@@ -13,10 +13,12 @@
       <MODULEPATHS>
         <MODULEPATH id="rapt" path="../../../RS-MET/Libraries/RobsJuceModules"/>
         <MODULEPATH id="rosic" path="../../../RS-MET/Libraries/RobsJuceModules"/>
+        <MODULEPATH id="BoostPython" path="../../Libraries/C++"/>
       </MODULEPATHS>
     </VS2019>
   </EXPORTFORMATS>
   <MODULES>
+    <MODULE id="BoostPython" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="rapt" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="rosic" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
   </MODULES>

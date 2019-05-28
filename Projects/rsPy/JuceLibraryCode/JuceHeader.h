@@ -14,6 +14,7 @@
 
 #include "AppConfig.h"
 
+#include <BoostPython/BoostPython.h>
 #include <rapt/rapt.h>
 #include <rosic/rosic.h>
 

@@ -18,8 +18,7 @@ namespace { // Avoid cluttering the global namespace.
   }
 }
 
-/*
-// temporarily commented to figure out linker error:
+
 BOOST_PYTHON_MODULE(extending)
 {
   using namespace boost::python;
@@ -33,8 +32,9 @@ BOOST_PYTHON_MODULE(extending)
   // Also add invite() as a regular function to the module.
   def("invite", invite);
 }
+// this produces a load of undefined symbol linker errors - no surprise here - i need
+// to include the respective cpp files into the unity build juce module file....
 
-*/
 
 
 

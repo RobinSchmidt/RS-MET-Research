@@ -8,3 +8,16 @@ header files that the compiler may be using. */
 
 #include "rs_boost.h"
 
+#include "libs//python/src/dict.cpp"
+//#include "libs//python/src/errors.cpp"
+//#include "libs//python/src/exec.cpp"
+//#include "libs//python/src/import.cpp"
+#include "libs//python/src/list.cpp"
+#include "libs//python/src/long.cpp"
+//#include "libs//python/src/module.cpp"
+//#include "libs//python/src/object_operators.cpp"
+//#include "libs//python/src/object_protocol.cpp"
+#include "libs//python/src/slice.cpp"
+#include "libs//python/src/str.cpp"
+#include "libs//python/src/tuple.cpp"
+#include "libs//python/src/wrapper.cpp"

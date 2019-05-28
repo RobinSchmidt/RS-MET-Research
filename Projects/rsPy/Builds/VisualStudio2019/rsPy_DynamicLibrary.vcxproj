@@ -2789,6 +2789,8 @@
     <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\type_id.hpp"/>
     <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\with_custodian_and_ward.hpp"/>
     <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\wrapper.hpp"/>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\config.hpp"/>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python.hpp"/>
     <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\rs_boost.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h"/>
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>

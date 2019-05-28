@@ -4635,6 +4635,12 @@
     <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\wrapper.hpp">
       <Filter>JUCE Modules\rs_boost\boost\python</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\config.hpp">
+      <Filter>JUCE Modules\rs_boost\boost</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\rs_boost.h">
       <Filter>JUCE Modules\rs_boost</Filter>
     </ClInclude>

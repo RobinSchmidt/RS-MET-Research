@@ -28,7 +28,7 @@ header files that the compiler may be using. */
 //#include "libs//python/src/converter/registry.cpp"
 //#include "libs//python/src/converter/type_id.cpp"
 
-/*
+
 // does not work yet - apparently, we also need the numpy path to the include path...
 #include "libs//python/src/numpy/dtype.cpp"
 #include "libs//python/src/numpy/matrix.cpp"
@@ -36,7 +36,7 @@ header files that the compiler may be using. */
 #include "libs//python/src/numpy/numpy.cpp"
 #include "libs//python/src/numpy/scalars.cpp"
 #include "libs//python/src/numpy/ufunc.cpp"
-*/
+
 
 //#include "libs//python/src/object/class.cpp"
 #include "libs//python/src/object/enum.cpp"
@@ -50,4 +50,5 @@ header files that the compiler may be using. */
 
 
 // some .cpp files from the python folder are apparently not supposed to be included (what are they
-// good for?) so they are commented out
+// good for?) so they are commented out. or maybe we have to define a macro that controsl the 
+// dll-linkage?

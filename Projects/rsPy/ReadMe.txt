@@ -1,7 +1,7 @@
 Project to create python bindings for the RS-MET signal processing libraries 
 rapt and rosic.
 
-To build it successfully, the BoostPython juce module needs to include the 
+To build it successfully, the rsPython juce module needs to include the 
 header file pyconfig.h which is supposed to reside somewhere in the python 
 installation folder. The folder where this file resides needs to be added to
 the "Header Search Paths" field in the exporter settings in the .jucer file.
@@ -9,11 +9,16 @@ On my machine, the path is:
 
 C:\Users\Rob\Anaconda3\include
 
+For numpy, the following files are included: 
 
-but may obviously be different on other people's machines. So if you get an
-include error for this file, change the path there and re-generate the visual
-studio project. If you don't use Projucer, change the path directly in visual 
-studio.
+<numpy/arrayobject.h>, <numpy/ufuncobject.h> which can be foun on my machine in:
+
+C:\Users\Rob\Anaconda3\Lib\site-packages\numpy\core\include
+
+The paths may obviously be different on other people's machines. So if you get 
+an include error for these files, change the path in the Projucer and 
+re-generate the visual studio project. If you don't use Projucer, change the 
+path directly in Visual Studio.
 
 We also need to link to
 
@@ -24,3 +29,4 @@ so that path must be added to the linker paths
 
 todo: maybe at some stage, distribute it as a proper python module...maybe 
 AudiPy or something - should work together with NumPy/SciPy
+the name SigPy is already taken - maybe have a look at it - perhaps it's cool?

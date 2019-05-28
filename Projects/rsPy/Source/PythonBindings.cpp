@@ -35,6 +35,8 @@ BOOST_PYTHON_MODULE(extending)
 // this produces a load of undefined symbol linker errors - no surprise here - i need
 // to include the respective cpp files into the unity build juce module file....
 
+// examples how to create the bindings:
+// https://wiki.python.org/moin/boost.python/SimpleExample
 
 
 

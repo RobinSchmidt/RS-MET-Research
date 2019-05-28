@@ -8,7 +8,7 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2019 targetFolder="Builds/VisualStudio2019">
+    <VS2019 targetFolder="Builds/VisualStudio2019" extraDefs="DONT_SET_USING_JUCE_NAMESPACE">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3" headerPath="../../../../Libraries/C++/JuceModules/rs_boost&#10;C:\Users\Rob\Anaconda3\include"/>
         <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3" headerPath="../../../../Libraries/C++/JuceModules/rs_boost&#10;C:\Users\Rob\Anaconda3\include"/>

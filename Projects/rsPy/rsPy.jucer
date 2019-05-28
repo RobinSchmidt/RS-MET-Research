@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="bjPT0u" name="rsPy" projectType="dll" jucerVersion="5.4.3">
+  <MAINGROUP id="wB8Nuh" name="rsPy">
+    <GROUP id="{9F521C21-0B14-5CC1-00E7-20CBD6912AB2}" name="Source"/>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2019 targetFolder="Builds/VisualStudio2019">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3"/>
+        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="rapt" path="../../../RS-MET/Libraries/RobsJuceModules"/>
+        <MODULEPATH id="rosic" path="../../../RS-MET/Libraries/RobsJuceModules"/>
+      </MODULEPATHS>
+    </VS2019>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="rapt" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="rosic" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+</JUCERPROJECT>

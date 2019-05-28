@@ -40,7 +40,19 @@ header files that the compiler may be using. */
 #include "libs//python/src/object/pickle_support.cpp"
 #include "libs//python/src/object/stl_iterator.cpp"
 
+//#include <numpy/ndarraytypes.h>
+//#include <numpy/__multiarray_api.h>
+// without these, we get an "identifier not found" error for import_array() which is a macro
+// (there's also a similar definition for import_ufunc() in __ufunc_api.h but maybe that's 
+// irrelevant). maybe we are not supposed to to include them and they are rather supposed
+// to be included from <numpy/arrayobject.h>, <numpy/ufuncobject.h> but my python installation
+// is too old?
+// here is some info about that error:
+// https://stackoverflow.com/questions/32899621/numpy-capi-error-with-import-array-when-compiling-multiple-modules
+// https://docs.scipy.org/doc/numpy-1.10.1/reference/c-api.array.html#miscellaneous
 
+// ..but with these we still get linker errors for numpy, so for the time being, all numpy stuff
+// is commented out:
 /*
 #include "libs//python/src/numpy/dtype.cpp"
 #include "libs//python/src/numpy/matrix.cpp"
@@ -49,7 +61,8 @@ header files that the compiler may be using. */
 #include "libs//python/src/numpy/scalars.cpp"
 #include "libs//python/src/numpy/ufunc.cpp"
 */
-// we still have a problem with import_array() called is numpy.cpp - we get an "identifier not found"
-// error, so the numpy stuff is commented out for now. here is some info about that:
-// https://stackoverflow.com/questions/32899621/numpy-capi-error-with-import-array-when-compiling-multiple-modules
-// https://docs.scipy.org/doc/numpy-1.10.1/reference/c-api.array.html#miscellaneous
+
+/* Now that we have the dll, the next step is to figure out, how to use it in python - how do we
+import it? */
+
+

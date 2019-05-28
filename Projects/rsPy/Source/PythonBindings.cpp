@@ -18,22 +18,17 @@ namespace { // Avoid cluttering the global namespace.
   }
 }
 
-
+// example code to create the bindings:
 BOOST_PYTHON_MODULE(extending)
 {
   using namespace boost::python;
   class_<hello>("hello", init<std::string>())
-    // Add a regular member function.
-    .def("greet", &hello::greet)
-    // Add invite() as a member of hello!
-    .def("invite", invite)
+    .def("greet", &hello::greet)   // Add a regular member function
+    .def("invite", invite)         // Add invite() as a member of hello
     ;
-
-  // Also add invite() as a regular function to the module.
-  def("invite", invite);
+  def("invite", invite);           // Also add invite() as a regular function to the module.
 }
-// this produces a load of undefined symbol linker errors - no surprise here - i need
-// to include the respective cpp files into the unity build juce module file....
+
 
 // examples how to create the bindings:
 // https://wiki.python.org/moin/boost.python/SimpleExample

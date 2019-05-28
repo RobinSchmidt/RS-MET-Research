@@ -1,8 +1,8 @@
 Project to create python bindings for the RS-MET signal processing libraries 
 rapt and rosic.
 
-To build it successfully, the rsPython juce module needs to include the 
-header file pyconfig.h which is supposed to reside somewhere in the python 
+To build it successfully, the rsPy juce module needs to include the header file
+pyconfig.h which is supposed to reside somewhere in the python 
 installation folder. The folder where this file resides needs to be added to
 the "Header Search Paths" field in the exporter settings in the .jucer file.
 On my machine, the path is:
@@ -11,7 +11,7 @@ C:\Users\Rob\Anaconda3\include
 
 For numpy, the following files are included: 
 
-<numpy/arrayobject.h>, <numpy/ufuncobject.h> which can be foun on my machine in:
+<numpy/arrayobject.h>, <numpy/ufuncobject.h> which can be found on my machine in:
 
 C:\Users\Rob\Anaconda3\Lib\site-packages\numpy\core\include
 
@@ -24,7 +24,7 @@ We also need to link to
 
 C:\Users\Rob\Anaconda3\libs\python34.lib
 
-so that path must be added to the linker paths
+so that path must be added to the linker paths (or do we? try without..)
 
 
 todo: maybe at some stage, distribute it as a proper python module...maybe 

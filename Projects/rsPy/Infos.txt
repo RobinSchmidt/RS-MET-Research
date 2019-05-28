@@ -1,0 +1,81 @@
+https://docs.python.org/3/extending/windows.html
+
+
+
+---------------------------------------------------------------------------------------------------
+https://docs.microsoft.com/en-us/visualstudio/python/working-with-c-cpp-python-in-visual-studio?view=vs-2019
+says, 
+-target extension should be .pyd instead of .dll
+-even a debug version should be built with "Multithreaded DLL" runtime library (non-debug)
+-pybind seems a good alternative to boost python...maybe check it out
+ https://github.com/pybind/pybind11 much more lightweight
+-i may need to build a 32-bit binary
+https://github.com/Microsoft/python-sample-vs-cpp-extension
+
+
+
+---------------------------------------------------------------------------------------------------
+http://wolfprojects.altervista.org/articles/dll-in-c-for-python/
+
+>>> from ctypes import cdll
+>>> mydll = cdll.LoadLibrary('test.dll')
+>>> mydll
+<CDLL 'test.dll', handle 10000000 at b92310>
+
+
+
+---------------------------------------------------------------------------------------------------
+https://medium.com/@akshathvarugeese/cuda-c-functions-in-python-through-dll-and-ctypes-for-windows-os-c29f56361089
+
+import numpy as np
+import ctypes
+from ctypes import * 
+
+def get_cuda_square():
+	dll = ctypes.windll.LoadLibrary("H:\Cuda Programming\CUDA Programs\squareGPU.dll") 
+	func = dll.cudaSquare
+	func.argtypes = [POINTER(c_float), POINTER(c_float), c_size_t] 
+	return func
+
+__cuda_square = get_cuda_square()
+
+def cuda_square(a, b, size):
+	a_p = a.ctypes.data_as(POINTER(c_float))
+	b_p = b.ctypes.data_as(POINTER(c_float))
+
+	__cuda_square(a_p, b_p, size)
+
+if __name__ == '__main__':
+	size = int(1024) 
+
+	a = np.arange(1, size + 1).astype('float32')
+	b = np.zeros(size).astype('float32')
+
+	cuda_square(a, b, size)
+
+	for i in range(size):
+		print(b[i], end = "")
+		print( '\t' if ((i % 4) != 3) else "\n", end = " ", flush = True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://docs.python.org/2/extending/windows.html#building-on-windows
+
+
+https://intermediate-and-advanced-software-carpentry.readthedocs.io/en/latest/c++-wrapping.html
+
+https://docs.python.org/2/extending/extending.html

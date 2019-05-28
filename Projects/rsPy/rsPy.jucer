@@ -10,8 +10,8 @@
   <EXPORTFORMATS>
     <VS2019 targetFolder="Builds/VisualStudio2019">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3" headerPath="../../../../Libraries/C++/BoostPython/include"/>
-        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3" headerPath="../../../../Libraries/C++/BoostPython/include"/>
+        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3" headerPath="../../../../Libraries/C++/BoostPython/include&#10;C:\Users\Rob\Anaconda3\include"/>
+        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3" headerPath="../../../../Libraries/C++/BoostPython/include&#10;C:\Users\Rob\Anaconda3\include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="rapt" path="../../../RS-MET/Libraries/RobsJuceModules"/>

@@ -35,13 +35,18 @@
 // what all these mt-gd-$&%§@ decorations mean, is explained here:
 //   https://www.boost.org/doc/libs/1_60_0/more/getting_started/windows.html#library-naming
 
+
+#define BOOST_PYTHON_SOURCE     // makes BOOST_PYTHON_DECL expand to __declspec(dllexport)
+//#define BOOST_PYTHON_STATIC_LIB // should probably build a static library
+
+
 // aggregated header for all features:
-//#include <boost/python.hpp>          
+#include <boost/python.hpp>
 
 // separate headers for specific features:
-#include <boost/python/class.hpp>
-#include <boost/python/module.hpp>
-#include <boost/python/def.hpp>
+//#include <boost/python/class.hpp>
+//#include <boost/python/module.hpp>
+//#include <boost/python/def.hpp>
 
 #include <iostream>
 #include <string>

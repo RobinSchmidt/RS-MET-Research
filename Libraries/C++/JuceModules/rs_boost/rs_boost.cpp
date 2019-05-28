@@ -8,28 +8,37 @@ header files that the compiler may be using. */
 
 #include "rs_boost.h"
 
+// some .cpp files from the python folder are apparently not supposed to be included (what are they
+// good for?) so they are commented out. or maybe we have to define a macro that controsl the 
+// dll-linkage? i think the problem is, that BOOST_PYTHON_DECL expands to __declspec(dllimport) but
+// should probably rather expand to __declspec(dllexport). somehow, we need to reconfigure that
+
+// in config.hpp is a section
+// Set up dll import/export options:
+
+
+
+
 #include "libs//python/src/dict.cpp"
-//#include "libs//python/src/errors.cpp"
-//#include "libs//python/src/exec.cpp"
-//#include "libs//python/src/import.cpp"
+#include "libs//python/src/errors.cpp"
+#include "libs//python/src/exec.cpp"
+#include "libs//python/src/import.cpp"
 #include "libs//python/src/list.cpp"
 #include "libs//python/src/long.cpp"
-//#include "libs//python/src/module.cpp"
-//#include "libs//python/src/object_operators.cpp"
-//#include "libs//python/src/object_protocol.cpp"
+#include "libs//python/src/module.cpp"
+#include "libs//python/src/object_operators.cpp"
+#include "libs//python/src/object_protocol.cpp"
 #include "libs//python/src/slice.cpp"
 #include "libs//python/src/str.cpp"
 #include "libs//python/src/tuple.cpp"
 #include "libs//python/src/wrapper.cpp"
 
 #include "libs//python/src/converter/arg_to_python_base.cpp"
-//#include "libs//python/src/converter/builtin_converters.cpp"
-//#include "libs//python/src/converter/from_python.cpp"
-//#include "libs//python/src/converter/registry.cpp"
-//#include "libs//python/src/converter/type_id.cpp"
+#include "libs//python/src/converter/builtin_converters.cpp"
+#include "libs//python/src/converter/from_python.cpp"
+#include "libs//python/src/converter/registry.cpp"
+#include "libs//python/src/converter/type_id.cpp"
 
-
-// does not work yet - apparently, we also need the numpy path to the include path...
 #include "libs//python/src/numpy/dtype.cpp"
 #include "libs//python/src/numpy/matrix.cpp"
 #include "libs//python/src/numpy/ndarray.cpp"
@@ -37,18 +46,14 @@ header files that the compiler may be using. */
 #include "libs//python/src/numpy/scalars.cpp"
 #include "libs//python/src/numpy/ufunc.cpp"
 
-
-//#include "libs//python/src/object/class.cpp"
+#include "libs//python/src/object/class.cpp"
 #include "libs//python/src/object/enum.cpp"
-//#include "libs//python/src/object/function.cpp"
+#include "libs//python/src/object/function.cpp"
 #include "libs//python/src/object/function_doc_signature.cpp"
-//#include "libs//python/src/object/inheritance.cpp"
-//#include "libs//python/src/object/iterator.cpp"
+#include "libs//python/src/object/inheritance.cpp"
+#include "libs//python/src/object/iterator.cpp"
 #include "libs//python/src/object/life_support.cpp"
 #include "libs//python/src/object/pickle_support.cpp"
 #include "libs//python/src/object/stl_iterator.cpp"
 
 
-// some .cpp files from the python folder are apparently not supposed to be included (what are they
-// good for?) so they are commented out. or maybe we have to define a macro that controsl the 
-// dll-linkage?

@@ -25,8 +25,8 @@
 
 #pragma once
 
-#include <include/boost/python/class.hpp>
-#include <include/boost/python/module.hpp>
-#include <include/boost/python/def.hpp>
+#include <boost/python/class.hpp>
+#include <boost/python/module.hpp>
+#include <boost/python/def.hpp>
 #include <iostream>
 #include <string>

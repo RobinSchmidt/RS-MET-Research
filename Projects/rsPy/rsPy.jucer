@@ -2,13 +2,16 @@
 
 <JUCERPROJECT id="bjPT0u" name="rsPy" projectType="dll" jucerVersion="5.4.3">
   <MAINGROUP id="wB8Nuh" name="rsPy">
-    <GROUP id="{9F521C21-0B14-5CC1-00E7-20CBD6912AB2}" name="Source"/>
+    <GROUP id="{9F521C21-0B14-5CC1-00E7-20CBD6912AB2}" name="Source">
+      <FILE id="duukDf" name="PythonBindings.cpp" compile="1" resource="0"
+            file="Source/PythonBindings.cpp"/>
+    </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <VS2019 targetFolder="Builds/VisualStudio2019">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3"/>
-        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3"/>
+        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3" headerPath="../../../../Libraries/C++/BoostPython/include"/>
+        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3" headerPath="../../../../Libraries/C++/BoostPython/include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="rapt" path="../../../RS-MET/Libraries/RobsJuceModules"/>

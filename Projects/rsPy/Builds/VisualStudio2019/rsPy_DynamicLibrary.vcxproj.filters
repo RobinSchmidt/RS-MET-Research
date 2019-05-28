@@ -2,6 +2,12 @@
 
 <Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="rsPy\Source">
+      <UniqueIdentifier>{B3987252-2662-BC38-24B8-70991C970C22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="rsPy">
+      <UniqueIdentifier>{42518D33-5E45-7D65-DC94-B9D6799EB75F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="JUCE Modules\BoostPython\doc">
       <UniqueIdentifier>{77F34B3B-2C4D-E1C7-FDD4-A1132CC4C84E}</UniqueIdentifier>
     </Filter>
@@ -313,6 +319,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\PythonBindings.cpp">
+      <Filter>rsPy\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\numpy\dtype.cpp">
       <Filter>JUCE Modules\BoostPython\example\numpy</Filter>
     </ClCompile>

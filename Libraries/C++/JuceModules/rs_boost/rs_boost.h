@@ -25,17 +25,23 @@
 
 #pragma once
 
-// including any of the files from boost/python creates a linker error:
-// cannot open file 'boost_python34-vc142-mt-gd-x64-1_70.lib'
-// how can inclusion of a hpp file make a difference for the question, which input files the 
-// linker expects? this is normally determined by the project settings - weird!
+#define BOOST_ALL_NO_LIB
+// Without this definition, the inclusion of <boost/config/auto_link.hpp>, which happens somewhere 
+// deep down in boost between macro definitions and undefinitions (for example in
+// <boost/python/detail/config.hpp>), will cause the linker to try to link to a static library file
+// that is nowhere specified in the project settings (i really wonder, how that works). So we need
+// this definition, to avoid linker errors of the type:
+//   cannot open file 'boost_python34-vc142-mt-gd-x64-1_70.lib'
+// what all these mt-gd-$&%§@ decorations mean, is explained here:
+//   https://www.boost.org/doc/libs/1_60_0/more/getting_started/windows.html#library-naming
 
-//#include <boost/python.hpp>  // aggregated header
+// aggregated header for all features:
+//#include <boost/python.hpp>          
 
-//#include <boost/python/class.hpp>
-//#include <boost/python/module.hpp>
-//#include <boost/python/def.hpp>
-
+// separate headers for specific features:
+#include <boost/python/class.hpp>
+#include <boost/python/module.hpp>
+#include <boost/python/def.hpp>
 
 #include <iostream>
 #include <string>

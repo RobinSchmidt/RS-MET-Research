@@ -8,15 +8,6 @@ header files that the compiler may be using. */
 
 #include "rs_boost.h"
 
-// some .cpp files from the python folder are apparently not supposed to be included (what are they
-// good for?) so they are commented out. or maybe we have to define a macro that controsl the 
-// dll-linkage? i think the problem is, that BOOST_PYTHON_DECL expands to __declspec(dllimport) but
-// should probably rather expand to __declspec(dllexport). somehow, we need to reconfigure that
-
-// in config.hpp is a section
-// Set up dll import/export options:
-
-
 
 
 #include "libs//python/src/dict.cpp"
@@ -39,13 +30,6 @@ header files that the compiler may be using. */
 #include "libs//python/src/converter/registry.cpp"
 #include "libs//python/src/converter/type_id.cpp"
 
-#include "libs//python/src/numpy/dtype.cpp"
-#include "libs//python/src/numpy/matrix.cpp"
-#include "libs//python/src/numpy/ndarray.cpp"
-#include "libs//python/src/numpy/numpy.cpp"
-#include "libs//python/src/numpy/scalars.cpp"
-#include "libs//python/src/numpy/ufunc.cpp"
-
 #include "libs//python/src/object/class.cpp"
 #include "libs//python/src/object/enum.cpp"
 #include "libs//python/src/object/function.cpp"
@@ -57,3 +41,15 @@ header files that the compiler may be using. */
 #include "libs//python/src/object/stl_iterator.cpp"
 
 
+/*
+#include "libs//python/src/numpy/dtype.cpp"
+#include "libs//python/src/numpy/matrix.cpp"
+#include "libs//python/src/numpy/ndarray.cpp"
+#include "libs//python/src/numpy/numpy.cpp"
+#include "libs//python/src/numpy/scalars.cpp"
+#include "libs//python/src/numpy/ufunc.cpp"
+*/
+// we still have a problem with import_array() called is numpy.cpp - we get an "identifier not found"
+// error, so the numpy stuff is commented out for now. here is some info about that:
+// https://stackoverflow.com/questions/32899621/numpy-capi-error-with-import-array-when-compiling-multiple-modules
+// https://docs.scipy.org/doc/numpy-1.10.1/reference/c-api.array.html#miscellaneous

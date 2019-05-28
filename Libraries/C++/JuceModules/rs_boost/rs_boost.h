@@ -41,12 +41,12 @@
 
 
 // aggregated header for all features:
-#include <boost/python.hpp>
+//#include <boost/python.hpp>
 
 // separate headers for specific features:
-//#include <boost/python/class.hpp>
-//#include <boost/python/module.hpp>
-//#include <boost/python/def.hpp>
+#include <boost/python/class.hpp>
+#include <boost/python/module.hpp>
+#include <boost/python/def.hpp>
 
 #include <iostream>
 #include <string>

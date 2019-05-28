@@ -8,72 +8,6 @@
     <Filter Include="rsPy">
       <UniqueIdentifier>{42518D33-5E45-7D65-DC94-B9D6799EB75F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="JUCE Modules\BoostPython\doc">
-      <UniqueIdentifier>{77F34B3B-2C4D-E1C7-FDD4-A1132CC4C84E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\example\numpy">
-      <UniqueIdentifier>{185D66C1-4F34-94B8-25FC-C9B8BDC27618}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\example\quickstart">
-      <UniqueIdentifier>{23C36238-3ABF-1794-0B4E-788F08C5AD32}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\example\tutorial">
-      <UniqueIdentifier>{747B0E7B-490A-E49A-89FA-2E2760A1818A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\example">
-      <UniqueIdentifier>{CE3386C0-7918-16DF-9BC1-3E4EDF9F010F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost\python\converter">
-      <UniqueIdentifier>{C00EC5F8-CD3B-337F-034E-0FFFB7B60D7B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost\python\detail">
-      <UniqueIdentifier>{128EB2D8-8074-21D7-E007-2EEEB1C180F5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost\python\numpy">
-      <UniqueIdentifier>{C6F6B7CF-AD83-C05D-4AE6-CF64674B5910}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost\python\object">
-      <UniqueIdentifier>{F30B8190-57F8-CA9D-0043-510117AB5BDF}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost\python\suite\indexing\detail">
-      <UniqueIdentifier>{016BFBE7-A8DD-4E91-FE29-54E018125B6F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost\python\suite\indexing">
-      <UniqueIdentifier>{0BAEDB9F-8F1D-2654-8C7E-DAF712F541C2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost\python\suite">
-      <UniqueIdentifier>{854B13B4-7EEC-D75E-EE96-87FB92D545F5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost\python">
-      <UniqueIdentifier>{8F457E0D-1C06-723A-9337-751E3C35771B}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include\boost">
-      <UniqueIdentifier>{00626E0A-90AC-47DF-8F41-1E7D8F99D0CC}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\include">
-      <UniqueIdentifier>{EC363745-A3BD-CD3A-147D-9B0A164D5C60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\src\converter">
-      <UniqueIdentifier>{EE5F1FE8-FA1B-688B-F638-C336CC8EB0CE}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\src\numpy">
-      <UniqueIdentifier>{98B3C0F6-8912-ECFF-CC63-602E3C7F49B4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\src\object">
-      <UniqueIdentifier>{8E281550-2AFC-1801-52DA-D8B975093F87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\src">
-      <UniqueIdentifier>{E91DF213-C259-8CE4-E35C-6CC3C63AEDB0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\test\numpy">
-      <UniqueIdentifier>{3E019EBB-7000-A505-8EB1-A79FF9D364CB}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython\test">
-      <UniqueIdentifier>{0E47F5A3-83FE-0049-5D03-76FA4CA4F79A}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="JUCE Modules\BoostPython">
-      <UniqueIdentifier>{86364FBF-152C-F5BA-0B0F-7B5B76B5DC97}</UniqueIdentifier>
-    </Filter>
     <Filter Include="JUCE Modules\rapt\Analysis">
       <UniqueIdentifier>{34544FA4-CEEB-3549-61FB-C970DF721282}</UniqueIdentifier>
     </Filter>
@@ -311,6 +245,54 @@
     <Filter Include="JUCE Modules\rosic">
       <UniqueIdentifier>{C25A56A4-C2B1-C292-616C-C6030FF88FAB}</UniqueIdentifier>
     </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost\python\converter">
+      <UniqueIdentifier>{923EDA2A-477D-9E9D-8052-2E53D4552A57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost\python\detail">
+      <UniqueIdentifier>{8A06497F-0430-F50F-8B8A-929DFEB65A42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost\python\numpy">
+      <UniqueIdentifier>{35FA3E3B-7FB9-3A37-F19C-F99063B4B45B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost\python\object">
+      <UniqueIdentifier>{CD204EB1-03D8-EF44-71E5-7C0A398029C6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost\python\suite\indexing\detail">
+      <UniqueIdentifier>{495D28CC-8446-606E-3B35-2373782F468E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost\python\suite\indexing">
+      <UniqueIdentifier>{387AE219-A997-5F12-D6C9-92BE4D729053}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost\python\suite">
+      <UniqueIdentifier>{365B7E6C-53EC-F180-E968-294D0A1B3ACB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost\python">
+      <UniqueIdentifier>{C991679F-F379-6217-0EEC-949C5C6C2CFA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\boost">
+      <UniqueIdentifier>{C2ADB911-71A1-BFA4-8115-37367A5E3F84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\libs\python\src\converter">
+      <UniqueIdentifier>{8D42CA7B-B3F6-442A-E5A6-43056F16E06A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\libs\python\src\numpy">
+      <UniqueIdentifier>{B57E0CA6-8AAF-5417-6EB0-6E8A73694395}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\libs\python\src\object">
+      <UniqueIdentifier>{259210EB-8F0A-2481-C3B8-124D412B370F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\libs\python\src">
+      <UniqueIdentifier>{A038E259-2C06-DC35-95FC-30165463ACD3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\libs\python">
+      <UniqueIdentifier>{026263B0-659E-0571-16DE-23B307D13468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost\libs">
+      <UniqueIdentifier>{74217800-6321-4AD1-4807-97BDEA50972F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="JUCE Modules\rs_boost">
+      <UniqueIdentifier>{A86993E1-8A6A-3B18-59C5-CE43C517D3D5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="JUCE Modules">
       <UniqueIdentifier>{FE955B6B-68AC-AA07-70D8-2413F6DB65C8}</UniqueIdentifier>
     </Filter>
@@ -321,444 +303,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\PythonBindings.cpp">
       <Filter>rsPy\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\numpy\dtype.cpp">
-      <Filter>JUCE Modules\BoostPython\example\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\numpy\fromdata.cpp">
-      <Filter>JUCE Modules\BoostPython\example\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\numpy\gaussian.cpp">
-      <Filter>JUCE Modules\BoostPython\example\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\numpy\ndarray.cpp">
-      <Filter>JUCE Modules\BoostPython\example\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\numpy\simple.cpp">
-      <Filter>JUCE Modules\BoostPython\example\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\numpy\ufunc.cpp">
-      <Filter>JUCE Modules\BoostPython\example\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\numpy\wrap.cpp">
-      <Filter>JUCE Modules\BoostPython\example\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\quickstart\embedding.cpp">
-      <Filter>JUCE Modules\BoostPython\example\quickstart</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\quickstart\extending.cpp">
-      <Filter>JUCE Modules\BoostPython\example\quickstart</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\example\tutorial\hello.cpp">
-      <Filter>JUCE Modules\BoostPython\example\tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\converter\arg_to_python_base.cpp">
-      <Filter>JUCE Modules\BoostPython\src\converter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\converter\builtin_converters.cpp">
-      <Filter>JUCE Modules\BoostPython\src\converter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\converter\from_python.cpp">
-      <Filter>JUCE Modules\BoostPython\src\converter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\converter\registry.cpp">
-      <Filter>JUCE Modules\BoostPython\src\converter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\converter\type_id.cpp">
-      <Filter>JUCE Modules\BoostPython\src\converter</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\numpy\dtype.cpp">
-      <Filter>JUCE Modules\BoostPython\src\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\numpy\matrix.cpp">
-      <Filter>JUCE Modules\BoostPython\src\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\numpy\ndarray.cpp">
-      <Filter>JUCE Modules\BoostPython\src\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\numpy\numpy.cpp">
-      <Filter>JUCE Modules\BoostPython\src\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\numpy\scalars.cpp">
-      <Filter>JUCE Modules\BoostPython\src\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\numpy\ufunc.cpp">
-      <Filter>JUCE Modules\BoostPython\src\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\class.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\enum.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\function.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\function_doc_signature.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\inheritance.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\iterator.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\life_support.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\pickle_support.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object\stl_iterator.cpp">
-      <Filter>JUCE Modules\BoostPython\src\object</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\dict.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\errors.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\exec.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\import.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\list.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\long.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\module.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object_operators.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\object_protocol.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\slice.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\str.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\tuple.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\src\wrapper.cpp">
-      <Filter>JUCE Modules\BoostPython\src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\numpy\dtype.cpp">
-      <Filter>JUCE Modules\BoostPython\test\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\numpy\indexing.cpp">
-      <Filter>JUCE Modules\BoostPython\test\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\numpy\ndarray.cpp">
-      <Filter>JUCE Modules\BoostPython\test\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\numpy\shapes.cpp">
-      <Filter>JUCE Modules\BoostPython\test\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\numpy\templates.cpp">
-      <Filter>JUCE Modules\BoostPython\test\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\numpy\ufunc.cpp">
-      <Filter>JUCE Modules\BoostPython\test\numpy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\a_map_indexing_suite.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\andreas_beyer.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\args.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\as_to_python_function.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\auto_ptr.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\back_reference.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\bases.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\ben_scott1.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\bienstman1.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\bienstman2.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\bienstman3.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\bienstman4.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\bienstman5.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\boost_shared_ptr.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\borrowed.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\builtin_converters.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\callbacks.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\calling_conventions.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\calling_conventions_mf.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\class.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\cltree.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\const_argument.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\copy_ctor_mutates_rhs.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\crossmod_exception_a.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\crossmod_exception_b.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\crossmod_opaque_a.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\crossmod_opaque_b.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\data_members.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\defaults.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\destroy_test.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\dict.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\docstring.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\enable_shared_from_this.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\enum_ext.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\exception_translator.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\exec.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\extract.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\if_else.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\implicit.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\import_.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\indirect_traits_test.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\injected.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\input_iterator.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\int_map_indexing_suite.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\iterator.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\keywords.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\list.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\long.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\m1.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\m2.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\map_indexing_suite.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\minimal.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\module_tail.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\multi_arg_constructor.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\nested.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\object.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\object_fail1.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\object_manager.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\opaque.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\operators.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\operators_wrapper.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\pickle1.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\pickle2.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\pickle3.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\pickle4.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\pointee.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\pointer_type_id_test.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\pointer_vector.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\polymorphism.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\polymorphism2.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\polymorphism2_auto_ptr.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\properties.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\pytype_function.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\raw_ctor.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\raw_pyobject_fail1.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\raw_pyobject_fail2.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\register_ptr.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\result.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\return_arg.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\select_arg_to_python_test.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\select_from_python_test.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\select_holder.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\shared_ptr.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\slice.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\staticmethod.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\stl_iterator.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\str.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\string_literal.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\test_overload_resolution.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\test_pointer_adoption.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\tuple.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\upcast.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\vector_indexing_suite.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\virtual_functions.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\voidptr.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\test\wrapper_held_type.cpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Libraries\C++\BoostPython\BoostPython.cpp">
-      <Filter>JUCE Modules\BoostPython</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\Analysis.cpp">
       <Filter>JUCE Modules\rapt\Analysis</Filter>
@@ -2470,8 +2014,107 @@
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\rosic.cpp">
       <Filter>JUCE Modules\rosic</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\JuceLibraryCode\include_BoostPython.cpp">
-      <Filter>JUCE Library Code</Filter>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\converter\arg_to_python_base.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\converter\builtin_converters.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\converter\from_python.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\converter\registry.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\converter\type_id.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\converter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\numpy\dtype.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\numpy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\numpy\matrix.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\numpy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\numpy\ndarray.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\numpy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\numpy\numpy.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\numpy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\numpy\scalars.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\numpy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\numpy\ufunc.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\numpy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\class.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\enum.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\function.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\function_doc_signature.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\inheritance.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\iterator.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\life_support.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\pickle_support.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object\stl_iterator.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src\object</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\dict.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\errors.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\exec.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\import.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\list.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\long.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\module.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object_operators.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\object_protocol.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\slice.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\str.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\tuple.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\libs\python\src\wrapper.cpp">
+      <Filter>JUCE Modules\rs_boost\libs\python\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\rs_boost.cpp">
+      <Filter>JUCE Modules\rs_boost</Filter>
     </ClCompile>
     <ClCompile Include="..\..\JuceLibraryCode\include_rapt.cpp">
       <Filter>JUCE Library Code</Filter>
@@ -2482,683 +2125,11 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_rosic.cpp">
       <Filter>JUCE Library Code</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\include_rs_boost.cpp">
+      <Filter>JUCE Library Code</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\arg_from_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\arg_to_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\arg_to_python_base.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\as_to_python_function.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\builtin_converters.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\constructor_function.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\context_result_converter.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\convertible_function.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\from_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\implicit.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\obj_mgr_arg_from_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\object_manager.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\pointer_type_id.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\pyobject_traits.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\pyobject_type.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\pytype_function.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\pytype_object_mgr_traits.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\registered.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\registered_pointee.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\registrations.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\registry.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\return_from_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\rvalue_from_python_data.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\shared_ptr_deleter.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\shared_ptr_from_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\shared_ptr_to_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\converter\to_python_function_type.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\converter</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\aix_init_module.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\api_placeholder.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\borrowed_ptr.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\caller.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\config.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\construct.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\convertible.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\copy_ctor_mutates_rhs.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\cv_category.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\dealloc.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\decorated_type_id.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\decref_guard.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\def_helper.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\def_helper_fwd.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\defaults_def.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\defaults_gen.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\dependent.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\destroy.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\enable_if.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\exception_handler.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\force_instantiate.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\if_else.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\indirect_traits.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\invoke.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\is_auto_ptr.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\is_shared_ptr.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\is_wrapper.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\is_xxx.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\make_keyword_range_fn.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\make_tuple.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\map_entry.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\mpl_lambda.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\msvc_typeinfo.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\none.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\not_specified.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\nullary_function_adaptor.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\operator_id.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\overloads_fwd.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\pointee.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\prefix.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\preprocessor.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\python_type.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\python22_fixed.h">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\raw_pyobject.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\referent_storage.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\result.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\scope.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\sfinae.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\signature.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\string_literal.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\target.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\translate_exception.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\type_list.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\type_list_impl.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\type_traits.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\unwind_type.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\unwrap_type_id.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\unwrap_wrapper.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\value_arg.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\value_is_shared_ptr.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\value_is_xxx.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\void_ptr.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\void_return.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\wrap_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\detail\wrapper_base.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\config.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\dtype.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\internal.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\invoke_matching.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\matrix.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\ndarray.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\numpy_object_mgr_traits.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\scalars.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy\ufunc.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\numpy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\add_to_namespace.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\class.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\class_detail.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\class_metadata.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\class_wrapper.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\enum_base.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\find_instance.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\forward.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\function.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\function_doc_signature.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\function_handle.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\function_object.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\inheritance.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\inheritance_query.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\instance.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\iterator.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\iterator_core.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\life_support.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\make_holder.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\make_instance.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\make_ptr_instance.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\pickle_support.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\pointer_holder.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\py_function.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\stl_iterator_core.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\value_holder.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object\value_holder_fwd.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\object</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\suite\indexing\detail\indexing_suite_detail.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\suite\indexing\detail</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\suite\indexing\container_utils.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\suite\indexing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\suite\indexing\indexing_suite.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\suite\indexing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\suite\indexing\map_indexing_suite.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\suite\indexing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\suite\indexing\vector_indexing_suite.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python\suite\indexing</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\arg_from_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\args.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\args_fwd.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\back_reference.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\base_type_traits.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\bases.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\borrowed.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\call.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\call_method.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\cast.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\class.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\class_fwd.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\copy_const_reference.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\copy_non_const_reference.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\data_members.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\def.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\def_visitor.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\default_call_policies.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\dict.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\docstring_options.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\enum.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\errors.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\exception_translator.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\exec.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\extract.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\handle.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\handle_fwd.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\has_back_reference.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\implicit.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\import.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\init.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\instance_holder.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\iterator.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\list.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\long.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\lvalue_from_pytype.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\make_constructor.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\make_function.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\manage_new_object.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\module.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\module_init.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\numpy.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_attributes.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_call.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_core.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_fwd.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_items.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_operators.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_protocol.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_protocol_core.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\object_slices.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\opaque_pointer_converter.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\operators.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\other.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\overloads.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\override.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\pointee.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\proxy.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\ptr.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\pure_virtual.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\raw_function.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\refcount.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\reference_existing_object.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\register_ptr_to_python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\return_arg.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\return_by_value.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\return_internal_reference.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\return_opaque_pointer.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\return_value_policy.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\scope.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\self.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\signature.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\slice.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\slice_nil.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\ssize_t.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\stl_iterator.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\str.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\tag.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\to_python_converter.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\to_python_indirect.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\to_python_value.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\tuple.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\type_id.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\with_custodian_and_ward.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python\wrapper.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost\python</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\include\boost\python.hpp">
-      <Filter>JUCE Modules\BoostPython\include\boost</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\test\complicated.hpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\test\shared_ptr.hpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\test\simple_type.hpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\test\test_class.hpp">
-      <Filter>JUCE Modules\BoostPython\test</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\Libraries\C++\BoostPython\BoostPython.h">
-      <Filter>JUCE Modules\BoostPython</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\Analysis.h">
       <Filter>JUCE Modules\rapt\Analysis</Filter>
     </ClInclude>
@@ -5007,6 +3978,666 @@
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\rosic.h">
       <Filter>JUCE Modules\rosic</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\arg_from_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\arg_to_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\arg_to_python_base.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\as_to_python_function.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\builtin_converters.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\constructor_function.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\context_result_converter.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\convertible_function.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\from_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\implicit.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\obj_mgr_arg_from_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\object_manager.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\pointer_type_id.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\pyobject_traits.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\pyobject_type.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\pytype_function.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\pytype_object_mgr_traits.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\registered.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\registered_pointee.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\registrations.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\registry.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\return_from_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\rvalue_from_python_data.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\shared_ptr_deleter.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\shared_ptr_from_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\shared_ptr_to_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\converter\to_python_function_type.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\converter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\aix_init_module.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\api_placeholder.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\borrowed_ptr.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\caller.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\config.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\construct.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\convertible.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\copy_ctor_mutates_rhs.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\cv_category.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\dealloc.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\decorated_type_id.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\decref_guard.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\def_helper.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\def_helper_fwd.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\defaults_def.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\defaults_gen.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\dependent.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\destroy.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\enable_if.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\exception_handler.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\force_instantiate.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\if_else.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\indirect_traits.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\invoke.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\is_auto_ptr.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\is_shared_ptr.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\is_wrapper.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\is_xxx.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\make_keyword_range_fn.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\make_tuple.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\map_entry.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\mpl_lambda.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\msvc_typeinfo.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\none.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\not_specified.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\nullary_function_adaptor.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\operator_id.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\overloads_fwd.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\pointee.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\prefix.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\preprocessor.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\python_type.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\python22_fixed.h">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\raw_pyobject.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\referent_storage.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\result.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\scope.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\sfinae.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\signature.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\string_literal.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\target.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\translate_exception.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\type_list.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\type_list_impl.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\type_traits.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\unwind_type.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\unwrap_type_id.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\unwrap_wrapper.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\value_arg.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\value_is_shared_ptr.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\value_is_xxx.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\void_ptr.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\void_return.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\wrap_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\detail\wrapper_base.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\config.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\dtype.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\internal.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\invoke_matching.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\matrix.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\ndarray.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\numpy_object_mgr_traits.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\scalars.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy\ufunc.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\numpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\add_to_namespace.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\class.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\class_detail.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\class_metadata.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\class_wrapper.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\enum_base.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\find_instance.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\forward.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\function.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\function_doc_signature.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\function_handle.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\function_object.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\inheritance.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\inheritance_query.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\instance.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\iterator.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\iterator_core.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\life_support.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\make_holder.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\make_instance.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\make_ptr_instance.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\pickle_support.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\pointer_holder.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\py_function.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\stl_iterator_core.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\value_holder.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object\value_holder_fwd.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\object</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\suite\indexing\detail\indexing_suite_detail.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\suite\indexing\detail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\suite\indexing\container_utils.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\suite\indexing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\suite\indexing\indexing_suite.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\suite\indexing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\suite\indexing\map_indexing_suite.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\suite\indexing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\suite\indexing\vector_indexing_suite.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python\suite\indexing</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\arg_from_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\args.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\args_fwd.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\back_reference.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\base_type_traits.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\bases.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\borrowed.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\call.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\call_method.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\cast.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\class.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\class_fwd.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\copy_const_reference.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\copy_non_const_reference.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\data_members.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\def.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\def_visitor.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\default_call_policies.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\dict.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\docstring_options.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\enum.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\errors.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\exception_translator.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\exec.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\extract.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\handle.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\handle_fwd.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\has_back_reference.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\implicit.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\import.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\init.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\instance_holder.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\iterator.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\list.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\long.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\lvalue_from_pytype.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\make_constructor.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\make_function.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\manage_new_object.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\module.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\module_init.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\numpy.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_attributes.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_call.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_core.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_fwd.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_items.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_operators.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_protocol.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_protocol_core.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\object_slices.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\opaque_pointer_converter.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\operators.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\other.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\overloads.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\override.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\pointee.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\proxy.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\ptr.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\pure_virtual.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\raw_function.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\refcount.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\reference_existing_object.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\register_ptr_to_python.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\return_arg.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\return_by_value.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\return_internal_reference.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\return_opaque_pointer.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\return_value_policy.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\scope.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\self.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\signature.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\slice.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\slice_nil.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\ssize_t.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\stl_iterator.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\str.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\tag.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\to_python_converter.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\to_python_indirect.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\to_python_value.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\tuple.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\type_id.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\with_custodian_and_ward.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\boost\python\wrapper.hpp">
+      <Filter>JUCE Modules\rs_boost\boost\python</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\JuceModules\rs_boost\rs_boost.h">
+      <Filter>JUCE Modules\rs_boost</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h">
       <Filter>JUCE Library Code</Filter>
     </ClInclude>
@@ -5015,21 +4646,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\Libraries\C++\BoostPython\doc\polymorphism.txt">
-      <Filter>JUCE Modules\BoostPython\doc</Filter>
-    </None>
-    <None Include="..\..\..\..\Libraries\C++\BoostPython\example\README.md">
-      <Filter>JUCE Modules\BoostPython\example</Filter>
-    </None>
-    <None Include="..\..\..\..\Libraries\C++\BoostPython\LICENSE_1_0.txt">
-      <Filter>JUCE Modules\BoostPython</Filter>
-    </None>
-    <None Include="..\..\..\..\Libraries\C++\BoostPython\README.md">
-      <Filter>JUCE Modules\BoostPython</Filter>
-    </None>
-    <None Include="..\..\..\..\Libraries\C++\BoostPython\todo.txt">
-      <Filter>JUCE Modules\BoostPython</Filter>
-    </None>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\LinearAlgebra\LaPackCPP\License.txt">
       <Filter>JUCE Modules\rapt\Math\LinearAlgebra\LaPackCPP</Filter>
     </None>

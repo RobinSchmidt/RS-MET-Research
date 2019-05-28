@@ -14,9 +14,9 @@
 
 #include "AppConfig.h"
 
-#include <BoostPython/BoostPython.h>
 #include <rapt/rapt.h>
 #include <rosic/rosic.h>
+#include <rs_boost/rs_boost.h>
 
 
 #if ! DONT_SET_USING_JUCE_NAMESPACE

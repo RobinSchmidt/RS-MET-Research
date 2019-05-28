@@ -1,3 +1,0 @@
-from faber.tools.python import python
-
-p = python(command='$PYTHON')

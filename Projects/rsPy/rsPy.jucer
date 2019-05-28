@@ -10,20 +10,20 @@
   <EXPORTFORMATS>
     <VS2019 targetFolder="Builds/VisualStudio2019">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3" headerPath="../../../../Libraries/C++/BoostPython/include&#10;C:\Users\Rob\Anaconda3\include"/>
-        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3" headerPath="../../../../Libraries/C++/BoostPython/include&#10;C:\Users\Rob\Anaconda3\include"/>
+        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3" headerPath="../../../../Libraries/C++/JuceModules/rs_boost&#10;C:\Users\Rob\Anaconda3\include"/>
+        <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3" headerPath="../../../../Libraries/C++/JuceModules/rs_boost&#10;C:\Users\Rob\Anaconda3\include"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="rapt" path="../../../RS-MET/Libraries/RobsJuceModules"/>
         <MODULEPATH id="rosic" path="../../../RS-MET/Libraries/RobsJuceModules"/>
-        <MODULEPATH id="BoostPython" path="../../Libraries/C++"/>
+        <MODULEPATH id="rs_boost" path="../../Libraries/C++/JuceModules"/>
       </MODULEPATHS>
     </VS2019>
   </EXPORTFORMATS>
   <MODULES>
-    <MODULE id="BoostPython" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="rapt" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
     <MODULE id="rosic" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="rs_boost" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
   </MODULES>
   <LIVE_SETTINGS>
     <WINDOWS/>

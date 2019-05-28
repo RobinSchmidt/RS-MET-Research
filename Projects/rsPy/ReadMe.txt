@@ -14,7 +14,7 @@ include error for this file, change the path there and re-generate the visual
 studio project. If you don't use Projucer, change the path directly in visual 
 studio.
 
-
+todo: re-organize directory structure to reflect the boost layout
 
 todo: maybe at some stage, distribute it as a proper python module...maybe 
 AudiPy or something - should work together with NumPy/SciPy

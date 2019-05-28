@@ -1,0 +1,1 @@
+maybe make an rs_boost juce module instead

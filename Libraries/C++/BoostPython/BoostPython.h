@@ -25,6 +25,7 @@
 
 #pragma once
 
+//#include <boost/python.hpp>  // aggregate header - would probably also work
 #include <boost/python/class.hpp>
 #include <boost/python/module.hpp>
 #include <boost/python/def.hpp>

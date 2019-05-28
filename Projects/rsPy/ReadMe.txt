@@ -9,12 +9,18 @@ On my machine, the path is:
 
 C:\Users\Rob\Anaconda3\include
 
+
 but may obviously be different on other people's machines. So if you get an
 include error for this file, change the path there and re-generate the visual
 studio project. If you don't use Projucer, change the path directly in visual 
 studio.
 
-todo: re-organize directory structure to reflect the boost layout
+We also need to link to
+
+C:\Users\Rob\Anaconda3\libs\python34.lib
+
+so that path must be added to the linker paths
+
 
 todo: maybe at some stage, distribute it as a proper python module...maybe 
 AudiPy or something - should work together with NumPy/SciPy

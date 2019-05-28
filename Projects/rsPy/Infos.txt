@@ -62,9 +62,34 @@ if __name__ == '__main__':
 
 
 
+---------------------------------------------------------------------------------------------------
+https://thomasnyberg.com/what_are_extension_modules.html
 
+Next we need to actually build this module in way that python can import. This is most easily done using the setuptools module. The following is a pretty minimal build script:
 
+setup.py:
 
+  import os
+  from setuptools import setup, Extension
+
+  module = Extension('spam', sources=['spammodule.c'])
+  setup(name='spam', ext_modules = [module])
+
+If you have both spammodule.c and setup.py in the current directory, the following should build the software:
+
+  $ python3 setup.py build
+  $ python3 setup.py install
+
+Test that everything worked by importing your module:
+
+  $ python3
+  >>> import spam
+  >>>
+
+  
+this seems also a good explanation (it uses boost.python)
+https://flipdazed.github.io/blog/python/boost-python-starter#a-simple-example-hello-world
+  
 
 
 

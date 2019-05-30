@@ -16,7 +16,13 @@ namespace { // Avoid cluttering the global namespace.
   std::string invite(const hello& w) {
     return w.greet() + "! Please come soon!";
   }
+
+
+  double rsSin(double x) { return ::sin(x); } // to disambiguate which overload should be taken
+
 }
+
+
 
 // example code to create the bindings:
 BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll file (rsPy.pyd)
@@ -27,6 +33,12 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
     .def("invite", invite)         // Add invite() as a member of hello
     ;
   def("invite", invite);           // Also add invite() as a regular function to the module.
+
+                                   // inputs -> output     
+  //def("sin", rsSin);                // double -> double
+
+  def("ellipj_cn", rosic::cn);     // double, double -> double
+
 }
 
 

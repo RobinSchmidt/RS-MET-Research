@@ -38,6 +38,11 @@ machine, this location is:
 C:\Users\Rob\Anaconda3\DLLs
 
 
+todo: figure out if there's a better way - maybe using the PYTHONPATH 
+environment variable and pointing it to the path where Visual Studio places
+the .dll (maybe we have to rename it from .dll to .pyd - either by directly
+setting the output target name or creating a renamed copy as post build step)
+
 
 
 

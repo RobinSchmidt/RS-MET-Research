@@ -37,6 +37,11 @@ machine, this location is:
 
 C:\Users\Rob\Anaconda3\DLLs
 
+To test, if it works as intended, try the python vs project in the "Test" 
+subfolder. If the compiled .dll is copied and renamed into the right place, it
+should be possible to run the script "rsPyTest.py" from the "Code" folder.
+
+
 
 todo: figure out if there's a better way - maybe using the PYTHONPATH 
 environment variable and pointing it to the path where Visual Studio places

@@ -27,6 +27,20 @@ C:\Users\Rob\Anaconda3\libs\python34.lib
 so that path must be added to the linker paths (or do we? try without..)
 
 
+To make it possible to import the .dll in python via a statement like:
+
+import rsPy as rs
+
+one way to do it is to rename the resulting built rsPy.dll into rsPy.pyd and 
+copy it into and appropriate location in the python installation. On my 
+machine, this location is:
+
+C:\Users\Rob\Anaconda3\DLLs
+
+
+
+
+
 todo: maybe at some stage, distribute it as a proper python module...maybe 
 AudiPy or something - should work together with NumPy/SciPy
 the name SigPy is already taken - maybe have a look at it - perhaps it's cool?

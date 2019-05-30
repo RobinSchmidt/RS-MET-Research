@@ -19,7 +19,7 @@ namespace { // Avoid cluttering the global namespace.
 }
 
 // example code to create the bindings:
-BOOST_PYTHON_MODULE(extending)
+BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll file (rsPy.pyd)
 {
   using namespace boost::python;
   class_<hello>("hello", init<std::string>())

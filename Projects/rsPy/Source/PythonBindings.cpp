@@ -1,6 +1,6 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
-namespace { // Avoid cluttering the global namespace.
+namespace Test { // Avoid cluttering the global namespace.
 
   // A friendly class.
   class hello
@@ -20,6 +20,8 @@ namespace { // Avoid cluttering the global namespace.
 
   double rsSin(double x) { return ::sin(x); } // to disambiguate which overload should be taken
 
+  std::complex<double> rsExp(std::complex<double> z) { return std::exp(z); }
+
 }
 
 
@@ -28,21 +30,31 @@ namespace { // Avoid cluttering the global namespace.
 BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll file (rsPy.pyd)
 {
   using namespace boost::python;
-  class_<hello>("hello", init<std::string>())
-    .def("greet", &hello::greet)   // Add a regular member function
-    .def("invite", invite)         // Add invite() as a member of hello
+  class_<Test::hello>("hello", init<std::string>())
+    .def("greet", &Test::hello::greet)   // Add a regular member function
+    .def("invite", Test::invite)         // Add invite() as a member of hello
     ;
-  def("invite", invite);           // Also add invite() as a regular function to the module.
+  def("invite", Test::invite);           // Also add invite() as a regular function to the module.
 
-                                   // inputs -> output     
-  //def("sin", rsSin);                // double -> double
 
+  // Classes:
+
+
+  // Math Functions:
+  def("sin", Test::rsSin);         // double -> double
   def("ellipj_cn", rosic::cn);     // double, double -> double
+  def("exp", Test::rsExp);         // complex -> complex
+
+  // String Functions:
 
 }
 
-// todo: note that currently all stuff related to numpy is not compiled in because i get errors
-// when trying that. see comments in rs_boost.cpp
+// todo: figure out, how we can deal with numpy arrays...maybe it would be convenient, if 1D arrays 
+// automatically map to std::vector
+// see here for documentation:
+// https://www.boost.org/doc/libs/1_66_0/libs/python/doc/html/index.html
+
+// https://www.boost.org/doc/libs/1_66_0/libs/python/doc/html/reference/high_level_components/boost_python_def_hpp.html#high_level_components.boost_python_def_hpp.functions
 
 
 // examples how to create the bindings:

@@ -4,8 +4,9 @@ if __name__ == "__main__":
     hi = rs.hello("Germany");
     s  = rs.invite(hi)
     print(s)
-    cnVal = rs.ellipj_cn(2.1231, 0.9) # 2nd argument must be in [0,1]
-    print(cnVal)
+    cnVal  = rs.ellipj_cn(2.1231, 0.9) # 2nd argument must be in [0,1]
+    expVal = rs.exp(3.14j);            # almost -1
+    print(expVal)
 
 
 

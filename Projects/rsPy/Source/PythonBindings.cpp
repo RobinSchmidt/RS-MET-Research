@@ -41,6 +41,9 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
 
 }
 
+// todo: note that currently all stuff related to numpy is not compiled in because i get errors
+// when trying that. see comments in rs_boost.cpp
+
 
 // examples how to create the bindings:
 // https://wiki.python.org/moin/boost.python/SimpleExample

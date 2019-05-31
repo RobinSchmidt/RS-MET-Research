@@ -32,21 +32,22 @@ To make it possible to import the .dll in python via a statement like:
 import rsPy as rs
 
 one way to do it is to rename the resulting built rsPy.dll into rsPy.pyd and 
-copy it into and appropriate location in the python installation. On my 
+copy it into an appropriate location in the python installation. On my 
 machine, this location is:
 
 C:\Users\Rob\Anaconda3\DLLs
 
-To test, if it works as intended, try the python vs project in the "Test" 
+I actually have a post-build command that creates a copy of the dll with 
+appropriate pyd extension. If it's too inconvenient to copy the pyd file 
+manually into the python folder, you may either modify this post-build step, 
+such that the file will be copied into your desired target folder or add the
+folder where the .pyd file ends up to the PYTHONPATH environment variable (which
+you may have to create, if it doesn't exist already)
+
+To test, if it works as intended, try the python VS project in the "Test" 
 subfolder. If the compiled .dll is copied and renamed into the right place, it
 should be possible to run the script "rsPyTest.py" from the "Code" folder.
 
-
-
-todo: figure out if there's a better way - maybe using the PYTHONPATH 
-environment variable and pointing it to the path where Visual Studio places
-the .dll (maybe we have to rename it from .dll to .pyd - either by directly
-setting the output target name or creating a renamed copy as post build step)
 
 
 

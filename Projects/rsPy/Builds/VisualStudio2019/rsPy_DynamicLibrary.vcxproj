@@ -98,6 +98,9 @@
     <Lib>
       <AdditionalLibraryDirectories>C:\Users\Rob\Anaconda3\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>copy /Y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(TargetDir)$(TargetName).pyd&quot;</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -144,6 +147,9 @@
     <Lib>
       <AdditionalLibraryDirectories>C:\Users\Rob\Anaconda3\libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
+    <PostBuildEvent>
+      <Command>copy /Y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(TargetDir)$(TargetName).pyd&quot;</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\PythonBindings.cpp"/>

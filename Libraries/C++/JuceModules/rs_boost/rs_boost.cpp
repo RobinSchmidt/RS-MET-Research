@@ -40,11 +40,11 @@ header files that the compiler may be using. */
 #include "libs//python/src/object/pickle_support.cpp"
 #include "libs//python/src/object/stl_iterator.cpp"
 
-//#include <numpy/ndarraytypes.h>
-//#include <numpy/__multiarray_api.h>
+#include <numpy/ndarraytypes.h>
+#include <numpy/__multiarray_api.h>
 // without these, we get an "identifier not found" error for import_array() which is a macro
 // (there's also a similar definition for import_ufunc() in __ufunc_api.h but maybe that's 
-// irrelevant). maybe we are not supposed to to include them and they are rather supposed
+// irrelevant). maybe we are not supposed to include them and they are rather supposed
 // to be included from <numpy/arrayobject.h>, <numpy/ufuncobject.h> but my python installation
 // is too old?
 // here is some info about that error:
@@ -61,8 +61,19 @@ header files that the compiler may be using. */
 #include "libs//python/src/numpy/scalars.cpp"
 #include "libs//python/src/numpy/ufunc.cpp"
 */
+// hmm...these functions in question are marked as __declspec(dllimport) - so i guess that means
+// they are supposed to be dynamically linked...but maybe we nevertheless need to link to some
+// .lib file, see here: https://social.msdn.microsoft.com/Forums/vstudio/en-US/d94f6af3-e330-4962-a150-078da57ee5d0/error-lnk2019-unresolved-external-symbol-quotdeclspecdllimport-public-thiscall?forum=vcgeneral
 
-/* Now that we have the dll, the next step is to figure out, how to use it in python - how do we
-import it? */
+// maybe this one
+// C:\Users\Rob\Anaconda3\Lib\site-packages\numpy\core\lib\npymath.lib
+// or
+// C:\Users\Rob\Anaconda3\Lib\site-packages\numpy\core\*.pyd (for example: multiarray.pyd ...these are dlls)
+
+// this might be relevant, too:
+// https://github.com/boostorg/python/issues/134
+// https://stackoverflow.com/questions/45069253/boost-numpy-linker-error-in-windows-vs
+
+
 
 

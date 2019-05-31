@@ -24,7 +24,8 @@ We also need to link to
 
 C:\Users\Rob\Anaconda3\libs\python34.lib
 
-so that path must be added to the linker paths (or do we? try without..)
+so that path must be added to the linker paths, otherwise, we'll get 
+the linker error: cannot open file 'python34.lib'
 
 
 To make it possible to import the .dll in python via a statement like:

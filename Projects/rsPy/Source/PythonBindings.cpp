@@ -48,6 +48,8 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
 // examples how to create the bindings:
 // https://wiki.python.org/moin/boost.python/SimpleExample
 
+// https://stackoverflow.com/questions/10701514/how-to-return-numpy-array-from-boostpython
+
 
 
 

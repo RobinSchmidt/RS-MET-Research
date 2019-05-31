@@ -10,7 +10,7 @@
   <EXPORTFORMATS>
     <VS2019 targetFolder="Builds/VisualStudio2019" extraDefs="DONT_SET_USING_JUCE_NAMESPACE">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="3" headerPath="../../../../Libraries/C++/JuceModules/rs_boost&#10;C:\Users\Rob\Anaconda3\include&#10;C:\Users\Rob\Anaconda3\Lib\site-packages\numpy\core\include"
+        <CONFIGURATION isDebug="1" name="Debug" winWarningLevel="2" headerPath="../../../../Libraries/C++/JuceModules/rs_boost&#10;C:\Users\Rob\Anaconda3\include&#10;C:\Users\Rob\Anaconda3\Lib\site-packages\numpy\core\include"
                        targetName="rsPy" postbuildCommand="copy /Y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(TargetDir)$(TargetName).pyd&quot;"
                        libraryPath="C:\Users\Rob\Anaconda3\libs"/>
         <CONFIGURATION isDebug="0" name="Release" winWarningLevel="3" headerPath="../../../../Libraries/C++/JuceModules/rs_boost&#10;C:\Users\Rob\Anaconda3\include&#10;C:\Users\Rob\Anaconda3\Lib\site-packages\numpy\core\include"

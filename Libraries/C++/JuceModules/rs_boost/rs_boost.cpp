@@ -81,15 +81,20 @@ void initArrayAPI()
   PyObject* numpy = PyImport_ImportModule("numpy.core.multiarray");
   PyObject* c_api = PyObject_GetAttrString(numpy, "_ARRAY_API");
   PyArray_API = (void**)PyCapsule_GetPointer(c_api, NULL);
+  //PyArray_API = (void**)PyCObject_AsVoidPtr(c_api); // from other #ifdef path -> compile error
 }
 void initUFuncAPI()
-{ 
-  // not yet implemented todo: see, how numpy::initialize() does it, copy/paste the relvant code
+{
+  // partially recreates _import_umath(void) from __ufunc_api.h - not yet tested
+  PyObject* numpy = PyImport_ImportModule("numpy.core.umath");
+  PyObject* c_api = PyObject_GetAttrString(numpy, "_UFUNC_API");
+  PyUFunc_API = (void**)PyCapsule_GetPointer(c_api, NULL);
+  //PyUFunc_API = (void**)PyCObject_AsVoidPtr(c_api);  // other #ifdef branch
 }
 void initNumPy()
 {
   initArrayAPI();
-  initUFuncAPI(); // not yet implemented
+  initUFuncAPI(); // not yet tested
 }
 
 

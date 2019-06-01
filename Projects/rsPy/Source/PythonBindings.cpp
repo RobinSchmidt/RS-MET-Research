@@ -109,7 +109,7 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // but doesn't seem necessary
 
   initNumPy();            // the self-written init code works...
-  //numpy::initialize();  // ...this doesn't! WTF!!!! maybe i have to #define something?
+  numpy::initialize();  // ...this doesn't! WTF!!!! maybe i have to #define something?
   // i think, it fills out the pointers void **PyArray_API and void** PyUFunc_API, declared as 
   // extern in boost::python and defined in rs_boost.cpp. In numpy.hpp, it is said that this 
   // function should be called before using anything in boost.numpy. but: regardless whether or not

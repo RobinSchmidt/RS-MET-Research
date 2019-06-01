@@ -12,11 +12,13 @@ if __name__ == "__main__":
     b = np.array([2.,3,4])
     c = a+b
 
-    testarray = rs.npArrayCreate(3, 5.0)
+    arrayApi = rs.arrayAPI()
+
+    #testarray = rs.npArrayCreate(3, 5.0)
 
     #rs.mul(a, 2)                      # should multiply a by 2 - crashes!
-    #norm = rs.eucnorm(a)               # should compute euclidean norm - crashes
-    test = rs.npArrayTest(a);
+    norm = rs.eucnorm(a)               # should compute euclidean norm - crashes
+    #test = rs.npArrayTest(a);
     # the crash is with a message: The debug adapter exited unexpectedly
     # https://github.com/Microsoft/PTVS/issues/3812
     # when switching the conig to release, the error is:

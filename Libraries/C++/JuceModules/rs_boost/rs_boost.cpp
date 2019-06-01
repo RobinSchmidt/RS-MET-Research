@@ -59,8 +59,11 @@ header files that the compiler may be using. */
 #include "libs//python/src/numpy/scalars.cpp"
 #include "libs//python/src/numpy/ufunc.cpp"
 
-void **PyArray_API = nullptr;
-void **PyUFunc_API = nullptr;
+
+void** PyArray_API;
+void** PyUFunc_API;
+//void **PyArray_API = nullptr;
+//void **PyUFunc_API = nullptr;
 // PyArray_API is declared as "extern" on line 807 in: 
 // Anaconda3\Lib\site-packages\numpy\core\include\numpy\__multiarray_api.h
 // and a similar declaratiion exists for PyUFunc_API. I guess, that we need to define them here but
@@ -71,6 +74,10 @@ void **PyUFunc_API = nullptr;
 // The C-API is actually an array of function pointers. This array is created (and pointed to by a 
 // global variable) by import_ufunc. The global variable is either statically defined or allowed to be 
 // seen by other files depending on the state of PY_UFUNC_UNIQUE_SYMBOL and NO_IMPORT_UFUNC.
+
+void** getPyArrayAPI() { return PyArray_API; } // for debug
+void setPyArrayAPI(int val) { PyArray_API = (void**)(val); }
+
 
 // some older links, collected while figuring out the linker issues - may not be relevant anymore:
 // https://social.msdn.microsoft.com/Forums/vstudio/en-US/d94f6af3-e330-4962-a150-078da57ee5d0/error-lnk2019-unresolved-external-symbol-quotdeclspecdllimport-public-thiscall?forum=vcgeneral

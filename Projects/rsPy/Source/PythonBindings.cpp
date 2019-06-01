@@ -1,5 +1,10 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
+//extern void** PyArray_API;  // for debugging numpy issues
+
+//void** PyArray_API = nullptr;
+//void** PyUFunc_API = nullptr;
+
 namespace Test { // Avoid cluttering the global namespace.
 
   // A friendly class.
@@ -87,6 +92,13 @@ namespace Test { // Avoid cluttering the global namespace.
     return a;
   }
 
+  // some code for debugging and figuring out, why the numpy initialization fails:
+  long long pyArrayAPI()
+  {
+    return (long long)(getPyArrayAPI());
+  }
+
+
 }
 
 
@@ -102,7 +114,7 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // https://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/numpy/tutorial/simple.html
   // but doesn't seem necessary
 
-  //numpy::initialize();
+  numpy::initialize();
   // i think, it fills out the pointers void **PyArray_API and void** PyUFunc_API, declared as 
   // extern in boost::python and defined in rs_boost.cpp. In numpy.hpp, it is said that this 
   // function should be called before using anything in boost.numpy. but: regardless whether or not
@@ -110,10 +122,21 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // rsPyTest as soon as we try to do anything with numpy arrays - even just passing a reference or
   // copy to a function - does the initialization fail? or do we have to call it in a different 
   // place?
-  // it seems to call _import_array(void) in __multiarray_api.h
+  // it seems to call _import_array(void) in __multiarray_api.h, line 1629
   // if we can't get debug breakpoints to work, maybe write functions that return the values of
   // our PyArray_API, PyUFunc_API pointers - see if they are still nullptrs even after calling 
-  // initialize()
+  // initialize() - yes, that is indeed the case! ...so what can we do to figure out where it goes 
+  // wrong? maybe hack into __multiarray_api.h to produce logging output, to see which path the 
+  // code takes?
+
+  //setPyArrayAPI(1);  
+  // test - makes no sense, i just want to see, if we can set the pointer here - ok, this works
+  // ...soo...it seems to be indeed the case that something in numpy::initialize goes wrong and our
+  // PyArray_API is *not* correctly filled out at initialization -> figure out which path the code 
+  // takes in _import_array! ...or maybe partially re-create the function here but *with* logging
+
+  // or maybe this could be the solution:
+  // https://docs.microsoft.com/en-us/visualstudio/python/debugging-mixed-mode-c-cpp-python-in-visual-studio?view=vs-2019
 
 
   class_<Test::hello>("hello", init<std::string>())
@@ -134,13 +157,13 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // String Functions:
 
   // NumPy Array Functions:
-  def("mul", Test::mul);           // doesn't work
+  def("arrayAPI", Test::pyArrayAPI); // for debug
+  def("mul", Test::mul);             // doesn't work
   def("eucnorm", Test::eucnorm);
-
   def("npArrayTest", Test::npArrayTest);
-
-
   def("npArrayCreate", Test::npArrayCreate);
+
+
 
 }
 

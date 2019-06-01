@@ -6,13 +6,14 @@
     <ProjectGuid>{09ccda2a-3fde-4b1c-9d38-7a9a3450a332}</ProjectGuid>
     <ProjectHome />
     <StartupFile>Code\rsPyTest.py</StartupFile>
-    <SearchPath />
+    <SearchPath>C:\Users\Rob\Anaconda3\VisualStudioDebugSymbols</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <InterpreterId>Global|PythonCore|3.4</InterpreterId>
     <IsWindowsApplication>False</IsWindowsApplication>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />

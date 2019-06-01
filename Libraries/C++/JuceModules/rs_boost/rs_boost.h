@@ -47,10 +47,15 @@
 #include <boost/python/numpy.hpp>
 
 
-//extern void** PyArray_API;  // for debugging numpy issues
-void** getPyArrayAPI();         // for debugging numpy issues
-void setPyArrayAPI(int val);    // just for testing how the BOOST_PYTHON_MODULE works - if we can set the value
-void setPyArrayAPI(void** api);
+
+// These can be called to set up the pointers to the array- and ufunc APIs. Actually, this is 
+// supposed to be the job of numpy::initialize() - but for some reason, it doesn't seem to work, 
+// that's why i wrote my own functions to get the job done:
+void setPyArrayAPI(void** api); 
+void setPyUFuncAPI(void** api);
+void** getPyArrayAPI();         // for inspecting/debugging numpy initialization issues
+void** getPyUFuncAPI();
+
 
 //#include <iostream>
 //#include <string>

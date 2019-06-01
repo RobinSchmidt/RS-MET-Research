@@ -75,9 +75,10 @@ void** PyUFunc_API;
 // global variable) by import_ufunc. The global variable is either statically defined or allowed to be 
 // seen by other files depending on the state of PY_UFUNC_UNIQUE_SYMBOL and NO_IMPORT_UFUNC.
 
-void** getPyArrayAPI() { return PyArray_API; } // for debug
-void setPyArrayAPI(int val) { PyArray_API = (void**)(val); }
+void** getPyArrayAPI() { return PyArray_API; }
+void** getPyUFuncAPI() { return PyUFunc_API; }
 void setPyArrayAPI(void** api) { PyArray_API = api; }
+void setPyUFuncAPI(void** api) { PyUFunc_API = api; }
 
 
 // some older links, collected while figuring out the linker issues - may not be relevant anymore:

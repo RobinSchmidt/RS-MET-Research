@@ -12,14 +12,15 @@ if __name__ == "__main__":
     b = np.array([2.,3,4])
     c = a+b
 
-    arrayApi = rs.arrayAPI()
-    rs.initArrayAPI()
-    arrayApi = rs.arrayAPI()
+    #arrayApi = rs.arrayAPI()
+    #rs.initArrayAPI()
+    #arrayApi = rs.arrayAPI()
 
-    #testarray = rs.npArrayCreate(3, 5.0)
+    testArray = rs.npArrayCreate(3, 5.0)
 
-    #rs.mul(a, 2)                      # should multiply a by 2 - crashes!
-    norm = rs.eucnorm(a)               # should compute euclidean norm - crashes
+    norm = rs.eucnorm(a)               # computes euclidean norm (3.7416..)
+    rs.scale(a, 2)                      # should multiply a by 2 - crashes!
+
     #test = rs.npArrayTest(a);
     # the crash is with a message: The debug adapter exited unexpectedly
     # https://github.com/Microsoft/PTVS/issues/3812

@@ -33,14 +33,12 @@ namespace Test { // Avoid cluttering the global namespace.
     return std::exp(z); 
   }
 
-  void mul(boost::python::numpy::ndarray& a, double scaler)
+  void scale(boost::python::numpy::ndarray& a, double scaler)
   //void mul(boost::python::numpy::ndarray a, double scaler)
   {
     // todo: make sure that it is an array of double - otherwise, raise an exception or something:
     //boost::python::numpy::dtype type = a.get_dtype();
 
-
-    /*
     int numDims = a.get_nd();                   // todo: check, if this is 1
     const Py_intptr_t* sizes = a.get_shape();
     int size    = sizes[0];                     // will work only for 1D arrays - maybe should be long long?
@@ -49,7 +47,6 @@ namespace Test { // Avoid cluttering the global namespace.
     double* data = reinterpret_cast<double*> (a.get_data());
     for(int i = 0; i < size; i++)
       data[i] *= scaler;
-    */
   }
   // https://www.boost.org/doc/libs/1_64_0/libs/python/doc/html/numpy/index.html
   // https://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/numpy/tutorial/simple.html
@@ -59,8 +56,6 @@ namespace Test { // Avoid cluttering the global namespace.
   using namespace boost::python;
   namespace np = boost::python::numpy;
   double eucnorm(np::ndarray axis) {
-    //return 0.0;  // test
-
     const int n = axis.shape(0);
     double norm = 0.0;
     for(int i = 0; i < n; i++) {
@@ -102,9 +97,12 @@ namespace Test { // Avoid cluttering the global namespace.
     PyObject* c_api = PyObject_GetAttrString(numpy, "_ARRAY_API");
     void** api = (void**)PyCapsule_GetPointer(c_api, NULL);
     setPyArrayAPI(api);
-
-    //PyArray_API = (void**)PyCapsule_GetPointer(c_api, NULL);
-
+  }
+  void initNumPy()
+  {
+    initArrayAPI();
+    //initUFuncAPI();
+    // todo: do the same for PyUFunc_API when we want use it to write universal functions
   }
 
 
@@ -123,7 +121,8 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // https://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/numpy/tutorial/simple.html
   // but doesn't seem necessary
 
-  numpy::initialize();
+  Test::initNumPy();      // the self-written init code works...
+  //numpy::initialize();  // ...this doesn't! WTF!!!!
   // i think, it fills out the pointers void **PyArray_API and void** PyUFunc_API, declared as 
   // extern in boost::python and defined in rs_boost.cpp. In numpy.hpp, it is said that this 
   // function should be called before using anything in boost.numpy. but: regardless whether or not
@@ -167,7 +166,7 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
 
   // NumPy Array Functions:
   def("arrayAPI", Test::pyArrayAPI); // for debug
-  def("mul", Test::mul);             // doesn't work
+  def("scale", Test::scale);
   def("eucnorm", Test::eucnorm);
   def("npArrayTest", Test::npArrayTest);
   def("npArrayCreate", Test::npArrayCreate);

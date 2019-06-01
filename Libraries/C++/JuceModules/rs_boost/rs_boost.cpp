@@ -59,18 +59,15 @@ header files that the compiler may be using. */
 #include "libs//python/src/numpy/scalars.cpp"
 #include "libs//python/src/numpy/ufunc.cpp"
 
-
-void** PyArray_API;
-void** PyUFunc_API;
-//void **PyArray_API = nullptr;
-//void **PyUFunc_API = nullptr;
-// PyArray_API is declared as "extern" on line 807 in: 
-// Anaconda3\Lib\site-packages\numpy\core\include\numpy\__multiarray_api.h
-// and a similar declaratiion exists for PyUFunc_API. I guess, that we need to define them here but
-// they will be assigned by some initialization code within boost or python itself, but we need to
-// define the pointers here, or we'll get "unresolved external symbol" linker errors. here:
+void **PyArray_API = nullptr;
+void **PyUFunc_API = nullptr;
+// Thes pointers are declared as extern in 
+// Anaconda3\Lib\site-packages\numpy\core\include\numpy\__multiarray_api.h, __ufunc_api.h and are 
+// supposed to be defined somewhere else - which is here. They will be filled in by the 
+// initialization code when the module is loaded by the python interpreter. Without these 
+// definitions, we'll get "unresolved external symbol" linker errors. More information:
 // https://docs.scipy.org/doc/numpy-1.13.0/reference/c-api.ufunc.html#importing-the-api 
-// it says:
+// ...it says:
 // The C-API is actually an array of function pointers. This array is created (and pointed to by a 
 // global variable) by import_ufunc. The global variable is either statically defined or allowed to be 
 // seen by other files depending on the state of PY_UFUNC_UNIQUE_SYMBOL and NO_IMPORT_UFUNC.

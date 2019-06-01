@@ -39,22 +39,18 @@
 #define BOOST_NUMPY_SOURCE      // similar for numpy
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION  // gets rid of a warning
 
-//#define BOOST_PYTHON_STATIC_LIB // my be used instead of .._SOURCE for building a static library?
+//#define BOOST_PYTHON_STATIC_LIB 
 //#define BOOST_NUMPY_STATIC_LIB
+// may be used instead of .._SOURCE for building a static library? 
 
 #include <boost/python.hpp>
 //#include <boost/python/detail/wrap_python.hpp> // alternative - recommended by documentation
 #include <boost/python/numpy.hpp>
 
-// This should be called in the definition of BOOST_PYTHON_MODULE before using any numpy 
-// functionality. It sets up the pointers to the array- and (noty yet) ufunc APIs. Actually, this is 
-// supposed to be the job of numpy::initialize() - but for some reason, it doesn't seem to work, 
-// that's why i wrote my own function to get the job done:
 void initNumPy();
-
-
-
-
-//#include <iostream>
-//#include <string>
-
+// This should be called in the definition of BOOST_PYTHON_MODULE before using any numpy 
+// functionality. It sets up the pointers to the array- and ufunc APIs. Actually, this is 
+// supposed to be the job of numpy::initialize(), but for some reason, it doesn't seem to work, 
+// so i wrote my own replacement function to get the job done. My version works for me but the 
+// boost function doesn't - this is really weird! ...but the ufunc stuff has not yet been tested. 
+// Only the array-api stuff is known to work.

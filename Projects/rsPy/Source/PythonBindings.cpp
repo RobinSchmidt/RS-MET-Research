@@ -93,29 +93,6 @@ namespace Test { // rename this class
     return a;
   }
 
-  // some code for debugging and figuring out, why the numpy initialization fails:
-  long long pyArrayAPI()
-  {
-    return (long long)(getPyArrayAPI());
-  }
-  /*
-  void initArrayAPI()
-  {
-    // partially recreates _import_array(void) from __multiarray_api.h
-    PyObject* numpy = PyImport_ImportModule("numpy.core.multiarray");
-    PyObject* c_api = PyObject_GetAttrString(numpy, "_ARRAY_API");
-    void** api = (void**)PyCapsule_GetPointer(c_api, NULL);
-    setPyArrayAPI(api);
-  }
-  void initNumPy()
-  {
-    initArrayAPI();
-    //initUFuncAPI();
-    // todo: do the same for PyUFunc_API when we want use it to write universal functions
-  }
-  */
-
-
 }
 
 
@@ -131,9 +108,8 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // https://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/numpy/tutorial/simple.html
   // but doesn't seem necessary
 
-  //Test::initNumPy();      // the self-written init code works...
   initNumPy();            // the self-written init code works...
-  //numpy::initialize();  // ...this doesn't! WTF!!!!
+  //numpy::initialize();  // ...this doesn't! WTF!!!! maybe i have to #define something?
   // i think, it fills out the pointers void **PyArray_API and void** PyUFunc_API, declared as 
   // extern in boost::python and defined in rs_boost.cpp. In numpy.hpp, it is said that this 
   // function should be called before using anything in boost.numpy. but: regardless whether or not
@@ -176,7 +152,6 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // String Functions:
 
   // NumPy Array Functions:
-  //def("arrayAPI", Test::pyArrayAPI); // for debug
   def("scale", Test::scale);
   def("eucnorm", Test::eucnorm); // maybe rename or get rid
   //def("npArrayTest", Test::npArrayTest);

@@ -75,25 +75,21 @@ void** PyUFunc_API;
 // global variable) by import_ufunc. The global variable is either statically defined or allowed to be 
 // seen by other files depending on the state of PY_UFUNC_UNIQUE_SYMBOL and NO_IMPORT_UFUNC.
 
-void** getPyArrayAPI() { return PyArray_API; }
-void** getPyUFuncAPI() { return PyUFunc_API; }
-void setPyArrayAPI(void** api) { PyArray_API = api; }
-void setPyUFuncAPI(void** api) { PyUFunc_API = api; }
-
 void initArrayAPI()
 {
   // partially recreates _import_array(void) from __multiarray_api.h
   PyObject* numpy = PyImport_ImportModule("numpy.core.multiarray");
   PyObject* c_api = PyObject_GetAttrString(numpy, "_ARRAY_API");
-  void** api = (void**)PyCapsule_GetPointer(c_api, NULL);
-  setPyArrayAPI(api); // maybe get rid of that call - assign pointer directly
+  PyArray_API = (void**)PyCapsule_GetPointer(c_api, NULL);
 }
-
+void initUFuncAPI()
+{ 
+  // not yet implemented todo: see, how numpy::initialize() does it, copy/paste the relvant code
+}
 void initNumPy()
 {
   initArrayAPI();
-  //initUFuncAPI();
-  // todo: do the same for PyUFunc_API when we want use it to write universal functions
+  initUFuncAPI(); // not yet implemented
 }
 
 

@@ -43,6 +43,9 @@
 //#define BOOST_NUMPY_STATIC_LIB
 
 #include <boost/python.hpp>
+//#include <boost/python/detail/wrap_python.hpp> // alternative - recommended by documentation
+#include <boost/python/numpy.hpp>
+
 
 //#include <iostream>
 //#include <string>

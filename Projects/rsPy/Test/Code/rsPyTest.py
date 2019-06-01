@@ -1,12 +1,20 @@
 ﻿import rsPy as rs
+import numpy as np
 
 if __name__ == "__main__":
     hi = rs.hello("Germany");
     s  = rs.invite(hi)
     print(s)
     cnVal  = rs.ellipj_cn(2.1231, 0.9) # 2nd argument must be in [0,1]
-    expVal = rs.exp(3.14j);            # almost -1
-    print(expVal)
+    expVal = rs.exp(3.14j)             # almost -1
+    print(cnVal, expVal)
+    a = np.array([1.,2,3])             # 1 float makes the whole array float
+    b = np.array([2.,3,4])
+    c = a+b
+    rs.mul(a, 2)                      # should multiply a by 2
+    
+    dummy = 0                          # to allow a breakpoint here
+
 
 
 

@@ -1,11 +1,13 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
-//extern void** PyArray_API;  // for debugging numpy issues
 
-//void** PyArray_API = nullptr;
-//void** PyUFunc_API = nullptr;
+namespace Test { // rename this class
 
-namespace Test { // Avoid cluttering the global namespace.
+
+  using namespace boost::python;
+  namespace np = boost::python::numpy;
+
+
 
   // A friendly class.
   class hello
@@ -33,19 +35,26 @@ namespace Test { // Avoid cluttering the global namespace.
     return std::exp(z); 
   }
 
-  void scale(boost::python::numpy::ndarray& a, double scaler)
-  //void mul(boost::python::numpy::ndarray a, double scaler)
+
+  /** Returns the total number of elements of the given numpy array. */
+  int size(np::ndarray& a) // maybe it should be long long?
+  {
+    int numDims = a.get_nd();
+    const Py_intptr_t* sizes = a.get_shape();
+    int size = 1;
+    for(int i = 0; i < numDims; i++)
+      size *= sizes[i];
+    return size;
+  }
+
+  /** Scales the array by the given scale factor. */
+  void scale(np::ndarray& a, double scaler)
   {
     // todo: make sure that it is an array of double - otherwise, raise an exception or something:
     //boost::python::numpy::dtype type = a.get_dtype();
 
-    int numDims = a.get_nd();                   // todo: check, if this is 1
-    const Py_intptr_t* sizes = a.get_shape();
-    int size    = sizes[0];                     // will work only for 1D arrays - maybe should be long long?
-    // todo: make it work for any dimensionality
-
     double* data = reinterpret_cast<double*> (a.get_data());
-    for(int i = 0; i < size; i++)
+    for(int i = 0; i < size(a); i++)
       data[i] *= scaler;
   }
   // https://www.boost.org/doc/libs/1_64_0/libs/python/doc/html/numpy/index.html
@@ -53,8 +62,7 @@ namespace Test { // Avoid cluttering the global namespace.
 
 
   // example from: https://jleem.bitbucket.io/code.html
-  using namespace boost::python;
-  namespace np = boost::python::numpy;
+
   double eucnorm(np::ndarray axis) {
     const int n = axis.shape(0);
     double norm = 0.0;
@@ -90,6 +98,7 @@ namespace Test { // Avoid cluttering the global namespace.
   {
     return (long long)(getPyArrayAPI());
   }
+  /*
   void initArrayAPI()
   {
     // partially recreates _import_array(void) from __multiarray_api.h
@@ -104,6 +113,7 @@ namespace Test { // Avoid cluttering the global namespace.
     //initUFuncAPI();
     // todo: do the same for PyUFunc_API when we want use it to write universal functions
   }
+  */
 
 
 }
@@ -121,7 +131,8 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // https://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/numpy/tutorial/simple.html
   // but doesn't seem necessary
 
-  Test::initNumPy();      // the self-written init code works...
+  //Test::initNumPy();      // the self-written init code works...
+  initNumPy();            // the self-written init code works...
   //numpy::initialize();  // ...this doesn't! WTF!!!!
   // i think, it fills out the pointers void **PyArray_API and void** PyUFunc_API, declared as 
   // extern in boost::python and defined in rs_boost.cpp. In numpy.hpp, it is said that this 
@@ -165,12 +176,27 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // String Functions:
 
   // NumPy Array Functions:
-  def("arrayAPI", Test::pyArrayAPI); // for debug
+  //def("arrayAPI", Test::pyArrayAPI); // for debug
   def("scale", Test::scale);
-  def("eucnorm", Test::eucnorm);
-  def("npArrayTest", Test::npArrayTest);
+  def("eucnorm", Test::eucnorm); // maybe rename or get rid
+  //def("npArrayTest", Test::npArrayTest);
   def("npArrayCreate", Test::npArrayCreate);
-  def("initArrayAPI", Test::initArrayAPI);
+
+
+  // todo: fill/set, convolve - should return an array that is the convolution of two input arrays
+  // filter(x, b, a)...maybe it should resemble scipy, sum, mean, sumOfSquares, sumOfProducts
+
+  // ok - the general system works - now it's time to implement some *useful* functionality - but 
+  // what? oscillators/filters/modulators/effects? maybe an equalizer or dynamics processor? 
+  // analysis/resynthesis tools? ...maybe first replicate some basic filter stuff that scipy.signal
+  // also has - that would be redundant, but my engineer's filter has more types (peak/shelv, 
+  // papoulis/halpern)
+  // https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.signal.iirfilter.html#scipy.signal.iirfilter
+  // scipy.signal.iirdesign(wp, ws, gpass, gstop, analog=False, ftype='ellip', output='ba')
+  // https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.signal.iirdesign.html
+  // maybe have a function iirDesign(type='Butterworth', response="Lowpass", order, omega, width, 
+  // gain, ripple, rejection
+
  
 }
 

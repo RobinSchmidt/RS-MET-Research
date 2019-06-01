@@ -18,8 +18,8 @@ if __name__ == "__main__":
 
     testArray = rs.npArrayCreate(3, 5.0)
 
-    norm = rs.eucnorm(a)               # computes euclidean norm (3.7416..)
-    rs.scale(a, 2)                      # should multiply a by 2 - crashes!
+    norm = rs.eucnorm(a)                # computes euclidean norm (3.7416..)
+    rs.scale(a, 2)                      # scale a by factor 2
 
     #test = rs.npArrayTest(a);
     # the crash is with a message: The debug adapter exited unexpectedly

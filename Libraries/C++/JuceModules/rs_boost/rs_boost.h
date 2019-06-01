@@ -51,10 +51,15 @@
 // These can be called to set up the pointers to the array- and ufunc APIs. Actually, this is 
 // supposed to be the job of numpy::initialize() - but for some reason, it doesn't seem to work, 
 // that's why i wrote my own functions to get the job done:
+
+void initNumPy();
 void setPyArrayAPI(void** api); 
 void setPyUFuncAPI(void** api);
 void** getPyArrayAPI();         // for inspecting/debugging numpy initialization issues
 void** getPyUFuncAPI();
+// todo: drag initNumPy() over from PythonBindings.cpp to rs_boost.cpp
+
+
 
 
 //#include <iostream>

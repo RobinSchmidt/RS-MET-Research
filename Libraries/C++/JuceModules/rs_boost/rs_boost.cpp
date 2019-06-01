@@ -80,6 +80,23 @@ void** getPyUFuncAPI() { return PyUFunc_API; }
 void setPyArrayAPI(void** api) { PyArray_API = api; }
 void setPyUFuncAPI(void** api) { PyUFunc_API = api; }
 
+void initArrayAPI()
+{
+  // partially recreates _import_array(void) from __multiarray_api.h
+  PyObject* numpy = PyImport_ImportModule("numpy.core.multiarray");
+  PyObject* c_api = PyObject_GetAttrString(numpy, "_ARRAY_API");
+  void** api = (void**)PyCapsule_GetPointer(c_api, NULL);
+  setPyArrayAPI(api); // maybe get rid of that call - assign pointer directly
+}
+
+void initNumPy()
+{
+  initArrayAPI();
+  //initUFuncAPI();
+  // todo: do the same for PyUFunc_API when we want use it to write universal functions
+}
+
+
 
 // some older links, collected while figuring out the linker issues - may not be relevant anymore:
 // https://social.msdn.microsoft.com/Forums/vstudio/en-US/d94f6af3-e330-4962-a150-078da57ee5d0/error-lnk2019-unresolved-external-symbol-quotdeclspecdllimport-public-thiscall?forum=vcgeneral

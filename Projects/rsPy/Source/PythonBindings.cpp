@@ -18,9 +18,15 @@ namespace Test { // Avoid cluttering the global namespace.
   }
 
 
-  double rsSin(double x) { return ::sin(x); } // to disambiguate which overload should be taken
+  double rsSin(double x) 
+  { 
+    return ::sin(x); 
+  } // to disambiguate which overload should be taken
 
-  std::complex<double> rsExp(std::complex<double> z) { return std::exp(z); }
+  std::complex<double> rsExp(std::complex<double> z) 
+  { 
+    return std::exp(z); 
+  }
 
   void mul(boost::python::numpy::ndarray& a, double scaler)
   //void mul(boost::python::numpy::ndarray a, double scaler)
@@ -40,9 +46,46 @@ namespace Test { // Avoid cluttering the global namespace.
       data[i] *= scaler;
     */
   }
-  // https://jleem.bitbucket.io/code.html
   // https://www.boost.org/doc/libs/1_64_0/libs/python/doc/html/numpy/index.html
   // https://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/numpy/tutorial/simple.html
+
+
+  // example from: https://jleem.bitbucket.io/code.html
+  using namespace boost::python;
+  namespace np = boost::python::numpy;
+  double eucnorm(np::ndarray axis) {
+    return 0.0;  // test
+
+    /*
+    const int n = axis.shape(0);
+    double norm = 0.0;
+    for(int i = 0; i < n; i++) {
+      double A = extract<double>(axis[i]);
+      norm += A * A;
+    }
+    return sqrt(norm);
+    */
+  }
+
+
+  //double npArrayTest(np::ndarray* a) // python argument type did not macth c++ signature
+  //double npArrayTest(np::ndarray a) // The debug adapter exited unexpectedly
+  double npArrayTest(np::ndarray& a)
+  {
+    return 0.0;
+  }
+
+  // trying to create and return a numpy::ndarray
+  np::ndarray npArrayCreate(int size, double value)
+  {
+    tuple shape = make_tuple(size);
+    np::dtype dtype = np::dtype::get_builtin<double>();
+    np::ndarray a = np::zeros(shape, dtype);  // maybe use  np::empty
+
+    // todo: fill the array with "value"
+
+    return a;
+  }
 
 }
 
@@ -53,11 +96,24 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
 {
   using namespace boost::python;
 
-  numpy::initialize();
-  //boost::python::numpy::initialize();
+
+  //Py_Initialize();
+  // ...is done in main() here:
+  // https://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/numpy/tutorial/simple.html
+  // but doesn't seem necessary
+
+  //numpy::initialize();
   // i think, it fills out the pointers void **PyArray_API and void** PyUFunc_API, declared as 
   // extern in boost::python and defined in rs_boost.cpp. In numpy.hpp, it is said that this 
-  // function should be called before using anything in boost.numpy.
+  // function should be called before using anything in boost.numpy. but: regardless whether or not
+  // we call this, we get the same "The debug adapter exited unexpectedly" errors/crashes in 
+  // rsPyTest as soon as we try to do anything with numpy arrays - even just passing a reference or
+  // copy to a function - does the initialization fail? or do we have to call it in a different 
+  // place?
+  // it seems to call _import_array(void) in __multiarray_api.h
+  // if we can't get debug breakpoints to work, maybe write functions that return the values of
+  // our PyArray_API, PyUFunc_API pointers - see if they are still nullptrs even after calling 
+  // initialize()
 
 
   class_<Test::hello>("hello", init<std::string>())
@@ -78,7 +134,13 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // String Functions:
 
   // NumPy Array Functions:
-  def("mul", Test::mul);
+  def("mul", Test::mul);           // doesn't work
+  def("eucnorm", Test::eucnorm);
+
+  def("npArrayTest", Test::npArrayTest);
+
+
+  def("npArrayCreate", Test::npArrayCreate);
 
 }
 

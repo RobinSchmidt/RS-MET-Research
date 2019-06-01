@@ -11,14 +11,30 @@ if __name__ == "__main__":
     a = np.array([1.,2,3])             # 1 float makes the whole array float
     b = np.array([2.,3,4])
     c = a+b
-    rs.mul(a, 2)                      # should multiply a by 2
+
+    testarray = rs.npArrayCreate(3, 5.0)
+
+    #rs.mul(a, 2)                      # should multiply a by 2 - crashes!
+    #norm = rs.eucnorm(a)               # should compute euclidean norm - crashes
+    test = rs.npArrayTest(a);
+    # the crash is with a message: The debug adapter exited unexpectedly
+    # https://github.com/Microsoft/PTVS/issues/3812
+    # when switching the conig to release, the error is:
+    # Stream does not support reading
+    # i also once got: cannot acces disposed object
+    # ...wtf? ...maybe numpy is not yet properly initialized? ...maybe try a debug build and
+    # set breakpoints in the c++ source ...i don't know how to hit the breakpoints..however, when
+    # not calling numpy::initialize(); we get the same error, so it seems plausible that somehow
+    # the call to initialize() has no actual effect?
+    #https://stackoverflow.com/questions/49522024/python-extension-debug-adapter-process-has-terminated-unexpectedly
+    #https://devblogs.microsoft.com/visualstudio/adding-support-for-debug-adapters-to-visual-studio-ide/
     
     dummy = 0                          # to allow a breakpoint here
 
 
 
 
-
+            
 """
 
 from ctypes import windll

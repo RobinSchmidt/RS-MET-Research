@@ -46,10 +46,11 @@
 //#include <boost/python/detail/wrap_python.hpp> // alternative - recommended by documentation
 #include <boost/python/numpy.hpp>
 
+
 //extern void** PyArray_API;  // for debugging numpy issues
 void** getPyArrayAPI();         // for debugging numpy issues
 void setPyArrayAPI(int val);    // just for testing how the BOOST_PYTHON_MODULE works - if we can set the value
-
+void setPyArrayAPI(void** api);
 
 //#include <iostream>
 //#include <string>

@@ -77,6 +77,7 @@ void** PyUFunc_API;
 
 void** getPyArrayAPI() { return PyArray_API; } // for debug
 void setPyArrayAPI(int val) { PyArray_API = (void**)(val); }
+void setPyArrayAPI(void** api) { PyArray_API = api; }
 
 
 // some older links, collected while figuring out the linker issues - may not be relevant anymore:

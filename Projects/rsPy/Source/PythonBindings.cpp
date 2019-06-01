@@ -59,9 +59,8 @@ namespace Test { // Avoid cluttering the global namespace.
   using namespace boost::python;
   namespace np = boost::python::numpy;
   double eucnorm(np::ndarray axis) {
-    return 0.0;  // test
+    //return 0.0;  // test
 
-    /*
     const int n = axis.shape(0);
     double norm = 0.0;
     for(int i = 0; i < n; i++) {
@@ -69,7 +68,6 @@ namespace Test { // Avoid cluttering the global namespace.
       norm += A * A;
     }
     return sqrt(norm);
-    */
   }
 
 
@@ -96,6 +94,17 @@ namespace Test { // Avoid cluttering the global namespace.
   long long pyArrayAPI()
   {
     return (long long)(getPyArrayAPI());
+  }
+  void initArrayAPI()
+  {
+    // partially recreates _import_array(void) from __multiarray_api.h
+    PyObject* numpy = PyImport_ImportModule("numpy.core.multiarray");
+    PyObject* c_api = PyObject_GetAttrString(numpy, "_ARRAY_API");
+    void** api = (void**)PyCapsule_GetPointer(c_api, NULL);
+    setPyArrayAPI(api);
+
+    //PyArray_API = (void**)PyCapsule_GetPointer(c_api, NULL);
+
   }
 
 
@@ -162,9 +171,8 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   def("eucnorm", Test::eucnorm);
   def("npArrayTest", Test::npArrayTest);
   def("npArrayCreate", Test::npArrayCreate);
-
-
-
+  def("initArrayAPI", Test::initArrayAPI);
+ 
 }
 
 // todo: figure out, how we can deal with numpy arrays...maybe it would be convenient, if 1D arrays 

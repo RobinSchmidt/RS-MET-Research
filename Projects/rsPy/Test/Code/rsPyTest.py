@@ -13,6 +13,8 @@ if __name__ == "__main__":
     c = a+b
 
     arrayApi = rs.arrayAPI()
+    rs.initArrayAPI()
+    arrayApi = rs.arrayAPI()
 
     #testarray = rs.npArrayCreate(3, 5.0)
 

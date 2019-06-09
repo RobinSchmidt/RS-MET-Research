@@ -61,7 +61,7 @@ header files that the compiler may be using. */
 
 void **PyArray_API = nullptr;
 void **PyUFunc_API = nullptr;
-// Thes pointers are declared as extern in 
+// These pointers are declared as extern in 
 // Anaconda3\Lib\site-packages\numpy\core\include\numpy\__multiarray_api.h, __ufunc_api.h and are 
 // supposed to be defined somewhere else - which is here. They will be filled in by the 
 // initialization code when the module is loaded by the python interpreter. Without these 
@@ -101,3 +101,19 @@ void initNumPy()
 // https://github.com/boostorg/python/issues/134
 // https://stackoverflow.com/questions/45069253/boost-numpy-linker-error-in-windows-vs
 // https://docs.scipy.org/doc/numpy-1.13.0/reference/c-api.html
+
+/*
+// interesting resources for DSP with python:
+https://github.com/unpingco/Python-for-Signal-Processing
+http://python-for-signal-processing.blogspot.com/
+
+http://greenteapress.com/thinkdsp/thinkdsp.pdf
+
+https://www.bogotobogo.com/python/OpenCV_Python/python_opencv3_NumPy_Arrays_Signal_Processing_iPython.php
+
+https://www.pythonforengineers.com/audio-and-digital-signal-processingdsp-in-python/
+
+https://www.embeddedrelated.com/showarticle/197.php
+
+https://www.scipy.org/scikits.html
+*/

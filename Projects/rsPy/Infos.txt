@@ -1,3 +1,12 @@
+Python scripting for DAWs:
+
+https://www.reaper.fm/sdk/reascript/reascript.php - reaper
+https://code.google.com/archive/p/liveapi/        - ableton live
+https://ask.metafilter.com/133186/DAW-scripting -- says blender has DAW functionality :-O
+
+https://wiki.python.org/moin/PythonInMusic - at the bottom is a list of music software supporting python
+
+
 https://wiki.python.org/moin/boost.python/SimpleExample
 
 https://docs.python.org/3/extending/windows.html

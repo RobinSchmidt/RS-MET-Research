@@ -93,6 +93,21 @@ namespace Test { // rename this class
     return a;
   }
 
+
+
+  // exmple from here: https://docs.python.org/3/extending/extending.html
+  static PyObject* spam_system(PyObject* self, PyObject* args)
+  {
+    const char* command;
+    int sts;
+
+    if(!PyArg_ParseTuple(args, "s", &command))
+      return NULL;
+    sts = system(command);
+    return PyLong_FromLong(sts);
+  }
+
+
 }
 
 
@@ -106,10 +121,10 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   //Py_Initialize();
   // ...is done in main() here:
   // https://www.boost.org/doc/libs/1_63_0/libs/python/doc/html/numpy/tutorial/simple.html
-  // but doesn't seem necessary
+  // but doesn't seem necessary...maybe boost.python does it already?
 
   initNumPy();            // the self-written init code works...
-  numpy::initialize();  // ...this doesn't! WTF!!!! maybe i have to #define something?
+  //numpy::initialize();  // ...this doesn't! WTF!!!! maybe i have to #define something?
   // i think, it fills out the pointers void **PyArray_API and void** PyUFunc_API, declared as 
   // extern in boost::python and defined in rs_boost.cpp. In numpy.hpp, it is said that this 
   // function should be called before using anything in boost.numpy. but: regardless whether or not
@@ -158,6 +173,14 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   def("npArrayCreate", Test::npArrayCreate);
 
 
+  // functions defined using Python's extension API itself (without boost.python):
+  def("spam", Test::spam_system);
+  // ...this may become necessarry when we need to parse argument lists that are too complex for 
+  // boost.python to be automatically unravelled - then we may need to fall back to Python's 
+  // extension API (which boost.python wraps and simplifies) and do it ourselves manually
+  // ...we'll see, whether or not we'll actually need it
+
+
   // todo: fill/set, convolve - should return an array that is the convolution of two input arrays
   // filter(x, b, a)...maybe it should resemble scipy, sum, mean, sumOfSquares, sumOfProducts
 
@@ -166,11 +189,21 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // analysis/resynthesis tools? ...maybe first replicate some basic filter stuff that scipy.signal
   // also has - that would be redundant, but my engineer's filter has more types (peak/shelv, 
   // papoulis/halpern)
-  // https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.signal.iirfilter.html#scipy.signal.iirfilter
+  // https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.signal.iirfilter.html
   // scipy.signal.iirdesign(wp, ws, gpass, gstop, analog=False, ftype='ellip', output='ba')
-  // https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.signal.iirdesign.html
+  // scipy.signal.iirfilter(N, Wn, rp=None, rs=None, btype='band', analog=False, ftype='butter', output='ba')
+  // https://docs.scipy.org/doc/scipy-0.18.1/reference/generated/scipy.signal.iirfilter.html
   // maybe have a function iirDesign(type='Butterworth', response="Lowpass", order, omega, width, 
   // gain, ripple, rejection
+  // arguments: order (integer), freq(s) (float or list/array of 2 floats), ripple (float), 
+  //  rejection (float), responseType (string: Lowpass, Highpass, Bandpass, Bandstop, Lowshelf, Highshelf, 
+  //  Peak), approximation (string: Butterworth, Chebychev1, Chebychev2, Elliptic, Bessel, Papoulis, 
+  //  Halpern, Gauss), analog (bool, default false), output (string: zpk, ba, sos)
+
+  // maybe at some point, i may include a python interpreter into ToolChain?
+  // https://docs.python.org/3/extending/embedding.html
+
+
 
  
 }

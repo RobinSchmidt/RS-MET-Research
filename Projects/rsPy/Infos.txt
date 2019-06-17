@@ -105,9 +105,13 @@ https://flipdazed.github.io/blog/python/boost-python-starter#a-simple-example-he
 
 
 
+view notebooks online:
+https://stackoverflow.com/questions/48481290/a-simple-way-to-view-ipython-notebook
 
-
-
+here's my first try
+https://mybinder.org/v2/gh/RobinSchmidt/RS-MET-Research/master?filepath=Notebooks%2FSineBeating.ipynb
+https://hub.gke.mybinder.org/user/robinschmidt-rs-met-research-0oavyh58/notebooks/Notebooks/SinusoidalModeling.ipynb
+hmm..it doesn't seem to support numpy
 
 
 https://docs.python.org/2/extending/windows.html#building-on-windows

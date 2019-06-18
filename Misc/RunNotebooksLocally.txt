@@ -12,9 +12,36 @@ order to install it, use commands like:
 
 conda install ipywidgets
 
+if widgets don't work in the notebook, try:
+
+conda install widgetsnbextension
+
+and maybe enter:
+
+jupyter nbextension enable --py widgetsnbextension
+
+in the command window (running in the Anaconda directory)
+
+
 (i think, "pip" instead of "conda" may also be used)
 
 
+i get:
+[IPKernelApp] ERREOR | No such comm target registered: jupyter.widget.version
+
+
+...maybe i should try to do a fresh install of Anaconda? my installation is
+quite old already....
 
 
 
+troubleshooting resources:
+
+widgets don't appear:
+https://stackoverflow.com/questions/36351109/ipython-notebook-ipywidgets-does-not-show
+https://github.com/jupyter-widgets/ipywidgets/issues/2248
+https://github.com/jupyter-widgets/ipywidgets/issues/1720
+
+
+related:
+https://github.com/krishnan-r/sparkmonitor/issues/6

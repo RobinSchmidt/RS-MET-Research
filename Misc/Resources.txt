@@ -1,0 +1,24 @@
+
+Python repos about math, graphics, visualization:
+https://github.com/empet/Math
+
+Demos how to use binder with mutliple languages:
+https://github.com/binder-examples/multi-language-demo
+
+Interesting Binder repositories from around the web:
+https://mybinder.readthedocs.io/en/latest/examples.html
+
+binder link to a chapter from a dsp book repo:
+https://mybinder.org/v2/gh/AllenDowney/ThinkDSP/master?filepath=code%2Fchap01.ipynb
+...this also demos how to include audio examples into a notebook
+
+
+maybe, it's possible to create demos with my own python module?
+...see maybe see here:
+https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html
+...maybe a postbuild step can just copy the rsPy module dll (or .so) filepath
+into the environment? ...or maybe see here:
+https://repo2docker.readthedocs.io/en/latest/faq.html#can-i-add-executable-files-to-the-user-s-path
+...maybe copy the pre-built (for linux, i guess) rsPy.so library into some directory 
+as explained there and add that directory to the pythonpath. i think, the .so file 
+should then be part of the repo - or we drag it in from rs-met.com 

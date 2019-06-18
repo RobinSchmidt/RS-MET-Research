@@ -1,0 +1,20 @@
+
+shift-rightclick and open command window in:
+
+C:\Users\Rob\Anaconda3
+
+or whereever your (Anaconda) python installation resides. Type:
+
+conda list
+
+to check, if the relevant packages are installed. For a missing package, in 
+order to install it, use commands like:
+
+conda install ipywidgets
+
+(i think, "pip" instead of "conda" may also be used)
+
+
+
+
+

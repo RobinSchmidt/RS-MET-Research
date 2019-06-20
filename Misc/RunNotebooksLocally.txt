@@ -22,6 +22,14 @@ jupyter nbextension enable --py widgetsnbextension
 
 in the command window (running in the Anaconda directory)
 
+...that doesn't work - here:
+https://ipywidgets.readthedocs.io/en/stable/user_install.html
+it says to use:
+
+jupyter nbextension enable --py widgetsnbextension --sys-prefix
+
+instead. ...that doesn'T work either
+
 
 (i think, "pip" instead of "conda" may also be used)
 
@@ -29,9 +37,54 @@ in the command window (running in the Anaconda directory)
 i get:
 [IPKernelApp] ERREOR | No such comm target registered: jupyter.widget.version
 
+and in the browser console:
+
+Could not cross validate the widget frontend and backend versions.
+
+that seems to be an important hint
+
 
 ...maybe i should try to do a fresh install of Anaconda? my installation is
 quite old already....
+
+
+
+https://www.pythonanywhere.com/forums/topic/11291/
+
+
+-------------------------------------------------------------------------------
+trying to get it to work with sage:
+
+when running the sage notebook server instead (installed in
+C:\Users\Rob\AppData\Local\SageMath 8.4\), the widgets do appear and work
+
+maybe we can start the sage server starting in the correct directory by passing
+the directory as coomandline parameter as said here:
+
+https://groups.google.com/forum/#!topic/sage-devel/NxN_oCasrkA
+it is possible to start in the current directory with 
+sage -notebook=ipython --notebook-dir=. 
+
+https://ask.sagemath.org/question/9126/running-sage-with-files-on-dropbox/
+https://ask.sagemath.org/question/10233/notebook-default-directory/
+
+
+the target for the shortcut for launching a sage notebook is:
+"C:\Users\Rob\AppData\Local\SageMath 8.4\runtime\bin\mintty.exe" -t 'SageMath 8.4 Notebook Server' -i sagemath.ico /bin/bash --login -c '/opt/sagemath-8.4/sage --notebook jupyter'
+can we add something to that command to tell it to use a different directory?
+
+-start mintty manually
+-paste /bin/bash --login -c '/opt/sagemath-8.4/sage --notebook jupyter'
+ ->starts the notebook server
+
+sage --notebook=jupyter --notebook-dir=/home/foo/bar
+sage --notebook=jupyter --notebook-dir=C:/
+
+/bin/bash --login -c '/opt/sagemath-8.4/sage --notebook=jupyter --notebook-dir=C:/'
+
+
+
+-------------------------------------------------------------------------------
 
 
 

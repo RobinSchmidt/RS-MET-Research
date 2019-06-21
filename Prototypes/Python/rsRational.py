@@ -58,7 +58,7 @@ def addFractions(n1, d1, n2, d2, w1=1, w2=1):
 	nr = w1*f1*n1 + w2*f2*n2 # numerator of result
 	return nr, dr
 
-def ratPolyNest(ni, di, po):  # ni,di: inner num/den, no outer polynomial
+def ratPolyNest(ni, di, po):  # ni,di: inner num/den, po outer polynomial
 	"""Computes lists of numerator and denominator coefficients that result 
 	from from nesting an inner rational function with an outer polynomial."""
 	nr = [po[0]]   # numerator of result

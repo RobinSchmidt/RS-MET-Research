@@ -176,16 +176,16 @@ def polyNest(a, b):
 
 class rsPolynomial():
 	""""
-	A class for reprenting polynomials via their coefficient lists. It's 
+	A class for representing polynomials via their coefficient lists. It's 
 	useful for doing all the typical operations on coefficient arrays. There 
 	are several places where functions rely on exact comparison of 
 	coefficients, so this class is supposed to work right only for exactly 
 	representable coefficient types such as rational numbers (class Fraction) 
 	or symbolic expressions (class Symbol from sympy). It *may* work in some 
 	cases with floats, but this will then be unreliable and really depend on 
-	wether two particular floats come exactly equal in a numeric computation 
-	and not only equal up to roundoff error. Sooo...better just don't use it 
-	with floats.
+	whether two particular floats come out exactly equal in a numeric 
+	computation and not only equal up to roundoff error. Sooo...better just 
+	don't use it with floats.
 	ToDo: maybe make it work with floats by introducing an error-tolerance
 	"""
 

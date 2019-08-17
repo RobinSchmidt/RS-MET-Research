@@ -13,6 +13,10 @@ https://mybinder.org/v2/gh/AllenDowney/ThinkDSP/master?filepath=code%2Fchap01.ip
 ...this also demos how to include audio examples into a notebook
 
 
+AudioTK and related repos by Mathhieu Brucher:
+https://github.com/mbrucher
+
+
 maybe, it's possible to create demos with my own python module?
 ...see maybe see here:
 https://mybinder.readthedocs.io/en/latest/tutorials/dockerfile.html

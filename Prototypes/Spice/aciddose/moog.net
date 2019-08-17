@@ -1,0 +1,85 @@
+*** rails ***
+V1   v+ 0 DC 10
+V2   v- 0 DC -10
+
+*** input ***
+R45 in  9 33k
+C5  in+ 9 10u
+R10 in+ ref 470
+
+*** "ladder" ***
+* voltage divider for base biases
+R11  ref s1b 150
+R12  s1b s2b 150
+R13  s2b s3b 150
+R14  s3b s4b 150
+R15  s4b v+ 220
+
+* input bias / reference
+C6 ref 0 200u
+R7 ref 0 220
+
+* input LTP
+Q3  s1- in+ lt Q2N3904
+Q4  s1+ in- lt Q2N3904
+* "stage 1"
+C1  s1- s1+ 10n
+Q5  s2- s1b s1- Q2N3904
+Q6  s2+ s1b s1+ Q2N3904
+* "stage 2"
+C2  s2- s2+ 10n
+Q7  s3- s2b s2- Q2N3904
+Q8  s3+ s2b s2+ Q2N3904
+* "stage 3"
+C3  s3- s3+ 10n
+Q9  s4- s3b s3- Q2N3904
+Q10 s4+ s3b s3+ Q2N3904
+* "stage 4"
+C4  s4- s4+ 10n
+Q11 v+ s4b s4- Q2N3904
+Q12 v+ s4b s4+ Q2N3904
+
+*** output buffer ***
+R17 v+  fb  220
+R18 fb  out 1k
+R20 13  v-  220k
+R21 blt v-  1k
+R22 14  v-  220k
+
+C7  b-  s4- 220n
+R19 b-  0   47k
+
+C8  b+  s4+ 220n
+R23 b+  0   47k
+
+Q13 out b- 13 Q2N3904
+Q14 out 13 blt Q2N3904
+Q15 v+ b+ 14 Q2N3904
+Q16 v+ 14 blt Q2N3904
+
+*** dc blocking on output ***
+C10 out dcb 10u
+R24 dcb 0 100k
+
+*** feedback ***
+C9 fb 17 10u
+* resonance 50k log
+R114 18 17 1000
+* trimmer 1k + 150
+R9A 20 in- 990
+R9B 18 in- 10
+R8  20 ref 150
+
+*** expo current source ***
+* built with pnp-buffered npn transistor,
+* in this case we just use a current source
+R6  ci lt 680
+Is1 ci 0  10u
+
+* input signal 50hz 0...1 pulse
+V4 in 0 DC 0 PULSE(-5 5 0 10u 10u 5m 10m)
+
+.TRAN 10u 2000m 1800m 10u
+
+.MODEL Q2N3904 NPN(IS=6.73E-15 BF=416.4 VAF=74.03 IKF=0.06678 ISE=6.73E-15 NE=1.259 BR=0.7374 RB=10 RC=1 CJE=4.5E-12 TF=3.012E-10 XTF=2 VTF=4 ITF=0.4 CJC=3.638E-12 MJC=0.3085 TR=2.395E-7 XTB=1.5 KF=9E-16 )
+.END

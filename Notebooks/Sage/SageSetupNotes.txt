@@ -1,0 +1,8 @@
+-to change the sage home directory run SageMath Shell and enter:
+ sage-sethome "E:\Your\Desired\Home\Directory"
+ (you can paste text with mouse-rightclick -> Paste there)
+ 
+-to change the colors of the sage shell (for the current session) enter:
+ %colors Neutral 
+ (other options are NoColor, Linux, LightBG)
+

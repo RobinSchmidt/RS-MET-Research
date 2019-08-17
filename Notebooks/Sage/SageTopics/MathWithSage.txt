@@ -1,0 +1,46 @@
+Numbers, Arithmetic, (In)Equations
+-natural, integer, rational, algebraic, real, complex, hypercomplex
+-operators +,-,*,/ and //,%,^
+ -commutativity, assocativity, distributivity
+-countable vs uncountable
+-square/cube-roots, power laws,
+-quadratic equation (use "solve")
+
+Analytic Geometry
+-synthetic geometry (historical note)
+-coordinate systems (cartesian
+-points, lines in 2D/3D, planes
+-distances, pythagoras
+-conic sections
+
+
+Functions
+-explicit form y = f(x)
+-injective, surjective, bijective
+-inverse function
+-implicit form f(x,y) = 0
+-parametric form x = f(t), y = g(t)
+ ->vector valued output
+-multivariate functions
+ ->vector valued output
+-elementary functions
+ -polynomials
+ -rational functions
+ -exp/log
+ -trig
+-special functions
+ -gamma, bessel, erf, Ei, Si, ...
+ 
+Linear Algebra
+-Linear Systems of equations
+ -solution sets
+-Vectors
+-Matrices
+ -decompositions, inverse, determinant (volume-scaler)
+-Tensors
+
+Calculus
+-Series
+-Limits
+-Differentiation
+-Integration

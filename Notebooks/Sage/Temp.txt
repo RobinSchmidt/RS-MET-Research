@@ -1,0 +1,79 @@
+The directory structure sucks - maybe have
+-Research
+ -Code
+  -Python
+   -Plain
+   -Sage   
+   -SciPy
+ -Notebooks
+  -Python
+  -Sage
+
+Idea: 
+Taylor Polynomials:
+-explain the idea to approximate a function around a point
+ by matching derivatives at the point
+-derive formula for the coeffs (maybe with help of sage?)
+-maybe use (1+x)/(1+x^2) as example function with x0 = -1, 0, 1
+ or maybe include parameters: (1+a*x)/(1+b*x^2)
+ this one looks nice (1+x^3) / (1+x^6)
+-write a function that analytically computes coeffs, given a function
+-convergence considerations
+-even/odd functions (half of the coeffs are zero)
+-make an interact that lets the user 
+ -select a function (dropdown)
+ -use a slider for x0
+ -set the degree of the polynomial (slider, dropdown or text entry-box)
+ -optionally print the coeffs (check-box)
+ -or maybe the user should enter the function in a text entry box
+
+Elementary Functions
+-plot them
+-show series expansion, if applicable
+-show basic important identities
+ sin^2(x) + cos^2(x) = 1
+ sinh(x) = exp(...
+ 
+ 
+ 
+ 
+Create worked through examples with plots
+Double Integral:
+compute signed volume of 
+f(x,y) = x^2*y^3 - xy in an area bounded by the ellipse
+x^2/a^2 + y^2/b^2 = 1 (maybe give the ellipse in parametric form)
+solve this eq for y to get expression y(x) to use as limit function for 
+the outer integral
+
+Differential Equation:
+-use equation of damped oscillator
+-compute special value for damping for the aperiodic limit
+
+wave equations:
+-string, stiff string, membrane (rectangular and circular), space
+-create animations of vibrating string, etc.
+
+Interesting stuff to explore further:
+
+Music Theory:
+https://en.wikipedia.org/wiki/Superparticular_ratio
+https://en.wikipedia.org/wiki/Superpartient_ratio
+https://en.wikipedia.org/wiki/Music_and_mathematics#Connections_to_mathematics
+https://en.wikipedia.org/wiki/Tonality_diamond
+https://en.wikipedia.org/wiki/Otonality_and_Utonality
+https://en.wikipedia.org/wiki/Euclidean_rhythm http://cgm.cs.mcgill.ca/~godfried/publications/banff.pdf
+ 
+ 
+python 3 and sage:
+http://doc.sagemath.org/html/en/faq/faq-usage.html#can-i-use-sagemath-with-python-3-x 
+ 
+ 
+ 
+the sagews file format is much more economical than the ipynb format but
+can't be edited locally with jupyter (only online on cocalc)...that's bad
+what's wors is that the ipynb format stores the output plots blowing up
+the files even more and clogging the repo history when plots are modified
+hmmm....
+maybe this can help - maybe replace "code" by:
+
+https://gist.github.com/damianavila/5305869

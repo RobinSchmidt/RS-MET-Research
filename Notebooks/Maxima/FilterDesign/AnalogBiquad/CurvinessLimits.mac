@@ -1,0 +1,106 @@
+/* Beware: the A2 variable actually represents A2^2 */
+
+kill(all);
+
+A2: (2*S1^2+(2*P0-2*P1)*S1-C1*P1+C1*P0)/(2*S1^2-C1*P1+Pi*C1);
+a:  -((A2+1)*S1+(A2-1)*P1+P0-Pi*A2)/S1;
+b:  -((P0+Pi*A2)*S1+(A2-1)*P1^2+(P0-Pi*A2)*P1)/S1;
+
+assume(P0 >= 0);
+assume(P1 >= 0);
+assume(Pi >= 0);
+
+
+
+/* Find limit for the curviness to ensure real A2: */
+/*
+eqA2: A2 = 0; 
+sln: solve([eqA2],[C1]);
+*/
+
+
+
+/*
+/* Find limit for the curviness to ensure real B1: */
+eqB: b^2 = 4*P0*Pi*A2;   /* b^2 >= 4*P0*Pi*A2 for real B-coeffs */
+/*eqB: b + 2*G0*Gi*sqrt(A2) = 0;*/
+/*eqB: b + 2*sqrt(P0*Pi*A2) = 0;*/
+sln: solve([eqB],[C1]);
+*/
+
+
+/*
+/* Find limit for the curviness to ensure real A1: */
+eqA: a^2 = 4*A2;        /* a^2 >= 4*A2 for real A-coeffs */
+sln: solve([eqA],[C1]);
+*/
+
+
+
+
+/* Find limit for the curviness to avoid occurence of 2 extrema: */
+p: 2*(Pi-P0) /  (a*Pi-b);
+optimize(p);
+q: (b-a*P0)  / ((a*Pi-b)*A2);
+optimize(q);
+eq1: q = 0;
+sln: solve([eq1],[C1]); 
+eq2: p^2/4 - q = 0;
+sln: solve([eq2],[C1]); 
+
+
+/*sln: solve([eq1],[S1]);*/ /* alternatively, limit the slope */
+
+
+
+
+
+/*
+
+/*
+eq1: a*Pi - b = 0;    
+sln: solve([eq1],[C1]); /* works, but i'm not sure why*/
+C1: rhs(sln[1]);
+C1: factor(C1);
+C1: factorout(C1, Pi);
+*/
+
+/*
+eq1: b - a*P0 = 0;    
+sln: solve([eq1],[C1]); 
+C1: rhs(sln[1]);
+C1: factor(C1);
+*/
+
+
+
+
+
+/*
+eq1: p^2/4 = q;    
+solve([eq1],[C1]);
+*/
+
+
+/*
+eq2: q = 0;
+solve([eq2],[C1]);
+*/
+
+/*
+eq2: -p/2 = sqrt(p^2/4-q);
+solve([eq2],[C1]);
+*/
+
+
+*/
+
+
+
+
+
+
+
+
+
+

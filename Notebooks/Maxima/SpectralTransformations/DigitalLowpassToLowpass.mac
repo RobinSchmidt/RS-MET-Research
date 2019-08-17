@@ -1,0 +1,9 @@
+/* 
+find expressions for new roots of a z-domain transfer function given the old roots via spectral transformation a la Constantinides
+*/
+
+eq1: r = (1-a/z) / ((1/z)-a);
+
+
+solve(eq1, z);
+

@@ -1,0 +1,11 @@
+eq1: H1sq = g^2 * (1+b1^2+2*b1)    / (1+a1^2+2*a1);
+eq2: H2sq = g^2 * (1+b1^2+2*c2*b1) / (1+a1^2+2*c2*a1);
+eq3: H3sq = g^2 * (1+b1^2-2*b1)    / (1+a1^2-2*a1);
+assume(g>0);
+assume(a1>0);
+assume(b1>0);
+solve(eq1, g^2);
+subst(%, eq2);
+solve(%, a1);
+subst(%, eq3);
+solve(%, b1);

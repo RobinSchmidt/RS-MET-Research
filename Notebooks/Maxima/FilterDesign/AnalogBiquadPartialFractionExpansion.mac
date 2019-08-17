@@ -1,0 +1,7 @@
+/* 
+finds the partial fraction expansion of a ratio of polynomials
+*/
+
+r: G * (1 + B1*s + B2*s^2) / (1 + A1*s + A2*s^2);
+partfrac(r, s);
+

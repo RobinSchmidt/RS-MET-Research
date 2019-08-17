@@ -1,0 +1,7 @@
+/* 
+finds the antiderivative of f(x)
+*/
+
+load  ("antid")$
+f(t) := sin(M*w*t) / sin(w*t);
+F = antidiff(f(t), t, t);

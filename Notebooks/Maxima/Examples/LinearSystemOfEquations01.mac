@@ -1,0 +1,8 @@
+/* 
+find coefficients for the function y = f(x) = c1*x + c0 such that f(x1) = y1, f(x2) = y2:
+*/
+
+e1: y1 = c1 * x1 + c0;
+e2: y2 = c1 * x2 + c0;
+solve([e1, e2], [c0, c1]);
+

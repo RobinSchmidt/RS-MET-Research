@@ -1,0 +1,59 @@
+\documentclass[12pt, fleqn]{article}
+
+%\usepackage{fullpage}         %sorgt dafr, dass alle Rnder 1 inch breit sind
+\topmargin=-1.0cm
+\textheight=23cm
+\evensidemargin=-1.0cm
+\oddsidemargin=-1.0cm
+\textwidth=19cm
+
+\setcounter{secnumdepth}{-1}    % suppress numbering of sections
+
+\usepackage{amsmath}
+\usepackage{amssymb}            % fr mathbb
+%\usepackage{algorithm}        % fr Einbindung von Algorithmen in Pseudocode
+%\usepackage{algorithmic}      % gehrt mit algorithm zusammen
+%\usepackage[latin1]{inputenc}   %%% damit man  tippen kann
+\usepackage{hyperref}               % for hyperlinks
+\usepackage{pstricks}
+\usepackage{pst-plot}
+%\usepackage{german}
+\usepackage{polynom}
+%\usepackage{ctabs}
+\usepackage{booktabs}
+\usepackage{array}
+
+\usepackage{fancyhdr}           % for headers and footers
+\pagestyle{fancy} 
+%\rhead{}
+\rfoot{\htmladdnormallink{www.rs-met.com}{http://www.rs-met.com}}
+
+
+
+\begin{document}
+
+
+
+%Formatierungseinstellungen:
+\parindent=0in
+\parskip=0pt
+\setlength{\abovedisplayskip}{0.25cm}  % vertical space above equations
+\setlength{\belowdisplayskip}{0.25cm}  % vertical space below equations
+
+
+%hier kommen ein paar Vorbemerkungen (Inhalsverzeichnis, etc.)
+\pagenumbering{roman}
+
+% hier werden Skalierungsfaktoren fr die verschiedenen Arten von Abbildungen definiert:
+%\def\diagramScale{0.6}
+%\def\plotScale{0.66}
+
+%ab hier beginnt der eigentliche Text:
+\pagenumbering{arabic} \setcounter{page}{1}
+
+% Hauptteil:
+ \include{PenticSoftKnee}   
+
+ 
+ 
+\end{document}

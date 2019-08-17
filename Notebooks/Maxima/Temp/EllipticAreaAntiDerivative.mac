@@ -1,0 +1,16 @@
+/* 
+finds the antiderivative of f(x)
+*/
+
+
+load  ("antid")$
+f(t) := (a*cos(t))^2 + (b*sin(t))^2;
+F = antidiff(f(t), t, t);
+
+/* check result: */
+/*
+G(t) := (a^2*(sin(2*t)/2+t))/2+(b^2*(t-sin(2*t)/2))/2;
+g = diff(G(t), t);
+d = 
+*/
+

@@ -1,0 +1,10 @@
+/* 
+demonstrates substitution of one expression into another withouth the subst command
+*/
+
+b:   a + 2*x;
+eq1: y = b * x^2;
+
+
+
+

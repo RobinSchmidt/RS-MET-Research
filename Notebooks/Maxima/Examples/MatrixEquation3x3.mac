@@ -1,0 +1,13 @@
+/* 
+find the solution vector [x1 x2 x3] to the matrix-equation:
+|a11 a12 a13| * |x1| = |b1|
+|a21 a22 a23|   |x2|   |b2|
+|a31 a32 a33|   |x3|   |b3|
+*/
+
+e1: a11*x1 + a12*x2 + a13*x3 = b1;
+e2: a21*x1 + a22*x2 + a23*x3 = b2;
+e3: a31*x1 + a32*x2 + a33*x3 = b3;
+solve([e1, e2, e3], [x1, x2, x3]);
+optimize(%);
+

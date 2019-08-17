@@ -1,0 +1,8 @@
+/* 
+demonstrates how to print numrical values in arbitrary precision
+prints the number pi with 32 digits (total, 1 before the point, 31 after)
+*/
+
+fpprec : 32;
+bfloat(%pi);
+

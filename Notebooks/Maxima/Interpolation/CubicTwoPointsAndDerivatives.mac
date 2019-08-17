@@ -1,0 +1,17 @@
+/* 
+finds coefficients for a third order polynomial that goes through the points
+(x1,y1), (x2,y2) and has 1st derivatives of yp1, yp2 respectively at these
+points
+*/
+
+f(x)  := a0 + a1*x + a2*x^2 + a3*x^3;
+f1(x) := diff(f(x), x);
+
+e1: y1  = f(x1);
+e2: y2  = f(x2);
+e3: yp1 = f1(x1);
+e4: yp2 = f1(x2);
+
+solve([e1, e2, e3, e4], [a0, a1, a2, a3]);
+optimize(%);
+

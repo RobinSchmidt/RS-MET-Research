@@ -1,0 +1,18 @@
+/* 
+
+*/
+
+
+s(x)  := 2*mod(x, 1) - 1;
+s1(x) := w1 * s(x);
+s2(x) := w2 * s(x-d);
+s3(x) := s1(x) + s2(x);
+s4(x) := s3(x) * s3(x);
+I1 = integrate(s1(x), x, 0, 1);
+I2 = integrate((s1(x))^2, x, 0, 1);
+I3 = integrate(s2(x), x, 0, 1);
+I4 = integrate(s3(x), x, 0, 1);
+I5 = integrate(s4(x), x, 0, 1);
+antidiff(s4(x), x, x);
+
+

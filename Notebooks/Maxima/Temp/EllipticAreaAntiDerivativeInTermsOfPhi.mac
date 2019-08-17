@@ -1,0 +1,27 @@
+/* 
+finds the antiderivative of f(x)
+*/
+
+
+load  ("antid")$
+t: atan(a*tan(p)/b);
+f(p) := (a*cos(t))^2 + (b*sin(t))^2;
+F = antidiff(f(p), p, p);
+
+/*
+optimize(%);
+*/
+
+/*
+subst(2*%pi, p, F);
+*/
+
+/*
+FF = rhs(%);
+A  = FF(2*%pi);
+*/
+
+
+
+
+

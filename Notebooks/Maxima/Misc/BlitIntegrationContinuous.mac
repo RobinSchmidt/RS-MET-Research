@@ -1,0 +1,10 @@
+/* 
+finds the definite integral of f(x)
+*/
+
+f(x) := a^x * sin(w1*x) / sin(w2*x);
+assume(a > 0);
+assume(a < 1);
+I = integrate(f(x), x, 0, inf);
+
+

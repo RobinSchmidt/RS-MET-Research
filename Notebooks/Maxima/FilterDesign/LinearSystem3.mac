@@ -1,0 +1,4 @@
+eq1: b0 + b1*r1 - a1*r1*H1 = H1;
+eq2: b0 + b1*r2 - a1*r2*H2 = H2;
+eq3: b0 + b1*r3 - a1*r3*H3 = H3;
+solve([eq1, eq2, eq3], [b0, b1, a1]);

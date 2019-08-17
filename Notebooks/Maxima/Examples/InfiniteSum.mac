@@ -1,0 +1,8 @@
+/* 
+finds the infinite sum
+*/
+
+f(x) := 1/x^2;
+sum(f(x), x, 1, inf), simpsum = true;
+
+

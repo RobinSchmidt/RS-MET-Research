@@ -1,0 +1,4 @@
+/* Given a digital biquad transfer function in the z-domain, this function produces the corresponding analog transfer function in the s-domain via the bilinear transform where: k == 2*sampleRate, rz == 1/z == z^(-1) */
+rz: (1-s/k)/(1+s/k);
+H = (b0 + b1*rz + b2*rz^2) / (a0 + a1*rz + a2*rz^2);
+ratsimp(%);

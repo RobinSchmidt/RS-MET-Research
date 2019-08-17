@@ -1,0 +1,36 @@
+kill(all);
+P(W) := (B0sq + b*W + B2sq*W^2) / (A0sq + a*W + A2sq*W^2);
+P1: diff(P(W), W);
+factor(%);
+P2: diff(P(W), W, 2);
+factor(%);
+
+
+/*
+/* Try some combinations - see if expression are simpler - no */
+S1 = P1 / P(W);
+factor(%);
+
+K1 = P2 / sqrt((1+P1^2)^3); /* Curvature: */
+K2 = P2 / P1;
+*/
+
+
+
+
+/* split the 2nd derivative into smaller pieces and verify correctness: */
+
+/*
+P2r: rhs(%);
+g3: A2sq*(a*B2sq-b*A2sq);
+g2: 3*A2sq*(A0sq*B2sq-A2sq*B0sq);
+g1: 3*A2sq*(b*A0sq-a*B0sq);
+g0: A0sq*(A2sq*B0sq - B2sq + a*b) - a^2*B0^2;
+D: A0sq + a*W + A2sq*W^2;
+P2t: -2* (g1*W^3 + g2*W^2 + g1*W + g0) / D^3;
+factor(%);
+is(equal(P2r, P2t));
+*/
+
+/*d: P2r-P2t;*/
+

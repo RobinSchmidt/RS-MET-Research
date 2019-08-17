@@ -1,0 +1,17 @@
+kill(all);
+
+H(s)   := 1 + (2*R*K*s) / (s^2 + 2*R*s + 1);
+Gsq(s) := H(s) * H(-s);
+Gsq: subst(%i*w, s, Gsq(s));
+ratsimp(Gsq);
+
+/* find the value w^2, for which Gsq == 1+K */
+eq1: 1+K = %;
+solve([eq1],[w^2]);
+
+/* solve result for intermediate variable A := ((4*K+4)*R^2+2)/2 */
+eq2: W1 = A + sqrt(A^2 - 1);
+solve([eq2],[A]);
+
+
+

@@ -1,0 +1,23 @@
+/* Beware: the A2, B1 variable actually represents A2^2, B1^2 */
+
+kill(all);
+
+/*
+A2: (2*S1^2+(2*P0-2*P1)*S1-C1*P1+C1*P0)/(2*S1^2-C1*P1+Pi*C1);
+a:  -((A2+1)*S1+(A2-1)*P1+P0-Pi*A2)/S1;
+*/
+
+
+b:  -((P0+Pi*A2)*S1+(A2-1)*P1^2+(P0-Pi*A2)*P1)/S1;
+eq1: B1 = b + 2*sqrt(P0*Pi*A2);
+
+/*
+assume(P0 >= 0);
+assume(P1 >= 0);
+assume(Pi >= 0);
+assume(B1 <=  0);
+is(A2 <= 0);
+*/
+
+
+solve([eq1], [A2]);

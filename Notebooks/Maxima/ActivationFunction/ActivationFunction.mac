@@ -1,0 +1,13 @@
+g1: z = x / (1+x); 
+solve([g1], [x]);
+g2: z = x / (1-x);
+solve([g2], [x]);
+h: x = k*a^3 + (1-k)*a;
+assume(k>=0);
+assume(k<=1);
+solve([h],[a]);
+h: a^3-a = -c;
+assume(c>0);
+solve([h],[a]);
+
+

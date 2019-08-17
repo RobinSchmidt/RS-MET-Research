@@ -1,0 +1,44 @@
+We want to fit a cubic of the form:
+
+\begin{equation}
+ f(x) = a x^3 + bx^2 + cx +d
+\end{equation}
+to a set of 2 points $(x_1, y_1), (x_2, y_2)$, such that:
+\begin{equation}
+ f(x_1) = y_1, \qquad f(x_2) = y_2
+\end{equation}
+and we want also to mat the first derivative there, such that:
+to a set of 2 points $(x_1, y_1), (x_2, y_2)$, such that:
+\begin{equation}
+ f'(x_1) = y_1', \qquad f'(x_2) = y_2'
+\end{equation}
+where the derivative is given by:
+\begin{equation}
+ f'(x) = 3 x^2 + 2 b x + c
+\end{equation}
+
+...maxima readily solves this system of equations and spits out:
+
+\begin{equation}
+ a=-\frac{\mathrm{x_2}\,\left(\mathrm{y'_2}+\mathrm{y'_1}\right)+\mathrm{x_1}\,\left(-\mathrm{y'_2}-\mathrm{y'_1}\right)-2\,\mathrm{y_2}+2\,\mathrm{y_1}}{-\mathrm{x_2}^3+3\,\mathrm{x_1}\,\mathrm{x_2}^2-3\,\mathrm{x_1}^2\,\mathrm{x_2}+\mathrm{x_1}^3}
+\end{equation}
+
+\begin{equation}
+ b=\frac{\mathrm{x_1}\,\left(\mathrm{x_2}\,\left(\mathrm{y_2'}-\mathrm{y_1'}\right)-3\,\mathrm{y_2}\right)+\mathrm{x_2}^2\,\left(\mathrm{y_2'}+2\,\mathrm{y_1'}\right)+\mathrm{x_1}^2\,\left(-2\,\mathrm{y_2'}-\mathrm{y_1'}\right)-3\,\mathrm{x_2}\,\mathrm{y_2}+\left(3\,\mathrm{x_2}+3\,\mathrm{x_1}\right)\,\mathrm{y_1}}{-\mathrm{x_2}^3+3\,\mathrm{x_1}\,\mathrm{x_2}^2-3\,\mathrm{x_1}^2\,\mathrm{x_2}+\mathrm{x_1}^3} , \linebreak[0]
+\end{equation}
+
+\begin{equation}
+c=-\frac{\mathrm{x_1}\,\left(\mathrm{x_2}^2\,\left(2\,\mathrm{y_2'}+\mathrm{y_1'}\right)-6\,\mathrm{x_2}\,\mathrm{y_2}\right)-\mathrm{x_1}^3\,\mathrm{y_2'}+\mathrm{x_1}^2\,\mathrm{x_2}\,\left(-\mathrm{y_2'}-2\,\mathrm{y_1'}\right)+\mathrm{x_2}^3\,\mathrm{y_1'}+6\,\mathrm{x_1}\,\mathrm{x_2}\,\mathrm{y_1}}{-\mathrm{x_2}^3+3\,\mathrm{x_1}\,\mathrm{x_2}^2-3\,\mathrm{x_1}^2\,\mathrm{x_2}+\mathrm{x_1}^3}  
+\end{equation}
+
+\begin{equation}
+d=\frac{\mathrm{x_1}^2\,\left(\mathrm{x_2}^2\,\left(\mathrm{y_2'}-\mathrm{y_1'}\right)-3\,\mathrm{x_2}\,\mathrm{y_2}\right)+\mathrm{x_1}^3\,\left(\mathrm{y_2}-\mathrm{x_2}\,\mathrm{y_2'}\right)+\mathrm{x_1}\,\mathrm{x_2}^3\,\mathrm{y_1'}+\left(3\,\mathrm{x_1}\,\mathrm{x_2}^2-\mathrm{x_2}^3\right)\,\mathrm{y_1}}{-\mathrm{x_2}^3+3\,\mathrm{x_1}\,\mathrm{x_2}^2-3\,\mathrm{x_1}^2\,\mathrm{x_2}+\mathrm{x_1}^3}  
+\end{equation}
+
+
+% original output from imaxima:
+%\left[ \left[ a=-\ifrac{\mathrm{x2}\,\left(\mathrm{yd2}+\mathrm{yd1}\right)+\mathrm{x1}\,\left(-\mathrm{yd2}-\mathrm{yd1}\right)-2\,\mathrm{y2}+2\,\mathrm{y1}}{-\mathrm{x2}^3+3\,\mathrm{x1}\,\mathrm{x2}^2-3\,\mathrm{x1}^2\,\mathrm{x2}+\mathrm{x1}^3} , \linebreak[0]b=\ifrac{\mathrm{x1}\,\left(\mathrm{x2}\,\left(\mathrm{yd2}-\mathrm{yd1}\right)-3\,\mathrm{y2}\right)+\mathrm{x2}^2\,\left(\mathrm{yd2}+2\,\mathrm{yd1}\right)+\mathrm{x1}^2\,\left(-2\,\mathrm{yd2}-\mathrm{yd1}\right)-3\,\mathrm{x2}\,\mathrm{y2}+\left(3\,\mathrm{x2}+3\,\mathrm{x1}\right)\,\mathrm{y1}}{-\mathrm{x2}^3+3\,\mathrm{x1}\,\mathrm{x2}^2-3\,\mathrm{x1}^2\,\mathrm{x2}+\mathrm{x1}^3} , \linebreak[0]c=-\ifrac{\mathrm{x1}\,\left(\mathrm{x2}^2\,\left(2\,\mathrm{yd2}+\mathrm{yd1}\right)-6\,\mathrm{x2}\,\mathrm{y2}\right)-\mathrm{x1}^3\,\mathrm{yd2}+\mathrm{x1}^2\,\mathrm{x2}\,\left(-\mathrm{yd2}-2\,\mathrm{yd1}\right)+\mathrm{x2}^3\,\mathrm{yd1}+6\,\mathrm{x1}\,\mathrm{x2}\,\mathrm{y1}}{-\mathrm{x2}^3+3\,\mathrm{x1}\,\mathrm{x2}^2-3\,\mathrm{x1}^2\,\mathrm{x2}+\mathrm{x1}^3} , \linebreak[0]d=\ifrac{\mathrm{x1}^2\,\left(\mathrm{x2}^2\,\left(\mathrm{yd2}-\mathrm{yd1}\right)-3\,\mathrm{x2}\,\mathrm{y2}\right)+\mathrm{x1}^3\,\left(\mathrm{y2}-\mathrm{x2}\,\mathrm{yd2}\right)+\mathrm{x1}\,\mathrm{x2}^3\,\mathrm{yd1}+\left(3\,\mathrm{x1}\,\mathrm{x2}^2-\mathrm{x2}^3\right)\,\mathrm{y1}}{-\mathrm{x2}^3+3\,\mathrm{x1}\,\mathrm{x2}^2-3\,\mathrm{x1}^2\,\mathrm{x2}+\mathrm{x1}^3} \right]  \right] 
+
+
+
+

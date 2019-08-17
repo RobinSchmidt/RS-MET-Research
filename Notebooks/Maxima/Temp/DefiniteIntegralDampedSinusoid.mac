@@ -1,0 +1,3 @@
+f(t) := A*exp(-a*t)*sin(w*t+p);
+assume(a > 0);
+I = integrate(f(t), t,  0, inf);

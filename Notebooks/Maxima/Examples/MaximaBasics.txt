@@ -1,0 +1,72 @@
+For XMaxima, it may be convenient to set 
+display2d:false;
+when that the output will be copy/pasted into source code.
+
+Operators in order of increasing precedence:
++  addition
+-  subtraction
+*  multiplication
+/  division
+-  negation
+^  exponentiation
+.  non-commutative multiplication
+^^ non-commutative exponentiation
+!  factorial
+!! double factorial
+
+Predefined Constants:
+%e     Euler's number e = exp(1)
+%i     imaginary unit i = sqrt(-1)
+%pi    ratio of circumfence to diameter in a cirle
+%phi   golden mean = (1+sqrt(5))/2
+%gamma Euler-Mascheroni constant
+
+Misc Symbols:
+%      last output line
+%o6    output line 6 (as an example)
+
+Some reserved words (avoid them for variable names):
+af    else   ic2       plog
+and   elseif if        psi
+av    erf    ift       product
+args  ev     ilt       put
+array exp    in        rat
+at    f90    ind       rem
+bc2   fft    inf       rk
+carg  fib    inrt      some
+cf    fix    integrate step
+cint  for    is        sum
+col   from   li        then
+cov   gcd    limit     thru
+cv    gd     min       und
+del   get    next      unless
+diag  go     not       vers
+diff  hav    op        while
+do    ic1    or        zeta
+
+
+
+ev(expr, arg_1, ..., arg_n);
+evaluates the expression and returns as a result another expression. The 
+optional arguments are flags, assignments, equations, etc. A shortcut notation
+is:
+expr, arg_1, ..., arg_n;
+An option like V : e or V = e will cause V to be substituted by e during the
+evaluation. Multiple substitutions are done in parallel, meaning that:
+(%i1) x+y, x = a+y, y = 2;
+will result in
+(%o1) y + a + 2
+and not:
+(%o1) a + 4
+the second substitution y = 2 did not propagate into the first x = a + y. If you 
+want this, you need two lines:
+(%i1) x+y, x = a+y;
+(%o1) 2 y + a
+(%i2) %, y = 2;
+(%o2) a + 4
+
+
+
+Getting help:
+apropos("foo") returns a list of core Maxima names which have foo appearing anywhere within them.
+describe(foo) or ? foo prints to the screen the manual documentation of e.

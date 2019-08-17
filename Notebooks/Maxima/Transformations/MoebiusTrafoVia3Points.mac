@@ -1,0 +1,36 @@
+/* 
+Finds expressions for the coefficients a, b, c, d of a Moebius M(z) = (a*z + b) / (c*z +d)  transform such that w1 = M(z1), w2 = M(z2), w3 = M(z3). */
+
+/* define the equation that we need to solve for w: */
+eq1: (w-w1)*(w2-w3) / ((w-w3)*(w2-w1)) = (z-z1)*(z2-z3) / ((z-z3)*(z2-z1));
+
+
+sln: solve([eq1], [w]);    /* solve eq1 for w and store list of solutions in sln */
+sln1: sln[1];              /* extract 1st element from list of solutions */
+expr: rhs(sln1);           /* get the right hand side of the solution as expression */
+
+
+N: num(expr);              /* extract numerator */
+N: expandwrt(N, z);        /* expand it with respect to z */
+N: collectterms(N, z);     /* collect terms that depend on z */
+[b, az]: partition (N, z); /* partition numerator into those terms that do not (b) 
+                              and those that do (az = a*z) contain z */
+
+/* the same procedure for the denominator: */
+D: denom(expr);
+D: expandwrt(D, z);
+D: collectterms(D, z);
+[d, cz]: partition (D, z);
+
+
+/* print the coefficients: */
+a = az/z;
+b;
+c = cz/z;
+d;
+
+
+
+
+
+

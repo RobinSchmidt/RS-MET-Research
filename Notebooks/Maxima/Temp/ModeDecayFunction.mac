@@ -1,0 +1,12 @@
+/* 
+Let the relative decay time of a mode with frequency x be given by:
+f(x) = a / (b + (x/x0)^p) where p is a given exponent that determines
+the ultimate slope of the (log) decay-time with respect to frequency and
+x0 determines the relative cutoff-frequency (the frequency from which the 
+decay-times begin to decrease appreciably). our goal is to adjust a and b 
+such that f(1) = 1 and f(x0) = 1/2 */
+
+e1: 1   = a / (b + (1/x0)^p) ;
+e2: 1/2 = a / (b +  1) ;
+solve([e1, e2], [a, b]);
+

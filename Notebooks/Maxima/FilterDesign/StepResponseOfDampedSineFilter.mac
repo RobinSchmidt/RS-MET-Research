@@ -1,0 +1,9 @@
+/* 
+
+*/
+
+f(t) := A * %e^(-a*t) * sin(w*t + phi);
+assume(a > 0);
+assume(t1 > 0);
+I = integrate(f(t), t,  0, t1);
+

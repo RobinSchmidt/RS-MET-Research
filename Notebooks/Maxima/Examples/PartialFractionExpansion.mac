@@ -1,0 +1,7 @@
+/* 
+finds the partial fraction expansion of a ratio of polynomials
+*/
+
+r: (x^2 + a*x + b) / (x^2 + c*x + d);
+partfrac(r, x);
+

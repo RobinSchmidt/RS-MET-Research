@@ -1,0 +1,12 @@
+/* 
+demonstrates asking if a statement is true.
+*/
+
+y: a*x + b*x;
+z: (a+b) * x;
+is(equal(y,z));
+
+
+
+
+

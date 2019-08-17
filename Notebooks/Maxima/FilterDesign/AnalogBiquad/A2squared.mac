@@ -1,0 +1,13 @@
+a:   u*A2sq + v;
+rh: S1*(A2sq + a + 1)^2;
+rh: expandwrt(rh, A2sq);
+lh: (a*Pi - (S0+a*P0))*A2sq + 2*(Pi-1)*A2sq + S0;
+lh: expandwrt(lh, A2sq);
+bh: lh-rh;
+
+coeff(bh, A2sq, 2);
+coeff(bh, A2sq, 1);
+coeff(bh, A2sq, 0);
+
+
+

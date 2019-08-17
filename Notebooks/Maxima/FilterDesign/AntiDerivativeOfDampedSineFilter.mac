@@ -1,0 +1,8 @@
+/* 
+finds the antiderivative of a damped sine which is the impulse response of
+a two-pole, one-zero filter
+*/
+
+load  ("antid")$
+f(t) := A * %e^(-a*t) * sin(w*t + phi) ;
+F = antidiff(f(t), t, t);

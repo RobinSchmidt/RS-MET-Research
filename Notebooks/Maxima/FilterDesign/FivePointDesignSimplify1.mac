@@ -1,0 +1,6 @@
+c1  : G1*(W1-a3)^2 - (W1*gi-a3*g0)^2;
+c2  : G2*(W2-a3)^2 - (W2*gi-a3*g0)^2;
+D   : W1*W2*(G1-G2);
+a2s = (W1*c2- W2*c1) / D;
+
+/* hmm - maxima computes endlessly when trying to simplify or optimize this */

@@ -1,0 +1,8 @@
+/* 
+finds the finite sum with variable upper bound N
+*/
+
+f(x) := x^2;
+sum(f(x), x, 1, N), simpsum = true;
+
+

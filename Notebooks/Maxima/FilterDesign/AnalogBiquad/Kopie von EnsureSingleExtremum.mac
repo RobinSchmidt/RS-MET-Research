@@ -1,0 +1,52 @@
+/* Beware: the A2 variable actually represents A2^2 */
+
+kill(all);
+
+A2: (2*S1^2+(2*P0-2*P1)*S1-C1*P1+C1*P0)/(2*S1^2-C1*P1+Pi*C1);
+a:  -((A2+1)*S1+(A2-1)*P1+P0-Pi*A2)/S1;
+b:  -((P0+Pi*A2)*S1+(A2-1)*P1^2+(P0-Pi*A2)*P1)/S1;
+
+eq1: a*Pi - b = 0;    
+sln: solve([eq1],[C1]); /* works, but i'm not sure why*/
+
+C1: rhs(sln[1]);
+C1: factor(C1);
+C1: factorout(C1, Pi);
+
+
+/*
+eq2: b - a*P0 = 0;    
+solve([eq2],[C1]);
+*/
+
+
+/*
+p: 2*(Pi-P0) /  (a*Pi-b);
+q: (b-a*P0)  / ((a*Pi-b)*A2);
+eq1: p^2/4 = q;    
+solve([eq1],[C1]);
+*/
+
+
+/*
+eq2: q = 0;
+solve([eq2],[C1]);
+*/
+
+/*
+eq2: -p/2 = sqrt(p^2/4-q);
+solve([eq2],[C1]);
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+

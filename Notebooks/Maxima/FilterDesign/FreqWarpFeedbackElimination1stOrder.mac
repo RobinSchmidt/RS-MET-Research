@@ -1,0 +1,6 @@
+y = b0*x + b1*(g*(c*x+x1)-c*u1) - a1*(g*(c*y+y1)-c*p1);
+solve(%, y);
+optimize(%);
+
+
+

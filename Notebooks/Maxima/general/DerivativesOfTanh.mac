@@ -1,0 +1,8 @@
+/* 
+finds some derivatives of f(x)
+*/
+
+f(x) := tanh(x);
+f1 = diff(f(x), x);
+f2 = diff(f(x), x, 2);
+f3 = diff(f(x), x, 3);

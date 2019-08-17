@@ -1,0 +1,6 @@
+eq0: d + c*x0 + b*x02 + a*x03 = y0;
+eq1: d + c*x1 + b*x12 + a*x13 = y1;
+eq2: d + c*x2 + b*x22 + a*x23 = y2;
+eq3: d + c*x3 + b*x32 + a*x33 = y3;
+solve([eq0, eq1, eq2, eq3], [a, b, c, d]);
+

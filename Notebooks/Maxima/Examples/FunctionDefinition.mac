@@ -1,0 +1,7 @@
+/* 
+some examples to define functions
+*/
+
+f1(x) := x^5;
+f2(x) := mod(x, 2 * %pi);
+

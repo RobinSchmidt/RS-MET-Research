@@ -1,0 +1,114 @@
+/*
+given a 3-complex number 
+
+
+
+((a + b*i) + (c + d*i)*j) + ((e + f*i) + (g + h*i)*j)*k = 
+a + b*i + c*j + d*i*j + e*k + f*i*k + g*j*k + h*i*j*k
+
+we want to find another 3-complex number 
+
+p + q*i + r*j + s*i*j + t*k + u*i*k + v*j*k + w*i*j*k 
+ 
+to be taken as the "conjugate", that satisfies:
+
+(a+bi+cj+dij+ek+fik+gjk+hijk) * (p+qi+rj+sij+tk+uik+vjk+wijk) = a^2+b^2+c^2+d^2+e^2+f^2+g^2+h^2
+*/
+
+(a+b*i+c*j+d*i*j+e*k+f*i*k+g*j*k+h*i*j*k) * (p+q*i+r*j+s*i*j+t*k+u*i*k+v*j*k+w*i*j*k);
+expand(%);
+subst(-1, i^2, %);
+subst(-1, j^2, %);
+subst(-1, k^2, %);
+collectterms(%, i, j, i*j, k, k*i, k*j, k*i*j);
+
+
+e1: -h*w+g*v+f*u-e*t+d*s-c*r-b*q+a*p = R2; /*     */
+e2:  g*w+h*v-e*u-f*t-c*s-d*r+a*q+b*p = 0;  /*   i */
+e3:  f*w-e*v+h*u-g*t-b*s+a*r-d*q+c*p = 0;  /*  j  */
+e4: -e*w-f*v-g*u-h*t+a*s+b*r+c*q+d*p = 0;  /*  ji */
+e5:  d*w-c*v-b*u+a*t+h*s-g*r-f*q+e*p = 0;  /* k   */
+e6: -c*w-d*v+a*u+b*t-g*s-h*r+e*q+f*p = 0;  /* k i */
+e7: -b*w+a*v-d*u+c*t-f*s+e*r-h*q+g*p = 0;  /* kj  */
+e8:  a*w+b*v+c*u+d*t+e*s+f*r+g*q+h*p = 0;  /* kji */
+slns: solve([e1, e2, e3, e4, e5, e6, e7, e8], [p, q, r, s, t, u, v, w]);
+sln:  slns[1]; 
+sln1: sln[1];
+D: denom(rhs(sln1));
+N1: num(rhs(sln1));
+
+
+
+/*
+-h*w+g*v+f*u-e*t+d*s-c*r-b*q+a*p = R2,
+ g*w+h*v-e*u-f*t-c*s-d*r+a*q+b*p = 0,
+ f*w-e*v+h*u-g*t-b*s+a*r-d*q+c*p = 0,
+-e*w-f*v-g*u-h*t+a*s+b*r+c*q+d*p = 0,
+ d*w-c*v-b*u+a*t+h*s-g*r-f*q+e*p = 0,
+-c*w-d*v+a*u+b*t-g*s-h*r+e*q+f*p = 0,
+-b*w+a*v-d*u+c*t-f*s+e*r-h*q+g*p = 0,
+ a*w+b*v+c*u+d*t+e*s+f*r+g*q+h*p = 0
+ 
+ 
+ 
+Solve[{{-h,g,f,-e,d,-c,-b,a},{g,h,-e,-f,-c,-d,a,b},{f,-e,h,-g,b,a,-d,c},{-e,-f,-g,-h,a,b,c,d},
+ {d,-c,-b,a,h,-g,-f,e},{-c,-d,a,b,-g,-h,e,f},{-b,a,-d,c,,-f,e,-h,g},{a,b,c,d,e,f,g,h}},{}]
+ 
+=R2,
+=0,
+=0,
+=0,
+=0,
+=0,
+=0,
+=0 
+*/
+
+
+
+
+
+/* equation-system was extracted manually from the solution: */
+/*
+e1:  d*s-c*r-b*q+a*p = R2;  /* real part - should equal the radius-squared */
+e2: -c*s-d*r+a*q+b*p = 0;   /*  i part   - should be 0 */
+e3: -b*s+a*r-d*q+c*p = 0;   /* j  part   - should be 0 */
+e4:  a*s+b*r+c*q+d*p = 0;   /* ji part   - should be 0 */
+solve([e1, e2, e3, e4], [p, q, r, s]);
+*/
+/*expand(%);*/
+
+/*
+the solution for p,q,r,s involves a common denominator:
+D = d^4+(2*c^2+2*b^2-2*a^2)*d^2+8*a*b*c*d+c^4+(2*a^2-2*b^2)*c^2+b^4+2*a^2*b^2+a^4
+expand:
+D = d^4+2*c^2*d^2+2*b^2*d^2-2*a^2*d^2+8*a*b*c*d+c^4-2*b^2*c^2+2*a^2*c^2+b^4+2*a^2*b^2+a^4
+rewrite:
+D = dddd+2ccdd+2bbdd-2aadd+8abcd+cccc-2bbcc+2aacc+bbbb+2aabb+aaaa
+rearrange:
+                                                sign-pattern
+D = +aaaa+2aabb+2aacc-2aadd                     + + + -
+          +bbbb-2bbcc+2bbdd                       + - +				
+                +cccc+2ccdd                         + +			  
+                      +dddd         +8abcd            +    +
+					  
+solution:					  
+					  
+p = (R2/D) * (+aaa +bba +cca -dda   +2 bcd)     + + + -    +
+q = (R2/D) * (-aab -bbb +ccb -ddb   -2a cd)     - - + -    -
+r = (R2/D) * (-aac +bbc -ccc -ddc   -2ab d)     - + - -    -
+s = (R2/D) * (-aad +bbd +ccd +ddd   +2abc )     - + + +    +	  
+
+observations for the 4x4 submatrix (excluding the rightmost column): 
+in each column there's only one sign different from the others, and that's the one for the cubed 
+term (on the main diagonal). also, in each row, there's only one term with a sign different from 
+the others, and that's the one on the subdiagonal. this statement also extends to the rightmost 
+column - an element there has the same sign as most other elements in thes same row. so, from 
++aaa, we can conclude the signs for the whoel 1st column, including -aad, from which we conclude 
++ddd, etc.
+
+for the denominator D, there seem to be minusses only on the subdiagonal.
+
+*/
+
+

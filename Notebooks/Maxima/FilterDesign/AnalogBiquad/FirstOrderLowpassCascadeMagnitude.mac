@@ -1,0 +1,6 @@
+kill(all);
+
+H(s)   := 1 / (1 + s);
+Gsq(s) := H(s) * H(-s);
+Gsq: subst(%i*w, s, Gsq(s));
+ratsimp(Gsq);

@@ -1,0 +1,10 @@
+/* 
+finds some derivatives of f(x)
+*/
+
+f(x) := a9*x^9+a8*x^8+a7*x^7+a6*x^6+a5*x^5+a4*x^4+a3*x^3+a2*x^2+a1*x+a0;
+f0 = f(x);
+f1 = diff(f(x), x);
+f2 = diff(f(x), x, 2);
+f3 = diff(f(x), x, 3);
+f4 = diff(f(x), x, 4);

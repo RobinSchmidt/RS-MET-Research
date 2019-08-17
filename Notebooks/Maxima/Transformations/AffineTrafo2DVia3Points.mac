@@ -1,0 +1,14 @@
+/* 
+find expressions for the four elements (a11,a12,a21,a22) of the matrix A and the two elements (b1,b2) of  the vector b in an affine transform y = A*x + b given 3 points p1,p2,p3 and their images q1,q2,q3 - coordinates x,y of the points are denoted as p1x, p1y, etc.
+*/
+
+eq1: q1x = a11*p1x + a12*p1y + b1;
+eq2: q1y = a21*p1x + a22*p1y + b2;
+eq3: q2x = a11*p2x + a12*p2y + b1;
+eq4: q2y = a21*p2x + a22*p2y + b2;
+eq5: q3x = a11*p3x + a12*p3y + b1;
+eq6: q3y = a21*p3x + a22*p3y + b2;
+
+solve([eq1, eq2, eq3, eq4, eq5, eq6], [a11, a12, a21, a22, b1, b2]);
+optimize(%);
+

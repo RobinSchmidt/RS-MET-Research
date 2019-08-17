@@ -1,0 +1,14 @@
+/* 
+derives the equation of the magnitude-squared response of an analog 2-pole ladder and finds the
+frequencies where the derivative of this function becomes zero.
+*/
+
+G(s):=   1 / (1+s);                      /* transfer function of 1st order lowpass */
+H(s):=   (G(s))^2 / (1 + k * (G(s))^2);  /* transfer function of 2-stage ladder with feedback */
+s:       %i * w;                         /* s is substituted by i*w */
+M2(w):=  ratsimp(H(s)*H(-s));            /* magnitude squared response */
+M2(w);                                   /* maxima shall show it */
+M2d(w):= diff(M2(w), w);                 /* derivative of magnitude response */
+eq:      M2d(w) = 0;                     /* set the derivative to zero */
+solve([eq], [w]);                        /* solve for radian frequency w */
+

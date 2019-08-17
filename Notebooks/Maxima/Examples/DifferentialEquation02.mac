@@ -1,0 +1,12 @@
+/* 
+finds the soltion of the ordinary differentia equation
+*/
+
+deq: m * 'diff(y,t,2) + R * 'diff(y,t) + y = 0;
+ode2(deq,y,t);
+/*ic1(%,t=0,y=1); */ /* solves initial value problem - dosn't work */
+
+
+
+
+

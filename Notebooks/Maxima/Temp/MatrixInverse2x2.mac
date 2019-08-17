@@ -1,0 +1,18 @@
+/* 
+given a 2x2 matrix [a b; c d], we solve for the elements of the inverse matrix
+[ai bi; ci, di] by solving the system of 4 equations for 4 unknowns tha arises 
+from the requirement:
+
+|a b| * |ai bi| = |1 0|
+|c d|   |ci di|   |0 1|
+
+*/
+
+e1: a*ai + b*ci = 1;
+e2: a*bi + b*di = 0;
+e3: c*ai + d*di = 0;
+e4: c*bi + d*di = 1;
+
+solve([e1, e2, e3, e4], [ai, bi, ci, di]);
+optimize(%);
+

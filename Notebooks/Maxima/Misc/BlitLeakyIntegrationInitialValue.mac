@@ -1,0 +1,10 @@
+/* 
+finds the infinite sum
+*/
+
+f(k) := c^k * sin(M*w) / sin(w);
+assume(c>0);
+assume(c<1);
+sum(f(k), k, 1, inf), simpsum = true;
+
+

@@ -1,0 +1,5 @@
+f(x) := cos(k*x)/(1+x^2);
+assume(k>0);
+assume(n>0);
+I1 = integrate(f(x), x, -inf, inf);
+

@@ -1,0 +1,17 @@
+kill(all);
+
+H(s)   := (s^2 + (A/Q)*s + A^2) / (s^2 + (1/Q)*s + 1);
+Gsq(s) := H(s) * H(-s);
+Gsq: subst(%i*w, s, Gsq(s));
+ratsimp(Gsq);
+
+/* find the value W=w^2, for which Gsq == A */
+eq1: A = %;
+solve([eq1],[w^2]);
+subst(W, w^2, %);
+subst(W^2, w^4, %);
+eq2: %[1];
+solve([eq2],[W]);
+
+
+

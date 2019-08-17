@@ -1,0 +1,6 @@
+/* 
+finds the power series expansion of exp(x) about the point 0
+*/
+
+powerseries(exp(x), x, 0);
+

@@ -1,0 +1,11 @@
+/* 
+find coefficients for the function f(x) = (a*x+b) / (c*x^2+d) such that f(0)=0, f(1)=1, f(0.5)=0.5, f'(0.5)=s 
+*/
+
+eq1: 0   = b/d;
+eq2: 1   = (a+b)/(c+d);
+eq3: 0.5 = (0.5*a+b)/(0.25*c+d);
+eq4: s   = ( a*(0.25*c+d)-0.5*c*(0.5*a+b) ) / (0.25*c+d)^2;
+
+solve([eq1, eq2, eq3, eq4], [a, b, c, d]);
+

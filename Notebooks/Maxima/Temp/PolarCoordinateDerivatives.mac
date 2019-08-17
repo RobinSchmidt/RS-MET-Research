@@ -1,0 +1,11 @@
+kill(all);
+
+u(x,y) := sqrt(x^2+y^2);
+v(x,y) := atan(y/x);
+
+ux = diff(u(x,y), x);
+uy = diff(u(x,y), y);
+vx = diff(v(x,y), x);
+ratsimp(%);
+vy = diff(v(x,y), y);
+ratsimp(%);

@@ -1,0 +1,12 @@
+/* 
+finds the soltion of the ordinary differentia equation
+*/
+
+deq: x^2 * 'diff(y,x) + 3*y*x = sin(x)/x;
+ode2(deq,y,x);
+ic1(%,x=%pi,y=0); /* solves initial value problem */
+
+
+
+
+

@@ -1,0 +1,38 @@
+/* Beware: the A2 variable actually represents A2^2 */
+
+kill(all);
+
+/* Establish denominator that occurs as some power in all 3 equations: */
+D: 1 + a + A2;
+
+/* Establish equations for magnitude value and slope: */
+eq1: P1 = (P0 + b + Pi*A2) / D;
+eq2: S1 = ((a*Pi-b)*A2 + 2*(Pi-P0)*A2 + b - a*P0) / D^2;
+
+/* solve these equations and extract expressions for a, b: */
+sln: solve([eq1, eq2], [a, b]);
+a: rhs(sln[2][1]);
+b: rhs(sln[2][2]);
+
+/* Establish the 3rd equation for the curvature: */
+g3: A2*(a*Pi*A2-b*A2);
+g2: 3*A2*(Pi*A2-P0*A2);
+g1: 3*A2*(b-a*P0);
+g0: (A2*P0-A2*Pi+a*b) - a^2*P0;
+
+
+
+
+eq3: C1 = -2 * (g0+g1+g2+g3) / D^3;
+
+solve([eq3], [A2]);
+
+/* todo: treat the special case where S1=0 */
+
+
+
+
+
+
+
+

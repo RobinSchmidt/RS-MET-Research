@@ -1,0 +1,133 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 0.8.2 ] */
+
+/* [wxMaxima: input   start ] */
+e1: (1-%i*x)^3 * (1+%i*x)^3 * (1-%i*y) * (1+i*Y) = exp(-2*phi*%i);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e1: (1-%i*x)^3 * (1+%i*x)^3 * (1-%i*y) * (1+%i*Y) = exp(-2*phi*%i);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e1: (1-%i*x)^3 * (1+%i*x)^3 * (1-%i*y) * (1+i*y) = exp(-2*phi*%i);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e1: (1-%i*x)^3 * (1+%i*x)^3 * (1-%i*y) * (1+%i*y) = exp(-2*phi*%i);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsubst(a1*s / (1+a1*c), x, e1);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsubst(-a1^2*s2 / (1-a1^2*c2), y, %o10);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve([%o11], [a1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+ratsimp(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+factor(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+trigreduce(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+expand(%);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e2: x = a1*s / (1+a1*c);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve([e2], [a1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e1;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e3: y = (-a1^2*s2) / (1-a1^2*c2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve([e3], [a1]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve([e2, e3], [y]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e4: x / (s-c*x) = -sqrt(y / (c2*y-s2));
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve([e4], [y]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e5: a1sq = (-x / (c*x-s)^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e5: a1sq = (-x / (c*x-s))^2;
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e6: a1sq = y / (c2*y-s);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve([e5, e6], [y]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve([%], [x]);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+e7: x^2 / (s-c*x)^2 = y / (c2*y-s2);
+/* [wxMaxima: input   end   ] */
+
+/* [wxMaxima: input   start ] */
+solve([e7], [y]);
+/* [wxMaxima: input   end   ] */
+
+/* Maxima can't load/batch files which end with a comment! */
+"Created with wxMaxima"$

@@ -1,0 +1,7 @@
+/* 
+finds the antiderivative of f(x)
+*/
+
+load  ("antid")$
+f(x) := (x-a)^5 / x;
+F = antidiff(f(x), x, x);

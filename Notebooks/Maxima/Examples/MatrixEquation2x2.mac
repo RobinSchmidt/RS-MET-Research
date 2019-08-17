@@ -1,0 +1,11 @@
+/* 
+find the solution vector [x1 x2] to the matrix-equation:
+|a11 a12| * |x1| = |b1|
+|a21 a22|   |x2|   |b2|
+*/
+
+e1: a11*x1 + a12*x2 = b1;
+e2: a21*x1 + a22*x2 = b2;
+solve([e1, e2], [x1, x2]);
+optimize(%);
+

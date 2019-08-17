@@ -1,0 +1,9 @@
+f0(x) := sin(x)/x;
+f1 = diff(f0(x), x);
+f2 = diff(f0(x), x, 2);
+f3 = diff(f0(x), x, 3);
+f4 = diff(f0(x), x, 4);
+f5 = diff(f0(x), x, 5);
+f6 = diff(f0(x), x, 6);
+fn = diff(f0(x), x, n);
+

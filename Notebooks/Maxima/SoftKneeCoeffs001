@@ -1,0 +1,33 @@
+
+Maxima 5.13.0 http://maxima.sourceforge.net
+Using Lisp GNU Common Lisp (GCL) GCL 2.6.8 (aka GCL)
+Distributed under the GNU Public License. See the file COPYING.
+Dedicated to the memory of William Schelter.
+This is a development version of Maxima. The function bug_report()
+provides bug reporting information.
+(%i1) e1: t-c   = a_5*(t-c)^5 + a_4*(t-c)^4 + a_3*(t-c)^3 + a_2*(t-c)^2 + a_1*(t-c) + a_0;
+
+(\%o1) t-c=\mathrm{a\_5}\,\left(t-c\right)^5+\mathrm{a\_4}\,\left(t-c\right)^4+\mathrm{a\_3}\,\left(t-c\right)^3+\mathrm{a\_2}\,\left(t-c\right)^2+\mathrm{a\_1}\,\left(t-c\right)+\mathrm{a\_0}
+(%i2) e2: t+c/r = a_5*(t+c)^5 + a_4*(t+c)^4 + a_3*(t+c)^3 + a_2*(t+c)^2 + a_1*(t+c) + a_0;
+
+(\%o2) t+\frac{c}{r}=\mathrm{a\_5}\,\left(t+c\right)^5+\mathrm{a\_4}\,\left(t+c\right)^4+\mathrm{a\_3}\,\left(t+c\right)^3+\mathrm{a\_2}\,\left(t+c\right)^2+\mathrm{a\_1}\,\left(t+c\right)+\mathrm{a\_0}
+(%i3) e3: 1     = 5*a_5*(t-c)^4 + 4*a_4*(t-c)^3 + 3*a_3*(t-c)^2 + 2*a_2*(t-c) + a_1;
+
+(\%o3) 1=5\,\mathrm{a\_5}\,\left(t-c\right)^4+4\,\mathrm{a\_4}\,\left(t-c\right)^3+3\,\mathrm{a\_3}\,\left(t-c\right)^2+2\,\mathrm{a\_2}\,\left(t-c\right)+\mathrm{a\_1}
+(%i4) e4: 1/r   = 5*a_5*(t+c)^4 + 4*a_4*(t+c)^3 + 3*a_3*(t+c)^2 + 2*a_2*(t+c) +  a_1;
+
+(\%o4) \frac{1}{r}=5\,\mathrm{a\_5}\,\left(t+c\right)^4+4\,\mathrm{a\_4}\,\left(t+c\right)^3+3\,\mathrm{a\_3}\,\left(t+c\right)^2+2\,\mathrm{a\_2}\,\left(t+c\right)+\mathrm{a\_1}
+(%i5) e5: 0     = 20*a_5*(t-c)^3 + 12*a_4*(t-c)^2 + 6*a_3*(t-c) + 2*a_2;
+
+(\%o5) 0=20\,\mathrm{a\_5}\,\left(t-c\right)^3+12\,\mathrm{a\_4}\,\left(t-c\right)^2+6\,\mathrm{a\_3}\,\left(t-c\right)+2\,\mathrm{a\_2}
+(%i6) e6: 0     = 20*a_5*(t+c)^3 + 12*a_4*(t+c)^2 + 6*a_3*(t+c) + 2 a_2;
+Incorrect syntax: A_2 is not an infix operator
+6*a_3*(t+c)Space+Space2Spacea_2;
+                  ^
+(%i6) e6: 0     = 20*a_5*(t+c)^3 + 12*a_4*(t+c)^2 + 6*a_3*(t+c) + 2*a_2;
+
+(\%o6) 0=20\,\mathrm{a\_5}\,\left(t+c\right)^3+12\,\mathrm{a\_4}\,\left(t+c\right)^2+6\,\mathrm{a\_3}\,\left(t+c\right)+2\,\mathrm{a\_2}
+(%i7) solve([e1,e2,e3,e4,e5,e6],[a_0,a_1,a_2,a_3,a_4,a_5]);
+
+(\%o7) \left[ \left[ \mathrm{a\_0}=\ifrac{\left(r-1\right)\,t^4+c^2\,\left(6-6\,r\right)\,t^2+c^3\,\left(8\,r-8\right)\,t+c^4\,\left(3-3\,r\right)}{16\,c^3\,r} , \linebreak[0]\mathrm{a\_1}=-\ifrac{\left(r-1\right)\,t^3+c^2\,\left(3-3\,r\right)\,t+c^3\,\left(-2\,r-2\right)}{4\,c^3\,r} , \linebreak[0]\mathrm{a\_2}=\ifrac{\left(3\,r-3\right)\,t^2+c^2\,\left(3-3\,r\right)}{8\,c^3\,r} , \linebreak[0]\mathrm{a\_3}=-\ifrac{\left(r-1\right)\,t}{4\,c^3\,r} , \linebreak[0]\mathrm{a\_4}=\ifrac{r-1}{16\,c^3\,r} , \linebreak[0]\mathrm{a\_5}=0 \right]  \right] 
+(%i8) 

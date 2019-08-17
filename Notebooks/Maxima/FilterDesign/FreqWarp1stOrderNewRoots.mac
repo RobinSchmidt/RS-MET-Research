@@ -1,0 +1,6 @@
+0 = 1 - r * g (c + zm) / (1 + c*zm);
+solve(%, zm);
+optimize(%);
+
+
+

@@ -1,0 +1,10 @@
+/* 
+demonstrates substitution
+*/
+
+eq1: b = a + 2*x;
+eq2: y = b * x^2;
+/*subst(eq1,b,eq2);*/
+subst(b,eq2);
+
+

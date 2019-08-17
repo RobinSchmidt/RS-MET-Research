@@ -1,0 +1,7 @@
+/* 
+finds the antiderivative of f(x)
+*/
+
+load  ("antid")$
+f(x) := 1/(1+x^2);
+F = antidiff(f(x), x, x);

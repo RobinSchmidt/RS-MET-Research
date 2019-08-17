@@ -1,0 +1,4 @@
+f(t) := (A*exp(-a*t)*sin(w*t+p))^2;
+assume(a > 0);
+E = integrate(f(t), t,  0, inf);
+optimize(%);

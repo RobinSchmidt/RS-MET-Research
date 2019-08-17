@@ -1,0 +1,15 @@
+Create a bunch of maxima scripts that demonstrate how to do certain things by means of examples, like:
+
+NonLinearSystemOfEquations
+
+informal:
+f: y = c1 * exp(c2 * x^2) * cos(x^2);
+d1f: diff(f);
+d2f: diff(f, 2);
+
+DifferentialEquation
+DifferenceEquation
+LaplaceTransform
+FourierTransform
+ZTransform
+WaveletTransform

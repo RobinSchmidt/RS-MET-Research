@@ -1,0 +1,4 @@
+eq1: H_C^2 = H_DC^2 * (1-W_C^2+W_C^4) / (1-(2*H_DC/H_inf - A_1^2)*W_C^2 + (H_DC^2/H_inf^2)*W_C^4);
+
+solve([eq1],[A_1^2]);
+

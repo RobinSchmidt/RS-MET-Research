@@ -1,0 +1,10 @@
+/* 
+finds the definite integral of f(x)
+*/
+
+f(x) := exp(-a*x);
+I1 = integrate(f(x), x, -5, 5);
+I2 = integrate(f(x), x,  0, inf);
+assume(a > 0);
+I3 = integrate(f(x), x,  0, inf);
+

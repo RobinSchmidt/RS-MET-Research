@@ -1,0 +1,60 @@
+
+/*
+e1: u = (x^1 + k*y^3)^(1/1);
+e2: v = (y^1 + k*x^3)^(1/1);
+solve([e1, e2], [x, y]);
+*/
+
+/*
+e1: u = x + k*x*y;
+e2: v = y + k*x*y;
+solve([e1, e2], [x, y]);
+*/
+
+
+
+
+e1: u = x + k * x/y;
+e2: v = y + k * y/x;
+solve([e1, e2], [x, y]);
+/* niceley invertible */
+
+/*
+e1: u = (1-k)*x + k * x/y;
+e2: v = (1-k)*y + k * y/x;
+solve([e1, e2], [x, y]);
+*/
+
+/*
+e1: u = x/y;
+e2: v = y/x;
+solve([e1, e2], [x, y]);
+*/
+
+
+
+/*
+e1: u = x/(y+k) + x;
+e2: v = y/(x+k) + y;
+solve([e1, e2], [x, y]);
+*/
+
+
+
+/*
+e1: u = x;
+e2: v = y + k*x^3;
+solve([e1, e2], [x, y]);
+*/
+
+
+/*
+e1: u = x;
+e2: v = sinh(y);
+solve([e1, e2], [x, y]);
+*/
+
+/*
+e3: 0 = y^3 + k*y + c;
+solve([e3], [y]);
+*/

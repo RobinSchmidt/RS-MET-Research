@@ -1,0 +1,4 @@
+f(x) := (sin(x)/x); /* * (1/(1+x^2)); */
+assume(a>0);
+I1 = integrate(f(x), x, 0, a);
+

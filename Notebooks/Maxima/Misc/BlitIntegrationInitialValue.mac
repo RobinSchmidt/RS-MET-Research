@@ -1,0 +1,8 @@
+/* 
+finds the infinite sum
+*/
+
+f(k) := sin(M*k*w) / sin(k*w);
+sum(f(k), k, 1, inf), simpsum = true;
+
+

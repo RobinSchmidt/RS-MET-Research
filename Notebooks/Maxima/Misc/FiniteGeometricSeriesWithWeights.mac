@@ -1,0 +1,7 @@
+/* 
+finds the finite sum
+*/
+
+sum((z^k)/k, k, 1, N), simpsum = true;
+
+

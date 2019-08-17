@@ -1,0 +1,9 @@
+/* 
+finds the partial fraction expansion of a ratio of polynomials
+*/
+
+/*r: (z^2 + b1*z + b2) / (z^2 + a1*z + a2);*/
+
+r: (b0 + b1*z^(-1) + b2*z^(-2)) / (1 + a1*z^(-1) + a2*z^(-2));
+partfrac(r, z);
+

@@ -46,3 +46,18 @@ a,b,c,d a rational numbers
 -the canonical representant of an equivalence class of such fractions
 is the one that has the smallest possible integers for a,b,c,d and
 whose numerator is in the 1st quadrant
+
+Torus:
+-take parameteric equation
+-convert to implicit equation (how?)
+-express z as function of x,y
+ -convert to polar coordinates: z = z(x,y) = z(r,phi)
+ -should give a (semi)circular arc/half-tube
+-demonstrate generalized implicit differentiation
+-for the circle, the parametric-to-implicit conversion works like this:
+ x(t) = cos(t), y(t) = sin(t)  | square them, s=sin(t), c=cos(t)
+ x^2 = c^2, y^2 = s^2          | add them
+ x^2 + y^2 = s^2 + c^2 = 1
+ ..can we do something similar with the torus?
+ 
+

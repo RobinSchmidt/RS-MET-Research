@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{09ccda2a-3fde-4b1c-9d38-7a9a3450a332}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>Python\rsPolynomial.py</StartupFile>
+    <StartupFile>Python\MinimalSurface.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -25,6 +25,7 @@
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Python\MinimalSurface.py" />
     <Compile Include="Python\rsIntegerFunctions.py" />
     <Compile Include="Python\rsPolynomial.py" />
     <Compile Include="Python\rsRational.py" />

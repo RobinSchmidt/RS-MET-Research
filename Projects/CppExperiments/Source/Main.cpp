@@ -1,4 +1,5 @@
-#include <iostream>>
+#include <iostream>
+#include <array>
 
 // see here https://www.youtube.com/watch?v=xGDLkt-jBJ4 at 19:50
 class SelfDeleter
@@ -21,6 +22,14 @@ public:
   }
 };
 
+// emulate multiple return values (of the same type) via std::array ...should this be done with
+// tuple instead? ...or maybe we should use structs?
+std::array<float, 3> get123()
+{
+  std::array<float, 3> a = {1.f, 2.f, 3.f};
+  return a;
+}
+
 int main()
 {
 
@@ -31,6 +40,10 @@ int main()
 
   Logger logger;
   logger.log();
+
+
+  auto a123 = get123();
+  std::cout << a123[0] << a123[1] << a123[2];
 
 
   //std::cout << "Blah!";

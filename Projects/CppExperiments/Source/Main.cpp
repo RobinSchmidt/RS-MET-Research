@@ -1,6 +1,9 @@
 #include <iostream>
 #include <array>
+#include <vector>
 
+
+//using namespace std;
 
 
 
@@ -11,6 +14,7 @@ class SelfDeleter
 public:
   void selfDelete() { delete this; }
 };
+// move to file Patterns.cpp (or antipatterns?)
 
 
 /** Logs the call of a function to std::cout. We put the function in a class to demonstrate showing 
@@ -29,13 +33,15 @@ public:
 };
 
 
-// emulate multiple return values (of the same type) via std::array ...should this be done with
-// tuple instead? ...or maybe we should use structs?
+/** Emulate multiple return values (of the same type) via std::array ...should this be done with
+tuple instead? ...or maybe we should use structs? */
 std::array<float, 3> get123()
 {
-  std::array<float, 3> a = {1.f, 2.f, 3.f};
-  return a;
+  return std::array<float, 3>{ 1.f, 2.f, 3.f };
+  //std::array<float, 3> a = {1.f, 2.f, 3.f}; return a; // alternative
 }
+
+
 
 int main()
 {
@@ -45,12 +51,30 @@ int main()
   // todo: test, if this works - check for memory leaks and/or implement destructor and put
   // breakpoint ina dn see, if it gets hit
 
+  std::cout << "Demonstrate, how a (member) function can print its won name\n";
   Logger logger;
   logger.log();
+  std::cout << "\n";
 
-
+  std::cout << "Emulate multiple return value via std::array\n";
   auto a123 = get123();
-  std::cout << a123[0] << a123[1] << a123[2];
+  std::cout << a123[0] << a123[1] << a123[2] << "\n\n";
+
+  std::cout << "Create a std::vector from initializer list\n";
+  std::vector<int> v({ 1, 2, 3 });
+  std::cout << v[0] << v[1] << v[2] << "\n\n";   // todo: wrap into function
+
+  std::cout << "Apply (lambda) function to each element - this has no effect on the stored vector elements\n";
+  std::for_each(v.begin(), v.end(), [](int x){ return 2*x + 1; }); 
+  std::cout << v[0] << v[1] << v[2] << "\n\n";
+
+  std::cout << "If we want to modify the vector contents, we have to write it like that\n";
+  std::for_each(v.begin(), v.end(), [&](int& x){ x = 2*x + 1; });
+  std::cout << v[0] << v[1] << v[2] << "\n\n"; 
+
+  // demonstrate lambda with binding by value via [=]
+
+
 
 
   //std::cout << "Blah!";

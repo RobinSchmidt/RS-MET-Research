@@ -32,7 +32,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="../Source/Main.cpp" />
+		<Unit filename="../../Source/Main.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

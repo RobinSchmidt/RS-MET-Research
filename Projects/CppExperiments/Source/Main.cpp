@@ -1,6 +1,10 @@
 #include <iostream>
 #include <array>
 
+
+
+
+
 // see here https://www.youtube.com/watch?v=xGDLkt-jBJ4 at 19:50
 class SelfDeleter
 {
@@ -9,18 +13,21 @@ public:
 };
 
 
-/** Logs the call of a function to std::cout. */
+/** Logs the call of a function to std::cout. We put the function in a class to demonstrate showing 
+the full path. */
+#if defined(__GNUC__) 
+#define FUNCTION_NAME __PRETTY_FUNCTION__     // shows full path and signature with gcc
+#elif defined(_MSC_VER)
+#define FUNCTION_NAME __FUNCSIG__             // same with microsoft compiler
+#else
+#define FUNCTION_NAME __func__                // shows name only but is ISO C++
+#endif
 class Logger
 {
 public:
-  void log()
-  {
-    std::cout << __func__ << " was called.\n";  // ISO C++
-    std::cout << __PRETTY_FUNCTION__ << "\n";  // only gcc
-    //std::cout << __FUNCSIG__  << "\n";       // only msc
-    //std::cout << "SelfDeleter::selfDelete";
-  }
+  void log() { std::cout << FUNCTION_NAME << " was called.\n";  }
 };
+
 
 // emulate multiple return values (of the same type) via std::array ...should this be done with
 // tuple instead? ...or maybe we should use structs?

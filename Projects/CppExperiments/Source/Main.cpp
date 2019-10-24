@@ -1,8 +1,8 @@
 #include <iostream>
 #include <array>
 #include <vector>
-
-
+#include <cmath>>
+#include <algorithm>
 //using namespace std;
 
 
@@ -17,9 +17,9 @@ public:
 // move to file Patterns.cpp (or antipatterns?)
 
 
-/** Logs the call of a function to std::cout. We put the function in a class to demonstrate showing 
+/** Logs the call of a function to std::cout. We put the function in a class to demonstrate showing
 the full path. */
-#if defined(__GNUC__) 
+#if defined(__GNUC__)
 #define FUNCTION_NAME __PRETTY_FUNCTION__     // shows full path and signature with gcc
 #elif defined(_MSC_VER)
 #define FUNCTION_NAME __FUNCSIG__             // same with microsoft compiler
@@ -29,8 +29,8 @@ the full path. */
 class Logger
 {
 public:
-  void log() 
-  { 
+  void log()
+  {
     std::cout << "Function: " << FUNCTION_NAME << " was called.\n"; // __FUNCTION__ exists as C macro
     //std::cout << "File:     " << __FILE__ << "\n";
     //std::cout << "Line:     " << __LINE__ << "\n";
@@ -39,7 +39,7 @@ public:
 
 class Statistics
 {
-public: 
+public:
   static double normalDistribution(double x, double mu, double sigma)
   {
     static const double pi = 3.14;   // we are grossly imprecise here
@@ -71,16 +71,16 @@ void printVector(const std::vector<T>& v)
 class ExpensiveToCopy
 {
 public:
-  ExpensiveToCopy()                         { std::cout << pad << "Default Constructor\n"; }
-  ExpensiveToCopy(const ExpensiveToCopy&)   { std::cout << pad << "Copy Constructor\n";    }
-  ExpensiveToCopy(      ExpensiveToCopy&&)  { std::cout << pad << "Move Constructor\n";    }
-  ~ExpensiveToCopy()                        { std::cout << pad << "Destructor\n";          }
+  ExpensiveToCopy()                         { std::cout << pad << "Default Constructor\n";    }
+  ExpensiveToCopy(const ExpensiveToCopy&)   { std::cout << pad << "!!!Copy Constructor!!!\n"; }
+  ExpensiveToCopy(      ExpensiveToCopy&&)  { std::cout << pad << "Move Constructor\n";       }
+  ~ExpensiveToCopy()                        { std::cout << pad << "Destructor\n";             }
 
-  //ExpensiveToCopy& operator=(ExpensiveToCopy) 
-  //{ std::cout << pad << "Copy Assignment Operator (by value)\n"; }
+  //ExpensiveToCopy& operator=(ExpensiveToCopy)
+  //{ std::cout << pad << "!!!Copy Assignment Operator!!!\n"; }
 
   ExpensiveToCopy& operator=(const ExpensiveToCopy&)
-  { std::cout << pad << "Copy Assignment Operator (by const reference)\n"; return *this; }
+  { std::cout << pad << "!!!Copy Assignment Operator!!!\n"; return *this; }
 
   ExpensiveToCopy& operator=(ExpensiveToCopy&&)
   { std::cout << pad << "Move Assignment Operator\n"; return *this; }
@@ -91,9 +91,42 @@ public:
     ExpensiveToCopy returnValue;
     return returnValue;
   }
+
+  ExpensiveToCopy operator+=(const ExpensiveToCopy& rhs)
+  {
+    std::cout << pad << "PlusEquals Operator\n";
+    ExpensiveToCopy returnValue;
+    return returnValue;
+  }
+
+  //ExpensiveToCopy operator-(const ExpensiveToCopy& a)
+  //{
+  //  std::cout << pad << "Unary Minus Operator\n";
+  //  return *this;
+  //}
+
+  ExpensiveToCopy operator-()
+  {
+    std::cout << pad << "Unary Minus Operator\n";
+    return *this;
+  }
+  // calls copy constructor, returning a reference doesn't help
+
   std::string pad = "  ";
+  // todo: let the indentation vary - when + calls constructors, they should be further indented
+  // use static indent member, increase on entry, decrease on exit
 };
+
+//ExpensiveToCopy ExpensiveToCopy::operator-(const ExpensiveToCopy& a)
+//{
+//  std::cout << ExpensiveToCopy::pad << "Unary Minus Operator\n";
+//  return *this;
+//}
+
+
+
 // https://en.cppreference.com/w/cpp/language/move_constructor
+// https://en.cppreference.com/w/cpp/language/operator_arithmetic
 
 void testReturnValueOptimization()
 {
@@ -101,10 +134,15 @@ void testReturnValueOptimization()
 
   std::cout << "MyClass a, b;\n";       MyClass a, b;
   std::cout << "MyClass c = a + b;\n";  MyClass c = a + b;
-  std::cout << "a = c;\n";              a = c;
-  std::cout << "MyClass d(c)\n";        MyClass d(c);
+  std::cout << "a = c;\n";              a = c;                // 1 copy
+  std::cout << "MyClass d(c)\n";        MyClass d(c);         // 1 copy
   std::cout << "c = a + MyClass();\n";  c = a + MyClass();
   std::cout << "a = a + b + c;\n";      a = a + b + c;
+  std::cout << "a = c + b + a;\n";      a = c + b + a;
+  std::cout << "a += b;\n";             a += b;
+  std::cout << "a = -a;\n";             a = -a;               // 1 copy
+  std::cout << "b = -a;\n";             b = -a;               // 1 copy
+  std::cout << "c = -(a+b)\n";          c = -(a+b);           // 1 copy
 
   std::cout << "End of function\n";
 };
@@ -112,7 +150,7 @@ void testReturnValueOptimization()
 
 int main()
 {
-  testReturnValueOptimization(); // 3 constructors, 4 destructors - what?                               
+  testReturnValueOptimization(); // 3 constructors, 4 destructors - what?
   // implement copy- and move constructors and assignment operators - there's probably a call to
   // the default copy cosntructor somewhere
 
@@ -127,10 +165,11 @@ int main()
   logger.log();
   std::cout << "\n";
 
-  double mu = 5;
-  double sigma = 2;
-  auto gaussian = [=](double x)->double{ return Statistics::normalDistribution(x, mu, sigma); };
-  double y = gaussian(3);
+  // use a lambda function as shortcut to an otherwise verbose function call (the compiler will
+  // optimize it away):
+  double mu = 5, sigma = 2;
+  auto normal_5_2 = [=](double x)->double{ return Statistics::normalDistribution(x, mu, sigma); };
+  double y = normal_5_2(3);
 
 
   std::cout << "Emulate multiple return value via std::array\n";
@@ -142,12 +181,12 @@ int main()
   std::cout << v[0] << v[1] << v[2] << "\n\n";   // todo: wrap into function
 
   std::cout << "Apply (lambda) function to each element - this has no effect on the stored vector elements\n";
-  std::for_each(v.begin(), v.end(), [](int x){ return 2*x + 1; }); 
+  std::for_each(v.begin(), v.end(), [](int x){ return 2*x + 1; });
   std::cout << v[0] << v[1] << v[2] << "\n\n";
 
   std::cout << "If we want to modify the vector contents, we have to write it like that\n";
   std::for_each(v.begin(), v.end(), [&](int& x){ x = 2*x + 1; });
-  std::cout << v[0] << v[1] << v[2] << "\n\n"; 
+  std::cout << v[0] << v[1] << v[2] << "\n\n";
 
   // demonstrate lambda with binding by value via [=]
 

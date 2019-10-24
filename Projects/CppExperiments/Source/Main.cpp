@@ -29,7 +29,24 @@ the full path. */
 class Logger
 {
 public:
-  void log() { std::cout << FUNCTION_NAME << " was called.\n";  }
+  void log() 
+  { 
+    std::cout << "Function: " << FUNCTION_NAME << " was called.\n"; // __FUNCTION__ exists as C macro
+    //std::cout << "File:     " << __FILE__ << "\n";
+    //std::cout << "Line:     " << __LINE__ << "\n";
+  }
+};
+
+class Statistics
+{
+public: 
+  static double normalDistribution(double x, double mu, double sigma)
+  {
+    static const double pi = 3.14;   // we are grossly imprecise here
+    double s22 = 2 * sigma * sigma;
+    double xm  = x - mu;
+    return (1./sqrt(s22*pi)) * exp(-xm*xm / s22);
+  }
 };
 
 
@@ -41,10 +58,64 @@ std::array<float, 3> get123()
   //std::array<float, 3> a = {1.f, 2.f, 3.f}; return a; // alternative
 }
 
+template<class T>
+void printVector(const std::vector<T>& v)
+{
+  for(size_t i = 0; i < v.size(); i++)
+    std::cout << v[i] << ", ";
+  std::cout << "\n";
+}
+
+
+
+class ExpensiveToCopy
+{
+public:
+  ExpensiveToCopy()                         { std::cout << pad << "Default Constructor\n"; }
+  ExpensiveToCopy(const ExpensiveToCopy&)   { std::cout << pad << "Copy Constructor\n";    }
+  ExpensiveToCopy(      ExpensiveToCopy&&)  { std::cout << pad << "Move Constructor\n";    }
+  ~ExpensiveToCopy()                        { std::cout << pad << "Destructor\n";          }
+
+  //ExpensiveToCopy& operator=(ExpensiveToCopy) 
+  //{ std::cout << pad << "Copy Assignment Operator (by value)\n"; }
+
+  ExpensiveToCopy& operator=(const ExpensiveToCopy&)
+  { std::cout << pad << "Copy Assignment Operator (by const reference)\n"; return *this; }
+
+  ExpensiveToCopy& operator=(ExpensiveToCopy&&)
+  { std::cout << pad << "Move Assignment Operator\n"; return *this; }
+
+  ExpensiveToCopy operator+(const ExpensiveToCopy& rhs)
+  {
+    std::cout << pad << "Addition Operator\n";
+    ExpensiveToCopy returnValue;
+    return returnValue;
+  }
+  std::string pad = "  ";
+};
+// https://en.cppreference.com/w/cpp/language/move_constructor
+
+void testReturnValueOptimization()
+{
+  using MyClass = ExpensiveToCopy;
+
+  std::cout << "MyClass a, b;\n";       MyClass a, b;
+  std::cout << "MyClass c = a + b;\n";  MyClass c = a + b;
+  std::cout << "a = c;\n";              a = c;
+  std::cout << "MyClass d(c)\n";        MyClass d(c);
+  std::cout << "c = a + MyClass();\n";  c = a + MyClass();
+  std::cout << "a = a + b + c;\n";      a = a + b + c;
+
+  std::cout << "End of function\n";
+};
 
 
 int main()
 {
+  testReturnValueOptimization(); // 3 constructors, 4 destructors - what?                               
+  // implement copy- and move constructors and assignment operators - there's probably a call to
+  // the default copy cosntructor somewhere
+
 
   SelfDeleter* sd = new SelfDeleter;
   sd->selfDelete();
@@ -55,6 +126,12 @@ int main()
   Logger logger;
   logger.log();
   std::cout << "\n";
+
+  double mu = 5;
+  double sigma = 2;
+  auto gaussian = [=](double x)->double{ return Statistics::normalDistribution(x, mu, sigma); };
+  double y = gaussian(3);
+
 
   std::cout << "Emulate multiple return value via std::array\n";
   auto a123 = get123();
@@ -73,6 +150,10 @@ int main()
   std::cout << v[0] << v[1] << v[2] << "\n\n"; 
 
   // demonstrate lambda with binding by value via [=]
+
+  // test, if std::vector initializes the memory - yes, it does
+  std::vector<double> v1(10);
+  printVector(v1);
 
 
 

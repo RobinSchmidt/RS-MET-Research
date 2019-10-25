@@ -125,11 +125,41 @@ public:
 //  std::cout << ExpensiveToCopy::pad << "Unary Minus Operator\n";
 //  return *this;
 //}
-
-
-
 // https://en.cppreference.com/w/cpp/language/move_constructor
 // https://en.cppreference.com/w/cpp/language/operator_arithmetic
+
+
+
+
+class RealNumber
+{
+
+public:
+
+  double x;
+
+  // Constructors:
+  RealNumber(double value) : x(value) {}
+  RealNumber(int value) : x(value) {}
+
+  // Assignment:
+  RealNumber operator=(const int& value) { return RealNumber(value); }
+  RealNumber operator=(int&& value)      { return RealNumber(value); }
+
+  // Conversion:
+  operator double() const { return x; }
+
+  // Artihmetic:
+  RealNumber operator+(const RealNumber& y) { return x + y; }
+  RealNumber operator-(const RealNumber& y) { return x - y; }
+  RealNumber operator*(const RealNumber& y) { return x * y; }
+  RealNumber operator/(const RealNumber& y) { return x / y; }
+  RealNumber operator^(const RealNumber& y) { return pow(x, y); }
+  // +=, =, ==, ...
+};
+// maybe templatize
+
+
 
 void testReturnValueOptimization()
 {
@@ -198,7 +228,11 @@ int main()
   printVector(v1);
 
 
-
+  RealNumber a = 2, b = 3;
+  double ab = a^b, ba = b^a; 
+  // we can actually use ^ as exponentiation, if we want - may be nice for prototype code that 
+  // deals with polynomials
+   
 
   //std::cout << "Blah!";
   return 0;

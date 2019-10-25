@@ -1,7 +1,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
-#include <cmath>>
+#include <cmath>
 #include <algorithm>
 //using namespace std;
 
@@ -108,9 +108,12 @@ public:
   ExpensiveToCopy operator-()
   {
     std::cout << pad << "Unary Minus Operator\n";
-    return *this;
+    return std::move(*this);  // this helps to avoid the copy constructor call
+    //return *this;
   }
   // calls copy constructor, returning a reference doesn't help
+  // it seems, it's called when returning the result, not for passing the argument...well - there
+  // is actually no argeument other than the implicit "this" pointer
 
   std::string pad = "  ";
   // todo: let the indentation vary - when + calls constructors, they should be further indented
@@ -140,9 +143,9 @@ void testReturnValueOptimization()
   std::cout << "a = a + b + c;\n";      a = a + b + c;
   std::cout << "a = c + b + a;\n";      a = c + b + a;
   std::cout << "a += b;\n";             a += b;
-  std::cout << "a = -a;\n";             a = -a;               // 1 copy
-  std::cout << "b = -a;\n";             b = -a;               // 1 copy
-  std::cout << "c = -(a+b)\n";          c = -(a+b);           // 1 copy
+  std::cout << "a = -a;\n";             a = -a;
+  std::cout << "b = -a;\n";             b = -a;
+  std::cout << "c = -(a+b)\n";          c = -(a+b);
 
   std::cout << "End of function\n";
 };

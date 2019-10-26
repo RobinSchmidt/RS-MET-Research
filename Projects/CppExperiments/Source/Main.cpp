@@ -1,4 +1,6 @@
 #include "ObjectLifetime.cpp"
+#include "Containers.cpp"
+#include "Functional.cpp"
 
 
 /** Logs the call of a function to std::cout. We put the function in a class to demonstrate showing
@@ -20,6 +22,8 @@ public:
     //std::cout << "Line:     " << __LINE__ << "\n";
   }
 };
+// move to file Introspection
+
 
 class Statistics
 {
@@ -33,22 +37,8 @@ public:
   }
 };
 
-/** Emulate multiple return values (of the same type) via std::array ...should this be done with
-tuple instead? ...or maybe we should use structs? */
-std::array<float, 3> get123()
-{
-  return std::array<float, 3>{ 1.f, 2.f, 3.f };
-  //std::array<float, 3> a = {1.f, 2.f, 3.f}; return a; // alternative
-}
 
-// move to Tools.h
-template<class T>
-void printVector(const std::vector<T>& v)
-{
-  for(size_t i = 0; i < v.size(); i++)
-    std::cout << v[i] << ", ";
-  std::cout << "\n";
-}
+
 
 
 
@@ -87,9 +77,7 @@ public:
 
 int main()
 {
-  testReturnValueOptimization(); // 3 constructors, 4 destructors - what?
-  // implement copy- and move constructors and assignment operators - there's probably a call to
-  // the default copy cosntructor somewhere
+  testReturnValueOptimization(); 
 
 
   SelfDeleter* sd = new SelfDeleter;
@@ -117,6 +105,8 @@ int main()
   std::vector<int> v({ 1, 2, 3 });
   std::cout << v[0] << v[1] << v[2] << "\n\n";   // todo: wrap into function
 
+
+  // move to file Functional
   std::cout << "Apply (lambda) function to each element - this has no effect on the stored vector elements\n";
   std::for_each(v.begin(), v.end(), [](int x){ return 2*x + 1; });
   std::cout << v[0] << v[1] << v[2] << "\n\n";

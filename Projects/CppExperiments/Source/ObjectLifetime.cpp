@@ -60,7 +60,6 @@ public:
 // up a static int that counts the number of invoked heap copy operations - and check, if it has 
 // the desired value after a couple of artithmetic operations
 
-
 void testReturnValueOptimization() // rename to testCopyElision
 {
   using MyClass = ExpensiveToCopy;
@@ -88,6 +87,6 @@ it's  an atipattern? see here https://www.youtube.com/watch?v=xGDLkt-jBJ4 at 19:
 class SelfDeleter
 {
 public:
-  void selfDelete() { delete this; }
+  void selfDelete() { delete this; } // can we aslo set this to nullptr?
 };
 

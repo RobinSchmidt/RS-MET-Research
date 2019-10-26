@@ -2,6 +2,8 @@
 
 #include "Common.h"
 
+
+
 /** Emulate multiple return values (of the same type) via std::array ...should this be done with
 tuple instead? ...or maybe we should use structs? */
 std::array<float, 3> get123()
@@ -11,3 +13,5 @@ std::array<float, 3> get123()
 }
 // What's the difference to the alternative way? is there an additional copy? ...figure out!
 // can we also emulate multiple return values of different types?
+
+// todo: demo std::vector, map, list, stack, deque, set, etc.

@@ -1,6 +1,8 @@
 #include "ObjectLifetime.cpp"
 #include "Containers.cpp"
 #include "Functional.cpp"
+#include "Misc.cpp"
+
 
 
 /** Logs the call of a function to std::cout. We put the function in a class to demonstrate showing
@@ -23,22 +25,6 @@ public:
   }
 };
 // move to file Introspection
-
-
-class Statistics
-{
-public:
-  static double normalDistribution(double x, double mu, double sigma)
-  {
-    static const double pi = 3.14;   // we are grossly imprecise here
-    double s22 = 2 * sigma * sigma;
-    double xm  = x - mu;
-    return (1./sqrt(s22*pi)) * exp(-xm*xm / s22);
-  }
-};
-
-
-
 
 
 
@@ -77,7 +63,12 @@ public:
 
 int main()
 {
-  testReturnValueOptimization(); 
+  demoObserver();
+  //testReturnValueOptimization(); 
+  //testFunctionShortcuts();
+
+
+
 
 
   SelfDeleter* sd = new SelfDeleter;
@@ -90,11 +81,6 @@ int main()
   logger.log();
   std::cout << "\n";
 
-  // use a lambda function as shortcut to an otherwise verbose function call (the compiler will
-  // optimize it away):
-  double mu = 5, sigma = 2;
-  auto normal_5_2 = [=](double x)->double{ return Statistics::normalDistribution(x, mu, sigma); };
-  double y = normal_5_2(3);
 
 
   std::cout << "Emulate multiple return value via std::array\n";

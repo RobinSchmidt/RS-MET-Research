@@ -4,7 +4,7 @@ destruction, copy/move constsructors and -assignment operators, etc.  */
 #include "Common.h"
 
 
-//-------------------------------------------------------------------------------------------------
+//=================================================================================================
 
 /** A class that avoids unnecessary copy operations for the return values of arithmetic operators.
 The techniques can be useful for implementing a matrix class. */
@@ -60,6 +60,8 @@ public:
 // up a static int that counts the number of invoked heap copy operations - and check, if it has 
 // the desired value after a couple of artithmetic operations
 
+//-------------------------------------------------------------------------------------------------
+
 void testReturnValueOptimization() // rename to testCopyElision
 {
   using MyClass = ExpensiveToCopy;
@@ -80,7 +82,9 @@ void testReturnValueOptimization() // rename to testCopyElision
 };
 
 
-//-------------------------------------------------------------------------------------------------
+
+
+//=================================================================================================
 
 /** Object that deletes itself in a member function - i don't know, how that could be used. Maybe 
 it's  an atipattern? see here https://www.youtube.com/watch?v=xGDLkt-jBJ4 at 19:50  */
@@ -90,3 +94,4 @@ public:
   void selfDelete() { delete this; } // can we aslo set this to nullptr?
 };
 
+// todo: DeletionRequester

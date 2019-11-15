@@ -69,7 +69,12 @@ int main()
   //testReturnValueOptimization(); 
   //testFunctionShortcuts();
 
-  printLines("Bla", 42, 3.14, 'c');
+
+  //printLines();
+  printLines1("Bla", 42, 3.14, 'c');
+  printLines2("Blub", 2.72, 'x', 73);
+
+
 
 
 

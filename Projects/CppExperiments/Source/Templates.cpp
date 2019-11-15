@@ -39,13 +39,15 @@ void printLines2(First first,Rest ... rest)
 template<int n> 
 struct factorial 
 { 
-  enum { value = n * factorial<n-1>::value }; // general case: n > 0
+  static const int value = n * factorial<n-1>::value; // general case: n > 0
+  //enum { value = n * factorial<n-1>::value };       // ...enums work also
 }; 
 
 template<>
 struct factorial<0> 
 { 
-  enum { value = 1 }; // base case: n == 0
+  static const int value = 1;  // base case: n == 0
+  //enum { value = 1 }; 
 };
 // why enums? would an int also work? ..i guess static const int would work
 
@@ -83,7 +85,7 @@ void testGcd()
   printLines1(gcd_60_21, gcd_60_48, gcd_210_1155);
 }
 // what if a == 0?
-
+// can we use a generic type T isntead of int?
 
 /** Computes the greatest common divisor of a and b at compile time. Should be called like this:
 int gcd_60_48 = gcd<60, 48>();  */
@@ -108,3 +110,5 @@ void testGcd()
 }
 */
 
+// see here for more examples:
+// https://en.wikipedia.org/wiki/Template_metaprogramming

@@ -76,7 +76,7 @@ int main()
   //testReturnValueOptimization();
   //testFunctionShortcuts();
 
-  //testFactorial();
+  testFactorial();
   testGcd();
 
   //int gcd_60_21 = gcd<60, 21>();

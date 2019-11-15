@@ -39,14 +39,15 @@ void printLines2(First first,Rest ... rest)
 template<int n> 
 struct factorial 
 { 
-  enum { value = n * factorial<n-1>::value }; // general case
+  enum { value = n * factorial<n-1>::value }; // general case: n > 0
 }; 
 
 template<>
 struct factorial<0> 
 { 
-  enum { value = 1 }; // base case
+  enum { value = 1 }; // base case: n == 0
 };
+// why enums? would an int also work? ..i guess static const int would work
 
 void testFactorial()
 {
@@ -62,16 +63,32 @@ void testFactorial()
 //-------------------------------------------------------------------------------------------------
 // Computing greatest common divisors:
 
+template<int a, int b> 
+struct gcd
+{ 
+  static const int value = gcd<b, a%b>::value; // general case: b > 0
+}; 
 
+template<int a> 
+struct gcd<a, 0>
+{ 
+  static const int value = a;  // base case: b == 0
+}; 
 
-
-
-
-
+void testGcd()
+{
+  int gcd_60_21 = gcd<60, 21>::value;
+  int gcd_60_48 = gcd<60, 48>::value;
+  int gcd_210_1155 = gcd<2*3*5*7, 3*5*7*11>::value;  // == 105 = 3*5*7 == 210/2 == 1155/11
+  printLines1(gcd_60_21, gcd_60_48, gcd_210_1155);
+}
+// what if a == 0?
 
 
 /** Computes the greatest common divisor of a and b at compile time. Should be called like this:
 int gcd_60_48 = gcd<60, 48>();  */
+
+/*
 template<int a, int b>
 int gcd()
 {
@@ -89,4 +106,5 @@ void testGcd()
 
   printLines1(gcd_60_21, gcd_60_48, gcd_210_1155);
 }
+*/
 

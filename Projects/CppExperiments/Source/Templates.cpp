@@ -33,19 +33,19 @@ void printLines2(First first,Rest ... rest)
   printLines2(rest...);        // recursive instantiation
 }
 
-
 //-------------------------------------------------------------------------------------------------
-// Experimental:
+// Computing factorials:
 
-template <int n>
+template<int n> 
 struct factorial 
-{
-  enum { value = n * factorial<n - 1>::value };
-};
+{ 
+  enum { value = n * factorial<n-1>::value }; // general case
+}; 
 
-template <>
-struct factorial<0> {
-  enum { value = 1 };
+template<>
+struct factorial<0> 
+{ 
+  enum { value = 1 }; // base case
 };
 
 void testFactorial()
@@ -59,31 +59,16 @@ void testFactorial()
   printLines1(f0, f1, f2, f3, f4, f5);
 }
 
+//-------------------------------------------------------------------------------------------------
+// Computing greatest common divisors:
 
-/*
-template<int n, int r>
-int factorialHelp()
-{
-  if(n <= 1) return r;
-  else       return factorialHelp<n-1, n*r>();
-}
-template<int n>
-int factorial()
-{
-  return factorialHelp<n, 1>();
-}
-*/
 
-/*
-template<int n>
-int factorial()
-{
-  if(n == 0) return 1;
-  else       return factorial<n-1>() * n;
-}
-// VS says, the recursion is too complex - maybe it's not a tail recursion because of the 
-// multiplication by n
-*/
+
+
+
+
+
+
 
 /** Computes the greatest common divisor of a and b at compile time. Should be called like this:
 int gcd_60_48 = gcd<60, 48>();  */
@@ -95,4 +80,13 @@ int gcd()
 }
 // compiles on msc but not gcc - change to the usual struct gcd { value } idiom
 // needs more tests with more interesting inputs
+
+void testGcd()
+{
+  int gcd_60_21 = gcd<60, 21>();
+  int gcd_60_48 = gcd<60, 48>();
+  int gcd_210_1155 = gcd<2*3*5*7, 3*5*7*11>();  // == 105 = 210/2 = 1155/11
+
+  printLines1(gcd_60_21, gcd_60_48, gcd_210_1155);
+}
 

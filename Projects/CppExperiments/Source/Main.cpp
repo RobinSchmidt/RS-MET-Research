@@ -76,7 +76,8 @@ int main()
   //testReturnValueOptimization();
   //testFunctionShortcuts();
 
-  testFactorial();
+  //testFactorial();
+  testGcd();
 
   //int gcd_60_21 = gcd<60, 21>();
   //int gcd_60_48 = gcd<60, 48>();
@@ -86,9 +87,9 @@ int main()
 
 
 
-  //printLines();
-  printLines1("Bla", 42, 3.14, 'c');
-  printLines2("Blub", 2.72, 'x', 73);
+
+  //printLines1("Bla", 42, 3.14, 'c');
+  //printLines2("Blub", 2.72, 'x', 73);
 
 
 

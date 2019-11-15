@@ -1,6 +1,8 @@
+#include "Common.h"
 #include "ObjectLifetime.cpp"
 #include "Containers.cpp"
 #include "Functional.cpp"
+#include "Templates.cpp"
 #include "Misc.cpp"
 
 
@@ -63,13 +65,16 @@ public:
 
 int main()
 {
-  demoObserver();
+  //demoObserver();
   //testReturnValueOptimization(); 
   //testFunctionShortcuts();
 
+  printLines("Bla", 42, 3.14, 'c');
 
 
 
+
+  /*
 
   SelfDeleter* sd = new SelfDeleter;
   sd->selfDelete();
@@ -80,8 +85,6 @@ int main()
   Logger logger;
   logger.log();
   std::cout << "\n";
-
-
 
   std::cout << "Emulate multiple return value via std::array\n";
   auto a123 = get123();
@@ -113,6 +116,8 @@ int main()
   // we can actually use ^ as exponentiation, if we want - may be nice for prototype code that 
   // deals with polynomials - but no - that doesn't work because the precedence rules don't match
   // mathematical usage
+
+  */
    
 
   //std::cout << "Blah!";

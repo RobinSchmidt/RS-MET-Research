@@ -1,7 +1,7 @@
 /** Demos for managing things related to the lifetime of objects including construction, 
-destruction, copy/move constsructors and -assignment operators, etc.  */
+destruction, copy/move constructors and -assignment operators, etc.  */
 
-#include "Common.h"
+//#include "Common.h"
 
 
 //=================================================================================================
@@ -91,7 +91,7 @@ it's  an atipattern? see here https://www.youtube.com/watch?v=xGDLkt-jBJ4 at 19:
 class SelfDeleter
 {
 public:
-  void selfDelete() { delete this; } // can we aslo set this to nullptr?
+  void selfDelete() { delete this; } // can we also set this to nullptr?
 };
 
 // todo: DeletionRequester

@@ -1,3 +1,10 @@
+#include <iostream>
+#include <array>
+#include <vector>
+#include <cmath>
+#include <algorithm>
+#include <typeinfo>
+
 #include "Common.h"
 #include "ObjectLifetime.cpp"
 #include "Containers.cpp"
@@ -66,11 +73,18 @@ public:
 int main()
 {
   //demoObserver();
-  //testReturnValueOptimization(); 
+  //testReturnValueOptimization();
   //testFunctionShortcuts();
 
-  int gcd_60_21 = gcd<60, 21>();
-  int gcd_60_48 = gcd<60, 48>();
+  testFactorial();
+
+  //int gcd_60_21 = gcd<60, 21>();
+  //int gcd_60_48 = gcd<60, 48>();
+  //int gcd_210_1155 = gcd<2*3*5*7, 3*5*7*11>();  // == 105 = 210/2 = 1155/11
+
+
+
+
 
   //printLines();
   printLines1("Bla", 42, 3.14, 'c');
@@ -119,13 +133,13 @@ int main()
 
 
   RealNumber a = 2, b = 3;
-  double ab = a^b, ba = b^a; 
-  // we can actually use ^ as exponentiation, if we want - may be nice for prototype code that 
+  double ab = a^b, ba = b^a;
+  // we can actually use ^ as exponentiation, if we want - may be nice for prototype code that
   // deals with polynomials - but no - that doesn't work because the precedence rules don't match
   // mathematical usage
 
   */
-   
+
 
   //std::cout << "Blah!";
   return 0;

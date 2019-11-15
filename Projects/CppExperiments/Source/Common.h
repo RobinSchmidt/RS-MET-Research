@@ -1,12 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <array>
-#include <vector>
-#include <cmath>
-#include <algorithm>
-//using namespace std;
-
 template<class T>
 void printVector(const std::vector<T>& v)
 {

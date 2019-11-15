@@ -69,6 +69,8 @@ int main()
   //testReturnValueOptimization(); 
   //testFunctionShortcuts();
 
+  int gcd_60_21 = gcd<60, 21>();
+  int gcd_60_48 = gcd<60, 48>();
 
   //printLines();
   printLines1("Bla", 42, 3.14, 'c');

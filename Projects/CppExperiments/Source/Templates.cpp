@@ -32,3 +32,18 @@ void printLines2(First first,Rest ... rest)
   std::cout << first << "\n";  // print first line
   printLines2(rest...);        // recursive instantiation
 }
+
+
+//-------------------------------------------------------------------------------------------------
+// Experimental:
+
+/** Computes the greatest common divisor of a and b at compile time. Should be called like this:
+int gcd_60_48 = gcd<60, 48>();  */
+template<int a, int b>
+int gcd()
+{
+  if(b == 0) return a;
+  else       return gcd<b, a%b>();
+}
+// needs more tests with more interesting inputs
+

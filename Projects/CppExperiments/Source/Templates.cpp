@@ -84,8 +84,9 @@ void testGcd()
   int gcd_210_1155 = gcd<2*3*5*7, 3*5*7*11>::value;  // == 105 = 3*5*7 == 210/2 == 1155/11
   printLines1(gcd_60_21, gcd_60_48, gcd_210_1155);
 }
-// what if a == 0?
-// can we use a generic type T isntead of int?
+// -what if a == 0?
+// -can we use a generic type T instead of int?
+// -the same things can be achieved more easily with constexpr in C++17
 
 /** Computes the greatest common divisor of a and b at compile time. Should be called like this:
 int gcd_60_48 = gcd<60, 48>();  */

@@ -12,7 +12,7 @@
 #include "Templates.cpp"
 #include "Misc.cpp"
 
-
+#include "MultiArray.h" // doesn't compile
 
 /** Logs the call of a function to std::cout. We put the function in a class to demonstrate showing
 the full path. */

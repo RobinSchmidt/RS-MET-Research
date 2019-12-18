@@ -87,5 +87,10 @@ void testMultiArray()
   a1(2) = 3;
 
 
+  MA a2 = MA(VecI{3,2});  // 3x2 matrix ..or 2x3? strides ar 2,1 - should be 3,1 - maybe we are 
+                          // traversing the shape array in the wrong direction?
+           
+
+
   int dummy = 0;
 }

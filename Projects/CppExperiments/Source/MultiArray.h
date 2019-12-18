@@ -12,6 +12,8 @@ public:
   {
     // todo: allocate memory, update strides
 
+
+    int dummy = 0;
   }
 
   template<typename... Rest>
@@ -54,3 +56,15 @@ protected:
   std::vector<T>   data;
 
 };
+
+void testMultiArray()
+{
+  typedef std::vector<int> VecI;
+  typedef std::vector<float> VecF;
+  typedef MultiArray<float> MA;
+
+  MA a1 = MA(VecI{3});  // should create a 3D vector
+
+
+  int dummy = 0;
+}

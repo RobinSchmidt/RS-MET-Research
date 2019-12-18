@@ -76,6 +76,8 @@ int main()
   //testReturnValueOptimization();
   //testFunctionShortcuts();
 
+  testMultiArray();
+
   testFactorial();
   testGcd();
 

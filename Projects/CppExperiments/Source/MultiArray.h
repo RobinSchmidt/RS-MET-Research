@@ -47,16 +47,12 @@ public:
     return data[ flatIndex((int)shape.size()-1, i, rest...) ];
   }
   // goal: we want to be able to use the operator like (i), (i,k), (i,j,k), ...
+  // seems to work! test with rank 3!
 
-  // https://eli.thegreenplace.net/2014/variadic-templates-in-c/
-  /*
-  template<typename T, typename... Args>
-  T adder(T first, Args... args) {
-  return first + adder(args...);
-  }
-  */
 
-  // depth is recursion-depth - maybe find better name
+
+  // depth is recursion-depth - maybe find better name ..perhaps dimension...but it starts
+  // with the last
   int flatIndex(int depth, int index)
   {
     return index * strides[depth];
@@ -84,6 +80,7 @@ protected:
   std::vector<T>   data;
 
 };
+// implement it in a similar way as rsMatrix
 
 void testMultiArray()
 {
@@ -91,16 +88,21 @@ void testMultiArray()
   typedef std::vector<float> VecF;
   typedef MultiArray<float> MA;
 
-  MA a1 = MA(VecI{3});  // should create a 3D vector
+  MA a1 = MA(VecI{3});     // 3D vector
   a1(0) = 1;
   a1(1) = 2;
   a1(2) = 3;
 
 
-  MA a2 = MA(VecI{3,2});  
-  // 3x2 matrix ..or 2x3? strides ar 2,1 - should be 3,1 - maybe we are 
-  // traversing the shape array in the wrong direction? - ok - yes - fixed!
-           
+  MA a2 = MA(VecI{3,2});  // 3x2 matrix
+  a2(0,0) = 11;
+  a2(0,1) = 12;
+  a2(1,0) = 21;
+  a2(1,1) = 22;
+  a2(2,0) = 31;
+  a2(2,1) = 32;
+
+  MA a3 = MA(VecI{2,4,3});  // 2x4x3 block
 
 
   int dummy = 0;

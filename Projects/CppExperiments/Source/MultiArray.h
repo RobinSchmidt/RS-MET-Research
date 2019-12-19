@@ -18,9 +18,10 @@ public:
   rsMultiArrayView(std::vector<int> initialShape, T* data) : shape(initialShape)
   {
     updateStrides();
+    updateSize();
     dataPointer = data;
   }
-
+  // take initial shape by reference
 
   //-----------------------------------------------------------------------------------------------
   /** \name Access */
@@ -59,9 +60,20 @@ protected:
   }
   // maybe move to cpp file
 
+  void updateSize()
+  {
+    // what about edge cases resulting in zero size?
+
+    int rank = (int) shape.size();
+    size = 1;
+    for(int i = 0; i < rank; i++)
+      size *= shape[i];
+  }
+
   std::vector<int> shape;
   std::vector<int> strides;
   T* dataPointer = nullptr;
+  int size = 0;
 
 };
 
@@ -71,71 +83,21 @@ protected:
 syntax: 1D: A(i), 2D: A(i,j), 3D: A(i,j,k), etc. The data is stored in a std::vector. */
 
 template<class T>
-class MultiArray
+class MultiArray : public rsMultiArrayView<T>
 {
 
 public:
 
-  MultiArray(std::vector<int> initialShape) : shape(initialShape)
+
+  MultiArray(std::vector<int> initialShape) : rsMultiArrayView<T>(initialShape, nullptr)
   {
-    // todo: allocate memory, update strides
-
-    int rank = (int) shape.size();
-    strides.resize(rank);
-
-    // update strides (factor out):
-    
-    int i = rank-1;    // last index has stride 1 -> row-major matrix storage
-    int s = 1;
-    while(i >= 0) {
-      strides[i] = s;
-      s *= shape[i];
-      --i;
-    }
-    
-
-    /*
-    int i = rank-1;  // first index has stride 1 -> column-major matrix storage
-    int s = 1;
-    while(i >= 0) {
-      strides[i] = s;
-      s *= shape[rank-i-1];
-      --i;
-    }
-    */
-
-    // compute required space and allocate memory:
-    s = 1;
-    for(i = 0; i < rank; i++)
-      s *= shape[i];
-    data.resize(s);
-  }
-
-  template<typename... Rest>
-  T& operator()(int i, Rest... rest) 
-  {
-    //return data[ flatIndex((int)shape.size()-1, i, rest...) ]; // column-major
-    return data[ flatIndex(0, i, rest...) ];                     // row-major
+    data.resize(this->size);
+    updateDataPointer();
   }
 
 
 
-
-  // depth is recursion-depth - maybe find better name ..perhaps dimension...but it starts
-  // with the last
-  int flatIndex(int depth, int index)
-  {
-    return index * strides[depth];
-  }
-
-  template<typename... Rest>
-  int flatIndex(int depth, int i, Rest... rest)
-  {
-    //return flatIndex(depth, i) + flatIndex(depth-1, rest...);   // column-major
-    return flatIndex(depth, i) + flatIndex(depth+1, rest...);     // row-major
-  }
-
-  // i think, arithmetic operators *,/ should work element-wise like numpy does - the different 
+  // arithmetic operators *,/ should work element-wise like numpy does - the different 
   // kinds of special products (matrix-product, outer-product, inner-product, etc.) should be 
   // realized a named functions
 
@@ -145,7 +107,6 @@ protected:
 
   /** Updates the data-pointer inherited from rsMultiArrayView to point to the begin of our 
   std::vector that holds the actual data. */
-  /*
   void updateDataPointer()
   {
     if(data.size() > 0)
@@ -153,14 +114,8 @@ protected:
     else
       this->dataPointer = nullptr;
   }
-  */
 
-  // factor out into class MultiArrayView:
-  std::vector<int> shape;
-  std::vector<int> strides;
-
-  // MultiArray itself should only have this additional member
-  std::vector<T>   data;
+  std::vector<T> data;
 
 };
 

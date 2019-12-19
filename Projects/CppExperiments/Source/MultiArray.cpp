@@ -23,8 +23,15 @@ maybe make a class MultiIndex such that we can write things like
 for(MultiIndex i = {0,0,0}; i < {2,4,3}; i++) A(i) = ... // A is MultiArray
 the operator ++ must be implemented such that it counts up the last index, then wraps back back
 to zero while incrementing second-to-last, etc.
+
+overload the () operator of rsMultiArray, so it can take an MultiIndex, a vector of int (reference)
+maybe a tuple of ints,a c-array of indices - so the class should support various syntaxes for
+indexing elements - we will then need various versions of the flatIndex() function as well
+
+
 operations: outer-product (tensor-product?), inner product, contraction (with respect to a pair
-of indices)
+of indices)...but maybe these should be in the Math section whereas MutiArray itself should go
+into the Data section
 
 
 */

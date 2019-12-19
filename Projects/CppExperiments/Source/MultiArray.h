@@ -49,11 +49,6 @@ public:
   shape array of [2,3]. */
   const std::vector<int>& getShape() const { return shape; }
 
-
-
-
-
-
   // maybe have functions that return a pointer to a particular "row" - but the function should be 
   // a template, taking an arbitrary number of indices - for example A.getRowPointer(2, 3) would
   // return the 4th row in the 3rd slice ...or the other way around...i think so
@@ -71,18 +66,38 @@ public:
 
 
 
-
-
 protected:
 
-  // depth is recursion-depth - maybe find better name ..perhaps dimension...but it starts
-  // with the last
-  int flatIndex(int depth, int index) { return index * strides[depth]; }
-  // base case for variadic template instantiation
+  //-----------------------------------------------------------------------------------------------
+  /** \name Index Computation */
+  // maybe move to public section
 
+  /** Used for implementing the variadic template for the () operator. Takes a recursion depth (for
+  recursive template instantiation) and a variable number of indices .... */
   template<typename... Rest>
   int flatIndex(int depth, int i, Rest... rest) 
   { return flatIndex(depth, i) + flatIndex(depth+1, rest...); }
+
+  /** Base case for the variadic template. this version will be instatiated when, in addition to 
+  the recursion depth, only one index is passed. */
+  int flatIndex(int depth, int index) { return index * strides[depth]; }
+  // this is perhaps the best case to check, if an idex is valid, we should have:
+  // 0 <= index < shape[depth] ...right? not sure
+
+  /** Converts a C-array (assumed to be of length getNumDimensions()) of indices to a flat 
+  index. */
+  int flatIndex(const int* indices)
+  {
+    int fltIdx = 0;
+    for(size_t i = 0; i < strides.size(); i++)
+      fltIdx += indices[i] * strides[i];
+    return fltIdx;
+  }
+  // needs test
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Member Updating */
 
   void updateStrides()
   {
@@ -98,7 +113,6 @@ protected:
   }
   // maybe move to cpp file
 
-
   /** Updates our size variable according to the values in the shape array. The total size is 
   (redundantly) cached in a member variable because it's used frequently. */
   void updateSize()
@@ -108,6 +122,10 @@ protected:
     for(size_t i = 0; i < shape.size(); i++)
       size *= shape[i];
   }
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Data */
 
   std::vector<int> shape;
   std::vector<int> strides;

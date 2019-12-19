@@ -33,5 +33,11 @@ operations: outer-product (tensor-product?), inner product, contraction (with re
 of indices)...but maybe these should be in the Math section whereas MutiArray itself should go
 into the Data section
 
+use 3D arrays to simulate the wave equation in rooms and tubes (cylidrical coordinates)...although, 
+the probelm is rotationally symmetric, so a 2D model (in r,z) should suffice, phi is not needed 
+- the dependence on r is probably weak as well - but just for proof of concept
+-implement functions that approximate the Laplacian numerically in cartesian and cyclindrical
+coordinates...how about 4D arrays for spacetime simulations?
+
 
 */

@@ -1,5 +1,7 @@
 #pragma once
 
+// this should go into RAPT::Data...what about rsMatrix then? should this stay in rsMath 
+// regardless? ...perhaps yes
 
 template<class T>
 class rsMultiArrayView
@@ -15,13 +17,12 @@ public:
 
   /** Creates a multi-array view with the given shape for the given raw array of values in "data". 
   The view will *not* take ownership over the data. */
-  rsMultiArrayView(std::vector<int> initialShape, T* data) : shape(initialShape)
+  rsMultiArrayView(const std::vector<int>& initialShape, T* data) : shape(initialShape)
   {
     updateStrides();
     updateSize();
     dataPointer = data;
   }
-  // take initial shape by reference
 
 
   //-----------------------------------------------------------------------------------------------
@@ -33,6 +34,10 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
+  /** Returns true, iff the two arrays A and B have the same shape. */
+  static bool areSameShape(const rsMultiArrayView<T>& A, const rsMultiArrayView<T>& B)
+  { return A.shape == B.shape; }
+
   /** Returns the number of array elements. */
   int getSize() const { return size; }
 
@@ -43,6 +48,11 @@ public:
   defined by the number of  values that each index may run over. For example, a 2x3 matrix has a 
   shape array of [2,3]. */
   const std::vector<int>& getShape() const { return shape; }
+
+
+
+
+
 
   // maybe have functions that return a pointer to a particular "row" - but the function should be 
   // a template, taking an arbitrary number of indices - for example A.getRowPointer(2, 3) would
@@ -56,6 +66,8 @@ public:
   elements is: A(i, j, k) = .... */
   template<typename... Rest>
   T& operator()(int i, Rest... rest) { return dataPointer[flatIndex(0, i, rest...)]; }
+  // insert rsAssert flatIndex(...) < size, maybe also >= 0 - maybe have a function 
+  // isFlatIndexValid(i) ...see rsMatrix, maybe add it there, too
 
 
 
@@ -86,13 +98,14 @@ protected:
   }
   // maybe move to cpp file
 
+
+  /** Updates our size variable according to the values in the shape array. The total size is 
+  (redundantly) cached in a member variable because it's used frequently. */
   void updateSize()
   {
-    // what about edge cases resulting in zero size?
-
-    int rank = (int) shape.size();
+    if(shape.size() == 0) { size = 0; return; }   // edge case
     size = 1;
-    for(int i = 0; i < rank; i++)
+    for(size_t i = 0; i < shape.size(); i++)
       size *= shape[i];
   }
 
@@ -109,13 +122,13 @@ protected:
 syntax: 1D: A(i), 2D: A(i,j), 3D: A(i,j,k), etc. The data is stored in a std::vector. */
 
 template<class T>
-class MultiArray : public rsMultiArrayView<T>
+class rsMultiArray : public rsMultiArrayView<T>
 {
 
 public:
 
 
-  MultiArray(std::vector<int> initialShape) : rsMultiArrayView<T>(initialShape, nullptr)
+  rsMultiArray(const std::vector<int>& initialShape) : rsMultiArrayView<T>(initialShape, nullptr)
   {
     data.resize(this->size);
     updateDataPointer();
@@ -127,6 +140,14 @@ public:
   // kinds of special products (matrix-product, outer-product, inner-product, etc.) should be 
   // realized a named functions
 
+
+  /** Adds two matrices: C = A + B. */
+  rsMultiArray<T> operator+(const rsMultiArray<T>& B) const
+  { 
+    rsMultiArray<T> C(this->shape); 
+    //this->add(*this, B, &C); //     
+    return C; 
+  }
 
 
 protected:
@@ -150,13 +171,15 @@ void testMultiArray()
 {
   typedef std::vector<int> VecI;
   typedef std::vector<float> VecF;
-  typedef MultiArray<float> MA;
+  typedef rsMultiArray<float> MA;
 
   // 3D vector:
   MA a1 = MA(VecI{3});     
   a1(0) = 1;
   a1(1) = 2;
   a1(2) = 3;
+
+  //a1 = a1 + a1;
 
 
   // 3x2 matrix:
@@ -205,6 +228,9 @@ void testMultiArray()
   a3(1,3,0) = 241;
   a3(1,3,1) = 242;
   a3(1,3,2) = 243;
+
+  // move code over to RAPT and turn this into a unit test
+  // allow the user to specify an allocator so we can unit-test the memory allocation avoidance
 
 
 

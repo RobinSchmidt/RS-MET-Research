@@ -28,7 +28,7 @@ public:
   /** Read and write access to array elements. The syntax for accessing, for example, 3D array 
   elements is: A(i, j, k) = .... */
   template<typename... Rest>
-  T& operator()(int i, Rest... rest) { return data[flatIndex(0, i, rest...)]; }
+  T& operator()(int i, Rest... rest) { return dataPointer[flatIndex(0, i, rest...)]; }
 
 
 
@@ -57,6 +57,7 @@ protected:
       --i;
     }
   }
+  // maybe move to cpp file
 
   std::vector<int> shape;
   std::vector<int> strides;
@@ -134,13 +135,25 @@ public:
     return flatIndex(depth, i) + flatIndex(depth+1, rest...);     // row-major
   }
 
-  // i think, arithmetic operators *,/ should work element-wise - no matrix multiply - see, what
-  // numpy does - the different kinds of special products (matrix-product, outer-product, 
-  // inner-product, etc.) should be realized a named functions
+  // i think, arithmetic operators *,/ should work element-wise like numpy does - the different 
+  // kinds of special products (matrix-product, outer-product, inner-product, etc.) should be 
+  // realized a named functions
 
 
 
 protected:
+
+  /** Updates the data-pointer inherited from rsMultiArrayView to point to the begin of our 
+  std::vector that holds the actual data. */
+  /*
+  void updateDataPointer()
+  {
+    if(data.size() > 0)
+      this->dataPointer = &data[0];
+    else
+      this->dataPointer = nullptr;
+  }
+  */
 
   // factor out into class MultiArrayView:
   std::vector<int> shape;
@@ -150,13 +163,7 @@ protected:
   std::vector<T>   data;
 
 };
-// implement it in a similar way as rsMatrix - factor out class MultiArrayView
-// maybe make a class MultiIndex such that we can write things like
-// for(MultiIndex i = {0,0,0}; i < {2,4,3}; i++) A(i) = ... // A is MultiArray
-// the operator ++ must be implemented such that it counts up the last index, then wraps back back
-// to zero while incrementing second-to-last, etc.
-// operations: outer-product (tensor-product?), inner product, contraction (with respect to a pair
-// of indices)
+
 
 void testMultiArray()
 {

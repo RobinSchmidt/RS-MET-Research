@@ -23,8 +23,34 @@ public:
   }
   // take initial shape by reference
 
+
   //-----------------------------------------------------------------------------------------------
-  /** \name Access */
+  /** \name Setup */
+
+  // setShape, fill, 
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry */
+
+  /** Returns the number of array elements. */
+  int getSize() const { return size; }
+
+  /** Returns the number of array dimensions, i.e. the number of indices. */
+  int getNumDimensions() const { return (int) shape.size(); }
+
+  /** Returns a const reference to the shape array of the multidimensional array. The shape is 
+  defined by the number of  values that each index may run over. For example, a 2x3 matrix has a 
+  shape array of [2,3]. */
+  const std::vector<int>& getShape() const { return shape; }
+
+  // maybe have functions that return a pointer to a particular "row" - but the function should be 
+  // a template, taking an arbitrary number of indices - for example A.getRowPointer(2, 3) would
+  // return the 4th row in the 3rd slice ...or the other way around...i think so
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Element Access */
 
   /** Read and write access to array elements. The syntax for accessing, for example, 3D array 
   elements is: A(i, j, k) = .... */

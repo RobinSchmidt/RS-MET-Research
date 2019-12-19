@@ -16,23 +16,25 @@ public:
     strides.resize(rank);
 
     // update strides (needs test):
-    /*
-    int i = rank-1;
+    
+    int i = rank-1;    // last index has stride 1 - "L-layout", row-major
     int s = 1;
     while(i >= 0) {
       strides[i] = s;
       s *= shape[i];
       --i;
     }
-    */
+    
 
-    int i = rank-1;
+    /*
+    int i = rank-1;  // first index has stride 1 - "F-layout", column-major
     int s = 1;
     while(i >= 0) {
       strides[i] = s;
       s *= shape[rank-i-1];
       --i;
     }
+    */
 
     // compute required space and allocate memory:
     s = 1;
@@ -44,7 +46,8 @@ public:
   template<typename... Rest>
   T& operator()(int i, Rest... rest) 
   {
-    return data[ flatIndex((int)shape.size()-1, i, rest...) ]; // maybe pass 0?
+    //return data[ flatIndex((int)shape.size()-1, i, rest...) ]; // F-layout
+    return data[ flatIndex(0, i, rest...) ];                     // L-layout
   }
   // goal: we want to be able to use the operator like (i), (i,k), (i,j,k), ...
   // seems to work! test with rank 3!
@@ -61,7 +64,8 @@ public:
   template<typename... Rest>
   int flatIndex(int depth, int i, Rest... rest)
   {
-    return flatIndex(depth, i) + flatIndex(depth-1, rest...); // maybe pass depth+1?
+    //return flatIndex(depth, i) + flatIndex(depth-1, rest...);   // F-layout
+    return flatIndex(depth, i) + flatIndex(depth+1, rest...);     // L-layout
   }
 
   // i think, arithmetic operators *,/ should work element-wise - no matrix multiply - see, what
@@ -103,9 +107,10 @@ void testMultiArray()
   MA a2 = MA(VecI{3,2});  
   a2(0,0) = 11;
   a2(0,1) = 12;
-  a2(1,0) = 21;
 
+  a2(1,0) = 21;
   a2(1,1) = 22;
+
   a2(2,0) = 31;
   a2(2,1) = 32;
 

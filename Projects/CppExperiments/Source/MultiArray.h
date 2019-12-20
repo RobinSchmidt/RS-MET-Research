@@ -84,6 +84,19 @@ protected:
   // this is perhaps the best case to check, if an idex is valid, we should have:
   // 0 <= index < shape[depth] ...right? not sure
 
+  // can we implement this without using the strides? let's try:
+
+  /*
+  int flatIndex(int stride, int index) { return index * stride; }
+
+  template<typename... Rest>
+  int flatIndex(int depth, int stride, int i, Rest... rest) 
+  { 
+    return flatIndex(stride, i) + flatIndex(depth, stride*shape[depth-1] , rest...); 
+    //return flatIndex(depth, i) + flatIndex(depth+1, rest...); 
+  }
+  */
+
   /** Converts a C-array (assumed to be of length getNumDimensions()) of indices to a flat 
   index. */
   int flatIndex(const int* indices)
@@ -133,6 +146,23 @@ protected:
   int size = 0;
 
 };
+// maybe numIndices should be a compile-time parameter, i.e. a template-parameter and shape should 
+// also be a non-owned pointer..maybe rsStaticMultiArrayView... maybe like this
+/*
+template<class T>
+class rsMultiArrayView
+{
+
+protected:
+  
+  T*   dataPointer;
+  int* sizesPointer; // aka shape
+  int  numSizes;
+  int  totalSize;    // == product(shape)
+
+};
+
+*/
 
 //=================================================================================================
 
@@ -185,8 +215,75 @@ protected:
 };
 
 
+// some idea to implement the index computation using only the shape array - which is passed along
+// to the index computation function
+
+int flatIndexRecursion(int* shape, int depth, int stride, int index)
+{
+  return stride * index;
+}
+// base case for recursion
+
+template<typename... Rest>
+int flatIndexRecursion(int* shape, int depth, int stride, int index, Rest... rest)
+{
+  return flatIndexRecursion(shape, depth,   stride,                index)
+      +  flatIndexRecursion(shape, depth-1, stride*shape[depth-1], rest...);
+}
+// rename the "depth" parameter to numIndices/numDimensions
+// measure the performance of this stride-array-free computation of flat indices with the 
+// stride-array based one
+
+
+template<typename... Rest>
+int flatIndex(int* shape, int numDimensions, int index, Rest... rest)
+{
+  return flatIndexRecursion(shape, numDimensions, 1, index, rest...);
+}
+// this is meant to be used by client code - the others above are just for internal use
+// -> seems to work - move to rapt, the get rid of stride array there - it's not needed anymore
+
+/*
+
+int getStride(int* shape, int depth, int stride)
+{
+  return stride;
+}
+
+template<typename... Rest>
+int getStride(int* shape, int depth, int stride, Rest...rest)
+{
+  return stride * getStride(shape, depth-1, rest...);
+}
+*/
+
+
 void testMultiArray()
 {
+  // test for the recursive flat index computation function without using strides:
+  int shape[3] = { 2,4,3 };                 // 2x4x3 3D array
+  int i = flatIndexRecursion(shape, 3, 1,   1,1,1);  // multi-index = (1,1,1) -> flat-index = 16
+
+
+  i = flatIndex(shape, 3,  1,1,1);
+
+  int shape2[5] ={ 3,5,7,11,13 };
+  i = flatIndex(shape2, 5,  3,2,3,4,5);  // nope - result is wrong! should be 17503
+  // https://www.wolframalpha.com/input/?i=5+%2B+4+*+13+%2B+3+*+11*13+%2B+2+*+7*11*13+%2B+3+*+5*7*11*13
+
+  i = flatIndex(shape2, 5,  5,4,3,2,3);
+  // this actually gives 17503 - i think the recursion traverses the shape array the wrong way
+
+
+  int shape3[4] ={ 2,4,3,2 };
+  i = flatIndex(shape3, 4,  1,1,1,1); // 33 - correct
+  i = flatIndex(shape3, 4,  1,1,2,1); // 39
+  i = flatIndex(shape3, 4,  1,2,2,1); // 41
+
+
+  //int s = getStride(shape, 3, 1)
+
+
   typedef std::vector<int> VecI;
   typedef std::vector<float> VecF;
   typedef rsMultiArray<float> MA;
@@ -254,3 +351,7 @@ void testMultiArray()
 
   int dummy = 0;
 }
+
+
+
+

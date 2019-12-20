@@ -230,6 +230,17 @@ int flatIndexRecursion(int* shape, int depth, int stride, int index, Rest... res
   return flatIndexRecursion(shape, depth,   stride,                index)
       +  flatIndexRecursion(shape, depth-1, stride*shape[depth-1], rest...);
 }
+
+/*
+// version 2 - for test - nope - that is even wronger:
+template<typename... Rest>
+int flatIndexRecursion(int* shape, int depth, int stride, int index, Rest... rest)
+{
+  return flatIndexRecursion(shape, depth, stride*shape[depth-1],                index)
+    +  flatIndexRecursion(shape, depth-1, stride, rest...);
+}
+/*
+
 // rename the "depth" parameter to numIndices/numDimensions
 // measure the performance of this stride-array-free computation of flat indices with the 
 // stride-array based one
@@ -260,19 +271,31 @@ int getStride(int* shape, int depth, int stride, Rest...rest)
 
 void testMultiArray()
 {
-  // test for the recursive flat index computation function without using strides:
-  int shape[3] = { 2,4,3 };                 // 2x4x3 3D array
-  int i = flatIndexRecursion(shape, 3, 1,   1,1,1);  // multi-index = (1,1,1) -> flat-index = 16
-
-
-  i = flatIndex(shape, 3,  1,1,1);
-
+  int i;
   int shape2[5] ={ 3,5,7,11,13 };
   i = flatIndex(shape2, 5,  3,2,3,4,5);  // nope - result is wrong! should be 17503
   // https://www.wolframalpha.com/input/?i=5+%2B+4+*+13+%2B+3+*+11*13+%2B+2+*+7*11*13+%2B+3+*+5*7*11*13
 
   i = flatIndex(shape2, 5,  5,4,3,2,3);
   // this actually gives 17503 - i think the recursion traverses the shape array the wrong way
+  // ...nope - the parameter pack is rolled up from the front - the base-case implementation gets
+  // the first passed index - but we want the base-case to get the last! the indexes are traversed
+  // left-to-right, but the accumulation of the strides goes right-to-left...hmm...we probably need
+  // the strides array
+  // ...i mean, we could implment it that way but it would imply that we get a column-major memory
+  // layout...the first index would run fastest - that's counter intuitive, but we can get rid of 
+  // the strides array...hmm...maybe it's better to have a strides array anyway
+
+
+
+  // test for the recursive flat index computation function without using strides:
+  int shape[3] = { 2,4,3 };                 // 2x4x3 3D array
+  i = flatIndexRecursion(shape, 3, 1,   1,1,1);  // multi-index = (1,1,1) -> flat-index = 16
+
+
+  i = flatIndex(shape, 3,  1,1,1);
+
+
 
 
   int shape3[4] ={ 2,4,3,2 };

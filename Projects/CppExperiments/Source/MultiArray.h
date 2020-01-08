@@ -282,9 +282,12 @@ void testMultiArray()
   // the first passed index - but we want the base-case to get the last! the indexes are traversed
   // left-to-right, but the accumulation of the strides goes right-to-left...hmm...we probably need
   // the strides array
-  // ...i mean, we could implment it that way but it would imply that we get a column-major memory
-  // layout...the first index would run fastest - that's counter intuitive, but we can get rid of 
-  // the strides array...hmm...maybe it's better to have a strides array anyway
+  // ...i mean, we could implement it that way but it would imply that we get a column-major memory
+  // layout...the first index would get a stride of 1 - that's counter intuitive, but we can get 
+  // rid of the strides array...hmm...maybe it's better to have a strides array anyway - at least,
+  // in the view-class - that makes it more flexible to use - we could write A(i,j) regardless 
+  // whether a matrix is stored row- or column major - we would just need to give the view object
+  // the correct strides
 
 
 

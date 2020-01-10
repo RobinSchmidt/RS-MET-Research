@@ -25,7 +25,8 @@ def polyTrunc(p):
 	""""Truncates trailing zeros of the list p - maybe rename to 
 	rsTruncateTrailingZeros"""
 	i = len(p)-1
-	while i > 0:
+	#while i > 0:  old - buggy!
+  while i > 1:
 		if p[i] != 0:
 			break
 		i -= 1

@@ -1,0 +1,33 @@
+
+Representing math things on a computer:
+
+RealNumber
+-a real number is represented as an infinite series of rational numbers 
+-the first few elements of the series are written down directly, the 
+ potentially infinitely many others are specified in terms of a rule, how to
+ compute the next element from previous ones
+-so, the representation is finite (finite set of rationals + recursive rule)
+-questions:
+ -is this powerful enough to represent any real number?
+ -how can real numbers defined like that be added, subtracted, multiplied
+  and divided - what about roots, exponentiation, etc? will these operations 
+  again yield a finite number of initial terms plus a recursive rule
+ -how is the recursive rule represented? initial terms are added directly, 
+  multiplication of initial terms will probably involve convolution, division
+  deconvolution
+
+
+IntervalSet:
+-an interval is represented a pair of a minimum and maximum value together with
+ flags whether min and max are included (2 reals, 2 bools)
+-a set of intervals is represented as an array of intervals
+-addition of IntervalSets represents the union, multiplication the intersection
+-the arithmetic operators should detect overlapping intervals in a set and 
+ merge them as appropriate, like (0,3] * [2,4) + (3,6] = [2,3] + (3,6] = [2,6] 
+-the empty interval is the neutral element of addition (union) and canonically 
+ represented as: min = max = 0, minIncluded = maxIncluded = false
+-the inifinite interval is the neutral element of multiplication (intersection) and
+ represented as: min = -inf, max = inf, minIncluded = maxIncluded = false
+ 
+
+ 

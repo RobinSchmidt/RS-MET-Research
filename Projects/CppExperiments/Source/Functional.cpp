@@ -24,5 +24,8 @@ void testFunctionShortcuts()
   // writing the full name out for each individual call. It's a bit similar to using things like
   // using Vec = std::vector<complex<double>>;  which is equivalent to 
   // typedef std::vector<complex<double>> Vec;  ...but the former is considered more modern
+  
+  // make a closure: std::function<...> getNormalDistribution(mu, sigma) return lambda-function
 
 }
+

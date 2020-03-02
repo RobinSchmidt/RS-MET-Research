@@ -7,6 +7,8 @@ RealNumber
  potentially infinitely many others are specified in terms of a rule, how to
  compute the next element from previous ones
 -so, the representation is finite (finite set of rationals + recursive rule)
+-example e = 1/0! + 1/1! + 1/2! + 1/3! + ... -> a_0 = 1, a_1 = 1, a_2 = 1/2,
+ a_n = a_{n-1}/n
 -questions:
  -is this powerful enough to represent any real number?
  -how can real numbers defined like that be added, subtracted, multiplied
@@ -15,6 +17,9 @@ RealNumber
  -how is the recursive rule represented? initial terms are added directly, 
   multiplication of initial terms will probably involve convolution, division
   deconvolution
+ -maybe the rule can be expressed as an expression in a CAS
+-figure out representations pi, e+pi, e*pi, e/pi, e^pi, maybe also the golden 
+ ratio phi
 
 
 IntervalSet:
@@ -27,7 +32,19 @@ IntervalSet:
 -the empty interval is the neutral element of addition (union) and canonically 
  represented as: min = max = 0, minIncluded = maxIncluded = false
 -the inifinite interval is the neutral element of multiplication (intersection) and
- represented as: min = -inf, max = inf, minIncluded = maxIncluded = false
+ represented as: min = -inf, max = inf, minIncluded = maxIncluded = false (because
+ infinity is never included in math - but it may not make a difference whether we
+ include it or not)
+-we may also define subtraction as the set-difference operation - but this 
+ operation can't be expressed as addition of an inverse element because the set 
+ union can make a set only larger, but this operation should make it smaller
+-is there also an inverse operation to multiplication, i.e. intersection? maybe a 
+ union with the complement? is (A * B) / B = A when * means intersection and / 
+ means union-with-complement? -> figure out
+-can we define addition differently such that there are inverse elements? 
+ probably not
+-can "equations" always be solved even though we do not have a field (because 
+ of the lack of additive inverses)?
  
 
  

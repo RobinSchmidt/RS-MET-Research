@@ -1,0 +1,1 @@
+Contains code snippets from various sources and in various languages - for inspiration and research.

@@ -2,6 +2,10 @@ This code is from:
 https://bartipan.net/vmath/
 
 things to look at:
+-attention: the at(int x, int y) function for matrices is implemented in such a way that x refers 
+ to the column and y to the row - this is different from conventional matrix addressing - so any 
+ matrix code in this library should be used with transposed indices
+ -the () operator, on the other hand, uses regular matrix notation
 -how unions are used in Vector3 for having (x,y,z),(r,g,b),(s,t,u) vectors
 -Vector3::rotate - compare to my implementation
 -Matrix3::createRotationAroundAxis
@@ -20,3 +24,10 @@ things to look at:
  -slerp (spherical interpolation)
 -Aabb: axis-aligned bounding box:
  -intersects (2 versions), intersection
+ 
+ 
+maybe also look at this:
+http://glm.g-truc.net/0.9.5/index.html
+because here:
+https://stackoverflow.com/questions/17250146/what-and-where-is-vmath-h
+someone says, vmath.h is buggy

@@ -1304,6 +1304,7 @@ class rsTestTensor : public rsTensor<T>
 public:
 
   using rsTensor::rsTensor;
+  //using rsTensor::operator=;
 
   // tests conversion from structured to flat indices and back:
   static bool testIndexConversion()
@@ -1320,6 +1321,30 @@ public:
     return r;
   }
 
+
+  static bool testOuterProduct(const rsTestTensor<T>& A, const rsTestTensor<T>& B)
+  {
+    rsTensor<T> C = getOuterProduct(A, B);
+
+    // recompute elements of D using other algorithm for index computation and compare, if it's
+    // still equal to C after doing so
+    //rsTestTensor<T> D = C; // getOuterProduct2(A, B);
+    rsTestTensor<T> D(C.getShape());
+    //rsTestTensor<T> D(C.shape);
+    int indices[10];   // 10 should be enough
+    for(int k = 0; k < D.getSize(); k++) {
+      D.structuredIndices(k, indices);
+      int flatIndexA = A.flatIndex(indices);
+      int flatIndexB = B.flatIndex(&indices[A.getNumIndices()]);
+      D.data[k] = A.data[flatIndexA] * B.data[flatIndexB];
+    }
+
+    return rsArrayTools::equal(C.getDataPointer(), D.getDataPointer(), C.getSize());
+
+    //return C == D;
+    return false; // preliminary
+  }
+
 };
 
 bool testTensor()
@@ -1327,9 +1352,20 @@ bool testTensor()
   bool r = true;
 
 
-  using Tens = rsTestTensor<double>;
+  using TestTens = rsTestTensor<double>;
+  using Tens     = rsTensor<double>;
 
-  r &= Tens::testIndexConversion();
+  r &= TestTens::testIndexConversion();
+
+
+  //Tens A({ 2,3,4 }), B({ 2,3 });
+  //Tens c = Tens::outerProduct(A, B);
+
+
+  TestTens A({ 2,3 }), B({ 4,5 });
+  A.fillRandomly();
+  B.fillRandomly();
+  r &= TestTens::testOuterProduct(A, B);
 
 
   return r;

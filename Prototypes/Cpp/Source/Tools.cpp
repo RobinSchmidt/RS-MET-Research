@@ -585,6 +585,8 @@ template<class T>
 class rsTensor : public rsMultiArray<T>
 {
 
+public:
+
   // todo: setters
 
   using rsMultiArray::rsMultiArray;  // inherit constructors
@@ -613,7 +615,7 @@ class rsTensor : public rsMultiArray<T>
   // \name Operations
   // see rsmultiArrayOld for possible implementations
 
-  static rsTensor<T> contraction(const rsTensor<T>& A, int i, int j)
+  static rsTensor<T> getContraction(const rsTensor<T>& A, int i, int j)
   {
     rsAssert(A.areIndicesOpposite(i, j), "Indices i,j must have opposite variance for contraction");
 
@@ -621,18 +623,54 @@ class rsTensor : public rsMultiArray<T>
     return rsTensor<>();  // preliminary
   }
 
-  static rsTensor<T> outerProduct(const rsTensor<T>& A, const rsTensor<T>& B)
+  // rename to getOuterProduct
+  static rsTensor<T> getOuterProduct(const rsTensor<T>& A, const rsTensor<T>& B)
   {
-    rsError("Not yet finished");
-    return rsTensor<>();  // preliminary
+    // allocate and set up result:
+    rsTensor<T> C;
+    C.weight = A.weight + B.weight;  // verify
+    C.shape.resize(A.shape.size() + B.shape.size());
+    for(size_t i = 0; i < A.shape.size(); i++) C.shape[i]                  = A.shape[i];
+    for(size_t i = 0; i < B.shape.size(); i++) C.shape[i + A.shape.size()] = B.shape[i];
+    C.updateStrides(); 
+    C.updateSize();
+    C.data.resize(C.getSize());
+    C.updateDataPointer();
+
+    // fill the C-array - loop through all of its flat indices
+
+    int k = 0;
+    for(int i = 0; i < A.getSize(); i++)
+    {
+      for(int j = 0; j < B.getSize(); j++)
+      {
+        C.data[k] = A.data[i] * B.data[j];
+        k++;
+      }
+    }
+    // does such a loop result in the correct order? of the elements in C? that would be nice 
+    // because it's efficient
+
+   
+
+
+    //rsError("Not yet finished");
+
+
+
+    return C;
+
+    //return rsTensor<T>();  // preliminary
   }
 
-  static rsTensor<T> innerProduct(const rsTensor<T>& A, const rsTensor<T>& B, int i, int j)
+  static rsTensor<T> getInnerProduct(const rsTensor<T>& A, const rsTensor<T>& B, int i, int j)
   {
-    return contraction(outerProduct(A, B), i, j);  // preliminary
+    return getContraction(getOuterProduct(A, B), i, j);  // preliminary
   }
 
   // leftFactor, rightFactor
+
+  // epsilon, delta
 
 protected:
 

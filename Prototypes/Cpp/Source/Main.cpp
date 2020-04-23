@@ -21,12 +21,14 @@ int main (int /*argc*/, char* /*argv[]*/)
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
   //epidemic();
+
+  testTensor();
   //testPlane();
   //testManifoldPlane();
   //testManifold1();
   //testManifold2();
-  testManifoldPolar();
-  testManifoldSphere();
+  //testManifoldPolar();
+  //testManifoldSphere();
   //testManifoldEarth();
   
   return 0;

@@ -1295,8 +1295,45 @@ void epidemic()
 // https://www.youtube.com/watch?v=wEvZmBXgxO0
 
 
+// class for testing rsTensor - we use a subclass to get access to some protected members that we 
+// need to investigate in the tests.
+template<class T>
+class rsTestTensor : public rsTensor<T>
+{
+
+public:
+
+  using rsTensor::rsTensor;
+
+  // tests conversion from structured to flat indices and back:
+  static bool testIndexConversion()
+  {
+    bool r = true;
+    int L = 2, M = 5, N = 3;
+    rsTestTensor<T> A({L,M,N});
+    for(int l = 0; l < L; l++) {
+      for(int m = 0; m < M; m++) {
+        for(int n = 0; n < N; n++) {
+          int flat = A.flatIndex(0, l,m,n);  // 1st argument 0 is the recursion depth
+          int lmn[3]; A.structuredIndices(flat, lmn);
+          r &= lmn[0] == l && lmn[1] == m && lmn[2] == n; }}}
+    return r;
+  }
+
+};
+
+bool testTensor()
+{
+  bool r = true;
 
 
+  using Tens = rsTestTensor<double>;
+
+  r &= Tens::testIndexConversion();
+
+
+  return r;
+}
 
 bool testPlane()
 {

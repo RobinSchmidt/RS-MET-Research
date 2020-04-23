@@ -564,7 +564,22 @@ protected:
 //-------------------------------------------------------------------------------------------------
 
 /** Extends rsMultiArray by storing information whether a given index is covariant or contravariant
-and a tensor weight which is zero for normal tensors and nonzero for relative tensors. */
+and a tensor weight which is zero for normal tensors and nonzero for relative tensors. 
+
+A tensor is:
+-A geometric or physical entity that can be represented by a multidimensional array, once a 
+ coordinate system has been selected. The tensor itself exists independently from the coordinate 
+ systems, but its components (i.e. the array elements) are always to be understood with respect to 
+ a given coordinate system.
+-A multilinear map that takes some number of vectors and/or covectors as inputs and produces a 
+ scalar as output. Multilinear means that it is linear in all of its arguments.
+-When converting tensor components from one coordinate system to another, they transform according
+ to a specific set of transformation rules.
+-Scalars, vectors (column-vectors), covectors (row-vectors) and matrices are included as special 
+ cases
+
+
+*/
 
 template<class T>
 class rsTensor : public rsMultiArray<T>
@@ -572,17 +587,58 @@ class rsTensor : public rsMultiArray<T>
 
   // todo: setters
 
+  using rsMultiArray::rsMultiArray;  // inherit constructors
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
 
   bool isIndexCovariant(int i) const { return covariant[i]; }
 
   int getTensorWeight() const { return weight; }
 
+  /** Returns true, iff indices i and j are of opposite variance type, i.e. one covariant the other
+  contravariant. This condition is required for the contraction with respect to i,j make sense. */
+  bool areIndicesOpposite(int i, int j) const
+  {
+    return (covariant[i] && !covariant[j]) || (!covariant[i] && covariant[j]);
+  }
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Operations
+  // see rsmultiArrayOld for possible implementations
+
+  static rsTensor<T> contraction(const rsTensor<T>& A, int i, int j)
+  {
+    rsAssert(A.areIndicesOpposite(i, j), "Indices i,j must have opposite variance for contraction");
+
+    rsError("Not yet finished");
+    return rsTensor<>();  // preliminary
+  }
+
+  static rsTensor<T> outerProduct(const rsTensor<T>& A, const rsTensor<T>& B)
+  {
+    rsError("Not yet finished");
+    return rsTensor<>();  // preliminary
+  }
+
+  static rsTensor<T> innerProduct(const rsTensor<T>& A, const rsTensor<T>& B, int i, int j)
+  {
+    return contraction(outerProduct(A, B), i, j);  // preliminary
+  }
+
+  // leftFactor, rightFactor
+
 protected:
 
   int weight = 0;
   std::vector<bool> covariant; // true if an index is covariant, false if contravariant
-    // todo: use a more efiicient datastructure - maybe rsFlags64 - this would limit us to tensors
+    // todo: use a more efficient datastructure - maybe rsFlags64 - this would limit us to tensors
     // up to rank 64 - but that should be crazily more than enough
 
 };

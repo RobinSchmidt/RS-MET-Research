@@ -632,48 +632,27 @@ public:
     rsAssert(A.shape[i] == A.shape[j], "Summation indices must have the same range");
     rsAssert(A.getRank() >= 2, "Rank must be at least 2.");
 
-
     // verify this:
     rsTensor<T> B;
     B.shape.resize(A.shape.size() - 2);
     int k = 0, l = 0;
-    while(k < B.getRank())
-    {
-      if(l == i || l == j) {
+    while(k < B.getRank()) {
+      if(l == i || l == j)  {
         l++; continue; }
       B.shape[k] = A.shape[l];
-      k++;
-      l++;
-    }
+      k++; l++; }
     B.adjustToNewShape();
 
-    // this needs thorough verifications - step/jump were was mostly guessed
-    //int indicesA[10], indicesB[10]; // preliminary
+    // this needs thorough verifications - step/jump/start were mostly guessed:
     int step = A.strides[i] + A.strides[j];
     int jump = rsArrayTools::sum(&A.strides[0], (int) A.strides.size()) - step;
     int num  = A.shape[i];                    // == A.shape[j]
-    for(k = 0; k < B.getSize(); k++)
-    {
-      B.structuredIndices(k, indicesB);
-
+    for(k = 0; k < B.getSize(); k++) {
       B.data[k] = T(0);
-
-      // i think, we must accumulate into B.data[k] values from A.data[start + l*step] where l runs
-      // from 0 to num-1...but what is start?
       int start = k*jump;
       for(l = 0; l < num; l++)
-        B.data[k] += A.data[start + l*step];
-
-      int dummy = 0;
-    }
-
-
-
-
-    //rsError("Not yet finished");
+        B.data[k] += A.data[start + l*step]; }
     return B;
-
-    //return rsTensor<T>();  // preliminary
   }
 
 

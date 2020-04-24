@@ -1368,19 +1368,53 @@ bool testTensor()
   using VecI = std::vector<int>;
   //using VecD = std::vector<double>;
 
+  // test contractions of 2x3x3, 3x2x3 and 3x3x2 tensors:
+
   //A = Tens(VecD({2,3,3}));
   C.setShape(VecI({2,3,3}));
-  C.setData(VecI({111,112,113,
-                  121,122,123,
-                  131,132,133,
+  C.setData(VecI({111, 112, 113,
+                  121, 122, 123,
+                  131, 132, 133,
     
-                  211,212,213,
-                  221,222,223,
-                  231,232,233}));
+                  211, 212, 213,
+                  221, 222, 223,
+                  231, 232, 233}));
   D = Tens::getContraction(C, 1,2); // should be (366, 666)
+  r &= D.getShape() == VecI({2});
+  r &= D(0) == 366.0 && D(1) == 666.0; // 111 + 122 + 133, 211 + 222 + 233
 
-  // works for 2x3x3 - try also with 3x2x3 and 3x3x2 tensors - then also with higher ranks
+  C.setShape(VecI({3,2,3}));
+  C.setData(VecI({111, 112, 113,
+                  121, 122, 123,
 
+                  211, 212, 213,
+                  221, 222, 223,
+
+                  311, 312, 313,
+                  321, 322, 323}));
+  D = Tens::getContraction(C, 0,2);
+  r &= D.getShape() == VecI({2});
+  r &= D(0) == 636.0 && D(1) == 666.0; // 111 + 212 + 313, 121 + 222 + 323
+
+  C.setShape(VecI({3,3,2}));
+  C.setData(VecI({111, 112, 
+                  121, 122, 
+                  131, 132,
+
+                  211, 212, 
+                  221, 222, 
+                  231, 232,
+
+                  311, 312, 
+                  321, 322, 
+                  331, 332}));
+  D = Tens::getContraction(C, 0,1);
+  r &= D.getShape() == VecI({2});
+  r &= D(0) == 663.0 && D(1) == 666.0; // 111 + 221 + 331, 112 + 222 + 332
+
+  // try contraction also with higher ranks, compare with old implementation
+
+  // combine this with the old rsMultiArrayOld tests
   return r;
 }
 

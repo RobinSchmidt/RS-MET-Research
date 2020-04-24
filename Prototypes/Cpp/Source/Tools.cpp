@@ -647,6 +647,29 @@ public:
     }
     B.adjustToNewShape();
 
+    // this needs thorough verifications - step/jump were was mostly guessed
+    //int indicesA[10], indicesB[10]; // preliminary
+    int step = A.strides[i] + A.strides[j];
+    int jump = rsArrayTools::sum(&A.strides[0], (int) A.strides.size()) - step;
+    int num  = A.shape[i];                    // == A.shape[j]
+    for(k = 0; k < B.getSize(); k++)
+    {
+      B.structuredIndices(k, indicesB);
+
+      B.data[k] = T(0);
+
+      // i think, we must accumulate into B.data[k] values from A.data[start + l*step] where l runs
+      // from 0 to num-1...but what is start?
+      int start = k*jump;
+      for(l = 0; l < num; l++)
+        B.data[k] += A.data[start + l*step];
+
+      int dummy = 0;
+    }
+
+
+
+
     //rsError("Not yet finished");
     return B;
 
@@ -690,7 +713,7 @@ public:
   // todo:
   // -leftFactor, rightFactor (retrieve left and right factor from outer product and the respective
   //  other factor
-  // -factory fucntions for special tensors: epsilon, delta (both with optional argument to produce
+  // -factory functions for special tensors: epsilon, delta (both with optional argument to produce
   //  the generalized versions
 
 protected:

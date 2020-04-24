@@ -1360,11 +1360,26 @@ bool testTensor()
   r &= TestTens::testOuterProduct(A, B);
 
   // test contraction:
-  Tens C = Tens::getOuterProduct(A, B);   // maybe use syntax C = A.outerProduct(B); or A.outer(B)
-  Tens D = Tens::getContraction(C, 1, 3); // maybe use syntax C.getContraction(1, 3)
+  Tens C,D;
+  //Tens C = Tens::getOuterProduct(A, B);   // maybe use syntax C = A.outerProduct(B); or A.outer(B)
+  //Tens D = Tens::getContraction(C, 1, 3); // maybe use syntax C.getContraction(1, 3)
 
 
+  using VecI = std::vector<int>;
+  //using VecD = std::vector<double>;
 
+  //A = Tens(VecD({2,3,3}));
+  C.setShape(VecI({2,3,3}));
+  C.setData(VecI({111,112,113,
+                  121,122,123,
+                  131,132,133,
+    
+                  211,212,213,
+                  221,222,223,
+                  231,232,233}));
+  D = Tens::getContraction(C, 1,2); // should be (366, 666)
+
+  // works for 2x3x3 - try also with 3x2x3 and 3x3x2 tensors - then also with higher ranks
 
   return r;
 }

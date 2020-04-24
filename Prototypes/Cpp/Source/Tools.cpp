@@ -576,7 +576,8 @@ A tensor is:
 -When converting tensor components from one coordinate system to another, they transform according
  to a specific set of transformation rules.
 -Scalars, vectors (column-vectors), covectors (row-vectors) and matrices are included as special 
- cases
+ cases, so tensors really provide a quite general framework for geometric and physical 
+ calculations.
 
 
 */
@@ -599,7 +600,12 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
+  int getRank() const { return getNumIndices(); }
+  // this is the total rank, todo: getCovariantRank, getContravariantRank
+
   bool isIndexCovariant(int i) const { return covariant[i]; }
+
+  bool isIndexContravariant(int i) const { return !isIndexCovariant(i); }
 
   int getTensorWeight() const { return weight; }
 
@@ -610,69 +616,93 @@ public:
     return (covariant[i] && !covariant[j]) || (!covariant[i] && covariant[j]);
   }
 
+  // isScalar, isVector, isCovector, 
+  // isOfSameTypeAs(const rsTensor<T>& A) - compares ranks, variances and weights
 
   //-----------------------------------------------------------------------------------------------
   // \name Operations
   // see rsmultiArrayOld for possible implementations
 
+  /** Returns a tensor that results from contracting this tensor with respect to the given pair of 
+  indices.  */
   static rsTensor<T> getContraction(const rsTensor<T>& A, int i, int j)
   {
-    rsAssert(A.areIndicesOpposite(i, j), "Indices i,j must have opposite variance for contraction");
+    rsAssert(A.covariant.size() == 0 || A.areIndicesOpposite(i, j),
+      "Indices i,j must have opposite variance for contraction");
+    rsAssert(A.shape[i] == A.shape[j], "Summation indices must have the same range");
+    rsAssert(A.getRank() >= 2, "Rank must be at least 2.");
 
-    rsError("Not yet finished");
-    return rsTensor<>();  // preliminary
-  }
 
-  // rename to getOuterProduct
-  static rsTensor<T> getOuterProduct(const rsTensor<T>& A, const rsTensor<T>& B)
-  {
-    // allocate and set up result:
-    rsTensor<T> C;
-    C.weight = A.weight + B.weight;  // verify
-    C.shape.resize(A.shape.size() + B.shape.size());
-    for(size_t i = 0; i < A.shape.size(); i++) C.shape[i]                  = A.shape[i];
-    for(size_t i = 0; i < B.shape.size(); i++) C.shape[i + A.shape.size()] = B.shape[i];
-    C.updateStrides(); 
-    C.updateSize();
-    C.data.resize(C.getSize());
-    C.updateDataPointer();
-
-    // fill the C-array - loop through all of its flat indices
-
-    int k = 0;
-    for(int i = 0; i < A.getSize(); i++)
+    // verify this:
+    rsTensor<T> B;
+    B.shape.resize(A.shape.size() - 2);
+    int k = 0, l = 0;
+    while(k < B.getRank())
     {
-      for(int j = 0; j < B.getSize(); j++)
-      {
-        C.data[k] = A.data[i] * B.data[j];
-        k++;
-      }
+      if(l == i || l == j) {
+        l++; continue; }
+      B.shape[k] = A.shape[l];
+      k++;
+      l++;
     }
-    // does such a loop result in the correct order? of the elements in C? that would be nice 
-    // because it's efficient
-
-   
-
+    B.adjustToNewShape();
 
     //rsError("Not yet finished");
-
-
-
-    return C;
+    return B;
 
     //return rsTensor<T>();  // preliminary
   }
 
-  static rsTensor<T> getInnerProduct(const rsTensor<T>& A, const rsTensor<T>& B, int i, int j)
+
+  /** Computes the outer product between tensors A and B, also known as direct product, tensor 
+  product or Kronecker product. */
+  static rsTensor<T> getOuterProduct(const rsTensor<T>& A, const rsTensor<T>& B)
   {
-    return getContraction(getOuterProduct(A, B), i, j);  // preliminary
+    // Allocate and set up result:
+    size_t i;
+    rsTensor<T> C;
+    C.shape.resize(A.shape.size() + B.shape.size());
+    for(i = 0; i < A.shape.size(); i++) C.shape[i]                  = A.shape[i];
+    for(i = 0; i < B.shape.size(); i++) C.shape[i + A.shape.size()] = B.shape[i];
+    C.adjustToNewShape();
+
+    // Set up the weight and the "covariant" array of the result:
+    C.weight = A.weight + B.weight;  // verify
+    C.covariant.resize(A.covariant.size() + B.covariant.size());
+    for(i = 0; i < A.covariant.size(); i++) C.covariant[i]                      = A.covariant[i];
+    for(i = 0; i < B.covariant.size(); i++) C.covariant[i + A.covariant.size()] = B.covariant[i];
+
+    // Fill the data-array of the result and return it:
+    int k = 0;
+    for(int i = 0; i < A.getSize(); i++) {
+      for(int j = 0; j < B.getSize(); j++) {
+        C.data[k] = A.data[i] * B.data[j]; k++; }}
+    return C;
   }
 
-  // leftFactor, rightFactor
+  static rsTensor<T> getInnerProduct(const rsTensor<T>& A, const rsTensor<T>& B, int i, int j)
+  {
+    return getContraction(getOuterProduct(A, B), i, j);  
+    // preliminary - todo: optimize this by avoiding the blown up outer product as intermediate
+    // result
+  }
 
-  // epsilon, delta
+  // todo:
+  // -leftFactor, rightFactor (retrieve left and right factor from outer product and the respective
+  //  other factor
+  // -factory fucntions for special tensors: epsilon, delta (both with optional argument to produce
+  //  the generalized versions
 
 protected:
+
+  void adjustToNewShape()
+  {
+    updateStrides(); 
+    updateSize();
+    data.resize(getSize());
+    updateDataPointer();
+  }
+  // maybe move to baseclass
 
   int weight = 0;
   std::vector<bool> covariant; // true if an index is covariant, false if contravariant

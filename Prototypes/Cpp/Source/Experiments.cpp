@@ -1328,10 +1328,8 @@ public:
 
     // recompute elements of D using other algorithm for index computation and compare, if it's
     // still equal to C after doing so
-    //rsTestTensor<T> D = C; // getOuterProduct2(A, B);
     rsTestTensor<T> D(C.getShape());
-    //rsTestTensor<T> D(C.shape);
-    int indices[10];   // 10 should be enough
+    int indices[10];   // 10 should be enough for this test - production code should not use this
     for(int k = 0; k < D.getSize(); k++) {
       D.structuredIndices(k, indices);
       int flatIndexA = A.flatIndex(indices);
@@ -1340,9 +1338,6 @@ public:
     }
 
     return rsArrayTools::equal(C.getDataPointer(), D.getDataPointer(), C.getSize());
-
-    //return C == D;
-    return false; // preliminary
   }
 
 };
@@ -1358,14 +1353,17 @@ bool testTensor()
   r &= TestTens::testIndexConversion();
 
 
-  //Tens A({ 2,3,4 }), B({ 2,3 });
-  //Tens c = Tens::outerProduct(A, B);
-
-
-  TestTens A({ 2,3 }), B({ 4,5 });
+  TestTens A({ 2,4,3 }), B({ 4,5 });
+  //TestTens A({ 2,3 }), B({ 4,5 });
   A.fillRandomly();
   B.fillRandomly();
   r &= TestTens::testOuterProduct(A, B);
+
+  // test contraction:
+  Tens C = Tens::getOuterProduct(A, B);   // maybe use syntax C = A.outerProduct(B); or A.outer(B)
+  Tens D = Tens::getContraction(C, 1, 3); // maybe use syntax C.getContraction(1, 3)
+
+
 
 
   return r;

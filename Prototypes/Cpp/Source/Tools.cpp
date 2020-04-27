@@ -635,9 +635,20 @@ public:
   bool isOfSameTypeAs(const rsTensor<T>& A) const
   { return this->shape == A.shape && this->covariant == A.covariant && this->weight == A.weight; }
 
+  /** Compares this tensor with another tensor A for equality with a tolerance. */
+  bool equals(const rsTensor<T>& A, T tol) const
+  {
+    bool r = true;
+    r &= getShape() == A.getShape();
+    r &= covariant  == A.covariant;
+    r &= weight     == A.weight;
+    r &= rsArrayTools::almostEqual(getDataPointerConst(), A.getDataPointerConst(), getSize(), tol);
+    return r;
+  }
+
   //-----------------------------------------------------------------------------------------------
   // \name Operations
-  // see rsmultiArrayOld for possible implementations
+  // see rsMultiArrayOld for possible implementations
 
   /** Returns a tensor that results from contracting tensor A with respect to the given pair of 
   indices.  */
@@ -709,12 +720,15 @@ public:
 
   static int getDivisionIndex(const rsTensor<T>& A) // maybe rename
   {
-    return 5; // test
-
-    //return 0;
-    // preliminary: later use the first index in A which has a nonzero entry and maybe even later 
-    // use an entry that causes the least rounding errors (i think, we should look for numbers, 
-    // whose mantissa has the largest number of zero entries, counting from the right end)
+    //return 0;  // preliminary
+    //return 7;  // test
+    //return 5; // test
+    //return rsArrayTools::firstIndexWithNonZeroValue(A.getDataPointerConst(), A.getSize());
+    return rsArrayTools::maxAbsIndex(A.getDataPointerConst(), A.getSize());
+      // maybe later use an entry that causes the least rounding errors (i think, we should look 
+      // for numbers, whose mantissa has the largest number trailing zero bits) - in case of 
+      // complex numbers we should use the one for which the minimum of both re/im of the number
+      // of trailing mantissa bits is largest
   }
 
   /** Given a tensor product C = A*B and the right factor B, this function retrieves the left
@@ -732,7 +746,6 @@ public:
     int k = B.getSize();
     for(int i = 0; i < A.getSize(); i++)
       A.data[i] = C.data[k*i + offset] / B.data[offset];
-
     return A;
   }
   // seems to work
@@ -751,25 +764,19 @@ public:
 
     // needs verification:
     int offset = getDivisionIndex(A);
-    //int k = A.getSize();
     int k = B.getSize();
     for(int i = 0; i < B.getSize(); i++)
-    {
-      //B.data[i] = C.data[i + offset] / A.data[offset]; // works when offset == 0
-      B.data[i] = C.data[i + k*offset] / A.data[offset]; // seems to weork when k == B.size()
-    }
-
-
-    //rsError("function does not yet work");
-
+      B.data[i] = C.data[i + k*offset] / A.data[offset];
     return B;
   }
-  // works only when offset == 0
+  // seems to work
+
 
 
   // todo:
   // -factory functions for special tensors: epsilon, delta (both with optional argument to produce
   //  the generalized versions
+  // -(anti)symmetrizations
 
   //-----------------------------------------------------------------------------------------------
   // Operators:
@@ -823,7 +830,8 @@ protected:
   // doesn't compile with vector<bool> because:
   // https://stackoverflow.com/questions/17794569/why-is-vectorbool-not-a-stl-container
   // https://howardhinnant.github.io/onvectorbool.html
-  // that's why i use vector<char> for the time being
+  // that's why i use vector<char> for the time being - eventually, it's perhaps best to use 
+  // rsFlags64 (which may have to be written
 };
 
 

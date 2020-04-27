@@ -1438,36 +1438,29 @@ bool testTensor()
   r &= testTensorContraction();
 
 
+  double tol = 1.e-15;
+
   Tens A({ 2,4,3 }), B({ 4,5 });
-  A.fillRandomly();
-  B.fillRandomly();
+  A.fillRandomly(-10.0, 10.0, 1);
+  B.fillRandomly(-10.0, 10.0, 2);
 
  
  // test getting back left and right factors from outer product:
   Tens C  = Tens::getOuterProduct(A, B);
-  Tens A2 = Tens::getLeftFactor(  C, B);
-  Tens B2 = Tens::getRightFactor( C, A);
+  Tens A2 = Tens::getLeftFactor(  C, B); // allow syntax C.getLeftFactor(B)
+  Tens B2 = Tens::getRightFactor( C, A); // C.getRightFactor(A)
+  //Tens DA = A - A2;  // should be numerically close to zero - seems to work
+  //Tens DB = B - B2;
+  r &= A2.equals(A, tol);
+  r &= B2.equals(B, tol);
 
-  Tens D  = A - A2;  // should be numerically close to zero - seems to work
-  D = B - B2;
 
-  // todo: try offsets other than 0 in getLeft/Right
-  // -implement getDivisionIndex
-
-  // B is still wrong when offset != 0
+  // todo: maybe do this in a loop with different random ranks, shapes, and data
 
   //r &= A == A2; // are operators not inherited? hmm - this says, they are, except the assignment
   // operator:
   // https://www.linuxtopia.org/online_books/programming_books/thinking_in_c++/Chapter14_018.html
 
-  //r &= rsArrayTools::equal(A.getDataPointer(), A2. getDataPointer(), A.getSize());
-
-  //Tens B2 = Tens::getRightFactor(C, A); 
-
-  // test contraction:
-  //Tens C,D;
-  //Tens C = Tens::getOuterProduct(A, B);   // maybe use syntax C = A.outerProduct(B); or A.outer(B)
-  //Tens D = Tens::getContraction(C, 1, 3); // maybe use syntax C.getContraction(1, 3)
 
 
   //using VecI = std::vector<int>;

@@ -1442,13 +1442,11 @@ bool testTensor()
   A.fillRandomly();
   B.fillRandomly();
 
-  
-  //r &= TestTens::testOuterProduct(A, B);
-  
-
-  Tens C = Tens::getOuterProduct(A, B);
-
-  //Tens A2 = Tens::getLeftFactor(C, B); // doesn't compile
+ 
+ // test getting back left and right factors from outer product:
+  Tens C  = Tens::getOuterProduct(A, B);
+  Tens A2 = Tens::getLeftFactor(  C, B); // doesn't compile
+  Tens D  = A - A2;  // should be numerically close to zero - seems to work
 
   //r &= A == A2; // are operators not inherited? hmm - this says, they are, except the assignment
   // operator:
@@ -1457,8 +1455,6 @@ bool testTensor()
   //r &= rsArrayTools::equal(A.getDataPointer(), A2. getDataPointer(), A.getSize());
 
   //Tens B2 = Tens::getRightFactor(C, A); 
-
-
 
   // test contraction:
   //Tens C,D;

@@ -567,7 +567,7 @@ template<class T>
 inline std::vector<T> rsChunk(const std::vector<T>& v, int start, int length)
 {
   rsAssert(length >= 0);
-  rsAssert(length-start <= (int) v.size());
+  rsAssert(start + length <= (int) v.size());
   std::vector<T> r(length);
   rsArrayTools::copy(&v[start], &r[0], length);
   return r;
@@ -632,7 +632,7 @@ public:
   // isScalar, isVector, isCovector, 
 
   // compares ranks, shape, variances and weights
-  bool isOfSameTypeAs(const rsTensor<T>& A)
+  bool isOfSameTypeAs(const rsTensor<T>& A) const
   { return this->shape == A.shape && this->covariant == A.covariant && this->weight == A.weight; }
 
   //-----------------------------------------------------------------------------------------------
@@ -711,21 +711,21 @@ public:
   factor A. */
   static rsTensor<T> getLeftFactor(const rsTensor<T>& C, const rsTensor<T>& B)
   {
+    rsTensor<T> A;      // result
+    int rankA = C.getRank() - B.getRank();
+    A.setShape(rsChunk(C.shape, 0, rankA));
+    if(C.covariant.size() > 0)
+      A.covariant = rsChunk(C.covariant, 0, rankA);
+
     int offset = 0; 
     // preliminary: later use the first index in B which has a nonzero entry and maybe even later 
     // use an entry that causes the leats rounding errors (i think, we should look for numbers, 
     // whose mantissa has the largest number of zero entries, counting from the right end)
 
-    rsTensor<T> A;      // result
-    int rankA = C.getRank() - B.getRank();
-    A.setShape(rsChunk(C.shape, 0, rankA));
-    A.covariant = rsChunk(C.covariant, 0, rankA);
-
-    //for(int
-
-
-    // ...
-
+    // needs verification:
+    int k = B.getSize();
+    for(int i = 0; i < A.getSize(); i++)
+      A.data[i] = C.data[k*i + offset] / B.data[offset];
 
     return A;
   }
@@ -760,6 +760,14 @@ public:
     return C; 
   }
 
+  rsTensor<T> operator-(const rsTensor<T>& B) const
+  { 
+    rsAssert(isOfSameTypeAs(B), "Tensors to be subtracted must have same shape, variances and weights");
+    rsTensor<T> C(this->shape); 
+    this->subtract(*this, B, &C); 
+    return C; 
+  }
+
   rsTensor<T> operator==(const rsTensor<T>& B) const
   {
     return isOfSameTypeAs(B) 
@@ -782,10 +790,18 @@ protected:
   // different variance types and/or weight or contracting with respect to two indices of the same
   // variance type (none of which makes sense mathematically):
   int weight = 0;
-  std::vector<bool> covariant; // true if an index is covariant, false if contravariant
+
+
+  //std::vector<bool> covariant; // true if an index is covariant, false if contravariant
+  std::vector<char> covariant; // 1 if an index is covariant, 0 if contravariant
     // todo: use a more efficient datastructure - maybe rsFlags64 - this would limit us to tensors
     // up to rank 64 - but that should be crazily more than enough
 
+  //A.covariant = rsChunk(C.covariant, 0, rankA);
+  // doesn't compile with vector<bool> because:
+  // https://stackoverflow.com/questions/17794569/why-is-vectorbool-not-a-stl-container
+  // https://howardhinnant.github.io/onvectorbool.html
+  // that's why i use vector<char> for the time being
 };
 
 

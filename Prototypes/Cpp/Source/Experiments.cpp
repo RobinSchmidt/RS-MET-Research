@@ -1445,8 +1445,13 @@ bool testTensor()
  
  // test getting back left and right factors from outer product:
   Tens C  = Tens::getOuterProduct(A, B);
-  Tens A2 = Tens::getLeftFactor(  C, B); // doesn't compile
+  Tens A2 = Tens::getLeftFactor(  C, B);
+  Tens B2 = Tens::getRightFactor( C, A);
+
   Tens D  = A - A2;  // should be numerically close to zero - seems to work
+  D = B - B2;
+
+
 
   //r &= A == A2; // are operators not inherited? hmm - this says, they are, except the assignment
   // operator:

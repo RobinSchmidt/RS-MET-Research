@@ -707,6 +707,14 @@ public:
   }
 
 
+  static int getDivisionIndex(const rsTensor<T>& A) // maybe rename
+  {
+    return 0;
+    // preliminary: later use the first index in A which has a nonzero entry and maybe even later 
+    // use an entry that causes the least rounding errors (i think, we should look for numbers, 
+    // whose mantissa has the largest number of zero entries, counting from the right end)
+  }
+
   /** Given a tensor product C = A*B and the right factor B, this function retrieves the left
   factor A. */
   static rsTensor<T> getLeftFactor(const rsTensor<T>& C, const rsTensor<T>& B)
@@ -716,16 +724,15 @@ public:
     A.setShape(rsChunk(C.shape, 0, rankA));
     if(C.covariant.size() > 0)
       A.covariant = rsChunk(C.covariant, 0, rankA);
-
-    int offset = 0; 
-    // preliminary: later use the first index in B which has a nonzero entry and maybe even later 
-    // use an entry that causes the leats rounding errors (i think, we should look for numbers, 
-    // whose mantissa has the largest number of zero entries, counting from the right end)
+    A.weight = C.weight - B.weight;
 
     // needs verification:
+    int offset = getDivisionIndex(B);
     int k = B.getSize();
     for(int i = 0; i < A.getSize(); i++)
       A.data[i] = C.data[k*i + offset] / B.data[offset];
+
+    // what about the weight? should we do A.weight = C.weight - B.weight? i think so
 
     return A;
   }
@@ -733,19 +740,31 @@ public:
 
   /** Given a tensor product C = A*B and the left factor A, this function retrieves the right 
   factor B. */
-  /*
   static rsTensor<T> getRightFactor(const rsTensor<T>& C, const rsTensor<T>& A)
   {
-    int offset = 0; 
-    // preliminary: later use the first index in A which has a nonzero entry and maybe even later 
-    // use an entry that causes the leats rounding errors (i think, we should look for numbers, 
-    // whose mantissa has the largest number of zero entries, counting from the right end)
+    rsTensor<T> B;      // result
+    int rankA = A.getRank();
+    int rankB = C.getRank() - rankA;
+    B.setShape(rsChunk(C.shape, rankA, rankB));
+    if(C.covariant.size() > 0)
+      B.covariant = rsChunk(C.covariant, rankA, rankB);
+    B.weight = C.weight - A.weight;
+
+
+
+    // needs verification:
+    int offset = getDivisionIndex(B);
+    int k = B.getSize();
+    // ...
+
+
+
+    return B;
   }
-  */
+
+
 
   // todo:
-  // -leftFactor, rightFactor (retrieve left and right factor from outer product and the respective
-  //  other factor
   // -factory functions for special tensors: epsilon, delta (both with optional argument to produce
   //  the generalized versions
 

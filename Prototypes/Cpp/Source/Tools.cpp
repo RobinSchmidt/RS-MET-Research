@@ -622,27 +622,32 @@ public:
   int getTensorWeight() const { return weight; }
 
   /** Returns true, iff indices i and j are of opposite variance type, i.e. one covariant the other
-  contravariant. This condition is required for the contraction with respect to i,j make sense. */
+  contravariant. This condition is required for the contraction with respect to i,j to make 
+  mathematical sense, so it can be used as sanity check to catch errors in tensor computations. */
   bool areIndicesOpposite(int i, int j) const
   {
     return (covariant[i] && !covariant[j]) || (!covariant[i] && covariant[j]);
   }
 
   // isScalar, isVector, isCovector, 
-  // isOfSameTypeAs(const rsTensor<T>& A) - compares ranks, variances and weights
+
+  // compares ranks, shape, variances and weights
+  bool isOfSameTypeAs(const rsTensor<T>& A)
+  { return this->shape == A.shape && this->covariant == A.covariant && this->weight == A.weight; }
 
   //-----------------------------------------------------------------------------------------------
   // \name Operations
   // see rsmultiArrayOld for possible implementations
 
-  /** Returns a tensor that results from contracting this tensor with respect to the given pair of 
+  /** Returns a tensor that results from contracting tensor A with respect to the given pair of 
   indices.  */
   static rsTensor<T> getContraction(const rsTensor<T>& A, int i, int j)
   {
+    // sanity checks:
     rsAssert(A.covariant.size() == 0 || A.areIndicesOpposite(i, j),
-      "Indices i,j must have opposite variance for contraction");
+      "Indices i,j must have opposite (co/contra) variance type for contraction");
     rsAssert(A.shape[i] == A.shape[j], "Summation indices must have the same range");
-    rsAssert(A.getRank() >= 2, "Rank must be at least 2.");
+    rsAssert(A.getRank() >= 2, "Rank must be at least 2");
 
     // verify this:
     rsTensor<T> B;
@@ -713,7 +718,7 @@ public:
 
     rsTensor<T> A;      // result
     int rankA = C.getRank() - B.getRank();
-    A.setShape(rsChunk(C.getShape(), 0, rankA));
+    A.setShape(rsChunk(C.shape, 0, rankA));
     A.covariant = rsChunk(C.covariant, 0, rankA);
 
     //for(int
@@ -744,6 +749,23 @@ public:
   // -factory functions for special tensors: epsilon, delta (both with optional argument to produce
   //  the generalized versions
 
+  //-----------------------------------------------------------------------------------------------
+  // Operators:
+
+  rsTensor<T> operator+(const rsTensor<T>& B) const
+  { 
+    rsAssert(isOfSameTypeAs(B), "Tensors to be added must have same shape, variances and weights");
+    rsTensor<T> C(this->shape); 
+    this->add(*this, B, &C); 
+    return C; 
+  }
+
+  rsTensor<T> operator==(const rsTensor<T>& B) const
+  {
+    return isOfSameTypeAs(B) 
+      && rsArrayTools::equal(this->getDataPointer(), B.getDataPointer(), getSize());
+  }
+
 protected:
 
   void adjustToNewShape()
@@ -755,6 +777,10 @@ protected:
   }
   // maybe move to baseclass
 
+  // using these is optional - if used, it allows for some sanity checks in the arithmetic 
+  // operations such as catching (i.e. raising an assertion) when you try to add tensors of 
+  // different variance types and/or weight or contracting with respect to two indices of the same
+  // variance type (none of which makes sense mathematically):
   int weight = 0;
   std::vector<bool> covariant; // true if an index is covariant, false if contravariant
     // todo: use a more efficient datastructure - maybe rsFlags64 - this would limit us to tensors

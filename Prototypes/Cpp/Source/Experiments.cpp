@@ -1342,6 +1342,23 @@ public:
 
 };
 
+bool testTensorOuterProduct()
+{
+  bool r = true;
+
+  using TestTens = rsTestTensor<double>;
+
+  TestTens A({ 2,4,3 }), B({ 4,5 });
+  //TestTens A({ 2,3 }), B({ 4,5 });
+  A.fillRandomly();
+  B.fillRandomly();
+  r &= TestTens::testOuterProduct(A, B);
+
+
+  return r;
+}
+
+
 bool testTensorContraction()
 {
   bool r = true;
@@ -1415,14 +1432,33 @@ bool testTensor()
   using Tens     = rsTensor<double>;
 
   r &= TestTens::testIndexConversion();
+
+
+  r &= testTensorOuterProduct();
   r &= testTensorContraction();
 
 
-  TestTens A({ 2,4,3 }), B({ 4,5 });
-  //TestTens A({ 2,3 }), B({ 4,5 });
+  Tens A({ 2,4,3 }), B({ 4,5 });
   A.fillRandomly();
   B.fillRandomly();
-  r &= TestTens::testOuterProduct(A, B);
+
+  
+  //r &= TestTens::testOuterProduct(A, B);
+  
+
+  Tens C = Tens::getOuterProduct(A, B);
+
+  //Tens A2 = Tens::getLeftFactor(C, B); // doesn't compile
+
+  //r &= A == A2; // are operators not inherited? hmm - this says, they are, except the assignment
+  // operator:
+  // https://www.linuxtopia.org/online_books/programming_books/thinking_in_c++/Chapter14_018.html
+
+  //r &= rsArrayTools::equal(A.getDataPointer(), A2. getDataPointer(), A.getSize());
+
+  //Tens B2 = Tens::getRightFactor(C, A); 
+
+
 
   // test contraction:
   //Tens C,D;

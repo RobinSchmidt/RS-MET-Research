@@ -1342,35 +1342,14 @@ public:
 
 };
 
-bool testTensor()
+bool testTensorContraction()
 {
   bool r = true;
-
-
-  using TestTens = rsTestTensor<double>;
-  using Tens     = rsTensor<double>;
-
-  r &= TestTens::testIndexConversion();
-
-
-  TestTens A({ 2,4,3 }), B({ 4,5 });
-  //TestTens A({ 2,3 }), B({ 4,5 });
-  A.fillRandomly();
-  B.fillRandomly();
-  r &= TestTens::testOuterProduct(A, B);
-
-  // test contraction:
-  Tens C,D;
-  //Tens C = Tens::getOuterProduct(A, B);   // maybe use syntax C = A.outerProduct(B); or A.outer(B)
-  //Tens D = Tens::getContraction(C, 1, 3); // maybe use syntax C.getContraction(1, 3)
-
-
+  using Tens = rsTensor<double>;
   using VecI = std::vector<int>;
-  //using VecD = std::vector<double>;
 
   // test contractions of 2x3x3, 3x2x3 and 3x3x2 tensors:
-
-  //A = Tens(VecD({2,3,3}));
+  Tens C, D;
   C.setShape(VecI({2,3,3}));
   C.setData(VecI({111, 112, 113,
                   121, 122, 123,
@@ -1412,7 +1391,48 @@ bool testTensor()
   r &= D.getShape() == VecI({2});
   r &= D(0) == 663.0 && D(1) == 666.0; // 111 + 221 + 331, 112 + 222 + 332
 
-  // try contraction also with higher ranks, compare with old implementation
+
+  // todo: contraction with higher ranks, compare with old implementation
+
+  // compare with old implementation:
+  //rsMultiArrayOld<double> M(5, 
+
+
+  // maybe implement a function sumOverIndex(int i) which sums over the given index and thereby 
+  // reduces the rank by one - this could already be useful in rsMultiArray, for example to create
+  // averages along certain dimensions - maybe see what numpy has
+
+  return r;
+} 
+
+
+bool testTensor()
+{
+  bool r = true;
+
+
+  using TestTens = rsTestTensor<double>;
+  using Tens     = rsTensor<double>;
+
+  r &= TestTens::testIndexConversion();
+  r &= testTensorContraction();
+
+
+  TestTens A({ 2,4,3 }), B({ 4,5 });
+  //TestTens A({ 2,3 }), B({ 4,5 });
+  A.fillRandomly();
+  B.fillRandomly();
+  r &= TestTens::testOuterProduct(A, B);
+
+  // test contraction:
+  //Tens C,D;
+  //Tens C = Tens::getOuterProduct(A, B);   // maybe use syntax C = A.outerProduct(B); or A.outer(B)
+  //Tens D = Tens::getContraction(C, 1, 3); // maybe use syntax C.getContraction(1, 3)
+
+
+  //using VecI = std::vector<int>;
+  //using VecD = std::vector<double>;
+
 
   // combine this with the old rsMultiArrayOld tests
   return r;

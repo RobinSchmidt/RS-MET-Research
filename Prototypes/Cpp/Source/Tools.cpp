@@ -561,6 +561,18 @@ protected:
 };
 
 
+/** Returns a vector that contains a chunk of the given input vector v, starting at index "start" 
+with length given by "length". */
+template<class T>
+inline std::vector<T> rsChunk(const std::vector<T>& v, int start, int length)
+{
+  rsAssert(length >= 0);
+  rsAssert(length-start <= (int) v.size());
+  std::vector<T> r(length);
+  rsArrayTools::copy(&v[start], &r[0], length);
+  return r;
+}
+
 //-------------------------------------------------------------------------------------------------
 
 /** Extends rsMultiArray by storing information whether a given index is covariant or contravariant
@@ -688,6 +700,43 @@ public:
     // preliminary - todo: optimize this by avoiding the blown up outer product as intermediate
     // result
   }
+
+
+  /** Given a tensor product C = A*B and the right factor B, this function retrieves the left
+  factor A. */
+  static rsTensor<T> getLeftFactor(const rsTensor<T>& C, const rsTensor<T>& B)
+  {
+    int offset = 0; 
+    // preliminary: later use the first index in B which has a nonzero entry and maybe even later 
+    // use an entry that causes the leats rounding errors (i think, we should look for numbers, 
+    // whose mantissa has the largest number of zero entries, counting from the right end)
+
+    rsTensor<T> A;      // result
+    int rankA = C.getRank() - B.getRank();
+    A.setShape(rsChunk(C.getShape(), 0, rankA));
+    A.covariant = rsChunk(C.covariant, 0, rankA);
+
+    //for(int
+
+
+    // ...
+
+
+    return A;
+  }
+
+
+  /** Given a tensor product C = A*B and the left factor A, this function retrieves the right 
+  factor B. */
+  /*
+  static rsTensor<T> getRightFactor(const rsTensor<T>& C, const rsTensor<T>& A)
+  {
+    int offset = 0; 
+    // preliminary: later use the first index in A which has a nonzero entry and maybe even later 
+    // use an entry that causes the leats rounding errors (i think, we should look for numbers, 
+    // whose mantissa has the largest number of zero entries, counting from the right end)
+  }
+  */
 
   // todo:
   // -leftFactor, rightFactor (retrieve left and right factor from outer product and the respective

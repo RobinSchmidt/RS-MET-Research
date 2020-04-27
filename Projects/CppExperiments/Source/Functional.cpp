@@ -22,8 +22,11 @@ void testFunctionShortcuts()
   // Using such a shortcut is useful, when we need to call a function with a long name many times 
   // (and not inside a loop). We save a lot of redundant typing by using a shortcut compared to 
   // writing the full name out for each individual call. It's a bit similar to using things like
-  // using Vec = std::vector<complex<double>>;  which is equivalent to 
-  // typedef std::vector<complex<double>> Vec;  ...but the former is considered more modern
+  //   using Vec = std::vector<complex<double>>;  which is equivalent to 
+  //   typedef std::vector<complex<double>> Vec;  ...but the former is considered more modern
+  // it's also serves a similar purpose as things like::
+  //   from module_with_functions import function_with_very_long_name as func
+  // in python
   
   // make a closure: std::function<...> getNormalDistribution(mu, sigma) return lambda-function
 

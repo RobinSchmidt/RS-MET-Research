@@ -1451,7 +1451,7 @@ bool testTensor()
   Tens D  = A - A2;  // should be numerically close to zero - seems to work
   D = B - B2;
 
-
+  // todo: try offsets other than 0 in getLeft/Right
 
   //r &= A == A2; // are operators not inherited? hmm - this says, they are, except the assignment
   // operator:

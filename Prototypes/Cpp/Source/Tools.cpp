@@ -753,10 +753,17 @@ public:
 
 
     // needs verification:
-    int offset = getDivisionIndex(B);
-    int k = B.getSize();
+    int offset = getDivisionIndex(A);
+    int k = A.getSize();
+    for(int i = 0; i < B.getSize(); i++)
+    {
+      B.data[i] = C.data[k*i + offset] / A.data[offset]; 
+      // is this correct? questionable is the index in C - B and A should be correct
+      // nope - it's wrong! only the very first element in B is correcz
+    }
     // ...
 
+    rsError("function does not yet work");
 
 
     return B;

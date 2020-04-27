@@ -1452,6 +1452,9 @@ bool testTensor()
   D = B - B2;
 
   // todo: try offsets other than 0 in getLeft/Right
+  // -implement getDivisionIndex
+
+  // B is still wrong when offset != 0
 
   //r &= A == A2; // are operators not inherited? hmm - this says, they are, except the assignment
   // operator:

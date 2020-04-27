@@ -709,7 +709,9 @@ public:
 
   static int getDivisionIndex(const rsTensor<T>& A) // maybe rename
   {
-    return 0;
+    return 5; // test
+
+    //return 0;
     // preliminary: later use the first index in A which has a nonzero entry and maybe even later 
     // use an entry that causes the least rounding errors (i think, we should look for numbers, 
     // whose mantissa has the largest number of zero entries, counting from the right end)
@@ -726,17 +728,14 @@ public:
       A.covariant = rsChunk(C.covariant, 0, rankA);
     A.weight = C.weight - B.weight;
 
-    // needs verification:
     int offset = getDivisionIndex(B);
     int k = B.getSize();
     for(int i = 0; i < A.getSize(); i++)
       A.data[i] = C.data[k*i + offset] / B.data[offset];
 
-    // what about the weight? should we do A.weight = C.weight - B.weight? i think so
-
     return A;
   }
-
+  // seems to work
 
   /** Given a tensor product C = A*B and the left factor A, this function retrieves the right 
   factor B. */
@@ -750,25 +749,22 @@ public:
       B.covariant = rsChunk(C.covariant, rankA, rankB);
     B.weight = C.weight - A.weight;
 
-
-
     // needs verification:
     int offset = getDivisionIndex(A);
-    int k = A.getSize();
+    //int k = A.getSize();
+    int k = B.getSize();
     for(int i = 0; i < B.getSize(); i++)
     {
-      B.data[i] = C.data[k*i + offset] / A.data[offset]; 
-      // is this correct? questionable is the index in C - B and A should be correct
-      // nope - it's wrong! only the very first element in B is correcz
+      //B.data[i] = C.data[i + offset] / A.data[offset]; // works when offset == 0
+      B.data[i] = C.data[i + k*offset] / A.data[offset]; // seems to weork when k == B.size()
     }
-    // ...
 
-    rsError("function does not yet work");
 
+    //rsError("function does not yet work");
 
     return B;
   }
-
+  // works only when offset == 0
 
 
   // todo:

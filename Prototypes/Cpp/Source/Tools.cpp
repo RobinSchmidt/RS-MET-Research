@@ -794,9 +794,17 @@ public:
   }
   // see (1) pg. 76
   // todo: create generalized delta tensor - maybe use an optional parameter...
+  // maybe rename to getUnitTensor
 
-
-  static rsTensor<T> getEpsilonTensor(int numDimensions)
+  /** Returns the permutation tensor for the given number of dimensions. It's also known as 
+  epsilon tensor, Levi-Civita tensor, anti-symmetric and alternating tensor. It has a rank 
+  equal to the number of dimensions, so if this number is N, this tensor has N^N components, which 
+  means it grows really fast with the number of dimensions. It's very sparse though, i.e. many 
+  components are zero, so it's probably not a good idea to use this tensor explicitly in 
+  computations in production code - especially in higher dimensions. 
+  ...todo: use weight...set it in the tensor and fill the "covariant" array accordingly
+  */
+  static rsTensor<T> getPermutationTensor(int numDimensions, int weight = 0)
   {
     int N = numDimensions;
     std::vector<int> indices(N);  
@@ -812,14 +820,24 @@ public:
     }
     return E;
   }
-  // this is a rank-N tensor, i.e. the rank equals the number of dimensions and we get N^N elements
   // see (1) pg 77
   // it's either a contravariant relative tensor of weight +1 or a covariant tensor of weight -1
   // (see (1) pg. 81) -> set this up correctly! ...maybe optionally - pass -1 or +1 as parameter - 
   // or 0, if the weight should not be used
 
 
-  //  compare with rsGeneralizedDelta, rsLeviCivita in IntegerFunctions.h
+  static rsTensor<T> getGeneralizedDeltaTensor(int numDimensions)
+  {
+    int N = numDimensions;
+    rsTensor<T> Eu = getPermutationTensor(N, +1); // contravariant version of permutation tensor
+    rsTensor<T> El = getPermutationTensor(N, -1); // covariant version
+    return Eu * El;                               // (1) Eq. 201
+  }
+  // it's a mixed tensor - the first N indices are upper the second N indices are lower, (1) Eq 201
+
+
+
+  
 
   // todo:
   // -factory functions for special tensors: epsilon, delta (both with optional argument to produce

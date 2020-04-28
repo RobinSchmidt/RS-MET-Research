@@ -1349,15 +1349,37 @@ bool testTensorOuterProduct()
   using TestTens = rsTestTensor<double>;
 
   TestTens A({ 2,4,3 }), B({ 4,5 });
-  //TestTens A({ 2,3 }), B({ 4,5 });
   A.fillRandomly();
   B.fillRandomly();
   r &= TestTens::testOuterProduct(A, B);
 
-
   return r;
 }
 
+// test getting back left and right factors from outer product:
+bool testTensorFactors()
+{
+  bool r = true;
+
+  using Tens = rsTensor<double>;
+
+  double tol = 1.e-15;
+  Tens A({ 2,4,3 }), B({ 4,5 });
+  A.fillRandomly(-10.0, 10.0, 1);
+  B.fillRandomly(-10.0, 10.0, 2);
+  Tens C  = Tens::getOuterProduct(A, B);
+  Tens A2 = Tens::getLeftFactor(  C, B); // allow syntax C.getLeftFactor(B)
+  Tens B2 = Tens::getRightFactor( C, A); // C.getRightFactor(A)
+  //Tens DA = A - A2;  // should be numerically close to zero - seems to work
+  //Tens DB = B - B2;
+  r &= A2.equals(A, tol);
+  r &= B2.equals(B, tol);
+
+  // todo: 
+  // -maybe do this in a loop with different random ranks, shapes, and data
+
+  return r;
+}
 
 bool testTensorContraction()
 {
@@ -1435,39 +1457,24 @@ bool testTensor()
 
 
   r &= testTensorOuterProduct();
+  r &= testTensorFactors();
   r &= testTensorContraction();
 
 
-  double tol = 1.e-15;
 
-  Tens A({ 2,4,3 }), B({ 4,5 });
-  A.fillRandomly(-10.0, 10.0, 1);
-  B.fillRandomly(-10.0, 10.0, 2);
-
- 
- // test getting back left and right factors from outer product:
-  Tens C  = Tens::getOuterProduct(A, B);
-  Tens A2 = Tens::getLeftFactor(  C, B); // allow syntax C.getLeftFactor(B)
-  Tens B2 = Tens::getRightFactor( C, A); // C.getRightFactor(A)
-  //Tens DA = A - A2;  // should be numerically close to zero - seems to work
-  //Tens DB = B - B2;
-  r &= A2.equals(A, tol);
-  r &= B2.equals(B, tol);
-
-
-  // todo: 
-  // -factor out (maybe testTensorFactorizaion, testTensorFactors or something
-  // -maybe do this in a loop with different random ranks, shapes, and data
-
-
-
-  Tens E3 = Tens::getEpsilonTensor(3);
-  Tens E4 = Tens::getEpsilonTensor(4);
-  Tens E5 = Tens::getEpsilonTensor(5);
+  Tens E3 = Tens::getPermutationTensor(3);
+  Tens E4 = Tens::getPermutationTensor(4);
+  Tens E5 = Tens::getPermutationTensor(5);
   // stop here - they grow fast! namely, like N^N - most entries are zero though - so it's really a
   // bad idea to explicitly use them in production code
 
 
+  // verify Eq. 209
+  Tens D1 = Tens::getDeltaTensor(3);
+  Tens D2 = Tens::getGeneralizedDeltaTensor(2);
+  Tens D3 = Tens::getGeneralizedDeltaTensor(3);
+  //...
+  //  compare with rsGeneralizedDelta, rsLeviCivita in IntegerFunctions.h
 
 
   //r &= A == A2; // are operators not inherited? hmm - this says, they are, except the assignment

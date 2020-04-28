@@ -591,6 +591,9 @@ A tensor is:
  cases, so tensors really provide a quite general framework for geometric and physical 
  calculations.
 
+ References:
+   (1) Principles of Tensor Calculus (Taha Sochi)
+
 
 */
 
@@ -777,8 +780,8 @@ public:
   //-----------------------------------------------------------------------------------------------
   // Factory functions:
 
-  /** Creates the Kronecker delta tensor for the given number of dimensions. This is a rank-2 
-  tensor represented by the NxN identity matrix. */
+  /** Creates the Kronecker delta tensor (aka unit tensor) for the given number of dimensions. This
+  is a rank-2 tensor represented by the NxN identity matrix. */
   static rsTensor<T> getDeltaTensor(int numDimensions)
   {
     int N = numDimensions;
@@ -789,14 +792,39 @@ public:
       D(i, i) = T(1);
     return D;
   }
+  // see (1) pg. 76
   // todo: create generalized delta tensor - maybe use an optional parameter...
 
 
+  static rsTensor<T> getEpsilonTensor(int numDimensions)
+  {
+    int N = numDimensions;
+    std::vector<int> indices(N);  
+    rsFill(indices, N);             // we "abuse" the indices array here to represent the shape
+    rsTensor<T> E(indices);
+    E.setToZero();
+    for(int i = 0; i < E.getSize(); i++)
+    {
+      E.structuredIndices(i, &indices[0]);
+      E.data[i] = (T) rsLeviCivita(&indices[0], N);
+      // this implementation may still be highly suboptimal - i just wanted something that works
+      int dummy = 0;
+    }
+    return E;
+  }
+  // this is a rank-N tensor, i.e. the rank equals the number of dimensions and we get N^N elements
+  // see (1) pg 77
+  // it's either a contravariant relative tensor of weight +1 or a covariant tensor of weight -1
+  // (see (1) pg. 81) -> set this up correctly! ...maybe optionally - pass -1 or +1 as parameter - 
+  // or 0, if the weight should not be used
 
+
+  //  compare with rsGeneralizedDelta, rsLeviCivita in IntegerFunctions.h
 
   // todo:
   // -factory functions for special tensors: epsilon, delta (both with optional argument to produce
   //  the generalized versions
+  //  -maybe verify some epsilon-delta identities in unit test
   // -(anti)symmetrizations
 
   //-----------------------------------------------------------------------------------------------

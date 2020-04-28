@@ -1455,7 +1455,20 @@ bool testTensor()
   r &= B2.equals(B, tol);
 
 
-  // todo: maybe do this in a loop with different random ranks, shapes, and data
+  // todo: 
+  // -factor out (maybe testTensorFactorizaion, testTensorFactors or something
+  // -maybe do this in a loop with different random ranks, shapes, and data
+
+
+
+  Tens E3 = Tens::getEpsilonTensor(3);
+  Tens E4 = Tens::getEpsilonTensor(4);
+  Tens E5 = Tens::getEpsilonTensor(5);
+  // stop here - they grow fast! namely, like N^N - most entries are zero though - so it's really a
+  // bad idea to explicitly use them in production code
+
+
+
 
   //r &= A == A2; // are operators not inherited? hmm - this says, they are, except the assignment
   // operator:

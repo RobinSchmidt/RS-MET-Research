@@ -619,7 +619,7 @@ public:
 
   bool isIndexContravariant(int i) const { return !isIndexCovariant(i); }
 
-  int getTensorWeight() const { return weight; }
+  int getWeight() const { return weight; }
 
   /** Returns true, iff indices i and j are of opposite variance type, i.e. one covariant the other
   contravariant. This condition is required for the contraction with respect to i,j to make 
@@ -685,7 +685,8 @@ public:
 
 
   /** Computes the outer product between tensors A and B, also known as direct product, tensor 
-  product or Kronecker product. */
+  product or Kronecker product. Every element of tensor A is multiplied with every element from 
+  tensor B. todo: explain, how the data is arranged in the result */
   static rsTensor<T> getOuterProduct(const rsTensor<T>& A, const rsTensor<T>& B)
   {
     // Allocate and set up result:
@@ -718,7 +719,7 @@ public:
   }
 
 
-  static int getDivisionIndex(const rsTensor<T>& A) // maybe rename
+  static int getDivisionIndex(const rsTensor<T>& A) // maybe rename to getBestDivisorIndex
   {
     //return 0;  // preliminary
     //return 7;  // test
@@ -773,6 +774,26 @@ public:
 
 
 
+  //-----------------------------------------------------------------------------------------------
+  // Factory functions:
+
+  /** Creates the Kronecker delta tensor for the given number of dimensions. This is a rank-2 
+  tensor represented by the NxN identity matrix. */
+  static rsTensor<T> getDeltaTensor(int numDimensions)
+  {
+    int N = numDimensions;
+    rsTensor<T> D;
+    D.setShape({N, N});
+    D.setToZero();
+    for(int i = 0; i < N; i++)
+      D(i, i) = T(1);
+    return D;
+  }
+  // todo: create generalized delta tensor - maybe use an optional parameter...
+
+
+
+
   // todo:
   // -factory functions for special tensors: epsilon, delta (both with optional argument to produce
   //  the generalized versions
@@ -796,6 +817,23 @@ public:
     this->subtract(*this, B, &C); 
     return C; 
   }
+
+  rsTensor<T> operator*(const rsTensor<T>& B) const
+  { return getOuterProduct(*this, B); }
+
+  rsTensor<T> operator/(const rsTensor<T>& B) const
+  { return getLeftFactor(*this, B); }
+
+  // maybe we should override the multiplication operator? the baseclass defines it as element-wise
+  // multiplication...but then, maybe we should also override the division - but should be then 
+  // return the left or the right factor? is one more common than the other? what about the
+  // quotient-rule (Eq. 141) - in this case, C and B are given and A is computed....but no - this
+  // rule involves a contraction...i think, when starting from A*B = C, then dividing both sides by 
+  // B leading to A = A*B/B = C/B is more natural than dividing both sides by a and writing
+  // B = A*B/A = C/A, so we should probably compute A - the left factor - or maybe disallow 
+  // division by the / operator...or see what sage or matblab or mathematica do
+
+  // todo: multiplication by a scalar (outside the class)
 
   rsTensor<T> operator==(const rsTensor<T>& B) const
   {
@@ -833,6 +871,11 @@ protected:
   // that's why i use vector<char> for the time being - eventually, it's perhaps best to use 
   // rsFlags64 (which may have to be written
 };
+
+/** Multiplies a scalar and a tensor. */
+template<class T>
+inline rsTensor<T> operator*(const T& s, const rsTensor<T>& A)
+{ rsTensor<T> B(A); B.scale(s); return B; }
 
 
 //-------------------------------------------------------------------------------------------------

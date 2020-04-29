@@ -209,6 +209,7 @@ void applyMultiPass1(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img, int num
 
 
 /** Apply filter in west-south-west/east-north-east direction (and back). */
+// maybe have separate images for input and output (which may be the same but don't have to)
 template<class T>
 void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
 {
@@ -244,45 +245,22 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
       j--;
     }
 
-    // todo: reverse direction:
-    // ....
-
-
-    int dummy = 0;
-  }
-
-
-  /*
-  // from applyDiagonalSW2NE
-  for(int d = 0; d < numDiagonals; d++)
-  {
-    // figure out start and end coordinates of the current diagonal:
-    int iStart = d;
-    int jStart = 0;
-    if(d >= w) {
-      iStart  = w-1;
-      jStart += d-w+1; }
-
-    // go from top-right to bottom-left:
-    flt.reset();
-    int i = iStart;
-    int j = jStart;
-    while(i >= 0 && j < h) {
-      img(i, j) = flt.getSample(img(i, j));
-      i--; j++;  } // go one pixel to bottom-left
-
-                   // go from bottom-left to top-right:
+    // reverse direction:
     flt.prepareForBackwardPass();
-    i++; j--;
-    while(i <= iStart && j >= jStart)  {
+    i--; j++;
+    while(i >= 0 && j <= jStart)
+    {
       img(i, j) = flt.getSample(img(i, j));
-      i++; j--; } // go one pixel to top-right
+      i--;
+      if(i < 0)
+        break;
+      img(i, j) = flt.getSample(img(i, j));
+      i--;
+      j++;
+    }
   }
-  */
-
-
-  int dummy = 0;
 }
+
 
 template<class T>
 void applySlanted(rsImage<T>& img, T kernelWidth)
@@ -300,7 +278,7 @@ void testImageFilterSlanted()
 {
   int w = 100;
   int h = 60;
-  float kernelWidth = 15.f;
+  float kernelWidth = 20.f;
 
 
   rsImage<float> img(w, h);

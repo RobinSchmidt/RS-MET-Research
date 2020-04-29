@@ -15,14 +15,15 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testGaussBlurIIR();
   //testMultiPass();
+  testImageFilterSlanted();
   //testExponentialBlur();
   //testComplexExponentialBlur();
-//animateComplexExponentialBlur();
+  //animateComplexExponentialBlur();
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
   //epidemic();
 
-  testTensor();
+  //testTensor();
   //testPlane();
   //testManifoldPlane();
   //testManifold1();

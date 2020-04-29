@@ -818,12 +818,25 @@ public:
       // this implementation may still be highly suboptimal - i just wanted something that works
       int dummy = 0;
     }
+
+    // maybe factor out, so we may have a version that doesn't use the weight and variance-flags:
+    E.weight = weight;
+    E.covariant.resize(N);
+    if(weight == -1)
+      rsFill(E.covariant, char(1));
+    else
+      rsFill(E.covariant, char(0));
+
+
     return E;
   }
   // see (1) pg 77
   // it's either a contravariant relative tensor of weight +1 or a covariant tensor of weight -1
   // (see (1) pg. 81) -> set this up correctly! ...maybe optionally - pass -1 or +1 as parameter - 
   // or 0, if the weight should not be used
+
+
+
 
 
   static rsTensor<T> getGeneralizedDeltaTensor(int numDimensions)

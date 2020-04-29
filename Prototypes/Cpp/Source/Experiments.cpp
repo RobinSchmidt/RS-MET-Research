@@ -1,6 +1,7 @@
 #include "Tools.cpp"  // this includes rapt and rosic
 
 //-------------------------------------------------------------------------------------------------
+// move some of this code to rapt:
 
 // simple box filter for smoothing/blurring an image
 // maybe have options for edge handling: periodic, ignore, repeat, ...
@@ -68,11 +69,11 @@ void sobelEdgeDetector3x3(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& G, RAPT::
              + 2*(x(i-1, j  ) - x(i+1, j  ))
              +    x(i-1, j+1) - x(i+1, j+1);
 
-      T Gx =      x(i-1, j-1) - x(i-1, j+1)
+      T Gy =      x(i-1, j-1) - x(i-1, j+1)
              + 2*(x(i,   j-1) - x(i,   j+1))
              +    x(i+1, j-1) - x(i+1, j+1);
 
-      G(i, j) = sqrt(Gx*gx, + Gy*Gy);
+      G(i, j) = sqrt(Gx*Gx, + Gy*Gy);
       t(i, j) = atan2(Gy, Gx);
     }
   }
@@ -80,8 +81,6 @@ void sobelEdgeDetector3x3(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& G, RAPT::
 // ...needs tests
 // https://en.wikipedia.org/wiki/Sobel_operator
 // maybe factor into sobelX, sobelY - can use same temp images as used for G and t
-
-
 // see also:
 // https://en.wikipedia.org/wiki/Prewitt_operator
 // https://en.wikipedia.org/wiki/Roberts_cross
@@ -208,6 +207,111 @@ void applyMultiPass1(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img, int num
 // where forward, backward mean the forward and backward application of the filter and b is the
 // feedforward coeff of the filter. x is the input signal and y is the output
 
+
+/** Apply filter in west-south-west/east-north-east direction (and back). */
+template<class T>
+void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
+{
+  int w  = img.getWidth();
+  int h  = img.getHeight();
+  int w2 = w/2;
+  int numDiagonals  = w2 + h - 1;  // verify this!
+
+
+  for(int d = 0; d < numDiagonals; d++)
+  {
+    // figure out start and end coordinates of the current diagonal:
+    int iStart = 0;
+    int jStart = d;
+    if(d >= h) {
+      jStart = h-1;
+      //iStart = 2*(d-h+1);
+      iStart = 2*(d-jStart);
+    }
+
+    // south-south-west to east-north-east:
+    flt.reset();
+    int i = iStart;
+    int j = jStart;
+    while(i < w && j >= 0)
+    {
+      img(i, j) = flt.getSample(img(i, j));
+      i++;
+      if(i >= w)
+        break;
+      img(i, j) = flt.getSample(img(i, j));
+      i++;
+      j--;
+    }
+
+    // todo: reverse direction:
+    // ....
+
+
+    int dummy = 0;
+  }
+
+
+  /*
+  // from applyDiagonalSW2NE
+  for(int d = 0; d < numDiagonals; d++)
+  {
+    // figure out start and end coordinates of the current diagonal:
+    int iStart = d;
+    int jStart = 0;
+    if(d >= w) {
+      iStart  = w-1;
+      jStart += d-w+1; }
+
+    // go from top-right to bottom-left:
+    flt.reset();
+    int i = iStart;
+    int j = jStart;
+    while(i >= 0 && j < h) {
+      img(i, j) = flt.getSample(img(i, j));
+      i--; j++;  } // go one pixel to bottom-left
+
+                   // go from bottom-left to top-right:
+    flt.prepareForBackwardPass();
+    i++; j--;
+    while(i <= iStart && j >= jStart)  {
+      img(i, j) = flt.getSample(img(i, j));
+      i++; j--; } // go one pixel to top-right
+  }
+  */
+
+
+  int dummy = 0;
+}
+
+template<class T>
+void applySlanted(rsImage<T>& img, T kernelWidth)
+{
+  rsFirstOrderFilterBase<T, T> flt;
+  kernelWidth /= sqrt(1.0*1.0 + 0.5*0.5);  // length of line segment in each pixel -> verify
+  T a = pow(T(2), T(-1)/kernelWidth);
+  flt.setCoefficients(T(1)-a, T(0), a);
+
+  applySlantedWSW2ENE(flt, img);
+  // more to come
+}
+
+void testImageFilterSlanted()
+{
+  int w = 100;
+  int h = 60;
+  float kernelWidth = 15.f;
+
+
+  rsImage<float> img(w, h);
+  img(w/2, h/2) = 1.f;
+
+  applySlanted(img, kernelWidth); // triggers debug assertion when memory gets de-allocated
+
+  rsImageProcessor<float>::normalize(img);
+  writeImageToFilePPM(img, "SlantedFilter.ppm");
+}
+
 /** Apply filter in south-west/north-east direction (and back). */
 template<class T>
 void applyDiagonalSW2NE(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
@@ -273,9 +377,6 @@ void applyDiagonalSE2NW(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
 template<class T>
 void applyDiagonal(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
 {
-  // the order in which these two functions are called determines, how the edge effects manifest 
-  // themselves, so we do it in both orders and take the average:
-
   //// test:
   //// SW -> NE first, then SE -> NW:
   //applyDiagonalSW2NE(flt, img);
@@ -284,8 +385,10 @@ void applyDiagonal(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
 
   int w = img.getWidth();
   int h = img.getHeight();
-
   rsImage<T> tmp1 = img, tmp2 = img;
+
+  // The order in which these two functions are called determines, how the edge effects manifest 
+  // themselves, so we do it in both orders and take the average:
 
   // SW -> NE first, then SE -> NW:
   applyDiagonalSW2NE(flt, tmp1);
@@ -299,7 +402,8 @@ void applyDiagonal(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
   rsArrayTools::weightedSum(tmp1.getPixelPointer(0,0), tmp2.getPixelPointer(0,0), 
     img.getPixelPointer(0,0), w*h, T(0.5), T(0.5));
 
-  // hmm... well - it's not ideal, but at least, it's symmetrical now
+  // hmm... well - it's not ideal, but at least, it's symmetrical now - but try to get rid of 
+  // having to do it twice
 
 
   // todo: test this with images for which h > w - this probably needs different code
@@ -378,7 +482,57 @@ void testExponentialBlur()
   // -as an alternative to normalizing after applying the filter: calculate total energy of the 
   //  image before and after filtering and multiply by the sqrt of the quotient - preserving the
   //  total energy preserves perceived overall brighntness (right?)
+  // -according to this video: https://www.youtube.com/watch?v=LKnqECcg6Gw  human brightness/color
+  //  perception follows the log of the energy where the energy is given by the squared pixel 
+  //  brightnesses - that implöies, a perceptually correct filter should do it like this: 
+  //  square pixel values -> apply filter -> square-root pixel values. this is especially important
+  //  when the filter is applied to RGB channels of a color image
 }
+
+
+// move to rsImageProcessor when finished:
+
+template<class T>
+void flipLeftRight(const rsImage<T>& x, rsImage<T>& y)
+{
+  int w = x.getWidth();
+  int h = x.getHeight();
+  y.setSize(w, h);
+  for(int j = 0; j < h; j++)
+    rsArrayTools::reverse(&x(0, j), w);
+}
+
+template <class T>
+void rsReverse(T* x, int N, int stride)
+{
+  for(int i = 0; i < stride*N/2; i += stride)
+    rsSwap(x[i], x[N-i-1]);
+}
+// needs test - if it works, move to rsArrayTools
+
+template<class T>
+void flipTopBottom(const rsImage<T>& x, rsImage<T>& y)
+{
+  int w = x.getWidth();
+  int h = x.getHeight();
+  y.setSize(w, h);
+  for(int i = 0; i < w; i++)
+    rsReverse(&x(i, 0), h, w); // w is the stride
+}
+
+template<class T>
+void transpose(const rsImage<T>& x, rsImage<T>& y)
+{
+  int w = x.getWidth();
+  int h = x.getHeight();
+  y.setSize(h, w);
+  for(int i = 0; i < w; i++)
+    for(int j = 0; j < h; j++)
+      y(j, i) = x(i, j);
+}
+
+
+
 
 template<class T>
 bool writeComplexImageToFilePPM(const rsImage<std::complex<T>>& img, const char* path)
@@ -1467,7 +1621,6 @@ bool testTensor()
   Tens E5 = Tens::getPermutationTensor(5);
   // stop here - they grow fast! namely, like N^N - most entries are zero though - so it's really a
   // bad idea to explicitly use them in production code
-
 
   // verify Eq. 209
   Tens D1 = Tens::getDeltaTensor(3);

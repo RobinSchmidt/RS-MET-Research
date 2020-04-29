@@ -25,7 +25,7 @@ void boxBlur3x3(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y)
     }
   }
 
-  // todo: handle edges..
+  // todo: handle edges and corners
   // maybe use a weighting that is more circular - the shape of the disease spread looks a bit
   // squarish
   // see https://en.wikipedia.org/wiki/Kernel_(image_processing)
@@ -51,6 +51,10 @@ void gaussBlur3x3(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y)
     }
   }
 }
+
+
+// todo: implement a general filter3x3 function that takes a 3x3 image to be used as filter kernel
+
 
 template<class T>
 void sobelEdgeDetector3x3(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& G, RAPT::rsImage<T>& t)
@@ -237,19 +241,27 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       y(i, j) = flt.getSample(x(i, j));
       i++; j--; }
 
+    
+    /*
     // reverse direction:
     flt.prepareForBackwardPass();
     int k1 = 0, k2 = 0;
     if( rsIsOdd(w) ) k1 = 1;
     else             k2 = 1;
     i--; j++;
-    while(i >= 0 && j <= jStart) {
+    while(i >= 0 && j <= jStart) 
+    {
       y(i, j) = flt.getSample(x(i, j));
       //i--; j += k1; if(i < 0 || j > jStart) break;
       i--; j += k1; if(i < 0 || j >= h) break;
       //i--; j += k1; if(i < 0) break;  // gives access violation for w,h = 101,60
       y(i, j) = flt.getSample(x(i, j));
-      i--; j += k2; }
+      i--; j += k2; 
+    }
+    */
+
+    // maybe we should have two separate loops for even and odd w - that may also be more efficient
+      
   }
 }
 // doesn't work when w is odd - i think, the adjustment i--, j++ before the reverse direction loop 
@@ -287,14 +299,17 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
 
 void testImageFilterSlanted()
 {
-  int w = 100;
+  int w = 101;
   int h = 60;
   float kernelWidth = 20.f;
 
 
   rsImage<float> img(w, h);
   //img(w/2, h/2) = 1.f;
-  img(20, 20) = 1.f; // this white pixel is not treated right when w is odd
+  //img(20, 20) = 1.f; // this white pixel is not treated right when w is odd
+  img(21, 21) = 1.f;
+  // todo: try it with small sizes with odd width and go through the algo step by step
+
 
 
   applySlanted(img, kernelWidth); // triggers debug assertion when memory gets de-allocated
@@ -834,6 +849,9 @@ void applyMultiPass3(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img, int num
 
   int dummy = 0;
 }
+// no - it cannot possibly work because each filter assumes in applyBidirectionally that the input
+// goes to zero when we reach the boundary - but that is true only for the first filter stage - the 
+// 2nd stage gets the deacying tail from the 1st, so its input does not immediately drop to zero
 
 
 void testMultiPass()

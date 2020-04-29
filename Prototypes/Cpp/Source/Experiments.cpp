@@ -236,7 +236,7 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       i++; 
       if(i >= w)
       {
-        //j--;
+        j--;
         break;
       }
 
@@ -259,7 +259,10 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
 // doesn't work when w is odd - i think, the adjustment i--, j++ before the reverse direction loop 
 // must be different depending on whether we did or didn't hit the break in the forward direction 
 // loop - when w is even, we do not hit it, when it's odd, we do hit it...or maybe we should do the
-// increments before breaking?
+// increments before breaking? oh - and also we must in this case in the second loop do the i--, j++
+// after the 1st getSample and the i-- only after the 2nd getSample - maybe do j += k1 after the 
+// 1st and j += k2 after the 2nd and adjust k1,k2 to be 1 or 0 depending on the case
+
 
 
 template<class T>
@@ -280,7 +283,7 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
 void testImageFilterSlanted()
 {
   int w = 100;
-  int h = 61;
+  int h = 60;
   float kernelWidth = 20.f;
 
 

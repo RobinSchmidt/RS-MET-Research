@@ -211,14 +211,13 @@ void applyMultiPass1(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img, int num
 /** Apply filter in west-south-west/east-north-east direction (and back). */
 // maybe have separate images for input and output (which may be the same but don't have to)
 template<class T>
-void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
+void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x, rsImage<T>& y)
 {
-  int w  = img.getWidth();
-  int h  = img.getHeight();
-  int w2 = w/2;
-  int numDiagonals  = w2 + h - 1;  // verify this!
-
-
+  rsAssert(y.hasSameShapeAs(x));
+  int w  = x.getWidth();
+  int h  = x.getHeight();
+  //int w2 = w/2;
+  int numDiagonals  = w/2 + h - 1;  // verify this!
   for(int d = 0; d < numDiagonals; d++)
   {
     // figure out start and end coordinates of the current diagonal:
@@ -226,58 +225,50 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img)
     int jStart = d;
     if(d >= h) {
       jStart = h-1;
-      //iStart = 2*(d-h+1);
-      iStart = 2*(d-jStart);
-    }
+      iStart = 2*(d-jStart); }
 
     // south-south-west to east-north-east:
     flt.reset();
     int i = iStart;
     int j = jStart;
-    while(i < w && j >= 0)
-    {
-      img(i, j) = flt.getSample(img(i, j));
-      i++;
-      if(i >= w)
-        break;
-      img(i, j) = flt.getSample(img(i, j));
-      i++;
-      j--;
-    }
+    while(i < w && j >= 0) {
+      y(i, j) = flt.getSample(x(i, j));
+      i++; if(i >= w) break;
+      y(i, j) = flt.getSample(x(i, j));
+      i++; j--; }
 
     // reverse direction:
     flt.prepareForBackwardPass();
     i--; j++;
-    while(i >= 0 && j <= jStart)
-    {
-      img(i, j) = flt.getSample(img(i, j));
-      i--;
-      if(i < 0)
-        break;
-      img(i, j) = flt.getSample(img(i, j));
-      i--;
-      j++;
-    }
+    while(i >= 0 && j <= jStart) {
+      y(i, j) = flt.getSample(x(i, j));
+      i--; if(i < 0) break;
+      y(i, j) = flt.getSample(x(i, j));
+      i--; j++; }
   }
 }
+// doesn't work when w is odd
 
 
 template<class T>
 void applySlanted(rsImage<T>& img, T kernelWidth)
 {
   rsFirstOrderFilterBase<T, T> flt;
-  kernelWidth /= sqrt(1.0*1.0 + 0.5*0.5);  // length of line segment in each pixel -> verify
+
+  kernelWidth /= sqrt(T(1.25));  
+  // == sqrt(1*1 + 0.5*0.5): length of line segment in each pixel -> verify
+
   T a = pow(T(2), T(-1)/kernelWidth);
   flt.setCoefficients(T(1)-a, T(0), a);
 
-  applySlantedWSW2ENE(flt, img);
+  applySlantedWSW2ENE(flt, img, img);
   // more to come
 }
 
 void testImageFilterSlanted()
 {
   int w = 100;
-  int h = 60;
+  int h = 61;
   float kernelWidth = 20.f;
 
 

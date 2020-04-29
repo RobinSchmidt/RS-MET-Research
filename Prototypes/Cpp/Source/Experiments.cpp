@@ -233,39 +233,21 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
     int j = jStart;
     while(i < w && j >= 0) {
       y(i, j) = flt.getSample(x(i, j));
-      i++; 
-      if(i >= w)
-      {
-        j--;
-        break;
-      }
-
+      i++; if(i >= w) { j--; break; }
       y(i, j) = flt.getSample(x(i, j));
       i++; j--; }
 
     // reverse direction:
     flt.prepareForBackwardPass();
-
-    //if(i < w) j++;
-
-
     int k1 = 0, k2 = 0;
-    //if(i >= w)  // this condition may be wrong - use rsIsOdd(w)
-    if( rsIsOdd(w) )
-      k1 = 1;
-    else
-      k2 = 1; 
-    //k1 = 0; 
-    //k2 = 1;  // test
-    i--; 
-    j++;
+    if( rsIsOdd(w) ) k1 = 1;
+    else             k2 = 1;
+    i--; j++;
     while(i >= 0 && j <= jStart) {
       y(i, j) = flt.getSample(x(i, j));
-
       //i--; j += k1; if(i < 0 || j > jStart) break;
       i--; j += k1; if(i < 0 || j >= h) break;
-      //i--; j += k1; if(i < 0) break;
-
+      //i--; j += k1; if(i < 0) break;  // gives access violation for w,h = 101,60
       y(i, j) = flt.getSample(x(i, j));
       i--; j += k2; }
   }
@@ -276,6 +258,7 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
 // increments before breaking? oh - and also we must in this case in the second loop do the i--, j++
 // after the 1st getSample and the i-- only after the 2nd getSample - maybe do j += k1 after the 
 // 1st and j += k2 after the 2nd and adjust k1,k2 to be 1 or 0 depending on the case
+// OK - seems to be fixed - do more tests with various shapes
 
 
 
@@ -285,24 +268,34 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
   rsFirstOrderFilterBase<T, T> flt;
 
   kernelWidth /= sqrt(T(1.25));  
-  // == sqrt(1*1 + 0.5*0.5): length of line segment in each pixel -> verify
+                 // == sqrt(1*1 + 0.5*0.5): length of line segment in each pixel -> verify
 
   T a = pow(T(2), T(-1)/kernelWidth);
   flt.setCoefficients(T(1)-a, T(0), a);
 
   applySlantedWSW2ENE(flt, img, img);
-  // more to come
+
+
+
+  //flipLeftRight(img, img);
+  //applySlantedWSW2ENE(flt, img, img);
+    // this works (again) only for even widths - why? is the reversal broken? do unit test of 
+    // in-place reversal with even and odd length (test also special cases of length 0 and 1)
+    // nope - whether applySlantedWSW2ENE works or not depends on where the white pixel is
+    // 
 }
 
 void testImageFilterSlanted()
 {
-  int w = 101;
+  int w = 100;
   int h = 60;
   float kernelWidth = 20.f;
 
 
   rsImage<float> img(w, h);
-  img(w/2, h/2) = 1.f;
+  //img(w/2, h/2) = 1.f;
+  img(20, 20) = 1.f; // this white pixel is not treated right when w is odd
+
 
   applySlanted(img, kernelWidth); // triggers debug assertion when memory gets de-allocated
 
@@ -497,7 +490,7 @@ void flipLeftRight(const rsImage<T>& x, rsImage<T>& y)
   int h = x.getHeight();
   y.setSize(w, h);
   for(int j = 0; j < h; j++)
-    rsArrayTools::reverse(&x(0, j), w);
+    rsArrayTools::reverse(&x(0, j), &y(0, j), w);
 }
 
 template <class T>

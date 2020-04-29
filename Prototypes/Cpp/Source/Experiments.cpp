@@ -247,13 +247,27 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
     flt.prepareForBackwardPass();
 
     //if(i < w) j++;
+
+
+    int k1 = 0, k2 = 0;
+    //if(i >= w)  // this condition may be wrong - use rsIsOdd(w)
+    if( rsIsOdd(w) )
+      k1 = 1;
+    else
+      k2 = 1; 
+    //k1 = 0; 
+    //k2 = 1;  // test
     i--; 
     j++;
     while(i >= 0 && j <= jStart) {
       y(i, j) = flt.getSample(x(i, j));
-      i--; if(i < 0) break;
+
+      //i--; j += k1; if(i < 0 || j > jStart) break;
+      i--; j += k1; if(i < 0 || j >= h) break;
+      //i--; j += k1; if(i < 0) break;
+
       y(i, j) = flt.getSample(x(i, j));
-      i--; j++; }
+      i--; j += k2; }
   }
 }
 // doesn't work when w is odd - i think, the adjustment i--, j++ before the reverse direction loop 
@@ -282,7 +296,7 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
 
 void testImageFilterSlanted()
 {
-  int w = 100;
+  int w = 101;
   int h = 60;
   float kernelWidth = 20.f;
 

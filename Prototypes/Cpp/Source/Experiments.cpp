@@ -216,8 +216,8 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
   rsAssert(y.hasSameShapeAs(x));
   int w  = x.getWidth();
   int h  = x.getHeight();
-  //int w2 = w/2;
   int numDiagonals  = w/2 + h - 1;  // verify this!
+  //int numDiagonals  = (w+1)/2 + h - 1;  // verify this!
   for(int d = 0; d < numDiagonals; d++)
   {
     // figure out start and end coordinates of the current diagonal:
@@ -233,13 +233,22 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
     int j = jStart;
     while(i < w && j >= 0) {
       y(i, j) = flt.getSample(x(i, j));
-      i++; if(i >= w) break;
+      i++; 
+      if(i >= w)
+      {
+        //j--;
+        break;
+      }
+
       y(i, j) = flt.getSample(x(i, j));
       i++; j--; }
 
     // reverse direction:
     flt.prepareForBackwardPass();
-    i--; j++;
+
+    //if(i < w) j++;
+    i--; 
+    j++;
     while(i >= 0 && j <= jStart) {
       y(i, j) = flt.getSample(x(i, j));
       i--; if(i < 0) break;
@@ -247,7 +256,10 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       i--; j++; }
   }
 }
-// doesn't work when w is odd
+// doesn't work when w is odd - i think, the adjustment i--, j++ before the reverse direction loop 
+// must be different depending on whether we did or didn't hit the break in the forward direction 
+// loop - when w is even, we do not hit it, when it's odd, we do hit it...or maybe we should do the
+// increments before breaking?
 
 
 template<class T>

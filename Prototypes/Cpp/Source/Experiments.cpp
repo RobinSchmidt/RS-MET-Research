@@ -1,4 +1,4 @@
-#include "Tools.cpp"  // this includes rapt and rosic
+﻿#include "Tools.cpp"  // this includes rapt and rosic
 
 //-------------------------------------------------------------------------------------------------
 // move some of this code to rapt:
@@ -241,8 +241,29 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       y(i, j) = flt.getSample(x(i, j));
       i++; j--; }
 
+
+    // new version - under construction:
+    // reverse direction:
+    flt.prepareForBackwardPass();
+    if(rsIsEven(w)) {  // maybe we should also have || i < w or || i < w-1
+      i--;  j++;
+      while(i >= 0 && j <= jStart) {
+        y(i, j) = flt.getSample(x(i, j));
+        i--; if(i < 0) break;
+        y(i, j) = flt.getSample(x(i, j));
+        i--; j++; }}
+    else
+    {
+
+
+      // not yet implemeted
+
+      int dummy = 0;
+    }
+
     
     /*
+    // old version:
     // reverse direction:
     flt.prepareForBackwardPass();
     int k1 = 0, k2 = 0;
@@ -272,7 +293,24 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
 // 1st and j += k2 after the 2nd and adjust k1,k2 to be 1 or 0 depending on the case
 // OK - seems to be fixed - do more tests with various shapes
 
+// example: image with w=9, h=6:
+//   │ 0 1 2 3 4 5 6 7 8
+// ──┼──────────────────
+// 0 │ 0 0 1 1 2 2 3 3 4
+// 1 │ 1 1 2 2 3 3 4 4 5
+// 2 │ 2 2 3 3 4 4 5 5 6
+// 3 │ 3 3 4 4 5 5 6 6 7
+// 4 │ 4 4 5 5 6 6 7 7 8
+// 5 │ 5 5 6 6 7 7 8 8 9
+// matrix entries stand for the index of the diagonal d - we mark each pixel with the index of the 
+// diagonal that crosses it
+// traversal of pixel locations (only forward)
+// d  (i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j)
+// 0: (0,0),(1,0)
+// 1: (0,1),(1,1),(2,0),(3,0)
+// 2:
 
+// https://theasciicode.com.ar/extended-ascii-code/box-drawings-single-horizontal-line-character-ascii-code-196.html
 
 template<class T>
 void applySlanted(rsImage<T>& img, T kernelWidth)
@@ -299,15 +337,19 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
 
 void testImageFilterSlanted()
 {
-  int w = 101;
-  int h = 60;
-  float kernelWidth = 20.f;
+  int w = 9;
+  int h = 6;
+  float kernelWidth = 2.f;
 
 
   rsImage<float> img(w, h);
+  img(1, 1) = 1.f;
+  //img(2, 2) = 1.f; // try 1,1; 1,2; 2,1; 3,3; 3,2; 2,3
+  //img(3, 3) = 1.f;
+
   //img(w/2, h/2) = 1.f;
   //img(20, 20) = 1.f; // this white pixel is not treated right when w is odd
-  img(21, 21) = 1.f;
+  //img(21, 21) = 1.f;
   // todo: try it with small sizes with odd width and go through the algo step by step
 
 
@@ -490,7 +532,7 @@ void testExponentialBlur()
   //  total energy preserves perceived overall brighntness (right?)
   // -according to this video: https://www.youtube.com/watch?v=LKnqECcg6Gw  human brightness/color
   //  perception follows the log of the energy where the energy is given by the squared pixel 
-  //  brightnesses - that impl�ies, a perceptually correct filter should do it like this: 
+  //  brightnesses - that implöies, a perceptually correct filter should do it like this: 
   //  square pixel values -> apply filter -> square-root pixel values. this is especially important
   //  when the filter is applied to RGB channels of a color image
 }
@@ -2351,7 +2393,7 @@ bool testManifoldPolar()
     dv(1, 0) = -r*r*2*sin(2*phi) - r*v[1];  // = dv1/dPhi - r*v2
     // not complete - fill the other two as well - they are not in the book
   };
-  // Example from B�rwolff pg 832
+  // Example from Bärwolff pg 832
   */
 
 
@@ -2771,7 +2813,7 @@ bool testManifoldSphere()
   // ...would have been too good to be true, if it worked at first shot
   // ...figure out, if the Christoffel-based formula is right - it is simpler and based on already
   // verified computation of Christoffel symbols - so it's more likely to be correct
-  // maybe verify it via the exmaple in B�rwolff pg. 832
+  // maybe verify it via the exmaple in Bärwolff pg. 832
   // OK - i think it is because my idea of using the product rule directly was too naive - i 
   // didn't take into account, that the basis-vectors themselves are expressed in cartesian 
   // coordinates, but we need them in spherical coordinates (or something like that)
@@ -2802,8 +2844,8 @@ bool testManifoldSphere()
 
 bool testManifoldEarth()
 {
-  // We use a spherical coodinate system with latitude from -90� (southpole) to +90� (northpole)
-  // and longitude from 0� to 360�. The intrsinsic dimensionality is 2 because teh radius is fixed.
+  // We use a spherical coodinate system with latitude from -90° (southpole) to +90° (northpole)
+  // and longitude from 0° to 360°. The intrsinsic dimensionality is 2 because teh radius is fixed.
   // The sphere is embedded in 3D Euclidean space.
 
   // https://en.wikipedia.org/wiki/Spherical_coordinate_system#In_geography
@@ -3090,7 +3132,7 @@ bool testManifoldEarth()
 
   // Compute the length of a "angle" degree arc using the metric tensor:
   double angle = 3.0;
-  Mat du(2, 1, {angle, 0.0});            // increase angle� in longitude and 0� in latitude
+  Mat du(2, 1, {angle, 0.0});            // increase angle° in longitude and 0° in latitude
   Mat ds2 = du.getTranspose() * gl * du; // should be a 1x1 matrix giving the squared length
   double ds  = sqrt(ds2(0,0));           // the actual length as scalar
   double tmp = radius * angle*PI/180;    // analytic formula for the length
@@ -3161,7 +3203,7 @@ bool testManifoldEarth()
 
   //rsNormalize(b2p);
 
-  // 33.4484� N, 112.0740� W
+  // 33.4484° N, 112.0740° W
 
   /*
   Vec a, v;

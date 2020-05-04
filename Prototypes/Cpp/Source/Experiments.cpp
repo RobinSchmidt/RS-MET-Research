@@ -223,7 +223,6 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
   rsAssert(y.hasSameShapeAs(x));
   int w  = x.getWidth();
   int h  = x.getHeight();
-  //int numDiagonals  = w/2 + h - 1;  // verify this!
   int numDiagonals  = (w+1)/2 + h - 1;  // verify this!
   for(int d = 0; d < numDiagonals; d++)
   {
@@ -244,11 +243,9 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       y(i, j) = flt.getSample(x(i, j));
       i++; j--; }
 
-
-    // new version - under construction:
     // reverse direction:
     flt.prepareForBackwardPass();
-    if(rsIsEven(w)) {  // maybe we should also have || i < w or || i < w-1
+    if(rsIsEven(w)) {
       i--;  j++;
       while(i >= 0 && j <= jStart) {
         y(i, j) = flt.getSample(x(i, j));
@@ -257,70 +254,18 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
         i--; j++; }}
     else
     {
-      i--;  j++;
-      // (i,j) = (1,0),(3,0),(5,0),(7,0),(8,0),(8,1),(8,2),(8,3),(8,4),(8,5)
-      // start:  (0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(2,5),(4,5),(6,5),(8,5)
-
-
-      // looks ok - but the last one: (8,5) is missing
-      // numDiagonals is 9 but should be 10 - fixed! - check, if it still works will all sorts of
-      // sizes 
-
-      // if we are at the right border, the 1st step is outside the loop:
-      if(i == w-1)
+      i--; j++;
+      if(i == w-1)  // if we are at the right border, the 1st step is outside the loop
       {
+        // this is the only difference to the rsIsEven(w) branch -> merge them
         y(i, j) = flt.getSample(x(i, j));
         i--; j++;
       }
-      while(i >= 0 && j <= jStart)
-      {
+      while(i >= 0 && j <= jStart) {
         y(i, j) = flt.getSample(x(i, j));
-        i--;
-        if(i < 0)
-          break;
+        i--; if(i < 0) break;
         y(i, j) = flt.getSample(x(i, j));
-        i--; j++;
-      }
-
-      // d  (i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j)
-      // 0: (0,0),(1,0)
-      // 1: (0,1),(1,1),(2,0),(3,0)
-      // 2: (0,2),(1,2),(2,1),(3,1),(4,0),(5,0)
-      // 3: (0,3),(1,3),(2,2),(3,2),(4,1),(5,1),(6,0),(7,0)
-      // 4: (0,4),(1,4),(2,3),(3,3),(4,2),(5,2),(6,1),(7,1),(8,0)
-      // 5: (0,5),(1,5),(2,4),(3,4),(4,3),(5,3),(6,2),(7,2),(8,1)
-      // 6: (2,5),(3,5),(4,4),(5,4),(6,3),(7,3),(8,2)
-      // 7: (4,5),(5,5),(6,4),(7,4),(8,3)
-      // 8: (6,5),(7,5),(8,4)
-      // 9: (8,5)
-
-      int dummy = 0;
-    }
-    // i think, we only need to do 
-    //   if(rsIsOdd(w) && i == w-1) 
-    // and then we can merge the two loops into a single one
-    
-    /*
-    // old version:
-    // reverse direction:
-    flt.prepareForBackwardPass();
-    int k1 = 0, k2 = 0;
-    if( rsIsOdd(w) ) k1 = 1;
-    else             k2 = 1;
-    i--; j++;
-    while(i >= 0 && j <= jStart) 
-    {
-      y(i, j) = flt.getSample(x(i, j));
-      //i--; j += k1; if(i < 0 || j > jStart) break;
-      i--; j += k1; if(i < 0 || j >= h) break;
-      //i--; j += k1; if(i < 0) break;  // gives access violation for w,h = 101,60
-      y(i, j) = flt.getSample(x(i, j));
-      i--; j += k2; 
-    }
-    */
-
-    // maybe we should have two separate loops for even and odd w - that may also be more efficient
-      
+        i--; j++; }}
   }
 }
 // doesn't work when w is odd - i think, the adjustment i--, j++ before the reverse direction loop 
@@ -389,13 +334,17 @@ void testImageFilterSlanted()
   int h = 6;
   float kernelWidth = 2.f;
 
+  w = 101;
+  h = 60;
+  kernelWidth = 20.f;
+
 
   rsImage<float> img(w, h);
-  img(1, 1) = 1.f;
+  //img(1, 1) = 1.f;
   //img(2, 2) = 1.f; // try 1,1; 1,2; 2,1; 3,3; 3,2; 2,3
   //img(3, 3) = 1.f;
 
-  //img(w/2, h/2) = 1.f;
+  img(w/2, h/2) = 1.f;
   //img(20, 20) = 1.f; // this white pixel is not treated right when w is odd
   //img(21, 21) = 1.f;
   // todo: try it with small sizes with odd width and go through the algo step by step

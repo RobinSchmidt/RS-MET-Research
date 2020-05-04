@@ -258,15 +258,47 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
     else
     {
       i--;  j++;
-      // (1,0),(3,0),(5,0),(7,0),(8,0),(8,1),(8,2),(8,3),(8,4),(8,5)
-      // look ok - but the last one: (8,5) is missing
-      // numDiagonals is 9 but should be 10 - fixed!
+      // (i,j) = (1,0),(3,0),(5,0),(7,0),(8,0),(8,1),(8,2),(8,3),(8,4),(8,5)
+      // start:  (0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(2,5),(4,5),(6,5),(8,5)
 
-      // not yet implemeted
+
+      // looks ok - but the last one: (8,5) is missing
+      // numDiagonals is 9 but should be 10 - fixed! - check, if it still works will all sorts of
+      // sizes 
+
+      // if we are at the right border, the 1st step is outside the loop:
+      if(i == w-1)
+      {
+        y(i, j) = flt.getSample(x(i, j));
+        i--; j++;
+      }
+      while(i >= 0 && j <= jStart)
+      {
+        y(i, j) = flt.getSample(x(i, j));
+        i--;
+        if(i < 0)
+          break;
+        y(i, j) = flt.getSample(x(i, j));
+        i--; j++;
+      }
+
+      // d  (i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j)
+      // 0: (0,0),(1,0)
+      // 1: (0,1),(1,1),(2,0),(3,0)
+      // 2: (0,2),(1,2),(2,1),(3,1),(4,0),(5,0)
+      // 3: (0,3),(1,3),(2,2),(3,2),(4,1),(5,1),(6,0),(7,0)
+      // 4: (0,4),(1,4),(2,3),(3,3),(4,2),(5,2),(6,1),(7,1),(8,0)
+      // 5: (0,5),(1,5),(2,4),(3,4),(4,3),(5,3),(6,2),(7,2),(8,1)
+      // 6: (2,5),(3,5),(4,4),(5,4),(6,3),(7,3),(8,2)
+      // 7: (4,5),(5,5),(6,4),(7,4),(8,3)
+      // 8: (6,5),(7,5),(8,4)
+      // 9: (8,5)
 
       int dummy = 0;
     }
-
+    // i think, we only need to do 
+    //   if(rsIsOdd(w) && i == w-1) 
+    // and then we can merge the two loops into a single one
     
     /*
     // old version:
@@ -323,7 +355,8 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
 // 8: (6,5),(7,5),(8,4)
 // 9: (8,5)
 // desired start pixels for (i,j) for backward pass - always the last index pair in each line: 
-// (1,0),(3,0),(5,0),(7,0),(8,0),(8,1),(8,2),(8,3),(8,4),(8,5)
+// (1,0),(3,0),(5,0),(7,0),(8,0),(8,1),(8,2),(8,3),(8,4),(8,5)  ..corresponding start indices:
+// (0,0),(0,1),(0,2),(0,3),(0,4),(0,5),(2,5),(4,5),(6,5),(8,5)
 
 // https://theasciicode.com.ar/extended-ascii-code/box-drawings-single-horizontal-line-character-ascii-code-196.html
 

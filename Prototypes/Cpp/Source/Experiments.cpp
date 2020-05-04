@@ -216,14 +216,13 @@ void applyMultiPass1(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img, int num
 
 
 /** Apply filter in west-south-west/east-north-east direction (and back). */
-// maybe have separate images for input and output (which may be the same but don't have to)
 template<class T>
 void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x, rsImage<T>& y)
 {
   rsAssert(y.hasSameShapeAs(x));
   int w  = x.getWidth();
   int h  = x.getHeight();
-  int numDiagonals  = (w+1)/2 + h - 1;  // verify this!
+  int numDiagonals = (w+1)/2 + h - 1;  // verify this!
   for(int d = 0; d < numDiagonals; d++)
   {
     // figure out start and end coordinates of the current diagonal:
@@ -233,7 +232,7 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       jStart = h-1;
       iStart = 2*(d-jStart); }
 
-    // south-south-west to east-north-east:
+    // apply forward pass from west-south-west to east-north-east:
     flt.reset();
     int i = iStart;
     int j = jStart;
@@ -243,39 +242,19 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       y(i, j) = flt.getSample(x(i, j));
       i++; j--; }
 
-    // reverse direction:
+    // apply backward pass from east-north-east to west-south-west:
     flt.prepareForBackwardPass();
-    if(rsIsEven(w)) {
-      i--;  j++;
-      while(i >= 0 && j <= jStart) {
-        y(i, j) = flt.getSample(x(i, j));
-        i--; if(i < 0) break;
-        y(i, j) = flt.getSample(x(i, j));
-        i--; j++; }}
-    else
-    {
-      i--; j++;
-      if(i == w-1)  // if we are at the right border, the 1st step is outside the loop
-      {
-        // this is the only difference to the rsIsEven(w) branch -> merge them
-        y(i, j) = flt.getSample(x(i, j));
-        i--; j++;
-      }
-      while(i >= 0 && j <= jStart) {
-        y(i, j) = flt.getSample(x(i, j));
-        i--; if(i < 0) break;
-        y(i, j) = flt.getSample(x(i, j));
-        i--; j++; }}
+    i--; j++;
+    if(rsIsOdd(w) && i == w-1) {
+      y(i, j) = flt.getSample(x(i, j));
+      i--; j++; }
+    while(i >= 0 && j <= jStart) {
+      y(i, j) = flt.getSample(x(i, j));
+      i--; if(i < 0) break;
+      y(i, j) = flt.getSample(x(i, j));
+      i--; j++; }
   }
 }
-// doesn't work when w is odd - i think, the adjustment i--, j++ before the reverse direction loop 
-// must be different depending on whether we did or didn't hit the break in the forward direction 
-// loop - when w is even, we do not hit it, when it's odd, we do hit it...or maybe we should do the
-// increments before breaking? oh - and also we must in this case in the second loop do the i--, j++
-// after the 1st getSample and the i-- only after the 2nd getSample - maybe do j += k1 after the 
-// 1st and j += k2 after the 2nd and adjust k1,k2 to be 1 or 0 depending on the case
-// OK - seems to be fixed - do more tests with various shapes
-
 // example: image with w=9, h=6:
 //   │ 0 1 2 3 4 5 6 7 8
 // ──┼──────────────────
@@ -317,15 +296,17 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
   flt.setCoefficients(T(1)-a, T(0), a);
 
   applySlantedWSW2ENE(flt, img, img);
+  flipLeftRight(img, img);
+  applySlantedWSW2ENE(flt, img, img);
+  flipLeftRight(img, img);
 
-
-
-  //flipLeftRight(img, img);
-  //applySlantedWSW2ENE(flt, img, img);
-    // this works (again) only for even widths - why? is the reversal broken? do unit test of 
-    // in-place reversal with even and odd length (test also special cases of length 0 and 1)
-    // nope - whether applySlantedWSW2ENE works or not depends on where the white pixel is
-    // 
+  // -it makes a difference whether we do apply->flip->apply->flip or flip->apply->flip->apply
+  //  ->the corners look different (test with high kernel width)
+  // -todo: try in preparForBackwardPass not to assume to go down to zero but to some 
+  //  constant and then pass the last input pixel brightness to that - maybe that fixes it?
+  //  -use flt.prepareForBackwardPass(flt.getX1())..or something - the filter stores the previous
+  //   input so we can use that without extra code
+  // ..then also apply the filters to the transposed image
 }
 
 void testImageFilterSlanted()
@@ -335,8 +316,8 @@ void testImageFilterSlanted()
   float kernelWidth = 2.f;
 
   w = 101;
-  h = 60;
-  kernelWidth = 20.f;
+  h = 61;
+  kernelWidth = 30.f;
 
 
   rsImage<float> img(w, h);

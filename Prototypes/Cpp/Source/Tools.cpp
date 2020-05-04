@@ -39,9 +39,7 @@ public:
   // always prodcues a 4 character string with a rounded percentage value
   // todo: produce a 7 character string with two decimal places after the dot, like:
   // " 56.87%" (the leading whitespace is intentional)
-  // for longer videos, we may need a finer indicator - factor out this functionality of writing a 
-  // progress indicator to the console - this could be useful in many places - maybe have a class
-  // rsConsoleProgressIndicator
+  // for longer tasks, we may need a finer indicator 
 
   /** Prints the initial 0% in the desired format (i.e. with padding) to the console. */
   void init() const
@@ -206,22 +204,17 @@ public:
   void writeTempFiles(const rsVideoRGB& vid) const
   {
     int numFrames = vid.getNumFrames();
-
-    //std::cout << "Writing ppm files:   0%";
     std::cout << "Writing ppm files: ";
     progressIndicator.init();
-
-
     for(int i = 0; i < numFrames; i++) {
       std::string path = getTempFileName(i);
       writeImageToFilePPM(vid.getFrame(i), path.c_str());
-      //updateProgressIndicator(i, numFrames-1); 
       progressIndicator.update(i, numFrames-1);
     }
     std::cout << "\n\n";
   }
 
-  /** Combines the temporary .ppm files that have previously writted to disk (via calling 
+  /** Combines the temporary .ppm files that have been previously written to disk (via calling 
   writeTempFiles) into a single video file with given name.  */
   void encodeTempFiles(const std::string& fileName) const
   {
@@ -265,7 +258,7 @@ public:
 
     // The command string has been adapted from here:
     // https://hamelot.io/visualization/using-ffmpeg-to-convert-a-set-of-images-into-a-video/
-    // and by trial and error, i have commented out those optionas which turned out to be 
+    // and by trial and error, i have commented out those options which turned out to be 
     // unnecessarry and added a few other options
 
     // Notes on the options:
@@ -287,7 +280,7 @@ protected:
   int frameRate   = 25;
 
   std::string framePrefix = "VideoTempFrame";  
-  // used for the temp files: VideoTempFrame.ppm, VideoTempFrame.ppm, ...
+  // used for the temp files: VideoTempFrame1.ppm, VideoTempFrame2.ppm, ...
 
   // have strings for other options: pix_fmt, vcodec, preset:
   // std::string pix_fmt = "yuv420p";
@@ -301,8 +294,8 @@ protected:
 
   //std::string tempDir, outDir, outFileName;
 };
-// todo: mayb allow to encode int different qualities using the same temporary files, i.e create
-// temp files once but rund the encoder several times over the files with different quality 
+// todo: maybe allow to encode into different qualities using the same temporary files, i.e. create
+// temp files once but run the encoder several times over the files with different quality 
 // settings (lossless should be among them for reference)
 
 // Infos about the video codecs of the H.26x family:
@@ -451,8 +444,8 @@ public:
     return u + s*v + t*w;
   }
 
-  /** Computes parameters s,t such a point on the plane with these parameters will be have matched 
-  x and y coordinates with the given target point. */
+  /** Computes parameters s,t such that a point on the plane with these parameters will be have 
+  matched x and y coordinates with the given target point. */
   void getMatchParametersXY(const rsVector3D<T>& target, T* s, T* t) const
   {
     rsVector3D<T> c = target-u;
@@ -466,8 +459,8 @@ public:
   // solve([e1,e2],[s,t])
   // -> [[s == (cy*wx - cx*wy)/(vy*wx - vx*wy), t == -(cy*vx - cx*vy)/(vy*wx - vx*wy)]]
 
-  /** Computes parameters s,t such a point on the plane with these parameters will be have matched 
-  x and z coordinates with the given target point. */
+  /** Computes parameters s,t such that a point on the plane with these parameters will be have 
+  matched x and z coordinates with the given target point. */
   void getMatchParametersXZ(const rsVector3D<T>& target, T* s, T* t) const
   {
     rsVector3D<T> c = target-u;
@@ -476,8 +469,8 @@ public:
     *t = -(c.z*v.x - c.x*v.z) * k;
   }
 
-  /** Computes parameters s,t such a point on the plane with these parameters will be have matched 
-  y and z coordinates with the given target point. */
+  /** Computes parameters s,t such that a point on the plane with these parameters will be have 
+  matched y and z coordinates with the given target point. */
   void getMatchParametersYZ(const rsVector3D<T>& target, T* s, T* t) const
   {
     rsVector3D<T> c = target-u;
@@ -559,6 +552,7 @@ protected:
   rsVector3D<T> u, v, w;
 
 };
+// todo: clean up and move to rapt (into Math/Geometry)
 
 
 /** Returns a vector that contains a chunk of the given input vector v, starting at index "start" 
@@ -576,7 +570,7 @@ inline std::vector<T> rsChunk(const std::vector<T>& v, int start, int length)
 //-------------------------------------------------------------------------------------------------
 
 /** Extends rsMultiArray by storing information whether a given index is covariant or contravariant
-and a tensor weight which is zero for normal tensors and nonzero for relative tensors. 
+and a tensor weight which is zero for absolute tensors and nonzero for relative tensors. 
 
 A tensor is:
 -A geometric or physical entity that can be represented by a multidimensional array, once a 
@@ -896,7 +890,7 @@ public:
 
   rsTensor<T> operator==(const rsTensor<T>& B) const
   {
-    return isOfSameTypeAs(B) 
+    return this->isOfSameTypeAs(B) 
       && rsArrayTools::equal(this->getDataPointer(), B.getDataPointer(), getSize());
   }
 
@@ -928,7 +922,7 @@ protected:
   // https://stackoverflow.com/questions/17794569/why-is-vectorbool-not-a-stl-container
   // https://howardhinnant.github.io/onvectorbool.html
   // that's why i use vector<char> for the time being - eventually, it's perhaps best to use 
-  // rsFlags64 (which may have to be written
+  // rsFlags64 (which may have to be written)
 };
 
 /** Multiplies a scalar and a tensor. */
@@ -987,18 +981,15 @@ public:
   using Vec  = std::vector<T>;
   using Mat  = rsMatrix<T>;
   using Tens = rsMultiArray<T>;
-  // todo: use them consistently in the function declarations to reduce clutter
 
   using FuncSclToVec = std::function<void(T, Vec&)>;
   // function that maps scalars to vectors, i.e defines parametric curves
 
   using FuncVecToVec = std::function<void(const Vec&, Vec&)>;
   // 1st argument: input vector, 2nd argument: output vector
-  // maybe rename to FuncVecToVec
 
   using FuncVecToMat = std::function<void(const Vec&, Mat&)>;
   // 1st argument: input vector, 2nd argument: output Jacobian matrix
-  // maybe rename to FuncVecToMat
 
   //-----------------------------------------------------------------------------------------------
   // \name Setup

@@ -105,7 +105,10 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
   int w = x.getWidth();
   int h = x.getHeight();
 
-  T scaledRadius = radius / numPasses;  // ad-hoc - maybe try to find better formula
+  T scaledRadius = radius / numPasses;
+  // ad-hoc - maybe try to find better formula - maybe plot the variance as function of the number 
+  // of passes (in 1D) to figure out the right formula experimentally - or maybe an analytic 
+  // formula can be derived?...maybe normalize the area under the curve to unity?
 
   // Create 1D IIR filter and set up its coefficients - we want a^r = 1/2 -> a = 2^(-1/r). This 
   // means the impulse response decays down to 1/2 after r pixels for a single pass (right?):
@@ -128,7 +131,7 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
       flt.applyBidirectionally(y.getPixelPointer(i, 0), y.getPixelPointer(i, 0), h, w);
 
   // todo: scale the filter coefficient b, such that the integral of the impulse response becomes
-  // 1 (or maybe the sum of the discrete implentation)....or maybe the sum-of-squares? maybe make
+  // 1 (or maybe the sum of the discrete implementation)....or maybe the sum-of-squares? maybe make
   // that user selectable - the sum of the values seems to be appropriate, if we want to use it 
   // for local averaging, as we do in the SIRP model
   // i think, this is already ensured because the geometric series 
@@ -220,8 +223,8 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
   rsAssert(y.hasSameShapeAs(x));
   int w  = x.getWidth();
   int h  = x.getHeight();
-  int numDiagonals  = w/2 + h - 1;  // verify this!
-  //int numDiagonals  = (w+1)/2 + h - 1;  // verify this!
+  //int numDiagonals  = w/2 + h - 1;  // verify this!
+  int numDiagonals  = (w+1)/2 + h - 1;  // verify this!
   for(int d = 0; d < numDiagonals; d++)
   {
     // figure out start and end coordinates of the current diagonal:
@@ -254,7 +257,10 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
         i--; j++; }}
     else
     {
-
+      i--;  j++;
+      // (1,0),(3,0),(5,0),(7,0),(8,0),(8,1),(8,2),(8,3),(8,4),(8,5)
+      // look ok - but the last one: (8,5) is missing
+      // numDiagonals is 9 but should be 10 - fixed!
 
       // not yet implemeted
 
@@ -308,7 +314,16 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
 // d  (i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j),(i,j)
 // 0: (0,0),(1,0)
 // 1: (0,1),(1,1),(2,0),(3,0)
-// 2:
+// 2: (0,2),(1,2),(2,1),(3,1),(4,0),(5,0)
+// 3: (0,3),(1,3),(2,2),(3,2),(4,1),(5,1),(6,0),(7,0)
+// 4: (0,4),(1,4),(2,3),(3,3),(4,2),(5,2),(6,1),(7,1),(8,0)
+// 5: (0,5),(1,5),(2,4),(3,4),(4,3),(5,3),(6,2),(7,2),(8,1)
+// 6: (2,5),(3,5),(4,4),(5,4),(6,3),(7,3),(8,2)
+// 7: (4,5),(5,5),(6,4),(7,4),(8,3)
+// 8: (6,5),(7,5),(8,4)
+// 9: (8,5)
+// desired start pixels for (i,j) for backward pass - always the last index pair in each line: 
+// (1,0),(3,0),(5,0),(7,0),(8,0),(8,1),(8,2),(8,3),(8,4),(8,5)
 
 // https://theasciicode.com.ar/extended-ascii-code/box-drawings-single-horizontal-line-character-ascii-code-196.html
 
@@ -479,6 +494,14 @@ void exponentialBlur(rsImage<T>& img, T radius, int numPasses)
   for(int n = 0; n < numPasses; n++)
     exponentialBlur(img, radius);
 }
+// todo: figure out the right formula for contracting the radius as function of the number of 
+// passes by considering the impulse response of the N-pass filter (given by the N-fold convolution
+// of the 1-pass impulse response with itself). maybe normalize the area under that impulse 
+// response (or maybe the squared impulse response - but that may be equivalent to what i already
+// have implemented for the butterworth scaler - energy normalization). let
+// h_1(t) = exp(-t/T) for t >= 0, h_N(t) = conv(h_1, h_{N-1}) be the impulse responses of 1-pass 
+// and N-pass filters -> obtain expressions for h_N(t) and \int_0^{inf} h_N(t) dt...maybe it's 
+// something like h_N(t) = k_N * t^N * exp(-t/T) ? -> use sage
 
 // try a (recursive) moving-average filter - should create a rectangular block - needs to 
 // implement prepareForBackwardPass - when input goes to zero, output will go to zero in a 
@@ -529,10 +552,10 @@ void testExponentialBlur()
   //  with a complex radius? would that work?
   // -as an alternative to normalizing after applying the filter: calculate total energy of the 
   //  image before and after filtering and multiply by the sqrt of the quotient - preserving the
-  //  total energy preserves perceived overall brighntness (right?)
+  //  total energy preserves perceived overall brightness (right?)
   // -according to this video: https://www.youtube.com/watch?v=LKnqECcg6Gw  human brightness/color
   //  perception follows the log of the energy where the energy is given by the squared pixel 
-  //  brightnesses - that implöies, a perceptually correct filter should do it like this: 
+  //  brightnesses - that implies, a perceptually correct filter should do it like this: 
   //  square pixel values -> apply filter -> square-root pixel values. this is especially important
   //  when the filter is applied to RGB channels of a color image
 }
@@ -646,11 +669,11 @@ void applyComplexExpBlur(rsImage<std::complex<T>>& img, T radius, T omega, int n
   for(int n = 1; n <= numPasses; n++)
     applyDiagonal(flt, img);
 }
-// Interesting interferecne patterns can be created when using a rather high frequency (in 
+// Interesting interference patterns can be created when using a rather high frequency (in 
 // relation to the radius). Also, the multiplication factors for the diagonal passes could be
 // different, leading to different results - this is only interesting for artistic purposes - for
-// generating isotropic kernels, the factors should be as they are - maybe make them optionla 
-// parameters
+// generating isotropic kernels, the factors should be as they are - maybe make them optional 
+// parameters (done)
 
 void testComplexExponentialBlur()
 {

@@ -233,9 +233,10 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       iStart = 2*(d-jStart); }
 
     // apply forward pass from west-south-west to east-north-east:
-    flt.reset();
     int i = iStart;
     int j = jStart;
+    flt.reset();                       // old -  todo: use some xL - maybe x(iStart, jStart)
+    //flt.setStateForConstInput(x(i, j));  // new 
     while(i < w && j >= 0) {
       y(i, j) = flt.getSample(x(i, j));
       i++; if(i >= w) { j--; break; }
@@ -243,8 +244,9 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       i++; j--; }
 
     // apply backward pass from east-north-east to west-south-west:
-    flt.prepareForBackwardPass();
     i--; j++;
+    flt.prepareForBackwardPass();       // old
+    //flt.prepareForBackwardPass(x(i, j));  // new 
     if(rsIsOdd(w) && i == w-1) {
       y(i, j) = flt.getSample(x(i, j));
       i--; j++; }
@@ -255,6 +257,8 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
       i--; j++; }
   }
 }
+// h.. the "new" lines lead to weird results
+
 // example: image with w=9, h=6:
 //   │ 0 1 2 3 4 5 6 7 8
 // ──┼──────────────────
@@ -302,11 +306,21 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
 
   // -it makes a difference whether we do apply->flip->apply->flip or flip->apply->flip->apply
   //  ->the corners look different (test with high kernel width)
+  // -maybe this will not happen, when the apsect ratio is 2x1? if so, maybe we should extend the 
+  //  image to have aspect ratio 2x1, filter and then crop? similarly, for the diagonal filters, we
+  //  should extend to aspect ratio 1x1 and then we can get rid of having to do it in two ways and 
+  //  taking the average? -> try it
   // -todo: try in preparForBackwardPass not to assume to go down to zero but to some 
   //  constant and then pass the last input pixel brightness to that - maybe that fixes it?
   //  -use flt.prepareForBackwardPass(flt.getX1())..or something - the filter stores the previous
   //   input so we can use that without extra code
   // ..then also apply the filters to the transposed image
+
+  // -what could be meaningful boundary conditions for images - just repeating the last pixel value
+  //  would make the filter very sensitive to cropping pixels away when there are fast changes at 
+  //  the boundary (i.e. last pixel black, 2nd to last white -> crop by 1 pixel -> get totally 
+  //  different result) ...maybe we should use some sort of local average near the boundary - say, 
+  //  over 10 pixels?
 }
 
 void testImageFilterSlanted()
@@ -315,8 +329,8 @@ void testImageFilterSlanted()
   int h = 6;
   float kernelWidth = 2.f;
 
-  w = 101;
-  h = 61;
+  w = 51;
+  h = 100;
   kernelWidth = 30.f;
 
 
@@ -337,6 +351,10 @@ void testImageFilterSlanted()
   rsImageProcessor<float>::normalize(img);
   writeImageToFilePPM(img, "SlantedFilter.ppm");
 }
+// todo: make a function that takes w,h as parameters and appends this info to the filename, then 
+// call it with various shapes, among them: 50x100, 51x100, 100x30, 100x50, 100x70, 100x100, 
+// 101x30, 101x50, 101x70, 101x101, 102x51 - they all behave in different ways, which is 
+// undesirable
 
 /** Apply filter in south-west/north-east direction (and back). */
 template<class T>

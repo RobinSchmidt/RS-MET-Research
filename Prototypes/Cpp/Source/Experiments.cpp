@@ -123,12 +123,12 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
   y.copyPixelDataFrom(x);
   for(int n = 0; n < numPasses; n++)  // loop over the passes
     for(int j = 0; j < h; j++)        // loop over the rows
-      flt.applyBidirectionally(y.getPixelPointer(0, j), y.getPixelPointer(0, j), w);
+      flt.applyForwardBackward(y.getPixelPointer(0, j), y.getPixelPointer(0, j), w);
 
   // vertical passes:
   for(int n = 0; n < numPasses; n++)
     for(int i = 0; i < w; i++)
-      flt.applyBidirectionally(y.getPixelPointer(i, 0), y.getPixelPointer(i, 0), h, w);
+      flt.applyForwardBackward(y.getPixelPointer(i, 0), y.getPixelPointer(i, 0), h, w);
 
   // todo: scale the filter coefficient b, such that the integral of the impulse response becomes
   // 1 (or maybe the sum of the discrete implementation)....or maybe the sum-of-squares? maybe make
@@ -201,11 +201,11 @@ void applyMultiPass1(rsFirstOrderFilterBase<T, T>& flt, rsImage<T>& img, int num
   {
     // horizontal pass:
     for(int j = 0; j < h; j++)        // loop over the rows
-      flt.applyBidirectionally(img.getPixelPointer(0, j), img.getPixelPointer(0, j), w);
+      flt.applyForwardBackward(img.getPixelPointer(0, j), img.getPixelPointer(0, j), w);
 
     // vertical pass:
     for(int i = 0; i < w; i++)        // loop over the columns
-      flt.applyBidirectionally(img.getPixelPointer(i, 0), img.getPixelPointer(i, 0), h, w);
+      flt.applyForwardBackward(img.getPixelPointer(i, 0), img.getPixelPointer(i, 0), h, w);
   }
 }
 // instead of using a serial connection of forward and backward passes, we could also try a 
@@ -916,7 +916,7 @@ void testMultiPass()
   flt.setCoefficients(b, 0.f, a);
   y1 = x;
   for(int n = 0; n < numPasses; n++)
-    flt.applyBidirectionally(&y1[0], &y1[0], N);
+    flt.applyForwardBackward(&y1[0], &y1[0], N);
 
   rsFirstOrderFilterChain<float, float> chain;
   chain.setupFromPrototype(flt, numPasses);
@@ -984,7 +984,7 @@ void plotComplexGauss1D()
   flt.setCoefficients(b, 0.f, a);
   y = x;
   for(int n = 0; n < numPasses; n++)
-    flt.applyBidirectionally(&y[0], &y[0], N);
+    flt.applyForwardBackward(&y[0], &y[0], N);
 
 
   std::vector<float> yr(N), yi(N), ya(N), yp(N); // real, imag, abs, phase
@@ -1004,7 +1004,7 @@ void plotComplexGauss1D()
   rsFill(y2, 0.f);
   y2[N/2] = 0.025f; // it has much larger amplitude (why?) - we compensate by scaling input
   for(int n = 0; n < numPasses; n++)
-    flt2.applyBidirectionally(&y2[0], &y2[0], N); 
+    flt2.applyForwardBackward(&y2[0], &y2[0], N); 
 
 
 

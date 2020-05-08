@@ -246,7 +246,14 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
     // apply backward pass from east-north-east to west-south-west:
     i--; j++;
     flt.prepareForBackwardPass();       // old
+
     //flt.prepareForBackwardPass(x(i, j));  // new 
+    // no - that's wrong when the filter is used in place - then x(i,j) has already been 
+    // overwritten by now and now contains y(i,j) ...we somehow must extract the last sample of the
+    // slanted line *before* overwriting it ...the filter-state x1 should still contain it, so 
+    // maybe flt.prepareForBackwardPass(flt.getStateX()); should work
+
+
     if(rsIsOdd(w) && i == w-1) {
       y(i, j) = flt.getSample(x(i, j));
       i--; j++; }
@@ -323,18 +330,24 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
   //  over 10 pixels?
 }
 
-void testImageFilterSlanted()
+
+
+
+template<class T>
+void testImageFilterSlanted(int w, int h, T kernelWidth)
 {
+  /*
   int w = 9;
   int h = 6;
-  float kernelWidth = 2.f;
+  T kernelWidth = 2.f;
 
   w = 51;
   h = 100;
   kernelWidth = 30.f;
+  */
 
 
-  rsImage<float> img(w, h);
+  rsImage<T> img(w, h);
   //img(1, 1) = 1.f;
   //img(2, 2) = 1.f; // try 1,1; 1,2; 2,1; 3,3; 3,2; 2,3
   //img(3, 3) = 1.f;
@@ -346,11 +359,23 @@ void testImageFilterSlanted()
 
 
 
-  applySlanted(img, kernelWidth); // triggers debug assertion when memory gets de-allocated
+  applySlanted(img, kernelWidth);
 
-  rsImageProcessor<float>::normalize(img);
+  rsImageProcessor<T>::normalize(img);
+
+
   writeImageToFilePPM(img, "SlantedFilter.ppm");
+
+  // todo: filname should include w,h
 }
+
+void testImageFilterSlanted()
+{
+  testImageFilterSlanted(100, 50, 30.f);
+
+
+}
+
 // todo: make a function that takes w,h as parameters and appends this info to the filename, then 
 // call it with various shapes, among them: 50x100, 51x100, 100x30, 100x50, 100x70, 100x100, 
 // 101x30, 101x50, 101x70, 101x101, 102x51 - they all behave in different ways, which is 

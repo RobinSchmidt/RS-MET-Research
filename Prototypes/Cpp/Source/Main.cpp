@@ -13,9 +13,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   */
 
 
-  //testGaussBlurIIR();
+  testGaussBlurIIR();
   //testMultiPass();
-  testImageFilterSlanted();
+  //testImageFilterSlanted();
   //testExponentialBlur();
   //testComplexExponentialBlur();
   //animateComplexExponentialBlur();

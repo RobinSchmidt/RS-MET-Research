@@ -123,12 +123,29 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
   y.copyPixelDataFrom(x);
   for(int n = 0; n < numPasses; n++)  // loop over the passes
     for(int j = 0; j < h; j++)        // loop over the rows
-      flt.applyForwardBackward(y.getPixelPointer(0, j), y.getPixelPointer(0, j), w);
+    {
+      flt.applyForwardBackward(y.getPixelPointer(0, j), y.getPixelPointer(0, j), w); // old
+
+      //// new:
+      //T xL = y(0,   j);
+      //T xR = y(w-1, j);
+      //flt.applyForwardBackward(y.getPixelPointer(0, j), y.getPixelPointer(0, j), w, xL, xR);
+    }
 
   // vertical passes:
   for(int n = 0; n < numPasses; n++)
     for(int i = 0; i < w; i++)
-      flt.applyForwardBackward(y.getPixelPointer(i, 0), y.getPixelPointer(i, 0), h, w);
+    {
+      flt.applyForwardBackward(y.getPixelPointer(i, 0), y.getPixelPointer(i, 0), h, w); // old
+
+      //// new
+      //T xL = y(i, 0);
+      //T xR = y(i, h-1);
+      //flt.applyForwardBackward(y.getPixelPointer(i, 0), y.getPixelPointer(i, 0), h, w, xL, xR);
+    }
+
+  // todo: maybe let the user decide, how the boundaries are handled (repeat last pixel or assume 
+  // zeros...maybe other options, like "reflect" could be uesed as well)
 
   // todo: scale the filter coefficient b, such that the integral of the impulse response becomes
   // 1 (or maybe the sum of the discrete implementation)....or maybe the sum-of-squares? maybe make
@@ -149,6 +166,9 @@ void testGaussBlurIIR()
   // controls shape - the higher, the better we approximate a true Gaussian - 5 or 6 seems to be
   // good enough
 
+
+  //radius = 30.f; // test
+
   //numPasses = 1; // for testing decay
 
   // try with w != h
@@ -158,6 +178,7 @@ void testGaussBlurIIR()
   // input is a single white pixel in the middle on black background: 
   x.fillAll(0.f);
   x(w/2, h/2) = 1.f;
+  //x(w/4, h/4) = 1.f;
 
   gaussBlurIIR(x, y, radius, numPasses);
 
@@ -235,8 +256,15 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
     // apply forward pass from west-south-west to east-north-east:
     int i = iStart;
     int j = jStart;
+
     flt.reset();                       // old -  todo: use some xL - maybe x(iStart, jStart)
-    //flt.setStateForConstInput(x(i, j));  // new 
+
+    //T xij = x(i,j);
+    //flt.setStateForConstInput(x(i, j));  // new - seems to cause problems
+    //int dummy = 0;
+    // todo: figure out, if it also causes similar problems when doing horizontal and vertical 
+    // filtering instead of slanted
+
     while(i < w && j >= 0) {
       y(i, j) = flt.getSample(x(i, j));
       i++; if(i >= w) { j--; break; }
@@ -252,7 +280,8 @@ void applySlantedWSW2ENE(rsFirstOrderFilterBase<T, T>& flt, const rsImage<T>& x,
     // overwritten by now and now contains y(i,j) ...we somehow must extract the last sample of the
     // slanted line *before* overwriting it ...the filter-state x1 should still contain it, so 
     // maybe flt.prepareForBackwardPass(flt.getStateX()); should work
-
+    //T x1 = flt.getStateX();
+    //flt.prepareForBackwardPass(flt.getStateX());
 
     if(rsIsOdd(w) && i == w-1) {
       y(i, j) = flt.getSample(x(i, j));
@@ -330,56 +359,59 @@ void applySlanted(rsImage<T>& img, T kernelWidth)
   //  over 10 pixels?
 }
 
-
-
-
 template<class T>
 void testImageFilterSlanted(int w, int h, T kernelWidth)
 {
-  /*
-  int w = 9;
-  int h = 6;
-  T kernelWidth = 2.f;
-
-  w = 51;
-  h = 100;
-  kernelWidth = 30.f;
-  */
-
-
   rsImage<T> img(w, h);
   //img(1, 1) = 1.f;
   //img(2, 2) = 1.f; // try 1,1; 1,2; 2,1; 3,3; 3,2; 2,3
   //img(3, 3) = 1.f;
 
   img(w/2, h/2) = 1.f;
-  //img(20, 20) = 1.f; // this white pixel is not treated right when w is odd
+  //img(20, 20) = 1.f;
   //img(21, 21) = 1.f;
-  // todo: try it with small sizes with odd width and go through the algo step by step
-
-
 
   applySlanted(img, kernelWidth);
-
   rsImageProcessor<T>::normalize(img);
-
-
-  writeImageToFilePPM(img, "SlantedFilter.ppm");
-
-  // todo: filname should include w,h
+  std::string name = "SlantedFilter_" + std::to_string(w) + "x" + std::to_string(h) + ".ppm";
+  writeImageToFilePPM(img, name.c_str());
 }
 
 void testImageFilterSlanted()
 {
-  testImageFilterSlanted(100, 50, 30.f);
+  testImageFilterSlanted( 80,  40,  15.f); 
+  //testImageFilterSlanted( 80,  40,  30.f); 
+
+  //testImageFilterSlanted(  9,   6,  2.f);
+  //testImageFilterSlanted(  9,   7,  2.f);  // result not symmetrical
+  //testImageFilterSlanted( 20,  10,  3.f); 
+  //testImageFilterSlanted( 21,  11,  3.f); 
 
 
+  /*
+  testImageFilterSlanted( 50, 100, 30.f);
+  testImageFilterSlanted( 51, 100, 30.f);
+  testImageFilterSlanted(100,  30, 30.f);
+  testImageFilterSlanted(100,  50, 30.f);
+  testImageFilterSlanted(100,  70, 30.f);
+  testImageFilterSlanted(100, 100, 30.f);
+  testImageFilterSlanted(101,  30, 30.f);
+  testImageFilterSlanted(101,  50, 30.f);
+  testImageFilterSlanted(101,  70, 30.f);
+  testImageFilterSlanted(101, 101, 30.f);
+  testImageFilterSlanted(102,  52, 30.f);
+  */
+
+  // Observations:
+  // -When the image width is even, we see a checkerboard pattern. I think, in the second pass, 
+  //  every even-numbered lines encounter a doublet of nonblack pixels along its journey and the 
+  //  odd numbered lines encounter only black pixels (or vice versa). When w is odd, every line of
+  //  the second pass encounters one nonblack pixel.
+  //  -the checkerboard pattern is undesirable, when the filter is used on its own, but when used
+  //   as part of a higher-level filtering algo that also includes vertical and horizontal passes,
+  //   i think, the effect will be smeared out by these passes, so it may not be a problem in 
+  //   practice - we need tests that use the filter in this context
 }
-
-// todo: make a function that takes w,h as parameters and appends this info to the filename, then 
-// call it with various shapes, among them: 50x100, 51x100, 100x30, 100x50, 100x70, 100x100, 
-// 101x30, 101x50, 101x70, 101x101, 102x51 - they all behave in different ways, which is 
-// undesirable
 
 /** Apply filter in south-west/north-east direction (and back). */
 template<class T>

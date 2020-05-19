@@ -1,0 +1,33 @@
+Consider a neural network architecture as follows:
+
+Idea:
+-has a set of nodes/neurons, each having a state which can be "ready" or "recovering"
+-each node monitors its total input given by delayed, weighted and smoothed outputs of other 
+ neurons
+-if the input exceeds a (global) threshold and the neuron is in "ready" mode, it fires a spike and
+ enters "recovering" mode in whcih it stays for a given time (global parameter)
+-the weights and delays are features of each connection
+-some neurons receive external inputs
+
+Implementation:
+-each neuron has a delayline at its input into which at each time-step the input is gathered from
+ the other neurons (it will be written into the right location of the delayline based on the delay
+ given by the connection and weighted by its weight)
+-at each time-step the delayline is read out and the output of this is smoothed, copared to a 
+ threshold and the the neuron either fires a spike or not
+
+Handcrafting networks:
+-a neuron that responds to a periodic input with period p and amplitude a can be created by 
+ connecting a neuron to itself with a delay matching the period p and a threshold matching the 
+ amplitude a. its response should be a spike train at the same period. it will also respond, when 
+ the amplitude is above the threshold
+-maybe a network that responds to certain frequencies (say 100, 200, 300 Hz) can be created, for 
+ each frequenciy, there are several neurons with different amplitude thresholds
+
+Learning:
+-use a Hebb-rule: neurons that fire together will have their connection strengthed and/or new 
+ connections get created, when the two neurons are not already connected
+-maybe new neurons can pop into existence randomly
+-maybe the neurons should have a notion of their position in 3D space and connection delays are
+ based on the distance
+ -maybe these neurons could move in order to modify the connection delays

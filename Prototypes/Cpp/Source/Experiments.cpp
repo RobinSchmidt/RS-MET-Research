@@ -127,7 +127,7 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
       flt.applyForwardBackward(y.getPixelPointer(0, j), y.getPixelPointer(0, j), w); // old
 
       //// new:
-      //T xL = y(0,   j);
+      //T xL = y(0,   j); // maybe we should use x(0, j) instead - likewise for xR
       //T xR = y(w-1, j);
       //flt.applyForwardBackward(y.getPixelPointer(0, j), y.getPixelPointer(0, j), w, xL, xR);
     }
@@ -202,6 +202,14 @@ void testGaussBlurIIR()
   //  (it tends to get less than one, when the radius becomes so large that there would be a 
   //  significant number nonzero zero pixels outside the image - but if we choose the radius such 
   //  that nonzero pixels onyl exist within the image, it seems to work)
+  // -when using last-pixel repetition for the boundary conditions and the white pixel is not at 
+  //  the center (like using x(w/4, h/4) = 1.f;) and the radius is sufficiently large, the 
+  //  "center of mass" in the filtered image shifts toward the corner - i.e. the corner is brighter
+  //  than it should be. that makes sense, because assuming the out-of-range pixels to just repeat 
+  //  the final brightness value - where it should actually decay - we assume then to be brighter 
+  //  than they actually would be, when using the same filter on a larger image and cropping later
+  //  -maybe we should use the final pixel values from the opriginal image in each pass - and not 
+  //   the ones of the output of the previous pass
 }
 
 

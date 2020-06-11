@@ -1,0 +1,21 @@
+Input:  a graph
+Output: array of vertices that is a subset of the graph's vertices, such that 
+        all edges are connected to one from the subset
+        
+init: array of remaining vertices R := array of all vertices of G
+      array of accumulated vertices C := empty
+
+(1) sort vertices in R by descending number of edges
+(2) pick first vertex of R (the one with most egdes) and put it into C and 
+    remove it (together with all its egdes) from R (this will change the 
+    order of all other vertices in R that were connected to the picked one)
+(3) if C is a vertex-cover, return C else go back to (1)
+
+this algo seems like a reasonable heuristic to find a vertex cover with a 
+small number of vertices - but it would be too good to be true, if it would 
+be guaranteed to always find such a minimal vertex cover because the problem
+is known to be NP-complete and this algo is apparently polynomial (right?). I 
+think it's O(N^3) - the test in (3) for C being a vertex cover is O(N^2) 
+(right?) and it has to be done at most N times where N is the number of 
+vertices in the graph. The sorting is O(N*log(N)) and picking the first is 
+O(1), so the O(N^2) test dominates the loop.

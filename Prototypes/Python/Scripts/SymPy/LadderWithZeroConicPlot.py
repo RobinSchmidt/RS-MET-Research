@@ -1,4 +1,4 @@
-"""
+﻿"""
 Plots the two conic section equations that arise from designing a first order
 filter (1 pole, 1 zero) to be used in a series connection...
 

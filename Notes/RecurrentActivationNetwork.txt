@@ -1,11 +1,12 @@
-Consider a neural network architecture as follows:
+Consider a biologically inspired neural network architecture as follows:
 
 Idea:
 -has a set of nodes/neurons, each having a state which can be "ready" or "recovering"
 -each node monitors its total input given by delayed, weighted and smoothed outputs of other 
  neurons
--if the input exceeds a (global) threshold and the neuron is in "ready" mode, it fires a spike and
- enters "recovering" mode in whcih it stays for a given time (global parameter)
+-if the input exceeds a (global? or per neuron?) threshold and the neuron is in "ready" mode, 
+ it fires a spike and enters "recovering" mode in which it stays for a given time (global 
+ parameter)
 -the weights and delays are features of each connection
 -some neurons receive external inputs
 
@@ -13,8 +14,9 @@ Implementation:
 -each neuron has a delayline at its input into which at each time-step the input is gathered from
  the other neurons (it will be written into the right location of the delayline based on the delay
  given by the connection and weighted by its weight)
--at each time-step the delayline is read out and the output of this is smoothed, copared to a 
- threshold and the the neuron either fires a spike or not
+-at each time-step the delayline is read out and the output of this is smoothed, compared to a 
+ threshold and then the neuron either fires a spike or not (and if it did fire, it enters the 
+ "recovering" state)
 
 Handcrafting networks:
 -a neuron that responds to a periodic input with period p and amplitude a can be created by 
@@ -31,3 +33,5 @@ Learning:
 -maybe the neurons should have a notion of their position in 3D space and connection delays are
  based on the distance
  -maybe these neurons could move in order to modify the connection delays
+
+ maybe call it recurrent spike network

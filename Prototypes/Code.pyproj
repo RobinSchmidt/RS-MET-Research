@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{09ccda2a-3fde-4b1c-9d38-7a9a3450a332}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>Python\MinimalSurface.py</StartupFile>
+    <StartupFile>Python\Scripts\SymPy\LadderWithZeroConicPlot.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -25,17 +25,27 @@
     <Content Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Python\MinimalSurface.py" />
     <Compile Include="Python\rsIntegerFunctions.py" />
     <Compile Include="Python\rsPolynomial.py" />
     <Compile Include="Python\rsRational.py" />
     <Compile Include="Python\rsSympyStuff.py" />
     <Compile Include="Python\rsTools.py" />
     <Compile Include="Python\rsUnitTests.py" />
+    <Compile Include="Python\Scripts\curve_fits.py" />
+    <Compile Include="Python\Scripts\demos.py" />
+    <Compile Include="Python\Scripts\fun.py" />
+    <Compile Include="Python\Scripts\SymPy\ImplicitPlot.py" />
+    <Compile Include="Python\Scripts\SymPy\LadderWithZero.py" />
+    <Compile Include="Python\Scripts\SymPy\LadderWithZeroConicPlot.py" />
+    <Compile Include="Python\Scripts\SymPy\softclip.py" />
+    <Compile Include="Python\Scripts\SymPy\softclip2-test.py" />
+    <Compile Include="Python\Scripts\SymPy\softclip2.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="NewFolder1\" />
     <Folder Include="Python" />
+    <Folder Include="Python\Scripts\" />
+    <Folder Include="Python\Scripts\SymPy\" />
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="{9a7a9026-48c1-4688-9d5d-e5699d47d074}\3.4" />

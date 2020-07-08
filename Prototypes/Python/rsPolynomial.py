@@ -25,8 +25,8 @@ def polyTrunc(p):
 	""""Truncates trailing zeros of the list p - maybe rename to 
 	rsTruncateTrailingZeros"""
 	i = len(p)-1
-	#while i > 0:  old - buggy!
-  while i > 1:
+	while i > 0:  # old - buggy!
+	#while i > 1:  # new - makes unit test fail - why? compare with c++ version
 		if p[i] != 0:
 			break
 		i -= 1

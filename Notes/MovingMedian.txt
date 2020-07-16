@@ -1,0 +1,23 @@
+-keep two buckets S,G of values - smaller and greater
+-the (S)maller bucket is a max heap, so we can access the largest element in it
+ in constant time
+-likewise, the (G)reater bucket is a min heap, so we can quickliy access its smallest 
+ element
+-when a new sample comes in, we must discard the oldest sample (from either the G or S 
+ bucket, whereever it happens to be in) and insert the new sample into either the G or S
+ bucket (wherever it belongs) *
+-the output signal is always the average of the largest (front) element in the S 
+ bucket and the smallest element in the G bucket
+ 
+the accept/discard process works as follows:
+-if x > front(G): insert into G
+-if x < front(S): insert into S
+
+or:
+-discard oldest
+-if oldest came from S: insert x into S
+-if oldest came from G: insert x into G
+-if front(S) > front(G): swap front(G) and front(S) and re-heapify both heaps, so 
+ front(S) should always be <= front(G) - the greatest of the small values should be <=
+ the smallest of the large values
+

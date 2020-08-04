@@ -20,4 +20,26 @@ or:
 -if front(S) > front(G): swap front(G) and front(S) and re-heapify both heaps, so 
  front(S) should always be <= front(G) - the greatest of the small values should be <=
  the smallest of the large values
+-..or maybe instead of comparing front(S) directly against front(G), we should compare 
+ them against our current output y?
 
+-in addition to the two heaps, we need a circular buffer with pointers to 
+ heap-nodes to identify the oldest node which we need to discard
+ 
+ 
+example: 
+-size of both heaps: 20, so we find a moving median of 40 (or 41?) samples
+-both heaps start being filled with zeros initially
+-the circular buffer of node-pointers points alternatingly to the nodes of S and G
+ (that's somewhat arbitrary - it should actually not really matter)
+-the "oldest" sample pointer points to the last node of S (or G - does it make a 
+ difference?)
+-a 5 comes in
+-we discard the oldest sample (from S) and insert 5 into S instead
+-we rebalance S -> 5 floats to the top
+-we note that front(S) = 5 > front(G) = 0, so we swap them and rebalance both 
+ heaps
+
+
+Moving Percentile:
+-the sizes of the S,G heaps could be different

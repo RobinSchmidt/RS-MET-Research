@@ -1,0 +1,111 @@
+
+
+
+de-interleave:
+
+1A2B3C4D5E6F    swap A,2  (1,2)
+12AB3C4D5E6F    swap A,3  (2,4)
+123BAC4D5E6F    swap B,4  (3,6)
+1234ACBD5E6F    swap A,5  (4,8)
+12345CBDAE6F    swap C,6  (5,10)
+123456BDAECF
+
+We always have swapped items at positions i and 2*i for i=1..5.
+The 1st half has been de-interleaved, now the 2nd half needs to be 
+re-ordered - but what's the general pattern?
+
+123456BDAECF    swap B,A  (6,8)
+123456ADBECF    swap D,B  (7,8)
+123456ABDECF    swap D,C  (8,10)
+123456ABCEDF    swap E,D  (9,10)
+123456ABCDEF
+
+hmm - pattern seems to be: 
+-swap i, i+2
+-swap i+1, i+2
+-i += 2
+...but is this generally true?...try longer sequences!
+
+
+1A2B3C4D5E6F7G8H9I    swap (A,2) - (1,2)
+12AB3C4D5E6F7G8H9I    swap (A,3) - (2,4)
+123BAC4D5E6F7G8H9I    swap (B,4) - (3,6)
+1234ACBD5E6F7G8H9I    swap (A,5) - (4,8)
+12345CBDAE6F7G8H9I    swap (C,6) - (5,10)
+123456BDAECF7G8H9I    swap (B,7) - (6,12)
+1234567DAECFBG8H9I    swap (D,8) - (7,14)
+12345678AECFBGDH9I    swap (A,9) - (8,16)
+123456789ECFBGDHAI
+
+consider only the 2nd half:
+
+012345678
+ECFBGDHAI    swap (E,A) - (0,7)
+ACFBGDHEI    swap (C,B) - (1,3)
+ABFCGDHEI    swap (F,C) - (2,3)
+ABCFGDHEI    swap (F,D) - (3,5)
+ABCDGFHEI    swap (G,E) - (4,7)
+ABCDEFHGI
+
+
+maybe write a program that figures out the swap indices for the 2nd half, run 
+it for longer lengths and try to spot the pattern
+
+OR:
+
+1A2B3C4D5E6F7G8H9I    swap (A,6) - (1,10)
+162B3C4D5EAF7G8H9I    swap (B,7) - (3,12)
+16273C4D5EAFBG8H9I    swap (C,8) - (5,14)
+1627384D5EAFBGCH9I    swap (D,9) - (7,16)
+162738495EAFBGCHDI  
+
+de-interleave upper half:
+
+162738495
+
+
+...let's try a power of 2 length (16) first
+
+0123456789012345    2nd digit of index
+1A2B3C4D5E6F7G8H    swap (A,5) - (1, 8)
+152B3C4DAE6F7G8H    swap (B,6) - (3,10)
+15263C4DAEBF7G8H    swap (C,7) - (5,12)
+1526374DAEBFCG8H    swap (D,8) - (7,14)
+15263748AEBFCGDH 
+
+now, all numbers are in the 2st half and all letters are in the 2nd half as
+it should be - but the first and 2nd halves are themselves interleaved - we 
+de-interleave them by applying the same strategy recursively:
+
+01234567
+15263748    swap (5,3) - (1,4)
+13265748    swap (6,4) - (3,6)
+13245768
+
+now de-interleave the 1st half again:
+
+0123
+1324    swap (3,2) - (1,2)
+1234
+
+first quarter is done, do 2nd quarter:
+
+
+...but what if N is not a power of two? is it enough to just take floor-division 
+when halving the range?
+
+
+
+
+
+
+
+see:
+https://stackoverflow.com/questions/1777901/interleave-array-in-constant-space
+https://en.wikipedia.org/wiki/In-place_matrix_transposition
+https://en.wikipedia.org/wiki/In_shuffle
+https://arxiv.org/abs/0805.1598 (A Simple In-Place Algorithm for In-Shuffle)
+https://cs.stackexchange.com/questions/332/in-place-algorithm-for-interleaving-an-array
+https://www.programmercoach.com/2017/04/interview-pearls-interleave-array-in.html
+
+google search: interleave array without additional memory

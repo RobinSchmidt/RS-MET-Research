@@ -1,0 +1,49 @@
+https://www.youtube.com/watch?v=CaasbfdJdJg Mathologer: Infinite fractions and the most irrational number 
+
+
+
+PI:
+[3; 7, 15, 1, 292, 1, 1, 1, 2, 1, 3, 1, 14, 2, 1, 1, 2, 2, 2, 2, ...]
+
+convergents:
+3, 22/7, 333/106, 355/113, 103993/33102, 104348/33215
+
+https://mathworld.wolfram.com/PiContinuedFraction.html
+
+https://oeis.org/A002485
+https://oeis.org/A002486
+
+
+01  3/1
+02  22/7
+03  333/106
+04  355/113
+05  103993/33102
+06  104348/33215
+07  208341/66317
+08  312689/99532
+09  833719/265381
+10  1146408/364913 
+11  4272943/1360120
+12  5419351/1725033
+13  80143857/25510582
+14  165707065/52746197
+15  245850922/78256779
+16  411557987/131002976
+17  1068966896/340262731
+19  2549491779/811528438
+20  6167950454/1963319607
+21  14885392687/4738167652
+22  21053343141/6701487259
+23  1783366216531/567663097408
+24  3587785776203/1142027682075
+25  5371151992734/1709690779483
+26  8958937768937/2851718461558
+
+
+figure out what the most accurate convegent is that we can represent with int
+and int64 - maybe define them as constants, so we can also do approximate
+calcualtions invloving pi, e, etc
+
+
+relevant files from Hollos: cfcv.c, cfrac.c, cfrat.c

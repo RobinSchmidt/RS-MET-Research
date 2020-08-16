@@ -1,0 +1,31 @@
+Consider the problem of finding a point (x,y) that satisfies:
+
+  f(x,y) := sin(a*x*y) = A
+  g(x,y) := cos(b*x*y) = B
+  
+With parameters A,a,B,b. We want to solve this by fixed point iteration. We have several 
+possibilities: solve 1st equation for x and 2nd equation for y and vice versa. In the 
+iteration, we could use the updated value from the 1st equation already in the 2nd equation which 
+implies that it may make a difference, in which order we perform the updates of x and y. Let's 
+solve the 1st for x and the 2nd for y:
+
+  x = asin(A) / (a*y)
+  y = acos(B) / (b*x)
+  
+We now have (at least) 3 options for a fixed point iteration:
+
+(1)  xNew = asin(A) / (a*yOld)
+     yNew = acos(B) / (b*xOld)    Jacobi iteration
+     
+(2)  xNew = asin(A) / (a*yOld)
+     yNew = acos(B) / (b*xNew)    Gauss-Seidel iteration (variant 1)
+     
+(3)  yNew = acos(B) / (b*xOld)
+     xNew = asin(A) / (a*yNew)    Gauss-Seidel iteration (variant 2)
+     
+More generally, we could use a linear combination of the old and new iterate in the 2nd update (see 
+SOR method). And if we would have solved eq. 1 for y and eq. 2 for x, we would get another 3 
+possibilities. For a linear system of equations, this choice probably does not matter much, but 
+for general nonlinear equations, it may have an impact on the convergence, so in such a case, we
+my want to try the various options. ...and the number of options grows quickly, when even more than
+two variables are involved...

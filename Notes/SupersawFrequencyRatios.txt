@@ -1,0 +1,40 @@
+Let's assume, the frequency ratios are given as rational numbers. We want an algorithm that takes 
+as input two frequencies (or period lengths) a,b (both rationla numbers) and produces as output
+an array of rational numbers c1,...,cN with c1=a, cN=b which should somehow minimize the beating
+between all the different frequencies. ...or actually: sort of distribute the beating in a way that
+makes it perceptually least obvious. 
+
+Let ci = ni/di and let's assume that the ci are period lengths. If all denominators di would be 
+one, we would like to maximize the lcm of all the ci (i think, if they are frequencies, we want 
+to minimze the gcd?). If we allow for other denominators, we perhaps want to maximize 
+lcm(n1,..,nN) / lcm(d1,..,dN)? But we need to put some constraints on the size of the numbers - 
+otherwise, this maximization task would be unbounded. Maybe let's say that the maximum allowed 
+denominator is dMax = d1*dN*N
+
+We also want the average of the ci to be close (or even equal) to (a+b)/2.
+
+Example: N=3, a = c1 = 6/5 = 1.2, b = cN = c3 = 5/4 = 1.25
+dMax = d1*d3*N = 5*4*3 = 60, avg = (6/5 + 5/4)/2 = 49/40
+let's use c2 = avg = 49/40, them we have:
+k := lcm(6,5,49)/lcm(5,4,40) = 1470/40 = 147/4
+we wnat the lcm of the numerators to be large, the lcm of the denominators be small and the
+gcd of both lcms be small
+
+
+OR:
+
+
+Let's not restrict ourselves to rational numbers and let c1,..,cN be real numbers. Maybe choose
+equidistant values between a^k and b^k and then take the k-th root afterwards. k is a user 
+parameter (could even be 0 or negative - in case of 0, we choose exponential spacing). Or maybe 
+choose numbers in a way so as to make their generalized mean (with exponent k) equal the same
+generalized mean of a and b...could that give the same result?
+
+Example: N=7, a=10, b=20, k=2
+raise a,b to power of k:  a^2 = 100, b^2 = 400
+create equidistant numbers: c1 = 100, c2=150, c3=200, c4=250, c5=300, c6=350, c7=400
+raise to power 1/k: c1 = 10, c2 = 12.25, c3 = 14.14, c4 = 15.81, c5 = 17.32, c6 = 18.71, c7 = 20
+
+...maybe compute the quadratic mean of these numbers and compare it to the quadratic mean of a,b.
+Is it the same?
+

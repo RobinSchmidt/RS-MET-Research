@@ -36,5 +36,30 @@ create equidistant numbers: c1 = 100, c2=150, c3=200, c4=250, c5=300, c6=350, c7
 raise to power 1/k: c1 = 10, c2 = 12.25, c3 = 14.14, c4 = 15.81, c5 = 17.32, c6 = 18.71, c7 = 20
 
 ...maybe compute the quadratic mean of these numbers and compare it to the quadratic mean of a,b.
-Is it the same?
+Is it the same? maybe that number k could be some sort of function of i (the index of the ci). 
+maybe some sort of point symmetric function around the center? maybe if the mean does not come 
+output as desired, we can scale all values - but then we would also have c1 != a, cN != b. Can a
+formula be derived that solves this? maybe call this rule equidistantPowers
+
+
+There are actually (at least) two factors at play that determine the phasiness:
+(1) how likely it is for the fundamentals to interfere totally destructively
+(2) how likely it is that - when (1) happens - it happens at the same time for
+    higher harmonic, too
+If it happens that the fundamentals cancels each other totally, we may want the 2nd harmonic to
+interfere more constructively to "make up" for it.
+
+
+
+Continuous density D:
+Example: D = 8.3
+-compute freqs for D=8 and D=9
+-actual lower half of freqs 0..3 and upper half of freqs 5..8 are computed by blending between
+ D=8 and D=9 freqs with factors 0.7 and 0.3
+-a middle tone is faded in (with relative amplitude 0.3)
+-when floor(D) is even, as in the example above, there's only one obvious way to do it. But when 
+ it's odd, we must make a decision if we want to make the split at floor(D)/2 or at floor(D+1)/2.
+ If floor(D) is even, they are both the same
+
+
 

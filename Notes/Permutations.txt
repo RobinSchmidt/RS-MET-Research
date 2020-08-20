@@ -1,0 +1,35 @@
+
+
+
+
+Any permutation can be split into a composition of disjoint cycles. For example, the permuation:
+
+0 1 2 3 4 5 6 7 8 9
+5 2 1 7 6 9 4 3 8 0
+
+can be written as:
+
+(0 5 9)(1 2)(3 7)(4 6)(8)
+
+To prodcue this representation, we start at 0 and look where it maps to (which is 5) then look 
+where 5 maps to (which is 9), then look where 9 maps to (which is 0) at which point we recognize 
+that 0 was our start value, so we found one cycle. Then, we find the next number which has not 
+yet been visited (which is 1) and do the same process. ..and so on, until all numbers have been 
+covered. In the example, the permutation consisted of 1 cycle of length 3, 3 cycles of length 2 and
+1 cycle of length 1. The length 1 cycles can be left out from the notation, since they represent
+elements which map to themselves. The identity can be written as (1) or as (). The composition of 
+the so extrcated cycles is commutative because the cycles are disjoint - each cycle operates on a 
+different subset of the original set, so they don't interfere with one another. The representation
+as cycles shows more clearly the structure of the permutation and makes it possible to perform the
+permutation in at most N steps without additional memory. We just work through each cycle from 
+right to left. Consider the cycle:
+
+(4 2 3 1 0)
+
+We can break it down into the sequence of transpositions (swaps):
+
+(1 0)(3 1)(3 2)(4 0)   (verify that)
+
+The set of permutations of N elements is a group and any group with N elements is isomorphic to a
+subgroup of that group (Cayley's theorem). This means that anything there is to know about finite 
+groups can be figured out by studying permutation groups - they encompass all other finite groups.

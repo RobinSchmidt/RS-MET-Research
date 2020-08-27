@@ -11,7 +11,7 @@ can be written as:
 
 (0 5 9)(1 2)(3 7)(4 6)(8)
 
-To prodcue this representation, we start at 0 and look where it maps to (which is 5) then look 
+To produce this representation, we start at 0 and look where it maps to (which is 5) then look 
 where 5 maps to (which is 9), then look where 9 maps to (which is 0) at which point we recognize 
 that 0 was our start value, so we found one cycle. Then, we find the next number which has not 
 yet been visited (which is 1) and do the same process. ..and so on, until all numbers have been 
@@ -33,3 +33,56 @@ We can break it down into the sequence of transpositions (swaps):
 The set of permutations of N elements is a group and any group with N elements is isomorphic to a
 subgroup of that group (Cayley's theorem). This means that anything there is to know about finite 
 groups can be figured out by studying permutation groups - they encompass all other finite groups.
+
+
+---------------------------------------------------------------------------------------------------
+Some ideas:
+-the operation of composing permutations takes two permutations and produces again a permutation
+-could there be another such operation that somehow relates to composition in a similar way as
+ addition and multiplication relate?
+Example using + to denote composition:
+
+Eq1:
+(1 2 3 4) + (1 2 3 4) = (1 2 3 4)
+(2 3 4 1)   (4 3 1 2)   (3 1 2 4)
+
+Let's define our other operation (denoted by *) as mapping that takes the two lower rows of both
+inputs:
+
+Eq2:
+(1 2 3 4) * (1 2 3 4) = (2 3 4 1) = (1 2 3 4)
+(2 3 4 1)   (4 3 1 2)   (4 3 1 2)   (2 4 3 1)
+
+...figure out, how this * relation relates to +. Is it distributive? Or maybe we need to reverse 
+the roles? By itself, it is associative (i think) but not commutative. Swapping the inputs yields
+the inverse permutation:
+
+Eq3:
+(1 2 3 4) * (1 2 3 4) = (4 3 1 2) = (1 2 3 4) = inv((1 2 3 4))
+(4 3 1 2)   (2 3 4 1)   (2 3 4 1)   (4 1 3 2)      ((2 4 3 1))
+
+hmm..in that way, it behaves more like subtraction or division - swapping arguments inverts 
+results. But the the results are inverses with respect to the *other* operation - which is
+kinda weird.
+
+I think, there are no inverse elements for this operation, but i think, if P is a permutation and
+Q is another, we will always have Q*P*Q = p, right? So, we can undo a left-multiplication by doing
+a right multiplication with the same Q and vice versa. Let's try it by taking the result of Eq2 and
+applying the 1st operand to the result, but from the right
+
+(1 2 3 4) * (1 2 3 4) = (2 4 3 1)
+(2 4 3 1)   (2 3 4 1)   (2 3 4 1) ..ääh - nope - that doesn't work!
+
+Let's invert the 2nd operand:
+
+(1 2 3 4) * (1 2 3 4)
+(2 4 3 1)   (4 1 2 3)
+
+no - that doesn't work either - it can'T: to get the identity as result, we would need the 2nd rows
+of both operands to match. hmmm...that operation does not really seem to lead to any interesting 
+structure
+
+
+
+
+

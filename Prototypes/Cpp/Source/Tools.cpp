@@ -2000,7 +2000,63 @@ void sphericalToCartesian(T r, T theta, T phi, T* x, T* y, T* z)
 //  close together (-> figure out details) - the bottom line is that we have to take care assigning
 //  u-coordinates to make sure, the specify a valid point
 
+// Set operations on std::vector (not yet tested):
 
+/** Returns a set C consisting of elements that are in A and in B. */
+template<class T>
+std::vector<T> rsSetIntersection(const std::vector<T>& A, const std::vector<T>& B)
+{
+  std::vector<T> C;
+  for(size_t i = 0; i < A.size(); i++)
+    if(rsArrayTools::contains(&B[0], (int) B.size(), A[i]))
+      C.push_back(A[i]);
+  return C;
+}
+
+/** Returns a set C consisting of elements that are in A but not in B. */
+template<class T>
+std::vector<T> rsSetDifference(const std::vector<T>& A, const std::vector<T>& B)
+{
+  std::vector<T> C;
+  for(size_t i = 0; i < A.size(); i++)
+    if(!rsArrayTools::contains(&B[0], (int) B.size(), A[i]))
+      C.push_back(A[i]);
+  return C;
+}
+
+/** Returns a set C consisting of elements that are in A or in B. */
+template<class T>
+std::vector<T> rsSetUnion(const std::vector<T>& A, const std::vector<T>& B)
+{
+  std::vector<T> C = A;
+  for(size_t i = 0; i < B.size(); i++)
+    if(!rsArrayTools::contains(&C[0], (int) C.size(), B[i]))
+      C.push_back(B[i]);
+  return C;
+}
+
+// -maybe make a class rsSet with operators + for union, - for difference, * for intersection.
+// -maybe keep the elements sorted - that reduces the complexity of "contains" from N to log(N)
+//  -union would be some sort of merge of sorted arrays (similar as in merge sort?..but avoiding
+//   duplicates)
+//  -but that requires an element type that defines an order...maybe we should have both: sorted 
+//   and unsorted sets
+
+/** Removes duplicate elements from a vector A and returns the result - that's useful for turning 
+arbitrary vectors inot sets (which contain each element just once). */
+template<class T>
+std::vector<T> rsRemoveDuplicates(const std::vector<T>& A)
+{
+  std::vector<T> B;
+  for(size_t i = 0; i < A.size(); i++)
+    if(!rsArrayTools::contains(&B[0], (int) B.size(), A[i]))
+      B.push_back(A[i]);
+  return B;
+}
+
+
+
+// maybe make rsRemvoveDuplict
 
 /*
 creating movies from pictures:

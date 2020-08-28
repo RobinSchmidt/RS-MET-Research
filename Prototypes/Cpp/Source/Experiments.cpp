@@ -3345,10 +3345,20 @@ void testSortedSet()
   A = Set({1,3,5,6,9});
   B = Set({2,3,4,5,7});
   C = A + B; r &= C == Set({1,2,3,4,5,6,7,9});  // union
+  C = B + A; r &= C == Set({1,2,3,4,5,6,7,9});
   C = A - B; r &= C == Set({1,6,9});            // difference
   C = B - A; r &= C == Set({2,4,7}); 
-  C = A * B; r &= C == Set({3,5});              // intersection 
-  C = A / B; r &= C == Set({1,2,4,6,7,9});      // symmetric difference 
+  C = A * B; r &= C == Set({3,5});              // intersection
+  C = B * A; r &= C == Set({3,5});
+  C = A / B; r &= C == Set({1,2,4,6,7,9});      // symmetric difference
+  C = B / A; r &= C == Set({1,2,4,6,7,9});
+  C = A + A; r &= C == A;
+  C = A - A; r &= C == Set({});
+  C = A * A; r &= C == A;
+  C = A / A; r &= C == Set({});
+
+
+  // try also A+A, A-A, A*A, A/A, try with empty sets, 
 
   A = Set({1,2,4,6,7,9});
   B = Set({2,3,5,7,8});
@@ -3380,7 +3390,15 @@ void testSortedSet()
   // todo: implement a class rsRelation..or maybe it should be an internal class of Set - or maybe
   // we should not use another class but the very same Set class - a relation *is* a set
   // https://en.wikipedia.org/wiki/Binary_relation#Operations_on_binary_relations
-  // this could also be used to represent (directed) graphs - the relation would be the edges
+  // this could also be used to represent (directed) graphs - the relation would be the edges.
+  // what about heterogenous sets? maybe they can be implemented by storing pointers to void or
+  // to some generic "rsSetElement" baseclass which hase a type field and a data field - we would
+  // need to invent some scheme for ordering them - maybe the type could be a string and we sort 
+  // sets lexicographically by type and within a type, use the < relation of the respective type
+  // ..but what if we have types like integer and rational and one set is A = { 1,2,3 } and another 
+  // is B = { 1,2/1,3 } - the 2/1 in B is of different type than the 2 in A - should we treat them
+  // as equal nonetheless in comparisons? maybe there should be a type-system that allows for
+  // one type to encompass another (like the rationals with the reals)
 
 
 

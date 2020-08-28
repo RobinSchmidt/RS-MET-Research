@@ -1,0 +1,35 @@
+Motivation:
+
+Consider Cauchy distribution:
+
+  p(x) = (1/(pi*g)) * g^2 / ((x-x0)^2 + g^2)
+
+https://en.wikipedia.org/wiki/Cauchy_distribution
+This probability density function has an undefined mean because the integral 
+via which the mean is defined does not converge. ...at least not in the sense
+of the limit of Riemann sums. Could we define a different notion of an 
+integral that works for this function? I'm thinking about starting at some 
+central point and going leftward and rightward simultaneously while adding up
+the contributions. Let's consider the simpler version of the function:
+
+  f(x) = 1 / (1 + x^2)
+  
+we want to find a suitable definition of:
+
+  I = integral_{-inf}^{+inf} x * f(x) dx
+  
+Let's define a stepsize h and consider the sum
+
+  S = sum_{n=-inf}^{+inf} h*f(c + n*h) + h*f(c - n*h)  -  h*f(c)
+  
+for some center value c. The last term is because the value for n=0 is counted 
+twice otherwise (right?). If this sum converges for h->0 and any choice of c 
+to the same finite value, we could take that as the definition for the 
+integral. Actually, for h->0, the subtraction of h*f(c) is not necessary 
+because that term goes to zero anyway (assuming f(c) is finite). Let's consider
+the sum before taking the h->0 limit with c=0. In the case of the Cauchy 
+distribution, as n goes to infinity, we add equal positive and negative 
+contributions, so each term in the sum becomes zero, so the sum itself becomes 
+zero. For more general c, it's a bit like an alternating series. It very much 
+reminds me of the harmonic series with alternating signs - which indeed does 
+converge.

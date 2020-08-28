@@ -2076,11 +2076,11 @@ public:
   {
     if(A.empty()) return true;  // the empty set is a valid set
     using AT = rsArrayTools;
-    bool sorted = AT::isSortedAscending(&A[0], (int) A.size()); // use isSortedStrictlyAscending
-    //bool unique = !AT::containsDuplicates(&A[0], (int) A.size());
-    return sorted;  // && unique
+    bool sorted = AT::isSortedAscending(&A[0], (int) A.size()); // use isSortedStrictlyAscending to disallow duplicates
+    return sorted;
   }
 
+  /** An element is in the intersection set of A and B if it is in A or in B. */
   static std::vector<T> unionSet(const std::vector<T>& A, const std::vector<T>& B)
   {
     size_t Na = A.size(), Nb = B.size();
@@ -2097,6 +2097,7 @@ public:
   }
   // maybe rename to unionSet, etc. to avoid confusion with setters
 
+  /** An element is in the intersection set of A and B if it is in A and in B. */
   static std::vector<T> intersectionSet(const std::vector<T>& A, const std::vector<T>& B)
   {
     size_t Na = A.size(), Nb = B.size();
@@ -2110,6 +2111,7 @@ public:
     return C;
   }
 
+  /** An element is in the difference set A "without" B if it is in A but not in B. */
   static std::vector<T> differenceSet(const std::vector<T>& A, const std::vector<T>& B)
   {
     size_t Na = A.size(), Nb = B.size();
@@ -2129,7 +2131,9 @@ public:
   //   skip all elements in B that are less than our current element in A
   // endwhile
 
-  /** The symmetric difference is the union minus the intersection. */
+  /** An element is in the intersection set of A and B if it is in A or in B but not in both, so 
+  it's like the union but with the exclusive instead of the inclusive or. The symmetric difference
+  is the union minus the intersection. */
   static std::vector<T> symmetricDifferenceSet(const std::vector<T>& A, const std::vector<T>& B)
   {
     size_t Na = A.size(), Nb = B.size();
@@ -2170,8 +2174,11 @@ public:
   // branches 1,2 and skip in branch 3, see also
   // https://www.geeksforgeeks.org/set-operations/
 
-  // implement function areDisjoint(A, B) ..or maybe as A.isDisjointTo(B), maybe also equals - this
-  // is really trivial thanks to the sorting
+  // implement function areDisjoint(A, B) ..or maybe as A.isDisjointTo(B),
+  // also: A.isSubsetOf(B), A.isSupersetOf(B) - maybe use < and <= operators where < should denote
+  // a strict subset. when A is a subset of B and B has larger size than A, then A is a strict 
+  // subset of B, maybe also implement power set - but that scales with 2^N and so it gets 
+  // impractical very quickly
 
   // maybe implement relations as subsets of the cartesian product - then we may inquire if a 
   // particular tuple of elements is in a given relation - this can also be determined quickly by 

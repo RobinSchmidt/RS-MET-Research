@@ -2074,13 +2074,14 @@ public:
   must be ascendingly sorted and each element may occur only once. */
   static bool isValid(const std::vector<T>& A)
   {
+    if(A.empty()) return true;  // the empty set is a valid set
     using AT = rsArrayTools;
-    bool sorted = AT::isSortedAscending(&A[0], (int) A.size());
+    bool sorted = AT::isSortedAscending(&A[0], (int) A.size()); // use isSortedStrictlyAscending
     //bool unique = !AT::containsDuplicates(&A[0], (int) A.size());
     return sorted;  // && unique
   }
 
-  static std::vector<T> setUnion(const std::vector<T>& A, const std::vector<T>& B)
+  static std::vector<T> unionSet(const std::vector<T>& A, const std::vector<T>& B)
   {
     size_t Na = A.size(), Nb = B.size();
     size_t ia = 0, ib = 0; // indices into A and B, maybe use i,j
@@ -2094,8 +2095,9 @@ public:
     while(ib < B.size()) { C.push_back(B[ib]); ib++; }
     return C;
   }
+  // maybe rename to unionSet, etc. to avoid confusion with setters
 
-  static std::vector<T> setIntersection(const std::vector<T>& A, const std::vector<T>& B)
+  static std::vector<T> intersectionSet(const std::vector<T>& A, const std::vector<T>& B)
   {
     size_t Na = A.size(), Nb = B.size();
     size_t ia = 0, ib = 0;
@@ -2108,7 +2110,7 @@ public:
     return C;
   }
 
-  static std::vector<T> setDifference(const std::vector<T>& A, const std::vector<T>& B)
+  static std::vector<T> differenceSet(const std::vector<T>& A, const std::vector<T>& B)
   {
     size_t Na = A.size(), Nb = B.size();
     size_t ia = 0, ib = 0;
@@ -2118,9 +2120,7 @@ public:
       while(ia < Na && ib < Nb && A[ia] <  B[ib]) { C.push_back(A[ia]); ia++; }  // is ib < Nb needed?
       while(ia < Na && ib < Nb && A[ia] == B[ib]) { ia++; ib++;               }
       while(ia < Na && ib < Nb && B[ib] <  A[ia]) { ib++;                     }} // is ia < Na needed?
-    // is this loop guaranteed to terminate?
-
-    while(ia < Na) { C.push_back(A[ia]); ia++; }    // add remaining elements from A
+    while(ia < Na) { C.push_back(A[ia]); ia++; } 
     return C;
   }
   // while(ia < Na && ib < Na)
@@ -2129,8 +2129,8 @@ public:
   //   skip all elements in B that are less than our current element in A
   // endwhile
 
-
-  static std::vector<T> setSymmetricDifference(const std::vector<T>& A, const std::vector<T>& B)
+  /** The symmetric difference is the union minus the intersection. */
+  static std::vector<T> symmetricDifferenceSet(const std::vector<T>& A, const std::vector<T>& B)
   {
     size_t Na = A.size(), Nb = B.size();
     size_t ia = 0, ib = 0;
@@ -2144,11 +2144,7 @@ public:
     while(ib < B.size()) { C.push_back(B[ib]); ib++; }
     return C;
   }
-  // needs test
-
-
   // needs more tests
-  // invariant of outer loop: B[ib] >= A[ia]
 
   static std::vector<std::pair<T,T>> cartesianProduct(
     const std::vector<T>& A, const std::vector<T>& B)
@@ -2160,7 +2156,8 @@ public:
         C[ia*Nb+ib] = std::pair(A[ia], B[ib]);
     return C;
   }
-  // maybe allow different types for the elements of A and B
+  // -maybe allow different types for the elements of A and B
+  // -maybe it should return a set
 
   // todo: implement int find(const T& x) - searches for element x via binary search and returns 
   // index, bool contains(const T& x), bool insert(const T& x), bool remove(const T& x) - return
@@ -2185,19 +2182,23 @@ public:
 
   /** Addition operator implements set union. */
   rsSortedSet<T> operator+(const rsSortedSet<T>& B) const
-  { return rsSortedSet<T>(setUnion(this->data, B.data)); }
+  { return rsSortedSet<T>(unionSet(this->data, B.data)); }
 
   /** Subtraction operator implements set difference. */
   rsSortedSet<T> operator-(const rsSortedSet<T>& B) const
-  { return rsSortedSet<T>(setDifference(this->data, B.data)); }
+  { return rsSortedSet<T>(differenceSet(this->data, B.data)); }
 
   /** Multiplication operator implements set intersection. */
   rsSortedSet<T> operator*(const rsSortedSet<T>& B) const
-  { return rsSortedSet<T>(setIntersection(this->data, B.data)); }
+  { return rsSortedSet<T>(intersectionSet(this->data, B.data)); }
 
-  /** Multiplication operator implements set symmetric difference. */
+  /** Division operator implements set symmetric difference. */
   rsSortedSet<T> operator/(const rsSortedSet<T>& B) const
-  { return rsSortedSet<T>(setSymmetricDifference(this->data, B.data)); }
+  { return rsSortedSet<T>(symmetricDifferenceSet(this->data, B.data)); }
+
+
+  bool operator==(const rsSortedSet<T>& B) const
+  { return this->data == B.data; }
 
 
 protected:

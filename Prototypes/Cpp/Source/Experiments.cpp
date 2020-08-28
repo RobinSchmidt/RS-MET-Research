@@ -3338,24 +3338,49 @@ void testManifoldEllipsoid()
 void testSortedSet()
 {
   using Set = rsSortedSet<int>;
+  bool r = true;
 
   Set A, B, C;
 
   A = Set({1,3,5,6,9});
   B = Set({2,3,4,5,7});
-  C = A + B;     // union - should be 1,2,3,4,5,6,7,9
-  C = A * B;     // intersection - should be 3,5
-  C = A / B;     // symmetric difference - should be 1,2,4,6,7,9
-
-
+  C = A + B; r &= C == Set({1,2,3,4,5,6,7,9});  // union
+  C = A - B; r &= C == Set({1,6,9});            // difference
+  C = B - A; r &= C == Set({2,4,7}); 
+  C = A * B; r &= C == Set({3,5});              // intersection 
+  C = A / B; r &= C == Set({1,2,4,6,7,9});      // symmetric difference 
 
   A = Set({1,2,4,6,7,9});
   B = Set({2,3,5,7,8});
-  C = A - B;              // should be 1,4,6,9
+  C = A + B; r &= C == Set({1,2,3,4,5,6,7,8,9});
+  C = A - B; r &= C == Set({1,4,6,9});
+  C = B - A; r &= C == Set({3,5,8});
+  C = A * B; r &= C == Set({2,7});
+  C = A / B; r &= C == Set({1,3,4,5,6,8,9});
+
+  A = Set({1,3,5,7,9});
+  B = Set({2,4,6,8});
+  C = A + B; r &= C == Set({1,2,3,4,5,6,7,8,9});
+  C = A - B; r &= C == Set({1,3,5,7,9});
+  C = A * B; r &= C == Set({});
+  C = A / B; r &= C == Set({1,2,3,4,5,6,7,8,9});
+
+  A = Set({1,2,3,4,5,6});
+  B = Set({3,4,5,6,7,8});
+  C = A + B; r &= C == Set({1,2,3,4,5,6,7,8});
+  C = A - B; r &= C == Set({1,2});
+  C = B - A; r &= C == Set({7,8});
+  C = A * B; r &= C == Set({3,4,5,6});
+  C = A / B; r &= C == Set({1,2,7,8});
+
+  // maybe make tests with randomized sets, check if set algebraic rules hold
 
   auto D = Set::cartesianProduct(A.getData(), B.getData());
 
-  // OK - we have the basic set operations in place
+  // todo: implement a class rsRelation..or maybe it should be an internal class of Set - or maybe
+  // we should not use another class but the very same Set class - a relation *is* a set
+  // https://en.wikipedia.org/wiki/Binary_relation#Operations_on_binary_relations
+  // this could also be used to represent (directed) graphs - the relation would be the edges
 
 
 

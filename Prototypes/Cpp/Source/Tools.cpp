@@ -2054,6 +2054,10 @@ std::vector<T> rsRemoveDuplicates(const std::vector<T>& A)
   return B;
 }
 
+
+/** A class for representing sets. To optimize operations, they are kept sorted internally which 
+means the data type T must support "less-than" comparisons. */
+
 template<class T>
 class rsSortedSet
 {
@@ -2061,10 +2065,10 @@ class rsSortedSet
 public:
 
 
+  rsSortedSet() {}
+
   rsSortedSet(const std::vector<T>& setData) : data(setData)
-  {
-    rsAssert(isValid(data));
-  }
+  { rsAssert(isValid(data)); }
 
   /** Returns true, iff the given vector is a valid representation of a sorted set. For this, it 
   must be ascendingly sorted and each element may occur only once. */
@@ -2078,9 +2082,11 @@ public:
 
   static std::vector<T> setUnion(const std::vector<T>& A, const std::vector<T>& B)
   {
+    size_t Na = A.size(), Nb = B.size();
+    size_t ia = 0, ib = 0; // indices into A and B, maybe use i,j
     std::vector<T> C;
-    size_t ia = 0, ib = 0; // indices into A and B
-    while(ia < A.size() && ib < B.size()) {
+    C.reserve(Na+Nb);
+    while(ia < Na && ib < Nb) {
       if(     B[ib] < A[ia]) { C.push_back(B[ib]); ib++;       }   // A[ia] >  B[ib]
       else if(A[ia] < B[ib]) { C.push_back(A[ia]); ia++;       }   // A[ia] <  B[ib]
       else                   { C.push_back(A[ia]); ia++; ib++; }}  // A[ia] == B[ib]
@@ -2088,26 +2094,26 @@ public:
     while(ib < B.size()) { C.push_back(B[ib]); ib++; }
     return C;
   }
-  // maybe do: C.reserve(A.size() + B.size())
 
   static std::vector<T> setIntersection(const std::vector<T>& A, const std::vector<T>& B)
   {
-    std::vector<T> C;
-    size_t ia = 0, ib = 0;
     size_t Na = A.size(), Nb = B.size();
+    size_t ia = 0, ib = 0;
+    std::vector<T> C;
+    C.reserve(rsMin(Na, Nb));
     while(ia < Na && ib < Nb) {
       while(ia < Na && ib < Nb && A[ia] <  B[ib])   ia++;   // is ib < B.size() needed?
       while(ia < Na && ib < Nb && B[ib] <  A[ia])   ib++;   // is ia < A.size() needed?
       while(ia < Na && ib < Nb && B[ib] == A[ia]) { C.push_back(A[ia]); ia++; ib++; }}
     return C;
   }
-  // maybe do: C.reserve(min(A.size(), B.size()))
 
   static std::vector<T> setDifference(const std::vector<T>& A, const std::vector<T>& B)
   {
-    std::vector<T> C;
-    size_t ia = 0, ib = 0;
     size_t Na = A.size(), Nb = B.size();
+    size_t ia = 0, ib = 0;
+    std::vector<T> C;
+    C.reserve(Na);
     while(ia < Na && ib < B.size()) {
       while(ia < Na && ib < Nb && A[ia] <  B[ib]) { C.push_back(A[ia]); ia++; }  // is ib < Nb needed?
       while(ia < Na && ib < Nb && A[ia] == B[ib]) { ia++; ib++;               }
@@ -2117,12 +2123,29 @@ public:
     while(ia < Na) { C.push_back(A[ia]); ia++; }    // add remaining elements from A
     return C;
   }
-  // maybe do: C.reserve(A.size())
   // while(ia < Na && ib < Na)
   //   add all elements from A that are less than our current element in B
   //   skip all elements in A and B that are equal
   //   skip all elements in B that are less than our current element in A
   // endwhile
+
+
+  static std::vector<T> setSymmetricDifference(const std::vector<T>& A, const std::vector<T>& B)
+  {
+    size_t Na = A.size(), Nb = B.size();
+    size_t ia = 0, ib = 0;
+    std::vector<T> C;
+    C.reserve(Na+Nb);
+    while(ia < Na && ib < Nb) {
+      while(ia < Na && ib < Nb && A[ia] <  B[ib]) { C.push_back(A[ia]); ia++; }   // is ib < B.size() needed?
+      while(ia < Na && ib < Nb && B[ib] <  A[ia]) { C.push_back(B[ib]); ib++; }   // is ia < A.size() needed?
+      while(ia < Na && ib < Nb && B[ib] == A[ia]) { ia++; ib++;               }}
+    while(ia < A.size()) { C.push_back(A[ia]); ia++; }
+    while(ib < B.size()) { C.push_back(B[ib]); ib++; }
+    return C;
+  }
+  // needs test
+
 
   // needs more tests
   // invariant of outer loop: B[ib] >= A[ia]
@@ -2147,7 +2170,11 @@ public:
   // https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations
   // https://en.wikipedia.org/wiki/Symmetric_difference
   // i think, it can be done with the same algo as for the intersection, just that we push in 
-  // branches 1,2 and skip in branch 3
+  // branches 1,2 and skip in branch 3, see also
+  // https://www.geeksforgeeks.org/set-operations/
+
+  // implement function areDisjoint(A, B) ..or maybe as A.isDisjointTo(B), maybe also equals - this
+  // is really trivial thanks to the sorting
 
   // maybe implement relations as subsets of the cartesian product - then we may inquire if a 
   // particular tuple of elements is in a given relation - this can also be determined quickly by 
@@ -2168,6 +2195,10 @@ public:
   rsSortedSet<T> operator*(const rsSortedSet<T>& B) const
   { return rsSortedSet<T>(setIntersection(this->data, B.data)); }
 
+  /** Multiplication operator implements set symmetric difference. */
+  rsSortedSet<T> operator/(const rsSortedSet<T>& B) const
+  { return rsSortedSet<T>(setSymmetricDifference(this->data, B.data)); }
+
 
 protected:
 
@@ -2176,6 +2207,8 @@ protected:
 };
 // goal: all basic set operations like union, intersection, difference, etc. should be O(N), 
 // finding an element O(log(N))
+// how would we deal with sets of complex numbers? they do not have a < operation. should we 
+// implement a subclass that provides such an operator, like rsComplexOrderedReIm
 
 /*
 creating movies from pictures:

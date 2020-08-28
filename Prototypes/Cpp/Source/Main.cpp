@@ -13,7 +13,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   */
 
 
-  testGaussBlurIIR();
+  //testGaussBlurIIR();
   //testMultiPass();
   //testImageFilterSlanted();
   //testExponentialBlur();
@@ -30,7 +30,11 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifold2();
   //testManifoldPolar();
   //testManifoldSphere();
-  testManifoldEarth();
+  //testManifoldEarth();
   
+
+
+  testSortedSet();
+
   return 0;
 }

@@ -2054,9 +2054,52 @@ std::vector<T> rsRemoveDuplicates(const std::vector<T>& A)
   return B;
 }
 
+template<class T>
+class rsSortedSet
+{
+
+public:
 
 
-// maybe make rsRemvoveDuplict
+  rsSortedSet(const std::vector<T>& setData) : data(setData)
+  {
+    rsAssert(isValid(data));
+  }
+
+  /** Returns true, iff the given vector is a valid representation of a sorted set. For this, it 
+  must be ascendingly sorted and each element may occur only once. */
+  static bool isValid(const std::vector<T>& A)
+  {
+    using AT = rsArrayTools;
+    bool sorted = AT::isSortedAscending(&A[0], (int) A.size());
+    //bool unique = !AT::containsDuplicates(&A[0], (int) A.size());
+    return sorted;  // && unique
+  }
+
+  static std::vector<T> setUnion(const std::vector<T>& A, const std::vector<T>& B)
+  {
+    std::vector<T> C;
+    size_t ia = 0, ib = 0; // indices into A and B
+    while(ia < A.size() && ib < B.size()) {
+      if(     B[ib] < A[ia]) { C.push_back(B[ib]); ib++;       }   // A[ia] >  B[ib]
+      else if(A[ia] < B[ib]) { C.push_back(A[ia]); ia++;       }   // A[ia] <  B[ib]
+      else                   { C.push_back(A[ia]); ia++; ib++; }}  // A[ia] == B[ib]
+    while(ia < A.size()) { C.push_back(A[ia]); ia++; }
+    while(ib < B.size()) { C.push_back(B[ib]); ib++; }
+    return C;
+  }
+
+  /** Addition operator implements set union. */
+  rsSortedSet<T> operator+(const rsSortedSet<T>& B) const
+  { return rsSortedSet<T>(setUnion(this->data, B.data)); }
+
+
+protected:
+
+  std::vector<T> data;
+
+};
+
 
 /*
 creating movies from pictures:

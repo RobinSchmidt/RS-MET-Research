@@ -3322,8 +3322,6 @@ void testManifoldEllipsoid()
 
 }
 
-
-
 // How can we express the Minkowski metric of flat spacetime? We would need a metric tensor of the
 // form
 //  -1  0  0  0
@@ -3335,3 +3333,16 @@ void testManifoldEllipsoid()
 // Can we express the basis vectors in terms of a given metric? maybe Cholesky decomposition is
 // needed? maybe the basis vectors are not unique? or maybe some other decomposition such that
 // G = E^T * E,  where E is the matrix of basis vectors and G is the metric as matrix
+
+
+void testSortedSet()
+{
+  using Set = rsSortedSet<int>;
+
+  Set A({1,3,5,6,9});
+  Set B({2,3,4,5,7});
+  Set C = A + B;    // union
+
+
+  int dummy = 0;
+}

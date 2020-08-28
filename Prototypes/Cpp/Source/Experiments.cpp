@@ -3344,16 +3344,15 @@ void testSortedSet()
   Set C = A + B;      // union - should be 1,2,3,4,5,6,7,9
   C = A * B;          // intersection - should be 3,5
 
-
-
   A = Set({1,2,4,6,7,9});
   B = Set({2,3,5,7,8});
   C = A - B;              // should be 1,4,6,9
 
   auto D = Set::cartesianProduct(A.getData(), B.getData());
 
+  // OK - we have the basic set operations in place
 
-  //Set D = C - B;  
+
 
   int dummy = 0;
 }

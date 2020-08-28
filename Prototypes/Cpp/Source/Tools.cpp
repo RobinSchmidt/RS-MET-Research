@@ -2088,6 +2088,7 @@ public:
     while(ib < B.size()) { C.push_back(B[ib]); ib++; }
     return C;
   }
+  // maybe do: C.reserve(A.size() + B.size())
 
   static std::vector<T> setIntersection(const std::vector<T>& A, const std::vector<T>& B)
   {
@@ -2100,6 +2101,7 @@ public:
       while(ia < Na && ib < Nb && B[ib] == A[ia]) { C.push_back(A[ia]); ia++; ib++; }}
     return C;
   }
+  // maybe do: C.reserve(min(A.size(), B.size()))
 
   static std::vector<T> setDifference(const std::vector<T>& A, const std::vector<T>& B)
   {
@@ -2109,12 +2111,13 @@ public:
     while(ia < Na && ib < B.size()) {
       while(ia < Na && ib < Nb && A[ia] <  B[ib]) { C.push_back(A[ia]); ia++; }  // is ib < Nb needed?
       while(ia < Na && ib < Nb && A[ia] == B[ib]) { ia++; ib++;               }
-      while(ia < Na && ib < Nb && B[ib] < A[ia])  { ib++;                     }} // is ia < Na needed?
+      while(ia < Na && ib < Nb && B[ib] <  A[ia]) { ib++;                     }} // is ia < Na needed?
     // is this loop guaranteed to terminate?
 
     while(ia < Na) { C.push_back(A[ia]); ia++; }    // add remaining elements from A
     return C;
   }
+  // maybe do: C.reserve(A.size())
   // while(ia < Na && ib < Na)
   //   add all elements from A that are less than our current element in B
   //   skip all elements in A and B that are equal
@@ -2127,23 +2130,28 @@ public:
   static std::vector<std::pair<T,T>> cartesianProduct(
     const std::vector<T>& A, const std::vector<T>& B)
   {
-    std::vector<std::pair<T,T>> C(A.size() * B.size());
-      /*
-    for(size_t ia = 0; i < A.size(); ia++)
-    {
-
-      for(size_t ib = 0; i < B.size(); ib++)
-      {
-        size_t ic = ia * B.size() + ib;
-        C[ic] = std::pair(A[ia], B[ib]);
-      }
-
-    }
-      */
+    size_t Na = A.size(), Nb = B.size();
+    std::vector<std::pair<T,T>> C(Na * Nb);
+    for(size_t ia = 0; ia < Na; ia++)
+      for(size_t ib = 0; ib < Nb; ib++)
+        C[ia*Nb+ib] = std::pair(A[ia], B[ib]);
     return C;
   }
+  // maybe allow different types for the elements of A and B
 
-  // maybe implement cartesian product - it should return a set of pairs (maybe std::pair)
+  // todo: implement int find(const T& x) - searches for element x via binary search and returns 
+  // index, bool contains(const T& x), bool insert(const T& x), bool remove(const T& x) - return
+  // value informs, if something was done
+
+  // implement symmetric difference:
+  // https://en.wikipedia.org/wiki/Set_(mathematics)#Basic_operations
+  // https://en.wikipedia.org/wiki/Symmetric_difference
+  // i think, it can be done with the same algo as for the intersection, just that we push in 
+  // branches 1,2 and skip in branch 3
+
+  // maybe implement relations as subsets of the cartesian product - then we may inquire if a 
+  // particular tuple of elements is in a given relation - this can also be determined quickly by 
+  // two successive binary searches...maybe we can do interesting computaions with relations, too
 
 
   const std::vector<T>& getData() const { return data; }

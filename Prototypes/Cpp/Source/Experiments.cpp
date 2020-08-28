@@ -3335,6 +3335,19 @@ void testManifoldEllipsoid()
 // G = E^T * E,  where E is the matrix of basis vectors and G is the metric as matrix
 
 
+
+template<class T>
+void rsNextPascalTriangleLine(const T* x, T* y, int N)
+{
+  T xL = T(1), xR;
+  for(int i = 1; i < N-1; i++) {
+    xR   = x[i];
+    y[i] = xL + xR;
+    xL   = xR; }
+  y[N-1] = T(1);
+}
+// move to rapt - the algo there is not in place
+
 void testSortedSet()
 {
   using Set = rsSortedSet<int>;
@@ -3400,6 +3413,10 @@ void testSortedSet()
   // as equal nonetheless in comparisons? maybe there should be a type-system that allows for
   // one type to encompass another (like the rationals with the reals)
 
+  // compute the next line of the pascal triangle from a given line:
+  static const int N = 7;                // we compute the 7th line
+  int p[N] = { 1, 5, 10, 10, 5, 1, -9 };  // this is the 6th line (with trailing -9 as garbage)
+  rsNextPascalTriangleLine(p, p, N);
 
 
   int dummy = 0;

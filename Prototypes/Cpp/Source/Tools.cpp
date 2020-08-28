@@ -2178,7 +2178,11 @@ public:
   // also: A.isSubsetOf(B), A.isSupersetOf(B) - maybe use < and <= operators where < should denote
   // a strict subset. when A is a subset of B and B has larger size than A, then A is a strict 
   // subset of B, maybe also implement power set - but that scales with 2^N and so it gets 
-  // impractical very quickly
+  // impractical very quickly. maybe < should not be used for subsets because we may need some 
+  // other notion of < that satisfies the tritochomie condition, because if we want to make sets of
+  // sets with the *sorted* set data structure, we need the comparison operator to work in a way
+  // that lest us uniquely order the sets https://de.wikipedia.org/wiki/Trichotomie
+  // maybe the operators should be implemented as functions A.intersectWith(B), etc.
 
   // maybe implement relations as subsets of the cartesian product - then we may inquire if a 
   // particular tuple of elements is in a given relation - this can also be determined quickly by 

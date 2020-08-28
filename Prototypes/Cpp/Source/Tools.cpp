@@ -2096,15 +2096,29 @@ public:
   {
     std::vector<T> C;
     size_t ia = 0, ib = 0;
-    while(ib < B.size())  
+    while(ia < A.size() && ib < B.size())
     {
-      while(A[ia] < B[ib] && ia < A.size())
+      // add all elements from A that are less than our current element in B:
+      while(ia < A.size() && ib < B.size() && A[ia] < B[ib]) // is ib < B.size() needed?
       {
         C.push_back(A[ia]);
         ia++;
       }
-      ib++;
+
+      // skip all elements in A and B that are equal:
+      while(ia < A.size() && ib < B.size() && A[ia] == B[ib])
+      {
+        ia++; 
+        ib++;
+      }
+
+      // skip all elements in B that are less than our current element in A:
+      while(ia < A.size() && ib < B.size() && B[ib] < A[ia]) // is ia < A.size() needed?
+        ib++;
     }
+    // is this loop guaranteed to terminate?
+
+    // add remaining elements from A
     while(ia < A.size())
     {
       C.push_back(A[ia]);

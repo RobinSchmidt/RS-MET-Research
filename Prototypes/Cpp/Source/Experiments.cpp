@@ -3341,8 +3341,14 @@ void testSortedSet()
 
   Set A({1,3,5,6,9});
   Set B({2,3,4,5,7});
-  Set C = A + B;    // union
-  Set D = C - B;  
+  Set C = A + B;    // union - should be 1,2,3,4,5,6,7,9
+
+  A = Set({1,2,4,6,7,9});
+  B = Set({2,3,5,7,8});
+  C = A - B;              // should be 1,4,6,9
+
+
+  //Set D = C - B;  
 
   int dummy = 0;
 }

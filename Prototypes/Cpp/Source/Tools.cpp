@@ -2089,7 +2089,28 @@ public:
     return C;
   }
 
+  static std::vector<T> setIntersection(const std::vector<T>& A, const std::vector<T>& B)
+  {
+    std::vector<T> C;
+    size_t ia = 0, ib = 0;
 
+    while(ia < A.size() && ib < B.size())
+    {
+      while(ia < A.size() && ib < B.size() && A[ia] < B[ib]) // is ib < B.size() needed?
+        ia++;
+      while(ia < A.size() && ib < B.size() && B[ib] < A[ia]) // is ib < B.size() needed?
+        ib++;
+      while(ia < A.size() && ib < B.size() && B[ib] == A[ia])
+      {
+        C.push_back(A[ia]);
+        ia++; 
+        ib++;
+      }
+    }
+
+
+    return C;
+  }
 
 
   static std::vector<T> setDifference(const std::vector<T>& A, const std::vector<T>& B)
@@ -2127,10 +2148,7 @@ public:
 
     return C;
   }
-  // no - that is still wrong!
-  // -while A[ia] <  B[ib]: add A[ia], ia++
-  // -while A[ia] == B[ib]: ia++, ib++
-
+  // needs more tests
   // invariant of outer loop: B[ib] >= A[ia]
 
 
@@ -2141,6 +2159,10 @@ public:
   /** Subtraction operator implements set difference. */
   rsSortedSet<T> operator-(const rsSortedSet<T>& B) const
   { return rsSortedSet<T>(setDifference(this->data, B.data)); }
+
+  /** Multiplication operator implements set intersection. */
+  rsSortedSet<T> operator*(const rsSortedSet<T>& B) const
+  { return rsSortedSet<T>(setIntersection(this->data, B.data)); }
 
 
 protected:

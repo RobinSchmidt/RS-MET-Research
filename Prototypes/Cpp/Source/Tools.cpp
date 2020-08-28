@@ -2093,64 +2093,60 @@ public:
   {
     std::vector<T> C;
     size_t ia = 0, ib = 0;
-
-    while(ia < A.size() && ib < B.size())
-    {
-      while(ia < A.size() && ib < B.size() && A[ia] < B[ib]) // is ib < B.size() needed?
-        ia++;
-      while(ia < A.size() && ib < B.size() && B[ib] < A[ia]) // is ib < B.size() needed?
-        ib++;
-      while(ia < A.size() && ib < B.size() && B[ib] == A[ia])
-      {
-        C.push_back(A[ia]);
-        ia++; 
-        ib++;
-      }
-    }
-
-
+    size_t Na = A.size(), Nb = B.size();
+    while(ia < Na && ib < Nb) {
+      while(ia < Na && ib < Nb && A[ia] <  B[ib])   ia++;   // is ib < B.size() needed?
+      while(ia < Na && ib < Nb && B[ib] <  A[ia])   ib++;   // is ia < A.size() needed?
+      while(ia < Na && ib < Nb && B[ib] == A[ia]) { C.push_back(A[ia]); ia++; ib++; }}
     return C;
   }
-
 
   static std::vector<T> setDifference(const std::vector<T>& A, const std::vector<T>& B)
   {
     std::vector<T> C;
     size_t ia = 0, ib = 0;
-    while(ia < A.size() && ib < B.size())
-    {
-      // add all elements from A that are less than our current element in B:
-      while(ia < A.size() && ib < B.size() && A[ia] < B[ib]) // is ib < B.size() needed?
-      {
-        C.push_back(A[ia]);
-        ia++;
-      }
-
-      // skip all elements in A and B that are equal:
-      while(ia < A.size() && ib < B.size() && A[ia] == B[ib])
-      {
-        ia++; 
-        ib++;
-      }
-
-      // skip all elements in B that are less than our current element in A:
-      while(ia < A.size() && ib < B.size() && B[ib] < A[ia]) // is ia < A.size() needed?
-        ib++;
-    }
+    size_t Na = A.size(), Nb = B.size();
+    while(ia < Na && ib < B.size()) {
+      while(ia < Na && ib < Nb && A[ia] <  B[ib]) { C.push_back(A[ia]); ia++; }  // is ib < Nb needed?
+      while(ia < Na && ib < Nb && A[ia] == B[ib]) { ia++; ib++;               }
+      while(ia < Na && ib < Nb && B[ib] < A[ia])  { ib++;                     }} // is ia < Na needed?
     // is this loop guaranteed to terminate?
 
-    // add remaining elements from A
-    while(ia < A.size())
-    {
-      C.push_back(A[ia]);
-      ia++;
-    }
-
+    while(ia < Na) { C.push_back(A[ia]); ia++; }    // add remaining elements from A
     return C;
   }
+  // while(ia < Na && ib < Na)
+  //   add all elements from A that are less than our current element in B
+  //   skip all elements in A and B that are equal
+  //   skip all elements in B that are less than our current element in A
+  // endwhile
+
   // needs more tests
   // invariant of outer loop: B[ib] >= A[ia]
 
+  static std::vector<std::pair<T,T>> cartesianProduct(
+    const std::vector<T>& A, const std::vector<T>& B)
+  {
+    std::vector<std::pair<T,T>> C(A.size() * B.size());
+      /*
+    for(size_t ia = 0; i < A.size(); ia++)
+    {
+
+      for(size_t ib = 0; i < B.size(); ib++)
+      {
+        size_t ic = ia * B.size() + ib;
+        C[ic] = std::pair(A[ia], B[ib]);
+      }
+
+    }
+      */
+    return C;
+  }
+
+  // maybe implement cartesian product - it should return a set of pairs (maybe std::pair)
+
+
+  const std::vector<T>& getData() const { return data; }
 
   /** Addition operator implements set union. */
   rsSortedSet<T> operator+(const rsSortedSet<T>& B) const

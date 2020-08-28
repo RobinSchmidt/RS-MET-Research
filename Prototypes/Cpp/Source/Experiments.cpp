@@ -3350,6 +3350,8 @@ void testSortedSet()
   B = Set({2,3,5,7,8});
   C = A - B;              // should be 1,4,6,9
 
+  auto D = Set::cartesianProduct(A.getData(), B.getData());
+
 
   //Set D = C - B;  
 

@@ -3335,18 +3335,29 @@ void testManifoldEllipsoid()
 // G = E^T * E,  where E is the matrix of basis vectors and G is the metric as matrix
 
 
-
+/** Given the (N-1)th line of the Pascal triangle in x, this produces the N-th line in y, where x 
+is of length N-1 and y is of length N. It may be used in place, i.e. x and y may point to the same
+array. */
 template<class T>
 void rsNextPascalTriangleLine(const T* x, T* y, int N)
 {
-  T xL = T(1), xR;
-  for(int i = 1; i < N-1; i++) {
-    xR   = x[i];
-    y[i] = xL + xR;
-    xL   = xR; }
+  T xL = T(1);
+  for(int i = 1; i < N-1; i++) { 
+    T xR = x[i]; 
+    y[i] = xL + xR; 
+    xL   = xR;  }
   y[N-1] = T(1);
 }
 // move to rapt - the algo there is not in place
+
+/** If you need only one line of the Pascal triangle, this function may be more convenient. */
+template<class T>
+void rsPascalTriangleLine(T* y, int N)
+{
+  for(int n = 1; n <= N; n++)
+    rsNextPascalTriangleLine(y, y, n);
+}
+
 
 void testSortedSet()
 {
@@ -3414,9 +3425,21 @@ void testSortedSet()
   // one type to encompass another (like the rationals with the reals)
 
   // compute the next line of the pascal triangle from a given line:
-  static const int N = 7;                // we compute the 7th line
-  int p[N] = { 1, 5, 10, 10, 5, 1, -9 };  // this is the 6th line (with trailing -9 as garbage)
-  rsNextPascalTriangleLine(p, p, N);
+  static const int N = 9;
+  int p[N];
+  rsNextPascalTriangleLine(p, p, 1);
+  rsNextPascalTriangleLine(p, p, 2);
+  rsNextPascalTriangleLine(p, p, 3);
+  rsNextPascalTriangleLine(p, p, 4);
+  rsNextPascalTriangleLine(p, p, 5);
+  rsNextPascalTriangleLine(p, p, 6);
+  rsNextPascalTriangleLine(p, p, 7);
+  rsNextPascalTriangleLine(p, p, 8);
+  rsNextPascalTriangleLine(p, p, 9);
+  // ok - nice - this produces the 1st 9 lines of the pascal triangle conveniently and efficiently
+
+
+  rsPascalTriangleLine(p, 7);
 
 
   int dummy = 0;

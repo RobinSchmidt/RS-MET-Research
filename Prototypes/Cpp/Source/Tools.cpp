@@ -2089,9 +2089,44 @@ public:
     return C;
   }
 
+
+
+
+  static std::vector<T> setDifference(const std::vector<T>& A, const std::vector<T>& B)
+  {
+    std::vector<T> C;
+    size_t ia = 0, ib = 0;
+    while(ib < B.size())  
+    {
+      while(A[ia] < B[ib] && ia < A.size())
+      {
+        C.push_back(A[ia]);
+        ia++;
+      }
+      ib++;
+    }
+    while(ia < A.size())
+    {
+      C.push_back(A[ia]);
+      ia++;
+    }
+
+    return C;
+  }
+  // no - that is still wrong!
+  // -while A[ia] <  B[ib]: add A[ia], ia++
+  // -while A[ia] == B[ib]: ia++, ib++
+
+  // invariant of outer loop: B[ib] >= A[ia]
+
+
   /** Addition operator implements set union. */
   rsSortedSet<T> operator+(const rsSortedSet<T>& B) const
   { return rsSortedSet<T>(setUnion(this->data, B.data)); }
+
+  /** Subtraction operator implements set difference. */
+  rsSortedSet<T> operator-(const rsSortedSet<T>& B) const
+  { return rsSortedSet<T>(setDifference(this->data, B.data)); }
 
 
 protected:
@@ -2099,7 +2134,8 @@ protected:
   std::vector<T> data;
 
 };
-
+// goal: all basic set operations like union, intersection, difference, etc. should be O(N), 
+// finding an element O(log(N))
 
 /*
 creating movies from pictures:

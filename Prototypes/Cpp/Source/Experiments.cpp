@@ -3342,7 +3342,7 @@ void testSortedSet()
   Set A({1,3,5,6,9});
   Set B({2,3,4,5,7});
   Set C = A + B;    // union
-
+  Set D = C - B;  
 
   int dummy = 0;
 }

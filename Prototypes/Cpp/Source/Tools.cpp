@@ -2174,15 +2174,21 @@ public:
   // branches 1,2 and skip in branch 3, see also
   // https://www.geeksforgeeks.org/set-operations/
 
-  // implement function areDisjoint(A, B) ..or maybe as A.isDisjointTo(B),
-  // also: A.isSubsetOf(B), A.isSupersetOf(B) - maybe use < and <= operators where < should denote
-  // a strict subset. when A is a subset of B and B has larger size than A, then A is a strict 
-  // subset of B, maybe also implement power set - but that scales with 2^N and so it gets 
-  // impractical very quickly. maybe < should not be used for subsets because we may need some 
-  // other notion of < that satisfies the tritochomie condition, because if we want to make sets of
-  // sets with the *sorted* set data structure, we need the comparison operator to work in a way
-  // that lest us uniquely order the sets https://de.wikipedia.org/wiki/Trichotomie
-  // maybe the operators should be implemented as functions A.intersectWith(B), etc.
+  // -implement function areDisjoint(A, B) ..or maybe as A.isDisjointTo(B),
+  //  also: A.isSubsetOf(B), A.isSupersetOf(B) 
+  // -maybe use < and <= operators where < should denote a strict subset. when A is a subset of B 
+  //  and B has larger size than A, then A is a strict subset of B
+  // -maybe also implement power set - but that scales with 2^N and so it gets impractical very 
+  //  quickly. 
+  // -maybe that could use a getAllSubsetsOfSize(int) function which may also be useful by itself
+  // -maybe < should not be used for subsets because we may need some other notion of < that 
+  //  satisfies the tritochomy condition, because if we want to make sets of sets with the 
+  //  *sorted* set data structure, we need the comparison operator to work in a way that lest us 
+  //  uniquely order the sets https://de.wikipedia.org/wiki/Trichotomie - on the other hand, we 
+  //  could use a user-provided less-function for the comparisons, similar to rsBinaryHeap - that 
+  //  would free the < operator again...but no - i think, it would be confusing to have a < 
+  //  operator that doesn't satisfy trichotomy
+  // -maybe the operators should be implemented as functions A.intersectWith(B), etc.
 
   // maybe implement relations as subsets of the cartesian product - then we may inquire if a 
   // particular tuple of elements is in a given relation - this can also be determined quickly by 
@@ -2221,6 +2227,13 @@ protected:
 // finding an element O(log(N))
 // how would we deal with sets of complex numbers? they do not have a < operation. should we 
 // implement a subclass that provides such an operator, like rsComplexOrderedReIm
+
+// see also:
+// https://www.geeksforgeeks.org/print-all-possible-combinations-of-r-elements-in-a-given-array-of-size-n/
+// https://www.geeksforgeeks.org/heaps-algorithm-for-generating-permutations/
+// https://en.cppreference.com/w/cpp/algorithm/next_permutation#Possible_implementation
+// https://en.wikipedia.org/wiki/Heap%27s_algorithm#:~:text=Heap's%20algorithm
+// https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm
 
 /*
 creating movies from pictures:

@@ -3344,11 +3344,14 @@ void rsNextPascalTriangleLine(const T* x, T* y, int N)
   T xL = T(1);
   for(int i = 1; i < N-1; i++) { 
     T xR = x[i]; 
-    y[i] = xL + xR; 
+    y[i] = xL + xR;
     xL   = xR;  }
   y[N-1] = T(1);
 }
 // move to rapt - the algo there is not in place
+// experiment with variations, for example replacing the + with - or xL+xR with -(xL+xR)
+// maybe this can be optimized using symmetry by doing something like
+// y[i] = y[i+k] = xL + xR where k depends on i and N - or maybe y[i] = y[N-i] = xL + xR?
 
 /** If you need only one line of the Pascal triangle, this function may be more convenient. */
 template<class T>
@@ -3357,6 +3360,8 @@ void rsPascalTriangleLine(T* y, int N)
   for(int n = 1; n <= N; n++)
     rsNextPascalTriangleLine(y, y, n);
 }
+// overflows for N >= 35 when T is a 32 bit signed integer, N <= 34 works
+// figure out, for which N it overflows for other common integer types
 
 
 void testSortedSet()
@@ -3425,21 +3430,33 @@ void testSortedSet()
   // one type to encompass another (like the rationals with the reals)
 
   // compute the next line of the pascal triangle from a given line:
-  static const int N = 9;
+  static const int N = 50;
   int p[N];
-  rsNextPascalTriangleLine(p, p, 1);
-  rsNextPascalTriangleLine(p, p, 2);
-  rsNextPascalTriangleLine(p, p, 3);
-  rsNextPascalTriangleLine(p, p, 4);
-  rsNextPascalTriangleLine(p, p, 5);
-  rsNextPascalTriangleLine(p, p, 6);
-  rsNextPascalTriangleLine(p, p, 7);
-  rsNextPascalTriangleLine(p, p, 8);
-  rsNextPascalTriangleLine(p, p, 9);
-  // ok - nice - this produces the 1st 9 lines of the pascal triangle conveniently and efficiently
-
-
+  rsNextPascalTriangleLine(p, p,  1);
+  rsNextPascalTriangleLine(p, p,  2);
+  rsNextPascalTriangleLine(p, p,  3);
+  rsNextPascalTriangleLine(p, p,  4);
+  rsNextPascalTriangleLine(p, p,  5);
+  rsNextPascalTriangleLine(p, p,  6);
+  rsNextPascalTriangleLine(p, p,  7);
+  rsNextPascalTriangleLine(p, p,  8);
+  rsNextPascalTriangleLine(p, p,  9);
+  rsNextPascalTriangleLine(p, p, 10);
+  rsNextPascalTriangleLine(p, p, 11);
+  rsNextPascalTriangleLine(p, p, 12);
+  // the sum of the n-th line should be 2^(n-1), when n starts counting at 1, 2^n when starting to 
+  // count at 0
   rsPascalTriangleLine(p, 7);
+  rsPascalTriangleLine(p, 34);  // 34 is the greatest possible value without overflow
+
+  // see: https://en.wikipedia.org/wiki/Pascal%27s_triangle
+  // maybe implement also:
+  // https://en.wikipedia.org/wiki/Trinomial_triangle
+  // https://en.wikipedia.org/wiki/(2,1)-Pascal_triangle
+  // https://en.wikipedia.org/wiki/Bell_triangle
+  // https://en.wikipedia.org/wiki/Bernoulli%27s_triangle
+  // https://en.wikipedia.org/wiki/Leibniz_harmonic_triangle
+  // https://en.wikipedia.org/wiki/Eulerian_number#Basic_properties
 
 
   int dummy = 0;

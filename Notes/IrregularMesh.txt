@@ -1,0 +1,47 @@
+Numerical schemes for solving partial differential equations by finite 
+difference methods are straighforward to understand and use but they usually 
+assume a regular grid. For geometrically more complicated domains, this 
+restriction is often a showstopper, so in such cases, finite element methods 
+are typically used. These, on the other hand, are conceptually much more 
+difficult to understand and apply and can require considerable analytical 
+preparatory work to convert the problem into an appropriate form - which may 
+be not even always possible. So here, we want to consider an idea that allows 
+us to use a finite difference method on an irregular grid (or mesh).
+
+
+As an example, let's consider the diffusion equation in 2 spatial dimensions:
+
+  u_t = D * Lap(u), where Lap(u) := u_xx + u_yy
+  
+Here, u stands for the function u(x,y,t) that we want to find, u_t for its
+derivative with respect to time t, Lap(u) for the Laplacian of u which is 
+defined as the sum of the second derivatives with respect to x and y which 
+are denoted as u_xx and u_yy. The scalar constant D is the diffusion 
+coefficient. This equation is also known as the heat equation, because heat
+is one of the things that diffuse this way.
+
+
+We need to find expressions for approximating spatial derivatives from known
+function values on grid points. On a regular grid with grid spacings h_x, h_y 
+in the x- and y-directions, we could approximate the first spatial derivatives 
+with a forward difference (time variable has been suppressed):
+
+  u_x ~= u(x+h_x,y) / h_x
+  u_y ~= u(x,y+h_y) / h_y
+  
+A central difference would be more accurate, but for the generalization to 
+irregular grids, the forward difference is a more convenient starting point.
+The key idea for the generalization to an irregular mesh is to approximate 
+directional derivatives into the directions of neighbouring grid points 
+instead of partial derivatives with respect to coordinate axes and later 
+retrieve the partial derivatives from those directional derivatives by 
+projecting them onto the unit vectors along the coordinate axes (which 
+is just a fancy way of describing the extraction of x- and y-components).
+
+Let P be a general grid point that is currently under consideration and let's
+assume, the point P is connected to 3 other grid points Q,R,S. We want to
+find a formula for approximating the first spatial derivatives u_x and u_y 
+at P and we assume that (approximate) function values u(P),u(Q),u(R),u(S) are
+known. We define the vectors a,b,c as:
+
+  a := Q-P, b:= R-P, c := S-P

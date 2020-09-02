@@ -8,26 +8,13 @@ preparatory work to convert the problem into an appropriate form - which may
 be not even always possible. So here, we want to consider an idea that allows 
 us to use a finite difference method on an irregular grid (or mesh).
 
-
-As an example, let's consider the diffusion equation in 2 spatial dimensions:
-
-  u_t = D * Lap(u), where Lap(u) := u_xx + u_yy
-  
-Here, u stands for the function u(x,y,t) that we want to find, u_t for its
-derivative with respect to time t, Lap(u) for the Laplacian of u which is 
-defined as the sum of the second derivatives with respect to x and y which 
-are denoted as u_xx and u_yy. The scalar constant D is the diffusion 
-coefficient. This equation is also known as the heat equation, because heat
-is one of the things that diffuse this way.
-
-
 We need to find expressions for approximating spatial derivatives from known
 function values on grid points. On a regular grid with grid spacings h_x, h_y 
 in the x- and y-directions, we could approximate the first spatial derivatives 
 with a forward difference (time variable has been suppressed):
 
-  u_x ~= u(x+h_x,y) / h_x
-  u_y ~= u(x,y+h_y) / h_y
+  u_x ~= (u(x+h_x,y) - u(x,y)) / h_x
+  u_y ~= (u(x,y+h_y) - u(x,y)) / h_y
   
 A central difference would be more accurate, but for the generalization to 
 irregular grids, the forward difference is a more convenient starting point.
@@ -45,3 +32,55 @@ at P and we assume that (approximate) function values u(P),u(Q),u(R),u(S) are
 known. We define the vectors a,b,c as:
 
   a := Q-P, b:= R-P, c := S-P
+  
+We approximate the directional derivatives into the a,b,c directions as:
+
+  u_a ~= (u(P+a)-u(P)) / |a|
+  u_b ~= (u(P+b)-u(P)) / |b|
+  u_c ~= (u(P+c)-u(P)) / |c|
+  
+where, of course, u(P+a) = u(Q), etc. Finally, to obtain our desired partial 
+derivatives with respect to x and y, we note that the x-components of 
+u_a,u_b,u_c can all be seen as approximations to u_x and the y-components as 
+approximations to u_y (right?). Let's denote them as u_a_x,u_a_y,u_b_x, etc. 
+We now form a weighted sum of them:
+
+  u_x ~= w_a*u_a_x + w_b*u_b_x + w_c*u_c_x
+  u_y ~= w_a*u_a_y + w_b*u_b_y + w_c*u_c_y
+  
+where the weights are chosen to sum up to 1 and they should be inverserly 
+proportional to the lengths of the vectors, i.e. as algorithm:
+
+  w_a := 1 / |a|
+  w_b := 1 / |b|
+  w_c := 1 / |c|
+  k   := 1 / (w_a + w_b + w_c)
+  w_a *= k
+  w_b *= k
+  w_c *= k
+  
+The idea behind choosing the weights inversely proportional to the distance 
+between the grid points is that closer grid points will give more accurate 
+approximations to the derivative, so they should get a higher weight. Higher
+order derivatives can be computed by just applying the same computations on 
+the (scalar) functions u_x, u_y and so on (todo: maybe find a simplified 
+scheme that almagamates the computations)
+
+
+ToDo: see, if (and how) we recover the central difference rule on a regular 
+grid...
+
+
+-------------------------------------------------------------------------------
+
+As an example, let's consider the diffusion equation in 2 spatial dimensions:
+
+  u_t = D * Lap(u), where Lap(u) := u_xx + u_yy
+  
+Here, u stands for the function u(x,y,t) that we want to find, u_t for its
+derivative with respect to time t, Lap(u) for the Laplacian of u which is 
+defined as the sum of the second derivatives with respect to x and y which 
+are denoted as u_xx and u_yy. The scalar constant D is the diffusion 
+coefficient. This equation is also known as the heat equation, because heat
+is one of the things that diffuse this way.
+  

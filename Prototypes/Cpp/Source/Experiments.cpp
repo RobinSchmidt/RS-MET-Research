@@ -3537,7 +3537,7 @@ void testVertexMesh()
 
   // create arrays of function values and partial derivatives:
   int N = mesh.getNumVertices();
-  VecF u(N), u_x(N), u_y(N);  
+  VecF u(N), u_x(N), u_y(N);
   // later compute also 2nd derivatives u_xx, u_yy, u_xy and Laplacian u_L
 
   // assign function values u(x,y) to the vertices:
@@ -3548,10 +3548,7 @@ void testVertexMesh()
   u[4] = 1.f; // u(T) = 3 ..or maybe 1
 
 
-  // use this as u(x,y):
-  // u(x,y)   =    sin(wx * x + px) *    sin(wy * y + py)
-  // u_x(x,y) = wx*cos(wx * x + px) *    sin(wy * y + py)
-  // u_y(x,y) =    sin(wx * x + px) * wy*cos(wy * y + py)
+
 
 
   // estimate partial derivatives u_x, u_y at all mesh points (only at P we should get a nonzero
@@ -3561,6 +3558,34 @@ void testVertexMesh()
   // maybe try the same with different configurations of Q,R,S,T - we need a way to change their
   // positions
 
+
+
+  // use this as u(x,y):
+  // u(x,y)   =    sin(wx * x + px) *    sin(wy * y + py)
+  // u_x(x,y) = wx*cos(wx * x + px) *    sin(wy * y + py)
+  // u_y(x,y) =    sin(wx * x + px) * wy*cos(wy * y + py)
+  float wx = 0.01f, px = 0.3f;
+  float wy = 0.02f, py = 0.4f;
+  auto f  = [&](float x, float y)->float { return    sin(wx * x + px) *    sin(wy * y + py); };
+  auto fx = [&](float x, float y)->float { return wx*cos(wx * x + px) *    sin(wy * y + py); };
+  auto fy = [&](float x, float y)->float { return    sin(wx * x + px) * wy*cos(wy * y + py); };
+
+  // compute function values and true derivatives:
+  for(int i = 0; i < N; i++) {
+    Vec2 v = mesh.getVertexPosition(i);
+    u[i]   = f( v.x, v.y);
+    u_x[i] = fx(v.x, v.y);
+    u_y[i] = fy(v.x, v.y); }
+  // factor out into fillFuncAndDerivatives (lambda)
+
+  // numerically estimate derivatives with 1st mesh:
+  VecF u_x1(N), u_y1(N);
+  partialDerivatives2D(mesh, u, u_x1, u_y1);
+
+  // only u_x1[0] and u_y1[0] are supposed to contain a reasonable value
+
+  // todo: try other meshes (this requires recomputation of the function values and target 
+  // derivatives)
 
 
 

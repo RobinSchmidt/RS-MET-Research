@@ -2256,6 +2256,10 @@ public:
   void addEdge(int i, int j)  { vertices[i].neighbors.push_back(j); }
 
 
+  /** Modifies the position of vertex i. */
+  void setVertexPosition(int i, const T& position) { vertices[i].pos = position; }
+
+
   /** Returns the number of vertices. */
   int getNumVertices() const { return (int) vertices.size(); }
 
@@ -2267,6 +2271,8 @@ public:
 
 
   const T& getVertexPosition(int i) const { return vertices[i].pos; }
+  // maybe use the more generic name value instead of position - the data-structure can be more
+  // generally useful
 
 
 protected:

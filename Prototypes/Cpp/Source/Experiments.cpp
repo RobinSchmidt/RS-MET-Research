@@ -3491,27 +3491,39 @@ void partialDerivatives2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::ve
     for(int j = 0; j < (int)nvi.size(); j++)    // loop over neighbors of vertex i
     {
       // intermediate variables:
-      int  k    = nvi[j];                      // index of current neighbor of vi
-      Vec2 vk   = mesh.getVertexPosition(k);   // current neighbor of vi
-      Vec2 dv   = vk   - vi;                   // difference vector
-      T    du   = u[k] - u[i];                 // difference in function value
-      T    nv   = rsNorm(dv);                  // norm, length of difference vector dv
-      T    dudv = du / nv;                     // approximation of directional derivative in dv
-      T    wj   = 1.f / nv;                    // (unscaled) weight for directional derivative
+      int  k  = nvi[j];                      // index of current neighbor of vi
+      Vec2 vk = mesh.getVertexPosition(k);   // current neighbor of vi
+      Vec2 dv = vk   - vi;  // difference vector
+      T du = u[k] - u[i];   // difference in function value
+      T nv = rsNorm(dv);    // norm, length of difference vector dv
+      T dd = du / nv;       // approximation of directional derivative in dv direction
+      T w  = 1.f / nv;      // (unscaled) weight for directional derivative
 
       // accumulation:
-      u_x[i] += wj * dv.x * dudv;              // projection on x-axis an weighting
-      u_y[i] += wj * dv.y * dudv;              // projection on y-axis an weighting
-      sw     += wj;
+      u_x[i] += w * dv.x * dd; // projection on x-axis and weighting
+      u_y[i] += w * dv.y * dd; // projection on y-axis and weighting
+      sw     += w;
     }
 
     // scaling to make the sum of weights 1 (after the fact):
     u_x[i] /= sw;
     u_y[i] /= sw;
+
+    // found empirically - figure out, why this is needed:
+    u_x[i] *= 2;
+    u_y[i] *= 2;
+
     int dummy = 0;
   }
   // this needs testing
 }
+// -rename to gradient2D
+// -move to rsNumericDifferentiatior
+// -maybe instead of taking two arrays for the partial derivatives, it should take one array of
+//  vectors - this will nicely generalize to 3D - the resulting gradient vector, i.e. vector of
+//  partial derivatives, can be accumulated as g += wj*dudv * dv; where dv is a vector and wj*dudv
+//  is a scalar
+// -however, this may make it harder to compute 2nd derivatives
 
 void testVertexMesh()
 {
@@ -3520,8 +3532,9 @@ void testVertexMesh()
   using Vec2 = rsVector2D<float>;
   using VecF = std::vector<float>;
   using VecI = std::vector<int>;
+  using Mesh = rsVertexMesh<Vec2>;
 
-  rsVertexMesh<Vec2> mesh;
+  Mesh mesh;
 
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
   // Q,R,S,T surrounding it that are connected to it:
@@ -3569,23 +3582,36 @@ void testVertexMesh()
   auto f  = [&](float x, float y)->float { return    sin(wx * x + px) *    sin(wy * y + py); };
   auto fx = [&](float x, float y)->float { return wx*cos(wx * x + px) *    sin(wy * y + py); };
   auto fy = [&](float x, float y)->float { return    sin(wx * x + px) * wy*cos(wy * y + py); };
-
-  // compute function values and true derivatives:
-  for(int i = 0; i < N; i++) {
-    Vec2 v = mesh.getVertexPosition(i);
-    u[i]   = f( v.x, v.y);
-    u_x[i] = fx(v.x, v.y);
-    u_y[i] = fy(v.x, v.y); }
-  // factor out into fillFuncAndDerivatives (lambda)
+  auto fill = [&]()
+  { 
+    for(int i = 0; i < N; i++) {
+      Vec2 v = mesh.getVertexPosition(i);
+      u[i]   = f( v.x, v.y);
+      u_x[i] = fx(v.x, v.y);
+      u_y[i] = fy(v.x, v.y); }
+  };
 
   // numerically estimate derivatives with 1st mesh:
   VecF u_x1(N), u_y1(N);
+  fill();  // compute target values
   partialDerivatives2D(mesh, u, u_x1, u_y1);
 
   // only u_x1[0] and u_y1[0] are supposed to contain a reasonable value
 
   // todo: try other meshes (this requires recomputation of the function values and target 
   // derivatives)
+
+  // P = (3,2), Q = (3,3), R = (4,2), 
+  mesh.setVertexPosition(0, Vec2(3.f, 2.f)); // P = (3,2)
+  mesh.setVertexPosition(1, Vec2(3.f, 3.f)); // Q = (3,3)
+  mesh.setVertexPosition(2, Vec2(4.f, 2.f)); // R = (4,2)
+  mesh.setVertexPosition(3, Vec2(3.f, 1.f)); // S = (3,1)
+  mesh.setVertexPosition(4, Vec2(2.f, 2.f)); // T = (2,2)
+  VecF u_x2(N), u_y2(N);
+  fill();  // compute target values
+  partialDerivatives2D(mesh, u, u_x2, u_y2);
+  // seems wrong by a factor 2
+
 
 
 

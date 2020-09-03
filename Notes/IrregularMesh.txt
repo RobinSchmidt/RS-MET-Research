@@ -1,5 +1,5 @@
 Numerical schemes for solving partial differential equations by finite 
-difference methods are straighforward to understand and use but they usually 
+difference methods are straightforward to understand and use but they usually 
 assume a regular grid. For geometrically more complicated domains, this 
 restriction is often a showstopper, so in such cases, finite element methods 
 are typically used. These, on the other hand, are conceptually much more 
@@ -9,9 +9,9 @@ be not even always possible. So here, we want to consider an idea that allows
 us to use a finite difference method on an irregular grid (or mesh).
 
 We need to find expressions for approximating spatial derivatives from known
-function values on grid points. On a regular grid with grid spacings h_x, h_y 
-in the x- and y-directions, we could approximate the first spatial derivatives 
-with a forward difference (time variable has been suppressed):
+function values on grid points. On a regular 2D grid with grid spacings h_x, 
+h_y in the x- and y-directions, we could approximate the first spatial 
+derivatives with a forward difference (time variable has been suppressed):
 
   u_x ~= (u(x+h_x,y) - u(x,y)) / h_x
   u_y ~= (u(x,y+h_y) - u(x,y)) / h_y
@@ -33,7 +33,7 @@ known. We define the vectors a,b,c as:
 
   a := Q-P, b:= R-P, c := S-P
   
-We approximate the directional derivatives into the a,b,c directions as:
+We approximate the directional derivatives at P into the a,b,c directions as:
 
   u_a ~= (u(P+a)-u(P)) / |a|
   u_b ~= (u(P+b)-u(P)) / |b|
@@ -64,7 +64,18 @@ between the grid points is that closer grid points will give more accurate
 approximations to the derivative, so they should get a higher weight. Higher
 order derivatives can be computed by just applying the same computations on 
 the (scalar) functions u_x, u_y and so on (todo: maybe find a simplified 
-scheme that almagamates the computations)
+scheme that almagamates the computations). Or maybe the weights should be 
+chosen to be proportional to the x- and y- distances, i.e. for the estimation 
+of u_x, we only look at a_x,b_x,c_x, etc.? If grid point Q is offset from P 
+only in the x- but not in the y-direction, we cannot expect to gain any 
+information about u_y from the directional derivative into the a=Q-P 
+direction - this direction is just the direction of the x-axis in this case.
+Or wait: the directional derivative u_a is actually just a scalar - to obtain
+u_a_x, we may need to do: u_a_x := u_a * <a,e_x> where <a,e_x> is the scalar 
+product between a and the unit vector in the x-direction e_x - so, it's 
+basically just: u_a_x := u_a * a_x where a_x is the x-component of a. That 
+actually gives a proportionality to the offset into the respective coordinate
+direction. ...this seems to make sense...
 
 
 ToDo: see, if (and how) we recover the central difference rule on a regular 

@@ -32,9 +32,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifoldSphere();
   //testManifoldEarth();
   
-
-
-  testSortedSet();
+  //testSortedSet();
+  testVertexMesh();
 
   return 0;
 }

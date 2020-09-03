@@ -2235,6 +2235,49 @@ protected:
 // https://en.wikipedia.org/wiki/Heap%27s_algorithm#:~:text=Heap's%20algorithm
 // https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm
 
+
+//=================================================================================================
+
+/** Class to represent an irregular mesh of vertices. 
+
+This is mainly meant for trying out an idea for extending finite difference methods for partial 
+differential equations on irregular meshes. */
+
+template<class T>  // T could be rsVector2D<double>
+class rsVertexMesh
+{
+
+public:
+
+  /** Adds a new vertex at the given position. */
+  void addVertex(const T& position) { vertices.push_back(Vertex(position)); }
+
+  /** Connects vertex i to vertex j by an edge. */
+  void addEdge(int i, int j)  { vertices[i].neighbors.push_back(j); }
+
+
+protected:
+
+  struct Vertex
+  {
+    Vertex(const T& position) : pos(position) {}
+    T pos;                        // position vector of the vertex
+    std::vector<int> neighbors;   // array of vertex indices that are neighbours of this vertex
+  };
+
+  std::vector<Vertex> vertices;
+
+};
+// -this data-structure is not optimal efficiency wise, but it's most straightforward for 
+//  implementing the idea for the irregular FDM - later, a different data-structure can be used to
+//  optimize the computations
+// -actually, it can also be used to represent graphs, in which case T could be just an index for
+//  labeling the vertices - it would be an adjacency-list based representation
+// -maybe instead of sdt::vector, we could use rsSortedSet
+// -instead of having each vertex maintain a list of adjacent vertices, we could have an explicit
+//  array of edges - which data-structure is better may depend on the situation and maybe it makes
+//  sense to have both variants
+
 /*
 creating movies from pictures:
 https://askubuntu.com/questions/971119/convert-a-sequence-of-ppm-images-to-avi-video

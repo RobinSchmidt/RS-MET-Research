@@ -3461,3 +3461,11 @@ void testSortedSet()
 
   int dummy = 0;
 }
+
+void testVertexMesh()
+{
+  rsVertexMesh<rsVector2D<float>> mesh;
+
+
+  int dummy = 0;
+}

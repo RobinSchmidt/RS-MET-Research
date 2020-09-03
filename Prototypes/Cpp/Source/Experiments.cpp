@@ -3462,12 +3462,60 @@ void testSortedSet()
   int dummy = 0;
 }
 
-void testVertexMesh()
+
+
+template<class T>
+void partialDerivatives2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
+  std::vector<T>& u_x, std::vector<T>& u_y)
 {
-  // We try numerically estimating partial derivatives into the x- and y-direction of a function 
+  // Under construction.
+  // We try to numerically estimate partial derivatives into the x- and y-direction of a function 
   // that is defined on an irregular mesh. This is a preliminary for generalizing finite difference
   // based PDE solvers to irregular meshes. The key tool for such an estimation is the directional
   // derivative...
+
+  int N = mesh.getNumVertices();
+  rsAssert((int) u.size()   == N);
+  rsAssert((int) u_x.size() == N);
+  rsAssert((int) u_y.size() == N);
+  using Vec2 = rsVector2D<T>;
+  using VecI = std::vector<int>;
+  rsFill(u_x, 0.f);
+  rsFill(u_y, 0.f);
+  for(int i = 0; i < N; i++)
+  {
+    Vec2 vi  = mesh.getVertexPosition(i);       // vertex, at which we calculate the derivative
+    VecI nvi = mesh.getNeighbors(i);            // indices of all neighbors of vi
+    if(nvi.empty()) continue;                   // skip iteration, if vi has no neighbors
+    T sw = 0.f;                                 // sum of weights
+    for(int j = 0; j < (int)nvi.size(); j++)    // loop over neighbors of vertex i
+    {
+      // intermediate variables:
+      int  k    = nvi[j];                      // index of current neighbor of vi
+      Vec2 vk   = mesh.getVertexPosition(k);   // current neighbor of vi
+      Vec2 dv   = vk   - vi;                   // difference vector
+      T    du   = u[k] - u[i];                 // difference in function value
+      T    nv   = rsNorm(dv);                  // norm, length of difference vector dv
+      T    dudv = du / nv;                     // approximation of directional derivative in dv
+      T    wj   = 1.f / nv;                    // (unscaled) weight for directional derivative
+
+      // accumulation:
+      u_x[i] += wj * dv.x * dudv;              // projection on x-axis an weighting
+      u_y[i] += wj * dv.y * dudv;              // projection on y-axis an weighting
+      sw     += wj;
+    }
+
+    // scaling to make the sum of weights 1 (after the fact):
+    u_x[i] /= sw;
+    u_y[i] /= sw;
+    int dummy = 0;
+  }
+  // this needs testing
+}
+
+void testVertexMesh()
+{
+
 
   using Vec2 = rsVector2D<float>;
   using VecF = std::vector<float>;
@@ -3499,44 +3547,21 @@ void testVertexMesh()
   u[3] = 4.f; // u(S) = 4
   u[4] = 1.f; // u(T) = 3 ..or maybe 1
 
+
+  // use this as u(x,y):
+  // u(x,y)   =    sin(wx * x + px) *    sin(wy * y + py)
+  // u_x(x,y) = wx*cos(wx * x + px) *    sin(wy * y + py)
+  // u_y(x,y) =    sin(wx * x + px) * wy*cos(wy * y + py)
+
+
   // estimate partial derivatives u_x, u_y at all mesh points (only at P we should get a nonzero
   // value because only P has connected neighbours):
-  rsFill(u_x, 0.f);
-  rsFill(u_y, 0.f);
+  partialDerivatives2D(mesh, u, u_x, u_y);
+
+  // maybe try the same with different configurations of Q,R,S,T - we need a way to change their
+  // positions
 
 
-  int maxNeighbors = 4;  // maximum number of neighbors, a vertex can have in the mesh
-  //VecF w(maxNeighbors);  // weights
-
-
-  for(int i = 0; i < N; i++)
-  {
-    Vec2 vi  = mesh.getVertexPosition(i);       // vertex, at which we calculate the derivative
-    VecI nvi = mesh.getNeighbors(i);            // indices of all neighbors of vi
-    if(nvi.empty()) continue;                   // skip iteration, if vi has no neighbors
-    float sw = 0.f;                             // sum of weights
-    for(int j = 0; j < (int)nvi.size(); j++)    // loop over neighbors of vertex i
-    {
-      // intermediate variables:
-      int   k    = nvi[j];                      // index of current neighbor of vi
-      Vec2  vk   = mesh.getVertexPosition(k);   // current neighbor of vi
-      Vec2  dv   = vk   - vi;                   // difference vector
-      float du   = u[k] - u[i];                 // difference in function value
-      float nv   = rsNorm(dv);                  // norm, length of difference vector dv
-      float dudv = du / nv;                     // approximation of directional derivative in dv
-      float wj   = 1.f / nv;                    // (unscaled) weight for directional derivative
-
-      // accumulation:
-      u_x[i] += wj * dv.x * dudv;
-      u_y[i] += wj * dv.y * dudv;
-      sw     += wj;
-    }
-
-    // scaling to make the sum of weights 1 (after the fact):
-    u_x[i] /= sw;
-    u_y[i] /= sw;
-    int dummy = 0;
-  }
 
 
   int dummy = 0;

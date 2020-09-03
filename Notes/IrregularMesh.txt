@@ -94,4 +94,6 @@ defined as the sum of the second derivatives with respect to x and y which
 are denoted as u_xx and u_yy. The scalar constant D is the diffusion 
 coefficient. This equation is also known as the heat equation, because heat
 is one of the things that diffuse this way.
-  
+
+References:
+https://en.wikipedia.org/wiki/Directional_derivative

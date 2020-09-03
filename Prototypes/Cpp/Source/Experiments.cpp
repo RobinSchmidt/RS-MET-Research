@@ -3464,8 +3464,103 @@ void testSortedSet()
 
 void testVertexMesh()
 {
-  rsVertexMesh<rsVector2D<float>> mesh;
+  // We try numerically estimating partial derivatives into the x- and y-direction of a function 
+  // that is defined on an irregular mesh. This is a preliminary for generalizing finite difference
+  // based PDE solvers to irregular meshes. The key tool for such an estimation is the directional
+  // derivative...
+
+  using Vec2 = rsVector2D<float>;
+  using VecF = std::vector<float>;
+  using VecI = std::vector<int>;
+
+  rsVertexMesh<Vec2> mesh;
+
+  // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
+  // Q,R,S,T surrounding it that are connected to it:
+  mesh.addVertex(Vec2(3.f, 2.f));  // P = (3,2) at index 0
+  mesh.addVertex(Vec2(1.f, 3.f));  // Q = (1,3) at index 1
+  mesh.addVertex(Vec2(4.f, 2.f));  // R = (4,2) at index 2
+  mesh.addVertex(Vec2(2.f, 0.f));  // S = (2,0) at index 3
+  mesh.addVertex(Vec2(1.f, 1.f));  // T = (1,1) at index 4
+  mesh.addEdge(0, 1);              // connect P to Q
+  mesh.addEdge(0, 2);              // connect P to R
+  mesh.addEdge(0, 3);              // connect P to S
+  mesh.addEdge(0, 4);              // connect P to T
+
+  // create arrays of function values and partial derivatives:
+  int N = mesh.getNumVertices();
+  VecF u(N), u_x(N), u_y(N);  
+  // later compute also 2nd derivatives u_xx, u_yy, u_xy and Laplacian u_L
+
+  // assign function values u(x,y) to the vertices:
+  u[0] = 5.f; // u(P) = 5
+  u[1] = 2.f; // u(Q) = 2
+  u[2] = 3.f; // u(R) = 3
+  u[3] = 4.f; // u(S) = 4
+  u[4] = 1.f; // u(T) = 3 ..or maybe 1
+
+  // estimate partial derivatives u_x, u_y at all mesh points (only at P we should get a nonzero
+  // value because only P has connected neighbours):
+  rsFill(u_x, 0.f);
+  rsFill(u_y, 0.f);
+
+
+  int maxNeighbors = 4;  // maximum number of neighbors, a vertex can have in the mesh
+  //VecF w(maxNeighbors);  // weights
+
+
+  for(int i = 0; i < N; i++)
+  {
+    Vec2 vi  = mesh.getVertexPosition(i);       // vertex, at which we calculate the derivative
+    VecI nvi = mesh.getNeighbors(i);            // indices of all neighbors of vi
+    if(nvi.empty()) continue;                   // skip iteration, if vi has no neighbors
+    float sw = 0.f;                             // sum of weights
+    for(int j = 0; j < (int)nvi.size(); j++)    // loop over neighbors of vertex i
+    {
+      // intermediate variables:
+      int   k    = nvi[j];                      // index of current neighbor of vi
+      Vec2  vk   = mesh.getVertexPosition(k);   // current neighbor of vi
+      Vec2  dv   = vk   - vi;                   // difference vector
+      float du   = u[k] - u[i];                 // difference in function value
+      float nv   = rsNorm(dv);                  // norm, length of difference vector dv
+      float dudv = du / nv;                     // approximation of directional derivative in dv
+      float wj   = 1.f / nv;                    // (unscaled) weight for directional derivative
+
+      // accumulation:
+      u_x[i] += wj * dv.x * dudv;
+      u_y[i] += wj * dv.y * dudv;
+      sw     += wj;
+    }
+
+    // scaling to make the sum of weights 1 (after the fact):
+    u_x[i] /= sw;
+    u_y[i] /= sw;
+    int dummy = 0;
+  }
 
 
   int dummy = 0;
+
+
+
+  // ToDo: maybe later use a function u(x,y) - maybe a bivariate polynomial - so we can compute 
+  // exact partial derivatives and compare them to the numerical results. We should also compare 
+  // them to numerical results obtained on a regular grid. Maybe or polynomial should have a scale 
+  // factor to scale both inputs (such that a grid-spacing of around 1 becomes reasonable with 
+  // respect to the behavior of the function)
+
+  // ToDo: factor out the computation and choose different configurations for Q,R,S,T - among them
+  // those that would result from ahving a regular gridd - maybe also rotate them (maybe by 45° 
+  // degrees and scale by sqrt(2))
+
+  // ToDo: provide functions to create meshes programmatically, for example 
+  // createCircularMesh(int Nr, int Na) where Nr, Na are the number of angles and radii - this can
+  // be used to compare a solver on an irregular cricular grid defined in cartesian coordinates
+  // with a regular grid in polar coordinates - maybe solving the heat- and wave-equation with a
+  // given initial temperature and height distribution and maybe with clamped values at the 
+  // boundary. especially the center point of the circle in the irregular mes is interesting - it 
+  // will have Na neighbours whereas a typical point will have only 4. boundary points will have 
+  // only 3 ...or maybe not giving them any neighbours could be a convenient to fix their values.
+  // ...maybe a vertex could have additional data associated with it, like the function value - but
+  // maybe these should be kept in separate arrays
 }

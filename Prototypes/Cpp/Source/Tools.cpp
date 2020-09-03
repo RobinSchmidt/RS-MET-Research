@@ -2256,6 +2256,19 @@ public:
   void addEdge(int i, int j)  { vertices[i].neighbors.push_back(j); }
 
 
+  /** Returns the number of vertices. */
+  int getNumVertices() const { return (int) vertices.size(); }
+
+  /** Returns the number of neighbors that are adjacent to vertex i. */
+  int getNumNeighbors(int i) const { return (int) vertices[i].neighbors.size(); }
+
+  /** Returns a const reference to the array of neighbors of vertex i */
+  const std::vector<int>& getNeighbors(int i) const { return vertices[i].neighbors; }
+
+
+  const T& getVertexPosition(int i) const { return vertices[i].pos; }
+
+
 protected:
 
   struct Vertex

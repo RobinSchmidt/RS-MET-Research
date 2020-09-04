@@ -3537,11 +3537,14 @@ void partialDerivatives2D_1(const rsVertexMesh<rsVector2D<T>>& mesh, const std::
 template<class T>
 void solve(const rsMatrix2x2<T>& A, rsVector2D<T>& x, const rsVector2D<T>& b)
 {
+  T tol = 1000 * RS_EPS(T);
+  rsAssert(rsAbs(A.getDeterminant()) > tol, "Handling of singular matrices not implemented");
   rsMatrix2x2<T> Ai = A.getInverse();
   x.x = Ai.a * b.x + Ai.b * b.y;
   x.y = Ai.c * b.x + Ai.d * b.y;
 }
-// todo: optimize, move to rsMatrix2x2
+// todo: optimize, move to rsMatrix2x2, handle singluar matrices: in the overdetermined case, 
+// produce a least squares approximation, in the underdetermined case, a minimum norm solution
 
 /** Numerically estimates partial derivatives into the x- and y-direction of a function u(x,y) that
 is defined on an irregular mesh. This is a preliminary for generalizing finite difference based 
@@ -3618,7 +3621,13 @@ void gradient2D(const rsGraphWithVertexData<rsVector2D<T>>& mesh, const std::vec
     u_y[i] = g.y;
   }
 }
-// todo: 
+// todo:
+// -make it work for vertices with 1 neighbor - we currently encounter a singular matrix A in this
+//  case (which makes sense, i guess - we get infinitely many solutions - we need to pick the 
+//  minimum norm solution)
+//  -perhaps, the solve function should detect a zero determinant and switch between computing
+//   a least-squares solution in case of an inconsistent RHS and a minimum norm solution in case
+//   of a consistent RHS
 // -optimize: the VecI nvi = ... may trigger a heap allocation and copying - avoid that by
 //  using a (const) reference
 // -maybe try using references in other places as well (for Vec2, etc. - but it's not that critical
@@ -3638,15 +3647,16 @@ void testVertexMesh()
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
   // Q,R,S,T surrounding it that are connected to it:
   Mesh mesh;
+  bool sym = false;                // select, if edges should be added symmetrically
   mesh.addVertex(Vec2(3.f, 2.f));  // P = (3,2) at index 0
   mesh.addVertex(Vec2(1.f, 3.f));  // Q = (1,3) at index 1
   mesh.addVertex(Vec2(4.f, 2.f));  // R = (4,2) at index 2
   mesh.addVertex(Vec2(2.f, 0.f));  // S = (2,0) at index 3
   mesh.addVertex(Vec2(1.f, 1.f));  // T = (1,1) at index 4
-  mesh.addEdge(0, 1);              // connect P to Q
-  mesh.addEdge(0, 2);              // connect P to R
-  mesh.addEdge(0, 3);              // connect P to S
-  mesh.addEdge(0, 4);              // connect P to T
+  mesh.addEdge(0, 1, sym);         // connect P to Q
+  mesh.addEdge(0, 2, sym);         // connect P to R
+  mesh.addEdge(0, 3, sym);         // connect P to S
+  mesh.addEdge(0, 4, sym);         // connect P to T
 
   // Create arrays of function values and (true) partial derivatives and their numerical estimates.
   // For the estimates, only vertices with neighbors are supposed to contain a reasonable value 

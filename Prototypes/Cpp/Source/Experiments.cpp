@@ -3545,15 +3545,35 @@ void solve(const rsMatrix2x2<T>& A, rsVector2D<T>& x, const rsVector2D<T>& b)
 
 /** Numerically estimates partial derivatives into the x- and y-direction of a function u(x,y) that
 is defined on an irregular mesh. This is a preliminary for generalizing finite difference based 
-solvers for partial differential equations on irregular meshes. The key tool for such an estimation
-is the directional derivative... 
-
-Possible values for the weighting: 0: unweighted, 1: Manhattan distance, 2: Euclidean distance
-*/
+solvers for partial differential equations to irregular meshes. The inputs are a mesh of vertices 
+(represented as a graph in which the data associated with each node represents the location of the 
+node in the x,y plane and the edges give the connectivity of the vertices) and a std::vector of 
+function values of the function u(x,y). The length of the u-array should match the number of 
+vertices in the mesh and contain the function values associated with the x,y coordinates for the 
+respective vertex (i.e. the vertex with the same index). Outputs are the arrays of estimated 
+partial derivatives of u with respect ot x and y (which should also be of the same length as u) 
+which, taken together, form the gradient. The optional "weighting" argument controls, how the 
+error should be weighted. Possible values are: 0: unweighted, 1: Manhattan distance, 2: Euclidean 
+distance. */
 template<class T>
 void gradient2D(const rsGraphWithVertexData<rsVector2D<T>>& mesh, const std::vector<T>& u,
   std::vector<T>& u_x, std::vector<T>& u_y, int weighting = 2)
 {
+  // Algorithm:
+  // The algorithm is based on the fact that the directional derivative into the direction of an 
+  // arbitrary vector a can be expressed as: D_a(u) = <g,a> where D_a(u) denotes the directional
+  // derivative of the function u(x,y) in the a-direction, g denotes the gradient of u and <g,a> 
+  // denotes the scalar product of vectors g and a. For each vertex, we compute numerical estimates
+  // of the directional derivatives into the directions of all its neighbors and set up the above 
+  // equation. When a vertex has more than 2 neighbors (which is the typical case), we have more 
+  // equations than degrees of freedom (g_x,g_y), so the system is overdetermined and we compute a
+  // weighted least squares solution. The weight can be given either as all one (unweighted), the 
+  // reciprocal of the Manhattan distance (between the current vertex and its current neighbor) or 
+  // the reciprocal of the Euclidean distance. The rationale of using reciprocals of distances as 
+  // weights is that we expect the values obtained by the formula to be further off from the true
+  // values, the greater the distance between the vertices, but some experimentation for what kind
+  // of weighting gives the most accurate results is encouraged.
+
   int N = mesh.getNumVertices();
   rsAssert((int) u.size()   == N);
   rsAssert((int) u_x.size() == N);
@@ -3598,6 +3618,15 @@ void gradient2D(const rsGraphWithVertexData<rsVector2D<T>>& mesh, const std::vec
     u_y[i] = g.y;
   }
 }
+// todo: 
+// -optimize: the VecI nvi = ... may trigger a heap allocation and copying - avoid that by
+//  using a (const) reference
+// -maybe try using references in other places as well (for Vec2, etc. - but it's not that critical
+//  because copying these is trivial
+// -move to rsNumericDifferentiator
+// -the "solve" call could be omptimized - maybe we don'T even need an explicit matrix and/or may
+//  make use of the symmetry of A (maybe a special solveSymmetric function could be used)
+// -maybe avoid the rsFill - instead, set values to zero before "continue"
 
 void testVertexMesh()
 {

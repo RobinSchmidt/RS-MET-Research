@@ -2238,13 +2238,16 @@ protected:
 
 //=================================================================================================
 
-/** Class to represent an irregular mesh of vertices. 
+/** Class to represent a graph that has data associated with each vertex but not with the edges. An
+edge between any pair of vertices can just exist or don't exist. We keep the vertices in a 
+std::vector, so they can be addressed by their indices and each vertex contains its data and a 
+std::vector<int> with the indices of its connected ("neighbor") vertices, so this is basically an 
+adjacency list representation. An example use is for irregular meshes of vertices for solving 
+partial differential equations - in this case, the data type for the vertices could be 
+rsVector2D<float> or similar. */
 
-This is mainly meant for trying out an idea for extending finite difference methods for partial 
-differential equations on irregular meshes. */
-
-template<class T>  // T could be rsVector2D<double>
-class rsGraphWithVertexData // rsVertexMesh
+template<class T>
+class rsGraphWithVertexData
 {
 
 public:

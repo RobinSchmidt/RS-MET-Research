@@ -3462,7 +3462,9 @@ void testSortedSet()
   int dummy = 0;
 }
 
+
 /** Solves a*x + b*y = p subject to x^2 + y^2 = min. */
+/*
 template<class T>
 void solveMinNorm(T a, T b, T p, T* x, T* y)
 {
@@ -3477,6 +3479,7 @@ void solveMinNorm(T a, T b, T p, T* x, T* y)
 //  https://ask.sagemath.org/question/38079/can-sage-do-symbolic-optimization/
 
 // x == a*p/(a^2 + b^2), y == b*p/(a^2 + b^2), l == -2*p/(a^2 + b^2)
+*/
 
 // move to rs-met codebase - maybe turn into a unit test and/or experiment
 void testVertexMesh()
@@ -3490,7 +3493,7 @@ void testVertexMesh()
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
   // Q,R,S,T surrounding it that are connected to it:
   Mesh mesh;
-  bool sym = false;                // select, if edges should be added symmetrically
+  bool sym = true;                // select, if edges should be added symmetrically
   mesh.addVertex(Vec2(3.f, 2.f));  // P = (3,2) at index 0
   mesh.addVertex(Vec2(1.f, 3.f));  // Q = (1,3) at index 1
   mesh.addVertex(Vec2(4.f, 2.f));  // R = (4,2) at index 2
@@ -3555,7 +3558,7 @@ void testVertexMesh()
 
   // test solveMinNorm - move elsewhere:
   float a = 2, b = 3, p = 5, x, y;
-  solveMinNorm(a, b, p, &x, &y);
+  RAPT::rsLinearAlgebra::solveMinNorm(a, b, p, &x, &y);
   float q = a*x + b*y;    // should be equal to p - ok
   float n = x*x + y*y;    // should be the smallest possible norm
   // how can we figure out, if there's really no other solution x,y with a smaller norm?

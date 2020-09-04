@@ -3546,10 +3546,13 @@ void solve(const rsMatrix2x2<T>& A, rsVector2D<T>& x, const rsVector2D<T>& b)
 /** Numerically estimates partial derivatives into the x- and y-direction of a function u(x,y) that
 is defined on an irregular mesh. This is a preliminary for generalizing finite difference based 
 solvers for partial differential equations on irregular meshes. The key tool for such an estimation
-is the directional derivative... */
+is the directional derivative... 
+
+Possible values for the weighting: 0: unweighted, 1: Manhattan distance, 2: Euclidean distance
+*/
 template<class T>
 void gradient2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
-  std::vector<T>& u_x, std::vector<T>& u_y)
+  std::vector<T>& u_x, std::vector<T>& u_y, int weighting = 2)
 {
   int N = mesh.getNumVertices();
   rsAssert((int) u.size()   == N);
@@ -3561,7 +3564,7 @@ void gradient2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u
   rsFill(u_y, 0.f);
   rsMatrix2x2<T> A;
   Vec2 b, g;
-
+  T w = T(1);
   for(int i = 0; i < N; i++)
   {
     Vec2 vi  = mesh.getVertexPosition(i);       // vertex, at which we calculate the derivative
@@ -3571,35 +3574,29 @@ void gradient2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u
     b.setZero();
     for(int j = 0; j < (int)nvi.size(); j++)    // loop over neighbors of vertex i
     {
-      // intermediate variables:
-      int  k  = nvi[j];                      // index of current neighbor of vi
-      Vec2 vk = mesh.getVertexPosition(k);   // current neighbor of vi
-      Vec2 dv = vk   - vi;  // difference vector
-      T du = u[k] - u[i];   // difference in function value
+      // Compute intermediate variables:
+      int  k  = nvi[j];                         // index of current neighbor of vi
+      Vec2 vk = mesh.getVertexPosition(k);      // current neighbor of vi
+      Vec2 dv = vk   - vi;                      // difference vector
+      T    du = u[k] - u[i];                    // difference in function value
+      if(     weighting == 1)  w = T(1) / (rsAbs(dv.x) + rsAbs(dv.y));
+      else if(weighting == 2)  w = T(1) / rsNorm(dv);
 
-      //T nv = rsNorm(dv);    // norm, length of difference vector dv
-      //T dd = du  / nv;      // approximation of directional derivative in dv direction - is that correct?
-      //T w  = 1.f / nv;      // (unscaled) weight for directional derivative
-
-      // accumulate least-squares-matrix and right-hand-side vector
-      A.a += dv.x * dv.x;
-      A.b += dv.x * dv.y;
-      A.d += dv.y * dv.y;
-      b.x += dv.x * du;
-      b.y += dv.y * du;
-      // todo: include weights
-
-      int dummy = 0;
+      // Accumulate least-squares-matrix and right-hand-side vector:
+      A.a += w * dv.x * dv.x;
+      A.b += w * dv.x * dv.y;
+      A.d += w * dv.y * dv.y;
+      b.x += w * dv.x * du;
+      b.y += w * dv.y * du;
     }
     A.c = A.b;  // A.c is still zero - make A symmetric
 
-    // compute gradient that best explains the measured directional derivatives in the least 
+    // Compute gradient that best explains the measured directional derivatives in the least 
     // squares sense and store it in output arrays:
     solve(A, g, b);  // g is the gradient vector that solves A*g = b
     u_x[i] = g.x;
     u_y[i] = g.y;
   }
-
 }
 
 void testVertexMesh()
@@ -3630,7 +3627,9 @@ void testVertexMesh()
   VecF u_x0(N), u_y0(N);         // with weighting 0 (unweighted)
   VecF u_x1(N), u_y1(N);         // with weighting 1 (sum of absolute values, "Manhattan distance")
   VecF u_x2(N), u_y2(N);         // with weighting 2 (Euclidean distance)
-  // todo: later compute also 2nd derivatives u_xx, u_yy, u_xy and Laplacian u_L
+  VecF e_x0(N), e_y0(N);         // error of u_x0, ...
+  VecF e_x1(N), e_y1(N);         // ...etc.
+  VecF e_x2(N), e_y2(N);
 
   // Define our test function u(x,y) and its partial derivatives:
   // u(x,y)   =    sin(wx * x + px) *    sin(wy * y + py)
@@ -3650,13 +3649,16 @@ void testVertexMesh()
       u_x[i] = fx(v.x, v.y);
       u_y[i] = fy(v.x, v.y); }
   };
-
+  // todo: later compute also 2nd derivatives u_xx, u_yy, u_xy and Laplacian u_L
 
   // P = (3,2), Q = (1,3), R = (4,2), S = (2,0), T = (1,1)
-  fill();                           // compute target values
-  gradient2D(mesh, u, u_x2, u_y2);  //
+  fill();
+  gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
+  gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
+  gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
+  // Manhattan distance seems to work best
 
-  // this is the regular 5-point stencil that would result from unsing a regular mesh:
+  // This is the regular 5-point stencil that would result from unsing a regular mesh:
   // P = (3,2), Q = (3,3), R = (4,2), S = (3,1), T = (2,2)
   mesh.setVertexPosition(0, Vec2(3.f, 2.f)); // P = (3,2)
   mesh.setVertexPosition(1, Vec2(3.f, 3.f)); // Q = (3,3)
@@ -3664,17 +3666,15 @@ void testVertexMesh()
   mesh.setVertexPosition(3, Vec2(3.f, 1.f)); // S = (3,1)
   mesh.setVertexPosition(4, Vec2(2.f, 2.f)); // T = (2,2)
   fill();                                    // compute target values
-  gradient2D(mesh, u, u_x2, u_y2);
-
-
-
+  gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
+  gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
+  gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
 
 
   int dummy = 0;
 
-  // todo: 
-  // -clean up
-  // -add weighting
+  // todo:
+  // -maybe compute relative errors
   // -compare accuracy of weighted vs unweighted
   // -optimize
   // -move to library
@@ -3683,6 +3683,7 @@ void testVertexMesh()
   // -try different configurations of Q,R,S,T - maybe also edge cases, where some are 
   //  non-distinct, maybe even fall on P - which is actually a situation that should not occur, but
   //  out of curiosity, what happens
+  // -try a rotated regular configuration
   // -try different functions
   // -test criticall determined case (vertex with 2 neighbors)
   // -implement and test underdetermined case (vertex with 1 neighbor)

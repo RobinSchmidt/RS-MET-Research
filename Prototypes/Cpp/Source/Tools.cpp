@@ -2294,6 +2294,7 @@ protected:
   std::vector<Vertex> vertices;
 
 };
+// -move into rapt into a file rsGraphs.h - maybe rename to rsGraphWithVertexData
 // -this data-structure is not optimal efficiency wise, but it's most straightforward for 
 //  implementing the idea for the irregular FDM - later, a different data-structure can be used to
 //  optimize the computations

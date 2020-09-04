@@ -3462,6 +3462,22 @@ void testSortedSet()
   int dummy = 0;
 }
 
+/** Solves a*x + b*y = p subject to x^2 + y^2 = min. */
+template<class T>
+void solveMinNorm(T a, T b, T p, T* x, T* y)
+{
+  T s = p / (a*a + b*b);
+  *x = s*a;
+  *y = s*b;
+}
+// needs test
+// -maybe move to rsMatrix2x2 or rsLinearAlgebraNew
+// -can we do this with one division?
+// -maybe try to derive the formulas with sage, see
+//  https://ask.sagemath.org/question/38079/can-sage-do-symbolic-optimization/
+
+// x == a*p/(a^2 + b^2), y == b*p/(a^2 + b^2), l == -2*p/(a^2 + b^2)
+
 // move to rs-met codebase - maybe turn into a unit test and/or experiment
 void testVertexMesh()
 {
@@ -3526,16 +3542,27 @@ void testVertexMesh()
 
   // This is the regular 5-point stencil that would result from unsing a regular mesh:
   // P = (3,2), Q = (3,3), R = (4,2), S = (3,1), T = (2,2)
-  mesh.setVertexData(0, Vec2(3.f, 2.f)); // P = (3,2)
-  mesh.setVertexData(1, Vec2(3.f, 3.f)); // Q = (3,3)
-  mesh.setVertexData(2, Vec2(4.f, 2.f)); // R = (4,2)
-  mesh.setVertexData(3, Vec2(3.f, 1.f)); // S = (3,1)
-  mesh.setVertexData(4, Vec2(2.f, 2.f)); // T = (2,2)
-  fill();                                    // compute target values
+  mesh.setVertexData(0, Vec2(3.f, 2.f));   // P = (3,2)
+  mesh.setVertexData(1, Vec2(3.f, 3.f));   // Q = (3,3)
+  mesh.setVertexData(2, Vec2(4.f, 2.f));   // R = (4,2)
+  mesh.setVertexData(3, Vec2(3.f, 1.f));   // S = (3,1)
+  mesh.setVertexData(4, Vec2(2.f, 2.f));   // T = (2,2)
+  fill();                                  // compute target values
   ND::gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
   ND::gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
   ND::gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
 
+
+  // test solveMinNorm - move elsewhere:
+  float a = 2, b = 3, p = 5, x, y;
+  solveMinNorm(a, b, p, &x, &y);
+  float q = a*x + b*y;    // should be equal to p - ok
+  float n = x*x + y*y;    // should be the smallest possible norm
+  // how can we figure out, if there's really no other solution x,y with a smaller norm?
+  // It's 1.92307687 - that's at least less than the squared norm of the obvious solution x=y=1, 
+  // which has 2 as squared norm - but how can we know that theres no solution with smaller norm?
+  // maybe derive y as function of x, which is just y = (p-a*x)/b and then the norm as function of 
+  // y which is x*x + y*y and plot it fo x = 0...2 or something
 
   int dummy = 0;
 
@@ -3581,3 +3608,5 @@ void testVertexMesh()
   // ...maybe a vertex could have additional data associated with it, like the function value - but
   // maybe these should be kept in separate arrays
 }
+// https://math.stackexchange.com/questions/2253443/difference-between-least-squares-and-minimum-norm-solution
+// https://see.stanford.edu/materials/lsoeldsee263/08-min-norm.pdf

@@ -3531,6 +3531,71 @@ void partialDerivatives2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::ve
 //   squares is needed, i think)
 
 
+/** Solves A*x = b for x. */
+template<class T>
+void solve(const rsMatrix2x2<T>& A, rsVector2D<T>& x, const rsVector2D<T>& b)
+{
+  rsMatrix2x2<T> Ai = A.getInverse();
+  x.x = Ai.a * b.x + Ai.b * b.y;
+  x.y = Ai.c * b.x + Ai.d * b.y;
+}
+// todo: optimize, move to rsMatrix2x2
+
+template<class T>
+void partialDerivatives2D_2(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
+  std::vector<T>& u_x, std::vector<T>& u_y)
+{
+  int N = mesh.getNumVertices();
+  rsAssert((int) u.size()   == N);
+  rsAssert((int) u_x.size() == N);
+  rsAssert((int) u_y.size() == N);
+  using Vec2 = rsVector2D<T>;
+  using VecI = std::vector<int>;
+  rsFill(u_x, 0.f);
+  rsFill(u_y, 0.f);
+  rsMatrix2x2<T> A;
+  Vec2 b, g;
+
+  for(int i = 0; i < N; i++)
+  {
+    Vec2 vi  = mesh.getVertexPosition(i);       // vertex, at which we calculate the derivative
+    VecI nvi = mesh.getNeighbors(i);            // indices of all neighbors of vi
+    if(nvi.empty()) continue;                   // skip iteration, if vi has no neighbors
+    A.setZero();
+    b.setZero();
+    for(int j = 0; j < (int)nvi.size(); j++)    // loop over neighbors of vertex i
+    {
+      // intermediate variables:
+      int  k  = nvi[j];                      // index of current neighbor of vi
+      Vec2 vk = mesh.getVertexPosition(k);   // current neighbor of vi
+      Vec2 dv = vk   - vi;  // difference vector
+      T du = u[k] - u[i];   // difference in function value
+
+      //T nv = rsNorm(dv);    // norm, length of difference vector dv
+      //T dd = du  / nv;      // approximation of directional derivative in dv direction - is that correct?
+      //T w  = 1.f / nv;      // (unscaled) weight for directional derivative
+
+      // accumulate least-squares-matrix and right-hand-side vector
+      A.a += dv.x * dv.x;
+      A.b += dv.x * dv.y;
+      A.d += dv.y * dv.y;
+      b.x += dv.x * du;
+      b.y += dv.y * du;
+      // todo: include weights
+
+      int dummy = 0;
+    }
+    A.c = A.b;  // A.c is still zero - make A symmetric
+
+    // compute gradient that best explains the measured directional derivatives in the least 
+    // squares sense and store it in output arrays:
+    solve(A, g, b);  // g is the gradient vector that solves A*g = b
+    u_x[i] = g.x;
+    u_y[i] = g.y;
+  }
+
+}
+
 void testVertexMesh()
 {
 
@@ -3617,6 +3682,8 @@ void testVertexMesh()
   fill();  // compute target values
   partialDerivatives2D(mesh, u, u_x2, u_y2);
   // seems wrong by a factor 2
+
+  partialDerivatives2D_2(mesh, u, u_x2, u_y2);
 
 
 

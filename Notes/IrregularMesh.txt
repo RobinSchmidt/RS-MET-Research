@@ -125,6 +125,23 @@ the matrix is singular?
 name: weighted least squares directional derivatives method
 
 
+But what do we actually get, when we project a (approximation of a) directional 
+derivative onto an arbitrary other (possibly normalized) vector? Will this give
+us any sort of reasonable estimate for the directional derivative in that other 
+direction? ..wait - the directional derivative itself is a scalar, so the 
+notion of "projecting" it makes no sense. What we can do is to project the 
+direction in which we have taken the directionla derivative onto that other 
+vector - and possibly multiply the result by the scalar value of the 
+directional derivative - but does that make any sense? Maybe write the 
+directional derivatives D_a,D_b with respect to two arbitrary vectors a,b in 
+terms of the gradient g and try to solve for D_b in terms of D_a.
+
+
+https://tutorial.math.lamar.edu/classes/calciii/directionalderiv.aspx
+https://mathinsight.org/directional_derivative_gradient_introduction
+https://mathinsight.org/directional_derivative_gradient_derivation
+
+
 ToDo: see, if (and how) we recover the central difference rule on a regular 
 grid...
 

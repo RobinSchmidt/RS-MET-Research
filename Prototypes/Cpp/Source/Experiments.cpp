@@ -3545,6 +3545,7 @@ partial derivatives of u with respect ot x and y (which should also be of the sa
 which, taken together, form the gradient. The optional "weighting" argument controls, how the 
 error should be weighted. Possible values are: 0: unweighted, 1: Manhattan distance, 2: Euclidean 
 distance. */
+/*
 template<class T>
 void gradient2D(const rsGraphWithVertexData<rsVector2D<T>>& mesh, const std::vector<T>& u,
   std::vector<T>& u_x, std::vector<T>& u_y, int weighting = 2)
@@ -3608,6 +3609,7 @@ void gradient2D(const rsGraphWithVertexData<rsVector2D<T>>& mesh, const std::vec
     u_y[i] = g.y;
   }
 }
+*/
 // todo:
 // -make it work for vertices with 1 neighbor - we currently encounter a singular matrix A in this
 //  case (which makes sense, i guess - we get infinitely many solutions - we need to pick the 
@@ -3631,6 +3633,7 @@ void testVertexMesh()
   using VecF = std::vector<float>;
   using VecI = std::vector<int>;
   using Mesh = rsGraphWithVertexData<Vec2>;
+  using ND   = rsNumericDifferentiator<float>;
 
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
   // Q,R,S,T surrounding it that are connected to it:
@@ -3680,9 +3683,9 @@ void testVertexMesh()
 
   // P = (3,2), Q = (1,3), R = (4,2), S = (2,0), T = (1,1)
   fill();
-  gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
-  gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
-  gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
+  ND::gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
+  ND::gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
+  ND::gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
   // Manhattan distance seems to work best
 
   // This is the regular 5-point stencil that would result from unsing a regular mesh:
@@ -3693,9 +3696,9 @@ void testVertexMesh()
   mesh.setVertexData(3, Vec2(3.f, 1.f)); // S = (3,1)
   mesh.setVertexData(4, Vec2(2.f, 2.f)); // T = (2,2)
   fill();                                    // compute target values
-  gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
-  gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
-  gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
+  ND::gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
+  ND::gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
+  ND::gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
 
 
   int dummy = 0;

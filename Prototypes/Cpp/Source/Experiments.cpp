@@ -3533,19 +3533,6 @@ void partialDerivatives2D_1(const rsVertexMesh<rsVector2D<T>>& mesh, const std::
 //   squares is needed, i think)
 
 
-/** Solves A*x = b for x. */
-template<class T>
-void solve(const rsMatrix2x2<T>& A, rsVector2D<T>& x, const rsVector2D<T>& b)
-{
-  T tol = 1000 * RS_EPS(T);
-  rsAssert(rsAbs(A.getDeterminant()) > tol, "Handling of singular matrices not implemented");
-  rsMatrix2x2<T> Ai = A.getInverse();
-  x.x = Ai.a * b.x + Ai.b * b.y;
-  x.y = Ai.c * b.x + Ai.d * b.y;
-}
-// todo: optimize, move to rsMatrix2x2, handle singluar matrices: in the overdetermined case, 
-// produce a least squares approximation, in the underdetermined case, a minimum norm solution
-
 /** Numerically estimates partial derivatives into the x- and y-direction of a function u(x,y) that
 is defined on an irregular mesh. This is a preliminary for generalizing finite difference based 
 solvers for partial differential equations to irregular meshes. The inputs are a mesh of vertices 
@@ -3616,7 +3603,7 @@ void gradient2D(const rsGraphWithVertexData<rsVector2D<T>>& mesh, const std::vec
 
     // Compute gradient that best explains the measured directional derivatives in the least 
     // squares sense and store it in output arrays:
-    solve(A, g, b);  // g is the gradient vector that solves A*g = b
+    rsMatrix2x2<T>::solve(A, g, b);  // g is the gradient vector that solves A*g = b
     u_x[i] = g.x;
     u_y[i] = g.y;
   }
@@ -3637,6 +3624,7 @@ void gradient2D(const rsGraphWithVertexData<rsVector2D<T>>& mesh, const std::vec
 //  make use of the symmetry of A (maybe a special solveSymmetric function could be used)
 // -maybe avoid the rsFill - instead, set values to zero before "continue"
 
+// move to rs-met codebase - maybe turn into a unit test and/or experiment
 void testVertexMesh()
 {
   using Vec2 = rsVector2D<float>;

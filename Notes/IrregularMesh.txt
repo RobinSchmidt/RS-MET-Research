@@ -77,6 +77,53 @@ basically just: u_a_x := u_a * a_x where a_x is the x-component of a. That
 actually gives a proportionality to the offset into the respective coordinate
 direction. ...this seems to make sense...
 
+oooh...i think, the formulas above to reconstruct the gradient from the 
+directional derivative is wrong. We cannot just project the vectors a,b,c 
+onto the coordinate unit vectors e_x,e_y to get an estimate for the respective
+component of the gradient. Consider the case, where the direction vector a goes
+up and we want to estimate the x-component of the gradient from the directional
+derivative along a - the projection of a onto x would be zero and so would be 
+the estimate for u_x given by a, i.e. u_x_a - that can't be right. I think, what 
+needs to be done instead is to set up a system of equations, like so:
+
+  u_a = u_x*a_x + u_y*a_y
+  u_b = u_x*b_x + u_y*b_y
+  u_c = u_x*c_x + u_y*c_y
+
+and solve for the gradient components u_x,u_y. With 3 neighbors, the system is
+overdetermined, so we may need a (weighted) least squares approach, where the 
+weights should be given as before as inversely proportional to the lengths (we 
+allow the solution error to be off more for points farther away from P). Maybe 
+here, u_a,u_b,u_c should not be normalized to unit length. With 2 neighbors, we 
+have 2 equations for 2 unknowns, so we should be able to compute a unique 
+solution - but what if there's only 1 neighbor - we have a degree of freedom 
+and may use it to compute a minimum length solution. However, the typical case 
+will be the overdetermined one. Maybe as an optimization, we could use weights 
+given inversely proportional to the sum of the absolute values - experimentation 
+needed. Writing the equation system as matrix equation:
+
+  |a_x a_y| * |u_x| = |u_a|
+  |b_x b_y|   |u_y|   |u_b|
+  |c_x c_y|           |u_c|
+
+see: https://en.wikipedia.org/wiki/Ordinary_least_squares 
+with p=2, n=3 - the least squares solution can be found by solving:
+
+  |a_x b_x c_x| * |a_x a_y| * |u_x| = |a_x b_x c_x| * |u_a|
+  |a_y b_y c_y|   |b_x b_y|   |u_y|   |a_y b_y c_y|   |u_b|
+                  |c_x c_y|                           |u_c|
+
+The weighted least squares solution:
+https://en.wikipedia.org/wiki/Weighted_least_squares
+can be found by solving:
+
+
+
+todo: figure out what to do in the underdetermined case. also, what if n=p but 
+the matrix is singular?
+
+name: weighted least squares directional derivatives method
+
 
 ToDo: see, if (and how) we recover the central difference rule on a regular 
 grid...

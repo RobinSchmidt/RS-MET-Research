@@ -3496,7 +3496,7 @@ void partialDerivatives2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::ve
       Vec2 dv = vk   - vi;  // difference vector
       T du = u[k] - u[i];   // difference in function value
       T nv = rsNorm(dv);    // norm, length of difference vector dv
-      T dd = du / nv;       // approximation of directional derivative in dv direction
+      T dd = du  / nv;      // approximation of directional derivative in dv direction - is that correct?
       T w  = 1.f / nv;      // (unscaled) weight for directional derivative
 
       // accumulation:
@@ -3524,6 +3524,12 @@ void partialDerivatives2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::ve
 //  partial derivatives, can be accumulated as g += wj*dudv * dv; where dv is a vector and wj*dudv
 //  is a scalar
 // -however, this may make it harder to compute 2nd derivatives
+// -i think, my formula to compute gradient components from the directional derivative is wrong
+//  -maybe we need to set up a weighted-least-squares system to form an etimate for the gradient
+//   that best describes the measured directional derivatives to the neighboruing vertices (the 
+//   system may be overdetermined whne vertex vi has more than 2 neighbours, that's why least 
+//   squares is needed, i think)
+
 
 void testVertexMesh()
 {

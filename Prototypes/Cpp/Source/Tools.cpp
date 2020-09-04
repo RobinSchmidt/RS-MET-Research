@@ -2252,12 +2252,19 @@ public:
   /** Adds a new vertex at the given position. */
   void addVertex(const T& position) { vertices.push_back(Vertex(position)); }
 
-  /** Connects vertex i to vertex j by an edge. */
-  void addEdge(int i, int j)  { vertices[i].neighbors.push_back(j); }
+  /** Connects vertex i to vertex j by an edge. If the optional boolean parameter "bothWays" is 
+  true, it also adds the edge from j to i. */
+  void addEdge(int i, int j, bool bothWays = false)  
+  { 
+    vertices[i].neighbors.push_back(j);
+    if(bothWays)
+      vertices[j].neighbors.push_back(i);
+  }
 
 
   /** Modifies the position of vertex i. */
   void setVertexPosition(int i, const T& position) { vertices[i].pos = position; }
+  // rename to setVertexData
 
 
   /** Returns the number of vertices. */
@@ -2271,8 +2278,8 @@ public:
 
 
   const T& getVertexPosition(int i) const { return vertices[i].pos; }
-  // maybe use the more generic name value instead of position - the data-structure can be more
-  // generally useful
+  // maybe use the more generic name "value" or "data" instead of "position" - the data-structure 
+  // can be more generally useful
 
 
 protected:
@@ -2296,6 +2303,7 @@ protected:
 // -instead of having each vertex maintain a list of adjacent vertices, we could have an explicit
 //  array of edges - which data-structure is better may depend on the situation and maybe it makes
 //  sense to have both variants
+// -maybe allow (optionally) data to be associated with each edge
 
 /*
 creating movies from pictures:

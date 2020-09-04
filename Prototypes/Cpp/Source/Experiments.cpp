@@ -3465,7 +3465,7 @@ void testSortedSet()
 
 
 template<class T>
-void partialDerivatives2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
+void partialDerivatives2D_1(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
   std::vector<T>& u_x, std::vector<T>& u_y)
 {
   // Under construction.
@@ -3637,7 +3637,9 @@ void testVertexMesh()
 
   // estimate partial derivatives u_x, u_y at all mesh points (only at P we should get a nonzero
   // value because only P has connected neighbours):
-  partialDerivatives2D(mesh, u, u_x, u_y);
+  partialDerivatives2D_1(mesh, u, u_x, u_y);  // wrong!
+  partialDerivatives2D_2(mesh, u, u_x, u_y);
+
 
   // maybe try the same with different configurations of Q,R,S,T - we need a way to change their
   // positions
@@ -3664,8 +3666,10 @@ void testVertexMesh()
 
   // numerically estimate derivatives with 1st mesh:
   VecF u_x1(N), u_y1(N);
+  VecF u_x2(N), u_y2(N);
   fill();  // compute target values
-  partialDerivatives2D(mesh, u, u_x1, u_y1);
+  partialDerivatives2D_1(mesh, u, u_x1, u_y1);  // wrong
+  partialDerivatives2D_2(mesh, u, u_x2, u_y2);  //
 
   // only u_x1[0] and u_y1[0] are supposed to contain a reasonable value
 
@@ -3678,11 +3682,9 @@ void testVertexMesh()
   mesh.setVertexPosition(2, Vec2(4.f, 2.f)); // R = (4,2)
   mesh.setVertexPosition(3, Vec2(3.f, 1.f)); // S = (3,1)
   mesh.setVertexPosition(4, Vec2(2.f, 2.f)); // T = (2,2)
-  VecF u_x2(N), u_y2(N);
-  fill();  // compute target values
-  partialDerivatives2D(mesh, u, u_x2, u_y2);
-  // seems wrong by a factor 2
 
+  fill();  // compute target values
+  partialDerivatives2D_1(mesh, u, u_x1, u_y1);  // coincidentally right?
   partialDerivatives2D_2(mesh, u, u_x2, u_y2);
 
 
@@ -3690,6 +3692,12 @@ void testVertexMesh()
 
   int dummy = 0;
 
+  // todo: 
+  // -clean up
+  // -add weighting
+  // -compare accuracy of weighted vs unweighted
+  // -optimize
+  // -move to library
 
 
   // ToDo: maybe later use a function u(x,y) - maybe a bivariate polynomial - so we can compute 

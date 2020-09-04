@@ -3551,7 +3551,7 @@ is the directional derivative...
 Possible values for the weighting: 0: unweighted, 1: Manhattan distance, 2: Euclidean distance
 */
 template<class T>
-void gradient2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
+void gradient2D(const rsGraphWithVertexData<rsVector2D<T>>& mesh, const std::vector<T>& u,
   std::vector<T>& u_x, std::vector<T>& u_y, int weighting = 2)
 {
   int N = mesh.getNumVertices();
@@ -3567,7 +3567,7 @@ void gradient2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u
   T w = T(1);
   for(int i = 0; i < N; i++)
   {
-    Vec2 vi  = mesh.getVertexPosition(i);       // vertex, at which we calculate the derivative
+    Vec2 vi  = mesh.getVertexData(i);           // vertex, at which we calculate the derivative
     VecI nvi = mesh.getNeighbors(i);            // indices of all neighbors of vi
     if(nvi.empty()) continue;                   // skip iteration, if vi has no neighbors
     A.setZero();
@@ -3576,7 +3576,7 @@ void gradient2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u
     {
       // Compute intermediate variables:
       int  k  = nvi[j];                         // index of current neighbor of vi
-      Vec2 vk = mesh.getVertexPosition(k);      // current neighbor of vi
+      Vec2 vk = mesh.getVertexData(k);          // current neighbor of vi
       Vec2 dv = vk   - vi;                      // difference vector
       T    du = u[k] - u[i];                    // difference in function value
       if(     weighting == 1)  w = T(1) / (rsAbs(dv.x) + rsAbs(dv.y));
@@ -3604,7 +3604,7 @@ void testVertexMesh()
   using Vec2 = rsVector2D<float>;
   using VecF = std::vector<float>;
   using VecI = std::vector<int>;
-  using Mesh = rsVertexMesh<Vec2>;
+  using Mesh = rsGraphWithVertexData<Vec2>;
 
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
   // Q,R,S,T surrounding it that are connected to it:
@@ -3644,7 +3644,7 @@ void testVertexMesh()
   auto fill = [&]() 
   { 
     for(int i = 0; i < N; i++) {
-      Vec2 v = mesh.getVertexPosition(i);
+      Vec2 v = mesh.getVertexData(i);
       u[i]   = f( v.x, v.y);
       u_x[i] = fx(v.x, v.y);
       u_y[i] = fy(v.x, v.y); }
@@ -3660,11 +3660,11 @@ void testVertexMesh()
 
   // This is the regular 5-point stencil that would result from unsing a regular mesh:
   // P = (3,2), Q = (3,3), R = (4,2), S = (3,1), T = (2,2)
-  mesh.setVertexPosition(0, Vec2(3.f, 2.f)); // P = (3,2)
-  mesh.setVertexPosition(1, Vec2(3.f, 3.f)); // Q = (3,3)
-  mesh.setVertexPosition(2, Vec2(4.f, 2.f)); // R = (4,2)
-  mesh.setVertexPosition(3, Vec2(3.f, 1.f)); // S = (3,1)
-  mesh.setVertexPosition(4, Vec2(2.f, 2.f)); // T = (2,2)
+  mesh.setVertexData(0, Vec2(3.f, 2.f)); // P = (3,2)
+  mesh.setVertexData(1, Vec2(3.f, 3.f)); // Q = (3,3)
+  mesh.setVertexData(2, Vec2(4.f, 2.f)); // R = (4,2)
+  mesh.setVertexData(3, Vec2(3.f, 1.f)); // S = (3,1)
+  mesh.setVertexData(4, Vec2(2.f, 2.f)); // T = (2,2)
   fill();                                    // compute target values
   gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
   gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;

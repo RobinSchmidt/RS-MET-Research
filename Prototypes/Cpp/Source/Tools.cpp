@@ -2244,13 +2244,16 @@ This is mainly meant for trying out an idea for extending finite difference meth
 differential equations on irregular meshes. */
 
 template<class T>  // T could be rsVector2D<double>
-class rsVertexMesh
+class rsGraphWithVertexData // rsVertexMesh
 {
 
 public:
 
-  /** Adds a new vertex at the given position. */
-  void addVertex(const T& position) { vertices.push_back(Vertex(position)); }
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  /** Adds a new vertex with the given associated data. */
+  void addVertex(const T& data) { vertices.push_back(Vertex(data)); }
 
   /** Connects vertex i to vertex j by an edge. If the optional boolean parameter "bothWays" is 
   true, it also adds the edge from j to i. */
@@ -2261,11 +2264,11 @@ public:
       vertices[j].neighbors.push_back(i);
   }
 
+  /** Modifies the data associated with vertex i. */
+  void setVertexData(int i, const T& data) { vertices[i].data = data; }
 
-  /** Modifies the position of vertex i. */
-  void setVertexPosition(int i, const T& position) { vertices[i].pos = position; }
-  // rename to setVertexData
-
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
 
   /** Returns the number of vertices. */
   int getNumVertices() const { return (int) vertices.size(); }
@@ -2276,18 +2279,20 @@ public:
   /** Returns a const reference to the array of neighbors of vertex i */
   const std::vector<int>& getNeighbors(int i) const { return vertices[i].neighbors; }
 
+  /** Returns a const pointer to the data that is associated with vertex i */
+  const T& getVertexData(int i) const { return vertices[i].data; }
 
-  const T& getVertexPosition(int i) const { return vertices[i].pos; }
-  // maybe use the more generic name "value" or "data" instead of "position" - the data-structure 
-  // can be more generally useful
-
+  //-----------------------------------------------------------------------------------------------
+  // \name Data
 
 protected:
 
+  /** Structure to hold one vertex containing its associated data and a list of indices of 
+  vertices that are connected to this vertex. */
   struct Vertex
   {
-    Vertex(const T& position) : pos(position) {}
-    T pos;                        // position vector of the vertex
+    Vertex(const T& newData) : data(newData) {}
+    T data;                       // data associated with the vertex
     std::vector<int> neighbors;   // array of vertex indices that are neighbours of this vertex
   };
 
@@ -2295,6 +2300,8 @@ protected:
 
 };
 // -move into rapt into a file rsGraphs.h - maybe rename to rsGraphWithVertexData
+// -implement functions like isConnected(int i, int j), containsDuplicateEdges(), 
+//  containsDuplicateVertices
 // -this data-structure is not optimal efficiency wise, but it's most straightforward for 
 //  implementing the idea for the irregular FDM - later, a different data-structure can be used to
 //  optimize the computations

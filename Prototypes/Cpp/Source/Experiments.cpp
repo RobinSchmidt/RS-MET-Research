@@ -3463,7 +3463,8 @@ void testSortedSet()
 }
 
 
-
+/*
+// this was the wrong approach - may be deleted later:
 template<class T>
 void partialDerivatives2D_1(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
   std::vector<T>& u_x, std::vector<T>& u_y)
@@ -3517,6 +3518,7 @@ void partialDerivatives2D_1(const rsVertexMesh<rsVector2D<T>>& mesh, const std::
   }
   // this needs testing
 }
+*/
 // -rename to gradient2D
 // -move to rsNumericDifferentiatior
 // -maybe instead of taking two arrays for the partial derivatives, it should take one array of
@@ -3541,8 +3543,12 @@ void solve(const rsMatrix2x2<T>& A, rsVector2D<T>& x, const rsVector2D<T>& b)
 }
 // todo: optimize, move to rsMatrix2x2
 
+/** Numerically estimates partial derivatives into the x- and y-direction of a function u(x,y) that
+is defined on an irregular mesh. This is a preliminary for generalizing finite difference based 
+solvers for partial differential equations on irregular meshes. The key tool for such an estimation
+is the directional derivative... */
 template<class T>
-void partialDerivatives2D_2(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
+void gradient2D(const rsVertexMesh<rsVector2D<T>>& mesh, const std::vector<T>& u,
   std::vector<T>& u_x, std::vector<T>& u_y)
 {
   int N = mesh.getNumVertices();
@@ -3598,17 +3604,14 @@ void partialDerivatives2D_2(const rsVertexMesh<rsVector2D<T>>& mesh, const std::
 
 void testVertexMesh()
 {
-
-
   using Vec2 = rsVector2D<float>;
   using VecF = std::vector<float>;
   using VecI = std::vector<int>;
   using Mesh = rsVertexMesh<Vec2>;
 
-  Mesh mesh;
-
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
   // Q,R,S,T surrounding it that are connected to it:
+  Mesh mesh;
   mesh.addVertex(Vec2(3.f, 2.f));  // P = (3,2) at index 0
   mesh.addVertex(Vec2(1.f, 3.f));  // Q = (1,3) at index 1
   mesh.addVertex(Vec2(4.f, 2.f));  // R = (4,2) at index 2
@@ -3619,43 +3622,27 @@ void testVertexMesh()
   mesh.addEdge(0, 3);              // connect P to S
   mesh.addEdge(0, 4);              // connect P to T
 
-  // create arrays of function values and partial derivatives:
+  // Create arrays of function values and (true) partial derivatives and their numerical estimates.
+  // For the estimates, only vertices with neighbors are supposed to contain a reasonable value 
+  // afterwards, all others are supposed to contain zero:
   int N = mesh.getNumVertices();
-  VecF u(N), u_x(N), u_y(N);
-  // later compute also 2nd derivatives u_xx, u_yy, u_xy and Laplacian u_L
+  VecF u(N), u_x(N), u_y(N);     // u(x,y) and its true partial derivatives with resp. to x,y
+  VecF u_x0(N), u_y0(N);         // with weighting 0 (unweighted)
+  VecF u_x1(N), u_y1(N);         // with weighting 1 (sum of absolute values, "Manhattan distance")
+  VecF u_x2(N), u_y2(N);         // with weighting 2 (Euclidean distance)
+  // todo: later compute also 2nd derivatives u_xx, u_yy, u_xy and Laplacian u_L
 
-  // assign function values u(x,y) to the vertices:
-  u[0] = 5.f; // u(P) = 5
-  u[1] = 2.f; // u(Q) = 2
-  u[2] = 3.f; // u(R) = 3
-  u[3] = 4.f; // u(S) = 4
-  u[4] = 1.f; // u(T) = 3 ..or maybe 1
-
-
-
-
-
-  // estimate partial derivatives u_x, u_y at all mesh points (only at P we should get a nonzero
-  // value because only P has connected neighbours):
-  partialDerivatives2D_1(mesh, u, u_x, u_y);  // wrong!
-  partialDerivatives2D_2(mesh, u, u_x, u_y);
-
-
-  // maybe try the same with different configurations of Q,R,S,T - we need a way to change their
-  // positions
-
-
-
-  // use this as u(x,y):
+  // Define our test function u(x,y) and its partial derivatives:
   // u(x,y)   =    sin(wx * x + px) *    sin(wy * y + py)
   // u_x(x,y) = wx*cos(wx * x + px) *    sin(wy * y + py)
   // u_y(x,y) =    sin(wx * x + px) * wy*cos(wy * y + py)
+  // and a function to fill the arrays of true partial derivatives:
   float wx = 0.01f, px = 0.3f;
   float wy = 0.02f, py = 0.4f;
   auto f  = [&](float x, float y)->float { return    sin(wx * x + px) *    sin(wy * y + py); };
   auto fx = [&](float x, float y)->float { return wx*cos(wx * x + px) *    sin(wy * y + py); };
   auto fy = [&](float x, float y)->float { return    sin(wx * x + px) * wy*cos(wy * y + py); };
-  auto fill = [&]()
+  auto fill = [&]() 
   { 
     for(int i = 0; i < N; i++) {
       Vec2 v = mesh.getVertexPosition(i);
@@ -3664,28 +3651,21 @@ void testVertexMesh()
       u_y[i] = fy(v.x, v.y); }
   };
 
-  // numerically estimate derivatives with 1st mesh:
-  VecF u_x1(N), u_y1(N);
-  VecF u_x2(N), u_y2(N);
-  fill();  // compute target values
-  partialDerivatives2D_1(mesh, u, u_x1, u_y1);  // wrong
-  partialDerivatives2D_2(mesh, u, u_x2, u_y2);  //
 
-  // only u_x1[0] and u_y1[0] are supposed to contain a reasonable value
+  // P = (3,2), Q = (1,3), R = (4,2), S = (2,0), T = (1,1)
+  fill();                           // compute target values
+  gradient2D(mesh, u, u_x2, u_y2);  //
 
-  // todo: try other meshes (this requires recomputation of the function values and target 
-  // derivatives)
-
-  // P = (3,2), Q = (3,3), R = (4,2), 
+  // this is the regular 5-point stencil that would result from unsing a regular mesh:
+  // P = (3,2), Q = (3,3), R = (4,2), S = (3,1), T = (2,2)
   mesh.setVertexPosition(0, Vec2(3.f, 2.f)); // P = (3,2)
   mesh.setVertexPosition(1, Vec2(3.f, 3.f)); // Q = (3,3)
   mesh.setVertexPosition(2, Vec2(4.f, 2.f)); // R = (4,2)
   mesh.setVertexPosition(3, Vec2(3.f, 1.f)); // S = (3,1)
   mesh.setVertexPosition(4, Vec2(2.f, 2.f)); // T = (2,2)
+  fill();                                    // compute target values
+  gradient2D(mesh, u, u_x2, u_y2);
 
-  fill();  // compute target values
-  partialDerivatives2D_1(mesh, u, u_x1, u_y1);  // coincidentally right?
-  partialDerivatives2D_2(mesh, u, u_x2, u_y2);
 
 
 
@@ -3698,7 +3678,18 @@ void testVertexMesh()
   // -compare accuracy of weighted vs unweighted
   // -optimize
   // -move to library
-
+  // -compare to results with regular mesh and central difference - see, if the formula reduces to
+  //  the central difference formula in this case
+  // -try different configurations of Q,R,S,T - maybe also edge cases, where some are 
+  //  non-distinct, maybe even fall on P - which is actually a situation that should not occur, but
+  //  out of curiosity, what happens
+  // -try different functions
+  // -test criticall determined case (vertex with 2 neighbors)
+  // -implement and test underdetermined case (vertex with 1 neighbor)
+  // -maybe try with symmetric edges (this will produce vertices with 1 neighbor)
+  // -generalize - first to 3D, then to nD
+  // -maybe measure how accuracy depends on grid-spacing and number of neighbors - i guess, a 
+  //  vertex with more neighbors will get a more accurate estimate?
 
   // ToDo: maybe later use a function u(x,y) - maybe a bivariate polynomial - so we can compute 
   // exact partial derivatives and compare them to the numerical results. We should also compare 

@@ -3513,10 +3513,10 @@ void testVertexMesh()
   mesh.addVertex(Vec2(4.f, 2.f));  // R = (4,2) at index 2
   mesh.addVertex(Vec2(2.f, 0.f));  // S = (2,0) at index 3
   mesh.addVertex(Vec2(1.f, 1.f));  // T = (1,1) at index 4
-  mesh.addEdge(0, 1, sym);         // connect P to Q
-  mesh.addEdge(0, 2, sym);         // connect P to R
-  mesh.addEdge(0, 3, sym);         // connect P to S
-  mesh.addEdge(0, 4, sym);         // connect P to T
+  mesh.addEdgeOld(0, 1, sym);         // connect P to Q
+  mesh.addEdgeOld(0, 2, sym);         // connect P to R
+  mesh.addEdgeOld(0, 3, sym);         // connect P to S
+  mesh.addEdgeOld(0, 4, sym);         // connect P to T
 
   // Create arrays of function values and (true) partial derivatives and their numerical estimates.
   // For the estimates, only vertices with neighbors are supposed to contain a reasonable value 
@@ -3586,7 +3586,7 @@ void testVertexMesh()
     float y = (p-a*x)/b;
     return x*x + y*y; 
   };
-  plotFunction(500, 0.76f, 0.78f, f1);
+  //plotFunction(500, 0.76f, 0.78f, f1);
   // yes - minimum is around 0.77, as is the computed x, so it seems to work
 
 

@@ -3481,13 +3481,27 @@ void solveMinNorm(T a, T b, T p, T* x, T* y)
 // x == a*p/(a^2 + b^2), y == b*p/(a^2 + b^2), l == -2*p/(a^2 + b^2)
 */
 
+template<class T>
+void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
+//void plotFunction(int N, T xMin, T xMax, std::function<T(T)> f)
+{
+  GNUPlotter plt;
+  std::vector<T> x(N), y(N);
+  plt.rangeLinear(&x[0], N, xMin, xMax);
+  for(int n = 0; n < N; n++)
+    y[n] = f(x[n]);
+  plt.addDataArrays(N, &x[0], &y[0]);
+  plt.plot();
+}
+// move to GNUPlotter - but it should take up to 10 functions
+
 // move to rs-met codebase - maybe turn into a unit test and/or experiment
 void testVertexMesh()
 {
   using Vec2 = rsVector2D<float>;
   using VecF = std::vector<float>;
   using VecI = std::vector<int>;
-  using Mesh = rsGraphWithVertexData<Vec2>;
+  using Mesh = rsGraph<Vec2, rsEmptyType>;  // later use float for the edge data
   using ND   = rsNumericDifferentiator<float>;
 
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
@@ -3567,9 +3581,29 @@ void testVertexMesh()
   // maybe derive y as function of x, which is just y = (p-a*x)/b and then the norm as function of 
   // y which is x*x + y*y and plot it fo x = 0...2 or something
 
+  std::function<float(float)> f1 = [&](float x)->float 
+  { 
+    float y = (p-a*x)/b;
+    return x*x + y*y; 
+  };
+  plotFunction(500, 0.76f, 0.78f, f1);
+  // yes - minimum is around 0.77, as is the computed x, so it seems to work
+
+
+  // Demonstrates how to create a graph with no vertex data:
+  struct Dummy { };                  // an empty struct
+  RAPT::rsGraph<Dummy, Dummy> graph; // graph with no vertex or edge data
+  graph.addVertex();
+
   int dummy = 0;
 
   // todo:
+  // -maybe precompute the weights and store them as edge data - more flexible, less compuation
+  //  but more memory usage
+  // -allow reading out the mesh at arbitrary positions p
+  //  -figure out in which triangular region the vector p falls - i.e. find the 3 vertices that 
+  //   bound the triangle that contains the point p
+  //  -do a triangular interpolation (something with barycentric coodinates, i guess)
   // -maybe compute relative errors
   // -compare accuracy of weighted vs unweighted
   // -optimize

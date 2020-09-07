@@ -3496,9 +3496,12 @@ void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
 // move to GNUPlotter - but it should take up to 10 functions
 
 
+// moved to rs-met codebase (except some comments) - may be deleted here:
+
 /** Fills edges of a graph of 2D vectors (as vertices) with a user supplied function that takes as
 input the source and target vector and returns a scalar that can be used as weight for the edge 
 between the two vertices. */
+/*
 template<class T>
 void fillEdges(rsGraph<rsVector2D<T>, T>& g, 
   const std::function<T(rsVector2D<T>, rsVector2D<T>)>& f)
@@ -3512,8 +3515,9 @@ void fillEdges(rsGraph<rsVector2D<T>, T>& g,
       T ed   = f(vi, vk);                        // compute edge data via user supplied function
       g.setEdgeData(i, j, ed); }}                // ...and store it at the edge
 }
+*/
 
-// move to rs-met codebase - maybe turn into a unit test and/or experiment
+/*
 void testVertexMesh()
 {
   using Vec2 = rsVector2D<float>;
@@ -3670,5 +3674,6 @@ void testVertexMesh()
   // ...maybe a vertex could have additional data associated with it, like the function value - but
   // maybe these should be kept in separate arrays
 }
+*/
 // https://math.stackexchange.com/questions/2253443/difference-between-least-squares-and-minimum-norm-solution
 // https://see.stanford.edu/materials/lsoeldsee263/08-min-norm.pdf

@@ -3495,6 +3495,31 @@ void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
 }
 // move to GNUPlotter - but it should take up to 10 functions
 
+
+
+template<class T>
+void fillEdges(rsGraph<rsVector2D<T>, T>& g)
+{
+  using Vec = rsVector2D<T>;
+  for(int i = 0; i < g.getNumVertices(); i++)
+  {
+    Vec vi = g.getVertexData(i);
+    for(int j = 0; j < g.getNumEdges(i); j++)
+    {
+      int k  = getEdgeTarget(i, j);
+      Vec vk = g.getVertexData(k);
+      Vec dv = vk - vi;
+      T   ed = T(1) / rsNorm(dv);  // preliminary - switch between different formulas later1
+
+      // T ed = func(vi, vk);  // later
+
+      g.setEdgeData(i, j, ed);
+      int dummy = 0;
+    }
+  }
+}
+// or maybe take a distance function - or a function of two vectors returning a scalar
+
 // move to rs-met codebase - maybe turn into a unit test and/or experiment
 void testVertexMesh()
 {
@@ -3502,6 +3527,7 @@ void testVertexMesh()
   using VecF = std::vector<float>;
   using VecI = std::vector<int>;
   using Mesh = rsGraph<Vec2, rsEmptyType>;  // later use float for the edge data
+  //using Mesh = rsGraph<Vec2, float>;
   using ND   = rsNumericDifferentiator<float>;
 
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 

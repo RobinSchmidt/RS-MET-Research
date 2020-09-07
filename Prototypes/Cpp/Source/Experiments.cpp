@@ -3496,29 +3496,22 @@ void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
 // move to GNUPlotter - but it should take up to 10 functions
 
 
-
+/** Fills edges of a graph of 2D vectors (as vertices) with a user supplied function that takes as
+input the source and target vector and returns a scalar that can be used as weight for the edge 
+between the two vertices. */
 template<class T>
-void fillEdges(rsGraph<rsVector2D<T>, T>& g)
+void fillEdges(rsGraph<rsVector2D<T>, T>& g, 
+  const std::function<T(rsVector2D<T>, rsVector2D<T>)>& f)
 {
   using Vec = rsVector2D<T>;
-  for(int i = 0; i < g.getNumVertices(); i++)
-  {
-    Vec vi = g.getVertexData(i);
-    for(int j = 0; j < g.getNumEdges(i); j++)
-    {
-      int k  = getEdgeTarget(i, j);
-      Vec vk = g.getVertexData(k);
-      Vec dv = vk - vi;
-      T   ed = T(1) / rsNorm(dv);  // preliminary - switch between different formulas later1
-
-      // T ed = func(vi, vk);  // later
-
-      g.setEdgeData(i, j, ed);
-      int dummy = 0;
-    }
-  }
+  for(int i = 0; i < g.getNumVertices(); i++) {
+    Vec vi = g.getVertexData(i);                 // vector stored at source vertex i
+    for(int j = 0; j < g.getNumEdges(i); j++) {
+      int k  = g.getEdgeTarget(i, j);            // index of target vertex
+      Vec vk = g.getVertexData(k);               // vector stored at target vertex k
+      T ed   = f(vi, vk);                        // compute edge data via user supplied function
+      g.setEdgeData(i, j, ed); }}                // ...and store it at the edge
 }
-// or maybe take a distance function - or a function of two vectors returning a scalar
 
 // move to rs-met codebase - maybe turn into a unit test and/or experiment
 void testVertexMesh()
@@ -3526,8 +3519,8 @@ void testVertexMesh()
   using Vec2 = rsVector2D<float>;
   using VecF = std::vector<float>;
   using VecI = std::vector<int>;
-  using Mesh = rsGraph<Vec2, rsEmptyType>;  // later use float for the edge data
-  //using Mesh = rsGraph<Vec2, float>;
+  //using Mesh = rsGraph<Vec2, rsEmptyType>;  // later use float for the edge data
+  using Mesh = rsGraph<Vec2, float>;
   using ND   = rsNumericDifferentiator<float>;
 
   // an (irregular) star-shaped mesh with a vertex P = (3,2) at the center and 4 vertices 
@@ -3576,11 +3569,17 @@ void testVertexMesh()
   };
   // todo: later compute also 2nd derivatives u_xx, u_yy, u_xy and Laplacian u_L
 
+  // distance functions (constant, 1/Manhattan, 1/Euclidean)
+  std::function<float(Vec2, Vec2)> d0, d1, d2;
+  d0 = [&](Vec2 a, Vec2 b)->float { return 1.f; };
+  d1 = [&](Vec2 a, Vec2 b)->float { Vec2 d = b-a; return 1.f / (rsAbs(d.x) + rsAbs(d.y)); };
+  d2 = [&](Vec2 a, Vec2 b)->float { return 1.f / rsNorm(b-a); };
+
   // P = (3,2), Q = (1,3), R = (4,2), S = (2,0), T = (1,1)
   fill();
-  ND::gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
-  ND::gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
-  ND::gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
+  fillEdges(mesh, d0); ND::gradient2D(mesh, u, u_x0, u_y0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
+  fillEdges(mesh, d1); ND::gradient2D(mesh, u, u_x1, u_y1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
+  fillEdges(mesh, d2); ND::gradient2D(mesh, u, u_x2, u_y2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
   // Manhattan distance seems to work best
 
   // This is the regular 5-point stencil that would result from unsing a regular mesh:
@@ -3591,9 +3590,9 @@ void testVertexMesh()
   mesh.setVertexData(3, Vec2(3.f, 1.f));   // S = (3,1)
   mesh.setVertexData(4, Vec2(2.f, 2.f));   // T = (2,2)
   fill();                                  // compute target values
-  ND::gradient2D(mesh, u, u_x0, u_y0, 0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
-  ND::gradient2D(mesh, u, u_x1, u_y1, 1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
-  ND::gradient2D(mesh, u, u_x2, u_y2, 2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
+  fillEdges(mesh, d0); ND::gradient2D(mesh, u, u_x0, u_y0); e_x0 = u_x-u_x0; e_y0 = u_y-u_y0;
+  fillEdges(mesh, d1); ND::gradient2D(mesh, u, u_x1, u_y1); e_x1 = u_x-u_x1; e_y1 = u_y-u_y1;
+  fillEdges(mesh, d2); ND::gradient2D(mesh, u, u_x2, u_y2); e_x2 = u_x-u_x2; e_y2 = u_y-u_y2;
 
 
   // test solveMinNorm - move elsewhere:

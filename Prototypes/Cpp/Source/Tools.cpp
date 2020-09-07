@@ -2295,10 +2295,28 @@ rsAutoDiffNumber<T> rsSin(rsAutoDiffNumber<T> x)
 { return rsAutoDiffNumber<T>(sin(x.v), x.d*cos(x.v)); }
 
 template<class T>
+rsAutoDiffNumber<T> rsCos(rsAutoDiffNumber<T> x) 
+{ return rsAutoDiffNumber<T>(cos(x.v), -x.d*sin(x.v)); }
+
+template<class T>
 rsAutoDiffNumber<T> rsExp(rsAutoDiffNumber<T> x) 
-{ return rsAutoDiffNumber<T>(sin(x.v), x.d*exp(x.v)); }
+{ return rsAutoDiffNumber<T>(exp(x.v), x.d*exp(x.v)); }
+
+template<class T>
+rsAutoDiffNumber<T> rsLog(rsAutoDiffNumber<T> x) 
+{ return rsAutoDiffNumber<T>(log(x.v), x.d/x.v); }  // requires x.v > 0
+
+template<class T>
+rsAutoDiffNumber<T> rsPow(rsAutoDiffNumber<T> x, T p)
+{ return rsAutoDiffNumber<T>(pow(x.v, p), p*pow(x.v, p-1)*x.d); }  // requires x.v != 0
+
+template<class T>
+rsAutoDiffNumber<T> rsAbs(rsAutoDiffNumber<T> x) 
+{ return rsAutoDiffNumber<T>(rsAbs(x.v), x.d*rsSign(x.v)); }  // requires x.v != 0..really?
+
 
 // https://en.wikipedia.org/wiki/Automatic_differentiation
+// https://en.wikipedia.org/wiki/Automatic_differentiation#Automatic_differentiation_using_dual_numbers
 
 
 

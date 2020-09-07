@@ -2238,6 +2238,68 @@ protected:
 
 //=================================================================================================
 
+/** Implements a numeric datatype for automatic differentiation. The idea is that in all arithmetic 
+operations that we do with the number, we carry along a derivative value whose value is computed by
+the well known sum-rule, difference-rule, product-rule and quotient-rule for derivatives.
+
+These can be useful in algorithms where we need derivatives, for example, in numercial 
+optimization.
+
+just a stub at the moment
+
+*/
+
+template<class T>
+class rsAutoDiffNumber
+{
+
+public:
+
+
+
+  T v, d;  // value and derivative
+
+  rsAutoDiffNumber(T value = T(0), T derivative = T(0)) : v(value), v(derivative) {}
+  // maybe the derivative should default to 1?
+
+
+  using ADN = rsAutoDiffNumber<T>;   // shorthand for convenience
+
+
+  ADN operator+(const ADN& y) const { return ADN(v + y.v, d + y.d); }
+  ADN operator-(const ADN& y) const { return ADN(v - y.v, d - y.d); }
+  ADN operator*(const ADN& y) const { return ADN(v * y.v, d*y.v + v*y.d ); }
+  ADN operator/(const ADN& y) const { return ADN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
+  // verify these, implement elementary functions
+  
+
+  
+  // f' * g + g' * f
+
+  // the operators implement 
+
+
+
+
+  /*
+  rsAutoDiffNumber operator-(const rsAutoDiffNumber& y) const { return rsFraction(num*b.den - b.num*den, den * b.den); }
+  rsAutoDiffNumber operator*(const rsAutoDiffNumber& y) const { return rsFraction(num * b.num, den * b.den); }
+  rsAutoDiffNumber operator/(const rsAutoDiffNumber& y) const { return rsFraction(num * b.den, den * b.num); }
+  */
+
+};
+
+// the elementary functions are obtained by application of the chain rule:
+template<class T>
+rsAutoDiffNumber<T> rsSin(rsAutoDiffNumber<T> x) 
+{ return rsAutoDiffNumber<T>(sin(x.v), x.d*cos(x.v)); }
+
+template<class T>
+rsAutoDiffNumber<T> rsExp(rsAutoDiffNumber<T> x) 
+{ return rsAutoDiffNumber<T>(sin(x.v), x.d*exp(x.v)); }
+
+// https://en.wikipedia.org/wiki/Automatic_differentiation
+
 
 
 /*

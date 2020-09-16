@@ -2301,6 +2301,11 @@ public:
 };
 
 // the elementary functions are obtained by application of the chain rule:
+
+template<class T>
+rsAutoDiffNumber<T> rsSqrt(rsAutoDiffNumber<T> x) 
+{ return rsAutoDiffNumber<T>(sqrt(x.v), x.d*T(0.5)/sqrt(x.v)); }
+
 template<class T>
 rsAutoDiffNumber<T> rsSin(rsAutoDiffNumber<T> x) 
 { return rsAutoDiffNumber<T>(sin(x.v), x.d*cos(x.v)); }

@@ -3481,6 +3481,20 @@ void testAutoDiff()
   r = x/y; t &= r == 1.5f;
 
 
+  r = rsSin(x);
+  r = rsCos(x);
+  r = rsExp(x);
+  r = rsLog(x);
+  r = rsPow(x, 2.f); 
+  //r = rsPow(x, y);   //
+  r = rsAbs(x);
+
+
+  //x = (2.f, 3.f);      // doesn't work - why does it even compile?
+  x = {2.f, 3.f};      // this "tuple-initialization" works, maybe use it also for rsFraction - what about complex?
+  x = ADN(2.f, 3.f);
+
+
 
 
 

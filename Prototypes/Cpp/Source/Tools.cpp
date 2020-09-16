@@ -2266,7 +2266,7 @@ public:
   using ADN = rsAutoDiffNumber<T>;   // shorthand for convenience
 
   //-----------------------------------------------------------------------------------------------
-  // \name Operators
+  // \name Arithmetic operators
 
   ADN operator+(const ADN& y) const { return ADN(v + y.v, d + y.d); }
   ADN operator-(const ADN& y) const { return ADN(v - y.v, d - y.d); }
@@ -2280,11 +2280,15 @@ public:
 
   // the operators implement 
 
-
+  //-----------------------------------------------------------------------------------------------
+  // \name Comparison operators
 
   bool operator==(const ADN& y) const { return v == y.v && d == y.d; }
   bool operator!=(const ADN& y) const { return !(*this == y); }
-
+  bool operator< (const ADN& y) const { return v <  y.v; }
+  bool operator<=(const ADN& y) const { return v <= y.v; }
+  bool operator> (const ADN& y) const { return v >  y.v; }
+  bool operator>=(const ADN& y) const { return v >= y.v; }
 
 
 

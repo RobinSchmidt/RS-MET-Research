@@ -2239,8 +2239,10 @@ protected:
 //=================================================================================================
 
 /** Implements a numeric datatype for automatic differentiation. The idea is that in all arithmetic 
-operations that we do with the number, we carry along a derivative value whose value is computed by
-the well known sum-rule, difference-rule, product-rule and quotient-rule for derivatives.
+operations that we do with a pair of operands, we carry along a derivative value whose value is 
+computed by the well known sum-rule, difference-rule, product-rule and quotient-rule for 
+derivatives. Likewise, in elementary function evaluations, we apply the chain-rule.
+
 
 These can be useful in algorithms where we need derivatives, for example, in numerical 
 optimization.
@@ -2265,20 +2267,32 @@ public:
 
   using ADN = rsAutoDiffNumber<T>;   // shorthand for convenience
 
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  T getValue()      const { return v; }
+  T getDerivative() const { return d; }
+
   //-----------------------------------------------------------------------------------------------
   // \name Arithmetic operators
 
+  // unary minus:
+  ADN operator-() const { return ADN(-v, -d); }
+
+  /** Implements sum rule: (f+g)' = f' + g'. */
   ADN operator+(const ADN& y) const { return ADN(v + y.v, d + y.d); }
+
+  /** Implements difference rule: (f-g)' = f' - g'. */
   ADN operator-(const ADN& y) const { return ADN(v - y.v, d - y.d); }
+
+  /** Implements product rule: (f*g)' = f' * g + g' * f. */
   ADN operator*(const ADN& y) const { return ADN(v * y.v, d*y.v + v*y.d ); }
+
+  /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2. */
   ADN operator/(const ADN& y) const { return ADN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
-  // verify these, implement elementary functions
-  
 
-  
-  // f' * g + g' * f
-
-  // the operators implement 
 
   //-----------------------------------------------------------------------------------------------
   // \name Comparison operators
@@ -2290,21 +2304,13 @@ public:
   bool operator> (const ADN& y) const { return v >  y.v; }
   bool operator>=(const ADN& y) const { return v >= y.v; }
 
-
-
-  /*
-  rsAutoDiffNumber operator-(const rsAutoDiffNumber& y) const { return rsFraction(num*b.den - b.num*den, den * b.den); }
-  rsAutoDiffNumber operator*(const rsAutoDiffNumber& y) const { return rsFraction(num * b.num, den * b.den); }
-  rsAutoDiffNumber operator/(const rsAutoDiffNumber& y) const { return rsFraction(num * b.den, den * b.num); }
-  */
-
 };
 
-// the elementary functions are obtained by application of the chain rule:
+// d-parts of functions are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x))
 
 template<class T>
 rsAutoDiffNumber<T> rsSqrt(rsAutoDiffNumber<T> x) 
-{ return rsAutoDiffNumber<T>(sqrt(x.v), x.d*T(0.5)/sqrt(x.v)); }
+{ return rsAutoDiffNumber<T>(sqrt(x.v), x.d*T(0.5)/sqrt(x.v)); }  // verify
 
 template<class T>
 rsAutoDiffNumber<T> rsSin(rsAutoDiffNumber<T> x) 

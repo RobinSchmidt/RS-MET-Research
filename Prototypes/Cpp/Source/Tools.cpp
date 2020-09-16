@@ -2242,7 +2242,7 @@ protected:
 operations that we do with the number, we carry along a derivative value whose value is computed by
 the well known sum-rule, difference-rule, product-rule and quotient-rule for derivatives.
 
-These can be useful in algorithms where we need derivatives, for example, in numercial 
+These can be useful in algorithms where we need derivatives, for example, in numerical 
 optimization.
 
 just a stub at the moment
@@ -2259,12 +2259,14 @@ public:
 
   T v, d;  // value and derivative
 
-  rsAutoDiffNumber(T value = T(0), T derivative = T(0)) : v(value), v(derivative) {}
+  rsAutoDiffNumber(T value = T(0), T derivative = T(0)) : v(value), d(derivative) {}
   // maybe the derivative should default to 1?
 
 
   using ADN = rsAutoDiffNumber<T>;   // shorthand for convenience
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Operators
 
   ADN operator+(const ADN& y) const { return ADN(v + y.v, d + y.d); }
   ADN operator-(const ADN& y) const { return ADN(v - y.v, d - y.d); }
@@ -2277,6 +2279,11 @@ public:
   // f' * g + g' * f
 
   // the operators implement 
+
+
+
+  bool operator==(const ADN& y) const { return v == y.v && d == y.d; }
+  bool operator!=(const ADN& y) const { return !(*this == y); }
 
 
 
@@ -2317,7 +2324,9 @@ rsAutoDiffNumber<T> rsAbs(rsAutoDiffNumber<T> x)
 
 // https://en.wikipedia.org/wiki/Automatic_differentiation
 // https://en.wikipedia.org/wiki/Automatic_differentiation#Automatic_differentiation_using_dual_numbers
+// https://www.neidinger.net/SIAMRev74362.pdf
 
+// whyt about multivariate functions and partial derivatives?
 
 
 /*

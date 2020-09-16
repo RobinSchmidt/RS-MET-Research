@@ -3462,6 +3462,47 @@ void testSortedSet()
   int dummy = 0;
 }
 
+void testAutoDiff()
+{
+  using ADN = rsAutoDiffNumber<float>;
+
+  ADN x, y, z, r;
+
+  bool t = true;  // test
+
+  x = 3.f;
+  y = 2.f;
+  z = 5.f;
+
+
+  r = x+y; t &= r == 5.f;
+  r = x-y; t &= r == 1.f;
+  r = x*y; t &= r == 6.f;
+  r = x/y; t &= r == 1.5f;
+
+
+
+
+
+
+  int dummy = 0;
+}
+
+
+template<class T>
+void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
+{
+  GNUPlotter plt;
+  std::vector<T> x(N), y(N);
+  plt.rangeLinear(&x[0], N, xMin, xMax);
+  for(int n = 0; n < N; n++)
+    y[n] = f(x[n]);
+  plt.addDataArrays(N, &x[0], &y[0]);
+  plt.plot();
+}
+// move to GNUPlotter - but it should take up to 10 functions
+
+
 
 /** Solves a*x + b*y = p subject to x^2 + y^2 = min. */
 /*
@@ -3481,19 +3522,7 @@ void solveMinNorm(T a, T b, T p, T* x, T* y)
 // x == a*p/(a^2 + b^2), y == b*p/(a^2 + b^2), l == -2*p/(a^2 + b^2)
 */
 
-template<class T>
-void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
-//void plotFunction(int N, T xMin, T xMax, std::function<T(T)> f)
-{
-  GNUPlotter plt;
-  std::vector<T> x(N), y(N);
-  plt.rangeLinear(&x[0], N, xMin, xMax);
-  for(int n = 0; n < N; n++)
-    y[n] = f(x[n]);
-  plt.addDataArrays(N, &x[0], &y[0]);
-  plt.plot();
-}
-// move to GNUPlotter - but it should take up to 10 functions
+
 
 
 // moved to rs-met codebase (except some comments) - may be deleted here:

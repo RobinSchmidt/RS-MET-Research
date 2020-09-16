@@ -3485,9 +3485,9 @@ void testAutoDiff()
   r = rsCos(x);
   r = rsExp(x);
   r = rsLog(x);
-  r = rsPow(x, 2.f); 
-  //r = rsPow(x, y);   //
   r = rsAbs(x);
+  r = rsPow(x, 2.f);
+  //r = rsPow(x, y);   //
 
 
   //x = (2.f, 3.f);      // doesn't work - why does it even compile?
@@ -3495,6 +3495,14 @@ void testAutoDiff()
   x = ADN(2.f, 3.f);
 
 
+  r = rsSin(x); t &= r == ADN(sin(x.v),   x.d*cos(x.v));
+  r = rsCos(x); t &= r == ADN(cos(x.v),  -x.d*sin(x.v));
+  r = rsExp(x); t &= r == ADN(exp(x.v),   x.d*exp(x.v));
+  r = rsLog(x); t &= r == ADN(log(x.v),   x.d / x.v );
+  r = rsAbs(x); t &= r == ADN(fabs(x.v),  x.d * rsSign(x.v));
+
+  r = rsPow(x, 5.f); t &= r == ADN(pow(x.v, 5.f), x.d * 5.f * pow(x.v, 4.f));
+  //r = rsPow(x, y);   //
 
 
 

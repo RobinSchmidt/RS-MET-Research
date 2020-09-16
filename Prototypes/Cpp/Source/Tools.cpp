@@ -2319,7 +2319,8 @@ rsAutoDiffNumber<T> rsLog(rsAutoDiffNumber<T> x)
 
 template<class T>
 rsAutoDiffNumber<T> rsPow(rsAutoDiffNumber<T> x, T p)
-{ return rsAutoDiffNumber<T>(pow(x.v, p), p*pow(x.v, p-1)*x.d); }  // requires x.v != 0
+{ return rsAutoDiffNumber<T>(pow(x.v, p), x.d*p*pow(x.v, p-1)); }  // requires x.v != 0
+// what, if p is also an AutoDiffNumber?
 
 template<class T>
 rsAutoDiffNumber<T> rsAbs(rsAutoDiffNumber<T> x) 

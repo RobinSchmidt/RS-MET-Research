@@ -2270,7 +2270,7 @@ public:
 
   //rsAutoDiffNumber(T value = T(0), T derivative = T(0)) : v(value), d(derivative) {}
   rsAutoDiffNumber(T value = T(0), T derivative = T(1)) : v(value), d(derivative) {}
-  // maybe the derivative should default to 1?
+  // maybe the derivative should default to 1? what is most convenient? to seed or not to seed?
 
 
   using ADN = rsAutoDiffNumber<T>;   // shorthand for convenience
@@ -2384,6 +2384,7 @@ rsAutoDiffNumber<T> rsAbs(rsAutoDiffNumber<T> x)
 // https://github.com/JuliaDiff
 
 // https://en.wikipedia.org/wiki/Grassmann_number
+// https://en.wikipedia.org/wiki/Split-complex_number
 
 // what about multivariate functions and partial derivatives?
 

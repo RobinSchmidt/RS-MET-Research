@@ -3522,6 +3522,9 @@ void testAutoDiff()
   //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,1.f) * x); };  // wrong (but should be?)
   //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,0.f) * x); };  // ok
 
+  // If f would take a float, we would have to explicitly construct an ADN from x inside f, like
+  // for example: return rsSin(2.f*ADN(x)); but we do the implicity construction here
+
 
 
 

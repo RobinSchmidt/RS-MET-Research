@@ -3516,10 +3516,7 @@ void testAutoDiff()
   //auto f = [&](ADN x)->ADN { return rsSin(2.f*x); };             // ok
   //auto f = [&](ADN x)->ADN { return rsSin(x*2.f); };             // ok
   //auto f = [&](ADN x)->ADN { return rsSin(x/2.f); };             // ok
-
-
-  auto f = [&](ADN x)->ADN { return 1.f / (1.f + x*x); };             // ok
-
+  //auto f = [&](ADN x)->ADN { return 1.f / (1.f + x*x); };             // ok
   //auto f = [&](ADN x)->ADN { return rsSin(2.f*x + 1.f); };         // ok
   //auto f = [&](ADN x)->ADN { return rsSin(1.f + 2.f*x); };         // ok
   //auto f = [&](ADN x)->ADN { return rsSin(2.f*x - 1.f); };         // ok
@@ -3530,12 +3527,8 @@ void testAutoDiff()
   // If f would take a float, we would have to explicitly construct an ADN from x inside f, like
   // for example: return rsSin(2.f*ADN(x)); but we do the implicity construction here
 
-
-
-
-  //auto f = [&](ADN x)->ADN { return 
-  //  rsExp(-x) * rsSin(2.f * x * 1.5f) / (2.f + x*x * (1.f + rsCos(x)) + 1.f); };
-  // looks like the zeros of the derivative are slightly off from the extrema of the function
+  auto f = [&](ADN x)->ADN { return 
+    rsExp(-x*0.2) * rsSin(2 * x * 1.5) / (2.f + x*x * (1.f + rsCos(x)) + 1.f); }; // ok
 
 
   // Computes f1(2) along with its derivative f1'(2) - the derivative is computed because we seed
@@ -3544,7 +3537,7 @@ void testAutoDiff()
 
   // todo: plot f1 and f1':
   static const int N = 500;
-  float xMin = 0.f, xMax = 5.f;
+  float xMin = 0.f, xMax = 8.f;
   float X[N], V[N], D[N];
   rsArrayTools::fillWithRangeLinear(X, N, xMin, xMax);
   for(int n = 0; n < N; n++) {

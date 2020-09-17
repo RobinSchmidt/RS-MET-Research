@@ -2301,12 +2301,11 @@ public:
   /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2. */
   ADN operator/(const ADN& y) const { return ADN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
 
-
   // verify these:
-  ADN operator+(const T& y) const { return ADN(v + y, d    ); }  // ok
-  ADN operator-(const T& y) const { return ADN(v - y, d    ); }  // ok
-  ADN operator*(const T& y) const { return ADN(v * y, d * y); }  // ok
-  ADN operator/(const T& y) const { return ADN(v / y, d / y); }  // ok
+  template<class Ty> ADN operator+(const Ty& y) const { return ADN(v + T(y), d       ); }  // ok
+  template<class Ty> ADN operator-(const Ty& y) const { return ADN(v - T(y), d       ); }  // ok
+  template<class Ty> ADN operator*(const Ty& y) const { return ADN(v * T(y), d * T(y)); }  // ok
+  template<class Ty> ADN operator/(const Ty& y) const { return ADN(v / T(y), d / T(y)); }  // ok
 
 
 
@@ -2323,21 +2322,21 @@ public:
 };
 
 // operators for left argument of type T (need to be verified):
-template<class T>
-rsAutoDiffNumber<T> operator+(const T& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(x + y.v, y.d); } // ok
+template<class T, class Tx>
+rsAutoDiffNumber<T> operator+(const Tx& x, const rsAutoDiffNumber<T>& y)
+{ return rsAutoDiffNumber<T>(T(x) + y.v, y.d); } // ok
 
-template<class T>
-rsAutoDiffNumber<T> operator-(const T& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(x - y.v, -y.d) ; } // ok
+template<class T, class Tx>
+rsAutoDiffNumber<T> operator-(const Tx& x, const rsAutoDiffNumber<T>& y)
+{ return rsAutoDiffNumber<T>(T(x) - y.v, -y.d) ; } // ok
 
-template<class T>
-rsAutoDiffNumber<T> operator*(const T& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(x * y.v, x * y.d); } // ok
+template<class T, class Tx>
+rsAutoDiffNumber<T> operator*(const Tx& x, const rsAutoDiffNumber<T>& y)
+{ return rsAutoDiffNumber<T>(T(x) * y.v, T(x) * y.d); } // ok
 
-template<class T>
-rsAutoDiffNumber<T> operator/(const T& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(x / y.v, -x*y.d/(y.v*y.v) ); } // ok
+template<class T, class Tx>
+rsAutoDiffNumber<T> operator/(const Tx& x, const rsAutoDiffNumber<T>& y)
+{ return rsAutoDiffNumber<T>(T(x) / y.v, -T(x)*y.d/(y.v*y.v) ); } // ok
 
 
 // d-parts of functions are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x))

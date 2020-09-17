@@ -2259,7 +2259,7 @@ an NxM matrix.
 ...under construction... */
 
 template<class T>
-class rsAutoDiffNumber  // maybe rename to rsDualNumber
+class rsDualNumber 
 {
 
 public:
@@ -2268,12 +2268,11 @@ public:
 
   T v, d;  // value and derivative
 
-  //rsAutoDiffNumber(T value = T(0), T derivative = T(0)) : v(value), d(derivative) {}
-  rsAutoDiffNumber(T value = T(0), T derivative = T(1)) : v(value), d(derivative) {}
+  rsDualNumber(T value = T(0), T derivative = T(1)) : v(value), d(derivative) {}
   // maybe the derivative should default to 1? what is most convenient? to seed or not to seed?
 
 
-  using ADN = rsAutoDiffNumber<T>;   // shorthand for convenience
+  using DN = rsDualNumber<T>;   // shorthand for convenience
 
 
 
@@ -2286,89 +2285,91 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Arithmetic operators
 
-  // unary minus:
-  ADN operator-() const { return ADN(-v, -d); }
+  /** Unary minus just applies minus sign to both parts. */
+  DN operator-() const { return DN(-v, -d); }
 
   /** Implements sum rule: (f+g)' = f' + g'. */
-  ADN operator+(const ADN& y) const { return ADN(v + y.v, d + y.d); }
+  DN operator+(const DN& y) const { return DN(v + y.v, d + y.d); }
 
   /** Implements difference rule: (f-g)' = f' - g'. */
-  ADN operator-(const ADN& y) const { return ADN(v - y.v, d - y.d); }
+  DN operator-(const DN& y) const { return DN(v - y.v, d - y.d); }
 
   /** Implements product rule: (f*g)' = f' * g + g' * f. */
-  ADN operator*(const ADN& y) const { return ADN(v * y.v, d*y.v + v*y.d ); }
+  DN operator*(const DN& y) const { return DN(v * y.v, d*y.v + v*y.d ); }
 
   /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2. */
-  ADN operator/(const ADN& y) const { return ADN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
+  DN operator/(const DN& y) const { return DN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
 
-  // verify these:
-  template<class Ty> ADN operator+(const Ty& y) const { return ADN(v + T(y), d       ); }  // ok
-  template<class Ty> ADN operator-(const Ty& y) const { return ADN(v - T(y), d       ); }  // ok
-  template<class Ty> ADN operator*(const Ty& y) const { return ADN(v * T(y), d * T(y)); }  // ok
-  template<class Ty> ADN operator/(const Ty& y) const { return ADN(v / T(y), d / T(y)); }  // ok
+  template<class Ty> DN operator+(const Ty& y) const { return DN(v + T(y), d       ); }
+  template<class Ty> DN operator-(const Ty& y) const { return DN(v - T(y), d       ); }
+  template<class Ty> DN operator*(const Ty& y) const { return DN(v * T(y), d * T(y)); }
+  template<class Ty> DN operator/(const Ty& y) const { return DN(v / T(y), d / T(y)); }
+
+
+  // todo: add boilerplate for +=,-=,*=,...
 
 
 
   //-----------------------------------------------------------------------------------------------
   // \name Comparison operators
 
-  bool operator==(const ADN& y) const { return v == y.v && d == y.d; } // maybe we should only compare v
-  bool operator!=(const ADN& y) const { return !(*this == y); }
-  bool operator< (const ADN& y) const { return v <  y.v; }
-  bool operator<=(const ADN& y) const { return v <= y.v; }
-  bool operator> (const ADN& y) const { return v >  y.v; }
-  bool operator>=(const ADN& y) const { return v >= y.v; }
+  bool operator==(const DN& y) const { return v == y.v && d == y.d; } // maybe we should only compare v
+  bool operator!=(const DN& y) const { return !(*this == y); }
+  bool operator< (const DN& y) const { return v <  y.v; }
+  bool operator<=(const DN& y) const { return v <= y.v; }
+  bool operator> (const DN& y) const { return v >  y.v; }
+  bool operator>=(const DN& y) const { return v >= y.v; }
 
 };
 
 // operators for left argument of type T (need to be verified):
 template<class T, class Tx>
-rsAutoDiffNumber<T> operator+(const Tx& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(T(x) + y.v, y.d); } // ok
+rsDualNumber<T> operator+(const Tx& x, const rsDualNumber<T>& y)
+{ return rsDualNumber<T>(T(x) + y.v, y.d); } // ok
 
 template<class T, class Tx>
-rsAutoDiffNumber<T> operator-(const Tx& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(T(x) - y.v, -y.d) ; } // ok
+rsDualNumber<T> operator-(const Tx& x, const rsDualNumber<T>& y)
+{ return rsDualNumber<T>(T(x) - y.v, -y.d) ; } // ok
 
 template<class T, class Tx>
-rsAutoDiffNumber<T> operator*(const Tx& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(T(x) * y.v, T(x) * y.d); } // ok
+rsDualNumber<T> operator*(const Tx& x, const rsDualNumber<T>& y)
+{ return rsDualNumber<T>(T(x) * y.v, T(x) * y.d); } // ok
 
 template<class T, class Tx>
-rsAutoDiffNumber<T> operator/(const Tx& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(T(x) / y.v, -T(x)*y.d/(y.v*y.v) ); } // ok
+rsDualNumber<T> operator/(const Tx& x, const rsDualNumber<T>& y)
+{ return rsDualNumber<T>(T(x) / y.v, -T(x)*y.d/(y.v*y.v) ); } // ok
 
 
 // d-parts of functions are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x))
 
 template<class T>
-rsAutoDiffNumber<T> rsSqrt(rsAutoDiffNumber<T> x) 
-{ return rsAutoDiffNumber<T>(sqrt(x.v), x.d*T(0.5)/sqrt(x.v)); }  // verify
+rsDualNumber<T> rsSqrt(rsDualNumber<T> x) 
+{ return rsDualNumber<T>(sqrt(x.v), x.d*T(0.5)/sqrt(x.v)); }  // verify
 
 template<class T>
-rsAutoDiffNumber<T> rsSin(rsAutoDiffNumber<T> x) 
-{ return rsAutoDiffNumber<T>(sin(x.v), x.d*cos(x.v)); }
+rsDualNumber<T> rsSin(rsDualNumber<T> x) 
+{ return rsDualNumber<T>(sin(x.v), x.d*cos(x.v)); }
 
 template<class T>
-rsAutoDiffNumber<T> rsCos(rsAutoDiffNumber<T> x) 
-{ return rsAutoDiffNumber<T>(cos(x.v), -x.d*sin(x.v)); }
+rsDualNumber<T> rsCos(rsDualNumber<T> x) 
+{ return rsDualNumber<T>(cos(x.v), -x.d*sin(x.v)); }
 
 template<class T>
-rsAutoDiffNumber<T> rsExp(rsAutoDiffNumber<T> x) 
-{ return rsAutoDiffNumber<T>(exp(x.v), x.d*exp(x.v)); }
+rsDualNumber<T> rsExp(rsDualNumber<T> x) 
+{ return rsDualNumber<T>(exp(x.v), x.d*exp(x.v)); }
 
 template<class T>
-rsAutoDiffNumber<T> rsLog(rsAutoDiffNumber<T> x) 
-{ return rsAutoDiffNumber<T>(log(x.v), x.d/x.v); }  // requires x.v > 0
+rsDualNumber<T> rsLog(rsDualNumber<T> x) 
+{ return rsDualNumber<T>(log(x.v), x.d/x.v); }  // requires x.v > 0
 
 template<class T>
-rsAutoDiffNumber<T> rsPow(rsAutoDiffNumber<T> x, T p)
-{ return rsAutoDiffNumber<T>(pow(x.v, p), x.d*p*pow(x.v, p-1)); }  // requires x.v != 0
+rsDualNumber<T> rsPow(rsDualNumber<T> x, T p)
+{ return rsDualNumber<T>(pow(x.v, p), x.d*p*pow(x.v, p-1)); }  // requires x.v != 0
 // what, if p is also an AutoDiffNumber?
 
 template<class T>
-rsAutoDiffNumber<T> rsAbs(rsAutoDiffNumber<T> x) 
-{ return rsAutoDiffNumber<T>(rsAbs(x.v), x.d*rsSign(x.v)); }  // requires x.v != 0..really?
+rsDualNumber<T> rsAbs(rsDualNumber<T> x) 
+{ return rsDualNumber<T>(rsAbs(x.v), x.d*rsSign(x.v)); }  // requires x.v != 0..really?
 
 
 // https://en.wikipedia.org/wiki/Automatic_differentiation

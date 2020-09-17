@@ -3464,9 +3464,9 @@ void testSortedSet()
 
 void testAutoDiff()
 {
-  using ADN = rsAutoDiffNumber<float>;
+  using DN = rsDualNumber<float>;
 
-  ADN x, y, z, r;
+  DN x, y, z, r;
 
   bool t = true;  // test
 
@@ -3492,15 +3492,15 @@ void testAutoDiff()
 
   //x = (2.f, 3.f);      // doesn't work - why does it even compile?
   x = {2.f, 3.f};      // this "tuple-initialization" works, maybe use it also for rsFraction - what about complex?
-  x = ADN(2.f, 3.f);
+  x = DN(2.f, 3.f);
 
-  r = rsSin(x); t &= r == ADN(sin(x.v),   x.d*cos(x.v));
-  r = rsCos(x); t &= r == ADN(cos(x.v),  -x.d*sin(x.v));
-  r = rsExp(x); t &= r == ADN(exp(x.v),   x.d*exp(x.v));
-  r = rsLog(x); t &= r == ADN(log(x.v),   x.d / x.v );
-  r = rsAbs(x); t &= r == ADN(fabs(x.v),  x.d * rsSign(x.v));
+  r = rsSin(x); t &= r == DN(sin(x.v),   x.d*cos(x.v));
+  r = rsCos(x); t &= r == DN(cos(x.v),  -x.d*sin(x.v));
+  r = rsExp(x); t &= r == DN(exp(x.v),   x.d*exp(x.v));
+  r = rsLog(x); t &= r == DN(log(x.v),   x.d / x.v );
+  r = rsAbs(x); t &= r == DN(fabs(x.v),  x.d * rsSign(x.v));
 
-  r = rsPow(x, 5.f); t &= r == ADN(pow(x.v, 5.f), x.d * 5.f * pow(x.v, 4.f));
+  r = rsPow(x, 5.f); t &= r == DN(pow(x.v, 5.f), x.d * 5.f * pow(x.v, 4.f));
   //r = rsPow(x, y);   //
 
 
@@ -3509,26 +3509,32 @@ void testAutoDiff()
 
 
   // maybe they sould take a float argument?
-  //auto f = [&](ADN x)->ADN { return 10*x*x - 2*x*x*x; };       // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(x); };               // ok
-  //auto f = [&](ADN x)->ADN { return 2 * rsSin(x); };           // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(x) * 2; };           // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(2*x); };             // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(x*2); };             // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(x/2); };             // ok
-  //auto f = [&](ADN x)->ADN { return 1 / (1 + x*x); };          // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(2*x + 1); };         // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(1 + 2*x); };         // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(2*x - 1); };         // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(1 - 2*x); };         // ok
+  //auto f = [&](DN x)->DN { return 10*x*x - 2*x*x*x; };       // ok
+  //auto f = [&](DN x)->DN { return rsSin(x); };               // ok
+  //auto f = [&](DN x)->DN { return 2 * rsSin(x); };           // ok
+  //auto f = [&](DN x)->DN { return rsSin(x) * 2; };           // ok
+  //auto f = [&](DN x)->DN { return rsSin(2*x); };             // ok
+  //auto f = [&](DN x)->DN { return rsSin(x*2); };             // ok
+  //auto f = [&](DN x)->DN { return rsSin(x/2); };             // ok
+  //auto f = [&](DN x)->DN { return 1 / (1 + x*x); };          // ok
+  //auto f = [&](DN x)->DN { return rsSin(2*x + 1); };         // ok
+  //auto f = [&](DN x)->DN { return rsSin(1 + 2*x); };         // ok
+  //auto f = [&](DN x)->DN { return rsSin(2*x - 1); };         // ok
+  //auto f = [&](DN x)->DN { return rsSin(1 - 2*x); };         // ok
 
 
   // If f would take a float, we would have to explicitly construct an ADN from x inside f, like
   // for example: return rsSin(2.f*ADN(x)); but we do the implicity construction here
 
-  auto f = [&](ADN x)->ADN { return 
-    rsExp(-x/31) * rsSin(5 * x / 2) / (2 + x*x * (1 + rsCos(x)) + 1); }; // ok
-  // todo: compute the analytic derivative (using sage) and compare results
+  auto f = [&](DN x)->DN { return rsExp(-x/31)*rsSin(5*x/2) / (2 + x*x * (1+rsCos(x)) + 1); };
+  // Computing the analytic derivative with sage:
+  //   f  = exp(-x/31) * sin(5 * x / 2) / (2 + x*x * (1 + cos(x)) + 1)
+  //   fp = diff(f,x)
+  //   f, fp
+  // shows that the derivative is already quite messy in this case, such that using autodiff 
+  // seems to be more convenient. What about the 2nd derivative? Can we nest autodiff numbers 
+  // suitably? but then maybe, the type of d should indeed be different from the type of v - d may
+  // itself be an dual number while v is still a regular number
 
 
   // Computes f1(2) along with its derivative f1'(2) - the derivative is computed because we seed

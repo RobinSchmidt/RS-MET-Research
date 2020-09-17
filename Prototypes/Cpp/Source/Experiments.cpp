@@ -3503,6 +3503,33 @@ void testAutoDiff()
   r = rsPow(x, 5.f); t &= r == ADN(pow(x.v, 5.f), x.d * 5.f * pow(x.v, 4.f));
   //r = rsPow(x, y);   //
 
+
+  // test a function that uses sum, product, quotient and chain rule, such as
+  // f(x) = exp(-x) * sin(3*x) / (1 + x^2 * cos(x))
+
+
+  auto f1 = [&](ADN x)->ADN { return 
+    rsExp(-x) * rsSin(2.f * x * 3.f) / (2.f + x*x * (1.f + rsCos(x)) + 1.f); };
+
+
+  // Computes f1(2) along with its derivative f1'(2) - the derivative is computed because we seed
+  // the d with 1.f:
+  r = f1( ADN(2.f, 1.f) );
+
+  // todo: plot f1 and f1':
+  static const int N = 500;
+  float xMin = 0.f, xMax = 5.f;
+  float X[N], V[N], D[N];
+  rsArrayTools::fillWithRangeLinear(X, N, xMin, xMax);
+  for(int n = 0; n < N; n++) {
+    r = f1( ADN(X[n], 1.f) );
+    V[n] = r.v;
+    D[n] = r.d; }
+  rsPlotArraysXY(N, X, V, D);
+  // looks wrong
+
+
+
   // test some more complicated expressions:
   // We evaluate the bivariate function f(x,y) = sin(x) * cos(y) at the point (2,3) - what does the
   // derivative part of the result represent? Is it the mixed 2nd derivative f_xy of f(x,y)? How 
@@ -3511,22 +3538,39 @@ void testAutoDiff()
   y = ADN(3.f, 0.f);
   r = rsSin(x) * rsCos(y);
 
-  // Maybe try the simpler function x^3 * y^2 first...hmmm...i think, the basic arithmetic 
-  // operations will never produce a nonzero d-part if both operands have zero d-part. How, then,
-  // can nonzero d-parts arise in the first place, when we assume that elementary functions (such 
-  // as sqrt), are themselves implemented in terms of basic arithmetic operations (such as the 
-  // Babylonian algorithm)? ...Maybe implement the Babylonian algo....
-  // Ah - that's actually consistent with what the elementary functions also do, due to the 
-  // multiplication by the inner derivative value due to the chain-rule. They also will never
-  // produce nonzero d-parts when the argument as a zero d-part. ....so how do nonzero d-parts
-  // ever arise in the first place unless we initialize them as nonzero? Is it, when we first
-  // initialize an AutoDiffNumber with a function evaluation result of a function of a normal 
-  // number? ..like y = sin(x), where y is an AutoDiffNumber and x is a normal number, we should
-  // produce y as y = ADN(sin(x), cos(x));? At some point, we must transition from normal 
-  // computations to autodiff computations - that seems to be the place where the d-part must be
-  // assigned...obviously...try to figure out, how to do a simple gradient descent with a bivariate
-  // function via autodiff...can we also implement an ODE solver in terms of autodiff?
 
+
+  // ToDo:
+  // -maybe instead of initializing d with 0 when constructing from a real number, we should use 1
+  //  to seed the perturbation ...or maybe demand the user to be explicit, whether to use 0 or 1
+  //  -> when computing f(v + 1*d), we should get (f(v), f'(v)) instead of(f(v), 0) as result of a 
+  //  function evaluation
+  // -maybe input, output and derivative should have different types, like R^N, R^M, R^(MxN)...but 
+  //  actually we can also do this by using rsMatrix for all 3 types
+  // -we may need generalized versions of chain-, product-, quotient-rules
+  // -could element functions of a multivariate function themselves operate on univariate dual 
+  //  numbers?
+  // -in general, a derivative value can be seen as having arisen form a mapping (R->R x R) -> R,
+  //  i.e. inputs are a function R->R and a real number from R and output is a real number from R
+  //  ...but we can also view it as (R->R) -> (R->R), i.e. both, input and output are functions 
+  //  R->R
+  // -maybe try the simpler function x^3 * y^2 first...hmmm...i think, the basic arithmetic 
+  //  operations will never produce a nonzero d-part if both operands have zero d-part. How, then,
+  //  can nonzero d-parts arise in the first place, when we assume that elementary functions (such 
+  //  as sqrt), are themselves implemented in terms of basic arithmetic operations (such as the 
+  //  Babylonian algorithm)? ...Maybe implement the Babylonian algo....
+  //  Ah - that's actually consistent with what the elementary functions also do, due to the 
+  //  multiplication by the inner derivative value due to the chain-rule. They also will never
+  //  produce nonzero d-parts when the argument as a zero d-part. ....so how do nonzero d-parts
+  //  ever arise in the first place unless we initialize them as nonzero? Is it, when we first
+  //  initialize an AutoDiffNumber with a function evaluation result of a function of a normal 
+  //  number? ..like y = sin(x), where y is an AutoDiffNumber and x is a normal number, we should
+  //  produce y as y = ADN(sin(x), cos(x));? At some point, we must transition from normal 
+  //  computations to autodiff computations - that seems to be the place where the d-part must be
+  //  assigned...obviously...try to figure out, how to do a simple gradient descent with a bivariate
+  //  function via autodiff...can we also implement an ODE solver in terms of autodiff?
+  // -how about forming dual number from complex (instead of real) numbers? or forming complex 
+  //  numbers of dual numbers?
 
 
 
@@ -3550,28 +3594,6 @@ void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
   plt.plot();
 }
 // move to GNUPlotter - but it should take up to 10 functions
-
-
-
-/** Solves a*x + b*y = p subject to x^2 + y^2 = min. */
-/*
-template<class T>
-void solveMinNorm(T a, T b, T p, T* x, T* y)
-{
-  T s = p / (a*a + b*b);
-  *x = s*a;
-  *y = s*b;
-}
-// needs test
-// -maybe move to rsMatrix2x2 or rsLinearAlgebraNew
-// -can we do this with one division?
-// -maybe try to derive the formulas with sage, see
-//  https://ask.sagemath.org/question/38079/can-sage-do-symbolic-optimization/
-
-// x == a*p/(a^2 + b^2), y == b*p/(a^2 + b^2), l == -2*p/(a^2 + b^2)
-*/
-
-
 
 
 // moved to rs-met codebase (except some comments) - may be deleted here:
@@ -3705,8 +3727,6 @@ void testVertexMesh()
   int dummy = 0;
 
   // todo:
-  // -maybe precompute the weights and store them as edge data - more flexible, less compuation
-  //  but more memory usage
   // -allow reading out the mesh at arbitrary positions p
   //  -figure out in which triangular region the vector p falls - i.e. find the 3 vertices that 
   //   bound the triangle that contains the point p
@@ -3714,7 +3734,6 @@ void testVertexMesh()
   // -maybe compute relative errors
   // -compare accuracy of weighted vs unweighted
   // -optimize
-  // -move to library
   // -compare to results with regular mesh and central difference - see, if the formula reduces to
   //  the central difference formula in this case
   // -try different configurations of Q,R,S,T - maybe also edge cases, where some are 
@@ -3722,7 +3741,7 @@ void testVertexMesh()
   //  out of curiosity, what happens
   // -try a rotated regular configuration
   // -try different functions
-  // -test criticall determined case (vertex with 2 neighbors) - test also behavior when the two
+  // -test critically determined case (vertex with 2 neighbors) - test also behavior when the two
   //  vertices are both along the x-direction - in this case, we should not be able to get an 
   //  estimate for the y-component of the gradient
   // -implement and test underdetermined case (vertex with 1 neighbor)
@@ -3730,27 +3749,16 @@ void testVertexMesh()
   // -generalize - first to 3D, then to nD
   // -maybe measure how accuracy depends on grid-spacing and number of neighbors - i guess, a 
   //  vertex with more neighbors will get a more accurate estimate?
-
-  // ToDo: maybe later use a function u(x,y) - maybe a bivariate polynomial - so we can compute 
-  // exact partial derivatives and compare them to the numerical results. We should also compare 
-  // them to numerical results obtained on a regular grid. Maybe or polynomial should have a scale 
-  // factor to scale both inputs (such that a grid-spacing of around 1 becomes reasonable with 
-  // respect to the behavior of the function)
-
-  // ToDo: factor out the computation and choose different configurations for Q,R,S,T - among them
-  // those that would result from ahving a regular gridd - maybe also rotate them (maybe by 45° 
-  // degrees and scale by sqrt(2))
-
-  // ToDo: provide functions to create meshes programmatically, for example 
-  // createCircularMesh(int Nr, int Na) where Nr, Na are the number of angles and radii - this can
-  // be used to compare a solver on an irregular cricular grid defined in cartesian coordinates
-  // with a regular grid in polar coordinates - maybe solving the heat- and wave-equation with a
-  // given initial temperature and height distribution and maybe with clamped values at the 
-  // boundary. especially the center point of the circle in the irregular mes is interesting - it 
-  // will have Na neighbours whereas a typical point will have only 4. boundary points will have 
-  // only 3 ...or maybe not giving them any neighbours could be a convenient to fix their values.
-  // ...maybe a vertex could have additional data associated with it, like the function value - but
-  // maybe these should be kept in separate arrays
+  // -provide functions to create meshes programmatically, for example 
+  //  createCircularMesh(int Nr, int Na) where Nr, Na are the number of angles and radii - this can
+  //  be used to compare a solver on an irregular cricular grid defined in cartesian coordinates
+  //  with a regular grid in polar coordinates - maybe solving the heat- and wave-equation with a
+  //  given initial temperature and height distribution and maybe with clamped values at the 
+  //  boundary. especially the center point of the circle in the irregular mes is interesting - it 
+  //  will have Na neighbours whereas a typical point will have only 4. boundary points will have 
+  //  only 3 ...or maybe not giving them any neighbours could be a convenient to fix their values.
+  //  ...maybe a vertex could have additional data associated with it, like the function value - 
+  // but maybe these should be kept in separate arrays
 }
 */
 // https://math.stackexchange.com/questions/2253443/difference-between-least-squares-and-minimum-norm-solution

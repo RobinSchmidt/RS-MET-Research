@@ -2238,21 +2238,28 @@ protected:
 
 //=================================================================================================
 
-/** Implements a numeric datatype for automatic differentiation. The idea is that in all arithmetic 
-operations that we do with a pair of operands, we carry along a derivative value whose value is 
-computed by the well known sum-rule, difference-rule, product-rule and quotient-rule for 
-derivatives. Likewise, in elementary function evaluations, we apply the chain-rule.
+/** Implements a datatype suitable for automatic differentiation or AD for short. In AD, a number 
+is seen as the result of a function evaluation and in addition to the actual output value of the 
+function, the value of the derivative is also computed and carried along through all subsequent 
+operations and function applications. These derivative values can be useful in algorithms for 
+numerical optimization (what about ODE and PDE solvers?).
+
+In all arithmetic operations that we do with a pair of operands, the first value component "v" is 
+computed as usual and the derivative component "d" is computed using the well known differentiation 
+rules: sum-rule, difference-rule, product-rule and quotient-rule. Likewise, in function 
+evaluations applied to a single input, we apply the chain-rule. At some point, the derivative value
+must be seeded...i think, this is called "forward mode"
+
+To implement multidimensional derivatives (gradients, Jacobians, etc.), we can use rsMatrix as 
+template type T. Then, the input is an Mx1 matrix, the output is an Nx1 matrix and the Jacobian is 
+an NxM matrix.
 
 
-These can be useful in algorithms where we need derivatives, for example, in numerical 
-optimization.
 
-just a stub at the moment
-
-*/
+...under construction... */
 
 template<class T>
-class rsAutoDiffNumber
+class rsAutoDiffNumber  // maybe rename to rsDualNumber
 {
 
 public:
@@ -2294,6 +2301,14 @@ public:
   ADN operator/(const ADN& y) const { return ADN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
 
 
+  // verify these:
+  ADN operator+(const T& y) const { return ADN(v + y, d   ); }
+  ADN operator-(const T& y) const { return ADN(v - y, d   ); }
+  ADN operator*(const T& y) const { return ADN(v * y, T(0)); }
+
+
+
+
   //-----------------------------------------------------------------------------------------------
   // \name Comparison operators
 
@@ -2305,6 +2320,23 @@ public:
   bool operator>=(const ADN& y) const { return v >= y.v; }
 
 };
+
+// operators for left argument of type T:
+template<class T>
+rsAutoDiffNumber<T> operator+(const T& x, const rsAutoDiffNumber<T>& y)
+{ return rsAutoDiffNumber<T>(x + y.v, y.v) ; }
+
+template<class T>
+rsAutoDiffNumber<T> operator-(const T& x, const rsAutoDiffNumber<T>& y)
+{ return rsAutoDiffNumber<T>(x - y.v, y.v) ; }
+
+template<class T>
+rsAutoDiffNumber<T> operator*(const T& x, const rsAutoDiffNumber<T>& y)
+{ return rsAutoDiffNumber<T>(x * y.v, T(0)) ; }
+
+
+
+
 
 // d-parts of functions are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x))
 
@@ -2341,8 +2373,16 @@ rsAutoDiffNumber<T> rsAbs(rsAutoDiffNumber<T> x)
 // https://en.wikipedia.org/wiki/Automatic_differentiation
 // https://en.wikipedia.org/wiki/Automatic_differentiation#Automatic_differentiation_using_dual_numbers
 // https://www.neidinger.net/SIAMRev74362.pdf
+// https://en.wikipedia.org/wiki/Dual_number
 
-// whyt about multivariate functions and partial derivatives?
+// https://www.youtube.com/watch?v=xtZ0_0DP_GI Automatic differentiation using ForwardDiff.jl and ReverseDiff.jl (Jarrett Revels, MIT)
+// http://www.juliadiff.org/ForwardDiff.jl/stable/
+// https://github.com/JuliaDiff/ForwardDiff.jl
+// https://github.com/JuliaDiff
+
+// https://en.wikipedia.org/wiki/Grassmann_number
+
+// what about multivariate functions and partial derivatives?
 
 
 /*

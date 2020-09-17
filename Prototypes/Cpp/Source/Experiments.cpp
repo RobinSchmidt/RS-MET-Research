@@ -3508,7 +3508,13 @@ void testAutoDiff()
   // f(x) = exp(-x) * sin(3*x) / (1 + x^2 * cos(x))
 
 
-  auto f1 = [&](ADN x)->ADN { return 
+  auto f1 = [&](ADN x)->ADN { return 10.f*x*x - 2.f*x*x*x; };    // wrong
+  auto f2 = [&](ADN x)->ADN { return rsSin(x); };                // ok
+  auto f3 = [&](ADN x)->ADN { return 2.f * rsSin(x); };          // wrong
+  auto f4 = [&](ADN x)->ADN { return rsSin(2.f*x); };            // wrong
+
+
+  auto f5 = [&](ADN x)->ADN { return 
     rsExp(-x) * rsSin(2.f * x * 3.f) / (2.f + x*x * (1.f + rsCos(x)) + 1.f); };
 
 
@@ -3522,11 +3528,12 @@ void testAutoDiff()
   float X[N], V[N], D[N];
   rsArrayTools::fillWithRangeLinear(X, N, xMin, xMax);
   for(int n = 0; n < N; n++) {
-    r = f1( ADN(X[n], 1.f) );
+    r = f4( ADN(X[n], 1.f) );
     V[n] = r.v;
     D[n] = r.d; }
   rsPlotArraysXY(N, X, V, D);
   // looks wrong
+  // hmm...ok - it seems, we need to take more care when to init d with 0 and when with 1
 
 
 

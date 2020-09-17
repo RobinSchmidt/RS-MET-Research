@@ -2269,6 +2269,7 @@ public:
   T v, d;  // value and derivative
 
   rsAutoDiffNumber(T value = T(0), T derivative = T(0)) : v(value), d(derivative) {}
+  //rsAutoDiffNumber(T value = T(0), T derivative = T(1)) : v(value), d(derivative) {}
   // maybe the derivative should default to 1?
 
 
@@ -2332,7 +2333,7 @@ rsAutoDiffNumber<T> operator-(const T& x, const rsAutoDiffNumber<T>& y)
 
 template<class T>
 rsAutoDiffNumber<T> operator*(const T& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(x * y.v, T(0)) ; }
+{ return rsAutoDiffNumber<T>(x * y.v, T(1)) ; }
 
 
 

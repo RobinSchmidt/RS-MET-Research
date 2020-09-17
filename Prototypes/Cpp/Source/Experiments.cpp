@@ -3509,26 +3509,26 @@ void testAutoDiff()
 
 
   // maybe they sould take a float argument?
-  //auto f = [&](ADN x)->ADN { return 10.f*x*x - 2.f*x*x*x; };       // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(x); };                 // ok
-  //auto f = [&](ADN x)->ADN { return 2.f * rsSin(x); };           // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(x) * 2.f; };           // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(2.f*x); };             // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(x*2.f); };             // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(x/2.f); };             // ok
-  //auto f = [&](ADN x)->ADN { return 1.f / (1.f + x*x); };             // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(2.f*x + 1.f); };         // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(1.f + 2.f*x); };         // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(2.f*x - 1.f); };         // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(1.f - 2.f*x); };         // ok
-  //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,1.f) * x); };  // wrong (but should be?)
-  //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,0.f) * x); };  // ok
+  //auto f = [&](ADN x)->ADN { return 10*x*x - 2*x*x*x; };       // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(x); };               // ok
+  //auto f = [&](ADN x)->ADN { return 2 * rsSin(x); };           // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(x) * 2; };           // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(2*x); };             // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(x*2); };             // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(x/2); };             // ok
+  //auto f = [&](ADN x)->ADN { return 1 / (1 + x*x); };          // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(2*x + 1); };         // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(1 + 2*x); };         // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(2*x - 1); };         // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(1 - 2*x); };         // ok
+
 
   // If f would take a float, we would have to explicitly construct an ADN from x inside f, like
   // for example: return rsSin(2.f*ADN(x)); but we do the implicity construction here
 
   auto f = [&](ADN x)->ADN { return 
-    rsExp(-x*0.2) * rsSin(2 * x * 1.5) / (2.f + x*x * (1.f + rsCos(x)) + 1.f); }; // ok
+    rsExp(-x/31) * rsSin(5 * x / 2) / (2 + x*x * (1 + rsCos(x)) + 1); }; // ok
+  // todo: compute the analytic derivative (using sage) and compare results
 
 
   // Computes f1(2) along with its derivative f1'(2) - the derivative is computed because we seed
@@ -3574,6 +3574,7 @@ void testAutoDiff()
   //  i.e. inputs are a function R->R and a real number from R and output is a real number from R
   //  ...but we can also view it as (R->R) -> (R->R), i.e. both, input and output are functions 
   //  R->R
+  // -what about nesting dual numbers?
   // -maybe try the simpler function x^3 * y^2 first...hmmm...i think, the basic arithmetic 
   //  operations will never produce a nonzero d-part if both operands have zero d-part. How, then,
   //  can nonzero d-parts arise in the first place, when we assume that elementary functions (such 

@@ -2266,7 +2266,7 @@ public:
 
 
 
-  T v, d;  // value and derivative
+  T v, d;  // value and derivative - maybe use different types Tv, Td
 
   rsDualNumber(T value = T(0), T derivative = T(1)) : v(value), d(derivative) {}
   // maybe the derivative should default to 1? what is most convenient? to seed or not to seed?
@@ -2305,6 +2305,8 @@ public:
   template<class Ty> DN operator*(const Ty& y) const { return DN(v * T(y), d * T(y)); }
   template<class Ty> DN operator/(const Ty& y) const { return DN(v / T(y), d / T(y)); }
 
+  // maybe rename operands from x,y to a,b - x,y should be used for function inputs and ouputs in
+  // expressions like y = f(x)
 
   // todo: add boilerplate for +=,-=,*=,...
 
@@ -2376,6 +2378,8 @@ rsDualNumber<T> rsAbs(rsDualNumber<T> x)
 // https://en.wikipedia.org/wiki/Automatic_differentiation#Automatic_differentiation_using_dual_numbers
 // https://www.neidinger.net/SIAMRev74362.pdf
 // https://en.wikipedia.org/wiki/Dual_number
+
+// http://www.autodiff.org/?module=Introduction&submenu=Surveys
 
 // https://www.youtube.com/watch?v=xtZ0_0DP_GI Automatic differentiation using ForwardDiff.jl and ReverseDiff.jl (Jarrett Revels, MIT)
 // http://www.juliadiff.org/ForwardDiff.jl/stable/

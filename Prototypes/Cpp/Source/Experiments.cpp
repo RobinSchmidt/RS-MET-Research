@@ -3560,10 +3560,12 @@ void testAutoDiff()
   // We evaluate the bivariate function f(x,y) = sin(x) * cos(y) at the point (2,3) - what does the
   // derivative part of the result represent? Is it the mixed 2nd derivative f_xy of f(x,y)? How 
   // can we get the partial derivatives f_x,f_y, i.e. the gradient? What about the Hessian matrix?
-  x = ADN(2.f, 0.f);
-  y = ADN(3.f, 0.f);
+  x = DN(2.f, 0.f);
+  y = DN(3.f, 0.f);
   r = rsSin(x) * rsCos(y);
 
+
+  //using NDN = rsDualNumber<float, DN>; // the 2nd part is itself a dual number
 
 
   // ToDo:
@@ -3601,8 +3603,8 @@ void testAutoDiff()
 
 
 
-  x = ADN(1.5f, 0.5f);
-  y = ADN(2.5f, 0.75f);
+  x = DN(1.5f, 0.5f);
+  y = DN(2.5f, 0.75f);
   r = rsSin(x) * rsCos(y);
 
   int dummy = 0;

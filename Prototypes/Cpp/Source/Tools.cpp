@@ -2258,7 +2258,7 @@ an NxM matrix.
 
 ...under construction... */
 
-template<class T>
+template<class TVal, class TDer>
 class rsDualNumber 
 {
 
@@ -2266,21 +2266,22 @@ public:
 
 
 
-  T v, d;  // value and derivative - maybe use different types Tv, Td
+  TVal v;  // function value
+  TDer d;  // derivative
 
-  rsDualNumber(T value = T(0), T derivative = T(1)) : v(value), d(derivative) {}
+  rsDualNumber(TVal value = TVal(0), TDer derivative = TDer(1)) : v(value), d(derivative) {}
   // maybe the derivative should default to 1? what is most convenient? to seed or not to seed?
 
 
-  using DN = rsDualNumber<T>;   // shorthand for convenience
+  using DN = rsDualNumber<TVal, TDer>;   // shorthand for convenience
 
 
 
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-  T getValue()      const { return v; }
-  T getDerivative() const { return d; }
+  TVal getValue()      const { return v; }
+  TDer getDerivative() const { return d; }
 
   //-----------------------------------------------------------------------------------------------
   // \name Arithmetic operators
@@ -2300,10 +2301,10 @@ public:
   /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2. */
   DN operator/(const DN& y) const { return DN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
 
-  template<class Ty> DN operator+(const Ty& y) const { return DN(v + T(y), d       ); }
-  template<class Ty> DN operator-(const Ty& y) const { return DN(v - T(y), d       ); }
-  template<class Ty> DN operator*(const Ty& y) const { return DN(v * T(y), d * T(y)); }
-  template<class Ty> DN operator/(const Ty& y) const { return DN(v / T(y), d / T(y)); }
+  template<class Ty> DN operator+(const Ty& y) const { return DN(v + TVal(y), d                ); }
+  template<class Ty> DN operator-(const Ty& y) const { return DN(v - TVal(y), d                ); }
+  template<class Ty> DN operator*(const Ty& y) const { return DN(v * TVal(y), d * TDer(TVal(y))); }
+  template<class Ty> DN operator/(const Ty& y) const { return DN(v / TVal(y), d / TDer(TVal(y))); }
 
   // maybe rename operands from x,y to a,b - x,y should be used for function inputs and ouputs in
   // expressions like y = f(x)
@@ -2325,54 +2326,59 @@ public:
 };
 
 // operators for left argument of type T (need to be verified):
-template<class T, class Tx>
-rsDualNumber<T> operator+(const Tx& x, const rsDualNumber<T>& y)
-{ return rsDualNumber<T>(T(x) + y.v, y.d); } // ok
+template<class TVal, class TDer, class Tx>
+rsDualNumber<TVal, TDer> operator+(const Tx& x, const rsDualNumber<TVal, TDer>& y)
+{ return rsDualNumber<TVal, TDer>(TVal(x) + y.v, y.d); } // ok
 
-template<class T, class Tx>
-rsDualNumber<T> operator-(const Tx& x, const rsDualNumber<T>& y)
-{ return rsDualNumber<T>(T(x) - y.v, -y.d) ; } // ok
+template<class TVal, class TDer, class Tx>
+rsDualNumber<TVal, TDer> operator-(const Tx& x, const rsDualNumber<TVal, TDer>& y)
+{ return rsDualNumber<TVal, TDer>(TVal(x) - y.v, -y.d) ; } // ok
 
-template<class T, class Tx>
-rsDualNumber<T> operator*(const Tx& x, const rsDualNumber<T>& y)
-{ return rsDualNumber<T>(T(x) * y.v, T(x) * y.d); } // ok
+template<class TVal, class TDer, class Tx>
+rsDualNumber<TVal, TDer> operator*(const Tx& x, const rsDualNumber<TVal, TDer>& y)
+{ return rsDualNumber<TVal, TDer>(TVal(x) * y.v, TDer(TVal(x)) * y.d); } // ok
 
-template<class T, class Tx>
-rsDualNumber<T> operator/(const Tx& x, const rsDualNumber<T>& y)
-{ return rsDualNumber<T>(T(x) / y.v, -T(x)*y.d/(y.v*y.v) ); } // ok
+template<class TVal, class TDer, class Tx>
+rsDualNumber<TVal, TDer> operator/(const Tx& x, const rsDualNumber<TVal, TDer>& y)
+{ return rsDualNumber<TVal, TDer>(TVal(x) / y.v, -TDer(x)*y.d/(y.v*y.v) ); } // ok
 
 
 // d-parts of functions are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x))
 
-template<class T>
-rsDualNumber<T> rsSqrt(rsDualNumber<T> x) 
-{ return rsDualNumber<T>(sqrt(x.v), x.d*T(0.5)/sqrt(x.v)); }  // verify
+template<class TVal, class TDer>
+rsDualNumber<TVal, TDer> rsSin(rsDualNumber<TVal, TDer> x) 
+{ return rsDualNumber<TVal, TDer>(rsSin(x.v), x.d*rsCos(x.v)); }
 
-template<class T>
-rsDualNumber<T> rsSin(rsDualNumber<T> x) 
-{ return rsDualNumber<T>(sin(x.v), x.d*cos(x.v)); }
+template<class TVal, class TDer>
+rsDualNumber<TVal, TDer> rsCos(rsDualNumber<TVal, TDer> x) 
+{ return rsDualNumber<TVal, TDer>(rsCos(x.v), -x.d*rsSin(x.v)); }
 
-template<class T>
-rsDualNumber<T> rsCos(rsDualNumber<T> x) 
-{ return rsDualNumber<T>(cos(x.v), -x.d*sin(x.v)); }
+template<class TVal, class TDer>
+rsDualNumber<TVal, TDer> rsExp(rsDualNumber<TVal, TDer> x) 
+{ return rsDualNumber<TVal, TDer>(rsExp(x.v), x.d*rsExp(x.v)); }
 
-template<class T>
-rsDualNumber<T> rsExp(rsDualNumber<T> x) 
-{ return rsDualNumber<T>(exp(x.v), x.d*exp(x.v)); }
+// figure out, if they behave correctly, when TDer is a vector, i.e. a gradient
 
-template<class T>
-rsDualNumber<T> rsLog(rsDualNumber<T> x) 
-{ return rsDualNumber<T>(log(x.v), x.d/x.v); }  // requires x.v > 0
 
-template<class T>
-rsDualNumber<T> rsPow(rsDualNumber<T> x, T p)
-{ return rsDualNumber<T>(pow(x.v, p), x.d*p*pow(x.v, p-1)); }  // requires x.v != 0
-// what, if p is also an AutoDiffNumber?
+/*
+// not yet tested:
+template<class TVal, class TDer>
+rsDualNumber<TVal, TDer> rsSqrt(rsDualNumber<TVal, TDer> x) 
+{ return rsDualNumber<TVal, TDer>(sqrt(x.v), x.d*T(0.5)/sqrt(x.v)); }  // verify
 
-template<class T>
-rsDualNumber<T> rsAbs(rsDualNumber<T> x) 
-{ return rsDualNumber<T>(rsAbs(x.v), x.d*rsSign(x.v)); }  // requires x.v != 0..really?
+template<class TVal, class TDer>
+rsDualNumber<TVal, TDer> rsLog(rsDualNumber<TVal, TDer> x) 
+{ return rsDualNumber<TVal, TDer>(log(x.v), x.d/x.v); }  // requires x.v > 0
 
+template<class TVal, class TDer>
+rsDualNumber<TVal, TDer> rsPow(rsDualNumber<TVal, TDer> x, TVal p)
+{ return rsDualNumber<TVal, TDer>(pow(x.v, p), x.d*TDer(p)*pow(x.v, p-1)); }  // requires x.v != 0
+// what, if p is also an dual number? ...this requires more thought....
+
+template<class TVal, class TDer>
+rsDualNumber<TVal, TDer> rsAbs(rsDualNumber<TVal, TDer> x) 
+{ return rsDualNumber<TVal, TDer>(rsAbs(x.v), x.d*rsSign(x.v)); }  // requires x.v != 0..really?
+*/
 
 // https://en.wikipedia.org/wiki/Automatic_differentiation
 // https://en.wikipedia.org/wiki/Automatic_differentiation#Automatic_differentiation_using_dual_numbers

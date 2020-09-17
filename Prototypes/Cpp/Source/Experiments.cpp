@@ -3464,7 +3464,7 @@ void testSortedSet()
 
 void testAutoDiff()
 {
-  using DN = rsDualNumber<float>;
+  using DN = rsDualNumber<float, float>;
 
   DN x, y, z, r;
 
@@ -3484,9 +3484,9 @@ void testAutoDiff()
   r = rsSin(x);
   r = rsCos(x);
   r = rsExp(x);
-  r = rsLog(x);
-  r = rsAbs(x);
-  r = rsPow(x, 2.f);
+  //r = rsLog(x);
+  //r = rsAbs(x);
+  //r = rsPow(x, 2.f);
   //r = rsPow(x, y);   //
 
 
@@ -3497,10 +3497,9 @@ void testAutoDiff()
   r = rsSin(x); t &= r == DN(sin(x.v),   x.d*cos(x.v));
   r = rsCos(x); t &= r == DN(cos(x.v),  -x.d*sin(x.v));
   r = rsExp(x); t &= r == DN(exp(x.v),   x.d*exp(x.v));
-  r = rsLog(x); t &= r == DN(log(x.v),   x.d / x.v );
-  r = rsAbs(x); t &= r == DN(fabs(x.v),  x.d * rsSign(x.v));
-
-  r = rsPow(x, 5.f); t &= r == DN(pow(x.v, 5.f), x.d * 5.f * pow(x.v, 4.f));
+  //r = rsLog(x); t &= r == DN(log(x.v),   x.d / x.v );
+  //r = rsAbs(x); t &= r == DN(fabs(x.v),  x.d * rsSign(x.v));
+  //r = rsPow(x, 5.f); t &= r == DN(pow(x.v, 5.f), x.d * 5.f * pow(x.v, 4.f));
   //r = rsPow(x, y);   //
 
 
@@ -3565,8 +3564,29 @@ void testAutoDiff()
   r = rsSin(x) * rsCos(y);
 
 
-  //using NDN = rsDualNumber<float, DN>; // the 2nd part is itself a dual number
+  /*
+  // try nesting dual numbers - will we get the 2nd derivative?
+  using NDN = rsDualNumber<DN, DN>; // the 2nd part is itself a dual number
+  auto f2 = [&](NDN x)->NDN { return rsExp(-x/31)*rsSin(5*x/2) / (2 + x*x * (1+rsCos(x)) + 1); };
+  float D2[N];  // 2nd derivative?...nope - does not look like it
+  float V2[N];  // 2nd derivative?...nope - does not look like it
+  for(int n = 0; n < N; n++) {
+    NDN r = f2(NDN(X[n])); 
+    V[n]  = r.v.v;
+    V2[n] = r.v.d;
+    D[n]  = r.d.v;
+    D2[n] = r.d.d;
+  }
+  rsPlotArraysXY(N, X, V, D, V2, D2);
+  */
+  // i think, if we nest, we should get: 
+  // r.v.v = value
+  // r.v.d = 1st derivative
+  // r.d.v = 1st derivative
+  // r.d.d = 2nd derivative
 
+
+  int dummy = 0;
 
   // ToDo:
   // -maybe instead of initializing d with 0 when constructing from a real number, we should use 1
@@ -3607,7 +3627,7 @@ void testAutoDiff()
   y = DN(2.5f, 0.75f);
   r = rsSin(x) * rsCos(y);
 
-  int dummy = 0;
+
 }
 
 

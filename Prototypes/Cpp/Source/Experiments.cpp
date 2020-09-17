@@ -3515,10 +3515,15 @@ void testAutoDiff()
   //auto f = [&](ADN x)->ADN { return rsSin(x) * 2.f; };           // ok
   //auto f = [&](ADN x)->ADN { return rsSin(2.f*x); };             // ok
   //auto f = [&](ADN x)->ADN { return rsSin(x*2.f); };             // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(x/2.f); };             // ok
+
+
+  auto f = [&](ADN x)->ADN { return 1.f / (1.f + x*x); };             // ok
+
   //auto f = [&](ADN x)->ADN { return rsSin(2.f*x + 1.f); };         // ok
   //auto f = [&](ADN x)->ADN { return rsSin(1.f + 2.f*x); };         // ok
   //auto f = [&](ADN x)->ADN { return rsSin(2.f*x - 1.f); };         // ok
-  auto f = [&](ADN x)->ADN { return rsSin(1.f - 2.f*x); };         // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(1.f - 2.f*x); };         // ok
   //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,1.f) * x); };  // wrong (but should be?)
   //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,0.f) * x); };  // ok
 

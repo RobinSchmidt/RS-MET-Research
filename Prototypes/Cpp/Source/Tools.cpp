@@ -2303,10 +2303,10 @@ public:
 
 
   // verify these:
-  ADN operator+(const T& y) const { return ADN(v + y, d    ); }
-  ADN operator-(const T& y) const { return ADN(v - y, d    ); }
-  ADN operator*(const T& y) const { return ADN(v * y, d * y); }
-
+  ADN operator+(const T& y) const { return ADN(v + y, d    ); }  // ok
+  ADN operator-(const T& y) const { return ADN(v - y, d    ); }  // ok
+  ADN operator*(const T& y) const { return ADN(v * y, d * y); }  // ok
+  ADN operator/(const T& y) const { return ADN(v / y, d / y); }  // ok
 
 
 
@@ -2325,20 +2325,19 @@ public:
 // operators for left argument of type T (need to be verified):
 template<class T>
 rsAutoDiffNumber<T> operator+(const T& x, const rsAutoDiffNumber<T>& y)
-{ 
-  return rsAutoDiffNumber<T>(x + y.v, y.d);
-}
+{ return rsAutoDiffNumber<T>(x + y.v, y.d); } // ok
 
 template<class T>
 rsAutoDiffNumber<T> operator-(const T& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(x - y.v, -y.d) ; }
+{ return rsAutoDiffNumber<T>(x - y.v, -y.d) ; } // ok
 
 template<class T>
 rsAutoDiffNumber<T> operator*(const T& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(x * y.v, x * y.d); }
+{ return rsAutoDiffNumber<T>(x * y.v, x * y.d); } // ok
 
-
-
+template<class T>
+rsAutoDiffNumber<T> operator/(const T& x, const rsAutoDiffNumber<T>& y)
+{ return rsAutoDiffNumber<T>(x / y.v, -x*y.d/(y.v*y.v) ); } // ok
 
 
 // d-parts of functions are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x))

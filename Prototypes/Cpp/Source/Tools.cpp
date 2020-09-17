@@ -2268,8 +2268,8 @@ public:
 
   T v, d;  // value and derivative
 
-  rsAutoDiffNumber(T value = T(0), T derivative = T(0)) : v(value), d(derivative) {}
-  //rsAutoDiffNumber(T value = T(0), T derivative = T(1)) : v(value), d(derivative) {}
+  //rsAutoDiffNumber(T value = T(0), T derivative = T(0)) : v(value), d(derivative) {}
+  rsAutoDiffNumber(T value = T(0), T derivative = T(1)) : v(value), d(derivative) {}
   // maybe the derivative should default to 1?
 
 
@@ -2305,7 +2305,8 @@ public:
   // verify these:
   ADN operator+(const T& y) const { return ADN(v + y, d   ); }
   ADN operator-(const T& y) const { return ADN(v - y, d   ); }
-  ADN operator*(const T& y) const { return ADN(v * y, T(0)); }
+
+  ADN operator*(const T& y) const { return ADN(v * y, d * y);    } 
 
 
 
@@ -2313,7 +2314,7 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Comparison operators
 
-  bool operator==(const ADN& y) const { return v == y.v && d == y.d; }
+  bool operator==(const ADN& y) const { return v == y.v && d == y.d; } // maybe we should only compare v
   bool operator!=(const ADN& y) const { return !(*this == y); }
   bool operator< (const ADN& y) const { return v <  y.v; }
   bool operator<=(const ADN& y) const { return v <= y.v; }
@@ -2333,7 +2334,7 @@ rsAutoDiffNumber<T> operator-(const T& x, const rsAutoDiffNumber<T>& y)
 
 template<class T>
 rsAutoDiffNumber<T> operator*(const T& x, const rsAutoDiffNumber<T>& y)
-{ return rsAutoDiffNumber<T>(x * y.v, T(1)) ; }
+{ return rsAutoDiffNumber<T>(x * y.v, x * y.d); }
 
 
 

@@ -3475,10 +3475,10 @@ void testAutoDiff()
   z = 5.f;
 
 
-  r = x+y; t &= r == 5.f;
-  r = x-y; t &= r == 1.f;
-  r = x*y; t &= r == 6.f;
-  r = x/y; t &= r == 1.5f;
+  //r = x+y; t &= r == 5.f;
+  //r = x-y; t &= r == 1.f;
+  //r = x*y; t &= r == 6.f;
+  //r = x/y; t &= r == 1.5f;
 
 
   r = rsSin(x);
@@ -3508,10 +3508,14 @@ void testAutoDiff()
   // f(x) = exp(-x) * sin(3*x) / (1 + x^2 * cos(x))
 
 
-  auto f1 = [&](ADN x)->ADN { return 10.f*x*x - 2.f*x*x*x; };    // wrong
-  auto f2 = [&](ADN x)->ADN { return rsSin(x); };                // ok
-  auto f3 = [&](ADN x)->ADN { return 2.f * rsSin(x); };          // wrong
-  auto f4 = [&](ADN x)->ADN { return rsSin(2.f*x); };            // wrong
+  auto f = [&](ADN x)->ADN { return 10.f*x*x - 2.f*x*x*x; };       // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(x); };                 // ok
+  //auto f = [&](ADN x)->ADN { return 2.f * rsSin(x); };           // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(x) * 2.f; };           // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(2.f*x); };             // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(x*2.f); };             // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,1.f) * x); };  // wrong (but should be?)
+  //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,0.f) * x); };  // ok
 
 
   auto f5 = [&](ADN x)->ADN { return 
@@ -3520,7 +3524,7 @@ void testAutoDiff()
 
   // Computes f1(2) along with its derivative f1'(2) - the derivative is computed because we seed
   // the d with 1.f:
-  r = f1( ADN(2.f, 1.f) );
+  //r = f1( ADN(2.f, 1.f) );
 
   // todo: plot f1 and f1':
   static const int N = 500;
@@ -3528,12 +3532,12 @@ void testAutoDiff()
   float X[N], V[N], D[N];
   rsArrayTools::fillWithRangeLinear(X, N, xMin, xMax);
   for(int n = 0; n < N; n++) {
-    r = f4( ADN(X[n], 1.f) );
+    r    = f(X[n]);             // works, if d defaults to 1
     V[n] = r.v;
     D[n] = r.d; }
   rsPlotArraysXY(N, X, V, D);
-  // looks wrong
-  // hmm...ok - it seems, we need to take more care when to init d with 0 and when with 1
+  // we need to take more care when to init d with 0 and when with 1 - the implicit conversions are
+  // sometimes right, sometimes wrong - we should perhaps be always explicit
 
 
 

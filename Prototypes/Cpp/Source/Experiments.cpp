@@ -3508,18 +3508,26 @@ void testAutoDiff()
   // f(x) = exp(-x) * sin(3*x) / (1 + x^2 * cos(x))
 
 
-  auto f = [&](ADN x)->ADN { return 10.f*x*x - 2.f*x*x*x; };       // ok
+  // maybe they sould take a float argument?
+  //auto f = [&](ADN x)->ADN { return 10.f*x*x - 2.f*x*x*x; };       // ok
   //auto f = [&](ADN x)->ADN { return rsSin(x); };                 // ok
   //auto f = [&](ADN x)->ADN { return 2.f * rsSin(x); };           // ok
   //auto f = [&](ADN x)->ADN { return rsSin(x) * 2.f; };           // ok
   //auto f = [&](ADN x)->ADN { return rsSin(2.f*x); };             // ok
   //auto f = [&](ADN x)->ADN { return rsSin(x*2.f); };             // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(2.f*x + 1.f); };         // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(1.f + 2.f*x); };         // ok
+  //auto f = [&](ADN x)->ADN { return rsSin(2.f*x - 1.f); };         // ok
+  auto f = [&](ADN x)->ADN { return rsSin(1.f - 2.f*x); };         // ok
   //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,1.f) * x); };  // wrong (but should be?)
   //auto f = [&](ADN x)->ADN { return rsSin(ADN(2.f,0.f) * x); };  // ok
 
 
-  auto f5 = [&](ADN x)->ADN { return 
-    rsExp(-x) * rsSin(2.f * x * 3.f) / (2.f + x*x * (1.f + rsCos(x)) + 1.f); };
+
+
+  //auto f = [&](ADN x)->ADN { return 
+  //  rsExp(-x) * rsSin(2.f * x * 1.5f) / (2.f + x*x * (1.f + rsCos(x)) + 1.f); };
+  // looks like the zeros of the derivative are slightly off from the extrema of the function
 
 
   // Computes f1(2) along with its derivative f1'(2) - the derivative is computed because we seed

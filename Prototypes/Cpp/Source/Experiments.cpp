@@ -3508,18 +3508,18 @@ void testAutoDiff()
 
 
   // maybe they sould take a float argument?
-  //auto f = [&](DN x)->DN { return 10*x*x - 2*x*x*x; };       // ok
-  //auto f = [&](DN x)->DN { return rsSin(x); };               // ok
-  //auto f = [&](DN x)->DN { return 2 * rsSin(x); };           // ok
-  //auto f = [&](DN x)->DN { return rsSin(x) * 2; };           // ok
-  //auto f = [&](DN x)->DN { return rsSin(2*x); };             // ok
-  //auto f = [&](DN x)->DN { return rsSin(x*2); };             // ok
-  //auto f = [&](DN x)->DN { return rsSin(x/2); };             // ok
-  //auto f = [&](DN x)->DN { return 1 / (1 + x*x); };          // ok
-  //auto f = [&](DN x)->DN { return rsSin(2*x + 1); };         // ok
-  //auto f = [&](DN x)->DN { return rsSin(1 + 2*x); };         // ok
-  //auto f = [&](DN x)->DN { return rsSin(2*x - 1); };         // ok
-  //auto f = [&](DN x)->DN { return rsSin(1 - 2*x); };         // ok
+  //auto f = [&](DN x)->DN { return 10*x*x - 2*x*x*x; };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(x);         };    // ok
+  //auto f = [&](DN x)->DN { return 2 * rsSin(x);     };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(x) * 2;     };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(2*x);       };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(x*2);       };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(x/2);       };    // ok
+  //auto f = [&](DN x)->DN { return 1 / (1 + x*x);    };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(2*x + 1);   };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(1 + 2*x);   };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(2*x - 1);   };    // ok
+  //auto f = [&](DN x)->DN { return rsSin(1 - 2*x);   };    // ok
 
 
   // If f would take a float, we would have to explicitly construct an ADN from x inside f, like
@@ -3692,8 +3692,6 @@ void testAutoDiff2()
   //   (-0.00187827680898942, 0.0446065178382468, -0.113010657281297)
   // OK - looks good - the gradient is computed correctly!
   
-
-
   // todo: 
   // -maybe plot the gradients as vectors field
   // -try a function from R^2 -> R^3, such as the surface of a torus using std::vector and rsMatrix
@@ -3763,15 +3761,63 @@ void testAutoDiff3()
   // };
 
 
-
-
-
   // ToDo: try a R^3 -> R^2 function - maybe some sort of projection (fish-eye? spherical? i.e. 
   // first project points onto the sphere surface (by expressing them in spherical coordinates and 
   // setting the r-coordinate to 1) and then map the sphere surface onto the plane (maybe by 
   // inverting the parametric description of a sphere, if possible)
 
   // try cumulative product of 3-vector (see video about ForwardDiff.jl etc.)
+
+  int dummy = 0;
+}
+
+
+void testAutoDiff4()
+{
+  // The same  as above but with vectors that can have arbitrary lengths
+
+  int M = 2;                                // dimenstionality of input space
+  int N = 3;                                // dimenstionality of output space
+  using VecF = std::vector<float>;          // input vector of length M
+  using DN   = rsDualNumber<float, VecF>;   // component function value and gradient
+  using VecD = std::vector<DN>;             // component function values and gradients
+
+
+
+
+  auto toDual = [&](VecF v)->VecD
+  {
+    size_t N = v.size();
+    VecF g(N);  // todo: init to zeros
+    VecD r(N);  // vector of dual numbers
+    for(size_t i = 0; i < N; i++)
+    {
+      g[i] = 1;
+      r[i] = DN(v[i], g);
+      g[i] = 0;
+    }
+    return r;
+  };
+
+  // define the 3 component functions
+  auto f0 = [&](VecF v)->DN { VecD d = toDual(v); return d[0]*d[1];             };
+  auto f1 = [&](VecF v)->DN { VecD d = toDual(v); return d[0]*d[0] + d[1]*d[1]; };
+  auto f2 = [&](VecF v)->DN { VecD d = toDual(v); return d[0]*d[0] - d[1]*d[1]; };
+
+
+    /*
+  auto f = [&](VecF v)->VecD
+  {
+
+
+    DN xi;
+
+
+
+
+    //return Vec3(fx(v), fy(v), fz(v));
+  };
+  */
 
   int dummy = 0;
 }

@@ -3801,12 +3801,25 @@ void testAutoDiff4()
   auto f1 = [&](VecF v)->DN { VecD d = toDual(v); return d[0]*d[0] + d[1]*d[1]; };
   auto f2 = [&](VecF v)->DN { VecD d = toDual(v); return d[0]*d[0] - d[1]*d[1]; };
 
+  // todo: use some more complicated functions
+  //auto f0 = [&](VecF v)->DN { VecD d = toDual(v); return rsSin( d[0]*d[1]);             };
+  //auto f1 = [&](VecF v)->DN { VecD d = toDual(v); return rsSqrt(d[0]*d[0] + d[1]*d[1]); };
+  //auto f2 = [&](VecF v)->DN { VecD d = toDual(v); return rsCos( d[0]*d[0] - d[1]*d[1]); };
+  // ...hmm...maybe a torus would be really nice indeed - maybe define the formulas in functions
+  // rsTorusX(u, v, R, r), rsTorusY(u, v, R, r), rsTorusZ(u, v, R, r) - maybe as static function
+  // in a class rsSurfaces - could also have rsSphereX(u, v, R), rsEllipticCylinderX(u, v, rx, ry)
+  // or maybe make a baseeclass rsParametricSurface3D with virtual functions getX(u, v), 
+  // getY(u, v), getZ(u, v) that subclasses must implement
+  // Could this autodiff stuff be usful for differential geometry - i'm currently using numerical
+  // differentiation there
+
   // Wrap the 3 component functions into a single multi-valued function:
   auto f = [&](VecF v)->VecD { return VecD({ f0(v), f1(v), f2(v) }); };
 
   // Evaluate f at (x,y) = (2,3). Each component of the result should contain the value and the 
   // gradient at that value. The result r has N=3 component and each gradient has M=2 components:
   VecD r = f(VecF({ 2,3 }));
+  r = f(VecF({ 3,5 }));
   int dummy = 0;
 
   // Can this be done more conveniently or efficiently? Can the user provide a function array

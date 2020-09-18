@@ -2241,20 +2241,50 @@ protected:
 /** Implements a datatype suitable for automatic differentiation or AD for short. In AD, a number 
 is seen as the result of a function evaluation and in addition to the actual output value of the 
 function, the value of the derivative is also computed and carried along through all subsequent 
-operations and function applications. These derivative values can be useful in algorithms for 
-numerical optimization, iterative nonlinear equation solvers, ordinary and partial differential
-equations solvers, etc.
+operations and function applications. Derivative values can be useful in algorithms for numerical 
+optimization, iterative nonlinear equation solvers, ordinary and partial differential equations 
+solvers, differential geometry etc. In general, derivatives can be calculated by various means: 
 
-Each dual number has one field "v" representing the (value of the) number itself and an additional
-field "d" for representing the derivative. In all arithmetic operations that we do with a pair of 
-operands, the first value component "v" is computed as usual and the derivative component "d" is 
-computed using the well known differentiation rules: sum-rule, difference-rule, product-rule and 
-quotient-rule. Likewise, in univariate function evaluations, we apply the chain-rule. At some 
-point, the derivative value must be seeded...i think, this is called "forward mode"...tbc...
+  (1) Analytically, by directly implementing symbolically derived formulas. This is tedious, 
+      error-prone and needs human effort for each individual case (unless a symbolic math engine 
+      is available).
+  (2) Numerically, by using finite difference approximations. This can be computationally 
+      expensive and inaccurate.
+  (3) Automatically, by overloading operators and functions for numbers that are augmented by a 
+      derivative field. The resulting algebra of such augmented numbers makes use of the well 
+      known differentiation rules and derivatives of elementary functions.
+
+The so called dual numbers are a way to implement the 3rd option. Each dual number has one field 
+"v" representing the actual (value of the) number itself and an additional field "d" for 
+representing the derivative. In all arithmetic operations that we do with a pair of operands, the 
+first value component "v" is computed as usual and the derivative component "d" is computed using
+the well known differentiation rules: sum-rule, difference-rule, product-rule and quotient-rule. 
+Likewise, in univariate function evaluations, we apply the chain-rule. 
 
 To implement multidimensional derivatives (gradients, Jacobians, etc.), we can use rsMatrix as 
 template type T. Then, the input is an Mx1 matrix, the output is an Nx1 matrix and the Jacobian is 
 an NxM matrix.
+
+Mathematically, we can think of the dual numbers as being constructed from the real numbers in a 
+way similar to the complex numbers. For these, we postulate the existence of a number i which has
+the property i^2 = -1. No real number has this property, so i can't be a real number. For the dual
+numbers, we postulate a nonzero number epsilon (denoted here as E) with the property E^2 = 0. No 
+real number (except zero, which was excluded) has this property, so E can't be a real number. The 
+dual numbers are then numbers of the form a + b*E, just like the complex numbers are of the form 
+a + b*i, where a and b are real numbers. ..i think, this has relations to nonstandard analysis and
+E can be thought of as being the infinitesimal....figure that out and explain
+
+todo: explain this adjoined number epsilon (denote as E) which is supposed to be a nonzero number 
+with the property E^2 = 0. No real number (excetp zero, which was excluded) has this property, so E
+can't be a real number. This is analgous to postulating a number i with the property i^2 = -1, which 
+leads to the complex numbers. There are also hyperbolic numbers...
+
+...what about higher derivative via nesting?
+
+...At some point, the derivative value must be seeded...i think, this is called 
+"forward mode"...tbc...
+
+
 
 
 
@@ -2268,8 +2298,8 @@ public:
 
 
 
-  TVal v;  // function value
-  TDer d;  // derivative
+  TVal v;  // function value, "real part"
+  TDer d;  // derivative, "infinitesimal part" (my word)
 
   rsDualNumber(TVal value = TVal(0), TDer derivative = TDer(1)) : v(value), d(derivative) {}
   // maybe the derivative should default to 1? what is most convenient? to seed or not to seed?
@@ -2364,7 +2394,7 @@ RS_PFX rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
 
 // not tested:
 RS_PFX rsLog( RS_DN x) { return RS_DN(rsLog(x.v),  x.d/x.v); } // requires x.v > 0
-RS_PFX rsSqrt(RS_DN x) { return RS_DN(rsSqrt(x.v), x.d*T(0.5)/sqrt(x.v)); } 
+RS_PFX rsSqrt(RS_DN x) { return RS_DN(rsSqrt(x.v), x.d*TVal(0.5)/sqrt(x.v)); } 
 // requires x.v > 0 - todo: make it work for x.v >= 0 - the derivative part at 0 should be computed
 // by using a limit
 

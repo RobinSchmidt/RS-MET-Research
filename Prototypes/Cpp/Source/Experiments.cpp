@@ -3745,11 +3745,13 @@ void testAutoDiff3()
   // r.x =  6    3   2
   // r.y = 13    4   6
   // r.z = -5    4  -6
+  // (6,13,-5) is the output and [[3 2],[4 6],[4 -6]] the Jacobian. Is that the expected result?
 
 
   // OK - this seems to work - but can we do this more conveniently? ...like getting the result as 
-  // 3-vector and Jacobian as actual 3x2 matrix as output of a function taking a 2-vector? and what
-  // about general functions R^M -> R^N? somehing like:
+  // 3-vector and Jacobian as actual 3x2 matrix as output of a function taking a 2-vector and
+  // hopefully avoiding a lot of the boilerplate? and what about general functions R^M -> R^N? 
+  // somehing like:
   // using Vec = std::vector<float>;
   // using Mat = rsMatrix<float>;
   // using DN  = rsDualNumber<Vec, Mat>;
@@ -3769,7 +3771,7 @@ void testAutoDiff3()
   // setting the r-coordinate to 1) and then map the sphere surface onto the plane (maybe by 
   // inverting the parametric description of a sphere, if possible)
 
-  // cumulative product of 3-vector (see video about ForwardDiff.jl etc.)
+  // try cumulative product of 3-vector (see video about ForwardDiff.jl etc.)
 
   int dummy = 0;
 }

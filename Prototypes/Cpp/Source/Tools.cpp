@@ -2349,21 +2349,33 @@ rsDualNumber<TVal, TDer> operator/(const Tx& x, const rsDualNumber<TVal, TDer>& 
 // maybe reduce the noise via #defines here, too
 
 //-------------------------------------------------------------------------------------------------
-// Elementary funcions, the d-parts are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x)):
+// Elementary functions of dual numbers. The v-parts are computed as usual and the d-parts are 
+// computed via the chain rule: (f(g(x)))' = g'(x) * f'(g(x)). We use some preprocessor 
+// #definitions to reduce the verbosity of the boilerplate code. They are #undef'd when we are done
+// with them:
 
 #define RS_CTD template<class TVal, class TDer>  // class template declarations
 #define RS_DN  rsDualNumber<TVal, TDer>          // dual number
+#define RS_PFX RS_CTD RS_DN                      // prefix for the function definitions
 
-RS_CTD RS_DN rsSin(RS_DN x) { return RS_DN(rsSin(x.v),  x.d*rsCos(x.v)); }
-RS_CTD RS_DN rsCos(RS_DN x) { return RS_DN(rsCos(x.v), -x.d*rsSin(x.v)); }
-RS_CTD RS_DN rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
+RS_PFX rsSin(RS_DN x) { return RS_DN(rsSin(x.v),  x.d*rsCos(x.v)); }
+RS_PFX rsCos(RS_DN x) { return RS_DN(rsCos(x.v), -x.d*rsSin(x.v)); }
+RS_PFX rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
 
-// todo: log, tan, sqrt, pow, abs, sinh, cosh, tanh, asin, acos, atan, atan2, etc.
+// not tested:
+RS_PFX rsLog( RS_DN x) { return RS_DN(rsLog(x.v),  x.d/x.v); } // requires x.v > 0
+RS_PFX rsSqrt(RS_DN x) { return RS_DN(rsSqrt(x.v), x.d*T(0.5)/sqrt(x.v)); } 
+// requires x.v > 0 - todo: make it work for x.v >= 0 - the derivative part at 0 should be computed
+// by using a limit
+
+
+// todo: tan, cbrt, pow, abs, sinh, cosh, tanh, asin, acos, atan, atan2, etc.
 // what about floor and ceil? should their derivatives be a delta-comb? well - maybe i should not
 // care about them - they are not differentiable anyway
 
 #undef RS_CTD
 #undef RS_DN
+#undef RS_PFX
 
 
 
@@ -2375,7 +2387,6 @@ RS_CTD RS_DN rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
 
 #define RS_CTD template<class T1, class T2, class T3>  // class template declarations
 #define RS_IDN rsDualNumber<T2, T3>                    // inner dual number
-//#define RS_ODN rsDualNumber<T1, rsDualNumber<T2, T3>>  // outer dual number
 #define RS_ODN rsDualNumber<T1, RS_IDN>                // outer dual number
 
 // types: x.v: T1, x.d.v: T2, x.d.d: T3

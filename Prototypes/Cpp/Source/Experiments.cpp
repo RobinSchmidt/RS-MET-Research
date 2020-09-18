@@ -3575,25 +3575,28 @@ void testAutoDiff()
   //auto f2 = [&](NDN x)->NDN { return x*x*x; };
   float D2[N]; 
   for(int n = 0; n < N; n++) {
-    NDN r = f2(NDN(X[n]));            // D ok, D2 is also 1st derivative - why? ..see (*) below
-    //NDN r = f2( NDN(X[n], DN(X[n], 1.f)) );  // nope
-    //NDN r = f2( NDN(X[n], DN(X[n], 0.f)) );  // nope
-    //NDN r = f2( NDN(X[n], DN(X[n], X[n])) );  // nope
-    //NDN r = f2( NDN(X[n], DN(1.f, 1.f)) );  // D ok, D2 is also 1st derivative
-    //NDN r = f2( NDN(X[n], DN(1.f, X[n])) );  // nope
-    //NDN r = f2( NDN(X[n], DN(1.f, 0.f)) );  // D ok, D2 zero
-    //NDN r = f2( NDN(X[n], DN(0.f, 1.f)) );  // D zero, D2 is 1st derivative
+    NDN r = f2(NDN(X[n])); 
     V[n]  = r.v;
     D[n]  = r.d.v;
     D2[n] = r.d.d;
   }
   rsPlotArraysXY(N, X, V, D, D2);
-  // (*) rsSin(rsDualNumber<TVal, TDer> x) calls rsSin(float) and rsCos(float) instead of 
-  // rsSin(float) and rsCos(rsDualNumber<float>) - the template parameter is interpreted in the 
-  // wrong way - how can this be possible? maybe we need to declare the cosine function before
-  // defining it - no: i think, we would need to convert the argument of the rsCos call to TDer, 
-  // but this breaks compilation of the bivariate case below because we cant take the cosine of a 
-  // vector...hmm...ok...looks better now but still not correct
+
+  // try nesting twice:
+  using NNDN = rsDualNumber<float, NDN>;
+  //auto f3 = [&](NNDN x)->NNDN { return rsSin(x); };
+  auto f3 = [&](NNDN x)->NNDN { return rsExp(x); };
+  float D3[N];
+  for(int n = 0; n < N; n++) {
+    NNDN r = f3(NNDN(X[n])); 
+    V[n]  = r.v;
+    D[n]  = r.d.v;
+    D2[n] = r.d.d.v;
+    D3[n] = r.d.d.d;
+  }
+  rsPlotArraysXY(N, X, V, D, D2, D3);
+  // nope - doesn't work
+
 
 
 

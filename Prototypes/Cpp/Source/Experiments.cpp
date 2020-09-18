@@ -3774,52 +3774,47 @@ void testAutoDiff3()
 
 void testAutoDiff4()
 {
-  // The same  as above but with vectors that can have arbitrary lengths
+  // The same as above but with vectors that can have arbitrary lengths using std::vector:
 
-  int M = 2;                                // dimenstionality of input space
-  int N = 3;                                // dimenstionality of output space
+  int M = 2;                                // dimensionality of input space
+  int N = 3;                                // dimensionality of output space
   using VecF = std::vector<float>;          // input vector of length M
   using DN   = rsDualNumber<float, VecF>;   // component function value and gradient
   using VecD = std::vector<DN>;             // component function values and gradients
 
-
-
-
+  // A function to convert a vector of numbers into a vector of numbers with attached vector for 
+  // the gradient, where the index of the only non-zero element of the gradient matches the index
+  // in the output vector:
   auto toDual = [&](VecF v)->VecD
   {
     size_t N = v.size();
     VecF g(N);  // todo: init to zeros
-    VecD r(N);  // vector of dual numbers
-    for(size_t i = 0; i < N; i++)
-    {
-      g[i] = 1;
-      r[i] = DN(v[i], g);
-      g[i] = 0;
-    }
+    VecD r(N);  // out vector of dual numbers
+    for(size_t i = 0; i < N; i++) {
+      g[i] = 1; r[i] = DN(v[i], g); g[i] = 0; }
     return r;
   };
+  // this may become a static utility function of class rsDualNumber
 
-  // define the 3 component functions
+  // Define the 3 component functions:
   auto f0 = [&](VecF v)->DN { VecD d = toDual(v); return d[0]*d[1];             };
   auto f1 = [&](VecF v)->DN { VecD d = toDual(v); return d[0]*d[0] + d[1]*d[1]; };
   auto f2 = [&](VecF v)->DN { VecD d = toDual(v); return d[0]*d[0] - d[1]*d[1]; };
 
+  // Wrap the 3 component functions into a single multi-valued function:
+  auto f = [&](VecF v)->VecD { return VecD({ f0(v), f1(v), f2(v) }); };
 
-    /*
-  auto f = [&](VecF v)->VecD
-  {
-
-
-    DN xi;
-
-
-
-
-    //return Vec3(fx(v), fy(v), fz(v));
-  };
-  */
-
+  // Evaluate f at (x,y) = (2,3). Each component of the result should contain the value and the 
+  // gradient at that value. The result r has N=3 component and each gradient has M=2 components:
+  VecD r = f(VecF({ 2,3 }));
   int dummy = 0;
+
+  // Can this be done more conveniently or efficiently? Can the user provide a function array
+  // instead of having to create function objects for each component function separately? 
+  // Especially the toDual function is costly because it allocates - it's ok for a prototype but
+  // not for production code. In production code, autodiff with dynamically allocated arrays for
+  // the gradients is generally not a good idea. With statically allocated vectors like rsVector2D,
+  // it's fine, though.
 }
 
 

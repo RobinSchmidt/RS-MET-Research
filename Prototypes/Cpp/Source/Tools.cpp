@@ -2346,27 +2346,27 @@ template<class TVal, class TDer, class Tx>
 rsDualNumber<TVal, TDer> operator/(const Tx& x, const rsDualNumber<TVal, TDer>& y)
 { return rsDualNumber<TVal, TDer>(TVal(x) / y.v, -TDer(x)*y.d/(y.v*y.v) ); } // ok
 
+// maybe reduce the noise via #defines here, too
+
 //-------------------------------------------------------------------------------------------------
 // Elementary funcions, the d-parts are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x)):
 
-template<class TVal, class TDer>
-rsDualNumber<TVal, TDer> rsSin(rsDualNumber<TVal, TDer> x) 
-{ return rsDualNumber<TVal, TDer>(rsSin(x.v), x.d*rsCos(x.v)); }
+#define RS_CTD template<class TVal, class TDer>  // class template declarations
+#define RS_DN  rsDualNumber<TVal, TDer>          // dual number
 
-template<class TVal, class TDer>
-rsDualNumber<TVal, TDer> rsCos(rsDualNumber<TVal, TDer> x)
-{ return rsDualNumber<TVal, TDer>(rsCos(x.v), -x.d*rsSin(x.v)); }
+RS_CTD RS_DN rsSin(RS_DN x) { return RS_DN(rsSin(x.v),  x.d*rsCos(x.v)); }
+RS_CTD RS_DN rsCos(RS_DN x) { return RS_DN(rsCos(x.v), -x.d*rsSin(x.v)); }
+RS_CTD RS_DN rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
 
-template<class TVal, class TDer>
-rsDualNumber<TVal, TDer> rsExp(rsDualNumber<TVal, TDer> x) 
-{ return rsDualNumber<TVal, TDer>(rsExp(x.v), x.d*rsExp(x.v)); }
+// todo: log, tan, sqrt, pow, abs, sinh, cosh, tanh, asin, acos, atan, atan2, etc.
+// what about floor and ceil? should their derivatives be a delta-comb? well - maybe i should not
+// care about them - they are not differentiable anyway
 
-// figure out, if they behave correctly, when TDer is a vector, i.e. a gradient
-
-// maybe use defines to reduce the code noise here, too - as is done below
+#undef RS_CTD
+#undef RS_DN
 
 //-------------------------------------------------------------------------------------------------
-// Functions for nested dual numbers:
+// Functions for nested dual numbers - can be used to compute 2nd derivatives:
 
 #define RS_CTD template<class T1, class T2, class T3>  // class template declarations
 #define RS_ODN rsDualNumber<T1, rsDualNumber<T2, T3>>  // outer dual number

@@ -3630,6 +3630,46 @@ void testAutoDiff()
 
 }
 
+void testAutoDiff2()
+{
+  using Vec = rsVector2D<float>;
+  using DN  = rsDualNumber<float, Vec>;
+  // function with 2 inputs and 1 output
+
+
+  // f(x,y) = x^2 + y^3, f_x = 2*x, f_y = 3*y^2
+  auto f = [&](Vec v)->DN 
+  { 
+    DN x = DN(v.x, Vec(1,0));
+    DN y = DN(v.y, Vec(0,1));
+    return x*x + y*y*y;
+  };
+  DN r;
+  r = f(Vec(3.f, 2.f)); // 17,  6, 12
+  r = f(Vec(5.f, 3.f)); // 52, 10, 27
+
+
+  auto f2 = [&](Vec v)->DN 
+  { 
+    DN x = DN(v.x, Vec(1,0));
+    DN y = DN(v.y, Vec(0,1));
+    return (rsSin(x*x) + rsCos(y*y*y)) / (1 + (x*y)*(x*y)) ;
+  };
+  r = f2(Vec(3.f, 2.f)); 
+  r = f2(Vec(5.f, 3.f));
+
+
+
+  // todo: 
+  // -try a more complicated function with a complicated gradient and compare with analytic
+  //  results, maybe plot the gradients as vectors field
+  // -try a function from R^2 -> R^3, such as the surface of a torus using std::vector and rsMatrix
+  //  for TVal, TDer
+
+  int dummy = 0;
+
+}
+
 
 template<class T>
 void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)

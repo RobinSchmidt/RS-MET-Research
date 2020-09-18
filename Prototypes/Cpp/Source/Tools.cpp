@@ -2327,7 +2327,9 @@ public:
 
 };
 
-// operators for left argument of type T (need to be verified):
+//-------------------------------------------------------------------------------------------------
+// Pperators for left argument of type Tx that can be converted into TVal:
+
 template<class TVal, class TDer, class Tx>
 rsDualNumber<TVal, TDer> operator+(const Tx& x, const rsDualNumber<TVal, TDer>& y)
 { return rsDualNumber<TVal, TDer>(TVal(x) + y.v, y.d); } // ok
@@ -2344,31 +2346,16 @@ template<class TVal, class TDer, class Tx>
 rsDualNumber<TVal, TDer> operator/(const Tx& x, const rsDualNumber<TVal, TDer>& y)
 { return rsDualNumber<TVal, TDer>(TVal(x) / y.v, -TDer(x)*y.d/(y.v*y.v) ); } // ok
 
-
-// d-parts of functions are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x))
-
-//template<class T> T rsSin(T x) { return sin(x); }
-
-
-
+//-------------------------------------------------------------------------------------------------
+// Elementary funcions, the d-parts are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x)):
 
 template<class TVal, class TDer>
 rsDualNumber<TVal, TDer> rsSin(rsDualNumber<TVal, TDer> x) 
-{ 
-  return rsDualNumber<TVal, TDer>(rsSin(x.v), x.d*rsCos(x.v));
-  //return rsDualNumber<TVal, TDer>(rsSin(x.v), x.d*rsCos(TDer(x.v))); 
-}
-// i think, when TDer is a vector type (i.e. a gradient), the first line is approriate but when 
-// TDer is itself a dual number (when implementing 2nd derivatives), the 2nd line is appropriate
-// ...can we combine the advantages of both? maybe only with an explicit instantiation for the 
-// latter case?
+{ return rsDualNumber<TVal, TDer>(rsSin(x.v), x.d*rsCos(x.v)); }
 
 template<class TVal, class TDer>
 rsDualNumber<TVal, TDer> rsCos(rsDualNumber<TVal, TDer> x)
-{ 
-  //return rsDualNumber<TVal, TDer>(rsCos(x.v), -x.d*rsSin(TDer(x.v)));
-  return rsDualNumber<TVal, TDer>(rsCos(x.v), -x.d*rsSin(x.v));
-}
+{ return rsDualNumber<TVal, TDer>(rsCos(x.v), -x.d*rsSin(x.v)); }
 
 template<class TVal, class TDer>
 rsDualNumber<TVal, TDer> rsExp(rsDualNumber<TVal, TDer> x) 
@@ -2376,50 +2363,23 @@ rsDualNumber<TVal, TDer> rsExp(rsDualNumber<TVal, TDer> x)
 
 // figure out, if they behave correctly, when TDer is a vector, i.e. a gradient
 
+// maybe use defines to reduce the code noise here, too - as is done below
 
-
-
-
-// functions for nested dual numbers - does not yet work:
+//-------------------------------------------------------------------------------------------------
+// Functions for nested dual numbers:
 
 #define RS_CTD template<class T1, class T2, class T3>  // class template declarations
 #define RS_ODN rsDualNumber<T1, rsDualNumber<T2, T3>>  // outer dual number
 #define RS_IDN rsDualNumber<T2, T3>                    // inner dual number
 
-//RS_CTD RS_ODN rsSin(RS_ODN x) { return RS_ODN(rsSin(x.v),  x.d*rsCos(RS_IDN(x.v))); }
-
 RS_CTD RS_ODN rsSin(RS_ODN x) { return RS_ODN(rsSin(x.v),  x.d.v*rsCos(RS_IDN(x.v))); }
-
-//RS_CTD RS_ODN rsCos(RS_ODN x) { 
-//  return RS_ODN(rsCos(x.v), -x.d*rsSin(RS_IDN(x.v, 0))); }
-
-RS_CTD RS_ODN rsCos(RS_ODN x) 
-{ 
-  T1     v = rsCos(x.v);
-  //RS_IDN d = -x.d*rsSin(RS_IDN(x.v, 1)); // nope
-  //RS_IDN d = -x.d*rsSin(RS_IDN(x.d.v, 1)); // nope
-  //RS_IDN d = -x.d.v*rsSin(RS_IDN(x.d.v, 1)); // nope
-  RS_IDN d = -x.d.v*rsSin(RS_IDN(x.v, 1)); // yep - looks good!
-  return RS_ODN(v, d);
-  //return RS_ODN(rsCos(x.v), -x.d*rsSin(RS_IDN(x.v, 1))); 
-}
-
-//RS_CTD RS_ODN rsCos(RS_ODN x) { 
-//  return RS_ODN(rsCos(x.v), -x.d*rsSin(RS_IDN(x.d.v, 1))); }
-
+RS_CTD RS_ODN rsCos(RS_ODN x) { return RS_ODN(rsCos(x.v), -x.d.v*rsSin(RS_IDN(x.v))); }
+RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v),  x.d.v*rsExp(RS_IDN(x.v))); }
+// todo: log, tan, sqrt, pow, abs, sinh, cosh, tanh, asin, acos, atan, atan2, etc.
 
 #undef RS_CTD
 #undef RS_IDN
 #undef RS_NDN
-
-/*
-// test:
-rsDualNumber<float, rsDualNumber<float, float>> rsSin(float, rsDualNumber<float, float>)
-{
-  return rsDualNumber<float, rsDualNumber<float, float>>
-    (rsSin(x.v), x.d*rsCos(rsDualNumber<float, float>(x.v)));
-}
-*/
 
 
 

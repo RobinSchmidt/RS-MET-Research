@@ -3549,7 +3549,7 @@ void testAutoDiff()
     r    = f(X[n]);             // works, if d defaults to 1
     V[n] = r.v;
     D[n] = r.d; }
-  //rsPlotArraysXY(N, X, V, D);
+  rsPlotArraysXY(N, X, V, D);
   // we need to take more care when to init d with 0 and when with 1 - the implicit conversions are
   // sometimes right, sometimes wrong - we should perhaps be always explicit
 
@@ -3569,8 +3569,8 @@ void testAutoDiff()
   using NDN = rsDualNumber<float, DN>; // the 2nd part is itself a dual number
   auto f2 = [&](NDN x)->NDN 
   { 
-    return rsSin(x);
-    //return rsCos(x);
+    //return rsSin(x);
+    return rsCos(x);
   };
   //auto f2 = [&](NDN x)->NDN { return x*x*x; };
   float D2[N]; 

@@ -3656,7 +3656,7 @@ void testAutoDiff2()
     DN y = DN(v.y, Vec(0,1));
     return (rsSin(x*x) + rsCos(y*y*y)) / (1 + (x*y)*(x*y)) ;
   };
-  //r = f2(Vec(3.f, 2.f)); 
+  r = f2(Vec(3.f, 2.f));
   r = f2(Vec(5.f, 3.f));
   // Sage gives the partial derivatives:
   //   var("x y")
@@ -3672,8 +3672,7 @@ void testAutoDiff2()
 
 
   // todo: 
-  // -try a more complicated function with a complicated gradient and compare with analytic
-  //  results, maybe plot the gradients as vectors field
+  // -maybe plot the gradients as vectors field
   // -try a function from R^2 -> R^3, such as the surface of a torus using std::vector and rsMatrix
   //  for TVal, TDer
 

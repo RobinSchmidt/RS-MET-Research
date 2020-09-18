@@ -2242,13 +2242,15 @@ protected:
 is seen as the result of a function evaluation and in addition to the actual output value of the 
 function, the value of the derivative is also computed and carried along through all subsequent 
 operations and function applications. These derivative values can be useful in algorithms for 
-numerical optimization (what about ODE and PDE solvers?).
+numerical optimization, iterative nonlinear equation solvers, ordinary and partial differential
+equations solvers, etc.
 
-In all arithmetic operations that we do with a pair of operands, the first value component "v" is 
-computed as usual and the derivative component "d" is computed using the well known differentiation 
-rules: sum-rule, difference-rule, product-rule and quotient-rule. Likewise, in function 
-evaluations applied to a single input, we apply the chain-rule. At some point, the derivative value
-must be seeded...i think, this is called "forward mode"
+Each dual number has one field "v" representing the (value of the) number itself and an additional
+field "d" for representing the derivative. In all arithmetic operations that we do with a pair of 
+operands, the first value component "v" is computed as usual and the derivative component "d" is 
+computed using the well known differentiation rules: sum-rule, difference-rule, product-rule and 
+quotient-rule. Likewise, in univariate function evaluations, we apply the chain-rule. At some 
+point, the derivative value must be seeded...i think, this is called "forward mode"...tbc...
 
 To implement multidimensional derivatives (gradients, Jacobians, etc.), we can use rsMatrix as 
 template type T. Then, the input is an Mx1 matrix, the output is an Nx1 matrix and the Jacobian is 

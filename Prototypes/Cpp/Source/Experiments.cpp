@@ -3565,62 +3565,49 @@ void testAutoDiff()
 
 
 
-  // try nesting dual numbers - will we get the 2nd derivative?
-  using NDN = rsDualNumber<float, DN>; // the 2nd part is itself a dual number
-  auto f2 = [&](NDN x)->NDN 
+  // try nesting dual numbers:
+  using DN2 = rsDualNumber<float, DN>; // the 2nd part is itself a dual number
+  auto f2 = [&](DN2 x)->DN2 
   { 
     //return rsSin(x);
-    return rsCos(x);
+    //return rsCos(x);
+    return rsExp(x);
   };
   //auto f2 = [&](NDN x)->NDN { return x*x*x; };
   float D2[N]; 
   for(int n = 0; n < N; n++) {
-    NDN r = f2(NDN(X[n])); 
-    V[n]  = r.v;
-    D[n]  = r.d.v;
-    D2[n] = r.d.d;
+    DN2 r = f2(DN2(X[n])); 
+    V[n]  = r.v;      // value
+    D[n]  = r.d.v;    // 1st derivative
+    D2[n] = r.d.d;    // 2nd derivative
   }
   rsPlotArraysXY(N, X, V, D, D2);
+  // looks ok so far, but more tests needed - we should have a unit test that systematically tests
+  // elementary functions, arithmetic operators, complicated combinations of everything with 
+  // simple, simply-nested, doubly-nested, triply-nested, etc. dual numbers
+
 
   // try nesting twice:
-  using NNDN = rsDualNumber<float, NDN>;
+  using DN3 = rsDualNumber<float, DN2>;
   //auto f3 = [&](NNDN x)->NNDN { return rsSin(x); };
-  auto f3 = [&](NNDN x)->NNDN { return rsExp(x); };
+  auto f3 = [&](DN3 x)->DN3 { return rsExp(x); };
   float D3[N];
   for(int n = 0; n < N; n++) {
-    NNDN r = f3(NNDN(X[n])); 
+    DN3 r = f3(DN3(X[n]));
     V[n]  = r.v;
     D[n]  = r.d.v;
     D2[n] = r.d.d.v;
     D3[n] = r.d.d.d;
   }
   rsPlotArraysXY(N, X, V, D, D2, D3);
-  // nope - doesn't work
+  // doesn't work - 3rd derivative has extra factor of 2 for exp function - i think, it has 
+  // something to do with bothe terms in the product rule evaluating to exp(x), so we get
+  // 1*exp(x) + exp(x)*1 ...or something -> figure out
 
 
-
-
-  /*
-  // try nesting dual numbers - will we get the 2nd derivative?
-  using NDN = rsDualNumber<DN, DN>; // the 2nd part is itself a dual number
-  auto f2 = [&](NDN x)->NDN { return rsExp(-x/31)*rsSin(5*x/2) / (2 + x*x * (1+rsCos(x)) + 1); };
-  float D2[N];  // 2nd derivative?...nope - does not look like it
-  float V2[N];  // 2nd derivative?...nope - does not look like it
-  for(int n = 0; n < N; n++) {
-    NDN r = f2(NDN(X[n])); 
-    V[n]  = r.v.v;
-    V2[n] = r.v.d;
-    D[n]  = r.d.v;
-    D2[n] = r.d.d;
-  }
-  rsPlotArraysXY(N, X, V, D, V2, D2);
-  */
-  // i think, if we nest, we should get: 
-  // r.v.v = value
-  // r.v.d = 1st derivative
-  // r.d.v = 1st derivative
-  // r.d.d = 2nd derivative
-
+  // nesting thrice:
+  using DN4 = rsDualNumber<float, DN3>;
+  // ...stuff to do...
 
   int dummy = 0;
 

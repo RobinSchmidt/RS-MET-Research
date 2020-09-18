@@ -2365,12 +2365,20 @@ RS_CTD RS_DN rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
 #undef RS_CTD
 #undef RS_DN
 
+
+
+
 //-------------------------------------------------------------------------------------------------
 // Functions for nested dual numbers - can be used to compute 2nd derivatives:
+// ...works only with simply nested dual numbers - nesting twice doesn't work - maybe nesting 
+// should be postponed - it's a mess
 
 #define RS_CTD template<class T1, class T2, class T3>  // class template declarations
-#define RS_ODN rsDualNumber<T1, rsDualNumber<T2, T3>>  // outer dual number
 #define RS_IDN rsDualNumber<T2, T3>                    // inner dual number
+//#define RS_ODN rsDualNumber<T1, rsDualNumber<T2, T3>>  // outer dual number
+#define RS_ODN rsDualNumber<T1, RS_IDN>                // outer dual number
+
+// types: x.v: T1, x.d.v: T2, x.d.d: T3
 
 RS_CTD RS_ODN rsSin(RS_ODN x) { return RS_ODN(rsSin(x.v),  x.d.v*rsCos(RS_IDN(x.v))); }
 RS_CTD RS_ODN rsCos(RS_ODN x) { return RS_ODN(rsCos(x.v), -x.d.v*rsSin(RS_IDN(x.v))); }
@@ -2382,10 +2390,36 @@ RS_CTD RS_ODN rsCos(RS_ODN x) { return RS_ODN(rsCos(x.v), -x.d.v*rsSin(RS_IDN(x.
 //RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v),  RS_IDN(x.d.v,1)*rsExp(RS_IDN(x.v))); }    // 2nd,3rd wrong
 //RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v),  T2(x.d.v)*rsExp(RS_IDN(x.v))); } // 3rd wrong
 //RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v),  RS_IDN(T2(x.d.v))*rsExp(RS_IDN(x.v))); }
-RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v),  RS_IDN(T2(x.d.v),0)*rsExp(RS_IDN(x.v))); }
+//RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v),  RS_IDN(T2(x.d.v),0)*rsExp(RS_IDN(x.v))); }
+//RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v), RS_IDN(T3(x.d.v))*rsExp(RS_IDN(x.v))); } 
+//RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v), T3(x.d.v)*rsExp(RS_IDN(x.v))); }
 // 3rd derivative is wrong - seems to be multiplied by factor 2
 
-// Why does it actually work when using x.d.v as inner derivative? It probabyl should not be 
+RS_CTD RS_ODN rsExp(RS_ODN x) 
+{ 
+  T1     v = rsExp(x.v);                      // T1
+  //RS_IDN d = T2(x.d.v) * rsExp(RS_IDN(x.v));  // T2 * Dual<T2,T3> -> Dual(x.d.v,1) * exp(Dual(x.v,1))
+
+  // if T2 is itself a dual number, this does not work - both factors get constructed with a 1 for the
+  // d part and in the product rule f'*g + g'*f, we end up producing twice the desired value due to 
+  // adding two equal terms
+
+  RS_IDN d = RS_IDN(x.d.v,0) * rsExp(RS_IDN(x.v));
+  // hmm...this also doesn't work - we still get the extra factor of 2
+
+  //RS_IDN d = T2(x.d.v,0) * rsExp(RS_IDN(x.v)); // no compile with T2=float
+
+  //RS_IDN d = RS_IDN(x.d.v * rsExp(RS_IDN(x.v)));
+
+  //RS_IDN d = x.d.v * rsExp(RS_IDN(T3(x.v)));
+  //RS_IDN d = T2(x.d.v) * rsExp(RS_IDN(T2(x.v)));
+  //RS_IDN d = RS_IDN(T3(x.d.v)) * rsExp(RS_IDN(T2(x.v)));
+  // somewhere, there's a constructor call missing and one d-element is not seeded, i think
+
+  return RS_ODN(v,  d); 
+}
+
+// Why does it actually work when using x.d.v as inner derivative? It probably should not be 
 // surprising, but i'm not sure about why. Maybe try nesting twice - doesn't work...maybe we need
 // to wrap something else into a constructor call? i tried -RS_IDN(x.d.v), RS_IDN(-x.d.v) for 
 // d-part of rsCos - but that doesn't work...maybe we need to use 0 as 2nd argument?
@@ -2395,6 +2429,10 @@ RS_CTD RS_ODN rsExp(RS_ODN x) { return RS_ODN(rsExp(x.v),  RS_IDN(T2(x.d.v),0)*r
 #undef RS_CTD
 #undef RS_IDN
 #undef RS_NDN
+
+// maybe for doubly nested dual numbers, we will need yet another specialzation? ...if so, will it 
+// end there or will we need another for triply nested ones and so on? that would be bad!
+
 
 
 

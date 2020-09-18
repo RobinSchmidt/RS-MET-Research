@@ -3564,6 +3564,37 @@ void testAutoDiff()
   r = rsSin(x) * rsCos(y);
 
 
+
+  // try nesting dual numbers - will we get the 2nd derivative?
+  using NDN = rsDualNumber<float, DN>; // the 2nd part is itself a dual number
+  auto f2 = [&](NDN x)->NDN 
+  { 
+    return rsSin(x); 
+  };
+  //auto f2 = [&](NDN x)->NDN { return x*x*x; };
+  float D2[N]; 
+  for(int n = 0; n < N; n++) {
+    NDN r = f2(NDN(X[n]));            // D ok, D2 is also 1st derivative - why? ..see (*) below
+    //NDN r = f2( NDN(X[n], DN(X[n], 1.f)) );  // nope
+    //NDN r = f2( NDN(X[n], DN(X[n], 0.f)) );  // nope
+    //NDN r = f2( NDN(X[n], DN(X[n], X[n])) );  // nope
+    //NDN r = f2( NDN(X[n], DN(1.f, 1.f)) );  // D ok, D2 is also 1st derivative
+    //NDN r = f2( NDN(X[n], DN(1.f, X[n])) );  // nope
+    //NDN r = f2( NDN(X[n], DN(1.f, 0.f)) );  // D ok, D2 zero
+    //NDN r = f2( NDN(X[n], DN(0.f, 1.f)) );  // D zero, D2 is 1st derivative
+    V[n]  = r.v;
+    D[n]  = r.d.v;
+    D2[n] = r.d.d;
+  }
+  rsPlotArraysXY(N, X, V, D, D2);
+  // (*) rsSin(rsDualNumber<TVal, TDer> x) calls rsSin(float) and rsCos(float) instead of 
+  // rsSin(float) and rsCos(rsDualNumber<float>) - the template parameter is interpreted in the 
+  // wrong way - how can this be possible? maybe we need to declare the cosine function before
+  // defining it - no: i think, we would need to convert the argument of the rsCos call to TDer, 
+  // but this breaks compilation of the bivariate case below because we cant take the cosine of a 
+  // vector...hmm...
+
+
   /*
   // try nesting dual numbers - will we get the 2nd derivative?
   using NDN = rsDualNumber<DN, DN>; // the 2nd part is itself a dual number

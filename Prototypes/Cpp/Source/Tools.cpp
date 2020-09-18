@@ -2347,13 +2347,28 @@ rsDualNumber<TVal, TDer> operator/(const Tx& x, const rsDualNumber<TVal, TDer>& 
 
 // d-parts of functions are computed via chain rule: (f(g(x)))' = g'(x) * f'(g(x))
 
-template<class TVal, class TDer>
-rsDualNumber<TVal, TDer> rsSin(rsDualNumber<TVal, TDer> x) 
-{ return rsDualNumber<TVal, TDer>(rsSin(x.v), x.d*rsCos(x.v)); }
+//template<class T> T rsSin(T x) { return sin(x); }
+
+
+//template<class TVal, class TDer> rsDualNumber<TVal, TDer> rsCos(rsDualNumber<TVal, TDer> x);
 
 template<class TVal, class TDer>
-rsDualNumber<TVal, TDer> rsCos(rsDualNumber<TVal, TDer> x) 
-{ return rsDualNumber<TVal, TDer>(rsCos(x.v), -x.d*rsSin(x.v)); }
+rsDualNumber<TVal, TDer> rsSin(rsDualNumber<TVal, TDer> x) 
+{ 
+  return rsDualNumber<TVal, TDer>(rsSin(x.v), x.d*rsCos(x.v));
+  //return rsDualNumber<TVal, TDer>(rsSin(x.v), x.d*rsCos(TDer(x.v))); 
+}
+// i think, when TDer is a vector type (i.e. a gradient), the first line is approriate but when 
+// TDer is itself a dual number (when implementing 2nd derivatives), the 2nd line is appropriate
+// ...can we combine the advantages of both? maybe only with an explicit instantiation for the 
+// latter case?
+
+template<class TVal, class TDer>
+rsDualNumber<TVal, TDer> rsCos(rsDualNumber<TVal, TDer> x)
+{ 
+  //return rsDualNumber<TVal, TDer>(rsCos(x.v), -x.d*rsSin(TDer(x.v)));
+  return rsDualNumber<TVal, TDer>(rsCos(x.v), -x.d*rsSin(x.v));
+}
 
 template<class TVal, class TDer>
 rsDualNumber<TVal, TDer> rsExp(rsDualNumber<TVal, TDer> x) 

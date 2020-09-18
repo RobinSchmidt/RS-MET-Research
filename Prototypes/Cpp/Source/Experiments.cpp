@@ -3632,10 +3632,11 @@ void testAutoDiff()
 
 void testAutoDiff2()
 {
+  // Tests automatic differentiation for a function with 2 inputs and 1 output. The derivative is 
+  // the gradient vector which as 2 components, just as the input.
+
   using Vec = rsVector2D<float>;
   using DN  = rsDualNumber<float, Vec>;
-  // function with 2 inputs and 1 output
-
 
   // f(x,y) = x^2 + y^3, f_x = 2*x, f_y = 3*y^2
   auto f = [&](Vec v)->DN 
@@ -3655,9 +3656,19 @@ void testAutoDiff2()
     DN y = DN(v.y, Vec(0,1));
     return (rsSin(x*x) + rsCos(y*y*y)) / (1 + (x*y)*(x*y)) ;
   };
-  r = f2(Vec(3.f, 2.f)); 
+  //r = f2(Vec(3.f, 2.f)); 
   r = f2(Vec(5.f, 3.f));
-
+  // Sage gives the partial derivatives:
+  //   var("x y")
+  //   f   = (sin(x*x) + cos(y*y*y)) / (1 + (x*y)*(x*y))
+  //   f_x = diff(f, x);
+  //   f_y = diff(f, y);
+  //   #f, f_x, f_y
+  //   N(f(5,3)), N(f_x(5,3)), N(f_y(5,3))
+  // which evaluate to:
+  //   (-0.00187827680898942, 0.0446065178382468, -0.113010657281297)
+  // OK - looks good - the gradient is computed correctly!
+  
 
 
   // todo: 

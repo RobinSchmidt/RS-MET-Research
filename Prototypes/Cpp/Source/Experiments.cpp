@@ -3700,7 +3700,78 @@ void testAutoDiff2()
   //  for TVal, TDer
 
   int dummy = 0;
+}
 
+
+void testAutoDiff3()
+{
+  // Trying to produce Jacobians of a function R^2 -> R^3. Such functions define a 2D surface 
+  // embedded in 3D space. (Later maybe use a torus as example surface).
+
+
+  // Define 3 scalar functions for the x,y,z components of the output vector:
+  using Vec2 = rsVector2D<float>;
+  using DN   = rsDualNumber<float, Vec2>;
+  auto fx = [&](Vec2 v)->DN
+  {
+    DN x = DN(v.x, Vec2(1,0));
+    DN y = DN(v.y, Vec2(0,1));
+    return x*y;  // preliminary
+  };
+  auto fy = [&](Vec2 v)->DN
+  {
+    DN x = DN(v.x, Vec2(1,0));
+    DN y = DN(v.y, Vec2(0,1));
+    return x*x + y*y;  // preliminary
+  };
+  auto fz = [&](Vec2 v)->DN
+  {
+    DN x = DN(v.x, Vec2(1,0));
+    DN y = DN(v.y, Vec2(0,1));
+    return x*x - y*y;  // preliminary
+  };
+
+  // Define a function f that combines fx,fy,fz and returns a 3-vector of dual numbers. The 
+  // derivative part of each output component is the gradient of the respective scalar function. 
+  // Together, they form the Jacobian matrix:
+  using Vec3 = rsVector3D<DN>;
+  auto f = [&](Vec2 v)->Vec3
+  {
+    return Vec3(fx(v), fy(v), fz(v));
+  };
+
+  Vec3 r = f(Vec2(2,3));
+  //        v   d.x d.y
+  // r.x =  6    3   2
+  // r.y = 13    4   6
+  // r.z = -5    4  -6
+
+
+  // OK - this seems to work - but can we do this more conveniently? ...like getting the result as 
+  // 3-vector and Jacobian as actual 3x2 matrix as output of a function taking a 2-vector? and what
+  // about general functions R^M -> R^N? somehing like:
+  // using Vec = std::vector<float>;
+  // using Mat = rsMatrix<float>;
+  // using DN  = rsDualNumber<Vec, Mat>;
+  // auto f = [&](Vec v)->DN  // input: 2D vector, output: Dual<3D vector, 3x2 matrix>
+  // {
+  //   DN vx = DN(Vec(3), Mat(3,3)); // (1,0,0)
+  //   DN vy = DN(Vec(3), Mat(3,3));
+  //   DN vz = DN(Vec(3), Mat(3,3));
+  // };
+
+
+
+
+
+  // ToDo: try a R^3 -> R^2 function - maybe some sort of projection (fish-eye? spherical? i.e. 
+  // first project points onto the sphere surface (by expressing them in spherical coordinates and 
+  // setting the r-coordinate to 1) and then map the sphere surface onto the plane (maybe by 
+  // inverting the parametric description of a sphere, if possible)
+
+  // cumulative product of 3-vector (see video about ForwardDiff.jl etc.)
+
+  int dummy = 0;
 }
 
 

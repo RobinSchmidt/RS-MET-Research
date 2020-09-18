@@ -2350,7 +2350,7 @@ rsDualNumber<TVal, TDer> operator/(const Tx& x, const rsDualNumber<TVal, TDer>& 
 //template<class T> T rsSin(T x) { return sin(x); }
 
 
-//template<class TVal, class TDer> rsDualNumber<TVal, TDer> rsCos(rsDualNumber<TVal, TDer> x);
+
 
 template<class TVal, class TDer>
 rsDualNumber<TVal, TDer> rsSin(rsDualNumber<TVal, TDer> x) 
@@ -2377,6 +2377,51 @@ rsDualNumber<TVal, TDer> rsExp(rsDualNumber<TVal, TDer> x)
 // figure out, if they behave correctly, when TDer is a vector, i.e. a gradient
 
 
+
+
+
+// functions for nested dual numbers:
+
+#define RS_CTD template<class T1, class T2, class T3>  // class template declarations
+#define RS_ODN rsDualNumber<T1, rsDualNumber<T2, T3>>  // outer dual number
+#define RS_IDN rsDualNumber<T2, T3>                    // inner dual number
+
+// forward declarations:
+//RS_CTD RS_ODN rsSin(RS_ODN x);
+//RS_CTD RS_ODN rsCos(RS_ODN x);
+
+/*
+template<class T2, class T3> 
+RS_IDN rsCos(RS_IDN x)
+{
+  return RS_IDN(rsCos(x.v), -x.d*rsSin(x.v));
+}
+// is not called - why? ah - we need to define it for the *inner* dual number
+*/
+
+
+template<class T1, class T2, class T3> 
+RS_ODN rsSin(RS_ODN x)
+{
+  return RS_ODN(rsSin(x.v), x.d*rsCos(RS_IDN(x.v)));
+}
+
+#undef RS_CTD
+#undef RS_IDN
+#undef RS_NDN
+
+/*
+// test:
+rsDualNumber<float, rsDualNumber<float, float>> rsSin(float, rsDualNumber<float, float>)
+{
+  return rsDualNumber<float, rsDualNumber<float, float>>
+    (rsSin(x.v), x.d*rsCos(rsDualNumber<float, float>(x.v)));
+}
+*/
+
+
+
+
 /*
 // not yet tested:
 template<class TVal, class TDer>
@@ -2396,6 +2441,10 @@ template<class TVal, class TDer>
 rsDualNumber<TVal, TDer> rsAbs(rsDualNumber<TVal, TDer> x) 
 { return rsDualNumber<TVal, TDer>(rsAbs(x.v), x.d*rsSign(x.v)); }  // requires x.v != 0..really?
 */
+
+
+
+
 
 // https://en.wikipedia.org/wiki/Automatic_differentiation
 // https://en.wikipedia.org/wiki/Automatic_differentiation#Automatic_differentiation_using_dual_numbers

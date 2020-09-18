@@ -2380,31 +2380,33 @@ rsDualNumber<TVal, TDer> rsExp(rsDualNumber<TVal, TDer> x)
 
 
 
-// functions for nested dual numbers:
+// functions for nested dual numbers - does not yet work:
 
 #define RS_CTD template<class T1, class T2, class T3>  // class template declarations
 #define RS_ODN rsDualNumber<T1, rsDualNumber<T2, T3>>  // outer dual number
 #define RS_IDN rsDualNumber<T2, T3>                    // inner dual number
 
-// forward declarations:
-//RS_CTD RS_ODN rsSin(RS_ODN x);
-//RS_CTD RS_ODN rsCos(RS_ODN x);
+//RS_CTD RS_ODN rsSin(RS_ODN x) { return RS_ODN(rsSin(x.v),  x.d*rsCos(RS_IDN(x.v))); }
 
-/*
-template<class T2, class T3> 
-RS_IDN rsCos(RS_IDN x)
-{
-  return RS_IDN(rsCos(x.v), -x.d*rsSin(x.v));
+RS_CTD RS_ODN rsSin(RS_ODN x) { return RS_ODN(rsSin(x.v),  x.d.v*rsCos(RS_IDN(x.v))); }
+
+//RS_CTD RS_ODN rsCos(RS_ODN x) { 
+//  return RS_ODN(rsCos(x.v), -x.d*rsSin(RS_IDN(x.v, 0))); }
+
+RS_CTD RS_ODN rsCos(RS_ODN x) 
+{ 
+  T1     v = rsCos(x.v);
+  //RS_IDN d = -x.d*rsSin(RS_IDN(x.v, 1)); // nope
+  //RS_IDN d = -x.d*rsSin(RS_IDN(x.d.v, 1)); // nope
+  //RS_IDN d = -x.d.v*rsSin(RS_IDN(x.d.v, 1)); // nope
+  RS_IDN d = -x.d.v*rsSin(RS_IDN(x.v, 1)); // yep - looks good!
+  return RS_ODN(v, d);
+  //return RS_ODN(rsCos(x.v), -x.d*rsSin(RS_IDN(x.v, 1))); 
 }
-// is not called - why? ah - we need to define it for the *inner* dual number
-*/
 
+//RS_CTD RS_ODN rsCos(RS_ODN x) { 
+//  return RS_ODN(rsCos(x.v), -x.d*rsSin(RS_IDN(x.d.v, 1))); }
 
-template<class T1, class T2, class T3> 
-RS_ODN rsSin(RS_ODN x)
-{
-  return RS_ODN(rsSin(x.v), x.d*rsCos(RS_IDN(x.v)));
-}
 
 #undef RS_CTD
 #undef RS_IDN

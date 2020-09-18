@@ -3549,7 +3549,7 @@ void testAutoDiff()
     r    = f(X[n]);             // works, if d defaults to 1
     V[n] = r.v;
     D[n] = r.d; }
-  rsPlotArraysXY(N, X, V, D);
+  //rsPlotArraysXY(N, X, V, D);
   // we need to take more care when to init d with 0 and when with 1 - the implicit conversions are
   // sometimes right, sometimes wrong - we should perhaps be always explicit
 
@@ -3569,7 +3569,8 @@ void testAutoDiff()
   using NDN = rsDualNumber<float, DN>; // the 2nd part is itself a dual number
   auto f2 = [&](NDN x)->NDN 
   { 
-    return rsSin(x); 
+    return rsSin(x);
+    //return rsCos(x);
   };
   //auto f2 = [&](NDN x)->NDN { return x*x*x; };
   float D2[N]; 
@@ -3592,7 +3593,8 @@ void testAutoDiff()
   // wrong way - how can this be possible? maybe we need to declare the cosine function before
   // defining it - no: i think, we would need to convert the argument of the rsCos call to TDer, 
   // but this breaks compilation of the bivariate case below because we cant take the cosine of a 
-  // vector...hmm...
+  // vector...hmm...ok...looks better now but still not correct
+
 
 
   /*

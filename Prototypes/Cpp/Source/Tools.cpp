@@ -2242,16 +2242,17 @@ protected:
 is seen as the result of a function evaluation and in addition to the actual output value of the 
 function, the value of the derivative is also computed and carried along through all subsequent 
 operations and function applications. Derivative values can be useful in algorithms for numerical 
-optimization, iterative nonlinear equation solvers, ordinary and partial differential equations 
-solvers, differential geometry etc. In general, derivatives can be calculated by various means: 
+optimization (e.g. gradient descent), iterative nonlinear equation solvers (e.g. Newton iteration),
+ordinary and partial differential equations solvers, differential geometry etc. In general, 
+derivatives can be calculated by various means: 
 
-  (1) Analytically, by directly implementing symbolically derived formulas. This is tedious, 
+  (1) Analytically, by directly implementing a symbolically derived formula. This is tedious, 
       error-prone and needs human effort for each individual case (unless a symbolic math engine 
       is available).
   (2) Numerically, by using finite difference approximations. This can be computationally 
       expensive and inaccurate.
-  (3) Automatically, by overloading operators and functions for numbers that are augmented by a 
-      derivative field. The resulting algebra of such augmented numbers makes use of the well 
+  (3) Automatically, by overloading operators and functions for a number type that is augmented by
+      a derivative field. The resulting algebra of such augmented numbers makes use of the well 
       known differentiation rules and derivatives of elementary functions.
 
 The so called dual numbers are a way to implement the 3rd option. Each dual number has one field 
@@ -2261,32 +2262,28 @@ first value component "v" is computed as usual and the derivative component "d" 
 the well known differentiation rules: sum-rule, difference-rule, product-rule and quotient-rule. 
 Likewise, in univariate function evaluations, we apply the chain-rule. 
 
-To implement multidimensional derivatives (gradients, Jacobians, etc.), we can use rsMatrix as 
-template type T. Then, the input is an Mx1 matrix, the output is an Nx1 matrix and the Jacobian is 
-an NxM matrix.
-
 Mathematically, we can think of the dual numbers as being constructed from the real numbers in a 
 way similar to the complex numbers. For these, we postulate the existence of a number i which has
 the property i^2 = -1. No real number has this property, so i can't be a real number. For the dual
 numbers, we postulate a nonzero number epsilon (denoted here as E) with the property E^2 = 0. No 
 real number (except zero, which was excluded) has this property, so E can't be a real number. The 
 dual numbers are then numbers of the form a + b*E, just like the complex numbers are of the form 
-a + b*i, where a and b are real numbers. ..i think, this has relations to nonstandard analysis and
-E can be thought of as being the infinitesimal....figure that out and explain
+a + b*i, where a and b are real numbers. ..i think, this has relations to nonstandard analysis with
+hyperreal numbers and E can be thought of as being the infinitesimal....figure that out and 
+explain more...maybe mention also also hyperbolic numbers...they do not form a field, only a ring,
+because the quotient rule demands that the v-part of divisor must be nonzero - so any dual number
+with zero v-part is a number that we cant divide by - and these are not the neutral element(s)
+of addition (there can be only one anyway)
 
-todo: explain this adjoined number epsilon (denote as E) which is supposed to be a nonzero number 
-with the property E^2 = 0. No real number (excetp zero, which was excluded) has this property, so E
-can't be a real number. This is analgous to postulating a number i with the property i^2 = -1, which 
-leads to the complex numbers. There are also hyperbolic numbers...
 
+To implement multidimensional derivatives (gradients, Jacobians, etc.), we can use rsMatrix as 
+template type T. Then, the input is an Mx1 matrix, the output is an Nx1 matrix and the Jacobian is 
+an NxM matrix. ...hmm...this is not how i did it in the examples...
 ...what about higher derivative via nesting?
 
 ...At some point, the derivative value must be seeded...i think, this is called 
-"forward mode"...tbc...
-
-
-
-
+"forward mode"...We seed the derivative field with 1 by default-constructing a dual number from a 
+real number...explain also what reverse mode is..tbc...
 
 ...under construction... */
 
@@ -2298,7 +2295,7 @@ public:
 
 
 
-  TVal v;  // function value, "real part"
+  TVal v;  // function value, "real part" or "standard part"
   TDer d;  // derivative, "infinitesimal part" (my word)
 
   rsDualNumber(TVal value = TVal(0), TDer derivative = TDer(1)) : v(value), d(derivative) {}
@@ -2332,6 +2329,18 @@ public:
 
   /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2. */
   DN operator/(const DN& y) const { return DN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
+    // requires that y.v is nonzero - what does this mean for the algebraic structure od dual 
+    // numbers? do they form a ring? it's not a field because *any* number y for which v is zero 
+    // can't be a divisor - but if the d-field of y is nonzero, then y is not 0 (the neutral 
+    // element of addition)...right? ..so we have nonzero elements that we can't divide by, so we
+    // have no field
+    // maybe we could do something else when y.v == 0. in this case, the infinitesimal part gets 
+    // blown up to infinity, so maybe it could make sense to add the numerator 
+    // (d*y.v - v*y.d) = -v*y.d to the real part? ...highly speculative - maybe try it and see 
+    // what happens...but actually, the 0 in the denomiantor is squared, so it gets blown up to
+    // "infinity-squared" ...so maybe it should overblow the real part...oh - that's what it 
+    // already does anyway...maybe it should be v - v*y.d = v*(1-y.d)...maybe consider the limits
+    // when y.v goes to 0
 
   template<class Ty> DN operator+(const Ty& y) const { return DN(v + TVal(y), d                ); }
   template<class Ty> DN operator-(const Ty& y) const { return DN(v - TVal(y), d                ); }
@@ -2354,6 +2363,12 @@ public:
   bool operator<=(const DN& y) const { return v <= y.v; }
   bool operator> (const DN& y) const { return v >  y.v; }
   bool operator>=(const DN& y) const { return v >= y.v; }
+
+  // maybe we should take the d-part into account in the case of equal v-parts. this video says 
+  // something about the hyperreal numbers being an *ordered* field:
+  // https://www.youtube.com/watch?v=ArAjEq8uFvA
+  // when we do it like this, the set of relations {<,==,>} satisfy the trichotomy law: any pair 
+  // of numbers is in one and only one of those 3 relations
 
 };
 

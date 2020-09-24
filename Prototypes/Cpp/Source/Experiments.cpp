@@ -3830,6 +3830,12 @@ void testAutoDiff4()
   // it's fine, though.
 }
 
+// see also:
+// https://math.stackexchange.com/questions/1839497/what-is-the-difference-between-hyperreal-numbers-and-dual-numbers
+// https://math.stackexchange.com/questions/2194476/differential-form-vs-hyperreal-vs-dual-number
+// https://en.wikipedia.org/wiki/Hyperreal_number
+// https://en.wikipedia.org/wiki/Infinitesimal
+
 
 template<class T>
 void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)

@@ -3845,7 +3845,17 @@ void testAutoDiffReverse1()
 
   ADN x(10.f, ops);    // x = 10
 
-  ADN y = rsSqrt(x);
+  ADN y1 = rsSqrt(x);
+  float d1 = y1.getDerivative();
+  float t1 = 0.5/rsSqrt(x.v);      // target
+
+  ops.clear();
+  ADN y2 = rsSin(rsSqrt(x));
+  float d2 = y2.getDerivative();
+
+  ops.clear();
+  ADN y3 = rsSin(rsSqrt(x*x));
+  float d3 = y3.getDerivative();
 
 
 

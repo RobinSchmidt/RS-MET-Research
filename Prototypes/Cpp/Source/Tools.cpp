@@ -2515,10 +2515,13 @@ rsDualNumber<TVal, TDer> rsAbs(rsDualNumber<TVal, TDer> x)
 
 
 
-/** A number type for automatioc differentiation in reverse mode. The operators and functions are 
+/** A number type for automatic differentiation in reverse mode. The operators and functions are 
 implemented in a way so keep a record of the whole computation. At the end of the computation, a 
 call to getDerivative() triggers the computation of the derivative by running through the whole 
-computation backwards....
+computation backwards
+
+....i don't know yet, if the implementation is on the right track - i just started without much
+of a plan...
 
 */
 
@@ -2553,6 +2556,7 @@ public:
 
 
   using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
+  using OT  = OperationType;
   using OP  = Operation;
   inline static const TVal NaN = RS_NAN(TVal);
 
@@ -2581,17 +2585,45 @@ public:
   // \name Inquiry
 
   TVal getValue()      const { return v; }
-  //TDer getDerivative() const { return d; }  // ...needs to trigger the backward traversal of ops
+
+
+  // under construction:
+  TDer getDerivative() const 
+  { 
+    TDer d(1);
+    for(int i = ops.size()-1; i >= 0; i--)
+    {
+      d *= getOpDerivative(ops[i]);
+    }
+
+    return d;
+
+    //return TDer(0);  // preliminary
+  }  // ...needs to trigger the backward traversal of ops
+
+  TDer getOpDerivative(const Operation& op) const
+  {
+    switch(op.type)
+    {
+    case OT::sqrt: return  TVal(0.5)/rsSqrt(op.op1);
+    case OT::sin:  return  rsCos(op.op1);
+    case OT::cos:  return -rsSin(op.op1);
+    case OT::exp:  return  rsExp(op.op1);
+      // but what about the operators?
+
+    default: return TDer(0);
+    }
+  }
 
   //-----------------------------------------------------------------------------------------------
   // \name Arithmetic operators
 
-  ADN operator-() const { return push(neg, v, NaN, -v); }
+  ADN operator-() { return push(neg, v, NaN, -v); }
 
-  ADN operator+(const ADN& y) const { return push(add, v, y.v, v + y.v); }
-  ADN operator-(const ADN& y) const { return push(sub, v, y.v, v - y.v); }
-  ADN operator*(const ADN& y) const { return push(mul, v, y.v, v * y.v); }
-  ADN operator/(const ADN& y) const { return push(div, v, y.v, v / y.v); }
+  ADN operator+(const ADN& y) { return push(OT::add, v, y.v, v + y.v); }
+  ADN operator-(const ADN& y) { return push(OT::sub, v, y.v, v - y.v); }
+  ADN operator*(const ADN& y) { return push(OT::mul, v, y.v, v * y.v); }
+  ADN operator/(const ADN& y) { return push(OT::div, v, y.v, v / y.v); }
 
 
   // void setOperationTape(std::vector<Operation>& newTape) { ops = newTape; }
@@ -2600,34 +2632,13 @@ public:
 
 #define RS_CTD template<class TVal, class TDer>  // class template declarations
 #define RS_ADN rsAutoDiffNumber<TVal, TDer>      // 
-#define RS_OP RS_ADN::OperationType;
+#define RS_OP RS_ADN::OperationType
 #define RS_PFX RS_CTD RS_ADN                      // prefix for the function definitions
 
-
-RS_PFX rsSqrt(RS_ADN x) 
-{ 
- 
-  //rsAutoDiffNumber<TVal, TDer>::OperationType type = rsAutoDiffNumber<TVal, TDer>::OperationType::sqrt;
-
-  RS_ADN::OperationType type = RS_ADN::OperationType::sqrt;
-
-  //RS_OP type = RS_ADN::OperationType::sqrt; // RS_OP macro doesn't work - why? maybe spaces?
-
-
-
-  TVal r = rsSqrt(x.v); 
-  return x.push(type, x.v, RS_ADN::NaN, r); 
-
-  //TVal r = rsSqrt(x.v); return x.push(RS_OP::sqrt, x, TVal(0), r); 
-}
-
-//RS_PFX rsSqrt(RS_ADN x) { TVal r = rsSqrt(x.v); return x.push(RS_OP::sqrt, x, RS_ADN::NaN, r); }
-
-/*
-RS_PFX rsSin( RS_ADN x) { TVal r = rsSin( x.v); return x.push(RS_OP::sin,  x, RS_ADN::NaN, r); }
-RS_PFX rsCos( RS_ADN x) { TVal r = rsCos( x.v); return x.push(RS_OP::cos,  x, RS_ADN::NaN, r); }
-RS_PFX rsExp( RS_ADN x) { TVal r = rsExp( x.v); return x.push(RS_OP::exp,  x, RS_ADN::NaN, r); }
-*/
+RS_PFX rsSqrt(RS_ADN x) { return x.push(RS_OP::sqrt, x.v, RS_ADN::NaN, rsSqrt(x.v)); }
+RS_PFX rsSin( RS_ADN x) { return x.push(RS_OP::sin,  x.v, RS_ADN::NaN, rsSin( x.v)); }
+RS_PFX rsCos( RS_ADN x) { return x.push(RS_OP::cos,  x.v, RS_ADN::NaN, rsCos( x.v)); }
+RS_PFX rsExp( RS_ADN x) { return x.push(RS_OP::exp,  x.v, RS_ADN::NaN, rsExp( x.v)); }
 
 #undef RS_CTD
 #undef RS_DN

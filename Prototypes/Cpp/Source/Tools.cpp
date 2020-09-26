@@ -2605,11 +2605,12 @@ public:
   {
     switch(op.type)
     {
-    case OT::sqrt: return  TVal(0.5)/rsSqrt(op.op1);
+    case OT::sqrt: return  TVal(0.5)/rsSqrt(op.op1); // maybe we could also use TVal(0.5)/op.res
     case OT::sin:  return  rsCos(op.op1);
     case OT::cos:  return -rsSin(op.op1);
     case OT::exp:  return  rsExp(op.op1);
-      // but what about the operators?
+
+      // but what about the binary operators?
 
     default: return TDer(0);
     }

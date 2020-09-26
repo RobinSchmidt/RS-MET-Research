@@ -3852,11 +3852,24 @@ void testAutoDiffReverse1()
   ops.clear();
   ADN y2 = rsSin(rsSqrt(x));
   float d2 = y2.getDerivative();
+  float t2 = (cos(sqrt(x.v)))/(2.f*sqrt(x.v));
 
+  ops.clear();
+  ADN y3 = rsExp(rsSin(rsSqrt(x)));
+  float d3 = y3.getDerivative();
+  float t3 = (exp(sin(sqrt(x.v))) * cos(sqrt(x.v)))/(2.f*sqrt(x.v));
+
+  // ok - looks good so far
+
+  /*
   ops.clear();
   ADN y3 = rsSin(rsSqrt(x*x));
   float d3 = y3.getDerivative();
+  */
 
+  // hmm - for a chain of elementary functions, the storage scheme is redundant - the result of 
+  // operation i is the (first) operand of operation n+1...but maybe that's the way it has to be 
+  // and will make more sense in binary operations?
 
 
   int dummy = 0;

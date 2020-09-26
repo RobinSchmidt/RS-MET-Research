@@ -2515,6 +2515,101 @@ rsDualNumber<TVal, TDer> rsAbs(rsDualNumber<TVal, TDer> x)
 
 
 
+/** A number type for automatioc differentiation in reverse mode. The operators and functions are 
+implemented in a way so keep a record of the whole computation. At the end of the computation, a 
+call to getDerivative() triggers the computation of the derivative by running through the whole 
+computation backwards....
+
+*/
+
+template<class TVal, class TDer>
+class rsAutoDiffNumber
+{
+
+protected:
+
+  enum class OperationType
+  {
+    neg, add, sub, mul, div, sin, cos, sqrt, exp  // more to come
+  };
+
+  /** Structure to store the operations */
+  struct Operation
+  {
+    OperationType type; // type of operation
+    TVal op1;           // first operand
+    TVal op2;           // second operand
+    TVal res;           // result
+
+    Operation(OperationType _type, TVal _op1, TVal _op2, TVal _res)
+      : type(_type), op1(_op1), op2(_op2), res(_res) {}
+
+  };
+
+  std::vector<Operation>& ops;  // record of the operations
+
+
+public:
+
+  TVal v;  // function value, "real part" or "standard part"
+  //TDer d;  // derivative, "infinitesimal part" (my word)
+
+
+
+  rsAutoDiffNumber(TVal value, std::vector<Operation>& record) : v(value), ops(record) {}
+
+  using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
+  using OP  = Operation;
+  TVal NaN  = RS_NAN(TVal);
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  TVal getValue()      const { return v; }
+  //TDer getDerivative() const { return d; }  // ...needs to trigger the backward traversal of ops
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Arithmetic operators
+
+  /** Unary minus. */
+  ADN operator-() const { TVal r = -v; ops.push_back(OP(neg, v, NaN, r)); return ADN(r, ops); }
+
+  ADN operator+(const ADN& y) const 
+  { TVal r = v + y.v; ops.push_back(OP(add, v, y.v, r)); return ADN(r, ops);  }
+
+  ADN operator-(const ADN& y) const 
+  { TVal r = v - y.v; ops.push_back(OP(add, v, y.v, r)); return ADN(r, ops);  }
+
+  ADN operator*(const ADN& y) const 
+  { TVal r = v * y.v; ops.push_back(OP(add, v, y.v, r)); return ADN(r, ops);  }
+
+  ADN operator/(const ADN& y) const 
+  { TVal r = v / y.v; ops.push_back(OP(add, v, y.v, r)); return ADN(r, ops);  }
+
+
+  // maybe abbreviate ops.push_back(OP(add, v, y.v, r)); to a simple call to a push(add, v, y.v, r);
+  // member function ..this function could also return the new ADN, so the operator bodies would 
+  // reduce to: { TVal r = v+y.v; return push(add, v, y.v, r); } ..or maybe just
+  // { return push(add, v, y.v, v + y.v); }
+
+
+
+
+
+
+  /** Implements difference rule: (f-g)' = f' - g'. */
+  //ADN operator-(const ADN& y) const { return DN(v - y.v, d - y.d); }
+
+  /** Implements product rule: (f*g)' = f' * g + g' * f. */
+  //ADN operator*(const ADN& y) const { return DN(v * y.v, d*y.v + v*y.d ); }
+
+  /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2. */
+  //ADN operator/(const ADN& y) const { return DN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
+
+
+};
+
 
 
 // https://en.wikipedia.org/wiki/Automatic_differentiation
@@ -2533,6 +2628,8 @@ rsDualNumber<TVal, TDer> rsAbs(rsDualNumber<TVal, TDer> x)
 // https://en.wikipedia.org/wiki/Split-complex_number
 
 // what about multivariate functions and partial derivatives?
+
+
 
 
 /*

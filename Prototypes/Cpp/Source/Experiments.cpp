@@ -3837,6 +3837,21 @@ void testAutoDiff4()
 // https://en.wikipedia.org/wiki/Infinitesimal
 
 
+void testAutoDiffReverse1()
+{  
+  using ADN = rsAutoDiffNumber<float, float>; 
+
+  std::vector<ADN::Operation> ops;
+
+  ADN x(10.f, ops);    // x = 10
+
+  ADN y = rsSqrt(x);
+
+
+
+  int dummy = 0;
+}
+
 template<class T>
 void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
 {

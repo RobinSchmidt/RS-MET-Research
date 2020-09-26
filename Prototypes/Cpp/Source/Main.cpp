@@ -37,6 +37,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testAutoDiff2();
   //testAutoDiff3();
   testAutoDiff4();
+  testAutoDiffReverse1();
   //testVertexMesh();  // moved to main codbase
 
 

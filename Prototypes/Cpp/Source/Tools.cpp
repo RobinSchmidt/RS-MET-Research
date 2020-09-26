@@ -2554,7 +2554,7 @@ public:
 
   using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
   using OP  = Operation;
-  static const TVal NaN  = RS_NAN(TVal);
+  inline static const TVal NaN = RS_NAN(TVal);
 
 
   /** Pushes an operation record consisting of a type, two operands and a result onto the operation 
@@ -2599,14 +2599,35 @@ public:
 };
 
 #define RS_CTD template<class TVal, class TDer>  // class template declarations
-#define RS_ADN  rsAutoDiffNumber<TVal, TDer>      // dual number
-#define RS_OP = RS_ADN::OperationType;
+#define RS_ADN rsAutoDiffNumber<TVal, TDer>      // 
+#define RS_OP RS_ADN::OperationType;
 #define RS_PFX RS_CTD RS_ADN                      // prefix for the function definitions
 
-RS_PFX rsSqrt(RS_ADN x) { TVal r = rsSqrt(x.v); return x.push(RS_OP::sqrt, x, RS_ADN::NaN, r); }
+
+RS_PFX rsSqrt(RS_ADN x) 
+{ 
+ 
+  //rsAutoDiffNumber<TVal, TDer>::OperationType type = rsAutoDiffNumber<TVal, TDer>::OperationType::sqrt;
+
+  RS_ADN::OperationType type = RS_ADN::OperationType::sqrt;
+
+  //RS_OP type = RS_ADN::OperationType::sqrt; // RS_OP macro doesn't work - why? maybe spaces?
+
+
+
+  TVal r = rsSqrt(x.v); 
+  return x.push(type, x.v, RS_ADN::NaN, r); 
+
+  //TVal r = rsSqrt(x.v); return x.push(RS_OP::sqrt, x, TVal(0), r); 
+}
+
+//RS_PFX rsSqrt(RS_ADN x) { TVal r = rsSqrt(x.v); return x.push(RS_OP::sqrt, x, RS_ADN::NaN, r); }
+
+/*
 RS_PFX rsSin( RS_ADN x) { TVal r = rsSin( x.v); return x.push(RS_OP::sin,  x, RS_ADN::NaN, r); }
 RS_PFX rsCos( RS_ADN x) { TVal r = rsCos( x.v); return x.push(RS_OP::cos,  x, RS_ADN::NaN, r); }
 RS_PFX rsExp( RS_ADN x) { TVal r = rsExp( x.v); return x.push(RS_OP::exp,  x, RS_ADN::NaN, r); }
+*/
 
 #undef RS_CTD
 #undef RS_DN

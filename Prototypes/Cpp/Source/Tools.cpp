@@ -2526,11 +2526,15 @@ template<class TVal, class TDer>
 class rsAutoDiffNumber
 {
 
-protected:
+//protected:
+
+public:
+
+
 
   enum class OperationType
   {
-    neg, add, sub, mul, div, sin, cos, sqrt, exp  // more to come
+    neg, add, sub, mul, div, sqrt, sin, cos, exp  // more to come
   };
 
   /** Structure to store the operations */
@@ -2540,14 +2544,26 @@ protected:
     TVal op1;           // first operand
     TVal op2;           // second operand
     TVal res;           // result
-
     Operation(OperationType _type, TVal _op1, TVal _op2, TVal _res)
       : type(_type), op1(_op1), op2(_op2), res(_res) {}
-
   };
 
-  std::vector<Operation>& ops;  // record of the operations
 
+  std::vector<Operation>& ops;  // "tape" of recorded operations
+
+
+  using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
+  using OP  = Operation;
+  static const TVal NaN  = RS_NAN(TVal);
+
+
+  /** Pushes an operation record consisting of a type, two operands and a result onto the operation 
+  tape ops and returns the result of the operation as rsAutoDiffNumber. */
+  ADN push(OperationType type, TVal op1, TVal op2, TVal res)
+  {
+    ops.push_back(OP(type, op1, op2, res)); 
+    return ADN(res, ops);
+  }
 
 public:
 
@@ -2556,11 +2572,9 @@ public:
 
 
 
-  rsAutoDiffNumber(TVal value, std::vector<Operation>& record) : v(value), ops(record) {}
+  rsAutoDiffNumber(TVal value, std::vector<Operation>& tape) : v(value), ops(tape) {}
 
-  using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
-  using OP  = Operation;
-  TVal NaN  = RS_NAN(TVal);
+
 
 
   //-----------------------------------------------------------------------------------------------
@@ -2572,43 +2586,33 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Arithmetic operators
 
-  /** Unary minus. */
-  ADN operator-() const { TVal r = -v; ops.push_back(OP(neg, v, NaN, r)); return ADN(r, ops); }
+  ADN operator-() const { return push(neg, v, NaN, -v); }
 
-  ADN operator+(const ADN& y) const 
-  { TVal r = v + y.v; ops.push_back(OP(add, v, y.v, r)); return ADN(r, ops);  }
-
-  ADN operator-(const ADN& y) const 
-  { TVal r = v - y.v; ops.push_back(OP(add, v, y.v, r)); return ADN(r, ops);  }
-
-  ADN operator*(const ADN& y) const 
-  { TVal r = v * y.v; ops.push_back(OP(add, v, y.v, r)); return ADN(r, ops);  }
-
-  ADN operator/(const ADN& y) const 
-  { TVal r = v / y.v; ops.push_back(OP(add, v, y.v, r)); return ADN(r, ops);  }
+  ADN operator+(const ADN& y) const { return push(add, v, y.v, v + y.v); }
+  ADN operator-(const ADN& y) const { return push(sub, v, y.v, v - y.v); }
+  ADN operator*(const ADN& y) const { return push(mul, v, y.v, v * y.v); }
+  ADN operator/(const ADN& y) const { return push(div, v, y.v, v / y.v); }
 
 
-  // maybe abbreviate ops.push_back(OP(add, v, y.v, r)); to a simple call to a push(add, v, y.v, r);
-  // member function ..this function could also return the new ADN, so the operator bodies would 
-  // reduce to: { TVal r = v+y.v; return push(add, v, y.v, r); } ..or maybe just
-  // { return push(add, v, y.v, v + y.v); }
-
-
-
-
-
-
-  /** Implements difference rule: (f-g)' = f' - g'. */
-  //ADN operator-(const ADN& y) const { return DN(v - y.v, d - y.d); }
-
-  /** Implements product rule: (f*g)' = f' * g + g' * f. */
-  //ADN operator*(const ADN& y) const { return DN(v * y.v, d*y.v + v*y.d ); }
-
-  /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2. */
-  //ADN operator/(const ADN& y) const { return DN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
-
+  // void setOperationTape(std::vector<Operation>& newTape) { ops = newTape; }
 
 };
+
+#define RS_CTD template<class TVal, class TDer>  // class template declarations
+#define RS_ADN  rsAutoDiffNumber<TVal, TDer>      // dual number
+#define RS_OP = RS_ADN::OperationType;
+#define RS_PFX RS_CTD RS_ADN                      // prefix for the function definitions
+
+RS_PFX rsSqrt(RS_ADN x) { TVal r = rsSqrt(x.v); return x.push(RS_OP::sqrt, x, RS_ADN::NaN, r); }
+RS_PFX rsSin( RS_ADN x) { TVal r = rsSin( x.v); return x.push(RS_OP::sin,  x, RS_ADN::NaN, r); }
+RS_PFX rsCos( RS_ADN x) { TVal r = rsCos( x.v); return x.push(RS_OP::cos,  x, RS_ADN::NaN, r); }
+RS_PFX rsExp( RS_ADN x) { TVal r = rsExp( x.v); return x.push(RS_OP::exp,  x, RS_ADN::NaN, r); }
+
+#undef RS_CTD
+#undef RS_DN
+#undef RS_OP
+#undef RS_PFX
+
 
 
 

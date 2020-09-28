@@ -2545,27 +2545,34 @@ public:
   };
 
   inline static const TVal NaN = RS_NAN(TVal);
+  using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
+
 
   /** Structure to store the operations */
   struct Operation
   {
     OperationType type; // type of operation
-    TVal op1;           // first operand
-    TVal op2;           // second operand
-    TVal res;           // result
+    //TVal op1;           // first operand
+    //TVal op2;           // second operand
+    //TVal res;           // result
 
     // experimental - derivative fields that are filled in in the backward pass:
-    TDer op1d = NaN;
-    TDer op2d = NaN;
+    //TDer op1d = NaN;
+    //TDer op2d = NaN;
 
-
-    rsAutoDiffNumber* loc = nullptr;
+    //ADN* loc1 = nullptr;
+    //ADN* loc2 = nullptr;
     // memory location where we may need to write to in the reverse pass - but may be null for 
     // operations on temporary variables - for those, nothing is written, but if non-null, we fill
     // the loc->d field in the reverse pass
     // ...not yet used
+    // maybe we should store op1, op2 as ADN - complete with v,d,loc fields
 
-    Operation(OperationType _type, TVal _op1, TVal _op2, TVal _res)
+    ADN op1, op2;
+    TVal res;
+
+
+    Operation(OperationType _type, ADN _op1, ADN _op2, TVal _res)
       : type(_type), op1(_op1), op2(_op2), res(_res) {}
   };
 
@@ -2573,7 +2580,7 @@ public:
   std::vector<Operation>& ops;  // "tape" of recorded operations
 
 
-  using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
+
   using OT  = OperationType;
   using OP  = Operation;
 
@@ -2581,7 +2588,7 @@ public:
 
   /** Pushes an operation record consisting of a type, two operands and a result onto the operation 
   tape ops and returns the result of the operation as rsAutoDiffNumber. */
-  ADN push(OperationType type, TVal op1, TVal op2, TVal res)
+  ADN push(OperationType type, ADN op1, ADN op2, TVal res)
   {
     ops.push_back(OP(type, op1, op2, res)); 
     return ADN(res, ops);
@@ -2600,6 +2607,18 @@ public:
 
 
 
+  void initLoc() { loc = this; }
+  // inits the location pointer - this is a bad API and temporary
+  // get rid of this - or at least avoid having to call it from client code - client created 
+  // numbers with memory locations should always automatically assign the location and temporaries
+  // shouldn't ...maybe we need to pass a flag to the constructor to indicate a memory variable
+  // if this is not possible, find a better name - like enable
+  // i think, maybe it's possible by making sure that push() sets loc to nullptr - then the 
+  // standard constructor may automatically set loc = this. ...but is it really safe to assume,
+  // that all variable locations are still valid - no: the user may define their own functions 
+  // using temporary variables - these will be invalid, when the function returns - maybe we 
+  // indeed need manual enable calls
+
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
@@ -2613,11 +2632,12 @@ public:
 
     int i = (int) ops.size()-1;
 
+
     while(i >= 0)
     {
 
-      ops[i].op1d = getOpDerivative(ops[i]);
-      d *= getOpDerivative(ops[i]);
+      //ops[i].op1d = getOpDerivative(ops[i]);
+      //d *= getOpDerivative(ops[i]);
 
 
       i--;
@@ -2670,10 +2690,10 @@ public:
 
   ADN operator-() { return push(neg, v, NaN, -v); }
 
-  ADN operator+(const ADN& y) { return push(OT::add, v, y.v, v + y.v); }
-  ADN operator-(const ADN& y) { return push(OT::sub, v, y.v, v - y.v); }
-  ADN operator*(const ADN& y) { return push(OT::mul, v, y.v, v * y.v); }
-  ADN operator/(const ADN& y) { return push(OT::div, v, y.v, v / y.v); }
+  ADN operator+(const ADN& y) { return push(OT::add, *this, y, v + y.v); }
+  ADN operator-(const ADN& y) { return push(OT::sub, *this, y, v - y.v); }
+  ADN operator*(const ADN& y) { return push(OT::mul, *this, y, v * y.v); }
+  ADN operator/(const ADN& y) { return push(OT::div, *this, y, v / y.v); }
 
 
   ADN operator=(const ADN& y) 
@@ -2687,7 +2707,7 @@ public:
 
 
   
-protected:
+//protected:  // try to make protected - but that may need a lot of boilerplat friend declarations
 
   rsAutoDiffNumber* loc = nullptr;
 
@@ -2698,10 +2718,17 @@ protected:
 #define RS_OP RS_ADN::OperationType
 #define RS_PFX RS_CTD RS_ADN                      // prefix for the function definitions
 
-RS_PFX rsSqrt(RS_ADN x) { return x.push(RS_OP::sqrt, x.v, RS_ADN::NaN, rsSqrt(x.v)); }
-RS_PFX rsSin( RS_ADN x) { return x.push(RS_OP::sin,  x.v, RS_ADN::NaN, rsSin( x.v)); }
-RS_PFX rsCos( RS_ADN x) { return x.push(RS_OP::cos,  x.v, RS_ADN::NaN, rsCos( x.v)); }
-RS_PFX rsExp( RS_ADN x) { return x.push(RS_OP::exp,  x.v, RS_ADN::NaN, rsExp( x.v)); }
+RS_PFX rsSqrt(RS_ADN x) { return x.push(RS_OP::sqrt, x, RS_ADN(0.f, x.ops), rsSqrt(x.v)); }
+RS_PFX rsSin( RS_ADN x) { return x.push(RS_OP::sin,  x, RS_ADN(0.f, x.ops), rsSin( x.v)); }
+RS_PFX rsCos( RS_ADN x) { return x.push(RS_OP::cos,  x, RS_ADN(0.f, x.ops), rsCos( x.v)); }
+RS_PFX rsExp( RS_ADN x) { return x.push(RS_OP::exp,  x, RS_ADN(0.f, x.ops), rsExp( x.v)); }
+// the 2nd operand is a dummy - maybe define a macro for it
+
+
+//RS_PFX rsSqrt(RS_ADN x) { return x.push(RS_OP::sqrt, x, RS_ADN(RS_ADN::NaN), rsSqrt(x.v)); }
+//RS_PFX rsSin( RS_ADN x) { return x.push(RS_OP::sin,  x, RS_ADN(RS_ADN::NaN), rsSin( x.v)); }
+//RS_PFX rsCos( RS_ADN x) { return x.push(RS_OP::cos,  x, RS_ADN(RS_ADN::NaN), rsCos( x.v)); }
+//RS_PFX rsExp( RS_ADN x) { return x.push(RS_OP::exp,  x, RS_ADN(RS_ADN::NaN), rsExp( x.v)); }
 
 #undef RS_CTD
 #undef RS_DN

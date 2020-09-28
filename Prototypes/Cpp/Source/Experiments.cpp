@@ -3845,18 +3845,22 @@ void testAutoDiffReverse1()
 
   bool ok = true;
 
-  ADN x(2.f, ops);    // x = 2
-  ADN y(3.f, ops);    // y = 3
-  ADN z(5.f, ops);    // z = 5
-  ADN f(0.f, ops);    // f(x,y,z)
-  float d, t;         // derivative and target
-  float tol = 1.e-8;  // tolerance for floating point comparisons
+  ADN x(2.f, ops);     // x = 2
+  ADN y(3.f, ops);     // y = 3
+  ADN z(5.f, ops);     // z = 5
+  ADN f(0.f, ops);     // f(x,y,z)
+  float d, t;          // derivative and target
+  float tol = 1.e-8f;  // tolerance for floating point comparisons
+
+
+  x.initLoc(); y.initLoc(); z.initLoc();  // get rid of these calls!
+
   
   // test derivatives of univariate functions:
   ops.clear();
   f = rsSqrt(x);
   d = f.getDerivative();
-  t = 0.5/rsSqrt(x.v);
+  t = 0.5f/rsSqrt(x.v);
   ok &= rsIsCloseTo(d, t, tol);
 
   ops.clear();

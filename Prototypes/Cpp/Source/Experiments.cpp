@@ -3843,23 +3843,70 @@ void testAutoDiffReverse1()
 
   std::vector<ADN::Operation> ops;
 
-  ADN x(10.f, ops);    // x = 10
+  bool ok = true;
 
-  ADN y1 = rsSqrt(x);
-  float d1 = y1.getDerivative();
-  float t1 = 0.5/rsSqrt(x.v);      // target
+  ADN x(2.f, ops);    // x = 2
+  ADN y(3.f, ops);    // y = 3
+  ADN z(5.f, ops);    // z = 5
+  ADN f(0.f, ops);    // f(x,y,z)
+  float d, t;         // derivative and target
+  float tol = 1.e-8;  // tolerance for floating point comparisons
+  
+  // test derivatives of univariate functions:
+  ops.clear();
+  f = rsSqrt(x);
+  d = f.getDerivative();
+  t = 0.5/rsSqrt(x.v);
+  ok &= rsIsCloseTo(d, t, tol);
 
   ops.clear();
-  ADN y2 = rsSin(rsSqrt(x));
-  float d2 = y2.getDerivative();
-  float t2 = (cos(sqrt(x.v)))/(2.f*sqrt(x.v));
+  f = rsSin(rsSqrt(x));
+  d = f.getDerivative();
+  t = (cos(sqrt(x.v)))/(2.f*sqrt(x.v));
+  ok &= rsIsCloseTo(d, t, tol);
 
   ops.clear();
-  ADN y3 = rsExp(rsSin(rsSqrt(x)));
-  float d3 = y3.getDerivative();
-  float t3 = (exp(sin(sqrt(x.v))) * cos(sqrt(x.v)))/(2.f*sqrt(x.v));
+  f = rsExp(rsSin(rsSqrt(x)));
+  d = f.getDerivative();
+  t = (exp(sin(sqrt(x.v))) * cos(sqrt(x.v)))/(2.f*sqrt(x.v));
+  ok &= rsIsCloseTo(d, t, tol);
 
   // ok - looks good so far
+  // the getDerivative doesn't seem to make sense anymore - instead, we need a call to 
+  // f.computeDerivatives() which should assign the x.d field and then compare x.d to t
+
+
+  // test derivatives of binary operators:
+
+  ops.clear();
+  f = x + y;
+  //d = x.d
+
+
+  // test derivatives of iterated binary operators, like f(x,y,z) = x*y*z, etc.
+
+
+  // ...but the binary operations are still wrong - these are more complicated because i can't just
+  // apply the chain-rule and move on to the next inner operand because there are now two operands, 
+  // so the expression tree actually branches ...maybe we need an actual tree to store the record?
+
+
+
+
+  // i think, i will need another field in rsAutoDiffNumber to store the "adjoint" - only in that 
+  // case it makes actually sense for function f: R^N -> R functions. The R^N inputs must be of 
+  // type rsAutoDiffNumber and in the reverse pass we compute df/dxn
+
+  ops.clear();
+  f = x+x;
+  d = f.getDerivative();
+  t = 2.f;
+
+  ops.clear();
+  f = rsSin(x) + rsCos(x);
+  d = f.getDerivative();
+  t = rsCos(x.v) - rsSin(x.v);
+
 
   /*
   ops.clear();
@@ -3870,6 +3917,36 @@ void testAutoDiffReverse1()
   // hmm - for a chain of elementary functions, the storage scheme is redundant - the result of 
   // operation i is the (first) operand of operation n+1...but maybe that's the way it has to be 
   // and will make more sense in binary operations?
+
+
+  // -maybe the numbers should actually store a derivative in a field and init it to NaN and 
+  //  actually set it in the backward pass?
+  // -the operands and results in the recorded operations should be AutoDiffNumbers, not TVal
+  // -maybe the record needs to store pointers to operands instead of the operands themselves?
+  // -then, when a binary operation is encountered, we call getDerivative recursively on both 
+  //  operands?
+  // -try a scalar function with 2 inputs, maybe something resembling a neural network - then 
+  //  actually the weights are also inputs to the function
+  // -how about y = tanh(a0 + a1*x1 + a2*x2) - after the backward pass, we want the derivative fields
+  //  of a0,a1,x1,a2,x2 contain the partial derivatives of y with respect to these variables
+  // -define z = a0 + a1*x1 + a2*x2, and compute the derivative of tanh with repect to z
+  // -compute derivatives of z: dz/da0 = 1, dz/da1 = x1, dz/dx1 = a1, dz/da2 = x2, dz/dx2=a2
+  // -the sensitivity of a sum with respect to a summand is 1
+  // -the sensitivities of a difference a-b are 1 and -1 respectively
+  // -the sensitivity of a product with respect to one factor is the other factor
+  // -maybe we need partial derivatives of the binary operators with respect to each of the 
+  //  operands. if underscore denotes partial derivative, we have: (x+y)_x = 1, (x+y)_y = 1, 
+  //  (x-y)_x = 1, (x-y)_y = -1, (x*y)_x = y, (x*y)_y = x, (x/y)_x = 1/y, (x/y)_y = -x/y^2
+  // -maybe when we encounter an add, we don't need recursion - instead just assign the derivative
+  //  fields for both operands - the operands are in positions i-1 and i-2 in the loop
+  // -i think, the goals are quite different in forward and reverse mode: in forward mode, we want
+  //  that in y.d of an end result y = E(x) for some complicated expression E, we want the 
+  //  derivative of E with respect to x. in reverse mode, we want to evaluate a function of several
+  //  variables, say r = f(x,y,z) and at the end, we want the the x.d, y.d, z.d contain the partial
+  //  derivatives of f with respect to x,y,z - the reverse pass should assign them - we may need to
+  //  distinguish between variables that have a memory location and temporaries and assign the 
+  //  memory variables in the reverse pass
+
 
 
   int dummy = 0;

@@ -2235,6 +2235,10 @@ protected:
 // https://en.wikipedia.org/wiki/Heap%27s_algorithm#:~:text=Heap's%20algorithm
 // https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm
 
+// https://www.jmlr.org/papers/volume18/17-468/17-468.pdf
+// Automatic Differentiation in Machine Learning: a Survey
+
+// https://github.com/coin-or/ADOL-C
 
 //=================================================================================================
 
@@ -2248,7 +2252,7 @@ derivatives can be calculated by various means:
 
   (1) Analytically, by directly implementing a symbolically derived formula. This is tedious, 
       error-prone and needs human effort for each individual case (unless a symbolic math engine 
-      is available).
+      is available, but the expressions tend to swell quickly rendering the approach inefficient).
   (2) Numerically, by using finite difference approximations. This can be computationally 
       expensive and inaccurate.
   (3) Automatically, by overloading operators and functions for a number type that is augmented by
@@ -2540,6 +2544,8 @@ public:
     neg, add, sub, mul, div, sqrt, sin, cos, exp  // more to come
   };
 
+  inline static const TVal NaN = RS_NAN(TVal);
+
   /** Structure to store the operations */
   struct Operation
   {
@@ -2547,6 +2553,18 @@ public:
     TVal op1;           // first operand
     TVal op2;           // second operand
     TVal res;           // result
+
+    // experimental - derivative fields that are filled in in the backward pass:
+    TDer op1d = NaN;
+    TDer op2d = NaN;
+
+
+    rsAutoDiffNumber* loc = nullptr;
+    // memory location where we may need to write to in the reverse pass - but may be null for 
+    // operations on temporary variables - for those, nothing is written, but if non-null, we fill
+    // the loc->d field in the reverse pass
+    // ...not yet used
+
     Operation(OperationType _type, TVal _op1, TVal _op2, TVal _res)
       : type(_type), op1(_op1), op2(_op2), res(_res) {}
   };
@@ -2558,7 +2576,7 @@ public:
   using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
   using OT  = OperationType;
   using OP  = Operation;
-  inline static const TVal NaN = RS_NAN(TVal);
+
 
 
   /** Pushes an operation record consisting of a type, two operands and a result onto the operation 
@@ -2571,12 +2589,13 @@ public:
 
 public:
 
-  TVal v;  // function value, "real part" or "standard part"
-  //TDer d;  // derivative, "infinitesimal part" (my word)
+  TVal v;  //
+  TDer d = NaN;
+  //TDer a;  // adjoint
 
 
 
-  rsAutoDiffNumber(TVal value, std::vector<Operation>& tape) : v(value), ops(tape) {}
+  rsAutoDiffNumber(TVal value, std::vector<Operation>& tape) : v(value), /*a(NaN),*/ ops(tape) {}
 
 
 
@@ -2591,10 +2610,30 @@ public:
   TDer getDerivative() const 
   { 
     TDer d(1);
+
+    int i = (int) ops.size()-1;
+
+    while(i >= 0)
+    {
+
+      ops[i].op1d = getOpDerivative(ops[i]);
+      d *= getOpDerivative(ops[i]);
+
+
+      i--;
+    }
+
+    /*
     for(int i = ops.size()-1; i >= 0; i--)
     {
+
+
+      ops[i].op1d = getOpDerivative(ops[i]);
       d *= getOpDerivative(ops[i]);
+
+
     }
+    */
 
     return d;
 
@@ -2605,12 +2644,22 @@ public:
   {
     switch(op.type)
     {
+    case OT::add: return   op.op1 + op.op2;  // is this correct?
+
+      // for mul..do we have to call getOpDerivative twice with both operands
+      // or maybe reverse mode is only good for univariate operations? they always only talk about
+      // multiplying the Jacobians left-to-right or right-to-left - but here, we need to add two
+      // Jacobians...maybe we have to use recursion in getDerivative
+      // or maybe the Operation struct needs derivative fields for both operands? that are filled
+      // in the backward pass?
+
+
     case OT::sqrt: return  TVal(0.5)/rsSqrt(op.op1); // maybe we could also use TVal(0.5)/op.res
     case OT::sin:  return  rsCos(op.op1);
     case OT::cos:  return -rsSin(op.op1);
     case OT::exp:  return  rsExp(op.op1);
 
-      // but what about the binary operators?
+      // but what about the binary operators? 
 
     default: return TDer(0);
     }
@@ -2627,7 +2676,20 @@ public:
   ADN operator/(const ADN& y) { return push(OT::div, v, y.v, v / y.v); }
 
 
+  ADN operator=(const ADN& y) 
+  { 
+    v = y.v;
+    ops = y.ops;
+    return *this;
+  }
+
   // void setOperationTape(std::vector<Operation>& newTape) { ops = newTape; }
+
+
+  
+protected:
+
+  rsAutoDiffNumber* loc = nullptr;
 
 };
 

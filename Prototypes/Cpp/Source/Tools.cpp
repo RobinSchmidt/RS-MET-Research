@@ -2552,26 +2552,9 @@ public:
   struct Operation
   {
     OperationType type; // type of operation
-    //TVal op1;           // first operand
-    //TVal op2;           // second operand
-    //TVal res;           // result
-
-    // experimental - derivative fields that are filled in in the backward pass:
-    //TDer op1d = NaN;
-    //TDer op2d = NaN;
-
-    //ADN* loc1 = nullptr;
-    //ADN* loc2 = nullptr;
-    // memory location where we may need to write to in the reverse pass - but may be null for 
-    // operations on temporary variables - for those, nothing is written, but if non-null, we fill
-    // the loc->d field in the reverse pass
-    // ...not yet used
-    // maybe we should store op1, op2 as ADN - complete with v,d,loc fields
-
-    ADN op1, op2;
-    TVal res;
-
-
+    ADN op1;            // first operand
+    ADN op2;            // second operand
+    TVal res;           // result
     Operation(OperationType _type, ADN _op1, ADN _op2, TVal _res)
       : type(_type), op1(_op1), op2(_op2), res(_res) {}
   };
@@ -2596,11 +2579,8 @@ public:
 
 public:
 
-  TVal v;  //
-  TDer d = NaN;
-  //TDer a;  // adjoint
-
-
+  TVal v;        // value
+  TDer d = NaN;  // (partial) derivative
 
   rsAutoDiffNumber(TVal value, std::vector<Operation>& tape) : v(value), /*a(NaN),*/ ops(tape) {}
 
@@ -2628,59 +2608,57 @@ public:
   void computeDerivatives()
   {
     TDer d(1);
+    // i think, this accumulator is wrong - we whould use only the v,d fields of the operand(s) and
+    // the result - so the result may also have to be an ADN
+
+    //TDer d1, d2;
+
     int i = (int) ops.size()-1;
+
+    if(i < 0)
+      return;
+
+    //ops[i].res.d = TVal(1);  // init - may not always be suitable
+
+
     while(i >= 0)
     {
 
       //ops[i].op1d = getOpDerivative(ops[i]);
 
-      d *= getOpDerivative(ops[i]);
-      if(ops[i].op1.loc != nullptr)
-        ops[i].op1.loc->d = d;
+      if(ops[i].type == OT::add)
+      {
+        ops[i].op1.d = ops[i].op2.v;
+        ops[i].op2.d = ops[i].op1.v;
+      }
+      else
+      {
+        // operation is a unary function
+        d *= getOpDerivative(ops[i]);
 
+
+        ops[i].op1.d = d;
+        ops[i].op2.d = NaN;
+
+
+      }
+
+        
+      if(ops[i].op1.loc != nullptr)
+      {
+        ops[i].op1.loc->d = ops[i].op1.d;
+
+        //ops[i].op1.loc->d = d;
+      }
 
 
       i--;
+
     }
 
   }
 
-
-  // under construction:
-  TDer getDerivative() const 
-  { 
-    TDer d(1);
-
-    int i = (int) ops.size()-1;
-
-
-    while(i >= 0)
-    {
-
-      //ops[i].op1d = getOpDerivative(ops[i]);
-      //d *= getOpDerivative(ops[i]);
-
-
-      i--;
-    }
-
-    /*
-    for(int i = ops.size()-1; i >= 0; i--)
-    {
-
-
-      ops[i].op1d = getOpDerivative(ops[i]);
-      d *= getOpDerivative(ops[i]);
-
-
-    }
-    */
-
-    return d;
-
-    //return TDer(0);  // preliminary
-  }  // ...needs to trigger the backward traversal of ops
-
+  // rename to getFunctionDerivative and use it only for unary functions
   TDer getOpDerivative(const Operation& op) const
   {
     switch(op.type)

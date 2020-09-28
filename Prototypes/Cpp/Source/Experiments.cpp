@@ -3859,21 +3859,18 @@ void testAutoDiffReverse1()
   // test derivatives of univariate functions:
   ops.clear();
   f = rsSqrt(x);
-  //d = f.getDerivative();
   f.computeDerivatives();
   t = 0.5f/rsSqrt(x.v);
   ok &= rsIsCloseTo(x.d, t, tol);
 
   ops.clear();
   f = rsSin(rsSqrt(x));
-  //d = f.getDerivative();
   f.computeDerivatives();
   t = (cos(sqrt(x.v)))/(2.f*sqrt(x.v));
   ok &= rsIsCloseTo(x.d, t, tol);
 
   ops.clear();
   f = rsExp(rsSin(rsSqrt(x)));
-  //d = f.getDerivative();
   f.computeDerivatives();
   t = (exp(sin(sqrt(x.v))) * cos(sqrt(x.v)))/(2.f*sqrt(x.v));
   ok &= rsIsCloseTo(x.d, t, tol);
@@ -3887,6 +3884,11 @@ void testAutoDiffReverse1()
 
   ops.clear();
   f = x + y;
+  f.computeDerivatives();
+  ok &= rsIsCloseTo(x.d, y.v, tol);
+  ok &= rsIsCloseTo(y.d, x.v, tol);
+  int dummy = 0;
+
   //d = x.d
 
 
@@ -3903,7 +3905,7 @@ void testAutoDiffReverse1()
   // i think, i will need another field in rsAutoDiffNumber to store the "adjoint" - only in that 
   // case it makes actually sense for function f: R^N -> R functions. The R^N inputs must be of 
   // type rsAutoDiffNumber and in the reverse pass we compute df/dxn
-
+  /*
   ops.clear();
   f = x+x;
   d = f.getDerivative();
@@ -3913,6 +3915,7 @@ void testAutoDiffReverse1()
   f = rsSin(x) + rsCos(x);
   d = f.getDerivative();
   t = rsCos(x.v) - rsSin(x.v);
+  */
 
 
   /*
@@ -3954,9 +3957,6 @@ void testAutoDiffReverse1()
   //  distinguish between variables that have a memory location and temporaries and assign the 
   //  memory variables in the reverse pass
 
-
-
-  int dummy = 0;
 }
 
 template<class T>

@@ -3983,6 +3983,48 @@ void testAutoDiffReverse1()
 
 }
 
+void testDualComplex()
+{
+  using DCN = rsDualComplexNumber<float>;
+
+  float a, b, c, d;
+
+  a = 2; b = 3; c = 5; d = 7;
+
+  DCN z(a, b, c,d);
+  DCN w(a,-b,-c,d);
+
+  DCN zw = z*w;
+  DCN wz = w*z; 
+
+  float A = a*a + b*b;
+  float D = 2*(a*d-b*c); 
+   
+  DCN v(A, 0, 0, -D);
+
+  DCN zwv = zw*v;  
+  // zwv has only real part nonzero, so first augmenting the fraction by a - i*b - c*E + i*E*d and 
+  // then by A - i*E*D with A,D given as above, we can make the denominator purely real
+
+
+  DCN z1 (1,2,3,4);
+  DCN z2 (5,6,7,8);
+  DCN z3 = z1 * z2;
+  DCN z4 = z3 / z1;
+  DCN z5 = z3 / z2;
+  // ok - it seems division works
+
+
+  // initializing the dual part to 1 and imdual to 0, we should get the complex derivative 2*z of 
+  // f(z) = z^2 in the derivative part, since z = 2 + 3*i, 2*z = 4 + 6*i
+  z = DCN(2,3,1,0); 
+  w = z*z;  // derivative part (contained in c,d) should be 4 + 6*i - yep, looks good!
+
+
+  int dummy = 0;
+
+}
+
 template<class T>
 void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
 {

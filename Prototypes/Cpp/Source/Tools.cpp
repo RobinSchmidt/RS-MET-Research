@@ -2767,7 +2767,55 @@ RS_PFX rsExp( RS_ADN x) { return x.push(RS_OP::exp,  x, RS_ADN(0.f, x.ops), rsEx
 
 // what about multivariate functions and partial derivatives?
 
+template<class T>
+class rsDualComplexNumber  // "duco"
+{
 
+public:
+
+  T a, b, c, d;
+
+  using DCN = rsDualComplexNumber<T>;
+
+
+  rsDualComplexNumber(T real = T(0), T imag = T(0), T dual = T(0), T imagDual = T(0)) 
+    : a(real), b(imag), c(dual), d(imagDual) {}
+
+
+
+
+  DCN operator+(const DCN& z) const { return DCN(a + z.a, b + z.b, c + z.c, d + z.d); }
+  DCN operator-(const DCN& z) const { return DCN(a - z.a, b - z.b, c - z.c, d - z.d); }
+  DCN operator*(const DCN& z) const
+  {
+    return DCN(a*z.a - b*z.b, 
+               a*z.b + z.a*b, 
+               a*z.c + z.a*c - b*z.d - z.b*d, 
+               a*z.d + z.a*d + b*z.c + z.b*c);
+  }
+
+  DCN operator/(const DCN& z) const
+  {
+    T A = z.a*z.a + z.b*z.b;
+    T D = T(2)*(z.a*z.d - z.b*z.c);
+
+    DCN t1 = *this * DCN(z.a, -z.b, -z.c, z.d);  // product after first augmentation
+    DCN t2 = t1 * DCN(A, T(0), T(0), -D);        // product after second augmentation
+    T s = T(1) / (A*A);
+    t2.a *= s;
+    t2.b *= s;
+    t2.c *= s;
+    t2.d *= s;
+
+    return t2;
+  }
+  // todo: simplify, optimize, use only one temporary
+
+  //float A = a*a + b*b;
+  //float D = 2*(a*d-b*c); 
+
+
+};
 
 
 /*

@@ -2625,6 +2625,27 @@ public:
   TVal getValue()      const { return v; }
 
 
+  void computeDerivatives()
+  {
+    TDer d(1);
+    int i = (int) ops.size()-1;
+    while(i >= 0)
+    {
+
+      //ops[i].op1d = getOpDerivative(ops[i]);
+
+      d *= getOpDerivative(ops[i]);
+      if(ops[i].op1.loc != nullptr)
+        ops[i].op1.loc->d = d;
+
+
+
+      i--;
+    }
+
+  }
+
+
   // under construction:
   TDer getDerivative() const 
   { 
@@ -2664,7 +2685,7 @@ public:
   {
     switch(op.type)
     {
-    case OT::add: return   op.op1 + op.op2;  // is this correct?
+    //case OT::add: return   op.op1.v + op.op2.v;  // is this correct?
 
       // for mul..do we have to call getOpDerivative twice with both operands
       // or maybe reverse mode is only good for univariate operations? they always only talk about
@@ -2674,10 +2695,10 @@ public:
       // in the backward pass?
 
 
-    case OT::sqrt: return  TVal(0.5)/rsSqrt(op.op1); // maybe we could also use TVal(0.5)/op.res
-    case OT::sin:  return  rsCos(op.op1);
-    case OT::cos:  return -rsSin(op.op1);
-    case OT::exp:  return  rsExp(op.op1);
+    case OT::sqrt: return  TVal(0.5)/rsSqrt(op.op1.v); // maybe we could also use TVal(0.5)/op.res
+    case OT::sin:  return  rsCos(op.op1.v);
+    case OT::cos:  return -rsSin(op.op1.v);
+    case OT::exp:  return  rsExp(op.op1.v);
 
       // but what about the binary operators? 
 

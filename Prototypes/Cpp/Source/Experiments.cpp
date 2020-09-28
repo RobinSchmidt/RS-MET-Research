@@ -3859,21 +3859,24 @@ void testAutoDiffReverse1()
   // test derivatives of univariate functions:
   ops.clear();
   f = rsSqrt(x);
-  d = f.getDerivative();
+  //d = f.getDerivative();
+  f.computeDerivatives();
   t = 0.5f/rsSqrt(x.v);
-  ok &= rsIsCloseTo(d, t, tol);
+  ok &= rsIsCloseTo(x.d, t, tol);
 
   ops.clear();
   f = rsSin(rsSqrt(x));
-  d = f.getDerivative();
+  //d = f.getDerivative();
+  f.computeDerivatives();
   t = (cos(sqrt(x.v)))/(2.f*sqrt(x.v));
-  ok &= rsIsCloseTo(d, t, tol);
+  ok &= rsIsCloseTo(x.d, t, tol);
 
   ops.clear();
   f = rsExp(rsSin(rsSqrt(x)));
-  d = f.getDerivative();
+  //d = f.getDerivative();
+  f.computeDerivatives();
   t = (exp(sin(sqrt(x.v))) * cos(sqrt(x.v)))/(2.f*sqrt(x.v));
-  ok &= rsIsCloseTo(d, t, tol);
+  ok &= rsIsCloseTo(x.d, t, tol);
 
   // ok - looks good so far
   // the getDerivative doesn't seem to make sense anymore - instead, we need a call to 

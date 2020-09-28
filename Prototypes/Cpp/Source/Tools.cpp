@@ -2628,28 +2628,31 @@ public:
 
       if(ops[i].type == OT::add)
       {
-        ops[i].op1.d = ops[i].op2.v;
-        ops[i].op2.d = ops[i].op1.v;
+        ops[i].op1.d = d;
+        ops[i].op2.d = d;
+      }
+      else if(ops[i].type == OT::mul)
+      {
+        ops[i].op1.d = d * ops[i].op2.v;
+        ops[i].op2.d = d * ops[i].op1.v;
       }
       else
       {
         // operation is a unary function
         d *= getOpDerivative(ops[i]);
-
-
         ops[i].op1.d = d;
         ops[i].op2.d = NaN;
-
-
       }
 
-        
-      if(ops[i].op1.loc != nullptr)
-      {
-        ops[i].op1.loc->d = ops[i].op1.d;
+      
 
-        //ops[i].op1.loc->d = d;
-      }
+      // assign derivative fields in memory variables, if applicable:
+      if(ops[i].op1.loc != nullptr) ops[i].op1.loc->d = ops[i].op1.d;
+      if(ops[i].op2.loc != nullptr) ops[i].op2.loc->d = ops[i].op2.d;
+
+
+
+
 
 
       i--;

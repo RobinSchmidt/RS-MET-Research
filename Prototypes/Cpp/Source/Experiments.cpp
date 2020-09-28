@@ -3881,12 +3881,17 @@ void testAutoDiffReverse1()
 
 
   // test derivatives of binary operators:
-
   ops.clear();
   f = x + y;
   f.computeDerivatives();
-  ok &= rsIsCloseTo(x.d, y.v, tol);
-  ok &= rsIsCloseTo(y.d, x.v, tol);
+  ok &= rsIsCloseTo(x.d, 1.f, tol);  // (x+y)_x = 1
+  ok &= rsIsCloseTo(y.d, 1.f, tol);  // (x+y)_y = 1
+
+  ops.clear();
+  f = x * y;
+  f.computeDerivatives();
+  ok &= rsIsCloseTo(x.d, y.v, tol);  // (x*y)_x = y
+  ok &= rsIsCloseTo(y.d, x.v, tol);  // (x*y)_y = x
   int dummy = 0;
 
   //d = x.d

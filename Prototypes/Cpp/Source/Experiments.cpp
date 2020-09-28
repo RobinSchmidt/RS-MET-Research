@@ -3888,10 +3888,29 @@ void testAutoDiffReverse1()
   ok &= rsIsCloseTo(y.d, 1.f, tol);  // (x+y)_y = 1
 
   ops.clear();
+  f = x - y;
+  f.computeDerivatives();
+  ok &= rsIsCloseTo(x.d,  1.f, tol);  // (x-y)_x =  1
+  ok &= rsIsCloseTo(y.d, -1.f, tol);  // (x-y)_y = -1
+
+  ops.clear();
   f = x * y;
   f.computeDerivatives();
   ok &= rsIsCloseTo(x.d, y.v, tol);  // (x*y)_x = y
   ok &= rsIsCloseTo(y.d, x.v, tol);  // (x*y)_y = x
+
+  ops.clear();
+  f = x / y;
+  f.computeDerivatives();
+  ok &= rsIsCloseTo(x.d,  1.f/ y.v,      tol);  // (x/y)_x =  1/y
+  ok &= rsIsCloseTo(y.d, -x.v/(y.v*y.v), tol);  // (x/y)_y = -x/y^2
+
+  ops.clear();
+  f = x * y * z;
+  f.computeDerivatives();
+  ok &= rsIsCloseTo(x.d, y.v*z.v, tol);  // (x*y*z)_x = y*z
+  // wrong
+
   int dummy = 0;
 
   //d = x.d

@@ -2609,7 +2609,7 @@ public:
   {
     TDer d(1);
     // i think, this accumulator is wrong - we whould use only the v,d fields of the operand(s) and
-    // the result - so the result may also have to be an ADN
+    // the result - so the result may also have to be an ADN...or maybe not?
 
     //TDer d1, d2;
 
@@ -2631,10 +2631,20 @@ public:
         ops[i].op1.d = d;
         ops[i].op2.d = d;
       }
+      else if(ops[i].type == OT::sub)
+      {
+        ops[i].op1.d =  d;
+        ops[i].op2.d = -d;
+      }
       else if(ops[i].type == OT::mul)
       {
-        ops[i].op1.d = d * ops[i].op2.v;
-        ops[i].op2.d = d * ops[i].op1.v;
+        ops[i].op1.d = d * ops[i].op2.v;  // (x*y)_x = y
+        ops[i].op2.d = d * ops[i].op1.v;  // (x*y)_y = x
+      }
+      else if(ops[i].type == OT::div)
+      {
+        ops[i].op1.d =  d                /  ops[i].op2.v;                  // (x/y)_x =  1/y
+        ops[i].op2.d = -d * ops[i].op1.v / (ops[i].op2.v * ops[i].op2.v);  // (x/y)_y = -x/y^2
       }
       else
       {

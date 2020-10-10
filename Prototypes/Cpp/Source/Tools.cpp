@@ -1957,8 +1957,7 @@ protected:
 // maybe have N and M as dimensionalities of the space/manifold under cosideration (e.g. the 
 // sphere) and the embedding space (e.g. R^3, the 3D Euclidean space)
 
-
-
+/*
 template<class T>
 void cartesianToSpherical(T x, T y, T z, T* r, T* theta, T* phi)
 {
@@ -1977,6 +1976,7 @@ void sphericalToCartesian(T r, T theta, T phi, T* x, T* y, T* z)
   *z = r * cos(theta);
 }
 // see Mathematical Physics Eq. 3.11
+*/
 
 // see also:
 // https://en.wikipedia.org/wiki/Hyperbolic_coordinates
@@ -2799,23 +2799,58 @@ public:
     T A = z.a*z.a + z.b*z.b;
     T D = T(2)*(z.a*z.d - z.b*z.c);
 
-    DCN t1 = *this * DCN(z.a, -z.b, -z.c, z.d);  // product after first augmentation
-    DCN t2 = t1 * DCN(A, T(0), T(0), -D);        // product after second augmentation
+    DCN tmp = *this * DCN(z.a, -z.b, -z.c, z.d);  // product after first augmentation
+    tmp = tmp * DCN(A, T(0), T(0), -D);        // product after second augmentation
     T s = T(1) / (A*A);
-    t2.a *= s;
-    t2.b *= s;
-    t2.c *= s;
-    t2.d *= s;
+    tmp.a *= s;
+    tmp.b *= s;
+    tmp.c *= s;
+    tmp.d *= s;
 
-    return t2;
+    return tmp;
   }
-  // todo: simplify, optimize, use only one temporary
+  // todo: simplify, optimize - the second multiplication contains lots of zeros, the scaling
+  // should use an operator / that takes a 2nd parameter of type T
 
-  //float A = a*a + b*b;
-  //float D = 2*(a*d-b*c); 
+  /*
+  DCN operator/(const T& z) const { }
+  */
 
 
 };
+
+#define RS_CTD template<class T> 
+#define RS_DCN rsDualComplexNumber<T> 
+#define RS_CMP std::complex<T> 
+#define RS_PFX RS_CTD RS_DCN 
+
+RS_PFX rsSin(RS_DCN x)
+{
+  // extract complex value and derivative of inputs:
+  RS_CMP v(x.a, x.b);
+  RS_CMP d(x.c, x.d);
+
+  // compute derivative and value of output:
+  d *= cos(v);    // chain rule
+  v  = sin(v);    // regular function application
+
+  // construct DCN from the 2 complex numbers:
+  return RS_DCN(v.real(), v.imag(), d.real(), d.imag());
+}
+// needs verification
+
+#undef RS_CTD
+#undef RS_DCN
+#undef RS_CMP 
+#undef RS_PFX
+
+// is this a restricted case of this?: https://en.wikipedia.org/wiki/Dual_quaternion
+// oh - there are already dual complex numbers - but they work differently:
+// https://en.wikipedia.org/wiki/Dual-complex_number
+// ...so we should use another name - how about DiffComplex or DiComplex - when they are useful for
+// automatic differentiation in the complex domain - we'll see
+// todo: define elementary functions exp, sin, cos, sqrt
+// implement operators that allow mixed operations with std::complex
 
 
 /*

@@ -4015,15 +4015,57 @@ void testDualComplex()
   // ok - it seems division works
 
 
+  // In order to use these numbers to perform autodiff in the complex domain, we should initialize
+  // the real-dual part to 1 and imaginary-dual part to 0. Then, in the real-dual and 
+  // imaginary-dual parts of the results (stored in c,d), we'll se the complex derivative.
+
   // initializing the dual part to 1 and imdual to 0, we should get the complex derivative 2*z of 
   // f(z) = z^2 in the derivative part, since z = 2 + 3*i, 2*z = 4 + 6*i
-  z = DCN(2,3,1,0); 
-  w = z*z;  // derivative part (contained in c,d) should be 4 + 6*i - yep, looks good!
+  z = DCN(2,3,1,0);  // 2 + 3*i + 1*E * 0*i*E
+  w = z*z;           // value =  -5 + 12i, derivative =   4 +  6i
+  w = z*z*z;         // value = -46 +  9i, derivative = -15 + 36i
 
+
+  w = rsSin(z);      // w is always almost symmetric - but values match with sage
+
+
+
+
+
+
+  w = rsSin(z*z);    
+  // that seems to be wrong - is it because the derivative is computed correctly only when 
+  // (c,d) = (1,0) and in the computation of z*z, it already becomse soemthing else - it seems 
+  // to work when manually computing z^2 first but using 1,0 for the derivative:
+  w = rsSin(DCN(-5,12,1,0));
+  // could it be meaningleass to try to propagate derivative information further than 1 step in the
+  // computation? or do we get something interesting other than the derivative?
+
+
+  // sage:
+  // z = 2 + 3*I
+  // N(sin(z*z)), N(cos(z*z))
+
+
+  // todo: implement exp, sin, cos, sqrt, etc. and see if complex autodiff also works for them. if 
+  // it works, it may be useful for complex Newton iteration
 
   int dummy = 0;
 
 }
+
+
+/*
+     1    i  E  iE
+  1  1    i  E  iE
+  i  i   -1  iE -E
+  E  E   iE  0  0
+ iE  iE  -E  0  0
+
+ oh - there are already dual complex numbers - but they work differently:
+ https://en.wikipedia.org/wiki/Dual-complex_number
+
+*/
 
 template<class T>
 void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
@@ -4037,6 +4079,76 @@ void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
   plt.plot();
 }
 // move to GNUPlotter - but it should take up to 10 functions
+
+
+// todo: multiplication of 3D vectors:
+// convert to spherical: x,y,z -> r,phi,theta -> multiply radii, add angles -> convert back
+// we want it to be consistent with tha notion that when z=0,theta=0, x + i*y = r*exp(i*phi) and 
+// likewise if y=0,phi=0, x + i*z = r*exp(i*theta)
+// i think: r = sqrt(x^2 + y^2 + z^2), phi = atan2(y,x), theta = atan2(z,x)
+// x = r*cos(phi)*cos(theta), y = r*sin(phi)*cos(theta) z = r*cos(phi)*sin(theta)
+// can be used to create 3D mandelbrot sets (mandelbulbs)
+
+template<class T>
+void cartesianToSpherical(T x, T y, T z, T* r, T* p, T* t)
+{
+  *r = sqrt(x*x + y*y + z*z);  // radius
+  *p = atan2(y, x);            // phi
+  *t = atan2(z, x);            // theta
+}
+// needs test
+
+template<class T>
+void sphericalToCartesian(T r, T p, T t, T* x, T* y, T* z)
+{
+  T cp = cos(p);
+  T sp = sin(p);
+  T ct = cos(t);
+  T st = sin(t);
+  *x = r*cp*ct;
+  *y = r*sp*ct;
+  *z = r*cp*st;
+}
+// needs test
+
+template<class T>
+rsVector3D<T> mul(const rsVector3D<T>& a, const rsVector3D<T> b)
+{
+  T ar, ap, at; cartesianToSpherical(a.x, a.y, a.z, &ar, &ap, &at);
+  T br, bp, bt; cartesianToSpherical(b.x, b.y, b.z, &br, &bp, &bt);
+  ar = ar * br;
+  ap = ap + bp;
+  at = at + bt;
+  T cx, cy, cz; sphericalToCartesian(ar, ap, at, &cx, &cy, &cz);
+  return rsVector3D<T>(cx, cy, cz);
+}
+// needs test
+// Multiplication of two 3-dimensional vectors using a rule that generalizes complex multiplication 
+// (of 2D vectors) in a somewhat natural way. If a.z = b.z = 0, the multiplication behaves like the 
+// complex numbers (a.x + i*a.y) * (b.x + i*b.y). Likewise, if a.y = b.y = 0, it behaves like 
+// (a.x + i*a.z) * (b.x + i*b.z). So the y and z components both behave like imaginary parts if the 
+// respective other component is 0. Can be used to create 3D Mandelbrot sets ("Mandelbulbs").
+
+
+void testVectorMultiplication3D()
+{
+  using Complex = std::complex<float>;
+  using Vec3    = rsVector3D<float>;
+
+  Complex a(3,4),   b(4,3),   c;
+  Vec3    A(3,4,0), B(4,3,0), C;
+
+  c = a * b;
+  C = mul(A, B);
+
+  A.set(3,0,4); B.set(4,0,3);
+  C = mul(A, B);
+
+
+  int dummy = 0;
+}
+
+
 
 
 // moved to rs-met codebase (except some comments) - may be deleted here:

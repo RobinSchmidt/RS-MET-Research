@@ -4195,34 +4195,46 @@ rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, 
 {
   using Vec  = std::vector<T>;
   using Poly = rsPolynomial<T>;
-  int m = (int) f.size() - 1;    // index of last datapoint
+  int  m = (int) f.size() - 1;               // index of last datapoint
+  Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
+  for(int j = 0; j <= m; j++) {
+    if(j != i)   {
+      int nj = f[j].size() - 1;              // degree of j-th factor
+      Poly qj(Vec({ -f[j][0], T(1) }));      //  (x - x_j)
+      qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
+      qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
+      pm = pm * qj; }}                       // accumulate product
+  Poly qi(Vec({ -f[i][0], T(1) }));          // (x - x_i)
+  qi = qi^k;                                 // (x - x_i)^k
+  qi = qi *  (T(1) / rsFactorial(k));        // (x - x_i)^k / k!
+  return qi * pm;
+}
 
-  // 
-  auto get_l_ik = [&](int i, int k)->Poly
-  { 
-    Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
-    for(int j = 0; j <= m; j++) {
-      if(j != i)   {
-        int nj = f[j].size() - 1;              // degree of j-th factor
-        Poly qj(Vec({-f[j][0], T(1)}));        //  (x - x_j)
-        qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
-        qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
-        pm = pm * qj; }}                       // accumulate product
-    Poly qi(Vec({-f[i][0], T(1)}));            // (x - x_i)
-    qi = qi^k;                                 // (x - x_i)^k
-    //qi = qi *  T(1) / rsFactorial(k);          // (x - x_i)^k / k!   -> bug: fails! qi == 0
+/** Constructs generalized Lagrange polynomial L_ik(x). */
+template<class T>
+rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f, int i, int k)
+{
+  using Vec  = std::vector<T>;
+  using Poly = rsPolynomial<T>;
+  int  ni    = (int)f[i].size()-1;
+  Poly l_ik  = generalizedLagrangeHelper(f, i, k);
+  Poly L_ik  = generalizedLagrangeHelper(f, i, ni-1);
 
-    T s = T(1) / rsFactorial(k);
-    qi = qi *  s;                              
-    // (x - x_i)^k / k!  ....works - i think, it tries to divide a polynomial by an interger above
-    // ...maybe we need to override the operators for that
+  if(k == ni-1)
+    return L_ik;
+  else
+    return Poly();  // preliminray
 
-    return qi * pm;
-  };
-  // maybe factor out too, for testing purposes - could these helper polynomials be useful in other
-  // contexts? if so, maybe factor the code out for production, too
 
-  return get_l_ik(i, k);  // preliminary
+  /*
+  for(int mu = ni-2; mu >= k+1; mu--)
+  {
+    T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
+    L_ik = L_ik - L_imu * s;
+  }
+  return L_ik;
+  // needs test
+  */
 
 
   /*
@@ -4241,10 +4253,9 @@ rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, 
   // nah - this is still wrong! i think, we need a double loop or pre-compute all L_imu first
   // or maybe not?
 
+
+
 }
-
-
-
 
 /** under construction - does not yet work
 
@@ -4372,15 +4383,19 @@ void testHermiteInterpolation()
   Vec f1({1,  0, 10, 20});
   std::vector<Vec> f({ f0, f1 });  // our data
 
-
-  Poly L_00 = generalizedLagrangeHelper(f, 0, 0);  // (1-x)^3      = -x^3 + 3*x^2 - 3*x + 1
-  Poly L_01 = generalizedLagrangeHelper(f, 0, 1);  // x*(1-x)^3     = -x^4 + 3*x^3 - 3*x^2 + x
-  Poly L_02 = generalizedLagrangeHelper(f, 0, 2);  // x^2*(1-x)^3/2 = -1/2*x^5 + 3/2*x^4 - 3/2*x^3 + 1/2*x^2
-  Poly L_10 = generalizedLagrangeHelper(f, 1, 0);  // x^2
-  Poly L_11 = generalizedLagrangeHelper(f, 1, 1);  // x^2*(x-1)     = x^3 - x^2
-  Poly L_12 = generalizedLagrangeHelper(f, 1, 2);  // x^2*(x-1)^2/2 = 1/2*x^4 - x^3 + 1/2*x^2
-  Poly L_13 = generalizedLagrangeHelper(f, 1, 3);  // x^2*(x-1)^3/6 = 1/6*x^5 - 1/2*x^4 + 1/2*x^3 - 1/6*x^2
+  // test helper polynomials:
+  Poly l_00 = generalizedLagrangeHelper(f, 0, 0);  // (1-x)^3      = -x^3 + 3*x^2 - 3*x + 1
+  Poly l_01 = generalizedLagrangeHelper(f, 0, 1);  // x*(1-x)^3     = -x^4 + 3*x^3 - 3*x^2 + x
+  Poly l_02 = generalizedLagrangeHelper(f, 0, 2);  // x^2*(1-x)^3/2 = -1/2*x^5 + 3/2*x^4 - 3/2*x^3 + 1/2*x^2
+  Poly l_10 = generalizedLagrangeHelper(f, 1, 0);  // x^2
+  Poly l_11 = generalizedLagrangeHelper(f, 1, 1);  // x^2*(x-1)     = x^3 - x^2
+  Poly l_12 = generalizedLagrangeHelper(f, 1, 2);  // x^2*(x-1)^2/2 = 1/2*x^4 - x^3 + 1/2*x^2
+  Poly l_13 = generalizedLagrangeHelper(f, 1, 3);  // x^2*(x-1)^3/6 = 1/6*x^5 - 1/2*x^4 + 1/2*x^3 - 1/6*x^2
   // looks good so far
+
+  // test generalized Lagrange polynomials:
+  Poly L_00 = generalizedLagrange(f, 0, 0);  // 1 - 6x^2 + 8x^3 - 3x^4                 -> wrong!
+  Poly L_01 = generalizedLagrange(f, 0, 1);  // x*(1-x)^3 = -x^4 + 3*x^3 - 3*x^2 + x   -> ok
 
 
 

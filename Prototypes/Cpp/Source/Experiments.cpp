@@ -4242,6 +4242,29 @@ rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f, int i,
 }
 // still wrong? test it by checking the condition in formula 3, right L_ik^(s) := ...
 
+
+// maybe try a recursive implementation - just for proof of concept:
+template<class T>
+rsPolynomial<T> generalizedLagrange2(const std::vector<std::vector<T>>& f, int i, int k)
+{
+  using Poly = rsPolynomial<T>;
+  int  ni    = (int)f[i].size()-1;
+  Poly l_ik  = generalizedLagrangeHelper(f, i, k);
+
+  if(k == ni-1)
+    return l_ik;
+  else
+  {
+    // calling ourselves recursively in a loop is horribly inefficient - lots of recomputations:
+    Poly sum;
+    for(int mu = ni-1; mu >= k+1; mu--) {
+      T s = l_ik.derivativeAt(f[i][0], mu);                // l_ik^(mu) (x_i)
+      sum = sum + generalizedLagrange2(f, i, mu) * s; }
+    return l_ik - sum;
+  }
+}
+
+
 /** under construction - does not yet work
 
 Returns the vector of polynomial coefficients for the Hermite interpolation 
@@ -4259,7 +4282,8 @@ rsPolynomial<T> hermite(const std::vector<std::vector<T>>& f) // rename!
   for(int i = 0; i <= m; i++) {
     int ni = (int)f[i].size()-1;
     for(int k = 0; k <= ni-1; k++) {
-      Poly L_ik = generalizedLagrange(f, i, k);
+      //Poly L_ik = generalizedLagrange(f, i, k);
+      Poly L_ik = generalizedLagrange2(f, i, k);
       p = p + L_ik * f[i][k+1]; }}
   return p;
 }

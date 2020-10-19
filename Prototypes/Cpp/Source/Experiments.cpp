@@ -4195,17 +4195,40 @@ it is the x-value. */
 template<class T>
 std::vector<T> generalizedLagrange(const std::vector<std::vector<T>>& f)
 {
-  int n = 0, i, j, m, ni; 
-  
+  // References: (1): Numerik (Andreas Meister, Thomas Sonar)
+  // Implementation follows the box "Unter der Lupe: Die Hermite-Interpolation" on page 73
+
+  using Vec  = std::vector<T>;
+  using Poly = rsPolynomial<T>;
+
+  int m = (int) f.size();  // number of datapoints
+
   // compute degree n of interpolating polynomial:
-  for(i = 0; i < (int)f.size(); i++) {
-    ni = (int)f[i].size()-1;
+  int n = 0; 
+  for(int i = 0; i < m; i++) {
+    int ni = (int)f[i].size()-1;
     n += ni; }
   n -= 1;
  
+  // constructs helper polynomial l_ik(x) as defined in (1) pg. 73, top-right:
+  auto l_ik = [&](int i, int k)->Poly
+  { 
+    Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
+    for(int j = 0; j <= m; j++) {
+      if(j != i)   {
+        int nj = f[j].size() - 1;              // degree of j-th factor
+        Poly qj(Vec({-f[j][0], T(1)}));        //  (x - x_j)
+        qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
+        qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
+        pm = pm * qj; }}                       // accumulate product
+    Poly qi(Vec({-f[i][0], T(1)}));            // (x - x_i)
+    qi = qi^k;                                 // (x - x_i)^k
+    qi = qi *  T(1) / rsFactorial(k);          // (x - x_i)^k / k!
+    return qi * pm;
+  };
 
 
-  std::vector<T> p(n+1);  // vector of polynomial coeffs
+  Vec p(n+1);  // vector of polynomial coeffs
 
 
   return p;

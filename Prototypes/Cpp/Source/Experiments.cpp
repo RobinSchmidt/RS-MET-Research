@@ -4209,6 +4209,7 @@ rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, 
   qi = qi *  (T(1) / rsFactorial(k));        // (x - x_i)^k / k!
   return qi * pm;
 }
+// seems ok
 
 /** Constructs generalized Lagrange polynomial L_ik(x). */
 template<class T>
@@ -4221,53 +4222,20 @@ rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f, int i,
   Poly L_ik  = generalizedLagrangeHelper(f, i, ni-1);
 
   if(k == ni-1)
-    return L_ik;  // seems to work
+    return L_ik;  // seems to work for i = 0
   else
   {
-    // this is horribly inefficient:
-    //Poly sum;
-    //return l_ik - sum;
-
-
     for(int mu = ni-1; mu >= k+1; mu--)
     {
       T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
-      L_ik = l_ik - L_ik * s;                  // is this correct?
+
+      L_ik = l_ik - L_ik * s;                  
+      // is this correct? should it not be a whole sum, like L_ik = l_ik - sum_mu s_mu L_imu
     }
     return L_ik;
   }
-
-
-  /*
-  for(int mu = ni-2; mu >= k+1; mu--)
-  {
-    T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
-    L_ik = L_ik - L_imu * s;
-  }
-  return L_ik;
-  // needs test
-  */
-
-
-  /*
-  int  ni   = (int)f[i].size()-1;
-  Poly l_ik = get_l_ik(i, k);
-  Poly L_ik  = l_ik;
-  Poly L_imu = get_l_ik(i, ni-1);
-  for(int mu = ni-2; mu >= k+1; mu--)
-  {
-    T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
-    L_ik = L_ik - L_imu * s;
-
-  }
-  return L_ik;
-  */
-  // nah - this is still wrong! i think, we need a double loop or pre-compute all L_imu first
-  // or maybe not?
-
-
-
 }
+// still wrong
 
 /** under construction - does not yet work
 
@@ -4297,70 +4265,6 @@ rsPolynomial<T> hermite(const std::vector<std::vector<T>>& f) // rename!
     n += ni; }
   n -= 1;
   */
- 
-  // Constructs helper polynomial l_ik(x) as defined in (1) pg. 73, top-right:
-  auto get_l_ik = [&](int i, int k)->Poly
-  { 
-    Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
-    for(int j = 0; j <= m; j++) {
-      if(j != i)   {
-        int nj = f[j].size() - 1;              // degree of j-th factor
-        Poly qj(Vec({-f[j][0], T(1)}));        //  (x - x_j)
-        qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
-        qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
-        pm = pm * qj; }}                       // accumulate product
-    Poly qi(Vec({-f[i][0], T(1)}));            // (x - x_i)
-    qi = qi^k;                                 // (x - x_i)^k
-    //qi = qi *  T(1) / rsFactorial(k);          // (x - x_i)^k / k!   -> bug: fails! qi == 0
-
-    T s = T(1) / rsFactorial(k);
-    qi = qi *  s;                              
-    // (x - x_i)^k / k!  ....works - i think, it tries to divide a polynomial by an interger above
-    // ...maybe we need to override the operators for that
-
-
-    return qi * pm;
-  };
-
-  // Constructs generalized Lagrange polynomial L_ik(x):
-  auto get_L_ik = [&](int i, int k)->Poly
-  {
-    int  ni   = (int)f[i].size()-1;
-    Poly l_ik = get_l_ik(i, k);
-    Poly L_ik  = l_ik;
-    Poly L_imu = get_l_ik(i, ni-1);
-    for(int mu = ni-2; mu >= k+1; mu--)
-    {
-      T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
-      L_ik = L_ik - L_imu * s;
-
-    }
-    return L_ik;
-    // nah - this is still wrong! i think, we need a double loop or pre-compute all L_imu first
-    // or maybe not?
-
-
-    /*
-    Poly sum  = get_l_ik(i, ni-1);
-    for(int mu = ni-2; mu >= k+1; mu--)  {
-      T s = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
-      sum = sum + sum * s;                    // is that correct?
-    }
-    return l_ik - sum;
-    */
-
-
-    
-
-
-
-    // ...more to do...
-
-
-  };
-  // factor this out - they may be useful in other contexts
-
-
 
   Poly p;
   for(int i = 0; i <= m; i++)
@@ -4368,20 +4272,13 @@ rsPolynomial<T> hermite(const std::vector<std::vector<T>>& f) // rename!
     int ni = (int)f[i].size()-1;
     for(int k = 0; k <= ni-1; k++)
     {
-      Poly L_ik = get_L_ik(i, k);
+      Poly L_ik = generalizedLagrange(f, i, k);
       p = p + L_ik * f[i][k];  // or should it be k+1?
     }
   }
   return p;
-
-
-
-  //Vec p(n+1);  // vector of polynomial coeffs
-  //return p;
-
-  //return Vec();  // preliminary
 }
-
+// still wrong
 
 
 
@@ -4406,12 +4303,19 @@ void testHermiteInterpolation()
   // looks good so far
 
   // test generalized Lagrange polynomials:
-  Poly L_00 = generalizedLagrange(f, 0, 0);  // 1 - 6x^2 + 8x^3 - 3x^4                 -> ok
+  /*
   Poly L_01 = generalizedLagrange(f, 0, 1);  // x*(1-x)^3 = -x^4 + 3*x^3 - 3*x^2 + x   -> ok
+  Poly L_00 = generalizedLagrange(f, 0, 0);  // 1 - 6x^2 + 8x^3 - 3x^4                 -> ok
+  */
+
+  
+  Poly L_12 = generalizedLagrange(f, 1, 2);  // x*(x-1)^2/2 = 1/2*x^3 - x^2 + 1/2*x    -> wrong (shifted)
+  Poly L_11 = generalizedLagrange(f, 1, 1);  // -2x^4 + 5x^3 - 3x^2                    -> ok
+  Poly L_10 = generalizedLagrange(f, 1, 0);  // 4x^4 - 10x^3 + 7x^2                    -> wrong!
+  
 
 
-
-  Poly p = hermite(f);
+  Poly p = hermite(f);  // wrong!
 
   //Vec p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
 

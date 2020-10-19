@@ -4194,7 +4194,8 @@ void testVectorMultiplication3D()
 // and is not suitable for production use (has memory allocations and "Shlemiel the painter" 
 // algos (i think)).
 
-/** Constructs helper polynomial l_ik(x) as defined in (1) pg. 73, top-right. */
+/** Constructs helper polynomial l_ik(x) as defined in (1) pg. 73, top-right. Unoptimized 
+prototype. */
 template<class T>
 rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, int i, int k)
 {
@@ -4214,83 +4215,44 @@ rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, 
   qi = qi *  (T(1) / rsFactorial(k));        // (x - x_i)^k / k!
   return qi * pm;
 }
-// seems ok
 
-/** Constructs generalized Lagrange polynomial L_ik(x). */
+/** Constructs generalized Lagrange polynomial L_ik(x). This is a recursive implementation and the 
+most direct translation of the formula in the book. But it's just for proof of concept because 
+calling ourselves recursively in a loop is horribly inefficient. There are lots of 
+recomputations. */
 template<class T>
 rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f, int i, int k)
 {
-  using Vec  = std::vector<T>;
   using Poly = rsPolynomial<T>;
   int  ni    = (int)f[i].size()-1;
   Poly l_ik  = generalizedLagrangeHelper(f, i, k);
-  Poly L_ik  = generalizedLagrangeHelper(f, i, ni-1);
-
-  if(k == ni-1)
-    return L_ik;  // seems to work for i = 0
-  else
-  {
-    for(int mu = ni-1; mu >= k+1; mu--)
-    {
-      T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
-
-      L_ik = l_ik - L_ik * s;                  
-      // is this correct? should it not be a whole sum, like L_ik = l_ik - sum_mu s_mu L_imu
-    }
-    return L_ik;
-  }
-}
-// still wrong? test it by checking the condition in formula 3, right L_ik^(s) := ...
-
-
-// maybe try a recursive implementation - just for proof of concept:
-template<class T>
-rsPolynomial<T> generalizedLagrange2(const std::vector<std::vector<T>>& f, int i, int k)
-{
-  using Poly = rsPolynomial<T>;
-  int  ni    = (int)f[i].size()-1;
-  Poly l_ik  = generalizedLagrangeHelper(f, i, k);
-
   if(k == ni-1)
     return l_ik;
-  else
-  {
-    // calling ourselves recursively in a loop is horribly inefficient - lots of recomputations:
+  else {
     Poly sum;
     for(int mu = ni-1; mu >= k+1; mu--) {
-      T s = l_ik.derivativeAt(f[i][0], mu);                // l_ik^(mu) (x_i)
-      sum = sum + generalizedLagrange2(f, i, mu) * s; }
-    return l_ik - sum;
-  }
+      T s = l_ik.derivativeAt(f[i][0], mu);             // l_ik^(mu) (x_i)
+      sum = sum + generalizedLagrange(f, i, mu) * s; }  // recursion
+    return l_ik - sum; }
 }
 
-
-/** under construction - does not yet work
-
-Returns the vector of polynomial coefficients for the Hermite interpolation 
-polynomial for the data given in f. We use the following conventions for the input data:
-f[i][0] is the i-th x-coordinate, f[i][1] is the corresponding y-coordinate, f[i][2] is the 1st 
-derivative, etc. In general f[i][k] is the (k-1)th derivative value, except for k=0, in which case
-it is the x-value. */
+/** Returns the Hermite interpolation polynomial for the data given in f. We use the following 
+conventions for the input data: f[i][0] is the i-th x-coordinate, f[i][1] is the corresponding 
+y-coordinate, f[i][2] is the 1st derivative, etc. In general f[i][k] is the (k-1)th derivative 
+value, except for k=0, in which case it is the x-value. */
 template<class T>
-rsPolynomial<T> hermite(const std::vector<std::vector<T>>& f) // rename!
+rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rename!
 {
-  //using Vec  = std::vector<T>;
   using Poly = rsPolynomial<T>;
-  int m = (int) f.size() - 1;  // index of last datapoint
+  int m = (int) f.size() - 1;    // index of last datapoint
   Poly p;
   for(int i = 0; i <= m; i++) {
     int ni = (int)f[i].size()-1;
     for(int k = 0; k <= ni-1; k++) {
-      //Poly L_ik = generalizedLagrange(f, i, k);
-      Poly L_ik = generalizedLagrange2(f, i, k);
+      Poly L_ik = generalizedLagrange(f, i, k);   // still very inefficient
       p = p + L_ik * f[i][k+1]; }}
   return p;
 }
-// still wrong? needs tests with more inputs - the example from the book seems to work but other
-// tests fail...hmmm
-
-
 
 void testHermiteInterpolation()
 {
@@ -4338,7 +4300,7 @@ void testHermiteInterpolation()
 
 
 
-  Poly p = hermite(f);
+  Poly p = hermiteInterpolant(f);
 
   // That's the example result in the book - check, if it gives the right values:
   Poly p1({-1,-2,-8,16,-5});
@@ -4354,14 +4316,11 @@ void testHermiteInterpolation()
   // mistake in the book? ...more tests needed - with more datapoints and more derivatives
 
 
-
-
   // try to match more derivatives but using only two datapoints:
-
   f0 = Vec({0, -1, -2,  3, 1    });  // value and 3 derivatives at x0 = 0
   f1 = Vec({1,  2,  1, -1, 2, -1});  // value and 4 derivatives at x1 = 1
   f = std::vector<Vec>({ f0, f1 }); 
-  p = hermite(f);
+  p = hermiteInterpolant(f);
   y = p.derivativeAt(0.f, 0); // -1
   y = p.derivativeAt(0.f, 1); // -2
   y = p.derivativeAt(0.f, 2); //  3
@@ -4371,32 +4330,35 @@ void testHermiteInterpolation()
   y = p.derivativeAt(1.f, 2); // -1
   y = p.derivativeAt(1.f, 3); //  2
   y = p.derivativeAt(1.f, 4); // -1
-  // nope! totally wrong!
+  // okayish, but numerically imprecise
 
 
   // try to match more than 2 datapoints
+  f0 = Vec({0, -1, -2    });
+  f1 = Vec({1,  0, 10, 20});
+  Vec f2({2,  -2, 3, -4, 5});
 
-  //Vec f2({2,  -2, 3, -4, 5});
-  Vec f2({2,  -2, 3, -4});
   f = std::vector<Vec>({ f0, f1, f2 }); 
-  p = hermite(f);
-  y = p.derivativeAt(0.f, 0); // -1
-  y = p.derivativeAt(0.f, 1); // -2
-  // correct
-
-  y = p.derivativeAt(1.f, 0); //  0
+  p = hermiteInterpolant(f);
+  y = p.derivativeAt(0.f, 0); //  -1
+  y = p.derivativeAt(0.f, 1); //  -2
+  y = p.derivativeAt(1.f, 0); //   0
   y = p.derivativeAt(1.f, 1); //  10
   y = p.derivativeAt(1.f, 2); //  20
-  // a bit off numerically
-
   y = p.derivativeAt(2.f, 0); //  -2
   y = p.derivativeAt(2.f, 1); //   3
-  y = p.derivativeAt(2.f, 2); //  -5 
-  y = p.derivativeAt(2.f, 3); //   4
-  // totally off - dunno, if total numeric breakdown or bug in algorithm
+  y = p.derivativeAt(2.f, 2); //  -4 
+  y = p.derivativeAt(2.f, 3); //   5
+  // okayish, but numerically imprecise
 
-
-  //Vec p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
+  // ToDo: 
+  // -maybe move over to prototypes section
+  // -get rid of the blatant inefficiencies in the current implementation
+  // -implement an optimized version for the special case m=1, x0=0, x1=1 - a lot of simplification
+  //  occurs in this case
+  // -try to improve numerical accuracy - figure out, why it's so bad - maybe we can factor out a 
+  //  couple of divisions in order to work with integers for longer (i think, the l_ik and L_ik 
+  //  polynomials can be scaled to use integer coeffs, if we do the division by 1/k! later)
 
 
   int dummy = 0;

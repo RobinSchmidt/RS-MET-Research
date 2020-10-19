@@ -4376,12 +4376,11 @@ void testHermiteInterpolation()
   Poly L_00 = generalizedLagrangeHelper(f, 0, 0);  // (1-x)^3      = -x^3 + 3*x^2 - 3*x + 1
   Poly L_01 = generalizedLagrangeHelper(f, 0, 1);  // x*(1-x)^3     = -x^4 + 3*x^3 - 3*x^2 + x
   Poly L_02 = generalizedLagrangeHelper(f, 0, 2);  // x^2*(1-x)^3/2 = -1/2*x^5 + 3/2*x^4 - 3/2*x^3 + 1/2*x^2
-  // looks good so far
   Poly L_10 = generalizedLagrangeHelper(f, 1, 0);  // x^2
-  Poly L_11 = generalizedLagrangeHelper(f, 1, 1);  // x^2*(x-1)
-  Poly L_12 = generalizedLagrangeHelper(f, 1, 2);  // x^2*(x-1)^2/2
-  Poly L_13 = generalizedLagrangeHelper(f, 1, 3);  // x^2*(x-1)^2/6
-
+  Poly L_11 = generalizedLagrangeHelper(f, 1, 1);  // x^2*(x-1)     = x^3 - x^2
+  Poly L_12 = generalizedLagrangeHelper(f, 1, 2);  // x^2*(x-1)^2/2 = 1/2*x^4 - x^3 + 1/2*x^2
+  Poly L_13 = generalizedLagrangeHelper(f, 1, 3);  // x^2*(x-1)^3/6 = 1/6*x^5 - 1/2*x^4 + 1/2*x^3 - 1/6*x^2
+  // looks good so far
 
 
 

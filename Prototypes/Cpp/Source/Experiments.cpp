@@ -4187,31 +4187,35 @@ void testVectorMultiplication3D()
   int dummy = 0;
 }
 
-/** Returns the vector of polynomial coefficients for the generalized Lagrange interpolation 
+/** Returns the vector of polynomial coefficients for the Hermite interpolation 
 polynomial for the data given in f. We use the following conventions for the input data:
 f[i][0] is the i-th x-coordinate, f[i][1] is the corresponding y-coordinate, f[i][2] is the 1st 
 derivative, etc. In general f[i][k] is the (k-1)th derivative value, except for k=0, in which case
 it is the x-value. */
 template<class T>
-std::vector<T> generalizedLagrange(const std::vector<std::vector<T>>& f)
+rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f)
 {
   // References: (1): Numerik (Andreas Meister, Thomas Sonar)
-  // Implementation follows the box "Unter der Lupe: Die Hermite-Interpolation" on page 73
+  // Implementation follows directly the box "Unter der Lupe: Die Hermite-Interpolation" on page 73 
+  // and is not suitable for production use (has memory allocations and "Shlemiel the painter" 
+  // algos (i think)).
 
   using Vec  = std::vector<T>;
   using Poly = rsPolynomial<T>;
 
-  int m = (int) f.size();  // number of datapoints
+  int m = (int) f.size() - 1;  // index of last datapoint
 
   // compute degree n of interpolating polynomial:
+  /*
   int n = 0; 
   for(int i = 0; i < m; i++) {
     int ni = (int)f[i].size()-1;
     n += ni; }
   n -= 1;
+  */
  
-  // constructs helper polynomial l_ik(x) as defined in (1) pg. 73, top-right:
-  auto l_ik = [&](int i, int k)->Poly
+  // Constructs helper polynomial l_ik(x) as defined in (1) pg. 73, top-right:
+  auto get_l_ik = [&](int i, int k)->Poly
   { 
     Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
     for(int j = 0; j <= m; j++) {
@@ -4227,12 +4231,41 @@ std::vector<T> generalizedLagrange(const std::vector<std::vector<T>>& f)
     return qi * pm;
   };
 
+  // Constructs generalized Lagrange polynomial L_ik(x):
+  auto get_L_ik = [&](int i, int k)->Poly
+  {
+    Poly l_ik = get_l_ik(i, k);
+    Poly L_ik = l_ik;
 
-  Vec p(n+1);  // vector of polynomial coeffs
+    // ...more to do...
+
+    return L_ik;
+  };
 
 
+
+  Poly p;
+  for(int i = 0; i <= m; i++)
+  {
+    int ni = (int)f[i].size()-1;
+    for(int k = 0; k <= ni-1; k++)
+    {
+      Poly L_ik = get_L_ik(i, k);
+      p = p + L_ik * f[i][k];  // or should it be k+1?
+    }
+  }
   return p;
+
+
+
+  //Vec p(n+1);  // vector of polynomial coeffs
+  //return p;
+
+  //return Vec();  // preliminary
 }
+
+
+
 
 void testHermiteInterpolation()
 {
@@ -4243,7 +4276,9 @@ void testHermiteInterpolation()
   Vec f1({1,  0, 10, 20});
 
 
-  Vec p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
+  rsPolynomial<float> p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
+
+  //Vec p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
 
 
   int dummy = 0;

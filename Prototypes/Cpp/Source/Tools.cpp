@@ -1957,13 +1957,18 @@ protected:
 // maybe have N and M as dimensionalities of the space/manifold under cosideration (e.g. the 
 // sphere) and the embedding space (e.g. R^3, the 3D Euclidean space)
 
-/*
+
+// formluas from:
+// https://en.wikipedia.org/wiki/Spherical_coordinate_system#Coordinate_system_conversions
+
 template<class T>
 void cartesianToSpherical(T x, T y, T z, T* r, T* theta, T* phi)
 {
   *r     = sqrt(x*x + y*y + z*z);
-  *phi   = acos(x / sqrt(x*x + y*y));        // ?= atan2(y,x)
-  *theta = acos(z / sqrt(x*x + y*y + z*z));  // == acos(z / *r)
+  *phi   = atan2(y, x);
+  *theta = acos(z / *r);
+  //*phi   = acos(x / sqrt(x*x + y*y));        // ?= atan2(y,x)
+  //*theta = acos(z / sqrt(x*x + y*y + z*z));  // == acos(z / *r)
 }
 // see Mathematical Physics Eq. 3.12
 // https://en.wikipedia.org/wiki/Spherical_coordinate_system
@@ -1976,7 +1981,7 @@ void sphericalToCartesian(T r, T theta, T phi, T* x, T* y, T* z)
   *z = r * cos(theta);
 }
 // see Mathematical Physics Eq. 3.11
-*/
+// roundtrip doesn't work
 
 // see also:
 // https://en.wikipedia.org/wiki/Hyperbolic_coordinates

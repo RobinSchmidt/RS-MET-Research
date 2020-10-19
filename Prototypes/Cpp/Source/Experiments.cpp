@@ -4089,6 +4089,7 @@ void plotFunction(int N, T xMin, T xMax, const std::function<T(T)>& f)
 // x = r*cos(phi)*cos(theta), y = r*sin(phi)*cos(theta) z = r*cos(phi)*sin(theta)
 // can be used to create 3D mandelbrot sets (mandelbulbs)
 
+/*
 template<class T>
 void cartesianToSpherical(T x, T y, T z, T* r, T* p, T* t)
 {
@@ -4110,6 +4111,11 @@ void sphericalToCartesian(T r, T p, T t, T* x, T* y, T* z)
   *z = r*cp*st;
 }
 // needs test
+*/
+
+
+
+
 
 template<class T>
 rsVector3D<T> mul(const rsVector3D<T>& a, const rsVector3D<T> b)
@@ -4127,7 +4133,13 @@ rsVector3D<T> mul(const rsVector3D<T>& a, const rsVector3D<T> b)
 // (of 2D vectors) in a somewhat natural way. If a.z = b.z = 0, the multiplication behaves like the 
 // complex numbers (a.x + i*a.y) * (b.x + i*b.y). Likewise, if a.y = b.y = 0, it behaves like 
 // (a.x + i*a.z) * (b.x + i*b.z). So the y and z components both behave like imaginary parts if the 
-// respective other component is 0. Can be used to create 3D Mandelbrot sets ("Mandelbulbs").
+// respective other component is 0. Can be used to create 3D Mandelbrot sets ("Mandelbulbs"). The 
+// operation is commutative and associative but not distributive over addition.
+// ...i think this is still wrong - the functions for spherical/cartesian conversion seem wrong - a
+// roundtrip doesn't work - i think, it may not be possible to have it behave like complex numbers
+// x + i*y (z=0) and x + i*z (y=0) at the same time?
+// ToDo: 
+// -implement division:  ar = ar / br; ap = ap - bp; at = at - bt;
 
 
 void testVectorMultiplication3D()
@@ -4144,10 +4156,75 @@ void testVectorMultiplication3D()
   A.set(3,0,4); B.set(4,0,3);
   C = mul(A, B);
 
+  
+  A.set(7,-2,3); B.set(-1,3,5); C.set(4,-3,-2);
+  Vec3 D1, D2;
+
+
+  // test associativity:
+  D1 = mul(A, mul(B, C));  // A * (B * C)
+  D2 = mul(mul(A, B), C);  // (A * B) * C
+  // yes! it's associative
+
+  // test commutativity:
+  D1 = mul(A, B);  // A * B
+  D2 = mul(B, A);  // B * A
+  // yes! it's commutative
+
+  // test distributivity:
+  D1 = mul(A, B+C);            // A * (B+C)
+  D2 = mul(A, B) + mul(A, C);  // A*B + A*C
+  // nope! not distributive!
+
+
+  float x = 3, y = -2, z = 5;
+  float r, p, t;
+  cartesianToSpherical(x, y, z, &r, &p, &t);
+  sphericalToCartesian(r, p, t, &x, &y, &z);
+  // this does not reconstruct x,y,z - something is wrong with the conversion!
+
 
   int dummy = 0;
 }
 
+/** Returns the vector of polynomial coefficients for the generalized Lagrange interpolation 
+polynomial for the data given in f. We use the following conventions for the input data:
+f[i][0] is the i-th x-coordinate, f[i][1] is the corresponding y-coordinate, f[i][2] is the 1st 
+derivative, etc. In general f[i][k] is the (k-1)th derivative value, except for k=0, in which case
+it is the x-value. */
+template<class T>
+std::vector<T> generalizedLagrange(const std::vector<std::vector<T>>& f)
+{
+  int n = 0, i, j, m, ni; 
+  
+  // compute degree n of interpolating polynomial:
+  for(i = 0; i < (int)f.size(); i++) {
+    ni = (int)f[i].size()-1;
+    n += ni; }
+  n -= 1;
+ 
+
+
+  std::vector<T> p(n+1);  // vector of polynomial coeffs
+
+
+  return p;
+}
+
+void testHermiteInterpolation()
+{
+  using Vec = std::vector<float>;
+
+  //      x   f   f' f''
+  Vec f0({0, -1, -2    });
+  Vec f1({1,  0, 10, 20});
+
+
+  Vec p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
+
+
+  int dummy = 0;
+}
 
 
 

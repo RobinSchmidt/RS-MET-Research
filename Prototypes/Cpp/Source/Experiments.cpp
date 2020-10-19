@@ -4292,14 +4292,30 @@ void testHermiteInterpolation()
   Vec f1({1,  0, 10, 20});
   std::vector<Vec> f({ f0, f1 });  // our data
 
+  bool ok = true;
+
   // test helper polynomials:
   Poly l_00 = generalizedLagrangeHelper(f, 0, 0);  // (1-x)^3      = -x^3 + 3*x^2 - 3*x + 1
+  ok &= l_00 == Poly(Vec({1,-3,+3,-1}));
+
   Poly l_01 = generalizedLagrangeHelper(f, 0, 1);  // x*(1-x)^3     = -x^4 + 3*x^3 - 3*x^2 + x
+  ok &= l_01 == Poly(Vec({0,1,-3,+3,-1}));
+
   Poly l_02 = generalizedLagrangeHelper(f, 0, 2);  // x^2*(1-x)^3/2 = -1/2*x^5 + 3/2*x^4 - 3/2*x^3 + 1/2*x^2
+  ok &= l_02 == Poly(Vec({0,0,0.5,-1.5,+1.5,-0.5}));
+
   Poly l_10 = generalizedLagrangeHelper(f, 1, 0);  // x^2
+  ok &= l_10 == Poly(Vec({0,0,1}));
+
   Poly l_11 = generalizedLagrangeHelper(f, 1, 1);  // x^2*(x-1)     = x^3 - x^2
+  ok &= l_11 == Poly(Vec({0,0,-1,1}));
+
   Poly l_12 = generalizedLagrangeHelper(f, 1, 2);  // x^2*(x-1)^2/2 = 1/2*x^4 - x^3 + 1/2*x^2
+  ok &= l_12 == Poly(Vec({0,0,0.5,-1,0.5}));
+
   Poly l_13 = generalizedLagrangeHelper(f, 1, 3);  // x^2*(x-1)^3/6 = 1/6*x^5 - 1/2*x^4 + 1/2*x^3 - 1/6*x^2
+  ok &= l_13 == Poly(Vec({0,0,-1./6,0.5,-0.5,1./6}));
+
   // looks good so far
 
   // test generalized Lagrange polynomials:

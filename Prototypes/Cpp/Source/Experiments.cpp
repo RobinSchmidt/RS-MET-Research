@@ -4187,13 +4187,74 @@ void testVectorMultiplication3D()
   int dummy = 0;
 }
 
-/** Returns the vector of polynomial coefficients for the Hermite interpolation 
+
+
+/** Constructs helper polynomial l_ik(x) as defined in (1) pg. 73, top-right. */
+template<class T>
+rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, int i, int k)
+{
+  using Vec  = std::vector<T>;
+  using Poly = rsPolynomial<T>;
+  int m = (int) f.size() - 1;    // index of last datapoint
+
+  // 
+  auto get_l_ik = [&](int i, int k)->Poly
+  { 
+    Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
+    for(int j = 0; j <= m; j++) {
+      if(j != i)   {
+        int nj = f[j].size() - 1;              // degree of j-th factor
+        Poly qj(Vec({-f[j][0], T(1)}));        //  (x - x_j)
+        qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
+        qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
+        pm = pm * qj; }}                       // accumulate product
+    Poly qi(Vec({-f[i][0], T(1)}));            // (x - x_i)
+    qi = qi^k;                                 // (x - x_i)^k
+    //qi = qi *  T(1) / rsFactorial(k);          // (x - x_i)^k / k!   -> bug: fails! qi == 0
+
+    T s = T(1) / rsFactorial(k);
+    qi = qi *  s;                              
+    // (x - x_i)^k / k!  ....works - i think, it tries to divide a polynomial by an interger above
+    // ...maybe we need to override the operators for that
+
+    return qi * pm;
+  };
+  // maybe factor out too, for testing purposes - could these helper polynomials be useful in other
+  // contexts? if so, maybe factor the code out for production, too
+
+  return get_l_ik(i, k);  // preliminary
+
+
+  /*
+  int  ni   = (int)f[i].size()-1;
+  Poly l_ik = get_l_ik(i, k);
+  Poly L_ik  = l_ik;
+  Poly L_imu = get_l_ik(i, ni-1);
+  for(int mu = ni-2; mu >= k+1; mu--)
+  {
+    T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
+    L_ik = L_ik - L_imu * s;
+
+  }
+  return L_ik;
+  */
+  // nah - this is still wrong! i think, we need a double loop or pre-compute all L_imu first
+  // or maybe not?
+
+}
+
+
+
+
+/** under construction - does not yet work
+
+Returns the vector of polynomial coefficients for the Hermite interpolation 
 polynomial for the data given in f. We use the following conventions for the input data:
 f[i][0] is the i-th x-coordinate, f[i][1] is the corresponding y-coordinate, f[i][2] is the 1st 
 derivative, etc. In general f[i][k] is the (k-1)th derivative value, except for k=0, in which case
 it is the x-value. */
 template<class T>
-rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f) // rename!
+rsPolynomial<T> hermite(const std::vector<std::vector<T>>& f) // rename!
 {
   // References: (1): Numerik (Andreas Meister, Thomas Sonar)
   // Implementation follows directly the box "Unter der Lupe: Die Hermite-Interpolation" on page 73 
@@ -4241,13 +4302,40 @@ rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f) // ren
   // Constructs generalized Lagrange polynomial L_ik(x):
   auto get_L_ik = [&](int i, int k)->Poly
   {
+    int  ni   = (int)f[i].size()-1;
     Poly l_ik = get_l_ik(i, k);
-    Poly L_ik = l_ik;
+    Poly L_ik  = l_ik;
+    Poly L_imu = get_l_ik(i, ni-1);
+    for(int mu = ni-2; mu >= k+1; mu--)
+    {
+      T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
+      L_ik = L_ik - L_imu * s;
+
+    }
+    return L_ik;
+    // nah - this is still wrong! i think, we need a double loop or pre-compute all L_imu first
+    // or maybe not?
+
+
+    /*
+    Poly sum  = get_l_ik(i, ni-1);
+    for(int mu = ni-2; mu >= k+1; mu--)  {
+      T s = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
+      sum = sum + sum * s;                    // is that correct?
+    }
+    return l_ik - sum;
+    */
+
+
+    
+
+
 
     // ...more to do...
 
-    return L_ik;
+
   };
+  // factor this out - they may be useful in other contexts
 
 
 
@@ -4277,13 +4365,27 @@ rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f) // ren
 void testHermiteInterpolation()
 {
   using Vec = std::vector<float>;
+  using Poly = rsPolynomial<float>;
 
   //      x   f   f' f''
   Vec f0({0, -1, -2    });
   Vec f1({1,  0, 10, 20});
+  std::vector<Vec> f({ f0, f1 });  // our data
 
 
-  rsPolynomial<float> p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
+  Poly L_00 = generalizedLagrangeHelper(f, 0, 0);  // (1-x)^3      = -x^3 + 3*x^2 - 3*x + 1
+  Poly L_01 = generalizedLagrangeHelper(f, 0, 1);  // x*(1-x)^3     = -x^4 + 3*x^3 - 3*x^2 + x
+  Poly L_02 = generalizedLagrangeHelper(f, 0, 2);  // x^2*(1-x)^3/2 = -1/2*x^5 + 3/2*x^4 - 3/2*x^3 + 1/2*x^2
+  // looks good so far
+  Poly L_10 = generalizedLagrangeHelper(f, 1, 0);  // x^2
+  Poly L_11 = generalizedLagrangeHelper(f, 1, 1);  // x^2*(x-1)
+  Poly L_12 = generalizedLagrangeHelper(f, 1, 2);  // x^2*(x-1)^2/2
+  Poly L_13 = generalizedLagrangeHelper(f, 1, 3);  // x^2*(x-1)^2/6
+
+
+
+
+  Poly p = hermite(f);
 
   //Vec p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
 

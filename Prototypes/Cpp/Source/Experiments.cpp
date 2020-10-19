@@ -4221,9 +4221,21 @@ rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f, int i,
   Poly L_ik  = generalizedLagrangeHelper(f, i, ni-1);
 
   if(k == ni-1)
-    return L_ik;
+    return L_ik;  // seems to work
   else
-    return Poly();  // preliminray
+  {
+    // this is horribly inefficient:
+    //Poly sum;
+    //return l_ik - sum;
+
+
+    for(int mu = ni-1; mu >= k+1; mu--)
+    {
+      T s  = l_ik.derivativeAt(f[i][0], mu);   // l_ik^(mu) (x_i)
+      L_ik = l_ik - L_ik * s;                  // is this correct?
+    }
+    return L_ik;
+  }
 
 
   /*
@@ -4394,7 +4406,7 @@ void testHermiteInterpolation()
   // looks good so far
 
   // test generalized Lagrange polynomials:
-  Poly L_00 = generalizedLagrange(f, 0, 0);  // 1 - 6x^2 + 8x^3 - 3x^4                 -> wrong!
+  Poly L_00 = generalizedLagrange(f, 0, 0);  // 1 - 6x^2 + 8x^3 - 3x^4                 -> ok
   Poly L_01 = generalizedLagrange(f, 0, 1);  // x*(1-x)^3 = -x^4 + 3*x^3 - 3*x^2 + x   -> ok
 
 

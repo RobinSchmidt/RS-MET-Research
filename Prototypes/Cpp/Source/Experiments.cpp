@@ -4199,7 +4199,7 @@ rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, 
   Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
   for(int j = 0; j <= m; j++) {
     if(j != i)   {
-      int nj = f[j].size() - 1;              // degree of j-th factor
+      int nj = f[j].size() - 1;              // exponent of j-th factor
       Poly qj(Vec({ -f[j][0], T(1) }));      //  (x - x_j)
       qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
       qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
@@ -4307,17 +4307,41 @@ void testHermiteInterpolation()
   // test generalized Lagrange polynomials:
  
   Poly L_01 = generalizedLagrange(f, 0, 1); ok &= L_01 == Poly(Vec({0,1,-3,3,-1}));
-  Poly L_00 = generalizedLagrange(f, 0, 0); ok &= L_00 == Poly(Vec({1,0,-6,8,-3}));
+  Poly L_12 = generalizedLagrange(f, 1, 2); ok &= L_12 == Poly(Vec({0,0.5,-1,0.5})); // wrong!
+  // the coefficients are shifted to the right by one index, i.e. we have a factor of x too much - 
+  // but the formula says tha L_12 should actually be equal to l_12 (which it is) but the numbers
+  // in the example suggest that l_12 = x * L_12
 
-  Poly L_11 = generalizedLagrange(f, 1, 1); ok &= L_11 == Poly(Vec({0,0,-3,5,-2}));
+  //Poly L_00 = generalizedLagrange(f, 0, 0); ok &= L_00 == Poly(Vec({1,0,-6,8,-3}));
+  //Poly L_11 = generalizedLagrange(f, 1, 1); ok &= L_11 == Poly(Vec({0,0,-3,5,-2}));
 
-  //Poly L_12 = generalizedLagrange(f, 1, 2); ok &= L_12 == Poly(Vec({0,0.5,-1,0.5})); // wrong!
   //Poly L_10 = generalizedLagrange(f, 1, 0); ok &= L_10 == Poly(Vec({0,0,7,-10,4}));  // wrong!
   // this still fails!
   
+  // todo: try to evaluate L_ik and its derivatives at 0 and 1
+  float y;
+  y = L_01.derivativeAt(0.f, 0);  // 0
+  y = L_01.derivativeAt(0.f, 1);  // 1
+  y = L_01.derivativeAt(0.f, 2);
+  y = L_01.derivativeAt(0.f, 3);
+
 
 
   Poly p = hermite(f);  // wrong!
+
+
+  // That's the example result in the book - check, if it gives the right values:
+  Poly p1({-1,-2,-8,16,-5});
+  y = p1.derivativeAt(0.f, 0); // -1
+  y = p1.derivativeAt(0.f, 1); // -2
+  y = p1.derivativeAt(1.f, 0); //  0
+  y = p1.derivativeAt(1.f, 1); //  10
+  y = p1.derivativeAt(1.f, 2); //  20
+  // yep - works
+
+
+
+
 
   //Vec p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));
 

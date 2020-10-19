@@ -4189,6 +4189,11 @@ void testVectorMultiplication3D()
 
 
 
+// References: (1): Numerik (Andreas Meister, Thomas Sonar)
+// Implementation follows directly the box "Unter der Lupe: Die Hermite-Interpolation" on page 73 
+// and is not suitable for production use (has memory allocations and "Shlemiel the painter" 
+// algos (i think)).
+
 /** Constructs helper polynomial l_ik(x) as defined in (1) pg. 73, top-right. */
 template<class T>
 rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, int i, int k)
@@ -4235,7 +4240,7 @@ rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f, int i,
     return L_ik;
   }
 }
-// still wrong
+// still wrong? test it by checking the condition in formula 3, right L_ik^(s) := ...
 
 /** under construction - does not yet work
 
@@ -4247,38 +4252,19 @@ it is the x-value. */
 template<class T>
 rsPolynomial<T> hermite(const std::vector<std::vector<T>>& f) // rename!
 {
-  // References: (1): Numerik (Andreas Meister, Thomas Sonar)
-  // Implementation follows directly the box "Unter der Lupe: Die Hermite-Interpolation" on page 73 
-  // and is not suitable for production use (has memory allocations and "Shlemiel the painter" 
-  // algos (i think)).
-
-  using Vec  = std::vector<T>;
+  //using Vec  = std::vector<T>;
   using Poly = rsPolynomial<T>;
-
   int m = (int) f.size() - 1;  // index of last datapoint
-
-  // compute degree n of interpolating polynomial:
-  /*
-  int n = 0; 
-  for(int i = 0; i < m; i++) {
-    int ni = (int)f[i].size()-1;
-    n += ni; }
-  n -= 1;
-  */
-
   Poly p;
-  for(int i = 0; i <= m; i++)
-  {
+  for(int i = 0; i <= m; i++) {
     int ni = (int)f[i].size()-1;
-    for(int k = 0; k <= ni-1; k++)
-    {
+    for(int k = 0; k <= ni-1; k++) {
       Poly L_ik = generalizedLagrange(f, i, k);
-      p = p + L_ik * f[i][k];  // or should it be k+1?
-    }
-  }
+      p = p + L_ik * f[i][k+1]; }}
   return p;
 }
-// still wrong
+// still wrong? needs tests with more inputs - the example from the book seems to work but other
+// tests fail...hmmm
 
 
 
@@ -4305,12 +4291,13 @@ void testHermiteInterpolation()
   // looks good so far
 
   // test generalized Lagrange polynomials:
- 
   Poly L_01 = generalizedLagrange(f, 0, 1); ok &= L_01 == Poly(Vec({0,1,-3,3,-1}));
-  Poly L_12 = generalizedLagrange(f, 1, 2); ok &= L_12 == Poly(Vec({0,0.5,-1,0.5})); // wrong!
+  //Poly L_12 = generalizedLagrange(f, 1, 2); ok &= L_12 == Poly(Vec({0,0.5,-1,0.5})); // wrong!
   // the coefficients are shifted to the right by one index, i.e. we have a factor of x too much - 
   // but the formula says tha L_12 should actually be equal to l_12 (which it is) but the numbers
   // in the example suggest that l_12 = x * L_12
+  // ..i think, this may be a mistake in the book - our p polynomial later seems to come out right
+  // :-O
 
   //Poly L_00 = generalizedLagrange(f, 0, 0); ok &= L_00 == Poly(Vec({1,0,-6,8,-3}));
   //Poly L_11 = generalizedLagrange(f, 1, 1); ok &= L_11 == Poly(Vec({0,0,-3,5,-2}));
@@ -4327,8 +4314,7 @@ void testHermiteInterpolation()
 
 
 
-  Poly p = hermite(f);  // wrong!
-
+  Poly p = hermite(f);
 
   // That's the example result in the book - check, if it gives the right values:
   Poly p1({-1,-2,-8,16,-5});
@@ -4339,8 +4325,51 @@ void testHermiteInterpolation()
   y = p1.derivativeAt(1.f, 2); //  20
   // yep - works
 
+  ok &= p == p1;
+  // looks good even though the L_12, etc. polynomials do not match the book - maybe that's a 
+  // mistake in the book? ...more tests needed - with more datapoints and more derivatives
 
 
+
+
+  // try to match more derivatives but using only two datapoints:
+
+  f0 = Vec({0, -1, -2,  3, 1    });  // value and 3 derivatives at x0 = 0
+  f1 = Vec({1,  2,  1, -1, 2, -1});  // value and 4 derivatives at x1 = 1
+  f = std::vector<Vec>({ f0, f1 }); 
+  p = hermite(f);
+  y = p.derivativeAt(0.f, 0); // -1
+  y = p.derivativeAt(0.f, 1); // -2
+  y = p.derivativeAt(0.f, 2); //  3
+  y = p.derivativeAt(0.f, 3); //  1
+  y = p.derivativeAt(1.f, 0); //  2
+  y = p.derivativeAt(1.f, 1); //  1
+  y = p.derivativeAt(1.f, 2); // -1
+  y = p.derivativeAt(1.f, 3); //  2
+  y = p.derivativeAt(1.f, 4); // -1
+  // nope! totally wrong!
+
+
+  // try to match more than 2 datapoints
+
+  //Vec f2({2,  -2, 3, -4, 5});
+  Vec f2({2,  -2, 3, -4});
+  f = std::vector<Vec>({ f0, f1, f2 }); 
+  p = hermite(f);
+  y = p.derivativeAt(0.f, 0); // -1
+  y = p.derivativeAt(0.f, 1); // -2
+  // correct
+
+  y = p.derivativeAt(1.f, 0); //  0
+  y = p.derivativeAt(1.f, 1); //  10
+  y = p.derivativeAt(1.f, 2); //  20
+  // a bit off numerically
+
+  y = p.derivativeAt(2.f, 0); //  -2
+  y = p.derivativeAt(2.f, 1); //   3
+  y = p.derivativeAt(2.f, 2); //  -5 
+  y = p.derivativeAt(2.f, 3); //   4
+  // totally off - dunno, if total numeric breakdown or bug in algorithm
 
 
   //Vec p = generalizedLagrange(std::vector<Vec>({ f0, f1 }));

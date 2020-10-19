@@ -4306,12 +4306,13 @@ void testHermiteInterpolation()
 
   // test generalized Lagrange polynomials:
  
-  Poly L_01 = generalizedLagrange(f, 0, 1);  // x*(1-x)^3 = -x^4 + 3*x^3 - 3*x^2 + x   -> ok
-  Poly L_00 = generalizedLagrange(f, 0, 0);  // 1 - 6x^2 + 8x^3 - 3x^4                 -> ok
+  Poly L_01 = generalizedLagrange(f, 0, 1); ok &= L_01 == Poly(Vec({0,1,-3,3,-1}));
+  Poly L_00 = generalizedLagrange(f, 0, 0); ok &= L_00 == Poly(Vec({1,0,-6,8,-3}));
 
-  Poly L_12 = generalizedLagrange(f, 1, 2);  // x*(x-1)^2/2 = 1/2*x^3 - x^2 + 1/2*x    -> wrong (shifted)
-  Poly L_11 = generalizedLagrange(f, 1, 1);  // -2x^4 + 5x^3 - 3x^2                    -> ok
-  Poly L_10 = generalizedLagrange(f, 1, 0);  // 4x^4 - 10x^3 + 7x^2                    -> wrong!
+  Poly L_11 = generalizedLagrange(f, 1, 1); ok &= L_11 == Poly(Vec({0,0,-3,5,-2}));
+
+  //Poly L_12 = generalizedLagrange(f, 1, 2); ok &= L_12 == Poly(Vec({0,0.5,-1,0.5})); // wrong!
+  //Poly L_10 = generalizedLagrange(f, 1, 0); ok &= L_10 == Poly(Vec({0,0,7,-10,4}));  // wrong!
   // this still fails!
   
 

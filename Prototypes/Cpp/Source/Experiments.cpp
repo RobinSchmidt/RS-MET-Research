@@ -4193,7 +4193,7 @@ f[i][0] is the i-th x-coordinate, f[i][1] is the corresponding y-coordinate, f[i
 derivative, etc. In general f[i][k] is the (k-1)th derivative value, except for k=0, in which case
 it is the x-value. */
 template<class T>
-rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f)
+rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f) // rename!
 {
   // References: (1): Numerik (Andreas Meister, Thomas Sonar)
   // Implementation follows directly the box "Unter der Lupe: Die Hermite-Interpolation" on page 73 
@@ -4227,7 +4227,14 @@ rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f)
         pm = pm * qj; }}                       // accumulate product
     Poly qi(Vec({-f[i][0], T(1)}));            // (x - x_i)
     qi = qi^k;                                 // (x - x_i)^k
-    qi = qi *  T(1) / rsFactorial(k);          // (x - x_i)^k / k!
+    //qi = qi *  T(1) / rsFactorial(k);          // (x - x_i)^k / k!   -> bug: fails! qi == 0
+
+    T s = T(1) / rsFactorial(k);
+    qi = qi *  s;                              
+    // (x - x_i)^k / k!  ....works - i think, it tries to divide a polynomial by an interger above
+    // ...maybe we need to override the operators for that
+
+
     return qi * pm;
   };
 

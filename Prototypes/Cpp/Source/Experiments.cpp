@@ -4263,13 +4263,21 @@ rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rena
 
 
 template<class T>
-void generalizedLagrangeHelper01(int i, int k, T* a)  // i is not needed - it's 0 or 1
+void generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
 {
   // create Pascal triangle - todo: pass that in as pointer (maybe rsMatrixView)
   static const int maxN = 10;  // preliminary
   T pt[maxN][maxN];
   for(int n = 0; n < maxN; n++)
     rsNextPascalTriangleLine(pt[n-1], pt[n], n+1);
+  // todo: alternate signs!
+
+  //int degree = n0 + n1 - 1;  // degree of Hermite polynomial
+  // but it seems, the helper polynomials have a degree one higher...how is that possible? The final 
+  // polynomial is a linear combination of those (right?). Is there some coefficient cancellation 
+  // going on?
+  //degree = n0 + n1; // ..one higher
+  //int N = degree + 1;  // length of polynomial coeff array
 
   // l_0k = ((x-1)/(0-1))^n1 * (x-0)^k / k!
   // l_1k = ((x-0)/(1-0))^n0 * (x-1)^k / k!
@@ -4278,8 +4286,33 @@ void generalizedLagrangeHelper01(int i, int k, T* a)  // i is not needed - it's 
   // but we have ((x-1)/(0-1))^n1 = (-(x-1))^n1 = (1-x)^n1 so the l_01 start with different sign
   // than the l_1k
 
+  using AT = rsArrayTools;
+
   T tmp[maxN];
 
+  AT::fillWithZeros(tmp, maxN);
+
+  int N;  // make output value - caller want to know the degree
+  if(i == 0)
+  {
+    // polynomial is n1-th line of alternating Pascal triangle, shifted by k
+    N = n1+k+1;
+    AT::copy(pt[n1], &tmp[k], N-k);
+  }
+  else if(i == 1)
+  {
+    // polynomial is k-th line of alternating Pascal triangle, shifted by n0
+    N = n0+k+1;
+    AT::copy(pt[k], &tmp[n0], N-n0);
+  }
+  else
+    rsError();
+
+  // multiply by 1/k!
+
+  AT::scale(tmp, tmp, N, T(1)/rsFactorial(k));
+
+  AT::copy(tmp, a, N); // does this work?
 
 
   int dummy = 0;
@@ -4354,8 +4387,8 @@ void testHermiteInterpolation()
   using Poly = rsPolynomial<float>;
 
   //      x   f   f' f''
-  Vec f0({0, -1, -2    });
-  Vec f1({1,  0, 10, 20});
+  Vec f0({0, -1, -2    }); int n0 = 2;
+  Vec f1({1,  0, 10, 20}); int n1 = 3;
   std::vector<Vec> f({ f0, f1 });  // our data
 
   bool ok = true;
@@ -4372,13 +4405,14 @@ void testHermiteInterpolation()
 
   // now the optimized version:
   float a[20];
-  generalizedLagrangeHelper01(0, 0, a);
-  generalizedLagrangeHelper01(0, 1, a);
-  generalizedLagrangeHelper01(0, 2, a);
-  generalizedLagrangeHelper01(1, 0, a);
-  generalizedLagrangeHelper01(1, 1, a);
-  generalizedLagrangeHelper01(1, 2, a);
-  generalizedLagrangeHelper01(1, 3, a);
+  generalizedLagrangeHelper01(0, 0, n0, n1, a);  // l_00, N = 4 == n1+k+1 = 3+0+1
+  generalizedLagrangeHelper01(0, 1, n0, n1, a);  // l_01, N = 5 == n1+k+1 = 3+1+1
+  generalizedLagrangeHelper01(0, 2, n0, n1, a);  // l_02, N = 6 == n1+k+1 = 3+2+1
+
+  generalizedLagrangeHelper01(1, 0, n0, n1, a);  // l_10, N = 3 == n0+k+1 = 2+0+1
+  generalizedLagrangeHelper01(1, 1, n0, n1, a);  // l_11, N = 4 == n0+k+1 = 2+1+1
+  generalizedLagrangeHelper01(1, 2, n0, n1, a);  // l_12, N = 5 == n0+k+1 = 2+2+1
+  generalizedLagrangeHelper01(1, 3, n0, n1, a);  // l_13, N = 6 == n0+k+1 = 2+3+1
 
 
   // test generalized Lagrange polynomials:

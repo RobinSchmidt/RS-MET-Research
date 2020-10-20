@@ -4217,7 +4217,7 @@ rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, 
   qi = qi *  (T(1) / rsFactorial(k));        // (x - x_i)^k / k!
   return qi * pm;
 }
-// for better numerical precision, mabye postpone out the division by k! for as long as possible
+
 
 /** Constructs generalized Lagrange polynomial L_ik(x). This is a recursive implementation and the 
 most direct translation of the formula in the book. But it's just for proof of concept because 
@@ -4257,6 +4257,64 @@ rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rena
       p = p + L_ik * f[i][k+1]; }}                // maybe division by k! should occur here later
   return p;
 }
+
+
+// for better numerical precision, try to postpone out the division by k! for as long as possible
+// ...nope - that doesn't work:
+template<class T>
+rsPolynomial<T> generalizedLagrangeHelper2(const std::vector<std::vector<T>>& f, int i, int k)
+{
+  using Vec  = std::vector<T>;
+  using Poly = rsPolynomial<T>;
+  int  m = (int) f.size() - 1;               // index of last datapoint
+  Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
+  for(int j = 0; j <= m; j++) {
+    if(j != i)   {
+      int nj = (int) f[j].size() - 1;              // exponent of j-th factor
+      Poly qj(Vec({ -f[j][0], T(1) }));      //  (x - x_j)
+      qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
+      qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
+      pm = pm * qj; }}                       // accumulate product
+  Poly qi(Vec({ -f[i][0], T(1) }));          // (x - x_i)
+  qi = qi^k;                                 // (x - x_i)^k
+  //qi = qi *  (T(1) / rsFactorial(k));        // (x - x_i)^k / k!
+  return qi * pm;
+}
+template<class T>
+rsPolynomial<T> generalizedLagrange2(const std::vector<std::vector<T>>& f, int i, int k)
+{
+  using Poly = rsPolynomial<T>;
+  int  ni    = (int)f[i].size()-1;
+  Poly l_ik  = generalizedLagrangeHelper2(f, i, k);
+  if(k == ni-1)
+    return l_ik;
+  else {
+    Poly sum;
+    for(int mu = ni-1; mu >= k+1; mu--) {
+      T s = l_ik.derivativeAt(f[i][0], mu);              // l_ik^(mu) (x_i)
+      sum = sum + generalizedLagrange2(f, i, mu) * s; }  // recursion
+    return l_ik - sum; }
+}
+template<class T>
+rsPolynomial<T> hermiteInterpolant2(const std::vector<std::vector<T>>& f) // rename!
+{
+  using Poly = rsPolynomial<T>;
+  int m = (int) f.size() - 1;    // index of last datapoint
+  Poly p;
+  for(int i = 0; i <= m; i++) {
+    int ni = (int)f[i].size()-1;
+    for(int k = 0; k <= ni-1; k++) {
+      Poly L_ik = generalizedLagrange2(f, i, k);  // still very inefficient
+      //p = (p + L_ik * f[i][k+1]) * (T(1) / rsFactorial(k));
+      p = p + L_ik * (f[i][k+1]/rsFactorial(k)); 
+    }
+  }
+  return p;
+}
+
+
+
+
 
 void testHermiteInterpolation()
 {
@@ -4355,14 +4413,19 @@ void testHermiteInterpolation()
   y = p.derivativeAt(2.f, 3); //   5
   // okayish, but numerically imprecise
 
+  // trying it with delayed division by 1/k!
+  p1 = hermiteInterpolant2(f); // ...nope - totally different from p!
+
   // ToDo: 
   // -maybe move over to prototypes section
   // -get rid of the blatant inefficiencies in the current implementation
-  // -implement an optimized version for the special case m=1, x0=0, x1=1 - a lot of simplification
-  //  occurs in this case
   // -try to improve numerical accuracy - figure out, why it's so bad - maybe we can factor out a 
   //  couple of divisions in order to work with integers for longer (i think, the l_ik and L_ik 
   //  polynomials can be scaled to use integer coeffs, if we do the division by 1/k! later)
+  // -implement an optimized version for the special case m=1, x0=0, x1=1 - a lot of simplification
+  //  occurs in this case
+  //  -the helper polynomials reduce to shifted versions of binomial coeffs with alternating signs
+
 
 
   int dummy = 0;

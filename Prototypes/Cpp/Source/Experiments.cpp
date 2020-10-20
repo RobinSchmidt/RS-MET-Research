@@ -4263,20 +4263,35 @@ rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rena
 
 
 template<class T>
+int generalizedLagrangeHelper0(int k, int n1, T* a, const rsMatrix<T>& pt)
+{
+  int N = n1+k+1;
+
+
+  return N
+}
+
+template<class T>
+int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
+{
+  int N = n0+k+1;
+
+  return N
+}
+
+template<class T>
 int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
 {
-  // create Pascal triangle - todo: pass that in as pointer (maybe rsMatrixView)
+  // create Pascal triangle with alternate signs (odd numbered entries become neagtive):
   static const int maxN = 10;  // preliminary
-  T pt[maxN][maxN];
+  rsMatrix<T> pt2(maxN, maxN);
   for(int n = 0; n < maxN; n++)
-    rsNextPascalTriangleLine(pt[n-1], pt[n], n+1);
-
-  // alternate signs (odd numbered entries become neagtive):
-  for(int n = 0; n < maxN; n++) {
+    rsNextPascalTriangleLine(pt2.getRowPointer(n-1), pt2.getRowPointer(n), n+1);
+  for(int n = 0; n < maxN; n++)
     for(int k = 1; k <= n; k += 2)
-      pt[n][k] = -pt[n][k]; 
-    // maybe include also the 1/factorial(k) factor to save the scale step
-  }
+      pt2(n,k) = -pt2(n,k); 
+  // todo: use a class for triangular matrices - saves half of the memory
+
 
   // l_0k = ((x-1)/(0-1))^n1 * (x-0)^k / k!
   // l_1k = ((x-0)/(1-0))^n0 * (x-1)^k / k!
@@ -4293,17 +4308,17 @@ int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
   if(i == 0) {
     // polynomial is n1-th line of alternating Pascal triangle, shifted by k
     N = n1+k+1;
-    AT::copy(pt[n1], &a[k], N-k); }
+    AT::copy(pt2.getRowPointer(n1), &a[k], N-k); 
+  }
   else if(i == 1) 
   {
     // polynomial is k-th line of alternating Pascal triangle, shifted by n0
     N = n0+k+1;
-    if(rsIsOdd(k)) AT::negate(pt[k], &a[n0], N-n0);
-    else           AT::copy(  pt[k], &a[n0], N-n0);  
+    if(rsIsOdd(k)) AT::negate(pt2.getRowPointer(k), &a[n0], N-n0);
+    else           AT::copy(  pt2.getRowPointer(k), &a[n0], N-n0);
   }
   else
     rsError();
-
 
   AT::scale(a, a, N, T(1)/rsFactorial(k));  // multiply by 1/k!
   return N;
@@ -4414,6 +4429,7 @@ void testHermiteInterpolation()
   N = generalizedLagrangeHelper01(1, 2, n0, n1, a); ok &= rsIsCloseTo(l_12, a, N, tol);
   N = generalizedLagrangeHelper01(1, 3, n0, n1, a); ok &= rsIsCloseTo(l_13, a, N, tol);
 
+  rsAssert(ok);
   // todo: split into two functions, not taking the i as input
 
 

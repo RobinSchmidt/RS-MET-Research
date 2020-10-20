@@ -2857,6 +2857,95 @@ RS_PFX rsSin(RS_DCN x)
 // todo: define elementary functions exp, sin, cos, sqrt
 // implement operators that allow mixed operations with std::complex
 
+//=================================================================================================
+
+/** Class for treating pre-existing data owned elsewhere as tableau. @see rsTableau. */
+
+template<class T>
+class rsTableauView
+{
+
+public:
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Construction/Destruction */
+
+  /** Default constructor. */
+  rsTableauView() {}
+
+  rsTableauView(int numRows, T* data, int* starts, int* lengths)
+  {
+    rsAssert(numRows >= 1 && data != nullptr);    
+    // todo: maybe also assert that none of lengths[i] is <= 0
+
+    this->numRows  = numRows;
+    this->pDataPtr = data;
+    this->pStarts  = starts;
+    this->pLengths = lengths;
+  }
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Element access */
+
+  T& operator()(const int i, const int j) 
+  { 
+    rsAssert(i >= 0 && i < numRows,     "Invalid row index");
+    rsAssert(j >= 0 && j < pLengths[i], "Invalid column index");
+    return pData(starts[i] + j);
+  }
+
+  // todo: implement operators or functions returning const references like in rsMatrixView
+
+protected:
+
+  T*   pData    = nullptr;
+  int* pLengths = nullptr;
+  int* pStarts  = nullptr;
+  int  numRows  = 0;
+
+
+};
+
+/** A class for efficiently storing data that has the form of an array of arrays, but unlike a 
+matrix, each subarray (i.e. each row) can have a different length. 
+
+Example - tableau with 4 rows:
+
+  1 2 3
+  4
+  5 6 7 8
+  9 0
+
+
+*/
+
+template<class T>
+class rsTableau : public rsTableauView<T>
+{
+
+public:
+
+  rsTableau() {}
+
+  rsTableau(int numRows, int* lengths)
+  {
+    // ...
+  }
+
+protected:
+
+  std::vector<T>   data;
+  std::vector<int> lengths;
+  std::vector<int> starts;
+  // optimize for less allocations: use one vector ls for lengths and starts and use 
+  // pLengths = &ls[0] and pStarts = &ls[numRows]...or something
+
+
+};
+
+
 
 /*
 creating movies from pictures:

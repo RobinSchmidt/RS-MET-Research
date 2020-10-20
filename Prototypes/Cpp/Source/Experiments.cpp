@@ -3911,6 +3911,8 @@ void testAutoDiffReverse1()
   ok &= rsIsCloseTo(x.d, y.v*z.v, tol);  // (x*y*z)_x = y*z
   // wrong
 
+
+  d = t;  // to suppress warning
   int dummy = 0;
 
   //d = x.d
@@ -4205,7 +4207,7 @@ rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, 
   Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
   for(int j = 0; j <= m; j++) {
     if(j != i)   {
-      int nj = f[j].size() - 1;              // exponent of j-th factor
+      int nj = (int) f[j].size() - 1;              // exponent of j-th factor
       Poly qj(Vec({ -f[j][0], T(1) }));      //  (x - x_j)
       qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
       qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
@@ -4215,6 +4217,7 @@ rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, 
   qi = qi *  (T(1) / rsFactorial(k));        // (x - x_i)^k / k!
   return qi * pm;
 }
+// for better numerical precision, mabye postpone out the division by k! for as long as possible
 
 /** Constructs generalized Lagrange polynomial L_ik(x). This is a recursive implementation and the 
 most direct translation of the formula in the book. But it's just for proof of concept because 
@@ -4237,9 +4240,10 @@ rsPolynomial<T> generalizedLagrange(const std::vector<std::vector<T>>& f, int i,
 }
 
 /** Returns the Hermite interpolation polynomial for the data given in f. We use the following 
-conventions for the input data: f[i][0] is the i-th x-coordinate, f[i][1] is the corresponding 
-y-coordinate, f[i][2] is the 1st derivative, etc. In general f[i][k] is the (k-1)th derivative 
-value, except for k=0, in which case it is the x-value. */
+conventions for the input data: f[i][0] is the x-coordinate of the i-th datapoint, f[i][1] is the 
+corresponding y-coordinate, f[i][2] is the 1st derivative, etc. In general, f[i][k] is the (k-1)th 
+derivative of the i-th datapoint value, except for k=0, in which case it is the x-value. For k=1, 
+it is the 0-th derivative which is conventionally the function value itself. */
 template<class T>
 rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rename!
 {
@@ -4250,7 +4254,7 @@ rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rena
     int ni = (int)f[i].size()-1;
     for(int k = 0; k <= ni-1; k++) {
       Poly L_ik = generalizedLagrange(f, i, k);   // still very inefficient
-      p = p + L_ik * f[i][k+1]; }}
+      p = p + L_ik * f[i][k+1]; }}                // maybe division by k! should occur here later
   return p;
 }
 
@@ -4273,7 +4277,7 @@ void testHermiteInterpolation()
   Poly l_10 = generalizedLagrangeHelper(f,1,0); ok &= l_10 == Poly(Vec({0,0,1}));
   Poly l_11 = generalizedLagrangeHelper(f,1,1); ok &= l_11 == Poly(Vec({0,0,-1,1}));
   Poly l_12 = generalizedLagrangeHelper(f,1,2); ok &= l_12 == Poly(Vec({0,0,0.5,-1,0.5}));
-  Poly l_13 = generalizedLagrangeHelper(f,1,3); ok &= l_13 == Poly(Vec({0,0,-1./6,0.5,-0.5,1./6}));
+  Poly l_13 = generalizedLagrangeHelper(f,1,3); ok &= l_13 == Poly(Vec({0,0,-1.f/6,0.5,-0.5,1.f/6}));
   // looks good so far
 
   // test generalized Lagrange polynomials:
@@ -4363,6 +4367,10 @@ void testHermiteInterpolation()
 
   int dummy = 0;
 }
+
+// todo: implement Gregory-Netwon interpolation formula that directly matches finite differences.
+// see (1) page 56. One may think about using Hermite interpolation using finite difference 
+// approximations to derivatives...maybe that may give the same results?
 
 
 
@@ -4496,40 +4504,49 @@ void testVertexMesh()
 
   int dummy = 0;
 
-  // todo:
-  // -allow reading out the mesh at arbitrary positions p
-  //  -figure out in which triangular region the vector p falls - i.e. find the 3 vertices that 
-  //   bound the triangle that contains the point p
-  //  -do a triangular interpolation (something with barycentric coodinates, i guess)
-  // -maybe compute relative errors
-  // -compare accuracy of weighted vs unweighted
-  // -optimize
-  // -compare to results with regular mesh and central difference - see, if the formula reduces to
-  //  the central difference formula in this case
-  // -try different configurations of Q,R,S,T - maybe also edge cases, where some are 
-  //  non-distinct, maybe even fall on P - which is actually a situation that should not occur, but
-  //  out of curiosity, what happens
-  // -try a rotated regular configuration
-  // -try different functions
-  // -test critically determined case (vertex with 2 neighbors) - test also behavior when the two
-  //  vertices are both along the x-direction - in this case, we should not be able to get an 
-  //  estimate for the y-component of the gradient
-  // -implement and test underdetermined case (vertex with 1 neighbor)
-  // -maybe try with symmetric edges (this will produce vertices with 1 neighbor)
-  // -generalize - first to 3D, then to nD
-  // -maybe measure how accuracy depends on grid-spacing and number of neighbors - i guess, a 
-  //  vertex with more neighbors will get a more accurate estimate?
-  // -provide functions to create meshes programmatically, for example 
-  //  createCircularMesh(int Nr, int Na) where Nr, Na are the number of angles and radii - this can
-  //  be used to compare a solver on an irregular cricular grid defined in cartesian coordinates
-  //  with a regular grid in polar coordinates - maybe solving the heat- and wave-equation with a
-  //  given initial temperature and height distribution and maybe with clamped values at the 
-  //  boundary. especially the center point of the circle in the irregular mes is interesting - it 
-  //  will have Na neighbours whereas a typical point will have only 4. boundary points will have 
-  //  only 3 ...or maybe not giving them any neighbours could be a convenient to fix their values.
-  //  ...maybe a vertex could have additional data associated with it, like the function value - 
-  // but maybe these should be kept in separate arrays
+
 }
 */
-// https://math.stackexchange.com/questions/2253443/difference-between-least-squares-and-minimum-norm-solution
-// https://see.stanford.edu/materials/lsoeldsee263/08-min-norm.pdf
+
+/*
+todo:
+-allow reading out the mesh at arbitrary positions p
+-figure out in which triangular region the vector p falls - i.e. find the 3 vertices that
+ bound the triangle that contains the point p
+-do a triangular interpolation (something with barycentric coodinates, i guess)
+-maybe compute relative errors
+-compare accuracy of weighted vs unweighted
+-compare to results with regular mesh and central difference - see, if the formula reduces to
+ the central difference formula in this case
+-try different configurations of Q,R,S,T - maybe also edge cases, where some are
+ non-distinct, maybe even fall on P - which is actually a situation that should not occur, but
+ out of curiosity, what happens
+-try a rotated regular configuration
+-try different functions
+-test critically determined case (vertex with 2 neighbors) - test also behavior when the two
+ vertices are both along the x-direction - in this case, we should not be able to get an
+ estimate for the y-component of the gradient
+-implement and test underdetermined case (vertex with 1 neighbor)
+-maybe try with symmetric edges (this will produce vertices with 1 neighbor)
+-generalize - first to 3D, then to nD
+-maybe measure how accuracy depends on grid-spacing and number of neighbors - i guess, a
+ vertex with more neighbors will get a more accurate estimate?
+-provide functions to create meshes programmatically, for example
+ createCircularMesh(int Nr, int Na) where Nr, Na are the number of angles and radii - this can
+ be used to compare a solver on an irregular cricular grid defined in cartesian coordinates
+ with a regular grid in polar coordinates - maybe solving the heat- and wave-equation with a
+ given initial temperature and height distribution and maybe with clamped values at the
+ boundary. especially the center point of the circle in the irregular mesh is interesting - it
+ will have Na neighbours whereas a typical point will have only 4. boundary points will have
+ only 3 ...or maybe not giving them any neighbours could be a convenient to fix their values.
+ ...maybe a vertex could have additional data associated with it, like the function value -
+ but maybe these should be kept in separate arrays
+ -we could also insert an extra center point connected to all vertices in the bottom row
+ -it should be possible to allow different topologies like plane, cylinder, torus, sphere, 
+  moebius-strip (like cylinder but contact edge reversed), klein-bottle (like torus but one or both
+  contact edges reversed), etc.
+
+ https://math.stackexchange.com/questions/2253443/difference-between-least-squares-and-minimum-norm-solution
+ https://see.stanford.edu/materials/lsoeldsee263/08-min-norm.pdf
+
+*/

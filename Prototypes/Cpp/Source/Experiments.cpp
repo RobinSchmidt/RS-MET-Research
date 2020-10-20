@@ -4270,7 +4270,15 @@ void generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
   T pt[maxN][maxN];
   for(int n = 0; n < maxN; n++)
     rsNextPascalTriangleLine(pt[n-1], pt[n], n+1);
-  // todo: alternate signs!
+
+  // alternate signs (odd numbered entries become neagtive):
+  for(int n = 0; n < maxN; n++) {
+    for(int k = 1; k <= n; k += 2)
+      pt[n][k] = -pt[n][k]; 
+    // maybe include also the 1/factorial(k) factor to save the scale step
+  }
+
+
 
   //int degree = n0 + n1 - 1;  // degree of Hermite polynomial
   // but it seems, the helper polynomials have a degree one higher...how is that possible? The final 
@@ -4290,20 +4298,19 @@ void generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
 
   T tmp[maxN];
 
-  AT::fillWithZeros(tmp, maxN);
+  AT::fillWithZeros(tmp, maxN);  // fill only up to where we have to, inside condtional below
 
-  int N;  // make output value - caller want to know the degree
-  if(i == 0)
-  {
+  int N;  // length of produced coeff array - make output value - caller wants to know the degree
+  if(i == 0) {
     // polynomial is n1-th line of alternating Pascal triangle, shifted by k
     N = n1+k+1;
-    AT::copy(pt[n1], &tmp[k], N-k);
-  }
-  else if(i == 1)
+    AT::copy(pt[n1], &tmp[k], N-k); }
+  else if(i == 1) 
   {
     // polynomial is k-th line of alternating Pascal triangle, shifted by n0
     N = n0+k+1;
-    AT::copy(pt[k], &tmp[n0], N-n0);
+    if(rsIsOdd(k)) AT::negate(pt[k], &tmp[n0], N-n0);
+    else           AT::copy(  pt[k], &tmp[n0], N-n0);  
   }
   else
     rsError();
@@ -4312,8 +4319,7 @@ void generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
 
   AT::scale(tmp, tmp, N, T(1)/rsFactorial(k));
 
-  AT::copy(tmp, a, N); // does this work?
-
+  AT::copy(tmp, a, N); // copy to output - todo: work directly on a, scrap tmp
 
   int dummy = 0;
 }
@@ -4413,6 +4419,9 @@ void testHermiteInterpolation()
   generalizedLagrangeHelper01(1, 1, n0, n1, a);  // l_11, N = 4 == n0+k+1 = 2+1+1
   generalizedLagrangeHelper01(1, 2, n0, n1, a);  // l_12, N = 5 == n0+k+1 = 2+2+1
   generalizedLagrangeHelper01(1, 3, n0, n1, a);  // l_13, N = 6 == n0+k+1 = 2+3+1
+
+  // todo: make automatic comparisons to l_00, l_01 etc. for this, the function should output the
+  // degree
 
 
   // test generalized Lagrange polynomials:

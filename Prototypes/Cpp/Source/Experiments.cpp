@@ -4446,8 +4446,10 @@ void testMeshGeneration()
   int Nx = 7;     // number grid coordinates along x-direction
   int Ny = 5;     // number grid coordinates along y-direction
 
-  //int Nv = Nx*Ny; // number of vertices
-  //int Ne = 4*Nv;  // each vertex has 4 neighbours (in toroidal topology)
+  int Nv = Nx*Ny; // number of vertices
+  int Ne = 4*Nv;  // each vertex has 4 neighbours (in toroidal topology)
+
+  bool ok = true;
 
   // create mesh and add the vertices:
   Mesh m;
@@ -4457,10 +4459,44 @@ void testMeshGeneration()
       float y = float(j);
       Vec2 v(x, y);
       m.addVertex(v); }}
+  // factor out
 
+  ok &= m.getNumVertices() == Nv;
 
   // add the edges to the mesh:
+  for(int i = 0; i < Nx; i++)
+  {
+    for(int j = 0; j < Ny; j++)
+    {
+      int k = i * Ny + j;   // flat index of current vertex
 
+      // vertex k should be connected to 4 vertices l,r,b,t (left, right, top, bottom):
+      int il = (i-1+Nx) % Nx;  // +Nx is needed for modulo to work right when i-1 < 0
+      int ir = (i+1   ) % Nx;
+      int jb = (j-1+Ny) % Ny;
+      int jt = (j+1   ) % Ny;
+      int kl = il * Ny + j;
+      int kr = ir * Ny + j;
+      int kb = i  * Ny + jb;
+      int kt = i  * Ny + jt;
+      m.addEdge(k, kl, 1.f);  // get rid of the 1.f
+      m.addEdge(k, kr, 1.f);
+      m.addEdge(k, kb, 1.f);
+      m.addEdge(k, kt, 1.f);
+      // maybe the order matters for efficient access? ..and maybe we could pre-allocate the memory
+      // for the edges?
+
+      int dummy = 0;
+    }
+  }
+  // factor out
+
+
+  ok &= m.getNumEdges() == Ne;
+
+
+  // todo: maybe check dx and dy for all the neighbours to see, if index computations for
+  // the neighbours is indeed correct
 
 
 

@@ -4436,7 +4436,18 @@ void testHermiteInterpolation()
 // approximations to derivatives...maybe that may give the same results?
 
 
-
+template<class T>
+void addRegularMeshVertices2D(
+  rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, T dx = T(1), T dy = T(1))
+{
+  for(int i = 0; i < Nx; i++)
+    for(int j = 0; j < Ny; j++)
+      m.addVertex(rsVector2D<T>(dx * T(i), dy * T(j)));
+  // -maybe addVertex should allow to pre-allocate memory for the edges
+  // -using dx,dy will have to be taken into account for the edge-weights, 
+  //  too...ewww....having different dx,dy values could mess up the gradient calculation - maybe 
+  //  don't use it for now
+}
 
 void testMeshGeneration()
 {
@@ -4453,13 +4464,17 @@ void testMeshGeneration()
 
   // create mesh and add the vertices:
   Mesh m;
+  addRegularMeshVertices2D(m, Nx, Ny);
+
+  /*
   for(int i = 0; i < Nx; i++) {
     for(int j = 0; j < Ny; j++) {
       float x = float(i);
       float y = float(j);
       Vec2 v(x, y);
-      m.addVertex(v); }}
+      m.addVertex(v); }}  // maybe the function shoudl allow to pre-allocate memoty for the edges
   // factor out
+  */
 
   ok &= m.getNumVertices() == Nv;
 
@@ -4475,11 +4490,11 @@ void testMeshGeneration()
       int ir = (i+1   ) % Nx;
       int jb = (j-1+Ny) % Ny;
       int jt = (j+1   ) % Ny;
-      int kl = il * Ny + j;
-      int kr = ir * Ny + j;
-      int kb = i  * Ny + jb;
-      int kt = i  * Ny + jt;
-      m.addEdge(k, kl, 1.f);  // get rid of the 1.f
+      int kl = il * Ny + j;      // west
+      int kr = ir * Ny + j;      // east
+      int kb = i  * Ny + jb;     // south
+      int kt = i  * Ny + jt;     // north
+      m.addEdge(k, kl, 1.f);     // get rid of the 1.f
       m.addEdge(k, kr, 1.f);
       m.addEdge(k, kb, 1.f);
       m.addEdge(k, kt, 1.f);
@@ -4489,7 +4504,7 @@ void testMeshGeneration()
       int dummy = 0;
     }
   }
-  // factor out
+  // factor out - have variants that connect to the diagonal neighbours as well
 
 
   ok &= m.getNumEdges() == Ne;

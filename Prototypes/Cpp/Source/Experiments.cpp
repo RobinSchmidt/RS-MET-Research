@@ -4436,6 +4436,11 @@ void testHermiteInterpolation()
 // approximations to derivatives...maybe that may give the same results?
 
 
+// maybe rename functions to use "Grid" instead of "Mesh" - research which terminology is more 
+// common in PDE solvers and use that...i think, "mesh" implies 2D whereas "grid" is nD? if so,
+// use grid, because the functions should actually also work for true 3D meshes - here, we deal with 
+// 2D surfaces in 2D or 3D space...we'll see
+
 template<class T>
 void addRegularMeshVertices2D(
   rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, T dx = T(1), T dy = T(1))
@@ -4459,16 +4464,12 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, 
 {
   // vertex k should be connected to the 4 vertices to its left, right, top, bottom, with 
   // wrap-arounds, if necessary:
-  int il = (i-1+Nx) % Nx;    // +Nx is needed for modulo to work right when i-1 < 0
-  int ir = (i+1   ) % Nx;
-  int jb = (j-1+Ny) % Ny;
-  int jt = (j+1   ) % Ny;
-  int k  = i  * Ny + j;      // flat index of vertex with indices i,j
-  int kl = il * Ny + j;      // west
-  int kr = ir * Ny + j;      // east
-  int kb = i  * Ny + jb;     // south
-  int kt = i  * Ny + jt;     // north
-  m.addEdge(k, kl, 1.f);     // get rid of the 1.f
+  int il = (i-1+Nx) % Nx, ir = (i+1) % Nx;    // +Nx needed for modulo when i-1 < 0
+  int jb = (j-1+Ny) % Ny, jt = (j+1) % Ny;    // dito for +Ny
+  int kl = il * Ny + j,   kr = ir * Ny + j;   // west, east
+  int kb = i  * Ny + jb,  kt = i  * Ny + jt;  // south, north
+  int k  = i  * Ny + j;                       // flat index of vertex with indices i,j
+  m.addEdge(k, kl, 1.f);                      // try to get rid of the 1.f
   m.addEdge(k, kr, 1.f);
   m.addEdge(k, kb, 1.f);
   m.addEdge(k, kt, 1.f);
@@ -4476,15 +4477,11 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, 
   //  memory for the edges?
 }
 
-// make versions cylindrical, flat/planar
-
 template<class T>
 void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, int i, int j)
 {
-  int il = i-1;
-  int ir = i+1;
-  int jb = j-1;
-  int jt = j+1;
+  int il = i-1, ir = i+1;
+  int jb = j-1, jt = j+1;
   int k  = i * Ny + j;
   if(il >=  0) m.addEdge(k, il * Ny + j,  1.f);  // west
   if(ir <  Nx) m.addEdge(k, ir * Ny + j,  1.f);  // east
@@ -4492,6 +4489,14 @@ void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, in
   if(jt <  Ny) m.addEdge(k, i  * Ny + jt, 1.f);  // north
 }
 // needs test
+
+// -make cylindrical version: wraparounds around 1 axis, truncation for the other - maybe let the 
+//  user select which axis is periodic
+// -maybe make a conical version - it's like the cylinder but with an extra point that gets 
+//  connected to all points of one nonperidic edge (top or bottom, if left is periodic with right)
+// -maybe a sort of sphere can be created if we do it with top and bottom - it's double-cyclinder
+//  but the topology is the same - geometry should be created by assigning (x,y,z) coordinates to
+//  the vertices
 
 template<class T>
 void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
@@ -4503,14 +4508,21 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
   // -have variants that connect to the diagonal neighbours as well and allow for different 
   //  handling of the edges
   // -have a function that re-assigns the edge weights according to computed Euclidean distances.
-  //  this may be useful when we use the same mesh topology with different intended geometries.
+  //  this may be useful when we use the same mesh topology with different intended geometries. But
+  //  this should not be used for toroidal topology when the vertices are only 2D because the 
+  //  wrapped edges would get a wrong distance then (they are conceptually just one step apart but 
+  //  in 2D space, they have a geometric distance of Nx*dx or Ny*dy)
   //  To create a different geometry, the user should loop through the vertices and re-assign their
   //  positions (x,y) or later also (x,y,z)
 }
 
-
-
-
+template<class T>
+void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
+{
+  for(int i = 0; i < Nx; i++) 
+    for(int j = 0; j < Ny; j++) 
+      addMeshConnectionsPlanar2D(m, Nx, Ny, i, j);
+}
 
 void testMeshGeneration()
 {
@@ -4528,18 +4540,34 @@ void testMeshGeneration()
   // create mesh and add the vertices:
   Mesh m;
   addRegularMeshVertices2D(m, Nx, Ny);
-  addMeshConnectionsToroidal2D(m, Nx, Ny);
   ok &= m.getNumVertices() == Nv;
-  ok &= m.getNumEdges()    == Ne;
+
+  addMeshConnectionsToroidal2D(m, Nx, Ny);
+  Ne = m.getNumEdges();
+  ok &= m.getNumEdges()    == 4*Nv; // each vertex has 4 neighbours in toroidal topology
 
 
-  // m.clearEdges()
-  // addMeshConnectionsPlanar2D(m, Nx, Ny);
+
+  m.clearEdges();
+  ok &= m.getNumEdges() == 0;
+  addMeshConnectionsPlanar2D(m, Nx, Ny);
+
+  // expected number of edges:
+  Ne = 4 * (Nx-2)*(Ny-2) + 3 * (2*(Nx-2) + 2*(Ny-2)) + 2 * 4;  // maybe simplify
+  // 4 neighbours (inner points):         (Nx-2)*(Ny-2)
+  // 3 neighbours (edges except corners):  2*(Nx-2) + 2*(Ny-2)
+  // 2 neighbours (corners):               4
+  // i think, the formula works only for Nx,Ny >= 2
+  ok &= m.getNumEdges() == Ne;
+
+  //Ne = m.getNumEdges();
 
 
   // todo: maybe check dx and dy for all the neighbours to see, if index computations for
   // the neighbours is indeed correct
 
+  // todo: solve heat- or wave-equation numerically on such a grid to test the numerical gradient
+  // computation on irregular grids
 
 
   // todo: have a function plotMesh - maybe it should create an image and write it to a ppm file

@@ -4292,14 +4292,54 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
 // O(n0+k)
 
 template<class T>
-void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* a)
+void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 {
   using Poly = rsPolynomial<T>;
   int N = n0 + n1;  // number of coeffs in interpolant
   int D = N  - 1;   // degree of interpolant
 
+  // ToDo:
+  // -compute matrix of alternating Pascal triangle coeffs in O(N^2)
+  // -compute polynomials L_0n0,...,L_00 via backward recursion
+  // -accumulate them into p
+  // -compute polynomials L_1n1,...,L10 via backward recursion
+  // -accumulate them into p
+  
+  rsMatrix<T> pt(N, N);
+  for(int n = 0; n < N; n++)
+    rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1);
+  for(int n = 0; n < N; n++)
+    for(int k = 1; k <= n; k += 2)
+      pt(n,k) = -pt(n,k); 
+  // todo: use a class for triangular matrices - saves half of the memory
 
-  return;
+  // compute L_0k polynomials:
+  std::vector<T> l(N);
+  rsMatrix<T> L(N, N);
+  generalizedLagrangeHelper0(0, n1, L.getRowPointer(n0-1), pt);
+  for(int k = n0-2; k >= 0; k--)
+  {
+    //T s = Poly::derivative
+
+
+  }
+
+
+  // accumulate them into p:
+  // ...
+
+
+
+  // compute L_1k polynomials:
+  generalizedLagrangeHelper1(0, n0, L.getRowPointer(n1-1), pt);
+  // ...
+
+
+  // accumulate them into p:
+  // ...
+
+
+  int dummy = 0;
 
   //Poly p(D);
   //return p;

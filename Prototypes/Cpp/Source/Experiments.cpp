@@ -4263,7 +4263,7 @@ rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rena
 
 
 template<class T>
-void generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
+int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
 {
   // create Pascal triangle - todo: pass that in as pointer (maybe rsMatrixView)
   static const int maxN = 10;  // preliminary
@@ -4278,15 +4278,6 @@ void generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
     // maybe include also the 1/factorial(k) factor to save the scale step
   }
 
-
-
-  //int degree = n0 + n1 - 1;  // degree of Hermite polynomial
-  // but it seems, the helper polynomials have a degree one higher...how is that possible? The final 
-  // polynomial is a linear combination of those (right?). Is there some coefficient cancellation 
-  // going on?
-  //degree = n0 + n1; // ..one higher
-  //int N = degree + 1;  // length of polynomial coeff array
-
   // l_0k = ((x-1)/(0-1))^n1 * (x-0)^k / k!
   // l_1k = ((x-0)/(1-0))^n0 * (x-1)^k / k!
 
@@ -4295,33 +4286,27 @@ void generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
   // than the l_1k
 
   using AT = rsArrayTools;
+  AT::fillWithZeros(a, maxN);  // fill only up to where we have to, inside condtional below
 
-  T tmp[maxN];
-
-  AT::fillWithZeros(tmp, maxN);  // fill only up to where we have to, inside condtional below
-
+  // split into 2 functions, without taking an i input
   int N;  // length of produced coeff array - make output value - caller wants to know the degree
   if(i == 0) {
     // polynomial is n1-th line of alternating Pascal triangle, shifted by k
     N = n1+k+1;
-    AT::copy(pt[n1], &tmp[k], N-k); }
+    AT::copy(pt[n1], &a[k], N-k); }
   else if(i == 1) 
   {
     // polynomial is k-th line of alternating Pascal triangle, shifted by n0
     N = n0+k+1;
-    if(rsIsOdd(k)) AT::negate(pt[k], &tmp[n0], N-n0);
-    else           AT::copy(  pt[k], &tmp[n0], N-n0);  
+    if(rsIsOdd(k)) AT::negate(pt[k], &a[n0], N-n0);
+    else           AT::copy(  pt[k], &a[n0], N-n0);  
   }
   else
     rsError();
 
-  // multiply by 1/k!
 
-  AT::scale(tmp, tmp, N, T(1)/rsFactorial(k));
-
-  AT::copy(tmp, a, N); // copy to output - todo: work directly on a, scrap tmp
-
-  int dummy = 0;
+  AT::scale(a, a, N, T(1)/rsFactorial(k));  // multiply by 1/k!
+  return N;
 }
 
 
@@ -4383,9 +4368,15 @@ rsPolynomial<T> hermiteInterpolant2(const std::vector<std::vector<T>>& f)
 
 
 
-
-
-
+/** Compares coefficient array a of length N to polynomial p and return true, iff they represent 
+the same polynomial */
+template<class T>
+bool rsIsCloseTo(const rsPolynomial<T>& p, const T* a, int N, T tol = T(0))
+{
+  if(p.getNumCoeffs() != N)
+    return false;
+  return rsArrayTools::almostEqual(p.getCoeffPointerConst(), a, N, tol);
+}
 
 void testHermiteInterpolation()
 {
@@ -4396,6 +4387,8 @@ void testHermiteInterpolation()
   Vec f0({0, -1, -2    }); int n0 = 2;
   Vec f1({1,  0, 10, 20}); int n1 = 3;
   std::vector<Vec> f({ f0, f1 });  // our data
+
+  float tol = 0.f;
 
   bool ok = true;
 
@@ -4411,17 +4404,17 @@ void testHermiteInterpolation()
 
   // now the optimized version:
   float a[20];
-  generalizedLagrangeHelper01(0, 0, n0, n1, a);  // l_00, N = 4 == n1+k+1 = 3+0+1
-  generalizedLagrangeHelper01(0, 1, n0, n1, a);  // l_01, N = 5 == n1+k+1 = 3+1+1
-  generalizedLagrangeHelper01(0, 2, n0, n1, a);  // l_02, N = 6 == n1+k+1 = 3+2+1
+  int N;
+  N = generalizedLagrangeHelper01(0, 0, n0, n1, a); ok &= rsIsCloseTo(l_00, a, N, tol);
+  N = generalizedLagrangeHelper01(0, 1, n0, n1, a); ok &= rsIsCloseTo(l_01, a, N, tol);
+  N = generalizedLagrangeHelper01(0, 2, n0, n1, a); ok &= rsIsCloseTo(l_02, a, N, tol);
 
-  generalizedLagrangeHelper01(1, 0, n0, n1, a);  // l_10, N = 3 == n0+k+1 = 2+0+1
-  generalizedLagrangeHelper01(1, 1, n0, n1, a);  // l_11, N = 4 == n0+k+1 = 2+1+1
-  generalizedLagrangeHelper01(1, 2, n0, n1, a);  // l_12, N = 5 == n0+k+1 = 2+2+1
-  generalizedLagrangeHelper01(1, 3, n0, n1, a);  // l_13, N = 6 == n0+k+1 = 2+3+1
+  N = generalizedLagrangeHelper01(1, 0, n0, n1, a); ok &= rsIsCloseTo(l_10, a, N, tol);
+  N = generalizedLagrangeHelper01(1, 1, n0, n1, a); ok &= rsIsCloseTo(l_11, a, N, tol);
+  N = generalizedLagrangeHelper01(1, 2, n0, n1, a); ok &= rsIsCloseTo(l_12, a, N, tol);
+  N = generalizedLagrangeHelper01(1, 3, n0, n1, a); ok &= rsIsCloseTo(l_13, a, N, tol);
 
-  // todo: make automatic comparisons to l_00, l_01 etc. for this, the function should output the
-  // degree
+  // todo: split into two functions, not taking the i as input
 
 
   // test generalized Lagrange polynomials:

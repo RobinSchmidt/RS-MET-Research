@@ -4266,6 +4266,7 @@ template<class T>
 int generalizedLagrangeHelper0(int k, int n1, T* a, const rsMatrix<T>& pt)
 {
   // Polynomial is n1-th line of alternating Pascal triangle, shifted by k
+  // l_0k = ((x-1)/(0-1))^n1 * (x-0)^k / k!
   using AT = rsArrayTools;
   int N = n1+k+1;
   AT::fillWithZeros(a, k);   // maybe rename to clear
@@ -4273,11 +4274,13 @@ int generalizedLagrangeHelper0(int k, int n1, T* a, const rsMatrix<T>& pt)
   AT::scale(a, a, N, T(1)/rsFactorial(k));
   return N;
 }
+// O(n1+k)
 
 template<class T>
 int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
 {
   // Polynomial is k-th line of alternating Pascal triangle, shifted by n0
+  // l_1k = ((x-0)/(1-0))^n0 * (x-1)^k / k!
   using AT = rsArrayTools;
   int N = n0+k+1;
   AT::fillWithZeros(a, n0);
@@ -4286,6 +4289,22 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
   AT::scale(a, a, N, T(1)/rsFactorial(k));
   return N;
 }
+// O(n0+k)
+
+template<class T>
+void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* a)
+{
+  using Poly = rsPolynomial<T>;
+  int N = n0 + n1;  // number of coeffs in interpolant
+  int D = N  - 1;   // degree of interpolant
+
+
+  return;
+
+  //Poly p(D);
+  //return p;
+}
+
 
 template<class T>
 int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
@@ -4301,23 +4320,14 @@ int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
   // todo: 
   // -use a class for triangular matrices - saves half of the memory
 
-  // l_0k = ((x-1)/(0-1))^n1 * (x-0)^k / k!
-  // l_1k = ((x-0)/(1-0))^n0 * (x-1)^k / k!
-
-  // the (x-1)^n1 and (x-1)^k factors are lines of the Pascal triangle but with alternating signs
-  // but we have ((x-1)/(0-1))^n1 = (-(x-1))^n1 = (1-x)^n1 so the l_01 start with different sign
-  // than the l_1k
-
-  //using AT = rsArrayTools;
-  //AT::fillWithZeros(a, maxN);  // fill only up to where we have to, inside condtional below
-
   // split into 2 functions, without taking an i input
   int N;  // length of produced coeff array - make output value - caller wants to know the degree
   if(     i == 0)  return generalizedLagrangeHelper0(k, n1, a, pt2);
   else if(i == 1)  return generalizedLagrangeHelper1(k, n0, a, pt2);
   else             rsError(); return 0;
 }
-
+// only for testing - always generates the pascal triangle - production code should do this just 
+// once
 
 
 // for better numerical precision, try to postpone out the division by k! for as long as possible
@@ -4449,8 +4459,6 @@ void testHermiteInterpolation()
   y = L_01.derivativeAt(0.f, 2);
   y = L_01.derivativeAt(0.f, 3);
 
-
-
   Poly p = hermiteInterpolant(f);
 
   // That's the example result in the book - check, if it gives the right values:
@@ -4465,6 +4473,12 @@ void testHermiteInterpolation()
   ok &= p == p1;
   // looks good even though the L_12, etc. polynomials do not match the book - maybe that's a 
   // mistake in the book? ...more tests needed - with more datapoints and more derivatives
+
+  // Now the optimized code:
+  hermiteInterpolant01(&f0[1], n0, &f1[1], n1, a);
+  N = n0 + n1; // length of a
+  //ok &= rsIsCloseTo(p, a, N, tol);
+
 
 
   // try to match more derivatives but using only two datapoints:

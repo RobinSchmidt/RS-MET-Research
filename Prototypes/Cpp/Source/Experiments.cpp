@@ -4437,6 +4437,41 @@ void testHermiteInterpolation()
 
 
 
+
+void testMeshGeneration()
+{
+  using Vec2 = rsVector2D<float>;
+  using Mesh = rsGraph<Vec2, float>;
+
+  int Nx = 7;     // number grid coordinates along x-direction
+  int Ny = 5;     // number grid coordinates along y-direction
+
+  //int Nv = Nx*Ny; // number of vertices
+  //int Ne = 4*Nv;  // each vertex has 4 neighbours (in toroidal topology)
+
+  // create mesh and add the vertices:
+  Mesh m;
+  for(int i = 0; i < Nx; i++) {
+    for(int j = 0; j < Ny; j++) {
+      float x = float(i);
+      float y = float(j);
+      Vec2 v(x, y);
+      m.addVertex(v); }}
+
+
+  // add the edges to the mesh:
+
+
+
+
+  // todo: have a function plotMesh - maybe it should create an image and write it to a ppm file
+
+
+
+  int dummy = 0;
+}
+
+
 // moved to rs-met codebase (except some comments) - may be deleted here:
 
 /** Fills edges of a graph of 2D vectors (as vertices) with a user supplied function that takes as

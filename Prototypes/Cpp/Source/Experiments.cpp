@@ -4261,22 +4261,30 @@ rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rena
 
 
 
-
+// pt should be the matrix containing the Pascal triangle with alternating signs
 template<class T>
 int generalizedLagrangeHelper0(int k, int n1, T* a, const rsMatrix<T>& pt)
 {
+  // Polynomial is n1-th line of alternating Pascal triangle, shifted by k
+  using AT = rsArrayTools;
   int N = n1+k+1;
-
-
-  return N
+  AT::fillWithZeros(a, k);   // maybe rename to clear
+  AT::copy(pt.getRowPointerConst(n1), &a[k], N-k); 
+  AT::scale(a, a, N, T(1)/rsFactorial(k));
+  return N;
 }
 
 template<class T>
 int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
 {
+  // Polynomial is k-th line of alternating Pascal triangle, shifted by n0
+  using AT = rsArrayTools;
   int N = n0+k+1;
-
-  return N
+  AT::fillWithZeros(a, n0);
+  if(rsIsOdd(k)) AT::negate(pt.getRowPointerConst(k), &a[n0], N-n0);
+  else           AT::copy(  pt.getRowPointerConst(k), &a[n0], N-n0);
+  AT::scale(a, a, N, T(1)/rsFactorial(k));
+  return N;
 }
 
 template<class T>
@@ -4290,8 +4298,8 @@ int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
   for(int n = 0; n < maxN; n++)
     for(int k = 1; k <= n; k += 2)
       pt2(n,k) = -pt2(n,k); 
-  // todo: use a class for triangular matrices - saves half of the memory
-
+  // todo: 
+  // -use a class for triangular matrices - saves half of the memory
 
   // l_0k = ((x-1)/(0-1))^n1 * (x-0)^k / k!
   // l_1k = ((x-0)/(1-0))^n0 * (x-1)^k / k!
@@ -4300,28 +4308,14 @@ int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
   // but we have ((x-1)/(0-1))^n1 = (-(x-1))^n1 = (1-x)^n1 so the l_01 start with different sign
   // than the l_1k
 
-  using AT = rsArrayTools;
-  AT::fillWithZeros(a, maxN);  // fill only up to where we have to, inside condtional below
+  //using AT = rsArrayTools;
+  //AT::fillWithZeros(a, maxN);  // fill only up to where we have to, inside condtional below
 
   // split into 2 functions, without taking an i input
   int N;  // length of produced coeff array - make output value - caller wants to know the degree
-  if(i == 0) {
-    // polynomial is n1-th line of alternating Pascal triangle, shifted by k
-    N = n1+k+1;
-    AT::copy(pt2.getRowPointer(n1), &a[k], N-k); 
-  }
-  else if(i == 1) 
-  {
-    // polynomial is k-th line of alternating Pascal triangle, shifted by n0
-    N = n0+k+1;
-    if(rsIsOdd(k)) AT::negate(pt2.getRowPointer(k), &a[n0], N-n0);
-    else           AT::copy(  pt2.getRowPointer(k), &a[n0], N-n0);
-  }
-  else
-    rsError();
-
-  AT::scale(a, a, N, T(1)/rsFactorial(k));  // multiply by 1/k!
-  return N;
+  if(     i == 0)  return generalizedLagrangeHelper0(k, n1, a, pt2);
+  else if(i == 1)  return generalizedLagrangeHelper1(k, n0, a, pt2);
+  else             rsError(); return 0;
 }
 
 

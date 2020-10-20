@@ -4459,11 +4459,11 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, 
 {
   // vertex k should be connected to the 4 vertices to its left, right, top, bottom, with 
   // wrap-arounds, if necessary:
-  int k  = i * Ny + j;       // flat index of vertex with indices i,j
   int il = (i-1+Nx) % Nx;    // +Nx is needed for modulo to work right when i-1 < 0
   int ir = (i+1   ) % Nx;
   int jb = (j-1+Ny) % Ny;
   int jt = (j+1   ) % Ny;
+  int k  = i  * Ny + j;      // flat index of vertex with indices i,j
   int kl = il * Ny + j;      // west
   int kr = ir * Ny + j;      // east
   int kb = i  * Ny + jb;     // south
@@ -4479,6 +4479,21 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, 
 // make versions cylindrical, flat/planar
 
 template<class T>
+void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, int i, int j)
+{
+  int il = i-1;
+  int ir = i+1;
+  int jb = j-1;
+  int jt = j+1;
+  int k  = i * Ny + j;
+  if(il >=  0) m.addEdge(k, il * Ny + j,  1.f);  // west
+  if(ir <  Nx) m.addEdge(k, ir * Ny + j,  1.f);  // east
+  if(jb >=  0) m.addEdge(k, i  * Ny + jb, 1.f);  // south
+  if(jt <  Ny) m.addEdge(k, i  * Ny + jt, 1.f);  // north
+}
+// needs test
+
+template<class T>
 void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
 {
   for(int i = 0; i < Nx; i++) 
@@ -4492,6 +4507,9 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
   //  To create a different geometry, the user should loop through the vertices and re-assign their
   //  positions (x,y) or later also (x,y,z)
 }
+
+
+
 
 
 void testMeshGeneration()
@@ -4510,41 +4528,13 @@ void testMeshGeneration()
   // create mesh and add the vertices:
   Mesh m;
   addRegularMeshVertices2D(m, Nx, Ny);
-  ok &= m.getNumVertices() == Nv;
-
-  /*
-  // add the edges to the mesh:
-  for(int i = 0; i < Nx; i++)
-  {
-    for(int j = 0; j < Ny; j++)
-    {
-      int k = i * Ny + j;   // flat index of current vertex
-
-      // vertex k should be connected to 4 vertices l,r,b,t (left, right, top, bottom):
-      int il = (i-1+Nx) % Nx;  // +Nx is needed for modulo to work right when i-1 < 0
-      int ir = (i+1   ) % Nx;
-      int jb = (j-1+Ny) % Ny;
-      int jt = (j+1   ) % Ny;
-      int kl = il * Ny + j;      // west
-      int kr = ir * Ny + j;      // east
-      int kb = i  * Ny + jb;     // south
-      int kt = i  * Ny + jt;     // north
-      m.addEdge(k, kl, 1.f);     // get rid of the 1.f
-      m.addEdge(k, kr, 1.f);
-      m.addEdge(k, kb, 1.f);
-      m.addEdge(k, kt, 1.f);
-      // maybe the order matters for efficient access? ..and maybe we could pre-allocate the memory
-      // for the edges?
-
-      int dummy = 0;
-    }
-  }
-  // factor out - have variants that connect to the diagonal neighbours as well
-  */
-
   addMeshConnectionsToroidal2D(m, Nx, Ny);
+  ok &= m.getNumVertices() == Nv;
+  ok &= m.getNumEdges()    == Ne;
 
-  ok &= m.getNumEdges() == Ne;
+
+  // m.clearEdges()
+  // addMeshConnectionsPlanar2D(m, Nx, Ny);
 
 
   // todo: maybe check dx and dy for all the neighbours to see, if index computations for

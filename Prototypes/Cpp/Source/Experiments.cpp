@@ -4542,25 +4542,27 @@ void testMeshGeneration()
   addRegularMeshVertices2D(m, Nx, Ny);
   ok &= m.getNumVertices() == Nv;
 
+  // add connections for toroidal topology (x and y axes are bot periodic):
   addMeshConnectionsToroidal2D(m, Nx, Ny);
   Ne = m.getNumEdges();
   ok &= m.getNumEdges()    == 4*Nv; // each vertex has 4 neighbours in toroidal topology
 
-
-
+  // create a planar topology, where the edges are just edges such that points on the edges do not 
+  // have a full set of 4 neighbours:
   m.clearEdges();
   ok &= m.getNumEdges() == 0;
   addMeshConnectionsPlanar2D(m, Nx, Ny);
 
-  // expected number of edges:
-  Ne = 4 * (Nx-2)*(Ny-2) + 3 * (2*(Nx-2) + 2*(Ny-2)) + 2 * 4;  // maybe simplify
+  // Compare actual to expected number of edges:
   // 4 neighbours (inner points):         (Nx-2)*(Ny-2)
   // 3 neighbours (edges except corners):  2*(Nx-2) + 2*(Ny-2)
-  // 2 neighbours (corners):               4
+  // 2 neighbours (corner points):         4
   // i think, the formula works only for Nx,Ny >= 2
+  Ne = 4 * (Nx-2)*(Ny-2) + 3 * (2*(Nx-2) + 2*(Ny-2)) + 2 * 4;  // maybe simplify
+  // int a = Nx-2; int b = Ny-2; Ne = 4*a*b + 6*(a+b) + 8;     // formula simplified
   ok &= m.getNumEdges() == Ne;
 
-  //Ne = m.getNumEdges();
+
 
 
   // todo: maybe check dx and dy for all the neighbours to see, if index computations for
@@ -4569,10 +4571,7 @@ void testMeshGeneration()
   // todo: solve heat- or wave-equation numerically on such a grid to test the numerical gradient
   // computation on irregular grids
 
-
   // todo: have a function plotMesh - maybe it should create an image and write it to a ppm file
-
-
 
   int dummy = 0;
 }

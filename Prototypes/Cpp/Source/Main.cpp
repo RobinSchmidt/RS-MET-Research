@@ -40,8 +40,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testAutoDiffReverse1();
   //testDualComplex();
   //testVectorMultiplication3D();
-  //testHermiteInterpolation();
-  testMeshGeneration();
+  testHermiteInterpolation();
+  //testMeshGeneration();
   //testVertexMesh();  // moved to main codbase
 
 

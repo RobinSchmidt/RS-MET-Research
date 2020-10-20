@@ -3342,6 +3342,7 @@ template<class T>
 void rsNextPascalTriangleLine(const T* x, T* y, int N)
 {
   T xL = T(1);
+  y[0] = T(1); // correct?
   for(int i = 1; i < N-1; i++) { 
     T xR = x[i]; 
     y[i] = xL + xR;
@@ -4259,6 +4260,33 @@ rsPolynomial<T> hermiteInterpolant(const std::vector<std::vector<T>>& f) // rena
 }
 
 
+
+
+template<class T>
+void generalizedLagrangeHelper01(int i, int k, T* a)  // i is not needed - it's 0 or 1
+{
+  // create Pascal triangle - todo: pass that in as pointer (maybe rsMatrixView)
+  static const int maxN = 10;  // preliminary
+  T pt[maxN][maxN];
+  for(int n = 0; n < maxN; n++)
+    rsNextPascalTriangleLine(pt[n-1], pt[n], n+1);
+
+  // l_0k = ((x-1)/(0-1))^n1 * (x-0)^k / k!
+  // l_1k = ((x-0)/(1-0))^n0 * (x-1)^k / k!
+
+  // the (x-1)^n1 and (x-1)^k factors are lines of the Pascal triangle but with alternating signs
+  // but we have ((x-1)/(0-1))^n1 = (-(x-1))^n1 = (1-x)^n1 so the l_01 start with different sign
+  // than the l_1k
+
+  T tmp[maxN];
+
+
+
+  int dummy = 0;
+}
+
+
+
 // for better numerical precision, try to postpone out the division by k! for as long as possible
 // ...nope - that doesn't work:
 template<class T>
@@ -4296,7 +4324,7 @@ rsPolynomial<T> generalizedLagrange2(const std::vector<std::vector<T>>& f, int i
     return l_ik - sum; }
 }
 template<class T>
-rsPolynomial<T> hermiteInterpolant2(const std::vector<std::vector<T>>& f) // rename!
+rsPolynomial<T> hermiteInterpolant2(const std::vector<std::vector<T>>& f) 
 {
   using Poly = rsPolynomial<T>;
   int m = (int) f.size() - 1;    // index of last datapoint
@@ -4311,6 +4339,10 @@ rsPolynomial<T> hermiteInterpolant2(const std::vector<std::vector<T>>& f) // ren
   }
   return p;
 }
+// doesn't work
+
+
+
 
 
 
@@ -4337,6 +4369,17 @@ void testHermiteInterpolation()
   Poly l_12 = generalizedLagrangeHelper(f,1,2); ok &= l_12 == Poly(Vec({0,0,0.5,-1,0.5}));
   Poly l_13 = generalizedLagrangeHelper(f,1,3); ok &= l_13 == Poly(Vec({0,0,-1.f/6,0.5,-0.5,1.f/6}));
   // looks good so far
+
+  // now the optimized version:
+  float a[20];
+  generalizedLagrangeHelper01(0, 0, a);
+  generalizedLagrangeHelper01(0, 1, a);
+  generalizedLagrangeHelper01(0, 2, a);
+  generalizedLagrangeHelper01(1, 0, a);
+  generalizedLagrangeHelper01(1, 1, a);
+  generalizedLagrangeHelper01(1, 2, a);
+  generalizedLagrangeHelper01(1, 3, a);
+
 
   // test generalized Lagrange polynomials:
   Poly L_01 = generalizedLagrange(f, 0, 1); ok &= L_01 == Poly(Vec({0,1,-3,3,-1}));

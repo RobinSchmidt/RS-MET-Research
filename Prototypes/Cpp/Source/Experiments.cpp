@@ -4448,6 +4448,52 @@ void addRegularMeshVertices2D(
   //  too...ewww....having different dx,dy values could mess up the gradient calculation - maybe 
   //  don't use it for now
 }
+// -maybe make a class rsMeshGenerator - this could be a static member function addVertices2D or
+//  addRectangularVertices or something
+// -actually, even though the surface is 2D, each vertex could be a 3D vector - maybe the user 
+//  could pass in du,dv instead of dx,dy and 3 functions fx(u,v), fy(u,v), fz(u,v) to compute 
+//  coordinates - but maybe that can be postponed
+
+
+template<class T>
+void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
+{
+  // rename function according to stencil and/or egde handling (
+
+  for(int i = 0; i < Nx; i++) 
+  {
+    for(int j = 0; j < Ny; j++) 
+    {
+      int k = i * Ny + j;   // flat index of current vertex
+
+      // vertex k should be connected to the 4 vertices to its left, right, top, bottom, with 
+      // wrap-arounds, if necessary:
+      int il = (i-1+Nx) % Nx;    // +Nx is needed for modulo to work right when i-1 < 0
+      int ir = (i+1   ) % Nx;
+      int jb = (j-1+Ny) % Ny;
+      int jt = (j+1   ) % Ny;
+      int kl = il * Ny + j;      // west
+      int kr = ir * Ny + j;      // east
+      int kb = i  * Ny + jb;     // south
+      int kt = i  * Ny + jt;     // north
+      m.addEdge(k, kl, 1.f);     // get rid of the 1.f
+      m.addEdge(k, kr, 1.f);
+      m.addEdge(k, kb, 1.f);
+      m.addEdge(k, kt, 1.f);
+      // -maybe factor out addConnectionStencil(m, i, j, Nx, Ny)
+      // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
+      //  memory for the edges?
+    }
+  }
+
+  // -have variants that connect to the diagonal neighbours as well and allow for different 
+  //  handling of the edges
+  // -have a function that re-assigns the edge weights according to computed Euclidean distances.
+  //  this may be useful when we use the same mesh topology with different intended geometries.
+  //  To create a different geometry, the user should loop through the vertices and re-assign their
+  //  positions (x,y) or later also (x,y,z)
+}
+
 
 void testMeshGeneration()
 {
@@ -4465,19 +4511,9 @@ void testMeshGeneration()
   // create mesh and add the vertices:
   Mesh m;
   addRegularMeshVertices2D(m, Nx, Ny);
-
-  /*
-  for(int i = 0; i < Nx; i++) {
-    for(int j = 0; j < Ny; j++) {
-      float x = float(i);
-      float y = float(j);
-      Vec2 v(x, y);
-      m.addVertex(v); }}  // maybe the function shoudl allow to pre-allocate memoty for the edges
-  // factor out
-  */
-
   ok &= m.getNumVertices() == Nv;
 
+  /*
   // add the edges to the mesh:
   for(int i = 0; i < Nx; i++)
   {
@@ -4505,7 +4541,9 @@ void testMeshGeneration()
     }
   }
   // factor out - have variants that connect to the diagonal neighbours as well
+  */
 
+  addMeshConnectionsToroidal2D(m, Nx, Ny);
 
   ok &= m.getNumEdges() == Ne;
 

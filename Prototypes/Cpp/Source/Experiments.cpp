@@ -4309,13 +4309,15 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
   using Poly = rsPolynomial<T>;
   using AT   = rsArrayTools;
   int N = n0 + n1;               // number of coeffs in interpolant
+  int ni;
   AT::fillWithZeros(p, N);
   std::vector<T> dl(N);          // N may be too much here...maybe use max(n0,n1)
   rsMatrix<T> L(N, N);           // generalized Lagrange polynomials
 
+
   // Compute L_0k polynomials via backward recursion in O(n0^3):
   L.setToZero();
-  int ni = n0;
+  ni = n0;
   for(int k = ni-1; k >= 0; k--) {
     int nc = generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt);
     Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), nc-1, &dl[0], ni);
@@ -4326,6 +4328,7 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
   for(int k = 0; k <= ni-1; k++)  // ni == n0
     for(int i = 0; i < N; i++)
       p[i] += y0[k] * L(k, i);
+
 
   // Compute L_1k polynomials via backward recursion in O(n1^3):
   L.setToZero();
@@ -4341,6 +4344,7 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
     for(int i = 0; i < N; i++)
       p[i] += y1[k] * L(k, i);
 
+
   return N;  // number of produced coeffs in p - for convenience - client should know that before
 }
 // -we could take the loop iterations for k = n-1 for computing L_0k and L_1k out of the loops and 
@@ -4350,7 +4354,7 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
 // -test it with more inputs - maybe n0=4, n1=6 (and vice versa) or something
 // -try to get rid of code duplication
 // -try to accumulate the L_1k polynomials before the L_0k polynomials and compare the numerical
-//  precision of the coeffs
+//  precision of the coeffs -> doesn't seem to make a difference
 // -minimize memory allocation and make function using a workspace
 // -compare to result with my old code using the linear system - maybe that can be generalized to
 //  use different numbers of derivatives at x0 = 0 and x1 = 1, too
@@ -4360,15 +4364,12 @@ template<class T>
 int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 {
   // Compute matrix of Pascal triangle coeffs in O(N^2):
-  int N = n0 + n1;        // maybe max(n0,n1) is enough
+  int N = n0 + n1;                  // maybe max(n0,n1) is enough
   rsMatrix<T> pt(N, N);
   for(int n = 0; n < N; n++)
     rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1);
   // todo: 
   // -use a class for triangular matrices - saves half of the memory
-  // -make a version of this function that lets the user pass this matrix ..but then it should be
-  //  the regular Pascal triangle, without the sign alternations, generalizedLagrangeHelper0 should
-  //  call fucntions AT::flipOddSigns or flipEvenSigns
 
   return hermiteInterpolant01(y0, n0, y1, n1, p, pt);
 }
@@ -4577,7 +4578,9 @@ void testHermiteInterpolation()
   // optimized version, y1[4] is totally wrong - this looks more like a bug rather than a numerical
   // precision issue -> figure out ...maybe the prototype code is numerically more precise after 
   // all? but why should that be the case? ..why should the optimzed code produce different coeffs
-  // anyway? we just avoid redundant computations
+  // anyway? we just avoid redundant computations - maybe we need to zero out more things in the 
+  // algo?
+  //
 
 
 

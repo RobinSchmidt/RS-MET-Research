@@ -4324,8 +4324,9 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
     generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt); // maybe we need to fill with zeros?
     Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n0, &dl[0], ni); // verify n0, ni
     for(int mu = ni-1; mu >= k+1; mu--)               // subtract scaled copies of rows above k
-      L.addWeightedRowToOther(ni-1, k, -dl[mu]); }
+      L.addWeightedRowToOther(mu, k, -dl[mu]); }    // ni-1 should be mu
   // looks good, so far
+  // targets: L_00 = 1,0,-6,8,-3; L_01 = 0,1,-3,3,1
 
   // accumulate them into p:
   for(int k = 0; k <= ni-1; k++)  // ni == n0
@@ -4335,15 +4336,18 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 
   // compute L_1k polynomials:
   L.setToZero();
-  ni = n1;
+  ni  = n1;
+  //deg = ni+1;
   generalizedLagrangeHelper1(ni-1, n0, L.getRowPointer(ni-1), pt);
-  for(int k = ni-2; k >= 0; k--) {
+  for(int k = ni-2; k >= 0; k--) 
+  {
     generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
-    Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), n1, &dl[0], ni);  // verify n1, ni
+    Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), ni+1, &dl[0], ni+1);  // verify ni+1, ni+1
     for(int mu = ni-1; mu >= k+1; mu--)
-      L.addWeightedRowToOther(ni-1, k, -dl[mu]); }
-
+      L.addWeightedRowToOther(mu, k, -dl[mu]);  // ni-1 should be mu
+  }
   // L_12 and L_11 look good, L_10 still wrong
+  // targets: L_10 = 0,0,6,-8,3; L_11 = 0,0,-3,5,-2; L_12 = 0,0,0.5,-1,0.5;
 
   //generalizedLagrangeHelper1(0, n0, L.getRowPointer(n1-1), pt);
   // ...

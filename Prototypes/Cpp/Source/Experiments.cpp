@@ -4270,7 +4270,7 @@ int generalizedLagrangeHelper0(int k, int n1, T* a, const rsMatrix<T>& pt)
   using AT = rsArrayTools;
   int N = n1+k+1;  // number of coeffs
   AT::fillWithZeros(a, k);   // maybe rename to clear
-  AT::copy(pt.getRowPointerConst(n1), &a[k], N-k); 
+  AT::negateOdd(pt.getRowPointerConst(n1), &a[k], N-k);
   AT::scale(a, a, N, T(1)/rsFactorial(k));
   return N;
 }
@@ -4285,8 +4285,8 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
   using AT = rsArrayTools;
   int N = n0+k+1;
   AT::fillWithZeros(a, n0);
-  if(rsIsOdd(k)) AT::negate(pt.getRowPointerConst(k), &a[n0], N-n0);
-  else           AT::copy(  pt.getRowPointerConst(k), &a[n0], N-n0);
+  if(rsIsOdd(k)) AT::negateEven(pt.getRowPointerConst(k), &a[n0], N-n0);
+  else           AT::negateOdd( pt.getRowPointerConst(k), &a[n0], N-n0);
   AT::scale(a, a, N, T(1)/rsFactorial(k));
   return N;
 }
@@ -4319,7 +4319,7 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   AT::fillWithZeros(p, N);
 
   // ToDo:
-  // -compute matrix of alternating Pascal triangle coeffs in O(N^2)
+  // -compute matrix of Pascal triangle coeffs in O(N^2)
   // -compute polynomials L_0n0,...,L_00 via backward recursion
   // -accumulate them into p
   // -compute polynomials L_1n1,...,L10 via backward recursion
@@ -4328,9 +4328,6 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   rsMatrix<T> pt(N, N);   // maybe N is too much here, too
   for(int n = 0; n < N; n++)
     rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1);
-  for(int n = 0; n < N; n++)
-    for(int k = 1; k <= n; k += 2)
-      pt(n,k) = -pt(n,k); 
   // todo: 
   // -use a class for triangular matrices - saves half of the memory
   // -make a version of this function that lets the user pass this matrix ..but then it should be
@@ -4388,14 +4385,11 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 template<class T>
 int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
 {
-  // create Pascal triangle with alternate signs (odd numbered entries become neagtive):
+  // create Pascal triangle:
   static const int maxN = 10;  // preliminary
   rsMatrix<T> pt2(maxN, maxN);
   for(int n = 0; n < maxN; n++)
     rsNextPascalTriangleLine(pt2.getRowPointer(n-1), pt2.getRowPointer(n), n+1);
-  for(int n = 0; n < maxN; n++)
-    for(int k = 1; k <= n; k += 2)
-      pt2(n,k) = -pt2(n,k); 
   // todo: 
   // -use a class for triangular matrices - saves half of the memory
 

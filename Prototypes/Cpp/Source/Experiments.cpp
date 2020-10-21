@@ -4726,6 +4726,46 @@ void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
       addMeshConnectionsPlanar2D(m, Nx, Ny, i, j);
 }
 
+
+int rsFlatMeshIndex2D(int i, int j, int Ny)
+{
+  return i  * Ny + j;
+}
+// maybe make a class rsMesh2D - subclass of rsGraph<rsVector2D<T>, T> with additional members
+// Nx, Ny
+
+template<class T>
+rsGraph<rsVector2D<T>, T> getPlanarMesh(T x0, T x1, int Nx, T y0, T y1, int Ny)
+{
+  // todo: let the user select edge handling
+
+  using Vec2 = rsVector2D<T>;
+  using Mesh = rsGraph<Vec2, T>;
+  Mesh m;
+  addRegularMeshVertices2D(  m, Nx, Ny);
+  addMeshConnectionsPlanar2D(m, Nx, Ny);
+
+  for(int i = 0; i < Nx; i++)
+  {
+    for(int j = 0; j < Ny; j++)
+    {
+      int k = rsFlatMeshIndex2D(i, j, Ny);
+
+      // compute x,y and set vertex data accordingly
+
+    }
+  }
+
+  // todo: 
+  // -compute and assign vertex positions
+  // -assign edge weights
+
+  // int k  = i  * Ny + j;  // flat mesh vertex index - maybe provide a function to compute it:
+  // rsFlatMeshIndex2D(int i, int j, int Ny)
+
+  return m;
+}
+
 void testMeshGeneration()
 {
   using Vec2 = rsVector2D<float>;
@@ -4774,6 +4814,19 @@ void testMeshGeneration()
   // computation on irregular grids
 
   // todo: have a function plotMesh - maybe it should create an image and write it to a ppm file
+
+
+  Mesh m2 = getPlanarMesh(-3.f, +3.f, 31, -2.f, 2.f, 21);
+
+
+  int dummy = 0;
+}
+
+// test solving the transport equation on an irregular grid, created from a regular grid by 
+// jittering the x,y-coordinates
+void testTranspotEquation()
+{
+
 
   int dummy = 0;
 }

@@ -4326,14 +4326,23 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   std::vector<T> dl(N);  // N may be too much...maybe use max(n0,n1)
   rsMatrix<T> L(N, N);   // here too? not sure...
   int ni = n0;
-  generalizedLagrangeHelper0(ni-1, n1, L.getRowPointer(ni-1), pt); // maybe we need to fill with zeros?
-  for(int k = ni-2; k >= 0; k--) {
+  for(int k = ni-1; k >= 0; k--) 
+  {
     generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt); // maybe we need to fill with zeros?
+    // what's the degree of the polynomial and how many derivatives do we need? we need these 
+    // values for the call below
+
+    int deg = ni + k + 1; // is that correct?
+
     Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n0, &dl[0], ni); // verify n0, ni
     for(int mu = ni-1; mu >= k+1; mu--)               // subtract scaled copies of rows above k
-      L.addWeightedRowToOther(mu, k, -dl[mu]); }    // ni-1 should be mu
+      L.addWeightedRowToOther(mu, k, -dl[mu]); 
+  }
   // looks good, so far
   // targets: L_00 = 1,0,-6,8,-3; L_01 = 0,1,-3,3,1
+  // i think, the evaluateWithDerivatives works only because we evaluate them at 0 such that only
+  // the 0-th derivative gets a nonzero value - we can optimize this further by removing adding
+  // rows with zero weight - only absolute coeff is ever effective - and that is always 1
 
   // accumulate them into p:
   for(int k = 0; k <= ni-1; k++)  // ni == n0
@@ -4344,14 +4353,12 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   // compute L_1k polynomials:
   L.setToZero();
   ni  = n1;
-  //deg = ni+1;
-  generalizedLagrangeHelper1(ni-1, n0, L.getRowPointer(ni-1), pt);
-  for(int k = ni-2; k >= 0; k--) 
+  for(int k = ni-1; k >= 0; k--) 
   {
     generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
     Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), ni+1, &dl[0], ni+1);  // verify ni+1, ni+1
     for(int mu = ni-1; mu >= k+1; mu--)
-      L.addWeightedRowToOther(mu, k, -dl[mu]);  // ni-1 should be mu
+      L.addWeightedRowToOther(mu, k, -dl[mu]);
   }
   // L_12 and L_11 look good, L_10 still wrong
   // targets: L_10 = 0,0,6,-8,3; L_11 = 0,0,-3,5,-2; L_12 = 0,0,0.5,-1,0.5;
@@ -4364,6 +4371,11 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   // i think, there are still bugs with regard to what we are passing as degrees and required number
   // of derivatives to evaluateWithDerivatives - maybe we also need to zero out some buffers in 
   // between computation, check also all loop limits
+
+  // -we could take the loop iterations for k = n-1 for computing L_0k and L_1k out of the loops and 
+  //  loop only from k = n-2 down to 0 - this would avoid the unnecessary evaluateWithDerivatives 
+  //  call (in the (k-1) iteration, the inner "for mu" loop is not entered and the computed values 
+  //  in dl are not used)
 
   int dummy = 0;
 
@@ -4597,7 +4609,7 @@ void testHermiteInterpolation()
   //  -the helper polynomials reduce to shifted versions of binomial coeffs with alternating signs
 
 
-
+  rsAssert(ok);
   int dummy = 0;
 }
 
@@ -4646,6 +4658,9 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, 
   // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
   //  memory for the edges?
 }
+// todo: make a 3D version - maybe a general one via templates - and then let the user set up the 
+// actual (x,y,z)-coordinates in a torus (edge weights need to be recomputed after that) - use also
+// ellipses instead of circles for major and minor radius -> additional flexibility
 
 template<class T>
 void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, int i, int j)

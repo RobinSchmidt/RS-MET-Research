@@ -4271,7 +4271,7 @@ int generalizedLagrangeHelper0(int k, int n1, T* a, const rsMatrix<T>& pt)
   int N = n1+k+1;  // number of coeffs
   AT::fillWithZeros(a, k);   // maybe rename to clear
   AT::negateOdd(pt.getRowPointerConst(n1), &a[k], N-k);
-  AT::scale(a, a, N, T(1)/rsFactorial(k));
+  AT::scale(a, a, N, T(1)/rsFactorial(k));  // use rsInverseFactorials[k]
   return N;
 }
 // O(n1+k)
@@ -4287,7 +4287,7 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
   AT::fillWithZeros(a, n0);
   if(rsIsOdd(k)) AT::negateEven(pt.getRowPointerConst(k), &a[n0], N-n0);
   else           AT::negateOdd( pt.getRowPointerConst(k), &a[n0], N-n0);
-  AT::scale(a, a, N, T(1)/rsFactorial(k));
+  AT::scale(a, a, N, T(1)/rsFactorial(k));  // use rsInverseFactorials[k]
   return N;
 }
 // O(n0+k)
@@ -4308,42 +4308,37 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
   // Initializations:
   using Poly = rsPolynomial<T>;
   using AT   = rsArrayTools;
-  int N = n0 + n1;               // number of coeffs in interpolant
-  int ni;
+  int N = n0 + n1;                 // number of coeffs in interpolant
+  int ni;                          // n0 or n1 - maybe get rid
+  std::vector<T> dl(N);            // N may be too much here...maybe use max(n0,n1)
+  rsMatrix<T> L(N, N);             // generalized Lagrange polynomials
   AT::fillWithZeros(p, N);
-  std::vector<T> dl(N);          // N may be too much here...maybe use max(n0,n1)
-  rsMatrix<T> L(N, N);           // generalized Lagrange polynomials
 
-
-  // Compute L_0k polynomials via backward recursion in O(n0^3):
-  L.setToZero();
+  // Compute L_0k polynomials via backward recursion in O(n0^3) and accumulate them into
+  // p in O(n0*N):
+  L.setToZero();  // rename to clear
   ni = n0;
   for(int k = ni-1; k >= 0; k--) {
     int nc = generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt);
     Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), nc-1, &dl[0], ni);
     for(int mu = ni-1; mu >= k+1; mu--)
       L.addWeightedRowToOther(mu, k, -dl[mu]); }
-
-  // Accumulate L_0k polynomials into p in O(n0^2):
   for(int k = 0; k <= ni-1; k++)  // ni == n0
     for(int i = 0; i < N; i++)
       p[i] += y0[k] * L(k, i);
 
-
-  // Compute L_1k polynomials via backward recursion in O(n1^3):
-  L.setToZero();
+  // Compute L_1k polynomials via backward recursion in O(n1^3) and accumulate them into
+  // p in O(n1*N):
+  L.setToZero();  // rename to clear
   ni = n1;
   for(int k = ni-1; k >= 0; k--) {
     int nc = generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
     Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), nc-1, &dl[0], ni);
     for(int mu = ni-1; mu >= k+1; mu--)
       L.addWeightedRowToOther(mu, k, -dl[mu]); }
-
-  // Accumulate L_1k polynomials into p in O(n1^2):
   for(int k = 0; k <= ni-1; k++)  // ni == n1
     for(int i = 0; i < N; i++)
       p[i] += y1[k] * L(k, i);
-
 
   return N;  // number of produced coeffs in p - for convenience - client should know that before
 }
@@ -4352,7 +4347,8 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
 //  call (in the (k-1) iteration, the inner "for mu" loop is not entered and the computed values 
 //  in dl are not used)
 // -test it with more inputs - maybe n0=4, n1=6 (and vice versa) or something
-// -try to get rid of code duplication
+// -try to get rid of code duplication - define an internal lambda function, taking i, n01, x_i,
+//  *yi
 // -try to accumulate the L_1k polynomials before the L_0k polynomials and compare the numerical
 //  precision of the coeffs -> doesn't seem to make a difference
 // -minimize memory allocation and make function using a workspace

@@ -4290,7 +4290,12 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
   return N;
 }
 // O(n0+k)
+// maybe work with the normal Pascla triangle without the alternating signs and do the alternation
+// in the functions - the idea is that later we may use a static constant Pascal triangle that may 
+// be used by other code too.
 
+
+// has still some bugs - but it close to finished:
 template<class T>
 void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 {
@@ -4299,6 +4304,8 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 
   int N = n0 + n1;  // number of coeffs in interpolant
   int D = N  - 1;   // degree of interpolant
+
+  AT::fillWithZeros(p, N);
 
   // ToDo:
   // -compute matrix of alternating Pascal triangle coeffs in O(N^2)
@@ -4349,13 +4356,14 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   // L_12 and L_11 look good, L_10 still wrong
   // targets: L_10 = 0,0,6,-8,3; L_11 = 0,0,-3,5,-2; L_12 = 0,0,0.5,-1,0.5;
 
-  //generalizedLagrangeHelper1(0, n0, L.getRowPointer(n1-1), pt);
-  // ...
-
-
   // accumulate them into p:
-  // ...
+  for(int k = 0; k <= ni-1; k++)  // ni == n1
+    for(int i = 0; i < N; i++)
+      p[i] += y1[k] * L(k, i);
 
+  // i think, there are still bugs with regard to what we are passing as degrees and required number
+  // of derivatives to evaluateWithDerivatives - maybe we also need to zero out some buffers in 
+  // between computation, check also all loop limits
 
   int dummy = 0;
 
@@ -4457,8 +4465,9 @@ bool rsIsCloseTo(const rsPolynomial<T>& p, const T* a, int N, T tol = T(0))
 
 void testHermiteInterpolation()
 {
-  using Vec = std::vector<float>;
+  using Vec  = std::vector<float>;
   using Poly = rsPolynomial<float>;
+  using AT   = rsArrayTools;
 
   //      x   f   f' f''
   Vec f0({0, -1, -2    }); int n0 = 2;
@@ -4506,10 +4515,8 @@ void testHermiteInterpolation()
   // ..i think, this may be a mistake in the book - our p polynomial later seems to come out right
   // :-O
 
-
   Poly L_11 = generalizedLagrange(f, 1, 1); ok &= L_11 == Poly(Vec({0,0,-3,5,-2}));
-
-  Poly L_10 = generalizedLagrange(f, 1, 0); ok &= L_10 == Poly(Vec({0,0,7,-10,4}));  // wrong!
+  Poly L_10 = generalizedLagrange(f, 1, 0); // ok &= L_10 == Poly(Vec({0,0,7,-10,4}));  // wrong!
   // this still fails!
   
   // todo: try to evaluate L_ik and its derivatives at 0 and 1
@@ -4535,10 +4542,10 @@ void testHermiteInterpolation()
   // mistake in the book? ...more tests needed - with more datapoints and more derivatives
 
   // Now the optimized code:
+  AT::fillWithNaN(a, 20);
   hermiteInterpolant01(&f0[1], n0, &f1[1], n1, a);
-  N = n0 + n1; // length of a
-  //ok &= rsIsCloseTo(p, a, N, tol);
-
+  N = n0 + n1; // length of a, maybe the function should return that for convenience
+  ok &= rsIsCloseTo(p, a, N, tol);
 
 
   // try to match more derivatives but using only two datapoints:

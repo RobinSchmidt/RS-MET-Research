@@ -4295,8 +4295,18 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
 // in the functions - the idea is that later we may use a static constant Pascal triangle that may 
 // be used by other code too.
 
+/*
+// convenience function - maybe make lambda in hermiteInterpolant01:
+template<class T>
+int generalizedLagrangeHelper01(int i, int k, int n01, T* a, const rsMatrix<T>& pt)
+{
+  rsAssert(i == 0 || i == 1);
+  if(i == 0) return generalizedLagrangeHelper0(k, n01, a, pt);
+  else       return generalizedLagrangeHelper1(k, n01, a, pt);
+}
+*/
 
-// has still some bugs - but it close to finished:
+
 template<class T>
 void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 {
@@ -4321,29 +4331,21 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   for(int n = 0; n < N; n++)
     for(int k = 1; k <= n; k += 2)
       pt(n,k) = -pt(n,k); 
-  // todo: use a class for triangular matrices - saves half of the memory
+  // todo: 
+  // -use a class for triangular matrices - saves half of the memory
+  // -make a version of this function that lets the user pass this matrix ..but then it should be
+  //  the regular Pascal triangle, without the sign alternations, generalizedLagrangeHelper0 should
+  //  call fucntions AT::flipOddSigns or flipEvenSigns
 
   // compute L_0k polynomials:
   std::vector<T> dl(N);  // N may be too much...maybe use max(n0,n1)
   rsMatrix<T> L(N, N);   // here too? not sure...
   int ni = n0;
-  for(int k = ni-1; k >= 0; k--) 
-  {
-    int nc = generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt); // maybe we need to fill with zeros?
-    // nc: number of coeffs
-    // what's the degree of the polynomial and how many derivatives do we need? we need these 
-    // values for the call below
-
-    //int deg = ni + k + 1; // is that correct?
-
-    //Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n0, &dl[0], ni); // verify n0, ni
-
-    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), nc-1, &dl[0], ni); // verify ni, ni
-
-
+  for(int k = ni-1; k >= 0; k--) {
+    int nc = generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt);
+    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), nc-1, &dl[0], ni);
     for(int mu = ni-1; mu >= k+1; mu--)
-      L.addWeightedRowToOther(mu, k, -dl[mu]);
-  }
+      L.addWeightedRowToOther(mu, k, -dl[mu]); }
   // looks good, so far
   // targets: L_00 = 1,0,-6,8,-3; L_01 = 0,1,-3,3,1
   // i think, the evaluateWithDerivatives works only because we evaluate them at 0 such that only
@@ -4356,22 +4358,14 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
     for(int i = 0; i < N; i++)
       p[i] += y0[k] * L(k, i);
 
-
   // compute L_1k polynomials:
   L.setToZero();
   ni  = n1;
-  for(int k = ni-1; k >= 0; k--) 
-  {
-    generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
-
-    Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), ni+1, &dl[0], ni+1);  // verify ni+1, ni+1
-
-    //int deg = ni + k + 1; // is that correct?
-    //Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), deg, &dl[0], ni);  // verify ni+1, ni+1
-
+  for(int k = ni-1; k >= 0; k--) {
+    int nc = generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
+    Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), nc-1, &dl[0], ni);
     for(int mu = ni-1; mu >= k+1; mu--)
-      L.addWeightedRowToOther(mu, k, -dl[mu]);
-  }
+      L.addWeightedRowToOther(mu, k, -dl[mu]); }
   // L_12 and L_11 look good, L_10 still wrong
   // targets: L_10 = 0,0,6,-8,3; L_11 = 0,0,-3,5,-2; L_12 = 0,0,0.5,-1,0.5;
 
@@ -4380,20 +4374,15 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
     for(int i = 0; i < N; i++)
       p[i] += y1[k] * L(k, i);
 
-  // i think, there are still bugs with regard to what we are passing as degrees and required number
-  // of derivatives to evaluateWithDerivatives - maybe we also need to zero out some buffers in 
-  // between computation, check also all loop limits
-
   // -we could take the loop iterations for k = n-1 for computing L_0k and L_1k out of the loops and 
   //  loop only from k = n-2 down to 0 - this would avoid the unnecessary evaluateWithDerivatives 
   //  call (in the (k-1) iteration, the inner "for mu" loop is not entered and the computed values 
   //  in dl are not used)
 
   int dummy = 0;
-
-  //Poly p(D);
-  //return p;
 }
+// -test it with more inputs - maybe n0=4, n1=6 (and vice versa) or something
+// -try to get rid of code duplication
 
 
 template<class T>

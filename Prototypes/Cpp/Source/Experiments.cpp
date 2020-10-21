@@ -4334,15 +4334,16 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 
 
   // compute L_1k polynomials:
+  L.setToZero();
   ni = n1;
   generalizedLagrangeHelper1(ni-1, n0, L.getRowPointer(ni-1), pt);
   for(int k = ni-2; k >= 0; k--) {
     generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
-    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n1, &dl[0], ni);  // verify n1, ni
+    Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), n1, &dl[0], ni);  // verify n1, ni
     for(int mu = ni-1; mu >= k+1; mu--)
       L.addWeightedRowToOther(ni-1, k, -dl[mu]); }
 
-  // L_12 looks good, L_11 and L_10 still wrong
+  // L_12 and L_11 look good, L_10 still wrong
 
   //generalizedLagrangeHelper1(0, n0, L.getRowPointer(n1-1), pt);
   // ...

@@ -4295,6 +4295,8 @@ template<class T>
 void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 {
   using Poly = rsPolynomial<T>;
+  using AT   = rsArrayTools;
+
   int N = n0 + n1;  // number of coeffs in interpolant
   int D = N  - 1;   // degree of interpolant
 
@@ -4314,14 +4316,25 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   // todo: use a class for triangular matrices - saves half of the memory
 
   // compute L_0k polynomials:
-  std::vector<T> l(N);
-  rsMatrix<T> L(N, N);
-  generalizedLagrangeHelper0(0, n1, L.getRowPointer(n0-1), pt);
-  for(int k = n0-2; k >= 0; k--)
+  std::vector<T> l(N);   // N may be too much...maybe use max(n0,n1)
+  std::vector<T> dl(N);  // dito
+  rsMatrix<T> L(N, N);   // here too? not sure...
+  int ni = n0;
+  generalizedLagrangeHelper0(0, n1, L.getRowPointer(ni-1), pt); // maybe we need to fill with zeros?
+  Poly::evaluateWithDerivatives(T(0), L.getRowPointer(ni-1), n0, &dl[0], ni); // verify ni
+  for(int k = ni-2; k >= 0; k--)
   {
-    //T s = Poly::derivative
+    AT::copy(L.getRowPointer(ni-1), L.getRowPointer(k), N);
+    // wrong! we need l_i,k not l_i,ni-1
 
+    // subtract scaled copies of rows above k:
+    for(int mu = ni-1; mu >= k+1; mu--)
+    {
+      T s = dl[mu];
+      L.addWeightedRowToOther(ni-1, k, -s);
+    }
 
+    int dummy = 0;
   }
 
 
@@ -4479,6 +4492,8 @@ void testHermiteInterpolation()
 
   // test generalized Lagrange polynomials:
   Poly L_01 = generalizedLagrange(f, 0, 1); ok &= L_01 == Poly(Vec({0,1,-3,3,-1}));
+  Poly L_00 = generalizedLagrange(f, 0, 0); ok &= L_00 == Poly(Vec({1,0,-6,8,-3}));
+
   //Poly L_12 = generalizedLagrange(f, 1, 2); ok &= L_12 == Poly(Vec({0,0.5,-1,0.5})); // wrong!
   // the coefficients are shifted to the right by one index, i.e. we have a factor of x too much - 
   // but the formula says tha L_12 should actually be equal to l_12 (which it is) but the numbers
@@ -4486,7 +4501,7 @@ void testHermiteInterpolation()
   // ..i think, this may be a mistake in the book - our p polynomial later seems to come out right
   // :-O
 
-  //Poly L_00 = generalizedLagrange(f, 0, 0); ok &= L_00 == Poly(Vec({1,0,-6,8,-3}));
+
   //Poly L_11 = generalizedLagrange(f, 1, 1); ok &= L_11 == Poly(Vec({0,0,-3,5,-2}));
 
   //Poly L_10 = generalizedLagrange(f, 1, 0); ok &= L_10 == Poly(Vec({0,0,7,-10,4}));  // wrong!

@@ -4316,16 +4316,17 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   // todo: use a class for triangular matrices - saves half of the memory
 
   // compute L_0k polynomials:
-  std::vector<T> l(N);   // N may be too much...maybe use max(n0,n1)
+  //std::vector<T> l(N);   // N may be too much...maybe use max(n0,n1)
   std::vector<T> dl(N);  // dito
+
   rsMatrix<T> L(N, N);   // here too? not sure...
   int ni = n0;
-  generalizedLagrangeHelper0(0, n1, L.getRowPointer(ni-1), pt); // maybe we need to fill with zeros?
-  Poly::evaluateWithDerivatives(T(0), L.getRowPointer(ni-1), n0, &dl[0], ni); // verify ni
+  generalizedLagrangeHelper0(ni-1, n1, L.getRowPointer(ni-1), pt); // maybe we need to fill with zeros?
+  //Poly::evaluateWithDerivatives(T(0), L.getRowPointer(ni-1), n0, &dl[0], ni); // verify ni
   for(int k = ni-2; k >= 0; k--)
   {
-    AT::copy(L.getRowPointer(ni-1), L.getRowPointer(k), N);
-    // wrong! we need l_i,k not l_i,ni-1
+    generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt); // maybe we need to fill with zeros?
+    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n0, &dl[0], ni); // verify ni
 
     // subtract scaled copies of rows above k:
     for(int mu = ni-1; mu >= k+1; mu--)

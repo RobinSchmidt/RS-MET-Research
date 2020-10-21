@@ -4378,7 +4378,6 @@ int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
   // -use a class for triangular matrices - saves half of the memory
 
   // split into 2 functions, without taking an i input
-  int N;  // length of produced coeff array - make output value - caller wants to know the degree
   if(     i == 0)  return generalizedLagrangeHelper0(k, n1, a, pt2);
   else if(i == 1)  return generalizedLagrangeHelper1(k, n0, a, pt2);
   else             rsError(); return 0;
@@ -4640,6 +4639,7 @@ void testHermiteInterpolation()
 // use grid, because the functions should actually also work for true 3D meshes - here, we deal with 
 // 2D surfaces in 2D or 3D space...we'll see
 
+// move these all into the class rsMesh2D
 template<class T>
 void addRegularMeshVertices2D(
   rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, T dx = T(1), T dy = T(1))
@@ -4736,11 +4736,14 @@ int rsFlatMeshIndex2D(int i, int j, int Ny)
 
 template<class T>
 rsGraph<rsVector2D<T>, T> getPlanarMesh(T x0, T x1, int Nx, T y0, T y1, int Ny)
+//rsMesh2D<float> getPlanarMesh(T x0, T x1, int Nx, T y0, T y1, int Ny)
 {
   // todo: let the user select edge handling
 
   using Vec2 = rsVector2D<T>;
   using Mesh = rsGraph<Vec2, T>;
+  //rsMesh2D<float> m;
+
   Mesh m;
   addRegularMeshVertices2D(  m, Nx, Ny);
   addMeshConnectionsPlanar2D(m, Nx, Ny);
@@ -4770,6 +4773,7 @@ void testMeshGeneration()
 {
   using Vec2 = rsVector2D<float>;
   using Mesh = rsGraph<Vec2, float>;
+  using MG   = rsMeshGenerator2D<float>;
 
   int Nx = 7;     // number grid coordinates along x-direction
   int Ny = 5;     // number grid coordinates along y-direction
@@ -4815,8 +4819,15 @@ void testMeshGeneration()
 
   // todo: have a function plotMesh - maybe it should create an image and write it to a ppm file
 
+  float x0 = -3, x1 = +3;  Nx = 31;
+  float y0 = -2, y1 = +2;  Ny = 21;
 
-  Mesh m2 = getPlanarMesh(-3.f, +3.f, 31, -2.f, 2.f, 21);
+
+  MG mg(Nx, Ny);
+  Mesh m3 = mg.getPlanarMesh();                      // rename to initMesh
+  mg.computePlanarCoordinates(m3, x0, x1, y0, y1);
+
+
 
 
   int dummy = 0;

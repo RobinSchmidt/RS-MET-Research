@@ -2946,6 +2946,64 @@ protected:
 };
 
 
+//=================================================================================================
+
+template<class T>
+class rsMeshGenerator2D
+{
+
+public:
+
+
+  rsMeshGenerator2D(int numX, int numY) : Nx(numX), Ny(numY) {}
+
+
+  void addVertices(rsGraph<rsVector2D<T>, T>& m) 
+  {
+    for(int i = 0; i < Nx; i++)
+      for(int j = 0; j < Ny; j++)
+        m.addVertex(rsVector2D<T>(T(i), T(j)));
+  }
+  // -maybe addVertex should allow to pre-allocate memory for the edges
+  // -using dx,dy will have to be taken into account for the edge-weights, 
+  //  too...ewww....having different dx,dy values could mess up the gradient calculation - maybe 
+  //  don't use it for now
+  // -actually, even though the surface is 2D, each vertex could be a 3D vector - maybe the user 
+  //  could pass in du,dv instead of dx,dy and 3 functions fx(u,v), fy(u,v), fz(u,v) to compute 
+  //  coordinates - but maybe that can be postponed
+
+
+  rsGraph<rsVector2D<T>, T> getPlanarMesh()
+  {
+    // todo: let the user select edge handling
+    rsGraph<rsVector2D<T>, T> m;
+    addRegularMeshVertices2D(  m, Nx, Ny);
+    addMeshConnectionsPlanar2D(m, Nx, Ny);
+    return m;
+  }
+
+  void computePlanarCoordinates(rsGraph<rsVector2D<T>, T>& m, T x0, T x1, T y0, T y1)
+  {
+    for(int i = 0; i < Nx; i++) {
+      for(int j = 0; j < Ny; j++) {
+        int k = flatIndex(i, j);
+        T x = rsLinToLin(T(i), T(0), T(Nx-1), x0, x1);
+        T y = rsLinToLin(T(j), T(0), T(Ny-1), y0, y1);
+        m.setVertexData(k, rsVector2D<T>(x,y)); }}
+
+    // updateEdges(m);
+  }
+
+
+protected:
+
+  int flatIndex(int i, int j) { return i  * Ny + j; }
+
+  int Nx = 0;  // number of vertices along 1st coordinate (can be x, radius, etc.)
+  int Ny = 0;  // number of vertices along 2nd coordinate (can be x, angle, etc.)
+
+};
+
 
 /*
 creating movies from pictures:

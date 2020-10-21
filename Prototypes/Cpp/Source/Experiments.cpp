@@ -4303,7 +4303,7 @@ int generalizedLagrangeHelper01(int i, int k, int n01, T* a, const rsMatrix<T>& 
 
 // i think, overall complexity is O(M^3) where M = max(n0,n1)
 template<class T>
-int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
+int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& pt)
 {
   // Initializations:
   using Poly = rsPolynomial<T>;
@@ -4312,30 +4312,15 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   AT::fillWithZeros(p, N);
   std::vector<T> dl(N);          // N may be too much here...maybe use max(n0,n1)
   rsMatrix<T> L(N, N);           // generalized Lagrange polynomials
-  
-
-  // Compute matrix of Pascal triangle coeffs in O(N^2):
-  rsMatrix<T> pt(N, N);   // maybe N is too much here, too
-  for(int n = 0; n < N; n++)
-    rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1);
-  // todo: 
-  // -use a class for triangular matrices - saves half of the memory
-  // -make a version of this function that lets the user pass this matrix ..but then it should be
-  //  the regular Pascal triangle, without the sign alternations, generalizedLagrangeHelper0 should
-  //  call fucntions AT::flipOddSigns or flipEvenSigns
 
   // Compute L_0k polynomials via backward recursion in O(n0^3):
+  L.setToZero();
   int ni = n0;
   for(int k = ni-1; k >= 0; k--) {
     int nc = generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt);
     Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), nc-1, &dl[0], ni);
     for(int mu = ni-1; mu >= k+1; mu--)
       L.addWeightedRowToOther(mu, k, -dl[mu]); }
-  // targets: L_00 = 1,0,-6,8,-3; L_01 = 0,1,-3,3,1
-  // i think, the evaluateWithDerivatives works only because we evaluate them at 0 such that only
-  // the 0-th derivative gets a nonzero value - we can optimize this further by removing adding
-  // rows with zero weight - only absolute coeff is ever effective - and that is always 1
-  // ..hmm - we need the dl-array to be filled up up to index ni-1
 
   // Accumulate L_0k polynomials into p in O(n0^2):
   for(int k = 0; k <= ni-1; k++)  // ni == n0
@@ -4350,22 +4335,43 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
     Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), nc-1, &dl[0], ni);
     for(int mu = ni-1; mu >= k+1; mu--)
       L.addWeightedRowToOther(mu, k, -dl[mu]); }
-  // targets: L_10 = 0,0,6,-8,3; L_11 = 0,0,-3,5,-2; L_12 = 0,0,0.5,-1,0.5;
 
   // Accumulate L_1k polynomials into p in O(n1^2):
   for(int k = 0; k <= ni-1; k++)  // ni == n1
     for(int i = 0; i < N; i++)
       p[i] += y1[k] * L(k, i);
 
-  // -we could take the loop iterations for k = n-1 for computing L_0k and L_1k out of the loops and 
-  //  loop only from k = n-2 down to 0 - this would avoid the unnecessary evaluateWithDerivatives 
-  //  call (in the (k-1) iteration, the inner "for mu" loop is not entered and the computed values 
-  //  in dl are not used)
-
   return N;  // number of produced coeffs in p - for convenience - client should know that before
 }
+// -we could take the loop iterations for k = n-1 for computing L_0k and L_1k out of the loops and 
+//  loop only from k = n-2 down to 0 - this would avoid the unnecessary evaluateWithDerivatives 
+//  call (in the (k-1) iteration, the inner "for mu" loop is not entered and the computed values 
+//  in dl are not used)
 // -test it with more inputs - maybe n0=4, n1=6 (and vice versa) or something
 // -try to get rid of code duplication
+// -try to accumulate the L_1k polynomials before the L_0k polynomials and compare the numerical
+//  precision of the coeffs
+// -minimize memory allocation and make function using a workspace
+// -compare to result with my old code using the linear system - maybe that can be generalized to
+//  use different numbers of derivatives at x0 = 0 and x1 = 1, too
+
+// convenience function:
+template<class T>
+int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
+{
+  // Compute matrix of Pascal triangle coeffs in O(N^2):
+  int N = n0 + n1;        // maybe max(n0,n1) is enough
+  rsMatrix<T> pt(N, N);
+  for(int n = 0; n < N; n++)
+    rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1);
+  // todo: 
+  // -use a class for triangular matrices - saves half of the memory
+  // -make a version of this function that lets the user pass this matrix ..but then it should be
+  //  the regular Pascal triangle, without the sign alternations, generalizedLagrangeHelper0 should
+  //  call fucntions AT::flipOddSigns or flipEvenSigns
+
+  return hermiteInterpolant01(y0, n0, y1, n1, p, pt);
+}
 
 
 template<class T>

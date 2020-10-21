@@ -4291,11 +4291,7 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
   return N;
 }
 // O(n0+k)
-// maybe work with the normal Pascal triangle without the alternating signs and do the alternation
-// in the functions - the idea is that later we may use a static constant Pascal triangle that may 
-// be used by other code too.
 
-/*
 // convenience function - maybe make lambda in hermiteInterpolant01:
 template<class T>
 int generalizedLagrangeHelper01(int i, int k, int n01, T* a, const rsMatrix<T>& pt)
@@ -4304,27 +4300,21 @@ int generalizedLagrangeHelper01(int i, int k, int n01, T* a, const rsMatrix<T>& 
   if(i == 0) return generalizedLagrangeHelper0(k, n01, a, pt);
   else       return generalizedLagrangeHelper1(k, n01, a, pt);
 }
-*/
 
-
+// i think, overall complexity is O(M^3) where M = max(n0,n1)
 template<class T>
 void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
 {
+  // Initializations:
   using Poly = rsPolynomial<T>;
   using AT   = rsArrayTools;
-
-  int N = n0 + n1;  // number of coeffs in interpolant
-  int D = N  - 1;   // degree of interpolant
-
+  int N = n0 + n1;               // number of coeffs in interpolant
   AT::fillWithZeros(p, N);
-
-  // ToDo:
-  // -compute matrix of Pascal triangle coeffs in O(N^2)
-  // -compute polynomials L_0n0,...,L_00 via backward recursion
-  // -accumulate them into p
-  // -compute polynomials L_1n1,...,L10 via backward recursion
-  // -accumulate them into p
+  std::vector<T> dl(N);          // N may be too much here...maybe use max(n0,n1)
+  rsMatrix<T> L(N, N);           // generalized Lagrange polynomials
   
+
+  // Compute matrix of Pascal triangle coeffs in O(N^2):
   rsMatrix<T> pt(N, N);   // maybe N is too much here, too
   for(int n = 0; n < N; n++)
     rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1);
@@ -4334,39 +4324,35 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   //  the regular Pascal triangle, without the sign alternations, generalizedLagrangeHelper0 should
   //  call fucntions AT::flipOddSigns or flipEvenSigns
 
-  // compute L_0k polynomials:
-  std::vector<T> dl(N);  // N may be too much...maybe use max(n0,n1)
-  rsMatrix<T> L(N, N);   // here too? not sure...
+  // Compute L_0k polynomials via backward recursion in O(n0^3):
   int ni = n0;
   for(int k = ni-1; k >= 0; k--) {
     int nc = generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt);
     Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), nc-1, &dl[0], ni);
     for(int mu = ni-1; mu >= k+1; mu--)
       L.addWeightedRowToOther(mu, k, -dl[mu]); }
-  // looks good, so far
   // targets: L_00 = 1,0,-6,8,-3; L_01 = 0,1,-3,3,1
   // i think, the evaluateWithDerivatives works only because we evaluate them at 0 such that only
   // the 0-th derivative gets a nonzero value - we can optimize this further by removing adding
   // rows with zero weight - only absolute coeff is ever effective - and that is always 1
   // ..hmm - we need the dl-array to be filled up up to index ni-1
 
-  // accumulate them into p:
+  // Accumulate L_0k polynomials into p in O(n0^2):
   for(int k = 0; k <= ni-1; k++)  // ni == n0
     for(int i = 0; i < N; i++)
       p[i] += y0[k] * L(k, i);
 
-  // compute L_1k polynomials:
+  // Compute L_1k polynomials via backward recursion in O(n1^3):
   L.setToZero();
-  ni  = n1;
+  ni = n1;
   for(int k = ni-1; k >= 0; k--) {
     int nc = generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
     Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), nc-1, &dl[0], ni);
     for(int mu = ni-1; mu >= k+1; mu--)
       L.addWeightedRowToOther(mu, k, -dl[mu]); }
-  // L_12 and L_11 look good, L_10 still wrong
   // targets: L_10 = 0,0,6,-8,3; L_11 = 0,0,-3,5,-2; L_12 = 0,0,0.5,-1,0.5;
 
-  // accumulate them into p:
+  // Accumulate L_1k polynomials into p in O(n1^2):
   for(int k = 0; k <= ni-1; k++)  // ni == n1
     for(int i = 0; i < N; i++)
       p[i] += y1[k] * L(k, i);
@@ -4375,8 +4361,6 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   //  loop only from k = n-2 down to 0 - this would avoid the unnecessary evaluateWithDerivatives 
   //  call (in the (k-1) iteration, the inner "for mu" loop is not entered and the computed values 
   //  in dl are not used)
-
-  int dummy = 0;
 }
 // -test it with more inputs - maybe n0=4, n1=6 (and vice versa) or something
 // -try to get rid of code duplication

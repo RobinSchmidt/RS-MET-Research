@@ -4268,13 +4268,14 @@ int generalizedLagrangeHelper0(int k, int n1, T* a, const rsMatrix<T>& pt)
   // Polynomial is n1-th line of alternating Pascal triangle, shifted by k
   // l_0k = ((x-1)/(0-1))^n1 * (x-0)^k / k!
   using AT = rsArrayTools;
-  int N = n1+k+1;
+  int N = n1+k+1;  // number of coeffs
   AT::fillWithZeros(a, k);   // maybe rename to clear
   AT::copy(pt.getRowPointerConst(n1), &a[k], N-k); 
   AT::scale(a, a, N, T(1)/rsFactorial(k));
   return N;
 }
 // O(n1+k)
+// returns number of coeffs (not degree!) ..maybe it should return the degree, i.e. N-1
 
 template<class T>
 int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
@@ -4290,7 +4291,7 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
   return N;
 }
 // O(n0+k)
-// maybe work with the normal Pascla triangle without the alternating signs and do the alternation
+// maybe work with the normal Pascal triangle without the alternating signs and do the alternation
 // in the functions - the idea is that later we may use a static constant Pascal triangle that may 
 // be used by other code too.
 
@@ -4328,21 +4329,27 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   int ni = n0;
   for(int k = ni-1; k >= 0; k--) 
   {
-    generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt); // maybe we need to fill with zeros?
+    int nc = generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt); // maybe we need to fill with zeros?
+    // nc: number of coeffs
     // what's the degree of the polynomial and how many derivatives do we need? we need these 
     // values for the call below
 
-    int deg = ni + k + 1; // is that correct?
+    //int deg = ni + k + 1; // is that correct?
 
-    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n0, &dl[0], ni); // verify n0, ni
-    for(int mu = ni-1; mu >= k+1; mu--)               // subtract scaled copies of rows above k
-      L.addWeightedRowToOther(mu, k, -dl[mu]); 
+    //Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n0, &dl[0], ni); // verify n0, ni
+
+    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), nc-1, &dl[0], ni); // verify ni, ni
+
+
+    for(int mu = ni-1; mu >= k+1; mu--)
+      L.addWeightedRowToOther(mu, k, -dl[mu]);
   }
   // looks good, so far
   // targets: L_00 = 1,0,-6,8,-3; L_01 = 0,1,-3,3,1
   // i think, the evaluateWithDerivatives works only because we evaluate them at 0 such that only
   // the 0-th derivative gets a nonzero value - we can optimize this further by removing adding
   // rows with zero weight - only absolute coeff is ever effective - and that is always 1
+  // ..hmm - we need the dl-array to be filled up up to index ni-1
 
   // accumulate them into p:
   for(int k = 0; k <= ni-1; k++)  // ni == n0
@@ -4356,7 +4363,12 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   for(int k = ni-1; k >= 0; k--) 
   {
     generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
+
     Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), ni+1, &dl[0], ni+1);  // verify ni+1, ni+1
+
+    //int deg = ni + k + 1; // is that correct?
+    //Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), deg, &dl[0], ni);  // verify ni+1, ni+1
+
     for(int mu = ni-1; mu >= k+1; mu--)
       L.addWeightedRowToOther(mu, k, -dl[mu]);
   }

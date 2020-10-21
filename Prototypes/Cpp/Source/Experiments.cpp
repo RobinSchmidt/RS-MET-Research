@@ -4307,7 +4307,7 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   // -compute polynomials L_1n1,...,L10 via backward recursion
   // -accumulate them into p
   
-  rsMatrix<T> pt(N, N);
+  rsMatrix<T> pt(N, N);   // maybe N is too much here, too
   for(int n = 0; n < N; n++)
     rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1);
   for(int n = 0; n < N; n++)
@@ -4316,36 +4316,35 @@ void hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   // todo: use a class for triangular matrices - saves half of the memory
 
   // compute L_0k polynomials:
-  //std::vector<T> l(N);   // N may be too much...maybe use max(n0,n1)
-  std::vector<T> dl(N);  // dito
-
+  std::vector<T> dl(N);  // N may be too much...maybe use max(n0,n1)
   rsMatrix<T> L(N, N);   // here too? not sure...
   int ni = n0;
   generalizedLagrangeHelper0(ni-1, n1, L.getRowPointer(ni-1), pt); // maybe we need to fill with zeros?
-  //Poly::evaluateWithDerivatives(T(0), L.getRowPointer(ni-1), n0, &dl[0], ni); // verify ni
-  for(int k = ni-2; k >= 0; k--)
-  {
+  for(int k = ni-2; k >= 0; k--) {
     generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt); // maybe we need to fill with zeros?
-    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n0, &dl[0], ni); // verify ni
-
-    // subtract scaled copies of rows above k:
-    for(int mu = ni-1; mu >= k+1; mu--)
-    {
-      T s = dl[mu];
-      L.addWeightedRowToOther(ni-1, k, -s);
-    }
-
-    int dummy = 0;
-  }
-
+    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n0, &dl[0], ni); // verify n0, ni
+    for(int mu = ni-1; mu >= k+1; mu--)               // subtract scaled copies of rows above k
+      L.addWeightedRowToOther(ni-1, k, -dl[mu]); }
+  // looks good, so far
 
   // accumulate them into p:
-  // ...
-
+  for(int k = 0; k <= ni-1; k++)  // ni == n0
+    for(int i = 0; i < N; i++)
+      p[i] += y0[k] * L(k, i);
 
 
   // compute L_1k polynomials:
-  generalizedLagrangeHelper1(0, n0, L.getRowPointer(n1-1), pt);
+  ni = n1;
+  generalizedLagrangeHelper1(ni-1, n0, L.getRowPointer(ni-1), pt);
+  for(int k = ni-2; k >= 0; k--) {
+    generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
+    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), n1, &dl[0], ni);  // verify n1, ni
+    for(int mu = ni-1; mu >= k+1; mu--)
+      L.addWeightedRowToOther(ni-1, k, -dl[mu]); }
+
+  // L_12 looks good, L_11 and L_10 still wrong
+
+  //generalizedLagrangeHelper1(0, n0, L.getRowPointer(n1-1), pt);
   // ...
 
 
@@ -4495,7 +4494,7 @@ void testHermiteInterpolation()
   Poly L_01 = generalizedLagrange(f, 0, 1); ok &= L_01 == Poly(Vec({0,1,-3,3,-1}));
   Poly L_00 = generalizedLagrange(f, 0, 0); ok &= L_00 == Poly(Vec({1,0,-6,8,-3}));
 
-  //Poly L_12 = generalizedLagrange(f, 1, 2); ok &= L_12 == Poly(Vec({0,0.5,-1,0.5})); // wrong!
+  Poly L_12 = generalizedLagrange(f, 1, 2); // ok &= L_12 == Poly(Vec({0,0.5,-1,0.5})); // wrong!
   // the coefficients are shifted to the right by one index, i.e. we have a factor of x too much - 
   // but the formula says tha L_12 should actually be equal to l_12 (which it is) but the numbers
   // in the example suggest that l_12 = x * L_12
@@ -4503,9 +4502,9 @@ void testHermiteInterpolation()
   // :-O
 
 
-  //Poly L_11 = generalizedLagrange(f, 1, 1); ok &= L_11 == Poly(Vec({0,0,-3,5,-2}));
+  Poly L_11 = generalizedLagrange(f, 1, 1); ok &= L_11 == Poly(Vec({0,0,-3,5,-2}));
 
-  //Poly L_10 = generalizedLagrange(f, 1, 0); ok &= L_10 == Poly(Vec({0,0,7,-10,4}));  // wrong!
+  Poly L_10 = generalizedLagrange(f, 1, 0); ok &= L_10 == Poly(Vec({0,0,7,-10,4}));  // wrong!
   // this still fails!
   
   // todo: try to evaluate L_ik and its derivatives at 0 and 1

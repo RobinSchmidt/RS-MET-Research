@@ -4314,6 +4314,33 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
   rsMatrix<T> L(N, N);             // generalized Lagrange polynomials
   AT::fillWithZeros(p, N);
 
+  // Computes L_ik polynomials (i = 0,1) via backward recursion in O(ni^3) and accumulates them 
+  // into p in O(ni*N):
+  auto accumulate = [&](int i)->void 
+  { 
+    // Initializations:
+    L.setToZero();        // rename to clear
+    int ni, no;           // ni = n0 or n1, no is the respective other n
+    T   xi;               // xi = 0  or 1
+    T*  yi;               // yi = y0 or y1
+    if(i == 0) { ni = n0; no = n1; xi = T(0); yi = y0; }
+    else       { ni = n1; no = n0; xi = T(1); yi = y1; }
+
+    // Accumulation:
+    for(int k = ni-1; k >= 0; k--) {
+      int nc = generalizedLagrangeHelper01(i, k, no, L.getRowPointer(k), pt);
+      Poly::evaluateWithDerivatives(xi, L.getRowPointer(k), nc-1, &dl[0], ni);
+      for(int mu = ni-1; mu >= k+1; mu--)
+        L.addWeightedRowToOther(mu, k, -dl[mu]); }
+    for(int k = 0; k <= ni-1; k++)
+      for(int i = 0; i < N; i++)
+        p[i] += yi[k] * L(k, i);
+  };
+  accumulate(0);  // accumulate coeffs for i = 0
+  accumulate(1);  // accumulate coeffs for i = 1
+
+
+  /*
   // Compute L_0k polynomials via backward recursion in O(n0^3) and accumulate them into
   // p in O(n0*N):
   L.setToZero();  // rename to clear
@@ -4339,6 +4366,7 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
   for(int k = 0; k <= ni-1; k++)  // ni == n1
     for(int i = 0; i < N; i++)
       p[i] += y1[k] * L(k, i);
+   */
 
   return N;  // number of produced coeffs in p - for convenience - client should know that before
 }

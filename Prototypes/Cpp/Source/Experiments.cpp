@@ -4202,23 +4202,21 @@ prototype. */
 template<class T>
 rsPolynomial<T> generalizedLagrangeHelper(const std::vector<std::vector<T>>& f, int i, int k)
 {
-  using Vec  = std::vector<T>;
   using Poly = rsPolynomial<T>;
   int  m = (int) f.size() - 1;               // index of last datapoint
   Poly pm({ T(1) });                         // prod_j ((x-x_j) / (x_i - x_j))^nj
   for(int j = 0; j <= m; j++) {
     if(j != i)   {
-      int nj = (int) f[j].size() - 1;              // exponent of j-th factor
-      Poly qj(Vec({ -f[j][0], T(1) }));      //  (x - x_j)
+      int nj = (int) f[j].size() - 1;        // exponent of j-th factor
+      Poly qj({ -f[j][0], T(1) });           //  (x - x_j)
       qj = qj * T(1) / (f[i][0] - f[j][0]);  //  (x - x_j) / (x_i - x_j)
       qj = qj^nj;                            // ((x - x_j) / (x_i - x_j))^nj
       pm = pm * qj; }}                       // accumulate product
-  Poly qi(Vec({ -f[i][0], T(1) }));          // (x - x_i)
+  Poly qi({ -f[i][0], T(1) });               // (x - x_i)
   qi = qi^k;                                 // (x - x_i)^k
   qi = qi *  (T(1) / rsFactorial(k));        // (x - x_i)^k / k!
   return qi * pm;
 }
-
 
 /** Constructs generalized Lagrange polynomial L_ik(x). This is a recursive implementation and the 
 most direct translation of the formula in the book. But it's just for proof of concept because 
@@ -4291,8 +4289,10 @@ int generalizedLagrangeHelper1(int k, int n0, T* a, const rsMatrix<T>& pt)
   return N;
 }
 // O(n0+k)
+// maybe make a function that gnererates the helper polynomials for arbitrary i - should take
+// i, k, arrays of the xj and nj - we can create these by repeated convolutions
 
-// convenience function - maybe make lambda in hermiteInterpolant01:
+// convenience function - maybe make it a lambda in hermiteInterpolant01 (it's only used there):
 template<class T>
 int generalizedLagrangeHelper01(int i, int k, int n01, T* a, const rsMatrix<T>& pt)
 {
@@ -4306,20 +4306,17 @@ template<class T>
 int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& pt)
 {
   // Initializations:
-  using Poly = rsPolynomial<T>;
-  using AT   = rsArrayTools;
-  int N = n0 + n1;                 // number of coeffs in interpolant
-  int ni;                          // n0 or n1 - maybe get rid
-  std::vector<T> dl(N);            // N may be too much here...maybe use max(n0,n1)
-  rsMatrix<T> L(N, N);             // generalized Lagrange polynomials
-  AT::fillWithZeros(p, N);
+  int N = n0 + n1;                    // number of coeffs in interpolant
+  std::vector<T> dl(rsMax(n0,n1)+1);  // value and derivatives of l_ik
+  rsMatrix<T> L(N, N);                // generalized Lagrange polynomials
+  rsArrayTools::fillWithZeros(p, N);  // clear to prepare for accumulation
 
-  // Computes L_ik polynomials (i = 0,1) via backward recursion in O(ni^3) and accumulates them 
+  // Compute L_ik polynomials (i = 0,1) via backward recursion in O(ni^3) and accumulate them 
   // into p in O(ni*N):
   auto accumulate = [&](int i)->void 
   { 
     // Initializations:
-    L.setToZero();        // rename to clear
+    L.setToZero();        // todo: rename to clear
     int ni, no;           // ni = n0 or n1, no is the respective other n
     T   xi;               // xi = 0  or 1
     T*  yi;               // yi = y0 or y1
@@ -4329,7 +4326,7 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
     // Accumulation:
     for(int k = ni-1; k >= 0; k--) {
       int nc = generalizedLagrangeHelper01(i, k, no, L.getRowPointer(k), pt);
-      Poly::evaluateWithDerivatives(xi, L.getRowPointer(k), nc-1, &dl[0], ni);
+      rsPolynomial<T>::evaluateWithDerivatives(xi, L.getRowPointer(k), nc-1, &dl[0], ni);
       for(int mu = ni-1; mu >= k+1; mu--)
         L.addWeightedRowToOther(mu, k, -dl[mu]); }
     for(int k = 0; k <= ni-1; k++)
@@ -4338,45 +4335,15 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
   };
   accumulate(0);  // accumulate coeffs for i = 0
   accumulate(1);  // accumulate coeffs for i = 1
-
-
-  /*
-  // Compute L_0k polynomials via backward recursion in O(n0^3) and accumulate them into
-  // p in O(n0*N):
-  L.setToZero();  // rename to clear
-  ni = n0;
-  for(int k = ni-1; k >= 0; k--) {
-    int nc = generalizedLagrangeHelper0(k, n1, L.getRowPointer(k), pt);
-    Poly::evaluateWithDerivatives(T(0), L.getRowPointer(k), nc-1, &dl[0], ni);
-    for(int mu = ni-1; mu >= k+1; mu--)
-      L.addWeightedRowToOther(mu, k, -dl[mu]); }
-  for(int k = 0; k <= ni-1; k++)  // ni == n0
-    for(int i = 0; i < N; i++)
-      p[i] += y0[k] * L(k, i);
-
-  // Compute L_1k polynomials via backward recursion in O(n1^3) and accumulate them into
-  // p in O(n1*N):
-  L.setToZero();  // rename to clear
-  ni = n1;
-  for(int k = ni-1; k >= 0; k--) {
-    int nc = generalizedLagrangeHelper1(k, n0, L.getRowPointer(k), pt);
-    Poly::evaluateWithDerivatives(T(1), L.getRowPointer(k), nc-1, &dl[0], ni);
-    for(int mu = ni-1; mu >= k+1; mu--)
-      L.addWeightedRowToOther(mu, k, -dl[mu]); }
-  for(int k = 0; k <= ni-1; k++)  // ni == n1
-    for(int i = 0; i < N; i++)
-      p[i] += y1[k] * L(k, i);
-   */
-
-  return N;  // number of produced coeffs in p - for convenience - client should know that before
+  return N;       // number of produced coeffs in p for convenience (client should know that)
 }
 // -we could take the loop iterations for k = n-1 for computing L_0k and L_1k out of the loops and 
 //  loop only from k = n-2 down to 0 - this would avoid the unnecessary evaluateWithDerivatives 
 //  call (in the (k-1) iteration, the inner "for mu" loop is not entered and the computed values 
-//  in dl are not used)
+//  in dl are not used) - then we could perhaps get rid of the +1 in rsMax(n0,n1)+1, but that may 
+//  increase the code size, when the generalizedLagrangeHelper01 function (and its callees) are 
+//  inlined, which is likely - so maybe don't do it
 // -test it with more inputs - maybe n0=4, n1=6 (and vice versa) or something
-// -try to get rid of code duplication - define an internal lambda function, taking i, n01, x_i,
-//  *yi
 // -try to accumulate the L_1k polynomials before the L_0k polynomials and compare the numerical
 //  precision of the coeffs -> doesn't seem to make a difference
 // -minimize memory allocation and make function using a workspace

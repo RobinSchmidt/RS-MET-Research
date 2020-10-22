@@ -4770,6 +4770,29 @@ rsGraph<rsVector2D<T>, T> getPlanarMesh(T x0, T x1, int Nx, T y0, T y1, int Ny)
   return m;
 }
 
+
+// maybe make lamdas in testMeshGeneration
+// expected number of graph-connections for a plane topology
+// 4 neighbours (inner points):         (Nu-2)*(Nv-2)
+// 3 neighbours (edges except corners):  2*(Nu-2) + 2*(Nv-2)
+// 2 neighbours (corner points):         4
+int getNumConnectionsPlane(int Nu, int Nv)
+{
+  return 4 * (Nu-2)*(Nv-2) + 3 * (2*(Nu-2) + 2*(Nv-2)) + 2 * 4; 
+}
+
+// other topologies:
+int getNumConnectionsCylinder(int Nu, int Nv)
+{
+  return getNumConnectionsPlane(Nu, Nv) + 2*Nv;
+}
+int getNumConnectionsTorus(int Nu, int Nv)
+{
+  return getNumConnectionsPlane(Nu, Nv) + 2*Nv + 2*Nu;
+  // should also be equal to Nu*Nv
+}
+
+
 void testMeshGeneration()
 {
   using Vec2 = rsVector2D<float>;
@@ -4826,14 +4849,21 @@ void testMeshGeneration()
 
 
   // Create and set up mesh generator:
+  int Nu = 31; 
+  Nv = 21;     // was used above for numVertices but now for number of v-values
+
+  int tgt; // target
   MG mg;
-  mg.setNumSamples(31, 21);
+  mg.setNumSamples(Nu, Nv);
   mg.setParameterRange(-3, +3, -2, +2);
 
   // Generate and retrieve meshes:
   mg.updateMeshes();
   rsGraph<Vec2, float> pm = mg.getParameterMesh();  // used in PDE solver
   rsGraph<Vec3, float> sm = mg.getSpatialMesh();    // used for visualization
+  tgt = getNumConnectionsPlane(Nu, Nv);
+  Ne  = pm.getNumEdges();
+  // Nu=21,Nv=31 gives 2500 edges for a plane topology
 
 
 

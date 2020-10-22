@@ -4799,9 +4799,26 @@ void plotMesh(rsGraph<rsVector2D<T>, T>& m)
 
   double dotRadius = 0.01; // can we make this absolute?
 
-  std::vector<int> highlighted = { 35 };  // make parameter
+  std::vector<int> highlighted = { 65 };  // make parameter
 
-  auto isHighlighted = [&](int i)->bool { return rsContains(highlighted, i); };
+  auto isHighlighted = [&](int i)->bool 
+  { 
+    return rsContains(highlighted, i); 
+  };
+  auto hasHighlightedNeighbor = [&](int i)->bool
+  {
+    int numNeighbors = m.getNumEdges(i);
+    for(int j = 0; j < numNeighbors; j++) {
+      int k = m.getEdgeTarget(i, j);
+      if(isHighlighted(k))
+        return true;  }
+    return false;
+  };
+  auto isEdgeHighlighted = [&](int i, int k)->bool 
+  {
+    return isHighlighted(i) && hasHighlightedNeighbor(k);
+  };
+
 
   for(int i = 0; i < m.getNumVertices(); i++)
   {
@@ -4811,9 +4828,13 @@ void plotMesh(rsGraph<rsVector2D<T>, T>& m)
       int k = m.getEdgeTarget(i, j);
       rsVector2D<T> vi = m.getVertexData(i);
       rsVector2D<T> vk = m.getVertexData(k);
-      plt.drawLine("", vi.x, vi.y, vk.x, vk.y);
+      if(isEdgeHighlighted(i, k))
+        plt.drawLine("linewidth 3", vi.x, vi.y, vk.x, vk.y);
+      else
+        plt.drawLine("", vi.x, vi.y, vk.x, vk.y);
     }
   }
+  // draw line thicker, if i is highlighted or has highlighted neighbor
 
   T minX = 0, maxX = 0, minY = 0, maxY = 0;
   std::string attr = "fillcolor \"black\" fillstyle solid";
@@ -4821,11 +4842,9 @@ void plotMesh(rsGraph<rsVector2D<T>, T>& m)
   {
     rsVector2D<T> v = m.getVertexData(i);
 
-    if(isHighlighted(i))
-      plt.drawCircle(attr, v.x, v.y, 2*dotRadius);
-    else
-      plt.drawCircle(attr, v.x, v.y, dotRadius);
-
+    if(isHighlighted(i))               plt.drawCircle(attr, v.x, v.y, 2.25*dotRadius);
+    else if(hasHighlightedNeighbor(i)) plt.drawCircle(attr, v.x, v.y, 1.75*dotRadius);
+    else                               plt.drawCircle(attr, v.x, v.y,      dotRadius);
 
     minX = rsMin(minX, v.x);
     maxX = rsMax(maxX, v.x);

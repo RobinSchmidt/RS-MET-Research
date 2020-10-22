@@ -2963,21 +2963,41 @@ public:
 
   //rsMeshGenerator2D() {}
 
+  /** Enumeration of the available topologies. This determines, how the vertices are connected to
+  other vertices in the mesh. Although the names are suggestive, the topology itself does not 
+  imply a certain shape in 3D space...tbc... */
   enum class Topology
   {
-    plane,     // edges of the parameter rectangle are not connected to anything
-    cylinder,  // left edge is connected to right edge
-    torus      // left edge is connected to right edge and top edge is connected to bottom edge
+    plane,        // edges of the parameter rectangle are not connected to anything
+    cylinder,     // left edge is connected to right edge (vertical cyclinder)
+    torus,        // ...ditto and also the top edge is connected to the bottom edge
+    mobiusStrip,  // like cylinder but with right edge reversed
+    kleinBottle   // like torus but with top and right edge reversed
 
-    // cone         // top edge is connected to additional tip vertex
+    // cone         // top edge is connected to an additional tip vertex
     // doubleCone   // top and bottom edges are connected to additional tip vertices
-    // mobiusStrip  // like cylinder but with right edge reversed
-    // kleinBottle  // like torus but with top and right edge reversed
     // closedCylinder // vertices of top and bottom edges are connected to other vertices on the 
                       // same edge (with offsets of Nu/2), forming a star when seen from above
   };
   // the doubleCone and closedCylinder topologies can also be used for a sphere - the actual 
   // interpretation as 3D shape is determined by the geometry, i.e. by the associated 3D mesh
+
+  /** Enumeration of the available geometries. This determines, how the (u,v)-coordinates of 
+  vertices in the parameterMesh are mapped to (x,y,z)-coordinates in the spatialMesh. */
+  /*
+  enum class Geometry
+  {
+    plane,
+    cylinder
+  };
+  */
+  // or maybe let the user provide functions fx,fy,fz for the mapping - this is more flexible 
+  // and/or maybe write another class rsMeshMapper or something that simplifies this
+  
+
+
+  // make a similar enum class for the geometry...maybe for the user, it would be more convenient
+  // to just select a shape that determines both, topology and geometry
 
 
   //-----------------------------------------------------------------------------------------------
@@ -3087,12 +3107,17 @@ protected:
     using TP = Topology;
     switch(topology)  
     {
-    case TP::cylinder: {  connectLeftToRight();  } break;   // it's a vertical cylinder
+    case TP::cylinder: {     connectLeftToRight();  } break;
 
-    case TP::torus:    {  connectLeftToRight();
-                          connectTopToBottom();  } break;
+    case TP::torus: {        connectLeftToRight();
+                             connectTopToBottom();  } break;
 
-    default: { }                                            // topology is plane - nothing to do
+    case TP::mobiusStrip: {  connectLeftToRightReversed(); } break;
+
+    case TP::kleinBottle: {  connectLeftToRightReversed();
+                             connectTopToBottomReversed(); } break;
+
+    default: { }   // topology is plane - nothing to do
     }
   }
 
@@ -3198,7 +3223,18 @@ protected:
 
   void connectTopToBottom()
   {
-    //...
+    for(int i = 0; i < Nu; i++) {
+      int k1 = flatIndex(i, 0   );
+      int k2 = flatIndex(i, Nv-1);
+      parameterMesh.addEdge(k1, k2, true); }
+  }
+
+  void connectTopToBottomReversed()
+  {
+    for(int i = 0; i < Nu; i++) {
+      int k1 = flatIndex(i,      0   );
+      int k2 = flatIndex(Nu-1-i, Nv-1);
+      parameterMesh.addEdge(k1, k2, true); }
   }
 
 

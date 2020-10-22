@@ -4873,8 +4873,8 @@ void testMeshGeneration()
 
   // create mesh of polar coordinates:
   int Nr = 9;   // num radii
-  int Na = 24;  // num angles - we want 360/Na to be an integer to have nice values for the 
-               // direction angles
+  int Na = 48;  // num angles - we want 360/Na to be an integer to have nice values for the 
+                // direction angles
   mg.setNumSamples(Nr, Na);
   mg.setTopology(MG::Topology::cylinderH);
   mg.updateMeshes();
@@ -4884,9 +4884,17 @@ void testMeshGeneration()
 
   // We set the coordinates manually here - eventually, there may be an API that let's the user 
   // pass fx,fy (these functions should assume normalized inputs in 0..1):
+
+  // todo: use hole (inner) radius and outer radius
+  //float dr = 0.1;
+
+  float holeRadius  = 0.5;
+  float outerRadius = 1.0;
   for(int i = 0; i < Nr; i++)
   {
-    float r = float(i) / (Nr-1);
+    //float r = float(i) / (Nr-1) + dr;
+
+    float r = holeRadius + (outerRadius - holeRadius) * i / (Nr-1);
     for(int j = 0; j < Na; j++)
     {
       float a = float(2*PI * j / Na);
@@ -4920,9 +4928,15 @@ void testMeshGeneration()
   // move to rsMeshGenerator2D
 
   ok &= pm.isSymmetric();
-  plotMesh(pm, {146});
 
-  // todo: solve wave equation on the mesh and somehow visualize the results
+  Nv = pm.getNumVertices();
+
+  plotMesh(pm, {20, 146, Nv-150, Nv-20});
+
+  // todo: 
+  // -solve wave equation on the mesh and somehow visualize the results - maybe have a black
+  //  background and let dots become red for positive and green for negative values and black for 
+  //  zero (or maybe blue)
   // -don't forget to average the bottom line
   // -try flat disc vs cone in 3D
 

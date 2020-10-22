@@ -38,8 +38,8 @@ public:
   }
   // always prodcues a 4 character string with a rounded percentage value
   // todo: produce a 7 character string with two decimal places after the dot, like:
-  // " 56.87%" (the leading whitespace is intentional)
-  // for longer tasks, we may need a finer indicator 
+  // " 56.87%" (the leading whitespace is intentional) because for longer tasks, we may need a 
+  // finer indicator - but maybe let the user set up the number of decimals
 
   /** Prints the initial 0% in the desired format (i.e. with padding) to the console. */
   void init() const
@@ -47,8 +47,9 @@ public:
     std::cout << getPercentageString(0.0);
   }
 
-  /** Deletes the old percentage from the console and prints the new one. */
-  void update(int itemsDone, int lastItemIndex) const
+  /** Deletes the old percentage from the console and prints the new one. Should be called 
+  repeatedly by the worker function. */
+  void update(int itemsDone, int lastItemIndex) const // use numItems - more intuitive to use
   {
     deleteCharactersFromConsole(4);                  // delete old percentage from console
     double percentDone = 100.0 * double(itemsDone) / double(lastItemIndex);
@@ -56,7 +57,9 @@ public:
   }
   // maybe implement a progress bar using ascii code 178 or 219
   // http://www.asciitable.com/
-  // maybe make the function mor general: itemsDone, lastItemIndex
+  // -maybe make the function mor general: itemsDone, lastItemIndex
+  // -have different versions - one taking directly a percentage, another in terms of 
+  //  itemsDone, numItems
 
   // have a function init that write 0% in the desired format
 
@@ -209,7 +212,7 @@ public:
     for(int i = 0; i < numFrames; i++) {
       std::string path = getTempFileName(i);
       writeImageToFilePPM(vid.getFrame(i), path.c_str());
-      progressIndicator.update(i, numFrames-1);
+      progressIndicator.update(i, numFrames-1);  // maybe pass i+1 and numFrames
     }
     std::cout << "\n\n";
   }
@@ -2948,6 +2951,9 @@ protected:
 
 //=================================================================================================
 
+// maybe rename to rsSurfaceMeshGenerator, use rsVector3D instead of 2D for the geometry to make 
+// more sense
+
 template<class T>
 class rsMeshGenerator2D
 {
@@ -2955,7 +2961,33 @@ class rsMeshGenerator2D
 public:
 
 
-  rsMeshGenerator2D(int numX, int numY) : Nx(numX), Ny(numY) {}
+  //rsMeshGenerator2D() {}
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  void setNumSamples(int numX, int numY) { Nx = numX; Ny = numY; }
+
+
+  // setTopology, setGeometry, setParameterRange(T u0, T u1,
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Retrieval
+
+
+  rsGraph<rsVector2D<T>, T> getParameterMesh() const { return parameterMesh; }
+
+  rsGraph<rsVector3D<T>, T> getSpatialMesh()   const { return spatialMesh;   }
+  // maybe they should return const references to the members
+
+
+
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Internal (maybe make protected later)
 
 
   void addVertices(rsGraph<rsVector2D<T>, T>& m) 
@@ -2972,16 +3004,18 @@ public:
   //  could pass in du,dv instead of dx,dy and 3 functions fx(u,v), fy(u,v), fz(u,v) to compute 
   //  coordinates - but maybe that can be postponed
 
-
-  rsGraph<rsVector2D<T>, T> getPlanarMesh()
+  rsGraph<rsVector2D<T>, T> initMesh() // rename to initParameterMesh
   {
-    // todo: let the user select edge handling
+    // todo: let the user select edge handling via a parameter "topology" or something - possible 
+    // values are: plane, torus, cylinderX, cylinderY, cone, sphere, mobiusStrip, kleinBottle, ..
+    // default is plane
     rsGraph<rsVector2D<T>, T> m;
     addRegularMeshVertices2D(  m, Nx, Ny);
     addMeshConnectionsPlanar2D(m, Nx, Ny);
     return m;
   }
 
+  // use u0,u1, etc...or maybe use members
   void computePlanarCoordinates(rsGraph<rsVector2D<T>, T>& m, T x0, T x1, T y0, T y1)
   {
     for(int i = 0; i < Nx; i++) {
@@ -3001,11 +3035,44 @@ protected:
 
   int Nx = 0;  // number of vertices along 1st coordinate (can be x, radius, etc.)
   int Ny = 0;  // number of vertices along 2nd coordinate (can be x, angle, etc.)
+  // maybe use u,v instead of x,y as coordinates
+
+
+  // not yet used:
+  T u0 = T(0), u1 = T(1);
+  T v0 = T(0), v1 = T(1);
+  rsGraph<rsVector2D<T>, T> parameterMesh;
+  rsGraph<rsVector3D<T>, T> spatialMesh;
 
 };
+// -todo: interpret the (x,y) values in the 2D grid and (u,v)-parameters that are later mapped to
+//  (x,y,z)-coordinates, according to some geometry settings
+// -let user select topology and geometry...but maybe the geometric aspects should be done by a 
+//  separate class - maybe we need to keep two meshes: one in 2D parameter space and one in 3D 
+//  actual space (maybe the latter can be also 4D for the Klein bottle)
+// -the PDE solver uses the 2D mesh in parameter space, but the interpretation and visualization is 
+//  done by means of the 3D mesh - also, the weights (distances) for the 2D parameter mesh have to
+//  be computed by help of the 3D mesh in user space - but optionally, we may also use the default
+//  weighting
+// -geometries: plane, torus, cylinder, mobiusStrip, kleinBottle, cone, doubleCone, disc, sphere
+// -use should set up stuff via setters and then retrieve 2 meshes via 
+//  getParameterMesh, getSpatialMesh - the 1st is 2D and used in  the PDE solver, the 2nd is for
+//  visualization
+// -a double-cone or spherical topology can be achieved in 1 of two ways:
+//  (1) close a cylinder on top and bottom by connecting top and bottom row vertices like: 
+//      bottom: v(i,0) to v((i+Nx/2)%Nx, 0), top: v(i,Ny-1) to v((i+Nx/2)%Nx, Ny-1)   i=0..Nx-1
+//      this makes only sense when Nx is even (right? what happens, when Nx is odd? try it!)
+//  (2) add two additional vertice for the two cone cusps (top, bottom) and connecting top and 
+//      bottom rows to these cusp vertices
+//  -for a simple cone, do this only for the top row, a simple cone can also degenerate to a disc
+//   when the height of the cone is zero (i.e. z-values are all equal)
+
+
+
 
 
 /*
+Move to some other file:
 creating movies from pictures:
 https://askubuntu.com/questions/971119/convert-a-sequence-of-ppm-images-to-avi-video
 https://superuser.com/questions/624567/how-to-create-a-video-from-images-using-ffmpeg

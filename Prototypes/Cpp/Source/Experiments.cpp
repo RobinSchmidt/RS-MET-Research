@@ -4823,9 +4823,11 @@ void testMeshGeneration()
   float y0 = -2, y1 = +2;  Ny = 21;
 
 
-  MG mg(Nx, Ny);
-  Mesh m3 = mg.getPlanarMesh();                      // rename to initMesh
-  mg.computePlanarCoordinates(m3, x0, x1, y0, y1);
+  MG mg;
+  mg.setNumSamples(Nx, Ny);
+
+  Mesh m3 = mg.initMesh(); 
+  mg.computePlanarCoordinates(m3, x0, x1, y0, y1); // maybe rename to computeGeometry
 
 
 

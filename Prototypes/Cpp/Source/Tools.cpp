@@ -2967,17 +2967,44 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
-  void setNumSamples(int numX, int numY) { Nx = numX; Ny = numY; }
+  void setNumSamples(int Nu, int Nv) 
+  { 
+    this->Nu = Nu;
+    this->Nv = Nv;
+  }
+
+  void setParameterRange(T u0, T u1, T v0, T v1)
+  {
+    this->u0 = u0;
+    this->u1 = u1;
+    this->v0 = v0;
+    this->v1 = v1;
+  }
 
 
-  // setTopology, setGeometry, setParameterRange(T u0, T u1,
+  // setTopology, setGeometry
 
   //-----------------------------------------------------------------------------------------------
   // \name Retrieval
 
+  /** Should be called after setting up the desired mesh parameters. */
+  void updateMeshes()
+  {
+    updateParameterMesh();
+    updateSpatialMesh();
+  }
 
+  /** Returns the parameter mesh in u,v space. This is what a PDE solver needs to pass to 
+  rsNumericDifferentiator::gradient2D to compute numerical approximations to the partial 
+  derivatives. They are taken with respect to our parameters u and v, which take the role of x 
+  and y in the notation of gradient2D. ...it's a bit confusing that there, the name u is used for
+  the dependent variable: our parameter u here maps to the x there and the u there is the scalar 
+  field f(u,v) in a PDE...but these are the conventions: u is conventionally used as first 
+  parameter in surface theory and also as scalar field variable in PDE theory...tbc... */
   rsGraph<rsVector2D<T>, T> getParameterMesh() const { return parameterMesh; }
 
+  /** Returns the spatial mesh in (x,y,z)-space that corresponds to the parameter mesh in 
+  (u,v)-space. This is what a visualizer needs to display the results...tbc...  */
   rsGraph<rsVector3D<T>, T> getSpatialMesh()   const { return spatialMesh;   }
   // maybe they should return const references to the members
 
@@ -2986,15 +3013,32 @@ public:
 
 
 
+protected:
+
   //-----------------------------------------------------------------------------------------------
-  // \name Internal (maybe make protected later)
+  // \name Internal
 
-
-  void addVertices(rsGraph<rsVector2D<T>, T>& m) 
+  void updateParameterMesh()
   {
-    for(int i = 0; i < Nx; i++)
-      for(int j = 0; j < Ny; j++)
-        m.addVertex(rsVector2D<T>(T(i), T(j)));
+    parameterMesh.clear();
+    addParameterVertices();
+    updateParameterCoordinates();
+    //addParameterEdges(parameterMesh);
+  }
+  // todo: do not create the mesh from scratch if not necessary - for example, if only the topology
+  // has changed, we may keep the vertices and need only recompute the edges.
+
+  void updateSpatialMesh()
+  {
+
+  }
+
+
+  void addParameterVertices() 
+  {
+    for(int i = 0; i < Nu; i++)
+      for(int j = 0; j < Nv; j++)
+        parameterMesh.addVertex(rsVector2D<T>(T(i), T(j)));
   }
   // -maybe addVertex should allow to pre-allocate memory for the edges
   // -using dx,dy will have to be taken into account for the edge-weights, 
@@ -3004,43 +3048,38 @@ public:
   //  could pass in du,dv instead of dx,dy and 3 functions fx(u,v), fy(u,v), fz(u,v) to compute 
   //  coordinates - but maybe that can be postponed
 
-  rsGraph<rsVector2D<T>, T> initMesh() // rename to initParameterMesh
-  {
-    // todo: let the user select edge handling via a parameter "topology" or something - possible 
-    // values are: plane, torus, cylinderX, cylinderY, cone, sphere, mobiusStrip, kleinBottle, ..
-    // default is plane
-    rsGraph<rsVector2D<T>, T> m;
-    addRegularMeshVertices2D(  m, Nx, Ny);
-    addMeshConnectionsPlanar2D(m, Nx, Ny);
-    return m;
-  }
 
-  // use u0,u1, etc...or maybe use members
-  void computePlanarCoordinates(rsGraph<rsVector2D<T>, T>& m, T x0, T x1, T y0, T y1)
+
+
+
+  void updateParameterCoordinates()
   {
-    for(int i = 0; i < Nx; i++) {
-      for(int j = 0; j < Ny; j++) {
+    for(int i = 0; i < Nu; i++) {
+      for(int j = 0; j < Nv; j++) {
         int k = flatIndex(i, j);
-        T x = rsLinToLin(T(i), T(0), T(Nx-1), x0, x1);
-        T y = rsLinToLin(T(j), T(0), T(Ny-1), y0, y1);
-        m.setVertexData(k, rsVector2D<T>(x,y)); }}
-
-    // updateEdges(m);
+        T x = rsLinToLin(T(i), T(0), T(Nu-1), u0, u1);
+        T y = rsLinToLin(T(j), T(0), T(Nv-1), v0, v1);
+        parameterMesh.setVertexData(k, rsVector2D<T>(x, y)); }}
   }
 
-
-protected:
-
-  int flatIndex(int i, int j) { return i  * Ny + j; }
-
-  int Nx = 0;  // number of vertices along 1st coordinate (can be x, radius, etc.)
-  int Ny = 0;  // number of vertices along 2nd coordinate (can be x, angle, etc.)
-  // maybe use u,v instead of x,y as coordinates
+  int flatIndex(int i, int j) { return i  * Nv + j; }  
 
 
-  // not yet used:
-  T u0 = T(0), u1 = T(1);
-  T v0 = T(0), v1 = T(1);
+
+
+
+
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Data
+
+  int Nu = 0;                // number of vertices along 1st u-coordinate (can be x, radius, etc.)
+  int Nv = 0;                // number of vertices along 2nd v-coordinate (can be y, angle, etc.)
+  T u0 = T(0), u1 = T(1);    // lower and upper limit for 1st parameter u
+  T v0 = T(0), v1 = T(1);    // lower and upper limit for 2nd parameter v
+
   rsGraph<rsVector2D<T>, T> parameterMesh;
   rsGraph<rsVector3D<T>, T> spatialMesh;
 
@@ -3066,8 +3105,7 @@ protected:
 //      bottom rows to these cusp vertices
 //  -for a simple cone, do this only for the top row, a simple cone can also degenerate to a disc
 //   when the height of the cone is zero (i.e. z-values are all equal)
-
-
+// -for best flexibility, the user 3 functions fx(u,v), fy(u,v), fz(u,v) to compute coordinates
 
 
 

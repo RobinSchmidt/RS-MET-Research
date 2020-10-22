@@ -4772,7 +4772,8 @@ rsGraph<rsVector2D<T>, T> getPlanarMesh(T x0, T x1, int Nx, T y0, T y1, int Ny)
 void testMeshGeneration()
 {
   using Vec2 = rsVector2D<float>;
-  using Mesh = rsGraph<Vec2, float>;
+  using Vec3 = rsVector3D<float>;
+  using Mesh = rsGraph<Vec2, float>;       // remove
   using MG   = rsMeshGenerator2D<float>;
 
   int Nx = 7;     // number grid coordinates along x-direction
@@ -4819,15 +4820,25 @@ void testMeshGeneration()
 
   // todo: have a function plotMesh - maybe it should create an image and write it to a ppm file
 
-  float x0 = -3, x1 = +3;  Nx = 31;
-  float y0 = -2, y1 = +2;  Ny = 21;
+  //float x0 = -3, x1 = +3;  Nx = 31;
+  //float y0 = -2, y1 = +2;  Ny = 21;
 
 
+  // Create and set up mesh generator:
   MG mg;
-  mg.setNumSamples(Nx, Ny);
+  mg.setNumSamples(31, 21);
+  mg.setParameterRange(-3, +3, -2, +2);
 
-  Mesh m3 = mg.initMesh(); 
-  mg.computePlanarCoordinates(m3, x0, x1, y0, y1); // maybe rename to computeGeometry
+  // Generate and retrieve meshes:
+  mg.updateMeshes();
+  rsGraph<Vec2, float> pm = mg.getParameterMesh();  // used in PDE solver
+  rsGraph<Vec3, float> sm = mg.getSpatialMesh();    // used for visualization
+
+
+
+
+  //Mesh m3 = mg.initMesh(); 
+  //mg.computePlanarCoordinates(m3, x0, x1, y0, y1); // maybe rename to computeGeometry
 
 
 

@@ -2953,6 +2953,7 @@ protected:
 
 // maybe rename to rsSurfaceMeshGenerator, use rsVector3D instead of 2D for the geometry to make 
 // more sense
+// maybe make other classes that can create more general patterns of connectivity
 
 template<class T>
 class rsMeshGenerator2D
@@ -3016,9 +3017,28 @@ public:
     this->v0 = v0;
     this->v1 = v1;
   }
+  // maybe get rid
+
+  /*
+  void setVertexCoordinates(int i, int i, T x, T y)
+  {
+    int k = flatIndex(i, j);
+    parameterMesh.setVertexData(k, rsVector2D<T>(x, y));
+  }
+  */
+  // can be used to manually set the coordinates of vertex with given index pair
 
 
   // setTopology, setGeometry
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  int flatIndex(int i, int j) const { return i  * Nv + j; }
+
+
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Retrieval
@@ -3248,12 +3268,11 @@ protected:
         parameterMesh.setVertexData(k, rsVector2D<T>(x, y)); }}
   }
 
-  int flatIndex(int i, int j) const { return i  * Nv + j; }
+
   int east(     int i, int j) const { return flatIndex(i+1, j  ); }
   int west(     int i, int j) const { return flatIndex(i-1, j  ); }
   int north(    int i, int j) const { return flatIndex(i,   j+1); }
   int south(    int i, int j) const { return flatIndex(i,   j-1); }
-
 
 
 
@@ -3266,13 +3285,17 @@ protected:
 
   int Nu = 0;                // number of vertices along 1st u-coordinate (can be x, radius, etc.)
   int Nv = 0;                // number of vertices along 2nd v-coordinate (can be y, angle, etc.)
+  // maybe revert to Nx, Ny - interpreting them as u,v shall be deferred to outlying code - in the 
+  // PDE solver, they are indeed x,y coordinates
+
   T u0 = T(0), u1 = T(1);    // lower and upper limit for 1st parameter u
   T v0 = T(0), v1 = T(1);    // lower and upper limit for 2nd parameter v
+  // maybe use 0,1 always - always operate on normalized coordinates..or maybe not?
 
   Topology topology = Topology::plane;
 
   rsGraph<rsVector2D<T>, T> parameterMesh;
-  rsGraph<rsVector3D<T>, T> spatialMesh;
+  rsGraph<rsVector3D<T>, T> spatialMesh;   // move elsewhere - don't make a god class!
 
 };
 // move implementations out of the class

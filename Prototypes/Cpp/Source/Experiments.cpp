@@ -4792,6 +4792,25 @@ int getNumConnectionsTorus(int Nu, int Nv)
   // should also be equal to Nu*Nv
 }
 
+template<class T>
+void plotMesh(rsGraph<rsVector2D<T>, T>& m)
+{
+  GNUPlotter plt;
+
+  double dotRadius = 0.01;
+
+  for(int i = 0; i < m.getNumVertices(); i++)
+  {
+    rsVector2D<T> v = m.getVertexData(i);
+    plt.drawCircle("", v.x, v.y, dotRadius);  // todo: fill
+    int dummy = 0;
+  }
+
+  plt.addCommand("set size square");
+
+  plt.plot();
+}
+
 
 void testMeshGeneration()
 {
@@ -4833,9 +4852,6 @@ void testMeshGeneration()
   // int a = Nx-2; int b = Ny-2; Ne = 4*a*b + 6*(a+b) + 8;     // formula simplified
   ok &= m.getNumEdges() == Ne;
 
-
-
-
   // todo: maybe check dx and dy for all the neighbours to see, if index computations for
   // the neighbours is indeed correct
 
@@ -4859,23 +4875,88 @@ void testMeshGeneration()
 
   // Generate and retrieve meshes:
   mg.updateMeshes();
-  rsGraph<Vec2, float> pm = mg.getParameterMesh();  // used in PDE solver
+  rsGraph<Vec2, float> pm = mg.getParameterMesh();  // used in PDE solver - maybe rename to getMesh
   rsGraph<Vec3, float> sm = mg.getSpatialMesh();    // used for visualization
   tgt = getNumConnectionsPlane(Nu, Nv);
   Ne  = pm.getNumEdges();
   // Nu=21,Nv=31 gives 2500 edges for a plane topology
 
+  // maybe the spatial mesh is not needed here - maybe another class should be responsible for 
+  // creating that
+
+  // create mesh of polar coordinates:
+  int Nr = 11; // num radii
+  int Na = 8;  // num angles - we want 360/Na to be an integer to have nice values for the 
+               // direction angles
+  mg.setNumSamples(Nr, Na);
+  mg.updateMeshes();
+  pm = mg.getParameterMesh();
+  //std::function<float(float u, float v)> fx, fy; 
+  // functions to create (x,y) coordinates from (u,v) parameter values
+
+  // we set the coordinates manually here - eventually, there may be an API that let's the user 
+  // pass fx,fy (these functions should assume normalized inputs in 0..1):
+  for(int i = 0; i < Nr; i++)
+  {
+    float r = float(i) / Nr;
+    for(int j = 0; j < Na; j++)
+    {
+      float a = float(2*PI * j / Na);
+      float x = r * cos(a);
+      float y = r * sin(a);
+      int k = mg.flatIndex(i, j);
+      pm.setVertexData(k, Vec2(x, y));
+      int dummy = 0;
+    }
+  }
 
 
-
-  //Mesh m3 = mg.initMesh(); 
-  //mg.computePlanarCoordinates(m3, x0, x1, y0, y1); // maybe rename to computeGeometry
-
-
-
+  plotMesh(pm);
 
   int dummy = 0;
 }
+// -don't cofuse the potential 2D mesh irregulatity with the irregularity in the 3D mesh after 
+//  projecting into 3D space -> the connection weights should not depend on the 3D locations but on
+//  the 2D locations. If 3D locations should be relevant, we need a 3D version of 
+//  rsNumericDifferentiator<T>::gradient2D which should use a 3x3 least-squares matrix
+// -to simulate a disc with a center point, we could take - for example - the bottom row and 
+//  conceptually collapse the 0-radius cricel into a single point, which implies that the u values
+//  in the bottom row should all be equal - maybe just compute as usual (with cone topology) and 
+//  afterwards compute the average of the row and assign all values in the row to that average
+// -as energy functions, use E_kin = sum u_x^2 + u_y^2, E_pot = sum u_xx^2 + u_yy^2 or sum lap^2
+// -try u_t = a * (u_x + u_y), u_t = a * (u_x - u_y), 
+//  a sort of wave equation with additional effects: u_tt = a*lap(u) + b*div(u) + c*curl(u)
+//  -> figure out, what these effects are
+// -use this for reverb
+
+template<class T>
+void laplacian2D(const rsGraph<rsVector2D<T>, T>& mesh, 
+  const std::vector<T>& u, std::vector<T>& L)
+{
+  int N = mesh.getNumVertices();
+  int k, numNeighbors;
+  rsAssert((int) u.size() == N);
+  rsAssert((int) L.size() == N);
+  for(int i = 0; i < N; i++)
+  {
+    numNeighbors = mesh.getNumEdges(i);    // number of neighbors of vertex vi
+    T uSum = T(0);                         // weighted sum of neighbors
+    T wSum = T(0);                         // sum of weights
+    for(int j = 0; j < numNeighbors; j++)  // loop over neighbors of vertex i
+    {
+      k   = mesh.getEdgeTarget(i, j);      // index of current neighbor
+      T w = mesh.getEdgeData(i, j);        // weight in weighted sum of neighbors
+      uSum += w * u[k];                    // accumulate weighted sum of neighbor values
+      wSum += w;                           // accumulate sum of weights
+    }
+    L[i] = u[i] - uSum/wSum;               // value minus weighted average of neighbors
+  }
+}
+// experimental - the idea is that thje Laplacian represents how far a value is away from the 
+// average of its neighborhood
+// we assume that the edge weights are inversely proportional to the distances
+// ...strange that we don't need the vertex data itself
+// applying this to the laplacian again should yield the biharmonic operator
 
 // test solving the transport equation on an irregular grid, created from a regular grid by 
 // jittering the x,y-coordinates

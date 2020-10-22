@@ -2967,8 +2967,8 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
-  void setNumSamples(int Nu, int Nv) 
-  { 
+  void setNumSamples(int Nu, int Nv)
+  {
     this->Nu = Nu;
     this->Nv = Nv;
   }
@@ -2994,18 +2994,18 @@ public:
     updateSpatialMesh();
   }
 
-  /** Returns the parameter mesh in u,v space. This is what a PDE solver needs to pass to 
-  rsNumericDifferentiator::gradient2D to compute numerical approximations to the partial 
-  derivatives. They are taken with respect to our parameters u and v, which take the role of x 
+  /** Returns the parameter mesh in u,v space. This is what a PDE solver needs to pass to
+  rsNumericDifferentiator::gradient2D to compute numerical approximations to the partial
+  derivatives. They are taken with respect to our parameters u and v, which take the role of x
   and y in the notation of gradient2D. ...it's a bit confusing that there, the name u is used for
-  the dependent variable: our parameter u here maps to the x there and the u there is the scalar 
-  field f(u,v) in a PDE...but these are the conventions: u is conventionally used as first 
+  the dependent variable: our parameter u here maps to the x there and the u there is the scalar
+  field f(u,v) in a PDE...but these are the conventions: u is conventionally used as first
   parameter in surface theory and also as scalar field variable in PDE theory...tbc... */
   rsGraph<rsVector2D<T>, T> getParameterMesh() const { return parameterMesh; }
 
-  /** Returns the spatial mesh in (x,y,z)-space that corresponds to the parameter mesh in 
+  /** Returns the spatial mesh in (x,y,z)-space that corresponds to the parameter mesh in
   (u,v)-space. This is what a visualizer needs to display the results...tbc...  */
-  rsGraph<rsVector3D<T>, T> getSpatialMesh()   const { return spatialMesh;   }
+  rsGraph<rsVector3D<T>, T> getSpatialMesh()   const { return spatialMesh; }
   // maybe they should return const references to the members
 
 
@@ -3035,7 +3035,7 @@ protected:
   }
 
 
-  void addParameterVertices() 
+  void addParameterVertices()
   {
     for(int i = 0; i < Nu; i++)
       for(int j = 0; j < Nv; j++)
@@ -3063,18 +3063,60 @@ protected:
         // wrap-arounds, if necessary:
         int il = (i-1+Nu) % Nu, ir = (i+1) % Nu;   // +Nu needed for modulo when i-1 < 0
         int jb = (j-1+Nv) % Nv, jt = (j+1) % Nv;   // dito for +Nv
-        int kl = il * Nv + j,  kr = ir * Nv + j;   // west, east
+        int kl = il * Nv + j, kr = ir * Nv + j;   // west, east
         int kb = i  * Nv + jb, kt = i  * Nv + jt;  // south, north
         int k  = i  * Nv + j;                      // flat index of vertex with indices i,j
         parameterMesh.addEdge(k, kl, 1.f);         // try to get rid of the 1.f
         parameterMesh.addEdge(k, kr, 1.f);
         parameterMesh.addEdge(k, kb, 1.f);
-        parameterMesh.addEdge(k, kt, 1.f); }}
-        // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
-        //  memory for the edges?
+        parameterMesh.addEdge(k, kt, 1.f);
+      }
+    }
+          // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
+          //  memory for the edges?
   }
   // maybe rename to addDirectEdgesToroidal and have also addDiagonalEdgesToroidal
 
+  // maybe have functions: addInnerConnectionsDirect, addInnerConnectionsDiagonal, 
+  // addTopConnections, addBottomConnections, addLeftConnections, addRightConnections, 
+  // addTopLeftConnections ..or shorther: connectInner, connectTop, connectBottom
+
+  /** Connects all inner vertices to their 4 direct neighbours with an edge. */
+  void connectInner()
+  {
+    for(int i = 1; i < Nu-1; i++) {
+      for(int j = 1; j < Nv-1; j++) {
+        int k = flatIndex(i, j);
+        parameterMesh.addEdge(k, west( i, j));
+        parameterMesh.addEdge(k, east( i, j));
+        parameterMesh.addEdge(k, north(i, j));
+        parameterMesh.addEdge(k, south(i, j)); }}
+  }
+  // maybe make a version to connect to diagonal neighbors, too
+
+  /** Connects the vertices at the top, except for the (top-left and top-right) corners to their
+  left, right and bottom neighbours. */
+  void connectTop()
+  {
+    int j = Nv-1;
+    for(int i = 1; i < Nu-1; i++) {
+      int k = flatIndex(i, j);
+      parameterMesh.addEdge(k, west( i, j));
+      parameterMesh.addEdge(k, east( i, j));
+      parameterMesh.addEdge(k, south(i, j)); }
+    // todo: depending on topology, maybe have wrap-around-connections - but maybe all topology
+    // dependent connections should be consolidated in one function
+  }
+
+  void connectBottom()
+  {
+    int j = 0;
+    for(int i = 1; i < Nu-1; i++) {
+      int k = flatIndex(i, j);
+      parameterMesh.addEdge(k, west( i, j));
+      parameterMesh.addEdge(k, east( i, j));
+      parameterMesh.addEdge(k, north(i, j)); }
+  }
 
 
   void updateParameterCoordinates()
@@ -3087,8 +3129,11 @@ protected:
         parameterMesh.setVertexData(k, rsVector2D<T>(x, y)); }}
   }
 
-  int flatIndex(int i, int j) { return i  * Nv + j; }  
-
+  int flatIndex(int i, int j) const { return i  * Nv + j; }
+  int east(     int i, int j) const { return flatIndex(i+1, j  ); }
+  int west(     int i, int j) const { return flatIndex(i-1, j  ); }
+  int north(    int i, int j) const { return flatIndex(i,   j+1); }
+  int south(    int i, int j) const { return flatIndex(i,   j-1); }
 
 
 

@@ -4639,7 +4639,7 @@ void testHermiteInterpolation()
 // use grid, because the functions should actually also work for true 3D meshes - here, we deal with 
 // 2D surfaces in 2D or 3D space...we'll see
 
-// move these all into the class rsMesh2D
+// Prototypes for testing/comparison
 template<class T>
 void addRegularMeshVertices2D(
   rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, T dx = T(1), T dy = T(1))
@@ -4676,7 +4676,6 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, 
   // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
   //  memory for the edges?
 }
-// obsolete
 // todo: make a 3D version - maybe a general one via templates - and then let the user set up the 
 // actual (x,y,z)-coordinates in a torus (edge weights need to be recomputed after that) - use also
 // ellipses instead of circles for major and minor radius -> additional flexibility
@@ -4719,7 +4718,6 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
   //  To create a different geometry, the user should loop through the vertices and re-assign their
   //  positions (x,y) or later also (x,y,z)
 }
-// obsolete
 
 template<class T>
 void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)

@@ -3022,7 +3022,7 @@ protected:
   {
     parameterMesh.clear();
     addParameterVertices();
-    addParameterEdges();
+    addConnections();
     updateParameterCoordinates();
 
   }
@@ -3049,12 +3049,36 @@ protected:
   //  could pass in du,dv instead of dx,dy and 3 functions fx(u,v), fy(u,v), fz(u,v) to compute 
   //  coordinates - but maybe that can be postponed
 
-  void addParameterEdges()
+  void addConnections()
   {
-    addEdgesToroidal();
+    addCommonConnections();
+
+    // factor out: addCommonConnections
+
+
+    // depending on selected topology, add addtional connections:
+    // addTopologySpecificConnections()
+    // ...
+
+
+    //addEdgesToroidal();
     // todo: switch, based on a "topology" member
   }
+  // rename to addConnections - using the term "edges" for the connections may lead to confusion 
+  // with the edges of the parameter rectangle
 
+  void addCommonConnections()
+  {
+    connectInner();
+    connectTop();
+    connectBottom();
+    connectLeft();
+    connectRight();
+    connectCorners();
+  }
+
+
+  /*
   void addEdgesToroidal()
   {
     for(int i = 0; i < Nu; i++) {
@@ -3075,6 +3099,8 @@ protected:
           // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
           //  memory for the edges?
   }
+  */
+  // obsolete
   // maybe rename to addDirectEdgesToroidal and have also addDiagonalEdgesToroidal
 
   // maybe have functions: addInnerConnectionsDirect, addInnerConnectionsDiagonal, 
@@ -3118,6 +3144,47 @@ protected:
       parameterMesh.addEdge(k, north(i, j)); }
   }
 
+  void connectLeft()
+  {
+    int i = 0;
+    for(int j = 1; j < Nv-1; j++) {
+      int k = flatIndex(i, j);
+      parameterMesh.addEdge(k, north(i, j));
+      parameterMesh.addEdge(k, south(i, j));
+      parameterMesh.addEdge(k, east( i, j)); }
+  }
+
+  void connectRight()
+  {
+    int i = Nu-1;
+    for(int j = 1; j < Nv-1; j++) {
+      int k = flatIndex(i, j);
+      parameterMesh.addEdge(k, north(i, j));
+      parameterMesh.addEdge(k, south(i, j));
+      parameterMesh.addEdge(k, west( i, j)); }
+  }
+
+  void connectCorners()
+  {
+    int i, j, k;
+
+    i = 0; j = 0; k = flatIndex(i, j);        // bottom left
+    parameterMesh.addEdge(k, east( i, j));
+    parameterMesh.addEdge(k, north(i, j));
+
+    i = Nu-1; j = 0;  k = flatIndex(i, j);    // bottom right
+    parameterMesh.addEdge(k, west( i, j));
+    parameterMesh.addEdge(k, north(i, j));
+
+    i = 0; j = Nv-1;  k = flatIndex(i, j);    // top left
+    parameterMesh.addEdge(k, east( i, j));
+    parameterMesh.addEdge(k, south(i, j));
+
+    i = Nu-1; j = Nv-1; k = flatIndex(i, j);  // top right
+    parameterMesh.addEdge(k, west( i, j));
+    parameterMesh.addEdge(k, south(i, j));
+  }
+
 
   void updateParameterCoordinates()
   {
@@ -3154,6 +3221,8 @@ protected:
   rsGraph<rsVector3D<T>, T> spatialMesh;
 
 };
+// move implementations out of the class
+
 // -todo: interpret the (x,y) values in the 2D grid and (u,v)-parameters that are later mapped to
 //  (x,y,z)-coordinates, according to some geometry settings
 // -let user select topology and geometry...but maybe the geometric aspects should be done by a 

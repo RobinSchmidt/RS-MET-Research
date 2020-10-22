@@ -4652,6 +4652,7 @@ void addRegularMeshVertices2D(
   //  too...ewww....having different dx,dy values could mess up the gradient calculation - maybe 
   //  don't use it for now
 }
+// obsolete
 // -maybe make a class rsMeshGenerator - this could be a static member function addVertices2D or
 //  addRectangularVertices or something
 // -actually, even though the surface is 2D, each vertex could be a 3D vector - maybe the user 
@@ -4675,6 +4676,7 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny, 
   // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
   //  memory for the edges?
 }
+// obsolete
 // todo: make a 3D version - maybe a general one via templates - and then let the user set up the 
 // actual (x,y,z)-coordinates in a torus (edge weights need to be recomputed after that) - use also
 // ellipses instead of circles for major and minor radius -> additional flexibility
@@ -4717,6 +4719,7 @@ void addMeshConnectionsToroidal2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
   //  To create a different geometry, the user should loop through the vertices and re-assign their
   //  positions (x,y) or later also (x,y,z)
 }
+// obsolete
 
 template<class T>
 void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)

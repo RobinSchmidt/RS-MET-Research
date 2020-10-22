@@ -3022,8 +3022,9 @@ protected:
   {
     parameterMesh.clear();
     addParameterVertices();
+    addParameterEdges();
     updateParameterCoordinates();
-    //addParameterEdges(parameterMesh);
+
   }
   // todo: do not create the mesh from scratch if not necessary - for example, if only the topology
   // has changed, we may keep the vertices and need only recompute the edges.
@@ -3048,7 +3049,31 @@ protected:
   //  could pass in du,dv instead of dx,dy and 3 functions fx(u,v), fy(u,v), fz(u,v) to compute 
   //  coordinates - but maybe that can be postponed
 
+  void addParameterEdges()
+  {
+    addEdgesToroidal();
+    // todo: switch, based on a "topology" member
+  }
 
+  void addEdgesToroidal()
+  {
+    for(int i = 0; i < Nu; i++) {
+      for(int j = 0; j < Nv; j++) {
+        // vertex k should be connected to the 4 vertices to its left, right, top, bottom, with 
+        // wrap-arounds, if necessary:
+        int il = (i-1+Nu) % Nu, ir = (i+1) % Nu;   // +Nu needed for modulo when i-1 < 0
+        int jb = (j-1+Nv) % Nv, jt = (j+1) % Nv;   // dito for +Nv
+        int kl = il * Nv + j,  kr = ir * Nv + j;   // west, east
+        int kb = i  * Nv + jb, kt = i  * Nv + jt;  // south, north
+        int k  = i  * Nv + j;                      // flat index of vertex with indices i,j
+        parameterMesh.addEdge(k, kl, 1.f);         // try to get rid of the 1.f
+        parameterMesh.addEdge(k, kr, 1.f);
+        parameterMesh.addEdge(k, kb, 1.f);
+        parameterMesh.addEdge(k, kt, 1.f); }}
+        // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
+        //  memory for the edges?
+  }
+  // maybe rename to addDirectEdgesToroidal and have also addDiagonalEdgesToroidal
 
 
 

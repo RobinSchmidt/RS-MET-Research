@@ -4797,17 +4797,38 @@ void plotMesh(rsGraph<rsVector2D<T>, T>& m)
 {
   GNUPlotter plt;
 
-  double dotRadius = 0.01;
+  double dotRadius = 0.015; // can we make this absolute?
 
+  for(int i = 0; i < m.getNumVertices(); i++)
+  {
+    int numNeighbors = m.getNumEdges(i);
+    for(int j = 0; j < numNeighbors; j++)
+    {
+      int k = m.getEdgeTarget(i, j);
+      rsVector2D<T> vi = m.getVertexData(i);
+      rsVector2D<T> vk = m.getVertexData(k);
+      plt.drawLine("", vi.x, vi.y, vk.x, vk.y);
+    }
+  }
+
+  T minX = 0, maxX = 0, minY = 0, maxY = 0;
   for(int i = 0; i < m.getNumVertices(); i++)
   {
     rsVector2D<T> v = m.getVertexData(i);
     plt.drawCircle("", v.x, v.y, dotRadius);  // todo: fill
-    int dummy = 0;
+    minX = rsMin(minX, v.x);
+    maxX = rsMax(maxX, v.x);
+    minY = rsMin(minY, v.y);
+    maxY = rsMax(maxY, v.y);
   }
 
+  minX -= (maxX-minX) * T(0.05);
+  maxX += (maxX-minX) * T(0.05);
+  minY -= (maxY-minY) * T(0.05);
+  maxY += (maxY-minY) * T(0.05);
+  plt.setRange(minX, maxX, minY, maxY);
   plt.addCommand("set size square");
-
+  plt.setPixelSize(600, 600);
   plt.plot();
 }
 
@@ -4885,10 +4906,11 @@ void testMeshGeneration()
   // creating that
 
   // create mesh of polar coordinates:
-  int Nr = 11; // num radii
-  int Na = 8;  // num angles - we want 360/Na to be an integer to have nice values for the 
+  int Nr = 9;   // num radii
+  int Na = 16;  // num angles - we want 360/Na to be an integer to have nice values for the 
                // direction angles
   mg.setNumSamples(Nr, Na);
+  //mg.setTopology(cylinderH)
   mg.updateMeshes();
   pm = mg.getParameterMesh();
   //std::function<float(float u, float v)> fx, fy; 
@@ -4898,7 +4920,7 @@ void testMeshGeneration()
   // pass fx,fy (these functions should assume normalized inputs in 0..1):
   for(int i = 0; i < Nr; i++)
   {
-    float r = float(i) / Nr;
+    float r = float(i) / (Nr-1);
     for(int j = 0; j < Na; j++)
     {
       float a = float(2*PI * j / Na);

@@ -4797,7 +4797,11 @@ void plotMesh(rsGraph<rsVector2D<T>, T>& m)
 {
   GNUPlotter plt;
 
-  double dotRadius = 0.015; // can we make this absolute?
+  double dotRadius = 0.01; // can we make this absolute?
+
+  std::vector<int> highlighted = { 35 };  // make parameter
+
+  auto isHighlighted = [&](int i)->bool { return rsContains(highlighted, i); };
 
   for(int i = 0; i < m.getNumVertices(); i++)
   {
@@ -4812,15 +4816,25 @@ void plotMesh(rsGraph<rsVector2D<T>, T>& m)
   }
 
   T minX = 0, maxX = 0, minY = 0, maxY = 0;
+  std::string attr = "fillcolor \"black\" fillstyle solid";
   for(int i = 0; i < m.getNumVertices(); i++)
   {
     rsVector2D<T> v = m.getVertexData(i);
-    plt.drawCircle("", v.x, v.y, dotRadius);  // todo: fill
+
+    if(isHighlighted(i))
+      plt.drawCircle(attr, v.x, v.y, 2*dotRadius);
+    else
+      plt.drawCircle(attr, v.x, v.y, dotRadius);
+
+
     minX = rsMin(minX, v.x);
     maxX = rsMax(maxX, v.x);
     minY = rsMin(minY, v.y);
     maxY = rsMax(maxY, v.y);
   }
+  // https://stackoverflow.com/questions/11138012/drawing-a-circle-of-radius-r-around-a-point
+  // # create a black circle at center (0.5, 0.5) with radius 0.5
+  // set object 1 circle front at 0.5,0.5 size 0.5 fillcolor rgb "black" lw 1
 
   minX -= (maxX-minX) * T(0.05);
   maxX += (maxX-minX) * T(0.05);
@@ -4831,6 +4845,8 @@ void plotMesh(rsGraph<rsVector2D<T>, T>& m)
   plt.setPixelSize(600, 600);
   plt.plot();
 }
+// maybe take a list of vertices that should be highlighted (draw large circle for vertex and
+// semilarge circle for its neighbors
 
 
 void testMeshGeneration()
@@ -4910,7 +4926,7 @@ void testMeshGeneration()
   int Na = 16;  // num angles - we want 360/Na to be an integer to have nice values for the 
                // direction angles
   mg.setNumSamples(Nr, Na);
-  //mg.setTopology(cylinderH)
+  mg.setTopology(MG::Topology::cylinderH);
   mg.updateMeshes();
   pm = mg.getParameterMesh();
   //std::function<float(float u, float v)> fx, fy; 

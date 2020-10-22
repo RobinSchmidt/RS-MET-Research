@@ -2970,8 +2970,9 @@ public:
   enum class Topology
   {
     plane,        // edges of the parameter rectangle are not connected to anything
-    cylinder,     // left edge is connected to right edge (vertical cyclinder)
-    torus,        // ...ditto and also the top edge is connected to the bottom edge
+    cylinderV,    // vertical cyclinder: left edge is connected to right edge
+    cylinderH,    // horizontal cyclinder: top edge is connected to bottom edge
+    torus,        // connects left to right and top to bottom
     mobiusStrip,  // like cylinder but with right edge reversed
     kleinBottle   // like torus but with top and right edge reversed
 
@@ -3018,6 +3019,11 @@ public:
     this->v1 = v1;
   }
   // maybe get rid
+
+  void setTopology(Topology newTopology)
+  {
+    topology = newTopology;
+  }
 
   /*
   void setVertexCoordinates(int i, int i, T x, T y)
@@ -3127,16 +3133,13 @@ protected:
     using TP = Topology;
     switch(topology)  
     {
-    case TP::cylinder: {     connectLeftToRight();  } break;
-
+    case TP::cylinderV: {    connectLeftToRight();  } break;
+    case TP::cylinderH: {    connectTopToBottom();  } break;
     case TP::torus: {        connectLeftToRight();
                              connectTopToBottom();  } break;
-
     case TP::mobiusStrip: {  connectLeftToRightReversed(); } break;
-
     case TP::kleinBottle: {  connectLeftToRightReversed();
                              connectTopToBottomReversed(); } break;
-
     default: { }   // topology is plane - nothing to do
     }
   }

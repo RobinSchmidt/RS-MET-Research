@@ -2963,6 +2963,22 @@ public:
 
   //rsMeshGenerator2D() {}
 
+  enum class Topology
+  {
+    plane,     // edges of the parameter rectangle are not connected to anything
+    cylinder,  // left edge is connected to right edge
+    torus      // left edge is connected to right edge and top edge is connected to bottom edge
+
+    // cone         // top edge is connected to additional tip vertex
+    // doubleCone   // top and bottom edges are connected to additional tip vertices
+    // mobiusStrip  // like cylinder but with right edge reversed
+    // kleinBottle  // like torus but with top and right edge reversed
+    // closedCylinder // vertices of top and bottom edges are connected to other vertices on the 
+                      // same edge (with offsets of Nu/2), forming a star when seen from above
+  };
+  // the doubleCone and closedCylinder topologies can also be used for a sphere - the actual 
+  // interpretation as 3D shape is determined by the geometry, i.e. by the associated 3D mesh
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Setup
@@ -3024,7 +3040,6 @@ protected:
     addParameterVertices();
     addConnections();
     updateParameterCoordinates();
-
   }
   // todo: do not create the mesh from scratch if not necessary - for example, if only the topology
   // has changed, we may keep the vertices and need only recompute the edges.
@@ -3041,32 +3056,21 @@ protected:
       for(int j = 0; j < Nv; j++)
         parameterMesh.addVertex(rsVector2D<T>(T(i), T(j)));
   }
-  // -maybe addVertex should allow to pre-allocate memory for the edges
-  // -using dx,dy will have to be taken into account for the edge-weights, 
-  //  too...ewww....having different dx,dy values could mess up the gradient calculation - maybe 
-  //  don't use it for now
-  // -actually, even though the surface is 2D, each vertex could be a 3D vector - maybe the user 
-  //  could pass in du,dv instead of dx,dy and 3 functions fx(u,v), fy(u,v), fz(u,v) to compute 
-  //  coordinates - but maybe that can be postponed
+  // -maybe addVertex should allow to pre-allocate memory for the edges - then we can pre-compute
+  //  the number of vertices and pre-allocate - maybe each vertex could also pre-allocate space for
+  //  the edges (use 4)
 
+
+  /** Adds the connections between the vertices, i.e. the graph's edges - but we use the term 
+  "edge" here to mean the edges of our parameter rectangle, so to avoid confusion, we call the
+  graph-theoretic edges "connections" here. */
   void addConnections()
   {
     addCommonConnections();
-
-    // factor out: addCommonConnections
-
-
-    // depending on selected topology, add addtional connections:
-    // addTopologySpecificConnections()
-    // ...
-
-
-    //addEdgesToroidal();
-    // todo: switch, based on a "topology" member
+    addTopologySpecificConnections();
   }
-  // rename to addConnections - using the term "edges" for the connections may lead to confusion 
-  // with the edges of the parameter rectangle
 
+  /** Adds the connections that are always present, regardless of selected topology. */
   void addCommonConnections()
   {
     connectInner();
@@ -3077,31 +3081,22 @@ protected:
     connectCorners();
   }
 
-
-  /*
-  void addEdgesToroidal()
+  /** Adds the extra connections that depend on the selected topology. */
+  void addTopologySpecificConnections()
   {
-    for(int i = 0; i < Nu; i++) {
-      for(int j = 0; j < Nv; j++) {
-        // vertex k should be connected to the 4 vertices to its left, right, top, bottom, with 
-        // wrap-arounds, if necessary:
-        int il = (i-1+Nu) % Nu, ir = (i+1) % Nu;   // +Nu needed for modulo when i-1 < 0
-        int jb = (j-1+Nv) % Nv, jt = (j+1) % Nv;   // dito for +Nv
-        int kl = il * Nv + j, kr = ir * Nv + j;   // west, east
-        int kb = i  * Nv + jb, kt = i  * Nv + jt;  // south, north
-        int k  = i  * Nv + j;                      // flat index of vertex with indices i,j
-        parameterMesh.addEdge(k, kl, 1.f);         // try to get rid of the 1.f
-        parameterMesh.addEdge(k, kr, 1.f);
-        parameterMesh.addEdge(k, kb, 1.f);
-        parameterMesh.addEdge(k, kt, 1.f);
-      }
+    using TP = Topology;
+    switch(topology)  
+    {
+    case TP::cylinder: {  connectLeftToRight();  } break;   // it's a vertical cylinder
+
+    case TP::torus:    {  connectLeftToRight();
+                          connectTopToBottom();  } break;
+
+    default: { }                                            // topology is plane - nothing to do
     }
-          // -maybe the order matters for efficient access? ..and maybe we could pre-allocate the 
-          //  memory for the edges?
   }
-  */
-  // obsolete
-  // maybe rename to addDirectEdgesToroidal and have also addDiagonalEdgesToroidal
+
+
 
   // maybe have functions: addInnerConnectionsDirect, addInnerConnectionsDiagonal, 
   // addTopConnections, addBottomConnections, addLeftConnections, addRightConnections, 
@@ -3185,6 +3180,27 @@ protected:
     parameterMesh.addEdge(k, south(i, j));
   }
 
+  void connectLeftToRight()
+  {
+    for(int j = 0; j < Nv; j++) {
+      int k1 = flatIndex(0,    j);
+      int k2 = flatIndex(Nu-1, j);
+      parameterMesh.addEdge(k1, k2, true); }
+  }
+
+  void connectLeftToRightReversed()
+  {
+    for(int j = 0; j < Nv; j++) {
+      int k1 = flatIndex(0,    j     );
+      int k2 = flatIndex(Nu-1, Nv-1-j);
+      parameterMesh.addEdge(k1, k2, true); }
+  }
+
+  void connectTopToBottom()
+  {
+    //...
+  }
+
 
   void updateParameterCoordinates()
   {
@@ -3216,6 +3232,8 @@ protected:
   int Nv = 0;                // number of vertices along 2nd v-coordinate (can be y, angle, etc.)
   T u0 = T(0), u1 = T(1);    // lower and upper limit for 1st parameter u
   T v0 = T(0), v1 = T(1);    // lower and upper limit for 2nd parameter v
+
+  Topology topology = Topology::plane;
 
   rsGraph<rsVector2D<T>, T> parameterMesh;
   rsGraph<rsVector3D<T>, T> spatialMesh;

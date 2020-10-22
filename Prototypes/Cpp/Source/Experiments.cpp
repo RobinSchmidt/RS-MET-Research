@@ -4793,80 +4793,11 @@ int getNumConnectionsTorus(int Nu, int Nv)
 }
 
 template<class T>
-void plotMesh(rsGraph<rsVector2D<T>, T>& m)
+void plotMesh(rsGraph<rsVector2D<T>, T>& m, std::vector<int> highlight = std::vector<int>())
 {
-  GNUPlotter plt;
-
-  double dotRadius = 0.01; // can we make this absolute?
-
-  std::vector<int> highlighted = { 65 };  // make parameter
-
-  auto isHighlighted = [&](int i)->bool 
-  { 
-    return rsContains(highlighted, i); 
-  };
-  auto hasHighlightedNeighbor = [&](int i)->bool
-  {
-    int numNeighbors = m.getNumEdges(i);
-    for(int j = 0; j < numNeighbors; j++) {
-      int k = m.getEdgeTarget(i, j);
-      if(isHighlighted(k))
-        return true;  }
-    return false;
-  };
-  auto isEdgeHighlighted = [&](int i, int k)->bool 
-  {
-    return isHighlighted(i) && hasHighlightedNeighbor(k);
-  };
-
-
-  for(int i = 0; i < m.getNumVertices(); i++)
-  {
-    int numNeighbors = m.getNumEdges(i);
-    for(int j = 0; j < numNeighbors; j++)
-    {
-      int k = m.getEdgeTarget(i, j);
-      rsVector2D<T> vi = m.getVertexData(i);
-      rsVector2D<T> vk = m.getVertexData(k);
-      if(isEdgeHighlighted(i, k))
-        plt.drawLine("linewidth 3", vi.x, vi.y, vk.x, vk.y);
-      else
-        plt.drawLine("", vi.x, vi.y, vk.x, vk.y);
-    }
-  }
-  // draw line thicker, if i is highlighted or has highlighted neighbor
-
-  T minX = 0, maxX = 0, minY = 0, maxY = 0;
-  std::string attr = "fillcolor \"black\" fillstyle solid";
-  for(int i = 0; i < m.getNumVertices(); i++)
-  {
-    rsVector2D<T> v = m.getVertexData(i);
-
-    if(isHighlighted(i))               plt.drawCircle(attr, v.x, v.y, 2.25*dotRadius);
-    else if(hasHighlightedNeighbor(i)) plt.drawCircle(attr, v.x, v.y, 1.75*dotRadius);
-    else                               plt.drawCircle(attr, v.x, v.y,      dotRadius);
-
-    minX = rsMin(minX, v.x);
-    maxX = rsMax(maxX, v.x);
-    minY = rsMin(minY, v.y);
-    maxY = rsMax(maxY, v.y);
-  }
-  // https://stackoverflow.com/questions/11138012/drawing-a-circle-of-radius-r-around-a-point
-  // # create a black circle at center (0.5, 0.5) with radius 0.5
-  // set object 1 circle front at 0.5,0.5 size 0.5 fillcolor rgb "black" lw 1
-
-  minX -= (maxX-minX) * T(0.05);
-  maxX += (maxX-minX) * T(0.05);
-  minY -= (maxY-minY) * T(0.05);
-  maxY += (maxY-minY) * T(0.05);
-  plt.setRange(minX, maxX, minY, maxY);
-  plt.addCommand("set size square");
-  plt.setPixelSize(600, 600);
-  plt.plot();
+  GraphPlotter<T> gp;
+  gp.plotGraph2D(m, highlight);
 }
-// maybe take a list of vertices that should be highlighted (draw large circle for vertex and
-// semilarge circle for its neighbors
-
 
 void testMeshGeneration()
 {
@@ -4942,7 +4873,7 @@ void testMeshGeneration()
 
   // create mesh of polar coordinates:
   int Nr = 9;   // num radii
-  int Na = 16;  // num angles - we want 360/Na to be an integer to have nice values for the 
+  int Na = 24;  // num angles - we want 360/Na to be an integer to have nice values for the 
                // direction angles
   mg.setNumSamples(Nr, Na);
   mg.setTopology(MG::Topology::cylinderH);
@@ -4951,7 +4882,7 @@ void testMeshGeneration()
   //std::function<float(float u, float v)> fx, fy; 
   // functions to create (x,y) coordinates from (u,v) parameter values
 
-  // we set the coordinates manually here - eventually, there may be an API that let's the user 
+  // We set the coordinates manually here - eventually, there may be an API that let's the user 
   // pass fx,fy (these functions should assume normalized inputs in 0..1):
   for(int i = 0; i < Nr; i++)
   {
@@ -4967,8 +4898,33 @@ void testMeshGeneration()
     }
   }
 
+  // We also compute the edge weights manually here (factor out):
+  for(int i = 0; i < (int)pm.getNumVertices(); i++)
+  {
+    int numNeighbors = pm.getNumEdges(i);
+    for(int k = 0; k < numNeighbors; k++)
+    {
+      int j = pm.getEdgeTarget(i, k);      // index of current neighbor
+      Vec2 vi = pm.getVertexData(i);
+      Vec2 vj = pm.getVertexData(j);
+      float dx = vj.x - vi.x;
+      float dy = vj.y - vi.y;
+      float d  = sqrt(dx*dx + dy*dy);      // Euclidean distance - try Manhattan distance, too
 
-  plotMesh(pm);
+      if(d > 0) 
+        pm.setEdgeData(i, k, 1/d);
+      else      
+        pm.setEdgeData(i, k, 0);  // happens for "bottom" edge in circle
+    }
+  }
+  // move to rsMeshGenerator2D
+
+  ok &= pm.isSymmetric();
+  plotMesh(pm, {146});
+
+  // todo: solve wave equation on the mesh and somehow visualize the results
+  // -don't forget to average the bottom line
+  // -try flat disc vs cone in 3D
 
   int dummy = 0;
 }
@@ -4984,6 +4940,8 @@ void testMeshGeneration()
 // -try u_t = a * (u_x + u_y), u_t = a * (u_x - u_y), 
 //  a sort of wave equation with additional effects: u_tt = a*lap(u) + b*div(u) + c*curl(u)
 //  -> figure out, what these effects are
+// -maybe use trapezoidal integration in time (use laplacian of time-step n together with the one
+//  from time-step n-1 for updating the scalar field u on the grid)
 // -use this for reverb
 
 template<class T>
@@ -5008,6 +4966,7 @@ void laplacian2D(const rsGraph<rsVector2D<T>, T>& mesh,
     }
     L[i] = u[i] - uSum/wSum;               // value minus weighted average of neighbors
   }
+  // reverse roles of j,k
 }
 // experimental - the idea is that thje Laplacian represents how far a value is away from the 
 // average of its neighborhood

@@ -4888,21 +4888,20 @@ void testMeshGeneration()
   // todo: use hole (inner) radius and outer radius
   //float dr = 0.1;
 
-  float holeRadius  = 0.5;
+  float holeRadius  = 0.4;
   float outerRadius = 1.0;
+  float wiggle      = 0.1f;
   for(int i = 0; i < Nr; i++)
   {
-    //float r = float(i) / (Nr-1) + dr;
-
     float r = holeRadius + (outerRadius - holeRadius) * i / (Nr-1);
     for(int j = 0; j < Na; j++)
     {
-      float a = float(2*PI * j / Na);
-      float x = r * cos(a);
-      float y = r * sin(a);
+      float a  = float(2*PI * j / Na);
+      float r2 = r + r * wiggle * sin(5*a);
+      float x  = r2 * cos(a);
+      float y  = r2 * sin(a);
       int k = mg.flatIndex(i, j);
       pm.setVertexData(k, Vec2(x, y));
-      int dummy = 0;
     }
   }
 
@@ -4939,6 +4938,11 @@ void testMeshGeneration()
   //  zero (or maybe blue)
   // -don't forget to average the bottom line
   // -try flat disc vs cone in 3D
+  // -arrange boundaries somewhat randomly (or using some nice shapes) and then let the vertices 
+  //  find their own positions by minimizing the potential energy when the vertices would be 
+  //  connected by springs
+  //  -iterate and in each step compute total force on each vertex and move it a little bit into 
+  //   that direction until an equilibrium is reached
 
   int dummy = 0;
 }

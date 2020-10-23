@@ -4846,6 +4846,16 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
 // -let the user determine points of attraction and repulsion (with strengths) to allow for 
 //  increase or decrease of vertex density in regions of interest
 
+template<class T>
+T getEdgeLength(rsGraph<rsVector2D<T>, T>& mesh, int i, int k)
+{
+  int j = mesh.getEdgeTarget(i, k);
+  rsVector2D<T> vi = mesh.getVertexData(i);
+  rsVector2D<T> vj = mesh.getVertexData(j);
+  rsVector2D<T> dv = vj - vi;
+  return rsNorm(dv);
+
+}
 
 // maybe make a class rsMesh2D - subclass of rsGraph<rsVector2D<T>, T> with additional members
 // Nx, Ny
@@ -5056,12 +5066,15 @@ void testMeshGeneration()
 
   // create new mesh manually:
   Nx = 21;
-  Ny = 22;
+  Ny = 21;
   Mesh mesh;
   addRegularMeshVertices2D(mesh, Nx, Ny);
   addMeshConnectionsStencil3(mesh, Nx, Ny); // connections for top and right edge are missing
 
-  scaleVertexPositions(mesh, 1.f, 2.0f);    
+  scaleVertexPositions(mesh, 1.f, 1.7f);
+  // trying to empirically find a sx, such that ratio computed below becomes unity...can this
+  // value be computed analytically?
+
   // check, if 2.0 is the right factor - it looks visually the same as without scaling but that 
   // seems a GNUPlot artifact - the y-axis actually uses a squeezed scale
   // 2 seems plausible because the total "density" of horizontal connections is twice the density
@@ -5069,6 +5082,15 @@ void testMeshGeneration()
 
   //plotMesh(mesh);
   moveVerticesToEquilibrium(mesh, 3);
+
+  int i = (Nx*Ny)/2;
+  float e0    = getEdgeLength(mesh, i, 0);
+  float e1    = getEdgeLength(mesh, i, 1);
+  float e2    = getEdgeLength(mesh, i, 2);
+  float ratio = rsMax(e0,e1,e2) / rsMin(e0,e1,e2);
+
+
+
   plotMesh(mesh);
   // ok, we get hexagons as expected - but they are not equilateral - they are wider than high 
   // why? ..is this soem sort of local (unstable?) equilibirium? try to perturb

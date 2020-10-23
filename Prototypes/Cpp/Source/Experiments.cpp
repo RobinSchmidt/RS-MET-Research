@@ -4729,7 +4729,7 @@ void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
 // this is a 4-point stencil
 
 
-int rsFlatMeshIndex2D(int i, int j, int Ny)
+int getFlatMeshIndex2D(int i, int j, int Ny)
 {
   return i  * Ny + j;
 }
@@ -4740,11 +4740,11 @@ void addMeshConnectionsStencil3(rsGraph<rsVector2D<T>, T>& mesh, int Nx, int Ny)
 {
   for(int i = 0; i < Nx-1; i++) {
     for(int j = 0; j < Ny-1; j++)  {
-      int k1 = rsFlatMeshIndex2D(i,   j, Ny);
-      int k2 = rsFlatMeshIndex2D(i+1, j, Ny);
+      int k1 = getFlatMeshIndex2D(i,   j, Ny);
+      int k2 = getFlatMeshIndex2D(i+1, j, Ny);
       mesh.addEdge(k1, k2, true);
       if(rsIsEven(i+j)) {
-        k2 = rsFlatMeshIndex2D(i, j+1, Ny);
+        k2 = getFlatMeshIndex2D(i, j+1, Ny);
         mesh.addEdge(k1, k2, true); }}}
 }
 
@@ -5176,9 +5176,9 @@ std::vector<std::vector<T>> solveExamplePDE1(
   using ND   = rsNumericDifferentiator<float>;
 
   // Coefficients that determine, what sort of differential equation this is:
-  T ax  = 1.0f, ay  = 1.0f;  // (negative?) velocity components in x- and y-direction
-  T axx = 1.0f, ayy = 1.0f;  // diffusivity in x- and y-direction
-  T axy = 1.0f;              // a sort of shear diffusion? an a_yx would be redundant?
+  T ax  = 0.1f, ay  = 0.1f;  // (negative?) velocity components in x- and y-direction
+  T axx = 0.0f, ayy = 0.0f;  // diffusivity in x- and y-direction
+  T axy = 0.0f;              // a sort of shear diffusion? an a_yx would be redundant?
 
   // create arrays for the dependent variable u and its various partial derivatives and do some
   // initializations:
@@ -5263,14 +5263,57 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
 
   // figure out spatial extent:
   T minX, maxX, minY, maxY;
+  T margin = 0.05f;
   getExtent(mesh, &minX, &maxX, & minY, &maxY);
+  T tmp = maxX-minX;
+  minX -= margin * tmp;
+  maxX += margin * tmp;
+  tmp = maxY-minY;
+  minY -= margin * tmp;
+  maxY += margin * tmp;
+
+
+  T brightness = T(1);
+
 
   rsImage<T> frame(width, height);
   rsVideoRGB video(width, height);
+  rsImagePainter<T, T, T> painter(&frame);
+  // todo: maybe use rsAlphaMask for the painter for larger circles
+
+  rsAlphaMask<T> mask;
+  //mask.setMaxSize(20);
+  mask.setSize(8.f);
+  painter.setUseAlphaMask(true);
+  painter.setAlphaMaskForDot(&mask);
 
 
+  for(int n = 0; n < numFrames; n++) 
+  {
+    frame.clear();
+    for(int i = 0; i < mesh.getNumVertices(); i++) 
+    {
+      rsVector2D<T> vi = mesh.getVertexData(i);
+      vi.x = rsLinToLin(vi.x, minX, maxX, T(0), T(width-1));
+      vi.y = rsLinToLin(vi.y, minY, maxY, T(height-1), T(0));
+      T value = brightness * result[n][i];
+      painter.paintDot(vi.x, vi.y, value); 
+    }
 
-  int dummy = 0;
+    // todo: maybe normalize the image
+
+    video.appendFrame(frame, frame, frame); // expects 3 images for the color channels
+  }
+
+  // maybe draw the edges as background - use a background image and instead of clearing, init to
+  // background
+
+  // write video to file:
+  rsVideoFileWriter vw;
+  vw.setFrameRate(frameRate);
+  vw.setCompressionLevel(0);  // 0: lossless, 10: good enough, 51: worst
+  vw.setDeleteTemporaryFiles(false);
+  vw.writeVideoToFile(video, "PDE");
 }
 
 
@@ -5280,23 +5323,32 @@ void testPDE_1stOrder()
   using Vec2 = rsVector2D<float>;
   using Vec = std::vector<float>;
 
-  // create the mesh:
-  int Mx = 40; // number of spatial samples in x direction
-  int My = 20; // number of spatial samples in y direction
+  // Set up mesh and video parameters:
+  int Mx        = 40; // number of spatial samples in x direction
+  int My        = 20; // number of spatial samples in y direction
+  int numFrames = 100;
+  int width     = Mx*10;
+  int height    = My*10;
+  int frameRate = 25;
+
+  // Create the mesh:
   rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My); // mayb need to compute weights
   int M = mesh.getNumVertices();  // should be Mx*My
   //plotMesh(mesh);
 
-  // set up initial conditions:
+  // Set up initial conditions:
   Vec u0(M);
   for(int i = 0; i < M; i++)
     u0[i] = 0.f;
-  u0[M/2] = 1.f;    // one impulse in the middle
+  int Mc = getFlatMeshIndex2D(Mx/2, My/2, My);
+  u0[Mc] = 1.f;    // one impulse in the middle
 
-  std::vector<Vec> result = solveExamplePDE1(mesh, u0, 50, 0.1f);
+  // Solve PDE and visualize:
+  std::vector<Vec> result = solveExamplePDE1(mesh, u0, numFrames, 0.05f);
+  visualizeResult(mesh, result, width, height, frameRate);
+  // we need some consideration for the aspect ratio
 
-  visualizeResult(mesh, result, Mx*10, My*10, 25);
-  // we need some consideration for the aspec ratio
+  // this looks not like expected - something is wron
 
   int dummy = 0;
 }

@@ -42,7 +42,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testVectorMultiplication3D();
   //testHermiteInterpolation();
   //testMeshGeneration();
-  testTransportEquation();  // remove
+  //testTransportEquation();  // remove
   testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
 

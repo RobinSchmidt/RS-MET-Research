@@ -5158,76 +5158,57 @@ void laplacian2D(const rsGraph<rsVector2D<T>, T>& mesh,
 
 // test solving the transport equation on an irregular grid, created from a regular grid by 
 // jittering the x,y-coordinates
-void testTransportEquation()
+
+
+/** Numerically solves a general 1st order in time, 2nd order in space, linear differential 
+equation of the form:
+
+   u_t = ax*u_x + ay*u_y + axx*u_xx + ayy*u_yy + axy*u_xy
+
+on an arbitrary grid of vertices using numerical estimation of spatial derivatives by the method of
+directional derivatives and an explicit Euler step in time. */
+template<class T>
+std::vector<std::vector<T>> solveExamplePDE1(
+  const rsGraph<rsVector2D<T>, T>& mesh, const std::vector<T> u0, int numTimeSteps, float deltaT)
 {
-
-
-
   using Vec2 = rsVector2D<float>;
-  using Vec = std::vector<float>;
-  using ND = rsNumericDifferentiator<float>;
+  using Vec  = std::vector<float>;
+  using ND   = rsNumericDifferentiator<float>;
 
-  // u_t = D * lap(u) - div(v, grad(u)) = D * (u_xx + u_yy) - (vx * u_x + vy * u_y) 
+  // Coefficients that determine, what sort of differential equation this is:
+  T ax  = 1.0f, ay  = 1.0f;  // (negative?) velocity components in x- and y-direction
+  T axx = 1.0f, ayy = 1.0f;  // diffusivity in x- and y-direction
+  T axy = 1.0f;              // a sort of shear diffusion? an a_yx would be redundant?
 
-  float D = 1.f;     // diffusivity
-  Vec2 v(1.f, 1.f);  // velocity
-
-
-  // create and plot hexagon mesh:
-  int Mx = 40; // number of spatial samples in x direction
-  int My = 20; // number of spatial samples in y direction
-  rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My);
-  //plotMesh(mesh);
-  // maybe try a rectangular mesh first and compare results to standard FDM-schemes
-
-  // create arrays for the dependent variable u and its various partial derivatives and 
-  // combinations therof
+  // create arrays for the dependent variable u and its various partial derivatives and do some
+  // initializations:
   int M = mesh.getNumVertices();  // should be Mx*My
-  Vec u(M), u_t(M);                                       // u and temporal derivative
-  Vec u_x(M), u_y(M), u_xx(M), u_xy(M), u_yx(M), u_yy(M); // spatial derivatives
-  Vec u_D(M), u_L(M);                                     // divergence, Laplacian
-
-  //Vec u_V; // dot-product of divergence and velocity
-
-  // set up initial conditions:
-  for(int i = 0; i < M; i++)
-    u[i] = 0.f;
-  u[M/2] = 1.f;    // one impulse in the middle
-
+  Vec u(M), u_t(M), u_x(M), u_y(M), u_xx(M), u_xy(M), u_yx(M), u_yy(M);
   std::vector<Vec> result;
- 
+  int   N  = numTimeSteps;  // number of time steps
+  float dt = deltaT;        // delta-t between time-steps
+  u = u0;
 
-  int   N  = 50;   // number of time steps
-  float dt = 0.1f; // delta-t between time-steps
-  for(int n = 0; n < N; n++)
+  // the main solver loop, stepping through the time-steps:
+  result.push_back(u);
+  for(int n = 1; n < N; n++)
   {
-    // compute spatial derivatives:
+    // Compute spatial derivatives numerically:
     ND::gradient2D(mesh, u,   u_x,  u_y );  // compute gradient vector (u_x, u_y)
-    ND::gradient2D(mesh, u_x, u_xx, u_xy);  // compute 1st row (or column?) of Hessian
-    ND::gradient2D(mesh, u_y, u_yx, u_yy);  // compute 2nd row (or column?) of Hessian 
+    ND::gradient2D(mesh, u_x, u_xx, u_xy);  // compute 1st row (or column?) of Hessian matrix
+    ND::gradient2D(mesh, u_y, u_yx, u_yy);  // compute 2nd row (or column?) of Hessian matrix
+    // u_xy should be equal to u_yx up to numerical inaccuracies - check that
 
-    // combine spatial derivatives to represent differential operators:
-    //u_D = u_x  + u_y;   // divergence  todo: verify - is this correct?
-    u_L = u_xx + u_yy;  // Laplacian   todo: test altenative computation for Laplacian
-
-
-    // compute temporal derivative using the defining PDE:
-    u_t = D * u_L - (v.x * u_x + v.y * u_y);
+    // Compute temporal derivative using the defining PDE:
+    u_t = ax*u_x + ay*u_y + axx*u_xx + ayy*u_yy + axy*u_xy;
 
     // update the dependent variable u = u(x,y,t) from time t to time t + dt using a simple Euler
-    // step:
+    // step and store the result:
     u = u + dt * u_t;
+    result.push_back(u);
     // todo: try trapezoidal step, should use average of dt from this and previous iteration, maybe 
     // the use should adjust a value that blends between Euler and trapezoidal
-
-    // todo: store result for visualization and/or diectly accumulate frames in a video - maybe the
-    // function should return a mesh and a vector of vectors of values...or maybe it should take
-    // the mesh as input and just return the vector of vectors of outputs
-
-    result.push_back(u);
-    int dummy = 0;
   }
-
 
   // todo: 
   // -how should we handle boundary conditions - and how are they implicitly handled, when we 
@@ -5239,21 +5220,59 @@ void testTransportEquation()
   //  which may or may not be meaningful ...but probably, it's not)
 
   // todo: 
-  // -implement Schrödinger equation - uses complex numbers
+  // -allow the use to set an input ("potential") - it's a (space-dependent) constant that's added 
+  //  to u_t (or u_tt)..should be another vector V
+  // -implement a similar scheme for a 2nd order in time PDE (yeah! it's wave-equation time! :-D)
+  // -implement Schrödinger equation - uses complex numbers - maybe this can be used for that?
   // -implement Navier-Stokes - but this works on vector fields rather than scalar fields but
   //  we can break it down into two separate scalar fields
   // -maybe make up a very general 2nd order PDE in space and time with various coeffs that can be
   //  set by the user to dial in aspects of waves, diffusion, convection and more - be creative
   //  ...if it uses complex numbers, this may also encompass the Schroedinge euqation (i think)
-  // -allow the use to set an input ("potential") - it's a (space-dependent) constant that's added 
-  //  to u_t (or u_tt)
+  // -provide a simplified implementation when only the Laplacian is needed - this can be estimated
+  //  by the simpler function above
+
 
   // https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation
 
+  int dummy = 0;
+  return result; // do this later, also take the mesh as input
+}
+
+template<class T>
+void getExtent(const rsGraph<rsVector2D<T>, T>& mesh, T* minX, T* maxX, T* minY, T* maxY)
+{
+  using Vec2 = rsVector2D<T>;
+  for(int i = 0; i < (int)mesh.getNumVertices(); i++) {
+    rsVector2D<T> vi = mesh.getVertexData(i);
+    *minX = rsMin(*minX, vi.x);
+    *maxX = rsMax(*maxX, vi.x);
+    *minY = rsMin(*minY, vi.y);
+    *maxY = rsMax(*maxY, vi.y); }
+}
+
+template<class T>
+void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vector<T>> result, 
+  int width, int height, int frameRate)
+{
+  // maybe use GNUPlot or rsVideoRGB
+  // for each time step, draw an image with a bunch of circles whose color is dictated by the 
+  // result
+
+  int numFrames = (int) result.size();
+
+  // figure out spatial extent:
+  T minX, maxX, minY, maxY;
+  getExtent(mesh, &minX, &maxX, & minY, &maxY);
+
+  rsImage<T> frame(width, height);
+  rsVideoRGB video(width, height);
+
+
 
   int dummy = 0;
-  //return result; // do this later, also take the mesh as input
 }
+
 
 // The PDE is 1st order in time, in space, it may be 2nd order depending on settings
 void testPDE_1stOrder()
@@ -5264,7 +5283,7 @@ void testPDE_1stOrder()
   // create the mesh:
   int Mx = 40; // number of spatial samples in x direction
   int My = 20; // number of spatial samples in y direction
-  rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My);
+  rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My); // mayb need to compute weights
   int M = mesh.getNumVertices();  // should be Mx*My
   //plotMesh(mesh);
 
@@ -5274,9 +5293,12 @@ void testPDE_1stOrder()
     u0[i] = 0.f;
   u0[M/2] = 1.f;    // one impulse in the middle
 
+  std::vector<Vec> result = solveExamplePDE1(mesh, u0, 50, 0.1f);
 
-  //std::vector<Vec> result = solvePDE1(mesh, u0);  // to write
-  //plotResult(mesh, result);                       // to write
+  visualizeResult(mesh, result, Mx*10, My*10, 25);
+  // we need some consideration for the aspec ratio
+
+  int dummy = 0;
 }
 
 

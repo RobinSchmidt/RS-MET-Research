@@ -4862,9 +4862,22 @@ T getEdgeLength(rsGraph<rsVector2D<T>, T>& mesh, int i, int k)
 
 }
 
-// maybe make a class rsMesh2D - subclass of rsGraph<rsVector2D<T>, T> with additional members
-// Nx, Ny
+template<class T>
+rsGraph<rsVector2D<T>, T> getHexagonMesh(int Nx, int Ny)
+{
+  rsGraph<rsVector2D<T>, T> mesh;
+  addRegularMeshVertices2D(mesh, Nx, Ny);
+  addMeshConnectionsStencil3(mesh, Nx, Ny); // connections for top and right edge are missing
+  float sy = sqrt(3.f);                     // = 2*sin(60°) - verify, that this is the correct scale factor
+  scaleVertexPositions(mesh, 1.f, sy);
+  moveVerticesToEquilibrium(mesh, 3);
+  return mesh;
+}
+// -todo: derive use an explicit fromula to adjust the vertex position instead of using the 
+//  iterative algorithm with the forces
+// -allow for different topologies like with the rectangular meshes
 
+// rename to getQuadrangleMesh or getRectangleMesh
 template<class T>
 rsGraph<rsVector2D<T>, T> getPlanarMesh(T x0, T x1, int Nx, T y0, T y1, int Ny)
 //rsMesh2D<float> getPlanarMesh(T x0, T x1, int Nx, T y0, T y1, int Ny)
@@ -5057,30 +5070,13 @@ void testMeshGeneration()
   // move to rsMeshGenerator2D
 
   ok &= pm.isSymmetric();
-
   Nv = pm.getNumVertices();
 
-  //plotMesh(pm, {20, 146, Nv-150, Nv-20});
-  //moveVerticesToEquilibrium(pm, 4);
-  //plotMesh(pm, {20, 146, Nv-150, Nv-20});
-  // this moveVerticesToEquilibrium does not work well
-  // maybe move in each step a little bit into the direction of the longest edge
-  // or: maybe make the force repulsive
-
-
-
-  // create new mesh manually:
-  Nx = 21;
-  Ny = 21;
-  Mesh mesh;
-  addRegularMeshVertices2D(mesh, Nx, Ny);
-  addMeshConnectionsStencil3(mesh, Nx, Ny); // connections for top and right edge are missing
-
-  // sclae y-coordinates to get rid of the flatness of the heygons:
-  float sy = sqrt(3.f); // = 2*sin(60°) - verify that this is the correct scale factor
-  scaleVertexPositions(mesh, 1.f, sy);
-  //plotMesh(mesh);
-  moveVerticesToEquilibrium(mesh, 3);
+  // create and plot hexagon mesh:
+  Nx = 21;  // using high numbers makes plotting slow, but around 20 is ok
+  Ny = (int) round(Nx / sqrt(3.f));
+  Mesh mesh = getHexagonMesh<float>(Nx, Ny);
+  plotMesh(mesh);
 
   int i = (Nx*Ny)/2;
   float e0    = getEdgeLength(mesh, i, 0);
@@ -5090,18 +5086,12 @@ void testMeshGeneration()
   // maybe generalize to whatever number edges a vertex has and factor into a fucntion 
   // getEdgeLengthRatio ..or maybe getMinEdgeLength(i), getMaxEdgeLength(i)
 
-  plotMesh(mesh);
-
   /*
   randomizeVertexPositions(mesh, 0.25f, 0.25f, 3);
   plotMesh(mesh);
   moveVerticesToEquilibrium(mesh, 3);
   plotMesh(mesh);
   */
-
-
-
-
 
   // todo: 
   // -solve wave equation on the mesh and somehow visualize the results - maybe have a black

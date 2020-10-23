@@ -2983,6 +2983,8 @@ public:
   };
   // the doubleCone and closedCylinder topologies can also be used for a sphere - the actual 
   // interpretation as 3D shape is determined by the geometry, i.e. by the associated 3D mesh
+  // i think, the kleinBottle is wrong: one edge must be connected in normal and the other in reverse 
+  // mode
 
   /** Enumeration of the available geometries. This determines, how the (u,v)-coordinates of 
   vertices in the parameterMesh are mapped to (x,y,z)-coordinates in the spatialMesh. */

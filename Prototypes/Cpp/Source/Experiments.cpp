@@ -4726,12 +4726,41 @@ void addMeshConnectionsPlanar2D(rsGraph<rsVector2D<T>, T>& m, int Nx, int Ny)
     for(int j = 0; j < Ny; j++) 
       addMeshConnectionsPlanar2D(m, Nx, Ny, i, j);
 }
+// this is a 4-point stencil
 
 
 int rsFlatMeshIndex2D(int i, int j, int Ny)
 {
   return i  * Ny + j;
 }
+
+// 3-point stencil:
+template<class T>
+void addMeshConnectionsStencil3(rsGraph<rsVector2D<T>, T>& mesh, int Nx, int Ny)
+{
+  for(int i = 0; i < Nx-1; i++) {
+    for(int j = 0; j < Ny-1; j++)  {
+      int k1 = rsFlatMeshIndex2D(i,   j, Ny);
+      int k2 = rsFlatMeshIndex2D(i+1, j, Ny);
+      mesh.addEdge(k1, k2, true);
+      if(rsIsEven(i+j)) {
+        k2 = rsFlatMeshIndex2D(i, j+1, Ny);
+        mesh.addEdge(k1, k2, true); }}}
+}
+
+
+/** Redistributes the vertices in the mesh, such that a force equilibrium is reached for each node, 
+where forces are excerted by connections - the connections behave like springs under tension
+...tbc... */
+template<class T>
+void distributeVertices(rsGraph<rsVector2D<T>, T>& m)
+{
+
+}
+// find better name: maybe equilibrifyVertices, moveVerticesToEquilibrium, 
+// equalizeVertexDistribution
+
+
 // maybe make a class rsMesh2D - subclass of rsGraph<rsVector2D<T>, T> with additional members
 // Nx, Ny
 
@@ -4930,7 +4959,22 @@ void testMeshGeneration()
 
   Nv = pm.getNumVertices();
 
-  plotMesh(pm, {20, 146, Nv-150, Nv-20});
+  //plotMesh(pm, {20, 146, Nv-150, Nv-20});
+
+
+  // create new mesh manually:
+  Nx = 10;
+  Ny = 10;
+  Mesh mesh;
+  addRegularMeshVertices2D(mesh, Nx, Ny);
+  addMeshConnectionsStencil3(mesh, Nx, Ny); // connections for top and right edge are missing
+  plotMesh(mesh);
+
+
+
+
+
+
 
   // todo: 
   // -solve wave equation on the mesh and somehow visualize the results - maybe have a black

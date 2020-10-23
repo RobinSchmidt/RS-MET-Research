@@ -41,8 +41,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testDualComplex();
   //testVectorMultiplication3D();
   //testHermiteInterpolation();
-  testMeshGeneration();
-  testTranspotEquation();  // stub
+  //testMeshGeneration();
+  testTransportEquation();  // remove
+  testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
 
 

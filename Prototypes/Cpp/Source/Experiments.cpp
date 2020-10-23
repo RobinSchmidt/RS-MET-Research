@@ -5071,6 +5071,8 @@ void testMeshGeneration()
 
   ok &= pm.isSymmetric();
   Nv = pm.getNumVertices();
+  plotMesh(pm);
+
 
   // create and plot hexagon mesh:
   Nx = 21;  // using high numbers makes plotting slow, but around 20 is ok
@@ -5153,9 +5155,133 @@ void laplacian2D(const rsGraph<rsVector2D<T>, T>& mesh,
 // ...strange that we don't need the vertex data itself
 // applying this to the laplacian again should yield the biharmonic operator
 
+
 // test solving the transport equation on an irregular grid, created from a regular grid by 
 // jittering the x,y-coordinates
-void testTranspotEquation()
+void testTransportEquation()
+{
+
+
+
+  using Vec2 = rsVector2D<float>;
+  using Vec = std::vector<float>;
+  using ND = rsNumericDifferentiator<float>;
+
+  // u_t = D * lap(u) - div(v, grad(u)) = D * (u_xx + u_yy) - (vx * u_x + vy * u_y) 
+
+  float D = 1.f;     // diffusivity
+  Vec2 v(1.f, 1.f);  // velocity
+
+
+  // create and plot hexagon mesh:
+  int Mx = 40; // number of spatial samples in x direction
+  int My = 20; // number of spatial samples in y direction
+  rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My);
+  //plotMesh(mesh);
+  // maybe try a rectangular mesh first and compare results to standard FDM-schemes
+
+  // create arrays for the dependent variable u and its various partial derivatives and 
+  // combinations therof
+  int M = mesh.getNumVertices();  // should be Mx*My
+  Vec u(M), u_t(M);                                       // u and temporal derivative
+  Vec u_x(M), u_y(M), u_xx(M), u_xy(M), u_yx(M), u_yy(M); // spatial derivatives
+  Vec u_D(M), u_L(M);                                     // divergence, Laplacian
+
+  //Vec u_V; // dot-product of divergence and velocity
+
+  // set up initial conditions:
+  for(int i = 0; i < M; i++)
+    u[i] = 0.f;
+  u[M/2] = 1.f;    // one impulse in the middle
+
+  std::vector<Vec> result;
+ 
+
+  int   N  = 50;   // number of time steps
+  float dt = 0.1f; // delta-t between time-steps
+  for(int n = 0; n < N; n++)
+  {
+    // compute spatial derivatives:
+    ND::gradient2D(mesh, u,   u_x,  u_y );  // compute gradient vector (u_x, u_y)
+    ND::gradient2D(mesh, u_x, u_xx, u_xy);  // compute 1st row (or column?) of Hessian
+    ND::gradient2D(mesh, u_y, u_yx, u_yy);  // compute 2nd row (or column?) of Hessian 
+
+    // combine spatial derivatives to represent differential operators:
+    //u_D = u_x  + u_y;   // divergence  todo: verify - is this correct?
+    u_L = u_xx + u_yy;  // Laplacian   todo: test altenative computation for Laplacian
+
+
+    // compute temporal derivative using the defining PDE:
+    u_t = D * u_L - (v.x * u_x + v.y * u_y);
+
+    // update the dependent variable u = u(x,y,t) from time t to time t + dt using a simple Euler
+    // step:
+    u = u + dt * u_t;
+    // todo: try trapezoidal step, should use average of dt from this and previous iteration, maybe 
+    // the use should adjust a value that blends between Euler and trapezoidal
+
+    // todo: store result for visualization and/or diectly accumulate frames in a video - maybe the
+    // function should return a mesh and a vector of vectors of values...or maybe it should take
+    // the mesh as input and just return the vector of vectors of outputs
+
+    result.push_back(u);
+    int dummy = 0;
+  }
+
+
+  // todo: 
+  // -how should we handle boundary conditions - and how are they implicitly handled, when we 
+  //  don't care about them? i think, this corresponds to setting u(t) = 0 at the boundary (or 
+  //  whatever values the boundary points initially had....or wit - no - i think, it corresponds to
+  //  a free boundary
+  // -i think, we need to make sure that also the boundary points all have at least 2 neighbors, 
+  //  otheriwse the solver will encounter underdetermined systems (and use the minimum norm solution
+  //  which may or may not be meaningful ...but probably, it's not)
+
+  // todo: 
+  // -implement Schrödinger equation - uses complex numbers
+  // -implement Navier-Stokes - but this works on vector fields rather than scalar fields but
+  //  we can break it down into two separate scalar fields
+  // -maybe make up a very general 2nd order PDE in space and time with various coeffs that can be
+  //  set by the user to dial in aspects of waves, diffusion, convection and more - be creative
+  //  ...if it uses complex numbers, this may also encompass the Schroedinge euqation (i think)
+  // -allow the use to set an input ("potential") - it's a (space-dependent) constant that's added 
+  //  to u_t (or u_tt)
+
+  // https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation
+
+
+  int dummy = 0;
+  //return result; // do this later, also take the mesh as input
+}
+
+// The PDE is 1st order in time, in space, it may be 2nd order depending on settings
+void testPDE_1stOrder()
+{
+  using Vec2 = rsVector2D<float>;
+  using Vec = std::vector<float>;
+
+  // create the mesh:
+  int Mx = 40; // number of spatial samples in x direction
+  int My = 20; // number of spatial samples in y direction
+  rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My);
+  int M = mesh.getNumVertices();  // should be Mx*My
+  //plotMesh(mesh);
+
+  // set up initial conditions:
+  Vec u0(M);
+  for(int i = 0; i < M; i++)
+    u0[i] = 0.f;
+  u0[M/2] = 1.f;    // one impulse in the middle
+
+
+  //std::vector<Vec> result = solvePDE1(mesh, u0);  // to write
+  //plotResult(mesh, result);                       // to write
+}
+
+
+
+void testWaveEquation()
 {
 
 

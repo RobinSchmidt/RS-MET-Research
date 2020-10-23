@@ -4749,6 +4749,39 @@ void addMeshConnectionsStencil3(rsGraph<rsVector2D<T>, T>& mesh, int Nx, int Ny)
 }
 
 
+template<class T>
+void randomizeVertexPositions(rsGraph<rsVector2D<T>, T>& mesh, T dx, T dy, 
+  int minNumNeighbors = 0, int seed = 0)
+{
+  using Vec2 = rsVector2D<T>;
+  rsNoiseGenerator<T> ng;
+  ng.setSeed(seed);
+  T rnd;
+  for(int k = 0; k < mesh.getNumVertices(); k++) 
+  {
+    if(mesh.getNumEdges(k) >= minNumNeighbors)
+    {
+      Vec2 v = mesh.getVertexData(k);
+      v.x += dx * ng.getSample();
+      v.y += dy * ng.getSample();
+      mesh.setVertexData(k, v);
+    }
+  }
+}
+
+template<class T>
+void scaleVertexPositions(rsGraph<rsVector2D<T>, T>& mesh, T sx, T sy)
+{
+  for(int k = 0; k < mesh.getNumVertices(); k++) 
+  {
+    rsVector2D<T> v = mesh.getVertexData(k);
+    v.x *= sx;
+    v.y *= sy;
+    mesh.setVertexData(k, v);
+  }
+}
+
+
 /** Redistributes the vertices in the mesh, such that a force equilibrium is reached for each node, 
 where forces are excerted by connections - the connections behave like springs under tension
 ...tbc... */
@@ -4757,11 +4790,13 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
 {
   using Vec2 = rsVector2D<T>;
 
-  T updateRate = T(0.25);  // needs experimentation
+  T updateRate = T(0.5);  // needs experimentation
   int numIts = 0;
   int maxNumIts = 100;
   T thresh = T(0.0001);      // this may be too high
 
+  //T wx = T(1) / T(3);
+  //T wy = T(2) / T(3);
 
   auto getForce = [&](int i)->Vec2
   {
@@ -4770,7 +4805,11 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
     for(int k = 0; k < (int) mesh.getNumEdges(i); k++) {
       int   j = mesh.getEdgeTarget(i, k);
       Vec2 vj = mesh.getVertexData(j);
-      f += (vj - vi); }
+      Vec2 fj = vj - vi;
+      //Vec2 fj = vi - vj;    // nope - diverges
+      //fj.x *= wx;
+      //fj.y *= wy;
+      f += fj; }
     return f;
   };
 
@@ -4786,7 +4825,6 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
         Vec2 dv = updateRate * f;
         mesh.setVertexData(i, vi + dv);
         maxDistance = rsMax(maxDistance, rsNorm(dv));
-        int dummy = 0;
       }
     }
 
@@ -4795,15 +4833,10 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
   // returns the maximum distance that a vertex was moved - used for stopping criterion
 
 
-
   while(adjustVertices() > thresh && numIts < maxNumIts)
   {
-
     numIts++;
   }
-
-
-
 
   int dummy = 0;
 }
@@ -5013,21 +5046,53 @@ void testMeshGeneration()
   Nv = pm.getNumVertices();
 
   //plotMesh(pm, {20, 146, Nv-150, Nv-20});
+  //moveVerticesToEquilibrium(pm, 4);
+  //plotMesh(pm, {20, 146, Nv-150, Nv-20});
+  // this moveVerticesToEquilibrium does not work well
+  // maybe move in each step a little bit into the direction of the longest edge
+  // or: maybe make the force repulsive
+
 
 
   // create new mesh manually:
-  Nx = 20;
-  Ny = 20;
+  Nx = 21;
+  Ny = 22;
   Mesh mesh;
   addRegularMeshVertices2D(mesh, Nx, Ny);
   addMeshConnectionsStencil3(mesh, Nx, Ny); // connections for top and right edge are missing
+
+  scaleVertexPositions(mesh, 1.f, 2.0f);    
+  // check, if 2.0 is the right factor - it looks visually the same as without scaling but that 
+  // seems a GNUPlot artifact - the y-axis actually uses a squeezed scale
+  // 2 seems plausible because the total "density" of horizontal connections is twice the density
+  // of vertical connections
+
+  //plotMesh(mesh);
   moveVerticesToEquilibrium(mesh, 3);
   plotMesh(mesh);
+  // ok, we get hexagons as expected - but they are not equilateral - they are wider than high 
+  // why? ..is this soem sort of local (unstable?) equilibirium? try to perturb
 
+  /*
+  randomizeVertexPositions(mesh, 0.25f, 0.25f, 3);
+  plotMesh(mesh);
+  moveVerticesToEquilibrium(mesh, 3);
+  plotMesh(mesh);
+  */
+  // trying to randomize the inner nodes a little bit
+  // that doesn't help - the connectivity pattern is actually not without a sense of orientation
+  // there's a stronger horizontal connectivity - we have a higher total number of horizontal edges
+  // which is why the hexagons are widened (more force along the horizonal) ...maybe use a 
+  // weighting for the horizontal and vertical forces
+  // or: compute analytically, where the nodes must move to achieve equilateral hexagons
+  // or: use a 6-point-stencil
+  // or: maybe it is because the top-row of connections is missing?
+  // maybe just scale all y-coordinates to change the aspect ratio
+  // todo: compute lengths of the 3 edges of the middle node and check if they are equal
 
-
-
-
+  // -let the user create arbitrary geometries by starting with a rectangle of honeycomb (3-point)
+  //  or 4-point stencil and remove nodes by subtracting shapes defined by F(x,y) - remove 
+  //  every node for which F(x,y) becomes negative (or positive) - use to subtract circles, etc.
 
 
   // todo: 

@@ -4753,12 +4753,65 @@ void addMeshConnectionsStencil3(rsGraph<rsVector2D<T>, T>& mesh, int Nx, int Ny)
 where forces are excerted by connections - the connections behave like springs under tension
 ...tbc... */
 template<class T>
-void distributeVertices(rsGraph<rsVector2D<T>, T>& m)
+void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighbors = 1)
 {
+  using Vec2 = rsVector2D<T>;
 
+  T updateRate = T(0.25);  // needs experimentation
+  int numIts = 0;
+  int maxNumIts = 100;
+  T thresh = T(0.0001);      // this may be too high
+
+
+  auto getForce = [&](int i)->Vec2
+  {
+    Vec2 f;
+    Vec2 vi = mesh.getVertexData(i);
+    for(int k = 0; k < (int) mesh.getNumEdges(i); k++) {
+      int   j = mesh.getEdgeTarget(i, k);
+      Vec2 vj = mesh.getVertexData(j);
+      f += (vj - vi); }
+    return f;
+  };
+
+  auto adjustVertices = [&]()->T
+  {
+    T maxDistance(0);
+    for(int i = 0; i < mesh.getNumVertices(); i++)
+    {
+      if(mesh.getNumEdges(i) >= minNumNeighbors)
+      {
+        Vec2 vi = mesh.getVertexData(i);
+        Vec2 f  = getForce(i);
+        Vec2 dv = updateRate * f;
+        mesh.setVertexData(i, vi + dv);
+        maxDistance = rsMax(maxDistance, rsNorm(dv));
+        int dummy = 0;
+      }
+    }
+
+    return maxDistance;
+  };
+  // returns the maximum distance that a vertex was moved - used for stopping criterion
+
+
+
+  while(adjustVertices() > thresh && numIts < maxNumIts)
+  {
+
+    numIts++;
+  }
+
+
+
+
+  int dummy = 0;
 }
 // find better name: maybe equilibrifyVertices, moveVerticesToEquilibrium, 
 // equalizeVertexDistribution
+// ToDo:
+// -let the user determine points of attraction and repulsion (with strengths) to allow for 
+//  increase or decrease of vertex density in regions of interest
 
 
 // maybe make a class rsMesh2D - subclass of rsGraph<rsVector2D<T>, T> with additional members
@@ -4917,8 +4970,8 @@ void testMeshGeneration()
   // todo: use hole (inner) radius and outer radius
   //float dr = 0.1;
 
-  float holeRadius  = 0.4;
-  float outerRadius = 1.0;
+  float holeRadius  = 0.4f;
+  float outerRadius = 1.0f;
   float wiggle      = 0.1f;
   for(int i = 0; i < Nr; i++)
   {
@@ -4963,11 +5016,12 @@ void testMeshGeneration()
 
 
   // create new mesh manually:
-  Nx = 10;
-  Ny = 10;
+  Nx = 20;
+  Ny = 20;
   Mesh mesh;
   addRegularMeshVertices2D(mesh, Nx, Ny);
   addMeshConnectionsStencil3(mesh, Nx, Ny); // connections for top and right edge are missing
+  moveVerticesToEquilibrium(mesh, 3);
   plotMesh(mesh);
 
 

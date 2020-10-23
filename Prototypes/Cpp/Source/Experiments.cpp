@@ -4795,8 +4795,8 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
   int maxNumIts = 100;
   T thresh = T(0.0001);      // this may be too high
 
-  //T wx = T(1) / T(3);
-  //T wy = T(2) / T(3);
+
+
 
   auto getForce = [&](int i)->Vec2
   {
@@ -4806,9 +4806,6 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
       int   j = mesh.getEdgeTarget(i, k);
       Vec2 vj = mesh.getVertexData(j);
       Vec2 fj = vj - vi;
-      //Vec2 fj = vi - vj;    // nope - diverges
-      //fj.x *= wx;
-      //fj.y *= wy;
       f += fj; }
     return f;
   };
@@ -4845,6 +4842,14 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
 // ToDo:
 // -let the user determine points of attraction and repulsion (with strengths) to allow for 
 //  increase or decrease of vertex density in regions of interest
+// -use momentum to speed up convergence
+// -let the user pass a distance-to-force function F(d) (currently the identity?)
+//  try F(d) = (d-a)^2 where a is some desired distance or F(d) = d + 1/d 
+// -move into a class rsGraphGeometryManipulator
+// -let the user create arbitrary geometries by starting with a rectangle of honeycomb (3-point)
+//  or 4-point stencil and remove nodes by subtracting shapes defined by F(x,y) - remove 
+//  every node for which F(x,y) becomes negative (or positive) - use to subtract circles, etc.
+//  F(x,y) should actually not tak x,y as input but a vector, such that it generalizes to 3D
 
 template<class T>
 T getEdgeLength(rsGraph<rsVector2D<T>, T>& mesh, int i, int k)
@@ -5071,15 +5076,9 @@ void testMeshGeneration()
   addRegularMeshVertices2D(mesh, Nx, Ny);
   addMeshConnectionsStencil3(mesh, Nx, Ny); // connections for top and right edge are missing
 
-  scaleVertexPositions(mesh, 1.f, 1.7f);
-  // trying to empirically find a sx, such that ratio computed below becomes unity...can this
-  // value be computed analytically?
-
-  // check, if 2.0 is the right factor - it looks visually the same as without scaling but that 
-  // seems a GNUPlot artifact - the y-axis actually uses a squeezed scale
-  // 2 seems plausible because the total "density" of horizontal connections is twice the density
-  // of vertical connections
-
+  // sclae y-coordinates to get rid of the flatness of the heygons:
+  float sy = sqrt(3.f); // = 2*sin(60°) - verify that this is the correct scale factor
+  scaleVertexPositions(mesh, 1.f, sy);
   //plotMesh(mesh);
   moveVerticesToEquilibrium(mesh, 3);
 
@@ -5088,12 +5087,10 @@ void testMeshGeneration()
   float e1    = getEdgeLength(mesh, i, 1);
   float e2    = getEdgeLength(mesh, i, 2);
   float ratio = rsMax(e0,e1,e2) / rsMin(e0,e1,e2);
-
-
+  // maybe generalize to whatever number edges a vertex has and factor into a fucntion 
+  // getEdgeLengthRatio ..or maybe getMinEdgeLength(i), getMaxEdgeLength(i)
 
   plotMesh(mesh);
-  // ok, we get hexagons as expected - but they are not equilateral - they are wider than high 
-  // why? ..is this soem sort of local (unstable?) equilibirium? try to perturb
 
   /*
   randomizeVertexPositions(mesh, 0.25f, 0.25f, 3);
@@ -5101,20 +5098,9 @@ void testMeshGeneration()
   moveVerticesToEquilibrium(mesh, 3);
   plotMesh(mesh);
   */
-  // trying to randomize the inner nodes a little bit
-  // that doesn't help - the connectivity pattern is actually not without a sense of orientation
-  // there's a stronger horizontal connectivity - we have a higher total number of horizontal edges
-  // which is why the hexagons are widened (more force along the horizonal) ...maybe use a 
-  // weighting for the horizontal and vertical forces
-  // or: compute analytically, where the nodes must move to achieve equilateral hexagons
-  // or: use a 6-point-stencil
-  // or: maybe it is because the top-row of connections is missing?
-  // maybe just scale all y-coordinates to change the aspect ratio
-  // todo: compute lengths of the 3 edges of the middle node and check if they are equal
 
-  // -let the user create arbitrary geometries by starting with a rectangle of honeycomb (3-point)
-  //  or 4-point stencil and remove nodes by subtracting shapes defined by F(x,y) - remove 
-  //  every node for which F(x,y) becomes negative (or positive) - use to subtract circles, etc.
+
+
 
 
   // todo: 

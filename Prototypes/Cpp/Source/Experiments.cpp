@@ -5176,8 +5176,8 @@ std::vector<std::vector<T>> solveExamplePDE1(
   using ND   = rsNumericDifferentiator<float>;
 
   // Coefficients that determine, what sort of differential equation this is:
-  T ax  = -0.25f, ay  = -0.25f;  // (negative?) velocity components in x- and y-direction
-  T axx =  0.0f,  ayy =  0.0f;  // diffusivity in x- and y-direction
+  T ax  = -1.0f, ay  = -0.5f;  // (negative?) velocity components in x- and y-direction
+  T axx =  0.0f, ayy =  0.0f;  // diffusivity in x- and y-direction
   T axy =  0.0f;               // a sort of shear diffusion? an a_yx would be redundant?
 
   // create arrays for the dependent variable u and its various partial derivatives and do some
@@ -5201,10 +5201,11 @@ std::vector<std::vector<T>> solveExamplePDE1(
 
     // Compute temporal derivative using the defining PDE:
     u_t = ax*u_x + ay*u_y + axx*u_xx + ayy*u_yy + axy*u_xy;
+    // ..is slow - lots of temporary vectors are created
 
     // update the dependent variable u = u(x,y,t) from time t to time t + dt using a simple Euler
     // step and store the result:
-    u = u + dt * u_t;
+    u = u + dt * u_t;      // also slow
     result.push_back(u);
     // todo: try trapezoidal step, should use average of dt from this and previous iteration, maybe 
     // the use should adjust a value that blends between Euler and trapezoidal
@@ -5253,11 +5254,11 @@ void getExtent(const rsGraph<rsVector2D<T>, T>& mesh, T* minX, T* maxX, T* minY,
 }
 
 template<class T>
-void drawEdges(const rsGraph<rsVector2D<T>, T> mesh, rsImage<T>& img, 
+void drawMesh(const rsGraph<rsVector2D<T>, T> mesh, rsImage<T>& img, 
  T minX, T maxX, T minY, T maxY)
 {
   rsImagePainter<T, T, T> painter(&img);
-  T brightness = T(0.5);
+  T brightness = T(0.125);
   int w = img.getWidth();
   int h = img.getHeight();
   for(int i = 0; i < mesh.getNumVertices(); i++) 
@@ -5309,16 +5310,16 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
 
   rsAlphaMask<T> mask;
   //mask.setMaxSize(20);
-  mask.setSize(8.f);
+  mask.setSize(16.f);
   painter.setUseAlphaMask(true);
   painter.setAlphaMaskForDot(&mask);
     
-  drawEdges(mesh, background, minX, maxX, minY, maxY);
+  drawMesh(mesh, background, minX, maxX, minY, maxY);
 
   for(int n = 0; n < numFrames; n++) 
   {
-    frame.clear();
-    //frame.copyPixelDataFrom(background);
+    //frame.clear();
+    frame.copyPixelDataFrom(background);
 
     for(int i = 0; i < mesh.getNumVertices(); i++) 
     {
@@ -5329,22 +5330,26 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
       painter.paintDot(vi.x, vi.y, value); 
     }
 
-    // todo: maybe normalize the image
-
+    rsImageProcessor<T>::normalize(frame);     // make optional
     video.appendFrame(frame, frame, frame); // expects 3 images for the color channels
   }
 
-  // maybe draw the edges as background - use a background image and instead of clearing, init to
-  // background
+  // actually, this paintDot function is not meant for negative values
+  // todo: use red for positive and green or blue for negative values
+
 
   // write video to file:
   rsVideoFileWriter vw;
   vw.setFrameRate(frameRate);
-  vw.setCompressionLevel(0);  // 0: lossless, 10: good enough, 51: worst
+  vw.setCompressionLevel(10);  // 0: lossless, 10: good enough, 51: worst
+                               // 0 produces artifacts
   vw.setDeleteTemporaryFiles(false);
   vw.writeVideoToFile(video, "PDE");
 }
-
+// maybe make datastructure rsFrozenGraph that has the same interface as rsGraph for reading but
+// allows no restructuring - it's initialized from a regular rsGraph and then stays fixed, at least
+// with regard to topology - that may be more efficient to use in PDE solver, less indirection, 
+// more compact storage in memory (no scattering of the data all over the place)
 
 // The PDE is 1st order in time, in space, it may be 2nd order depending on settings
 void testPDE_1stOrder()
@@ -5357,13 +5362,16 @@ void testPDE_1stOrder()
   int My        = 20; // number of spatial samples in y direction
   int numFrames = 200;
   int width     = Mx*10;
-  int height    = My*10;
+  int height    = (int)round(My*10 * sqrt(3));
   int frameRate = 25;
 
   // Create the mesh:
   rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My); // mayb need to compute weights
   int M = mesh.getNumVertices();  // should be Mx*My
   //plotMesh(mesh);
+  // try triangular mesh - then, each vertex has 6 neighbors - this may make the estimation of the
+  // derivative more accurate - it uses more data, so it might be more accurate. maybe try also
+  // an 8-point stencil - figure out, how accuracy increases with number of stencil points
 
   // Set up initial conditions:
   Vec u0(M);
@@ -5377,7 +5385,7 @@ void testPDE_1stOrder()
   visualizeResult(mesh, result, width, height, frameRate);
   // we need some consideration for the aspect ratio
 
-  // this looks not like expected - something is wrong
+  // -when the wave hits hits the wall, it messes up
   // -the weights are not yet assigned, so they are supposed to by unity - which may actually be 
   //  appropriate
 

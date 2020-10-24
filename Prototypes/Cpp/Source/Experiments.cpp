@@ -5176,9 +5176,9 @@ std::vector<std::vector<T>> solveExamplePDE1(
   using ND   = rsNumericDifferentiator<float>;
 
   // Coefficients that determine, what sort of differential equation this is:
-  T ax  = 0.1f, ay  = 0.1f;  // (negative?) velocity components in x- and y-direction
-  T axx = 0.0f, ayy = 0.0f;  // diffusivity in x- and y-direction
-  T axy = 0.0f;              // a sort of shear diffusion? an a_yx would be redundant?
+  T ax  = -0.25f, ay  = -0.25f;  // (negative?) velocity components in x- and y-direction
+  T axx =  0.0f,  ayy =  0.0f;  // diffusivity in x- and y-direction
+  T axy =  0.0f;               // a sort of shear diffusion? an a_yx would be redundant?
 
   // create arrays for the dependent variable u and its various partial derivatives and do some
   // initializations:
@@ -5234,6 +5234,7 @@ std::vector<std::vector<T>> solveExamplePDE1(
 
 
   // https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation
+  // http://www.mathematik.uni-dortmund.de/~kuzmin/Transport.pdf
 
   int dummy = 0;
   return result; // do this later, also take the mesh as input
@@ -5250,6 +5251,31 @@ void getExtent(const rsGraph<rsVector2D<T>, T>& mesh, T* minX, T* maxX, T* minY,
     *minY = rsMin(*minY, vi.y);
     *maxY = rsMax(*maxY, vi.y); }
 }
+
+template<class T>
+void drawEdges(const rsGraph<rsVector2D<T>, T> mesh, rsImage<T>& img, 
+ T minX, T maxX, T minY, T maxY)
+{
+  rsImagePainter<T, T, T> painter(&img);
+  T brightness = T(0.5);
+  int w = img.getWidth();
+  int h = img.getHeight();
+  for(int i = 0; i < mesh.getNumVertices(); i++) 
+  {
+    rsVector2D<T> vi = mesh.getVertexData(i);
+    vi.x = rsLinToLin(vi.x, minX, maxX, T(0), T(w-1));
+    vi.y = rsLinToLin(vi.y, minY, maxY, T(h-1), T(0));
+    for(int k = 0; k < mesh.getNumEdges(i); k++)
+    {
+      int j = mesh.getEdgeTarget(i, k);
+      rsVector2D<T> vj = mesh.getVertexData(j);
+      vj.x = rsLinToLin(vj.x, minX, maxX, T(0), T(w-1));
+      vj.y = rsLinToLin(vj.y, minY, maxY, T(h-1), T(0));
+      painter.drawLineWu(vi.x, vi.y, vj.x, vj.y, brightness);
+    }
+  }
+}
+
 
 template<class T>
 void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vector<T>> result, 
@@ -5276,7 +5302,7 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
   T brightness = T(1);
 
 
-  rsImage<T> frame(width, height);
+  rsImage<T> frame(width, height), background(width, height);
   rsVideoRGB video(width, height);
   rsImagePainter<T, T, T> painter(&frame);
   // todo: maybe use rsAlphaMask for the painter for larger circles
@@ -5286,11 +5312,14 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
   mask.setSize(8.f);
   painter.setUseAlphaMask(true);
   painter.setAlphaMaskForDot(&mask);
-
+    
+  drawEdges(mesh, background, minX, maxX, minY, maxY);
 
   for(int n = 0; n < numFrames; n++) 
   {
     frame.clear();
+    //frame.copyPixelDataFrom(background);
+
     for(int i = 0; i < mesh.getNumVertices(); i++) 
     {
       rsVector2D<T> vi = mesh.getVertexData(i);
@@ -5326,7 +5355,7 @@ void testPDE_1stOrder()
   // Set up mesh and video parameters:
   int Mx        = 40; // number of spatial samples in x direction
   int My        = 20; // number of spatial samples in y direction
-  int numFrames = 100;
+  int numFrames = 200;
   int width     = Mx*10;
   int height    = My*10;
   int frameRate = 25;
@@ -5348,7 +5377,9 @@ void testPDE_1stOrder()
   visualizeResult(mesh, result, width, height, frameRate);
   // we need some consideration for the aspect ratio
 
-  // this looks not like expected - something is wron
+  // this looks not like expected - something is wrong
+  // -the weights are not yet assigned, so they are supposed to by unity - which may actually be 
+  //  appropriate
 
   int dummy = 0;
 }

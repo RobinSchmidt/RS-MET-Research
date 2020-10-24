@@ -5235,7 +5235,10 @@ std::vector<std::vector<T>> solveExamplePDE1(
 
 
   // https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation
-  // http://www.mathematik.uni-dortmund.de/~kuzmin/Transport.pdf
+
+
+
+  // http://www-personal.umd.umich.edu/~remski/java/source/Transport.html
 
   int dummy = 0;
   return result; // do this later, also take the mesh as input
@@ -5258,7 +5261,7 @@ void drawMesh(const rsGraph<rsVector2D<T>, T> mesh, rsImage<T>& img,
  T minX, T maxX, T minY, T maxY)
 {
   rsImagePainter<T, T, T> painter(&img);
-  T brightness = T(0.25);
+  T brightness = T(0.75);
   int w = img.getWidth();
   int h = img.getHeight();
   for(int i = 0; i < mesh.getNumVertices(); i++) 
@@ -5290,7 +5293,7 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
 
   // figure out spatial extent:
   T minX, maxX, minY, maxY;
-  T margin = 0.05f;
+  T margin = 0.01f;
   getExtent(mesh, &minX, &maxX, & minY, &maxY);
   T tmp = maxX-minX;
   minX -= margin * tmp;
@@ -5311,10 +5314,11 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
   rsImagePainter<T, T, T> painter;
 
   rsAlphaMask<T> mask;
-  mask.setSize(20.f);   // should be as large as possible without overlap
-  mask.setTransitionWidth(0.25);
+  mask.setSize(15.f);   // should be as large as possible without overlap
+  //mask.setTransitionWidth(0.25);
   // when changing the mask settings, we sometimes get a totally messed up result - the dots get 
   // *moved*(!!!) into the top-right corner - the brightness can also have this effect - wtf?
+  // it depends also on numFrames - there's a weird bug somewhere!
 
   painter.setUseAlphaMask(true);
   painter.setAlphaMaskForDot(&mask);
@@ -5325,8 +5329,6 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
   {
     positive.clear();
     negative.clear();
-    //frame.copyPixelDataFrom(background);
-
     for(int i = 0; i < mesh.getNumVertices(); i++) 
     {
       rsVector2D<T> vi = mesh.getVertexData(i);
@@ -5339,15 +5341,8 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
         painter.setImageToPaintOn(&negative);
       painter.paintDot(vi.x, vi.y, rsAbs(value)); 
     }
-
-    //rsImageProcessor<T>::normalize(positive);     // make optional
-    //rsImageProcessor<T>::normalize(negative);     // make optional
-
     video.appendFrame(positive, negative, background);
   }
-
-
-
 
   // write video to file:
   rsVideoFileWriter vw;
@@ -5371,7 +5366,7 @@ void testPDE_1stOrder()
   // Set up mesh and video parameters:
   int Mx        = 40; // number of spatial samples in x direction
   int My        = 20; // number of spatial samples in y direction
-  int numFrames = 20;
+  int numFrames = 250;
   int width     = Mx*10;
   int height    = (int)round(My*10 * sqrt(3));
   int frameRate = 25;

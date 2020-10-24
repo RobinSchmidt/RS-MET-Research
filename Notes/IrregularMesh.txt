@@ -6,12 +6,12 @@ are typically used. These, on the other hand, are conceptually much more
 difficult to understand and apply and can require considerable analytical 
 preparatory work to convert the problem into an appropriate form - which may 
 be not even always possible. So here, we want to consider an idea that allows 
-us to use a finite difference method on an irregular grid (or mesh).
+us to use a finite difference method on an irregular mesh.
 
 We need to find expressions for approximating spatial derivatives from known
 function values on grid points. On a regular 2D grid with grid spacings h_x, 
 h_y in the x- and y-directions, we could approximate the first spatial 
-derivatives with a forward difference (time variable has been suppressed):
+derivatives of a function u(x,y) with a forward difference:
 
   u_x ~= (u(x+h_x,y) - u(x,y)) / h_x
   u_y ~= (u(x,y+h_y) - u(x,y)) / h_y
@@ -21,9 +21,8 @@ irregular grids, the forward difference is a more convenient starting point.
 The key idea for the generalization to an irregular mesh is to approximate 
 directional derivatives into the directions of neighbouring grid points 
 instead of partial derivatives with respect to coordinate axes and later 
-retrieve the partial derivatives from those directional derivatives by 
-projecting them onto the unit vectors along the coordinate axes (which 
-is just a fancy way of describing the extraction of x- and y-components).
+retrieve the partial derivatives from those directional derivatives by a 
+least squares fit.
 
 Let P be a general grid point that is currently under consideration and let's
 assume, the point P is connected to 3 other grid points Q,R,S. We want to
@@ -39,26 +38,97 @@ We approximate the directional derivatives at P into the a,b,c directions as:
   u_b ~= (u(P+b)-u(P)) / |b|
   u_c ~= (u(P+c)-u(P)) / |c|
   
-where, of course, u(P+a) = u(Q), etc. Finally, to obtain our desired partial 
-derivatives with respect to x and y, we note that the x-components of 
-u_a,u_b,u_c can all be seen as approximations to u_x and the y-components as 
-approximations to u_y (right?). Let's denote them as u_a_x,u_a_y,u_b_x, etc. 
-We now form a weighted sum of them:
+where, of course, u(P+a) = u(Q), etc. Having found the estimates for the 3 
+directional derivatives, we now need a formula to convert them to estimates for
+the partial derivatives into the x- and y-direction which together constitue 
+the gradient vector g. To this end, we note that the directional derivative 
+u_v into any (normalized?) direction vector v can be computed from the gradient 
+g by just taking the scalar product of the two: 
 
-  u_x ~= w_a*u_a_x + w_b*u_b_x + w_c*u_c_x
-  u_y ~= w_a*u_a_y + w_b*u_b_y + w_c*u_c_y
-  
-where the weights are chosen to sum up to 1 and they should be inverserly 
-proportional to the lengths of the vectors, i.e. as algorithm:
+  u_v = <g,v>
 
-  w_a := 1 / |a|
-  w_b := 1 / |b|
-  w_c := 1 / |c|
-  k   := 1 / (w_a + w_b + w_c)
-  w_a *= k
-  w_b *= k
-  w_c *= k
-  
+D_v and v are the things what we have (for multiple vectors v: v = a, b, c in 
+our case, so we have u_a, u_b, u_c) and what we want is g. The second idea is to 
+set up the equations:
+
+  u_a = <g,a>
+  u_b = <g,b>
+  u_c = <g,c>
+
+and solving them. Now, in the 2D case, our gradient vector g has just 2 
+components and we have 3 equations, so we can't expect to find a gradient g 
+that exactly solves these 3 equations. We are dealing with an overdetermined 
+system of linear equations. Let's write it down in component form:
+
+  u_a = u_x*a_x + u_y*a_y
+  u_b = u_x*b_x + u_y*b_y
+  u_c = u_x*c_x + u_y*c_y
+
+and in matrix form:
+
+  |a_x a_y| * |u_x| = |u_a|
+  |b_x b_y|   |u_y|   |u_b|
+  |c_x c_y|           |u_c|
+
+In general, there will be no exact solution to this. What we can do, however, 
+is to find a least squares solution, i.e. a solution to the problem:
+
+  |a_x a_y| * |u_x| - |u_a| = min   (norm of this vector should be minimal)
+  |b_x b_y|   |u_y|   |u_b|
+  |c_x c_y|           |u_c|
+
+According to
+https://en.wikipedia.org/wiki/Linear_least_squares#Main_formulations 
+the least squares solution can be found by solving:
+
+        X^T     *     X     *  beta =      X^T      *   y 
+
+  |a_x b_x c_x| * |a_x a_y| * |u_x| = |a_x b_x c_x| * |u_a|
+  |a_y b_y c_y|   |b_x b_y|   |u_y|   |a_y b_y c_y|   |u_b|
+                  |c_x c_y|                           |u_c|
+
+Let's also introduce error weights w_a, w_a, w_c for the 3 neighbours:
+
+  |w_a*a_x  w_a*a_y| * |u_x| - |w_a*u_a| = min
+  |w_b*b_x  w_b*b_y|   |u_y|   |w_b*u_b|
+  |w_b*c_x  w_c*c_y|           |w_c*u_c|
+
+Defining A_x = w_a*a_x, B_x = w_b*b_x, U_a = w_a*u_a, etc., we get:
+
+  |A_x A_x C_x| * |A_x A_y| * |u_x| = |A_x B_x C_x| * |U_a|
+  |A_y A_y C_y|   |B_x A_y|   |u_y|   |A_y B_y C_y|   |U_b|
+                  |C_x A_y|                           |U_c|
+
+Let's call the matrix corresponding to (X^T * X) M and the right hand side r, 
+such that:
+
+  M * |u_x| = r,   M = |M_xx M_xy|, r = |r_x|
+      |u_y|            |M_xy M_yy|      |r_y|
+
+with
+
+  M_xx = A_xx^2  + B_xx^2  + C_xx^2
+  M_yy = A_x*A_y + B_x*B_y + C_x*C_y
+  M_yy = A_yy^2  + B_yy^2  + C_yy^2
+  r_x  = A_x*U_a + B_x*U_b + C_x*U_c
+  r_y  = A_y*U_a + B_y*U_b + C_y*U_c
+
+and when the vertex P in question has more than 3 neighbors, simply more 
+terms are added, so we can accumulate the matrix M and right hand side r
+conveniently in a loop over the neighbors of P.
+
+
+
+Conclusion:
+
+The two key ideas for this approximation method are directional derivatives and
+a least squares approximation...
+
+
+
+
+-------------------------------------------------------------------------------
+
 The idea behind choosing the weights inversely proportional to the distance 
 between the grid points is that closer grid points will give more accurate 
 approximations to the derivative, so they should get a higher weight. Higher
@@ -83,7 +153,11 @@ onto the coordinate unit vectors e_x,e_y to get an estimate for the respective
 component of the gradient. Consider the case, where the direction vector a goes
 up and we want to estimate the x-component of the gradient from the directional
 derivative along a - the projection of a onto x would be zero and so would be 
-the estimate for u_x given by a, i.e. u_x_a - that can't be right. I think, what 
+the estimate for u_x given by a, i.e. u_x_a - that can't be right. 
+
+
+
+I think, what 
 needs to be done instead is to set up a system of equations, like so:
 
   u_a = u_x*a_x + u_y*a_y
@@ -146,6 +220,8 @@ ToDo: see, if (and how) we recover the central difference rule on a regular
 grid...
 
 
+
+
 -------------------------------------------------------------------------------
 
 As an example, let's consider the diffusion equation in 2 spatial dimensions:
@@ -161,3 +237,30 @@ is one of the things that diffuse this way.
 
 References:
 https://en.wikipedia.org/wiki/Directional_derivative
+
+
+
+
+
+===============================================================================
+obsolete text material
+
+
+ we note that the x-components of 
+u_a,u_b,u_c can all be seen as approximations to u_x and the y-components as 
+approximations to u_y (right? ...WRONG!). Let's denote them as 
+u_a_x,u_a_y,u_b_x, etc. We now form a weighted sum of them:
+
+  u_x ~= w_a*u_a_x + w_b*u_b_x + w_c*u_c_x
+  u_y ~= w_a*u_a_y + w_b*u_b_y + w_c*u_c_y
+  
+where the weights are chosen to sum up to 1 and they should be inverserly 
+proportional to the lengths of the vectors, i.e. as algorithm:
+
+  w_a := 1 / |a|
+  w_b := 1 / |b|
+  w_c := 1 / |c|
+  k   := 1 / (w_a + w_b + w_c)
+  w_a *= k
+  w_b *= k
+  w_c *= k

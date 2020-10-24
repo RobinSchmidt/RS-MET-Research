@@ -107,11 +107,11 @@ such that:
 
 with
 
-  M_xx = A_xx^2  + B_xx^2  + C_xx^2
-  M_yy = A_x*A_y + B_x*B_y + C_x*C_y
-  M_yy = A_yy^2  + B_yy^2  + C_yy^2
-  r_x  = A_x*U_a + B_x*U_b + C_x*U_c
-  r_y  = A_y*U_a + B_y*U_b + C_y*U_c
+  M_xx = A_x^2   + B_x^2   + C_x^2     = sum V_x^2    where V_x = w * v_x
+  M_xy = A_x*A_y + B_x*B_y + C_x*C_y   = sum V_x*V_y
+  M_yy = A_y^2   + B_y^2   + C_y^2     = sum V_y^2
+  r_x  = A_x*U_a + B_x*U_b + C_x*U_c   = sum V_x*U_v
+  r_y  = A_y*U_a + B_y*U_b + C_y*U_c   = sum V_y*U_v
 
 and when the vertex P in question has more than 3 neighbors, simply more 
 terms are added, so we can accumulate the matrix M and right hand side r

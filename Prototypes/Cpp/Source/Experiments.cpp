@@ -5300,7 +5300,9 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
   maxY += margin * tmp;
 
 
-  T brightness = T(1);
+  T brightness = T(4);
+  // using brightness = 4, we get only a yellow spot in the top-right corner - wtf? the brightness
+  // has nothing to do with the position?
 
 
   rsImage<T> positive(width, height), negative(width, height), background(width, height);
@@ -5310,6 +5312,10 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
 
   rsAlphaMask<T> mask;
   mask.setSize(20.f);   // should be as large as possible without overlap
+  mask.setTransitionWidth(0.25);
+  // when changing the mask settings, we sometimes get a totally messed up result - the dots get 
+  // *moved*(!!!) into the top-right corner - the brightness can also have this effect - wtf?
+
   painter.setUseAlphaMask(true);
   painter.setAlphaMaskForDot(&mask);
     
@@ -5365,7 +5371,7 @@ void testPDE_1stOrder()
   // Set up mesh and video parameters:
   int Mx        = 40; // number of spatial samples in x direction
   int My        = 20; // number of spatial samples in y direction
-  int numFrames = 200;
+  int numFrames = 20;
   int width     = Mx*10;
   int height    = (int)round(My*10 * sqrt(3));
   int frameRate = 25;

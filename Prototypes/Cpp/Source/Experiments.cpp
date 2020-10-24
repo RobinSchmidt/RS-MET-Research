@@ -5258,7 +5258,7 @@ void drawMesh(const rsGraph<rsVector2D<T>, T> mesh, rsImage<T>& img,
  T minX, T maxX, T minY, T maxY)
 {
   rsImagePainter<T, T, T> painter(&img);
-  T brightness = T(0.125);
+  T brightness = T(0.25);
   int w = img.getWidth();
   int h = img.getHeight();
   for(int i = 0; i < mesh.getNumVertices(); i++) 
@@ -5303,14 +5303,13 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
   T brightness = T(1);
 
 
-  rsImage<T> frame(width, height), background(width, height);
+  rsImage<T> positive(width, height), negative(width, height), background(width, height);
+
   rsVideoRGB video(width, height);
-  rsImagePainter<T, T, T> painter(&frame);
-  // todo: maybe use rsAlphaMask for the painter for larger circles
+  rsImagePainter<T, T, T> painter;
 
   rsAlphaMask<T> mask;
-  //mask.setMaxSize(20);
-  mask.setSize(16.f);
+  mask.setSize(20.f);   // should be as large as possible without overlap
   painter.setUseAlphaMask(true);
   painter.setAlphaMaskForDot(&mask);
     
@@ -5318,8 +5317,9 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
 
   for(int n = 0; n < numFrames; n++) 
   {
-    //frame.clear();
-    frame.copyPixelDataFrom(background);
+    positive.clear();
+    negative.clear();
+    //frame.copyPixelDataFrom(background);
 
     for(int i = 0; i < mesh.getNumVertices(); i++) 
     {
@@ -5327,15 +5327,20 @@ void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vec
       vi.x = rsLinToLin(vi.x, minX, maxX, T(0), T(width-1));
       vi.y = rsLinToLin(vi.y, minY, maxY, T(height-1), T(0));
       T value = brightness * result[n][i];
-      painter.paintDot(vi.x, vi.y, value); 
+      if(value > T(0))
+        painter.setImageToPaintOn(&positive);
+      else
+        painter.setImageToPaintOn(&negative);
+      painter.paintDot(vi.x, vi.y, rsAbs(value)); 
     }
 
-    rsImageProcessor<T>::normalize(frame);     // make optional
-    video.appendFrame(frame, frame, frame); // expects 3 images for the color channels
+    //rsImageProcessor<T>::normalize(positive);     // make optional
+    //rsImageProcessor<T>::normalize(negative);     // make optional
+
+    video.appendFrame(positive, negative, background);
   }
 
-  // actually, this paintDot function is not meant for negative values
-  // todo: use red for positive and green or blue for negative values
+
 
 
   // write video to file:

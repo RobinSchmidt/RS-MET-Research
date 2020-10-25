@@ -5214,8 +5214,15 @@ std::vector<std::vector<T>> solveExamplePDE1(
   // todo: 
   // -how should we handle boundary conditions - and how are they implicitly handled, when we 
   //  don't care about them? i think, this corresponds to setting u(t) = 0 at the boundary (or 
-  //  whatever values the boundary points initially had....or wit - no - i think, it corresponds to
+  //  whatever values the boundary points initially had....or wait - no - i think, it corresponds to
   //  a free boundary
+  // -maybe the user could pass another array with the same length as the array of vertices that 
+  //  specifies for each vertex a boundary value b and boundary strength s and after (or before?) 
+  //  the update of u[i], we do u[i] = (1-s)*u[i] + s*b ...i think, if we do it before, it 
+  //  translates better to handling Neumann conditions the same way - in this case, we'd use
+  //  u_x[i] = (1-s)*u_x[i] + s*b
+  //  -this also allows for "soft" boundary conditions and the conditions can be applied anywhere 
+  //   in the grid -> it's straightforward to implement and very flexible
   // -i think, we need to make sure that also the boundary points all have at least 2 neighbors, 
   //  otheriwse the solver will encounter underdetermined systems (and use the minimum norm solution
   //  which may or may not be meaningful ...but probably, it's not)

@@ -5147,13 +5147,15 @@ void laplacian2D(const rsGraph<rsVector2D<T>, T>& mesh,
     }
     L[i] = u[i] - uSum/wSum;               // value minus weighted average of neighbors
   }
-  // reverse roles of j,k
+  // todo: reverse roles of j,k
 }
-// experimental - the idea is that thje Laplacian represents how far a value is away from the 
-// average of its neighborhood
-// we assume that the edge weights are inversely proportional to the distances
-// ...strange that we don't need the vertex data itself
-// applying this to the laplacian again should yield the biharmonic operator
+// -experimental - the idea is that the Laplacian represents, how far a value is away from the 
+//  average of its neighborhood (see the 3blue1brown video on the heat equation), so we compute 
+//  that weighted average ad return the difference of the value and the average
+// -we assume that the edge weights are inversely proportional to the distances - todo: lift that
+//  assumption - we can't assume that - but maybe it works with any choice of weights, due to the 
+//  fact that we divide by the sum of weights, it will in any cas produce a weighted average
+// -applying the laplacian to the laplacian again should yield the biharmonic operator
 
 
 // test solving the transport equation on an irregular grid, created from a regular grid by 
@@ -5195,9 +5197,14 @@ std::vector<std::vector<T>> solveExamplePDE1(
   {
     // Compute spatial derivatives numerically:
     ND::gradient2D(mesh, u,   u_x,  u_y );  // compute gradient vector (u_x, u_y)
-    ND::gradient2D(mesh, u_x, u_xx, u_xy);  // compute 1st row (or column?) of Hessian matrix
-    ND::gradient2D(mesh, u_y, u_yx, u_yy);  // compute 2nd row (or column?) of Hessian matrix
-    // u_xy should be equal to u_yx up to numerical inaccuracies - check that
+    ND::gradient2D(mesh, u_x, u_xx, u_xy);  // compute 1st row/column of Hessian matrix
+    ND::gradient2D(mesh, u_y, u_yx, u_yy);  // compute 2nd row/column of Hessian matrix
+    // u_xy should be equal to u_yx up to numerical inaccuracies (which may be higher than roundoff 
+    // error) - check that - maybe it's useful to use the average of the two estimates:
+    // u_xy = 0.5 * (u_xy + u_yx) in a scheme...but in many PDEs, the mixed derivatives are not 
+    // used anyway - instead, only the Laplacian = u_xx + u_yy is used which can be estimated by 
+    // our simpler laplacian2D function above which does not use the gradient but only the function
+    // u itself -> todo: compare the results of both estimation methods
 
     // Compute temporal derivative using the defining PDE:
     u_t = ax*u_x + ay*u_y + axx*u_xx + ayy*u_yy + axy*u_xy;
@@ -5222,10 +5229,23 @@ std::vector<std::vector<T>> solveExamplePDE1(
   //  translates better to handling Neumann conditions the same way - in this case, we'd use
   //  u_x[i] = (1-s)*u_x[i] + s*b
   //  -this also allows for "soft" boundary conditions and the conditions can be applied anywhere 
-  //   in the grid -> it's straightforward to implement and very flexible
+  //   in the grid -> it's straightforward to implement and very flexible - the code does not need 
+  //   to distiguish beteen inner points and boundary points - it just applies this sample simple 
+  //   "soft-condition" formula to all points
   // -i think, we need to make sure that also the boundary points all have at least 2 neighbors, 
-  //  otheriwse the solver will encounter underdetermined systems (and use the minimum norm solution
+  //  otherwise the solver will encounter underdetermined systems (and use the minimum norm solution
   //  which may or may not be meaningful ...but probably, it's not)
+  // -the method should be generally applicable to all PDEs that can be written explicitly as, for 
+//    example: u_tt = F(u, u_t, u_x, u_y, u_xx, ...) - the highest time deriavtive must be isolated
+  //  on one side. Implicit PDEs like F(u, u_t, u_tt, u_x, ...) = 0 can not easily be treated...but 
+  //  maybe they can be handled by computing the spatial derivatives as usual and then running a 
+  //  multidimensional root-finder to find (u,u_t,u_tt) with (u_x,u_y,...) as parameters at all 
+  //  points on the mesh?
+  // -try to apply the method to stationary problems, i.e. problems, where the LHS is not u_t or 
+  //  u_tt but 0 by just replacing the 0 by u_t and iterate until u_t has become 0 at all points, 
+  //  i.e. the system has converged to a stationary state
+  // -try to analyze stability using the von Neumann method, energy analysis and disturbations 
+  //  ("Störungstheorie")
 
   // todo: 
   // -allow the use to set an input ("potential") - it's a (space-dependent) constant that's added 

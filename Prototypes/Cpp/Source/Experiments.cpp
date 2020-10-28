@@ -5246,6 +5246,16 @@ std::vector<std::vector<T>> solveExamplePDE1(
   //  i.e. the system has converged to a stationary state
   // -try to analyze stability using the von Neumann method, energy analysis and disturbations 
   //  ("Störungstheorie")
+  // -in 1D schemes for the transport equation, it can be advanatageous to take a one-sided spatial
+  //  difference instead of a centered one in the direction of the movement of the wave (upwind 
+  //  scheme) - maybe in 2D and on irregular meshes, something similar can be done, by including 
+  //  settings the weight to zero for all neighbor node difference-vectors whose projection on the
+  //  velocity vector is negative
+  // -the transport equation is actually numerically more problematic than the (higher order in 
+  //  space) heat- or wave-equations - so maybe try these first...but these contain the laplacian
+  //  and we actually want to try the gradient estimation...hmmm
+  // -if the euqation includes advection (transport) and diffusio, maybe it could make sense to use
+  //  an upwind estimate for the advection term and a centered estimate for the diffusion term
 
   // todo: 
   // -allow the use to set an input ("potential") - it's a (space-dependent) constant that's added 

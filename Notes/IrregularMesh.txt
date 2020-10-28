@@ -93,6 +93,19 @@ Let's also introduce error weights w_a, w_a, w_c for the 3 neighbours:
   |w_b*b_x  w_b*b_y|   |u_y|   |w_b*u_b|
   |w_b*c_x  w_c*c_y|           |w_c*u_c|
 
+...noo - i think, it is wrong to multiply each matrix element with the weight...
+maybe instead, we need:
+
+
+  |w_a w_b w_c| * |a_x  a_y| * |u_x| - |w_a*u_a| = min
+                  |b_x  b_y|   |u_y|   |w_b*u_b|
+                  |c_x  c_y|           |w_c*u_c|
+
+...hmmm...that doesn't seem to make sense either -> figure out
+
+
+
+...obsolete:
 Defining A_x = w_a*a_x, B_x = w_b*b_x, U_a = w_a*u_a, etc., we get:
 
   |A_x A_x C_x| * |A_x A_y| * |u_x| = |A_x B_x C_x| * |U_a|

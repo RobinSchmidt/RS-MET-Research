@@ -5464,7 +5464,7 @@ void testTransportEquation()
   using Vec2 = rsVector2D<float>;
 
   // Equation and solver settings:
-  float dt = 0.05;                // time step
+  float dt = 0.05f;                // time step
   Vec2  v  = Vec2(1.f, 0.f);      // velocity vector
 
   // Visualization settings:
@@ -5502,14 +5502,14 @@ void testTransportEquation()
   // todo: try trapezoidal steps
 
   // Loop through the frames and for each frame, update the solution and record the result:
+  rsVideoWriterMesh<float> videoWriter;
   for(int n = 0; n < numFrames; n++)
   {
     doTimeStep();
-    //visualizer.recordFrame(mesh, u);  // todo: record result for visualization....
+    videoWriter.recordFrame(mesh, u);           // does nothing yet
     int dummy = 0;
   }
-
-  //visualizer.writeVideoFile("TransportEquation");
+  videoWriter.writeFile("TransportEquation");  // does nothing yet
 
 
   int dummy = 0;

@@ -322,6 +322,53 @@ protected:
 // https://slhck.info/video/2017/02/24/crf-guide.html
 
 
+//=================================================================================================
+
+/** A class to facilitate the creation of video files for recording videos of time-variant 
+functions that are defined on a mesh of type rsGraph<rsVector2D<T>, T> and writing them to disk.
+The user is supposed to create and set up the writer object and repeatedly call recordFrame in a 
+loop and calling writeFile when done. It's mainly intended to record the time evolution of mesh
+functions that are created, for example, by a PDE solver for irregular meshes for the purpose of
+visualizing what the PDE solver does. ...tbc... */
+
+template<class T>
+class rsVideoWriterMesh
+{
+
+public:
+
+  void setSize(int width, int height)
+  {
+    frameR.setSize(width, height);
+    frameG.setSize(width, height);
+    frameB.setSize(width, height);
+  }
+
+  void recordFrame(const rsGraph<rsVector2D<T>, T>& mesh, const std::vector<T>& meshFunction);
+
+  void writeFile(const std::string& name)
+  {
+
+  }
+
+protected:
+
+  rsImage<float> frameR, frameG, frameB; // image objects to store r,g,b values of current frame
+  //rsVideoRGB video;                      // video object to acculate the frames
+
+  //rsAlphaMask<float> brush;
+  //rsImagePainterFFF painter;
+
+};
+
+template<class T>
+void rsVideoWriterMesh<T>::recordFrame(
+  const rsGraph<rsVector2D<T>, T>& mesh, const std::vector<T>& u)
+{
+  // ...stuff to do....
+
+  int dummy = 0;
+}
 
 
 

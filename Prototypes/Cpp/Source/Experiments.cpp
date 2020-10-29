@@ -5547,6 +5547,40 @@ void testTransportEquation()
 
   // Try combining estimates at t=n, t=n+1/2, t=n with weights (1,2,1)/4 ...maybe tweak the weights
   // later
+  // (1) compute u_t at t = n and t = n+1 like in Heun's method
+  // (2) compute their average
+  // (3) compute u_t at t = n+1/2 going a half-step into the direction of the average from (2)
+  // (4) average the results from (2) and (3)
+  // (5) update solution with result of (4)
+  // ...this should result in a 3rd order accurate scheme (i hope)
+  auto doTimeStep3 = [&]()
+  {
+    computeTimeDerivative(u, tmp1);         // tmp1:  u_t at t = n
+    for(int i = 0; i < N; i++)
+      tmp2[i] = u[i] + dt * tmp1[i];        // tmp2:  u   at t = n+1 via Euler
+    computeTimeDerivative(tmp2, tmp3);      // tmp3:  u_t at t = n+1 via Euler
+    for(int i = 0; i < N; i++)
+      tmp1[i] = 0.5f * (tmp1[i] + tmp3[i]); // tmp1:   average of estimates at t = n and t = n+1
+
+    //updateSolution(u, tmp1); return;  //   // test - should give same results as Heun
+
+    // tmp1 now contains the estimate of u_t that would be used in the Heun method - but we use it
+    // here to do a preliminary midpoint step:
+    for(int i = 0; i < N; i++)
+      tmp2[i] = u[i] + 0.5f*dt * tmp1[i];  // tmp2:  u   at t = n+1/2 via Heun
+    computeTimeDerivative(tmp2, tmp3);     // tmp3:  u_t at t = n+1/2
+
+    // tmp3 now contains a midpoint estimate but using a Heun (instead of Euler) step to compute 
+    // where the midpoint is. Now we finally compute our actual estimate of u_t as average of Heun 
+    // method result and the (Heun-improved) midpoint method:
+    for(int i = 0; i < N; i++)
+      u_t[i] = 0.5f * (tmp1[i] + tmp3[i]);
+
+    updateSolution(u, u_t);
+  };
+  // ...hmm - result looks the same as with Heun or midpoint - no improvement visible - check for 
+  // bugs
+  // maybe this can be optimized using less temporaries
 
 
 
@@ -5562,9 +5596,10 @@ void testTransportEquation()
   videoWriter.initBackground(mesh);
   for(int n = 0; n < numFrames; n++)
   {
-    doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
+    //doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
     //doTimeStepMidpoint();
     //doTimeStepHeun();
+    doTimeStep3();
     videoWriter.recordFrame(mesh, u);
   }
   videoWriter.writeFile("TransportEquation");

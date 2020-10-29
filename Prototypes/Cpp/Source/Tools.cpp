@@ -353,6 +353,24 @@ public:
 
   void writeFile(const std::string& name, int frameRate = 25);
 
+  void copyPositivePixelDataFrom(const rsImage<float>& source, rsImage<float>& target) 
+  { 
+    rsAssert(target.hasSameShapeAs(source));
+    float* src = source.getPixelPointer(0, 0);
+    float* dst = target.getPixelPointer(0, 0);
+    for(int i = 0; i < source.getNumPixels(); i++)
+      dst[i] = rsMax(0.f, src[i]);
+  }
+
+  void copyNegativePixelDataFrom(const rsImage<float>& source, rsImage<float>& target) 
+  { 
+    rsAssert(target.hasSameShapeAs(source));
+    float* src = source.getPixelPointer(0, 0);
+    float* dst = target.getPixelPointer(0, 0);
+    for(int i = 0; i < source.getNumPixels(); i++)
+      dst[i] = rsMax(0.f, -src[i]);
+  }
+
 
 protected:
 
@@ -375,8 +393,9 @@ template<class T>
 rsVideoWriterMesh<T>::rsVideoWriterMesh()
 {
   painter.setImageToPaintOn(&foreground);
-  brush.setSize(15.f);
+  brush.setSize(10.f);
   painter.setAlphaMaskForDot(&brush);
+  painter.setUseAlphaMask(true);
 }
 
 template<class T>
@@ -394,7 +413,7 @@ template<class T>
 void rsVideoWriterMesh<T>::initBackground(const rsGraph<rsVector2D<T>, T>& mesh)
 {
   painter.setImageToPaintOn(&background);
-  float brightness = 0.75f;
+  float brightness = 0.25f;
   int w = background.getWidth();
   int h = background.getHeight();
   for(int i = 0; i < mesh.getNumVertices(); i++) 
@@ -436,8 +455,8 @@ void rsVideoWriterMesh<T>::recordFrame(
 
   // The blue channel is used for drawing the mesh in the background, the red channel draws 
   // positive values and the green channel draws (absolute values of) negative values
-  frameR.copyPositivePixelDataFrom(foreground);
-  frameG.copyNegativePixelDataFrom(foreground);
+  copyPositivePixelDataFrom(foreground, frameR);
+  copyNegativePixelDataFrom(foreground, frameG);
   frameB.copyPixelDataFrom(background);  // we don't need to do this for each frame
   video.appendFrame(frameR, frameG, frameB);
 

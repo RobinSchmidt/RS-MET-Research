@@ -5464,20 +5464,21 @@ void testTransportEquation()
   using Vec2 = rsVector2D<float>;
 
   // Equation and solver settings:
-  float dt = 0.05f;                // time step
-  Vec2  v  = Vec2(1.f, 0.f);       // velocity vector
+  float dt = 0.01f;                // time step - needs to be very small for Euler, like 0.002f
+  Vec2  v  = Vec2(1.0f, 0.3f);     // velocity vector
   Vec2  mu = Vec2(0.5f, 0.5f);     // center of initial Gaussian distribution
-  float sigma = 0.1f;              // variance
+  float sigma = 0.01f;             // variance
+  int density = 40;                // density of mesh points (number along each direction)
 
   // Visualization settings:
   int width     = 400;
   int height    = 400;
-  int numFrames = 25;
+  int numFrames = 50;
   int frameRate = 25;
 
   // Create the mesh:
   rsMeshGenerator2D<float> meshGen;
-  meshGen.setNumSamples(40, 40);
+  meshGen.setNumSamples(density, density);
   meshGen.setTopology(rsMeshGenerator2D<float>::Topology::torus);
   meshGen.setParameterRange(0.f, 1.f, 0.f, 1.f);             // rename to setRange
   meshGen.updateMeshes();                                    // get rid of this
@@ -5485,22 +5486,39 @@ void testTransportEquation()
 
   // Create and initialize data arrays for the funtion u(x,y,t):
   int N = mesh.getNumVertices();
-  Vec u(N), u_x(N), u_y(N);
+  Vec u(N), u_x(N), u_y(N), u_t(N); // mesh function and its spatial and temporal derivatives
+  Vec tmp(N);                       // temporaries, used vor different things in different schemes
   initWithGaussian2D(mesh, u, mu, sigma);
 
-  // Define lambda function that computes the partial derivatives u_x, u_y and updates our solution
-  // u = u(x,y,t) to the next time step u = u(x,y,t+dt) according to the transport equation:
-  auto doTimeStep = [&]()
+
+  // Define lambda function that computes the temporal derivative u_t by first computing the 
+  // spatial partial derivatives u_x, u_y using rsNumericlDifferentiator::gradient2D for meshes and
+  // then computing u_t from them via the transport equation: u_t = -dot(g,v) where g is the 
+  // gradient, v is the velocity and dot means the dot-product:
+  auto computeTimeDerivative = [&]()
   {
-    // Compute gradient g (stored in u_x, u_y) and update u according to the transport equation 
-    // u_t = -dot(g,v) where g is the gradient, v is the velocity and dot means the dot-product
-    rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // compute partial derivatives
-    for(int i = 0; i < N; i++) {
-      float u_t = -(u_x[i]*v.x + u_y[i]*v.y);  // negative dot product of gradient and velocity
-      u[i] += dt * u_t;                        // update u via explicit Euler step
-    }
+    rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
+    for(int i = 0; i < N; i++)
+      u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // u_t: temporal derivative
   };
-  // todo: try trapezoidal steps
+
+  // Define lambda function that computes the temporal derivative u_t and updates our solution
+  // u = u(x,y,t) to the next time step u = u(x,y,t+dt) using a smoothed Euler step. The parameter 
+  // s is a smoothing coefficient in the range 0..0.5, where 0 means normal Euler steps and 0.5 
+  // means averaged Euler steps (like in trapzoidal integration). So, with 0.5, the temporal 
+  // derivative is averaged between the current and previous time step. This is for 
+  // experimentation, but it seems to be useless - we'll see. When s = 1, only the derivative
+  // from the previous time step is used - but that seems to be even more silly.
+  auto doTimeStepEuler = [&](float s = 0.f) // s: smoothing from 0...0.5
+  {
+    computeTimeDerivative();
+    for(int i = 0; i < N; i++) {
+      u[i] += dt * ((1.f-s)*u_t[i] + s*tmp[i]); // update u via smoothed Euler step
+      rsCopy(u_t, tmp); }                       // remember u_t for next iteration
+  };
+
+  // ToDo: define more lambda functions for different time-stepping schemes: Heun, midpoint, etc.
+
 
   // Loop through the frames and for each frame, update the solution and record the result:
   rsVideoWriterMesh<float> videoWriter;
@@ -5508,11 +5526,38 @@ void testTransportEquation()
   videoWriter.initBackground(mesh);
   for(int n = 0; n < numFrames; n++)
   {
-    doTimeStep();
-    videoWriter.recordFrame(mesh, u);           // does nothing yet
+    doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
+    videoWriter.recordFrame(mesh, u);
   }
-  videoWriter.writeFile("TransportEquation");  // does nothing yet
+  videoWriter.writeFile("TransportEquation");
 
+  // Observations:
+  // -There is quite a lot of rippling and dispersion going on, but it can be remedied by choosing 
+  //  a very small time step dt. I tried reducing the density in order to make the ratio between 
+  //  spatial and temporal sampling better (Courant number or something), but it doesn't seem to 
+  //  help
+  // -Smoothing the Euler steps seems useless with regard to improving accuracy, but maybe the idea
+  //  can be used in other contexts to improve stability, when a scheme produces oscillations at
+  //  the time-stepping rate - we'll see...
+
+  // ToDo: 
+  // -try it with trapezoidal integration in time - this is supposed to be second order 
+  //  accurate (right?) whereas Euler steps are only first order accurate. We are currently only 
+  //  1st order accurate in time and 2nd order accurate in space - maybe we should do better in 
+  //  both. Maybe ther could be time-stepping schemes using even more of past estimates?
+  //  ...hmm - it doesn't seem to get better with trapezoidal steps - actually, it's a bit worse
+  // -try using a mesh with connections to diagonal neighbors - increase spatial precision by
+  //  4 powers 
+  // -try to improve time accuracy by using a strategy similar to the midpoint rule in ODE solvers:
+  //  do a prelimiray step by half the stepsize, compute the gradient there again and then do the
+  //  actual step with the gradient computed there - or try Heun's method:
+  //  https://en.wikipedia.org/wiki/Heun%27s_method
+  //  https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods#Second-order_methods_with_two_stages
+  //  it goes a tentative full step, then computes the new gradient there and the uses an average
+  //  of both gradients for the actual step
+  // -maybe try using double precision
+  // -try another PDE - wave equation, diffusion equation
+  // -the wrap-around does not seem to work - check the mesh connectivity
 
   int dummy = 0;
 }

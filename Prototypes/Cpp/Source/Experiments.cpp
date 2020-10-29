@@ -5486,13 +5486,12 @@ void testTransportEquation()
   Vec u(N), u_x(N), u_y(N);
   initWithGaussian2D(mesh, u, Vec2(0.5f, 0.5f), 0.1f);
 
-  // Define lambda function that updates our solution u = u(x,y,t) to the next time step 
-  // u = u(x,y,t+dt) and also updates the partial derivatives u_x, u_y according to the transport 
-  // equation:
+  // Define lambda function that computes the partial derivatives u_x, u_y and updates our solution
+  // u = u(x,y,t) to the next time step u = u(x,y,t+dt) according to the transport equation:
   auto doTimeStep = [&]()
   {
     // Compute gradient g (stored in u_x, u_y) and update u according to the transport equation 
-    // u_t = -dot(g,v) where g is the gradient and v is the velocity
+    // u_t = -dot(g,v) where g is the gradient, v is the velocity and dot means the dot-product
     rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // compute partial derivatives
     for(int i = 0; i < N; i++) {
       float u_t = -(u_x[i]*v.x + u_y[i]*v.y);  // negative dot product of gradient and velocity
@@ -5506,12 +5505,11 @@ void testTransportEquation()
   for(int n = 0; n < numFrames; n++)
   {
     doTimeStep();
-
-    // todo: record result for visualization....
-
+    //visualizer.recordFrame(mesh, u);  // todo: record result for visualization....
     int dummy = 0;
   }
 
+  //visualizer.writeVideoFile("TransportEquation");
 
 
   int dummy = 0;

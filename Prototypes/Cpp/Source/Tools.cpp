@@ -3007,7 +3007,7 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
-  void setNumSamples(int Nu, int Nv)
+  void setNumSamples(int Nu, int Nv) // rename to Nx, Ny
   {
     this->Nu = Nu;
     this->Nv = Nv;
@@ -3020,7 +3020,7 @@ public:
     this->v0 = v0;
     this->v1 = v1;
   }
-  // maybe get rid
+  // maybe get rid or if not, rename to setRange
 
   void setTopology(Topology newTopology)
   {
@@ -3057,6 +3057,7 @@ public:
     updateParameterMesh();
     updateSpatialMesh();
   }
+  // get rid of this!
 
   /** Returns the parameter mesh in u,v space. This is what a PDE solver needs to pass to
   rsNumericDifferentiator::gradient2D to compute numerical approximations to the partial
@@ -3066,10 +3067,13 @@ public:
   field f(u,v) in a PDE...but these are the conventions: u is conventionally used as first
   parameter in surface theory and also as scalar field variable in PDE theory...tbc... */
   rsGraph<rsVector2D<T>, T> getParameterMesh() const { return parameterMesh; }
+  // renamed to getMesh
 
   /** Returns the spatial mesh in (x,y,z)-space that corresponds to the parameter mesh in
   (u,v)-space. This is what a visualizer needs to display the results...tbc...  */
   rsGraph<rsVector3D<T>, T> getSpatialMesh()   const { return spatialMesh; }
+  // the functionality of mapping a 2D mesh of (u,v) parameters should be moved to another class,
+  // maybe rsMeshMapper_2D_to_3D
   // maybe they should return const references to the members
 
 

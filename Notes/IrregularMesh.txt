@@ -47,7 +47,7 @@ g by just taking the scalar product of the two:
 
   u_v = <g,v>
 
-D_v and v are the things what we have (for multiple vectors v: v = a, b, c in 
+u_v and v are the things what we have (for multiple vectors v: v = a, b, c in 
 our case, so we have u_a, u_b, u_c) and what we want is g. The second idea is to 
 set up the equations:
 

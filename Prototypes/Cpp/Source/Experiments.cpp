@@ -5168,11 +5168,17 @@ equation of the form:
    u_t = ax*u_x + ay*u_y + axx*u_xx + ayy*u_yy + axy*u_xy
 
 on an arbitrary grid of vertices using numerical estimation of spatial derivatives by the method of
-directional derivatives and an explicit Euler step in time. */
+directional derivatives and an explicit Euler step in time. 
+
+ToDo: maybe it's too ambitiuous to have such a general function - maybe treat the transport equation 
+first
+*/
 template<class T>
 std::vector<std::vector<T>> solveExamplePDE1(
   const rsGraph<rsVector2D<T>, T>& mesh, const std::vector<T> u0, int numTimeSteps, float deltaT)
 {
+  // under construction
+
   using Vec2 = rsVector2D<float>;
   using Vec  = std::vector<float>;
   using ND   = rsNumericDifferentiator<float>;
@@ -5273,8 +5279,6 @@ std::vector<std::vector<T>> solveExamplePDE1(
 
   // https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation
 
-
-
   // http://www-personal.umd.umich.edu/~remski/java/source/Transport.html
 
   int dummy = 0;
@@ -5316,7 +5320,6 @@ void drawMesh(const rsGraph<rsVector2D<T>, T> mesh, rsImage<T>& img,
     }
   }
 }
-
 
 template<class T>
 void visualizeResult(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<std::vector<T>> result, 
@@ -5435,6 +5438,48 @@ void testPDE_1stOrder()
   int dummy = 0;
 }
 
+template<class T>
+void initWithGaussian2D(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<T>& u,
+  rsVector2D<T> mu, T sigma)
+{
+  using Vec2 = rsVector2D<T>;
+  int N = mesh.getNumVertices();
+  rsAssert((int) u.size() == N);
+  for(int i = 0; i < N; i++)
+  {
+    Vec2 v = mesh.getVertexData(i) - mu;  // difference between vertex location and gaussian center
+    T    r = v.x*v.x + v.y*v.y;           // squared distance
+    u[i]   = exp(-(r*r)/(sigma*sigma));   // value of bivariate Gaussian
+  }
+}
+
+void testTransportEquation()
+{
+  // Under construction
+
+  // Solves the transport equation on a regular rectangular grid with periodic boundary conditions, 
+  // i.e. a toroidal topology of the grid
+
+  using Vec  = std::vector<float>;
+  using Vec2 = rsVector2D<float>;
+
+  // Create the mesh:
+  rsMeshGenerator2D<float> meshGen;
+  meshGen.setNumSamples(40, 40);
+  meshGen.setTopology(rsMeshGenerator2D<float>::Topology::torus);
+  meshGen.setParameterRange(0.f, 1.f, 0.f, 1.f);             // rename to setRange
+  meshGen.updateMeshes();                                    // get rid of this
+  rsGraph<Vec2, float> mesh = meshGen.getParameterMesh();    // rename to getMesh
+
+  // Create and initialize data arrays for the funtion u(x,y,t):
+  int N = mesh.getNumVertices();
+  Vec u(N), u_x(N), u_y(N);
+  initWithGaussian2D(mesh, u, Vec2(0.5f, 0.5f), 0.1f);
+
+
+
+  int dummy = 0;
+}
 
 
 void testWaveEquation()

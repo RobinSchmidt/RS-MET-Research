@@ -5463,6 +5463,16 @@ void testTransportEquation()
   using Vec  = std::vector<float>;
   using Vec2 = rsVector2D<float>;
 
+  // Equation and solver settings:
+  float dt = 0.05;                // time step
+  Vec2  v  = Vec2(1.f, 0.f);      // velocity vector
+
+  // Visualization settings:
+  int width     = 400;
+  int height    = 400;
+  int numFrames = 25;
+  int frameRate = 25;
+
   // Create the mesh:
   rsMeshGenerator2D<float> meshGen;
   meshGen.setNumSamples(40, 40);
@@ -5475,6 +5485,33 @@ void testTransportEquation()
   int N = mesh.getNumVertices();
   Vec u(N), u_x(N), u_y(N);
   initWithGaussian2D(mesh, u, Vec2(0.5f, 0.5f), 0.1f);
+
+  // Define lambda funtion that updates our solution u = u(x,y,t) to the next time step 
+  // u = u(x,y,t+dt) and also updates the partial derivatives u_x, u_y according to the transport 
+  // equation:
+  auto doTimeStep = [&]()
+  {
+    rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // compute partial derivatives
+
+    // update u according to the trasport equation:
+    for(int i = 0; i < N; i++)
+    {
+      // ....
+
+      int dummy = 0;
+    }
+
+  };
+
+  // Loop through the frames and for each frame, update the solution and record the result:
+  for(int n = 0; n < numFrames; n++)
+  {
+    doTimeStep();
+
+    // todo: record result for visualization....
+
+    int dummy = 0;
+  }
 
 
 

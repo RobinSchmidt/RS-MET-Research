@@ -82,8 +82,7 @@ public:
 
   rsVideoRGB(int width = 0, int height = 0/*, int frameRate*/)
   {
-    this->width     = width;
-    this->height    = height;
+    setSize(width, height);
     //this->frameRate = frameRate;
   }
 
@@ -95,6 +94,11 @@ public:
   not clipped, they will wrap around to zero when they overflow the valid range. */
   void setPixelClipping(bool shouldClip) { clipPixelValues = shouldClip; }
 
+  void setSize(int width, int height)
+  {
+    this->width  = width;
+    this->height = height;
+  }
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
@@ -347,11 +351,7 @@ public:
 
   void recordFrame(const rsGraph<rsVector2D<T>, T>& mesh, const std::vector<T>& meshFunction);
 
-  void writeFile(const std::string& name)
-  {
-
-  }
-
+  void writeFile(const std::string& name, int frameRate = 25);
 
 
 protected:
@@ -375,6 +375,7 @@ template<class T>
 rsVideoWriterMesh<T>::rsVideoWriterMesh()
 {
   painter.setImageToPaintOn(&foreground);
+  brush.setSize(15.f);
   painter.setAlphaMaskForDot(&brush);
 }
 
@@ -386,6 +387,7 @@ void rsVideoWriterMesh<T>::setSize(int w, int h)
   frameR.setSize(w, h);
   frameG.setSize(w, h);
   frameB.setSize(w, h);
+  video.setSize(w, h);
 }
 
 template<class T>
@@ -417,12 +419,40 @@ template<class T>
 void rsVideoWriterMesh<T>::recordFrame(
   const rsGraph<rsVector2D<T>, T>& mesh, const std::vector<T>& u)
 {
-  // ...stuff to do....
+  foreground.clear();
+  int w = foreground.getWidth();
+  int h = foreground.getHeight();
+  float brightness = 4.f;
+  for(int i = 0; i < mesh.getNumVertices(); i++) 
+  {
+    rsVector2D<T> vi = mesh.getVertexData(i);
+    vi.x = rsLinToLin(vi.x, xMin, xMax, T(0), T(w-1));
+    vi.y = rsLinToLin(vi.y, yMin, yMax, T(h-1), T(0));
+    T value = brightness * float(u[i]);
+    painter.paintDot(vi.x, vi.y, rsAbs(value)); 
+  }
+
+  //frameB.copyPixelDataFrom(background);
+
+  // The blue channel is used for drawing the mesh in the background, the red channel draws 
+  // positive values and the green channel draws (absolute values of) negative values
+  frameR.copyPositivePixelDataFrom(foreground);
+  frameG.copyNegativePixelDataFrom(foreground);
+  frameB.copyPixelDataFrom(background);  // we don't need to do this for each frame
+  video.appendFrame(frameR, frameG, frameB);
 
   int dummy = 0;
 }
 
-
+template<class T>
+void rsVideoWriterMesh<T>::writeFile(const std::string& name, int frameRate)
+{
+  rsVideoFileWriter vw;
+  vw.setFrameRate(frameRate);
+  vw.setCompressionLevel(10);  // 0: lossless, 10: good enough, 51: worst - 0 produces artifacts
+  vw.setDeleteTemporaryFiles(false);
+  vw.writeVideoToFile(video, name);
+}
 
 //=================================================================================================
 

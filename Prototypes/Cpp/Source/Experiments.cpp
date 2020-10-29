@@ -5487,7 +5487,7 @@ void testTransportEquation()
   // Create and initialize data arrays for the funtion u(x,y,t):
   int N = mesh.getNumVertices();
   Vec u(N), u_x(N), u_y(N), u_t(N); // mesh function and its spatial and temporal derivatives
-  Vec tmp(N);                       // temporaries, used vor different things in different schemes
+  Vec tmp1(N), tmp2(N), tmp3(N);    // temporaries, used vor different things in different schemes
   initWithGaussian2D(mesh, u, mu, sigma);
 
 
@@ -5495,7 +5495,7 @@ void testTransportEquation()
   // spatial partial derivatives u_x, u_y using rsNumericlDifferentiator::gradient2D for meshes and
   // then computing u_t from them via the transport equation: u_t = -dot(g,v) where g is the 
   // gradient, v is the velocity and dot means the dot-product:
-  auto computeTimeDerivative = [&]()
+  auto computeTimeDerivative = [&](Vec& u, Vec& u_t)
   {
     rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
     for(int i = 0; i < N; i++)
@@ -5511,13 +5511,46 @@ void testTransportEquation()
   // from the previous time step is used - but that seems to be even more silly.
   auto doTimeStepEuler = [&](float s = 0.f) // s: smoothing from 0...0.5
   {
-    computeTimeDerivative();
+    computeTimeDerivative(u, u_t);
     for(int i = 0; i < N; i++) {
-      u[i] += dt * ((1.f-s)*u_t[i] + s*tmp[i]); // update u via smoothed Euler step
-      rsCopy(u_t, tmp); }                       // remember u_t for next iteration
+      u[i] += dt * ((1.f-s)*u_t[i] + s*tmp1[i]); // update u via smoothed Euler step
+      rsCopy(u_t, tmp1); }                       // remember u_t for next iteration
   };
 
   // ToDo: define more lambda functions for different time-stepping schemes: Heun, midpoint, etc.
+
+  auto doTimeStepMidpoint = [&]()
+  {
+    computeTimeDerivative(u, tmp1);        // tmp1:  u_t at t = n
+    for(int i = 0; i < N; i++)
+      tmp2[i] = u[i] + 0.5f*dt * tmp1[i];  // tmp2:  u   at t = n+1/2 via Euler
+    computeTimeDerivative(tmp2, u_t);      // u_t:   u_t at t = n+1/2
+
+    for(int i = 0; i < N; i++)             // update solution (maybe factor out)
+      u[i] += dt * u_t[i];
+  };
+
+  auto doTimeStepHeun = [&]()
+  {
+    computeTimeDerivative(u, tmp1);        // tmp1:  u_t at t = n
+    for(int i = 0; i < N; i++)
+      tmp2[i] = u[i] + dt * tmp1[i];       // tmp2:  u   at t = n+1 via Euler
+    computeTimeDerivative(tmp2, tmp3);     // tmp3:  u_t at t = n+1 via Euler
+    for(int i = 0; i < N; i++)
+      u_t[i] = 0.5f * (tmp1[i] + tmp3[i]); // u_t:   average of estimates at t = n and t = n+1
+
+    for(int i = 0; i < N; i++)             // update solution (maybe factor out)
+      u[i] += dt * u_t[i];
+  };
+  // maybe this could use smoothing, too
+
+
+
+
+
+  // this uses an estimate (u_t(n) + u_t(n+1)) / 2
+  // try: (u_t(n) + 2*u_t(t+1/2) + u_t(n+1)) / 4 ..i.e. an average of Heun and midpoint method - i 
+  // think, this should be 3rd order accurate in dt since it uses 3 gradient evaluations
 
 
   // Loop through the frames and for each frame, update the solution and record the result:
@@ -5526,26 +5559,31 @@ void testTransportEquation()
   videoWriter.initBackground(mesh);
   for(int n = 0; n < numFrames; n++)
   {
-    doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
+    //doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
+    doTimeStepMidpoint();
+    //doTimeStepHeun();
     videoWriter.recordFrame(mesh, u);
   }
   videoWriter.writeFile("TransportEquation");
 
   // Observations:
-  // -There is quite a lot of rippling and dispersion going on, but it can be remedied by choosing 
-  //  a very small time step dt. I tried reducing the density in order to make the ratio between 
-  //  spatial and temporal sampling better (Courant number or something), but it doesn't seem to 
-  //  help
+  // -Withe the Euler steps, there is quite a lot of rippling and dispersion going on, but it can 
+  //  be remedied by choosing a very small time step dt. I tried reducing the density in order to 
+  //  make the ratio between spatial and temporal sampling better (Courant number or something), 
+  //  but it doesn't seem to help
   // -Smoothing the Euler steps seems useless with regard to improving accuracy, but maybe the idea
   //  can be used in other contexts to improve stability, when a scheme produces oscillations at
   //  the time-stepping rate - we'll see...
+  // -The Heun time stepping method is indeed a big improvement over Euler. Now it's clear what we 
+  //  have to do to get even better results: average more estimates of u_t in the interval t = n
+  //  and t = n+1, just like it is done in Runge-Kutta methods for ODEs.
+  // -I can't see any difference between midpoint and Heun (which is a good sign - they are supposed
+  //  to have the same error order) but maybe run the simulation longer for closer analysis.
 
   // ToDo: 
-  // -try it with trapezoidal integration in time - this is supposed to be second order 
-  //  accurate (right?) whereas Euler steps are only first order accurate. We are currently only 
-  //  1st order accurate in time and 2nd order accurate in space - maybe we should do better in 
-  //  both. Maybe ther could be time-stepping schemes using even more of past estimates?
-  //  ...hmm - it doesn't seem to get better with trapezoidal steps - actually, it's a bit worse
+  // -Implement more accurate (i.e. higher order) time-steppers. When the improvements start to 
+  //  level off, it may be due the accuracy of spatial derivatives not keeping up - in this case, 
+  //  use a mesh with more neighbors to increase spatial accuracy.
   // -try using a mesh with connections to diagonal neighbors - increase spatial precision by
   //  4 powers 
   // -try to improve time accuracy by using a strategy similar to the midpoint rule in ODE solvers:

@@ -5465,8 +5465,8 @@ void testTransportEquation()
 
   // Equation and solver settings:
   float dt = 0.01f;                // time step - needs to be very small for Euler, like 0.002f
-  Vec2  v  = Vec2(1.0f, 0.3f);     // velocity vector
-  Vec2  mu = Vec2(0.5f, 0.5f);     // center of initial Gaussian distribution
+  Vec2  v  = Vec2(1.0f,  0.3f);    // velocity vector
+  Vec2  mu = Vec2(0.25f, 0.25f);   // center of initial Gaussian distribution
   float sigma = 0.01f;             // variance
   int density = 40;                // density of mesh points (number along each direction)
 
@@ -5502,6 +5502,12 @@ void testTransportEquation()
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // u_t: temporal derivative
   };
 
+  auto updateSolution = [&](Vec& u, Vec& u_t)
+  {
+    for(int i = 0; i < N; i++) 
+      u[i] += dt * u_t[i];
+  };
+
   // Define lambda function that computes the temporal derivative u_t and updates our solution
   // u = u(x,y,t) to the next time step u = u(x,y,t+dt) using a smoothed Euler step. The parameter 
   // s is a smoothing coefficient in the range 0..0.5, where 0 means normal Euler steps and 0.5 
@@ -5517,17 +5523,13 @@ void testTransportEquation()
       rsCopy(u_t, tmp1); }                       // remember u_t for next iteration
   };
 
-  // ToDo: define more lambda functions for different time-stepping schemes: Heun, midpoint, etc.
-
   auto doTimeStepMidpoint = [&]()
   {
     computeTimeDerivative(u, tmp1);        // tmp1:  u_t at t = n
     for(int i = 0; i < N; i++)
       tmp2[i] = u[i] + 0.5f*dt * tmp1[i];  // tmp2:  u   at t = n+1/2 via Euler
     computeTimeDerivative(tmp2, u_t);      // u_t:   u_t at t = n+1/2
-
-    for(int i = 0; i < N; i++)             // update solution (maybe factor out)
-      u[i] += dt * u_t[i];
+    updateSolution(u, u_t);
   };
 
   auto doTimeStepHeun = [&]()
@@ -5538,12 +5540,13 @@ void testTransportEquation()
     computeTimeDerivative(tmp2, tmp3);     // tmp3:  u_t at t = n+1 via Euler
     for(int i = 0; i < N; i++)
       u_t[i] = 0.5f * (tmp1[i] + tmp3[i]); // u_t:   average of estimates at t = n and t = n+1
-
-    for(int i = 0; i < N; i++)             // update solution (maybe factor out)
-      u[i] += dt * u_t[i];
+    updateSolution(u, u_t);
   };
   // maybe this could use smoothing, too
 
+
+  // Try combining estimates at t=n, t=n+1/2, t=n with weights (1,2,1)/4 ...maybe tweak the weights
+  // later
 
 
 
@@ -5559,8 +5562,8 @@ void testTransportEquation()
   videoWriter.initBackground(mesh);
   for(int n = 0; n < numFrames; n++)
   {
-    //doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
-    doTimeStepMidpoint();
+    doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
+    //doTimeStepMidpoint();
     //doTimeStepHeun();
     videoWriter.recordFrame(mesh, u);
   }
@@ -5596,6 +5599,8 @@ void testTransportEquation()
   // -maybe try using double precision
   // -try another PDE - wave equation, diffusion equation
   // -the wrap-around does not seem to work - check the mesh connectivity
+  // -figure out, if the method could be used in the context of an implicit scheme - maybe not, but 
+  //  that may not be a problem, if it's stable in explicit schemes
 
   int dummy = 0;
 }

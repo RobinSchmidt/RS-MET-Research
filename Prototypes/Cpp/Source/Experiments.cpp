@@ -5465,7 +5465,9 @@ void testTransportEquation()
 
   // Equation and solver settings:
   float dt = 0.05f;                // time step
-  Vec2  v  = Vec2(1.f, 0.f);      // velocity vector
+  Vec2  v  = Vec2(1.f, 0.f);       // velocity vector
+  Vec2  mu = Vec2(0.5f, 0.5f);     // center of initial Gaussian distribution
+  float sigma = 0.1f;              // variance
 
   // Visualization settings:
   int width     = 400;
@@ -5484,7 +5486,7 @@ void testTransportEquation()
   // Create and initialize data arrays for the funtion u(x,y,t):
   int N = mesh.getNumVertices();
   Vec u(N), u_x(N), u_y(N);
-  initWithGaussian2D(mesh, u, Vec2(0.5f, 0.5f), 0.1f);
+  initWithGaussian2D(mesh, u, mu, sigma);
 
   // Define lambda function that computes the partial derivatives u_x, u_y and updates our solution
   // u = u(x,y,t) to the next time step u = u(x,y,t+dt) according to the transport equation:
@@ -5497,17 +5499,17 @@ void testTransportEquation()
       float u_t = -(u_x[i]*v.x + u_y[i]*v.y);  // negative dot product of gradient and velocity
       u[i] += dt * u_t;                        // update u via explicit Euler step
     }
-    int dummy = 0;
   };
   // todo: try trapezoidal steps
 
   // Loop through the frames and for each frame, update the solution and record the result:
   rsVideoWriterMesh<float> videoWriter;
+  videoWriter.setSize(width, height);
+  videoWriter.initBackground(mesh);
   for(int n = 0; n < numFrames; n++)
   {
     doTimeStep();
     videoWriter.recordFrame(mesh, u);           // does nothing yet
-    int dummy = 0;
   }
   videoWriter.writeFile("TransportEquation");  // does nothing yet
 

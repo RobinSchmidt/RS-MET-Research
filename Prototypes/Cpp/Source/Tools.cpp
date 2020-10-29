@@ -80,7 +80,7 @@ class rsVideoRGB
 
 public:
 
-  rsVideoRGB(int width, int height/*, int frameRate*/)
+  rsVideoRGB(int width = 0, int height = 0/*, int frameRate*/)
   {
     this->width     = width;
     this->height    = height;
@@ -337,12 +337,13 @@ class rsVideoWriterMesh
 
 public:
 
-  void setSize(int width, int height)
-  {
-    frameR.setSize(width, height);
-    frameG.setSize(width, height);
-    frameB.setSize(width, height);
-  }
+  rsVideoWriterMesh();
+
+  void setSize(int width, int height);
+
+  /** Before calling recordFrame in a loop, you may call this function to initialize the 
+  background onto which the mesh function is drawn - otherwise the background will be black. */
+  void initBackground(const rsGraph<rsVector2D<T>, T>& mesh);
 
   void recordFrame(const rsGraph<rsVector2D<T>, T>& mesh, const std::vector<T>& meshFunction);
 
@@ -351,15 +352,66 @@ public:
 
   }
 
+
+
 protected:
 
+  rsImage<float> background;
+  rsImage<float> foreground;
   rsImage<float> frameR, frameG, frameB; // image objects to store r,g,b values of current frame
-  //rsVideoRGB video;                      // video object to acculate the frames
+  rsVideoRGB video;                      // video object to acculate the frames
 
-  //rsAlphaMask<float> brush;
-  //rsImagePainterFFF painter;
+  rsAlphaMask<float> brush;
+  rsImagePainterFFF painter;
+
+  // range of the mesh-vertices - to be used for conversion from mesh-coordinates to pixel 
+  // coordinates (todo: make user adjustable):
+  T xMin = T(0), xMax = T(1);
+  T yMin = T(0), yMax = T(1);
 
 };
+
+template<class T>
+rsVideoWriterMesh<T>::rsVideoWriterMesh()
+{
+  painter.setImageToPaintOn(&foreground);
+  painter.setAlphaMaskForDot(&brush);
+}
+
+template<class T>
+void rsVideoWriterMesh<T>::setSize(int w, int h)
+{
+  foreground.setSize(w, h);
+  background.setSize(w, h);
+  frameR.setSize(w, h);
+  frameG.setSize(w, h);
+  frameB.setSize(w, h);
+}
+
+template<class T>
+void rsVideoWriterMesh<T>::initBackground(const rsGraph<rsVector2D<T>, T>& mesh)
+{
+  painter.setImageToPaintOn(&background);
+  float brightness = 0.75f;
+  int w = background.getWidth();
+  int h = background.getHeight();
+  for(int i = 0; i < mesh.getNumVertices(); i++) 
+  {
+    rsVector2D<T> vi = mesh.getVertexData(i);
+    vi.x = rsLinToLin(vi.x, xMin, xMax, T(0), T(w-1));
+    vi.y = rsLinToLin(vi.y, yMin, yMax, T(h-1), T(0));
+    for(int k = 0; k < mesh.getNumEdges(i); k++)
+    {
+      int j = mesh.getEdgeTarget(i, k);
+      rsVector2D<T> vj = mesh.getVertexData(j);
+      vj.x = rsLinToLin(vj.x, xMin, xMax, T(0), T(w-1));
+      vj.y = rsLinToLin(vj.y, yMin, yMax, T(h-1), T(0));
+      painter.drawLineWu(float(vi.x), float(vi.y), float(vj.x), float(vj.y), brightness);
+    }
+  }
+  painter.setImageToPaintOn(&foreground);
+}
+// optimize away the rsLinToLin calls
 
 template<class T>
 void rsVideoWriterMesh<T>::recordFrame(

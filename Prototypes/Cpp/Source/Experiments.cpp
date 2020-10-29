@@ -5486,22 +5486,21 @@ void testTransportEquation()
   Vec u(N), u_x(N), u_y(N);
   initWithGaussian2D(mesh, u, Vec2(0.5f, 0.5f), 0.1f);
 
-  // Define lambda funtion that updates our solution u = u(x,y,t) to the next time step 
+  // Define lambda function that updates our solution u = u(x,y,t) to the next time step 
   // u = u(x,y,t+dt) and also updates the partial derivatives u_x, u_y according to the transport 
   // equation:
   auto doTimeStep = [&]()
   {
+    // Compute gradient g (stored in u_x, u_y) and update u according to the transport equation 
+    // u_t = -dot(g,v) where g is the gradient and v is the velocity
     rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // compute partial derivatives
-
-    // update u according to the trasport equation:
-    for(int i = 0; i < N; i++)
-    {
-      // ....
-
-      int dummy = 0;
+    for(int i = 0; i < N; i++) {
+      float u_t = -(u_x[i]*v.x + u_y[i]*v.y);  // negative dot product of gradient and velocity
+      u[i] += dt * u_t;                        // update u via explicit Euler step
     }
-
+    int dummy = 0;
   };
+  // todo: try trapezoidal steps
 
   // Loop through the frames and for each frame, update the solution and record the result:
   for(int n = 0; n < numFrames; n++)

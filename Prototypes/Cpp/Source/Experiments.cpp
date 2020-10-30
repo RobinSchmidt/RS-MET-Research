@@ -5495,12 +5495,36 @@ void testTransportEquation()
   // spatial partial derivatives u_x, u_y using rsNumericlDifferentiator::gradient2D for meshes and
   // then computing u_t from them via the transport equation: u_t = -dot(g,v) where g is the 
   // gradient, v is the velocity and dot means the dot-product:
-  auto computeTimeDerivative = [&](Vec& u, Vec& u_t)
+  auto timeDerivative = [&](Vec& u, Vec& u_t)
   {
     rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
     for(int i = 0; i < N; i++)
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // u_t: temporal derivative
   };
+
+  // Computes an estimate for the time-derivative evaluated at the midpoint t + n/2. This estimate
+  // is used in the midpoint method.
+  auto timeDerivativeMidpoint = [&](Vec& u, Vec& u_t)
+  {
+    timeDerivative(u, tmp1);               // tmp1:  u_t at t = n
+    for(int i = 0; i < N; i++)
+      tmp2[i] = u[i] + 0.5f*dt * tmp1[i];  // tmp2:  u   at t = n+1/2 via Euler
+    timeDerivative(tmp2, u_t);             // u_t:   u_t at t = n+1/2
+  };
+
+  // Computes an estimate for the mean of time-derivatives evaluated at t and t + 1. This estimate
+  // is used in the Heun method.
+  auto timeDerivativeMean = [&](Vec& u, Vec& u_t)
+  {
+    timeDerivative(u, tmp1);               // tmp1:  u_t at t = n
+    for(int i = 0; i < N; i++)
+      tmp2[i] = u[i] + dt * tmp1[i];       // tmp2:  u   at t = n+1 via Euler
+    timeDerivative(tmp2, tmp3);            // tmp3:  u_t at t = n+1
+    for(int i = 0; i < N; i++)
+      u_t[i] = 0.5f * (tmp1[i] + tmp3[i]); // u_t:   average of estimates at t = n and t = n+1
+  };
+
+
 
   auto updateSolution = [&](Vec& u, Vec& u_t)
   {
@@ -5517,7 +5541,7 @@ void testTransportEquation()
   // from the previous time step is used - but that seems to be even more silly.
   auto doTimeStepEuler = [&](float s = 0.f) // s: smoothing from 0...0.5
   {
-    computeTimeDerivative(u, u_t);
+    timeDerivative(u, u_t);
     for(int i = 0; i < N; i++) {
       u[i] += dt * ((1.f-s)*u_t[i] + s*tmp1[i]); // update u via smoothed Euler step
       rsCopy(u_t, tmp1); }                       // remember u_t for next iteration
@@ -5525,19 +5549,16 @@ void testTransportEquation()
 
   auto doTimeStepMidpoint = [&]()
   {
-    computeTimeDerivative(u, tmp1);        // tmp1:  u_t at t = n
-    for(int i = 0; i < N; i++)
-      tmp2[i] = u[i] + 0.5f*dt * tmp1[i];  // tmp2:  u   at t = n+1/2 via Euler
-    computeTimeDerivative(tmp2, u_t);      // u_t:   u_t at t = n+1/2
+    timeDerivativeMidpoint(u, u_t);
     updateSolution(u, u_t);
   };
 
   auto doTimeStepHeun = [&]()
   {
-    computeTimeDerivative(u, tmp1);        // tmp1:  u_t at t = n
+    timeDerivative(u, tmp1);               // tmp1:  u_t at t = n
     for(int i = 0; i < N; i++)
       tmp2[i] = u[i] + dt * tmp1[i];       // tmp2:  u   at t = n+1 via Euler
-    computeTimeDerivative(tmp2, tmp3);     // tmp3:  u_t at t = n+1 via Euler
+    timeDerivative(tmp2, tmp3);            // tmp3:  u_t at t = n+1 via Euler
     for(int i = 0; i < N; i++)
       u_t[i] = 0.5f * (tmp1[i] + tmp3[i]); // u_t:   average of estimates at t = n and t = n+1
     updateSolution(u, u_t);
@@ -5557,10 +5578,10 @@ void testTransportEquation()
   // (5) update solution with result of (4)
   auto doTimeStepHM = [&]()  // HM: Heun-Midpoint
   {
-    computeTimeDerivative(u, tmp1);         // tmp1:  u_t at t = n
+    timeDerivative(u, tmp1);         // tmp1:  u_t at t = n
     for(int i = 0; i < N; i++)
       tmp2[i] = u[i] + dt * tmp1[i];        // tmp2:  u   at t = n+1 via Euler
-    computeTimeDerivative(tmp2, tmp3);      // tmp3:  u_t at t = n+1 via Euler
+    timeDerivative(tmp2, tmp3);      // tmp3:  u_t at t = n+1 via Euler
     for(int i = 0; i < N; i++)
       tmp1[i] = 0.5f * (tmp1[i] + tmp3[i]); // tmp1:   average of estimates at t = n and t = n+1
 
@@ -5570,7 +5591,7 @@ void testTransportEquation()
     // here to do a preliminary midpoint step:
     for(int i = 0; i < N; i++)
       tmp2[i] = u[i] + 0.5f*dt * tmp1[i];  // tmp2:  u   at t = n+1/2 via Heun
-    computeTimeDerivative(tmp2, tmp3);     // tmp3:  u_t at t = n+1/2
+    timeDerivative(tmp2, tmp3);     // tmp3:  u_t at t = n+1/2
 
     // tmp3 now contains a midpoint estimate but using a Heun (instead of Euler) step to compute 
     // where the midpoint is. Now we finally compute our actual estimate of u_t as average of Heun 

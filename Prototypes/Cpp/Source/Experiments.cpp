@@ -5465,7 +5465,7 @@ void testTransportEquation()
 
   // Equation and solver settings:
   float dt = 0.01f;                // time step - needs to be very small for Euler, like 0.002f
-  Vec2  v  = Vec2(1.0f,  0.3f);    // velocity vector
+  Vec2  v  = Vec2(1.0f,  0.3f);    // velocity vector - maybe make it a function of (x,y) later
   Vec2  mu = Vec2(0.25f, 0.25f);   // center of initial Gaussian distribution
   float sigma = 0.01f;             // variance
   int density = 40;                // density of mesh points (number along each direction)
@@ -5552,8 +5552,7 @@ void testTransportEquation()
   // (3) compute u_t at t = n+1/2 going a half-step into the direction of the average from (2)
   // (4) average the results from (2) and (3)
   // (5) update solution with result of (4)
-  // ...this should result in a 3rd order accurate scheme (i hope)
-  auto doTimeStep3 = [&]()
+  auto doTimeStepHM = [&]()  // HM: Heun-Midpoint
   {
     computeTimeDerivative(u, tmp1);         // tmp1:  u_t at t = n
     for(int i = 0; i < N; i++)
@@ -5578,11 +5577,28 @@ void testTransportEquation()
 
     updateSolution(u, u_t);
   };
-  // ...hmm - result looks the same as with Heun or midpoint - no improvement visible - check for 
-  // bugs
-  // maybe this can be optimized using less temporaries
+  // -this should result in a 3rd order accurate scheme (i hope), but the result looks the same 
+  //  as with Heun or midpoint - no improvement visible 
+  //  -check for bugs 
+  //  -or maybe the spatial accuracy is already too bad for this? we want to achieve 3rd order
+  //   in time, but maybe that makes no sense when the spatial error is only 2nd order? maybe the 
+  //   spatial order should be >= the temporal order, otherwise increasing temporal order will not 
+  //   help?
+  // -try doing it the other way around: first making a midpoint estimate and then use this to make 
+  //  a preliminary Heun estimate - call it MH for Midpoint-Heun
+  // -maybe this can be optimized using less temporaries
 
+  // Try combining midpoint and Heun with midpoint first:
+  // (1) compute u_t at t = n and t = n+1/2 like in the midpoint method
+  // (2) compute u at t = n+1 using the u_t estimate at t = n + 1/2 from (1)
+  // (3) compute u_t at t = n+1 using u as computed in (2)
+  // (4) compute a weighted average of u_t at t = n, t = n+1/2 and t = n+1 computed in (1),(3)
+  // (5) update solution with result of (4)
+  auto doTimeStepMH = [&]()  // MH: Midpoint-Heun
+  {
+    // ...
 
+  };
 
 
   // this uses an estimate (u_t(n) + u_t(n+1)) / 2
@@ -5599,7 +5615,7 @@ void testTransportEquation()
     //doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
     //doTimeStepMidpoint();
     //doTimeStepHeun();
-    doTimeStep3();
+    doTimeStepHM();
     videoWriter.recordFrame(mesh, u);
   }
   videoWriter.writeFile("TransportEquation");
@@ -5629,6 +5645,7 @@ void testTransportEquation()
   //  actual step with the gradient computed there - or try Heun's method:
   //  https://en.wikipedia.org/wiki/Heun%27s_method
   //  https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods#Second-order_methods_with_two_stages
+  //  https://en.wikipedia.org/wiki/List_of_Runge%E2%80%93Kutta_methods#Explicit_methods
   //  it goes a tentative full step, then computes the new gradient there and the uses an average
   //  of both gradients for the actual step
   // -maybe try using double precision

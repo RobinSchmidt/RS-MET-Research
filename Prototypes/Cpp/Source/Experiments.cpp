@@ -5462,6 +5462,7 @@ void testTransportEquation()
 
   using Vec  = std::vector<float>;
   using Vec2 = rsVector2D<float>;
+  using AT   = rsArrayTools;
 
   // Equation and solver settings:
   float dt = 0.01f;                // time step - needs to be very small for Euler, like 0.002f
@@ -5579,9 +5580,31 @@ void testTransportEquation()
   // ...if it works, this should be optimized: the function both compute the same estimate u_t at
   // t = n twice!
 
+  // A classic Runge-Kutta time-step of order 4, adapted to the PDE scenario: the function "f" 
+  // that is typically seen in textbooks is replaced by our "timeDerivative" function that fills
+  // a whole array and "h" is replaced by our time-delta dt:
+  Vec k1(N), k2(N), k3(N), k4(N), uk(N); // arrays for the k-values in RK4 and u + ki
+  auto doTimeStepRungeKutta4 = [&]()
+  {
+    // Compute the (arrays of the) 4 k-values:
+    timeDerivative(u,  k1);                                    // k1 = f(u)
+    AT::weightedSum(&u[0], &k1[0], &uk[0], N, 1.f, 0.5f*dt);   // uk =   u + (h/2)*k1
+    timeDerivative(uk, k2);                                    // k2 = f(u + (h/2)*k1) = f(uk)
+    AT::weightedSum(&u[0], &k2[0], &uk[0], N, 1.f, 0.5f*dt);   // uk =   u + (h/2)*k2
+    timeDerivative(uk, k3);                                    // k3 = f(u + (h/2)*k2) = f(uk)
+    AT::weightedSum(&u[0], &k3[0], &uk[0], N, 1.f, 1.0f*dt);   // uk =   u + h*k3
+    timeDerivative(uk, k4);                                    // k4 = f(u + h*k3)
 
-
-
+    // Do the RK4 step using a weighted average of the 4 k-values:
+    for(int i = 0; i < N; i++)
+      u[i] += (dt/6.f) * (k1[i] + 2.f*(k2[i] + k3[i]) + k4[i]);
+  };
+  // needs test
+  // ToDo: Combine an initial section (of 4 frames) computed via RK4 with subsequent frames 
+  // computed by 4th order Adams-Bashforth or Adams-Moulton steps. These are multistep methods 
+  // that re-use past computations of u and/or u_t from previous time-steps. This gives also a 4th 
+  // order in time scheme but with 4 times less evaluations of the expensive timeDerivative 
+  // function. See "Höhere Mathematik in Rezepten", page 384
 
   // Try combining estimates at t=n, t=n+1/2, t=n with weights (1,2,1)/4 ...maybe tweak the weights
   // later
@@ -5638,7 +5661,6 @@ void testTransportEquation()
 
   };
 
-
   // this uses an estimate (u_t(n) + u_t(n+1)) / 2
   // try: (u_t(n) + 2*u_t(t+1/2) + u_t(n+1)) / 4 ..i.e. an average of Heun and midpoint method - i 
   // think, this should be 3rd order accurate in dt since it uses 3 gradient evaluations
@@ -5653,7 +5675,8 @@ void testTransportEquation()
     //doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
     //doTimeStepMidpoint();
     //doTimeStepHeun();
-    doTimeStepMidHeun();    // this sucks!
+    //doTimeStepMidHeun();    // this sucks!
+    doTimeStepRungeKutta4();
     //doTimeStepHM();
     videoWriter.recordFrame(mesh, u);
   }
@@ -5678,6 +5701,9 @@ void testTransportEquation()
   //  temporal accuracy, when the spacial accuracy is not high enough
   //  -> done: adding diagonals does not seem to help to get rid of the dispersion - it just gets
   //     oriented more diagonally
+  // -RK4 does not seem to better than Heun either - in fact, the result looks exactly the same
+  //  -check for bugs
+  //  -try it with more accurate spatial derivatives
 
   // ToDo: 
   // -Implement more accurate (i.e. higher order) time-steppers. When the improvements start to 

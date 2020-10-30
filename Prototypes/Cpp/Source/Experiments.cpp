@@ -5555,18 +5555,32 @@ void testTransportEquation()
 
   auto doTimeStepHeun = [&]()
   {
-    timeDerivative(u, tmp1);               // tmp1:  u_t at t = n
-    for(int i = 0; i < N; i++)
-      tmp2[i] = u[i] + dt * tmp1[i];       // tmp2:  u   at t = n+1 via Euler
-    timeDerivative(tmp2, tmp3);            // tmp3:  u_t at t = n+1 via Euler
-    for(int i = 0; i < N; i++)
-      u_t[i] = 0.5f * (tmp1[i] + tmp3[i]); // u_t:   average of estimates at t = n and t = n+1
+    timeDerivativeMean(u, u_t);
     updateSolution(u, u_t);
   };
   // maybe this could use smoothing, too
 
-  // factor out functions computeMeanTimeDerivativeHeun and from midpoint 
-  // computeTimeDerivativeMidpoint, so we can conveninetly build a function that combines the two
+  // A time-stepper using a mean of midpoint and Heun method:
+  auto doTimeStepMidHeun = [&]()
+  {
+    timeDerivativeMidpoint(u, tmp1);
+    timeDerivativeMean(    u, tmp2);
+
+    rsPlotVectors(tmp1, tmp2);
+
+    for(int i = 0; i < N; i++)
+      u_t[i] = 0.5f * (tmp1[i] + tmp2[i]);
+
+    updateSolution(u, u_t);
+  };
+  // this actually produces garbage - why? ...because timeDerivativeMean overwrites tmp1 with a 1st
+  // order estimate? ..the two function calls operate on the same temp-data - introduce separate
+  // temp arrays for u_t_mid and u_t_mean
+  // ...if it works, this should be optimized: the function both compute the same estimate u_t at
+  // t = n twice!
+
+
+
 
 
   // Try combining estimates at t=n, t=n+1/2, t=n with weights (1,2,1)/4 ...maybe tweak the weights
@@ -5637,8 +5651,9 @@ void testTransportEquation()
   for(int n = 0; n < numFrames; n++)
   {
     //doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
-    doTimeStepMidpoint();
+    //doTimeStepMidpoint();
     //doTimeStepHeun();
+    doTimeStepMidHeun();    // this sucks!
     //doTimeStepHM();
     videoWriter.recordFrame(mesh, u);
   }

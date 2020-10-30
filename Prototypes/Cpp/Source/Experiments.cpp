@@ -5468,7 +5468,7 @@ void testTransportEquation()
   Vec2  v  = Vec2(1.0f,  0.3f);    // velocity vector - maybe make it a function of (x,y) later
   Vec2  mu = Vec2(0.25f, 0.25f);   // center of initial Gaussian distribution
   float sigma = 0.01f;             // variance
-  int density = 40;                // density of mesh points (number along each direction)
+  int density = 33;                // density of mesh points (number along each direction)
 
   // Visualization settings:
   int width     = 400;
@@ -5544,6 +5544,9 @@ void testTransportEquation()
   };
   // maybe this could use smoothing, too
 
+  // factor out functions computeMeanTimeDerivativeHeun and from midpoint 
+  // computeTimeDerivativeMidpoint, so we can conveninetly build a function that combines the two
+
 
   // Try combining estimates at t=n, t=n+1/2, t=n with weights (1,2,1)/4 ...maybe tweak the weights
   // later
@@ -5613,9 +5616,9 @@ void testTransportEquation()
   for(int n = 0; n < numFrames; n++)
   {
     //doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
-    //doTimeStepMidpoint();
+    doTimeStepMidpoint();
     //doTimeStepHeun();
-    doTimeStepHM();
+    //doTimeStepHM();
     videoWriter.recordFrame(mesh, u);
   }
   videoWriter.writeFile("TransportEquation");
@@ -5633,6 +5636,12 @@ void testTransportEquation()
   //  and t = n+1, just like it is done in Runge-Kutta methods for ODEs.
   // -I can't see any difference between midpoint and Heun (which is a good sign - they are supposed
   //  to have the same error order) but maybe run the simulation longer for closer analysis.
+  // -HM is slightly better than Heun with density = 65 - but the difference is not as big as 
+  //  expected - maybe try using a grid with higher connectivity (i.e. connections also to diagonal
+  //  neighbors) to increase spatial accuracy - maybe it makes no sense to try to increase the 
+  //  temporal accuracy, when the spacial accuracy is not high enough
+  //  -> done: adding diagonals does not seem to help to get rid of the dispersion - it just gets
+  //     oriented more diagonally
 
   // ToDo: 
   // -Implement more accurate (i.e. higher order) time-steppers. When the improvements start to 
@@ -5653,6 +5662,12 @@ void testTransportEquation()
   // -the wrap-around does not seem to work - check the mesh connectivity
   // -figure out, if the method could be used in the context of an implicit scheme - maybe not, but 
   //  that may not be a problem, if it's stable in explicit schemes
+
+  // Notes:
+  // -In the book "Finite Difference Computing with PDEs", chapter 4, it is said that PDEs 
+  //  involving 1st order spatial derivatives (such as the transport equation) are actually harder 
+  //  to treat numerically than those involving only 2nd order spatial derivatives (such as the 
+  //  wave- or heat-equation), so we are doing already a sort of stress-test here.
 
   int dummy = 0;
 }

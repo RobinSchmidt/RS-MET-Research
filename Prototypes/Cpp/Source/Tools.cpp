@@ -3273,7 +3273,12 @@ protected:
   /** Adds the connections that are always present, regardless of selected topology. */
   void addCommonConnections()
   {
-    connectInner();
+    connectInner();             // rename to connectInnerStraight
+
+    //connectInnerDiagonal();     
+    // make optional - or maybe connectInner should do the switch - seems to lead to memory 
+    // corruption
+
     connectTop();
     connectBottom();
     connectLeft();
@@ -3316,6 +3321,19 @@ protected:
         parameterMesh.addEdge(k, south(i, j)); }}
   }
   // maybe make a version to connect to diagonal neighbors, too
+
+  void connectInnerDiagonal()
+  {
+    for(int i = 1; i < Nu-1; i++) {
+      for(int j = 1; j < Nv-1; j++) {
+        int k = flatIndex(i, j);
+        parameterMesh.addEdge(k, northEast(i, j));
+        parameterMesh.addEdge(k, northWest(i, j));
+        parameterMesh.addEdge(k, southEast(i, j));
+        parameterMesh.addEdge(k, southWest(i, j)); }}
+  }
+  // maybe split into 2 functions for west and east diagonals
+
 
   /** Connects the vertices at the top, except for the (top-left and top-right) corners to their
   left, right and bottom neighbours. */
@@ -3425,15 +3443,15 @@ protected:
         parameterMesh.setVertexData(k, rsVector2D<T>(x, y)); }}
   }
 
-
+  // Functions to compute vertex indices for neighbors:
   int east(     int i, int j) const { return flatIndex(i+1, j  ); }
   int west(     int i, int j) const { return flatIndex(i-1, j  ); }
   int north(    int i, int j) const { return flatIndex(i,   j+1); }
   int south(    int i, int j) const { return flatIndex(i,   j-1); }
-
-
-
-
+  int northEast(int i, int j) const { return flatIndex(i+1, j+1); }
+  int northWest(int i, int j) const { return flatIndex(i-1, j+1); }
+  int southEast(int i, int j) const { return flatIndex(i+1, j-1); }
+  int southWest(int i, int j) const { return flatIndex(i-1, j-1); }
 
 
 

@@ -5473,6 +5473,41 @@ void removeDirectedConnections(rsGraph<rsVector2D<T>, T>& mesh, rsVector2D<T> d)
         mesh.removeEdgeAtIndex(i, k);
         numNeighbors--; }}}
 }
+// make a function that instead of removing the edges altogether introduces a factor between 0 and
+// 1 - maybe based on the actual value of rsDot(dv, d) / (rsNorm(dv)*rsNorm(d)) - allow user to 
+// trade off numeric dispersion vs numeric diffusion
+
+
+template<class T>
+void weightEdgesByDirection(rsGraph<rsVector2D<T>, T>& mesh, rsVector2D<T> d, T amount)
+{
+  using Vec2 = rsVector2D<T>;
+  int N = mesh.getNumVertices();
+  for(int i = 0; i < N; i++) 
+  {
+    Vec2 vi = mesh.getVertexData(i);
+    int numNeighbors = mesh.getNumEdges(i);
+    for(int k = 0; k < numNeighbors; k++) 
+    {
+      int j = mesh.getEdgeTarget(i, k);
+      const Vec2& vj = mesh.getVertexData(j);
+      Vec2 dv = vj - vi;
+      T c = rsDot(dv, d) / (rsNorm(dv) * rsNorm(d)); // correlation, todo: precompute norm of d
+      T e = mesh.getEdgeData(i, k);
+      if(c > T(0))
+      {
+        e *= (1-amount) + amount*c;  // or mybe we should just do nothing?
+      }
+      else
+      {
+        e *= (1-amount);
+        //e *= (1-amount) + (1+amount*c);
+      }
+      mesh.setEdgeData(i, k, e);
+    }
+  }
+}
+
 
 void testTransportEquation()
 {
@@ -5491,7 +5526,8 @@ void testTransportEquation()
   Vec2  mu = Vec2(0.25f, 0.25f);   // center of initial Gaussian distribution
   float sigma = 0.0025f;           // variance
   int density = 65;                // density of mesh points (number along each direction)
-  bool upwind = false;             // if true, mesh connections in direction of v are deleted
+  //bool upwind = false;             // if true, mesh connections in direction of v are deleted
+  float upwind = 0.5f;
 
   // maybe compute Courant number, try special values like 1, 1/2 - maybe use a velocity vector
   // with unit length (like (0.8,0.6)) and an inverse power of 2 for dt, if density is a power of 2
@@ -5500,7 +5536,7 @@ void testTransportEquation()
   // Visualization settings:
   int width     = 400;
   int height    = 400;
-  int numFrames = 50;
+  int numFrames = 100;
   int frameRate = 25;
 
   // Create the mesh:
@@ -5510,8 +5546,9 @@ void testTransportEquation()
   meshGen.setParameterRange(0.f, 1.f, 0.f, 1.f);             // rename to setRange
   meshGen.updateMeshes();                                    // get rid of this
   rsGraph<Vec2, float> mesh = meshGen.getParameterMesh();    // rename to getMesh
-  if(upwind)
-    removeDirectedConnections(mesh, v); 
+  //if(upwind)
+  //  removeDirectedConnections(mesh, v); 
+  weightEdgesByDirection(mesh, -v, upwind);
 
   // Compute Courant number:
   float dx = 1.f / float(density-1);      // more generally: (xMax-xMin) / (xDensity-1)
@@ -5774,7 +5811,9 @@ void testTransportEquation()
   //  does not seem to reduce the dispersion further
   // -Using more neighbors (8) seems to leave the hape more intact and the ripples adjust more long
   //  the direction of movement (rather than along the grid directions)
-  // -with the upwind scheme, we still get NaNs - seemingly spreading out from the bottom left
+  // -Try to make the "upwind" parameter continuous: scale down the weights of the downwind 
+  //  connections instead of removing them entirely -> user can dial in a tradeoff between numeric
+  //  dispersion and numeric diffusion
 
 
   // ToDo: 

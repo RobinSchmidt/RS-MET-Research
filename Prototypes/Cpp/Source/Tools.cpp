@@ -3322,23 +3322,35 @@ protected:
   }
   // maybe make a version to connect to diagonal neighbors, too
 
+
+
   void connectInnerDiagonal()
   {
     for(int i = 1; i < Nu-1; i++) {
-      for(int j = 1; j < Nv-1; j++) {
+      for(int j = 2; j < Nv-1; j++) {
         int k = flatIndex(i, j);
-        //parameterMesh.addEdge(k, northEast(i, j));
-
+        parameterMesh.addEdge(k, northEast(i, j));
         parameterMesh.addEdge(k, northWest(i, j));
         parameterMesh.addEdge(k, southEast(i, j));
-
         //int k2 = southWest(i, j);
-        //parameterMesh.addEdge(k, southWest(i, j)); 
+        parameterMesh.addEdge(k, southWest(i, j)); 
         // This call creates memory corruption error later on, namely when rsImage::allocateMemory
-        // is called. we 
+        // is called. WTF?!
       }
     }
+
+    // The j-loop starts at 2, because of weird memory corruptions in testTransportEquation when it 
+    // starts at 1 as it actually should. I think, they come from the southWest-edge - for some 
+    // value of i, with j==1, there must be something going wrong -> figure out and debug and write
+    // a note about what it was. It's a kinda lucky circumstance that i found the location of the 
+    // bug, when its effect occurs totally elsewhere. This should be documented for reference.
+    // For debug:
+    //int i = 2, j = 1;  // i = 1 or Nu-2 do not trigger it
+    //int k = flatIndex(i, j);
+    //parameterMesh.addEdge(k, southWest(i, j));
+
   }
+
   // maybe split into 2 functions for west and east diagonals
 
 

@@ -5453,6 +5453,27 @@ void initWithGaussian2D(const rsGraph<rsVector2D<T>, T>& mesh, std::vector<T>& u
   }
 }
 
+/** Removes edges from the mesh that have a positive component in the given direction d, i.e. the
+dot product of their direction vector with d is strictly greater than zero. Can be used to modify 
+the mesh to implement an upwind scheme for the transport equation in which case the velocity vector
+should be passed as d. */
+template<class T>
+void removeDirectedConnections(rsGraph<rsVector2D<T>, T>& mesh, rsVector2D<T> d)
+{
+  using Vec2 = rsVector2D<T>;
+  int N = mesh.getNumVertices();
+  for(int i = 0; i < N; i++) {
+    Vec2 vi = mesh.getVertexData(i);
+    int numNeighbors = mesh.getNumEdges(i);
+    for(int k = 0; k < numNeighbors; k++) {
+      int j = mesh.getEdgeTarget(i, k);         // index of current neighbor of vi
+      const Vec2& vj = mesh.getVertexData(j);   // current neighbor of vi
+      Vec2 dv = vj - vi;                        // difference vector
+      if(rsDot(dv, d) > T(0)) {
+        mesh.removeEdgeAtIndex(i, k);
+        numNeighbors--; }}}
+}
+
 void testTransportEquation()
 {
   // Under construction
@@ -5465,11 +5486,12 @@ void testTransportEquation()
   using AT   = rsArrayTools;
 
   // Equation and solver settings:
-  float dt = 0.01f;                // time step - needs to be very small for Euler, like 0.002f
-  Vec2  v  = Vec2(1.0f,  0.3f);    // velocity vector - maybe make it a function of (x,y) later
+  float dt = 1.f/512;              // time step - needs to be very small for Euler, like 0.002f
+  Vec2  v  = Vec2(3.0f,  1.0f);    // velocity vector - maybe make it a function of (x,y) later
   Vec2  mu = Vec2(0.25f, 0.25f);   // center of initial Gaussian distribution
-  float sigma = 0.0025f;             // variance
+  float sigma = 0.0025f;           // variance
   int density = 65;                // density of mesh points (number along each direction)
+  bool upwind = false;             // if true, mesh connections in direction of v are deleted
 
   // maybe compute Courant number, try special values like 1, 1/2 - maybe use a velocity vector
   // with unit length (like (0.8,0.6)) and an inverse power of 2 for dt, if density is a power of 2
@@ -5488,13 +5510,22 @@ void testTransportEquation()
   meshGen.setParameterRange(0.f, 1.f, 0.f, 1.f);             // rename to setRange
   meshGen.updateMeshes();                                    // get rid of this
   rsGraph<Vec2, float> mesh = meshGen.getParameterMesh();    // rename to getMesh
+  if(upwind)
+    removeDirectedConnections(mesh, v); 
+
+  // Compute Courant number:
+  float dx = 1.f / float(density-1);      // more generally: (xMax-xMin) / (xDensity-1)
+  float dy = 1.f / float(density-1);
+  float C  = dt * (v.x/dx + v.y/dy);
+  rsAssert(C <= 1.f, "Courant number too high! A garbage solution should be expected!");
+  // This should be less than 1, i think, see:
+  // https://en.wikipedia.org/wiki/Courant%E2%80%93Friedrichs%E2%80%93Lewy_condition
 
   // Create and initialize data arrays for the funtion u(x,y,t):
   int N = mesh.getNumVertices();
   Vec u(N), u_x(N), u_y(N), u_t(N); // mesh function and its spatial and temporal derivatives
   Vec tmp1(N), tmp2(N), tmp3(N);    // temporaries, used vor different things in different schemes
   initWithGaussian2D(mesh, u, mu, sigma);
-
 
   // Define lambda function that computes the temporal derivative u_t by first computing the 
   // spatial partial derivatives u_x, u_y using rsNumericlDifferentiator::gradient2D for meshes and
@@ -5503,7 +5534,7 @@ void testTransportEquation()
   auto timeDerivative = [&](Vec& u, Vec& u_t)
   {
     rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
-    //rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y, -v); // pass velocity -> upwind
+    //rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y, -v); // pass -velocity -> upwind
     for(int i = 0; i < N; i++)
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // u_t: temporal derivative
   };
@@ -5678,13 +5709,13 @@ void testTransportEquation()
   videoWriter.initBackground(mesh);
   for(int n = 0; n < numFrames; n++)
   {
+    videoWriter.recordFrame(mesh, u);
     //doTimeStepEuler(0.0f);                        // 0: normal Euler, 0.5: "trapezoidal" Euler
     //doTimeStepMidpoint();
-    //doTimeStepHeun();
+    doTimeStepHeun();
     //doTimeStepMidHeun();    // this sucks!
-    doTimeStepRungeKutta4();
+    //doTimeStepRungeKutta4();
     //doTimeStepHM();
-    videoWriter.recordFrame(mesh, u);
   }
   videoWriter.writeFile("TransportEquation");
 
@@ -5729,6 +5760,22 @@ void testTransportEquation()
   //  -maybe we need a mesh with more neighbors - try with 8, but that requires to fix the bug with
   //   the southwest neighbors in the mesh (try to let loops run from 2...Nv-2 )
   //  -also, figure out, if we need to pass v or -v - the API should be such that we pass v
+  //   -> it's OK - the "upwind" side is the direction where the wave comes from
+  //  -with upwind, only frames 0,1,2 ar ok - after that, we get garbage - we get nans in u already
+  //   in the first update step - could be related to encountering a singular matrix A in the 
+  //   boundary vertices producing nans which then contaminate the whole mesh over time
+  //   -however, these first few frames actually look sort of what one would expect from an upwind
+  //    scheme: less dispersion than a centered scheme but instead more spreading out, i.e. 
+  //    diffusion. maybe instead of calling rsMatrix2x2<T>::solve, use some sort of solveSave
+  //    function that gracefully handles singular matrices
+  // -It doesn't seem to make a difference, if we use the expensive RK4 time-stepper or the Heun
+  //  stepper that has roughly half the cost
+  // -Increasing grid density seems to help only up to a point (like 65) going even higher (128) 
+  //  does not seem to reduce the dispersion further
+  // -Using more neighbors (8) seems to leave the hape more intact and the ripples adjust more long
+  //  the direction of movement (rather than along the grid directions)
+  // -with the upwind scheme, we still get NaNs - seemingly spreading out from the bottom left
+
 
   // ToDo: 
   // -Implement more accurate (i.e. higher order) time-steppers. When the improvements start to 

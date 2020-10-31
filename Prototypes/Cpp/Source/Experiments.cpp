@@ -5496,7 +5496,12 @@ void weightEdgesByDirection(rsGraph<rsVector2D<T>, T>& mesh, rsVector2D<T> d, T 
       T e = mesh.getEdgeData(i, k);
       if(c > T(0))
       {
-        e *= (1-amount) + amount*c;  // or mybe we should just do nothing?
+        //e *= (1-amount) + amount*c;  // or mybe we should just do nothing?
+        // i think it's better to do nothing - it let's the blob diffuse into all direction whereas
+        // with the formula, it tends to diffuse more into the direction of motion
+        // todo: 
+        // -try to tweak formula for best results
+        // -try formula in conjuction with edge-weighting by distance
       }
       else
       {
@@ -5507,6 +5512,12 @@ void weightEdgesByDirection(rsGraph<rsVector2D<T>, T>& mesh, rsVector2D<T> d, T 
     }
   }
 }
+// there's a lot of tweaking room here:
+// -should we also scale the forward directions? if so, what function should be used
+// -maybe we should not just scale the backward directions by the same amount but by an amount
+//  that takes inot account how aligned the backward direction is, i.e. take into account c: if 
+//  it's -1, the edge weight should be 0 but if it's like -0.5, maybe the edge weight should be 
+//  just scaled down by 0.5 ...or 0.5^2...or whatever other formula? -> experimentation needed
 
 
 void testTransportEquation()
@@ -5527,7 +5538,7 @@ void testTransportEquation()
   float sigma = 0.0025f;           // variance
   int density = 65;                // density of mesh points (number along each direction)
   //bool upwind = false;             // if true, mesh connections in direction of v are deleted
-  float upwind = 0.5f;
+  float upwind = 0.5f;             // continiously adjustable upwind setting - adjusts weights
 
   // maybe compute Courant number, try special values like 1, 1/2 - maybe use a velocity vector
   // with unit length (like (0.8,0.6)) and an inverse power of 2 for dt, if density is a power of 2

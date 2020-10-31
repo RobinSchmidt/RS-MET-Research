@@ -3155,18 +3155,18 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Setup
 
-  void setNumSamples(int Nu, int Nv) // rename to Nx, Ny
+  void setNumSamples(int Nx, int Ny)
   {
-    this->Nu = Nu;
-    this->Nv = Nv;
+    this->Nx = Nx;
+    this->Ny = Ny;
   }
 
-  void setParameterRange(T u0, T u1, T v0, T v1)
+  void setParameterRange(T x0, T x1, T y0, T y1)
   {
-    this->u0 = u0;
-    this->u1 = u1;
-    this->v0 = v0;
-    this->v1 = v1;
+    this->x0 = x0;
+    this->x1 = x1;
+    this->y0 = y0;
+    this->y1 = y1;
   }
   // maybe get rid or if not, rename to setRange
 
@@ -3191,7 +3191,7 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-  int flatIndex(int i, int j) const { return i  * Nv + j; }
+  int flatIndex(int i, int j) const { return i  * Ny + j; }
 
 
 
@@ -3252,8 +3252,8 @@ protected:
 
   void addParameterVertices()
   {
-    for(int i = 0; i < Nu; i++)
-      for(int j = 0; j < Nv; j++)
+    for(int i = 0; i < Nx; i++)
+      for(int j = 0; j < Ny; j++)
         parameterMesh.addVertex(rsVector2D<T>(T(i), T(j)));
   }
   // -maybe addVertex should allow to pre-allocate memory for the edges - then we can pre-compute
@@ -3312,8 +3312,8 @@ protected:
   /** Connects all inner vertices to their 4 direct neighbours with an edge. */
   void connectInner()
   {
-    for(int i = 1; i < Nu-1; i++) {
-      for(int j = 1; j < Nv-1; j++) {
+    for(int i = 1; i < Nx-1; i++) {
+      for(int j = 1; j < Ny-1; j++) {
         int k = flatIndex(i, j);
         parameterMesh.addEdge(k, west( i, j));
         parameterMesh.addEdge(k, east( i, j));
@@ -3326,8 +3326,8 @@ protected:
 
   void connectInnerDiagonal()
   {
-    for(int i = 1; i < Nu-1; i++) {
-      for(int j = 2; j < Nv-1; j++) {
+    for(int i = 1; i < Nx-1; i++) {
+      for(int j = 2; j < Ny-1; j++) {
         int k = flatIndex(i, j);
         parameterMesh.addEdge(k, northEast(i, j));
         parameterMesh.addEdge(k, northWest(i, j));
@@ -3358,8 +3358,8 @@ protected:
   left, right and bottom neighbours. */
   void connectTop()
   {
-    int j = Nv-1;
-    for(int i = 1; i < Nu-1; i++) {
+    int j = Ny-1;
+    for(int i = 1; i < Nx-1; i++) {
       int k = flatIndex(i, j);
       parameterMesh.addEdge(k, west( i, j));
       parameterMesh.addEdge(k, east( i, j));
@@ -3371,7 +3371,7 @@ protected:
   void connectBottom()
   {
     int j = 0;
-    for(int i = 1; i < Nu-1; i++) {
+    for(int i = 1; i < Nx-1; i++) {
       int k = flatIndex(i, j);
       parameterMesh.addEdge(k, west( i, j));
       parameterMesh.addEdge(k, east( i, j));
@@ -3381,7 +3381,7 @@ protected:
   void connectLeft()
   {
     int i = 0;
-    for(int j = 1; j < Nv-1; j++) {
+    for(int j = 1; j < Ny-1; j++) {
       int k = flatIndex(i, j);
       parameterMesh.addEdge(k, north(i, j));
       parameterMesh.addEdge(k, south(i, j));
@@ -3390,8 +3390,8 @@ protected:
 
   void connectRight()
   {
-    int i = Nu-1;
-    for(int j = 1; j < Nv-1; j++) {
+    int i = Nx-1;
+    for(int j = 1; j < Ny-1; j++) {
       int k = flatIndex(i, j);
       parameterMesh.addEdge(k, north(i, j));
       parameterMesh.addEdge(k, south(i, j));
@@ -3406,59 +3406,59 @@ protected:
     parameterMesh.addEdge(k, east( i, j));
     parameterMesh.addEdge(k, north(i, j));
 
-    i = Nu-1; j = 0;  k = flatIndex(i, j);    // bottom right
+    i = Nx-1; j = 0;  k = flatIndex(i, j);    // bottom right
     parameterMesh.addEdge(k, west( i, j));
     parameterMesh.addEdge(k, north(i, j));
 
-    i = 0; j = Nv-1;  k = flatIndex(i, j);    // top left
+    i = 0; j = Ny-1;  k = flatIndex(i, j);    // top left
     parameterMesh.addEdge(k, east( i, j));
     parameterMesh.addEdge(k, south(i, j));
 
-    i = Nu-1; j = Nv-1; k = flatIndex(i, j);  // top right
+    i = Nx-1; j = Ny-1; k = flatIndex(i, j);  // top right
     parameterMesh.addEdge(k, west( i, j));
     parameterMesh.addEdge(k, south(i, j));
   }
 
   void connectLeftToRight()
   {
-    for(int j = 0; j < Nv; j++) {
+    for(int j = 0; j < Ny; j++) {
       int k1 = flatIndex(0,    j);
-      int k2 = flatIndex(Nu-1, j);
+      int k2 = flatIndex(Nx-1, j);
       parameterMesh.addEdge(k1, k2, true); }
   }
 
   void connectLeftToRightReversed()
   {
-    for(int j = 0; j < Nv; j++) {
+    for(int j = 0; j < Ny; j++) {
       int k1 = flatIndex(0,    j     );
-      int k2 = flatIndex(Nu-1, Nv-1-j);
+      int k2 = flatIndex(Nx-1, Ny-1-j);
       parameterMesh.addEdge(k1, k2, true); }
   }
 
   void connectTopToBottom()
   {
-    for(int i = 0; i < Nu; i++) {
+    for(int i = 0; i < Nx; i++) {
       int k1 = flatIndex(i, 0   );
-      int k2 = flatIndex(i, Nv-1);
+      int k2 = flatIndex(i, Ny-1);
       parameterMesh.addEdge(k1, k2, true); }
   }
 
   void connectTopToBottomReversed()
   {
-    for(int i = 0; i < Nu; i++) {
+    for(int i = 0; i < Nx; i++) {
       int k1 = flatIndex(i,      0   );
-      int k2 = flatIndex(Nu-1-i, Nv-1);
+      int k2 = flatIndex(Nx-1-i, Ny-1);
       parameterMesh.addEdge(k1, k2, true); }
   }
 
 
   void updateParameterCoordinates()
   {
-    for(int i = 0; i < Nu; i++) {
-      for(int j = 0; j < Nv; j++) {
+    for(int i = 0; i < Nx; i++) {
+      for(int j = 0; j < Ny; j++) {
         int k = flatIndex(i, j);
-        T x = rsLinToLin(T(i), T(0), T(Nu-1), u0, u1);
-        T y = rsLinToLin(T(j), T(0), T(Nv-1), v0, v1);
+        T x = rsLinToLin(T(i), T(0), T(Nx-1), x0, x1);
+        T y = rsLinToLin(T(j), T(0), T(Ny-1), y0, y1);
         parameterMesh.setVertexData(k, rsVector2D<T>(x, y)); }}
   }
 
@@ -3480,18 +3480,17 @@ protected:
   //-----------------------------------------------------------------------------------------------
   // \name Data
 
-  int Nu = 0;                // number of vertices along 1st u-coordinate (can be x, radius, etc.)
-  int Nv = 0;                // number of vertices along 2nd v-coordinate (can be y, angle, etc.)
-  // maybe revert to Nx, Ny - interpreting them as u,v shall be deferred to outlying code - in the 
-  // PDE solver, they are indeed x,y coordinates
+  int Nx = 0;   // number of vertices along x-coordinate
+  int Ny = 0;   // number of vertices along y-coordinate
 
-  T u0 = T(0), u1 = T(1);    // lower and upper limit for 1st parameter u
-  T v0 = T(0), v1 = T(1);    // lower and upper limit for 2nd parameter v
+  T x0 = T(0), x1 = T(1);    // lower and upper limit for x-coordinate
+  T y0 = T(0), y1 = T(1);    // lower and upper limit for y-coordinate
+  // use x0,etc
   // maybe use 0,1 always - always operate on normalized coordinates..or maybe not?
 
   Topology topology = Topology::plane;
 
-  rsGraph<rsVector2D<T>, T> parameterMesh;
+  rsGraph<rsVector2D<T>, T> parameterMesh; // rename to mesh
   rsGraph<rsVector3D<T>, T> spatialMesh;   // move elsewhere - don't make a god class!
 
 };

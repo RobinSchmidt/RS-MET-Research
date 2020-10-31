@@ -3275,9 +3275,9 @@ protected:
   {
     connectInner();             // rename to connectInnerStraight
 
-    //connectInnerDiagonal();     
-    // make optional - or maybe connectInner should do the switch - seems to lead to memory 
-    // corruption
+    connectInnerDiagonal();
+    // -make optional or maybe connectInner should do the switch 
+    // -seems to lead to memory corruption - an assert gets triggered by rsImage - weird!
 
     connectTop();
     connectBottom();
@@ -3327,10 +3327,17 @@ protected:
     for(int i = 1; i < Nu-1; i++) {
       for(int j = 1; j < Nv-1; j++) {
         int k = flatIndex(i, j);
-        parameterMesh.addEdge(k, northEast(i, j));
+        //parameterMesh.addEdge(k, northEast(i, j));
+
         parameterMesh.addEdge(k, northWest(i, j));
         parameterMesh.addEdge(k, southEast(i, j));
-        parameterMesh.addEdge(k, southWest(i, j)); }}
+
+        //int k2 = southWest(i, j);
+        //parameterMesh.addEdge(k, southWest(i, j)); 
+        // This call creates memory corruption error later on, namely when rsImage::allocateMemory
+        // is called. we 
+      }
+    }
   }
   // maybe split into 2 functions for west and east diagonals
 
@@ -3448,10 +3455,13 @@ protected:
   int west(     int i, int j) const { return flatIndex(i-1, j  ); }
   int north(    int i, int j) const { return flatIndex(i,   j+1); }
   int south(    int i, int j) const { return flatIndex(i,   j-1); }
+
   int northEast(int i, int j) const { return flatIndex(i+1, j+1); }
   int northWest(int i, int j) const { return flatIndex(i-1, j+1); }
   int southEast(int i, int j) const { return flatIndex(i+1, j-1); }
+
   int southWest(int i, int j) const { return flatIndex(i-1, j-1); }
+  // this seems to cause weird problems in connectInnerDiagonal
 
 
 

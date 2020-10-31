@@ -5468,8 +5468,12 @@ void testTransportEquation()
   float dt = 0.01f;                // time step - needs to be very small for Euler, like 0.002f
   Vec2  v  = Vec2(1.0f,  0.3f);    // velocity vector - maybe make it a function of (x,y) later
   Vec2  mu = Vec2(0.25f, 0.25f);   // center of initial Gaussian distribution
-  float sigma = 0.01f;             // variance
-  int density = 33;                // density of mesh points (number along each direction)
+  float sigma = 0.0025f;             // variance
+  int density = 65;                // density of mesh points (number along each direction)
+
+  // maybe compute Courant number, try special values like 1, 1/2 - maybe use a velocity vector
+  // with unit length (like (0.8,0.6)) and an inverse power of 2 for dt, if density is a power of 2
+  // plus 1, we get a spatial sampling with an inverse power of 2, too
 
   // Visualization settings:
   int width     = 400;
@@ -5499,6 +5503,7 @@ void testTransportEquation()
   auto timeDerivative = [&](Vec& u, Vec& u_t)
   {
     rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
+    //rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y, -v); // pass velocity -> upwind
     for(int i = 0; i < N; i++)
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // u_t: temporal derivative
   };
@@ -5524,8 +5529,6 @@ void testTransportEquation()
     for(int i = 0; i < N; i++)
       u_t[i] = 0.5f * (tmp1[i] + tmp3[i]); // u_t:   average of estimates at t = n and t = n+1
   };
-
-
 
   auto updateSolution = [&](Vec& u, Vec& u_t)
   {
@@ -5588,10 +5591,13 @@ void testTransportEquation()
   {
     // Compute the (arrays of the) 4 k-values:
     timeDerivative(u,  k1);                                    // k1 = f(u)
+
     AT::weightedSum(&u[0], &k1[0], &uk[0], N, 1.f, 0.5f*dt);   // uk =   u + (h/2)*k1
     timeDerivative(uk, k2);                                    // k2 = f(u + (h/2)*k1) = f(uk)
+
     AT::weightedSum(&u[0], &k2[0], &uk[0], N, 1.f, 0.5f*dt);   // uk =   u + (h/2)*k2
     timeDerivative(uk, k3);                                    // k3 = f(u + (h/2)*k2) = f(uk)
+
     AT::weightedSum(&u[0], &k3[0], &uk[0], N, 1.f, 1.0f*dt);   // uk =   u + h*k3
     timeDerivative(uk, k4);                                    // k4 = f(u + h*k3)
 
@@ -5704,6 +5710,25 @@ void testTransportEquation()
   // -RK4 does not seem to better than Heun either - in fact, the result looks exactly the same
   //  -check for bugs
   //  -try it with more accurate spatial derivatives
+  //   -adding one pair of diagonals northWest/southEast, the dispersion seems to get dragged into
+  //    that direction - it doesn't get less compared to no diagonal connections, though, so it 
+  //    seems trying to counteract the dispersion with higher spatial accuracy does not work
+  //   -adding the other set of diagonals gives errors - there seems to be  something wrong with 
+  //    the southWest diagonals - but the error only shows up much later as a heap corruption, when
+  //    rsImage tries to allocate memory - there are comments in 
+  //    rsMeshGenerator2D::connectInnerDiagonal about this - it's really weird!
+  //    -> try, if the error persists, if we leave out the time-steps, i.e. if it's sufficient to
+  //       trigger the error to set up the diagonal mesh connections
+  // -dispersion seems to increase when the the initial Gaussian bump is made narrower (needs more)
+  //  tests
+  // -maybe a lower order scheme (like Heun) but with smaller time-step is preferable, because 
+  //  reducing the time-step seems to reduce the dispersion ...or maybe use something like leapfrog
+  //  or lax-wendroff for time-stepping (try to get high order with only one gradient evaluation
+  //  per time step), we may use RK4 for initialization
+  // -when trying ot use an upwidn scheme, we get garbage
+  //  -maybe we need a mesh with more neighbors - try with 8, but that requires to fix the bug with
+  //   the southwest neighbors in the mesh (try to let loops run from 2...Nv-2 )
+  //  -also, figure out, if we need to pass v or -v - the API should be such that we pass v
 
   // ToDo: 
   // -Implement more accurate (i.e. higher order) time-steppers. When the improvements start to 
@@ -5721,15 +5746,27 @@ void testTransportEquation()
   //  of both gradients for the actual step
   // -maybe try using double precision
   // -try another PDE - wave equation, diffusion equation
+  // -try less smooth initial conditions
   // -the wrap-around does not seem to work - check the mesh connectivity
   // -figure out, if the method could be used in the context of an implicit scheme - maybe not, but 
   //  that may not be a problem, if it's stable in explicit schemes
+  // -Compare the numerical dispersion to a comparable standard scheme - see, if this algor is 
+  //  better or worse
+  // -figure out, if there is a certain optimum value for the speed that minimizes the dispersion
+  // -maybe try to connect to more nieghbors, further away from the center vertex
 
   // Notes:
   // -In the book "Finite Difference Computing with PDEs", chapter 4, it is said that PDEs 
   //  involving 1st order spatial derivatives (such as the transport equation) are actually harder 
   //  to treat numerically than those involving only 2nd order spatial derivatives (such as the 
   //  wave- or heat-equation), so we are doing already a sort of stress-test here.
+
+  // Links:
+  // Analysis of numerical dissipation and dispersion:
+  // http://www.mathematik.uni-dortmund.de/~kuzmin/cfdintro/lecture10.pdf
+  // Free book on PDEs:
+  // http://people.maths.ox.ac.uk/trefethen/pdetext.html
+  // Chapter 3, page 126 has an algorithm for finite differences in for arbitraray 1D meshes
 
   int dummy = 0;
 }

@@ -3530,6 +3530,15 @@ public:
 
   void createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh);
 
+  void gradient(const T* u, T* u_x, T* u_y);
+
+  void gradient(const T* u, int i, T* u_x, T* u_y);
+
+
+
+
+
+  // internal:
 
   int getNumNeighbors(int i) { return numNeighbors[i]; }
   T   getSelfWeightX( int i) { return selfWeightsX[i]; }
@@ -3594,6 +3603,7 @@ void rsStencilMesh2D<T>::createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh)
 
     // Compute least squares matrix A and its inverse M:
     T a11 = T(0), a12 = T(0), a22 = T(0);
+    T sx = T(0), sy = T(0);
     for(int k = 0; k < numNeighbors[i]; k++)
     {
       int j = mesh.getEdgeTarget(i, k);         // index of current neighbor of vi
@@ -3603,32 +3613,58 @@ void rsStencilMesh2D<T>::createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh)
       a11 += w * dv.x * dv.x;
       a12 += w * dv.x * dv.y;
       a22 += w * dv.y * dv.y;
+      sx  += w * dv.x;
+      sy  += w * dv.y;
     }
     rsMatrix2x2 A(a11, a12, a12, a22);
     rsMatrix2x2 M = A.getInverse();
     T m11 = M.a, m12 = M.b, m22 = M.d;
-    
+    // we get really large values...check, i everything is correct, also in the derivation
+
+
+    selfWeightsX[i] = -(m11 * sx + m12 * sy);
+    selfWeightsY[i] = -(m12 * sx + m22 * sy);   // verify!
+    for(int k = 0; k < numNeighbors[i]; k++)
+    {
+      int j = mesh.getEdgeTarget(i, k);         // index of current neighbor of vi
+      const Vec2& vj = mesh.getVertexData(j);   // current neighbor of vi
+      Vec2 dv = vj - vi;                        // difference vector
+      T    w  = mesh.getEdgeData(i, k);         // edge weight
+      neighborWeightsX[starts[i] + k] = w * (m11 * dv.x + m12 * dv.y);
+      neighborWeightsY[starts[i] + k] = w * (m12 * dv.x + m22 * dv.y);  // verify!
+      neighborIndices [starts[i] + k] = j;
+    }
+    // maybe the sum of the neighbor-weights plus the self-weight should sum up to zero? ...they
+    // seem to indeed do
+
     int dummy = 0;
-
-
-    //selfWeightsX[i] = T(0);
-    //selfWeightsY[i] = T(0);
-
-
-    //numNeighbors[i] = mesh.getNumEdges(i);
-    //A.setZero();
   }
 
 
 
 
-
-  // ...
-
-
   int dummy = 0;
 }
 
+template<class T>
+void rsStencilMesh2D<T>::gradient(const T* u, int i, T* u_x, T* u_y)
+{
+  *u_x = getSelfWeightX(i) * u[i];
+  *u_y = getSelfWeightY(i) * u[i];
+  for(int k = 0; k < getNumNeighbors(i); k++) {
+    int j = getNeighborIndex(i, k);
+    *u_x += getNeighborWeightX(i, k) * u[j];
+    *u_y += getNeighborWeightY(i, k) * u[j]; }
+}
+
+template<class T>
+void rsStencilMesh2D<T>::gradient(const T* u, T* u_x, T* u_y)
+{
+  for(int i = 0; i < numNodes; i++)
+    gradient(u, i, &u_x[i], &u_y[i]);
+}
+
+/*
 template<class T>
 void gradient2D(const rsStencilMesh2D<T>& mesh, const T* u, int i, T* u_x, T* u_y)
 {
@@ -3638,6 +3674,7 @@ void gradient2D(const rsStencilMesh2D<T>& mesh, const T* u, int i, T* u_x, T* u_
     *u_x += mesh.getNeighborWeightX(i, k);
     *u_y += mesh.getNeighborWeightY(i, k); }
 }
+*/
 // maybe this can be a member of class rsStencilMesh2D - then it doesn't need to get the mesh 
 // passed as parameter
 

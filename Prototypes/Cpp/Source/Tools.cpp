@@ -3521,21 +3521,38 @@ protected:
 
 //=================================================================================================
 
+/** A data structure for optimizing the computation of partial derivatives on irregular meshes. 
+The mesh is given as a graph and the data stored in this graph is used to derive coefficients with
+which the partial derivatives u_x, u_y at some vertex i can be computed as weighted sum of the 
+vertex value itself and the values at its neighbors. These weights are stored internally in the
+rsStencilMesh2D object when you call the member function computeCoeffsFromMesh. This can be done 
+once and for all for a given mesh and after that, subsequent gradient computations can be computed 
+by the gradient method which is (supposedly) cheaper than calling the corresponding function
+rsNumericDifferentiator<T>::gradient2D(mesh, ...). The result should be the same up to roundoff 
+errors. */
+
 template<class T>
 class rsStencilMesh2D
 {
 
 public:
 
+  /** Computes the coefficients (or weights) for forming the weighted sum of the vertex value and
+  its neighbors for the estimate of the partial derivatives. */
+  void computeCoeffsFromMesh(const rsGraph<rsVector2D<T>, T>& mesh);
 
-  void createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh);
-
+  /** Computes estimates of the partial derivatives u_x, u_y given function values u. */
   void gradient(const T* u, T* u_x, T* u_y);
 
+  /** Given the function values u, this computes the partial derivatives u_x and u_y at the 
+  grid-point with index i. Note that u should point to the start of the u-array whereas u_x and u_y
+  should point to the i-th elements of the respective arrays. This makes sense because... */
   void gradient(const T* u, int i, T* u_x, T* u_y);
 
+  // todo: hessian, laplacian, etc.
 
 
+protected:
 
 
   // internal:
@@ -3544,39 +3561,31 @@ public:
   T   getSelfWeightX( int i) { return selfWeightsX[i]; }
   T   getSelfWeightY( int i) { return selfWeightsY[i]; }
 
-  // verify these:
-  T getNeighborIndex(  int i, int k) { return neighborIndices[ starts[i] + k]; }
-  T getNeighborWeightX(int i, int k) { return neighborWeightsX[starts[i] + k]; }
-  T getNeighborWeightY(int i, int k) { return neighborWeightsY[starts[i] + k]; }
+  int getNeighborIndex(  int i, int k) { return neighborIndices[ starts[i] + k]; }
+  T   getNeighborWeightX(int i, int k) { return neighborWeightsX[starts[i] + k]; }
+  T   getNeighborWeightY(int i, int k) { return neighborWeightsY[starts[i] + k]; }
 
 
-protected:
-
+  // These arrays are all numNodes long:
   int numNodes = 0;
-  std::vector<int> numNeighbors; // length: numNodes, entry is the number of neighbors of node i
-  std::vector<T>   selfWeightsX, selfWeightsY; // length: numNodes
+  std::vector<int> numNeighbors; // entry is the number of neighbors of node i
+  std::vector<T>   selfWeightsX, selfWeightsY; //
+  std::vector<int> starts;  
+  // entries are start-indices of the sections with values belonging to node i 
+  // in the neighborIndices, etc arrays - maybe rename to offsets
 
-
+  // These arrays are all numEdges long:
   int numEdges = 0;              // sum of entries of numNeighbors array
   std::vector<int> neighborIndices;
   std::vector<T>   neighborWeightsX, neighborWeightsY;
-
-
-  std::vector<int> starts;  // length: numNodes, entries are start-indices of the sections with 
-                            // values belonging to node i in the neighborIndices, etc arrays
-
-  // pointers to the starts of the sections for node i:
-  //std::vector<int*> pNeighborIndices;
-  //std::vector<T*>   pNeighborWeightsX, pNeighborWeightsY;
-
 };
 
 template<class T>
-void rsStencilMesh2D<T>::createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh)
+void rsStencilMesh2D<T>::computeCoeffsFromMesh(const rsGraph<rsVector2D<T>, T>& mesh)
 {
   using Vec2 = rsVector2D<T>;
 
-  // allocate memory and set pointers:
+  // allocate memory and set offsets:
   numNodes = mesh.getNumVertices();
   numNeighbors.resize(numNodes);
   selfWeightsX.resize(numNodes);
@@ -3588,9 +3597,7 @@ void rsStencilMesh2D<T>::createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh)
   starts[0] = 0;
   for(int i = 1; i < numNodes; i++)
     starts[i] = starts[i-1] + numNeighbors[i-1];
-
   numEdges = rsSum(numNeighbors);
-  //rsArrayTools::cumulativeSum(&numNeighbors[0], &starts[0], numNodes);
 
   neighborIndices.resize(numEdges);
   neighborWeightsX.resize(numEdges);
@@ -3619,7 +3626,7 @@ void rsStencilMesh2D<T>::createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh)
     rsMatrix2x2 A(a11, a12, a12, a22);
     rsMatrix2x2 M = A.getInverse();
     T m11 = M.a, m12 = M.b, m22 = M.d;
-    // we get really large values...check, i everything is correct, also in the derivation
+    // try to optimize: get rid of using rsMatrix2x2
 
 
     selfWeightsX[i] = -(m11 * sx + m12 * sy);
@@ -3635,15 +3642,10 @@ void rsStencilMesh2D<T>::createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh)
       neighborIndices [starts[i] + k] = j;
     }
     // maybe the sum of the neighbor-weights plus the self-weight should sum up to zero? ...they
-    // seem to indeed do
-
-    int dummy = 0;
+    // seem to indeed do...so the self-weight should always be minus the sum of the neighbor 
+    // weights - maybe it's numerically more precise to use that sum, such that the cancellation
+    // is perfect?
   }
-
-
-
-
-  int dummy = 0;
 }
 
 template<class T>
@@ -3663,20 +3665,6 @@ void rsStencilMesh2D<T>::gradient(const T* u, T* u_x, T* u_y)
   for(int i = 0; i < numNodes; i++)
     gradient(u, i, &u_x[i], &u_y[i]);
 }
-
-/*
-template<class T>
-void gradient2D(const rsStencilMesh2D<T>& mesh, const T* u, int i, T* u_x, T* u_y)
-{
-  *u_x = mesh.getSelfWeightX(i);
-  *u_y = mesh.getSelfWeightY(i);
-  for(int k = 0; k < mesh.getNumNeighbors(i); k++) {
-    *u_x += mesh.getNeighborWeightX(i, k);
-    *u_y += mesh.getNeighborWeightY(i, k); }
-}
-*/
-// maybe this can be a member of class rsStencilMesh2D - then it doesn't need to get the mesh 
-// passed as parameter
 
 
 /*

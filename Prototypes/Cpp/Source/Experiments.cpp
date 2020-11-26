@@ -5563,7 +5563,7 @@ void testTransportEquation()
 
   // Create the rsStencilMesh2D for optimized computations:
   rsStencilMesh2D<float> stencilMesh;
-  stencilMesh.createFromGraph(mesh);
+  stencilMesh.computeCoeffsFromMesh(mesh);
 
 
   // Compute Courant number:
@@ -5589,7 +5589,7 @@ void testTransportEquation()
     stencilMesh.gradient(&u[0], &u_x[0], &u_y[0]);  
     // test - should give same result as call below - but doesn't - something is still wrong
 
-    rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
+    //rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
 
     for(int i = 0; i < N; i++)
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // u_t: temporal derivative

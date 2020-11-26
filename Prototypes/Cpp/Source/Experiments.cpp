@@ -5556,10 +5556,15 @@ void testTransportEquation()
   meshGen.setTopology(rsMeshGenerator2D<float>::Topology::torus);
   meshGen.setParameterRange(0.f, 1.f, 0.f, 1.f);             // rename to setRange
   meshGen.updateMeshes();                                    // get rid of this
-  rsGraph<Vec2, float> mesh = meshGen.getParameterMesh();    // rename to getMesh
+  rsGraph<Vec2, float> mesh = meshGen.getParameterMesh();    // rename mesh to graphMesh, getP.. to getMesh
   //if(upwind)
   //  removeDirectedConnections(mesh, v); 
   weightEdgesByDirection(mesh, -v, upwind);
+
+  // Create the rsStencilMesh2D for optimized computations:
+  rsStencilMesh2D<float> stencilMesh;
+  stencilMesh.createFromGraph(mesh);
+
 
   // Compute Courant number:
   float dx = 1.f / float(density-1);      // more generally: (xMax-xMin) / (xDensity-1)
@@ -5582,7 +5587,6 @@ void testTransportEquation()
   auto timeDerivative = [&](Vec& u, Vec& u_t)
   {
     rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
-    //rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y, -v); // pass -velocity -> upwind
     for(int i = 0; i < N; i++)
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // u_t: temporal derivative
   };

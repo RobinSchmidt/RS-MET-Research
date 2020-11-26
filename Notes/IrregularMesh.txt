@@ -232,8 +232,56 @@ https://mathinsight.org/directional_derivative_gradient_derivation
 ToDo: see, if (and how) we recover the central difference rule on a regular 
 grid...
 
+-------------------------------------------------------------------------------
+Optimizing the calculations
 
+We want to obtain coeffs c_xk, c_yk such that we can form the estimates for the
+derivatives simply as:
 
+  u_x = sum_k c_xk * u[j]
+  u_y = sum_k c_yk * u[j]
+  
+where u[j] is the value at the k-th neighbor of the center node i. So, we need 
+to precompute the c_xk, c_yk coeffs once after the grid has been generated. We 
+have:
+
+  A := |a11 a12|,  b = |bx|
+       |a21 a22|       |by|
+
+where:
+  
+  a11 =       sum_k wk * v_xk^2
+  a22 =       sum_k wk * v_yk^2
+  a12 = a21 = sum_k wk * v_xk * v_yk
+  bx  =       sum_k wk * v_xk * (u[j]-u[i])
+  by  =       sum_k wk * v_yk * (u[j]-u[i])
+  
+where v_xk is the difference vector v[j]-v[i], v[i] is the current center and 
+v[j] its k-th neighbor and k runs over the neighbors of node i, d_k = u[j]-u[i]
+is the difference in function value. The gradient estimate is then given by:
+
+  g = M * b   where  M := A^-1
+
+  g_x  = m11 * bx + m12 * by
+       =   m11 * sum_k wk * v_xk * (u[j]-u[i]) 
+         + m12 * sum_k wk * v_yk * (u[j]-u[i])
+       =   m11 * sum_k wk * v_xk * u[j]
+         - m11 * sum_k wk * v_xk * u[i]
+         + m12 * sum_k wk * v_yk * u[j]
+         - m12 * sum_k wk * v_yk * u[i]
+       =   m11 * sum_k wk * v_xk * u[j]
+         + m12 * sum_k wk * v_yk * u[j]
+         - (m11 * sum_k wk * v_xk + m12 * sum_k wk * v_yk) * u[i]
+       =   sum_k m11 * wk * v_xk * u[j]
+         + sum_k m12 * wk * v_yk * u[j]
+         - (m11 * sum_k wk * v_xk + m12 * sum_k wk * v_yk) * u[i]
+       =   sum_k (m11 * wk * v_xk + m12 * wk * v_yk) * u[j]
+         - (m11 * sum_k wk * v_xk + m12 * sum_k wk * v_yk) * u[i]
+
+g_x = a_0 * u[i] + sum_k a_k u[j]
+a_0 = - (m11 * sum_k wk * v_xk  +  m12 * sum_k wk * v_yk)
+a_k = m11 * wk * v_xk  +  m12 * wk * v_yk
+    = wk * (m11 * v_xk  +  m12 * v_yk)
 
 -------------------------------------------------------------------------------
 

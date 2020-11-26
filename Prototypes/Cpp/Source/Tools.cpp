@@ -3519,6 +3519,127 @@ protected:
 //   when the height of the cone is zero (i.e. z-values are all equal)
 // -for best flexibility, the user 3 functions fx(u,v), fy(u,v), fz(u,v) to compute coordinates
 
+//=================================================================================================
+
+template<class T>
+class rsStencilMesh2D
+{
+
+public:
+
+
+  void createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh);
+
+
+  int getNumNeighbors(int i) { return numNeighbors[i]; }
+  T   getSelfWeightX( int i) { return selfWeightsX[i]; }
+  T   getSelfWeightY( int i) { return selfWeightsY[i]; }
+
+  // verify these:
+  T getNeighborIndex(  int i, int k) { return neighborIndices[ starts[i] + k]; }
+  T getNeighborWeightX(int i, int k) { return neighborWeightsX[starts[i] + k]; }
+  T getNeighborWeightY(int i, int k) { return neighborWeightsY[starts[i] + k]; }
+
+
+protected:
+
+  int numNodes = 0;
+  std::vector<int> numNeighbors; // length: numNodes, entry is the number of neighbors of node i
+  std::vector<T>   selfWeightsX, selfWeightsY; // length: numNodes
+
+
+  int numEdges = 0;              // sum of entries of numNeighbors array
+  std::vector<int> neighborIndices;
+  std::vector<T>   neighborWeightsX, neighborWeightsY;
+
+
+  std::vector<int> starts;  // length: numNodes, entries are start-indices of the sections with 
+                            // values belonging to node i in the neighborIndices, etc arrays
+
+  // pointers to the starts of the sections for node i:
+  //std::vector<int*> pNeighborIndices;
+  //std::vector<T*>   pNeighborWeightsX, pNeighborWeightsY;
+
+};
+
+template<class T>
+void rsStencilMesh2D<T>::createFromGraph(const rsGraph<rsVector2D<T>, T>& mesh)
+{
+  using Vec2 = rsVector2D<T>;
+
+  // allocate memory and set pointers:
+  numNodes = mesh.getNumVertices();
+  numNeighbors.resize(numNodes);
+  selfWeightsX.resize(numNodes);
+  selfWeightsY.resize(numNodes);
+  starts.resize(numNodes);
+
+  for(int i = 0; i < numNodes; i++)
+    numNeighbors[i] = mesh.getNumEdges(i);
+  starts[0] = 0;
+  for(int i = 1; i < numNodes; i++)
+    starts[i] = starts[i-1] + numNeighbors[i-1];
+
+  numEdges = rsSum(numNeighbors);
+  //rsArrayTools::cumulativeSum(&numNeighbors[0], &starts[0], numNodes);
+
+  neighborIndices.resize(numEdges);
+  neighborWeightsX.resize(numEdges);
+  neighborWeightsY.resize(numEdges);
+ 
+  // compute the coefficients:
+  for(int i = 0; i < numNodes; i++)
+  {
+    const Vec2& vi = mesh.getVertexData(i);
+
+    // Compute least squares matrix A and its inverse M:
+    T a11 = T(0), a12 = T(0), a22 = T(0);
+    for(int k = 0; k < numNeighbors[i]; k++)
+    {
+      int j = mesh.getEdgeTarget(i, k);         // index of current neighbor of vi
+      const Vec2& vj = mesh.getVertexData(j);   // current neighbor of vi
+      Vec2 dv = vj - vi;                        // difference vector
+      T    w  = mesh.getEdgeData(i, k);         // edge weight
+      a11 += w * dv.x * dv.x;
+      a12 += w * dv.x * dv.y;
+      a22 += w * dv.y * dv.y;
+    }
+    rsMatrix2x2 A(a11, a12, a12, a22);
+    rsMatrix2x2 M = A.getInverse();
+    T m11 = M.a, m12 = M.b, m22 = M.d;
+    
+    int dummy = 0;
+
+
+    //selfWeightsX[i] = T(0);
+    //selfWeightsY[i] = T(0);
+
+
+    //numNeighbors[i] = mesh.getNumEdges(i);
+    //A.setZero();
+  }
+
+
+
+
+
+  // ...
+
+
+  int dummy = 0;
+}
+
+template<class T>
+void gradient2D(const rsStencilMesh2D<T>& mesh, const T* u, int i, T* u_x, T* u_y)
+{
+  *u_x = mesh.getSelfWeightX(i);
+  *u_y = mesh.getSelfWeightY(i);
+  for(int k = 0; k < mesh.getNumNeighbors(i); k++) {
+    *u_x += mesh.getNeighborWeightX(i, k);
+    *u_y += mesh.getNeighborWeightY(i, k); }
+}
+// maybe this can be a member of class rsStencilMesh2D - then it doesn't need to get the mesh 
+// passed as parameter
 
 
 /*

@@ -5557,14 +5557,11 @@ void testTransportEquation()
   meshGen.setParameterRange(0.f, 1.f, 0.f, 1.f);             // rename to setRange
   meshGen.updateMeshes();                                    // get rid of this
   rsGraph<Vec2, float> mesh = meshGen.getParameterMesh();    // rename mesh to graphMesh, getP.. to getMesh
-  //if(upwind)
-  //  removeDirectedConnections(mesh, v); 
   weightEdgesByDirection(mesh, -v, upwind);
 
   // Create the rsStencilMesh2D for optimized computations:
   rsStencilMesh2D<float> stencilMesh;
   stencilMesh.computeCoeffsFromMesh(mesh);
-
 
   // Compute Courant number:
   float dx = 1.f / float(density-1);      // more generally: (xMax-xMin) / (xDensity-1)
@@ -5586,13 +5583,13 @@ void testTransportEquation()
   // gradient, v is the velocity and dot means the dot-product:
   auto timeDerivative = [&](Vec& u, Vec& u_t)
   {
-    stencilMesh.gradient(&u[0], &u_x[0], &u_y[0]);  
-    // test - should give same result as call below - but doesn't - something is still wrong
+    // Compute spatial derivatives u_x, u_y:
+    stencilMesh.gradient(&u[0], &u_x[0], &u_y[0]);                   // fast
+    //rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // slow
 
-    //rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // u_x, u_y: spatial derivatives
-
+    // Compute temporal derivatives u_t:
     for(int i = 0; i < N; i++)
-      u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // u_t: temporal derivative
+      u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);
   };
 
   // Computes an estimate for the time-derivative evaluated at the midpoint t + n/2. This estimate
@@ -5859,6 +5856,19 @@ void testTransportEquation()
   //  better or worse
   // -figure out, if there is a certain optimum value for the speed that minimizes the dispersion
   // -maybe try to connect to more nieghbors, further away from the center vertex
+  // -Try to derive and implement implicit schemes (maybe the implicit Euler scheme first because 
+  //  it's the simplest). The explicit Euler scheme does: uNew = uOld + dt * u_t where u is the 
+  //  vector of u-values, u_t is the time-derivative and dt is the time-step. u_t itself can be 
+  //  computed from u as u_t = D * uOld where D is some (sparse) matrix that provides the 
+  //  time-differentiation by first performing spatial differentiation and then combining these 
+  //  spatial derivatives in a way dictated by the velocity vector. Maybe we can write the explicit 
+  //  Euler update in full generality as uNew = A * uOld where in this case A = I + dt*D where I is 
+  //  the identity matrix. An implicit update would then look like uNew = A * uNew...hmm..that 
+  //  doesn't seem right...maybe write:
+  //    explicit: uNew = uOld + dt * D * uOld
+  //    implicit: uNew = uOld + dt * D * uNew
+  //  and then solve the linear system arising from the implicit method using an iterative solver.
+  //  This can be generalized to 2nd order PDEs - just the D-matrix would need to change.
 
   // Notes:
   // -In the book "Finite Difference Computing with PDEs", chapter 4, it is said that PDEs 

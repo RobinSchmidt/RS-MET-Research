@@ -1,0 +1,27 @@
+We want to find an algorithm to convolve to functions that are defined as 
+piecewise polynomials. First, we consider two of such polynomial pieces, 
+given as:
+
+  p(x) = \sum_m p_m x^m    for a <= x < b, 0 otherwise
+  q(x) = \sum_n q_n x^n    for c <= x < d, 0 otherwise
+  
+The convolution is: 
+
+  r(x) = \int_{-\infty}^{\infty} p(x) q(x-u) du
+  
+because the functions are zero outside the intervals [a,b), [c,d), repectively,
+the integration limits become finite:
+
+  lower: a+c, 
+  upper: a+c + (L_p + L_q) = a+c + ((b-a)+(d-c)) = b+d
+  
+so:
+
+  r(x) = \int_{a+c}^{b+d} p(x) q(x-u) du
+       = p(x) \int_{a+c}^{b+d} q(x-u) du   because p(x) does not depend on u
+  
+where
+
+  q(x-u) = \sum_n q_n (x-u)^n = \sum_{n=0}^N q_n \sum_{k=0}^n B(n,k) x^k -1^k u^(n-k)
+  
+where B(n,k) is the binomial coefficient n-choose-k. Now, we need integrate with respect to u, insert the integration limits u = b+d, u = a+c and subtract..

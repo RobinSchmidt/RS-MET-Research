@@ -1,0 +1,41 @@
+Given a matrix A, we want to compile a list of operations that we can perfrom
+with it in order to manipulate the eigenvalues in a controlled way while 
+leaving the eigenvectors as is.
+
+-Scaling the matrix by a scalar s: B = s*A scales all eigenvalues by the same 
+ scalar.
+-Adding a scaled identity matrix: B = A + s*I shifts all eigenvalues by s.
+-A^-1 has reciprocal eigenvalues of A.
+-A^n has eigenvalues of A raised to the power of n.
+-A^T has the same eigenvalues as A.
+-A^T * A has eigenvalues of A squared?
+-If A is diagonalizable we can express it as A = V * D * V^-1 where the columns 
+ of V are the eigenvectors and D is the diagonal matrix containing the 
+ eigenvalues. In this representation, we can set them to anything we want and 
+ then multiply out the product to obtain our final matrix with desired 
+ eigenvalues and same eigenvectors as A.
+
+Questions:
+-What about A^H?
+-What about exp(A) or more generally f(A) where f is expressed as power series?
+-What about A+B and A*B for general A, B?
+-What about the singular value decomposition? Could that be helpful? Maybe it 
+ could do something similar like the diagonalization approach but also with 
+ matrices that are not diagonalizable?
+-Can we rotate the eigenvectors while leaving the eigenvalues as is? Maybe by 
+ using something like: A = V * D * V^-1, B = R^-1 * A * R for some rotation 
+ matrix R?
+-Can we rotate a specific eigenvector?
+
+
+
+https://math.stackexchange.com/questions/3395439/forcibly-manipulating-eigenvalues
+https://math.stackexchange.com/questions/2214641/shifting-eigenvalues-of-a-matrix
+
+https://www.sciencedirect.com/science/article/pii/S0377042713002100
+
+https://math.stackexchange.com/questions/123923/a-matrix-and-its-transpose-have-the-same-set-of-eigenvalues-other-version-a-a
+
+
+https://en.wikipedia.org/wiki/Eigenvalue_algorithm
+https://en.wikipedia.org/wiki/List_of_numerical_analysis_topics#Eigenvalue_algorithms

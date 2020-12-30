@@ -32,7 +32,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifoldSphere();
   //testManifoldEarth();
   
-  testSortedSet();
+  //testSortedSet();
   //testAutoDiff();
   //testAutoDiff2();
   //testAutoDiff3();
@@ -40,11 +40,13 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testAutoDiffReverse1();
   //testDualComplex();
   //testVectorMultiplication3D();
-  //testHermiteInterpolation();
+  testHermiteInterpolation();
   //testMeshGeneration();
-  testTransportEquation();
+  //testTransportEquation();
   //testPDE_1stOrder();  // stub
+  testComplexPotential();
   //testVertexMesh();  // moved to main codbase
+
 
 
   return 0;

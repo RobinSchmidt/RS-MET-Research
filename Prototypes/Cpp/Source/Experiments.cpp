@@ -3334,41 +3334,6 @@ void testManifoldEllipsoid()
 // needed? maybe the basis vectors are not unique? or maybe some other decomposition such that
 // G = E^T * E,  where E is the matrix of basis vectors and G is the metric as matrix
 
-
-/** Given the (N-1)th line of the Pascal triangle in x, this produces the N-th line in y, where x 
-is of length N-1 and y is of length N. It may be used in place, i.e. x and y may point to the same
-array. */
-// obsolete - now there's a function in rapt but it uses a different convention: line indices start
-// at 0 there which is consistent with usage in math and c++
-template<class T>
-void rsNextPascalTriangleLine(const T* x, T* y, int N)
-{
-  T xL = T(1);
-  y[0] = T(1); // correct?
-  for(int i = 1; i < N-1; i++) { 
-    T xR = x[i]; 
-    y[i] = xL + xR;
-    xL   = xR;  }
-  y[N-1] = T(1);
-}
-// move to rapt - the algo there is not in place
-// experiment with variations, for example replacing the + with - or xL+xR with -(xL+xR)
-// maybe this can be optimized using symmetry by doing something like
-// y[i] = y[i+k] = xL + xR where k depends on i and N - or maybe y[i] = y[N-i] = xL + xR?
-// or maybe use coefficients: y[i] = a*xL + b*xR...i think, this computes the coeff for 
-// x^k * y^(n-k) in (a*x + b*y)^n
-
-/** If you need only one line of the Pascal triangle, this function may be more convenient. */
-template<class T>
-void rsPascalTriangleLine(T* y, int N)
-{
-  for(int n = 1; n <= N; n++)
-    rsNextPascalTriangleLine(y, y, n);
-}
-// overflows for N >= 35 when T is a 32 bit signed integer, N <= 34 works
-// figure out, for which N it overflows for other common integer types
-
-
 void testSortedSet()
 {
   using Set = rsSortedSet<int>;
@@ -3433,37 +3398,6 @@ void testSortedSet()
   // is B = { 1,2/1,3 } - the 2/1 in B is of different type than the 2 in A - should we treat them
   // as equal nonetheless in comparisons? maybe there should be a type-system that allows for
   // one type to encompass another (like the rationals with the reals)
-
-  // Move to unit tests in rapt:
-  // compute the next line of the pascal triangle from a given line:
-  static const int N = 50;
-  int p[N];
-  rsNextPascalTriangleLine(p, p,  1);
-  rsNextPascalTriangleLine(p, p,  2);
-  rsNextPascalTriangleLine(p, p,  3);
-  rsNextPascalTriangleLine(p, p,  4);
-  rsNextPascalTriangleLine(p, p,  5);
-  rsNextPascalTriangleLine(p, p,  6);
-  rsNextPascalTriangleLine(p, p,  7);
-  rsNextPascalTriangleLine(p, p,  8);
-  rsNextPascalTriangleLine(p, p,  9);
-  rsNextPascalTriangleLine(p, p, 10);
-  rsNextPascalTriangleLine(p, p, 11);
-  rsNextPascalTriangleLine(p, p, 12);
-  // the sum of the n-th line should be 2^(n-1), when n starts counting at 1, 2^n when starting to 
-  // count at 0
-  rsPascalTriangleLine(p, 7);
-  rsPascalTriangleLine(p, 34);  // 34 is the greatest possible value without overflow
-
-  // see: https://en.wikipedia.org/wiki/Pascal%27s_triangle
-  // maybe implement also:
-  // https://en.wikipedia.org/wiki/Trinomial_triangle
-  // https://en.wikipedia.org/wiki/(2,1)-Pascal_triangle
-  // https://en.wikipedia.org/wiki/Bell_triangle
-  // https://en.wikipedia.org/wiki/Bernoulli%27s_triangle
-  // https://en.wikipedia.org/wiki/Leibniz_harmonic_triangle
-  // https://en.wikipedia.org/wiki/Eulerian_number#Basic_properties
-
 
   int dummy = 0;
 }
@@ -4363,7 +4297,10 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p)
   int N = n0 + n1;                  // maybe max(n0,n1) is enough
   rsMatrix<T> pt(N, N);
   for(int n = 0; n < N; n++)
-    rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1);
+  {
+    //::rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n+1); // old
+    RAPT::rsNextPascalTriangleLine(pt.getRowPointer(n-1), pt.getRowPointer(n), n);  // new
+  }
   // todo: 
   // -use a class for triangular matrices - saves half of the memory
 
@@ -4377,8 +4314,18 @@ int generalizedLagrangeHelper01(int i, int k, int n0, int n1, T* a)
   // create Pascal triangle:
   static const int maxN = 10;  // preliminary
   rsMatrix<T> pt2(maxN, maxN);
+
+  // old:
+  //for(int n = 0; n < maxN; n++)
+  //  ::rsNextPascalTriangleLine(pt2.getRowPointer(n-1), pt2.getRowPointer(n), n+1); // old
+
+  // new:
+  //pt2.setAllValues(-1);
+  //pt2(0,0) = 1;
   for(int n = 0; n < maxN; n++)
-    rsNextPascalTriangleLine(pt2.getRowPointer(n-1), pt2.getRowPointer(n), n+1);
+    RAPT::rsNextPascalTriangleLine(pt2.getRowPointer(n-1), pt2.getRowPointer(n), n);
+
+
   // todo: 
   // -use a class for triangular matrices - saves half of the memory
 
@@ -5891,7 +5838,6 @@ void testTransportEquation()
   int dummy = 0;
 }
 
-
 void testWaveEquation()
 {
 
@@ -5900,7 +5846,38 @@ void testWaveEquation()
 }
 
 
-// moved to rs-met codebase (except some comments) - may be deleted here:
+void testComplexPotential()
+{
+  // We consider the complex polynomial f(z) = z^n - 1 which has as its roots the n n-th roots of 
+  // unity. We want to find its Polya vector field and a potential function for that field
+
+  using Real    = double;  // try to use float (gives currently compiler errors)
+  using Complex = std::complex<Real>;
+  using PolyC   = rsPolynomial<Complex>;
+  using BiPolyC = rsBivariatePolynomial<Complex>;
+
+  int n = 5;
+
+  PolyC p(n);
+  p[0] = -1;
+  p[n] =  1;
+
+
+
+
+  int dummy = 0;
+}
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------------------------------
+
+// moved to rs-met codebase (except some comments) - may be deleted here when missing important
+// comments have also been moved over:
 
 /** Fills edges of a graph of 2D vectors (as vertices) with a user supplied function that takes as
 input the source and target vector and returns a scalar that can be used as weight for the edge 

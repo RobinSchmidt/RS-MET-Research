@@ -5854,14 +5854,60 @@ void testComplexPotential()
   using Real    = double;  // try to use float (gives currently compiler errors)
   using Complex = std::complex<Real>;
   using PolyC   = rsPolynomial<Complex>;
+  using BiPolyR = rsBivariatePolynomial<Real>;
   using BiPolyC = rsBivariatePolynomial<Complex>;
 
-  int n = 5;
+  int n = 2;
 
+  // Create the complex polynomial p(z) = z^n - 1:
   PolyC p(n);
   p[0] = -1;
   p[n] =  1;
+  p[0] =  0;  // test - without the constant term
 
+
+  // Create the complex bivariate polynomial bp(x,y) = p(x + i*y):
+  Complex one(1, 0), im(0, 1);
+  BiPolyC bp = BiPolyC::composeWithLinear(p, one, im);
+
+  // Extract real and negative imaginary parts. These are both real-valued bivariate polynomials 
+  // which together constitute the Polya vector field for p(z):
+  BiPolyR px(n, n), py(n, n);   // p_x(x,y), p_y(x,y)
+  for(int i = 0; i <= n; i++) {
+    for(int j = 0; j <= n; j++) {
+      px.coeff(i, j) =  bp.coeff(i, j).real();
+      py.coeff(i, j) = -bp.coeff(i, j).imag(); }}
+
+  // Verify that bpr, bpi constitute a potential field, i.e. a vector field that can be derived 
+  // from a scalar field by taking its gradient:
+  BiPolyR px_x, px_y, py_x, py_y;
+  px_x = px.derivativeX();
+  px_y = px.derivativeY();
+  py_x = py.derivativeX();
+  py_y = py.derivativeY();
+  bool isPotential = px_y == py_x; // fails because the matrices have formally different shapes
+
+  // Find the potential P(x,y) from px, py - there are two ways to do this:
+  // (1)
+  // -integrate px with respect to x
+  // -differentiate the result with respect to y
+  // -add whatever function of y is needed to make it equal to py
+  // (2)
+  // -integrate py with repect to y
+  // -differentiate the result with respect to x
+  // -add whatever function of x is needed to make it equal to px
+  // ...or could we also integrate px with respect to y, etc...giving in total 4 ways to compute
+  // the potential? -> figure out
+  BiPolyR px_ix    = px.integralX();
+  BiPolyR px_ix_dy = px_ix.derivativeY();
+  BiPolyR gy       = py - px_ix_dy;   // correct?
+  BiPolyR P        = px_ix + gy;      // correct?
+  // the correct result should be x^3/3 - x*y^2 when p[0] = 0
+
+  // Check, if the found potential has indeed the desired gradient:
+  BiPolyR P_x = P.derivativeX();  // should equal px
+  BiPolyR P_y = P.derivativeY();  // should equal py
+  // ...P_y has different shape than py
 
 
 

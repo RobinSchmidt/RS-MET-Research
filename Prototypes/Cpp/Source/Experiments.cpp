@@ -5845,6 +5845,46 @@ void testWaveEquation()
   int dummy = 0;
 }
 
+template<class T>
+rsBivariatePolynomial<T> getPolyaPotential(const rsPolynomial<std::complex<T>>& p)
+{
+  using Complex = std::complex<T>;
+  using BiPolyR = rsBivariatePolynomial<T>;
+  using BiPolyC = rsBivariatePolynomial<Complex>;
+
+  // Create the complex bivariate polynomial bp(x,y) = p(x + i*y):
+  Complex one(1, 0), im(0, 1);
+  BiPolyC bp = BiPolyC::composeWithLinear(p, one, im);
+
+  // Extract real and negative imaginary parts. These are both real-valued bivariate polynomials 
+  // which together constitute the Polya vector field for p(z):
+  int n = p.getDegree();
+  BiPolyR px(n, n), py(n, n);   // p_x(x,y), p_y(x,y)
+  for(int i = 0; i <= n; i++) {
+    for(int j = 0; j <= n; j++) {
+      px.coeff(i, j) =  bp.coeff(i, j).real();
+      py.coeff(i, j) = -bp.coeff(i, j).imag(); }}
+
+  // Find the potential P(x,y) from px, py:
+  // -integrate px with respect to x
+  // -differentiate the result with respect to y
+  // -compute the difference to the desired py, this should be a function of y alone, all coeffs
+  //  involving x should be zero, otherwise, px, py are not a gradient field. This is the 
+  //  integration constant (with respect to x - it's still a function of y)
+  // -integrate that difference with respect to y and add it to the result of step 1
+  BiPolyR px_ix    = px.integralX();       // integrate px with respect to x
+  BiPolyR px_ix_dy = px_ix.derivativeY();  // differentiate the result with respect to y
+  BiPolyR gyp      = py - px_ix_dy;        // integration constant g'(y), still a function of y
+  BiPolyR gy       = gyp.integralY();      // integrate g'(y) to get g(y)
+  BiPolyR P        = px_ix + gy;           // this the desired potential P(x,y)
+  return P;
+}
+// -maybe move into rsBivariatePolynomial
+// -can be optimized: 
+//  -maybe we can avoid creating a complex bivariate polynomial
+//  -gyp has nonzero coeffs only for terms that are free of any x
+// -maybe factor out a function to create a potential from two bivariate polynomials px,py
+//  -this may assert that there is a potential by checking px.derivativeY() == py.derivativeX()
 
 void testComplexPotential()
 {
@@ -5857,59 +5897,32 @@ void testComplexPotential()
   using BiPolyR = rsBivariatePolynomial<Real>;
   using BiPolyC = rsBivariatePolynomial<Complex>;
 
-  int n = 2;
+  // Create the complex polynomial:
+  //int n = 7; PolyC p(n); p[0] = -1; p[n] =  1; // p(z) = z^n - 1
+  PolyC p({1,3,5,-2,-1,2});
 
-  // Create the complex polynomial p(z) = z^n - 1:
-  PolyC p(n);
-  p[0] = -1;
-  p[n] =  1;
-  p[0] =  0;  // test - without the constant term
-
-
-  // Create the complex bivariate polynomial bp(x,y) = p(x + i*y):
-  Complex one(1, 0), im(0, 1);
-  BiPolyC bp = BiPolyC::composeWithLinear(p, one, im);
-
-  // Extract real and negative imaginary parts. These are both real-valued bivariate polynomials 
-  // which together constitute the Polya vector field for p(z):
-  BiPolyR px(n, n), py(n, n);   // p_x(x,y), p_y(x,y)
-  for(int i = 0; i <= n; i++) {
-    for(int j = 0; j <= n; j++) {
-      px.coeff(i, j) =  bp.coeff(i, j).real();
-      py.coeff(i, j) = -bp.coeff(i, j).imag(); }}
-
-  // Verify that bpr, bpi constitute a potential field, i.e. a vector field that can be derived 
-  // from a scalar field by taking its gradient:
-  BiPolyR px_x, px_y, py_x, py_y;
-  px_x = px.derivativeX();
-  px_y = px.derivativeY();
-  py_x = py.derivativeX();
-  py_y = py.derivativeY();
-  bool isPotential = px_y == py_x; // fails because the matrices have formally different shapes
-
-  // Find the potential P(x,y) from px, py - there are two ways to do this:
-  // (1)
-  // -integrate px with respect to x
-  // -differentiate the result with respect to y
-  // -add whatever function of y is needed to make it equal to py
-  // (2)
-  // -integrate py with repect to y
-  // -differentiate the result with respect to x
-  // -add whatever function of x is needed to make it equal to px
-  // ...or could we also integrate px with respect to y, etc...giving in total 4 ways to compute
-  // the potential? -> figure out
-  BiPolyR px_ix    = px.integralX();
-  BiPolyR px_ix_dy = px_ix.derivativeY();
-  BiPolyR gy       = py - px_ix_dy;   // correct?
-  BiPolyR P        = px_ix + gy;      // correct?
-  // the correct result should be x^3/3 - x*y^2 when p[0] = 0
+  // Find the Polya potential P(x,y):
+  BiPolyR P = getPolyaPotential(p);
 
   // Check, if the found potential has indeed the desired gradient:
-  BiPolyR P_x = P.derivativeX();  // should equal px
-  BiPolyR P_y = P.derivativeY();  // should equal py
-  // ...P_y has different shape than py
+  BiPolyR P_x = P.derivativeX();
+  BiPolyR P_y = P.derivativeY();
 
+  bool ok = true;
+  Real x = 2.0, y = 3.0, val1, val2;
+  Complex z(x, y);
+  val1 = p(z).real();
+  val2 = P_x(x, y);
+  ok &= val1 == val2;
 
+  val1 = -p(z).imag();
+  val2 = P_y(x, y);
+  ok &= val1 == val2;
+
+  // todo: 
+  // -make a unit test and test it with more complicated complex polynomials p(z)
+  // -plot some potentials to get a feeling for how they look like and how we can see features of
+  //  complex functions in them
 
   int dummy = 0;
 }

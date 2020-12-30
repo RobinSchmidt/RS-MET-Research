@@ -3338,6 +3338,8 @@ void testManifoldEllipsoid()
 /** Given the (N-1)th line of the Pascal triangle in x, this produces the N-th line in y, where x 
 is of length N-1 and y is of length N. It may be used in place, i.e. x and y may point to the same
 array. */
+// obsolete - now there's a function in rapt but it uses a different convention: line indices start
+// at 0 there which is consistent with usage in math and c++
 template<class T>
 void rsNextPascalTriangleLine(const T* x, T* y, int N)
 {
@@ -3353,6 +3355,8 @@ void rsNextPascalTriangleLine(const T* x, T* y, int N)
 // experiment with variations, for example replacing the + with - or xL+xR with -(xL+xR)
 // maybe this can be optimized using symmetry by doing something like
 // y[i] = y[i+k] = xL + xR where k depends on i and N - or maybe y[i] = y[N-i] = xL + xR?
+// or maybe use coefficients: y[i] = a*xL + b*xR...i think, this computes the coeff for 
+// x^k * y^(n-k) in (a*x + b*y)^n
 
 /** If you need only one line of the Pascal triangle, this function may be more convenient. */
 template<class T>
@@ -3430,6 +3434,7 @@ void testSortedSet()
   // as equal nonetheless in comparisons? maybe there should be a type-system that allows for
   // one type to encompass another (like the rationals with the reals)
 
+  // Move to unit tests in rapt:
   // compute the next line of the pascal triangle from a given line:
   static const int N = 50;
   int p[N];

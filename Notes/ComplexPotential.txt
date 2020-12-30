@@ -1,0 +1,72 @@
+We try to find a potential function for the complex function:
+ 
+   w(z) = z^2
+   
+seen as 2D Polya vector field:
+ 
+   w(x,y) = (x^2-y^2, -2*x*y) = (w1(x,y), w2(x,y))
+   
+We integrate w1 with respect to x:
+
+  P(x,y) = x^3/3 - x*y^2 + g(y)
+  
+To find g(y), we take the partial derivative of P with respect to y and compare
+the result to our desired -2*x*y:
+
+  dP/dy = -2*x*y + g'(y)
+  
+which turns out to be exactly equal to what we want if we set g'(y) = 0, so we 
+may also use g(y) = 0. This is not always the case - we may have to find a 
+function of y alone that we can add, to make the partial derivative equal to 
+what we want. So, setting g(y) = 0, our potetntia becomes: 
+
+  P(x,y) = x^3/3 - x*y^2
+
+To verify it, we compute the partial derivatives of P with respect to x,y:
+
+  dP/dx = x^2 - y^2
+  dP/dy = -2*x*y
+
+so our P(x,y) does indeed work as potential for our Polya vector field. How 
+about integrating w2 with respect to y:
+
+  Q(x,y) = -2*x*y^2 / 2 = -x*y^2 + g(x)
+
+find the partial derivative of Q with respect to x:
+
+  dQ/dx = -y^2 + g'(x)
+
+which should be equal to x^2 - y^2, so we need g'(x) = x^2. Integrating with 
+respect to x gives: g(x) = x^3/3 + C. Setting C to zero, we get:
+
+  Q(x,y) = -x*y^2 + x^3/3
+
+which equals P(x,y) that we computed before.
+
+
+Notes:
+
+Generalizing this to w(z) = z^n requires use of the binomial theorem.
+
+By looking at the plot of the potential of the Polya vector field, we can 
+identify the zeros of the original functions as the extrema and saddles of 
+the potential, and the extrema of the original function are points of 
+steepest slope. I think, we can also identify fixed points by looking at the
+potential of f(z) - z instead of f(z) itself. The zeros of f(z) - z should be
+the fixed points of f(z).
+
+ToDo:
+-work out the potential for some other important functions such as 1/z, exp(z),
+ sin(z), cos(z), log(z), etc.
+
+
+
+Questions:
+-when we don't take the Polya vector field, i.e. the vector field obtained by
+ taking the complex conjugate, we don't get a potential field - the sign of the
+ imaginary part is wrong. However - does it make sense to consider that field, 
+ too?
+-Has this use of -1 something to do with "integrating factors", i.e. the -1 is 
+ such an integrating factor?
+-Does the potential help to evaluate and/or make sense of complex path 
+ integrals?

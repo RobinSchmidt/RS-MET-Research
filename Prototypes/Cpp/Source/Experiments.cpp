@@ -5846,6 +5846,30 @@ void testWaveEquation()
 }
 
 template<class T>
+rsBivariatePolynomial<T> getPotential(
+  const rsBivariatePolynomial<T>& px, const rsBivariatePolynomial<T>& py)
+{
+  //rsAssert(px.derivativeY() == py.derivativeX(), "px, py are not a potential field");
+  // we need a weaker notion of equality here: allow different formal shapes of the coeff matrices, 
+  // allow tolerance for equality of coefficients, maybe have a function 
+  // isPotentialField(px, py, tol) that calls px.isCloseTo(py, tol)
+
+  //using BiPolyR = rsBivariatePolynomial<T>;
+
+  rsBivariatePolynomial<T> Px, Px_y, gyp, gy;
+  Px   = px.integralX();    // integrate px with respect to x
+  Px_y = Px.derivativeY();  // differentiate the result with respect to y
+  gyp  = py - Px_y;         // g'(y): derivative of integration "constant" g(y)..
+  gy   = gyp.integralY();   // ..which is still a function of y
+  return Px + gy;           // Px + gy is the desired potential function
+}
+// -maybe optimize: gyp has nonzero coeffs only for terms that are free of any x
+// -maybe implement different algorithms, integrating py with respect y y first, etc. - they 
+//  should all give the same result up to roundoff error
+// -implement a function getHarmonicConjugate that takes a single bivariate polynomial, say px, and
+//  produces the appropriate py
+
+template<class T>
 rsBivariatePolynomial<T> getPolyaPotential(const rsPolynomial<std::complex<T>>& p)
 {
   using Complex = std::complex<T>;
@@ -5857,34 +5881,20 @@ rsBivariatePolynomial<T> getPolyaPotential(const rsPolynomial<std::complex<T>>& 
   BiPolyC bp = BiPolyC::composeWithLinear(p, one, im);
 
   // Extract real and negative imaginary parts. These are both real-valued bivariate polynomials 
-  // which together constitute the Polya vector field for p(z):
+  // which together constitute the Polya vector field for p(z). Then, compute their potential:
   int n = p.getDegree();
   BiPolyR px(n, n), py(n, n);   // p_x(x,y), p_y(x,y)
   for(int i = 0; i <= n; i++) {
     for(int j = 0; j <= n; j++) {
       px.coeff(i, j) =  bp.coeff(i, j).real();
       py.coeff(i, j) = -bp.coeff(i, j).imag(); }}
+  // maybe factor out into splitRealImag
 
-  // Find the potential P(x,y) from px, py:
-  // -integrate px with respect to x
-  // -differentiate the result with respect to y
-  // -compute the difference to the desired py, this should be a function of y alone, all coeffs
-  //  involving x should be zero, otherwise, px, py are not a gradient field. This is the 
-  //  integration constant (with respect to x - it's still a function of y)
-  // -integrate that difference with respect to y and add it to the result of step 1
-  BiPolyR px_ix    = px.integralX();       // integrate px with respect to x
-  BiPolyR px_ix_dy = px_ix.derivativeY();  // differentiate the result with respect to y
-  BiPolyR gyp      = py - px_ix_dy;        // integration constant g'(y), still a function of y
-  BiPolyR gy       = gyp.integralY();      // integrate g'(y) to get g(y)
-  BiPolyR P        = px_ix + gy;           // this the desired potential P(x,y)
-  return P;
+
+  return getPotential(px, py);
 }
-// -maybe move into rsBivariatePolynomial
-// -can be optimized: 
-//  -maybe we can avoid creating a complex bivariate polynomial
-//  -gyp has nonzero coeffs only for terms that are free of any x
-// -maybe factor out a function to create a potential from two bivariate polynomials px,py
-//  -this may assert that there is a potential by checking px.derivativeY() == py.derivativeX()
+// -move into rsBivariatePolynomial
+// -maybe we can avoid creating a complex bivariate polynomial? ...probably not worth the effort
 
 void testComplexPotential()
 {
@@ -5924,6 +5934,7 @@ void testComplexPotential()
   // -plot some potentials to get a feeling for how they look like and how we can see features of
   //  complex functions in them
 
+  rsAssert(ok);
   int dummy = 0;
 }
 

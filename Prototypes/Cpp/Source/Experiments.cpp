@@ -5849,51 +5849,15 @@ template<class T>
 rsBivariatePolynomial<T> getHarmonicConjugate(const rsBivariatePolynomial<T>& u)
 {
   using BiPoly = rsBivariatePolynomial<T>;
-
-  //BiPoly uxy = u.derivativeX().integralY();
-  //BiPoly uyx = u.derivativeY().integralX(); 
-  //uyx.negate();
-  //BiPoly d   = uxy - uyx;
-  //BiPoly v   = uxy + d;
-
-
-  BiPoly u_dx    = u.derivativeX();
-  BiPoly u_dy    = u.derivativeY();
-  BiPoly u_dx_iy = u_dx.integralY();
-
-
-
-
-  //BiPoly hxp     = u_dx_iy - u_dy;
-
-  BiPoly hxp = u_dy;
-  hxp.negate();
-  for(int m = 0; m <= hxp.getDegreeX(); m++)
-    for(int n = 1; n <= hxp.getDegreeY(); n++)
-      hxp.coeff(m, n) = T(0);
-  BiPoly hx  = hxp.integralX();
-
-  BiPoly v   = u_dx_iy + hx;
-
-
-
-  //BiPoly uyx = u.derivativeY().integralX(); 
-  //uyx.negate();
-  //BiPoly d   = uxy - uyx;
-  //BiPoly v   = uxy + d;
-
-
-
-  //BiPoly uxy = u.derivativeX().integralY();
-  //BiPoly uyx = u.derivativeY().integralX();
-  //BiPoly v   = uxy - uyx;
-
-  return v;
+  BiPoly u_dx_iy = u.derivativeX().integralY();
+  BiPoly u_dy = u.derivativeY(); 
+  for(int m = 0; m <= u_dy.getDegreeX(); m++)
+    for(int n = 1; n <= u_dy.getDegreeY(); n++)
+      u_dy.coeff(m, n) = T(0);
+  return u_dx_iy - u_dy.integralX();
 }
-// needs tests - seems like the first row of the result is wrong - maybe we need another 
-// integration constant somewhere? test it with simpler functions
-
-// https://math.stackexchange.com/questions/930000/calculating-a-harmonic-conjugate
+// -needs tests 
+// -implement an isHarmonic function and add an rsAssert(isHarmonic(u))
 
 template<class T> 
 bool areHarmonicConjugates(const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v, 
@@ -5902,7 +5866,7 @@ bool areHarmonicConjugates(const rsBivariatePolynomial<T>& u, const rsBivariateP
   using BiPoly = rsBivariatePolynomial<T>;
   bool r = true;
 
-  // We must have: ux == vy and uy == -vx:
+  // We must have: u_x == v_y and u_y == -v_x:
   BiPoly ux = u.derivativeX();
   BiPoly uy = u.derivativeY();
   BiPoly vx = v.derivativeX(); vx.negate();
@@ -5976,7 +5940,7 @@ void testPolyaPotential()
   rsAssert(ok);
 
 
-  // test creation of the harmonic conjugate function:
+  // test the harmonic conjugate creation function:
   BiPolyR u, v, u2, v2;
 
   u = BiPolyR(2,2,{0,0,-1, 0,0,0, 1,0,0});  // x^2 - y^2
@@ -5985,15 +5949,23 @@ void testPolyaPotential()
   u2 = getHarmonicConjugate(v);
   ok &= areHarmonicConjugates(u,  v );    // make sure that the target functions are correct
   ok &= areHarmonicConjugates(u,  v2);    // works
-  ok &= areHarmonicConjugates(u2, v );    // fails!
-  ok &= areHarmonicConjugates(u2, v2);
 
+  //ok &= areHarmonicConjugates(u2, v );    // fails!
+  //ok &= areHarmonicConjugates(u2, v2);
+  // hmm - is it actually the case that if v is the harmonic conjugate of u then u is also the 
+  // harmonic conjugate of v? or is -u the harmonic conjugate of v? this is what seems to come out
+  // of the algorithm
 
-  // u(x,y) = 2*y^3 − 6*x^2*y + 4*x^2 − 7*x*y − 4*y^2 + 3*x + 4*y − 4:
+  // u(x,y) = 2*y^3 − 6*x^2*y + 4*x^2 − 7*x*y − 4*y^2 + 3*x + 4*y − 4
+  // v(x,y) = 2*x^3 + (7/2)*x^2 − 6*x*y^2 + 8*x*y − 4*x − (7/2)*y^2 + 3*y
   u  = BiPolyR(2,3,{-4,4,-4,2, 3,-7,0,0, 4,-6,0,0}); 
+  v  = BiPolyR(3,2,{0,3,-3.5, -4,8,-6, 3.5,0,0, 2,0,0}); 
   v2 = getHarmonicConjugate(u);
+  ok &= v2.isCloseTo(v);
 
-  //ok &= v2.isCloseTo(v);
+  // Example from:
+  // https://math.stackexchange.com/questions/930000/calculating-a-harmonic-conjugate
+
   //ok &= u2.isCloseTo(u);
 
 

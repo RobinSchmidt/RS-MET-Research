@@ -5845,6 +5845,35 @@ void testWaveEquation()
   int dummy = 0;
 }
 
+template<class T> 
+rsBivariatePolynomial<T> getHarmonicConjugate(const rsBivariatePolynomial<T>& u)
+{
+  using BiPoly = rsBivariatePolynomial<T>;
+  BiPoly vxy = u.derivativeX().integralY();
+  BiPoly vyx = u.derivativeY().integralX(); vyx.negate();
+  BiPoly d   = vxy - vyx;
+  //BiPoly d   = vyx - vxy;
+  BiPoly v   = vxy + d;
+  return v;
+}
+// needs tests - seems like the first row is wrong - maybe we need another integration constant 
+// somewhere? test it with simpler functions
+
+template<class T> 
+bool areHarmonicConjugates(const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v)
+{
+  using BiPoly = rsBivariatePolynomial<T>;
+  bool r = true;
+  BiPoly ux = u.derivativeX();
+  BiPoly uy = u.derivativeY();
+  BiPoly vx = v.derivativeX();
+  BiPoly vy = v.derivativeY();
+
+  // we must have: ux == vy and uy == -vx
+
+  return r;
+}
+
 void testPolyaPotential()
 {
   // We consider the complex polynomial f(z) = z^n - 1 which has as its roots the n n-th roots of 
@@ -5857,8 +5886,9 @@ void testPolyaPotential()
   using BiPolyC = rsBivariatePolynomial<Complex>;
 
   // Create the complex polynomial:
-  //int n = 7; PolyC p(n); p[0] = -1; p[n] =  1; // p(z) = z^n - 1
+  //int n = 4; PolyC p(n); p[0] = -1; p[n] =  1; // p(z) = z^n - 1
   PolyC p({1,3,5,-2,-1,2});
+  //PolyC p({2,-1,3,-3,5,2,4});
 
   // Find the Polya potential P(x,y):
   BiPolyR P = BiPolyR::getPolyaPotential(p);
@@ -5869,7 +5899,8 @@ void testPolyaPotential()
   BiPolyR P_y = P.derivativeY();
 
   bool ok = true;
-  Real x = 2.0, y = 3.0, val1, val2;
+  Real x = 2.0, y = 3.0;
+  Real val1, val2;
   Complex z(x, y);
   val1 = p(z).real();
   val2 = P_x(x, y);
@@ -5879,14 +5910,53 @@ void testPolyaPotential()
   val2 = P_y(x, y);
   ok &= val1 == val2;
 
+  // evaluate the potential at some points:
+  val1 = P(+1, 0);  // -2/3 for p(z) = z^2 - 1, -4/5 for p(z) = z^4
+  val2 = P(-1, 0);  // +2/3 for p(z) = z^2 - 1, +4/5 for p(z) = z^4
+
+  // Observations:
+  // -at the zeros of the original function, we seem to see saddles in the potential
+  // -so far, i've not yet seen a potential that features minima or maxima - only saddles seem to
+  //  occur - investigate if this is always the case and try to find a theoretical explanation
+  // -saddles are easy to identify in topographic or equipotential plots - they look like crosses
+  // -could the value at the zeros be given by +-(1 - 1/(n+1)) for p(z) = z^n - 1, or maybe
+  //  exp(i*k) * (1 - 1/(n+1)) for k = 0...n or something?
+
   // todo: 
-  // -document the relevant functions in rsBivariatePolynomial
-  // -make a unit test and test it with more complicated complex polynomials p(z)
-  // -clean up
   // -plot some potentials to get a feeling for how they look like and how we can see features of
   //  complex functions in them
+  // -plot them as topographic map - draw equipotentials and maybe field lines, too - obtain them 
+  //  by considering the differential equation (d/dt) f(x,y) = -grad(P(x,y))...or something
+  //  ...or maybe we can find the harmonic conjugate of the potential - i think, its equipotentials 
+  //  are indeed the field lines...i think, from these two, the complex potential can be 
+  //  constructed?
+  // -maybe use a coloring according to the absolute value of the gradient? that will show extrema
+  //  of the magnitude of the complex function
+  // -make a unit test and test it with more complicated complex polynomials p(z)
+
 
   rsAssert(ok);
+
+
+  // test creation of the harmonic conjugate function:
+  BiPolyR u(2,2,{0,0,-1, 0,0,0, 1,0,0});  // x^2 - y^2
+  BiPolyR v(2,2,{0,0,0,  0,2,0, 0,0,0});  // 2*x*y
+  BiPolyR v2 = getHarmonicConjugate(u);
+  ok &= v2.isCloseTo(v);
+
+  //BiPolyR Q = getHarmonicConjugate(P);
+  //ok &= areHarmonicConjugates(P, Q);
+
+
+
+  Real r = 1.5;
+  plotBivariatePolynomial(P, -r, +r, 31, -r, +r, 31);
+
+
+
+
+
+
   int dummy = 0;
 }
 

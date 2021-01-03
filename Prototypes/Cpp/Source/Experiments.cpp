@@ -5846,35 +5846,42 @@ void testWaveEquation()
 }
 
 template<class T> 
-rsBivariatePolynomial<T> getHarmonicConjugate(const rsBivariatePolynomial<T>& u)
+rsPolynomial<std::complex<T>> getComplexFromHarmonic(const rsBivariatePolynomial<T>& u)
 {
-  using BiPoly = rsBivariatePolynomial<T>;
-  BiPoly u_dx_iy = u.derivativeX().integralY();
-  BiPoly u_dy = u.derivativeY(); 
-  for(int m = 0; m <= u_dy.getDegreeX(); m++)
-    for(int n = 1; n <= u_dy.getDegreeY(); n++)
-      u_dy.coeff(m, n) = T(0);
-  return u_dx_iy - u_dy.integralX();
+  // It's just the very first column of u. This can be seen by assuming p(x,y) = p(x+i*y), i.e. the
+  // bivariate p(x,y) is actually univariate in the single variable x+i*y and multiplying out the 
+  // ansatz: c0*(x+i*y)^0 + c1*(x+i*y)^1 + c2*(x+i*y)^2 + c3*(x+i*y)^3 + ... It can be seen, that
+  // the univariate c-coeffs must equal the bivariate coeffs that multiply the powers of x without 
+  // any y in the term.
+
+  int M = u.getDegreeX();
+  rsPolynomial<std::complex<T>> p(M);
+  for(int i = 0; i <= M; i++)
+    p[i] = u.coeff(i, 0);
+  return p;
 }
-// -needs tests 
-// -implement an isHarmonic function and add an rsAssert(isHarmonic(u))
+// needs more tests....
+// more generally, the coeffs for the ansatz 
+//   c0*(a*x+b*y)^0 + c1*(a*x+b*y)^1 + c2*(a*x+b*y)^2 + c3*(a*x+b*y)^3
+// are the first column divided by powers of a, i.e. p[i] = u.coeff(i, 0) / pow(a, i); ..i think
+// can we also reconstruct the complex function from the v-part. maybe we need to negate it and 
+// then find the harmonic conjugate and feed it to this algo?
+
+// see: https://math.mit.edu/~jorloff/18.04/notes/topic5.pdf
+// ...seems like we need only u and not also v to reconstruct the complex function - which makes
+// sense, since ve is redundant
 
 template<class T> 
-bool areHarmonicConjugates(const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v, 
-  T tol = T(0))
+rsPolynomial<std::complex<T>> getComplexFromHarmonicV(const rsBivariatePolynomial<T>& v)
 {
-  using BiPoly = rsBivariatePolynomial<T>;
-  bool r = true;
-
-  // We must have: u_x == v_y and u_y == -v_x:
-  BiPoly ux = u.derivativeX();
-  BiPoly uy = u.derivativeY();
-  BiPoly vx = v.derivativeX(); vx.negate();
-  BiPoly vy = v.derivativeY();
-  r &= ux.isCloseTo(vy, tol);
-  r &= uy.isCloseTo(vx, tol);
-  return r;
+  rsBivariatePolynomial<T> vn = v;
+  //vn.negate();
+  rsBivariatePolynomial<T> u = vn.getHarmonicConjugate();
+  return getComplexFromHarmonic(u);
 }
+
+
+
 
 void testPolyaPotential()
 {
@@ -5889,8 +5896,8 @@ void testPolyaPotential()
 
   // Create the complex polynomial:
   //int n = 4; PolyC p(n); p[0] = -1; p[n] =  1; // p(z) = z^n - 1
-  PolyC p({1,3,5,-2,-1,2});
-  //PolyC p({2,-1,3,-3,5,2,4});
+  //PolyC p({1,3,5,-2,-1,2});
+  PolyC p({2,-1,3,-3,5,2,4});
 
   // Find the Polya potential P(x,y):
   BiPolyR P = BiPolyR::getPolyaPotential(p);
@@ -5900,7 +5907,15 @@ void testPolyaPotential()
   BiPolyR P_x = P.derivativeX();
   BiPolyR P_y = P.derivativeY();
 
+  PolyC p2 = getComplexFromHarmonic(P_x);  // should reconstruct p
+  PolyC p3 = getComplexFromHarmonicV(P_y); // seems to work except for the constant term
+
+
   bool ok = true;
+
+  ok &= p2 == p;
+
+
   Real x = 2.0, y = 3.0;
   Real val1, val2;
   Complex z(x, y);
@@ -5945,10 +5960,10 @@ void testPolyaPotential()
 
   u = BiPolyR(2,2,{0,0,-1, 0,0,0, 1,0,0});  // x^2 - y^2
   v = BiPolyR(2,2,{0,0,0,  0,2,0, 0,0,0});  // 2*x*y
-  v2 = getHarmonicConjugate(u);
-  u2 = getHarmonicConjugate(v);
-  ok &= areHarmonicConjugates(u,  v );    // make sure that the target functions are correct
-  ok &= areHarmonicConjugates(u,  v2);    // works
+  v2 = u.getHarmonicConjugate();
+  u2 = v.getHarmonicConjugate();
+  ok &= BiPolyR::areHarmonicConjugates(u,  v );    // make sure that the target functions are correct
+  ok &= BiPolyR::areHarmonicConjugates(u,  v2);    // works
 
   //ok &= areHarmonicConjugates(u2, v );    // fails!
   //ok &= areHarmonicConjugates(u2, v2);
@@ -5960,7 +5975,7 @@ void testPolyaPotential()
   // v(x,y) = 2*x^3 + (7/2)*x^2 − 6*x*y^2 + 8*x*y − 4*x − (7/2)*y^2 + 3*y
   u  = BiPolyR(2,3,{-4,4,-4,2, 3,-7,0,0, 4,-6,0,0}); 
   v  = BiPolyR(3,2,{0,3,-3.5, -4,8,-6, 3.5,0,0, 2,0,0}); 
-  v2 = getHarmonicConjugate(u);
+  v2 = u.getHarmonicConjugate();
   ok &= v2.isCloseTo(v);
 
   // Example from:
@@ -5978,6 +5993,11 @@ void testPolyaPotential()
   plotBivariatePolynomial(P, -r, +r, 31, -r, +r, 31);
 
 
+  // Can we "reconstruct" the univariate complex polynomial from two given real, harmonic 
+  // conjugate, bivariate polynomials? maybe by going through a complex bivariate polynomial?
+  // Let p(x,y) + i*q(x,y) ~ f(z) (wher ~ means some sort of "corresponds to"). Let z = x + i*y, 
+  // this gives x = z-i*y, y = z-x. Plug these expressions into a complexified versions of p,q?
+
 
 
 
@@ -5986,9 +6006,24 @@ void testPolyaPotential()
 }
 
 
+float Q_rsqrt(float number)
+{
+  long i;
+  float x2, y;
+  const float threehalfs = 1.5F;
 
+  x2 = number * 0.5F;
+  y  = number;
+  i  = *(long*)&y;                          // evil floating point bit level hacking
+  i  = 0x5f3759df - (i >> 1);               // what the fuck? 
+  y  = *(float*)&i;
+  y  = y * (threehalfs - (x2 * y * y));     // 1st Newton iteration
+  //  y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
 
-
+  return y;
+}
+// https://www.youtube.com/watch?v=p8u_k2LIZyo
+// https://medium.com/hard-mode/the-legendary-fast-inverse-square-root-e51fee3b49d9
 
 
 //-------------------------------------------------------------------------------------------------

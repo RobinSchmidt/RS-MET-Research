@@ -5845,6 +5845,36 @@ void testWaveEquation()
   int dummy = 0;
 }
 
+
+template<class T> 
+bool isHarmonic2(const rsBivariatePolynomial<T>& u, T tol = T(0))
+{
+  //rsBivariatePolynomial<T> u_xx = u.derivativeX().derivativeX();  // for debug
+  //rsBivariatePolynomial<T> u_yy = u.derivativeY().derivativeY();  // ditto
+
+  for(int m = 2; m <= u.getDegreeX(); m++)
+  {
+    for(int n = 2; n <= u.getDegreeY(); n++)
+    {
+      //T t_xx = u_xx.coeff(m-2, n-2);
+      //T t_yy = u_yy.coeff(m-2, n-2);
+
+      T c_xx = m * (m-1) * u.coeff(m  , n-2);
+      T c_yy = n * (n-1) * u.coeff(m-2, n  );
+      if(rsAbs(c_xx + c_yy) > tol)
+        return false;
+    }
+  }
+  return true;
+}
+// -needs more tests
+// -make a function makeHarmonicY that assigns:
+//    u.coeff(m-2, n) = -m * (m-1) * u.coeff(m, n-2) / (n * (n-1))
+//  and a makeHarmonicX that assigns:
+//    u.coeff(m, n-2) = -n * (n-1) * u.coeff(m-2, n) / (m * (m-1))
+//  and maybe some sort of symmetric version that assigns both - the goal is always that 
+//  c_xx + c_yy = 0
+
 template<class T> 
 rsPolynomial<std::complex<T>> getComplexFromHarmonic(const rsBivariatePolynomial<T>& u)
 {
@@ -5852,7 +5882,7 @@ rsPolynomial<std::complex<T>> getComplexFromHarmonic(const rsBivariatePolynomial
   // bivariate p(x,y) is actually univariate in the single variable x+i*y and multiplying out the 
   // ansatz: c0*(x+i*y)^0 + c1*(x+i*y)^1 + c2*(x+i*y)^2 + c3*(x+i*y)^3 + ... It can be seen, that
   // the univariate c-coeffs must equal the bivariate coeffs that multiply the powers of x without 
-  // any y in the term.
+  // any y in the term. ...but maybe that works only if the original polynomial had real coeffs
 
   int M = u.getDegreeX();
   rsPolynomial<std::complex<T>> p(M);
@@ -5914,7 +5944,7 @@ void testPolyaPotential()
   bool ok = true;
 
   ok &= p2 == p;
-
+  ok &= isHarmonic2(P_x);
 
   Real x = 2.0, y = 3.0;
   Real val1, val2;
@@ -5935,6 +5965,7 @@ void testPolyaPotential()
   // -at the zeros of the original function, we seem to see saddles in the potential
   // -so far, i've not yet seen a potential that features minima or maxima - only saddles seem to
   //  occur - investigate if this is always the case and try to find a theoretical explanation
+  //  ...maybe it's only because so far i have not used polynomials with complex coeffs?
   // -saddles are easy to identify in topographic or equipotential plots - they look like crosses
   // -could the value at the zeros be given by +-(1 - 1/(n+1)) for p(z) = z^n - 1, or maybe
   //  exp(i*k) * (1 - 1/(n+1)) for k = 0...n or something?
@@ -5990,7 +6021,11 @@ void testPolyaPotential()
 
 
   Real r = 1.5;
-  plotBivariatePolynomial(P, -r, +r, 31, -r, +r, 31);
+  //plotBivariatePolynomial(P, -r, +r, 31, -r, +r, 31);
+
+
+  u = BiPolyR(2,2,{0,0,1, 0,0,0, -1,0,0}); // -x^2 + y^2
+  bool harm = u.isHarmonic();
 
 
   // Can we "reconstruct" the univariate complex polynomial from two given real, harmonic 

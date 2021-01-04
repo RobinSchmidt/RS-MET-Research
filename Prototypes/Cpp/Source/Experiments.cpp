@@ -5849,45 +5849,75 @@ void testWaveEquation()
 template<class T> 
 bool isHarmonic2(const rsBivariatePolynomial<T>& u, T tol = T(0))
 {
-  //rsBivariatePolynomial<T> u_xx = u.derivativeX().derivativeX();  // for debug
-  //rsBivariatePolynomial<T> u_yy = u.derivativeY().derivativeY();  // ditto
-
-  for(int m = 2; m <= u.getDegreeX(); m++)
-  {
-    for(int n = 2; n <= u.getDegreeY(); n++)
-    {
-      //T t_xx = u_xx.coeff(m-2, n-2);
-      //T t_yy = u_yy.coeff(m-2, n-2);
-
-      T c_xx = m * (m-1) * u.coeff(m  , n-2);
-      T c_yy = n * (n-1) * u.coeff(m-2, n  );
+  for(int m = 2; m <= u.getDegreeX(); m++) {
+    for(int n = 2; n <= u.getDegreeY(); n++) {
+      T c_xx = m * (m-1) * u.coeff(m  , n-2);   // coeff for x^(m-2) * y^(n-2) in u_xx
+      T c_yy = n * (n-1) * u.coeff(m-2, n  );   // coeff for x^(m-2) * y^(n-2) in u_yy
       if(rsAbs(c_xx + c_yy) > tol)
-        return false;
-    }
-  }
+        return false;   }}
   return true;
 }
 // -needs more tests
+// -if it works, maybe replace the old implementation in rsBivariatePolynomial - this here is more
+//  efficient
 // -make a function makeHarmonicY that assigns:
 //    u.coeff(m-2, n) = -m * (m-1) * u.coeff(m, n-2) / (n * (n-1))
 //  and a makeHarmonicX that assigns:
 //    u.coeff(m, n-2) = -n * (n-1) * u.coeff(m-2, n) / (m * (m-1))
 //  and maybe some sort of symmetric version that assigns both - the goal is always that 
-//  c_xx + c_yy = 0
+//  c_xx + c_yy = 0  ->  m * (m-1) * u[m, n-2] + n * (n-1) * u[m-2, n] = 0
+//  m * (m-1) * u[m, n-2] = -n * (n-1) * u[m-2, n]
+//  so:
+//    u[m, n-2] / u[m-2, n] = -(n*(n-1)) / (m*(m-1))
+//  i think, this is the general symmetry condition that the matrix for a harmonic polynomial must
+//  satisfy
+
 
 template<class T> 
-rsPolynomial<std::complex<T>> getComplexFromHarmonic(const rsBivariatePolynomial<T>& u)
+rsPolynomial<std::complex<T>> getComplexFromHarmonicUV(
+  const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v)
+{
+  //rsAssert(rsBivariatePolynomial<T>::areHarmonicConjugates(u, v));
+  // fails: seems like ux == -vy where we should have ux == vy - there's some sign confusion: i 
+  // think P_y is not the harmonic conjugate of of P_x, -P_y is
+
+  int M = u.getDegreeX();
+  rsPolynomial<std::complex<T>> p(M);
+  for(int i = 0; i <= M; i++)
+    p[i] = std::complex<T>(u.coeff(i, 0), -v.coeff(i, 0));
+  return p;
+}
+// needs more tests - especially: why should the loop go only up to M and not max(M,N), where 
+// N = v.getDegreeX(), using a zero-padded accessor like getCoeffPadded(i, 0) for safe 
+// out-of-range access returning 0?
+
+
+/*
+template<class T> 
+rsPolynomial<std::complex<T>> getComplexFromHarmonicU(const rsBivariatePolynomial<T>& u)
 {
   // It's just the very first column of u. This can be seen by assuming p(x,y) = p(x+i*y), i.e. the
   // bivariate p(x,y) is actually univariate in the single variable x+i*y and multiplying out the 
   // ansatz: c0*(x+i*y)^0 + c1*(x+i*y)^1 + c2*(x+i*y)^2 + c3*(x+i*y)^3 + ... It can be seen, that
   // the univariate c-coeffs must equal the bivariate coeffs that multiply the powers of x without 
   // any y in the term. ...but maybe that works only if the original polynomial had real coeffs
+  // i think this works to extract the real part and for the imaginary part, we need to take the
+  // negative entries of the first column of v - which can be passed by the caller but we could 
+  // also do v = u.getHarmonicConjugate - maybe do both
+
+  rsBivariatePolynomial<T> v = u.getHarmonicConjugate();
 
   int M = u.getDegreeX();
   rsPolynomial<std::complex<T>> p(M);
   for(int i = 0; i <= M; i++)
-    p[i] = u.coeff(i, 0);
+  {
+    //p[i] = u.coeff(i, 0);
+
+    //p[i] = std::complex<T>(u.coeff(i, 0), -v.coeff(i, 0));
+
+    p[i] = std::complex<T>(u.coeff(i, 0), v.coeff(i, 0)); // why no minus for v.coeff?
+
+  }
   return p;
 }
 // needs more tests....
@@ -5909,7 +5939,7 @@ rsPolynomial<std::complex<T>> getComplexFromHarmonicV(const rsBivariatePolynomia
   rsBivariatePolynomial<T> u = vn.getHarmonicConjugate();
   return getComplexFromHarmonic(u);
 }
-
+*/
 
 
 
@@ -5924,10 +5954,13 @@ void testPolyaPotential()
   using BiPolyR = rsBivariatePolynomial<Real>;
   using BiPolyC = rsBivariatePolynomial<Complex>;
 
+  using C = Complex;
+
   // Create the complex polynomial:
   //int n = 4; PolyC p(n); p[0] = -1; p[n] =  1; // p(z) = z^n - 1
   //PolyC p({1,3,5,-2,-1,2});
-  PolyC p({2,-1,3,-3,5,2,4});
+  //PolyC p({2,-1,3,-3,5,2,4});
+  PolyC p({C(2,1),C(-1,2),C(3,-2),C(-3,1),C(5,-2),C(2,-1),C(4,-2)});  // with complex coeffs
 
   // Find the Polya potential P(x,y):
   BiPolyR P = BiPolyR::getPolyaPotential(p);
@@ -5937,25 +5970,38 @@ void testPolyaPotential()
   BiPolyR P_x = P.derivativeX();
   BiPolyR P_y = P.derivativeY();
 
-  PolyC p2 = getComplexFromHarmonic(P_x);  // should reconstruct p
-  PolyC p3 = getComplexFromHarmonicV(P_y); // seems to work except for the constant term
 
 
+
+
+  // Tests:
   bool ok = true;
 
-  ok &= p2 == p;
-  ok &= isHarmonic2(P_x);
-
+  // Evaluate p, P_x, P_y at some point x,y and compare results:
   Real x = 2.0, y = 3.0;
   Real val1, val2;
   Complex z(x, y);
-  val1 = p(z).real();
-  val2 = P_x(x, y);
-  ok &= val1 == val2;
+  val1 =  p(z).real(); val2 = P_x(x, y); ok &= val1 == val2;
+  val1 = -p(z).imag(); val2 = P_y(x, y); ok &= val1 == val2;
 
-  val1 = -p(z).imag();
-  val2 = P_y(x, y);
-  ok &= val1 == val2;
+
+  ok &= isHarmonic2(P_x);
+
+  PolyC p2;
+  p2 = getComplexFromHarmonicUV(P_x, P_y);
+  ok &= p2 == p;
+
+  //p2 = getComplexFromHarmonicU(P_x); // should reconstruct p
+  //p2 = getComplexFromHarmonicV(P_y); // seems to work except for the constant term
+
+
+
+
+
+
+
+
+
 
   // evaluate the potential at some points:
   val1 = P(+1, 0);  // -2/3 for p(z) = z^2 - 1, -4/5 for p(z) = z^4
@@ -5983,7 +6029,7 @@ void testPolyaPotential()
   // -make a unit test and test it with more complicated complex polynomials p(z)
 
 
-  rsAssert(ok);
+
 
 
   // test the harmonic conjugate creation function:
@@ -6036,8 +6082,7 @@ void testPolyaPotential()
 
 
 
-
-  int dummy = 0;
+  rsAssert(ok);
 }
 
 

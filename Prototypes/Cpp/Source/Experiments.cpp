@@ -5873,23 +5873,34 @@ bool isHarmonic2(const rsBivariatePolynomial<T>& u, T tol = T(0))
 //  satisfy
 
 
+
+
 template<class T> 
 rsPolynomial<std::complex<T>> getComplexFromHarmonicUV(
   const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v)
 {
-  //rsAssert(rsBivariatePolynomial<T>::areHarmonicConjugates(u, v));
+  rsAssert(rsBivariatePolynomial<T>::areHarmonicConjugates(u, v));
   // fails: seems like ux == -vy where we should have ux == vy - there's some sign confusion: i 
   // think P_y is not the harmonic conjugate of of P_x, -P_y is
 
-  int M = u.getDegreeX();
+  /*
+  int M = rsMax(u.getDegreeX(), v.getDegreeX());
   rsPolynomial<std::complex<T>> p(M);
   for(int i = 0; i <= M; i++)
-    p[i] = std::complex<T>(u.coeff(i, 0), -v.coeff(i, 0));
+    p[i] = std::complex<T>(u.getCoeffPadded(i, 0), v.getCoeffPadded(i, 0));
+  return p;
+  // seems like if v.degX > u.degX, the last coeff is zero anyway - more tests needed
+  */
+
+  int M = rsMin(u.getDegreeX(), v.getDegreeX());
+  rsPolynomial<std::complex<T>> p(M);
+  for(int i = 0; i <= M; i++)
+    p[i] = std::complex<T>(u.coeff(i, 0), v.coeff(i, 0));
   return p;
 }
 // needs more tests - especially: why should the loop go only up to M and not max(M,N), where 
 // N = v.getDegreeX(), using a zero-padded accessor like getCoeffPadded(i, 0) for safe 
-// out-of-range access returning 0?
+// out-of-range access returning 0? ...or maybe the loop should go only up to min(M,N)
 
 
 /*
@@ -5941,6 +5952,37 @@ rsPolynomial<std::complex<T>> getComplexFromHarmonicV(const rsBivariatePolynomia
 }
 */
 
+/** Given a vector field u(x,y), v(x,y) and a parametric curve x(t), y(t) and start- and 
+end-values a,b for the parameter t, this function computes the path integral of the (polynomial) 
+vector field along the given (polynomial) path. */
+template<class T> 
+T pathIntegral(const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v,
+  const rsPolynomial<T>& x, const rsPolynomial<T>& y, T a, T b)
+{
+
+
+  return T(0);
+}
+// todo: maybe have a function that leaves a,b, unspecified - this should return a single bivariate
+// polynomial that is interpreted as a function of a,b
+
+template<class T> 
+T doubleIntegralXY(const rsBivariatePolynomial<T>& p, T x0, T x1, T y0, T y1)
+{
+  rsPolynomial<T>& p_ix = p.integralX(x0, x1);  // still a function of y
+  return p_ix.definiteIntegral(y0, y1);         // just a number
+}
+
+template<class T> 
+T doubleIntegralYX(const rsBivariatePolynomial<T>& p, T x0, T x1, T y0, T y1)
+{
+  rsPolynomial<T>& p_iy = p.integralY(y0, y1);  // still a function of x
+  return p_iy.definiteIntegral(x0, x1);         // just a number
+}
+
+// todo: functions for principal curvatures, mean curvature and Gaussian curvature - these should
+// all be bivariate polynomials again (if i'm not mistaken)
+
 
 
 void testPolyaPotential()
@@ -5984,23 +6026,28 @@ void testPolyaPotential()
   val1 =  p(z).real(); val2 = P_x(x, y); ok &= val1 == val2;
   val1 = -p(z).imag(); val2 = P_y(x, y); ok &= val1 == val2;
 
+  // Test the harmonic conjugate relationships between P_x, P_y
+  ok &= P_x.isHarmonic();
+  ok &= isHarmonic2(P_x); 
+  ok &= P_y.isHarmonic();
+  ok &= isHarmonic2(P_y); 
+  ok &= BiPolyR::areHarmonicConjugates(P_x, -P_y); // -P_y (not P_y!) is harmonic conjugate of P_x
+  ok &= BiPolyR::areHarmonicConjugates(P_y,  P_x); // the relation is antisymmetric (?)
 
-  ok &= isHarmonic2(P_x);
-
-  PolyC p2;
-  p2 = getComplexFromHarmonicUV(P_x, P_y);
+  // Try to reconstruct the original complex univariate polynomial from P_x, P_y
+  PolyC p2 = getComplexFromHarmonicUV(P_x, -P_y);
   ok &= p2 == p;
+
+  // experimental - find an "associated polynomial" by swapping the roles of P_x, P_y in the 
+  // reconstruction:
+  PolyC p3 = getComplexFromHarmonicUV(P_y, P_x);
+  // looks like p3 has the real and imaginary parts swapped with respect to p - but also with a 
+  // sign flip: p3[i] = -Im{ p[i] } + i*Re{ p[i] } ... i think, this is a rotation by 90°, i.e. a
+  // multiplication by i? let's try it:
+  PolyC p4 = p; p4.scale(C(0,1)); ok &= p3 == p4;   // ...yep, indeed - nice!
 
   //p2 = getComplexFromHarmonicU(P_x); // should reconstruct p
   //p2 = getComplexFromHarmonicV(P_y); // seems to work except for the constant term
-
-
-
-
-
-
-
-
 
 
   // evaluate the potential at some points:
@@ -6012,6 +6059,7 @@ void testPolyaPotential()
   // -so far, i've not yet seen a potential that features minima or maxima - only saddles seem to
   //  occur - investigate if this is always the case and try to find a theoretical explanation
   //  ...maybe it's only because so far i have not used polynomials with complex coeffs?
+  //  -could this be related to features of minimal surfaces? they also tend to from saddles
   // -saddles are easy to identify in topographic or equipotential plots - they look like crosses
   // -could the value at the zeros be given by +-(1 - 1/(n+1)) for p(z) = z^n - 1, or maybe
   //  exp(i*k) * (1 - 1/(n+1)) for k = 0...n or something?
@@ -6080,6 +6128,24 @@ void testPolyaPotential()
   // this gives x = z-i*y, y = z-x. Plug these expressions into a complexified versions of p,q?
 
 
+  u = BiPolyR(2,2,{1,2,3, 4,5,6, 7,8,9});
+  // p(x,y) =   1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2
+  //          + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2
+  //          + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2
+  // x0 = 1, x1 = 2, y0 = 3, y1 = 4
+
+  val1 = doubleIntegralXY(u, 1., 2., 3., 4.);
+  val2 = doubleIntegralYX(u, 1., 2., 3., 4.);
+  ok &= val1 == 6347./12.;
+  ok &= val2 == 6347./12.;
+
+  // var("x y")
+  // p(x,y) =   1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2 + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2 + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2       
+  // p_ix = integrate(p, x, 1, 2)
+  // p_ix_iy = integrate(p_ix, y, 3, 4)
+  // p_ix_iy
+  //
+  // 6347/12 = 528.916666666667
 
 
   rsAssert(ok);

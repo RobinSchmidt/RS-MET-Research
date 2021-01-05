@@ -5955,69 +5955,50 @@ rsPolynomial<std::complex<T>> getComplexFromHarmonicV(const rsBivariatePolynomia
 
 /** Given a bivariate polynomial p(x,y) and two univariate polynomials x(t), y(t), this function 
 computes p(x(t),y(t)) which is a univariate polynomial in t.  */
+/*
 template<class T> 
 rsPolynomial<T> compose(const rsBivariatePolynomial<T>& p,
   const rsPolynomial<T>& x, const rsPolynomial<T>& y)
 {
+  //   p(x,y) = \sum_m \sum_n a_{mn} x^m y^n
+  // where: 
+  //   x = x(t) = \sum_i b_i x^i
+  //   y = y(t) = \sum_j c_j y^j
+  // so the univariate p(t) is:
+  //   p(t) = \sum_m \sum_n \left(  a_{mn} * (\sum_i b_i x^i)^m * (\sum_j c_j y^j)^n  \right)
+  // so, the algo needs:
+  //   -successive powers of the b,c arrays (iterated convolutions of the arrays with themselves)
+  //   -the products of all possible combinations of those powers (more convolutions)
+  //   -multiply these products by a coeff a_{mn} and accumulate the result into the output coeff
+  //    array
   using Poly = rsPolynomial<T>;
-  using AT = rsArrayTools;
-
+  using AT   = rsArrayTools;
   int M = p.getDegreeX();
   int N = p.getDegreeY();
   int I = x.getDegree();
   int J = y.getDegree();
   int L = I+M + J+N;              // degree of result
-  int strideX = M*(I+1)-1;
-  int strideY = N*(J+1)-1;
-
+  int strideX = M*(I+1)-1;        // number of columns in matrix xp (powers of x)
+  int strideY = N*(J+1)-1;        // same for yp
   rsMatrix<T> xp(M+1, strideX);   // powers of x
   rsMatrix<T> yp(N+1, strideY);   // powers of y
-
+  std::vector<T> tmp(L+1);        // holds coeffs for (x(t))^m * (y(t))^n as function of t
+  Poly pt(L);                     // target polynomal p(t)
   Poly::powers(x.getCoeffPointerConst(), I, xp.getDataPointer(), M, strideX);
   Poly::powers(y.getCoeffPointerConst(), J, yp.getDataPointer(), N, strideY);
-
-
-
-
-  std::vector<T> tmp(L+1);   // holds coeffs for (x(t))^m * (y(t))^n as function of t
-  T* t = &tmp[0];
-
-  rsPolynomial<T> pt(L);              // target polynomal p(t)
-  T* d = pt.getCoeffPointer();
-
-  for(int m = 0; m <= M; m++)
-  {
-    for(int n = 0; n <= N; n++)
-    {
-      AT::fillWithNaN(t, L);
-      T*  xm  = xp.getRowPointer(m);       // coeffs for (x(t))^m
-      T*  yn  = yp.getRowPointer(n);       // coeffs for (y(t))^n
-      int lxm = m*I+1;                     // effective length of xm
-      int lyn = n*J+1;                     // effective length of xm
-      AT::convolve(xm, lxm, yn, lyn, t);
-      int lt = lxm+lyn-1;
-      for(int i = 0; i < lt; i++)
-        d[i] += p.coeff(m, n) * t[i];      // accumulation
-    }
-  }
-
-
-
-
-
+  for(int m = 0; m <= M; m++) {
+    for(int n = 0; n <= N; n++) {
+      T*  xm  = xp.getRowPointer(m);            // coeffs for (x(t))^m
+      T*  yn  = yp.getRowPointer(n);            // coeffs for (y(t))^n
+      int lxm = m*I+1;                          // effective length of xm
+      int lyn = n*J+1;                          // effective length of xm
+      AT::convolve(xm, lxm, yn, lyn, &tmp[0]);
+      for(int i = 0; i < lxm+lyn-1; i++)
+        pt[i] += p.coeff(m, n) * tmp[i];  }}    // accumulation
   return pt;
 }
-//   p(x,y) = \sum_m \sum_n a_{mn} x^m y^n  
-// where: 
-//   x = x(t) = \sum_i b_i x^i
-//   y = y(t) = \sum_j c_j y^j
-// so the univariate p(t) is:
-//   p(t) = \sum_m \sum_n \left(  a_{mn} * (\sum_i b_i x^i)^m * (\sum_j c_j y^j)^n  \right)
-// so, the algo needs:
-//   -successive powers of the b,c arrays (iterated convolutions of the arrays with themselves)
-//   -the products of all possible combinations of those powers (more convolutions)
-//   -multiply these products by a coeff a_{mn} and accumulate the result into the output coeff
-//    array
+*/
+// what about the composition where the inner polynomial is bivariate and the outer univariate?
 
 /** Given a vector field u(x,y), v(x,y) and a parametric curve x(t), y(t) and start- and 
 end-values a,b for the parameter t, this function computes the path integral of the (polynomial) 
@@ -6026,9 +6007,15 @@ template<class T>
 T pathIntegral(const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v,
   const rsPolynomial<T>& x, const rsPolynomial<T>& y, T a, T b)
 {
-
-
-  return T(0);
+  using Poly   = rsPolynomial<T>;
+  using BiPoly = rsBivariatePolynomial<T>;
+  Poly ut = BiPoly::compose(u, x, y);  // u(t) - todo: support syntax: u.compose(x, y)
+  Poly vt = BiPoly::compose(v, x, y);  // v(t)
+  Poly xp = x.derivative();            // x'(t)
+  Poly yp = y.derivative();            // y'(t)
+  Poly P  = ut * xp + vt * yp;         // the scalar product in the integrand
+  return P.definiteIntegral(a, b);
+  //return T(0);
 }
 // -compose:         uc = u(x(t), y(t)), vc = v(x(t), y(t))  -> univariate in t
 // -scalar product:  us = uc * x(t),     vs = vc * y(t),     S = us + vs
@@ -6042,16 +6029,20 @@ T pathIntegral(const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>
 /** Given a scalar field u(x,y) and a parametric curve x(t), y(t) and start- and end-values a,b for
 the parameter t, this function computes the path integral of the (polynomial) vector field along 
 the given (polynomial) path. */
+/*
 template<class T> 
 T pathIntegral(const rsBivariatePolynomial<T>& u,
   const rsPolynomial<T>& x, const rsPolynomial<T>& y, T a, T b)
 {
-
+  rsPolynomial<T> ut;
 
   return T(0);
 }
+*/
 // https://www.youtube.com/watch?v=7mrsZzXmibg ..oh damn - that involves taking the norm of the 
-// velocity which is not a polynomial anymore due to the sqrt
+// velocity which is not a polynomial anymore due to the sqrt - and the sqrt occurs in the 
+// integrand, so we can't just evaluate it - the only way would be to evaluate it numerically - 
+// maybe do that...
 
 template<class T> 
 T doubleIntegralXY(const rsBivariatePolynomial<T>& p, T x0, T x1, T y0, T y1)
@@ -6234,17 +6225,36 @@ void testPolyaPotential()
   //
   // 6347/12 = 528.916666666667
 
+  // Composition of outer bivariate with inner univariate polynomial:
   PolyR xt({1,2,3,4});
   PolyR yt({2,3});
-  PolyR ut = compose(u, xt, yt);
-
+  PolyR ut = BiPolyR::compose(u, xt, yt);
   Real t = 5;
   val1 = u(xt(t), yt(t));
   val2 = ut(t);
+  ok  &= val1 == val2;
+
+  // var("t")
+  // x(t) = 1*t^0 + 2*t^1 + 3*t^2 + 4*t^3
+  // y(t) = 2*t^0 + 3*t^1
+  // u = 1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2 + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2 + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2
+  // v = 9*x^0*y^0 + 8*x^0*y^1 + 7*x^0*y^2 + 6*x^1*y^0 + 5*x^1*y^1 + 4*x^1*y^2 + 3*x^2*y^0 + 2*x^2*y^1 + 1*x^2*y^2
+  // s = u*diff(x,t) + v*diff(y,t)
+  // r = integrate(s, t, -1, 2)
+  // r, N(r)
+  //
+  // 3392240031/154, 2.20275326688312e7
+
+  Real tol = 1.e-8;
+  v = BiPolyR(2,2,{9,8,7, 6,5,4, 3,2,1});
+  val1 = pathIntegral(u, v, xt, yt, -1., +2.);
+  val2 = 3392240031./154;;
+  ok  &= rsIsCloseTo(val1, val2, tol);
+
 
   // todo:
-  // -path integral of a scalar field
   // -path integral of a vector field
+  // -path integral of a scalar field
   // -double integral over region bounded by polynomial curves
 
 

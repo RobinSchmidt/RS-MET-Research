@@ -5872,9 +5872,6 @@ bool isHarmonic2(const rsBivariatePolynomial<T>& u, T tol = T(0))
 //  i think, this is the general symmetry condition that the matrix for a harmonic polynomial must
 //  satisfy
 
-
-
-
 template<class T> 
 rsPolynomial<std::complex<T>> getComplexFromHarmonicUV(
   const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v)
@@ -5952,52 +5949,9 @@ rsPolynomial<std::complex<T>> getComplexFromHarmonicV(const rsBivariatePolynomia
 }
 */
 
-/** Given a scalar field u(x,y) and a parametric curve x(t), y(t) and start- and end-values a,b for
-the parameter t, this function computes the path integral of the (polynomial) vector field along 
-the given (polynomial) path. */
-/*
-template<class T> 
-T pathIntegral(const rsBivariatePolynomial<T>& u,
-  const rsPolynomial<T>& x, const rsPolynomial<T>& y, T a, T b)
-{
-  rsPolynomial<T> ut;
-
-  return T(0);
-}
-*/
-// https://www.youtube.com/watch?v=7mrsZzXmibg ..oh damn - that involves taking the norm of the 
-// velocity which is not a polynomial anymore due to the sqrt - and the sqrt occurs in the 
-// integrand, so we can't just evaluate it - the only way would be to evaluate it numerically - 
-// maybe do that...
-
-// scalar path integral
-template<class T> 
-T pathIntegral(const rsBivariatePolynomial<T>& p, 
-  const rsPolynomial<T>& x, const rsPolynomial<T>& y, T a, T b)
-{
-  using Poly   = rsPolynomial<T>;
-  using BiPoly = rsBivariatePolynomial<T>;
-
-  rsAssert(x.getDegree() <= 1 && y.getDegree() <= 1);
-  // todo: lift this restriction by switching to numerical integration, if any degree is larger
-
-  Poly pt = BiPoly::compose(p, x, y);  // p(t)
-  Poly xp = x.derivative();            // x'(t)  - optimize - it's just the coeff for x^1
-  Poly yp = y.derivative();            // y'(t)
-  T dx    = xp(0);                     // dx/dt, constant bcs x is linear
-  T dy    = yp(0);                     // dy/dt, constant bcs y is linear
-  T ds    = sqrt(dx*dx + dy*dy);       // arc length (the "arc" is just a line element)
-  pt.scale(ds);                        // the integrand
-  return pt.definiteIntegral(a, b);
-
-  // when x(t) or y(t) is nonlinear, then xp or yp would still be functions of t and the sqrt would
-  // appear in the integrand and we would have to evaluate x,y at t within the integral
-}
-// pt has 2 zero coeffs at the end - check, if that's ok
-
 
 template<class T> 
-T firstFundamentalForm(const rsBivariatePolynomial<T>& x, const rsBivariatePolynomial<T>& y,
+void firstFundamentalForm(const rsBivariatePolynomial<T>& x, const rsBivariatePolynomial<T>& y,
   const rsBivariatePolynomial<T>& z, rsBivariatePolynomial<T>& E, rsBivariatePolynomial<T>& F,
   rsBivariatePolynomial<T>& G)
 {
@@ -6012,8 +5966,9 @@ T firstFundamentalForm(const rsBivariatePolynomial<T>& x, const rsBivariatePolyn
   F = x_u*x_v + y_u*y_v + z_u*z_v;
   G = x_v*x_v + y_v*y_v + z_v*z_v;
 }
-// we need to implement the multiplication operator
 // see Weitz - Differentialgeometrie, p.154
+// maybe make a function that takes as input an rsVector3D of rsBivariatePolynomial instead of 
+// x,y,z separately
 
 // todo: 
 // -consider parametric surfaces given by a triple of bivariate polynomials:
@@ -6164,28 +6119,14 @@ void testPolyaPotential()
   bool harm = u.isHarmonic();
 
 
-
-  // Test evaluation of various types of integrals:
-
+  // Arithmetic operators:
   u = BiPolyR(2,2,{1,2,3, 4,5,6, 7,8,9});
-  // p(x,y) =   1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2
-  //          + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2
-  //          + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2
-  // x0 = 1, x1 = 2, y0 = 3, y1 = 4
-
-  // Double intgral over a rectangular region:
-  //val1 = BiPolyR::doubleIntegralXY(u, 1., 2., 3., 4.); ok &= val1 == 6347./12.;
-  //val2 = BiPolyR::doubleIntegralYX(u, 1., 2., 3., 4.); ok &= val2 == 6347./12.;
-
-  val1 = u.doubleIntegralXY(1., 2., 3., 4.); ok &= val1 == 6347./12.;
-  val2 = u.doubleIntegralYX(1., 2., 3., 4.); ok &= val2 == 6347./12.;
-  // var("x y")
-  // p(x,y) =   1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2 + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2 + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2       
-  // p_ix = integrate(p, x, 1, 2)
-  // p_ix_iy = integrate(p_ix, y, 3, 4)
-  // p_ix_iy
-  //
-  // 6347/12 = 528.916666666667
+  v = BiPolyR(2,2,{9,8,7, 6,5,4, 3,2,1});
+  BiPolyR uv;
+  uv = u+v; val1 = uv(x, y); val2 = u(x, y) + v(x, y); ok &= val1 == val2;
+  uv = u-v; val1 = uv(x, y); val2 = u(x, y) - v(x, y); ok &= val1 == val2;
+  uv = u*v; val1 = uv(x, y); val2 = u(x, y) * v(x, y); ok &= val1 == val2;
+  // maybe use polynomials with more interesting degrees (all values different and maybe higher)
 
   // Composition of outer bivariate with inner univariate polynomial:
   PolyR xt({1,2,3,4});
@@ -6196,6 +6137,24 @@ void testPolyaPotential()
   val2 = ut(t);
   ok  &= val1 == val2;
 
+
+  // Test evaluation of various types of integrals:
+
+  // Double intgral over a rectangular region:
+  // p(x,y) =   1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2
+  //          + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2
+  //          + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2
+  // x0 = 1, x1 = 2, y0 = 3, y1 = 4
+  //
+  // var("x y")
+  // p(x,y) =   1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2 + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2 + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2       
+  // p_ix = integrate(p, x, 1, 2)
+  // p_ix_iy = integrate(p_ix, y, 3, 4)
+  // p_ix_iy
+  //
+  // 6347/12 = 528.916666666667
+  val1 = u.doubleIntegralXY(1., 2., 3., 4.); ok &= val1 == 6347./12.;
+  val2 = u.doubleIntegralYX(1., 2., 3., 4.); ok &= val2 == 6347./12.;
 
   // Path integral over a vector field:
   // var("t")
@@ -6209,10 +6168,10 @@ void testPolyaPotential()
   //
   // 3392240031/154, 2.20275326688312e7
   Real tol = 1.e-8;
-  v = BiPolyR(2,2,{9,8,7, 6,5,4, 3,2,1});
   val1 = BiPolyR::pathIntegral(u, v, xt, yt, -1., +2.);
   val2 = 3392240031./154;;
   ok  &= rsIsCloseTo(val1, val2, tol);
+  // todo: maybe check the relative instead of the absolute error (absolute error is largeish)
 
 
   // Path integral over a scalar field:
@@ -6229,19 +6188,57 @@ void testPolyaPotential()
   //
   // 102399/10*sqrt(13), 36920.4845056237
   Real err;
+  tol = 1.e-15;
   xt = PolyR({1,2});
   yt = PolyR({2,3});
-  val1 = pathIntegral(u, xt, yt, -1., +2.);
-  val2 = 102399/10*sqrt(13);
+  val1 = BiPolyR::pathIntegral(u, xt, yt, -1., +2.);
+  val2 = (102399./10.)*sqrt(13);
   err  = (val2-val1)/val2;                // relative error - almost 1.e-4 - why so large?
-  ok  &= rsIsCloseTo(val1, val2, tol);
+  ok  &= rsAbs(err) <= tol;
+  //ok  &= rsIsCloseTo(val1, val2, tol);
+
+  // https://www.youtube.com/watch?v=7mrsZzXmibg 
+
+  // Test Green's theorem in 2D: compare the double integral of the curl over a rectangle to the 
+  // path integral of the vector field itself along the boundary of the rectangle:
+  Real x0 =  1, x1 = 3;
+  Real y0 = -1, y1 = 2;
+  BiPolyR curl = BiPolyR::curl2D(u, v);
+  val1 = curl.doubleIntegralXY(x0, x1, y0, y1);
+
+  // first segment (rightward):
+  xt = PolyR({x0, x1-x0});
+  yt = PolyR({y0         });
+  val2 = BiPolyR::pathIntegral(u, v, xt, yt, 0., 1.);
+
+  // upward:
+  xt = PolyR({x1       });
+  yt = PolyR({y0, y1-y0});
+  val2 += BiPolyR::pathIntegral(u, v, xt, yt, 0., 1.);
+
+  // leftward:
+  xt = PolyR({x1, x0-x1});
+  yt = PolyR({y1       });
+  val2 += BiPolyR::pathIntegral(u, v, xt, yt, 0., 1.);
+
+  // downward:
+  xt = PolyR({x0       });
+  yt = PolyR({y1, y0-y1});
+  val2 += BiPolyR::pathIntegral(u, v, xt, yt, 0., 1.);
+
+  // yes - looks good: todo: factor out a convenience function to implement the roundtrip
+  // path integral around a rectangle
 
 
+  // Curvature of surfaces:
+  BiPolyR w = BiPolyR(2,2,{6,5,4, 9,8,7, 3,2,1});
+  BiPolyR E, F, G;
+  firstFundamentalForm(u, v, w, E, F, G);
 
 
 
   // todo:
-  // -path integral of a scalar field
+  // -flux and circulation integrals (integrals over divergence and curl)
   // -double integral over region bounded by polynomial curves
 
 

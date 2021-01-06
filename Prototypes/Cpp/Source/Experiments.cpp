@@ -5981,6 +5981,42 @@ void firstFundamentalForm(const rsBivariatePolynomial<T>& x, const rsBivariatePo
 // -circulation ond flux through a curve (path integrals over curl and divergence)
 // -maybe integral functions that take univariate polynomials for the integration limits
 
+template<class T> 
+T fluxIntegral(const rsBivariatePolynomial<T>& p, const rsBivariatePolynomial<T>& q,
+  const rsPolynomial<T>& x, const rsPolynomial<T>& y, T a, T b)
+{
+  rsAssert(x.getDegree() <= 1 && y.getDegree() <= 1, "Only implemented for linear paths");
+
+  using Poly   = rsPolynomial<T>;
+  using BiPoly = rsBivariatePolynomial<T>;
+  Poly pt = BiPoly::compose(p, x, y);          // p(t)
+  Poly qt = BiPoly::compose(q, x, y);          // q(t)
+  T dx = x.getCoeffPadded(1); 
+  T dy = y.getCoeffPadded(1);                  // (dx,dy): velocity vector
+  T nx = -dy;           
+  T ny =  dx;                                  // (nx,ny): normal vector (not normalized)
+  pt.scale(nx);                                // x-term in scalar product
+  qt.scale(ny);                                // y-term in scalar product
+  Poly S = pt + qt;                            // scalar product
+  T I = S.definiteIntegral(a, b);              // not yet normalized result
+  return I / sqrt(nx*nx + ny*ny);              // now it's normalized
+
+  // this is still wrong - verify the computation of the normal vector
+
+  /*
+  Poly pt_nx(pt); pt_nx.scale(nx);             // x-term in scalar product
+  Poly pt_ny(pt); pt_ny.scale(ny);             // y-term in scalar product
+  Poly S = pt_nx + pt_ny;                      // scalar product
+  T I = pt.definiteIntegral(a, b);             // not yet normalized result
+  return I / sqrt(nx*nx + ny*ny);              // now it's normalized
+  */
+
+  return 0;
+}
+// the flux is given by the scalar product of the vector field and a unit normal vector to the path
+// so, due to the normalization requirement (involving the sqrt), we can only allow linear paths 
+// here - the situation is similar to the path integrals over scalar fields
+// this is needed for the righ-hand side of Gauss' theorem in 2D
 
 
 
@@ -6201,33 +6237,28 @@ void testPolyaPotential()
 
   // Test Green's theorem in 2D: compare the double integral of the curl over a rectangle to the 
   // path integral of the vector field itself along the boundary of the rectangle:
+  tol = 1.e-13;
   Real x0 =  1, x1 = 3;
   Real y0 = -1, y1 = 2;
   BiPolyR curl = BiPolyR::curl2D(u, v);
   val1 = curl.doubleIntegralXY(x0, x1, y0, y1);
+  val2 = BiPolyR::loopIntegral(u, v, x0, x1, y0, y1);
+  ok  &= rsIsCloseTo(val1, val2, tol);
+  // val1 seems to be more numerically precise
 
-  // first segment (rightward):
-  xt = PolyR({x0, x1-x0});
-  yt = PolyR({y0         });
-  val2 = BiPolyR::pathIntegral(u, v, xt, yt, 0., 1.);
+  // Test Gauss' theorem in 2D
+  BiPolyR divergence = BiPolyR::divergence2D(u, v);
+  val1 = divergence.doubleIntegralXY(x0, x1, y0, y1);
+  val2 = 0;
+  xt = PolyR({x0, x1-x0}); yt = PolyR({y0}); 
+  val2 += fluxIntegral(u, v, xt, yt, 0., 1.);  // rightward
+  xt = PolyR({x1}); yt = PolyR({y0, y1-y0}); 
+  val2 += fluxIntegral(u, v, xt, yt, 0., 1.);  // upward
+  xt = PolyR({x1, x0-x1}); yt = PolyR({y1}); 
+  val2 += fluxIntegral(u, v, xt, yt, 0., 1.);  // leftward
+  xt = PolyR({x0}); yt = PolyR({y1, y0-y1}); 
+  val2 += fluxIntegral(u, v, xt, yt, 0., 1.);  // downward
 
-  // upward:
-  xt = PolyR({x1       });
-  yt = PolyR({y0, y1-y0});
-  val2 += BiPolyR::pathIntegral(u, v, xt, yt, 0., 1.);
-
-  // leftward:
-  xt = PolyR({x1, x0-x1});
-  yt = PolyR({y1       });
-  val2 += BiPolyR::pathIntegral(u, v, xt, yt, 0., 1.);
-
-  // downward:
-  xt = PolyR({x0       });
-  yt = PolyR({y1, y0-y1});
-  val2 += BiPolyR::pathIntegral(u, v, xt, yt, 0., 1.);
-
-  // yes - looks good: todo: factor out a convenience function to implement the roundtrip
-  // path integral around a rectangle
 
 
   // Curvature of surfaces:

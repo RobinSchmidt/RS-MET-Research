@@ -5993,31 +5993,35 @@ T fluxIntegral(const rsBivariatePolynomial<T>& p, const rsBivariatePolynomial<T>
   Poly qt = BiPoly::compose(q, x, y);          // q(t)
   T dx = x.getCoeffPadded(1); 
   T dy = y.getCoeffPadded(1);                  // (dx,dy): velocity vector
-  T nx = -dy;           
-  T ny =  dx;                                  // (nx,ny): normal vector (not normalized)
+
+
+  //T nx = -dy;           
+  //T ny =  dx;                                  // (nx,ny): normal vector (not normalized)
+
+  T nx =  dy;           
+  T ny = -dx;                                  // (nx,ny): normal vector (not normalized)
+
+  //T s  = 1 / sqrt(nx*nx + ny*ny); 
+  //nx *= s;
+  //ny *= s;
+
   pt.scale(nx);                                // x-term in scalar product
   qt.scale(ny);                                // y-term in scalar product
   Poly S = pt + qt;                            // scalar product
   T I = S.definiteIntegral(a, b);              // not yet normalized result
-  return I / sqrt(nx*nx + ny*ny);              // now it's normalized
 
-  // this is still wrong - verify the computation of the normal vector
+  return I;
 
-  /*
-  Poly pt_nx(pt); pt_nx.scale(nx);             // x-term in scalar product
-  Poly pt_ny(pt); pt_ny.scale(ny);             // y-term in scalar product
-  Poly S = pt_nx + pt_ny;                      // scalar product
-  T I = pt.definiteIntegral(a, b);             // not yet normalized result
-  return I / sqrt(nx*nx + ny*ny);              // now it's normalized
-  */
-
-  return 0;
+  //return I / sqrt(nx*nx + ny*ny);              // now it's normalized
 }
+// seems like *not* normalizing the normal vector at all gives the correct result, i.e. the result
+// that equals the double-integral over the divergence...if this is indeed the case, we can 
+// actually allow for nonlinear curves - more tests needed
 // the flux is given by the scalar product of the vector field and a unit normal vector to the path
 // so, due to the normalization requirement (involving the sqrt), we can only allow linear paths 
 // here - the situation is similar to the path integrals over scalar fields
 // this is needed for the righ-hand side of Gauss' theorem in 2D
-
+// https://www.khanacademy.org/math/multivariable-calculus/integrating-multivariable-functions/line-integrals-in-vector-fields-articles/a/flux-in-two-dimensions
 
 
 void testPolyaPotential()
@@ -6247,18 +6251,24 @@ void testPolyaPotential()
   // val1 seems to be more numerically precise
 
   // Test Gauss' theorem in 2D
+  x0 = 1, x1 = 3;
+  y0 = 3, y1 = 5;
   BiPolyR divergence = BiPolyR::divergence2D(u, v);
   val1 = divergence.doubleIntegralXY(x0, x1, y0, y1);
   val2 = 0;
-  xt = PolyR({x0, x1-x0}); yt = PolyR({y0}); 
+  xt = PolyR({x0, x1-x0}); 
+  yt = PolyR({y0}); 
   val2 += fluxIntegral(u, v, xt, yt, 0., 1.);  // rightward
-  xt = PolyR({x1}); yt = PolyR({y0, y1-y0}); 
+  xt = PolyR({x1}); 
+  yt = PolyR({y0, y1-y0}); 
   val2 += fluxIntegral(u, v, xt, yt, 0., 1.);  // upward
-  xt = PolyR({x1, x0-x1}); yt = PolyR({y1}); 
+  xt = PolyR({x1, x0-x1}); 
+  yt = PolyR({y1}); 
   val2 += fluxIntegral(u, v, xt, yt, 0., 1.);  // leftward
-  xt = PolyR({x0}); yt = PolyR({y1, y0-y1}); 
+  xt = PolyR({x0}); 
+  yt = PolyR({y1, y0-y1}); 
   val2 += fluxIntegral(u, v, xt, yt, 0., 1.);  // downward
-
+  // works only if x1-x0 == y1-y0 = 1 - something must be wrong about the normalization
 
 
   // Curvature of surfaces:

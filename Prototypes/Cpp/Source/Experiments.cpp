@@ -5952,80 +5952,6 @@ rsPolynomial<std::complex<T>> getComplexFromHarmonicV(const rsBivariatePolynomia
 }
 */
 
-
-/** Given a bivariate polynomial p(x,y) and two univariate polynomials x(t), y(t), this function 
-computes p(x(t),y(t)) which is a univariate polynomial in t.  */
-/*
-template<class T> 
-rsPolynomial<T> compose(const rsBivariatePolynomial<T>& p,
-  const rsPolynomial<T>& x, const rsPolynomial<T>& y)
-{
-  //   p(x,y) = \sum_m \sum_n a_{mn} x^m y^n
-  // where: 
-  //   x = x(t) = \sum_i b_i x^i
-  //   y = y(t) = \sum_j c_j y^j
-  // so the univariate p(t) is:
-  //   p(t) = \sum_m \sum_n \left(  a_{mn} * (\sum_i b_i x^i)^m * (\sum_j c_j y^j)^n  \right)
-  // so, the algo needs:
-  //   -successive powers of the b,c arrays (iterated convolutions of the arrays with themselves)
-  //   -the products of all possible combinations of those powers (more convolutions)
-  //   -multiply these products by a coeff a_{mn} and accumulate the result into the output coeff
-  //    array
-  using Poly = rsPolynomial<T>;
-  using AT   = rsArrayTools;
-  int M = p.getDegreeX();
-  int N = p.getDegreeY();
-  int I = x.getDegree();
-  int J = y.getDegree();
-  int L = I+M + J+N;              // degree of result
-  int strideX = M*(I+1)-1;        // number of columns in matrix xp (powers of x)
-  int strideY = N*(J+1)-1;        // same for yp
-  rsMatrix<T> xp(M+1, strideX);   // powers of x
-  rsMatrix<T> yp(N+1, strideY);   // powers of y
-  std::vector<T> tmp(L+1);        // holds coeffs for (x(t))^m * (y(t))^n as function of t
-  Poly pt(L);                     // target polynomal p(t)
-  Poly::powers(x.getCoeffPointerConst(), I, xp.getDataPointer(), M, strideX);
-  Poly::powers(y.getCoeffPointerConst(), J, yp.getDataPointer(), N, strideY);
-  for(int m = 0; m <= M; m++) {
-    for(int n = 0; n <= N; n++) {
-      T*  xm  = xp.getRowPointer(m);            // coeffs for (x(t))^m
-      T*  yn  = yp.getRowPointer(n);            // coeffs for (y(t))^n
-      int lxm = m*I+1;                          // effective length of xm
-      int lyn = n*J+1;                          // effective length of xm
-      AT::convolve(xm, lxm, yn, lyn, &tmp[0]);
-      for(int i = 0; i < lxm+lyn-1; i++)
-        pt[i] += p.coeff(m, n) * tmp[i];  }}    // accumulation
-  return pt;
-}
-*/
-// what about the composition where the inner polynomial is bivariate and the outer univariate?
-
-/** Given a vector field u(x,y), v(x,y) and a parametric curve x(t), y(t) and start- and 
-end-values a,b for the parameter t, this function computes the path integral of the (polynomial) 
-vector field along the given (polynomial) path. */
-template<class T> 
-T pathIntegral(const rsBivariatePolynomial<T>& u, const rsBivariatePolynomial<T>& v,
-  const rsPolynomial<T>& x, const rsPolynomial<T>& y, T a, T b)
-{
-  using Poly   = rsPolynomial<T>;
-  using BiPoly = rsBivariatePolynomial<T>;
-  Poly ut = BiPoly::compose(u, x, y);  // u(t) - todo: support syntax: u.compose(x, y)
-  Poly vt = BiPoly::compose(v, x, y);  // v(t)
-  Poly xp = x.derivative();            // x'(t)
-  Poly yp = y.derivative();            // y'(t)
-  Poly P  = ut * xp + vt * yp;         // the scalar product in the integrand
-  return P.definiteIntegral(a, b);
-  //return T(0);
-}
-// -compose:         uc = u(x(t), y(t)), vc = v(x(t), y(t))  -> univariate in t
-// -scalar product:  us = uc * x(t),     vs = vc * y(t),     S = us + vs
-// -intgeral:        I = S.integral(a, b)
-
-
-// todo: maybe have a function that leaves a,b, unspecified - this should return a single bivariate
-// polynomial that is interpreted as a function of a,b
-
-
 /** Given a scalar field u(x,y) and a parametric curve x(t), y(t) and start- and end-values a,b for
 the parameter t, this function computes the path integral of the (polynomial) vector field along 
 the given (polynomial) path. */
@@ -6044,24 +5970,57 @@ T pathIntegral(const rsBivariatePolynomial<T>& u,
 // integrand, so we can't just evaluate it - the only way would be to evaluate it numerically - 
 // maybe do that...
 
+// scalar path integral
 template<class T> 
-T doubleIntegralXY(const rsBivariatePolynomial<T>& p, T x0, T x1, T y0, T y1)
+T pathIntegral(const rsBivariatePolynomial<T>& p, 
+  const rsPolynomial<T>& x, const rsPolynomial<T>& y, T a, T b)
 {
-  rsPolynomial<T>& p_ix = p.integralX(x0, x1);  // still a function of y
-  return p_ix.definiteIntegral(y0, y1);         // just a number
+  using Poly   = rsPolynomial<T>;
+  using BiPoly = rsBivariatePolynomial<T>;
+
+  rsAssert(x.getDegree() <= 1 && y.getDegree() <= 1);
+  // todo: lift this restriction by switching to numerical integration, if any degree is larger
+
+  Poly pt = BiPoly::compose(p, x, y);  // p(t)
+  Poly xp = x.derivative();            // x'(t)  - optimize - it's just the coeff for x^1
+  Poly yp = y.derivative();            // y'(t)
+  T dx    = xp(0);                     // dx/dt, constant bcs x is linear
+  T dy    = yp(0);                     // dy/dt, constant bcs y is linear
+  T ds    = sqrt(dx*dx + dy*dy);       // arc length (the "arc" is just a line element)
+  pt.scale(ds);                        // the integrand
+  return pt.definiteIntegral(a, b);
+
+  // when x(t) or y(t) is nonlinear, then xp or yp would still be functions of t and the sqrt would
+  // appear in the integrand and we would have to evaluate x,y at t within the integral
 }
+// pt has 2 zero coeffs at the end - check, if that's ok
+
 
 template<class T> 
-T doubleIntegralYX(const rsBivariatePolynomial<T>& p, T x0, T x1, T y0, T y1)
+T firstFundamentalForm(const rsBivariatePolynomial<T>& x, const rsBivariatePolynomial<T>& y,
+  const rsBivariatePolynomial<T>& z, rsBivariatePolynomial<T>& E, rsBivariatePolynomial<T>& F,
+  rsBivariatePolynomial<T>& G)
 {
-  rsPolynomial<T>& p_iy = p.integralY(y0, y1);  // still a function of x
-  return p_iy.definiteIntegral(x0, x1);         // just a number
+  using BiPoly = rsBivariatePolynomial<T>;
+  BiPoly x_u = x.derivativeX();     // dx/du
+  BiPoly x_v = x.derivativeY();     // dx/dv
+  BiPoly y_u = y.derivativeX();     // dy/du
+  BiPoly y_v = y.derivativeY();     // dy/dv
+  BiPoly z_u = z.derivativeX();     // dz/du
+  BiPoly z_v = z.derivativeY();     // dz/dv
+  E = x_u*x_u + y_u*y_u + z_u*z_u;
+  F = x_u*x_v + y_u*y_v + z_u*z_v;
+  G = x_v*x_v + y_v*y_v + z_v*z_v;
 }
-// make function names consistent maybe rename definiteIntegral to integral...but this could lead
-// to ambiguities with the function that evaluates the indefinite integral at some x0 with 
-// integration constant c
+// we need to implement the multiplication operator
+// see Weitz - Differentialgeometrie, p.154
 
 // todo: 
+// -consider parametric surfaces given by a triple of bivariate polynomials:
+//  x(u,v), y(u,v), z(u,v) (note that u,v are here the independent variables, i.e. the inputs to
+//  the 3 component polynomials, in the context of complex analysis, they were used for the real 
+//  and imaginary part of the function - don't get confused by this!)
+// -write a function to compute the first fundamental form coeffs E,F,G of the surface
 // -functions for principal curvatures, mean curvature and Gaussian curvature - these should
 //  all be bivariate polynomials again (if i'm not mistaken)
 // -circulation ond flux through a curve (path integrals over curl and divergence)
@@ -6215,8 +6174,11 @@ void testPolyaPotential()
   // x0 = 1, x1 = 2, y0 = 3, y1 = 4
 
   // Double intgral over a rectangular region:
-  val1 = doubleIntegralXY(u, 1., 2., 3., 4.); ok &= val1 == 6347./12.;
-  val2 = doubleIntegralYX(u, 1., 2., 3., 4.); ok &= val2 == 6347./12.;
+  //val1 = BiPolyR::doubleIntegralXY(u, 1., 2., 3., 4.); ok &= val1 == 6347./12.;
+  //val2 = BiPolyR::doubleIntegralYX(u, 1., 2., 3., 4.); ok &= val2 == 6347./12.;
+
+  val1 = u.doubleIntegralXY(1., 2., 3., 4.); ok &= val1 == 6347./12.;
+  val2 = u.doubleIntegralYX(1., 2., 3., 4.); ok &= val2 == 6347./12.;
   // var("x y")
   // p(x,y) =   1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2 + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2 + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2       
   // p_ix = integrate(p, x, 1, 2)
@@ -6234,6 +6196,8 @@ void testPolyaPotential()
   val2 = ut(t);
   ok  &= val1 == val2;
 
+
+  // Path integral over a vector field:
   // var("t")
   // x(t) = 1*t^0 + 2*t^1 + 3*t^2 + 4*t^3
   // y(t) = 2*t^0 + 3*t^1
@@ -6244,16 +6208,39 @@ void testPolyaPotential()
   // r, N(r)
   //
   // 3392240031/154, 2.20275326688312e7
-
   Real tol = 1.e-8;
   v = BiPolyR(2,2,{9,8,7, 6,5,4, 3,2,1});
-  val1 = pathIntegral(u, v, xt, yt, -1., +2.);
+  val1 = BiPolyR::pathIntegral(u, v, xt, yt, -1., +2.);
   val2 = 3392240031./154;;
   ok  &= rsIsCloseTo(val1, val2, tol);
 
 
+  // Path integral over a scalar field:
+  // var("t")
+  // x(t) = 1*t^0 + 2*t^1
+  // y(t) = 2*t^0 + 3*t^1
+  // p = 1*x^0*y^0 + 2*x^0*y^1 + 3*x^0*y^2 + 4*x^1*y^0 + 5*x^1*y^1 + 6*x^1*y^2 + 7*x^2*y^0 + 8*x^2*y^1 + 9*x^2*y^2
+  // dx = diff(x,t)
+  // dy = diff(y,t)
+  // ds = sqrt(dx*dx + dy*dy) 
+  // s = p * ds 
+  // r = integrate(s, t, -1, 2)
+  // r, N(r)
+  //
+  // 102399/10*sqrt(13), 36920.4845056237
+  Real err;
+  xt = PolyR({1,2});
+  yt = PolyR({2,3});
+  val1 = pathIntegral(u, xt, yt, -1., +2.);
+  val2 = 102399/10*sqrt(13);
+  err  = (val2-val1)/val2;                // relative error - almost 1.e-4 - why so large?
+  ok  &= rsIsCloseTo(val1, val2, tol);
+
+
+
+
+
   // todo:
-  // -path integral of a vector field
   // -path integral of a scalar field
   // -double integral over region bounded by polynomial curves
 

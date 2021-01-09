@@ -44,7 +44,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMeshGeneration();
   //testTransportEquation();
   //testPDE_1stOrder();  // stub
-  testPolyaPotential();
+  //testPolyaPotential();
+  testTrivariatePolynomial();
   //testVertexMesh();  // moved to main codbase
 
 

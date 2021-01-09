@@ -5967,8 +5967,9 @@ void firstFundamentalForm(const rsBivariatePolynomial<T>& x, const rsBivariatePo
   G = x_v*x_v + y_v*y_v + z_v*z_v;
 }
 // see Weitz - Differentialgeometrie, p.154
-// maybe make a function that takes as input an rsVector3D of rsBivariatePolynomial instead of 
-// x,y,z separately
+// -maybe make a function that takes as input an rsVector3D of rsBivariatePolynomial instead of 
+//  x,y,z separately
+// -are E,F,G the entries of J^T * J where J is the Jacobian and E*G - 2*F is its determinant?
 
 // todo: 
 // -consider parametric surfaces given by a triple of bivariate polynomials:
@@ -5982,7 +5983,7 @@ void firstFundamentalForm(const rsBivariatePolynomial<T>& x, const rsBivariatePo
 // -maybe integral functions that take univariate polynomials for the integration limits
 
 
-void testPolyaPotential()
+void testPolyaPotential()  // rename to testBivariatePolynomial, move to unit tests
 {
   // We consider the complex polynomial f(z) = z^n - 1 which has as its roots the n n-th roots of 
   // unity. We want to find its Polya vector field and a potential function for that field
@@ -6233,6 +6234,59 @@ void testPolyaPotential()
   rsAssert(ok);
 }
 
+void testTrivariatePolynomial()
+{
+  using Poly    = rsPolynomial<double>;
+  using BiPoly  = rsBivariatePolynomial<double>;
+  using TriPoly = rsTrivariatePolynomial<double>;
+
+  TriPoly p(3, 4, 5);
+  p.fillRandomly(-9.0, +9.0, 0, true); // maybe round to integers
+
+  bool ok = true;
+
+  double x = 5, y = 3, z = 2;
+  double val1, val2;
+  val1 = p.evaluate(x, y, z);
+  BiPoly p_yz = p.evaluateX(x);
+  val2 = p_yz.evaluate(y, z);
+  ok &= val1 == val2;
+
+  // test compose:
+  double u = 2, v = 3;
+  BiPoly px(2,2,{1,2,3, 4,5,6, 7,8,9});           // px(u,v)
+  BiPoly py(2,2,{4,5,6, 1,2,3, 7,8,9});           // py(u,v)
+  BiPoly pz(2,2,{7,8,9, 4,5,6, 1,2,3});           // pz(u,v)
+  p = TriPoly(2,2,2);
+  p.fillRandomly(-3.0, +3.0, 0, true);
+  BiPoly p_uv = TriPoly::compose(p, px, py, pz);  // p(u,v)
+  x = px(u,v);
+  y = py(u,v);
+  z = pz(u,v);
+  val1 = p.evaluate(x, y, z);
+  val2 = p_uv.evaluate(u, v);
+  ok &= val1 == val2;
+  // ...values are getting big here!
+
+
+  // todo: test fluxIntegral
+  double u0 = -1, u1 = 1, v0 = -1, v1 = 1;
+  TriPoly fx(2,2,2), fy(2,2,2), fz(2,2,2);  // the vector field
+  fx.fillRandomly(-3.0, +3.0, 0, true);
+  fy.fillRandomly(-3.0, +3.0, 1, true);     // we need to use different seeds
+  fz.fillRandomly(-3.0, +3.0, 2, true);
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, u0, u1, v0, v1);
+  // very big value - maybe use smaller, non-integer coeffs to get more reasonable values
+
+  // todo: evaluate a flux integral over the closed surface of a cuboid and compare to the integral
+  // of the divergence - these should be equal by Gauss' theorem
+
+  TriPoly divergence = TriPoly::divergence(fx, fy, fz);
+
+
+
+  rsAssert(ok);
+}
 
 float Q_rsqrt(float number)
 {

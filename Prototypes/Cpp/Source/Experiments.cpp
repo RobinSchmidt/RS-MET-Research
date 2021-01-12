@@ -6246,7 +6246,7 @@ void testTrivariatePolynomial()
   bool ok = true;
 
   double x = 5, y = 3, z = 2;
-  double val1, val2;
+  double val1, val2, val3;
   val1 = p.evaluate(x, y, z);
   BiPoly p_yz = p.evaluateX(x);
   val2 = p_yz.evaluate(y, z);
@@ -6268,6 +6268,25 @@ void testTrivariatePolynomial()
   ok &= val1 == val2;
   // ...values are getting big here!
 
+  // test triple integral:
+  double x0 = 1, x1 = 3, y0 = 2, y1 = 4, z0 = 3, z1 = 5;
+  p = TriPoly(1,1,1);
+  p.coeff(1,1,1) = 3.0;  // p(x,y,z) = 3*x*y*z
+  val1 = p.tripleIntegralXYZ(x0, x1, y0, y1, z0, z1);
+  ok &= val1 == 576;
+  // var("x y z")
+  // f = 3*x*y*z
+  // Fx   = integral(f,   (x, 1, 3))
+  // Fxy  = integral(Fx,  (y, 2, 4))
+  // Fxyz = integral(Fxy, (z, 3, 5))
+  // f, Fx, Fxy, Fxyz
+  //
+  // 3*x*y*z, 12*y*z, 72*z, 576
+
+  TriPoly tmp;
+  tmp = p.derivativeX(); val1 = tmp.evaluate(1,2,3); ok &= val1 == 18;
+  tmp = p.derivativeY(); val1 = tmp.evaluate(1,2,3); ok &= val1 == 9;
+  tmp = p.derivativeZ(); val1 = tmp.evaluate(1,2,3); ok &= val1 == 6;
 
   // todo: test fluxIntegral
   double u0 = -1, u1 = 1, v0 = -1, v1 = 1;
@@ -6275,14 +6294,144 @@ void testTrivariatePolynomial()
   fx.fillRandomly(-3.0, +3.0, 0, true);
   fy.fillRandomly(-3.0, +3.0, 1, true);     // we need to use different seeds
   fz.fillRandomly(-3.0, +3.0, 2, true);
-  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, u0, u1, v0, v1);
+  //val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, u0, u1, v0, v1);
   // very big value - maybe use smaller, non-integer coeffs to get more reasonable values
 
-  // todo: evaluate a flux integral over the closed surface of a cuboid and compare to the integral
-  // of the divergence - these should be equal by Gauss' theorem
-
+  // Test Gauss' theorem:
+  double tol = 1.e-10;
+  x0 = 2, x1 = 4, y0 = 3, y1 = 5, z0 = 4, z1 = 6;
+  val1 = TriPoly::outfluxIntegral(fx, fy, fz, x0, x1, y0, y1, z0, z1);
   TriPoly divergence = TriPoly::divergence(fx, fy, fz);
+  val2 = divergence.tripleIntegralXYZ(x0, x1, y0, y1, z0, z1);
+  ok &= rsIsCloseTo(val1, val2, tol);
+  // val2 seems to be more precise, which makes sense because the triple integral is a simpler
+  // computation than the flux integral
 
+
+
+  // constant flow in z-direction with unit speed, through a unit-square plane in (x,y) at z = 0:
+  double fluxX = 2, fluxY = 3, fluxZ = 4;
+
+  double dx = x1-x0, dy = y1-y0, dz = z1-z0;
+  double tgt;  // target
+  fx = TriPoly(0, 0, 0, { fluxX });
+  fy = TriPoly(0, 0, 0, { fluxY });
+  fz = TriPoly(0, 0, 0, { fluxZ });
+
+  // We imagine, x goes rightward, y goes forward, z goes upward
+
+  // top and bottom plane (z constant):
+  tgt  = fluxZ*dx*dy;
+  px   = BiPoly(1, 1, { x0, 0, dx, 0 });
+  py   = BiPoly(1, 1, { y0, dy, 0, 0 });
+  pz   = BiPoly(0, 0, { z0           });
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, 0., 1., 0., 1.);
+  ok &= val1 == tgt;
+  pz = BiPoly(0, 0, { z1             });
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, 0., 1., 0., 1.);
+  ok &= val1 == tgt;
+
+  // front and back plane (y constant):
+  tgt  = fluxY*dx*dz;
+  px   = BiPoly(1, 1, { x0, 0,  dx, 0 });
+  py   = BiPoly(0, 0, { y0            });
+  pz   = BiPoly(1, 1, { z1, -dz, 0, 0 }); // z takes the role of y, direction reversed, see below
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, 0., 1., 0., 1.);
+  ok  &= val1 == tgt; 
+  py = BiPoly(0, 0, { y1             });
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, 0., 1., 0., 1.);
+  ok &= val1 == tgt; 
+  // We can use:
+  //   px = BiPoly(1, 1, { x1, -dx, 0, 0 });
+  //   py = BiPoly(0, 0, { y0            });
+  //   pz = BiPoly(1, 1, { z0, 0,  dz, 0 });
+  // or 
+  //   px = BiPoly(1, 1, { x0, dx,  0, 0 });
+  //   py = BiPoly(0, 0, { y0            });
+  //   pz = BiPoly(1, 1, { z1, 0, -dz, 0 });
+  // as parametrization, but not:
+  //   px = BiPoly(1, 1, { x0, 0, dx, 0 });
+  //   py = BiPoly(0, 0, { y0           });
+  //   pz = BiPoly(1, 1, { z0, dz, 0, 0 }); 
+  // because then the result will have the wrong sign. This is because when i,j,k are the unit 
+  // vectors in the x,y,z directions, then we have: i x j = k, i x k = -j, j x k = i (x denoting 
+  // the cross product).
+
+  // left and right plane (x constant):
+  tgt  = fluxX*dy*dz;
+  px   = BiPoly(0, 0, { x0           });  // x is constant
+  py   = BiPoly(1, 1, { y0, 0, dy, 0 });  // y takes the role of x
+  pz   = BiPoly(1, 1, { z0, dz, 0, 0 });  // z takes the role of y
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, 0., 1., 0., 1.);
+  ok  &= val1 == tgt; 
+  px   = BiPoly(0, 0, { x1           });
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, 0., 1., 0., 1.);
+  ok  &= val1 == tgt; 
+
+  // compute outflux for simple linear fields like fx = a + b*x, fy = 0, fz = 0
+  fx = TriPoly(1, 1, 1);
+  fx.coeff(1, 0, 0) = fluxX;
+  fy = fz = TriPoly(0,0,0);
+  tgt  = fluxX*dy*dz;
+  px   = BiPoly(0, 0, { x0           });
+  py   = BiPoly(1, 1, { y0, 0, dy, 0 });
+  pz   = BiPoly(1, 1, { z0, dz, 0, 0 });
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, 0., 1., 0., 1.);
+  val2 = tgt*x0;
+  ok  &= val1 == val2; 
+  px   = BiPoly(0, 0, { x1           });
+  val1 = TriPoly::fluxIntegral(fx, fy, fz, px, py, pz, 0., 1., 0., 1.);
+  val2 = tgt*x1;
+  ok  &= val1 == val2; 
+  val1 = TriPoly::outfluxIntegral(fx, fy, fz, x0, x1, y0, y1, z0, z1);
+  val2 = tgt*(x1-x0);
+  ok  &= val1 == val2;
+  divergence = TriPoly::divergence(fx, fy, fz);
+  val3 = divergence.tripleIntegralXYZ(x0, x1, y0, y1, z0, z1);
+  ok  &= val1 == val3;
+
+  fz = TriPoly(1, 1, 1);
+  fz.coeff(0, 0, 1) = fluxZ;
+  fx = fy = TriPoly(0,0,0);
+  val1 = TriPoly::outfluxIntegral(fx, fy, fz, x0, x1, y0, y1, z0, z1);
+  tgt  = fluxZ*dx*dy;
+  val2 = tgt*(z1-z0);
+  ok  &= val1 == val2; 
+  divergence = TriPoly::divergence(fx, fy, fz);
+  val3 = divergence.tripleIntegralXYZ(x0, x1, y0, y1, z0, z1);
+  ok  &= val1 == val3;
+
+  fy = TriPoly(1, 1, 1);
+  fy.coeff(0, 1, 0) = fluxY;
+  fx = fz = TriPoly(0,0,0);
+  val1 = TriPoly::outfluxIntegral(fx, fy, fz, x0, x1, y0, y1, z0, z1);
+  tgt  = fluxY*dx*dz;
+  val2 = tgt*(y1-y0);
+  ok  &= val1 == val2; 
+  divergence = TriPoly::divergence(fx, fy, fz);
+  val3 = divergence.tripleIntegralXYZ(x0, x1, y0, y1, z0, z1);
+  ok  &= val1 == val3;
+
+  // Compute path integral of vector field:
+  Poly xt({1,2,3,4});
+  Poly yt({2,3,4,5});
+  Poly zt({3,4,5,6});
+  val1 = TriPoly::pathIntegral(fx, fy, fz, xt, yt, zt, 0.0, 1.0); // 288
+
+
+
+
+
+  // Compute circulation around closed loop:
+
+
+  // Test Stokes Theorem (Bärwolff, pg 609):
+
+
+
+
+  // Test Green's integral formulas (Bärwolff, pg 625):
+  //...
 
 
   rsAssert(ok);

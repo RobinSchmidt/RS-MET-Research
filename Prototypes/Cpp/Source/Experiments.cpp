@@ -6307,6 +6307,16 @@ void testTrivariatePolynomial()
   // val2 seems to be more precise, which makes sense because the triple integral is a simpler
   // computation than the flux integral
 
+  // Test Stokes' theorem:
+  using Vec3 = rsVector3D<double>;
+  //Vec3 P0(0,0,0), P1(1,0,0), P2(0,1,0);
+  Vec3 P0(1,2,3), P1(2,-3,-1), P2(-1,2,1);
+  std::vector<Vec3> path({P0, P1, P2, P0});
+  val1 = TriPoly::pathIntegral(fx, fy, fz, path);       // circulation around triangular loop
+  TriPoly cx, cy, cz;                                   // components of curl
+  TriPoly::curl(fx, fy, fz, cx, cy, cz);
+  val2 = TriPoly::fluxIntegral(cx, cy, cz, P0, P1, P2); // flux of curl through triangular patch
+  ok &= rsIsCloseTo(val1, val2, tol);
 
 
   // constant flow in z-direction with unit speed, through a unit-square plane in (x,y) at z = 0:
@@ -6422,10 +6432,38 @@ void testTrivariatePolynomial()
 
 
 
+  fx = fy = TriPoly(1, 1, 1);
+  fx.coeff(1, 0, 0) =  4;
+  fy.coeff(0, 1, 0) = -2;
+  fz = TriPoly(0,0,0);
+  //std::vector<Vec3> path({P0, P1});
+  val1 = TriPoly::pathIntegral(fx, fy, fz, path);  // 0
+
   // Compute circulation around closed loop:
 
 
+
   // Test Stokes Theorem (Bärwolff, pg 609):
+  // -use a triangular surface patch bounded by 3 lines, the 3 vertices are P0 = (x0,y0,z0), 
+  //  P1 = (x1,y1,z1), P2 = (x2,y2,z2)
+  // -parametrize: p1(u) = P0 + u*(P1-P0), p2(u) = P0 + u*(P2-P0), 
+  //  p(u,v) = (1-v)*p1(u) + v*p2(u)   ...are the barycentric coordinates?
+
+  TriPoly::curl(fx, fy, fz, cx, cy, cz);
+  val1 = TriPoly::pathIntegral(cx, cy, cz, path);
+  val2 = TriPoly::fluxIntegral(fx, fy, fz, P0, P1, P2);
+  
+
+
+  // var("u v P0 P1 P2")
+  // p1(u) = P0 + u*(P1-P0) 
+  // p2(u) = P0 + u*(P2-P0)
+  // p(u,v) = (1-v)*p1 + v*p2
+  // p.expand()
+  //
+  // -P1*u*v + P2*u*v - P0*u + P1*u + P0
+  //
+  // p(u,v) = P0 + (P1-P0)*u + (P2-P1)*u*v
 
 
 

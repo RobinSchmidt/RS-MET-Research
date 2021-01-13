@@ -6317,6 +6317,39 @@ void testTrivariatePolynomial()
   TriPoly::curl(fx, fy, fz, cx, cy, cz);
   val2 = TriPoly::fluxIntegral(cx, cy, cz, P0, P1, P2); // flux of curl through triangular patch
   ok &= rsIsCloseTo(val1, val2, tol);
+  // more interesting (and harder to test) is that the theorem holds for any surface that is 
+  // bounded by the given loop - it may totally bulge or balloon away from the boundary loop (here
+  // we use just a flat (triangular) patch)
+
+  // Test Green's integral formulas (Bärwolff, pg 625):
+  TriPoly f(4,4,4), g(4,4,4), gx, gy, gz;
+  f.fillRandomly(-3.0, +3.0, 3, true);
+  g.fillRandomly(-3.0, +3.0, 4, true);
+  TriPoly::gradient(f, fx, fy, fz);
+  TriPoly::gradient(g, gx, gy, gz);
+
+  // First Green formula (Eq 8.31), g plays the role of phi:
+  val1 = TriPoly::outfluxIntegral(g*fx, g*fy, g*fz, x0, x1, y0, y1, z0, z1);  // lhs
+  tmp = g*f.laplacian() + gx*fx + gy*fy + gz*fz;
+  val2 = tmp.tripleIntegralXYZ(x0, x1, y0, y1, z0, z1);  // rhs
+  double err = val2 - val1;
+  ok &= err == 0.0;
+  // val1 and val2 seem to be equal indeed, but the values are ridiculously large
+
+  // Second Green formula (Eq. 8.32):
+  val1 = TriPoly::outfluxIntegral(g*fx-f*gx, g*fy-f*gy, g*fz-f*gz, x0, x1, y0, y1, z0, z1);  // lhs
+  tmp = g*f.laplacian() - f*g.laplacian();
+  val2 = tmp.tripleIntegralXYZ(x0, x1, y0, y1, z0, z1);  // rhs
+  err = val2 - val1;
+  ok &= err == 0.0;
+
+  // todo: 
+  // -test 8.40 (page 629) for the 2D version of the 1st formula (but in the BiPoly unit test)
+  //  is there also a 2D version of the second formula?
+  // -implement and test the 1D version (also on page 625)..this has something to do with 
+  //  integration by parts - maybe implement that in rsPolynomial in the 1D case, maybe also the
+  //  substitution rule, if that makes sense
+
 
 
   // constant flow in z-direction with unit speed, through a unit-square plane in (x,y) at z = 0:
@@ -6428,53 +6461,10 @@ void testTrivariatePolynomial()
   Poly zt({3,4,5,6});
   val1 = TriPoly::pathIntegral(fx, fy, fz, xt, yt, zt, 0.0, 1.0); // 288
 
-
-
-
-
-  fx = fy = TriPoly(1, 1, 1);
-  fx.coeff(1, 0, 0) =  4;
-  fy.coeff(0, 1, 0) = -2;
-  fz = TriPoly(0,0,0);
-  //std::vector<Vec3> path({P0, P1});
-  val1 = TriPoly::pathIntegral(fx, fy, fz, path);  // 0
-
-  // Compute circulation around closed loop:
-
-
-
-  // Test Stokes Theorem (Bärwolff, pg 609):
-  // -use a triangular surface patch bounded by 3 lines, the 3 vertices are P0 = (x0,y0,z0), 
-  //  P1 = (x1,y1,z1), P2 = (x2,y2,z2)
-  // -parametrize: p1(u) = P0 + u*(P1-P0), p2(u) = P0 + u*(P2-P0), 
-  //  p(u,v) = (1-v)*p1(u) + v*p2(u)   ...are the barycentric coordinates?
-
-  TriPoly::curl(fx, fy, fz, cx, cy, cz);
-  val1 = TriPoly::pathIntegral(cx, cy, cz, path);
-  val2 = TriPoly::fluxIntegral(fx, fy, fz, P0, P1, P2);
-  
-
-
-  // var("u v P0 P1 P2")
-  // p1(u) = P0 + u*(P1-P0) 
-  // p2(u) = P0 + u*(P2-P0)
-  // p(u,v) = (1-v)*p1 + v*p2
-  // p.expand()
-  //
-  // -P1*u*v + P2*u*v - P0*u + P1*u + P0
-  //
-  // p(u,v) = P0 + (P1-P0)*u + (P2-P1)*u*v
-
-
-
-
-  // Test Green's integral formulas (Bärwolff, pg 625):
-  //...
-
-
   rsAssert(ok);
 }
 
+// fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {
   long i;

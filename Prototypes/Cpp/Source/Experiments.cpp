@@ -6234,6 +6234,52 @@ void testPolyaPotential()  // rename to testBivariatePolynomial, move to unit te
   rsAssert(ok);
 }
 
+template<class T>
+bool dependsOnX(const rsTrivariatePolynomial<T>& p)
+{
+  T val0 = p.evaluate(T(0), T(1), T(1));  // x = 0, y = 1, z = 1
+  T val1 = p.evaluate(T(1), T(1), T(1));  // x = 1, y = 1, z = 1
+  return val0 != val1;
+}
+// maybe have a tolerance
+// but no - this function is unreliable - it will not always detect when p depends on x, i think
+// ...we really need to compare all coefficients that multiply nonzero powers of x
+
+template<class T>
+rsTrivariatePolynomial<T> getPotential(const rsTrivariatePolynomial<T>& px, 
+  const rsTrivariatePolynomial<T>& py, const rsTrivariatePolynomial<T>& pz)
+{
+  rsTrivariatePolynomial<T> Px, Px_y, gyz_y, gyz, gyz_z, hz_z, hz;
+  Px    = px.integralX();      // integrate px with respect to x
+  Px_y  = Px.derivativeY();    // differentiate the result with respect to y
+  gyz_y = py - Px_y;           // d g(y,z) / dy
+
+  rsAssert(!dependsOnX(gyz_y));
+
+  gyz   = gyz_y.integralY();   // g(y,z)
+
+  rsAssert(!dependsOnX(gyz));
+
+  return Px + gyz;  // preliminary
+
+  //gyz_z = gyz.derivativeZ();   // d g(y,z) / dz
+  //hz_z  = pz - gyz_z;          // d h(z) / dz
+  //hz    = hz_z.integralZ();    // h(z)
+  //return Px + gyz + hz;  
+
+  /* code for the 2D case:
+  rsBivariatePolynomial<T> Px, Px_y, gyp, gy;
+  Px   = px.integralX();    // integrate px with respect to x
+  Px_y = Px.derivativeY();  // differentiate the result with respect to y
+  gyp  = py - Px_y;         // g'(y): derivative of integration "constant" g(y)..
+  gy   = gyp.integralY();   // ..which is still a function of y
+  return Px + gy;           // Px + gy is the desired potential function P(x,y)
+  */
+}
+// needs tests
+// see
+// https://tutorial.math.lamar.edu/classes/calcIII/conservativevectorfield.aspx
+
 void testTrivariatePolynomial()
 {
   using Poly    = rsPolynomial<double>;
@@ -6268,6 +6314,13 @@ void testTrivariatePolynomial()
   ok &= val1 == val2;
   // ...values are getting big here!
 
+  // Test integration and differentiation:
+  TriPoly tmp;
+  tmp = p.integralX().derivativeX(); ok &= p == tmp;
+  tmp = p.integralY().derivativeY(); ok &= p == tmp;
+  tmp = p.integralZ().derivativeZ(); ok &= p == tmp;
+
+
   // test triple integral:
   double x0 = 1, x1 = 3, y0 = 2, y1 = 4, z0 = 3, z1 = 5;
   p = TriPoly(1,1,1);
@@ -6283,7 +6336,11 @@ void testTrivariatePolynomial()
   //
   // 3*x*y*z, 12*y*z, 72*z, 576
 
-  TriPoly tmp;
+  // todo: implement and test different orders of integration: XZY, YXZ, YZX, ZXY, ZYX
+
+
+
+
   tmp = p.derivativeX(); val1 = tmp.evaluate(1,2,3); ok &= val1 == 18;
   tmp = p.derivativeY(); val1 = tmp.evaluate(1,2,3); ok &= val1 == 9;
   tmp = p.derivativeZ(); val1 = tmp.evaluate(1,2,3); ok &= val1 == 6;
@@ -6321,14 +6378,15 @@ void testTrivariatePolynomial()
   // bounded by the given loop - it may totally bulge or balloon away from the boundary loop (here
   // we use just a flat (triangular) patch)
 
-  // Test Green's integral formulas (Bärwolff, pg 625):
+  // Test Green's integral formulas (https://en.wikipedia.org/wiki/Green%27s_identities or
+  // Bärwolff, pg 625):
   TriPoly f(4,4,4), g(4,4,4), gx, gy, gz;
   f.fillRandomly(-3.0, +3.0, 3, true);
   g.fillRandomly(-3.0, +3.0, 4, true);
   TriPoly::gradient(f, fx, fy, fz);
   TriPoly::gradient(g, gx, gy, gz);
 
-  // First Green formula (Eq 8.31), g plays the role of phi:
+  // First Green formula (Eq 8.31):
   val1 = TriPoly::outfluxIntegral(g*fx, g*fy, g*fz, x0, x1, y0, y1, z0, z1);  // lhs
   tmp = g*f.laplacian() + gx*fx + gy*fy + gz*fz;
   val2 = tmp.tripleIntegralXYZ(x0, x1, y0, y1, z0, z1);  // rhs
@@ -6350,6 +6408,14 @@ void testTrivariatePolynomial()
   //  integration by parts - maybe implement that in rsPolynomial in the 1D case, maybe also the
   //  substitution rule, if that makes sense
 
+
+  tmp = getPotential(fx, fy, fz);
+  gx = tmp.derivativeX(); ok &= fx == gx;
+  gy = tmp.derivativeY(); ok &= fy == gy;
+  gz = tmp.derivativeZ();
+  tmp = fx-gx;
+  tmp = fy-gy; 
+  tmp = fz-gz;
 
 
   // constant flow in z-direction with unit speed, through a unit-square plane in (x,y) at z = 0:

@@ -6248,37 +6248,8 @@ bool dependsOnX(const rsTrivariatePolynomial<T>& p)
 */
 // needs tests
 
-
-
-template<class T>
-bool hasVectorPotential(const rsTrivariatePolynomial<T>& fx, const rsTrivariatePolynomial<T>& fy,
-  const rsTrivariatePolynomial<T>& fz, T tolerance = T(0))
-{
-  using TriPoly = rsTrivariatePolynomial<T>;
-  TriPoly d = TriPoly::divergence(fx, fy, fz);
-  return d.isZero(tolerance);
-}
-
-template<class T>
-void vectorPotential(const rsTrivariatePolynomial<T>& fx, const rsTrivariatePolynomial<T>& fy,
-  const rsTrivariatePolynomial<T>& fz,
-  rsTrivariatePolynomial<T>& gx, rsTrivariatePolynomial<T>& gy, rsTrivariatePolynomial<T>& gz)
-{
-  rsAssert(hasVectorPotential(fx, fy, fz));  // but we need a tolerance
-
-  gx = fy.integralZ();               // we need to add C1(x,y)
-  gy = fx.integralZ(); gy.negate();  // we need to add C2(x,y) 
-
-  gy = gy + fz.integralX(); 
-  // we choose C1(x,y) = 0 and C2(x,y) = fz.integralX...alternatively, we could add (or subtract)
-  // fz.integralY to gx
-
-  gz = rsTrivariatePolynomial<T>(0,0,0); // maybe remove this parameter
-}
-// this does not work yet
-// maybe let the user select a gauge...somehow
-
-void testTrivariatePolynomial()
+// move into main codebase as unit test
+bool testTrivariatePolynomial()
 {
   using Poly    = rsPolynomial<double>;
   using BiPoly  = rsBivariatePolynomial<double>;
@@ -6408,7 +6379,7 @@ void testTrivariatePolynomial()
 
   // Test scalar potential:
   //tmp = getPotential(fx, fy, fz);
-  tmp = TriPoly::potential(fx, fy, fz);   // maybe rename to scalarPotential
+  tmp = TriPoly::scalarPotential(fx, fy, fz);   // maybe rename to scalarPotential
   gx = tmp.derivativeX(); ok &= fx == gx;
   gy = tmp.derivativeY(); ok &= fy == gy;
   gz = tmp.derivativeZ(); ok &= fz == gz;
@@ -6428,25 +6399,31 @@ void testTrivariatePolynomial()
   // -integrate Fx, Fy with respect to z, call them Gx, Gy, negate Gy
   // -...
 
+  using TP = TriPoly;
+
   fx.fillRandomly(-3.0, +3.0, 3, true);
   fy.fillRandomly(-3.0, +3.0, 3, true);
   fz.fillRandomly(-3.0, +3.0, 3, true);
-  TriPoly::curl(fx, fy, fz, cx, cy, cz);    // obtain curl field c using f as vector potential
-  vectorPotential(cx, cy, cz, gx, gy, gz);  // construct vector potentential g with same curl c
-  TriPoly::curl(gx, gy, gz, fx, fy, fz);    // f is now the curl of g and should match c
-  tmp = cx - fx;  // nope!
-  tmp = cy - fy;  // yep!
-  tmp = cz - fz;  // nope!
+  TP::curl(fx, fy, fz, cx, cy, cz);             // obtain curl field c using f as vector potential
+  TP::vectorPotential(cx, cy, cz, gx, gy, gz);  // construct vector potential g with same curl c
+  TP::curl(gx, gy, gz, fx, fy, fz);             // f is now the curl of g and should match c
+  tmp = cx - fx; ok &= tmp.isZero(tol);
+  tmp = cy - fy; ok &= tmp.isZero(tol);
+  tmp = cz - fz; ok &= tmp.isZero(tol);
 
+  // -maybe test, if we can add any conservative vector field to the vector potential with 
+  //  destroying its vector potential property
+  // -figure out meaningful ways to add such conservative vector fields to simplify certain 
+  //  calculations - this is called "fixing the gauge"
 
-  fx = TriPoly(1,1,1); fx.coeff(0,1,1) = 1; // fx(x,y,z) = y*z
-  fy = TriPoly(1,1,1); fy.coeff(1,0,1) = 1; // fx(x,y,z) = x*z
-  fz = TriPoly(1,1,1); fz.coeff(1,1,0) = 1; // fz(x,y,z) = x*y
-  vectorPotential(fx, fy, fz, gx, gy, gz);
-  TriPoly::curl(gx, gy, gz, cx, cy, cz);    // cx,cy,cz should equal fx,fy,fz
-  tmp = fx - cx;
-  tmp = fy - cy;
-  tmp = fz - cz;
+  fx = TP(1,1,1); fx.coeff(0,1,1) = 1;          // fx(x,y,z) = y*z
+  fy = TP(1,1,1); fy.coeff(1,0,1) = 1;          // fx(x,y,z) = x*z
+  fz = TP(1,1,1); fz.coeff(1,1,0) = 1;          // fz(x,y,z) = x*y
+  TP::vectorPotential(fx, fy, fz, gx, gy, gz);
+  TP::curl(gx, gy, gz, cx, cy, cz);             // cx,cy,cz should equal fx,fy,fz
+  tmp = fx - cx; ok &= tmp.isZero(tol);
+  tmp = fy - cy; ok &= tmp.isZero(tol);
+  tmp = fz - cz; ok &= tmp.isZero(tol);
 
 
 
@@ -6561,6 +6538,7 @@ void testTrivariatePolynomial()
   val1 = TriPoly::pathIntegral(fx, fy, fz, xt, yt, zt, 0.0, 1.0); // 288
 
   rsAssert(ok);
+  return ok;
 }
 
 // fast inverse square root approximation from Quake engine

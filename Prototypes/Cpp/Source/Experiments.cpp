@@ -6249,11 +6249,23 @@ bool dependsOnX(const rsTrivariatePolynomial<T>& p)
 // needs tests
 
 
+
+template<class T>
+bool hasVectorPotential(const rsTrivariatePolynomial<T>& fx, const rsTrivariatePolynomial<T>& fy,
+  const rsTrivariatePolynomial<T>& fz, T tolerance = T(0))
+{
+  using TriPoly = rsTrivariatePolynomial<T>;
+  TriPoly d = TriPoly::divergence(fx, fy, fz);
+  return d.isZero(tolerance);
+}
+
 template<class T>
 void vectorPotential(const rsTrivariatePolynomial<T>& fx, const rsTrivariatePolynomial<T>& fy,
   const rsTrivariatePolynomial<T>& fz,
   rsTrivariatePolynomial<T>& gx, rsTrivariatePolynomial<T>& gy, rsTrivariatePolynomial<T>& gz)
 {
+  rsAssert(hasVectorPotential(fx, fy, fz));  // but we need a tolerance
+
   gx = fy.integralZ();               // we need to add C1(x,y)
   gy = fx.integralZ(); gy.negate();  // we need to add C2(x,y) 
 

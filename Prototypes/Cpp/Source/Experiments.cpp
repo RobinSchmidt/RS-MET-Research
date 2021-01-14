@@ -5983,7 +5983,7 @@ void firstFundamentalForm(const rsBivariatePolynomial<T>& x, const rsBivariatePo
 // -maybe integral functions that take univariate polynomials for the integration limits
 
 
-void testPolyaPotential()  // rename to testBivariatePolynomial, move to unit tests
+bool testBivariatePolynomial() // move to unit tests
 {
   // We consider the complex polynomial f(z) = z^n - 1 which has as its roots the n n-th roots of 
   // unity. We want to find its Polya vector field and a potential function for that field
@@ -6010,10 +6010,6 @@ void testPolyaPotential()  // rename to testBivariatePolynomial, move to unit te
   // derivatives at some point. (todo: implement a way to directly compare the coeff matrices):
   BiPolyR P_x = P.derivativeX();
   BiPolyR P_y = P.derivativeY();
-
-
-
-
 
   // Tests:
   bool ok = true;
@@ -6232,6 +6228,7 @@ void testPolyaPotential()  // rename to testBivariatePolynomial, move to unit te
 
 
   rsAssert(ok);
+  return ok;
 }
 
 /*
@@ -6343,9 +6340,32 @@ bool testTrivariatePolynomial()
   TriPoly::curl(fx, fy, fz, cx, cy, cz);
   val2 = TriPoly::fluxIntegral(cx, cy, cz, P0, P1, P2); // flux of curl through triangular patch
   ok &= rsIsCloseTo(val1, val2, tol);
-  // more interesting (and harder to test) is that the theorem holds for any surface that is 
-  // bounded by the given loop - it may totally bulge or balloon away from the boundary loop (here
-  // we use just a flat (triangular) patch)
+
+  // ...more interesting is that the theorem holds for any surface that is bounded by the given 
+  // loop - it may totally bulge or balloon away from the boundary loop (here we used just a flat 
+  // (triangular) patch). We can test it by choosing a 4th point P4 and compute the 3 flux 
+  // integrals through: (P0, P4, P1), (P1, P4, P2), (P2, P4, P0):
+
+  Vec3 P4(3,1,-3);
+  //Vec3 P4(0,0,0);
+  //Vec3 P4 = (P0 + P1 + P2) / 3.0;
+  val3  = TriPoly::fluxIntegral(cx, cy, cz, P0, P4, P1);
+  val3 += TriPoly::fluxIntegral(cx, cy, cz, P1, P4, P2);
+  val3 += TriPoly::fluxIntegral(cx, cy, cz, P2, P4, P0);
+  // the value has a minus sign compared to val1, val2 - no matter how we choose P4 (well, tested 
+  // only with a few)
+
+  // reversing the orientations fixes this:
+  val3  = TriPoly::fluxIntegral(cx, cy, cz, P1, P4, P0);
+  val3 += TriPoly::fluxIntegral(cx, cy, cz, P2, P4, P1);
+  val3 += TriPoly::fluxIntegral(cx, cy, cz, P0, P4, P2);
+  // -> figure out why we need this
+
+  val3  = TriPoly::fluxIntegral(cx, cy, cz, P1, P0, P4);
+  val3 += TriPoly::fluxIntegral(cx, cy, cz, P2, P1, P4);
+  val3 += TriPoly::fluxIntegral(cx, cy, cz, P0, P2, P4);
+  // has also negative sign
+
 
   // Test Green's integral formulas (https://en.wikipedia.org/wiki/Green%27s_identities or
   // Bärwolff, pg 625):

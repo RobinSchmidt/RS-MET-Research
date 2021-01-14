@@ -53,7 +53,18 @@ functions:
 
 where c(x) can be function of x but for simplicity, we can also set it to zero.
 
+-------------------------------------------------------------------------------
 
+Other choices:
+
+We may want the divergence of F,G,H to be zero. In this case, we have the 
+additional equation:
+
+  F_x + G_y + H_z = 0
+
+hmm...if we keep using H = const, we would have H_z = 0, so F_x = - G_y, so:
+
+  h = G_x - F_y = 2*G_x
 
 
 

@@ -6234,6 +6234,7 @@ void testPolyaPotential()  // rename to testBivariatePolynomial, move to unit te
   rsAssert(ok);
 }
 
+/*
 template<class T>
 bool dependsOnX(const rsTrivariatePolynomial<T>& p)
 {
@@ -6244,41 +6245,26 @@ bool dependsOnX(const rsTrivariatePolynomial<T>& p)
 // maybe have a tolerance
 // but no - this function is unreliable - it will not always detect when p depends on x, i think
 // ...we really need to compare all coefficients that multiply nonzero powers of x
+*/
+// needs tests
+
 
 template<class T>
-rsTrivariatePolynomial<T> getPotential(const rsTrivariatePolynomial<T>& px, 
-  const rsTrivariatePolynomial<T>& py, const rsTrivariatePolynomial<T>& pz)
+void vectorPotential(const rsTrivariatePolynomial<T>& fx, const rsTrivariatePolynomial<T>& fy,
+  const rsTrivariatePolynomial<T>& fz,
+  rsTrivariatePolynomial<T>& gx, rsTrivariatePolynomial<T>& gy, rsTrivariatePolynomial<T>& gz)
 {
-  rsTrivariatePolynomial<T> Px, Px_y, gyz_y, gyz, gyz_z, hz_z, hz;
-  Px    = px.integralX();      // integrate px with respect to x
-  Px_y  = Px.derivativeY();    // differentiate the result with respect to y
-  gyz_y = py - Px_y;           // d g(y,z) / dy
+  gx = fy.integralZ();               // we need to add C1(x,y)
+  gy = fx.integralZ(); gy.negate();  // we need to add C2(x,y) 
 
-  rsAssert(!dependsOnX(gyz_y));
+  gy = gy + fz.integralX(); 
+  // we choose C1(x,y) = 0 and C2(x,y) = fz.integralX...alternatively, we could add (or subtract)
+  // fz.integralY to gx
 
-  gyz   = gyz_y.integralY();   // g(y,z)
-
-  rsAssert(!dependsOnX(gyz));
-
-  return Px + gyz;  // preliminary
-
-  //gyz_z = gyz.derivativeZ();   // d g(y,z) / dz
-  //hz_z  = pz - gyz_z;          // d h(z) / dz
-  //hz    = hz_z.integralZ();    // h(z)
-  //return Px + gyz + hz;  
-
-  /* code for the 2D case:
-  rsBivariatePolynomial<T> Px, Px_y, gyp, gy;
-  Px   = px.integralX();    // integrate px with respect to x
-  Px_y = Px.derivativeY();  // differentiate the result with respect to y
-  gyp  = py - Px_y;         // g'(y): derivative of integration "constant" g(y)..
-  gy   = gyp.integralY();   // ..which is still a function of y
-  return Px + gy;           // Px + gy is the desired potential function P(x,y)
-  */
+  gz = rsTrivariatePolynomial<T>(0,0,0); // maybe remove this parameter
 }
-// needs tests
-// see
-// https://tutorial.math.lamar.edu/classes/calcIII/conservativevectorfield.aspx
+// this does not work yet
+// maybe let the user select a gauge...somehow
 
 void testTrivariatePolynomial()
 {
@@ -6408,14 +6394,49 @@ void testTrivariatePolynomial()
   //  integration by parts - maybe implement that in rsPolynomial in the 1D case, maybe also the
   //  substitution rule, if that makes sense
 
-
-  tmp = getPotential(fx, fy, fz);
+  // Test scalar potential:
+  //tmp = getPotential(fx, fy, fz);
+  tmp = TriPoly::potential(fx, fy, fz);   // maybe rename to scalarPotential
   gx = tmp.derivativeX(); ok &= fx == gx;
   gy = tmp.derivativeY(); ok &= fy == gy;
-  gz = tmp.derivativeZ();
-  tmp = fx-gx;
-  tmp = fy-gy; 
-  tmp = fz-gz;
+  gz = tmp.derivativeZ(); ok &= fz == gz;
+  ok &= tmp == f; // works only because f's (0,0,0) coeff happens to be zero - we should really 
+                  // compare only the coeffs excluding the constant term in general
+
+  // todo: implement functions hasScalarPotential, hasVectorPotential
+  // maybe implement the path-integral method to compute a (scalar) potential, too (Bärwollf pg
+  // 563)
+
+  // see
+  // https://tutorial.math.lamar.edu/classes/calcIII/conservativevectorfield.aspx
+
+
+  // for vector potentials, see:
+  // http://galileo.math.siu.edu/Courses/251/S12/vpot.pdf
+  // -integrate Fx, Fy with respect to z, call them Gx, Gy, negate Gy
+  // -...
+
+  fx.fillRandomly(-3.0, +3.0, 3, true);
+  fy.fillRandomly(-3.0, +3.0, 3, true);
+  fz.fillRandomly(-3.0, +3.0, 3, true);
+  TriPoly::curl(fx, fy, fz, cx, cy, cz);    // obtain curl field c using f as vector potential
+  vectorPotential(cx, cy, cz, gx, gy, gz);  // construct vector potentential g with same curl c
+  TriPoly::curl(gx, gy, gz, fx, fy, fz);    // f is now the curl of g and should match c
+  tmp = cx - fx;  // nope!
+  tmp = cy - fy;  // yep!
+  tmp = cz - fz;  // nope!
+
+
+  fx = TriPoly(1,1,1); fx.coeff(0,1,1) = 1; // fx(x,y,z) = y*z
+  fy = TriPoly(1,1,1); fy.coeff(1,0,1) = 1; // fx(x,y,z) = x*z
+  fz = TriPoly(1,1,1); fz.coeff(1,1,0) = 1; // fz(x,y,z) = x*y
+  vectorPotential(fx, fy, fz, gx, gy, gz);
+  TriPoly::curl(gx, gy, gz, cx, cy, cz);    // cx,cy,cz should equal fx,fy,fz
+  tmp = fx - cx;
+  tmp = fy - cy;
+  tmp = fz - cz;
+
+
 
 
   // constant flow in z-direction with unit speed, through a unit-square plane in (x,y) at z = 0:

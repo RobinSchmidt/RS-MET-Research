@@ -44,7 +44,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMeshGeneration();
   //testTransportEquation();
   //testWaveEquation();
-  testModalFeedback();
+  testBiModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
 

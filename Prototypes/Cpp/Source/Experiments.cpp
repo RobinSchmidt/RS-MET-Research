@@ -5897,7 +5897,7 @@ rsPolynomial<std::complex<T>> getComplexFromHarmonicV(const rsBivariatePolynomia
 */
 
 
-void testModalFeedback()
+void testBiModalFeedback()
 {
   // Idea: 
   // -We want to combine the outputs of a modal filter bank in a way that is suitable to feed
@@ -5927,15 +5927,50 @@ void testModalFeedback()
 
   // User parameters:
   double fs = 44100;
-  double f1 = 200,  f2 = 303;    // 1st and 2nd modal frequency in Hz
+  double f1 = 200,  f2 = 503;    // 1st and 2nd modal frequency in Hz
   double p1 = 0,    p2 = 0;      // modal pahses in degrees
-  double a1 = 1./2, a2 = 1./2;   // modal amplitudes
+  double a1 = 1./2, a2 = 1./5;   // modal amplitudes
   double d1 = 0.10, d2 = 0.10;   // modal decay time constants in seconds
-  double L  = 0.1;               // length of output in seconds
-  double k  = +0.2;               // feedback gain
+  double L  = 1.0;               // length of output in seconds
+  double k  = +0.05;             // feedback gain
 
   // The feedback driver function g(y, y_t):
-  auto func = [](double y, double y_t){ return y_t * (1. - y*y); };  // van der Pol
+  auto func1 = [](double y, double y_t){ return y_t * (1. - y*y); };  // van der Pol
+
+  auto func2 = [](double y, double y_t)
+  { 
+    double t  = 0.8;                // tension parameter
+    double ty = t*y;
+    double z  = (ty-y)/(2*ty-t-1);  // rationally mapped y
+    return rsSign(y_t) * z;
+  };
+  // rational mapping, see https://www.desmos.com/calculator/xaklfkriac
+
+  auto func3 = [](double y, double y_t)
+  { 
+    double t  = 0.5;                // tension parameter - seems to scale the whole feedbak signal
+    double v  = y*y;
+    double tv = t*v;
+    double z  = (tv-v)/(2*tv-t-1);  // rationally mapped v
+    return rsSign(y_t) * z;
+  };
+
+  auto func4 = [](double y, double y_t)
+  { 
+    double t  = 0.99;
+    double v  = 1.0-y*y;
+    double tv = t*v;
+    double z  = (tv-v)/(2*tv-t-1);  // rationally mapped v
+    //return rsSign(y_t) * z;
+    return z;
+  };
+
+  // i want a function z(y) that produces large output (near 1) only when v = y^2 is near zero, 
+  // scaling that with the sign of the derivative should give up/down spikes at the zero crossings
+
+
+  auto func = func4;
+
 
   // Create and set up the 2 modal filters:
   rsModalFilter<double, double> mf1, mf2;
@@ -5954,18 +5989,37 @@ void testModalFeedback()
   {
     double y_a = (y[n-1] + y[n-2]) * 0.5;  // average
     double y_t = (y[n-1] - y[n-2]) * 0.5;  // difference (approximates derivative)
-    g[n] = k * func(y_a, y_t);
-    y1[n] = mf1.getSample(g[n]); 
-    y2[n] = mf2.getSample(g[n]); 
+    g[n] = func(y_a, y_t);
+
+    y1[n] = mf1.getSample(k*g[n]); 
+    y2[n] = mf2.getSample(k*g[n]); 
     y[ n] = y1[n] + y2[n];
   }
+
+  // Write the output y and the feedback excitation g into a stereo wavefile:
+  using AT = RAPT::rsArrayTools;
+  AT::normalize(&y[0], N);
+  AT::normalize(&g[0], N);
+  rosic::writeToMonoWaveFile("ModalFeedbackY.wav", &y[0], N, fs);
+  rosic::writeToStereoWaveFile("ModalFeedback.wav", &y[0], &g[0], N, fs);
 
 
   //rsPlotVectors(y, g);
   //rsPlotVectors(y1, y2);
-  rsPlotVectors(y, g, y1, y2);
+  //rsPlotVectors(y, g, y1, y2);
+
 
   // Observations:
+  // -f = 200,520, p1 = 0,0, a = 1/2,1/5, d = 0.1,0.1, k = +0.05, func = func4, t = 0.99:
+  //  -modes lock after around 10k samples, f0 around 105 Hz is present (but not strong)
+  // -f = 200,505, p1 = 0,0, a = 1/2,1/5, d = 0.1,0.1, k = +0.05, func = func4, t = 0.99:
+  //  -settles into "overblown" state at around 505 Hz after 25k samples
+  // -f = 200,503, p1 = 0,0, a = 1/2,1/5, d = 0.1,0.1, k = +0.05, func = func4, t = 0.99:
+  //  -settles afetr 10k samples into a 210 Hz tone with ahrmonics (420,630,840,...) with some 
+  //   component around 495 that fades away
+
+
+  // Observations old:
   // -negative k lead to stronger damping
   // -with positive k, the 2nd harmonic quickly dominates
   // -the g function does not look very much like spikes at the zero-crossings - maybe we need 
@@ -5973,6 +6027,8 @@ void testModalFeedback()
   //  help to concentrate the spikes more at the zeros
   // -we could also detect zero-crossings explicitly and trigger spikes explicitly - but somehow 
   //  that seems to be less natural, less physical
+
+
 }
 
 

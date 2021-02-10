@@ -43,7 +43,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testHermiteInterpolation();
   //testMeshGeneration();
   //testTransportEquation();
-  testWaveEquation();
+  //testWaveEquation();
+  testModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
 

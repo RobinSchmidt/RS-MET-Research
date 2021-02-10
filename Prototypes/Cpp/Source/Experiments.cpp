@@ -5897,6 +5897,83 @@ rsPolynomial<std::complex<T>> getComplexFromHarmonicV(const rsBivariatePolynomia
 */
 
 
+void testModalFeedback()
+{
+  // Idea: 
+  // -We want to combine the outputs of a modal filter bank in a way that is suitable to feed
+  //  back as input signal to achieve effects that mimic the (self)-excitation in musical 
+  //  instruments such as bowing a string or blowing a pipe. In these systems, a steady supply of 
+  //  energy gets modulated by the output signal (string-position, pressure) itself. We tpyically 
+  //  see effects like mode-locking (the nearly harmonic modes lock each other into exact harmonic
+  //  relationships).
+  // -It seems like it would be good, if we could produce a signal from the modal-bank output that
+  //  features prominent spikes in each cycle or up/down spikes in each half-cycle
+  // -In "The Physics of Musical Instuments", pg. 139, the equation of motion for a self-excited 
+  //  oscillator is given by: y_tt + w_0^2 * y = g(y, y_t) where y is some sort of displacement,
+  //  _t, _tt denote 1st and 2nd time derivatives and g is some function and w_0 is the resonance
+  //  frequency when g is zero. On page 140, a special form of g is given as: g = a*y_t*(1-y^2) 
+  //  where a is some amplitude of excitation. That's descirbed as the Van der Pol oscilator. I 
+  //  think, g should be large whenever y is small and has high 1st derivative, which we may expect
+  //  at the zero, crossings - so that equation for the feedback-driver might be suitable.
+  // -for y,y_t we could use y = (y[n-1] + y[n-2]) / 2, y_t = (y[n-1] - y[n-2]) / 2
+  // -variations: g = a * sat(y_t^3 * (1-y^4)) where sat(..) is some sort of saturation curve. 
+  //  Using higher (even) powers of y may concentrate the spike more around the zero crossing. 
+  //  Using saturation may help to stabilize the system. It could also be some nonmonotonic 
+  //  function like x / (1 + x^2), x^m / (1 + x^n) where n odd, m even
+  // https://en.wikipedia.org/wiki/Van_der_Pol_oscillator
+  // https://de.wikipedia.org/wiki/Van-der-Pol-System
+
+  // We try it with 2 modes that are slightly off from a perfect harmonic relationship:
+
+  // User parameters:
+  double fs = 44100;
+  double f1 = 200,  f2 = 303;    // 1st and 2nd modal frequency in Hz
+  double p1 = 0,    p2 = 0;      // modal pahses in degrees
+  double a1 = 1./2, a2 = 1./2;   // modal amplitudes
+  double d1 = 0.10, d2 = 0.10;   // modal decay time constants in seconds
+  double L  = 0.1;               // length of output in seconds
+  double k  = +0.2;               // feedback gain
+
+  // The feedback driver function g(y, y_t):
+  auto func = [](double y, double y_t){ return y_t * (1. - y*y); };  // van der Pol
+
+  // Create and set up the 2 modal filters:
+  rsModalFilter<double, double> mf1, mf2;
+  mf1.setModalParameters(f1, a1, d1, p1, fs);
+  mf2.setModalParameters(f2, a2, d2, p2, fs);
+
+  // Create arrays for the output signals
+  int N = ceil(L*fs);                // number of samples to produce
+  std::vector<double> y1(N) , y2(N), y(N), g(N);
+
+  // Trigger the filters (wihtout feedback yet) and enter the loop over the samples (with 
+  // feedback):
+  y1[0] = mf1.getSample(1.0); y2[0] = mf2.getSample(1.0); y[0] = y1[0] + y2[0];
+  y1[1] = mf1.getSample(0.0); y2[1] = mf2.getSample(0.0); y[1] = y1[1] + y2[1];
+  for(int n = 2; n < N; n++)
+  {
+    double y_a = (y[n-1] + y[n-2]) * 0.5;  // average
+    double y_t = (y[n-1] - y[n-2]) * 0.5;  // difference (approximates derivative)
+    g[n] = k * func(y_a, y_t);
+    y1[n] = mf1.getSample(g[n]); 
+    y2[n] = mf2.getSample(g[n]); 
+    y[ n] = y1[n] + y2[n];
+  }
+
+
+  //rsPlotVectors(y, g);
+  //rsPlotVectors(y1, y2);
+  rsPlotVectors(y, g, y1, y2);
+
+  // Observations:
+  // -negative k lead to stronger damping
+  // -with positive k, the 2nd harmonic quickly dominates
+  // -the g function does not look very much like spikes at the zero-crossings - maybe we need 
+  //  higher even powers of y ...or maybe the rational function used for parameter mappings could
+  //  help to concentrate the spikes more at the zeros
+  // -we could also detect zero-crossings explicitly and trigger spikes explicitly - but somehow 
+  //  that seems to be less natural, less physical
+}
 
 
 // fast inverse square root approximation from Quake engine

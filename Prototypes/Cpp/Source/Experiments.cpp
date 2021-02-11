@@ -5927,10 +5927,10 @@ void testBiModalFeedback()
 
   // User parameters:
   double fs = 44100;
-  double f1 = 200,  f2 = 503;    // 1st and 2nd modal frequency in Hz
+  double f1 = 200,  f2 = 520;    // 1st and 2nd modal frequency in Hz
   double p1 = 0,    p2 = 0;      // modal pahses in degrees
   double a1 = 1./2, a2 = 1./5;   // modal amplitudes
-  double d1 = 0.10, d2 = 0.10;   // modal decay time constants in seconds
+  double d1 = 0.05, d2 = 0.1;    // modal decay time constants in seconds
   double L  = 1.0;               // length of output in seconds
   double k  = +0.05;             // feedback gain
 
@@ -5948,11 +5948,12 @@ void testBiModalFeedback()
 
   auto func3 = [](double y, double y_t)
   { 
-    double t  = 0.5;                // tension parameter - seems to scale the whole feedbak signal
+    double t  = +0.99;               // tension parameter - seems to scale the whole feedbak signal
     double v  = y*y;
     double tv = t*v;
     double z  = (tv-v)/(2*tv-t-1);  // rationally mapped v
-    return rsSign(y_t) * z;
+    return z;
+    //return rsSign(y_t) * z;
   };
 
   auto func4 = [](double y, double y_t)
@@ -5961,9 +5962,20 @@ void testBiModalFeedback()
     double v  = 1.0-y*y;
     double tv = t*v;
     double z  = (tv-v)/(2*tv-t-1);  // rationally mapped v
-    //return rsSign(y_t) * z;
     return z;
   };
+  // Produces upward spikes at all (upward and downward) zero-crossings
+
+  auto func5 = [](double y, double y_t)
+  { 
+    double t  = 0.99;
+    double v  = 1.0-y*y;
+    double tv = t*v;
+    double z  = (tv-v)/(2*tv-t-1);  
+    return y_t * z;
+  };
+  // Produces upward spikes at upward zero-crossings and downward spikes at downward zero-crossings
+
 
   // i want a function z(y) that produces large output (near 1) only when v = y^2 is near zero, 
   // scaling that with the sign of the derivative should give up/down spikes at the zero crossings
@@ -5978,7 +5990,7 @@ void testBiModalFeedback()
   mf2.setModalParameters(f2, a2, d2, p2, fs);
 
   // Create arrays for the output signals
-  int N = ceil(L*fs);                // number of samples to produce
+  int N = (int) ceil(L*fs);                // number of samples to produce
   std::vector<double> y1(N) , y2(N), y(N), g(N);
 
   // Trigger the filters (wihtout feedback yet) and enter the loop over the samples (with 
@@ -5987,10 +5999,12 @@ void testBiModalFeedback()
   y1[1] = mf1.getSample(0.0); y2[1] = mf2.getSample(0.0); y[1] = y1[1] + y2[1];
   for(int n = 2; n < N; n++)
   {
+    // Create feedback signal:
     double y_a = (y[n-1] + y[n-2]) * 0.5;  // average
     double y_t = (y[n-1] - y[n-2]) * 0.5;  // difference (approximates derivative)
-    g[n] = func(y_a, y_t);
+    g[n]  = func(y_a, y_t);
 
+    // Produce output signal:
     y1[n] = mf1.getSample(k*g[n]); 
     y2[n] = mf2.getSample(k*g[n]); 
     y[ n] = y1[n] + y2[n];
@@ -6000,8 +6014,8 @@ void testBiModalFeedback()
   using AT = RAPT::rsArrayTools;
   AT::normalize(&y[0], N);
   AT::normalize(&g[0], N);
-  rosic::writeToMonoWaveFile("ModalFeedbackY.wav", &y[0], N, fs);
-  rosic::writeToStereoWaveFile("ModalFeedback.wav", &y[0], &g[0], N, fs);
+  rosic::writeToMonoWaveFile("ModalFeedbackY.wav", &y[0], N, int(fs));
+  rosic::writeToStereoWaveFile("ModalFeedback.wav", &y[0], &g[0], N, int(fs));
 
 
   //rsPlotVectors(y, g);
@@ -6010,14 +6024,50 @@ void testBiModalFeedback()
 
 
   // Observations:
-  // -f = 200,520, p1 = 0,0, a = 1/2,1/5, d = 0.1,0.1, k = +0.05, func = func4, t = 0.99:
-  //  -modes lock after around 10k samples, f0 around 105 Hz is present (but not strong)
+  // -f = 200,520, p1 = 0,0, a = 1/1,1/1, d = 0.1,0.1, k = +0.05, func = func4, t = 0.99:
+  //  -modes lock after around 10k samples, f0 around 105 Hz is present (but not strong), when 
+  //   using k = -0.05 instead of +0.05, the signal seems to be inverted - is it a general rule 
+  //   that flipping the sign of the feedback factor flips the sign of the signal...or perhaps only
+  //   for func4
+  // -when a2 = 0, we see a waveform at around 210 Hz plus harmonics - the offset from the dialed 
+  //  in 200 Hz is probably due to the feedback delay? ...maybe try with oversampling
+  // -reducing both decay times, seems to increase the fundamental frequency
   // -f = 200,505, p1 = 0,0, a = 1/2,1/5, d = 0.1,0.1, k = +0.05, func = func4, t = 0.99:
   //  -settles into "overblown" state at around 505 Hz after 25k samples
   // -f = 200,503, p1 = 0,0, a = 1/2,1/5, d = 0.1,0.1, k = +0.05, func = func4, t = 0.99:
-  //  -settles afetr 10k samples into a 210 Hz tone with ahrmonics (420,630,840,...) with some 
+  //  -settles afetr 10k samples into a 210 Hz tone with harmonics (420,630,840,...) with some 
   //   component around 495 that fades away
+  //  -going down to 480 with f2 still seems to settle to the same harmonics - but there's a rough
+  //   and rather long transient (about 16k samples long)
+  //  -going down further to f2 = 450, it settles to 450 Hz pülus harmonics after an interesting
+  //   transient
+  //  -Going to f2 = 420 enters a chatic regime with prominent peaks at 210 and 430 hz
+  //  -the chaotic regime seems to go down to about 360 Hz, at 350 Hz, we again enter a periodic 
+  //   regime - maybe it has to do with interacting phases of even and odd harmonics? when f2 is 
+  //   near an even harmonic, they interact in a way that produces chaos?
+  //  -going further down to 310, the initial chaotic section gets longer
+  // -f = 200,520, p1 = 0,0, a = 1/2,1/5, d = 0.1,0.1, k = -0.7, func = func5, t = 0.99:
+  //  -modes get more strongly damped with higher negative feedback (not interesting), increasing 
+  //   tension to 0.999 seems to make the decay longer and more linear
+  // -f = 200,520, p1 = 0,0, a = 1/2,1/5, d = 0.1,0.1, k = -0.75, func = func4, t = 0.99:
+  //  -settles into quasi-steady state after 5k samples, when increasing negative feedback to -0.8,
+  //   it overblows, at -0.81 it goes back to normal (but noisier)
 
+
+
+  // ...oh - wait - the a1,a2 values were not actually used in these tests, so they have been 1.0 
+  // all along - ah - no - that's wrong - they are part of the modal filter setting
+
+  // ToDo:
+  // -fade out the feedback factor at the end and see how this ends the sound
+  // -try a feedback factor that is a function of time - maybe an envelope and/or LFO
+  // -maybe with more modal filters, we should have seperate parameters for (cross)feedback of 
+  //  neighbouring modes (each mode gets feedback from iteself and its two neighbors) and global 
+  //  feedback (each mode gets feedback from the whole sum). maybe that neighbor feedback can be
+  //  a function of frequency. More generally, we could have a whole (sparse?) feedback matrix
+  //  ...maybe we should not have a full set of 1000 modal oscillators in this case but rather a 
+  //  handful - we don't need them to produce high freq content because the nonlinearities also 
+  //  produce harmonics
 
   // Observations old:
   // -negative k lead to stronger damping

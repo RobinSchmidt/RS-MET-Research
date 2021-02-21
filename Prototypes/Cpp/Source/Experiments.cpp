@@ -6081,6 +6081,22 @@ void testBiModalFeedback()
 
 }
 
+void testExteriorAlgebra3D()
+{
+  using Real   = float;
+  using Vec    = rsVector3D<Real>;
+  using BiVec  = rsBiVector3D<Real>;
+  using TriVec = rsTriVector3D<Real>;
+
+  Vec u(1.f, 2.f, 3.f), v(4.f, 5.f, 6.f);
+
+  BiVec w = u ^ v;  // wedge product
+
+
+
+  int dummy = 0;
+}
+
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

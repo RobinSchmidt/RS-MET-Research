@@ -44,9 +44,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMeshGeneration();
   //testTransportEquation();
   //testWaveEquation();
-  testBiModalFeedback();
+  //testBiModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
+  testExteriorAlgebra3D();
 
 
 

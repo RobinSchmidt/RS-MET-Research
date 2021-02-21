@@ -3667,6 +3667,104 @@ void rsStencilMesh2D<T>::gradient(const T* u, T* u_x, T* u_y)
 }
 
 
+
+//=================================================================================================
+
+// Classes for representing the objects that are encountered in the extrerior algebra for 3D space 
+// (in addition to the regular vectors, i.e. rsVector3D)
+
+/** a.k.a. 1-form
+
+*/
+
+template<class T>
+class rsCoVector3D
+{
+
+public:
+
+
+};
+
+/** Bivectors are... */
+
+template<class T>
+class rsBiVector3D
+{
+
+public:
+
+  rsBiVector3D(const rsVector3D<T>& u, const rsVector3D<T>& v)
+  {
+    normal = cross(u, v);
+  }
+
+protected:
+
+  rsVector3D<T> normal;
+  // The normal vector to the area element given by the parallelogram spanned by the two vectors 
+  // from which this bivector was constructed
+
+};
+
+/** The wegde product as operator to support bivector construction from 2 vectors via the syntax:
+w = u ^ v. */
+template<class T>
+rsBiVector3D<T> operator^(const rsVector3D<T>& u, const rsVector3D<T>& v)
+{
+  return rsBiVector3D<T>(u, v);
+}
+
+
+/** Co-bivectors are ...a.k.a. 2-forms */
+
+template<class T>
+class rsCoBiVector3D
+{
+
+public:
+
+
+};
+
+/** Trivectors are... */
+
+template<class T>
+class rsTriVector3D
+{
+
+public:
+
+
+};
+
+/** Co-trivectors are ...a.k.a. 3-forms */
+
+template<class T>
+class rsCoTriVector3D
+{
+
+public:
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 Move to some other file:
 creating movies from pictures:

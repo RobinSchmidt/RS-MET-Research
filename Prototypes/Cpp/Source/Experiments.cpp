@@ -6088,11 +6088,22 @@ void testExteriorAlgebra3D()
   using BiVec  = rsBiVector3D<Real>;
   using TriVec = rsTriVector3D<Real>;
 
-  Vec u(1.f, 2.f, 3.f), v(4.f, 5.f, 6.f);
 
-  BiVec w = u ^ v;  // wedge product
+  bool ok = true;
 
+  Vec u(1.f, 2.f, 3.f), v(4.f, 5.f, 6.f), w(7.f, -8.f, 9.f);
+  // when using w(7.f, 8.f, 9.f) t becomes zero
 
+  BiVec b = u ^ v;    // wedge product of two vectors
+
+  TriVec t(u, v, w); ok &= t.getSignedVolume() == -96.f; 
+  t = b ^ w;         ok &= t.getSignedVolume() == -96.f;  // wegde product of bivector and vector
+  t = u ^ v ^ w;     ok &= t.getSignedVolume() == -96.f;  // wedge product of 3 vectors
+
+  // todo: 
+  // -implement analogous operations for covectors (maybe using delegation) and then give the
+  //  covector classes an evaluation operator () that takes 1,2 or 3 vectors as inputs respectively
+  // -implement sharp and flat functions as member functions in the classes, where these apply
 
   int dummy = 0;
 }

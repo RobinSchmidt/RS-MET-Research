@@ -3673,18 +3673,7 @@ void rsStencilMesh2D<T>::gradient(const T* u, T* u_x, T* u_y)
 // Classes for representing the objects that are encountered in the extrerior algebra for 3D space 
 // (in addition to the regular vectors, i.e. rsVector3D)
 
-/** a.k.a. 1-form
 
-*/
-
-template<class T>
-class rsCoVector3D
-{
-
-public:
-
-
-};
 
 /** Bivectors are... */
 
@@ -3698,6 +3687,8 @@ public:
   {
     normal = cross(u, v);
   }
+
+  rsVector3D<T> getSurfaceNormal() const { return normal; }
 
 protected:
 
@@ -3716,10 +3707,45 @@ rsBiVector3D<T> operator^(const rsVector3D<T>& u, const rsVector3D<T>& v)
 }
 
 
-/** Co-bivectors are ...a.k.a. 2-forms */
+/** Trivectors are... */
 
 template<class T>
-class rsCoBiVector3D
+class rsTriVector3D
+{
+
+public:
+
+  rsTriVector3D(T signedVolume) : volume(signedVolume) {}
+
+  rsTriVector3D(const rsVector3D<T>& u, const rsVector3D<T>& v, const rsVector3D<T>& w)
+  {
+    volume = rsVector3D<T>::tripleProduct(u, v, w);
+  }
+
+  T getSignedVolume() const { return volume; }
+
+protected:
+
+  T volume;
+  // The signed volume of the parallelepiped spanned by the three vectors from which this trivector
+  // was constructed
+
+};
+
+template<class T>
+rsTriVector3D<T> operator^(const rsBiVector3D<T>& u, const rsVector3D<T>& v)
+{
+  T vol = dot(u.getSurfaceNormal(), v);
+  return rsTriVector3D<T>(vol);
+}
+
+
+/** a.k.a. 1-form
+
+*/
+
+template<class T>
+class rsCoVector3D
 {
 
 public:
@@ -3727,10 +3753,10 @@ public:
 
 };
 
-/** Trivectors are... */
+/** Co-bivectors are ...a.k.a. 2-forms */
 
 template<class T>
-class rsTriVector3D
+class rsCoBiVector3D
 {
 
 public:

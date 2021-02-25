@@ -3683,12 +3683,17 @@ class rsBiVector3D
 
 public:
 
-  rsBiVector3D(const rsVector3D<T>& u, const rsVector3D<T>& v)
-  {
-    normal = cross(u, v);
-  }
+  rsBiVector3D(const rsVector3D<T>& surfaceNormal) : normal(surfaceNormal) {}
+
+  rsBiVector3D(const rsVector3D<T>& u, const rsVector3D<T>& v) { normal = cross(u, v); }
+  // maybe this constructor shouldn't exist -> enforce constructing bivectors via wedge-products
 
   rsVector3D<T> getSurfaceNormal() const { return normal; }
+
+  rsBiVector3D<T> operator-() const { return rsBiVector3D<T>(-normal); }
+
+  /** Compares two bivectors for equality. */
+  bool operator==(const rsBiVector3D<T>& v) const { return normal == v.normal; }
 
 protected:
 
@@ -3696,15 +3701,10 @@ protected:
   // The normal vector to the area element given by the parallelogram spanned by the two vectors 
   // from which this bivector was constructed
 
+
+  template<class U> friend class rsExteriorAlgebra3D;
 };
 
-/** The wegde product as operator to support bivector construction from 2 vectors via the syntax:
-w = u ^ v. */
-template<class T>
-rsBiVector3D<T> operator^(const rsVector3D<T>& u, const rsVector3D<T>& v)
-{
-  return rsBiVector3D<T>(u, v);
-}
 
 
 /** Trivectors are... */
@@ -3724,6 +3724,10 @@ public:
 
   T getSignedVolume() const { return volume; }
 
+
+  /** Compares two trivectors for equality. */
+  bool operator==(const rsTriVector3D<T>& v) const { return volume == v.volume; }
+
 protected:
 
   T volume;
@@ -3731,13 +3735,6 @@ protected:
   // was constructed
 
 };
-
-template<class T>
-rsTriVector3D<T> operator^(const rsBiVector3D<T>& u, const rsVector3D<T>& v)
-{
-  T vol = dot(u.getSurfaceNormal(), v);
-  return rsTriVector3D<T>(vol);
-}
 
 
 /** a.k.a. 1-form
@@ -3751,7 +3748,21 @@ class rsCoVector3D
 public:
 
 
+
+
+
+protected:
+
+  rsVector3D<T> vec;
+  // The space of covectors is isomorphic to the space of regular vectors, but the interpretation 
+  // and the typical operations that we do with covectors are different, so we use object 
+  // composition together with delegation, where that makes sense.
+
+  template<class U> friend class rsExteriorAlgebra3D;
 };
+
+
+
 
 /** Co-bivectors are ...a.k.a. 2-forms */
 
@@ -3761,6 +3772,10 @@ class rsCoBiVector3D
 
 public:
 
+
+protected:
+
+  rsBiVector3D<T> biVec;
 
 };
 
@@ -3773,15 +3788,112 @@ class rsCoTriVector3D
 public:
 
 
+protected:
+
+  rsTriVector3D<T> triVec;
+
 };
 
 
+/** Implements the operations of the exterior algebra of 3-dimensional Euclidean space. The objects
+that this algebra deals with are of different types: 
+
+primal: scalars (0-vectors), vectors (1-vectors), bivectors (2-vectors), trivectors (3-vectors)
+dual: 0-forms (coscalars?), 1-forms (covectors), 2-forms (cobivectors?), 3-forms (cotrivectors?)
+
+The names with the question mark are, as far as i know, not in common use. I made them up to fit 
+the apparent pattern. The operations of the exterior algebra actually change the types of the 
+objects. For example, the wegde-product of a bivector with a vector yields a trivector, the 
+Hodge-star of a trivector yields a scalar, the sharp of a covector gives a vector, etc.
+
+https://en.wikipedia.org/wiki/Exterior_algebra
+
+
+https://en.wikipedia.org/wiki/Bialgebra
+https://en.wikipedia.org/wiki/Graded_algebra
+
+*/
+
+template<class T>
+class rsExteriorAlgebra3D
+{
+
+public:
+
+  /** Wedge product between two vectors yielding a bivector. */
+  static rsBiVector3D<T> wedge(const rsVector3D<T>& u, const rsVector3D<T>& v)
+  { return rsBiVector3D<T>(u, v); }
+
+  /** Wedge product between a vector and a bivector vectors yielding a trivector. */
+  static rsTriVector3D<T> wedge(const rsVector3D<T>& v, const rsBiVector3D<T>& u)
+  { T vol = dot(v, u.getSurfaceNormal()); return rsTriVector3D<T>(vol); }
+
+  /** Wedge product between a bivector and a vector vectors yielding a trivector. */
+  static rsTriVector3D<T> wedge(const rsBiVector3D<T>& u, const rsVector3D<T>& v)
+  { T vol = dot(u.getSurfaceNormal(), v); return rsTriVector3D<T>(vol); }
 
 
 
+  // what about vector and bivector, i.e. different argument order? i think, the result is the same 
+  // because wedge is associative - so we may not need separate functions
+
+  /** Converts a regular vector into its Hodge dual, which is a bivector in 3D. This operation is 
+  called the "Hodge star" or just "start" and is basically just a re-interpretation or 
+  type-comversion. No actual computation takes place. */
+  static rsBiVector3D<T> star(const rsVector3D<T>& u) 
+  { rsBiVector3D<T> bv; bv.normal = u; return bv; }
+
+  /** Converts a bivector into its Hodge dual, which is a regular vector in 3D. */
+  static rsVector3D<T> star(const rsBiVector3D<T>& bv) { return bv.normal; }
+
+  /** Converts a scalar into its Hodge dual, which is a trivector in 3D. */
+  static rsTriVector3D<T> star(const T& a) { rsTriVector3D<T> tv; tv.volume = a; return tv; }
+
+  /** Converts a trivector into its Hodge dual, which is a scalar in 3D. */
+  static T star(const rsTriVector3D<T>& tv) { return tv.volume = a; }
 
 
 
+  // todo: implement the wegde- and star operations also for CoVector, CoBiVector, CoTriVectors, 
+  // CoScalars - it's all very boilerplatsih and production code would probably do it differently,
+  // but for keeping things clean and separated for learning the concepts, it may make sense to do 
+  // it (maybe sort of the distinction between points and vectors, which is usually not made in 
+  // production code)
+
+
+  /** The musical isomorphism "flat" that turns a vector into a covector (aka 1-form), i.e. it 
+  lowers the index, i.e. it transposes a (contravariant) column-vector into a (covariant) 
+  row-vector. */
+  static rsCoVector3D<T> flat(const rsVector3D<T>& vec)
+  { rsCoVector3D<T> coVec; coVec.vec = vec; return coVec; }
+
+  /** The musical isomorphism "sharp" that turns a covector (aka 1-form) into a vector, i.e. it 
+  raises the index, i.e. it transposes a (covariant) row-vector into a (contravariant) 
+  column-vector. */
+  static rsVector3D<T> sharp(const rsCoVector3D<T>& coVec) { return coVec.vec}
+
+
+
+  // todo: implement the additional operations of exterior calculus (maybe in another class or 
+  // maybe rename this class): d (directional derivative), Lie derivative, interior product
+  // https://en.wikipedia.org/wiki/Interior_product
+
+};
+
+// The wegde product as operator to support bivector and trivector construction via the syntax:
+//   w = u ^ v, t = u ^ v ^ w:
+
+template<class T>
+rsBiVector3D<T> operator^(const rsVector3D<T>& u, const rsVector3D<T>& v)
+{ return rsExteriorAlgebra3D<T>::wedge(u, v); }
+
+template<class T>
+rsTriVector3D<T> operator^(const rsVector3D<T>& u, const rsBiVector3D<T>& v)
+{ return rsExteriorAlgebra3D<T>::wedge(u, v); }
+
+template<class T>
+rsTriVector3D<T> operator^(const rsBiVector3D<T>& u, const rsVector3D<T>& v)
+{ return rsExteriorAlgebra3D<T>::wedge(u, v); }
 
 
 

@@ -6100,10 +6100,33 @@ void testExteriorAlgebra3D()
   t = b ^ w;         ok &= t.getSignedVolume() == -96.f;  // wegde product of bivector and vector
   t = u ^ v ^ w;     ok &= t.getSignedVolume() == -96.f;  // wedge product of 3 vectors
 
+  ok &= (u^v) == -(v^u);         // antisymmetry
+  ok &= ((u^v)^w) == (u^(v^w));  // associativity
+
+  // todo: 
+  // -test antisymmetry, associativity, distributivity over addition, distributivity of scalar
+  //  multiplication of wedge product
+  // -test distributivity of hodge-star over addition, the condition: det(u,v,star(u^v)) > 0
+  // -test a ^ star(b) = <<a,b>>w, dot(u,v) = star(sharp(u) ^ star(flat(b)), 
+  //  cross(u,v) = sharp(star(flat(u) ^ flat(v)))
+  // -test exterior algebra for vectors - i.e. the type Real is replaced by a vector type
+
+  // -implement directional derivative d and check:
+  //  d f(u) = dot(u, grad(f)), d(a ^ b) = (d a) ^b + ((-1)^k) (a ^ d b), 
+  //  curl(X) = sharp(star(d flat(X)))
+
   // todo: 
   // -implement analogous operations for covectors (maybe using delegation) and then give the
   //  covector classes an evaluation operator () that takes 1,2 or 3 vectors as inputs respectively
-  // -implement sharp and flat functions as member functions in the classes, where these apply
+  // -implement sharp and flat functions as member functions in the classes, where these apply 
+  // -what about the hodge-star operation? do we need an explicit operation or do we just 
+  //  "identify" objects with their hodge-duals as needed?
+
+  // For generalizing the wedge product to higher dimensional spaces, it seems, we could use a 
+  // definition based on tensor products, see
+  // https://math.stackexchange.com/questions/2312215/relationship-between-tensor-product-and-wedge-product
+  // https://www.researchgate.net/publication/303810058_Tensor_Products_Wedge_Products_and_Differential_Forms/link/5754447008ae10d9337a2f15/download
+  // from this, it seems: u ^ v = (u*v - v*u) / 2
 
   int dummy = 0;
 }

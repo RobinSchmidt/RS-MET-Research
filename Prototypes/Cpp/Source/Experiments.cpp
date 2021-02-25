@@ -6094,18 +6094,18 @@ void testExteriorAlgebra3D()
   Vec u(1.f, 2.f, 3.f), v(4.f, 5.f, 6.f), w(7.f, -8.f, 9.f);
   // when using w(7.f, 8.f, 9.f) t becomes zero
 
+  // Test wedge product:
   BiVec b = u ^ v;    // wedge product of two vectors
-
   TriVec t(u, v, w); ok &= t.getSignedVolume() == -96.f; 
   t = b ^ w;         ok &= t.getSignedVolume() == -96.f;  // wegde product of bivector and vector
   t = u ^ v ^ w;     ok &= t.getSignedVolume() == -96.f;  // wedge product of 3 vectors
+  ok &= (u^v) == -(v^u);                      // antisymmetry
+  ok &= ((u^v)^w) == (u^(v^w));               // associativity
+  ok &= (u ^ (v+w)) == (u^v) + (u^w);         // distributivity over addition
+  ok &= ((2.f*u) ^ (3.f*v)) == 2.f*3.f*(u^v); // distributivity of scalar multiplication
 
-  ok &= (u^v) == -(v^u);         // antisymmetry
-  ok &= ((u^v)^w) == (u^(v^w));  // associativity
 
   // todo: 
-  // -test antisymmetry, associativity, distributivity over addition, distributivity of scalar
-  //  multiplication of wedge product
   // -test distributivity of hodge-star over addition, the condition: det(u,v,star(u^v)) > 0
   // -test a ^ star(b) = <<a,b>>w, dot(u,v) = star(sharp(u) ^ star(flat(b)), 
   //  cross(u,v) = sharp(star(flat(u) ^ flat(v)))

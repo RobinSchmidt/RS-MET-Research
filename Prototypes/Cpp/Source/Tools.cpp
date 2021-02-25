@@ -3895,7 +3895,21 @@ template<class T>
 rsTriVector3D<T> operator^(const rsBiVector3D<T>& u, const rsVector3D<T>& v)
 { return rsExteriorAlgebra3D<T>::wedge(u, v); }
 
+/** Adds two bivectors and returns result as new bivector. */
+template<class T>
+rsBiVector3D<T> operator+(const rsBiVector3D<T>& v, const rsBiVector3D<T>& w)
+{
+  rsVector3D<T> nv = v.getSurfaceNormal();
+  rsVector3D<T> nw = w.getSurfaceNormal();
+  return rsBiVector3D<T>(nv + nw);
+}
 
+/** Multiplies a scalar and a bivectors and returns result as new bivector. */
+template<class T>
+rsBiVector3D<T> operator*(const T& s, const rsBiVector3D<T>& v)
+{
+  return rsBiVector3D<T>(s * v.getSurfaceNormal());
+}
 
 
 

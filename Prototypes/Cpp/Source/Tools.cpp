@@ -3839,9 +3839,8 @@ public:
 
   /** Converts a regular vector into its Hodge dual, which is a bivector in 3D. This operation is 
   called the "Hodge star" or just "start" and is basically just a re-interpretation or 
-  type-comversion. No actual computation takes place. */
-  static rsBiVector3D<T> star(const rsVector3D<T>& u) 
-  { rsBiVector3D<T> bv; bv.normal = u; return bv; }
+  type-conversion. No actual computation takes place. */
+  static rsBiVector3D<T> star(const rsVector3D<T>& u) { return rsBiVector3D<T>(u); }
 
   /** Converts a bivector into its Hodge dual, which is a regular vector in 3D. */
   static rsVector3D<T> star(const rsBiVector3D<T>& bv) { return bv.normal; }
@@ -3910,6 +3909,31 @@ rsBiVector3D<T> operator*(const T& s, const rsBiVector3D<T>& v)
 {
   return rsBiVector3D<T>(s * v.getSurfaceNormal());
 }
+
+
+
+template<class T>
+class rsBlade
+{
+
+public:
+
+  rsBlade(int n, int k, T* coeffs)
+  {
+    int m = rsBinomialCoefficient(n, k)
+    coeffs.resize(m);
+    rsCopyToVector(coeffs, m, &(this->coeffs[0]));
+  }
+
+
+  // todo: wedge operator
+
+protected:
+
+  int n, k;               // dimensionality of the space and grade of the blade
+  std::vector<T> coeffs;  // n-choose-k coeffs for the projections on the basis blades
+
+};
 
 
 

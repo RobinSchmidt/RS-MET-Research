@@ -6087,7 +6087,7 @@ void testExteriorAlgebra3D()
   using Vec    = rsVector3D<Real>;
   using BiVec  = rsBiVector3D<Real>;
   using TriVec = rsTriVector3D<Real>;
-
+  using EA     = rsExteriorAlgebra3D<Real>;
 
   bool ok = true;
 
@@ -6104,16 +6104,20 @@ void testExteriorAlgebra3D()
   ok &= (u ^ (v+w)) == (u^v) + (u^w);         // distributivity over addition
   ok &= ((2.f*u) ^ (3.f*v)) == 2.f*3.f*(u^v); // distributivity of scalar multiplication
 
+  // Test Hodge star:
+  ok &= det(u, v, EA::star(u^v)) >= 0.f;
+  ok &= EA::star(u+v) == EA::star(u) + EA::star(v);
+
+
 
   // todo: 
-  // -test distributivity of hodge-star over addition, the condition: det(u,v,star(u^v)) > 0
   // -test a ^ star(b) = <<a,b>>w, dot(u,v) = star(sharp(u) ^ star(flat(b)), 
   //  cross(u,v) = sharp(star(flat(u) ^ flat(v)))
   // -test exterior algebra for vectors - i.e. the type Real is replaced by a vector type
 
   // -implement directional derivative d and check:
   //  d f(u) = dot(u, grad(f)), d(a ^ b) = (d a) ^b + ((-1)^k) (a ^ d b), 
-  //  curl(X) = sharp(star(d flat(X)))
+  //  curl(X) = sharp(star(d flat(X))), (flat(u))(v) == g(u,v) where g is the metric induced by f
 
   // todo: 
   // -implement analogous operations for covectors (maybe using delegation) and then give the
@@ -6127,6 +6131,37 @@ void testExteriorAlgebra3D()
   // https://math.stackexchange.com/questions/2312215/relationship-between-tensor-product-and-wedge-product
   // https://www.researchgate.net/publication/303810058_Tensor_Products_Wedge_Products_and_Differential_Forms/link/5754447008ae10d9337a2f15/download
   // from this, it seems: u ^ v = (u*v - v*u) / 2
+  // ...or can we store the set of vectors and if we want to evaluate a k-form, just project the 
+  // input vectors and then compute a determinant (see Krane, pg. 58 - there it's done for 2D but
+  // maybe the idea generalizes?) ...or: maybe forming a wedge product from k 1-vectors or 
+  // k 1-forms should be done by applying Gram-Schmidt orthonormalization to them and applying the 
+  // resulting k-form amounts to projection and taking the determinant?
+
+  // https://en.wikipedia.org/wiki/Multivector
+  // https://en.wikipedia.org/wiki/Blade_(geometry)
+
+  // http://www.jaapsuter.com/geometric-algebra.pdf
+
+  // https://geometricalgebra.org/
+
+  // http://home.clara.net/iancgbell/maths/geoprg.htm
+
+  // https://www.youtube.com/watch?v=-6F74TH1i_g
+
+
+  // https://www.youtube.com/watch?v=60z_hpEAtD8 A Swift Introduction to Geometric Algebra
+  // https://www.youtube.com/watch?v=_AaOFCl2ihc The Vector Algebra War
+
+  // https://www.youtube.com/watch?v=P2ZxxoS5YD0 Intro to clifford, a python package for geometric algebra
+  // https://clifford.readthedocs.io/en/latest/
+
+  // http://glucat.sourceforge.net/
+
+  // https://bivector.net/lib.html  links to GA libraries
+
+  // https://github.com/wolftype/versor "A (fast) Generic C++ library for Geometric Algebras"
+  // http://versor.mat.ucsb.edu/
+  // http://wolftype.com/versor/colapinto_masters_final_02.pdf
 
   int dummy = 0;
 }

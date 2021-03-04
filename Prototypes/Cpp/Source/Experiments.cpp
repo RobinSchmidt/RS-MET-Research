@@ -6083,6 +6083,9 @@ void testBiModalFeedback()
 
 void testExteriorAlgebra3D()
 {
+  // This is actually just a special case of the 3D geometric algebra, namely, the subalgebra that 
+  // involves only pure blades
+
   using Real   = float;
   using Vec    = rsVector3D<Real>;
   using BiVec  = rsBiVector3D<Real>;
@@ -6162,6 +6165,13 @@ void testExteriorAlgebra3D()
   // https://github.com/wolftype/versor "A (fast) Generic C++ library for Geometric Algebras"
   // http://versor.mat.ucsb.edu/
   // http://wolftype.com/versor/colapinto_masters_final_02.pdf
+
+  int dummy = 0;
+}
+
+void testGeometricAlgebra()
+{
+
 
   int dummy = 0;
 }

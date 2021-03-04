@@ -2,6 +2,10 @@
  geometric product (maybe have also inner and outer product)
 -for the Euclidean nD space, it needs to store 2^n coefficients
 -it should be possible extract the n-choose-k coeffs for a particular grade k
+-it should be possible to lift a multivector in nD to one in mD where m >= n, maybe that
+ should just happen automatically under the hood whenever and nD multivector is combined 
+ (added or multiplied) with an mD multivector - i think, it should just be a matter of 
+ strategically distributing the 2^n coeffs into the 2^m array
 -i think, in a first, very naive implementation, the product could be implemented in a 
  double loop, like:
 
@@ -24,15 +28,15 @@ between integers 0..m-1 and the basis blades, like:
 we have the following correspondences between products the basis blades (row: 1st factor, col: 2nd 
 factor):
 
-      1      e1     e2    e3   e12  e13   e23   e123
-1     1      e1     e2    e3   e12  e13   e23   e123
-e1    e1     1      e12   e13  0    0     e123  0
-e2    e2     -e12   1     e23  0    -e123 0     0
-e3    e3     -e13   -e23  1
-e12   e12    0      0     e123 0    0
-e13   e13    0
-e23   e23    -e123
-e123  e123   0
+      1      e1     e2     e3    e12   e13    e23   e123
+1     1      e1     e2     e3    e12   e13    e23   e123
+e1    e1     1      e12    e13   0     0      e123  0
+e2    e2     -e12   1      e23   0     -e123  0     0
+e3    e3     -e13   -e23   1     e123  0      0     0 
+e12   e12    0      0      e123  0     0      0     0
+e13   e13    0      -e123  0     0     0      0     0
+e23   e23    -e123  0      0     0     -e123  0     0
+e123  e123   0      0      0     0     0      0     0
 
 ...not yet complete
 

@@ -3912,8 +3912,58 @@ rsBiVector3D<T> operator*(const T& s, const rsBiVector3D<T>& v)
 
 
 
+
+
+
+
 template<class T>
-class rsBlade
+class rsMultiVector
+{
+
+public:
+
+  // todo: implement inner, outer and geometric product
+
+  rsMultiVector(int dimensionality)
+  {
+    n = dimensionality;
+    coeffs.resize(n);
+  }
+
+  rsMultiVector<T> operator*(const rsMultiVector<T>& b) const
+  {
+    rsAssert(b.n == n);
+    // todo: relax that later - the output is a multivector of dimension max(n, b.n)
+
+    rsMultiVector<T> c(n);
+    const rsMatrix<T>&   factorMap = factorMaps[n];
+    const rsMatrix<int>& indexMap  = indexMaps[n];
+
+
+    int dummy = 0;
+  }
+
+
+
+
+protected:
+
+  int n;                  // dimensionality of the underlying space
+  std::vector<T> coeffs;  // 2^n coeffs for the projections on the basis blades
+
+  static std::vector<rsMatrix<T>>   factorMaps;
+  static std::vector<rsMatrix<int>> indexMaps;
+
+};
+
+
+
+
+
+
+
+template<class T>
+class rsBlade : public rsMultiVector<T>
 {
 
 public:
@@ -3930,8 +3980,8 @@ public:
 
 protected:
 
-  int n, k;               // dimensionality of the space and grade of the blade
-  std::vector<T> coeffs;  // n-choose-k coeffs for the projections on the basis blades
+  int k; // grade of the blade
+  // the inherited coeffs array is re-used, but the length is only n-choose-k instead of 2^n
 
 };
 

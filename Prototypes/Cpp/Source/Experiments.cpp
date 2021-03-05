@@ -6239,6 +6239,61 @@ int rsRightmostBit(int n)
   return -1;
 }
 
+bool rsIsBit1(int a, int bit)
+{
+  return (a >> bit) & 1;
+}
+
+// -1 if a < b, +1 if a > b, 0 if a == b
+int rsCompareByRightmostBit(int a, int b)
+{
+  int numBits = 8 * sizeof(int);
+  for(int i = 0; i < numBits; i++)
+  {
+    bool aiIs1 = rsIsBit1(a, i);
+    bool biIs1 = rsIsBit1(b, i);
+    if(aiIs1 && !biIs1) return -1;
+    if(biIs1 && !aiIs1) return +1;
+  }
+  return 0;
+}
+// maybe make internal to rsBitLess
+
+/** A function used as comparison function for sorting the blades into their more natural 
+order... */
+bool rsBitLess(const int& a, const int& b)  // rename
+{
+  int na = rsBitCount(a);
+  int nb = rsBitCount(b);
+  if(na < nb)
+    return true;
+  else if(nb < na)
+    return false;
+  else
+  {
+    //return a < b;
+    // is this correct? ...needs tests - no, i think, when the number of 1 bits is 
+    // equal in a,b, we need to figure out which of the two has its rightmost bit further to the
+    // right - and if both have their rightmost bit in the same position, zero it out and see who 
+    // has then its rightmost bit further right...and so on
+
+
+    int c = rsCompareByRightmostBit(a, b);
+    if(c == -1)
+      return true;
+    else
+      return false;
+  }
+
+
+
+}
+// todo: test this 
+
+
+
+
+
 
 /** Counts the number of basis vector swaps required to get ’a’ and ’b’ into canonical order. 
 Arguments ’a’ and ’b’ are both bitmaps representing basis blades.
@@ -6268,24 +6323,9 @@ void rsBasisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer =
   wab = T(sign) * wa * wb;                     // compute weight of product blade
 }
 
-/** A function used as comparison function for sorting the blades into their more natural 
-order... */
-bool rsBitLess(const int& a, const int& b)
-{
-  int na = rsBitCount(a);
-  int nb = rsBitCount(b);
-  if(na < nb)
-    return true;
-  else if(nb < na)
-    return false;
-  else
-    return a < b; 
-    // is this correct? ...needs tests - no, i think, when the number of 1 bits is 
-    // equal in a,b, we need to figure out which of the two has its rightmost bit further to the
-    // right - and if both have their rightmost bit in the same position, zero it out and see who 
-    // has then its rightmost bit further right...and so on
-}
-// todo: test this 
+
+
+
 
 
 /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
@@ -6382,6 +6422,24 @@ bool testBitTwiddling()
   r = rsRightmostBit(6); ok &= r ==  1;
   r = rsRightmostBit(7); ok &= r ==  0;
   r = rsRightmostBit(8); ok &= r ==  3;
+
+  // 4D:
+  // 1    e1   e2   e3   e4   e12  e13  e14  e23  e24  e34  e123 e124 e134 e234 e1234
+  // 0000 0001 0010 0100 1000 0011 0101 1001 0110 1010 1100 0111 1011 1101 1110 1111
+  // 0    1    2    4    8    3    5    9    6    10   12   7    11   13   14   15
+
+  bool b;
+
+  // sequences with 1 bit set:
+  ok &= !rsBitLess(1, 1);
+  ok &=  rsBitLess(1, 2) && !rsBitLess(2, 1);
+  ok &=  rsBitLess(1, 4) && !rsBitLess(4, 1);
+  ok &=  rsBitLess(1, 8) && !rsBitLess(8, 1);
+  ok &= !rsBitLess(2, 2);
+  ok &=  rsBitLess(2, 4) && !rsBitLess(4, 2);
+  ok &=  rsBitLess(2, 8) && !rsBitLess(8, 2);
+  ok &= !rsBitLess(4, 4);
+  ok &=  rsBitLess(4, 8) && !rsBitLess(8, 4);
 
   return ok;
 }

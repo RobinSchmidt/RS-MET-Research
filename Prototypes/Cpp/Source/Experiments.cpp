@@ -6430,7 +6430,7 @@ bool testBitTwiddling()
 
   bool b;
 
-  // sequences with 1 bit set:
+  // sequences with 1 bit set (1,2,4,8)
   ok &= !rsBitLess(1, 1);
   ok &=  rsBitLess(1, 2) && !rsBitLess(2, 1);
   ok &=  rsBitLess(1, 4) && !rsBitLess(4, 1);
@@ -6440,6 +6440,43 @@ bool testBitTwiddling()
   ok &=  rsBitLess(2, 8) && !rsBitLess(8, 2);
   ok &= !rsBitLess(4, 4);
   ok &=  rsBitLess(4, 8) && !rsBitLess(8, 4);
+  ok &= !rsBitLess(8, 8);
+
+  // sequences with 2 bits set (3,5,9,6,10,12)
+  ok &= !rsBitLess(3,  3);
+  ok &=  rsBitLess(3,  5) && !rsBitLess( 5, 3);
+  ok &=  rsBitLess(3,  9) && !rsBitLess( 9, 3);
+  ok &=  rsBitLess(3,  6) && !rsBitLess( 6, 3);
+  ok &=  rsBitLess(3, 10) && !rsBitLess(10, 3);
+  ok &=  rsBitLess(3, 12) && !rsBitLess(12, 3);
+  ok &= !rsBitLess(5,  5);
+  ok &=  rsBitLess(5,  9) && !rsBitLess( 9, 5);
+  ok &=  rsBitLess(5,  6) && !rsBitLess( 6, 5);
+  ok &=  rsBitLess(5, 10) && !rsBitLess(10, 5);
+  ok &=  rsBitLess(5, 12) && !rsBitLess(12, 5);
+  ok &= !rsBitLess(9,  9);
+  ok &=  rsBitLess(9,  6) && !rsBitLess( 6, 9);
+  ok &=  rsBitLess(9, 10) && !rsBitLess(10, 9);
+  ok &=  rsBitLess(9, 12) && !rsBitLess(12, 9);
+  ok &= !rsBitLess(6,  6);
+  ok &=  rsBitLess(6, 10) && !rsBitLess(10, 6);
+  ok &=  rsBitLess(6, 12) && !rsBitLess(12, 6);
+  ok &= !rsBitLess(10, 10);
+  ok &=  rsBitLess(10, 12) && !rsBitLess(12, 10);
+  ok &= !rsBitLess(12, 12);
+
+  // sequences with 3 bits set (7,11,13,14)
+  ok &= !rsBitLess(7,  7);
+  ok &=  rsBitLess(7, 11) && !rsBitLess(11, 7);
+  ok &=  rsBitLess(7, 13) && !rsBitLess(13, 7);
+  ok &=  rsBitLess(7, 14) && !rsBitLess(14, 7);
+  ok &= !rsBitLess(11, 11);
+  ok &=  rsBitLess(11, 13) && !rsBitLess(13, 11);
+  ok &=  rsBitLess(11, 14) && !rsBitLess(14, 11);
+  ok &= !rsBitLess(13, 13);
+  ok &=  rsBitLess(13, 14) && !rsBitLess(14, 13);
+  ok &= !rsBitLess(14, 14);
+
 
   return ok;
 }

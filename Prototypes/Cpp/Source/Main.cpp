@@ -32,7 +32,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifoldSphere();
   //testManifoldEarth();
   
-  testSortedSet();
+  //testSortedSet();
   //testAutoDiff();
   //testAutoDiff2();
   //testAutoDiff3();

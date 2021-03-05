@@ -6215,20 +6215,129 @@ void testExteriorAlgebra3D()
   int dummy = 0;
 }
 
+// taken from
+// https://www.geeksforgeeks.org/count-set-bits-in-an-integer/
+/** Counts the number of bits with value 1 in the given number n. */
+int rsBitCount(int n)
+{
+  int count = 0;
+  while (n) {
+    n &= (n - 1);
+    count++;  }
+  return count;
+}
+
+/** Counts the number of basis vector swaps required to get ’a’ and ’b’ into canonical order. 
+Arguments ’a’ and ’b’ are both bitmaps representing basis blades.
+adapted from "Geometric Algebra for Computer Science", page 514   */ 
+double rsCanonicalReorderingSign(int a, int b) 
+{
+  a = a >> 1;
+  int sum = 0;
+  while (a != 0) {
+    sum = sum + rsBitCount(a & b);
+    a = a >> 1; }
+  return ((sum & 1) == 0) ? 1.0 : -1.0; //  even number of swaps: 1, else -1
+}
+// why does this return a double and not an int? or maybe just a bool, which is true, iff the 
+// number of swaps is odd
+
+/** Computes the (geometric or outer) product of the two basis blades represented by the integers
+a and b and their associated weights wa, wb and stores the result in bitmap/weight. 
+adapted from "Geometric Algebra for Computer Science", page 515  */
+void rsBasisBladeProduct(int a, double wa, int b, double wb, int& bitmap, double& weight, 
+  bool outer = false) 
+{
+  // todo: rename bitmap to ab and weight to wab
+
+  // The outer is zero if a and b are independent:
+  if(outer && ((a & b) != 0)) {
+    bitmap = 0; weight = 0.0; return; }
+
+  bitmap = a ^ b;                                 // compute the product bitmap
+  double sign = rsCanonicalReorderingSign(a, b);  // compute the sign change due to reordering
+  weight = sign * wa * wb;                        // compute weight of product blade
+}
+
+/** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
+the geometric algebra nD Euclidean space. */
+void rsBuildCayleyTables(int numDimensions, 
+  rsMatrix<int>& inner, rsMatrix<int>& outer, rsMatrix<int>& geom)  
+{
+  // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
+  // numZeroDimensions
+
+  int n = numDimensions;
+  int N = rsPowInt(2, n);  // size of the matrices
+  inner.setShape(N, N);
+  outer.setShape(N, N);
+  geom.setShape( N, N);
+
+  /*
+  // create a representation of the basis blades:
+  std::vector<int> spaceBasis(n);
+  for(int i = 0; i < n; i++)
+    spaceBasis[i] = i+1;
+  std::vector<int> tmp, bladeBasis;
+  for(int i = 0; i <= n; i++)
+  {
+    tmp = rsSubsetsOfSize(spaceBasis, i);
+    rsAppend(bladeBasis, tmp);
+  }
+  */
+
+  for(int i = 0; i < N; i++)
+  {
+    for(int j = 0; j < N; j++)
+    {
+      int ij;
+      double wij;
+      double wi = 1.0, wj = 1.0;  
+      // is this correct? where are they supposed to come from? is this, where the +/-/0 type of 
+      // the basis-vectors gets incorporated?
+
+      rsBasisBladeProduct(i, wi, j, wj, ij, wij);
+
+      int dummy = 0;
+    }
+  }
+
+  // but the basis blades are in a somewhat unnatural order...or are they? maybe that order is 
+  // convenient for other algorithms
+
+  
 
 
 
+
+
+  int dummy = 0;
+}
 
 
 
 
 void testGeometricAlgebra()
 {
-
-
-
+  rsMatrix<int> inner, outer, geom;
+  rsBuildCayleyTables(3, inner, outer, geom);
   int dummy = 0;
 
+  // to build the Cayley-Table, see:
+  // https://en.wikipedia.org/wiki/Cayley_table
+  // https://bivector.net/tools.html
+  // we need to use rsSubsetsOfSize(const std::vector<T>& set, int size) to generate a 
+  // representation of the row/column headers of the table and then fill in the table elements 
+  // according to the rules (for the outer product)
+  // -concatenate row and column index array
+  // -if any entry of the result occurs more than once, the table entry is zero
+  // -if all entries occur only once, figure out, how many swaps are required to order the result,
+  //  the ordered version corresponds to another basis blade B -> figure out which one
+  // -if the number of swaps is even, the entry is plus B, if it's odd, it's minus B
+  //  (later that rule may be modified to allow different signature´s - in the basic setup, all
+  //  basis vectors square to 1 - but we may want also algebras where some square to -1 or 0 - but
+  //  maybe that affects only the squares and the the cross-terms?)
+  //  ...or wait - no - is this rule correct?
 
   // https://en.wikipedia.org/wiki/Multivector
   // https://en.wikipedia.org/wiki/Blade_(geometry)

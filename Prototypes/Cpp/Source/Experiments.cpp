@@ -6288,15 +6288,19 @@ void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& 
   // ordering. In the bit based ordering, a bit with value 1 in the integer indicates the presence
   // of a particular basis-vector in the given basis blade. In the natural ordering, we want the 
   // scalar first, then the bivectors and then the trivectors, etc.
-  std::vector<int> map(N);
+  std::vector<int> map(N), unmap(N);
   for(int i = 0; i < N; i++)
     map[i] = i;
   rsHeapSort(&map[0], N, &rsBitLess);  // experimental
+  for(int i = 0; i < N; i++)
+    unmap[map[i]] = i;
   // 3D:
   // blade:     1   e1  e2  e3  e12 e13 e23 e123
   // bin-code:  000 001 010 100 011 101 110 111
   // num-code:  0   1   2   4   3   5   6   7
   // position:  0   1   2   3   4   5   6   7
+
+
 
   for(int i = 0; i < N; i++)
   {
@@ -6312,7 +6316,9 @@ void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& 
       // the basis-vectors gets incorporated?
 
       rsBasisBladeProduct(a, wa, b, wb, ab, wab);
-      blades( i, j) = ab;
+      //blades( i, j) = ab;
+      //blades( i, j) = map[ab];
+      blades( i, j) = unmap[ab];
       weights(i, j) = wab;
 
       int dummy = 0;
@@ -6348,7 +6354,9 @@ void testGeometricAlgebra()
   rsMatrix<float> weights;
   rsBuildCayleyTables(3, blades, weights);
   int dummy = 0;
-
+  // this matches what https://bivector.net/tools.html gives, but i'm not sure if we need to use
+  // the reverse mapping as in blades( i, j) = unmap[ab]; ...in this special case, the map and the 
+  // reverse map are the same. todo: try another case
 
 
 

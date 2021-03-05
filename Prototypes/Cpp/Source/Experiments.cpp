@@ -6322,7 +6322,7 @@ void rsBasisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer =
   int sign = rsCanonicalReorderingSign(a, b);  // compute the sign change due to reordering
   wab = T(sign) * wa * wb;                     // compute weight of product blade
 }
-
+// maybe get rid of wab - absorb the sign in ab - nope: taht does not work when ab == 0
 
 
 
@@ -6381,7 +6381,7 @@ void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& 
       //blades( i, j) = ab;
       //blades( i, j) = map[ab];
       blades( i, j) = unmap[ab];
-      weights(i, j) = wab;
+      weights(i, j) = wab;  
 
       int dummy = 0;
     }
@@ -6428,7 +6428,7 @@ bool testBitTwiddling()
   // 0000 0001 0010 0100 1000 0011 0101 1001 0110 1010 1100 0111 1011 1101 1110 1111
   // 0    1    2    4    8    3    5    9    6    10   12   7    11   13   14   15
 
-  bool b;
+  //bool b;
 
   // sequences with 1 bit set (1,2,4,8)
   ok &= !rsBitLess(1, 1);
@@ -6485,9 +6485,18 @@ void testGeometricAlgebra()
 {
   testBitTwiddling();
 
-  rsMatrix<int>   blades;
-  rsMatrix<float> weights;
+  using Real = float;
+
+  rsMatrix<int>  blades;
+  rsMatrix<Real> weights;
   rsBuildCayleyTables(3, blades, weights);
+  rsBuildCayleyTables(4, blades, weights);
+
+  using MV = rsMultiVector<Real>;
+  rsGeometricAlgebra<Real> alg3(3); // later use alg300
+
+
+
   int dummy = 0;
   // this matches what https://bivector.net/tools.html gives, but i'm not sure if we need to use
   // the reverse mapping as in blades( i, j) = unmap[ab]; ...in this special case, the map and the 

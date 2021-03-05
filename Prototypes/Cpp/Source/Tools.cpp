@@ -3952,6 +3952,75 @@ rsBiVector3D<T> operator*(const T& s, const rsBiVector3D<T>& v)
 
 
 
+template<class T>
+class rsGeometricAlgebra
+{
+
+public:
+
+  using Vec = std::vector<T>; // for conevenience
+
+
+  rsGeometricAlgebra(int numDimensions)
+  {
+    n = numDimensions;
+    N = RAPT::rsPowInt(2, n);
+    init();
+  }
+
+  int getNumDimensions() const { return n; }
+
+  int getMultiVectorSize() const { return N; }
+  // maybe use value stored in the numRows/Cols of the matrices
+
+
+
+  //void innerProduct(const Vec& a, const Vec& b, Vec& p) const;
+
+  //void outerProduct(const Vec& a, const Vec& b, Vec& p) const;
+
+  void geometricProduct(const Vec& a, const Vec& b, Vec& p) const;
+
+
+
+protected:
+
+  void init();
+
+  int n = 0; // later: np, nn, nz (positive, negative, zero) for basis vectors that square to
+             // +1, -1, 0   ->   n = np + nn + nz
+  int N = 1;
+
+  // The Cayley tables for the various products:
+  rsMatrix<int> indicesGeom;
+  rsMatrix<T>   weightsGeom;
+
+};
+
+template<class T>
+void rsGeometricAlgebra<T>::init()
+{
+  // todo: fill the Cayley table(s)
+
+  int dummy = 0;
+}
+
+template<class T>
+void rsGeometricAlgebra<T>::geometricProduct(
+  const std::vector<T>& a, const std::vector<T>& b, std::vector<T>& p) const
+{
+  rsFill(p, T(0));
+  for(int i = 0; i < N; i++) {
+    for(int j = 0; j < N; j++) {
+      int k = indicesGeom(i, j);
+      p[k] += weightsGeom(i, j) * a[i] * b[j]; }}
+}
+// optimize! let j start at i -> this requires symmetrizing the matrices which may actually create
+// even more zeros due to cancellation (at least, in the outer product) which will in turn open 
+// more optimization opportunities when a sparse matrix implementation is used (...later...)
+
+
+
 
 template<class T>
 class rsMultiVector
@@ -3961,12 +4030,27 @@ public:
 
   // todo: implement inner, outer and geometric product
 
-  rsMultiVector(int dimensionality)
+  rsMultiVector(rsGeometricAlgebra<T>* algebraToUse)
   {
-    n = dimensionality;
-    coeffs.resize(n);
+    alg = algebraToUse;
+    coeffs.resize(alg->getMultiVectorSize());
+
+    //n = dimensionality;
+    //coeffs.resize(n);
   }
 
+
+  rsMultiVector<T> operator*(const rsMultiVector<T>& b) const
+  {
+    rsAssert(b.coeffs.size() == coeffs.size());
+    // todo: relax that later - the output is a multivector of dimension max(n, b.n)
+
+    rsMultiVector<T> p(alg);
+    alg->geometricProduct(*this, b, p.coeffs);
+    return p;
+  }
+
+  /*
   rsMultiVector<T> operator*(const rsMultiVector<T>& b) const
   {
     rsAssert(b.n == n);
@@ -3979,17 +4063,18 @@ public:
 
     int dummy = 0;
   }
+  */
 
 
 
 
 protected:
 
-  int n;                  // dimensionality of the underlying space
-  std::vector<T> coeffs;  // 2^n coeffs for the projections on the basis blades
+  std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
+  rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
 
-  static std::vector<rsMatrix<T>>   factorMaps;
-  static std::vector<rsMatrix<int>> indexMaps;
+  //static std::vector<rsMatrix<T>>   factorMaps;
+  //static std::vector<rsMatrix<int>> indexMaps;
 
 };
 

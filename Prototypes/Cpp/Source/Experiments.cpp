@@ -6221,11 +6221,24 @@ void testExteriorAlgebra3D()
 int rsBitCount(int n)
 {
   int count = 0;
-  while (n) {
-    n &= (n - 1);
-    count++;  }
+  while(n) { n &= n-1; count++; }
   return count;
 }
+
+/** Returns the index of the rightmost 1 bit, counting from right to left */
+int rsRightmostBit(int n)
+{
+  int mask = 1;
+  int numBits = 8 * sizeof(int);
+  for(int i = 0; i < numBits; i++)
+  {
+    if(n & mask)
+      return i;
+    mask = (mask << 1) + 1;  // shift one bit to left and fill set righmost bit to 1
+  }
+  return -1;
+}
+
 
 /** Counts the number of basis vector swaps required to get ’a’ and ’b’ into canonical order. 
 Arguments ’a’ and ’b’ are both bitmaps representing basis blades.
@@ -6266,7 +6279,11 @@ bool rsBitLess(const int& a, const int& b)
   else if(nb < na)
     return false;
   else
-    return a < b; // is this correct? ...needs tests
+    return a < b; 
+    // is this correct? ...needs tests - no, i think, when the number of 1 bits is 
+    // equal in a,b, we need to figure out which of the two has its rightmost bit further to the
+    // right - and if both have their rightmost bit in the same position, zero it out and see who 
+    // has then its rightmost bit further right...and so on
 }
 // todo: test this 
 
@@ -6299,6 +6316,11 @@ void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& 
   // bin-code:  000 001 010 100 011 101 110 111
   // num-code:  0   1   2   4   3   5   6   7
   // position:  0   1   2   3   4   5   6   7
+
+  // 4D:
+  // 1    e1   e2   e3   e4   e12  e13  e14  e23  e24  e34  e123 e124 e134 e234 e1234
+  // 0000 0001 0010 0100 1000 0011 0101 1001 0110 1010 1100 0111 1011 1101 1110 1111
+  // 0    1    2    4    8    3    5    9    6    10   12   7    11   13   14   15
 
 
 
@@ -6336,19 +6358,37 @@ void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& 
   int dummy = 0;
 }
 
+bool testBitTwiddling()
+{
+  int r;
+  bool ok = true;
+
+  r = rsBitCount(0); ok &= r == 0;
+  r = rsBitCount(1); ok &= r == 1;
+  r = rsBitCount(2); ok &= r == 1;
+  r = rsBitCount(3); ok &= r == 2;
+  r = rsBitCount(4); ok &= r == 1;
+  r = rsBitCount(5); ok &= r == 2;
+  r = rsBitCount(6); ok &= r == 2;
+  r = rsBitCount(7); ok &= r == 3;
+  r = rsBitCount(8); ok &= r == 1;
+
+  r = rsRightmostBit(0); ok &= r == -1;
+  r = rsRightmostBit(1); ok &= r ==  0;
+  r = rsRightmostBit(2); ok &= r ==  1;
+  r = rsRightmostBit(3); ok &= r ==  0;
+  r = rsRightmostBit(4); ok &= r ==  2;
+  r = rsRightmostBit(5); ok &= r ==  0;
+  r = rsRightmostBit(6); ok &= r ==  1;
+  r = rsRightmostBit(7); ok &= r ==  0;
+  r = rsRightmostBit(8); ok &= r ==  3;
+
+  return ok;
+}
+
 void testGeometricAlgebra()
 {
-  int bc;
-  bool ok = true;
-  bc = rsBitCount(0); ok &= bc == 0;
-  bc = rsBitCount(1); ok &= bc == 1;
-  bc = rsBitCount(2); ok &= bc == 1;
-  bc = rsBitCount(3); ok &= bc == 2;
-  bc = rsBitCount(4); ok &= bc == 1;
-  bc = rsBitCount(5); ok &= bc == 2;
-  bc = rsBitCount(6); ok &= bc == 2;
-  bc = rsBitCount(7); ok &= bc == 3;
-  bc = rsBitCount(8); ok &= bc == 1;
+  testBitTwiddling();
 
   rsMatrix<int>   blades;
   rsMatrix<float> weights;
@@ -6358,6 +6398,7 @@ void testGeometricAlgebra()
   // the reverse mapping as in blades( i, j) = unmap[ab]; ...in this special case, the map and the 
   // reverse map are the same. todo: try another case
 
+  // actually, 1 matrix would be enough - we can absorb/encode the signs also in the blades matrix
 
 
   // to build the Cayley-Table, see:

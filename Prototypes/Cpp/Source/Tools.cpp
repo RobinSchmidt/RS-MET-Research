@@ -2199,7 +2199,7 @@ std::vector<T> rsSetUnion(const std::vector<T>& A, const std::vector<T>& B)
 //   and unsorted sets
 
 /** Removes duplicate elements from a vector A and returns the result - that's useful for turning 
-arbitrary vectors inot sets (which contain each element just once). */
+arbitrary vectors into sets (which contain each element just once). */
 template<class T>
 std::vector<T> rsRemoveDuplicates(const std::vector<T>& A)
 {
@@ -2209,6 +2209,7 @@ std::vector<T> rsRemoveDuplicates(const std::vector<T>& A)
       B.push_back(A[i]);
   return B;
 }
+
 
 
 /** A class for representing sets. To optimize operations, they are kept sorted internally which 

@@ -3334,8 +3334,71 @@ void testManifoldEllipsoid()
 // needed? maybe the basis vectors are not unique? or maybe some other decomposition such that
 // G = E^T * E,  where E is the matrix of basis vectors and G is the metric as matrix
 
+
+
+
+
+
+
+
+// code from:
+// https://www.geeksforgeeks.org/print-subsets-given-size-set/
+
+/* 
+arr[]  ---> Input Array
+n	     ---> Size of input array
+r	     ---> Size of a combination to be printed
+index  ---> Current index in data[]
+data[] ---> Temporary array to store current combination
+i	     ---> index of current element in arr[]	 */
+void combinationUtil(int arr[], int n, int r, int index,
+  int data[], int i)
+{
+  // Current combination is ready, print it
+  if (index == r) {
+    for (int j = 0; j < r; j++)
+      printf("%d ", data[j]);
+    printf("\n");
+    return;
+  }
+
+  // When no more elements are there to put in data[]
+  if (i >= n)
+    return;
+
+  // current is included, put next at next location
+  data[index] = arr[i];
+  combinationUtil(arr, n, r, index + 1, data, i + 1);
+
+  // current is excluded, replace it with next (Note that i+1 is passed, but index is not
+  // changed):
+  combinationUtil(arr, n, r, index, data, i + 1);
+}
+
+// The main function that prints all combinations of size r in arr[] of size n. This function 
+// mainly uses combinationUtil()
+void printCombination(int arr[], int n, int r)
+{
+  int* data = new int[r];                 // A temporary array to store all combination one by one
+  combinationUtil(arr, n, r, 0, data, 0); // Print all combination using temprary array 'data[]'
+  delete[] data;
+}
+
+int testPrintCombinations()
+{
+  int arr[] = { 10, 20, 30, 40, 50 };
+  int r = 3;
+  int n = sizeof(arr) / sizeof(arr[0]);
+  printCombination(arr, n, r);
+  return 0;
+}
+// todo: adapt code to not print the combinations but instead store them in an output array
+
+
 void testSortedSet()
 {
+  testPrintCombinations();
+
   using Set = rsSortedSet<int>;
   bool r = true;
 
@@ -6111,8 +6174,6 @@ void testExteriorAlgebra3D()
   ok &= det(u, v, EA::star(u^v)) >= 0.f;
   ok &= EA::star(u+v) == EA::star(u) + EA::star(v);
 
-
-
   // todo: 
   // -test a ^ star(b) = <<a,b>>w, dot(u,v) = star(sharp(u) ^ star(flat(b)), 
   //  cross(u,v) = sharp(star(flat(u) ^ flat(v)))
@@ -6140,6 +6201,26 @@ void testExteriorAlgebra3D()
   // k 1-forms should be done by applying Gram-Schmidt orthonormalization to them and applying the 
   // resulting k-form amounts to projection and taking the determinant?
 
+
+
+  int dummy = 0;
+}
+
+
+
+
+
+
+
+
+void testGeometricAlgebra()
+{
+
+
+
+  int dummy = 0;
+
+
   // https://en.wikipedia.org/wiki/Multivector
   // https://en.wikipedia.org/wiki/Blade_(geometry)
 
@@ -6166,14 +6247,19 @@ void testExteriorAlgebra3D()
   // http://versor.mat.ucsb.edu/
   // http://wolftype.com/versor/colapinto_masters_final_02.pdf
 
-  int dummy = 0;
-}
 
-void testGeometricAlgebra()
-{
+  // https://www.youtube.com/watch?v=tX4H_ctggYo Siggraph2019 Geometric Algebra
+  // https://github.com/enkimute/ganja.js
+  // https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_points_and_lines
+  // https://bivector.net/
 
-
-  int dummy = 0;
+  // to create the table, i think, we need a function to generate all possible subsets of a given 
+  // size k of a set of size n, see:
+  // https://www.geeksforgeeks.org/print-subsets-given-size-set/
+  // https://www.tutorialspoint.com/print-all-subsets-of-given-size-of-a-set-in-cplusplus
+  // https://stackoverflow.com/questions/23974569/how-to-generate-all-subsets-of-a-given-size
+  // https://www.codeproject.com/Articles/26050/Permutations-Combinations-and-Variations-using-C-G
+  // https://afteracademy.com/blog/print-all-subsets-of-a-given-set
 }
 
 

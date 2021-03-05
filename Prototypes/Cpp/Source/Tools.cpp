@@ -2212,6 +2212,42 @@ std::vector<T> rsRemoveDuplicates(const std::vector<T>& A)
 
 
 
+// code adapted from: https://www.geeksforgeeks.org/print-subsets-given-size-set/
+
+template<class T> // todo: rename
+void rsSubsetUtil(const std::vector<T>& set, int r, int index, std::vector<T>& tmp, int i, 
+  std::vector<T>& result)
+{
+  // Current subset is ready, append it to the result and return:
+  if (index == r) { rsAppend(result, tmp); return; }
+
+  // Check, if no more elements are there to put in tmp - if so, return:
+  int n = (int) set.size();
+  if(i >= n) return;
+
+  // Current is included, put next at next location:
+  tmp[index] = set[i];
+  rsSubsetUtil(set, r, index + 1, tmp, i + 1, result);
+
+  // current is excluded, replace it with next (Note that i+1 is passed, but index is not
+  // changed):
+  rsSubsetUtil(set, r, index, tmp, i + 1, result);
+
+  int dummy = 0;
+}
+template<class T>
+std::vector<T> rsSubsetsOfSize(const std::vector<T>& set, int size)
+{
+  std::vector<T> result;     // todo: reserve n-choose-k, n = set.size(), k = size
+  std::vector<T> tmp(size);
+  rsSubsetUtil(set, size, 0, tmp, 0, result);
+  return result;
+}
+
+
+
+
+
 /** A class for representing sets. To optimize operations, they are kept sorted internally which 
 means the data type T must support "less-than" comparisons. */
 

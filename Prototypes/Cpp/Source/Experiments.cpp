@@ -3351,8 +3351,7 @@ r	     ---> Size of a combination to be printed
 index  ---> Current index in data[]
 data[] ---> Temporary array to store current combination
 i	     ---> index of current element in arr[]	 */
-void combinationUtil(int arr[], int n, int r, int index,
-  int data[], int i)
+void combinationUtil(int arr[], int n, int r, int index, int data[], int i)
 {
   // Current combination is ready, print it
   if (index == r) {
@@ -3374,7 +3373,6 @@ void combinationUtil(int arr[], int n, int r, int index,
   // changed):
   combinationUtil(arr, n, r, index, data, i + 1);
 }
-
 // The main function that prints all combinations of size r in arr[] of size n. This function 
 // mainly uses combinationUtil()
 void printCombination(int arr[], int n, int r)
@@ -3383,7 +3381,6 @@ void printCombination(int arr[], int n, int r)
   combinationUtil(arr, n, r, 0, data, 0); // Print all combination using temprary array 'data[]'
   delete[] data;
 }
-
 int testPrintCombinations()
 {
   int arr[] = { 10, 20, 30, 40, 50 };
@@ -3394,13 +3391,25 @@ int testPrintCombinations()
 }
 // todo: adapt code to not print the combinations but instead store them in an output array
 
+bool testSubsets()
+{
+  bool ok = true;
+  using Vec = std::vector<int>;
+  Vec set = { 10, 20, 30, 40, 50 };
+  Vec subsets = rsSubsetsOfSize(set, 3);
+  ok &= subsets == Vec({ 10,20,30, 10,20,40, 10,20,50, 10,30,40, 10,30,50, 10,40,50, 20,30,40, 
+     20,30,50, 20,40,50, 30,40,50});
+  return ok;
+}
 
 void testSortedSet()
 {
-  testPrintCombinations();
+  //testPrintCombinations();
 
   using Set = rsSortedSet<int>;
   bool r = true;
+
+  r &= testSubsets();
 
   Set A, B, C;
 

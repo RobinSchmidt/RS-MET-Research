@@ -6230,98 +6230,127 @@ int rsBitCount(int n)
 /** Counts the number of basis vector swaps required to get ’a’ and ’b’ into canonical order. 
 Arguments ’a’ and ’b’ are both bitmaps representing basis blades.
 adapted from "Geometric Algebra for Computer Science", page 514   */ 
-double rsCanonicalReorderingSign(int a, int b) 
+int rsCanonicalReorderingSign(int a, int b)
 {
   a = a >> 1;
   int sum = 0;
   while (a != 0) {
     sum = sum + rsBitCount(a & b);
     a = a >> 1; }
-  return ((sum & 1) == 0) ? 1.0 : -1.0; //  even number of swaps: 1, else -1
+  return ((sum & 1) == 0) ? 1 : -1; //  even number of swaps: 1, else -1
 }
 // why does this return a double and not an int? or maybe just a bool, which is true, iff the 
 // number of swaps is odd
 
 /** Computes the (geometric or outer) product of the two basis blades represented by the integers
-a and b and their associated weights wa, wb and stores the result in bitmap/weight. 
+a and b and their associated weights wa, wb and stores the result in ab/wab. 
 adapted from "Geometric Algebra for Computer Science", page 515  */
-void rsBasisBladeProduct(int a, double wa, int b, double wb, int& bitmap, double& weight, 
-  bool outer = false) 
+template<class T>
+void rsBasisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false) 
 {
-  // todo: rename bitmap to ab and weight to wab
-
-  // The outer is zero if a and b are independent:
   if(outer && ((a & b) != 0)) {
-    bitmap = 0; weight = 0.0; return; }
-
-  bitmap = a ^ b;                                 // compute the product bitmap
-  double sign = rsCanonicalReorderingSign(a, b);  // compute the sign change due to reordering
-  weight = sign * wa * wb;                        // compute weight of product blade
+    ab = 0; wab = 0.0; return; }               // outer product is zero if a and b are independent
+  ab = a ^ b;                                  // compute the product bitmap
+  int sign = rsCanonicalReorderingSign(a, b);  // compute the sign change due to reordering
+  wab = T(sign) * wa * wb;                     // compute weight of product blade
 }
+
+/** A function used as comparison function for sorting the blades into their more natural 
+order... */
+bool rsBitLess(const int& a, const int& b)
+{
+  int na = rsBitCount(a);
+  int nb = rsBitCount(b);
+  if(na < nb)
+    return true;
+  else if(nb < na)
+    return false;
+  else
+    return a < b; // is this correct? ...needs tests
+}
+// todo: test this 
+
 
 /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
 the geometric algebra nD Euclidean space. */
-void rsBuildCayleyTables(int numDimensions, 
-  rsMatrix<int>& inner, rsMatrix<int>& outer, rsMatrix<int>& geom)  
+template<class T>
+void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& weights)
 {
   // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
   // numZeroDimensions
 
   int n = numDimensions;
   int N = rsPowInt(2, n);  // size of the matrices
-  inner.setShape(N, N);
-  outer.setShape(N, N);
-  geom.setShape( N, N);
+  blades.setShape(N, N);
+  weights.setShape(N, N);
 
-  /*
-  // create a representation of the basis blades:
-  std::vector<int> spaceBasis(n);
-  for(int i = 0; i < n; i++)
-    spaceBasis[i] = i+1;
-  std::vector<int> tmp, bladeBasis;
-  for(int i = 0; i <= n; i++)
-  {
-    tmp = rsSubsetsOfSize(spaceBasis, i);
-    rsAppend(bladeBasis, tmp);
-  }
-  */
+  // Create a map of the basis blades that converts from their bit-based to the more natural 
+  // ordering. In the bit based ordering, a bit with value 1 in the integer indicates the presence
+  // of a particular basis-vector in the given basis blade. In the natural ordering, we want the 
+  // scalar first, then the bivectors and then the trivectors, etc.
+  std::vector<int> map(N);
+  for(int i = 0; i < N; i++)
+    map[i] = i;
+  rsHeapSort(&map[0], N, &rsBitLess);  // experimental
+  // 3D:
+  // blade:     1   e1  e2  e3  e12 e13 e23 e123
+  // bin-code:  000 001 010 100 011 101 110 111
+  // num-code:  0   1   2   4   3   5   6   7
+  // position:  0   1   2   3   4   5   6   7
 
   for(int i = 0; i < N; i++)
   {
     for(int j = 0; j < N; j++)
     {
-      int ij;
-      double wij;
-      double wi = 1.0, wj = 1.0;  
-      // is this correct? where are they supposed to come from? is this, where the +/-/0 type of 
+      int a  = map[i];  // 1st factor blade
+      int b  = map[j];  // 2nd factor blade
+      T   wa = T(1);    // 1st weight
+      T   wb = T(1);    // 2nd weight
+      int ab;           // product blade
+      T wab;            // product weight
+      // Are wa, wb correct? where are they supposed to come from? is this, where the +/-/0 type of 
       // the basis-vectors gets incorporated?
 
-      rsBasisBladeProduct(i, wi, j, wj, ij, wij);
+      rsBasisBladeProduct(a, wa, b, wb, ab, wab);
+      blades( i, j) = ab;
+      weights(i, j) = wab;
 
       int dummy = 0;
     }
   }
 
-  // but the basis blades are in a somewhat unnatural order...or are they? maybe that order is 
-  // convenient for other algorithms
+  // But the basis blades are now in a somewhat unnatural order. The ordering is such that when a 
+  // bit with value 1 in the integer indicates the presence of a particular basis-vector in the 
+  // given basis blade. But maybe that order is convenient for other algorithms? ...but nah...maybe
+  // reorder them appropriately such that the scalar comes first, then the vectors, then the 
+  // bivectors and then the trivector, etc. all in the most natural order (rightmost index 
+  // increases fastest). Maybe write a function int -> int that does the conversion
 
   
-
-
-
-
-
   int dummy = 0;
 }
 
-
-
-
 void testGeometricAlgebra()
 {
-  rsMatrix<int> inner, outer, geom;
-  rsBuildCayleyTables(3, inner, outer, geom);
+  int bc;
+  bool ok = true;
+  bc = rsBitCount(0); ok &= bc == 0;
+  bc = rsBitCount(1); ok &= bc == 1;
+  bc = rsBitCount(2); ok &= bc == 1;
+  bc = rsBitCount(3); ok &= bc == 2;
+  bc = rsBitCount(4); ok &= bc == 1;
+  bc = rsBitCount(5); ok &= bc == 2;
+  bc = rsBitCount(6); ok &= bc == 2;
+  bc = rsBitCount(7); ok &= bc == 3;
+  bc = rsBitCount(8); ok &= bc == 1;
+
+  rsMatrix<int>   blades;
+  rsMatrix<float> weights;
+  rsBuildCayleyTables(3, blades, weights);
   int dummy = 0;
+
+
+
 
   // to build the Cayley-Table, see:
   // https://en.wikipedia.org/wiki/Cayley_table

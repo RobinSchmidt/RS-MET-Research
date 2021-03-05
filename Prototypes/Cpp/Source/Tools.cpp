@@ -3948,6 +3948,89 @@ rsBiVector3D<T> operator*(const T& s, const rsBiVector3D<T>& v)
 }
 
 
+//=================================================================================================
+
+
+
+// taken from
+// https://www.geeksforgeeks.org/count-set-bits-in-an-integer/
+/** Counts the number of bits with value 1 in the given number n. */
+int rsBitCount(int n)
+{
+  int count = 0;
+  while(n) { n &= n-1; count++; }
+  return count;
+}
+
+/** Return true, iff the bit at the given bitIndex (counting from right) is 1. */
+bool rsIsBit1(int a, int bitIndex)
+{
+  return (a >> bitIndex) & 1;
+}
+
+/** Returns the index of the rightmost 1 bit, counting from right to left */
+int rsRightmostBit(int n)
+{
+  int mask = 1;
+  int numBits = 8 * sizeof(int);
+  for(int i = 0; i < numBits; i++)
+  {
+    if(n & mask)
+      return i;
+    mask = (mask << 1) + 1;  // shift one bit to left and fill set righmost bit to 1
+  }
+  return -1;
+}
+
+
+// -1 if a < b, +1 if a > b, 0 if a == b
+int rsCompareByRightmostBit(int a, int b)
+{
+  int numBits = 8 * sizeof(int);
+  for(int i = 0; i < numBits; i++)
+  {
+    bool aiIs1 = rsIsBit1(a, i);
+    bool biIs1 = rsIsBit1(b, i);
+    if(aiIs1 && !biIs1) return -1;
+    if(biIs1 && !aiIs1) return +1;
+  }
+  return 0;
+}
+// maybe make internal to rsBitLess
+
+/** A function used as comparison function for sorting the blades into their more natural 
+order... */
+bool rsBitLess(const int& a, const int& b)  // rename
+{
+  int na = rsBitCount(a);
+  int nb = rsBitCount(b);
+  if(na < nb)
+    return true;
+  else if(nb < na)
+    return false;
+  else
+  {
+    //return a < b;
+    // is this correct? ...needs tests - no, i think, when the number of 1 bits is 
+    // equal in a,b, we need to figure out which of the two has its rightmost bit further to the
+    // right - and if both have their rightmost bit in the same position, zero it out and see who 
+    // has then its rightmost bit further right...and so on
+
+    int c = rsCompareByRightmostBit(a, b);
+    if(c == -1)
+      return true;
+    else
+      return false;
+  }
+}
+// todo: test this 
+
+
+
+
+
+
+
 
 
 
@@ -3982,6 +4065,20 @@ public:
   void geometricProduct(const Vec& a, const Vec& b, Vec& p) const;
 
 
+  /** Counts the number of basis vector swaps required to get ’a’ and ’b’ into canonical order. 
+  Arguments ’a’ and ’b’ are both bitmaps representing basis blades.
+  adapted from "Geometric Algebra for Computer Science", page 514   */ 
+  static int rsCanonicalReorderingSign(int a, int b);
+
+  /** Computes the (geometric or outer) product of the two basis blades represented by the integers
+  a and b and their associated weights wa, wb and stores the result in ab/wab. 
+  adapted from "Geometric Algebra for Computer Science", page 515  */
+  static void rsBasisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false);
+
+  /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
+  the geometric algebra nD Euclidean space. */
+  static void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& weights);
+
 
 protected:
 
@@ -3998,9 +4095,95 @@ protected:
 };
 
 template<class T>
+int rsGeometricAlgebra<T>::rsCanonicalReorderingSign(int a, int b)
+{
+  a = a >> 1;
+  int sum = 0;
+  while (a != 0) {
+    sum = sum + rsBitCount(a & b);
+    a = a >> 1; }
+  return ((sum & 1) == 0) ? 1 : -1; //  even number of swaps: 1, else -1
+}
+
+template<class T>
+void rsGeometricAlgebra<T>::rsBasisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, 
+  bool outer) 
+{
+  if(outer && ((a & b) != 0)) {
+    ab = 0; wab = 0.0; return; }               // outer product is zero if a and b are independent
+  ab = a ^ b;                                  // compute the product bitmap
+  int sign = rsCanonicalReorderingSign(a, b);  // compute the sign change due to reordering
+  wab = T(sign) * wa * wb;                     // compute weight of product blade
+}
+// maybe get rid of wab - absorb the sign in ab - nope: that does not work when ab == 0
+
+template<class T>
+void rsGeometricAlgebra<T>::rsBuildCayleyTables(int numDimensions, 
+  rsMatrix<int>& blades, rsMatrix<T>& weights)
+{
+  // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
+  // numZeroDimensions
+
+  int n = numDimensions;
+  int N = rsPowInt(2, n);  // size of the matrices
+  blades.setShape(N, N);
+  weights.setShape(N, N);
+
+  // Create a map of the basis blades that converts from their bit-based to the more natural 
+  // ordering. In the bit based ordering, a bit with value 1 in the integer indicates the presence
+  // of a particular basis-vector in the given basis blade. In the natural ordering, we want the 
+  // scalar first, then the bivectors and then the trivectors, etc.
+  //
+  // 3D:
+  // 0   1   2   3   4   5   6   7       array position/index
+  // 1   e1  e2  e3  e12 e13 e23 e123    blade name
+  // 000 001 010 100 011 101 110 111     binary code (has a 1 for each balde present)
+  // 0   1   2   4   3   5   6   7       code translated to number
+  //
+  // 4D:
+  // 0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15
+  // 1    e1   e2   e3   e4   e12  e13  e14  e23  e24  e34  e123 e124 e134 e234 e1234
+  // 0000 0001 0010 0100 1000 0011 0101 1001 0110 1010 1100 0111 1011 1101 1110 1111
+  // 0    1    2    4    8    3    5    9    6    10   12   7    11   13   14   15
+  std::vector<int> map(N), unmap(N);
+  for(int i = 0; i < N; i++)
+    map[i] = i;
+  rsHeapSort(&map[0], N, &rsBitLess);
+  for(int i = 0; i < N; i++)
+    unmap[map[i]] = i;
+  // maybe factor out into createBasisBladeReorderMap
+
+
+  for(int i = 0; i < N; i++)
+  {
+    for(int j = 0; j < N; j++)
+    {
+      int a  = map[i];  // 1st factor blade
+      int b  = map[j];  // 2nd factor blade
+      T   wa = T(1);    // 1st weight
+      T   wb = T(1);    // 2nd weight
+      int ab;           // product blade
+      T wab;            // product weight
+      // Are wa, wb correct? where are they supposed to come from? is this, where the +/-/0 type of 
+      // the basis-vectors gets incorporated?
+
+      rsBasisBladeProduct(a, wa, b, wb, ab, wab);
+      //blades( i, j) = ab;
+      //blades( i, j) = map[ab];
+      blades( i, j) = unmap[ab];
+      weights(i, j) = wab;  
+    }
+  }
+
+}
+
+template<class T>
 void rsGeometricAlgebra<T>::init()
 {
-  // todo: fill the Cayley table(s)
+  rsBuildCayleyTables(n, indicesGeom, weightsGeom);  // fill Cayley table for geometric product
+
+  // todo: maybe create and store the n-th line of Pascal's triangle - this is useful for 
+  // extracting the coeffs for a particular grade
 
   int dummy = 0;
 }
@@ -4034,10 +4217,10 @@ public:
   {
     alg = algebraToUse;
     coeffs.resize(alg->getMultiVectorSize());
-
-    //n = dimensionality;
-    //coeffs.resize(n);
   }
+
+  void randomIntegers(int min, int max, int seed)
+  { RAPT::rsArrayTools::fillWithRandomIntegers(&coeffs[0], (int)coeffs.size(), min, max, seed); }
 
 
   rsMultiVector<T> operator*(const rsMultiVector<T>& b) const
@@ -4046,35 +4229,15 @@ public:
     // todo: relax that later - the output is a multivector of dimension max(n, b.n)
 
     rsMultiVector<T> p(alg);
-    alg->geometricProduct(*this, b, p.coeffs);
+    alg->geometricProduct(this->coeffs, b.coeffs, p.coeffs);
     return p;
   }
-
-  /*
-  rsMultiVector<T> operator*(const rsMultiVector<T>& b) const
-  {
-    rsAssert(b.n == n);
-    // todo: relax that later - the output is a multivector of dimension max(n, b.n)
-
-    rsMultiVector<T> c(n);
-    const rsMatrix<T>&   factorMap = factorMaps[n];
-    const rsMatrix<int>& indexMap  = indexMaps[n];
-
-
-    int dummy = 0;
-  }
-  */
-
-
 
 
 protected:
 
   std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
   rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
-
-  //static std::vector<rsMatrix<T>>   factorMaps;
-  //static std::vector<rsMatrix<int>> indexMaps;
 
 };
 
@@ -4107,7 +4270,7 @@ protected:
 
 };
 
-
+//=================================================================================================
 
 
 

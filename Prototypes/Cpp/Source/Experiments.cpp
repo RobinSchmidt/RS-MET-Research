@@ -6215,81 +6215,6 @@ void testExteriorAlgebra3D()
   int dummy = 0;
 }
 
-// taken from
-// https://www.geeksforgeeks.org/count-set-bits-in-an-integer/
-/** Counts the number of bits with value 1 in the given number n. */
-int rsBitCount(int n)
-{
-  int count = 0;
-  while(n) { n &= n-1; count++; }
-  return count;
-}
-
-/** Returns the index of the rightmost 1 bit, counting from right to left */
-int rsRightmostBit(int n)
-{
-  int mask = 1;
-  int numBits = 8 * sizeof(int);
-  for(int i = 0; i < numBits; i++)
-  {
-    if(n & mask)
-      return i;
-    mask = (mask << 1) + 1;  // shift one bit to left and fill set righmost bit to 1
-  }
-  return -1;
-}
-
-bool rsIsBit1(int a, int bit)
-{
-  return (a >> bit) & 1;
-}
-
-// -1 if a < b, +1 if a > b, 0 if a == b
-int rsCompareByRightmostBit(int a, int b)
-{
-  int numBits = 8 * sizeof(int);
-  for(int i = 0; i < numBits; i++)
-  {
-    bool aiIs1 = rsIsBit1(a, i);
-    bool biIs1 = rsIsBit1(b, i);
-    if(aiIs1 && !biIs1) return -1;
-    if(biIs1 && !aiIs1) return +1;
-  }
-  return 0;
-}
-// maybe make internal to rsBitLess
-
-/** A function used as comparison function for sorting the blades into their more natural 
-order... */
-bool rsBitLess(const int& a, const int& b)  // rename
-{
-  int na = rsBitCount(a);
-  int nb = rsBitCount(b);
-  if(na < nb)
-    return true;
-  else if(nb < na)
-    return false;
-  else
-  {
-    //return a < b;
-    // is this correct? ...needs tests - no, i think, when the number of 1 bits is 
-    // equal in a,b, we need to figure out which of the two has its rightmost bit further to the
-    // right - and if both have their rightmost bit in the same position, zero it out and see who 
-    // has then its rightmost bit further right...and so on
-
-
-    int c = rsCompareByRightmostBit(a, b);
-    if(c == -1)
-      return true;
-    else
-      return false;
-  }
-
-
-
-}
-// todo: test this 
-
 
 
 
@@ -6485,7 +6410,7 @@ void testGeometricAlgebra()
 {
   testBitTwiddling();
 
-  using Real = float;
+  using Real = double;
 
   rsMatrix<int>  blades;
   rsMatrix<Real> weights;
@@ -6495,7 +6420,14 @@ void testGeometricAlgebra()
   using MV = rsMultiVector<Real>;
   rsGeometricAlgebra<Real> alg3(3); // later use alg300
 
+  MV a(&alg3), b(&alg3); // a = 3,8,7,4,6,4,6,5  b = 4,5,7,1,4,7,6,1
+  a.randomIntegers(+1, +9, 0);
+  b.randomIntegers(+1, +9, 1);
+  MV c = a*b;            // c = 12,1,72,29,84,-5,28,46 -> correct!
 
+  // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
+  // the algebra and then enter the product via the syntax:
+  // (3+8e1+7e2+4e3+6e12+4e13+6e23+5e123) * (4+5e1+7e2+1e3+4e12+7e13+6e23+1e123)
 
   int dummy = 0;
   // this matches what https://bivector.net/tools.html gives, but i'm not sure if we need to use

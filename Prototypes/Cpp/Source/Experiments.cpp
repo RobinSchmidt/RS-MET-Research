@@ -6352,11 +6352,16 @@ void testGeometricAlgebra()
 
   // test with different signatures: 201, 210, 111, ... this here has signature 300
 
-  GA alg201(2,0,1);          // 2D Euclidean Projective Geometric Algebra
+  // 2D Euclidean Projective Geometric Algebra. Elements represent lines (vectors) and points 
+  // (bivectors). The even subalgebra is isomorphic to the planar quaternions and includes all 
+  // isometries (metric preserving translations and rotations) in 2D.
+  GA alg201(2,0,1); 
   a.setAlgebra(&alg201);
   b.setAlgebra(&alg201);
-  c = a*b;
-  // some coeffs match, but we should get more zeros
+  c = a*b; //ok &= c == Vec({77,61,51,0,57,0,0,0});
+  c = a^b; //ok &= c == Vec({12,47,49,0,57,0,0,0});
+  // some coeffs match, but we should get more zeros - it seems, bivector.net puts the zero 
+  // dimensions first: z,p,n not p,n,z
 
 
 

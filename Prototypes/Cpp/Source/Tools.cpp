@@ -4070,10 +4070,25 @@ public:
   adapted from "Geometric Algebra for Computer Science", page 515  */
   static void basisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false);
 
+  /** under construction 
+  Given a blade bitmap B and a signature (p,n,z) for the number of positive, negative and zero 
+  basis vectors, this computes the weight for the blade which is one of -1,0,+1.   */
+  static int basisBladeWeight(int B, int p, int n, int z);
+
+  /** Creates the forward and backward mapping between basis blade indices and their bitmap 
+  representations. map[i] expects an basis blade index i in their natural order and returns the 
+  corresponding bitmap whereas unmap[i] expects the bitmap and returns the corresponding index. N
+  ist the number of basis blades which is 2^n for an nD space. */
+  static void reorderMap(std::vector<int>& map, std::vector<int>& unmap, int N);
+  // find better name
+
+
   /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
   the geometric algebra nD Euclidean space. */
   static void buildCayleyTables(int numDimensions, rsMatrix<int>& blades, 
     rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner);
+
+
 
 
 protected:
@@ -4120,21 +4135,26 @@ void rsGeometricAlgebra<T>::basisBladeProduct(
 }
 
 template<class T>
-void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& blades, 
-  rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner)
+int rsGeometricAlgebra<T>::basisBladeWeight(int B, int np, int nn, int nz)
 {
-  // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
-  // numZeroDimensions
+  return 1;  // preliminary
+}
+// see:
+// https://bivector.net/PGA4CS.html
+// pg 516 of GAfCS, or BasisBlade.java in referecne implementation, line 206
 
-  int n = numDimensions;
-  int N = rsPowInt(2, n);  // size of the matrices
-  blades.setShape(N, N);
-  weightsGeom.setShape(N, N);
-  weightsOuter.setShape(N, N);
-  weightsInner.setShape(N, N);
+template<class T>
+void rsGeometricAlgebra<T>::reorderMap(std::vector<int>& map, std::vector<int>& unmap, int N)
+{
+  map.resize(N);
+  unmap.resize(N);
+  for(int i = 0; i < N; i++)
+    map[i] = i;
+  rsHeapSort(&map[0], N, &rsBitLess);
+  for(int i = 0; i < N; i++)
+    unmap[map[i]] = i;
 
-
-  // Create a map of the basis blades that converts from their bit-based to the more natural 
+  // Creates a map of the basis blades that converts from their bit-based to the more natural 
   // ordering. In the bit based ordering, a bit with value 1 in the integer indicates the presence
   // of a particular basis-vector in the given basis blade. In the natural ordering, we want the 
   // scalar first, then the bivectors and then the trivectors, etc.
@@ -4150,27 +4170,44 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& 
   // 1    e1   e2   e3   e4   e12  e13  e14  e23  e24  e34  e123 e124 e134 e234 e1234
   // 0000 0001 0010 0100 1000 0011 0101 1001 0110 1010 1100 0111 1011 1101 1110 1111
   // 0    1    2    4    8    3    5    9    6    10   12   7    11   13   14   15
-  std::vector<int> map(N), unmap(N);
-  for(int i = 0; i < N; i++)
-    map[i] = i;
-  rsHeapSort(&map[0], N, &rsBitLess);
-  for(int i = 0; i < N; i++)
-    unmap[map[i]] = i;
-  // maybe factor out into createBasisBladeReorderMap
+}
+
+template<class T>
+void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& blades, 
+  rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner)
+{
+  // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
+  // numZeroDimensions or take an array of metric coeffs - for a 3,2,1 algebra, it would look like
+  // [1 1 1 -1 -1 0]
+
+  int n = numDimensions;
+  int N = rsPowInt(2, n);  // size of the matrices
+  blades.setShape(N, N);
+  weightsGeom.setShape(N, N);
+  weightsOuter.setShape(N, N);
+  weightsInner.setShape(N, N);
+  std::vector<int> map, unmap;
+  reorderMap(map, unmap, N);    // to map back and forth between blade index and its bitmap
+
+
 
 
   for(int i = 0; i < N; i++)
   {
     for(int j = 0; j < N; j++)
     {
-      int a  = map[i];  // 1st factor blade
-      int b  = map[j];  // 2nd factor blade
+      int a  = map[i];  // bitmap representing 1st factor blade
+      int b  = map[j];  // bitmap representing 2nd factor blade
       T   wa = T(1);    // 1st weight
       T   wb = T(1);    // 2nd weight
       int ab;           // product blade
       T wab;            // product weight
       // Are wa, wb correct? where are they supposed to come from? is this, where the +/-/0 type of 
       // the basis-vectors gets incorporated?
+
+
+      // i,j are the natural blade indices, a,b are the bitmaps that represent the i-th and j-th 
+      // blade respectively
 
       basisBladeProduct(a, wa, b, wb, ab, wab);
       blades(i, j) = unmap[ab];  // or should it be map[ab] or just ab?

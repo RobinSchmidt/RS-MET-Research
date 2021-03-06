@@ -6350,22 +6350,24 @@ void testGeometricAlgebra()
   c = a*b; ok &= c == Vec({10,21,30,81,30,55,28,46});
   c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
 
-  // test with different signatures: 201, 210, 111, ... this here has signature 300
 
   // 2D Euclidean Projective Geometric Algebra. Elements represent lines (vectors) and points 
   // (bivectors). The even subalgebra is isomorphic to the planar quaternions and includes all 
   // isometries (metric preserving translations and rotations) in 2D.
-  GA alg201(2,0,1); 
-  a.setAlgebra(&alg201);
-  b.setAlgebra(&alg201);
-  c = a*b; //ok &= c == Vec({77,61,51,0,57,0,0,0});
-  c = a^b; //ok &= c == Vec({12,47,49,0,57,0,0,0});
+  GA alg201(2,0,1); a.setAlgebra(&alg201); b.setAlgebra(&alg201);
+  c = a*b; ok &= c == Vec({29,1,31,19,84,-5,21,46});
+  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});  // same as for 120
   // some coeffs match, but we should get more zeros - it seems, bivector.net puts the zero 
   // dimensions first: z,p,n not p,n,z
+  // maybe i need to change the expression in the evaulator field because it involves e0,e1,e2
+  // instead of e1,e2,e3
 
+  // Custom:
+  GA alg111(1,1,1); a.setAlgebra(&alg111); b.setAlgebra(&alg111);
+  c = a*b; //ok &= c == Vec({27,33,51,0,57,0,0,0});
+  c = a^b; 
 
-
-
+  // try 102
 
 
   int dummy = 0;
@@ -6373,6 +6375,11 @@ void testGeometricAlgebra()
   // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
   // the algebra and then enter the product via the syntax:
   // (3+8e1+7e2+4e3+6e12+4e13+6e23+5e123) * (4+5e1+7e2+1e3+4e12+7e13+6e23+1e123)
+  // or:
+  // (3+8e0+7e1+4e2+6e01+4e02+6e12+5e012) * (4+5e0+7e1+1e2+4e01+7e02+6e12+1e012)
+  // the former notation is required when there are no zero dimensions and the latter where there
+  // are some
+
   // more info about the code generator can be found here:
   // https://github.com/enkimute/ganja.js
 

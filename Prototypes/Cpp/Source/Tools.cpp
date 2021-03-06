@@ -4278,10 +4278,14 @@ void rsGeometricAlgebra<T>::init()
   // create the metric for the given signature ( maybe factor out into getMetric(p, n, z)
   std::vector<T> M(n);
   int i;
-  for(i = 0; i < np;       i++) M[i] = T(+1);
-  for(i = i; i < np+nn;    i++) M[i] = T(-1);
-  for(i = i; i < np+nn+nz; i++) M[i] = T( 0);
+  //for(i = 0; i < np;       i++) M[i] = T(+1);
+  //for(i = i; i < np+nn;    i++) M[i] = T(-1);
+  //for(i = i; i < np+nn+nz; i++) M[i] = T( 0);
 
+  // puts zero dimensions first - but also doesn't work:
+  for(i = 0; i < nz;       i++) M[i] = T( 0);
+  for(i = i; i < nz+np;    i++) M[i] = T(+1);
+  for(i = i; i < nz+np+nn; i++) M[i] = T(-1);
 
 
   buildCayleyTables(M, bladeIndices, weightsGeom, weightsOuter, weightsInner);

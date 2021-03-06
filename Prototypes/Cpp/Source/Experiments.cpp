@@ -6312,20 +6312,24 @@ void testGeometricAlgebra()
   using MV   = rsMultiVector<Real>;
   using Vec  = std::vector<Real>;
 
+
+  bool ok = true;
+
+  /*
   rsMatrix<int>  blades;
   rsMatrix<Real> weightsGeom, weightsOuter, weightsInner;
   GA::buildCayleyTables(3, blades, weightsGeom, weightsOuter, weightsInner);
   GA::buildCayleyTables(4, blades, weightsGeom, weightsOuter, weightsInner);
-
-  bool ok = true;
-
   bool sym; 
   sym = blades.isSymmetric();       // this should always be the case, i think
   ok &= sym;
   sym = weightsInner.isSymmetric(); // not symmetric
+  */
 
-  GA alg3(3); // later use alg300
-
+  // 3D Geometric Algebra (or 2D Elliptic Projective Geometric Algebra). Elements represent 
+  // lines/planes through the origin (or vectors/bivectors). The even subalgebra is isomorphic to
+  // the quaternions.
+  GA alg3(3);
   MV a(&alg3), b(&alg3); 
   a.randomIntegers(+1, +9, 0);           // a = 3,8,7,4,6,4,6,5  
   b.randomIntegers(+1, +9, 1);           // b = 4,5,7,1,4,7,6,1
@@ -6335,7 +6339,31 @@ void testGeometricAlgebra()
   c = b*a; ok &= c == Vec({12,21,104,-43,6,-5,122,46}); 
   c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
 
+  // 2D Hyperbolic Projective Geometric Algebra. Elements represent lines (vectors) and points 
+  // (bivectors). The even subalgebra includes hyperbolic rotations and translations.
+  GA alg210(2,1,0); a.setAlgebra(&alg210); b.setAlgebra(&alg210);
+  c = a*b; ok &= c == Vec({142,121,30,29,30,-5,28,46});
+  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});    // same as for 300
+
+  // Custom:
+  GA alg120(1,2,0); a.setAlgebra(&alg120); b.setAlgebra(&alg120);
+  c = a*b; ok &= c == Vec({10,21,30,81,30,55,28,46});
+  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
+
   // test with different signatures: 201, 210, 111, ... this here has signature 300
+
+  GA alg201(2,0,1);          // 2D Euclidean Projective Geometric Algebra
+  a.setAlgebra(&alg201);
+  b.setAlgebra(&alg201);
+  c = a*b;
+  // some coeffs match, but we should get more zeros
+
+
+
+
+
+
+  int dummy = 0;
 
   // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
   // the algebra and then enter the product via the syntax:
@@ -6372,7 +6400,7 @@ void testGeometricAlgebra()
 
 
 
-  int dummy = 0;
+
   // this matches what https://bivector.net/tools.html gives, but i'm not sure if we need to use
   // the reverse mapping as in blades( i, j) = unmap[ab]; ...in this special case, the map and the 
   // reverse map are the same. todo: try another case

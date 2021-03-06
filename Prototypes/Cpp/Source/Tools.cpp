@@ -4072,7 +4072,7 @@ public:
   adapted from "Geometric Algebra for Computer Science", page 515  */
   static void basisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false);
 
-  static void basisBladeProduct(int a, int b, std::vector<T> M, int& ab, T& w);
+  static void basisBladeProduct(int a, int b, std::vector<T>& M, int& ab, T& w);
 
 
   /** under construction 
@@ -4090,7 +4090,7 @@ public:
 
   /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
   the geometric algebra nD Euclidean space. */
-  static void buildCayleyTables(int numDimensions, rsMatrix<int>& blades, 
+  static void buildCayleyTables(std::vector<T>& M, rsMatrix<int>& blades, 
     rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner);
 
 
@@ -4140,7 +4140,7 @@ void rsGeometricAlgebra<T>::basisBladeProduct(
 }
 
 template<class T>
-void rsGeometricAlgebra<T>::basisBladeProduct(int a, int b, std::vector<T> M, int& ab, T& w)
+void rsGeometricAlgebra<T>::basisBladeProduct(int a, int b, std::vector<T>& M, int& ab, T& w)
 {
   basisBladeProduct(a, T(1), b, T(1), ab, w, false);
   int tmp = a & b;       // compute the meet (bitmap of annihilated vectors)
@@ -4220,14 +4220,10 @@ void rsGeometricAlgebra<T>::reorderMap(std::vector<int>& map, std::vector<int>& 
 }
 
 template<class T>
-void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& blades, 
+void rsGeometricAlgebra<T>::buildCayleyTables(std::vector<T>& M, rsMatrix<int>& blades, 
   rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner)
 {
-  // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
-  // numZeroDimensions or take an array of metric coeffs - for a 3,2,1 algebra, it would look like
-  // [1 1 1 -1 -1 0]
-
-  int n = numDimensions;
+  int n = (int) M.size();
   int N = rsPowInt(2, n);  // size of the matrices
   blades.setShape(N, N);
   weightsGeom.setShape(N, N);
@@ -4236,17 +4232,14 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& 
   std::vector<int> map, unmap;
   reorderMap(map, unmap, N);    // to map back and forth between blade index and its bitmap
 
-
-
-
   for(int i = 0; i < N; i++)
   {
     for(int j = 0; j < N; j++)
     {
       int a  = map[i];  // bitmap representing 1st factor blade
       int b  = map[j];  // bitmap representing 2nd factor blade
-      T   wa = T(1);    // 1st weight
-      T   wb = T(1);    // 2nd weight
+      //T   wa = T(1);    // 1st weight
+      //T   wb = T(1);    // 2nd weight
       int ab;           // product blade
       T wab;            // product weight
       // Are wa, wb correct? where are they supposed to come from? is this, where the +/-/0 type of 
@@ -4256,8 +4249,9 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& 
       // i,j are the natural blade indices, a,b are the bitmaps that represent the i-th and j-th 
       // blade respectively
 
-      basisBladeProduct(a, wa, b, wb, ab, wab); // old
-      //basisBladeProduct(a, b, M, ab, wab);  // new - needs metric M: array of +1,0,-1
+      //basisBladeProduct(a, wa, b, wb, ab, wab); // old
+
+      basisBladeProduct(a, b, M, ab, wab);  // new - needs metric M: array of +1,0,-1
 
       blades(i, j) = unmap[ab];  // or should it be map[ab] or just ab?
       weightsGeom(i, j) = wab;
@@ -4281,7 +4275,16 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& 
 template<class T>
 void rsGeometricAlgebra<T>::init()
 {
-  buildCayleyTables(n, bladeIndices, weightsGeom, weightsOuter, weightsInner);
+  // create the metric for the given signature ( maybe factor out into getMetric(p, n, z)
+  std::vector<T> M(n);
+  int i;
+  for(i = 0; i < np;       i++) M[i] = T(+1);
+  for(i = i; i < np+nn;    i++) M[i] = T(-1);
+  for(i = i; i < np+nn+nz; i++) M[i] = T( 0);
+
+
+
+  buildCayleyTables(M, bladeIndices, weightsGeom, weightsOuter, weightsInner);
   // fill Cayley tables for geometric, outer and inner product
 
   // todo: maybe create and store the n-th line of Pascal's triangle - this is useful for 

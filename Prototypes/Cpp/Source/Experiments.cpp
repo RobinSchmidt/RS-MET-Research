@@ -6316,6 +6316,10 @@ void testGeometricAlgebra()
   GA::buildCayleyTables(3, blades, weightsGeom, weightsOuter, weightsInner);
   GA::buildCayleyTables(4, blades, weightsGeom, weightsOuter, weightsInner);
 
+  bool sym; 
+  sym = blades.isSymmetric();       // this should always be the case, i think
+  sym = weightsInner.isSymmetric(); // not symmetric
+
   GA alg3(3); // later use alg300
 
   MV a(&alg3), b(&alg3); // a = 3,8,7,4,6,4,6,5  b = 4,5,7,1,4,7,6,1

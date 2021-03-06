@@ -4032,10 +4032,14 @@ public:
   using Vec = std::vector<T>; // for conevenience
 
 
-  rsGeometricAlgebra(int numDimensions)
+  rsGeometricAlgebra(int numPositiveDimensions, int numNegativeDimensions = 0, 
+    int numZeroDimensions = 0)
   {
-    n = numDimensions;
-    N = RAPT::rsPowInt(2, n);
+    np = numPositiveDimensions;
+    nn = numNegativeDimensions;
+    nz = numZeroDimensions;
+    n  = np + nn + nz;
+    N  = RAPT::rsPowInt(2, n);
     init();
   }
 
@@ -4079,9 +4083,12 @@ protected:
 
   void init();
 
-  int n = 0; // later: np, nn, nz (positive, negative, zero) for basis vectors that square to
-             // +1, -1, 0   ->   n = np + nn + nz
-  int N = 1;
+
+  int np = 0;  // number of basis vectors that square to +1 ("positive dimensions")
+  int nn = 0;  // number of basis vectors that square to -1 ("negative dimensions")
+  int nz = 0;  // number of basis vectors that square to  0 ("zero dimensions")
+  int n  = 0;  // n = np + nn + nz, the dimensionality of the vector space
+  int N  = 1;  // N = 2^n, the dimensionality of the multivector space
 
   // The Cayley tables for the various products:
   rsMatrix<int> bladeIndices;
@@ -4175,7 +4182,11 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& 
 
       weightsInner(i, j) = weightsGeom(i, j) - weightsOuter(i, j); 
       // is this correct? nope! produces wrong results i think, it's because a*b = a|b + a^b holds
-      // only for vectors but not in general for multivectors?
+      // only for vectors but not in general for multivectors? ...hmmm...maybe it's a matter of 
+      // definition? there seems to be no general consensus yet, how the inner product should be 
+      // defined. maybe, it's actually a useful definition, if we define it in a way that honors 
+      // geom = inner + outer? would this definition also obey the grade raising/lowering when 
+      // applied to blades? ...try it!
     }
   }
 
@@ -4220,13 +4231,24 @@ public:
   // todo: implement inner, outer and geometric product
 
   rsMultiVector(rsGeometricAlgebra<T>* algebraToUse)
+  { setAlgebra(algebraToUse); }
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup */
+
+  /** Sets the geometric algebra to use for operations involving this multivector. */
+  void setAlgebra(rsGeometricAlgebra<T>* algebraToUse)
   {
     alg = algebraToUse;
     coeffs.resize(alg->getMultiVectorSize());
   }
 
+  /** Sets the coefficients to random integers in the given range. */
   void randomIntegers(int min, int max, int seed)
   { RAPT::rsArrayTools::fillWithRandomIntegers(&coeffs[0], (int)coeffs.size(), min, max, seed); }
+
+
+
 
 
 

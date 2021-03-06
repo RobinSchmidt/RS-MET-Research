@@ -6315,17 +6315,6 @@ void testGeometricAlgebra()
 
   bool ok = true;
 
-  /*
-  rsMatrix<int>  blades;
-  rsMatrix<Real> weightsGeom, weightsOuter, weightsInner;
-  GA::buildCayleyTables(3, blades, weightsGeom, weightsOuter, weightsInner);
-  GA::buildCayleyTables(4, blades, weightsGeom, weightsOuter, weightsInner);
-  bool sym; 
-  sym = blades.isSymmetric();       // this should always be the case, i think
-  ok &= sym;
-  sym = weightsInner.isSymmetric(); // not symmetric
-  */
-
   // 3D Geometric Algebra (or 2D Elliptic Projective Geometric Algebra). Elements represent 
   // lines/planes through the origin (or vectors/bivectors). The even subalgebra is isomorphic to
   // the quaternions.
@@ -6345,27 +6334,27 @@ void testGeometricAlgebra()
   c = a*b; ok &= c == Vec({142,121,30,29,30,-5,28,46});
   c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});    // same as for 300
 
-  // Custom:
-  GA alg120(1,2,0); a.setAlgebra(&alg120); b.setAlgebra(&alg120);
-  c = a*b; ok &= c == Vec({10,21,30,81,30,55,28,46});
-  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
-
-
   // 2D Euclidean Projective Geometric Algebra. Elements represent lines (vectors) and points 
   // (bivectors). The even subalgebra is isomorphic to the planar quaternions and includes all 
   // isometries (metric preserving translations and rotations) in 2D.
   GA alg201(2,0,1); a.setAlgebra(&alg201); b.setAlgebra(&alg201);
   c = a*b; ok &= c == Vec({29,1,31,19,84,-5,21,46});
   c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});  // same as for 120
-  // some coeffs match, but we should get more zeros - it seems, bivector.net puts the zero 
-  // dimensions first: z,p,n not p,n,z
-  // maybe i need to change the expression in the evaulator field because it involves e0,e1,e2
-  // instead of e1,e2,e3
+
+  // Custom:
+  GA alg120(1,2,0); a.setAlgebra(&alg120); b.setAlgebra(&alg120);
+  c = a*b; ok &= c == Vec({10,21,30,81,30,55,28,46});
+  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46}); 
 
   // Custom:
   GA alg111(1,1,1); a.setAlgebra(&alg111); b.setAlgebra(&alg111);
-  c = a*b; //ok &= c == Vec({27,33,51,0,57,0,0,0});
-  c = a^b; 
+  c = a*b; ok &= c == Vec({93,121,67,19,30,-5,21,46});
+  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
+
+  // Custom:
+  GA alg003(0,0,3); a.setAlgebra(&alg003); b.setAlgebra(&alg003);
+  c = a*b; ok &= c == Vec({12,47,49,19,57,25,21,46});
+  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
 
   // try 102
 

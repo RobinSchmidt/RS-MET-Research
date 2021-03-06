@@ -4029,9 +4029,12 @@ class rsGeometricAlgebra
 
 public:
 
-  using Vec = std::vector<T>; // for conevenience
+  using Vec = std::vector<T>; // for conevenience ..use MV
 
-
+  /** Creates an algebra object with given signature, i.e. given number of basis vectors that 
+  square to +1, -1 and 0 respectively. Note that even though the zero-dimensions are specified 
+  last, their basis-vectors will appear first, adhering to the convention used at 
+  bivector.net. */
   rsGeometricAlgebra(int numPositiveDimensions, int numNegativeDimensions = 0, 
     int numZeroDimensions = 0)
   {
@@ -4043,17 +4046,21 @@ public:
     init();
   }
 
+  /** Returns the dimensionality of the vector space. */
   int getNumDimensions() const { return n; }
 
+  /** Returns the size of the multivectors, i.e. the dimensionality of the vector space. If the
+  dimensionality of the underlying vectors space is n, then this is 2^n. */
   int getMultiVectorSize() const { return N; }
-  // maybe use value stored in the numRows/Cols of the matrices
 
 
-
+  /** Given multivectors a and b, this computes their geometric product and stores it in p. */
   void geometricProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsGeom); }
 
+  /** Given multivectors a and b, this computes their outer product and stores it in p. */
   void outerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsOuter); }
 
+  /** Given multivectors a and b, this computes their inner product and stores it in p. */
   void innerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsInner); }
 
 
@@ -4075,11 +4082,6 @@ public:
   static void basisBladeProduct(int a, int b, std::vector<T>& M, int& ab, T& w);
 
 
-  /** under construction 
-  Given a blade bitmap B and a signature (p,n,z) for the number of positive, negative and zero 
-  basis vectors, this computes the weight for the blade which is one of -1,0,+1.   */
-  static int basisBladeWeight(int B, int p, int n, int z);
-
   /** Creates the forward and backward mapping between basis blade indices and their bitmap 
   representations. map[i] expects an basis blade index i in their natural order and returns the 
   corresponding bitmap whereas unmap[i] expects the bitmap and returns the corresponding index. N
@@ -4087,13 +4089,10 @@ public:
   static void reorderMap(std::vector<int>& map, std::vector<int>& unmap, int N);
   // find better name
 
-
   /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
   the geometric algebra nD Euclidean space. */
   static void buildCayleyTables(std::vector<T>& M, rsMatrix<int>& blades, 
     rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner);
-
-
 
 
 protected:
@@ -4112,8 +4111,7 @@ protected:
 
   // The Cayley tables for the various products:
   rsMatrix<int> bladeIndices;
-  rsMatrix<T> weightsGeom, weightsOuter, weightsInner;
-  // maybe remove weightsInner
+  rsMatrix<T> weightsGeom, weightsOuter, weightsInner; // maybe remove weightsInner
 
 };
 
@@ -4151,44 +4149,9 @@ void rsGeometricAlgebra<T>::basisBladeProduct(int a, int b, std::vector<T>& M, i
     i++;
     tmp = tmp >> 1; }
 }
-
-/**
-* Computes the geometric product of two basis blades in limited non-Euclidean metric.
-* @param m is an array of doubles giving the metric for each basis vector.
-*/
-/*
-public static BasisBlade geometricProduct(BasisBlade a, BasisBlade b, double[] m) {
-  // compute the geometric product in Euclidean metric:
-  BasisBlade result = geometricProduct(a, b);
-
-  // compute the meet (bitmap of annihilated vectors):
-  int bitmap = a.bitmap & b.bitmap;
-
-  // change the scale according to the metric:
-  int i = 0;
-  while (bitmap != 0) {
-    if ((bitmap & 1) != 0) result.scale *= m[i];
-    i++;
-    bitmap = bitmap >> 1;
-  }
-
-  return result;
-}
-*/
-
-
-
-
-template<class T>
-int rsGeometricAlgebra<T>::basisBladeWeight(int B, int np, int nn, int nz)
-{
-  return 1;  // preliminary
-}
 // see:
 // https://bivector.net/PGA4CS.html
 // pg 516 of GAfCS, or BasisBlade.java in referecne implementation, line 206
-
-
 
 template<class T>
 void rsGeometricAlgebra<T>::reorderMap(std::vector<int>& map, std::vector<int>& unmap, int N)
@@ -4278,11 +4241,6 @@ void rsGeometricAlgebra<T>::init()
   // create the metric for the given signature ( maybe factor out into getMetric(p, n, z)
   std::vector<T> M(n);
   int i;
-  //for(i = 0; i < np;       i++) M[i] = T(+1);
-  //for(i = i; i < np+nn;    i++) M[i] = T(-1);
-  //for(i = i; i < np+nn+nz; i++) M[i] = T( 0);
-
-  // puts zero dimensions first - but also doesn't work:
   for(i = 0; i < nz;       i++) M[i] = T( 0);
   for(i = i; i < nz+np;    i++) M[i] = T(+1);
   for(i = i; i < nz+np+nn; i++) M[i] = T(-1);

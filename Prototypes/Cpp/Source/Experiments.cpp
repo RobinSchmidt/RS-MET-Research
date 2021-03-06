@@ -6305,33 +6305,43 @@ void testGeometricAlgebra()
   testBitTwiddling();
 
   // References:
-  // 1: Geometric Algebra for Computer Science
+  // 1: Geometric Algebra for Computer Science (GAfCS)
 
   using Real = double;
   using GA   = rsGeometricAlgebra<Real>;
   using MV   = rsMultiVector<Real>;
+  using Vec  = std::vector<Real>;
 
   rsMatrix<int>  blades;
   rsMatrix<Real> weightsGeom, weightsOuter, weightsInner;
   GA::buildCayleyTables(3, blades, weightsGeom, weightsOuter, weightsInner);
   GA::buildCayleyTables(4, blades, weightsGeom, weightsOuter, weightsInner);
 
+  bool ok = true;
+
   bool sym; 
   sym = blades.isSymmetric();       // this should always be the case, i think
+  ok &= sym;
   sym = weightsInner.isSymmetric(); // not symmetric
 
   GA alg3(3); // later use alg300
 
-  MV a(&alg3), b(&alg3); // a = 3,8,7,4,6,4,6,5  b = 4,5,7,1,4,7,6,1
-  a.randomIntegers(+1, +9, 0);
-  b.randomIntegers(+1, +9, 1);
-  MV c(&alg3), d(&alg3), e(&alg3);
-  c = a+b;
-  c = a*b;            // c = 12,1,72,29,84,-5,28,46    -> correct!
-  c = b*a;            // c = 12,21,104,-43,6,-5,122,46 -> correct!
-  c = a^b;            // c = 12,47,49,19,57,25,21,46   -> correct!
-  e = (c+d)*0.5;      // doesn't match bivector.net output for a|b
-  e = (c-d)*0.5;      // doesn't match bivector.net output for a^b
+  MV a(&alg3), b(&alg3); 
+  a.randomIntegers(+1, +9, 0);           // a = 3,8,7,4,6,4,6,5  
+  b.randomIntegers(+1, +9, 1);           // b = 4,5,7,1,4,7,6,1
+  MV c(&alg3); // d(&alg3), e(&alg3);
+  c = a+b; ok &= c == Vec({7,13,14,5,10,11,12,6});
+  c = a*b; ok &= c == Vec({12,1,72,29,84,-5,28,46});
+  c = b*a; ok &= c == Vec({12,21,104,-43,6,-5,122,46}); 
+  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
+
+  // test with different signatures: 201, 210, 111, ... this here has signature 300
+
+  // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
+  // the algebra and then enter the product via the syntax:
+  // (3+8e1+7e2+4e3+6e12+4e13+6e23+5e123) * (4+5e1+7e2+1e3+4e12+7e13+6e23+1e123)
+  // more info about the code generator can be found here:
+  // https://github.com/enkimute/ganja.js
 
 
   //c = a|b;            // c = 0,-46,23,10,27,-30,7,0 -> should be 12,1,72,29,45,-5,75,23
@@ -6360,11 +6370,7 @@ void testGeometricAlgebra()
   // can then be obtained by the equation a*b = a|b + a^b, so we get the table for the inner as
   // geom - outer?
 
-  // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
-  // the algebra and then enter the product via the syntax:
-  // (3+8e1+7e2+4e3+6e12+4e13+6e23+5e123) * (4+5e1+7e2+1e3+4e12+7e13+6e23+1e123)
-  // more info about the code generator can be found here:
-  // https://github.com/enkimute/ganja.js
+
 
   int dummy = 0;
   // this matches what https://bivector.net/tools.html gives, but i'm not sure if we need to use

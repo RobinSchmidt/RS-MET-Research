@@ -4057,6 +4057,8 @@ public:
   void innerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsInner); }
 
 
+  // move to protected - these are really implementation details:
+
   /** Counts the number of basis vector swaps required to get (the concatenation of?) "a" and "b" 
   into canonical order and returns -1, if this number is odd and +1 if it's even. Arguments "a" and
   "b" are both bitmaps representing basis blades. This is used to build the Cayley table for the 
@@ -4069,6 +4071,9 @@ public:
   a and b and their associated weights wa, wb and stores the result in ab/wab. 
   adapted from "Geometric Algebra for Computer Science", page 515  */
   static void basisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false);
+
+  static void basisBladeProduct(int a, int b, std::vector<T> M, int& ab, T& w);
+
 
   /** under construction 
   Given a blade bitmap B and a signature (p,n,z) for the number of positive, negative and zero 
@@ -4135,6 +4140,46 @@ void rsGeometricAlgebra<T>::basisBladeProduct(
 }
 
 template<class T>
+void rsGeometricAlgebra<T>::basisBladeProduct(int a, int b, std::vector<T> M, int& ab, T& w)
+{
+  basisBladeProduct(a, T(1), b, T(1), ab, w, false);
+  int tmp = a & b;       // compute the meet (bitmap of annihilated vectors)
+  int i = 0;
+  while(tmp != 0) {
+    if((tmp & 1) != 0) 
+      w *= M[i];         // change the scale according to the metric
+    i++;
+    tmp = tmp >> 1; }
+}
+
+/**
+* Computes the geometric product of two basis blades in limited non-Euclidean metric.
+* @param m is an array of doubles giving the metric for each basis vector.
+*/
+/*
+public static BasisBlade geometricProduct(BasisBlade a, BasisBlade b, double[] m) {
+  // compute the geometric product in Euclidean metric:
+  BasisBlade result = geometricProduct(a, b);
+
+  // compute the meet (bitmap of annihilated vectors):
+  int bitmap = a.bitmap & b.bitmap;
+
+  // change the scale according to the metric:
+  int i = 0;
+  while (bitmap != 0) {
+    if ((bitmap & 1) != 0) result.scale *= m[i];
+    i++;
+    bitmap = bitmap >> 1;
+  }
+
+  return result;
+}
+*/
+
+
+
+
+template<class T>
 int rsGeometricAlgebra<T>::basisBladeWeight(int B, int np, int nn, int nz)
 {
   return 1;  // preliminary
@@ -4142,6 +4187,8 @@ int rsGeometricAlgebra<T>::basisBladeWeight(int B, int np, int nn, int nz)
 // see:
 // https://bivector.net/PGA4CS.html
 // pg 516 of GAfCS, or BasisBlade.java in referecne implementation, line 206
+
+
 
 template<class T>
 void rsGeometricAlgebra<T>::reorderMap(std::vector<int>& map, std::vector<int>& unmap, int N)
@@ -4209,7 +4256,9 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& 
       // i,j are the natural blade indices, a,b are the bitmaps that represent the i-th and j-th 
       // blade respectively
 
-      basisBladeProduct(a, wa, b, wb, ab, wab);
+      basisBladeProduct(a, wa, b, wb, ab, wab); // old
+      //basisBladeProduct(a, b, M, ab, wab);  // new - needs metric M: array of +1,0,-1
+
       blades(i, j) = unmap[ab];  // or should it be map[ab] or just ab?
       weightsGeom(i, j) = wab;
 
@@ -4348,6 +4397,10 @@ public:
   */
 
 
+  bool operator==(const rsMultiVector<T>& b) const { return coeffs == b.coeffs; }
+
+
+  bool operator==(const std::vector<T>& b) const { return coeffs == b; }
 
 
   static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)

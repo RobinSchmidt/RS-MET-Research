@@ -4068,10 +4068,14 @@ public:
 
   /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
   the geometric algebra nD Euclidean space. */
-  static void buildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& weights);
+  static void buildCayleyTables(int numDimensions, rsMatrix<int>& blades, 
+    rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner);
 
 
 protected:
+
+  /** General product with weights passed as matrix */
+  void product(const Vec& a, const Vec& b, Vec& p, const rsMatrix<T>& weights) const;
 
   void init();
 
@@ -4080,8 +4084,8 @@ protected:
   int N = 1;
 
   // The Cayley tables for the various products:
-  rsMatrix<int> indicesGeom;
-  rsMatrix<T>   weightsGeom;
+  rsMatrix<int> bladeIndices;
+  rsMatrix<T> weightsGeom, weightsOuter, weightsInner;
 
 };
 
@@ -4108,8 +4112,8 @@ void rsGeometricAlgebra<T>::basisBladeProduct(
 }
 
 template<class T>
-void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, 
-  rsMatrix<int>& blades, rsMatrix<T>& weights)
+void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& blades, 
+  rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner)
 {
   // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
   // numZeroDimensions
@@ -4117,7 +4121,10 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions,
   int n = numDimensions;
   int N = rsPowInt(2, n);  // size of the matrices
   blades.setShape(N, N);
-  weights.setShape(N, N);
+  weightsGeom.setShape(N, N);
+  weightsOuter.setShape(N, N);
+  weightsInner.setShape(N, N);
+
 
   // Create a map of the basis blades that converts from their bit-based to the more natural 
   // ordering. In the bit based ordering, a bit with value 1 in the integer indicates the presence
@@ -4158,10 +4165,13 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions,
       // the basis-vectors gets incorporated?
 
       basisBladeProduct(a, wa, b, wb, ab, wab);
-      //blades( i, j) = ab;
-      //blades( i, j) = map[ab];
-      blades( i, j) = unmap[ab];
-      weights(i, j) = wab;  
+      blades(i, j) = unmap[ab];  // or should it be map[ab] or just ab?
+      weightsGeom(i, j) = wab;
+
+      // new - needs test:
+      if((a & b) != 0) wab = T(0);
+      weightsOuter(i, j) = wab;
+      weightsInner(i, j) = weightsGeom(i, j) - weightsOuter(i, j); // is this correct?
     }
   }
 
@@ -4170,7 +4180,8 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions,
 template<class T>
 void rsGeometricAlgebra<T>::init()
 {
-  buildCayleyTables(n, indicesGeom, weightsGeom);  // fill Cayley table for geometric product
+  buildCayleyTables(n, bladeIndices, weightsGeom, weightsOuter, weightsInner);
+  // fill Cayley tables for geometric, outer and inner product
 
   // todo: maybe create and store the n-th line of Pascal's triangle - this is useful for 
   // extracting the coeffs for a particular grade
@@ -4179,18 +4190,33 @@ void rsGeometricAlgebra<T>::init()
 }
 
 template<class T>
-void rsGeometricAlgebra<T>::geometricProduct(
-  const std::vector<T>& a, const std::vector<T>& b, std::vector<T>& p) const
+void rsGeometricAlgebra<T>::product(const std::vector<T>& a, const std::vector<T>& b, 
+  std::vector<T>& p, const RAPT::rsMatrix<T>& weights) const
 {
   rsFill(p, T(0));
   for(int i = 0; i < N; i++) {
     for(int j = 0; j < N; j++) {
-      int k = indicesGeom(i, j);
-      p[k] += weightsGeom(i, j) * a[i] * b[j]; }}
+      int k = bladeIndices(i, j);
+      p[k] += weights( i, j) * a[i] * b[j]; }}
 }
 // optimize! let j start at i -> this requires symmetrizing the matrices which may actually create
 // even more zeros due to cancellation (at least, in the outer product) which will in turn open 
 // more optimization opportunities when a sparse matrix implementation is used (...later...)
+
+template<class T>
+void rsGeometricAlgebra<T>::geometricProduct(
+  const std::vector<T>& a, const std::vector<T>& b, std::vector<T>& p) const
+{
+  product(a, b, p, weightsGeom);
+  /*
+  rsFill(p, T(0));
+  for(int i = 0; i < N; i++) {
+    for(int j = 0; j < N; j++) {
+      int k = bladeIndices(i, j);
+      p[k] += weightsGeom( i, j) * a[i] * b[j]; }}
+      */
+}
+
 
 
 

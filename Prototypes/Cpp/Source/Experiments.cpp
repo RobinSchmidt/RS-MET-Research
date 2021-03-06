@@ -6309,9 +6309,9 @@ void testGeometricAlgebra()
   using MV   = rsMultiVector<Real>;
 
   rsMatrix<int>  blades;
-  rsMatrix<Real> weights;
-  GA::buildCayleyTables(3, blades, weights);
-  GA::buildCayleyTables(4, blades, weights);
+  rsMatrix<Real> weightsGeom, weightsOuter, weightsInner;
+  GA::buildCayleyTables(3, blades, weightsGeom, weightsOuter, weightsInner);
+  GA::buildCayleyTables(4, blades, weightsGeom, weightsOuter, weightsInner);
 
   GA alg3(3); // later use alg300
 
@@ -6334,6 +6334,8 @@ void testGeometricAlgebra()
   // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
   // the algebra and then enter the product via the syntax:
   // (3+8e1+7e2+4e3+6e12+4e13+6e23+5e123) * (4+5e1+7e2+1e3+4e12+7e13+6e23+1e123)
+  // more info about the code generator can be found here:
+  // https://github.com/enkimute/ganja.js
 
   int dummy = 0;
   // this matches what https://bivector.net/tools.html gives, but i'm not sure if we need to use

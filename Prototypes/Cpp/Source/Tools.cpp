@@ -4223,16 +4223,60 @@ public:
   { RAPT::rsArrayTools::fillWithRandomIntegers(&coeffs[0], (int)coeffs.size(), min, max, seed); }
 
 
+
+  rsMultiVector<T> operator+(const rsMultiVector<T>& b) const
+  {
+    rsAssert(areCompatible(*this, b));
+    rsMultiVector<T> p(alg);
+    RAPT::rsArrayTools::add(&coeffs[0], &b.coeffs[0], &p.coeffs[0], (int)coeffs.size());
+    return p;
+  }
+
+  rsMultiVector<T> operator-(const rsMultiVector<T>& b) const
+  {
+    rsAssert(areCompatible(*this, b));
+    rsMultiVector<T> p(alg);
+    RAPT::rsArrayTools::subtract(&coeffs[0], &b.coeffs[0], &p.coeffs[0], (int)coeffs.size());
+    return p;
+  }
+
+  /** Geometric product between this multivector and multivector b. This is the main operation that
+  makes geometric algebra tick. */
   rsMultiVector<T> operator*(const rsMultiVector<T>& b) const
   {
-    rsAssert(b.coeffs.size() == coeffs.size());
-    // todo: relax that later - the output is a multivector of dimension max(n, b.n)
-
+    rsAssert(areCompatible(*this, b));
     rsMultiVector<T> p(alg);
     alg->geometricProduct(this->coeffs, b.coeffs, p.coeffs);
     return p;
   }
 
+  /** Product between this multivector and scalar s. */
+  rsMultiVector<T> operator*(const T& s) const
+  {
+    rsMultiVector<T> p(alg);
+    RAPT::rsArrayTools::scale(&coeffs[0], &p.coeffs[0], (int)coeffs.size(), s);
+    return p;
+  }
+
+  /** Outer (aka wedge, exterior) product between this multivector and multivector b. This is the 
+  antisymmetric part of the geometric product: a^b = (a*b - b*a)/2....but this seems to hold only,
+  if a and b are vectors, not for general multivectors? */
+  rsMultiVector<T> operator^(const rsMultiVector<T>& b) const
+  {
+    rsAssert(areCompatible(*this, b));
+    return ((*this * b) - (b * *this)) * T(0.5);
+  }
+  // nope! does not work in general
+
+
+
+  static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)
+  {
+    bool ok = a.coeffs.size() == b.coeffs.size();
+    ok &= a.alg == b.alg;
+    return ok;
+    // todo: try to relax that later: a 3D geometric algebra contains a 2D one as subalgebra
+  }
 
 protected:
 

@@ -6423,7 +6423,18 @@ void testGeometricAlgebra()
   MV a(&alg3), b(&alg3); // a = 3,8,7,4,6,4,6,5  b = 4,5,7,1,4,7,6,1
   a.randomIntegers(+1, +9, 0);
   b.randomIntegers(+1, +9, 1);
-  MV c = a*b;            // c = 12,1,72,29,84,-5,28,46 -> correct!
+  MV c(&alg3), d(&alg3), e(&alg3);
+  c = a+b;
+  c = a*b;            // c = 12,1,72,29,84,-5,28,46    -> correct!
+  d = b*a;            // d = 12,21,104,-43,6,-5,122,46 -> correct!
+  e = (c-d)*0.5;      // doesn't match bivector.net output for a^b
+  e = (c+d)*0.5;      // doesn't match bivector.net output for a|b
+  c = a^b;
+  // perhaps the identities a^b = (a*b - b*a)/2, a|b = (a*b + b*a)/2 hold only if a and b are 
+  // vectors but do not hold anymore for general multivectors?
+  // maybe create the cayley table also for the outer product - i guess the one for the inner
+  // can then be obtained by the equation a*b = a|b + a^b, so we get the table for the inner as
+  // geom - outer?
 
   // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
   // the algebra and then enter the product via the syntax:

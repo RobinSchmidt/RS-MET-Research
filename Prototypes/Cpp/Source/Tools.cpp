@@ -3947,10 +3947,8 @@ rsBiVector3D<T> operator*(const T& s, const rsBiVector3D<T>& v)
   return rsBiVector3D<T>(s * v.getSurfaceNormal());
 }
 
-
 //=================================================================================================
-
-
+// code for Geometric algebra
 
 // taken from
 // https://www.geeksforgeeks.org/count-set-bits-in-an-integer/
@@ -3981,7 +3979,6 @@ int rsRightmostBit(int n)
   }
   return -1;
 }
-
 
 // -1 if a < b, +1 if a > b, 0 if a == b
 int rsCompareByRightmostBit(int a, int b)
@@ -4026,15 +4023,6 @@ bool rsBitLess(const int& a, const int& b)  // rename
 // todo: test this 
 
 
-
-
-
-
-
-
-
-
-
 template<class T>
 class rsGeometricAlgebra
 {
@@ -4065,19 +4053,22 @@ public:
   void geometricProduct(const Vec& a, const Vec& b, Vec& p) const;
 
 
-  /** Counts the number of basis vector swaps required to get ’a’ and ’b’ into canonical order. 
-  Arguments ’a’ and ’b’ are both bitmaps representing basis blades.
+  /** Counts the number of basis vector swaps required to get (the concatenation of?) "a" and "b" 
+  into canonical order and returns -1, if this number is odd and +1 if it's even. Arguments "a" and
+  "b" are both bitmaps representing basis blades. This is used to build the Cayley table for the 
+  gerometric products (and it's derived outer and inner products).
   adapted from "Geometric Algebra for Computer Science", page 514   */ 
-  static int rsCanonicalReorderingSign(int a, int b);
+  static int reorderSign(int a, int b);
+  // rename to reorderSign
 
   /** Computes the (geometric or outer) product of the two basis blades represented by the integers
   a and b and their associated weights wa, wb and stores the result in ab/wab. 
   adapted from "Geometric Algebra for Computer Science", page 515  */
-  static void rsBasisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false);
+  static void basisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false);
 
   /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
   the geometric algebra nD Euclidean space. */
-  static void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& weights);
+  static void buildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& weights);
 
 
 protected:
@@ -4095,7 +4086,7 @@ protected:
 };
 
 template<class T>
-int rsGeometricAlgebra<T>::rsCanonicalReorderingSign(int a, int b)
+int rsGeometricAlgebra<T>::reorderSign(int a, int b)
 {
   a = a >> 1;
   int sum = 0;
@@ -4106,19 +4097,18 @@ int rsGeometricAlgebra<T>::rsCanonicalReorderingSign(int a, int b)
 }
 
 template<class T>
-void rsGeometricAlgebra<T>::rsBasisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, 
-  bool outer) 
+void rsGeometricAlgebra<T>::basisBladeProduct(
+  int a, T wa, int b, T wb, int& ab, T& wab, bool outer) 
 {
-  if(outer && ((a & b) != 0)) {
-    ab = 0; wab = 0.0; return; }               // outer product is zero if a and b are independent
-  ab = a ^ b;                                  // compute the product bitmap
-  int sign = rsCanonicalReorderingSign(a, b);  // compute the sign change due to reordering
-  wab = T(sign) * wa * wb;                     // compute weight of product blade
+  ab = a ^ b;                     // compute the product bitmap
+  if(outer && ((a & b) != 0)) {   // if a and b are linearly independent...
+    wab = T(0); return; }         // ...their outer product is zero
+  int sign = reorderSign(a, b);   // compute the sign change due to reordering
+  wab = T(sign) * wa * wb;        // compute weight of product blade
 }
-// maybe get rid of wab - absorb the sign in ab - nope: that does not work when ab == 0
 
 template<class T>
-void rsGeometricAlgebra<T>::rsBuildCayleyTables(int numDimensions, 
+void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, 
   rsMatrix<int>& blades, rsMatrix<T>& weights)
 {
   // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
@@ -4167,7 +4157,7 @@ void rsGeometricAlgebra<T>::rsBuildCayleyTables(int numDimensions,
       // Are wa, wb correct? where are they supposed to come from? is this, where the +/-/0 type of 
       // the basis-vectors gets incorporated?
 
-      rsBasisBladeProduct(a, wa, b, wb, ab, wab);
+      basisBladeProduct(a, wa, b, wb, ab, wab);
       //blades( i, j) = ab;
       //blades( i, j) = map[ab];
       blades( i, j) = unmap[ab];
@@ -4180,7 +4170,7 @@ void rsGeometricAlgebra<T>::rsBuildCayleyTables(int numDimensions,
 template<class T>
 void rsGeometricAlgebra<T>::init()
 {
-  rsBuildCayleyTables(n, indicesGeom, weightsGeom);  // fill Cayley table for geometric product
+  buildCayleyTables(n, indicesGeom, weightsGeom);  // fill Cayley table for geometric product
 
   // todo: maybe create and store the n-th line of Pascal's triangle - this is useful for 
   // extracting the coeffs for a particular grade

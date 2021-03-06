@@ -6215,114 +6215,8 @@ void testExteriorAlgebra3D()
   int dummy = 0;
 }
 
-
-
-
-
-
-/** Counts the number of basis vector swaps required to get ’a’ and ’b’ into canonical order. 
-Arguments ’a’ and ’b’ are both bitmaps representing basis blades.
-adapted from "Geometric Algebra for Computer Science", page 514   */ 
-int rsCanonicalReorderingSign(int a, int b)
-{
-  a = a >> 1;
-  int sum = 0;
-  while (a != 0) {
-    sum = sum + rsBitCount(a & b);
-    a = a >> 1; }
-  return ((sum & 1) == 0) ? 1 : -1; //  even number of swaps: 1, else -1
-}
-// why does this return a double and not an int? or maybe just a bool, which is true, iff the 
-// number of swaps is odd
-
-/** Computes the (geometric or outer) product of the two basis blades represented by the integers
-a and b and their associated weights wa, wb and stores the result in ab/wab. 
-adapted from "Geometric Algebra for Computer Science", page 515  */
-template<class T>
-void rsBasisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false) 
-{
-  if(outer && ((a & b) != 0)) {
-    ab = 0; wab = 0.0; return; }               // outer product is zero if a and b are independent
-  ab = a ^ b;                                  // compute the product bitmap
-  int sign = rsCanonicalReorderingSign(a, b);  // compute the sign change due to reordering
-  wab = T(sign) * wa * wb;                     // compute weight of product blade
-}
-// maybe get rid of wab - absorb the sign in ab - nope: taht does not work when ab == 0
-
-
-
-
-
-/** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
-the geometric algebra nD Euclidean space. */
-template<class T>
-void rsBuildCayleyTables(int numDimensions, rsMatrix<int>& blades, rsMatrix<T>& weights)
-{
-  // todo: later maybe have 3 int parameters: numPositiveDimension, numNegativeDimensions, 
-  // numZeroDimensions
-
-  int n = numDimensions;
-  int N = rsPowInt(2, n);  // size of the matrices
-  blades.setShape(N, N);
-  weights.setShape(N, N);
-
-  // Create a map of the basis blades that converts from their bit-based to the more natural 
-  // ordering. In the bit based ordering, a bit with value 1 in the integer indicates the presence
-  // of a particular basis-vector in the given basis blade. In the natural ordering, we want the 
-  // scalar first, then the bivectors and then the trivectors, etc.
-  std::vector<int> map(N), unmap(N);
-  for(int i = 0; i < N; i++)
-    map[i] = i;
-  rsHeapSort(&map[0], N, &rsBitLess);  // experimental
-  for(int i = 0; i < N; i++)
-    unmap[map[i]] = i;
-  // 3D:
-  // blade:     1   e1  e2  e3  e12 e13 e23 e123
-  // bin-code:  000 001 010 100 011 101 110 111
-  // num-code:  0   1   2   4   3   5   6   7
-  // position:  0   1   2   3   4   5   6   7
-
-  // 4D:
-  // 1    e1   e2   e3   e4   e12  e13  e14  e23  e24  e34  e123 e124 e134 e234 e1234
-  // 0000 0001 0010 0100 1000 0011 0101 1001 0110 1010 1100 0111 1011 1101 1110 1111
-  // 0    1    2    4    8    3    5    9    6    10   12   7    11   13   14   15
-
-
-
-  for(int i = 0; i < N; i++)
-  {
-    for(int j = 0; j < N; j++)
-    {
-      int a  = map[i];  // 1st factor blade
-      int b  = map[j];  // 2nd factor blade
-      T   wa = T(1);    // 1st weight
-      T   wb = T(1);    // 2nd weight
-      int ab;           // product blade
-      T wab;            // product weight
-      // Are wa, wb correct? where are they supposed to come from? is this, where the +/-/0 type of 
-      // the basis-vectors gets incorporated?
-
-      rsBasisBladeProduct(a, wa, b, wb, ab, wab);
-      //blades( i, j) = ab;
-      //blades( i, j) = map[ab];
-      blades( i, j) = unmap[ab];
-      weights(i, j) = wab;  
-
-      int dummy = 0;
-    }
-  }
-
-  // But the basis blades are now in a somewhat unnatural order. The ordering is such that when a 
-  // bit with value 1 in the integer indicates the presence of a particular basis-vector in the 
-  // given basis blade. But maybe that order is convenient for other algorithms? ...but nah...maybe
-  // reorder them appropriately such that the scalar comes first, then the vectors, then the 
-  // bivectors and then the trivector, etc. all in the most natural order (rightmost index 
-  // increases fastest). Maybe write a function int -> int that does the conversion
-
-  
-  int dummy = 0;
-}
-
+// move to main repo (together with the actual bit-twiddling functions - i think, it now makes 
+// sense to create a class rsBitTwiddling<TInt> in rapt)
 bool testBitTwiddling()
 {
   int r;
@@ -6411,14 +6305,15 @@ void testGeometricAlgebra()
   testBitTwiddling();
 
   using Real = double;
+  using GA   = rsGeometricAlgebra<Real>;
+  using MV   = rsMultiVector<Real>;
 
   rsMatrix<int>  blades;
   rsMatrix<Real> weights;
-  rsBuildCayleyTables(3, blades, weights);
-  rsBuildCayleyTables(4, blades, weights);
+  GA::buildCayleyTables(3, blades, weights);
+  GA::buildCayleyTables(4, blades, weights);
 
-  using MV = rsMultiVector<Real>;
-  rsGeometricAlgebra<Real> alg3(3); // later use alg300
+  GA alg3(3); // later use alg300
 
   MV a(&alg3), b(&alg3); // a = 3,8,7,4,6,4,6,5  b = 4,5,7,1,4,7,6,1
   a.randomIntegers(+1, +9, 0);

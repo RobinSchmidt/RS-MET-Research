@@ -6304,6 +6304,9 @@ void testGeometricAlgebra()
 {
   testBitTwiddling();
 
+  // References:
+  // 1: Geometric Algebra for Computer Science
+
   using Real = double;
   using GA   = rsGeometricAlgebra<Real>;
   using MV   = rsMultiVector<Real>;
@@ -6321,10 +6324,32 @@ void testGeometricAlgebra()
   MV c(&alg3), d(&alg3), e(&alg3);
   c = a+b;
   c = a*b;            // c = 12,1,72,29,84,-5,28,46    -> correct!
-  d = b*a;            // d = 12,21,104,-43,6,-5,122,46 -> correct!
-  e = (c-d)*0.5;      // doesn't match bivector.net output for a^b
+  c = b*a;            // c = 12,21,104,-43,6,-5,122,46 -> correct!
+  c = a^b;            // c = 12,47,49,19,57,25,21,46   -> correct!
   e = (c+d)*0.5;      // doesn't match bivector.net output for a|b
-  c = a^b;
+  e = (c-d)*0.5;      // doesn't match bivector.net output for a^b
+
+
+  //c = a|b;            // c = 0,-46,23,10,27,-30,7,0 -> should be 12,1,72,29,45,-5,75,23
+  // there seem to be a lot of different inner products and no universal consensus among the
+  // mathematicians which is best. geometric algebra seems to be a still actively developing field
+  // and the dust has not yet settled:
+  // https://www.researchgate.net/publication/2842332_The_Inner_Products_of_Geometric_Algebra
+  // so it's maybe not too surprising that the naive way of implementing it did not work out
+  // and it may be better leave that for now - geometric and outer products are enough for the 
+  // moment, let's and instead focus on:
+  // -incorporating negative and zero dimensions
+  // -extraction of grades (maybe implement: isBlade, getGrade (return -1 for mixed grade)) ...but
+  //  maybe we should another class for blades - maybe if we restrict ourselves to blades and
+  //  the outer product, we get the exterior algebra as subalgebra?
+  //  -rsBlade could also take a pointer to the algebra but maybe it should not be a subclass of
+  //   rsMultiVector
+  // -maybe swicthing to a sparse matrix representation
+  // 
+
+  // test the followig properties:
+  // -outer product should be antisymmetric when operands have odd grade (1, pg 38)
+
   // perhaps the identities a^b = (a*b - b*a)/2, a|b = (a*b + b*a)/2 hold only if a and b are 
   // vectors but do not hold anymore for general multivectors?
   // maybe create the cayley table also for the outer product - i guess the one for the inner

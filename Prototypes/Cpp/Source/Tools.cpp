@@ -4046,11 +4046,11 @@ public:
 
 
 
-  //void innerProduct(const Vec& a, const Vec& b, Vec& p) const;
+  void geometricProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsGeom); }
 
-  //void outerProduct(const Vec& a, const Vec& b, Vec& p) const;
+  void outerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsOuter); }
 
-  void geometricProduct(const Vec& a, const Vec& b, Vec& p) const;
+  void innerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsInner); }
 
 
   /** Counts the number of basis vector swaps required to get (the concatenation of?) "a" and "b" 
@@ -4086,6 +4086,7 @@ protected:
   // The Cayley tables for the various products:
   rsMatrix<int> bladeIndices;
   rsMatrix<T> weightsGeom, weightsOuter, weightsInner;
+  // maybe remove weightsInner
 
 };
 
@@ -4171,7 +4172,10 @@ void rsGeometricAlgebra<T>::buildCayleyTables(int numDimensions, rsMatrix<int>& 
       // new - needs test:
       if((a & b) != 0) wab = T(0);
       weightsOuter(i, j) = wab;
-      weightsInner(i, j) = weightsGeom(i, j) - weightsOuter(i, j); // is this correct?
+
+      weightsInner(i, j) = weightsGeom(i, j) - weightsOuter(i, j); 
+      // is this correct? nope! produces wrong results i think, it's because a*b = a|b + a^b holds
+      // only for vectors but not in general for multivectors?
     }
   }
 
@@ -4197,25 +4201,11 @@ void rsGeometricAlgebra<T>::product(const std::vector<T>& a, const std::vector<T
   for(int i = 0; i < N; i++) {
     for(int j = 0; j < N; j++) {
       int k = bladeIndices(i, j);
-      p[k] += weights( i, j) * a[i] * b[j]; }}
+      p[k] += weights(i, j) * a[i] * b[j]; }}
 }
 // optimize! let j start at i -> this requires symmetrizing the matrices which may actually create
 // even more zeros due to cancellation (at least, in the outer product) which will in turn open 
 // more optimization opportunities when a sparse matrix implementation is used (...later...)
-
-template<class T>
-void rsGeometricAlgebra<T>::geometricProduct(
-  const std::vector<T>& a, const std::vector<T>& b, std::vector<T>& p) const
-{
-  product(a, b, p, weightsGeom);
-  /*
-  rsFill(p, T(0));
-  for(int i = 0; i < N; i++) {
-    for(int j = 0; j < N; j++) {
-      int k = bladeIndices(i, j);
-      p[k] += weightsGeom( i, j) * a[i] * b[j]; }}
-      */
-}
 
 
 
@@ -4274,15 +4264,30 @@ public:
     return p;
   }
 
-  /** Outer (aka wedge, exterior) product between this multivector and multivector b. This is the 
-  antisymmetric part of the geometric product: a^b = (a*b - b*a)/2....but this seems to hold only,
-  if a and b are vectors, not for general multivectors? */
+  /** Outer (aka wedge, exterior) product between this multivector and multivector b. For vectors 
+  a and b, this is the antisymmetric part of the geometric product: a^b = (a*b-b*a)/2, but this 
+  identity does not generalize to multivectors. */
   rsMultiVector<T> operator^(const rsMultiVector<T>& b) const
   {
     rsAssert(areCompatible(*this, b));
-    return ((*this * b) - (b * *this)) * T(0.5);
+    rsMultiVector<T> p(alg);
+    alg->outerProduct(this->coeffs, b.coeffs, p.coeffs);
+    return p;
   }
-  // nope! does not work in general
+
+  /** Outer (aka contraction?) product between this multivector and multivector b. For vectors 
+  a and b, this is the symmetric part of the geometric product: a|b = (a*b+b*a)/2, but this 
+  identity does not generalize to multivectors. */
+  /*
+  rsMultiVector<T> operator|(const rsMultiVector<T>& b) const
+  {
+    rsAssert(areCompatible(*this, b));
+    rsMultiVector<T> p(alg);
+    alg->innerProduct(this->coeffs, b.coeffs, p.coeffs);
+    return p;
+  }
+  */
+
 
 
 

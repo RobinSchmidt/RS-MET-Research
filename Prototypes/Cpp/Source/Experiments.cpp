@@ -6328,15 +6328,31 @@ void testGeometricAlgebra()
   C = B*A; ok &= C == Vec({12,21,104,-43,6,-5,122,46}); 
   C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46});
 
-  // Test grade extraction and products between blades:
+  // Test grade extraction and wedge-products between blades:
   Bld a(&alg3, 0), b(&alg3, 0), c(&alg3, 0);
   a = C.extractGrade(0); ok &= a.getGrade() == 0 && a == Vec({12});
   a = C.extractGrade(1); ok &= a.getGrade() == 1 && a == Vec({47,49,19});
   b = C.extractGrade(2); ok &= b.getGrade() == 2 && b == Vec({57,25,21});
   c = C.extractGrade(3); ok &= c.getGrade() == 3 && c == Vec({46});
-  c = a^b;
+  c = a^b; ok &= c.getGrade() == 3 && c == Vec({845});   // (47e1+49e2+19e3)^(57e12+25e13+21e23)
+  c = b^a; ok &= c.getGrade() == 3 && c == Vec({845});   // (57e12+25e13+21e23)^(47e1+49e2+19e3)
+  c = a^a; ok &= c.getGrade() == 2 && c == Vec({0,0,0});
+  c = b^b; ok &= c.getGrade() == 0 && c == Vec({0});
+  a.set(1, Vec({2,3,5})); b.set(0, Vec({7}));
+  c = a^b;   ok &= c.getGrade() == 1 && c == Vec({14,21,35});
+  c = b^a;   ok &= c.getGrade() == 1 && c == Vec({14,21,35});
+  c = b^a^b; ok &= c.getGrade() == 1 && c == Vec({98,147,245});
+  c = a^b^a; ok &= c.getGrade() == 2 && c == Vec({0,0,0});
 
+  // todo: test wedge between two different vectors, vector and scalar, test wedging together more
+  // than 2 things -> check associativity
+  // why is the wedge of two bivectors commutative? isn't it supposed to be anticommutative - or
+  // is that only the case when the grade of the result is even? -> figure out
 
+  // todo: maybe also implement the geometric product between blades? will that be just the same as
+  // the wedge product? or will it even make sense mathematically? if it is really the same, it 
+  // could make sense to have the usual multiplication symbol overloaded as an alias to the wedge
+  // but if it's not the same, we probably should not implement the operator at all for blades
 
 
   // 2D Hyperbolic Projective Geometric Algebra. Elements represent lines (vectors) and points 

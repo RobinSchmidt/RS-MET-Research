@@ -4391,6 +4391,18 @@ public:
       coeffs[i] = newCoeffs[i];
   }
 
+  /** Sets the blade's grade and the coefficients for the projections onto the basis blades of the
+  given grade. There are n-choose-k of them (n: dimensionality, k: grade), so the newCoeffs vector
+  is supposed to match that size. */
+  void set(int newGrade, const std::vector<T>& newCoeffs)
+  {
+    int m = alg->getBladeSize(newGrade);
+    rsAssert((int) newCoeffs.size() == m);
+    grade = newGrade;
+    coeffs.resize(m);
+    rsCopy(newCoeffs, coeffs);
+  }
+
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
@@ -4405,7 +4417,10 @@ public:
   rsBlade<T> operator^(const rsBlade<T>& b) const
   {
     rsAssert(areCompatible(*this, b));
-    rsBlade<T> p(alg, getGrade() + b.getGrade());
+    int g = getGrade() + b.getGrade();
+    if(g > alg->getNumDimensions())
+      return rsBlade(alg, 0);          // return 0 (of grade 0)
+    rsBlade<T> p(alg, g);
     alg->outerProduct_bld_bld(this->coeffs, grade, b.coeffs, b.grade, p.coeffs);
     return p;
   }

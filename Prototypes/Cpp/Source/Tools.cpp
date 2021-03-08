@@ -4089,6 +4089,9 @@ public:
   static void reorderMap(std::vector<int>& map, std::vector<int>& unmap, int N);
   // find better name
 
+
+
+
   /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
   the geometric algebra nD Euclidean space. */
   static void buildCayleyTables(std::vector<T>& M, rsMatrix<int>& blades, 
@@ -4096,6 +4099,15 @@ public:
 
 
 protected:
+
+
+  /** Computes the (i,j)th elements of the Cayley tables (i.e. multiplication tables) for the 
+  geometric, outer and inner products. The metric is a vector containing the diagonal elements of 
+  the desired metric tensor (todo: support non-diagonal matrics). 
+  todo: document map/unmap parameters   */
+  static void cayleyTableEntries(int i, int j, 
+    const std::vector<T>& metric, const std::vector<int>& map, const std::vector<int>& unmap, 
+    int& blade, T& wGeom, T& wOuter, T& wInner);
 
   /** General product with weights passed as matrix */
   void product(const Vec& a, const Vec& b, Vec& p, const rsMatrix<T>& weights) const;
@@ -4183,6 +4195,21 @@ void rsGeometricAlgebra<T>::reorderMap(std::vector<int>& map, std::vector<int>& 
 }
 
 template<class T>
+void rsGeometricAlgebra<T>::cayleyTableEntries(int i, int j, 
+  const std::vector<T>& metric, const std::vector<int>& map, const std::vector<int>& unmap,
+  int& blade, T& wGeom, T& wOuter, T& wInner)
+{
+  int a = map[i];                             // bitmap representing 1st factor blade
+  int b = map[j];                             // bitmap representing 2nd factor blade
+  int ab;                                     // product blade bitmap
+  basisBladeProduct(a, b, metric, ab, wGeom); // compute bitmap and weight for geometric product
+  blade = unmap[ab];                          // blade index represented by product bitmap ab
+  if(a & b) wOuter = T(0);                    // if (a & b) != 0, blades i,j are linearly dependent
+  else      wOuter = wGeom;
+  wInner = wGeom - wOuter;                    // naive ad-hoc definition, maybe useless
+}
+
+template<class T>
 void rsGeometricAlgebra<T>::buildCayleyTables(std::vector<T>& M, rsMatrix<int>& blades, 
   rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner)
 {
@@ -4244,6 +4271,9 @@ void rsGeometricAlgebra<T>::init()
   for(i = 0; i < nz;       i++) M[i] = T( 0);
   for(i = i; i < nz+np;    i++) M[i] = T(+1);
   for(i = i; i < nz+np+nn; i++) M[i] = T(-1);
+  // todo: make the metric a member, then implement a function 
+  // getCayleyTabelEntries(int i, int j, T& geom, T& outer, T& inner) 
+  // that  can be called from buildCayleyTables
 
 
   buildCayleyTables(M, bladeIndices, weightsGeom, weightsOuter, weightsInner);

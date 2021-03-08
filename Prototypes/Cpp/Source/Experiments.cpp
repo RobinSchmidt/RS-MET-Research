@@ -6305,7 +6305,7 @@ void testGeometricAlgebra()
   testBitTwiddling();
 
   // References:
-  // 1: Geometric Algebra for Computer Science (GAfCS)
+  // 1: Geometric Algebra for Computer Science (GA4CS)
 
   using Real = double;
   using GA   = rsGeometricAlgebra<Real>;
@@ -6356,8 +6356,14 @@ void testGeometricAlgebra()
   c = a*b; ok &= c == Vec({12,47,49,19,57,25,21,46});
   c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
 
-  // try 102
+  // try 102, 310, 410, 311 - maybe generate the .cpp code for it and use it to create reference
+  // output
 
+  // or maybe use this for unit tests:
+  // R(4,1) is known as 3D Conformal Geometric Algebra. Elements represent points (vectors), 
+  // point-pairs (bivectors), lines and circles (trivectors), spheres and planes (quadvectors). 
+  // The even subalgebra includes rotations, translations and dilutions as conformal 3D 
+  // transformations.
 
   int dummy = 0;
 

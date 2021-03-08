@@ -3947,7 +3947,7 @@ rsBiVector3D<T> operator*(const T& s, const rsBiVector3D<T>& v)
   return rsBiVector3D<T>(s * v.getSurfaceNormal());
 }
 
-//=================================================================================================
+//#################################################################################################
 // code for Geometric algebra
 
 // taken from
@@ -3966,19 +3966,20 @@ bool rsIsBit1(int a, int bitIndex)
   return (a >> bitIndex) & 1;
 }
 
-/** Returns the index of the rightmost 1 bit, counting from right to left */
+/** Returns the index of the rightmost 1 bit, counting from right to left. If all bits are zero, it
+returns -1 as code for "none". */
 int rsRightmostBit(int n)
 {
   int mask = 1;
   int numBits = 8 * sizeof(int);
-  for(int i = 0; i < numBits; i++)
-  {
+  for(int i = 0; i < numBits; i++) {
     if(n & mask)
       return i;
-    mask = (mask << 1) + 1;  // shift one bit to left and fill set righmost bit to 1
-  }
+    mask = (mask << 1) + 1; }  // shift one bit to left and fill set righmost bit to 1
   return -1;
 }
+// these 3 functions may be moved into rapt, into a rsBitTwiddling class (together with the 
+// existing bit-masking and twiddling stuff that currently exists as free functions)
 
 // -1 if a < b, +1 if a > b, 0 if a == b
 int rsCompareByRightmostBit(int a, int b)
@@ -3996,7 +3997,10 @@ int rsCompareByRightmostBit(int a, int b)
 // maybe make internal to rsBitLess
 
 /** A function used as comparison function for sorting the blades into their more natural 
-order... */
+order. This is needed to establish the mapping between the natural index of a basis blade and its 
+bitmap representation. A given basis blade's bitmap has a 1 bit for every basis vector that is 
+present in the basis blade and a 0 bit for every basis vector that is absent from the basis blade.
+todo: document, how this mapping works  */
 bool rsBitLess(const int& a, const int& b)  // rename
 {
   int na = rsBitCount(a);
@@ -4007,12 +4011,6 @@ bool rsBitLess(const int& a, const int& b)  // rename
     return false;
   else
   {
-    //return a < b;
-    // is this correct? ...needs tests - no, i think, when the number of 1 bits is 
-    // equal in a,b, we need to figure out which of the two has its rightmost bit further to the
-    // right - and if both have their rightmost bit in the same position, zero it out and see who 
-    // has then its rightmost bit further right...and so on
-
     int c = rsCompareByRightmostBit(a, b);
     if(c == -1)
       return true;
@@ -4020,7 +4018,8 @@ bool rsBitLess(const int& a, const int& b)  // rename
       return false;
   }
 }
-// todo: test this 
+// todo: test this, maybe move into a static member function of rsGeometricAlgebra - i don't think
+// this will be useful in any other context
 
 
 template<class T>
@@ -4079,7 +4078,7 @@ public:
   adapted from "Geometric Algebra for Computer Science", page 515  */
   static void basisBladeProduct(int a, T wa, int b, T wb, int& ab, T& wab, bool outer = false);
 
-  static void basisBladeProduct(int a, int b, std::vector<T>& M, int& ab, T& w);
+  static void basisBladeProduct(int a, int b, const std::vector<T>& M, int& ab, T& w);
 
 
   /** Creates the forward and backward mapping between basis blade indices and their bitmap 
@@ -4115,9 +4114,9 @@ protected:
   void init();
 
 
-  int np = 0;  // number of basis vectors that square to +1 ("positive dimensions")
-  int nn = 0;  // number of basis vectors that square to -1 ("negative dimensions")
-  int nz = 0;  // number of basis vectors that square to  0 ("zero dimensions")
+  int np = 0;  // number of basis vectors that square to +1 ("positive dimensions", space-like)
+  int nn = 0;  // number of basis vectors that square to -1 ("negative dimensions", time-like)
+  int nz = 0;  // number of basis vectors that square to  0 ("zero dimensions", projection-like?)
   int n  = 0;  // n = np + nn + nz, the dimensionality of the vector space
   int N  = 1;  // N = 2^n, the dimensionality of the multivector space
 
@@ -4150,7 +4149,7 @@ void rsGeometricAlgebra<T>::basisBladeProduct(
 }
 
 template<class T>
-void rsGeometricAlgebra<T>::basisBladeProduct(int a, int b, std::vector<T>& M, int& ab, T& w)
+void rsGeometricAlgebra<T>::basisBladeProduct(int a, int b, const std::vector<T>& M, int& ab, T& w)
 {
   basisBladeProduct(a, T(1), b, T(1), ab, w, false);
   int tmp = a & b;       // compute the meet (bitmap of annihilated vectors)
@@ -4206,7 +4205,15 @@ void rsGeometricAlgebra<T>::cayleyTableEntries(int i, int j,
   blade = unmap[ab];                          // blade index represented by product bitmap ab
   if(a & b) wOuter = T(0);                    // if (a & b) != 0, blades i,j are linearly dependent
   else      wOuter = wGeom;
-  wInner = wGeom - wOuter;                    // naive ad-hoc definition, maybe useless
+  wInner = wGeom - wOuter;                    // naive ad-hoc definition, maybe useless...
+  // ...there are many different possible definitions for the inner product of two multivectors. 
+  // This here is based on the idea that the identity a*b = a|b + a^b, that holds for vectors, 
+  // should continue to hold for general multivectors. I have no idea, if that leads to a useful 
+  // concept, but some authors (Alan Macdonald) call that identity "fundamental", so it might be a 
+  // good idea...we'll see...will this definition also obey the grade raising/lowering when applied
+  // to blades? ...try it! ...but i can already say that it produces different results than what
+  // we get on bivector.net, so it might be a "wrong" definition (definitions can't actually be 
+  // "wrong" - only useful or useless)
 }
 
 template<class T>
@@ -4221,45 +4228,15 @@ void rsGeometricAlgebra<T>::buildCayleyTables(std::vector<T>& M, rsMatrix<int>& 
   weightsInner.setShape(N, N);
   std::vector<int> map, unmap;
   reorderMap(map, unmap, N);    // to map back and forth between blade index and its bitmap
-
-  for(int i = 0; i < N; i++)
-  {
-    for(int j = 0; j < N; j++)
-    {
-      int a  = map[i];  // bitmap representing 1st factor blade
-      int b  = map[j];  // bitmap representing 2nd factor blade
-      //T   wa = T(1);    // 1st weight
-      //T   wb = T(1);    // 2nd weight
-      int ab;           // product blade
-      T wab;            // product weight
-      // Are wa, wb correct? where are they supposed to come from? is this, where the +/-/0 type of 
-      // the basis-vectors gets incorporated?
-
-
-      // i,j are the natural blade indices, a,b are the bitmaps that represent the i-th and j-th 
-      // blade respectively
-
-      //basisBladeProduct(a, wa, b, wb, ab, wab); // old
-
-      basisBladeProduct(a, b, M, ab, wab);  // new - needs metric M: array of +1,0,-1
-
-      blades(i, j) = unmap[ab];  // or should it be map[ab] or just ab?
-      weightsGeom(i, j) = wab;
-
-      // new - needs test:
-      if((a & b) != 0) wab = T(0);
-      weightsOuter(i, j) = wab;
-
-      weightsInner(i, j) = weightsGeom(i, j) - weightsOuter(i, j); 
-      // is this correct? nope! produces wrong results i think, it's because a*b = a|b + a^b holds
-      // only for vectors but not in general for multivectors? ...hmmm...maybe it's a matter of 
-      // definition? there seems to be no general consensus yet, how the inner product should be 
-      // defined. maybe, it's actually a useful definition, if we define it in a way that honors 
-      // geom = inner + outer? would this definition also obey the grade raising/lowering when 
-      // applied to blades? ...try it!
-    }
-  }
-
+  for(int i = 0; i < N; i++) {
+    for(int j = 0; j < N; j++) {
+      int b;
+      T wg, wo, wi;
+      cayleyTableEntries(i, j, M, map, unmap, b, wg, wo, wi);
+      blades(      i, j) = b;
+      weightsGeom( i, j) = wg;
+      weightsOuter(i, j) = wo;
+      weightsInner(i, j) = wi; }}
 }
 
 template<class T>
@@ -4271,9 +4248,10 @@ void rsGeometricAlgebra<T>::init()
   for(i = 0; i < nz;       i++) M[i] = T( 0);
   for(i = i; i < nz+np;    i++) M[i] = T(+1);
   for(i = i; i < nz+np+nn; i++) M[i] = T(-1);
-  // todo: make the metric a member, then implement a function 
-  // getCayleyTabelEntries(int i, int j, T& geom, T& outer, T& inner) 
-  // that  can be called from buildCayleyTables
+  // todo: maybe make the metric a member, allow for non-diagonal metrics. that requires a 
+  // diagonalization of the metric before building the Cayley tables and some sort of 
+  // "de-diagonalization" of the results... i'm not yet sure, how exactly that is supposed to work 
+  // -> consult the GA4CS book and the author's reference implementation
 
 
   buildCayleyTables(M, bladeIndices, weightsGeom, weightsOuter, weightsInner);
@@ -4295,13 +4273,49 @@ void rsGeometricAlgebra<T>::product(const std::vector<T>& a, const std::vector<T
       int k = bladeIndices(i, j);
       p[k] += weights(i, j) * a[i] * b[j]; }}
 }
-// optimize! let j start at i -> this requires symmetrizing the matrices which may actually create
-// even more zeros due to cancellation (at least, in the outer product) which will in turn open 
-// more optimization opportunities when a sparse matrix implementation is used (...later...)
+// optimize! let j start at i -> this requires symmetrizing the weight matrices of the Cayley 
+// tables. This may actually create even more zeros due to cancellations (at least, in the outer 
+// product) which will in turn open more optimization opportunities when a sparse matrix 
+// implementation is used (...later...)
+// maybe in rsMatrixView we should have a function getDensity where the density of a matrix is 
+// defined as the number of nonzero entries divided by the total number of entries
+
+//=================================================================================================
+
+template<class T>
+class rsBlade
+{
+
+public:
+
+  rsBlade(rsGeometricAlgebra<T>* algebraToUse, int grade)
+  {
+    this->grade = grade;
+    setAlgebra(algebraToUse);
+  }
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup */
+
+  /** Sets the geometric algebra to use for operations involving this multivector. */
+  void setAlgebra(rsGeometricAlgebra<T>* algebraToUse)
+  {
+    alg = algebraToUse;
+    coeffs.resize(alg->getBladeSize(grade));
+  }
 
 
+  // todo: wedge operator
 
+protected:
 
+  std::vector<T> coeffs;      // n-choose-k coeffs for the projections on the basis blades
+  rsGeometricAlgebra<T>* alg = nullptr;
+  int grade;
+
+};
+
+//=================================================================================================
 
 template<class T>
 class rsMultiVector
@@ -4330,8 +4344,15 @@ public:
 
 
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry */
 
+  /** Extracts the blade of a given grade that is present in this multivector. For example, 
+  mv.extractGrade(2) would extract the bivector part of a given multivector mv. */
+  rsBlade<T> extractGrade(int grade);
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators */
 
   rsMultiVector<T> operator+(const rsMultiVector<T>& b) const
   {
@@ -4419,28 +4440,7 @@ protected:
 
 
 
-template<class T>
-class rsBlade : public rsMultiVector<T>
-{
 
-public:
-
-  rsBlade(int n, int k, T* coeffs)
-  {
-    int m = rsBinomialCoefficient(n, k)
-    coeffs.resize(m);
-    rsCopyToVector(coeffs, m, &(this->coeffs[0]));
-  }
-
-
-  // todo: wedge operator
-
-protected:
-
-  int k; // grade of the blade
-  // the inherited coeffs array is re-used, but the length is only n-choose-k instead of 2^n
-
-};
 
 //=================================================================================================
 

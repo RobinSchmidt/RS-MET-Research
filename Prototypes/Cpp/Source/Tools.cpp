@@ -4322,7 +4322,8 @@ void rsGeometricAlgebra<T>::product(const std::vector<T>& a, const std::vector<T
 // optimize! let j start at i -> this requires symmetrizing the weight matrices of the Cayley 
 // tables. This may actually create even more zeros due to cancellations (at least, in the outer 
 // product) which will in turn open more optimization opportunities when a sparse matrix 
-// implementation is used (...later...)
+// implementation is used (...later...) ...but maybe that makes the implementation of 
+// product_bld_bld inconvenient?
 // maybe in rsMatrixView we should have a function getDensity where the density of a matrix is 
 // defined as the number of nonzero entries divided by the total number of entries
 
@@ -4339,27 +4340,13 @@ void rsGeometricAlgebra<T>::product_bld_bld(const std::vector<T>& a, int ga,
   int sb = getBladeStart(gb);
   int sp = getBladeStart(gp);
   rsFill(p, T(0));
-
   for(int i = sa; i < sa+na; i++) {
     for(int j = sb; j < sb+nb; j++) {
       int k = bladeIndices(i, j);
       if(k >= sp && k < sp + np)
-      {
-        T w = weights(i, j);  // for debug
-        p[k-sp] += weights(i, j) * a[i-sa] * b[j-sb];
-      }
-    }
-  }
-
-
-
-  //for(int i = sa; i < sa+na; i++) {
-  //  for(int j = sb; j < sb+nb; j++) {
-  //    int k = bladeIndices(i, j);
-  //    p[k-sp] += weights(i, j) * a[i] * b[j]; }}
-  // nope - that is wrong!
+        p[k-sp] += weights(i, j) * a[i-sa] * b[j-sb]; }}
 }
-// needs tests
+// needs more tests
 
 //=================================================================================================
 
@@ -4437,7 +4424,7 @@ public:
 
   int getGrade() const { return grade; }
 
-  int getCoefficient(int i) const { return coeffs[i]; }
+  T getCoefficient(int i) const { return coeffs[i]; }
 
 
 
@@ -4519,6 +4506,9 @@ public:
   rsMultiVector(rsGeometricAlgebra<T>* algebraToUse)
   { setAlgebra(algebraToUse); }
 
+
+  rsMultiVector(const rsBlade<T>& b) { set(b); }
+
   //-----------------------------------------------------------------------------------------------
   /** \name Setup */
 
@@ -4534,6 +4524,9 @@ public:
   { RAPT::rsArrayTools::fillWithRandomIntegers(&coeffs[0], (int)coeffs.size(), min, max, seed); }
 
   void set(const rsBlade<T>& b);
+
+  void set(const std::vector<T>& newCoeffs)
+  { rsAssert(newCoeffs.size() == coeffs.size()); coeffs = newCoeffs; }
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
@@ -4610,11 +4603,16 @@ public:
   */
 
 
+  rsMultiVector<T> operator-()
+  { rsMultiVector<T> r = *this; RAPT::rsNegate(r.coeffs); return r; }
+
   bool operator==(const rsMultiVector<T>& b) const { return coeffs == b.coeffs; }
 
 
   bool operator==(const std::vector<T>& b) const { return coeffs == b; }
 
+
+  void operator=(const rsBlade<T>& b) { set(b); }
 
   static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)
   {
@@ -4641,7 +4639,6 @@ void rsMultiVector<T>::set(const rsBlade<T>& b)
   for(int i = 0; i < n; i++)
     coeffs[n0+i] = b.getCoefficient(i);
 }
-
 
 
 

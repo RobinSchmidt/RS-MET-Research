@@ -6389,6 +6389,26 @@ void testGeometricAlgebra()
   d = (a^b)^c; ok &= d.getGrade() == 3 && d == Vec({-78});
   d = a^(b^c); ok &= d.getGrade() == 3 && d == Vec({-78});
 
+  // Compute the unit pseudoscalar and its inverse:
+  a.set(1, Vec({1,0,0})); A = a;
+  b.set(1, Vec({0,1,0})); B = b;
+  c.set(1, Vec({0,0,1})); C = c;
+  MV I  = A*B*C; Vec({0,0,0,0,0,0,0, 1});      // unit pseudoscalar
+  MV Ii = C*B*A; Vec({0,0,0,0,0,0,0,-1});      // and its inverse
+  C = I*Ii; ok &= C == Vec({1,0,0,0,0,0,0,0});
+  C = Ii*I;
+
+
+  // implement taking the inverse
+  A.set(Vec({ 0,2,3,4,0,0,0,0 }));
+  B = A*Ii; // should compute the dual of A
+  C = B*Ii; ok &= C == -A; // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s
+                           // there are also useful identities for the inner product
+                      
+
+
+  rsAssert(ok);
+
   // Why is the wedge of two bivectors commutative? Isn't it supposed to be anticommutative - or
   // is that only the case when the grade of the result is even? -> figure out and document
 
@@ -6409,12 +6429,23 @@ void testGeometricAlgebra()
   // todo: implement == for multivector == blade and blade == multivector
   // implement assign for multivector = blade
 
+  // check this out at around 4 min:
+  // https://www.youtube.com/watch?v=iv5G956UGfs&list=PLLvlxwbzkr7i6DlChcYEL7nJ8R9ZuV8JA&index=5
+  // it seems, the "fundamental identity" a*b = a|b + a^b also holds when b is a multivector (but
+  // a is still just a vector)...it has actually some other identities for the inner product based
+  // on the dual as wel, namely: (M^N)* = M|N*, (M|N)* = M^N*, so it seems we could define
+  // M|N = (M^N*)* or -(M^N*)* because he says something about getting the negative back when 
+  // doing something like (N*)*
+
+  // todo: implement the unit pseudoscalar I = e1*e2*e3 and its inverse which in G^3 is just 
+  // I^-1 = e3*e2*e1 - i think, this pattern of reversing the basis vectors generalizes. with that,
+  // we can dualize multivectors via dual(M) = M * I^-1 - this should give the orthogonal
+  // complement
 
 
 
 
 
-  rsAssert(ok);
 
   // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
   // the algebra and then enter the product via the syntax:

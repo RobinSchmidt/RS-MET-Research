@@ -6328,10 +6328,15 @@ void testGeometricAlgebra()
   C = B*A; ok &= C == Vec({12,21,104,-43,6,-5,122,46}); 
   C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46});
 
-  Bld bld = C.extractGrade(0); ok &= bld.getGrade() == 0 && bld == Vec({12});
-  bld = C.extractGrade(1);     ok &= bld.getGrade() == 1 && bld == Vec({47,49,19});
-  bld = C.extractGrade(2);     ok &= bld.getGrade() == 2 && bld == Vec({57,25,21});
-  bld = C.extractGrade(3);     ok &= bld.getGrade() == 3 && bld == Vec({46});
+  // Test grade extraction and products between blades:
+  Bld a(&alg3, 0), b(&alg3, 0), c(&alg3, 0);
+  a = C.extractGrade(0); ok &= a.getGrade() == 0 && a == Vec({12});
+  a = C.extractGrade(1); ok &= a.getGrade() == 1 && a == Vec({47,49,19});
+  b = C.extractGrade(2); ok &= b.getGrade() == 2 && b == Vec({57,25,21});
+  c = C.extractGrade(3); ok &= c.getGrade() == 3 && c == Vec({46});
+  c = a^b;
+
+
 
 
   // 2D Hyperbolic Projective Geometric Algebra. Elements represent lines (vectors) and points 

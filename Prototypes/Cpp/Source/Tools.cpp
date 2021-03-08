@@ -4090,8 +4090,8 @@ public:
   void innerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsInner); }
 
   /** Given blades a and b, this computes their outer product and stores it in p. */
-  void outerProduct_bld_bld(const Vec& a, const Vec& b, Vec& p) const 
-  { product_bld_bld(a,b,p, weightsOuter); }
+  void outerProduct_bld_bld(const Vec& a, int ga, const Vec& b, int gb, Vec& p) const 
+  { product_bld_bld(a, ga, b, gb, p, weightsOuter); }
 
 
   // move to protected - these are really implementation details (except buildCayleyTables - this
@@ -4143,7 +4143,7 @@ protected:
   /** General product of two multivectors a,b with weights passed as matrix. */
   void product(const Vec& a, const Vec& b, Vec& p, const rsMatrix<T>& weights) const;
   // rename to product_mv_mv, standing for multivector * multivector and implement also 
-  // product_bld_bld for the product between tow blades...and then also product_mv_bld and
+  // product_bld_bld for the product between two blades...and then also product_mv_bld and
   // product_bld_mv
 
   /** General product of two blades a,b of grades ga,gb with weights passed as matrix. */
@@ -4339,10 +4339,25 @@ void rsGeometricAlgebra<T>::product_bld_bld(const std::vector<T>& a, int ga,
   int sb = getBladeStart(gb);
   int sp = getBladeStart(gp);
   rsFill(p, T(0));
+
   for(int i = sa; i < sa+na; i++) {
     for(int j = sb; j < sb+nb; j++) {
       int k = bladeIndices(i, j);
-      p[k-sp] += weights(i, j) * a[i] * b[j]; }}
+      if(k >= sp && k < sp + np)
+      {
+        T w = weights(i, j);  // for debug
+        p[k-sp] += weights(i, j) * a[i-sa] * b[j-sb];
+      }
+    }
+  }
+
+
+
+  //for(int i = sa; i < sa+na; i++) {
+  //  for(int j = sb; j < sb+nb; j++) {
+  //    int k = bladeIndices(i, j);
+  //    p[k-sp] += weights(i, j) * a[i] * b[j]; }}
+  // nope - that is wrong!
 }
 // needs tests
 
@@ -4390,8 +4405,8 @@ public:
   rsBlade<T> operator^(const rsBlade<T>& b) const
   {
     rsAssert(areCompatible(*this, b));
-    rsBlade<T> p(alg);
-    alg->outerProduct_bld_bld(this->coeffs, b.coeffs, p.coeffs);
+    rsBlade<T> p(alg, getGrade() + b.getGrade());
+    alg->outerProduct_bld_bld(this->coeffs, grade, b.coeffs, b.grade, p.coeffs);
     return p;
   }
 

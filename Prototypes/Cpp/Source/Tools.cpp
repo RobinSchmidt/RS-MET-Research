@@ -4363,6 +4363,35 @@ void rsGeometricAlgebra<T>::product_bld_bld(const std::vector<T>& a, int ga,
 
 //=================================================================================================
 
+/** A class to represent k-blades in n-dimensional space. For example, in 3D space, we have 
+scalars (0-blades), vectors (1-blades), bivectors (2-blades) and trivectors (3-blades). A blade
+is represented by a set of coefficients that scale the contributions of the relevant k-dimensional
+basis blades. A 3D scalar is just one coefficient that can be seen as scaling the unit scalar 1, 
+a 3D vector has 3 coefficients for the 3 basis vectors (e1,e2,e3), a 3D bivector has coefficients 
+for the 3 basis bivectors (e12,e13,e23) and a 3D trivector has 1 coefficient that scales the single
+basis trivector (e123) which represents a unit volume in 3D and is also known as pseudoscalar or 
+sometimes antiscalar. The number k is known as the grade of the blade. The highest possible grade
+is always equal to the dimension of the vector space, the number of coefficients for a particular
+grade k is always n-choose-k and the highest grade basis blade is always the unit pseudoscalar. In
+2D space, the unit pseudoscalar behaves similar to the imaginary unit i in complex numbers...but i 
+think, not exactly like it, because it behaves anticommutative rather than commutative 
+-> figure out
+
+The main operation between blades is the outer product (a.k.a. wedge product). When we restrict the
+computations of geometric algebra to using only blades (rather than general multivectors) and using 
+only the outer "wedge" product (and not the geometric product), we actually get a subalgebra of the
+geometric algebra known as exterior algebra and the wedge product is also sometimes called exterior 
+product. Being a subalgebra means closure: when we combine two blades via the wedge product, the 
+result is a blade again. When combining blades via the geometric product, the result is actually 
+not a blade anymore but a more general multivector.
+
+Note:
+Blades are actually a special case of multivectors, so at first glance, it may seem appropriate to 
+let rsBlade be a subclass of rsMultiVector. However, i opted not to do this because multivectors 
+can do so many more things, which a blade should really not inherit. They are really a restricted
+special case, i.e. more like a subset rather than a subclass. But where there functionality 
+overlaps, both classes provide the same API. */
+
 template<class T>
 class rsBlade
 {
@@ -4408,10 +4437,14 @@ public:
 
   int getGrade() const { return grade; }
 
+  int getCoefficient(int i) const { return coeffs[i]; }
 
 
 
-  // todo: wedge operator
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators */
+
+  // todo: +,-,/
 
   /** Outer (aka wedge, exterior) product between this blade and blade b. */
   rsBlade<T> operator^(const rsBlade<T>& b) const
@@ -4466,7 +4499,7 @@ public:
   void randomIntegers(int min, int max, int seed)
   { RAPT::rsArrayTools::fillWithRandomIntegers(&coeffs[0], (int)coeffs.size(), min, max, seed); }
 
-
+  void set(const rsBlade<T>& b);
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
@@ -4529,7 +4562,7 @@ public:
     return p;
   }
 
-  /** Outer (aka contraction?) product between this multivector and multivector b. For vectors 
+  /** Inner (aka contraction?) product between this multivector and multivector b. For vectors 
   a and b, this is the symmetric part of the geometric product: a|b = (a*b+b*a)/2, but this 
   identity does not generalize to multivectors. */
   /*
@@ -4564,6 +4597,16 @@ protected:
 
 };
 
+template<class T>
+void rsMultiVector<T>::set(const rsBlade<T>& b)
+{
+  // should we also set the algebra, like alg = b.alg? or setAlgebra(b.getAlgebra())
+  int n0 = alg->getBladeStart(b.getGrade());
+  int n  = alg->getBladeSize( b.getGrade());
+  rsFill(coeffs, T(0));
+  for(int i = 0; i < n; i++)
+    coeffs[n0+i] = b.getCoefficient(i);
+}
 
 
 

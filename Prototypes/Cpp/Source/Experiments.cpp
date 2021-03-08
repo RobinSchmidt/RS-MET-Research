@@ -6328,49 +6328,6 @@ void testGeometricAlgebra()
   C = B*A; ok &= C == Vec({12,21,104,-43,6,-5,122,46}); 
   C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46});
 
-  // Test grade extraction and wedge-products between blades:
-  Bld a(&alg3, 0), b(&alg3, 0), c(&alg3, 0), d(&alg3, 0);
-  a = C.extractGrade(0); ok &= a.getGrade() == 0 && a == Vec({12});
-  a = C.extractGrade(1); ok &= a.getGrade() == 1 && a == Vec({47,49,19});
-  b = C.extractGrade(2); ok &= b.getGrade() == 2 && b == Vec({57,25,21});
-  c = C.extractGrade(3); ok &= c.getGrade() == 3 && c == Vec({46});
-  c = a^b; ok &= c.getGrade() == 3 && c == Vec({845});   // (47e1+49e2+19e3)^(57e12+25e13+21e23)
-  c = b^a; ok &= c.getGrade() == 3 && c == Vec({845});   // (57e12+25e13+21e23)^(47e1+49e2+19e3)
-  c = a^a; ok &= c.getGrade() == 2 && c == Vec({0,0,0});
-  c = b^b; ok &= c.getGrade() == 0 && c == Vec({0});
-  a.set(1, Vec({2,3,5})); b.set(0, Vec({7}));
-  c = a^b;   ok &= c.getGrade() == 1 && c == Vec({14,21,35});
-  c = b^a;   ok &= c.getGrade() == 1 && c == Vec({14,21,35});
-  c = b^a^b; ok &= c.getGrade() == 1 && c == Vec({98,147,245});
-  c = a^b^a; ok &= c.getGrade() == 2 && c == Vec({0,0,0});
-  b.set(1, Vec({7,11,13}));
-  c = a^b; ok &= c.getGrade() == 2 && c == Vec({1,-9,-16});
-  c = b^a; ok &= c.getGrade() == 2 && c == Vec({-1,9,16});
-  c.set(1, Vec({17,19,23}));
-  d = (a^b)^c; ok &= d.getGrade() == 3 && d == Vec({-78});
-  d = a^(b^c); ok &= d.getGrade() == 3 && d == Vec({-78});
-
-  // Why is the wedge of two bivectors commutative? Isn't it supposed to be anticommutative - or
-  // is that only the case when the grade of the result is even? -> figure out and document
-
-  // todo: maybe also implement the geometric product between blades? will that be just the same as
-  // the wedge product? or will it even make sense mathematically? if it is really the same, it 
-  // could make sense to have the usual multiplication symbol overloaded as an alias to the wedge
-  // but if it's not the same, we probably should not implement the operator at all for blades
-
-  // (2e1+3e2+5e3)*(7e1+11e2+13e3)*(17e1+19e2+23e3) gives vector + trivector
-  // (2e1+3e2+5e3)*(7e1+11e2+13e3)^(17e1+19e2+23e3) gives vector + trivector
-  // ..so, in general, the geometric product between two blades will give a multivector
-
-
-  A.set(a); B.set(b);
-
-  // todo: implement == for multivector == blade and blade == multivector
-  // implement assign for multivector = blade
-
-
-
-
   // 2D Hyperbolic Projective Geometric Algebra. Elements represent lines (vectors) and points 
   // (bivectors). The even subalgebra includes hyperbolic rotations and translations.
   GA alg210(2,1,0); A.setAlgebra(&alg210); B.setAlgebra(&alg210);
@@ -6407,6 +6364,55 @@ void testGeometricAlgebra()
   // point-pairs (bivectors), lines and circles (trivectors), spheres and planes (quadvectors). 
   // The even subalgebra includes rotations, translations and dilutions as conformal 3D 
   // transformations.
+
+
+  // Test grade extraction and wedge-products between blades:
+  A.setAlgebra(&alg3); B.setAlgebra(&alg3); C.setAlgebra(&alg3); 
+  Bld a(&alg3, 0), b(&alg3, 0), c(&alg3, 0), d(&alg3, 0);
+  a = C.extractGrade(0); ok &= a.getGrade() == 0 && a == Vec({12});
+  a = C.extractGrade(1); ok &= a.getGrade() == 1 && a == Vec({47,49,19});
+  b = C.extractGrade(2); ok &= b.getGrade() == 2 && b == Vec({57,25,21});
+  c = C.extractGrade(3); ok &= c.getGrade() == 3 && c == Vec({46});
+  c = a^b; ok &= c.getGrade() == 3 && c == Vec({845});   // (47e1+49e2+19e3)^(57e12+25e13+21e23)
+  c = b^a; ok &= c.getGrade() == 3 && c == Vec({845});   // (57e12+25e13+21e23)^(47e1+49e2+19e3)
+  c = a^a; ok &= c.getGrade() == 2 && c == Vec({0,0,0});
+  c = b^b; ok &= c.getGrade() == 0 && c == Vec({0});
+  a.set(1, Vec({2,3,5})); b.set(0, Vec({7}));
+  c = a^b;   ok &= c.getGrade() == 1 && c == Vec({14,21,35});
+  c = b^a;   ok &= c.getGrade() == 1 && c == Vec({14,21,35});
+  c = b^a^b; ok &= c.getGrade() == 1 && c == Vec({98,147,245});
+  c = a^b^a; ok &= c.getGrade() == 2 && c == Vec({0,0,0});
+  b.set(1, Vec({7,11,13}));
+  c = a^b; ok &= c.getGrade() == 2 && c == Vec({1,-9,-16});
+  c = b^a; ok &= c.getGrade() == 2 && c == Vec({-1,9,16});
+  c.set(1, Vec({17,19,23}));
+  d = (a^b)^c; ok &= d.getGrade() == 3 && d == Vec({-78});
+  d = a^(b^c); ok &= d.getGrade() == 3 && d == Vec({-78});
+
+  // Why is the wedge of two bivectors commutative? Isn't it supposed to be anticommutative - or
+  // is that only the case when the grade of the result is even? -> figure out and document
+
+  // todo: maybe also implement the geometric product between blades? will that be just the same as
+  // the wedge product? or will it even make sense mathematically? if it is really the same, it 
+  // could make sense to have the usual multiplication symbol overloaded as an alias to the wedge
+  // but if it's not the same, we probably should not implement the operator at all for blades
+
+  // (2e1+3e2+5e3)*(7e1+11e2+13e3)*(17e1+19e2+23e3) gives vector + trivector
+  // (2e1+3e2+5e3)*(7e1+11e2+13e3)^(17e1+19e2+23e3) gives vector + trivector
+  // ..so, in general, the geometric product between two blades will give a multivector
+  // maybe implement a conversion constructor from blades to multivectors - maybe the geometric 
+  // product of two blades will the just work?
+
+
+  //A.set(a); B.set(b);
+
+  // todo: implement == for multivector == blade and blade == multivector
+  // implement assign for multivector = blade
+
+
+
+
+
 
   rsAssert(ok);
 

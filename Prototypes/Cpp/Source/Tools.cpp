@@ -4476,6 +4476,24 @@ protected:
 
 //=================================================================================================
 
+/** Class to represent multivectors. A multivector can be seen as a formal sum of blades of various
+grades. For example, in 3D, a general multivector M is a sum: M = S + V + B + T where
+where S,V,B,T are the scalar, vector, bivector and trivector components of the multivector. The 
+addition is not actually "executed" because you can't really add a scalar to a vector and so on. 
+It is rather meant in the sense of putting things together but keeping them as seperate parts of a
+single entity, very much like z = a + b*i in the representation of complex numbers or in 
+v = x*(1,0,0) + y*(0,1,0) + z*(0,0,1) = (x,0,0) + (0,y,0) + (0,0,z) in the representation of 
+vectors v = (x,y,z) in terms of scaled basis vectors - you never actually "do" any additions in 
+expressions like this but just keep the coefficients a,b or x,y,z separate. It's the same thing 
+here, just the B and T parts have more than one component themselves (their components are 
+coefficients that scale the basis vectors and basis bivectors respectively). Internally, the 
+multivector is just stored as a flat array of coefficients for all the basis blades of various 
+grades. In an n-dimensional vector space, there are 2^n such basis blades in total and a blade of 
+grade k gets n-choose-k of them.
+
+
+*/
+
 template<class T>
 class rsMultiVector
 {

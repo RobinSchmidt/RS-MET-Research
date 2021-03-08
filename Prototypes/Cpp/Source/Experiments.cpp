@@ -6311,7 +6311,7 @@ void testGeometricAlgebra()
   using GA   = rsGeometricAlgebra<Real>;
   using MV   = rsMultiVector<Real>;
   using Vec  = std::vector<Real>;
-
+  using Bld  = rsBlade<Real>;
 
   bool ok = true;
 
@@ -6327,6 +6327,12 @@ void testGeometricAlgebra()
   c = a*b; ok &= c == Vec({12,1,72,29,84,-5,28,46});
   c = b*a; ok &= c == Vec({12,21,104,-43,6,-5,122,46}); 
   c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
+
+  Bld bld = c.extractGrade(0); ok &= bld.getGrade() == 0 && bld == Vec({12});
+  bld = c.extractGrade(1);     ok &= bld.getGrade() == 1 && bld == Vec({47,49,19});
+  bld = c.extractGrade(2);     ok &= bld.getGrade() == 2 && bld == Vec({57,25,21});
+  bld = c.extractGrade(3);     ok &= bld.getGrade() == 3 && bld == Vec({46});
+
 
   // 2D Hyperbolic Projective Geometric Algebra. Elements represent lines (vectors) and points 
   // (bivectors). The even subalgebra includes hyperbolic rotations and translations.
@@ -6365,7 +6371,7 @@ void testGeometricAlgebra()
   // The even subalgebra includes rotations, translations and dilutions as conformal 3D 
   // transformations.
 
-  int dummy = 0;
+  rsAssert(ok);
 
   // Results can be checked here: https://bivector.net/tools.html - choose the right signature for
   // the algebra and then enter the product via the syntax:

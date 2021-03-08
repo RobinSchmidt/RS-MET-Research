@@ -4032,8 +4032,8 @@ public:
 
   /** Creates an algebra object with given signature, i.e. given number of basis vectors that 
   square to +1, -1 and 0 respectively. Note that even though the zero-dimensions are specified 
-  last, their basis-vectors will appear first, adhering to the convention used at 
-  bivector.net. */
+  last, their basis-vectors will appear first in the canoncial ordering, adhering to the convention
+  used in the algebra creation tool at bivector.net. */
   rsGeometricAlgebra(int numPositiveDimensions, int numNegativeDimensions = 0, 
     int numZeroDimensions = 0)
   {
@@ -4045,12 +4045,39 @@ public:
     init();
   }
 
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry */
+
   /** Returns the dimensionality of the vector space. */
   int getNumDimensions() const { return n; }
 
   /** Returns the size of the multivectors, i.e. the dimensionality of the vector space. If the
   dimensionality of the underlying vectors space is n, then this is 2^n. */
   int getMultiVectorSize() const { return N; }
+
+  /** Returns the size (i.e. number of elements) of a blade of given grade. This is the n-choose-k
+  binomial coefficient where k is the grade and n the dimensionality of the underlying vector 
+  space. */
+  int getBladeSize(int grade) const
+  {
+    rsAssert(grade >= 0 && grade <= n);
+    // todo: maybe allow for grades outside the range and return either 0 or -1 - whatever is more
+    // convenient or mathematicllay meaningful/consistent
+
+    return bladeSizes[grade];
+  }
+
+  /** Returns the array index at which the coefficients for a given grade begin in a multivector 
+  that is represented by an array of scaling coefficients for each of the basis blades. */
+  int getBladeStart(int grade) const
+  {
+    rsAssert(grade >= 0 && grade <= n);
+    // todo: maybe allow for grades outside the range and return either 0 or -1 - whatever is more
+    // convenient or mathematicllay meaningful/consistent
+
+    return bladeStarts[grade];
+  }
 
 
   /** Given multivectors a and b, this computes their geometric product and stores it in p. */
@@ -4063,7 +4090,8 @@ public:
   void innerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsInner); }
 
 
-  // move to protected - these are really implementation details:
+  // move to protected - these are really implementation details (except buildCayleyTables - this
+  // may be useful for client code, too):
 
   /** Counts the number of basis vector swaps required to get (the concatenation of?) "a" and "b" 
   into canonical order and returns -1, if this number is odd and +1 if it's even. Arguments "a" and
@@ -4124,6 +4152,9 @@ protected:
   rsMatrix<int> bladeIndices;
   rsMatrix<T> weightsGeom, weightsOuter, weightsInner; // maybe remove weightsInner
 
+  // Sizes and start-indices of the coeffs of the blades of grades 1..n
+  std::vector<int> bladeSizes, bladeStarts;
+
 };
 
 template<class T>
@@ -4162,7 +4193,7 @@ void rsGeometricAlgebra<T>::basisBladeProduct(int a, int b, const std::vector<T>
 }
 // see:
 // https://bivector.net/PGA4CS.html
-// pg 516 of GAfCS, or BasisBlade.java in referecne implementation, line 206
+// pg 516 of GA4CS, or BasisBlade.java in referecne implementation, line 206
 
 template<class T>
 void rsGeometricAlgebra<T>::reorderMap(std::vector<int>& map, std::vector<int>& unmap, int N)
@@ -4207,7 +4238,7 @@ void rsGeometricAlgebra<T>::cayleyTableEntries(int i, int j,
   else      wOuter = wGeom;
   wInner = wGeom - wOuter;                    // naive ad-hoc definition, maybe useless...
   // ...there are many different possible definitions for the inner product of two multivectors. 
-  // This here is based on the idea that the identity a*b = a|b + a^b, that holds for vectors, 
+  // This here is based on the idea that the identity a*b = a|b + a^b (which holds for vectors), 
   // should continue to hold for general multivectors. I have no idea, if that leads to a useful 
   // concept, but some authors (Alan Macdonald) call that identity "fundamental", so it might be a 
   // good idea...we'll see...will this definition also obey the grade raising/lowering when applied
@@ -4242,7 +4273,7 @@ void rsGeometricAlgebra<T>::buildCayleyTables(std::vector<T>& M, rsMatrix<int>& 
 template<class T>
 void rsGeometricAlgebra<T>::init()
 {
-  // create the metric for the given signature ( maybe factor out into getMetric(p, n, z)
+  // Create the metric for the given signature (maybe factor out into getMetric(p, n, z))
   std::vector<T> M(n);
   int i;
   for(i = 0; i < nz;       i++) M[i] = T( 0);
@@ -4253,14 +4284,17 @@ void rsGeometricAlgebra<T>::init()
   // "de-diagonalization" of the results... i'm not yet sure, how exactly that is supposed to work 
   // -> consult the GA4CS book and the author's reference implementation
 
-
+  // Fill Cayley (i.e. multiplication) tables for geometric, outer and inner product. These tables 
+  // really define what the algebra does - they are the heart and soul of everything:
   buildCayleyTables(M, bladeIndices, weightsGeom, weightsOuter, weightsInner);
-  // fill Cayley tables for geometric, outer and inner product
 
-  // todo: maybe create and store the n-th line of Pascal's triangle - this is useful for 
-  // extracting the coeffs for a particular grade
-
-  int dummy = 0;
+  // Create the information that is needed for extracting the coeffs for a particular grade:
+  bladeSizes.resize(n+1);
+  bladeStarts.resize(n+1);
+  rsGetLineOfPascalTriangle(&bladeSizes[0], n);
+  bladeStarts[0] = 0;
+  for(i = 1; i <= n; i++)
+    bladeStarts[i] = bladeStarts[i-1] + bladeSizes[i-1];
 }
 
 template<class T>
@@ -4304,8 +4338,23 @@ public:
     coeffs.resize(alg->getBladeSize(grade));
   }
 
+  void setCoefficients(const T* newCoeffs)
+  {
+    for(size_t i = 0; i < coeffs.size(); i++)
+      coeffs[i] = newCoeffs[i];
+  }
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry */
+
+  int getGrade() const { return grade; }
+
+
+
 
   // todo: wedge operator
+
+  bool operator==(const std::vector<T>& b) const { return coeffs == b; }
 
 protected:
 
@@ -4349,7 +4398,13 @@ public:
 
   /** Extracts the blade of a given grade that is present in this multivector. For example, 
   mv.extractGrade(2) would extract the bivector part of a given multivector mv. */
-  rsBlade<T> extractGrade(int grade);
+  rsBlade<T> extractGrade(int grade)
+  {
+    rsBlade<T> B(alg, grade);
+    int n0 = alg->getBladeStart(grade);
+    B.setCoefficients(&coeffs[n0]);
+    return B;
+  }
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */

@@ -4089,6 +4089,10 @@ public:
   /** Given multivectors a and b, this computes their inner product and stores it in p. */
   void innerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsInner); }
 
+  /** Given blades a and b, this computes their outer product and stores it in p. */
+  void outerProduct_bld_bld(const Vec& a, const Vec& b, Vec& p) const 
+  { product_bld_bld(a,b,p, weightsOuter); }
+
 
   // move to protected - these are really implementation details (except buildCayleyTables - this
   // may be useful for client code, too):
@@ -4136,8 +4140,16 @@ protected:
     const std::vector<T>& metric, const std::vector<int>& map, const std::vector<int>& unmap, 
     int& blade, T& wGeom, T& wOuter, T& wInner);
 
-  /** General product with weights passed as matrix */
+  /** General product of two multivectors a,b with weights passed as matrix. */
   void product(const Vec& a, const Vec& b, Vec& p, const rsMatrix<T>& weights) const;
+  // rename to product_mv_mv, standing for multivector * multivector and implement also 
+  // product_bld_bld for the product between tow blades...and then also product_mv_bld and
+  // product_bld_mv
+
+  /** General product of two blades a,b of grades ga,gb with weights passed as matrix. */
+  void product_bld_bld(const Vec& a, int ga, const Vec& b, int gb, Vec& p, 
+    const rsMatrix<T>& weights) const;
+
 
   void init();
 
@@ -4214,8 +4226,8 @@ void rsGeometricAlgebra<T>::reorderMap(std::vector<int>& map, std::vector<int>& 
   // 3D:
   // 0   1   2   3   4   5   6   7       array position/index
   // 1   e1  e2  e3  e12 e13 e23 e123    blade name
-  // 000 001 010 100 011 101 110 111     binary code (has a 1 for each balde present)
-  // 0   1   2   4   3   5   6   7       code translated to number
+  // 000 001 010 100 011 101 110 111     binary code (has a 1 for each blade present)
+  // 0   1   2   4   3   5   6   7       binary code translated to decimal number
   //
   // 4D:
   // 0    1    2    3    4    5    6    7    8    9    10   11   12   13   14   15
@@ -4314,6 +4326,26 @@ void rsGeometricAlgebra<T>::product(const std::vector<T>& a, const std::vector<T
 // maybe in rsMatrixView we should have a function getDensity where the density of a matrix is 
 // defined as the number of nonzero entries divided by the total number of entries
 
+template<class T>
+void rsGeometricAlgebra<T>::product_bld_bld(const std::vector<T>& a, int ga, 
+  const std::vector<T>& b, int gb, std::vector<T>& p, const rsMatrix<T>& weights) const
+{
+  int gp = ga + gb;             // grade of product
+  rsAssert(gp <= n);            // will result in zero, should be handled in the operator
+  int na = getBladeSize(ga);
+  int nb = getBladeSize(gb);
+  int np = getBladeSize(gp);
+  int sa = getBladeStart(ga);
+  int sb = getBladeStart(gb);
+  int sp = getBladeStart(gp);
+  rsFill(p, T(0));
+  for(int i = sa; i < sa+na; i++) {
+    for(int j = sb; j < sb+nb; j++) {
+      int k = bladeIndices(i, j);
+      p[k-sp] += weights(i, j) * a[i] * b[j]; }}
+}
+// needs tests
+
 //=================================================================================================
 
 template<class T>
@@ -4354,7 +4386,22 @@ public:
 
   // todo: wedge operator
 
+  /** Outer (aka wedge, exterior) product between this blade and blade b. */
+  rsBlade<T> operator^(const rsBlade<T>& b) const
+  {
+    rsAssert(areCompatible(*this, b));
+    rsBlade<T> p(alg);
+    alg->outerProduct_bld_bld(this->coeffs, b.coeffs, p.coeffs);
+    return p;
+  }
+
+
   bool operator==(const std::vector<T>& b) const { return coeffs == b; }
+
+
+  static bool areCompatible(const rsBlade<T>& a, const rsBlade<T>& b)
+  { return a.alg == b.alg; }
+
 
 protected:
 
@@ -4371,8 +4418,6 @@ class rsMultiVector
 {
 
 public:
-
-  // todo: implement inner, outer and geometric product
 
   rsMultiVector(rsGeometricAlgebra<T>* algebraToUse)
   { setAlgebra(algebraToUse); }

@@ -6319,48 +6319,48 @@ void testGeometricAlgebra()
   // lines/planes through the origin (or vectors/bivectors). The even subalgebra is isomorphic to
   // the quaternions.
   GA alg3(3);
-  MV a(&alg3), b(&alg3); 
-  a.randomIntegers(+1, +9, 0);           // a = 3,8,7,4,6,4,6,5  
-  b.randomIntegers(+1, +9, 1);           // b = 4,5,7,1,4,7,6,1
-  MV c(&alg3); // d(&alg3), e(&alg3);
-  c = a+b; ok &= c == Vec({7,13,14,5,10,11,12,6});
-  c = a*b; ok &= c == Vec({12,1,72,29,84,-5,28,46});
-  c = b*a; ok &= c == Vec({12,21,104,-43,6,-5,122,46}); 
-  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
+  MV A(&alg3), B(&alg3); 
+  A.randomIntegers(+1, +9, 0);           // a = 3,8,7,4,6,4,6,5  
+  B.randomIntegers(+1, +9, 1);           // b = 4,5,7,1,4,7,6,1
+  MV C(&alg3); // d(&alg3), e(&alg3);
+  C = A+B; ok &= C == Vec({7,13,14,5,10,11,12,6});
+  C = A*B; ok &= C == Vec({12,1,72,29,84,-5,28,46});
+  C = B*A; ok &= C == Vec({12,21,104,-43,6,-5,122,46}); 
+  C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46});
 
-  Bld bld = c.extractGrade(0); ok &= bld.getGrade() == 0 && bld == Vec({12});
-  bld = c.extractGrade(1);     ok &= bld.getGrade() == 1 && bld == Vec({47,49,19});
-  bld = c.extractGrade(2);     ok &= bld.getGrade() == 2 && bld == Vec({57,25,21});
-  bld = c.extractGrade(3);     ok &= bld.getGrade() == 3 && bld == Vec({46});
+  Bld bld = C.extractGrade(0); ok &= bld.getGrade() == 0 && bld == Vec({12});
+  bld = C.extractGrade(1);     ok &= bld.getGrade() == 1 && bld == Vec({47,49,19});
+  bld = C.extractGrade(2);     ok &= bld.getGrade() == 2 && bld == Vec({57,25,21});
+  bld = C.extractGrade(3);     ok &= bld.getGrade() == 3 && bld == Vec({46});
 
 
   // 2D Hyperbolic Projective Geometric Algebra. Elements represent lines (vectors) and points 
   // (bivectors). The even subalgebra includes hyperbolic rotations and translations.
-  GA alg210(2,1,0); a.setAlgebra(&alg210); b.setAlgebra(&alg210);
-  c = a*b; ok &= c == Vec({142,121,30,29,30,-5,28,46});
-  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});    // same as for 300
+  GA alg210(2,1,0); A.setAlgebra(&alg210); B.setAlgebra(&alg210);
+  C = A*B; ok &= C == Vec({142,121,30,29,30,-5,28,46});
+  C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46});    // same as for 300
 
   // 2D Euclidean Projective Geometric Algebra. Elements represent lines (vectors) and points 
   // (bivectors). The even subalgebra is isomorphic to the planar quaternions and includes all 
   // isometries (metric preserving translations and rotations) in 2D.
-  GA alg201(2,0,1); a.setAlgebra(&alg201); b.setAlgebra(&alg201);
-  c = a*b; ok &= c == Vec({29,1,31,19,84,-5,21,46});
-  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});  // same as for 120
+  GA alg201(2,0,1); A.setAlgebra(&alg201); B.setAlgebra(&alg201);
+  C = A*B; ok &= C == Vec({29,1,31,19,84,-5,21,46});
+  C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46});  // same as for 120
 
   // Custom:
-  GA alg120(1,2,0); a.setAlgebra(&alg120); b.setAlgebra(&alg120);
-  c = a*b; ok &= c == Vec({10,21,30,81,30,55,28,46});
-  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46}); 
+  GA alg120(1,2,0); A.setAlgebra(&alg120); B.setAlgebra(&alg120);
+  C = A*B; ok &= C == Vec({10,21,30,81,30,55,28,46});
+  C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46}); 
 
   // Custom:
-  GA alg111(1,1,1); a.setAlgebra(&alg111); b.setAlgebra(&alg111);
-  c = a*b; ok &= c == Vec({93,121,67,19,30,-5,21,46});
-  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
+  GA alg111(1,1,1); A.setAlgebra(&alg111); B.setAlgebra(&alg111);
+  C = A*B; ok &= C == Vec({93,121,67,19,30,-5,21,46});
+  C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46});
 
   // Custom:
-  GA alg003(0,0,3); a.setAlgebra(&alg003); b.setAlgebra(&alg003);
-  c = a*b; ok &= c == Vec({12,47,49,19,57,25,21,46});
-  c = a^b; ok &= c == Vec({12,47,49,19,57,25,21,46});
+  GA alg003(0,0,3); A.setAlgebra(&alg003); B.setAlgebra(&alg003);
+  C = A*B; ok &= C == Vec({12,47,49,19,57,25,21,46});
+  C = A^B; ok &= C == Vec({12,47,49,19,57,25,21,46});
 
   // try 102, 310, 410, 311 - maybe generate the .cpp code for it and use it to create reference
   // output

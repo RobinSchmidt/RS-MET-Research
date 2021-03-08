@@ -4489,7 +4489,23 @@ here, just the B and T parts have more than one component themselves (their comp
 coefficients that scale the basis vectors and basis bivectors respectively). Internally, the 
 multivector is just stored as a flat array of coefficients for all the basis blades of various 
 grades. In an n-dimensional vector space, there are 2^n such basis blades in total and a blade of 
-grade k gets n-choose-k of them.
+grade k gets n-choose-k of them. A blade can be seen as a special kind of multivector that has 
+nonzero values only for coefficients that belong to the same grade, i.e. it doesn't mix up basis 
+blades of different grades.
+
+The main operation between multivectors is the geometric product which is implemented via the usual
+multiplication operator *. The outer or wedge product that was defined for blades as ^ operator 
+does also still exist for general multivectors. The geometric product is defined via a sum of the
+inner and outer product of vectors: a*b = a|b + a^b, where the | operator is used here to denote 
+the inner product, i.e. the scalar product. Note that a and b are supposed to be vectors here and 
+not general blades or even more general multivectors. This equation may not hold anymore for these 
+more general objects. In fact, there doesn't even seem to be a general consensus for how the inner 
+product should be defined for those more general objects, which is why the operator is not yet
+implemented here (Q: could it perhaps be *defined* by this equation - would that be any useful?).
+
+Other operations are of course addition and subtraction (which just operate element-wise), 
+...todo: inversion, division, join, meet, rotor, projection, rejection, reflection, dualization, 
+exponentiation, sin, cos
 
 
 */

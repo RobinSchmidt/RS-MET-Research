@@ -6306,6 +6306,7 @@ void testGeometricAlgebra()
 
   // References:
   // 1: Geometric Algebra for Computer Science (GA4CS)
+  // 2: The Inner Products of Geometric Algebra (TIPoGA)
 
   using Real = double;
   using GA   = rsGeometricAlgebra<Real>;
@@ -6390,17 +6391,60 @@ void testGeometricAlgebra()
   d = (a^b)^c; ok &= d.getGrade() == 3 && d == Vec({-78});  // ^ is associative
   d = a^(b^c); ok &= d.getGrade() == 3 && d == Vec({-78});
 
-
-
-
   // Compute the unit pseudoscalar and its inverse:
   a.set(1, Vec({1,0,0})); A = a;
   b.set(1, Vec({0,1,0})); B = b;
   c.set(1, Vec({0,0,1})); C = c;
-  MV I  = A*B*C; Vec({0,0,0,0,0,0,0, 1});      // unit pseudoscalar
-  MV Ii = C*B*A; Vec({0,0,0,0,0,0,0,-1});      // and its inverse
-  C = I*Ii; ok &= C == Vec({1,0,0,0,0,0,0,0});
-  C = Ii*I;
+  MV I  = A*B*C; Vec({0,0,0,0,0,0,0, 1});       // unit pseudoscalar
+  MV Ii = C*B*A; Vec({0,0,0,0,0,0,0,-1});       // and its inverse
+  C = I*Ii; ok &= C == Vec({1,0,0,0,0,0,0,0});  // I * I^-1 = 1
+  C = Ii*I; ok &= C == Vec({1,0,0,0,0,0,0,0});  // I^-1 * I = 1
+
+  // Function to compute the dual via the formula with the inverse pseudoscalar, which must be 
+  // passed via the parameter Ii:
+  auto dual = [](const MV& A, const MV& Ii) { return A * Ii; };
+
+  // Function to compute the regressive product (a.k.a. antiwedge product) via the formula using
+  // duals: A v B = (A* ^ B*)*. To compute the duals, we need the inverse pseudoscalar, which must
+  // be passed via the parameter Ii:
+  auto regressiveProduct = [&](const MV& A, const MV& B, const MV& Ii)
+  {
+    MV Ad = dual(A, Ii);  // dual of A
+    MV Bd = dual(B, Ii);  // dual of B
+    MV Pd = Ad ^ Bd;      // dual of product
+    return dual(Pd, Ii);  // product
+  };
+
+  // Computes inner product via the identity: (M | N)* = M ^ N* -> M | N = -(M ^ N*)* which is 
+  // given in this video (btw.: we also have: (M ^ N)* = M | N*):
+  // https://www.youtube.com/watch?v=iv5G956UGfs&list=PLLvlxwbzkr7i6DlChcYEL7nJ8R9ZuV8JA&index=5
+  // at 9:35. This does not seem to correspond to any of the inner products defined so far - is 
+  // this yet another one or am i doinf soemthing wrong? Btw. at around 4 min it also says, the 
+  // "fundamental identity" a*b = a|b + a^b also holds when b is a multivector (but a is still 
+  // just a vector).
+  auto innerProduct = [&](const MV& M, const MV& N, const MV& Ii)
+  {
+    // M | N = -(M ^ N*)*
+    MV Nd = dual(N, Ii);
+    MV Pd = M ^ Nd;
+    return -dual(Pd, Ii); // the minus comes from: A** = dual(dual(A)) = -A
+  };
+  // see also:
+  // https://discourse.bivector.net/t/very-basic-question-ii/361
+  // https://www.youtube.com/watch?v=bj9JslblYPU&t=160s
+
+
+
+
+  // test (M ^ N)* = M | N* and  (M | N)* = M ^ N*
+
+  // check this out at around 4 min:
+  // 
+  // it seems, the "fundamental identity" a*b = a|b + a^b also holds when b is a multivector (but
+  // a is still just a vector)...it has actually some other identities at 9:35 for the inner 
+  // product based on the dual as wel, namely: (M^N)* = M|N*, (M|N)* = M^N*, so it seems we could 
+  // define M|N = (M^N*)* or -(M^N*)* because he says something about getting the negative back when 
+  // doing something like (N*)*
 
 
   // todo: store the unit pseudoscalar and its inverse in the algebra (should be computed in init)
@@ -6420,12 +6464,35 @@ void testGeometricAlgebra()
   C = MV::product(A, B, PT::fatDot);
   ok &= C == Vec({12,1,72,29,45,-5,75,23});
 
+
+  // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s there are also useful identities for
+  // the inner product -> figure out to which inner product they apply
+  C = innerProduct(A, B, Ii);
+  D = MV::product(A, B, PT::contractLeft);
+  D = MV::product(A, B, PT::dot);
+  D = A | B;
+  D = MV::product(A, B, PT::fatDot);
+  D = MV::product(A, B, PT::contractRight);
+  // it seems, none of the inner products defined so far obeys the equation that was used to derive
+  // the innerProduct function. What's going on? In his 1st book, page 101, Alan Macdonald defines 
+  // the inner product as left contraction
+
+  C = MV::product(A, B, PT::contractLeft) + MV::product(A, B, PT::contractRight);
+  D = MV::product(A, B, PT::scalar) + MV::product(A, B, PT::fatDot);
+  ok &= C == D; // 2.11 in TIPoGA
+
   //A.set(Vec({ 0,2,3,4,0,0,0,0 }));
   B = A*Ii; // should compute the dual of A
   C = B*Ii; ok &= C == -A; 
-  // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s there are also useful identities for
-  // the inner product -> figure out to which inner product they apply
-                      
+
+
+
+  // In "The Inner Products of Geometric Algebra" some other operations are mentioned:
+  // -"reversion of a blade is obtained by writing its evctor factors in reverse order" pg.39
+  //  ...so that means e1*e2 becomes e2*e1, etc. 
+  // -"grade involution reverses the sign of odd blades" pg 39
+
+
 
   // https://www.youtube.com/watch?v=tX4H_ctggYo
   // ei*ei = 1 or 0 or -1, ei*ej = -ej*ei for i != j, ei*ej = eij
@@ -6459,21 +6526,20 @@ void testGeometricAlgebra()
   // todo: implement == for multivector == blade and blade == multivector
   // implement assign for multivector = blade
 
-  // check this out at around 4 min:
-  // https://www.youtube.com/watch?v=iv5G956UGfs&list=PLLvlxwbzkr7i6DlChcYEL7nJ8R9ZuV8JA&index=5
-  // it seems, the "fundamental identity" a*b = a|b + a^b also holds when b is a multivector (but
-  // a is still just a vector)...it has actually some other identities for the inner product based
-  // on the dual as wel, namely: (M^N)* = M|N*, (M|N)* = M^N*, so it seems we could define
-  // M|N = (M^N*)* or -(M^N*)* because he says something about getting the negative back when 
-  // doing something like (N*)*
+
 
   // todo: implement the unit pseudoscalar I = e1*e2*e3 and its inverse which in G^3 is just 
   // I^-1 = e3*e2*e1 - i think, this pattern of reversing the basis vectors generalizes. with that,
   // we can dualize multivectors via dual(M) = M * I^-1 - this should give the orthogonal
   // complement
 
-
-
+  // Translations of terminology between geometric/exterior/tensor/linear algebra and physics in 3D
+  // Geometric                Exterior   Tensor     Linear          Physics
+  //
+  // scalar                   scalar     scalar     scalar          scalar
+  // vector                   vector     vector     row-vector      vector
+  // bivector                 1-form     covector   column-vector   pseudovector/axial vector
+  // trivector/pseudoscalar   scalar?    scalar?    scalar          scalar
 
 
 
@@ -6580,6 +6646,10 @@ void testGeometricAlgebra()
   // https://stackoverflow.com/questions/23974569/how-to-generate-all-subsets-of-a-given-size
   // https://www.codeproject.com/Articles/26050/Permutations-Combinations-and-Variations-using-C-G
   // https://afteracademy.com/blog/print-all-subsets-of-a-given-set
+
+
+
+
 }
 
 

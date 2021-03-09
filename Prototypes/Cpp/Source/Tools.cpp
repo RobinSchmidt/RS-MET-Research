@@ -4610,7 +4610,7 @@ public:
   /** Inner (aka contraction?) product between this multivector and multivector b. For vectors 
   a and b, this is the symmetric part of the geometric product: a|b = (a*b+b*a)/2, but this 
   identity does not generalize to multivectors. */
-  /*
+
   rsMultiVector<T> operator|(const rsMultiVector<T>& b) const
   {
     rsAssert(areCompatible(*this, b));
@@ -4618,7 +4618,7 @@ public:
     alg->innerProduct(this->coeffs, b.coeffs, p.coeffs);
     return p;
   }
-  */
+
 
 
   rsMultiVector<T> operator-()
@@ -4649,9 +4649,10 @@ public:
     wedge,
     //commutator,
     //regressive,
-    contractLeft,
-    contractRight,
-    scalar,
+    contractLeft,  // "contraction onto"
+    contractRight, // "contraction by"
+    scalar,        // for blades, nonzero only when the two blades have same grade
+    dot,
     fatDot
   };
 
@@ -4696,6 +4697,8 @@ rsMultiVector<T> rsMultiVector<T>::product(const rsMultiVector<T>& C, const rsMu
   int n = C.getAlgebra()->getNumDimensions();
   for(int r = 0; r <= n; r++) {
     for(int s = 0; s <= n; s++) {
+      if(type == PT::dot && (r == 0 || s == 0))
+        continue;
       Bld Cr   = C.extractGrade(r);
       Bld Ds   = D.extractGrade(s);
       MV  CrDs = Cr * Ds;                 // geometric product of blades Cr,Ds
@@ -4706,6 +4709,7 @@ rsMultiVector<T> rsMultiVector<T>::product(const rsMultiVector<T>& C, const rsMu
       case PT::contractLeft:  rs = s-r;        break;
       case PT::contractRight: rs = r-s;        break;
       case PT::scalar:        rs = 0;          break;
+      case PT::dot:           rs = rsAbs(s-r); break; 
       case PT::fatDot:        rs = rsAbs(s-r); break;
       default:                rs = r+s;
       }

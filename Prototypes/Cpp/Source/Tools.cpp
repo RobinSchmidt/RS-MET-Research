@@ -4385,7 +4385,7 @@ class rsBlade
 
 public:
 
-  rsBlade(rsGeometricAlgebra<T>* algebraToUse, int grade)
+  rsBlade(const rsGeometricAlgebra<T>* algebraToUse, int grade)
   {
     this->grade = grade;
     setAlgebra(algebraToUse);
@@ -4395,7 +4395,7 @@ public:
   /** \name Setup */
 
   /** Sets the geometric algebra to use for operations involving this multivector. */
-  void setAlgebra(rsGeometricAlgebra<T>* algebraToUse)
+  void setAlgebra(const rsGeometricAlgebra<T>* algebraToUse)
   {
     alg = algebraToUse;
     coeffs.resize(alg->getBladeSize(grade));
@@ -4425,6 +4425,8 @@ public:
   int getGrade() const { return grade; }
 
   T getCoefficient(int i) const { return coeffs[i]; }
+
+  const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
 
 
 
@@ -4456,7 +4458,7 @@ public:
 protected:
 
   std::vector<T> coeffs;      // n-choose-k coeffs for the projections on the basis blades
-  rsGeometricAlgebra<T>* alg = nullptr;
+  const rsGeometricAlgebra<T>* alg = nullptr;
   int grade;
 
 };
@@ -4503,7 +4505,7 @@ class rsMultiVector
 
 public:
 
-  rsMultiVector(rsGeometricAlgebra<T>* algebraToUse)
+  rsMultiVector(const rsGeometricAlgebra<T>* algebraToUse)
   { setAlgebra(algebraToUse); }
 
 
@@ -4513,7 +4515,7 @@ public:
   /** \name Setup */
 
   /** Sets the geometric algebra to use for operations involving this multivector. */
-  void setAlgebra(rsGeometricAlgebra<T>* algebraToUse)
+  void setAlgebra(const rsGeometricAlgebra<T>* algebraToUse)
   {
     alg = algebraToUse;
     coeffs.resize(alg->getMultiVectorSize());
@@ -4533,13 +4535,18 @@ public:
 
   /** Extracts the blade of a given grade that is present in this multivector. For example, 
   mv.extractGrade(2) would extract the bivector part of a given multivector mv. */
-  rsBlade<T> extractGrade(int grade)
+  rsBlade<T> extractGrade(int grade) const
   {
+    if(grade < 0 || grade > alg->getNumDimensions())
+      return rsBlade<T>(alg, 0); // return the zero blade
     rsBlade<T> B(alg, grade);
     int n0 = alg->getBladeStart(grade);
     B.setCoefficients(&coeffs[n0]);
     return B;
   }
+
+  const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */
@@ -4551,6 +4558,17 @@ public:
     RAPT::rsArrayTools::add(&coeffs[0], &b.coeffs[0], &p.coeffs[0], (int)coeffs.size());
     return p;
   }
+
+  /** Adds multivector b to this multivector. */
+  rsMultiVector<T>& operator+=(const rsMultiVector<T>& b) 
+  { 
+    rsAssert(areCompatible(*this, b));
+    for(size_t i = 0; i < coeffs.size(); i++)
+      coeffs[i] += b.coeffs[i];
+    return *this; 
+  }
+  // todo: create function that adds a blade into a multivector
+
 
   rsMultiVector<T> operator-(const rsMultiVector<T>& b) const
   {
@@ -4625,7 +4643,7 @@ public:
 protected:
 
   std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
-  rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
+  const rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
 
 };
 
@@ -4633,6 +4651,7 @@ template<class T>
 void rsMultiVector<T>::set(const rsBlade<T>& b)
 {
   // should we also set the algebra, like alg = b.alg? or setAlgebra(b.getAlgebra())
+  setAlgebra(b.getAlgebra());
   int n0 = alg->getBladeStart(b.getGrade());
   int n  = alg->getBladeSize( b.getGrade());
   rsFill(coeffs, T(0));
@@ -4640,7 +4659,15 @@ void rsMultiVector<T>::set(const rsBlade<T>& b)
     coeffs[n0+i] = b.getCoefficient(i);
 }
 
-
+/** Geometric product of two blades. This results in general in a multivector. */
+template<class T>
+rsMultiVector<T> operator*(const rsBlade<T>& a, const rsBlade<T>& b)
+{
+  rsMultiVector<T> A = a;
+  rsMultiVector<T> B = b;
+  return A*B;
+}
+// may be optimized
 
 
 

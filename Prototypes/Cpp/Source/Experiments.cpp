@@ -6321,8 +6321,8 @@ void testGeometricAlgebra()
   // the quaternions.
   GA alg3(3);
   MV A(&alg3), B(&alg3); 
-  A.randomIntegers(+1, +9, 0);           // a = 3,8,7,4,6,4,6,5  
-  B.randomIntegers(+1, +9, 1);           // b = 4,5,7,1,4,7,6,1
+  A.randomIntegers(+1, +9, 0);           // A = 3,8,7,4,6,4,6,5  
+  B.randomIntegers(+1, +9, 1);           // B = 4,5,7,1,4,7,6,1
   MV C(&alg3); // d(&alg3), e(&alg3);
   C = A+B; ok &= C == Vec({7,13,14,5,10,11,12,6});
   C = A*B; ok &= C == Vec({12,1,72,29,84,-5,28,46});
@@ -6403,20 +6403,28 @@ void testGeometricAlgebra()
   C = Ii*I;
 
 
+  // todo: store the unit pseudoscalar and its inverse in the algebra (should be computed in init)
+
   // todo: implement taking the inverse
 
-  A.set(Vec({5,6,3,4,1,7,2,8}));
-  B.set(Vec({5,1,3,2,9,6,4,7}));
+  // Test the product function for the derived products:
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  B.set(Vec({4,5,7,1,4,7,6,1}));
   C = A^B;
   MV D = MV::product(A, B, PT::wedge);
   ok &= C == D; 
 
+  // When entering
+  //   (3+8e1+7e2+4e3+6e12+4e13+6e23+5e123) | (4+5e1+7e2+1e3+4e12+7e13+6e23+1e123)
+  // into bivector.net, it apparently computes the "fat dot" product:
+  C = MV::product(A, B, PT::fatDot);
+  ok &= C == Vec({12,1,72,29,45,-5,75,23});
 
-
-  A.set(Vec({ 0,2,3,4,0,0,0,0 }));
+  //A.set(Vec({ 0,2,3,4,0,0,0,0 }));
   B = A*Ii; // should compute the dual of A
-  C = B*Ii; ok &= C == -A; // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s
-                           // there are also useful identities for the inner product
+  C = B*Ii; ok &= C == -A; 
+  // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s there are also useful identities for
+  // the inner product -> figure out to which inner product they apply
                       
 
   // https://www.youtube.com/watch?v=tX4H_ctggYo

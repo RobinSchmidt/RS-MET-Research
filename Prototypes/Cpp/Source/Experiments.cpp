@@ -6310,8 +6310,9 @@ void testGeometricAlgebra()
   using Real = double;
   using GA   = rsGeometricAlgebra<Real>;
   using MV   = rsMultiVector<Real>;
-  using Vec  = std::vector<Real>;
   using Bld  = rsBlade<Real>;
+  using Vec  = std::vector<Real>;
+  using PT   = MV::ProductType;
 
   bool ok = true;
 
@@ -6402,42 +6403,13 @@ void testGeometricAlgebra()
   C = Ii*I;
 
 
-
-
   // todo: implement taking the inverse
-
-  // implement various products via grade projection, see
-  // https://en.wikipedia.org/wiki/Geometric_algebra#Extensions_of_the_inner_and_exterior_products
-
-  // Computes the outer product (inefficiently) via blade projection:
-  auto outer = [&](const MV& C, const MV& D)
-  {
-    MV CD(C.getAlgebra());
-    int n = C.getAlgebra()->getNumDimensions();
-    for(int r = 0; r <= n; r++)
-    {
-      for(int s = 0; s <= n; s++)
-      {
-        Bld Cr   = C.extractGrade(r);
-        Bld Ds   = D.extractGrade(s);
-        MV  CrDs = Cr * Ds;                 // geometric product of blades Cr,Ds
-        Bld Prj  = CrDs.extractGrade(r+s);  // projection
-        CD      += Prj;                     // accumulation
-      }
-    }
-    return CD;
-  };
-  // todo: pass in a function gradeToExtract(int r, int s) and then use:
-  // CrDs.extractGrade(gradeToExtract(r, s)). different functions produce different products.
-  // or maybe move into class rsMultiVector as gradedProduct that takes a ProductType parameter
-
 
   A.set(Vec({5,6,3,4,1,7,2,8}));
   B.set(Vec({5,1,3,2,9,6,4,7}));
   C = A^B;
-  MV D = outer(A, B);
+  MV D = MV::product(A, B, PT::wedge);
   ok &= C == D; 
-
 
 
 
@@ -6446,11 +6418,6 @@ void testGeometricAlgebra()
   C = B*Ii; ok &= C == -A; // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s
                            // there are also useful identities for the inner product
                       
-
-
-
-
-
 
   // https://www.youtube.com/watch?v=tX4H_ctggYo
   // ei*ei = 1 or 0 or -1, ei*ej = -ej*ei for i != j, ei*ej = eij

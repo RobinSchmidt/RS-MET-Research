@@ -4640,6 +4640,32 @@ public:
     // todo: try to relax that later: a 3D geometric algebra contains a 2D one as subalgebra
   }
 
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Functions */
+
+  enum class ProductType
+  {
+    wedge,
+    //commutator,
+    //regressive,
+    contractLeft,
+    contractRight,
+    scalar,
+    fatDot
+  };
+
+  /** Computes one of the several products that can be derived from the geometric product. Which 
+  one it is is selected by the product type parameter. This function is *horribly* inefficient and 
+  only meant for prototyping and reference purposes. ..well, actually the whole class is anyway, 
+  but this one is particularly horrible. See:
+  https://en.wikipedia.org/wiki/Geometric_algebra#Extensions_of_the_inner_and_exterior_products */
+  static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
+    ProductType type);
+
+
+
+
 protected:
 
   std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
@@ -4659,6 +4685,35 @@ void rsMultiVector<T>::set(const rsBlade<T>& b)
     coeffs[n0+i] = b.getCoefficient(i);
 }
 
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::product(const rsMultiVector<T>& C, const rsMultiVector<T>& D,
+  ProductType type)
+{
+  using MV  = rsMultiVector<T>;
+  using Bld = rsBlade<T>;
+  using PT  = ProductType;
+  MV CD(C.getAlgebra());
+  int n = C.getAlgebra()->getNumDimensions();
+  for(int r = 0; r <= n; r++) {
+    for(int s = 0; s <= n; s++) {
+      Bld Cr   = C.extractGrade(r);
+      Bld Ds   = D.extractGrade(s);
+      MV  CrDs = Cr * Ds;                 // geometric product of blades Cr,Ds
+      int rs;
+      switch(type)
+      {
+      case PT::wedge:         rs = r+s;        break;
+      case PT::contractLeft:  rs = s-r;        break;
+      case PT::contractRight: rs = r-s;        break;
+      case PT::scalar:        rs = 0;          break;
+      case PT::fatDot:        rs = rsAbs(s-r); break;
+      default:                rs = r+s;
+      }
+      Bld Prj  = CrDs.extractGrade(rs);   // projection
+      CD      += Prj;  }}                 // accumulation
+  return CD;
+}
+
 /** Geometric product of two blades. This results in general in a multivector. */
 template<class T>
 rsMultiVector<T> operator*(const rsBlade<T>& a, const rsBlade<T>& b)
@@ -4668,6 +4723,7 @@ rsMultiVector<T> operator*(const rsBlade<T>& a, const rsBlade<T>& b)
   return A*B;
 }
 // may be optimized
+
 
 
 

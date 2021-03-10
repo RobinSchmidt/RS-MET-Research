@@ -4094,6 +4094,11 @@ public:
   { product_bld_bld(a, ga, b, gb, p, weightsOuter); }
 
 
+  const rsMatrix<int>& getCayleyTableIndices() const { return bladeIndices; } 
+
+  const rsMatrix<T>& getCayleyTableWeightsGeom() const { return weightsGeom; } 
+
+
   // move to protected - these are really implementation details (except buildCayleyTables - this
   // may be useful for client code, too):
 
@@ -4156,7 +4161,7 @@ protected:
 
   int np = 0;  // number of basis vectors that square to +1 ("positive dimensions", space-like)
   int nn = 0;  // number of basis vectors that square to -1 ("negative dimensions", time-like)
-  int nz = 0;  // number of basis vectors that square to  0 ("zero dimensions", projection-like?)
+  int nz = 0;  // number of basis vectors that square to  0 ("zero dimensions", light-like? projective? degenerate?)
   int n  = 0;  // n = np + nn + nz, the dimensionality of the vector space
   int N  = 1;  // N = 2^n, the dimensionality of the multivector space
 
@@ -4533,6 +4538,9 @@ public:
   /** Scales this multivector by a scalar scaler. */
   void scale(const T& scaler) { rsScale(coeffs, scaler); }
 
+  /** Sets this multivector to zero. */
+  void setZero() { rsFill(coeffs, T(0)); }
+
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
@@ -4641,6 +4649,12 @@ public:
 
   void operator=(const rsBlade<T>& b) { set(b); }
 
+
+  /** Read and write access to i-th coefficient. */
+  T& operator[](int i) { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
+
+  const T& operator[](int i) const { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
+
   static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)
   {
     bool ok = a.coeffs.size() == b.coeffs.size();
@@ -4656,7 +4670,7 @@ public:
   enum class ProductType
   {
     wedge,
-    //commutator,
+    //commutator,  // is a "derivation", obey product rule
     //regressive,
     contractLeft,  // "contraction onto"
     contractRight, // "contraction by"

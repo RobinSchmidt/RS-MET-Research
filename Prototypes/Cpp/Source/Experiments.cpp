@@ -6445,6 +6445,7 @@ void testGeometricAlgebra()
   // Bld ai = a.getInverse();   // see LaGA, pg 69
   // MV  Ai = A.getInverse();   // dunno, if that's always possible, maybe return scalar NaN if not
                                 // or maybe the whole array should be NaNs
+  // -reversion (complex conjugation in 2D)
 
   // Maybe install the python package clifford for reference
 
@@ -6515,16 +6516,78 @@ void testGeometricAlgebra()
 
 
   // ToDo: figure aout what happens with the different products, when we feed in:
-  // A*A where A = {1,2,3,4,5,6,7} - could this hepl to build Cayley tables for the different 
+  // A*A where A = {1,2,3,4,5,6,7} - could this help to build Cayley tables for the different 
   // products? ...or maybe to find the (2,4)th entry of the Cayley table for a given product, we
   // need to feed A = {0,0,1,0,0,0,0,0}, B = {0,0,0,0,1,0,0,0}
+  // OK - let's try to obtain the Cayley table of the geometric product by this method:
 
+  auto findHotIndex = [](const MV& A)
+  {
+    int N = A.getAlgebra()->getMultiVectorSize();
+    for(int i = 0; i < N; i++)
+      if(A[i] != Real(0))
+        return i;
+    return -1;
+  };
+
+
+  rsMatrix<int> CT_indicesTrue = alg3.getCayleyTableIndices();
+  rsMatrix<int>  CT_indices(8, 8);
+  rsMatrix<Real> CT_weights(8, 8);
+  for(int i = 0; i < 8; i++)
+  {
+    for(int j = 0; j < 8; j++)
+    {
+      // Set the i-th and j-th alement in A and B "hot", respectively and form the product:
+      A.setZero(); A[i] = 1;
+      B.setZero(); B[j] = 1;
+      C = A*B;
+
+      //C = MV::product(A, B, PT::contractLeft);
+      //C = MV::product(A, B, PT::contractRight);
+      //C = MV::product(A, B, PT::scalar);
+      //C = MV::product(A, B, PT::dot);
+      //C = MV::product(A, B, PT::fatDot);
+
+      // Find the "hot" (nonzero) element in the product C (there should be at most one):
+      int k = findHotIndex(C);
+      if(k != -1) { 
+        rsAssert(k == CT_indicesTrue(i, j));
+        CT_indices(i, j) = k;       // its index gives the index-entry for the Cayley table
+        CT_weights(i, j) = C[k]; }  // its value (-1 or +1) gives the weight 
+    }
+  }
+  ok &= CT_indices == alg3.getCayleyTableIndices();
+  ok &= CT_weights == alg3.getCayleyTableWeightsGeom();
+
+  // todo: figure out, if the indices table is the same for all products - well, that test works
+  // only when there are no zero entries in the table because for the zero entries, the "hot"
+  // index in C cannot retrieved (because it is not actually hot) ...however, at bivector.net, it 
+  // looks like at least the inner product there does indeed produce the same index matrix, so it
+  // may be a general rule - i guess, to figure out, if that rule generally holds, we need to
+  // compare slowly evaluated products with those evaluated via the Cayley tables resulting from
+  // assuming this rule. if it doesn't hold, we will need different index tables for the different
+  // products, if it does hold, we can use the same index-table but still need different 
+  // weight-tables for the various products
+  // maybe we can rsAssert(k == indexTable(i, j)) inside the if(k != 1) where index
+  // ...done...ok - yet that seems to work and the rule seems to hold
+
+
+  rsAssert(ok);
 
   // In "The Inner Products of Geometric Algebra" some other operations are mentioned:
   // -"reversion of a blade is obtained by writing its evctor factors in reverse order" pg.39
   //  ...so that means e1*e2 becomes e2*e1, etc. 
   // -"grade involution reverses the sign of odd blades" pg 39
 
+
+  // In this video:
+  // https://www.youtube.com/watch?v=b0K451IxLBQ&list=PLQ6JJNfj9jD_H3kUopCXkvvGoZqzYOzsV&index=4
+  // he says, that complex numbers and quaternions can be derived from geomteric algebra in 2 ways:
+  // 1: as signature 0,1,0 and 0,2,0 geometric algebras and 2: as subalgebras of a 3,0,0 algebra
+
+  // http://geocalc.clas.asu.edu/pdf/OerstedMedalLecture.pdf
+  // pg 27: pauli algebra is the matrix version of G(3,0,0)
 
 
   // https://www.youtube.com/watch?v=tX4H_ctggYo
@@ -6537,7 +6600,7 @@ void testGeometricAlgebra()
   // see also:
   // https://en.wikipedia.org/wiki/Comparison_of_vector_algebra_and_geometric_algebra
 
-  rsAssert(ok);
+
 
   // Why is the wedge of two bivectors commutative? Isn't it supposed to be anticommutative - or
   // is that only the case when the grade of the result is even? -> figure out and document
@@ -6682,6 +6745,9 @@ void testGeometricAlgebra()
 
 
 
+  // Ideas:
+  // -the diagonals of the Cayley tables are always -1,0,+1 - would it make sense if they also 
+  //  could be a scalar multiple of some other basis blade?
 
 }
 

@@ -4530,6 +4530,9 @@ public:
   void set(const std::vector<T>& newCoeffs)
   { rsAssert(newCoeffs.size() == coeffs.size()); coeffs = newCoeffs; }
 
+  /** Scales this multivector by a scalar scaler. */
+  void scale(const T& scaler) { rsScale(coeffs, scaler); }
+
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
@@ -4607,10 +4610,15 @@ public:
     return p;
   }
 
-  /** Inner (aka contraction?) product between this multivector and multivector b. For vectors 
-  a and b, this is the symmetric part of the geometric product: a|b = (a*b+b*a)/2, but this 
-  identity does not generalize to multivectors. */
-
+  /** Inner product between this multivector and multivector b. For vectors a and b, this is the 
+  symmetric part of the geometric product: a|b = (a*b+b*a)/2, but this identity does not generalize
+  to multivectors.  
+  Maybe don't implement that operator just yet - there seems to be no general consensus yet, how
+  the inner product should be defined. For example, bivector.net uses the "fat dot" definition, 
+  Alan Macdonald uses the "left contraction" definition. We implement both of these and more via 
+  the product function defined below - users should be explicit, which kind of "inner product" they
+  want.  */
+  /*
   rsMultiVector<T> operator|(const rsMultiVector<T>& b) const
   {
     rsAssert(areCompatible(*this, b));
@@ -4618,6 +4626,7 @@ public:
     alg->innerProduct(this->coeffs, b.coeffs, p.coeffs);
     return p;
   }
+  */
 
 
 
@@ -4716,6 +4725,15 @@ rsMultiVector<T> rsMultiVector<T>::product(const rsMultiVector<T>& C, const rsMu
       Bld Prj  = CrDs.extractGrade(rs);   // projection
       CD      += Prj;  }}                 // accumulation
   return CD;
+}
+
+/** Product of a scalar and a multivector. */
+template<class T>
+rsMultiVector<T> operator*(const T& s, const rsMultiVector<T>& A)
+{
+  rsMultiVector<T> P = A;
+  P.scale(s);
+  return P;
 }
 
 /** Geometric product of two blades. This results in general in a multivector. */

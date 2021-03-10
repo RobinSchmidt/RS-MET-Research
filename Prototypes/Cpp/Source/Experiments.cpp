@@ -6307,6 +6307,7 @@ void testGeometricAlgebra()
   // References:
   // 1: Geometric Algebra for Computer Science (GA4CS)
   // 2: The Inner Products of Geometric Algebra (TIPoGA)
+  // 3: Linear and Geometric Algebra (LaGA)
 
   using Real = double;
   using GA   = rsGeometricAlgebra<Real>;
@@ -6416,12 +6417,12 @@ void testGeometricAlgebra()
   };
 
   // Computes inner product via the identity: (M | N)* = M ^ N* -> M | N = -(M ^ N*)* which is 
-  // given in this video (btw.: we also have: (M ^ N)* = M | N*):
+  // given in this video (btw.: we also have: (M ^ N)* = M | N*). 
   // https://www.youtube.com/watch?v=iv5G956UGfs&list=PLLvlxwbzkr7i6DlChcYEL7nJ8R9ZuV8JA&index=5
-  // at 9:35. This does not seem to correspond to any of the inner products defined so far - is 
-  // this yet another one or am i doinf soemthing wrong? Btw. at around 4 min it also says, the 
-  // "fundamental identity" a*b = a|b + a^b also holds when b is a multivector (but a is still 
-  // just a vector).
+  // at 9:35. Btw. at around 4 min it also says, the "fundamental identity" a*b = a|b + a^b also 
+  // holds when b is a multivector (but a is still just a vector). These identifies apply to the
+  // "left-contraction" definition of the inner product. On the other hand bivector.net uses the 
+  // "fat dot" definition.
   auto innerProduct = [&](const MV& M, const MV& N, const MV& Ii)
   {
     // M | N = -(M ^ N*)*
@@ -6433,7 +6434,19 @@ void testGeometricAlgebra()
   // https://discourse.bivector.net/t/very-basic-question-ii/361
   // https://www.youtube.com/watch?v=bj9JslblYPU&t=160s
 
+  // what if we define an inner product by  u|v = (u*v + v*u)/2? do we get something different than
+  // using u|v = u*v - u^v
 
+
+  // Operations to do next:
+  // Vec I  = alg.getPseudoScalar();
+  // Vec Ii = alg.getInversePseudoScalar();
+  // MV  Ad = A.getDual();
+  // Bld ai = a.getInverse();   // see LaGA, pg 69
+  // MV  Ai = A.getInverse();   // dunno, if that's always possible, maybe return scalar NaN if not
+                                // or maybe the whole array should be NaNs
+
+  // Maybe install the python package clifford for reference
 
 
   // test (M ^ N)* = M | N* and  (M | N)* = M ^ N*
@@ -6465,17 +6478,22 @@ void testGeometricAlgebra()
   ok &= C == Vec({12,1,72,29,45,-5,75,23});
 
 
-  // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s there are also useful identities for
-  // the inner product -> figure out to which inner product they apply
+  // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s There are also useful identities for
+  // the inner product. Macdonald uses the left-contraction definition of the inner product:
   C = innerProduct(A, B, Ii);
   D = MV::product(A, B, PT::contractLeft);
+  ok &= C == D;
+
+
   D = MV::product(A, B, PT::dot);
-  D = A | B;
+  //D = A | B;
   D = MV::product(A, B, PT::fatDot);
   D = MV::product(A, B, PT::contractRight);
   // it seems, none of the inner products defined so far obeys the equation that was used to derive
   // the innerProduct function. What's going on? In his 1st book, page 101, Alan Macdonald defines 
   // the inner product as left contraction
+
+  // Test some identities:
 
   C = MV::product(A, B, PT::contractLeft) + MV::product(A, B, PT::contractRight);
   D = MV::product(A, B, PT::scalar) + MV::product(A, B, PT::fatDot);
@@ -6485,6 +6503,21 @@ void testGeometricAlgebra()
   B = A*Ii; // should compute the dual of A
   C = B*Ii; ok &= C == -A; 
 
+  // the geometric product A*B commutes, when B = A*
+  C = A*B;
+  D = B*A;
+  ok &= C == D;
+
+  //C = A ^ B;
+  //D = 0.5*(A*B - B*A);  // this is actually zero :-O
+  //ok &= C == D;         // does not hold! a^b = (a*b-b*a)/2 holds probably only for vectors
+
+
+
+  // ToDo: figure aout what happens with the different products, when we feed in:
+  // A*A where A = {1,2,3,4,5,6,7} - could this hepl to build Cayley tables for the different 
+  // products? ...or maybe to find the (2,4)th entry of the Cayley table for a given product, we
+  // need to feed A = {0,0,1,0,0,0,0,0}, B = {0,0,0,0,1,0,0,0}
 
 
   // In "The Inner Products of Geometric Algebra" some other operations are mentioned:

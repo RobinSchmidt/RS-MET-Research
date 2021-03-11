@@ -4040,23 +4040,14 @@ class rsGeometricAlgebra
 
 public:
 
-  using Vec = std::vector<T>; // for conevenience ..use MV
+  using Vec = std::vector<T>; // for conevenience
 
   /** Creates an algebra object with given signature, i.e. given number of basis vectors that 
   square to +1, -1 and 0 respectively. Note that even though the zero-dimensions are specified 
   last, their basis-vectors will appear first in the canoncial ordering, adhering to the convention
   used in the algebra creation tool at bivector.net. */
   rsGeometricAlgebra(int numPositiveDimensions, int numNegativeDimensions = 0, 
-    int numZeroDimensions = 0)
-  {
-    np = numPositiveDimensions;
-    nn = numNegativeDimensions;
-    nz = numZeroDimensions;
-    n  = np + nn + nz;
-    N  = RAPT::rsPowInt(2, n);
-    init();
-  }
-
+    int numZeroDimensions = 0);
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
@@ -4072,25 +4063,23 @@ public:
   binomial coefficient where k is the grade and n the dimensionality of the underlying vector 
   space. */
   int getBladeSize(int grade) const
-  {
-    rsAssert(grade >= 0 && grade <= n);
-    // todo: maybe allow for grades outside the range and return either 0 or -1 - whatever is more
-    // convenient or mathematicllay meaningful/consistent
-
-    return bladeSizes[grade];
-  }
+  { rsAssert(grade >= 0 && grade <= n); return bladeSizes[grade]; }
 
   /** Returns the array index at which the coefficients for a given grade begin in a multivector 
   that is represented by an array of scaling coefficients for each of the basis blades. */
   int getBladeStart(int grade) const
-  {
-    rsAssert(grade >= 0 && grade <= n);
-    // todo: maybe allow for grades outside the range and return either 0 or -1 - whatever is more
-    // convenient or mathematicllay meaningful/consistent
+  { rsAssert(grade >= 0 && grade <= n); return bladeStarts[grade]; }
 
-    return bladeStarts[grade];
-  }
 
+  const rsMatrix<int>& getCayleyTableIndices() const { return bladeIndices; } 
+
+  const rsMatrix<T>& getCayleyTableWeightsGeom() const { return weightsGeom; } 
+
+  const rsMatrix<T>& getCayleyTableWeightsOuter() const { return weightsOuter; } 
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Computation of products */
 
   /** Given multivectors a and b, this computes their geometric product and stores it in p. */
   void geometricProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsGeom); }
@@ -4106,13 +4095,10 @@ public:
   { product_bld_bld(a, ga, b, gb, p, weightsOuter); }
 
 
-  const rsMatrix<int>& getCayleyTableIndices() const { return bladeIndices; } 
+protected:
 
-  const rsMatrix<T>& getCayleyTableWeightsGeom() const { return weightsGeom; } 
-
-
-  // move to protected - these are really implementation details (except buildCayleyTables - this
-  // may be useful for client code, too):
+  //-----------------------------------------------------------------------------------------------
+  /** \name Internals */
 
   /** Counts the number of basis vector swaps required to get (the concatenation of?) "a" and "b" 
   into canonical order and returns -1, if this number is odd and +1 if it's even. Arguments "a" and
@@ -4137,17 +4123,10 @@ public:
   static void reorderMap(std::vector<int>& map, std::vector<int>& unmap, int N);
   // find better name
 
-
-
-
   /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
   the geometric algebra nD Euclidean space. */
   static void buildCayleyTables(std::vector<T>& M, rsMatrix<int>& blades, 
     rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner);
-
-
-protected:
-
 
   /** Computes the (i,j)th elements of the Cayley tables (i.e. multiplication tables) for the 
   geometric, outer and inner products. The metric is a vector containing the diagonal elements of 
@@ -4171,6 +4150,8 @@ protected:
   products between two multivectors. */
   void init();
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Data */
 
   int np = 0;  // number of basis vectors that square to +1 ("positive dimensions", space-like)
   int nn = 0;  // number of basis vectors that square to -1 ("negative dimensions", time-like)
@@ -4180,11 +4161,14 @@ protected:
 
   // The Cayley tables for the various products:
   rsMatrix<int> bladeIndices;
-  rsMatrix<T> weightsGeom, weightsOuter, weightsInner; // maybe remove weightsInner
-  // ...or replace by weightsContractLeft, weightsContractRight, weightsFatDot, etc.
+  rsMatrix<T> weightsGeom, weightsOuter, weightsInner; // maybe remove/rename weightsInner
+  rsMatrix<T> weightsContractLeft, weightsContractRight, weightsScalar, weightsDot, weightsFatDot;
 
   // Sizes and start-indices of the coeffs of the blades of grades 1..n
   std::vector<int> bladeSizes, bladeStarts;
+
+  template<class U> friend class rsBlade;
+  template<class U> friend class rsMultiVector;
 
 };
 
@@ -4432,7 +4416,7 @@ public:
   only meant for prototyping and reference purposes. ..well, actually the whole class is anyway, 
   but this one is particularly horrible. See:
   https://en.wikipedia.org/wiki/Geometric_algebra#Extensions_of_the_inner_and_exterior_products */
-  static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
+  static rsMultiVector<T> productSlow(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
     ProductType type);
 
 
@@ -4450,6 +4434,17 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 // rsGeometricAlgebra:
+
+template<class T>
+rsGeometricAlgebra<T>::rsGeometricAlgebra(int numPos, int numNeg, int numZero)
+{
+  np = numPos;
+  nn = numNeg;
+  nz = numZero;
+  n  = np + nn + nz;
+  N  = RAPT::rsPowInt(2, n);
+  init();
+}
 
 template<class T>
 int rsGeometricAlgebra<T>::reorderSign(int a, int b)
@@ -4578,8 +4573,8 @@ void rsGeometricAlgebra<T>::init()
   // "de-diagonalization" of the results... i'm not yet sure, how exactly that is supposed to work 
   // -> consult the GA4CS book and the author's reference implementation
 
-  // Fill Cayley (i.e. multiplication) tables for geometric, outer and inner product. These tables 
-  // really define what the algebra does - they are the heart and soul of everything:
+  // Fillthe basic Cayley (i.e. multiplication) tables for geometric, outer and inner product. 
+  // These tables really define what the algebra does - they are the heart and soul of everything:
   buildCayleyTables(M, bladeIndices, weightsGeom, weightsOuter, weightsInner);
 
   // Create the information that is needed for extracting the coeffs for a particular grade:
@@ -4589,6 +4584,31 @@ void rsGeometricAlgebra<T>::init()
   bladeStarts[0] = 0;
   for(i = 1; i <= n; i++)
     bladeStarts[i] = bladeStarts[i-1] + bladeSizes[i-1];
+
+  // Build the additional Cayley tables for the derived products:
+  using MV = rsMultiVector<T>;
+  using PT = MV::ProductType;
+  weightsContractLeft.setShape(N, N);
+  weightsContractRight.setShape(N, N);
+  weightsScalar.setShape(N, N);
+  weightsDot.setShape(N, N);
+  weightsFatDot.setShape(N, N);
+  MV A(this), B(this), P(this);
+  for(int i = 0; i < N; i++) {
+    for(int j = 0; j < N; j++) {
+      // Set the i-th and j-th alement in A and B "hot", respectively and form the products:
+      A.setZero(); A[i] = 1;
+      B.setZero(); B[j] = 1;
+      int k = bladeIndices(i, j);
+      P = MV::productSlow(A, B, PT::contractLeft);  weightsContractLeft( i, j) = P[k];
+      P = MV::productSlow(A, B, PT::contractRight); weightsContractRight(i, j) = P[k];
+      P = MV::productSlow(A, B, PT::scalar);        weightsScalar(       i, j) = P[k];
+      P = MV::productSlow(A, B, PT::dot);           weightsDot(          i, j) = P[k];
+      P = MV::productSlow(A, B, PT::fatDot);        weightsFatDot(       i, j) = P[k]; }}
+      // We assume here, that in every product, P has only one nonzero entry which is at index k.
+      // This seems to be the case from observations but i have no proof for this -> figure out
+
+  int dummy = 0;
 }
 
 template<class T>
@@ -4747,8 +4767,8 @@ rsMultiVector<T> rsMultiVector<T>::operator|(const rsMultiVector<T>& b) const
 */
 
 template<class T>
-rsMultiVector<T> rsMultiVector<T>::product(const rsMultiVector<T>& C, const rsMultiVector<T>& D,
-  ProductType type)
+rsMultiVector<T> rsMultiVector<T>::productSlow(
+  const rsMultiVector<T>& C, const rsMultiVector<T>& D, ProductType type)
 {
   using MV  = rsMultiVector<T>;
   using Bld = rsBlade<T>;

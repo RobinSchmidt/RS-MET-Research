@@ -4022,6 +4022,18 @@ bool rsBitLess(const int& a, const int& b)  // rename
 // this will be useful in any other context
 
 
+/** Class to represent a geometric algebra of an n-dimensional vector space. The main purpose of 
+this class is to define, how the various products (geometric, outer, contraction, dot, ...) of two 
+multivectors are calculated. Different algebras may have different rules and these rules are 
+embodied in the Cayley tables that are member variables of this class and are built in the 
+constructor according to the desired signature of the algebra (see below). rsBlade and 
+rsMultiVector objects need to store a pointer to such an rsGeometricAlgebra object in order to 
+delegate the actual computations in their multiplication operators to it. To the constructor of the 
+algebra object, you need to pass 3 numbers that determine the number of basis vectors that square 
+to +1, -1 and 0 respectively. This triple of numbers is called the signature of the algebra. For 
+example, the usual 3D Euclidean space has signature (3,0,0), 4D Minkowski spacetime has signature 
+(3,1,0) (or (1,3,0? depending on convention? -> figure out) ....tbc... */
+
 template<class T>
 class rsGeometricAlgebra
 {
@@ -4155,7 +4167,8 @@ protected:
   void product_bld_bld(const Vec& a, int ga, const Vec& b, int gb, Vec& p, 
     const rsMatrix<T>& weights) const;
 
-
+  /** Initializes the object. The main task is to fill the various Cayley tables for the various
+  products between two multivectors. */
   void init();
 
 
@@ -4168,11 +4181,275 @@ protected:
   // The Cayley tables for the various products:
   rsMatrix<int> bladeIndices;
   rsMatrix<T> weightsGeom, weightsOuter, weightsInner; // maybe remove weightsInner
+  // ...or replace by weightsContractLeft, weightsContractRight, weightsFatDot, etc.
 
   // Sizes and start-indices of the coeffs of the blades of grades 1..n
   std::vector<int> bladeSizes, bladeStarts;
 
 };
+
+//=================================================================================================
+
+/** A class to represent k-blades in n-dimensional space. For example, in 3D space, we have 
+scalars (0-blades), vectors (1-blades), bivectors (2-blades) and trivectors (3-blades). A blade
+is represented by a set of coefficients that scale the contributions of the relevant k-dimensional
+basis blades. A 3D scalar is just one coefficient that can be seen as scaling the unit scalar 1, 
+a 3D vector has 3 coefficients for the 3 basis vectors (e1,e2,e3), a 3D bivector has coefficients 
+for the 3 basis bivectors (e12,e13,e23) and a 3D trivector has 1 coefficient that scales the single
+basis trivector (e123) which represents a unit volume in 3D and is also known as pseudoscalar or 
+sometimes antiscalar. The number k is known as the grade of the blade. The highest possible grade
+is always equal to the dimension of the vector space, the number of coefficients for a particular
+grade k is always n-choose-k and the highest grade basis blade is always the unit pseudoscalar. In
+2D space, the unit pseudoscalar behaves similar to the imaginary unit i in complex numbers...but i 
+think, not exactly like it, because it behaves anticommutative rather than commutative?
+-> figure out
+
+The main operation between blades is the outer product (a.k.a. wedge product). When we restrict the
+computations of geometric algebra to using only blades (rather than general multivectors) and using 
+only the outer "wedge" product (and not the geometric product), we actually get a subalgebra of the
+geometric algebra known as exterior algebra and the wedge product is also sometimes called exterior 
+product. Being a subalgebra means closure: when we combine two blades via the wedge product, the 
+result is a blade again. When combining blades via the geometric product, the result is actually in
+general not a blade anymore but a more general multivector.
+
+Note:
+Blades are actually a special case of multivectors, so at first glance, it may seem appropriate to 
+let rsBlade be a subclass of rsMultiVector. However, i opted not to do this because multivectors 
+can do so many more things, which a blade should really not inherit. They are really a restricted
+special case, i.e. more like a subset rather than a subclass. But where there functionality 
+overlaps, both classes provide the same API. */
+
+template<class T>
+class rsBlade
+{
+
+public:
+
+  rsBlade(const rsGeometricAlgebra<T>* algebraToUse, int grade)
+  { this->grade = grade; setAlgebra(algebraToUse); }
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup */
+
+  /** Sets the geometric algebra to use for operations involving this multivector. */
+  void setAlgebra(const rsGeometricAlgebra<T>* algebraToUse)
+  { alg = algebraToUse; coeffs.resize(alg->getBladeSize(grade)); }
+
+  void setCoefficients(const T* newCoeffs)
+  { for(size_t i = 0; i < coeffs.size(); i++) coeffs[i] = newCoeffs[i]; }
+
+  /** Sets the blade's grade and the coefficients for the projections onto the basis blades of the
+  given grade. There are n-choose-k of them (n: dimensionality, k: grade), so the newCoeffs vector
+  is supposed to match that size. */
+  void set(int newGrade, const std::vector<T>& newCoeffs);
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry */
+
+  int getGrade() const { return grade; }
+
+  T getCoefficient(int i) const { return coeffs[i]; }
+
+  const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators */
+
+  // todo: +,-,/
+
+  /** Outer (aka wedge, exterior) product between this blade and blade b. */
+  rsBlade<T> operator^(const rsBlade<T>& b) const;
+
+
+  bool operator==(const std::vector<T>& b) const { return coeffs == b; }
+
+
+  static bool areCompatible(const rsBlade<T>& a, const rsBlade<T>& b)
+  { return a.alg == b.alg; }
+
+
+protected:
+
+  std::vector<T> coeffs;      // n-choose-k coeffs for the projections on the basis blades
+  const rsGeometricAlgebra<T>* alg = nullptr;
+  int grade;
+
+};
+
+//=================================================================================================
+
+/** Class to represent multivectors. A multivector can be seen as a formal sum of blades of various
+grades. For example, in 3D, a general multivector M is a sum: M = S + V + B + T where
+where S,V,B,T are the scalar, vector, bivector and trivector components of the multivector. The 
+addition is not actually "executed" because you can't really add a scalar to a vector and so on. 
+It is rather meant in the sense of putting things together but keeping them as seperate parts of a
+single entity, very much like z = a + b*i in the representation of complex numbers. You never 
+actually "do" any additions in expressions like this but just keep the coefficients a,b separate. 
+It's the same thing here, just the V and B parts have more than one component themselves (their 
+components are coefficients that scale the basis vectors and basis bivectors respectively). 
+Internally, the multivector is just stored as a flat array of coefficients for all the basis blades
+of various grades. In an n-dimensional vector space, there are 2^n such basis blades in total and a 
+blade of grade k gets n-choose-k of them. A blade can be seen as a special kind of multivector that 
+has nonzero values only for coefficients that belong to the same grade, i.e. it doesn't mix up 
+basis blades of different grades.
+
+The main operation between multivectors is the geometric product which is implemented via the usual
+multiplication operator *. The outer or wedge product that was defined for blades as ^ operator 
+does also still exist for general multivectors. The geometric product is defined via a sum of the
+inner and outer product of vectors: a*b = a|b + a^b, where the | operator is used here to denote 
+the inner product, i.e. the scalar product. Note that a and b are supposed to be vectors here and 
+not general blades or even more general multivectors. This equation may not hold anymore for these 
+more general objects. In fact, there doesn't even seem to be a general consensus for how the inner 
+product should be defined for those more general objects, which is why the operator is not yet
+implemented here (Q: could it perhaps be *defined* by this equation - would that be any useful?).
+Of course, the basic operations of addition and subtraction, which just operate element-wise, also 
+still exist.
+
+...todo: inversion, division, join, meet, rotor, projection, rejection, reflection, dualization, 
+reversion, exponentiation, sin, cos  */
+
+template<class T>
+class rsMultiVector
+{
+
+public:
+
+  rsMultiVector(const rsGeometricAlgebra<T>* algebraToUse)
+  { setAlgebra(algebraToUse); }
+
+  rsMultiVector(const rsBlade<T>& b) { set(b); }
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup */
+
+  /** Sets the geometric algebra to use for operations involving this multivector. */
+  void setAlgebra(const rsGeometricAlgebra<T>* algebraToUse)
+  { alg = algebraToUse; coeffs.resize(alg->getMultiVectorSize()); }
+
+  /** Sets the coefficients to random integers in the given range. */
+  void randomIntegers(int min, int max, int seed)
+  { RAPT::rsArrayTools::fillWithRandomIntegers(&coeffs[0], (int)coeffs.size(), min, max, seed); }
+
+  void set(const rsBlade<T>& b);
+
+  void set(const std::vector<T>& newCoeffs)
+  { rsAssert(newCoeffs.size() == coeffs.size()); coeffs = newCoeffs; }
+
+  /** Scales this multivector by a scalar scaler. */
+  void scale(const T& scaler) { rsScale(coeffs, scaler); }
+
+  /** Sets this multivector to zero. */
+  void setZero() { rsFill(coeffs, T(0)); }
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry */
+
+  /** Extracts the blade of a given grade that is present in this multivector. For example, 
+  mv.extractGrade(2) would extract the bivector part of a given multivector mv. */
+  rsBlade<T> extractGrade(int grade) const;
+
+
+  const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators */
+
+  /** Adds two multivectors. */
+  rsMultiVector<T> operator+(const rsMultiVector<T>& b) const;
+
+  /** Subtracts two multivectors. */
+  rsMultiVector<T> operator-(const rsMultiVector<T>& b) const;
+
+  /** Geometric product between this multivector and multivector b. This is the main operation that
+  makes geometric algebra tick. */
+  rsMultiVector<T> operator*(const rsMultiVector<T>& b) const;
+
+  /** Adds multivector b to this multivector. */
+  rsMultiVector<T>& operator+=(const rsMultiVector<T>& b);
+  // todo: create function that adds a blade into a multivector
+
+  /** Product between this multivector and scalar s. */
+  rsMultiVector<T> operator*(const T& s) const;
+
+  /** Outer (aka wedge, exterior) product between this multivector and multivector b. For vectors 
+  a and b, this is the antisymmetric part of the geometric product: a^b = (a*b-b*a)/2, but this 
+  identity does not generalize to multivectors. */
+  rsMultiVector<T> operator^(const rsMultiVector<T>& b) const;
+
+  /** Inner product between this multivector and multivector b. For vectors a and b, this is the 
+  symmetric part of the geometric product: a|b = (a*b+b*a)/2, but this identity does not generalize
+  to multivectors.  
+  Maybe don't implement that operator just yet - there seems to be no general consensus yet, how
+  the inner product should be defined. For example, bivector.net uses the "fat dot" definition, 
+  Alan Macdonald uses the "left contraction" definition. We implement both of these and more via 
+  the product function defined below - users should be explicit, which kind of "inner product" they
+  want.  */
+  //rsMultiVector<T> operator|(const rsMultiVector<T>& b) const;
+
+
+
+  rsMultiVector<T> operator-()
+  { rsMultiVector<T> r = *this; RAPT::rsNegate(r.coeffs); return r; }
+
+  bool operator==(const rsMultiVector<T>& b) const { return coeffs == b.coeffs; }
+
+
+  bool operator==(const std::vector<T>& b) const { return coeffs == b; }
+
+
+  void operator=(const rsBlade<T>& b) { set(b); }
+
+
+  /** Read and write access to i-th coefficient. */
+  T& operator[](int i) { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
+
+  const T& operator[](int i) const { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
+
+  static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)
+  { bool ok = a.coeffs.size() == b.coeffs.size(); ok &= a.alg == b.alg; return ok; }
+  // todo: try to relax that later: a 3D geometric algebra contains a 2D one as subalgebra
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Functions */
+
+  enum class ProductType
+  {
+    wedge,
+    //commutator,  // is a "derivation", obey product rule
+    //regressive,
+    contractLeft,  // "contraction onto"
+    contractRight, // "contraction by"
+    scalar,        // for blades, nonzero only when the two blades have same grade
+    dot,
+    fatDot
+  };
+
+  /** Computes one of the several products that can be derived from the geometric product. Which 
+  one it is is selected by the product type parameter. This function is *horribly* inefficient and 
+  only meant for prototyping and reference purposes. ..well, actually the whole class is anyway, 
+  but this one is particularly horrible. See:
+  https://en.wikipedia.org/wiki/Geometric_algebra#Extensions_of_the_inner_and_exterior_products */
+  static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
+    ProductType type);
+
+
+protected:
+
+  std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
+  const rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
+
+};
+
+//=================================================================================================
+// Implementations of member functions and operators of classes rsGeometricAlgebra, rsBlade,
+// rsMultiVector. The classes are so intertwined that some implementations need to know the full
+// declaration of another class, so we put the implementations all together:
+
+//-------------------------------------------------------------------------------------------------
+// rsGeometricAlgebra:
 
 template<class T>
 int rsGeometricAlgebra<T>::reorderSign(int a, int b)
@@ -4354,299 +4631,33 @@ void rsGeometricAlgebra<T>::product_bld_bld(const std::vector<T>& a, int ga,
 }
 // needs more tests
 
-//=================================================================================================
-
-/** A class to represent k-blades in n-dimensional space. For example, in 3D space, we have 
-scalars (0-blades), vectors (1-blades), bivectors (2-blades) and trivectors (3-blades). A blade
-is represented by a set of coefficients that scale the contributions of the relevant k-dimensional
-basis blades. A 3D scalar is just one coefficient that can be seen as scaling the unit scalar 1, 
-a 3D vector has 3 coefficients for the 3 basis vectors (e1,e2,e3), a 3D bivector has coefficients 
-for the 3 basis bivectors (e12,e13,e23) and a 3D trivector has 1 coefficient that scales the single
-basis trivector (e123) which represents a unit volume in 3D and is also known as pseudoscalar or 
-sometimes antiscalar. The number k is known as the grade of the blade. The highest possible grade
-is always equal to the dimension of the vector space, the number of coefficients for a particular
-grade k is always n-choose-k and the highest grade basis blade is always the unit pseudoscalar. In
-2D space, the unit pseudoscalar behaves similar to the imaginary unit i in complex numbers...but i 
-think, not exactly like it, because it behaves anticommutative rather than commutative 
--> figure out
-
-The main operation between blades is the outer product (a.k.a. wedge product). When we restrict the
-computations of geometric algebra to using only blades (rather than general multivectors) and using 
-only the outer "wedge" product (and not the geometric product), we actually get a subalgebra of the
-geometric algebra known as exterior algebra and the wedge product is also sometimes called exterior 
-product. Being a subalgebra means closure: when we combine two blades via the wedge product, the 
-result is a blade again. When combining blades via the geometric product, the result is actually 
-not a blade anymore but a more general multivector.
-
-Note:
-Blades are actually a special case of multivectors, so at first glance, it may seem appropriate to 
-let rsBlade be a subclass of rsMultiVector. However, i opted not to do this because multivectors 
-can do so many more things, which a blade should really not inherit. They are really a restricted
-special case, i.e. more like a subset rather than a subclass. But where there functionality 
-overlaps, both classes provide the same API. */
+//-------------------------------------------------------------------------------------------------
+// rsBlade:
 
 template<class T>
-class rsBlade
+void rsBlade<T>::set(int newGrade, const std::vector<T>& newCoeffs)
 {
-
-public:
-
-  rsBlade(const rsGeometricAlgebra<T>* algebraToUse, int grade)
-  {
-    this->grade = grade;
-    setAlgebra(algebraToUse);
-  }
-
-  //-----------------------------------------------------------------------------------------------
-  /** \name Setup */
-
-  /** Sets the geometric algebra to use for operations involving this multivector. */
-  void setAlgebra(const rsGeometricAlgebra<T>* algebraToUse)
-  {
-    alg = algebraToUse;
-    coeffs.resize(alg->getBladeSize(grade));
-  }
-
-  void setCoefficients(const T* newCoeffs)
-  {
-    for(size_t i = 0; i < coeffs.size(); i++)
-      coeffs[i] = newCoeffs[i];
-  }
-
-  /** Sets the blade's grade and the coefficients for the projections onto the basis blades of the
-  given grade. There are n-choose-k of them (n: dimensionality, k: grade), so the newCoeffs vector
-  is supposed to match that size. */
-  void set(int newGrade, const std::vector<T>& newCoeffs)
-  {
-    int m = alg->getBladeSize(newGrade);
-    rsAssert((int) newCoeffs.size() == m);
-    grade = newGrade;
-    coeffs.resize(m);
-    rsCopy(newCoeffs, coeffs);
-  }
-
-  //-----------------------------------------------------------------------------------------------
-  /** \name Inquiry */
-
-  int getGrade() const { return grade; }
-
-  T getCoefficient(int i) const { return coeffs[i]; }
-
-  const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
-
-
-
-  //-----------------------------------------------------------------------------------------------
-  /** \name Operators */
-
-  // todo: +,-,/
-
-  /** Outer (aka wedge, exterior) product between this blade and blade b. */
-  rsBlade<T> operator^(const rsBlade<T>& b) const
-  {
-    rsAssert(areCompatible(*this, b));
-    int g = getGrade() + b.getGrade();
-    if(g > alg->getNumDimensions())
-      return rsBlade(alg, 0);          // return 0 (of grade 0)
-    rsBlade<T> p(alg, g);
-    alg->outerProduct_bld_bld(this->coeffs, grade, b.coeffs, b.grade, p.coeffs);
-    return p;
-  }
-
-
-  bool operator==(const std::vector<T>& b) const { return coeffs == b; }
-
-
-  static bool areCompatible(const rsBlade<T>& a, const rsBlade<T>& b)
-  { return a.alg == b.alg; }
-
-
-protected:
-
-  std::vector<T> coeffs;      // n-choose-k coeffs for the projections on the basis blades
-  const rsGeometricAlgebra<T>* alg = nullptr;
-  int grade;
-
-};
-
-//=================================================================================================
-
-/** Class to represent multivectors. A multivector can be seen as a formal sum of blades of various
-grades. For example, in 3D, a general multivector M is a sum: M = S + V + B + T where
-where S,V,B,T are the scalar, vector, bivector and trivector components of the multivector. The 
-addition is not actually "executed" because you can't really add a scalar to a vector and so on. 
-It is rather meant in the sense of putting things together but keeping them as seperate parts of a
-single entity, very much like z = a + b*i in the representation of complex numbers or in 
-v = x*(1,0,0) + y*(0,1,0) + z*(0,0,1) = (x,0,0) + (0,y,0) + (0,0,z) in the representation of 
-vectors v = (x,y,z) in terms of scaled basis vectors - you never actually "do" any additions in 
-expressions like this but just keep the coefficients a,b or x,y,z separate. It's the same thing 
-here, just the B and T parts have more than one component themselves (their components are 
-coefficients that scale the basis vectors and basis bivectors respectively). Internally, the 
-multivector is just stored as a flat array of coefficients for all the basis blades of various 
-grades. In an n-dimensional vector space, there are 2^n such basis blades in total and a blade of 
-grade k gets n-choose-k of them. A blade can be seen as a special kind of multivector that has 
-nonzero values only for coefficients that belong to the same grade, i.e. it doesn't mix up basis 
-blades of different grades.
-
-The main operation between multivectors is the geometric product which is implemented via the usual
-multiplication operator *. The outer or wedge product that was defined for blades as ^ operator 
-does also still exist for general multivectors. The geometric product is defined via a sum of the
-inner and outer product of vectors: a*b = a|b + a^b, where the | operator is used here to denote 
-the inner product, i.e. the scalar product. Note that a and b are supposed to be vectors here and 
-not general blades or even more general multivectors. This equation may not hold anymore for these 
-more general objects. In fact, there doesn't even seem to be a general consensus for how the inner 
-product should be defined for those more general objects, which is why the operator is not yet
-implemented here (Q: could it perhaps be *defined* by this equation - would that be any useful?).
-
-Other operations are of course addition and subtraction (which just operate element-wise), 
-...todo: inversion, division, join, meet, rotor, projection, rejection, reflection, dualization, 
-exponentiation, sin, cos
-
-
-*/
+  int m = alg->getBladeSize(newGrade);
+  rsAssert((int) newCoeffs.size() == m);
+  grade = newGrade;
+  coeffs.resize(m);
+  rsCopy(newCoeffs, coeffs);
+}
 
 template<class T>
-class rsMultiVector
+rsBlade<T> rsBlade<T>::operator^(const rsBlade<T>& b) const
 {
+  rsAssert(areCompatible(*this, b));
+  int g = getGrade() + b.getGrade();
+  if(g > alg->getNumDimensions())
+    return rsBlade(alg, 0);          // return 0 (of grade 0)
+  rsBlade<T> p(alg, g);
+  alg->outerProduct_bld_bld(this->coeffs, grade, b.coeffs, b.grade, p.coeffs);
+  return p;
+}
 
-public:
-
-  rsMultiVector(const rsGeometricAlgebra<T>* algebraToUse)
-  { setAlgebra(algebraToUse); }
-
-  rsMultiVector(const rsBlade<T>& b) { set(b); }
-
-  //-----------------------------------------------------------------------------------------------
-  /** \name Setup */
-
-  /** Sets the geometric algebra to use for operations involving this multivector. */
-  void setAlgebra(const rsGeometricAlgebra<T>* algebraToUse)
-  { alg = algebraToUse; coeffs.resize(alg->getMultiVectorSize()); }
-
-  /** Sets the coefficients to random integers in the given range. */
-  void randomIntegers(int min, int max, int seed)
-  { RAPT::rsArrayTools::fillWithRandomIntegers(&coeffs[0], (int)coeffs.size(), min, max, seed); }
-
-  void set(const rsBlade<T>& b);
-
-  void set(const std::vector<T>& newCoeffs)
-  { rsAssert(newCoeffs.size() == coeffs.size()); coeffs = newCoeffs; }
-
-  /** Scales this multivector by a scalar scaler. */
-  void scale(const T& scaler) { rsScale(coeffs, scaler); }
-
-  /** Sets this multivector to zero. */
-  void setZero() { rsFill(coeffs, T(0)); }
-
-  //-----------------------------------------------------------------------------------------------
-  /** \name Inquiry */
-
-  /** Extracts the blade of a given grade that is present in this multivector. For example, 
-  mv.extractGrade(2) would extract the bivector part of a given multivector mv. */
-  rsBlade<T> extractGrade(int grade) const;
-  /*
-  {
-    if(grade < 0 || grade > alg->getNumDimensions())
-      return rsBlade<T>(alg, 0); // return the zero blade
-    rsBlade<T> B(alg, grade);
-    int n0 = alg->getBladeStart(grade);
-    B.setCoefficients(&coeffs[n0]);
-    return B;
-  }
-  */
-
-  const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
-
-
-  //-----------------------------------------------------------------------------------------------
-  /** \name Operators */
-
-  /** Adds two multivectors. */
-  rsMultiVector<T> operator+(const rsMultiVector<T>& b) const;
-
-  /** Subtracts two multivectors. */
-  rsMultiVector<T> operator-(const rsMultiVector<T>& b) const;
-
-  /** Geometric product between this multivector and multivector b. This is the main operation that
-  makes geometric algebra tick. */
-  rsMultiVector<T> operator*(const rsMultiVector<T>& b) const;
-
-  /** Adds multivector b to this multivector. */
-  rsMultiVector<T>& operator+=(const rsMultiVector<T>& b);
-  // todo: create function that adds a blade into a multivector
-
-  /** Product between this multivector and scalar s. */
-  rsMultiVector<T> operator*(const T& s) const;
-
-  /** Outer (aka wedge, exterior) product between this multivector and multivector b. For vectors 
-  a and b, this is the antisymmetric part of the geometric product: a^b = (a*b-b*a)/2, but this 
-  identity does not generalize to multivectors. */
-  rsMultiVector<T> operator^(const rsMultiVector<T>& b) const;
-
-  /** Inner product between this multivector and multivector b. For vectors a and b, this is the 
-  symmetric part of the geometric product: a|b = (a*b+b*a)/2, but this identity does not generalize
-  to multivectors.  
-  Maybe don't implement that operator just yet - there seems to be no general consensus yet, how
-  the inner product should be defined. For example, bivector.net uses the "fat dot" definition, 
-  Alan Macdonald uses the "left contraction" definition. We implement both of these and more via 
-  the product function defined below - users should be explicit, which kind of "inner product" they
-  want.  */
-  //rsMultiVector<T> operator|(const rsMultiVector<T>& b) const;
-
-
-
-  rsMultiVector<T> operator-()
-  { rsMultiVector<T> r = *this; RAPT::rsNegate(r.coeffs); return r; }
-
-  bool operator==(const rsMultiVector<T>& b) const { return coeffs == b.coeffs; }
-
-
-  bool operator==(const std::vector<T>& b) const { return coeffs == b; }
-
-
-  void operator=(const rsBlade<T>& b) { set(b); }
-
-
-  /** Read and write access to i-th coefficient. */
-  T& operator[](int i) { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
-
-  const T& operator[](int i) const { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
-
-  static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)
-  { bool ok = a.coeffs.size() == b.coeffs.size(); ok &= a.alg == b.alg; return ok; }
-  // todo: try to relax that later: a 3D geometric algebra contains a 2D one as subalgebra
-
-
-  //-----------------------------------------------------------------------------------------------
-  /** \name Functions */
-
-  enum class ProductType
-  {
-    wedge,
-    //commutator,  // is a "derivation", obey product rule
-    //regressive,
-    contractLeft,  // "contraction onto"
-    contractRight, // "contraction by"
-    scalar,        // for blades, nonzero only when the two blades have same grade
-    dot,
-    fatDot
-  };
-
-  /** Computes one of the several products that can be derived from the geometric product. Which 
-  one it is is selected by the product type parameter. This function is *horribly* inefficient and 
-  only meant for prototyping and reference purposes. ..well, actually the whole class is anyway, 
-  but this one is particularly horrible. See:
-  https://en.wikipedia.org/wiki/Geometric_algebra#Extensions_of_the_inner_and_exterior_products */
-  static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
-    ProductType type);
-
-
-protected:
-
-  std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
-  const rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
-
-};
+//-------------------------------------------------------------------------------------------------
+// rsMultiVector:
 
 template<class T>
 void rsMultiVector<T>::set(const rsBlade<T>& b)
@@ -4734,8 +4745,6 @@ rsMultiVector<T> rsMultiVector<T>::operator|(const rsMultiVector<T>& b) const
   return p;
 }
 */
-
-
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::product(const rsMultiVector<T>& C, const rsMultiVector<T>& D,

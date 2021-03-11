@@ -4328,9 +4328,10 @@ void rsGeometricAlgebra<T>::product(const std::vector<T>& a, const std::vector<T
 // tables. This may actually create even more zeros due to cancellations (at least, in the outer 
 // product) which will in turn open more optimization opportunities when a sparse matrix 
 // implementation is used (...later...) ...but maybe that makes the implementation of 
-// product_bld_bld inconvenient?
+// product_bld_bld inconvenient? ..or maybe that's not possible at all?
 // maybe in rsMatrixView we should have a function getDensity where the density of a matrix is 
 // defined as the number of nonzero entries divided by the total number of entries
+// ...implement a function int rsNumNonZeroEntries(const std::vector<T>& v)
 
 template<class T>
 void rsGeometricAlgebra<T>::product_bld_bld(const std::vector<T>& a, int ga, 
@@ -4513,7 +4514,6 @@ public:
   rsMultiVector(const rsGeometricAlgebra<T>* algebraToUse)
   { setAlgebra(algebraToUse); }
 
-
   rsMultiVector(const rsBlade<T>& b) { set(b); }
 
   //-----------------------------------------------------------------------------------------------
@@ -4521,10 +4521,7 @@ public:
 
   /** Sets the geometric algebra to use for operations involving this multivector. */
   void setAlgebra(const rsGeometricAlgebra<T>* algebraToUse)
-  {
-    alg = algebraToUse;
-    coeffs.resize(alg->getMultiVectorSize());
-  }
+  { alg = algebraToUse; coeffs.resize(alg->getMultiVectorSize()); }
 
   /** Sets the coefficients to random integers in the given range. */
   void randomIntegers(int min, int max, int seed)
@@ -4546,7 +4543,8 @@ public:
 
   /** Extracts the blade of a given grade that is present in this multivector. For example, 
   mv.extractGrade(2) would extract the bivector part of a given multivector mv. */
-  rsBlade<T> extractGrade(int grade) const
+  rsBlade<T> extractGrade(int grade) const;
+  /*
   {
     if(grade < 0 || grade > alg->getNumDimensions())
       return rsBlade<T>(alg, 0); // return the zero blade
@@ -4555,6 +4553,7 @@ public:
     B.setCoefficients(&coeffs[n0]);
     return B;
   }
+  */
 
   const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
 
@@ -4562,61 +4561,27 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */
 
-  rsMultiVector<T> operator+(const rsMultiVector<T>& b) const
-  {
-    rsAssert(areCompatible(*this, b));
-    rsMultiVector<T> p(alg);
-    RAPT::rsArrayTools::add(&coeffs[0], &b.coeffs[0], &p.coeffs[0], (int)coeffs.size());
-    return p;
-  }
+  /** Adds two multivectors. */
+  rsMultiVector<T> operator+(const rsMultiVector<T>& b) const;
 
-  /** Adds multivector b to this multivector. */
-  rsMultiVector<T>& operator+=(const rsMultiVector<T>& b) 
-  { 
-    rsAssert(areCompatible(*this, b));
-    for(size_t i = 0; i < coeffs.size(); i++)
-      coeffs[i] += b.coeffs[i];
-    return *this; 
-  }
-  // todo: create function that adds a blade into a multivector
-
-
-  rsMultiVector<T> operator-(const rsMultiVector<T>& b) const
-  {
-    rsAssert(areCompatible(*this, b));
-    rsMultiVector<T> p(alg);
-    RAPT::rsArrayTools::subtract(&coeffs[0], &b.coeffs[0], &p.coeffs[0], (int)coeffs.size());
-    return p;
-  }
+  /** Subtracts two multivectors. */
+  rsMultiVector<T> operator-(const rsMultiVector<T>& b) const;
 
   /** Geometric product between this multivector and multivector b. This is the main operation that
   makes geometric algebra tick. */
-  rsMultiVector<T> operator*(const rsMultiVector<T>& b) const
-  {
-    rsAssert(areCompatible(*this, b));
-    rsMultiVector<T> p(alg);
-    alg->geometricProduct(this->coeffs, b.coeffs, p.coeffs);
-    return p;
-  }
+  rsMultiVector<T> operator*(const rsMultiVector<T>& b) const;
+
+  /** Adds multivector b to this multivector. */
+  rsMultiVector<T>& operator+=(const rsMultiVector<T>& b);
+  // todo: create function that adds a blade into a multivector
 
   /** Product between this multivector and scalar s. */
-  rsMultiVector<T> operator*(const T& s) const
-  {
-    rsMultiVector<T> p(alg);
-    RAPT::rsArrayTools::scale(&coeffs[0], &p.coeffs[0], (int)coeffs.size(), s);
-    return p;
-  }
+  rsMultiVector<T> operator*(const T& s) const;
 
   /** Outer (aka wedge, exterior) product between this multivector and multivector b. For vectors 
   a and b, this is the antisymmetric part of the geometric product: a^b = (a*b-b*a)/2, but this 
   identity does not generalize to multivectors. */
-  rsMultiVector<T> operator^(const rsMultiVector<T>& b) const
-  {
-    rsAssert(areCompatible(*this, b));
-    rsMultiVector<T> p(alg);
-    alg->outerProduct(this->coeffs, b.coeffs, p.coeffs);
-    return p;
-  }
+  rsMultiVector<T> operator^(const rsMultiVector<T>& b) const;
 
   /** Inner product between this multivector and multivector b. For vectors a and b, this is the 
   symmetric part of the geometric product: a|b = (a*b+b*a)/2, but this identity does not generalize
@@ -4626,15 +4591,7 @@ public:
   Alan Macdonald uses the "left contraction" definition. We implement both of these and more via 
   the product function defined below - users should be explicit, which kind of "inner product" they
   want.  */
-  /*
-  rsMultiVector<T> operator|(const rsMultiVector<T>& b) const
-  {
-    rsAssert(areCompatible(*this, b));
-    rsMultiVector<T> p(alg);
-    alg->innerProduct(this->coeffs, b.coeffs, p.coeffs);
-    return p;
-  }
-  */
+  //rsMultiVector<T> operator|(const rsMultiVector<T>& b) const;
 
 
 
@@ -4656,12 +4613,8 @@ public:
   const T& operator[](int i) const { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
 
   static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)
-  {
-    bool ok = a.coeffs.size() == b.coeffs.size();
-    ok &= a.alg == b.alg;
-    return ok;
-    // todo: try to relax that later: a 3D geometric algebra contains a 2D one as subalgebra
-  }
+  { bool ok = a.coeffs.size() == b.coeffs.size(); ok &= a.alg == b.alg; return ok; }
+  // todo: try to relax that later: a 3D geometric algebra contains a 2D one as subalgebra
 
 
   //-----------------------------------------------------------------------------------------------
@@ -4688,8 +4641,6 @@ public:
     ProductType type);
 
 
-
-
 protected:
 
   std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
@@ -4708,6 +4659,83 @@ void rsMultiVector<T>::set(const rsBlade<T>& b)
   for(int i = 0; i < n; i++)
     coeffs[n0+i] = b.getCoefficient(i);
 }
+
+template<class T>
+rsBlade<T> rsMultiVector<T>::extractGrade(int grade) const
+{
+  if(grade < 0 || grade > alg->getNumDimensions())
+    return rsBlade<T>(alg, 0); // return the zero blade
+  rsBlade<T> B(alg, grade);
+  int n0 = alg->getBladeStart(grade);
+  B.setCoefficients(&coeffs[n0]);
+  return B;
+}
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::operator+(const rsMultiVector<T>& b) const
+{
+  rsAssert(areCompatible(*this, b));
+  rsMultiVector<T> p(alg);
+  RAPT::rsArrayTools::add(&coeffs[0], &b.coeffs[0], &p.coeffs[0], (int)coeffs.size());
+  return p;
+}
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::operator-(const rsMultiVector<T>& b) const
+{
+  rsAssert(areCompatible(*this, b));
+  rsMultiVector<T> p(alg);
+  RAPT::rsArrayTools::subtract(&coeffs[0], &b.coeffs[0], &p.coeffs[0], (int)coeffs.size());
+  return p;
+}
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::operator*(const rsMultiVector<T>& b) const
+{
+  rsAssert(areCompatible(*this, b));
+  rsMultiVector<T> p(alg);
+  alg->geometricProduct(this->coeffs, b.coeffs, p.coeffs);
+  return p;
+}
+
+template<class T>
+rsMultiVector<T>& rsMultiVector<T>::operator+=(const rsMultiVector<T>& b) 
+{ 
+  rsAssert(areCompatible(*this, b));
+  for(size_t i = 0; i < coeffs.size(); i++)
+    coeffs[i] += b.coeffs[i];
+  return *this; 
+}
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::operator*(const T& s) const
+{
+  rsMultiVector<T> p(alg);
+  RAPT::rsArrayTools::scale(&coeffs[0], &p.coeffs[0], (int)coeffs.size(), s);
+  return p;
+}
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::operator^(const rsMultiVector<T>& b) const
+{
+  rsAssert(areCompatible(*this, b));
+  rsMultiVector<T> p(alg);
+  alg->outerProduct(this->coeffs, b.coeffs, p.coeffs);
+  return p;
+}
+
+/*
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::operator|(const rsMultiVector<T>& b) const
+{
+  rsAssert(areCompatible(*this, b));
+  rsMultiVector<T> p(alg);
+  alg->innerProduct(this->coeffs, b.coeffs, p.coeffs);
+  return p;
+}
+*/
+
+
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::product(const rsMultiVector<T>& C, const rsMultiVector<T>& D,

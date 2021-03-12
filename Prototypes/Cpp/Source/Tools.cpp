@@ -4259,6 +4259,10 @@ protected:
   const rsGeometricAlgebra<T>* alg = nullptr;
   int grade;
 
+
+  //template<class U> friend class rsGeometricAlgebra;
+  //template<class U> friend class rsMultiVector;
+
 };
 
 //=================================================================================================
@@ -4418,12 +4422,18 @@ public:
   https://en.wikipedia.org/wiki/Geometric_algebra#Extensions_of_the_inner_and_exterior_products */
   static rsMultiVector<T> productSlow(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
     ProductType type);
+  // This is used in rsGeometricAlgebra::init to build the Calyey tables for thederived products. 
+  // Once they have been created, they can be used to compute these products more efficiently
 
 
 protected:
 
   std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
   const rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
+
+
+  template<class U> friend class rsGeometricAlgebra;
+  //template<class U> friend class rsBlade;
 
 };
 
@@ -4588,6 +4598,37 @@ void rsGeometricAlgebra<T>::init()
   // Build the additional Cayley tables for the derived products:
   using MV = rsMultiVector<T>;
   using PT = MV::ProductType;
+  auto buildTable = [&](PT productType, RAPT::rsMatrix<T>& weights)
+  {
+    MV A(this), B(this), P(this);
+    weights.setShape(N, N);
+    for(int i = 0; i < N; i++) {
+      for(int j = 0; j < N; j++) {
+        // Set the i-th and j-th alement in A and B "hot", respectively and form the product:
+        A.setZero(); A[i] = 1;
+        B.setZero(); B[j] = 1;
+        int k = bladeIndices(i, j);                 // assumed index of nozero element in product
+        P = MV::productSlow(A, B, productType);  
+        weights(i, j) = P[k];
+        // Sanity check:
+        int nnz = rsNumNonZeros(P.coeffs);          // number of nonzeros in P
+        int kt  = rsIndexOfFirstNonZero(P.coeffs);  // true index of the nonzero
+        rsAssert(nnz == 1 || nnz ==  0);
+        rsAssert(kt  == k || kt  == -1); }}
+        // We assume here, that in every type of product, the result P has only one nonzero entry 
+        // which occurs at index k. This seems to be the case from observations but i have no proof
+        // for this -> figure out. But if it doesn't hold, the assertions here will catch it. In 
+        // this case, we may need different "bladeIndices" tables for different products
+  };
+  buildTable(PT::contractLeft,  weightsContractLeft);
+  buildTable(PT::contractRight, weightsContractRight);
+  buildTable(PT::scalar,        weightsScalar);
+  buildTable(PT::dot,           weightsDot);
+  buildTable(PT::fatDot,        weightsFatDot);
+  // todo: commutator, regressive
+
+  /*
+  // old - may be deleted when new code above has been tested:
   weightsContractLeft.setShape(N, N);
   weightsContractRight.setShape(N, N);
   weightsScalar.setShape(N, N);
@@ -4607,6 +4648,7 @@ void rsGeometricAlgebra<T>::init()
       P = MV::productSlow(A, B, PT::fatDot);        weightsFatDot(       i, j) = P[k]; }}
       // We assume here, that in every product, P has only one nonzero entry which is at index k.
       // This seems to be the case from observations but i have no proof for this -> figure out
+   */
 
   int dummy = 0;
 }

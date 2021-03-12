@@ -6521,6 +6521,7 @@ void testGeometricAlgebra()
   // need to feed A = {0,0,1,0,0,0,0,0}, B = {0,0,0,0,1,0,0,0}
   // OK - let's try to obtain the Cayley table of the geometric product by this method:
 
+  // obsolete - has now been integrated into rsGeometricAlgebra<T>::init
   auto findHotIndex = [](const MV& A)
   {
     int N = A.getAlgebra()->getMultiVectorSize();
@@ -6529,8 +6530,6 @@ void testGeometricAlgebra()
         return i;
     return -1;
   };
-
-
   rsMatrix<int> CT_indicesTrue = alg3.getCayleyTableIndices();
   rsMatrix<int>  CT_indices(8, 8);
   rsMatrix<Real> CT_weights(8, 8);
@@ -6668,24 +6667,25 @@ void testGeometricAlgebra()
   // -maybe swicthing to a sparse matrix representation
   // 
 
+  // How are blades and (differential) forms related? A 2-form takes two vectors as input and 
+  // produces a scalar as output. Can a 2-form be mapped to a 2-blade as follows?: when two input 
+  // vectors come in, do:
+  // -form a second 2-blade from the two incoming vectors
+  // -form the scalar product between these two 2-blades
+
   // test the followig properties:
   // -outer product should be antisymmetric when operands have odd grade (1, pg 38)
-
   // perhaps the identities a^b = (a*b - b*a)/2, a|b = (a*b + b*a)/2 hold only if a and b are 
   // vectors but do not hold anymore for general multivectors?
   // maybe create the cayley table also for the outer product - i guess the one for the inner
   // can then be obtained by the equation a*b = a|b + a^b, so we get the table for the inner as
   // geom - outer?
 
-
-
-
   // this matches what https://bivector.net/tools.html gives, but i'm not sure if we need to use
   // the reverse mapping as in blades( i, j) = unmap[ab]; ...in this special case, the map and the 
   // reverse map are the same. todo: try another case
 
   // actually, 1 matrix would be enough - we can absorb/encode the signs also in the blades matrix
-
 
   // to build the Cayley-Table, see:
   // https://en.wikipedia.org/wiki/Cayley_table
@@ -6702,6 +6702,7 @@ void testGeometricAlgebra()
   //  basis vectors square to 1 - but we may want also algebras where some square to -1 or 0 - but
   //  maybe that affects only the squares and the the cross-terms?)
   //  ...or wait - no - is this rule correct?
+
 
   // https://en.wikipedia.org/wiki/Multivector
   // https://en.wikipedia.org/wiki/Blade_(geometry)
@@ -6744,6 +6745,8 @@ void testGeometricAlgebra()
   // https://afteracademy.com/blog/print-all-subsets-of-a-given-set
 
 
+  // big GA/GC playlist:
+  // https://www.youtube.com/playlist?list=PLTGkWQjAP0wovgVKVz1tUCYKZXCSmqsLm
 
   // Ideas:
   // -the diagonals of the Cayley tables are always -1,0,+1 - would it make sense if they also 

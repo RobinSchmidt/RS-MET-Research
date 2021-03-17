@@ -6748,6 +6748,10 @@ void testGeometricAlgebra()
   // big GA/GC playlist:
   // https://www.youtube.com/playlist?list=PLTGkWQjAP0wovgVKVz1tUCYKZXCSmqsLm
 
+ 
+  // solutions to GA problems:
+  // https://vixra.org/author/james_a_smith
+
   // Ideas:
   // -the diagonals of the Cayley tables are always -1,0,+1 - would it make sense if they also 
   //  could be a scalar multiple of some other basis blade?

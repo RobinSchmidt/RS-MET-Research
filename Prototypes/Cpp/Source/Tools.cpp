@@ -4162,7 +4162,8 @@ protected:
   // The Cayley tables for the various products:
   rsMatrix<int> bladeIndices;
   rsMatrix<T> weightsGeom, weightsOuter, weightsInner; // maybe remove/rename weightsInner
-  rsMatrix<T> weightsContractLeft, weightsContractRight, weightsScalar, weightsDot, weightsFatDot;
+  rsMatrix<T> weightsContractLeft, weightsContractRight, weightsScalar, weightsDot, weightsFatDot,
+    weightsCommutator, weightsRegressive;
 
   // Sizes and start-indices of the coeffs of the blades of grades 1..n
   std::vector<int> bladeSizes, bladeStarts;
@@ -4201,7 +4202,16 @@ Blades are actually a special case of multivectors, so at first glance, it may s
 let rsBlade be a subclass of rsMultiVector. However, i opted not to do this because multivectors 
 can do so many more things, which a blade should really not inherit. They are really a restricted
 special case, i.e. more like a subset rather than a subclass. But where there functionality 
-overlaps, both classes provide the same API. */
+overlaps, both classes provide the same API. 
+
+oh - i think, this is not the correct terminonlogy:
+https://en.wikipedia.org/wiki/Blade_(geometry)
+https://en.wikipedia.org/wiki/Multivector
+...this class represents general k-vectors - blades are only very specific special cases of 
+k-vectors...soo rename it to rsKVector? that looks ugly but maybe it has to be done...or 
+rsGradedVector?
+
+*/
 
 template<class T>
 class rsBlade
@@ -4414,6 +4424,8 @@ public:
     dot,
     fatDot
   };
+  // maybe this should be defined in class rsGeometricAlgebra - then we could have a function
+  // rsMatrix<T> getCalyeyTable(ProductType type) there. This could be interesting for client code
 
   /** Computes one of the several products that can be derived from the geometric product. Which 
   one it is is selected by the product type parameter. This function is *horribly* inefficient and 
@@ -4598,6 +4610,17 @@ void rsGeometricAlgebra<T>::init()
   // Build the additional Cayley tables for the derived products:
   using MV = rsMultiVector<T>;
   using PT = MV::ProductType;
+  auto checkProduct = [&](const MV& P, int k)
+  {
+    // We assume here, that in every type of derived product, the result P has only one nonzero 
+    // entry which occurs at index k (or none). This seems to be the case from observations but i 
+    // have no proof for this -> figure out. But if it doesn't hold, the assertions here will 
+    // catch it. In this case, we may need different "bladeIndices" tables for different products:
+    int nnz = rsNumNonZeros(P.coeffs);          // number of nonzero entries in P
+    int kt  = rsIndexOfFirstNonZero(P.coeffs);  // true index of the nonzero entry
+    rsAssert(nnz == 1 || nnz ==  0);
+    rsAssert(kt  == k || kt  == -1);
+  };
   auto buildTable = [&](PT productType, RAPT::rsMatrix<T>& weights)
   {
     MV A(this), B(this), P(this);
@@ -4608,24 +4631,66 @@ void rsGeometricAlgebra<T>::init()
         A.setZero(); A[i] = 1;
         B.setZero(); B[j] = 1;
         int k = bladeIndices(i, j);                 // assumed index of nozero element in product
-        P = MV::productSlow(A, B, productType);  
-        weights(i, j) = P[k];
-        // Sanity check:
-        int nnz = rsNumNonZeros(P.coeffs);          // number of nonzeros in P
-        int kt  = rsIndexOfFirstNonZero(P.coeffs);  // true index of the nonzero
-        rsAssert(nnz == 1 || nnz ==  0);
-        rsAssert(kt  == k || kt  == -1); }}
-        // We assume here, that in every type of product, the result P has only one nonzero entry 
-        // which occurs at index k. This seems to be the case from observations but i have no proof
-        // for this -> figure out. But if it doesn't hold, the assertions here will catch it. In 
-        // this case, we may need different "bladeIndices" tables for different products
+        P = MV::productSlow(A, B, productType);
+        checkProduct(P, k);                         // sanity check
+        weights(i, j) = P[k];   }}  
   };
   buildTable(PT::contractLeft,  weightsContractLeft);
   buildTable(PT::contractRight, weightsContractRight);
   buildTable(PT::scalar,        weightsScalar);
   buildTable(PT::dot,           weightsDot);
   buildTable(PT::fatDot,        weightsFatDot);
-  // todo: commutator, regressive
+
+
+  // todo: 
+  // -create tables for commutator- and regressive product
+  // -create permuatation and sign arrays for dualization
+  MV A(this), B(this), P(this);
+
+  // Create inverse of the unit pseudoscalar, given by the product en*...*e3*e2*e1*1:
+  MV Ii(this);
+  Ii[0] = T(1);                   // initialize product with unity
+  for(int i = 1; i <= n; i++) {
+    A.setZero(); A[i] = 1;
+    Ii = A * Ii;  }
+  // maybe Ii should be a member - but we can store it only as std::vector, not as rsMultiVector
+  // because rsGeometricAlgebra doesn't really know about that class
+
+  // Function to compute the dual via the formula with the inverse pseudoscalar, which must be 
+  // passed via the parameter Ii:
+  auto dual = [](const MV& A, const MV& Ii) { return A * Ii; };
+
+  // Function to compute the regressive product (a.k.a. antiwedge product) via the formula using
+  // duals: A v B = (A* ^ B*)*:
+  auto regressiveProduct = [&](const MV& A, const MV& B)
+  {
+    MV Ad = dual(A, Ii);  // dual of A
+    MV Bd = dual(B, Ii);  // dual of B
+    MV Pd = Ad ^ Bd;      // dual of product
+    return dual(Pd, Ii);  // product
+  };
+  
+  weightsCommutator.setShape(N, N);
+  //weightsRegressive.setShape(N, N);
+  for(int i = 0; i < N; i++) 
+  {
+    for(int j = 0; j < N; j++) 
+    {
+      A.setZero(); A[i] = 1;
+      B.setZero(); B[j] = 1;
+      int k = bladeIndices(i, j);
+      P = T(0.5) * (A*B - B*A);        // commutator product
+      checkProduct(P, k);              // sanity check
+      weightsCommutator(i, j) = P[k];
+      //P = regressiveProduct(A, B);
+      //checkProduct(P, k);              // sanity check
+      //weightsRegressive(i, j) = P[k];
+    }
+  }
+  // For the regressive product, it seems we cannot use the same bladeIndices table as for the 
+  // other products
+
+
 
   /*
   // old - may be deleted when new code above has been tested:

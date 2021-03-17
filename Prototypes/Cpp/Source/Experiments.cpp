@@ -6312,7 +6312,7 @@ void testGeometricAlgebra()
   using Real = double;
   using GA   = rsGeometricAlgebra<Real>;
   using MV   = rsMultiVector<Real>;
-  using Bld  = rsBlade<Real>;
+  using GV   = rsGradedVector<Real>;
   using Vec  = std::vector<Real>;
   using PT   = MV::ProductType;
 
@@ -6371,7 +6371,7 @@ void testGeometricAlgebra()
 
   // Test grade extraction and wedge-products between blades:
   A.setAlgebra(&alg3); B.setAlgebra(&alg3); C.setAlgebra(&alg3); 
-  Bld a(&alg3, 0), b(&alg3, 0), c(&alg3, 0), d(&alg3, 0);
+  GV a(&alg3, 0), b(&alg3, 0), c(&alg3, 0), d(&alg3, 0);
   a = C.extractGrade(0); ok &= a.getGrade() == 0 && a == Vec({12});
   a = C.extractGrade(1); ok &= a.getGrade() == 1 && a == Vec({47,49,19});
   b = C.extractGrade(2); ok &= b.getGrade() == 2 && b == Vec({57,25,21});

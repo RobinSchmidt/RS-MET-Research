@@ -4168,6 +4168,10 @@ protected:
   // Sizes and start-indices of the coeffs of the blades of grades 1..n
   std::vector<int> bladeSizes, bladeStarts;
 
+  // Diagonal matrices for the involutions:
+  std::vector<T> involutionGrade, involutionReverse, involutionConjugate;
+
+
   template<class U> friend class rsGradedVector;
   template<class U> friend class rsMultiVector;
 
@@ -4358,6 +4362,8 @@ public:
   const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
 
 
+  /** Returns true, iff this multivector has at least one nozero coefficient (with some tolerance) 
+  for the given grade k */
   bool containsGrade(int k, T tol = T(0)) const;
 
   /** Returns the lowest grade that is present in this multivector. */
@@ -4365,6 +4371,7 @@ public:
   // todo: what if the multivector is zero? should that count as zero grade (with scalar coeff 
   // zero) or be a special case (encoded by -1)? ...we'll see what's more convenient...
 
+  /** Returns the highest grade that is present in this multivector. */
   int getHighestGrade(T tol = T(0)) const;
 
 
@@ -4385,6 +4392,16 @@ public:
 
   // todo: isBlade, isVersor, isZero (not yet sure, if 0 should be considered a the scalar 0 or as 
   // special case)
+  // getDual, getReverse
+
+  /** Returns the reverse of this multivector. */
+  rsMultiVector<T> getReverse() const;
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Manipulations */
+
+  /** Applies reversal of this multivector in place. */
+  void applyReversal();
 
 
   //-----------------------------------------------------------------------------------------------
@@ -4463,18 +4480,27 @@ public:
   // maybe this should be defined in class rsGeometricAlgebra - then we could have a function
   // rsMatrix<T> getCalyeyTable(ProductType type) there. This could be interesting for client code
 
+  // todo:
+  // static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
+  //   ProductType type);
+
   /** Computes one of the several products that can be derived from the geometric product. Which 
   one it is is selected by the product type parameter. This function is *horribly* inefficient and 
-  only meant for prototyping and reference purposes. ..well, actually the whole class is anyway, 
-  but this one is particularly horrible. See:
+  client code should use this only for prototyping and reference purposes. It is also used in 
+  rsGeometricAlgebra::init to build the Calyey tables for the derived products once and for all. 
+  Once they have been created, they can be used to compute these products more efficiently. See:
   https://en.wikipedia.org/wiki/Geometric_algebra#Extensions_of_the_inner_and_exterior_products */
   static rsMultiVector<T> productSlow(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
     ProductType type);
-  // This is used in rsGeometricAlgebra::init to build the Calyey tables for thederived products. 
-  // Once they have been created, they can be used to compute these products more efficiently
 
 
 protected:
+
+
+  /** Applies the involution defined by the vector inv to this multivector. inv can be something 
+  like alg->involutionReverse */
+  void applyInvolution(const std::vector<T>& inv);
+
 
   std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
   const rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
@@ -4726,6 +4752,23 @@ void rsGeometricAlgebra<T>::init()
   // For the regressive product, it seems we cannot use the same bladeIndices table as for the 
   // other products
 
+  // Create the diagonal matrices for the involutions. They all just change the sign of some grades
+  // according to pow(-1, f(k)) where the function f(k) is different for each kind of involution
+  // see "Geometric Multiplication of Vectors", pg 22,198:
+  auto fGI = [&](int k) { return T(k); };
+  auto fRI = [&](int k) { return T(k*(k-1)) / T(2); };
+  auto fCI = [&](int k) { return T(k*(k+1)) / T(2); };
+  involutionGrade.resize(n+1);
+  involutionReverse.resize(n+1);
+  involutionConjugate.resize(n+1);
+  for(int k = 0; k <= n; k++) {
+    involutionGrade[k]     = pow(T(-1), fGI(k));
+    involutionReverse[k]   = pow(T(-1), fRI(k));
+    involutionConjugate[k] = pow(T(-1), fCI(k)); }
+  // Wait - is this formula correct in general or does it apply only signatures n,0,0? ...and in 
+  // general, we need to take the signature into account? hmm...GA4CS gives the same formula for
+  // reversion on page 522 without any mention of signature dependency.
+
 
 
   /*
@@ -4878,6 +4921,38 @@ int rsMultiVector<T>::getHighestGrade(T tol) const
 }
 
 template<class T>
+void rsMultiVector<T>::applyInvolution(const std::vector<T>& inv)
+{
+  int n = alg->getNumDimensions();
+  rsAssert(inv.size() == n+1);
+  for(int k = 0; k <= n; k++) {
+    int n0 = alg->bladeStarts[k];
+    int m  = alg->bladeSizes[k];
+    T   s  = inv[k];
+    for(int i = 0; i < m; i++)
+      coeffs[n0+i] *= s; }
+}
+
+template<class T>
+void rsMultiVector<T>::applyReversal()
+{
+  applyInvolution(alg->involutionReverse);
+}
+// maybe move in to class and inline
+
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::getReverse() const
+{
+  rsMultiVector<T> Y(this);
+  Y.applyReversal();
+  return Y;
+}
+// needs tests
+// todo: getConjugate, getGradeInvolution
+
+
+template<class T>
 rsMultiVector<T> rsMultiVector<T>::operator+(const rsMultiVector<T>& b) const
 {
   rsAssert(areCompatible(*this, b));
@@ -4945,18 +5020,18 @@ template<class T>
 rsMultiVector<T> rsMultiVector<T>::productSlow(
   const rsMultiVector<T>& C, const rsMultiVector<T>& D, ProductType type)
 {
-  using MV  = rsMultiVector<T>;
-  using Bld = rsGradedVector<T>;
-  using PT  = ProductType;
+  using MV = rsMultiVector<T>;
+  using GV = rsGradedVector<T>;
+  using PT = ProductType;
   MV CD(C.getAlgebra());
   int n = C.getAlgebra()->getNumDimensions();
   for(int r = 0; r <= n; r++) {
     for(int s = 0; s <= n; s++) {
       if(type == PT::dot && (r == 0 || s == 0))
         continue;
-      Bld Cr   = C.extractGrade(r);
-      Bld Ds   = D.extractGrade(s);
-      MV  CrDs = Cr * Ds;                 // geometric product of blades Cr,Ds
+      GV Cr   = C.extractGrade(r);
+      GV Ds   = D.extractGrade(s);
+      MV CrDs = Cr * Ds;                 // geometric product of grades Cr,Ds
       int rs;
       switch(type)
       {
@@ -4968,8 +5043,8 @@ rsMultiVector<T> rsMultiVector<T>::productSlow(
       case PT::fatDot:        rs = rsAbs(s-r); break;
       default:                rs = r+s;
       }
-      Bld Prj  = CrDs.extractGrade(rs);   // projection
-      CD      += Prj;  }}                 // accumulation
+      GV Prj  = CrDs.extractGrade(rs);   // grade projection
+      CD     += Prj;  }}                 // accumulation
   return CD;
 }
 
@@ -4991,6 +5066,23 @@ rsMultiVector<T> operator*(const rsGradedVector<T>& a, const rsGradedVector<T>& 
   return A*B;
 }
 // may be optimized
+
+/**  */
+template<class T>
+rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
+{
+  rsError("no yet implemented");
+
+  // Use special formulas when possible (i.e. if X is a scalar...maybe there are also formulas for
+  // vectors and bivectors - the latter are most important for rotations) and taylor expansion as 
+  // fallback
+
+
+  rsMultiVector<T> Y(alg), T(alg);
+  T tol = T(1000) * RS_EPS(T);            // ad hoc - figure out something better
+
+  return Y;
+}
 
 
 

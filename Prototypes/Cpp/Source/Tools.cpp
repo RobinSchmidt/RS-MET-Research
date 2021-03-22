@@ -4329,6 +4329,11 @@ public:
 
   rsMultiVector(const rsGradedVector<T>& b) { set(b); }
 
+  rsMultiVector(const rsGeometricAlgebra<T>* algebraToUse, const std::vector<T>& coeffs)
+  { setAlgebra(algebraToUse); set(coeffs); }
+
+
+
   //-----------------------------------------------------------------------------------------------
   /** \name Setup */
 
@@ -4395,14 +4400,29 @@ public:
   // getDual, getReverse
 
   /** Returns the reverse of this multivector. */
-  rsMultiVector<T> getReverse() const;
+  rsMultiVector<T> getReverse() const { rsMultiVector<T> Y(*this); Y.applyReversal(); return Y; }
+
+  rsMultiVector<T> getGradeInvolution() const 
+  { rsMultiVector<T> Y(this); Y.applyGradeInvolution(); return Y; }
+
+  rsMultiVector<T> getConjugate() const 
+  { rsMultiVector<T> Y(this); Y.applyConjugation(); return Y; }
+
+  // todo: getDual
 
   //-----------------------------------------------------------------------------------------------
   /** \name Manipulations */
 
   /** Applies reversal of this multivector in place. */
-  void applyReversal();
+  void applyReversal() { applyInvolution(alg->involutionReverse); }
 
+  void applyGradeInvolution() { applyInvolution(alg->involutionGrade); }
+
+  void applyConjugation() { applyInvolution(alg->involutionConjugate); }
+
+  // todo: applyDualization ...or is this just another word for one of the above? -> figure out
+  // -> no, it's not: dualization involves permuting the elements: the dual of a vector is a 
+  // bivector etc.
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */
@@ -4508,6 +4528,11 @@ protected:
 
   template<class U> friend class rsGeometricAlgebra;
   //template<class U> friend class rsGradedVector;
+
+  // ToDo:
+  // -maybe make a class rsSparseMultiVector that contains coeffs for a particular grade only if
+  //  at least one of them is nonzero - for example, the product of two vectors contains only 
+  //  grades 0 and 2
 
 };
 
@@ -4933,13 +4958,13 @@ void rsMultiVector<T>::applyInvolution(const std::vector<T>& inv)
       coeffs[n0+i] *= s; }
 }
 
+/*
 template<class T>
 void rsMultiVector<T>::applyReversal()
 {
   applyInvolution(alg->involutionReverse);
 }
 // maybe move in to class and inline
-
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::getReverse() const
@@ -4950,6 +4975,7 @@ rsMultiVector<T> rsMultiVector<T>::getReverse() const
 }
 // needs tests
 // todo: getConjugate, getGradeInvolution
+*/
 
 
 template<class T>

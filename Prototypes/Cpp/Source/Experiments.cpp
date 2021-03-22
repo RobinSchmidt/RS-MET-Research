@@ -6513,6 +6513,26 @@ void testGeometricAlgebra()
   //D = 0.5*(A*B - B*A);  // this is actually zero :-O
   //ok &= C == D;         // does not hold! a^b = (a*b-b*a)/2 holds probably only for vectors
 
+  // Test reversal:
+  MV e1(&alg3, Vec({0,1,0,0,0,0,0,0}));
+  MV e2(&alg3, Vec({0,0,1,0,0,0,0,0}));
+  MV e3(&alg3, Vec({0,0,0,1,0,0,0,0}));
+  ok &= (e1^e2) == e1*e2;
+  ok &= (e1^e3) == e1*e3;
+  ok &= (e2^e3) == e2*e3;
+  MV e12  = e1^e2;
+  MV e13  = e1^e3;
+  MV e23  = e2^e3;
+  MV e123 = e12 ^ e3;
+  ok &= (e1^e2).getReverse()    == (e2^e1);
+  ok &= (e1^e3).getReverse()    == (e3^e1);
+  ok &= (e2^e3).getReverse()    == (e3^e2);
+  ok &= (e1^e2^e3).getReverse() == (e3^e2^e1);
+
+
+
+
+
 
 
   // ToDo: figure aout what happens with the different products, when we feed in:

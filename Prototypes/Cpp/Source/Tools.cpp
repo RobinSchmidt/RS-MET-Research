@@ -4248,6 +4248,7 @@ public:
 
   T getCoefficient(int i) const { return coeffs[i]; }
 
+  /** Returns a const pointer to the algebra object that is used. */
   const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
 
 
@@ -4353,8 +4354,37 @@ public:
   mv.extractGrade(2) would extract the bivector part of a given multivector mv. */
   rsGradedVector<T> extractGrade(int grade) const;
 
-
+  /** Returns a const pointer to the algebra object that is used. */
   const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
+
+
+  bool containsGrade(int k, T tol = T(0)) const;
+
+  /** Returns the lowest grade that is present in this multivector. */
+  int getLowestGrade(T tol = T(0)) const;
+  // todo: what if the multivector is zero? should that count as zero grade (with scalar coeff 
+  // zero) or be a special case (encoded by -1)? ...we'll see what's more convenient...
+
+  int getHighestGrade(T tol = T(0)) const;
+
+
+
+  bool isSingleGraded(T tol = T(0)) const { return getLowestGrade(tol) == getHighestGrade(tol); }
+  // aka homogeneous
+
+  bool hasOnlyGrade(int k, T tol = T(0)) const 
+  { return getLowestGrade(tol) == k && getHighestGrade(tol) == k; }
+
+
+
+  bool isScalar(T tol = T(0)) const { return hasOnlyGrade(0, tol); }
+
+  bool isVector(T tol = T(0)) const { return hasOnlyGrade(1, tol); }
+
+  bool isBivector(T tol = T(0)) const { return hasOnlyGrade(2, tol); }
+
+  // todo: isBlade, isVersor, isZero (not yet sure, if 0 should be considered a the scalar 0 or as 
+  // special case)
 
 
   //-----------------------------------------------------------------------------------------------
@@ -4795,10 +4825,9 @@ rsGradedVector<T> rsGradedVector<T>::operator^(const rsGradedVector<T>& b) const
 template<class T>
 void rsMultiVector<T>::set(const rsGradedVector<T>& b)
 {
-  // should we also set the algebra, like alg = b.alg? or setAlgebra(b.getAlgebra())
   setAlgebra(b.getAlgebra());
   int n0 = alg->getBladeStart(b.getGrade());
-  int n  = alg->getBladeSize( b.getGrade());
+  int n  = alg->getBladeSize( b.getGrade());  // maybe use m
   rsFill(coeffs, T(0));
   for(int i = 0; i < n; i++)
     coeffs[n0+i] = b.getCoefficient(i);
@@ -4813,6 +4842,39 @@ rsGradedVector<T> rsMultiVector<T>::extractGrade(int grade) const
   int n0 = alg->getBladeStart(grade);
   B.setCoefficients(&coeffs[n0]);
   return B;
+}
+
+template<class T>
+bool rsMultiVector<T>::containsGrade(int k, T tol) const
+{
+  if(grade < 0 || grade > alg->getNumDimensions())
+    return false;
+  int n0 = alg->getBladeStart(k);
+  int m  = alg->getBladeSize(k);
+  for(int i = 0; i < m; i++)
+    if(rsAbs(coeffs[n0+i]) > tol)
+      return true;
+  return false;
+}
+
+template<class T>
+int rsMultiVector<T>::getLowestGrade(T tol) const
+{
+  int n = alg->getNumDimensions();
+  for(int k = 0; k <= n; k++)
+    if(containsGrade(k, tol))
+      return k;
+  return 0;  // or should we return -1?
+}
+
+template<class T>
+int rsMultiVector<T>::getHighestGrade(T tol) const
+{
+  int n = alg->getNumDimensions();
+  for(int k = n; k >= 0; k++)
+    if(containsGrade(k, tol))
+      return k;
+  return 0;  // or should we return -1?
 }
 
 template<class T>

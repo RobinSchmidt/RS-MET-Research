@@ -4556,6 +4556,8 @@ public:
   static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)
   { bool ok = a.coeffs.size() == b.coeffs.size(); ok &= a.alg == b.alg; return ok; }
   // todo: try to relax that later: a 3D geometric algebra contains a 2D one as subalgebra
+  // i think, it's enough to test a.alg == b.alg because the size of the coeffs is determined by
+  // the algebra object ...at least it should be
 
 
   //-----------------------------------------------------------------------------------------------
@@ -4564,41 +4566,38 @@ public:
   enum class ProductType
   {
     wedge,
-    //commutator,  // is a "derivation", obeys product rule
-    //regressive,
     contractLeft,  // "contraction onto"
     contractRight, // "contraction by"
     scalar,        // for blades, nonzero only when the two blades have same grade
     dot,
-    fatDot
+    fatDot,
+    commutator,    // is a "derivation", obeys product rule
+    regressive
   };
-  // maybe this should be defined in class rsGeometricAlgebra - then we could have a function
+  // Maybe this should be defined in class rsGeometricAlgebra - then we could have a function
   // rsMatrix<T> getCalyeyTable(ProductType type) there. This could be interesting for client code
 
-  // todo:
-  static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B,
-    ProductType type);
-
   /** Computes one of the several products that can be derived from the geometric product. Which 
-  one it is is selected by the product type parameter. This function is *horribly* inefficient and 
-  client code should use this only for prototyping and reference purposes. It is also used in 
-  rsGeometricAlgebra::init to build the Calyey tables for the derived products once and for all. 
-  Once they have been created, they can be used to compute these products more efficiently. See:
+  one it is is selected by the product type parameter. See:
   https://en.wikipedia.org/wiki/Geometric_algebra#Extensions_of_the_inner_and_exterior_products */
-  static rsMultiVector<T> productSlow(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
+  static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B,
     ProductType type);
 
 
 protected:
 
+  /** This function is used in rsGeometricAlgebra::init to build the Calyey tables for the derived 
+  products. */
+  static rsMultiVector<T> productSlow(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
+    ProductType type);
 
   /** Applies the involution defined by the vector inv to this multivector. inv can be something 
   like alg->involutionReverse */
   void applyInvolution(const std::vector<T>& inv);
 
 
-  std::vector<T> coeffs;                 // 2^n coeffs for the projections on the basis blades
-  const rsGeometricAlgebra<T>* alg = nullptr;  // pointer to the algebra to use
+  std::vector<T> coeffs;                      // 2^n coeffs for the projections on the basis blades
+  const rsGeometricAlgebra<T>* alg = nullptr; // pointer to the algebra to use
 
 
   template<class U> friend class rsGeometricAlgebra;
@@ -4863,7 +4862,9 @@ void rsGeometricAlgebra<T>::init()
   }
   // For the regressive product, it seems we cannot use the same bladeIndices table as for the 
   // other products - maybe compute the regressive product without a specific Cayley table by
-  // using its definition: A v B = (A* ^ B*)*
+  // using its definition: A v B = (A* ^ B*)*...that's how it's currently done - but maybe at some
+  // point, just do it with an additional bladeIndicesRegressive table - depends on how often the
+  // regressive product is used - if it's used often, that optimization may be worthwhile
 
   // Create the diagonal matrices for the involutions. They all just change the sign of some grades
   // according to pow(-1, f(k)) where the function f(k) is different for each kind of involution
@@ -5136,20 +5137,29 @@ rsMultiVector<T> rsMultiVector<T>::product(
 {
   using MV = rsMultiVector<T>;
   using PT = ProductType;
+  const rsGeometricAlgebra<T>* alg = A.alg;
   MV P(alg);
+  if(type == PT::regressive)
+  {
+    MV Ad = A.getDual();
+    MV Bd = B.getDual();
+    alg->outerProduct(Ad.coeffs, Bd.coeffs, P.coeffs);
+    P.applyDualization();
+    return P;
+  }
   switch(type)
   {
-  case PT::wedge:         alg->outerProduct(   A.coeffs, B.coeffs, P.coeffs); break;
-  case PT::contractLeft:  alg->contractLeft(   A.coeffs, B.coeffs, P.coeffs); break;
-  case PT::contractRight: alg->contractRight(  A.coeffs, B.coeffs, P.coeffs); break;
-  case PT::scalar:        alg->scalarProductMM(A.coeffs, B.coeffs, P.coeffs); break;
-  case PT::dot:           alg->dotProductMM(   A.coeffs, B.coeffs, P.coeffs); break; 
-  case PT::fatDot:        alg->fatDotProductMM(A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::wedge:         alg->outerProduct(       A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::contractLeft:  alg->contractLeftMM(     A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::contractRight: alg->contractRightMM(    A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::scalar:        alg->scalarProductMM(    A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::dot:           alg->dotProductMM(       A.coeffs, B.coeffs, P.coeffs); break; 
+  case PT::fatDot:        alg->fatDotProductMM(    A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::commutator:    alg->commutatorProductMM(A.coeffs, B.coeffs, P.coeffs); break;
   default:                rsError("Unknown product type");
   }
   return P;
 }
-// todo: commutator, regressive
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::productSlow(

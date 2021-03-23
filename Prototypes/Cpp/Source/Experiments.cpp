@@ -6480,35 +6480,35 @@ void testGeometricAlgebra()
   A.set(Vec({3,8,7,4,6,4,6,5}));
   B.set(Vec({4,5,7,1,4,7,6,1}));
   C = A^B;
-  MV D = MV::productSlow(A, B, PT::wedge);
+  MV D = MV::product(A, B, PT::wedge);
   ok &= C == D; 
 
   // When entering
   //   (3+8e1+7e2+4e3+6e12+4e13+6e23+5e123) | (4+5e1+7e2+1e3+4e12+7e13+6e23+1e123)
   // into bivector.net, it apparently computes the "fat dot" product:
-  C = MV::productSlow(A, B, PT::fatDot);
+  C = MV::product(A, B, PT::fatDot);
   ok &= C == Vec({12,1,72,29,45,-5,75,23});
 
 
   // see https://www.youtube.com/watch?v=iv5G956UGfs&t=550s There are also useful identities for
   // the inner product. Macdonald uses the left-contraction definition of the inner product:
   C = innerProduct(A, B, Ii);
-  D = MV::productSlow(A, B, PT::contractLeft);
+  D = MV::product(A, B, PT::contractLeft);
   ok &= C == D;
 
 
-  D = MV::productSlow(A, B, PT::dot);
+  D = MV::product(A, B, PT::dot);
   //D = A | B;
-  D = MV::productSlow(A, B, PT::fatDot);
-  D = MV::productSlow(A, B, PT::contractRight);
+  D = MV::product(A, B, PT::fatDot);
+  D = MV::product(A, B, PT::contractRight);
   // it seems, none of the inner products defined so far obeys the equation that was used to derive
   // the innerProduct function. What's going on? In his 1st book, page 101, Alan Macdonald defines 
   // the inner product as left contraction
 
   // Test some identities:
 
-  C = MV::productSlow(A, B, PT::contractLeft) + MV::productSlow(A, B, PT::contractRight);
-  D = MV::productSlow(A, B, PT::scalar) + MV::productSlow(A, B, PT::fatDot);
+  C = MV::product(A, B, PT::contractLeft) + MV::product(A, B, PT::contractRight);
+  D = MV::product(A, B, PT::scalar) + MV::product(A, B, PT::fatDot);
   ok &= C == D; // 2.11 in TIPoGA
 
   //A.set(Vec({ 0,2,3,4,0,0,0,0 }));

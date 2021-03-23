@@ -4032,7 +4032,11 @@ delegate the actual computations in their multiplication operators to it. To the
 algebra object, you need to pass 3 numbers that determine the number of basis vectors that square 
 to +1, -1 and 0 respectively. This triple of numbers is called the signature of the algebra. For 
 example, the usual 3D Euclidean space has signature (3,0,0), 4D Minkowski spacetime has signature 
-(3,1,0) (or (1,3,0? depending on convention? -> figure out) ....tbc... */
+(3,1,0) or (1,3,0) depending on the convention used. I prefer the (3,1,0) convention because it 
+just takes the regular 3D space as is and extends it by a time dimension whereas the (1,3,0) 
+convention additionally flips all spatial axes (or does it? it actually flips the squares of those
+axes, i think - making them all imaginary? ...like in quaternions?), which seems to me an unnatural 
+thing to do (todo: figure out the rationale behind the (1,3,0) convention). ....tbc... */
 
 template<class T>
 class rsGeometricAlgebra
@@ -4048,6 +4052,7 @@ public:
   used in the algebra creation tool at bivector.net. */
   rsGeometricAlgebra(int numPositiveDimensions, int numNegativeDimensions = 0, 
     int numZeroDimensions = 0);
+  // see https://en.wikipedia.org/wiki/Metric_signature
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
@@ -4165,13 +4170,20 @@ protected:
   rsMatrix<T> weightsContractLeft, weightsContractRight, weightsScalar, weightsDot, weightsFatDot,
     weightsCommutator, weightsRegressive;
 
-  // Sizes and start-indices of the coeffs of the blades of grades 1..n
+  // Sizes and start-indices of the coeffs of the blades of grades 1..n (or 0..n?)
   std::vector<int> bladeSizes, bladeStarts;
 
   // Diagonal matrices for the involutions:
   std::vector<T> involutionGrade, involutionReverse, involutionConjugate;
 
+  // Permutation and sign tables for dualization:
+  std::vector<int> dualPerm;
+  std::vector<T>   dualSigns;
 
+  // ToDo: maybe have temp arrays of size N for performing certain computations that would 
+  // otherwise need to allocate memory
+
+  // They need access to our internals:
   template<class U> friend class rsGradedVector;
   template<class U> friend class rsMultiVector;
 
@@ -4366,6 +4378,10 @@ public:
   /** Returns a const pointer to the algebra object that is used. */
   const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
 
+  /** Returns the number of dimensions n of the underlying vector space in which this mulitvector 
+  lives. Not   to be confused with the number of dimensions of the multivector space, which is 
+  2^n. */
+  int getNumDimensions() const { return alg->getNumDimensions(); }
 
   /** Returns true, iff this multivector has at least one nozero coefficient (with some tolerance) 
   for the given grade k */
@@ -4379,36 +4395,68 @@ public:
   /** Returns the highest grade that is present in this multivector. */
   int getHighestGrade(T tol = T(0)) const;
 
-
-
+  /** Returns true, iff this multivector has nonzero coefficients only for a single grade. Such 
+  multivectors are also called homogeneous. */
   bool isSingleGraded(T tol = T(0)) const { return getLowestGrade(tol) == getHighestGrade(tol); }
-  // aka homogeneous
 
+  /** Returns true, iff this multivector has nonzero coefficients only for the given grade k. */
   bool hasOnlyGrade(int k, T tol = T(0)) const 
   { return getLowestGrade(tol) == k && getHighestGrade(tol) == k; }
 
+  /** Returns true, iff this multivector has all zero coefficients. */
+  bool isZero(T tol = T(0)) const { return rsMaxAbs(coeffs) > tol; }
 
-
+  /** Returns true, iff this multivector has nonzero coefficients only for the scalar (grade 0) 
+  part.  ...i'm not yet sure, if 0 should be considered as the scalar 0 (of grade 0) or as special 
+  case (of grade -1) - currently zero is treated as scalar, too...  */
   bool isScalar(T tol = T(0)) const { return hasOnlyGrade(0, tol); }
 
+  /** Returns true, iff this multivector has nonzero coefficients only for the vector (grade 1) 
+  part. */
   bool isVector(T tol = T(0)) const { return hasOnlyGrade(1, tol); }
 
+  /** Returns true, iff this multivector has nonzero coefficients only for the bivector (grade 2) 
+  part. */
   bool isBivector(T tol = T(0)) const { return hasOnlyGrade(2, tol); }
 
-  // todo: isBlade, isVersor, isZero (not yet sure, if 0 should be considered a the scalar 0 or as 
-  // special case)
-  // getDual, getReverse
+  /** Returns true, iff this multivector has nonzero coefficients only for the trivector (grade 3) 
+  part. */
+  bool isTrivector(T tol = T(0)) const { return hasOnlyGrade(3, tol); }
+
+  /** Returns true, iff this multivector has nonzero coefficients only for the pseudovector 
+  (grade n-1) part. */
+  bool isPseudovector(T tol = T(0)) const { return hasOnlyGrade(getNumDimensions()-1, tol); }
+
+  /** Returns true, iff this multivector has nonzero coefficients only for the pseudoscalar
+  (grade n) part. */
+  bool isPseudoscalar(T tol = T(0)) const { return hasOnlyGrade(getNumDimensions(), tol); }
+
+  // todo: isBlade, isVersor
 
   /** Returns the reverse of this multivector. */
   rsMultiVector<T> getReverse() const { rsMultiVector<T> Y(*this); Y.applyReversal(); return Y; }
+  // ...i think, this may be applicable only to blades? figure out -> if so, maybe use 
+  // rsAssert(isBlade())
 
   rsMultiVector<T> getGradeInvolution() const 
   { rsMultiVector<T> Y(this); Y.applyGradeInvolution(); return Y; }
 
+  /** Returns the Clifford conjugate of this multivector. */
   rsMultiVector<T> getConjugate() const 
   { rsMultiVector<T> Y(this); Y.applyConjugation(); return Y; }
 
-  // todo: getDual
+  /** Returns the dual of this multivector. If V is a homogeneous graded vector of grade k, then 
+  its dual V* is of grade n-k and represents the orthogonal complement subspace of the space 
+  spanned by V. The dual can be computed via V* = V / I where I is the unit pseudoscalar. */
+  rsMultiVector<T> getDual() const;
+
+  // todo: getInverse() - implement special formulas where available, like for scalars, vectors,
+  // blades, etc. ...do we need to distinguish between left and right inverses? i think so. maybe
+  // in the general case, we need to express the C = M*B as C: vector, M: matrix, B: vector and 
+  // solve a linear system? the matrix M should be obtained from a multivector A by taking into 
+  // account A itself and the Cayley table?
+  // https://math.stackexchange.com/questions/443555/calculating-the-inverse-of-a-multivector/2985578
+  // https://arxiv.org/abs/1712.05204
 
   //-----------------------------------------------------------------------------------------------
   /** \name Manipulations */
@@ -4489,7 +4537,7 @@ public:
   enum class ProductType
   {
     wedge,
-    //commutator,  // is a "derivation", obey product rule
+    //commutator,  // is a "derivation", obeys product rule
     //regressive,
     contractLeft,  // "contraction onto"
     contractRight, // "contraction by"
@@ -4532,7 +4580,7 @@ protected:
   // ToDo:
   // -maybe make a class rsSparseMultiVector that contains coeffs for a particular grade only if
   //  at least one of them is nonzero - for example, the product of two vectors contains only 
-  //  grades 0 and 2
+  //  grades 0 and 2. maybe use a std::vector<rsGradedVector<T>> grades;
 
 };
 
@@ -4747,6 +4795,32 @@ void rsGeometricAlgebra<T>::init()
   // passed via the parameter Ii:
   auto dual = [](const MV& A, const MV& Ii) { return A * Ii; };
 
+  // Create permutation and sign tables for the dualization:
+  dualPerm.resize(N);
+  dualSigns.resize(N);
+  for(int i = 0; i < N; i++)
+  {
+    A.setZero(); A[i] = 1;
+    B = dual(A, Ii);
+    //int k = rsIndexOfFirstNonZero(B.coeffs);
+    int k = N-i-1;
+    checkProduct(B, k);
+    dualSigns[k] = B.coeffs[k];
+    dualPerm[k]  = i;
+    // Should it be dualPerm[i] = k or dualPerm[k] = i? ...in R^3, it doesn't seem to make any 
+    // difference because the permutation is just a reversal anyway - i guess, that rule is 
+    // generally true (-> figure out). If this turns out to be true, the dualPerm array can be 
+    // removed from the class. In this case, we can also implement an in-place dualization without
+    // extra memory by just reversing the array and applying the signs.
+
+    // damn: we get an access violation when the signature contains degenerate axes
+    // -> determine k by the rule: k = N-i-1 and use checkProduct(B, k) to see, if the rule works
+    // -> yes, looks good! -> so we can indeed get rid of the dualPerm member
+
+    int dummy = 0;
+  }
+
+
   // Function to compute the regressive product (a.k.a. antiwedge product) via the formula using
   // duals: A v B = (A* ^ B*)*:
   auto regressiveProduct = [&](const MV& A, const MV& B)
@@ -4958,25 +5032,14 @@ void rsMultiVector<T>::applyInvolution(const std::vector<T>& inv)
       coeffs[n0+i] *= s; }
 }
 
-/*
 template<class T>
-void rsMultiVector<T>::applyReversal()
+rsMultiVector<T> rsMultiVector<T>::getDual() const
 {
-  applyInvolution(alg->involutionReverse);
-}
-// maybe move in to class and inline
-
-template<class T>
-rsMultiVector<T> rsMultiVector<T>::getReverse() const
-{
-  rsMultiVector<T> Y(this);
-  Y.applyReversal();
+  rsMultiVector<T> Y(alg);
+  for(int i = 0; i < alg->N; i++)
+    Y.coeffs[i] = coeffs[alg->dualPerm[i]] * alg->dualSigns[i];
   return Y;
 }
-// needs tests
-// todo: getConjugate, getGradeInvolution
-*/
-
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::operator+(const rsMultiVector<T>& b) const

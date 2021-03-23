@@ -6437,6 +6437,13 @@ void testGeometricAlgebra()
   // what if we define an inner product by  u|v = (u*v + v*u)/2? do we get something different than
   // using u|v = u*v - u^v
 
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  B = A.getDual();
+  C = dual(A, Ii);
+  ok &= B == C;
+  B = B.getDual();
+  ok &= A == -B;    // taking the dual of A twice gives back A but with negative sign
+
 
   // Operations to do next:
   // Vec I  = alg.getPseudoScalar();
@@ -6446,6 +6453,9 @@ void testGeometricAlgebra()
   // MV  Ai = A.getInverse();   // dunno, if that's always possible, maybe return scalar NaN if not
                                 // or maybe the whole array should be NaNs
   // -reversion (complex conjugation in 2D)
+  // -store the unit pseudoscalar and its inverse in the algebra (should be computed in init)
+  // -implement taking the inverse
+  // -implement exp
 
   // Maybe install the python package clifford for reference
 
@@ -6461,9 +6471,6 @@ void testGeometricAlgebra()
   // doing something like (N*)*
 
 
-  // todo: store the unit pseudoscalar and its inverse in the algebra (should be computed in init)
-
-  // todo: implement taking the inverse
 
   // Test the product function for the derived products:
   A.set(Vec({3,8,7,4,6,4,6,5}));

@@ -4088,16 +4088,39 @@ public:
 
   /** Given multivectors a and b, this computes their geometric product and stores it in p. */
   void geometricProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsGeom); }
+  // rename to geometricProductMM
 
   /** Given multivectors a and b, this computes their outer product and stores it in p. */
   void outerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsOuter); }
+  // rename to outerProductMM
+
+  void contractLeftMM(const Vec& a, const Vec& b, Vec& p) const 
+  { product(a,b,p, weightsContractLeft); }
+
+  void contractRightMM(const Vec& a, const Vec& b, Vec& p) const 
+  { product(a,b,p, weightsContractRight); }
+
+  void scalarProductMM(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsScalar); }
+
+  void dotProductMM(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsDot); }
+
+  void fatDotProductMM(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsFatDot); }
+
+  void commutatorProductMM(const Vec& a, const Vec& b, Vec& p) const 
+  { product(a,b,p, weightsCommutator); }
+
+
 
   /** Given multivectors a and b, this computes their inner product and stores it in p. */
   void innerProduct(const Vec& a, const Vec& b, Vec& p) const { product(a,b,p, weightsInner); }
+  // maybe remove
+
+
 
   /** Given blades a and b, this computes their outer product and stores it in p. */
   void outerProduct_bld_bld(const Vec& a, int ga, const Vec& b, int gb, Vec& p) const 
   { product_bld_bld(a, ga, b, gb, p, weightsOuter); }
+  // rename to outerProductGG
 
 
 protected:
@@ -4177,7 +4200,7 @@ protected:
   std::vector<T> involutionGrade, involutionReverse, involutionConjugate;
 
   // Permutation and sign tables for dualization:
-  std::vector<int> dualPerm;
+  //std::vector<int> dualPerm;  // the permutation is just a reversal
   std::vector<T>   dualSigns;
 
   // ToDo: maybe have temp arrays of size N for performing certain computations that would 
@@ -4468,6 +4491,10 @@ public:
 
   void applyConjugation() { applyInvolution(alg->involutionConjugate); }
 
+  // these 3 involutions together with the identity constitute the Klein 4 group
+
+  void applyDualization();
+
   // todo: applyDualization ...or is this just another word for one of the above? -> figure out
   // -> no, it's not: dualization involves permuting the elements: the dual of a vector is a 
   // bivector etc.
@@ -4549,8 +4576,8 @@ public:
   // rsMatrix<T> getCalyeyTable(ProductType type) there. This could be interesting for client code
 
   // todo:
-  // static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B, 
-  //   ProductType type);
+  static rsMultiVector<T> product(const rsMultiVector<T>& A, const rsMultiVector<T>& B,
+    ProductType type);
 
   /** Computes one of the several products that can be derived from the geometric product. Which 
   one it is is selected by the product type parameter. This function is *horribly* inefficient and 
@@ -4730,7 +4757,7 @@ void rsGeometricAlgebra<T>::init()
   // "de-diagonalization" of the results... i'm not yet sure, how exactly that is supposed to work 
   // -> consult the GA4CS book and the author's reference implementation
 
-  // Fillthe basic Cayley (i.e. multiplication) tables for geometric, outer and inner product. 
+  // Fill the basic Cayley (i.e. multiplication) tables for geometric, outer and inner product. 
   // These tables really define what the algebra does - they are the heart and soul of everything:
   buildCayleyTables(M, bladeIndices, weightsGeom, weightsOuter, weightsInner);
 
@@ -4795,29 +4822,15 @@ void rsGeometricAlgebra<T>::init()
   // passed via the parameter Ii:
   auto dual = [](const MV& A, const MV& Ii) { return A * Ii; };
 
-  // Create permutation and sign tables for the dualization:
-  dualPerm.resize(N);
+  // Create sign table for the dualization:
   dualSigns.resize(N);
   for(int i = 0; i < N; i++)
   {
     A.setZero(); A[i] = 1;
     B = dual(A, Ii);
-    //int k = rsIndexOfFirstNonZero(B.coeffs);
     int k = N-i-1;
     checkProduct(B, k);
     dualSigns[k] = B.coeffs[k];
-    dualPerm[k]  = i;
-    // Should it be dualPerm[i] = k or dualPerm[k] = i? ...in R^3, it doesn't seem to make any 
-    // difference because the permutation is just a reversal anyway - i guess, that rule is 
-    // generally true (-> figure out). If this turns out to be true, the dualPerm array can be 
-    // removed from the class. In this case, we can also implement an in-place dualization without
-    // extra memory by just reversing the array and applying the signs.
-
-    // damn: we get an access violation when the signature contains degenerate axes
-    // -> determine k by the rule: k = N-i-1 and use checkProduct(B, k) to see, if the rule works
-    // -> yes, looks good! -> so we can indeed get rid of the dualPerm member
-
-    int dummy = 0;
   }
 
 
@@ -4849,7 +4862,8 @@ void rsGeometricAlgebra<T>::init()
     }
   }
   // For the regressive product, it seems we cannot use the same bladeIndices table as for the 
-  // other products
+  // other products - maybe compute the regressive product without a specific Cayley table by
+  // using its definition: A v B = (A* ^ B*)*
 
   // Create the diagonal matrices for the involutions. They all just change the sign of some grades
   // according to pow(-1, f(k)) where the function f(k) is different for each kind of involution
@@ -4866,7 +4880,8 @@ void rsGeometricAlgebra<T>::init()
     involutionConjugate[k] = pow(T(-1), fCI(k)); }
   // Wait - is this formula correct in general or does it apply only signatures n,0,0? ...and in 
   // general, we need to take the signature into account? hmm...GA4CS gives the same formula for
-  // reversion on page 522 without any mention of signature dependency.
+  // reversion on page 522 without any mention of signature dependency. yeah - why would the 
+  // signature come into play anyway - there are no squared basis vectors involved
 
 
 
@@ -5033,11 +5048,21 @@ void rsMultiVector<T>::applyInvolution(const std::vector<T>& inv)
 }
 
 template<class T>
+void rsMultiVector<T>::applyDualization()
+{
+  int N = alg->N;
+  rsArrayTools::reverse(&coeffs[0], N);
+  for(int i = 0; i < N; i++)
+    coeffs[i] *= alg->dualSigns[i];
+}
+
+template<class T>
 rsMultiVector<T> rsMultiVector<T>::getDual() const
 {
+  int N = alg->N;
   rsMultiVector<T> Y(alg);
-  for(int i = 0; i < alg->N; i++)
-    Y.coeffs[i] = coeffs[alg->dualPerm[i]] * alg->dualSigns[i];
+  for(int i = 0; i < N; i++)
+    Y.coeffs[i] = coeffs[N-i-1] * alg->dualSigns[i];
   return Y;
 }
 
@@ -5104,6 +5129,27 @@ rsMultiVector<T> rsMultiVector<T>::operator|(const rsMultiVector<T>& b) const
   return p;
 }
 */
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::product(
+  const rsMultiVector<T>& A, const rsMultiVector<T>& B, ProductType type)
+{
+  using MV = rsMultiVector<T>;
+  using PT = ProductType;
+  MV P(alg);
+  switch(type)
+  {
+  case PT::wedge:         alg->outerProduct(   A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::contractLeft:  alg->contractLeft(   A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::contractRight: alg->contractRight(  A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::scalar:        alg->scalarProductMM(A.coeffs, B.coeffs, P.coeffs); break;
+  case PT::dot:           alg->dotProductMM(   A.coeffs, B.coeffs, P.coeffs); break; 
+  case PT::fatDot:        alg->fatDotProductMM(A.coeffs, B.coeffs, P.coeffs); break;
+  default:                rsError("Unknown product type");
+  }
+  return P;
+}
+// todo: commutator, regressive
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::productSlow(

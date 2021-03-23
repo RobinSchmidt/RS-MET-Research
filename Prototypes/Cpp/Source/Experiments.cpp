@@ -6437,12 +6437,16 @@ void testGeometricAlgebra()
   // what if we define an inner product by  u|v = (u*v + v*u)/2? do we get something different than
   // using u|v = u*v - u^v
 
+  // Test dualization:
   A.set(Vec({3,8,7,4,6,4,6,5}));
   B = A.getDual();
   C = dual(A, Ii);
   ok &= B == C;
   B = B.getDual();
-  ok &= A == -B;    // taking the dual of A twice gives back A but with negative sign
+  ok &= A == -B;         // taking the dual of A twice gives back A but with negative sign
+  B = A;
+  B.applyDualization();  // test in-place dualization
+  ok &= B == C;
 
 
   // Operations to do next:

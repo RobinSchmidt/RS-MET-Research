@@ -4478,8 +4478,10 @@ public:
   /** Returns the matrix representation of this multivector. The matrix A that corresponds to a 
   general multivector a, is the matrix for which the matrix-(multi)vector product A*b is the same
   as the geometric product a*b. */
-  rsMatrix<T> getMatrixRepresentation();
+  rsMatrix<T> getMatrixRepresentation() const;
   // todo: let the user select which of the products should be realized 
+
+  rsMultiVector<T> getInverse() const;
 
 
   // todo: getInverse() - implement special formulas where available, like for scalars, vectors,
@@ -5052,7 +5054,7 @@ rsMultiVector<T> rsMultiVector<T>::getDual() const
 }
 
 template<class T>
-rsMatrix<T> rsMultiVector<T>::getMatrixRepresentation()
+rsMatrix<T> rsMultiVector<T>::getMatrixRepresentation() const
 {
   // Each row of the matrix is a permutation of the elements of the coeffs array, with some 
   // sign-factors applied:
@@ -5066,6 +5068,18 @@ rsMatrix<T> rsMultiVector<T>::getMatrixRepresentation()
   return M;
 }
 // needs more tests
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::getInverse() const
+{
+  rsMatrix<T> A = getMatrixRepresentation();
+  std::vector<T> b(alg->N);
+  b[0] = T(1);
+  std::vector<T> x = rsLinearAlgebraNew::solve(A, b);
+  return rsMultiVector<T>(alg, x);
+}
+// try to optimze away some extra memory allocations
+
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::operator+(const rsMultiVector<T>& b) const

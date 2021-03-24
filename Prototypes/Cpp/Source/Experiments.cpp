@@ -6543,8 +6543,20 @@ void testGeometricAlgebra()
   // Test matrix representation:
   rsMatrix<Real> matA = A.getMatrixRepresentation();
   Vec vecB  = B.getCoeffs();
-  Vec vecAB = matA * vecB;  // matrix-vector product
-  MV  AB = A*B;
+  Vec vecAB = matA * vecB;            // matrix-vector product
+  MV  AB    = A    *    B;            // geometric product of multivectors   
+  ok &= vecAB == AB.getCoeffs();      // ...should give the same result
+
+  // todo: this is actually a "left-matrix" representation - figure out how to create right-matrix
+  // representation such that B*A = vecB * matA ...does that even make sense? or maybe we should
+  // use  B*A = vecB^T * matA  with the B-vector transposed?
+
+  // todo: implement getInverse based on the matrix representation: solve the linear system:
+  // A*x = (1,0,0,0,...) where A is the matrix represnetation and x is the desired inverse
+
+  MV Ai = A.getInverse();
+  C = Ai * A;
+  C = A * Ai;
 
 
 

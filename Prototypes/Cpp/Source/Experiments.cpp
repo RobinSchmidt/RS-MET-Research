@@ -6540,67 +6540,12 @@ void testGeometricAlgebra()
   ok &= (e2^e3).getReverse()    == (e3^e2);
   ok &= (e1^e2^e3).getReverse() == (e3^e2^e1);
 
+  // Test matrix representation:
+  rsMatrix<Real> matA = A.getMatrixRepresentation();
+  Vec vecB  = B.getCoeffs();
+  Vec vecAB = matA * vecB;  // matrix-vector product
+  MV  AB = A*B;
 
-
-
-
-
-
-  // ToDo: figure aout what happens with the different products, when we feed in:
-  // A*A where A = {1,2,3,4,5,6,7} - could this help to build Cayley tables for the different 
-  // products? ...or maybe to find the (2,4)th entry of the Cayley table for a given product, we
-  // need to feed A = {0,0,1,0,0,0,0,0}, B = {0,0,0,0,1,0,0,0}
-  // OK - let's try to obtain the Cayley table of the geometric product by this method:
-
-  // obsolete - has now been integrated into rsGeometricAlgebra<T>::init
-  auto findHotIndex = [](const MV& A)
-  {
-    int N = A.getAlgebra()->getMultiVectorSize();
-    for(int i = 0; i < N; i++)
-      if(A[i] != Real(0))
-        return i;
-    return -1;
-  };
-  rsMatrix<int> CT_indicesTrue = alg3.getCayleyTableIndices();
-  rsMatrix<int>  CT_indices(8, 8);
-  rsMatrix<Real> CT_weights(8, 8);
-  for(int i = 0; i < 8; i++)
-  {
-    for(int j = 0; j < 8; j++)
-    {
-      // Set the i-th and j-th alement in A and B "hot", respectively and form the product:
-      A.setZero(); A[i] = 1;
-      B.setZero(); B[j] = 1;
-      C = A*B;
-
-      //C = MV::product(A, B, PT::contractLeft);
-      //C = MV::product(A, B, PT::contractRight);
-      //C = MV::product(A, B, PT::scalar);
-      //C = MV::product(A, B, PT::dot);
-      //C = MV::product(A, B, PT::fatDot);
-
-      // Find the "hot" (nonzero) element in the product C (there should be at most one):
-      int k = findHotIndex(C);
-      if(k != -1) { 
-        rsAssert(k == CT_indicesTrue(i, j));
-        CT_indices(i, j) = k;       // its index gives the index-entry for the Cayley table
-        CT_weights(i, j) = C[k]; }  // its value (-1 or +1) gives the weight 
-    }
-  }
-  ok &= CT_indices == alg3.getCayleyTableIndices();
-  ok &= CT_weights == alg3.getCayleyTableWeightsGeom();
-
-  // todo: figure out, if the indices table is the same for all products - well, that test works
-  // only when there are no zero entries in the table because for the zero entries, the "hot"
-  // index in C cannot retrieved (because it is not actually hot) ...however, at bivector.net, it 
-  // looks like at least the inner product there does indeed produce the same index matrix, so it
-  // may be a general rule - i guess, to figure out, if that rule generally holds, we need to
-  // compare slowly evaluated products with those evaluated via the Cayley tables resulting from
-  // assuming this rule. if it doesn't hold, we will need different index tables for the different
-  // products, if it does hold, we can use the same index-table but still need different 
-  // weight-tables for the various products
-  // maybe we can rsAssert(k == indexTable(i, j)) inside the if(k != 1) where index
-  // ...done...ok - yet that seems to work and the rule seems to hold
 
 
   rsAssert(ok);
@@ -6667,6 +6612,16 @@ void testGeometricAlgebra()
   // bivector                 1-form     covector   column-vector   pseudovector/axial vector
   // trivector/pseudoscalar   scalar?    scalar?    scalar          scalar
 
+  // Is it generally true, that the set of fixed points of a rotation in nD space has 
+  // dimensionality n-2? It works in 2D and 3D and seems to make sense because a rotation is 
+  // defined by a bivector (which is 2D). Within the bivector, only the origin is a fixed point.
+
+  // Are the 1D geometric algebras with signatures (+1),(-1),(0) isomorphic to the hyperbolic, 
+  // complex and dual numbers? We can get a variation of complex numbers (with a noncommutative 
+  // imaginary unit) in the (2,0,0) algebra by defining I = e1*e2 (verify). The even subalgebra
+  // (using only grades 0 and 2) is then a (sort of) complex numbers, but not quite isomorphic due
+  // to the noncommutativity of I (verify!). It works also with arbitrary planes defined by 
+  // arbitrary bivectors in (3,0,0)...
 
 
   // Results can be checked here: https://bivector.net/tools.html - choose the right signature for

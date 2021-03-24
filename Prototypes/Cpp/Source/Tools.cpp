@@ -4350,8 +4350,8 @@ yet implemented here (Q: could it perhaps be *defined* by this equation - would 
 useful?). Of course, the basic operations of addition and subtraction, which just operate 
 element-wise, also still exist.
 
-...todo: inversion, division, join, meet, rotor, projection, rejection, reflection, dualization, 
-reversion, exponentiation, sin, cos  */
+...todo: inversion, division, join, meet, rotor, projection, rejection, reflection, 
+exp, sin, cos, log, pow, sqrt  */
 
 template<class T>
 class rsMultiVector
@@ -4394,16 +4394,18 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
-  /** Extracts the blade of a given grade that is present in this multivector. For example, 
-  mv.extractGrade(2) would extract the bivector part of a given multivector mv. */
+  /** Returns the array of coefficients as std::vector. */
+  std::vector<T> getCoeffs() const { return coeffs; }
+
+  /** Extracts the part of a given grade that is present in this multivector. For example, 
+  M.extractGrade(2) would extract the bivector part of a given multivector M. */
   rsGradedVector<T> extractGrade(int grade) const;
 
   /** Returns a const pointer to the algebra object that is used. */
   const rsGeometricAlgebra<T>* getAlgebra() const { return alg; }
 
-  /** Returns the number of dimensions n of the underlying vector space in which this mulitvector 
-  lives. Not   to be confused with the number of dimensions of the multivector space, which is 
-  2^n. */
+  /** Returns the number of dimensions n of the underlying vector space in which this multivector 
+  lives. Not to be confused with the number of dimensions of the multivector space, which is 2^n.*/
   int getNumDimensions() const { return alg->getNumDimensions(); }
 
   /** Returns true, iff this multivector has at least one nozero coefficient (with some tolerance) 
@@ -4440,19 +4442,19 @@ public:
 
   /** Returns true, iff this multivector has nonzero coefficients only for the bivector (grade 2) 
   part. */
-  bool isBivector(T tol = T(0)) const { return hasOnlyGrade(2, tol); }
+  bool isBiVector(T tol = T(0)) const { return hasOnlyGrade(2, tol); }
 
   /** Returns true, iff this multivector has nonzero coefficients only for the trivector (grade 3) 
   part. */
-  bool isTrivector(T tol = T(0)) const { return hasOnlyGrade(3, tol); }
+  bool isTriVector(T tol = T(0)) const { return hasOnlyGrade(3, tol); }
 
   /** Returns true, iff this multivector has nonzero coefficients only for the pseudovector 
   (grade n-1) part. */
-  bool isPseudovector(T tol = T(0)) const { return hasOnlyGrade(getNumDimensions()-1, tol); }
+  bool isPseudoVector(T tol = T(0)) const { return hasOnlyGrade(getNumDimensions()-1, tol); }
 
   /** Returns true, iff this multivector has nonzero coefficients only for the pseudoscalar
   (grade n) part. */
-  bool isPseudoscalar(T tol = T(0)) const { return hasOnlyGrade(getNumDimensions(), tol); }
+  bool isPseudoScalar(T tol = T(0)) const { return hasOnlyGrade(getNumDimensions(), tol); }
 
   // todo: isBlade, isVersor
 
@@ -4473,6 +4475,13 @@ public:
   spanned by V. The dual can be computed via V* = V / I where I is the unit pseudoscalar. */
   rsMultiVector<T> getDual() const;
 
+  /** Returns the matrix representation of this multivector. The matrix A that corresponds to a 
+  general multivector a, is the matrix for which the matrix-(multi)vector product A*b is the same
+  as the geometric product a*b. */
+  rsMatrix<T> getMatrixRepresentation();
+  // todo: let the user select which of the products should be realized 
+
+
   // todo: getInverse() - implement special formulas where available, like for scalars, vectors,
   // blades, etc. ...do we need to distinguish between left and right inverses? i think so. maybe
   // in the general case, we need to express the C = M*B as C: vector, M: matrix, B: vector and 
@@ -4480,9 +4489,11 @@ public:
   // account A itself and the Cayley table?
   // https://math.stackexchange.com/questions/443555/calculating-the-inverse-of-a-multivector/2985578
   // https://arxiv.org/abs/1712.05204
+  // maybe write getScalarInverse, getVectorInverse, getBladeInverse, getGeneralLeftInverse,
+  // getGeneralRightInverse
 
   //-----------------------------------------------------------------------------------------------
-  /** \name Manipulations */
+  /** \name Manipulations. ...that modify the multivector in place */
 
   /** Applies reversal of this multivector in place. */
   void applyReversal() { applyInvolution(alg->involutionReverse); }
@@ -4495,9 +4506,7 @@ public:
 
   void applyDualization();
 
-  // todo: applyDualization ...or is this just another word for one of the above? -> figure out
-  // -> no, it's not: dualization involves permuting the elements: the dual of a vector is a 
-  // bivector etc.
+  // todo: applyScalarInversion, applyVectorInversion, applyBladeInversion
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */
@@ -4884,31 +4893,6 @@ void rsGeometricAlgebra<T>::init()
   // reversion on page 522 without any mention of signature dependency. yeah - why would the 
   // signature come into play anyway - there are no squared basis vectors involved
 
-
-
-  /*
-  // old - may be deleted when new code above has been tested:
-  weightsContractLeft.setShape(N, N);
-  weightsContractRight.setShape(N, N);
-  weightsScalar.setShape(N, N);
-  weightsDot.setShape(N, N);
-  weightsFatDot.setShape(N, N);
-  MV A(this), B(this), P(this);
-  for(int i = 0; i < N; i++) {
-    for(int j = 0; j < N; j++) {
-      // Set the i-th and j-th alement in A and B "hot", respectively and form the products:
-      A.setZero(); A[i] = 1;
-      B.setZero(); B[j] = 1;
-      int k = bladeIndices(i, j);
-      P = MV::productSlow(A, B, PT::contractLeft);  weightsContractLeft( i, j) = P[k];
-      P = MV::productSlow(A, B, PT::contractRight); weightsContractRight(i, j) = P[k];
-      P = MV::productSlow(A, B, PT::scalar);        weightsScalar(       i, j) = P[k];
-      P = MV::productSlow(A, B, PT::dot);           weightsDot(          i, j) = P[k];
-      P = MV::productSlow(A, B, PT::fatDot);        weightsFatDot(       i, j) = P[k]; }}
-      // We assume here, that in every product, P has only one nonzero entry which is at index k.
-      // This seems to be the case from observations but i have no proof for this -> figure out
-   */
-
   int dummy = 0;
 }
 
@@ -5066,6 +5050,22 @@ rsMultiVector<T> rsMultiVector<T>::getDual() const
     Y.coeffs[i] = coeffs[N-i-1] * alg->dualSigns[i];
   return Y;
 }
+
+template<class T>
+rsMatrix<T> rsMultiVector<T>::getMatrixRepresentation()
+{
+  // Each row of the matrix is a permutation of the elements of the coeffs array, with some 
+  // sign-factors applied:
+  int N = alg->N;
+  rsMatrix<T> M(N, N);
+  for(int i = 0; i < N; i++) {
+    for(int j = 0; j < N; j++) {
+      int k = alg->bladeIndices(i, j);
+      T   s = alg->weightsGeom( i, j);
+      M(k, j) = s * coeffs[i]; }}
+  return M;
+}
+// needs more tests
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::operator+(const rsMultiVector<T>& b) const

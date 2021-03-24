@@ -4458,6 +4458,16 @@ public:
 
   // todo: isBlade, isVersor
 
+  /** Returns true, iff this multivector is numerically close the given multivector rhs within a 
+  given (absolute) tolerance tol. */
+  bool isCloseTo(const rsMultiVector<T>& rhs, T tol = T(0)) const
+  { return rsIsCloseTo(coeffs, rhs.coeffs, tol); }
+
+
+
+  T getSquaredVectorNorm() const;
+
+
   /** Returns the reverse of this multivector. */
   rsMultiVector<T> getReverse() const { rsMultiVector<T> Y(*this); Y.applyReversal(); return Y; }
   // ...i think, this may be applicable only to blades? figure out -> if so, maybe use 
@@ -4481,7 +4491,22 @@ public:
   rsMatrix<T> getMatrixRepresentation() const;
   // todo: let the user select which of the products should be realized 
 
+  /** Returns the inverse of this multivector. This is the general implementation based on solving
+  a linear NxN system (N=2^n), so it's quite expensive. If possible, use the more efficient 
+  implementations for special cases such as getInverseScalar, getInverseVector, etc. Note that an 
+  inverse may not exist, in which case the linear solver will encounter a singular matrix and 
+  return garbage without warning. */
   rsMultiVector<T> getInverse() const;
+
+  rsMultiVector<T> getInverseScalar() const;
+
+  rsMultiVector<T> getInverseVector() const;
+
+  // todo:
+  //rsMultiVector<T> getInverseVersor() const;
+  //rsMultiVector<T> getInverseBlade() const;
+  //rsMultiVector<T> getInversePseudoScalar() const;
+  //rsMultiVector<T> getInversePseudoVector() const;
 
 
   // todo: getInverse() - implement special formulas where available, like for scalars, vectors,
@@ -4991,7 +5016,7 @@ rsGradedVector<T> rsMultiVector<T>::extractGrade(int grade) const
 template<class T>
 bool rsMultiVector<T>::containsGrade(int k, T tol) const
 {
-  if(grade < 0 || grade > alg->getNumDimensions())
+  if(k < 0 || k > alg->getNumDimensions())
     return false;
   int n0 = alg->getBladeStart(k);
   int m  = alg->getBladeSize(k);
@@ -5015,10 +5040,22 @@ template<class T>
 int rsMultiVector<T>::getHighestGrade(T tol) const
 {
   int n = alg->getNumDimensions();
-  for(int k = n; k >= 0; k++)
+  for(int k = n; k >= 0; k--)
     if(containsGrade(k, tol))
       return k;
   return 0;  // or should we return -1?
+}
+
+template<class T>
+T rsMultiVector<T>::getSquaredVectorNorm() const
+{
+  rsAssert(isVector(), "applicable only to vectors"); // may need tolerance
+  int n0 = alg->bladeStarts[1];
+  int m  = alg->bladeSizes[1];
+  T sum = T(0);
+  for(int i = 0; i < m; i++)
+    sum += coeffs[n0+i] * coeffs[n0+i];
+  return sum;
 }
 
 template<class T>
@@ -5078,8 +5115,32 @@ rsMultiVector<T> rsMultiVector<T>::getInverse() const
   std::vector<T> x = rsLinearAlgebraNew::solve(A, b);
   return rsMultiVector<T>(alg, x);
 }
-// try to optimze away some extra memory allocations
+// try to optimze away the extra memory allocations in the return statement
 
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::getInverseScalar() const
+{
+  rsAssert(isScalar(), "works only for scalars"); // may need tolerance
+  rsMultiVector<T> I(alg);
+  I[0] = T(1) / coeffs[0];
+  return I;
+}
+
+template<class T>
+rsMultiVector<T> rsMultiVector<T>::getInverseVector() const
+{
+  //rsError("not yet complete");
+  rsAssert(isVector(), "works only for vectors"); // may need tolerance
+  T s = T(1) / getSquaredVectorNorm();
+  rsMultiVector<T> I(*this);
+
+  for(int i = 0; i < alg->N; i++)
+    I.coeffs[i] *= s;
+  // we don't need to loop from 0 to N - most of the coeffs inI are zero anyway
+
+
+  return I;
+}
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::operator+(const rsMultiVector<T>& b) const

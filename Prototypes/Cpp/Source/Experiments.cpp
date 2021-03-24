@@ -6554,10 +6554,19 @@ void testGeometricAlgebra()
   // todo: implement getInverse based on the matrix representation: solve the linear system:
   // A*x = (1,0,0,0,...) where A is the matrix represnetation and x is the desired inverse
 
-  MV Ai = A.getInverse();
-  C = Ai * A;
-  C = A * Ai;
+  // Test inversion of general multivector:
+  MV Ai = A.getInverse();            // A^-1
+  MV one(&alg3); one[0] = 1.0;       // 1 = (1,0,0,0,...)
+  Real tol = 1.e-13;
+  C = Ai * A; ok &= C.isCloseTo(one, tol);
+  C = A * Ai; ok &= C.isCloseTo(one, tol);
 
+  // Test vector inversion:
+  A.setZero();
+  A[1] = 2; A[2] = 3; A[3] = 5;
+  Ai = A.getInverseVector();
+  C = Ai * A; ok &= C.isCloseTo(one, tol);
+  C = A * Ai; ok &= C.isCloseTo(one, tol);
 
 
   rsAssert(ok);

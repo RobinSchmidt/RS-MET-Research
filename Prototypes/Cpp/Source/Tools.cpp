@@ -5353,13 +5353,12 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
   using MV = rsMultiVector<T>;
   MV X2 = X.getReverse() * X;
   T s = sqrt(X2[0]);
-  s = rsNextPowerOfTwo(s);
-  MV Z = (T(1)/s) * X;       // scaled X
-  MV Y( X.getAlgebra());     // output Y 
-  MV Zk(X.getAlgebra());     // Zk = Z^k in the iteraion
-  Zk[0] = T(1);              // Zk = Z^0 = 1 initially
-  int maxIts = 20;           // maybe make parameter
-
+  s = rsNextPowerOfTwo(s) * 2; // factor 2 ad hoc - tweak for numeric accuracy
+  MV Z = (T(1)/s) * X;         // scaled X
+  MV Y( X.getAlgebra());       // output Y 
+  MV Zk(X.getAlgebra());       // Zk = Z^k in the iteraion
+  Zk[0] = T(1);                // Zk = Z^0 = 1 initially
+  int maxIts = 20;             // maybe make parameter
   for(int k = 0; k < maxIts; k++)
   {
     Y  += Zk * (T(1) / T(rsFactorial(k)));

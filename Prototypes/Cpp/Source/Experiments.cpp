@@ -6583,9 +6583,20 @@ void testGeometricAlgebra()
   // to the scalar component of the unscaled A*rev(A) - this is probably not a coincidence: maybe 
   // we should use the sqrt of <A * rev(a)>_0 as scaler...or maybe twice that value
 
-
+  // Test integer powers of multivectors:
   A.set(Vec({3,8,7,4,6,4,6,5}));
-  C = rsExp(A);
+  ok &= rsPow(A, 0) == one;
+  ok &= rsPow(A, 1) == A;
+  ok &= rsPow(A, 2) == A*A;
+  ok &= rsPow(A, 3) == A*A*A;
+  ok &= rsPow(A, 4) == A*A*A*A;
+  ok &= rsPow(A, 5) == A*A*A*A*A;
+
+  // Test exponential function:
+  //C = rsExp(A);
+  A.set(Vec({10,0,0,0,0,0,0,0}));
+  C = rsExp(A); // e^10 == 22026.4657948
+
 
 
   // ToDo: implement various norms of multivectors, for eaxmple:

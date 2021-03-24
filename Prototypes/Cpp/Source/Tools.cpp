@@ -4394,8 +4394,8 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
-  /** Returns the array of coefficients as std::vector. */
-  std::vector<T> getCoeffs() const { return coeffs; }
+  /** Returns a const pointer to the std::vector of coefficients. */
+  const std::vector<T>& getCoeffs() const { return coeffs; }
 
   /** Extracts the part of a given grade that is present in this multivector. For example, 
   M.extractGrade(2) would extract the bivector part of a given multivector M. */
@@ -5345,13 +5345,26 @@ rsMultiVector<T> rsPow(const rsMultiVector<T>& base, int exponent)
   }
   return result;
 }
-// needs tests
+
+/** Returns true, iff adding any of the dx-values (scaled by s) to the corresponding x-value 
+actually changes the x-value. Useful for convergence tests. */
+template<class T>
+bool rsMakesDifference(const T* x, const T* dx, int N, T s = T(1))
+{
+  for(int n = 0; n < N; n++)
+  {
+    T y = x[n] + s*dx[n];
+    if(y != x[n])
+      return true;
+  }
+  return false;
+}
 
 template<class T>
 rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 {
   using MV = rsMultiVector<T>;
-  MV X2 = X.getReverse() * X;
+  MV X2 = X.getReverse() * X;  // a sort of squared norm (verify!)
   T s = sqrt(X2[0]);
   s = rsNextPowerOfTwo(s) * 2; // factor 2 ad hoc - tweak for numeric accuracy
   MV Z = (T(1)/s) * X;         // scaled X
@@ -5359,11 +5372,19 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
   MV Zk(X.getAlgebra());       // Zk = Z^k in the iteraion
   Zk[0] = T(1);                // Zk = Z^0 = 1 initially
   int maxIts = 20;             // maybe make parameter
+
+  auto converged = [&](int k)  // convergene test, takes iteration number k (== current power)
+  {
+    return !rsMakesDifference(
+      &Y.getCoeffs()[0], &Zk.getCoeffs()[0], (int)Y.getCoeffs().size(), rsInverseFactorials[k]);
+  };
+
   for(int k = 0; k < maxIts; k++)
   {
-    Y  += Zk * (T(1) / T(rsFactorial(k)));
+    if(converged(k)) 
+      break;
+    Y  += Zk * T(rsInverseFactorials[k]);
     Zk  = Zk * Z;                            // implement and use Zk *= Z
-    // todo: if(max(Zk) < tol*max(Y)) break;  // convergence test
   }
 
   return rsPow(Y, (int)s);

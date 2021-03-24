@@ -5115,7 +5115,7 @@ rsMultiVector<T> rsMultiVector<T>::getInverse() const
   std::vector<T> x = rsLinearAlgebraNew::solve(A, b);
   return rsMultiVector<T>(alg, x);
 }
-// try to optimze away the extra memory allocations in the return statement
+// try to optimze away the extra memory allocation in the return statement
 
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::getInverseScalar() const
@@ -5129,16 +5129,13 @@ rsMultiVector<T> rsMultiVector<T>::getInverseScalar() const
 template<class T>
 rsMultiVector<T> rsMultiVector<T>::getInverseVector() const
 {
-  //rsError("not yet complete");
   rsAssert(isVector(), "works only for vectors"); // may need tolerance
   T s = T(1) / getSquaredVectorNorm();
-  rsMultiVector<T> I(*this);
-
-  for(int i = 0; i < alg->N; i++)
-    I.coeffs[i] *= s;
-  // we don't need to loop from 0 to N - most of the coeffs inI are zero anyway
-
-
+  int n0 = alg->bladeStarts[1];
+  int m  = alg->bladeSizes[1];
+  rsMultiVector<T> I(alg);
+  for(int i = 0; i < m; i++)
+    I.coeffs[n0+i] = s * coeffs[n0+i];
   return I;
 }
 

@@ -4474,11 +4474,11 @@ public:
   // rsAssert(isBlade())
 
   rsMultiVector<T> getGradeInvolution() const 
-  { rsMultiVector<T> Y(this); Y.applyGradeInvolution(); return Y; }
+  { rsMultiVector<T> Y(*this); Y.applyGradeInvolution(); return Y; }
 
   /** Returns the Clifford conjugate of this multivector. */
   rsMultiVector<T> getConjugate() const 
-  { rsMultiVector<T> Y(this); Y.applyConjugation(); return Y; }
+  { rsMultiVector<T> Y(*this); Y.applyConjugation(); return Y; }
 
   /** Returns the dual of this multivector. If V is a homogeneous graded vector of grade k, then 
   its dual V* is of grade n-k and represents the orthogonal complement subspace of the space 
@@ -4503,8 +4503,8 @@ public:
   rsMultiVector<T> getInverseVector() const;
 
   // todo:
-  //rsMultiVector<T> getInverseVersor() const;
-  //rsMultiVector<T> getInverseBlade() const;
+  //rsMultiVector<T> getInverseVersor() const; // V^-1 = rev(V) / (V * rev(V))  GA4CS, pg 530
+  //rsMultiVector<T> getInverseBlade() const; // pg 79
   //rsMultiVector<T> getInversePseudoScalar() const;
   //rsMultiVector<T> getInversePseudoVector() const;
 
@@ -5284,26 +5284,96 @@ rsMultiVector<T> operator*(const rsGradedVector<T>& a, const rsGradedVector<T>& 
 }
 // may be optimized
 
-/**  */
+/** Naive prototype implementation of the exponential function of a general multivector. */
 template<class T>
-rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
+rsMultiVector<T> rsExpNaive(const rsMultiVector<T>& X)
 {
-  rsError("no yet implemented");
-
   // Use special formulas when possible (i.e. if X is a scalar...maybe there are also formulas for
   // vectors and bivectors - the latter are most important for rotations) and taylor expansion as 
   // fallback
 
+  int maxIts = 20;  // maybe make parameter
+  //T tol = T(1000) * RS_EPS(T);            // ad hoc - figure out something better
 
-  rsMultiVector<T> Y(alg), T(alg);
-  T tol = T(1000) * RS_EPS(T);            // ad hoc - figure out something better
+  rsMultiVector<T> Y(X.getAlgebra()), Xk(X.getAlgebra());  // output Y and Xk = X^k
+  Xk[0] = T(1);                          // Xk = X^0 = 1
+  for(int k = 0; k < maxIts; k++)
+  {
+    Y  += Xk * (T(1) / T(rsFactorial(k)));
+    Xk  = Xk * X;                            // implement and use Xk *= X
+  }
+  // todo: add convergence test
 
   return Y;
 }
 
+/*
+template<class T>
+T rsNextPowerOfTwo(T x)
+{
+  if(x < T(1)) 
+    return T(1) / rsNextPowerOfTwo(T(1)/x);
+  T tmp = rsLog2(x);
+  tmp = ceil(tmp);
+  tmp = rsExp2(tmp);
+  tmp = round(tmp);
+  return tmp;
+}
+*/
 
 
 
+//template rsMultiVector<double> RAPT::rsPow(const rsMultiVector<double>& base, int exponent);
+//extern template rsMultiVector<double> RAPT::rsPow(const rsMultiVector<double>& base, int exponent);
+// instantiating the template doesn't seem to work, so for the time being, we use a specialized
+// implementation of rsPow:
+
+template <class T>
+rsMultiVector<T> rsPow(const rsMultiVector<T>& base, int exponent)
+{
+  rsMultiVector<T> square(base);
+  rsMultiVector<T> result(base.getAlgebra());
+  result[0] = T(1);
+  while(true)
+  {
+    if(exponent & 1)
+      result = result * square;
+    exponent /= 2;
+    if(exponent == 0)
+      break;
+    square = square * square;
+  }
+  return result;
+}
+// needs tests
+
+template<class T>
+rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
+{
+  using MV = rsMultiVector<T>;
+  MV X2 = X.getReverse() * X;
+  T s = sqrt(X2[0]);
+  s = rsNextPowerOfTwo(s);
+  MV Z = (T(1)/s) * X;       // scaled X
+  MV Y( X.getAlgebra());     // output Y 
+  MV Zk(X.getAlgebra());     // Zk = Z^k in the iteraion
+  Zk[0] = T(1);              // Zk = Z^0 = 1 initially
+  int maxIts = 20;           // maybe make parameter
+
+  for(int k = 0; k < maxIts; k++)
+  {
+    Y  += Zk * (T(1) / T(rsFactorial(k)));
+    Zk  = Zk * Z;                            // implement and use Zk *= Z
+    // todo: if(max(Zk) < tol*max(Y)) break;  // convergence test
+  }
+
+  return rsPow(Y, (int)s);
+}
+// needs tests
+
+
+
+// template instantiation
 
 
 //=================================================================================================

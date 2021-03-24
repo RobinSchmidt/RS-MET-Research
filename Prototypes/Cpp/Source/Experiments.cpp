@@ -6300,6 +6300,8 @@ bool testBitTwiddling()
   return ok;
 }
 
+
+
 void testGeometricAlgebra()
 {
   testBitTwiddling();
@@ -6554,6 +6556,7 @@ void testGeometricAlgebra()
   // todo: implement getInverse based on the matrix representation: solve the linear system:
   // A*x = (1,0,0,0,...) where A is the matrix represnetation and x is the desired inverse
 
+
   // Test inversion of general multivector:
   MV Ai = A.getInverse();            // A^-1
   MV one(&alg3); one[0] = 1.0;       // 1 = (1,0,0,0,...)
@@ -6568,6 +6571,41 @@ void testGeometricAlgebra()
   C = Ai * A; ok &= C.isCloseTo(one, tol);
   C = A * Ai; ok &= C.isCloseTo(one, tol);
 
+  // Test exponential of general multivector:
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  //A = A * (1.0/8.0);
+  A = A * (1.0/16.0);              // we need smallish coeffs for convergence*
+  //A = A * (1.0/32.0);
+  C = rsExpNaive(A); 
+  C = A.getReverse() * A;
+  // (*) with factor 1/8 the powers X^k in the iteration still blow up, with 1/32 they shrink and
+  // with 1/16 they stay roughly the same. 16 is the square-root of 256 which happens to be close
+  // to the scalar component of the unscaled A*rev(A) - this is probably not a coincidence: maybe 
+  // we should use the sqrt of <A * rev(a)>_0 as scaler...or maybe twice that value
+
+
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  C = rsExp(A);
+
+
+  // ToDo: implement various norms of multivectors, for eaxmple:
+  //   N_c(A) = conj((A) * A     where conj(A) is the Clifford conjugate of A
+  //   N_r(A) = <A * rev(a)>_0   where rev(A) is the reversal of A
+  // how about the absolute value of the determinant of the matrix-representation?
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  C = A.getConjugate() * A;           // has scalar and pseudoscalar parts, both negative
+  C = A * A.getConjugate();           // is the same
+  C = A.getReverse() * A;             // has scalar and vector parts, scalar is 251
+  C = A * A.getReverse();             // ditto, but different values for vector part
+  matA = A.getMatrixRepresentation();
+  //Real detA = rsLinearAlgebraNew::determinant(matA);
+  // https://math.stackexchange.com/questions/3733141/what-does-the-norm-of-a-multivector-describes-geometrically
+  // https://math.stackexchange.com/questions/958559/norm-on-a-geometric-algebra/2840383
+
+
+
+  // For elementary functions:
+  // https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4361175/pdf/pone.0116943.pdf
 
   rsAssert(ok);
 
@@ -6637,12 +6675,15 @@ void testGeometricAlgebra()
   // dimensionality n-2? It works in 2D and 3D and seems to make sense because a rotation is 
   // defined by a bivector (which is 2D). Within the bivector, only the origin is a fixed point.
 
-  // Are the 1D geometric algebras with signatures (+1),(-1),(0) isomorphic to the hyperbolic, 
-  // complex and dual numbers? We can get a variation of complex numbers (with a noncommutative 
-  // imaginary unit) in the (2,0,0) algebra by defining I = e1*e2 (verify). The even subalgebra
-  // (using only grades 0 and 2) is then a (sort of) complex numbers, but not quite isomorphic due
-  // to the noncommutativity of I (verify!). It works also with arbitrary planes defined by 
-  // arbitrary bivectors in (3,0,0)...
+  // Are the 1D geometric algebras with signatures (1,0,0),(0,1,0),(0,0,1) isomorphic to the 
+  // hyperbolic, complex and dual numbers? We can get a variation of complex numbers (with a 
+  // noncommutative imaginary unit) in the (2,0,0) algebra by defining I = e1*e2 (verify). The 
+  // even subalgebra (using only grades 0 and 2) is then a (sort of) complex numbers, but not 
+  // quite isomorphic due to the noncommutativity of I (verify!). It works also with arbitrary 
+  // planes defined by arbitrary bivectors in (3,0,0)...
+  // The complex numbers can be also found in Cl(R^3) by considering the subalgebra formed by 
+  // scalars and pseudoscalars (trivctors) and the quaternions are found as the even subalgebra
+  // (of scalars and bivectors)
 
 
   // Results can be checked here: https://bivector.net/tools.html - choose the right signature for

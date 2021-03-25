@@ -5084,20 +5084,25 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
 
       GV P(this, 0);  // outer product of the images
       P[0] = T(1);
+
+      for(int i = 0; i < n; i++)
+      {
+        if(bmp & 1)
+          P = P ^ bi[i];
+        bmp >>= 1;
+      }
+
+      /*
       for(int i = 0; i < k; i++)
       {
-        // e = basisVector(k, i);
-        // p = A * e;              // image of basis vector
-        // ...we can precompute these
-
         int q = 0; // preliminary - todo: q = getBasisVector(k, i) which should return the index
         // of the i-th basis vector in the product ...e_i... for the i-th blade of grade k..
         // ..or somthing
 
         P = P ^ bi[q];
-
-        //P = P ^ p;
       }
+      */
+
       rsAssert(P.getGrade() == k);
 
 

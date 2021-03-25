@@ -6645,8 +6645,9 @@ void testGeometricAlgebra()
   // of the basis vectors, we could compute the column (o55,o65,o75) by transforming e1^e2:
   // F(e1^e2) = F(e1) ^ F(e2), then compute the column (o56,o66,o76) as F(e1) ^ F(e3), 
   //  (o57,o67,o77) as F(e2) ^ F(e3), and o88 = F(e1) ^ F(e2) ^ F(e3)
-  Mat F(3, 3, {1,2,3, 4,5,6, 7,8,9});
+  Mat F(3, 3, {1,2,3, 4,-5,6, 7,8,9});
   Mat F_o = alg3.makeOutermorphism(F);
+  // last element should be the determiant of F
   
 
 

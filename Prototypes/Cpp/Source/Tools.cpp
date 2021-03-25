@@ -4999,7 +4999,7 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
   rsMatrix<T> B(N, N);
 
   // The top-left element is just 1 and the n x n block at the bottom right to it is just a copy of
-  // the original matrix A:
+  // the original matrix A. This fills the grade-0 and grade-1 elements of the matrix:
   B(0, 0) = T(1);
   for(int i = 0; i < n; i++)
     for(int j = 0; j < n; j++)
@@ -5027,8 +5027,17 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
       // compute j-th column of B:
       GV e(this, 1);  // current basis vector
       GV p(this, 1);  // image of basis vector to accumlate into P via outer product
-      GV P(this, k);  
-      // ...
+      GV P(this, 0);
+      P[0] = T(1);
+      for(int i = 0; i < k; i++)
+      {
+        // e = basisVector(k, i);
+        // p = A * e;              // image of basis vector
+        // ...we can precompute these
+
+        P = P ^ p;
+      }
+      rsAssert(P.getGrade() == k);
 
 
       // copy j-th column into matrix B:

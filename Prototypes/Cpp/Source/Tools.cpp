@@ -4275,9 +4275,17 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Lifetime */
 
+  /** Default constructor. */
+  rsGradedVector() {}
+
   /** Constructor. */
   rsGradedVector(const rsGeometricAlgebra<T>* algebraToUse, int grade)
   { this->grade = grade; setAlgebra(algebraToUse); }
+
+
+  rsGradedVector(const rsGeometricAlgebra<T>* algebraToUse, int grade,
+    const std::vector<T>& coeffs)
+  { this->grade = grade; setAlgebra(algebraToUse); set(grade, coeffs); }
 
   /** Factory function. Constructs the basis blade with given index which ranges from 0 to N-1 
   where N = 2^n. The grade of the blade is inferred automatically from the index. */
@@ -4340,7 +4348,7 @@ protected:
 
   std::vector<T> coeffs;      // n-choose-k coeffs for the projections on the basis blades
   const rsGeometricAlgebra<T>* alg = nullptr;
-  int grade;
+  int grade = 0;
 
 
   //template<class U> friend class rsGeometricAlgebra;
@@ -5005,6 +5013,25 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
     for(int j = 0; j < n; j++)
       B(i+1, j+1) = A(i, j);
 
+  // Compute the images of the basis vectors:
+  using GV  = rsGradedVector<T>;
+  using Vec = std::vector<T>;
+  std::vector<GV> bi(n);
+  Vec b(n);
+  for(int i = 0; i < n; i++)
+  {
+    //Vec b  = getBasisVector(i); // current basis vector...
+    b[i]   = T(1);
+    Vec Ab = A * b;             // ...and its image under A
+    bi[i]  = GV(this, 1, Ab);
+    b[i]   = T(0);
+  }
+  // We currently use the canonical basis vectors (1,0,0,..), (0,1,0,..) etc., so it's sufficient 
+  // to set one coeff to 1 in each iteration. However, for a general basis, we may indeed need a 
+  // call like the commented Vec b = getBasisVector(i); instead of b[i] = T(1); ... b[i] = T(0);
+  // where we would need to implement such a getBasisVector() member function
+
+
   //...stuff to do...
   // -loop over the grades, starting at 2 - for each grade k, do:
   //  -figure out the number m of basis blades for given grade k (this determines size of the block
@@ -5015,7 +5042,6 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
   //      P = A(b_p) ^ A(b_q) ^ A(b_r) ^ ...
   //   -copy the result P into the appropriate column of the matrix B
 
-  using GV = rsGradedVector<T>;
 
   for(int k = 2; k <= n; k++)
   {
@@ -5035,7 +5061,13 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
         // p = A * e;              // image of basis vector
         // ...we can precompute these
 
-        P = P ^ p;
+        int q = 0; // preliminary - todo: q = getBasisVector(k, i) which should return the index
+        // of the i-th basis vector in the product ...e_i... for the i-th blade of grade k..
+        // ..or somthing
+
+        P = P ^ bi[q];
+
+        //P = P ^ p;
       }
       rsAssert(P.getGrade() == k);
 

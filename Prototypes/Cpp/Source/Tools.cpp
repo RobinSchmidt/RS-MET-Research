@@ -4188,6 +4188,20 @@ protected:
   products between two multivectors. */
   void init();
 
+  /** Returns the bitmap corresponding to th i-th basis blade where i = 0..N-1. */
+  int getBladeBitmap(int i) const { return map[i]; }
+
+  /** Returns the bitmap of the j-th blade of grade k where k = 0..n, j = 0..n-choose-k */
+  int getBladeBitmap(int k, int j) const 
+  { 
+    rsAssert(k >= 0 && k <= n,             "Invalid grade");
+    rsAssert(j >= 0 && j <  bladeSizes[k], "Invalid blade (sub)index");
+    int i = bladeStarts[k] + j;  // verify this!
+    return map[i]; 
+  }
+
+
+
   //-----------------------------------------------------------------------------------------------
   /** \name Data */
 
@@ -5060,13 +5074,15 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
 
     for(int j = 0; j < m; j++)
     {
-      //int bmp = getBladeBitmap(k, j);
+      //int bladeIndex = bladeStarts[k] + j;  // verify this!
+      int bmp = getBladeBitmap(k, j);
 
 
       // compute j-th column of B:
-      GV e(this, 1);  // current basis vector
-      GV p(this, 1);  // image of basis vector to accumlate into P via outer product
-      GV P(this, 0);
+      //GV e(this, 1);  // current basis vector
+      //GV p(this, 1);  // image of basis vector to accumlate into P via outer product
+
+      GV P(this, 0);  // outer product of the images
       P[0] = T(1);
       for(int i = 0; i < k; i++)
       {
@@ -5085,7 +5101,7 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
       rsAssert(P.getGrade() == k);
 
 
-      // copy j-th column into matrix B:
+      // Copy the outer product of images P into j-th column of matrix B:
       for(int i = 0; i < m; i++)
         B(n0+i, n0+j) = P[i];
 

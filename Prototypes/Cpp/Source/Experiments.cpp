@@ -6595,9 +6595,13 @@ void testGeometricAlgebra()
   // Test exponential function:
   //C = rsExp(A);
   A.set(Vec({10,0,0,0,0,0,0,0}));
-  C = rsExp(A); // e^10 == 22026.4657948
+  C = rsExp(A); // e^10 == 22026.465794806716517
+  Real err = C[0] - 22026.465794806716517;
+  ok &= rsAbs(err) < 2.e-11;               // the error is quite large: around 1.8e-11
 
-
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  C = rsExp(A);
+  // how can we obtain a reference value? maybe use clifford.py? bivector.net does not know exp
 
   // ToDo: implement various norms of multivectors, for eaxmple:
   //   N_c(A) = conj((A) * A     where conj(A) is the Clifford conjugate of A
@@ -6610,8 +6614,36 @@ void testGeometricAlgebra()
   C = A * A.getReverse();             // ditto, but different values for vector part
   matA = A.getMatrixRepresentation();
   //Real detA = rsLinearAlgebraNew::determinant(matA);
-  // https://math.stackexchange.com/questions/3733141/what-does-the-norm-of-a-multivector-describes-geometrically
-  // https://math.stackexchange.com/questions/958559/norm-on-a-geometric-algebra/2840383
+
+  // todo: implement 
+  //   rsMatrix<T> alg.makeOutermorphism(const rsMatrix<T>& F)
+  // that takes an n x n matrix defining a linear transformation for vectors and returns an N x N 
+  // matrix defining the induced linear transformation for multivectors. This induced 
+  // transformation is constructed such that F(a^b) = F(a) ^ F(b) for vectors a,b. It preserves the
+  // outer product and is therefore called outermorphism. See:
+  // https://www.youtube.com/watch?v=0VGMxSUDBH8&list=PLLvlxwbzkr7igd6bL7959WWE7XInCCevt&index=6
+  // https://en.wikipedia.org/wiki/Outermorphism#Properties
+  // ..but there, it's even more general - it allows the input matrix to be non-square
+  // outermorphisms are grade preserving - i think that implies that their matrix representations
+  // has a block diagonal structure, like in R^3:
+  //   a11 a12 a13
+  //   a21 a22 a23  = A
+  //   a31 a32 a33
+  // gets extended to the outermorphism:
+  //   o11  0   0   0   0   0   0   0
+  //    0  o22 o23 o24  0   0   0   0
+  //    0  o32 o33 o34  0   0   0   0
+  //    0  o42 o43 o44  0   0   0   0  = A'
+  //    0   0   0   0  o55 o56 o57  0
+  //    0   0   0   0  o65 o66 o67  0
+  //    0   0   0   0  o75 o76 o77  0
+  //    0   0   0   0   0   0   0  o88
+  // where the grade-1 block (o22..o44) is the original 3x3 matrix and the other elements can all 
+  // be computed from these. I think, o11 should be 1 and o88 be the determinant of the orginal 
+  // matrix (verify!). Since the columns of a transformation matrix generally contain the images
+  // of the basis vectors, we could compute the column (o55,o65,o75) by transforming e1^e2:
+  // F(e1^e2) = F(e1) ^ F(e2), then compute the column (o56,o66,o76) as F(e1) ^ F(e3), 
+  //  (o57,o67,o77) as F(e2) ^ F(e3), and o88 = F(e1) ^ F(e2) ^ F(e3)
 
 
 

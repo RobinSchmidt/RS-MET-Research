@@ -5322,12 +5322,33 @@ T rsNextPowerOfTwo(T x)
 */
 
 
+template <class T>
+T rsSquaredNorm(const rsMultiVector<T>& V)
+{
+  rsMultiVector<T> Vr_V = V * V.getReverse();
+  return Vr_V[0];
+  // Vr * V has same scalar part as V * Vr but in general a different vector part
+  // 
+}
+template <class T>
+T rsNorm(const rsMultiVector<T>& V)
+{
+  return sqrt(rsSquaredNorm(V));
+}
+// Referneces:
+// GMoV pg 48,
+// https://math.stackexchange.com/questions/3733141/what-does-the-norm-of-a-multivector-describes-geometrically
+// https://math.stackexchange.com/questions/958559/norm-on-a-geometric-algebra/2840383
+// todo: 
+// -implement the other norm based on Clifford conjugation
+// -optimze: if only the scalar component is extracted, compute only that - maybe make a function
+//  to compute the scalar product efficiently
+
 
 //template rsMultiVector<double> RAPT::rsPow(const rsMultiVector<double>& base, int exponent);
 //extern template rsMultiVector<double> RAPT::rsPow(const rsMultiVector<double>& base, int exponent);
 // instantiating the template doesn't seem to work, so for the time being, we use a specialized
 // implementation of rsPow:
-
 template <class T>
 rsMultiVector<T> rsPow(const rsMultiVector<T>& base, int exponent)
 {
@@ -5347,49 +5368,68 @@ rsMultiVector<T> rsPow(const rsMultiVector<T>& base, int exponent)
 }
 
 /** Returns true, iff adding any of the dx-values (scaled by s) to the corresponding x-value 
-actually changes the x-value. Useful for convergence tests. */
+actually changes the x-value. Useful for multidimensional convergence tests. */
 template<class T>
 bool rsMakesDifference(const T* x, const T* dx, int N, T s = T(1))
 {
-  for(int n = 0; n < N; n++)
-  {
+  for(int n = 0; n < N; n++) {
     T y = x[n] + s*dx[n];
     if(y != x[n])
-      return true;
-  }
+      return true; }
   return false;
 }
+// move to rsArrayTools, try to find a better name
 
 template<class T>
 rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 {
-  using MV = rsMultiVector<T>;
-  MV X2 = X.getReverse() * X;  // a sort of squared norm (verify!)
-  T s = sqrt(X2[0]);
-  s = rsNextPowerOfTwo(s) * 2; // factor 2 ad hoc - tweak for numeric accuracy
-  MV Z = (T(1)/s) * X;         // scaled X
-  MV Y( X.getAlgebra());       // output Y 
-  MV Zk(X.getAlgebra());       // Zk = Z^k in the iteraion
-  Zk[0] = T(1);                // Zk = Z^0 = 1 initially
-  int maxIts = 20;             // maybe make parameter
+  // The algorithm uses the fact that exp(X) = (exp(X/s))^s to use a scaled version of X in the 
+  // Taylor expansion that ensures that the powers X^k of X don't explode. In fact, they decay 
+  // exponentially and additionally get divided by k!, so the terms in the series get small very 
+  // fast.
 
-  auto converged = [&](int k)  // convergene test, takes iteration number k (== current power)
+  using MV = rsMultiVector<T>;
+  T s = rsNorm(X);
+  s = rsNextPowerOfTwo(s) * 2; // factor 2 gives best numeric accuracy for the scalar exp(10)
+  MV Z = (T(1)/s) * X;         // scaled X: Z = X/s
+  MV Y( X.getAlgebra());       // output Y 
+  MV Zk(X.getAlgebra());       // Zk = Z^k in the iteration
+  Zk[0] = T(1);                // Zk = Z^0 = 1 initially
+  int maxIts = 32;             // maybe make parameter
+  int k;                       // iteration number == current power of Z
+
+  auto converged = [&](int k)  // convergene test, takes iteration number k
   {
     return !rsMakesDifference(
       &Y.getCoeffs()[0], &Zk.getCoeffs()[0], (int)Y.getCoeffs().size(), rsInverseFactorials[k]);
   };
 
-  for(int k = 0; k < maxIts; k++)
+  for(k = 0; k < maxIts; k++)
   {
     if(converged(k)) 
       break;
     Y  += Zk * T(rsInverseFactorials[k]);
-    Zk  = Zk * Z;                            // implement and use Zk *= Z
+    Zk  = Zk * Z; // implement and use Zk *= Z, this can be implemented without memory allocation
+    // by having a temp-array member in the algebra object, or maybe have a multiplication function
+    // that takes a workspace pointer
   }
 
-  return rsPow(Y, (int)s);
+  rsAssert(k < maxIts, "rsExp for rsMultiVector did not converge");
+  return rsPow(Y, (int)s);     // Y^s undoes the scaling
 }
-// needs tests
+// -needs more tests
+// Idea: can we use a variant of Newton iteration to evaluate a function? Newton iteration itself 
+// uses function nd derivative evaluations, so it can't be used as is. But maybe we can use the
+// differential equation f(x) - f'(x) = 0 or one of the functional equations, like 
+// f(2*x) - (f(x))^2 = 0 and approximate the f,f' values via Taylor series? Or maybe somehow use
+// the inverse slope: f^-1(y) = log(y) = x to somehow find a crossing of the tnagent with the 
+// y-axis? -> research needed -> if so, maybe we could refine the exp with a single such step at
+// the very end. And/or maybe fixed point iteration may also be adapted?
+// for function evaluation, see:
+// https://arxiv.org/abs/1004.3412
+// https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_47
+// https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_56
+// https://cr.yp.to/bib/1976/brent-elementary.pdf
 
 
 

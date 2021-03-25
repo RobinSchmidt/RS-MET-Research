@@ -6315,8 +6315,9 @@ void testGeometricAlgebra()
   using GA   = rsGeometricAlgebra<Real>;
   using MV   = rsMultiVector<Real>;
   using GV   = rsGradedVector<Real>;
-  using Vec  = std::vector<Real>;
   using PT   = MV::ProductType;
+  using Vec  = std::vector<Real>;
+  using Mat  = rsMatrix<Real>;
 
   bool ok = true;
 
@@ -6543,7 +6544,7 @@ void testGeometricAlgebra()
   ok &= (e1^e2^e3).getReverse() == (e3^e2^e1);
 
   // Test matrix representation:
-  rsMatrix<Real> matA = A.getMatrixRepresentation();
+  Mat matA = A.getMatrixRepresentation();
   Vec vecB  = B.getCoeffs();
   Vec vecAB = matA * vecB;            // matrix-vector product
   MV  AB    = A    *    B;            // geometric product of multivectors   
@@ -6644,6 +6645,9 @@ void testGeometricAlgebra()
   // of the basis vectors, we could compute the column (o55,o65,o75) by transforming e1^e2:
   // F(e1^e2) = F(e1) ^ F(e2), then compute the column (o56,o66,o76) as F(e1) ^ F(e3), 
   //  (o57,o67,o77) as F(e2) ^ F(e3), and o88 = F(e1) ^ F(e2) ^ F(e3)
+  Mat F(3, 3, {1,2,3, 4,5,6, 7,8,9});
+  Mat F_o = alg3.makeOutermorphism(F);
+  
 
 
 

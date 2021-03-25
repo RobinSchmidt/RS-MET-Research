@@ -4123,6 +4123,16 @@ public:
   // rename to outerProductGG
 
 
+
+  /** Under construction....
+  Given an n x n matrix A, this function returns the unique N x N matrix (N=2^n) that extends
+  the linear transformation of vectors that is defined by A to the induced linear transformation
+  of multivectors for which holds: A(x ^ y) = A(x) ^ A(y), i.e. a transformation that preserves the
+  outer product...tbc...  */
+  rsMatrix<T> makeOutermorphism(const rsMatrix<T>& A);
+
+
+
 protected:
 
   //-----------------------------------------------------------------------------------------------
@@ -4262,8 +4272,17 @@ class rsGradedVector
 
 public:
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Lifetime */
+
+  /** Constructor. */
   rsGradedVector(const rsGeometricAlgebra<T>* algebraToUse, int grade)
   { this->grade = grade; setAlgebra(algebraToUse); }
+
+  /** Factory function. Constructs the basis blade with given index which ranges from 0 to N-1 
+  where N = 2^n. The grade of the blade is inferred automatically from the index. */
+  //static rsGradedVector<T> basisBlade(
+  //  const rsGeometricAlgebra<T>* algebraToUse, int index);
 
   //-----------------------------------------------------------------------------------------------
   /** \name Setup */
@@ -4303,6 +4322,14 @@ public:
 
 
   bool operator==(const std::vector<T>& b) const { return coeffs == b; }
+
+
+  /** Read and write access to i-th coefficient. */
+  T& operator[](int i) { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
+
+  /** Read access to i-th coefficient. */
+  const T& operator[](int i) const { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
+
 
 
   static bool areCompatible(const rsGradedVector<T>& a, const rsGradedVector<T>& b)
@@ -4587,7 +4614,9 @@ public:
   /** Read and write access to i-th coefficient. */
   T& operator[](int i) { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
 
+  /** Read access to i-th coefficient. */
   const T& operator[](int i) const { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
+
 
   static bool areCompatible(const rsMultiVector<T>& a, const rsMultiVector<T>& b)
   { bool ok = a.coeffs.size() == b.coeffs.size(); ok &= a.alg == b.alg; return ok; }
@@ -4962,6 +4991,60 @@ void rsGeometricAlgebra<T>::product_bld_bld(const std::vector<T>& a, int ga,
         p[k-sp] += weights(i, j) * a[i-sa] * b[j-sb]; }}
 }
 // needs more tests
+
+template<class T>
+rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
+{
+  rsAssert(A.getNumRows() == n && A.getNumColumns() == n);
+  rsMatrix<T> B(N, N);
+
+  // The top-left element is just 1 and the n x n block at the bottom right to it is just a copy of
+  // the original matrix A:
+  B(0, 0) = T(1);
+  for(int i = 0; i < n; i++)
+    for(int j = 0; j < n; j++)
+      B(i+1, j+1) = A(i, j);
+
+  //...stuff to do...
+  // -loop over the grades, starting at 2 - for each grade k, do:
+  //  -figure out the number m of basis blades for given grade k (this determines size of the block
+  //   that we currently need fill)
+  //  -loop over the m basis blades - for each blade, do:
+  //   -figure out, from which basis vectors this blade is formed
+  //   -compute the outer product of the mapped basis blades b_p, b_q, b_r, ...:
+  //      P = A(b_p) ^ A(b_q) ^ A(b_r) ^ ...
+  //   -copy the result P into the appropriate column of the matrix B
+
+  using GV = rsGradedVector<T>;
+
+  for(int k = 2; k <= n; k++)
+  {
+    int n0 = bladeStarts[k];    // (n0,n0) == start location of current block
+    int m  = bladeSizes[k];     // current block is of shape m x m
+
+    for(int j = 0; j < m; j++)
+    {
+      // compute j-th column of B:
+      GV e(this, 1);  // current basis vector
+      GV p(this, 1);  // image of basis vector to accumlate into P via outer product
+      GV P(this, k);  
+      // ...
+
+
+      // copy j-th column into matrix B:
+      for(int i = 0; i < m; i++)
+        B(n0+i, n0+j) = P[i];
+
+      int dummy = 0;
+    }
+
+    int dummy = 0;
+  }
+
+
+  return B;
+}
+
 
 //-------------------------------------------------------------------------------------------------
 // rsGradedVector:
@@ -5430,6 +5513,9 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_47
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_56
 // https://cr.yp.to/bib/1976/brent-elementary.pdf
+
+
+
 
 
 

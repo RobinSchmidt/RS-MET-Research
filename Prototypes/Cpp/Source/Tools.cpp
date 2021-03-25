@@ -4163,7 +4163,7 @@ protected:
 
   /** Builds the 2^n x 2^n matrices that define the multiplication tables for the basis blades for 
   the geometric algebra nD Euclidean space. */
-  static void buildCayleyTables(std::vector<T>& M, rsMatrix<int>& blades, 
+  void buildCayleyTables(std::vector<T>& M, rsMatrix<int>& blades, 
     rsMatrix<T>& weightsGeom, rsMatrix<T>& weightsOuter, rsMatrix<T>& weightsInner);
 
   /** Computes the (i,j)th elements of the Cayley tables (i.e. multiplication tables) for the 
@@ -4206,12 +4206,18 @@ protected:
   // Sizes and start-indices of the coeffs of the blades of grades 1..n (or 0..n?)
   std::vector<int> bladeSizes, bladeStarts;
 
+  // Bitmaps for the basis blades ...tbc...
+  std::vector<int> map, unmap; // rename to bladeBitmaps, bladeBitmapsInv
+
   // Diagonal matrices for the involutions:
   std::vector<T> involutionGrade, involutionReverse, involutionConjugate;
 
   // Permutation and sign tables for dualization:
   //std::vector<int> dualPerm;  // the permutation is just a reversal
   std::vector<T>   dualSigns;
+
+
+
 
   // ToDo: maybe have temp arrays of size N for performing certain computations that would 
   // otherwise need to allocate memory
@@ -4802,8 +4808,12 @@ void rsGeometricAlgebra<T>::buildCayleyTables(std::vector<T>& M, rsMatrix<int>& 
   weightsGeom.setShape(N, N);
   weightsOuter.setShape(N, N);
   weightsInner.setShape(N, N);
-  std::vector<int> map, unmap;
+
+  //std::vector<int> map, unmap;
   reorderMap(map, unmap, N);    // to map back and forth between blade index and its bitmap
+  // make them members bladeBitmaps, bladeBitmapsInv
+  // they may be needed in some algorithms later
+
   for(int i = 0; i < N; i++) {
     for(int j = 0; j < N; j++) {
       int b;
@@ -5050,6 +5060,9 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
 
     for(int j = 0; j < m; j++)
     {
+      //int bmp = getBladeBitmap(k, j);
+
+
       // compute j-th column of B:
       GV e(this, 1);  // current basis vector
       GV p(this, 1);  // image of basis vector to accumlate into P via outer product

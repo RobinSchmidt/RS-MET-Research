@@ -5029,19 +5029,32 @@ void rsGeometricAlgebra<T>::product_bld_bld(const std::vector<T>& a, int ga,
 // needs more tests
 
 template<class T>
-rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
+rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& F)
 {
-  rsAssert(A.getNumRows() == n && A.getNumColumns() == n);
-  rsMatrix<T> B(N, N);
+  rsAssert(F.getNumRows() == n && F.getNumColumns() == n);
 
-  // The top-left element is just 1 and the n x n block at the bottom right to it is just a copy of
-  // the original matrix A. This fills the grade-0 and grade-1 elements of the matrix:
-  B(0, 0) = T(1);
-  for(int i = 0; i < n; i++)
-    for(int j = 0; j < n; j++)
-      B(i+1, j+1) = A(i, j);
+  // We make use of two facts: 
+  // (1) in order to be grade-preserving, the matrix must have block-diagonal structure: there are 
+  //     n+1 blocks and the size of the k-th block is n-choose-k
+  // (2) in a general transformation matrix, the j-th column of the matrix is equal to the image
+  //     of the j-th basis vector (at least, that's the case for the canonical basis -> figure out
+  //     if it's still true for a general basis)
+  // This gives rise to the following algorithm: 
+  // -precompute the images of all basis vectors F(b_1), F(b_2), F(b_3), ...
+  // -loop over the grades, for each grade k, do:
+  //  -figure out the number m of basis blades for given grade k (this determines size of the block
+  //   that we currently need fill)
+  //  -loop over the m basis blades - for each blade, do:
+  //   -figure out, from which basis vectors (p,q,r,...) this blade is formed
+  //   -compute the outer product of the mapped basis vectors b_p, b_q, b_r, ...:
+  //      P = F(b_p) ^ F(b_q) ^ F(b_r) ^ ...
+  //   -copy the result P into the appropriate column in the k-th block of the matrix B
 
-  // Compute the images of the basis vectors:
+  // Compute the images of the basis vectors. We currently use the canonical basis vectors 
+  // (1,0,0,..), (0,1,0,..) etc., so it's sufficient to set one coeff in b to 1 in each iteration.
+  // However, for a general basis, we may indeed need a call like the commented 
+  //   Vec b = getBasisVector(i); instead of b[i] = T(1); ... b[i] = T(0);
+  // where we would need to implement such a getBasisVector() member function:
   using GV  = rsGradedVector<T>;
   using Vec = std::vector<T>;
   std::vector<GV> bi(n);
@@ -5050,27 +5063,15 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
   {
     //Vec b  = getBasisVector(i); // current basis vector...
     b[i]   = T(1);
-    Vec Ab = A * b;             // ...and its image under A
-    bi[i]  = GV(this, 1, Ab);
+    Vec Fb = F * b;             // ...and its image under F
+    bi[i]  = GV(this, 1, Fb);
     b[i]   = T(0);
   }
-  // We currently use the canonical basis vectors (1,0,0,..), (0,1,0,..) etc., so it's sufficient 
-  // to set one coeff in b to 1 in each iteration. However, for a general basis, we may indeed need
-  // a call like the commented Vec b = getBasisVector(i); instead of b[i] = T(1); ... b[i] = T(0);
-  // where we would need to implement such a getBasisVector() member function
 
-
-  // Algorithm:
-  // -loop over the grades, starting at 2 - for each grade k, do:
-  //  -figure out the number m of basis blades for given grade k (this determines size of the block
-  //   that we currently need fill)
-  //  -loop over the m basis blades - for each blade, do:
-  //   -figure out, from which basis vectors this blade is formed
-  //   -compute the outer product of the mapped basis blades b_p, b_q, b_r, ...:
-  //      P = A(b_p) ^ A(b_q) ^ A(b_r) ^ ...
-  //   -copy the result P into the appropriate column of the matrix B
-
-  for(int k = 2; k <= n; k++) {        // loop over the grades - todo: start at 0 or 1
+  // Compute the matrix elements:
+  rsMatrix<T> B(N, N);
+  B(0, 0) = T(1);                      // top-left entry is always 1
+  for(int k = 1; k <= n; k++) {        // loop over the grades
     int n0 = bladeStarts[k];           // (n0,n0) == start location of current block
     int m  = bladeSizes[k];            // number of grade-k basis blades
     // Fill a block of shape m x m:
@@ -5082,7 +5083,7 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
           P = (P ^ bi[i]);             // accumulate factor A*b if basis blade e_i is present
         bmp >>= 1; }
       rsAssert(P.getGrade() == k);     // sanity check
-      for(int i = 0; i < m; i++)       // copy P into j-th column of matrix B:
+      for(int i = 0; i < m; i++)       // copy P into a column of the current block
         B(n0+i, n0+j) = P[i];      }}
 
   return B;

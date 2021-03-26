@@ -6668,7 +6668,8 @@ void testGeometricAlgebra()
   // where c are the input coeffs, ad d are the output coeffs. Note that a grade-2 element has 1
   // coeff in 2D but 3 coeffs in 3D -> the bivector with coeff c12 from 2D gets mapped to the 
   // bivector (d12,d13,d23) in 3D, There is no trivector in 2D, so the d123 element is zero. The
-  // matrix can be sliced row-wise in 1,3,3,1 and column-wise in 1,2,1
+  // matrix can be sliced row-wise in 1,3,3,1 and column-wise in 1,2,1. what if F: R^3 -> R^2?
+  // do we just throw away the trivector part?
 
 
   // Test, if the outer product F(a) ^ F(b) of two mapped vectors a,b is indeed equal to the mapped
@@ -6717,6 +6718,13 @@ void testGeometricAlgebra()
 
   // For elementary functions:
   // https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4361175/pdf/pone.0116943.pdf
+  A.set(Vec({9,0,0,0,0,0,0,0}));
+  B = rsSqrt(A);
+  C = B*B;
+  ok &= C == A;
+
+
+
 
   rsAssert(ok);
 

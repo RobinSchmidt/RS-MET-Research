@@ -4124,12 +4124,18 @@ public:
 
 
 
-  /** Under construction....
-  Given an n x n matrix A, this function returns the unique N x N matrix (N=2^n) that extends
+  /** Given an n x n matrix A, this function returns the unique N x N matrix (N=2^n) that extends
   the linear transformation of vectors that is defined by A to the induced linear transformation
   of multivectors for which holds: A(x ^ y) = A(x) ^ A(y), i.e. a transformation that preserves the
   outer product...tbc...  */
   rsMatrix<T> makeOutermorphism(const rsMatrix<T>& A);
+
+
+  /** Under construction....
+  A more general function to extend non-square mappings of vectors: R^m -> R^n to multivectors. */
+  static rsMatrix<T> makeOutermorphism(const rsMatrix<T>& F, 
+    const rsGeometricAlgebra<T>* srcAlg, const rsGeometricAlgebra<T>* dstAlg);
+
 
 
 
@@ -5035,7 +5041,7 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& F)
 
   // We make use of two facts: 
   // (1) in order to be grade-preserving, the matrix must have block-diagonal structure: there are 
-  //     n+1 blocks and the size of the k-th block is n-choose-k
+  //     n+1 blocks and the size of the k-th block (k = 0..n) is n-choose-k
   // (2) in a general transformation matrix, the j-th column of the matrix is equal to the image
   //     of the j-th basis vector (at least, that's the case for the canonical basis -> figure out
   //     if it's still true for a general basis)
@@ -5070,8 +5076,8 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& F)
 
   // Compute the matrix elements:
   rsMatrix<T> B(N, N);
-  B(0, 0) = T(1);                      // top-left entry is always 1
-  for(int k = 1; k <= n; k++) {        // loop over the grades
+  B(0, 0) = T(1);                      // top-left entry (grade-0 trafo) is always 1
+  for(int k = 1; k <= n; k++) {        // loop over the grades starting at 1
     int n0 = bladeStarts[k];           // (n0,n0) == start location of current block
     int m  = bladeSizes[k];            // number of grade-k basis blades
     // Fill a block of shape m x m:
@@ -5086,6 +5092,54 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& F)
       for(int i = 0; i < m; i++)       // copy P into a column of the current block
         B(n0+i, n0+j) = P[i];      }}
 
+  return B;
+}
+
+template<class T> rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& F,
+  const rsGeometricAlgebra<T>* srcAlg, const rsGeometricAlgebra<T>* dstAlg)
+{
+  // Input matrix F is m x n and maps vectors from R^n to R^m. Do some sanity checks:
+  int m = F.getNumRows();    // dimensionality of destination vector space (codomain)
+  int n = F.getNumColumns(); // dimensionality of source vector space (domain)
+  rsAssert(dstAlg->getNumDimensions() == m);
+  rsAssert(srcAlg->getNumDimensions() == n);
+  int M = dstAlg->getMultiVectorSize();
+  int N = srcAlg->getMultiVectorSize();
+  rsAssert(M == rsPow(2, m));
+  rsAssert(N == rsPow(2, n));
+
+  // Compute the images of the basis vectors:
+  using GV  = rsGradedVector<T>;
+  using Vec = std::vector<T>;
+  std::vector<GV> bi(m);
+  Vec b(n);
+  for(int i = 0; i < n; i++)
+  {
+    //Vec b  = srcAlg->getBasisVector(i); // current basis vector...
+    b[i]   = T(1);
+    Vec Fb = F * b;             // ...and its image under F
+    bi[i]  = GV(this, 1, Fb);
+    b[i]   = T(0);
+  }
+
+  // Compute the matrix elements:
+  rsMatrix<T> B(M, N);
+  B(0, 0) = T(1);
+  for(int k = 1; k <= rsMin(m,n); k++)   // todo: verify the rsMin
+  {
+    int m0 = dstAlg->bladeStarts[k];     // (m0,n0) == start location of current block
+    int n0 = srcAlg->bladeStarts[k];
+    int mm = dstAlg->bladeSizes[k];
+    int nn = srcAlg->bladeSizes[k];
+    // Fill a block of shape mm x nn starting at m0,n0:
+
+
+
+  }
+
+
+
+  rsError("not yet complete");
   return B;
 }
 
@@ -5581,6 +5635,40 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_47
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_56
 // https://cr.yp.to/bib/1976/brent-elementary.pdf
+
+// todo: implement: invSqrt, sqrt, agm, log, pow, sin, cos
+
+template<class T>
+rsMultiVector<T> rsInvSqrt(const rsMultiVector<T>& X)
+{
+  using MV = rsMultiVector<T>;
+  MV one(X.getAlgebra());
+  one[0] = T(1);        // todo: use a scalar, i.e. type T
+  MV Y = one; // = 0.5*X;          // iterate - todo: figure out more suitable initialization
+  //Y[0] = 0.5;
+  Y[0] = T(1./9.);
+
+  int maxIts = 32;
+  int k;
+  for(k = 0; k < maxIts; k++)
+  {
+    MV E = X*Y*Y - one;
+    Y = Y - T(0.5)*Y*(E - T(0.75)*E*E);
+  }
+  // OK - asymptotic convergence works and is fast but we need a good initial guess - how about
+  // 1/X? ..looks good for scalars - more tests needed
+
+  return Y;
+}
+
+template<class T>
+rsMultiVector<T> rsSqrt(const rsMultiVector<T>& X)
+{
+  return X * rsInvSqrt(X);
+}
+
+
+
 
 // template instantiation
 

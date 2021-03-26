@@ -6614,10 +6614,6 @@ void testGeometricAlgebra()
   C = A.getReverse() * A;             // has scalar and vector parts, scalar is 251
   C = A * A.getReverse();             // ditto, but different values for vector part
   matA = A.getMatrixRepresentation();
-  //Real detA = rsLinearAlgebraNew::determinant(matA); // needs to be implemented - maybe by
-  // a variant of Gaussian elimination that keeps track of the changes of the determinant due
-  // to row operations (this accumulates a factor) and at the end returns the trace multipied
-  // by the factor
 
   // todo: implement 
   //   rsMatrix<T> alg.makeOutermorphism(const rsMatrix<T>& F)
@@ -6650,10 +6646,15 @@ void testGeometricAlgebra()
   //  (o57,o67,o77) as F(e2) ^ F(e3), and o88 = F(e1) ^ F(e2) ^ F(e3)
   Mat F(3, 3, {1,2,3, 4,-5,6, 7,8,9});
   Mat F_o = alg3.makeOutermorphism(F);
-  // last element should be the determiant of F
+  Real detF = rsLinearAlgebraNew::determinant(F);
+  ok &= rsIsCloseTo(detF, F_o(7,7), tol);  // last element of F_o should be the determinant of F 
 
-  // Test, if the outer product F(a) ^ F(b) for two vectors is indeed equal to the outer product
-  // F(a ^ b)
+  // How about outermorphisms G^m -> G^n constructed from linear transformations R^m -> R^n? 
+  // maybe makeOutermorphism(A, srcAlg, dstAlg) and the special case is then just
+  // makeOutermorphism(A, this, this)
+
+  // Test, if the outer product F(a) ^ F(b) of two mapped vectors a,b is indeed equal to the mapped
+  // outer product F(a ^ b) of them:
   a.set(1, Vec({2, 3,5})); A.set(a);
   b.set(1, Vec({7,-4,6})); B.set(b);
   GV Fa = F*a, Fb = F*b;
@@ -6661,8 +6662,16 @@ void testGeometricAlgebra()
   C = F_o*(A ^ B);
   D = MV(Fa_Fb);
   ok &= C == D;
+  C = (F_o*A) ^ (F_o*B);
+  ok &= C == D;
 
-  // todo: test, if the relation holds also when a,b are general multivectors
+  // Test, F_o(A) ^ F_o(B) == F_o(A ^ B) for general multivectors A,B, i.e. the outermorphism 
+  // property generalizes to multivectors:
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  B.set(Vec({4,5,7,1,4,7,6,1}));
+  C = F_o*(A ^ B);
+  D = (F_o*A) ^ (F_o*B);
+  ok &= C == D;
 
   // ToDo: Maybe represent the outermorphism as rsMatrixList - a class (to be implemented) that is
   // essentially an array of matrices - such a class can be useful also for use with neural 
@@ -6672,7 +6681,18 @@ void testGeometricAlgebra()
   // multivector? We would need some sort of inverse of MV::getMatrixRepresentation() that takes a 
   // N x N matrix (here, the F_o matrix) and computes a multivector whose matrix representation is
   // F_o. I have no idea, if this is possible at all and if so, under which conditions -> research!
-
+  // In general, (left) multiplication by genera multivectors may mix up grades, but outermorphisms
+  // are grade-preserving, so the result of such an operation (if possible) is a restricted class
+  // of multivectors. 
+  // ToDo: implement tests:
+  // -A.isGradePreserving: checks, if the matrix representation of A has the desired block 
+  //  structure
+  // -A.isOutermorphism: A must have the desired block structure *and* the blocks for grades != 1
+  //  are related to the grade-1 block according to the outer product. We can test this by 
+  //  comparing the matrix representation of A to the outermorphism that is induced by the grade-1
+  //  block of A
+  
+  // in factor, we can do a test "A.isOutermorphism" or ""
   
 
 

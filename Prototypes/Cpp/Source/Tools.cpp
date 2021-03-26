@@ -5581,11 +5581,6 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_56
 // https://cr.yp.to/bib/1976/brent-elementary.pdf
 
-
-
-
-
-
 // template instantiation
 
 

@@ -4330,6 +4330,9 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
+  /** Returns a const pointer to the std::vector of coefficients. */
+  const std::vector<T>& getCoeffs() const { return coeffs; }
+
   int getGrade() const { return grade; }
 
   T getCoefficient(int i) const { return coeffs[i]; }
@@ -4357,6 +4360,7 @@ public:
 
   /** Read access to i-th coefficient. */
   const T& operator[](int i) const { rsAssert(i >= 0 && i < (int)coeffs.size()); return coeffs[i]; }
+
 
 
 
@@ -5051,12 +5055,12 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
     b[i]   = T(0);
   }
   // We currently use the canonical basis vectors (1,0,0,..), (0,1,0,..) etc., so it's sufficient 
-  // to set one coeff to 1 in each iteration. However, for a general basis, we may indeed need a 
-  // call like the commented Vec b = getBasisVector(i); instead of b[i] = T(1); ... b[i] = T(0);
+  // to set one coeff in b to 1 in each iteration. However, for a general basis, we may indeed need
+  // a call like the commented Vec b = getBasisVector(i); instead of b[i] = T(1); ... b[i] = T(0);
   // where we would need to implement such a getBasisVector() member function
 
 
-  //...stuff to do...
+  // Algorithm:
   // -loop over the grades, starting at 2 - for each grade k, do:
   //  -figure out the number m of basis blades for given grade k (this determines size of the block
   //   that we currently need fill)
@@ -5066,56 +5070,20 @@ rsMatrix<T> rsGeometricAlgebra<T>::makeOutermorphism(const rsMatrix<T>& A)
   //      P = A(b_p) ^ A(b_q) ^ A(b_r) ^ ...
   //   -copy the result P into the appropriate column of the matrix B
 
-
-  for(int k = 2; k <= n; k++)
-  {
-    int n0 = bladeStarts[k];    // (n0,n0) == start location of current block
-    int m  = bladeSizes[k];     // current block is of shape m x m
-
-    for(int j = 0; j < m; j++)
-    {
-      //int bladeIndex = bladeStarts[k] + j;  // verify this!
-      int bmp = getBladeBitmap(k, j);
-
-
-      // compute j-th column of B:
-      //GV e(this, 1);  // current basis vector
-      //GV p(this, 1);  // image of basis vector to accumlate into P via outer product
-
-      GV P(this, 0);  // outer product of the images
-      P[0] = T(1);
-
-      for(int i = 0; i < n; i++)
-      {
+  for(int k = 2; k <= n; k++) {        // loop over the grades - todo: start at 0 or 1
+    int n0 = bladeStarts[k];           // (n0,n0) == start location of current block
+    int m  = bladeSizes[k];            // number of grade-k basis blades
+    // Fill a block of shape m x m:
+    for(int j = 0; j < m; j++) {       // loop over the m grade-k basis blades
+      int bmp = getBladeBitmap(k, j);  // bitmap of j-th grade-k basis blade
+      GV P(this, 0); P[0] = T(1);      // outer product of the images, initially 1
+      for(int i = 0; i < n; i++) {
         if(bmp & 1)
-          P = P ^ bi[i];
-        bmp >>= 1;
-      }
-
-      /*
-      for(int i = 0; i < k; i++)
-      {
-        int q = 0; // preliminary - todo: q = getBasisVector(k, i) which should return the index
-        // of the i-th basis vector in the product ...e_i... for the i-th blade of grade k..
-        // ..or somthing
-
-        P = P ^ bi[q];
-      }
-      */
-
-      rsAssert(P.getGrade() == k);
-
-
-      // Copy the outer product of images P into j-th column of matrix B:
-      for(int i = 0; i < m; i++)
-        B(n0+i, n0+j) = P[i];
-
-      int dummy = 0;
-    }
-
-    int dummy = 0;
-  }
-
+          P = (P ^ bi[i]);             // accumulate factor A*b if basis blade e_i is present
+        bmp >>= 1; }
+      rsAssert(P.getGrade() == k);     // sanity check
+      for(int i = 0; i < m; i++)       // copy P into j-th column of matrix B:
+        B(n0+i, n0+j) = P[i];      }}
 
   return B;
 }
@@ -5144,6 +5112,18 @@ rsGradedVector<T> rsGradedVector<T>::operator^(const rsGradedVector<T>& b) const
   rsGradedVector<T> p(alg, g);
   alg->outerProduct_bld_bld(this->coeffs, grade, b.coeffs, b.grade, p.coeffs);
   return p;
+}
+
+/** Product between matrix A and vector b. It is assumed that A is a square matrix whose shape 
+matches the size of b. */
+template<class T>
+rsGradedVector<T> operator*(const rsMatrix<T>& A, const rsGradedVector<T>& b)
+{
+  int m = (int) b.getCoeffs().size();
+  rsAssert(b.getGrade() == 1, "b is assumed to be a vector" );
+  rsAssert(A.hasShape(m, m),  "Matrix A has wrong shape");
+  std::vector<T> v = A * b.getCoeffs();
+  return rsGradedVector<T>(b.getAlgebra(), b.getGrade(), v);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -5432,7 +5412,8 @@ rsMultiVector<T> operator*(const T& s, const rsMultiVector<T>& A)
   return P;
 }
 
-/** Geometric product of two blades. This results in general in a multivector. */
+/** Geometric product of two k-vectors. This results in general in a multivector. If the grades of 
+the inputs are i and j the result will have grades i-j and i+j (verify!).  */
 template<class T>
 rsMultiVector<T> operator*(const rsGradedVector<T>& a, const rsGradedVector<T>& b)
 {
@@ -5441,6 +5422,17 @@ rsMultiVector<T> operator*(const rsGradedVector<T>& a, const rsGradedVector<T>& 
   return A*B;
 }
 // may be optimized
+
+/** Product between matrix A and multivector b. It is assumed that A is a square matrix whose shape 
+matches the size of b. */
+template<class T>
+rsMultiVector<T> operator*(const rsMatrix<T>& A, const rsMultiVector<T>& b)
+{
+  int m = (int) b.getCoeffs().size();
+  rsAssert(A.hasShape(m, m),  "Matrix A has wrong shape");
+  std::vector<T> v = A * b.getCoeffs();
+  return rsMultiVector<T>(b.getAlgebra(), v);
+}
 
 /** Naive prototype implementation of the exponential function of a general multivector. */
 template<class T>

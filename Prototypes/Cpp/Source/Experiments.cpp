@@ -6627,13 +6627,13 @@ void testGeometricAlgebra()
   // outermorphisms are grade preserving - i think that implies that their matrix representations
   // has a block diagonal structure, like in R^3:
   //   a11 a12 a13
-  //   a21 a22 a23  = A
+  //   a21 a22 a23  = F
   //   a31 a32 a33
   // gets extended to the outermorphism:
   //   o11  0   0   0   0   0   0   0
   //    0  o22 o23 o24  0   0   0   0
   //    0  o32 o33 o34  0   0   0   0
-  //    0  o42 o43 o44  0   0   0   0  = A_o
+  //    0  o42 o43 o44  0   0   0   0  = F_o
   //    0   0   0   0  o55 o56 o57  0
   //    0   0   0   0  o65 o66 o67  0
   //    0   0   0   0  o75 o76 o77  0
@@ -6652,6 +6652,24 @@ void testGeometricAlgebra()
   // How about outermorphisms G^m -> G^n constructed from linear transformations R^m -> R^n? 
   // maybe makeOutermorphism(A, srcAlg, dstAlg) and the special case is then just
   // makeOutermorphism(A, this, this)
+  // Let's say, we have a function F: R^2 -> R^3:
+  //   a11 a12 
+  //   a21 a22 = A
+  //   a31 a32 
+  // This gives the induced map F_o: R^4 -> R^8 ...we need 4 rows, 8 cols
+  //  1   0   0   0      c0      d0
+  //  0  a11 a12  0   *  c1   =  d1
+  //  0  a21 a22  0      c2      d2
+  //  0  a31 a32  0      c12     d3
+  //  0   0   0  o44             d12
+  //  0   0   0  o54             d13
+  //  0   0   0  o64             d23
+  //  0   0   0   0              d123
+  // where c are the input coeffs, ad d are the output coeffs. Note that a grade-2 element has 1
+  // coeff in 2D but 3 coeffs in 3D -> the bivector with coeff c12 from 2D gets mapped to the 
+  // bivector (d12,d13,d23) in 3D, There is no trivector in 2D, so the d123 element is zero. The
+  // matrix can be sliced row-wise in 1,3,3,1 and column-wise in 1,2,1
+
 
   // Test, if the outer product F(a) ^ F(b) of two mapped vectors a,b is indeed equal to the mapped
   // outer product F(a ^ b) of them:

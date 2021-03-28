@@ -4635,6 +4635,17 @@ public:
   want.  */
   //rsMultiVector<T> operator|(const rsMultiVector<T>& b) const;
 
+  /** Adds a multivector and a scalar. */
+  rsMultiVector<T> operator+(const T& s) const { rsMultiVector<T> R(*this); R[0] += s; return R; }
+
+  /** Adds scalar s to this multivector. */
+  rsMultiVector<T>& operator+=(const T& s) { coeffs[0] += s; }
+
+  /** Subtracts the scalar s from a multivector. */
+  rsMultiVector<T> operator-(const T& s) const { rsMultiVector<T> R(*this); R[0] -= s; return R; }
+
+  /** Subtracts the scalar s from this multivector. */
+  rsMultiVector<T>& operator-=(const T& s) { coeffs[0] -= s; }
 
 
   rsMultiVector<T> operator-()
@@ -5605,8 +5616,35 @@ bool rsMakesDifference(const rsMultiVector<T>& X, const rsMultiVector<T>& dX, T 
   return rsMakesDifference(&X.getCoeffs()[0], &dX.getCoeffs()[0], N, weight);
 }
 
+/** Exponential function of multivectors A that square to zero. */
 template<class T>
-rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
+rsMultiVector<T> rsExpSqrZero(const rsMultiVector<T>& A)
+{
+  return A + T(1);
+}
+
+/** Exponential function of multivectors A that square to a positive scalar a2. */
+template<class T>
+rsMultiVector<T> rsExpSqrPosScalar(const rsMultiVector<T>& A, const T& a2)
+{
+  rsAssert(a2 > T(0));
+  T a = sqrt(a2);
+  return (sinh(a)/a)*A + cosh(a); // maybe implement and use rsSinch(a)
+}
+
+/** Exponential function of multivectors A that square to a negative scalar a2. */
+template<class T>
+rsMultiVector<T> rsExpSqrNegScalar(const rsMultiVector<T>& A, const T& a2)
+{
+  rsAssert(a2 < T(0));
+  T a = sqrt(-a2);
+  return (sin(a)/a)*A + cos(a);  // maybe use rsSinc(a)
+}
+
+
+/** Exponential function of general multivectors X, evaluated by Taylor expansion. */
+template<class T>
+rsMultiVector<T> rsExpViaTaylor(const rsMultiVector<T>& X)
 {
   // The algorithm uses the fact that exp(X) = (exp(X/s))^s to use a scaled version of X in the 
   // Taylor expansion that ensures that the powers X^k of X don't explode. In fact, they decay 
@@ -5620,7 +5658,7 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
   MV Y( X.getAlgebra());       // output Y 
   MV Zk(X.getAlgebra());       // Zk = Z^k in the iteration
   Zk[0] = T(1);                // Zk = Z^0 = 1 initially
-  int maxIts = 32;             // maybe make parameter
+  int maxIts = 32;             // 32 is the length of rsInverseFactorials
   int k;                       // iteration number == current power of Z
 
   for(k = 0; k < maxIts; k++)
@@ -5638,10 +5676,10 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 }
 // -needs more tests
 // Idea: can we use a variant of Newton iteration to evaluate a function? Newton iteration itself 
-// uses function nd derivative evaluations, so it can't be used as is. But maybe we can use the
+// uses function and derivative evaluations, so it can't be used as is. But maybe we can use the
 // differential equation f(x) - f'(x) = 0 or one of the functional equations, like 
 // f(2*x) - (f(x))^2 = 0 and approximate the f,f' values via Taylor series? Or maybe somehow use
-// the inverse slope: f^-1(y) = log(y) = x to somehow find a crossing of the tnagent with the 
+// the inverse slope: f^-1(y) = log(y) = x to somehow find a crossing of the tangent with the 
 // y-axis? -> research needed -> if so, maybe we could refine the exp with a single such step at
 // the very end. And/or maybe fixed point iteration may also be adapted?
 // for function evaluation, see:
@@ -5649,6 +5687,26 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_47
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_56
 // https://cr.yp.to/bib/1976/brent-elementary.pdf
+
+/** Exponential function of multivectors. Dispatches between various implementations, depending on 
+the square of A. */
+template<class T>
+rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
+{
+  rsMultiVector<T> X2 = X*X;
+  T tol = T(0);             // preliminary
+  if(X2.isScalar(tol))
+  {
+    T x2 = X2[0];                                          // x2 = x^2
+    if(     x2 > T(0)) return rsExpSqrPosScalar(X, x2);    // exp(X) = (sinh(x)/x)*X + cosh(x)
+    else if(x2 < T(0)) return rsExpSqrNegScalar(X, x2);    // exp(X) = (sin(x) /x)*X + cos(x)
+    else               return rsExpSqrZero(X);             // exp(X) =             X + 1
+  }
+  else
+    return rsExpViaTaylor(X);                              // fallback for the general case
+}
+// needs tests for the special cases
+// see GA4CS, pg 531
 
 // todo: implement: invSqrt, sqrt, agm, log, pow, sin, cos
 
@@ -5671,8 +5729,11 @@ rsMultiVector<T> rsInvSqrt(const rsMultiVector<T>& X)
   }
   // OK - asymptotic convergence works and is fast but we need a good initial guess - how about
   // 1/X? ..looks good for scalars - more tests needed
+  // ..the convergence test does not work - we cannot assume that the addition makes no difference
+  // after convegence - it may make a difference of the order of epsilon...what exactly should we 
+  // use? 2*eps? 4*eps?
 
-  rsAssert(k < maxIts, "rsInvSqrt did not converge");
+  //rsAssert(k < maxIts, "rsInvSqrt did not converge");
   return Y;
 }
 
@@ -5682,8 +5743,14 @@ rsMultiVector<T> rsSqrt(const rsMultiVector<T>& X)
   return X * rsInvSqrt(X);
 }
 
-
-
+template<class T>
+bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)
+{
+  int N = X.getAlgebra()->getMultiVectorSize();
+  if(Y.getAlgebra()->getMultiVectorSize() != N)
+    return false;
+  return rsArrayTools::almostEqual(&X.getCoeffs()[0], &Y.getCoeffs()[0], N, tol);
+}
 
 // template instantiation
 

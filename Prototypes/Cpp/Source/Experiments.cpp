@@ -6318,6 +6318,7 @@ void testGeometricAlgebra()
   using PT   = MV::ProductType;
   using Vec  = std::vector<Real>;
   using Mat  = rsMatrix<Real>;
+  using LA   = rsLinearAlgebraNew;
 
   bool ok = true;
 
@@ -6719,10 +6720,31 @@ void testGeometricAlgebra()
   // For elementary functions:
   // https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4361175/pdf/pone.0116943.pdf
   A.set(Vec({9,0,0,0,0,0,0,0}));
-  B = rsSqrt(A);
-  C = B*B;
-  ok &= C == A;
+  B = rsSqrt(A); C = B*B; ok &= C == A; // works
 
+
+  A.set(Vec({-1,0,0,0,0,0,0,0}));
+  //B = rsSqrt(A); // iteration diverges
+
+
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  //B = rsSqrt(A); C = B*B; ok &= C == A;   // iteration diverges
+  B = A*A; C = rsSqrt(B); //ok &= C == A;   // converges to a different root: C != A
+  D = C*C; ok &= rsIsCloseTo(D, B, 1.e-11); // ..and it is not very precise!
+  // Is there actually always a square-root for multivectors or can there be multivectors that 
+  // cannot be obtained by squaring some other multivector? Maybe the square-root is a partial
+  // function (in addition to being multi-valued, where it exists)? Could it be that the algo
+  // sometimes diverges because no solution exists? Let's consider the matrix representation matA 
+  // of a multivector A - we can then write: A*A = B = matA*A, so finding the square-root of B 
+  // amounts to solving the linear system B = matA*A for A. Could it be that it has no solutions, 
+  // i.e. could matA be singular? ...yes, it obviously must be possible for matA to be singular, 
+  // because sometimes multiple solutions exists (as we have just seen) - and this also happens 
+  // only for singular matrices.
+  matA = A.getMatrixRepresentation();
+  Real detA = LA::determinant(matA);
+  // ...but detA is not zero. What about the matrix-square-root - could we use the algo for that
+  // todo: try to find the square root of -1 in a (0,1,0) algebra (i.e. complex numbers) and in an
+  // algebra that contains complex subalgebras
 
 
 

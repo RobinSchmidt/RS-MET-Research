@@ -4613,6 +4613,9 @@ public:
   makes geometric algebra tick. */
   rsMultiVector<T> operator*(const rsMultiVector<T>& b) const;
 
+  /** Divides this multivectors by multivector b. */
+  rsMultiVector<T> operator/(const rsMultiVector<T>& b) const { return *this * b.getInverse(); }
+
   /** Adds multivector b to this multivector. */
   rsMultiVector<T>& operator+=(const rsMultiVector<T>& b);
   // todo: create function that adds a blade into a multivector
@@ -5717,8 +5720,29 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 // needs tests for the special cases
 // see GA4CS, pg 531
 
-// todo: implement: sin, cos, sinh, cosh, log, pow, agm, meet, join
+// todo: implement: sin, cos, log, asin, acos, asinh, acosh, pow, agm, meet, join
 
+template<class T>
+rsMultiVector<T> rsSinh(const rsMultiVector<T>& X)
+{
+  rsMultiVector<T> eX = rsExp(X);
+  return T(0.5) * (eX - eX.getInverse());   // sinh(X) = (exp(X) - exp(-X)) / 2
+}
+
+template<class T>
+rsMultiVector<T> rsCosh(const rsMultiVector<T>& X)
+{
+  rsMultiVector<T> eX = rsExp(X);
+  return T(0.5) * (eX + eX.getInverse());   // cosh(X) = (exp(X) + exp(-X)) / 2
+}
+
+template<class T>
+rsMultiVector<T> rsTanh(const rsMultiVector<T>& X)
+{
+  rsMultiVector<T> eX  = rsExp(X);
+  rsMultiVector<T> eXi = eX.getInverse();
+  return (eX - eXi) / (eX + eXi);           // tanh(X) = sinh(X) / cosh(X)
+}
 
 
 

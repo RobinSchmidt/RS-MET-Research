@@ -6336,24 +6336,41 @@ bool testGeometricAlgebra010()
     return rsAbs(dr) <= tol && rsAbs(di) <= tol;
   };
 
-
-  c = a*b;
-  C = A*B;
-  ok &= equals(C, c);
-
-  c = exp(2.0 * i);
-  C = rsExp(2.0 * I);          // special case: X^2 = negative scaler
-  ok &= equals(C, c);
-
-  c = exp(2.0 * one);
-  C = rsExp(2.0 * One);        // special case: X^2 = positive scaler
-  ok &= equals(C, c);
-
-  c = exp(a);
-  C = rsExp(A);                // general case uses Taylor expansion
-  ok &= equals(C, c, 1.e-13);
+  // Test arithmetic operators:
+  c = a+b; C = A+B; ok &= equals(C, c);
+  c = a-b; C = A-B; ok &= equals(C, c);
+  c = a*b; C = A*B; ok &= equals(C, c);
+  c = a/b; C = A/B; ok &= equals(C, c, 1.e-16);
+  c = b*a; C = B*A; ok &= equals(C, c);
+  c = b/a; C = B/A; ok &= equals(C, c, 1.e-15);
 
 
+  // Test exponential function:
+  c = exp(2.0 * i);   C = rsExp(2.0 * I);   ok &= equals(C, c);         // X^2 = negative scalar
+  c = exp(2.0 * one); C = rsExp(2.0 * One); ok &= equals(C, c);         // X^2 = positive scalar
+  c = exp(a);         C = rsExp(A);         ok &= equals(C, c, 1.e-13); // general case
+  // the X^2 = 0 case can be tested in the (0,0,1) algebra which is isomorphic to dual numbers
+
+  // Test square root function:
+  c = sqrt(a);         C = rsSqrt(A);         ok &= equals(C, c, 1.e-13);
+  c = sqrt(b);         C = rsSqrt(B);         ok &= equals(C, c, 1.e-13);
+  c = sqrt(2.0 * one); C = rsSqrt(2.0 * One); ok &= equals(C, c);
+  //c = sqrt(2.0 * i);   C = rsSqrt(2.0 * I);   ok &= equals(C, c, 1.e-13); // fails!
+  // OK, it works in these cases but more tests are needed with many different arguments. The 
+  // complex square root has two solutions and we want the principal solution but the iteration 
+  // used may actually converge to a different solution...
+
+  // Test hyperbolic functions:
+  c = sinh(a); C = rsSinh(A); ok &= equals(C, c, 1.e-13);
+  c = cosh(a); C = rsCosh(A); ok &= equals(C, c, 1.e-13);
+  c = tanh(a); C = rsTanh(A); ok &= equals(C, c, 1.e-13);
+
+  // Test trigonometric functions:
+
+
+
+  // todo: test also the subalgebras of (2,0,0) or (3,0,0) that are isomorphic to complex numbers
+  // in think in 3,0,0 it's the subalgebra of the scalar and pseudoscalar, in 2,0,0 maybe the.. 
 
 
   return ok;
@@ -6666,6 +6683,10 @@ void testGeometricAlgebra()
   A.set(Vec({3,8,7,4,6,4,6,5}));
   C = rsExp(A);
   // how can we obtain a reference value? maybe use clifford.py? bivector.net does not know exp
+  C = rsExp(-A);
+  D = 1.0 / rsExp(A);
+  B = C-D;
+  ok &= rsIsCloseTo(C, D, 3.e-7);  // the error is even worse here
 
   // ToDo: implement various norms of multivectors, for eaxmple:
   //   N_c(A) = conj((A) * A     where conj(A) is the Clifford conjugate of A

@@ -5467,6 +5467,16 @@ rsMultiVector<T> operator*(const T& s, const rsMultiVector<T>& A)
   return P;
 }
 
+/** Quotient of a scalar and a multivector. */
+template<class T>
+rsMultiVector<T> operator/(const T& s, const rsMultiVector<T>& A)
+{
+  rsMultiVector<T> Q = A.getInverse();
+  Q.scale(s);
+  return Q;
+}
+
+
 /** Geometric product of two k-vectors. This results in general in a multivector. If the grades of 
 the inputs are i and j the result will have grades i-j and i+j (verify!).  */
 template<class T>
@@ -5477,6 +5487,8 @@ rsMultiVector<T> operator*(const rsGradedVector<T>& a, const rsGradedVector<T>& 
   return A*B;
 }
 // may be optimized
+
+
 
 /** Product between matrix A and multivector b. It is assumed that A is a square matrix whose shape 
 matches the size of b. */
@@ -5586,6 +5598,14 @@ bool rsMakesDifference(const T* x, const T* dx, int N, T s = T(1))
 // move to rsArrayTools, try to find a better name
 
 template<class T>
+bool rsMakesDifference(const rsMultiVector<T>& X, const rsMultiVector<T>& dX, T weight = T(1))
+{
+  int N = X.getAlgebra()->getMultiVectorSize();
+  rsAssert(dX.getAlgebra()->getMultiVectorSize() == N);
+  return rsMakesDifference(&X.getCoeffs()[0], &dX.getCoeffs()[0], N, weight);
+}
+
+template<class T>
 rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 {
   // The algorithm uses the fact that exp(X) = (exp(X/s))^s to use a scaled version of X in the 
@@ -5603,16 +5623,10 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
   int maxIts = 32;             // maybe make parameter
   int k;                       // iteration number == current power of Z
 
-  auto converged = [&](int k)  // convergene test, takes iteration number k
-  {
-    return !rsMakesDifference(
-      &Y.getCoeffs()[0], &Zk.getCoeffs()[0], (int)Y.getCoeffs().size(), rsInverseFactorials[k]);
-  };
-
   for(k = 0; k < maxIts; k++)
   {
-    if(converged(k)) 
-      break;
+    if(!rsMakesDifference(Y, Zk, rsInverseFactorials[k]))  // convergence test
+      break;  
     Y  += Zk * T(rsInverseFactorials[k]);
     Zk  = Zk * Z; // implement and use Zk *= Z, this can be implemented without memory allocation
     // by having a temp-array member in the algebra object, or maybe have a multiplication function
@@ -5644,20 +5658,21 @@ rsMultiVector<T> rsInvSqrt(const rsMultiVector<T>& X)
   using MV = rsMultiVector<T>;
   MV one(X.getAlgebra());
   one[0] = T(1);        // todo: use a scalar, i.e. type T
-  MV Y = one; // = 0.5*X;          // iterate - todo: figure out more suitable initialization
-  //Y[0] = 0.5;
-  Y[0] = T(1./9.);
-
+  MV Y = T(1) / X;
   int maxIts = 32;
   int k;
   for(k = 0; k < maxIts; k++)
   {
-    MV E = X*Y*Y - one;
-    Y = Y - T(0.5)*Y*(E - T(0.75)*E*E);
+    MV E  = X*Y*Y - one;
+    MV dY = -T(0.5)*Y*(E - T(0.75)*E*E);
+    if(!rsMakesDifference(Y, dY))             // convergence test
+      break;
+    Y += dY;
   }
   // OK - asymptotic convergence works and is fast but we need a good initial guess - how about
   // 1/X? ..looks good for scalars - more tests needed
 
+  rsAssert(k < maxIts, "rsInvSqrt did not converge");
   return Y;
 }
 

@@ -6301,10 +6301,72 @@ bool testBitTwiddling()
 }
 
 
+bool testGeometricAlgebra010()
+{
+  // The geometic algebra with signature (0,1,0) is supposed to be isomorphic to the complex 
+  // numbers. We test that here...
+
+  using Real = double;
+  using GA   = rsGeometricAlgebra<Real>;
+  using MV   = rsMultiVector<Real>;
+  using Comp = std::complex<Real>;
+
+  bool ok = true;
+
+  GA alg(0,1,0);
+
+  Comp a,b,c,d;
+  MV A(&alg), B(&alg), C(&alg), D(&alg);
+
+  // unity and imaginary unit:
+  Comp i(0, 1), one(1, 0);
+  MV   I(&alg); I[1] = 1;
+  MV   One(&alg); One[0] = 1;
+
+  a = 3.0 + 2.0*i;
+  A = 3.0 + 2.0*I;
+  b = 5.0 + 7.0*i;
+  B = 5.0 + 7.0*I;
+
+  // Equality comparison (with tolerance) between multivector Z and complex number z:
+  auto equals = [](const MV& Z, const Comp& z, Real tol = Real(0))
+  { 
+    Real dr = Z[0] - z.real();  // difference in real part
+    Real di = Z[1] - z.imag();  // difference in imaginary part
+    return rsAbs(dr) <= tol && rsAbs(di) <= tol;
+  };
+
+
+  c = a*b;
+  C = A*B;
+  ok &= equals(C, c);
+
+  c = exp(2.0 * i);
+  C = rsExp(2.0 * I);          // special case: X^2 = negative scaler
+  ok &= equals(C, c);
+
+  c = exp(2.0 * one);
+  C = rsExp(2.0 * One);        // special case: X^2 = positive scaler
+  ok &= equals(C, c);
+
+  c = exp(a);
+  C = rsExp(A);                // general case uses Taylor expansion
+  ok &= equals(C, c, 1.e-13);
+
+
+
+
+  return ok;
+}
+
+
+
 
 void testGeometricAlgebra()
 {
-  testBitTwiddling();
+  bool ok = true;
+  ok &= testBitTwiddling();
+  ok &= testGeometricAlgebra010();
 
   // References:
   // 1: Geometric Algebra for Computer Science (GA4CS)
@@ -6320,7 +6382,7 @@ void testGeometricAlgebra()
   using Mat  = rsMatrix<Real>;
   using LA   = rsLinearAlgebraNew;
 
-  bool ok = true;
+
 
   // 3D Geometric Algebra (or 2D Elliptic Projective Geometric Algebra). Elements represent 
   // lines/planes through the origin (or vectors/bivectors). The even subalgebra is isomorphic to

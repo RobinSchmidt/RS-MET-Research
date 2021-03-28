@@ -5469,6 +5469,15 @@ rsMultiVector<T> rsMultiVector<T>::productSlow(
   return CD;
 }
 
+/** Sum of a scalar and a multivector. */
+template<class T>
+rsMultiVector<T> operator+(const T& s, const rsMultiVector<T>& A)
+{
+  rsMultiVector<T> P = A;
+  P[0] += s;
+  return P;
+}
+
 /** Product of a scalar and a multivector. */
 template<class T>
 rsMultiVector<T> operator*(const T& s, const rsMultiVector<T>& A)
@@ -5708,7 +5717,10 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 // needs tests for the special cases
 // see GA4CS, pg 531
 
-// todo: implement: invSqrt, sqrt, agm, log, pow, sin, cos
+// todo: implement: sin, cos, sinh, cosh, log, pow, agm, meet, join
+
+
+
 
 template<class T>
 rsMultiVector<T> rsInvSqrt(const rsMultiVector<T>& X)

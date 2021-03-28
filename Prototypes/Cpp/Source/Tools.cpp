@@ -2526,7 +2526,7 @@ public:
 
   /** Implements quotient rule: (f/g)' = (f' * g - g' * f) / g^2. */
   DN operator/(const DN& y) const { return DN(v / y.v, (d*y.v - v*y.d)/(y.v*y.v) ); }
-    // requires that y.v is nonzero - what does this mean for the algebraic structure od dual 
+    // requires that y.v is nonzero - what does this mean for the algebraic structure of dual 
     // numbers? do they form a ring? it's not a field because *any* number y for which v is zero 
     // can't be a divisor - but if the d-field of y is nonzero, then y is not 0 (the neutral 
     // element of addition)...right? ..so we have nonzero elements that we can't divide by, so we
@@ -2534,7 +2534,7 @@ public:
     // maybe we could do something else when y.v == 0. in this case, the infinitesimal part gets 
     // blown up to infinity, so maybe it could make sense to add the numerator 
     // (d*y.v - v*y.d) = -v*y.d to the real part? ...highly speculative - maybe try it and see 
-    // what happens...but actually, the 0 in the denomiantor is squared, so it gets blown up to
+    // what happens...but actually, the 0 in the denominator is squared, so it gets blown up to
     // "infinity-squared" ...so maybe it should overblow the real part...oh - that's what it 
     // already does anyway...maybe it should be v - v*y.d = v*(1-y.d)...maybe consider the limits
     // when y.v goes to 0
@@ -2603,6 +2603,10 @@ rsDualNumber<TVal, TDer> operator/(const Tx& x, const rsDualNumber<TVal, TDer>& 
 RS_PFX rsSin(RS_DN x) { return RS_DN(rsSin(x.v),  x.d*rsCos(x.v)); }
 RS_PFX rsCos(RS_DN x) { return RS_DN(rsCos(x.v), -x.d*rsSin(x.v)); }
 RS_PFX rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
+
+RS_PFX rsSinh(RS_DN x) { return RS_DN(rsSinh(x.v), x.d*rsCosh(x.v)); }
+RS_PFX rsCosh(RS_DN x) { return RS_DN(rsCosh(x.v), x.d*rsSinh(x.v)); }
+RS_PFX rsTanh(RS_DN x) { TVal t = rsTanh(x.v); return RS_DN(t, x.d*TDer(TVal(1)-t*t)); }
 
 // not tested:
 RS_PFX rsLog( RS_DN x) { return RS_DN(rsLog(x.v),  x.d/x.v); } // requires x.v > 0

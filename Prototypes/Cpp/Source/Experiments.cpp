@@ -6344,6 +6344,19 @@ bool testGeometricAlgebra010()
   c = b*a; C = B*A; ok &= equals(C, c);
   c = b/a; C = B/A; ok &= equals(C, c, 1.e-15);
 
+  // Test multivector involutions vs complex conjugation:
+  c = conj(a); 
+  C = A.getGradeInvolution(); ok &= equals(C, c);
+  C = A.getConjugate();       ok &= equals(C, c);
+  C = A.getReverse();         // nope!
+
+  // I think, dualization should correspond to multiplication by i..
+  c = a*i; C = A*I;         ok &= equals(C, c);
+  c = a*i; C = A.getDual(); ok &= equals(C, c);
+  // hmm...isn't dualization supposed to be equal multiplication by the inverse unit pseudoscalar 
+  // I^-1, not I itself?
+  //c = a/i;
+
 
   // Test exponential function:
   c = exp(2.0 * i);   C = rsExp(2.0 * I);   ok &= equals(C, c);         // X^2 = negative scalar
@@ -6368,10 +6381,71 @@ bool testGeometricAlgebra010()
   // Test trigonometric functions:
 
 
-
   // todo: test also the subalgebras of (2,0,0) or (3,0,0) that are isomorphic to complex numbers
   // in think in 3,0,0 it's the subalgebra of the scalar and pseudoscalar, in 2,0,0 maybe the.. 
 
+  return ok;
+}
+
+bool testGeometricAlgebra001()
+{
+  // The geometic algebra with signature (0,0,1) is supposed to be isomorphic to the dual 
+  // numbers. We test that here...
+
+  using Real = double;
+  using GA   = rsGeometricAlgebra<Real>;
+  using MV   = rsMultiVector<Real>;
+  using Dual = rsDualNumber<Real, Real>;
+
+  bool ok = true;
+
+  GA alg(0,0,1);
+
+  Dual a,b,c,d;
+  MV A(&alg), B(&alg), C(&alg), D(&alg);
+
+  // unity and imaginary unit:
+  Dual e(0., 1.), one(1., 0.);
+  MV   E(&alg); E[1] = 1;
+  MV   One(&alg); One[0] = 1;
+
+  a = 3.0 + 2.0*e;
+  A = 3.0 + 2.0*E;
+  b = 5.0 + 7.0*e;
+  B = 5.0 + 7.0*E;
+
+  // Equality comparison (with tolerance) between multivector Z and dual number z:
+  auto equals = [](const MV& Z, const Dual& z, Real tol = Real(0))
+  { 
+    Real dv = Z[0] - z.v;  // difference in value part
+    Real dd = Z[1] - z.d;  // difference in derivative part
+    return rsAbs(dv) <= tol && rsAbs(dd) <= tol;
+  };
+
+  // Test arithmetic operators:
+  c = a+b; C = A+B; ok &= equals(C, c);
+  c = a-b; C = A-B; ok &= equals(C, c);
+  c = a*b; C = A*B; ok &= equals(C, c);
+  c = a/b; C = A/B; ok &= equals(C, c, 1.e-15);
+  c = b*a; C = B*A; ok &= equals(C, c);
+  c = b/a; C = B/A; ok &= equals(C, c, 1.e-15);
+
+  // Test exponential function:
+  c = rsExp(2.0 * e); C = rsExp(2.0 * E); ok &= equals(C, c);         // X^2 = 0
+  c = rsExp(a);       C = rsExp(A);       ok &= equals(C, c, 1.e-13); // general case
+
+  // Test square root function:
+  c = rsSqrt(a); C = rsSqrt(A); ok &= equals(C, c, 1.e-13);
+
+  // Test hyperbolic functions:
+  c = rsSinh(a); C = rsSinh(A); ok &= equals(C, c, 1.e-13);
+  c = rsCosh(a); C = rsCosh(A); ok &= equals(C, c, 1.e-13);
+  c = rsTanh(a); C = rsTanh(A); ok &= equals(C, c, 1.e-13);
+
+  // Test trigonometric functions:
+  //c = rsSin(a); C = rsSin(A); ok &= equals(C, c, 1.e-13);
+  //c = rsCos(a); C = rsCos(A); ok &= equals(C, c, 1.e-13);
+  //c = rsTan(a); C = rsTan(A); ok &= equals(C, c, 1.e-13);
 
   return ok;
 }
@@ -6384,6 +6458,7 @@ void testGeometricAlgebra()
   bool ok = true;
   ok &= testBitTwiddling();
   ok &= testGeometricAlgebra010();
+  ok &= testGeometricAlgebra001();
 
   // References:
   // 1: Geometric Algebra for Computer Science (GA4CS)

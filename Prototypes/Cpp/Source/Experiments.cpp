@@ -6790,8 +6790,13 @@ void testGeometricAlgebra()
   C = rsCos(A); C = C*C;  // C = cos^2(A)
   D = B + C;              // should be 1 - yep, but accuracy is low
 
-
-
+  // Test logarithm function:
+  A.set(Vec({0.5,0,0,0,0,0,0,0}));
+  B = rsLogViaTaylorSmall(A, 10);
+  tgt = log(A[0]);
+  err = B[0] - tgt;
+  C = rsLogViaNewton(A);
+  err = C[0] - tgt;
 
   // ToDo: implement various norms of multivectors, for eaxmple:
   //   N_c(A) = conj((A) * A     where conj(A) is the Clifford conjugate of A

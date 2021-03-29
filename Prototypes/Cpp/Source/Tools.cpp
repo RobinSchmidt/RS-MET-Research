@@ -5929,6 +5929,67 @@ rsMultiVector<T> rsTan(const rsMultiVector<T>& X)
 // https://arxiv.org/abs/1702.01129
 // https://math.stackexchange.com/questions/585154/taylor-series-for-logx
 // http://www.math.com/tables/expansion/log.htm
+// https://math.stackexchange.com/questions/61209/what-algorithm-is-used-by-computers-to-calculate-logarithms
+// https://en.wikipedia.org/wiki/Taylor_series#Natural_logarithm
+// https://www.efunda.com/math/taylor_series/logarithmic.cfm
+// http://www.math.com/tables/expansion/log.htm
+
+
+template<class T>
+rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
+{
+  using MV = rsMultiVector<T>;
+  MV z  = x; z[0] -= T(1);         // z = x-1
+  MV zk = z;                       // z^k, initially z^1 = z
+  MV y(x.getAlgebra());            // result
+  T s = T(1);                      // sign
+  for(int k = 1; k <= order; k++)
+  {
+    T w  = s / T(k);  // weight
+    y   += w * zk;
+    zk  *= z;
+    s   *= T(-1);     // sign alternation
+  }
+  return y;
+}
+// Converges rather slowly because the weights do not fall off as rapidly as in the case of exp, 
+// sin, etc. Can we find a faster converging series for a function that is (simply) related to
+// log? Or maybe speed up the convergence in other ways? maybe this could be applicable:
+// https://www.youtube.com/watch?v=wqMQRwX4Zn0
+
+
+template<class T>
+rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& a)
+{
+  using MV = rsMultiVector<T>;
+  MV x = rsLogViaTaylorSmall(a, 3);  // initial guess
+  int maxIts = 32;
+  for(int i = 1; i <= maxIts; i++)
+  {
+    MV ex = rsExp(x);
+    x += (a-ex) / ex;
+    int dummy = 0;
+  }
+  return x;
+}
+
+
+/*
+template<class T>
+T rsLogViaTaylor(const T& x)
+{
+  T z = x - 1
+
+
+}
+
+template<class T>
+T rsLogViaNewton(const T& a)
+{
+
+
+}
+*/
 
 template<class T>
 bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)

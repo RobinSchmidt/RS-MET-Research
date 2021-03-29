@@ -6779,6 +6779,18 @@ void testGeometricAlgebra()
   tgt = sin(5.0);
   err = C[0] - tgt;
   ok &= rsAbs(err) < 2.e-15;
+  C = rsCos(A);
+  tgt = cos(5.0);
+  err = C[0] - tgt;
+  ok &= rsAbs(err) < 2.e-15;
+
+  // test, if sin^2 + cos^2 = 1:
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  B = rsSin(A);
+  C = rsCos(A);
+  B = B*B;
+  C = C*C;
+  D = B + C;  // should be 1 - yep, but accuracy is low
 
 
   // ToDo: implement various norms of multivectors, for eaxmple:

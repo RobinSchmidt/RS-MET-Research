@@ -5802,7 +5802,6 @@ rsMultiVector<T> rsSinSmall(const rsMultiVector<T>& X)
   return Y;
 }
 // todo: 
-// -implement acceleration via argument scaling and recursive multiple angle formula
 // -add convergence test
 
 template<class T>
@@ -5824,29 +5823,52 @@ rsMultiVector<T> rsCosSmall(const rsMultiVector<T>& X)
   rsAssert(k <= kLim, "rsCos for rsMultiVector did not converge");
   return Y;
 }
+// todo: 
+// -add convergence test
 
 template<class T>
 rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
 {
+  // Uses sin(n*x) = 2*cos(x) * sin((n-1)*x) - sin((n-2)*x) to apply a similar argument reduction 
+  // trick as for the exponential function.
   using MV = rsMultiVector<T>;
   T s = rsNorm(X);
-  s = ceil(s);           // todo: multiply by a factor - figure out which works best
-  MV Z = (T(1)/s) * X;
+  s = ceil(s);             // todo: multiply by a factor - figure out which works best with respect to
+  MV Z = (T(1)/s) * X;     // fast convergence and high accuracy of the result
   MV S = rsSinSmall(Z);
   MV C = rsCosSmall(Z);
   MV S2(X.getAlgebra());
   MV S1 = S;
-  MV Sn(S);
   int n = (int)s;
-  for(int i = 2; i <= n; i++)
-  {
-    Sn = T(2)*C*S1 - S2;
+  for(int i = 2; i <= n; i++) {
+    S  = T(2)*C*S1 - S2;
     S2 = S1;
-    S1 = Sn;
-  }
-  return Sn;
+    S1 = S;   }
+  return S;
 }
 // needs more tests - especially with small arguments
+
+template<class T>
+rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
+{
+  // Uses sin(n*x) = 2*cos(x) * sin((n-1)*x) - sin((n-2)*x) to apply a similar argument reduction 
+  // trick as for the exponential function.
+  using MV = rsMultiVector<T>;
+  T s = rsNorm(X);
+  s = ceil(s);             // todo: multiply by a factor - figure out which works best with respect to
+  MV Z = (T(1)/s) * X;     // fast convergence and high accuracy of the result
+  MV C = rsCosSmall(Z);
+  MV C2(X.getAlgebra());
+  C2[0] = T(1);
+  MV C1 = C;
+  MV Cn(X.getAlgebra());
+  int n = (int)s;
+  for(int i = 2; i <= n; i++) {
+    Cn = T(2)*C*C1 - C2;
+    C2 = C1;
+    C1 = Cn;   }
+  return Cn;
+}
 
 // For sin/cos, maybe a similar trick for accelerating the convergence can be used as for the
 // exponential, based on this formula:

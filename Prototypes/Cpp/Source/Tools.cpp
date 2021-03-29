@@ -5959,6 +5959,9 @@ rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
 // sin, etc. Can we find a faster converging series for a function that is (simply) related to
 // log? Or maybe speed up the convergence in other ways? maybe this could be applicable:
 // https://www.youtube.com/watch?v=wqMQRwX4Zn0
+// We need to apply the same technique to the series of weights which is actually the harmonic 
+// series. So it seems reasonable to start with trying to make a quickly converging harmonic 
+// series....
 
 template<class T>
 rsMultiVector<T> rsLogViaTaylor(const rsMultiVector<T>& x, int order)
@@ -5977,8 +5980,7 @@ template<class T>
 rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& x)
 {
   using MV = rsMultiVector<T>;
-  //MV y = rsLogViaTaylorSmall(x, 3);  // initial guess, todo: tweak order
-  MV y = rsLogViaTaylor(x, 3);  // initial guess, todo: tweak order
+  MV y = rsLogViaTaylor(x, 3);       // initial guess, todo: tweak order
   int maxIts = 32;
   int i;
   for(i = 1; i <= maxIts; i++) {
@@ -5989,6 +5991,15 @@ rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& x)
     y += dy; }
   rsAssert(i < maxIts, "rsLog for rsMultiVector did not converge");
   return y;
+}
+// It's interesting that we seem to get more accurate results for log than for exp even though exp
+// is used (iteratively!) in the computation of log. It probably has to do with the self-correcting
+// behavior of Newton iteration. More experiments needed...
+
+template<class T>
+rsMultiVector<T> rsLog(const rsMultiVector<T>& x)
+{
+  return rsLogViaNewton(x);
 }
 
 

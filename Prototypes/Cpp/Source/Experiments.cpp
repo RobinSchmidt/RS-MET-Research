@@ -6358,6 +6358,10 @@ bool testGeometricAlgebra010()
   C = A.getConjugate();       ok &= equals(C, c);
   C = A.getReverse();         // nope!
 
+  Real tmp1, tmp2;
+  tmp1 = rsNorm(A);
+  tmp2 = rsAbs(a);
+
   // I think, dualization should correspond to multiplication by i..
   c = a*i; C = A*I;         ok &= equals(C, c);
   c = a*i; C = A.getDual(); ok &= equals(C, c);
@@ -6373,9 +6377,9 @@ bool testGeometricAlgebra010()
 
   // Test trigonometric functions:
   Real err;
-  c = rsCos(a); C = rsCos(A); ok &= equals(C, c, 1.e-14); err = error(C, c);
-  c = rsSin(a); C = rsSin(A); ok &= equals(C, c, 1.e-14); err = error(C, c);
-  c = rsTan(a); C = rsTan(A); ok &= equals(C, c, 1.e-15); err = error(C, c);
+  c = cos(a); C = rsCos(A); ok &= equals(C, c, 1.e-14); err = error(C, c);
+  c = sin(a); C = rsSin(A); ok &= equals(C, c, 1.e-14); err = error(C, c);
+  c = tan(a); C = rsTan(A); ok &= equals(C, c, 1.e-15); err = error(C, c);
 
   // Test hyperbolic functions:
   c = sinh(a); C = rsSinh(A); ok &= equals(C, c, 1.e-13); err = error(C, c);
@@ -6390,6 +6394,14 @@ bool testGeometricAlgebra010()
   // OK, it works in these cases but more tests are needed with many different arguments. The 
   // complex square root has two solutions and we want the principal solution but the iteration 
   // used may actually converge to a different solution...
+
+  // Test inverse functions:
+  //c = log(a); C = rsLog(A); err = error(C, c);
+  //c = log(b); C = rsLog(B); err = error(C, c);
+  // diverges - it seems the reverse-norm does not work well for complex numbers
+  // maybe we should instead use a sort of blow-up factor that is computed by comparing the 
+  // "size" of X and X^2...something like sumOfSquares(x*x) / sumOfSquares(x) or max(x*x)/max(x)
+
 
 
   // todo: test also the subalgebras of (2,0,0) or (3,0,0) that are isomorphic to complex numbers
@@ -6797,7 +6809,7 @@ void testGeometricAlgebra()
   A.setToScalar(+0.1);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // large error
   A.setToScalar(+0.2);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
   A.setToScalar(+0.5);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; ok &= rsAbs(err) < 1.e-4;
-  A.setToScalar(+0.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; ok &= rsAbs(err) < 1.e-12;
+  A.setToScalar(+0.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; ok &= rsAbs(err) < 1.e-11;
   A.setToScalar(+0.99); B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
   A.setToScalar(+1.0);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
   A.setToScalar(+1.1);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;

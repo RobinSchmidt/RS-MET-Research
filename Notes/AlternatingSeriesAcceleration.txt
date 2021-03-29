@@ -1,0 +1,61 @@
+We want to accelerate the convergence of the Taylor series for the natrural logarithm, which is 
+given by:
+
+Define: z := x-1   (we want to expand around 1)
+
+         z^1   z^2   z^3   z^4   z^5   z^6
+log(x) = --- - --- + --- - --- + --- - --- + ...
+          1     2     3     4     5     6
+
+This is an alternating series with a rather slow convergence. For z = 1 (i.e. x = 2), this becomes
+the alterning version of the harmonic series. This video:
+  https://www.youtube.com/watch?v=wqMQRwX4Zn0
+describes a method fo accelerating a similar series
+
+
+See at 11 minutes:
+
+z^1 / 1
+          (2*z^1 - 1*z^2) / (1*2)
+z^2 / 2                             ((2*3)(2*z^1 - 1*z^2) - (1*2)*(3*z^2 - 2*z^3)) / (1*2*3*4)
+          (3*z^2 - 2*z^3) / (2*3)
+z^3 / 3
+          (4*z^3 - 3*z^4) / (3*4)
+z^4 / 4
+          (5*z^4 - 4*z^5) / (4*5)
+z^5 / 5
+
+  :2             :4
+
+  
+z^1   z^2   2*z^1 - 1*z^2
+--- - --- = -------------
+ 1     2         1*2
+
+z^2   z^3   3*z^2 - 2*z^3
+--- - --- = -------------
+ 2     3         2*3
+   
+z^3   z^4   4*z^3 - 3*z^4
+--- - --- = -------------
+ 3     4         3*4
+ 
+ 
+ 2*z^1 - 1*z^2    3*z^2 - 2*z^3   (2*3)(2*z^1 - 1*z^2) - (1*2)*(3*z^2 - 2*z^3)   3*(2*z^1 - 1*z^2) - 1*(3*z^2 - 2*z^3)
+ -------------- - ------------- = -------------------------------------------- = -------------------------------------
+      1*2              2*3                          1*2*3*4                                      1*3*4
+
+
+...hmm - that gets out of hand quickly - let's try it withozut the z, first, i.e. taking fixed value of z=1:
+
+1/1
+     (2-1)/(1*2)
+1/2               ((2*3)(2-1) - (1*2)*(3-2)) / (1*2*3*4)
+     (3-2)/(2*3)
+1/3
+     (4-3)/(3*4)
+1/4
+     (5-4)/(4*5)
+1/5
+
+ :2       :4

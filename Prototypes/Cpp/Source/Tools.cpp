@@ -5792,12 +5792,12 @@ template<class T>
 rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
 {
   using MV = rsMultiVector<T>;
-  MV X2 = X*X;                // X^2
-  MV Xk = X;                  // X^(2*k+1)
-  MV Y(X.getAlgebra());       // output Y 
-  T s = T(1);                 // sign factor
-  int kLim = 16;              // 32 = 2*16 is the length of rsInverseFactorials
-  int k;                      // iteration number
+  MV X2 = X*X;                 // X^2
+  MV Xk = X;                   // X^(2*k+1)
+  MV Y(X.getAlgebra());        // output Y 
+  T s = T(1);                  // sign factor
+  int kLim = 16;               // 32 = 2*16 is the length of rsInverseFactorials
+  int k;                       // iteration number
   for(k = 0; k < kLim; k++) {
     int k2p1 = 2*k+1;
     Y  += Xk * s*rsInverseFactorials[k2p1];
@@ -5806,9 +5806,29 @@ rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
   rsAssert(k <= kLim, "rsSin for rsMultiVector did not converge");
   return Y;
 }
-// todo: implement acceleration via argument scaling and recursive multiple angle formula
+// todo: 
+// -implement acceleration via argument scaling and recursive multiple angle formula
+// -add convergence test
 
-
+template<class T>
+rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
+{
+  using MV = rsMultiVector<T>;
+  MV X2 = X*X;                 // X^2
+  MV Xk(X.getAlgebra());       // X^(2*k)
+  Xk[0] = T(1);
+  MV Y( X.getAlgebra());       // output Y 
+  T s = T(1);                  // sign factor
+  int kLim = 16;               // 32 = 2*16 is the length of rsInverseFactorials
+  int k;                       // iteration number
+  for(k = 0; k < kLim; k++) {
+    int k2 = 2*k;
+    Y  += Xk * s*rsInverseFactorials[k2];
+    Xk *= X2;
+    s  *= T(-1); }
+  rsAssert(k <= kLim, "rsCos for rsMultiVector did not converge");
+  return Y;
+}
 
 template<class T>
 bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)

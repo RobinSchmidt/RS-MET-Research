@@ -6767,7 +6767,12 @@ void testGeometricAlgebra()
   A.set(Vec({1,0,0,0,0,0,0,0}));
   C = rsSin(A);
   Real tgt = sin(1.0);
-
+  err = C[0] - tgt;
+  ok &= err == 0.0;
+  C = rsCos(A);
+  tgt = cos(1.0);
+  err = C[0] - tgt;
+  ok &= err == 0.0;
 
 
   // ToDo: implement various norms of multivectors, for eaxmple:

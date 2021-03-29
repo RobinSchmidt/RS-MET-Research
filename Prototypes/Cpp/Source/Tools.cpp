@@ -2600,10 +2600,10 @@ rsDualNumber<TVal, TDer> operator/(const Tx& x, const rsDualNumber<TVal, TDer>& 
 #define RS_DN  rsDualNumber<TVal, TDer>          // dual number
 #define RS_PFX RS_CTD RS_DN                      // prefix for the function definitions
 
+RS_PFX rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
 RS_PFX rsSin(RS_DN x) { return RS_DN(rsSin(x.v),  x.d*rsCos(x.v)); }
 RS_PFX rsCos(RS_DN x) { return RS_DN(rsCos(x.v), -x.d*rsSin(x.v)); }
-RS_PFX rsExp(RS_DN x) { return RS_DN(rsExp(x.v),  x.d*rsExp(x.v)); }
-
+RS_PFX rsTan(RS_DN x) { TVal t = rsTan(x.v); return RS_DN(t, x.d*TDer(TVal(1)+t*t)); }
 RS_PFX rsSinh(RS_DN x) { return RS_DN(rsSinh(x.v), x.d*rsCosh(x.v)); }
 RS_PFX rsCosh(RS_DN x) { return RS_DN(rsCosh(x.v), x.d*rsSinh(x.v)); }
 RS_PFX rsTanh(RS_DN x) { TVal t = rsTanh(x.v); return RS_DN(t, x.d*TDer(TVal(1)-t*t)); }
@@ -2614,8 +2614,7 @@ RS_PFX rsSqrt(RS_DN x) { return RS_DN(rsSqrt(x.v), x.d*TVal(0.5)/sqrt(x.v)); }
 // requires x.v > 0 - todo: make it work for x.v >= 0 - the derivative part at 0 should be computed
 // by using a limit
 
-
-// todo: tan, cbrt, pow, abs, sinh, cosh, tanh, asin, acos, atan, atan2, etc.
+// todo: cbrt, pow, abs, asin, acos, atan, atan2, etc.
 // what about floor and ceil? should their derivatives be a delta-comb? well - maybe i should not
 // care about them - they are not differentiable anyway
 
@@ -5573,7 +5572,14 @@ T rsSquaredNorm(const rsMultiVector<T>& V)
   rsMultiVector<T> Vr_V = V * V.getReverse();
   return Vr_V[0];
   // Vr * V has same scalar part as V * Vr but in general a different vector part
-  // 
+  // try to optimize this: 
+  // -only scalar part is needed, so we may compute only that 
+  // -also try to avoid creating the temporary objects V.getReverse(), Vr_v to avoid the memory 
+  //  allocation -> instead just compute Vr_v[0] maybe like
+  //  for(int i = 0; i < N; i++) {
+  //    for(int j = 0; j < N; j++) {
+  //      k = bladeIndices(i, j);
+  //      sum += V[i] * reverseSigns[k] * V[reversIndices[k]] * weightsGeom[i, j]; }}
 }
 template <class T>
 T rsNorm(const rsMultiVector<T>& V)
@@ -5795,7 +5801,11 @@ rsMultiVector<T> rsSinSmall(const rsMultiVector<T>& X)
   int k;                       // iteration number
   for(k = 0; k < kLim; k++) {
     int k2p1 = 2*k+1;
-    Y  += Xk * s*rsInverseFactorials[k2p1];
+    T w = s*rsInverseFactorials[k2p1];  // weight
+    if(!rsMakesDifference(Y, Xk, w))    // convergence test
+      break;  
+    //Y  += Xk * s*rsInverseFactorials[k2p1];
+    Y  += Xk * w;
     Xk *= X2;
     s  *= T(-1); }
   rsAssert(k <= kLim, "rsSin for rsMultiVector did not converge");
@@ -5808,16 +5818,20 @@ template<class T>
 rsMultiVector<T> rsCosSmall(const rsMultiVector<T>& X)
 {
   using MV = rsMultiVector<T>;
-  MV X2 = X*X;                 // X^2
-  MV Xk(X.getAlgebra());       // X^(2*k)
+  MV X2 = X*X;                        // X^2
+  MV Xk(X.getAlgebra());              // X^(2*k)
   Xk[0] = T(1);
-  MV Y( X.getAlgebra());       // output Y 
-  T s = T(1);                  // sign factor
-  int kLim = 16;               // 32 = 2*16 is the length of rsInverseFactorials
-  int k;                       // iteration number
+  MV Y( X.getAlgebra());              // output Y 
+  T s = T(1);                         // sign factor
+  int kLim = 16;                      // 32 = 2*16 is the length of rsInverseFactorials
+  int k;                              // iteration number
   for(k = 0; k < kLim; k++) {
     int k2 = 2*k;
-    Y  += Xk * s*rsInverseFactorials[k2];
+    T w = s*rsInverseFactorials[k2];  // weight
+    if(!rsMakesDifference(Y, Xk, w))  // convergence test
+      break;  
+    Y  += Xk * w;
+    //Y  += Xk * s*rsInverseFactorials[k2];
     Xk *= X2;
     s  *= T(-1); }
   rsAssert(k <= kLim, "rsCos for rsMultiVector did not converge");
@@ -5851,7 +5865,7 @@ rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
 template<class T>
 rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
 {
-  // Uses sin(n*x) = 2*cos(x) * sin((n-1)*x) - sin((n-2)*x) to apply a similar argument reduction 
+  // Uses cos(n*x) = 2*cos(x) * cos((n-1)*x) - cos((n-2)*x) to apply a similar argument reduction 
   // trick as for the exponential function.
   using MV = rsMultiVector<T>;
   T s = rsNorm(X);
@@ -5869,7 +5883,6 @@ rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
     C1 = Cn;   }
   return Cn;
 }
-
 // For sin/cos, maybe a similar trick for accelerating the convergence can be used as for the
 // exponential, based on this formula:
 // https://en.wikipedia.org/wiki/De_Moivre%27s_formula#Formulae_for_cosine_and_sine_individually
@@ -5881,6 +5894,39 @@ rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
 // exp-function to compute sin/cos - i think, i works whenever we have a commuting pseudoscalar 
 // that squares to -1
 
+template<class T>
+rsMultiVector<T> rsTan(const rsMultiVector<T>& X)
+{
+  return rsSin(X) / rsCos(X);
+  // When the denominator becomes zero, the result is +-infinity, when the numerator is nonzero. 
+  // This is the correct, desired behavior. However - can it happen that the numerator is also 
+  // zero at these points? Not along the real axis and neither in the complex plane (i think). But
+  // what can be said about general multivectors?
+}
+// ToDo: maybe have an rsSinCos function - might be more efficient
+
+// Ideas for sin/cos:
+// -use a coupled Newton iteration:
+//   s[i+1] = x - s[i]/c[i];  // f[i+1] = x - f[i]/f'[i]
+//   c[i+1] = x + c[i]/s[i];  // may also use c[i]/s[i+1]
+//  ‰‰‰hh...wait...not - we need to reformulate it as root finding problem, like sin(x) - s = 0
+//  but if we replace sin(x) by our current estimate, that becomes a useless trivial identity
+// -maybe enforce sin^2(x) + cos^2(x) = 1 by renormalization: compute sin^2(x) + cos^2(x), take the
+//  norm and divide both components by it (maybe not in every iteration)
+
+// Ideas for logarithm:
+// -Newton iteration with log'(x) = 1/x
+// -Taylor series with acceleration via: log(n*x) = log(x) + log(n)
+// -maybe for square root, we can also use a Taylor series with acceleration via 
+//  sqrt(n*x) = sqrt(n) * sqrt(x)...or at least use the first few term of such a series f to find
+//  a good initial guess for Newton iteration
+// see also:
+// https://en.wikipedia.org/wiki/Series_acceleration
+// https://en.wikipedia.org/wiki/Sequence_transformation
+// https://mathworld.wolfram.com/ConvergenceImprovement.html
+// https://arxiv.org/abs/1702.01129
+// https://math.stackexchange.com/questions/585154/taylor-series-for-logx
+// http://www.math.com/tables/expansion/log.htm
 
 template<class T>
 bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)

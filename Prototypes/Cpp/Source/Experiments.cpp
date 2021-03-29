@@ -6357,12 +6357,20 @@ bool testGeometricAlgebra010()
   // I^-1, not I itself?
   //c = a/i;
 
-
   // Test exponential function:
   c = exp(2.0 * i);   C = rsExp(2.0 * I);   ok &= equals(C, c);         // X^2 = negative scalar
   c = exp(2.0 * one); C = rsExp(2.0 * One); ok &= equals(C, c);         // X^2 = positive scalar
   c = exp(a);         C = rsExp(A);         ok &= equals(C, c, 1.e-13); // general case
-  // the X^2 = 0 case can be tested in the (0,0,1) algebra which is isomorphic to dual numbers
+
+  // Test trigonometric functions:
+  c = rsSin(a); C = rsSin(A); ok &= equals(C, c, 1.e-13);
+  c = rsCos(a); C = rsCos(A); ok &= equals(C, c, 1.e-13);
+  c = rsTan(a); C = rsTan(A); ok &= equals(C, c, 1.e-13);
+
+  // Test hyperbolic functions:
+  c = sinh(a); C = rsSinh(A); ok &= equals(C, c, 1.e-13);
+  c = cosh(a); C = rsCosh(A); ok &= equals(C, c, 1.e-13);
+  c = tanh(a); C = rsTanh(A); ok &= equals(C, c, 1.e-13);
 
   // Test square root function:
   c = sqrt(a);         C = rsSqrt(A);         ok &= equals(C, c, 1.e-13);
@@ -6372,13 +6380,6 @@ bool testGeometricAlgebra010()
   // OK, it works in these cases but more tests are needed with many different arguments. The 
   // complex square root has two solutions and we want the principal solution but the iteration 
   // used may actually converge to a different solution...
-
-  // Test hyperbolic functions:
-  c = sinh(a); C = rsSinh(A); ok &= equals(C, c, 1.e-13);
-  c = cosh(a); C = rsCosh(A); ok &= equals(C, c, 1.e-13);
-  c = tanh(a); C = rsTanh(A); ok &= equals(C, c, 1.e-13);
-
-  // Test trigonometric functions:
 
 
   // todo: test also the subalgebras of (2,0,0) or (3,0,0) that are isomorphic to complex numbers
@@ -6434,18 +6435,19 @@ bool testGeometricAlgebra001()
   c = rsExp(2.0 * e); C = rsExp(2.0 * E); ok &= equals(C, c);         // X^2 = 0
   c = rsExp(a);       C = rsExp(A);       ok &= equals(C, c, 1.e-13); // general case
 
-  // Test square root function:
-  c = rsSqrt(a); C = rsSqrt(A); ok &= equals(C, c, 1.e-13);
+  // Test trigonometric functions:
+  c = rsSin(a); C = rsSin(A); ok &= equals(C, c, 1.e-13);
+  c = rsCos(a); C = rsCos(A); ok &= equals(C, c, 1.e-13);
+  c = rsTan(a); C = rsTan(A); ok &= equals(C, c, 1.e-13);
 
   // Test hyperbolic functions:
   c = rsSinh(a); C = rsSinh(A); ok &= equals(C, c, 1.e-13);
   c = rsCosh(a); C = rsCosh(A); ok &= equals(C, c, 1.e-13);
   c = rsTanh(a); C = rsTanh(A); ok &= equals(C, c, 1.e-13);
 
-  // Test trigonometric functions:
-  //c = rsSin(a); C = rsSin(A); ok &= equals(C, c, 1.e-13);
-  //c = rsCos(a); C = rsCos(A); ok &= equals(C, c, 1.e-13);
-  //c = rsTan(a); C = rsTan(A); ok &= equals(C, c, 1.e-13);
+  // Test square root function:
+  c = rsSqrt(a); C = rsSqrt(A); ok &= equals(C, c, 1.e-13);
+
 
   return ok;
 }
@@ -6765,32 +6767,20 @@ void testGeometricAlgebra()
 
   // Test trigonometric functions:
   A.set(Vec({1,0,0,0,0,0,0,0}));
-  C = rsSinSmall(A);
-  Real tgt = sin(1.0);
-  err = C[0] - tgt;
-  ok &= err == 0.0;
-  C = rsCosSmall(A);
-  tgt = cos(1.0);
-  err = C[0] - tgt;
-  ok &= err == 0.0;
-
+  Real tgt;
+  C = rsSinSmall(A); tgt = sin(1.0); err = C[0] - tgt; ok &= err == 0.0;
+  C = rsCosSmall(A); tgt = cos(1.0); err = C[0] - tgt; ok &= err == 0.0;
   A.set(Vec({5,0,0,0,0,0,0,0}));
-  C = rsSin(A);
-  tgt = sin(5.0);
-  err = C[0] - tgt;
-  ok &= rsAbs(err) < 2.e-15;
-  C = rsCos(A);
-  tgt = cos(5.0);
-  err = C[0] - tgt;
-  ok &= rsAbs(err) < 2.e-15;
+  C = rsSin(A); tgt = sin(5.0); err = C[0] - tgt; ok &= rsAbs(err) < 2.e-15;
+  C = rsCos(A); tgt = cos(5.0); err = C[0] - tgt; ok &= rsAbs(err) < 2.e-15;
 
-  // test, if sin^2 + cos^2 = 1:
+  // Test, if sin^2 + cos^2 = 1 for general multivectors:
   A.set(Vec({3,8,7,4,6,4,6,5}));
-  B = rsSin(A);
-  C = rsCos(A);
-  B = B*B;
-  C = C*C;
-  D = B + C;  // should be 1 - yep, but accuracy is low
+  B = rsSin(A); B = B*B;  // B = sin^2(A)
+  C = rsCos(A); C = C*C;  // C = cos^2(A)
+  D = B + C;              // should be 1 - yep, but accuracy is low
+
+
 
 
   // ToDo: implement various norms of multivectors, for eaxmple:

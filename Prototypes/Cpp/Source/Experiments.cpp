@@ -6763,6 +6763,13 @@ void testGeometricAlgebra()
   B = C-D;
   ok &= rsIsCloseTo(C, D, 3.e-7);  // the error is even worse here
 
+  // Test trigonometric functions:
+  A.set(Vec({1,0,0,0,0,0,0,0}));
+  C = rsSin(A);
+  Real tgt = sin(1.0);
+
+
+
   // ToDo: implement various norms of multivectors, for eaxmple:
   //   N_c(A) = conj((A) * A     where conj(A) is the Clifford conjugate of A
   //   N_r(A) = <A * rev(a)>_0   where rev(A) is the reversal of A

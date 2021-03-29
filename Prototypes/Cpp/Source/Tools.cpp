@@ -4655,6 +4655,11 @@ public:
   rsMultiVector<T>& operator-=(const T& s) { coeffs[0] -= s; }
 
 
+  rsMultiVector<T>& operator*=(const rsMultiVector<T>& b) { *this = *this * b; return *this; }
+  // optimize! this can be implemented without memory allocation by having a temp-array member in 
+  // the algebra object, or maybe have a multiplication function that takes a workspace pointer
+
+
   rsMultiVector<T> operator-()
   { rsMultiVector<T> r = *this; RAPT::rsNegate(r.coeffs); return r; }
 
@@ -5532,11 +5537,7 @@ rsMultiVector<T> operator*(const rsMatrix<T>& A, const rsMultiVector<T>& b)
 template<class T>
 rsMultiVector<T> rsExpNaive(const rsMultiVector<T>& X)
 {
-  // Use special formulas when possible (i.e. if X is a scalar...maybe there are also formulas for
-  // vectors and bivectors - the latter are most important for rotations) and taylor expansion as 
-  // fallback
-
-  int maxIts = 20;  // maybe make parameter
+  int maxIts = 32;  // maybe make parameter
   //T tol = T(1000) * RS_EPS(T);            // ad hoc - figure out something better
 
   rsMultiVector<T> Y(X.getAlgebra()), Xk(X.getAlgebra());  // output Y and Xk = X^k
@@ -5658,7 +5659,7 @@ rsMultiVector<T> rsExpSqrNegScalar(const rsMultiVector<T>& A, const T& a2)
 }
 
 
-/** Exponential function of general multivectors X, evaluated by Taylor expansion. */
+/** Exponential function of general multivectors X, evaluated by accelerated Taylor expansion. */
 template<class T>
 rsMultiVector<T> rsExpViaTaylor(const rsMultiVector<T>& X)
 {
@@ -5669,25 +5670,19 @@ rsMultiVector<T> rsExpViaTaylor(const rsMultiVector<T>& X)
 
   using MV = rsMultiVector<T>;
   T s = rsNorm(X);
-  s = rsNextPowerOfTwo(s) * 2; // factor 2 gives best numeric accuracy for the scalar exp(10)
-  MV Z = (T(1)/s) * X;         // scaled X: Z = X/s
-  MV Y( X.getAlgebra());       // output Y 
-  MV Zk(X.getAlgebra());       // Zk = Z^k in the iteration
-  Zk[0] = T(1);                // Zk = Z^0 = 1 initially
-  int maxIts = 32;             // 32 is the length of rsInverseFactorials
-  int k;                       // iteration number == current power of Z
-
-  for(k = 0; k < maxIts; k++)
-  {
+  s = rsNextPowerOfTwo(s) * 2;  // factor 2 gives best numeric accuracy for the scalar exp(10)
+  MV Z = (T(1)/s) * X;          // scaled X: Z = X/s
+  MV Y( X.getAlgebra());        // output Y 
+  MV Zk(X.getAlgebra());        // Zk = Z^k in the iteration
+  Zk[0] = T(1);                 // Zk = Z^0 = 1 initially
+  int maxIts = 32;              // 32 is the length of rsInverseFactorials
+  int k;                        // iteration number == current power of Z
+  for(k = 0; k < maxIts; k++) {
     if(!rsMakesDifference(Y, Zk, rsInverseFactorials[k]))  // convergence test
       break;  
     Y  += Zk * T(rsInverseFactorials[k]);
-    Zk  = Zk * Z; // implement and use Zk *= Z, this can be implemented without memory allocation
-    // by having a temp-array member in the algebra object, or maybe have a multiplication function
-    // that takes a workspace pointer
-  }
-
-  rsAssert(k < maxIts, "rsExp for rsMultiVector did not converge");
+    Zk *= Z; }
+  rsAssert(k <= maxIts, "rsExp for rsMultiVector did not converge");
   return rsPow(Y, (int)s);     // Y^s undoes the scaling
 }
 // -needs more tests
@@ -5726,20 +5721,19 @@ rsMultiVector<T> rsExp(const rsMultiVector<T>& X)
 
 // todo: implement: sin, cos, log, asin, acos, asinh, acosh, pow, agm, meet, join
 
+// maybe rename to rsSinhViaExp etc.:
 template<class T>
 rsMultiVector<T> rsSinh(const rsMultiVector<T>& X)
 {
   rsMultiVector<T> eX = rsExp(X);
   return T(0.5) * (eX - eX.getInverse());   // sinh(X) = (exp(X) - exp(-X)) / 2
 }
-
 template<class T>
 rsMultiVector<T> rsCosh(const rsMultiVector<T>& X)
 {
   rsMultiVector<T> eX = rsExp(X);
   return T(0.5) * (eX + eX.getInverse());   // cosh(X) = (exp(X) + exp(-X)) / 2
 }
-
 template<class T>
 rsMultiVector<T> rsTanh(const rsMultiVector<T>& X)
 {
@@ -5749,6 +5743,17 @@ rsMultiVector<T> rsTanh(const rsMultiVector<T>& X)
 }
 
 
+
+// For sin/cos, maybe a similar trick for accelerating the convergence can be used as for the
+// exponential, based on this formula:
+// https://en.wikipedia.org/wiki/De_Moivre%27s_formula#Formulae_for_cosine_and_sine_individually
+// https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Sine,_cosine,_and_tangent_of_multiple_angles
+// or maybe with the Chebychev method:
+// https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Chebyshev_method
+// initialized with cos(0) = 1 and cos(x/n). maybe first implement a simple version based on Taylor
+// series and then try the trick on top of that implementation. in some cases, we may also use the 
+// exp-function to compute sin/cos - i think, i works whenever we have a commuting pseudoscalar 
+// that squares to -1
 
 template<class T>
 rsMultiVector<T> rsInvSqrt(const rsMultiVector<T>& X)
@@ -5784,6 +5789,28 @@ rsMultiVector<T> rsSqrt(const rsMultiVector<T>& X)
 }
 
 template<class T>
+rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
+{
+  using MV = rsMultiVector<T>;
+  MV X2 = X*X;                // X^2
+  MV Xk = X;                  // X^(2*k+1)
+  MV Y(X.getAlgebra());       // output Y 
+  T s = T(1);                 // sign factor
+  int kLim = 16;              // 32 = 2*16 is the length of rsInverseFactorials
+  int k;                      // iteration number
+  for(k = 0; k < kLim; k++) {
+    int k2p1 = 2*k+1;
+    Y  += Xk * s*rsInverseFactorials[k2p1];
+    Xk *= X2;
+    s  *= T(-1); }
+  rsAssert(k <= kLim, "rsSin for rsMultiVector did not converge");
+  return Y;
+}
+// todo: implement acceleration via argument scaling and recursive multiple angle formula
+
+
+
+template<class T>
 bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)
 {
   int N = X.getAlgebra()->getMultiVectorSize();
@@ -5791,6 +5818,9 @@ bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)
     return false;
   return rsArrayTools::almostEqual(&X.getCoeffs()[0], &Y.getCoeffs()[0], N, tol);
 }
+
+// implement power sum: sum_{k=0}^n M^k = (1 - M^(n+1)) / (1-M) ...yeah, that formula works for
+// multivectors, too (Eq. 12 in Functions for Multivector Variables (Chappell et al))
 
 // template instantiation
 

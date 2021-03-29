@@ -5686,6 +5686,9 @@ rsMultiVector<T> rsExpViaTaylor(const rsMultiVector<T>& X)
   return rsPow(Y, (int)s);     // Y^s undoes the scaling
 }
 // -needs more tests
+// -i'm not sure, if this norm makes the most sense - maybe we should use the largest absolute
+//  eigenvalue of the matrix representation of X instead because this is the maximum blow-up factor
+//  that this multivector can cause
 // Idea: can we use a variant of Newton iteration to evaluate a function? Newton iteration itself 
 // uses function and derivative evaluations, so it can't be used as is. But maybe we can use the
 // differential equation f(x) - f'(x) = 0 or one of the functional equations, like 
@@ -5744,16 +5747,7 @@ rsMultiVector<T> rsTanh(const rsMultiVector<T>& X)
 
 
 
-// For sin/cos, maybe a similar trick for accelerating the convergence can be used as for the
-// exponential, based on this formula:
-// https://en.wikipedia.org/wiki/De_Moivre%27s_formula#Formulae_for_cosine_and_sine_individually
-// https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Sine,_cosine,_and_tangent_of_multiple_angles
-// or maybe with the Chebychev method:
-// https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Chebyshev_method
-// initialized with cos(0) = 1 and cos(x/n). maybe first implement a simple version based on Taylor
-// series and then try the trick on top of that implementation. in some cases, we may also use the 
-// exp-function to compute sin/cos - i think, i works whenever we have a commuting pseudoscalar 
-// that squares to -1
+
 
 template<class T>
 rsMultiVector<T> rsInvSqrt(const rsMultiVector<T>& X)
@@ -5788,8 +5782,9 @@ rsMultiVector<T> rsSqrt(const rsMultiVector<T>& X)
   return X * rsInvSqrt(X);
 }
 
+/** Sine function for small arguments with |X| <= 1. */
 template<class T>
-rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
+rsMultiVector<T> rsSinSmall(const rsMultiVector<T>& X)
 {
   using MV = rsMultiVector<T>;
   MV X2 = X*X;                 // X^2
@@ -5811,7 +5806,7 @@ rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
 // -add convergence test
 
 template<class T>
-rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
+rsMultiVector<T> rsCosSmall(const rsMultiVector<T>& X)
 {
   using MV = rsMultiVector<T>;
   MV X2 = X*X;                 // X^2
@@ -5829,6 +5824,41 @@ rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
   rsAssert(k <= kLim, "rsCos for rsMultiVector did not converge");
   return Y;
 }
+
+template<class T>
+rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
+{
+  using MV = rsMultiVector<T>;
+  T s = rsNorm(X);
+  s = ceil(s);           // todo: multiply by a factor - figure out which works best
+  MV Z = (T(1)/s) * X;
+  MV S = rsSinSmall(Z);
+  MV C = rsCosSmall(Z);
+  MV S2(X.getAlgebra());
+  MV S1 = S;
+  MV Sn(S);
+  int n = (int)s;
+  for(int i = 2; i <= n; i++)
+  {
+    Sn = T(2)*C*S1 - S2;
+    S2 = S1;
+    S1 = Sn;
+  }
+  return Sn;
+}
+// needs more tests - especially with small arguments
+
+// For sin/cos, maybe a similar trick for accelerating the convergence can be used as for the
+// exponential, based on this formula:
+// https://en.wikipedia.org/wiki/De_Moivre%27s_formula#Formulae_for_cosine_and_sine_individually
+// https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Sine,_cosine,_and_tangent_of_multiple_angles
+// or maybe with the Chebychev method:
+// https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Chebyshev_method
+// initialized with cos(0) = 1 and cos(x/n). maybe first implement a simple version based on Taylor
+// series and then try the trick on top of that implementation. in some cases, we may also use the 
+// exp-function to compute sin/cos - i think, i works whenever we have a commuting pseudoscalar 
+// that squares to -1
+
 
 template<class T>
 bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)

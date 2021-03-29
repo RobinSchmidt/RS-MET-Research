@@ -6765,14 +6765,20 @@ void testGeometricAlgebra()
 
   // Test trigonometric functions:
   A.set(Vec({1,0,0,0,0,0,0,0}));
-  C = rsSin(A);
+  C = rsSinSmall(A);
   Real tgt = sin(1.0);
   err = C[0] - tgt;
   ok &= err == 0.0;
-  C = rsCos(A);
+  C = rsCosSmall(A);
   tgt = cos(1.0);
   err = C[0] - tgt;
   ok &= err == 0.0;
+
+  A.set(Vec({5,0,0,0,0,0,0,0}));
+  C = rsSin(A);
+  tgt = sin(5.0);
+  err = C[0] - tgt;
+  ok &= rsAbs(err) < 2.e-15;
 
 
   // ToDo: implement various norms of multivectors, for eaxmple:

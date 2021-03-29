@@ -5793,26 +5793,23 @@ template<class T>
 rsMultiVector<T> rsSinSmall(const rsMultiVector<T>& X)
 {
   using MV = rsMultiVector<T>;
-  MV X2 = X*X;                 // X^2
-  MV Xk = X;                   // X^(2*k+1)
-  MV Y(X.getAlgebra());        // output Y 
-  T s = T(1);                  // sign factor
-  int kLim = 16;               // 32 = 2*16 is the length of rsInverseFactorials
-  int k;                       // iteration number
+  MV X2 = X*X;                          // X^2
+  MV Xk = X;                            // X^(2*k+1)
+  MV Y(X.getAlgebra());                 // output Y 
+  T s = T(1);                           // sign factor
+  int kLim = 16;                        // 32 = 2*16 is the length of rsInverseFactorials
+  int k;                                // iteration number
   for(k = 0; k < kLim; k++) {
     int k2p1 = 2*k+1;
     T w = s*rsInverseFactorials[k2p1];  // weight
     if(!rsMakesDifference(Y, Xk, w))    // convergence test
       break;  
-    //Y  += Xk * s*rsInverseFactorials[k2p1];
     Y  += Xk * w;
     Xk *= X2;
     s  *= T(-1); }
   rsAssert(k <= kLim, "rsSin for rsMultiVector did not converge");
   return Y;
 }
-// todo: 
-// -add convergence test
 
 template<class T>
 rsMultiVector<T> rsCosSmall(const rsMultiVector<T>& X)
@@ -5831,14 +5828,11 @@ rsMultiVector<T> rsCosSmall(const rsMultiVector<T>& X)
     if(!rsMakesDifference(Y, Xk, w))  // convergence test
       break;  
     Y  += Xk * w;
-    //Y  += Xk * s*rsInverseFactorials[k2];
     Xk *= X2;
     s  *= T(-1); }
   rsAssert(k <= kLim, "rsCos for rsMultiVector did not converge");
   return Y;
 }
-// todo: 
-// -add convergence test
 
 template<class T>
 rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
@@ -5846,9 +5840,10 @@ rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
   // Uses sin(n*x) = 2*cos(x) * sin((n-1)*x) - sin((n-2)*x) to apply a similar argument reduction 
   // trick as for the exponential function.
   using MV = rsMultiVector<T>;
+  static const T scl = T(1);
   T s = rsNorm(X);
-  s = ceil(s);             // todo: multiply by a factor - figure out which works best with respect to
-  MV Z = (T(1)/s) * X;     // fast convergence and high accuracy of the result
+  s = ceil(s) * scl;
+  MV Z = (T(1)/s) * X;
   MV S = rsSinSmall(Z);
   MV C = rsCosSmall(Z);
   MV S2(X.getAlgebra());
@@ -5859,6 +5854,10 @@ rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
     S2 = S1;
     S1 = S;   }
   return S;
+  // The factor scl may be tweaked emprically to give a good compromise between fast convergence
+  // (high scl) and accuracy (low or mid scl). ..well..actually it seems a factor of gives best 
+  // accuracy and 4 seems to give good tradeoff. Currently I just use 1 for best accuracy. More 
+  // tests needed, wiht various arguments
 }
 // needs more tests - especially with small arguments
 
@@ -5868,8 +5867,9 @@ rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
   // Uses cos(n*x) = 2*cos(x) * cos((n-1)*x) - cos((n-2)*x) to apply a similar argument reduction 
   // trick as for the exponential function.
   using MV = rsMultiVector<T>;
+  static const T scl = T(1);
   T s = rsNorm(X);
-  s = ceil(s);             // todo: multiply by a factor - figure out which works best with respect to
+  s = ceil(s) * scl;       // todo: multiply by a factor - figure out which works best with respect to
   MV Z = (T(1)/s) * X;     // fast convergence and high accuracy of the result
   MV C = rsCosSmall(Z);
   MV C2(X.getAlgebra());
@@ -5913,6 +5913,8 @@ rsMultiVector<T> rsTan(const rsMultiVector<T>& X)
 //  but if we replace sin(x) by our current estimate, that becomes a useless trivial identity
 // -maybe enforce sin^2(x) + cos^2(x) = 1 by renormalization: compute sin^2(x) + cos^2(x), take the
 //  norm and divide both components by it (maybe not in every iteration)
+// -How about using std::complex<rsMultiVector<T>> and then compute the complex exponential? This 
+//  way of computing sin/cos seems to be common practice is multiprecision arithmetic libraries.
 
 // Ideas for logarithm:
 // -Newton iteration with log'(x) = 1/x

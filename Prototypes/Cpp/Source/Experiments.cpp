@@ -6328,6 +6328,14 @@ bool testGeometricAlgebra010()
   b = 5.0 + 7.0*i;
   B = 5.0 + 7.0*I;
 
+  // Error between multivector Z and complex number z:
+  auto error = [](const MV& Z, const Comp& z)
+  {
+    Real dr = Z[0] - z.real();  // difference in real part
+    Real di = Z[1] - z.imag();  // difference in imaginary part
+    return rsMax(rsAbs(dr), rsAbs(di));
+  };
+
   // Equality comparison (with tolerance) between multivector Z and complex number z:
   auto equals = [](const MV& Z, const Comp& z, Real tol = Real(0))
   { 
@@ -6357,25 +6365,27 @@ bool testGeometricAlgebra010()
   // I^-1, not I itself?
   //c = a/i;
 
+
   // Test exponential function:
   c = exp(2.0 * i);   C = rsExp(2.0 * I);   ok &= equals(C, c);         // X^2 = negative scalar
   c = exp(2.0 * one); C = rsExp(2.0 * One); ok &= equals(C, c);         // X^2 = positive scalar
   c = exp(a);         C = rsExp(A);         ok &= equals(C, c, 1.e-13); // general case
 
   // Test trigonometric functions:
-  c = rsSin(a); C = rsSin(A); ok &= equals(C, c, 1.e-13);
-  c = rsCos(a); C = rsCos(A); ok &= equals(C, c, 1.e-13);
-  c = rsTan(a); C = rsTan(A); ok &= equals(C, c, 1.e-13);
+  Real err;
+  c = rsCos(a); C = rsCos(A); ok &= equals(C, c, 1.e-14); err = error(C, c);
+  c = rsSin(a); C = rsSin(A); ok &= equals(C, c, 1.e-14); err = error(C, c);
+  c = rsTan(a); C = rsTan(A); ok &= equals(C, c, 1.e-15); err = error(C, c);
 
   // Test hyperbolic functions:
-  c = sinh(a); C = rsSinh(A); ok &= equals(C, c, 1.e-13);
-  c = cosh(a); C = rsCosh(A); ok &= equals(C, c, 1.e-13);
-  c = tanh(a); C = rsTanh(A); ok &= equals(C, c, 1.e-13);
+  c = sinh(a); C = rsSinh(A); ok &= equals(C, c, 1.e-13); err = error(C, c);
+  c = cosh(a); C = rsCosh(A); ok &= equals(C, c, 1.e-13); err = error(C, c);
+  c = tanh(a); C = rsTanh(A); ok &= equals(C, c, 1.e-15); err = error(C, c);
 
   // Test square root function:
-  c = sqrt(a);         C = rsSqrt(A);         ok &= equals(C, c, 1.e-13);
-  c = sqrt(b);         C = rsSqrt(B);         ok &= equals(C, c, 1.e-13);
-  c = sqrt(2.0 * one); C = rsSqrt(2.0 * One); ok &= equals(C, c);
+  c = sqrt(a);         C = rsSqrt(A);         ok &= equals(C, c, 1.e-15); err = error(C, c);
+  c = sqrt(b);         C = rsSqrt(B);         ok &= equals(C, c, 0.0   ); err = error(C, c);
+  c = sqrt(2.0 * one); C = rsSqrt(2.0 * One); ok &= equals(C, c, 0.0   ); err = error(C, c);
   //c = sqrt(2.0 * i);   C = rsSqrt(2.0 * I);   ok &= equals(C, c, 1.e-13); // fails!
   // OK, it works in these cases but more tests are needed with many different arguments. The 
   // complex square root has two solutions and we want the principal solution but the iteration 

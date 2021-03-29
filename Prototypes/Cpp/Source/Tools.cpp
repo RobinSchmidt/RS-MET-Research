@@ -4459,6 +4459,9 @@ public:
   /** Sets this multivector to zero. */
   void setZero() { rsFill(coeffs, T(0)); }
 
+  /** Sets this multivector to the scalar s. */
+  void setToScalar(const T& s) { rsFill(coeffs, T(0)); coeffs[0] = s; }
+
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
@@ -5915,12 +5918,14 @@ rsMultiVector<T> rsTan(const rsMultiVector<T>& X)
 //  norm and divide both components by it (maybe not in every iteration)
 // -How about using std::complex<rsMultiVector<T>> and then compute the complex exponential? This 
 //  way of computing sin/cos seems to be common practice is multiprecision arithmetic libraries.
+// -Maybe we may use 2D Newton iteration on the pair s,c with the two equations:
+//  s^2 + c^2 = 1, s^4 - c^4 - s^2 + c^2 = 0, see: https://www.desmos.com/calculator/5xpr3ugtsa
 
 // Ideas for logarithm:
 // -Newton iteration with log'(x) = 1/x
 // -Taylor series with acceleration via: log(n*x) = log(x) + log(n)
 // -maybe for square root, we can also use a Taylor series with acceleration via 
-//  sqrt(n*x) = sqrt(n) * sqrt(x)...or at least use the first few term of such a series f to find
+//  sqrt(n*x) = sqrt(n) * sqrt(x)...or at least use the first few terms of such a series f to find
 //  a good initial guess for Newton iteration
 // see also:
 // https://en.wikipedia.org/wiki/Series_acceleration
@@ -5934,22 +5939,20 @@ rsMultiVector<T> rsTan(const rsMultiVector<T>& X)
 // https://www.efunda.com/math/taylor_series/logarithmic.cfm
 // http://www.math.com/tables/expansion/log.htm
 
-
+/**  */
 template<class T>
 rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
 {
   using MV = rsMultiVector<T>;
-  MV z  = x; z[0] -= T(1);         // z = x-1
-  MV zk = z;                       // z^k, initially z^1 = z
-  MV y(x.getAlgebra());            // result
-  T s = T(1);                      // sign
-  for(int k = 1; k <= order; k++)
-  {
-    T w  = s / T(k);  // weight
+  MV z  = x; z[0] -= T(1);           // z = x-1
+  MV zk = z;                         // z^k, initially z^1 = z
+  MV y(x.getAlgebra());              // result
+  T s = T(1);                        // sign
+  for(int k = 1; k <= order; k++) {
+    T w  = s / T(k);                 // weight
     y   += w * zk;
     zk  *= z;
-    s   *= T(-1);     // sign alternation
-  }
+    s   *= T(-1);   }                // sign alternation
   return y;
 }
 // Converges rather slowly because the weights do not fall off as rapidly as in the case of exp, 
@@ -5957,39 +5960,37 @@ rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
 // log? Or maybe speed up the convergence in other ways? maybe this could be applicable:
 // https://www.youtube.com/watch?v=wqMQRwX4Zn0
 
+template<class T>
+rsMultiVector<T> rsLogViaTaylor(const rsMultiVector<T>& x, int order)
+{
+  // Uses log(n*x) = log(x) + log(n) for argument reduction.
+  using MV = rsMultiVector<T>;
+  static const T scl = T(1);
+  T s = rsNorm(x);
+  s = ceil(s) * scl;
+  MV z = (T(1)/s) * x;
+  MV y = rsLogViaTaylorSmall(z, order);
+  return y + log(s);
+}
 
 template<class T>
-rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& a)
+rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& x)
 {
   using MV = rsMultiVector<T>;
-  MV x = rsLogViaTaylorSmall(a, 3);  // initial guess
+  //MV y = rsLogViaTaylorSmall(x, 3);  // initial guess, todo: tweak order
+  MV y = rsLogViaTaylor(x, 3);  // initial guess, todo: tweak order
   int maxIts = 32;
-  for(int i = 1; i <= maxIts; i++)
-  {
-    MV ex = rsExp(x);
-    x += (a-ex) / ex;
-    int dummy = 0;
-  }
-  return x;
+  int i;
+  for(i = 1; i <= maxIts; i++) {
+    MV ey = rsExp(y);
+    MV dy = (x-ey) / ey;
+    if(!rsMakesDifference(y, dy))    // convergence test
+      break;
+    y += dy; }
+  rsAssert(i < maxIts, "rsLog for rsMultiVector did not converge");
+  return y;
 }
 
-
-/*
-template<class T>
-T rsLogViaTaylor(const T& x)
-{
-  T z = x - 1
-
-
-}
-
-template<class T>
-T rsLogViaNewton(const T& a)
-{
-
-
-}
-*/
 
 template<class T>
 bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)

@@ -6790,13 +6790,27 @@ void testGeometricAlgebra()
   C = rsCos(A); C = C*C;  // C = cos^2(A)
   D = B + C;              // should be 1 - yep, but accuracy is low
 
-  // Test logarithm function:
-  A.set(Vec({0.5,0,0,0,0,0,0,0}));
-  B = rsLogViaTaylorSmall(A, 10);
-  tgt = log(A[0]);
-  err = B[0] - tgt;
+  // Test logarithm functions:
+  A.setToScalar(-0.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // nan
+  A.setToScalar(-0.5);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // nan
+  A.setToScalar( 0.0);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // inf
+  A.setToScalar(+0.1);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // large error
+  A.setToScalar(+0.2);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
+  A.setToScalar(+0.5);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; ok &= rsAbs(err) < 1.e-4;
+  A.setToScalar(+0.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; ok &= rsAbs(err) < 1.e-12;
+  A.setToScalar(+0.99); B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
+  A.setToScalar(+1.0);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
+  A.setToScalar(+1.1);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
+  A.setToScalar(+1.5);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
+  A.setToScalar(+1.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
+  // use lambda function to avoid the boilerplate
+
+  A.setToScalar(+1.9); B = rsLogViaTaylor(A, 10); tgt = log(A[0]); err = B[0] - tgt;
+
+
   C = rsLogViaNewton(A);
   err = C[0] - tgt;
+  ok &= err == 0.0;
 
   // ToDo: implement various norms of multivectors, for eaxmple:
   //   N_c(A) = conj((A) * A     where conj(A) is the Clifford conjugate of A

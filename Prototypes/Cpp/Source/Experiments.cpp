@@ -6866,8 +6866,22 @@ void testGeometricAlgebra()
   err = errorLog2( 2.0, 10); ok &= rsAbs(err) < 1.e-10;
   err = errorLog2( 3.0, 10); ok &= rsAbs(err) < 1.e-7;   // convergence becomes worse
 
+  // This uses the series based solution above with range reduction:
+  auto errorLog3 = [&](Real arg, int numTerms)
+  { 
+    MV x(&alg3); x[0] = arg; 
+    MV y = rsLogViaAtanhSeries(x, numTerms);
+    return y[0] - log(x[0]); 
+  };
+  err = errorLog3(  0.01, 10); ok &= rsAbs(err) < 1.e-15;
+  err = errorLog3(  0.1 , 10); ok &= rsAbs(err) < 1.e-15;
+  err = errorLog3(  1.0 , 10); ok &= rsAbs(err) < 1.e-15;
+  err = errorLog3( 10.0 , 10); ok &= rsAbs(err) < 1.e-15;
+  err = errorLog3(100.0 , 10); ok &= rsAbs(err) < 1.e-15;
 
-
+  //C = rsLogViaAtanhSeries(A, 100); // raises assertion and produces garbage because convergence
+                                   // requirement is violated 
+  //C = rsLogViaTaylor(     A, 100); // diverges also but slower
   C = rsLogViaNewton(A);
   err = C[0] - tgt;
   ok &= err == 0.0;

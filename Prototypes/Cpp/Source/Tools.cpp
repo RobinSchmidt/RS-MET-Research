@@ -6002,8 +6002,37 @@ rsMultiVector<T> rsLogViaTaylor(const rsMultiVector<T>& x, int order)
 }
 
 template<class T>
+rsMultiVector<T> rsAtanhViaSeriesSmall(const rsMultiVector<T>& x, int numTerms)
+{
+  // test:
+  T xa = rsNorm2(x);   // absolute value
+  rsAssert(xa < T(1)); // convergence requirement
+  // maybe return nan, if requirement is violated - returning nan is better than returning garbage
+  // in this case
+
+  using MV = rsMultiVector<T>;
+  MV xk = x;                           // x^k, initially x^1 = x
+  MV x2 = x*x;                         // x^2
+  MV y(x.getAlgebra());                // result
+  int k;
+  for(k = 0; k < numTerms; k++) {
+    T w = T(1)/T(2*k+1);               // weight
+    if(!rsMakesDifference(y, xk, w))   // convergence test
+      break;  
+    y  += w * xk;
+    xk *= x2;  }
+  return y;
+}
+// References:
+// This says that the absolute value of the input should be less than 1:
+// https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions#Principal_values_of_the_inverse_hyperbolic_tangent_and_cotangent
+
+template<class T>
 rsMultiVector<T> rsLogViaAtanhSeriesSmall(const rsMultiVector<T>& x, int numTerms)
 {
+  return T(2) * rsAtanhViaSeriesSmall((x-T(1))/(x+T(1)), numTerms);
+  /*
+  // old - now factored out into rsAtanhViaSeriesSmall:
   using MV = rsMultiVector<T>;
   MV z = (x-T(1))/(x+T(1));            // z = (x-1)/(x+1)
   MV zk = z;                           // z^k, initially z^1 = z
@@ -6013,17 +6042,33 @@ rsMultiVector<T> rsLogViaAtanhSeriesSmall(const rsMultiVector<T>& x, int numTerm
     y  += zk * (T(1)/T(2*k+1));
     zk *= z2;  }
   return T(2) * y;
+  */
 }
-
-
-
-
+template<class T>
+rsMultiVector<T> rsLogViaAtanhSeries(const rsMultiVector<T>& x, int order)
+{
+  // Uses log(n*x) = log(x) + log(n) for argument reduction.
+  using MV = rsMultiVector<T>;
+  T scl = T(1.0);
+  T s  = rsNorm2(x) * scl;
+  MV z = (T(1)/s) * x;
+  MV y = rsLogViaAtanhSeriesSmall(z, order);
+  return y + log(s);
+}
+// -may diverge
+// -maybe instead of the norm, we need to use the squared norm, because we multiply by x^2 in each 
+//  iteration step in rsAtanhViaSeriesSmall? wait - no: rsAtanhViaSeriesSmall gets the transformed
+//  variable (x-1)/(x+1) as input - for positive scalars x, this has indeed always an absolute 
+//  value less than 1
 
 template<class T>
 rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& x)
 {
   using MV = rsMultiVector<T>;
-  MV y = rsLogViaTaylor(x, 3);       // initial guess, todo: tweak order
+  //MV y = rsLogViaTaylor(x, 3);       // initial guess, todo: tweak order
+  //MV y = rsLogViaAtanhSeries(x, 3);
+  //MV y = rsLogViaAtanhSeries(x, 10);
+  MV y(x.getAlgebra());
   int maxIts = 32;
   int i;
   for(i = 1; i <= maxIts; i++) {
@@ -6042,9 +6087,11 @@ rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& x)
 template<class T>
 rsMultiVector<T> rsLog(const rsMultiVector<T>& x)
 {
-  return rsLogViaNewton(x);
+  rsLogViaAtanhSeries(x, int 20);  // todo: check, if 20 is enough as upper limit
+  //return rsLogViaNewton(x);
 }
-
+// ToDo: maybe instead of using Newton, use the fast converging series with an internal 
+// convergence test. 
 
 template<class T>
 bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)

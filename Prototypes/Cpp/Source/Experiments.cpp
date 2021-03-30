@@ -6397,13 +6397,12 @@ bool testGeometricAlgebra010()
   // used may actually converge to a different solution...
 
   // Test inverse functions:
-  c = log(a); C = rsLog(A); err = error(C, c);
-  c = log(b); C = rsLog(B); err = error(C, c);
-  // diverges - it seems the reverse-norm does not work well for complex numbers
-  // maybe we should instead use a sort of blow-up factor that is computed by comparing the 
-  // "size" of X and X^2...something like sumOfSquares(x*x) / sumOfSquares(x) or max(x*x)/max(x)
-  // or use rsNorm2
+  //c = log(a); C = rsLog(A); err = error(C, c);
+  //c = log(b); C = rsLog(B); err = error(C, c);
+  // works but raises assertion because the convergence test needs a tolerance
 
+  // todo: test logarithms for large arguments - that's what the log is used for: reducing large 
+  // numbers to a resonable range
 
 
   // todo: test also the subalgebras of (2,0,0) or (3,0,0) that are isomorphic to complex numbers
@@ -6828,25 +6827,22 @@ void testGeometricAlgebra()
   // ToDo: compare various norms in various signatures
 
 
-
-
-
   // Test logarithm functions:
-  A.setToScalar(-0.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // nan
-  A.setToScalar(-0.5);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // nan
-  A.setToScalar( 0.0);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // inf
-  A.setToScalar(+0.1);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // large error
-  A.setToScalar(+0.2);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
-  A.setToScalar(+0.5);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; ok &= rsAbs(err) < 1.e-4;
-  A.setToScalar(+0.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; ok &= rsAbs(err) < 1.e-11;
-  A.setToScalar(+0.99); B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
-  A.setToScalar(+1.0);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
-  A.setToScalar(+1.1);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
-  A.setToScalar(+1.5);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
-  A.setToScalar(+1.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt;
-  // use lambda function to avoid the boilerplate
+  auto errorLog1 = [&](Real arg, int numTerms)
+  { 
+    MV x(&alg3); x[0] = arg; 
+    MV y = rsLogViaTaylorSmall(x, numTerms);            // converges slowly
+    return y[0] - log(x[0]); 
+  };
+  err = errorLog1(-0.1, 10);                            // nan
+  err = errorLog1( 0.0, 10);                            // infinity
+  err = errorLog1( 0.5, 10); ok &= rsAbs(err) < 1.e-4;
+  err = errorLog1( 0.9, 10); ok &= rsAbs(err) < 1.e-11;
+  err = errorLog1( 1.0, 10); ok &= rsAbs(err) < 1.e-15; // it's actually zero! :-)
+  err = errorLog1( 1.1, 10); ok &= rsAbs(err) < 1.e-11;
+  err = errorLog1( 1.5, 10); ok &= rsAbs(err) < 1.e-4;
+  err = errorLog1( 2.0, 10);                            // limit of convergent domain
 
-  A.setToScalar(+1.9); B = rsLogViaTaylor(A, 10); tgt = log(A[0]); err = B[0] - tgt;
 
 
   C = rsLogViaNewton(A);

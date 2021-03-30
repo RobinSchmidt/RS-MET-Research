@@ -5960,7 +5960,8 @@ rsMultiVector<T> rsTan(const rsMultiVector<T>& X)
 // https://www.efunda.com/math/taylor_series/logarithmic.cfm
 // http://www.math.com/tables/expansion/log.htm
 
-/**  */
+/** Computes the logarithm of x using a Taylor series of given order centered around x0 = 1. 
+Converges for 0 < x < 2 and converges most quickly for x = 1. */
 template<class T>
 rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
 {
@@ -5992,13 +5993,29 @@ rsMultiVector<T> rsLogViaTaylor(const rsMultiVector<T>& x, int order)
   // Uses log(n*x) = log(x) + log(n) for argument reduction.
   using MV = rsMultiVector<T>;
   static const T scl = T(1);
-  //T s = rsNorm(x);
-  T s = rsNorm2(x);
-  //s = ceil(s) * scl;  // why ceil? we don't need s to be an integer here!
+  T s = rsNorm2(x) * scl;
   MV z = (T(1)/s) * x;
   MV y = rsLogViaTaylorSmall(z, order);
   return y + log(s);
 }
+
+template<class T>
+rsMultiVector<T> rsLogViaAtanhSeriesSmall(const rsMultiVector<T>& x, int numTerms)
+{
+  using MV = rsMultiVector<T>;
+  MV z = (x-T(1))/(x+T(1));            // z = (x-1)/(x+1)
+  MV zk = z;                           // z^k, initially z^1 = z
+  MV z2 = z*z;                         // z^2
+  MV y(x.getAlgebra());                // result
+  for(int k = 0; k < numTerms; k++) {
+    y  += zk / T(2*k+1);
+    zk *= z2;  }
+  return T(2) * y;
+}
+
+
+
+
 
 template<class T>
 rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& x)

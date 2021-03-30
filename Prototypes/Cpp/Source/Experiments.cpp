@@ -7191,56 +7191,78 @@ void testGeometricAlgebra()
   // Ideas:
   // -the diagonals of the Cayley tables are always -1,0,+1 - would it make sense if they also 
   //  could be a scalar multiple of some other basis blade?
-
 }
+// ToDo:
+// Figure out how to translate back and forth between a multivector-based and matrix-based 
+// representation of a Clifford algebra. For example, the 8 basis blades of G(3,0,0) can be 
+// represented by a set of 8 4x4 matrices. But how are we supposed to extrac the coefficient for a
+// given basis balde from a given 4x4 matrix that is some linear combination of the basis matrices?
+// It's all mixed up
+
 
 void testEulerTransformation()
 {
   // Tests the Euler transformation used to speed up the convergence of a slowly converging 
   // alternating series. As example, we use the alternating harmonic series which converges to
-  // log(2). We fill the first column of the matrix with the 1/n terms (without the sign 
+  // log(2). We fill the first column of a matrix with the 1/n terms (without the sign 
   // alternation applied), subsequent columns will contain the forward difference of the previous 
-  // column. The partial sum of the original series is obtained by summing the first row  with sign
-  // alternation: The accelerated partial sum is obtained by summing the first row with sign 
-  // alternation and weighting by 1/2^(j+1) where j is the column index.
+  // column. The partial sum of the original series is obtained by summing the first column with 
+  // sign alternation. The accelerated partial sum is obtained by summing the first row with sign 
+  // alternation and weighting by 1/2^(j+1) where j is the column index. We plot the relative 
+  // errors of the partial sums as function of the upper summation index for both series.
 
-  int N = 10;   // number of terms
+  int N = 10;                          // number of terms
   using Real = double;
   int i, j;
-  rsMatrix<Real> A(N,N);
+  rsMatrix<Real> A(N, N);
+  Real target = log(2.0);              // the limit to which both series converge
+  std::vector<Real> err1(N), err2(N);  // relative error of partial sum
 
-  // Fill the first column and compute the partial sum of the original series:
+  // Fill the first column and compute the partial sum of the original series and record the 
+  // relative a error as the summation progresses:
   for(i = 0; i < N; i++)
     A(i, 0) = 1.0 / Real(i+1);
   Real sign = 1.0;
   Real sum1 = 0.0;
   for(i = 0; i < N; i++) {
     sum1 += sign * A(i, 0);
-    sign *= -1; }
+    err1[i] = (sum1-target)/target;
+    sign *= -1;
+  }
 
-  // Compute the forward differences of all orders:
+// Compute the forward differences of all orders. The j-th column will contain the j-th 
+// difference:
   for(j = 1; j < N; j++)
     for(i = 0; i < N-j; i++)
       A(i, j) = A(i+1, j-1) - A(i, j-1);
 
-  // Sum the first row to get the partial sum of the acclerated series:
+  // Sum the first row (with scale and sign) to get the partial sum of the accelerated series and 
+  // record the error:
   sign = 1.0;
   Real scale = 0.5;
   Real sum2  = 0.0;
   for(j = 0; j < N; j++) {
     sum2  += sign * scale * A(0, j);
-    sign  *= -1; 
-    scale *= 0.5; }
+    err2[j] = (sum2-target)/target;
+    sign  *= -1;
+    scale *= 0.5;
+  }
 
-  Real target = log(2.0);
-
-  Real err1 = sum1 - target;
-  Real err2 = sum2 - target;
-  return;
+  // Plot the relative errors:
+  rsPlotVectors(err1, err2);
 
   // Observations:
-  // The partial sum of the accelerated series is indeed much closer to the target value than the
-  // partial sum of the original series. So, it seems to work as expected.
+  // The partial sum of the accelerated series does indeed converge much faster to the limit than
+  // the partial sum of the original series. Furthermore, the error alternates between positive and
+  // negative for the orginal series but doesn't for the accelerated series. I think, this is due 
+  // to the smoothing effect of taking differences of terms with opposite signs. I think, it's like 
+  // taking averages, when the signs would not differ. The faster convergence can also be explained 
+  // by the additional 1/2^(j+1) factor. Maybe both effects play a role in the acceleration? But
+  // interestingly, the first row of the matrix A follows also the A(0,j) = 1/(j+1) rule just as 
+  // the first column follows A(i,0) = 1/(i+1). This is probably a peculiar feature of that 
+  // particular series used here which doesn't generalize. If that would be generally true, it 
+  // would mean that all the differencing computations could be bypassed in general and that would 
+  // just be too good to be true. 
 
   // ToDo: make a more efficient implementation that uses only O(N) of axiliary memory. Maybe with
   // some clever juggling with temporary variables, we could even get away with O(1) of memory?
@@ -7256,7 +7278,43 @@ void testEulerTransformation()
   // complexity though. ...unless an analytic formula can be given for all the terms in the 
   // accelerated series in which case it will be O(1) in memory and O(N) in time complexity.
 
-  // ToDo: plot the error as function of the number of summed terms for both series
+
+  // To find symbolic expressions for terms the in the series, Wolfram may help. In particular the 
+  // function DifferenceDelta to find an expression for a forward difference:
+  // https://reference.wolfram.com/language/guide/DiscreteCalculus.html
+  // https://reference.wolfram.com/language/ref/DifferenceDelta.html
+  // https://www.wolfram.com/mathematica/newin7/content/DiscreteCalculus/
+  // For example, for the logarithm of x-1, the expression for the n-th term in the original series
+  // is x^n / (n+1)
+
+  // Example from wolfram, but i replaced with k - i doesn't work with i in alpha:
+  //   DifferenceDelta[Sin[a k + b], {k, 5}]  
+  // For the logarithm:
+  //   DifferenceDelta[x^k/(k+1), {k, n}]  
+  // gives:
+  //   -beta(1/x, -k - n - 1, n + 1)/x
+  // where beta is the incomplete beta function:
+  //   https://reference.wolfram.com/language/ref/Beta.html
+  // ...hmm - this doesn't seem to be helpful. I hoped the expression is something simpler, 
+  // possibly involving binomial coefficients instead of the beta function. But these are related:
+  //   https://proofwiki.org/wiki/Binomial_Coefficient_expressed_using_Beta_Function
+  //   https://en.wikipedia.org/wiki/Beta_function
+  // Maybe the problem is that mathematica assumes the series to be summed up to infinity. What we
+  // really need is a truncated series like: x^k/(k+1) for k < N, 0 otherwise. See:
+  //   https://reference.wolfram.com/language/ref/Piecewise.html
+  //   Plot[Piecewise[{{x^2, x < 0}, {x, x > 0}}], {x, -2, 2}]
+  // Let's try it:
+  //   DifferenceDelta[Piecewise[{{x^k/(k+1), k <= N}, {0, k > N}}], {k, n}]  
+  // but alpha doesn't understand this. Maybe sequence can't be defined piecewise? Or maybe it has 
+  // problems with the variable upper limit N? Here, k is the sequence index (which later becomes 
+  // the summation index in the series), N is the point where we want to tuncate the sequence
+  // (which becomes the upper limit of the sum) and n is the order of the difference. Maybe try it 
+  // in Wolfram cloud and/or search for other possible problems.
+  // BUT: by just inspecting the first row of the matrix A, we see that the coeff A(0,i) is just
+  // 1/(i+1). Does that help? Probably not. In general, the powers of x will also factor in into
+  // the original series which will almost certainly destroy this simple pattern.
+  // Maybe for the truncated sequence, the incomplete beta function can be replaced by the complete
+  // one which in turn can be expressed in terms of binomial coeffs? ...just a wild guess...
 }
 
 

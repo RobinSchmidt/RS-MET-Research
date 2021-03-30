@@ -5611,6 +5611,7 @@ T rsNorm2(const rsMultiVector<T>& V)
 // This norm may be more suitable for argument scaling in the elementary function evaluation 
 // algorithms. For G(3,0,0) (R^3 vector space) is apparently coincides with the reversal-based norm
 // above, in G(0,1,0) (complex numbers), it coincides with the complex magnitude, ...tbc...
+// maybe rename to rsAbs
 
 
 //template rsMultiVector<double> RAPT::rsPow(const rsMultiVector<double>& base, int exponent);

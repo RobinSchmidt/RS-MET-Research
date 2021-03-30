@@ -6359,8 +6359,9 @@ bool testGeometricAlgebra010()
   C = A.getReverse();         // nope!
 
   Real tmp1, tmp2;
-  tmp1 = rsNorm(A);
-  tmp2 = rsAbs(a);
+  tmp1 = rsAbs(a);
+  tmp2 = rsNorm(A);   // disagrees with tmp1
+  tmp2 = rsNorm2(A);  // agrees with tmp1
 
   // I think, dualization should correspond to multiplication by i..
   c = a*i; C = A*I;         ok &= equals(C, c);
@@ -6396,8 +6397,8 @@ bool testGeometricAlgebra010()
   // used may actually converge to a different solution...
 
   // Test inverse functions:
-  //c = log(a); C = rsLog(A); err = error(C, c);
-  //c = log(b); C = rsLog(B); err = error(C, c);
+  c = log(a); C = rsLog(A); err = error(C, c);
+  c = log(b); C = rsLog(B); err = error(C, c);
   // diverges - it seems the reverse-norm does not work well for complex numbers
   // maybe we should instead use a sort of blow-up factor that is computed by comparing the 
   // "size" of X and X^2...something like sumOfSquares(x*x) / sumOfSquares(x) or max(x*x)/max(x)
@@ -7188,6 +7189,11 @@ void testGeometricAlgebra()
   // solutions to GA problems:
   // https://vixra.org/author/james_a_smith
 
+  // this is really nice, concise and straightforward:
+  // http://www.math.umd.edu/~immortal/MATH431/lecturenotes/ch_geometricalgebra.pdf
+  // http://www.math.umd.edu/~immortal/MATH431/lecturenotes/
+  // http://www.math.umd.edu/~immortal/MATH431/
+
   // Ideas:
   // -the diagonals of the Cayley tables are always -1,0,+1 - would it make sense if they also 
   //  could be a scalar multiple of some other basis blade?
@@ -7195,9 +7201,12 @@ void testGeometricAlgebra()
 // ToDo:
 // Figure out how to translate back and forth between a multivector-based and matrix-based 
 // representation of a Clifford algebra. For example, the 8 basis blades of G(3,0,0) can be 
-// represented by a set of 8 4x4 matrices. But how are we supposed to extrac the coefficient for a
-// given basis balde from a given 4x4 matrix that is some linear combination of the basis matrices?
-// It's all mixed up
+// represented by a set of 8 4x4 matrices. But how are we supposed to extract the coefficient for a
+// given basis blade from a given 4x4 matrix that is some linear combination of the basis matrices?
+// It's all mixed up. Maybe by a sort of projection onto an reciprocal basis blade in analogy how
+// it usually works in tensor algebra? But how do we find the reciprocal basis blades and hwo would
+// the projection work? Maybe we write the basis matrices as vectors, assemble these vectors into 
+// an 16x8 matrix, find the pseudo-inverse and. ...figure out
 
 
 void testEulerTransformation()

@@ -5612,6 +5612,9 @@ T rsNorm2(const rsMultiVector<T>& V)
 // algorithms. For G(3,0,0) (R^3 vector space) is apparently coincides with the reversal-based norm
 // above, in G(0,1,0) (complex numbers), it coincides with the complex magnitude, ...tbc...
 // maybe rename to rsAbs
+// see pg 17 here:
+// http://www.math.umd.edu/~immortal/MATH431/lecturenotes/ch_geometricalgebra.pdf
+// http://www.math.umd.edu/~immortal/MATH431/lecturenotes/
 
 
 //template rsMultiVector<double> RAPT::rsPow(const rsMultiVector<double>& base, int exponent);
@@ -5693,7 +5696,8 @@ rsMultiVector<T> rsExpViaTaylor(const rsMultiVector<T>& X)
   // fast.
 
   using MV = rsMultiVector<T>;
-  T s = rsNorm(X);
+  //T s = rsNorm(X);
+  T s = rsNorm2(X);
   s = rsNextPowerOfTwo(s) * 2;  // factor 2 gives best numeric accuracy for the scalar exp(10)
   MV Z = (T(1)/s) * X;          // scaled X: Z = X/s
   MV Y( X.getAlgebra());        // output Y 
@@ -5859,7 +5863,8 @@ rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
   // trick as for the exponential function.
   using MV = rsMultiVector<T>;
   static const T scl = T(1);
-  T s = rsNorm(X);
+  //T s = rsNorm(X);
+  T s = rsNorm2(X);
   s = ceil(s) * scl;
   MV Z = (T(1)/s) * X;
   MV S = rsSinSmall(Z);
@@ -5886,7 +5891,8 @@ rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
   // trick as for the exponential function.
   using MV = rsMultiVector<T>;
   static const T scl = T(1);
-  T s = rsNorm(X);
+  //T s = rsNorm(X);
+  T s = rsNorm2(X);
   s = ceil(s) * scl;       // todo: multiply by a factor - figure out which works best with respect to
   MV Z = (T(1)/s) * X;     // fast convergence and high accuracy of the result
   MV C = rsCosSmall(Z);
@@ -5977,6 +5983,8 @@ rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
 // We need to apply the same technique to the series of weights which is actually the harmonic 
 // series. So it seems reasonable to start with trying to make a quickly converging harmonic 
 // series....
+// See also:
+// https://en.wikipedia.org/wiki/Logarithm#Calculation
 
 template<class T>
 rsMultiVector<T> rsLogViaTaylor(const rsMultiVector<T>& x, int order)
@@ -5984,8 +5992,9 @@ rsMultiVector<T> rsLogViaTaylor(const rsMultiVector<T>& x, int order)
   // Uses log(n*x) = log(x) + log(n) for argument reduction.
   using MV = rsMultiVector<T>;
   static const T scl = T(1);
-  T s = rsNorm(x);
-  s = ceil(s) * scl;
+  //T s = rsNorm(x);
+  T s = rsNorm2(x);
+  //s = ceil(s) * scl;  // why ceil? we don't need s to be an integer here!
   MV z = (T(1)/s) * x;
   MV y = rsLogViaTaylorSmall(z, order);
   return y + log(s);
@@ -6001,7 +6010,7 @@ rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& x)
   for(i = 1; i <= maxIts; i++) {
     MV ey = rsExp(y);
     MV dy = (x-ey) / ey;
-    if(!rsMakesDifference(y, dy))    // convergence test
+    if(!rsMakesDifference(y, dy))    // convergence test - we need a tolerance!
       break;
     y += dy; }
   rsAssert(i < maxIts, "rsLog for rsMultiVector did not converge");

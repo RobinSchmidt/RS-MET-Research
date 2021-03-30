@@ -5729,6 +5729,8 @@ rsMultiVector<T> rsExpViaTaylor(const rsMultiVector<T>& X)
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_47
 // https://link.springer.com/chapter/10.1007/978-1-4757-2736-4_56
 // https://cr.yp.to/bib/1976/brent-elementary.pdf
+// maybe implement also expm1 = exp(x)-1, see:
+// https://en.wikipedia.org/wiki/Exponential_function#Computation
 
 /** Exponential function of multivectors. Dispatches between various implementations, depending on 
 the square of A. */
@@ -6008,7 +6010,7 @@ rsMultiVector<T> rsLogViaAtanhSeriesSmall(const rsMultiVector<T>& x, int numTerm
   MV z2 = z*z;                         // z^2
   MV y(x.getAlgebra());                // result
   for(int k = 0; k < numTerms; k++) {
-    y  += zk / T(2*k+1);
+    y  += zk * (T(1)/T(2*k+1));
     zk *= z2;  }
   return T(2) * y;
 }

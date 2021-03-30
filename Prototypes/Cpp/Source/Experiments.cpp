@@ -6828,6 +6828,9 @@ void testGeometricAlgebra()
 
 
   // Test logarithm functions:
+
+  // The Taylor series implementation is only for reference. It's convergence is too slow to be 
+  // useful:
   auto errorLog1 = [&](Real arg, int numTerms)
   { 
     MV x(&alg3); x[0] = arg; 
@@ -6842,6 +6845,26 @@ void testGeometricAlgebra()
   err = errorLog1( 1.1, 10); ok &= rsAbs(err) < 1.e-11;
   err = errorLog1( 1.5, 10); ok &= rsAbs(err) < 1.e-4;
   err = errorLog1( 2.0, 10);                            // limit of convergent domain
+
+  // The series based on the atanh function has a larger domain of convergence and converges more
+  // quickly. The sweet spot with the fastest convergence is around x = 1. See:
+  // https://en.wikipedia.org/wiki/Logarithm#Calculation
+  auto errorLog2 = [&](Real arg, int numTerms)
+  { 
+    MV x(&alg3); x[0] = arg; 
+    MV y = rsLogViaAtanhSeriesSmall(x, numTerms);
+    return y[0] - log(x[0]); 
+  };
+  err = errorLog1(-0.1, 10);                             // nan
+  err = errorLog1( 0.0, 10);                             // inf
+  err = errorLog2( 0.1, 10); ok &= rsAbs(err) < 0.01;    // too large
+  err = errorLog2( 0.5, 10); ok &= rsAbs(err) < 1.e-10;
+  err = errorLog2( 0.9, 10); ok &= rsAbs(err) < 1.e-15;
+  err = errorLog2( 1.0, 10); ok &= rsAbs(err) < 1.e-15;
+  err = errorLog2( 1.1, 10); ok &= rsAbs(err) < 1.e-15;
+  err = errorLog2( 1.5, 10); ok &= rsAbs(err) < 1.e-15;
+  err = errorLog2( 2.0, 10); ok &= rsAbs(err) < 1.e-10;
+  err = errorLog2( 3.0, 10); ok &= rsAbs(err) < 1.e-7;   // convergence becomes worse
 
 
 

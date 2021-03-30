@@ -5587,7 +5587,7 @@ T rsSquaredNorm(const rsMultiVector<T>& V)
 template <class T>
 T rsNorm(const rsMultiVector<T>& V)
 {
-  return sqrt(rsSquaredNorm(V));
+  return rsSqrt(rsSquaredNorm(V));
 }
 // Referneces:
 // GMoV pg 48,
@@ -5597,6 +5597,20 @@ T rsNorm(const rsMultiVector<T>& V)
 // -implement the other norm based on Clifford conjugation
 // -optimze: if only the scalar component is extracted, compute only that - maybe make a function
 //  to compute the scalar product efficiently
+
+template <class T>
+T rsSumOfSquares(const rsMultiVector<T>& V)
+{
+  return rsArrayTools::sumOfSquares(&V.getCoeffs()[0], (int) V.getCoeffs().size());
+}
+template <class T>
+T rsNorm2(const rsMultiVector<T>& V)
+{
+  return rsSqrt(rsSumOfSquares(V));
+}
+// This norm may be more suitable for argument scaling in the elementary function evaluation 
+// algorithms. For G(3,0,0) (R^3 vector space) is apparently coincides with the reversal-based norm
+// above, in G(0,1,0) (complex numbers), it coincides with the complex magnitude, ...tbc...
 
 
 //template rsMultiVector<double> RAPT::rsPow(const rsMultiVector<double>& base, int exponent);

@@ -47,8 +47,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testBiModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
-  testExteriorAlgebra3D();
-  testGeometricAlgebra();
+  //testExteriorAlgebra3D();
+  //testGeometricAlgebra();
+  testEulerTransformation();
 
 
 

@@ -6401,6 +6401,7 @@ bool testGeometricAlgebra010()
   // diverges - it seems the reverse-norm does not work well for complex numbers
   // maybe we should instead use a sort of blow-up factor that is computed by comparing the 
   // "size" of X and X^2...something like sumOfSquares(x*x) / sumOfSquares(x) or max(x*x)/max(x)
+  // or use rsNorm2
 
 
 
@@ -6802,6 +6803,33 @@ void testGeometricAlgebra()
   C = rsCos(A); C = C*C;  // C = cos^2(A)
   D = B + C;              // should be 1 - yep, but accuracy is low
 
+  // Test the growth-rate norm:
+  Real r1, r2, r3, r4, r5;
+  r1 = sqrt(rsSumOfSquares(A));
+  r2 = sqrt(rsSumOfSquares(A*A));
+  r3 = sqrt(rsSumOfSquares(A*A*A));
+  r4 = r2/r1;
+  r5 = r3/r2;
+  // Oh - too bad - i thought, i could define a growth rate for how A^n grows, but that would make
+  // only sense when the ratio of size(A^(n+1)) / size(A^n) would be a constant (the growth rate)
+  // but that doesn't seem to be the case, at least not for "size" == "sumOfSquares". Let's try 
+  // the reversal-based norm:
+  r1 = rsNorm(A);
+  r2 = rsNorm(A*A);
+  r3 = rsNorm(A*A*A);
+  r4 = r2/r1;
+  r5 = r3/r2;
+  // Ha! The numbers are the same! So maybe we should use sum-of-squares norm in the elementary
+  // functions. I still think, the best norm would be the largest absolute eigenvalue (is this
+  // the operator norm?)...but that's expensive to compute. Or the largest singular value:
+  // https://en.wikipedia.org/wiki/Operator_norm
+  // Maybe we can use the power method with the original (multi)vector as start-vector
+  // ToDo: compare various norms in various signatures
+
+
+
+
+
   // Test logarithm functions:
   A.setToScalar(-0.9);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // nan
   A.setToScalar(-0.5);  B = rsLogViaTaylorSmall(A, 10); tgt=log(A[0]); err=B[0]-tgt; // nan
@@ -7164,6 +7192,71 @@ void testGeometricAlgebra()
   // -the diagonals of the Cayley tables are always -1,0,+1 - would it make sense if they also 
   //  could be a scalar multiple of some other basis blade?
 
+}
+
+void testEulerTransformation()
+{
+  // Tests the Euler transformation used to speed up the convergence of a slowly converging 
+  // alternating series. As example, we use the alternating harmonic series which converges to
+  // log(2). We fill the first column of the matrix with the 1/n terms (without the sign 
+  // alternation applied), subsequent columns will contain the forward difference of the previous 
+  // column. The partial sum of the original series is obtained by summing the first row  with sign
+  // alternation: The accelerated partial sum is obtained by summing the first row with sign 
+  // alternation and weighting by 1/2^(j+1) where j is the column index.
+
+  int N = 10;   // number of terms
+  using Real = double;
+  int i, j;
+  rsMatrix<Real> A(N,N);
+
+  // Fill the first column and compute the partial sum of the original series:
+  for(i = 0; i < N; i++)
+    A(i, 0) = 1.0 / Real(i+1);
+  Real sign = 1.0;
+  Real sum1 = 0.0;
+  for(i = 0; i < N; i++) {
+    sum1 += sign * A(i, 0);
+    sign *= -1; }
+
+  // Compute the forward differences of all orders:
+  for(j = 1; j < N; j++)
+    for(i = 0; i < N-j; i++)
+      A(i, j) = A(i+1, j-1) - A(i, j-1);
+
+  // Sum the first row to get the partial sum of the acclerated series:
+  sign = 1.0;
+  Real scale = 0.5;
+  Real sum2  = 0.0;
+  for(j = 0; j < N; j++) {
+    sum2  += sign * scale * A(0, j);
+    sign  *= -1; 
+    scale *= 0.5; }
+
+  Real target = log(2.0);
+
+  Real err1 = sum1 - target;
+  Real err2 = sum2 - target;
+  return;
+
+  // Observations:
+  // The partial sum of the accelerated series is indeed much closer to the target value than the
+  // partial sum of the original series. So, it seems to work as expected.
+
+  // ToDo: make a more efficient implementation that uses only O(N) of axiliary memory. Maybe with
+  // some clever juggling with temporary variables, we could even get away with O(1) of memory?
+  //   Step Compute                        Accumulate Forget    Variables
+  //   0    a0                             a0                   a0
+  //   1    a1,b0=a1-a0                    b0         a0        a1,b0
+  //   2    a2,b1=a2-a1,c0=b1-b0           c0         a1,b0     a2,b1,c0
+  //   3    a3,b2=a3-a2,c1=b2-b1,d0=c1-c0  d0         a2,b1,c0  a3,b2,c1,d0
+  // hmmm...nope - that doesn't seem to work. Tne number of active (still needed) variables grows 
+  // by one in each step. So we need indeed a temporary array of length N. Then precompute all the 
+  // original terms and store them in the array. Then apply successive forward differencing and
+  // accumulation of the front element (with scale and sign). The algo will need O(N^2) time 
+  // complexity though. ...unless an analytic formula can be given for all the terms in the 
+  // accelerated series in which case it will be O(1) in memory and O(N) in time complexity.
+
+  // ToDo: plot the error as function of the number of summed terms for both series
 }
 
 

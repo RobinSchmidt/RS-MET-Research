@@ -6475,7 +6475,94 @@ bool testGeometricAlgebra001()
   return ok;
 }
 
+bool testGeometricAlgebraMatrix()
+{
+  using Real = double;
+  using GA   = rsGeometricAlgebra<Real>;
+  using MV   = rsMultiVector<Real>;
+  using Vec  = std::vector<Real>;
+  using Mat  = rsMatrix<Real>;
+  using LA   = rsLinearAlgebraNew;
 
+  bool ok = true;
+
+  GA alg(3);
+
+  // Returns a vector of (raw) basis matrices. They are NxN (but may(?) be reduced...
+  auto getBasisMatrices = [&]()
+  {
+    // Create one basis vector at a time and add its matrix representation to B:
+    std::vector<Mat> B;
+    int N = alg.getMultiVectorSize();
+    MV b(&alg);
+    for(int i = 0; i < N; i++) {
+      b[i] = 1;
+      B.push_back(b.getMatrixRepresentation());
+      b[i] = 0; }
+    return B;
+  };
+
+  auto isIndexUseless = [](const std::vector<Mat>& M, int i)
+  {
+    // As soon as a nonzero element is found in either the i-th row or the i-th column in any of 
+    // the matrices, the index i is not useless and needs to be retained:
+    int N = (int)M.size();
+    for(int k = 1; k < N; k++) {
+      if(!M[k].isRowZero(i))    
+        return false;
+      if(!M[k].isColumnZero(i)) 
+        return false; }
+    return true;
+    // Maybe we should start the loop at 1 rather than 0? The identity matrix will always have a 
+    // nonzero entry
+  };
+
+  // Returns an array of row/column indices, for which all of the matrices in M have a zero row and
+  // column. The vector M is supposed to have N elements and each is supposed to be an NxN matrix
+  auto getUselessRowsAndCols = [&](const std::vector<Mat>& M)
+  {
+    std::vector<int> useless;
+    int N = (int)M.size();
+    for(int i = 0; i < N; i++)
+      if(isIndexUseless(M, i))
+        useless.push_back(i);
+    return useless;
+  };
+
+  std::vector<Mat> basis = getBasisMatrices();
+
+  //std::vector<int> useless = getUselessRowsAndCols(basis);
+  // todo: find rows and columns that are all zero in all of the basis matrices - these may be 
+  // scrapped to reduce the excess dimenstionality of the matrix representation...hmm - it doesn't
+  // seem to be that simple - maybe in order to reduce the dimensionality of the basis, we also 
+  // need to permute rows columns to make the zero rows/columns align - OK, so for the momebt, 
+  // let's work with the raw basis of 8x8 matrices...
+
+  // Converts multivector x to its matrix represnetation using the basis matrices in B
+  auto toMatrix = [](const MV& x, const std::vector<Mat>& B)
+  {
+    int N = x.getNumCoeffs();
+    Mat xm(N, N);
+    for(int i = 0; i < N; i++)
+      xm += x[i] * B[i];
+    return xm;
+  };
+
+  MV a(&alg), b(&alg);
+  a.randomIntegers(+1, +9, 0);           // A = 3,8,7,4,6,4,6,5
+
+  Mat m1, m2; 
+  m1 = a.getMatrixRepresentation();
+  m2 = toMatrix(a, basis);
+  ok &= m1 == m2;
+
+
+  // ToDo: find the eigenvalue spectrum of the matrix represneting multivector a and compare that
+  // to what we get in logarithm experiments
+
+
+  return ok;
+}
 
 
 void testGeometricAlgebra()
@@ -6484,6 +6571,7 @@ void testGeometricAlgebra()
   ok &= testBitTwiddling();
   ok &= testGeometricAlgebra010();
   ok &= testGeometricAlgebra001();
+  ok &= testGeometricAlgebraMatrix();
 
   // References:
   // 1: Geometric Algebra for Computer Science (GA4CS)

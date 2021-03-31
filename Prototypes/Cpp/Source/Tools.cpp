@@ -4479,6 +4479,10 @@ public:
   lives. Not to be confused with the number of dimensions of the multivector space, which is 2^n.*/
   int getNumDimensions() const { return alg->getNumDimensions(); }
 
+  /** Returns the number of coefficients, i.e. the number of dimensions of the multivector space 
+  which is 2^n where n is the dimensionality of the underlying vector space. */
+  int getNumCoeffs() const { return alg->getMultiVectorSize(); }
+
   /** Returns true, iff this multivector has at least one nozero coefficient (with some tolerance) 
   for the given grade k */
   bool containsGrade(int k, T tol = T(0)) const;
@@ -4660,6 +4664,14 @@ public:
   rsMultiVector<T>& operator*=(const rsMultiVector<T>& b) { *this = *this * b; return *this; }
   // optimize! this can be implemented without memory allocation by having a temp-array member in 
   // the algebra object, or maybe have a multiplication function that takes a workspace pointer
+
+
+  rsMultiVector<T>& operator*=(const T& s) 
+  { rsArrayTools::scale(&coeffs[0], getNumCoeffs(), s); return *this; }
+
+
+  rsMultiVector<T>& operator/=(const T& s) 
+  { rsArrayTools::scale(&coeffs[0], getNumCoeffs(), T(1)/s); return *this; }
 
 
   rsMultiVector<T> operator-()
@@ -5589,7 +5601,8 @@ T rsNorm(const rsMultiVector<T>& V)
 {
   return rsSqrt(rsSquaredNorm(V));
 }
-// Referneces:
+// rename to rsNormReverse
+// Refreneces:
 // GMoV pg 48,
 // https://math.stackexchange.com/questions/3733141/what-does-the-norm-of-a-multivector-describes-geometrically
 // https://math.stackexchange.com/questions/958559/norm-on-a-geometric-algebra/2840383
@@ -5608,6 +5621,7 @@ T rsNorm2(const rsMultiVector<T>& V)
 {
   return rsSqrt(rsSumOfSquares(V));
 }
+// rename to rsNormEuclidean
 // This norm may be more suitable for argument scaling in the elementary function evaluation 
 // algorithms. For G(3,0,0) (R^3 vector space) is apparently coincides with the reversal-based norm
 // above, in G(0,1,0) (complex numbers), it coincides with the complex magnitude, ...tbc...
@@ -5615,6 +5629,58 @@ T rsNorm2(const rsMultiVector<T>& V)
 // see pg 17 here:
 // http://www.math.umd.edu/~immortal/MATH431/lecturenotes/ch_geometricalgebra.pdf
 // http://www.math.umd.edu/~immortal/MATH431/lecturenotes/
+
+template <class T>
+T rsNorm3(const rsMultiVector<T>& V)
+{
+  return rsArrayTools::sumOfAbsoluteValues(&V.getCoeffs()[0], (int) V.getCoeffs().size());
+}
+// rename to rsNormManhattan
+
+// add: rsNormClifford, rsNormOperator, rsNormForPowerSeries - the last one delegates to one
+// of the other ones (probably the operator norm) - or maybe call it rsNormPower to indicate
+// that we use the multivector itself as seed - to find the true operator norm, we would 
+// potentially have to try with many different start vectors
+
+template <class T>
+T rsNormPower(const rsMultiVector<T>& x)
+{
+  using MV = rsMultiVector<T>;
+  auto norm = [&](const rsMultiVector<T>& x) { return rsNorm2(x); };
+
+  MV y = x;
+  T ny = norm(y);
+  y   *= T(1)/ny;
+  int its = 0;                 // iteration counter
+  T tol = T(1.5) * RS_EPS(T);
+  while(true)                  // ad hoc, experimental
+  {
+    //MV yNew = y*y;           // repeated squaring
+    MV yNew = x*y;
+    T nyNew = norm(yNew);
+    yNew   *= T(1)/nyNew;
+
+    // todo: convergence check: converged, if yNew == y, i.e. the direction has stabilized
+    T ratio = nyNew / ny;   // ratio of norms after and before multiplication
+                            // should converge to 1;
+    T delta = ratio - T(1); // should go to zero
+
+    y  = yNew;
+    if(rsAbs(delta) < tol)
+      break;
+    ny = nyNew;
+    its++;
+  }
+
+  // y is now supposed to be a normalized vector pointing into the direction of the largest 
+  // absolute eigenvalue of x. To figure out the eigenvalue, we multiply it by x and see, how
+  // much this changes the length...
+  T ev = norm(x*y) / norm(y);
+  return ev;
+}
+// maybe use repeated squaring instead of repeated multiplication by x to converge faster - we can
+// later take an appropriate root of scale factor..or make a last step with a multiplication by x
+
 
 
 //template rsMultiVector<double> RAPT::rsPow(const rsMultiVector<double>& base, int exponent);
@@ -6050,7 +6116,8 @@ rsMultiVector<T> rsLogViaAtanhSeries(const rsMultiVector<T>& x, int order)
   // Uses log(n*x) = log(x) + log(n) for argument reduction.
   using MV = rsMultiVector<T>;
   T scl = T(1.0);
-  T s  = rsNorm2(x) * scl;
+  T s = rsNorm2(x) * scl;
+  //T s = rsNorm3(x) * scl;
   MV z = (T(1)/s) * x;
   MV y = rsLogViaAtanhSeriesSmall(z, order);
   return y + log(s);
@@ -6087,7 +6154,7 @@ rsMultiVector<T> rsLogViaNewton(const rsMultiVector<T>& x)
 template<class T>
 rsMultiVector<T> rsLog(const rsMultiVector<T>& x)
 {
-  rsLogViaAtanhSeries(x, int 20);  // todo: check, if 20 is enough as upper limit
+  return rsLogViaAtanhSeries(x, 50);  // todo: check, if 20 is enough as upper limit
   //return rsLogViaNewton(x);
 }
 // ToDo: maybe instead of using Newton, use the fast converging series with an internal 

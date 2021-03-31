@@ -6397,8 +6397,8 @@ bool testGeometricAlgebra010()
   // used may actually converge to a different solution...
 
   // Test inverse functions:
-  //c = log(a); C = rsLog(A); err = error(C, c);
-  //c = log(b); C = rsLog(B); err = error(C, c);
+  c = log(a); C = rsLog(A); err = error(C, c);
+  c = log(b); C = rsLog(B); err = error(C, c);
   // works but raises assertion because the convergence test needs a tolerance
 
   // todo: test logarithms for large arguments - that's what the log is used for: reducing large 
@@ -6825,7 +6825,12 @@ void testGeometricAlgebra()
   // https://en.wikipedia.org/wiki/Operator_norm
   // Maybe we can use the power method with the original (multi)vector as start-vector
   // ToDo: compare various norms in various signatures
-
+  r1 = rsNormPower(A);
+  r2 = rsNormPower(A*A);
+  r3 = rsNormPower(A*A*A);
+  r4 = r2/r1;
+  r5 = r3/r2;
+  // r4 should be equal to r5
 
   // Test logarithm functions:
 
@@ -6882,9 +6887,25 @@ void testGeometricAlgebra()
   //C = rsLogViaAtanhSeries(A, 100); // raises assertion and produces garbage because convergence
                                    // requirement is violated 
   //C = rsLogViaTaylor(     A, 100); // diverges also but slower
-  C = rsLogViaNewton(A);
-  err = C[0] - tgt;
-  ok &= err == 0.0;
+  //C = rsLogViaNewton(A);
+  //err = C[0] - tgt;
+  //ok &= err == 0.0;
+  // maybe it diverges because no solution exists? -> try it with a vector where a solution is 
+  // known:
+  A.set(Vec({3,8,7,4,6,4,6,5}));
+  B = rsExp(A);
+  C = rsLogViaAtanhSeries(B, 20);  // fails!
+  //C = rsLogViaTaylor(     B, 20);    // fails!
+  //C = rsLogViaNewton(     B    );    // fails!
+  // soooo...yeah....logarithms of general multivectors are complicated. Algorithms that work well 
+  // for real numbers may completely fail for general multivectors. Maybe also research matrix 
+  // logarithms. It's likely more info around about that than about logs for multivectors
+  // https://www.maths.manchester.ac.uk/~higham/talks/ecm12_log.pdf
+  // https://www.maths.manchester.ac.uk/~higham/fm/index.php
+  // ...maybe try using different norms for argument scaling. For example, the L1 norm (sum of
+  // absolute values). This should shrink the multivector more. The goal is that the powers do
+  // not explode. If that is guaranteed, we should be on the safe side. hmmm...i guess, we really
+  // need to use the operator norm - but that's hard to compute - but maybe it has to be done
 
   // ToDo: implement various norms of multivectors, for eaxmple:
   //   N_c(A) = conj((A) * A     where conj(A) is the Clifford conjugate of A
@@ -7237,9 +7258,13 @@ void testGeometricAlgebra()
 // represented by a set of 8 4x4 matrices. But how are we supposed to extract the coefficient for a
 // given basis blade from a given 4x4 matrix that is some linear combination of the basis matrices?
 // It's all mixed up. Maybe by a sort of projection onto an reciprocal basis blade in analogy how
-// it usually works in tensor algebra? But how do we find the reciprocal basis blades and hwo would
+// it usually works in tensor algebra? But how do we find the reciprocal basis blades and how would
 // the projection work? Maybe we write the basis matrices as vectors, assemble these vectors into 
 // an 16x8 matrix, find the pseudo-inverse and. ...figure out
+// To find the basis matrices, maybe we should find the matrix representations of all the basis 
+// vectors. In R^3, this will give 8 8x8 matrices but maybe they have rows/columns with all zeros, 
+// which could then be removed? I think, in order to remove the i-th row/column, it must be the 
+// case that the i-th row and column is all zeros in all basis matrices?
 
 
 void testEulerTransformation()

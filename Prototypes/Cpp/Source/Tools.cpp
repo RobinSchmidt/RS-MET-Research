@@ -5642,44 +5642,62 @@ T rsNorm3(const rsMultiVector<T>& V)
 // that we use the multivector itself as seed - to find the true operator norm, we would 
 // potentially have to try with many different start vectors
 
+/** Experimental. This is supposed to figure out the operator norm of the multivector x, i.e. the 
+maximum stretch-factor that a multiplication by x can apply to another multivector (here 
+interpreted as regular 2^n dimensional vector). We use a sort of power iteration to find the 
+direction of maximum stretch. When this is converged, we figure out the actual stretch factor by 
+comparing norms of original and and stretched vector. This works similar to algorithms for 
+computing the largest absolute eigenvalue/-vector of a matrix. see:
+https://en.wikipedia.org/wiki/Power_iteration  */
 template <class T>
 T rsNormPower(const rsMultiVector<T>& x)
 {
   using MV = rsMultiVector<T>;
   auto norm = [&](const rsMultiVector<T>& x) { return rsNorm2(x); };
-
+  //auto norm = [&](const rsMultiVector<T>& x) { return rsNorm3(x); }; // no convergence!
   MV y = x;
   T ny = norm(y);
-  y   *= T(1)/ny;
+  y   /= ny;
   int its = 0;                 // iteration counter
-  T tol = T(1.5) * RS_EPS(T);
-  while(true)                  // ad hoc, experimental
+  T tol = T(1.5) * RS_EPS(T);  // tolerance (rather strict, may need tweaks)
+  while(true)                 
   {
-    //MV yNew = y*y;           // repeated squaring
-    MV yNew = x*y;
+    MV yNew = y*y;             // repeated squaring
+    //MV yNew = x*y;           // power iteration (same result, slower convergence)
     T nyNew = norm(yNew);
-    yNew   *= T(1)/nyNew;
-
-    // todo: convergence check: converged, if yNew == y, i.e. the direction has stabilized
-    T ratio = nyNew / ny;   // ratio of norms after and before multiplication
-                            // should converge to 1;
-    T delta = ratio - T(1); // should go to zero
-
+    yNew   /= nyNew;
+    T ratio = nyNew / ny;      // should converge to 1
+    T delta = ratio - T(1);    // should go to zero
     y  = yNew;
-    if(rsAbs(delta) < tol)
+    if(rsAbs(delta) < tol)     // convergence check
       break;
     ny = nyNew;
     its++;
   }
 
   // y is now supposed to be a normalized vector pointing into the direction of the largest 
-  // absolute eigenvalue of x. To figure out the eigenvalue, we multiply it by x and see, how
-  // much this changes the length...
+  // absolute eigenvector of x. To figure out the eigenvalue, we multiply it by x and see, how
+  // much this changes the length:
   T ev = norm(x*y) / norm(y);
   return ev;
 }
-// maybe use repeated squaring instead of repeated multiplication by x to converge faster - we can
-// later take an appropriate root of scale factor..or make a last step with a multiplication by x
+// Test results with multivector x = (3,8,7,4,6,4,6,5) in G(3,0,0):
+// The iterates of y hop around wildly. They don't seem to converge to a particular direction. 
+// Maybe the largest absolute eigenvalue is complex and there is some sort of 8D rotation going on?
+// Power iteration is used for diagonalizable matrices and maybe this one isn't? Also, what if
+// x has multiple eigenvalues of the same magnitude? Maybe the iterates converge to some vector in 
+// the subspace spanned by the corresponding eigenvectors and that is good enough for the purpose
+// here?
+// Also, the norm computed this way is suspicously close to the Euclidean norm, so it may not 
+// really improve our argument reduction scheme for log, etc. Using the sum-of-abs norm rather than
+// Euclidean as underlying norm, the algo doesn't even converge.
+// ToDo: 
+// -compare result to largest eigenvalue of matrix representation of x - it should be the same
+// -figure out the actual complex spectrum of the matrix representation of x using sage or octave 
+//  or whatever - or maybe my own eigenvalue code could already be up to the task? not sure...
+// -maybe figure out the singular values of the matrix representation of x
+// -try to use different random start vectors for y and see if it always converges to the same 
+//  result - it should!
 
 
 

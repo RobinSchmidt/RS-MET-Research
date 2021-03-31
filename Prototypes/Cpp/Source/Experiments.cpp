@@ -6830,7 +6830,7 @@ void testGeometricAlgebra()
   r3 = rsNormPower(A*A*A);
   r4 = r2/r1;
   r5 = r3/r2;
-  // r4 should be equal to r5
+  // r4 should be equal to r5 - yes, seems to work
 
   // Test logarithm functions:
 

@@ -4447,6 +4447,8 @@ public:
   /** Sets the coefficients to random integers in the given range. */
   void randomIntegers(int min, int max, int seed)
   { RAPT::rsArrayTools::fillWithRandomIntegers(&coeffs[0], (int)coeffs.size(), min, max, seed); }
+  // maybe rename to randomize and let the rounding to integers be optional, controlled by a bool
+  // parameter
 
   void set(const rsGradedVector<T>& b);
 
@@ -5647,7 +5649,9 @@ maximum stretch-factor that a multiplication by x can apply to another multivect
 interpreted as regular 2^n dimensional vector). We use a sort of power iteration to find the 
 direction of maximum stretch. When this is converged, we figure out the actual stretch factor by 
 comparing norms of original and and stretched vector. This works similar to algorithms for 
-computing the largest absolute eigenvalue/-vector of a matrix. see:
+computing the largest absolute eigenvalue/-vector of a matrix. The difference is that here, we use
+multivector multiplication instead of the matrix-vector product and we use repeated squaring 
+instead of computing powers to increase the convergence speed. See:
 https://en.wikipedia.org/wiki/Power_iteration  */
 template <class T>
 T rsNormPower(const rsMultiVector<T>& x)
@@ -5656,6 +5660,7 @@ T rsNormPower(const rsMultiVector<T>& x)
   auto norm = [&](const rsMultiVector<T>& x) { return rsNorm2(x); };
   //auto norm = [&](const rsMultiVector<T>& x) { return rsNorm3(x); }; // no convergence!
   MV y = x;
+  //y.randomIntegers(-9, +9, 42);  // test
   T ny = norm(y);
   y   /= ny;
   int its = 0;                 // iteration counter
@@ -5678,7 +5683,8 @@ T rsNormPower(const rsMultiVector<T>& x)
   // y is now supposed to be a normalized vector pointing into the direction of the largest 
   // absolute eigenvector of x. To figure out the eigenvalue, we multiply it by x and see, how
   // much this changes the length:
-  T ev = norm(x*y) / norm(y);
+  //ny = norm(y);      // test - should be 1
+  T ev = norm(x*y);
   return ev;
 }
 // Test results with multivector x = (3,8,7,4,6,4,6,5) in G(3,0,0):
@@ -5697,7 +5703,8 @@ T rsNormPower(const rsMultiVector<T>& x)
 //  or whatever - or maybe my own eigenvalue code could already be up to the task? not sure...
 // -maybe figure out the singular values of the matrix representation of x
 // -try to use different random start vectors for y and see if it always converges to the same 
-//  result - it should!
+//  result - it should! -> yes, it does, but only if power iteration is used, not repeated 
+//  squaring. This is expected.
 
 
 

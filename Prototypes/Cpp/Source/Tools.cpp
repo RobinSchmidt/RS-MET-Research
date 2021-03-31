@@ -5584,7 +5584,7 @@ T rsNextPowerOfTwo(T x)
 
 
 template <class T>
-T rsSquaredNorm(const rsMultiVector<T>& V)
+T rsSquaredNormReverse(const rsMultiVector<T>& V)
 {
   rsMultiVector<T> Vr_V = V * V.getReverse();
   return Vr_V[0];
@@ -5599,12 +5599,11 @@ T rsSquaredNorm(const rsMultiVector<T>& V)
   //      sum += V[i] * reverseSigns[k] * V[reversIndices[k]] * weightsGeom[i, j]; }}
 }
 template <class T>
-T rsNorm(const rsMultiVector<T>& V)
+T rsNormReverse(const rsMultiVector<T>& V)
 {
-  return rsSqrt(rsSquaredNorm(V));
+  return rsSqrt(rsSquaredNormReverse(V));
 }
-// rename to rsNormReverse
-// Refreneces:
+// Refernces:
 // GMoV pg 48,
 // https://math.stackexchange.com/questions/3733141/what-does-the-norm-of-a-multivector-describes-geometrically
 // https://math.stackexchange.com/questions/958559/norm-on-a-geometric-algebra/2840383
@@ -5651,8 +5650,12 @@ direction of maximum stretch. When this is converged, we figure out the actual s
 comparing norms of original and and stretched vector. This works similar to algorithms for 
 computing the largest absolute eigenvalue/-vector of a matrix. The difference is that here, we use
 multivector multiplication instead of the matrix-vector product and we use repeated squaring 
-instead of computing powers to increase the convergence speed. See:
-https://en.wikipedia.org/wiki/Power_iteration  */
+instead of computing powers to increase the convergence speed. The so computed norm can be seen as
+operator norm, when multiplication by multivector x is seen as an operator that can act on other
+multivectors. ...or can it? Or maybe this holds only if x itself contains a nonzero component in 
+the direction of its own largest eigenvector? But maybe that's guaranteed to be the case? See:
+https://en.wikipedia.org/wiki/Power_iteration  
+https://en.wikipedia.org/wiki/Operator_norm    */
 template <class T>
 T rsNormPower(const rsMultiVector<T>& x)
 {
@@ -5684,7 +5687,7 @@ T rsNormPower(const rsMultiVector<T>& x)
   // absolute eigenvector of x. To figure out the eigenvalue, we multiply it by x and see, how
   // much this changes the length:
   //ny = norm(y);      // test - should be 1
-  T ev = norm(x*y);
+  T ev = norm(x*y);    // eigenvalue corresponding to largest eigenvector y
   return ev;
 }
 // Test results with multivector x = (3,8,7,4,6,4,6,5) in G(3,0,0):

@@ -6360,7 +6360,7 @@ bool testGeometricAlgebra010()
 
   Real tmp1, tmp2;
   tmp1 = rsAbs(a);
-  tmp2 = rsNorm(A);   // disagrees with tmp1
+  tmp2 = rsNormReverse(A);   // disagrees with tmp1
   tmp2 = rsNorm2(A);  // agrees with tmp1
 
   // I think, dualization should correspond to multiplication by i..
@@ -6803,34 +6803,16 @@ void testGeometricAlgebra()
   C = rsCos(A); C = C*C;  // C = cos^2(A)
   D = B + C;              // should be 1 - yep, but accuracy is low
 
-  // Test the growth-rate norm:
+  // Test the power norm:
   Real r1, r2, r3, r4, r5;
-  r1 = sqrt(rsSumOfSquares(A));
-  r2 = sqrt(rsSumOfSquares(A*A));
-  r3 = sqrt(rsSumOfSquares(A*A*A));
-  r4 = r2/r1;
-  r5 = r3/r2;
-  // Oh - too bad - i thought, i could define a growth rate for how A^n grows, but that would make
-  // only sense when the ratio of size(A^(n+1)) / size(A^n) would be a constant (the growth rate)
-  // but that doesn't seem to be the case, at least not for "size" == "sumOfSquares". Let's try 
-  // the reversal-based norm:
-  r1 = rsNorm(A);
-  r2 = rsNorm(A*A);
-  r3 = rsNorm(A*A*A);
-  r4 = r2/r1;
-  r5 = r3/r2;
-  // Ha! The numbers are the same! So maybe we should use sum-of-squares norm in the elementary
-  // functions. I still think, the best norm would be the largest absolute eigenvalue (is this
-  // the operator norm?)...but that's expensive to compute. Or the largest singular value:
-  // https://en.wikipedia.org/wiki/Operator_norm
-  // Maybe we can use the power method with the original (multi)vector as start-vector
-  // ToDo: compare various norms in various signatures
   r1 = rsNormPower(A);
   r2 = rsNormPower(A*A);
   r3 = rsNormPower(A*A*A);
   r4 = r2/r1;
   r5 = r3/r2;
-  // r4 should be equal to r5 - yes, seems to work
+  rsIsCloseTo(r4, r5, 1.e-15);
+  // ToDo: compare various norms in various signatures
+
 
   // Test logarithm functions:
 

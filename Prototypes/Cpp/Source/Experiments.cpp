@@ -6814,7 +6814,32 @@ void testGeometricAlgebra()
   // ToDo: compare various norms in various signatures
 
 
-  // Test logarithm functions:
+  // Test logarithm functions (move into separate function):
+  A.set(Vec({8,-7,-3,-2,-8,-8,-7,3}));
+  C = rsLogViaTaylor(A, 50);
+  B = rsExp(C);
+  int dummy = 0;
+  // OK, with this choice of A, it seems to work. The Taylor series converges because the norm of
+  // the transformed variable z is less than 1.
+
+  // Try it with random matrices where it is unknown, if the log exists:
+  //for(int i = 0; i < 100; i++)  {
+  //  A.randomIntegers(-9, 9, i);
+  //  C = rsLogViaTaylor(A, 50);
+  //  B = rsExp(C);  // should reconstruct A
+  //  // This seems to work occasionally. Sometimes the operator norm of z=x-1 has indeed absolute 
+  //  // value < 1, so the series converges
+  //  int dummy = 0; }
+
+  // Try it with expoentiated random matrices - the log is known to exist and we even know its 
+  // value:
+  //for(int i = 0; i < 100; i++) {
+  //  A.randomIntegers(-9, 9, i);
+  //  B = rsExp(A);
+  //  C = rsLogViaTaylor(B, 50);  // should reconstruct A
+  //  // Nope - doesn't work. The operator norm of z=x-1 seems to be always between 1 and 2 in this
+  //  // test.
+  //  int dummy = 0; }
 
   // The Taylor series implementation is only for reference. It's convergence is too slow to be 
   // useful:
@@ -6824,8 +6849,8 @@ void testGeometricAlgebra()
     MV y = rsLogViaTaylorSmall(x, numTerms);            // converges slowly
     return y[0] - log(x[0]); 
   };
-  err = errorLog1(-0.1, 10);                            // nan
-  err = errorLog1( 0.0, 10);                            // infinity
+  err = errorLog1(-0.1, 10); // nan, but y[0] is not nan but should be!
+  err = errorLog1( 0.0, 10); // inf, but y[0] is not -inf but should be!
   err = errorLog1( 0.5, 10); ok &= rsAbs(err) < 1.e-4;
   err = errorLog1( 0.9, 10); ok &= rsAbs(err) < 1.e-11;
   err = errorLog1( 1.0, 10); ok &= rsAbs(err) < 1.e-15; // it's actually zero! :-)
@@ -6842,8 +6867,8 @@ void testGeometricAlgebra()
     MV y = rsLogViaAtanhSeriesSmall(x, numTerms);
     return y[0] - log(x[0]); 
   };
-  err = errorLog1(-0.1, 10);                             // nan
-  err = errorLog1( 0.0, 10);                             // inf
+  //err = errorLog2(-0.1, 10); // todo: test if result (not error) is nan
+  //err = errorLog2( 0.0, 10); // todo: test if result (not error) is -inf
   err = errorLog2( 0.1, 10); ok &= rsAbs(err) < 0.01;    // too large
   err = errorLog2( 0.5, 10); ok &= rsAbs(err) < 1.e-10;
   err = errorLog2( 0.9, 10); ok &= rsAbs(err) < 1.e-15;
@@ -6876,8 +6901,19 @@ void testGeometricAlgebra()
   // known:
   A.set(Vec({3,8,7,4,6,4,6,5}));
   B = rsExp(A);
-  C = rsLogViaAtanhSeries(B, 20);  // fails!
-  //C = rsLogViaTaylor(     B, 20);    // fails!
+  //C = rsLogViaAtanhSeries(B, 20);  
+  // fails! apparently the transformed variable (x-1)/(x+1) has absolute value > 1 even when the
+  // non-transformed has not? ... so maybe and (accelerated) Taylor series could converge?
+
+  C = rsLogViaTaylor(B, 20);   
+  D = rsExp(C);
+  // Fails! i think, the problem might be that the series does not compute powers of the input
+  // x but rather of x-1, so all our efforts to make the operator norm of x less than one might
+  // be thwarted by the subtraction of 1 immediately before we enter the Taylor series iteration.
+  // ...could it be that the Euler acceleration also affects the convergence region? ..i actually 
+  // don't think so, because it applies only to series that are convergent in the first place.
+  // Could we use a Laurent series around x0 = 0 instead of a Taylor series around x0 = 1?
+
   //C = rsLogViaNewton(     B    );    // fails!
   // soooo...yeah....logarithms of general multivectors are complicated. Algorithms that work well 
   // for real numbers may completely fail for general multivectors. Maybe also research matrix 

@@ -1,4 +1,4 @@
-Given a matrix A, we want to compile a list of operations that we can perfrom
+Given a matrix A, we want to compile a list of operations that we can perform
 with it in order to manipulate the eigenvalues in a controlled way while 
 leaving the eigenvectors as is.
 

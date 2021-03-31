@@ -5665,9 +5665,11 @@ T rsNormOperator(const rsMultiVector<T>& x)
   MV y = x;
   //y.randomIntegers(-9, +9, 42);  // test
   T ny = norm(y);
+  if(ny == T(0))
+    return ny;
   y   /= ny;
   int its = 0;                 // iteration counter
-  T tol = T(1.5) * RS_EPS(T);  // tolerance (rather strict, may need tweaks)
+  T tol = T(2) * RS_EPS(T);    // tolerance (rather strict, may need tweaks)
   while(true)                 
   {
     MV yNew = y*y;             // repeated squaring
@@ -6063,6 +6065,35 @@ rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
 {
   using MV = rsMultiVector<T>;
   MV z  = x; z[0] -= T(1);           // z = x-1
+
+  // test:
+  T nx = rsNormOperator(x);
+  T nz = rsNormOperator(z);
+  //MV t = (1.0/x) - 1.0;
+  MV t = (x*x) - 1.0;
+  T nt = rsNormOperator(t);
+  //rsAssert(nz <= T(1));
+  // OK, yes - the norm of x is indeed 1 but the norm of z is mostly > 1, so the powers of z blow 
+  // up exponentially, making the series divergent. What we actually need to do is to scale x in 
+  // such a way that the norm of z becomes less than 1. Using powers like t = (x*x) - 1.0; or
+  // (1.0*x) - 1.0; does indeed sometimes yield a norm < 1 when the norm of z is > 1, so it seems
+  // like there *may* be a suitable tansformation of the form z = (x^p / s) - 1 that makes the 
+  // series convergent. We "just" need to find the right exponent and scaler. But how? And what 
+  // about using negative scalers s? Maybe the rsNormOperator can also figure out whether the 
+  // eigenvector get flipped or not, i.e. if the eigenvalue is positive or negative - but maybe 
+  // it's complex? I think, the subtraction of 1 shifts all eigenvalues by -1, so if x has a 
+  // spectrum of (1,-0.9,...), z will have a spectrum (0,-1.9,...). What we need for convergence is
+  // that the *shifted* spectrum has largest absolute eigenvalue of < 1. Maybe if we can't arrange 
+  // for that, we should pick a different expansion point like x0 = 2, i.e. z = x-2 - wolfram:
+  //   Series[Log[x], {x, x0, 10}] 
+  // gives:
+  //   sum_(n>=1) ((-1)^(1 + n) (x - x0)^n x0^(-n))/n + log(x0)
+  //   converges when abs(x - x0) < abs(x0)
+  // so that could lead to a viable approach: we just take a greater expansion point and thereby
+  // increase the region of convergence. Maybe the ideal expansion point is nz itself? No - nz is
+  // computed *after* the expansion point has been selected. Oh - wait, that means we can't really
+  // change the expansion point without also shifting the eigenvalues along with it
+
   MV zk = z;                         // z^k, initially z^1 = z
   MV y(x.getAlgebra());              // result
   T s = T(1);                        // sign
@@ -6086,14 +6117,18 @@ rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
 template<class T>
 rsMultiVector<T> rsLogViaTaylor(const rsMultiVector<T>& x, int order)
 {
-  // Uses log(n*x) = log(x) + log(n) for argument reduction.
+  // Uses log(s*x) = log(x) + log(s) for argument reduction.
   using MV = rsMultiVector<T>;
   static const T scl = T(1);
-  T s = rsNorm2(x) * scl;
+  T s;
+  //s = rsNormEuclidean(x) * scl;
+  s = rsNormOperator(x)  * scl;
   MV z = (T(1)/s) * x;
   MV y = rsLogViaTaylorSmall(z, order);
   return y + log(s);
 }
+// We cannot only scale x but also raise it to a (possibly negative) power: z = x^p / s  
+// return p*y + log(s)
 
 template<class T>
 rsMultiVector<T> rsAtanhViaSeriesSmall(const rsMultiVector<T>& x, int numTerms)
@@ -6125,18 +6160,6 @@ template<class T>
 rsMultiVector<T> rsLogViaAtanhSeriesSmall(const rsMultiVector<T>& x, int numTerms)
 {
   return T(2) * rsAtanhViaSeriesSmall((x-T(1))/(x+T(1)), numTerms);
-  /*
-  // old - now factored out into rsAtanhViaSeriesSmall:
-  using MV = rsMultiVector<T>;
-  MV z = (x-T(1))/(x+T(1));            // z = (x-1)/(x+1)
-  MV zk = z;                           // z^k, initially z^1 = z
-  MV z2 = z*z;                         // z^2
-  MV y(x.getAlgebra());                // result
-  for(int k = 0; k < numTerms; k++) {
-    y  += zk * (T(1)/T(2*k+1));
-    zk *= z2;  }
-  return T(2) * y;
-  */
 }
 template<class T>
 rsMultiVector<T> rsLogViaAtanhSeries(const rsMultiVector<T>& x, int order)
@@ -6144,8 +6167,9 @@ rsMultiVector<T> rsLogViaAtanhSeries(const rsMultiVector<T>& x, int order)
   // Uses log(n*x) = log(x) + log(n) for argument reduction.
   using MV = rsMultiVector<T>;
   T scl = T(1.0);
-  T s = rsNormEuclidean(x) * scl;
-  //T s = rsNorm3(x) * scl;
+  T s;
+  s = rsNormEuclidean(x) * scl;
+  //s = rsNormOperator(x)  * scl;
   MV z = (T(1)/s) * x;
   MV y = rsLogViaAtanhSeriesSmall(z, order);
   return y + log(s);

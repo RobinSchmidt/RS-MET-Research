@@ -5608,7 +5608,7 @@ T rsNormReverse(const rsMultiVector<T>& V)
 // https://math.stackexchange.com/questions/3733141/what-does-the-norm-of-a-multivector-describes-geometrically
 // https://math.stackexchange.com/questions/958559/norm-on-a-geometric-algebra/2840383
 // todo: 
-// -implement the other norm based on Clifford conjugation
+// -implement the other norm based on Clifford conjugation: rsNormConjugate
 // -optimze: if only the scalar component is extracted, compute only that - maybe make a function
 //  to compute the scalar product efficiently
 
@@ -5618,7 +5618,7 @@ T rsSumOfSquares(const rsMultiVector<T>& V)
   return rsArrayTools::sumOfSquares(&V.getCoeffs()[0], (int) V.getCoeffs().size());
 }
 template <class T>
-T rsNorm2(const rsMultiVector<T>& V)
+T rsNormEuclidean(const rsMultiVector<T>& V)
 {
   return rsSqrt(rsSumOfSquares(V));
 }
@@ -5632,7 +5632,7 @@ T rsNorm2(const rsMultiVector<T>& V)
 // http://www.math.umd.edu/~immortal/MATH431/lecturenotes/
 
 template <class T>
-T rsNorm3(const rsMultiVector<T>& V)
+T rsNormSumAbsolute(const rsMultiVector<T>& V)
 {
   return rsArrayTools::sumOfAbsoluteValues(&V.getCoeffs()[0], (int) V.getCoeffs().size());
 }
@@ -5657,11 +5657,11 @@ the direction of its own largest eigenvector? But maybe that's guaranteed to be 
 https://en.wikipedia.org/wiki/Power_iteration  
 https://en.wikipedia.org/wiki/Operator_norm    */
 template <class T>
-T rsNormPower(const rsMultiVector<T>& x)
+T rsNormOperator(const rsMultiVector<T>& x)
 {
   using MV = rsMultiVector<T>;
-  auto norm = [&](const rsMultiVector<T>& x) { return rsNorm2(x); };
-  //auto norm = [&](const rsMultiVector<T>& x) { return rsNorm3(x); }; // no convergence!
+  auto norm = [&](const rsMultiVector<T>& x) { return rsNormEuclidean(x); };
+  //auto norm = [&](const rsMultiVector<T>& x) { return rsNormSumAbsolute(x); }; // no convergence!
   MV y = x;
   //y.randomIntegers(-9, +9, 42);  // test
   T ny = norm(y);
@@ -5791,7 +5791,7 @@ rsMultiVector<T> rsExpViaTaylor(const rsMultiVector<T>& X)
 
   using MV = rsMultiVector<T>;
   //T s = rsNorm(X);
-  T s = rsNorm2(X);
+  T s = rsNormEuclidean(X);
   s = rsNextPowerOfTwo(s) * 2;  // factor 2 gives best numeric accuracy for the scalar exp(10)
   MV Z = (T(1)/s) * X;          // scaled X: Z = X/s
   MV Y( X.getAlgebra());        // output Y 
@@ -5960,7 +5960,7 @@ rsMultiVector<T> rsSin(const rsMultiVector<T>& X)
   using MV = rsMultiVector<T>;
   static const T scl = T(1);
   //T s = rsNorm(X);
-  T s = rsNorm2(X);
+  T s = rsNormEuclidean(X);
   s = ceil(s) * scl;
   MV Z = (T(1)/s) * X;
   MV S = rsSinSmall(Z);
@@ -5988,7 +5988,7 @@ rsMultiVector<T> rsCos(const rsMultiVector<T>& X)
   using MV = rsMultiVector<T>;
   static const T scl = T(1);
   //T s = rsNorm(X);
-  T s = rsNorm2(X);
+  T s = rsNormEuclidean(X);
   s = ceil(s) * scl;       // todo: multiply by a factor - figure out which works best with respect to
   MV Z = (T(1)/s) * X;     // fast convergence and high accuracy of the result
   MV C = rsCosSmall(Z);
@@ -6099,7 +6099,7 @@ template<class T>
 rsMultiVector<T> rsAtanhViaSeriesSmall(const rsMultiVector<T>& x, int numTerms)
 {
   // test:
-  T xa = rsNorm2(x);   // absolute value
+  T xa = rsNormEuclidean(x);   // absolute value
   rsAssert(xa < T(1)); // convergence requirement
   // maybe return nan, if requirement is violated - returning nan is better than returning garbage
   // in this case
@@ -6144,7 +6144,7 @@ rsMultiVector<T> rsLogViaAtanhSeries(const rsMultiVector<T>& x, int order)
   // Uses log(n*x) = log(x) + log(n) for argument reduction.
   using MV = rsMultiVector<T>;
   T scl = T(1.0);
-  T s = rsNorm2(x) * scl;
+  T s = rsNormEuclidean(x) * scl;
   //T s = rsNorm3(x) * scl;
   MV z = (T(1)/s) * x;
   MV y = rsLogViaAtanhSeriesSmall(z, order);

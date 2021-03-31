@@ -6360,8 +6360,8 @@ bool testGeometricAlgebra010()
 
   Real tmp1, tmp2;
   tmp1 = rsAbs(a);
-  tmp2 = rsNormReverse(A);   // disagrees with tmp1
-  tmp2 = rsNorm2(A);  // agrees with tmp1
+  tmp2 = rsNormReverse(A);    // disagrees with tmp1
+  tmp2 = rsNormEuclidean(A);  // agrees with tmp1
 
   // I think, dualization should correspond to multiplication by i..
   c = a*i; C = A*I;         ok &= equals(C, c);
@@ -6803,11 +6803,11 @@ void testGeometricAlgebra()
   C = rsCos(A); C = C*C;  // C = cos^2(A)
   D = B + C;              // should be 1 - yep, but accuracy is low
 
-  // Test the power norm:
+  // Test the operator norm:
   Real r1, r2, r3, r4, r5;
-  r1 = rsNormPower(A);
-  r2 = rsNormPower(A*A);
-  r3 = rsNormPower(A*A*A);
+  r1 = rsNormOperator(A);
+  r2 = rsNormOperator(A*A);
+  r3 = rsNormOperator(A*A*A);
   r4 = r2/r1;
   r5 = r3/r2;
   rsIsCloseTo(r4, r5, 1.e-15);

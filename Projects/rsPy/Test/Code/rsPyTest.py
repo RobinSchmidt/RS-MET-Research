@@ -1,8 +1,9 @@
 ﻿import rsPy as rs
 import numpy as np
 
-if __name__ == "__main__":
-    hi = rs.hello("Germany");
+
+def test1():
+    hi = rs.hello("Germany")
     s  = rs.invite(hi)
     print(s)
     cnVal  = rs.ellipj_cn(2.1231, 0.9) # 2nd argument must be in [0,1]
@@ -16,8 +17,24 @@ if __name__ == "__main__":
     norm = rs.eucnorm(a)                # computes euclidean norm (3.7416..)
     rs.scale(a, 2)                      # scale a by factor 2
     print(norm)
+    dummy = 0                          # to allow a breakpoint here
 
-    #dummy = 0                          # to allow a breakpoint here
+def test2():
+    mf1 = rs.ModalFilter()
+    print("ModalFilter object 1 created")
+    mf2 = rs.ModalFilter
+    print("ModalFilter object 2 created")
+    mfb = rs.ModalFilterBank()
+    print("ModalFilterBank object created")
+    dummy = 0                          # to allow a breakpoint here
+
+
+if __name__ == "__main__":
+    test1()
+    test2()
+
+
+
 
 
 

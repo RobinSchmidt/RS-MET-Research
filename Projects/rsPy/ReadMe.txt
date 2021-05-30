@@ -47,12 +47,16 @@ you may have to create, if it doesn't exist already)
 
 To test, if it works as intended, try the python VS project in the "Test" 
 subfolder. If the compiled .dll is copied and renamed into the right place, it
-should be possible to run the script "rsPyTest.py" from the "Code" folder.
+should be possible to run the script "rsPyTest.py" from the "Code" folder. 
 
 
 
 
 
-todo: maybe at some stage, distribute it as a proper python module...maybe 
-AudiPy or something - should work together with NumPy/SciPy
-the name SigPy is already taken - maybe have a look at it - perhaps it's cool?
+todo: 
+-check, if the environment variable is set to the debug target folder (it seems 
+ to work after building in debug mode)
+-maybe at some stage, distribute it as a proper python module...maybe 
+ AudiPy or something - should work together with NumPy/SciPy
+ the name SigPy is already taken - maybe have a look at it - perhaps it's cool?
+

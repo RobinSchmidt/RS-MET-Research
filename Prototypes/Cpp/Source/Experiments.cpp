@@ -6482,7 +6482,8 @@ bool testGeometricAlgebraMatrix()
   using MV   = rsMultiVector<Real>;
   using Vec  = std::vector<Real>;
   using Mat  = rsMatrix<Real>;
-  using LA   = rsLinearAlgebraNew;
+  //using LA   = rsLinearAlgebraNew;
+  using ILA  = rsIterativeLinearAlgebra;
 
   bool ok = true;
 
@@ -7510,6 +7511,12 @@ float Q_rsqrt(float number)
 }
 // https://www.youtube.com/watch?v=p8u_k2LIZyo
 // https://medium.com/hard-mode/the-legendary-fast-inverse-square-root-e51fee3b49d9
+
+
+// todo: implement adaptive filters: LMS, GAL, GALL, RLS, LSL, FTF, see:
+// https://en.wikipedia.org/wiki/Recursive_least_squares_filter
+// https://link.springer.com/chapter/10.1007/978-1-4612-4978-8_10
+// https://www.researchgate.net/publication/220058701_Implementation_of_the_Least-Squares_Lattice_with_Order_and_Forgetting_Factor_Estimation_for_FPGA
 
 
 //-------------------------------------------------------------------------------------------------

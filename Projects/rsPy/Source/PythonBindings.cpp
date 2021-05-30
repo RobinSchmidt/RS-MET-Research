@@ -1,7 +1,12 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 
+//=================================================================================================
 
-namespace Test { // rename this class
+/** A couple of example classes and functions to demonstrate, how to make available C++ code to
+python and how to interface with numpy. May become obsolte, when more code is written in AudiPy. */
+
+namespace Test 
+{ // rename this namespace
 
 
   using namespace boost::python;
@@ -43,9 +48,11 @@ namespace Test { // rename this class
     const Py_intptr_t* sizes = a.get_shape();
     int size = 1;
     for(int i = 0; i < numDims; i++)
-      size *= sizes[i];
-    return size;
+      size *= sizes[i];  // produces warning "conversion from 'const Py_intptr_t' to 'int'"
+    return size;         // in release mode (with msc) -> verify
   }
+
+
 
   /** Scales the array by the given scale factor. */
   void scale(np::ndarray& a, double scaler)
@@ -107,15 +114,53 @@ namespace Test { // rename this class
     return PyLong_FromLong(sts);
   }
 
-
 }
 
+//=================================================================================================
+/*
+namespace AudiPy 
+{
+
+using namespace boost::python;
+namespace np = boost::python::numpy;
+using namespace rosic;
+
+class EnineersFilter
+{
+
+public:
+
+  EnineersFilter() {}
+
+  void setSampleRate(double newRate) { ef.setSampleRate(newRate); }
+  void setMode(      int    newMode) { ef.setMode(      newMode); }
+
+
+
+
+  double getSample(double in) { return ef.getSampleDirect2(in); }
+  void reset() { ef.reset(); }
+
+private:
+
+  rsEngineersFilterMono ef;
+
+};
+
+
+// todo:
+//rsModalBankFloatSSE2
+
+}
+*/
 
 
 // example code to create the bindings:
 BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll file (rsPy.pyd)
 {
   using namespace boost::python;
+  //namespace np = boost::python::numpy;
+  using namespace rosic;
 
 
   //Py_Initialize();
@@ -149,7 +194,45 @@ BOOST_PYTHON_MODULE(rsPy) // name here *must* match the name of module's dll fil
   // https://docs.microsoft.com/en-us/visualstudio/python/debugging-mixed-mode-c-cpp-python-in-visual-studio?view=vs-2019
 
 
-  class_<Test::hello>("hello", init<std::string>())
+  /*
+  class_<rsEngineersFilterMono>("EngineersFilter")
+    .def("setSampleRate",          &rsEngineersFilterMono::setSampleRate)
+    .def("setMode",                &rsEngineersFilterMono::setMode)
+    .def("setApproximationMethod", &rsEngineersFilterMono::setApproximationMethod)
+    .def("setFrequency",           &rsEngineersFilterMono::setFrequency)
+    .def("setPrototypeOrder",      &rsEngineersFilterMono::setPrototypeOrder)
+    .def("setBandwidth",           &rsEngineersFilterMono::setBandwidth)
+    ;
+   // Produces compile error, complaining about deleted copy-constructor. Why is this needed? Maybe 
+   // the python runtime needs to be able to copy objects? The obvious fix would be to implement 
+   // the copy constructor (and maybe also the assignment operator) in RAPT::rsEngineersFilter. 
+   // Maybe both should make use of a utility function copyDataFrom(& other)
+   */
+
+  //using C = rsModalFilterFloatSSE2; // can't be re-assigned, so we'll use a #define
+
+#define MF rsModalFilterFloatSSE2
+  //class_<MF>("ModalFilter", init<>())
+  class_<MF>("ModalFilter")
+    .def("setParameters",        &MF::setParameters)
+    .def("setParametersTwoEnvs", &MF::setParametersTwoEnvs)
+    //.def("getSample",            &MF::getSample)
+    .def("reset",                &MF::reset)
+    ;
+
+#define C rsModalBankFloatSSE2
+  //using C = rsModalBankFloatSSE2;
+  class_<C>("ModalFilterBank")
+    .def("setParameters",    &C::setModalFilterParameters)
+    .def("setLowModeIndex",  &C::setLowModeIndex)
+    .def("setHighModeIndex", &C::setHighModeIndex)
+    //.def("getSample",        &C::getSample)
+    ;
+
+#undef C
+
+
+  class_<Test::hello>("hello", init<std::string>()) // string is for the doc? or passed to constructor?
     .def("greet", &Test::hello::greet)   // Add a regular member function
     .def("invite", Test::invite)         // Add invite() as a member of hello
     ;

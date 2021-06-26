@@ -1,0 +1,122 @@
+Idea for a lossless codec specifically optimized for instrumental audio samples
+
+Goal:
+-it should be possible to ship sample-libraries encoded with this codec and they should be
+ ridculously small.
+-should support 16 and 24 bit target quality and any reasonable sample rate
+-it should be possible to DFD the file -> we can't require the whole file to be loaded at once,
+ although that should be possible, of course
+-streaming should allow (quasi)random access to individual chunks -> no dependency of one chunk's
+ data on its predecessor
+
+
+Idea:
+-it should provide several compression algorithms to choose from (depending on material), the list
+ of available algos should be easily extendable
+-maybe a higher level algo should be able to figure out what the optimal algo is for a given
+ sample (that may also be used to classify samples)
+-should use a chain of (modeling) algorithms, each operating on the residual of the predecessor
+-the goal is to bring the residual down as much as possible and as close to white noise as
+ possible, the distribution of which should be concentrated around 0 as much as possible (for
+ efficient Huffman encoding)
+-one of the algos should be based on my sinusoidal modeling framework
+ -split the signal into chunks of varying size (one chunk = 1 cycle, or an integer number of 
+  cycles, maybe there should be and 8 bit variable that says, how many cycles a chunk encodes)
+  ...data should probably have a minChunkSize/maxChunkSize field that can be set by the encoder
+ -the breakpoint data will be stored in the following format:
+  -time: 64bit uint (sample), maybe 16 or 8 bit uint for fractional sample position
+   -or maybe 32 bit is enough - this may depend on the length of the sample, so maybe make it
+    flexible -> encoder decides to use 16, 32 or 64 bit, depending on what is needed
+  -freq, phase, amp: 16 bit float, libraries for that:
+   https://github.com/suruoxi/half
+   https://github.com/acgessler/half_float
+   https://github.com/hglm/detex/blob/master/half-float.c
+   ..there may be more and maybe we should use a custom format for each of the variables, for 
+   example, 
+   -for amplitude, the range 0..2 may be enough and we don't need negatives
+   -for freq, we may need a range up to fs/2, we also don't need negatives
+   -for phase, we need -pi..+pi, so -4..+4 seems appropriate...but actually, equidistant values
+    are assumed, so an int16 might be better...or maybe int8 is enough -> experiment
+-another algorithm should be based on linear prediction
+ -it may make sense to use that for the residual of the sinusoidal modeling
+ -maybe encode the poles and zeros of a pole/zero model
+ -num poles/zeros may be fixed or chosen adaptively by the algo
+ -poles zeros may also be defined by a pair of pole-frequency, pole-radius (or q - figure out,
+  what works best)
+-the final residual should be huffman encoded, or run-length. ...i guess, it will have a Gaussian
+ distribution? or maybe, if there's some transient left, it will be more concentrated towards the 
+ center
+
+
+
+Licensing terms:
+
+-Encoder:
+ -free for all
+
+-Decoder:
+ -free for any software that doesn't ship with encoded sample-content
+ -free for free sample content
+ -commercially sold encoded sample content or products that are based on such, need
+  a commerical license
+  -yearly per-product fee, might be managed via GitHub sponsorship or Patreon
+  -might be degressive starting at 100€ per year and product and going down by 10 each year until a
+   floor value (of maybe 10) is reached...or maybe the price should depend on the amount of data and
+   achieved compression ratio
+  -or: alternativly, royalty charge based on the sales - maybe 2%..5%
+
+  
+  
+Further (and wilder) ideas:
+-maybe it should be possible to encode entire sample-sets, taking advantage of the similarities 
+ between the individual samples
+ -the sinusoidal model could be based on storing a reference frequency (i.e. fundamental) and
+  relative frequencies of the partials...these numbers will probably be very similar from key to 
+  key
+-maybe it should have options for lossy encoding, allowing:
+ -noise in the bottommost bits (rationale: samples may have been dithered anyway and it's pointless
+  to reproduce the dither noise exactly)
+ -maybe, if the final residual is indeed only (uncorrelated) noise, it may suffice to encode some 
+  data about its features (PDF) and resynthesize it or optionally, leave it out entirely, if it's 
+  below some threshold
+ -maybe lossy encoding could be even desirable for noise reduced, cleaned up samples
+ -lossy could also just mean, that the final reconstructed result is dithered or re-dithered, 
+  which may be acceptable or even desirable, if we loose only the last bit information - we assume
+  that the last bit contains only white noise anyway, and the algo just replaces the existing 
+  (dither) noise with its own noise which may be inconsequential...but we should test what happens 
+  to a signal that is re-encoded a lot (like thousands) of times, use exponentially enveloped 
+  sinusoids as test signals
+
+name ideas for extension:
+ass:   audio sample storage
+asaf:  audio sample archiving format
+casa:  compressed audio sample archive
+tass:  tiny audio sample storage
+bass:  bantam audio sample storage (or: boxed, bitty, bass, backup, badass, baffling, bald)
+mass:  minimized audio sample storage
+sassa: small audio sample storage archive
+
+
+Idea vor video compression:
+-Try to predict the frame at time instant n+1 as an affine transform of the previous frame n and
+ encode only the differences between predicted and actual. Prediction formula:
+   x[i,j,n,c] = sum_p sum_q sum_c a_pqr x[i+p,j+q,n-1,r]
+ where i,j is the pixel location, n is the time instant and c is the color channel. p,q run from 
+ -1..+1, c from 0..2, so that makes for 27 coeffs. Or wait..is that actually linear instead of
+ affine?
+-maybe the sum over c should be thrown away and instead do: 
+   x[i,j,n] = sum_p sum_q a_pq x[i+p,j+q,n-1]
+ for each color channel seperately, but maybe not necessarily in RGB space. Maybe, with 24 bits
+ per pixel, don't use 8 bit for ach color channel, but give more bits to luminance, say instead of
+ using 8,8,8 bits, use 12,6,6 or 10,7,7
+-Rationale: many common changes such as camera movements can be well represented by this
+-At lower framerates with fast movement, we may assume that the formula needs to be iterated a 
+ few times to take into account the missing intermediate frames
+-The strategy may be applied to individual blocks with each block having its own set of coeffs, 
+ each fram can define its own blocksize
+
+
+
+
+
+

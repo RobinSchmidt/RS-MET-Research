@@ -76,9 +76,10 @@ int main()
   //testReturnValueOptimization();
   //testFunctionShortcuts();
 
-  testMultiArray();
+  //testMultiArray();
 
   testFactorial();
+  testBinomialCoeffs();
   testGcd();
 
   //int gcd_60_21 = gcd<60, 21>();

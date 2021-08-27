@@ -18,7 +18,7 @@ the result to our desired -2*x*y:
 which turns out to be exactly equal to what we want if we set g'(y) = 0, so we 
 may also use g(y) = 0. This is not always the case - we may have to find a 
 function of y alone that we can add, to make the partial derivative equal to 
-what we want. So, setting g(y) = 0, our potetntia becomes: 
+what we want. So, setting g(y) = 0, our potential becomes: 
 
   P(x,y) = x^3/3 - x*y^2
 

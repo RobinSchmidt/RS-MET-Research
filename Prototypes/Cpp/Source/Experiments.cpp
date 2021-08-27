@@ -1088,7 +1088,6 @@ void plotComplexGauss1D()
   // todo: maybe for reference, plot a real gausian filter output as well
   // -figure out, how kernel-width changes as function of numPasses in order to come up with 
   //  compensation formula
-
 }
 
 
@@ -7300,6 +7299,19 @@ void testGeometricAlgebra()
   //  basis vectors square to 1 - but we may want also algebras where some square to -1 or 0 - but
   //  maybe that affects only the squares and the the cross-terms?)
   //  ...or wait - no - is this rule correct?
+  
+  // What about a geometric algebra of an infinite-dimensional vector space, say, the vector space
+  // of periodic functions on 0..2pi? This vector space has a countably infinite dimensionality.
+  // Would the dimensionality of the multivector-space still be countable? Maybe not because in the
+  // finite dimensional case, the multivector space has dimensionality 2^N when the vector space
+  // has dimensionality N which is the dimensionality of the power set and we know that the 
+  // cardinality of the power set of the natural numbers equals the cardinality of the real 
+  // numbers. Does this even make sense? Will we get bifunctions, trifunctions, etc.? One thing is 
+  // very different from the finite dimensional case: the dimensionality of the grades grows 
+  // forever rather than growing and then shrinking back. Then, what about the multivector space
+  // obtained from a vector space with uncountably infinite dimension, like the vector space of all
+  // (square-integrable?) functions on an interval?
+  
 
 
   // https://en.wikipedia.org/wiki/Multivector
@@ -7696,5 +7708,12 @@ todo:
 
  https://math.stackexchange.com/questions/2253443/difference-between-least-squares-and-minimum-norm-solution
  https://see.stanford.edu/materials/lsoeldsee263/08-min-norm.pdf
+
+
+ // For math visualization:
+
+ // -try to recreate the enhanced phase plots shown here:
+ //  https://www.youtube.com/watch?v=O3aJCGbyfR8&list=PL9tHLTl03LqEM2q6xZTcOAVFNTj4TqtL6&index=4
+ //  maybe also implement animations
 
 */

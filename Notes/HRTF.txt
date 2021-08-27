@@ -1,0 +1,17 @@
+http://www.3d-tune-in.eu/toolkit-developers
+https://github.com/3DTune-In/3dti_AudioToolkit
+
+https://www.akustik.rwth-aachen.de/go/id/lsly/lidx/1
+https://gershwin.akustik.rwth-aachen.de/hrtf/hrtf-lic.php
+https://www.ita-toolbox.org/download.php
+
+https://github.com/greekgoddj/mit-hrtf-lib
+
+http://recherche.ircam.fr/equipes/salles/listen/
+http://recherche.ircam.fr/equipes/salles/listen/download.html
+
+https://www.ece.ucdavis.edu/cipic/spatial-sound/hrtf-data/
+
+https://www.aes.org/e-lib/browse.cfm?elib=20941
+
+https://docs.rs/hrtf/0.6.0/hrtf/

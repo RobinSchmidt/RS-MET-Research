@@ -239,7 +239,7 @@ int flatIndexRecursion(int* shape, int depth, int stride, int index, Rest... res
   return flatIndexRecursion(shape, depth, stride*shape[depth-1],                index)
     +  flatIndexRecursion(shape, depth-1, stride, rest...);
 }
-/*
+*/
 
 // rename the "depth" parameter to numIndices/numDimensions
 // measure the performance of this stride-array-free computation of flat indices with the 

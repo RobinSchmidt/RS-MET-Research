@@ -1,1 +1,4 @@
 https://www.kvraudio.com/forum/viewtopic.php?f=33&t=482777
+
+https://www.allaboutcircuits.com/textbook/reference/chpt-7/introduction-to-spice/
+https://www.allaboutcircuits.com/textbook/reference/chpt-7/example-circuits-and-netlists/

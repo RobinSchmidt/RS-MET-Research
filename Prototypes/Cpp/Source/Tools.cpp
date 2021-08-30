@@ -3592,18 +3592,26 @@ public:
   // todo: hessian, laplacian, etc.
 
 
+  int getNumNodes() const { return numNodes; }
+  int getNumEdges() const { return numEdges; }
+
+
+  int getNumNeighbors(int i) const { return numNeighbors[i]; }
+  T   getSelfWeightX( int i) const { return selfWeightsX[i]; }
+  T   getSelfWeightY( int i) const { return selfWeightsY[i]; }
+
+  int getNeighborIndex(  int i, int k) const { return neighborIndices[ starts[i] + k]; }
+  T   getNeighborWeightX(int i, int k) const { return neighborWeightsX[starts[i] + k]; }
+  T   getNeighborWeightY(int i, int k) const { return neighborWeightsY[starts[i] + k]; }
+
+
+
 protected:
 
 
   // internal:
 
-  int getNumNeighbors(int i) { return numNeighbors[i]; }
-  T   getSelfWeightX( int i) { return selfWeightsX[i]; }
-  T   getSelfWeightY( int i) { return selfWeightsY[i]; }
 
-  int getNeighborIndex(  int i, int k) { return neighborIndices[ starts[i] + k]; }
-  T   getNeighborWeightX(int i, int k) { return neighborWeightsX[starts[i] + k]; }
-  T   getNeighborWeightY(int i, int k) { return neighborWeightsY[starts[i] + k]; }
 
 
   // These arrays are all numNodes long:
@@ -3625,7 +3633,7 @@ void rsStencilMesh2D<T>::computeCoeffsFromMesh(const rsGraph<rsVector2D<T>, T>& 
 {
   using Vec2 = rsVector2D<T>;
 
-  // allocate memory and set offsets:
+  // Allocate memory and set offsets:
   numNodes = mesh.getNumVertices();
   numNeighbors.resize(numNodes);
   selfWeightsX.resize(numNodes);
@@ -3643,7 +3651,7 @@ void rsStencilMesh2D<T>::computeCoeffsFromMesh(const rsGraph<rsVector2D<T>, T>& 
   neighborWeightsX.resize(numEdges);
   neighborWeightsY.resize(numEdges);
  
-  // compute the coefficients:
+  // Compute the coefficients:
   for(int i = 0; i < numNodes; i++)
   {
     const Vec2& vi = mesh.getVertexData(i);
@@ -3706,14 +3714,91 @@ void rsStencilMesh2D<T>::gradient(const T* u, T* u_x, T* u_y)
     gradient(u, i, &u_x[i], &u_y[i]);
 }
 
+//=================================================================================================
 
+/** Computes the matrix-vector product y = A*x between a matrix A and a vector x where the types
+of the elements may be different for all 3 objects. Typically, the output type TOut will be either
+the same as the matrix type TMat or the input type TIn. ...tbc... */
+template<class TMat, class TIn, class TOut>
+void rsProduct(const rsSparseMatrix<TMat>& A, const std::vector<TIn>& x, std::vector<TOut>& y)
+{
+  rsAssert((int)x.size() == A.getNumColumns());
+  rsAssert((int)y.size() == A.getNumRows());
+  A.product(&x[0], &y[0]);
+
+  //for(int i = 0; i < (int)y.size(); i++)
+  //  y[i] = TOut(0);
+  //RAPT::rsError("not yet implemented");
+}
+
+/** Under construction.
+
+Takes a mesh as input and produces as output a sparse matrix by which a vector u can be multiplied
+to obtain the vector of gradients.
+
+*/
+
+template<class T>
+rsSparseMatrix<rsVector2D<T>> rsGradientMatrix(const rsGraph<rsVector2D<T>, T>& mesh)
+{
+  rsStencilMesh2D<T> stencilMesh;
+  stencilMesh.computeCoeffsFromMesh(mesh);
+
+  int numNodes = stencilMesh.getNumNodes();
+
+  rsSparseMatrix<rsVector2D<T>> A(numNodes, numNodes);
+  A.reserve(stencilMesh.getNumEdges() + numNodes);      // + numNodes for the self-weights
+
+
+  for(int i = 0; i < numNodes; i++)
+  {
+    // add diagonal element:
+    T vx = stencilMesh.getSelfWeightX(i);
+    T vy = stencilMesh.getSelfWeightY(i);
+    //A.set(i, i, rsVector2D(vx, vy));
+    A.insert(i, i, rsVector2D(vx, vy));
+
+    // add elements for neighbors:
+    for(int k = 0; k < stencilMesh.getNumNeighbors(i); k++)
+    {
+      vx = stencilMesh.getNeighborWeightX(i, k);
+      vy = stencilMesh.getNeighborWeightY(i, k);
+      int j = stencilMesh.getNeighborIndex(i, k);
+      //A.set(i, j, rsVector2D(vx, vy));
+      A.insert(i, j, rsVector2D(vx, vy));
+      int dummy = 0;
+    }
+  }
+
+  // Because we have used the fast "insert" method instead of the slow "set" method, the elements
+  // in A are now not sorted. We don't actually need them to be sorted because we don't need random
+  // access to compute gradients, but for consistency of the object, we sort them anyway because 
+  // that's how rsSparseMatrix is meant to be:
+  // A.sortElements();
+
+  return A;
+
+  // ToDo:
+  // -Establish a mapping between the nodes of the mesh and a flat vector u that represents the values
+  //  of the nodes.
+  // -The coefficients for computing spatial derivatives on the mesh (derived from the edges) should be 
+  //  mapped to entries of a (sparse) matrix A, such that we can can write: u' = A*u.
+  //  -the input vector u has scalars as elements (the values of the scalar field) but the output 
+  //   vector u' has 2D vectors as elements (the values of the gradients)
+  //  -that means, the matrix elements must be 2D vectors
+  //  -more generally, we may want to be able to specify the type of the matrix elements, input 
+  //   elements and output elements by 3 template parameters - in onther contexts (especiall 
+  //   graphics), it may make sense to have a matrix of scalars that is multiplied by a vector of 
+  //   2D vectors
+  //  -maybe rsSparseMatrix needs a function typedProduct
+  // -This should optimize the computations and also make it possible to apply implicit solver schemes.
+  // -
+}
 
 //=================================================================================================
 
 // Classes for representing the objects that are encountered in the extrerior algebra for 3D space 
 // (in addition to the regular vectors, i.e. rsVector3D)
-
-
 
 /** Bivectors are... */
 

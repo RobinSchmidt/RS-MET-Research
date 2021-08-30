@@ -5435,7 +5435,7 @@ void testPDE_1stOrder()
   int frameRate = 25;
 
   // Create the mesh:
-  rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My); // mayb need to compute weights
+  rsGraph<Vec2, float> mesh = getHexagonMesh<float>(Mx, My); // maybe need to compute weights
   int M = mesh.getNumVertices();  // should be Mx*My
   //plotMesh(mesh);
   // try triangular mesh - then, each vertex has 6 neighbors - this may make the estimation of the
@@ -5561,7 +5561,7 @@ void testTransportEquation()
   float sigma = 0.0025f;           // variance
   int density = 65;                // density of mesh points (number along each direction)
   //bool upwind = false;             // if true, mesh connections in direction of v are deleted
-  float upwind = 0.5f;             // continiously adjustable upwind setting - adjusts weights
+  float upwind = 0.5f;             // continuously adjustable upwind setting - adjusts weights
 
   // maybe compute Courant number, try special values like 1, 1/2 - maybe use a velocity vector
   // with unit length (like (0.8,0.6)) and an inverse power of 2 for dt, if density is a power of 2
@@ -5581,10 +5581,17 @@ void testTransportEquation()
   meshGen.updateMeshes();                                    // get rid of this
   rsGraph<Vec2, float> mesh = meshGen.getParameterMesh();    // rename mesh to graphMesh, getP.. to getMesh
   weightEdgesByDirection(mesh, -v, upwind);
+  int N = mesh.getNumVertices();
 
   // Create the rsStencilMesh2D for optimized computations:
   rsStencilMesh2D<float> stencilMesh;
   stencilMesh.computeCoeffsFromMesh(mesh);
+
+  // Create the rsSparseMatrix for another way of an optimized computation that also allows for 
+  // implicit schemes:
+  rsSparseMatrix<rsVector2D<float>> gradMat = rsGradientMatrix(mesh);
+  std::vector<Vec2> grad(N);  // gradient
+
 
   // Compute Courant number:
   float dx = 1.f / float(density-1);      // more generally: (xMax-xMin) / (xDensity-1)
@@ -5595,7 +5602,6 @@ void testTransportEquation()
   // https://en.wikipedia.org/wiki/Courant%E2%80%93Friedrichs%E2%80%93Lewy_condition
 
   // Create and initialize data arrays for the funtion u(x,y,t):
-  int N = mesh.getNumVertices();
   Vec u(N), u_x(N), u_y(N), u_t(N); // mesh function and its spatial and temporal derivatives
   Vec tmp1(N), tmp2(N), tmp3(N);    // temporaries, used vor different things in different schemes
   initWithGaussian2D(mesh, u, mu, sigma);
@@ -5604,16 +5610,41 @@ void testTransportEquation()
   // spatial partial derivatives u_x, u_y using rsNumericlDifferentiator::gradient2D for meshes and
   // then computing u_t from them via the transport equation: u_t = -dot(g,v) where g is the 
   // gradient, v is the velocity and dot means the dot-product:
-  auto timeDerivative = [&](Vec& u, Vec& u_t)
+  auto timeDerivativeViaMesh = [&](Vec& u, Vec& u_t)
   {
-    // Compute spatial derivatives u_x, u_y:
-    stencilMesh.gradient(&u[0], &u_x[0], &u_y[0]);                   // fast
-    //rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // slow
+    rsNumericDifferentiator<float>::gradient2D(mesh, u, u_x, u_y); // spatial derivatives u_x, u_y
+    for(int i = 0; i < N; i++)
+      u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // temporal derivatives u_t
+  };
 
-    // Compute temporal derivatives u_t:
+  // A 2nd implementation which should compute the same thing but uses the StencilMesh:
+  auto timeDerivativeViaStencilMesh = [&](Vec& u, Vec& u_t)
+  {
+    stencilMesh.gradient(&u[0], &u_x[0], &u_y[0]);
     for(int i = 0; i < N; i++)
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);
   };
+
+  // A 3rd implementation which should compute the same thing but uses the sparse matrix:
+  auto timeDerivativeViaMatrix = [&](Vec& u, Vec& u_t)
+  {
+    rsProduct(gradMat, u, grad);
+    for(int i = 0; i < N; i++)
+      u_t[i] = -rsDot(grad[i], v);
+  };
+
+  // Compile time dispatcher between the 3 implementations above - uncomment the variant, you want 
+  // to use:
+  auto timeDerivative = [&](Vec& u, Vec& u_t)
+  {
+    //timeDerivativeViaMesh(u, u_t);
+    //timeDerivativeViaStencilMesh(u, u_t);
+    timeDerivativeViaMatrix(u, u_t);
+  };
+  // todo: make performance tests for the 3 implementations. I think (and hope) that the sparse 
+  // matrix variant is fastest (hope, because that's the one that lends itself most 
+  // straightforwardly to the implementation of implicit PDE solver schemes)
+
 
   // Computes an estimate for the time-derivative evaluated at the midpoint t + n/2. This estimate
   // is used in the midpoint method.

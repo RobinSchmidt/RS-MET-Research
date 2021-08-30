@@ -5560,18 +5560,28 @@ void testTransportEquation()
   Vec2  mu = Vec2(0.25f, 0.25f);   // center of initial Gaussian distribution
   float sigma = 0.0025f;           // variance
   int density = 65;                // density of mesh points (number along each direction)
+
   //bool upwind = false;             // if true, mesh connections in direction of v are deleted
-  float upwind = 0.5f;             // continuously adjustable upwind setting - adjusts weights
+  float upwind = 0.5f;
+  // continuously adjustable upwind setting - adjusts weights: if 1.0: weights are such that a pure
+  // upwidn method is used, if 0.0: weights are symmetric, 0.5: compromise between upwind and 
+  // symmetric formula
+
+
+  density = 65; // test - with 513, we get garbage, 257 is still ok (although it shouldn't be bcs 
+  // the Courant number is 2 in this case). With higher density, we also need a smaller time-step.
+
 
   // maybe compute Courant number, try special values like 1, 1/2 - maybe use a velocity vector
   // with unit length (like (0.8,0.6)) and an inverse power of 2 for dt, if density is a power of 2
   // plus 1, we get a spatial sampling with an inverse power of 2, too
 
   // Visualization settings:
-  int width     = 400;
-  int height    = 400;
+  int width     = 400;   // 400
+  int height    = 400;   // 400
   int numFrames = 100;
   int frameRate = 25;
+  bool drawMesh = true;
 
   // Create the mesh:
   rsMeshGenerator2D<float> meshGen;
@@ -5607,8 +5617,8 @@ void testTransportEquation()
   initWithGaussian2D(mesh, u, mu, sigma);
 
   // Define lambda function that computes the temporal derivative u_t by first computing the 
-  // spatial partial derivatives u_x, u_y using rsNumericlDifferentiator::gradient2D for meshes and
-  // then computing u_t from them via the transport equation: u_t = -dot(g,v) where g is the 
+  // spatial partial derivatives u_x, u_y using rsNumericalDifferentiator::gradient2D for meshes 
+  // and then computing u_t from them via the transport equation: u_t = -dot(g,v) where g is the 
   // gradient, v is the velocity and dot means the dot-product:
   auto timeDerivativeViaMesh = [&](Vec& u, Vec& u_t)
   {
@@ -5617,7 +5627,7 @@ void testTransportEquation()
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);                         // temporal derivatives u_t
   };
 
-  // A 2nd implementation which should compute the same thing but uses the StencilMesh:
+  // A 2nd implementation which should compute the same thing but uses the stencilMesh:
   auto timeDerivativeViaStencilMesh = [&](Vec& u, Vec& u_t)
   {
     stencilMesh.gradient(&u[0], &u_x[0], &u_y[0]);
@@ -5625,7 +5635,7 @@ void testTransportEquation()
       u_t[i] = -(u_x[i]*v.x + u_y[i]*v.y);
   };
 
-  // A 3rd implementation which should compute the same thing but uses the sparse matrix:
+  // A 3rd implementation that uses the rsSparseMatrix gradMat:
   auto timeDerivativeViaMatrix = [&](Vec& u, Vec& u_t)
   {
     rsProduct(gradMat, u, grad);
@@ -5813,7 +5823,8 @@ void testTransportEquation()
   // Loop through the frames and for each frame, update the solution and record the result:
   rsVideoWriterMesh<float> videoWriter;
   videoWriter.setSize(width, height);
-  videoWriter.initBackground(mesh);
+  if(drawMesh)
+    videoWriter.initBackground(mesh);
   for(int n = 0; n < numFrames; n++)
   {
     videoWriter.recordFrame(mesh, u);
@@ -5890,6 +5901,9 @@ void testTransportEquation()
   // -Implement more accurate (i.e. higher order) time-steppers. When the improvements start to 
   //  level off, it may be due the accuracy of spatial derivatives not keeping up - in this case, 
   //  use a mesh with more neighbors to increase spatial accuracy.
+  // -Try Adams-Bashforth and Adams-Moulton steppers (requires us to keep a couple of past states
+  //  of u - maybe call them u1, u2, etc. - in a production implementation, they may be stored in a 
+  //  sort of ringbuffer to avoid copying)
   // -try using a mesh with connections to diagonal neighbors - increase spatial precision by
   //  4 powers 
   // -try to improve time accuracy by using a strategy similar to the midpoint rule in ODE solvers:

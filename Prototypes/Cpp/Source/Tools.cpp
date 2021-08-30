@@ -3725,74 +3725,42 @@ void rsProduct(const rsSparseMatrix<TMat>& A, const std::vector<TIn>& x, std::ve
   rsAssert((int)x.size() == A.getNumColumns());
   rsAssert((int)y.size() == A.getNumRows());
   A.product(&x[0], &y[0]);
-
-  //for(int i = 0; i < (int)y.size(); i++)
-  //  y[i] = TOut(0);
-  //RAPT::rsError("not yet implemented");
 }
+// maybe move to library as convenience function
 
-/** Under construction.
-
-Takes a mesh as input and produces as output a sparse matrix by which a vector u can be multiplied
-to obtain the vector of gradients.
-
-*/
-
+/** Takes a mesh as input and produces as output a sparse matrix by which a vector u can be 
+multiplied to obtain the vector of gradients: u' = A*u. The input vector u is supposed to have 
+scalar elements (we assume to work with a scalar field), whereas the vector u' has elements of type
+rsVector2D representing the gradient of the scalar field u(x,y). This is achieved by letting the 
+matrix have elements of type rsVector2D. Using such a matrix should optimize the computations and 
+also make it possible to apply implicit solver schemes. */
 template<class T>
 rsSparseMatrix<rsVector2D<T>> rsGradientMatrix(const rsGraph<rsVector2D<T>, T>& mesh)
 {
   rsStencilMesh2D<T> stencilMesh;
   stencilMesh.computeCoeffsFromMesh(mesh);
-
   int numNodes = stencilMesh.getNumNodes();
-
   rsSparseMatrix<rsVector2D<T>> A(numNodes, numNodes);
-  A.reserve(stencilMesh.getNumEdges() + numNodes);      // + numNodes for the self-weights
-
-
-  for(int i = 0; i < numNodes; i++)
-  {
-    // add diagonal element:
+  A.reserve(stencilMesh.getNumEdges() + numNodes);             // + numNodes for the self-weights
+  for(int i = 0; i < numNodes; i++) {
     T vx = stencilMesh.getSelfWeightX(i);
     T vy = stencilMesh.getSelfWeightY(i);
-    //A.set(i, i, rsVector2D(vx, vy));
-    A.insert(i, i, rsVector2D(vx, vy));
-
-    // add elements for neighbors:
-    for(int k = 0; k < stencilMesh.getNumNeighbors(i); k++)
-    {
+    A.appendFastAndUnsafe(i, i, rsVector2D(vx, vy));           // add diagonal element
+    for(int k = 0; k < stencilMesh.getNumNeighbors(i); k++) {
       vx = stencilMesh.getNeighborWeightX(i, k);
       vy = stencilMesh.getNeighborWeightY(i, k);
       int j = stencilMesh.getNeighborIndex(i, k);
-      //A.set(i, j, rsVector2D(vx, vy));
-      A.insert(i, j, rsVector2D(vx, vy));
-      int dummy = 0;
-    }
-  }
-
-  // Because we have used the fast "insert" method instead of the slow "set" method, the elements
-  // in A are now not sorted. We don't actually need them to be sorted because we don't need random
-  // access to compute gradients, but for consistency of the object, we sort them anyway because 
-  // that's how rsSparseMatrix is meant to be:
-  // A.sortElements();
-
+      A.appendFastAndUnsafe(i, j, rsVector2D(vx, vy)); }}      // add elements for neighbors
+  A.sortElements();                                            // ensure correct order
   return A;
 
   // ToDo:
-  // -Establish a mapping between the nodes of the mesh and a flat vector u that represents the values
-  //  of the nodes.
-  // -The coefficients for computing spatial derivatives on the mesh (derived from the edges) should be 
-  //  mapped to entries of a (sparse) matrix A, such that we can can write: u' = A*u.
-  //  -the input vector u has scalars as elements (the values of the scalar field) but the output 
-  //   vector u' has 2D vectors as elements (the values of the gradients)
-  //  -that means, the matrix elements must be 2D vectors
-  //  -more generally, we may want to be able to specify the type of the matrix elements, input 
-  //   elements and output elements by 3 template parameters - in onther contexts (especiall 
-  //   graphics), it may make sense to have a matrix of scalars that is multiplied by a vector of 
-  //   2D vectors
-  //  -maybe rsSparseMatrix needs a function typedProduct
-  // -This should optimize the computations and also make it possible to apply implicit solver schemes.
-  // -
+  // -Maybe try to permute the matrix elements in a way that optimizes the access pattern into the
+  //  u vector when computing the gradient. Maybe the u vector needs to be permuted, too. Maybe a 
+  //  Hilbert curve could be useful for that?
+  // -Try to compute a matrix that can be used to compute the Laplacian. This should have scalar
+  //  elements. ...but i have not yet figured out a good formula for the Laplacian on irregular 
+  //  meshes
 }
 
 //=================================================================================================

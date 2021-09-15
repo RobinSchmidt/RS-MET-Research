@@ -42,13 +42,13 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testVectorMultiplication3D();
   //testHermiteInterpolation();
   //testMeshGeneration();
-  testTransportEquation();
+  //testTransportEquation();
   //testWaveEquation();
   //testBiModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
   //testExteriorAlgebra3D();
-  //testGeometricAlgebra();
+  testGeometricAlgebra();
   //testEulerTransformation();
 
 

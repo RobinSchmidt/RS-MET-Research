@@ -5747,7 +5747,11 @@ rsMultiVector<T> rsLogViaTaylorSmall(const rsMultiVector<T>& x, int order)
 // series. So it seems reasonable to start with trying to make a quickly converging harmonic 
 // series....
 // See also:
-// https://en.wikipedia.org/wiki/Logarithm#Calculation
+//   https://en.wikipedia.org/wiki/Logarithm#Calculation
+// See also the book Functions of Matrices: Theory and Computation:
+//   https://archive.siam.org/books/ot104/
+//   http://www.ma.man.ac.uk/~higham/mftoolbox/
+// it also covers logarithms of matrices, maybe that's useful
 
 template<class T>
 rsMultiVector<T> rsLogViaTaylor(const rsMultiVector<T>& x, int order)

@@ -4771,27 +4771,6 @@ void addMeshConnectionsStencil3(rsGraph<rsVector2D<T>, T>& mesh, int Nx, int Ny)
         mesh.addEdge(k1, k2, true); }}}
 }
 
-
-template<class T>
-void randomizeVertexPositions(rsGraph<rsVector2D<T>, T>& mesh, T dx, T dy, 
-  int minNumNeighbors = 0, int seed = 0)
-{
-  using Vec2 = rsVector2D<T>;
-  rsNoiseGenerator<T> ng;
-  ng.setSeed(seed);
-  T rnd;
-  for(int k = 0; k < mesh.getNumVertices(); k++) 
-  {
-    if(mesh.getNumEdges(k) >= minNumNeighbors)
-    {
-      Vec2 v = mesh.getVertexData(k);
-      v.x += dx * ng.getSample();
-      v.y += dy * ng.getSample();
-      mesh.setVertexData(k, v);
-    }
-  }
-}
-
 template<class T>
 void scaleVertexPositions(rsGraph<rsVector2D<T>, T>& mesh, T sx, T sy)
 {
@@ -4803,7 +4782,6 @@ void scaleVertexPositions(rsGraph<rsVector2D<T>, T>& mesh, T sx, T sy)
     mesh.setVertexData(k, v);
   }
 }
-
 
 /** Redistributes the vertices in the mesh, such that a force equilibrium is reached for each node, 
 where forces are excerted by connections - the connections behave like springs under tension
@@ -4873,6 +4851,10 @@ void moveVerticesToEquilibrium(rsGraph<rsVector2D<T>, T>& mesh, int minNumNeighb
 //  or 4-point stencil and remove nodes by subtracting shapes defined by F(x,y) - remove 
 //  every node for which F(x,y) becomes negative (or positive) - use to subtract circles, etc.
 //  F(x,y) should actually not tak x,y as input but a vector, such that it generalizes to 3D
+// -Let the caller pass a 2nd mesh whose vertex data encodes a "mobility" for the corresponding 
+//  vertices in the given mesh. Multiply the dv values (or maybe the f-values) by these mobilities.
+//  This allows to fix certain vertices (for example, at the boundary) by giving them zero 
+//  mobility. Default mobility is 1.
 
 template<class T>
 T getEdgeLength(rsGraph<rsVector2D<T>, T>& mesh, int i, int k)
@@ -5500,7 +5482,7 @@ void removeDirectedConnections(rsGraph<rsVector2D<T>, T>& mesh, rsVector2D<T> d)
 // 1 - maybe based on the actual value of rsDot(dv, d) / (rsNorm(dv)*rsNorm(d)) - allow user to 
 // trade off numeric dispersion vs numeric diffusion
 
-
+// I think, this is used to implement the "upwind" scheme
 template<class T>
 void weightEdgesByDirection(rsGraph<rsVector2D<T>, T>& mesh, rsVector2D<T> d, T amount)
 {

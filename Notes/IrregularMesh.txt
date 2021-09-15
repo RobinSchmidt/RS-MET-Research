@@ -1,34 +1,28 @@
-Numerical schemes for solving partial differential equations by finite 
-difference methods are straightforward to understand and use but they usually 
-assume a regular grid. For geometrically more complicated domains, this 
-restriction is often a showstopper, so in such cases, finite element methods 
-are typically used. These, on the other hand, are conceptually much more 
-difficult to understand and apply and can require considerable analytical 
-preparatory work to convert the problem into an appropriate form - which may 
-be not even always possible. So here, we want to consider an idea that allows 
-us to use a finite difference method on an irregular mesh.
+Numerical schemes for solving partial differential equations by finite difference methods are 
+straightforward to understand and use but they usually assume a regular grid. For geometrically 
+more complicated domains, this restriction is often a showstopper, so in such cases, finite element 
+methods are typically used. These, on the other hand, are conceptually much more difficult to 
+understand and apply and can require considerable analytical preparatory work to convert the 
+problem into an appropriate form - which may be not even always possible. So here, we want to 
+consider an idea that allows us to use a finite difference method on an irregular mesh.
 
-We need to find expressions for approximating spatial derivatives from known
-function values on grid points. On a regular 2D grid with grid spacings h_x, 
-h_y in the x- and y-directions, we could approximate the first spatial 
-derivatives of a function u(x,y) with a forward difference:
+We need to find expressions for approximating spatial derivatives from known function values on 
+grid points. On a regular 2D grid with grid spacings h_x, h_y in the x- and y-directions, we could 
+approximate the first spatial derivatives of a function u(x,y) with a forward difference:
 
   u_x ~= (u(x+h_x,y) - u(x,y)) / h_x
   u_y ~= (u(x,y+h_y) - u(x,y)) / h_y
   
-A central difference would be more accurate, but for the generalization to 
-irregular grids, the forward difference is a more convenient starting point.
-The key idea for the generalization to an irregular mesh is to approximate 
-directional derivatives into the directions of neighbouring grid points 
-instead of partial derivatives with respect to coordinate axes and later 
-retrieve the partial derivatives from those directional derivatives by a 
-least squares fit.
+A central difference would be more accurate, but for the generalization to irregular grids, the 
+forward difference is a more convenient starting point. The key idea for the generalization to an 
+irregular mesh is to approximate directional derivatives into the directions of neighbouring grid 
+points instead of partial derivatives with respect to coordinate axes and later retrieve the 
+partial derivatives from those directional derivatives by a least squares fit.
 
-Let P be a general grid point that is currently under consideration and let's
-assume, the point P is connected to 3 other grid points Q,R,S. We want to
-find a formula for approximating the first spatial derivatives u_x and u_y 
-at P and we assume that (approximate) function values u(P),u(Q),u(R),u(S) are
-known. We define the vectors a,b,c as:
+Let P be a general grid point that is currently under consideration and let's assume, the point P 
+is connected to 3 other grid points Q,R,S. We want to find a formula for approximating the first 
+spatial derivatives u_x and u_y at P and we assume that (approximate) function values 
+u(P),u(Q),u(R),u(S) are known. We define the vectors a,b,c as:
 
   a := Q-P, b:= R-P, c := S-P
   
@@ -38,27 +32,24 @@ We approximate the directional derivatives at P into the a,b,c directions as:
   u_b ~= (u(P+b)-u(P)) / |b|
   u_c ~= (u(P+c)-u(P)) / |c|
   
-where, of course, u(P+a) = u(Q), etc. Having found the estimates for the 3 
-directional derivatives, we now need a formula to convert them to estimates for
-the partial derivatives into the x- and y-direction which together constitue 
-the gradient vector g. To this end, we note that the directional derivative 
-u_v into any (normalized?) direction vector v can be computed from the gradient 
-g by just taking the scalar product of the two: 
+where, of course, u(P+a) = u(Q), etc. Having found the estimates for the 3 directional derivatives,
+we now need a formula to convert them to estimates for the partial derivatives into the x- and 
+y-direction which together constitute the gradient vector g. To this end, we note that the 
+directional derivative u_v into any (normalized?) direction vector v can be computed from the 
+gradient g by just taking the scalar product of the two: 
 
   u_v = <g,v>
 
-u_v and v are the things what we have (for multiple vectors v: v = a, b, c in 
-our case, so we have u_a, u_b, u_c) and what we want is g. The second idea is to 
-set up the equations:
+u_v and v are the things what we have (for multiple vectors v: v = a, b, c in our case, so we have 
+u_a, u_b, u_c) and what we want is g. The second idea is to set up the equations:
 
   u_a = <g,a>
   u_b = <g,b>
   u_c = <g,c>
 
-and solving them. Now, in the 2D case, our gradient vector g has just 2 
-components and we have 3 equations, so we can't expect to find a gradient g 
-that exactly solves these 3 equations. We are dealing with an overdetermined 
-system of linear equations. Let's write it down in component form:
+and solving them. Now, in the 2D case, our gradient vector g has just 2 components and we have 3 
+equations, so we can't expect to find a gradient g that exactly solves these 3 equations. We are 
+dealing with an overdetermined system of linear equations. Let's write it down in component form:
 
   u_a = u_x*a_x + u_y*a_y
   u_b = u_x*b_x + u_y*b_y
@@ -70,16 +61,16 @@ and in matrix form:
   |b_x b_y|   |u_y|   |u_b|
   |c_x c_y|           |u_c|
 
-In general, there will be no exact solution to this. What we can do, however, 
-is to find a least squares solution, i.e. a solution to the problem:
+In general, there will be no exact solution to this. What we can do, however, is to find a least 
+squares solution, i.e. a solution to the problem:
 
   |a_x a_y| * |u_x| - |u_a| = min   (norm of this vector should be minimal)
   |b_x b_y|   |u_y|   |u_b|
   |c_x c_y|           |u_c|
 
 According to
-https://en.wikipedia.org/wiki/Linear_least_squares#Main_formulations 
-the least squares solution can be found by solving:
+https://en.wikipedia.org/wiki/Linear_least_squares#Main_formulations the least squares solution can
+ be found by solving:
 
         X^T     *     X     *  beta =      X^T      *   y 
 
@@ -112,8 +103,7 @@ Defining A_x = w_a*a_x, B_x = w_b*b_x, U_a = w_a*u_a, etc., we get:
   |A_y A_y C_y|   |B_x A_y|   |u_y|   |A_y B_y C_y|   |U_b|
                   |C_x A_y|                           |U_c|
 
-Let's call the matrix corresponding to (X^T * X) M and the right hand side r, 
-such that:
+Let's call the matrix corresponding to (X^T * X) M and the right hand side r, such that:
 
   M * |u_x| = r,   M = |M_xx M_xy|, r = |r_x|
       |u_y|            |M_xy M_yy|      |r_y|
@@ -126,9 +116,8 @@ with
   r_x  = A_x*U_a + B_x*U_b + C_x*U_c   = sum V_x*U_v
   r_y  = A_y*U_a + B_y*U_b + C_y*U_c   = sum V_y*U_v
 
-and when the vertex P in question has more than 3 neighbors, simply more 
-terms are added, so we can accumulate the matrix M and right hand side r
-conveniently in a loop over the neighbors of P.
+and when the vertex P in question has more than 3 neighbors, simply more terms are added, so we can
+accumulate the matrix M and right hand side r conveniently in a loop over the neighbors of P.
 
 
 

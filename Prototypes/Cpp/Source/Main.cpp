@@ -21,7 +21,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //animateComplexExponentialBlur();
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
-  //epidemic();
+  epidemic();
 
   //testTensor();
   //testPlane();
@@ -48,8 +48,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
   //testExteriorAlgebra3D();
-  testGeometricAlgebra();
+  //testGeometricAlgebra();
   //testEulerTransformation();
+  testGreensFunction();
 
 
 

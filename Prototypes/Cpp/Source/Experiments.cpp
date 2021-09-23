@@ -1400,11 +1400,24 @@ void epidemic()
   // I_av denotes a local spatial average of infected people.....
   
 
-  // animation parameters:
-  int w   = 360;       // image width
-  int h   = 360;       // image height  - 120 is the minimum height for facebook
+  // Animation parameters:
+  //int w   = 360;       // image width
+  //int h   = 360;       // image height  - 120 is the minimum height for facebook
+
+  //int w   = 192;       // nice for previewing when target resolution is 1920x1080 (full HD)
+  //int h   = 108;
+
+  //int w   = 1280;
+  //int h   = 720;
+
+  //int w   = 640;
+  //int h   = 360;
+
+  int w   = 480;
+  int h   = 480;
+
   int fps = 25;        // frames per second
-  int N   = 800;       // number of frames
+  int N   = 1000;      // number of frames
   float dt = w / 250.f;
   //float dt   = 0.1;  // delta-t between two frames
 
@@ -1414,7 +1427,7 @@ void epidemic()
   // model parameters:
   float t = 0.5f;     // transmission rate
   float r = 0.002f;   // recovery rate
-  float d = 1.0f;    // diffusion between 0..1 (crossfade between I and I_av)
+  float d = 1.0f;     // diffusion between 0..1 (crossfade between I and I_av)
 
   // grids for population density P(x,y), density of susceptible people S(x,y), infected people 
   // I(x,y) and recovered people R(x,y)
@@ -1429,7 +1442,6 @@ void epidemic()
 
   rsVideoRGB video(w, h);
   video.setPixelClipping(true);    // turn this off to reveal problems
-
   RAPT::rsImage<float> I_av(w,h);  // temporary, to hold local average
 
   rsConsoleProgressIndicator progressIndicator;
@@ -1511,8 +1523,8 @@ void epidemic()
                            + "_d=" + std::to_string(d); // the trailing zeros are ugly
   rsVideoFileWriter vw;
   vw.setFrameRate(fps);
-  vw.setCompressionLevel(0);  // 0: lossless, 10: good enough, 51: worst
-  //vw.setDeleteTemporaryFiles(false);
+  vw.setCompressionLevel(8);  // 0: lossless, 10: good enough, 51: worst
+  vw.setDeleteTemporaryFiles(false);
   //vw.writeVideoToFile(video, fileName);
   vw.writeVideoToFile(video, "SIRP");
 
@@ -1527,10 +1539,19 @@ void epidemic()
   //     unfiltered
   //  -> use bidriectional IIR filters
   // -we may actually use t < 1
+  // -when rendering with lower resolutions, we see some sort of "ignition" of the top city before
+  //  the "wavefront" reaches it. But this feature goes away with high resolution rendering. I 
+  //  think we should implement a filter kernel whose size is independent of the pixle grid, i.e. 
+  //  spans more pixels when the resolution is higher. Maybe we should use (Gaussina) IIR 
+  //  filtering. The filter kernel width and height in pixels should scale up the withe resultion.
+  //  ..the "ignition" renders best at 480x480 when using gaussBlur3x3 for the local average
 
   // Video Encoding Notes:
   // -with t=0.5, r=0.002, d=1 and the clusters, i get artifacts when using H.264 with CRF=0
-  //  which actually is supposed to be lossless :-O :-(
+  //  (i.e. setCompressionLevel) which actually is supposed to be lossless :-O :-(
+  //  -with CRF=1, the artifacts disappear - *and* the file gets larger!!! there is definitely 
+  //   something buggy with CRF=0!
+  //  -CRF=8 seems a good compromise
 
   // ToDo:
   // -test, if/how the dynamics depends on the pixel-size - if it does, something is wrong - it 
@@ -1544,6 +1565,13 @@ void epidemic()
   //   ..an aspect-ratio other than one is unrealistic anyway because it would mean that the 
   //   disease spreads faster in one than the other direction - the spread would be anisotropic
   //   (we could compensate by using an elliptic filter kernel)
+  // -For making videos, we want the target rendering resolution to be full HD, i.e. 1920x1080
+  //  -maybe use 192x108 for preview renders ...or maybe 1280x720 is enough
+  //  -For rendering in such high resolution, we really need an implementation that render one 
+  //   frame at a time and writes the .ppm file to disk immediately instead of accumulating all 
+  //   frames in RAM and writing out the .ppm files in one go thereafter. Otherwise, it blasts the
+  //   available RAM, swaps out to disk, etc - that's not desirable. But a machine with more RAM 
+  //   would be nice to have anyway
 
   // -maybe plot the 3 curves of a single selected point - they should resemble the curves from
   //  the SIR model
@@ -7477,14 +7505,14 @@ void testEulerTransformation()
   // would mean that all the differencing computations could be bypassed in general and that would 
   // just be too good to be true. 
 
-  // ToDo: make a more efficient implementation that uses only O(N) of axiliary memory. Maybe with
+  // ToDo: make a more efficient implementation that uses only O(N) of auxiliary memory. Maybe with
   // some clever juggling with temporary variables, we could even get away with O(1) of memory?
   //   Step Compute                        Accumulate Forget    Variables
   //   0    a0                             a0                   a0
   //   1    a1,b0=a1-a0                    b0         a0        a1,b0
   //   2    a2,b1=a2-a1,c0=b1-b0           c0         a1,b0     a2,b1,c0
   //   3    a3,b2=a3-a2,c1=b2-b1,d0=c1-c0  d0         a2,b1,c0  a3,b2,c1,d0
-  // hmmm...nope - that doesn't seem to work. Tne number of active (still needed) variables grows 
+  // hmmm...nope - that doesn't seem to work. The number of active (still needed) variables grows 
   // by one in each step. So we need indeed a temporary array of length N. Then precompute all the 
   // original terms and store them in the array. Then apply successive forward differencing and
   // accumulation of the front element (with scale and sign). The algo will need O(N^2) time 
@@ -7500,7 +7528,7 @@ void testEulerTransformation()
   // For example, for the logarithm of x-1, the expression for the n-th term in the original series
   // is x^n / (n+1)
 
-  // Example from wolfram, but i replaced with k - i doesn't work with i in alpha:
+  // Example from wolfram, but i replaced with k - it doesn't work with i in alpha:
   //   DifferenceDelta[Sin[a k + b], {k, 5}]  
   // For the logarithm:
   //   DifferenceDelta[x^k/(k+1), {k, n}]  
@@ -7528,6 +7556,39 @@ void testEulerTransformation()
   // the original series which will almost certainly destroy this simple pattern.
   // Maybe for the truncated sequence, the incomplete beta function can be replaced by the complete
   // one which in turn can be expressed in terms of binomial coeffs? ...just a wild guess...
+}
+
+void testGreensFunction()
+{
+
+  // References:
+  // (1) Teubner - Tschenbuch the Mathematik
+
+  // ToDo:
+  // -Implement a numerical solution of the equation in (1), pg 436
+  //  -Implement G(x,xi) and k_e(x) as functors, i.e. analytically
+  //  -Based on k_e, define k(xi) as superposition of a couple of k_e
+  //  -Form the product G(x,xi) * k(xi) also as functor
+  //  -The integral for y(x) in eq 1.224 is evaluated as numeric integral over xi. To this end, 
+  //   define another functor that depends only on oen variable (xi) that has x as fixed parameter.
+  //   This functor is fed into e.g. rsNumericIntegrator<T>::trapezoidal
+  // -For a general ODE solver based on Green's functions, evaluate the Greens function itself 
+  //  numerically by feeding right hand sides in which the input is 1 at one grid-point only and 0
+  //  everywhere else. This will be a 2D function which we can store as rsMatrix. To solve the ODE
+  //  for a given RHS, we then use this atbulated Greens function directly in 1.224
+  // -Also implement a solver based on Picard iteration (1), pg 439 an 452 and
+  //    https://de.wikipedia.org/wiki/Picard-Iteration. This can also use numerical integration
+  // -Maybe also implement seperation of variables (1), pg 454 using numeric integration of f(t) 
+  //  with respect to t, and of 1/g(x) with respec to x ..ääähh - and then? ..hmm..dunno, if that
+  //  makes any sens...hmm - no - i think, we just have: dx ~= f(t)*g(x) * dt
+  //
+  //
+  // See also:
+  // https://mathworld.wolfram.com/GreensFunction.html
+  // https://en.wikipedia.org/wiki/Green%27s_function
+
+
+  int dummy = 0;
 }
 
 

@@ -1404,8 +1404,8 @@ void epidemic()
   //int w   = 360;       // image width
   //int h   = 360;       // image height  - 120 is the minimum height for facebook
 
-  //int w   = 192;       // nice for previewing when target resolution is 1920x1080 (full HD)
-  //int h   = 108;
+  int w   = 192;       // nice for previewing when target resolution is 1920x1080 (full HD)
+  int h   = 108;
 
   //int w   = 1280;
   //int h   = 720;
@@ -1413,8 +1413,8 @@ void epidemic()
   //int w   = 640;
   //int h   = 360;
 
-  int w   = 480;
-  int h   = 480;
+  //int w   = 480;
+  //int h   = 480;
 
   int fps = 25;        // frames per second
   int N   = 1000;      // number of frames
@@ -1438,15 +1438,20 @@ void epidemic()
   initSirpClusters(S, I, R, P);
 
 
-
-
-  rsVideoRGB video(w, h);
+  rsVideoRGB video(w, h);          // get rid
   video.setPixelClipping(true);    // turn this off to reveal problems
+
   RAPT::rsImage<float> I_av(w,h);  // temporary, to hold local average
 
-  rsConsoleProgressIndicator progressIndicator;
+  rsConsoleProgressIndicator progressIndicator;  // get rid
   std::cout << "Computing frames: ";
   progressIndicator.init();
+
+  rsVideoFileWriter vw;
+  vw.setFrameRate(fps);
+  vw.setCompressionLevel(8);            // 0: lossless, 10: good enough, 51: worst
+  vw.setDeleteTemporaryFiles(false);
+
 
   for(int n = 0; n < N; n++)       // loop over the frames
   {
@@ -1517,14 +1522,10 @@ void epidemic()
 
 
 
-  // factor out into convenience function:
+
   std::string fileName = "SIRP_t=" + std::to_string(t)
                            + "_r=" + std::to_string(r)
                            + "_d=" + std::to_string(d); // the trailing zeros are ugly
-  rsVideoFileWriter vw;
-  vw.setFrameRate(fps);
-  vw.setCompressionLevel(8);  // 0: lossless, 10: good enough, 51: worst
-  vw.setDeleteTemporaryFiles(false);
   //vw.writeVideoToFile(video, fileName);
   vw.writeVideoToFile(video, "SIRP");
 

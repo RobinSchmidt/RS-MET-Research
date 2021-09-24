@@ -207,16 +207,30 @@ public:
       deleteTempFiles(vid.getNumFrames());
   }
 
+  /** Writes the given image as temporary .ppm file to disk. The caller needs to pass the frame 
+  index and the total number of frames. The latter is needed fro the progress bar. */
+  void writeTempFile(const rsImage<rsPixelRGB>& img, int frameIndex, int numFrames = 0) const
+  {
+    std::string path = getTempFileName(frameIndex);
+    writeImageToFilePPM(img, path.c_str());
+    if(numFrames != 0)
+      progressIndicator.update(frameIndex, numFrames-1);  // maybe pass frameIndex+1 and numFrames
+  }
+
   /** Writes the temporary .ppm files to the harddisk for the given video. */
   void writeTempFiles(const rsVideoRGB& vid) const
   {
     int numFrames = vid.getNumFrames();
     std::cout << "Writing ppm files: ";
     progressIndicator.init();
-    for(int i = 0; i < numFrames; i++) {
-      std::string path = getTempFileName(i);
-      writeImageToFilePPM(vid.getFrame(i), path.c_str());
-      progressIndicator.update(i, numFrames-1);  // maybe pass i+1 and numFrames
+    for(int i = 0; i < numFrames; i++) 
+    {
+      writeTempFile(vid.getFrame(i), i, numFrames);
+
+      // old:
+      //std::string path = getTempFileName(i);
+      //writeImageToFilePPM(vid.getFrame(i), path.c_str());
+      //progressIndicator.update(i, numFrames-1);  // maybe pass i+1 and numFrames
     }
     std::cout << "\n\n";
   }

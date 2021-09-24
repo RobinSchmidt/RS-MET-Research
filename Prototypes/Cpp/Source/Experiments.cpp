@@ -1404,8 +1404,8 @@ void epidemic()
   //int w   = 360;       // image width
   //int h   = 360;       // image height  - 120 is the minimum height for facebook
 
-  int w   = 192;       // nice for previewing when target resolution is 1920x1080 (full HD)
-  int h   = 108;
+  //int w   = 192;       // nice for previewing when target resolution is 1920x1080 (full HD)
+  //int h   = 108;
 
   //int w   = 1280;
   //int h   = 720;
@@ -1413,8 +1413,8 @@ void epidemic()
   //int w   = 640;
   //int h   = 360;
 
-  //int w   = 480;
-  //int h   = 480;
+  int w   = 480;
+  int h   = 480;
 
   int fps = 25;        // frames per second
   int N   = 1000;      // number of frames
@@ -1432,30 +1432,26 @@ void epidemic()
   // grids for population density P(x,y), density of susceptible people S(x,y), infected people 
   // I(x,y) and recovered people R(x,y)
   RAPT::rsImage<float> P(w,h), S(w,h), I(w,h), R(w,h);
+  RAPT::rsImage<float> I_av(w,h);  // temporary, to hold local average
 
+
+  // Set up population and initial specks of infection:
   //initSirpUniform(S, I, R, P);
   //initSirpGradient(S, I, R, P);  // shows how the speed of spreading depends on population density
   initSirpClusters(S, I, R, P);
 
-
-  rsVideoRGB video(w, h);          // get rid
-  video.setPixelClipping(true);    // turn this off to reveal problems
-
-  RAPT::rsImage<float> I_av(w,h);  // temporary, to hold local average
-
-  rsConsoleProgressIndicator progressIndicator;  // get rid
-  std::cout << "Computing frames: ";
-  progressIndicator.init();
-
+  rsImage<rsPixelRGB> frame(w, h);      // the current frame 
   rsVideoFileWriter vw;
   vw.setFrameRate(fps);
   vw.setCompressionLevel(8);            // 0: lossless, 10: good enough, 51: worst
   vw.setDeleteTemporaryFiles(false);
 
-
+  std::cout << "Computing frames:\n";
   for(int n = 0; n < N; n++)       // loop over the frames
   {
-    video.appendFrame(I, R, S);// infected: red, recovered: green, susceptible: blue
+    // Write current frame to temp file on disk:
+    rsConvertImage(I, R, S, true, frame);  // infected: red, recovered: green, susceptible: blue
+    vw.writeTempFile(frame, n, N);
 
     // compute local spatial average (todo: maybe use better (= more circular) kernels):
     gaussBlur3x3(I, I_av);  
@@ -1515,19 +1511,16 @@ void epidemic()
     // but this is really a dirty trick - try to get it as good as possible without that trick and
     // put it in to make the implementation even better - but don't use it to fix a botched 
     // implementation...
-
-    progressIndicator.update(n, N-1);
   }
   std::cout << "\n\n";
 
-
-
-
+  // Create video from the temp files:
   std::string fileName = "SIRP_t=" + std::to_string(t)
                            + "_r=" + std::to_string(r)
                            + "_d=" + std::to_string(d); // the trailing zeros are ugly
-  //vw.writeVideoToFile(video, fileName);
-  vw.writeVideoToFile(video, "SIRP");
+  vw.encodeTempFiles("SIRP");
+  //vw.deleteTempFiles(N);   // optional
+
 
 
   // Observations:

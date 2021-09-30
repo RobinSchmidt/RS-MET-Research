@@ -3062,6 +3062,31 @@ RS_PFX rsSin(RS_DCN x)
 // todo: define elementary functions exp, sin, cos, sqrt
 // implement operators that allow mixed operations with std::complex
 
+
+//=================================================================================================
+
+/** Class to represent complex numbers in polar form: z = r * exp(i * a) with radius r and angle 
+(or argument) a. A somwhat peculiar feature of this implementation is that the angle is not 
+restricted to the domain (-pi, pi] or [0, 2*pi) or whatever other interval of length 2*pi but 
+instead can assume any real value and differences in the argument by multiples of 2*pi actually 
+carry meaning: they distinguish between several sheets of a Riemann surface...tbc...  */
+
+template<class T>
+class rsComplexPolar
+{
+
+public:
+
+  // ToDo: 
+  // -define +,-,*,/ operators
+  // -define functions: sqrt, exp, pow, log
+
+protected:
+
+  T r = T(0), a = T(0);
+
+};
+
 //=================================================================================================
 
 /** Class for treating pre-existing data owned elsewhere as tableau. @see rsTableau. */

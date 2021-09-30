@@ -52,9 +52,49 @@ void gaussBlur3x3(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y)
   }
 }
 
+template<class T>
+void gaussBlur5x5(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y)
+{
+  //rsAssert(y.hasSameShapeAs(x));  // todo!!
+  rsAssert(y.getPixelPointer(0,0) != x.getPixelPointer(0,0), "Cant be used in place");
+  rsAssert(y.hasSameShapeAs(x), "Input and output images must have the same shape");
+  int w = x.getWidth();
+  int h = x.getHeight();
 
-// todo: implement a general filter3x3 function that takes a 3x3 image to be used as filter kernel
+  T c = T(1) / T(273);
+  for(int j = 2; j < h-2; j++)
+  {
+    for(int i = 2; i < w-2; i++)
+    {
+      // Outer ring:
+      T t1 = 1*c * (x(i-2, j-2) + x(i-2, j+2) + x(i+2, j-2) + x(i+2, j+2));     // corners
+      T t2 = 4*c * (x(i-1, j-2) + x(i-1, j+2) + x(i+1, j-2) + x(i+1, j+2) +
+                    x(i-2, j-1) + x(i-2, j+1) + x(i+2, j-1) + x(i+2, j+1)   );
+      T t3 = 7*c * (x(i-0, j-2) + x(i-0, j+2) + x(i-2, j-0) + x(i+2, j+0)); 
 
+      // Inner ring:
+      T t4 = 16*c * (x(i-1, j-1) + x(i-1, j+1) + x(i+1, j-1) + x(i+1, j+1));
+      T t5 = 26*c * (x(i-0, j-1) + x(i-0, j+1) + x(i-1, j-0) + x(i+1, j+0));
+
+      // Center:
+      T t6 = 41*c * x(i,j);
+
+      // Sum:
+      y(i,j) = t1 + t2 + t3 + t4 + t5 + t6;
+    }
+  }
+}
+// ToDo:
+// -handle boundaries
+
+
+// Todo: 
+// -implement a general filter3x3 function that takes a 3x3 image to be used as filter kernel
+// -Implement Guassian filters of sizes 5x5, 7x7, see:
+//  https://homepages.inf.ed.ac.uk/rbf/HIPR2/gsmooth.htm
+//  https://www.researchgate.net/figure/Discrete-approximation-of-the-Gaussian-kernels-3x3-5x5-7x7_fig2_325768087
+// -Implement the "magic kernel" and its sharp variant:
+//  http://www.johncostella.com/magic/ http://www.johncostella.com/magic/mks.pdf
 
 template<class T>
 void sobelEdgeDetector3x3(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& G, RAPT::rsImage<T>& t)
@@ -155,6 +195,33 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
   //   S = sum_k a^k = 1/(1-a)  
   // where k runs from 0 to infinity - so with b=1, we would get a sum of 1/(1-a) - scaling that by
   // the reciprocal, would scale by 1-a, whcih is exactly the formula for b
+}
+
+void testGaussBlurFIR()
+{
+  int w = 21;
+  int h = 21;
+
+  RAPT::rsImage<float> x(w,h), y3(w,h), y5(w,h);  // input and output images
+
+  x.fillAll(0.f);
+  x(w/2, h/2) = 1.f;
+
+
+  gaussBlur3x3(x, y3);
+  gaussBlur5x5(x, y5);
+
+  RAPT::rsImageProcessor<float>::normalize(y3);
+  RAPT::rsImageProcessor<float>::normalize(y5);
+
+
+  writeImageToFilePPM(y3, "OutputGauss3x3.ppm");
+  writeImageToFilePPM(y5, "OutputGauss5x5.ppm");
+
+  // ToDo:
+  // -Compare 5x5 blur to applying a 3x3 blur twice, likewise with 7x7 blurs etc.
+
+  int dummy = 0;
 }
 
 void testGaussBlurIIR()
@@ -1404,6 +1471,9 @@ void epidemic()
   //int w   = 360;       // image width
   //int h   = 360;       // image height  - 120 is the minimum height for facebook
 
+  int w   = 1920;        // Full HD
+  int h   = 1080;
+
   //int w   = 192;       // nice for previewing when target resolution is 1920x1080 (full HD)
   //int h   = 108;
 
@@ -1413,8 +1483,11 @@ void epidemic()
   //int w   = 640;
   //int h   = 360;
 
-  int w   = 480;
-  int h   = 480;
+  //int w   = 480;
+  //int h   = 480;
+
+  //int w   = 960;
+  //int h   = 960;
 
   int fps = 25;        // frames per second
   int N   = 1000;      // number of frames
@@ -1453,8 +1526,16 @@ void epidemic()
     rsConvertImage(I, R, S, true, frame);  // infected: red, recovered: green, susceptible: blue
     vw.writeTempFile(frame, n, N);
 
-    // compute local spatial average (todo: maybe use better (= more circular) kernels):
-    gaussBlur3x3(I, I_av);  
+    // compute local spatial average
+    //gaussBlur3x3(I, I_av);
+    gaussBlur5x5(I, I_av);
+      // todo: 
+      // -maybe use better (= more circular) kernels, maybe use bidirectional IIR filters
+      // -maybe have a function gaussBlur(imgIn, imgOut, kernelSize, variance)
+      //  -this function should first generate an NxN gaussian kernel and the apply it
+      //  -the applyFilter(imgIn, imgOut, kernel) part should be factored out, maybe it can use
+      //   rsMatrix::convolve - but maybe not - we need some means of handling the boundaries that 
+      //   may be different from what rsMatrix does
 
     // update density-images of S,I,R
     for(int j = 0; j < h; j++) {
@@ -7359,7 +7440,16 @@ void testGeometricAlgebra()
   // very different from the finite dimensional case: the dimensionality of the grades grows 
   // forever rather than growing and then shrinking back. Then, what about the multivector space
   // obtained from a vector space with uncountably infinite dimension, like the vector space of all
-  // (square-integrable?) functions on an interval?
+  // (square-integrable?) functions on an interval? Is there a canonical basis for such a space? 
+  //  Maybe in terms of Dirac delta functions? How can we define an outer product of 2 functions f 
+  // and g and what does it represent? maybe the space of all functions that can be expressed as 
+  // linear combinations of f and g. What does the magnitude of such a bifunction represent and how
+  // can we compute int. Maybe define the angle between f and g as acos(<f,g>), the magnitude of
+  // f as |f| = sqrt(<f,f>) where <f,g> denotes a suitably defined inner product. Then maybe it 
+  // makes sense to define the magnitude of the outer product f^g as |f|*|g|*sin(angle(f,g)) in 
+  // analogy to finite-dimensional vector spaces. How can we find the expansion coeffs of a 
+  // bifunction with respect to a set of basis bifunctions constructed from outer products of
+  // basis functions?
   
 
 
@@ -7584,6 +7674,40 @@ void testGreensFunction()
 
   int dummy = 0;
 }
+
+void testComplexPolar()
+{
+
+  // Ideas:
+  // -Multiplication: r*exp(i*a) * s*exp(i*b) = r*s * exp(i(a+b))
+  // -Reciprocal (multiplicative inverse): 1/(r*exp(i*a)) = (1/r)*exp(-i*a)
+  // -Addition:
+  //  -Convert operands from polar to cartesian
+  //  -do the usual addition of re and im
+  //  -compute magnitude to find radius of result
+  //  -compute principal value of angle using atan2 as usual
+  //  -adjust angle by adding/subtracting an appropriate multiple of 2*pi such that the angle of
+  //   the result falls in between the two angles of the operands (rationale: just look at the 
+  //   parallelogram rule from vector addition)
+  // -Negation (additive inverse): -(r*exp(i*a)) = r*exp(i*(a-pi))
+  //  ...hmm...but negating twice does not bring us back to where we started but instead has added 
+  //  -2*pi to the angle...maybe try to figure out a subtraction rule from the addition rule and then 
+  //  define -z by 0-z...if that makes sense
+  //  or: maybe use either a-pi or a+pi depending on what value a has, maybe take principal value 
+  //  of a and use a-pi if positive and a+pi if negative -> check, if this give a true additive 
+  //  inverse...maybe we need to also take into account, how many time we need to subtract or add
+  //  2*pi to get into the principal range and then add/sub an appropriate multiple to the 
+  //  resulting angle, too - the goal is that (r*exp(i*a)) + (-(r*exp(i*a))) = 0*exp(i*0), i.e. the
+  //  angle in the result should be zero (and not some other multiple of 2*pi), regardless of a
+  // -maybe try another representation based on usual re- and im-parts and an integer that 
+  //  indicates the sheet
+
+  // see:
+  // -Complex Analysis #2 | Functions of a complex variable
+  //  https://www.youtube.com/watch?v=7gSklO9FG6A 
+}
+
+
 
 
 // fast inverse square root approximation from Quake engine

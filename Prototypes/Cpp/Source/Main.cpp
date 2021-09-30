@@ -12,7 +12,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   getchar();
   */
 
-
+  testGaussBlurFIR();
   //testGaussBlurIIR();
   //testMultiPass();
   //testImageFilterSlanted();
@@ -50,7 +50,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testExteriorAlgebra3D();
   //testGeometricAlgebra();
   //testEulerTransformation();
-  testGreensFunction();
+  testGreensFunction();  // stub
+  testComplexPolar();    // stub
 
 
 

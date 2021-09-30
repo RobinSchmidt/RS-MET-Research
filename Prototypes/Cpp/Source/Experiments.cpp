@@ -84,11 +84,48 @@ void gaussBlur5x5(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y)
     }
   }
 }
-// ToDo:
-// -handle boundaries
 
+template<class T>
+void gaussBlur7x7(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y)
+{
+  //rsAssert(y.hasSameShapeAs(x));  // todo!!
+  rsAssert(y.getPixelPointer(0,0) != x.getPixelPointer(0,0), "Cant be used in place");
+  rsAssert(y.hasSameShapeAs(x), "Input and output images must have the same shape");
+  int w = x.getWidth();
+  int h = x.getHeight();
+
+  T c = T(1) / T(1003);
+  for(int j = 3; j < h-3; j++)
+  {
+    for(int i = 3; i < w-3; i++)
+    {
+      // Outer ring:
+      T t1 = 2*c * (x(i-0, j-3) + x(i-0, j+3) + x(i-3, j-0) + x(i+3, j+0));
+      T t2 = 1*c * (x(i-1, j-3) + x(i-1, j+3) + x(i+1, j-3) + x(i+1, j+3) +
+                    x(i-3, j-1) + x(i-3, j+1) + x(i+3, j-1) + x(i+3, j+1)   );
+
+      // Middle ring:
+      T t3 =  3*c * (x(i-2, j-2) + x(i-2, j+2) + x(i+2, j-2) + x(i+2, j+2));
+      T t4 = 13*c * (x(i-1, j-2) + x(i-1, j+2) + x(i+1, j-2) + x(i+1, j+2) +
+                     x(i-2, j-1) + x(i-2, j+1) + x(i+2, j-1) + x(i+2, j+1)   );
+      T t5 = 22*c * (x(i-0, j-2) + x(i-0, j+2) + x(i-2, j-0) + x(i+2, j+0)); 
+
+      // Inner ring:
+      T t6 = 59*c * (x(i-1, j-1) + x(i-1, j+1) + x(i+1, j-1) + x(i+1, j+1));
+      T t7 = 97*c * (x(i-0, j-1) + x(i-0, j+1) + x(i-1, j-0) + x(i+1, j+0));
+
+      // Center:
+      T t8 = 159*c * x(i,j);
+
+      // Sum:
+      y(i,j) = t1 + t2 + t3 + t4 + t5 + t6 + t7 + t8;
+    }
+  }
+}
+// This 7x7 kernel seems to be just a more precise version of the 5x5 kernel but has the same width
 
 // Todo: 
+// -handle boundaries
 // -implement a general filter3x3 function that takes a 3x3 image to be used as filter kernel
 // -Implement Guassian filters of sizes 5x5, 7x7, see:
 //  https://homepages.inf.ed.ac.uk/rbf/HIPR2/gsmooth.htm
@@ -202,21 +239,29 @@ void testGaussBlurFIR()
   int w = 21;
   int h = 21;
 
-  RAPT::rsImage<float> x(w,h), y3(w,h), y5(w,h);  // input and output images
+  using IP = RAPT::rsImageProcessor<float>;
 
+  // Allocate input and output images:
+  RAPT::rsImage<float> x(w,h), y3(w,h), y5(w,h), y7(w,h), y33(w,h), y53(w,h), y55(w,h); 
+
+  // Create black input with single white spot at the center:
   x.fillAll(0.f);
   x(w/2, h/2) = 1.f;
 
+  // Create filtered versions and write them to files:
+  gaussBlur3x3(x,  y3);  IP::normalize(y3);  writeImageToFilePPM(y3,  "Gauss3.ppm");
+  gaussBlur5x5(x,  y5);  IP::normalize(y5);  writeImageToFilePPM(y5,  "Gauss5.ppm");
+  gaussBlur7x7(x,  y7);  IP::normalize(y7);  writeImageToFilePPM(y7,  "Gauss7.ppm");
+  gaussBlur3x3(y3, y33); IP::normalize(y33); writeImageToFilePPM(y33, "Gauss3+3.ppm");
+  gaussBlur3x3(y5, y53); IP::normalize(y53); writeImageToFilePPM(y53, "Gauss5+3.ppm");
+  gaussBlur5x5(y5, y55); IP::normalize(y55); writeImageToFilePPM(y55, "Gauss5+5.ppm");
 
-  gaussBlur3x3(x, y3);
-  gaussBlur5x5(x, y5);
 
-  RAPT::rsImageProcessor<float>::normalize(y3);
-  RAPT::rsImageProcessor<float>::normalize(y5);
+  // Maybe factor out into a lambda function to be called like 
+  // writeKernelFile(x, &gausBlur3x3, "3x3") etc.
 
 
-  writeImageToFilePPM(y3, "OutputGauss3x3.ppm");
-  writeImageToFilePPM(y5, "OutputGauss5x5.ppm");
+
 
   // ToDo:
   // -Compare 5x5 blur to applying a 3x3 blur twice, likewise with 7x7 blurs etc.

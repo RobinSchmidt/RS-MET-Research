@@ -12,7 +12,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   getchar();
   */
 
-  testGaussBlurFIR();
+  //testGaussBlurFIR();
   //testGaussBlurIIR();
   //testMultiPass();
   //testImageFilterSlanted();
@@ -21,7 +21,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //animateComplexExponentialBlur();
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
-  epidemic();
+  //epidemic();
 
   //testTensor();
   //testPlane();

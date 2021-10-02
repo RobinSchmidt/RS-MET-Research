@@ -2628,6 +2628,9 @@ RS_PFX rsSqrt(RS_DN x) { return RS_DN(rsSqrt(x.v), x.d*TVal(0.5)/sqrt(x.v)); }
 // requires x.v > 0 - todo: make it work for x.v >= 0 - the derivative part at 0 should be computed
 // by using a limit
 
+RS_PFX rsPow(RS_DN x, int n) { return RS_DN(rsPow(x.v, n),  x.d*n*rsPow(x.v, n-1)); }
+// needs test
+
 // todo: cbrt, pow, abs, asin, acos, atan, atan2, etc.
 // what about floor and ceil? should their derivatives be a delta-comb? well - maybe i should not
 // care about them - they are not differentiable anyway

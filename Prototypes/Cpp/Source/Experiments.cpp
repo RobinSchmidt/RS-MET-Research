@@ -207,6 +207,8 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
       //T xL = y(0,   j); // maybe we should use x(0, j) instead - likewise for xR
       //T xR = y(w-1, j);
       //flt.applyForwardBackward(y.getPixelPointer(0, j), y.getPixelPointer(0, j), w, xL, xR);
+      // I think, the new version handles the boudary condition differently - instead of assuming 
+      // zero samples, it assumes infinite repetition of the boundary pixel values
     }
 
   // vertical passes:
@@ -232,6 +234,12 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
   //   S = sum_k a^k = 1/(1-a)  
   // where k runs from 0 to infinity - so with b=1, we would get a sum of 1/(1-a) - scaling that by
   // the reciprocal, would scale by 1-a, whcih is exactly the formula for b
+
+  // -Maybe combine horizontal and vertical passes with diagonal passes. Maybe that converges 
+  //  faster to an isotropic filter. I think, a diagonal filter has stride w+1 or w-1. It also 
+  //  needs to scale the coeff by 1/sqrt(2) to compensate for the greater distance.
+  // -Maybe for the boundaries, use c*xL, c*xR where 0 <= c <= 1 is a user parameter to dial 
+  //  between zero and repeat boundry conditions
 }
 
 void testGaussBlurFIR()
@@ -3802,6 +3810,22 @@ void testAutoDiff()
   //  function via autodiff...can we also implement an ODE solver in terms of autodiff?
   // -how about forming dual number from complex (instead of real) numbers? or forming complex 
   //  numbers of dual numbers?
+
+
+  // Is it possible to find higher derivatives by somehow feeding the first derivative back to get 
+  // the 2nd, then feeding the 2nd back to get the 3rd, etc? Let's try it with f(x) = x^5:
+  x = DN(2.f);
+  y = rsPow(x, 5);   // y = 2^5 = 32, y' = 5 * 2^4 = 80, y'' = 4 * 5 * 2^3 = 160
+  x = DN(y.v, y.d);
+  y = rsPow(x, 5);   
+  // ...nope - that doesn't work. what was i thinking? Maybe implement a class that also 
+  // automatically computes 2nd derivatives. Maybe they should be of yet another type? The 1st 
+  // derivative of a scalar field is a vector (the gradient) while the 2nd derivative is a matrix
+  // (the Hessian). Maybe, when forming products in the chain-rule, product-rule, etc. we need the
+  // outer product? The derivative of a vector field is also a matrix (the Jacobian)...hmmm...
+
+
+
 
 
 
@@ -7744,6 +7768,9 @@ void testComplexPolar()
   //  2*pi to get into the principal range and then add/sub an appropriate multiple to the 
   //  resulting angle, too - the goal is that (r*exp(i*a)) + (-(r*exp(i*a))) = 0*exp(i*0), i.e. the
   //  angle in the result should be zero (and not some other multiple of 2*pi), regardless of a
+  // -Subtraction: We want to compute c = a-b. The angle of c must be chosen in such a way that the
+  //  angle of a is between the angle of b and the angle of c because c = a-b means a = c+b and we 
+  //  already have the "angle-must-be-between" rule for sums a+b
   // -maybe try another representation based on usual re- and im-parts and an integer that 
   //  indicates the sheet
 

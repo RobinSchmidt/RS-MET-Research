@@ -32,3 +32,9 @@ Temp/
 *.ipch
 *.db
 Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
+Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
+*.pdf
+Misc/Formulas.synctex.gz
+*.toc
+Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
+*.db

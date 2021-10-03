@@ -1,10 +1,27 @@
 \subsubsection{Integration by Parts} 
-\begin{align}
-  \int_a^b u(x) v'(x) \, dx 
-  & = \Big[u(x) v(x)\Big]_a^b - \int_a^b u'(x) v(x) \, dx\\[6pt]
-  & = u(b) v(b) - u(a) v(a) - \int_a^b u'(x) v(x) \, dx.
-\end{align}
-With $u = u(x)$, $du = u'(x) \,dx$ such that $v = v(x)$ and $dv = v'(x) dx$:
-\begin{align}
+Write the function $f(x)$ to be integrated as a product $u(x)v(x)$ such that the remaining integral over $u' v$ in the formula is easier to evaluate than the original one. This usually means to choose a $u$ that simplifies under differentiation and/or to choose a $v'$ that simplifies under integration. The formula for a definite integral is:
+\begin{equation}
+  \int_a^b u(x) v'(x) \, dx = \Big[u(x) v(x)\Big]_a^b - \int_a^b u'(x) v(x) \, dx
+\end{equation}
+With $u = u(x), du = u'(x) dx, v = v(x), dv = v'(x) dx$, an indefinite integral can be written using the differentials $du, dv$ as:
+\begin{equation}
   \int u \, dv \ =\ uv - \int v \, du
+\end{equation}
+The formulas can be derived from the product rule of differentiation.
+
+\paragraph{Example} Let's find the indefinite integral of $f(x) = 2 x \ln x \, dx$ using $u' = 2 x, v = \ln x$ such that $u = x^2, v' = 1/x$ and $v' u = x^2/x = x$. Note that the roles of $u,v$ are reversed here. They are just dummy names and you'll find formulas using both conventions, so a bit of flexibility is good:
+\begin{align}
+  \int 2 x \ln x \, dx = x^2 \ln x - \int x \, dx = x^2 \ln x - \frac{x^2}{2} + C
 \end{align}
+...yeah, the $+ C$ has been neglected (i.e. taken to be zero) in the formulas above. It's more convenient to just add the integration constant at the very end of the calculation.
+
+
+%\newline % we want some vertical space - newline doe not really cut it
+See also:
+\href{https://en.wikipedia.org/wiki/Integration_by_parts}{wikipedia.org/wiki/Integration\_by\_parts}
+
+% Applications: finding adjoint operators (move integral from one function to the other)
+% https://www.youtube.com/watch?v=aG5tFA8GJ78 Linear Operators and their Adjoints (Nathan Kutz)
+
+
+% ToDo: Substitution, Logarithmic integration, integration of inverse?

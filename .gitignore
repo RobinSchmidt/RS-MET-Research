@@ -38,3 +38,4 @@ Misc/Formulas.synctex.gz
 *.toc
 Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
 *.db
+*.out

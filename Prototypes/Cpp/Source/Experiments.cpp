@@ -7746,8 +7746,7 @@ void testGreensFunction()
 
 void testRationalTrigonometry()
 {
-  using Integer  = rsInt64;
-  //using Integer  = int;
+  using Integer  = rsInt64;               // to avoid overflow, we really need 64 bits
   using Fraction = rsFraction<Integer>;
   using Point    = rsVector2D<Fraction>;
   using Vector   = rsVector2D<Fraction>;  // for clarity, we distinguish between points and vectors
@@ -7799,7 +7798,8 @@ void testRationalTrigonometry()
   Line CA = makeLine(C,A);
   Line CB = makeLine(C,B);
   // hmm...weird...i would have expected same or negative coeffs of AB, but that's not true for the
-  // b-coeff -> figure out what's going on
+  // b-coeff -> figure out what's going on...maybe we can use this differentce to give lines a 
+  // direction
 
   // Compute the quadrances between the vertices of the triangle:
   Fraction Q1 = quadrance(B,C);
@@ -7808,38 +7808,59 @@ void testRationalTrigonometry()
 
   // Compute the spreads between the 3 lines:
   Fraction s1 = spread(AB, AC);
-  Fraction s2 = spread(AB, BC);  // should actually be spread(BA,BC) but that doesn't matter?
-  Fraction s3 = spread(AC, BC);  // should be spread(CA,CB)?
-  
-  //s3 = spread(CA, CB);
-  // stays the same...good! ToDo: check also: spread(BC,AC), spread(CB,CA))
+  Fraction s2 = spread(AB, BC);   // should actually be spread(BA,BC) but that doesn't matter?
+  Fraction s3 = spread(AC, BC);   // should be spread(CA,CB)?
+  Fraction c3 = Integer(1) - s3;  // for convenience, not a fundamental quantity
 
-
-  Fraction lhs, rhs;
+  // Test the theorems:
+  //Fraction tmp;
+  Fraction lhs, rhs, mhs;  // left- and righ hand side.....and also mid-hand side
   bool ok = true;
 
+  // Test commutativity of spread:
+  lhs = spread(AB, AC);
+  rhs = spread(AC, AB);
+  ok &= lhs == rhs;
 
+  // Test, whether or not is matters, in which way we create the lines:
+  rhs = spread(BA, CA); ok &= lhs == rhs;
+  rhs = spread(AB, CA); ok &= lhs == rhs;
+  lhs = spread(BA, AC); ok &= lhs == rhs;
 
   // Check cross law (holds for any triangle, ~law of cosines):
   lhs = sq(Q1 + Q2 - Q3);
   rhs = Integer(4)*Q1*Q2*(Integer(1)-s3);
   ok &= lhs == rhs;
 
+  // Check the spread law (holds for any triangle, ~law of sines):
+  lhs = s1 / Q1;
+  mhs = s2 / Q2;
+  rhs = s3 / Q3;
+  ok &= lhs == mhs && mhs == rhs;
+
+  // Check the triple spread law (holds for any triangle, ~sum of interiors):
+  lhs = sq(s1 + s2 + s3);
+  rhs = Integer(2)*(sq(s1) + sq(s2) + sq(s3)) + Integer(4)*s1*s2*s3;
+  ok &= lhs == rhs;
 
 
   // Check Pythagoras' theorem (holds for right triangles):
   // ....
 
-
   // Check triple quad formula (hold for degenerate triangles):
-  lhs = sq(Q1 + Q2 + Q3);
-  rhs = Integer(2)*(sq(Q1) + sq(Q2) + sq(Q3));
+  //lhs = sq(Q1 + Q2 + Q3);
+  //rhs = Integer(2)*(sq(Q1) + sq(Q2) + sq(Q3));
   // they are not equal - something is wrong! ah - wait! lhs == rhs iff the 3 points are on the 
   // same line which is not the case - so to check the triple quad formula, we should create a 
   // degenerate triangle
 
 
-  // ToDo: do all computations also in classic trigonometry and investigate the numerical errors
+
+  // ToDo: 
+  // -take 3 values as given say Q2,s1,Q3 and compute the other 3 - the classical cases of triangle
+  //  computations
+  // -do all computations also in classic trigonometry and investigate the numerical errors
+  // -plot spread as function of angle and angle as function of spread
 
 
   rsAssert(ok);

@@ -3068,6 +3068,48 @@ RS_PFX rsSin(RS_DCN x)
 
 //=================================================================================================
 
+/** Defines a line in the 2D plane using 3 numbers a,b,c representing the line equation:
+
+  a*y + b*x + c = 0
+
+
+
+*/
+
+template<class T>
+class rsLine
+{
+
+
+public:
+
+
+//protected:
+
+  T a, b, c;  // coefficients of line equation: a*y + b*x + c = 0
+
+};
+
+template<class T>  // T should be the type for the vertices such as rsVector2D, rsVector3D
+class rsTriangle
+{
+
+public:
+
+  rsTriangle(T _A, T _B, T _C) : A(_A), B(_B), C(_C) {}
+
+
+//protected:
+
+  T A, B, C;  // coordinates of the vertices
+
+};
+
+
+
+
+//=================================================================================================
+
 /** Class to represent complex numbers in polar form: z = r * exp(i * a) with radius r and angle 
 (or argument) a. A somwhat peculiar feature of this implementation is that the angle is not 
 restricted to the domain (-pi, pi] or [0, 2*pi) or whatever other interval of length 2*pi but 

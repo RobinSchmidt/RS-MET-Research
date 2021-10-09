@@ -7744,6 +7744,52 @@ void testGreensFunction()
   int dummy = 0;
 }
 
+void testRationalTrigonometry()
+{
+  using Fraction = rsFraction<int>;
+  using Point    = rsVector2D<Fraction>;
+  using Vector   = rsVector2D<Fraction>;  // for clarity, we distinguish between points and vectors
+  using Line     = rsLine<Fraction>;
+  using Triangle = rsTriangle<Point>;
+
+
+  Point A(3,2), B(13,5), C(11,7);
+  Triangle T(A, B, C);
+
+
+  // Shorthand for the squaring function:
+  auto sq = [](Fraction x){ return x*x; };
+
+  // Quadrance between two points is defined as squared distance-squared: 
+  auto quadrance = [&](Point A, Point B)
+  {
+    return sq(B.x-A.x) + sq(B.y-A.y);
+  };
+
+  // Spread between two lines is defined as the squared sine of the angle. To compute it, we only 
+  // need elementary arithmetic:
+  auto spread = [&](Line L1, Line L2)
+  {
+    Fraction num = sq(L1.a*L2.b - L2.a*L1.b);
+    Fraction den = (sq(L1.a)+sq(L1.b)) * (sq(L2.a)+sq(L2.b));
+    return num / den; // (a1*b2 - a2*b1)^2 / ( (a1^2+b1^2)*(a2^2+b2^2) )
+  };
+
+  // Creates a line from 2 points:
+  auto makeLine = [](Point A, Point B)
+  {
+    Line L;
+    L.a = A.y - B.y;
+    L.b = B.x - A.y;
+    L.c = A.x*B.y - A.y*B.x;
+    return L;
+  };
+
+
+
+  int dummy = 0;
+}
+
 void testComplexPolar()
 {
 

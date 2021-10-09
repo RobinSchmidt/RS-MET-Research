@@ -50,8 +50,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testExteriorAlgebra3D();
   //testGeometricAlgebra();
   //testEulerTransformation();
-  testGreensFunction();  // stub
-  testComplexPolar();    // stub
+  //testGreensFunction();  // stub
+  //testComplexPolar();    // stub
+  testRationalTrigonometry();
 
 
 

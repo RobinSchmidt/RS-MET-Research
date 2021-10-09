@@ -7746,7 +7746,9 @@ void testGreensFunction()
 
 void testRationalTrigonometry()
 {
-  using Fraction = rsFraction<int>;
+  using Integer  = rsInt64;
+  //using Integer  = int;
+  using Fraction = rsFraction<Integer>;
   using Point    = rsVector2D<Fraction>;
   using Vector   = rsVector2D<Fraction>;  // for clarity, we distinguish between points and vectors
   using Line     = rsLine<Fraction>;
@@ -7754,7 +7756,7 @@ void testRationalTrigonometry()
 
 
   Point A(3,2), B(13,5), C(11,7);
-  Triangle T(A, B, C);
+  Triangle ABC(A, B, C);
 
 
   // Shorthand for the squaring function:
@@ -7780,14 +7782,67 @@ void testRationalTrigonometry()
   {
     Line L;
     L.a = A.y - B.y;
-    L.b = B.x - A.y;
+    L.b = B.x - A.x;
     L.c = A.x*B.y - A.y*B.x;
     return L;
   };
 
 
+  // Define the 3 lines that make up our triangle ABC:
+  Line AB = makeLine(A,B); 
+  Line AC = makeLine(A,C); 
+  Line BC = makeLine(B,C);
+  // ToDo: implement a constructor for Line that takes two points
 
-  int dummy = 0;
+  // just a test:
+  Line BA = makeLine(B,A); 
+  Line CA = makeLine(C,A);
+  Line CB = makeLine(C,B);
+  // hmm...weird...i would have expected same or negative coeffs of AB, but that's not true for the
+  // b-coeff -> figure out what's going on
+
+  // Compute the quadrances between the vertices of the triangle:
+  Fraction Q1 = quadrance(B,C);
+  Fraction Q2 = quadrance(A,C);
+  Fraction Q3 = quadrance(A,B);
+
+  // Compute the spreads between the 3 lines:
+  Fraction s1 = spread(AB, AC);
+  Fraction s2 = spread(AB, BC);  // should actually be spread(BA,BC) but that doesn't matter?
+  Fraction s3 = spread(AC, BC);  // should be spread(CA,CB)?
+  
+  //s3 = spread(CA, CB);
+  // stays the same...good! ToDo: check also: spread(BC,AC), spread(CB,CA))
+
+
+  Fraction lhs, rhs;
+  bool ok = true;
+
+
+
+  // Check cross law (holds for any triangle, ~law of cosines):
+  lhs = sq(Q1 + Q2 - Q3);
+  rhs = Integer(4)*Q1*Q2*(Integer(1)-s3);
+  ok &= lhs == rhs;
+
+
+
+  // Check Pythagoras' theorem (holds for right triangles):
+  // ....
+
+
+  // Check triple quad formula (hold for degenerate triangles):
+  lhs = sq(Q1 + Q2 + Q3);
+  rhs = Integer(2)*(sq(Q1) + sq(Q2) + sq(Q3));
+  // they are not equal - something is wrong! ah - wait! lhs == rhs iff the 3 points are on the 
+  // same line which is not the case - so to check the triple quad formula, we should create a 
+  // degenerate triangle
+
+
+  // ToDo: do all computations also in classic trigonometry and investigate the numerical errors
+
+
+  rsAssert(ok);
 }
 
 void testComplexPolar()

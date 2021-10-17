@@ -7872,8 +7872,18 @@ void testRationalTrigonometry()
   rsAssert(ok);
 }
 
+template<class T>
+T newtonStep(const RAPT::rsPolynomial<T>& p, T x)
+{
+  T y, yp;  // y, y'
+  p.evaluateWithDerivative(x, p.getCoeffPointerConst(), p.getDegree(), &y, &yp);
+  return x - y / yp;  // what if yp is zero?
+}
+
 void testNewtonFractal()
 {
+  // under construction
+
   // We generate the Newton fractal which arises from iterating:
   //
   //   z[n+1] = z[n] - p(z)/p'(z)
@@ -7892,6 +7902,70 @@ void testNewtonFractal()
   // the Laguerre root finding method in the hope to figure out what we can say about *its* 
   // convergence. As far as i know, little is known about this which is one reason why usually the
   // Jenkins/Traub method is preferred in numerical packages...tbc...
+
+  // User parameters:
+  using Real  = double;
+  Real xMin   = -2;
+  Real xMax   = +2;
+  Real yMin   = -2;
+  Real yMax   = +2;
+  int  w      = 10;       // image width
+  int  h      = 10;       // image height
+  int  maxIts =  3;        // maximum number of iterations
+  Real tol    =  1.e-13;   // tolerance for convergence test
+
+  // For covenience:
+  using Complex = std::complex<Real>;
+  using Poly    = RAPT::rsPolynomial<Complex>;
+  using VecC    = std::vector<Complex>;
+  using Img     = RAPT::rsImage<float>;
+  using Color   = rsColor<float>;  // maybe use rsPixelRGB
+
+  // Make a 4th degree polynomial with roots at 1,i,-1,-i:
+  Complex I(0, 1);               // imaginary unit
+  VecC roots({1, I, -1, -I});
+  int numRoots = (int) roots.size();
+  Poly p; p.setRoots(&roots[0], numRoots);
+
+  // Create an array with the colors to the used for each root:
+  std::vector<Color> colors(numRoots);
+  for(int i = 0; i < numRoots; i++)
+    colors[i] = float(i) / float(numRoots-1);
+  // preliminary
+
+  // Create an image, loop through its pixels, figure out the color and color it:
+  Img img(w, h);
+  for(int j = 0; j < h; j++)
+  {
+    for(int i = 0; i < w; i++)
+    {
+      Real x = RAPT::rsLinToLin(double(i), 0.0, w-1.0, xMin, xMax);
+      Real y = RAPT::rsLinToLin(double(j), 0.0, h-1.0, yMax, yMin);
+      Complex z0(x, y);
+
+      // Factor out and optimize (use a tolerance and break early, if possible):
+      Complex z = z0;
+      for(int n = 0; n < maxIts; n++)
+        z = newtonStep(p, z);
+
+      // Find index of root that is closest to our final z, choose its associated color and fill
+      // the pixel accordingly:
+      int k = 0; // preliminary, todo: k = findClosestMatch(z, roots);
+      Color color = colors[k];
+
+
+
+
+
+
+
+      int dummy = 0;
+
+    }
+  }
+
+
+
 
 
 

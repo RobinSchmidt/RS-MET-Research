@@ -7880,6 +7880,35 @@ T newtonStep(const RAPT::rsPolynomial<T>& p, T x)
   return x - y / yp;  // what if yp is zero?
 }
 
+/** Returns the index of the element in the array A (of length N) that is closest to the given x. 
+If there are multiple elements in A with the same distance to x, it will return the index of the 
+first of these. */
+template<class T, class F>
+int findBestMatch(T* A, int N, const T& x, const F& closer)
+{
+  T   minVal = A[0];
+  int minIdx = 0;
+  for(int i = 0; i < N; i++)  // maybe we cant start at i = 1
+  {
+    //if(rsNorm(A[i] - x) < rsNorm(minVal - x))  // (*)
+    if(closer(A[i], minVal, x)) 
+    {
+      minVal = A[i];
+      minIdx = i;
+    }
+  }
+  return minIdx;
+
+  // (*) Using the strict comparison < as opposed to <= will update the found minimum only when the 
+  // new element is strictly closer to x, which has the consequence that we return the 1st index 
+  // when there are multiple a[i] with the same distance to x. Would we have used <= instead, it 
+  // would return the last.
+}
+// todo: 
+// -move into rsArrayTools 
+// -write unit test
+// -let the user pass a distance-comparison function
+
 void testNewtonFractal()
 {
   // under construction
@@ -7905,21 +7934,21 @@ void testNewtonFractal()
 
   // User parameters:
   using Real  = double;
-  Real xMin   = -2;
-  Real xMax   = +2;
-  Real yMin   = -2;
-  Real yMax   = +2;
-  int  w      = 10;       // image width
-  int  h      = 10;       // image height
-  int  maxIts =  3;        // maximum number of iterations
-  Real tol    =  1.e-13;   // tolerance for convergence test
+  Real xMin   =  -2;
+  Real xMax   =  +2;
+  Real yMin   =  -2;
+  Real yMax   =  +2;
+  int  w      = 129;        // image width
+  int  h      = 129;        // image height
+  int  maxIts =   3;        // maximum number of iterations
+  Real tol    =   1.e-13;   // tolerance for convergence test
 
   // For covenience:
   using Complex = std::complex<Real>;
   using Poly    = RAPT::rsPolynomial<Complex>;
   using VecC    = std::vector<Complex>;
-  using Img     = RAPT::rsImage<float>;
-  using Color   = rsColor<float>;  // maybe use rsPixelRGB
+  using Img     = RAPT::rsImage<rsPixelRGB>;
+  //using Color   = rsPixelRGB;  // maybe use rsPixelRGB
 
   // Make a 4th degree polynomial with roots at 1,i,-1,-i:
   Complex I(0, 1);               // imaginary unit
@@ -7928,10 +7957,23 @@ void testNewtonFractal()
   Poly p; p.setRoots(&roots[0], numRoots);
 
   // Create an array with the colors to the used for each root:
-  std::vector<Color> colors(numRoots);
+  std::vector<rsPixelRGB> colors(numRoots);
   for(int i = 0; i < numRoots; i++)
-    colors[i] = float(i) / float(numRoots-1);
+  {
+    float g = float(i) / float(numRoots-1);  // gray value
+    colors[i] = rsPixelRGB(g, g, g);
+  }
   // preliminary
+
+  // Returns true, iff a is strictly closer to the reference value r than n:
+  auto closer = [](Complex a, Complex b, Complex r)
+  {
+    Real da = rsAbs(r-a);
+    Real db = rsAbs(r-b);
+    return da < db;
+  };
+  // maybe the reference value should be in the middle? seems more intuitive and natural when
+  // calling it
 
   // Create an image, loop through its pixels, figure out the color and color it:
   Img img(w, h);
@@ -7950,26 +7992,17 @@ void testNewtonFractal()
 
       // Find index of root that is closest to our final z, choose its associated color and fill
       // the pixel accordingly:
-      int k = 0; // preliminary, todo: k = findClosestMatch(z, roots);
-      Color color = colors[k];
-
-
-
-
-
-
+      //int k = 0; // preliminary, todo: k = findBestMatch(z, roots);
+      int k = findBestMatch(&roots[0], numRoots, z, closer);
+      rsPixelRGB color = colors[k];
+      img(i, j) = color;
 
       int dummy = 0;
-
     }
   }
 
 
-
-
-
-
-
+  writeImageToFilePPM(img, "NewtonFractal.ppm");
   int dummy = 0;
 }
 

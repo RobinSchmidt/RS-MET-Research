@@ -7932,6 +7932,8 @@ template<class T>
 void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
 {
   int n = (int) r.size();             // size of the roots array, degree of the polynomial
+  if(n == 0) { *y  = T(1);     *yp = T(0); return; }
+  if(n == 1) { *y  = x - r[0]; *yp = T(1); return; }
   int N = RAPT::rsNextPowerOfTwo(n);  // we need a power of 2 for the recursion
   std::vector<T> w(N);                // allocate temporary workspace
 
@@ -7944,10 +7946,17 @@ void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
   // fill up the remainder of the workspace:
   for(i = 0; i < n; i+=2)
   {
+    /*
     T rE   = w[i];                 // root at even index
     T rO   = w[i+1];               // root at odd index
     w[i]   = (x-rE) * (x-rO);      // value of 1st pair of linear factors
     w[i+1] = (x-rE) + (x-rO);      // derivative of 1st pair of linear factors
+    */
+
+    T dE   = x  - w[i]; 
+    T dO   = x  - w[i+1];
+    w[i]   = dE * dO;
+    w[i+1] = dE + dO;
   }
   if(rsIsOdd(n))
   {
@@ -8026,9 +8035,20 @@ bool testPolyFromRoots()
   ok &= w1 == w && wp1 == wp;
 
 
-  // Now in a loop from 0 to 32 roots with random complex roots:
-  // ...
-
+  // Now in a loop from 1 to 22 roots with random complex roots (with 23 or more, roundoff error
+  // creeps in):
+  roots.clear();
+  RAPT::rsNoiseGenerator<double> prng;
+  for(int n = 1; n <= 22; n++)
+  {
+    int rr = prng.getSampleRaw() % 10 - 5;  // real part
+    int ri = prng.getSampleRaw() % 10 - 5;  // imag part
+    roots.push_back(Complex(rr, ri));
+    p.setRoots(&roots[0], (int)roots.size());
+    p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
+    evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
+    ok &= w1 == w && wp1 == wp;
+  }
 
   RAPT::rsAssert(ok);
   return ok;

@@ -7827,6 +7827,12 @@ void testRationalTrigonometry()
   rhs = spread(AB, CA); ok &= lhs == rhs;
   lhs = spread(BA, AC); ok &= lhs == rhs;
 
+  // On page 6, spread between two lines AB and BC is also "temporarily" defined as the ratio of 
+  // the quadrances Q(BC) / Q(AB), so let's see, if that holds:
+  rhs = Q1 / Q3;  
+  // ...nope - not the same as lhs....hmmm - ah, there, the point C is not just an arbitrary point
+  // but contructed using a perpendicular...
+
   // Check cross law (holds for any triangle, ~law of cosines):
   lhs = sq(Q1 + Q2 - Q3);
   rhs = Integer(4)*Q1*Q2*(Integer(1)-s3);
@@ -7864,6 +7870,33 @@ void testRationalTrigonometry()
 
 
   rsAssert(ok);
+}
+
+void testNewtonFractal()
+{
+  // We generate the Newton fractal which arises from iterating:
+  //
+  //   z[n+1] = z[n] - p(z)/p'(z)
+  //
+  // where z is a complex number and p(z) is a polynomial. The fractal arises from running this 
+  // iteration for different initial values z[0] and coloring the point z[0] in the complex plane
+  // according to to which of the roots the iteration converges. Each root gets a color assigned
+  // and after the algo has converged, the solor for the initial value z[0] is selected to be the 
+  // color of the closest root. This can also be done before convergence is reached. In the case of
+  // doing it after 0 iterations, we'll actually get the Voronoi diagram for the given roots. After
+  // 1 iteration, some blobs appear, after 2 blobs on blobs, etc.
+  //
+  // We don't do this purely for artistic reasons. The fractal actually can reveal some 
+  // information about what sort of behavior (fixed point, limit cycle, divergence) we may expect 
+  // for a given initial guess. The eventual goal is actually to later create a similar picture for
+  // the Laguerre root finding method in the hope to figure out what we can say about *its* 
+  // convergence. As far as i know, little is known about this which is one reason why usually the
+  // Jenkins/Traub method is preferred in numerical packages...tbc...
+
+
+
+
+  int dummy = 0;
 }
 
 void testComplexPolar()

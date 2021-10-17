@@ -7952,19 +7952,31 @@ void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
     T rO   = w[i+1];            // root at odd index
     w[i]   = (x-rE) * (x-rO);   // value of 1st pair of linear factors
     w[i+1] = (x-rE) + (x-rO);   // derivative of 1st pair of linear factors
-    int dummy = 0;
   }
 
   // Now enter recursion...
+  N /= 2;
+  while(N > 1)
+  {
+    for(i = 0; i < N; i+=2)
+    {
+      // Pull out values and derivatives:
+      T vE = w[2*i+0];
+      T dE = w[2*i+1];
+      T vO = w[2*i+2];
+      T dO = w[2*i+3];
 
+      // Combine them:
+      w[i]   = vE * vO;                // multiply two partial factors
+      w[i+1] = vE * dO + vO * dE;      // product rule to computes combined derivative
 
+      int dummy = 0;
+    }
+    N /= 2;;
+  }
 
-
-
-
-
-
-
+  *y  = w[0];
+  *yp = w[1];
   int dummy = 0;
 }
 
@@ -7991,8 +8003,9 @@ bool testPolyFromRoots()
   // ...and now using the roots:
   Complex w1, wp1;
   evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
+  ok &= w1 == w && wp1 == wp;
 
-
+  RAPT::rsAssert(ok);
   return ok;
 }
 // move elsewhere

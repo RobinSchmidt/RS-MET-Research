@@ -7931,57 +7931,56 @@ int findBestMatch(T* A, int N, const T& x, const F& isCloser)
 template<class T>
 void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
 {
-  int n = (int) r.size();
-  int N = RAPT::rsNextPowerOfTwo(n);
-
-  std::vector<T> w(N); // temporary workspace
-  // maybe initialize with alternative ones and zeros - i think, this may be what is needed when r
-  // has a length that is not a power of two
+  int n = (int) r.size();             // size of the roots array, degree of the polynomial
+  int N = RAPT::rsNextPowerOfTwo(n);  // we need a power of 2 for the recursion
+  std::vector<T> w(N);                // allocate temporary workspace
 
   // Copy roots into work array:
   int i;
   for(i = 0; i < n; i++)
     w[i] = r[i];
 
-  // Initialization: Compute values and derivatives of the 1st stage:
-  //for(i = 0; i < N; i+=2)
+  // Initialization: Compute values and derivatives of the 1st stage with some special rules to 
+  // fill up the remainder of the workspace:
   for(i = 0; i < n; i+=2)
   {
-    T rE   = w[i];              // root at even index
-    T rO   = w[i+1];            // root at odd index
-    w[i]   = (x-rE) * (x-rO);   // value of 1st pair of linear factors
-    w[i+1] = (x-rE) + (x-rO);   // derivative of 1st pair of linear factors
+    T rE   = w[i];                 // root at even index
+    T rO   = w[i+1];               // root at odd index
+    w[i]   = (x-rE) * (x-rO);      // value of 1st pair of linear factors
+    w[i+1] = (x-rE) + (x-rO);      // derivative of 1st pair of linear factors
   }
-  // if(rsIsOdd(n))...
-
-  for(i = n; i < N; i++)
+  if(rsIsOdd(n))
+  {
+    w[n-1] = x - r[n-1];           // handle odd degrees
+    w[n]   = T(1);
+    i      = n+1;
+  }
+  else
+    i = n;
+  for(i = i; i < N; i++)            // padding with alternating ones and zeros
     w[i] = (int)RAPT::rsIsEven(i);
 
-
-  // Now enter recursion...
+  // Recursively combine results from previous stages by a simple multiplication for the function
+  // values and by application of the product rule for the derivatives:
   N /= 2;
   while(N > 1)
   {
     for(i = 0; i < N; i+=2)
     {
-      // Pull out values and derivatives:
-      T vE = w[2*i+0];
+      T vE = w[2*i+0];             // pull out values and derivatives from previopus stage
       T dE = w[2*i+1];
       T vO = w[2*i+2];
       T dO = w[2*i+3];
-
-      // Combine them:
-      w[i]   = vE * vO;                // multiply two partial factors
-      w[i+1] = vE * dO + vO * dE;      // product rule to computes combined derivative
-
-      int dummy = 0;
+      w[i]   = vE * vO;            // multiply two partial factors to compute value
+      w[i+1] = vE * dO + vO * dE;  // use product rule to compute derivative
     }
     N /= 2;;
   }
 
+  // The first two elements of the workspace have now accumulated the value p(x) and the derivative
+  // p('x) at the given x. Copy them into the output slots:
   *y  = w[0];
   *yp = w[1];
-  int dummy = 0;
 }
 // todo: 
 // -test with larger and smaller arrays of roots
@@ -8018,6 +8017,17 @@ bool testPolyFromRoots()
   p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
   evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
   ok &= w1 == w && wp1 == wp;
+
+  // Now with 5 roots:
+  roots = VecC({1, -1, 2, -2, 3});
+  p.setRoots(&roots[0], (int)roots.size());
+  p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
+  evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
+  ok &= w1 == w && wp1 == wp;
+
+
+  // Now in a loop from 0 to 32 roots with random complex roots:
+  // ...
 
 
   RAPT::rsAssert(ok);

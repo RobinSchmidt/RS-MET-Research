@@ -7880,6 +7880,21 @@ T newtonStep(const RAPT::rsPolynomial<T>& p, T x)
   return x - y / yp;  // what if yp is zero?
 }
 
+template<class T>
+T newtonIteration(const RAPT::rsPolynomial<T>& p, T x, T tol, int maxIts = 100)
+{
+  for(int i = 0; i < maxIts; i++)
+  {
+    T y, yp;  // y, y'
+    p.evaluateWithDerivative(x, p.getCoeffPointerConst(), p.getDegree(), &y, &yp);
+    T dx = - y / yp;
+    if(rsAbs(dx) <= rsAbs(tol))
+      break;
+    x += dx;
+  }
+  return x;
+}
+
 /** Returns the index of the element in the array A (of length N) that is closest to the given x. 
 If there are multiple elements in A with the same distance to x, it will return the index of the 
 first of these. */
@@ -7938,10 +7953,13 @@ void testNewtonFractal()
   Real xMax   =   +2;
   Real yMin   =   -2;
   Real yMax   =   +2;
-  int  w      = 1025;        // image width
-  int  h      = 1025;        // image height
-  int  maxIts =   20;        // maximum number of iterations
+  int  w      =  256;        // image width
+  int  h      =  256;        // image height
+  //int  w      =  8192;        // image width
+  //int  h      =  8192;        // image height
+  int  maxIts =   100;       // maximum number of iterations
   Real tol    =    1.e-13;   // tolerance for convergence test
+
 
   // For covenience:
   using Complex = std::complex<Real>;
@@ -7960,17 +7978,22 @@ void testNewtonFractal()
   std::vector<rsPixelRGB> colors(numRoots);
   for(int i = 0; i < numRoots; i++)
   {
-    //float x = float(i) / float(numRoots-1);  // normalized value betwen 0..1
-    //colors[i] = rsPixelRGB(x, x, x);         // preliminary, gray scale
+    float x;
 
-    float x = float(i) / float(numRoots);
+    // For grayscale:
+    x = float(i) / float(numRoots-1);  // normalized value betwen 0..1
+    //x = float(i%2);                    // test
+    colors[i] = rsPixelRGB(x, x, x);
+
+    // For circular colors (comment last line colors[i] = ... to deactivate):
+    x = float(i) / float(numRoots);
     float H, S, L;
     float R, G, B;
     H = x;
     S = 1.f;
     L = 0.3f;
     rsColor<float>::hsl2rgb(H, S, L, &R, &G, &B);
-    colors[i] = rsPixelRGB(R, G, B);
+    //colors[i] = rsPixelRGB(R, G, B);
   }
 
 
@@ -7996,8 +8019,8 @@ void testNewtonFractal()
 
       // Factor out and optimize (use a tolerance and break early, if possible):
       Complex z = z0;
-      for(int n = 0; n < maxIts; n++)
-        z = newtonStep(p, z);
+      //for(int n = 0; n < maxIts; n++) z = newtonStep(p, z); // old
+      z = newtonIteration(p, z0, Complex(tol), maxIts);     // new, faster (with convergence test)
 
       // Find index of root that is closest to our final z, choose its associated color and fill
       // the pixel accordingly:
@@ -8028,6 +8051,8 @@ void testNewtonFractal()
   // -Try using (products of) elliptic functions. They form a periodic pattern which could be 
   //  artistically interesting. Maybe also take products of those functions with polynomials. The 
   //  polynomials may be used to add additional roots at will.
+  // -Try placing roots along spirals. And/or use this sort of sunflower/fibonacci pattern...
+  //  something with the golden angle and spiraling outward
   // -Maybe record the full trajectory for each initial value and take it into account in the 
   //  coloring instead of using just the final value. maybe that can be used to smooth the 
   //  boundaries between regions. At the moment, they feature ugly jaggies.
@@ -8035,10 +8060,24 @@ void testNewtonFractal()
   //  pictures.
   // -The colors are still somewhat ugly. Try using cyclidrical version of the L*a*b color space.
   // -Have a preview flag that divides the image width and height by 4 and maybe the maxIts by 2
+  // -For HQ rendering use something like 8192x8192 and 100 iterations, downsample to 4096x4096
+  //  using IrfanView
 
   // See:
   // https://www.youtube.com/watch?v=-RdOwhmqP5s
   // https://www.youtube.com/watch?v=LqbZpur38nw
+
+  // WRT polynomial root finders, see:
+  // https://en.wikipedia.org/wiki/Laguerre%27s_method
+  // https://en.wikipedia.org/wiki/Root-finding_algorithms#Roots_of_polynomials
+  // https://en.wikipedia.org/wiki/Aberth_method
+  //   https://en.wikipedia.org/wiki/MPSolve
+  // https://en.wikipedia.org/wiki/Jenkins%E2%80%93Traub_algorithm
+  //
+  // specifically about the Laguerre method:
+  // https://www.researchgate.net/publication/262070812_Analysis_of_Laguerre's_method_applied_to_find_the_roots_of_unity/link/5514c4960cf260a7cb2d6aef/download
+  // https://www.sciencedirect.com/science/article/pii/S0898122103900289
+  // https://arxiv.org/pdf/1501.02168.pdf
 }
 
 void testComplexPolar()

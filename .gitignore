@@ -41,3 +41,5 @@ Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
 *.out
 Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
 Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
+*.png
+*.db

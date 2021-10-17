@@ -7938,9 +7938,9 @@ void testNewtonFractal()
   Real xMax   =  +2;
   Real yMin   =  -2;
   Real yMax   =  +2;
-  int  w      = 129;        // image width
-  int  h      = 129;        // image height
-  int  maxIts =   3;        // maximum number of iterations
+  int  w      = 513;        // image width
+  int  h      = 513;        // image height
+  int  maxIts =   6;        // maximum number of iterations
   Real tol    =   1.e-13;   // tolerance for convergence test
 
   // For covenience:
@@ -7963,7 +7963,7 @@ void testNewtonFractal()
     float g = float(i) / float(numRoots-1);  // gray value
     colors[i] = rsPixelRGB(g, g, g);
   }
-  // preliminary
+  // preliminary - todo: choose colors with circulating hue
 
   // Returns true, iff a is strictly closer to the reference value r than n:
   auto closer = [](Complex a, Complex b, Complex r)
@@ -8004,6 +8004,10 @@ void testNewtonFractal()
 
   writeImageToFilePPM(img, "NewtonFractal.ppm");
   int dummy = 0;
+
+  // See:
+  // https://www.youtube.com/watch?v=-RdOwhmqP5s
+  // https://www.youtube.com/watch?v=LqbZpur38nw
 }
 
 void testComplexPolar()

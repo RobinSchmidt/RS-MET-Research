@@ -7897,16 +7897,19 @@ T newtonIteration(const RAPT::rsPolynomial<T>& p, T x, T tol, int maxIts = 100)
 
 /** Returns the index of the element in the array A (of length N) that is closest to the given x. 
 If there are multiple elements in A with the same distance to x, it will return the index of the 
-first of these. */
+first of these. The isCloser function should take two values a,b and a reference value r and return
+true, iff a is closer to r than b is to r. If it uses a strict comparision (i.e. <, not <=), it 
+will have the consequence that when there are multiple closest value, the index first one will be
+returned. If it uses a <= comparison, it will be the last one instead. */
 template<class T, class F>
-int findBestMatch(T* A, int N, const T& x, const F& closer)
+int findBestMatch(T* A, int N, const T& x, const F& isCloser)
 {
   T   minVal = A[0];
   int minIdx = 0;
   for(int i = 0; i < N; i++)  // maybe we cant start at i = 1
   {
     //if(rsNorm(A[i] - x) < rsNorm(minVal - x))  // (*)
-    if(closer(A[i], minVal, x)) 
+    if(isCloser(A[i], minVal, x)) 
     {
       minVal = A[i];
       minIdx = i;
@@ -7924,8 +7927,82 @@ int findBestMatch(T* A, int N, const T& x, const F& closer)
 // -write unit test
 // -let the user pass a distance-comparison function
 
+
+template<class T>
+void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
+{
+  int N = RAPT::rsNextPowerOfTwo((int) r.size());
+
+  std::vector<T> w(N); // temporary workspace
+  // maybe initialize with alternative ones and zeros - i think, this may be what is needed when r
+  // has a length that is not a power of two
+
+  // Copy roots into work array:
+  int i;
+  for(i = 0; i < (int)r.size(); i++)
+    w[i] = r[i];
+
+  // pad with alternating ones and zeros (even indices get a one, odd indices a zero):
+  // ...
+
+  // Initialization: Compute values and derivatives of the 1st stage:
+  for(i = 0; i < N; i+=2)
+  {
+    T rE   = w[i];              // root at even index
+    T rO   = w[i+1];            // root at odd index
+    w[i]   = (x-rE) * (x-rO);   // value of 1st pair of linear factors
+    w[i+1] = (x-rE) + (x-rO);   // derivative of 1st pair of linear factors
+    int dummy = 0;
+  }
+
+  // Now enter recursion...
+
+
+
+
+
+
+
+
+
+  int dummy = 0;
+}
+
+bool testPolyFromRoots()
+{
+  bool ok = true;
+
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using Poly    = RAPT::rsPolynomial<Complex>;
+  using VecC    = std::vector<Complex>;
+
+  //Complex I(0, 1);               // imaginary unit
+  VecC roots({1, -1, 2, -2, 3, -3, 4, -4});
+  Poly p; p.setRoots(&roots[0], (int)roots.size());
+
+  // Evaluation point:
+  Complex z(1.5, 0.5);
+
+  // Evaluate polynomial and its derivative using the coeffs:
+  Complex w, wp;
+  p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
+
+  // ...and now using the roots:
+  Complex w1, wp1;
+  evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
+
+
+  return ok;
+}
+// move elsewhere
+
+
 void testNewtonFractal()
 {
+  bool ok = testPolyFromRoots();
+
+
   // under construction
 
   // We generate the Newton fractal which arises from iterating:

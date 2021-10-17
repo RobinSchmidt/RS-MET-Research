@@ -7931,7 +7931,8 @@ int findBestMatch(T* A, int N, const T& x, const F& isCloser)
 template<class T>
 void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
 {
-  int N = RAPT::rsNextPowerOfTwo((int) r.size());
+  int n = (int) r.size();
+  int N = RAPT::rsNextPowerOfTwo(n);
 
   std::vector<T> w(N); // temporary workspace
   // maybe initialize with alternative ones and zeros - i think, this may be what is needed when r
@@ -7939,20 +7940,23 @@ void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
 
   // Copy roots into work array:
   int i;
-  for(i = 0; i < (int)r.size(); i++)
+  for(i = 0; i < n; i++)
     w[i] = r[i];
 
-  // pad with alternating ones and zeros (even indices get a one, odd indices a zero):
-  // ...
-
   // Initialization: Compute values and derivatives of the 1st stage:
-  for(i = 0; i < N; i+=2)
+  //for(i = 0; i < N; i+=2)
+  for(i = 0; i < n; i+=2)
   {
     T rE   = w[i];              // root at even index
     T rO   = w[i+1];            // root at odd index
     w[i]   = (x-rE) * (x-rO);   // value of 1st pair of linear factors
     w[i+1] = (x-rE) + (x-rO);   // derivative of 1st pair of linear factors
   }
+  // if(rsIsOdd(n))...
+
+  for(i = n; i < N; i++)
+    w[i] = (int)RAPT::rsIsEven(i);
+
 
   // Now enter recursion...
   N /= 2;
@@ -7979,6 +7983,9 @@ void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
   *yp = w[1];
   int dummy = 0;
 }
+// todo: 
+// -test with larger and smaller arrays of roots
+// -test with non-power-of-two arrays of roots
 
 bool testPolyFromRoots()
 {
@@ -8004,6 +8011,14 @@ bool testPolyFromRoots()
   Complex w1, wp1;
   evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
   ok &= w1 == w && wp1 == wp;
+
+  // Now with 6 roots:
+  roots = VecC({1, -1, 2, -2, 3, -3});
+  p.setRoots(&roots[0], (int)roots.size());
+  p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
+  evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
+  ok &= w1 == w && wp1 == wp;
+
 
   RAPT::rsAssert(ok);
   return ok;

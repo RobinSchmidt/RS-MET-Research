@@ -7934,14 +7934,14 @@ void testNewtonFractal()
 
   // User parameters:
   using Real  = double;
-  Real xMin   =  -2;
-  Real xMax   =  +2;
-  Real yMin   =  -2;
-  Real yMax   =  +2;
-  int  w      = 513;        // image width
-  int  h      = 513;        // image height
-  int  maxIts =   6;        // maximum number of iterations
-  Real tol    =   1.e-13;   // tolerance for convergence test
+  Real xMin   =   -2;
+  Real xMax   =   +2;
+  Real yMin   =   -2;
+  Real yMax   =   +2;
+  int  w      = 1025;        // image width
+  int  h      = 1025;        // image height
+  int  maxIts =   20;        // maximum number of iterations
+  Real tol    =    1.e-13;   // tolerance for convergence test
 
   // For covenience:
   using Complex = std::complex<Real>;
@@ -7960,10 +7960,19 @@ void testNewtonFractal()
   std::vector<rsPixelRGB> colors(numRoots);
   for(int i = 0; i < numRoots; i++)
   {
-    float g = float(i) / float(numRoots-1);  // gray value
-    colors[i] = rsPixelRGB(g, g, g);
+    //float x = float(i) / float(numRoots-1);  // normalized value betwen 0..1
+    //colors[i] = rsPixelRGB(x, x, x);         // preliminary, gray scale
+
+    float x = float(i) / float(numRoots);
+    float H, S, L;
+    float R, G, B;
+    H = x;
+    S = 1.f;
+    L = 0.3f;
+    rsColor<float>::hsl2rgb(H, S, L, &R, &G, &B);
+    colors[i] = rsPixelRGB(R, G, B);
   }
-  // preliminary - todo: choose colors with circulating hue
+
 
   // Returns true, iff a is strictly closer to the reference value r than n:
   auto closer = [](Complex a, Complex b, Complex r)
@@ -8004,6 +8013,28 @@ void testNewtonFractal()
 
   writeImageToFilePPM(img, "NewtonFractal.ppm");
   int dummy = 0;
+
+  // ToDo:
+  // -Try to create artistic images by placing roots in the plane in interesting patterns. These 
+  //  patterns themselves should be created according to some rule that creates nice patterns. The 
+  //  colors should also be generated programaitically. Maybe it could make sense to also use 
+  //  poles? 
+  // -Maybe generalize the procedure to allow for an arbitrary rule z[n+1] = f(z[n]). In the case 
+  //  of Newton fractals, the rule would be f(z[n]) = z[n] - p(z[n]) / p'(z[n]) for a given p(z), 
+  //  but we could use anything. f(z) = z^2 + c would generate the Julia set for a given c (in a
+  //  Mandelbrot set, c would vary and z[0] would always be chosen to be zero). Maybe we can 
+  //  express this by allowing f(z) to have parameters. The Julia sets for c being near the 
+  //  boundary of the Mandelbrot set are visually the most attractive (in my opinion).
+  // -Try using (products of) elliptic functions. They form a periodic pattern which could be 
+  //  artistically interesting. Maybe also take products of those functions with polynomials. The 
+  //  polynomials may be used to add additional roots at will.
+  // -Maybe record the full trajectory for each initial value and take it into account in the 
+  //  coloring instead of using just the final value. maybe that can be used to smooth the 
+  //  boundaries between regions. At the moment, they feature ugly jaggies.
+  // -If this doesn't help to get rid of te jaggies, use oversampling for rendering pretty 
+  //  pictures.
+  // -The colors are still somewhat ugly. Try using cyclidrical version of the L*a*b color space.
+  // -Have a preview flag that divides the image width and height by 4 and maybe the maxIts by 2
 
   // See:
   // https://www.youtube.com/watch?v=-RdOwhmqP5s

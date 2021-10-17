@@ -7957,7 +7957,7 @@ void testNewtonFractal()
   int  h      =  256;        // image height
   //int  w      =  8192;        // image width
   //int  h      =  8192;        // image height
-  int  maxIts =   100;       // maximum number of iterations
+  int  maxIts =   10;       // maximum number of iterations
   Real tol    =    1.e-13;   // tolerance for convergence test
 
 
@@ -7989,11 +7989,11 @@ void testNewtonFractal()
     x = float(i) / float(numRoots);
     float H, S, L;
     float R, G, B;
-    H = x;
+    H = fmod(x + 0.1f, 1.f);
     S = 1.f;
-    L = 0.3f;
+    L = 0.35f;
     rsColor<float>::hsl2rgb(H, S, L, &R, &G, &B);
-    //colors[i] = rsPixelRGB(R, G, B);
+    colors[i] = rsPixelRGB(R, G, B);
   }
 
 
@@ -8033,7 +8033,6 @@ void testNewtonFractal()
     }
   }
 
-
   writeImageToFilePPM(img, "NewtonFractal.ppm");
   int dummy = 0;
 
@@ -8058,10 +8057,24 @@ void testNewtonFractal()
   //  boundaries between regions. At the moment, they feature ugly jaggies.
   // -If this doesn't help to get rid of te jaggies, use oversampling for rendering pretty 
   //  pictures.
-  // -The colors are still somewhat ugly. Try using cyclidrical version of the L*a*b color space.
+  // -The colors are still somewhat ugly. Try using cylidrical version of the L*a*b color space.
   // -Have a preview flag that divides the image width and height by 4 and maybe the maxIts by 2
   // -For HQ rendering use something like 8192x8192 and 100 iterations, downsample to 4096x4096
   //  using IrfanView
+  // -To do these computations in a numerically stable way, we may need an algorithm to evaluate 
+  //  the polynomial and its derivative directly from its roots rather than creating the 
+  //  coefficient array from the roots. The value itself is easy to compute but what about the 
+  //  derivative? Maybe split the polynomial recursively into two factors of half degree and use 
+  //  the product rule for the two factors (and do the same recursively to the factors)? Or maybe
+  //  use dual numbers, i.e. automatic differentiation. Try both and compare numerical accuracy.
+  //  -Maybe for roots that are close to the evaluation point, it makes sense to convert them into
+  //   a coefficient form (maybe together with some other roots) to avoid precision loss due to 
+  //   cancellation. Ir r5 is a root close to x, we would lump it together with another root to
+  //   form a quadratic factor. ...dunno, if that hels -> tests needed
+  // -Maybe take into account the number of iterations taken for the coloring. Maybe with less 
+  //  iterations, the color should be darker. Hue is selected according to the root-index, 
+  //  lightness according to the number of iterations. ...what about saturation?
+  //  
 
   // See:
   // https://www.youtube.com/watch?v=-RdOwhmqP5s
@@ -8078,6 +8091,9 @@ void testNewtonFractal()
   // https://www.researchgate.net/publication/262070812_Analysis_of_Laguerre's_method_applied_to_find_the_roots_of_unity/link/5514c4960cf260a7cb2d6aef/download
   // https://www.sciencedirect.com/science/article/pii/S0898122103900289
   // https://arxiv.org/pdf/1501.02168.pdf
+  //
+  // more resources about polynomials in general:
+  // https://juliamath.github.io/Polynomials.jl/stable/#Quick-Start
 }
 
 void testComplexPolar()

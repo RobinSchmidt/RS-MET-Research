@@ -1,0 +1,56 @@
+Let's assume we have a degree N polynomial p(x) given in terms of its roots as:
+
+  p(x) = k * (x-r1) * (x-r2*) * ... * (x-rN)
+
+and we want to evaluate it together with its derivative at some given number x. The idea is to 
+recursively split it into two polynomials of half the degree, evaluate their values and derivatives
+and combine them using the product rule. Let's take a degree 8 polynomial as example and assume 
+k = 1, so we have:
+
+  p(x) = (x-r1)*(x-r2) * (x-r3)*(x-r4)  *  (x-r5)*(x-r6*) * (x-r7)*(x-r8)
+
+where the spacing already indicates how we intend to organize the evaluation. The values of all the
+linear factors are just given by x-rK and the derivatives by 1. We denote by v[i..j] the value
+(x-ri)*...*(x-rj), i.e. the evaluation of a partial product involving the roots i to j. We denote
+the corresponding derivative as d[i..j]. We first compute values and derivatives of pairs of linear
+factors:
+
+  v[1..2] =   (x-r1) *   (x-r2)
+  d[1..2] = 1*(x-r1) + 1*(x-r2)                            product rule with f' = g' = 1
+  v[3..4] =   (x-r3) *   (x-r4)
+  d[3..4] = 1*(x-r3) + 1*(x-r4)
+  v[5..6] =   (x-r5) *   (x-r6)
+  d[5..6] = 1*(x-r5) + 1*(x-r6)
+  v[7..8] =   (x-r7) *   (x-r8)
+  d[7..8] = 1*(x-r7) + 1*(x-r8)
+
+In the next stage, we combine v[1..2], d[1..2], v[3..4], d[3..4] into v[1..4], d[1..4] via simple
+multiplication and the product rule respectively. Similarly we compute v[5..8], d[5..8]:
+
+  v[1..4] = v[1..2] * v[3..4]                              simple multiplication
+  d[1..4] = v[1..2] * d[3..4] + v[3..4] * d[1..2]          product rule
+  v[5..8] = v[5..6] * v[7..8]
+  d[5..8] = v[5..6] * d[7..8] + v[7..8] * d[5..6] 
+
+And in the last stage, we compute v[1..8], d[1..8] by combining these 4 just computed values 
+appropriately:
+
+  v[1..8] = v[1..4] * v[5..8]
+  d[1..8] = v[1..4] * d[5..8] + v[5..8] * d[1..4]
+
+These our desired final results. This leads to an O(N*log(N)) algorithm. That's not as nice as an 
+O(N) algorithm which is clearly also possible - well, at least when the coefficients are also 
+available (computing them from the roots is an O(N^2) task but it may often assumed to be done once
+and for all). We could also try to use automatic differentiation which should also result in an 
+O(N) algorithm. We should compare the numerical accuracy of the various algorithms. If the 
+O(N*log(N)) algo is numerically more stable, it may be worth it.
+
+Questions:
+-What if the degree is not a power of 2? Maybe it's most convenient to just pad the array up to
+ the next power of two? Maybe the values should be padded by 1 and the derivatives by 0?
+-Can it be generalized to higher derivatives?
+
+
+
+
+

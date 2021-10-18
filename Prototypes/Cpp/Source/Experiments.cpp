@@ -8064,34 +8064,46 @@ bool testPolyFromRoots()
     *yp = Complex(1);
   };
 
+  // Helper function for performing a single test:
+  auto runTest = [&](const VecC& r, Complex z)  // & to capture f
+  {
+    Complex vt, dt, vc, dc;  // target and computed value and derivative
+    bool ok = true;          // test result
+
+    // Compute target value and derivative:
+    Poly p;
+    p.setRoots(&r[0], (int)r.size());
+    p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &vt, &dt);
+
+    // Compute value and derivative via evalPolyAndDerivativeFromRoots and compare:
+    evalPolyAndDerivativeFromRoots(r, z, &vc, &dc);
+    ok &= vc == vt && dc == dt;
+
+    // Compute value and derivative via evalWithDerivativeFromRoots and compare:
+    evalWithDerivativeFromRoots(roots, z, f, &vc, &dc);
+    ok &= vc == vt && dc == dt;
+
+    return ok;
+  };
+
+
+
+
   // Evaluate polynomial and its derivative using the coeffs:
   Complex w, wp;
   p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
 
   // ...and now using the roots:
   Complex w1, wp1;
-  evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
-  ok &= w1 == w && wp1 == wp;
-  evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
-  ok &= w1 == w && wp1 == wp;
+  ok &= runTest(roots, z);
 
   // Now with 6 roots:
   roots = VecC({1, -1, 2, -2, 3, -3});
-  p.setRoots(&roots[0], (int)roots.size());
-  p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
-  evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
-  ok &= w1 == w && wp1 == wp;
-  evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
-  ok &= w1 == w && wp1 == wp;
+  ok &= runTest(roots, z);
 
   // Now with 5 roots:
   roots = VecC({1, -1, 2, -2, 3});
-  p.setRoots(&roots[0], (int)roots.size());
-  p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
-  evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
-  ok &= w1 == w && wp1 == wp;
-  evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
-  ok &= w1 == w && wp1 == wp;
+  ok &= runTest(roots, z);
 
   // Now in a loop from 1 to 22 roots with random complex roots (with 23 or more, roundoff error
   // creeps in). We also test the generalized variant of the function:
@@ -8102,14 +8114,8 @@ bool testPolyFromRoots()
     int rr = prng.getSampleRaw() % 10 - 5;  // real part
     int ri = prng.getSampleRaw() % 10 - 5;  // imag part
     roots.push_back(Complex(rr, ri));
-    p.setRoots(&roots[0], (int)roots.size());
-    p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
-    evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
-    ok &= w1 == w && wp1 == wp;
-    evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
-    ok &= w1 == w && wp1 == wp;
+    ok &= runTest(roots, z);
   }
-
 
   // ToDo: 
   // -add a function that evaluates value and derivative via autodiff and compare that, too

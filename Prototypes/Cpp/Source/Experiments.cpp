@@ -8211,20 +8211,28 @@ bool testRationalFromRoots()
     return R;
   };
 
-
+  // Create evaluation point z0 and an array of roots that define our function 
+  // F = f(x, r0) * f(x,r1) * f(x,r2) * ...
+  Complex z0(1.5, 0.5);
   VecC roots({1.0+I, 2.0-3.0*I, -3.0+2.0*I}); // try to allow simpler syntax 2-3*I etc.
+
+  // Compute target values via rsRationalFunction:
+  Complex vt, dt;
   rf = makeRatFunc(roots);
+  rf.valueAndSlopeAt(z0, &vt, &dt);
 
+  // Compute values via product rule formula:
+  Complex vc, dc;
+  evalWithDerivativeFromRoots(roots, z0, f, &vc, &dc);
 
-  // ToDo:
-  // -Define function makeRatFunc takes an array of roots and produces the rational function
-  //  corrsponding to the product of the factors corresponding to the roots
-  // -Implement valueAndSlopeAt in rsRationalFunction
-
+  // Compare:
+  Real tol = 1.e-13;
+  ok &= RAPT::rsIsCloseTo(vc, vt, tol) && RAPT::rsIsCloseTo(dc, dt, tol);
 
 
   // ToDo: maybe introduce a scale factor to f(x,r) which ensures that the maximum value is unity.
   // could it be 2*sqrt(a)? yep, that looks good: https://www.desmos.com/calculator/lwa7dsfsdi
+  // ...done!
 
   RAPT::rsAssert(ok);
   return ok;

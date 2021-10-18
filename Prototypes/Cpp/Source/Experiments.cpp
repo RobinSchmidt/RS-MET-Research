@@ -8042,6 +8042,9 @@ void evalWithDerivativeFromRoots(const std::vector<T>& r, T x,
 
 bool testPolyFromRoots()
 {
+  // Unit test for the evalPolyAndDerivativeFromRoots function. We also test 
+  // evalWithDerivativeFromRoots which is a more general variation of the former.
+
   bool ok = true;
 
   using Real    = double;
@@ -8113,9 +8116,47 @@ bool testPolyFromRoots()
 // -test the general evalWithDerivativeFromRoots function using f(x,r) = (x-r) / (1 + a*(x-r)^2)
 //  for a given constant a
 
+bool testRationalFromRoots()
+{
+  // Unit test for the evalWithDerivativeFromRoots function where we use for a single parametrized
+  // component function the rational function f(x,r) = (x-r) / (1 + a*(x-r)^2) in which consider
+  // r as our parameter and a is another constant that is fixed once and for all. ...tbc...
+
+  // f(x,r) = (x-r) / (1 + a*(x-r)^2) = (x-r) / (1+a*r^2 - 2*a*r*x + a*x^2)
+
+
+  bool ok = true;
+
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using RatFunc = RAPT::rsRationalFunction<Complex>;
+  using VecC    = std::vector<Complex>;
+
+
+  Complex I(0, 1);          // imaginary unit
+  Complex a(9, 0);          // width parameter (smaller values make the function wider)
+  Complex s = 2.0*sqrt(a);  // normalizer
+
+
+  RatFunc f;  // initializes as 0/0 - maybe it should be 0/1 instead
+
+
+
+
+  // ToDo: maybe introduce a scale factor to f(x,r) which ensures that the maximum value is unity.
+  // could it be 2*sqrt(a)? yep, that looks good: https://www.desmos.com/calculator/lwa7dsfsdi
+
+  RAPT::rsAssert(ok);
+  return ok;
+}
+
+
 void testNewtonFractal()
 {
-  bool ok = testPolyFromRoots();
+  // move this elsewhere:
+  bool ok;
+  ok &= testPolyFromRoots();
+  ok &= testRationalFromRoots();
 
 
   // under construction

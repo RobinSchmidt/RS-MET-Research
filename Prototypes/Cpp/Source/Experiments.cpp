@@ -8023,7 +8023,7 @@ void evalWithDerivativeFromRoots(const std::vector<T>& r, T x,
   }
   if(rsIsOdd(n)) 
   {
-    T rO  = w[i-1];
+    T rO  = r[n-1];
     f(x, rO, &vO, &dO);
     w[n-1] = vO;
     w[n]   = dO;
@@ -8053,9 +8053,6 @@ void evalWithDerivativeFromRoots(const std::vector<T>& r, T x,
   // p('x) at the given x. Copy them into the output slots:
   *y  = w[0];
   *yp = w[1];
-
-  // Results seems wrong for for odd n. The value is the negative of what it should be and the
-  // derivative is totally wrong
 }
 
 bool testPolyFromRoots()
@@ -8074,6 +8071,14 @@ bool testPolyFromRoots()
   // Evaluation point:
   Complex z(1.5, 0.5);
 
+  // Function to evaluate single linear factor and its derivative:
+  std::function<void(Complex x, Complex r, Complex* y, Complex* yp)> f;
+  f = [](Complex x, Complex r, Complex* y, Complex* yp)
+  {
+    *y  = x - r;
+    *yp = Complex(1);
+  };
+
   // Evaluate polynomial and its derivative using the coeffs:
   Complex w, wp;
   p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
@@ -8082,12 +8087,16 @@ bool testPolyFromRoots()
   Complex w1, wp1;
   evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
   ok &= w1 == w && wp1 == wp;
+  evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
+  ok &= w1 == w && wp1 == wp;
 
   // Now with 6 roots:
   roots = VecC({1, -1, 2, -2, 3, -3});
   p.setRoots(&roots[0], (int)roots.size());
   p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
   evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
+  ok &= w1 == w && wp1 == wp;
+  evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
   ok &= w1 == w && wp1 == wp;
 
   // Now with 5 roots:
@@ -8096,16 +8105,11 @@ bool testPolyFromRoots()
   p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
   evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
   ok &= w1 == w && wp1 == wp;
-
+  evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
+  ok &= w1 == w && wp1 == wp;
 
   // Now in a loop from 1 to 22 roots with random complex roots (with 23 or more, roundoff error
   // creeps in). We also test the generalized variant of the function:
-  std::function<void(Complex x, Complex r, Complex* y, Complex* yp)> f;
-  f = [](Complex x, Complex r, Complex* y, Complex* yp)
-  {
-    *y  = x - r;
-    *yp = Complex(1);
-  };
   roots.clear();
   RAPT::rsNoiseGenerator<double> prng;
   for(int n = 1; n <= 22; n++)
@@ -8117,14 +8121,9 @@ bool testPolyFromRoots()
     p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
     evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
     ok &= w1 == w && wp1 == wp;
-
-    // new:
     evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
-    //ok &= w1 == w && wp1 == wp; // does not yet work
-    int dummy = 0;
+    ok &= w1 == w && wp1 == wp;
   }
-
-
 
 
   // ToDo: 

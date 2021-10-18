@@ -7996,39 +7996,28 @@ template<class T>
 void evalWithDerivativeFromRoots(const std::vector<T>& r, T x, 
   const std::function<void(T x,T r, T* y, T* yp)>& f, T* y, T* yp)
 {
-  // under construction...
-
-  int n = (int) r.size();                        // size of the roots array
+  int i, n = (int) r.size();                        // size of the roots array
   if(n == 0) { *y = T(1); *yp = T(0); return; }
   if(n == 1) { f(x, r[0], y, yp);     return; }
   int N = RAPT::rsNextPowerOfTwo(n);             // we need a power of 2 for the recursion
   std::vector<T> w(N);                           // allocate temporary workspace
 
   // Copy roots into work array:
-  int i;
+  //int i;
   for(i = 0; i < n; i++)
     w[i] = r[i];
 
   // Initialization: Compute values and derivatives of the 1st stage with some special rules to 
   // fill up the remainder of the workspace, if n is not a power of 2:
-  T rE, rO, vE, vO, dE, dO;
-  for(i = 0; i < n; i += 2) 
-  {
-    T rE  = w[i];                // root at even index
-    T rO  = w[i+1];              // root at odd index
-    f(x, rE, &vE, &dE);          // compute value and derivative at even index
-    f(x, rO, &vO, &dO);          // compute value and derivative at odd index
-    w[i]   = vE * vO;            // value of pair is product of the two factors
-    w[i+1] = vE * dO + vO * dE;  // derivative is computed by product rule
-  }
-  if(rsIsOdd(n)) 
-  {
-    T rO  = r[n-1];
-    f(x, rO, &vO, &dO);
-    w[n-1] = vO;
-    w[n]   = dO;
-    i      = n+1; 
-  }
+  T vE, vO, dE, dO;
+  for(i = 0; i < n; i += 2) {
+    f(x, w[i],   &vE, &dE);         // compute value and derivative at even index
+    f(x, w[i+1], &vO, &dO);         // compute value and derivative at odd index
+    w[i]   = vE * vO;               // value of pair is product of the two factors
+    w[i+1] = vE * dO + vO * dE; }   // derivative is computed by product rule
+  if(rsIsOdd(n)) {
+    f(x, r[n-1], &w[n-1], &w[n]);
+    i = n+1; }
   else
     i = n;
   for(i = i; i < N; i++)            // padding with alternating ones and zeros
@@ -8047,13 +8036,12 @@ void evalWithDerivativeFromRoots(const std::vector<T>& r, T x,
       w[i+1] = vE * dO + vO * dE; } // use product rule to compute derivative
     N /= 2; }
 
-
-
   // The first two elements of the workspace have now accumulated the value p(x) and the derivative
   // p('x) at the given x. Copy them into the output slots:
   *y  = w[0];
   *yp = w[1];
 }
+// ToDo: test it with some actual rational function such as f(x,r) = (x-r) / (1 + (x-r)^2)
 
 bool testPolyFromRoots()
 {

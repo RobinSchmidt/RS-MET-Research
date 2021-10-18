@@ -8049,14 +8049,7 @@ bool testPolyFromRoots()
   using Poly    = RAPT::rsPolynomial<Complex>;
   using VecC    = std::vector<Complex>;
 
-  //Complex I(0, 1);               // imaginary unit
-  VecC roots({1, -1, 2, -2, 3, -3, 4, -4});
-  Poly p; p.setRoots(&roots[0], (int)roots.size());
-
-  // Evaluation point:
-  Complex z(1.5, 0.5);
-
-  // Function to evaluate single linear factor and its derivative:
+  // Define function to evaluate a single linear factor and its derivative:
   std::function<void(Complex x, Complex r, Complex* y, Complex* yp)> f;
   f = [](Complex x, Complex r, Complex* y, Complex* yp)
   {
@@ -8064,7 +8057,10 @@ bool testPolyFromRoots()
     *yp = Complex(1);
   };
 
-  // Helper function for performing a single test:
+  // Helper function for performing a single test. We compute target values for function value and
+  // derivative by converting the roots into polynomial coeffs and use the evaluation function from 
+  // the class. These target values are then compared to the values computed by the evaluation 
+  // routines based on the product rule:
   auto runTest = [&](const VecC& r, Complex z)  // & to capture f
   {
     Complex vt, dt, vc, dc;  // target and computed value and derivative
@@ -8080,34 +8076,18 @@ bool testPolyFromRoots()
     ok &= vc == vt && dc == dt;
 
     // Compute value and derivative via evalWithDerivativeFromRoots and compare:
-    evalWithDerivativeFromRoots(roots, z, f, &vc, &dc);
+    evalWithDerivativeFromRoots(r, z, f, &vc, &dc);
     ok &= vc == vt && dc == dt;
 
     return ok;
   };
 
+  // Set evaluation point z where we evaluate f(z) = (z-r[0]) * (z-r[1]) * ... :
+  Complex z(1.5, 0.5);
 
-
-
-  // Evaluate polynomial and its derivative using the coeffs:
-  Complex w, wp;
-  p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
-
-  // ...and now using the roots:
-  Complex w1, wp1;
-  ok &= runTest(roots, z);
-
-  // Now with 6 roots:
-  roots = VecC({1, -1, 2, -2, 3, -3});
-  ok &= runTest(roots, z);
-
-  // Now with 5 roots:
-  roots = VecC({1, -1, 2, -2, 3});
-  ok &= runTest(roots, z);
-
-  // Now in a loop from 1 to 22 roots with random complex roots (with 23 or more, roundoff error
-  // creeps in). We also test the generalized variant of the function:
-  roots.clear();
+  // Run the test helper function with an array of 1 to 22 roots with random complex roots (with 23
+  // or more, roundoff error creeps in):
+  VecC roots;
   RAPT::rsNoiseGenerator<double> prng;
   for(int n = 1; n <= 22; n++)
   {
@@ -8121,6 +8101,7 @@ bool testPolyFromRoots()
   // -add a function that evaluates value and derivative via autodiff and compare that, too
   // -make some tests to figure out which method is the best numerically by comparing results
   //  of single and double precision computations
+  // -Try to figure out, how a similar would work that computes also the 2nd derivative
 
   RAPT::rsAssert(ok);
   return ok;
@@ -8129,10 +8110,8 @@ bool testPolyFromRoots()
 // -implement a fractal generator using Newton iteration based on a polynomial defined via its 
 //  roots
 // -programmatically create a set of roots...maybe try something like a golden spiral
-
-
-
-
+// -test the general evalWithDerivativeFromRoots function using f(x,r) = (x-r) / (1 + a*(x-r)^2)
+//  for a given constant a
 
 void testNewtonFractal()
 {

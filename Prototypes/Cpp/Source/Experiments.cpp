@@ -7944,26 +7944,15 @@ void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
 
   // Initialization: Compute values and derivatives of the 1st stage with some special rules to 
   // fill up the remainder of the workspace:
-  for(i = 0; i < n; i+=2)
-  {
-    /*
-    T rE   = w[i];                 // root at even index
-    T rO   = w[i+1];               // root at odd index
-    w[i]   = (x-rE) * (x-rO);      // value of 1st pair of linear factors
-    w[i+1] = (x-rE) + (x-rO);      // derivative of 1st pair of linear factors
-    */
-
-    T dE   = x  - w[i]; 
-    T dO   = x  - w[i+1];
-    w[i]   = dE * dO;
-    w[i+1] = dE + dO;
-  }
-  if(rsIsOdd(n))
-  {
-    w[n-1] = x - r[n-1];           // handle odd degrees
-    w[n]   = T(1);
-    i      = n+1;
-  }
+  for(i = 0; i < n; i += 2) {
+    T lfE  = x   - w[i];            // linear factor at even index
+    T lfO  = x   - w[i+1];          // linear factor at odd index
+    w[i]   = lfE * lfO;             // value of current pair of linear factors
+    w[i+1] = lfE + lfO; }           // derivative of current pair of linear factors
+  if(rsIsOdd(n)) {                  // handle odd degrees...
+    w[n-1] = x - r[n-1];            // ...value is only a single factor
+    w[n]   = T(1);                  // ...derivative is 1
+    i      = n+1; }
   else
     i = n;
   for(i = i; i < N; i++)            // padding with alternating ones and zeros
@@ -7972,28 +7961,50 @@ void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
   // Recursively combine results from previous stages by a simple multiplication for the function
   // values and by application of the product rule for the derivatives:
   N /= 2;
-  while(N > 1)
-  {
-    for(i = 0; i < N; i+=2)
-    {
-      T vE = w[2*i+0];             // pull out values and derivatives from previopus stage
+  while(N > 1) {
+    for(i = 0; i < N; i+=2) {
+      T vE = w[2*i+0];              // pull out values and derivatives from previous stage
       T dE = w[2*i+1];
       T vO = w[2*i+2];
       T dO = w[2*i+3];
-      w[i]   = vE * vO;            // multiply two partial factors to compute value
-      w[i+1] = vE * dO + vO * dE;  // use product rule to compute derivative
-    }
-    N /= 2;;
-  }
+      w[i]   = vE * vO;             // multiply two partial factors to compute value
+      w[i+1] = vE * dO + vO * dE; } // use product rule to compute derivative
+    N /= 2; }
 
   // The first two elements of the workspace have now accumulated the value p(x) and the derivative
   // p('x) at the given x. Copy them into the output slots:
   *y  = w[0];
   *yp = w[1];
 }
-// todo: 
-// -test with larger and smaller arrays of roots
-// -test with non-power-of-two arrays of roots
+
+// ToDo:
+// -Generalize this function in such a way that we may use some other function to evaluate 
+//  f_k(x) and f_k'(x) for each root r[k]. For the polynomial, we just have f_k(x) = x - r[k],
+//  f_k'(x) = 1. But in a more general case, the user should be able to specify what f_k(x) and 
+//  f_k'(x) should be. In general, we want to evaluate a function with derivative of the general 
+//  form: f(x) = f(x,r[0]) * f(x,r[1]) * ... * f(x,r[N-1]). In the case of the polynomial, we have
+//  f(x,r[k]) = x - r[k] and f'(x,r[k]) = 1. The idea is to construct functions based on factors 
+//  like, for example: f(x,r[k]) = (x - r[k]) / (x - r[k]*r[k]). Maybe with such factors, we can 
+//  avoid the excessive oscillations that a high order polynomial would show. Such a generalization
+//  would only require to change the initialization. The recursion could remain the same. Maybe
+//  test this using rsRationalFunction. When done, maybe the less general version can be deleted. 
+//  But maybe keep it for optimizing the (simpler) polynomial case.
+//  OK - here we go:
+template<class T>
+void evalWithDerivativeFromRoots(const std::vector<T>& r, T x, 
+  const std::function<T(T,T)>& f, const std::function<T(T,T)>& fp,
+  T* y, T* yp)
+{
+  // hmm - maybe f and fp should be lumped together. Rationale: often it's cheaper to evaluate
+  // a function and it's derivative together. so we should have one single function of type
+  // std::function<void(T,T,T*,T*)>
+
+  // under construction...
+
+
+
+  int dummy = 0;
+}
 
 bool testPolyFromRoots()
 {
@@ -8050,10 +8061,21 @@ bool testPolyFromRoots()
     ok &= w1 == w && wp1 == wp;
   }
 
+  // ToDo: 
+  // -add a function that evaluates value and derivative via autodiff and compare that, too
+  // -make some tests to figure out which method is the best numerically by comparing results
+  //  of single and double precision computations
+
   RAPT::rsAssert(ok);
   return ok;
 }
-// move elsewhere
+// -maybe move elsewhere
+// -implement a fractal generator using Newton iteration based on a polynomial defined via its 
+//  roots
+// -programmatically create a set of roots...maybe try something like a golden spiral
+
+
+
 
 
 void testNewtonFractal()
@@ -8088,8 +8110,8 @@ void testNewtonFractal()
   Real xMax   =   +2;
   Real yMin   =   -2;
   Real yMax   =   +2;
-  int  w      =  256;        // image width
-  int  h      =  256;        // image height
+  int  w      =  512;        // image width
+  int  h      =  512;        // image height
   //int  w      =  8192;        // image width
   //int  h      =  8192;        // image height
   int  maxIts =   10;       // maximum number of iterations
@@ -8101,7 +8123,6 @@ void testNewtonFractal()
   using Poly    = RAPT::rsPolynomial<Complex>;
   using VecC    = std::vector<Complex>;
   using Img     = RAPT::rsImage<rsPixelRGB>;
-  //using Color   = rsPixelRGB;  // maybe use rsPixelRGB
 
   // Make a 4th degree polynomial with roots at 1,i,-1,-i:
   Complex I(0, 1);               // imaginary unit
@@ -8117,7 +8138,7 @@ void testNewtonFractal()
 
     // For grayscale:
     x = float(i) / float(numRoots-1);  // normalized value betwen 0..1
-    //x = float(i%2);                    // test
+    //x = float(i%2);                  // test - only black and white - looks ugly
     colors[i] = rsPixelRGB(x, x, x);
 
     // For circular colors (comment last line colors[i] = ... to deactivate):
@@ -8128,7 +8149,7 @@ void testNewtonFractal()
     S = 1.f;
     L = 0.35f;
     rsColor<float>::hsl2rgb(H, S, L, &R, &G, &B);
-    colors[i] = rsPixelRGB(R, G, B);
+    //colors[i] = rsPixelRGB(R, G, B);
   }
 
 
@@ -8154,22 +8175,17 @@ void testNewtonFractal()
 
       // Factor out and optimize (use a tolerance and break early, if possible):
       Complex z = z0;
-      //for(int n = 0; n < maxIts; n++) z = newtonStep(p, z); // old
-      z = newtonIteration(p, z0, Complex(tol), maxIts);     // new, faster (with convergence test)
+      z = newtonIteration(p, z0, Complex(tol), maxIts);
 
       // Find index of root that is closest to our final z, choose its associated color and fill
       // the pixel accordingly:
-      //int k = 0; // preliminary, todo: k = findBestMatch(z, roots);
       int k = findBestMatch(&roots[0], numRoots, z, closer);
       rsPixelRGB color = colors[k];
       img(i, j) = color;
-
-      int dummy = 0;
     }
   }
 
   writeImageToFilePPM(img, "NewtonFractal.ppm");
-  int dummy = 0;
 
   // ToDo:
   // -Try to create artistic images by placing roots in the plane in interesting patterns. These 
@@ -8209,6 +8225,8 @@ void testNewtonFractal()
   // -Maybe take into account the number of iterations taken for the coloring. Maybe with less 
   //  iterations, the color should be darker. Hue is selected according to the root-index, 
   //  lightness according to the number of iterations. ...what about saturation?
+  // -Implement oversampling - maybe use a factor of 3 with a boxcar kernel for downsampling. Maybe
+  //  that filter should operate on an image of float values
   //  
 
   // See:

@@ -8077,7 +8077,9 @@ bool testPolyFromRoots()
     // Compute target value and derivative:
     Poly p;
     p.setRoots(&r[0], (int)r.size());
-    p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &vt, &dt);
+    //p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &vt, &dt);
+    p.valueAndSlopeAt(z, &vt, &dt);
+
 
     // Compute value and derivative via evalPolyAndDerivativeFromRoots and compare:
     evalPolyAndDerivativeFromRoots(r, z, &vc, &dc);
@@ -8161,13 +8163,11 @@ bool testRationalFromRoots()
   };
   // could be optimized by computing di = 1/d and then y = n*di, yp = (np*d-dp*n) * (di*di)
 
-  //VecC roots({1.0+I, 2.0-3.0*I, -3.0+2.0*I}); // try to allow simpler syntax 2-3*I etc.
 
   RatFunc rf;       // initializes as 0/1
   Complex r(2, 0);  // one root at 2
   rf.setNumeratorCoeffs(  VecC({      -s*r,        s    }));
   rf.setDenominatorCoeffs(VecC({ 1.0+a*r*r, -2.0*a*r, a }));
-
 
   // for debug - make a plot:
   int N = 500;                             // number of values
@@ -8181,21 +8181,43 @@ bool testRationalFromRoots()
     Complex xc = Complex(x[n]);  // complexify
     Complex yc, ypc;
 
-    // Evaluate f and f' using our defined f-variable
-    //f(Complex(x[n]), r, &yc, &ypc);
+    // Evaluate f and f' using our defined f-variable:
     f(xc, r, &yc, &ypc);
     y[n]  = yc.real();
     yp[n] = ypc.real();
 
     // Evaluate f and f' using the rsRationalFunction object:
-    yc   = rf(xc);
-    z[n] = yc.real();
+    rf.valueAndSlopeAt(xc, &yc, &ypc);
+    z[n]  = yc.real();
+    zp[n] = ypc.real();
   }
-  rsPlotVectorsXY(x, y, z, y-z); 
-  rsPlotVectorsXY(x, y, yp); // ok - looks as expected
+  //rsPlotVectorsXY(x, y,  z,  y -z); 
+  //rsPlotVectorsXY(x, yp, zp, yp-zp); 
+  //rsPlotVectorsXY(x, y, yp); // ok - looks as expected
+
+
+  auto makeRatFunc = [&](const VecC& roots)  // & to capture a,s
+  {
+    RatFunc r, R;  // single factor and overall result, i.e. R = r1 * r2 * r3 * ...
+    R.setNumeratorCoeffs(  VecC({ Complex(1.0) }));
+    R.setDenominatorCoeffs(VecC({ Complex(1.0) }));
+    for(size_t i = 0; i < roots.size(); i++)
+    {
+      Complex ri = roots[i];
+      r.setNumeratorCoeffs(  VecC({       -s*ri,         s    }));
+      r.setDenominatorCoeffs(VecC({ 1.0+a*ri*ri, -2.0*a*ri, a }));
+      R *= r;
+    }
+    return R;
+  };
+
+
+  VecC roots({1.0+I, 2.0-3.0*I, -3.0+2.0*I}); // try to allow simpler syntax 2-3*I etc.
+  rf = makeRatFunc(roots);
+
 
   // ToDo:
-  // -Define function makeRatFunc tak takes an array of roots and produces the rational function
+  // -Define function makeRatFunc takes an array of roots and produces the rational function
   //  corrsponding to the product of the factors corresponding to the roots
   // -Implement valueAndSlopeAt in rsRationalFunction
 

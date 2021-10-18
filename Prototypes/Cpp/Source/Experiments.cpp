@@ -8039,6 +8039,11 @@ void evalWithDerivativeFromRoots(const std::vector<T>& r, T x,
 // ToDo: 
 // -test it with some actual rational function such as f(x,r) = (x-r) / (1 + (x-r)^2)
 // -implement a production version using a workspace
+// -maybe make it even more flexible by allowing the user to pass an array of (pointers to) 
+//  functions, such that instead of f(x, w[i], &vE, &dE); we would do something like
+//  (*f[i])(x, &vE, &dE);
+// -maybe factor out the common bottom section (recursion and output assignment), maybe call it
+//  productRuleRecursion
 
 bool testPolyFromRoots()
 {
@@ -8138,7 +8143,32 @@ bool testRationalFromRoots()
   Complex s = 2.0*sqrt(a);  // normalizer
 
 
-  RatFunc f;  // initializes as 0/0 - maybe it should be 0/1 instead
+  // Define function to evaluate a single factor of the form (s*(x-r)) / (1+a*(x-r)^2) 
+  // and its derivative:
+  std::function<void(Complex x, Complex r, Complex* y, Complex* yp)> f;
+  f = [&](Complex x, Complex r, Complex* y, Complex* yp) // & to capture a,s
+  {
+    Complex t, n, d, np, dp;
+    t   = x-r;                  // temporary
+    n   = s*t;                  // value of numerator
+    d   = 1.0 + a*t*t;          // value of denominator
+    np  = s;                    // derivative of numerator (with respect to x)
+    dp  = 2.0*a*t;              // derivative of denominator
+    *y  = n/d;                  // function value 
+    *yp = (np*d-dp*n) / (d*d);  // derivative via quotient rule
+    int dummy = 0;
+  };
+
+
+
+  VecC roots({1.0+I, 2.0-3.0*I, -3.0+2.0*I}); // try to allow simpler syntax 2-3*I etc.
+
+
+
+
+
+
+  RatFunc rf;  // initializes as 0/1
 
 
 

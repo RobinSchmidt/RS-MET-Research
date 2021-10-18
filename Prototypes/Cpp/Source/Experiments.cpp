@@ -8158,18 +8158,26 @@ bool testRationalFromRoots()
     *yp = (np*d-dp*n) / (d*d);  // derivative via quotient rule
     int dummy = 0;
   };
-
-
+  // could be optimized by computing di = 1/d and then y = n*di, yp = (np*d-dp*n) * (di*di)
 
   VecC roots({1.0+I, 2.0-3.0*I, -3.0+2.0*I}); // try to allow simpler syntax 2-3*I etc.
-
-
-
-
-
-
   RatFunc rf;  // initializes as 0/1
 
+
+  // for debug - make a plot:
+  int N = 500;                             // number of values
+  Complex r(2, 0);                         // one root at 2
+  std::vector<double> x(N), y(N), yp(N);
+  for(int n = 0; n < N; n++)
+  {
+    x[n]  = double(n) / (N-1);   // 0..1
+    x[n] *= 4.0;
+    Complex yc, ypc;
+    f(Complex(x[n]), r, &yc, &ypc);
+    y[n]  = yc.real();
+    yp[n] = ypc.real();
+  }
+  rsPlotVectorsXY(x, y, yp);
 
 
 

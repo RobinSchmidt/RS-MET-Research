@@ -7988,22 +7988,74 @@ void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
 //  avoid the excessive oscillations that a high order polynomial would show. Such a generalization
 //  would only require to change the initialization. The recursion could remain the same. Maybe
 //  test this using rsRationalFunction. When done, maybe the less general version can be deleted. 
-//  But maybe keep it for optimizing the (simpler) polynomial case.
+//  But maybe keep it for optimizing the (simpler) polynomial case. Maybe the parameter r does not 
+//  even need to be a root? Maybe we can rename it to evalParamtrizedProductWithDerivative where 
+//  the r-values are now interpreted as more general parameters?
 //  OK - here we go:
 template<class T>
 void evalWithDerivativeFromRoots(const std::vector<T>& r, T x, 
-  const std::function<T(T,T)>& f, const std::function<T(T,T)>& fp,
-  T* y, T* yp)
+  const std::function<void(T x,T r, T* y, T* yp)>& f, T* y, T* yp)
 {
-  // hmm - maybe f and fp should be lumped together. Rationale: often it's cheaper to evaluate
-  // a function and it's derivative together. so we should have one single function of type
-  // std::function<void(T,T,T*,T*)>
-
   // under construction...
 
+  int n = (int) r.size();                        // size of the roots array
+  if(n == 0) { *y = T(1); *yp = T(0); return; }
+  if(n == 1) { f(x, r[0], y, yp);     return; }
+  int N = RAPT::rsNextPowerOfTwo(n);             // we need a power of 2 for the recursion
+  std::vector<T> w(N);                           // allocate temporary workspace
+
+  // Copy roots into work array:
+  int i;
+  for(i = 0; i < n; i++)
+    w[i] = r[i];
+
+  // Initialization: Compute values and derivatives of the 1st stage with some special rules to 
+  // fill up the remainder of the workspace, if n is not a power of 2:
+  T rE, rO, vE, vO, dE, dO;
+  for(i = 0; i < n; i += 2) 
+  {
+    T rE  = w[i];                // root at even index
+    T rO  = w[i+1];              // root at odd index
+    f(x, rE, &vE, &dE);          // compute value and derivative at even index
+    f(x, rO, &vO, &dO);          // compute value and derivative at odd index
+    w[i]   = vE * vO;            // value of pair is product of the two factors
+    w[i+1] = vE * dO + vO * dE;  // derivative is computed by product rule
+  }
+  if(rsIsOdd(n)) 
+  {
+    T rO  = w[i-1];
+    f(x, rO, &vO, &dO);
+    w[n-1] = vO;
+    w[n]   = dO;
+    i      = n+1; 
+  }
+  else
+    i = n;
+  for(i = i; i < N; i++)            // padding with alternating ones and zeros
+    w[i] = (int)RAPT::rsIsEven(i);
+
+  // Recursively combine results from previous stages by a simple multiplication for the function
+  // values and by application of the product rule for the derivatives:
+  N /= 2;
+  while(N > 1) {
+    for(i = 0; i < N; i+=2) {
+      T vE = w[2*i+0];              // pull out values and derivatives from previous stage
+      T dE = w[2*i+1];
+      T vO = w[2*i+2];
+      T dO = w[2*i+3];
+      w[i]   = vE * vO;             // multiply two partial factors to compute value
+      w[i+1] = vE * dO + vO * dE; } // use product rule to compute derivative
+    N /= 2; }
 
 
-  int dummy = 0;
+
+  // The first two elements of the workspace have now accumulated the value p(x) and the derivative
+  // p('x) at the given x. Copy them into the output slots:
+  *y  = w[0];
+  *yp = w[1];
+
+  // Results seems wrong for for odd n. The value is the negative of what it should be and the
+  // derivative is totally wrong
 }
 
 bool testPolyFromRoots()
@@ -8047,7 +8099,13 @@ bool testPolyFromRoots()
 
 
   // Now in a loop from 1 to 22 roots with random complex roots (with 23 or more, roundoff error
-  // creeps in):
+  // creeps in). We also test the generalized variant of the function:
+  std::function<void(Complex x, Complex r, Complex* y, Complex* yp)> f;
+  f = [](Complex x, Complex r, Complex* y, Complex* yp)
+  {
+    *y  = x - r;
+    *yp = Complex(1);
+  };
   roots.clear();
   RAPT::rsNoiseGenerator<double> prng;
   for(int n = 1; n <= 22; n++)
@@ -8059,7 +8117,15 @@ bool testPolyFromRoots()
     p.evaluateWithDerivative(z, p.getCoeffPointerConst(), p.getDegree(), &w, &wp);
     evalPolyAndDerivativeFromRoots(roots, z, &w1, &wp1);
     ok &= w1 == w && wp1 == wp;
+
+    // new:
+    evalWithDerivativeFromRoots(roots, z, f, &w1, &wp1);
+    //ok &= w1 == w && wp1 == wp; // does not yet work
+    int dummy = 0;
   }
+
+
+
 
   // ToDo: 
   // -add a function that evaluates value and derivative via autodiff and compare that, too

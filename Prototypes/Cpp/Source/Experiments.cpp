@@ -7885,48 +7885,23 @@ T newtonIteration(const RAPT::rsPolynomial<T>& p, T x, T tol, int maxIts = 100)
 {
   for(int i = 0; i < maxIts; i++)
   {
+    // maybe factor out into getNewtonStep:
     T y, yp;  // y, y'
-    p.evaluateWithDerivative(x, p.getCoeffPointerConst(), p.getDegree(), &y, &yp);
+    p.valueAndSlopeAt(x, &y, &yp);
     T dx = - y / yp;
+
+    // Do the step:
     if(rsAbs(dx) <= rsAbs(tol))
       break;
-    x += dx;
+    x += dx;  // maybe move this before the test to make use of one step more
   }
   return x;
 }
-
-/** Returns the index of the element in the array A (of length N) that is closest to the given x. 
-If there are multiple elements in A with the same distance to x, it will return the index of the 
-first of these. The isCloser function should take two values a,b and a reference value r and return
-true, iff a is closer to r than b is to r. If it uses a strict comparision (i.e. <, not <=), it 
-will have the consequence that when there are multiple closest value, the index first one will be
-returned. If it uses a <= comparison, it will be the last one instead. */
-template<class T, class F>
-int findBestMatch(T* A, int N, const T& x, const F& isCloser)
-{
-  T   minVal = A[0];
-  int minIdx = 0;
-  for(int i = 0; i < N; i++)  // maybe we cant start at i = 1
-  {
-    //if(rsNorm(A[i] - x) < rsNorm(minVal - x))  // (*)
-    if(isCloser(A[i], minVal, x)) 
-    {
-      minVal = A[i];
-      minIdx = i;
-    }
-  }
-  return minIdx;
-
-  // (*) Using the strict comparison < as opposed to <= will update the found minimum only when the 
-  // new element is strictly closer to x, which has the consequence that we return the 1st index 
-  // when there are multiple a[i] with the same distance to x. Would we have used <= instead, it 
-  // would return the last.
-}
-// todo: 
-// -move into rsArrayTools 
-// -write unit test
-// -let the user pass a distance-comparison function
-
+// ToDo:
+// -rename to findPolyRootViaNewton
+// -maybe generalize to take a std::function instead of rsPolynomial which should evaluate the
+//  function together with its derivative
+// -then maybe move this into RAPT rsRootFinder::newton
 
 template<class T>
 void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
@@ -8037,13 +8012,18 @@ void evalWithDerivativeFromRoots(const std::vector<T>& r, T x,
   *yp = w[1];
 }
 // ToDo: 
-// -test it with some actual rational function such as f(x,r) = (x-r) / (1 + (x-r)^2)
 // -implement a production version using a workspace
 // -maybe make it even more flexible by allowing the user to pass an array of (pointers to) 
 //  functions, such that instead of f(x, w[i], &vE, &dE); we would do something like
-//  (*f[i])(x, &vE, &dE);
+//  (*f[i])(x, &vE, &dE); -> only the 3 lines involving a call to f would need to be 
+//  changed, the rest stays the same
+// -rename to evalProductWithSlope
 // -maybe factor out the common bottom section (recursion and output assignment), maybe call it
 //  productRuleRecursion
+// -the code is actually very similar to many functions in rsLinearTransforms - but this one here
+//  is a nonlinear transform (i think). can it be interpreted in some meaningful way outside the
+//  context of computing derivatives via product rule? and can it be inverted?
+// -maybe move to RAPT
 
 bool testPolyFromRoots()
 {
@@ -8111,7 +8091,7 @@ bool testPolyFromRoots()
   // -add a function that evaluates value and derivative via autodiff and compare that, too
   // -make some tests to figure out which method is the best numerically by comparing results
   //  of single and double precision computations
-  // -Try to figure out, how a similar would work that computes also the 2nd derivative
+  // -Try to figure out, how a similar function would work that computes also the 2nd derivative
 
   RAPT::rsAssert(ok);
   return ok;
@@ -8126,10 +8106,14 @@ bool testPolyFromRoots()
 bool testRationalFromRoots()
 {
   // Unit test for the evalWithDerivativeFromRoots function where we use for a single parametrized
-  // component function the rational function f(x,r) = (x-r) / (1 + a*(x-r)^2) in which consider
-  // r as our parameter and a is another constant that is fixed once and for all. ...tbc...
-
-  // f(x,r) = (x-r) / (1 + a*(x-r)^2) = (x-r) / (1+a*r^2 - 2*a*r*x + a*x^2)
+  // component function the rational function:
+  //
+  //   f(x,r) = s*(x-r) / (1 + a*(x-r)^2) = s*(x-r) / (1+a*r^2 - 2*a*r*x + a*x^2)
+  //
+  // in which we consider r as our parameter and s,a are constants that are fixed once and for all,
+  // where s = 2*sqrt(a) is the overall scaling factor that ensures that the functions peaks at 
+  // unity and a is a parameter controlling the width (smaller values make the function wider).
+  // See: https://www.desmos.com/calculator/lwa7dsfsdi there, b takes the role of r.
 
 
   bool ok = true;
@@ -8140,11 +8124,9 @@ bool testRationalFromRoots()
   using VecR    = std::vector<Real>;
   using VecC    = std::vector<Complex>;
 
-
   Complex I(0, 1);          // imaginary unit
-  Complex a(9, 0);          // width parameter (smaller values make the function wider)
+  Complex a(9, 0);          // width parameter 
   Complex s = 2.0*sqrt(a);  // normalizer
-
 
   // Define function to evaluate a single factor of the form (s*(x-r)) / (1+a*(x-r)^2) 
   // and its derivative:
@@ -8159,10 +8141,8 @@ bool testRationalFromRoots()
     dp  = 2.0*a*t;              // derivative of denominator
     *y  = n/d;                  // function value 
     *yp = (np*d-dp*n) / (d*d);  // derivative via quotient rule
-    int dummy = 0;
   };
   // could be optimized by computing di = 1/d and then y = n*di, yp = (np*d-dp*n) * (di*di)
-
 
   RatFunc rf;       // initializes as 0/1
   Complex r(2, 0);  // one root at 2
@@ -8194,7 +8174,6 @@ bool testRationalFromRoots()
   //rsPlotVectorsXY(x, y,  z,  y -z); 
   //rsPlotVectorsXY(x, yp, zp, yp-zp); 
   //rsPlotVectorsXY(x, y, yp); // ok - looks as expected
-
 
   auto makeRatFunc = [&](const VecC& roots)  // & to capture a,s
   {
@@ -8230,9 +8209,9 @@ bool testRationalFromRoots()
   ok &= RAPT::rsIsCloseTo(vc, vt, tol) && RAPT::rsIsCloseTo(dc, dt, tol);
 
 
-  // ToDo: maybe introduce a scale factor to f(x,r) which ensures that the maximum value is unity.
-  // could it be 2*sqrt(a)? yep, that looks good: https://www.desmos.com/calculator/lwa7dsfsdi
-  // ...done!
+  // ToDo: make a loop that runs this test for 1,2,3,4,5,... roots similar as we did above for the
+  // polynomial
+
 
   RAPT::rsAssert(ok);
   return ok;
@@ -8392,6 +8371,25 @@ void testNewtonFractal()
   // -Implement oversampling - maybe use a factor of 3 with a boxcar kernel for downsampling. Maybe
   //  that filter should operate on an image of float values
   //  
+  // -Implement a class rsFractalRenderer, it should support:
+  //  -Iteration Modes: 
+  //   -NewtonComplex (as we do here)
+  //   -NewtonVector (general 2D vector-field, using inverse Jacobian for Newton steps)
+  //   -Holomorphic: general holomorphic iteration function, not necessarily based on Newton 
+  //    iteration
+  //   -VectorField: general 2D -> 2D function
+  //  -Pixel Interpretation Modes:
+  //   -initial value (as in Newton and Julia fractals)
+  //   -parameter (as in Mandelbrot fractals)
+  //  -For each pixel, it should record the trajectory and then call a user-defined function with it
+  //   which will determine the pixel "color" as float-quadruple, the interpretation of which is 
+  //   relegated to later stages of the code
+  //  -It should be easy to vectorize, i.e. use with rsSimdVector - maybe we should use simd right 
+  //   from the start
+  //   -Maybe in this context, it's convenient, when it operates on a vector of (x,y)-coordinates 
+  //    rather than on an image with on-the-fly computation of coordinates
+  //  -Maybe it should be named rsFractalPixelRenderer and we should also mae an 
+  //   rsFractalVectorRenderer based on Lindenmayer systems
 
   // See:
   // https://www.youtube.com/watch?v=-RdOwhmqP5s

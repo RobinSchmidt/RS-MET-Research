@@ -7872,16 +7872,6 @@ void testRationalTrigonometry()
   rsAssert(ok);
 }
 
-/*
-// obsolete
-template<class T>
-T newtonStep(const RAPT::rsPolynomial<T>& p, T x)
-{
-  T y, yp;  // y, y'
-  p.evaluateWithDerivative(x, p.getCoeffPointerConst(), p.getDegree(), &y, &yp);
-  return x - y / yp;  // what if yp is zero?
-}
-*/
 
 template<class T>
 T getNewtonStep(const RAPT::rsPolynomial<T>& p, T x)
@@ -7906,6 +7896,9 @@ T newtonIteration(const RAPT::rsPolynomial<T>& p, T x, T tol, int maxIts = 100)
 // -maybe generalize to take a std::function instead of rsPolynomial which should evaluate the
 //  function together with its derivative
 // -then maybe move this into RAPT rsRootFinder::newton
+// -maybe the polynomial-specific version can be moved into rsPolynomial, right next to
+//  convergeToRootViaLaguerre as convergeToRootViaNewton ...maybe it should be renamed to
+//  findRootViaLaguerre/Newton bcs "convergeTo" is rather clunky
 
 template<class T>
 void evalPolyAndDerivativeFromRoots(const std::vector<T>& r, T x, T* y, T* yp)
@@ -8021,13 +8014,14 @@ void evalWithDerivativeFromRoots(const std::vector<T>& r, T x,
 //  functions, such that instead of f(x, w[i], &vE, &dE); we would do something like
 //  (*f[i])(x, &vE, &dE); -> only the 3 lines involving a call to f would need to be 
 //  changed, the rest stays the same
-// -rename to evalProductWithSlope
+// -rename to evalProductWithSlope, valueAndSlopeOfProduct
 // -maybe factor out the common bottom section (recursion and output assignment), maybe call it
 //  productRuleRecursion
 // -the code is actually very similar to many functions in rsLinearTransforms - but this one here
 //  is a nonlinear transform (i think). can it be interpreted in some meaningful way outside the
 //  context of computing derivatives via product rule? and can it be inverted?
-// -maybe move to RAPT
+// -maybe move to RAPT or maybe move it as static function into one of the autodiff classes - it's
+//  related to that stuff
 
 bool testPolyFromRoots()
 {
@@ -8335,7 +8329,7 @@ void testNewtonFractal()
   writeImageToFilePPM(img, "NewtonFractal.ppm");
 
   // ToDo:
-  // -add functions symmetrizeHorizoatally and syymetrizeVertically to rsImageProcessor
+  // -add functions symmetrizeHorizontally and syymetrizeVertically to rsImageProcessor
   //  -these should form the average of the image with a flipped version of itself, they can work
   //   in place
   //  -can we also produce more complex symmetrizations? diagonally? rotationally? shift?
@@ -8390,25 +8384,7 @@ void testNewtonFractal()
   // -Implement oversampling - maybe use a factor of 3 with a boxcar kernel for downsampling. Maybe
   //  that filter should operate on an image of float values
   //  
-  // -Implement a class rsFractalRenderer, it should support:
-  //  -Iteration Modes: 
-  //   -NewtonComplex (as we do here)
-  //   -NewtonVector (general 2D vector-field, using inverse Jacobian for Newton steps)
-  //   -Holomorphic: general holomorphic iteration function, not necessarily based on Newton 
-  //    iteration
-  //   -VectorField: general 2D -> 2D function
-  //  -Pixel Interpretation Modes:
-  //   -initial value (as in Newton and Julia fractals)
-  //   -parameter (as in Mandelbrot fractals)
-  //  -For each pixel, it should record the trajectory and then call a user-defined function with it
-  //   which will determine the pixel "color" as float-quadruple, the interpretation of which is 
-  //   relegated to later stages of the code
-  //  -It should be easy to vectorize, i.e. use with rsSimdVector - maybe we should use simd right 
-  //   from the start
-  //   -Maybe in this context, it's convenient, when it operates on a vector of (x,y)-coordinates 
-  //    rather than on an image with on-the-fly computation of coordinates
-  //  -Maybe it should be named rsFractalPixelRenderer and we should also mae an 
-  //   rsFractalVectorRenderer based on Lindenmayer systems
+
 
   // See:
   // https://www.youtube.com/watch?v=-RdOwhmqP5s

@@ -7872,6 +7872,8 @@ void testRationalTrigonometry()
   rsAssert(ok);
 }
 
+/*
+// obsolete
 template<class T>
 T newtonStep(const RAPT::rsPolynomial<T>& p, T x)
 {
@@ -7879,22 +7881,24 @@ T newtonStep(const RAPT::rsPolynomial<T>& p, T x)
   p.evaluateWithDerivative(x, p.getCoeffPointerConst(), p.getDegree(), &y, &yp);
   return x - y / yp;  // what if yp is zero?
 }
+*/
 
+template<class T>
+T getNewtonStep(const RAPT::rsPolynomial<T>& p, T x)
+{
+  T y, yp;  // y, y'
+  p.valueAndSlopeAt(x, &y, &yp);
+  T dx = - y / yp;
+  return dx;
+}
 template<class T>
 T newtonIteration(const RAPT::rsPolynomial<T>& p, T x, T tol, int maxIts = 100)
 {
-  for(int i = 0; i < maxIts; i++)
-  {
-    // maybe factor out into getNewtonStep:
-    T y, yp;  // y, y'
-    p.valueAndSlopeAt(x, &y, &yp);
-    T dx = - y / yp;
-
-    // Do the step:
+  for(int i = 0; i < maxIts; i++) {
+    T dx = getNewtonStep(p, x);
+    x += dx; 
     if(rsAbs(dx) <= rsAbs(tol))
-      break;
-    x += dx;  // maybe move this before the test to make use of one step more
-  }
+      break;  }
   return x;
 }
 // ToDo:
@@ -8253,11 +8257,11 @@ void testNewtonFractal()
   Real xMax   =   +2;
   Real yMin   =   -2;
   Real yMax   =   +2;
-  int  w      =  512;        // image width
-  int  h      =  512;        // image height
+  int  w      = 512;        // image width
+  int  h      = 512;        // image height
   //int  w      =  8192;        // image width
   //int  h      =  8192;        // image height
-  int  maxIts =   10;       // maximum number of iterations
+  int  maxIts =   100;       // maximum number of iterations
   Real tol    =    1.e-13;   // tolerance for convergence test
 
 
@@ -8331,6 +8335,15 @@ void testNewtonFractal()
   writeImageToFilePPM(img, "NewtonFractal.ppm");
 
   // ToDo:
+  // -add functions symmetrizeHorizoatally and syymetrizeVertically to rsImageProcessor
+  //  -these should form the average of the image with a flipped version of itself, they can work
+  //   in place
+  //  -can we also produce more complex symmetrizations? diagonally? rotationally? shift?
+  //   what about crossfading an image with a flipped version instead of taking the average?
+  //  -to rotate, we need a way to read out the image at arbitrary locations. we could use
+  //   bilinear interpolation and/or the "magic kernel"
+  // -make a rendering pipeline, maybe with the option to store/load intermediate results to/from
+  //  disk (in float32 rgba format)
   // -Try to create artistic images by placing roots in the plane in interesting patterns. These 
   //  patterns themselves should be created according to some rule that creates nice patterns. The 
   //  colors should also be generated programaitically. Maybe it could make sense to also use 
@@ -8368,6 +8381,12 @@ void testNewtonFractal()
   // -Maybe take into account the number of iterations taken for the coloring. Maybe with less 
   //  iterations, the color should be darker. Hue is selected according to the root-index, 
   //  lightness according to the number of iterations. ...what about saturation?
+  //  Or maybe the color should be determined by how much time the trajectory spent near each root.
+  //  -for each point along the trajectory, find the distances to all roots
+  //  -average these values over the trajectory -> gives mean distance to each root
+  //  -use these mean distances to compute weights for the colors associated with the the roots
+  //   where a smaller mean distance gives higher weight to the respective root
+  //  -if the trajectory converges early, fill the whole rest of the array with the last value
   // -Implement oversampling - maybe use a factor of 3 with a boxcar kernel for downsampling. Maybe
   //  that filter should operate on an image of float values
   //  

@@ -1,8 +1,32 @@
 
 
 
-% Cartan Derivative: generalizes gradient, divergence, curl
+\begin{comment}
 
-% the generalized Stokes theorem generalizes the curl theorem in two ways:
-% (1) it can now be applied to (co)vector-fields in arbitrary dimensions
-% (2) it cannot only be applied to vector fields but also scalar fields, bivector fields, etc. One tpyically does not look at vector fields per se but at 1-form fields (i.e. covector fields) instead (or, in general, at k-form fields). But they area isomorphic, so it's ok to identify them. however, in 3D, integrating a (co)bivector fields will yield a (co)vector fields, which is the vector potential of the original bivector field...wait ...does this co-bivector thing make sense? or *is* a bivector the same thing as a covector? yes, i think, in 3D a vector is identified with a 1-form and a bivector is identified with a 2-form which is also a covector
+Analogous objects in exterior calculus and classic vector calculus
+
+0-form -> multivariate function, scalar field
+1-form -> vector field
+2-form -> bivector field, can be indentified with a vector field in 3D
+3-form -> trivector field, can be identified with a scalar field in 3D
+
+effect of the exterior derivative $\d$ on k-forms:
+
+0-form -> d -> 1-form -> d -> 2-form -> d -> 3-form
+
+this is analogous to:
+
+scalar field -> grad -> vector field -> curl -> vector field -> div -> scalar field
+
+
+todo: explain, how the exterior derivative would work in 4D where the curl doesn't work anymore
+
+The $\d$ operator can be applied to a vector field (i.e. 1-form field) of any dimension, in which case it generalizes the curl operator from classic vector calculus. It also generalizes and unifies the other 2 first order differential operators from vector calculus (grad and div) when it is being applied to other kinds of fields, such as scalar (0-form) and bivector (2-form) fields.
+
+
+the generalized Stokes theorem generalizes the curl theorem in two ways:
+
+(1) it can now be applied to vector-fields in arbitrary dimensions
+(2) it cannot only be applied to vector fields but also scalar fields, bivector fields, etc. One tpyically does not look at vector fields per se but at 1-form fields (i.e. covector fields?) instead (or, in general, at k-form fields). But they area isomorphic, so it's ok to identify them. however, in 3D, integrating a (co)bivector fields will yield a (co)vector fields, which is the vector potential of the original bivector field...wait ...does this co-bivector thing make sense? or *is* a bivector the same thing as a covector? yes, i think, in 3D a vector is identified with a 1-form and a bivector is identified with a 2-form which is also a covector
+
+\end{comment} 

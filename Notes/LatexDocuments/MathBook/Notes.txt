@@ -46,11 +46,15 @@ some notes on the order of the chapters
  to put calculus before that - but that may not be necessary. there are enough non-calc examples,
  like invert, multiply by fixed function, etc...but many of them are nonlinear..so yeah...maybe 
  calc should come first. otoh, operators may also be delayed to a later chapter (maybe functional
- analysis) - we'll see
+ analysis) and systems of linear ODEs need some LinAlg - we'll see
 -maybe make a part "Elaborations" where certain topics that belong logically into earlier chapters
  are picked up again and explained in more detail. For example, ordinary differential equations 
  belong logically into the calculus chapter, i.e. should be introduced early, but the whole theory 
  of their solutions is way too extensive to present in such an early and basic chapter.
+ or maybe it should be called "solution techniques" or "recipes"
+-maybe there should be two variants of organizing the material: 1: in linear order without any
+ forward references (for a first read) and 2: an organization by topic with liberal referencing 
+ (for looking up stuff later)
 -maybe make a part about weird, non-mainstream topics. for example, rational trigonometry, 
  fractional calculus, ...
  

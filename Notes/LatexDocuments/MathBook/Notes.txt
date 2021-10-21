@@ -46,7 +46,8 @@ some notes on the order of the chapters
  to put calculus before that - but that may not be necessary. there are enough non-calc examples,
  like invert, multiply by fixed function, etc...but many of them are nonlinear..so yeah...maybe 
  calc should come first. otoh, operators may also be delayed to a later chapter (maybe functional
- analysis) and systems of linear ODEs need some LinAlg - we'll see
+ analysis) and systems of linear ODEs need some LinAlg - we'll see..maybe put linalg before calc 
+ and mention operators only briefly and discuss them fully in functional analysis
 -maybe make a part "Elaborations" where certain topics that belong logically into earlier chapters
  are picked up again and explained in more detail. For example, ordinary differential equations 
  belong logically into the calculus chapter, i.e. should be introduced early, but the whole theory 

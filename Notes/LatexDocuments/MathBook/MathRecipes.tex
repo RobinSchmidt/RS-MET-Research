@@ -40,21 +40,16 @@
 \include{Basics_Foundations} 
 \include{Basics_Numbers}
 \include{Basics_Functions}
-%Numbers (N,Z,Q,R,C), Polynomials, Rational Functions, Transcendental Functions
-
 
 \chapter{Linear Algebra}
-Linear algebra is the study of vector spaces and linear operations that can be applied to elements of these spaces. It provides tools for solving linear systems of equations and for doing geometric calculations. A vector space is a set of elements, called vectors, with which you can do two things: you can add together two vectors to get another vector and you can multiply a vector by scalar factor (i.e. a number) to get another vector. Scalars derive their name from the fact that they "scale" vectors, i.e. change their "size". These operations of addition and multiplication by a scalar must follow the usual associative, commutative and distributive laws. An operation is said to be linear, if two properties hold: First: applying the operation and then scaling the output by a factor should give the same result as scaling the input by the same factor and then applying the operation. Second: adding two inputs and then applying the operation to the sum must give the same result as applying the operation to both inputs seperately and then summing the results. If the space is $N$-dimensional where N is a finite natural number, vectors can be represented by an array of $N$ numbers and linear operations can be represented by N-by-N matrices (i.e. 2D arrays) of numbers. These numbers will depend on the choice of a basis which determines your coordinate axes, but the vector or operation (which is \emph{represented} by the array or matrix) does not depend on that choice. Vectors in 2D or 3D can be visualized as arrows and linear operations can be visualized as moving the tips of the arrows around in the space (in particular, constrained ways). In a more general setting, operations can also be defined to take a vector from one vector space as input and produce an output that lives in a different vector space. In this case, the representing matrix will be M-by-N (M rows, N columns) where M is the dimensionality of the output space and N the dimensionality of the input space and you have to make a choice for the basis for both of these spaces. Vector spaces can also be infinite dimensional. For example, you may consider the "space" of all functions defined on some interval. In such a case, the operations are usually called "operators". These operators take a function as input and produce another function as output. Examples of such operators are: take the derivative, compute the definite integral, multiply by a number, multiply by some other (fixed) function, take the square, etc. (the last one being actually a nonlinear operator).
+\include{LinAlg_Intro} 
 
 \chapter{Calculus}
-Calculus is the study of continuous functions and provides the tools for computing slopes of tangents, areas under curves and identifying important features such as extrema and inflection points. These tools are mainly derivatives and integrals. Functions can also be unknowns which in the context of calculus can be determined by differential- or integral equations. This is especially important in the physical sciences. Calculus also provides tools to approximate a given function by simpler functions that are well understood, most notably by Taylor- and Fourier series. This is important in numerical computations. Series themselves are also an important object of study in calculus. A series is an infinite sum of all the elements of an infinite sequence of numbers. Besides their role in the usual ("infinitesimal") calculus, sequences and series can also be studied by a discrete version of calculus which closely parallels the regular calculus. The discrete counterparts of derivatives, integrals and differential equations are differences, sums and difference equations. The discrete calculus may involve a step size $h$ (when absent, it's usually assumed to be unity) and the continuous calculus may be seen as the limiting case, when the stepsize approaches zero. To figure out what happens in this limiting process, calculus also studies the idea of a limit itself. This idea is actually the foundation of the usual calculus on which the ideas of derivatives and integrals are based.
-\section{Continuous Functions}
- \include{Calc_LimitsAndContinuity} 
-\section{Differentiation}
- \include{Calc_Differentiation}
-\section{Integration} 
- \include{Calc_Integration} 
-%\section{Differential Equations}
+\include{Calc_Intro} 
+\include{Calc_LimitsAndContinuity} 
+\include{Calc_Differentiation}
+\include{Calc_Integration} 
+%\include{Differential_Equations}
 %\subsection{Series}
 %\subsection{Integral Transforms} % Fourier- and Laplace trafo
 %\subsection{Integral Equations}

@@ -3,20 +3,19 @@ Outline:
 
 Part I: Continuous Mathematics
 -Foundations: logic, set theory, numbers, functions
--Calculus: limits, derivatives, integrals, differential equations, Taylor series
--Linear Algebra: vectors, matrices, operators
+-Calculus: limits, continuity, derivatives, integrals, (Taylor) series, differential equations
+-Linear Algebra: vectors, matrices, various products (dot,cross,wedge,matrix), operators
 -Geometry: coordinate systems, lines, planes, projections, shapes, areas, volumes
--Multilinear Algebra: covectors, k-forms, tensors
+-Multilinear Algebra: tensors, exterior algebra (covectors, k-forms)
 -Multivariable Calculus: vector, complex, exterior, geometric, tensor, partial differential 
  equations (present them in the various different formalisms)
 -Differential Geometry 
 -Functional Analysis: differential and integral operators, functionals, fourier- and laplace-trafo,
  variational calculus
 
-
 Part II: Discrete Mathematics
 -Number Theory: divisibility, primes, modular arithmetic, Gaussian integers
--Discrete Calculus: differences, sums, difference equations, z-transforms
+-Discrete Calculus: differences, sums, difference equations, z-transforms, generating functions?
 -Abstract Algebra: groups, rings, fields (including finite fields), representation
 -Graph Theory
 -Topology
@@ -32,6 +31,24 @@ Part III: Applications
 -Signal Processing: filters (analog and digital -> ODEs and difference eqs), spectral (FFT, etc.),
  statistical (adaptive filters)
 
+---------------------------------------------------------------------------------------------------
+ 
+some notes on the order of the chapters
+-try to put the chapters in a logical order such that later chapters only refer to material that
+ was already introduced in previous chapters. avoid forward references as much as possible. that 
+ requirement may interfere with how topics belong logically together. the body of math knowledge
+ is more like an entangled mesh rather than a nicely ordered tree (in the graph-theory sense), 
+ especially for the higher level topics. the pedagogical challenge is to disentangle it.
+-if in the operators section of linear algebra we also give things like d/dx as examples, we need
+ to put calculus before that - but that may not be necessary. there are enough non-calc examples,
+ like invert, multiply by fixed function, etc...but many of them are nonlinear..so yeah...maybe 
+ calc should come first. otoh, operators may also be delayed to a later chapter (maybe functional
+ analysis) - we'll see
+-maybe make a part "Elaborations" where certain topics that belong logically into earlier chapters
+ are picked up again and explained in more detail. For example, ordinary differential equations 
+ belong logically into the calculus chapter, i.e. should be introduced early, but the whole theory 
+ of their solutions is way too extensive to present in such an early and basic chapter.
+ 
 
 also (don't know yet where this fits): 
 -infinities (countable/uncountable/Aleph) - maybe set theory

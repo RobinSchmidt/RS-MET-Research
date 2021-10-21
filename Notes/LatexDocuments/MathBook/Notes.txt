@@ -1,0 +1,55 @@
+
+Outline:
+
+Part I: Continuous Mathematics
+-Foundations: logic, set theory, numbers, functions
+-Calculus: limits, derivatives, integrals, differential equations, Taylor series
+-Linear Algebra: vectors, matrices, operators
+-Geometry: coordinate systems, lines, planes, projections, shapes, areas, volumes
+-Multilinear Algebra: covectors, k-forms, tensors
+-Multivariable Calculus: vector, complex, exterior, geometric, tensor, partial differential 
+ equations (present them in the various different formalisms)
+-Differential Geometry 
+-Functional Analysis: differential and integral operators, functionals, fourier- and laplace-trafo,
+ variational calculus
+
+
+Part II: Discrete Mathematics
+-Number Theory: divisibility, primes, modular arithmetic, Gaussian integers
+-Discrete Calculus: differences, sums, difference equations, z-transforms
+-Abstract Algebra: groups, rings, fields (including finite fields), representation
+-Graph Theory
+-Topology
+
+Part III: Applications
+-Optimization Theory: gradient descent, linear optimization, least squares
+-Approximation Theory: Taylor, Fourier, Chebychev, orthogonal polynomials, curve fitting
+-Physics: mechanics (Newton/Lagrange/Hamilton), phase space, electrodynamics (maxwell eqs in 
+ different forms), quantum mechanics (uses operators and complex numbers), relativity (uses tensors
+ and differential geometry)
+-Probability and Statistics 
+-Numerics: interpolation, differentiation, integration, simulation of differential equations
+-Signal Processing: filters (analog and digital -> ODEs and difference eqs), spectral (FFT, etc.),
+ statistical (adaptive filters)
+
+
+also (don't know yet where this fits): 
+-infinities (countable/uncountable/Aleph) - maybe set theory
+-computer science: relational databases
+
+
+
+ToDo:
+-Introduce wedge product in the context of vector algebra, along with the dot-product and 
+ scalar-vector product. The cross product may be treated as an awkward reformulation that is 
+ specific to 3D. Make some historical notes about wedge vs cross product. ...but maybe the wedge
+ product can be also delayed to a later chapter about exterior algebra
+-Maybe first write the text and add the formulas later...and graphics even later. ideally, the text
+ should be digestible without formulas and/or graphics - they should be an optional add-on. that 
+ forces me to explain everything in words. In the Feynman lectures, it's also a pattern that many 
+ formulas are also stated in words which makes them much easier to digest
+ 
+ 
+ resources:
+ 
+ 

@@ -6,13 +6,15 @@ Part I: Continuous Mathematics
  theorem, partial fraction expansion)
 -Calculus: limits, continuity, derivatives, integrals, (Taylor) series, differential equations
 -Linear Algebra: vectors, matrices, various products (dot,cross,wedge,matrix), operators
--Geometry: coordinate systems, lines, planes, projections, shapes, areas, volumes
+-Geometry: coordinate systems, lines, planes, projections, shapes, areas, volumes, curves, 
+ surfaces, maybe introduce sin/cos here - in functions, consider only poly/rational and powers, 
+ i.e. algebraic functions, maybe the exponential, too
 -Multilinear Algebra: tensors, exterior algebra (covectors, k-forms)
 -Multivariable Calculus: vector, complex, exterior, geometric, tensor, partial differential 
  equations (present them in the various different formalisms)
--Differential Geometry 
 -Functional Analysis: differential and integral operators, functionals, fourier- and laplace-trafo,
  variational calculus
+-Differential Geometry: manifolds
 
 Part II: Discrete Mathematics
 -Number Theory: divisibility, primes, modular arithmetic, Gaussian integers
@@ -76,7 +78,10 @@ ToDo:
  should be digestible without formulas and/or graphics - they should be an optional add-on. that 
  forces me to explain everything in words. In the Feynman lectures, it's also a pattern that many 
  formulas are also stated in words which makes them much easier to digest
- 
+-include python code in the text, realizing numerical and symbolic computations using numpy and 
+ sympy, there should be a python library accompanying the book, maybe make plots with matplotlib
+ but printing plotting code in the book may be too verbose...but may be useful to clarify things 
+ dunno
  --------------------------------------------------------------------------------------------------
  
  resources:

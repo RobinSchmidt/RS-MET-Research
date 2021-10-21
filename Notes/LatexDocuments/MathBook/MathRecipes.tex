@@ -1,5 +1,6 @@
 %\documentclass[12pt, twocolumn]{article}
-\documentclass[12pt]{book}  % todo: use book and for the top-level items use "chapter"
+%\documentclass[12pt, openany]{book}
+\documentclass[12pt, oneside]{book}
 %\usepackage{fullpage}           % makes all margins 1 inch?
 \topmargin=-1.0cm
 \textheight=23cm
@@ -19,6 +20,8 @@
 
 %\DeclareMathOperator{\d}{d}                  % exterior derivative
 
+%\let\cleardoublepage\clearpage
+
 \begin{document}
 	
 % formatting:
@@ -35,20 +38,20 @@
 \maketitle
 \tableofcontents
 
-\chapter{Basics}
-\include{Basics_Intro} 
+%\chapter{Basics}
+\include{Basics}
 \include{Basics_Foundations} 
 \include{Basics_Numbers}
 \include{Basics_Functions}
 
-\chapter{Linear Algebra}
-\include{LinAlg_Intro} 
+%\chapter{Linear Algebra}
+\include{LinAlg} 
 \include{LinAlg_Vectors}
 \include{LinAlg_Matrices}
 %\include{LinAlg_SystemsOfEquations}
 
-\chapter{Calculus}
-\include{Calc_Intro} 
+%\chapter{Calculus}
+\include{Calc} 
 \include{Calc_LimitsAndContinuity} 
 \include{Calc_Differentiation}
 \include{Calc_Integration} 
@@ -62,15 +65,15 @@
 %\chapter{Geometry}
 % maybe this fits best directly after Linear Algebra as application thereof, so maybe place Calculus before Linear Algebra but maybe if we also compute areas of shapes via integrals, calculus needs to be introduced before geometry as well...maybe be a bit more general and include some (basic) calculusly stuff like areas and volumes, optimization of shapes (cylindrical can with smallest surface area kind of stuff)..no multivariable calculus, though - that's for later. but maybe introduce bivectors and trivectors already - they are simple and intuitive and will be needed for exterior algebra
 
-\chapter{Multilinear Algebra}
-\include{MulLinAlg_Intro}
+%\chapter{Multilinear Algebra}
+\include{MulLinAlg}
 %\include{MulLinAlg_Tensor} 
 %\include{MulLinAlg_Exterior}
 %\include{MulLinAlg_Geometric}
 % todo: covectors/k-forms, tensors, ..
 
-\chapter{Multivariable Calculus}
-\include{MulCalc_Intro} 
+%\chapter{Multivariable Calculus}
+\include{MulCalc} 
 \include{MulCalc_Vector} 
 \include{MulCalc_Complex} 
 \include{MulCalc_Exterior}

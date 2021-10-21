@@ -84,6 +84,15 @@ ToDo:
  dunno
  --------------------------------------------------------------------------------------------------
  
+ LaTeX links:
+ 
+ trying to remove excessive bank space:
+ https://tex.stackexchange.com/questions/111580/removing-an-unwanted-page-between-two-chapters
+ 
+ https://www.generacodice.com/en/articolo/427621/LaTeX%3A-remove-blank-page-after-a-%5Cpart-or-%5Cchapter-%5Bclosed%5D
+ 
+  --------------------------------------------------------------------------------------------------
+ 
  resources:
  
  The Fractional Derivative, what is it? | Introduction to Fractional Calculus

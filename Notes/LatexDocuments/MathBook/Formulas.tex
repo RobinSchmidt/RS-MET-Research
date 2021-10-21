@@ -1,5 +1,5 @@
 %\documentclass[12pt, twocolumn]{article}
-\documentclass[12pt]{article}  % todo: use book and for the top-level items use "chapter"
+\documentclass[12pt]{book}  % todo: use book and for the top-level items use "chapter"
 %\usepackage{fullpage}           % makes all margins 1 inch?
 \topmargin=-1.0cm
 \textheight=23cm
@@ -16,6 +16,9 @@
 % see:
 % https://tex.stackexchange.com/questions/17816/commenting-out-large-sections
 % https://tex.stackexchange.com/questions/11177/how-to-write-hidden-notes-in-a-latex-file/73418
+
+
+%\DeclareMathOperator{\d}{d}                  % exterior derivative
 
 \begin{document}
 	
@@ -37,32 +40,32 @@
 
 \tableofcontents
 
-\section{Preface}
+\chapter{Preface}
 Mathematics is a broad subject and I would be way out of my depth to try to give a definition what it actually is. I like to think of it as the study of structures, patterns and equivalences and as a way to systematize, formalize and eventually automate thought processes. One big theme is to figure out, under which circumstances one thing is equal to another. Often, there are multiple ways to compute the same thing and a big sub-theme of finding equivalences is to find computational shortcuts that allow to do a computation more efficiently than was previously possible. The body of mathematical knowledge today is an impressive tower of known facts about abstract constructs of the human mind. The first of these abstract constructs that one usually encounters in elementary school is the idea of a natural number and one learns how to add, subtract, multiply and divide them. Building on that, one later encounters negative numbers, rational numbers, real numbers and complex numbers. I like to think of numbers as the ground floor of the tower. Numbers usually set the stage for doing mathematics on first encounter, but the foundations of mathematics can go down to even lower levels: If numbers are the ground floor, then it may be appropriate to think of set theory and mathematical logic as two basement floors. Having numbers in place, one can go up a stage and look at functions that map numbers to other numbers. One then may realize that addition, multiplication, etc. are actually functions, too: they take two inputs and map them to a single output. Such generalization with hindsight is also a common theme in math. A stage higher, you can look at mappings that map functions to other functions. And it goes ever higher up. Well, actually, it also kind of branches out while going up, so maybe a tree of knowledge might be better analogy than a tower - but then the roots (levels below ground) do not branch out as much as the upper levels. But there certainly is some sort of trunk that everybody needs to know. This trunk contains numbers themselves (from the natural to the complex ones), equations (and solution techniques for them when they contain unknowns), elementary functions (polynomial, rational, exponential, trigonometric and their inverses), linear algebra (vectors, matrices, linear systems of equations) and single variable calculus (derivatives, integrals, differential equations). With these basics in place, math branches out into various directions. Some of these are: multivariable calculus: the study of functions of several variables, abstract algebra: generalizes ideas such as addition, multiplication, etc. to other sorts of objects and identifies the common structure, number theory: studies natural numbers and especially prime numbers in depth, functional analysis: studies functions of functions, topology: studies qualitative properties of shapes, etc. 
 
 \paragraph{}
 This document is an attempt to give a condensed high level overview about what's going on in a particular subject and to give the required formulas and recipies to actually get the work done. There is little regard to derivation or justification and no regard whatsoever to proof or mathematical rigor. It's meant to be a collection of recipies for the practioner who needs to use math in applications. In focus are the questions: What is it? What can I do with it? How can I do it? The focus is deliberately not: Why does it work the way it does? That would fill volumes (and has done so) and thereby just distract from getting the work done.
 
-\section{Basics}
-\subsection{Foundations} 
+\chapter{Basics}
+\section{Foundations} 
  \include{Foundations} 
-\subsection{Numbers and Arithmetic} 
+\section{Numbers and Arithmetic} 
  \include{Numbers}
 %Numbers (N,Z,Q,R,C), Polynomials, Rational Functions, Transcendental Functions
 
 
-\section{Linear Algebra}
+\chapter{Linear Algebra}
 Linear algebra is the study of vector spaces and linear operations that can be applied to elements of these spaces. It provides tools for solving linear systems of equations and for doing geometric calculations. A vector space is a set of elements, called vectors, with which you can do two things: you can add together two vectors to get another vector and you can multiply a vector by scalar factor (i.e. a number) to get another vector. Scalars derive their name from the fact that they "scale" vectors, i.e. change their "size". These operations of addition and multiplication by a scalar must follow the usual associative, commutative and distributive laws. An operation is said to be linear, if two properties hold: First: applying the operation and then scaling the output by a factor should give the same result as scaling the input by the same factor and then applying the operation. Second: adding two inputs and then applying the operation to the sum must give the same result as applying the operation to both inputs seperately and then summing the results. If the space is $N$-dimensional where N is a finite natural number, vectors can be represented by an array of $N$ numbers and linear operations can be represented by N-by-N matrices (i.e. 2D arrays) of numbers. These numbers will depend on the choice of a basis which determines your coordinate axes, but the vector or operation (which is \emph{represented} by the array or matrix) does not depend on that choice. Vectors in 2D or 3D can be visualized as arrows and linear operations can be visualized as moving the tips of the arrows around in the space (in particular, constrained ways). In a more general setting, operations can also be defined to take a vector from one vector space as input and produce an output that lives in a different vector space. In this case, the representing matrix will be M-by-N (M rows, N columns) where M is the dimensionality of the output space and N the dimensionality of the input space and you have to make a choice for the basis for both of these spaces. Vector spaces can also be infinite dimensional. For example, you may consider the "space" of all functions defined on some interval. In such a case, the operations are usually called "operators". These operators take a function as input and produce another function as output. Examples of such operators are: take the derivative, compute the definite integral, multiply by a number, multiply by some other (fixed) function, take the square, etc. (the last one being actually a nonlinear operator).
 
-\section{Calculus}
+\chapter{Calculus}
 Calculus is the study of continuous functions and provides the tools for computing slopes of tangents, areas under curves and identifying important features such as extrema and inflection points. These tools are mainly derivatives and integrals. Functions can also be unknowns which in the context of calculus can be determined by differential- or integral equations. This is especially important in the physical sciences. Calculus also provides tools to approximate a given function by simpler functions that are well understood, most notably by Taylor- and Fourier series. This is important in numerical computations. Series themselves are also an important object of study in calculus. A series is an infinite sum of all the elements of an infinite sequence of numbers. Besides their role in the usual ("infinitesimal") calculus, sequences and series can also be studied by a discrete version of calculus which closely parallels the regular calculus. The discrete counterparts of derivatives, integrals and differential equations are differences, sums and difference equations. The discrete calculus may involve a step size $h$ (when absent, it's usually assumed to be unity) and the continuous calculus may be seen as the limiting case, when the stepsize approaches zero. To figure out what happens in this limiting process, calculus also studies the idea of a limit itself. This idea is actually the foundation of the usual calculus on which the ideas of derivatives and integrals are based.
-\subsection{Continuous Functions}
+\section{Continuous Functions}
  \include{LimitsAndContinuity} 
-\subsection{Differentiation}
+\section{Differentiation}
  \include{Differentiation}
-\subsection{Integration} 
+\section{Integration} 
  \include{Integration} 
-\subsection{Differential Equations}
+\section{Differential Equations}
 %\subsection{Series}
 %\subsection{Integral Transforms} % Fourier- and Laplace trafo
 %\subsection{Integral Equations}
@@ -73,11 +76,11 @@ Calculus is the study of continuous functions and provides the tools for computi
 % maybe this fits best directly after Linear Algebra as application thereof, so maybe place Calculus before Linear Algebra but maybe if we also compute areas of shapes via integrals, calculus needs to be introduced before geometry as well...maybe be a bit more general and include some (basic) calculusly stuff like areas and volumes, optimization of shapes (cylindrical can with smallest surface area kind of stuff)..no multivariable calculus, though - that's for later. but maybe introduce bivectors and trivectors already - they are simple and intuitive and will be needed for exterior algebra
 
 
-\section{Multilinear Algebra}
+\chapter{Multilinear Algebra}
 Multilinear algebra is the study of operations that take multiple inputs and are linear in each of those inputs. For example, consider the sandwich product of two vectors and a matrix: $\mathbf{z = x^T A y}$. The matrix $\mathbf{A}$ can be thought of defining an operation that takes two vectors as inputs and produces a scalar as output. The so defined operation is indeed linear in both inputs in the sense that it makes no difference whether you add or scale at the input or output side.
  % covectors/k-forms, tensors, ..
 
-\section{Multivariable Calculus}
+\chapter{Multivariable Calculus}
 Multivariable calculus is the calculus of continuous functions that may depend on several input variables and/or produce several output variables. As with single variable calculus, one may find minima and maxima of a function with multiple inputs using derivatives by requiring them to be zero (yes: derivatives in plural!). This is important in optimization. Because we now have several input variables, we may take derivatives with respect to any of them which is why they are called partial derivatives in this context. We can collect them in a vector which we then call the gradient. The tool to compute areas under functions - the integral - generalizes to compute other aggregate quantities such as lengths of curves and volumes and surface areas of 3D objects, the amount of a fluid flowing through a surface, the work done by a force field on an object moving through that field, etc. The multivariable version of a differential equation is a partial differential equation, named like that because it involves partial derivatives. So, despite its name, a "partial" differential equation is actually a (much) more complicated thing than an ordinary differential equation. A subfield of multivariable calculus, called vector calculus, is mainly concerned with functions that live in the same 3-dimensional space that we do, making it suitable to describe many physical phenomena. The 3D vector calculus uses some special notations that are specific to 3D and do not readily generalize to an arbitrary number of dimensions. Most notably among them is the curl which is defined by a certain cross-product which itself makes only sense in 3D. Sometimes the equations are boiled down to just two dimensions, which you can easily embed in 3 dimensions, so with some hacks (the curl becomes a scalar) it kinda works there, too. Sometimes the equations also involve time which is then treated seperately from the spatial dimensions. Time being treated as "something else" than space coincides with our daily experience but makes it less than ideal in the context of relativity where time is treated on equal footing, which is why you often see different formalisms used there. Alternatives to vector calculus that do generalize to higher dimensional spaces are exterior calculus (a.k.a. calculus of differential forms), tensor calculus or geometric calculus. All these calculi are based on their respective algebras each of which defines a particular product and the problematic cross-product from 3D vector algebra is not a thing anymore in these algebras.
 %\subsection{Basics} \include{MultivariateCalculusBasics} 
 % multivariate functions, partial derivatives & gradient, Hessian, Jacobian, directional derivative, multiple integrals, (constrained) optimization (also numerical), parametrized curves/surfaces
@@ -85,7 +88,7 @@ Multivariable calculus is the calculus of continuous functions that may depend o
 %\subsection{Vector Calculus} \include{VectorCalculus} 
 % scalar and vector fields, curl, div, line/surface/volume integrals, Green/Gauss/Stokes theorem,
 
-\subsection{Exterior Calculus} \include{ExteriorCalculus} 
+\section{Exterior Calculus} \include{ExteriorCalculus} 
 
 %\subsection{Partial Differential Equations}
 % transport, heat, wave, laplace/poisson, schrödinger, maxwell, navier-stokes, Einstein, Dirac

@@ -2,7 +2,8 @@
 Outline:
 
 Part I: Continuous Mathematics
--Foundations: logic, set theory, numbers, functions
+-Foundations: logic, set theory, numbers, functions (polynomials, rational, sin/exp/log, binomial
+ theorem, partial fraction expansion)
 -Calculus: limits, continuity, derivatives, integrals, (Taylor) series, differential equations
 -Linear Algebra: vectors, matrices, various products (dot,cross,wedge,matrix), operators
 -Geometry: coordinate systems, lines, planes, projections, shapes, areas, volumes
@@ -25,11 +26,13 @@ Part III: Applications
 -Approximation Theory: Taylor, Fourier, Chebychev, orthogonal polynomials, curve fitting
 -Physics: mechanics (Newton/Lagrange/Hamilton), phase space, electrodynamics (maxwell eqs in 
  different forms), quantum mechanics (uses operators and complex numbers), relativity (uses tensors
- and differential geometry)
+ and differential geometry), fluid dynamics
 -Probability and Statistics 
--Numerics: interpolation, differentiation, integration, simulation of differential equations
+-Numerics: interpolation, differentiation, integration, simulation of differential equations,
+ floating point numbers
 -Signal Processing: filters (analog and digital -> ODEs and difference eqs), spectral (FFT, etc.),
  statistical (adaptive filters)
+-Dynamical Systems: attractors (fixed points, periodic, chaotic), bifurcation, fractals
 
 ---------------------------------------------------------------------------------------------------
  
@@ -48,11 +51,14 @@ some notes on the order of the chapters
  are picked up again and explained in more detail. For example, ordinary differential equations 
  belong logically into the calculus chapter, i.e. should be introduced early, but the whole theory 
  of their solutions is way too extensive to present in such an early and basic chapter.
+-maybe make a part about weird, non-mainstream topics. for example, rational trigonometry, 
+ fractional calculus, ...
  
 
-also (don't know yet where this fits): 
+also (don't know yet where this fits and/or if it should be included at all): 
 -infinities (countable/uncountable/Aleph) - maybe set theory
 -computer science: relational databases
+-fractional calculus
 
 
 
@@ -66,7 +72,14 @@ ToDo:
  forces me to explain everything in words. In the Feynman lectures, it's also a pattern that many 
  formulas are also stated in words which makes them much easier to digest
  
+ --------------------------------------------------------------------------------------------------
  
  resources:
+ 
+ The Fractional Derivative, what is it? | Introduction to Fractional Calculus
+ https://www.youtube.com/watch?v=A4sTAKN6yFA
+ 
+ Introducing Weird Differential Equations: Delay, Fractional, Integro, Stochastic!
+ https://www.youtube.com/watch?v=eJaHCZ3ITIc
  
  

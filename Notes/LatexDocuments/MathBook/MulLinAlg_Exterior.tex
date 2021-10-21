@@ -1,0 +1,32 @@
+\section{Exterior Algebra}
+Exterior algebra, also known as Grassmann algebra, is an extension of vector algebra. In classic vector algebra, we have (among other things) the following products defined: (1) the dot product of two vectors, which produces a scalar, (2) the product of a scalar and a vector, which produces another vector, (3) the cross product between two vectors which produces another vector. The cross product is actually a bit problematic. What it produces is not actually a proper vector anymore. Sure, it's a column of 3 numbers, but it shows some weird behaviors compared to regular vectors [TODO: transformation proerties und reflection]. It doesn't generalize to spaces of other dimensionality and it is not even associative (it's anticommutative, though). For this reason, the 3-number quantities that arise from cross products are sometimes called pseudovectors or axial vectors instead of vectors. Exterior algebra sheds some light on this odd behavior of the cross product and cleans it up by defining a new product, called the wedge product, which can for many purposes be used as a replacement for the cross product but encapsulates a much more powerful idea, is better behaved and generalizes to higher dimensions. This new kind of product can also take two vectors as input but in contrast to the cross product, its output is not a vector but a new kind of object, called a bivector. In 3D, such bivectors have 3 components just like ordinary vectors, but conceptually, they represent a different idea. 
+
+\subsection{The Wedge Product}
+The cross product $\mathbf{c = a \times b}$ of two vectors in 3D space is usually depicted as a normal vector to the parallelogram that is formed by the two input vectors $\mathbf{a,b}$. The area of the parallelogram determines the length of this vector and the direction is perpendicular to plane in which the parallelogram lives. If you change the order of the inputs $\mathbf{a,b}$, the output  $\mathbf{c}$ will change its sign, i.e. stick out of the parallelogram into the opposite direction. The wedge product $\mathbf{w = a \wedge b}$ can be thought of as literally representing the parallelogram itself - not a normal vector to it. That's a conceptual shift of perspective with far reaching consequences. 
+
+\subsubsection{Bivectors}
+You may think of a vector as representing a 1-dimensional subspace of $\mathbb{R}^3$, i.e. a line with a particular direction, with some indication of size attached to it via the vector's length and some idication of orientation via its sign. By analogy, the parallelogram arising from wedging two vectors together (yes - picture it in your head exactly this way!), can be thought of as representing a 2-dimensional subspace of $\mathbb{R}^3$, i.e. a plane in which you can move in 2 independent directions. This subspace includes all points that can be reached by a linear combination of the two vectors $\mathbf{a,b}$ that make up the wedge. As with a vector, we have a size associated with this subspace via the area of the parallelogram as well as an orientation, defined by following $\mathbf{a}$ and going around the parallelogram. This oriented area element is what we call a bivector. We can think of it as a parallelogram formed by two vectors, however, it is important to note that any information about the shape of the parallelgram is lost. The bivector only represents the subspace spanned by the two directions $\mathbf{a,b}$, an area and an orientation - it has no shape associated with it. Yes, it arose from a particular shape, but the information of that shape is lost in forming the wedge product.
+
+\subsubsection{Trivectors}
+
+\subsubsection{k-vectors}
+
+
+%can take different types of args (vec,vec -> bivec),(vec,bivec -> trivec),(vec,scl -> vec)
+%generalizes to n dimensions
+%is associative and anticommutative
+
+\begin{comment}
+
+resources:
+https://en.wikipedia.org/wiki/Exterior_algebra
+https://de.wikipedia.org/wiki/Gra%C3%9Fmann-Algebra
+
+https://math.wikia.org/wiki/Dot_product
+https://math.wikia.org/wiki/Wedge_product
+https://math.wikia.org/wiki/Cross_product
+https://math.wikia.org/wiki/Pseudovector
+https://math.wikia.org/wiki/Scalar_triple_product
+https://math.wikia.org/wiki/Vector_triple_product
+
+\end{comment}

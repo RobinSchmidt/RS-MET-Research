@@ -9,15 +9,58 @@ In functional analysis, we will encounter a lot of integrals. Sometimes, however
 
 
 \subsection{Test Functions}
-For the following material, we will need to work with a set of functions with some special properties. We want them to be smooth, which means they should be differentiable infinitely often everywhere. We also want them to have a finite support, which means they should be identically zero everywhere except within some finite interval. The set of all functions that satisfy these two requirements will be called the set of "test functions". [TODO: explain where the name comes from]. At first glance, it may be a bit surprising that functions that satisfy both of these criteria even exist (it certainly suprised me). To make a function identically zero outside a given interval typically requires a piecewise definition and such piecewise definitions tend to make the functions non-smooth at the junctions of the pieces. However, such functions do indeed exist, and a standard example is the so called bump function:
+For the following material, we will need to work with a set of functions with some special properties. We want them to be smooth, which means they should be differentiable infinitely often everywhere. We also want them to have a finite support, which means they should be identically zero everywhere except within some finite interval. The set of all functions that satisfy these two requirements will be called the set of "test functions". [TODO: explain where the name comes from]. At first glance, it may be a bit surprising that functions that satisfy both of these criteria even exist (it certainly suprised me). To make a function identically zero outside a given interval typically requires a piecewise definition and such piecewise definitions tend to make the functions non-smooth at the junctions of the pieces. However, such smooth, piecewise-defined functions do indeed exist, and a standard example is the so called bump function:
 \begin{equation}
  f(x) = ...
 \end{equation}
 It is indeed infinitely often differentiable everywhere, even at the potentially problematic junctions [TODO: show it]. It is, however, not analytic there: a power series expansion centered at these points will not converge to the function $f$ [TODO: figure out to what it converges, if at all (maybe to the zero-function?)].
 
+\paragraph{Notation}
+The set of functions that are continuous on a given interval $(a,b)$ is denoted as $C(a,b)$. The set of functions that are continuously differentiable $k$ times on $(a,b)$ is denoted as $C^k(a,b)$. A smooth function is continuously differentiable infinitely often, so here $k = \infty$ and hence the set of smooth functions on $(a,b)$ is denoted as $C^{\infty}(a,b)$. Finally, the set of smooth functions that are zero outside the interval $(a,b)$, i.e. the set of our test functions, is denoted as  $C_0^{\infty}(a,b)$.
+%or should we use brackets [] instead of ()?
+
 
 \subsection{Distributions}
+In general, a dual space $V^*$ with respect to a given vector space $V$ is defined as the set of all linear functions that take as input an element of the set $V$ and spit out a scalar, i.e. a (typically real) number. What we want to define here is the space that is dual to the space of test functions. This is the space of all linear functionals that take as input a test function and produce a real number as output. Elements of this set are called distributions and in a certain sense, they can be seen as a generalization of the idea of a function. 
 
+\subsubsection{Regular Distributions}
+One way to construct such a linear functional is to multiply the input (test) function $f$ with some fixed other function $g$ and integrate the product over a given interval $(a,b)$. Let's call the resulting functional $G$, so we have:
+\begin{equation}
+ G(f) = \int_a^b g(x) f(x) \; dx
+\end{equation}
+% does the order of f and g matter? could we be dealing with a non-commutative multiplication?
+The so constructed functionals are what we will call "regular distributions". If we identify the functionals with the functions that induce them (i.e. here, identify $G$ with $g$, assuming $a,b$ are fixed once and for all), we have a space that looks a lot like a function space, i.e. a vector space, whose elements are functions. However, the space of functionals can contain also more general objects, i.e. functionals that are not induced by function via such an integral. A simple example of such a functional could be to just take $f$ and spit out the value of $f$ at some given fixed $x_0$. This also does everything we would expect from a functional: take a function as input, spit out a number. It is linear, too. We will call this functional a distribution, too - but it's not a regular one anymore.
+
+% Q: what do we need to assume about g? does it need to be square-integrable, for example? or will any arbitrary function do?
+
+\subsubsection{The Dirac Delta-Distribution}
+One very important example of such an irregular distribution is the Dirac delta distribution that just maps any given function $f$ to its value at $x = 0$:
+\begin{equation}
+ D(f) = f(0)
+\end{equation}
+If we would try to define this distribution $D(f)$ via an integral over a product of $f(x)$ with some fixed function $\delta(x)$ as we did above for the regular distributions, we would formally get something like this:
+\begin{equation}
+ D(f) = f(0) = \int_a^b \delta(x) f(x) \; dx
+\end{equation}
+and now we would ask ourselves, how the supposed function $\delta(x)$ would have to look like to make this work (spoiler alert: there is no such function). We would need to construct a function $\delta(x)$ which for any function $f$, when their product is integrated over an interval $(a,b)$ (which we assume to contain zero, i.e. $a < 0 < b$), gives the value of $f$ at zero. Let's try something that almost works: Pick a small positive number $\epsilon$, at least small enough such that the interval $(-\epsilon, \epsilon)$ is completely contained in $(a,b)$. Then define $\delta_{\epsilon}$ as:
+\begin{equation}
+ \delta_{\epsilon} (x) = ...
+\end{equation}
+When we would use $\delta_{\epsilon}$ in place of $\delta$ in an integral such as the one above, the output would not be exactly $f(0)$ as we would like it, but it would be an average value of $f$ over a small interval centered around zero. The smaller we take $\epsilon$, the closer the average around zero will be to the actual value at zero, so the better our approximation will get. If we now imagine to let $\epsilon$ approach zero, it may actually work out. However, letting  $\epsilon$ approach zero will let $\delta_{\epsilon}$ approach a nonsensical function: it approaches a function that is zero everywhere except at $x=0$ where its value is infinite. Infinity, however, is not a real number and we cannot really meaningfully treat it as such. Paul Dirac and with him the whole physics community nevertheless use this limiting "function" anyway and very successfully so. This "function" $\delta(x)$ is the (in)famous Dirac delta function. In practice (e.g. physics), it usually works well enough to think about this strange object $\delta(x)$ as a bizarre function-like object resulting from a limiting process over perfectly reasonable functions $\delta_{\epsilon}(x)$. In theory (rigorous mathematics), one has to accept, that a Dirac "function"  $\delta(x)$ does not really exist as such and it makes only sense to talk about the Dirac distribution $D(f)$ as a functional which is not defined via an integral. We shall take the practical point of view and pretend that $\delta(x)$ exists as a function. If it's good enough for Dirac, it's good enough for me! In the literature, the distinction between "delta-function" and "delta-distribution" is blurred and the two terms are often used interchangably and you will also find notations like $\delta(f)$ for what I have denoted here as $D(f)$. I did this to make explicit the distinction between the (non-existent) function $\delta$ and the (indeed existent) functional $D$ that $\delta$ would induce, if it would exist.
+
+% todo: sifting property, unit-integral porperty, applications
+% in precisely such a way that the integral of the whole function is unity for any integration interval that contains zero
+
+\subsubsection{Distributional Derivatives}
+One of the motivations to develop this theory was to make sense of situations where we need to take derivatives, for example in differential equations, but the functions we have to deal with are not necessarily differentiable in the usual sense. What we want is a generalization of the derivative that is applicable to a wider class of functions or function-like objects. This wider class is the set of distributions. Remember that our plain old functions can be identified with the regular distributions which are a subset of all distributions. A distribution, seen as a functional, is completely defined by its input/output relation: if we know what it does to any input function $f$, i.e. which output number it produces, we know everything there is to know about the functional. Let's revisit our definition of a regular distribution $G(f)$, which was defined via an integral over a product of $f$ and some inducing function $g$, and see what happens, when we take the derivative $g'$ of $g$ instead of $g$ itself inside this integral. Let's call the resulting functional $G'$:
+\begin{equation}
+ G'(f) = \int_a^b g'(x) f(x) \; dx
+\end{equation}
+Now let's assume, $g$ is actually some nasty, non-differentiable function. We can nevertheless make sense of $G'$ by moving the prime in $g'$ over to $f$. What allows us to do this is the rule for integration by parts:
+\begin{equation}
+ \int_a^b g'(x) f(x) \; dx = ...
+\end{equation}
+Now we have to differentiate $f$ instead of $g$ and that will never pose a problem to us because $f$ was assumed to be a test function, so it's differentiable infinitely often. Moreover, the boundary terms vanish because we have $f(a) = f(b) = 0$. So, what remains is:
 
 
 \begin{comment}
@@ -30,5 +73,7 @@ https://de.wikipedia.org/wiki/Lebesgue-Integral
 https://en.wikipedia.org/wiki/Distribution_(mathematics)
 https://en.wikipedia.org/wiki/Bump_function
 https://en.wikipedia.org/wiki/Mollifier
+
+https://www.math.arizona.edu/~kglasner/math456/GREENS1.pdf
 
 \end{comment}

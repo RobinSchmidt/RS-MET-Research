@@ -13,7 +13,7 @@ Part I: Continuous Mathematics
 -Multivariable Calculus: vector, complex, exterior, geometric, tensor, partial differential 
  equations (present them in the various different formalisms)
 -Functional Analysis: differential and integral operators, functionals, fourier- and laplace-trafo,
- variational calculus
+ variational calculus, distributions: dirac-delta and its derivatives
 -Differential Geometry: manifolds
 
 Part II: Discrete Mathematics

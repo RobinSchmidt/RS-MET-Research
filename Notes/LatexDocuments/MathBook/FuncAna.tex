@@ -1,0 +1,26 @@
+\chapter{Functional Analysis}
+Functional analysis studies operations that take a function as input. As output, these operations may produce another function in which case they are called operators, or just a simple number in which case they are called functionals. Some simple examples of operators, operating on a function $f$, are: take the derivative of $f$, take an antiderivative, multiply the input function $f$ by some (fixed) other function $g$. An example for a functional $F$ that just produces a number as output would be to take the definite integral of $f$ over some given interval $(a,b)$. An even simpler, nonetheless practically very relevant, example of a functional $F(f)$ of a function $f = f(x)$ is to just extract the value of $f$ at a given $x$, for example at $x=0$, so we would just have $F(f) = f(0)$. In any case, we are one level higher up the ladder: we are now talking about functions-of-functions, so to speak. Especially in computer science, such higher level function-like objects are also sometimes called functors. 
+
+\paragraph{}
+Functional analysis plays an important role in the study of differential equations. An ordinary differential equation (ODE), for example, may take a "driving function" as input (i.e. as right-hand-side, inhomogeneity) and produce as output a solution function which can be interpreted as the "response" of a system for the given input function. In such a context, we may in practice have to deal with driving functions that are not necessarily differentiable or even continuous - but when dealing with differential equations, we often really need to be able to take derivatives. That's one reason why a generalized notion of function-like objects, called distributions, is introduced. For these distributions, we have a notion of differentiation that is always applicable - even in the case of discontinuous functions. This notion will help us to find solutions to ODEs even for such discontinuous driving functions which we otherwise just couldn't handle properly. A strange object, called the Dirac delta-distribution $\delta(x)$, will play an important role in this context. It can be thought of as a "function" that is zero everywhere except at $x=0$ where it is infinite in such a way that the integral over any interval that includes $x=0$ equals unity. It represents an inifinitely narrow impulse of unit energy concentrated at $x=0$. No classical function behaves in such a bizarre way. If we know the response of a linear ODE to such an impulse, we can compute the response to any driving function as superposition of such impulse-responses. This superposition will be a continuous one, given by an integral, called the convolution integral.
+
+\paragraph{}
+In the context of boundary value problems and/or partial differential equations (PDEs), this notion of an impulse response will be generalized to what is called a Green's funcion...tbc...
+
+\paragraph{}
+An important type of operators are integral operators, prominent examples of which are given by the Fourier- and Laplace transform. These transforms take functions from one space (the time domain) to another (the frequency domain) and in this new space, the complicated process of convolution can be replaced by a simple pointwise multiplication. Moreover, the frequency domain is more intuitive for human interpretation - we may identify perceptually important features of signals often more easiyl in the frequency domain, especially in the case of audio signals.
+..tbc...
+
+\begin{comment}
+
+-measure theory, Lebesgue integral
+-functionals
+-distributions, test-functions
+-integral transforms (fourier- and laplace trafo)
+-greens-functions
+-scalar-product, norm, Hilbert-space
+-calculus of variations
+-operators: eigenvalues, eigenfunctions
+
+
+\end{comment}

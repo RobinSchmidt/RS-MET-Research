@@ -5,7 +5,8 @@ Mathematics deals with various kinds of numbers, the most important of which are
 \subsubsection{Natural Numbers}
 Natural numbers are the counting numbers $0,1,2,3,4,5,\ldots$. They are indeed "natural" in the sense that we have an intuitive understanding what a number like $3$ means. It is an act of abstraction though, to recognize that a set of 3 apples and a set of 3 orang-utans have something in common, namely that they both have the "size" of 3. Whether or not zero is considered a natural number is a matter of convention. The historical fact that the "invention" (or discovery? TODO: elaborate in a footnote) of the number zero was a rather late development in western mathematics (it was recognized much earlier in indian mathematics) may suggest that the idea of zero is not so natural after all. However, I adopt the convention here that zero is a natural number because especially in the context of computers and programming, it is more often than not more convenient to have zero available in the set. There is no right or wrong here. This is a typical case of a definition for which there is no universal consensus in the math community. If zero is in the set $\mathbb{N}$ per definition but we nevertheless need to make a statement about all natural numbers except zero, the notation $\mathbb{N}^+$ is often used. Conversely, if some author defines zero to not be in the set $\mathbb{N}$ but wants to make a statement about all natural numbers including zero, the notation $\mathbb{N}_0$ is often used.
 
-\paragraph{Elementary Operations}
+\paragraph{Arithmetic Operations}
+The elementary operations between natural numbers are usually introduced in elementary school as addition, subtraction, multiplication and division. They obey the following laws: .... 
 
 \paragraph{Solving Equations}
 
@@ -16,15 +17,28 @@ Natural numbers are the counting numbers $0,1,2,3,4,5,\ldots$. They are indeed "
 
 
 \subsubsection{Rational Numbers}
+% rules for arithmetic, countability (Cantor's 1st diagonal argument)
+
+
+\paragraph{Arithmetic Operations}
+... In higher mathematics, specifically in abstract algebra, it turns out that a more convenient way to think about arithmetic operations is to only consider addition and multiplication as basic and cast subtraction and division in terms of these two basic operations and so called inverse elements. The inverse element of a rational number $q$ with respect to addition is just its negative version, i.e. $-q$. The inverse element of $q$ with respect to multiplication is the reciprocal of $q$, written as $1/q$ or $q^{-1}$. The set of rational numbers is the first set in which both of these inverses exist for any given $q$, except for $q=0$ which has no multiplicative inverse. 
 
 
 \subsubsection{Real Numbers}
 
-% intervals
+% intervals, uncountability (Cantor's 2nd diagonal argument), algebraic numbers (as subset...but wait - they can be complex, too)
 
 
 \subsubsection{Complex Numbers}
 
 
 \subsubsection{Other Numbers}
-% make small paragraphs about: ordinal, cardinal, hyperreal, dual, p-adic, surreal, clifford numbers (aka multivectors), quaternions, octonions, sedenions, modular integers - what about matrices as representations?
+%-make small paragraphs about: ordinal, cardinal, hyperreal, dual, p-adic, surreal, clifford numbers (aka multivectors), quaternions, octonions, sedenions, algebraic numbers, modular integers - what about matrices as representations?
+
+\begin{comment}
+
+-say something about countably and uncountably infinite sets (defined via power sets) - real numbers are uncountable but it's yet unknown if their cardinality is aleph1 or aleph2, i think
+
+\end{comment}
+
+

@@ -1,0 +1,56 @@
+Library for IIR filter design, analysis and realization/implementation
+
+Approximations methods: 
+Butterworth, Chebychev 1 and 2, elliptic, Bessel, Papoulis, Halpern, Gauss,
+(maybe: parabolic, ultraspherical, Legendre, Thiran (allpass) ...)
+
+Filter types: 
+lowpass, highpass, bandpass, bandstop, low-shelf, high-shelf, peak, allpass, maybe: quadrature
+
+transformations: 
+LP->LP, LP->HP, LP->BP, LP->BS, LP->LS, etc: all in the s- and z-domain, s-to-z,
+z-to-s,
+
+Discretization methods: 
+bilinear, MZTi, Nyquist-magnitude-match (NMM)
+
+Realizations: 
+biquad cascade, direct form, biquad bank (parallel), biquads are available in all 4 
+forms (DF1,DF2,TDF1,TDF2) and SVF, maybe also state-vector form, lattice, complex 1-pole, support
+sample-based and block-based processing, the latter possibly bidirectional and with stride
+
+Analysis:
+-magnitude and phase response (unwrapped), phase delay and group delay
+
+Design pipeline:
+-prototype poles and zeros in the s-domain
+-s-domain frequency transform
+-s-to-z transform
+-pole/zero-form to coeffs
+-separate data-structures for coeffs and state to mix and match
+-should be realtime capable
+ -allocate memory once and then operate on that, use workspaces where necessary
+ -expensive recomputations should be avoided when possible (i.e. on a cutoff change, we don't need
+  to recompute prototype poles/zeros)
+ -maybe it could be cheaper to design a digital (halfband) prototype and do z-domain frequency
+  transforms (a la Constantinides). then, on a cutoff-change, we only need to recompute the z-to-z
+  frequency transform, so the library should support both (s-domain and z-domain freq-transforms)
+
+
+maybe:
+-transitional filters (in between e.g. Butterworth and Bessel etc.)
+-Linkwitz/Riley crossovers (with compensation allpasses), maybe with arbitrary number of bands
+ (requires a proper binary tree)
+-perfect crossovers
+-modal resonator (maybe with attack)
+-RBJ cookbook filters
+-pole/zero modeling
+-bidirectional (with correct state initialization), with stride (for image processing)
+-maybe a code-generator for fixed filters
+
+coding style:
+-maybe it should be prepared to be used as c++20 module but also compile as c++11, if that is
+ possible
+-should optionally use concepts (for "Parameter" and "Signal")
+
+(d)igital and (a)nalog (d)esign, (i)mplementation and (a)nalysis of (f)ilter (dadiaf)

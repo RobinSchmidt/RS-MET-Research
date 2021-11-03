@@ -58,10 +58,18 @@ One of the motivations to develop this theory was to make sense of situations wh
 \end{equation}
 Now let's assume, $g$ is actually some nasty, non-differentiable function. We can nevertheless make sense of $G'$ by moving the prime in $g'$ over to $f$. What allows us to do this is the rule for integration by parts:
 \begin{equation}
- \int_a^b g'(x) f(x) \; dx = ...
+ \int_a^b g'(x) f(x) \; dx = \Big[g(x) f(x)\Big]_a^b - \int_a^b g(x) f'(x) \; dx
 \end{equation}
-Now we have to differentiate $f$ instead of $g$ and that will never pose a problem to us because $f$ was assumed to be a test function, so it's differentiable infinitely often. Moreover, the boundary terms vanish because we have $f(a) = f(b) = 0$. So, what remains is:
+Now we have to differentiate $f$ instead of $g$ and that will never pose a problem to us because $f$ was assumed to be a test function, so it's differentiable infinitely often. Moreover, the boundary term vanishes because we have $f(a) = f(b) = 0$. So, what remains is:
+\begin{equation}
+ G'(f) = - \int_a^b g(x) f'(x) \; dx
+\end{equation}
+So, we may compute the functional $G'(f)$ for any test function $f$ even for a non-differentiable inducing function $g$ by simply moving the prime from $g$ to $f$ and prepending a minus sign. ....
 
+
+% todo: consider as example f(x) = |x| and give the expressions for some of its distributional derivatives. the 1st will be a scaled and shifted Heaviside function, the 2nd will be a scaled dirac delta function, etc.
+
+% introduce the scalar-product alike notation for the dual pairing of distributions and tes functions
 
 \begin{comment}
 

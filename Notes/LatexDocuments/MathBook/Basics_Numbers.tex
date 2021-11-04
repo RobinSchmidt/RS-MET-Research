@@ -1,12 +1,12 @@
 \section{Numbers and Arithmetic} 
 
-Mathematics deals with various kinds of numbers, the most important of which are the natural, integer, rational, real and complex numbers. These sets of these numbers are denoted by  $\mathbb{N,Z,Q,R,C}$ respectively. In the given order, the sets further to the left are actually subsets of all the sets further to the right, so we have $\mathbb{N \subset Z \subset Q \subset R \subset C}$. The set $\mathbb{C}$ does not have to be the end of this progression (there are even larger sets such as quaternions, octonions, etc.), but in a very meaningful and satisfying sense, it can be justified to stop at $\mathbb{C}$.
+Mathematics deals with various kinds of numbers, the most important of which are the natural, integer, rational, real and complex numbers. The sets of these numbers are denoted by  $\mathbb{N,Z,Q,R,C}$ respectively. In the given order, the sets further to the left are actually subsets of all the sets further to the right, so we have $\mathbb{N \subset Z \subset Q \subset R \subset C}$. The set $\mathbb{C}$ does not have to be the end of this progression (there are even larger sets such as quaternions, octonions, etc.), but in a very meaningful and satisfying sense, it can be justified to stop at $\mathbb{C}$.
 
 \subsubsection{Natural Numbers}
 Natural numbers are the counting numbers $0,1,2,3,4,5,\ldots$. They are indeed "natural" in the sense that we have an intuitive understanding what a number like $3$ means. It is an act of abstraction though, to recognize that a set of 3 apples and a set of 3 orang-utans have something in common, namely that they both have the "size" of 3. Whether or not zero is considered a natural number is a matter of convention. The historical fact that the "invention" (or discovery? TODO: elaborate in a footnote) of the number zero was a rather late development in western mathematics (it was recognized much earlier in indian mathematics) may suggest that the idea of zero is not so natural after all. However, I adopt the convention here that zero is a natural number because especially in the context of computers and programming, it is more often than not more convenient to have zero available in the set. There is no right or wrong here. This is a typical case of a definition for which there is no universal consensus in the math community. If zero is in the set $\mathbb{N}$ per definition but we nevertheless need to make a statement about all natural numbers except zero, the notation $\mathbb{N}^+$ is often used. Conversely, if some author defines zero to not be in the set $\mathbb{N}$ but wants to make a statement about all natural numbers including zero, the notation $\mathbb{N}_0$ is often used.
 
 \paragraph{Arithmetic Operations}
-The elementary operations between natural numbers are usually introduced in elementary school as addition, subtraction, multiplication and division. Let's recall the laws that additon and multiplication obey. For any natural numbers $a,b,c$, we have:
+There are some elementary operations that take two natural numbers as input and produce another natural number as output. These are usually introduced in elementary school as addition, subtraction, multiplication and division denoted by the symbols $+,-,\cdot,/$ respectively, where the symbol is surrrounded by the two operands (computer scientists call this "infix notation"). The dot for the multiplication is sometimes omitted. Let's recall the laws that additon and multiplication obey. For any natural numbers $a,b,c$, we have:
 
 \medskip
 \begin{tabular}{c l}
@@ -21,21 +21,42 @@ The elementary operations between natural numbers are usually introduced in elem
 We could write down some laws for subtraction and division, too. However, it turns out to be more economic to think of subtraction and division not as elementary operations in their own right but rather to consider them in terms of addition and multiplication of so called inverse elements. We will later define the meaning of $-a$ and $1/a$ and with those definitions in place, the laws above will be sufficient and we don't need extra laws for subtraction and division. But we first need to talk about...
 
 \paragraph{Divisibility}
-% prime numbers, euclidean algo, gcd, lcm
+A natural number $p$ is said to be divisible by some other natural number $d$, if there exists a natural number $q$, such that $p = q \cdot d$ and $q = p/d$. In this case, we call $p$ the product, $q$ the quotient and $d$ the divisor and we express the fact that $p$ is divisible by $d$ by the notation $d | p$ which we read as "d divides p". For example, $15$ is divisible by $3$, because there exists a natural number, namely $5$, such that $15 = 5 \cdot 3$.
+%remainders: p = q*d + r, introduce symbols for division /,
+Every number is divisible by itself and by one.
+
+\paragraph{Powers}
+Multiplication can be viewed as iterated addition: In $15 = 3 \cdot 5$, the right hand side can be interpreted as $5 + 5 + 5$, i.e. we add together $3$ copies of the number $5$. In analogy, we can define a new operation as iterated multiplication. This operation is called exponentiation or "raising to a power"...
+% tetration
+
+\paragraph{Prime Numbers}
+Some numbers have the special property that they are \emph{only} divisible by themselves and by one but have no other divisors. These numbers are called prime numbers and can in a certain sense be seen as the atomic building blocks from which all numbers are made up.
+% factorization, fundamental theorem of arithmetic
+
+% euclidean algo, gcd, lcm, coprime
 % factorial, binomial coeffs
-
-\paragraph{Solving Equations}
-% "subtractability"
-
-
-
-
 
 \paragraph{Number Systems}
 % decimal, binary, octal, hexadecimal, sexagesimal, etc. - base p
 
 
+\paragraph{Solving Equations}
+In the definition of divisibility, we said something like "if there exists a natural number such that...". Such a definition is rather implicit and doesn't really give us any clue how we would go about figuring out whether or not such a number exists. Moreover, if such a number does indeed exist, we may want to know, what that number is. We need an algorithm to find that unknown number! But let's first consider a simpler but similar question: Does a number, let's call it $x$, exist such that $3 + x = 5$? The question is simple enough that we can solve it by the "method of looking closely" (as my high school math teacher used to say). We immediately "see" that the answer is: "yes, it's two!". But what did we actually do in our minds to figure this out? Maybe we imagined a number line and counted the number of steps that we would have to go to the right from 3 to reach 5? Or maybe we just brute forced the solution by trial and error? Can we do something more systematic and more efficient that we can cast into an algorithm that can then also be applied to more complicated problems for which just "looking closely" doesn't really cut it? 
+
+\medskip
+The general theme here is that we want to solve an equation for an unknown variable, which is typically called $x$, just as we did above. The goal is to isolate $x$ on one side of the equation such that it stands there alone and on the other side of the equation we want to see only known quantities, such that we can actually compute that side of the equation directly. The strategy to reach this goal is to apply certain allowed manipulations to the equation. So, what kinds of manipulations are "allowed" and why? These operations should not change the fact that the left hand side (LHS) is equal to the right hand side (RHS). This requirement will be satisfied, iff we do the \emph{same thing} to both sides. If we subtract $3$ from both sides of the equation $3 + x = 5$, we will get $3 + x - 3 = 5 - 3$ which simplifies to $x = 2$ and we are done. This was a very simple example. In general, we may have to combine many manipulation steps, one after another and in just the right order to reach our goal. This process can become arbitrarily complicated and it can also be impossible and it may require some experience and intuition to figure out, which transformation will bring us closer to our goal in a given situation. Let's collect some of the most important allowed operations. We may: (1) add or subtract a constant from both sides, (2) multiply or divide both sides by any constant except zero, (3) take the reciprocal of both sides, if both are nonzero (but we don't yet know what that means and it doesn't make sense if we only have the natural numbers). There are many more operations that may be ok in a given situation, but some of them come with pitfalls and require special care. For example, you may multiply or divide both sides by the unknown $x$, too - as long as $x$ is not zero, but since $x$ is unknown, you may not know whether or not that's the case. You may also take the square of both sides, but then you need to be aware that this may create extra solutions wich solve only the squared equation but not the original one, so you may need to sieve out these extra solutions later, etc. We won't go deeper into this here because we need to address a more basic problem first: Even for the 3 basic transformations given above, we may run into problems. We could solve $3 + x = 5$, but what about $5 + x = 3$? Let's try to isolate $x$ by subtracting $5$ from both sides: $5 + x - 5 = 3 - 5$ which simplifies to $x = 3 - 5$. WTF? What is $3-5$? There is no such natural number!
+
+%In general, adding or subtracting any given constant number from both sides is an allowed operation.
+% multiply both sides by the same number (but not with zero)
+% divide both sides by the saem number (we must assume that both sides are divisible by that number)
+% taking reciprocals of both sides 
+% sqauring both sides...with some care
+% But: what if applying a transformation results in a
+%\medskip
+% "subtractability"
+
 \subsubsection{Integer Numbers}
+Within the natural numbers, the equation $3 + x = 5$ has no solution. If we want to have any chance to solve the equation anyway, we will apparently need some not-so-natural numbers.
 
 
 \subsubsection{Rational Numbers}

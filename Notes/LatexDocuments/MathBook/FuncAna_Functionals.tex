@@ -29,7 +29,7 @@ One way to construct such a linear functional is to multiply the input (test) fu
  G(f) = \int_a^b g(x) f(x) \; dx
 \end{equation}
 % does the order of f and g matter? could we be dealing with a non-commutative multiplication?
-The so constructed functionals are what we will call "regular distributions". If we identify the functionals with the functions that induce them (i.e. here, identify $G$ with $g$, assuming $a,b$ are fixed once and for all), we have a space that looks a lot like a function space, i.e. a vector space, whose elements are functions. However, the space of functionals can contain also more general objects, i.e. functionals that are not induced by function via such an integral. A simple example of such a functional could be to just take $f$ and spit out the value of $f$ at some given fixed $x_0$. This also does everything we would expect from a functional: take a function as input, spit out a number. It is linear, too. We will call this functional a distribution, too - but it's not a regular one anymore.
+The so constructed functionals are what we will call "regular distributions". If we identify the functionals with the functions that induce them (i.e. here, identify $G$ with $g$, assuming $a,b$ are fixed once and for all), we have a space that looks a lot like a function space, i.e. a vector space, whose elements are functions. However, the space of functionals can contain also more general objects, i.e. functionals that are not induced by a function via such an integral. A simple example of such a functional could be to just take $f$ and spit out the value of $f$ at some given fixed $x_0$. This also does everything we would expect from a functional: take a function as input, spit out a number. It is linear, too. We will call this functional a distribution, too - but it's not a regular one anymore.
 
 % Q: what do we need to assume about g? does it need to be square-integrable, for example? or will any arbitrary function do?
 
@@ -56,16 +56,16 @@ One of the motivations to develop this theory was to make sense of situations wh
 \begin{equation}
  G'(f) = \int_a^b g'(x) f(x) \; dx
 \end{equation}
-Now let's assume, $g$ is actually some nasty, non-differentiable function. We can nevertheless make sense of $G'$ by moving the prime in $g'$ over to $f$. What allows us to do this is the rule for integration by parts:
+Now let's assume, $g$ is actually some nasty, non-differentiable function such that $g'$ makes no sense. We can nevertheless make sense of $G'$ by moving the prime in $g'$ over to $f$. What allows us to do this is the rule for integration by parts:
 \begin{equation}
  \int_a^b g'(x) f(x) \; dx = \Big[g(x) f(x)\Big]_a^b - \int_a^b g(x) f'(x) \; dx
 \end{equation}
-Now we have to differentiate $f$ instead of $g$ and that will never pose a problem to us because $f$ was assumed to be a test function, so it's differentiable infinitely often. Moreover, the boundary term vanishes because we have $f(a) = f(b) = 0$. So, what remains is:
+Now there's no $g'$ anymore in the right hand side. Instead, we have to differentiate $f$ and that will never pose a problem to us because $f$ was assumed to be a test function, so it's differentiable infinitely often. For test functions, we also we have $f(a) = f(b) = 0$ which makes the boundary terms vanish. So, what remains is:
 \begin{equation}
  G'(f) = - \int_a^b g(x) f'(x) \; dx
 \end{equation}
 So, we may compute the functional $G'(f)$ for any test function $f$ even for a non-differentiable inducing function $g$ by simply moving the prime from $g$ to $f$ and prepending a minus sign. ....
-
+% give general formula for the n-th distributional derivative using the scalar-product notation
 
 % todo: consider as example f(x) = |x| and give the expressions for some of its distributional derivatives. the 1st will be a scaled and shifted Heaviside function, the 2nd will be a scaled dirac delta function, etc.
 
@@ -73,7 +73,17 @@ So, we may compute the functional $G'(f)$ for any test function $f$ even for a n
 
 \begin{comment}
 
--dual space: set of all linear maps from agivne space into the (real) numbers
+-Frechet-derivative: derivative for functionals - is this similar to a directional derivative? nah! that's the gateaux derivative
+https://en.wikipedia.org/wiki/Fr%C3%A9chet_derivative
+https://en.wikipedia.org/wiki/Gateaux_derivative
+...maybe the gateaux derivative can be introduced in the context of functionals but the frechet derivative only after operators have been discussed. the frechet derivative seems to have stronger preconditions to exist...but maybe they should both be introduced together in a chapter after functionals and operators - maybe it fits into calculus of variations, see also:
+
+https://en.wikipedia.org/wiki/Functional_derivative
+https://cds.cern.ch/record/1383342/files/978-3-642-14090-7_BookBackMatter.pdf
+...looks like the functional derivative is a continuous analog of the total differential (the sum over partial derivatives is replaced by an integral)
+
+
+
 
 https://en.wikipedia.org/wiki/Lebesgue_integration
 https://de.wikipedia.org/wiki/Lebesgue-Integral

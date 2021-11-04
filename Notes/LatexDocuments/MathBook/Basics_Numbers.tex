@@ -6,18 +6,40 @@ Mathematics deals with various kinds of numbers, the most important of which are
 Natural numbers are the counting numbers $0,1,2,3,4,5,\ldots$. They are indeed "natural" in the sense that we have an intuitive understanding what a number like $3$ means. It is an act of abstraction though, to recognize that a set of 3 apples and a set of 3 orang-utans have something in common, namely that they both have the "size" of 3. Whether or not zero is considered a natural number is a matter of convention. The historical fact that the "invention" (or discovery? TODO: elaborate in a footnote) of the number zero was a rather late development in western mathematics (it was recognized much earlier in indian mathematics) may suggest that the idea of zero is not so natural after all. However, I adopt the convention here that zero is a natural number because especially in the context of computers and programming, it is more often than not more convenient to have zero available in the set. There is no right or wrong here. This is a typical case of a definition for which there is no universal consensus in the math community. If zero is in the set $\mathbb{N}$ per definition but we nevertheless need to make a statement about all natural numbers except zero, the notation $\mathbb{N}^+$ is often used. Conversely, if some author defines zero to not be in the set $\mathbb{N}$ but wants to make a statement about all natural numbers including zero, the notation $\mathbb{N}_0$ is often used.
 
 \paragraph{Arithmetic Operations}
-The elementary operations between natural numbers are usually introduced in elementary school as addition, subtraction, multiplication and division. They obey the following laws: .... 
+The elementary operations between natural numbers are usually introduced in elementary school as addition, subtraction, multiplication and division. Let's recall the laws that additon and multiplication obey. For any natural numbers $a,b,c$, we have:
+
+\medskip
+\begin{tabular}{c l}
+  $a + b = b + a$                             & Commutativity of addition \\
+  $a \cdot b = b \cdot a$                     & Commutativity of multiplication \\
+  $(a + b) + c = a + (b + c)$                 & Associativity of addition \\
+  $(a \cdot b) \cdot c = a \cdot (b \cdot c)$ & Associativity of multiplication \\
+  $a \cdot (b + c) = a \cdot b + a \cdot c$   & Distributivity of multiplication over addition
+\end{tabular}
+\medskip
+
+We could write down some laws for subtraction and division, too. However, it turns out to be more economic to think of subtraction and division not as elementary operations in their own right but rather to consider them in terms of addition and multiplication of so called inverse elements. We will later define the meaning of $-a$ and $1/a$ and with those definitions in place, the laws above will be sufficient and we don't need extra laws for subtraction and division. But we first need to talk about...
+
+\paragraph{Divisibility}
+% prime numbers, euclidean algo, gcd, lcm
+% factorial, binomial coeffs
 
 \paragraph{Solving Equations}
+% "subtractability"
 
 
+
+
+
+\paragraph{Number Systems}
+% decimal, binary, octal, hexadecimal, sexagesimal, etc. - base p
 
 
 \subsubsection{Integer Numbers}
 
 
 \subsubsection{Rational Numbers}
-% rules for arithmetic, countability (Cantor's 1st diagonal argument)
+% rules for arithmetic, countability (Cantor's 1st diagonal argument), decimal expansion (fixed and floating point)
 
 
 \paragraph{Arithmetic Operations}
@@ -38,6 +60,7 @@ The elementary operations between natural numbers are usually introduced in elem
 \begin{comment}
 
 -say something about countably and uncountably infinite sets (defined via power sets) - real numbers are uncountable but it's yet unknown if their cardinality is aleph1 or aleph2, i think
+-numbers in the computer: 2-complement integers, IEEE754 float (half/single/double/quad), big int, big float, overflow, precision, precision loss in subtraction of similar values
 
 \end{comment}
 

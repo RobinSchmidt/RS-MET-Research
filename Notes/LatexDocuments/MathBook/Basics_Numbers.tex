@@ -25,13 +25,19 @@ A natural number $p$ is said to be divisible by some other natural number $d$, i
 %remainders: p = q*d + r, introduce symbols for division /,
 Every number is divisible by itself and by one.
 
-\paragraph{Powers}
-Multiplication can be viewed as iterated addition: In $15 = 3 \cdot 5$, the right hand side can be interpreted as $5 + 5 + 5$, i.e. we add together $3$ copies of the number $5$. In analogy, we can define a new operation as iterated multiplication. This operation is called exponentiation or "raising to a power"...
-% tetration
-
 \paragraph{Prime Numbers}
-Some numbers have the special property that they are \emph{only} divisible by themselves and by one but have no other divisors. These numbers are called prime numbers and can in a certain sense be seen as the atomic building blocks from which all numbers are made up.
+Some numbers have the special property that they are \emph{only} divisible by themselves and by one but have no other divisors. These numbers are called prime numbers and can in a certain sense be seen as the atomic building blocks from which all numbers are made up. This is meant in the following sense: for nay natural number, there always exists one and only one way to construct it as product of natural numbers. Consider the number 60: We can write it as a product as follows $60 = 2 \cdot 2 \cdot 3 \cdot 5$
 % factorization, fundamental theorem of arithmetic
+
+\paragraph{Powers}
+Multiplication can be viewed as iterated addition: In $15 = 3 \cdot 5$, the right hand side can be interpreted as $5 + 5 + 5$, i.e. we add together $3$ copies of the number $5$. In analogy, we can define a new operation as iterated multiplication. This will be useful. For example, in the prime factorization of 60, the number 2 appeared twice and in general for any number, a prime factor of that number may appear multiple times. We want a convenient notation to express something like $2 \cdot 2 \cdot 2$. The notation for this is $2^3$: we write the factor as usual and the "number of times" in superscript. The factor is called the "base" and the "number of times" is called the exponent or, depending on context, also the "power". This operation is called "exponentiation" or "raising to a power". With this new notation, we can write the prime factorization of 60 as $60 = 2^2 \cdot 3 \cdot 5$.  We read something like $2^5$ as: "two to the power of five" or "two to the fifth power" or shorter "two to the five" or "two to the fifth". If the exponent is 2 or 3, as in $5^2$ or $5^3$, we may also say "five squared" or "five cubed" respectively. That comes from the geometric fact that $5^2$ is the area of a square with side length $5$ and $5^3$ is the volume of cube with side length 5.
+
+\medskip
+Consider $2^3 = 2 \cdot 2 \cdot 2 = 8$. We have already said that in this context, 2 is called the base and 3 is called the exponent. What if we consider the act of raising some arbitrary number $b$ (like 2 in this example) to the power of 3 as a unary operation (i.e. an operation with only one input where we assume the exponent to be fixed) that we apply to $b$ and imagine we are given only the result of the operation (8, in this case). Can we undo the operation, i.e. figure out, that the base must have been 2? That ought to be possible because no other natural number than 2 will produce 8 when raised to the power of 3. The idea of undoing an exponentiation leads to the idea of extracting the "n-th root". Here $n = 3$, so we want to extract the 3rd root from 8.
+
+% mention tetration (briefly), list the laws for powers, maybe introduce roots and logarithms
+
+
 
 % euclidean algo, gcd, lcm, coprime
 % factorial, binomial coeffs
@@ -56,8 +62,9 @@ The general theme here is that we want to solve an equation for an unknown varia
 % "subtractability"
 
 \subsubsection{Integer Numbers}
-Within the natural numbers, the equation $3 + x = 5$ has no solution. If we want to have any chance to solve the equation anyway, we will apparently need some not-so-natural numbers.
+Within the natural numbers, the equation $3 + x = 5$ has no solution. If we want to have any chance to solve the equation anyway, we will apparently need some not-so-natural numbers. The first set of "unnatural" numbers that we will define are the negative numbers. Together with the set of natural numbers, they form the set of integer numbers. In reality, you can not take way 5 apples from 3 apples but many bank accounts allow you to go into debt. If you have 30 coins deposited and withdraw 50 coins, your account will go into debt by 20 coins which you will have to repay later. Mathematically, such debt is modeled by negative numbers, i.e. numbers that are less than zero. That means, in order to get zero, you need to add something. That's indeed rather unnatural. 
 
+% rules for multiplication
 
 \subsubsection{Rational Numbers}
 % rules for arithmetic, countability (Cantor's 1st diagonal argument), decimal expansion (fixed and floating point)
@@ -73,10 +80,11 @@ Within the natural numbers, the equation $3 + x = 5$ has no solution. If we want
 
 
 \subsubsection{Complex Numbers}
-
+% remind of the "unnaturalness" of negative numbers - make the point that imaginary numbers are no more unnatural than negative numbers
+% also talk about the extended complex plane, i.e. with the additional point at infinity
 
 \subsubsection{Other Numbers}
-%-make small paragraphs about: ordinal, cardinal, hyperreal, dual, p-adic, surreal, clifford numbers (aka multivectors), quaternions, octonions, sedenions, algebraic numbers, modular integers - what about matrices as representations?
+%-make small paragraphs about: ordinal, cardinal, hyperreal, dual, p-adic, surreal, clifford numbers (aka multivectors), quaternions, octonions, sedenions, algebraic numbers, modular integers, Galois fields - what about matrices as representations?
 
 \begin{comment}
 

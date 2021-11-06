@@ -36,6 +36,13 @@ Part III: Applications
  statistical (adaptive filters)
 -Dynamical Systems: attractors (fixed points, periodic, chaotic), bifurcation, fractals
 
+
+some special topics that i don't know where to fit:
+-functional equations
+-rational trigonometry (maybe in the discrete math part)
+-all the different infinities
+
+
 ---------------------------------------------------------------------------------------------------
  
 some notes on the order of the chapters

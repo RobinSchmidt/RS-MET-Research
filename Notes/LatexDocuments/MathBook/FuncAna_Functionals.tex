@@ -8,12 +8,13 @@ In functional analysis, we will encounter a lot of integrals. Sometimes, however
 \subsubsection{The Lebesgue Integral}
 
 
-\subsection{Test Functions}
+\subsection{Test Functions  [TODO: move to function spaces]}
 For the following material, we will need to work with a set of functions with some special properties. We want them to be smooth, which means they should be differentiable infinitely often everywhere. We also want them to have a finite support, which means they should be identically zero everywhere except within some finite interval. The set of all functions that satisfy these two requirements will be called the set of "test functions". [TODO: explain where the name comes from]. At first glance, it may be a bit surprising that functions that satisfy both of these criteria even exist (it certainly suprised me). To make a function identically zero outside a given interval typically requires a piecewise definition and such piecewise definitions tend to make the functions non-smooth at the junctions of the pieces. However, such smooth, piecewise-defined functions do indeed exist, and a standard example is the so called bump function:
 \begin{equation}
  f(x) = ...
 \end{equation}
 It is indeed infinitely often differentiable everywhere, even at the potentially problematic junctions [TODO: show it]. It is, however, not analytic there: a power series expansion centered at these points will not converge to the function $f$ [TODO: figure out to what it converges, if at all (maybe to the zero-function?)].
+
 
 \paragraph{Notation}
 The set of functions that are continuous on a given interval $(a,b)$ is denoted as $C(a,b)$. The set of functions that are continuously differentiable $k$ times on $(a,b)$ is denoted as $C^k(a,b)$. A smooth function is continuously differentiable infinitely often, so here $k = \infty$ and hence the set of smooth functions on $(a,b)$ is denoted as $C^{\infty}(a,b)$. Finally, the set of smooth functions that are zero outside the interval $(a,b)$, i.e. the set of our test functions, is denoted as  $C_0^{\infty}(a,b)$.

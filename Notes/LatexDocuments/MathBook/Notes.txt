@@ -6,7 +6,8 @@ Part I: Continuous Mathematics
  theorem, partial fraction expansion)
 -Calculus: limits, continuity, derivatives, integrals, (Taylor) series, differential equations
 -Linear Algebra: vectors, matrices, various products (dot,cross,wedge,matrix), operators
--Geometry: coordinate systems, lines, planes, projections, shapes, areas, volumes, curves, 
+-Geometry: Euclidean, Differential, Hyperbolic, Elliptic, synthetic, analytic
+ coordinate systems, lines, planes, projections, shapes, areas, volumes, curves, 
  surfaces, maybe introduce sin/cos here - in functions, consider only poly/rational and powers, 
  i.e. algebraic functions, maybe the exponential, too
 -Multilinear Algebra: tensors, exterior algebra (covectors, k-forms)
@@ -30,10 +31,12 @@ Part III: Applications
  different forms), quantum mechanics (uses operators and complex numbers), relativity (uses tensors
  and differential geometry), fluid dynamics
 -Probability and Statistics 
--Numerics: interpolation, differentiation, integration, simulation of differential equations,
- floating point numbers
+-Numerics: interpolation, differentiation, integration, simulation of differential equations, 
+ optimization, floating point numbers
 -Signal Processing: filters (analog and digital -> ODEs and difference eqs), spectral (FFT, etc.),
  statistical (adaptive filters)
+-Computer graphics and image processing - perhaps the most visual application of math, therefore 
+ well suited to build mathematical intuition
 -Dynamical Systems: attractors (fixed points, periodic, chaotic), bifurcation, fractals
 
 

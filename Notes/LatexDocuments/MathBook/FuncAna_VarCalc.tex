@@ -1,17 +1,37 @@
 \section{Calculus of Variations} 
 
-
 In multivariable calculus, we were interested in finding minima and maxima of functions that had multiple inputs. The strategy was to compute an expression for the gradient and requiring it to be the zero vector. In the calculus of variations, aka variational calculus, we will take this a step further: We will minimize functionals with respect to their input function. That means we are interested in finding a function that minimizes a given functional. We may interpret this as minimizing something that depends on (uncountably) infinitely many inputs - not just 2 or 3 or 1000 as in multivariable calculus.
+
+\subsection{The Problem}
+We want to find a stationary point (typically a minimum or maximum) of an integral of the form:
+\begin{equation}
+ I(u) = \int_a^b F(x,u(x),u'(x)) \; dx
+\end{equation}
+where $u = u(x)$ is the unknown function that we want to find which has $x$ as its argument. The function $F$ is a function that may depend on 3 scalar inputs $x,u,u'$ where $u,u'$ are themselves dependent on $x$, so the only truly independent input to the integrand $F$ is actually just $x$. 
+
+
+% I think, $F$ can be seen as the result of applying an operator to the function $u$? 
+
+
+\subsection{The Solution}
 
 
 \begin{comment}
+
+-after Euler-Lagrange Eq:
+In physics, the problem of minimizing such a functional is called the "princple of least action" and the idea is so fundamental that almost all differential equations that occurr in physics can be derived from such a principle. In this context, the function under the integral is called the "Lagrangian" of the system, typically denoted by $L$, and the Euler-Lagrange equation gives the solution of the problem.
+
+It's appropriate now to take a step back and appreciate the view from the lofty height we have reached: we now consider a differential equation to be the *solution* of a problem that was posed on an even higher level. It may look like a partial differential equation due to the occurrence of derivatives with respect to $x,u,u'$ but it's actually an ordinary one because $u,u'$ are themselves functions of $x$ (verify!)
+
+It's not even one particular differential equation but rather a recipe for deriving an infinite number of differential equations. Time to pat ourselves on the back for having understood one of the crown jewels of theoretical physics. 
+
 
 -derivatives of functionals: variation (as continuous analog of the total differential), Frechet- and Gateaux derivative
 
 -can we interpret the functional derivative (i.e. the variation) as some continuous analog of the norm of the
  gradient vector? can the minimization problem be cast into setting this norm to zero?
  
--make derivation of the variation similar to the one in Susskind's theorectical minimum, volume 3
+-make derivation of the variation similar to the one in Susskind's theorectical minimum, volume 1
 
 -minimization of functionals 
  -applications: 
@@ -19,5 +39,10 @@ In multivariable calculus, we were interested in finding minima and maxima of fu
   -physics: principle of least action and least time, Lagrangian mechanics, 
 
 -connection between variational problems and differential equations: a diffeq is the solution to a variational problem - how can we go the other way around and find the variationl problem when given a diffeq?
+
+
+https://www.youtube.com/watch?v=V0wx0JBEgZc
+https://www.youtube.com/watch?v=VCHFCXgYdvY
+https://www.youtube.com/watch?v=vqDHO2eKXcs
 
 \end{comment} 

@@ -8,14 +8,12 @@ In multivariable calculus, we were interested in finding minima and maxima of fu
 \subsection{The Problem}
 We want to find a stationary point (typically a minimum or maximum - in the following, we'll assume a minimum) of an integral of the form:
 \begin{equation}
- I(u) = \int_a^b F(x,u(x),u'(x)) \; dx
+ I(y) = \int_a^b F(x,y(x),y'(x)) \; dx
 \end{equation}
-where $u = u(x)$ is an unknown function that we want to find which has $x$ as its argument. The function $u(x)$ should also satisfy some given boundary conditions $u(a) = u_a, u(b) = u_b$. That means we minimize the integral subject to the contraint that the function $u$ has to take specific prescribed values $u_a, u_b$ at the boundaries of the integration interval. The function $F$ is a function that may depend on 3 scalar inputs $x,u,u'$ where $u,u'$ are themselves dependent on $x$, so the only truly independent input to the integrand $F$ is actually just $x$.
-
-Let's assume that $u$ is indeed a function that makes the $I(u)$ stationary and let $v = v(x)$ be any function of $x$ that satisfies $v(a) = v(b) = 0$. Then, adding a small amount $h$ of the function $v$ to the function $u$ should cause at most second order changes to $I$, i.e. $I$ should remain constant to first order. The boundary conditions $v(a) = v(b) = 0$ ensure that our modified function $\tilde{u} = u + h v$ satisfies the same boundary conditions as $u$ does: $\tilde{u}(a) = u_a, \tilde{u}(b) = u_b$.
+where $y = y(x)$ is an unknown function that we want to find which has $x$ as its argument. The function $y(x)$ should also satisfy some given boundary conditions $y(a) = y_a, y(b) = y_b$. That means we minimize the integral subject to the contraint that the function $y$ has to take specific prescribed values $y_a, y_b$ at the boundaries of the integration interval. The function $F$ is a function that may depend on 3 scalar inputs $x,y,y'$ where $y,y'$ are themselves dependent on $x$, so the only truly independent input to the integrand $F$ is actually just $x$. Let's assume that $y$ is indeed a function that makes the $I(y)$ stationary and let $v = v(x)$ be any function of $x$ that satisfies $v(a) = v(b) = 0$. Then, adding a small amount $h$ of the function $v$ to the function $y$ should cause at most second order changes to $I$, i.e. $I$ should remain constant to first order. The boundary conditions $v(a) = v(b) = 0$ ensure that our modified function $\tilde{y} = y + h v$ satisfies the same boundary conditions as $y$ does: $\tilde{y}(a) = y_a, \tilde{y}(b) = y_b$.
 
 \subsection{Gateaux Derivatives - The Tool}
-We need to make more explicit what we mean by a statement like $I(u)$ should remain constant to first order when we wiggle $u$ a little bit. We need to define some sort analogon of a derivative for functionals. Since a functional has an infinite dimensional input, it's perhaps advisable to draw ideas from notions of derivatives of multivariate functions because their input is at least multidimensional. The idea that we will pick up from multivariable calculus and extend to the infinite dimensional case is the idea of directional a derivative. ...tbc...
+We need to make more explicit what we mean by a statement like $I(y)$ should remain constant to first order when we wiggle $y$ a little bit by adding a small amount of another function $v$. We need to define some sort of derivative for functionals that we can then set to zero. Since a functional has an infinite dimensional input, it's perhaps advisable to draw ideas from notions of derivatives of multivariate functions because their input is at least multidimensional. The idea that we will pick up from multivariable calculus and extend to the infinite dimensional case is the idea of a directional derivative. ...tbc...
 
 
 
@@ -37,7 +35,9 @@ We need to make more explicit what we mean by a statement like $I(u)$ should rem
 
 
 \begin{equation}
- \frac{d}{d x} \left(  \frac{\partial F}{\partial u'}  \right) = \frac{\partial F}{\partial u}
+ \frac{d}{d x} \left(  \frac{\partial F}{\partial y'}  \right) = \frac{\partial F}{\partial y}
+ \qquad \text{aka} \qquad
+ \frac{d}{d x} F_y = F_{y'}
 \end{equation}
 % why is the derivative with respect a normal derivative and the others are partial derivatives? is it because the result of \frac{\partial F}{\partial u'} is only a function of x? 
 

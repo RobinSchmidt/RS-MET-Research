@@ -1,0 +1,36 @@
+\section{Derivatives}
+
+\subsection{Partial and Directional Derivatives}
+Let's assume we have a bivariate function $f$, i.e. a function with two inputs $x,y$, that produces one output $z$: $z = f(x,y)$. We can visualize this as a landscape above an $(x,y)$-plane where the height is given by the function value. We can take derivatives of $f$ with respect to $x$ and with respect to $y$. In the former case, $y$ is just treated as a constant and in the latter case $x$ is treated as a constant. These two derivatives of $f$ are called partial derivatives and we denote them as $\frac{\partial f}{\partial x}$ and $\frac{\partial f}{\partial y}$, where the curly d symbol $\partial$ is a special math symbol that we read as "partial" - it's not a greek delta. The formal definition is:
+\begin{equation}
+ \frac{\partial f(x,y)}{\partial x} = \lim_{h \rightarrow 0} \frac{f(x+h,y) - f(x,y)}{h}, \qquad
+ \frac{\partial f(x,y)}{\partial y} = \lim_{h \rightarrow 0} \frac{f(x,y+h) - f(x,y)}{h}
+\end{equation}
+In the text above, we wrote $\frac{\partial f}{\partial x}$ whereas in the definition, we wrote  $\frac{\partial f(x,y)}{\partial x}$. The former notation with supressed input arguments $x,y$ is just an abbreviation of the more verbose latter notation. This abbreviation makes sense when it is understood from the context that $f$ is a function of $x,y$. Another, even shorter, notation for the partial derivatives is $f_x, f_y$. For a general multivariate function with scalar output $f(\mathbf{x})$ where $\mathbf{x} = (x_0,x_1,\ldots,x_n)^T$ where $n$ is the number of inputs, we can compute partial derivatives with respect to eeach input dimension. We denote these as $\frac{\partial f}{\partial x_i}$ where $i = 1,\ldots,n$. We could also write $f_{x_i}$ but we will rarely use this notation because an index with an index is typographically less than ideal. The formal definition of $\frac{\partial f}{\partial x_i}$ is given by:
+\begin{equation}
+ \frac{\partial f(\mathbf{x}) }{\partial x_i} 
+ = \lim_{h \rightarrow 0} \frac{f(\mathbf{x} + h \mathbf{e}_i ) - f(\mathbf{x})}{h}
+\end{equation}
+where $\mathbf{e}_i$ is the unit vector in the $i$-th coordinate direction, i.e. it has a one at position $i$ and zeros everywhere else. As said: the computation of such partial derivatives is purely mechanic and we don't need to refer to our definitions for that. Instead, we just treat the function as if it would depend only on the variable with respect to which we differentiate and treat all other variables as constants.
+
+\medskip
+Now let's assume we are given an arbitrary vector $\mathbf{v}$ of unit length. We define the directional derivative of $f$ into the direction of  $\mathbf{v}$ as:
+\begin{equation}
+ \frac{\partial f(\mathbf{x}) }{\partial \mathbf{v}} 
+ = \lim_{h \rightarrow 0} \frac{f(\mathbf{x} + h \mathbf{v} ) - f(\mathbf{x})}{h}
+\end{equation}
+In order to compute such a directional derivative of a given function, it's convenient to first define the...
+
+\subsection{Gradient}
+
+
+
+
+
+
+\begin{comment}
+
+-gradient, Jacobian, Hessian
+-maybe divergence, but maybe defer that to vector calculus
+
+\end{comment} 

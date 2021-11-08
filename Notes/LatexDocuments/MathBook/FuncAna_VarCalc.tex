@@ -1,20 +1,49 @@
 \section{Calculus of Variations} 
 
+[TODO: this chapter needs thorough verification - i'm not so sure about many things]
+
 In multivariable calculus, we were interested in finding minima and maxima of functions that had multiple inputs. The strategy was to compute an expression for the gradient and requiring it to be the zero vector. In the calculus of variations, aka variational calculus, we will take this a step further: We will minimize functionals with respect to their input function. That means we are interested in finding a function that minimizes a given functional. We may interpret this as minimizing something that depends on (uncountably) infinitely many inputs - not just 2 or 3 or 1000 as in multivariable calculus.
 
+
 \subsection{The Problem}
-We want to find a stationary point (typically a minimum or maximum) of an integral of the form:
+We want to find a stationary point (typically a minimum or maximum - in the following, we'll assume a minimum) of an integral of the form:
 \begin{equation}
  I(u) = \int_a^b F(x,u(x),u'(x)) \; dx
 \end{equation}
-where $u = u(x)$ is the unknown function that we want to find which has $x$ as its argument. The function $F$ is a function that may depend on 3 scalar inputs $x,u,u'$ where $u,u'$ are themselves dependent on $x$, so the only truly independent input to the integrand $F$ is actually just $x$. 
+where $u = u(x)$ is an unknown function that we want to find which has $x$ as its argument. The function $u(x)$ should also satisfy some given boundary conditions $u(a) = u_a, u(b) = u_b$. That means we minimize the integral subject to the contraint that the function $u$ has to take specific prescribed values $u_a, u_b$ at the boundaries of the integration interval. The function $F$ is a function that may depend on 3 scalar inputs $x,u,u'$ where $u,u'$ are themselves dependent on $x$, so the only truly independent input to the integrand $F$ is actually just $x$.
+
+Let's assume that $u$ is indeed a function that makes the $I(u)$ stationary and let $v = v(x)$ be any function of $x$ that satisfies $v(a) = v(b) = 0$. Then, adding a small amount $h$ of the function $v$ to the function $u$ should cause at most second order changes to $I$, i.e. $I$ should remain constant to first order. The boundary conditions $v(a) = v(b) = 0$ ensure that our modified function $\tilde{u} = u + h v$ satisfies the same boundary conditions as $u$ does: $\tilde{u}(a) = u_a, \tilde{u}(b) = u_b$.
+
+\subsection{Gateaux Derivatives - The Tool}
+We need to make more explicit what we mean by a statement like $I(u)$ should remain constant to first order when we wiggle $u$ a little bit. We need to define some sort analogon of a derivative for functionals. Since a functional has an infinite dimensional input, it's perhaps advisable to draw ideas from notions of derivatives of multivariate functions because their input is at least multidimensional. The idea that we will pick up from multivariable calculus and extend to the infinite dimensional case is the idea of directional a derivative. ...tbc...
 
 
-% I think, $F$ can be seen as the result of applying an operator to the function $u$? 
+
+
+
+
+
+
+
+
+% I think, $F$ can be seen as the result of applying an operator to the function $u$? But it's not just any arbitrary operator - it is a function that can depend only on $x$ and its instantaneous values $u(x),u'(x)$ at that given $x$, not on any other function values of $u$, as the result of a general operator could
 
 
 \subsection{The Solution}
 
+%The Gateaux derivative of $I$ at $u$ into the "direction" of $v$ should vanish, i.e....
+
+% ... Because $v$ was assumed to be arbitrary, the only way that this integral can vanish is when the integrand vanishes, so we may actually get rid of the integral and arrive at the simpler condition...
+
+
+\begin{equation}
+ \frac{d}{d x} \left(  \frac{\partial F}{\partial u'}  \right) = \frac{\partial F}{\partial u}
+\end{equation}
+% why is the derivative with respect a normal derivative and the others are partial derivatives? is it because the result of \frac{\partial F}{\partial u'} is only a function of x? 
+
+%\subsection{Special Cases and Generalizations}
+
+%\subsection{Applications}
 
 \begin{comment}
 
@@ -44,5 +73,7 @@ It's not even one particular differential equation but rather a recipe for deriv
 https://www.youtube.com/watch?v=V0wx0JBEgZc
 https://www.youtube.com/watch?v=VCHFCXgYdvY
 https://www.youtube.com/watch?v=vqDHO2eKXcs
+
+https://www.youtube.com/watch?v=MXXrAxBu3lo
 
 \end{comment} 

@@ -5,15 +5,33 @@
 In multivariable calculus, we were interested in finding minima and maxima of functions that had multiple inputs. The strategy was to compute an expression for the gradient and requiring it to be the zero vector. In the calculus of variations, aka variational calculus, we will take this a step further: We will minimize functionals with respect to their input function. That means we are interested in finding a function that minimizes a given functional. We may interpret this as minimizing something that depends on (uncountably) infinitely many inputs - not just 2 or 3 or 1000 as in multivariable calculus.
 
 
-\subsection{The Problem}
+\subsection{The Problem: Minimize a Functional}
 We want to find a stationary point (typically a minimum or maximum - in the following, we'll assume a minimum) of an integral of the form:
 \begin{equation}
  I(y) = \int_a^b F(x,y(x),y'(x)) \; dx
 \end{equation}
 where $y = y(x)$ is an unknown function that we want to find which has $x$ as its argument. The function $y(x)$ should also satisfy some given boundary conditions $y(a) = y_a, y(b) = y_b$. That means we minimize the integral subject to the contraint that the function $y$ has to take specific prescribed values $y_a, y_b$ at the boundaries of the integration interval. The function $F$ is a function that may depend on 3 scalar inputs $x,y,y'$ where $y,y'$ are themselves dependent on $x$, so the only truly independent input to the integrand $F$ is actually just $x$. Let's assume that $y$ is indeed a function that makes the $I(y)$ stationary and let $v = v(x)$ be any function of $x$ that satisfies $v(a) = v(b) = 0$. Then, adding a small amount $h$ of the function $v$ to the function $y$ should cause at most second order changes to $I$, i.e. $I$ should remain constant to first order. The boundary conditions $v(a) = v(b) = 0$ ensure that our modified function $\tilde{y} = y + h v$ satisfies the same boundary conditions as $y$ does: $\tilde{y}(a) = y_a, \tilde{y}(b) = y_b$.
 
-\subsection{Gateaux Derivatives - The Tool}
-We need to make more explicit what we mean by a statement like $I(y)$ should remain constant to first order when we wiggle $y$ a little bit by adding a small amount of another function $v$. We need to define some sort of derivative for functionals that we can then set to zero. Since a functional has an infinite dimensional input, it's perhaps advisable to draw ideas from notions of derivatives of multivariate functions because their input is at least multidimensional. The idea that we will pick up from multivariable calculus and extend to the infinite dimensional case is the idea of a directional derivative. ...tbc...
+\subsection{The Tool: The Gateaux Derivative}
+We need to make more explicit what we mean by a statement like $I(y)$ should remain constant to first order when we wiggle $y$ a little bit by adding a small amount of another function $v$. We need to define some sort of derivative for functionals that we can then set to zero. Since a functional has an infinite dimensional input, it's perhaps advisable to draw ideas from notions of derivatives of multivariate functions because their input is at least multidimensional. The idea that we will pick up from multivariable calculus and extend to the infinite dimensional case is the idea of a directional derivative. Recall that the directional derivative of a multivariate function $f(\mathbf{x})$ into the direction of some arbitrary unit length vector $\mathbf{v}$ was defined as:
+\begin{equation}
+ \frac{\partial f(\mathbf{x}) }{\partial \mathbf{v}} 
+ = \lim_{h \rightarrow 0} \frac{f(\mathbf{x} + h \mathbf{v} ) - f(\mathbf{x})}{h}
+\end{equation}
+Now, our function $y = y(x)$ plays the role of the input vector $\mathbf{x}$ and $v = v(x)$ plays the role of  the given dircetion vector $\mathbf{v}$, but now $v$ is a "direction" in our infinite dimensional function space, into which we perturb our given location $y$ in that space. The role of $f$ is taken by $I$, so we could write in full analogy:
+\begin{equation}
+ \frac{\partial I(y) }{\partial v} 
+ = \lim_{h \rightarrow 0} \frac{I(y + h v ) - I(y)}{h}
+\end{equation}
+and call that expression the directional derivative of $I$ into the direction of $v$ at $y$. However, this is not the usual notation and terminology. Instead, the f
+
+
+% $ h v$ is called the variation of $y$
+
+
+% Side note: For the analogy to be complete and fully consistent, we should also require that the norm of $v$ has to be unity. However, in the literature, that is typically not done in the definition of the Gateaux derivative. This is not such a big deal because in the typical applications, we will require this derivative be zero, so any scalar proportionality factor doesn't matter anyway. One could perhaps conceive of removing the unit-length requirement in the definition of the directional derivative as well - if the vector $\mathbf{v}$ would have some length other than unity, the first order change in $f$ due to that length factor would be given by just that length. Any non-unit scale factor in the input vector would just scale the output value of the directional derivative accordingly, which would make sense. Anyway...
+
+...tbc...
 
 
 
@@ -27,7 +45,7 @@ We need to make more explicit what we mean by a statement like $I(y)$ should rem
 % I think, $F$ can be seen as the result of applying an operator to the function $u$? But it's not just any arbitrary operator - it is a function that can depend only on $x$ and its instantaneous values $u(x),u'(x)$ at that given $x$, not on any other function values of $u$, as the result of a general operator could
 
 
-\subsection{The Solution}
+\subsection{The Solution: The Euler-Lagrange Equation}
 
 %The Gateaux derivative of $I$ at $u$ into the "direction" of $v$ should vanish, i.e....
 
@@ -41,9 +59,9 @@ We need to make more explicit what we mean by a statement like $I(y)$ should rem
 \end{equation}
 % why is the derivative with respect a normal derivative and the others are partial derivatives? is it because the result of \frac{\partial F}{\partial u'} is only a function of x? 
 
-%\subsection{Special Cases and Generalizations}
+\subsubsection{Special Cases and Generalizations}
 
-%\subsection{Applications}
+\subsection{Examples}
 
 \begin{comment}
 
@@ -69,6 +87,8 @@ It's not even one particular differential equation but rather a recipe for deriv
 
 -connection between variational problems and differential equations: a diffeq is the solution to a variational problem - how can we go the other way around and find the variationl problem when given a diffeq?
 
+
+https://en.wikipedia.org/wiki/Gateaux_derivative
 
 https://www.youtube.com/watch?v=V0wx0JBEgZc
 https://www.youtube.com/watch?v=VCHFCXgYdvY

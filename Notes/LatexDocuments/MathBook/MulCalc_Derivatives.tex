@@ -41,6 +41,23 @@ So far, we assumed that $f$ has only a single output, i.e. defines a scalar fiel
 \subsection{The Hessian Matrix}
 The gradient vector and the Jacobian matrix are collections of first partial derivatives of scalar- and vector valued functions respectively. The Hessian matrix is a collection of second partial derivatives of a scalar valued function. ...tbc...
 
+
+
+
+\subsection{TODO Notes}
+It seems to be generally true that for any function $f(x)$ we have
+\begin{equation}
+ \frac{d}{d x} f(x) = \frac{d}{d h} f(x + h) \bigg\rvert_{h=0}
+\end{equation}
+which seems to generalize to the directional derivative of multivariate functions as:
+\begin{equation}
+ \frac{\partial f(\mathbf{x}) }{\partial \mathbf{v}} 
+ = \lim_{h \rightarrow 0} \frac{f(\mathbf{x} + h \mathbf{v} ) - f(\mathbf{x})}{h}
+ = \frac{d}{d h} f(\mathbf{x} + h \mathbf{v}) \bigg\rvert_{h=0}
+\end{equation}
+which could be used to actually evaluate the directional derivative without using the formula with the scalar product with the gradient. ...verify this! This seems to be the important observation in evaluating the Gateaux derivative by analogy later...
+
+
 \begin{comment}
 
 -maybe divergence, but maybe defer that to vector calculus

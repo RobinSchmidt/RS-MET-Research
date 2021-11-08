@@ -8215,6 +8215,29 @@ bool testRationalFromRoots()
   return ok;
 }
 
+bool testLeveledNumber()
+{
+  bool ok = true;
+
+
+
+  return ok;
+
+  // ToDo:
+  // -Test it with rational functions: f(x) = ((x-1)*(x-2)*(x-3)) / ((x-1)*(x-2))
+  //  -> evaluate it at x=1,x=2, i.e. the poles that cancel with the zeros
+  // -Define derivative: f'(x) = (f(x + 0+) - f(x))
+  // ...ah nope - that also doesn'k work, consider
+  //   (5_1 - 5_1) + (2_1 - 2_1) = 5_0 + 2_0 = 7_0
+  //   5_1 + 2_1 - 5_1 - 2_1 = 7_1 - 5_1 - 2_1 = 2_1 - 2_1 = 0_1 = 1_0
+  // ...nope - this idea makes no sense!
+
+  // Notes:
+  // -Keeping only the highest level, i.e. letting it absorb all the lower levels, would make 
+  //  addition non-associative, so we really need to keep all levels. Example:
+  //    (5_1 +  -5_1) + 3_0  = 5_0 +  3_0 = 8_0        cancellation in 1st addition
+  //     5_1 + (-5_1  + 3_0) = 5_1 + -5_1 = 0_0 = 1_-1 absorption in 1st addition 
+}
 
 void testNewtonFractal()
 {

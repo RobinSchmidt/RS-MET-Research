@@ -34,36 +34,38 @@ and call that expression the directional derivative of $I$ into the direction of
 ...tbc...
 
 
-
-
-
-
-
-
-
-
-% I think, $F$ can be seen as the result of applying an operator to the function $u$? But it's not just any arbitrary operator - it is a function that can depend only on $x$ and its instantaneous values $u(x),u'(x)$ at that given $x$, not on any other function values of $u$, as the result of a general operator could
-
-
 \subsection{The Solution: The Euler-Lagrange Equation}
-
-%The Gateaux derivative of $I$ at $u$ into the "direction" of $v$ should vanish, i.e....
-
-% ... Because $v$ was assumed to be arbitrary, the only way that this integral can vanish is when the integrand vanishes, so we may actually get rid of the integral and arrive at the simpler condition...
-
-
+If $y = y(x)$ is a stationary "point" (function) of $I(y)$, then the Gateaux derivative of $I$ at $y$ into the "direction" of $v$ should vanish, regardless of the choice of $v$. Using this requirement, after a somewhat difficult derivation involving the multivariable chain rule and integration by parts, the following result can be derived: If $y$ is a stationary point of the functional $I$, then $y$ must satisfy the following differential equation:
 \begin{equation}
  \frac{d}{d x} \left(  \frac{\partial F}{\partial y'}  \right) = \frac{\partial F}{\partial y}
  \qquad \text{aka} \qquad
  \frac{d}{d x} F_y = F_{y'}
 \end{equation}
-% why is the derivative with respect a normal derivative and the others are partial derivatives? is it because the result of \frac{\partial F}{\partial u'} is only a function of x? 
 
 \subsubsection{Special Cases and Generalizations}
 
+
+
+
+
+
 \subsection{Examples}
 
+
+
+
+
+
 \begin{comment}
+
+
+% I think, $F$ can be seen as the result of applying an operator to the function $u$? But it's not just any arbitrary operator - it is a function that can depend only on $x$ and its instantaneous values $u(x),u'(x)$ at that given $x$, not on any other function values of $u$, as the result of a general operator could
+
+% Maybe present at least an outline of the derivation, maybe not all the details
+
+%There's no integral anymore in this result, because the integral fell due the fact that the vanishing of the Gateaux derivative can be ensured for any arbitrary $v$ only if the integrand vanishes.
+
+% why is the derivative with respect to x a normal derivative and the others are partial derivatives? is it because the result of \frac{\partial F}{\partial u'} is only a function of x? 
 
 -after Euler-Lagrange Eq:
 In physics, the problem of minimizing such a functional is called the "princple of least action" and the idea is so fundamental that almost all differential equations that occurr in physics can be derived from such a principle. In this context, the function under the integral is called the "Lagrangian" of the system, typically denoted by $L$, and the Euler-Lagrange equation gives the solution of the problem.
@@ -95,5 +97,8 @@ https://www.youtube.com/watch?v=VCHFCXgYdvY
 https://www.youtube.com/watch?v=vqDHO2eKXcs
 
 https://www.youtube.com/watch?v=MXXrAxBu3lo
+
+https://www.youtube.com/watch?v=bvUyYv_x2Gs 
+Vid 1 Calculus of Variations Derivation of the Euler Lagrange Equation and the Beltrami Identity
 
 \end{comment} 

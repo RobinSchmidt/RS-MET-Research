@@ -44,7 +44,11 @@ some special topics that i don't know where to fit:
 -functional equations
 -rational trigonometry (maybe in the discrete math part)
 -all the different infinities
-
+-infinities (countable/uncountable/Aleph) - maybe set theory
+-computer science: relational databases
+-fractional calculus
+-non-Newtonian calculus
+-delay-differential equations
 
 ---------------------------------------------------------------------------------------------------
  
@@ -72,10 +76,7 @@ some notes on the order of the chapters
  fractional calculus, ...
  
 
-also (don't know yet where this fits and/or if it should be included at all): 
--infinities (countable/uncountable/Aleph) - maybe set theory
--computer science: relational databases
--fractional calculus
+
 
 
 

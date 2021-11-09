@@ -5,7 +5,7 @@ Consider an arbitrary function $f(x)$ and imagine that we want to compute the sl
 \begin{equation}
   f'(x_0) = \lim_{h \rightarrow 0} \frac{f(x_0 + h) - f(x_0)}{h}
 \end{equation}
-We note that we could compute this limit at any value of $x_0$ where that limit exists, so if the limit exists everywhere, we can actually replace $x_0$ by $x$ because $x_0$ just an arbitrary variable name anyway which we may choose any way we want, as long as the name doesn't collide with any other names in the equation. Then, this definition actually defines a whole new function $f'(x)$. This new function $f'$ is called the derivative of $f$.
+We note that we could compute this limit at any value of $x_0$ where that limit exists, so if the limit exists everywhere, we can actually replace $x_0$ by $x$ because $x_0$ just an arbitrary variable name anyway which we may choose any way we want, as long as the name doesn't collide with any other names in the equation. Then, this definition actually defines a whole new function $f'(x)$. This new function $f'$ ("f prime") is called the derivative of $f$.
 
 \paragraph{Example} Let $f(x) = x^2$. Plugging it into the definition above, using $x$ in place of $x_0$ as explained, we get:
 \begin{equation}
@@ -17,7 +17,31 @@ We note that we could compute this limit at any value of $x_0$ where that limit 
 \end{equation}
 so the derivative of $f(x) = x^2$ is $f'(x) = 2 x$.
 
-\paragraph{}
-Fortunately, we don't have to go through this tedious procedure via the limit everytime we need to compute a derivative. Instead, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). These rules are:
+\paragraph{Leibniz Notation} ...
+% also introduce the "evaluated at" notation with the vertical bar
 
-%linearity, chain rule, product rule, quotient rule
+
+\subsubsection{Differentiation Rules}
+Fortunately, we don't have to go through this tedious procedure via the limit everytime we need to compute a derivative. Instead, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). These rules are for any two function $f$ and $g$ and any constant $a$:
+
+\medskip
+\begin{tabular}{c c c l}
+  $(a f)'$        &$=$& $ a f'$              & Homogeneity \\
+  $(f + g)'$      &$=$& $f' + g'$            & Sum rule (aka Additivity) \\
+  $(f \cdot g)'$  &$=$& $f' g + g' f$        & Product rule \\
+  $(f / g)'$      &$=$& $(f' g - g' f)/g^2$  & Quotient rule \\
+  $(f( g))'$      &$=$& $g' \cdot f'(g)$     & Chain rule \\
+\end{tabular}
+\medskip
+
+The two first properties, homogeneity and additivity, taken together constitute the important property of linearity. One lesser known formula is:
+\begin{equation}
+ \frac{d}{d x} f(x) 
+ = \lim_{h \rightarrow 0} \frac{f(x + h) - f(x)}{h}
+ = \frac{d}{d h} f(x + h) \bigg\rvert_{h=0}
+\end{equation}
+whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later.
+
+%todo: list derivatives of elementary functions
+
+

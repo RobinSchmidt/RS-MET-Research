@@ -64,30 +64,21 @@ It's appropriate now to take a step back and appreciate the view from the lofty 
 
 % F does not depend explicitly on x, F does not depend explicitly on y, F does not depend explicitly on y' see Baerwollf, pg 796 for 1,2
 
-\paragraph{Bivariate Functions} We consider the problem of finding a bivariate function $z(x,y)$ that minimizes a functional $I(z)$ given by a double integral:
+\paragraph{Bivariate Functions} We want to find a bivariate function $z(x,y)$ that minimizes a functional $I(z)$ given by a double integral. The solution is a partial differential equation:
 \begin{equation}
  I(z) = \int_a^b \int_c^d  F(x,y,z,z_x,z_y ) \; dx dy
-\end{equation}
-The solution is a partial differential equation:
-\begin{equation}
- F_z - \frac{\partial}{\partial x} F_{z_x} - \frac{\partial}{\partial x} F_{z_y} = 0
+ \quad \Rightarrow \quad
+  F_z - \frac{\partial}{\partial x} F_{z_x} - \frac{\partial}{\partial x} F_{z_y} = 0
 \end{equation}
 
-\paragraph{Bivariate Functionals} Now we consider the case that the functional $I$ takes two univariate functions $y(x)$ and $z(x)$ as input:
+\paragraph{Bivariate Functionals} Now we consider the case that the functional $I$ takes two univariate functions $y(x)$ and $z(x)$ as input. The solution is a system of two ordinary differential equations:
 \begin{equation}
  I(y,z) = \int_a^b F(x,y,z,y',z' ) \; dx
+ \quad \Rightarrow \quad
+ \frac{d}{d x} F_{y'} = F_y, \;  \frac{d}{d x} F_{z'} = F_z,
 \end{equation}
-The solution is a system of two ordinary differential equations:
-\begin{equation}
- \frac{d}{d x} F_{y'} = F_y, \quad
- \frac{d}{d x} F_{z'} = F_z,
-\end{equation}
-
-
 
 % see Baerwolff, pg 807
-
-
 % todo: Bivariate Functions and Functionals - system of PDEs?
 
 

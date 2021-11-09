@@ -16,10 +16,12 @@ where $\mathbf{e}_i$ is the unit vector in the $i$-th coordinate direction, i.e.
 \medskip
 Now let's assume we are given an arbitrary vector $\mathbf{v}$ of unit length. We define the directional derivative of $f$ into the direction of  $\mathbf{v}$ as:
 \begin{equation}
+\label{Eq:DirectionalDerivative}
  \frac{\partial f(\mathbf{x}) }{\partial \mathbf{v}} 
  = \lim_{h \rightarrow 0} \frac{f(\mathbf{x} + h \mathbf{v} ) - f(\mathbf{x})}{h}
+ = \frac{d}{d h} f(\mathbf{x} + h \mathbf{v}) \bigg\rvert_{h=0}
 \end{equation}
-Note that the directional derivative into any of the coordinate directions $\mathbf{e}_i$ just reduces to the partial derivative with respect to coordinate $i$, so partial derivatives can also be seen as directional derivatives into very specific directions: namely, into the directions of our coordinate axes. In order to compute such a directional derivative of a given function, it's convenient to first define the...
+where the RHS is a generalization of \ref{Eq:DerivativeViaH} which tells us how we could evaluate the limit (but we'll soon learn a simpler way to evaluate it). Note that the directional derivative into any of the coordinate directions $\mathbf{e}_i$ just reduces to the partial derivative with respect to coordinate $i$, so partial derivatives can also be seen as directional derivatives into very specific directions: namely, into the directions of our coordinate axes. [TODO: verify that the RHS is actually correct - the formula is not from a book - i found it myself by analogy to the evaluation formula for the Gateaux derivative in Baerwolff, pg. 792]
 
 \subsection{The Gradient Vector}
 For a function $f$ with $n$ input variables (or one single $n$-dimensional input vector) and a single output, we can compute $n$ different partial derivatives. We can collect these partial derivatives into another $n$-dimensional vector. This vector is called the gradient of the function. The gradient always points into the direction in which the function increases most steeply and the length of this gradient vector tells us, how steep that steepest increase is. Note that this is a direction in the input space, not in the combined input/output space. So, if the input is 2D, such that $z = f(x,y)$ gives a height over an $(x,y)$-plane of input values, the gradient of $f$ at a particular input location $(x_0,y_0)$ in the plane gives the direction in the $(x,y)$-plane in which we need to move the input to get the steepest increase in the height value $z$. But it's \emph{not} a direction in the 3D space of $(x,y,z)$.
@@ -44,6 +46,13 @@ The gradient vector and the Jacobian matrix are collections of first partial der
 
 
 
+
+
+
+
+\begin{comment}
+
+
 \subsection{TODO Notes}
 It seems to be generally true that for any function $f(x)$ we have
 \begin{equation}
@@ -58,7 +67,6 @@ which seems to generalize to the directional derivative of multivariate function
 which could be used to actually evaluate the directional derivative without using the formula with the scalar product with the gradient. ...verify this! This seems to be the important observation in evaluating the Gateaux derivative by analogy later...
 
 
-\begin{comment}
 
 -maybe divergence, but maybe defer that to vector calculus
 https://en.wikipedia.org/wiki/Del

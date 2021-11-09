@@ -13,36 +13,53 @@ We want to find a stationary point (typically a minimum or maximum - in the foll
 where $y = y(x)$ is an unknown function that we want to find which has $x$ as its argument. The function $y(x)$ should also satisfy some given boundary conditions $y(a) = y_a, y(b) = y_b$. That means we minimize the integral subject to the contraint that the function $y$ has to take specific prescribed values $y_a, y_b$ at the boundaries of the integration interval. The function $F$ is a function that may depend on 3 scalar inputs $x,y,y'$ where $y,y'$ are themselves dependent on $x$, so the only truly independent input to the integrand $F$ is actually just $x$. Let's assume that $y$ is indeed a function that makes the $I(y)$ stationary and let $v = v(x)$ be any function of $x$ that satisfies $v(a) = v(b) = 0$. Then, adding a small amount $h$ of the function $v$ to the function $y$ should cause at most second order changes to $I$, i.e. $I$ should remain constant to first order. The boundary conditions $v(a) = v(b) = 0$ ensure that our modified function $\tilde{y} = y + h v$ satisfies the same boundary conditions as $y$ does: $\tilde{y}(a) = y_a, \tilde{y}(b) = y_b$.
 
 \subsection{The Tool: The Gateaux Derivative}
-We need to make more explicit what we mean by a statement like $I(y)$ should remain constant to first order when we wiggle $y$ a little bit by adding a small amount of another function $v$. We need to define some sort of derivative for functionals that we can then set to zero. Since a functional has an infinite dimensional input, it's perhaps advisable to draw ideas from notions of derivatives of multivariate functions because their input is at least multidimensional. The idea that we will pick up from multivariable calculus and extend to the infinite dimensional case is the idea of a directional derivative. Recall that the directional derivative of a multivariate function $f(\mathbf{x})$ into the direction of some arbitrary unit length vector $\mathbf{v}$ was defined as:
+We need to make more explicit what we mean by a statement like $I(y)$ should remain constant to first order when we wiggle $y$ a little bit by adding a small amount of another function $v$. We need to define some sort of derivative for functionals that we can then set to zero. Since a functional has an infinite dimensional input, it's perhaps advisable to draw ideas from notions of derivatives of multivariate functions because their input is at least multidimensional. The idea that we will pick up from multivariable calculus and extend to the infinite dimensional case is the idea of a directional derivative. Recall that in \ref{Eq:DirectionalDerivative} the directional derivative of a multivariate function $f(\mathbf{x})$ into the direction of some arbitrary unit length vector $\mathbf{v}$ was defined as:
 \begin{equation}
  \frac{\partial f(\mathbf{x}) }{\partial \mathbf{v}} 
  = \lim_{h \rightarrow 0} \frac{f(\mathbf{x} + h \mathbf{v} ) - f(\mathbf{x})}{h}
+ = \frac{d}{d h} f(\mathbf{x} + h \mathbf{v}) \bigg\rvert_{h=0}
 \end{equation}
 Now, our function $y = y(x)$ plays the role of the input vector $\mathbf{x}$ and $v = v(x)$ plays the role of  the given dircetion vector $\mathbf{v}$, but now $v$ is a "direction" in our infinite dimensional function space, into which we perturb our given location $y$ in that space. The role of $f$ is taken by $I$, so we could write in full analogy:
 \begin{equation}
  \frac{\partial I(y) }{\partial v} 
  = \lim_{h \rightarrow 0} \frac{I(y + h v ) - I(y)}{h}
+ = \frac{d}{d h} I(y + h v) \bigg\rvert_{h=0}
 \end{equation}
-and call that expression the directional derivative of $I$ into the direction of $v$ at $y$. However, this is not the usual notation and terminology. Instead, the f
+and call that expression the directional derivative of $I$ into the direction of $v$ at $y$. However, this is not the usual notation and terminology. Instead, the expression on the LHS is typically written as $\delta I(y;v)$ and called the "first variation" or  "Gateaux derivative" of the functional $I$ at $y$ into the direction $v$. In this context, the quantity $h v = \delta y$ is called the variation of $y$. There is also a second variation of $I$ defined likewise, just as a second derivative with respec to $h$. So, in standard notation, the first and second variations of the functional $I$ at $y$ into the direction of $v$ are given by:
+\begin{equation}
+ \delta   I(y; v) = \frac{d}  {d h  } I(y + h v) \bigg\rvert_{h=0}, \qquad
+ \delta^2 I(y; v) = \frac{d^2}{d h^2} I(y + h v) \bigg\rvert_{h=0}
+\end{equation}
+In the literature, you will also find definitions of the so called "Frechet derivative" and "functional derivative", which are - as far as I understand it - basically the same thing, but maybe require stronger conditions on $I$.
 
+\paragraph{Side note:} For the analogy with the directional derivative to be complete and fully consistent, we should also require that the norm of $v$ has to be unity. However, in the literature, that is typically not done in the definition of the Gateaux derivative. This is not such a big deal because in the typical applications, we will require this derivative be zero, so any scalar proportionality factor doesn't matter anyway. One could perhaps conceive of removing the unit-length requirement in the definition of the directional derivative as well - if the vector $\mathbf{v}$ would have some length other than unity, the first order change in $f$ due to that length factor would be given by just that length. Any non-unit scale factor in the input vector would just scale the output value of the directional derivative accordingly, which would make sense. Anyway...
 
-% $ h v$ is called the variation of $y$
+%% what's the difference between these:
+% https://en.wikipedia.org/wiki/Gateaux_derivative
+% https://en.wikipedia.org/wiki/Functional_derivative
+% is it that the Gateaux derivative apllied to any functional and the variation of functional derivative only to this specific functional that is used in calculus of variations, there's also:
+% https://en.wikipedia.org/wiki/Fr%C3%A9chet_derivative
 
-
-% Side note: For the analogy to be complete and fully consistent, we should also require that the norm of $v$ has to be unity. However, in the literature, that is typically not done in the definition of the Gateaux derivative. This is not such a big deal because in the typical applications, we will require this derivative be zero, so any scalar proportionality factor doesn't matter anyway. One could perhaps conceive of removing the unit-length requirement in the definition of the directional derivative as well - if the vector $\mathbf{v}$ would have some length other than unity, the first order change in $f$ due to that length factor would be given by just that length. Any non-unit scale factor in the input vector would just scale the output value of the directional derivative accordingly, which would make sense. Anyway...
-
-...tbc...
+% see also:
+% https://mathoverflow.net/questions/349057/question-about-functional-derivatives
 
 
 \subsection{The Solution: The Euler-Lagrange Equation}
-If $y = y(x)$ is a stationary "point" (function) of $I(y)$, then the Gateaux derivative of $I$ at $y$ into the "direction" of $v$ should vanish, regardless of the choice of $v$. Using this requirement, after a somewhat difficult derivation involving the multivariable chain rule and integration by parts, the following result can be derived: If $y$ is a stationary point of the functional $I$, then $y$ must satisfy the following differential equation:
+If $y = y(x)$ is a stationary "point" (function) of $I(y)$, then the Gateaux derivative of $I$ at $y$ into the "direction" of $v$ should vanish, regardless of the choice of $v$. Using this requirement, after a nontrivial derivation involving the multivariable chain rule and integration by parts, which I will skip here, the following result can be derived: If $y$ is a stationary point of the functional $I$, then $y$ must satisfy the following differential equation:
 \begin{equation}
  \frac{d}{d x} \left(  \frac{\partial F}{\partial y'}  \right) = \frac{\partial F}{\partial y}
  \qquad \text{aka} \qquad
  \frac{d}{d x} F_y = F_{y'}
 \end{equation}
+In physics, the problem of minimizing such a functional is called the "princple of least action". In this application, the integral is taken over a time interval and the integrand is called the "Lagrangian" of the system, typically denoted by $L$, and given by the difference between potential and kinetic energy. The value of the integral itself is called the "action". The idea is so fundamental that almost all differential equations that occurr in physics can be derived from such a principle. Evaluating the Euler-Lagrange equation for such a problem will give the equation of motion for the given system as a differential equation.
+
+\medskip
+It's appropriate now to take a step back and appreciate the view from the lofty height we have reached:  Formerly, we used to consider differential equations as (hard) problems and here we now consider a differential equation to be the \emph{solution} of a problem that was posed on an even higher level. It may look like a partial differential equation due to the occurrence of derivatives with respect to $x,y,y'$ but it's actually an ordinary one because $y,y'$ are themselves functions of $x$ [verify!]. It's not even one particular differential equation but rather a recipe for deriving an infinite number of differential equations. Time to pat ourselves on the back for having grasped one of the crown jewels of theoretical physics. 
+
 
 \subsubsection{Special Cases and Generalizations}
+...
+
 
 
 
@@ -58,6 +75,7 @@ If $y = y(x)$ is a stationary "point" (function) of $I(y)$, then the Gateaux der
 
 \begin{comment}
 
+maybe use J instead of I to denote the functional - it's used on wikipedia and in many other places
 
 % I think, $F$ can be seen as the result of applying an operator to the function $u$? But it's not just any arbitrary operator - it is a function that can depend only on $x$ and its instantaneous values $u(x),u'(x)$ at that given $x$, not on any other function values of $u$, as the result of a general operator could
 
@@ -68,11 +86,9 @@ If $y = y(x)$ is a stationary "point" (function) of $I(y)$, then the Gateaux der
 % why is the derivative with respect to x a normal derivative and the others are partial derivatives? is it because the result of \frac{\partial F}{\partial u'} is only a function of x? 
 
 -after Euler-Lagrange Eq:
-In physics, the problem of minimizing such a functional is called the "princple of least action" and the idea is so fundamental that almost all differential equations that occurr in physics can be derived from such a principle. In this context, the function under the integral is called the "Lagrangian" of the system, typically denoted by $L$, and the Euler-Lagrange equation gives the solution of the problem.
 
-It's appropriate now to take a step back and appreciate the view from the lofty height we have reached: we now consider a differential equation to be the *solution* of a problem that was posed on an even higher level. It may look like a partial differential equation due to the occurrence of derivatives with respect to $x,u,u'$ but it's actually an ordinary one because $u,u'$ are themselves functions of $x$ (verify!)
 
-It's not even one particular differential equation but rather a recipe for deriving an infinite number of differential equations. Time to pat ourselves on the back for having understood one of the crown jewels of theoretical physics. 
+
 
 
 -derivatives of functionals: variation (as continuous analog of the total differential), Frechet- and Gateaux derivative

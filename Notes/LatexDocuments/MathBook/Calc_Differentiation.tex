@@ -22,7 +22,7 @@ so the derivative of $f(x) = x^2$ is $f'(x) = 2 x$.
 
 
 \subsubsection{Differentiation Rules}
-Fortunately, we don't have to go through this tedious procedure via the limit everytime we need to compute a derivative. Instead, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). These rules are for any two function $f$ and $g$ and any constant $a$:
+Fortunately, we don't have to go through this tedious procedure via the limit everytime we need to compute a derivative. Instead, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). These rules are for any two functions $f$ and $g$ and any constant $a$:
 
 \medskip
 \begin{tabular}{c c c l}
@@ -33,15 +33,23 @@ Fortunately, we don't have to go through this tedious procedure via the limit ev
   $(f( g))'$      &$=$& $g' \cdot f'(g)$     & Chain rule \\
 \end{tabular}
 \medskip
+% are there more rules? what about logarithmic differentiation and derivative of inverse?
 
-The two first properties, homogeneity and additivity, taken together constitute the important property of linearity. One lesser known formula is:
+The two first properties, homogeneity and additivity, taken together constitute the important property of linearity. We may state the linearity property also in a single formula: $(a f + b g)' = a f' + b g'$ where $b$ is another constant. It can easily be verified that this single formula is equivalent to the first two rules in the list above. One lesser known formula is:
+
 \begin{equation}
+\label{Eq:DerivativeViaH}
  \frac{d}{d x} f(x) 
  = \lim_{h \rightarrow 0} \frac{f(x + h) - f(x)}{h}
  = \frac{d}{d h} f(x + h) \bigg\rvert_{h=0}
 \end{equation}
-whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later.
+whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later. There, we will see a similar definition via a limit and the RHS will tell us, how to actually evaluate the limit....but that's for later... 
 
 %todo: list derivatives of elementary functions
+
+\subsubsection{Elementary Derivatives}
+We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting).
+
+...
 
 

@@ -1,0 +1,61 @@
+\section{Algebraic Geometry}
+Algebraic geometry investigates the sets of zeros of multivariate polynomials and the geometrical shapes that are defined by these zero sets. Consider as example the bivariate polynomial $f(x) = x^2 + y^2 - r^2$ for some given $r$. Those points $(x,y)$ in the $xy$-plane for which this function produces zero as output define a geometric shape - in this case, a circle of radius $r$ centered at the origin. You can have multiple simultaneous equations that must be equal to zero and of course, you can also have more than two input variables. It's also possible to consider complex solutions. In general, these sets of solutions to polynomial equations are called "algebraic varieties" and these are the main subject of interest in algebraic geometry.
+
+\medskip
+Besides the circle, all conic sections, i.e. equations of the form $0 = A x^2 + B y^2 + C x y + D x + E y + F$, fall into this category. The set of solutions of $y^2 = x^3 + a x + b$ for some given values $a,b$ is called an "elliptic curve" in the field. These are not to be confused with actual ellipses, which are special cases of conic sections. Rather, elliptic curves represent a canonical form of the generalization of conic sections up to degree 3 (verify!).
+
+%simple examples: conic sections, elliptic curves, cassini curves, lemniskate
+
+\medskip
+It is also possible to work in the field of rational numbers $\mathbb{Q}$ rather than in the field of complex numbers $\mathbb{C}$ or even in finite fields such as $\mathbb{Z}_p$ for a given prime number $p$. ...tbc..
+
+Fun fact: algebraic geometry and geometric algebra are two fields of mathematics that have nothing to do with each other. Isn't that weird? I really wonder, how connections between these fields could look like. Maybe we could start by interpreting the variables in the equations as multivectors instead of real or complex numbers? I have no idea but I think there just \emph{should} be some connection!
+
+
+\begin{comment}
+
+
+
+https://de.wikipedia.org/wiki/Algebraische_Geometrie
+https://de.wikipedia.org/wiki/Algebraische_Variet%C3%A4t
+https://de.wikipedia.org/wiki/Hilbertscher_Basissatz
+https://de.wikipedia.org/wiki/Gr%C3%B6bnerbasis
+
+https://en.wikipedia.org/wiki/Algebraic_geometry
+https://en.wikipedia.org/wiki/Algebraic_variety
+
+https://en.wikipedia.org/wiki/Zero_of_a_function#Zero_set
+https://en.wikipedia.org/wiki/Projective_plane
+
+
+https://en.wikipedia.org/wiki/Elliptic_curve
+https://en.wikipedia.org/wiki/Algebraic_curve
+https://en.wikipedia.org/wiki/Weierstrass_elliptic_function
+
+
+https://en.wikipedia.org/wiki/K3_surface
+https://en.wikipedia.org/wiki/Calabi%E2%80%93Yau_manifold
+
+-conic sections in 2D and 3D, classification
+-elliptic curves
+-lemniskate, contour plots
+-polynomials with integer/rational coeffs -> integer and rational solutions -> elliptic curve cryptography
+-what about allowing more general classes of functions?
+-what about multiple simultaneous equations - what does that imply for the dimensionality of the solution set?
+-what are important features of the solution sets? connectedness?
+
+-seems like differential geometry deals with parameteric representations and algebraic geometry with implicit representations of geometric shapes (manifolds?)
+-is there a way to convert between these representations? ..yeah...this seems to be actually a difficult research area
+
+Tikz:
+https://texample.net/tikz/examples/feature/angles/
+https://texample.net/tikz/examples/feature/foreach/
+
+https://pbelmans.ncag.info/blog/2010/11/11/howto-draw-algebraic-curves-using-pgftikz/
+
+-write a c++ function that takes in an implicit function f(x,y) = 0 and spits out a vector of vectors of 2D points (the outer vector is because we may have multiple curves), this can then be converted into svg or tikz code (via suitable code-generators that take as input the coordinate vectors)
+-with this code, generate tikz figures for elliptic curves, maybe x^2 + y^3 + k = 0 for different values of k
+
+Fun fact
+
+\end{comment}

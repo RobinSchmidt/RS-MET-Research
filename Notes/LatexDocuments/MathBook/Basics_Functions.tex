@@ -1,4 +1,100 @@
+\section{Functions}
+Functions are like machines that take some input and produce some output. In the case of mathematical functions, these inputs and outputs are usually numbers. There are more general notions, taking other types of inputs and producing other types of output, for example sets, vectors, matrices, etc. but here, we will mainly look at functions that take one number as input and produce another number as output and those two numbers will typically assumed to be real numbers.
 
+\subsection{Domain and Range}
+The two sets (of numbers) from which inputs can be taken and outputs will be produced are called the domain and range of the function respectively. Functions are usually denoted by lowercase letters such as $f,g,h$ etc. If a function takes real numbers as inputs and also produces real numbers as output, we write this as: $f: \mathbb{R} \rightarrow \mathbb{R}$. The argument is usually denoted by $x$ and of the function and is written in parentheses and the output is often denoted by $y$. When we write something like $y = f(x)$, we mean that the function $f$ produces the number $y$ as output when we give it the number $x$ as input. An example could be $y = f(x) = x^2$. The function woul just square the input and return that as result. 
+
+\medskip
+\subsubsection{Codomain and Image}
+There is a little ambiguity with respect to the notion of range. It may mean either one these two things: sometimes it may mean the set of numbers from which outputs can \emph{potentially} be drawn and sometimes the (possibly smaller) set of numbers, that can \emph{actually} be the result. For example, if the domain of $f(x) = x^2$, is taken to be the set real numbers $\mathbb{R}$, we could think of $f$ as a mapping between real numbers and real numbers, i.e. $f: \mathbb{R} \rightarrow \mathbb{R}$. However, not all possible real numbers are reached because the result of $x^2$ will never be a negative number. We could also consider $f$ as a function from the real numbers to the \emph{nonnegative} real numbers, i.e. $f: \mathbb{R} \rightarrow \mathbb{R}^+_0$. To distinguish these two notions, sometimes the term "codomain" is used for the set that outputs could potentially be drawn from and "image" is used for the set from which numbers are actually produced by the function for a given input domain.
+
+% https://en.wikipedia.org/wiki/Domain_of_a_function
+% https://en.wikipedia.org/wiki/Range_of_a_function
+
+\subsection{Taxonomy}
+There are certain features that a function may or may not have which turn out to important for classification. ...tbc...
+% monotonicity, boundedness, symmetry (-> decomposition int symmetric and antisysmmetric part), injective/surjective/bijective, convex/concave?
+
+
+%taxonomy
+%% surjective: codomain coincides with image?
+
+\subsection{Ways to define [todo: find a better title]}
+One way to define a function is to prescribe a simple calculation rule such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number like, this way of defining a function is called a piecewise definition ...tbc...
+
+% maybe make these subsubsection of an "Elementary functions"  section
+
+
+\subsection{Elementary Functions}
+In general, a function can be any mapping. But there is a certain set of functions that permeates mathematics so thoroughly that it has been given a special name: the elementary functions. These are all functions that can be constructed by a finite formula involving only the 4 basic arithmetic operations, roots, exponentials, logarithms, trigonometric functions and the inverses of all these functions.
+
+% https://www.youtube.com/watch?v=l6w868U8C-M
+
+\subsubsection{Polynomials}
+A polynomial can be written in various forms. Some important canonical forms are: (1) a weighted sum of integer powers of $x$, (2) a (scaled) product of so called linear factors, (3) a nested expression. So, a polynomial is a function of one of the forms:
+\begin{equation}
+ f(x) = \sum_{k=0}^n a_k x^k 
+      = a_n \prod_{k=1}^{n} (x - r_k)
+      = a_0 + x(a_1 + x(a_2 + \ldots + x(a_{n-1} + x a_n)))
+\end{equation}
+where the weights $a_k$ in the sum form are called the coefficients of the polynomial and the highest power $n$ for which there is a nonzero coefficient is called the degree of the polynomial. The $r_k$ in the product form are called the roots of the polynomial. These are the values of $x$ where the output of the function $y = f(x)$ is zero. This is immediately obvious from the fact that a product is zero as soon as any of its factors is zero, which will clearly be the case if $x = r_k$ for one of the $r_k$. The roots $r_k$ may be real or complex and are not necessarily distinct. The number of times by which a root appears in the product is called the multiplicity of the root. An important theorem, the fundamental theorem of algebra, states that every polynomial of degree $n$ has exactly $n$ such roots (counted with multiplicity, i.e. a double root counts twice, etc.). A polynomial of degree 1, i.e. a function of the form $f(x) = a_0 + a_1  x$, is a very simple special case which is of practical importance and is sometimes - somewhat inconsistently - called a linear function. This terminology is inconsistent because such a function satisfies the usual requirements for linearity - homogeneity and additivity - only when the additive constant is zero, i.e. when $a_0 = 0$. Nevertheless, you'll find that terminology used often. The practical importance of such linear functions is that we will often use them to approximate more complicated functions - a process known as linearization. 
+
+\paragraph{Evaluation}
+The evaluation of a polynomial is best done in nested form. This is the most efficient way and also one of the most stable ways numerically. We assume that the polynomial is given as a list or array of $n$ coefficients $a_0, \ldots, a_n$.
+%\begin{lstlisting}
+%def polyEval(p, x):
+%	"""Evaluates the polynomial p a the given x using Horner's algorithm"""
+%	k = len(p)-1       # last valid index
+%	if(k < 0):
+%		return 0
+%	y = p[k]
+%	while(k > 0):
+%		k -= 1
+%		y = y*x + p[k]
+%	return y
+%\end{lstlisting}
+This way of evaluating a polynomial is also known as Horner's rule.
+...hmm...not sure, if code should appear in the normal text. maybe put it into an appendix?
+
+\paragraph{Addition and Subtraction}
+Polynomials, given as arrays of coefficients, can be added and subtracted element wise. If the input arrays are of different lenght, i.e. the polynomials are of a different degree, the lower degree coefficient array has to be padded with zeros to match the length of the larger one.
+
+...python code is buggy
+
+\paragraph{Multiplication}
+
+
+\paragraph{Division}
+Oh my dog! Polynomial division! That pesky algorithm that we all once had to learn in school and then have forgotten for good! Worry not - you won't have to relearn it here and now. Executing algorithms with pencil and paper is not something we humans like to do and I personally find it as pointless as the next guy. Instead, I'll give you computer code for it, so we'll never ever have to do it again by hand. ....
+
+\paragraph{Composition}
+
+%You will sometimes find a weaker form of this statement called fundamental theorem of algebra, namely a statement that each polynomial has a root. But the stronger statement immediately follows from the possibility of splitting off a linear factor.
+
+%..tbc..
+% product form, fundamental theorem of algebra, linear functions as special case
+% factor out a linear factor, polynomial addition, multiplication, division - maybe with (pseudo) code or better: sage code, maybe provide als sage code for basic integer arithmetic - maybe in the section numbers in 
+
+\subsubsection{Rational Functions}
+A rational function is a ratio or quotient of two polynomials, i.e. function of the form:
+\begin{equation}
+ f(x) = \frac{\sum_{k=0}^n a_k x^k}{\sum_{k=0}^m b_k x^k}
+\end{equation}
+
+
+
+\subsubsection{Algebraic Functions}
+The set of algebraic functions contains all the functions that can be constructed from using the elementary operations and extracting roots....
+% partial fraction expansion
+
+\subsubsection{Exponential Functions}
+
+\subsubsection{Trigonometric Functions}
+
+
+
+\subsection{Special Functions}
+% gamma, bessel, elliptic integrals
 
 
 \begin{comment}
@@ -7,8 +103,6 @@
 -symmetry, periodicity, boundedness, maybe continuity (but maybe defer to calculus, we'll see where it fits best)
 -maybe explain functions also as unary operators? abs, negation
 
-Features:
--monotonicity, boundedness, symmetry (-> decomposition int symmetric and antisysmmetric part), domain, range, injective/surjective/bijective
 
 How to define functions:
 -explicitly, e.g. y = x^2

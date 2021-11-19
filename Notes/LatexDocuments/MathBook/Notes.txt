@@ -23,6 +23,7 @@ Part II: Discrete Mathematics
 -Abstract Algebra: groups, rings, fields (including finite fields), representation
 -Graph Theory
 -Topology
+-Combinatorics
 
 Part III: Applications
 -Optimization Theory: gradient descent, linear optimization, least squares
@@ -30,7 +31,7 @@ Part III: Applications
 -Physics: mechanics (Newton/Lagrange/Hamilton), phase space, electrodynamics (maxwell eqs in 
  different forms), quantum mechanics (uses operators and complex numbers), relativity (uses tensors
  and differential geometry), fluid dynamics
--Probability and Statistics 
+-Probability and Statistics, data science
 -Numerics: interpolation, differentiation, integration, simulation of differential equations, 
  optimization, floating point numbers
 -Signal Processing: filters (analog and digital -> ODEs and difference eqs), spectral (FFT, etc.),
@@ -38,6 +39,14 @@ Part III: Applications
 -Computer graphics and image processing - perhaps the most visual application of math, therefore 
  well suited to build mathematical intuition
 -Dynamical Systems: attractors (fixed points, periodic, chaotic), bifurcation, fractals
+-Geometry - computer graphics
+
+Part IV: Code
+-Python and/or Sage code for:
+ -big integers and big floats, maybe complex arithmetic
+ -polynomial and rational function computations
+ -higher level integration stuff like finding potentials etc.
+ -maybe code to generate figures...but maybe, i should do them with tikz
 
 
 some special topics that i don't know where to fit:

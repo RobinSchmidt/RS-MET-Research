@@ -18,6 +18,28 @@
 % https://tex.stackexchange.com/questions/17816/commenting-out-large-sections
 % https://tex.stackexchange.com/questions/11177/how-to-write-hidden-notes-in-a-latex-file/73418
 
+
+\usepackage{color}               % colored text
+\usepackage{listings}            % source code formatting 
+%\lstset{language=python}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+  backgroundcolor=\color{white},   
+  basicstyle=\footnotesize\ttfamily,  % the size of the fonts that are used for the code
+  captionpos=none,                    % no captions (and no empty space either)
+  commentstyle=\color{mygreen},       % comment style
+  frame=single,	                      % adds a frame around the code
+  keywordstyle=\color{blue},          % keyword style
+  language=Python,
+  stringstyle=\color{mymauve},        % string literal style
+  columns=flexible,                   %
+  keepspaces=true,                    % keeps spaces in text
+  tabsize=2,
+}
+
+
 %\DeclareMathOperator{\d}{d}                  % exterior derivative
 \DeclareMathOperator{\grad}{\mathbf{grad}}
 
@@ -87,7 +109,11 @@
 
 \include{Geo}
 \include{Geo_Euclidean}
+\include{Geo_Algebraic}
 \include{Geo_Differential}
+%\include{Geo_Fractal}
+%\include{Geo_Discrete} % but maybe this should got into the discretet math part
+% maybe the geometry chapte should go into the applications part
 
 \include{FuncAna}
 \include{FuncAna_FuncSpaces}
@@ -104,10 +130,13 @@
 ToDo:
 make glossary for symbols and abbreviations 
 CR  - Cauchy-Riemann,
+DG  - Differentail Geometry
 LHS - left hand side
 ODE - ordinary differential equation
 PDE - partial differential equation
 RHS - right hand side
+i.e. - "it est", latin for "that means" or "which means"
+e.g. - ?  for example
 
 \begin{thebibliography}{10}
 

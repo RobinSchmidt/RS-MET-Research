@@ -1,7 +1,49 @@
 \chapter{Geometry}
-Geometry is the study of shapes that live in a certain space. That "space" can be the well known 3D space that we happen to live in or just a 2D subspace of it, such as a plane or the surface of a sphere or torus or whatever other 3D object. It can also be a higher dimensional space that we can't easily visualize anymore such as the 4D spacetime that we actually happen to live in.
+Geometry is the study of shapes that live in a certain (vector) space. That "space" can be the well known 3D space that we happen to live in or just a 2D subspace of it, such as a plane or the surface of a sphere or torus or whatever other 3D object. It can also be a higher dimensional space that we can't easily visualize anymore such as the 4D spacetime that we actually happen to live in. Of special interest are features of these shapes that remain invariant under a certain set of transformations like, for example, the distance between two points or the angle between two intersecting lines which both remain invariant under translations and rotations. These sets of transformations under consideration actually form groups: they can be chained one after another and the combined transformation is another element from the set. 
+
+\medskip
+I used terms like "point", "line", "distance", etc. assuming that everyone has an intuitive understanding of what these terms mean. In a more modern, abstract and axiomatic approach, one starts with a bunch of primitive notions and then proceeds to make postulates (i.e. state axioms) about the relationships of these primitives. From these axioms, one then derives theorems via the rules of formal logic as usual. Such a set of primitives, postulates about them and the theorems that follow from them defines "a geometry". In this lingo, you can define different geometries by using different sets of primitives and/or postulates. At this point, the terms for the primitives are not yet supposed to carry any meaning - the words are to be understood as empty shells. Filling in the missing interpretations, i.e. explaining what a "point" or "line" is supposed to mean (typically in a mix of set-theoretic and natural language), creates "a model" for "a geometry". There can be different models for the same geometry and, of course, there can be different geometries.
+
+\medskip
+The best known and most basic geometry is the Euclidean geometry of the plane. The postulates of this geometry could be stated als follows: (1) we can always draw a straight line from a point to another point, (2) we can extend any straight line indefinitely, (3) we can draw a circle with given radius and center, (4) all right angles are equal to each other, (5)\footnote{Euclid himself used a different, more complicated 5th axiom. I've given Playfair's parallel axiom here which is an equivalent replacement.} for a given line and a given point which is not on the line, we can find a unique line that goes through the point and is parallel to the given line. The last one is called the parallel axiom and plays a special role . It's the most complicated one, not as immediately obvious as the others, Euclid himself tried to avoid to use it in proofs as much as possible and it is the one that historically led to the first non-Euclidean geometries by replacing it by another postulate. For example, by postulating that there  there are at least two such lines, you get hyperbolic geometry. By postulating that no such line exists, one may arrive at elliptic or spherical geometry. In the former, the lines cross in one point, in the the latter, in two points. We still haven't said what "point" or "line" means. Euclid himself gave some definitions such as "a point is something that has no parts", "a line is something that has only length but no width", etc. But these Euclidean definitions are not very helpful because they can actually only be correctly understood by someone who already intuitively knows what a point or line is.
+
+\medskip
+In the early 20th century, David Hilbert proposed a new foundation for geometry. He starts by stating what the primitive notions are while emphasizing that we should not yet assign any meaning to them. These primitives are: points, lines, incidence, betweenness and congruence. "Incidence" is also called containment. Going against Hilbert's intention, I'll now tell you what incidence supposed to mean: it's meant to model the circumstance that a point lies on a line or that a line passes through a point or that two lines cross. In all these cases, the objects of interest (lines, points) coincide in some way. "Congruence" is meant to model "sameness" in some way. "Points", "lines" and "betweenness" are meant to model exactly what you think they do.
+
+...tbc...maybe state Hilbert's axioms...
+
+
+
+
 
 \begin{comment}
+
+https://en.wikipedia.org/wiki/Playfair%27s_axiom
+
+What defines "a" geometry? A set of axioms? Or a set/group of transformations? Or a metric? What is a model of a geometry?
+I think, "a geometry" is indeed define by a set of axioms and a model for such a geometry is defined by a set of transformations and a metric? To state the axioms, we need a couple of basic concepts, such as "points", "lines", "angles", etc.
+
+-axiomatic approach by Euclid, later by Hilbert
+-classification of geometries (Felix Klein's Erlangen program)
+
 https://en.wikipedia.org/wiki/Geometrization_conjecture#The_eight_Thurston_geometries
+
+https://en.wikipedia.org/wiki/Erlangen_program
+
+https://en.wikipedia.org/wiki/Poincar%C3%A9_half-plane_model
+
+https://en.wikipedia.org/wiki/Hyperbolic_geometry#Models_of_the_hyperbolic_plane
+
+https://en.wikipedia.org/wiki/Euclidean_geometry
+https://en.wikipedia.org/wiki/Spherical_geometry
+https://en.wikipedia.org/wiki/Elliptic_geometry
+https://en.wikipedia.org/wiki/Hyperbolic_geometry
+
+https://en.wikipedia.org/wiki/Hilbert%27s_axioms
+https://en.wikipedia.org/wiki/Foundations_of_geometry
+
+-synthetic vs. analytic geometry
+
+https://www.youtube.com/watch?v=EmLzMYr6uHU
 
 \end{comment}

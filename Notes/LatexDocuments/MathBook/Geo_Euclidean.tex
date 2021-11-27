@@ -1,0 +1,50 @@
+\section{Elementary Geometry}
+Elementary geometry is about basic geometric features of basic shapes in the 2D plane or 3D space such as lengths, areas, volumes, angles, etc. of triangles, quadrilaterals, circles etc.. It's mostly a bunch of rules, formulas or algorithms to compute quantities of interest given some other quantities. For example, if we know two angles of a triangle, there's a simple formula to compute the third. If we know the locations of the vertices of a triangle and we want to know its area, there's a formula for that, too (in fact, actually multiple formulas). If we know the length of a side of a triangle and its two adjacent angles, there's an algorithm to compute the third angle and the lengths of the two other sides. Things like that. These formulas and algorithms are "elementary" in the sense that they are used as building blocks in more complex, higher level geometric algorithms or derivations. For example, one might be interested in the area of a more complicated polygon in the plane. One way to compute it (not necessarily the best, though) involves splitting it into a bunch of triangles, computing their areas and adding them up. The formulas, rules and algorithms of elementary geometry are well suited for treating them as recipes. There are a lot of them and it's pointless to try to memorize them all. Deriving all these formulas is not necessarily easy or obvious - this is not, what "elementary" means (quite generally). It typically involves drawing pictures, recognizing visually that certain angles or lengths are the same, then proving that this must always the case, often by drawing auxiliary lines in non-obvious places which may involve some ingenuity and inspiration. But we won't bother with that. At the end of the process stands a neat formula and we are here to reap the crops, not to sow the seeds and watch them grow slowly. For us, it's enough to know that these formulas exist and where to look them up, if needed. Or better yet: implement them once and for all in our favorite programming language and then just call the functions from higher-level code for the rest of our life without ever again needing to worry about how that low-level stuff is actually being done. 
+
+\subsection{Trigonometry}
+It's no coincidence that triangles featured prominently in the introduction above. They are the simplest and most basic shapes of all shapes. More complicated shapes, like polygons, can be split into a bunch of triangles. In turn, smooth shapes, like circles or ellipses, can be approximated by polygons to arbitrary accuracy. For this reason, triangles are the basic geometric building blocks of most if not all 2D or 3D rendering engines. So, it makes a lot of sense to look at triangles first and "trigonometry" does exactly that: it is literally the science of measuring triangles in greek: "trigonom" means triangle and "metry" is the science of measuring something.
+
+\medskip
+Let's consider a general triangle with side lengths $a,b,c$ where the angles opposite to these sides are called $\alpha, \beta, \gamma$. We then have the following 4 fundamental laws:
+
+\medskip
+\begin{tabular}{c l}
+  $\alpha + \beta + \gamma = \pi$                       & Sum of interior angles \\
+  $a / \sin \alpha = b / \sin \beta 
+    = c / \sin \gamma 
+    = 2R = \frac{abc}{2 \Delta}$                        & Law of sines \\  
+  $c^2 = a^2 + b^2 - 2ab \cos \gamma$                   & Law of cosines \\
+  $\frac{a-b}{a+b} 
+   = \frac{\tan \frac{\alpha-\beta}{2}}{\tan \frac{\alpha+\beta}{2}} 
+   = \frac{\tan \frac{\alpha-\beta}{2}}{\cot \frac{\gamma}{2}}$
+                                                        & Law of tangents \\
+\end{tabular}
+\medskip
+
+where the quantities $R, \Delta$ appear. These and others can be computed via:
+
+\medskip
+\begin{tabular}{c l}
+  $s = (a+b+c)/2$                      & Semiperimeter, half of the perimeter \\
+  $\Delta = \sqrt{s(s-a)(s-b)(s-c)}$   & Area (via Heron's formula) \\
+  $R = (abc)/ \Delta$                  & Radius of circumscribed circle \\
+  $r = \Delta/s$                       & Radius of inscribed circle \\
+\end{tabular}
+\medskip
+
+
+
+\begin{comment}
+-rename file to Geo_Elementary
+
+-plot a drawing of a triangle with vertices A,B,C, sides a,b,c and angles alpha, beta, gamma
+-give a bunch of formulas that hold for all triangles
+-the plot some special triangles (right, isosceles, etc.) and give the formulas specific to them
+-mention non-Euclidean trigonometry, espeically spherical...maybe give the formulas for those
+triangles, too - or maybe refer to some ressource
+
+-give formulas for volumes of 3D shapes
+
+https://en.wikipedia.org/wiki/Trigonometry
+
+\end{comment}

@@ -1,8 +1,62 @@
 \section{Elementary Geometry}
-Elementary geometry is about basic geometric features of basic shapes in the 2D plane or 3D space such as lengths, areas, volumes, angles, etc. of triangles, quadrilaterals, circles etc.. It's mostly a bunch of rules, formulas or algorithms to compute quantities of interest given some other quantities. For example, if we know two angles of a triangle, there's a simple formula to compute the third. If we know the locations of the vertices of a triangle and we want to know its area, there's a formula for that, too (in fact, actually multiple formulas). If we know the length of a side of a triangle and its two adjacent angles, there's an algorithm to compute the third angle and the lengths of the two other sides. Things like that. These formulas and algorithms are "elementary" in the sense that they are used as building blocks in more complex, higher level geometric algorithms or derivations. For example, one might be interested in the area of a more complicated polygon in the plane. One way to compute it (not necessarily the best, though) involves splitting it into a bunch of triangles, computing their areas and adding them up. The formulas, rules and algorithms of elementary geometry are well suited for treating them as recipes. There are a lot of them and it's pointless to try to memorize them all. Deriving all these formulas is not necessarily easy or obvious - this is not, what "elementary" means (quite generally). It typically involves drawing pictures, recognizing visually that certain angles or lengths are the same, then proving that this must always the case, often by drawing auxiliary lines in non-obvious places which may involve some ingenuity and inspiration. But we won't bother with that. At the end of the process stands a neat formula and we are here to reap the crops, not to sow the seeds and watch them grow slowly. For us, it's enough to know that these formulas exist and where to look them up, if needed. Or better yet: implement them once and for all in our favorite programming language and then just call the functions from higher-level code for the rest of our life without ever again needing to worry about how that low-level stuff is actually being done. 
+Elementary geometry is about basic geometric features of basic shapes in the 2D plane or 3D space such as lengths, areas, volumes, angles, etc. of triangles, quadrilaterals, circles etc.. It's mostly a catalog of laws, formulas or algorithms to compute quantities of interest given some other quantities. For example, if we know two angles of a triangle, there's a simple formula to compute the third. If we know the locations of the vertices of a triangle and we want to know its area, there's a formula for that, too (in fact, actually multiple formulas). If we know the length of a side of a triangle and its two adjacent angles, there's an algorithm to compute the third angle and the lengths of the two other sides. Things like that. These formulas and algorithms are "elementary" in the sense that they are used as building blocks in more complex, higher level geometric algorithms or derivations. For example, one might be interested in the area of a more complicated polygon in the plane. One way to compute it (not necessarily the best, though) involves splitting it into a bunch of triangles, computing their areas and adding them up. The formulas, laws and algorithms of elementary geometry are well suited for treating them as recipes. There are a lot of them and it's pointless to try to memorize them all. Deriving all these formulas is not necessarily easy or obvious. This is not, what "elementary" means (quite generally in math). It typically involves drawing pictures, recognizing visually that certain angles or lengths are the same, then proving that this must always be the case, often by drawing auxiliary lines in non-obvious places which may involve some ingenuity and inspiration. We won't bother with that. At the end of the process stands a neat formula and we are here to reap the crops, not to sow the seeds and grow them. For us, it's enough to know that these formulas exist and where to look them up, if needed. Or better yet: implement them once and for all in our favorite programming language and then just call the functions from higher-level code for the rest of our life without ever again needing to worry about how that low-level stuff is actually being done. 
+
+\subsection{Angles}
+When we draw two parallel straight lines and a third line that crosses through both of them, 8 angles are created. The situation is depicted in figure...
+
+\medskip
+ToDo: draw a picture of two parallel lines and a 3rd line crossing both. we get 8 angles, name them (top to bottom, counterclockwise, starting top-right): $\alpha, \beta, \gamma, \delta$ (top) and $\phi, \xi, \psi, \omega$ (bottom). 
+
+\medskip
+We call the pairs $(\alpha, \beta)$, $(\beta, \gamma)$, $(\gamma, \delta)$, $(\delta, \alpha)$ and the pairs $(\phi, \xi)$, $(\xi, \psi)$, $(\psi, \omega)$, $(\omega, \phi)$ \emph{adjacent angles} with respect to one another (although I've use tuple notation, the order doesn't matter - ToDo: maybe use set notation). A pair of adjacent angles always "sums up" to what we call a \emph{straight angle} for which we reserve the special symbol $\pi$. Thus, we have the relations:
+\begin{equation}
+  \pi = \alpha + \beta = \beta + \gamma = \gamma + \delta = \delta + \alpha 
+      = \phi + \xi = \xi + \psi = \psi + \omega = \omega + \phi
+\end{equation}
+Furthermore, we call the pairs $(\alpha, \gamma)$, $(\beta, \delta)$ and $(\phi, \psi)$, $(\xi, \omega)$ \emph{opposite angles}. We see that they are equal to one another:
+\begin{equation}
+  \alpha = \gamma, \; \beta = \delta, \; \phi = \psi, \; \xi = \omega
+\end{equation}
+The pairs $(\alpha, \phi)$, $(\beta, \xi)$ and  $(\gamma, \psi)$, $(\delta, \omega)$ are called \emph{corresponding angles} and are equal to one another:
+\begin{equation}
+  \alpha = \phi, \; \beta = \xi, \; \gamma = \psi, \; \delta = \omega
+\end{equation}
+
+
+...tbc....
+\begin{comment}
+
+https://thirdspacelearning.com/gcse-maths/geometry-and-measure/angles-in-parallel-lines/
+
+https://thirdspacelearning.com/gcse-maths/geometry-and-measure/angle-rules/
+
+https://thirdspacelearning.com/gcse-maths/geometry-and-measure/alternate-angles/
+https://thirdspacelearning.com/gcse-maths/geometry-and-measure/corresponding-angles/
+
+https://thirdspacelearning.com/gcse-maths/geometry-and-measure/supplementary-angles/ aka adjacent?
+
+https://thirdspacelearning.com/gcse-maths/geometry-and-measure/co-interior-angles/ aka neighbor?
+
+https://thirdspacelearning.com/gcse-maths/geometry-and-measure/vertically-opposite-angles/ aka opposite
+
+
+https://thirdspacelearning.com/gcse-maths/geometry-and-measure/types-of-angles/
+
+
+https://www.cuemath.com/geometry/alternate-interior-angles/
+https://www.cuemath.com/geometry/alternate-exterior-angles/
+
+https://www.mathsisfun.com/geometry/parallel-lines.html
+https://www.mathsisfun.com/geometry/consecutive-interior-angles.html
+https://www.mathsisfun.com/geometry/alternate-interior-angles.html
+https://www.mathsisfun.com/geometry/alternate-exterior-angles.html
+
+
+\end{comment}
+
 
 \subsection{Trigonometry}
-It's no coincidence that triangles featured prominently in the introduction above. They are the simplest and most basic shapes of all shapes. More complicated shapes, like polygons, can be split into a bunch of triangles. In turn, smooth shapes, like circles or ellipses, can be approximated by polygons to arbitrary accuracy. For this reason, triangles are the basic geometric building blocks of most if not all 2D or 3D rendering engines. So, it makes a lot of sense to look at triangles first and "trigonometry" does exactly that: it is literally the science of measuring triangles in greek: "trigonom" means triangle and "metry" is the science of measuring something.
+It's no coincidence that triangles featured prominently in the introduction above. They are the simplest and most basic shapes of all shapes. More complicated shapes, like polygons, can be split into a bunch of triangles. In turn, smooth shapes, like circles or ellipses, can be approximated by polygons to arbitrary accuracy. That's why triangles are the basic geometric building blocks of most if not all 2D or 3D rendering engines. So, it makes a lot of sense to look at triangles first and "trigonometry" does exactly that: it is literally the science of measuring triangles in greek: "trigonom" means triangle and "metry" is the science of measuring something.
 
 \medskip
 Let's consider a general triangle with side lengths $a,b,c$ where the angles opposite to these sides are called $\alpha, \beta, \gamma$. We then have the following 4 fundamental laws:
@@ -12,7 +66,7 @@ Let's consider a general triangle with side lengths $a,b,c$ where the angles opp
   $\alpha + \beta + \gamma = \pi$                       & Sum of interior angles \\
   $a / \sin \alpha = b / \sin \beta 
     = c / \sin \gamma 
-    = 2R = \frac{abc}{2 \Delta}$                        & Law of sines \\  
+    = 2R = \frac{abc}{2 A}$                             & Law of sines \\  
   $c^2 = a^2 + b^2 - 2ab \cos \gamma$                   & Law of cosines \\
   $\frac{a-b}{a+b} 
    = \frac{\tan \frac{\alpha-\beta}{2}}{\tan \frac{\alpha+\beta}{2}} 
@@ -21,20 +75,49 @@ Let's consider a general triangle with side lengths $a,b,c$ where the angles opp
 \end{tabular}
 \medskip
 
-where the quantities $R, \Delta$ appear. These and others can be computed via:
+where the quantities $R, A$ appear. These and others can be computed via:
 
 \medskip
 \begin{tabular}{c l}
-  $s = (a+b+c)/2$                      & Semiperimeter, half of the perimeter \\
-  $\Delta = \sqrt{s(s-a)(s-b)(s-c)}$   & Area (via Heron's formula) \\
-  $R = (abc)/ \Delta$                  & Radius of circumscribed circle \\
-  $r = \Delta/s$                       & Radius of inscribed circle \\
+  $s = (a+b+c)/2$                 & Semiperimeter, half of the perimeter \\
+  $A = \sqrt{s(s-a)(s-b)(s-c)}$   & Area (via Heron's formula) \\
+  $R = (abc)/ A$                  & Radius of circumscribed circle \\
+  $r = A/s$                       & Radius of inscribed circle \\
 \end{tabular}
 \medskip
 
+Half-angle formulas:
+\begin{equation}
+  \sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  },  \quad
+  \cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }
+\end{equation}
+Mollweide formulas:
 
 
 \begin{comment}
+
+-center circumscribed circle: intersection of medians
+-center of inscribed circle: intersection of angle bisectors
+
+https://en.wikipedia.org/wiki/Median_(geometry)
+https://de.wikipedia.org/wiki/Seitenhalbierende
+
+https://mathworld.wolfram.com/AngleBisector.html
+https://en.wikipedia.org/wiki/Angle_bisector_theorem
+https://en.wikipedia.org/wiki/Bisection#Triangle
+https://de.wikipedia.org/wiki/Winkelhalbierende
+
+https://mathworld.wolfram.com/PerpendicularBisector.html
+https://en.wikipedia.org/wiki/Bisection#Perpendicular_line_segment_bisector
+https://de.wikipedia.org/wiki/Mittelsenkrechte
+
+
+https://en.wikipedia.org/wiki/Mollweide%27s_formula
+
+https://en.wikipedia.org/wiki/Law_of_cotangents
+
+-thales' theorem
+
 -rename file to Geo_Elementary
 
 -plot a drawing of a triangle with vertices A,B,C, sides a,b,c and angles alpha, beta, gamma
@@ -46,5 +129,13 @@ triangles, too - or maybe refer to some ressource
 -give formulas for volumes of 3D shapes
 
 https://en.wikipedia.org/wiki/Trigonometry
+
+Weitz: Elementargeometrie (Vorkurs Mathematik)
+https://www.youtube.com/watch?v=cMuoFr4DvDo
+
+Weitz: Überblick Elementargeometrie: Winkel, Satz des Pythagoras, Sinus, Kosinus, etc.
+https://www.youtube.com/watch?v=zVLFfgg7f98&list=PLb0zKSynM2PBYzz6l37rWH3B_n_7P40QP&index=167
+
+
 
 \end{comment}

@@ -1,14 +1,14 @@
 \section{Elementary Geometry}
 Elementary geometry is about basic geometric features of basic shapes in the 2D plane or 3D space such as lengths, areas, volumes, angles, etc. of triangles, quadrilaterals, circles etc.. It's mostly a catalog of laws, formulas or algorithms to compute quantities of interest given some other quantities. For example, if we know two angles of a triangle, there's a simple formula to compute the third. If we know the locations of the vertices of a triangle and we want to know its area, there's a formula for that, too (in fact, actually multiple formulas). If we know the length of a side of a triangle and its two adjacent angles, there's an algorithm to compute the third angle and the lengths of the two other sides. Things like that. These formulas and algorithms are "elementary" in the sense that they are used as building blocks in more complex, higher level geometric algorithms or derivations. For example, one might be interested in the area of a more complicated polygon in the plane. One way to compute it (not necessarily the best, though) involves splitting it into a bunch of triangles, computing their areas and adding them up. The formulas, laws and algorithms of elementary geometry are well suited for treating them as recipes. There are a lot of them and it's pointless to try to memorize them all. Deriving all these formulas is not necessarily easy or obvious. This is not, what "elementary" means (quite generally in math). It typically involves drawing pictures, recognizing visually that certain angles or lengths are the same, then proving that this must always be the case, often by drawing auxiliary lines in non-obvious places which may involve some ingenuity and inspiration. We won't bother with that. At the end of the process stands a neat formula and we are here to reap the crops, not to sow the seeds and grow them. For us, it's enough to know that these formulas exist and where to look them up, if needed. Or better yet: implement them once and for all in our favorite programming language and then just call the functions from higher-level code for the rest of our life without ever again needing to worry about how that low-level stuff is actually being done. 
 
-\subsection{Angles}
+\subsection{Angles in Parallel Lines}
 When we draw two parallel straight lines and a third line that crosses through both of them, 8 angles are created. The situation is depicted in figure...
 
 \medskip
 ToDo: draw a picture of two parallel lines and a 3rd line crossing both. we get 8 angles, name them (top to bottom, counterclockwise, starting top-right): $\alpha, \beta, \gamma, \delta$ (top) and $\phi, \xi, \psi, \omega$ (bottom). 
 
 \medskip
-We call the pairs $(\alpha, \beta)$, $(\beta, \gamma)$, $(\gamma, \delta)$, $(\delta, \alpha)$ and the pairs $(\phi, \xi)$, $(\xi, \psi)$, $(\psi, \omega)$, $(\omega, \phi)$ \emph{adjacent angles} with respect to one another (although I've use tuple notation, the order doesn't matter - ToDo: maybe use set notation). A pair of adjacent angles always "sums up" to what we call a \emph{straight angle} for which we reserve the special symbol $\pi$. Thus, we have the relations:
+We call the pairs $(\alpha, \beta)$, $(\beta, \gamma)$, $(\gamma, \delta)$, $(\delta, \alpha)$ and the pairs $(\phi, \xi)$, $(\xi, \psi)$, $(\psi, \omega)$, $(\omega, \phi)$ \emph{adjacent angles} with respect to one another. Although I'm using tuple notation, the order doesn't matter - all relationships are symmetric. A pair of adjacent angles always "sums up" to what we call a \emph{straight angle} for which we reserve the special symbol $\pi$. Thus, we have the relations:
 \begin{equation}
   \pi = \alpha + \beta = \beta + \gamma = \gamma + \delta = \delta + \alpha 
       = \phi + \xi = \xi + \psi = \psi + \omega = \omega + \phi
@@ -21,10 +21,21 @@ The pairs $(\alpha, \phi)$, $(\beta, \xi)$ and  $(\gamma, \psi)$, $(\delta, \ome
 \begin{equation}
   \alpha = \phi, \; \beta = \xi, \; \gamma = \psi, \; \delta = \omega
 \end{equation}
+The pairs $(\delta, \phi)$, $(\gamma, \xi)$ are called \emph{consecutive interior angles} or just \emph{co-interior angles} or sometimes also \emph{neighbor angles}. The pairs  $(\alpha, \omega)$, $(\beta, \psi)$ are called \emph{co-exterior angles}. The pairs must sum up to a straight angle:
+\begin{equation}
+  \pi = \delta + \phi = \gamma + \xi = \alpha + \omega = \beta + \psi
+\end{equation}
+The pairs $(\gamma, \phi)$, $(\delta, \xi)$ are called \emph{alternate interior angles} and the pairs $(\beta, \omega)$, $(\alpha, \psi)$ are called \emph{alternate exterior angles}. They maust be pairwise equal:
+\begin{equation}
+  \gamma = \phi, \; \delta = \xi, \; \beta = \omega, \; \alpha = \psi
+\end{equation}
+The straight angle which we have symbolized by $\pi$ is of special importance. We have not yet said anything about its numerical value. The numerical value we associate with a straight angle is actually matter of convention....tbc....
+% full angle, right angle, acute, obtuse, reflex
 
 
-...tbc....
 \begin{comment}
+
+https://www.mathplanet.com/education/geometry/perpendicular-and-parallel/angles-parallel-lines-and-transversals
 
 https://thirdspacelearning.com/gcse-maths/geometry-and-measure/angles-in-parallel-lines/
 

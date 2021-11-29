@@ -147,11 +147,17 @@ Of special importance are triangles in which one angle is a right angle. These a
 
 Preliminary:
 
-\begin{tikzpicture}[thick, scale=0.75]
-\draw (0,0) coordinate[label=below:$A$] (a) --
-      (4,0) coordinate[label=below:$B$] (b) --
-      (4,3) coordinate[label=above:$C$] (c) -- cycle;
+\begin{tikzpicture}[thick, scale=0.5]
+\draw (0,0)--(13,0)--(4,6)--cycle;
+\draw (4,6)--(4,0);
 \end{tikzpicture}
+
+
+%\begin{tikzpicture}[thick, scale=0.75]
+%\draw (0,0) coordinate[label=below:$A$] (a) --
+%      (4,0) coordinate[label=below:$B$] (b) --
+%      (4,3) coordinate[label=above:$C$] (c) -- cycle;
+%\end{tikzpicture}
 
 %\include{Tikz/RightTriangle_4_3} % doesn't work - includes can't be nested - that sucks!!!
 

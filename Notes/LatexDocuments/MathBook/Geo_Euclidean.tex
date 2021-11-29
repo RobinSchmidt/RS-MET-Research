@@ -31,6 +31,7 @@ The pairs $(\gamma, \phi)$, $(\delta, \xi)$ are called \emph{alternate interior 
 \end{equation}
 It's not important to memorize all these names. What is important is to be able to visually recognize such situations in a drawing. The straight angle which we have symbolized by $\pi$ is of special importance. We have not yet said anything about its numerical value or how to represent angles as numbers in general. The numerical value we associate with an angle is actually a matter of convention. In mathematics, we usually measure angles in radians in which case the numerical value of the angle is defined to be the length of the corresponding circular arc of a circle with radius one. The length of such an arc for a straight angle, i.e. the length of the perimeter of a half-circle (not counting the straight line), is around $3.14159$ and the actual exact value is a transcendental number with infinitely many decimal digits without any (known) pattern in them. In everyday life, that's a bit inconvenient so we usually prefer to use degrees to measure angles in which case a straight angle is \emph{defined} to be 180 degrees. Half of a straight angle is called a \emph{right angle} and it's the angle that occurs when two adjacent angles are equal to one another. In degrees, that would be 90 and in radians it's $\pi / 2$. The \emph{full angle} is defined to be twice the straight angle. It's 360 degrees or $2 \pi$ radians an represents completely turning around once such that you end up looking into the same direction as before the turn. Angles less than a right angle are called \emph{acute}, angles between right and straight are called \emph{obtuse} and angles between straight and full are called \emph{reflex}. You probably don't need to memorize these terms either. The number $\pi$ is also called the circle constant\footnote{In many mathematical formulas where $\pi$ occurs, it actually occurs as $2 \pi$, so it was suggested by some people that we should define a new circle constant $\tau = 2 \pi$ and use that instead of $\pi$ all throughout math. That would save writing a lot of multiplications by 2 at the expense of having to write a few more divisions by 2 for the couple of occasions where $\pi$ appears without the pre-factor of 2. And in many of these occasions, it can even be persuasively argued that the divisor 2 \emph{should} appear. If you want to learn more about this, search for "tau manifesto". I personally think, the proponents of $\tau$ have a point. Sadly, many people disagree and maybe even more find the whole discussion pointless.} and it's the most important constant in geometry, some may even say in all of mathematics but there it would have to compete with the most important constant of calculus which is Eulers number $e$ and the important constants of algebra which are $0,1, \i$.
 
+% One general strategy in geometry is to take a given line and construct a line parallel to it that passes through given point. With the angle relations above, we may then often "see" what certain other, up to now unknown, angles must be. Another one is to construct new points and draw lines through them...this 
 
 \begin{comment}
 
@@ -140,11 +141,30 @@ In geometry, two shapes are said to be congruent if they can be brought into ful
 %https://tutors.com/math-tutors/geometry-help/triangle-congruence-theorems-sss-sas-asa
 %https://j-tradition.com/congruence.html
 
+
 \subsubsection{Right Triangles}
 Of special importance are triangles in which one angle is a right angle. These are unsurprisingly and rightfully called right triangles. There can be only one right angle in a non-degenerate triangle because two right angles already sum up to a straight angle, which is also the sum of all 3 angles - so if you attempt to have two right angles, you'll get a degenerate triangle whose 3rd vertex is at infinity with an angle of zero. By the way, triangles in which two sides have the same length are called isosceles and those where all three sides are equal are called equilateral. But this is just more jargon and not super important. The right triangles are the mathematically important ones. ...tbc...
 
+Preliminary:
+
+\begin{tikzpicture}[thick, scale=0.75]
+\draw (0,0) coordinate[label=below:$A$] (a) --
+      (4,0) coordinate[label=below:$B$] (b) --
+      (4,3) coordinate[label=above:$C$] (c) -- cycle;
+\end{tikzpicture}
+
+%\include{Tikz/RightTriangle_4_3} % doesn't work - includes can't be nested - that sucks!!!
+
+\subsubsection{More Facts}
+% https://texample.net/tikz/examples/morleys-triangle/ trisectors always from an equilateral triangle
+
 
 \begin{comment}
+
+https://texample.net/tikz/examples/area/geometry/
+http://www.tikzedt.org/
+
+https://github.com/walmes/Tikz  examples mainly for statistics
 
 -center circumscribed circle: intersection of medians
 -center of inscribed circle: intersection of angle bisectors

@@ -29,7 +29,7 @@ The pairs $(\gamma, \phi)$, $(\delta, \xi)$ are called \emph{alternate interior 
 \begin{equation}
   \gamma = \phi, \; \delta = \xi, \; \beta = \omega, \; \alpha = \psi
 \end{equation}
-It's not important to memorize all these names. What is important is to be able to visually recognize such situations in a drawing. The straight angle which we have symbolized by $\pi$ is of special importance. We have not yet said anything about its numerical value or how to represent angles as numbers in general. The numerical value we associate with an angle is actually a matter of convention. In mathematics, we usually measure angles in radians in which case the numerical value of the angle is defined to be the length of the corresponding circular arc of a circle with radius one. The length of such an arc for a straight angle, i.e. the length of the perimeter of a half-circle (not counting the straight line), is around $3.14159$ and the actual exact value is a transcendental number with infinitely many decimal digits without any (known) pattern in them. In everyday life, that's a bit inconvenient so we usually prefer to use degrees to measure angles in which case a straight angle is \emph{defined} to be 180 degrees. Half of a straight angle is called a \emph{right angle} and it's the angle that occurs when two adjacent angles are equal to one another. In degrees, that would be 90 and in radians it's $\pi / 2$. The \emph{full angle} is defined to be twice the straight angle. It's 360 degrees or $2 \pi$ radians. Angles less than a right angle are called \emph{acute}, angles between right and straight are called \emph{obtuse} and angles between straight and full are called \emph{reflex}. You probably don't need to memorize these terms either. The number $\pi$ is also called the circle constant and it's one of the most important mathematical constants\footnote{In many mathematical formulas where $\pi$ occurs, it actually occurs as $2 \pi$, so it was suggested by some people that we should define a new circle constant $\tau = 2 \pi$ and use that instead of $\pi$ all throughout math. That would save writing a lot of multiplications by 2 at the expense of having to write a few more divisions by 2 for the couple of occasions where $\pi$ appears without the pre-factor of 2. If you want to learn more about this, search for "tau manifesto". I personally think, the proponents of $\tau$ have a point. Many people disagree and maybe even more find the whole discussion pointless.}, if not \emph{the} most important (only Euler's number $e$ could possibly compete).
+It's not important to memorize all these names. What is important is to be able to visually recognize such situations in a drawing. The straight angle which we have symbolized by $\pi$ is of special importance. We have not yet said anything about its numerical value or how to represent angles as numbers in general. The numerical value we associate with an angle is actually a matter of convention. In mathematics, we usually measure angles in radians in which case the numerical value of the angle is defined to be the length of the corresponding circular arc of a circle with radius one. The length of such an arc for a straight angle, i.e. the length of the perimeter of a half-circle (not counting the straight line), is around $3.14159$ and the actual exact value is a transcendental number with infinitely many decimal digits without any (known) pattern in them. In everyday life, that's a bit inconvenient so we usually prefer to use degrees to measure angles in which case a straight angle is \emph{defined} to be 180 degrees. Half of a straight angle is called a \emph{right angle} and it's the angle that occurs when two adjacent angles are equal to one another. In degrees, that would be 90 and in radians it's $\pi / 2$. The \emph{full angle} is defined to be twice the straight angle. It's 360 degrees or $2 \pi$ radians an represents completely turning around once such that you end up looking into the same direction. Angles less than a right angle are called \emph{acute}, angles between right and straight are called \emph{obtuse} and angles between straight and full are called \emph{reflex}. You probably don't need to memorize these terms either. The number $\pi$ is also called the circle constant\footnote{In many mathematical formulas where $\pi$ occurs, it actually occurs as $2 \pi$, so it was suggested by some people that we should define a new circle constant $\tau = 2 \pi$ and use that instead of $\pi$ all throughout math. That would save writing a lot of multiplications by 2 at the expense of having to write a few more divisions by 2 for the couple of occasions where $\pi$ appears without the pre-factor of 2. And in many of these occasions, it can even be persuasively argued that the divisor 2 \emph{should} appear. If you want to learn more about this, search for "tau manifesto". I personally think, the proponents of $\tau$ have a point. Sadly, many people disagree and maybe even more find the whole discussion pointless.} and it's the most important constant in geometry, some may even say in all of mathematics but there it would have to compete with the most important constant of calculus which is Eulers number $e$ and the important constants of algebra which are $0,1, \i$.
 
 
 \begin{comment}
@@ -72,7 +72,7 @@ It's no coincidence that triangles featured prominently in the introduction abov
 Let's consider a general triangle with side lengths $a,b,c$ where the angles opposite to these sides are called $\alpha, \beta, \gamma$. We then have the following 4 fundamental laws:
 
 \medskip
-\begin{tabular}{c l}
+\begin{tabular}{l l}
   $\alpha + \beta + \gamma = \pi$                       & Sum of interior angles \\
   $a / \sin \alpha = b / \sin \beta 
     = c / \sin \gamma 
@@ -84,11 +84,12 @@ Let's consider a general triangle with side lengths $a,b,c$ where the angles opp
                                                         & Law of tangents \\
 \end{tabular}
 \medskip
+% use () notaion for argument in law of tangents - text is too small with frac
 
 where the quantities $R, A$ appear. These and others can be computed via:
 
 \medskip
-\begin{tabular}{c l}
+\begin{tabular}{l l}
   $s = (a+b+c)/2$                 & Semiperimeter, half of the perimeter \\
   $A = \sqrt{s(s-a)(s-b)(s-c)}$   & Area (via Heron's formula) \\
   $R = (abc)/ A$                  & Radius of circumscribed circle \\
@@ -96,12 +97,30 @@ where the quantities $R, A$ appear. These and others can be computed via:
 \end{tabular}
 \medskip
 
-Half-angle formulas:
-\begin{equation}
-  \sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  },  \quad
-  \cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }
-\end{equation}
-Mollweide formulas:
+More formulas:
+
+\medskip
+\begin{tabular}{l l}
+  $\sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  }$  & Half-angle formula for sine \\
+  $\cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }$      & Half-angle formula for cosine \\
+  $\frac{a-b}{c} 
+    = \frac{\sin( (\alpha - \beta)/2) } { \sin( (\alpha + \beta)/2) }
+    = \frac{\sin( (\alpha - \beta)/2) } { \cos( \gamma/2) } $
+                                                       & Mollweide formula for sine \\
+  $\frac{a+b}{c} 
+  = \frac{\cos( (\alpha - \beta)/2) } { \cos( (\alpha + \beta)/2) }
+  = \frac{\cos( (\alpha - \beta)/2) } { \sin( \gamma/2) } $
+                                                     & Mollweide formula for cosine \\
+\end{tabular}
+\medskip
+
+
+%Half-angle formulas:
+%\begin{equation}
+%  \sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  },  \quad
+%  \cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }
+%\end{equation}
+%Mollweide formulas:
 
 
 \begin{comment}

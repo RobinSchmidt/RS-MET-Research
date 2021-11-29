@@ -101,19 +101,21 @@ More formulas:
 
 \medskip
 \begin{tabular}{l l}
-  $\sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  }$      & Half-angle formula for sine \\
-  $\cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }$          & Half-angle formula for cosine \\
-  $\frac{a-b}{c} 
-    = \frac{\sin( (\alpha - \beta)/2) } { \sin( (\alpha + \beta)/2) }
-    = \frac{\sin( (\alpha - \beta)/2) } { \cos( \gamma/2) } $
-                                                         & Mollweide formula for sine \\
-  $\frac{a+b}{c} 
-  = \frac{\cos( (\alpha - \beta)/2) } { \cos( (\alpha + \beta)/2) }
-  = \frac{\cos( (\alpha - \beta)/2) } { \sin( \gamma/2) } $
-                                                         & Mollweide formula for cosine \\
+ $h_a = b \sin \gamma = c \sin \beta$                   & Height above side $a$ \\ 
+ $A = a h_a / 2$                                       & Area via height \\
+ $\sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  }$      & Half-angle formula for sine \\
+ $\cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }$          & Half-angle formula for cosine \\
+ $\frac{a-b}{c} 
+   = \frac{\sin( (\alpha - \beta)/2) } { \sin( (\alpha + \beta)/2) }
+   = \frac{\sin( (\alpha - \beta)/2) } { \cos( \gamma/2) } $
+                                                        & Mollweide formula for sine \\
+ $\frac{a+b}{c} 
+ = \frac{\cos( (\alpha - \beta)/2) } { \cos( (\alpha + \beta)/2) }
+ = \frac{\cos( (\alpha - \beta)/2) } { \sin( \gamma/2) } $
+                                                        & Mollweide formula for cosine \\
  $\tan \gamma = \frac{c \sin \alpha}{b - c \cos \alpha}
-              = \frac{c \sin \beta} {a - c \cos \beta}$  & Tangent formula  \\
- $c = a \cos \beta + b \cos \alpha$                      & Projection theorem \\      
+             = \frac{c \sin \beta} {a - c \cos \beta}$  & Tangent formula  \\
+ $c = a \cos \beta + b \cos \alpha$                     & Projection theorem \\      
 \end{tabular}
 \medskip
 
@@ -121,13 +123,7 @@ By symmetry, more formulas can be obtained by doing the cyclic replacements: $a 
 
 % see Teubner tachenbuch, page 760
 % https://de.wikipedia.org/wiki/Projektionssatz_(Dreieck)
-
-%Half-angle formulas:
-%\begin{equation}
-%  \sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  },  \quad
-%  \cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }
-%\end{equation}
-%Mollweide formulas:
+% todo: law of cotangents, what about centers of the incircle and circumcircle? but maybe that's for analytic geometry because it involves coordinates
 
 
 \begin{comment}

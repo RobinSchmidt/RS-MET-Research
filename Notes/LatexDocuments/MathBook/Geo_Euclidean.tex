@@ -79,8 +79,8 @@ Let's consider a general triangle with side lengths $a,b,c$ where the angles opp
     = 2R = \frac{abc}{2 A}$                             & Law of sines \\  
   $c^2 = a^2 + b^2 - 2ab \cos \gamma$                   & Law of cosines \\
   $\frac{a-b}{a+b} 
-   = \frac{\tan \frac{\alpha-\beta}{2}}{\tan \frac{\alpha+\beta}{2}} 
-   = \frac{\tan \frac{\alpha-\beta}{2}}{\cot \frac{\gamma}{2}}$
+   = \frac{\tan((\alpha-\beta)/2)}{\tan ((\alpha+\beta)/2)} 
+   = \frac{\tan((\alpha-\beta)/2)}{\cot (\gamma/2)}$
                                                         & Law of tangents \\
 \end{tabular}
 \medskip
@@ -101,8 +101,6 @@ More formulas:
 
 \medskip
 \begin{tabular}{l l}
- $h_a = b \sin \gamma = c \sin \beta$                   & Height above side $a$ \\ 
- $A = a h_a / 2$                                       & Area via height \\
  $\sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  }$      & Half-angle formula for sine \\
  $\cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }$          & Half-angle formula for cosine \\
  $\frac{a-b}{c} 
@@ -115,13 +113,19 @@ More formulas:
                                                         & Mollweide formula for cosine \\
  $\tan \gamma = \frac{c \sin \alpha}{b - c \cos \alpha}
              = \frac{c \sin \beta} {a - c \cos \beta}$  & Tangent formula  \\
- $c = a \cos \beta + b \cos \alpha$                     & Projection theorem \\      
+ $c = a \cos \beta + b \cos \alpha$                     & Projection theorem \\  
+ $H_a = b \sin \gamma = c \sin \beta$                   & Height above side $a$ \\ 
+ $A = a H_a / 2$                                        & Area via height \\
+ $M_c = \sqrt{2(a^2+b^2) - c^2}/2
+      = \sqrt{a^2+b^2 +2ab\cos\gamma}/2$                & Length of median of side $c$ \\
+ $B_{\gamma} = (2ab\cos(\gamma/2))/(a+b)
+      = \sqrt{ab \; ((a+b)^2-c^2)}/(a+b)$               & Length of angle bisector of $\gamma$
 \end{tabular}
 \medskip
 
-By symmetry, more formulas can be obtained by doing the cyclic replacements: $a \rightarrow b \rightarrow c \rightarrow a$, $\alpha \rightarrow \beta \rightarrow \gamma \rightarrow \alpha$
+By symmetry, more formulas can be obtained by doing the cyclic replacements: $a \rightarrow b \rightarrow c \rightarrow a$, $\alpha \rightarrow \beta \rightarrow \gamma \rightarrow \alpha$. The median of a side is...
 
-% see Teubner tachenbuch, page 760
+% see Teubner tachenbuch, page 760,764
 % https://de.wikipedia.org/wiki/Projektionssatz_(Dreieck)
 % todo: law of cotangents, what about centers of the incircle and circumcircle? but maybe that's for analytic geometry because it involves coordinates
 

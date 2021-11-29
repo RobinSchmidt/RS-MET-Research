@@ -66,7 +66,7 @@ https://www.mathsisfun.com/geometry/alternate-exterior-angles.html
 
 
 \subsection{Triangles and Trigonometry}
-It's no coincidence that triangles featured prominently in the introduction above. They are the simplest and most basic shapes of all shapes. More complicated shapes, like polygons, can be split into a bunch of triangles. In turn, smooth shapes, like circles or ellipses, can be approximated by polygons to arbitrary accuracy. That's why triangles are the basic geometric building blocks of most if not all 2D or 3D rendering engines. So, it makes a lot of sense to look at triangles first and "trigonometry" does exactly that: it is literally the science of measuring triangles in greek: "trigonom" means triangle and "metry" is the science of measuring something.
+It's no coincidence that triangles featured prominently in the introduction above. They are the simplest and most basic shapes of all shapes, made from 3 points and the 3 line segments connecting them, forming 3 angles at the 3 vertices. One point less and you don't get a shape anymore but just a line segment. More complicated shapes, like polygons, can be split into a bunch of triangles. In turn, smooth shapes, like circles or ellipses, can be approximated by polygons to arbitrary accuracy. That's why triangles are the basic geometric building blocks of most if not all 2D or 3D rendering engines. So, it makes a lot of sense to look at triangles first and "trigonometry" does exactly that: it is literally the science of measuring triangles in greek: "trigonom" means triangle and "metry" is the science of measuring something.
 
 \medskip
 Let's consider a general triangle with side lengths $a,b,c$ where the angles opposite to these sides are called $\alpha, \beta, \gamma$. We then have the following 4 fundamental laws:
@@ -90,10 +90,13 @@ where the quantities $R, A$ appear. These and others can be computed via:
 
 \medskip
 \begin{tabular}{l l}
-  $s = (a+b+c)/2$                 & Semiperimeter, half of the perimeter \\
-  $A = \sqrt{s(s-a)(s-b)(s-c)}$   & Area (via Heron's formula) \\
-  $R = (abc)/ A$                  & Radius of circumscribed circle \\
-  $r = A/s$                       & Radius of inscribed circle \\
+ $s = (a+b+c)/2$                       & Semiperimeter, half of the perimeter \\
+ $A = \sqrt{(s-a)(s-b)(s-c) s} = r s$  & Area (via Heron's formula) \\
+ $r = \sqrt{(s-a)(s-b)(s-c)/s} = A/s$  & Radius of inscribed circle \\  
+ $R = (abc)/ A$                        & Radius of circumscribed circle \\
+ $r = \frac{s-a}{\cot(\alpha/2)}
+    = \frac{s-b}{\cot(\beta/2)}
+    = \frac{s-c}{\cot(\gamma/2)}$      & Law of cotangents\\
 \end{tabular}
 \medskip
 
@@ -123,14 +126,22 @@ More formulas:
 \end{tabular}
 \medskip
 
-These are a lot of formulas already (you perhaps see now why we really don't want to memorize them) and by symmetry, even more formulas can be obtained by doing the cyclic replacements: $a \rightarrow b \rightarrow c \rightarrow a$, $\alpha \rightarrow \beta \rightarrow \gamma \rightarrow \alpha$. The median of a side is the line segment that starts from the middle of that side and goes to the vertex that is opposed to that side. All 3 medians meet in a common point which is the center of gravity of the triangle. The angle bisector is a line segment resulting from drawing a line from a vertex using half of the angle there and extending it until it hits the opposing side. All 3 angle bisectors meet in a common point which is also the center of the inscribed circle of the triangle. The center of the circumscribed circle is given by the point where perpendicular line segment bisectors meet. These are lines starting at the centers of the sides in a direction perpendicular to the respective side (ToDo: is there a formula for their lengths, too?).
+These are quite a lot of moderately complicated formulas already (you perhaps see now why we really don't want to memorize them) and by symmetry, even more formulas can be obtained by doing the cyclic replacements: $a \rightarrow b \rightarrow c \rightarrow a$, $\alpha \rightarrow \beta \rightarrow \gamma \rightarrow \alpha$. The median of a side is the line segment that starts from the middle of that side and goes to the vertex that is opposed to that side. All 3 medians meet in a common point which is the center of gravity of the triangle. The angle bisector is a line segment resulting from drawing a line from a vertex using half of the angle there and extending it until it hits the opposing side. All 3 angle bisectors meet in a common point which is also the center of the inscribed circle of the triangle. The center of the circumscribed circle is given by the point where perpendicular line segment bisectors meet. These are lines starting at the centers of the sides in a direction perpendicular to the respective side (ToDo: is there a formula for their lengths, too?).
 
 % see Teubner tachenbuch, page 760,764
 % https://de.wikipedia.org/wiki/Projektionssatz_(Dreieck)
 % todo: law of cotangents, what about centers of the incircle and circumcircle? but maybe that's for analytic geometry because it involves coordinates
 
+\subsubsection{Congruence Theorems}
+In geometry, two shapes are said to be congruent if they can be brought into full agreement just by means of translations, rotations and reflections - fancy terms for moving, turning and mirroring. It captures the idea that the two shapes are the same, just possibly placed somwhere else in space with a possibly different orientation. There are 5 theorems that state sufficient conditions for two triangles to be congruent. Two triangles are congruent if at least one of the following statements holds true: (SSS) all three sides have matching lengths, (ASA) one side and the two adjacent angles match, (SAS) one angle and the two adjacent sides match, (AAS) two angles and one side match, (SsA) two sides and the angle adjacent to the smaller side match (the lowercase 2nd s is not a typo - it indicates the smaller side). ...ToDo: verify these, especially SsA and give the algorithms to compute the missing pieces
+
+% on (SsA): https://www.jstor.org/stable/27966706
+
+%https://tutors.com/math-tutors/geometry-help/triangle-congruence-theorems-sss-sas-asa
+%https://j-tradition.com/congruence.html
+
 \subsubsection{Right Triangles}
-Of special importance are triangles in which one angle is a right angle. These are unsurprisingly and rightfully called right triangles. By the way, triangles in which two sides have the same length are called isosceles and those where all three sides are equal are called equilateral. But this is just more jargon and not super important. The right triangles are the mathematically important ones. ...tbc...
+Of special importance are triangles in which one angle is a right angle. These are unsurprisingly and rightfully called right triangles. There can be only one right angle in a non-degenerate triangle because two right angles already sum up to a straight angle, which is also the sum of all 3 angles - so if you attempt to have two right angles, you'll get a degenerate triangle whose 3rd vertex is at infinity with an angle of zero. By the way, triangles in which two sides have the same length are called isosceles and those where all three sides are equal are called equilateral. But this is just more jargon and not super important. The right triangles are the mathematically important ones. ...tbc...
 
 
 \begin{comment}

@@ -5,7 +5,7 @@ Elementary geometry is about basic geometric features of basic shapes in the 2D 
 Angles are a way to measure an amount of rotation. Imagine standing on straight line extending forward from your position. Now turn a little bit to the left and imagine drawing another straight line into the new "forward" direction and extend it backward, too. The two lines will intersect at what we call an angle and that angle is a measure for how much you turned. When we draw two parallel straight lines and a third line that crosses through both of them (that 3rd line is called a "transversal", by the way), 8 angles are created. The situation is depicted in figure...
 
 \medskip
-ToDo: draw a picture of two parallel lines and a 3rd line crossing both. we get 8 angles, name them (top to bottom, counterclockwise, starting top-right): $\alpha, \beta, \gamma, \delta$ (top) and $\phi, \xi, \psi, \omega$ (bottom). 
+ToDo: draw a picture of two parallel lines and a 3rd line crossing both. we get 8 angles, name them (top to bottom, counterclockwise, starting top-right): $\alpha, \beta, \gamma, \delta$ (top) and $\phi, \xi, \psi, \omega$ (bottom). maybe try to make the pic side by side with the formulas like with the triangles below
 
 \medskip
 We call the pairs $(\alpha, \beta)$, $(\beta, \gamma)$, $(\gamma, \delta)$, $(\delta, \alpha)$ and the pairs $(\phi, \xi)$, $(\xi, \psi)$, $(\psi, \omega)$, $(\omega, \phi)$ \emph{adjacent angles} with respect to one another. Although I'm using tuple notation, the order doesn't matter - all relationships are symmetric. A pair of adjacent angles always "sums up" to what we call a \emph{straight angle} for which we reserve the special symbol $\pi$. By "sum up", we imagine to turn by some amount first and then turn by another amount and the "sum" is the total amount that we have turned. Thus, we have the relations:
@@ -73,6 +73,17 @@ It's no coincidence that triangles featured prominently in the introduction abov
 Let's consider a general triangle with side lengths $a,b,c$ where the angles opposite to these sides are called $\alpha, \beta, \gamma$. We then have the following 4 fundamental laws:
 
 \medskip
+\begin{tikzpicture}[thick, scale=0.4]
+\draw (0,0)--(13,0)--(4,4)--cycle;
+\node at ( 1.3, 0.5) {$\alpha$};
+\node at (10.2, 0.5) {$\beta$};
+\node at ( 4.2, 3.2) {$\gamma$};
+\node at ( 5.5,-0.5) {$c$};
+\node at ( 1.7, 2.5) {$b$};
+\node at ( 8.4, 2.5) {$a$};
+%\node[align=left] at (17,3) {$c^2=a^2+b^2$\\ $b^2=p^2+h^2$ \\ $a^2=q^2+h^2$};
+\node[align=left] at (29,2) 
+{
 \begin{tabular}{l l}
   $\alpha + \beta + \gamma = \pi$                       & Sum of interior angles \\
   $a / \sin \alpha = b / \sin \beta 
@@ -84,8 +95,26 @@ Let's consider a general triangle with side lengths $a,b,c$ where the angles opp
    = \frac{\tan((\alpha-\beta)/2)}{\cot (\gamma/2)}$
                                                         & Law of tangents \\
 \end{tabular}
+};
+\end{tikzpicture}
 \medskip
-% use () notaion for argument in law of tangents - text is too small with frac
+
+%\medskip
+%\begin{tabular}{l l}
+%  $\alpha + \beta + \gamma = \pi$                       & Sum of interior angles \\
+%  $a / \sin \alpha = b / \sin \beta 
+%    = c / \sin \gamma 
+%    = 2R = \frac{abc}{2 A}$                             & Law of sines \\  
+%  $c^2 = a^2 + b^2 - 2ab \cos \gamma$                   & Law of cosines \\
+%  $\frac{a-b}{a+b} 
+%   = \frac{\tan((\alpha-\beta)/2)}{\tan ((\alpha+\beta)/2)} 
+%   = \frac{\tan((\alpha-\beta)/2)}{\cot (\gamma/2)}$
+%                                                        & Law of tangents \\
+%\end{tabular}
+%\medskip
+% maybe try to draw a triangle next to to the table showing all the quantities...without taking any more vertical space ...it doesn't seem to work - maybe do it in the same way as with the right triangle - include the formulas into the tikz picture - use two columns of text
+% OK - done...the commented tabular environment is now inside the tikzpicture
+
 
 where the quantities $R, A$ appear. These and others can be computed via:
 
@@ -107,6 +136,8 @@ More formulas:
 \begin{tabular}{l l}
  $\sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  }$      & Half-angle formula for sine \\
  $\cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }$          & Half-angle formula for cosine \\
+ $\tan( \gamma) = \frac{c \sin \alpha}{b - c \cos \alpha}
+              = \frac{c \sin \beta} {a - c \cos \beta}$ & Tangent formula  \\
  $\frac{a-b}{c} 
    = \frac{\sin( (\alpha - \beta)/2) } { \sin( (\alpha + \beta)/2) }
    = \frac{\sin( (\alpha - \beta)/2) } { \cos( \gamma/2) } $
@@ -115,8 +146,6 @@ More formulas:
  = \frac{\cos( (\alpha - \beta)/2) } { \cos( (\alpha + \beta)/2) }
  = \frac{\cos( (\alpha - \beta)/2) } { \sin( \gamma/2) } $
                                                         & Mollweide formula for cosine \\
- $\tan \gamma = \frac{c \sin \alpha}{b - c \cos \alpha}
-             = \frac{c \sin \beta} {a - c \cos \beta}$  & Tangent formula  \\
  $c = a \cos \beta + b \cos \alpha$                     & Projection theorem \\  
  $H_a = b \sin \gamma = c \sin \beta$                   & Height above side $a$ \\ 
  $A = a H_a / 2$                                        & Area via height \\
@@ -127,7 +156,7 @@ More formulas:
 \end{tabular}
 \medskip
 
-These are quite a lot of moderately complicated formulas already (you perhaps see now why we really don't want to memorize them) and by symmetry, even more formulas can be obtained by doing the cyclic replacements: $a \rightarrow b \rightarrow c \rightarrow a$, $\alpha \rightarrow \beta \rightarrow \gamma \rightarrow \alpha$. The median of a side is the line segment that starts from the middle of that side and goes to the vertex that is opposed to that side. All 3 medians meet in a common point which is the center of gravity of the triangle. The angle bisector is a line segment resulting from drawing a line from a vertex using half of the angle there and extending it until it hits the opposing side. All 3 angle bisectors meet in a common point which is also the center of the inscribed circle of the triangle. The center of the circumscribed circle is given by the point where perpendicular line segment bisectors meet. These are lines starting at the centers of the sides in a direction perpendicular to the respective side (ToDo: is there a formula for their lengths, too?).
+These are quite a lot of moderately complicated formulas already (you perhaps see now why we really don't want to memorize them) and by symmetry, even more formulas can be obtained by doing the cyclic replacements: $a \rightarrow b \rightarrow c \rightarrow a$, $\alpha \rightarrow \beta \rightarrow \gamma \rightarrow \alpha$. The median of a side is the line segment that starts from the middle of that side and goes to the vertex that is opposed to that side. All 3 medians meet in a common point which is the center of gravity of the triangle. The angle bisector is a line segment resulting from drawing a line from a vertex using half of the angle there and extending it until it hits the opposing side. All 3 angle bisectors meet in a common point which is also the center of the inscribed circle of the triangle. The center of the circumscribed circle is given by the point where perpendicular line segment bisectors meet. These are lines starting at the centers of the sides in a direction perpendicular to the respective side (ToDo: is there a formula for their lengths, too? maybe draw triangle with medians, bisectors, inscribed circle, etc.).
 
 % see Teubner tachenbuch, page 760,764
 % https://de.wikipedia.org/wiki/Projektionssatz_(Dreieck)
@@ -143,22 +172,31 @@ In geometry, two shapes are said to be congruent if they can be brought into ful
 
 
 \subsubsection{Right Triangles}
-Of special importance are triangles in which one angle is a right angle. These are unsurprisingly and rightfully called right triangles. There can be only one right angle in a non-degenerate triangle because two right angles already sum up to a straight angle, which is also the sum of all 3 angles - so if you attempt to have two right angles, you'll get a degenerate triangle whose 3rd vertex is at infinity with an angle of zero. By the way, triangles in which two sides have the same length are called isosceles and those where all three sides are equal are called equilateral. But this is just more jargon and not super important. The right triangles are the mathematically important ones. ...tbc...
+Of special importance are triangles in which one angle is a right angle. These are unsurprisingly and rightfully called right triangles. There can be only one right angle in a non-degenerate triangle because two right angles already sum up to a straight angle, which is also the sum of all 3 angles - so if you attempt to have two right angles, you'll get a degenerate triangle whose 3rd vertex is at infinity with an angle of zero. By the way, triangles in which two sides have the same length are called isosceles and those where all three sides are equal are called equilateral. But this is just more jargon and not super important. The right triangles are the mathematically important ones. Pictured below is a right triangle with sides $a,b,c$ that is split into two further right triangles by a drawing a perpendicular from the top vertex to the base side $c$. The height of the triangle is denoted by $h$. Next to it are some relevant formulas that hold in such a situation.
 
-Preliminary:
-
+\medskip
 \begin{tikzpicture}[thick, scale=0.4]
 \draw (0,0)--(13,0)--(4,6)--cycle;
 \draw (4,6)--(4,0);
-\node at (2.2, 0.5) {$p$};
+\node at (1.0, 0.5) {$\alpha$};
+\node at (2.4, 0.5) {$p$};
 \node at (7.5, 0.5) {$q$};
+\node at (11.0, 0.5) {$\beta$};
 \node at (5.0,-0.5) {$c$};
 \node at (1.5,3.0)  {$b$};
 \node at (9.2,3.0)  {$a$};
 \node at (4.4,3.0)  {$h$};
 \node[align=left] at (17,3) {$c^2=a^2+b^2$\\ $b^2=p^2+h^2$ \\ $a^2=q^2+h^2$};
-\node[align=left] at (23,3) {$h^2 = p q$ \\ $a^2 = q c$ \\ $b^2 = p c$};
+\node[align=left] at (23,3) {$h^2 = p q$ \\ $b^2 = p c$ \\ $a^2 = q c$};
+\node[align=left] at (31,3) {$\sin \alpha = \cos \beta = a/c$ \\ 
+   $\sin \beta = \cos \alpha = b/c$ \\ 
+   $\tan \alpha = \cot \beta = a/b$ \\ 
+   $\alpha + \beta = \pi/2$};
 \end{tikzpicture}
+\medskip
+% see Teubner Taschenbuch, page 761
+
+The $a^2 + b^2 = c^2$ relation is the famous theorem of Pythagoras which is a special case of the law of cosines when the angle $\gamma$ is a right angle in which case the cosine term vanishes ($\gamma$ is not shown - it's the angle opposite to side $c$). The two equations below are the same theorem applied to the sub-triangles. In the middle column are Euclid's altitude theorem (aka height theorem) and below are his theorems of sides. In the right column are some angle relations. [ToDo:verify everything, especially the $\cot \beta$ relation - it's just a guess from symmetry, maybe add also the converse relation for b/a] 
 
 % https://tex.stackexchange.com/questions/29233/tikz-adding-text
 

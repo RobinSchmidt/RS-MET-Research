@@ -37,4 +37,13 @@ Differentiation is a purely mechanic process: given the list of elemenary deriva
 https://mathoverflow.net/questions/374089/does-there-exist-a-complete-implementation-of-the-risch-algorithm
 https://mathematica.stackexchange.com/questions/140088/does-mathematica-implement-risch-algorithm-if-it-does-in-which-cases
 
+-as example for computing a Riemman integral from the definiton, use f(x) = x^2 and integrate it from zero to some variable upper limit b
+-define a sum S_N = \sum_{k=1}^N (k dx)^2 dx with dx defined as (b-a)/N with a=0, so it's just dx=b/N
+-this leads to S_N = dx^3 \sum_k k^3
+-using \sum_k k^3 = (2N^3+3N^2+N)/6 via Faulhaber's formula we can get rid of the sum
+-this leads to an expression containing powers of N in the numerator and N^3 in the denominator
+-when N -> inf only the leading term remains and we get \lim_{N -> inf} S_N = b^3/3
+-this should just serve as a demonstartion that in princpile, it's possible to evaluate integrals from the definitions, using rules of limits and closed form sum formulas as an analogy how it is in princpile possible to evaluate derivatives using limits
+-state that nobody actually evaluates integrals like that, just like with derivatives
+
 \end{comment}

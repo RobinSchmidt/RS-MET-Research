@@ -58,6 +58,7 @@ some special topics that i don't know where to fit:
 -fractional calculus
 -non-Newtonian calculus
 -delay-differential equations
+-stochastic differential equations
 
 ---------------------------------------------------------------------------------------------------
  

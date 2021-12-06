@@ -1,0 +1,45 @@
+\section{Tensor Algebra}
+
+
+
+
+\begin{comment}
+====================================================================================================
+-A tensor can be seen as a function that takes a number of vectors and covectors  as inputs and 
+ produces a scalar as output. This mapping is linear in all its inputs, i.e. it is a multilinear
+ map.
+-It can also be seen as a multidimensional array, or rather, a geometric of physical quantity that
+ can be represented by such an array, once a basis has been chosen. The tensor itself is invariant
+ ...or is this the right word? i think tensors can be covariant, contravariant or a mix of both. 
+ Truly invariant are the scalars that result when fully evaluating a tensor. Regardless of the 
+ chosen coordinate system, they will always have the same numerical value
+-When seen as a multidimensional array, it must obey certain transformation rules, when the basis
+ is changed.
+-how can we interpret a matrix vector-product in this context? maybe as partial evaluation? 
+ multiplying a matrix from the left by a vector gives another vector. this is a tensor that 
+ requires another covector as input to produce a scalar
+-what about inverse tensors and tensor division? i think, with repect to the tensor product, this
+ would not make much sense. only when a tensor indeed resulted from tensor-multiplying two lower
+ rank tensors, we may be able to calculate one of the factors, given the other factor and the 
+ product
+-Examples for tensor quantities are: scalars, vectors, linear maps, quadratic forms(?)
+
+Let's try to express the some known products in terms of tensors and index notation:
+
+scalar product: c = a^i b_i = b_i a^i  (product of vector a and covector b)
+matrix-vector product: c_i = a^k_i b_k  (verify)
+matrix-matrix product: ...
+vector-matrix product:  ...
+outer product of vectors: c_{ij} = a_i b_j  ...this is actually the tensor product
+
+Kronecker product of two matrices: c_{ij kl} = a_{ij} b_{kl}
+...but wait - no - this is a rank 4 tensor - the kronecker product is again a matrix - it has the
+same elements but arranged ad 2D array rather than 4D
+
+Questions:
+-What about the various exterior products that can be computed from 1-vectors, 2-vectors, 
+ 1-covectors, 2-covectors, etc? How can they be expressed in index notation?
+-What about the geometric products of various quantities in geometric algebra?
+
+
+\end{comment}

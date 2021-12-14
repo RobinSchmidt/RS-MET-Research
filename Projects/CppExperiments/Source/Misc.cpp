@@ -117,3 +117,46 @@ void demoObserver()
 //  nicer because it doesn't pollute the namespace so much.
 
 //=================================================================================================
+
+void demoOptional()
+{
+  using MaybeInt = std::optional<int>;
+  bool ok = true;
+
+  // Division of n integer by another integer may either produce another integer as result or no
+  // result. The latter case occurs, when the divisor is zero:
+  auto div = [](MaybeInt a, MaybeInt b)
+  {
+    if(b != 0) return MaybeInt(a.value() / b.value());
+    else       return MaybeInt();
+  };
+
+
+  MaybeInt c;  // c may be an integer or undefined
+
+  c = div(15, 3);
+  ok &= c.has_value() == true;
+  ok &= c.value()     == 5;
+
+  c = div(15, 0);
+  ok &= c.has_value() == false;
+
+  // Trying to access a nonexistent value in an optional should throw std::bad_optional_access:
+  try
+  {
+    ok &= c.value() == 0;
+    ok &= false;
+  }
+  catch(std::bad_optional_access)
+  {
+    ok &= true;
+  }
+  // ToDo: what if exceptions are turne off? -> try it!
+
+
+
+
+
+  int dummy = 0;
+
+}

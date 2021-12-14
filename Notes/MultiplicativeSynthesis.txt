@@ -28,21 +28,35 @@ A: 50,250, B: 350,550
 P: 300,400,100,600, 500,600,300,800 -> fail: 200,700 missing, 300,600 twice
 
 Rules:
--The total number of partials in P generated from A*B equals 2*nA*nB, but the frequencies of all 
+-The total number nP of partials in P generated from A*B equals 2*nA*nB, but the frequencies of all 
  these partials are not necessarily distinct. In fact, our goal is to find useful rules under which
  we can make them distinct (while being harmonically related, too).
 -The highest freq in P is the sum of the two highest freqs from A and B.
--When P is harmonic and A has only one partial, we need to arrange the partials of B to fall in 
- between the desired harmonics of P and A should be half of the difference between the harmonics, 
+-When T is harmonic and A has only one partial, we need to arrange the partials of B to fall in 
+ between the desired harmonics of P. A should be half of the difference between the harmonics, 
  i.e. half the fundamental. The difference between partials in B has to be two times the 
  fundamental.
 -The previous rule may perhaps be harnessed by generating a signal by successively multiplying the
  output of the previous multiplication stage with a single sinusoidal partial. At each stage, the
  number of frequencies in the output would potentially double (unless generated partials happen
  to coincide).
+-If the same frequency occurs in A and in B, P will have a DC component
  
 Ideas:
 -Maybe instead of just doing P = A*B, we could do P = wA*A + wB*B + wAB*A*B where wA,wB,wAB are 
  weights. wA = wB = 0, wAB = 1 would reduce to the P = A*B case. The number of output partials in P
  would be nP = 2*nA*nB + nA + nB, so the spectrum would get denser even faster after a couple of
  multiplication stages.
+ 
+Let's denote A + B + A*B = A +* B, sets of partial frequencies are denoted braces. With this 
+notation, we can write:
+ 
+{50} +* {150} = {50, 100, 150, 200}
+{25} +*  {50, 100, 150, 200} = {25,50,75(2),100,125(2),150,175(2),200,225}
+
+so with 3 oscillators at 150,50,25, we obtain 12 partials, 9 of which have distinct frequencies and 
+they from a nice and complete harmonic series. If we detune the 25 slightly, say, to 26, the 
+frequencies that appear twice will show beating
+
+what about (1+A)*B = B + A*B or (1+B)*A = A + A*B
+

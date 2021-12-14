@@ -4,6 +4,8 @@
 #include <cmath>
 #include <algorithm>
 #include <typeinfo>
+#include <optional>    // needs c++17
+
 
 #include "Common.h"
 #include "ObjectLifetime.cpp"
@@ -72,6 +74,7 @@ public:
 
 int main()
 {
+  demoOptional();
   //demoObserver();
   //testReturnValueOptimization();
   //testFunctionShortcuts();

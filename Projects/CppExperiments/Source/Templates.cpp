@@ -126,7 +126,15 @@ void testBinomialCoeffs()
   int b44 = binomial<4, 4>::value;  //   1
   printLines1(b40, b41, b42, b43, b44);
 }
-// todo: make a printLine function that prints them all in one line
+// ToDo: 
+// -make a printLine function that prints them all in one line
+// -try to implement a template that evaluates (x+y)^n at compile time using the binomial coeffs 
+//  where x,y are also compile time constants. of course, that's a silly way of evaluating such an
+//  expression - maybe implement it also in a more sensible way, namely, first evaluation z=x+y 
+//  and then z^n
+// -try to implement a recursive while, similar to the python code, i wrote some time ago in
+//  Recursions.ipynb
+
 
 // using the wrong formula and wrong binomial<0, n> and creating a matrix, we get a symmetric 
 // matrix whose diagonal seems to match the "Central binomial coefficients" 

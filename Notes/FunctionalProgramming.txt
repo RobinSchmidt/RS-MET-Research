@@ -1,0 +1,28 @@
+
+
+https://www.youtube.com/watch?v=giWCdQ7fnQU
+
+Defintions:
+
+Monoid: 
+A type T with a binary operation + which is associative and has a neutral element
+
+examples: 
+-int, +, 0
+-float,min,inf
+-vector, concatenation, empty 
+-optional, any op, empty if one of both args is empty, otherwise result of content
+-function, composition, identity
+-heap, merge, 
+
+Monoids can be squashed (reduced using that operation?)
+
+
+
+
+Monad:
+
+
+
+Resources:
+Programming in Haskell

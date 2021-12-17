@@ -120,43 +120,58 @@ void demoObserver()
 
 void demoOptional()
 {
+  // Demonstrates usage of std::optional, see:
+  // https://en.cppreference.com/w/cpp/utility/optional
+
   using MaybeInt = std::optional<int>;
   bool ok = true;
 
-  // Division of n integer by another integer may either produce another integer as result or no
-  // result. The latter case occurs, when the divisor is zero:
+  // Division of an (optional) integer by another integer may either produce another integer as
+  // result or no result. The latter case occurs, when the divisor is zero or if one or both of 
+  // the operands do not have a value:
   auto div = [](MaybeInt a, MaybeInt b)
   {
-    if(b != 0) return MaybeInt(a.value() / b.value());
-    else       return MaybeInt();
+    if(a.has_value() && b.has_value() && b.value() != 0) 
+      return MaybeInt(a.value() / b.value());
+    else       
+      return MaybeInt();  // Default constructor produces an optional without a value
   };
-
 
   MaybeInt c;  // c may be an integer or undefined
 
   c = div(15, 3);
   ok &= c.has_value() == true;
+  //ok &= c             == true;   // can(?) be converted to bool -> true if it has a value
   ok &= c.value()     == 5;
 
   c = div(15, 0);
-  ok &= c.has_value() == false;
-
-  // Trying to access a nonexistent value in an optional should throw std::bad_optional_access:
+  ok &= c.has_value() == false; // Division by zero yields no value
+  //ok &= c             == false;  // .hmm - conversion to bool doesn't seem to work
   try
   {
+    // Trying to access a nonexistent value in an optional should throw std::bad_optional_access:
     ok &= c.value() == 0;
-    ok &= false;
+    ok &= false;  // we never get here
   }
   catch(std::bad_optional_access)
   {
     ok &= true;
+    // Even when turning exceptions off (under "Code Generation"), we enter this branch. 
+    // Interesting! ...but why?
   }
-  // ToDo: what if exceptions are turne off? -> try it!
 
+  MaybeInt a = 15, b = 5;
+  b = div(a, c); ok &= b.has_value() == false; // Division by non-value yields no value
+  b = div(c, a); ok &= b.has_value() == false; // Division of non-value yields no value
 
-
+  //c = a + b;  
+  // operator not defined...maybe we can define arithemtic operators for std::optional outside
+  // the class
 
 
   int dummy = 0;
 
 }
+
+// ToDo:
+// https://en.cppreference.com/w/cpp/utility/variant

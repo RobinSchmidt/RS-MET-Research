@@ -1,3 +1,10 @@
+Videos about integrating Python with C++:
+
+https://www.youtube.com/watch?v=YReJ3pSnNDo
+https://www.youtube.com/watch?v=bJq1n4gQFfw
+https://www.youtube.com/watch?v=TMHuRMLXe-A
+
+
 Python scripting for DAWs:
 
 https://www.reaper.fm/sdk/reascript/reascript.php - reaper

@@ -40,13 +40,27 @@ which gives:
 
 x == -1/4*a - 1/2*c - 1/2*sqrt(1/2*(a + 2*c)^2 - 2*a*c - 4*c^2 - b + 1/2*((a + 2*c)^3 + 8*a*c^2 + 16*c^3 - 4*(2*a*c + 2*c^2 + b)*(a + 2*c))/sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)) - 1/4*sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)
 x == -1/4*a - 1/2*c + 1/2*sqrt(1/2*(a + 2*c)^2 - 2*a*c - 4*c^2 - b + 1/2*((a + 2*c)^3 + 8*a*c^2 + 16*c^3 - 4*(2*a*c + 2*c^2 + b)*(a + 2*c))/sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)) - 1/4*sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)
-
 x == -1/4*a - 1/2*c - 1/2*sqrt(1/2*(a + 2*c)^2 - 2*a*c - 4*c^2 - b - 1/2*((a + 2*c)^3 + 8*a*c^2 + 16*c^3 - 4*(2*a*c + 2*c^2 + b)*(a + 2*c))/sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)) + 1/4*sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)
 x == -1/4*a - 1/2*c + 1/2*sqrt(1/2*(a + 2*c)^2 - 2*a*c - 4*c^2 - b - 1/2*((a + 2*c)^3 + 8*a*c^2 + 16*c^3 - 4*(2*a*c + 2*c^2 + b)*(a + 2*c))/sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)) + 1/4*sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)
 
-Lets define: 
-Ap = 
+Lets define:
+A := -1/4*a - 1/2*c
+B := sqrt(a^2 - 4*a*c + 4*c^2 - 4*b)
+C := 1/2*((a + 2*c)^3 + 8*a*c^2 + 16*c^3 - 4*(2*a*c + 2*c^2 + b)*(a + 2*c))
+D := 1/2*(a + 2*c)^2 - 2*a*c - 4*c^2 - b
 
+With these, the mess above can be simplified to:
+x == A - 1/4*B - 1/2*sqrt(D + C/B)
+x == A - 1/4*B + 1/2*sqrt(D + C/B)
+x == A + 1/4*B - 1/2*sqrt(D - C/B)
+x == A + 1/4*B + 1/2*sqrt(D - C/B)
+...that was done manually, so there may be mistakes. ToDo: verify numerically and/or plug it back 
+into the equation: 0 == (c^2+a*x+x^2)*(x+c)^2 + b*x^2
+
+the C,B variables have k := (a + 2*c) as common subexpression:
+
+C := 1/2*(k^3 + 8*a*c^2 + 16*c^3 - 4*(2*a*c + 2*c^2 + b)*k)
+D := 1/2*k^2 - 2*a*c - 4*c^2 - b
 
 
 Let's see what wolfram alpha has to say about this:
@@ -60,6 +74,41 @@ x = 1/4 (-sqrt(a^2 - 4 a c - 4 b + 4 c^2) + sqrt( 2)  sqrt(a sqrt(a^2 - 4 a c - 
 x = 1/4 ( sqrt(a^2 - 4 a c - 4 b + 4 c^2) - sqrt(-2 a sqrt(a^2 - 4 a c - 4 b + 4 c^2) - 4 (c (sqrt(a^2 - 4 a c - 4 b + 4 c^2) + 2 c) + b) + 2 a^2) - a - 2 c)
 x = 1/4 ( sqrt(a^2 - 4 a c - 4 b + 4 c^2) + sqrt(-2 a sqrt(a^2 - 4 a c - 4 b + 4 c^2) - 4 (c (sqrt(a^2 - 4 a c - 4 b + 4 c^2) + 2 c) + b) + 2 a^2) - a - 2 c)
 
-ToDo: simplify the results manually. There are *lots* of common subexpressions....
+ToDo: simplify the wolfram results manually, too
+
+B := sqrt(a^2 - 4 a c - 4 b + 4 c^2)    ...same as above
+
+x = 1/4 (-B - a - 2 c - sqrt( 2)  sqrt(a B + 2 c B + a^2 - 2 b - 4 c^2))
+x = 1/4 (-B - a - 2 c + sqrt( 2)  sqrt(a B + 2 c B + a^2 - 2 b - 4 c^2))
+x = 1/4 ( B - a - 2 c - sqrt(-2 a B - 4 (c B + 2 c) + b) + 2 a^2))
+x = 1/4 ( B - a - 2 c + sqrt(-2 a B - 4 (c B + 2 c) + b) + 2 a^2))
+
+x = 1/4 (-B - (a + 2 c) - sqrt( 2)  sqrt(a B + 2 c B + a^2 - 2 b - 4 c^2))
+x = 1/4 (-B - (a + 2 c) + sqrt( 2)  sqrt(a B + 2 c B + a^2 - 2 b - 4 c^2))
+x = 1/4 ( B - (a + 2 c) - sqrt(-2 a B - 4 (c B + 2 c) + b) + 2 a^2))
+x = 1/4 ( B - (a + 2 c) + sqrt(-2 a B - 4 (c B + 2 c) + b) + 2 a^2))
+
+k := (a + 2 c)
+A := sqrt( 2)  sqrt(a B + 2 c B + a^2 - 2 b - 4 c^2)
+C: = sqrt(-2 a B - 4 (c B + 2 c) + b)
+
+x = 1/4 (-B - k - A)
+x = 1/4 (-B - k + A)
+x = 1/4 ( B - k - C + 2 a^2))    ? parentheses don't match! -> verify!
+x = 1/4 ( B - k + C + 2 a^2))
+
+
 
 We'll see, whether or not the analytic results will be preferable over using Newton iteration
+
+also: 
+What, if the matrix becomes singular? Maybe, in the case of an inconsistent system (i.e. no 
+solutions exist), we should compute a least squares approximation? And in the case of multiple 
+solutions, use a minimum norm solution? The 2nd case should definitely exist: just think about a 
+flat magnitude response and all the different allpass filters that would have such a response. But 
+maybe, our post-processing (reflecting the poles and zeros, etc.) then makes the solution unique? 
+But maybe the post-processing only selects between the 4 solutions of the quartic equation? ...and 
+maybe we can avoid the post-processing altogether by finding some rules, which of the 4 solutions 
+to pick?
+
+

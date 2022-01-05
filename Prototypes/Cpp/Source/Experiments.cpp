@@ -8490,7 +8490,7 @@ void testPrimeFactorTable()
 
   //using Table = rsPrimeFactorTable<rsUint32>;
   using Table = rsPrimeFactorTable<int>;
-  int N = 801;   // could also be rsUint32 but GNUPlotter is happier with int
+  int N = 201;   // could also be rsUint32 but GNUPlotter is happier with int
   Table tbl(N);  // table has factorizations of all numbers up to N
 
   using VecI = std::vector<int>;
@@ -8517,14 +8517,14 @@ void testPrimeFactorTable()
     if(!tbl.isPrime(n))
       cnt++;
     cmp[n] = cnt; }
-  //rsPlotVectors(num, prm, cmp);
+  rsPlotVectors(num, prm, cmp);
   //VecI test = prm + cmp; // we should have n = num[n] = prm[n] + cmp[n] + 1. OK, looks good.
 
   // Compute the number-of-prime-factors function:
   VecI npf(N); npf[0] = 0; npf[1] = 0;
   for(n = 2; n < N; n++)
     npf[n] = tbl.getNumFactors(n);
-  rsPlotVectors(npf);
+  //rsPlotVectors(npf);
   // -The number k of prime factors of n is bounded by log2(n) because a number with k factors is 
   //  at least 2^k because 2 is the smallest possible prime factor. (maybe plot it along with 
   //  log2(n))
@@ -8551,7 +8551,44 @@ void testPrimeFactorTable()
   //  interesting! Why is this the case? Conjecture: spf = n/npf + npf  or  n. But this would 
   //  imply that n must be divisible by npf - or would it? ...nah - 9 has two factors and is not 
   //  divisible by 2. -> figure out what is going on...
-
+  // To verify the conjecture, plot only those sums which have two factors, then only those that 
+  // have 3, etc.
+  int k = 2;
+  for(n = 2; n < N; n++)
+  {
+    if(npf[n] == k)
+      spfD[n] = (double)spf[n];
+    else
+      spfD[n] = 0.0;
+  }
+  rsPlotVectors(spfD, numD/2.0+2.0, numD/3.0+3.0, numD/4.0+4.0, numD/5.0+5.0, numD/6.0+6.0);
+  // ...hmm - OK - seems that is not the case. There are numbers with 2 factors whose factor-sum
+  // is n/3+3, n/5+5 etc. Interestingly, n/4+4 is not present. Maybe because 4 is a multiple (even 
+  // power) of two? Also n/6+6 is not present, so maybe n/m+m not present whenever m is a multiple 
+  // of k (here k=2)?
+  // But it's still striking that only those sums occur and not some "random"
+  // mess.
+  // -Let's group all numbers into sequences S1,S2,S3,... S1 are the primes. Their factor-sum is
+  //  always the number itself. S2 are those numbers n, whose factor-sum is n/2+2. In general, Sm
+  //  is the sequence, whose factor-sum is n/m+m.
+  // -Maybe the Sm numbers are those that have a factor of m and dividing by m gives a prime? A 
+  //  couple of samples seem to confirm this.
+  // -Maybe plot the numbers as dots in the same color as the line connecting the dots for a better
+  //  visualization.
+  // -See: https://mathworld.wolfram.com/SumofPrimeFactors.html ...the function is well known but 
+  //  classifying numbers according to the value of that function is not mentioned. Maybe it's not
+  //  so interesting after all.
+  // -Maybe try to figure out asymptotic approximations for the counting functions for these other
+  //  series as well, analogously to n/log(n) for the asymptotic prime counting function which 
+  //  would be the counting function of S1 in this context. A (crude) upper bound would be how
+  //  often the continuous function x/m+m passes through an integer which is inversely proportional
+  //  to m. Maybe the actual counting functions have asymtotic ratios equal to the ratios of these
+  //  bounds?
+  // -Maybe take a look at the sequence that results from taking the first number of each of the 
+  //  Sm sequences. Looks like S1 is most plentiful, then S2, etc. The sum of all counting 
+  //  functions should approach the identity function, i think (because each number must fall into
+  //  one of the classes). Maybe we could classify further into 2-factor, 3-factor etc classes.
+  //  The S6 class would be a 2-factor class, S9 a 3-factor class, etc.
 
 
   // ToDo: 

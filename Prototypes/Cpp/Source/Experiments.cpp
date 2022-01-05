@@ -8471,10 +8471,15 @@ void testComplexPolar()
 void testPrimeFactorTable()
 {
   using Table = rsPrimeFactorTable<rsUint32>;
-  rsUint32 N = 10000;
+  rsUint32 N = 5000;
   Table tbl(N);
 
+  // We don't do much here, yet. Currently, the idea is to inspect the table in the debugger. It 
+  // looks good! Maybe we can later plot some interesting number-theorectic functions using the 
+  // contents of the table. Maybe the number of prime-factors as function of n. Or the cumulative
+  // number of prime factors.
 
+  int dummy = 0;
 }
 
 // fast inverse square root approximation from Quake engine

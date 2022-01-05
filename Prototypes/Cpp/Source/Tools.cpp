@@ -5964,6 +5964,16 @@ class rsPrimeFactorTable
 public:
 
   rsPrimeFactorTable(T maxNumber) { buildTable(maxNumber); }
+
+
+  const std::vector<T>& getFactors(T n) const { return factors[n]; }
+
+  // todo:
+  // maybe split buildTable into initTable() and increaseTableSize(T). The idea is that client code 
+  // may later discover that it needs a table larger than it originally thought and we want to be 
+  // able to increase the size dynamically, without re-computing all previously calcluated values.
+
+
   
 
 protected:
@@ -5988,7 +5998,7 @@ void rsPrimeFactorTable<T>::buildTable(T N)
 
   // The table of primes up to N is built along the way as well:
   // https://en.wikipedia.org/wiki/Prime-counting_function#Inequalities
-  //static const double c = 30.0 * log(113.0) / 113.0;  // ~= 1.25506
+  //static const double c = 30.0 * log(113.0) / 113.0;  // < 1.25506
   T maxPrimes = (T) ceil(1.25506 * double(N) / log(double(N)));
   primes.reserve(maxPrimes);
   primes.push_back(2);
@@ -6009,32 +6019,47 @@ void rsPrimeFactorTable<T>::buildTable(T N)
   for(T n = 3; n <= N; n++)
   {
     T s = leastFactor(n);
-    if(s == n)
-    {
-      // n is prime
+    if(s == n) {                       // n is prime
       primes.push_back(n);
-      factors.push_back(Vec({n}));
-      int dummy = 0;
-    }
+      factors.push_back(Vec({n}));  }
     else
     {
       T g = n/s;  
-      // Greatest factor in n which may be composite. The factorization of n is the same as the
-      // factorization of g but with an additional factor of s.
 
       // suboptimal:
-      factors.push_back(factors[g]); // new element is a t index n 
-      rsPrepend(factors[n], s);      // suboptimal!!!
-      int dummy = 0;
+      //factors.push_back(factors[g]); // new element is at index n 
+      //rsPrepend(factors[n], s);      // suboptimal!!!
 
-      // to optimize, do:
-      //factors.push_back(Vec());
-      //factors[n].resize(factors[g].size()+1);
-      //factors[n][0] = s;
-      // ...copy over content of factors[g] into factors[n] with shift of 1 in destination
+      // optimized:
+      factors.push_back(Vec());                      // new empty vector at n-th position
+      factors[n].resize(factors[g].size()+1);        // it needs space for the factors of g...
+      factors[n][0] = s;                             // ...plus the additional factor s
+      for(size_t i = 0; i < factors[g].size(); i++)  // the factors of g get copied into the 
+        factors[n][i+1] = factors[g][i];             // factors of n with offset 1
     }
   }
 
+  // The algorithm is based on the idea of doing trial divisions of each number n by primes, 
+  // starting at the smallest prime 2 moving upwards. As soon as a number is discovered to be 
+  // divisible by some prime s we know that n is not a prime and s is its smallest prime factor. We
+  // therefore compute its greatest (possibly still composite) factor g = n/s. The prime 
+  // factorization of n is then given by the prime factorization of g but with an additional factor
+  // of s. If the smallest divisor s of n is n itself, then n is a prime and therefore its own only
+  // factor. As side effect of building the table of factorizations of all numbers up to N, we also
+  // build a table of primes up to N.
+  //
+  // I think, the complexity of the algorithm should be of the order O(N*sqrt(N)) = O(N^1.5). The 
+  // outer loop runs up to N, the inner loop (buried in the call to leastFactor) up to the sqrt
+  // of the current outer loop index n. Actually, it doesn't run over all numbers up to sqrt(n) but
+  // only over the primes <= n, so we may get O(N^1.5 / log(N)) due to the prime counting function. 
+  // However, that may be eaten up by the requirement to copy arrays in the "else" branch and the 
+  // size of these arrays also grows logarithmically. All in all, O(N^1.5) doesn't seem too bad for
+  // an algo that computes a complete table of the prime factorizations of all numbers up to N.
+  // Hmm...actually, the loop in the else branch is a 2nd loop independent from the loop in 
+  // leastFactor, so the overall complexity of the inner loops should be given by the maximum of 
+  // these 2 complexities, so we may actually still get away with O(N^1.5 / log(N)). The first 
+  // inner loop has complexity O(sqrt(n)/log(n)) and the second has O(log(n)) - only the first one
+  // really counts.
 
   int dummy = 0;
 }

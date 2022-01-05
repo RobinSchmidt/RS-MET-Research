@@ -5957,6 +5957,82 @@ bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)
 //=================================================================================================
 
 
+template<class T>  // T should be an integer type (may be unsigned)
+class rsPrimeFactorTable
+{
+
+public:
+
+  rsPrimeFactorTable(T maxNumber) { buildTable(maxNumber); }
+  
+
+protected:
+
+  void buildTable(T maxNum);
+
+  std::vector<T> primes;
+  std::vector<std::vector<T>> factors;
+
+};
+
+template<class T> 
+void rsPrimeFactorTable<T>::buildTable(T N)
+{
+  using Vec = std::vector<T>;
+
+  // By convention, the numbers 0 and 1 have themselves as their only factors:
+  factors.reserve(N+1);
+  factors.push_back(Vec({0}));
+  factors.push_back(Vec({1}));
+  factors.push_back(Vec({2}));
+
+  //primes.reserve();  // todo: use some (upper bound) approximation of the prime counting function
+  primes.push_back(2);
+
+  // Returns the smallest prime factor in the given n:
+  auto leastFactor = [this](T n)
+  {
+    T m = rsIntSqrt(n);
+    size_t i = 0;
+    while(primes[i] <= m) {
+      if(n % primes[i] == 0)
+        return primes[i];
+      i++;  }
+    return n;  // n is itself prime and therefore its own smallest factor
+  };
+
+  // Loop to fill the table:
+  for(T n = 3; n <= N; n++)
+  {
+    T s = leastFactor(n);
+    if(s == n)
+    {
+      // n is prime
+      primes.push_back(n);
+      factors.push_back(Vec({n}));
+      int dummy = 0;
+    }
+    else
+    {
+      T g = n/s;  // greatest factor in n (not necessarily prime)
+
+      // suboptimal:
+      factors.push_back(factors[g]); // new element is a t index n 
+      rsPrepend(factors[n], s);      // suboptimal!!!
+      int dummy = 0;
+
+      // to optimize, do:
+      //factors.push_back(Vec());
+      //factors[n].resize(factors[g].size()+1);
+      //factors[n][0] = s;
+      // ...copy over content of factors[g] into factors[n] with shift of 1 in destination
+    }
+  }
+
+
+  int dummy = 0;
+}
+
 
 
 

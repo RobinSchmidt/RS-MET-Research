@@ -53,8 +53,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testGreensFunction();  // stub
   //testComplexPolar();    // stub
   //testRationalTrigonometry();
-  testLeveledNumber();
+  //testLeveledNumber();
   //testNewtonFractal();
+  testPrimeFactorTable();
 
 
 

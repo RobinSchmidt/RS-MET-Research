@@ -3631,6 +3631,10 @@ void testSortedSet()
 
 void testAutoDiff()
 {
+  // see also:
+  // https://www.youtube.com/watch?v=1QQj1mAV-eY
+
+
   using DN = rsDualNumber<float, float>;
 
   DN x, y, z, r;
@@ -8464,8 +8468,14 @@ void testComplexPolar()
   //  https://www.youtube.com/watch?v=7gSklO9FG6A 
 }
 
+void testPrimeFactorTable()
+{
+  using Table = rsPrimeFactorTable<rsUint32>;
+  rsUint32 N = 100;
+  Table tbl(N);
 
 
+}
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

@@ -8468,17 +8468,33 @@ void testComplexPolar()
   //  https://www.youtube.com/watch?v=7gSklO9FG6A 
 }
 
+/*
+// this doesn't compile
+//template<class TSrc>
+//template<class TDst>
+template<class TSrc, class TDst>
+std::vector<TDst> convert<TDst>(const std::vector<TSrc>& x)
+{
+  std::vector<TDst> y(x.size());
+  RAPT::rsArrayTools::convert(&x[0], &y[0], (int) x.size());
+  return y;
+}
+*/
+
+
 void testPrimeFactorTable()
 {
   // We test the class rsPrimeFactorTable by using it to plot some number-theoretic functions such
   // as the prime-counting function.
 
 
-  using Table = rsPrimeFactorTable<rsUint32>;
+  //using Table = rsPrimeFactorTable<rsUint32>;
+  using Table = rsPrimeFactorTable<int>;
   int N = 801;   // could also be rsUint32 but GNUPlotter is happier with int
   Table tbl(N);  // table has factorizations of all numbers up to N
 
   using VecI = std::vector<int>;
+  using VecD = std::vector<double>;
 
   // Fill array with numbers 0...N-1:
   VecI num(N);
@@ -8486,7 +8502,7 @@ void testPrimeFactorTable()
   for(n = 0; n < N; n++)
     num[n] = n;
 
-  // Compute prime counting function:
+  // Compute prime-counting function:
   VecI prm(N); prm[0] = 0; prm[1] = 0;
   int cnt = 0;
   for(n = 2; n < N; n++) {
@@ -8494,38 +8510,51 @@ void testPrimeFactorTable()
       cnt++;
     prm[n] = cnt; }
 
-  // Compute composite counting function
+  // Compute composite-counting function:
   VecI cmp(N); cmp[0] = 0; cmp[1] = 0;
   cnt = 0;
   for(n = 2; n < N; n++) {
     if(!tbl.isPrime(n))
       cnt++;
     cmp[n] = cnt; }
+  //rsPlotVectors(num, prm, cmp);
   //VecI test = prm + cmp; // we should have n = num[n] = prm[n] + cmp[n] + 1. OK, looks good.
 
   // Compute the number-of-prime-factors function:
   VecI npf(N); npf[0] = 0; npf[1] = 0;
   for(n = 2; n < N; n++)
     npf[n] = tbl.getNumFactors(n);
-  // -maybe plot it along with log2(n) which should be an upper bound and be hit for every power 
-  //  of 2
-  // -what about sum-of-prime-factors function?
-
-  rsPlotVectors(num, prm, cmp);
   rsPlotVectors(npf);
-
-  // Observations:
   // -The number k of prime factors of n is bounded by log2(n) because a number with k factors is 
-  //  at least 2^k.
+  //  at least 2^k because 2 is the smallest possible prime factor. (maybe plot it along with 
+  //  log2(n))
   // -In the interval 2^k...2^(k+1)-1, the number of k factors is attained exactly twice namely at 
   //  2^k and 2^(k-1)*3
   //  -Q: How often are other values (k-1,k-2,...) of the number of factors attained in such an 
-  //   interval?
-  //
-  // Questions:
-  //
+  //   interval? Should be related to the number of primes between 2^k and 2^(k+1)? Or the number 
+  //   of numbers between them? Between 256 and 511, k=7 is attained 5 times, k=6 8 times, etc. 
+  //   And there's some self similarity going on in the npf function
+
+  // Compute the sum-of-prime-factors function:
+  VecI spf(N); spf[0] = 0; spf[1] = 0;
+  for(n = 2; n < N; n++)
+    spf[n] = rsSum(tbl.getFactors(n));
+  //rsPlotVectors(npf, spf);
+  // -The sum of the prime factors of n is always <= n with equality when n is a prime
+  VecD numD = rsConvert(num, 0.0);
+  VecD spfD = rsConvert(spf, 0.0);
+  rsPlotVectors(spfD, numD, numD/2.0 + 2.0, numD/3.0 + 3.0, numD/4.0 + 4.0, numD/5.0 + 5.0);
+  // -There are secondary maxima seemingly with a slope of n/2. That's in itself not so surprising.
+  //  These are most probably the numbers that have only 2 factors. What is surprising though, is
+  //  that there seems to be very little "random" fluctuation in this secondary slope. Seems like 
+  //  the sum is either n or n/2+2 or n/3+3 or n/4+4 etc. but never anything else. That's 
+  //  interesting! Why is this the case? Conjecture: spf = n/npf + npf  or  n. But this would 
+  //  imply that n must be divisible by npf - or would it? ...nah - 9 has two factors and is not 
+  //  divisible by 2. -> figure out what is going on...
+
+
+
   // ToDo: 
-  // -compute the number of prime factors as function of n
   // -maybe compute differences and cumulative sums
   // -what about coprimes?
 }

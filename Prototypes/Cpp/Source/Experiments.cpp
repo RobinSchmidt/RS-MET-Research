@@ -8471,7 +8471,7 @@ void testComplexPolar()
 void testPrimeFactorTable()
 {
   using Table = rsPrimeFactorTable<rsUint32>;
-  rsUint32 N = 100;
+  rsUint32 N = 10000;
   Table tbl(N);
 
 

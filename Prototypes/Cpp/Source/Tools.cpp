@@ -5986,7 +5986,11 @@ void rsPrimeFactorTable<T>::buildTable(T N)
   factors.push_back(Vec({1}));
   factors.push_back(Vec({2}));
 
-  //primes.reserve();  // todo: use some (upper bound) approximation of the prime counting function
+  // The table of primes up to N is built along the way as well:
+  // https://en.wikipedia.org/wiki/Prime-counting_function#Inequalities
+  //static const double c = 30.0 * log(113.0) / 113.0;  // ~= 1.25506
+  T maxPrimes = (T) ceil(1.25506 * double(N) / log(double(N)));
+  primes.reserve(maxPrimes);
   primes.push_back(2);
 
   // Returns the smallest prime factor in the given n:
@@ -6014,7 +6018,9 @@ void rsPrimeFactorTable<T>::buildTable(T N)
     }
     else
     {
-      T g = n/s;  // greatest factor in n (not necessarily prime)
+      T g = n/s;  
+      // Greatest factor in n which may be composite. The factorization of n is the same as the
+      // factorization of g but with an additional factor of s.
 
       // suboptimal:
       factors.push_back(factors[g]); // new element is a t index n 

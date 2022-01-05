@@ -8470,16 +8470,64 @@ void testComplexPolar()
 
 void testPrimeFactorTable()
 {
+  // We test the class rsPrimeFactorTable by using it to plot some number-theoretic functions such
+  // as the prime-counting function.
+
+
   using Table = rsPrimeFactorTable<rsUint32>;
-  rsUint32 N = 5000;
-  Table tbl(N);
+  int N = 801;   // could also be rsUint32 but GNUPlotter is happier with int
+  Table tbl(N);  // table has factorizations of all numbers up to N
 
-  // We don't do much here, yet. Currently, the idea is to inspect the table in the debugger. It 
-  // looks good! Maybe we can later plot some interesting number-theorectic functions using the 
-  // contents of the table. Maybe the number of prime-factors as function of n. Or the cumulative
-  // number of prime factors.
+  using VecI = std::vector<int>;
 
-  int dummy = 0;
+  // Fill array with numbers 0...N-1:
+  VecI num(N);
+  int n;
+  for(n = 0; n < N; n++)
+    num[n] = n;
+
+  // Compute prime counting function:
+  VecI prm(N); prm[0] = 0; prm[1] = 0;
+  int cnt = 0;
+  for(n = 2; n < N; n++) {
+    if(tbl.isPrime(n))
+      cnt++;
+    prm[n] = cnt; }
+
+  // Compute composite counting function
+  VecI cmp(N); cmp[0] = 0; cmp[1] = 0;
+  cnt = 0;
+  for(n = 2; n < N; n++) {
+    if(!tbl.isPrime(n))
+      cnt++;
+    cmp[n] = cnt; }
+  //VecI test = prm + cmp; // we should have n = num[n] = prm[n] + cmp[n] + 1. OK, looks good.
+
+  // Compute the number-of-prime-factors function:
+  VecI npf(N); npf[0] = 0; npf[1] = 0;
+  for(n = 2; n < N; n++)
+    npf[n] = tbl.getNumFactors(n);
+  // -maybe plot it along with log2(n) which should be an upper bound and be hit for every power 
+  //  of 2
+  // -what about sum-of-prime-factors function?
+
+  rsPlotVectors(num, prm, cmp);
+  rsPlotVectors(npf);
+
+  // Observations:
+  // -The number k of prime factors of n is bounded by log2(n) because a number with k factors is 
+  //  at least 2^k.
+  // -In the interval 2^k...2^(k+1)-1, the number of k factors is attained exactly twice namely at 
+  //  2^k and 2^(k-1)*3
+  //  -Q: How often are other values (k-1,k-2,...) of the number of factors attained in such an 
+  //   interval?
+  //
+  // Questions:
+  //
+  // ToDo: 
+  // -compute the number of prime factors as function of n
+  // -maybe compute differences and cumulative sums
+  // -what about coprimes?
 }
 
 // fast inverse square root approximation from Quake engine

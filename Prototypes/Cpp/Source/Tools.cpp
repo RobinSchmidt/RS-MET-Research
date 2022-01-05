@@ -5966,6 +5966,13 @@ public:
   rsPrimeFactorTable(T maxNumber) { buildTable(maxNumber); }
 
 
+  /** Returns the number of prime factors of the given n. By convention, it will return 1 when n is
+  zero or one. */
+  T getNumFactors(T n) const { return (T) factors[n].size(); }
+
+  bool isPrime(T n) const { return getNumFactors(n) == 1; }
+
+
   const std::vector<T>& getFactors(T n) const { return factors[n]; }
 
   // todo:
@@ -6058,8 +6065,8 @@ void rsPrimeFactorTable<T>::buildTable(T N)
   // Hmm...actually, the loop in the else branch is a 2nd loop independent from the loop in 
   // leastFactor, so the overall complexity of the inner loops should be given by the maximum of 
   // these 2 complexities, so we may actually still get away with O(N^1.5 / log(N)). The first 
-  // inner loop has complexity O(sqrt(n)/log(n)) and the second has O(log(n)) - only the first one
-  // really counts.
+  // inner loop has complexity O(sqrt(n)/log(sqrt(n))) and the second has O(log(n)) - only the 
+  // first one really counts. ...Maybe make some more thorough analysis.
 
   int dummy = 0;
 }

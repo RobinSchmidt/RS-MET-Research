@@ -8487,7 +8487,6 @@ void testPrimeFactorTable()
   // We test the class rsPrimeFactorTable by using it to plot some number-theoretic functions such
   // as the prime-counting function.
 
-
   //using Table = rsPrimeFactorTable<rsUint32>;
   using Table = rsPrimeFactorTable<int>;
   int N = 201;   // could also be rsUint32 but GNUPlotter is happier with int
@@ -8588,12 +8587,49 @@ void testPrimeFactorTable()
   //  Sm sequences. Looks like S1 is most plentiful, then S2, etc. The sum of all counting 
   //  functions should approach the identity function, i think (because each number must fall into
   //  one of the classes). Maybe we could classify further into 2-factor, 3-factor etc classes.
-  //  The S6 class would be a 2-factor class, S9 a 3-factor class, etc.
+  //  The S6 class would be a 2-factor class, S9 a 3-factor class, etc. ...maybe a nice naming 
+  //  could be S1 are pime numbers, S2 secondary, S3 tertiary, etc?
 
 
   // ToDo: 
   // -maybe compute differences and cumulative sums
   // -what about coprimes?
+}
+
+void testPrimesAndMore()
+{
+  // We expand on the experiment above and experimentally try to find out a bit more about these
+  // sequences of "secondary", "tertiary", etc. numbers n whose sum of prime-factors is not the 
+  // number itself (as it is in primes) but n/m + m. First, we polt their counting functions which
+  // are analogous to the prime-counting function (which is the first of them).
+
+  // Setup:
+  int N = 201;   // highest natural number n in the plot (x-axis)
+  int M = 1;     // highest sequence index, 0 are the primes
+
+
+  using Mat = rsMatrix<double>;
+  rsPrimeFactorTable<int> tbl(N); 
+
+  // Compute counting functions:
+  Mat C(M, N);
+  C.setToZero();
+
+  int cnt = 0, n;
+  for(n = 2; n < N; n++) {
+    if(tbl.isPrime(n))
+      cnt++;
+    C(0, n) = cnt; }
+
+  plotMatrixRows(C);
+
+  // ToDo:
+  // -implement a helper function getSequenceIndex which takes a number n and tells, to which
+  //  sequence m it belongs.
+  // -maintain a vector of counters and increment the m-th element
+  // -write the vector into tha matrix column 
+  // -maybe use a different plotting style (dots) - maybe let plotMaxtrixRows take an optional
+  //  string with gnuplot options
 }
 
 // fast inverse square root approximation from Quake engine

@@ -45,3 +45,4 @@ Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
 *.db
 Prototypes/Cpp/Builds/VisualStudio2019/x64/Debug/ConsoleApp/Experiments_ConsoleApp.vcxproj.FileListAbsolute.txt
 *.gz
+Projects/CppExperiments/Build/VisualStudio2019/x64/Debug/CppExperiments.vcxproj.FileListAbsolute.txt

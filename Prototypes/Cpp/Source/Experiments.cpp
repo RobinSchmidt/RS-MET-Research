@@ -8489,7 +8489,7 @@ void testPrimeFactorTable()
 
   //using Table = rsPrimeFactorTable<rsUint32>;
   using Table = rsPrimeFactorTable<int>;
-  int N = 201;   // could also be rsUint32 but GNUPlotter is happier with int
+  int N = 501;   // could also be rsUint32 but GNUPlotter is happier with int
   Table tbl(N);  // table has factorizations of all numbers up to N
 
   using VecI = std::vector<int>;
@@ -8596,6 +8596,12 @@ void testPrimeFactorTable()
   // -what about coprimes?
 }
 
+bool rsIsInteger(double x, double tol)
+{
+  double xr = round(x);
+  return abs(x-xr) <= tol;
+}
+
 void testPrimesAndMore()
 {
   // We expand on the experiment above and experimentally try to find out a bit more about these
@@ -8604,24 +8610,71 @@ void testPrimesAndMore()
   // are analogous to the prime-counting function (which is the first of them).
 
   // Setup:
-  int N = 201;   // highest natural number n in the plot (x-axis)
-  int M = 1;     // highest sequence index, 0 are the primes
+  int N = 501;   // highest natural number n in the plot (x-axis)
+  int M = 6;     // highest sequence index, 1 are the primes
 
 
   using Mat = rsMatrix<double>;
-  rsPrimeFactorTable<int> tbl(N); 
+  using Vec = std::vector<double>;
+  rsPrimeFactorTable<int> tbl(N);
 
-  // Compute counting functions:
-  Mat C(M, N);
+  // Helper function to return the sequence index m, to which the number n belongs. A number n 
+  // belongs to sequence m, if its sum of prime factors equals n/m + m except for m=1 which 
+  // returned when the sum of prime factors is equal to n itself (which is the case for prime 
+  // numbers)
+  auto getSequenceIndex = [&](int n)
+  {
+    int s = rsSum(tbl.getFactors(n));
+    if(s == n)  
+      return 1;     // n is a prime number
+    double D  = s*s - 4*n;    // discriminant
+    if(D < 0.0) 
+      return 0;     // n is not on one of those s = n/m + m lines
+    double sq = sqrt(D);
+    double m  = 0.5 * (s - sq); // what about the other solution: 0.5 * (s + sq)?
+    if( rsIsInteger(m, 1.e-13) )
+      return (int) round(m);
+    return 0;       // n is not on one of those s = n/m + m lines
+  };
+  // maybe use https://www.wolframalpha.com/input/?i=solve+s+%3D+n%2Fm+%2B+m+for+m
+  // sometimes, the rule doesn't work - in these cases, the discriminant becomes negative. However,
+  // for these numbers, the factor sum seems to tend toward horizontal lines. there are also cases
+  // when m is not (close to) an integer. maybe these are yet a different class of numbers?
+  // I think, we perhaps should distinguish the cases where D < 0 and m != int. They should 
+  // probably be in different classes, so we should return different return values. Maybe return
+  // 0 at the bottom?
+
+  // Compute the class of each number and the counting functions for the classes:
+  std::vector<std::vector<int>> numberClasses(M+1);
+  Vec c(M+1);      // the current counts of all the sequences
+  Mat C(M+1, N);
   C.setToZero();
-
-  int cnt = 0, n;
-  for(n = 2; n < N; n++) {
-    if(tbl.isPrime(n))
-      cnt++;
-    C(0, n) = cnt; }
-
+  for(int n = 2; n < N; n++)
+  {
+    int m = getSequenceIndex(n);
+    if(m >= 0)
+    {
+      if(m <= M)
+      {
+        c[m] += 1.0; // count up
+        numberClasses[m].push_back(n);
+      }
+      else
+      {
+        // n is on one of the main lines but on one with index above those which we record, i.e.
+        // there is a valid m but is too large for our allocated matrix.
+      }
+    }
+    else
+    {
+      // todo: collect and count those numbers, too - maybe use different codes for D < 0 and
+      // m != int and collect the different kinds of "outliers" in different bins
+    }
+    C.setColumn(n, &c[0]);
+  }
   plotMatrixRows(C);
+
+
 
   // ToDo:
   // -implement a helper function getSequenceIndex which takes a number n and tells, to which

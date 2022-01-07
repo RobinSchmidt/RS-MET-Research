@@ -5988,7 +5988,15 @@ protected:
   void buildTable(T maxNum);
 
   std::vector<T> primes;
-  std::vector<std::vector<T>> factors;
+
+  std::vector<std::vector<T>> factors; 
+  // To optimize, maybe class rsTableau could be used after it's finished. It should use contiguous
+  // memory and pre-allocate enough. -> figure out, how much is enough, i.e. find a formula for an
+  // approximation (upper bound) for the cumulative count of prime factors. A crude upper bound
+  // could perhaps be the integral of the base-2 logarithm because the base-2 log of a number n is
+  // an upper bound for the number of prime factors in n. The integral of log(x) is x*(log(x)-1), 
+  // so the required size grows slightly superlinearly, i.e. as x*log(x) - kind of similar to how 
+  // the number of primes grows slightly sublinearly as x/log(x)
 
 };
 
@@ -6066,7 +6074,17 @@ void rsPrimeFactorTable<T>::buildTable(T N)
   // leastFactor, so the overall complexity of the inner loops should be given by the maximum of 
   // these 2 complexities, so we may actually still get away with O(N^1.5 / log(N)). The first 
   // inner loop has complexity O(sqrt(n)/log(sqrt(n))) and the second has O(log(n)) - only the 
-  // first one really counts. ...Maybe make some more thorough analysis.
+  // first one really counts. Maybe make some more thorough analysis taking into account the 
+  // average time for the inner loop - it rarely loops up to sqrt(n) - maybe that contributes
+  // only a constant factor but maybe it actually changes the order. The fact that the inner loop
+  // only runs up to n and not up to N perhaps contributes a constant factor of 1/2 which is the 
+  // average of n taken over all N (roughly). We could do away with the trial division by 2 for
+  // all even n - but the increased complexity of the implementation may not be justified. We could
+  // perhaps handle that in leastFactor by bitmasking without increasing complexity too much, i.e.
+  // do if(n & 1) return 2; as very first line in leastFactor. That early return would kick in half
+  // of the time and even save the rsIntSqrt. Maybe do all that together with using rsTableau when
+  // a production version of this code is needed and keep the implementation here as prototype for
+  // comparisons in unit tests.
 
   int dummy = 0;
 }

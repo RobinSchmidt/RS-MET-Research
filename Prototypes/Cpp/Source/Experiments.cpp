@@ -8542,7 +8542,7 @@ void testPrimeFactorTable()
   // -The sum of the prime factors of n is always <= n with equality when n is a prime
   VecD numD = rsConvert(num, 0.0);
   VecD spfD = rsConvert(spf, 0.0);
-  rsPlotVectors(spfD, numD, numD/2.0 + 2.0, numD/3.0 + 3.0, numD/4.0 + 4.0, numD/5.0 + 5.0);
+  rsPlotVectors(spfD, numD, numD/2.+2., numD/3.+3., numD/4.+4., numD/5.+5., numD/6.+6., numD/7.+7.);
   // -There are secondary maxima seemingly with a slope of n/2. That's in itself not so surprising.
   //  These are most probably the numbers that have only 2 factors. What is surprising though, is
   //  that there seems to be very little "random" fluctuation in this secondary slope. Seems like 
@@ -8560,7 +8560,7 @@ void testPrimeFactorTable()
     else
       spfD[n] = 0.0;
   }
-  rsPlotVectors(spfD, numD/2.0+2.0, numD/3.0+3.0, numD/4.0+4.0, numD/5.0+5.0, numD/6.0+6.0);
+  rsPlotVectors(spfD, numD/2.+2., numD/3.+3., numD/4.+4., numD/5.+5., numD/6.+6., numD/7.+7.);
   // ...hmm - OK - seems that is not the case. There are numbers with 2 factors whose factor-sum
   // is n/3+3, n/5+5 etc. Interestingly, n/4+4 is not present. Maybe because 4 is a multiple (even 
   // power) of two? Also n/6+6 is not present, so maybe n/m+m not present whenever m is a multiple 
@@ -8594,6 +8594,7 @@ void testPrimeFactorTable()
   // ToDo: 
   // -maybe compute differences and cumulative sums
   // -what about coprimes?
+  // -maybe plot cumulative sums of sums and counts of prime-factors
 }
 
 bool rsIsInteger(double x, double tol)
@@ -8601,7 +8602,6 @@ bool rsIsInteger(double x, double tol)
   double xr = round(x);
   return abs(x-xr) <= tol;
 }
-
 void testPrimesAndMore()
 {
   // We expand on the experiment above and experimentally try to find out a bit more about these
@@ -8610,8 +8610,8 @@ void testPrimesAndMore()
   // are analogous to the prime-counting function (which is the first of them).
 
   // Setup:
-  int N = 501;   // highest natural number n in the plot (x-axis)
-  int M = 6;     // highest sequence index, 1 are the primes
+  int N = 3001;    // highest natural number n in the plot (x-axis)
+  int M = 35;      // highest sequence index, 1 are the primes
 
 
   using Mat = rsMatrix<double>;
@@ -8632,7 +8632,7 @@ void testPrimesAndMore()
       return 0;     // n is not on one of those s = n/m + m lines
     double sq = sqrt(D);
     double m  = 0.5 * (s - sq); // what about the other solution: 0.5 * (s + sq)?
-    if( rsIsInteger(m, 1.e-13) )
+    if( rsIsInteger(m, 1.e-10) )
       return (int) round(m);
     return 0;       // n is not on one of those s = n/m + m lines
   };
@@ -8661,26 +8661,40 @@ void testPrimesAndMore()
       }
       else
       {
-        // n is on one of the main lines but on one with index above those which we record, i.e.
+        // n is on one of the "main lines" but on one with index above those which we record, i.e.
         // there is a valid m but is too large for our allocated matrix.
       }
     }
     else
     {
       // todo: collect and count those numbers, too - maybe use different codes for D < 0 and
-      // m != int and collect the different kinds of "outliers" in different bins
+      // m != int and collect the different kinds of "outliers" in different bins...actually, these
+      // "outliers" seem to be more common than i first thought - in fact, they become more and 
+      // more common for higher n. It actually look like that about a half of all numbers falls 
+      // into this bin. But actually, this bin should perhaps be split further
+
     }
     C.setColumn(n, &c[0]);
   }
-  plotMatrixRows(C);
 
+  int dummy = 0;
+  //plotMatrixRows(C); // if this is activated, make sure to use not too big numbers for N,M
 
+  // Observations:
+  // -class 2 contains: 6,8,10,14,22,26,34,38,46,58,62,74,82,86,94,106,118,... It looks like this:
+  //  https://oeis.org/A073582, https://oeis.org/A073582/b073582.txt
+  // -class 3 contains: 9,12,15,21,33,39,51,57,69,87,93,111,123,129,141,159,177,183,... and it's 
+  //  not listed in the oeis
+  // -the following classes (expected by the s = n/m + m pattern) are empty:
+  //  6,8,9,10,12,14,15,16,18,20,21,22,24,25,26,27,28,30,32,33,34,35
+  // -class 2 is mostly populated by primes times two, class 3 by primes times three and in general
+  //  class m is mostly populated by primes times m - but not exclusively - there are execptions. 
+  //  And for certain m, the classes are empty.
+  // -i have no idea what is going on! ...as expected! but the first conjecture that all sums of
+  //  prime factors are lined up like this has clearly turned out to be false. ...but there may 
+  //  still be something interesting going on - many factor-sums are lined up this way
 
   // ToDo:
-  // -implement a helper function getSequenceIndex which takes a number n and tells, to which
-  //  sequence m it belongs.
-  // -maintain a vector of counters and increment the m-th element
-  // -write the vector into tha matrix column 
   // -maybe use a different plotting style (dots) - maybe let plotMaxtrixRows take an optional
   //  string with gnuplot options
 }

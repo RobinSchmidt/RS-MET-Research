@@ -55,7 +55,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testRationalTrigonometry();
   //testLeveledNumber();
   //testNewtonFractal();
-  //testPrimeFactorTable();
+  testPrimeFactorTable();
   testPrimesAndMore();
 
 

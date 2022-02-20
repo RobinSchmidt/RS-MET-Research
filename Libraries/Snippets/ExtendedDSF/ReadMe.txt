@@ -1,4 +1,4 @@
-This folder contains the file default.cxx, which, if I'm not mistaken, contains the relevant code fro implementing some extensions to Discrete Summation Formulae (DSF) synthesis. The code was written by Walter Hackett and released into the public domain. Here is the original source:
+This folder contains the file default.cxx, which, if I'm not mistaken, contains the relevant code for implementing some extensions to Discrete Summation Formulae (DSF) synthesis. The code was written by Walter Hackett and released into the public domain. Here is the original source:
 
 https://plugins4free.com/plugin/3713/
 

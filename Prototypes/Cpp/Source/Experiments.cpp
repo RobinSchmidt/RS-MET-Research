@@ -3948,12 +3948,28 @@ void testAutoDiff3()
   // };
 
 
-  // ToDo: try a R^3 -> R^2 function - maybe some sort of projection (fish-eye? spherical? i.e. 
-  // first project points onto the sphere surface (by expressing them in spherical coordinates and 
-  // setting the r-coordinate to 1) and then map the sphere surface onto the plane (maybe by 
-  // inverting the parametric description of a sphere, if possible)
+  // Ideas:
+  // -R^3 -> R^2 functions:
+  //  -Maybe some sort of projection (fish-eye? spherical? i.e. first project points onto the sphere
+  //   surface (by expressing them in spherical coordinates and setting the r-coordinate to 1) and 
+  //   then map the sphere surface onto the plane (maybe by inverting the parametric description of 
+  //   a sphere, if possible)
+  //  -Maybe a pair of 3D scalar fields like temperature and pressure or maybe one field could be 
+  //   the divergence or the Laplacian of the other.
+  // -R^2 -> R^3: surface of a torus, sphere, etc.
+  // -R^9 -> R^1 function defined as determinant of a 3x3 matrix, we want to compute the partial 
+  //  derivatives of the determinant with respect to the matrix elements
+  // -R^3 -> R^1: cumulative product of 3-vector (see video about ForwardDiff.jl etc.)
+  // -R^3 -> R^2: (r,t,p) = toSpherical(x,y,z), f = sin(r) * d(r,t,p), g = cos(r) * d(r,t,p)
+  //  d(r,t,p) = 1 / (r^2)...or d(x,y,z) = 1 / (|x|^2 + |y|^3 + |z|^1)...d is some decay function.
+  //  Describes sin/cos parts a spherical wave with some sort of amplitude decay with distance and
+  //  direction (in x-direction with a 1/d^2 rule, in y-direction with a 1/d^3 rule, etc.), t,p 
+  //  stand for theta and phi.
+  // -R^3 -> R^2: f = gravitational potential, g = electric potential of some configuration of 
+  //  charged masses. could be combined into a force for a charged test mass
+  // -R^3 -> R^2: maybe any sort of complex-valued function of 3 inputs
 
-  // try cumulative product of 3-vector (see video about ForwardDiff.jl etc.)
+
 
   int dummy = 0;
 }
@@ -4043,7 +4059,7 @@ void testAutoDiffReverse1()
   x.initLoc(); y.initLoc(); z.initLoc();  // get rid of these calls!
 
   
-  // test derivatives of univariate functions:
+  // Test derivatives of univariate functions (test iterated applications of the chain-rule):
   ops.clear();
   f = rsSqrt(x);
   f.computeDerivatives();
@@ -4061,6 +4077,18 @@ void testAutoDiffReverse1()
   f.computeDerivatives();
   t = (exp(sin(sqrt(x.v))) * cos(sqrt(x.v)))/(2.f*sqrt(x.v));
   ok &= rsIsCloseTo(x.d, t, tol);
+
+  ops.clear();
+  f = rsCos(rsExp(rsSin(rsSqrt(x))));
+  f.computeDerivatives();
+  t =  -(exp(sin(sqrt(x.v))) * sin( exp(sin(sqrt(x.v))) ) * cos(sqrt(x.v))) / (2*sqrt(x.v));
+  ok &= rsIsCloseTo(x.d, t, tol);
+
+  // maybe use sx = sqrt(x.v) for convenience
+
+
+
+
 
   // ok - looks good so far
   // the getDerivative doesn't seem to make sense anymore - instead, we need a call to 
@@ -4096,7 +4124,12 @@ void testAutoDiffReverse1()
   f = x * y * z;
   f.computeDerivatives();
   ok &= rsIsCloseTo(x.d, y.v*z.v, tol);  // (x*y*z)_x = y*z
-  // wrong
+  // wrong, x.d == y.v, the z.v factor is missing, the ops array contains nans in the 2nd operation
+  // ...they are probably uninitialized? z.d is nan
+
+  // Try the example from this video:
+  // https://www.youtube.com/watch?v=5s4pERJ0VZo
+  // 
 
 
   d = t;  // to suppress warning
@@ -4171,6 +4204,15 @@ void testAutoDiffReverse1()
   //  memory variables in the reverse pass
 
 }
+
+// Autodiff Resources:
+//   autodiff.org         portal site for autodiff stuff
+//   autodiff.github.io   C++17 library featuring forward and reverse mode, MIT license
+//   youtube.com/watch?v=wG_nF1awSSY  manim video, very good introduction
+//   youtube.com/watch?v=5s4pERJ0VZo  slideshow video, maybe helpful for reverse mode
+//   youtube.com/watch?v=jS-0aAamC64  explains C++ library DCO
+//   youtube.com/watch?v=R_m4kanPy6Q  explains reverse mode in context of neural networks
+//   github.com/cg-tuwien/deep_learning_demo  ..code for video above
 
 void testDualComplex()
 {

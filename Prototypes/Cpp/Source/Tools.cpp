@@ -2756,6 +2756,9 @@ public:
   {
     neg, add, sub, mul, div, sqrt, sin, cos, exp  // more to come
   };
+  // maybe sort by arity: unary first, the binary, the ternary, etc. - we may want to be able 
+  // quickly distingusih arity for dispatching computations (1st dispatch is on arity, 2nd on 
+  // actual func/op within a given arity)
 
   inline static const TVal NaN = RS_NAN(TVal);
   using ADN = rsAutoDiffNumber<TVal, TDer>;   // shorthand for convenience
@@ -2793,7 +2796,7 @@ public:
 public:
 
   TVal v;        // value
-  TDer d = NaN;  // (partial) derivative
+  TDer d = NaN;  // (partial) derivative (aka adjoint?)
 
   rsAutoDiffNumber(TVal value, std::vector<Operation>& tape) : v(value), /*a(NaN),*/ ops(tape) {}
 
@@ -2884,7 +2887,10 @@ public:
 
   }
 
-  // rename to getFunctionDerivative and use it only for unary functions
+  // rename to getFunctionDerivative and use it only for unary functions, maybe rename to 
+  // getUnaryDerivative and maybe compute the partial derivative of binary functions/operators and
+  // ternary functions by similar functions: getBinaryPartialDerivative, 
+  // getTernaryPartialDerivative
   TDer getOpDerivative(const Operation& op) const
   {
     switch(op.type)

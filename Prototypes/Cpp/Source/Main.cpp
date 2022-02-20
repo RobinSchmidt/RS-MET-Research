@@ -37,7 +37,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testAutoDiff2();
   //testAutoDiff3();
   //testAutoDiff4();
-  //testAutoDiffReverse1();
+  testAutoDiffReverse1();
   //testDualComplex();
   //testVectorMultiplication3D();
   //testHermiteInterpolation();

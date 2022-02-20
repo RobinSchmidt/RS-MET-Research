@@ -4056,43 +4056,46 @@ void testAutoDiffReverse1()
   float tol = 1.e-8f;  // tolerance for floating point comparisons
 
 
-  x.initLoc(); y.initLoc(); z.initLoc();  // get rid of these calls!
+  x.initLoc(); y.initLoc(); z.initLoc();  
+  // Get rid of these calls! These are only needed for technical reasons and a bad API. Client 
+  // code should not have to deal with such implementation details.
 
   
-  // Test derivatives of univariate functions (test iterated applications of the chain-rule):
+  // Test derivatives of univariate functions (test iterated applications of the chain-rule). 
+  // First, we call (nested) unary functions on our x-variable - this is the forward pass. Then, we
+  // call computeDerivatives on the final output hwich triggers the reverse pass, after which x.d
+  // should conatin df/dx, i.e. the (partial) derivative of f with respect to x.
+  float sx = sqrt(x.v); // for convenience, used a lot in computation of target results
   ops.clear();
   f = rsSqrt(x);
+  t = 0.5f/sx;
   f.computeDerivatives();
-  t = 0.5f/rsSqrt(x.v);
   ok &= rsIsCloseTo(x.d, t, tol);
 
   ops.clear();
   f = rsSin(rsSqrt(x));
+  t = (cos(sx))/(2.f*sx);
   f.computeDerivatives();
-  t = (cos(sqrt(x.v)))/(2.f*sqrt(x.v));
   ok &= rsIsCloseTo(x.d, t, tol);
 
   ops.clear();
   f = rsExp(rsSin(rsSqrt(x)));
+  t = (exp(sin(sx)) * cos(sx))/(2.f*sx);
   f.computeDerivatives();
-  t = (exp(sin(sqrt(x.v))) * cos(sqrt(x.v)))/(2.f*sqrt(x.v));
   ok &= rsIsCloseTo(x.d, t, tol);
 
   ops.clear();
   f = rsCos(rsExp(rsSin(rsSqrt(x))));
+  t = -(exp(sin(sx)) * sin( exp(sin(sx)) ) * cos(sx)) / (2*sx);
   f.computeDerivatives();
-  t =  -(exp(sin(sqrt(x.v))) * sin( exp(sin(sqrt(x.v))) ) * cos(sqrt(x.v))) / (2*sqrt(x.v));
   ok &= rsIsCloseTo(x.d, t, tol);
 
-  // maybe use sx = sqrt(x.v) for convenience
+  // ToDo: 
+  // -Figure out what happens, if we compute a second final output g. The desired behavior is that 
+  //  we could invoke g.computeDerivatives(); after f.computeDerivatives(); and then x.d should 
+  //  contain dg/dx and it should not intefere with the calculation of df/dx that we did before.
+  //  We should be able to compute df/dx and dg/dx in any order
 
-
-
-
-
-  // ok - looks good so far
-  // the getDerivative doesn't seem to make sense anymore - instead, we need a call to 
-  // f.computeDerivatives() which should assign the x.d field and then compare x.d to t
 
 
   // test derivatives of binary operators:

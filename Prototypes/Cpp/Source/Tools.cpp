@@ -2941,6 +2941,7 @@ public:
 //protected:  // try to make protected - but that may need a lot of boilerplat friend declarations
 
   rsAutoDiffNumber* loc = nullptr;
+  // why do we need this? try to get rid!
 
 };
 

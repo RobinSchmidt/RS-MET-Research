@@ -2879,7 +2879,7 @@ public:
       //ops[i].op1d = getOpDerivative(ops[i]);
 
       // todo:
-      // d = ops[i].adj
+      //TDer d = ops[i].adj;
 
       if(ops[i].type == OT::add)
       {
@@ -2904,7 +2904,8 @@ public:
       else
       {
         // operation is a unary function
-        d *= getOpDerivative(ops[i]);
+        d *= getOpDerivative(ops[i]);  // ??? apparently, this comes from the chain rule but i 
+        // think, it doesn't generalize to arbitrary graphs
         ops[i].op1.d = d;
         ops[i].op2.d = NaN;
       }
@@ -2984,6 +2985,9 @@ public:
   // why do we need this? try to get rid!
 
 };
+
+
+
 
 #define RS_CTD template<class TVal, class TDer>  // class template declarations
 #define RS_ADN rsAutoDiffNumber<TVal, TDer>      // 

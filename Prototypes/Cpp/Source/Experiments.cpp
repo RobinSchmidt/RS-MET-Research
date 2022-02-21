@@ -3629,8 +3629,65 @@ void testSortedSet()
   int dummy = 0;
 }
 
+bool unitTestDualNumber()
+{
+  using DN = rsDualNumber<float, float>;
+
+  bool ok = true;
+
+  // Test unary functions:
+  DN x = DN(2.f, 3.f);
+  DN r;                 // result
+
+  r = rsSin(x); ok &= r == DN(sin(x.v),   x.d*cos(x.v));
+  r = rsCos(x); ok &= r == DN(cos(x.v),  -x.d*sin(x.v));
+  r = rsExp(x); ok &= r == DN(exp(x.v),   x.d*exp(x.v));
+  r = rsLog(x); ok &= r == DN(log(x.v),   x.d / x.v );
+  r = rsAbs(x); ok &= r == DN(fabs(x.v),  x.d * rsSign(x.v));
+
+  // Test binary operators and functions:
+  r = rsPow(x, 2);   ok &= r == x*x;
+  r = rsPow(x, 3);   ok &= r == x*x*x;
+  r = rsPow(x, 4);   ok &= r == x*x*x*x;
+  r = rsPow(x, 5);   ok &= r == x*x*x*x*x;
+  r = rsPow(x, 5);   ok &= r == DN(pow(x.v, 5),   x.d * 5   * pow(x.v, 4  ));
+  r = rsPow(x, 5.f); ok &= r == DN(pow(x.v, 5.f), x.d * 5.f * pow(x.v, 4.f));
+
+  // Raise a dual number ot the power of another dual number;
+  DN y = DN(5.f, 0.f);                      // derivative part zero
+  r = rsPow(x, y); ok &= r == x*x*x*x*x;    // ..so the result should be the same as before
+  y = DN(5.f, 7.f);                         // but now it's nonzero
+  r = rsPow(x, y);
+  ok &= r.v == pow(2, 5);                   // the primal part should still be the same a^c
+  float t = 16*3*5 + 32*7*log(2);           // this is what we expect for the dual part
+  ok &= RAPT::rsIsCloseTo(r.d, t, 1.e-7f);
+  // https://math.stackexchange.com/questions/1914591/dual-number-ab-varepsilon-raised-to-a-dual-power-e-g-ab-varepsilon
+  // says: (a + b*E)^(c + d*E) = a^c + (b*c*a^(c-1) + d*a^c*log(a))*E  ..our implementation is 
+  // simply based on reducing it to exp, log, mul. Maybe we could also provide a more direct 
+  // implementation later. What is the intrepretation of the dual part of f^g when f and g are both
+  // dual numbers? I think, it's the derivative of f(x)^(g(x)) with respect to x where f and g are 
+  // given as values together with the values of *their* derivatives with respect to x. In reverse
+  // mode autodiff, we will probably be more interested in the partial derivatives with respect to
+  // the inputs. Generally, we have:
+  //   (d/dx) pow(x,y) = y * pow(x, y-1), 
+  //   (d/dy) pow(x,y) = log(x) * pow(x,y)
+  // Maybe we should store these at the nodes of the computational graph that is created during the
+  // computation?
+
+
+  // ToDo: create a more complicated function using all operators, nesting, etc. and compute values
+  // and derivatives using dual numbers and using a formula, plot error, check, if it's within
+  // tolerance
+
+
+  return ok;
+}
+
+
 void testAutoDiff()
 {
+  rsAssert(unitTestDualNumber());
+
   // see also:
   // https://www.youtube.com/watch?v=1QQj1mAV-eY
 
@@ -3639,44 +3696,31 @@ void testAutoDiff()
 
   DN x, y, z, r;
 
-  bool t = true;  // test
+  bool ok = true;  // test
 
   x = 3.f;
   y = 2.f;
   z = 5.f;
-
 
   //r = x+y; t &= r == 5.f;
   //r = x-y; t &= r == 1.f;
   //r = x*y; t &= r == 6.f;
   //r = x/y; t &= r == 1.5f;
 
-
-  r = rsSin(x);
-  r = rsCos(x);
-  r = rsExp(x);
+  //r = rsSin(x);
+  //r = rsCos(x);
+  //r = rsExp(x);
   //r = rsLog(x);
   //r = rsAbs(x);
   //r = rsPow(x, 2.f);
   //r = rsPow(x, y);   //
 
-
   //x = (2.f, 3.f);      // doesn't work - why does it even compile?
   x = {2.f, 3.f};      // this "tuple-initialization" works, maybe use it also for rsFraction - what about complex?
   x = DN(2.f, 3.f);
 
-  r = rsSin(x); t &= r == DN(sin(x.v),   x.d*cos(x.v));
-  r = rsCos(x); t &= r == DN(cos(x.v),  -x.d*sin(x.v));
-  r = rsExp(x); t &= r == DN(exp(x.v),   x.d*exp(x.v));
-  //r = rsLog(x); t &= r == DN(log(x.v),   x.d / x.v );
-  //r = rsAbs(x); t &= r == DN(fabs(x.v),  x.d * rsSign(x.v));
-  //r = rsPow(x, 5.f); t &= r == DN(pow(x.v, 5.f), x.d * 5.f * pow(x.v, 4.f));
-  //r = rsPow(x, y);   //
-
-
   // test a function that uses sum, product, quotient and chain rule, such as
   // f(x) = exp(-x) * sin(3*x) / (1 + x^2 * cos(x))
-
 
   // maybe they sould take a float argument?
   //auto f = [&](DN x)->DN { return 10*x*x - 2*x*x*x; };    // ok
@@ -4058,7 +4102,8 @@ void testAutoDiffReverse1()
 
   x.initLoc(); y.initLoc(); z.initLoc();  
   // Get rid of these calls! These are only needed for technical reasons and a bad API. Client 
-  // code should not have to deal with such implementation details.
+  // code should not have to deal with such implementation details. ..or maybe rename to something
+  // that realtes to client code like setDerivativeNeeded
 
   
   // Test derivatives of univariate functions (test iterated applications of the chain-rule). 
@@ -4098,7 +4143,7 @@ void testAutoDiffReverse1()
 
 
 
-  // test derivatives of binary operators:
+  // Test derivatives of binary operators:
   ops.clear();
   f = x + y;
   f.computeDerivatives();
@@ -4129,6 +4174,10 @@ void testAutoDiffReverse1()
   ok &= rsIsCloseTo(x.d, y.v*z.v, tol);  // (x*y*z)_x = y*z
   // wrong, x.d == y.v, the z.v factor is missing, the ops array contains nans in the 2nd operation
   // ...they are probably uninitialized? z.d is nan
+  // in computeDerivatives, we use TDer d(1); which never changes - i think it should always hold 
+  // the adjoint? is that possible? maybe the Operation struct needs an additional field for the 
+  // adjoint? ...hmm - i think, perhaps the idea of a "tape" is not sufficient and we need a full
+  // blown graph as datastructure to store the computation
 
   // Try the example from this video:
   // https://www.youtube.com/watch?v=5s4pERJ0VZo

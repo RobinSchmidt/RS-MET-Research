@@ -2628,12 +2628,23 @@ RS_PFX rsSqrt(RS_DN x) { return RS_DN(rsSqrt(x.v), x.d*TVal(0.5)/sqrt(x.v)); }
 // requires x.v > 0 - todo: make it work for x.v >= 0 - the derivative part at 0 should be computed
 // by using a limit
 
-RS_PFX rsPow(RS_DN x, int n) { return RS_DN(rsPow(x.v, n),  x.d*n*rsPow(x.v, n-1)); }
-// needs test
+
+RS_PFX rsPow(RS_DN x, int  n) { return RS_DN(rsPow(x.v, n),  x.d*n*rsPow(x.v, n-1)); }
+RS_PFX rsPow(RS_DN x, TVal n) { return RS_DN(rsPow(x.v, n),  x.d*n*rsPow(x.v, n-1)); }
+// Not sure, if we should have these two of just always use the more general implementation below
+// which takes two dual numbers as inputs.
+
+RS_PFX rsPow(RS_DN x, RS_DN y)
+{
+  return rsExp(y * rsLog(x)); // x^y = exp(y * log(x))
+}
+// see also:
+// https://math.stackexchange.com/questions/1914591/dual-number-ab-varepsilon-raised-to-a-dual-power-e-g-ab-varepsilon
 
 // todo: cbrt, pow, abs, asin, acos, atan, atan2, etc.
 // what about floor and ceil? should their derivatives be a delta-comb? well - maybe i should not
 // care about them - they are not differentiable anyway
+
 
 #undef RS_CTD
 #undef RS_DN
@@ -2771,6 +2782,12 @@ public:
     ADN op1;            // first operand
     ADN op2;            // second operand
     TVal res;           // result
+
+    // experimental:
+    //TVal adj;           // adjoint
+    // maybe we should store the partial derivatives with respect to both inputs?
+
+
     Operation(OperationType _type, ADN _op1, ADN _op2, TVal _res)
       : type(_type), op1(_op1), op2(_op2), res(_res) {}
   };
@@ -2814,6 +2831,8 @@ public:
   // that all variable locations are still valid - no: the user may define their own functions 
   // using temporary variables - these will be invalid, when the function returns - maybe we 
   // indeed need manual enable calls
+  // maybe rename to setDerivativeNeeded - it should be used by client code to indicate that it 
+  // wants to compute derivatives with respect to the variable
 
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
@@ -2826,6 +2845,9 @@ public:
     TDer d(1);
     // i think, this accumulator is wrong - we whould use only the v,d fields of the operand(s) and
     // the result - so the result may also have to be an ADN...or maybe not?
+
+    // I think, we need to init all ajoints in the ops array to 0, then, instead of using d, we 
+    // should use the adjoint of the result?
 
     //TDer d1, d2;
 

@@ -33,10 +33,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifoldEarth();
   
   //testSortedSet();
-  //testAutoDiff();
-  //testAutoDiff2();
-  //testAutoDiff3();
-  //testAutoDiff4();
+  testAutoDiff();
+  testAutoDiff2();
+  testAutoDiff3();
+  testAutoDiff4();
   testAutoDiffReverse1();
   //testDualComplex();
   //testVectorMultiplication3D();

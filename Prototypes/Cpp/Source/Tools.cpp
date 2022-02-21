@@ -2784,8 +2784,15 @@ public:
     TVal res;           // result
 
     // experimental:
-    //TVal adj;           // adjoint
-    // maybe we should store the partial derivatives with respect to both inputs?
+    TVal adj = NaN;     // adjoint
+    // we could also use an ADN as res and res.d as adjoint...for what reason do we actually store
+    // the result's value anyway? it's not used in the backprop 
+
+
+    // -maybe we should store the partial derivatives with respect to both inputs?
+    // -maybe instead of the values of the operands, we need to store the indices of the nodes 
+    //  whose result is used, so we can backprop into them? but what about the initial inputs? they
+    //  don't have any operation associated with them
 
 
     Operation(OperationType _type, ADN _op1, ADN _op2, TVal _res)
@@ -2849,20 +2856,30 @@ public:
     // I think, we need to init all ajoints in the ops array to 0, then, instead of using d, we 
     // should use the adjoint of the result?
 
-    //TDer d1, d2;
-
-    int i = (int) ops.size()-1;
-
-    if(i < 0)
+    int numOps = (int)ops.size();
+    if(numOps == 0)
       return;
 
-    //ops[i].res.d = TVal(1);  // init - may not always be suitable
+    int i;
 
+    // Init adjoints and local gradients at all nodes:
+    for(i = 0; i < numOps; i++)
+    {
+      ops[i].adj   = 0;
+      ops[i].op1.d = 0;
+      ops[i].op2.d = 0;
+    }
 
-    while(i >= 0)
+    // Backpropagate the adjoints and local gradients:
+    ops[numOps-1].adj = 1; // seed for backprop
+    i = (int)numOps-1;
+    while(i >= 0)  // use for-loop
     {
 
       //ops[i].op1d = getOpDerivative(ops[i]);
+
+      // todo:
+      // d = ops[i].adj
 
       if(ops[i].type == OT::add)
       {
@@ -2932,7 +2949,8 @@ public:
     case OT::cos:  return -rsSin(op.op1.v);
     case OT::exp:  return  rsExp(op.op1.v);
 
-      // but what about the binary operators? 
+      // but what about the binary operators? they are currently handled directly in 
+      // computeDerivatives
 
     default: return TDer(0);
     }

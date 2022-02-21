@@ -4265,6 +4265,7 @@ void testAutoDiffReverse1()
 //   youtube.com/watch?v=jS-0aAamC64  explains C++ library DCO
 //   youtube.com/watch?v=R_m4kanPy6Q  explains reverse mode in context of neural networks
 //   github.com/cg-tuwien/deep_learning_demo  ..code for video above
+//   youtube.com/watch?v=mYOkLkS5yqc  walks through example, forward,backward
 
 void testDualComplex()
 {

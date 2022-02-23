@@ -1,7 +1,7 @@
-Handling color spaces is a messy business. There are dozens of color spaces with all sorts of 
-all sorts of back-and-forth conversion functions with various variants, the formulas you find 
-online are often inexact (i.e. contain rounded floating point coefficients), etc. Here, I collect
-some resources about that topic.
+Handling color spaces is a messy business. There are dozens of color spaces with all all sorts of
+back-and-forth conversion functions with various variants. The formulas you find online are often
+inexact (i.e. contain rounded floating point coefficients), etc. Here, I collect some resources
+about that topic.
 
 http://www.brucelindbloom.com/
   Under "Math", lists lost of conversion formulas. Coefficients are often given as exact rational

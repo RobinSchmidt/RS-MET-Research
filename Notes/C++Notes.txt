@@ -1,0 +1,67 @@
+
+===================================================================================================
+https://www.youtube.com/watch?v=tXUXl_RzkAk
+
+Classic STL (since C++98):
+Utilities:   basic stuff like min,max,swap,etc.
+Containers:  collections of data
+Algorithms:  operate on collections of data (typically but not necessarily containers)
+Iterators:   glue/interface between containers and algorithms
+
+One key aspect of the design of the STL is that the containers and the algorithms which operate on
+them are entirely independent. Ideally, every algo should work with every container. Iterators 
+are the key idea that make such a thing possible. When an algorithm says "i++" for an iterator i,
+the overloaded implementation of the "++" operator of the given iterator class knows what to do to
+go the next element - even if we are iterating over a linked list instead of a contiguous array,
+for example.
+
+---------------------------------------------------------------------------------------------------
+Iterators:
+
+Iterators abstract the idea of iterating over a sequence. The simplest example of an iterator is a
+pointer to an element in a vector or array. Other iterators provide similar capabilities 
+(increment, decrement, dereference (read/write), etc.) but may implement them in very different 
+ways depending on the underlying container that is iterated over. There are different categories:
+
+Category        Capabilities                          Example
+ Input           read forward, single pass             read from a file
+ Output          write forward, single pass            write to a file
+ Forward         access forward, multi-pass            singly linked list
+ Bidirectional   access forward/backward, multi-pass   doubly linked list
+ Random Access   access at any position, multi-pass    array, vector
+ 
+A "mutable iterator" has the capabilities of an output iterator, i.e. it allows to write data. An
+iterator range is defined by pair of iterators [begin, end), the "end" not being included, i.e.
+representing the position one after the last. An "end" iterator can't be dereferenced. It may refer
+to a sentinel node in e.g. linked lists or to an unowned memory location in e.g. std::vector. 
+Reverse iterators move backward where a regular iterator moves forward and vice versa. There are
+also insert iterators that model output iterators.
+
+---------------------------------------------------------------------------------------------------
+Containers:
+
+Sequence containers (vector, deque, list, array, forward_list) are unsorted. Associative containers
+like map, set, multimap, multiset are sorted in some way (i.e. position depends on value), usually
+implemented using binary search trees (typically red/black-trees). Unordered associative containers
+like the unordered_map etc. counterparts of the former are implemented by hash-tables. Every 
+container provides a common set of type-aliases (typedefs or using-declarations) such as: 
+value_type, iterator, size_type, etc., a common set of functions such as: begin(), end(), etc. 
+There are also container adaptors like stack or queue that endow an underlying other container such
+as deque, list or vector with a stack/queue interface. Priority queue is another adaptor that
+implements a heap datastructure.
+
+---------------------------------------------------------------------------------------------------
+Algorithms:
+
+Operate on (sub-ranges of) containers, taking a pair of iterators as arguments and possibly have
+additional parameter for predicates
+
+
+
+
+
+
+
+
+
+

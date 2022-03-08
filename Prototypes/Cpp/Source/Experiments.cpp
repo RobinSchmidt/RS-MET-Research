@@ -233,13 +233,13 @@ void gaussBlurIIR(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y, T radius, int 
   // i think, this is already ensured because the geometric series 
   //   S = sum_k a^k = 1/(1-a)  
   // where k runs from 0 to infinity - so with b=1, we would get a sum of 1/(1-a) - scaling that by
-  // the reciprocal, would scale by 1-a, whcih is exactly the formula for b
+  // the reciprocal, would scale by 1-a, which is exactly the formula for b
 
   // -Maybe combine horizontal and vertical passes with diagonal passes. Maybe that converges 
   //  faster to an isotropic filter. I think, a diagonal filter has stride w+1 or w-1. It also 
   //  needs to scale the coeff by 1/sqrt(2) to compensate for the greater distance.
   // -Maybe for the boundaries, use c*xL, c*xR where 0 <= c <= 1 is a user parameter to dial 
-  //  between zero and repeat boundry conditions
+  //  between zero and repeat boundary conditions
 }
 
 void testGaussBlurFIR()
@@ -269,6 +269,9 @@ void testGaussBlurFIR()
   // writeKernelFile(x, &gausBlur3x3, "3x3") etc.
 
 
+  // Observations:
+  // -Gauss5 and Gauss7 look almost indistiguishable. I guess, they have the same width of the 
+  //  Gaussian and in the 7x7 kernel, the outer sections have negligible amplitude.
 
 
   // ToDo:
@@ -3489,10 +3492,9 @@ void testManifoldEllipsoid()
 // needed? maybe the basis vectors are not unique? or maybe some other decomposition such that
 // G = E^T * E,  where E is the matrix of basis vectors and G is the metric as matrix
 
-
-
-
-
+// Resources:
+// https://www.youtube.com/watch?v=Hf-BxbtCg_A Demystifying The Metric Tensor in General Relativity
+// https://www.youtube.com/watch?v=L9WR78xvCPY The Metric Tensor in 20 Glorious Minutes
 
 
 
@@ -4256,7 +4258,11 @@ void testAutoDiffReverse1()
   //  memory variables in the reverse pass
 
 }
+// Autodiff Ideas:
+// -
+//
 
+//
 // Autodiff Resources:
 //   autodiff.org         portal site for autodiff stuff
 //   autodiff.github.io   C++17 library featuring forward and reverse mode, MIT license
@@ -8792,6 +8798,66 @@ void testPrimesAndMore()
   // ToDo:
   // -maybe use a different plotting style (dots) - maybe let plotMaxtrixRows take an optional
   //  string with gnuplot options
+}
+
+void testGeneralizedCollatz()
+{
+  // The Collatz conjecture is a famous problem in math. It states: You will always end up in the 
+  // loop 4-2-1 when you start with an arbitrary seed number and apply the following rule 
+  // iteratively: If x is even, apply x = x/2, else apply 3*x + 1. We look at a generalized 
+  // form: we pick a fixed divisor k and a seed x and use the rule: If x is divisible by k, apply
+  // x = x/k, else apply x = (k+1)*x + 1. Using k=2 leads to the original Collatz rule.
+
+  using uint = uint32_t;
+  using AT   = RAPT::rsArrayTools;
+  uint k = 2;
+  uint x = 7;
+
+
+
+  std::vector<uint> v;
+
+  while(true) {
+    v.push_back(x);
+    if(x % k == 0)
+      x = x / k;
+    else
+      x = (k+1)*x + 1;
+    if(RAPT::rsContains(v, x))  {  // detect repetition - makes algo O(N^2)
+      v.push_back(x); break; }}
+
+  // Simpler and more efficient: version - but can only detect the loop for the k=2 case (i think - verify:)
+  //v.push_back(x);
+  //while(x != 1)
+  //{
+  //  if(x % k == 0)
+  //    x = x / k;
+  //  else
+  //    x = (k+1)*x + 1;
+  //  v.push_back(x);
+  //}
+
+
+  // Observations:
+  // For k = 3, we also end up in loops ending in 2784085845 like so:
+  //   x[0] =  1, x[2809] = 2784085845
+  //   x[0] =  2, x[2812] = 2784085845
+  //   x[0] =  3, x[2810] = 2784085845
+  //   x[0] =  4, x[2319] = 3499611477
+  //   x[0] =  5, x[2808] = 2784085845
+  //   x[0] =  6, x[2813] = 2784085845
+  //   x[0] =  7, x[2806] = 2784085845
+  //   x[0] =  8, x[2813] = 2784085845
+  //   x[0] =  9, x[2811] = 2784085845
+  //   x[0] = 10, x[2873] = 880104789
+
+
+
+  // Try k = 2, x = 7 to reproduce sequence from the begiinig of this:
+  // https://www.youtube.com/watch?v=094y1Z2wpJg
+
+
+  int dummy = 0;
 }
 
 // fast inverse square root approximation from Quake engine

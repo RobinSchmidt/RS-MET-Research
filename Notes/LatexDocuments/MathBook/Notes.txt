@@ -122,4 +122,14 @@ ToDo:
  Introducing Weird Differential Equations: Delay, Fractional, Integro, Stochastic!
  https://www.youtube.com/watch?v=eJaHCZ3ITIc
  
+ Euler-Lagrange Equation and How to Use it
+ https://www.youtube.com/watch?v=jCD_4mqu4Os
+ 
+ The Most Important Math Formula For Understanding Physics
+ https://www.youtube.com/watch?v=HQsZG8Yxb7w
+ is about Taylor's formula, it introduces an interesting shift-operator notation:
+ f(x+a) = exp(a * d/dx) f(x) where exp(a * d/dx) is an operator that shifts f by a. It generalizes 
+ to nD as: f(x+a) = exp(a . nabla) f(x). Now x and a are vectors, . is the dot-product and nabla is 
+ the formal vector of the partial derivative operators.
+ 
  

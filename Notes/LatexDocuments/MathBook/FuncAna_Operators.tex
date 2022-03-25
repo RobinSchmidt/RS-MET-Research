@@ -13,6 +13,25 @@ The definition of linearity for operators is as always: for any two functions $f
 \subsubsection{Eigenfunctions}
 Just like matrices can have eigenvectors, i.e. vectors that are only scaled in length when the matrix is applied, linear operators can have eigenfunctions which are - in full analogy - functions that are only scaled by a factor, when the operator is applied, that is $T[f] = \lambda f$ for some scalar $\lambda$. In both cases, the scaling factor $\lambda$ is called the eigenvalue. The pairs of eigenvalues with their corresponding eigenfunctions are called eigenpairs.
 
+
+\subsection{Functions of Operators}
+We can define the $n$th power of an operator $T$, denoted as $T^n$, simply as the operator that results from applying $T$ to a function $n$ times. With that definition in place, we can use the power series expansions of all our well known functions (such as $\exp, \sin, \log$, etc.) to get a definition of these functions for operator-valued arguments. For example, the exponential function of an operator $T$ is defined as:
+\begin{equation}
+  e^T = \sum_{k=0}^{\infty} \frac{T^k}{k!}
+\end{equation}
+For this operator exponential, the familiar relation $e^A e^B = e^{A + B}$ holds only iff $A B = B A$, i.e. if the operators $A$ and $B$ commute. If they don't commute, the Baker-Campbell-Hausdorff formula applies which you may look up, if you need it. If we choose the operator $T$ to be taking the derivative with respect to the independent variable $x$, i.e. $T = \frac{d}{dx}$ and we form the operator $e^{a \frac{d}{dx}}$ for any given constant $a$, then the effect of the operator $e^{a \frac{d}{dx}}$ when applied to a function $f$ is to shift the function's graph horizontally. We have: 
+\begin{equation}
+  e^{a \frac{d}{dx}} [f(x)] = f(x-a)
+\end{equation}
+This formula can be derived by considering the Taylor series of an arbitrary function $f$ with respect to $a$ around a point $x$ and treating $a$ as the deviation from the expansion point (...tbc...).
+
+
+
+%https://en.wikipedia.org/wiki/Baker%E2%80%93Campbell%E2%80%93Hausdorff_formula
+%https://de.wikipedia.org/wiki/Baker-Campbell-Hausdorff-Formel
+%http://webhome.phy.duke.edu/~mehen/760/ProblemSets/BCH.pdf
+%maybe the sin/cos functions of operators can be constructed from the exp function like sin(T) = (exp(i T) - exp(-i T))/(2 i) etc.
+
 \begin{comment}
 examples: d/dx has eigenpairs (k, e^(kx)), d^2/dx^2 has eigenpairs (-k, sin(kx+p)) for any p
 
@@ -41,6 +60,15 @@ https://math.stackexchange.com/questions/4208589/integral-kernel-of-the-legendre
 https://en.wikipedia.org/wiki/Operator_(mathematics)
 
 https://en.wikipedia.org/wiki/Operator_algebra
+
+
+Functions of operators:
+https://www.youtube.com/watch?v=nqLEbrzVsk4 Functions of operators in quantum mechanics
+https://math.stackexchange.com/questions/204592/operator-exponential
+https://www2.math.upenn.edu/~kirillov/MATH548-F07/Lect1.pdf
+https://www.tcs.tifr.res.in/~pgdsen/pages/courses/2007/quantalgo/lectures/lec06.pdf
+https://cpb-us-w2.wpmucdn.com/voices.uchicago.edu/dist/0/1830/files/2019/07/Exponential-Operators.pdf
+
 
 
 interesting ones from here:

@@ -1,0 +1,16 @@
+Main website:
+https://qoiformat.org/
+
+Code repo and include file:
+https://github.com/phoboslab/qoi
+https://github.com/phoboslab/qoi/blob/master/qoi.h
+
+Video explaining PNG and QOI:
+https://www.youtube.com/watch?v=EFUYNoFRHQI
+
+Blog post introducing the idea:
+https://phoboslab.org/log/2021/11/qoi-fast-lossless-image-compression
+
+Specification:
+https://qoiformat.org/qoi-specification.pdf
+

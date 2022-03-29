@@ -11,7 +11,7 @@ The definition of linearity for operators is as always: for any two functions $f
 % notes: could "homogeneity" also be called "multiplicativity"? i think, in number theory, multiplicative functions are defined exactly that way - oh - nope, it's not, it's defined as f(a*b) = f(a)*f(b)
 
 \subsubsection{Eigenfunctions}
-Just like matrices can have eigenvectors, i.e. vectors that are only scaled in length when the matrix is applied, linear operators can have eigenfunctions which are - in full analogy - functions that are only scaled by a factor, when the operator is applied, that is $T[f] = \lambda f$ for some scalar $\lambda$. In both cases, the scaling factor $\lambda$ is called the eigenvalue. The pairs of eigenvalues with their corresponding eigenfunctions are called eigenpairs.
+Just like matrices can have eigenvectors, i.e. vectors that are only scaled in length when the matrix is applied, linear operators can have eigenfunctions which are - in full analogy - functions that are only scaled by a factor, when the operator is applied, that is $T[f] = \lambda f$ for some scalar $\lambda$. In both cases, the scaling factor $\lambda$ is called the eigenvalue. The pairs of eigenvalues with their corresponding eigenfunctions are called eigenpairs. For example, the exponential function is an eigenfunction of the derivative operator with eigenvalue 1.
 
 
 \subsection{Functions of Operators}
@@ -31,6 +31,7 @@ This formula can be derived by considering the Taylor series of an arbitrary fun
 %https://de.wikipedia.org/wiki/Baker-Campbell-Hausdorff-Formel
 %http://webhome.phy.duke.edu/~mehen/760/ProblemSets/BCH.pdf
 %maybe the sin/cos functions of operators can be constructed from the exp function like sin(T) = (exp(i T) - exp(-i T))/(2 i) etc.
+% define T^{1/2}, T^{-1}, T^a, explain fractional derivatives
 
 \begin{comment}
 examples: d/dx has eigenpairs (k, e^(kx)), d^2/dx^2 has eigenpairs (-k, sin(kx+p)) for any p

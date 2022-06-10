@@ -3248,8 +3248,8 @@ Example - tableau with 4 rows:
   5 6 7 8
   9 0
 
-
-*/
+The actual data is stored in a contiguous block of memory and we also store the start indices and 
+lengths of each row...tbc...  */
 
 template<class T>
 class rsTableau : public rsTableauView<T>
@@ -3259,10 +3259,32 @@ public:
 
   rsTableau() {}
 
-  rsTableau(int numRows, int* lengths)
+  /** Creates a new Tableau with the given number of rows where each row has a length given by the
+  repective entry in the rowLengths array. We copy the content of the rowLengths array into a 
+  member so after initializing, the original lengths array will not be referenced anymore */
+  rsTableau(int numOfRows, int* rowLengths)
   {
-    // ...
+    rsAssert(numOfRows > 0);  // ToDo: maybe allow to init with size zero
+
+    numRows = numOfRows;
+
+    lengths.resize(numRows);
+    pLengths = &lengths[0];
+    rsArrayTools::copy(rowLengths, pLengths, numRows);
+
+    starts.resize(numRows);
+    pStarts = &starts[0];
+    pStarts[0] = 0;
+    for(int i = 1; i < numRows; i++)
+      pStarts[i] = pStarts[i-1] + pLengths[i-1];
+
+    int size = rsArrayTools::sum(pLengths, numRows);
+    data.resize(size);
+    pData = &data[0];
   }
+  // needs test, maybe factor out into init function -> useful if client needs to re-init
+  // What if one or more of the rowLengths is zero? Should this be allowed? If so, check that it
+  // works correctly!
 
 protected:
 
@@ -6007,6 +6029,7 @@ bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)
 
 //=================================================================================================
 
+/** A class that tabulates the prime factorizations of all numbers up to some given upper limit. */
 
 template<class T>  // T should be an integer type (may be unsigned)
 class rsPrimeFactorTable
@@ -6026,13 +6049,8 @@ public:
 
   const std::vector<T>& getFactors(T n) const { return factors[n]; }
 
-  // todo:
-  // maybe split buildTable into initTable() and increaseTableSize(T). The idea is that client code 
-  // may later discover that it needs a table larger than it originally thought and we want to be 
-  // able to increase the size dynamically, without re-computing all previously calcluated values.
 
 
-  
 
 protected:
 
@@ -6041,13 +6059,20 @@ protected:
   std::vector<T> primes;
 
   std::vector<std::vector<T>> factors; 
-  // To optimize, maybe class rsTableau could be used after it's finished. It should use contiguous
-  // memory and pre-allocate enough. -> figure out, how much is enough, i.e. find a formula for an
-  // approximation (upper bound) for the cumulative count of prime factors. A crude upper bound
-  // could perhaps be the integral of the base-2 logarithm because the base-2 log of a number n is
-  // an upper bound for the number of prime factors in n. The integral of log(x) is x*(log(x)-1), 
-  // so the required size grows slightly superlinearly, i.e. as x*log(x) - kind of similar to how 
-  // the number of primes grows slightly sublinearly as x/log(x)
+
+  // ToDo:
+  // -Maybe split buildTable into initTable() and increaseTableSize(T) or growTable(T). The idea is
+  //  that client code may later discover that it needs a table larger than it originally thought 
+  //  and we want to be able to increase the size dynamically, without re-computing all previously 
+  //  calculated values.
+  // -To optimize memory access, maybe later use class rsTableau (which is not yet finished) for 
+  //  storing the factors. It should use contiguous memory and pre-allocate enough. -> figure out, 
+  //  how much is enough, i.e. find a formula for an approximation (upper bound) for the cumulative
+  //  count of prime factors. A crude upper bound could perhaps be the integral of the base-2 
+  //  logarithm because the base-2 log of a number n is an upper bound for the number of prime 
+  //  factors in n. The integral of log(x) is x*(log(x)-1), so the required size grows slightly 
+  //  superlinearly, i.e. as x*log(x) - kind of similar to how the number of primes grows slightly
+  //  sublinearly as x/log(x)
 
 };
 
@@ -6141,8 +6166,54 @@ void rsPrimeFactorTable<T>::buildTable(T N)
 }
 
 
+//=================================================================================================
+
+template<class T> 
+class rsParticleSystem2D
+{
+
+public:
+
+  void computeForcesNaive();
+
+protected:
+
+  std::vector<rsVector2D<T>> positions, velocities, forces;
+  std::vector<T> masses;
+
+};
+
+template<class T> 
+void rsParticleSystem2D<T>::computeForcesNaive()
+{
+  int N = positions.size(); // todo: assert that the other array sizes match
+
+  for(int i = 0; i < N; i++)
+  {
+    forces[i] = 0;
+    rsVector2D<T> p = positions[i];
+    for(int j = 0; j < N; j++)
+    {
+      if(j != i)
+      {
+        rsVector2D<T> q = positions[j] - p; // delta-vector
+
+        // ToDo: factor out, use modified gravity laws:
+        T d = rsNorm(q);
+        forces[i] += masses[j] * masses[i] * q / (d*d*d);
+        // we use d^3 and not d^2 because q in the numerator also still contains a factor of d, 
+        // i.e. q is not normalized to unit length
+
+      }
+    }
+  }
+}
 
 
+
+
+
+//=================================================================================================
 /*
 Move to some other file:
 creating movies from pictures:

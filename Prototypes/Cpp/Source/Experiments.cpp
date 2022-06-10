@@ -8942,7 +8942,8 @@ void testWeightedAverages()
   }
   A /= W;
 
-  // Compute weighted averages with one left out using a naive O(N^2) algorithm:
+  // Compute weighted averages with one left out using a naive O(N^2) algorithm that literally
+  // computes these weighted averages leaving out one element at a time:
   Vec Ai(5);
   Vec Wi(5);
   for(int i = 0; i < 5; i++)
@@ -8960,6 +8961,21 @@ void testWeightedAverages()
     }
     Ai[i] /= Wi[i];
   }
+
+  // No compute these same weighted averages with one left out using an O(N) algorithm that just
+  // subtracts out the contribution of each w[i]*a[i] from the total weighted averages...tbc...
+  Vec Ai2(5);
+  Vec Wi2(5);
+  for(int i = 0; i < 5; i++)
+  {
+    float S = A*W;             // weighted sum
+    float Si = S - w[i]*a[i];  // weighted sum with one left out
+    Wi2[i] = W - w[i];         // sum of weights with one left out
+
+
+    int dummy = 0;
+  }
+
 
 
 

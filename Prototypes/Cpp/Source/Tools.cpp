@@ -6276,14 +6276,35 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
   rsAssert((int)forces.size() == N);
 
   T totalMass = 0;
-  rsVector2D<T> cog(0, 0);
+  rsVector2D<T> C(0, 0);  // center of mass
   for(int i = 0; i < N; i++)
   {
-    cog += masses[i] * positions[i];
+    C += masses[i] * positions[i];
     totalMass += masses[i];
   }
-  cog /= totalMass;  // does that make sense?
+  C /= totalMass;  // does that make sense?
 
+  for(int i = 0; i < N; i++)
+  {
+    T M_i = totalMass - masses[i];
+    // Mass of all other particles, i.e. all except the i-th
+
+
+    rsVector2D<T> C_i = C - (masses[i]/totalMass) * positions[i];
+    // Center of mass of all other particles, i.e. all particles except the i-th
+    // ...verify this! something seemt ot be wron. maybe the factor should be 
+    // masses[i] / M_i instead?
+
+
+
+
+    T D = rsNorm(C_i);
+    forces[i] = masses[i] * M_i * C_i / (D*D*D);
+    int dummy = 0;
+  }
+
+
+  /*
   for(int i = 0; i < N; i++)
   {
     rsVector2D<T> Q = cog - masses[i]*positions[i];
@@ -6296,6 +6317,7 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
     // ...nahh - i think, it only worked in the simplemost special case but not in general
     // ...back to the drawing board!
   }
+  */
 
 
 

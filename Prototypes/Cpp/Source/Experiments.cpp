@@ -8925,6 +8925,49 @@ void testParticleSystem()
 
 
 
+void testWeightedAverages()
+{
+
+  using Vec = std::vector<float>;
+
+  Vec a = { 3, 4, 2, 7, 4 };   // values to be averaged
+  Vec w = { 2, 3, 8, 3, 5 };   // weights
+
+  float W = 0.f;  // sum of weights
+  float A = 0.f;  // weighted average
+  for(int i = 0; i < 5; i++)
+  {
+    A += w[i] * a[i];
+    W += w[i];
+  }
+  A /= W;
+
+  // Compute weighted averages with one left out using a naive O(N^2) algorithm:
+  Vec Ai(5);
+  Vec Wi(5);
+  for(int i = 0; i < 5; i++)
+  {
+    Ai[i] = 0;
+    Wi[i] = 0;
+    for(int j = 0; j < 5; j++)
+    {
+      if(j != i)
+      {
+        Ai[i] += w[j] * a[j];
+        Wi[i] += w[j];
+        int dummy = 0;
+      }
+    }
+    Ai[i] /= Wi[i];
+  }
+
+
+
+
+  int dummy = 0;
+}
+
+
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {

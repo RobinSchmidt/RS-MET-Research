@@ -8943,42 +8943,32 @@ void testWeightedAverages()
   A /= W;
 
   // Compute weighted averages with one left out using a naive O(N^2) algorithm that literally
-  // computes these weighted averages leaving out one element at a time:
+  // computes all these weighted averages from scratch while leaving out one element at a time:
   Vec Ai(5);
   Vec Wi(5);
-  for(int i = 0; i < 5; i++)
-  {
+  for(int i = 0; i < 5; i++) {
     Ai[i] = 0;
     Wi[i] = 0;
-    for(int j = 0; j < 5; j++)
-    {
-      if(j != i)
-      {
+    for(int j = 0; j < 5; j++) {
+      if(j != i) {
         Ai[i] += w[j] * a[j];
-        Wi[i] += w[j];
-        int dummy = 0;
-      }
-    }
-    Ai[i] /= Wi[i];
-  }
+        Wi[i] += w[j]; }}
+    Ai[i] /= Wi[i]; }
 
-  // No compute these same weighted averages with one left out using an O(N) algorithm that just
+  // Now compute these same weighted averages with one left out using an O(N) algorithm that takes
+  // the total average ...
   // subtracts out the contribution of each w[i]*a[i] from the total weighted averages...tbc...
   Vec Ai2(5);
   Vec Wi2(5);
-  for(int i = 0; i < 5; i++)
-  {
-    float S = A*W;             // weighted sum
+  for(int i = 0; i < 5; i++) {
+    float S  = A*W;            // weighted sum
     float Si = S - w[i]*a[i];  // weighted sum with one left out
-    Wi2[i] = W - w[i];         // sum of weights with one left out
+    Wi2[i] = W  - w[i];        // sum of weights with one left out
+    Ai2[i] = Si / Wi2[i];  }   // weighted average with one left out
 
-
-    int dummy = 0;
-  }
-
-
-
-
+  bool ok = true;
+  ok &= Ai == Ai2;
+  ok &= Wi == Wi2;
 
   int dummy = 0;
 }

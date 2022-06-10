@@ -58,7 +58,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testGeneralizedCollatz();
-  //testParticleSystem();
+  testParticleSystem();
   testWeightedAverages();
 
 

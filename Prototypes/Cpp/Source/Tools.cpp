@@ -6275,6 +6275,41 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
   rsAssert((int)velocities.size() == N);
   rsAssert((int)forces.size() == N);
 
+  T M = 0;                      // total mass of all particles (maybe precompute - it's a constant!)
+  rsVector2D<T> S(0, 0);        // sum of all position vectors weighted by the mass of the particle
+  for(int i = 0; i < N; i++)
+  {
+    M += masses[i];
+    S += masses[i] * positions[i];
+  }
+
+
+
+  for(int i = 0; i < N; i++)
+  {
+    T M_i = M - masses[i];
+    // sum of all masses except the i-th
+
+    rsVector2D<T> S_i = S - masses[i] * positions[i];  
+    // Weighted sum of all positions expcept the i-th
+
+    rsVector2D<T> C_i = S_i / M_i;
+    // Center of mass of all particles except the i-th
+
+    rsVector2D<T> Q = C_i - positions[i];
+    // Difference vector between current particle i and the center of mass of all other particles
+
+    T D = rsNorm(Q);
+    // Distance from i-th particle to center of mass of all others
+
+    forces[i] = M_i * masses[i] * Q / (D*D*D);
+    // Force excerted on i-th particle by all the others
+  }
+
+
+
+
+  /*
   T totalMass = 0;
   rsVector2D<T> C(0, 0);  // center of mass
   for(int i = 0; i < N; i++)
@@ -6302,6 +6337,8 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
     forces[i] = masses[i] * M_i * C_i / (D*D*D);
     int dummy = 0;
   }
+  */
+
 
 
   /*

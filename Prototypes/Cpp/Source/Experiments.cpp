@@ -8910,7 +8910,12 @@ void testParticleSystem()
   ps.setPositions(p);
 
   ps.computeForcesNaive(f1);
-  ps.computeForcesFast(f2); // nope! that's toally wrong! there are even nans
+  ps.computeForcesFast(f2);
+  // Values are numercially wrong but qualitatively right. Maybe we are just missing a scale factor
+  // somewhere. The middle value is nan but that's not surprising because the middle mass sits
+  // exactly on the center of amss of the other two, so we get a 0/0
+
+  // nope! that's toally wrong! there are even nans
   //ok &= f2 == f1;
 
 
@@ -8932,8 +8937,12 @@ void testWeightedAverages()
   // of weights. We want to compute all the weighted averages with one element left out at a time,
   // i.e. define Ai = weighted average of all a[j] where j != i. A naive algorithm has time
   // complexity O(N^2) but a better algorithm can compute the same values in O(N). This is a 
-  // algorithmic pattern that can be useful in other contexts too - for example for implementing
-  // particle systems efficiently.
+  // algorithmic pattern that can potentially be useful in other contexts, whenever each object
+  // interacts with every other object. An example is a particle system where each particle excerts
+  // a gravitational attraction pon every other particle. It occurs also in Lagrange interpolation 
+  // where there are partial polynomials that consists of a product of all linear factors exscpt 
+  // one. In such a case, one can construct a "master" polynomial and then obtain the i-th by 
+  // dividing out a linear factor at a time.
 
   using Vec = std::vector<float>;
   Vec a = { 3, 4, 2, 7, 4 };   // array of values to be averaged

@@ -6282,7 +6282,7 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
     cog += masses[i] * positions[i];
     totalMass += masses[i];
   }
-  cog /= totalMass;
+  cog /= totalMass;  // does that make sense?
 
   for(int i = 0; i < N; i++)
   {
@@ -6292,6 +6292,9 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
 
     // Test:
     forces[i] /= totalMass*totalMass;
+    // It seens to work but I'm not sure why. More tests and derivations needed.
+    // ...nahh - i think, it only worked in the simplemost special case but not in general
+    // ...back to the drawing board!
   }
 
 

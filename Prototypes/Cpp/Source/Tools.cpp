@@ -6174,7 +6174,12 @@ class rsParticleSystem2D
 
 public:
 
-  void computeForcesNaive();
+  rsParticleSystem2D(int numParticles);
+
+  void computeForcesNaive(); // for referencce in unit tests, inefficient
+  void computeForcesFast(); 
+  // Maybe the forces vector doesn't need to be stored as member. it can be passed in as
+  // parameter. That makes it also convenient to test the force computation
 
 protected:
 
@@ -6182,6 +6187,15 @@ protected:
   std::vector<T> masses;
 
 };
+
+template<class T> 
+rsParticleSystem2D<T>::rsParticleSystem2D(int numParticles)
+{
+  positions.resize(numParticles);
+  velocities.resize(numParticles);
+  forces.resize(numParticles);
+  masses.resize(numParticles);
+}
 
 template<class T> 
 void rsParticleSystem2D<T>::computeForcesNaive()
@@ -6209,6 +6223,30 @@ void rsParticleSystem2D<T>::computeForcesNaive()
   }
 }
 
+template<class T> 
+void rsParticleSystem2D<T>::computeForcesFast()
+{
+  int N = positions.size(); // todo: assert that the other array sizes match
+
+  rsVector2D<T> c(0, 0);
+  for(int i = 0; i < N; i++)
+    cog += masses[i] * positions[i];
+
+
+  for(int i = 0; i < N; i++)
+  {
+    rsVector2D<T> Q = cog - masses[i]*positions[i];
+    T D = rsNorm(Q);
+    forces[i] = masses[i] * Q / (D*D*D);
+  }
+
+
+  // Idea:
+  // -We first compute the center of mass of all particles. This is an O(N) operation.
+  // -For each particle, we subtrcat out its contribution to the center of mass which gives the
+  //  center of all other masses. We treat this center of all other masses as a single replacement
+  //  mass that acts as a stand-in for all others. i'm not sure, if that is supposed to work...
+}
 
 
 

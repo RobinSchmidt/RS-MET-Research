@@ -57,8 +57,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNewtonFractal();
   //testPrimeFactorTable();
   //testPrimesAndMore();
-  testGeneralizedCollatz();
-
+  //testGeneralizedCollatz();
+  testParticleSystem();
 
 
   return 0;

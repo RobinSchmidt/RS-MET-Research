@@ -8860,6 +8860,20 @@ void testGeneralizedCollatz()
   int dummy = 0;
 }
 
+
+void testParticleSystem()
+{
+  using Real = float;
+
+  // A system with just two particles:
+  rsParticleSystem2D<Real> ps2(2);
+
+
+  int dummy = 0;
+}
+
+
+
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {

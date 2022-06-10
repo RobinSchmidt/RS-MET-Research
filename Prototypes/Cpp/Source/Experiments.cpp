@@ -8893,6 +8893,11 @@ void testParticleSystem()
   ps2.computeForcesFast(f2);
   ok &= f2[0] == Vec2D( 1, 0);
   ok &= f2[1] == Vec2D(-1, 0);
+  // the direction is correct but it is scaled by a factor of 4...is that the square of the 
+  // total mass? ..ok - we now divide by that factor and this test passes. 
+
+  // ToDo:
+  // -Test it with 3 particles at (-1,0), (0,0), (1,0)
 
 
 

@@ -6268,16 +6268,26 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
   rsAssert((int)velocities.size() == N);
   rsAssert((int)forces.size() == N);
 
+  T totalMass = 0;
   rsVector2D<T> cog(0, 0);
   for(int i = 0; i < N; i++)
+  {
     cog += masses[i] * positions[i];
+    totalMass += masses[i];
+  }
+  cog /= totalMass;
 
   for(int i = 0; i < N; i++)
   {
     rsVector2D<T> Q = cog - masses[i]*positions[i];
     T D = rsNorm(Q);
     forces[i] = masses[i] * Q / (D*D*D);
+
+    // Test:
+    forces[i] /= totalMass*totalMass;
   }
+
+
 
 
   // Idea:

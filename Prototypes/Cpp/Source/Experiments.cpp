@@ -8927,20 +8927,17 @@ void testParticleSystem()
 
 void testWeightedAverages()
 {
+  // Demonstrates two different ways of computing weighted averages of an array with one left out. 
+  // Assume we are given an array a[] of numbers (or vectors, matrices, whatever) and an array w[]
+  // of weights. We want to compute all the weighted averages with one element left out at a time,
+  // i.e. define Ai = weighted average of all a[j] where j != i. A naive algorithm has time
+  // complexity O(N^2) but a better algorithm can compute the same values in O(N). This is a 
+  // algorithmic pattern that can be useful in other contexts too - for example for implementing
+  // particle systems efficiently.
 
   using Vec = std::vector<float>;
-
-  Vec a = { 3, 4, 2, 7, 4 };   // values to be averaged
-  Vec w = { 2, 3, 8, 3, 5 };   // weights
-
-  float W = 0.f;  // sum of weights
-  float A = 0.f;  // weighted average
-  for(int i = 0; i < 5; i++)
-  {
-    A += w[i] * a[i];
-    W += w[i];
-  }
-  A /= W;
+  Vec a = { 3, 4, 2, 7, 4 };   // array of values to be averaged
+  Vec w = { 2, 3, 8, 3, 5 };   // weights for the average
 
   // Compute weighted averages with one left out using a naive O(N^2) algorithm that literally
   // computes all these weighted averages from scratch while leaving out one element at a time:
@@ -8955,17 +8952,31 @@ void testWeightedAverages()
         Wi[i] += w[j]; }}
     Ai[i] /= Wi[i]; }
 
-  // Now compute these same weighted averages with one left out using an O(N) algorithm that takes
-  // the total average ...
-  // subtracts out the contribution of each w[i]*a[i] from the total weighted averages...tbc...
+
+  // Now compute these same weighted averages with one left out using an O(N) algorithm that first 
+  // precomputes the total average and the total sum of weights and then for each index i, 
+  // subtracts out the contribution of the curent w[i]*a[i] 
+
+  // Precomputation in O(N):
+  float W = 0.f;  // sum of weights
+  float A = 0.f;  // weighted average
+  for(int i = 0; i < 5; i++) {
+    A += w[i] * a[i];
+    W += w[i]; }
+  A /= W;  
+
+  // Computation of the Ai, also in O(N):
   Vec Ai2(5);
   Vec Wi2(5);
+  float S = A*W;               // weighted sum
   for(int i = 0; i < 5; i++) {
-    float S  = A*W;            // weighted sum
     float Si = S - w[i]*a[i];  // weighted sum with one left out
     Wi2[i] = W  - w[i];        // sum of weights with one left out
     Ai2[i] = Si / Wi2[i];  }   // weighted average with one left out
 
+  // Check if both algorithms did indeed compute the same numbers (we don't even seem to need a 
+  // tolerance - but that may depend on compiler-settings, so maybe include a tolerance for this
+  // test later):
   bool ok = true;
   ok &= Ai == Ai2;
   ok &= Wi == Wi2;

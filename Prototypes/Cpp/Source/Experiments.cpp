@@ -8870,37 +8870,51 @@ void testParticleSystem()
 
 
   // A system with just two particles:
-  rsParticleSystem2D<Real> ps2(2);
+  rsParticleSystem2D<Real> ps(2);
 
   std::vector<Vec2D> p(2), v(2);   // positions, velocities, forces
   p[0] = Vec2D(0, 0);
   p[1] = Vec2D(1, 0);
-  ps2.setPositions(p);
+  ps.setPositions(p);
 
   std::vector<Real> m(2);  // masses
   m[0] = 1;
   m[1] = 1;
-  ps2.setMasses(m);
+  ps.setMasses(m);
 
   std::vector<Vec2D> f1(2), f2(2); // forces computed by 2 different algorithms
 
   // Compute forces by naive algorithm with complexity O(N^2):
-  ps2.computeForcesNaive(f1);
+  ps.computeForcesNaive(f1);
   ok &= f1[0] == Vec2D( 1, 0);
   ok &= f1[1] == Vec2D(-1, 0);
 
   // Compute forces by fast algorithm with complexity O(N):
-  ps2.computeForcesFast(f2);
+  ps.computeForcesFast(f2);
   ok &= f2[0] == Vec2D( 1, 0);
   ok &= f2[1] == Vec2D(-1, 0);
   // the direction is correct but it is scaled by a factor of 4...is that the square of the 
   // total mass? ..ok - we now divide by that factor and this test passes. 
 
+  // Now with 3 particles at (-1,0), (0,0), (1,0)
+  ps.setNumParticles(3);
+  m.resize(3);
+  p.resize(3);
+  f1.resize(3);
+  f2.resize(3);
+  m[2] = 1;
+  p[0] = Vec2D(-1, 0);
+  p[1] = Vec2D( 0, 0);
+  p[2] = Vec2D( 1, 0);
+
+  ps.computeForcesNaive(f1);
+  ps.computeForcesFast(f2);
+  ok &= f2 == f1;
+
+
+
   // ToDo:
-  // -Test it with 3 particles at (-1,0), (0,0), (1,0)
-
-
-
+  // -compare to Nils beglund's code
 
   int dummy = 0;
 }

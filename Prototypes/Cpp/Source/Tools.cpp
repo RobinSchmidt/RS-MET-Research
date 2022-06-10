@@ -6179,6 +6179,7 @@ public:
 
 
   // Setup:
+  void setNumParticles(int newNumber);
   void setMasses(std::vector<T>& newMasses);
   void setPositions(std::vector<rsVector2D<T>>& newPositions);
 
@@ -6206,10 +6207,16 @@ protected:
 template<class T> 
 rsParticleSystem2D<T>::rsParticleSystem2D(int numParticles)
 {
-  positions.resize(numParticles);
-  velocities.resize(numParticles);
-  //forces.resize(numParticles);
-  masses.resize(numParticles);
+  setNumParticles(numParticles);
+}
+
+template<class T> 
+void rsParticleSystem2D<T>::setNumParticles(int newNumber)
+{
+  positions.resize(newNumber);
+  velocities.resize(newNumber);
+  //forces.resize(newNumber);
+  masses.resize(newNumber);
 }
 
 template<class T> 

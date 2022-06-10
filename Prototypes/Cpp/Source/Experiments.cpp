@@ -8863,10 +8863,29 @@ void testGeneralizedCollatz()
 
 void testParticleSystem()
 {
-  using Real = float;
+  using Real  = float;
+  using Vec2D = rsVector2D<Real>;
+
 
   // A system with just two particles:
   rsParticleSystem2D<Real> ps2(2);
+
+  std::vector<Vec2D> p(2), v(2);   // positions, velocities, forces
+  p[0] = Vec2D(0, 0);
+  p[1] = Vec2D(1, 0);
+  ps2.setPositions(p);
+
+  std::vector<Real> m(2);  // masses
+  m[0] = 1;
+  m[1] = 1;
+  ps2.setMasses(m);
+
+  std::vector<Vec2D> f1(2), f2(2); // forces computed by 2 different algorithms
+  ps2.computeForcesNaive(f1);
+  ps2.computeForcesFast(f2);
+
+
+
 
 
   int dummy = 0;

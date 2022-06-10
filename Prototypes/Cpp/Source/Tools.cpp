@@ -6174,16 +6174,31 @@ class rsParticleSystem2D
 
 public:
 
+  // Lifetime:
   rsParticleSystem2D(int numParticles);
 
-  void computeForcesNaive(); // for referencce in unit tests, inefficient
-  void computeForcesFast(); 
+
+  // Setup:
+  void setMasses(std::vector<T>& newMasses);
+  void setPositions(std::vector<rsVector2D<T>>& newPositions);
+
+
+
+
+
+  // Processing:
+  void computeForcesNaive(std::vector<rsVector2D<T>>& forces); // for referencce in unit tests, inefficient
+  void computeForcesFast(std::vector<rsVector2D<T>>& forces); 
   // Maybe the forces vector doesn't need to be stored as member. it can be passed in as
   // parameter. That makes it also convenient to test the force computation
 
+
+
+
+
 protected:
 
-  std::vector<rsVector2D<T>> positions, velocities, forces;
+  std::vector<rsVector2D<T>> positions, velocities;
   std::vector<T> masses;
 
 };
@@ -6193,19 +6208,39 @@ rsParticleSystem2D<T>::rsParticleSystem2D(int numParticles)
 {
   positions.resize(numParticles);
   velocities.resize(numParticles);
-  forces.resize(numParticles);
+  //forces.resize(numParticles);
   masses.resize(numParticles);
 }
 
 template<class T> 
-void rsParticleSystem2D<T>::computeForcesNaive()
+void rsParticleSystem2D<T>::setMasses(std::vector<T>& newMasses)
 {
-  int N = positions.size(); // todo: assert that the other array sizes match
+  rsAssert(newMasses.size() == masses.size());
+  rsCopy(newMasses, masses);
+}
+
+template<class T> 
+void rsParticleSystem2D<T>::setPositions(std::vector<rsVector2D<T>>& newPositions)
+{
+  rsAssert(newPositions.size() == positions.size());
+  rsCopy(newPositions, positions);
+}
+
+
+template<class T> 
+void rsParticleSystem2D<T>::computeForcesNaive(std::vector<rsVector2D<T>>& forces)
+{
+  int N = positions.size(); 
+  rsAssert((int)velocities.size() == N);
+  rsAssert((int)forces.size() == N);
 
   for(int i = 0; i < N; i++)
   {
     forces[i] = 0;
     rsVector2D<T> p = positions[i];
+
+    // Loop over all other particles and sum up their contributions to the total force that acts
+    // on the current particle i:
     for(int j = 0; j < N; j++)
     {
       if(j != i)
@@ -6218,20 +6253,24 @@ void rsParticleSystem2D<T>::computeForcesNaive()
         // we use d^3 and not d^2 because q in the numerator also still contains a factor of d, 
         // i.e. q is not normalized to unit length
 
+        int dummy = 0;
+
       }
     }
   }
 }
+// maybe it should take the positions as parameter, too?
 
 template<class T> 
-void rsParticleSystem2D<T>::computeForcesFast()
+void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces)
 {
-  int N = positions.size(); // todo: assert that the other array sizes match
+  int N = positions.size(); 
+  rsAssert((int)velocities.size() == N);
+  rsAssert((int)forces.size() == N);
 
-  rsVector2D<T> c(0, 0);
+  rsVector2D<T> cog(0, 0);
   for(int i = 0; i < N; i++)
     cog += masses[i] * positions[i];
-
 
   for(int i = 0; i < N; i++)
   {

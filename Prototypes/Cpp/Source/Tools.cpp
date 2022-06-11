@@ -6275,15 +6275,15 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
   rsAssert((int)velocities.size() == N);
   rsAssert((int)forces.size() == N);
 
-  T M = 0;                      // total mass of all particles (maybe precompute - it's a constant!)
-  rsVector2D<T> S(0, 0);        // sum of all position vectors weighted by the mass of the particle
+  T M = 0;                     // total mass of all particles (maybe precompute - it's a constant!)
+  rsVector2D<T> S(0, 0);       // sum of all position vectors weighted by the mass of the particle
   for(int i = 0; i < N; i++)
   {
     M += masses[i];
     S += masses[i] * positions[i];
   }
-
-
+  // By the way: the center of mass of all particles would now be given by S/M. But we don't need 
+  // that in further computations. We will only need the weighted sum itself.
 
   for(int i = 0; i < N; i++)
   {
@@ -6307,63 +6307,13 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
   }
 
 
-
-
-  /*
-  T totalMass = 0;
-  rsVector2D<T> C(0, 0);  // center of mass
-  for(int i = 0; i < N; i++)
-  {
-    C += masses[i] * positions[i];
-    totalMass += masses[i];
-  }
-  C /= totalMass;  // does that make sense?
-
-  for(int i = 0; i < N; i++)
-  {
-    T M_i = totalMass - masses[i];
-    // Mass of all other particles, i.e. all except the i-th
-
-
-    rsVector2D<T> C_i = C - (masses[i]/totalMass) * positions[i];
-    // Center of mass of all other particles, i.e. all particles except the i-th
-    // ...verify this! something seemt ot be wron. maybe the factor should be 
-    // masses[i] / M_i instead?
-
-
-
-
-    T D = rsNorm(C_i);
-    forces[i] = masses[i] * M_i * C_i / (D*D*D);
-    int dummy = 0;
-  }
-  */
-
-
-
-  /*
-  for(int i = 0; i < N; i++)
-  {
-    rsVector2D<T> Q = cog - masses[i]*positions[i];
-    T D = rsNorm(Q);
-    forces[i] = masses[i] * Q / (D*D*D);
-
-    // Test:
-    forces[i] /= totalMass*totalMass;
-    // It seens to work but I'm not sure why. More tests and derivations needed.
-    // ...nahh - i think, it only worked in the simplemost special case but not in general
-    // ...back to the drawing board!
-  }
-  */
-
-
-
-
   // Idea:
   // -We first compute the center of mass of all particles. This is an O(N) operation.
-  // -For each particle, we subtrcat out its contribution to the center of mass which gives the
+  // -For each particle, we subtract out its contribution to the center of mass which gives the
   //  center of all other masses. We treat this center of all other masses as a single replacement
-  //  mass that acts as a stand-in for all others. i'm not sure, if that is supposed to work...
+  //  mass that acts as a stand-in for all others. I'm not sure, if that is supposed to work. Maybe
+  //  only for very specific force laws like Hooke's but not for the (nonlinear) gravitational law?
+  //  But maybe the law can be taken into account when we compute S?
 }
 
 

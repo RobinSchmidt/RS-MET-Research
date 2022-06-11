@@ -8911,19 +8911,31 @@ void testParticleSystem()
 
   ps.computeForcesNaive(f1);
   ps.computeForcesFast(f2);
-  // Values are numercially wrong but qualitatively right. Maybe we are just missing a scale factor
-  // somewhere. The middle value is nan but that's not surprising because the middle mass sits
-  // exactly on the center of amss of the other two, so we get a 0/0
+  // Values are numerically wrong but qualitatively right. Maybe we are just missing a scale factor
+  // somewhere? The middle value is nan but that's not surprising because the middle mass sits
+  // exactly on the center of mass of the other two, so we get a 0/0. But maybe the whole idea is 
+  // flawed and will not work because of the nonlinearity of the gravitaional force law? Maybe it
+  // works only for a linear Hooke-spring like force law? That seems to make sense. If that's the 
+  // case can we somehow fix it...maybe by taking the nonlinearity into account in the computation
+  // of the total weighted sum? We may somehow also use the same law in the average computation.
+  // Or maybe we can compute gravitational potentials with one particle left out at a time. Or 
+  // gravitational fields...actually, there ought to be a linear superposition principle for 
+  // gravitational fields, right? Or, more generally, for any kind of force field. Maybe we can
+  // compute a total fotce field and subtract out one contribution to the force field at a time.
+  // Yes! That makes sense...äääh...but wait - we need to compute it at all positions...but at 
+  // which position would be be supposed to calculate the total force field?
 
-  // nope! that's toally wrong! there are even nans
-  //ok &= f2 == f1;
+  // It seems to work if we divide not by d^3 but instead by d^1 in the force law. Also for
+  // not dividing at all (I think, not dividing at all should give Hooke's law?). But more tests 
+  // are needed with different and more complex configurations. Try an example unequal masses: one 
+  // mass is heavier but also farther away to compensate for the weight difference...or something. 
+  // And then try also to arrange the masses on a triangle (currently, they are along a line)
 
-
-
+  // Maybe the nan problem can be fixed by a simple if(D==0)?
 
 
   // ToDo:
-  // -compare to Nils beglund's code
+  // -Compare to Nils Berglund's code
 
   int dummy = 0;
 }

@@ -9012,21 +9012,36 @@ void testModularForm()
   using Complex  = rsComplex<Fraction>;
   using Matrix   = rsMatrix2x2<Complex>;
 
-  Complex one(1), zero(0);
-
   // Define the generators of the group SL_2(Z). Any element of the group can be created as a 
   // suitable product of these two matrices:
+  Complex one(1), zero(0);
   Matrix T(one,   one,   zero, one);    // T = (1, 1 ; 0,1)
   Matrix S(zero, -one,   one,  zero);   // S = (0,-1 ; 1,0)
-
-  // Verify indentities from here: https://kconrad.math.uconn.edu/blurbs/grouptheory/SL(2,Z).pdf:
-  Matrix A = T*T*T * S * T*T * S * T*T*T*T * S;  // T^3 S T^2 S T^4 S = (17,-5 ; 7,-2)
+  Matrix A;
 
   // Verify identites from here: https://encyclopediaofmath.org/wiki/Modular_group:
-  A = S*S;            // S^2     = (1,0 , 0,1) = 1
-  A = S*T; A = A*A*A; // (S*T)^3 = (1,0 , 0,1) = 1
-  // ...hmm - they have a minus sign. Am I doing something wrong? Or mayby the website has missed
-  // the minus?
+  A = S*S;            // S^2     = (1,0 , 0,1) = -1
+  A = S*T; A = A*A*A; // (S*T)^3 = (1,0 , 0,1) = -1
+  // ...hmm - they have a minus sign but the website says it's just the identity. Am I doing 
+  // something wrong? Or maybe the website has missed the minus?
+
+  // Verify indentities from here: https://kconrad.math.uconn.edu/blurbs/grouptheory/SL(2,Z).pdf:
+  A = T*T*T * S * T*T * S * T*T*T*T * S;  // T^3 S T^2 S T^4 S = (17,-5 ; 7,-2)
+  // ..do some more..
+
+
+  // Applies the modular for defined by the matrix A to the number z:
+  auto apply = [](Matrix A, Complex z) { return (A.a*z + A.b) / (A.c*z + A.d); };
+
+  // Try action of the matrix:
+  Complex z(Fraction(2, 3), Fraction(3, 5));
+  Complex gz = apply(A, z);  // (13439 + 135i) / 5569
+  // interesting that real and imaginary part have the same denominator. is that a general feature?
+
+  z = Complex(Fraction(3, 7), Fraction(2, 5)); gz = apply(A, z); 
+  // ...nope, here they have different demominators. What was so special about the input above? 
+  // -> figure out!
+
 
 
   // ToDo:

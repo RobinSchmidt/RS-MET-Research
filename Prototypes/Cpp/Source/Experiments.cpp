@@ -9006,6 +9006,40 @@ void testWeightedAverages()
 }
 
 
+void testModularForm()
+{
+  using Fraction = rsFraction<int>;
+  using Complex  = rsComplex<Fraction>;
+  using Matrix   = rsMatrix2x2<Complex>;
+
+  Complex one(1), zero(0);
+
+  // Define the generators of the group SL_2(Z). Any element of the group can be created as a 
+  // suitable product of these two matrices:
+  Matrix T(one,   one,   zero, one);    // T = (1, 1 ; 0,1)
+  Matrix S(zero, -one,   one,  zero);   // S = (0,-1 ; 1,0)
+
+  // Verify indentities from here: https://kconrad.math.uconn.edu/blurbs/grouptheory/SL(2,Z).pdf:
+  Matrix A = T*T*T * S * T*T * S * T*T*T*T * S;  // T^3 S T^2 S T^4 S = (17,-5 ; 7,-2)
+
+  // Verify identites from here: https://encyclopediaofmath.org/wiki/Modular_group:
+  A = S*S;            // S^2     = (1,0 , 0,1) = 1
+  A = S*T; A = A*A*A; // (S*T)^3 = (1,0 , 0,1) = 1
+  // ...hmm - they have a minus sign. Am I doing something wrong? Or mayby the website has missed
+  // the minus?
+
+
+  // ToDo:
+  // -In think, the matrices do not need to be complex. Actually, the elements a,b,c,d are supposed
+  //  to be integers. But at the end, we may need the complex datatype, so maybe it's good to 
+  //  define these matrices using complex numbers too for compatibility...we'll see
+
+
+  int dummy = 0;
+}
+
+
+
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {

@@ -9018,6 +9018,9 @@ void testModularForm()
   Matrix T(one,   one,   zero, one);    // T = (1, 1 ; 0,1)
   Matrix S(zero, -one,   one,  zero);   // S = (0,-1 ; 1,0)
   Matrix A;
+  // ..I think, being generators means that you can build up any linear fractional (Moebius) 
+  // transformation with integer coeffs by composing the "shift-by-one" and the 
+  // "take-the-negative-reciprocal" operation in a suitable way.
 
   // Verify identites from here: https://encyclopediaofmath.org/wiki/Modular_group:
   A = S*S;            // S^2     = (1,0 , 0,1) = -1
@@ -9049,6 +9052,9 @@ void testModularForm()
   //  to be integers. But at the end, we may need the complex datatype, so maybe it's good to 
   //  define these matrices using complex numbers too for compatibility...we'll see
 
+
+  // See:
+  // https://www.youtube.com/watch?v=dOY_MzmS0Zk
 
   int dummy = 0;
 }

@@ -9006,7 +9006,7 @@ void testWeightedAverages()
 }
 
 
-void testModularForm()
+void testModularGroup()
 {
   using Fraction = rsFraction<int>;
   using Complex  = rsComplex<Fraction>;
@@ -9059,7 +9059,27 @@ void testModularForm()
   int dummy = 0;
 }
 
+void testModularForms()
+{
+  // Tests a couple of modular forms and modular functions (which are special modular forms - those
+  // with weight 0)
 
+
+  using Real     = double;
+  using Complex  = rsComplex<Real>;
+
+
+  Complex i(0, 1);  // imaginary unit
+  Complex w1 = 1;   // 1st period
+  Complex w2 = i;   // 2nd period
+
+
+  // Evaluating the Weierstrass P-function:
+  // https://github.com/daviddumas/weierstrass   ..is based on:
+  // https://academic.oup.com/imajna/article-abstract/10/1/119/672367?redirectedFrom=fulltext
+
+  int dummy = 0;
+}
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

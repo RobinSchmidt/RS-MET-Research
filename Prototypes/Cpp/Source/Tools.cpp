@@ -2640,6 +2640,13 @@ RS_PFX rsPow(RS_DN x, RS_DN y)
 }
 // see also:
 // https://math.stackexchange.com/questions/1914591/dual-number-ab-varepsilon-raised-to-a-dual-power-e-g-ab-varepsilon
+//
+// Try also an implementation based on:
+// https://en.wikipedia.org/wiki/Logarithmic_differentiation#Composite_exponent
+// see also Hans Cycon's math book, page 99 "Logarithmische Ableitung":
+//   (f^g)' = (f^g) * (g' * log(f) + g * f' / f)   for f > 0
+// implementing this formula directly for the d-part along with calling pow for the v-part should
+// probably give the same result. -> try it!
 
 // todo: cbrt, pow, abs, asin, acos, atan, atan2, etc.
 // what about floor and ceil? should their derivatives be a delta-comb? well - maybe i should not

@@ -60,7 +60,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testGeneralizedCollatz();
   //testParticleSystem();
   //testWeightedAverages();
-  testModularForm();
+  //testModularGroup();
+  testModularForms();
 
 
   return 0;

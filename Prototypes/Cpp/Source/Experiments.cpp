@@ -9073,6 +9073,14 @@ void testModularForms()
   Complex w1 = 1;   // 1st period
   Complex w2 = i;   // 2nd period
 
+  // ToDo:
+  // -Evaluate 
+  //    e1 = P(w1/2), e2 = P((w1+w2)/2), e3 = P(w2/2), g2 = -4*(e1*e2 + e1*e3 + e2*e3), 
+  //    g3 = 4*e1*e2*e3, D = g2^3 27*g3^2
+  //  see Teubner-Bronstein, pg. 606. Maybe before we have the Weierstrass P-function available, 
+  //  just hardcode these values for given w1, w2 (evaluate with wolfram alpha or soemthing).
+  // -Implement Klein's J-function (pg. 610)
+
 
   // Evaluating the Weierstrass P-function:
   // https://github.com/daviddumas/weierstrass   ..is based on:

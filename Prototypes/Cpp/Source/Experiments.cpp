@@ -9093,6 +9093,45 @@ void testModularForms()
 void testAttractors()
 {
 
+  int N = 10000;
+  double sampleRate = 44100;
+  double frequency  = 10;
+
+  using Vec = std::vector<double>;
+
+  // Set up the object:
+  DenTSUCS2 att;
+  att.reset();
+  att.setSampleRate(sampleRate);
+  att.setFrequency(frequency);
+  double h = att.getStepSize();
+
+  // Generate output:
+  Vec t(N), x(N), y(N), z(N);
+  t[0] = 0;
+  x[0] = att.getX();
+  y[0] = att.getY();
+  z[0] = att.getZ();
+  for(int i = 1; i < N; i++)
+  {
+    att.inc();
+    t[i] = t[i-1] + h;
+    x[i] = att.getX();
+    y[i] = att.getY();
+    z[i] = att.getZ();
+  }
+
+
+  // Plot results:
+  rsPlotVectorsXY(t, x, y, z);
+
+
+
+  // ToDo:
+  // -Introduce an oversampling factor. This attarctor really needs a very high sample rate to
+  //  remain stable but we don't want to plot so much data
+
+
 
   int dummy = 0;
 }

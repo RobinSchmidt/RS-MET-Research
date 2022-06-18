@@ -4,6 +4,9 @@
 
 class Attractor
 {
+
+public:
+
   void setSampleRate(double newSampleRate)
   {
     sampleRate = newSampleRate;
@@ -46,6 +49,8 @@ class Attractor
     return z;
   }
 
+  double getStepSize() const { return h; }
+
   void inc(){}
 
   void reset(){}
@@ -64,7 +69,7 @@ protected:
 };
 
 
-class Lorentz : Attractor
+class Lorentz : public Attractor
 {
   uint sigma = 0;
   uint rho   = 1;
@@ -98,7 +103,7 @@ class Lorentz : Attractor
   }
 };
 
-class Aizawa : Attractor // http://www.3d-meier.de/tut19/Seite3.html
+class Aizawa : public Attractor // http://www.3d-meier.de/tut19/Seite3.html
 {
   uint a = 0;
   uint b = 1;
@@ -138,7 +143,7 @@ class Aizawa : Attractor // http://www.3d-meier.de/tut19/Seite3.html
   }
 };
 
-class Bouali : Attractor // http://www.3d-meier.de/tut19/Seite5.html
+class Bouali : public Attractor // http://www.3d-meier.de/tut19/Seite5.html
 {
   uint a = 0;
   uint s = 1;
@@ -170,7 +175,7 @@ class Bouali : Attractor // http://www.3d-meier.de/tut19/Seite5.html
   }
 };
 
-class ChenLee : Attractor // http://www.3d-meier.de/tut19/Seite8.html
+class ChenLee : public Attractor // http://www.3d-meier.de/tut19/Seite8.html
 {
   uint a = 0;
   uint b = 1;
@@ -204,7 +209,7 @@ class ChenLee : Attractor // http://www.3d-meier.de/tut19/Seite8.html
   }
 };
 
-class DequanLi : Attractor // http://www.3d-meier.de/tut19/Seite9.html
+class DequanLi : public Attractor // http://www.3d-meier.de/tut19/Seite9.html
 {
   uint a = 0;
   uint c = 1;
@@ -244,7 +249,7 @@ class DequanLi : Attractor // http://www.3d-meier.de/tut19/Seite9.html
   }
 };
 
-class DenTSUCS2 : Attractor // http://www.3d-meier.de/tut19/Seite43.html
+class DenTSUCS2 : public Attractor // http://www.3d-meier.de/tut19/Seite43.html
 {
   uint a = 0;
   uint b = 1;
@@ -252,6 +257,8 @@ class DenTSUCS2 : Attractor // http://www.3d-meier.de/tut19/Seite43.html
   uint d = 3;
   uint e = 4;
   uint f = 5;
+
+public:
 
   DenTSUCS2()
   {
@@ -284,7 +291,7 @@ class DenTSUCS2 : Attractor // http://www.3d-meier.de/tut19/Seite43.html
   }
 };
 
-class DenGenesioTesi : Attractor // http://www.3d-meier.de/tut19/Seite11.html
+class DenGenesioTesi : public Attractor // http://www.3d-meier.de/tut19/Seite11.html
 {
   uint a = 0;
   uint b = 1;
@@ -318,7 +325,7 @@ class DenGenesioTesi : Attractor // http://www.3d-meier.de/tut19/Seite11.html
   }
 };
 
-class Hadley : Attractor // http://www.3d-meier.de/tut19/Seite12.html
+class Hadley : public Attractor // http://www.3d-meier.de/tut19/Seite12.html
 {
   uint a = 0;
   uint b = 1;
@@ -354,7 +361,7 @@ class Hadley : Attractor // http://www.3d-meier.de/tut19/Seite12.html
   }
 };
 
-class Halvorsen : Attractor // http://www.3d-meier.de/tut19/Seite13.html
+class Halvorsen : public Attractor // http://www.3d-meier.de/tut19/Seite13.html
 {
   uint a = 0;
 
@@ -384,7 +391,7 @@ class Halvorsen : Attractor // http://www.3d-meier.de/tut19/Seite13.html
   }
 };
 
-class HyperchaoticQi : Attractor // http://www.3d-meier.de/tut19/Seite90.html
+class HyperchaoticQi : public Attractor // http://www.3d-meier.de/tut19/Seite90.html
 {
   uint a = 0;
   uint b = 1;
@@ -427,7 +434,7 @@ class HyperchaoticQi : Attractor // http://www.3d-meier.de/tut19/Seite90.html
   }
 };
 
-class Dadra : Attractor //http://www.3d-meier.de/tut19/Seite77.html
+class Dadra : public Attractor //http://www.3d-meier.de/tut19/Seite77.html
 {
   uint p = 0;
   uint q = 1;
@@ -465,7 +472,7 @@ class Dadra : Attractor //http://www.3d-meier.de/tut19/Seite77.html
   }
 };
 
-class DenSprottLinzJ : Attractor // http://www.3d-meier.de/tut19/Seite29.html
+class DenSprottLinzJ : public Attractor // http://www.3d-meier.de/tut19/Seite29.html
 {
   uint a = 0;
 
@@ -495,7 +502,7 @@ class DenSprottLinzJ : Attractor // http://www.3d-meier.de/tut19/Seite29.html
   }
 };
 
-class LiuChen : Attractor // http://www.3d-meier.de/tut19/Seite46.html
+class LiuChen : public Attractor // http://www.3d-meier.de/tut19/Seite46.html
 {
   uint a = 0;
   uint b = 1;
@@ -537,7 +544,7 @@ class LiuChen : Attractor // http://www.3d-meier.de/tut19/Seite46.html
   }
 };
 
-class MultiSprottC : Attractor // http://www.3d-meier.de/tut19/Seite192.html
+class MultiSprottC : public Attractor // http://www.3d-meier.de/tut19/Seite192.html
 {
   uint a = 0;
   uint b = 1;
@@ -569,7 +576,7 @@ class MultiSprottC : Attractor // http://www.3d-meier.de/tut19/Seite192.html
   }
 };
 
-class SprottLinz : Attractor // http://www.3d-meier.de/tut19/Seite20.html
+class SprottLinz : public Attractor // http://www.3d-meier.de/tut19/Seite20.html
 {
   SprottLinz()
   {
@@ -595,7 +602,7 @@ class SprottLinz : Attractor // http://www.3d-meier.de/tut19/Seite20.html
   }
 };
 
-class Thomas : Attractor // http://www.3d-meier.de/tut19/Seite20.html
+class Thomas : public Attractor // http://www.3d-meier.de/tut19/Seite20.html
 {
   uint b = 0;
 
@@ -625,7 +632,7 @@ class Thomas : Attractor // http://www.3d-meier.de/tut19/Seite20.html
   }
 };
 
-class LorenzMod1 : Attractor // http://www.3d-meier.de/tut19/Seite79.html
+class LorenzMod1 : public  Attractor // http://www.3d-meier.de/tut19/Seite79.html
 {
   uint a = 0;
   uint b = 1;
@@ -661,7 +668,7 @@ class LorenzMod1 : Attractor // http://www.3d-meier.de/tut19/Seite79.html
   }
 };
 
-class LorXYZ15 : Attractor // https://arxiv.org/ftp/arxiv/papers/1409/1409.7842.pdf
+class LorXYZ15 : public Attractor // https://arxiv.org/ftp/arxiv/papers/1409/1409.7842.pdf
 {
   uint a = 0;
   uint b = 1;
@@ -697,7 +704,7 @@ class LorXYZ15 : Attractor // https://arxiv.org/ftp/arxiv/papers/1409/1409.7842.
   }
 };
 
-class WangSun : Attractor // http://www.3d-meier.de/tut19/Seite99.html
+class WangSun : public Attractor // http://www.3d-meier.de/tut19/Seite99.html
 {
   uint a = 0;
   uint b = 1;
@@ -737,7 +744,7 @@ class WangSun : Attractor // http://www.3d-meier.de/tut19/Seite99.html
   }
 };
 
-class HindenmarshRose : Attractor // https://en.wikipedia.org/wiki/Hindmarsh%E2%80%93Rose_model
+class HindenmarshRose : public Attractor // https://en.wikipedia.org/wiki/Hindmarsh%E2%80%93Rose_model
 {
   uint a = 0;
   uint b = 1;

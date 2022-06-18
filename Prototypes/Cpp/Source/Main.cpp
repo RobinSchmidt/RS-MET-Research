@@ -61,7 +61,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testParticleSystem();
   //testWeightedAverages();
   //testModularGroup();
-  testModularForms();
+  //testModularForms();
+
+  testAttractors();
 
 
   return 0;

@@ -9089,6 +9089,13 @@ void testModularForms()
   int dummy = 0;
 }
 
+void testAttractors()
+{
+
+
+  int dummy = 0;
+}
+
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {

@@ -1,4 +1,5 @@
-﻿#include "Tools.cpp"  // this includes rapt and rosic
+﻿#include "Tools.cpp"         // this includes rapt and rosic
+#include "Attractors.cpp"
 
 //-------------------------------------------------------------------------------------------------
 // move some of this code to rapt:

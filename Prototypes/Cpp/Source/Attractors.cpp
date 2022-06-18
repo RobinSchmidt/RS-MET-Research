@@ -50,18 +50,19 @@ class Attractor
 
   void reset(){}
 
-  protected void update()
-  {
-    h = frequency / sampleRate;
-  }
+protected:
 
-  protected array<double> C(10); // array of constants
-  protected double sampleRate = 44100;
-  protected double frequency = 100;
-  protected double h = frequency / sampleRate;
-  protected double x, y, z, w;
-  protected double dx, dy, dz, dw;
-}
+  
+  void update() {  h = frequency / sampleRate; }
+
+  double C[10]; // array of constants
+  double sampleRate = 44100;
+  double frequency = 100;
+  double h = frequency / sampleRate;
+  double x, y, z, w;
+  double dx, dy, dz, dw;
+};
+
 
 class Lorentz : Attractor
 {
@@ -135,7 +136,7 @@ class Aizawa : Attractor // http://www.3d-meier.de/tut19/Seite3.html
     y = 0;
     z = 0;
   }
-}
+};
 
 class Bouali : Attractor // http://www.3d-meier.de/tut19/Seite5.html
 {
@@ -201,7 +202,7 @@ class ChenLee : Attractor // http://www.3d-meier.de/tut19/Seite8.html
     y = 0;
     z = 4.5;
   }
-}
+};
 
 class DequanLi : Attractor // http://www.3d-meier.de/tut19/Seite9.html
 {
@@ -241,7 +242,7 @@ class DequanLi : Attractor // http://www.3d-meier.de/tut19/Seite9.html
     y = 0;
     z = -.16;
   }
-}
+};
 
 class DenTSUCS2 : Attractor // http://www.3d-meier.de/tut19/Seite43.html
 {
@@ -281,7 +282,7 @@ class DenTSUCS2 : Attractor // http://www.3d-meier.de/tut19/Seite43.html
     y = 1;
     z = -.1;
   }
-}
+};
 
 class DenGenesioTesi : Attractor // http://www.3d-meier.de/tut19/Seite11.html
 {
@@ -315,7 +316,7 @@ class DenGenesioTesi : Attractor // http://www.3d-meier.de/tut19/Seite11.html
     y = .1;
     z = .1;
   }
-}
+};
 
 class Hadley : Attractor // http://www.3d-meier.de/tut19/Seite12.html
 {
@@ -351,7 +352,7 @@ class Hadley : Attractor // http://www.3d-meier.de/tut19/Seite12.html
     y = 0;
     z = 0;
   }
-}
+};
 
 class Halvorsen : Attractor // http://www.3d-meier.de/tut19/Seite13.html
 {
@@ -381,7 +382,7 @@ class Halvorsen : Attractor // http://www.3d-meier.de/tut19/Seite13.html
     y = 0;
     z = 0;
   }
-}
+};
 
 class HyperchaoticQi : Attractor // http://www.3d-meier.de/tut19/Seite90.html
 {
@@ -424,7 +425,7 @@ class HyperchaoticQi : Attractor // http://www.3d-meier.de/tut19/Seite90.html
     z = 20;
     w = 22;
   }
-}
+};
 
 class Dadra : Attractor //http://www.3d-meier.de/tut19/Seite77.html
 {
@@ -462,7 +463,7 @@ class Dadra : Attractor //http://www.3d-meier.de/tut19/Seite77.html
     y = .1;
     z = .1;
   }
-}
+};
 
 class DenSprottLinzJ : Attractor // http://www.3d-meier.de/tut19/Seite29.html
 {
@@ -492,7 +493,7 @@ class DenSprottLinzJ : Attractor // http://www.3d-meier.de/tut19/Seite29.html
     y = .1;
     z = .1;
   }
-}
+};
 
 class LiuChen : Attractor // http://www.3d-meier.de/tut19/Seite46.html
 {
@@ -534,7 +535,7 @@ class LiuChen : Attractor // http://www.3d-meier.de/tut19/Seite46.html
     y = 3;
     z = 5;
   }
-}
+};
 
 class MultiSprottC : Attractor // http://www.3d-meier.de/tut19/Seite192.html
 {
@@ -566,7 +567,7 @@ class MultiSprottC : Attractor // http://www.3d-meier.de/tut19/Seite192.html
     y = .1;
     z = .1;
   }
-}
+};
 
 class SprottLinz : Attractor // http://www.3d-meier.de/tut19/Seite20.html
 {
@@ -592,7 +593,7 @@ class SprottLinz : Attractor // http://www.3d-meier.de/tut19/Seite20.html
     y = .1;
     z = .1;
   }
-}
+};
 
 class Thomas : Attractor // http://www.3d-meier.de/tut19/Seite20.html
 {
@@ -622,7 +623,7 @@ class Thomas : Attractor // http://www.3d-meier.de/tut19/Seite20.html
     y = 0;
     z = 0;
   }
-}
+};
 
 class LorenzMod1 : Attractor // http://www.3d-meier.de/tut19/Seite79.html
 {
@@ -658,7 +659,7 @@ class LorenzMod1 : Attractor // http://www.3d-meier.de/tut19/Seite79.html
     y = .1;
     z = .1;
   }
-}
+};
 
 class LorXYZ15 : Attractor // https://arxiv.org/ftp/arxiv/papers/1409/1409.7842.pdf
 {
@@ -694,7 +695,7 @@ class LorXYZ15 : Attractor // https://arxiv.org/ftp/arxiv/papers/1409/1409.7842.
     y = .1;
     z = .1;
   }
-}
+};
 
 class WangSun : Attractor // http://www.3d-meier.de/tut19/Seite99.html
 {
@@ -734,7 +735,7 @@ class WangSun : Attractor // http://www.3d-meier.de/tut19/Seite99.html
     y = .1;
     z = 1;
   }
-}
+};
 
 class HindenmarshRose : Attractor // https://en.wikipedia.org/wiki/Hindmarsh%E2%80%93Rose_model
 {
@@ -778,4 +779,4 @@ class HindenmarshRose : Attractor // https://en.wikipedia.org/wiki/Hindmarsh%E2%
     y = 4.0;
     z = 2.75;
   }
-}
+};

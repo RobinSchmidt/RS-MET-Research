@@ -9161,13 +9161,28 @@ void testAttractors()
   //  good deal, i.e. a net win.
 
   // ToDo:
-  // -Try even higher order methods like RK4.
+  // -Try even higher order methods like 4th order Runge-Kutta.
+  // -Try implicit methods like backward Euler and trapezoidal. Are they even more stable? Try them
+  //  also with stiff systems. Maybe use a system that produces two exponential decays with very
+  //  different decay-times - this is a textbook example for a stiff system.
+  // -Try multistep methods like Adams-Bashforth and Adams-Moulton.
+  // -Try the formula based on non-Newtonian calculus that I mention here:
+  //  https://github.com/RobinSchmidt/RS-MET/discussions/324
+  //  maybe use an exponential decay as example system. Maybe this works only for strictly positive
+  //  outputs due to the division by y - we can't divide by zero, so the output may not be supposed
+  //  to pass through zero.
+  // -Implement all of these methods generically with a sensible API.
+  // -Maybe the "oversampling" could be made adaptive in the sense of some automatic stepsize 
+  //  control.
+  // -Compare the accuracy of the various methods. Maybe creating the reference output ("ground 
+  //  truth") by a method that is known to be very accurate and using a very small stepsize.
 
   // Ideas:
   // -Invent some new systems by starting from a linear system that produces a decaying sinusoid 
   //  (with user adjustable frequency and decay time) and then add some nonlinear terms
   // -This looks interesting: http://www.3d-meier.de/tut19/Seite118.html
-  // -Maybe try using complex numbers
+  // -Maybe try using complex numbers. These could be used for all the existing systems to 
+  //  potentially produce even more interesting dynamics.
 
   // A big collection of systems can be found here:
   // http://www.3d-meier.de/tut19/Seite0.html

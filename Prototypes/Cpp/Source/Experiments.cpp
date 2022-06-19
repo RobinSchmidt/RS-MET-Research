@@ -9097,10 +9097,10 @@ void testAttractors()
   // We want to try a couple of solver methods...tbc...
 
   // Setup:
-  int    numSamples = 3000;   // Number of datapoints to generate
+  int    numSamples = 2000;   // Number of datapoints to generate
   int    oversample = 10;     // Amount of oversampling for the ODE solver
   double sampleRate = 44100;  // Output sample rate
-  double frequency  = 1400;   // Sort of a pseudo-frequency of the generator
+  double frequency  = 200;    // Sort of a pseudo-frequency of the generator
 
   // Set up the object:
   DenTSUCS2 att;
@@ -9137,16 +9137,19 @@ void testAttractors()
 
   // Observations:
   // -With sampleRate=44100, oversample=10, the maximum usable frequency before the method becomes
-  //  unstable is around 156 for the forward Euler method and 1399 for the midpoint method
+  //  unstable is around 156 for the forward Euler method and 1399 for the midpoint method.
   // -Using the midpoint rule increases the apparent frequency compared to using the forward Euler
   //  rule.
 
-
-
+  // Conclusions:
+  // -Using a higher order solver such as the (2nd order) midpoint rule really does improve the
+  //  numerical stability compared to the naive (1st order) forward Euler rule.
+  // -The midpoint rule requires 2 evaluations per step (Euler: just 1) but increases the usable
+  //  frequency range by a factor of around 9. That looks like using a 2nd order method could be a
+  //  good deal, i.e. a net win.
 
   // ToDo:
-  // -Introduce an oversampling factor. This attarctor really needs a very high sample rate to
-  //  remain stable but we don't want to plot so much data
+  // -Try even higher order methods like RK4.
   // -Create a 3D plot (just for fun)
 
 

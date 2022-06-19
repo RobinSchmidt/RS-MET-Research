@@ -9162,10 +9162,6 @@ void testAttractors()
 
   // ToDo:
   // -Try even higher order methods like RK4.
-  // -Create a 3D plot (just for fun)
-
-
-  int dummy = 0;
 }
 
 // fast inverse square root approximation from Quake engine

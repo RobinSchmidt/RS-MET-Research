@@ -268,7 +268,7 @@ public:
 
   void inc()
   {
-    computeDeltas();
+    computeDerivatives();
 
     x += h * dx;
     y += h * dy;
@@ -278,6 +278,8 @@ public:
 
   void incMidpoint()
   {
+
+
 
   }
 
@@ -291,7 +293,7 @@ public:
 
 protected:
 
-  void computeDeltas()
+  void computeDerivatives()
   {
     dx = C[a] * (y - x) + C[d] * x * z;
     dy = C[b] * x - x * z + C[f] * y;
@@ -299,7 +301,7 @@ protected:
   }
   // todo: 
   // -maybe factor out into a purely virtual baseclass function
-  // -maybe it should take the stepsize h as parameter
+  // -maybe it should take the x,y,z variables as parameters, maybe the dx,dy,dz outputs, too
 
   uint a = 0;
   uint b = 1;

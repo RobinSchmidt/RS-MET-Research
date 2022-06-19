@@ -9093,20 +9093,23 @@ void testModularForms()
 void testAttractors()
 {
 
-  int N = 10000;
-  double sampleRate = 44100;
-  double frequency  = 10;
+  int    numSamples = 2000;   // Number of datapoints to generate
+  int    oversample = 15;     // Amount of oversampling for the ODE solver
+  double sampleRate = 44100;  // Output sample rate
+  double frequency  = 150;    // Sort of a pseudo-frequency of the generator
 
   using Vec = std::vector<double>;
 
   // Set up the object:
   DenTSUCS2 att;
   att.reset();
-  att.setSampleRate(sampleRate);
+  att.setSampleRate(oversample * sampleRate);
   att.setFrequency(frequency);
   double h = att.getStepSize();
+  double H = h*oversample;
 
   // Generate output:
+  int N = numSamples;
   Vec t(N), x(N), y(N), z(N);
   t[0] = 0;
   x[0] = att.getX();
@@ -9114,8 +9117,10 @@ void testAttractors()
   z[0] = att.getZ();
   for(int i = 1; i < N; i++)
   {
-    att.inc();
-    t[i] = t[i-1] + h;
+    for(int j = 1; j <= oversample; j++)
+      att.inc();
+
+    t[i] = t[i-1] + H;
     x[i] = att.getX();
     y[i] = att.getY();
     z[i] = att.getZ();

@@ -9122,7 +9122,8 @@ void testAttractors()
   {
     for(int j = 1; j <= oversample; j++)
     {
-      att.stepEuler();
+      //att.stepEuler();
+      att.stepMidpoint();
     }
     t[i] = t[i-1] + H;
     x[i] = att.getX();

@@ -9097,10 +9097,10 @@ void testAttractors()
   // We want to try a couple of solver methods...tbc...
 
   // Setup:
-  int    numSamples = 2000;   // Number of datapoints to generate
+  int    numSamples = 3000;   // Number of datapoints to generate
   int    oversample = 10;     // Amount of oversampling for the ODE solver
   double sampleRate = 44100;  // Output sample rate
-  double frequency  = 100;    // Sort of a pseudo-frequency of the generator
+  double frequency  = 156;    // Sort of a pseudo-frequency of the generator
 
   // Set up the object:
   DenTSUCS2 att;
@@ -9135,6 +9135,8 @@ void testAttractors()
   rsPlotVectorsXY(t, x, y, z);
 
   // Observations:
+  // -With sampleRate=44100, oversample=10, the maximum usable frequency before the method becomes
+  //  unstable is around 156 for the forward Euler method
   // -Using the midpoint rule increases the apparent frequency compared to using the forward Euler
   //  rule.
 

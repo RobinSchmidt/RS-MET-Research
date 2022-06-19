@@ -270,27 +270,15 @@ public:
   void stepEuler()
   {
     computeDerivatives(x, y, z, &dx, &dy, &dz);
-    x += h*dx; 
-    y += h*dy; 
-    z += h*dz;
+    x += h*dx; y += h*dy; z += h*dz;
   }
 
   /** Performs a step using the midpoint rule. */
   void stepMidpoint()
   {
-    double k2x, k2y, k2z;  // temporaries
-
-    // Fill k2 with evaluation at the half-step:
-    computeDerivatives(x, y, z, &dx, &dy, &dz);
-    k2x = x + 0.5*h*dx; 
-    k2y = y + 0.5*h*dy;
-    k2z = z + 0.5*h*dz;
-
-    // Do full step with derivative computed at midpoint:
-    computeDerivatives(k2x, k2y, k2z, &dx, &dy, &dz);
-    x += h*dx; 
-    y += h*dy; 
-    z += h*dz;
+    computeDerivatives(x,          y,          z,          &dx, &dy, &dz);
+    computeDerivatives(x+0.5*h*dx, y+0.5*h*dy, z+0.5*h*dz, &dx, &dy, &dz);
+    x += h*dx; y += h*dy; z += h*dz;
   }
 
 

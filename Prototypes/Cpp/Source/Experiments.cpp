@@ -9098,9 +9098,9 @@ void testAttractors()
 
   // Setup:
   int    numSamples = 2000;   // Number of datapoints to generate
-  int    oversample = 15;     // Amount of oversampling for the ODE solver
+  int    oversample = 10;     // Amount of oversampling for the ODE solver
   double sampleRate = 44100;  // Output sample rate
-  double frequency  = 150;    // Sort of a pseudo-frequency of the generator
+  double frequency  = 100;    // Sort of a pseudo-frequency of the generator
 
   // Set up the object:
   DenTSUCS2 att;
@@ -9122,8 +9122,8 @@ void testAttractors()
   {
     for(int j = 1; j <= oversample; j++)
     {
-      //att.stepEuler();
-      att.stepMidpoint();
+      att.stepEuler();
+      //att.stepMidpoint();
     }
     t[i] = t[i-1] + H;
     x[i] = att.getX();
@@ -9134,6 +9134,9 @@ void testAttractors()
   // Plot results:
   rsPlotVectorsXY(t, x, y, z);
 
+  // Observations:
+  // -Using the midpoint rule increases the apparent frequency compared to using the forward Euler
+  //  rule.
 
 
 

@@ -9162,6 +9162,11 @@ void testAttractors()
 
   // ToDo:
   // -Try even higher order methods like RK4.
+  // -Invent some new systems by starting from a linear system that produces a decaying sinusoid 
+  //  (with user adjustable frequency and decay time) and then add some nonlinear terms
+
+  // A big collection of systems can be found here:
+  // http://www.3d-meier.de/tut19/Seite0.html
 }
 
 // fast inverse square root approximation from Quake engine

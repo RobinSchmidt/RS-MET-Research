@@ -9100,7 +9100,7 @@ void testAttractors()
   int    numSamples = 3000;   // Number of datapoints to generate
   int    oversample = 10;     // Amount of oversampling for the ODE solver
   double sampleRate = 44100;  // Output sample rate
-  double frequency  = 156;    // Sort of a pseudo-frequency of the generator
+  double frequency  = 1400;   // Sort of a pseudo-frequency of the generator
 
   // Set up the object:
   DenTSUCS2 att;
@@ -9122,8 +9122,9 @@ void testAttractors()
   {
     for(int j = 1; j <= oversample; j++)
     {
-      att.stepEuler();
-      //att.stepMidpoint();
+      // Uncomment exactly one of these to switch between the different solver methods:
+      //att.stepEuler();
+      att.stepMidpoint();
     }
     t[i] = t[i-1] + H;
     x[i] = att.getX();
@@ -9136,7 +9137,7 @@ void testAttractors()
 
   // Observations:
   // -With sampleRate=44100, oversample=10, the maximum usable frequency before the method becomes
-  //  unstable is around 156 for the forward Euler method
+  //  unstable is around 156 for the forward Euler method and 1399 for the midpoint method
   // -Using the midpoint rule increases the apparent frequency compared to using the forward Euler
   //  rule.
 

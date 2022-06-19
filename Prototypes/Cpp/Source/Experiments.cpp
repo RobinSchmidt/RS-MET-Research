@@ -9090,17 +9090,28 @@ void testModularForms()
   int dummy = 0;
 }
 
+
+template<class T>
+void rsPlotVectors3D(const std::vector<T>& x, const std::vector<T>& y, const std::vector<T>& z)
+{
+  rsAssert(rsAreSameSize(x,y,z), "All 3 arrays must have the same length");
+  GNUPlotter plt;
+  plt.addDataArrays((int) x.size(), &x[0], &y[0], &z[0]);
+  plt.plot3D();
+}
+// maybe move to RAPT where all the other plotting convenience functions are
+
 void testAttractors()
 {
-  // Tests some ODE systems posted by Elan here:
+  // We tests some ODE systems posted by Elan here:
   //   https://github.com/RobinSchmidt/RS-MET/discussions/324
-  // We want to try a couple of solver methods...tbc...
+  // We want to try a couple of solver methods to compare their stability range, accuracy, etc.
 
   // Setup:
-  int    numSamples = 2000;   // Number of datapoints to generate
+  int    numSamples = 3000;   // Number of datapoints to generate
   int    oversample = 10;     // Amount of oversampling for the ODE solver
   double sampleRate = 44100;  // Output sample rate
-  double frequency  = 200;    // Sort of a pseudo-frequency of the generator
+  double frequency  = 100;    // Sort of a pseudo-frequency of the generator
 
   // Set up the object:
   DenTSUCS2 att;
@@ -9134,6 +9145,7 @@ void testAttractors()
 
   // Plot results:
   rsPlotVectorsXY(t, x, y, z);
+  rsPlotVectors3D(   x, y, z);
 
   // Observations:
   // -With sampleRate=44100, oversample=10, the maximum usable frequency before the method becomes

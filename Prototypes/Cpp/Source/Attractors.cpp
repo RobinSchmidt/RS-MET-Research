@@ -299,7 +299,6 @@ protected:
   }
   // todo: 
   // -maybe factor out into a purely virtual baseclass function
-  // -maybe it should take the x,y,z variables as parameters, maybe the dx,dy,dz outputs, too
 
   uint a = 0;
   uint b = 1;

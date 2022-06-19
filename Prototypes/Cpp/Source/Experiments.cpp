@@ -9092,13 +9092,11 @@ void testModularForms()
 
 void testAttractors()
 {
-
+  // Setup:
   int    numSamples = 2000;   // Number of datapoints to generate
   int    oversample = 15;     // Amount of oversampling for the ODE solver
   double sampleRate = 44100;  // Output sample rate
   double frequency  = 150;    // Sort of a pseudo-frequency of the generator
-
-  using Vec = std::vector<double>;
 
   // Set up the object:
   DenTSUCS2 att;
@@ -9109,6 +9107,7 @@ void testAttractors()
   double H = h*oversample;
 
   // Generate output:
+  using Vec = std::vector<double>;
   int N = numSamples;
   Vec t(N), x(N), y(N), z(N);
   t[0] = 0;
@@ -9119,23 +9118,23 @@ void testAttractors()
   {
     for(int j = 1; j <= oversample; j++)
       att.inc();
-
     t[i] = t[i-1] + H;
     x[i] = att.getX();
     y[i] = att.getY();
     z[i] = att.getZ();
   }
 
-
   // Plot results:
   rsPlotVectorsXY(t, x, y, z);
+
+
 
 
 
   // ToDo:
   // -Introduce an oversampling factor. This attarctor really needs a very high sample rate to
   //  remain stable but we don't want to plot so much data
-
+  // -Create a 3D plot (just for fun)
 
 
   int dummy = 0;

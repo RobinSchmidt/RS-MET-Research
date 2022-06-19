@@ -251,12 +251,6 @@ class DequanLi : public Attractor // http://www.3d-meier.de/tut19/Seite9.html
 
 class DenTSUCS2 : public Attractor // http://www.3d-meier.de/tut19/Seite43.html
 {
-  uint a = 0;
-  uint b = 1;
-  uint c = 2;
-  uint d = 3;
-  uint e = 4;
-  uint f = 5;
 
 public:
 
@@ -274,21 +268,46 @@ public:
 
   void inc()
   {
-    dx = C[a] * (y - x) + C[d] * x * z;
-    dy = C[b] * x - x * z + C[f] * y;
-    dz = C[c] * z + x * y - C[e] * pow(x, 2);
+    computeDeltas();
 
     x += h * dx;
     y += h * dy;
     z += h * dz;
   }
+  // ToDo: rename to incForwardEuler
+
+  void incMidpoint()
+  {
+
+  }
+
 
   void reset()
   {
-    x = .1;
-    y = 1;
-    z = -.1;
+    x =  0.1;
+    y =  1.0;
+    z = -0.1;
   }
+
+protected:
+
+  void computeDeltas()
+  {
+    dx = C[a] * (y - x) + C[d] * x * z;
+    dy = C[b] * x - x * z + C[f] * y;
+    dz = C[c] * z + x * y - C[e] * pow(x, 2);
+  }
+  // todo: 
+  // -maybe factor out into a purely virtual baseclass function
+  // -maybe it should take the stepsize h as parameter
+
+  uint a = 0;
+  uint b = 1;
+  uint c = 2;
+  uint d = 3;
+  uint e = 4;
+  uint f = 5;
+
 };
 
 class DenGenesioTesi : public Attractor // http://www.3d-meier.de/tut19/Seite11.html

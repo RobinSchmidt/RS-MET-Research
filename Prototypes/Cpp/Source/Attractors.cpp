@@ -266,17 +266,15 @@ public:
     reset();
   }
 
-  void inc()
+  /** Performs a forward Euler step. */
+  void stepEuler()
   {
-    computeDerivatives();
-
-    x += h * dx;
-    y += h * dy;
-    z += h * dz;
+    computeDerivatives(x, y, z, &dx, &dy, &dz);
+    x += h*dx; y += h*dy; z += h*dz;
   }
-  // ToDo: rename to incForwardEuler
 
-  void incMidpoint()
+  /** Performs a step using the midpoint rule. */
+  void stepMidpoint()
   {
 
 
@@ -293,11 +291,11 @@ public:
 
 protected:
 
-  void computeDerivatives()
+  void computeDerivatives(double x, double y, double z, double* dx, double* dy, double* dz)
   {
-    dx = C[a] * (y - x) + C[d] * x * z;
-    dy = C[b] * x - x * z + C[f] * y;
-    dz = C[c] * z + x * y - C[e] * pow(x, 2);
+    *dx = C[a] * (y - x) + C[d] * x * z;
+    *dy = C[b] * x - x * z + C[f] * y;
+    *dz = C[c] * z + x * y - C[e] * pow(x, 2);
   }
   // todo: 
   // -maybe factor out into a purely virtual baseclass function

@@ -9092,6 +9092,10 @@ void testModularForms()
 
 void testAttractors()
 {
+  // Tests some ODE systems posted by Elan here:
+  //   https://github.com/RobinSchmidt/RS-MET/discussions/324
+  // We want to try a couple of solver methods...tbc...
+
   // Setup:
   int    numSamples = 2000;   // Number of datapoints to generate
   int    oversample = 15;     // Amount of oversampling for the ODE solver
@@ -9117,7 +9121,9 @@ void testAttractors()
   for(int i = 1; i < N; i++)
   {
     for(int j = 1; j <= oversample; j++)
-      att.inc();
+    {
+      att.stepEuler();
+    }
     t[i] = t[i-1] + H;
     x[i] = att.getX();
     y[i] = att.getY();

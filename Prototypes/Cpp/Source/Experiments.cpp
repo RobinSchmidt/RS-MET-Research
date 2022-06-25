@@ -9200,9 +9200,6 @@ void testMimoFilters()
   // try some mathematical transformations, check some conditions analytically and numerically, 
   // etc.
 
-
-
-
   using Real = float;
   using Splitter = RAPT::rsTwoBandSplitter<Real, Real>;
   using Vec = std::vector<Real>;
@@ -9214,12 +9211,11 @@ void testMimoFilters()
   Real noiseSlope =    -5;   // Spectral slope for input noise in dB/oct
   Real lowWidth   =    20;   // low-freq stereo width in percent, 100: unchanged
 
-
-
   // Create matrix for L/R to M/S conversion (and back):
   Real s = sqrt(0.5);
   rsMatrix2x2<Real> ms(s, s, s, -s);
   //rsMatrix2x2<Real> test = ms * ms;  // should be the identity (up to rounding) -> yep
+  // ...get rid of this matrix
 
   // Create and set up the band-splitters:
   Real omega = 2*PI*splitFreq / sampleRate;
@@ -9289,36 +9285,42 @@ void testMimoFilters()
   // Process the signal and plot outputs:
   processBassNarrower();
   //rsPlotVectors(xL-yL, xR-yR); //  should be zero (up to rounding), if lowWidth == 100% -> yep
-  rsPlotVectors(xL, xR, yL, yR);
+  //rsPlotVectors(xL, xR, yL, yR);
 
   //-----------------------------------------------------------------------------------------------
   // The second experiment is a 2-in / 3-out system that works similar to the bass-narrower above
   // but plays the (boosted) yML signal out over a dedicated "subwoofer" channel:
   Vec yW(N);           // our additional "woofer" output channel
-  splitterM.reset();
-  splitterS.reset();
-  for(int n = 0; n < N; n++)
+  auto processBassSplitter = [&]()
   {
-    // This is the same code as above:
-    xM[n] = ms.a * xL[n] + ms.b * xR[n];
-    xS[n] = ms.c * xL[n] + ms.d * xR[n];
-    splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
-    splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
-    yML[n] = gML * xML[n];
-    ySL[n] = gSL * xSL[n];
-    yMH[n] = xMH[n];
-    ySH[n] = xSH[n];
-    // todo: maybe don't use the gains?
+    splitterM.reset();
+    splitterS.reset();
+    for(int n = 0; n < N; n++)
+    {
+      // This is the same code as above:
+      xM[n] = ms.a * xL[n] + ms.b * xR[n];
+      xS[n] = ms.c * xL[n] + ms.d * xR[n];
+      splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
+      splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
+      yML[n] = gML * xML[n];
+      ySL[n] = gSL * xSL[n];
+      yMH[n] = xMH[n];
+      ySH[n] = xSH[n];
+      // todo: maybe don't use the gains?
 
-    // At this point, the new algo is different:
-    yW[n] = yML[n];  // The yML signal now goes into its own dedicated channel
-    yM[n] = yMH[n];  // Previously, the yML signal was added here
+      // At this point, the new algo is different:
+      yW[n] = yML[n];  // The yML signal now goes into its own dedicated channel
+      yM[n] = yMH[n];  // Previously, the yML signal was added here
 
-    // The rest is again the same as above:
-    yS[n] = ySL[n] + ySH[n];
-    yL[n] = ms.a * yM[n] + ms.b * yS[n];
-    yR[n] = ms.c * yM[n] + ms.d * yS[n];
-  }
+      // The rest is again the same as above:
+      yS[n] = ySL[n] + ySH[n];
+      yL[n] = ms.a * yM[n] + ms.b * yS[n];
+      yR[n] = ms.c * yM[n] + ms.d * yS[n];
+    }
+
+  };
+
+  processBassSplitter();
   rsPlotVectors(xL, xR, yL, yR, yW);
   rsPlotVectors(yW, yMH);
 

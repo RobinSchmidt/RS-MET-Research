@@ -9208,7 +9208,7 @@ void testMimoFilters()
   Real sampleRate = 48000;
   Real splitFreq  =  5000;
   Real noiseSlope =    -5;   // Spectral slope for input noise in dB/oct
-  Real lowWidth   =   100;   // low-freq stereo width in percent, 100: unchanged
+  Real lowWidth   =    20;   // low-freq stereo width in percent, 100: unchanged
 
 
 
@@ -9238,7 +9238,7 @@ void testMimoFilters()
   //rsPlotVectors(xL, xR);
 
   // The first experiment is a 2-in / 2-out filter that narrows the stereo width of the low 
-  // frequencies ...tbc...
+  // frequencies while keeping the width of the high frequencies intact:
   Vec xM(N),  xS(N);   // mid and side parts of input signal
   Vec xML(N), xMH(N);  // low and high parts of mid signal
   Vec xSL(N), xSH(N);  // low and high parts of side signal
@@ -9257,7 +9257,8 @@ void testMimoFilters()
     splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
 
     // Modify the gains of the ML,SL (mid-low, side-low) channels according to desired stereo width
-    // for the low frequencies:
+    // for the low frequencies. The gains are chosen according to a sin/cos rule which preserves 
+    // the total energy for uncorrelated L/R signals (verify that!):
     yML[n] = gML * xML[n];
     ySL[n] = gSL * xSL[n];
 
@@ -9278,10 +9279,43 @@ void testMimoFilters()
   //rsPlotVectors(xL-yL, xR-yR); //  should be zero (up to rounding), if lowWidth == 100% -> yep
   rsPlotVectors(xL, xR, yL, yR);
 
+  // The second experiment is a 2-in / 3-out system that works similar to the bass-narrower above
+  // plays the (boosted) yML signal out over a dedicated "subwoofer" channel:
+  Vec yW(N);           // woofer channel
+  for(int n = 0; n < N; n++)
+  {
+    // This is the same code as above:
+    xM[n] = ms.a * xL[n] + ms.b * xR[n];
+    xS[n] = ms.c * xL[n] + ms.d * xR[n];
+    splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
+    splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
+    yML[n] = gML * xML[n];
+    ySL[n] = gSL * xSL[n];
+    yMH[n] = xMH[n];
+    ySH[n] = xSH[n];
+
+    // From here, the new algo is different:
+
+
+
+
+
+
+  }
+
+
 
 
 
   int dummy = 0;
+
+  // Questions:
+  // -When is the bass-narrowing filter invertible? I guess, whenever the lowWidth parameter is
+  //  nonzero?
+  // -What actually is the inverse? Try to construct it in two ways:
+  //  (1) Applying the actual DSP algorithm in reverse
+  //  (2) Deriving the transfer function matrix algebraically and inverting it and constructing
+  //      an algorithm that directly applies this MIMO transfer function matrix
 
 
 
@@ -9289,14 +9323,9 @@ void testMimoFilters()
   // -Create a simple lossless 2-in / 2-out system as a mid/side encoder. This is also delayless,
   //  so it's a bit boring but nevertheless a good first example of a MIMO system.
   // -Create a 1-in / 2-out system as a low-/high frequency splitter. I think, Linkwitz/Riley 
-  //  splitters should be lossless (i.e. allpass) in the MIMO sense?
-  // -Implement a 2-in / 2-out bass-narrowing filter:
-  //  -convert L/R into M/S
-  //  -split M and S into ML,MH, SL,SH
-  //  -boost ML, attenuate SL (in an energy preserving way, maybe sin/cos rule)
-  //  -convert back to L/R
-  //  -overall goal is to narrow the stereo-width of the bass while keeping the width of the highs
-  //   intact.
+  //  splitters should be lossless (i.e. allpass) in the MIMO sense? We currently use a 1st order
+  //  IIR splitter with perfect reconstruction in the bass-narrower above. Maybe try an FIR 
+  //  splitter using just scaled 2-point moving average and difference
   // -Create a 2-in / 3-out system by
   //  -Converting inputs (interpreted as L/R) to M/S
   //  -Split the M and S signals into low/high components (ML, MH, SL, SH)

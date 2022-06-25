@@ -9284,7 +9284,7 @@ void testMimoFilters()
 
   // Process the signal and plot outputs:
   processBassNarrower();
-  rsPlotVectors(xL-yL, xR-yR); //  should be zero (up to rounding), if lowWidth == 100% -> yep
+  //rsPlotVectors(xL-yL, xR-yR); //  should be zero (up to rounding), if lowWidth == 100% -> yep
   //rsPlotVectors(xL, xR, yL, yR);
 
   //-----------------------------------------------------------------------------------------------
@@ -9318,11 +9318,11 @@ void testMimoFilters()
     }
   };
   processBassSplitter();
-  rsPlotVectors(xL, xR, yL, yR, yW);
-  rsPlotVectors(yW, yMH);
+  //rsPlotVectors(xL, xR, yL, yR, yW);
+  //rsPlotVectors(yW, yMH);
 
   // Now let's measure the point-to-point impulse responses of the 2nd system 
-  // (...that code is awkward!):
+  // (...that code is a bit awkward! Try to clean up...):
   Vec hLL(N), hLR(N), hLW(N);
   xL = createImpulse(N);
   xR = createSilence(N);

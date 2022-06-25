@@ -9206,7 +9206,7 @@ void testMimoFilters()
 
   int  numSamples =  1000;   // Number of samples to produce
   Real sampleRate = 48000;
-  Real splitFreq  =  5000;
+  Real splitFreq  =  1000;
   Real noiseSlope =    -5;   // Spectral slope for input noise in dB/oct
   Real lowWidth   =    20;   // low-freq stereo width in percent, 100: unchanged
 
@@ -9294,20 +9294,28 @@ void testMimoFilters()
     yMH[n] = xMH[n];
     ySH[n] = xSH[n];
 
-    // From here, the new algo is different:
+    // At this point, the new algo is different:
+    yW[n] = yML[n];  // The yML signla now goes into its own channel
+    yM[n] = yMH[n];  // Previously, the yML signal was added here
 
-
-
-
-
-
+    // The rest is again the same as above:
+    yS[n] = ySL[n] + ySH[n];
+    yL[n] = ms.a * yM[n] + ms.b * yS[n];
+    yR[n] = ms.c * yM[n] + ms.d * yS[n];
   }
+  rsPlotVectors(xL, xR, yL, yR, yW);
+  rsPlotVectors(yW, yMH);
 
 
 
 
 
   int dummy = 0;
+
+  // Observations:
+  // -The result of the subwoofer algo looks plausible, the yW signal seems to indeed contain more
+  //  low-frequency content. But there's quite a lot of high-freq content left. Maybe try steeper 
+  //  splitting filters (maybe Linkwitz-Riley?).
 
   // Questions:
   // -When is the bass-narrowing filter invertible? I guess, whenever the lowWidth parameter is
@@ -9316,8 +9324,7 @@ void testMimoFilters()
   //  (1) Applying the actual DSP algorithm in reverse
   //  (2) Deriving the transfer function matrix algebraically and inverting it and constructing
   //      an algorithm that directly applies this MIMO transfer function matrix
-
-
+  // -Try to also invert subwoofer algorithm by both methods.
 
   // ToDo:
   // -Create a simple lossless 2-in / 2-out system as a mid/side encoder. This is also delayless,

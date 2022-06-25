@@ -9213,7 +9213,7 @@ void testMimoFilters()
 
   // Create matrix for L/R to M/S conversion (and back):
   Real s = sqrt(0.5);
-  rsMatrix2x2<Real> ms(s, s, s, -s);
+  //rsMatrix2x2<Real> ms(s, s, s, -s);
   //rsMatrix2x2<Real> test = ms * ms;  // should be the identity (up to rounding) -> yep
   // ...get rid of this matrix
 
@@ -9298,8 +9298,8 @@ void testMimoFilters()
     for(int n = 0; n < N; n++)
     {
       // This is the same code as above:
-      xM[n] = ms.a * xL[n] + ms.b * xR[n];
-      xS[n] = ms.c * xL[n] + ms.d * xR[n];
+      xM[n] = s * (xL[n] + xR[n]);
+      xS[n] = s * (xL[n] - xR[n]);
       splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
       splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
       yMH[n] = xMH[n];
@@ -9313,8 +9313,8 @@ void testMimoFilters()
 
       // The rest is again the same as above:
       yS[n] = ySL[n] + ySH[n];
-      yL[n] = ms.a * yM[n] + ms.b * yS[n];
-      yR[n] = ms.c * yM[n] + ms.d * yS[n];
+      yL[n] = s * (yM[n] + yS[n]);
+      yR[n] = s * (yM[n] - yS[n]);
     }
 
   };

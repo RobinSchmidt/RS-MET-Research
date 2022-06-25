@@ -9200,12 +9200,12 @@ void testMimoFilters()
   // try some mathematical transformations, check some conditions analytically and numerically, 
   // etc.
 
-  using Real = float;
+  using Real = double;
   using Splitter = RAPT::rsTwoBandSplitter<Real, Real>;
   using Vec = std::vector<Real>;
   //using Matrix = 
 
-  int  numSamples =  1000;   // Number of samples to produce
+  int  numSamples =  1024;   // Number of samples to produce
   Real sampleRate = 48000;
   Real splitFreq  =  1000;
   Real noiseSlope =    -5;   // Spectral slope for input noise in dB/oct
@@ -9316,14 +9316,39 @@ void testMimoFilters()
       yL[n] = s * (yM[n] + yS[n]);
       yR[n] = s * (yM[n] - yS[n]);
     }
-
   };
-
   processBassSplitter();
   rsPlotVectors(xL, xR, yL, yR, yW);
   rsPlotVectors(yW, yMH);
 
+  // Now let's measure the point-to-point impulse responses of the 2nd system 
+  // (...that code is awkward!):
+  Vec hLL(N), hLR(N), hLW(N);
+  xL = createImpulse(N);
+  xR = createSilence(N);
+  processBassSplitter();
+  rsCopy(yL, hLL);
+  rsCopy(yR, hLR);
+  rsCopy(yW, hLW);
+  Vec hRL(N), hRR(N), hRW(N);
+  xL = createSilence(N);
+  xR = createImpulse(N);
+  processBassSplitter();
+  rsCopy(yL, hRL);
+  rsCopy(yR, hRR);
+  rsCopy(yW, hRW);
+  rsPlotVectors(hLL, hLR, hLW);
 
+
+  // ToDo: 
+  // -take FFT magnitudes and plot them -> point-to-point frequency responses
+
+
+
+
+
+
+  // try the 2nd algorithm with an impulse
 
 
 

@@ -63,8 +63,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testModularGroup();
   //testModularForms();
 
-  testAttractors();
-  testMimoFilters();  // just a stub - nothing in there yet (only comments)
+  //testAttractors();
+  testMimoFilters();  // just a stub - not much in there yet, mostly comments
 
 
   return 0;

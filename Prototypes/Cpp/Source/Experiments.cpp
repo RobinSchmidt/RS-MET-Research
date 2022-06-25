@@ -9191,33 +9191,85 @@ void testAttractors()
 void testMimoFilters()
 {
   // Some experiments with multi-input/multi-output (MIMO) filters. The goal is to get a better
-  // intuition for when a MIMO system is invertible, how to obtain the inverse, when it is lossless
-  // (which is equivalent to being MIMO-allpass), etc. We create some example systems and try some
-  // mathematical transformations, check some conditions, etc.
+  // intuition for when a MIMO system is invertible, if so, how to obtain the inverse, when it is
+  // lossless (which is equivalent to being MIMO-allpass), etc. We create some example systems and
+  // try some mathematical transformations, check some conditions analytically and numerically, 
+  // etc.
+
+
+
+
+  using Real = float;
+  using Splitter = RAPT::rsTwoBandSplitter<Real, Real>;
+  using Vec = std::vector<Real>;
+  //using Matrix = 
+
+  int  numSamples =  1000;   // Number of samples to produce
+  Real sampleRate = 48000;
+  Real splitFreq  =  5000;
+  Real noiseSlope =    -5;   // Spectral slope for input noise in dB/oct
+
+
+
+  // Create matrix for L/R to M/S conversion (and back):
+  Real s = sqrt(0.5);
+  rsMatrix2x2<Real> ms(s, s, s, -s);
+  //rsMatrix2x2<Real> test = ms * ms;  // should be the identity (up to rounding) -> yep
+
+  // Create and set up the band-splitter:
+  Splitter splitter;
+  splitter.setOmega(2*PI*splitFreq / sampleRate);
+
+  // Create stereo input signal (white noise):
+  int N = numSamples;
+  //Vec xL(N), xR(N);
+  Vec xL = createColoredNoise(N, noiseSlope, 0);
+  Vec xR = createColoredNoise(N, noiseSlope, 1);
+  rsPlotVectors(xL, xR);
+
+
+  int dummy = 0;
+
+
 
   // ToDo:
   // -Create a simple lossless 2-in / 2-out system as a mid/side encoder. This is also delayless,
   //  so it's a bit boring but nevertheless a good first example of a MIMO system.
   // -Create a 1-in / 2-out system as a low-/high frequency splitter. I think, Linkwitz/Riley 
   //  splitters should be lossless (i.e. allpass) in the MIMO sense?
+  // -Implement a 2-in / 2-out bass-narrowing filter:
+  //  -convert L/R into M/S
+  //  -split M and S into ML,MH, SL,SH
+  //  -boost ML, attenuate SL (in an energy preserving way, maybe sin/cos rule)
+  //  -convert back to L/R
+  //  -overall goal is to narrow the stereo-width of the bass while keeping the width of the highs
+  //   intact.
   // -Create a 2-in / 3-out system by
   //  -Converting inputs (interpreted as L/R) to M/S
   //  -Split the M and S signals into low/high components (ML, MH, SL, SH)
   //  -Route the ML (mid-low) to an extra channel (something like a subwoofer out)
   //  -The new L/R channels shall be MH,SH converted back to L/R plus 0,SL converted back to
   //   L/R
-  //  -The intention of the whole system is to route the bass of the mid-signal to its own channel,
-  //   leave the highs on L/R as is and put whatever residual bass is prsent in S also back to L/R
-  //   ...this should be lossless - right? Check this?
+  //  -The intention of the whole system is to route the bass of the mid-signal to its own 
+  //   ("subwoofer") channel, leave the highs on L/R as is and put whatever residual bass is 
+  //   prsent in S (normally, there shouldn't be much bass in the side signal) also back to L/R
+  //   ...this should be lossless - right? Check this. Try to invert the process to get the 
+  //   original L/R signals back.
   //  -It's the first example of a MIMO system that actually does some proper filtering *and* has
   //   multiple ins and outs. Moreover the number of ins and outs is not the same. So it may be a 
   //   good example for a general MIMO system ...and actually does something potentially useful.
   //  -Maybe we could also just route ML+SL to the subwoofer channel? ...but that step is probably
   //   not invertible - so it will violate the MIMO allpass (= losslessness) condition?
+
   // -Create multiband splitters and do some interesting M/S and/or re-panning stuff with the
   //  different bands.
   // -Create transfer function (TF) matrices as rsMatrix<rsRationalFunction<T>>
   // -Obtain inverses of TF matrices
+  // -Obtain determinants, eigenvectors, eigenvalues, etc. - figure out, what they mean, if 
+  //  anything
+  // -Apply the systems to example signals (e.g. white noise) and check losslessness numerically by
+  //  computing the total energies of inputs and outputs.
+  // -Try to get the original signals back by applying the respective inverse systems.
 
 }
 

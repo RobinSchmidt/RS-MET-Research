@@ -9255,8 +9255,8 @@ void testMimoFilters()
     for(int n = 0; n < N; n++)
     {
       // Convert L/R inputs to M/S via the ms matrix:
-      xM[n] = ms.a * xL[n] + ms.b * xR[n];
-      xS[n] = ms.c * xL[n] + ms.d * xR[n];
+      xM[n] = s * (xL[n] + xR[n]);
+      xS[n] = s * (xL[n] - xR[n]);
 
       // Split the M/S parts individually into low and high frequencies:
       splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
@@ -9277,14 +9277,14 @@ void testMimoFilters()
       yS[n] = ySL[n] + ySH[n];
 
       // Convert mid/side outputs to L/R:
-      yL[n] = ms.a * yM[n] + ms.b * yS[n];
-      yR[n] = ms.c * yM[n] + ms.d * yS[n];
+      yL[n] = s * (yM[n] + yS[n]);
+      yR[n] = s * (yM[n] - yS[n]);
     }
   };
 
   // Process the signal and plot outputs:
   processBassNarrower();
-  //rsPlotVectors(xL-yL, xR-yR); //  should be zero (up to rounding), if lowWidth == 100% -> yep
+  rsPlotVectors(xL-yL, xR-yR); //  should be zero (up to rounding), if lowWidth == 100% -> yep
   //rsPlotVectors(xL, xR, yL, yR);
 
   //-----------------------------------------------------------------------------------------------

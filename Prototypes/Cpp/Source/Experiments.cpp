@@ -9329,6 +9329,7 @@ void testMimoFilters()
   // -Try to also invert subwoofer algorithm by both methods.
 
   // ToDo:
+  // -Factor out the DSP code above into helper functions
   // -Create a simple lossless 2-in / 2-out system as a mid/side encoder. This is also delayless,
   //  so it's a bit boring but nevertheless a good first example of a MIMO system.
   // -Create a 1-in / 2-out system as a low-/high frequency splitter. I think, Linkwitz/Riley 
@@ -9361,9 +9362,20 @@ void testMimoFilters()
   // -Apply the systems to example signals (e.g. white noise) and check losslessness numerically by
   //  computing the total energies of inputs and outputs.
   // -Try to get the original signals back by applying the respective inverse systems.
-  // -Plot the point-to-point frequency responses:
-  //  1: L->L, L->R, R->L, R->R
-  //  2: L->L, L->R, L->W, R->L, R->R, R->W
+  // -Recorde point-to-point impulse responses and FFT them to get the corresponding frequency
+  //  responses and plot them. 
+  //  1st experiment: L->L, L->R, R->L, R->R
+  //  2nd experiment: L->L, L->R, L->W, R->L, R->R, R->W
+  // -Make state-space implementations of the systems
+
+
+  // Notes:
+  // -I think, for a MIMO filter to be invertible, a necessarry (but not sufficient) condition is
+  //  that it has at least as many outputs as inputs, see here:
+  //  https://ccrma.stanford.edu/~jos/filters/Multi_Input_Multi_Output_MIMO_Allpass.html
+  //  which is intuitively obvious because if it has less outputs, we will inevitably lose some 
+  //  information contained in the input signal. He talks about the allpass condition there, 
+  //  which is an even stronger requirement than invertibility (I think).
 
 }
 

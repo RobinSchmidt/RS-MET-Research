@@ -9244,6 +9244,7 @@ void testMimoFilters()
   Vec xSL(N), xSH(N);  // low and high parts of side signal
   Vec yML(N), yMH(N);  // modified xML, yMH
   Vec ySL(N), ySH(N);  // modified ySL, ySH
+  Vec yM(N),  yS(N);   // mid and side parts of output signal
   Vec yL(N),  yR(N);   // left and right parts of output signal
   for(int n = 0; n < N; n++)
   {
@@ -9264,11 +9265,19 @@ void testMimoFilters()
     yMH[n] = xMH[n];
     ySH[n] = xSH[n];
 
+    // Establish mid and side outputs by adding the respective low and high bands:
+    yM[n] = yML[n] + yMH[n];
+    yS[n] = ySL[n] + ySH[n];
 
-
-
-
+    // Convert mid/side outputs to L/R:
+    yL[n] = ms.a * yM[n] + ms.b * yS[n];
+    yR[n] = ms.c * yM[n] + ms.d * yS[n];
   }
+
+  // Plot outputs:
+  //rsPlotVectors(xL-yL, xR-yR); //  should be zero (up to rounding), if lowWidth == 100% -> yep
+  rsPlotVectors(xL, xR, yL, yR);
+
 
 
 

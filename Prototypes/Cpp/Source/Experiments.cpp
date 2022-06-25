@@ -9337,11 +9337,19 @@ void testMimoFilters()
   rsCopy(yL, hRL);
   rsCopy(yR, hRR);
   rsCopy(yW, hRW);
-  rsPlotVectors(hLL, hLR, hLW);
+  //rsPlotVectors(hLL, hLR, hLW);
+
+  // Check symmetries:
+  //rsPlotVectors(hLL - hRR);  // should be zero
+  //rsPlotVectors(hLR - hRL);  // dito
+  //rsPlotVectors(hLW - hRW);  // dito
+  // OK - that looks good
+
 
 
   // ToDo: 
-  // -take FFT magnitudes and plot them -> point-to-point frequency responses
+  // -take FFT magnitudes and plot them -> point-to-point amplitude responses
+  // -we should see symmetries, i.e.
 
 
 

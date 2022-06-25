@@ -9262,15 +9262,15 @@ void testMimoFilters()
       splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
       splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
 
+      // The high frequencies of mid and side signal are just taken as is:
+      yMH[n] = xMH[n];
+      ySH[n] = xSH[n];
+
       // Modify the gains of the ML,SL (mid-low, side-low) channels according to desired stereo width
       // for the low frequencies. The gains are chosen according to a sin/cos rule which preserves 
       // the total energy for uncorrelated L/R signals (verify that!):
       yML[n] = gML * xML[n];
       ySL[n] = gSL * xSL[n];
-
-      // The high frequencies of mid and side signal are just taken as is:
-      yMH[n] = xMH[n];
-      ySH[n] = xSH[n];
 
       // Establish mid and side outputs by adding the respective low and high bands:
       yM[n] = yML[n] + yMH[n];
@@ -9302,13 +9302,12 @@ void testMimoFilters()
       xS[n] = ms.c * xL[n] + ms.d * xR[n];
       splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
       splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
-      yML[n] = gML * xML[n];
-      ySL[n] = gSL * xSL[n];
       yMH[n] = xMH[n];
       ySH[n] = xSH[n];
-      // todo: maybe don't use the gains?
 
-      // At this point, the new algo is different:
+      // At this point, the new algo is different (todo: maybe don't use the gains?):
+      yML[n] = gML * xML[n];
+      ySL[n] = gSL * xSL[n];
       yW[n] = yML[n];  // The yML signal now goes into its own dedicated channel
       yM[n] = yMH[n];  // Previously, the yML signal was added here
 

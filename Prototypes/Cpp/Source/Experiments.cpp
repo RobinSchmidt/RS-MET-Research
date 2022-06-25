@@ -9188,6 +9188,10 @@ void testAttractors()
   // http://www.3d-meier.de/tut19/Seite0.html
 }
 
+
+//template<class T>
+
+
 void testMimoFilters()
 {
   // Some experiments with multi-input/multi-output (MIMO) filters. The goal is to get a better
@@ -9228,15 +9232,14 @@ void testMimoFilters()
   rsSinCos(Real(PI/4) * lowWidth / 100, &gML, &gSL);
   gML /= s; gSL /= s;  // multiply with sqrt(2)
 
-
-
-
   // Create stereo input signal (white noise):
   int N = numSamples;
   Vec xL = createColoredNoise(N, noiseSlope, 0);
   Vec xR = createColoredNoise(N, noiseSlope, 1);
   //rsPlotVectors(xL, xR);
 
+
+  //-----------------------------------------------------------------------------------------------
   // The first experiment is a 2-in / 2-out filter that narrows the stereo width of the low 
   // frequencies while keeping the width of the high frequencies intact:
   Vec xM(N),  xS(N);   // mid and side parts of input signal
@@ -9246,39 +9249,49 @@ void testMimoFilters()
   Vec ySL(N), ySH(N);  // modified ySL, ySH
   Vec yM(N),  yS(N);   // mid and side parts of output signal
   Vec yL(N),  yR(N);   // left and right parts of output signal
-  for(int n = 0; n < N; n++)
+
+  // We wrap the process into a little helper function so we may call it again with another input
+  // later:
+  auto processBassNarrower = [&]()
   {
-    // Convert L/R inputs to M/S via the ms matrix:
-    xM[n] = ms.a * xL[n] + ms.b * xR[n];
-    xS[n] = ms.c * xL[n] + ms.d * xR[n];
+    splitterM.reset();
+    splitterS.reset();
+    for(int n = 0; n < N; n++)
+    {
+      // Convert L/R inputs to M/S via the ms matrix:
+      xM[n] = ms.a * xL[n] + ms.b * xR[n];
+      xS[n] = ms.c * xL[n] + ms.d * xR[n];
 
-    // Split the M/S parts individually into low and high frequencies:
-    splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
-    splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
+      // Split the M/S parts individually into low and high frequencies:
+      splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
+      splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
 
-    // Modify the gains of the ML,SL (mid-low, side-low) channels according to desired stereo width
-    // for the low frequencies. The gains are chosen according to a sin/cos rule which preserves 
-    // the total energy for uncorrelated L/R signals (verify that!):
-    yML[n] = gML * xML[n];
-    ySL[n] = gSL * xSL[n];
+      // Modify the gains of the ML,SL (mid-low, side-low) channels according to desired stereo width
+      // for the low frequencies. The gains are chosen according to a sin/cos rule which preserves 
+      // the total energy for uncorrelated L/R signals (verify that!):
+      yML[n] = gML * xML[n];
+      ySL[n] = gSL * xSL[n];
 
-    // The high frequencies of mid and side signal are just taken as is:
-    yMH[n] = xMH[n];
-    ySH[n] = xSH[n];
+      // The high frequencies of mid and side signal are just taken as is:
+      yMH[n] = xMH[n];
+      ySH[n] = xSH[n];
 
-    // Establish mid and side outputs by adding the respective low and high bands:
-    yM[n] = yML[n] + yMH[n];
-    yS[n] = ySL[n] + ySH[n];
+      // Establish mid and side outputs by adding the respective low and high bands:
+      yM[n] = yML[n] + yMH[n];
+      yS[n] = ySL[n] + ySH[n];
 
-    // Convert mid/side outputs to L/R:
-    yL[n] = ms.a * yM[n] + ms.b * yS[n];
-    yR[n] = ms.c * yM[n] + ms.d * yS[n];
-  }
+      // Convert mid/side outputs to L/R:
+      yL[n] = ms.a * yM[n] + ms.b * yS[n];
+      yR[n] = ms.c * yM[n] + ms.d * yS[n];
+    }
+  };
 
-  // Plot outputs:
+  // Process the signal and plot outputs:
+  processBassNarrower();
   //rsPlotVectors(xL-yL, xR-yR); //  should be zero (up to rounding), if lowWidth == 100% -> yep
   rsPlotVectors(xL, xR, yL, yR);
 
+  //-----------------------------------------------------------------------------------------------
   // The second experiment is a 2-in / 3-out system that works similar to the bass-narrower above
   // but plays the (boosted) yML signal out over a dedicated "subwoofer" channel:
   Vec yW(N);           // our additional "woofer" output channel
@@ -9295,6 +9308,7 @@ void testMimoFilters()
     ySL[n] = gSL * xSL[n];
     yMH[n] = xMH[n];
     ySH[n] = xSH[n];
+    // todo: maybe don't use the gains?
 
     // At this point, the new algo is different:
     yW[n] = yML[n];  // The yML signal now goes into its own dedicated channel

@@ -9208,6 +9208,7 @@ void testMimoFilters()
   Real sampleRate = 48000;
   Real splitFreq  =  5000;
   Real noiseSlope =    -5;   // Spectral slope for input noise in dB/oct
+  Real lowWidth   =   100;   // low-freq stereo width in percent, 100: unchanged
 
 
 
@@ -9216,16 +9217,59 @@ void testMimoFilters()
   rsMatrix2x2<Real> ms(s, s, s, -s);
   //rsMatrix2x2<Real> test = ms * ms;  // should be the identity (up to rounding) -> yep
 
-  // Create and set up the band-splitter:
-  Splitter splitter;
-  splitter.setOmega(2*PI*splitFreq / sampleRate);
+  // Create and set up the band-splitters:
+  Real omega = 2*PI*splitFreq / sampleRate;
+  Splitter splitterM, splitterS;
+  splitterM.setOmega(omega);
+  splitterS.setOmega(omega);
+
+  // Compute gain factors:
+  Real gML = 1, gSL = 1;  // preliminary
+  rsSinCos(Real(PI/4) * lowWidth / 100, &gML, &gSL);
+  gML /= s; gSL /= s;  // multiply with sqrt(2)
+
+
+
 
   // Create stereo input signal (white noise):
   int N = numSamples;
-  //Vec xL(N), xR(N);
   Vec xL = createColoredNoise(N, noiseSlope, 0);
   Vec xR = createColoredNoise(N, noiseSlope, 1);
-  rsPlotVectors(xL, xR);
+  //rsPlotVectors(xL, xR);
+
+  // The first experiment is a 2-in / 2-out filter that narrows the stereo width of the low 
+  // frequencies ...tbc...
+  Vec xM(N),  xS(N);   // mid and side parts of input signal
+  Vec xML(N), xMH(N);  // low and high parts of mid signal
+  Vec xSL(N), xSH(N);  // low and high parts of side signal
+  Vec yML(N), yMH(N);  // modified xML, yMH
+  Vec ySL(N), ySH(N);  // modified ySL, ySH
+  Vec yL(N),  yR(N);   // left and right parts of output signal
+  for(int n = 0; n < N; n++)
+  {
+    // Convert L/R inputs to M/S via the ms matrix:
+    xM[n] = ms.a * xL[n] + ms.b * xR[n];
+    xS[n] = ms.c * xL[n] + ms.d * xR[n];
+
+    // Split the M/S parts individually into low and high frequencies:
+    splitterM.getSamplePair(xM[n], &xML[n], &xMH[n]);
+    splitterS.getSamplePair(xS[n], &xSL[n], &xSH[n]);
+
+    // Modify the gains of the ML,SL (mid-low, side-low) channels according to desired stereo width
+    // for the low frequencies:
+    yML[n] = gML * xML[n];
+    ySL[n] = gSL * xSL[n];
+
+    // The high frequencies of mid and side signal are just taken as is:
+    yMH[n] = xMH[n];
+    ySH[n] = xSH[n];
+
+
+
+
+
+  }
+
 
 
   int dummy = 0;

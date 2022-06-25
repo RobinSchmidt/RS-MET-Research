@@ -64,6 +64,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testModularForms();
 
   testAttractors();
+  testMimoFilters();  // just a stub - nothing in there yet (only comments)
 
 
   return 0;

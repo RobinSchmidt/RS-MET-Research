@@ -9188,6 +9188,39 @@ void testAttractors()
   // http://www.3d-meier.de/tut19/Seite0.html
 }
 
+void testMimoFilters()
+{
+  // Some experiments with multi-input/multi-output (MIMO) filters. The goal is to get a better
+  // intuition for when a MIMO system is invertible, how to obtain the inverse, when it is lossless
+  // (which is equivalent to being MIMO-allpass), etc. We create some example systems and try some
+  // mathematical transformations, check some conditions, etc.
+
+  // ToDo:
+  // -Create a simple lossless 2-in / 2-out system as a mid/side encoder. This is also delayless,
+  //  so it's a bit boring but nevertheless a good first example of a MIMO system.
+  // -Create a 1-in / 2-out system as a low-/high frequency splitter. I think, Linkwitz/Riley 
+  //  splitters should be lossless (i.e. allpass) in the MIMO sense?
+  // -Create a 2-in / 3-out system by
+  //  -Converting inputs (interpreted as L/R) to M/S
+  //  -Split the M and S signals into low/high components (ML, MH, SL, SH)
+  //  -Route the ML (mid-low) to an extra channel (something like a subwoofer out)
+  //  -The new L/R channels shall be MH,SH converted back to L/R plus 0,SL converted back to
+  //   L/R
+  //  -The intention of the whole system is to route the bass of the mid-signal to its own channel,
+  //   leave the highs on L/R as is and put whatever residual bass is prsent in S also back to L/R
+  //   ...this should be lossless - right? Check this?
+  //  -It's the first example of a MIMO system that actually does some proper filtering *and* has
+  //   multiple ins and outs. Moreover the number of ins and outs is not the same. So it may be a 
+  //   good example for a general MIMO system ...and actually does something potentially useful.
+  //  -Maybe we could also just route ML+SL to the subwoofer channel? ...but that step is probably
+  //   not invertible - so it will violate the MIMO allpass (= losslessness) condition?
+  // -Create multiband splitters and do some interesting M/S and/or re-panning stuff with the
+  //  different bands.
+  // -Create transfer function (TF) matrices as rsMatrix<rsRationalFunction<T>>
+  // -Obtain inverses of TF matrices
+
+}
+
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {

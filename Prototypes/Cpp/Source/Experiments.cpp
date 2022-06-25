@@ -9280,8 +9280,10 @@ void testMimoFilters()
   rsPlotVectors(xL, xR, yL, yR);
 
   // The second experiment is a 2-in / 3-out system that works similar to the bass-narrower above
-  // plays the (boosted) yML signal out over a dedicated "subwoofer" channel:
-  Vec yW(N);           // woofer channel
+  // but plays the (boosted) yML signal out over a dedicated "subwoofer" channel:
+  Vec yW(N);           // our additional "woofer" output channel
+  splitterM.reset();
+  splitterS.reset();
   for(int n = 0; n < N; n++)
   {
     // This is the same code as above:
@@ -9295,7 +9297,7 @@ void testMimoFilters()
     ySH[n] = xSH[n];
 
     // At this point, the new algo is different:
-    yW[n] = yML[n];  // The yML signla now goes into its own channel
+    yW[n] = yML[n];  // The yML signal now goes into its own dedicated channel
     yM[n] = yMH[n];  // Previously, the yML signal was added here
 
     // The rest is again the same as above:
@@ -9359,6 +9361,9 @@ void testMimoFilters()
   // -Apply the systems to example signals (e.g. white noise) and check losslessness numerically by
   //  computing the total energies of inputs and outputs.
   // -Try to get the original signals back by applying the respective inverse systems.
+  // -Plot the point-to-point frequency responses:
+  //  1: L->L, L->R, R->L, R->R
+  //  2: L->L, L->R, L->W, R->L, R->R, R->W
 
 }
 

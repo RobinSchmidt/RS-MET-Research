@@ -9191,6 +9191,15 @@ void testAttractors()
 
 void testMimoTransferMatrix()
 {
+  // Experiments with MIMO (multi-input/multi-output) transfer function matrices. A p-by-q (p rows,
+  // q columns) transfer function matrix is a matrix, whose entries are point-to-point transfer 
+  // functions. The (i,j)-th entry is the transfer function from input j to output i. So, the first
+  // index (row index) indicates the output and the second index (column index) indicates the 
+  // input.
+  //
+  // References:
+  //   (1) Introduction to Digital Filters (Julius O. Smith)
+  //       ...our notation and conventions here follow this book mostly
 
   using Real = double;  // Maybe try using rsFraction<int> if roundoff becomes an issue
   using RatFunc  = rsRationalFunction<Real>;  // Represents a SISO transfer function
@@ -9198,28 +9207,27 @@ void testMimoTransferMatrix()
   // Maybe append an R to idicate real transfer function(matrice)s and have also complex versions.
 
   // Create some point-to-point transfer function objects for a 2-in/3-out MIMO filter. H_ij is the
-  // transfer function from the i-th input to the j-th output of the MIMO filter:
+  // transfer function from the j-th input to the i-th output of the MIMO filter:
   RatFunc H_11({+0.7, +0.3      }, {1, +0.5, -0.2});  // 1st denom coeff must always be 1
   RatFunc H_12({-0.5, +1.5      }, {1, -0.5, +0.2});
-  RatFunc H_13({+0.2, +0.4, +0.2}, {1, +0.9      });
-  RatFunc H_21({-0.6, +1.6      }, {1, -0.3, +0.6});
-  RatFunc H_22({-0.3, +0.0, +0.5}, {1, -0.8      });
-  RatFunc H_23({-0.2, -0.7      }, {1, +0.3, +0.1});
+  RatFunc H_21({+0.2, +0.4, +0.2}, {1, +0.9      });
+  RatFunc H_22({-0.6, +1.6      }, {1, -0.3, +0.6});
+  RatFunc H_31({-0.3, +0.0, +0.5}, {1, -0.8      });
+  RatFunc H_32({-0.2, -0.7      }, {1, +0.3, +0.1});
 
-  // Assemble the point-to-point transfer functions into the transfer function matrix:
-  TransMat H(2, 3, {H_11, H_12, H_13,  H_21, H_22, H_23});
-  // ...oh...wait - I think, this specifies a 3-in/2-out system. We need to flip the convention:
-  // the 1st index should indicate the output and the 2nd index the input.
+  // Assemble the point-to-point transfer functions into the 3x2 transfer function matrix:
+  TransMat H(3, 2, {H_11, H_12,  H_21, H_22,  H_31, H_32});
 
 
+
+  // ToDo:
+  // -Compute H_p, the paraconjugate of H (in (1), a H with a tilde)
+  // -Compute H_h, the Hermitian transpose of H (in (1) a H with a star/asterisk)
 
 
 
 
   int dummy = 0;
-
-  // Refererencs:
-  // (1) Introduction to Digital Filters (Julius O. Smith)
 
   // Questions:
   // -Can we have a stable MIMO filter even though one of the H_ij is unstable...err...well...no

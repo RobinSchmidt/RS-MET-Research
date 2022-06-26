@@ -9189,10 +9189,43 @@ void testAttractors()
 }
 
 
-//template<class T>
+void testMimoTransferMatrix()
+{
+
+  using Real = double;  // Maybe try using rsFraction<int> if roundoff becomes an issue
+  using RatFunc  = rsRationalFunction<Real>;  // Represents a SISO transfer function
+  using TransMat = rsMatrix<RatFunc>;         // Transfer function matrix
+
+  // Create some point-to-point transfer function objects for a 2-in/3-out MIMO filter. H_ij is the
+  // transfer function from the i-th input to the j-th output of the MIMO filter:
+  RatFunc H_11({+0.7, +0.3      }, {1, +0.5, -0.2});  // 1st denom coeff must always be 1
+  RatFunc H_12({-0.5, +1.5      }, {1, -0.5, +0.2});
+  RatFunc H_13({+0.2, +0.4, +0.2}, {1, +0.9      });
 
 
-void testMimoFilters()
+
+
+
+
+  int dummy = 0;
+
+  // Questions:
+  // -Can we have a stable MIMO filter even though one of the H_ij is unstable...err...well...no
+  //  by definition - but what if we put such a MIMO filter into a feedback path like in an FDN?
+  //  Can the blow-up of one filter be somehow counteracted by another filter? Maybe one that 
+  //  produces the same blowup but with negative sign? Or what if we just subtract two unstable
+  //  SISO outputs that create a blow-up at the same frequency?
+
+  // ToDo:
+  // -Maybe let all SISO filter classes in RAPT have a function getTransferFunction() that returns 
+  //  an object of class rsRationalFunction. Maybe it should have a bool parameter that selects 
+  //  whether the caller wants a function in z or 1/z. A MIMO filter's transfer function would then
+  //  be an rsMatrix of such functions and MIMO filter classes should have a function 
+  //  getTransferMatrix().
+
+}
+
+void testMimoFilters() // rename to testMimoBassFilters
 {
   // Some experiments with multi-input/multi-output (MIMO) filters. The goal is to get a better
   // intuition for when a MIMO system is invertible, if so, how to obtain the inverse, when it is
@@ -9203,7 +9236,6 @@ void testMimoFilters()
   using Real = double;
   using Splitter = RAPT::rsTwoBandSplitter<Real, Real>;
   using Vec = std::vector<Real>;
-  //using Matrix = 
 
   int  numSamples =  1024;   // Number of samples to produce
   Real sampleRate = 48000;
@@ -9415,6 +9447,17 @@ void testMimoFilters()
   //  1st experiment: L->L, L->R, R->L, R->R
   //  2nd experiment: L->L, L->R, L->W, R->L, R->R, R->W
   // -Make state-space implementations of the systems
+  // -Make an experiment with 2 delaylines with a 2x2 feedback filter matrix
+  //  -x1, x2 are inputs
+  //   d1  = delay1(x1 + y11 + y21);
+  //   d2  = delay2(x1 + y21 + y22);
+  //   y11 = filter11(d1);
+  //   y12 = filter12(d1);
+  //   y21 = filter21(d2);
+  //   y22 = filter22(d2);
+  //  -How can we make such a system losless? Musta filter11/12 and filter21/22 be complementary 
+  //   pairs? And/or does it work when 11/22 and 12/21 are complementary? Can they also be inverses
+  //   of each other ...or maybe that's the same thing anyway?
 
 
   // Notes:

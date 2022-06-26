@@ -6342,6 +6342,17 @@ class rsOffsetPolynomial : private RAPT::rsPolynomial<T>  // find a better name!
 
 public:
 
+  static T evaluate(const T& x, const T *a, int degree, int offset);
+
+  static int multiply(const T *a, int aDegree, int aOffset,
+                      const T *b, int bDegree, int bOffset, T *result);
+  // todo: 
+  // -document, how long the result array needs to be...actually, in this respec, nothing really
+  //  changes - the same rules as for normal polynomials apply
+
+  // todo:
+  // -implement add, subtract, divide ...maybe divide is like regular divide and the result-offset
+  //  is obtained by subtracting the input offsets?
 
 
 protected:
@@ -6349,6 +6360,22 @@ protected:
   int M = 0;  // The offset, i.e. the power of x by which the whole thing is multiplied
 
 };
+
+template <class T>
+T rsOffsetPolynomial<T>::evaluate(const T& x, const T *a, int degree, int offset)
+{
+  return rsPow(x, offset) * RAPT::rsPolynomial<T>::evaluate(x, a, degree);
+}
+
+template <class T>
+int rsOffsetPolynomial<T>::multiply(const T *a, int aDegree, int aOffset, const T *b, int bDegree,
+  int bOffset, T *result)
+{
+  RAPT::rsPolynomial<T>::multiply(a, aDegree, b, bDegree, result);
+  return aOffset + bOffset;  // verify this!
+}
+
+
 
 // ToDo:
 // -Implement evaluation, addition, subtraction, multiplication and (maybe) division.

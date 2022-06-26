@@ -6351,6 +6351,8 @@ protected:
 };
 
 // ToDo:
+// -Implement evaluation, addition, subtraction, multiplication and (maybe) division.
+// -What about integration and differentiation?
 // -Can M be a real or even complex number?
 // -Find a better name...maybe PoweredPolynomial, ElevatedPolynomial (!), BoostedPolynomial, 
 //  LiftedPolynomial (!!), HoistedPolynomial, RaisedPolynomial
@@ -6359,7 +6361,9 @@ protected:
 //  actually not an uncommon thing so that may actually be of practical relevance. Perhaps 
 //  pre-multiply is the better choice because in DSP texts, we sometimes see things like
 //  z^(-M) * H(z) (see Introduction to Digital Filters by JOS, page 133) but rarely, if ever 
-//  H(z) * z^(-M)
+//  H(z) * z^(-M). But maybe then it should be called PreLiftedPoly or PreMultipliedPoly
+// -Make also a class LiftedRationalFunction because eventually, we want to apply it also to IIR
+//  transfer functions
 
 
 //=================================================================================================

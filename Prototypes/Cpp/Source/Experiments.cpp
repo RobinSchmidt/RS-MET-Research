@@ -9201,13 +9201,20 @@ void testMimoTransferMatrix()
   RatFunc H_11({+0.7, +0.3      }, {1, +0.5, -0.2});  // 1st denom coeff must always be 1
   RatFunc H_12({-0.5, +1.5      }, {1, -0.5, +0.2});
   RatFunc H_13({+0.2, +0.4, +0.2}, {1, +0.9      });
+  RatFunc H_21({-0.6, +1.6      }, {1, -0.3, +0.6});
+  RatFunc H_22({-0.3, +0.0, +0.5}, {1, -0.8      });
+  RatFunc H_23({-0.2, -0.7      }, {1, +0.3, +0.1});
 
+  // Assemble the point-to-point transfer functions into the transfer function matrix:
 
 
 
 
 
   int dummy = 0;
+
+  // Refererencs:
+  // (1) Introduction to Digital Filters (Julius O. Smith)
 
   // Questions:
   // -Can we have a stable MIMO filter even though one of the H_ij is unstable...err...well...no
@@ -9222,6 +9229,18 @@ void testMimoTransferMatrix()
   //  whether the caller wants a function in z or 1/z. A MIMO filter's transfer function would then
   //  be an rsMatrix of such functions and MIMO filter classes should have a function 
   //  getTransferMatrix().
+  // -Try to build a lossless transfer function matrix. Check loslessness analytically by showing 
+  //  that herm(H) * H = ID where herm(H) denotes taking the Hermitian transpose of H (a.k.a. 
+  //  conjugate transpose) and ID denotes the identity matrix of appropriate size. See (1) pg 301.
+  //  How do we conjugate a rational function? By conjugating all coeffs?
+  // -Write a function that computes the paraconjugate H_p of a tranfer function matrix H. This 
+  //  involves taking complex conjugates of all coeffs. See (1) pg 300. ..We currently only have 
+  //  real coeffs so maybe taking the paraconjugate is just the identity? But at the bottom of the
+  //  page, he forms the matrix product H_p * H, so I guess paraconjugation must also involve 
+  //  transposition to make that product be defined in general? But the text doesn't say anything
+  //  about transposing. ...figure out! pg 302: H_p(z) = H_h(1/z) where H_h = herm(H) is the 
+  //  Hermitian transpose.
+  // -Try to build a paraunitary filter bank. See (1) pg 303.
 
 }
 

@@ -9233,10 +9233,18 @@ void testMimoTransferMatrix()
   Complex l(1, 0);  // 1 - one  - try to get rid and use 1 instead
   Complex O(0, 0);  // 0 - zero - try to get rid and use 0 instead
 
-  // Example system from (1) pg 302:
+  // Example system from (1) pg 302. H(z) is a 1-in/2-out system
   PolyMatC H(  2, 1, {PolyC({ l, j }), PolyC({ l, O, l }) });  // H  (z) = [1 + j/z ; 1 + 1/z^2]
   PolyMatC H_p(1, 2, {PolyC({ l,-j }), PolyC({ l, O, l }) });  // H_p(z) = [1 - j*z , 1 +   z^2]
 
+  // Compute H_p(z) * H(z). This should be the 1x1 identity matrix, i think? We want to compute:
+  //
+  //  [1 + j/z  ] * [1 - j*z  1 + z^2] = z^2 - j*z + j/z + 1/z^2 + 4
+  //  [1 + 1/z^2]
+  //
+  // Sage:
+  // expand((1-I*x)*(1+I/x) + (1+x^2)*(1+1/x^2))
+  // ...soo - apparently, this example is not paraunitary.
 
   // The elements of H are polynomials in z^(-1) = 1/z whereas the elements of its paraconjugate
   // H_p are polynomials in z itself. How should we deal with this? Maybe we could have a 
@@ -9261,7 +9269,14 @@ void testMimoTransferMatrix()
   // by x^2. In general, if a polynomial contains both, positive and negative powers, we may need
   // to reverse only a part of the coeff array? Ah - wait - no: in such a case, the coeffs for the 
   // negative powers don't need to be reversed. The reversal comes about because we consider x^-(2)
-  // as being a higher power than x^(-1)...but actually it's a lower power.
+  // as being a higher power than x^(-1)...but actually it's a lower power. I think, we can just
+  // convolve the coeff arrays as usual and the resulting offset is just the sum of the two offsets
+  // of the operands. To add two such polynomials, we need to re-adjust the one with the higher 
+  // offset to match the one with the lower offset and shift the coeffs right by that amount 
+  // (with zero-padding from the left). Then we can add them as usual. Actually, such shifted 
+  // transfer functions appear a lot in (1). We often see things like: z^(-M) * H(z) for a 
+  // transfer function H(z) that was delayed by M samples. So it may be convenient to have a 
+  // datastructure to represent such delayed transfer functions.
 
 
 

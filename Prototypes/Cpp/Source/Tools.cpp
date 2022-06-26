@@ -6323,7 +6323,43 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
   //  But maybe the law can be taken into account when we compute S?
 }
 
+//=================================================================================================
 
+/** A class for representing polynomials that are multiplied by some power of x, say x^M. This 
+shifts all exponents by M. The coefficient array a[0]...a[N] of an N-th degree polynomial will then
+represent:
+
+  p(x) = x^M * (a0 + a1*x + a2*x^2 + a3*x^3 + ... + aN*x^N)
+       = a0*x^M + a1*x^(M+1) + a2*x^(M+2) + a3*x^(M+3) + ... + aN*x^(M+N)
+
+M can also be negative. This makes this class helpful when we want to represent polynomials that 
+are meant to be in inverse powers of x: we simply choose M = -N and reverse the coefficient array.
+Polynomials in inverse powers of z are very common in DSP. ...tbc...  */
+
+template<class T> 
+class rsOffsetPolynomial : private RAPT::rsPolynomial<T>  // find a better name!
+{
+
+public:
+
+
+
+protected:
+
+  int M = 0;  // The offset, i.e. the power of x by which the whole thing is multiplied
+
+};
+
+// ToDo:
+// -Can M be a real or even complex number?
+// -Find a better name...maybe PoweredPolynomial, ElevatedPolynomial (!), BoostedPolynomial, 
+//  LiftedPolynomial (!!), HoistedPolynomial, RaisedPolynomial
+// -Define whether we mean to pre- or post-multiply by x^M. This may make a difference if 
+//  the type T has a noncommutative multiplication such as matrices. Polynomials of matrices are
+//  actually not an uncommon thing so that may actually be of practical relevance. Perhaps 
+//  pre-multiply is the better choice because in DSP texts, we sometimes see things like
+//  z^(-M) * H(z) (see Introduction to Digital Filters by JOS, page 133) but rarely, if ever 
+//  H(z) * z^(-M)
 
 
 //=================================================================================================

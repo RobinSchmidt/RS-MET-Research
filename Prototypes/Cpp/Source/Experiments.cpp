@@ -9195,6 +9195,7 @@ void testMimoTransferMatrix()
   using Real = double;  // Maybe try using rsFraction<int> if roundoff becomes an issue
   using RatFunc  = rsRationalFunction<Real>;  // Represents a SISO transfer function
   using TransMat = rsMatrix<RatFunc>;         // Transfer function matrix
+  // Maybe append an R to idicate real transfer function(matrice)s and have also complex versions.
 
   // Create some point-to-point transfer function objects for a 2-in/3-out MIMO filter. H_ij is the
   // transfer function from the i-th input to the j-th output of the MIMO filter:
@@ -9206,6 +9207,10 @@ void testMimoTransferMatrix()
   RatFunc H_23({-0.2, -0.7      }, {1, +0.3, +0.1});
 
   // Assemble the point-to-point transfer functions into the transfer function matrix:
+  TransMat H(2, 3, {H_11, H_12, H_13,  H_21, H_22, H_23});
+  // ...oh...wait - I think, this specifies a 3-in/2-out system. We need to flip the convention:
+  // the 1st index should indicate the output and the 2nd index the input.
+
 
 
 
@@ -9253,6 +9258,10 @@ void testMimoTransferMatrix()
   //  See (1) pg 356-359. Maybe we should also have a means to conert state-space forms between
   //  controller-canonical and observer-canonical?
   // -Implement the "Time Domain Filter Estimation" algo from (1) pg 340.
+  // -Implement the example from (1) pg 302: 
+  //    H(z) = [1 + i/z ; 1 + 1/z^2], H_p(z) = [1 - i*z , 1 + z^2]
+  //  we use a semicolon to seperate rows and a comma to seperate row entries. H(z) is a column 
+  //  vector and H_p(z) a row vector.
 
 }
 

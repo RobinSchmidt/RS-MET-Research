@@ -9240,7 +9240,19 @@ void testMimoTransferMatrix()
   //  transposition to make that product be defined in general? But the text doesn't say anything
   //  about transposing. ...figure out! pg 302: H_p(z) = H_h(1/z) where H_h = herm(H) is the 
   //  Hermitian transpose.
-  // -Try to build a paraunitary filter bank. See (1) pg 303.
+  // -Try to build a paraunitary filter bank. See (1) pg 303. And/or implement the example on page
+  //  304. Write a function to invert an FIR filter bank. The book says, it can be done by just 
+  //  flipping the coeff arrays - try that! Try also the Haar filter bank from pg 304/305.
+  // -Do the problem on page 305
+  // -Implement state-space realizations of SISO filters first and then later also for MIMO 
+  //  filters. Maybe first convert a simple SISO biquad into state-space form, from there, find
+  //  its poles and zeros. The poles are the eigenvalues of the state transition matrix. What do
+  //  the eigenvectors represent? Diagonalize the filter. If not diagonalizable, find Jordan
+  //  canoncial form. I think, this happens when a pole has multiplicity > 1.
+  // -Implement the matlab functions tf2ss, ss2tf, tf2sos, sos2ss, tf2zp, ss2zp, zp2ss in C++.
+  //  See (1) pg 356-359. Maybe we should also have a means to conert state-space forms between
+  //  controller-canonical and observer-canonical?
+  // -Implement the "Time Domain Filter Estimation" algo from (1) pg 340.
 
 }
 

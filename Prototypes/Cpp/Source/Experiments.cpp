@@ -9192,35 +9192,102 @@ void testAttractors()
 void testMimoTransferMatrix()
 {
   // Experiments with MIMO (multi-input/multi-output) transfer function matrices. A p-by-q (p rows,
-  // q columns) transfer function matrix is a matrix, whose entries are point-to-point transfer 
-  // functions. The (i,j)-th entry is the transfer function from input j to output i. So, the first
-  // index (row index) indicates the output and the second index (column index) indicates the 
-  // input.
+  // q columns) transfer function matrix is a matrix, whose entries are point-to-point SISO 
+  // (single-input/single-output) transfer functions. The (i,j)-th entry is the SISO transfer 
+  // function from input j to output i. So, the first index (row index) indicates the output and 
+  // the second index (column index) indicates the input.
   //
   // References:
   //   (1) Introduction to Digital Filters (Julius O. Smith)
-  //       ...our notation and conventions here follow this book mostly
+  //
+  // Notation:
+  // Our notation, terminology and conventions here are mostly based on (1). We use H to denote a
+  // transfer function. In the SISO case, H is an rsRationalFunction and in the MIMO case, it is
+  // a matrix thereof. In (1), the former would be written in normal font and the latter in bold. 
+  // We don't make such a distinction here. We denote row vectors like [1, 3, 2] and column vectors
+  // as [1; 3; 2]. A 2x3 matrix is written as [1,2,3; 4,5,6]. We use H_p to denote the 
+  // paraconjugate of H (a tilde in (1)), H_h for the Hermitian transpose of H (an asterisk in (1))
+  // and H_c for the conjugate (an overbar in (1)). We will also sometimes write 1/z instead of 
+  // z^(-1) because it's shorter.
 
-  using Real = double;  // Maybe try using rsFraction<int> if roundoff becomes an issue
-  using RatFunc  = rsRationalFunction<Real>;  // Represents a SISO transfer function
-  using TransMat = rsMatrix<RatFunc>;         // Transfer function matrix
-  // Maybe append an R to idicate real transfer function(matrice)s and have also complex versions.
+  // Type aliases for convenience:
+  using Real      = double;
+  //using Complex   = rsComplex<Real>;           // use later - we get a linker error atm
+  using Complex   = std::complex<Real>;
+  //using PolyR     = rsPolynomial<Real>;
+  //using RatFuncR  = rsRationalFunction<Real>;    // Real SISO transfer function
+  //using PolyMatR  = rsMatrix<PolyR>;  
+  //using TransMatR = rsMatrix<RatFuncR>;          // Real MIMO function matrix
+  using PolyC     = rsPolynomial<Complex>;
+  using RatFuncC  = rsRationalFunction<Complex>; 
+  using PolyMatC  = rsMatrix<PolyC>; 
+  using TransMatC = rsMatrix<RatFuncC>;          // maybe rename to RatMatC
+  // ToDo:
+  // Maybe try using Real = rsFraction<int> if roundoff becomes an issue. Maybe try std::complex
+  // instead of rsComplex - but then we can use only float or double for Real because std::complex
+  // is limited to those. Even if we eventually don't use rsFraction, make sure that the code 
+  // compiles witn rsFraction, too.
+
+
+  Complex j(0, 1);  // imaginary unit
+  Complex l(1, 0);  // 1 - one  - try to get rid and use 1 instead
+  Complex O(0, 0);  // 0 - zero - try to get rid and use 0 instead
+
+  // Example system from (1) pg 302:
+  PolyMatC H(  2, 1, {PolyC({ l, j }), PolyC({ l, O, l }) });  // H  (z) = [1 + j/z ; 1 + 1/z^2]
+  PolyMatC H_p(1, 2, {PolyC({ l,-j }), PolyC({ l, O, l }) });  // H_p(z) = [1 - j*z , 1 +   z^2]
+
+
+  // The elements of H are polynomials in z^(-1) = 1/z whereas the elements of its paraconjugate
+  // H_p are polynomials in z itself. How should we deal with this? Maybe we could have a 
+  // generalized polynomial class that allows also for negative exponents. Maybe add an offset M to
+  // each exponent such that the coeff array a[0] represents the polynomial:
+  //   p(x) = a0 * x^(0+M) + a1 * x^(1+M) + a2 * x^(2+M) + ...
+  // and when we choose a negative number as offset, we get negative powers?. That could be also 
+  // useful to represent truncated Laurent series. And/or implement a special multiplication 
+  // function that expects the 1st and or 2nd operand to be in powers of 1/x rather than x.
+  // How could such a special multiplication of two offset-polynomials look like algorithmically?
+  // Consider 
+  //   A(x) * B(x) = (a0 + a1*x + a2x^2) * (b0 + b1/x + b2/x^2) 
+  //               =   a0*b0     + a0*b1/x + a0*b2/x^2 
+  //                 + a1*b0*x   + a1*b1   + a1*b2/x
+  //                 + a2*b0*x^2 + a2*b1*x + a2*b2
+  // I think, the coeff array of the result coul be found by multiplying B(x) by x^2, reversing the
+  // resulting coeff array, convolving the result with the A array
+  // I think, to make the two polynomials multiplicable by convolution, we must multiply them by an 
+  // appropriate power of x to make them both start with the coeff of the constant term and then
+  // go up to higher powers and the re-interpret the convolution result by assuming that the result
+  // should be divided by the same power of x. In this case, our B polynomial would be multiplied 
+  // by x^2. In general, if a polynomial contains both, positive and negative powers, we may need
+  // to reverse only a part of the coeff array? Ah - wait - no: in such a case, the coeffs for the 
+  // negative powers don't need to be reversed. The reversal comes about because we consider x^-(2)
+  // as being a higher power than x^(-1)...but actually it's a lower power.
+
+
+
+  /*
 
   // Create some point-to-point transfer function objects for a 2-in/3-out MIMO filter. H_ij is the
   // transfer function from the j-th input to the i-th output of the MIMO filter:
-  RatFunc H_11({+0.7, +0.3      }, {1, +0.5, -0.2});  // 1st denom coeff must always be 1
-  RatFunc H_12({-0.5, +1.5      }, {1, -0.5, +0.2});
-  RatFunc H_21({+0.2, +0.4, +0.2}, {1, +0.9      });
-  RatFunc H_22({-0.6, +1.6      }, {1, -0.3, +0.6});
-  RatFunc H_31({-0.3, +0.0, +0.5}, {1, -0.8      });
-  RatFunc H_32({-0.2, -0.7      }, {1, +0.3, +0.1});
+  RatFuncR H_11({+0.7, +0.3      }, {1, +0.5, -0.2});  // 1st denom coeff must always be 1
+  RatFuncR H_12({-0.5, +1.5      }, {1, -0.5, +0.2});
+  RatFuncR H_21({+0.2, +0.4, +0.2}, {1, +0.9      });
+  RatFuncR H_22({-0.6, +1.6      }, {1, -0.3, +0.6});
+  RatFuncR H_31({-0.3, +0.0, +0.5}, {1, -0.8      });
+  RatFuncR H_32({-0.2, -0.7      }, {1, +0.3, +0.1});
 
   // Assemble the point-to-point transfer functions into the 3x2 transfer function matrix:
-  TransMat H(3, 2, {H_11, H_12,  H_21, H_22,  H_31, H_32});
+  TransMatR H(3, 2, {H_11, H_12,  H_21, H_22,  H_31, H_32});
+
+  */
+
+
+
 
 
 
   // ToDo:
+  // -Compute H_c, the conjugate of H
   // -Compute H_p, the paraconjugate of H (in (1), a H with a tilde)
   // -Compute H_h, the Hermitian transpose of H (in (1) a H with a star/asterisk)
 
@@ -9237,6 +9304,7 @@ void testMimoTransferMatrix()
   //  SISO outputs that create a blow-up at the same frequency?
 
   // ToDo:
+  // -Make it compilable with: using Complex   = rsComplex<Real>;
   // -Maybe let all SISO filter classes in RAPT have a function getTransferFunction() that returns 
   //  an object of class rsRationalFunction. Maybe it should have a bool parameter that selects 
   //  whether the caller wants a function in z or 1/z. A MIMO filter's transfer function would then

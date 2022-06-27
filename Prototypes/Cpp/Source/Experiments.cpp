@@ -9678,6 +9678,23 @@ void testMimoFilters() // rename to testMimoBassFilters
   //  which is intuitively obvious because if it has less outputs, we will inevitably lose some 
   //  information contained in the input signal. He talks about the allpass condition there, 
   //  which is an even stronger requirement than invertibility (I think).
+}
+
+void testStateSpaceFilters()
+{
+  using Real = double;
+  using SSF  = rsStateSpaceFilter<Real>;
+
+  int numIns    = 2;
+  int numOuts   = 3;
+  int numStates = 4;  // Doesn't need to be related to numIns or numOuts
+
+  SSF ssf1;
+  //ssf.setDimensions(numIns, numOuts, numStates);
+
+
+
+  int dummy = 0;
 
 }
 

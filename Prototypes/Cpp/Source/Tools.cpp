@@ -6439,8 +6439,6 @@ int rsLiftedPolynomial<T>::multiply(const T *a, int aDegree, int aOffset, const 
   return aOffset + bOffset;  // verify this!
 }
 
-
-
 // ToDo:
 // -Implement evaluation, addition, subtraction, multiplication and (maybe) division.
 // -What about integration and differentiation? I gues the x^(-1) = 1/x term may be problematic 
@@ -6479,6 +6477,54 @@ int rsLiftedPolynomial<T>::multiply(const T *a, int aDegree, int aOffset, const 
 // -Make also a class LiftedRationalFunction because eventually, we want to apply it also to IIR
 //  transfer functions
 
+
+//=================================================================================================
+
+/** A class for implementing digital filters in state space form. It implements the difference 
+equation:
+
+  y[n]   = C * x[n] + D * u[n]           output generation for sample index n
+  x[n+1] = A * x[n] + B * u[n]           state update to prepare for the next sample
+
+where x is a length N state vector, u is a length p input vector, y is a length q output vector, A
+is an N-by-N state transition matrix, B is an N-by-p injection matrix, C is an q-by-N output matrix 
+and D is a q-by-p feedthrough matrix. (verify sizes and terminology - I made some of them up)
+
+The system has the q-by-p MIMO transfer function matrix:
+
+  H(z) = D + C*(z*I - A)^(-1) * B     (1) Eq G.5
+
+ ...tbc...
+
+References:
+  (1) Introduction to Digital Filters with Audio Application (Julius O. Smith)
+
+*/
+
+
+template<class T> 
+class rsStateSpaceFilter
+{
+
+public:
+
+
+protected:
+
+  rsMatrix<T> x, A, B, C, D;
+  // Meaning of those matrices
+  //   x: state vector, N-by-1 column vector
+  //   A: state transition matrix, N-by-N matrix
+  //   B: input matrix, N-by-p matrix (verify!)
+  //   C: output matrix, q-by-N matrix (verify!)
+  //   D: passthrough matrix, q-by-p (verify!)
+  // We also use the notation:
+  //   u: input vector, p-by-1
+  //   y: output vector, q-by-1
+  // but we don't need any class members for these I/O variables. See (1) pg 345, Appendix G.
+  // ToDo: check names. I made some of them up myself
+
+};
 
 //=================================================================================================
 /*

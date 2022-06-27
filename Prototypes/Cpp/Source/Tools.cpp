@@ -6326,15 +6326,25 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
 //=================================================================================================
 
 /** A class for representing polynomials that are (pre-) multiplied by some power of x, say x^m. 
-This shifts all exponents by M. The coefficient array a[0]...a[N] of an N-th degree polynomial will
+This shifts all exponents by m. The coefficient array a[0]...a[N] of an N-th degree polynomial will
 then represent:
 
   p(x) = x^m * (a0 + a1*x + a2*x^2 + a3*x^3 + ... + aN*x^N)
        = a0*x^m + a1*x^(m+1) + a2*x^(m+2) + a3*x^(m+3) + ... + aN*x^(m+N)
 
-M can also be negative. This makes this class helpful when we want to represent polynomials that 
-are meant to be in inverse powers of x: we simply choose m = -N and reverse the coefficient array.
-Polynomials in inverse powers of z are very common in DSP. ...tbc...  */
+where for m = 0,we just get our regular old polynomial. The power m can also be negative. This 
+makes this class helpful when we want to represent polynomials that are meant to be in inverse 
+powers of x: we simply choose m = -N and reverse the coefficient array. Polynomials in inverse 
+powers of z are a very common thing in DSP. Normally, when working with polynomials, it doesn't 
+really matter, whether these represent polynomials in x or in 1/x as long as the usage is 
+consistent among them all. But as soon as we want to mix both types, like multiply a polynomial p 
+in x by another polynomial q which is in 1/x, this class can be used to make them compatible. Such
+a situation occurs in the definition of paraunitary filters.
+
+See here, section 1.3.3:
+https://www.snnu.uni-saarland.de/wp-content/uploads/2015/05/BMT1822-Introduction-to-Paraunitary-Filter-Banks-and-Orthogonal-Expansions-in-l2.pdf
+
+...tbc...  */
 
 template<class T> 
 class rsLiftedPolynomial : private RAPT::rsPolynomial<T> 
@@ -6383,8 +6393,8 @@ public:
 
 
   /** If the function p(x) is currently a (generalized) polynomial in x, calling this will turn it
-  into one in x^(-1) = 1/x instead. This is achieven by reversing the coefficient array and making
-  adjustments to the power m of the pre-factor x^m. */
+  into one in x^(-1) = 1/x instead. This is achieved by reversing the coefficient array and making
+  appropriate adjustments to the power m of the pre-factor x^m. */
   void invert();
 
 
@@ -6407,22 +6417,18 @@ protected:
 
 };
 
-
 template <class T>
 void rsLiftedPolynomial<T>::invert()
 {
   rsReverse(Base::coeffs);    // maybe we need this->coeffs syntax for clang, gcc?
   int N = Base::getDegree();  // dito?
-  m = -N - m;                 // verify this!
-  int dummy = 0;
+  m = -N - m;                 // verify this!...ok - seems to work
 }
-
 
 template <class T>
 T rsLiftedPolynomial<T>::evaluate(const T& x, const T *a, int N, int m)
 {
   return rsPow(x, m) * Base::evaluate(x, a, N);
-  // doesn't work yet because rsPow doesn't support negative exponents yet
 }
 
 template <class T>

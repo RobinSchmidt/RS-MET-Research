@@ -9280,6 +9280,8 @@ void testMimoTransferMatrix()
   using PolyMatC  = rsMatrix<PolyC>; 
   using TransMatC = rsMatrix<RatFuncC>;          // maybe rename to RatMatC
   // ToDo:
+  // Use rsLifedPolynomial to enable computing the paraconjugate.
+  //
   // Maybe try using Real = rsFraction<int> if roundoff becomes an issue. Maybe try std::complex
   // instead of rsComplex - but then we can use only float or double for Real because std::complex
   // is limited to those. Even if we eventually don't use rsFraction, make sure that the code 

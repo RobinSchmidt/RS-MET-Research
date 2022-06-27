@@ -6508,12 +6508,45 @@ class rsStateSpaceFilter
 
 public:
 
+  void setDimensions(int numIns, int numOuts, int numStates);
+
+  void setup(const rsMatrixView<T>& A, const rsMatrixView<T>& B, const rsMatrixView<T>& C,
+    const rsMatrixView<T>& D);
+
+  void processFrame(T* ins, T* outs)
+  {
+    // Wrap some matrix-view objects around the input vectors:
+    using MV = rsMatrixView<T>;
+    MV u(p, 1, ins);   // input vector
+    MV y(q, 1, outs);  // output vector
+
+    // Compute output y = C*x + D*u:
+    MV::matrixMultiply(          C, x, &y);  // y = C*x
+    MV::matrixMultiplyAccumulate(D, u, &y);  // y = C*x + D*u
+
+    // Update the state: x = A*x + B*u:
+    MV::matrixMultiply(          A, x, &t);  // t = A*x
+    MV::matrixMultiplyAccumulate(B, u, &t);  // t = A*x + B*u
+    rsArrayTools::copy(t.getDataPointer(), x.getDataPointer(), N);
+
+    int dummy = 0;
+  }
+
+  void reset() { x.setToZero(); }
+
 
 protected:
 
-  rsMatrix<T> x, A, B, C, D;
+
+  int N = 0;  // number of internal states
+  int p = 0;  // number of inputs
+  int q = 0;  // number of outputs
+
+
+  rsMatrix<T> x, t, A, B, C, D;
   // Meaning of those matrices
   //   x: state vector, N-by-1 column vector
+  //   t: temporary storage for x during state update
   //   A: state transition matrix, N-by-N matrix
   //   B: input matrix, N-by-p matrix (verify!)
   //   C: output matrix, q-by-N matrix (verify!)
@@ -6524,7 +6557,35 @@ protected:
   // but we don't need any class members for these I/O variables. See (1) pg 345, Appendix G.
   // ToDo: check names. I made some of them up myself
 
+
+
 };
+
+template<class T> 
+void rsStateSpaceFilter<T>::setDimensions(int numIns, int numOuts, int numStates)
+{
+  p = numIns;
+  q = numOuts;
+  N = numStates;
+  x.setShape(N, 1);
+  t.setShape(N, 1);
+  A.setShape(N, N);
+  B.setShape(N, p);
+  C.setShape(q, N);
+  D.setShape(q, p);
+  reset();
+}
+
+
+template<class T> 
+void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixView<T>& newB,
+  const rsMatrixView<T>& newC, const rsMatrixView<T>& newD)
+{
+  rsError("Not yet implemented");
+}
+
+
+
 
 //=================================================================================================
 /*

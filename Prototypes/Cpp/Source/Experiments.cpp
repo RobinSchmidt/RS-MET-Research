@@ -9689,8 +9689,13 @@ void testStateSpaceFilters()
   int numOuts   = 3;
   int numStates = 4;  // Doesn't need to be related to numIns or numOuts
 
-  SSF ssf1;
-  //ssf.setDimensions(numIns, numOuts, numStates);
+  SSF ssf;
+  ssf.setDimensions(numIns, numOuts, numStates);
+
+  Real u[2] = {1, 2};
+  Real y[3];
+
+  ssf.processFrame(u, y);
 
 
 

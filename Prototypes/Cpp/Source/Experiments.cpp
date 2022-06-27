@@ -9211,13 +9211,12 @@ bool testLiftedPolynomial()
   p.setPower(-2);
   y = p.evaluate(2.0f); ok &= y == 32.25;
 
-
-
   // Test inversion:
+  p.setPower(0);
   p.invert();
-  y = p.evaluate(2.0f);
-  y = p.evaluate(0.5f); 
-  // nope! this doesn't work!
+  y = p.evaluate(2.0f); ok &= y == 3.5625;
+  y = p.evaluate(0.5f); ok &= y == 129;
+
 
 
 

@@ -9430,6 +9430,9 @@ void testMimoTransferMatrix()
   //    H(z) = [1 + i/z ; 1 + 1/z^2], H_p(z) = [1 - i*z , 1 + z^2]
   //  we use a semicolon to seperate rows and a comma to seperate row entries. H(z) is a column 
   //  vector and H_p(z) a row vector.
+  //
+  // -Write a class for representing filters in state-space form. It should have the A,B,C,D
+  //  matrices from (1) pg 345 as member variables. 
 
 }
 
@@ -9663,7 +9666,7 @@ void testMimoFilters() // rename to testMimoBassFilters
   //   y12 = filter12(d1);
   //   y21 = filter21(d2);
   //   y22 = filter22(d2);
-  //  -How can we make such a system losless? Musta filter11/12 and filter21/22 be complementary 
+  //  -How can we make such a system losless? Must filter11/12 and filter21/22 be complementary 
   //   pairs? And/or does it work when 11/22 and 12/21 are complementary? Can they also be inverses
   //   of each other ...or maybe that's the same thing anyway?
 

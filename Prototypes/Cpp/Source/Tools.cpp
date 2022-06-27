@@ -6405,13 +6405,9 @@ protected:
 template <class T>
 void rsLiftedPolynomial<T>::invert()
 {
-  int N = Base::getDegree();
-
-
-
-  m = -N - m;   // verify this!
-
-
+  rsReverse(Base::coeffs);    // maybe we need this->coeffs syntax for clang, gcc?
+  int N = Base::getDegree();  // dito?
+  m = -N - m;                 // verify this!
   int dummy = 0;
 }
 

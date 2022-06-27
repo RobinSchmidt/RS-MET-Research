@@ -9220,15 +9220,17 @@ bool testLiftedPolynomial()
   test(0.5f, 14.25);      // 0.5^(-2) * (1 + 2*0.5^1 + 3*0.5^2 + 4*0.5^3 + 5*0.5^4)
 
 
-
-  // Test inversion:
+  // Test inversion. When inverted once, we expect the same results as above but in reverse order,
+  // i.e. what formerly was the result p(2) becomes p(0.5) and vice versa. After inverting again,
+  // we want to see the old results in their old order again:
   p.setPower(0);
-  p.invert();    // 
-  y = p.evaluate(2.0f); ok &= y == 3.5625;
-  y = p.evaluate(0.5f); ok &= y == 129;
+  p.invert();    // Now, p becomes a generalized polynomial in x^(-1) instead of x itself
+  test(2.0f, 3.5625);
+  test(0.5f, 129);
   p.invert();    // Inverting again should bring us back to where we started
-  y = p.evaluate(2.0f); ok &= y == 129;
-  y = p.evaluate(0.5f); ok &= y == 3.5625;
+  test(2.0f, 129);  
+  test(0.5f, 3.5625);
+
 
 
 

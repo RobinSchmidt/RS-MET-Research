@@ -9197,12 +9197,21 @@ bool testLiftedPolynomial()
   using Number = float;
   using PolyL  = rsLiftedPolynomial<Number>;
 
-  //PolyL p({ 1.f,2.f,3.f,4.f,5.f }); // doesn't compile
-  //PolyL q;
+  PolyL p({ 1,2,3,4,5 }); // 1 + 2*x^1 + 3*x^2 + 4*x^3 + 5*x^4
+  PolyL q;
+
+  // Test evaluation:
+  Number y; 
+  y = p.evaluate(2.0f); ok &= y == 129;    // 1 + 2*2^1 + 3*2^2 + 4*2^3 + 5*2^4 = 129
+  y = p.evaluate(0.5f); ok &= y == 3.5625; // 1 + 2*0.5^1 + 3*0.5^2 + 4*0.5^3 + 5*0.5^4 = 3.5625
+
+
+
 
 
   // ToDo:
-  // -It doesn't compile when we use:  using Number = int; -> fix that
+  // -It doesn't link when we use:  using Number = int; -> fix that, probably we just need an 
+  //  explicit template instantiation
 
   return ok;
 }

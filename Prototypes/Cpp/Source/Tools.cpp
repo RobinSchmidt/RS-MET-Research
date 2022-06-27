@@ -6347,25 +6347,28 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Lifetime */
 
-  /*
-  rsLiftedPolynomial(int degree = 0, int power = 0, bool initWithZeros = true)
-    RAPT::rsPolynomial<T>::rsPolynomial(degree, initWithZeros) 
-  {
   
-  }
-  */
+  rsLiftedPolynomial(int degree = 0, int power = 0, bool initWithZeros = true)
+    : RAPT::rsPolynomial<T>::rsPolynomial(degree, initWithZeros) {}
+  
+  rsLiftedPolynomial(std::initializer_list<T> l)
+    : RAPT::rsPolynomial<T>::rsPolynomial(l) {}
 
   /*
   rsLiftedPolynomial(const std::vector<T>& coefficients)
     : RAPT::rsPolynomial<T>::rsPolynomial(coefficients) {}
 
-  rsLiftedPolynomial(std::initializer_list<T> l)
-    : RAPT::rsPolynomial<T>::rsPolynomial(l) {}
 
   rsLiftedPolynomial(const T& number) 
     : RAPT::rsPolynomial<T>::rsPolynomial(number) {}
     */
 
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Evaluation (High Level) */
+
+  /** Evaluates the polynomial at the given input x. */
+  T evaluate(T x) const { return evaluate(x, &coeffs[0], getDegree(), m); }
 
 
   //-----------------------------------------------------------------------------------------------

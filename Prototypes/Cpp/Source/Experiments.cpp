@@ -9230,6 +9230,13 @@ bool testLiftedPolynomial()
   p.invert();    // Inverting again should bring us back to where we started
   test(2.0f, 129);  
   test(0.5f, 3.5625);
+  p.setPower(2);
+  p.invert();
+  test(2.0f, 0.890625);
+  test(0.5f, 516);  
+  p.invert();
+  test(2.0f, 516);
+  test(0.5f, 0.890625);  
 
 
 

@@ -9219,32 +9219,26 @@ bool testLiftedPolynomial()
   test(2.0f, 32.25);      // 2^(-2) * (1 + 2*2^1 + 3*2^2 + 4*2^3 + 5*2^4)
   test(0.5f, 14.25);      // 0.5^(-2) * (1 + 2*0.5^1 + 3*0.5^2 + 4*0.5^3 + 5*0.5^4)
 
-
   // Test inversion. When inverted once, we expect the same results as above but in reverse order,
   // i.e. what formerly was the result p(2) becomes p(0.5) and vice versa. After inverting again,
-  // we want to see the old results in their old order again:
+  // we want to see the old results in their old order again. After one inversion, p becomes a 
+  // (generalized) polynomial in x^(-1) instead of x itself. After the second inversion, we should
+  // be back to where we started.
   p.setPower(0);
-  p.invert();    // Now, p becomes a generalized polynomial in x^(-1) instead of x itself
-  test(2.0f, 3.5625);
-  test(0.5f, 129);
-  p.invert();    // Inverting again should bring us back to where we started
-  test(2.0f, 129);  
-  test(0.5f, 3.5625);
+  p.invert(); test(2.0f, 3.5625);   test(0.5f, 129);
+  p.invert(); test(2.0f, 129);      test(0.5f, 3.5625);
   p.setPower(2);
-  p.invert();
-  test(2.0f, 0.890625);
-  test(0.5f, 516);  
-  p.invert();
-  test(2.0f, 516);
-  test(0.5f, 0.890625);  
-
+  p.invert(); test(2.0f, 0.890625); test(0.5f, 516);  
+  p.invert(); test(2.0f, 516);      test(0.5f, 0.890625);
+  p.setPower(-2);
+  p.invert(); test(2.0f, 14.25);    test(0.5f, 32.25);
+  p.invert(); test(2.0f, 32.25);    test(0.5f, 14.25);
 
 
 
 
 
   // ToDo:
-  // -Factor out: y = p.evaluate(..) ok &= y == ... into a test(argument, result)
   // -It doesn't link when we use:  using Number = int; -> fix that, probably we just need an 
   //  explicit template instantiation
 

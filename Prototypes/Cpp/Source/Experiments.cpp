@@ -9275,7 +9275,9 @@ void testMimoTransferMatrix()
   //using RatFuncR  = rsRationalFunction<Real>;    // Real SISO transfer function
   //using PolyMatR  = rsMatrix<PolyR>;  
   //using TransMatR = rsMatrix<RatFuncR>;          // Real MIMO function matrix
-  using PolyC     = rsPolynomial<Complex>;
+  //using PolyC     = rsPolynomial<Complex>;
+
+  using PolyC     = rsLiftedPolynomial<Complex>;
   using RatFuncC  = rsRationalFunction<Complex>; 
   using PolyMatC  = rsMatrix<PolyC>; 
   using TransMatC = rsMatrix<RatFuncC>;          // maybe rename to RatMatC
@@ -9296,9 +9298,21 @@ void testMimoTransferMatrix()
   Complex l(1, 0);  // 1 - one  - try to get rid and use 1 instead
   Complex O(0, 0);  // 0 - zero - try to get rid and use 0 instead
 
+
+  // Helper function to invert all polynomials in the given matrix, i.e. transform them from
+  // polynomials in z to polynomial in z^(-1):
+  //auto invertElements = [](PolyMatC& H)  {  };
+
+
+
+
   // Example system from (1) pg 302. H(z) is a 1-in/2-out system
   PolyMatC H(  2, 1, {PolyC({ l, j }), PolyC({ l, O, l }) });  // H  (z) = [1 + j/z ; 1 + 1/z^2]
   PolyMatC H_p(1, 2, {PolyC({ l,-j }), PolyC({ l, O, l }) });  // H_p(z) = [1 - j*z , 1 +   z^2]
+
+  // ToDo: we need to manipulate H such that the *given* coeffs apply to inverse powers of z. The
+  // inversion function is not suitable because it doesn't use the given coeff-array but a reversed
+  // one. Maybe we should just set the power to -2
 
   // Compute H_p(z) * H(z). This should be the 1x1 identity matrix, i think? We want to compute:
   //

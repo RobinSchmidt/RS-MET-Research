@@ -9200,11 +9200,23 @@ bool testLiftedPolynomial()
   PolyL p({ 1,2,3,4,5 }); // 1 + 2*x^1 + 3*x^2 + 4*x^3 + 5*x^4
   PolyL q;
 
+  // Helper function to check, if p produces output y when input is x:
+  auto test = [&](Number x, Number y)
+  {
+    Number yc = p.evaluate(x);  // todo: allow syntax yc = p(x)
+    ok &= y == yc;
+  };
+
   // Test evaluation with powers of m=0, m=2, m=-2:
   Number y; 
-  p.setPower(0);                             // actually, it was already 0 but anyway
-  y = p.evaluate(2.0f); ok &= y == 129;      // 1 + 2*2^1 + 3*2^2 + 4*2^3 + 5*2^4
-  y = p.evaluate(0.5f); ok &= y == 3.5625;   // 1 + 2*0.5^1 + 3*0.5^2 + 4*0.5^3 + 5*0.5^4
+  p.setPower(0);          // actually, it was already 0 but anyway
+  test(2.0f, 129);        // 1 + 2*2^1 + 3*2^2 + 4*2^3 + 5*2^4
+  test(0.5f, 3.5625);     // 1 + 2*0.5^1 + 3*0.5^2 + 4*0.5^3 + 5*0.5^4
+
+  //y = p.evaluate(2.0f); ok &= y == 129;     
+  //y = p.evaluate(0.5f); ok &= y == 3.5625;  
+
+
   p.setPower(2);
   y = p.evaluate(2.0f); ok &= y == 516;      // 2^2 * (1 + 2*2^1 + 3*2^2 + 4*2^3 + 5*2^4)
   y = p.evaluate(0.5f); ok &= y == 0.890625; // 0.5^2 * (1 + 2*0.5^1 + 3*0.5^2 + 4*0.5^3 + 5*0.5^4)

@@ -6325,22 +6325,59 @@ void rsParticleSystem2D<T>::computeForcesFast(std::vector<rsVector2D<T>>& forces
 
 //=================================================================================================
 
-/** A class for representing polynomials that are multiplied by some power of x, say x^M. This 
-shifts all exponents by M. The coefficient array a[0]...a[N] of an N-th degree polynomial will then
-represent:
+/** A class for representing polynomials that are (pre-) multiplied by some power of x, say x^m. 
+This shifts all exponents by M. The coefficient array a[0]...a[N] of an N-th degree polynomial will
+then represent:
 
-  p(x) = x^M * (a0 + a1*x + a2*x^2 + a3*x^3 + ... + aN*x^N)
-       = a0*x^M + a1*x^(M+1) + a2*x^(M+2) + a3*x^(M+3) + ... + aN*x^(M+N)
+  p(x) = x^m * (a0 + a1*x + a2*x^2 + a3*x^3 + ... + aN*x^N)
+       = a0*x^m + a1*x^(m+1) + a2*x^(m+2) + a3*x^(m+3) + ... + aN*x^(m+N)
 
 M can also be negative. This makes this class helpful when we want to represent polynomials that 
-are meant to be in inverse powers of x: we simply choose M = -N and reverse the coefficient array.
+are meant to be in inverse powers of x: we simply choose m = -N and reverse the coefficient array.
 Polynomials in inverse powers of z are very common in DSP. ...tbc...  */
 
 template<class T> 
-class rsOffsetPolynomial : private RAPT::rsPolynomial<T>  // find a better name!
+class rsLiftedPolynomial : private RAPT::rsPolynomial<T> 
 {
 
 public:
+
+  using Base = RAPT::rsPolynomial<T>;
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Lifetime */
+
+  /*
+  rsLiftedPolynomial(int degree = 0, int power = 0, bool initWithZeros = true)
+    RAPT::rsPolynomial<T>::rsPolynomial(degree, initWithZeros) 
+  {
+  
+  }
+  */
+
+  /*
+  rsLiftedPolynomial(const std::vector<T>& coefficients)
+    : RAPT::rsPolynomial<T>::rsPolynomial(coefficients) {}
+
+  rsLiftedPolynomial(std::initializer_list<T> l)
+    : RAPT::rsPolynomial<T>::rsPolynomial(l) {}
+
+  rsLiftedPolynomial(const T& number) 
+    : RAPT::rsPolynomial<T>::rsPolynomial(number) {}
+    */
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Misc
+
+
+
+  /** If the function p(x) is currently a (generalized) polynomial in x, calling this will turn it
+  into one in x^(-1) = 1/x instead. This is achieven by reversing the coefficient array and making
+  adjustments to the power m of the pre-factor x^m. */
+  void invert();
+
 
   static T evaluate(const T& x, const T *a, int degree, int offset);
 
@@ -6352,26 +6389,41 @@ public:
 
   // todo:
   // -implement add, subtract, divide ...maybe divide is like regular divide and the result-offset
-  //  is obtained by subtracting the input offsets?
+  //  is obtained by subtracting the input offsets? what about the remainder?
 
 
 protected:
 
-  int M = 0;  // The offset, i.e. the power of x by which the whole thing is multiplied
+  int m = 0;  // The offset, i.e. the power of x by which the whole thing is multiplied
 
 };
 
+
 template <class T>
-T rsOffsetPolynomial<T>::evaluate(const T& x, const T *a, int degree, int offset)
+void rsLiftedPolynomial<T>::invert()
 {
-  return rsPow(x, offset) * RAPT::rsPolynomial<T>::evaluate(x, a, degree);
+  int N = Base::getDegree();
+
+
+
+  m = -N - m;   // verify this!
+
+
+  int dummy = 0;
+}
+
+
+template <class T>
+T rsLiftedPolynomial<T>::evaluate(const T& x, const T *a, int N, int m)
+{
+  return rsPow(x, m) * Base::evaluate(x, a, N);
 }
 
 template <class T>
-int rsOffsetPolynomial<T>::multiply(const T *a, int aDegree, int aOffset, const T *b, int bDegree,
+int rsLiftedPolynomial<T>::multiply(const T *a, int aDegree, int aOffset, const T *b, int bDegree,
   int bOffset, T *result)
 {
-  RAPT::rsPolynomial<T>::multiply(a, aDegree, b, bDegree, result);
+  Base::multiply(a, aDegree, b, bDegree, result);
   return aOffset + bOffset;  // verify this!
 }
 
@@ -6379,16 +6431,39 @@ int rsOffsetPolynomial<T>::multiply(const T *a, int aDegree, int aOffset, const 
 
 // ToDo:
 // -Implement evaluation, addition, subtraction, multiplication and (maybe) division.
-// -What about integration and differentiation?
+// -What about integration and differentiation? I gues the x^(-1) = 1/x term may be problematic 
+//  because the integral of 1/x is log(x) which is not a function in terms of powers of x. However
+//  differntiation may still be unproblematic. And maybe at some stage, we can also extend the
+//  class to contain logarithmic terms? But via repeated integration, these will then also 
+//  proliferate into terms like x * (log(x) - 1) which is the antiderivative of log(x). Maybe we 
+//  could have a regular polynomial and a 2nd polynomial that is multiplied by log(x) and get a set
+//  of functions f(x) = p(x) + log(x) * q(x) wher p,q are polynomials that is closed under 
+//  integration and differentiation? But then what about composition?
 // -Can M be a real or even complex number?
 // -Find a better name...maybe PoweredPolynomial, ElevatedPolynomial (!), BoostedPolynomial, 
 //  LiftedPolynomial (!!), HoistedPolynomial, RaisedPolynomial
+// -Maybe make also classes for (p(x))^M, p(x^M), p(x+a), p(1/x) - the latter could be done in 
+//  terms of this class by reversing the coeff array and choosing M = -N but we probably should
+//  not implement it this way. Maybe evaluation should just compute the reciprocal (left inverse in
+//  general?) and then call the regular evaluation routine. Possible names:
+//    p(x+a): rsShiftedPolynomial
+//    p(1/x): rsInvertedPolynomial
+//    p(x^m): rsPowerPolynomial
+//    p^m(x): rsRaisedPolynomial
 // -Define whether we mean to pre- or post-multiply by x^M. This may make a difference if 
 //  the type T has a noncommutative multiplication such as matrices. Polynomials of matrices are
 //  actually not an uncommon thing so that may actually be of practical relevance. Perhaps 
 //  pre-multiply is the better choice because in DSP texts, we sometimes see things like
 //  z^(-M) * H(z) (see Introduction to Digital Filters by JOS, page 133) but rarely, if ever 
-//  H(z) * z^(-M). But maybe then it should be called PreLiftedPoly or PreMultipliedPoly
+//  H(z) * z^(-M). But maybe then it should be called PreLiftedPoly or PreMultipliedPoly.
+// -But perhaps we need to require T to have a commutative multiplication anyway because otherwise 
+//  products like r(x) = (x^m * p(x)) * (x^n * q(x)) cannot be generally computed as
+//  r(x) = x^(m+n) * (p(x) * q(x)) which is what our multiplier does. But maybe we may not strictly
+//  require that *all* multiplications are commutative but in this case, just the one between
+//  p(x) and x^n, i.e. the polynomial factor of the 1st argument and the pre-multiplier of the 2nd
+//  argument. These need to commute and this will of course be ensured, if all multiplications 
+//  commute anyway but maybe we don't need to require that *all* multiplications need to commute? 
+//  Figure this out and document it.
 // -Make also a class LiftedRationalFunction because eventually, we want to apply it also to IIR
 //  transfer functions
 

@@ -9189,6 +9189,25 @@ void testAttractors()
 }
 
 
+
+bool testLiftedPolynomial()
+{
+  bool ok = true;
+
+  using Number = float;
+  using PolyL  = rsLiftedPolynomial<Number>;
+
+  //PolyL p({ 1.f,2.f,3.f,4.f,5.f }); // doesn't compile
+  //PolyL q;
+
+
+  // ToDo:
+  // -It doesn't compile when we use:  using Number = int; -> fix that
+
+  return ok;
+}
+
+
 void testMimoTransferMatrix()
 {
   // Experiments with MIMO (multi-input/multi-output) transfer function matrices. A p-by-q (p rows,
@@ -9227,6 +9246,10 @@ void testMimoTransferMatrix()
   // instead of rsComplex - but then we can use only float or double for Real because std::complex
   // is limited to those. Even if we eventually don't use rsFraction, make sure that the code 
   // compiles witn rsFraction, too.
+
+
+  // Just some preliminary "unit-tests" that should go elsewhere someday:
+  bool ok = testLiftedPolynomial();
 
 
   Complex j(0, 1);  // imaginary unit

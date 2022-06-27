@@ -9205,6 +9205,14 @@ bool testLiftedPolynomial()
   y = p.evaluate(2.0f); ok &= y == 129;    // 1 + 2*2^1 + 3*2^2 + 4*2^3 + 5*2^4 = 129
   y = p.evaluate(0.5f); ok &= y == 3.5625; // 1 + 2*0.5^1 + 3*0.5^2 + 4*0.5^3 + 5*0.5^4 = 3.5625
 
+  // Test with some nonzero setting for the power m of the pre-multiplier x^m:
+  p.setPower(2);
+  y = p.evaluate(2.0f); ok &= y == 516;    // 2^2 * (1 + 2*2^1 + 3*2^2 + 4*2^3 + 5*2^4) = 516
+  p.setPower(-2);
+  y = p.evaluate(2.0f); ok &= y == 32.25;
+
+
+
   // Test inversion:
   p.invert();
   y = p.evaluate(2.0f);

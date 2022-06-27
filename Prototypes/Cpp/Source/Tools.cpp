@@ -6349,10 +6349,10 @@ public:
 
   
   rsLiftedPolynomial(int degree = 0, int power = 0, bool initWithZeros = true)
-    : RAPT::rsPolynomial<T>::rsPolynomial(degree, initWithZeros) {}
+    : RAPT::rsPolynomial<T>::rsPolynomial(degree, initWithZeros) { m = power; }
   
-  rsLiftedPolynomial(std::initializer_list<T> l)
-    : RAPT::rsPolynomial<T>::rsPolynomial(l) {}
+  rsLiftedPolynomial(std::initializer_list<T> l, int power = 0)
+    : RAPT::rsPolynomial<T>::rsPolynomial(l) { m = power; }
 
   /*
   rsLiftedPolynomial(const std::vector<T>& coefficients)
@@ -6362,6 +6362,12 @@ public:
   rsLiftedPolynomial(const T& number) 
     : RAPT::rsPolynomial<T>::rsPolynomial(number) {}
     */
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup */
+
+  void setPower(int newPower) { m = newPower; }
 
 
   //-----------------------------------------------------------------------------------------------
@@ -6416,6 +6422,7 @@ template <class T>
 T rsLiftedPolynomial<T>::evaluate(const T& x, const T *a, int N, int m)
 {
   return rsPow(x, m) * Base::evaluate(x, a, N);
+  // doesn't work yet because rsPow doesn't support negative exponents yet
 }
 
 template <class T>

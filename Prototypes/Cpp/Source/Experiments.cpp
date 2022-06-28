@@ -9698,15 +9698,18 @@ void testStateSpaceFilters()
   int numSamples = 100;  // number of samples to generate
 
 
+  SSF ssf;
+
+  /*
   // 1st (preliminary) test:
   int numIns    = 2;
   int numOuts   = 3;
   int numStates = 4;  // Doesn't need to be related to numIns or numOuts
-  SSF ssf;
   ssf.setDimensions(numIns, numOuts, numStates);
   Real u[2] = {1, 2};
   Real y[3];
   ssf.processFrame(u, y);
+  */
   // OK - at least, the matrix-dimensions seem to be right, otherwise we should raise an assert 
   // here. If it produces the correct output is another question though....more tests needed....
   // When these other tests are in place, this one here may become obsolete and may be deleted
@@ -9730,27 +9733,41 @@ void testStateSpaceFilters()
 
   // Create a reference output signal using a direct form implementation on some white noise input.
   // See (1) pg 359.
-  Vec b = {0,  1,    1        };  // feedforward coeffs for direct form
-  Vec a = {1, -0.5, +0.1,-0.01};  // feedback coeffs for direct form
-  Vec x = createNoise(numSamples, -1.0, +1.0, 0);
-  Vec yDF(numSamples);
-  AT::filter(&x[0], numSamples, &yDF[0], numSamples, 
+  Vec b  = {0,  1,    1         };  // feedforward coeffs for direct form
+  Vec a  = {1, -0.5, +0.1, -0.01};  // feedback coeffs for direct form
+  Vec u1 = createNoise(numSamples, -1.0, +1.0, 0);
+  Vec y1DF(numSamples);
+  AT::filter(&u1[0], numSamples, &y1DF[0], numSamples, 
     &b[0], (int)b.size()-1, &a[0], (int)a.size()-1);
 
-  // Now set up the SSF and let it compute its output, too. It should match the DF filter:
+  // Now set up the SSF and let it compute its output, too. It should match the DF filter's output:
   Mat A(3, 3, {0,1,0, 0,0,1, 0.01,-0.1,0.5});
   Mat B(3, 1, {0,0,1});
   Mat C(1, 3, {0,1,1});
   Mat D(1, 1, {0});
   ssf.setup(A, B, C, D);
   ssf.reset();
-  Vec ySSF(numSamples);
+  Vec y1SSF(numSamples);
   for(int n = 0; n < numSamples; n++)
-    ssf.processFrame(&x[n], &ySSF[n]);
+    ssf.processFrame(&u1[n], &y1SSF[n]);
 
   // Plot input and both outputs and the difference between the two ouputs:
-  rsPlotVectors(x, yDF, ySSF, yDF - ySSF);
+  rsPlotVectors(u1, y1DF, y1SSF, y1DF - y1SSF);
   // OK - that looks good. The outputs are indeed the same, as expected.
+
+  // Now the example from (1) pg 347:
+  Real g = 0.9;     // Gain of the feedback matrix, 1 producese sine waves
+  Real w = 0.1;     // omega
+  Real s = sin(w);
+  Real c = cos(w);
+  A = Mat(2, 2, {g*c,-g*s, g*s,c}); // maybe allow A.set(2,2,{}) - avoid creating temp object
+  B = Mat(2, 2, {1,  0,    0,  1});
+  C = Mat(2, 2, {1,  0,    0,  1});
+  D = Mat(2, 2, {0,  0,    0,  0});
+  ssf.setup(A, B, C, D);
+  ssf.reset();
+
+
 
 
   // ToDo:
@@ -9768,6 +9785,12 @@ void testStateSpaceFilters()
   //  diagonal matrix which makes it efficient to apply.
   // -Implement and test functions that convert between direct form and state space form like 
   //  tf2ss, ss2tf in MatLab. Maybe implement also sos2ss, ss2sos, zp2ss, etc. see (1) pg 359
+  // -Is this state space realization here actually the generalized version of my 
+  //  rsStateVectorFilter? That seems plausible! Figure that out! Could the state-vector filter
+  //  benefit from having 2 ins and 2 outs? If so, we should not confuse that with a stereo 
+  //  version (which would be MIMO, specifically: 2-in/2-out). But that would be something 
+  //  different, I think because the internal states mix up the channels. But maybe it can be 
+  //  related to a complex valued SISO filter?
 
   int dummy = 0;
 }

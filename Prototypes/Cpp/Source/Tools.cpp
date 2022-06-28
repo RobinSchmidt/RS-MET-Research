@@ -6640,6 +6640,9 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
   D.copyDataFrom(newD);
   // hmm...copyDataFrom also calls setShape. These calls are redundant with those in setDimensions.
   // Maybe it doesn't matter but perhaps it would be nicer to avoid it...we'll see...
+  // Maybe we should just keep references to some A,B,C,D matrices owned by cleint code anyway.
+  // That avoids redundancies and makes it easier to implement time-variant operation. Client code
+  // could just vary the matrices. 
 
   //rsError("Not yet implemented");
 }

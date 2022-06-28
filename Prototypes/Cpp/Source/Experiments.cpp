@@ -9688,23 +9688,29 @@ void testStateSpaceFilters()
   using Real = double;
   using SSF  = rsStateSpaceFilter<Real>;
   using Mat  = rsMatrix<Real>;
+  using Vec  = std::vector<Real>;
+  using AT   = RAPT::rsArrayTools;
+
+
+  int numSamples = 100;  // number of samples to generat
+
 
   int numIns    = 2;
   int numOuts   = 3;
   int numStates = 4;  // Doesn't need to be related to numIns or numOuts
 
-  SSF ssf;
-  ssf.setDimensions(numIns, numOuts, numStates);
 
-  Real u[2] = {1, 2};
-  Real y[3];
 
   // 1st test:
+  SSF ssf;
+  ssf.setDimensions(numIns, numOuts, numStates);
+  Real u[2] = {1, 2};
+  Real y[3];
   ssf.processFrame(u, y);
   // OK - at least, the matrix-dimensions seem to be right, otherwise we should raise an assert 
   // here. If it produces the correct output is another question though....more tests needed....
 
-  // ToDo: implement example from (1) pg 338 continued on pg 359:
+  // We implement the example from (1) pg 338 continued on pg 359:
   //
   //     [0      1    0  ]      [0]
   // A = [0      0    1  ], B = [0], C = [0 1 1], D = [0]
@@ -9716,12 +9722,19 @@ void testStateSpaceFilters()
   //   y[n] = u[n-1] + u[n-2] + 0.5*y[n-1] - 0.1*y[n-2] + 0.01*y[n-3]
   //
   // where we have use u[] for the input signal for cosistency with the book and to avoid confusion
-  // with the state vector inside our SSF, so its direct form feedforward coeffs are (0,1,1) and 
-  // its feedback coeffs are (-0.5,0.1,+0.01) using the usual negative sign convention for feedback
-  // coeffs.
+  // with the state vector inside our SSF. So, our filter's direct form feedforward coeffs are 
+  // (0,1,1) and its feedback coeffs are (1,-0.5,+0.1,-0.01) using the usual negative sign 
+  // convention for feedback coeffs and the unity dummy coeff for y[0] ...wait..shouldn't it get a 
+  // minus, too?
 
-  // Create a reference output signal using a direct form implementation:
-  // ...
+  // Create a reference output signal using a direct form implementation on some white noise input:
+  Vec b = {0,1,1};               // feedforward coeffs for direct form
+  Vec a = {1, -0.5,+0.1,-0.01};  // feedback coeffs for direct form
+  Vec x = createNoise(numSamples, -1.0, +1.0, 0);
+  Vec yDF(numSamples);
+  AT::filter(&x[0], numSamples, &yDF[0], numSamples, 
+    &b[0], (int)b.size()-1, &a[0], (int)a.size()-1);
+  rsPlotVectors(x, yDF);
 
   // Now set up the SSF and let it compute its output, too. It should match the DF filter:
   Mat A(3, 3, {0,1,0, 0,0,1, 0.01,-0.1,0.5});
@@ -9729,6 +9742,7 @@ void testStateSpaceFilters()
   Mat C(1, 3, {0,1,1});
   Mat D(1, 1, {0});
   ssf.setup(A, B, C, D);
+  ssf.reset();
 
   // Plot both outputs:
   // ...

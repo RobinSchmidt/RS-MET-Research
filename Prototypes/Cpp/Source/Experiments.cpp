@@ -9734,7 +9734,7 @@ void testStateSpaceFilters()
   Vec yDF(numSamples);
   AT::filter(&x[0], numSamples, &yDF[0], numSamples, 
     &b[0], (int)b.size()-1, &a[0], (int)a.size()-1);
-  rsPlotVectors(x, yDF);
+  //rsPlotVectors(x, yDF);
 
   // Now set up the SSF and let it compute its output, too. It should match the DF filter:
   Mat A(3, 3, {0,1,0, 0,0,1, 0.01,-0.1,0.5});
@@ -9743,9 +9743,13 @@ void testStateSpaceFilters()
   Mat D(1, 1, {0});
   ssf.setup(A, B, C, D);
   ssf.reset();
+  Vec ySSF(numSamples);
+  for(int n = 0; n < numSamples; n++)
+    ssf.processFrame(&x[n], &ySSF[n]);
 
-  // Plot both outputs:
-  // ...
+  // Plot input and both outputs and difference between the two ouputs:
+  rsPlotVectors(x, yDF, ySSF, yDF - ySSF);
+  // OK - that looks good. The outputs are indeed the same, as expected.
 
 
 

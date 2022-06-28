@@ -9755,7 +9755,21 @@ void testStateSpaceFilters()
   rsPlotVectors(u1, y1DF, y1SSF, y1DF - y1SSF);
   // OK - that looks good. The outputs are indeed the same, as expected.
 
-  // Now the example from (1) pg 347:
+  // Now the example from (1) pg 347. It is a 2-in/2-out system with the transfer function matrix:
+  //
+  //         [        1/z - g*c/z^2                  s/z^2         ]
+  //         [ -------------------------   ----------------------- ]
+  //         [  1 - 2*g*c/z + g^2/z^2       1 - 2*g*c/z + g^2/z^2  ]
+  //   H(z) =[                                                     ]
+  //         [         g*s/z^2                   1/z - g*c/z^2     ]
+  //         [ -------------------------   ----------------------- ]
+  //         [  1 - 2*g*c/z + g^2/z^2       1 - 2*g*c/z + g^2/z^2  ]
+  //
+  // Note how the denominators are all the same. This is always the case for state space filters. 
+  // The poles are solely dictated by the state transition (i.e. feedback) matrix and they are the
+  // same for all the point-to-point transfer functions.
+
+
   Real g = 0.9;     // Gain of the feedback matrix, 1 producese sine waves
   Real w = 0.1;     // omega
   Real s = sin(w);

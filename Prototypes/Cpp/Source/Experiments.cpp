@@ -9682,6 +9682,9 @@ void testMimoFilters() // rename to testMimoBassFilters
 
 void testStateSpaceFilters()
 {
+  // We test a state space implementation structure of a digital filter and compare its outputs to
+  // a direct form implementation.
+  // 
   //  References:
   //   (1) Introduction to Digital Filters with Audio Application (Julius O. Smith)
 
@@ -9692,16 +9695,13 @@ void testStateSpaceFilters()
   using AT   = RAPT::rsArrayTools;
 
 
-  int numSamples = 100;  // number of samples to generat
+  int numSamples = 100;  // number of samples to generate
 
 
+  // 1st (preliminary) test:
   int numIns    = 2;
   int numOuts   = 3;
   int numStates = 4;  // Doesn't need to be related to numIns or numOuts
-
-
-
-  // 1st test:
   SSF ssf;
   ssf.setDimensions(numIns, numOuts, numStates);
   Real u[2] = {1, 2};
@@ -9709,8 +9709,9 @@ void testStateSpaceFilters()
   ssf.processFrame(u, y);
   // OK - at least, the matrix-dimensions seem to be right, otherwise we should raise an assert 
   // here. If it produces the correct output is another question though....more tests needed....
+  // When these other tests are in place, this one here may become obsolete and may be deleted
 
-  // We implement the example from (1) pg 338 continued on pg 359:
+  // We implement the example from (1) pg 338 (continued on pg 359):
   //
   //     [0      1    0  ]      [0]
   // A = [0      0    1  ], B = [0], C = [0 1 1], D = [0]
@@ -9725,16 +9726,16 @@ void testStateSpaceFilters()
   // with the state vector inside our SSF. So, our filter's direct form feedforward coeffs are 
   // (0,1,1) and its feedback coeffs are (1,-0.5,+0.1,-0.01) using the usual negative sign 
   // convention for feedback coeffs and the unity dummy coeff for y[0] ...wait..shouldn't it get a 
-  // minus, too?
+  // minus, too? ...figure out!
 
-  // Create a reference output signal using a direct form implementation on some white noise input:
-  Vec b = {0,1,1};               // feedforward coeffs for direct form
-  Vec a = {1, -0.5,+0.1,-0.01};  // feedback coeffs for direct form
+  // Create a reference output signal using a direct form implementation on some white noise input.
+  // See (1) pg 359.
+  Vec b = {0,  1,    1        };  // feedforward coeffs for direct form
+  Vec a = {1, -0.5, +0.1,-0.01};  // feedback coeffs for direct form
   Vec x = createNoise(numSamples, -1.0, +1.0, 0);
   Vec yDF(numSamples);
   AT::filter(&x[0], numSamples, &yDF[0], numSamples, 
     &b[0], (int)b.size()-1, &a[0], (int)a.size()-1);
-  //rsPlotVectors(x, yDF);
 
   // Now set up the SSF and let it compute its output, too. It should match the DF filter:
   Mat A(3, 3, {0,1,0, 0,0,1, 0.01,-0.1,0.5});
@@ -9747,15 +9748,13 @@ void testStateSpaceFilters()
   for(int n = 0; n < numSamples; n++)
     ssf.processFrame(&x[n], &ySSF[n]);
 
-  // Plot input and both outputs and difference between the two ouputs:
+  // Plot input and both outputs and the difference between the two ouputs:
   rsPlotVectors(x, yDF, ySSF, yDF - ySSF);
   // OK - that looks good. The outputs are indeed the same, as expected.
 
 
-
-
   // ToDo:
-  // -Try alos the examples from (1) 356, 352, 347
+  // -Try also the examples from (1) 356, 352, 347
   // -Try a more complex example, with more inputs and outputs maybe (p,q,N) = (2,3,4) is not that
   //  bad for an example system for tests. All 3 numbers should be different to expose all mistakes 
   //  with respect to the shapes of the matrices. But they should also be small to make them easy 
@@ -9767,10 +9766,10 @@ void testStateSpaceFilters()
   //  perhaps the best form to implement such a system in practice anyway because of the 
   //  interpretability of the transition matrix in terms of poles and we also get a (band) 
   //  diagonal matrix which makes it efficient to apply.
-
+  // -Implement and test functions that convert between direct form and state space form like 
+  //  tf2ss, ss2tf in MatLab. Maybe implement also sos2ss, ss2sos, zp2ss, etc. see (1) pg 359
 
   int dummy = 0;
-
 }
 
 // fast inverse square root approximation from Quake engine

@@ -6568,7 +6568,7 @@ protected:
   int q = 0;  // number of outputs
   // These are actually redundant but convenient. They could be inferred from certain row- and 
   // column settings in our matrices below if saving that little amount of extra space seems 
-  // worthwhile.
+  // worthwhile. Maybe rename them into numStates, numIns, numOuts.
 
 
   rsMatrix<T> x, t, A, B, C, D;
@@ -6590,6 +6590,12 @@ protected:
   // -Perhaps production code should use sparse matrices? I think, the state update matrices are
   //  typically sparse, right? But what about the other matrices? Are they also typically sparse?
   //  Maybe only A should be sparse but B,C,D dense? ...figure out!
+  // -Implement a getTransferFunction() function that returns an rsMatrix of type
+  //  rsRationalFunction and a getTransferFunctionAt(Complex z, int i, int j) that evaluates
+  //  the (i,j)th point-to-point transfer function from input j to output i at the given z. Can we
+  //  do this without memory allocations? I mean conveniently, without introducing new members or
+  //  a workspace? I think, we nee to implement: H(z) = D + C*(z*I - A)^(-1) * B. There appears an
+  //  inverse matrix
 
 };
 
@@ -6613,14 +6619,29 @@ template<class T>
 void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixView<T>& newB,
   const rsMatrixView<T>& newC, const rsMatrixView<T>& newD)
 {
-  rsError("Not yet implemented");
-  // ToDo: 
-  // -Perform some sanity checks (rsAssert) to make sure, that the desired relations between the
-  //  shapes of the given matrices are satisfied.
-  // -Reshape our member matrices to match what was passed. If they already match, no alloc should 
-  //  happen. That should actually be ensured already in the implementation of rsMatrix::setShape.
-  //  Verify and document that!
-  // -Copy the given matrix data into them.
+  // Retrieve and set up desired dimensions:
+  N = newA.getNumRows();     // number of states
+  p = newB.getNumColumns();  // number of inputs
+  q = newC.getNumRows();     // number of outputs
+  setDimensions(p, q, N);
+  // ToDo: Verify and document that no allocations take place here, when alreade enough memory was
+  // allcoated previously. See rsMatrix::setShape - it calls resize on a std::vector which should
+  // reallocate only in case of growth.
+
+  // Perform som sanity checks on the input matrices:
+  rsAssert(newA.isSquare(), "State transition matrices must be square");
+  // ...more to come: make sure, that all the desired relations between the shapes of the given 
+  // matrices are satisfied.
+
+  // Copy the new matrix data into our members:
+  A.copyDataFrom(newA);
+  B.copyDataFrom(newB);
+  C.copyDataFrom(newC);
+  D.copyDataFrom(newD);
+  // hmm...copyDataFrom also calls setShape. These calls are redundant with those in setDimensions.
+  // Maybe it doesn't matter but perhaps it would be nicer to avoid it...we'll see...
+
+  //rsError("Not yet implemented");
 }
 
 

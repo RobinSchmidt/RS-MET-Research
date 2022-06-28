@@ -9682,8 +9682,12 @@ void testMimoFilters() // rename to testMimoBassFilters
 
 void testStateSpaceFilters()
 {
+  //  References:
+  //   (1) Introduction to Digital Filters with Audio Application (Julius O. Smith)
+
   using Real = double;
   using SSF  = rsStateSpaceFilter<Real>;
+  using Mat  = rsMatrix<Real>;
 
   int numIns    = 2;
   int numOuts   = 3;
@@ -9699,6 +9703,36 @@ void testStateSpaceFilters()
   ssf.processFrame(u, y);
   // OK - at least, the matrix-dimensions seem to be right, otherwise we should raise an assert 
   // here. If it produces the correct output is another question though....more tests needed....
+
+  // ToDo: implement example from (1) pg 338 continued on pg 359:
+  //
+  //     [0      1    0  ]      [0]
+  // A = [0      0    1  ], B = [0], C = [0 1 1], D = [0]
+  //     [0.01  -0.1  0.5]      [1]
+  //
+  // so, we have N = 3 (numStates), p = 1 (numIns), q = 1 (numOuts)
+
+  Mat A(3, 3, {0,1,0, 0,0,1, 0.01,-0.1,0.5});
+  Mat B(3, 1, {0,0,1});
+  Mat C(1, 3, {0,1,1});
+  Mat D(1, 1, {0});
+  ssf.setup(A, B, C, D);
+
+
+
+
+  // ToDo:
+  // -Try a more complex example, with more inputs and outputs maybe (p,q,N) = (2,3,4) is not that
+  //  bad for an example system for tests. All 3 numbers should be different to expose all mistakes 
+  //  with respect to the shapes of the matrices. But they should also be small to make them easy 
+  //  to handle but > 1 to have at least some MIMO aspects - 2,3,4 seems the smallest example that 
+  //  ticks all these boxes.
+  // -Try to apply similarity transformations to diagonalize the state transition matrix A or at
+  //  least bring it into Jordan normal form (if it isn't diagonalizable). This will also involve
+  //  corresponding transformations of B,C,D (well, not sure about D - but probably B,C). This is
+  //  perhaps the best form to implement such a system in practice anyway because of the 
+  //  interpretability of the transition matrix in terms of poles and we also get a (band) 
+  //  diagonal matrix which makes it efficient to apply.
 
 
   int dummy = 0;

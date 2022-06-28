@@ -9710,18 +9710,34 @@ void testStateSpaceFilters()
   // A = [0      0    1  ], B = [0], C = [0 1 1], D = [0]
   //     [0.01  -0.1  0.5]      [1]
   //
-  // so, we have N = 3 (numStates), p = 1 (numIns), q = 1 (numOuts)
+  // so, we have N = 3 (numStates), p = 1 (numIns), q = 1 (numOuts). This state space filter should
+  // realize the direct form difference equation:
+  //
+  //   y[n] = u[n-1] + u[n-2] + 0.5*y[n-1] - 0.1*y[n-2] + 0.01*y[n-3]
+  //
+  // where we have use u[] for the input signal for cosistency with the book and to avoid confusion
+  // with the state vector inside our SSF, so its direct form feedforward coeffs are (0,1,1) and 
+  // its feedback coeffs are (-0.5,0.1,+0.01) using the usual negative sign convention for feedback
+  // coeffs.
 
+  // Create a reference output signal using a direct form implementation:
+  // ...
+
+  // Now set up the SSF and let it compute its output, too. It should match the DF filter:
   Mat A(3, 3, {0,1,0, 0,0,1, 0.01,-0.1,0.5});
   Mat B(3, 1, {0,0,1});
   Mat C(1, 3, {0,1,1});
   Mat D(1, 1, {0});
   ssf.setup(A, B, C, D);
 
+  // Plot both outputs:
+  // ...
+
 
 
 
   // ToDo:
+  // -Try alos the examples from (1) 356, 352, 347
   // -Try a more complex example, with more inputs and outputs maybe (p,q,N) = (2,3,4) is not that
   //  bad for an example system for tests. All 3 numbers should be different to expose all mistakes 
   //  with respect to the shapes of the matrices. But they should also be small to make them easy 

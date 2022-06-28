@@ -9695,7 +9695,7 @@ void testStateSpaceFilters()
   using AT   = RAPT::rsArrayTools;
 
 
-  int numSamples = 100;  // number of samples to generate
+  int numSamples = 1000;  // number of samples to generate
 
 
   SSF ssf;
@@ -9714,6 +9714,15 @@ void testStateSpaceFilters()
   // here. If it produces the correct output is another question though....more tests needed....
   // When these other tests are in place, this one here may become obsolete and may be deleted
 
+
+  // Create input and output sample arrays:
+  int N = numSamples;
+  Vec u1 = createNoise(N, -1.0, +1.0, 0);   // 1st input
+  Vec u2 = createNoise(N, -1.0, +1.0, 1);   // 2nd input
+  Vec y1DF(N), y2DF(N);                     // direct form filter outputs
+  Vec y1SSF(N), y2SSF(N);                   // state space filter outputs
+
+  //-----------------------------------------------------------------------------------------------
   // We implement the example from (1) pg 338 (continued on pg 359):
   //
   //     [0      1    0  ]      [0]
@@ -9735,10 +9744,7 @@ void testStateSpaceFilters()
   // See (1) pg 359.
   Vec b  = {0,  1,    1         };  // feedforward coeffs for direct form
   Vec a  = {1, -0.5, +0.1, -0.01};  // feedback coeffs for direct form
-  Vec u1 = createNoise(numSamples, -1.0, +1.0, 0);
-  Vec y1DF(numSamples);
-  AT::filter(&u1[0], numSamples, &y1DF[0], numSamples, 
-    &b[0], (int)b.size()-1, &a[0], (int)a.size()-1);
+  AT::filter(&u1[0], N, &y1DF[0], N, &b[0], (int)b.size()-1, &a[0], (int)a.size()-1);
 
   // Now set up the SSF and let it compute its output, too. It should match the DF filter's output:
   Mat A(3, 3, {0,1,0, 0,0,1, 0.01,-0.1,0.5});
@@ -9747,39 +9753,56 @@ void testStateSpaceFilters()
   Mat D(1, 1, {0});
   ssf.setup(A, B, C, D);
   ssf.reset();
-  Vec y1SSF(numSamples);
-  for(int n = 0; n < numSamples; n++)
+
+  for(int n = 0; n < N; n++)
     ssf.processFrame(&u1[n], &y1SSF[n]);
 
   // Plot input and both outputs and the difference between the two ouputs:
-  rsPlotVectors(u1, y1DF, y1SSF, y1DF - y1SSF);
+  //rsPlotVectors(u1, y1DF, y1SSF, y1DF - y1SSF);
   // OK - that looks good. The outputs are indeed the same, as expected.
 
+  //-----------------------------------------------------------------------------------------------
   // Now the example from (1) pg 347. It is a 2-in/2-out system with the transfer function matrix:
   //
-  //         [        1/z - g*c/z^2                  s/z^2         ]
-  //         [ -------------------------   ----------------------- ]
-  //         [  1 - 2*g*c/z + g^2/z^2       1 - 2*g*c/z + g^2/z^2  ]
-  //   H(z) =[                                                     ]
-  //         [         g*s/z^2                   1/z - g*c/z^2     ]
-  //         [ -------------------------   ----------------------- ]
-  //         [  1 - 2*g*c/z + g^2/z^2       1 - 2*g*c/z + g^2/z^2  ]
+  //          [        1/z - g*c/z^2                s/z^2         ]
+  //          [ -----------------------   ----------------------- ]
+  //          [  1 - 2*g*c/z + g^2/z^2     1 - 2*g*c/z + g^2/z^2  ]
+  //   H(z) = [                                                   ]
+  //          [         g*s/z^2                 1/z - g*c/z^2     ]
+  //          [ -----------------------   ----------------------- ]
+  //          [  1 - 2*g*c/z + g^2/z^2     1 - 2*g*c/z + g^2/z^2  ]
   //
   // Note how the denominators are all the same. This is always the case for state space filters. 
   // The poles are solely dictated by the state transition (i.e. feedback) matrix and they are the
   // same for all the point-to-point transfer functions.
 
-
-  Real g = 0.9;     // Gain of the feedback matrix, 1 producese sine waves
-  Real w = 0.1;     // omega
+  Real g = 0.99;     // Gain of the feedback matrix, 1 produces sine/cosine waves as imp-resp
+  Real w = 0.1;      // omega
   Real s = sin(w);
   Real c = cos(w);
-  A = Mat(2, 2, {g*c,-g*s, g*s,c}); // maybe allow A.set(2,2,{}) - avoid creating temp object
+  A = Mat(2, 2, {g*c,-g*s, g*s,c}); // Maybe allow A.set(2,2,{}) - avoid creating temp object
   B = Mat(2, 2, {1,  0,    0,  1});
   C = Mat(2, 2, {1,  0,    0,  1});
   D = Mat(2, 2, {0,  0,    0,  0});
   ssf.setup(A, B, C, D);
   ssf.reset();
+  Real u[2], y[2]; // temporaries, to store input/output vectors at sample instant n
+  for(int n = 0; n < N; n++)
+  {
+    u[0] = u1[n]; u[1] = u2[n];        // prepare inputs
+    ssf.processFrame(u, y);            // compute outputs
+    y1SSF[n] = y[0]; y2SSF[n] = y[1];  // record outputs
+  }
+
+  rsPlotVectors(y1SSF, y2SSF);
+  // yes, that looks plausibly like a (very!) noisy sine/cosine pair
+
+  // ToDo: 
+  // -Create a reference signal by a direct form filter. To do this, we need to:
+  //  -implement filters for the 4 point-to-point transfer functions separately
+  //  -mix the 4 outputs appropriately into the 2 final outputs
+  // -Plot both signals as we did above
+  // -Record and plot all 4 point-to-point impulse responses
 
 
 

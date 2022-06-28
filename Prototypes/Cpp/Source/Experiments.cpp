@@ -9695,8 +9695,10 @@ void testStateSpaceFilters()
   Real u[2] = {1, 2};
   Real y[3];
 
+  // 1st test:
   ssf.processFrame(u, y);
-
+  // OK - at least, the matrix-dimensions seem to be right, otherwise we should raise an assert 
+  // here. If it produces the correct output is another question though....more tests needed....
 
 
   int dummy = 0;

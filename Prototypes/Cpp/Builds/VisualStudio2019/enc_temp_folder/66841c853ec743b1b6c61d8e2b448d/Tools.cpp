@@ -6520,11 +6520,6 @@ public:
   matrices already have (more than) enough space, which you can ensure using setDimensions(). */
   void setup(const rsMatrixView<T>& A, const rsMatrixView<T>& B, const rsMatrixView<T>& C,
     const rsMatrixView<T>& D);
-  // ToDo:
-  // -Maybe we should keep only references or pointers to these matrices here? The way we do it now
-  //  requires redundant existence of these matrices in memory which is bad. But maybe the state 
-  //  vector x and its temporary storage t should nevertheless stay non-reference members?
-  //  ...hmmm...
 
   /** Processes a single MIMO output frame at a time. */
   void processFrame(T* ins, T* outs)

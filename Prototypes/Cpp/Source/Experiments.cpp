@@ -9874,9 +9874,9 @@ void test2x2Matrices()
   // guess we could also see it living in and 8D space if we allow our matrices to be complex...or
   // in a 2D space if we only allow antisymmetric matrices...so I guess, the choice of the 
   // embedding space for the manifold is kind of an arbitrary choice and we don't actually need to
-  // imagine any embedding space at all? But what is not arbitrary is the topology of the manifold 
-  // and we can actually make statements about the topologies of the manifolds that certain groups 
-  // of (parametrized) matrices form ...tbc...
+  // imagine any embedding space at all and just take an intrinsic view? But what is not arbitrary 
+  // is the topology of the manifold and we can actually make statements about the topologies of 
+  // the manifolds that certain groups of (parametrized) matrices form ...tbc...
   //
   // We use the following notation:
   //   i:    imaginary unit (scalar)
@@ -9941,7 +9941,11 @@ void test2x2Matrices()
   rsPlotVectorsXY(t, x, y);  // Shows x,y as function of t (= n = discrete "time" here)
   rsPlotVectorsXY(x, y);     // Shows the circle (we go around it N/P times)
 
-
+  // ToDo:
+  // -Try some more interesting groups:
+  //  -Rotations with scaling ("amplitwists") 
+  //   -> produces exponentially decying sines when iterated
+  //   -> should be isomorphic to the complex numbers?
 
   int dummy = 0;
 }

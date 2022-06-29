@@ -9808,7 +9808,7 @@ void testStateSpaceFilters()
 
 
   // ToDo:
-  // -Try also the examples from (1) 356, 352, 347
+  // -Try also the examples from (1) 356, 352
   // -Try a more complex example, with more inputs and outputs maybe (p,q,N) = (2,3,4) is not that
   //  bad for an example system for tests. All 3 numbers should be different to expose all mistakes 
   //  with respect to the shapes of the matrices. But they should also be small to make them easy 

@@ -6488,7 +6488,9 @@ difference equation:
 
 where x is a length N state vector, u is a length p input vector, y is a length q output vector, A
 is an N-by-N state transition matrix, B is an N-by-p injection matrix, C is an q-by-N output matrix 
-and D is a q-by-p feedthrough matrix. (verify sizes and terminology - I made some of them up)
+and D is a q-by-p feedthrough matrix. (verify sizes and terminology - I made some of them up. Edit:
+on page 357, in a code comment JOS calls B,C,D the input, output, feed-around matrices 
+respectively)
 
 The system has the q-by-p MIMO transfer function matrix:
 

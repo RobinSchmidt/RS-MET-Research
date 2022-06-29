@@ -9695,32 +9695,17 @@ void testStateSpaceFilters()
   using AT   = RAPT::rsArrayTools;
 
 
-  int numSamples = 1000;  // number of samples to generate
+  int numSamples = 300;  // number of samples to generate
 
 
-  SSF ssf;
 
-  /*
-  // 1st (preliminary) test:
-  int numIns    = 2;
-  int numOuts   = 3;
-  int numStates = 4;  // Doesn't need to be related to numIns or numOuts
-  ssf.setDimensions(numIns, numOuts, numStates);
-  Real u[2] = {1, 2};
-  Real y[3];
-  ssf.processFrame(u, y);
-  */
-  // OK - at least, the matrix-dimensions seem to be right, otherwise we should raise an assert 
-  // here. If it produces the correct output is another question though....more tests needed....
-  // When these other tests are in place, this one here may become obsolete and may be deleted
-
-
-  // Create input and output sample arrays:
-  int N = numSamples;
+  // Create input and output sample arrays and filter object:
+  int N  = numSamples;                      // we need it often, so a shorthand is good
   Vec u1 = createNoise(N, -1.0, +1.0, 0);   // 1st input
   Vec u2 = createNoise(N, -1.0, +1.0, 1);   // 2nd input
   Vec y1DF(N), y2DF(N);                     // direct form filter outputs
   Vec y1SSF(N), y2SSF(N);                   // state space filter outputs
+  SSF ssf;
 
   //-----------------------------------------------------------------------------------------------
   // We implement the example from (1) pg 338 (continued on pg 359):
@@ -9758,7 +9743,7 @@ void testStateSpaceFilters()
     ssf.processFrame(&u1[n], &y1SSF[n]);
 
   // Plot input and both outputs and the difference between the two ouputs:
-  //rsPlotVectors(u1, y1DF, y1SSF, y1DF - y1SSF);
+  rsPlotVectors(u1, y1DF, y1SSF, y1DF - y1SSF);
   // OK - that looks good. The outputs are indeed the same, as expected.
 
   //-----------------------------------------------------------------------------------------------
@@ -9777,7 +9762,7 @@ void testStateSpaceFilters()
   // same for all the point-to-point transfer functions.
 
   Real g = 0.99;     // Gain of the feedback matrix, 1 produces sine/cosine waves as imp-resp
-  Real w = 0.1;      // omega
+  Real w = 0.3;      // omega
   Real s = sin(w);
   Real c = cos(w);
   A = Mat(2, 2, {g*c,-g*s, g*s,c}); // Maybe allow A.set(2,2,{}) - avoid creating temp object
@@ -9794,8 +9779,8 @@ void testStateSpaceFilters()
     y1SSF[n] = y[0]; y2SSF[n] = y[1];  // record outputs
   }
 
-  //rsPlotVectors(y1SSF, y2SSF);
-  // yes, that looks plausibly like a (very!) noisy sine/cosine pair
+  rsPlotVectors(y1SSF, y2SSF);
+  // yes, that looks plausibly like a (very!) noisy sine/cosine pair 
 
   // ToDo: 
   // -Create a reference signal by a direct form filter. To do this, we need to:
@@ -9805,7 +9790,7 @@ void testStateSpaceFilters()
   // -Record and plot all 4 point-to-point impulse responses
 
   //-----------------------------------------------------------------------------------------------
-  // Example from (1) pg 356. A 1-in/1-out system with the difference equation:
+  // Example from (1) pg 352-356. A 1-in/1-out system with the difference equation:
   //
   //  y[n] = u[n] + 2*u[n-1] + 3*u[n-2] - (1/2)*y[n-1] - (1/3)*y[n-2]
   // 
@@ -9835,7 +9820,6 @@ void testStateSpaceFilters()
 
 
   // ToDo:
-  // -Try also the examples from (1) 356, 352
   // -Try a more complex example, with more inputs and outputs maybe (p,q,N) = (2,3,4) is not that
   //  bad for an example system for tests. All 3 numbers should be different to expose all mistakes 
   //  with respect to the shapes of the matrices. But they should also be small to make them easy 
@@ -9846,7 +9830,7 @@ void testStateSpaceFilters()
   //  corresponding transformations of B,C,D (well, not sure about D - but probably B,C). This is
   //  perhaps the best form to implement such a system in practice anyway because of the 
   //  interpretability of the transition matrix in terms of poles and we also get a (band) 
-  //  diagonal matrix which makes it efficient to apply.
+  //  diagonal matrix which makes it efficient to apply. See (1) pg 362 ff
   // -Implement and test functions that convert between direct form and state space form like 
   //  tf2ss, ss2tf in MatLab. Maybe implement also sos2ss, ss2sos, zp2ss, etc. see (1) pg 359
   // -Is this state space realization here actually the generalized version of my 

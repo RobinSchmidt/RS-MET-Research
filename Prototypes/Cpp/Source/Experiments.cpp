@@ -9853,7 +9853,36 @@ void test2x2Matrices()
   // 2x2 case first. Some specific 2x2 matrices (namely rotation matices) also arise naturally in 
   // the context of describing oscillations and implementing sinusoidal oscillators, so it may be 
   // worthwhile to learn something about certain generalizations of such rotation matrices. Maybe
-  // we can build interesting oscillators from those at some point...
+  // we can build interesting oscillators from those at some point.
+  //
+  // Certain specific subsets of the set of all 2x2 matrices have interesting properties in that 
+  // they may form groups (in the abstract algebra sense) with the group operation being matrix
+  // multiplication. They can be seen as concrete representations of these abstract groups (in the
+  // representation theory sense). Often, these matrix groups can be parametrized by formulas using
+  // a certain number of parameters which is less than the number of degrees of freedom that the
+  // sets of all such matrices have (4 in case of real 2x2 matrices, 8 in case of complex 2x2 
+  // matrices). For example, the set of rotation matrices can be parametrized by a single number, 
+  // namely the rotation angle. So this group is 1-dimensional - and yes, it is indeed a group:
+  // composing rotations gives again rotations, you can always rotate back (invertibility), the 
+  // identity is in the set, etc.. This group is called the special orthogonal group and denoted by
+  // SO(2), sometimes by SO(2,R) where R stands for "real".
+  //
+  // I'm still learning about this stuff - take with a grain of salt:
+  // Having parameterized a group of matrices in that way, we can also see this group as a 
+  // manifold. For example, SO(2) forms a 1D manifold in 4D space because it has one parameter and
+  // it lives in 4D because a general real 2x2 matrix has 4 degrees of freedom. Hmm...well - I 
+  // guess we could also see it living in and 8D space if we allow our matrices to be complex...or
+  // in a 2D space if we only allow antisymmetric matrices...so I guess, the choice of the 
+  // embedding space for the manifold is kind of an arbitrary choice and we don't actually need to
+  // imagine any embedding space at all? But what is not arbitrary is the topology of the manifold 
+  // and we can actually make statements about the topologies of the manifolds that certain groups 
+  // of (parametrized) matrices form ...tbc...
+  //
+  // We use the following notation:
+  //   i:    imaginary unit (scalar)
+  //   I:    identity matrix: [1,0; 0,1]
+  //   A^T:  transpose of matrix A
+  //   A^H:  Hermitian transpose of A (transpose and complex conjugate)
   //
   // References:
   //   (1) Mathematik mit 2x2-Matrizen (Hans Jürgen Korsch)
@@ -9863,9 +9892,36 @@ void test2x2Matrices()
   using Complex = std::complex<Real>;    // maybe use rsComplex instead
   using MatR    = rsMatrix2x2<Real>;
   using MatC    = rsMatrix2x2<Complex>;
+  using Vec     = std::vector<Real>;     // for plotting data
 
 
   Complex i(0, 1);  // imaginary unit
+
+  // We consider the set of rotation matrices of the general form:
+  //
+  //   R(a) = [c -s]
+  //          [s  c]
+  //
+  // where c = cos(a), s = sin(a). They have the following properties 
+  //
+  // -they form the special orthogonal group SO(2)
+  // -det(R) = 1: their determinant is always 1
+  // -R^T * R = I
+  // -the group is parametrized by 1 parameter (the angle a), so the group is 1-dimensional
+  // -the group is simply connected, has one connected component and is compact
+  //
+  // See:
+  //   -https://en.wikipedia.org/wiki/Lie_group#Definitions_and_examples
+  //   -Note that in (1) pg 88, SO(2) is defined with a different sign convention: the minus 
+  //    appears in the sin(a) in element R(2,1) rather than R(1,2). I guess, that's just a matter 
+  //    of convention, but ozr definition above seems more common
+
+
+
+  // Create a rotation matrix that rotates a point (x,y) around the origin by some amount such that
+  // after P such rotations, it comes back to where it started:
+  Real P = 100;     // Period
+  Real w = 2*PI/P;  // Normalized frequency
 
 
 

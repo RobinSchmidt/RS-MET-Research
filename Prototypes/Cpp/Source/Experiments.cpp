@@ -9946,6 +9946,8 @@ void test2x2Matrices()
   //  -Rotations with scaling ("amplitwists") 
   //   -> produces exponentially decying sines when iterated
   //   -> should be isomorphic to the complex numbers?
+  // -The book (1) has a whole zoo of matrix groups - see the list on page 88 - and it's not even
+  //  complete - maybe we can find something interesting and/or useful
 
   int dummy = 0;
 }

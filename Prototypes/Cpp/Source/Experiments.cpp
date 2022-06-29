@@ -9794,7 +9794,7 @@ void testStateSpaceFilters()
     y1SSF[n] = y[0]; y2SSF[n] = y[1];  // record outputs
   }
 
-  rsPlotVectors(y1SSF, y2SSF);
+  //rsPlotVectors(y1SSF, y2SSF);
   // yes, that looks plausibly like a (very!) noisy sine/cosine pair
 
   // ToDo: 
@@ -9803,6 +9803,33 @@ void testStateSpaceFilters()
   //  -mix the 4 outputs appropriately into the 2 final outputs
   // -Plot both signals as we did above
   // -Record and plot all 4 point-to-point impulse responses
+
+  //-----------------------------------------------------------------------------------------------
+  // Example from (1) pg 356. A 1-in/1-out system with the difference equation:
+  //
+  //  y[n] = u[n] + 2*u[n-1] + 3*u[n-2] - (1/2)*y[n-1] - (1/3)*y[n-2]
+  // 
+  // and state space matrices given by:
+  //
+  // A = [-1/2  -1/3], B = [0], C = [3/2  8/3], D = [1]
+  //     [ 1     0  ]      [1]
+  //
+  b = Vec({1, 2,    3    });
+  a = Vec({1, 1./2, 1./3 });
+  AT::filter(&u1[0], N, &y1DF[0], N, &b[0], (int)b.size()-1, &a[0], (int)a.size()-1);
+
+  A = Mat(2, 2, {-1./2,-1./3, 1,0});
+  B = Mat(2, 1, {1,  0});
+  C = Mat(1, 2, {3./2,  8./3});
+  D = Mat(1, 1, {1});
+  ssf.setup(A, B, C, D);
+  ssf.reset();
+  for(int n = 0; n < N; n++)
+    ssf.processFrame(&u1[n], &y1SSF[n]);
+
+  rsPlotVectors(y1DF, y1SSF, y1DF - y1SSF);
+  // yep - both outputs are also the same
+
 
 
 

@@ -65,9 +65,11 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testAttractors();
 
-  testMimoTransferMatrix();
-  testMimoFilters();        // just a stub - not much in there yet, mostly comments
-  testStateSpaceFilters();  // also a stub at the moment
+  //testMimoTransferMatrix();
+  //testMimoFilters();        // just a stub - not much in there yet, mostly comments
+  //testStateSpaceFilters();
+
+  test2x2Matrices();  // stub
 
 
   return 0;

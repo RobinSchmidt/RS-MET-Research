@@ -9815,10 +9815,6 @@ void testStateSpaceFilters()
   rsPlotVectors(y1DF, y1SSF, y1DF - y1SSF);
   // yep - both outputs are also the same
 
-
-
-
-
   // ToDo:
   // -Try a more complex example, with more inputs and outputs maybe (p,q,N) = (2,3,4) is not that
   //  bad for an example system for tests. All 3 numbers should be different to expose all mistakes 
@@ -9839,6 +9835,40 @@ void testStateSpaceFilters()
   //  version (which would be MIMO, specifically: 2-in/2-out). But that would be something 
   //  different, I think because the internal states mix up the channels. But maybe it can be 
   //  related to a complex valued SISO filter?
+
+  int dummy = 0;
+}
+
+
+void test2x2Matrices()
+{
+  // We do some experiments with 2x2 matrices, verifying some formulas and properties that certain
+  // classes of such matrices are supposed to have. The reason why I'm interested learning more
+  // about such matrices is that the 2x2 case is a nice small educational example from which many
+  // properties are easier to understand and visualize. Also, for the 2x2 case, simple analytic 
+  // formulas exist for eigenvalues, eigenvectors, determinant, etc. so we can actually compute 
+  // all these things directly without resorting to numerical methods. Many (but not all) insights
+  // can later be generalized to higher dimensions. Such generalizations are not always as simple 
+  // and straighforward as one might hope but it still often helps to think about the simplemost 
+  // 2x2 case first. Some specific 2x2 matrices (namely rotation matices) also arise naturally in 
+  // the context of describing oscillations and implementing sinusoidal oscillators, so it may be 
+  // worthwhile to learn something about certain generalizations of such rotation matrices. Maybe
+  // we can build interesting oscillators from those at some point...
+  //
+  // References:
+  //   (1) Mathematik mit 2x2-Matrizen (Hans Jürgen Korsch)
+
+
+  using Real    = double;
+  using Complex = std::complex<Real>;    // maybe use rsComplex instead
+  using MatR    = rsMatrix2x2<Real>;
+  using MatC    = rsMatrix2x2<Complex>;
+
+
+  Complex i(0, 1);  // imaginary unit
+
+
+
 
   int dummy = 0;
 }

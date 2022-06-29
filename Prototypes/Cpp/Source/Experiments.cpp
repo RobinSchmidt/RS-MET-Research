@@ -9892,6 +9892,8 @@ void test2x2Matrices()
   using Complex = std::complex<Real>;    // maybe use rsComplex instead
   using MatR    = rsMatrix2x2<Real>;
   using MatC    = rsMatrix2x2<Complex>;
+  using VecR    = rsVector2D<Real>;
+  using VecC    = rsVector2D<Complex>;
   using Vec     = std::vector<Real>;     // for plotting data
 
 
@@ -9909,6 +9911,7 @@ void test2x2Matrices()
   // -R^T * R = I
   // -the group is parametrized by 1 parameter (the angle a), so the group is 1-dimensional
   // -the group is simply connected, has one connected component and is compact
+  // -they are antisymmetric
   //
   // See:
   //   -https://en.wikipedia.org/wiki/Lie_group#Definitions_and_examples
@@ -9916,13 +9919,27 @@ void test2x2Matrices()
   //    appears in the sin(a) in element R(2,1) rather than R(1,2). I guess, that's just a matter 
   //    of convention, but ozr definition above seems more common
 
-
-
   // Create a rotation matrix that rotates a point (x,y) around the origin by some amount such that
   // after P such rotations, it comes back to where it started:
+  int  N = 300;     // number datapoints to create
   Real P = 100;     // Period
   Real w = 2*PI/P;  // Normalized frequency
+  Real s = sin(w);
+  Real c = cos(w);
+  MatR R(c,-s, s,c);
 
+  // Apply the rotation N times to an initial vector (1,0), record x and y coordinates and plot:
+  VecR v(1, 0);
+  Vec t(N), x(N), y(N);  
+  for(int n = 0; n < N; n++)
+  {
+    t[n] = n;
+    x[n] = v.x;
+    y[n] = v.y;
+    v = R * v;
+  }
+  rsPlotVectorsXY(t, x, y);  // Shows x,y as function of t (= n = discrete "time" here)
+  rsPlotVectorsXY(x, y);     // Shows the circle (we go around it N/P times)
 
 
 

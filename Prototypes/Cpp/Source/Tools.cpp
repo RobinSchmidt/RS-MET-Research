@@ -6680,6 +6680,9 @@ class rsQuaternion2
 
 public:
 
+  rsQuaternion2(const T& a, const T& b, const T& c, const T& d)
+    : s(a), v(b, c, d) {}
+
   rsQuaternion2(const T& scalarPart, const rsVector3D<T>& vectorPart)
     : s(scalarPart), v(vectorPart) {}
 
@@ -6709,6 +6712,45 @@ protected:
   rsVector3D<T> v;  // vector part (q1,q2,q3)
 
 };
+
+
+/** Another representation of quaternions as a pair of complex numbers */
+
+template<class T> 
+class rsQuaternion3
+{
+
+public:
+
+  rsQuaternion3(const T& a, const T& b, const T& c, const T& d)
+    : q(rsComplex<T>(a, b), rsComplex<T>(c, d)) {}
+
+  rsQuaternion3(const rsComplex<T>& ab, const rsComplex<T>& cd)
+    : q(rsComplex<T>(ab), rsComplex<T>(cd)) {}
+
+
+
+  rsQuaternion3 operator*(const rsQuaternion3& p) const 
+  { 
+    rsComplex<T> j(0, 1);
+    rsComplex<T> re = q.re * p.q.re  -  q.im * rsConj(p.q.im);
+    rsComplex<T> im = q.re * p.q.im  +  q.im + rsConj(p.q.re);
+    return rsQuaternion3(re, im);
+  }
+  // This needs thorough verifications..I'm not even sure, if this "nested complex" is the right
+  // way to think about it. Maybe instead, we need indeed just a pair of complex numbers. see
+  // (1) pg 129
+
+
+protected:
+
+  //rsComplex<T> z, w;
+
+
+  rsComplex<rsComplex<T>> q;
+
+};
+
 
 
 //=================================================================================================

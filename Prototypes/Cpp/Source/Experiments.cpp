@@ -9998,19 +9998,36 @@ void testQuaternion()
   using Real = float;
   using Vec3 = rsVector3D<Real>;
 
-  //using Quat1 = rsQuaternion<double>;   // old implementation in Relativity.h
-  using Quat = rsQuaternion2<Real>;
+  using Quat1 = rsQuaternion<Real>;   // old implementation in Relativity.h
+  using Quat2 = rsQuaternion2<Real>;
+  using Quat3 = rsQuaternion3<Real>;
 
-  Quat q(2, Vec3(3,5,7));
-  Quat p(3, Vec3(4,6,8));
+  // Raw representation:
+  Quat1 q1(2,3,5,7);
+  Quat1 p1(3,4,6,8);
+  Quat1 qp1 = q1*p1;
+  Quat1 pq1 = p1*q1;
 
-  Quat qp = q*p;
-  Quat pq = p*q;
+  // Representation as pair of scalar and vector:
+  Quat2 q2(2, Vec3(3,5,7));
+  Quat2 p2(3, Vec3(4,6,8));
+  Quat2 qp2 = q2*p2;
+  Quat2 pq2 = p2*q2;
+
+  // Representation as nested complex number:
+  Quat3 q3(2,3,5,7);
+  Quat3 p3(3,4,6,8);
+  Quat3 qp3 = q3*p3;
+  Quat3 pq3 = p3*q3;
+  // The 2nd inner complex number is wrong but the first looks right
 
   // ToDo:
   // -Test representation as pair of complex numbers, the different 2x2 and 4x4 matrix 
   //  representations (1) pg 129 ff. Maybe the pair of complex numbers could just be a nested
   //  complex number?
+  // -Implement and test division for all the different representations.
+  // -Compare the performances of the different implementations (I guess, raw will be most 
+  //  performant?)
 
 
   int dummy = 0;

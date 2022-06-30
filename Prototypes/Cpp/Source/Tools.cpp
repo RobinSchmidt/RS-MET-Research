@@ -6715,7 +6715,9 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 
-/** Another representation of quaternions as a pair of complex numbers */
+/** Another representation of quaternions as a pair of complex numbers. To distinguish these two
+complex numbers, we actually use a nested complex type whose real and imaginary part are used our
+two (level 1) complex numbers. */
 
 template<class T> 
 class rsQuaternion3
@@ -6824,7 +6826,13 @@ protected:
 
 };
 
-
+// It is also possible to translate these two different representations as complex 2x2 matrices 
+// into corresponding representations of real 4x4 block matrices by replacing 
+//
+//   1 = I = [1 0],   J = [ 0 1]
+//           [0 1]        [-1 0]
+//
+// But we don't do a implementation of that here, though because that would be boring.
 
 
 //=================================================================================================

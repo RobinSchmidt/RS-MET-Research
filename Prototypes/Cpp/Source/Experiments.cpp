@@ -9836,6 +9836,46 @@ void testStateSpaceFilters()
   //  different, I think because the internal states mix up the channels. But maybe it can be 
   //  related to a complex valued SISO filter?
 
+  // Notes on diagonalization (see (1) pg 360 ff). I'm not totally sure, if I understand 
+//   everything correctly, so take it with a grain of salt:
+  // -Diagonalizing the state transition matrix A corresponds to a partial fraction expansion of
+  //  the corresponding transfer function H(z). Each diagonal matrix element is responsible for a 
+  //  single (complex) resonant mode, i.e. implements one complex resonator. That necessiates that 
+  //  those matrix elements have to be complex.
+  // -If the tranfer function is real, then the poles/eigenvalues will occur in complex conjugate 
+  //  pairs. If a real transition matrix is desired, complex conjugate poles/eigenvalues can be
+  //  combined into 2x2 blocks which correspond to real 2nd order sections. (ToDo: explain how!)
+  // -If the transfer function has a pole p with a multiplicity m > 1, then A will have a 
+  //  corresponding eigenvalue with algebraic multiplicity m (verify!). In such cases, A may or may
+  //  not be diagonalizable depending on the geometric multiplicity of the eigenvalue i.e. the 
+  //  dimensionality of the corresponding eigenspace (verify!). If the corresponding eigenvectors 
+  //  are linearly independent (i.e. the eigenspace has its maximum dimensionality), A can still be
+  //  diagonalized (verify!). If not, it means that the corresponding modes are coupled and A is 
+  //  not diagonalizable. In such a case, it can still be brought into a Jordan normal form, which
+  //  has only additional ones above the main diagonal. Each such 1 couples two modes with the same
+  //  resonant frequency (verify!). For example, for a pole p with multiplicity 3, we would get a 
+  //  3x3 Jordan block of the form:
+  //    [p 1 0]
+  //    [0 p 1]
+  //    [0 0 p]
+  //  I think, the ones above the diagonal couple the modes, i.e. feed the output of one resonator
+  //  into the input of the next (with gain 1 - that's what the 1 does, I think). In such a case, 
+  //  the eigenvectors need to be replaced by generalized eigenvectors in the similarity 
+  //  transformation. Generalized eigenvectors v to some eigenvalue s do not satisfy 
+  //  (A - s*I) * v = 0 as regular eigenvectors do but instead (A - s*I)^m * v = 0 for some m which 
+  //  is called the rank of the eigenvector. See:
+  //    https://en.wikipedia.org/wiki/Generalized_eigenvector
+  //  The number of Jordan blocks belonging to a pole p is equal to the number of linearly 
+  //  independent eigenvectors.
+  // -Q: What would it mean if we have 2 Jordan blocks of respective sizes 1 and 3 corresponding to
+  //  a pole p? We have 3 modes at p's frequency wich are coupled and another one at the same 
+  //  frequency that is decoupled? The algebraic multiplicity of the pole would be 1+3 = 4 and the 
+  //  geometric multiplicity 2? One of the poles would have its own 1D eigenspace and the remaining
+  //  3 would have to "share" the 2nd dimension...or something?....figure this out!
+
+
+
+
   int dummy = 0;
 }
 
@@ -9907,17 +9947,18 @@ void test2x2Matrices()
   // where c = cos(a), s = sin(a). They have the following properties 
   //
   // -they form the special orthogonal group SO(2)
+  // -this group is commutative aka Abelian - this feature does not generalize to higher dimensional 
+  //  rotations
   // -det(R) = 1: their determinant is always 1
   // -R^T * R = I
+  // -the inverse rotation of R(a) is given by R(-a)
   // -the group is parametrized by 1 parameter (the angle a), so the group is 1-dimensional
-  // -the group is simply connected, has one connected component and is compact
-  // -they are antisymmetric
+  // -the manifold is simply connected, has one connected component and is compact
+  // -the matrices are antisymmetric
   //
   // See:
   //   -https://en.wikipedia.org/wiki/Lie_group#Definitions_and_examples
-  //   -Note that in (1) pg 88, SO(2) is defined with a different sign convention: the minus 
-  //    appears in the sin(a) in element R(2,1) rather than R(1,2). I guess, that's just a matter 
-  //    of convention, but ozr definition above seems more common
+
 
   // Create a rotation matrix that rotates a point (x,y) around the origin by some amount such that
   // after P such rotations, it comes back to where it started:

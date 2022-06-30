@@ -10024,6 +10024,8 @@ void testQuaternion()
   // Representation as a special kind of 2x2 matrix of complex numbers:
   Quat4 q4(2,3,5,7);
   Quat4 p4(3,4,6,8);
+  Quat4 qp4 = q4*p4;
+  Quat4 pq4 = p4*q4;
 
 
 

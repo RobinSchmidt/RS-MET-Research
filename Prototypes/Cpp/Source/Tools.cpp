@@ -6765,6 +6765,8 @@ class rsQuaternion4
 
 public:
 
+  rsQuaternion4(){}
+
   rsQuaternion4(const T& a, const T& b, const T& c, const T& d)
   {
     using C = rsComplex<T>;
@@ -6772,12 +6774,18 @@ public:
   }
 
 
-  /*
-  rsQuaternion4 operator*(const rsQuaternion3& p) const
-  {
+  rsQuaternion4(const rsMatrix<rsComplex<T>>& Q) : q(Q) {}
 
+
+ 
+  rsQuaternion4 operator*(const rsQuaternion4& p) const
+  {
+    rsQuaternion4 r;
+    r.q = q * p.q;
+    return r;
+    //return rsQuaternion4(q * p.q);
   }
-  */
+ 
 
 protected:
 

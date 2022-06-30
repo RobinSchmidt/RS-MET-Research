@@ -6732,9 +6732,9 @@ public:
 
   rsQuaternion3 operator*(const rsQuaternion3& p) const 
   { 
-    rsComplex<T> j(0, 1);
+    //rsComplex<T> j(0, 1);
     rsComplex<T> re = q.re * p.q.re  -  q.im * rsConj(p.q.im);
-    rsComplex<T> im = q.re * p.q.im  +  q.im + rsConj(p.q.re);
+    rsComplex<T> im = q.re * p.q.im  +  q.im * rsConj(p.q.re);
     return rsQuaternion3(re, im);
   }
   // This needs thorough verifications..I'm not even sure, if this "nested complex" is the right

@@ -10019,7 +10019,8 @@ void testQuaternion()
   Quat3 p3(3,4,6,8);
   Quat3 qp3 = q3*p3;
   Quat3 pq3 = p3*q3;
-  // The 2nd inner complex number is wrong but the first looks right
+
+
 
   // ToDo:
   // -Test representation as pair of complex numbers, the different 2x2 and 4x4 matrix 

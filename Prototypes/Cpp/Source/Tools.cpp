@@ -6770,27 +6770,57 @@ public:
   rsQuaternion4(const T& a, const T& b, const T& c, const T& d)
   {
     using C = rsComplex<T>;
-    q.setValues(C(a,b), C(c,d), C(-c,d), C(a,-b));
+    Q.setValues(C(a,b), C(c,d), C(-c,d), C(a,-b));
   }
 
-
-  rsQuaternion4(const rsMatrix<rsComplex<T>>& Q) : q(Q) {}
-
-
- 
   rsQuaternion4 operator*(const rsQuaternion4& p) const
   {
     rsQuaternion4 r;
-    r.q = q * p.q;
+    r.Q = Q * p.Q;
     return r;
-    //return rsQuaternion4(q * p.q);
   }
  
+protected:
+
+
+  rsMatrix2x2<rsComplex<T>> Q;
+
+};
+
+// implement rsConj for rsQuaternion4. We need to take the Hermitian conjugate of the matrix
+
+//-------------------------------------------------------------------------------------------------
+
+/** Another representation of quaternions as a complex 2x2 matrix of the form:
+
+q = (a,b,c,d) = [a-d*i -c-b*i] = [A  -B ]
+                [c-b*i  a+d*i]   [B*  A*] */
+
+template<class T> 
+class rsQuaternion5
+{
+
+public:
+
+  rsQuaternion5(){}
+
+  rsQuaternion5(const T& a, const T& b, const T& c, const T& d)
+  {
+    using C = rsComplex<T>;
+    Q.setValues(C(a,-d), C(-c,-b), C(c,-b), C(a,d));
+  }
+
+  rsQuaternion5 operator*(const rsQuaternion5& p) const
+  {
+    rsQuaternion5 r;
+    r.Q = Q * p.Q;
+    return r;
+  }
 
 protected:
 
 
-  rsMatrix2x2<rsComplex<T>> q;
+  rsMatrix2x2<rsComplex<T>> Q;
 
 };
 

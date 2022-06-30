@@ -10002,6 +10002,7 @@ void testQuaternion()
   using Quat2 = rsQuaternion2<Real>;
   using Quat3 = rsQuaternion3<Real>;
   using Quat4 = rsQuaternion4<Real>;
+  using Quat5 = rsQuaternion5<Real>;
 
   // Raw representation:
   Quat1 q1(2,3,5,7);
@@ -10026,6 +10027,12 @@ void testQuaternion()
   Quat4 p4(3,4,6,8);
   Quat4 qp4 = q4*p4;
   Quat4 pq4 = p4*q4;
+
+  // Representation as a different kind of 2x2 matrix of complex numbers:
+  Quat5 q5(2,3,5,7);
+  Quat5 p5(3,4,6,8);
+  Quat5 qp5 = q5*p5;
+  Quat5 pq5 = p5*q5;
 
 
 

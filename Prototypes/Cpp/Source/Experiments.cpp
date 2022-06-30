@@ -10001,6 +10001,7 @@ void testQuaternion()
   using Quat1 = rsQuaternion<Real>;   // old implementation in Relativity.h
   using Quat2 = rsQuaternion2<Real>;
   using Quat3 = rsQuaternion3<Real>;
+  using Quat4 = rsQuaternion4<Real>;
 
   // Raw representation:
   Quat1 q1(2,3,5,7);
@@ -10019,6 +10020,10 @@ void testQuaternion()
   Quat3 p3(3,4,6,8);
   Quat3 qp3 = q3*p3;
   Quat3 pq3 = p3*q3;
+
+  // Representation as a special kind of 2x2 matrix of complex numbers:
+  Quat4 q4(2,3,5,7);
+  Quat4 p4(3,4,6,8);
 
 
 

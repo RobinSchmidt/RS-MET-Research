@@ -6713,6 +6713,7 @@ protected:
 
 };
 
+//-------------------------------------------------------------------------------------------------
 
 /** Another representation of quaternions as a pair of complex numbers */
 
@@ -6728,11 +6729,8 @@ public:
   rsQuaternion3(const rsComplex<T>& ab, const rsComplex<T>& cd)
     : q(rsComplex<T>(ab), rsComplex<T>(cd)) {}
 
-
-
   rsQuaternion3 operator*(const rsQuaternion3& p) const 
   { 
-    //rsComplex<T> j(0, 1);
     rsComplex<T> re = q.re * p.q.re  -  q.im * rsConj(p.q.im);
     rsComplex<T> im = q.re * p.q.im  +  q.im * rsConj(p.q.re);
     return rsQuaternion3(re, im);
@@ -6744,12 +6742,50 @@ public:
 
 protected:
 
-  //rsComplex<T> z, w;
-
-
   rsComplex<rsComplex<T>> q;
 
 };
+// We need also the other operators and more tests
+
+
+//-------------------------------------------------------------------------------------------------
+
+/** Yet another representation of quaternions as a complex 2x2 matrix of the form:
+
+  q = (a,b,c,d) = [ a+b*i  c+d*i] = [ A  B ]
+                  [-c+d*i  a-b*i]   [-B* A*]
+
+where A* denotes the complex cojugate of A. 
+
+*/
+
+template<class T> 
+class rsQuaternion4
+{
+
+public:
+
+  rsQuaternion4(const T& a, const T& b, const T& c, const T& d)
+  {
+    using C = rsComplex<T>;
+    q.setValues(C(a,b), C(c,d), C(-c,d), C(a,-b));
+  }
+
+
+  /*
+  rsQuaternion4 operator*(const rsQuaternion3& p) const
+  {
+
+  }
+  */
+
+protected:
+
+
+  rsMatrix2x2<rsComplex<T>> q;
+
+};
+
 
 
 

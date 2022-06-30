@@ -6649,7 +6649,66 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
   //rsError("Not yet implemented");
 }
 
+//=================================================================================================
 
+/** A class for representing Quaternions. Quaternions are a kind of 4-dimensional numbers similar 
+to how complex numbers are 2-dimensional numbers. In fact, the complex numbers are found as a 2D 
+subset within the quaternions. A quaternion q can be written as:
+
+  q = q0 + i*q1 + j*q2 + k*q3
+
+where i,j,k are three different imaginary units which all satisfy the squaring to one property, 
+i.e. i^2 = j^2 = k^2 = 1. They also satisfy the cyclic product relations: i*j = -j*i = k, 
+j*k = -k*j = i, k*i = -i*k = j. In some contexts, it is useful to view a quaternion as being 
+composed of a scalar part q0 and a 3D vector part (q1,q2,q3). This is also the way, it is 
+internally represented here in this class. It's - of course - also possible to just represent it 
+by 4 raw numbers without structuring them further but I think, the formal scalar + vector 
+representation reveals some more insights. One could also represent quaternions a pair of complex
+numbers z,w as q = z + w*j...tbc... 
+
+References
+  (1) Mathematik mit 2x2 Matrizen (Hans Jürgen Korsch)   */
+
+template<class T> 
+class rsQuaternion2
+{
+  // we need to append a "2" because there is already some other definition of rsQuaternion 
+  // in Relativity.h ...this old one should probably be superseded by this...or maybe implement
+  // various representations - maybe they all have theri strengths and weaknesses? Maybe if one
+  // turns out to be the most efficient computationally (maybe the raw one?), the others may 
+  // nevertheless provide certain other insights?
+
+public:
+
+  rsQuaternion2(const T& scalarPart, const rsVector3D<T>& vectorPart)
+    : s(scalarPart), v(vectorPart) {}
+
+
+  rsQuaternion2 operator*(const rsQuaternion2& p) const 
+  { 
+    return rsQuaternion2(s*p.s - rsDot(v, p.v), s*p.v + p.s*v + rsCross(v, p.v));
+  }
+  // see (1) pg 128
+
+  /** [q,p] = q*p - p*q */
+  static rsQuaternion2 commutator(const rsQuaternion2& q, const rsQuaternion2& p)
+  {
+    return rsQuaternion2(T(0), T(2)*rsCross(q.v, p.v));
+  }
+
+  /** {q,p} = q*p + p*q */
+  static rsQuaternion2 anticommutator(const rsQuaternion2& q, const rsQuaternion2& p)
+  {
+    rsQuaternion2(T(-2)*rsDot(q.v*p.v), rsVector3D<T>(0,0,0));
+  }
+
+
+protected:
+
+  T s;              // scalar part q0
+  rsVector3D<T> v;  // vector part (q1,q2,q3)
+
+};
 
 
 //=================================================================================================

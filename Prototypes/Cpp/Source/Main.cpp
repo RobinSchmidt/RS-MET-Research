@@ -69,7 +69,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMimoFilters();        // just a stub - not much in there yet, mostly comments
   //testStateSpaceFilters();
 
-  test2x2Matrices();  // stub
+  //test2x2Matrices();  // stub
+  testQuaternion();
 
 
   return 0;

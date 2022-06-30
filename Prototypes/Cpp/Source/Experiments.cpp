@@ -9993,6 +9993,33 @@ void test2x2Matrices()
   int dummy = 0;
 }
 
+void testQuaternion()
+{
+  using Real = float;
+  using Vec3 = rsVector3D<Real>;
+
+  //using Quat1 = rsQuaternion<double>;   // old implementation in Relativity.h
+  using Quat = rsQuaternion2<Real>;
+
+  Quat q(2, Vec3(3,5,7));
+  Quat p(3, Vec3(4,6,8));
+
+  Quat qp = q*p;
+  Quat pq = p*q;
+
+  // ToDo:
+  // -Test representation as pair of complex numbers, the different 2x2 and 4x4 matrix 
+  //  representations (1) pg 129 ff. Maybe the pair of complex numbers could just be a nested
+  //  complex number?
+
+
+  int dummy = 0;
+}
+
+
+
+
+
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {
@@ -10012,6 +10039,8 @@ float Q_rsqrt(float number)
 }
 // https://www.youtube.com/watch?v=p8u_k2LIZyo
 // https://medium.com/hard-mode/the-legendary-fast-inverse-square-root-e51fee3b49d9
+
+
 
 
 // todo: implement adaptive filters: LMS, GAL, GALL, RLS, LSL, FTF, see:

@@ -6034,6 +6034,14 @@ bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)
 // template instantiation
 
 
+// At 00:30:00, there's an interesting formula from geometric calculus:
+//   https://www.youtube.com/watch?v=PGZNYGwsXTw
+//   grad(F) = div(F) + curl(F)
+// in the sense of 
+//   geometricProduct(Nabla, F) = innerProduct(Nabla, F) + outerProduct(Nabla, F)
+// for any vector field F
+
+
 //=================================================================================================
 
 /** A class that tabulates the prime factorizations of all numbers up to some given upper limit. */

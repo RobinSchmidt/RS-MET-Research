@@ -9678,6 +9678,10 @@ void testMimoFilters() // rename to testMimoBassFilters
   //  which is intuitively obvious because if it has less outputs, we will inevitably lose some 
   //  information contained in the input signal. He talks about the allpass condition there, 
   //  which is an even stronger requirement than invertibility (I think).
+  // -I think, in a general SISO difference equation / transfer function where a0 is not normalized
+  //  to 1, we can interpret b0 as an input gain and a0 as an output gain. In an LTI filter, both 
+  //  can be absorbed into one (typically b0) but maybe in the time-varying and/or nonlinear case,
+  //  it's a good idea to keep them both as pre-gain and post-gain?
 }
 
 void testStateSpaceFilters()
@@ -10048,7 +10052,29 @@ void testQuaternion()
   int dummy = 0;
 }
 
+void testChebychevEconomization()
+{
+  // Just a stub at the moment - ToDo:
 
+  // -Create a power series expansion of e^x of order N=10 and another of order n=5 and see, how 
+  //  well they approximate e^x in the interval -1...+1
+  // -Convert the longer (order N=10) expansion into a Chebychev expansion, i.e. convert from the
+  //  1,x,x^2,x^3,... basis of monomials to the basis of T0,T1,T2,T3,... of Chebychev polynomials
+  // -Truncate the Chebychev expansion also at n=5 and plot it against the truncated power 
+  //  expansion
+  // -The expected result is that around x=0, the truncated power series is the better 
+  //  approximation but within the interval -1...+1, the truncated Chebychev expansion is better.
+  // -Somewhere in the experiments, I have some nice recursions for converting back and forth 
+  //  between powers and Chebychev polynomials (but I think, as of yet, only one direction works).
+  //  -> Fix that and use that, if possible - otherwise use rsPolynomial::baseChange with 
+  //  appropriately constructed matrices
+  // -This process is known as Chebychev economization, see:
+  //  https://math.stackexchange.com/questions/145678/help-with-chebyshev-economization-of-expx
+  //  http://boron.physics.metu.edu.tr/NumericalComputations/week10/node4.html
+  // -Is there a process to bypass the creation of the longer N=10 Taylor expansion and directly
+  //  derive a formula for an exact Chebychev expansion?
+
+}
 
 
 

@@ -71,6 +71,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //test2x2Matrices();  // stub
   testQuaternion();
+  testChebychevEconomization();  // stub
 
 
   return 0;

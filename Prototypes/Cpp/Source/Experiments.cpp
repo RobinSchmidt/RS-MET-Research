@@ -9049,9 +9049,16 @@ void testModularGroup()
 
 
   // ToDo:
-  // -In think, the matrices do not need to be complex. Actually, the elements a,b,c,d are supposed
+  // -I think, the matrices do not need to be complex. Actually, the elements a,b,c,d are supposed
   //  to be integers. But at the end, we may need the complex datatype, so maybe it's good to 
   //  define these matrices using complex numbers too for compatibility...we'll see
+
+  // Questions:
+  // -Perhaps it's best to think of (a*z + b) / (c*z + d) as being the transformation itself and 
+  //  the matrix [a,b ; c,d] as a possible representation of it?
+  // -Is it somehow possible to relate this stuff to homogeneous coordinates in complex 1D? Could 
+  //  that be another representation of the same transformation? I'm not sure anymore, how that 
+  //  idea occurred to me (it was in the Tram). It may very well be nonsense.
 
 
   // See:

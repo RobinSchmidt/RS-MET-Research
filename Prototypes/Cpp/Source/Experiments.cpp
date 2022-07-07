@@ -7641,6 +7641,7 @@ void testGeometricAlgebra()
 
 
   // https://www.youtube.com/watch?v=60z_hpEAtD8 A Swift Introduction to Geometric Algebra
+  // https://www.youtube.com/watch?v=0bOiy0HVMqA Addendum
   // https://www.youtube.com/watch?v=_AaOFCl2ihc The Vector Algebra War
 
   // https://www.youtube.com/watch?v=P2ZxxoS5YD0 Intro to clifford, a python package for geometric algebra
@@ -9052,6 +9053,10 @@ void testModularGroup()
   // -I think, the matrices do not need to be complex. Actually, the elements a,b,c,d are supposed
   //  to be integers. But at the end, we may need the complex datatype, so maybe it's good to 
   //  define these matrices using complex numbers too for compatibility...we'll see
+  // -Figure out the relation to conformal geometric algebra, if any. see here (towards the end):
+  //  https://www.youtube.com/watch?v=0bOiy0HVMqA
+
+
 
   // Questions:
   // -Perhaps it's best to think of (a*z + b) / (c*z + d) as being the transformation itself and 
@@ -9063,6 +9068,9 @@ void testModularGroup()
 
   // See:
   // https://www.youtube.com/watch?v=dOY_MzmS0Zk
+
+  //
+
 
   int dummy = 0;
 }

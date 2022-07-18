@@ -4140,6 +4140,7 @@ void testAutoDiff5()
   g = { exp(k*x), k*exp(k*x), k*k*exp(k*x), k*k*k*exp(k*x) };
 
   // We verify our results with SageMath using the code:
+  //
   // k = 1/2
   // f = sin(x)
   // g = exp(k*x)
@@ -4156,9 +4157,10 @@ void testAutoDiff5()
   for(int n = 0; n < N; n++) {
     h[n] = 0;
     for(int k = 0; k <= n; k++)
-      h[n] += rsBinomialCoefficient(n, k) * f[k] * g[n-k];  } // verify this!
+      h[n] += rsBinomialCoefficient(n, k) * f[k] * g[n-k];  }
   // Yes - the result in h indeed matches the sage output. Good! But we really need a better way to
-  // evaluate (or look up) the binomial coeffs.
+  // evaluate (or look up) the binomial coeffs. Calling the stupid rsBinomialCoefficient is not 
+  // acceptable for production code.
 
   // Looking at this paper:
   //   https://www.jstor.org/stable/2324425
@@ -4211,7 +4213,26 @@ void testAutoDiff5()
 
   Vec r = reciprocal(f);
   // r should be (1/sin(x)), (1/sin(x))', (1/sin(x))'', (1/sin(x))''' at x = 2.5
+  //
+  // f = 1/sin(x)
+  // fp = diff(f)
+  // fpp = diff(fp)
+  // fppp = diff(fpp)
+  // x0 = 2.5
+  // f(x=x0), fp(x=x0), fpp(x=x0), fppp(x=x0)
+  //
+  // -> (1.67092154555868, 2.23677599950521, 7.65943355590526, 35.2334111794582)
+  // ...yes - looks good! :-)
 
+  r = reciprocal(g);
+
+
+  // ToDo:
+  // -What about the chain rule? How would we implement that?
+  // -Maybe in a class for regular use, we should also store the evaluation point x to make sure 
+  //  that only (hyper)dual numbers which have the same evaluation point are combined. Anything 
+  //  else wouldn't make much sense (i think) and may indicate a user error, which we should 
+  //  perhaps catch in an assert.
 
 
   int dummy = 0;

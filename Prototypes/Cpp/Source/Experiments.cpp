@@ -4128,9 +4128,11 @@ void testAutoDiff5()
   Vec f({1,2,3,4}), g({5,6,7,8}), h(N);
   // These vectors are supposed to represent value, derivative, 2nd derivative and 3rd derivative
   // and we ant to compute their product using the generalized Leibniz rule. a and b are inputs, c
-  // is the output
+  // is the output.
 
-
+  // We choose as the functions f(x) = sin(x) and g(x) = exp(k*x) and we assign the 0th vector 
+  // elements to the function value, the 1st to the 1st derivative and so on. Then we compute the
+  // derivatives of h(x) = f(x) * g(x) at x = 2.5.
   float x = 2.5;
   float k = 0.5;
   f = { sin(x),     cos(x),      -sin(x),        -cos(x)   };
@@ -4149,16 +4151,12 @@ void testAutoDiff5()
   //
   // -> (2.08887303341033, -1.75182945973459, -4.36292075149751, -2.17313392682927)
 
-  for(int n = 0; n < N; n++)
-  {
+  for(int n = 0; n < N; n++) {
     h[n] = 0;
     for(int k = 0; k <= n; k++)
-    {
-      h[n] += rsBinomialCoefficient(n, k) * f[k] * g[n-k]; // verify this!
-      int dummy = 0;
-    }
-  }
-  // yes - the result in h looks good.
+      h[n] += rsBinomialCoefficient(n, k) * f[k] * g[n-k];  } // verify this!
+  // Yes - the result in h indeed matches the sage output. Good! But we really need a better way to
+  // evaluate (or look up) the binomial coeffs.
 
   // Looking at this paper:
   //   https://www.jstor.org/stable/2324425
@@ -4171,7 +4169,7 @@ void testAutoDiff5()
   //   [f''' 3f'' 3f'  f]   [(1/f)''']   [0]
   //
   // here written for the case of up to the 3rd derivative. The matrix is apparently Pascal's 
-  // triangle. -> try it!
+  // triangle. We apparently only need one round of backsubstitution, right? -> try it!
 
 
   int dummy = 0;

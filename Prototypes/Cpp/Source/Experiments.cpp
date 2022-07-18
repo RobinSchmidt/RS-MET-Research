@@ -10092,33 +10092,78 @@ void testChebychevEconomization()
 
 void testGeneratingFunction()
 {
+  // We generate recursively and efficiently the coefficient array of the function f_n(x) defined
+  // as the polynomial:
+  //
+  //   f_n(x) = (1+x^1) * (1+x^2) * (1+x^3) * ... * (1+x^n)
+  //
+  // the k-th coefficient of this polynomial gives the number of subsets of the set 
+  //
+  //   S_n := {1,2,3,...,n}
+  //
+  // whose sum of elements is equal to k.
 
-  int n = 10;         // We consider the set {1,2,3,...,n}
+
+  int n = 5;         // We consider the set S_n := {1,2,3,...,n}
   int N = n*(n+1)/2;  // Highest possible sum via Gauss summation formula
 
-  // Recursively compute the array of coefficients. At each iteration the current content of the
-  // coeff array represents the array of polynomial coeffs of the product
-  // (1+x^1) * (1+x^2) * (1+x^3) * ... * (1+x^k)   ..where k = i+1
-  std::vector<int> a(N);            // Array of coefficients
-  a[0]  = 1;
-  int L = 1;                        // Current length of coeff array
-  for(int k = 1; k <= n; k++)
-  {
+  // Recursively compute the array of coefficients. At the k-th iteration, the current content of 
+  // the coeff array represents the array of polynomial coeffs of the product:
+  //
+  //   (1+x^1) * (1+x^2) * (1+x^3) * ... * (1+x^k)
+  //
+  // In each iteration, we (conceptually) convolve the current content of the array with the
+  // sequence (1,0,0,0...,1) where the number of zeros between the ones at the start and end equals
+  // k which we may interpret as a shift amount between the current sequence and a copy of itself,
+  // which get added in the iteration. That means, in each iteration, we just add a k-shifted copy
+  // of the array to itself.
+  std::vector<int> a(N+1);          // Array of polynomial coefficients
+  a[0]  = 1;                        // Initially, it's 1,0,0,0,...
+  int L = 1;                        // Current length of nonzero coeffs
+  for(int k = 1; k <= n; k++) {     // Iterate over the convolutions
     L += k;                         // Length increases by the shift-amount
-    rsAssert(L == 1+k*(k+1)/2);     // We could also compute it directly
+    rsAssert(L == 1+k*(k+1)/2);     // We could also compute L directly
+    for(int i = L-1; i >= k; i--)   // To the current content of a, 
+      a[i] += a[i-k]; }             // ...add a k-shifted copy of itself
 
-    // To the current content of a, add a k-shifted copy of itself:
-    //for(int i = k; i < L; i++)
-    for(int i = L-1; i >= k; i--)
-      a[i] += a[i-k];
+  // Now, the a-array should contain the polynomial coeffs of
+  //   f_n(x) = (1+x^1) * (1+x^2) * (1+x^3) * ... * (1+x^n)
+  // You may verify this with sage via (for n = 5):
+  //   expand((1+x)*(1+x^2)*(1+x^3)*(1+x^4)*(1+x^5))
+  // If you now want to know, how many subsets of the set {1,2,3,...,n} have a sum of k, then a[k]
+  // is the answer. I have no idea in which context we could want to know such a thing. In the
+  // Weitz and 3blue1brown videos linked below, the task is to compute the number of subsets which
+  // have a sum that is divisible by some number m (Weitz: n=300,m=3, 3b1b: n=2000,m=5). To compute 
+  // this, we could now just sum up all coefficients starting at index 0 and iterating with a 
+  // step-size of m. Doing this would lead us to an O(n^2) algorithm because creating the whole 
+  // coeff array is already O(n^2).
+  
+  
+  // The idea
+  // to evaluate this efficiently is to evaluate the polynomial at the m-th root of unity, i.e. at
+  // x = e^(2*pi*i/m) and at its powers up to m-1 and add up the results. In the process of adding
+  // up, only the terms coming from x^0, x^m, x^2m, x^3m survive, i.e. those coming from multiples 
+  // of m. We need to divide the result by m to make up for adding up m such evaluations.
+  // ...tbc...
 
-
-    int dummy = 0;
-  }
-
+  // Questions:
+  // -Does this cancellation always work or only when m is a prime? Maybe the cancellation only 
+  //  works, if each power of e^(2*pi*i/m) is itself a primitive m-th root of unity, i.e. its 
+  //  powers generate the full set of all roots? This is only the case, if m is prime (i think).
+  //  ...figure out!
 
 
   int dummy = 0;
+
+  // See:
+  // https://www.youtube.com/watch?v=bOXCLR3Wric Olympiad level counting: How many subsets of {1,…,2000} have a sum divisible by 5?
+  // https://www.youtube.com/watch?v=dg_YgkOUb14 Ein cleverer Trick: erzeugende Funktionen
+
+  // ToDo:
+  // -Maybe make a class rsSparsePolynomial or rsSparseSequence which should be abler to more 
+  //  efficiently convolve such sequences (or multiply the polynomials) than the dense 
+  //  implementation. This will generalize what we have done in our inner loop (the convolution 
+  //  with the (1,0,0,0,...,1) array).
 }
 
 

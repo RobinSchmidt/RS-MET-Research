@@ -2658,11 +2658,20 @@ RS_PFX rsPow(RS_DN x, RS_DN y)
 // from the A,B arrays? Then, we would also need one for the quotient and formulas for the n-th
 // derivative of the elementary functions and we would be ready to go. We have:
 //   (fg)'   =  f'g + fg'
-//   (fg)''  = (f'g + fg')' = f''g + f'g' + f'g' + fg''
+//   (fg)''  = (f'g + fg')' = f''g + f'g' + f'g' + fg'' = f''g + 2f'g' + fg''
 //   (fg)''' = ...
 // Looks like maybe we could also end up with an O(n^2) algorithm? We'll see. See here:
 //   https://en.wikipedia.org/wiki/Product_rule#Higher_derivatives
 //   https://en.wikipedia.org/wiki/General_Leibniz_rule
+// Yes - it seems we can compute these using the generalized Leibniz rule. Maybe we should keep a
+// pointer to an array of binomial coeffs...or maybe make a class for binomial coeffs which can be 
+// re-used by all objects and functions that need these coeffs. We actually use binomial coeffs in
+// so mayn places and often re-generate them everywhere. I mean, it's not much computation but 
+// still. And we would otherwise need a temporary array into which we may render the coeffs, which
+// may be problematic. Maybe the whole class should just have a pointer to an object of class
+// rsBinomialCoefficients (to be written) which allows client code to access the coeffs via an 
+// operator (int n, int k) that takes two integers. It may check, if enough coeffs have been 
+// pre-rendered and if not, just render more if needed. 
 // For a suitable generalization the quotient rule, see:
 //   https://en.wikipedia.org/wiki/Quotient_rule#Higher_order_formulas
 //   https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives

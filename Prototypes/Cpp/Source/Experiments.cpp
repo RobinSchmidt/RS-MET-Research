@@ -4090,7 +4090,8 @@ void testAutoDiff5()
 {
   // Under construction
   // Prototype to compute with higher order derivatives using the generalized Leibniz rule for
-  // products
+  // products. It's some preliminary work for an implementation of a generalization fo dual numbers
+  // to higher derivatives (maybe we should call them hyperdual numbers?)
 
   // We want to implement a generalization that computes higher derivatives (up to the n-th). Try
   // to figure out how the product rule can be used to compute C = (c,c',c'',c''') from A * B 
@@ -4151,6 +4152,7 @@ void testAutoDiff5()
   //
   // -> (2.08887303341033, -1.75182945973459, -4.36292075149751, -2.17313392682927)
 
+  // ToDo: wrap into helper function product(f, g):
   for(int n = 0; n < N; n++) {
     h[n] = 0;
     for(int k = 0; k <= n; k++)
@@ -4168,8 +4170,46 @@ void testAutoDiff5()
   //   [f''  2f'  f    0]   [(1/f)'' ]   [0]
   //   [f''' 3f'' 3f'  f]   [(1/f)''']   [0]
   //
-  // here written for the case of up to the 3rd derivative. The matrix is apparently Pascal's 
-  // triangle. We apparently only need one round of backsubstitution, right? -> try it!
+  // here written out for the case of up to the 3rd derivative. The matrix is apparently Pascal's 
+  // triangle. Let f0 = f, f1 = f', f2 = f'', f3 = f''', r0 = (1/f), r1 = (1/f)', r2 = (1/f)'', 
+  // r3 = (1/f)'''. Then, we can rewrite the system a bit nicer like this:
+  //
+  //   [f0    0    0    0]   [r0]   [1]
+  //   [f1   f0    0    0] * [r1] = [0]
+  //   [f2 2*f1   f0    0]   [r2]   [0]
+  //   [f3 3*f2 3*f1   f0]   [r3]   [0]
+  //
+  // We apparently only need one round of backsubstitution, right? I think, we get:
+  //
+  //   r0 = 1 / f0
+  //   r1 = -(f1*r0) / f0
+  //   r2 = -(f2*r0 + 2*f1*r1) / f0
+  //   r3 = -(f3*r0 + 3*f2*r1 + 3*f1*r2) / f0
+  //
+  // -> implement it and test it numerically!
+
+  // Helper function to compute the reciprocal of a Hyperdual number:
+  auto reciprocal = [](const Vec& f)
+  {
+    int N = f.size();
+    Vec r(N);
+    r[0] = 1 / f[0];
+    for(int n = 1; n < N; n++) {
+      r[n] = 0;
+      for(int k = 0; k < n; k++)  // verify upper limit!
+      {
+        //int Bnk =  rsBinomialCoefficient(n, k);  // for debug
+        r[n] -= rsBinomialCoefficient(n, k) * r[k] * f[n-k];
+      }
+      r[n] /= f[0];               // Optimize: use r[n] *= r[0]
+    }
+    return r;
+  };
+  // needs test
+
+  Vec r = reciprocal(f);
+  // r should be (1/sin(x)), (1/sin(x))', (1/sin(x))'', (1/sin(x))''' at x = 2.5
+
 
 
   int dummy = 0;
@@ -10267,18 +10307,24 @@ void testGeneratingFunction()
   //
   //  if n is divisble by m. Verify this formula and figure out how it needs to be modified if n
   //  is not divisible by m.
+  // -Let the remainder of n/m be r. I think, we then get a product of the form
+  //  (1+x^0) * (1+x^1) *...* (1+x^r) as cliffhanger which does not form a nice group of m factors
+  //  that evaluates to 2 like the others (I have already shifted the powers down which
+  //  is ok due to the modular nature of the multiplication of the roots, I think). But what does 
+  //  it evaluate to instead?
   // -The whole point of the videos is actually to avoid creating the polynomial coefficient array
   //  explicitly as we do here. However, doing so could make the technique more generally 
   //  applicable because here, we generate actually the *full* information about the coeff array. 
   //  It results in an O(n^2) algorithm in both space and time. That may still be impractical for 
   //  larger n but is definitely a lot better already than the naive O(2^n) algo. Yeah, OK, the 
   //  point may be to avoid having to create all the subsets explictly which is the O(2^n) thing.
-  //  reducing it to O(n^2) is good but they reduce it even further...I think, maybe to O(m*n) or
+  //  Reducing it to O(n^2) is good but they reduce it even further...I think, maybe to O(m*n) or
   //  even to a simple formula (which we may assume to be O(1)...although that may not really be 
   //  the case in practice). We want to extract information about the coeff array without actually
   //  generating it. The coeffs encode information about subsets.
   // -Setting m = 1 amounts to count the subsets whose sum is divisible by 1, i.e. to count *all* 
-  //  of the subsets, so the result should be 2^n, so numsets should come out as 2^n for m = 1.
+  //  of the subsets, so the result should be 2^n, so numSets should come out as 2^n for m = 1.
+  //  That seems to be indeed the case.
 
   // Questions:
   // -What is the maximum n we can use before hitting overflow?

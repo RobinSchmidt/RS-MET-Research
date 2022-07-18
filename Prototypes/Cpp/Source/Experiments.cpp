@@ -4228,7 +4228,24 @@ void testAutoDiff5()
 
 
   // ToDo:
-  // -What about the chain rule? How would we implement that?
+  // -What about the chain rule? How would we implement that? Do we even need to implement it as
+  //  such explicitly or will it be implicitly used in the definitions of the elementary 
+  //  functions? I think, the latter. Let's see what we need to do for the 1st and 2nd derivative:
+  //    (f(g(x)))'  =  f'(g(x)) * g'(x)
+  //    (f(g(x)))'' = (f'(g(x)) * g'(x))' = f''(g(x)) * g'(x) * g'(x) + f'(g(x)) * g''(x)
+  //  uuhh - it seems in the 2nd step we need to recursively apply the chain rule and the product 
+  //  rule. I guess, that could quickly become messy for higher derivatives. Not sure, if we'll get
+  //  a practical general algorithm for this. Let f = sin and we are given g,g1=g',g2=g'',g3=g''' 
+  //  and we need to compute f0=f(g),f1=f'(g),f2=f''(g),f3=f'''(g). 
+  //    f0 =  sin(g)
+  //    f1 =  cos(g) *  g1
+  //    f2 = -sin(g) *  g1^2 + cos(g) * g2
+  //    f3 = -cos(g) * ...?.... is that -cos(g) even right? It's just a guess...
+  //  See:
+  //  https://en.wikipedia.org/wiki/Chain_rule#Higher_derivatives
+  //  https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
+  //  https://en.wikipedia.org/wiki/Bell_polynomials
+  //  OK - that seems to be a bit more complicated indeed.
   // -Maybe in a class for regular use, we should also store the evaluation point x to make sure 
   //  that only (hyper)dual numbers which have the same evaluation point are combined. Anything 
   //  else wouldn't make much sense (i think) and may indicate a user error, which we should 
@@ -10334,7 +10351,14 @@ void testGeneratingFunction()
   //  (1+x^0) * (1+x^1) *...* (1+x^r) as cliffhanger which does not form a nice group of m factors
   //  that evaluates to 2 like the others (I have already shifted the powers down which
   //  is ok due to the modular nature of the multiplication of the roots, I think). But what does 
-  //  it evaluate to instead?
+  //  it evaluate to instead? Se Weitz video at around 27:00 (nü == x). I think we get something
+  //  like f_n(x) = 2^(floor(n/m)) * (1+x^0) * (1+x^1) * ... * (1+x^r)  ...hmm...wouldn't that 
+  //  cliffhanger make the result complex in general? But maybe the imaginary part somehow cancels
+  //  later again? This seems plausible: we also need to add f_n(x^2), etc. to obtain our final
+  //  result. the 2^n terms stays thes same (coming from f_n(x^0)) but the (m-1)*2^(n/m) term will
+  //  need to be replaced by something more complicated (i guess). Maybe we'll get 
+  //  (m-2)*2^(n/m) + something(r), the (m-2)*2^(n/m) comes from the integer (floor) division and 
+  //  we need to add something that depends on the remainder r.
   // -The whole point of the videos is actually to avoid creating the polynomial coefficient array
   //  explicitly as we do here. However, doing so could make the technique more generally 
   //  applicable because here, we generate actually the *full* information about the coeff array. 

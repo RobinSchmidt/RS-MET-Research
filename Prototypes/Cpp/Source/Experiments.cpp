@@ -10088,7 +10088,34 @@ void testChebychevEconomization()
   //  http://boron.physics.metu.edu.tr/NumericalComputations/week10/node4.html
   // -Is there a process to bypass the creation of the longer N=10 Taylor expansion and directly
   //  derive a formula for an exact Chebychev expansion?
+}
 
+void testGeneratingFunction()
+{
+
+  int n = 10;         // We consider the set {1,2,3,...,n}
+  int N = n*(n+1)/2;  // Highest possible sum via Gauss summation formula
+
+  // Recursively compute the array of coefficients. At each iteration the current content of the
+  // coeff array represents the array of polynomial coeffs of the product
+  // (1+x^1) * (1+x^2) * (1+x^3) * ... * (1+x^k)   ..where k = i+1
+  std::vector<int> a(N);            // Array of coefficients
+  a[0]  = 1;
+  int L = 1;                        // Current length of coeff array
+  for(int i = 0; i <= n; i++)
+  {
+    int s = i+1;                    // Shift amount
+    L += s;                         // Length increases by the shift-amount
+    rsAssert(L == 1+(i+1)*(i+2)/2); // We could also compute it directly
+
+
+
+    int dummy = 0;
+  }
+
+
+
+  int dummy = 0;
 }
 
 

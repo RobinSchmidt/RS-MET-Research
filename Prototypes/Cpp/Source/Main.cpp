@@ -70,8 +70,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testStateSpaceFilters();
 
   //test2x2Matrices();  // stub
-  testQuaternion();
-  testChebychevEconomization();  // stub
+  //testQuaternion();
+  //testChebychevEconomization();  // stub
+
+  testGeneratingFunction();
 
 
   return 0;

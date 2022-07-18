@@ -10101,11 +10101,13 @@ void testGeneratingFunction()
   //
   //   S_n := {1,2,3,...,n}
   //
-  // whose sum of elements is equal to k.
+  // whose sum of elements is equal to k. In the problems in the videos linked below, the question
+  // is, how many of these subsets have a sum divisible by a given divisor m. When we have an array
+  // of coeffs containing the number of subsets with a given sum, we can just compute this by 
+  // iterating a summation through our array with an increment of m.
 
-
-  int n = 5;         // We consider the set S_n := {1,2,3,...,n}
-  int N = n*(n+1)/2;  // Highest possible sum via Gauss summation formula
+  int n = 5;          // We consider the set S_n := {1,2,3,...,n}
+  int m = 3;          // The divisor
 
   // Recursively compute the array of coefficients. At the k-th iteration, the current content of 
   // the coeff array represents the array of polynomial coeffs of the product:
@@ -10117,6 +10119,7 @@ void testGeneratingFunction()
   // k which we may interpret as a shift amount between the current sequence and a copy of itself,
   // which get added in the iteration. That means, in each iteration, we just add a k-shifted copy
   // of the array to itself.
+  int N = n*(n+1)/2;                // Highest possible sum via Gauss summation formula
   std::vector<int> a(N+1);          // Array of polynomial coefficients
   a[0]  = 1;                        // Initially, it's 1,0,0,0,...
   int L = 1;                        // Current length of nonzero coeffs
@@ -10125,6 +10128,12 @@ void testGeneratingFunction()
     rsAssert(L == 1+k*(k+1)/2);     // We could also compute L directly
     for(int i = L-1; i >= k; i--)   // To the current content of a, 
       a[i] += a[i-k]; }             // ...add a k-shifted copy of itself
+
+
+  int sum = 0;
+  for(int i = 0; i <= N; i += m)
+    sum += a[i];
+
 
   // Now, the a-array should contain the polynomial coeffs of
   //   f_n(x) = (1+x^1) * (1+x^2) * (1+x^3) * ... * (1+x^n)
@@ -10136,17 +10145,16 @@ void testGeneratingFunction()
   // have a sum that is divisible by some number m (Weitz: n=300,m=3, 3b1b: n=2000,m=5). To compute 
   // this, we could now just sum up all coefficients starting at index 0 and iterating with a 
   // step-size of m. Doing this would lead us to an O(n^2) algorithm because creating the whole 
-  // coeff array is already O(n^2).
-  
-  
-  // The idea
-  // to evaluate this efficiently is to evaluate the polynomial at the m-th root of unity, i.e. at
-  // x = e^(2*pi*i/m) and at its powers up to m-1 and add up the results. In the process of adding
-  // up, only the terms coming from x^0, x^m, x^2m, x^3m survive, i.e. those coming from multiples 
-  // of m. We need to divide the result by m to make up for adding up m such evaluations.
-  // ...tbc...
+  // coeff array is already O(n^2). That's certainly already much better than the exponential 
+  // scaling that a naive algorithm (which actually creates all the subsets) would have. However, 
+  // there's a shortcut leading to an even more effcient algorithm: The idea to evaluate this is to 
+  // evaluate the polynomial at the m-th root of unity, i.e. at x = e^(2*pi*i/m) and at its powers 
+  // up to m-1 and add up the results. In the process of adding up, only the terms coming from 
+  // x^0, x^m, x^2m, x^3m survive, i.e. those coming from multiples of m. We need to divide the 
+  // result by m to make up for adding up m such evaluations. ...tbc...
 
   // Questions:
+  // -What is the maximum n we can use befor hitting overflow?
   // -Does this cancellation always work or only when m is a prime? Maybe the cancellation only 
   //  works, if each power of e^(2*pi*i/m) is itself a primitive m-th root of unity, i.e. its 
   //  powers generate the full set of all roots? This is only the case, if m is prime (i think).

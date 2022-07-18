@@ -10102,12 +10102,15 @@ void testGeneratingFunction()
   std::vector<int> a(N);            // Array of coefficients
   a[0]  = 1;
   int L = 1;                        // Current length of coeff array
-  for(int i = 0; i <= n; i++)
+  for(int k = 1; k <= n; k++)
   {
-    int s = i+1;                    // Shift amount
-    L += s;                         // Length increases by the shift-amount
-    rsAssert(L == 1+(i+1)*(i+2)/2); // We could also compute it directly
+    L += k;                         // Length increases by the shift-amount
+    rsAssert(L == 1+k*(k+1)/2);     // We could also compute it directly
 
+    // To the current content of a, add a k-shifted copy of itself:
+    //for(int i = k; i < L; i++)
+    for(int i = L-1; i >= k; i--)
+      a[i] += a[i-k];
 
 
     int dummy = 0;

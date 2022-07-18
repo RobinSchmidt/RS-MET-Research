@@ -4170,14 +4170,16 @@ void testAutoDiff5()
   //   [f''  2f'  f    0]   [(1/f)'' ]   [0]
   //   [f''' 3f'' 3f'  f]   [(1/f)''']   [0]
   //
-  // here written out for the case of up to the 3rd derivative. The matrix is apparently Pascal's 
-  // triangle. Let f0 = f, f1 = f', f2 = f'', f3 = f''', r0 = (1/f), r1 = (1/f)', r2 = (1/f)'', 
-  // r3 = (1/f)'''. Then, we can rewrite the system a bit nicer like this:
+  // here written out for the case of up to the 3rd derivative. The paper uses g for the function 
+  // and the D^k operator to denote the k-th derivative, if I interpret it correctly. The matrix is
+  // apparently Pascal's triangle. Let f0 = f, f1 = f', f2 = f'', f3 = f''', r0 = (1/f), 
+  // r1 = (1/f)', r2 = (1/f)'',  r3 = (1/f)'''. Then, we can rewrite the system a bit nicer like 
+  // this:
   //
-  //   [f0    0    0    0]   [r0]   [1]
-  //   [f1   f0    0    0] * [r1] = [0]
-  //   [f2 2*f1   f0    0]   [r2]   [0]
-  //   [f3 3*f2 3*f1   f0]   [r3]   [0]
+  //   [1*f0    0    0    0]   [r0]   [1]
+  //   [1*f1 1*f0    0    0] * [r1] = [0]
+  //   [1*f2 2*f1 1*f0    0]   [r2]   [0]
+  //   [1*f3 3*f2 3*f1 1*f0]   [r3]   [0]
   //
   // We apparently only need one round of backsubstitution, right? I think, we get:
   //

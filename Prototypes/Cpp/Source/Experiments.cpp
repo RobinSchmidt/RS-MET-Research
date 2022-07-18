@@ -10101,13 +10101,32 @@ void testGeneratingFunction()
   //
   //   S_n := {1,2,3,...,n}
   //
-  // whose sum of elements is equal to k. In the problems in the videos linked below, the question
+  // whose sum of elements is equal to k. In the Weitz and 3blue1brown videos linked below, the 
+  // task is to compute the number of subsets which have a sum that is divisible by some number m 
+  // (Weitz: n=300,m=3, 3b1b: n=2000,m=5). To compute this, we could now just sum up all 
+  // coefficients starting at index 0 and iterating with a step-size of m. Doing this would lead us
+  // to an O(n^2) algorithm because creating the whole coeff array is already O(n^2). That's 
+  // certainly already much better than the exponential scaling that a naive algorithm (which 
+  // actually creates all the subsets) would have. However, there's a shortcut leading to an even
+  // more effcient algorithm: The idea to evaluate this is to evaluate the polynomial at the m-th 
+  // root of unity, i.e. at x = e^(2*pi*i/m) and at its powers up to m-1 (starting a the 0th 
+  // power) and add up the results. In the process of adding up, only the terms coming from x^0, 
+  // x^m, x^2m, x^3m survive, i.e. those coming from multiples of m. We need to divide the result 
+  // by m to make up for adding up m such evaluations. 
+  // ...tbc...I think, the resulting algorithm is just O(m)? Or maybe O(n*m)?...figure out!
+  //
+  // References:
+  // https://www.youtube.com/watch?v=bOXCLR3Wric Olympiad level counting: How many subsets of {1,…,2000} have a sum divisible by 5?
+  // https://www.youtube.com/watch?v=dg_YgkOUb14 Ein cleverer Trick: erzeugende Funktionen
+
+  
+  // In the problems in the videos linked below, the question
   // is, how many of these subsets have a sum divisible by a given divisor m. When we have an array
   // of coeffs containing the number of subsets with a given sum, we can just compute this by 
   // iterating a summation through our array with an increment of m.
 
   int n = 5;          // We consider the set S_n := {1,2,3,...,n}
-  int m = 3;          // The divisor
+  int m = 5;          // The divisor
 
   // Recursively compute the array of coefficients. At the k-th iteration, the current content of 
   // the coeff array represents the array of polynomial coeffs of the product:
@@ -10129,10 +10148,12 @@ void testGeneratingFunction()
     for(int i = L-1; i >= k; i--)   // To the current content of a, 
       a[i] += a[i-k]; }             // ...add a k-shifted copy of itself
 
-
-  int sum = 0;
+  // Now compute the number of subsets whose sum is divisible by m. In the small examples in the 
+  // videos, 3b1b uses n=5,m=5 giving a result of 8 and Weitz uses n=3,m=3 which results in 4. The 
+  // following code produces the correct results in these toy cases:
+  int numSets = 0;
   for(int i = 0; i <= N; i += m)
-    sum += a[i];
+    numSets += a[i];
 
 
   // Now, the a-array should contain the polynomial coeffs of
@@ -10140,32 +10161,55 @@ void testGeneratingFunction()
   // You may verify this with sage via (for n = 5):
   //   expand((1+x)*(1+x^2)*(1+x^3)*(1+x^4)*(1+x^5))
   // If you now want to know, how many subsets of the set {1,2,3,...,n} have a sum of k, then a[k]
-  // is the answer. I have no idea in which context we could want to know such a thing. In the
-  // Weitz and 3blue1brown videos linked below, the task is to compute the number of subsets which
-  // have a sum that is divisible by some number m (Weitz: n=300,m=3, 3b1b: n=2000,m=5). To compute 
-  // this, we could now just sum up all coefficients starting at index 0 and iterating with a 
-  // step-size of m. Doing this would lead us to an O(n^2) algorithm because creating the whole 
-  // coeff array is already O(n^2). That's certainly already much better than the exponential 
-  // scaling that a naive algorithm (which actually creates all the subsets) would have. However, 
-  // there's a shortcut leading to an even more effcient algorithm: The idea to evaluate this is to 
-  // evaluate the polynomial at the m-th root of unity, i.e. at x = e^(2*pi*i/m) and at its powers 
-  // up to m-1 and add up the results. In the process of adding up, only the terms coming from 
-  // x^0, x^m, x^2m, x^3m survive, i.e. those coming from multiples of m. We need to divide the 
-  // result by m to make up for adding up m such evaluations. ...tbc...
+  // is the answer. I have no idea in which context we could want to know such a thing. 
+
+  // Notes:
+  // -In the Weitz video around 27 min, we see that:
+  //    f_n(x) = 2^(n/m)
+  //  if n is divisible by m and x = e^(2*pi*i/m). And the same value also results when we insert
+  //  x^2, x^3, ..., x^(m-1). Q: also for x^m? What if n is nto divisble by m. Then there will be
+  //  an leftover factor that is not part of an m-group of factors. We also see at 28 that
+  //    f_n(1) = 2^n
+  //  so, i think, the general formula for the number M of subsets of {1,2,3,..,n} whose sum is 
+  //  divisible by m comes out as:
+  //
+  //         2^n + (m-1)*2^(n/m) 
+  //    M = ---------------------
+  //                m
+  //
+  //  if n is divisble by m. Verify this formula and figure out how it needs to be modified if n
+  //  is not divisible by m.
+  // -The whole point of the videos is actually to avoid creating the polynomial coefficient array
+  //  explicitly as we do here. However, doing so could make the technique more generally 
+  //  applicable because here, we generate actually the *full* information about the coeff array. 
+  //  It results in an O(n^2) algorithm in both space and time. That may still be impractical for 
+  //  larger n but is definitely a lot better already than the naive O(2^n) algo. Yeah, OK, the 
+  //  point may be to avoid having to create all the subsets explictly which is the O(2^n) thing.
+  //  reducing it to O(n^2) is good but they reduce it even further...I think, maybe to O(m*n) or
+  //  even to a simple formula (which we may assume to be O(1)...although that may not really be 
+  //  the case in practice)
+  // -Setting m = 1 amounts to count the subsets whose sum is divisible by 1, i.e. to count *all* 
+  //  of the subsets, so the result should be 2^n, so numsets should come out as 2^n for m = 1.
 
   // Questions:
-  // -What is the maximum n we can use befor hitting overflow?
+  // -What is the maximum n we can use before hitting overflow?
   // -Does this cancellation always work or only when m is a prime? Maybe the cancellation only 
   //  works, if each power of e^(2*pi*i/m) is itself a primitive m-th root of unity, i.e. its 
   //  powers generate the full set of all roots? This is only the case, if m is prime (i think).
-  //  ...figure out!
-
+  //  Hmm...from the Weitz video at around 20 min, it would seem that this should always work 
+  //  because even if m is not prime, e^(2*pi*i/m) is a primitive m-th root of unity. If m is a 
+  //  prime, then all powers of e^(2*pi*i/m) are also primitive, but we don't seem to need that.
+  //  Note that the definition of *a* primitive m-th root of unity is that its powers generate 
+  //  the whole set. This is always true for x = e^(2*pi*i/m) and it may or may not be true for
+  //  powers of x. If m is a prime, it's also true for all powers of x. But for m = 6 such that
+  //  x = e^(2*pi*i/6), the powers of x^2 or x^3 will only generate a subset of all possible 6th 
+  //  roots roots of unity. ...Or do we need that feature? See at 22 min - he also plugs in powers
+  //  of x...ah...but the cancellation is column-wise, so that should not matter. Or do we...at
+  //  around 23 it again seems so....figure out...maybe make some numerical experiments with the 
+  //  code here.
 
   int dummy = 0;
 
-  // See:
-  // https://www.youtube.com/watch?v=bOXCLR3Wric Olympiad level counting: How many subsets of {1,…,2000} have a sum divisible by 5?
-  // https://www.youtube.com/watch?v=dg_YgkOUb14 Ein cleverer Trick: erzeugende Funktionen
 
   // ToDo:
   // -Maybe make a class rsSparsePolynomial or rsSparseSequence which should be abler to more 

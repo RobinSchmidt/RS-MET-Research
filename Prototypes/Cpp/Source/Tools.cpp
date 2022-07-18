@@ -2651,6 +2651,24 @@ RS_PFX rsPow(RS_DN x, RS_DN y)
 // todo: cbrt, pow, abs, asin, acos, atan, atan2, etc.
 // what about floor and ceil? should their derivatives be a delta-comb? well - maybe i should not
 // care about them - they are not differentiable anyway
+//
+// Can we implement a generalization that computes higher derivatives (up to the n-th), too? Try
+// to figure out how the product rule can be used to compute C = (c,c',c'',c''') from A * B 
+// = (a,a',a'', a'') * (b,b',b'',b'''). Maybe we can find an O(n) algorithm to compute the C-array
+// from the A,B arrays? Then, we would also need one for the quotient and formulas for the n-th
+// derivative of the elementary functions and we would be ready to go. We have:
+//   (fg)'   =  f'g + fg'
+//   (fg)''  = (f'g + fg')' = f''g + f'g' + f'g' + fg''
+//   (fg)''' = ...
+// Looks like maybe we could also end up with an O(n^2) algorithm? We'll see. See here:
+//   https://en.wikipedia.org/wiki/Product_rule#Higher_derivatives
+//   https://en.wikipedia.org/wiki/General_Leibniz_rule
+// For a suitable generalization the quotient rule, see:
+//   https://en.wikipedia.org/wiki/Quotient_rule#Higher_order_formulas
+//   https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives
+//   https://www.jstor.org/stable/2324425
+// ...they say, it may be easier to form the reciprocal of g and then apply the product rule which 
+// seems reasonable and algorithmically attractive.
 
 
 #undef RS_CTD

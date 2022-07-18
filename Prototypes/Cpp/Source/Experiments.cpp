@@ -4116,6 +4116,7 @@ void testAutoDiff5()
   //   https://en.wikipedia.org/wiki/Quotient_rule#Higher_order_formulas
   //   https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives
   //   https://www.jstor.org/stable/2324425
+  //   https://en.wikipedia.org/wiki/Reciprocal_rule
   // ...they say, it may be easier to form the reciprocal of g and then apply the product rule which 
   // seems reasonable and algorithmically attractive.
 
@@ -4159,7 +4160,18 @@ void testAutoDiff5()
   }
   // yes - the result in h looks good.
 
-
+  // Looking at this paper:
+  //   https://www.jstor.org/stable/2324425
+  // it seems that for finding the derivatives of a reciprocal 1/f of the function f, we need to 
+  // solve the triangular system:
+  //
+  //   [f    0    0    0]   [(1/f)   ]   [1]
+  //   [f'   f    0    0] * [(1/f)'  ] = [0]
+  //   [f''  2f'  f    0]   [(1/f)'' ]   [0]
+  //   [f''' 3f'' 3f'  f]   [(1/f)''']   [0]
+  //
+  // here written for the case of up to the 3rd derivative. The matrix is apparently Pascal's 
+  // triangle. -> try it!
 
 
   int dummy = 0;

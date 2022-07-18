@@ -3819,7 +3819,7 @@ void testAutoDiff()
   }
   rsPlotArraysXY(N, X, V, D, D2, D3);
   // doesn't work - 3rd derivative has extra factor of 2 for exp function - i think, it has 
-  // something to do with bothe terms in the product rule evaluating to exp(x), so we get
+  // something to do with both terms in the product rule evaluating to exp(x), so we get
   // 1*exp(x) + exp(x)*1 ...or something -> figure out
 
 
@@ -4021,7 +4021,6 @@ void testAutoDiff3()
   int dummy = 0;
 }
 
-
 void testAutoDiff4()
 {
   // The same as above but with vectors that can have arbitrary lengths using std::vector:
@@ -4086,6 +4085,85 @@ void testAutoDiff4()
 // https://en.wikipedia.org/wiki/Hyperreal_number
 // https://en.wikipedia.org/wiki/Infinitesimal
 
+
+void testAutoDiff5()
+{
+  // Under construction
+  // Prototype to compute with higher order derivatives using the generalized Leibniz rule for
+  // products
+
+  // We want to implement a generalization that computes higher derivatives (up to the n-th). Try
+  // to figure out how the product rule can be used to compute C = (c,c',c'',c''') from A * B 
+  // = (a,a',a'', a'') * (b,b',b'',b'''). Maybe we can find an O(n) algorithm to compute the C-array
+  // from the A,B arrays? Then, we would also need one for the quotient and formulas for the n-th
+  // derivative of the elementary functions and we would be ready to go. We have:
+  //   (fg)'   =  f'g + fg'
+  //   (fg)''  = (f'g + fg')' = f''g + f'g' + f'g' + fg'' = f''g + 2f'g' + fg''
+  //   (fg)''' = ...
+  // Looks like maybe we could also end up with an O(n^2) algorithm? We'll see. See here:
+  //   https://en.wikipedia.org/wiki/Product_rule#Higher_derivatives
+  //   https://en.wikipedia.org/wiki/General_Leibniz_rule
+  // Yes - it seems we can compute these using the generalized Leibniz rule. Maybe we should keep a
+  // pointer to an array of binomial coeffs...or maybe make a class for binomial coeffs which can be 
+  // re-used by all objects and functions that need these coeffs. We actually use binomial coeffs in
+  // so mayn places and often re-generate them everywhere. I mean, it's not much computation but 
+  // still. And we would otherwise need a temporary array into which we may render the coeffs, which
+  // may be problematic. Maybe the whole class should just have a pointer to an object of class
+  // rsBinomialCoefficients (to be written) which allows client code to access the coeffs via an 
+  // operator (int n, int k) that takes two integers. It may check, if enough coeffs have been 
+  // pre-rendered and if not, just render more if needed. 
+  // For a suitable generalization the quotient rule, see:
+  //   https://en.wikipedia.org/wiki/Quotient_rule#Higher_order_formulas
+  //   https://math.stackexchange.com/questions/5357/whats-the-generalisation-of-the-quotient-rule-for-higher-derivatives
+  //   https://www.jstor.org/stable/2324425
+  // ...they say, it may be easier to form the reciprocal of g and then apply the product rule which 
+  // seems reasonable and algorithmically attractive.
+
+  using Real = float;
+  using Vec  = std::vector<Real>;
+
+
+  int N = 4;
+  Vec f({1,2,3,4}), g({5,6,7,8}), h(N);
+  // These vectors are supposed to represent value, derivative, 2nd derivative and 3rd derivative
+  // and we ant to compute their product using the generalized Leibniz rule. a and b are inputs, c
+  // is the output
+
+
+  float x = 2.5;
+  float k = 0.5;
+  f = { sin(x),     cos(x),      -sin(x),        -cos(x)   };
+  g = { exp(k*x), k*exp(k*x), k*k*exp(k*x), k*k*k*exp(k*x) };
+
+  // We verify our results with SageMath using the code:
+  // k = 1/2
+  // f = sin(x)
+  // g = exp(k*x)
+  // h = f*g
+  // hp = diff(h)
+  // hpp = diff(hp)
+  // hppp = diff(hpp)
+  // x0 = 2.5
+  // h(x=x0), hp(x=x0), hpp(x=x0), hppp(x=x0)
+  //
+  // -> (2.08887303341033, -1.75182945973459, -4.36292075149751, -2.17313392682927)
+
+  for(int n = 0; n < N; n++)
+  {
+    h[n] = 0;
+    for(int k = 0; k <= n; k++)
+    {
+      h[n] += rsBinomialCoefficient(n, k) * f[k] * g[n-k]; // verify this!
+      int dummy = 0;
+    }
+  }
+  // yes - the result in h looks good.
+
+
+
+
+  int dummy = 0;
+}
 
 void testAutoDiffReverse1()
 {  

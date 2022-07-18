@@ -10187,7 +10187,8 @@ void testGeneratingFunction()
   //  point may be to avoid having to create all the subsets explictly which is the O(2^n) thing.
   //  reducing it to O(n^2) is good but they reduce it even further...I think, maybe to O(m*n) or
   //  even to a simple formula (which we may assume to be O(1)...although that may not really be 
-  //  the case in practice)
+  //  the case in practice). We want to extract information about the coeff array without actually
+  //  generating it. The coeffs encode information about subsets.
   // -Setting m = 1 amounts to count the subsets whose sum is divisible by 1, i.e. to count *all* 
   //  of the subsets, so the result should be 2^n, so numsets should come out as 2^n for m = 1.
 

@@ -1,0 +1,13 @@
+Rave Hoover sound fo Roland Alpha Juno:
+
+Seems like it is based on what they call a PWM-Saw which actually seems to be a sawtooth wave that 
+is chopped (amplitude modulated) by a unipolar pulse-wave. ...maybe...mayby try to build a patch in 
+Liberty that does this
+
+https://www.kvraudio.com/forum/viewtopic.php?t=420194
+https://forums.johnbowen.com/viewtopic.php?t=16284
+https://www.youtube.com/watch?v=UwbngUE1dAU
+https://www.youtube.com/watch?v=hyg5lD__jJw
+https://modwiggler.com/forum/viewtopic.php?t=126839
+https://www.bartonmusicalcircuits.com/saw/
+https://blog.thea.codes/the-design-of-the-juno-dco/

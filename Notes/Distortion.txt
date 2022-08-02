@@ -1,0 +1,15 @@
+The goal is to devise a flexible distortion algorithm that is able to capture dynamic behavior and
+be musically tweakable, i.e. should offer parameters that correlate well with perceptual features
+of the distortion. It should be flexible enough to recreate behaviors of guitar pedals and 
+amplifiers
+
+-Analyze a distortion device in terms of harmonic amplitudes and phases for input sinusoids of given
+ frequencies and amplitudes. Maybe visualize the result for each harmonic as a heat-map, i.e. in a 
+ spectrogram like fashion just that what normally is time now becomes input amplitude. Maybe 
+ restrict the attention to only the first few harmonics like 1...5. For each harmonic we'll get a
+ "sprectrogram"...maybe we could call it "distortogram" or "harmonigram1,2,3 etc."
+ 
+-Create different parametrized models and use them to try to recreate the so analyzed behavior. 
+ Maybe a sort of learning algorithm can be devised to learn the parameters. Models could include 
+ things like a simple waveshaper, waveshaper with pre/post filters (maybe biquad), 
+ multiband-waveshaper, networks of units of those types.

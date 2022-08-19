@@ -10458,13 +10458,15 @@ void testCatalanNumbers()
     { 
       Ck = 4*Ck - 6*Ck/(k+2);         // works up to n=18
       //Ck = 2 * (2*Ck - 3*Ck/(k+2)); // nope!
+      //Ck = Ck*(4 - 6/(k+2));        // nope!
       k++;
     } 
     return Ck;
   };
-  // Nope - It doesn't work. It'S based on 2*(2*k+1) / (k+2) = 4 - 6/(k+2), see
+  // Results from the recursion above by noting that 2*(2*k+1) / (k+2) = 4 - 6/(k+2), see
   //   https://www.wolframalpha.com/input?i=+2*%282*k%2B1%29++%2F+%28k%2B2%29
-  // but apparently, 
+  // In the "nope!" lines, apparently the 3*Ck/(k+2) or 6/(k+2) terms are not guaranteed to be an 
+  // integer whereas the 6*Ck/(k+2) term is? ...verify that!
 
 
   //int N = 12;  // upper limit

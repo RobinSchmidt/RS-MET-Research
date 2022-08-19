@@ -10406,13 +10406,20 @@ void testCatalanNumbers()
   // We implement some algorithms to compute Catalan numbers. They seem to be rather important in 
   // combinatorics and they tend to pop up whenever a problem involves (or can be related to) a 
   // binary tree, so maybe we'll need such an algorithm at some point. The first few are:
-  //   1,1,2,5,14,42,132,429,1430,4862,16796,58786,...
+  // 	 1,1,2,5,14,42,132,429,1430,4862,16796,58786,208012,742900,2674440,9694845,35357670,
+  //   129644790,477638700,1767263190,6564120420,24466267020,91482563640,343059613650,
+  //   1289904147324,4861946401452,18367353072152,69533550916004,263747951750360,1002242216651368,
+  //   3814986502092304,...
+  // They also show up as the number of triangulations of an n-sided polygon. C_n is also the 
+  // number of full binray trees with 2*n+1 nodes
 
   // Uses the formula with the binomial coefficient:
   auto cat1 = [](int n)
   {
     return rsBinomialCoefficient(2*n, n) / (n+1);
   };
+  // works up to n=14
+
 
   // Uses the product formula. We accumulate numerator and denominator seperately:
   auto cat2 = [](int n)
@@ -10426,6 +10433,7 @@ void testCatalanNumbers()
     }
     return num/den;
   };
+  // works up to n=9
 
   // Uses the recursion formula:
   auto cat3 = [](int n)
@@ -10437,17 +10445,37 @@ void testCatalanNumbers()
     //while(k < n-1) { k++; Ck = 2*(2*k+3) * Ck / (k+1); }  // also wrong
     return Ck;
   };
+  // works up to n=16
   // With the wrong formulas, I'm trying to do the k-increment first and thereby possibly simplify 
   // the formula...not sure, if that makes sense, though
 
+  // Uses a tweaked recursion formula:
+  auto cat4 = [](int n)
+  {
+    int k  = 0;
+    int Ck = 1;
+    while(k < n) 
+    { 
+      Ck = 4*Ck - 6*Ck/(k+2);         // works up to n=18
+      //Ck = 2 * (2*Ck - 3*Ck/(k+2)); // nope!
+      k++;
+    } 
+    return Ck;
+  };
+  // Nope - It doesn't work. It'S based on 2*(2*k+1) / (k+2) = 4 - 6/(k+2), see
+  //   https://www.wolframalpha.com/input?i=+2*%282*k%2B1%29++%2F+%28k%2B2%29
+  // but apparently, 
 
-  int N = 12;  // upper limit
-  std::vector<int> c1(N), c2(N), c3(N);
+
+  //int N = 12;  // upper limit
+  int N = 20;  // upper limit
+  std::vector<int> c1(N), c2(N), c3(N), c4(N);
   for(int n = 0; n < N; n++)
   {
     c1[n] = cat1(n);
     c2[n] = cat2(n);
     c3[n] = cat3(n);
+    c4[n] = cat4(n);
   }
   // OK - all 3 algorithms seem to work generally but the product formula overflows already at 
   // n=10.
@@ -10467,6 +10495,8 @@ void testCatalanNumbers()
   // -Figure out if it is possible to implement the product formula in a way that does the division
   //  at each step. That may avoid the overflow for a while longer. We'll probably end up with an 
   //  algo similar to the recursion formula?
+  // -Plot the Catalan numbers and their asymptotic approximation: 4^n / (sqrt(pi) * n^(3/2)). 
+  //  Maybe do the same for the factorial and Stirling's formula
 
   // See:
   // https://en.wikipedia.org/wiki/Catalan_number

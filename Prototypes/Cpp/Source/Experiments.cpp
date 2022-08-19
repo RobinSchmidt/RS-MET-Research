@@ -10429,17 +10429,25 @@ void testCatalanNumbers()
   // Uses the recursion formula:
   auto cat3 = [](int n)
   {
+    int k  = 0;
     int Ck = 1;
-    int k  = 1;
-    while(k <= n)
+
+    while(k < n)
     {
-      Ck = 2*(2*k+1) * Ck / (k+2);
-      k++;
+      //k++; Ck = 2*(2*k) * Ck / (k+1);  // replaces n+1 by k in the formula
+      //Ck = 2*(2*k) * Ck / (k+1); k++;
+
+      Ck = 2*(2*k+1) * Ck / (k+2); k++;
+
+
+      int dummy = 0;
     }
     return Ck;
   };
   // wrong - one 1 is missing in the array (numbers seem to be correct, though)
 
+
+  //int test = cat3(3);
 
   int N = 10;  // upper limit
   std::vector<int> c1(N), c2(N), c3(N);

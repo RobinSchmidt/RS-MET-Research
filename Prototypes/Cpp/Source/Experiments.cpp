@@ -10404,8 +10404,9 @@ void testGeneratingFunction()
 void testCatalanNumbers()
 {
   // We implement some algorithms to compute Catalan numbers. They seem to be rather important in 
-  // combinatorics, so maybe we'll need such an algorithm at some point. The first few are:
-  // 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786
+  // combinatorics and they tend to pop up whenever a problem involves (or can be related to) a 
+  // binary tree, so maybe we'll need such an algorithm at some point. The first few are:
+  //   1,1,2,5,14,42,132,429,1430,4862,16796,58786,...
 
   // Uses the formula with the binomial coefficient:
   auto cat1 = [](int n)
@@ -10413,7 +10414,7 @@ void testCatalanNumbers()
     return rsBinomialCoefficient(2*n, n) / (n+1);
   };
 
-  // Uses the product formula:
+  // Uses the product formula. We accumulate numerator and denominator seperately:
   auto cat2 = [](int n)
   {
     int num = 1;
@@ -10448,7 +10449,8 @@ void testCatalanNumbers()
     c2[n] = cat2(n);
     c3[n] = cat3(n);
   }
-
+  // OK - all 3 algorithms seem to work generally but the product formula overflows already at 
+  // n=10.
 
 
 
@@ -10456,10 +10458,15 @@ void testCatalanNumbers()
 
   // ToDo:
   // -Figure out and document the overflow limits for the different algorithms. The product formula 
-  //  breaks at C(10) already (with 32-bit signed integers).
+  //  breaks at n=10 already (with 32-bit signed integers).
   // -Test the efficiency of the algorithms. I guess, the product formula is most efficient?
   // -Figure out, if it is advantageous to use the recursion, when all Catalan numbers from 0 to n
   //  are needed rather than just C(n).
+  // -Figure out, if there are better algorithms to compute them (more efficient and/or less prone 
+  //  to overflow etc.)
+  // -Figure out if it is possible to implement the product formula in a way that does the division
+  //  at each step. That may avoid the overflow for a while longer. We'll probably end up with an 
+  //  algo similar to the recursion formula?
 
   // See:
   // https://en.wikipedia.org/wiki/Catalan_number

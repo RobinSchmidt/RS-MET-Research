@@ -10455,7 +10455,8 @@ void testCatalanNumbers()
   int dummy = 0;
 
   // ToDo:
-  // -Figure out and document the overflow limits for the different algorithms.
+  // -Figure out and document the overflow limits for the different algorithms. The product formula 
+  //  breaks at C(10) already (with 32-bit signed integers).
   // -Test the efficiency of the algorithms. I guess, the product formula is most efficient?
   // -Figure out, if it is advantageous to use the recursion, when all Catalan numbers from 0 to n
   //  are needed rather than just C(n).

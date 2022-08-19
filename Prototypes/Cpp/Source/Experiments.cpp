@@ -10401,6 +10401,66 @@ void testGeneratingFunction()
 }
 
 
+void testCatalanNumbers()
+{
+  // We implement some algorithms to compute Catalan numbers. They seem to be rather important in 
+  // combinatorics, so maybe we'll need such an algorithm at some point. The first few are:
+  // 1, 1, 2, 5, 14, 42, 132, 429, 1430, 4862, 16796, 58786
+
+  // Uses the formula with the binomial coefficient:
+  auto cat1 = [](int n)
+  {
+    return rsBinomialCoefficient(2*n, n) / (n+1);
+  };
+
+  // Uses the product formula:
+  auto cat2 = [](int n)
+  {
+    int num = 1;
+    int den = 1;
+    for(int k = 2; k <= n; k++)
+    {
+      num *= n+k;
+      den *= k;
+    }
+    return num/den;
+  };
+
+  // Uses the recursion formula:
+  auto cat3 = [](int n)
+  {
+    int Ck = 1;
+    int k  = 1;
+    while(k <= n)
+    {
+      Ck = 2*(2*k+1) * Ck / (k+2);
+      k++;
+    }
+    return Ck;
+  };
+  // wrong - one 1 is missing in the array (numbers seem to be correct, though)
+
+
+  int N = 10;  // upper limit
+  std::vector<int> c1(N), c2(N), c3(N);
+  for(int n = 0; n < N; n++)
+  {
+    c1[n] = cat1(n);
+    c2[n] = cat2(n);
+    c3[n] = cat3(n);
+  }
+
+
+
+
+  int dummy = 0;
+
+  // See:
+  // https://en.wikipedia.org/wiki/Catalan_number
+  // https://www.youtube.com/watch?v=TAuJV5eNKLM
+  // https://oeis.org/A000108
+}
+
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

@@ -37,7 +37,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testAutoDiff2();
   //testAutoDiff3();
   //testAutoDiff4();
-  testAutoDiff5();     // stub
+  //testAutoDiff5();     // stub
   //testAutoDiffReverse1();
   //testDualComplex();
 
@@ -75,7 +75,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testQuaternion();
   //testChebychevEconomization();  // stub
 
-  testGeneratingFunction();
+  //testGeneratingFunction();
+  testCatalanNumbers();
 
 
   return 0;

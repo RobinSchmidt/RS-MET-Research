@@ -10431,25 +10431,16 @@ void testCatalanNumbers()
   {
     int k  = 0;
     int Ck = 1;
-
-    while(k < n)
-    {
-      //k++; Ck = 2*(2*k) * Ck / (k+1);  // replaces n+1 by k in the formula
-      //Ck = 2*(2*k) * Ck / (k+1); k++;
-
-      Ck = 2*(2*k+1) * Ck / (k+2); k++;
-
-
-      int dummy = 0;
-    }
+    while(k < n) { Ck = 2*(2*k+1) * Ck / (k+2);  k++; }  // works
+    //while(k < n-1) { k++; Ck = 2*(2*k) * Ck / (k+1); } // is wrong
+    //while(k < n-1) { k++; Ck = 2*(2*k+3) * Ck / (k+1); }  // also wrong
     return Ck;
   };
-  // wrong - one 1 is missing in the array (numbers seem to be correct, though)
+  // With the wrong formulas, I'm trying to do the k-increment first and thereby possibly simplify 
+  // the formula...not sure, if that makes sense, though
 
 
-  //int test = cat3(3);
-
-  int N = 10;  // upper limit
+  int N = 12;  // upper limit
   std::vector<int> c1(N), c2(N), c3(N);
   for(int n = 0; n < N; n++)
   {
@@ -10462,6 +10453,12 @@ void testCatalanNumbers()
 
 
   int dummy = 0;
+
+  // ToDo:
+  // -Figure out and document the overflow limits for the different algorithms.
+  // -Test the efficiency of the algorithms. I guess, the product formula is most efficient?
+  // -Figure out, if it is advantageous to use the recursion, when all Catalan numbers from 0 to n
+  //  are needed rather than just C(n).
 
   // See:
   // https://en.wikipedia.org/wiki/Catalan_number

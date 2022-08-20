@@ -10454,13 +10454,16 @@ void testCatalanNumbers()
   {
     int k  = 0;
     int Ck = 1;
-    while(k < n) 
-    { 
+    while(k < n)
+    {
       Ck = 4*Ck - 6*Ck/(k+2);         // works up to n=18
       //Ck = 2 * (2*Ck - 3*Ck/(k+2)); // nope!
       //Ck = Ck*(4 - 6/(k+2));        // nope!
+      //Ck = Ck * (4*k+2)/(k+2);   // works up to n = 16
+      //Ck = Ck * ((4*k+2)/(k+2));    // nope!
+      //Ck = 4*Ck - 6*(Ck/(k+2));    // nope
       k++;
-    } 
+    }
     return Ck;
   };
   // Results from the recursion above by noting that 2*(2*k+1) / (k+2) = 4 - 6/(k+2), see
@@ -10468,20 +10471,25 @@ void testCatalanNumbers()
   // In the "nope!" lines, apparently the 3*Ck/(k+2) or 6/(k+2) terms are not guaranteed to be an 
   // integer whereas the 6*Ck/(k+2) term is? ...verify that!
 
+  // Asymptotic approximation:
+  auto catA = [](double n)
+  {
+    return pow(4.0, n) / (sqrt(PI) * pow(n, 1.5));
+  };
+  // Verify the formula! The approximation seems the be not very good, but that might be OK 
+  // because we are actually looking at rather small values of n.
 
   //int N = 12;  // upper limit
   int N = 20;  // upper limit
-  std::vector<int> c1(N), c2(N), c3(N), c4(N);
+  std::vector<int> c1(N), c2(N), c3(N), c4(N), cA(N);
   for(int n = 0; n < N; n++)
   {
     c1[n] = cat1(n);
     c2[n] = cat2(n);
     c3[n] = cat3(n);
     c4[n] = cat4(n);
+    cA[n] = catA(n);
   }
-  // OK - all 3 algorithms seem to work generally but the product formula overflows already at 
-  // n=10.
-
 
 
   int dummy = 0;
@@ -10498,7 +10506,8 @@ void testCatalanNumbers()
   //  at each step. That may avoid the overflow for a while longer. We'll probably end up with an 
   //  algo similar to the recursion formula?
   // -Plot the Catalan numbers and their asymptotic approximation: 4^n / (sqrt(pi) * n^(3/2)). 
-  //  Maybe do the same for the factorial and Stirling's formula
+  //  Maybe figure out if there are more accurate approximations formulas. Maybe do the same for
+  //  the factorial and Stirling's formula.
 
   // See:
   // https://en.wikipedia.org/wiki/Catalan_number

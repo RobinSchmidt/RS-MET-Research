@@ -10440,12 +10440,17 @@ void testCatalanNumbers()
   {
     int k  = 0;
     int Ck = 1;
-    while(k < n) { Ck = 2*(2*k+1) * Ck / (k+2);  k++; }  // works
+    //while(k < n) { Ck = 2*(2*k+1) * Ck / (k+2);  k++; }  // works
+    while(k < n) { Ck = (4*k+2) * Ck / (k+2);  k++; }  // works
     //while(k < n-1) { k++; Ck = 2*(2*k) * Ck / (k+1); } // is wrong
     //while(k < n-1) { k++; Ck = 2*(2*k+3) * Ck / (k+1); }  // also wrong
     return Ck;
   };
   // works up to n=16
+  // Seems like neither 4k+2 nor Ck is divisible by k+2 in general, but the product (4k+2)Ck is. If
+  // one of the factors would always be divisible by (k+2), we could do the division before the 
+  // multiplication and thereby extend the range before overflow occurs...but unfortunately, we
+  // can't.
   // With the wrong formulas, I'm trying to do the k-increment first and thereby possibly simplify 
   // the formula...not sure, if that makes sense, though
 
@@ -10468,6 +10473,8 @@ void testCatalanNumbers()
   };
   // Results from the recursion above by noting that 2*(2*k+1) / (k+2) = 4 - 6/(k+2), see
   //   https://www.wolframalpha.com/input?i=+2*%282*k%2B1%29++%2F+%28k%2B2%29
+  // ...so it seems like with this recursion we could extend the range of n before overflow by 2.
+  // Not much but still a small improvement.
   // In the "nope!" lines, apparently the 3*Ck/(k+2) or 6/(k+2) terms are not guaranteed to be an 
   // integer whereas the 6*Ck/(k+2) term is? ...verify that!
 
@@ -10479,7 +10486,7 @@ void testCatalanNumbers()
   // Verify the formula! The approximation seems the be not very good, but that might be OK 
   // because we are actually looking at rather small values of n.
 
-  //int N = 12;  // upper limit
+
   int N = 20;  // upper limit
   std::vector<int> c1(N), c2(N), c3(N), c4(N), cA(N);
   for(int n = 0; n < N; n++)

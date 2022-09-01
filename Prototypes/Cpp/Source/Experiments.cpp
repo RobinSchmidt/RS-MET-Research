@@ -10537,6 +10537,14 @@ void testCatalanNumbers()
 
 void testSmoothCrossFade()
 {
+  // Consider a function that is piecewise defined for x <= a by some formula and for x >= b by 
+  // some other formula where a,b mark the start and endpoints of a a transition region (we have 
+  // a < b). Inside the interval (a,b) we want to have some sort of intermediate function that 
+  // "crossfades" between the two formulas and the crossfade should be smooth, i.e. we don't want
+  // to see discontiunuities (neither in value nor in any derivative) at start and end of the 
+  // transition region. This can be achieved using a crossfading function that is flat at a and b 
+  // and goes monotonically from 0 to 1. See this video:
+  // https://www.youtube.com/watch?v=vD5g8aVscUI
 
   using Real = double;
   using Func = std::function<Real(Real)>;
@@ -10602,11 +10610,19 @@ void testSmoothCrossFade()
   int dummy = 0; 
 
   // ToDo:
-  // -Find other functions for psi that also work. Maybe try exp(-1.0/x^k);
-
-
+  // -Find other functions for psi that also work. Maybe try exp(-1.0/x^k). There are also some
+  //  comments about this below the video (especially in the replies to the comment by Pedro 
+  //  Krause, I also replied to that comment myself).
+  // -Try to optimize the computations such that we need to evaluate the exp function only once.
+  //  See comment by Cypress Hodgson:
+  //  "A simplification of the phi function is 1/(1+e^((1-2x)/x(1-x))"
+  // 
   // See:
   // https://www.youtube.com/watch?v=vD5g8aVscUI&lc=UgzlCXZTG2W3-el5yZl4AaABAg.9fEwMKrRSKl9fQXw88JUSe
+  // https://en.wikipedia.org/wiki/Smoothstep
+  // https://en.wikipedia.org/wiki/Flat_function
+  // https://en.wikipedia.org/wiki/Bump_function
+  // https://en.wikipedia.org/wiki/Mollifier
 }
 
 

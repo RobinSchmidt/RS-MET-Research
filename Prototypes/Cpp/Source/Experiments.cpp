@@ -10547,20 +10547,32 @@ void testSmoothCrossFade()
 
   Real xMin = -5;
   Real xMax = +5;
-  int  N    = 1000;
+  int  N    = 1001;
 
-  a = 0;
-  b = 1;
+  a = -1;
+  b = +1;
   f1 = [](Real x) { return -exp(x) - 2; };
   f2 = [](Real x) { return  cos(x);     };
+  //f1 = [](Real x) { return  sin(2*x) - 2; };
+  //f2 = [](Real x) { return  cos(3*x) + 2; };
+  //f1 = [](Real x) { return 0; };
+  //f2 = [](Real x) { return 1; };
 
+  // A function satisfying: psi(0) = 0, psi(inf) = 1, all derivatives are zero at 0 and inf at inf 
+  // (verify!). This is the essential building block for our crossfading fucction:
   psi = [](Real x) 
   { 
     if(x <= 0.0) 
       return 0.0;
-    return exp(-1.0/x);
+    return exp(-1.0/x);  // infinitely smooth crossfade
+    //return x;          // linear crossfade (continuous but with corners at a and b)
+    //return x*x;
+    //return x*x*x;
+    // when using x^k, our crossfade will be smooth only up to order k-1, i.e. for k=1 we get a linear 
+    // crossfade and the the result is only 0th order smooth, i.e. continuous but with two corners.
   };
 
+  // The smooth crossfading or step-function where x needs the be in 0..1:
   phi = [&](Real x)
   {
     Real psi1 = psi(x);
@@ -10586,10 +10598,12 @@ void testSmoothCrossFade()
   for(int n = 0; n < N; n++)
     y[n] = f(x[n]);
 
-
-
   rsPlotVectorsXY(x, y);
   int dummy = 0; 
+
+  // ToDo:
+  // -Find other functions for psi that also work. Maybe try exp(-1.0/x^k);
+
 
   // See:
   // https://www.youtube.com/watch?v=vD5g8aVscUI&lc=UgzlCXZTG2W3-el5yZl4AaABAg.9fEwMKrRSKl9fQXw88JUSe

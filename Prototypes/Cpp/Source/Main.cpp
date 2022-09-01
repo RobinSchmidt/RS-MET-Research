@@ -76,7 +76,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testChebychevEconomization();  // stub
 
   //testGeneratingFunction();
-  testCatalanNumbers();
+  //testCatalanNumbers();
+  testSmoothCrossFade();
 
 
   return 0;

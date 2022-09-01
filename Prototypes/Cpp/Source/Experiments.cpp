@@ -9264,6 +9264,18 @@ void testModularForms()
   //  see Teubner-Bronstein, pg. 606. Maybe before we have the Weierstrass P-function available, 
   //  just hardcode these values for given w1, w2 (evaluate with wolfram alpha or soemthing).
   // -Implement Klein's J-function (pg. 610)
+  // -May try to design/construct/cook-up double-periodic and analytic functions. Mayby use 
+  //  infinite products with one factor for each integer point (m,n) = m + i*n in the complex 
+  //  plane. How about: f(z) = prod_{m,n} 1 - 1 / (z - (m + i*n))^k   for some k integer k. The 
+  //  rationale is that the 2nd term tends to zero the further away m + i*n is from z such that the
+  //  whole factor approaches 1 (thereby making the infinite product ocnverge). The fact that m,n 
+  //  go from -inf to +inf should ensure that it doesn't really matter, where in the plane we are. 
+  //  Maybe first look at the 1D version f(x) = prod_n 1 - 1 / (x-n)^k. See also:
+  //  https://www.youtube.com/watch?v=FCpRl0NzVu4&list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY
+  //  What about the double product in the xy-plane (not necesaarily be seen as comple xplane) 
+  //  prod_m prod_ n (x-m)*(y-n). It should have zero value not only on the grid-points but on 
+  //  whole grid-lines...but maybe it won't be analytic when interpreted as complex function?
+  //  Maybe infinte sums could be used instead of infinite products, too?
 
 
   // Evaluating the Weierstrass P-function:
@@ -10520,6 +10532,67 @@ void testCatalanNumbers()
   // https://en.wikipedia.org/wiki/Catalan_number
   // https://www.youtube.com/watch?v=TAuJV5eNKLM
   // https://oeis.org/A000108
+}
+
+
+void testSmoothCrossFade()
+{
+
+  using Real = double;
+  using Func = std::function<Real(Real)>;
+  using Vec  = std::vector<Real>;
+
+  Real a, b;
+  Func f1, f2, psi, phi, f;
+
+  Real xMin = -5;
+  Real xMax = +5;
+  int  N    = 1000;
+
+  a = 0;
+  b = 1;
+  f1 = [](Real x) { return -exp(x) - 2; };
+  f2 = [](Real x) { return  cos(x);     };
+
+  psi = [](Real x) 
+  { 
+    if(x <= 0.0) 
+      return 0.0;
+    return exp(-1.0/x);
+  };
+
+  phi = [&](Real x)
+  {
+    Real psi1 = psi(x);
+    Real psi2 = psi(1-x);
+    return psi1 / (psi1 + psi2);
+  };
+
+  // The piecewise defined, smoothly crossfaded function:
+  f = [&](Real x)
+  {
+    if(x <= a) 
+      return f1(x);
+    if(x >= b) 
+      return f2(x);
+    Real p = (x-a) / (b-a);
+    Real q = phi(p);
+    return (1-q)*f1(x) + q*f2(x);  
+  };
+
+
+  Vec x(N), y(N);
+  x = RAPT::rsRangeLinear(xMin, xMax, N);
+  for(int n = 0; n < N; n++)
+    y[n] = f(x[n]);
+
+
+
+  rsPlotVectorsXY(x, y);
+  int dummy = 0; 
+
+  // See:
+  // https://www.youtube.com/watch?v=vD5g8aVscUI&lc=UgzlCXZTG2W3-el5yZl4AaABAg.9fEwMKrRSKl9fQXw88JUSe
 }
 
 

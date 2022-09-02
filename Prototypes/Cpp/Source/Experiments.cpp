@@ -9276,6 +9276,8 @@ void testModularForms()
 
 void testBiPeriodicFunctions()
 {
+  // Under construction...does not yet work as intended
+
   // We construct some doubly-periodic functions in the complex plane ourselves by means of certain 
   // infinite sumsand products that depend on the distances to all grid-points, i.e. points of the 
   // form m + i*n where m,n are integers and i is the imaginary unit. These grid-points are also 
@@ -9321,10 +9323,18 @@ void testBiPeriodicFunctions()
   };
   // -Maybe take R as parameter and loop m,n from -R to +R
   // -Maybe make expansion center an (optional) parameter, maybe call it z0
+  // -Try to optimize by combining 4 factors for m,n, m,-n, -m,n, -m,-n and then let the loops run
+  //  only from 1..R
 
 
   Complex w; 
   w = f1(Complex(0.2, 0.3));
+  w = f1(Complex(1.2, 0.3));
+  w = f1(Complex(0.2, 1.3));
+  w = f1(Complex(1.2, 1.3));
+  // ,,,hmm...if f1 would be doubly-periodic, all of these should evaluate to the same number (up
+  // to truncation error) - but they totally don't...something is still wrong
+
   w = f1(Complex(0.8, 0.6));  // z is on unit circle, real part of w is (close to) 0
 
 
@@ -9337,13 +9347,15 @@ void testBiPeriodicFunctions()
   //  rationale is that the 2nd term tends to zero the further away m + i*n is from z such that the
   //  whole factor approaches 1 (thereby making the infinite product ocnverge). The fact that m,n 
   //  go from -inf to +inf should ensure that it doesn't really matter, where in the plane we are. 
-  //  Maybe first look at the 1D version f(x) = prod_n 1 - 1 / (x-n)^k. See also:
-  //  https://www.youtube.com/watch?v=FCpRl0NzVu4&list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY
-  //  What about the double product in the xy-plane (not necesaarily be seen as comple xplane) 
-  //  prod_m prod_ n (x-m)*(y-n). It should have zero value not only on the grid-points but on 
-  //  whole grid-lines...but maybe it won't be analytic when interpreted as complex function?
-  //  Maybe infinte sums could be used instead of infinite products, too?
 
+
+  // Ideas:
+  //  -What about the double product in the xy-plane (not necesaarily be seen as comple xplane) 
+  //   prod_m prod_ n (x-m)*(y-n). It should have zero value not only on the grid-points but on 
+  //   whole grid-lines...but maybe it won't be analytic when interpreted as complex function?
+  //   Maybe infinte sums could be used instead of infinite products, too?
+  //  -Maybe look at the 1D version f(x) = prod_n 1 - 1 / (x-n)^k. See also:
+  //   https://www.youtube.com/watch?v=FCpRl0NzVu4&list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY
 
   int dummy = 0;
 }

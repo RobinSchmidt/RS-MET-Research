@@ -9279,12 +9279,13 @@ void testBiPeriodicFunctions()
   // Under construction...does not yet work as intended
 
   // We construct some doubly-periodic functions in the complex plane ourselves by means of certain 
-  // infinite sumsand products that depend on the distances to all grid-points, i.e. points of the 
-  // form m + i*n where m,n are integers and i is the imaginary unit. These grid-points are also 
-  // called Gaussian integers. The idea is that the infinite nature of the sum or product enforces 
-  // a double periodicity because a sum or product over the distances to *all* gridpoints can 
-  // depend only on the position inside the unit cell (which has the shape of a square) but not on
-  // which cell it is because all cells are created equal.
+  // infinite sums and products that depend on the distances of the argument z to all grid-points, 
+  // i.e. points of the form m + i*n where m,n are integers and i is the imaginary unit. These 
+  // grid-points are also called Gaussian integers. The idea is that the infinite nature of the sum
+  // or product enforces a double periodicity because a sum or product over the distances to *all* 
+  // gridpoints can depend only on the position inside the unit cell (which has the shape of a 
+  // square) but not on which cell it is because all cells are created equal...at least, I think so
+  // ...tbc...
 
 
   using Real    = double;
@@ -9325,6 +9326,7 @@ void testBiPeriodicFunctions()
   // -Maybe make expansion center an (optional) parameter, maybe call it z0
   // -Try to optimize by combining 4 factors for m,n, m,-n, -m,n, -m,-n and then let the loops run
   //  only from 1..R
+  // -Use a sum over a_mn instead of a product over 1 - a_mn
 
 
   Complex w; 
@@ -9333,29 +9335,25 @@ void testBiPeriodicFunctions()
   w = f1(Complex(0.2, 1.3));
   w = f1(Complex(1.2, 1.3));
   // ,,,hmm...if f1 would be doubly-periodic, all of these should evaluate to the same number (up
-  // to truncation error) - but they totally don't...something is still wrong
+  // to truncation error) - but they totally don't...something is still wrong...but maybe that 
+  // really only works when forming a truly infinite product?
 
   w = f1(Complex(0.8, 0.6));  // z is on unit circle, real part of w is (close to) 0
 
 
-
-
-
-  // -May try to design/construct/cook-up double-periodic and analytic functions. Mayby use 
-  //  infinite products with one factor for each integer point (m,n) = m + i*n in the complex 
-  //  plane. How about: f(z) = prod_{m,n} 1 - 1 / (z - (m + i*n))^k   for some k integer k. The 
-  //  rationale is that the 2nd term tends to zero the further away m + i*n is from z such that the
-  //  whole factor approaches 1 (thereby making the infinite product ocnverge). The fact that m,n 
-  //  go from -inf to +inf should ensure that it doesn't really matter, where in the plane we are. 
-
-
   // Ideas:
+  //  -f(z) = prod_{m,n} 1 - 1 / (d_mn)^k     for some integer k
+  //  -f(z) = prod_{m,n} (1 - 1 / (d_mn))^k
+
+
   //  -What about the double product in the xy-plane (not necesaarily be seen as comple xplane) 
   //   prod_m prod_ n (x-m)*(y-n). It should have zero value not only on the grid-points but on 
   //   whole grid-lines...but maybe it won't be analytic when interpreted as complex function?
   //   Maybe infinte sums could be used instead of infinite products, too?
   //  -Maybe look at the 1D version f(x) = prod_n 1 - 1 / (x-n)^k. See also:
   //   https://www.youtube.com/watch?v=FCpRl0NzVu4&list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY
+  //  -Plot the inversions of the functions. i.e. 1/f(z). Due to the translational symmetry in f(z)
+  //   1/f(z) may show nice self-similar structure when zooming in to the origin?
 
   int dummy = 0;
 }

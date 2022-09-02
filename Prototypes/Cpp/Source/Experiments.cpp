@@ -9327,6 +9327,8 @@ void testBiPeriodicFunctions()
   // -Try to optimize by combining 4 factors for m,n, m,-n, -m,n, -m,-n and then let the loops run
   //  only from 1..R
   // -Use a sum over a_mn instead of a product over 1 - a_mn
+  // -Instead of having a = a_mn = d / (1.0 + mn*mn); use a = d / (1.0 + m^2 + n^2)
+  //  or use something based on 1/d or 1/(1+d)
 
 
   Complex w; 

@@ -9264,6 +9264,72 @@ void testModularForms()
   //  see Teubner-Bronstein, pg. 606. Maybe before we have the Weierstrass P-function available, 
   //  just hardcode these values for given w1, w2 (evaluate with wolfram alpha or soemthing).
   // -Implement Klein's J-function (pg. 610)
+
+
+
+  // Evaluating the Weierstrass P-function:
+  // https://github.com/daviddumas/weierstrass   ..is based on:
+  // https://academic.oup.com/imajna/article-abstract/10/1/119/672367?redirectedFrom=fulltext
+
+  int dummy = 0;
+}
+
+void testBiPeriodicFunctions()
+{
+  // We construct some doubly-periodic functions in the complex plane ourselves by means of certain 
+  // infinite sumsand products that depend on the distances to all grid-points, i.e. points of the 
+  // form m + i*n where m,n are integers and i is the imaginary unit. These grid-points are also 
+  // called Gaussian integers. The idea is that the infinite nature of the sum or product enforces 
+  // a double periodicity because a sum or product over the distances to *all* gridpoints can 
+  // depend only on the position inside the unit cell (which has the shape of a square) but not on
+  // which cell it is because all cells are created equal.
+
+
+  using Real    = double;
+  using Complex = rsComplex<Real>;
+  using Func    = std::function<Complex(Complex)>;
+
+  Complex i(0, 1);     // imaginary unit
+  Complex c_00(0, 0);  // expansion center
+
+
+  int R    = 10;    // range for sum or product, should be "close enough to infinity" such that
+  int mMin = -R;    // taking even more terms makes no big difference in the result, i.e. big 
+  int mMax = +R;    // enough to let thes sum or product converge
+  int nMin = -R;
+  int nMax = +R;
+
+
+  Func f1 = [&](Complex z)
+  {
+    Complex w(1, 0);
+
+    for(int m = mMin; m <= mMax; m++)
+    {
+      for(int n = nMin; n <= nMax; n++)
+      {
+        if(n == 0 || m == 0) 
+          continue;                              // avoids large factors
+        Complex c = c_00 + Complex(m, n);
+        Complex d = z - c;
+        Complex a = d / (1.0 + (m*n)*(m*n));
+        Complex b = 1.0 - a;
+        w *= b;
+      }
+    }
+
+    return w;
+    //return z;
+  };
+
+
+  Complex w = f1(Complex(0.2, 0.3));
+
+
+
+
+
+
   // -May try to design/construct/cook-up double-periodic and analytic functions. Mayby use 
   //  infinite products with one factor for each integer point (m,n) = m + i*n in the complex 
   //  plane. How about: f(z) = prod_{m,n} 1 - 1 / (z - (m + i*n))^k   for some k integer k. The 
@@ -9277,10 +9343,6 @@ void testModularForms()
   //  whole grid-lines...but maybe it won't be analytic when interpreted as complex function?
   //  Maybe infinte sums could be used instead of infinite products, too?
 
-
-  // Evaluating the Weierstrass P-function:
-  // https://github.com/daviddumas/weierstrass   ..is based on:
-  // https://academic.oup.com/imajna/article-abstract/10/1/119/672367?redirectedFrom=fulltext
 
   int dummy = 0;
 }

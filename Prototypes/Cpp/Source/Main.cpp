@@ -64,6 +64,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testWeightedAverages();
   //testModularGroup();
   //testModularForms();
+  testBiPeriodicFunctions();
 
   //testAttractors();
 
@@ -77,7 +78,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testGeneratingFunction();
   //testCatalanNumbers();
-  testSmoothCrossFade();
+  //testSmoothCrossFade();
 
 
   return 0;

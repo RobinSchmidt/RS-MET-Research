@@ -9293,38 +9293,39 @@ void testBiPeriodicFunctions()
   Complex c_00(0, 0);  // expansion center
 
 
-  int R    = 10;    // range for sum or product, should be "close enough to infinity" such that
+  int R    = 500;   // range for sum or product, should be "close enough to infinity" such that
   int mMin = -R;    // taking even more terms makes no big difference in the result, i.e. big 
   int mMax = +R;    // enough to let thes sum or product converge
   int nMin = -R;
   int nMax = +R;
 
-
+  // f(z) = prod_{mn} 1 - d_{mn} / (1 + (mn)^2)
   Func f1 = [&](Complex z)
   {
     Complex w(1, 0);
-
     for(int m = mMin; m <= mMax; m++)
     {
       for(int n = nMin; n <= nMax; n++)
       {
-        if(n == 0 || m == 0) 
+        Real mn = m*n;
+        if(mn == 0) 
           continue;                              // avoids large factors
         Complex c = c_00 + Complex(m, n);
         Complex d = z - c;
-        Complex a = d / (1.0 + (m*n)*(m*n));
+        Complex a = d / (1.0 + mn*mn);
         Complex b = 1.0 - a;
         w *= b;
       }
     }
-
     return w;
-    //return z;
   };
+  // -Maybe take R as parameter and loop m,n from -R to +R
+  // -Maybe make expansion center an (optional) parameter, maybe call it z0
 
 
-  Complex w = f1(Complex(0.2, 0.3));
-
+  Complex w; 
+  w = f1(Complex(0.2, 0.3));
+  w = f1(Complex(0.8, 0.6));  // z is on unit circle, real part of w is (close to) 0
 
 
 

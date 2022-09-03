@@ -9311,12 +9311,21 @@ void testBiPeriodicFunctions()
       for(int n = nMin; n <= nMax; n++)
       {
         Real mn = m*n;
-        if(mn == 0) 
-          continue;                              // avoids large factors
+        if(mn == 0) continue;
+        // Avoids large factors...this is very questionable! I think, it may break our rationale 
+        // for enforcing bi-periodicity. Maybe take it out!
+
         Complex c = c_00 + Complex(m, n);
         Complex d = z - c;
+
         Complex a = d / (1.0 + mn*mn);
+        // Maybe use d / (1 + m*m + n*n) instead.
+
+
         Complex b = 1.0 - a;
+        // Maybe use something like b = 1 - 1/d^k or 1 + 1/d^k for some k. This will lead to poles
+        // (of order k) at the lattice points because 1/d^k will become infinite.
+
         w *= b;
       }
     }
@@ -9347,7 +9356,6 @@ void testBiPeriodicFunctions()
   //  -f(z) = prod_{m,n} 1 - 1 / (d_mn)^k     for some integer k
   //  -f(z) = prod_{m,n} (1 - 1 / (d_mn))^k
 
-
   //  -What about the double product in the xy-plane (not necesaarily be seen as comple xplane) 
   //   prod_m prod_ n (x-m)*(y-n). It should have zero value not only on the grid-points but on 
   //   whole grid-lines...but maybe it won't be analytic when interpreted as complex function?
@@ -9356,6 +9364,23 @@ void testBiPeriodicFunctions()
   //   https://www.youtube.com/watch?v=FCpRl0NzVu4&list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY
   //  -Plot the inversions of the functions. i.e. 1/f(z). Due to the translational symmetry in f(z)
   //   1/f(z) may show nice self-similar structure when zooming in to the origin?
+
+  // ToDo:
+  // -Implement a naive evaluation algorithm for the Weierstrass P-function, based directly on the
+  //  definition via the infinite sum:
+  //    P(z) = (1/z^2) * sum_g (1/(z-g)^2 - 1/g^2)
+  //  where g is a lattice point. We sum over all lattice points except the origin 
+  //  0 = (0,0) = 0 + i*0. See the Teubner-Bronstein, pg 606 ff.
+  // -I think, the spirit in which this P-function was constructed is similar to what I'm trying to
+  //  do here: let the function be defined by an infinite summation (or product) over all lattice
+  //  points to put the parallelograms (squares in our special case here) on an equal footing, 
+  //  thereby enforcing bi-periodicity. Figure out, if this indeed the rationale behind the
+  //  definition of P(z).
+  // -Implement a more practical evaluation algorithm for the P-function, suitable for production
+  //  use (see Libraries/Snippets/Weierstrass).
+  // -Implement more elliptic functions which are based on the P-function and numerically verify 
+  //  some of their properties like the functional or differential equations that are supposed to 
+  //  hold.
 
   int dummy = 0;
 }
@@ -10618,8 +10643,9 @@ void testSmoothCrossFade()
   // "crossfades" between the two formulas and the crossfade should be smooth, i.e. we don't want
   // to see discontiunuities (neither in value nor in any derivative) at start and end of the 
   // transition region. This can be achieved using a crossfading function that is flat at a and b 
-  // and goes monotonically from 0 to 1. See this video:
-  // https://www.youtube.com/watch?v=vD5g8aVscUI
+  // and goes monotonically from 0 to 1. See these videos:
+  // https://www.youtube.com/watch?v=vD5g8aVscUI Smooth Transition Function in One Dimension | Smooth Transition Function Series Part 1
+  // https://www.youtube.com/watch?v=pZyVU-pthco When Functions We Want to Interpolate Aren't Too Nice | Smooth Transition Function Series Part 1.5
 
   using Real = double;
   using Func = std::function<Real(Real)>;
@@ -10691,6 +10717,16 @@ void testSmoothCrossFade()
   // -Try to optimize the computations such that we need to evaluate the exp function only once.
   //  See comment by Cypress Hodgson:
   //  "A simplification of the phi function is 1/(1+e^((1-2x)/x(1-x))"
+  // -Implement the idea from the follow-up video "When Functions We Want to Interpolate Aren't Too
+  //  Nice":
+  //  -Define an intermediate point c between a and b
+  //  -Define an arbitrary function p(x) between a and b. In practice, a linear (or more generally
+  //   Hermite polynomial) interpolant between a and b, with values and derivatives obtained from 
+  //   f1(x) at a and f2(x) at b, could be most useful.
+  //  -Between a and c, smoothly interpolate between f1(x) and p(x).
+  //  -Between c and b, smoothly interpolate between p(x) and f2(x)
+  //  -This approach can be used for smooth transitions in cases when one or both functions f1,f2 
+  //   have singularities between a and b.
   // 
   // See:
   // https://www.youtube.com/watch?v=vD5g8aVscUI&lc=UgzlCXZTG2W3-el5yZl4AaABAg.9fEwMKrRSKl9fQXw88JUSe

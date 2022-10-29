@@ -4343,6 +4343,30 @@ public:
   bool isCloseTo(const rsMultiVector<T>& rhs, T tol = T(0)) const
   { return rsIsCloseTo(coeffs, rhs.coeffs, tol); }
 
+  // ToDo:
+  // isBlade, isVersor. Maybe there should be algorithms to figure this out (GAfCS pg 46 says that 
+  // an algorithm for this is "not elementary") as well as flags as 
+  // members that keep track of the property during the construction of the multivector. For 
+  // example, scalars vectors, pseudo-vectors and pseudo-scalars are blades. Forming an outer 
+  // product of two blades gives again a blade. So, the outer product could assign the isBlade flag
+  // of the result as boolean and of the two inputs. All other operators (add, subtract, geometric 
+  // product, etc.) produce, in general, non-blades when getting blades as inputs. k-blades are 
+  // sometimes called simple k-vectors. They are factorizable as an outer product of vectors.
+  // Maybe wee need factory functions like makeScalar, makeVector, makePseudoVector, 
+  // makePseudoScalar which would init the isBlade flag as true. Blades and versors. GAfCS, pg 529
+  // says that almost all elements constructed in geometric algebra actually are blades or versors
+  // and for those, there's a simpler algorithm for inversion. pg 191 expalins what versors are:
+  // a k-versor is formed as a geometric product of k invertible vectors. They are typically used 
+  // in a sandwich product, called the verso product, like Y = +- V X /V where V is the versor and 
+  // /V means "divide by V" i.e. multiply by Vs inverse. Versors represent orthogonal 
+  // transformation.
+  // maybe have also: isRotor, isSpinor - see GAfCS pg 195 ff., pg 531 says versors and blades have
+  // scalar squares, so that test might go into an algo that figures out bladeness and versorness.
+  // Ch 21.5 also talks about this.
+  // Maybe we could have functions like isBladeByConstruction/isVersorByConstruction that just 
+  // check the flags. The general isBlade, isVersor, etc. functions would run the classification
+  // algorithm
+
 
 
   T getSquaredVectorNorm() const;

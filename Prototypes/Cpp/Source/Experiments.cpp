@@ -7794,6 +7794,23 @@ void testGeometricAlgebra()
   // bifunction with respect to a set of basis bifunctions constructed from outer products of
   // basis functions?
   
+  // ToDo:
+  // -Use geometric algebra to render some 3D objects. Maybe use the conformal model
+  // -Try to write an algorithm that takes a gemoetric object as input and somehow produces a 
+  //  parametric representation of it. For example, a 2-blade encodes plane. A geometric object G 
+  //  is directly represented by the equation: G ^ x = 0. A vector x is part of the geometric 
+  //  object G, if it satisfies this equation (in the dual representation we'd use the inner 
+  //  instead of the outer product, btw). My idea is to turn that definign equation into a 
+  //  parametrization of G as follows: 
+  //  -Obtain the matrix version of the equation, i.e. produce the matrix-vector equation that
+  //   corresponds to G ^ x = 0
+  //  -Solve for x - this should probably produce infinitely many solutions, i.e. a subspace of
+  //   solutions. So, the general solution of the matrix equation will have a couple of free 
+  //   parameters. How many depends on the dimensionality of the object. A line should have a 
+  //   1-parametric solution space, a plane a 2-parametric and so on. Let the parameters vary 
+  //   over some grid and paint dots at the grid-points. We should get a sort of point based 
+  //   rendering. Try it with a sphere in the CGA model. Can we also do ellipsoids or more 
+  //   general conics?
 
 
   // https://en.wikipedia.org/wiki/Multivector

@@ -9498,6 +9498,15 @@ void testAttractors()
 
   // A big collection of systems can be found here:
   // http://www.3d-meier.de/tut19/Seite0.html
+
+  // Here are some videos explaining the dynamics of some systems
+  // https://www.youtube.com/watch?v=vBwyD4JJlSs&list=PLMrJAkhIeNNTYaOnVI3QpH7jgULnAmvPA&index=24
+  // https://www.youtube.com/watch?v=vuZmaSyJpUY
+  // ...for inspiration for creating some of my own systems - just come up with some interesting
+  // potential functions. Draw some phase-portraits of these systems using GNUPlotCPP. Maybe for 
+  // oscillators, use polynomials for the potential that have an even order. That should make sure
+  // that the system is always globally stable (potential goes to +inf when x goes to +-inf. A 
+  // polynomial P(x) = x^2 should lead to sinusoidal behavior.
 }
 
 
@@ -10229,10 +10238,11 @@ void test2x2Matrices()
   // it lives in 4D because a general real 2x2 matrix has 4 degrees of freedom. Hmm...well - I 
   // guess we could also see it living in and 8D space if we allow our matrices to be complex...or
   // in a 2D space if we only allow antisymmetric matrices...so I guess, the choice of the 
-  // embedding space for the manifold is kind of an arbitrary choice and we don't actually need to
-  // imagine any embedding space at all and just take an intrinsic view? But what is not arbitrary 
-  // is the topology of the manifold and we can actually make statements about the topologies of 
-  // the manifolds that certain groups of (parametrized) matrices form ...tbc...
+  // embedding space for the manifold is kind of an arbitrary choice as long as it has a high 
+  // enough dimensionality to embed or manifold in question. Perhaps we don't actually need to
+  // imagine any embedding space at all and can just take an intrinsic view? But what is not 
+  // arbitrary is the topology of the manifold and we can actually make statements about the 
+  // topologies of the manifolds that certain groups of (parametrized) matrices form ...tbc...
   //
   // We use the following notation:
   //   i:    imaginary unit (scalar)
@@ -10260,7 +10270,8 @@ void test2x2Matrices()
   //   R(a) = [c -s]
   //          [s  c]
   //
-  // where c = cos(a), s = sin(a). They have the following properties 
+  // where c = cos(a), s = sin(a) for some parameter a which we may interpret as rotation angle. 
+  // They have the following properties:
   //
   // -they form the special orthogonal group SO(2)
   // -this group is commutative aka Abelian - this feature does not generalize to higher dimensional 
@@ -10305,6 +10316,26 @@ void test2x2Matrices()
   //   -> should be isomorphic to the complex numbers?
   // -The book (1) has a whole zoo of matrix groups - see the list on page 88 - and it's not even
   //  complete - maybe we can find something interesting and/or useful
+
+  int dummy = 0;
+}
+
+void test2x2MatrixInterpolation()
+{
+  // We try to come up with an algorithm that can interpolate sensibly between two 2x2 matrices 
+  // A and B. The idea is to decompose both matrices into a pure rotation followed by axis-aligned
+  // scaling followed by another rotation, i.e. performing the singular value decomposition (SVD).
+  // Then, we linearly interpolate the rotation angles for both rotations seperately and linearly 
+  // interpolate the scaling matrix in the middle directly and then recompose the final matrix. If
+  // this works well, it may be used as building block in an interpolation for a 2D affine 
+  // transform: We just use the matrix-interpolation algorithm for the matrix-parts of the affine 
+  // transforms and apply linear interpolation to the translational part.
+  //
+  // Questions: what happens when one of the transforms contains reflection and the other one 
+  // doesn't, i.e. the determinants have opposite signs? Maybe the interpolants need to go through
+  // a "collapsing" transform (i.e. one with determinant zero) which would actually look quite 
+  // natural in an animation of a reflection: when it's half-done, the 2D shapes collapse into the
+  // reflection axis...hopefully - that would be a desirable outcome - we'll see
 
   int dummy = 0;
 }

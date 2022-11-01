@@ -10331,11 +10331,36 @@ void test2x2MatrixInterpolation()
   // transform: We just use the matrix-interpolation algorithm for the matrix-parts of the affine 
   // transforms and apply linear interpolation to the translational part.
   //
-  // Questions: what happens when one of the transforms contains reflection and the other one 
-  // doesn't, i.e. the determinants have opposite signs? Maybe the interpolants need to go through
-  // a "collapsing" transform (i.e. one with determinant zero) which would actually look quite 
-  // natural in an animation of a reflection: when it's half-done, the 2D shapes collapse into the
-  // reflection axis...hopefully - that would be a desirable outcome - we'll see
+  // Questions: 
+  // -what happens when one of the transforms contains reflection and the other one 
+  //  doesn't, i.e. the determinants have opposite signs? Maybe the interpolants need to go through
+  //  a "collapsing" transform (i.e. one with determinant zero) which would actually look quite 
+  //  natural in an animation of a reflection: when it's half-done, the 2D shapes collapse into the
+  //  reflection axis...hopefully - that would be a desirable outcome - we'll see
+  // -Maybe if A and b are both symmetric, it could make more sense to do an eigendecomposition
+  //  instead of an SVD?
+  // -Maybe we should take the square-roots of the entries of the diagonla matrix, linearly 
+  //  interpolate these and then square the results?
+
+  using Real = double;
+  using Mat  = rsMatrix2x2<Real>;
+  using Vec  = rsVector2D<Real>;
+
+  Mat A(1, -3, 2, 3);
+  Mat B(2, -2, 4, 1);
+
+
+
+  // See:
+  // https://www.youtube.com/watch?v=mhy-ZKSARxI&list=PLWhu9osGd2dB9uMG5gKBARmk73oHUUQZS&index=3 Visualize Spectral Decomposition | SEE Matrix, Chapter 2
+  // https://www.youtube.com/watch?v=vSczTbgc8Rc&list=PLWhu9osGd2dB9uMG5gKBARmk73oHUUQZS&index=5 SVD Visualized, Singular Value Decomposition explained | SEE Matrix , Chapter 3 #SoME2
+  //   ...it looks like, in the animations, these videos do naive interpolation of tranformation
+  //   matrices in the animations?
+  // https://www.youtube.com/watch?v=CpD9XlTu3ys What is the Singular Value Decomposition?
+  // https://www.youtube.com/watch?v=bDV7Uxn9338 Geometrische Bedeutung der Transposition / Singulärwertzerlegung
+
+
+
 
   int dummy = 0;
 }

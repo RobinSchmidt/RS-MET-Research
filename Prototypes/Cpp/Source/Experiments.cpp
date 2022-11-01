@@ -10571,7 +10571,7 @@ void testCatalanNumbers()
   //   1289904147324,4861946401452,18367353072152,69533550916004,263747951750360,1002242216651368,
   //   3814986502092304,...
   // They also show up as the number of triangulations of an n-sided polygon. C_n is also the 
-  // number of full binray trees with 2*n+1 nodes
+  // number of full binary trees with 2*n+1 nodes
 
   // Uses the formula with the binomial coefficient:
   auto cat1 = [](int n)

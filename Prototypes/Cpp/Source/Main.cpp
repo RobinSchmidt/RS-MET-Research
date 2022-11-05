@@ -73,13 +73,13 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testStateSpaceFilters();
 
   //test2x2Matrices();               // stub
-  test2x2MatrixInterpolation();    // stub
-  testQuaternion();
+  //test2x2MatrixInterpolation();    // stub
+  //testQuaternion();
   //testChebychevEconomization();  // stub
 
   //testGeneratingFunction();
   //testCatalanNumbers();
-  //testSmoothCrossFade();
+  testSmoothCrossFade();
 
 
   return 0;

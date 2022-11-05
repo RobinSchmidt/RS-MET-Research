@@ -10346,9 +10346,14 @@ void test2x2MatrixInterpolation()
   using Mat  = rsMatrix2x2<Real>;
   using Vec  = rsVector2D<Real>;
 
-  Mat A(1, -3, 2, 3);
-  Mat B(2, -2, 4, 1);
+  //Mat A(1, -3, 2, 3);
+  //Mat B(2, -2, 4, 1);
 
+  // Two matrices with very different determinants D (= a*d - b*c), sign and magnitude-wise:
+  Mat A(3, 2, 5,  4);   // D = 3 *  4 - 2*5 =  12 - 10 =   2
+  Mat B(3, 2, 5, -4);   // D = 3 * -4 - 2*5 = -12 - 10 = -22
+  // Compare direct linear interpolation of these matrices with an SVD based interpolation. The 
+  // difference should be rather extreme due to the widely differing determinants
 
 
   // See:
@@ -10800,6 +10805,8 @@ void testSmoothCrossFade()
   //  -Between c and b, smoothly interpolate between p(x) and f2(x)
   //  -This approach can be used for smooth transitions in cases when one or both functions f1,f2 
   //   have singularities between a and b.
+  // -Use this technique to implement a soft-clipper with a smooth junction between linear and 
+  //  saturating range
   // 
   // See:
   // https://www.youtube.com/watch?v=vD5g8aVscUI&lc=UgzlCXZTG2W3-el5yZl4AaABAg.9fEwMKrRSKl9fQXw88JUSe

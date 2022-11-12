@@ -8987,6 +8987,28 @@ void testPrimesAndMore()
   //  string with gnuplot options
 }
 
+
+
+// Template instantiation needed for the experiment:
+//template class RAPT::rsPolynomial<rsModularInteger<int>>;
+
+void testFiniteField()
+{
+  using Int = int;  // try also unsigned, 64 bit, etc.
+  
+  Int p = 3;
+  Int k = 4;
+  Int q = rsPow(p, k);  // q = p^k = 3^4 = 81, the number of field elements
+  
+  rsFiniteFieldNaive<Int> field(p, k);
+
+  int dummy = 0;
+
+  // To actually do this, we first need to make sure that rsPolynomial compiles (and works) fine
+  // for T = rsModularInteger. We should do that in the unit tests in the main repo and while we 
+  // are at it, we should also make it clenaly compile (without warnings) and work with rsFraction.
+}
+
 void testGeneralizedCollatz()
 {
   // The Collatz conjecture is a famous problem in math. It states: You will always end up in the 
@@ -10814,6 +10836,12 @@ void testSmoothCrossFade()
   // https://en.wikipedia.org/wiki/Flat_function
   // https://en.wikipedia.org/wiki/Bump_function
   // https://en.wikipedia.org/wiki/Mollifier
+  //
+  // Related to the smooth crossfading functions here is also the smoothStep and the smoothMin/Max 
+  // functions. See these videos for clever techniques to work with them:
+  //   https://www.youtube.com/watch?v=60VoL-F-jIQ
+  //   https://www.youtube.com/watch?v=YJ4iyff7zbk&list=PLGmrMu-IwbgsY3onv9rrzHvm7OpG43Uvk
+  // From smoothMin and smoothMax we can perhaps also construct a smoothClip. 
 }
 
 

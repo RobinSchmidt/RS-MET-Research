@@ -6065,7 +6065,6 @@ bool rsIsCloseTo(const rsMultiVector<T>& X, const rsMultiVector<T>& Y, T tol)
 //   geometricProduct(Nabla, F) = innerProduct(Nabla, F) + outerProduct(Nabla, F)
 // for any vector field F
 
-
 //=================================================================================================
 
 /** A class that tabulates the prime factorizations of all numbers up to some given upper limit. */
@@ -6203,6 +6202,75 @@ void rsPrimeFactorTable<T>::buildTable(T N)
 
   int dummy = 0;
 }
+
+//=================================================================================================
+
+/** just a stub at the moment
+
+In mathematics, a field is a set in which certain operations are defined and these operations
+behave in the same way as addition and multiplication in rational or real numbers. That means, 
+besides other things that, the multiplicative inverses must exist for each element except zero.
+Rational, real or complex numbers are all infinite fields but finite fields also exist. The 
+simplest finite fields are the modular integers when the modulus is a prime number. The only other
+finite fields that exist are (isomorphic to) those, whose number of elements is an integer power
+of a prime. But for these, simple modular arithmetic doesn't produce the field. Addition and 
+multiplication require some more elaborate algorithms. These are implemented in a naive way for
+learning purposes by the classes rsFiniteFieldNaive and rsFiniteFieldElementNaive which work 
+together in tandem in the same way as rsGeometricAlgebra and rsMultiVector: every element holds a
+pointer to the algebra object which is consulted to perform the arithmetic operation.
+
+...tbc...
+
+See:
+https://en.wikipedia.org/wiki/Finite_field
+
+
+*/
+
+template<class T>  // T should be an integer type (may be unsigned)
+class rsFiniteFieldNaive
+{
+
+public:
+
+  rsFiniteFieldNaive(T base, T exponent) : p(base), k(exponent)
+  {
+    //RAPT::rsAssert(rsIsPrime(p));  // todo
+    //generateTables();
+  }
+
+protected:
+
+  T p;  // Base in p^m, should be prime
+  T k;  // Exponent in p^k, a positive integer
+
+
+  // We need to form the field of polynomials of degree <= k over the modular integers with 
+  // modulus p. Then we take that field modulo a specific polynomial M(x) that plays the role
+  // of a modulus ...tbc...
+  //using ModInt = RAPT::rsModularInteger<T>; // 
+  //rsPolynomial<ModInt> M;  // M(x) is an degree k polynomial that is irreducible in Z_p = Z/pZ
+  // ...so we have two levels of modular arithmetic at play here? The lower level being the usage 
+  // of modular integers and the higher level being the use doing all polynomial operations modulo
+  // the given M(x), requiring polynomial division with remainder?
+
+
+};
+
+
+
+
+
+
+// In a non-naive implementation, we should build tables for addition and multiplication in the 
+// constructor. Each polynomial, i.e. each array of polynomial coeffs, maps to a unique integer
+// in the range 0...p^k-1. For each pair of such integers (mapped polynomials) we need to specify
+// what the result of their addition and multiplication should be - coming from the same set of 
+// 0...p^k-1. The multiplication table can be turned into a 1D array rather than a full blown 2D
+// matrix by a trick explained in Weitz pg. 744. I hope, a similar trick is possible for addition
+// too. Weitz says nothing about that because he's only covering the case for p=2 in which addition
+// reduces to xor such that no table is needed ...  figure this out!
+
 
 
 //=================================================================================================

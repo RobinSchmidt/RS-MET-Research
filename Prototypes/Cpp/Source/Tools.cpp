@@ -6257,11 +6257,6 @@ protected:
 
 };
 
-
-
-
-
-
 // In a non-naive implementation, we should build tables for addition and multiplication in the 
 // constructor. Each polynomial, i.e. each array of polynomial coeffs, maps to a unique integer
 // in the range 0...p^k-1. For each pair of such integers (mapped polynomials) we need to specify
@@ -6269,8 +6264,10 @@ protected:
 // 0...p^k-1. The multiplication table can be turned into a 1D array rather than a full blown 2D
 // matrix by a trick explained in Weitz pg. 744. I hope, a similar trick is possible for addition
 // too. Weitz says nothing about that because he's only covering the case for p=2 in which addition
-// reduces to xor such that no table is needed ...  figure this out!
-
+// reduces to xor such that no table is needed. The method there uses a primitive k-th (?) root of 
+// unity, i.e. a number that, when multiplied by itself k times gives one. Maybe an analog for
+// addition could be a number that when added to itself k times gives zero? And that number would 
+// be just the number 1, regardless of the modulus? ...  figure this out!
 
 
 //=================================================================================================

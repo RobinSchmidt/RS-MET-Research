@@ -10335,18 +10335,24 @@ void test2x2Matrices1()
   MatC B(11,13,17,19);
   MatC C(23,29,31,37);
 
+  Complex j(0, 1);
+  Complex a = 2.0 + j;
+  Complex b = 3.0 - 2.0*j;
+
 
   // Eq 1.2: Definition of scalar product of two complex vectors, 2D case:
   auto scalarProduct = [](const VecC& a, const VecC& b)
   {
     return rsConj(a.x) * b.x  +  rsConj(a.y) * b.y;
   };
+  // maybe rename to dot
 
   // Eq 1.17: Definition of the commutator [A,B] = AB - BA of two matrices:
   auto commutator = [](const MatC& A, const MatC& B)
   {
     return A*B - B*A;
   };
+  // maybe rename to comm
   // The commutator turns a matrix algebra into a Lie algebra (How? Does the commutator serve as a 
   // second, higher level operation)?
   // There's also an anticommutator defined as A*B + B*Y (not defined in the book).
@@ -10383,12 +10389,30 @@ void test2x2Matrices1()
   ok &= det(herm(A))  == rsConj(det(A));
 
   // Ex 1.2:
-  ok &= det(A*B) == det(A) * det(B);
-  ok &= det(inv(A)) == Complex(1) / det(A);
+  ok &= det(A*B) == det(A) * det(B);         // The deteriminant is multiplicative (?)
+  ok &= det(inv(A)) == Complex(1) / det(A);  // Inverse matrix has reciprocal determinant
   ok &= herm(A*B)  == herm(B) * herm(A);
   ok &= trans(A*B) == trans(B) * trans(A); 
     // there's a generalized version of that formula, I think - for an arbitrary number of factors
-  ok &= inv(A*B) == inv(B) * inv(A);
+  ok &= inv(A*B) == inv(B) * inv(A);         // Inversion reverses order in a product
+
+  // Eq 1.24-1.27: Definition of the trace and some identities:
+  auto trc = [] (const MatC& A) { return A.a + A.d; };
+  ok &= trc(a*A + b*B) == a*trc(A) + b*trc(B);  // Taking the trace is a linear operation
+  ok &= trc(A*B) == trc(B*A);                   // Multiplication order doesn't affect trace
+  ok &= trc(commutator(A, B)) == 0;             // Commutators are always trace-free
+  ok &= trc(A*B*C) == trc(B*C*A);               // Under the trace, we may cyclically...
+  ok &= trc(A*B*C) == trc(C*A*B);               // ...exchange factors
+
+  // Eq 1.28-1.29: Definition of the Frobenius scalar product and norm:
+  auto frobProd = [&](const MatC& A, const MatC& B) { return trc(herm(A) * B); };
+  auto frobNorm = [&](const MatC& A)                { return frobProd(A, A);   };
+
+  // Eq 1.30: 
+  ok &= frobNorm(a*A) == rsAbs(a) * frobNorm(A);
+  Complex test1 = frobNorm(a*A);
+  Complex test2 = rsAbs(a) * frobNorm(A);
+  // Something is wrong here!
 
 
   // ToDo:
@@ -10399,6 +10423,9 @@ void test2x2Matrices1()
   //  operations, too. That's not mentioned in the book.
   // -Maybe use matrices with truly complex entries - otherwise, our tests won't cover the most 
   //  genral case..
+  // -Is the commutator associative, i.e. [[A, B], C] == [A, [B, C]]? The commutator should be 
+  //  anti-commutative, I think. Is there some sort of distributive law for commutators with 
+  //  respect to matrix-multiplication?
 
 
   rsAssert(ok);

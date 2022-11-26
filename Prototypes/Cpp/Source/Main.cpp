@@ -59,12 +59,13 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNewtonFractal();
   //testPrimeFactorTable();
   //testPrimesAndMore();
-  testFiniteField();
+  //testFiniteField();
   //testGeneralizedCollatz();
   //testParticleSystem();
   //testWeightedAverages();
   //testModularGroup();
   //testModularForms();
+  testIntegerGroup();
   //testBiPeriodicFunctions();
 
   //testAttractors();

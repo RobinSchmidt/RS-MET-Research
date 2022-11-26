@@ -9272,12 +9272,8 @@ void testModularGroup()
   //  that be another representation of the same transformation? I'm not sure anymore, how that 
   //  idea occurred to me (it was in the Tram). It may very well be nonsense.
 
-
   // See:
   // https://www.youtube.com/watch?v=dOY_MzmS0Zk
-
-  //
-
 
   int dummy = 0;
 }
@@ -9312,6 +9308,98 @@ void testModularForms()
 
   int dummy = 0;
 }
+
+void testIntegerGroup()
+{
+  // Idea:
+  // The modular group, when represented using matrices, yields a group of 2x2 matrices with 
+  // integer coefficients. Question: What is the largest, most general possible group of 2x2 
+  // matrices with integer coeffs? Maybe let's call it the "integer group" or "integer linear 
+  // group" ...somehow in accordance with general group theory jargon. Maybe (probably) someone 
+  // has already given it a name because surely, someone thought about this already -> figure 
+  // this out!
+  //
+  // For a matrix to be a member of the group, it must be invertible and its inverse must also have
+  // integer coeffs. For a 2x2 matrix A = [a,b; c,d], the inverse is given by A^-1 = [d,-b; -c,a]/D 
+  // where D = a*d - b*c is the determinant of A. So, we require D != 0 and a,b,c,d must all be 
+  // divisible by D. Can we find a set of matrices that generates this group? I think, diagonal 
+  // matrices other than the identity can't be members of the group because their determinant is 
+  // D = a*d and D|a and D|d can only hold if a = d = 1. This is because the absolute value of the 
+  // product a*d is necesarrily >= a and >= d with equality for >= a only when d = 1 and vice versa
+  // but even in the equality casea, it will still be > than the respective other coeff, i.e. if 
+  // D = a then D > d, etc.
+  //
+  // Hmm - this:
+  //   https://en.wikipedia.org/wiki/Integer_matrix
+  // says "The inverse of an integer matrix M is again an integer matrix if and only if the 
+  // determinant of M equals 1 or -1". So - it seems my proposed criterion above is too liberal? Or
+  // is it somehow equivalent? If so - why? But it makes sense from the observation that the 
+  // determinant of the inverse matrix is the reciprocal of the determinant of the original matrix.
+  // OK - the experiment below confirms indeed, that my more liberal criterion does indeed seem to 
+  // imply the stricter criterion.
+
+
+  using Mat = RAPT::rsMatrix2x2<int>;
+
+  // Returns true, iff a divides b:
+  auto divides = [](int a, int b)
+  {
+    return abs(b) % abs(a) == 0;
+    //return rsModularInteger<int>::modulo(b, a) == 0;
+  };
+
+  // Returns true, iff the given matrix A has an inverse with all integer coefficients:
+  auto hasIntegerInverse = [&](Mat& A)
+  {
+    int D = A.getDeterminant();
+    if(D == 0)
+      return false;
+    return divides(D, A.a) && divides(D, A.b) && divides(D, A.c) && divides(D, A.d);
+  };
+
+  // Check for all matrices with min <= a,b,c,d <= max, if their inverse exists and has integer
+  // values. If that is the case, we check, whether the determinant has an absolute value of 1 as
+  // https://en.wikipedia.org/wiki/Integer_matrix says.
+  int min = -30;
+  int max = +30;
+  for(int a = min; a <= max; a++) {
+    for(int b = min; b <= max; b++) {
+      for(int c = min; c <= max; c++) {
+        for(int d = min; d <= max; d++) {
+          Mat A(a,b,c,d);
+          if(hasIntegerInverse(A)) {
+            int D = A.getDeterminant();
+            RAPT::rsAssert(abs(D) == 1); }}}}}
+  // OK - we don't hit the assert, so it is indeed confirmed experimentally that the more liberal
+  // criterion about D being a divisor of a,b,c,d does indeed imply that D = +-1. Of course, 
+  // checking only finitely many cases is no proof but at least, it gives some numercial evidence.
+  // Going from -30...+30 means going through 61^4 = 13'845'841 examples. Interesting! How could 
+  // that implication be proved?
+
+  // Conclusion:
+  // What I proposed to call the integer (linear) group (of size 2x2) above turns out to be 
+  // actually the same thing as SL2(Z). OK - nice! I learned something again!
+
+  // Ideas:
+  // What about using complex entries with integer real and imaginary part, aka Gaussian integers?
+  // Can something interesting be said about groups of such matrices? In which case has the inverse
+  // also Gaussian integers as entries?
+  //
+  // What about NxN matrices? Maybe, if N is composite, we can factor members of the group into 
+  // members of smaller groups using the Kronecker product? Like a member of the 6x6 integer group
+  // could be factored into a Kronecker product of members of 2x2 and 3x3 integer group? This is 
+  // just a totally random idea and may be completely false - but would be a cool result, if true.
+  // How can we try to figure this out experimentally? The forward direction of checking whether
+  // such a (2x2) x (3x3) Kronecker product of members of SL2(Z) and SL3(Z) is indeed a member of 
+  // SL6(Z) seems easier than checking, if each member of SL6(Z) can be factored in such a way. 
+  // ...but it's probably false anyway...
+
+  // See also:
+  // https://en.wikipedia.org/wiki/Modular_group
+
+  int dummy = 0;
+}
+
 
 void testBiPeriodicFunctions()
 {

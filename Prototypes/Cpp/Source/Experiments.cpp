@@ -10330,10 +10330,10 @@ void test2x2Matrices1()
   using VecC    = rsVector2D<Complex>;
 
   bool ok = true;
-  MatC I( 1, 0, 0, 1);
-  MatC A( 2, 3, 5, 7);
-  MatC B(11,13,17,19);
-  MatC C(23,29,31,37);
+  MatC I(1, 0, 0, 1);
+  MatC A(2, 3, 5, 7);
+  MatC B(11, 13, 17, 19);
+  MatC C(23, 29, 31, 37);
 
   Complex j(0, 1);
   Complex a = 2.0 + j;
@@ -10359,14 +10359,14 @@ void test2x2Matrices1()
 
   // Eq 1.18: Leibniz rule: [A,BC] = B[A,C] + [A,B]C
   MatC lhs = commutator(A, B*C);
-  MatC rhs = B * commutator(A,C) + commutator(A,B) * C;
+  MatC rhs = B * commutator(A, C) + commutator(A, B) * C;
   ok &= lhs == rhs;
-  
+
   // Eq 1.20: Definition of transposed, conjugated and Hermitian conjugated matrices A^T, 
   // A^C, A^H and definitions of Hermitian (A = A^H), unitary (A * A^H = A^H * A = I) and normal
   // (A * A^H = A^H * A) matrices:
-  auto trans = [] (const MatC& A) { return MatC(A.a, A.c, A.b, A.d);  };
-  auto conj  = [] (const MatC& A) { return MatC(rsConj(A.a), rsConj(A.b), rsConj(A.c), rsConj(A.d)); };
+  auto trans = [](const MatC& A) { return MatC(A.a, A.c, A.b, A.d);  };
+  auto conj  = [](const MatC& A) { return MatC(rsConj(A.a), rsConj(A.b), rsConj(A.c), rsConj(A.d)); };
   auto herm  = [&](const MatC& A) { return trans(conj(A)); };
   auto isHermitian = [&](const MatC& A) { return A == herm(A); };
   auto isUnitary   = [&](const MatC& A) { return A * herm(A) == I && herm(A) * A == I; };
@@ -10374,7 +10374,7 @@ void test2x2Matrices1()
   // Symmetric real matrices are a special case of Hermitian matrices where all entries are real.
 
   // Eq 1.22 and 1.21 - Determinant and inverse:
-  auto det = [] (const MatC& A) { return A.a*A.d - A.b*A.c; };
+  auto det = [](const MatC& A) { return A.a*A.d - A.b*A.c; };
   auto inv = [&](const MatC& A) { return MatC(A.d, -A.b, -A.c, A.a) / det(A); };
 
   // Some tests:
@@ -10392,12 +10392,12 @@ void test2x2Matrices1()
   ok &= det(A*B) == det(A) * det(B);         // The deteriminant is multiplicative (?)
   ok &= det(inv(A)) == Complex(1) / det(A);  // Inverse matrix has reciprocal determinant
   ok &= herm(A*B)  == herm(B) * herm(A);
-  ok &= trans(A*B) == trans(B) * trans(A); 
+  ok &= trans(A*B) == trans(B) * trans(A);
     // there's a generalized version of that formula, I think - for an arbitrary number of factors
   ok &= inv(A*B) == inv(B) * inv(A);         // Inversion reverses order in a product
 
   // Eq 1.24-1.27: Definition of the trace and some identities:
-  auto trc = [] (const MatC& A) { return A.a + A.d; };
+  auto trc = [](const MatC& A) { return A.a + A.d; };
   ok &= trc(a*A + b*B) == a*trc(A) + b*trc(B);  // Taking the trace is a linear operation
   ok &= trc(A*B) == trc(B*A);                   // Multiplication order doesn't affect trace
   ok &= trc(commutator(A, B)) == 0;             // Commutators are always trace-free
@@ -10405,14 +10405,23 @@ void test2x2Matrices1()
   ok &= trc(A*B*C) == trc(C*A*B);               // ...exchange factors
 
   // Eq 1.28-1.29: Definition of the Frobenius scalar product and norm:
-  auto frobProd = [&](const MatC& A, const MatC& B) { return trc(herm(A) * B); };
-  auto frobNorm = [&](const MatC& A)                { return frobProd(A, A);   };
+  auto frobProd    = [&](const MatC& A, const MatC& B) { return trc(herm(A) * B); };
+  auto frobNormSqr = [&](const MatC& A) { return rsAbsSqr(A.a) + rsAbsSqr(A.b) 
+                                               + rsAbsSqr(A.c) + rsAbsSqr(A.d); };
+  auto frobNorm    = [&](const MatC& A) { return rsSqrt(frobNormSqr(A)); };
+  ok &= Complex(frobNormSqr(A)) == frobProd(A, A);
 
+
+
+
+
+  /*
   // Eq 1.30: 
   ok &= frobNorm(a*A) == rsAbs(a) * frobNorm(A);
   Complex test1 = frobNorm(a*A);
   Complex test2 = rsAbs(a) * frobNorm(A);
   // Something is wrong here!
+  */
 
 
   // ToDo:

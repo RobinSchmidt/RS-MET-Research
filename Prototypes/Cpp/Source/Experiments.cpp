@@ -10370,9 +10370,16 @@ void test2x2Matrices1()
   auto det = [] (const MatC& A) { return A.a*A.d - A.b*A.c; };
   auto inv = [&](const MatC& A) { return MatC(A.d, -A.b, -A.c, A.a) / det(A); };
 
+  // Some tests:
   Complex detA = det(A);  // =  2 *  7 -  3 *  5 =  14 -  15 =   -1
   Complex detB = det(B);  // = 11 * 19 - 13 * 17 = 209 - 221  = -12
   MatC invA = inv(A);     // [-7,3; 5,-2]  ->  elements have same absolute values as A
+  ok &= A * invA == I;
+
+  // Eq 1.23: det(A^T) = det(A), det(A^H) = det(conj(A)) = conj(det(A)):
+  ok &= det(trans(A)) == det(A);
+  ok &= det(herm(A))  == det(conj(A));
+  ok &= det(herm(A))  == rsConj(det(A));
 
 
   // ToDo:
@@ -10382,7 +10389,8 @@ void test2x2Matrices1()
   //  and antisymmetric part? Like (A + A^H)/2 and (A - A^H)/2? Maybe implement functions for these 
   //  operations, too. That's not mentioned in the book.
 
-  int dummy = 0;
+
+  rsAssert(ok);
 }
 
 

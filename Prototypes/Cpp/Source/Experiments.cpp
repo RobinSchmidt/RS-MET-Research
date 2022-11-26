@@ -10315,6 +10315,48 @@ void testStateSpaceFilters()
 }
 
 
+void test2x2Matrices1()
+{
+  // We implement definitions and verify formulas/theorems from chapter 1 in the book "Mathematik 
+  // mit 2x2-Matrizen" by Hans Jürgen Korsch.
+
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  //using MatR    = rsMatrix2x2<Real>;
+  using MatC    = rsMatrix2x2<Complex>;
+  //using VecR    = rsVector2D<Real>;
+  using VecC    = rsVector2D<Complex>;
+
+  bool ok = true;
+  MatC A( 2, 3, 5, 7);
+  MatC B(11,13,17,19);
+  MatC C(23,29,31,37);
+
+
+  // Eq 1.2 - Definition of scalar product of two complex vectors, 2D case:
+  auto scalarProduct = [](const VecC& a, const VecC& b)
+  {
+    return conj(a.x) * b.x  +  conj(a.y) * b.y;
+  };
+
+  // Eq 1.17 - Definition of the commutator [A,B] = AB - BA of two matrices:
+  auto commutator = [](const MatC& A, const MatC& B)
+  {
+    return A*B - B*A;
+  };
+
+  // Eq 1.18 - Leibniz rule: [A,BC] = B[A,C] + [A,B]C
+  MatC lhs = commutator(A, B*C);
+  MatC rhs = B * commutator(A,C) + commutator(A,B) * C;
+  ok &= lhs == rhs;
+  
+
+
+
+  int dummy = 0;
+}
+
+
 void test2x2Matrices()
 {
   // We do some experiments with 2x2 matrices, verifying some formulas and properties that certain
@@ -10362,6 +10404,11 @@ void test2x2Matrices()
   //
   // References:
   //   (1) Mathematik mit 2x2-Matrizen (Hans Jürgen Korsch)
+
+
+  test2x2Matrices1();
+
+
 
 
   using Real    = double;

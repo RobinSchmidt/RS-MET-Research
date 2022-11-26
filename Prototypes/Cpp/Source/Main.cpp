@@ -63,9 +63,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testGeneralizedCollatz();
   //testParticleSystem();
   //testWeightedAverages();
-  //testModularGroup();
+  //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff
   //testModularForms();
-  testIntegerGroup();
+  //testIntegerGroup();
   //testBiPeriodicFunctions();
 
   //testAttractors();
@@ -74,7 +74,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMimoFilters();        // just a stub - not much in there yet, mostly comments
   //testStateSpaceFilters();
 
-  //test2x2Matrices();               // stub
+  test2x2Matrices();               // stub
   //test2x2MatrixInterpolation();    // stub
   //testQuaternion();
   //testChebychevEconomization();  // stub

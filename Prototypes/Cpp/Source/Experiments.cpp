@@ -10318,7 +10318,8 @@ void testStateSpaceFilters()
 void test2x2Matrices1()
 {
   // We implement definitions and verify formulas/theorems from chapter 1 in the book "Mathematik 
-  // mit 2x2-Matrizen" by Hans Jürgen Korsch.
+  // mit 2x2-Matrizen" by Hans Jürgen Korsch. This should serve as digest, reference and grab-bag
+  // for potentially useful formulas and theorems.
 
   using Real    = double;
   using Complex = rsComplex<Real>;
@@ -10335,13 +10336,13 @@ void test2x2Matrices1()
   MatC C(23,29,31,37);
 
 
-  // Eq 1.2 - Definition of scalar product of two complex vectors, 2D case:
+  // Eq 1.2: Definition of scalar product of two complex vectors, 2D case:
   auto scalarProduct = [](const VecC& a, const VecC& b)
   {
     return rsConj(a.x) * b.x  +  rsConj(a.y) * b.y;
   };
 
-  // Eq 1.17 - Definition of the commutator [A,B] = AB - BA of two matrices:
+  // Eq 1.17: Definition of the commutator [A,B] = AB - BA of two matrices:
   auto commutator = [](const MatC& A, const MatC& B)
   {
     return A*B - B*A;
@@ -10350,12 +10351,12 @@ void test2x2Matrices1()
   // second, higher level operation)?
   // There's also an anticommutator defined as A*B + B*Y (not defined in the book).
 
-  // Eq 1.18 - Leibniz rule: [A,BC] = B[A,C] + [A,B]C
+  // Eq 1.18: Leibniz rule: [A,BC] = B[A,C] + [A,B]C
   MatC lhs = commutator(A, B*C);
   MatC rhs = B * commutator(A,C) + commutator(A,B) * C;
   ok &= lhs == rhs;
   
-  // Eq 1.20 - Definition of transposed, conjugated and Hermitian conjugated matrices A^T, 
+  // Eq 1.20: Definition of transposed, conjugated and Hermitian conjugated matrices A^T, 
   // A^C, A^H and definitions of Hermitian (A = A^H), unitary (A * A^H = A^H * A = I) and normal
   // (A * A^H = A^H * A) matrices:
   auto trans = [] (const MatC& A) { return MatC(A.a, A.c, A.b, A.d);  };
@@ -10381,6 +10382,14 @@ void test2x2Matrices1()
   ok &= det(herm(A))  == det(conj(A));
   ok &= det(herm(A))  == rsConj(det(A));
 
+  // Ex 1.2:
+  ok &= det(A*B) == det(A) * det(B);
+  ok &= det(inv(A)) == Complex(1) / det(A);
+  ok &= herm(A*B)  == herm(B) * herm(A);
+  ok &= trans(A*B) == trans(B) * trans(A); 
+    // there's a generalized version of that formula, I think - for an arbitrary number of factors
+  ok &= inv(A*B) == inv(B) * inv(A);
+
 
   // ToDo:
   // -Test the trans/conj/herm, isHermitian/isUnitary/isNormal functions with example matrices. How
@@ -10388,6 +10397,8 @@ void test2x2Matrices1()
   //  we can split it into an Hermitian and anti-Hermitian part similar to obtaining a symmetric 
   //  and antisymmetric part? Like (A + A^H)/2 and (A - A^H)/2? Maybe implement functions for these 
   //  operations, too. That's not mentioned in the book.
+  // -Maybe use matrices with truly complex entries - otherwise, our tests won't cover the most 
+  //  genral case..
 
 
   rsAssert(ok);

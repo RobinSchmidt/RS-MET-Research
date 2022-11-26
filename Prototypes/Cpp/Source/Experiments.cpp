@@ -10410,18 +10410,14 @@ void test2x2Matrices1()
                                                + rsAbsSqr(A.c) + rsAbsSqr(A.d); };
   auto frobNorm    = [&](const MatC& A) { return rsSqrt(frobNormSqr(A)); };
   ok &= Complex(frobNormSqr(A)) == frobProd(A, A);
+  // In production code, the Frobenius product could be optimized. It's in general given by 
+  // sum_{j,k} conj(A_jk) * B_kj.
 
-
-
-
-
-  /*
   // Eq 1.30: 
-  ok &= frobNorm(a*A) == rsAbs(a) * frobNorm(A);
-  Complex test1 = frobNorm(a*A);
-  Complex test2 = rsAbs(a) * frobNorm(A);
-  // Something is wrong here!
-  */
+  ok &= rsIsCloseTo(frobNorm(a*A), rsAbs(a) * frobNorm(A), 1.e-14); // |a*A| = |a| * |A|
+  ok &= frobNorm(A+B) <= frobNorm(A) + frobNorm(B);                 // triangle inequality
+  ok &= frobNorm(A*B) <= frobNorm(A) * frobNorm(B);                 // submultiplicative
+
 
 
   // ToDo:

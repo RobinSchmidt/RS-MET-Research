@@ -10366,6 +10366,14 @@ void test2x2Matrices1()
   auto isNormal    = [&](const MatC& A) { return A * herm(A) == herm(A) * A; };
   // Symmetric real matrices are a special case of Hermitian matrices where all entries are real.
 
+  // Eq 1.22 and 1.21 - Determinant and inverse:
+  auto det = [] (const MatC& A) { return A.a*A.d - A.b*A.c; };
+  auto inv = [&](const MatC& A) { return MatC(A.d, -A.b, -A.c, A.a) / det(A); };
+
+  Complex detA = det(A);  // =  2 *  7 -  3 *  5 =  14 -  15 =   -1
+  Complex detB = det(B);  // = 11 * 19 - 13 * 17 = 209 - 221  = -12
+  MatC invA = inv(A);     // [-7,3; 5,-2]  ->  elements have same absolute values as A
+
 
   // ToDo:
   // -Test the trans/conj/herm, isHermitian/isUnitary/isNormal functions with example matrices. How

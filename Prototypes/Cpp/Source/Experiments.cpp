@@ -10329,12 +10329,13 @@ void test2x2Matrices1()
   //using VecR    = rsVector2D<Real>;
   using VecC    = rsVector2D<Complex>;
 
-  bool ok = true;
+  bool ok = true;            // for verifying the therorems in a unit-test style
+
+  // Some variables for example computations:
   MatC I(1, 0, 0, 1);
   MatC A(2, 3, 5, 7);
   MatC B(11, 13, 17, 19);
   MatC C(23, 29, 31, 37);
-
   Complex j(0, 1);
   Complex a = 2.0 + j;
   Complex b = 3.0 - 2.0*j;
@@ -10371,7 +10372,8 @@ void test2x2Matrices1()
   auto isHermitian = [&](const MatC& A) { return A == herm(A); };
   auto isUnitary   = [&](const MatC& A) { return A * herm(A) == I && herm(A) * A == I; };
   auto isNormal    = [&](const MatC& A) { return A * herm(A) == herm(A) * A; };
-  // Symmetric real matrices are a special case of Hermitian matrices where all entries are real.
+  // Unitary and Hermitian matrices are clearly a special case of normal matrices. Symmetric real 
+  // matrices are a special case of Hermitian matrices where all entries are real.
 
   // Eq 1.22 and 1.21 - Determinant and inverse:
   auto det = [](const MatC& A) { return A.a*A.d - A.b*A.c; };
@@ -10417,6 +10419,13 @@ void test2x2Matrices1()
   ok &= rsIsCloseTo(frobNorm(a*A), rsAbs(a) * frobNorm(A), 1.e-14); // |a*A| = |a| * |A|
   ok &= frobNorm(A+B) <= frobNorm(A) + frobNorm(B);                 // triangle inequality
   ok &= frobNorm(A*B) <= frobNorm(A) * frobNorm(B);                 // submultiplicative
+  // The Euclidean norm is also mentioned briefly but treated later in chapter 2 in more detail, so
+  // we'll not define it here.
+
+  // Ex 1.3: A matrix formed via herm(A) * A is positive semidefinite and positive definite if it 
+  // has full rank. Not sure, how to express that in code - probably requires computation of 
+  // eigenvalues. Maybe later....
+
 
 
 
@@ -10431,6 +10440,8 @@ void test2x2Matrices1()
   // -Is the commutator associative, i.e. [[A, B], C] == [A, [B, C]]? The commutator should be 
   //  anti-commutative, I think. Is there some sort of distributive law for commutators with 
   //  respect to matrix-multiplication?
+  // -Figure out, if symmetric matrices with truly complex entries have a mathematical 
+  //  significance.
 
 
   rsAssert(ok);

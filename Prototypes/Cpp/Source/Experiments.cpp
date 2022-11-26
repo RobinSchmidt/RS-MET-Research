@@ -10321,13 +10321,15 @@ void test2x2Matrices1()
   // mit 2x2-Matrizen" by Hans Jürgen Korsch.
 
   using Real    = double;
-  using Complex = std::complex<Real>;
+  using Complex = rsComplex<Real>;
+  //using Complex = std::complex<Real>;
   //using MatR    = rsMatrix2x2<Real>;
   using MatC    = rsMatrix2x2<Complex>;
   //using VecR    = rsVector2D<Real>;
   using VecC    = rsVector2D<Complex>;
 
   bool ok = true;
+  MatC I( 1, 0, 0, 1);
   MatC A( 2, 3, 5, 7);
   MatC B(11,13,17,19);
   MatC C(23,29,31,37);
@@ -10336,7 +10338,7 @@ void test2x2Matrices1()
   // Eq 1.2 - Definition of scalar product of two complex vectors, 2D case:
   auto scalarProduct = [](const VecC& a, const VecC& b)
   {
-    return conj(a.x) * b.x  +  conj(a.y) * b.y;
+    return rsConj(a.x) * b.x  +  rsConj(a.y) * b.y;
   };
 
   // Eq 1.17 - Definition of the commutator [A,B] = AB - BA of two matrices:
@@ -10344,14 +10346,33 @@ void test2x2Matrices1()
   {
     return A*B - B*A;
   };
+  // The commutator turns a matrix algebra into a Lie algebra (How? Does the commutator serve as a 
+  // second, higher level operation)?
+  // There's also an anticommutator defined as A*B + B*Y (not defined in the book).
 
   // Eq 1.18 - Leibniz rule: [A,BC] = B[A,C] + [A,B]C
   MatC lhs = commutator(A, B*C);
   MatC rhs = B * commutator(A,C) + commutator(A,B) * C;
   ok &= lhs == rhs;
   
+  // Eq 1.20 - Definition of transposed, conjugated and Hermitian conjugated matrices A^T, 
+  // A^C, A^H and definitions of Hermitian (A = A^H), unitary (A * A^H = A^H * A = I) and normal
+  // (A * A^H = A^H * A) matrices:
+  auto trans = [] (const MatC& A) { return MatC(A.a, A.c, A.b, A.d);  };
+  auto conj  = [] (const MatC& A) { return MatC(rsConj(A.a), rsConj(A.b), rsConj(A.c), rsConj(A.d)); };
+  auto herm  = [&](const MatC& A) { return trans(conj(A)); };
+  auto isHermitian = [&](const MatC& A) { return A == herm(A); };
+  auto isUnitary   = [&](const MatC& A) { return A * herm(A) == I && herm(A) * A == I; };
+  auto isNormal    = [&](const MatC& A) { return A * herm(A) == herm(A) * A; };
+  // Symmetric real matrices are a special case of Hermitian matrices where all entries are real.
 
 
+  // ToDo:
+  // -Test the trans/conj/herm, isHermitian/isUnitary/isNormal functions with example matrices. How
+  //  can we construct matrices with the desired features? Maybe starting with an arbitrary matrix,
+  //  we can split it into an Hermitian and anti-Hermitian part similar to obtaining a symmetric 
+  //  and antisymmetric part? Like (A + A^H)/2 and (A - A^H)/2? Maybe implement functions for these 
+  //  operations, too. That's not mentioned in the book.
 
   int dummy = 0;
 }

@@ -9383,7 +9383,7 @@ void testIntegerGroup()
   // Ideas:
   // What about using complex entries with integer real and imaginary part, aka Gaussian integers?
   // Can something interesting be said about groups of such matrices? In which case has the inverse
-  // also Gaussian integers as entries?
+  // also Gaussian integers as entries? Maybe the determinant can be +-i in addition to +-1?
   //
   // What about NxN matrices? Maybe, if N is composite, we can factor members of the group into 
   // members of smaller groups using the Kronecker product? Like a member of the 6x6 integer group

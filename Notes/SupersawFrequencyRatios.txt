@@ -61,5 +61,52 @@ Example: D = 8.3
  it's odd, we must make a decision if we want to make the split at floor(D)/2 or at floor(D+1)/2.
  If floor(D) is even, they are both the same
 
+----------------------------------------------------------------------------------------------------
+On page 12 here:
 
+https://www.kvraudio.com/forum/viewtopic.php?p=8572188#p8572188
+
+stepvhen has posted a solution for what the JP-8000 might have done, including this JSFX code:
+
+/* Reaper JSFX code */
+@init
+  ph1=0;
+  ph2=0;
+  padj=2^32;
+  
+function yass(p,dph,phsr)(
+/* Don't have a solution for random phase, but didn't want to implement an RNG.
+ * phase offests are the super low base phase, multiplied by some odd factor. This avoids bumping,
+  * but does not produce any perceivable repetition or audible frequency shift. The static offset is
+  * needed to avoid everything starting at the same spot. 
+  */
+  x = dph*4; o = 0;
+  w1 = (phsr*1.05+0.1) + p + ((dph + x)/256);  
+  w2 = (phsr*1.07+0.3) + p - ((dph + x)/256);
+  w3 = (phsr*1.13+0.37) + p + x/64;
+  w4 = (phsr*1.23+0.29) + p - x/64;
+  w5 = (phsr*1.17+0.23) + p + ((x * 8) - x)/256; 
+  w6 = (phsr*1.19+0.5) + p - ((x * 8) - x)/256;
+  w1 -= floor(w1); w2 -= floor(w2); w3 -= floor(w3);
+  w4 -= floor(w4); w5 -= floor(w5); w6 -= floor(w6);
+  p -= floor(p);
+  o += w1/8 + w2/8 + w3/8 + w4/8 + w5/8 + w6/8+p/16; 	/* fundamental is lower at full wet */
+);
+
+@slider
+/* detune amount, currently linear */ 
+  p1 = slider5;
+
+/* Mix amount, constant loudness */
+  dry = cos(0.5*$pi*slider6)/8;
+  wet = sin(0.5*$pi*slider6);
+ 
+@sample
+ph1+=(adj/padj);  		/* increment base phase, use multiples of this value */
+ph1-=floor(ph1);		/* floating point wraparound */
+pout=0;
+ph2=ph1*padj;			/* Shift back to fundamental frequency */
+det = p1*ph2;			/* apply detune */
+pout = yass(ph2,det,ph1); 	/* Yet another supersaw */
+pout = pout*2 - 1; 		/* Center */
 

@@ -74,14 +74,15 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testMimoFilters();        // just a stub - not much in there yet, mostly comments
   //testStateSpaceFilters();
 
-  test2x2Matrices();               // stub
+  //test2x2Matrices();               // stub
   //test2x2MatrixInterpolation();    // stub
   //testQuaternion();
   //testChebychevEconomization();  // stub
 
   //testGeneratingFunction();
   //testCatalanNumbers();
-  testSmoothCrossFade();
+  //testSmoothCrossFade();
+  testMerge();
 
 
   return 0;

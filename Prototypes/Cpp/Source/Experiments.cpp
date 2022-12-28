@@ -11070,6 +11070,111 @@ void testSmoothCrossFade()
   // From smoothMin and smoothMax we can perhaps also construct a smoothClip. 
 }
 
+/** UNDER CONSTRUCTION */
+template<class T>
+void rsMergeInPlace(std::vector<T>& A, int s)
+{
+  int in1 = 0;   // read index into 1st part of input array
+  int in2 = s;   // read index into 2nd part of input array
+  int out = 0;   // write index
+  int swp = s;   // start index of our swap-section
+  int ns  = 0;   // current length of swap-section
+  int N   = (int) A.size();
+
+  bool done = false;
+
+  while(out < N)
+  {
+
+    if(ns > 0)
+    {
+      // There are items in the swap section. These are items that originated from the first few
+      // items in the left section. Check them first - they are supposed to be smaller then the 
+      // item at our current left read index:
+
+      if(A[swp] < A[in2])
+      {
+        rsSwap(A[out], A[swp]);
+        swp++; 
+        ns--;
+        int dummy = 0; 
+      }
+      else
+      {
+        if(A[in2] < A[in1])
+        {
+          T tmp  = A[in2];
+          swp++;
+          A[swp] = A[in1];
+          ns++;
+          A[out] = tmp;
+          int dummy = 0; 
+        }
+        else
+        {
+          int dummy = 0; 
+          // no op ...or maybe we have something to do here? 
+        }
+      }
+
+    }
+    else  
+    {
+      // The swap-section is empty. We need to compare the first elements of left and right 
+      // section:
+
+      if(A[in1] < A[in2])
+      {
+        // Item in left section is already in its proper positon.
+        in1++;
+        int dummy = 0; 
+      }
+      else
+      {
+        // The head-item in the right section is less than the head-item in the left section. We
+        // move the head-item of the left section into the swap section and the head item of the 
+        // right section into the output place ...tbc...
+        T tmp  = A[in2];
+        A[swp] = A[in1];
+        ns++;
+        A[out] = tmp;
+        in1++;
+        in2++;
+        int dummy = 0; 
+      }
+
+
+
+
+      int dummy = 0; 
+    }
+
+
+
+    out++;
+  }
+
+
+  int dummy = 0; 
+
+}
+
+void testMerge()
+{
+  // See Notes/InPlaceMerge.txt
+
+  using Vec = std::vector<int>;
+
+  Vec A; 
+
+  A = Vec({5,6,7,8, 1,2,3,4});
+  rsMergeInPlace(A, 4);
+
+  A = Vec({1, 4, 7, 8, 2, 3, 5, 6});
+  
+  int dummy = 0; 
+}
+
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

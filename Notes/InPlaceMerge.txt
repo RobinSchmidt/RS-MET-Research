@@ -36,3 +36,107 @@ swap-space where the swap space coul occupy a portion of input 2. At each step, 
 rsMergeInPlace(std::vector<int>& v, int splitPoint)
 
 in the example, the length of v would be 8 and splitPoint = 4
+
+
+Let's do a couple of example runs. Notation;
+
+L:   left read pointer
+R:   right read pointer
+W:   write pointer
+S:   first element of swap section
+R-S: length of swap section
+
+
+
+Array                  Candidates  to-final  to-swap  to-right   increment
+					  
+            R                                
+0:  2 4 7 8 1 3 5 6    2,1         1         2                   W
+    W       S
+
+              R
+1:  1 4 7 8 2 3 5 6    4,2,3       2         4                   W,R
+      W     S
+
+              R
+2:  1 2 7 8 4 3 5 6    7,4,3       3         7                   W,R
+        W   S
+
+                R
+3:  1 2 3 8 4 7 5 6    8,4,5       4         8        5(?)       W,R  ...maybe S too?
+          W S
+		  
+		          R
+4:  1 2 3 4 5 7 8 6    5,6         5                             W,S
+            W
+			S
+			
+			      R
+5:  1 2 3 4 5 7 8 6    7,6         6
+              W
+			  S
+			  
+			  			  
+-At step 4, W catches up to S - should this change the logic? Maybe...
+-I think, as long as W is inside the left section (steps 1..3) we need to first determine whether
+ the swap sections is non-empty and if so, compare the head-item in "swap" with the head-item in 
+ "right" and otherwise, compare the head-item in "left"...
+-Hmmm...I think, as soon as the write pointer catches up to the swap pointer, the whole idea falls 
+ apart...or does it? Or can we repait it? Maybe we can force the S pointer to be always at least 1 
+ position further right than the W pointer?
+-Or wait: when this happens, we are actually in the same situation as at the very start, just with
+ an array of roughly half the length - so maybe we can now just invoke a recursive call for the 
+ tail array. The swap section is the new left section and the remaining right section is the new 
+ right section. If that works, we can pehaps figure out how to convert this recursion to iteration 
+ as well
+-Will it be a problem, if the split-point (i.e. the initial position of R (and W)) is not in the 
+ middle?
+ 
+Let's try a manual run with the right half array at step 4, where W catches up to R:
+
+Array           Candidates  to-final  to-swap  increment
+
+         R
+0: 5 7 8 6      5,6         5                  W
+   W     S
+  
+         R
+1: 5 7 8 6      7,6         6         7        W,R
+     W   S
+ 
+           R
+2: 5 6 8 7      8,7         7         8        W
+       W S
+	   
+	       R
+3: 5 6 8 7   
+         W
+	     S
+	   
+ 
+-Is it legal that R is beyond the array?  Maybe the right-section size is R - array-length, so it's
+ indeed zero in this case? But may there must be some logic to detect that and prevent and 
+ out-of-bounds access attempt
+ 
+ 
+ 
+...well...unsurprisingly, this problem seems to be well known - and is perhaps harder than I naively 
+thought:
+
+
+https://nms.kcl.ac.uk/informatics/techreports/papers/TR-04-05.pdf 
+ 
+https://www.geeksforgeeks.org/in-place-merge-sort/
+https://www.geeksforgeeks.org/efficiently-merging-two-sorted-arrays-with-o1-extra-space/
+
+https://www.interviewkickstart.com/learn/in-place-merge-sort
+
+https://stackoverflow.com/questions/2571049/how-to-sort-in-place-using-the-merge-sort-algorithm
+http://thomas.baudel.name/Visualisation/VisuTri/inplacestablesort.html
+https://github.com/h2database/h2database/blob/master/h2/src/tools/org/h2/dev/sort/InPlaceStableMergeSort.java
+
+https://www.programiz.com/dsa/merge-sort
+ 
+ 
+https://en.cppreference.com/w/cpp/algorithm/inplace_merge
+ 

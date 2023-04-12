@@ -8880,8 +8880,11 @@ void testPrimeFactorTable()
 
 
   // ToDo: 
-  // -maybe compute differences and cumulative sums
-  // -what about coprimes?
+  // -Maybe compute differences and cumulative sums
+  // -What about coprimes?
+  // -What about counting functions of "half-primes", "third-primes", "quarter-primes" etc. 
+  //  defined as numbers with exactly 2, 3, 4, etc. factors? (my definition - check if some such 
+  //  definition already exists)
   // -maybe plot cumulative sums of sums and counts of prime-factors
 }
 

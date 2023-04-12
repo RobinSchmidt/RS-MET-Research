@@ -4,7 +4,8 @@ Outline:
 Part I: Continuous Mathematics
 -Foundations: logic, set theory, numbers, functions (polynomials, rational, sin/exp/log, binomial
  theorem, partial fraction expansion)
--Calculus: limits, continuity, derivatives, integrals, (Taylor) series, differential equations
+-Calculus: limits, continuity, derivatives, integrals, (Taylor) series, convergence, differential 
+ equations,
 -Linear Algebra: vectors, matrices, various products (dot,cross,wedge,matrix), operators
 -Geometry: Euclidean, Differential, Hyperbolic, Elliptic, synthetic, analytic
  coordinate systems, lines, planes, projections, shapes, areas, volumes, curves, 
@@ -132,4 +133,5 @@ ToDo:
  to nD as: f(x+a) = exp(a . nabla) f(x). Now x and a are vectors, . is the dot-product and nabla is 
  the formal vector of the partial derivative operators.
  
- 
+ https://mathworld.wolfram.com/HypergeometricSeries.html
+ Introduce it as generalization of geometric series in the series section of calculus chapter

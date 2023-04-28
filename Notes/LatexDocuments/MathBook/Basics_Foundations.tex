@@ -74,18 +74,22 @@ A relation can formally be defined to be a set of tuples. Of particular importan
 \node[mydot, below=of a2, label={left:3}] (a3) {}; 
 \node[mydot, below=of a3, label={left:4}] (a4) {}; 
 	
-\node[mydot, right=2cm of a1, label={right:1}] (b1) {}; 
-\node[mydot, below=of b1,     label={right:2}] (b2) {}; 
-\node[mydot, below=of b2,     label={right:3}] (b3) {}; 
+\node[mydot, right=2cm of a1, label={right:0}] (b1) {}; 
+\node[mydot, below=of b1,     label={right:1}] (b2) {}; 
+\node[mydot, below=of b2,     label={right:2}] (b3) {}; 
 \node[mydot, below=of b3,     label={right:4}] (b4) {}; 
 	
-\path[->] (a1) edge (b1) edge (b2) edge (b3) edge (b4);
-\path[->] (a2) edge (b3) edge (b4);	
-\path[->] (a3) edge (b1) edge (b3);
-\path[->] (a4) edge (b2) edge (b4);
+\path[->] (a1) edge (b3);
+\path[->] (a1) edge (b4);
+\path[->] (a2) edge (b4);
+\path[->] (a3) edge (b4);
+%\path[->] (a1) edge (b1) edge (b2); 
+%\path[->] (a2) edge (b3) edge (b4);	
+%\path[->] (a3) edge (b1) edge (b3);
+%\path[->] (a4) edge (b2) edge (b4);
 \end{tikzpicture}
 %\end{comment}
-
+% try to draw it more horizontally, draw ellipses around the sets
 
 
 % see:

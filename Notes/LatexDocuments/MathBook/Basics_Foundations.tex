@@ -56,7 +56,7 @@ Sidenote: If you really want to be puristic and build \emph{everything} from set
 % https://en.wikipedia.org/wiki/Ordered_pair#Defining_the_ordered_pair_using_set_theory
 
 \paragraph{Relations}
-A relation can formally be defined to be a set of tuples. Of particular importance are binary relations, i.e. sets of 2-tuples, aka ordered pairs. As an example, consider the two sets $A = \{1,2,5\}, B = \{0,2,4\}$. We can define a relation $R$ between the sets $A$ and $B$ as a set of ordered pairs where the first entry comes from $A$ and the seconds from $B$, for example: $R = \{(1,2),(1,4),(2,4)\}$. Such a relation can be visualized pictorially by drawing the two sets side by side and drawing an arrow between each pair of elements that is in the relation. This is shown for our relation $R$ in figure .... ...TBC...
+A relation can formally be defined to be a set of tuples. Of particular importance are binary relations, i.e. sets of 2-tuples, aka ordered pairs. As an example, consider the two sets $A = \{1,2,5\}, B = \{0,2,4\}$. We can define a relation $R$ between the sets $A$ and $B$ as a set of ordered pairs where the first entry comes from $A$ and the second from $B$, for example: $R = \{(1,2),(1,4),(2,4)\}$. Such a relation can be visualized pictorially by drawing the two sets side by side and drawing an arrow between each pair of elements that is in the relation. This is shown for our relation $R$ in figure .... ...TBC...
 % explain left/right totality, left/right uniqueness - see Bill Shillito's course on youtube
 % use as example A = {1,2,3,4}, B = {0,2,4} and the < relation. R = {(1,2),(1,4),(2,4),(3,4)}
 % not left-total due to (4,X) missing
@@ -65,6 +65,9 @@ A relation can formally be defined to be a set of tuples. Of particular importan
 % not right-unique due to (1,2),(1,4)
 % draw diagrams
 
+\begin{figure}[h]
+\centering
+	
 \begin{tikzpicture}
 [mydot/.style={circle, fill=lightgray, inner sep=5pt}, >=latex, shorten >= 1pt, shorten <= 1pt]
 
@@ -88,8 +91,7 @@ A relation can formally be defined to be a set of tuples. Of particular importan
 \draw (2.0,-0.75) ellipse (0.5cm and 1.5cm);
 
 \end{tikzpicture}
-
-% try to draw it more horizontally, draw ellipses around the sets
+\end{figure}
 
 % https://tikz.dev/tikz-transformations
 

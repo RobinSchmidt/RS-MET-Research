@@ -38,7 +38,7 @@ Set theory is often said to be the foundation of all mathematics - even much mor
 The idea of a set was initially introduced by Georg Cantor in an intuitive way. His way of establishing set theory later turned out to have some flaws which is why it was later rebuilt more formally. The result of this rebuild is called "axiomatic set theory" and is very abstract and formal. Fortunately, Cantor's view, which is today sometimes called "naive set theory", is good enough for us. 
 
 \paragraph{Sets}
-In Cantor's definition "A set is a gathering together into a whole of definite, distinct objects of our perception or of our thought which are called elements of the set.". So, in essence, a set is just a bunch of things. A very general concept indeed. Sets are usually denoted in curly braces. For example, the set of the 3 letters a,b,c would be denoted as $\{a,b,c\}$. Two sets are considered equal, if and only if they contain the same elements. It does not matter in which order the elements are written down or if an element appears multiple times. So that means, for example, the sets $\{c,a,b\}$ or $\{a,c,a,a,b,c\}$ are in fact equal to the set $\{a,b,c\}$. By the way, the phrase "if and only if" appears sufficiently often in math texts that some authors use the abbreviation "iff" for that - yes, that's an "if" with a double-f. I may sometimes use that, too. Sets can be given names, for example, we may call our set above $S$ and we may write this as $S = \{a,b,c\}$. Element membership is denoted by an $\in$ symbol, so to express the fact that $b$ is an element of the set $S$, we would write $b \in S$. 
+In Cantor's definition "A set is a gathering together into a whole of definite, distinct objects of our perception or of our thought which are called elements of the set.". So, in essence, a set is just a bunch of things. A very general concept indeed. Sets are usually denoted in curly braces. For example, the set of the 3 letters a,b,c would be denoted as $\{a,b,c\}$. Two sets are considered equal, if and only if they contain the same elements. It does not matter in which order the elements are written down or if an element appears multiple times. So that means, for example, the sets $\{c,a,b\}$ or $\{a,c,a,a,b,c\}$ are in fact equal to the set $\{a,b,c\}$. By the way, the phrase "if and only if" appears sufficiently often in math texts that some authors use the abbreviation "iff" for that - yes, that's an "if" with a double-f. I may sometimes use that, too. Sets can be given names, for example, we may call our set above $S$ and we may write this as $S = \{a,b,c\}$. Element membership is denoted by an $\in$ symbol, so to express the fact that $b$ is an element of the set $S$, we would write $b \in S$. If we want to express that a certain object, say $d$, is not an element of a set $S$, we write this as $d \notin S$.
 
 \medskip 
 Sets can have other sets as elements and that nesting capability can be used recursively to build arbitrarily complex structures purely from sets. These structures also include the number systems that are used in math. For example, the number zero can be represented by the empty set: $0 = \{\}$, which is also denoted by $\emptyset$, the number one by the set that contains the empty set (i.e. zero): $1 = \{ 0 \} =  \{ \emptyset \}$, the number two by the set that contains zero and one: $2 = \{ 0, 1 \} = \{ \emptyset, \{ \emptyset \} \}$ and so on. Of course, that's super tedious and nobody actually thinks about numbers this way - but in principle, it can be done. Note that in this context $\emptyset$ and $\{ \emptyset \}$ are different things. The first is the empty set and the second is the set that contains the empty set. The nesting matters. One is an empty box, the other one is a box that contains something: namely, an empty box. If you really go down to the very lowest levels of math, then sets are actually the \emph{only} things that can occur as elements of (other) sets because sets are really the only thing that exists in this world. There is nothing else but sets. [VERIFY!]
@@ -100,12 +100,16 @@ There are a couple of important features that such a relation may or may not hav
 
 % https://www.youtube.com/watch?v=Tk5_B7w5fiY&list=PLZzHxk_TPOStgPtqRZ6KzmkUQBQ8TSWVX&index=9
 
-\paragraph{Functions} are a special kind of relation, namely those relations which are left-total and right-unique. You can think of functions as a definition of a map from a set $A$ to another set $B$. Each element of $A$ gets mapped to some unique element of $B$. You can throw any $a \in A$ at a function $f$ and it will unambiguously tell you, which $b \in B$ your given $a$ is mapped to. If a function is additionally left-unique, we can actually traverse the arrow back to figure out unambiguously, where we came from. We can undo the application of the functional mapping for those $b \in B$ which have an incoming arrow. Such left-unique functions are also called \emph{injective}. If, on the other hand, the function is right-total, i.e. every element of $B$ has an incoming arrow, we call the function \emph{surjective}. A function that is both injective and surjective is called \emph{bijective}. Such bijective functions can be inverted, i.e. undone, for any $b \in B$ and are therefore also called invertible.
+\paragraph{Functions} are a special kind of relations, namely those relations which are left-total and right-unique. You can think of functions as a definition of a map from a set $A$ to another set $B$. Each element of $A$ gets mapped to some unique element of $B$. You can throw any $a \in A$ at a function $f$ and it will unambiguously tell you, which $b \in B$ your given $a$ is mapped to. If a function is additionally left-unique, we can actually traverse the arrow back to figure out unambiguously, where we came from. We can undo the application of the functional mapping for those $b \in B$ which have an incoming arrow. Such left-unique functions are also called \emph{injective}. If, on the other hand, the function is right-total, i.e. every element of $B$ has an incoming arrow, we call the function \emph{surjective}. A function that is both injective and surjective is called \emph{bijective}. Such bijective functions can be inverted, i.e. undone, for any $b \in B$ and are therefore also called invertible.
+
+\paragraph{Equivalences} are another special kind of relations ...TBC...
+
+\paragraph{Orders} are yet another special kind of relations ...TBC...
+
 
 % explains special kinds of relations - especially equivalence relations and partial and total orders
 
 \paragraph{Set Algebra} Just like we could combine logical propositions via the connectives $\wedge, \vee, \neg, \ldots$ to yield new propositions, there are operations that we can perform on sets to yield new sets. The \emph{intersection} of two sets $A, B$ is denoted as $A \cap B$ and defined to be the set with the elements that are present in $A$ and in $B$, i.e. the set of elements that $A$ and $B$ have in common. The visual resemblence of $\cap$ and $\wedge$ is, of course, no coincidence....TBC...
-
 \begin{eqnarray}
  A \cap B      =& \{x: \; x \in A \wedge x \in    B \} \qquad &\text{intersection} \\
  A \cup B      =& \{x: \; x \in A \vee   x \in    B \} \qquad &\text{union} \\
@@ -113,14 +117,23 @@ There are a couple of important features that such a relation may or may not hav
  A \times B    =& \{(x,y): \; x \in A \wedge y \in    B \} \qquad &\text{product}
 \end{eqnarray}
 
+\paragraph{Subsets} The set algebra can be seen as providing some operations that we can perform on sets. Sometimes, we also want to express certain relationships between sets. Of particular interest is, when one set $B$ contains all the elements that another set $A$ contains. In such a case, we call $A$ a \emph{subset} of $B$ and we call $B$ a \emph{superset} of $A$. The set $B$ may or may not contain other elements, i.e. elements that are not in $A$. If the superset $B$ does indeed contain additional elements, then we call $A$ a \emph{strict subset} of $B$ and we call $B$ a \emph{strict superset} of $A$. These relations are expressed with the notation $\subseteq, \subset, \supset, \supseteq$ as follows:
+\begin{eqnarray}
+A \subseteq B &  \Leftrightarrow &  x \in B \Rightarrow x \in A \qquad \text{$A$ is subset of $B$} \\
+A \supseteq B &  \Leftrightarrow &  x \in A \Rightarrow x \in B \qquad \text{$A$ is superset of $B$} \\
+A \subset   B &  \Leftrightarrow &  x \in B \Rightarrow x \in A, \; A \neq B \qquad \text{$A$ is strict subset of $B$} \\
+A \supset   B &  \Leftrightarrow &  x \in A \Rightarrow x \in B, \; A \neq B \qquad \text{$A$ is strict superset of $B$} \\
+\end{eqnarray}
 
 
-% set algebra
-%   cartesian product, intersection, union, difference, subset, etc.
+%\paragraph{Relations between sets} Not only can set elements be related to one another but there are also there be relations between
+% set algebra:
+%   subset, superset, power set etc.
 
 % what about relational algebra?
 
 % https://texample.net/tikz/examples/set-operations-illustrated-with-venn-diagrams/
+%Cardinality
 
 \subsubsection{Category Theory}
 Category theory is an area of math that attempts to structure and organize mathematics itself. This section here is meant to only give a very superficial birds eye overview. Category theory has been called the "mathematics of mathematics" and - less charitably - as "abstract nonsense". Its relation to set theory has been compared to that of higher level programming languages to assembly language. Category theory describes a given field of mathematics in terms of a so called \emph{category}. Such a category consists of a class of \emph{objects} and relationships between those objects, called \emph{morphisms}. You can picture the objects as nodes (as in a multigraph, see [REF needed to Graph Theory section]) and the morphisms as directed edges, depicted as arrows. Morphisms are also sometimes called arrows. The category must also have a notion of composing morphisms. When there's an arrow from node $A$ to node $B$ and another arrow from node $B$ to node $C$ then this induces an arrow from node $A$ to node $C$. This sort of \emph{composition} of morphisms into other morphisms can be pictured as traversing a path in the multigraph. The composition of morphisms must be associative. As final ingredient for a category, we need for each node a special kind of morphism, called an \emph{identity}. An identity is a morphism/arrow that goes from a node $A$ to itself and is meant to convey an abstraction of the idea of an identity function - a sort of neutral element in the realm of morphisms.

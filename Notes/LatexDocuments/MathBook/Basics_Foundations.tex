@@ -92,6 +92,21 @@ A relation can formally be defined to be a set of tuples. Of particular importan
 
 \end{tikzpicture}
 \end{figure}
+There are a couple of important features that such a relation may or may not have. In a \emph{left-total} relation, every element in the left set has an outgoing arrow emanating from it. In a \emph{right-total} relation, every element in the right set has an incoming arrow. In a \emph{right-unique} relation, every element in the left set has at most one outgoing arrow. The naming convention reflects the idea that when you pick one element from the left set, the related  element of the right set, if any, is uniquely determined. We always know, where we have to go. Likewise, in a \emph{left-unique} relation, every element of the right set has at most one incoming arrow. For every element from the right set, the related element from the left set, if any, is uniquely dtermined. We always know, where we came from. As we can see, our example relation $R$ actually has none of these features.
+
+% https://www.youtube.com/watch?v=Tk5_B7w5fiY&list=PLZzHxk_TPOStgPtqRZ6KzmkUQBQ8TSWVX&index=9
+
+\paragraph{Functions} are a special kind of relation, namely those relations which are left-total and right-unique. You can think of functions as a definition of a map from a set $A$ to another set $B$. Each element of $A$ gets mapped to some unique element of $B$. You can throw any $a \in A$ at a function $f$ and it will unambiguously tell you, which $b \in B$ your given $a$ is mapped to. If a function is additionally left-unique, we can actually traverse the arrow back to figure out unambiguously, where we came from. We can undo the application of the functional mapping for those $b \in B$ which have an incoming arrow. Such left-unique functions are also called \emph{injective}. If, on the other hand, the function is right-total, i.e. every element of $B$ has an incoming arrow, we call the function \emph{surjective}. A function that is both injective and surjective is called \emph{bijective}. Such bijective functions can be inverted, i.e. undone, for any $b \in B$ and are therefore also called invertible.
+
+\paragraph{Set Algebra} Just like we could combine logical propositions via the connectives $\wedge, \vee, \neg, \ldots$ to yield new propositions, there are operations that we can perform on sets to yield new sets. The \emph{intersection} of two sets $A, B$ is denoted as $A \cap B$ and defined to be the set with the elements that are present in $A$ and in $B$, i.e. the set of elements that $A$ and $B$ have in common. The visual resemblence of $\cap$ and $\wedge$ is, of course, no coincidence.
+
+\begin{eqnarray}
+ A \cap B      &=& \{x: \; x \in A \wedge x \in    B \} \qquad \text{intersection} \\
+ A \cup B      &=& \{x: \; x \in A \vee   x \in    B \} \qquad \text{union} \\
+ A \setminus B &=& \{x: \; x \in A \wedge x \notin B \} \qquad \text{difference} \\
+\end{eqnarray}
+
+...TBC...
 
 % https://tikz.dev/tikz-transformations
 
@@ -103,7 +118,9 @@ A relation can formally be defined to be a set of tuples. Of particular importan
 
 
 % set algebra
-%   Relations, Functions, cartesian product, intersection, union, difference, subset, etc.
+%   cartesian product, intersection, union, difference, subset, etc.
+
+% what about relational algebra?
 
 % https://texample.net/tikz/examples/set-operations-illustrated-with-venn-diagrams/
 
@@ -130,6 +147,8 @@ Abstracting the idea of bijective functions to a more general setting in which t
 
 % https://en.wikipedia.org/wiki/Category_theory
 % https://plato.stanford.edu/entries/category-theory/#Exam
+
+% https://www.youtube.com/watch?v=SmXB2K_5lcA  Category Theory for Programmers: Chapter 1 - Category
 
 % https://texample.net/tikz/examples/tag/diagrams/
 % https://texample.net/tikz/examples/labeled-chain/

@@ -805,3 +805,12 @@ class HindenmarshRose : public Attractor // https://en.wikipedia.org/wiki/Hindma
     z = 2.75;
   }
 };
+
+
+/*
+
+this video has a few more at 1:57
+
+https://www.youtube.com/watch?v=wZvFKcQ_3Rc&list=PLw5b-jhi9cCD_YQgijiHnodoD0G91lu4c&index=6
+
+*/

@@ -8735,6 +8735,13 @@ void testComplexPolar()
   //  -adjust angle by adding/subtracting an appropriate multiple of 2*pi such that the angle of
   //   the result falls in between the two angles of the operands (rationale: just look at the 
   //   parallelogram rule from vector addition)
+  //  -Maybe we can avoid the conversions? Maybe the angle of the result could be a weighted 
+  //   average of the input angles? Maybe a = (r1*a1 + r2*a2) / (r1 + r1)? And the radius of the 
+  //   result perhaps a weighted geometric mean? ...but that would require to pow calls which are
+  //   probably even more expensive than the conversions. Or maybe the resulting radius could be 
+  //   the product of tha radii multiplied by some factor based on the angle difference? Maybe 
+  //   cos(a2-a1)? ...but that could be negative. Or maybe the weight could use a formula involving
+  //   a1,a2,a?
   // -Negation (additive inverse): -(r*exp(i*a)) = r*exp(i*(a-pi))
   //  ...hmm...but negating twice does not bring us back to where we started but instead has added 
   //  -2*pi to the angle...maybe try to figure out a subtraction rule from the addition rule and then 

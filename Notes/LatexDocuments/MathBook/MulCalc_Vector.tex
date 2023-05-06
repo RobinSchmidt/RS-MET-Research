@@ -1,18 +1,35 @@
 \section{Vector Calculus} 
 
 \subsection{Scalar and Vector Fields}
-When we are in the realm of vector calculus, the mathematical idea of a \emph{field} refers to a function $f$ that takes a vector $\mathbf{x}$, usually from $\mathbb{R}^n$, as input and produces an output - as functions do. But we must be careful not confuse this notion with the notion of a field in abstract algebra. There, a field means something else. When the output of the function is a simple scalar, i.e. a (real) number, then we call our field a \emph{scalar field}. So, scalar fields are functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$. If the output of the function is itself a vector and that vector is of the same dimensionality as the input vector, we call the field a \emph{vector field}. So, vector fields are functions $\mathbf{f}: \mathbb{R}^n \rightarrow \mathbb{R}^n$. Typographically, we denote functions with vector outputs in boldface. In classic vector calculus, the dimensionality $n$ is usually 3, sometimes 2.
+When we are in the realm of vector calculus, the mathematical idea of a \emph{field} refers to a function $f$ that takes a vector $\mathbf{x}$, usually from $\mathbb{R}^n$, as input and produces an output - as functions do. But we must be careful not confuse this notion with the notion of a field in abstract algebra. There, a field means something else. When the output of the function is a simple scalar, i.e. a (real) number, then we call our field a \emph{scalar field}. So, scalar fields are functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$. If the output of the function is itself a vector and that vector is of the same dimensionality as the input vector, we call the field a \emph{vector field}. So, vector fields are functions $\mathbf{f}: \mathbb{R}^n \rightarrow \mathbb{R}^n$. Typographically, we denote functions with vector outputs in boldface. In classic vector calculus, the dimensionality $n$ is usually 3, sometimes 2. Therefore, for convenience, we may write scalar fields as $f = f(x,y,z)$ or $f = f(x,y)$ and vector fields as $\mathbf{f}(x,y,z) = (f_1(x,y,z), f_2(x,y,z), f_3(x,y,z))^T$ or $\mathbf{f}(x,y) = (f_1(x,y), f_2(x,y))^T$. One could perhaps use $f_x, f_y, f_z$ instead of $f_1, f_2, f_3$. However, that notation is already commonly used to denote partial derivatives in the realm of partial differential equations (PDEs) which we will encounter later, so we won't use that notation here because we indeed want to use it there later. 
+
+%One also sometimes sees the notation $u(x), v(x), w(x)$ ...really? In differential geometry, one often sees x(u,v), y(u,v), z(u,v) ...but the other way around? ...not sure
+
+%\begin{eqnarray}
+% f(x,y,z) &= 
+%\end{eqnarray}
 
 %-maybe plot an example vector field
 
 
 \subsection{Differential Operators}
-Operators are mathematical objects that can "act on" or be "applied to" functions to produce new functions. Differential operators are operators which are built from (partial) derivatives. In vector calculus, we will encounter operators that act on scalar- and vector fields and produce other scalar- and vector fields. In this context, one could consider taking the Jacobian and Hessian as operators that act on vector and scalar fields respectively and produce matrix fields as outputs. However, Jacobians and Hessians are not really a thing in the realm of vector calculus, as far as I know. They belong more into the general multivariable calculus and/or maybe into matrix- or tensor calculus. [TODO: figure out!]
+Operators are mathematical objects that can "act on" or be "applied to" functions to produce new functions. Differential operators are operators which are built from (partial) derivatives. In vector calculus, we will encounter operators that act on scalar- and vector fields and produce other scalar- and vector fields. In this context, one could consider taking the Jacobian and Hessian as operators that act on vector and scalar fields respectively and produce matrix fields as outputs. However, Jacobians and Hessians themselves in their original form are not commonly encountered in the realm of 3D vector calculus, as far as I know. They belong more into the realm of general multivariable calculus and/or maybe into matrix- or tensor calculus. Sometimes, the Jacobian appears in disguise as a gradient of a vector field which is the transpose of the Jacobian and we also encounter the trace of the Hessian in the form of the Laplacian operator.
+
+%[TODO: figure out!]
 
 %-mention how the Jacobian and Hessian fit into this scheme. I think, we may consider them as operators that produce matrix-valued functions, i.e. matrix-fields or tensor fields
+%-maybe they occur in disguise as the vector gradient (Jacobian) and Laplacian (trace of Hessian)?
 
 \subsubsection{Gradient}
-We already encountered the general $n$-dimensional gradient operator that acts on a scalar field $f(\mathbf{x})$ and produces a vector field $\mathbf{grad} f(\mathbf{x})$. The gradient of scalar fields $f: \mathbb{R}^3 \rightarrow \mathbb{R}$ is indeed one of the differential operators of classic 3D vector calculus. 
+We already encountered the general $n$-dimensional gradient operator that acts on a scalar field $f(\mathbf{x})$ and produces a vector field $\mathbf{grad} f(\mathbf{x})$. The gradient of scalar fields $f: \mathbb{R}^3 \rightarrow \mathbb{R}$ is indeed one of the common differential operators of classic 3D vector calculus. For such a scalar field $f = f(x,y,z)$, the gradient is defined as:
+\begin{equation}
+ \grad f = \nabla f = ...
+\end{equation}
+where we introduced two possible notations at once - one using $\grad$ and one using the nabla-operator $\nabla$. There is also a notion of a gradient of a vector field. This operator is much less common...TBC...
+
+%-can it also be applied to vector fields? Does it then, in fact, produce the Jacobian?
+%-https://en.wikipedia.org/wiki/Gradient#Gradient_of_a_vector_field
+
 
 \subsubsection{Divergence}
 The divergence operator acts on a vector field and produces a scalar field...TBC...
@@ -29,11 +46,40 @@ The curl operator acts on a vector field and produces another vector field...TBC
 \subsubsection{Laplacian}
 The Laplacian operator acts on a scalar field and produces another scalar field. It is actually the divergence of the gradient (VERIFY!) and is therefore a second order differential operator in the sense that it involves second order partial derivatives...TBC...
 
+%-It's the trace of the Hessian, I think. When the Hessian is viewed as tensor, that also corresponds to a contraction.
+%-I think, it can also be applied to vector fields?
+
+
+\subsubsection{Identities}
+ToDo: give a comprehensive list of identities involving the differential operators above.
+
+
 % introduce nabla dot nabla and nabla-squared notation
 
+%\subsection{Harmonic Fields}
+%-Laplacian must be zero?
+%-harmonic conjugates
+%-https://en.wikipedia.org/wiki/Skew_gradient
+
 \subsection{Potential Fields}
+We have seen how we are able to produce new fields by applying differential operators to given fields. Fields that are so produced are special and have some convenient properties. If we are able to express a vector field as gradient of a scalar field, then the scalar field contains all the information that the original vector field contains. We can always get our original vector field back by just taking its gradient. We lost no information - yet, a scalar field is a much simpler object than a vector field. Of course, it's not always possible to find such a scalar field - but if it is, we should take advantage of it. If such a scalar field, let's call it $F$, exists for a given vector field $\mathbf{f}$, then we call $F$ a \emph{potential} for $\mathbf{f}$. A potential is a sort of antiderivative of a vector field and sometimes even called by that name. You need to be careful about different sign conventions used in the literature: some authors would define $-F$ to be the potential of $\mathbf{f}$. ...TBC...
+
+% figure out sign conventions - i think, potentials are sometimes defined via negative gradient
+% https://en.wikipedia.org/wiki/Scalar_potential
+% both conventions are used - Bärwolff uses the one without the minus - mention that one finds both notations in the literature
+
+%A vector field that can be produced by taking the gradient of a given scalar field is called a potential field
+
 %-scalar and vector potentials ...but we need the curl be defined to define vector potentials
 %maybe re-organize:  make this subsection "Scalar and vector Fields" and introduce potential fields after the "Differential Operators" or maybe even after the integrals...nah...maybe not
+
+%-what, if the divergence is zero? Have these fields also some special name?
+
+\subsubsection{Finding Scalar Potentials}
+So, if we encounter a vector field $\mathbf{f}$ in some application, how do find its scalar potential? First things first - we should first figure out whether or not such a scalar potential even exists. Fortunately, there's a simple criterion for that: For a given vector field $\mathbf{f}$, a scalar potential $F$ exists, if and only if ...
+
+\subsubsection{Finding Vector Potentials}
+
 
 
 \subsection{Contour Integrals}
@@ -63,6 +109,7 @@ ToDo: explain, how the contour is given as parametric equations and formulate th
 
 %-applies to potential fields
 %-could also be called "Gradient Theorem" - would fit well with "Divergence-" and "Curl Theorem"
+% https://en.wikipedia.org/wiki/Gradient_theorem
 % https://www.khanacademy.org/math/multivariable-calculus/integrating-multivariable-functions/line-integrals-in-vector-fields-articles/a/fundamental-theorem-of-line-integrals
 % https://www.contemporarycalculus.com/dh/Calculus_all/Ch15_4.pdf
 % https://math.mit.edu/~jorloff/18.04/notes/greenstheorem.pdf

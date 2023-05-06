@@ -31,12 +31,18 @@ We already encountered the general $n$-dimensional gradient operator that acts o
  \end{pmatrix}
  =
  \begin{pmatrix}
+  \partial_x f \\
+  \partial_y f \\
+  \partial_z f
+\end{pmatrix}
+= 
+ \begin{pmatrix}
    f_x \\
    f_y \\
    f_z
 \end{pmatrix} 
 \end{equation}
-We introduced two possible notations on the left hand side at once: one using $\grad$ and one using the nabla-operator $\nabla$. We also introduced two possible notations on the right hand side: one using the "partial" symbol $\partial$ and another one using subscripts. You will find both and possibly more in the literature. 
+We introduced two possible notations on the left hand side at once: one using $\grad$ and one using the nabla-operator $\nabla$. We also introduced three possible notations on the right hand side: one using the "partial" symbol $\partial$ in a differential quotient, one using a subscripted $\partial$ symbol and another one using subscripts on $f$. They all mean the same thing and you will find all of them and possibly more in the literature. We will primarily use simplemost one which is the rightmost. In some books, you will also see definitions with the function's arguments written out, i.e. $f$ is replaced by $f(x,y,z)$ everywhere. That would be quite messy so we have already suppressed the arguments here and it is implicitly understood from the context that $f$ is a function of $x,y,z$.
 
 \medskip
 There is also a notion of a gradient of a vector field. This operator is much less common...TBC...
@@ -71,10 +77,8 @@ ToDo: give a comprehensive list of identities involving the differential operato
 
 % introduce nabla dot nabla and nabla-squared notation
 
-%\subsection{Harmonic Fields}
-%-Laplacian must be zero?
-%-harmonic conjugates
-%-https://en.wikipedia.org/wiki/Skew_gradient
+
+
 
 \subsection{Potential Fields}
 We have seen how we are able to produce new fields by applying differential operators to given fields. Fields that are so produced are special and have some convenient properties. If we are able to express a vector field as gradient of a scalar field, then the scalar field contains all the information that the original vector field contains. We can always get our original vector field back by just taking its gradient. We lost no information - yet, a scalar field is a much simpler object than a vector field. Of course, it's not always possible to find such a scalar field - but if it is, we should take advantage of it. If such a scalar field, let's call it $F$, exists for a given vector field $\mathbf{f}$, then we call $F$ a \emph{potential} for $\mathbf{f}$. A potential is a sort of antiderivative of a vector field and sometimes even called by that name. You need to be careful about different sign conventions used in the literature: some authors would define $-F$ to be the potential of $\mathbf{f}$. ...TBC...
@@ -91,11 +95,26 @@ We have seen how we are able to produce new fields by applying differential oper
 %-what, if the divergence is zero? Have these fields also some special name?
 
 \subsubsection{Finding Scalar Potentials}
-So, if we encounter a vector field $\mathbf{f}$ in some application, how do find its scalar potential? First things first - we should first figure out whether or not such a scalar potential even exists. Fortunately, there's a simple criterion for that: For a given vector field $\mathbf{f}$, a scalar potential $F$ exists, if and only if ...
+So, if we encounter a vector field $\mathbf{f}$ in some application, how do find its scalar potential? First things first - we should first figure out whether or not such a scalar potential even exists. Fortunately, there's a simple criterion for that: For a given vector field $\mathbf{f}$, a scalar potential $F$ exists, if and only if the curl of the vector field is identically zero. Due to the fact that curl is only defined in 3D, this definition is only applicable in 3D. In the more general case, the requirement is that the Jacobian matrix of the vector field is symmetric. This fact is so important that it is actually called second fundamental theorem for potential fields (we'll see the first one later). %(Bärwolff, pg 560 - aka integrability criterion?)
+Let's assume we have checked the criterion and now we actually want to find the potential....TBC...
+
+% what about the Laplacian? does it play nor role here?
 
 \subsubsection{Finding Vector Potentials}
+If we encounter a vector field $\mathbf{f}$ and we want to know whether or not there exists a vector potential for $\mathbf{f}$, i.e. a vector field $\mathbf{F}$ whose curl $\mathbf{f}$ is: $\curl \mathbf{F} = \nabla \times \mathbf{F} = \mathbf{f}$, a necessary and sufficient condition for such a vector potential $\mathbf{F}$ to exist is that the divergence of $\mathbf{f}$ must be identically zero: $\dive \mathbf{f} = \nabla \cdot \mathbf{f} = 0$. ...TBC...
 
+%-mention how this translates to higher dimensions - the divergence based existence criterion carries over as is - but curl is undefined in nD - we need to do it in the context of exterior calculus
 
+\subsection{Harmonic Functions}
+A so called \emph{harmonic function} is a scalar field $f$ whose Laplacian is identically zero. That means, it satisfies the so called Laplace equation $\Delta f = 0$ for all possible inputs. The Laplace equation is a partial differential equation that features prominently in physics. Harmonic functions of 2 variables are closely related to the field of complex analysis which we will encounter later ...TBC...
+
+%-harmonic conjugates
+%-relation to potential fields? are gradient fields harmonic? i think, it could follow from Lap(f) = div(grad(f)) = 0 ...but wait, no - 
+%-https://en.wikipedia.org/wiki/Skew_gradient
+% https://en.wikipedia.org/wiki/Harmonic_function
+% https://en.wikipedia.org/wiki/Harmonic_conjugate
+% https://mathworld.wolfram.com/HarmonicConjugateFunction.html
+% https://en.wikipedia.org/wiki/Harmonic_function
 
 \subsection{Contour Integrals}
 \subsubsection{Area of a "Curtain"}
@@ -123,6 +142,7 @@ ToDo: explain, how the contour is given as parametric equations and formulate th
 
 
 %-applies to potential fields
+%-aka first fundamental theorem for potential fields (see Bärwolff, pg 557)
 %-could also be called "Gradient Theorem" - would fit well with "Divergence-" and "Curl Theorem"
 % https://en.wikipedia.org/wiki/Gradient_theorem
 % https://www.khanacademy.org/math/multivariable-calculus/integrating-multivariable-functions/line-integrals-in-vector-fields-articles/a/fundamental-theorem-of-line-integrals

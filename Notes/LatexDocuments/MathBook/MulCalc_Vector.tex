@@ -7,17 +7,29 @@ When we are in the realm of vector calculus, the mathematical idea of a \emph{fi
 
 
 \subsection{Differential Operators}
-Operators are mathematical objects that can "act on" or be "applied to" functions to produce new functions. Differential operators are operators are built from (partial) derivatives. In vector calculus, we will encounter operators that act on scalar- and vector fields and produce other scalar- and vector fields. We already encountered the gradient operator that acts on a scalar field $f(\mathbf{x})$ and produces a vector field $\mathbf{grad} f(\mathbf{x})$.
+Operators are mathematical objects that can "act on" or be "applied to" functions to produce new functions. Differential operators are operators which are built from (partial) derivatives. In vector calculus, we will encounter operators that act on scalar- and vector fields and produce other scalar- and vector fields. In this context, one could consider taking the Jacobian and Hessian as operators that act on vector and scalar fields respectively and produce matrix fields as outputs. However, Jacobians and Hessians are not really a thing in the realm of vector calculus, as far as I know. They belong more into the general multivariable calculus and/or maybe into matrix- or tensor calculus. [TODO: figure out!]
 
-%-mention how the Jacobian and Hessian fit into this scheme. I think, we may consider them as operators that produce matrix-valued functions, i.e. matrix-fields
+%-mention how the Jacobian and Hessian fit into this scheme. I think, we may consider them as operators that produce matrix-valued functions, i.e. matrix-fields or tensor fields
 
-%\subsubsection{Gradient}
+\subsubsection{Gradient}
+We already encountered the general $n$-dimensional gradient operator that acts on a scalar field $f(\mathbf{x})$ and produces a vector field $\mathbf{grad} f(\mathbf{x})$. The gradient of scalar fields $f: \mathbb{R}^3 \rightarrow \mathbb{R}$ is indeed one of the differential operators of classic 3D vector calculus. 
 
 \subsubsection{Divergence}
+The divergence operator acts on a vector field and produces a scalar field...TBC...
+
+%-introduce the nabla dot f notation
+%-explain hwo it generalizes to nD
+
 \subsubsection{Curl}
+The curl operator acts on a vector field and produces another vector field...TBC...
+
+%-explain the hack for 2D (embedding 2D in 3D)
+%-explain how it doesn't generalize to nD and how this traces back to the cross product
+
 \subsubsection{Laplacian}
+The Laplacian operator acts on a scalar field and produces another scalar field. It is actually the divergence of the gradient (VERIFY!) and is therefore a second order differential operator in the sense that it involves second order partial derivatives...TBC...
 
-
+% introduce nabla dot nabla and nabla-squared notation
 
 \subsection{Potential Fields}
 %-scalar and vector potentials ...but we need the curl be defined to define vector potentials
@@ -75,6 +87,10 @@ Stokes's theorem is a 3D generalization of Green's Theorem. It relates a surface
 -before that, have a section for how to test, if a potential even exists 
 
 -i'm not sure, if path integrals and surface integrals should be treated here or in the "General Concepts" section ...maybe here - there, we only do integrals of scalar fields
+
+
+https://en.wikipedia.org/wiki/Matrix_calculus
+
 
 \end{comment}
 

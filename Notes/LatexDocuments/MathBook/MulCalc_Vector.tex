@@ -1,21 +1,27 @@
 \section{Vector Calculus} 
 
-\subsection{Fields}
-When we are in the realm of vector calculus, the mathematical idea of a \emph{field} refers to a function $f$ that takes a vector $\mathbf{x}$, usually from $\mathbb{R}^n$, as input and produces an output - as functions do. But we must be careful not confuse this notion with the notion of a field in abstract algebra. There, a field means something else.
+\subsection{Scalar and Vector Fields}
+When we are in the realm of vector calculus, the mathematical idea of a \emph{field} refers to a function $f$ that takes a vector $\mathbf{x}$, usually from $\mathbb{R}^n$, as input and produces an output - as functions do. But we must be careful not confuse this notion with the notion of a field in abstract algebra. There, a field means something else. When the output of the function is a simple scalar, i.e. a (real) number, then we call our field a \emph{scalar field}. So, scalar fields are functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$. If the output of the function is itself a vector and that vector is of the same dimensionality as the input vector, we call the field a \emph{vector field}. So, vector fields are functions $\mathbf{f}: \mathbb{R}^n \rightarrow \mathbb{R}^n$. Typographically, we denote functions with vector outputs in boldface. In classic vector calculus, the dimensionality $n$ is usually 3, sometimes 2.
 
-\subsubsection{Scalar Fields}
-When the output of the function is a simple scalar, i.e. a (real) number, then we call our field a \emph{scalar field}. So, scalar fields are functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$.
+%-maybe plot an example vector field
 
-\subsubsection{Vector Fields}
-\subsubsection{Potential Fields}
-%-scalar and vector potentials ...but we need the curl be defined to define vector potentials
-%maybe re-organize:  make this subsection "Scalar and vector Fields" and introduce potential fields after the "Differential Operators" or maybe even after the integrals...nah...maybe not
 
 \subsection{Differential Operators}
-\subsubsection{Gradient}
+Operators are mathematical objects that can "act on" or be "applied to" functions to produce new functions. Differential operators are operators are built from (partial) derivatives. In vector calculus, we will encounter operators that act on scalar- and vector fields and produce other scalar- and vector fields. We already encountered the gradient operator that acts on a scalar field $f(\mathbf{x})$ and produces a vector field $\mathbf{grad} f(\mathbf{x})$.
+
+%-mention how the Jacobian and Hessian fit into this scheme. I think, we may consider them as operators that produce matrix-valued functions, i.e. matrix-fields
+
+%\subsubsection{Gradient}
+
 \subsubsection{Divergence}
 \subsubsection{Curl}
 \subsubsection{Laplacian}
+
+
+
+\subsection{Potential Fields}
+%-scalar and vector potentials ...but we need the curl be defined to define vector potentials
+%maybe re-organize:  make this subsection "Scalar and vector Fields" and introduce potential fields after the "Differential Operators" or maybe even after the integrals...nah...maybe not
 
 
 \subsection{Contour Integrals}

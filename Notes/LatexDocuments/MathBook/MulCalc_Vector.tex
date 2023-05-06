@@ -23,9 +23,23 @@ Operators are mathematical objects that can "act on" or be "applied to" function
 \subsubsection{Gradient}
 We already encountered the general $n$-dimensional gradient operator that acts on a scalar field $f(\mathbf{x})$ and produces a vector field $\mathbf{grad} f(\mathbf{x})$. The gradient of scalar fields $f: \mathbb{R}^3 \rightarrow \mathbb{R}$ is indeed one of the common differential operators of classic 3D vector calculus. For such a scalar field $f = f(x,y,z)$, the gradient is defined as:
 \begin{equation}
- \grad f = \nabla f = ...
+ \grad f = \nabla f  \quad = \quad
+ \begin{pmatrix}
+  \partial f / \partial x \\
+  \partial f / \partial y \\
+  \partial f / \partial z
+ \end{pmatrix}
+ =
+ \begin{pmatrix}
+   f_x \\
+   f_y \\
+   f_z
+\end{pmatrix} 
 \end{equation}
-where we introduced two possible notations at once - one using $\grad$ and one using the nabla-operator $\nabla$. There is also a notion of a gradient of a vector field. This operator is much less common...TBC...
+We introduced two possible notations on the left hand side at once: one using $\grad$ and one using the nabla-operator $\nabla$. We also introduced two possible notations on the right hand side: one using the "partial" symbol $\partial$ and another one using subscripts. You will find both and possibly more in the literature. 
+
+\medskip
+There is also a notion of a gradient of a vector field. This operator is much less common...TBC...
 
 %-can it also be applied to vector fields? Does it then, in fact, produce the Jacobian?
 %-https://en.wikipedia.org/wiki/Gradient#Gradient_of_a_vector_field
@@ -53,6 +67,7 @@ The Laplacian operator acts on a scalar field and produces another scalar field.
 \subsubsection{Identities}
 ToDo: give a comprehensive list of identities involving the differential operators above.
 
+%-gradient-laws: 0 if field is const, linearity, product rule
 
 % introduce nabla dot nabla and nabla-squared notation
 

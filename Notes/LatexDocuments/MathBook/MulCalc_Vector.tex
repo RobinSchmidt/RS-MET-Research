@@ -42,7 +42,9 @@ We already encountered the general $n$-dimensional gradient operator that acts o
    f_z
 \end{pmatrix} 
 \end{equation}
-We introduced two possible notations on the left hand side at once: one using $\grad$ and one using the nabla-operator $\nabla$. We also introduced three possible notations on the right hand side: one using the "partial" symbol $\partial$ in a differential quotient, one using a subscripted $\partial$ symbol and another one using subscripts on $f$. They all mean the same thing and you will find all of them and possibly more in the literature. We will primarily use simplemost one which is the rightmost. In some books, you will also see definitions with the function's arguments written out, i.e. $f$ is replaced by $f(x,y,z)$ everywhere. That would be quite messy so we have already suppressed the arguments here and it is implicitly understood from the context that $f$ is a function of $x,y,z$.
+We introduced two possible notations on the left hand side at once: one using $\grad$ and one using the nabla-operator $\nabla$. We also introduced three possible notations on the right hand side: one using the "partial" symbol $\partial$ in a differential quotient, one using a subscripted $\partial$ symbol and another one using subscripts on $f$. They all mean the same thing and you will find all of them and possibly more in the literature. We will primarily use simplemost one which is the rightmost. In some books, you will also see definitions with the function's arguments written out, i.e. $f$ is replaced by $f(x,y,z)$ everywhere. That would be quite messy so we have already suppressed the arguments here and it is implicitly understood from the context that $f$ is a function of $x,y,z$. Of course, it could also be a 2D function of $x,y$ or an $n$D function of $x_1, \ldots, x_n$. In the former case, the $f_z$ component would be missing and in the latter, you would have a $n$D vector $(\partial f / \partial x_1, \ldots, \partial f / \partial x_n)^T$. The gradient of a scalar field $f$ is always just the vector of all the partial derivatives of $f$. As said before, it gives the direction of steepest ascent in the input space and its length encodes, how steep that steepest ascent is. Don't make the mistake of thinking about it as a direction in the combined input/output space.
+
+%-maybe draw a picture
 
 \medskip
 There is also a notion of a gradient of a vector field. This operator is much less common...TBC...
@@ -52,9 +54,20 @@ There is also a notion of a gradient of a vector field. This operator is much le
 
 
 \subsubsection{Divergence}
-The divergence operator acts on a vector field and produces a scalar field...TBC...
+The divergence operator acts on a vector field and produces a scalar field. Given a vector field $\mathbf{f}(x,y,z) = (f_1(x,y,z), f_2(x,y,z), f_3(x,y,z))^T$, the divergence of the vector field is defined as:
+\begin{equation}
+ \dive \mathbf{f} = \nabla \cdot \mathbf{f}  \quad = \quad
+ \frac{\partial f_1}{\partial x} + 
+ \frac{\partial f_2}{\partial y} + 
+ \frac{\partial f_3}{\partial z}
+\end{equation}
+We have also introduced two notations on the left ahnd side. The notation using the "nabla-dot" operator $\nabla \cdot$ conveys the idea that the divergence can be formed by taking a formal dot product between the nabla operator $\nabla = (\partial / \partial x, \partial / \partial y, \partial / \partial z)^T$ and the vector field $\mathbf{f} = (f_1, f_2, f_3)^T$ itself. If you expand this dot product formally, you'll get precisely the sum of partial derivatives above.
+
+
+...TBC...
 
 %-introduce the nabla dot f notation
+%-explain what it intuitively means, maybe draw a picture
 %-explain hwo it generalizes to nD
 
 \subsubsection{Curl}
@@ -81,9 +94,10 @@ ToDo: give a comprehensive list of identities involving the differential operato
 
 
 \subsection{Potential Fields}
-We have seen how we are able to produce new fields by applying differential operators to given fields. Fields that are so produced are special and have some convenient properties. If we are able to express a vector field as gradient of a scalar field, then the scalar field contains all the information that the original vector field contains. We can always get our original vector field back by just taking its gradient. We lost no information - yet, a scalar field is a much simpler object than a vector field. Of course, it's not always possible to find such a scalar field - but if it is, we should take advantage of it. If such a scalar field, let's call it $F$, exists for a given vector field $\mathbf{f}$, then we call $F$ a \emph{potential} for $\mathbf{f}$. A potential is a sort of antiderivative of a vector field and sometimes even called by that name. You need to be careful about different sign conventions used in the literature: some authors would define $-F$ to be the potential of $\mathbf{f}$. ...TBC...
+We have seen how we are able to produce new fields by applying differential operators to given fields. Fields that are so produced are special and have some convenient properties. If we are able to express a vector field as gradient of a scalar field, then the scalar field contains all the information that the original vector field contains. We can always get our original vector field back by just taking its gradient. We lost no information - yet, a scalar field is a much simpler object than a vector field. Of course, it's not always possible to find such a scalar field - but if it is, we should take advantage of it. If such a scalar field, let's call it $F$, exists for a given vector field $\mathbf{f}$, then we call $F$ a \emph{potential} for $\mathbf{f}$. A potential is a sort of antiderivative of a vector field and sometimes even called by that name. You need to be careful about different sign conventions used in the literature: some authors would define $-F$ to be the potential of $\mathbf{f}$. Typical potentials that occur in physics are the gravitational and the electrostatic potentials. These are scalar fields whose gradients give the gravitational and electric field respectively. Usually when we talk about a potential without any qualifier, we mean a scalar field. However, there are also situations in which a vector field can be obtained by taking the curl of another vector field. In this case, this other vector field is called the \emph{vector potential} of our given vector field. If we want to explicitly emphasize that we are not talking about a vector potential, we may qualify a potential as a \emph{scalar potential}. It may seem strange to consider vector potentials because at face value they don't seem to simplify anything. They just trade a vector field for another vector field. However, they can indeed be convenient [ToDo: give an example, how]. In physics, the magnetic field does in posess such a vector potential which is in some sense more fundamental than the magnetic field itself....TBC...
 
-% figure out sign conventions - i think, potentials are sometimes defined via negative gradient
+% explain how in electromagnetism, the vector potential is used for the magnetic field
+
 % https://en.wikipedia.org/wiki/Scalar_potential
 % both conventions are used - Bärwolff uses the one without the minus - mention that one finds both notations in the literature
 
@@ -95,15 +109,19 @@ We have seen how we are able to produce new fields by applying differential oper
 %-what, if the divergence is zero? Have these fields also some special name?
 
 \subsubsection{Finding Scalar Potentials}
-So, if we encounter a vector field $\mathbf{f}$ in some application, how do find its scalar potential? First things first - we should first figure out whether or not such a scalar potential even exists. Fortunately, there's a simple criterion for that: For a given vector field $\mathbf{f}$, a scalar potential $F$ exists, if and only if the curl of the vector field is identically zero. Due to the fact that curl is only defined in 3D, this definition is only applicable in 3D. In the more general case, the requirement is that the Jacobian matrix of the vector field is symmetric. This fact is so important that it is actually called second fundamental theorem for potential fields (we'll see the first one later). %(Bärwolff, pg 560 - aka integrability criterion?)
+So, if we encounter a vector field $\mathbf{f}$ in some application, how do find its scalar potential? First things first - we should first figure out whether or not such a scalar potential even exists. Fortunately, there's a simple criterion for that: For a given vector field $\mathbf{f}$, a scalar potential $F$ exists, if and only if the curl of the vector field is identically zero. Such vector fields are also called \emph{irrotational}. Due to the fact that curl is only defined in 3D, this definition is only applicable in 3D. In the more general case, the requirement is that the Jacobian matrix of the vector field is symmetric. This fact is so important that it is actually called second fundamental theorem for potential fields (we'll see the first one later). %(Bärwolff, pg 560 - aka integrability criterion?)
 Let's assume we have checked the criterion and now we actually want to find the potential....TBC...
 
+%-explain non-uniqueness - we are allowed to add any constant
 % what about the Laplacian? does it play nor role here?
 
 \subsubsection{Finding Vector Potentials}
 If we encounter a vector field $\mathbf{f}$ and we want to know whether or not there exists a vector potential for $\mathbf{f}$, i.e. a vector field $\mathbf{F}$ whose curl $\mathbf{f}$ is: $\curl \mathbf{F} = \nabla \times \mathbf{F} = \mathbf{f}$, a necessary and sufficient condition for such a vector potential $\mathbf{F}$ to exist is that the divergence of $\mathbf{f}$ must be identically zero: $\dive \mathbf{f} = \nabla \cdot \mathbf{f} = 0$. ...TBC...
 
-%-mention how this translates to higher dimensions - the divergence based existence criterion carries over as is - but curl is undefined in nD - we need to do it in the context of exterior calculus
+%- they are not unique . we can always add the gradient of an arbitrary scalar field - see Feynman Lectures, Vol. 2, Ch. 14
+
+%-mention how this translates to higher dimensions - the divergence based existence criterion carries over as is (right?) - but curl is undefined in nD - we need to do it in the context of exterior calculus
+
 
 \subsection{Harmonic Functions}
 A so called \emph{harmonic function} is a scalar field $f$ whose Laplacian is identically zero. That means, it satisfies the so called Laplace equation $\Delta f = 0$ for all possible inputs. The Laplace equation is a partial differential equation that features prominently in physics. Harmonic functions of 2 variables are closely related to the field of complex analysis which we will encounter later ...TBC...

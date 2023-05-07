@@ -3,16 +3,19 @@
 \subsection{The Riemann Integral} 
 Imagine we have a function $y = f(x)$ and want to compute the area that is enclosed between some interval of the $x$-axis, say $[a,b]$, and the graph of the function over this interval. We could approach this problem by approximating the area by a bunch of rectangles as follows: we split the interval $[a,b]$ into some number $n$ of equally sized subintervals, for each subinterval compute the area of a rectangle where one side is given by the width of the subinterval and the other by the height of the function somewhere inside the subinterval, then add up all those areas of the rectangles. When the number of intervals $n$ grows, the width of the intervals shrinks, the rectangles become thinner and the approximation becomes better. In the limit, as $n$ approaches infinity, the approximation becomes exact. We could define the integral as follows:
 \begin{equation}
- \int_a^b f(x) \, dx = \lim_{n \rightarrow \infty}  \sum_{i=1}^n f(x_i) \, \Delta x_i
+ I = \int_a^b f(x) \, dx = \lim_{n \rightarrow \infty}  \sum_{i=1}^n f(x_i) \, \Delta x_i
 \end{equation}
-Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value somewhere in side the $i$th subinterval. This is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized - he only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, in the middle or wherever. The Riemann integral is only defined, if it doesn't matter, i.e. if the above limit will always give the same result.
+Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value somewhere inside the $i$th subinterval. This is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result.
+
+\medskip
+The interpretation of the Riemann integral as an area is actually a somewhat sloppy interpretation: it works only when we assume that the function graph is above the $x$-axis for the whole integration interval. If this is not the case, the portions below the $x$-axis will actually produce negative contributions to the total area. If the function is more below the $x$-axis than above, the "area" may even become negative. It is more useful to think about the integral as a sort of "signed area". If we divide the integral by the width of the integration interval, i.e. by $b-a$, we obtain an average value of the function over the interval $[a,b]$.
+
+%above expression
 
 ...TBC...
-% explain signed areas and cancellation of positive and negative parts
 
 % maybe mention the Lesbesgue integral, too - maybe other generalizations (Riemman-Stieljes, etc.)
 
-% Riemann does not require the intevals to be equally sized nor does he demand to take as height the function value in the middle. He just requires that the maximum size of all the intervals shrinks to zero and that the function value is from somewhere inside the interval. There's actually also this thing with upper and lower Riemann sums....look it up!
 
 \subsection{Indefinite Integrals}
 %-pick a lower boudnray, leave the upper boundary as variable

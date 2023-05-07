@@ -37,7 +37,20 @@ The gradient helps us to compute the directional derivative: It's just the scala
 \end{equation}
 
 \subsection{The Jacobian Matrix}
-So far, we assumed that $f$ has only a single output, i.e. defines a scalar field. Now we will have a look at vector valued functions ...tbc...
+So far, we assumed that $f$ has only a single output, i.e. defines a scalar field. Now we will have a look at vector valued functions $\mathbf{f}: \mathbb{R}^n \rightarrow \mathbb{R}^m$ with $\mathbf{f(x)} = (f_1(\mathbf{x}), \ldots, f_m(\mathbf{x}))^T$ where $\mathbf{x} = (x_1,\ldots,x_n)^T$. So, our function has $n$ inputs and $m$ outputs. The $m \times n$ matrix
+\begin{equation}
+ \mathbf{f'}(\mathbf{x}_0) = 
+ \begin{pmatrix}
+  \frac{\partial f_1}{\partial x_1} (\mathbf{x}_0) & \hdots & \frac{\partial f_1}{\partial x_n} (\mathbf{x}_0) \\
+  \vdots & \ddots & \vdots \\
+  \frac{\partial f_m}{\partial x_1} (\mathbf{x}_0) & \hdots & \frac{\partial f_m}{\partial x_n} (\mathbf{x}_0)
+ \end{pmatrix}
+\end{equation}	
+is called the Jacobi matrix	of $\mathbf{f}$ at $\mathbf{x}_0$.
+
+
+...TBC...
+%-explain how this matrix represents a linear approximation
 %also mention the importance of its determinant in case of equal input and output dimensionalities - it's a generalized area/volume/hypervolume scale factor
 
 \subsection{The Hessian Matrix}

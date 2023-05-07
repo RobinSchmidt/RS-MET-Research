@@ -34,7 +34,7 @@ which means the order of the differentiations makes no difference. We can first 
 
 
 \subsection{The Gradient Vector}
-For a function $f$ with $n$ input variables (or one single $n$-dimensional input vector) and a single output, we can compute $n$ different partial derivatives. We can collect these partial derivatives into another $n$-dimensional vector. This vector is called the gradient of the function. The gradient always points into the direction in which the function increases most steeply and the length of this gradient vector tells us, how steep that steepest increase is. Note that this is a direction in the input space, not in the combined input/output space. So, if the input is 2D, such that $z = f(x,y)$ gives a height over an $(x,y)$-plane of input values, the gradient of $f$ at a particular input location $(x_0,y_0)$ in the plane gives the direction in the $(x,y)$-plane in which we need to move the input to get the steepest increase in the height value $z$. But it's \emph{not} a direction in the 3D space of $(x,y,z)$.
+For a function $f$ with $n$ input variables (or one single $n$-dimensional input vector) and a single output, we can compute $n$ different partial derivatives. We can collect these partial derivatives into another $n$-dimensional vector. This vector is called the gradient of the function. It is usually taken to be a column vector. The gradient always points into the direction in which the function increases most steeply and the length of this gradient vector tells us, how steep that steepest increase is. Note that this is a direction in the input space, not in the combined input/output space. So, if the input is 2D, such that $z = f(x,y)$ gives a height over an $(x,y)$-plane of input values, the gradient of $f$ at a particular input location $(x_0,y_0)$ in the plane gives the direction in the $(x,y)$-plane in which we need to move the input to get the steepest increase in the height value $z$. But it's \emph{not} a direction in the 3D space of $(x,y,z)$.
 %[Q: what is the direction in x,y,z space? is it just x,y taken from the gradient, augmented by a z-value for which we can take the length of the gradient? that seems plausible -> make some plots! the vector should be tangential to the surface, i think]
 
 \medskip
@@ -62,7 +62,7 @@ is called the Jacobi matrix	of $\mathbf{f}$ at $\mathbf{x}$. It's a generalizati
  \mathbf{f}(\mathbf{x + h}) \approx 
  \mathbf{f}(\mathbf{x}) + \mathbf{J_f(x) \; h}
 \end{equation}	
-This is the reason why the individual gradients of the component functions are in the rows rather than in the columns. It ensures that we can formulate the linear approximation by left multiplication of the matrix with some small delta vector. The determinant of this matrix will play an important role in the change of variables formula for multiple integrals which we will see later. In a more terse notation, you can also suppress the index $\mathbf{f}$ and the argument $\mathbf{x}$ and just write $\mathbf{J}$ instead of $\mathbf{J_f}(\mathbf{x})$, if it's clear from the context about which $\mathbf{f}$ we are talking and that $\mathbf{f}$ is a function of $\mathbf{x}$.
+This is the reason why the individual gradients of the component functions are in the rows rather than in the columns. It ensures that we can formulate the linear approximation by left multiplication of the matrix with some small delta vector. The Jacobian matrix of a scalar valued function is actually the transpose of its gradient vector and I'm not sure, why the definitions have been chosen that way. It may be a bit confusing. The determinant of this matrix will play an important role in the change of variables formula for multiple integrals which we will see later. In a more terse notation, you can also suppress the index $\mathbf{f}$ and the argument $\mathbf{x}$ and just write $\mathbf{J}$ instead of $\mathbf{J_f}(\mathbf{x})$, if it's clear from the context about which $\mathbf{f}$ we are talking and that $\mathbf{f}$ is a function of $\mathbf{x}$.
 
 % https://en.wikipedia.org/wiki/Jacobian_matrix_and_determinant
 % Bärwolff, pg 392
@@ -87,20 +87,19 @@ The gradient vector and the Jacobian matrix are collections of first partial der
 		& \frac{\partial^2 f}{\partial x_n \partial x_n} (\mathbf{x})
 	\end{pmatrix}
 \end{equation}	
+Due to the symmetry of the partial derivatives, the Hessian matrix is a symmetric matrix. The Hessian of a function $f$ can also be formed as the Jacobian of its gradient. As usual, if things are clear from the context, we may suppress the index and argument and just write $\mathbf{H}$ for the Hessian. The Hessian can be used to formulate a quadratic (i.e. second order) approximation of a function $f$ as follows: Let $\mathbf{g}$ be the gradient and $\mathbf{H}$ be the Hessian of $f$ at $\mathbf{x}$. Then:
+\begin{equation}
+ f(\mathbf{x + h}) \approx f(\mathbf{x}) + \mathbf{g^T h} + \mathbf{h^T H h}
+\end{equation}	
+for some small deviation vector $\mathbf{h}$.
 
 
-...TBC...
+% todo: explain how it can be used in a second order (quadratic) approximation of f
 
-
+% Bärwolff, pg 393
 %-https://en.wikipedia.org/wiki/Hessian_matrix#Vector-valued_functions
 
-% mention symmetry (Schwartz' theorem)
-
-
-
-
 \begin{comment}
-
 
 \subsection{TODO Notes}
 It seems to be generally true that for any function $f(x)$ we have

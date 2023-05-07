@@ -10,16 +10,15 @@ Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value so
 \medskip
 The interpretation of the Riemann integral as an area is actually a somewhat sloppy interpretation: it works only when we assume that the function graph is above the $x$-axis for the whole integration interval. If this is not the case, the portions below the $x$-axis will actually produce negative contributions to the total area. If the function is more below the $x$-axis than above, the "area" may even become negative. It is more useful to think about the integral as a sort of "signed area". If we divide the integral by the width of the integration interval, i.e. by $b-a$, we obtain an average value of the function over the interval $[a,b]$.
 
-%above expression
-
-...TBC...
-
 % maybe mention the Lesbesgue integral, too - maybe other generalizations (Riemman-Stieljes, etc.)
 
-
-\subsection{Indefinite Integrals}
-%-pick a lower boudnray, leave the upper boundary as variable
-%-that defines a new function
+\subsection{Antiderivatives and Indefinite Integrals}
+We now want to consider a situation where the lower limit of the integration $a$ is fixed as before but the upper limit $b$ is taken to be a variable. In that case, the above expression actually defines a new function. Just like via the derivative, we have "derived" a new function $f'(x)$ from our given $f(x)$, we can derive a new function, let's call it $F$ from $f$ via the following operation:
+\begin{equation}
+F(b) = \int_a^b f(x) \, dx \qquad \text{or} \qquad
+F(x) = \int_a^x f(u) \, du
+\end{equation}
+Note that in the left equation, the argument of the function $F$ which I have chosen to be $b$ here, is just a dummy variable. I could just as well have called it $x$ if i had at the same time renamed the $x$ under the integral into something else, say $u$. This has been done in the right equation. OK, so we have created a new function $F$ from our given function $f$. That new function $F$ is called an \emph{indefinite integral} or an \emph{antiderivative} of $f$. I deliberately said "an" antiderivative and not "the" antiderivative because it is not uniquely determined: we could pick a different fixed $a$ and would get another antiderivative. The reason for calling it an antiderivative is, as you may have guessed, its relation to the derivative. This relation is captured in...
 
 \subsection{The Fundamental Theorem of Calculus}
 

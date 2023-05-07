@@ -160,10 +160,22 @@ A so called \emph{harmonic function} is a scalar field $f$ whose Laplacian is id
 % https://mathworld.wolfram.com/HarmonicConjugateFunction.html
 % https://en.wikipedia.org/wiki/Harmonic_function
 
-\subsection{Contour Integrals}
+\subsection{Line Integrals}
+Line integrals are integrals in which some field quantity is integrated over some line or curve in our vector space $\mathbb{R}^n$. They are also known as contour integrals, curve integrals or path integrals. The curve is given in parametric form:
+...TBC...
+
 \subsubsection{Area of a "Curtain"}
+% https://www.khanacademy.org/math/multivariable-calculus/integrating-multivariable-functions/line-integrals-for-scalar-functions-articles/a/line-integrals-in-a-scalar-field
+
+%https://en.wikipedia.org/wiki/Line_integral#Line_integral_of_a_scalar_field
+
+% what about line integrals of scalar fields - see Baerwolff, pg 550. Ah - I think, this is the area under the curtain
+
 \subsubsection{Work in a Force Field}
+
 \subsubsection{Flux through a Curve}
+%is specific to 2D, i think
+
 
 \subsection{Surface Integrals}
 \subsubsection{Area of a Surface}
@@ -172,13 +184,14 @@ A so called \emph{harmonic function} is a scalar field $f$ whose Laplacian is id
 \subsection{Integral Theorems}
 
 \subsubsection{Fundamental Theorem of Line Integrals}
-Let $F(\mathbf{x})$ be a scalar-valued function of some vector input $\mathbf{x}$ in $\mathbb{R}^n$ and $\mathbf{f(x)} = F'(\mathbf{x}) = \grad F(\mathbf{x})$ be the gradient of $F$. We observe that $\mathbf{f} = F'$ is a vector-valued function of $\mathbf{x}$ and that according to our definition, $F$ is a potential for $\mathbf{f}$. Let $C$ be a contour with start and end points $\mathbf{a,b} \in \mathbb{R}^n$ and let $C$ be given as a parametric curve $\mathbf{c} = \mathbf{c}(t)$ with parameter $t$. Let $d\mathbf{s} = \dot{\mathbf{c}} = d\mathbf{c} / dt$ be an infinitesimal tangent vector along $C$ at the position $\mathbf{c}(t)$. Then, the following holds:
+Let $F(\mathbf{x})$ be a scalar-valued function of some vector input $\mathbf{x}$ in $\mathbb{R}^n$ and $\mathbf{f(x)} = F'(\mathbf{x}) = \grad F(\mathbf{x})$ be the gradient of $F$. We observe that $\mathbf{f} = F'$ is a vector-valued function of $\mathbf{x}$ and that according to our definition, $F$ is a potential for $\mathbf{f}$. Let $C$ be a contour with start and end points $\mathbf{a,b} \in \mathbb{R}^n$ and let $C$ be given as a parametric curve $\mathbf{c} = \mathbf{c}(t)$ with parameter $t$. Let $d\mathbf{s} = \dot{\mathbf{c}} = d\mathbf{c} / dt$ be an infinitesimal tangent vector along $C$ at the position $\mathbf{c}(t)$ and $\mathbf{c}(t_a) = \mathbf{a}, \mathbf{c}(t_b) = \mathbf{b}$. Then, the following holds:
 \begin{equation}
- \int_C \mathbf{f} \cdot d\mathbf{s} 
+ \int_C \mathbf{f} \cdot d\mathbf{s}  =
+ \int_{t_a}^{t_b}  \mathbf{f} (\mathbf{c}(t) ) \cdot \dot{\mathbf{c}}(t) \; dt =
 % = \int_{\mathbf{a}}^{\mathbf{b}} \mathbf{f} \cdot d\mathbf{s} 
- = F(\mathbf{b}) - F(\mathbf{a}) 
+ F(\mathbf{b}) - F(\mathbf{a}) 
 \end{equation}
-This is the \emph{fundamental theorem of line integrals} and it is also known as the \emph{first fundamental theorem of potential fields} or as the \emph{gradient theorem}. Let's unpack what this formula means: In the integrand, we are forming a dot product (aka scalar product) between the gradient field $\mathbf{f}$, which is a vector field, and an infinitesimal tangent vector $d\mathbf{s}$ of our parametric contour/curve $C$. When the theorem is stated in this form, it is implicitly understood that we are evaluating $\mathbf{f}$ and $d\mathbf{s}$ at some given value for the parameter $t$. This infinitesimal dot product of two vectors is then integrated, i.e. summed, over the whole length of the curve. Via the dot product, at each point along the curve, we "measure" how much the vector field points into the local direction of our curve and that "measurement" gives a little contribution to our integral. If the vector field is locally aligned with the curve, we get the maximum contribution. If the vector field is locally perpendicular to our curve, we get no contribution at all. The right hand side is easy to understand: we just evaluate the scalar field $F$ at the two endpoints of the curve and subtract the two resulting scalar values. What this implies is that the value for the integral depends only on the endpoints $\mathbf{a,b}$ and not at all on the specific curve, i.e. on the way how we move from $\mathbf{a}$ to $\mathbf{b}$. This path-independence is a special convenient feature of potential fields. You cannot expect that from any general vector field. Not all vector fields can be expressed as a gradient of some scalar field. But for those that can, we can apply this theorem and thereby greatly simplify the evaluation of line integrals along paths through this field, provided that we know the potential $F$. An immediate consequence is that the line integral around any closed loop, i.e. a curve whose end point is equal to the start point, must be zero. Just look at the right hand side when $\mathbf{b = a}$. This can be written as:
+This is the \emph{fundamental theorem of line integrals} and it is also known as the \emph{first fundamental theorem of potential fields} or as the \emph{gradient theorem}. Let's unpack what this formula means: In the integrand of the right hand side, we are forming a dot product (aka scalar product) between the gradient field $\mathbf{f}$, which is a vector field, and an infinitesimal tangent vector $d\mathbf{s}$ of our parametric contour/curve $C$. When the theorem is stated in this form, it is implicitly understood that we are evaluating $\mathbf{f}$ and $d\mathbf{s}$ at some given value for the parameter $t$. In the middle, we have just expanded in more detail, what the the left ahnd side actually means. This infinitesimal dot product of two vectors is then integrated, i.e. summed, over the whole length of the curve. Via the dot product, at each point along the curve, we "measure" how much the vector field points into the local direction of our curve and that "measurement" gives a little contribution to our integral. If the vector field is locally aligned with the curve, we get the maximum contribution. If the vector field is locally perpendicular to our curve, we get no contribution at all. The right hand side is easy to understand: we just evaluate the scalar field $F$ at the two endpoints of the curve and subtract the two resulting scalar values. What this implies is that the value for the integral depends only on the endpoints $\mathbf{a,b}$ and not at all on the specific curve, i.e. on the way how we move from $\mathbf{a}$ to $\mathbf{b}$. This path-independence is a special convenient feature of potential fields. You cannot expect that from any general vector field. Not all vector fields can be expressed as a gradient of some scalar field. But for those that can, we can apply this theorem and thereby greatly simplify the evaluation of line integrals along paths through this field, provided that we know the potential $F$. An immediate consequence is that the line integral around any closed loop, i.e. a curve whose end point is equal to the start point, must be zero. Just look at the right hand side when $\mathbf{b = a}$. This can be written as:
 \begin{equation}
 \oint_C \mathbf{f} \cdot d\mathbf{s} = 0
 \end{equation}

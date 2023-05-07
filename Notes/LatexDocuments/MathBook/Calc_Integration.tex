@@ -1,5 +1,27 @@
 \section{Integration} 
 
+\subsection{The Riemann Integral} 
+Imagine we have a function $y = f(x)$ and want to compute the area that is enclosed between some interval of the $x$-axis, say $[a,b]$, and the graph of the function over this interval. We could approach this problem by approximating the area by a bunch of rectangles as follows: we split the interval $[a,b]$ into some number $n$ of equally sized subintervals, for each subinterval compute the area of a rectangle where one side is given by the width of the subinterval and the other by the height of the function somewhere inside the subinterval, then add up all those areas of the rectangles. When the number of intervals $n$ grows, the width of the intervals shrinks, the rectangles become thinner and the approximation becomes better. In the limit, as $n$ approaches infinity, the approximation becomes exact. We could define the integral as follows:
+\begin{equation}
+ \int_a^b f(x) \, dx = \lim_{n \rightarrow \infty}  \sum_{i=1}^n f(x_i) \, \Delta x_i
+\end{equation}
+Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value somewhere in side the $i$th subinterval. This is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized - he only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, in the middle or wherever. The Riemann integral is only defined, if it doesn't matter, i.e. if the above limit will always give the same result.
+
+...TBC...
+% explain signed areas and cancellation of positive and negative parts
+
+% maybe mention the Lesbesgue integral, too - maybe other generalizations (Riemman-Stieljes, etc.)
+
+% Riemann does not require the intevals to be equally sized nor does he demand to take as height the function value in the middle. He just requires that the maximum size of all the intervals shrinks to zero and that the function value is from somewhere inside the interval. There's actually also this thing with upper and lower Riemann sums....look it up!
+
+\subsection{Indefinite Integrals}
+%-pick a lower boudnray, leave the upper boundary as variable
+%-that defines a new function
+
+\subsection{The Fundamental Theorem of Calculus}
+
+
+\subsection{Integration Techniques} 
 
 \subsubsection{Integration by Parts} 
 Write the function $f(x)$ to be integrated as a product $u(x)v(x)$ such that the remaining integral over $u' v$ in the formula is easier to evaluate than the original one. This usually means to choose a $u$ that simplifies under differentiation and/or to choose a $v'$ that simplifies under integration. The formula for a definite integral is:
@@ -29,6 +51,15 @@ See also:
 
 % ToDo: Substitution, Logarithmic integration, integration of inverse?
 
+\subsubsection{The Risch Algorithm}
+Finding an antiderivative for a given function is hard. Unlike for differentiation, for integration there is no simple mechanical set of rules that we can just blindly apply and be sure that it will always lead us to the result. Except: there actually is one - but with a caveat: it is not really suitable for execution by hand using pencil and paper. It's too complicated and messy for that. However, computers can deal with it easily, provided they have the appropriate software installed. This set of rules is embodied in the Risch algorithm and some variation of this algorithm is usually integrated into every computer algebra system. Not all such systems implement the full algorithm
+...TBC...
+
+\medskip
+In my humble personal opinion, I think nowadays with the widespread availability of computers and the Risch algorithm, it is pointless to try memorizing all these integration techniques and tricks. The problem has been solved for good - no need to torture students with that anymore. Maybe it's just as pointless as being able to calculate square roots with pencil and paper. Yes it is absolutely possible and back in the day, it was the way to go - but for dog's sake, we now have computers for that kind of stuff. I don't consider the hand calculation of square roots to be an essential mathematical skill and I tend to think about manual integration techniques similarly. 
+%However, I do consider the ability to implement a square-root algorithm
+
+%and tricks to find antiderivatives by hand
 
 \begin{comment}
 

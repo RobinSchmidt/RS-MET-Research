@@ -24,17 +24,13 @@ Now let's assume we are given an arbitrary vector $\mathbf{v}$ of unit length. W
 where the RHS is a generalization of \ref{Eq:DerivativeViaH} which tells us how we could evaluate the limit (but we'll soon learn a simpler way to evaluate it). Note that the directional derivative into any of the coordinate directions $\mathbf{e}_i$ just reduces to the partial derivative with respect to coordinate $i$, so partial derivatives can also be seen as directional derivatives into very specific directions: namely, into the directions of our coordinate axes. [TODO: verify that the RHS is actually correct - the formula is not from a book - i found it myself by analogy to the evaluation formula for the Gateaux derivative in Baerwolff, pg. 792]
 
 \subsection{Higher Order Partial Derivatives}
-Just like we could define the second derivative of a univariate function as the derivative of the derivative, we can define second order partial derivatives of a multivariate scalar function. Due to the fact that we now have $n$ input variables, we can from $n^2$ different partial derivatives. If we first find the derivative of $f$ with respect to some $x_i$ and then take the result and find the derivative with respect to $x_j$, we obtain such a second order partial derivative. We write this as $ \frac{\partial f}{\partial x_i \partial x_j}$
-\begin{equation}
- \frac{\partial f}{\partial x_i \partial x_j}
-\end{equation}
-If the function $f$ is twice continuously differentiable, then, according to Schwartz's theorem, we will actually have the symmetry:
+Just like we could define the second derivative of a univariate function as the derivative of the derivative, we can define second order partial derivatives of a multivariate scalar function. Due to the fact that we now have $n$ input variables, we can from $n^2$ different second partial derivatives. If we first find the derivative of $f$ with respect to some $x_i$ and then take the result and find its derivative with respect to $x_j$, we obtain such a second order partial derivative. We write this as $ \frac{\partial f}{\partial x_i \partial x_j}$ If the function $f$ is twice continuously differentiable, then, according to Schwartz's theorem, we will actually have the following symmetry:
 \begin{equation}
 	\frac{\partial f}{\partial x_i \partial x_j} 
 	=
 	\frac{\partial f}{\partial x_j \partial x_i} 
 \end{equation}
-which means the order of the differentiations makes no difference. We can first take the derivative with respect to $x_i$ and then with respect to $x_j$ or the other way around. The end result will be the same.
+which means the order of the differentiations makes no difference. We can first take the derivative with respect to $x_i$ and then with respect to $x_j$ or the other way around. The end result will be the same. In the same way, we can find third order partial derivatives and there will be $n^3$ of them - but there will be symmetries, too: whatever order we choose for the 3 differentiations, the result will be the same if the function is 3 times continuously differentiable. And so on.
 
 
 \subsection{The Gradient Vector}

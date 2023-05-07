@@ -1,6 +1,6 @@
 \section{Derivatives}
 
-\subsection{Partial and Directional Derivatives}
+\subsection{Partial Derivatives}
 Let's assume we have a bivariate function $f$, i.e. a function with two inputs $x,y$, that produces one output $z$: $z = f(x,y)$. We can visualize this as a landscape above an $(x,y)$-plane where the height is given by the function value. We can take derivatives of $f$ with respect to $x$ and with respect to $y$. In the former case, $y$ is just treated as a constant and in the latter case $x$ is treated as a constant. These two derivatives of $f$ are called partial derivatives and we denote them as $\frac{\partial f}{\partial x}$ and $\frac{\partial f}{\partial y}$, where the curly d symbol $\partial$ is a special math symbol that we read as "partial" - it's not a greek delta. The formal definition is:
 \begin{equation}
  \frac{\partial f(x,y)}{\partial x} = \lim_{h \rightarrow 0} \frac{f(x+h,y) - f(x,y)}{h}, \qquad
@@ -13,7 +13,7 @@ In the text above, we wrote $\frac{\partial f}{\partial x}$ whereas in the defin
 \end{equation}
 where $\mathbf{e}_i$ is the unit vector in the $i$-th coordinate direction, i.e. it has a one at position $i$ and zeros everywhere else. As said: the computation of such partial derivatives is purely mechanic and we don't need to refer to our definitions for that. Instead, we just treat the function as if it would depend only on the variable with respect to which we differentiate and treat all other variables as constants.
 
-\medskip
+\subsection{Directional Derivatives}
 Now let's assume we are given an arbitrary vector $\mathbf{v}$ of unit length. We define the directional derivative of $f$ into the direction of  $\mathbf{v}$ as:
 \begin{equation}
 \label{Eq:DirectionalDerivative}
@@ -22,6 +22,20 @@ Now let's assume we are given an arbitrary vector $\mathbf{v}$ of unit length. W
  = \frac{d}{d h} f(\mathbf{x} + h \mathbf{v}) \bigg\rvert_{h=0}
 \end{equation}
 where the RHS is a generalization of \ref{Eq:DerivativeViaH} which tells us how we could evaluate the limit (but we'll soon learn a simpler way to evaluate it). Note that the directional derivative into any of the coordinate directions $\mathbf{e}_i$ just reduces to the partial derivative with respect to coordinate $i$, so partial derivatives can also be seen as directional derivatives into very specific directions: namely, into the directions of our coordinate axes. [TODO: verify that the RHS is actually correct - the formula is not from a book - i found it myself by analogy to the evaluation formula for the Gateaux derivative in Baerwolff, pg. 792]
+
+\subsection{Higher Order Partial Derivatives}
+Just like we could define the second derivative of a univariate function as the derivative of the derivative, we can define second order partial derivatives of a multivariate scalar function. Due to the fact that we now have $n$ input variables, we can from $n^2$ different partial derivatives. If we first find the derivative of $f$ with respect to some $x_i$ and then take the result and find the derivative with respect to $x_j$, we obtain such a second order partial derivative. We write this as $ \frac{\partial f}{\partial x_i \partial x_j}$
+\begin{equation}
+ \frac{\partial f}{\partial x_i \partial x_j}
+\end{equation}
+If the function $f$ is twice continuously differentiable, then, according to Schwartz's theorem, we will actually have the symmetry:
+\begin{equation}
+	\frac{\partial f}{\partial x_i \partial x_j} 
+	=
+	\frac{\partial f}{\partial x_j \partial x_i} 
+\end{equation}
+which means the order of the differentiations makes no difference. We can first take the derivative with respect to $x_i$ and then with respect to $x_j$ or the other way around. The end result will be the same.
+
 
 \subsection{The Gradient Vector}
 For a function $f$ with $n$ input variables (or one single $n$-dimensional input vector) and a single output, we can compute $n$ different partial derivatives. We can collect these partial derivatives into another $n$-dimensional vector. This vector is called the gradient of the function. The gradient always points into the direction in which the function increases most steeply and the length of this gradient vector tells us, how steep that steepest increase is. Note that this is a direction in the input space, not in the combined input/output space. So, if the input is 2D, such that $z = f(x,y)$ gives a height over an $(x,y)$-plane of input values, the gradient of $f$ at a particular input location $(x_0,y_0)$ in the plane gives the direction in the $(x,y)$-plane in which we need to move the input to get the steepest increase in the height value $z$. But it's \emph{not} a direction in the 3D space of $(x,y,z)$.
@@ -62,7 +76,22 @@ This is the reason why the individual gradients of the component functions are i
 %also mention the importance of its determinant in case of equal input and output dimensionalities - it's a generalized area/volume/hypervolume scale factor
 
 \subsection{The Hessian Matrix}
-The gradient vector and the Jacobian matrix are collections of first partial derivatives of scalar- and vector valued functions respectively. The Hessian matrix is a collection of second partial derivatives of a scalar valued function. 
+The gradient vector and the Jacobian matrix are collections of first partial derivatives of scalar- and vector valued functions respectively. The Hessian matrix is a collection of second partial derivatives of a scalar valued function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ with $f = f(\mathbf{x})$ and $\mathbf{x} = (x_1, \ldots, x_n)$. It is defined as:
+\begin{equation}
+ \mathbf{H}_f(\mathbf{x}) = 
+	\begin{pmatrix}
+		  \frac{\partial^2 f}{\partial x_1 \partial x_1} (\mathbf{x}) 
+		& \hdots 
+		& \frac{\partial^2 f}{\partial x_1 \partial x_n} (\mathbf{x}) 
+		\\
+		\vdots & \ddots & \vdots 
+		\\
+	      \frac{\partial^2 f}{\partial x_n \partial x_1} (\mathbf{x}) 
+		& \hdots 
+		& \frac{\partial^2 f}{\partial x_n \partial x_n} (\mathbf{x})
+	\end{pmatrix}
+\end{equation}	
+
 
 ...TBC...
 

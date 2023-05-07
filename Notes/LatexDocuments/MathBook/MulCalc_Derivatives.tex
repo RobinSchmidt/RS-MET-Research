@@ -39,18 +39,25 @@ The gradient helps us to compute the directional derivative: It's just the scala
 \subsection{The Jacobian Matrix}
 So far, we assumed that $f$ has only a single output, i.e. defines a scalar field. Now we will have a look at vector valued functions $\mathbf{f}: \mathbb{R}^n \rightarrow \mathbb{R}^m$ with $\mathbf{f(x)} = (f_1(\mathbf{x}), \ldots, f_m(\mathbf{x}))^T$ where $\mathbf{x} = (x_1,\ldots,x_n)^T$. So, our function has $n$ inputs and $m$ outputs. The $m \times n$ matrix
 \begin{equation}
- \mathbf{f'}(\mathbf{x}_0) = 
+ \mathbf{J_f}(\mathbf{x}) = 
+ \mathbf{f'}(\mathbf{x}) = 
  \begin{pmatrix}
-  \frac{\partial f_1}{\partial x_1} (\mathbf{x}_0) & \hdots & \frac{\partial f_1}{\partial x_n} (\mathbf{x}_0) \\
+  \frac{\partial f_1}{\partial x_1} (\mathbf{x}) & \hdots & \frac{\partial f_1}{\partial x_n} (\mathbf{x}) \\
   \vdots & \ddots & \vdots \\
-  \frac{\partial f_m}{\partial x_1} (\mathbf{x}_0) & \hdots & \frac{\partial f_m}{\partial x_n} (\mathbf{x}_0)
+  \frac{\partial f_m}{\partial x_1} (\mathbf{x}) & \hdots & \frac{\partial f_m}{\partial x_n} (\mathbf{x})
  \end{pmatrix}
 \end{equation}	
-is called the Jacobi matrix	of $\mathbf{f}$ at $\mathbf{x}_0$.
+is called the Jacobi matrix	of $\mathbf{f}$ at $\mathbf{x}$. The $k$th row of the matrix is the transpose of the gradient of the $k$th component function $f_k$. It defines a linear approximation to $\mathbf{f}$ at a given $\mathbf{x}$ in the sense that for a small vector  $\mathbf{h}$, we have:
+\begin{equation}
+ \mathbf{f}(\mathbf{x + h}) \approx 
+ \mathbf{f}(\mathbf{x}) + \mathbf{J_f(x) \; h}
+\end{equation}	
+
+%If we multiply the matrix
 
 
 ...TBC...
-%-explain how this matrix represents a linear approximation
+%-explain how this matrix represents a linear approximation: f(x + dx) ~= f(x) + J dx
 %also mention the importance of its determinant in case of equal input and output dimensionalities - it's a generalized area/volume/hypervolume scale factor
 
 \subsection{The Hessian Matrix}

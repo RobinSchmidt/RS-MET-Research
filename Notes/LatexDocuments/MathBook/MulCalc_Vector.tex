@@ -44,9 +44,22 @@ We already encountered the general $n$-dimensional gradient operator that acts o
 \end{equation}
 We introduced two possible notations on the left hand side at once: one using $\grad$ and one using the nabla-operator $\nabla$. We also introduced three possible notations on the right hand side: one using the "partial" symbol $\partial$ in a differential quotient, one using a subscripted $\partial$ symbol and another one using subscripts on $f$. They all mean the same thing and you will find all of them and possibly more in the literature. We will primarily use simplemost one which is the rightmost. In some books, you will also see definitions with the function's arguments written out, i.e. $f$ is replaced by $f(x,y,z)$ everywhere. That would be quite messy so we have already suppressed the arguments here and it is implicitly understood from the context that $f$ is a function of $x,y,z$. Of course, it could also be a 2D function of $x,y$ or an $n$D function of $x_1, \ldots, x_n$. In the former case, the $f_z$ component would be missing and in the latter, you would have a $n$D vector $(\partial f / \partial x_1, \ldots, \partial f / \partial x_n)^T$. The gradient of a scalar field $f$ is always just the vector of all the partial derivatives of $f$. As said before, it gives the direction of steepest ascent in the input space and its length encodes, how steep that steepest ascent is. Don't make the mistake of thinking about it as a direction in the combined input/output space.
 
+\medskip
+The gradient is a generalization of the derivative for scalar fields. What about vector fields? We have already seen the Jacobian matrix as an appropriate generalization of the derivative for the $n$ inputs, $m$ outputs case. Now, the gradient vector as defined above is a column vector. The Jacobian matrix has the gradients of the individual component functions as its rows. What do we make of this? Wikipedia offers a definition of a gradient for a vector field in terms of a tensor expression which is equivalent to the transpose of the Jacobian [REF needed]. ...TBC...
+
+%see \hyperlink{www.en.wikipedia.org/wiki/Gradient}{here}.
+%\hyperlink{here}{https://en.wikipedia.org/wiki/Gradient}.
+
+ %\hyperlink{https://en.wikipedia.org/wiki/Gradient#Gradient_of_a_vector_field}{here}.
+% https://en.wikipedia.org/wiki/Gradient#Gradient_of_a_vector_field
+
+% mismatch between matrix and vector algebra? the dot product of two row vectors would not be defined in matrix algebra - only when the first vecor is transposed, it will work. We informally view vectors as n x 1 matrices, but maybe that's formally wrong?
+
+%graient is row-vector
+
 %-maybe draw a picture
 
-%\medskip
+
 
 %There is also a notion of a gradient of a vector field. This operator is much less common...TBC...
 
@@ -193,7 +206,7 @@ Line integrals are integrals in which some field quantity is integrated over som
 
 \subsubsection{Fundamental Theorem of Line Integrals}
 % I think, it's wrong to call int F' - there should be a transposition involved - see Bärwolff, pg 393.
-Let $F(\mathbf{x})$ be a scalar-valued function of some vector input $\mathbf{x}$ in $\mathbb{R}^n$ and $\mathbf{f(x)} = F'(\mathbf{x}) = \grad F(\mathbf{x})$ be the gradient of $F$. We observe that $\mathbf{f} = F'$ is a vector-valued function of $\mathbf{x}$ and that according to our definition, $F$ is a potential for $\mathbf{f}$. Let $C$ be a contour with start and end points $\mathbf{a,b} \in \mathbb{R}^n$ and let $C$ be given as a parametric curve $\mathbf{c} = \mathbf{c}(t)$ with parameter $t$. Let $d\mathbf{s} = \dot{\mathbf{c}} = d\mathbf{c} / dt$ be an infinitesimal tangent vector along $C$ at the position $\mathbf{c}(t)$ and $\mathbf{c}(t_a) = \mathbf{a}, \mathbf{c}(t_b) = \mathbf{b}$. Then, the following holds:
+Let $F(\mathbf{x})$ be a scalar-valued function of some vector input $\mathbf{x}$ in $\mathbb{R}^n$ and $\mathbf{f(x)} = \grad F(\mathbf{x})$ be the gradient of $F$. We observe that $\mathbf{f}$ is a vector-valued function of $\mathbf{x}$ and that according to our definition, $F$ is a potential for $\mathbf{f}$. Let $C$ be a contour with start and end points $\mathbf{a,b} \in \mathbb{R}^n$ and let $C$ be given as a parametric curve $\mathbf{c} = \mathbf{c}(t)$ with parameter $t$. Let $d\mathbf{s} = \dot{\mathbf{c}} = d\mathbf{c} / dt$ be an infinitesimal tangent vector along $C$ at the position $\mathbf{c}(t)$ and $\mathbf{c}(t_a) = \mathbf{a}, \mathbf{c}(t_b) = \mathbf{b}$. Then, the following holds:
 \begin{equation}
  \int_C \mathbf{f} \cdot d\mathbf{s}  =
  \int_{t_a}^{t_b}  \mathbf{f} (\mathbf{c}(t) ) \cdot \dot{\mathbf{c}}(t) \; dt =

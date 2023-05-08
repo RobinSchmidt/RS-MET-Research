@@ -17,8 +17,13 @@ We note that we could compute this limit at any value of $x_0$ where that limit 
 \end{equation}
 so the derivative of $f(x) = x^2$ is $f'(x) = 2 x$.
 
-\paragraph{Notations} 
-ToDo: Explain Lagrange ($f'$), Newton ($\dot{f}$), Leibniz ($d/dx$) and operator ($D[f], D f$) notations. Introduce the "evaluated at" notation with the vertical bar on the right.
+\paragraph{Notations} Writing $f'$ with the prime for the derivative of $f$ is only one of several different notations. It is called the Lagrange notation. Especially in physics and when the independent variable is time $t$, you will also often see a notation with a dot above the function name, here $f$, such that the derivative of $f(t)$ with respect to $t$ would be written as: $\dot{f}(t)$. This is called Newton notation. Yet another notation is due to Leibniz and that notation writes a $\frac{d}{dx}$ in front of the $f$ such that $f'(x) = \frac{d}{dx} f(x) = \frac{d f(x)}{dx}$. The Leibniz notation can be convenient when manipulating equations because in certain algebraic transformations, the $dx$ can indeed be treated like a denominator in a fraction. The $\frac{d}{dx}$ in front of the $f$ can actually also be seen as an \emph{operator} that "acts on" the function $f$. There is another such operator notation that uses just a $D$ instead, i.e. $f' = D f$. I have suppressed the argument here, i.e. wrote just $f$ instead of $f(x)$. This is also common practice. In another operator notation, the argument of the operator $D$, which is the function $f$, is put into brackets: $f' = D[f]$. You may also encounter notations like this:
+\begin{equation}
+	\frac{d}{d x} f(x) \bigg\rvert_{x=a}
+\end{equation}
+This means: take the derivative of $f$ with respect to $x$, then evaluate the resulting expression at $x = a$.
+
+%ToDo: Introduce the "evaluated at" notation with the vertical bar on the right.
 
 
 \subsection{Differentiation Rules}
@@ -49,7 +54,11 @@ whose usefulness lies mostly in its generalizations to the directional derivativ
 
 \subsection{Elementary Derivatives}
 We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting).
-
 ...
 
+\subsection{Higher Order Derivatives}
+With the derivative, we have an operation to produce a new "derived" function from a given function. There's nothing that stops us to apply the same operation to the derived function as well. And then iterate that process as often as we like. That's the way, higher order derivatives are created.
 
+...TBC...
+
+% give all different notations $f'', f''', f^{(k)}, \frac{d^k}{d x^k}, D^k, \ddot{f}, \dddot{f}$

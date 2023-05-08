@@ -22,28 +22,32 @@ The interpretation of the Riemann integral as an area is actually a somewhat slo
 
 
 \subsection{Antiderivatives and Indefinite Integrals}
-We now want to consider a situation where the lower limit of the integration $a$ is fixed as before but the upper limit $b$ is taken to be a variable. In that case, the above expression actually defines a new function - namely, a function of $b$. Just like via the derivative, we have "derived" a new function $f'(x)$ from our given $f(x)$, we can derive a new function, let's call it $F$ from $f$ via the following operation:
+We now want to consider a situation where the lower limit of the integration $a$ is fixed as before but the upper limit $b$ is taken to be a variable. In that case, the above expression actually defines a new function - namely, a function of $b$. Just like we have earlier "derived" a new function $f'(x)$ from our given $f(x)$ via the derivative, we can now derive another new function, let's call it $F$ from $f$ via the following operation:
 \begin{equation}
 F(b) = \int_a^b f(x) \, dx \qquad \text{or} \qquad
 F(x) = \int_a^x f(u) \, du
 \end{equation}
-Note that $b$ and $x$ are just dummies or placeholders. The left and right version say exactly the same thing and I have just chosen different names for the dummy variables in both expressions. The functions $f$ and $F$ and their relationship is of interest here - not how we choose to call their arguments. OK, so we have created a new function $F$ from our given function $f$. That new function $F$ is called an \emph{indefinite integral} or an \emph{antiderivative} of $f$. I deliberately said "an" antiderivative and not "the" antiderivative because it is not uniquely determined: we could pick a different fixed $a$ and would get another antiderivative. 
+We can interpret this function of $F(b)$ as a sort of "accumulated area" function where the argument $b$ determines, how far to the right we accumulate the area (starting at the left at our fixed $a$). Note that $b$ and $x$ are just dummies or placeholders. The left and right version say exactly the same thing and I have just chosen different names for the dummy variables in both expressions. The functions $f$ and $F$ and their relationship is of interest here - not how we choose to call their arguments. OK, so we have created a new function $F$ from our given function $f$. That new function $F$ is called an \emph{indefinite integral} or an \emph{antiderivative} of $f$. I deliberately said "an" antiderivative and not "the" antiderivative because it is not uniquely determined: we could pick a different fixed $a$ and would get another antiderivative. 
 The reason for calling it an antiderivative is, as you may have guessed, its relation to the derivative. When we take \emph{the} derivative of \emph{an} antiderivative of a function, we get our original function back. Formally, \emph{the} indefinite integral of a function $f$ is not one single function but a whole set of functions: namely, the set of all those functions whose derivative is $f$. There are many functions that have the same derivative because adding a constant to a function does not affect its derivative. The indefinite integral of a function $f$ is written as an integral without integration limits and is defined formally as the following set:
 \begin{equation}
  \int f(x) \, dx = 	\{ F(x) + C : F'(x) = f(x) \} = F(x) + C \qquad \text{where } C \in \mathbb{R}
 \end{equation}
-In this equation, the set builder notation in the middle is the formal definition and the right hand side is a less formal shorthand notation. The constant $C$ is called the integration constant. To relate that definition to our former expression with the variable upper integration limit $b$, we note that different choices of the lower integration limit $a$ would give rise to different integration constants $C$. [ToDo: state that relation explicitly!]
-
-%This profound relation is captured in...(drum roll)...
+In this equation, the set builder notation in the middle is the formal definition and the right hand side is a less formal shorthand notation. The constant $C$ is called the integration constant. To relate that definition to our former expression with the variable upper integration limit $b$, we note that different choices of the lower integration limit $a$ would give rise to different integration constants $C$. Specifically, if we define $F_0(x)$ to be the particular antiderivative of $f$ with integration constant zero, then we would get $C = -F_0(a)$ in the general case. [VERIFY!]
+% is it: C = F(a) or C = f(a) or C = a or something else? if a = b then F(b) = 0 when we choose C = 0...maybe C = F(b) - F(a)?
+% Let f(x) = x^2, then F(x) = x^3/3 + C
+% https://www.wolframalpha.com/input?i=integrate+x%5E2+dx+from+x%3Da+to+b
+% gives int_a^b x^2 dx = b^3/3 - a^3/3
+% so it seems that C = -F(a) 
+% Explain interpretation of F as and "accumulated area" function
 
 \subsection{The Fundamental Theorem of Calculus}
 We have approached derivatives and integrals from geometric problems involving the graph of a function $f$: finding the slope of a tangent to the graph and finding the (signed) area between the graph and the $x$-axis. As it turns out, these two seemingly disparate questions are related to one another. Specifically, if $F$ is an antiderivative for $f$, then the following holds:
 \begin{equation}
  \int_a^b f(x) \, dx = F(b) - F(a)
 \end{equation}
-With that theorem in hand, we can easily compute (signed) areas under the graph of a function $f$ provided that we know an antiderivative $F$ of $f$. We just need to evaluate our antiderivative at two points and subtract the results. To find such an antiderivative for some simple functions, we just need to read our table of derivatives backwards. For more complicated functions, there are certain laws that we can use.
+With that theorem in hand, we can easily compute (signed) areas under the graph of a function $f$ provided that we know an antiderivative $F$ of $f$. We just need to evaluate our antiderivative at two points and subtract the results. To find such an antiderivative for some simple functions, we just need to read our table of derivatives backwards. For more complicated functions, there are certain laws that we can use. %Before we get to them, let's try to convince ourselves that this theorem is plausible. 
 
-...TBC...
+%...TBC...
 
 % F being *an* antiderivative for f implies that f is *the* derivative of F. Given f, the antiderivative is determined only up to an additive constant. But given F, the derivative f is uniquely determined because the derivative of the constant is zero.
 
@@ -104,7 +108,8 @@ Finding an antiderivative for a given function is hard. Unlike for differentiati
 
 %¯\_(ツ)_/¯
 
-% maybe for the statement that Mathematica does not implement the full Risch algo, bring the example from Weitz's video
+% maybe for the statement that Mathematica does not implement the full Risch algo, bring the example from Weitz's video at around 23 min:
+% https://www.youtube.com/watch?v=l6w868U8C-M
 
 %\medskip
 %\paragraph{Personal Rant} In my humble personal opinion, I think nowadays with the widespread availability of computers and the Risch algorithm, it is pointless to try memorizing all these integration techniques and tricks. The problem has been solved for good - no need to torture students with that anymore. Maybe it's just as pointless as being able to calculate square roots with pencil and paper. Yes, it is absolutely possible and back in the day, it was the way to go - but for dog's sake, we now have computers for that kind of stuff. I don't consider the hand calculation of square roots to be an essential mathematical skill anymore and I tend to think similarly about manual integration techniques. In the mission statement, I said that one of the aims of this book is to give rather comprehensive collections of useful formulas. However, I will abstain from even trying to give a comprehensive list of known basic, elementary integrals. Such lists can fill dozens of pages and even whole books. In Germany, there's a running gag circulating that a function is said to be "Bronstein integrable" if its antiderivative can be found in "the Bronstein" which is a famous math reference book originally written by Ilja Nikolajevic - you guessed it - Bronstein. My copy has 32 pages of tables of antiderivatives. In the age of computers and the Risch algorithm, this would feel like listing tables of function values for the logarithm. Yes, such tables were a thing at some time, too. My Bronstein actually also still has such tables for some "special functions" like the Gamma- and Bessel-function. I felt great relief when I first learned about the existence of the Risch algorithm. Not one of my university professors even mentioned its existence. Ever. Not in math lectures, not in physics lectures, not in engineering lectures, not even in computer science lectures. Never. That was in the 2000s and the algo was known since the early 1970s and already had been implemented in a lot of computer algebra systems. 

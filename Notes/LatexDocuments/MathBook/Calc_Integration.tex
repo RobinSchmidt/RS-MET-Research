@@ -5,12 +5,17 @@ Imagine we have a function $y = f(x)$ and want to compute the area that is enclo
 \begin{equation}
  I = \int_a^b f(x) \, dx = \lim_{n \rightarrow \infty}  \sum_{i=1}^n f(x_i) \, \Delta x_i
 \end{equation}
-Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value somewhere inside the $i$th subinterval. This is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result.
+Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value somewhere inside the $i$th subinterval. This is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result. If that isn't the case, the function is not considered to be Riemann integrable.
 
 \medskip
 The interpretation of the Riemann integral as an area is actually a somewhat sloppy interpretation: it works only when we assume that the function graph is above the $x$-axis for the whole integration interval. If this is not the case, the portions below the $x$-axis will actually produce negative contributions to the total area. If the function is more below the $x$-axis than above, the "area" may even become negative. It is more useful to think about the integral as a sort of "signed area". If we divide the integral by the width of the integration interval, i.e. by $b-a$, we obtain an average value of the function over the interval $[a,b]$.
 
+%\paragraph{The Lesbesgue Integral}
+
 % maybe mention the Lesbesgue integral, too - maybe other generalizations (Riemman-Stieljes, etc.)
+% but maybe it's better to save that for later - it would just interrupt the flow
+
+
 
 \subsection{Antiderivatives and Indefinite Integrals}
 We now want to consider a situation where the lower limit of the integration $a$ is fixed as before but the upper limit $b$ is taken to be a variable. In that case, the above expression actually defines a new function - namely, a function of $b$. Just like via the derivative, we have "derived" a new function $f'(x)$ from our given $f(x)$, we can derive a new function, let's call it $F$ from $f$ via the following operation:
@@ -24,6 +29,12 @@ Note that $b$ and $x$ are just dummies or placeholders. The left and right versi
 We have approached derivatives and integrals from geometric problems involving the graph of a function $f$: finding the slope of a tangent to the graph and finding the (signed) area between the graph and the $x$-axis. As it turns out, these two seemingly disparate questions are related to one another
 
 ...TBC...
+
+\subsection{Integration Laws} 
+ToDo: Explain rules for linearity, reversal,...
+
+%\paragraph{Notations} 
+% Maybe introduce a functional notation $I_a^b[f] = \int_a^b f(x) dx$ for definite integrals and an operator notation $I[f] = \int f(x) dx$ for indefinite integrals. It should be consistent with the notation used in the Operators section in the Functional Analysis chapter. The notation is more compact and allows the laws to be written down in smaller table.
 
 \subsection{Improper Integrals} 
 %-infinite integration limits
@@ -61,10 +72,12 @@ See also:
 
 % ToDo: Substitution (inversion of the chain rule), Logarithmic integration, integration of inverse?
 
+\subsubsection{Integration by Substitution} 
 
+\subsubsection{Integration by Partial Fraction Expansion} 
 
 \subsubsection{The Risch Algorithm}
-Finding an antiderivative for a given function is hard. Unlike for differentiation, for integration there is no simple mechanical set of rules that we can just blindly apply and be sure that it will always lead us to the result. Except: there actually is one - but with a caveat: it is not really suitable for execution by hand using pencil and paper. It's too complicated and messy for that. However, computers can deal with it easily, provided they have the appropriate software installed. This set of rules is embodied in the Risch algorithm and some variation of this algorithm is usually integrated into every computer algebra system. Not all such systems implement the full algorithm
+Finding an antiderivative for a given function is hard. Unlike for differentiation, for integration there is no simple mechanical set of rules that we can just blindly apply and be sure that it will always lead us to the result. Except: there actually is one - but with a caveat: it is not really suitable for execution by hand using pencil and paper. It's too complicated and messy for that. However, computers can deal with it easily, provided they have the appropriate software installed. This set of rules is embodied in the Risch algorithm and some variation of this algorithm is usually integrated into every computer algebra system. The Risch algorithm can be given an elementary function as input and if the function has an elementary antiderivative, the algorithm will find it and return it as output. If the algorithm didn't find an elementary antiderivative, then it has proven that none exists. Not all such systems implement the full algorithm and some may implement custom extensions (on top of the full or partial algo) to enable it to deal also with certain non-elementary functions, also kown as "special functions".
 ...TBC...
 
 %\medskip

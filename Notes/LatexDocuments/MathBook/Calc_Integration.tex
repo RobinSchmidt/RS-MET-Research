@@ -26,15 +26,22 @@ F(x) = \int_a^x f(u) \, du
 Note that $b$ and $x$ are just dummies or placeholders. The left and right version say exactly the same thing and I have just chosen different names for the dummy variables in both expressions. The functions $f$ and $F$ and their relationship is of interest here - not how we choose to call their arguments. OK, so we have created a new function $F$ from our given function $f$. That new function $F$ is called an \emph{indefinite integral} or an \emph{antiderivative} of $f$. I deliberately said "an" antiderivative and not "the" antiderivative because it is not uniquely determined: we could pick a different fixed $a$ and would get another antiderivative. The reason for calling it an antiderivative is, as you may have guessed, its relation to the derivative. This profound relation is captured in...(drum roll)...
 
 \subsection{The Fundamental Theorem of Calculus}
-We have approached derivatives and integrals from geometric problems involving the graph of a function $f$: finding the slope of a tangent to the graph and finding the (signed) area between the graph and the $x$-axis. As it turns out, these two seemingly disparate questions are related to one another
+We have approached derivatives and integrals from geometric problems involving the graph of a function $f$: finding the slope of a tangent to the graph and finding the (signed) area between the graph and the $x$-axis. As it turns out, these two seemingly disparate questions are related to one another. Specifically, if $F$ is an antiderivative for $f$, then the following holds:
+\begin{equation}
+ \int_a^b f(x) \, dx = F(b) - F(a)
+\end{equation}
 
 ...TBC...
 
+% F being *an* antiderivative for f implies that f is *the* derivative of F. Given f, the antiderivative is determined only up to an additive constant. But given F, the derivative f is uniquely determined because the derivative of the constant is zero.
+
+% give an intuitive understanding of why this should be true: if a function has a high value at the upper (i.e. right) integration limit, then shifting the right integration limit further to the right should increase the area under the graph faster than when it has a low value.
+
 \subsection{Integration Laws} 
-ToDo: Explain rules for linearity, reversal,...
+ToDo: Explain rules for linearity, reversal, splitting, ...
 
 %\paragraph{Notations} 
-% Maybe introduce a functional notation $I_a^b[f] = \int_a^b f(x) dx$ for definite integrals and an operator notation $I[f] = \int f(x) dx$ for indefinite integrals. It should be consistent with the notation used in the Operators section in the Functional Analysis chapter. The notation is more compact and allows the laws to be written down in smaller table.
+% Maybe introduce a functional notation $I_a^b[f] = \int_a^b f(x) dx$ for definite integrals and an operator notation $I[f] = \int f(x) dx$ for indefinite integrals. It should be consistent with the notation used in the Operators section in the Functional Analysis chapter. The notation is more compact and allows the laws to be written down in smaller table. Also introduce the notation with the vertical bar to mean "evaluated at upper and lower limit, then subtracted"
 
 \subsection{Improper Integrals} 
 %-infinite integration limits
@@ -58,12 +65,12 @@ The formulas can be derived from the product rule of differentiation.
 \begin{align}
   \int 2 x \ln x \, dx = x^2 \ln x - \int x \, dx = x^2 \ln x - \frac{x^2}{2} + C
 \end{align}
-...yeah, the $+ C$ has been neglected (i.e. taken to be zero) in the formulas above. It's more convenient to just add the integration constant at the very end of the calculation.
+...yeah, the $+ C$ has been neglected (i.e. taken to be zero) in the formulas above. It's more convenient to just add the integration constant at the very end of the calculation. In many cases, you will probably forget about it. This amounts to taking it to be zero which is often the most natural choice anyway. However, you should keep in the back of your head that you can always add an integration constant and in some cases (e.g. when solving differential equations), that constant actually has a role and matters.
 
 
 %\newline % we want some vertical space - newline doe not really cut it
-See also:
-\href{https://en.wikipedia.org/wiki/Integration_by_parts}{wikipedia.org/wiki/Integration\_by\_parts}
+%See also:
+%\href{https://en.wikipedia.org/wiki/Integration_by_parts}{wikipedia.org/wiki/Integration\_by\_parts}
 
 % Applications: finding adjoint operators (move integral from one function to the other)
 % https://www.youtube.com/watch?v=aG5tFA8GJ78 Linear Operators and their Adjoints (Nathan Kutz)
@@ -76,16 +83,28 @@ See also:
 
 \subsubsection{Integration by Partial Fraction Expansion} 
 
+
+
 \subsubsection{The Risch Algorithm}
-Finding an antiderivative for a given function is hard. Unlike for differentiation, for integration there is no simple mechanical set of rules that we can just blindly apply and be sure that it will always lead us to the result. Except: there actually is one - but with a caveat: it is not really suitable for execution by hand using pencil and paper. It's too complicated and messy for that. However, computers can deal with it easily, provided they have the appropriate software installed. This set of rules is embodied in the Risch algorithm and some variation of this algorithm is usually integrated into every computer algebra system. The Risch algorithm can be given an elementary function as input and if the function has an elementary antiderivative, the algorithm will find it and return it as output. If the algorithm didn't find an elementary antiderivative, then it has proven that none exists. Not all such systems implement the full algorithm and some may implement custom extensions (on top of the full or partial algo) to enable it to deal also with certain non-elementary functions, also kown as "special functions".
-...TBC...
+Finding an antiderivative for a given function is hard. Unlike for differentiation, for integration there is no simple mechanical set of rules that we can just blindly apply and be sure that it will always lead us to the result. Except: there actually is one - but with a caveat: it is not really suitable for execution by hand using pencil and paper. It's too complicated and messy for that. However, computers can deal with it easily, provided they have the appropriate software installed. This set of rules is embodied in the Risch algorithm and some variation of this algorithm is usually integrated into every computer algebra system. The Risch algorithm can be given an elementary function as input and if the function has an elementary antiderivative, the algorithm will find it and return it as output. If the algorithm didn't find an elementary antiderivative, then it has proven that none exists. Not all such systems implement the full algorithm and some may implement custom extensions (on top of the full or partial algo) to enable it to deal also with certain non-elementary functions, also kown as "special functions". When faced with some integral, my advice would be to reach for such a software. Wolfram's "Mathematica" is pretty good at integration and has a free web interface called "Wolfram Alpha" which is often good enough. If it doesn't succeed, you may have to look further, but that should probably be the first thing to try. I don't think, it implements the full Risch algo, though. On the other hand, it apparently implements some extensions that allow it to also deal with some special functions. The free and open source system "Axiom" does indeed implement the full Risch algo - or so I have heard. You may also want to try "SageMath" which, at the time of this writing and to the best of my knowledge, is currently the most extensive free and open source math software. Its more like an umbrella software that lets you access multiple other math software systems under the hood with a unified, Python-like syntax. Its computer algebra engine is by default "Maxima" but it can access others, too. Supposedly, Axiom is actually among them, but I couldn't get that to work yet.
+
+% maybe for the statement that Mathematica does not implement the full Risch algo, bring the example from Weitz's video
 
 %\medskip
-\paragraph{Personal Rant} In my humble personal opinion, I think nowadays with the widespread availability of computers and the Risch algorithm, it is pointless to try memorizing all these integration techniques and tricks. The problem has been solved for good - no need to torture students with that anymore. Maybe it's just as pointless as being able to calculate square roots with pencil and paper. Yes it is absolutely possible and back in the day, it was the way to go - but for dog's sake, we now have computers for that kind of stuff. I don't consider the hand calculation of square roots to be an essential mathematical skill anymore and I tend to think about manual integration techniques similarly. In the mission statement, I said that one of the aims of this book is to give rather comprehensive collections of useful formulas. However, I will abstain from even trying to give a comprehensive list of known basic, elementary integrals. Such lists can fill dozens of pages and even whole books. In Germany, there's a running gag circulating that a function is said to be "Bronstein integrable" if its antiderivative can be found in "the Bronstein" which is a famous math reference book originally written by Ilja Nikolajevic - you guessed it - Bronstein. My copy has 32 pages of tables of antiderivatives. In the age of computers and the Risch algorithm, this would feel like listing tables of function values for the logarithm. Yes, such tables were a thing at some time, too. My Bronstein actually also still has some of them for the Gamma- and Bessel-function and a few others. I felt great relief when I first learned about the existence of the Risch algorithm. Not one of my university professors even mentioned its existence. Ever.
+\paragraph{Personal Rant} In my humble personal opinion, I think nowadays with the widespread availability of computers and the Risch algorithm, it is pointless to try memorizing all these integration techniques and tricks. The problem has been solved for good - no need to torture students with that anymore. Maybe it's just as pointless as being able to calculate square roots with pencil and paper. Yes, it is absolutely possible and back in the day, it was the way to go - but for dog's sake, we now have computers for that kind of stuff. I don't consider the hand calculation of square roots to be an essential mathematical skill anymore and I tend to think similarly about manual integration techniques. In the mission statement, I said that one of the aims of this book is to give rather comprehensive collections of useful formulas. However, I will abstain from even trying to give a comprehensive list of known basic, elementary integrals. Such lists can fill dozens of pages and even whole books. In Germany, there's a running gag circulating that a function is said to be "Bronstein integrable" if its antiderivative can be found in "the Bronstein" which is a famous math reference book originally written by Ilja Nikolajevic - you guessed it - Bronstein. My copy has 32 pages of tables of antiderivatives. In the age of computers and the Risch algorithm, this would feel like listing tables of function values for the logarithm. Yes, such tables were a thing at some time, too. My Bronstein actually also still has such tables for some "special functions" like the Gamma- and Bessel-function. I felt great relief when I first learned about the existence of the Risch algorithm. Not one of my university professors even mentioned its existence. Ever. That was in the 2000s and the algo was known since the early 1970s and already had been implemented in a lot of computer algebra systems. 
 
 %However, I do consider the ability to implement a square-root algorithm
 
 %and tricks to find antiderivatives by hand
+
+\subsubsection{Finding Definite Integrals}
+The techniques explained above are for finding antiderivatives also known as indefinite integrals. Once you have found an indefinite integral, it is trivial to evaluate a corresponding definite integral by just evaluating your antiderivative at two points and subtracting the results. There are cases where all you want is a definite integral, i.e. basically a number. For this, going through the process of finding an antiderivative first might be overkill. It may sometimes even be impossible to find one, at least in terms of elementary functions. Yet, it may still be perfectly possible to give a neat value for the desired definite integral. One important technique to achieve this involves using the "residue theorem" which is one of the important results of complex analysis. We will see this later...
+
+...TBC...what other techniques are there?
+
+% What about techniques to find definite integrals without having to find an antiderivative first? I think, going through the complex plane and using the residue theorem is a way to do this.
+
+
 
 \begin{comment}
 

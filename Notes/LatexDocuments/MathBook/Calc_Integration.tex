@@ -1,7 +1,7 @@
 \section{Integration} 
 
 \subsection{The Riemann Integral} 
-Imagine we have a function $y = f(x)$ and want to compute the area that is enclosed between some interval of the $x$-axis, say $[a,b]$, and the graph of the function over this interval. We could approach this problem by approximating the area by a bunch of rectangles as follows: we split the interval $[a,b]$ into some number $n$ of equally sized subintervals, for each subinterval compute the area of a rectangle where one side is given by the width of the subinterval and the other by the height of the function somewhere inside the subinterval, then add up all those areas of the rectangles. When the number of intervals $n$ grows, the width of the intervals shrinks, the rectangles become thinner and the approximation becomes better. In the limit, as $n$ approaches infinity, the approximation becomes exact. We could define the integral as follows:
+Imagine we have a function $y = f(x)$ and want to compute the area that is enclosed between some interval of the $x$-axis, say $[a,b]$, and the graph of the function over this interval. We could approach this problem by approximating the area by a bunch of rectangles as follows: we split the interval $[a,b]$ into some number $n$ of equally sized subintervals, for each subinterval compute the area of a rectangle where one side is given by the width of the subinterval and the other by the height of the function somewhere inside the subinterval, then add up all those areas of the rectangles. When the number of intervals $n$ grows, the width of the intervals shrinks, the rectangles become thinner and the approximation becomes better. In the limit, as $n$ approaches infinity, the approximation becomes exact. This area is also called the \emph{definite integral} of $f$ over the interval $[a,b]$. We could define the integral as follows:
 \begin{equation}
  I = \int_a^b f(x) \, dx = \lim_{n \rightarrow \infty}  \sum_{i=1}^n f(x_i) \, \Delta x_i
 \end{equation}
@@ -18,12 +18,16 @@ We now want to consider a situation where the lower limit of the integration $a$
 F(b) = \int_a^b f(x) \, dx \qquad \text{or} \qquad
 F(x) = \int_a^x f(u) \, du
 \end{equation}
-Note that $b$ and $x$ are just dummies or placeholders. The left and right version say exactly the same thing and I have just chosen different names for the dummy variables in both expressions. The functions $f$ and $F$ and their relationship is of interest here - not how we choose to call their arguments. OK, so we have created a new function $F$ from our given function $f$. That new function $F$ is called an \emph{indefinite integral} or an \emph{antiderivative} of $f$. I deliberately said "an" antiderivative and not "the" antiderivative because it is not uniquely determined: we could pick a different fixed $a$ and would get another antiderivative. The reason for calling it an antiderivative is, as you may have guessed, its relation to the derivative. This relation is captured in...(drum roll)...
+Note that $b$ and $x$ are just dummies or placeholders. The left and right version say exactly the same thing and I have just chosen different names for the dummy variables in both expressions. The functions $f$ and $F$ and their relationship is of interest here - not how we choose to call their arguments. OK, so we have created a new function $F$ from our given function $f$. That new function $F$ is called an \emph{indefinite integral} or an \emph{antiderivative} of $f$. I deliberately said "an" antiderivative and not "the" antiderivative because it is not uniquely determined: we could pick a different fixed $a$ and would get another antiderivative. The reason for calling it an antiderivative is, as you may have guessed, its relation to the derivative. This profound relation is captured in...(drum roll)...
 
 \subsection{The Fundamental Theorem of Calculus}
+We have approached derivatives and integrals from geometric problems involving the graph of a function $f$: finding the slope of a tangent to the graph and finding the (signed) area between the graph and the $x$-axis. As it turns out, these two seemingly disparate questions are related to one another
 
+...TBC...
 
 \subsection{Improper Integrals} 
+%-infinite integration limits
+%-singularities within the integration interval
 
 
 \subsection{Integration Techniques} 
@@ -53,15 +57,19 @@ See also:
 % Applications: finding adjoint operators (move integral from one function to the other)
 % https://www.youtube.com/watch?v=aG5tFA8GJ78 Linear Operators and their Adjoints (Nathan Kutz)
 
+% is inversion of the product rule
 
-% ToDo: Substitution, Logarithmic integration, integration of inverse?
+% ToDo: Substitution (inversion of the chain rule), Logarithmic integration, integration of inverse?
+
+
 
 \subsubsection{The Risch Algorithm}
 Finding an antiderivative for a given function is hard. Unlike for differentiation, for integration there is no simple mechanical set of rules that we can just blindly apply and be sure that it will always lead us to the result. Except: there actually is one - but with a caveat: it is not really suitable for execution by hand using pencil and paper. It's too complicated and messy for that. However, computers can deal with it easily, provided they have the appropriate software installed. This set of rules is embodied in the Risch algorithm and some variation of this algorithm is usually integrated into every computer algebra system. Not all such systems implement the full algorithm
 ...TBC...
 
-\medskip
-In my humble personal opinion, I think nowadays with the widespread availability of computers and the Risch algorithm, it is pointless to try memorizing all these integration techniques and tricks. The problem has been solved for good - no need to torture students with that anymore. Maybe it's just as pointless as being able to calculate square roots with pencil and paper. Yes it is absolutely possible and back in the day, it was the way to go - but for dog's sake, we now have computers for that kind of stuff. I don't consider the hand calculation of square roots to be an essential mathematical skill and I tend to think about manual integration techniques similarly. 
+%\medskip
+\paragraph{Personal Rant} In my humble personal opinion, I think nowadays with the widespread availability of computers and the Risch algorithm, it is pointless to try memorizing all these integration techniques and tricks. The problem has been solved for good - no need to torture students with that anymore. Maybe it's just as pointless as being able to calculate square roots with pencil and paper. Yes it is absolutely possible and back in the day, it was the way to go - but for dog's sake, we now have computers for that kind of stuff. I don't consider the hand calculation of square roots to be an essential mathematical skill anymore and I tend to think about manual integration techniques similarly. In the mission statement, I said that one of the aims of this book is to give rather comprehensive collections of useful formulas. However, I will abstain from even trying to give a comprehensive list of known basic, elementary integrals. Such lists can fill dozens of pages and even whole books. In Germany, there's a running gag circulating that a function is said to be "Bronstein integrable" if its antiderivative can be found in "the Bronstein" which is a famous math reference book originally written by Ilja Nikolajevic - you guessed it - Bronstein. My copy has 32 pages of tables of antiderivatives. In the age of computers and the Risch algorithm, this would feel like listing tables of function values for the logarithm. Yes, such tables were a thing at some time, too. My Bronstein actually also still has some of them for the Gamma- and Bessel-function and a few others. I felt great relief when I first learned about the existence of the Risch algorithm. Not one of my university professors even mentioned its existence. Ever.
+
 %However, I do consider the ability to implement a square-root algorithm
 
 %and tricks to find antiderivatives by hand

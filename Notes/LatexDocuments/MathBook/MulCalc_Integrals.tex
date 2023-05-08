@@ -25,26 +25,24 @@ that is: we can switch inner and outer integral, as we see fit - the result will
 % https://tutorial.math.lamar.edu/Classes/CalcIII/IteratedIntegrals.aspx
 
 \subsubsection{Handling Non Rectangular Regions}
-Now let's see how we can handle regions that are not such nice and simple axis-aligned rectangles. To handle other shapes, we must allow at least some of the integration limits to be functions instead of constants. There are two types of so called \emph{normal domains}: In type 1 normal domains, our region could be bounded left and right by two vertical lines at $x = a$ and $x = b$ as before but now, instead of being bounded at bottom and top by horizontal lines as $y = c$ and $y = d$, it would now be bounded by two functions $y = g(x)$ and $y = h(x)$. For a type 2 normal domain, it's the other way around: the are bounded at bottom at top by horizontal lines at $y = c$ and $y = d$  as before but the left and right boundaries are described by two functions $x = g(y)$ and $x = h(y)$.
-
-%For example, our region could be bounded left and right by two vertical lines at $x = a$ and $x = b$, i.e. on the $x$-axis we would have constant boundaries defined by the interval $[a,b]$ as before. But 
+Now let's see how we can handle regions that are not such nice and simple axis-aligned rectangles. To handle other shapes, we must allow at least some of the integration limits to be functions instead of constants. There are two types of so called \emph{normal domains}: In type 1 normal domains, our region could be bounded left and right by two vertical lines at $x = a$ and $x = b$ as before but now, instead of being bounded at bottom and top by horizontal lines as $y = c$ and $y = d$, it would now be bounded by two functions $y = g(x)$ and $y = h(x)$. For a type 2 normal domain, it's the other way around: the are bounded at bottom at top by horizontal lines at $y = c$ and $y = d$  as before but the left and right boundaries are described by two functions $x = g(y)$ and $x = h(y)$. Assuming that our region is either a type 1 or type 2 normal domain, we can compute the integral as:
+\begin{equation}
+\text{Type 1: } I = \int_a^b \int_{g(x)}^{h(x)} f(x,y) \, dy dx   \qquad
+\text{Type 2: } I = \int_c^d \int_{g(y)}^{h(y)} f(x,y) \, dx dy
+\end{equation}
+If our region can neither be described as a type 1 or 2 normal domain, it must be dissected into such normal domains and then the integrals have to be computed for each of the subdomains and be added up. Unless your region has a totally crazy shape, it should be fairly straightforward to break down the region into such normal domains and in general, there a mutliple ways to do so. 
+% Bärwolff, pg 575
+%If your region is a polygon, it may make sense to break it down into triangles
+%....TBC...explain
 
 % First, we need some more general notation ...TBC...
 %\begin{equation}
 %	I = \iint_R f \, dA 
 %\end{equation}
 
- ....TBC...
-
-%-if we evalutae the inner integral first, x gets "integrated out" and we get a function that depends onyl on y
-
-%-axis parallel rectangles
 %-triangles or maybe more generally trapezoids with vertical borders and some slant in the horizontalish borders, i.e. y-limits are p x + q and r x + s - it doesn't really matter, if the left boundary is at the intersection or somewhat right to it
 %-polygons
-%-domains specified by functions
 
-
-%...TBC...
 
 \subsection{Triple Integrals}
 

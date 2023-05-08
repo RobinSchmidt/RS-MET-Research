@@ -15,16 +15,26 @@ To evaluate such a double integral, we work our way from the inside out. First, 
  \text{Step 2 - Evaluate:}
  \int_c^d f(y) \, dy
 \end{equation}
-So, the evaluation of a single 2D integral has been broken down to the evaluation of two 1D integrals. We have reduced a new operation to things that we already know how to do. In principle, it doesn't matter, which integration we perform first because under very general circumstances [ToDo: figure out the exceptions], we will have:
+So, the evaluation of a single 2D integral has been broken down to the evaluation of two 1D integrals. We have reduced a new operation to things that we already know how to do. In principle, it doesn't matter, which integration we perform first because for continuous functions $f(x,y)$ because by Fubini's theorem we will have:
 \begin{equation}
-\int_c^d \int_a^b f(x,y) \, dx dy = \int_a^b \int_c^d f(x,y) \, dy dx 
+ I = \int_c^d \int_a^b f(x,y) \, dx dy = \int_a^b \int_c^d f(x,y) \, dy dx 
 \end{equation}
-that is: we can switch inner and outer integral, as we see fit - the result will be the same. However, it is not necessarily the case that both ways of evaluating the integral are of similar difficulty. It may be the case, that one way is (much) easier than the other.
+that is: we can switch inner and outer integral, as we see fit - the result will be the same. However, it is not necessarily the case that both ways of evaluating the integral are of similar difficulty. It may be the case that one way is (much) easier than the other.
 
 
+% https://tutorial.math.lamar.edu/Classes/CalcIII/IteratedIntegrals.aspx
 
 \subsubsection{Handling Non Rectangular Regions}
+Now let's see how we can handle regions that are not such nice and simple axis-aligned rectangles. To handle other shapes, we must allow at least some of the integration limits to be functions instead of constants. There are two types of so called \emph{normal domains}: In type 1 normal domains, our region could be bounded left and right by two vertical lines at $x = a$ and $x = b$ as before but now, instead of being bounded at bottom and top by horizontal lines as $y = c$ and $y = d$, it would now be bounded by two functions $y = g(x)$ and $y = h(x)$. For a type 2 normal domain, it's the other way around: the are bounded at bottom at top by horizontal lines at $y = c$ and $y = d$  as before but the left and right boundaries are described by two functions $x = g(y)$ and $x = h(y)$.
 
+%For example, our region could be bounded left and right by two vertical lines at $x = a$ and $x = b$, i.e. on the $x$-axis we would have constant boundaries defined by the interval $[a,b]$ as before. But 
+
+% First, we need some more general notation ...TBC...
+%\begin{equation}
+%	I = \iint_R f \, dA 
+%\end{equation}
+
+ ....TBC...
 
 %-if we evalutae the inner integral first, x gets "integrated out" and we get a function that depends onyl on y
 
@@ -43,7 +53,7 @@ that is: we can switch inner and outer integral, as we see fit - the result will
 \subsection{Integrals in Higher Dimensions}
 
 
-\subsection{The Transformation Formula}
+\subsection{The Change of Variables Formula}
 % i think, it's called "change of variables" in english literature
 
 \subsubsection{Coordinate Transformations}

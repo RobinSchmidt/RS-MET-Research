@@ -1,11 +1,11 @@
 \section{Integrals}
 
 \subsection{Double Integrals}
-Double integrals are 2D integrals of functions $f: \mathbb{R}^2 \rightarrow \mathbb{R}$ with $f = f(x,y)$. We can visualize the graph of such a function as a terrain above the $xy$-plane where the $z$-coordinate is the height above the plane and is prescribed by $f$ as function of $x$ and $y$. Just like we could interpret integrals of 1D functions as areas between the $x$-axis and the function graph, we can imagine 2D integrals as the volume between the $xy$-plane and the function graph, i.e. the surface of the terrain. In a definite integral in 1D, the domain of integration was just a simple interval on the $x$-axis. Here in 2D, the domain of integration can be in general an arbitrarily region in the $xy$-plane. The simplest case is when that region is an axis-parallel rectangle. In this case, we can define the 2D integral in full analogy to the definition of the 1D Riemann integral in \ref{Eq:RiemannIntegral1D} as a limit of a double sum:
+Double integrals are 2D integrals of functions $f: \mathbb{R}^2 \rightarrow \mathbb{R}$ with $f = f(x,y)$. We can visualize the graph of such a function as a terrain above the $xy$-plane where the $z$-coordinate is the height above the plane and is prescribed by $f$ as function of $x$ and $y$. Just like we could interpret integrals of 1D functions as areas between the $x$-axis and the function graph, we can imagine 2D integrals as the volume between the $xy$-plane and the function graph, i.e. the surface of the terrain. In a definite integral in 1D, the domain of integration was just a simple interval on the $x$-axis. Here in 2D, the domain of integration can be in general an arbitrarily shaped region in the $xy$-plane. The simplest case is when that region is an axis-parallel rectangle. In this case, we have an interval $[a,b]$ of $x$-values and another interval $[c,d]$ of $y$-values and we can define the 2D integral in full analogy to the definition of the 1D Riemann integral in \ref{Eq:RiemannIntegral1D} as a limit of a double sum:
 \begin{equation}
  I =  \int_c^d \int_a^b f(x,y) \, dx dy = \lim_{n \rightarrow \infty} \sum_{j=1}^n \sum_{i=1}^n f(x_i, y_j) \, \Delta x_i \Delta y_j
 \end{equation}
-Again, this is a somewhat simplified definition,
+Again, this is a somewhat simplified definition. For the actual definition, all considerations mentioned in the 1D case apply and in addition, we do not actually need to require the two sums to have the same upper limit. The inner $i$-sum could go up to $n$ and the outer $j$-sum could go up to some $m \neq n$ and then we would take the limit in which both $m$ and $n$ go to infinity. But for an idea of what's going on, this definition is good enough. Let's unpack a bit what we are doing there. Splitting the $[a,b]$ and $[c,d]$ intervals into $n$ subintervals amounts to spltting the original rectangular region into smaller subrectangles. Each such subrectangle has and area of $\Delta A = \Delta x_i \Delta y_j$
 
 %-if we evalutae the inner integral first, x gets "integrated out" and we get a function that depends onyl on y
 
@@ -18,6 +18,8 @@ Again, this is a somewhat simplified definition,
 ...TBC...
 
 \subsection{Triple Integrals}
+
+% use [p,q] for the z-interval - explain that f is already taken and e is a special constant
 
 \subsection{Integrals in Higher Dimensions}
 

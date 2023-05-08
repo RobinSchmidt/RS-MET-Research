@@ -21,7 +21,7 @@ Operators are mathematical objects that can "act on" or be "applied to" function
 %-maybe they occur in disguise as the vector gradient (Jacobian) and Laplacian (trace of Hessian)?
 
 \subsubsection{Gradient}
-We already encountered the general $n$-dimensional gradient operator that acts on a scalar field $f(\mathbf{x})$ and produces a vector field $\mathbf{grad} f(\mathbf{x})$. The gradient of scalar fields $f: \mathbb{R}^3 \rightarrow \mathbb{R}$ is indeed one of the common differential operators of classic 3D vector calculus. For such a scalar field $f = f(x,y,z)$, the gradient is defined as:
+We already encountered the general $n$-dimensional \emph{gradient} operator that acts on a scalar field $f(\mathbf{x})$ and produces a vector field $\mathbf{grad} f(\mathbf{x})$. The gradient of scalar fields $f: \mathbb{R}^3 \rightarrow \mathbb{R}$ is indeed one of the common differential operators of classic 3D vector calculus. For such a scalar field $f = f(x,y,z)$, the gradient is defined as:
 \begin{equation}
  \grad f = \nabla f  \quad = \quad
  \begin{pmatrix}
@@ -75,17 +75,20 @@ The gradient is a generalization of the derivative for scalar fields. What about
 
 
 \subsubsection{Divergence}
-The divergence operator acts on a vector field and produces a scalar field. Given a vector field $\mathbf{f}(x,y,z) = (f_1(x,y,z), f_2(x,y,z), f_3(x,y,z))^T$, the divergence of the vector field is defined as:
+The \emph{divergence} operator acts on a vector field and produces a scalar field. Given a vector field $\mathbf{f}(x,y,z) = (f_1(x,y,z), f_2(x,y,z), f_3(x,y,z))^T$, the divergence of the vector field is defined as:
 \begin{equation}
  \dive \mathbf{f} = \nabla \cdot \mathbf{f}  \quad = \quad
  \frac{\partial f_1}{\partial x} + 
  \frac{\partial f_2}{\partial y} + 
  \frac{\partial f_3}{\partial z}
 \end{equation}
-We have also introduced two notations on the left ahnd side. The notation using the "nabla-dot" operator $\nabla \cdot$ conveys the idea that the divergence can be formed by taking a formal dot product between the nabla operator $\nabla = (\partial / \partial x, \partial / \partial y, \partial / \partial z)^T$ and the vector field $\mathbf{f} = (f_1, f_2, f_3)^T$ itself. If you expand this dot product formally, you'll get precisely the sum of partial derivatives above. The divergence is a measure of how much the vector field tends to point out of an infinitesimally small region. If you envision the vector field as a velocity field of a fluid, divergence can the thought of as a sort of source strength. It measures how much fluid is "produced" in a region and "flows outward" into its surrounding environment. It is obvious how this operator generalizes to $n$D space: you would just take the sum over $n$ terms where the $k$th term is the partial derivative of the $k$th component function with respect to the $k$th variable.
+We have also introduced two notations on the left hand side. The notation using the "nabla-dot" operator $\nabla \cdot$ conveys the idea that the divergence can be formed by taking a formal dot product between the nabla operator $\nabla = (\partial / \partial x, \partial / \partial y, \partial / \partial z)^T$ and the vector field $\mathbf{f} = (f_1, f_2, f_3)^T$ itself. If you expand this dot product formally, you'll get precisely the sum of partial derivatives above. The divergence is a measure of how much the vector field tends to point out of an infinitesimally small region. If you envision the vector field as a velocity field of a fluid, divergence can the thought of as a sort of source strength. It measures how much fluid is "produced" in a region and "flows outward" into its surrounding environment. For this reason, a region where the divergence is positive is called a \emph{source} and region with negative divergence is called a \emph{sink}. A field in which the divergence is zero everywhere is called \emph{solenoidal} [TODO: explain why]. It is obvious how this operator generalizes to $n$D space: you would just take the sum over $n$ terms where the $k$th term is the partial derivative of the $k$th component function with respect to the $k$th variable.
+
+%ToDo: explain sources and sinks, divergence free fields - solenoidal.
+% https://en.wikipedia.org/wiki/Solenoidal_vector_field
 
 \subsubsection{Curl}
-The curl operator acts on a vector field and produces another vector field. The curl of a vector field $\mathbf{f} = (f_1, f_2, f_3)^T$ is defined as:
+The \emph{curl} operator acts on a vector field and produces another vector field. The curl of a vector field $\mathbf{f} = (f_1, f_2, f_3)^T$ is defined as:
 \begin{equation}
  \curl \mathbf{f} = \nabla \times \mathbf{f}  \quad = \quad
  \begin{pmatrix}
@@ -96,20 +99,20 @@ The curl operator acts on a vector field and produces another vector field. The 
 \end{equation}
 Again, the "nabla-cross" notation  $\nabla \times$ can be explained by taking a formal cross product between the nabla operator and the the vector field. The curl measures how much a vector field tends to swirl around locally. It is a vector that points into the direction of the axis around which the field swirls around the most [VERIFY] and its length indicates, how much that is. The curl is also sometimes called the \emph{rotation} and denoted by a $\mathbf{rot}$ operator. Due to the fact that the definition of curl is based on the cross product which exists only in 3D, curl also only exists in 3D. 
 
+ToDo: explain vorticity
+
 \medskip
 For 2D vector fields $\mathbf{f}(x,y) = (f_1(x,y), f_2(x,y))^T$, we can use a sort of hack: First, we embed the 2D input space in 3D space by just setting $f_3 = 0$. Our functions $f_1, f_2$ are just functions of $x$ and $y$.  Because they do not depend on $z$, all partial derivatives with respect to $z$ will be zero as well. Now we notice that only the last component of our curl vector will be nonzero. That means, if the vector field is (locally) swirling at all, it will do so around an axis parallel to the $z$-axis. This makes a lot of sense - we'd probably think about a 2D curl more as swirling around a point on the plane rather than an axis sticking out of the plane - but if we really force ourselves to think about an axis, then it would have to be perpendicular to the plane. We could now define a sort of pseudo curl as the simple scalar field $\partial f_2 / \partial x - \partial f_1 / \partial y$. Sometimes, such a 2D pseudo curl is useful but it's not really a satisfying solution. A meaningful and satisfying generalization to $n$D including 2D can only be given later in the context of exterior calculus where the cross product is thrown away in favor of the similar but different wedge product. 
 
 \subsubsection{Laplacian}
-The Laplacian operator acts on a scalar field and produces another scalar field. It is actually the divergence of the gradient and is therefore a second order differential operator in the sense that it involves second order partial derivatives. Given a 3D scalar field $f = f(x,y,z)$, the Laplacian of the field is defined as:
+The \emph{Laplacian} operator acts on a scalar field and produces another scalar field. It is actually the divergence of the gradient and is therefore a second order differential operator in the sense that it involves second order partial derivatives. Given a 3D scalar field $f = f(x,y,z)$, the Laplacian of the field is defined as:
 \begin{equation}
  \Delta f = \nabla \cdot \nabla f = \nabla^2 f \quad = \quad
  \frac{\partial^2 f}{\partial x^2} + 
  \frac{\partial^2 f}{\partial y^2} + 
  \frac{\partial^2 f}{\partial z^2}   
 \end{equation}
-On the left hand side, we again have a couple of alternative notations which all mean the same thing. It is always just the sum of the non-mixed second partial derivatives of $f$ with respect to all the coordinates and generalizes to $n$D in the obvious way.
-
-..TBC...
+On the left hand side, we again have a couple of alternative notations which all mean the same thing. It is always just the sum of the non-mixed second partial derivatives of $f$ with respect to all the coordinates and generalizes to $n$D in the obvious way. In terms of the Hessian matrix, we recognize the Laplacian as the trace of the Hessian. %When the Hessian is viewed as tensor, taking the trace also corresponds to a contraction. Don't worry about that right now - we'll come back to that later in the context of tensor calculus.
 
 %-It's the trace of the Hessian, I think. When the Hessian is viewed as tensor, that also corresponds to a contraction.
 %-I think, it can also be applied to vector fields?
@@ -117,7 +120,9 @@ On the left hand side, we again have a couple of alternative notations which all
 % https://de.wikipedia.org/wiki/Laplace-Operator
 
 \subsubsection{Identities}
-First of all, we note that all these differential operators are linear:
+There are a lot of identities involving those differential operators. Having them available can be very helpful in simplifying vector calculus equations. First of all, we note that all these operators are linear:
+
+...TBC...
 
 ToDo: give a comprehensive list of identities involving the differential operators above.
 
@@ -131,7 +136,7 @@ ToDo: give a comprehensive list of identities involving the differential operato
 \subsubsection{Curvilinear Coordinates}
 %With these integral theorems, we now have a lot of formulas available to potentially simplify certain integrals. But all of them can also be used together with the coordinate transformation formula for multiple integrals that we have seen earlier. To this end, 
 
-It is useful to have formulas available that tell us, how our differential opertors look like in other coordinate systems like cylindrical, spherical, etc.
+It is useful to have formulas available that tell us, how our differential operators look like in other coordinate systems like cylindrical, spherical, etc.
 ...TBC...
 
 % give formulas for how gradient, divergence, etc. look in cylindrical, spherical and general coordinate systems
@@ -194,8 +199,11 @@ Line integrals are integrals in which some field quantity is integrated over som
 
 \subsubsection{Work in a Force Field}
 
+%explain the meanint of th \oint notation
+
 \subsubsection{Flux through a Curve}
 %is specific to 2D, i think
+
 
 
 \subsection{Surface Integrals}
@@ -213,7 +221,7 @@ Let $F(\mathbf{x})$ be a scalar-valued function of some vector input $\mathbf{x}
 % = \int_{\mathbf{a}}^{\mathbf{b}} \mathbf{f} \cdot d\mathbf{s} 
  F(\mathbf{b}) - F(\mathbf{a}) 
 \end{equation}
-This is the \emph{fundamental theorem of line integrals} and it is also known as the \emph{first fundamental theorem of potential fields} or as the \emph{gradient theorem}. Let's unpack what this formula means: In the integrand of the right hand side, we are forming a dot product (aka scalar product) between the gradient field $\mathbf{f}$, which is a vector field, and an infinitesimal tangent vector $d\mathbf{s}$ of our parametric contour/curve $C$. When the theorem is stated in this form, it is implicitly understood that we are evaluating $\mathbf{f}$ and $d\mathbf{s}$ at some given value for the parameter $t$. In the middle, we have just expanded in more detail, what the the left ahnd side actually means. This infinitesimal dot product of two vectors is then integrated, i.e. summed, over the whole length of the curve. Via the dot product, at each point along the curve, we "measure" how much the vector field points into the local direction of our curve and that "measurement" gives a little contribution to our integral. If the vector field is locally aligned with the curve, we get the maximum contribution. If the vector field is locally perpendicular to our curve, we get no contribution at all. The right hand side is easy to understand: we just evaluate the scalar field $F$ at the two endpoints of the curve and subtract the two resulting scalar values. What this implies is that the value for the integral depends only on the endpoints $\mathbf{a,b}$ and not at all on the specific curve, i.e. on the way how we move from $\mathbf{a}$ to $\mathbf{b}$. This path-independence is a special convenient feature of potential fields. You cannot expect that from any general vector field. Not all vector fields can be expressed as a gradient of some scalar field. But for those that can, we can apply this theorem and thereby greatly simplify the evaluation of line integrals along paths through this field, provided that we know the potential $F$. An immediate consequence is that the line integral around any closed loop, i.e. a curve whose end point is equal to the start point, must be zero. Just look at the right hand side when $\mathbf{b = a}$. This can be written as:
+This is the \emph{fundamental theorem of line integrals} and it is also known as the \emph{first fundamental theorem of potential fields} or as the \emph{gradient theorem}. Let's unpack what this formula means: In the integrand of the right hand side, we are forming a dot product (aka scalar product) between the gradient field $\mathbf{f}$, which is a vector field, and an infinitesimal tangent vector $d\mathbf{s}$ of our parametric contour/curve $C$. When the theorem is stated in this form, it is implicitly understood that we are evaluating $\mathbf{f}$ and $d\mathbf{s}$ at some given value for the parameter $t$. In the middle, we have just expanded in more detail, what the the left hand side actually means. This infinitesimal dot product of two vectors is then integrated, i.e. summed, over the whole length of the curve. Via the dot product, at each point along the curve, we "measure" how much the vector field points into the local (tangential) direction of our curve and that "measurement" gives a little contribution to our integral. If the vector field is locally aligned with the curve, we get the maximum contribution. If the vector field is locally perpendicular to our curve, we get no contribution at all. The right hand side is easy to understand: we just evaluate the scalar field $F$ at the two endpoints of the curve and subtract the two resulting scalar values. What this implies is that the value for the integral depends only on the endpoints $\mathbf{a,b}$ and not at all on the specific curve, i.e. on the way how we move from $\mathbf{a}$ to $\mathbf{b}$. This path-independence is a special convenient feature of potential fields. You cannot expect that from any general vector field. Not all vector fields can be expressed as a gradient of some scalar field. But for those that can, we can apply this theorem and thereby greatly simplify the evaluation of line integrals along paths through this field, provided that we know the potential $F$. An immediate consequence is that the line integral around any closed loop, i.e. a curve whose end point is equal to the start point, must be zero. Just look at the right hand side when $\mathbf{b = a}$. This can be written as:
 \begin{equation}
 \oint_C \mathbf{f} \cdot d\mathbf{s} = 0
 \end{equation}

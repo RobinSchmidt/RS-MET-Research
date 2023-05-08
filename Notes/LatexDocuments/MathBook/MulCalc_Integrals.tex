@@ -44,14 +44,19 @@ The notation we have used so far with the two seperate integration symbols each 
 I = \iint_R f \, dA  \qquad \text{or}  \qquad 
 I = \int_R  f \, dA
 \end{equation}
-where $R$ is the region that we want to integrate over, $d A$ is an infinitesimal area element and $f$ is our function as before but with supressed arguments. In our first case with the rectangular region, we had $R = [a,b] \times [c,d]$ and $dA = dx dy = dy dx$. When it is clear from the context that we are talking about a double integral, sometimes just one integral symbol is used. This is especially the case when integrals of arbitrary dimensionality are written down. For these, usually just one single integral sign is used and it must be gathered from the context, what dimensionality this integral has.
-
+where $R$ is the region that we want to integrate over, $d A$ is an infinitesimal area element and $f$ is our function as before but with supressed arguments. In our first case with the rectangular region, we had $R = [a,b] \times [c,d]$ and generally we have $dA = dx dy = dy dx$. When it is clear from the context that we are talking about a double integral, sometimes just one integral symbol is used. This is especially the case when integrals of arbitrary dimensionality are written down. For these, usually just one single integral sign is used and it must be gathered from the context, what dimensionality this integral has.
 
 \subsection{Triple Integrals}
+The definition of the triple integral should now be pretty unsurprising. We'll use the abrreviated notation just introduced and define it as:
+\begin{equation}
+I = \iiint_R f \, dV = \lim_{n \rightarrow \infty} \sum_{k=1}^n \sum_{j=1}^n \sum_{i=1}^n f(x_i, y_j, z_k) \, \Delta x_i \Delta y_j \Delta z_k
+\end{equation}
+Here, $dV$ is an infinitesimal volume element given by $dV = dx dy dz$ and we could also replace $\Delta x_i \Delta y_j \Delta z_k$ by a $\Delta V$ - a small but non-infinitesimal volume element. Triple integrals can be used to compute the total mass of an object when its density is given by a function $f(x,y,z)$. Its shape must be somehow formulated via the integration limits. In 3D, it may of course be quite a bit more complicated to break the shape down into pieces that are directly integrable but the genral principles remain the same. We would again work our way from the inside out by performing first the innermost integration which integrates out one variable, say $x$, and then we would be left with a double integral of a function $f(y,z)$. For arbitrary regions, the innermost integration boundaries would be defined by two bivariate functions $g(y,z), h(y,z)$ [VERIFY!]
+...TBC...
 
 % use [p,q] for the z-interval - explain that f is already taken and e is a special constant
 
-\subsection{Integrals in Higher Dimensions}
+%\subsection{Integrals in Higher Dimensions}
 
 
 \subsection{The Change of Variables Formula}

@@ -3,16 +3,20 @@
 \subsection{Sequences}
 A sequence can be defined as a function from the natural into the real numbers: $f: \mathbb{N} \rightarrow \mathbb{R}$. The input can be seen as an index for an element of the sequence. Sometimes it is more convenient to restrict the domain to the positive natural numbers, i.e. consider functions $f: \mathbb{N}^+ \rightarrow \mathbb{R}$. You will find both definitions for sequences in the literature. Here, we will mostly use the former and I will give a special disclaimer when the latter is used. Some example sequences are:
 \begin{equation}
+ a_n = (-1)^n,           \quad 
  a_n = \frac{1}{n},      \quad
  a_n = \frac{(-1)^n}{n}, \quad 
  a_n = \frac{1}{n^2},    \quad
  a_n = \frac{1}{2^n},   
 \end{equation}
-The first three examples can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element. For the last, plugging in $n=0$ poses no problem because $2^0=1$.
+The examples with an $n$ or $n^2$ in the denominator the can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last, plugging in $n=0$ poses no problem because $2^0=1$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. 
 
-%...TBC...examples:
+...TBC...
 
 \subsection{Convergence}
+When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero
+
+%This sequence has a name: it's called the \emph{alternating harmonic series}. 
 
 
 \subsection{Infinite Sums aka Series}

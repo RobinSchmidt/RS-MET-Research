@@ -150,11 +150,14 @@ It is well known that a weighted sum of a sine and a cosine of the same frequenc
  a_k = A_k \sin(\varphi_k),     \;\;
  b_k = A_k \cos(\varphi_k)   
 \end{equation}
-where I have also given the conversion formula for the other direction. With these new coeffs, we can express the series as:
+where the $A_k = \ldots$ formula applies only to $k \neq 0$. I have also given the conversion formula for the other direction. With these new coeffs, we can express the series as:
 \begin{equation}
-f(x) = \sum_{k=0}^\infty A_k \sin(k x +\varphi_k)
+f(x) = A_0 + \sum_{k=1}^\infty A_k \sin(k x +\varphi_k) 
+     = A_0 + \sum_{k=1}^\infty A_k \cos(k x +\varphi_k - \frac{\pi}{2})
 \end{equation}
-[VERIFY!] check, if it also works for the $a_0$ coeff - I don't think so. Give it also in terms of cosines (just add or subtract $\pi/4$ or something)
+[VERIFY!] 
+% Seems like we can't get rid of $A_0$ when we start the sum at $k=0$. phi_0 = 0 because atan2(0,x) is 0° for any x and sin(0) = 0 and cos(-pi/2) = 0. So the DC would be missing in the resythesis. But wouldn't it be nicer if the formula would cover the edge case also? can that be made to work? We would just need to ensure that phi_0 = pi/2, such that sin(phi_0) = cos(0) = 1, I think. 
+% https://en.wikipedia.org/wiki/Sine_and_cosine#Identities
 \newline
 
 

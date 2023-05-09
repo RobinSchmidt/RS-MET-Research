@@ -90,13 +90,15 @@ When we multiply two polynomials $f(x), g(x)$ with degrees $m,n$ together, we wi
 &+ (a_0 b_3 + a_1 b_2 + a_2 b_1 + a_3 b_0) x^3  \\
 &+ (a_0 b_4 + a_1 b_3 + a_2 b_2 + a_3 b_1 + a_4 b_0) x^4 \\
 &+ (a_0 b_5 + a_1 b_4 + a_2 b_3 + a_3 b_2 + a_4 b_1 + a_5 b_0) x^5 \\
-&+ (a_0 b_6 + a_1 b_5 + a_2 b_4 + a_3 b_3 + a_4 b_2 + a_5 b_1 + a_6 b_6) x^6 + \ldots
+&+ (a_0 b_6 + a_1 b_5 + a_2 b_4 + a_3 b_3 + a_4 b_2 + a_5 b_1 + a_6 b_0) x^6 + \ldots
 \end{eqnarray}
-The coefficient $c_k$ in the resulting polynomial is the sum of all products of input coefficients $a_i, b_j$ such that $i+j = k$.
- ...TBC...
+The coefficient $c_n$ in the resulting polynomial is the sum of all products of input coefficients $a_i, b_j$ such that $i+j = n$. Let's introduce another index $k$ to replace $i$ and then use $n-k$ to replace $j$. This ensures that $k + (n-k) = n$. We now have:
+\begin{equation}
+  c_n = \sum_{k=0}^n a_k b_{n-k}
+\end{equation}
+That formula to compute the new list of $c$-coefficients from the $a$- and $b$-coefficients is called convolution. Multiplication of two polynomials is achieved by convolving their coefficient lists.
 
-
-ToDo: explain convolution, give Python code for it
+...TBC... give Python code for it
 
 \paragraph{Division}
 Oh my dog! Polynomial division! That pesky algorithm that we all once had to learn in school and then have forgotten for good! Worry not - you won't have to relearn it here and now. Executing algorithms with pencil and paper is not something we humans like to do and I personally find it as pointless as the next guy. Instead, I'll give you computer code for it, so we'll never ever have to do it again by hand. ....

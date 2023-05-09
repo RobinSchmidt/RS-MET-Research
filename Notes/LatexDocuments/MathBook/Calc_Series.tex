@@ -31,7 +31,15 @@ where, from the given formula, you will already correctly infer that the operati
 \paragraph{Deconvolution}
 With some caveats, it is actually possible to undo a convolution. We will call this operation \emph{deconvolution}. ...TBC...
 
-...TBC...TODO:  mention that there's also a convolution between functions $f: \mathbb{R} \rightarrow \mathbb{R}$ defined by an integral.
+\paragraph{Continuous Convolution}
+As a side note, an analoguos operation of convolution can also be defined between two function $f,g: \mathbb{R} \rightarrow \mathbb{R}$. In this case, the convolution is defined via an integral instead of a sum:
+\begin{equation}
+ h(x) = f(x) \ast g(x) = g(x) \ast f(x) \quad \text{with} \quad
+ h(x) = \int_{-\infty}^{\infty} f(u) g(x-u) \, du = \int_{-\infty}^{\infty} g(u) f(x-u) \, du
+\end{equation}
+This is not relevant in this context here but it's sometimes good to point out the connections to other topics.
+
+...TBC...
 
 % https://mathworld.wolfram.com/CauchyProduct.html
 

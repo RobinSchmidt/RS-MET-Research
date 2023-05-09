@@ -166,7 +166,7 @@ f(x) = A_0 + \sum_{k=1}^\infty A_k \sin(k x +\varphi_k)
 ...TBC... interpretation as amplitude and phase, symmetries (odd - no cosines, even - no sines)
 %Leup2, pg 65
 
-\paragraph{Complex Formulation}
+\subsubsection{Complex Formulation}
 The theory of Fourier series if often being presented in its complex form. Doing so hides some of its complexity in the complex numbers. Depending on your fluency with complex numbers, this may feel like a simplification or like a mystification. The equations are shorter, yes. But they are complex - pun intended. Instead of using real valued sine and cosine functions for analysis and synthesis, one uses a single complex exponential function. This is equivalent due to Euler's formula. By doing so, one reduces the apparent complexity of having to deal with two sets of coefficients, namely the $a_n$ and $b_n$ coefficients, to a single set of $c_n$ coefficients - but these coeffs are then complex valued. Going to the complex domain actually also generalizes the applicability to functions $f: \mathbb{R} \rightarrow \mathbb{C}$ as well, so we get a little bit more than just a simpli/mystification. In the complex formulation, the synthesis and analysis equations look like:
 \begin{equation}
 \label{Eq:FourierSeriesComplex}
@@ -175,10 +175,17 @@ The theory of Fourier series if often being presented in its complex form. Doing
 \end{equation}
 We could put synthesis and analysis equation together in one line and it's still shorter than the real valued analysis equation alone. Notice also how there's no special case for $c_0$ anymore. It may seem a little bit strange that the summation in the analysis equation now starts at minus infinity. Shouldn't the real and imaginary parts of the non-negatively indexed coeffs $c_0, c_1, \ldots$ already contain the same amount of information as the pairs $(a_0,b_0),(a_1,b_1), \ldots$ from the real formulation? Why do we need the additional coeffs with negative indices? Indeed, when the input function is purely real valued, the negatively indexed coeffs will be redundant, but remember that we now allow, in general, complex valued functions $f(x)$ functions, too. For real valued functions $f$, the $c_k$ will be conjugate symmetric, i.e. $c_{-k} = \overline{c_k}$. [VERIFY]. A $c_k$ with a negative index $k$ formally represents the coefficient for a negative frequency. That just means the complex phasor rotates clockwise rather than counterclockwise in the corresponding $c_k  e^{\i k x}$ term in the synthesis equation. This flips the sign of the sine part, the cosine part stays the same [VERIFY]
 
-...TBC...explain negative frequencies and how conjugate symmetry of coeffs yields real signals
+...TBC...
 
+\subsubsection{Theorems}
+% f even -> only cosines
+% f odd  -> only sines
+% f real -> c_k conjugate symmetric, A_k even, phi_k odd, a_k even, b_k odd
+% energy -> Pasreval's theorem
+% multiplciation -> convolution
+% only positive freqs -> f has real and imag part 90° out of phase at each frequency
 
-\paragraph{Aperiodic Functions}
+\subsubsection{Aperiodic Functions}
 So far, we assumed $f$ to be periodic but the theory can actually be generalized to deal with (some) aperiodic functions, too. This leads to the idea of the Fourier transform which will be treated in more detail in the section about integral transforms. At this point, I'll just say that the sum in the synthesis equation will be replaced by an integral, our discrete Fourier coefficients $a_n, b_n$ will be replaced by a continuous function of frequency and in the analysis equations, we will have to perform an integration from minus to plus infinity instead of over one period. 
 
 

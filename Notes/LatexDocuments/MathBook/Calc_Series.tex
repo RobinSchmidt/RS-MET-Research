@@ -1,22 +1,48 @@
 \section{Series}
 
 \subsection{Sequences}
-A sequence can be defined as a function from the natural into the real numbers: $f: \mathbb{N} \rightarrow \mathbb{R}$. The input can be seen as an index for an element of the sequence. Sometimes it is more convenient to restrict the domain to the positive natural numbers, i.e. consider functions $f: \mathbb{N}^+ \rightarrow \mathbb{R}$. You will find both definitions for sequences in the literature. Here, we will mostly use the former and I will give a special disclaimer when the latter is used. Some example sequences are:
+A \emph{sequence} can be defined as a function from the natural into the real numbers: $f: \mathbb{N} \rightarrow \mathbb{R}$. The input can be seen as an index for an element of the sequence. Sometimes it is more convenient to restrict the domain to the positive natural numbers, i.e. consider functions $f: \mathbb{N}^+ \rightarrow \mathbb{R}$. You will find both definitions for sequences in the literature. Here, we will mostly use the former and I will give a special disclaimer when the latter is used. Some example sequences are:
 \begin{equation}
  a_n = (-1)^n,           \quad 
  a_n = \frac{1}{n},      \quad
  a_n = \frac{(-1)^n}{n}, \quad 
  a_n = \frac{1}{n^2},    \quad
- a_n = \frac{1}{2^n},   
+ a_n = \frac{1}{2^n},    \quad  
+ a_n = \sqrt{n}
 \end{equation}
-The examples with an $n$ or $n^2$ in the denominator the can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last, plugging in $n=0$ poses no problem because $2^0=1$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. 
+The examples with an $n$ or $n^2$ in the denominator the can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last two, plugging in $n=0$ poses no problem because $2^0=1$ and $\sqrt{0} = 0$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. Sequences themselves are a sort of preliminary to what we actually want to build up to: namely series. These are infinite sums of sequence elements.
 
-...TBC...
+% https://en.wikipedia.org/wiki/Sequence
+
+\subsection{Operations}
+
+\subsubsection{Pointwise Operations}
+Just like we can do with any functions $f: \mathbb{R} \rightarrow \mathbb{R}$, we can of course also add, subtract, multiply and divide two functions $f: \mathbb{N} \rightarrow \mathbb{R}$ pointwise. The fact that the domain is restricted to the naturals does not change anything about that. That means: we can just perform our usual arithmetic operations on sequences element-wise.
+
+\subsubsection{Convolution aka Cauchy Product}
+Another binary operation that we can perform on two sequences $(a_n),(b_n)$ is \emph{convolution}, also known as the \emph{Cauchy product} between the sequences. We will denote the operation symbol for convolution by an asterisk $\ast$ and define the operation as:
+\begin{equation}
+ (c_n) = (a_n) \ast (b_n) = (b_n) \ast (a_n) \quad \text{with} \quad
+ c_n = \sum_{k=0}^n a_k b_{n-k} = \sum_{k=0}^n b_k a_{n-k}
+\end{equation}
+where, from the given formula, you will already correctly infer that the operation is commutative.
+[VERIFY!]. It is also associative and distributive over addition and subtraction. This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity}. That means, the operation is linear in both of its input arguments.
+
+\paragraph{Deconvolution}
+With some caveats, it is actually possible to undo a convolution. We will call this operation \emph{deconvolution}. ...TBC...
+
+...TBC...TODO:  mention that there's also a convolution between functions $f: \mathbb{R} \rightarrow \mathbb{R}$ defined by an integral.
+
+% https://mathworld.wolfram.com/CauchyProduct.html
 
 \subsection{Convergence}
-When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero
+When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster.
 
-%This sequence has a name: it's called the \emph{alternating harmonic series}. 
+%This sequence has a name: it's called the \emph{alternating harmonic series}.
+
+%Theorems: pointwise sum of sequences converes to sum of limits, etc.
+
+
 
 
 \subsection{Infinite Sums aka Series}

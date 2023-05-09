@@ -113,12 +113,12 @@ As with power series, the $f(x)$ on the left hand side indicates that we intend 
 The Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. The coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. The formulas are:
 \begin{equation}
 \label{Eq:FourierCoeffs}	
- a_0 = \frac{1}{\tau} \int_0^\tau f(x) \, dx, \quad
+ a_0 = \frac{1}{\tau} \int_0^{\tau} f(x) \, dx, \quad
  b_0 = 0, \quad
- a_n = \frac{2}{\tau} \int_0^\tau f(x) \cos(n x) \, dx, \quad
- b_n = \frac{2}{\tau} \int_0^\tau f(x) \sin(n x) \, dx 
+ a_n = \frac{2}{\tau} \int_0^{\tau} f(x) \cos(n x) \, dx, \quad
+ b_n = \frac{2}{\tau} \int_0^{\tau} f(x) \sin(n x) \, dx 
 \end{equation}
-where the $a_n=\ldots, b_n=\ldots$ formulas apply to the $n \neq 0$ case. We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equation \ref{Eq:FourierCoeffs} as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function. The integration can also be performed over some other interval of length $p$ like $[a,a+\tau]$ for some $a$ or $[-\tau/2,\tau/2] = [-\pi,\pi]$. 
+where the $a_n=\ldots, b_n=\ldots$ formulas apply to the $n \neq 0$ case. We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equation \ref{Eq:FourierCoeffs} as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function. The integration can also be performed over some other interval of length $\tau$ like $[a,a+\tau]$ for some $a$ or $[-\tau/2,\tau/2] = [-\pi,\pi]$. 
 
 \medskip
 ...TBC...explain the convergence properties, requirements on $f$ ((square?)-integrable?), why this special case for $a_0$, interpretation as amplitude and phase
@@ -129,7 +129,7 @@ The theory of Fourier series if often being presented in its complex form. Doing
 \begin{equation}
 \label{Eq:FourierSeriesComplex}
  f(x) = \sum_{n=-\infty}^\infty c_n  e^{\i n x}, \qquad
- c_n = \frac{1}{\tau} \int_0^\tau f(x) e^{-\i n x}  \, dx
+ c_n = \frac{1}{\tau} \int_0^{\tau} f(x) e^{-\i n x}  \, dx
 \end{equation}
 We could put synthesis and analysis equation together in one line and it's still shorter than the real valued analysis equation alone. Notice also how there's no special case for $c_0$ anymore. It may seem a little bit strange that the summation in the analysis equation now starts at minus infinity. Shouldn't the real and imaginary parts of the non-negatively indexed coeffs $c_0, c_1, \ldots$ already contain the same amount of information as the pairs $(a_0,b_0),(a_1,b_1), \ldots$ from the real formulation? Why do we need the additional coeffs with negative indices? Indeed, when the input function is purely real valued, the negatively indexed coeffs will be redundant, but remember that we now allow, in general, complex valued functions $f(x)$ functions, too. 
 

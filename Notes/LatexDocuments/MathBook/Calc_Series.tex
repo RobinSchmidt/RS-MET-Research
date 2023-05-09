@@ -79,24 +79,39 @@ where $c$ is some fixed constant. It's often zero but for generality, I've alrea
 \paragraph{Convolution Revisited}
 When we defined the convolution operation between sequences, it may have seemed somewhat arbitrary and unmotivated. In light of power series, we may give it some interpretation that also justifies why it is also called the Cauchy "product". Recall that to mutliply two (finite) polynomials, we have to convolve their lists of coefficients. The Cauchy product is basically the infinite version of that. It's a generalization in the sense that it includes the finite case as special case when we assume that the sequences just become identically zero after some $n$. The product sequence is the sequence of coefficients of an infinite product polynomial, so to speak...TBC...that can perhaps be explained better
 
+...TBC..ToDo: explain how to compute radius of convergence
+
 %explain 
 
 \subsubsection{Taylor Expansion}
 One truly remarkable result of calculus is that a lot of functions can be expressed as such a power series. For many important functions (including our favorites $\exp, \sin, \cos$), we will even find an infinite radius of convergence. Taylor's theorem tells us how to find the coefficients and the formula is actually pretty simple. 
 
-...TBC...
+...TBC...give formula for coeffs, explain aproximation properties and error term
 
 % https://en.wikipedia.org/wiki/Taylor%27s_theorem
 
 
 
 \subsection{Trigonometric Series}
-We now want to look at a completely different kind of series. It will again involve a variable $x$ but this time, we will not use powers of $x$ but instead trigonometric functions, specifically sines and cosines.
+We now want to look at a completely different kind of series. It will again involve a variable $x$ but this time, we will not use powers of $x$ but instead trigonometric functions, specifically sines and cosines. We will look at series of the form:
+\begin{equation}
+ f(x) = \sum_{n=0}^\infty \left(  a_n \cos(n \omega x) + b_n \sin(n \omega x) \right)
+\end{equation}
+where $\omega$ is some fixed constant. As with power series, the $f(x)$ on the left hand side indicates that we intend to use such a series to define a function of $x$. By construction, our so defined function will be periodic with a period of $p = \frac{2\pi}{\omega}$. This can easily be seen by considering a couple of values for $n$. For $n = 0$, the argument of sine and cosine becomes $0$ as well. The sine of zero is zero and the cosine of zero is one, so the $n=0$ term will just give us the constant function with value $a_0$. The $n=1$ term gives a sine and cosine of period $p$, the $n=2$ term gives a sin/cos pair with period $p/2$. Of course, when something is periodic with period $p/2$, it is also periodic with period $p$. And the same is true for any $n$: a function that is periodic with period $p/n$ is also periodic with period $p$. So, all the higher terms will also be $p$-periodic. They will just undergo $n$ cycles when our slowest sinusoid (for $n=1$) undergoes one cycle.
+
+
+% https://en.wikipedia.org/wiki/Fourier_series
+
+% maybe use \tau instead of 2 \pi 
 
 ...TBC...
 
+%explain different conventions - some use $2 \pi x$ as argument, some pull out $a_0/2$, etc.
+
 \subsubsection{Fourier Expansion}
-The Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. the coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. ...TBC...
+The Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. The coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. 
+
+...TBC...give formulas for coeffs
 
 
 

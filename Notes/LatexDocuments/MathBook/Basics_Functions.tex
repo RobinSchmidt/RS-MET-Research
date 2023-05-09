@@ -21,13 +21,21 @@ f(x) = f_e(x) + f_o(x)
 \end{equation}
 \emph{Injectivity}, \emph{surjectivity} and \emph{bijectivity} are also important features which have already been discussed in the section about set theory. Functions can also be \emph{periodic}. That means that there exists some number $p$, called the period, such that $f(x) = f(x + k p)$ for all inputs $x$ and all integers $k$. Such a function repeats itself over and over. Functions may have \emph{asymptotes} which are straight lines which the function approaches as the argument goes to plus or minus infinity. Asymptotes can also be vertical lines. In this case, the line is approached as the argument approaches a finite value and at that value itself, the function is usually undefined. When a function $f(x)$ has a vertical asymptote at some input value $x_0$, we call $x_0$ a \emph{pole} of the function. A function is said to be \emph{compactly supported}, if it is nonzero only in some finite interval and zero outside that interval. A function is called \emph{convex} if you can pick any two points $(a,f(a)),(b,f(b))$ on its graph, connect them with a straight line and the function will be below that line everywhere. The function behaves like a chain hanging down, i.e. it is curved downward like a bowl. The opposite of convex is \emph{concave}. Such functions are everywhere above the straight line. They look like an arch. A \emph{continuous} function is one that can be drawn without lifting the pencil or drawing vertical lines. Functions can also be classified according to their degree of \emph{smoothness} and/or according to whether or not they have a finite area under their graph. To define exactly what that means, we will need a few tools from calculus (differentiability, integrability), so we will defer further discussion about these features to later chapters.
 
+% surjective: codomain coincides with image?
 
+\subsection{Defining a Function}
+One way to define a function is to prescribe a simple \emph{calculation rule} such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. Up to until a few hundred years, this was the only way that was acceptable for mathematicians to define a function. Today, we have become a lot more liberal in that regard and allow functions to be defined in more esoteric ways. A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number like, this way of defining a function is called a \emph{piecewise definition}. They are written down like this:
+\begin{equation}
+f(x) = 
+\begin{cases} 
+ 0 \quad& x < 0 \\
+ -x     & 0   \leq x < 1 \\
+ x^2    & x \geq 1
+\end{cases}
+\end{equation}
+This means, the function will output $0$ for $x < 0$ and $-x$ when $x$ is between zero and one (including zero, excluding one) and $x^2$ when $x \geq 1$. The example function is discontinuous at $x=1$. It jumps from $-1$ to $+1$ there.
 
-%taxonomy
-%% surjective: codomain coincides with image?
-
-\subsection{Ways to define [todo: find a better title]}
-One way to define a function is to prescribe a simple calculation rule such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number like, this way of defining a function is called a piecewise definition ...tbc...
+...tbc...
 
 % maybe make these subsubsection of an "Elementary functions"  section
 

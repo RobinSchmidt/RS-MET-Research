@@ -33,7 +33,9 @@ f(x) =
  x^2    & x \geq 1
 \end{cases}
 \end{equation}
-This means, the function will output $0$ for $x < 0$ and $-x$ when $x$ is between zero and one (including zero, excluding one) and $x^2$ when $x \geq 1$. The example function is discontinuous at $x=1$. It jumps from $-1$ to $+1$ there.
+This means, the function will output $0$ for $x < 0$ and $-x$ when $x$ is between zero and one (including zero, excluding one) and $x^2$ when $x \geq 1$. The example function is discontinuous at $x=1$. It jumps from $-1$ to $+1$ there. A function can also be defined by recorded data points of some measurement. To turn these discrete data points into a continuous function, one would also have to prescribe some sort of \emph{interpolation} rule such as "connect the dots by straight lines". The data together with the interpolation rule constitute a bona fide function: we can give it an input $x$ and it will give back an output $y$. 
+
+%A function can also be defined by various kinds of equations such as implicit, differential, functional, etc.
 
 ...tbc...
 
@@ -56,27 +58,41 @@ where the weights $a_k$ in the sum form are called the coefficients of the polyn
 
 \paragraph{Evaluation}
 The evaluation of a polynomial is best done in nested form. This is the most efficient way and also one of the most stable ways numerically. We assume that the polynomial is given as a list or array of $n$ coefficients $a_0, \ldots, a_n$.
-%\begin{lstlisting}
-%def polyEval(p, x):
-%	"""Evaluates the polynomial p a the given x using Horner's algorithm"""
-%	k = len(p)-1       # last valid index
-%	if(k < 0):
-%		return 0
-%	y = p[k]
-%	while(k > 0):
-%		k -= 1
-%		y = y*x + p[k]
-%	return y
-%\end{lstlisting}
+\begin{lstlisting}
+def polyEval(p, x):
+	"""Evaluates the polynomial p at the given x using Horner's algorithm"""
+	k = len(p)-1           # last valid index
+	if(k < 0):
+		return 0
+	y = p[k]
+	while(k > 0):
+		k -= 1
+		y = y*x + p[k]
+	return y
+\end{lstlisting}
 This way of evaluating a polynomial is also known as Horner's rule.
 ...hmm...not sure, if code should appear in the normal text. maybe put it into an appendix?
 
 \paragraph{Addition and Subtraction}
-Polynomials, given as arrays of coefficients, can be added and subtracted element wise. If the input arrays are of different lenght, i.e. the polynomials are of a different degree, the lower degree coefficient array has to be padded with zeros to match the length of the larger one.
+Polynomials, given as arrays of coefficients, can be added and subtracted element wise. If the input arrays are of different length, i.e. the polynomials are of a different degree, the lower degree coefficient array has to be padded with zeros to match the length of the larger one.
 
 ...python code is buggy
 
 \paragraph{Multiplication}
+When we multiply two polynomials $f(x), g(x)$ with degrees $m,n$ together, we will get a new polynomial of degree $m+n$. The coefficients of this new polynomial can be found by an algorithm called \emph{convolution} ...TBC...
+
+\begin{equation}
+(a_0 + a_1 x + a_2 x^2 + a_3 x^3 + \ldots)
+(b_0 + b_1 x + b_2 x^2 + b_3 x^3 + \ldots)  \newline
+= 
+   a_0 b_0 
++ (a_0 b_1 + a_1 b_0) x 
++ (a_0 b_2 + a_1 b_1 + a_2 b_0) x^2 
++ (a_0 b_3 + a_1 b_2 + a_2 b_1 + a_3 b_0) x^3
++ \ldots
+\end{equation}
+
+
 ToDo: explain convolution, give Python code for it
 
 \paragraph{Division}
@@ -117,7 +133,6 @@ The set of algebraic functions contains all the functions that can be constructe
 \begin{comment}
 
 -polynomials, rational functions, power series, trig-functions, exp/log, floor/ceil/round, atan2
--symmetry, periodicity, boundedness, maybe continuity (but maybe defer to calculus, we'll see where it fits best)
 -maybe explain functions also as unary operators? abs, negation
 
 

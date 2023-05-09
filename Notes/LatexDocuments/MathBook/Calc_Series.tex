@@ -1,7 +1,7 @@
 \section{Series}
 
 \subsection{Sequences}
-A \emph{sequence} can be defined as a function from the natural into the real numbers: $f: \mathbb{N} \rightarrow \mathbb{R}$. The input can be seen as an index for an element of the sequence. Sometimes it is more convenient to restrict the domain to the positive natural numbers, i.e. consider functions $f: \mathbb{N}^+ \rightarrow \mathbb{R}$. You will find both definitions for sequences in the literature. Here, we will mostly use the former and I will give a special disclaimer when the latter is used. Some example sequences are:
+A \emph{sequence} can be defined as a function from the natural into the real numbers: $f: \mathbb{N} \rightarrow \mathbb{R}$. Sometimes the codomain can also be the complex numbers. The input can be seen as an index for an element of the sequence. Sometimes it is more convenient to restrict the domain to the positive natural numbers, i.e. consider functions $f: \mathbb{N}^+ \rightarrow \mathbb{R}$. You will find both definitions for sequences in the literature. Here, we will mostly use the former and I will give a special disclaimer when the latter is used. Some example sequences are:
 \begin{equation}
  a_n = (-1)^n,           \quad 
  a_n = \frac{1}{n},      \quad
@@ -70,13 +70,19 @@ ToDo: give formulas for finite and infinite geometric series, infinite alternati
 \subsection{Power Series}
 A power series is a series that involves a variable $x$. We imagine that we have a given sequence $(a_n)$ and we will intepret this as a sequence of coefficients of a series of powers of $x$, i.e. a sort of infinite polynomial. We will consider the series:
 \begin{equation}
- f(x) = \sum_{n=0}^\infty a_n x^n
+ f(x) = \sum_{n=0}^\infty a_n (x-c)^n
 \end{equation}
-where on the left hand side, I already suggestively have written $f(x)$ to indicate that this "infinite polynomial" may be used to define a function - at least for those values of $x$, for which the infinite sum converges to a finite value.
+where $c$ is some fixed constant. It's often zero but for generality, I've already included it. On the left hand side, I already suggestively have written $f(x)$ to indicate that this "infinite polynomial" may be used to define a function - at least for those values of $x$, for which the infinite sum converges to a finite value. If the series converges for any $x$ at all, it will do so inside a disc centered at $c$ when we assume that $c$ and $x$ can be complex numbers. The radius of this disc is called the radius of convergence. In general, we could also allow complex coefficients $a_n$. For the time being, we'll focus our attention to real $x,c,a_n$ all being numbers, though.
+% https://en.wikipedia.org/wiki/Radius_of_convergence
+
+
+\paragraph{Convolution Revisited}
+When we defined the convolution operation between sequences, it may have seemed somewhat arbitrary and unmotivated. In light of power series, we may give it some interpretation that also justifies why it is also called the Cauchy "product". Recall that to mutliply two (finite) polynomials, we have to convolve their lists of coefficients. The Cauchy product is basically the infinite version of that. It's a generalization in the sense that it includes the finite case as special case when we assume that the sequences just become identically zero after some $n$. The product sequence is the sequence of coefficients of an infinite product polynomial, so to speak...TBC...that can perhaps be explained better
 
 
 
-%explain how the cauchy-product corresponds to polynomial multipliations
+
+%explain 
 
 \subsubsection{Taylor Expansion}
 

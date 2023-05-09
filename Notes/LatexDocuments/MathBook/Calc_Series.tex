@@ -79,18 +79,32 @@ where $c$ is some fixed constant. It's often zero but for generality, I've alrea
 \paragraph{Convolution Revisited}
 When we defined the convolution operation between sequences, it may have seemed somewhat arbitrary and unmotivated. In light of power series, we may give it some interpretation that also justifies why it is also called the Cauchy "product". Recall that to mutliply two (finite) polynomials, we have to convolve their lists of coefficients. The Cauchy product is basically the infinite version of that. It's a generalization in the sense that it includes the finite case as special case when we assume that the sequences just become identically zero after some $n$. The product sequence is the sequence of coefficients of an infinite product polynomial, so to speak...TBC...that can perhaps be explained better
 
-
-
-
 %explain 
 
 \subsubsection{Taylor Expansion}
+One truly remarkable result of calculus is that a lot of functions can be expressed as such a power series. For many important functions (including our favorites $\exp, \sin, \cos$), we will even find an infinite radius of convergence. Taylor's theorem tells us how to find the coefficients and the formula is actually pretty simple. 
+
+...TBC...
+
+% https://en.wikipedia.org/wiki/Taylor%27s_theorem
 
 
 
 \subsection{Trigonometric Series}
+We now want to look at a completely different kind of series. It will again involve a variable $x$ but this time, we will not use powers of $x$ but instead trigonometric functions, specifically sines and cosines.
+
+...TBC...
 
 \subsubsection{Fourier Expansion}
+The Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. the coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. ...TBC...
+
+
+
+\paragraph{Aperiodic Functions}
+So far, we assumed $f$ to be periodic but the theory can actually be generalized to deal with (some) aperiodic functions, too. ...TBC...
+
+
+
 
 \subsubsection{Connection to Power Series}
 ToDo: bring stuff from Weitz video "Taylor trifft Fourier"

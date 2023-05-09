@@ -12,10 +12,18 @@ There is a little ambiguity with respect to the notion of range. It may mean eit
 % https://en.wikipedia.org/wiki/Range_of_a_function
 
 \subsection{Taxonomy}
-There are certain features that a function may or may not have which turn out to important for classification. A function is said to be \emph{monotonically increasing}, if from $a \geq b$ follows $f(a) \geq f(b)$. It means that the function either goes upward or stays constant but never goes downward. If the stronger condition  $a > b \Rightarrow f(a) > f(b)$ holds true, then $f$ is \emph{strictly monotonically increasing}. Such a function really goes upward everywhere. Not even plateaus are allowed. A \emph{(strictly) monotonically decreasing} function is defined analogously with $\leq, <$ rather than $\geq, >$. If a function is either (strictly) monotonically increasing or decreasing, it is called \emph{(strictly) monotonic}. A function $f$ is said to be \emph{bounded from above} when there is some finite number $U$ such that $f(x) \leq U$ for all $x$. The number $U$ is called an upper bound for $f$. Likewise, a function $f$ is called bounded from below, when there's some number $L$ such that $f(x) \geq L$ for all $x$. a function that is bounded from below and above is called \emph{bounded}.
+There are certain features that a function may or may not have which turn out to important for classification. A function is said to be \emph{monotonically increasing}, if from $a \geq b$ follows $f(a) \geq f(b)$. It means that the function either goes upward or stays constant but never goes downward. If the stronger condition  $a > b \Rightarrow f(a) > f(b)$ holds true, then $f$ is \emph{strictly monotonically increasing}. Such a function really goes upward everywhere. Not even plateaus are allowed. A \emph{(strictly) monotonically decreasing} function is defined analogously with $\leq, <$ rather than $\geq, >$. If a function is either (strictly) monotonically increasing or decreasing, it is called \emph{(strictly) monotonic}. A function $f$ is said to be \emph{bounded from above} when there is some finite number $U$ such that $f(x) \leq U$ for all $x$. The number $U$ is called an upper bound for $f$. Likewise, a function $f$ is called bounded from below, when there's some number $L$ such that $f(x) \geq L$ for all $x$. In this case, $L$ is called a lower bound for $f$. A function that is bounded from below and above is called \emph{bounded}. A function for which we have $f(x) = f(-x)$ has \emph{even symmetry} and a function with $f(x) = -f(-x)$ has \emph{odd symmetry}. Every function can be decomposed into an even part and odd part like so: 
+\begin{equation}
+\label{Eq:EvenOddFuncDecomp}
+f_e(x) = \frac{f(x) + f(-x)}{2}, \;\;
+f_o(x) = \frac{f(x) - f(-x)}{2}, \qquad
+f(x) = f_e(x) + f_o(x)
+\end{equation}
+
+
 
 ...tbc...
-% monotonicity, boundedness, symmetry (-> decomposition int symmetric and antisysmmetric part), injective/surjective/bijective, convex/concave? periodic, vertical asymptotes / poles, smoothness
+% symmetry (-> decomposition int symmetric and antisysmmetric part), injective/surjective/bijective, convex/concave? periodic, vertical asymptotes / poles, smoothness
 
 
 %taxonomy

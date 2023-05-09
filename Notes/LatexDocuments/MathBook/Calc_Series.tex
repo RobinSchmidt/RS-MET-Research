@@ -120,7 +120,10 @@ The Taylor expansion expressed arbitrary functions as (potentially) infinite wei
 where the $a_n=\ldots, b_n=\ldots$ formulas apply to the $n \neq 0$ case. We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equation \ref{Eq:FourierCoeffs} as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function.
 
 \medskip
-...TBC...explain the convergence properties, requirements on $f$ ((square?)-integrable?), explain hwo the formulas compute a correlation, why this special case for $a_0$
+...TBC...explain the convergence properties, requirements on $f$ ((square?)-integrable?), why this special case for $a_0$
+
+\paragraph{Complex Formulation}
+
 
 \paragraph{Aperiodic Functions}
 So far, we assumed $f$ to be periodic but the theory can actually be generalized to deal with (some) aperiodic functions, too. This leads to the idea of the Fourier transform which will be treated in more detail in the section about integral transforms. At this point, I'll just say that the sum in the synthesis equation will be replaced by an integral, our discrete Fourier coefficients $a_n, b_n$ will be replaced by a continuous function of frequency and in the analysis equations, we will have to perform an integration from minus to plus infinity instead of over one period. 
@@ -129,4 +132,9 @@ So far, we assumed $f$ to be periodic but the theory can actually be generalized
 
 
 \subsubsection{Connection to Power Series}
+Taylor and Fourier series seem to be totally disconnected things. However, when we widen our perspective to the complex domain, a beautiful connection between these two emerges...
+
+\medskip
 ToDo: bring stuff from Weitz video "Taylor trifft Fourier"
+\hyperlink{https://www.youtube.com/watch?v=cXxsSdbfEEg}{youtube.com/watch?v=cXxsSdbfEEg}
+

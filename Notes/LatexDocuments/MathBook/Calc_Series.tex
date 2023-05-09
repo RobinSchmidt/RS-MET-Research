@@ -141,9 +141,26 @@ We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equat
 \medskip
 The requirements on $f$ are quite different from those for Taylor series. First of all and most obviously, we require $f$ to be periodic. Here, we restricted our attention to $2 \pi$-periodic functions, but the theory can easily be applied to functions with other periods by stretching the function appropriately along the $x$-axis. For a Taylor series, we required $f$ to be smooth because we had to take (infinitely many) derivatives to compute the coeffs. For a Fourier series, $f$ does not even need to be continuous. We only require that the integrals in the analysis equation must exist and be finite. This is a much less strict requirement. If the function has jump discontinuities, it will converge to average of the values on the left and right at the jump. If we use only finitely many terms, there will be some overshoot and wiggle around the jump. This is called Gibbs's phenomenon. Taking more terms will make these wiggles narrower in width but not smaller in height. Their height will settle to something like $9\%$ of the jump height when taking ever more but still finitely many terms. They will disappear completely only due to vanishing width in the limit of infinitely many terms.
 
+\subsubsection{Magnitude and Phase}
+It is well known that a weighted sum of a sine and a cosine of the same frequency can also be expressed as just a sine or just a cosine. For this, we need give the argument an appropriate phase shift $\varphi_k$ and scale the result by an appropriate amplitude factor $A_k$. The phase shift and the scale factor depend on the relative and total amounts of the sine and cosine components in the following way.:
+\begin{equation}
+ A_0 = \frac{a_0}{2},           \;\;
+ A_k = \sqrt{a_k^2 + b_k^2},    \;\;
+ \varphi_k = \atan2(b_k, a_k),  \qquad
+ a_k = A_k \sin(\varphi_k),     \;\;
+ b_k = A_k \cos(\varphi_k)   
+\end{equation}
+where I have also given the conversion formula for the other direction. With these new coeffs, we can express the series as:
+\begin{equation}
+f(x) = \sum_{k=0}^\infty A_k \sin(k x +\varphi_k)
+\end{equation}
+[VERIFY!] check, if it also works for the $a_0$ coeff - I don't think so. Give it also in terms of cosines (just add or subtract $\pi/4$ or something)
+\newline
+
+
 
 \medskip
-...TBC...explain the convergence properties, what happens at discontinuities (convergence to average, Gibbs phenomonen), requirements on $f$ ((square?)-integrable?), why this special case for $a_0$, interpretation as amplitude and phase, symmetries (odd - no cosines, even - no sines)
+...TBC... interpretation as amplitude and phase, symmetries (odd - no cosines, even - no sines)
 %Leup2, pg 65
 
 \paragraph{Complex Formulation}

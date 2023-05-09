@@ -27,21 +27,22 @@ Another binary operation that we can perform on two sequences $(a_n),(b_n)$ is \
 \end{equation}
 where, from the given formula, you will already correctly infer that the operation is commutative.
 [VERIFY!]. It is also associative and distributive over addition and subtraction. This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity}. That means, the operation is linear in both of its input arguments.
+% https://mathworld.wolfram.com/CauchyProduct.html
 
 \paragraph{Deconvolution}
 With some caveats, it is actually possible to undo a convolution. We will call this operation \emph{deconvolution}. ...TBC...
 
 \paragraph{Continuous Convolution}
-As a side note, an analoguos operation of convolution can also be defined between two function $f,g: \mathbb{R} \rightarrow \mathbb{R}$. In this case, the convolution is defined via an integral instead of a sum:
+As a side note, an analoguos operation of convolution can also be defined between two functions $f,g: \mathbb{R} \rightarrow \mathbb{R}$. In this case, the convolution is defined via an integral instead of a sum:
 \begin{equation}
- h(x) = f(x) \ast g(x) = g(x) \ast f(x) \quad \text{with} \quad
- h(x) = \int_{-\infty}^{\infty} f(u) g(x-u) \, du = \int_{-\infty}^{\infty} g(u) f(x-u) \, du
+ h(t) = f(t) \ast g(t) = g(t) \ast f(t) \quad \text{with} \quad
+ h(t) = \int_{-\infty}^{\infty} f(\tau) g(t-\tau) \, d \tau 
+      = \int_{-\infty}^{\infty} g(\tau) f(t-\tau) \, d \tau
 \end{equation}
-This is not relevant in this context here but it's sometimes good to point out the connections to other topics.
+This is not relevant in the context of series but it's sometimes good to point out the connections to other topics. I have used $t$ for the input and $\tau$ for the dummy integration variable here because this is the way, you often find it stated. This operation occurs a lot in signal processing where $t$ stands for time and $\tau$ for a time-lag or delay.
 
-...TBC...
 
-% https://mathworld.wolfram.com/CauchyProduct.html
+
 
 \subsection{Convergence}
 When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster.
@@ -67,7 +68,15 @@ ToDo: give formulas for finite and infinite geometric series, infinite alternati
 
 
 \subsection{Power Series}
-A power series is a series that involves a variable $x$. We imagine that we have 
+A power series is a series that involves a variable $x$. We imagine that we have a given sequence $(a_n)$ and we will intepret this as a sequence of coefficients of a series of powers of $x$, i.e. a sort of infinite polynomial. We will consider the series:
+\begin{equation}
+ f(x) = \sum_{n=0}^\infty a_n x^n
+\end{equation}
+where on the left hand side, I already suggestively have written $f(x)$ to indicate that this "infinite polynomial" may be used to define a function - at least for those values of $x$, for which the infinite sum converges to a finite value.
+
+
+
+%explain how the cauchy-product corresponds to polynomial multipliations
 
 \subsubsection{Taylor Expansion}
 

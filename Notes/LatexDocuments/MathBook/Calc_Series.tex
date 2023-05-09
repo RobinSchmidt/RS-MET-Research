@@ -139,7 +139,11 @@ The Taylor expansion expressed arbitrary functions as (potentially) infinite wei
 We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equation \ref{Eq:FourierCoeffs} as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function. The integration can also be performed over some other interval of length $2\pi$ like $[a,a+2\pi]$ for some $a$. 
 
 \medskip
-...TBC...explain the convergence properties, requirements on $f$ ((square?)-integrable?), why this special case for $a_0$, interpretation as amplitude and phase, symmetries (odd - no cosines, even - no sines)
+The requirements on $f$ are quite different from those for Taylor series. First of all and most obviously, we require $f$ to be periodic. Here, we restricted our attention to $2 \pi$-periodic functions, but the theory can easily be applied to functions with other periods $p$ too, by stretching the function appropriately along the $x$-axis. For a Taylor series, we required $f$ to be smooth. For a Fourier series, $f$ does not even need to be continuous. If the function has jumps, it will converge to average of the values on the left and right at the jump. If we use only finitely many terms, there will be some wiggle around the jump. This is called Gibbs's phenomenon.
+
+
+\medskip
+...TBC...explain the convergence properties, what happens at discontinuities (convergence to average, Gibbs phenomonen), requirements on $f$ ((square?)-integrable?), why this special case for $a_0$, interpretation as amplitude and phase, symmetries (odd - no cosines, even - no sines)
 %Leup2, pg 65
 
 \paragraph{Complex Formulation}

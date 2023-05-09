@@ -96,14 +96,18 @@ One truly remarkable result of calculus is that a lot of functions can be expres
 We now want to look at a completely different kind of series. It will again involve a variable $x$ but this time, we will not use powers of $x$ but instead trigonometric functions, specifically sines and cosines. We will look at series of the form:
 \begin{equation}
 \label{Eq:FourierSeries}
- f(x) = \sum_{n=0}^\infty \left(  a_n \cos(n x) + b_n \sin(n x) \right)
+ f(x) = \frac{a_0}{2} + \sum_{k=1}^\infty \left(  a_k \cos(k x) + b_k \sin(k x) \right)
 \end{equation}
-As with power series, the $f(x)$ on the left hand side indicates that we intend to use such a series to define a function of $x$. By construction, our so defined function will be periodic with a period of $2\pi$. This can easily be seen by considering a couple of values for $n$. For $n = 0$, the argument of sine and cosine becomes $0$ as well. The sine of zero is zero and the cosine of zero is one, so the $n=0$ term will just give us the constant function with value $a_0$. The $n=1$ term gives a sine and cosine of period $2\pi$, the $n=2$ term gives a sin/cos pair with period $2\pi/2$. Of course, when something is periodic with period $2\pi/2$, it is also periodic with period $2\pi$. And the same is true for any $n$: a function that is periodic with period $2\pi/n$ is also periodic with period $2\pi$. So, all the higher terms will also be $2\pi$-periodic. They will just undergo $n$ cycles when our slowest sinusoid (for $n=1$) undergoes one cycle.
+As with power series, the $f(x)$ on the left hand side indicates that we intend to use such a series to define a function of $x$. By construction, our so defined function will be periodic with a period of $2\pi$. This can easily be seen as follows. The $a_0/2$ term will just give us a constant offset and that's periodic with any period. The $k=1$ term gives a sine and cosine which are the prototypical functions with period $2\pi$. For higher $k$, the sin/cos pair will oscillate $k$ times faster, so it will have a period of $2\pi/k$. But of course, something that is periodic with period $2\pi/k$ is also periodic with period $2\pi$. So, all the higher terms will also be $2\pi$-periodic. They will just undergo $k$ cycles when our slowest sinusoid (for $k=1$) undergoes one cycle.
+
+\medskip
+There are different conventions for dealing with the $a_0$ coefficient which represents the constant part of the function, in electrical engineering also known as the DC (directed current) term. ...TBC..
 
 % https://en.wikipedia.org/wiki/Fourier_series
 % Leupold, Vol2, pg 50 ff
 % maybe use \tau instead of 2 \pi 
 % maybe assume a period of 2 pi - having to carry aorund the p and the omega makes things unnecessarily complicated. Yes, it's more general but the application to functions with arbitrary period can better be done on a higher level by stretching the functions appropriately. we don't want to deal with that inside the nitty gritty of Fourier analysis and it's more consistent with most books
+% maybe use the convention that pulls the a0/2 out of the sum and starts the sum at 1. this relieves us from special casing the analysis equation for a_0 and also simplifies the explanation of the periodicity
 
 %...TBC...
 
@@ -113,27 +117,25 @@ As with power series, the $f(x)$ on the left hand side indicates that we intend 
 The Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. The coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. The formulas are:
 \begin{equation}
 \label{Eq:FourierCoeffs}	
- a_0 = \frac{1}{\tau} \int_0^{\tau} f(x) \, dx, \quad
- b_0 = 0, \quad
- a_n = \frac{2}{\tau} \int_0^{\tau} f(x) \cos(n x) \, dx, \quad
- b_n = \frac{2}{\tau} \int_0^{\tau} f(x) \sin(n x) \, dx 
+ a_k = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \cos(k x) \, dx, \quad
+ b_k = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \sin(k x) \, dx 
 \end{equation}
-where the $a_n=\ldots, b_n=\ldots$ formulas apply to the $n \neq 0$ case. We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equation \ref{Eq:FourierCoeffs} as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function. The integration can also be performed over some other interval of length $\tau$ like $[a,a+\tau]$ for some $a$ or $[-\tau/2,\tau/2] = [-\pi,\pi]$. 
+We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equation \ref{Eq:FourierCoeffs} as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function. The integration can also be performed over some other interval of length $2\pi$ like $[a,a+2\pi]$ for some $a$. 
 
 \medskip
-...TBC...explain the convergence properties, requirements on $f$ ((square?)-integrable?), why this special case for $a_0$, interpretation as amplitude and phase
+...TBC...explain the convergence properties, requirements on $f$ ((square?)-integrable?), why this special case for $a_0$, interpretation as amplitude and phase, symmetries (odd - no cosines, even - no sines)
 %Leup2, pg 65
 
 \paragraph{Complex Formulation}
 The theory of Fourier series if often being presented in its complex form. Doing so hides some of its complexity in the complex numbers. Depending on your fluency with complex numbers, this may feel like a simplification or like a mystification. The equations are shorter, yes. But they are complex - pun intended. Instead of using real valued sine and cosine functions for analysis and synthesis, one uses a single complex exponential function. This is equivalent due to Euler's formula. By doing so, one reduces the apparent complexity of having to deal with two sets of coefficients, namely the $a_n$ and $b_n$ coefficients, to a single set of $c_n$ coefficients - but these coeffs are then complex valued. Going to the complex domain actually also generalizes the applicability to functions $f: \mathbb{R} \rightarrow \mathbb{C}$ as well, so we get a little bit more than just a simpli/mystification. In the complex formulation, the synthesis and analysis equations look like:
 \begin{equation}
 \label{Eq:FourierSeriesComplex}
- f(x) = \sum_{n=-\infty}^\infty c_n  e^{\i n x}, \qquad
- c_n = \frac{1}{\tau} \int_0^{\tau} f(x) e^{-\i n x}  \, dx
+ f(x) = \sum_{k=-\infty}^\infty c_k  e^{\i k x}, \qquad
+ c_k = \frac{1}{2\pi} \int_{-\pi}^{\pi} f(x) e^{-\i k x}  \, dx
 \end{equation}
-We could put synthesis and analysis equation together in one line and it's still shorter than the real valued analysis equation alone. Notice also how there's no special case for $c_0$ anymore. It may seem a little bit strange that the summation in the analysis equation now starts at minus infinity. Shouldn't the real and imaginary parts of the non-negatively indexed coeffs $c_0, c_1, \ldots$ already contain the same amount of information as the pairs $(a_0,b_0),(a_1,b_1), \ldots$ from the real formulation? Why do we need the additional coeffs with negative indices? Indeed, when the input function is purely real valued, the negatively indexed coeffs will be redundant, but remember that we now allow, in general, complex valued functions $f(x)$ functions, too. 
+We could put synthesis and analysis equation together in one line and it's still shorter than the real valued analysis equation alone. Notice also how there's no special case for $c_0$ anymore. It may seem a little bit strange that the summation in the analysis equation now starts at minus infinity. Shouldn't the real and imaginary parts of the non-negatively indexed coeffs $c_0, c_1, \ldots$ already contain the same amount of information as the pairs $(a_0,b_0),(a_1,b_1), \ldots$ from the real formulation? Why do we need the additional coeffs with negative indices? Indeed, when the input function is purely real valued, the negatively indexed coeffs will be redundant, but remember that we now allow, in general, complex valued functions $f(x)$ functions, too. For real valued functions $f$, the $c_k$ will be conjugate symmetric, i.e. $c_{-k} = \overline{c_k}$. [VERIFY]. A $c_k$ with a negative index $k$ formally represents the coefficient for a negative frequency. That just means the complex phasor rotates clockwise rather than counterclockwise in the corresponding $c_k  e^{\i k x}$ term in the synthesis equation. This flips the sign of the sine part, the cosine part stays the same [VERIFY]
 
-...TBC...explain negative frequencies
+...TBC...explain negative frequencies and how conjugate symmetry of coeffs yields real signals
 
 
 \paragraph{Aperiodic Functions}
@@ -147,5 +149,6 @@ Taylor and Fourier series seem to be totally disconnected things. However, when 
 
 \medskip
 ToDo: bring stuff from Weitz video "Taylor trifft Fourier"
-\hyperlink{https://www.youtube.com/watch?v=cXxsSdbfEEg}{youtube.com/watch?v=cXxsSdbfEEg}
+% https://www.youtube.com/watch?v=cXxsSdbfEEg
+%\hyperlink{https://www.youtube.com/watch?v=cXxsSdbfEEg}{youtube.com/watch?v=cXxsSdbfEEg}
 

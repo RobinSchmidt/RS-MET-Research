@@ -95,6 +95,7 @@ One truly remarkable result of calculus is that a lot of functions can be expres
 \subsection{Trigonometric Series}
 We now want to look at a completely different kind of series. It will again involve a variable $x$ but this time, we will not use powers of $x$ but instead trigonometric functions, specifically sines and cosines. We will look at series of the form:
 \begin{equation}
+\label{Eq:FourierSeries}
  f(x) = \sum_{n=0}^\infty \left(  a_n \cos(n \omega x) + b_n \sin(n \omega x) \right)
 \end{equation}
 where $\omega$ is some fixed constant. As with power series, the $f(x)$ on the left hand side indicates that we intend to use such a series to define a function of $x$. By construction, our so defined function will be periodic with a period of $p = \frac{2\pi}{\omega}$. This can easily be seen by considering a couple of values for $n$. For $n = 0$, the argument of sine and cosine becomes $0$ as well. The sine of zero is zero and the cosine of zero is one, so the $n=0$ term will just give us the constant function with value $a_0$. The $n=1$ term gives a sine and cosine of period $p$, the $n=2$ term gives a sin/cos pair with period $p/2$. Of course, when something is periodic with period $p/2$, it is also periodic with period $p$. And the same is true for any $n$: a function that is periodic with period $p/n$ is also periodic with period $p$. So, all the higher terms will also be $p$-periodic. They will just undergo $n$ cycles when our slowest sinusoid (for $n=1$) undergoes one cycle.
@@ -110,18 +111,19 @@ where $\omega$ is some fixed constant. As with power series, the $f(x)$ on the l
 \subsubsection{Fourier Expansion}
 The Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. The coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. The formulas are:
 \begin{equation}
+\label{Eq:FourierCoeffs}	
  a_0 = \frac{1}{p} \int_0^p f(x) \, dx, \quad
  b_0 = 0, \quad
  a_n = \frac{2}{p} \int_0^p f(x) \cos(n \omega x) \, dx, \quad
  b_n = \frac{2}{p} \int_0^p f(x) \sin(n \omega x) \, dx 
 \end{equation}
+where the $a_n=\ldots, b_n=\ldots$ formulas apply to the $n \neq 0$ case. We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equation \ref{Eq:FourierCoeffs} as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function.
 
+\medskip
 ...TBC...explain the convergence properties, requirements on $f$ ((square?)-integrable?), explain hwo the formulas compute a correlation, why this special case for $a_0$
 
-
-
 \paragraph{Aperiodic Functions}
-So far, we assumed $f$ to be periodic but the theory can actually be generalized to deal with (some) aperiodic functions, too. ...TBC...
+So far, we assumed $f$ to be periodic but the theory can actually be generalized to deal with (some) aperiodic functions, too. This leads to the idea of the Fourier transform which will be treated in more detail in the section about integral transforms. At this point, I'll just say that the sum in the synthesis equation will be replaced by an integral, our discrete Fourier coefficients $a_n, b_n$ will be replaced by a continuous function of frequency and in the analysis equations, we will have to perform an integration from minus to plus infinity instead of over one period. 
 
 
 

@@ -99,19 +99,24 @@ We now want to look at a completely different kind of series. It will again invo
 \end{equation}
 where $\omega$ is some fixed constant. As with power series, the $f(x)$ on the left hand side indicates that we intend to use such a series to define a function of $x$. By construction, our so defined function will be periodic with a period of $p = \frac{2\pi}{\omega}$. This can easily be seen by considering a couple of values for $n$. For $n = 0$, the argument of sine and cosine becomes $0$ as well. The sine of zero is zero and the cosine of zero is one, so the $n=0$ term will just give us the constant function with value $a_0$. The $n=1$ term gives a sine and cosine of period $p$, the $n=2$ term gives a sin/cos pair with period $p/2$. Of course, when something is periodic with period $p/2$, it is also periodic with period $p$. And the same is true for any $n$: a function that is periodic with period $p/n$ is also periodic with period $p$. So, all the higher terms will also be $p$-periodic. They will just undergo $n$ cycles when our slowest sinusoid (for $n=1$) undergoes one cycle.
 
-
 % https://en.wikipedia.org/wiki/Fourier_series
-
+% Leupold, Vol2, pg 50 ff
 % maybe use \tau instead of 2 \pi 
 
-...TBC...
+%...TBC...
 
 %explain different conventions - some use $2 \pi x$ as argument, some pull out $a_0/2$, etc.
 
 \subsubsection{Fourier Expansion}
-The Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. The coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. 
+The Taylor expansion expressed arbitrary functions as (potentially) infinite weighted sums of powers of the variable $x$. The coefficients were computed using derivatives of the function at one single point. Fourier expansions, on the other hand, express arbitrary periodic functions as (potentially) infinite sums of sines and cosines of $x$. The coefficients are calculated by a definite integral over one period. The formulas are:
+\begin{equation}
+ a_0 = \frac{1}{p} \int_0^p f(x) \, dx, \quad
+ b_0 = 0, \quad
+ a_n = \frac{2}{p} \int_0^p f(x) \cos(n \omega x) \, dx, \quad
+ b_n = \frac{2}{p} \int_0^p f(x) \sin(n \omega x) \, dx 
+\end{equation}
 
-...TBC...give formulas for coeffs
+...TBC...explain the convergence properties, requirements on $f$ ((square?)-integrable?), explain hwo the formulas compute a correlation, why this special case for $a_0$
 
 
 

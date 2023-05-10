@@ -39,12 +39,31 @@ f(x) =
 This means, the function will output $0$ for $x < 0$ and $-x$ when $x$ is between zero and one (including zero, excluding one) and $x^2$ when $x \geq 1$. The example function is discontinuous at $x=1$. It jumps from $-1$ to $+1$ there. At zero, it has a corner - that is: a discontinuity in its slope.
 
 \medskip
+The piecewise definition is a specific kind of a conditional definition where the conditions are of the form "if $x$ is in interval ... then ...". A function can also be defined by more general conditions such as:
+\begin{equation}
+f(x) = 
+\begin{cases} 
+ 1 \quad& x \in    \mathbb{Q} \\
+ 0      & x \notin \mathbb{Q}
+\end{cases}
+\end{equation}
+The function given above is called the Dirichlet function or indicator function of the rational numbers. It outputs one for rational inputs and zero for irrational inputs.
+
+\medskip
 A function can also be defined by recorded data points of some measurement. To turn these discrete data points into a continuous function, one would also have to prescribe some sort of \emph{interpolation} rule such as "connect the dots by straight lines". The data together with the interpolation rule constitute a bona fide function: we can give it an input $x$ and it will give back an output $y$. 
+
+\medskip
+Functions can be defined by the limit of some infinite recursive process or algorithm. An example of that is Bolzano's function. Such functions will often show self-similar, "fractal" behavior: you can zoom in as much as you like and it will always look similar. ToDo: explain construction rule
+
+% https://de.wikipedia.org/wiki/Bolzanofunktion
+% https://demonstrations.wolfram.com/BolzanosFunction/
+
+% https://en.wikipedia.org/wiki/Weierstrass_function
 
 
 %A function can also be defined by various kinds of equations such as implicit, differential, functional, etc.
 
-...tbc...
+...TBC...
 
 % maybe make these subsubsection of an "Elementary functions"  section
 
@@ -194,6 +213,7 @@ todo:
  f(x+1) - f(x) = f'(x + 1/2). Idea: we want a function whose derivative equals the central
  difference approximation of it. "differentio-functional"?
 -maybe it makes sense to have a section about equations - what type of equations we see in math...but for some types (e.g. differntial or integral equations), we need some calculus
+-what about the Dirac delta function? It's not really a function, though
 
 \end{comment}
 

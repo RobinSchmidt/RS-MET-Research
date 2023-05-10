@@ -79,16 +79,37 @@ Speaking of convergence, consider the following infinite sum:
 \begin{equation}
  f(x) = \sum_{n=1}^\infty \frac{1}{n^x}
 \end{equation}
-This sum converges only for $x > 1$. If we allow complex arguments, the condition is $\Re(x) > 1$. So in the complex plane, this sum above defines a function for those complex numbers whose real part is greater than one. For other values, the function is as of yet undefined. However, complex analysis provides a tool known as "analytic continuation" by means of which we can uniquely expand the domain of the function to the whole complex plane except for the single point $x=1$. The so defined function is known as the Riemann Zeta function and an important object in number theory due to its unexpected connection to prime numbers. The point that I want to make here is that the process of analytic continuation gives us yet another way to define a function.
-
-%Such sums can also define
+This sum converges only for $x > 1$. If we allow complex arguments, the condition is $\Re(x) > 1$. So in the complex plane, this sum above defines a function for those complex numbers whose real part is greater than one. For other values, the function is as of yet undefined. However, complex analysis provides a tool known as \emph{analytic continuation} by means of which we can uniquely expand the domain of the function to the whole complex plane except for the single point $x=1$. The so defined function is known as the Riemann Zeta function and an important object in number theory due to its unexpected connection to prime numbers. The point that I want to make here is that the process of analytic continuation gives us yet another way to define a function.
 
 \medskip
 You may wonder how we are supposed to evaluate functions that are defined by some infinite process. The answer is: on a computer, we cannot really represent real numbers exactly anyway. Our floating point numbers are always approximations. So, from a practical point of view, it is good enough to be able to evaluate functions up to some precision. For the infinite processes, that usually means that we can obtain a sufficiently precise approximation of the function by only doing a finite number of steps until we deem the result to be close enough. The best we can expect is to precise within one ulp ("unit in the last place"). Usually, we'll accept even much higher errors.
 
+\medskip
+Now let's consider the factorial function $n! = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n$. As it stands, it's defined only for natural numbers. There is a way to define it for all real and even complex numbers. The key lies in the observation of the factorial's function equation given by $n! = n \cdot (n-1)!$. In our expanded definition, we want that equation to be satisfied for all real inputs. So we search a function $f(x)$ for which the functional equation $f(x) = x \cdot f(x-1)$ holds true. It can be shown that the following integral based definitions:
+\begin{equation}
+\Pi(x)    = \int_0^\infty t^x e^{-t} \, dt, \quad
+\Gamma(x) = \Pi(x-1) = \int_0^\infty t^{x-1} e^{-t} \, dt,
+\end{equation}
+do indeed lead to functions that satisfy the desired functional equation. The first definition agrees with the factorials at the naturals, i.e. $\Pi(x) = x!$ for $x \in \mathbb{N}$. That means, it interpolates (i.e. makes continuous) the formerly discrete factorial function. The second definition is called the \emph{gamma function} and it agrees with the shifted factorial function. There is some discussion
+\href{https://math.stackexchange.com/questions/1362523/why-is-the-gamma-function-off-by-1-from-the-factorial}{here} about why the gamma function might have been defined with that strange shift. Supposedly, it will make some higher level stuff more convenient but at first, it seems unnatural and inconvenient. Anyway, my point here is that a function definition can be based on a functional equation. In this case here, a definition in terms of a \emph{parameter integral} which is an integral in which the integrand depends on a parameter - here $x$.
+
+I think, the general way to define a function $f$ in terms of a parameter integral is to have some function $g(x,t)$ and then use:
+\begin{equation}
+ f(x)  = \int_{a(x)}^{b(x)} g(t,x) \, dt
+\end{equation}
+For $\Pi(x)$ we have $g(x,t) = t^x e^{-x}, a(x) = 0, b(x) = \infty$.
+[VERIFY all of this!]
+...TBC...
+% https://en.wikipedia.org/wiki/Gamma_function
+% https://math.stackexchange.com/questions/1362523/why-is-the-gamma-function-off-by-1-from-the-factorial
+% https://mathoverflow.net/questions/20960/why-is-the-gamma-function-shifted-from-the-factorial-by-1
+% https://de.wikipedia.org/wiki/Parameterintegral
+
+
+
+
 %A function can also be defined by various kinds of equations such as implicit, differential, functional, etc.
 
-...TBC...
 
 % maybe make these subsubsection of an "Elementary functions"  section
 

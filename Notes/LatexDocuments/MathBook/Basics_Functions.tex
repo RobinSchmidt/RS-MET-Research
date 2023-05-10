@@ -24,7 +24,10 @@ f(x) = f_e(x) + f_o(x)
 % surjective: codomain coincides with image?
 
 \subsection{Defining a Function}
-One way to define a function is to prescribe a simple \emph{calculation rule} such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. Up to until a few hundred years, this was the only way that was acceptable for mathematicians to define a function. Today, we have become a lot more liberal in that regard and allow functions to be defined in more esoteric ways. A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number like, this way of defining a function is called a \emph{piecewise definition}. They are written down like this:
+One way to define a function is to prescribe a simple \emph{calculation rule} such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. Up to until a few hundred years, this was the only way that was acceptable for mathematicians to define a function. Today, we have become a lot more liberal in that regard and allow functions to be defined in more esoteric ways. 
+
+\medskip
+A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number like, this way of defining a function is called a \emph{piecewise definition}. They are written down like this:
 \begin{equation}
 f(x) = 
 \begin{cases} 
@@ -33,7 +36,11 @@ f(x) =
  x^2    & x \geq 1
 \end{cases}
 \end{equation}
-This means, the function will output $0$ for $x < 0$ and $-x$ when $x$ is between zero and one (including zero, excluding one) and $x^2$ when $x \geq 1$. The example function is discontinuous at $x=1$. It jumps from $-1$ to $+1$ there. A function can also be defined by recorded data points of some measurement. To turn these discrete data points into a continuous function, one would also have to prescribe some sort of \emph{interpolation} rule such as "connect the dots by straight lines". The data together with the interpolation rule constitute a bona fide function: we can give it an input $x$ and it will give back an output $y$. 
+This means, the function will output $0$ for $x < 0$ and $-x$ when $x$ is between zero and one (including zero, excluding one) and $x^2$ when $x \geq 1$. The example function is discontinuous at $x=1$. It jumps from $-1$ to $+1$ there. At zero, it has a corner - that is: a discontinuity in its slope.
+
+\medskip
+A function can also be defined by recorded data points of some measurement. To turn these discrete data points into a continuous function, one would also have to prescribe some sort of \emph{interpolation} rule such as "connect the dots by straight lines". The data together with the interpolation rule constitute a bona fide function: we can give it an input $x$ and it will give back an output $y$. 
+
 
 %A function can also be defined by various kinds of equations such as implicit, differential, functional, etc.
 
@@ -105,7 +112,7 @@ Let's now see, if we can reverse the process. Let's assume that we know the coef
 \begin{equation}
 a_n = \frac{1}{b_0} (  c_n - \sum_{k=0}^{n-1} a_k b_{n-k} ) 
 \end{equation}
-...but there's a caveat: what, if $b_0 = 0$? Maybe we should find $m$ as the index of the first nonzero $b$-coeff and use $b_m$ as divisor? I think, the upper limit of the sum can then be reduced to $n-m-1$. -> figure out!
+...but there's a caveat: what, if $b_0 = 0$? Maybe we should find $m$ as the index of the first nonzero $b$-coeff and use $b_m$ as divisor? I think, the upper limit of the sum can then be reduced to $n-m-1$. -> figure out! What about polynomial division with remainder?
 
 %Oh my dog! Polynomial division! That pesky algorithm that we all once had to learn in school and then have forgotten for good! Worry not - you won't have to relearn it here and now. Executing algorithms with pencil and paper is not something we humans like to do and I personally find it as pointless as the next guy. Instead, I'll give you computer code for it, so we'll never ever have to do it again by hand. ....
 
@@ -152,11 +159,24 @@ The set of algebraic functions contains all the functions that can be constructe
 
 
 How to define functions:
+
+done:
 -explicitly, e.g. y = x^2
 -piecewise (may also be explicit but that's actually an independent question)
--by an algorithm (see fractal functions (Bolzano function) Weitz video "Monster der Analysis")
 -by data (togther with an interpolation rule)
--power series
+
+todo:
+-Dirichlet function: "infinitely piecewise"? "pointwise"? "condition-based"? How about:
+ f(x) = numerator, if x rational otherwise 0
+-definite or indefinite integral of some given function, examples:
+ erf (int of Gauss), jacobi-elliptic (int of 1/sqrt(...))
+-by an algorithm (see fractal functions (Bolzano function) Weitz video "Monster der Analysis")
+ -> limit of an infinite recursive process
+-power series - this is the usual way to expand definitions of function to e.g. complex 
+ numbers, matrices, etc.
+-other types of series , example: Weierstrass function - also in "Monster der Analysis"
+-series in some domain, analytic continuation where the series diverges, example:
+ Riemann Zeta function.
 -as the solution of a given problem (let f(x) be the solution of ..blabla)
 -implicit functions ...maybe something like 
  y + exp(y) = x + sin(x), y - exp(y) = x + sin(x), y - exp(y) = x - sin(x), y + exp(y) = sqrt(x^x)
@@ -165,9 +185,14 @@ How to define functions:
 -functional equations, examples: 
  f(x + y) = f(x) * f(y)  ->  f(x) = exp(x)
  f(a x) = b f(x)  ->  f(x) = x^(b/a) or x^(a/b)
--differential equations
--(parameter) integrals
--integral equations
+ f(x+1) = x * f(x) -> Gamma-function, leads to a definition via an integral
+-differential equations, examples: Bessel
+-(parameter) integrals...?
+-integral equation, example: assume that a kernel h(x) is given (for example Gauss-func) and
+ some function g(x) is given. We seek f(x) such that g = convolve(f,h). Useful in signal reconstruction (compensate for undesired filtering)
+-delay differential? what about something like f(x+1/2) - f(x-1/2) = f'(x) or equivalently
+ f(x+1) - f(x) = f'(x + 1/2). Idea: we want a function whose derivative equals the central
+ difference approximation of it. "differentio-functional"?
 -maybe it makes sense to have a section about equations - what type of equations we see in math...but for some types (e.g. differntial or integral equations), we need some calculus
 
 \end{comment}

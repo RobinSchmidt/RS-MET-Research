@@ -79,6 +79,9 @@ Power series are often used to expand the domain of a function - for example, fr
 
 \paragraph{Continued Fractions}
 
+\paragraph{Inverse Functions}
+A function can be defined by its inverse function. For example, the logarithm can be defined to be the inverse to the exponential function. ToDo: arcsin, ...
+
 \paragraph{Analytic Continuation}
 Speaking of convergence, consider the following infinite sum:
 \begin{equation}
@@ -261,12 +264,28 @@ A rational function is a ratio or quotient of two polynomials, i.e. function of 
 The set of algebraic functions contains all the functions that can be constructed from using the elementary operations and extracting roots....
 % partial fraction expansion
 
+\subsubsection{Trigonometric Functions}
+The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geometric considerations about triangles (more on that later in the geometry chapter) but can also be defined in terms of a power series:
+
+
+
+
+
+
 \subsubsection{Exponential Functions}
-The exponential function can be defined in various ways:
+A general exponential function is a function of the form $y = f(x) = b^x$ for some constant $b$ which is called the basis in this context. Choosing the special number $e$ as basis, we obtain \emph{the} exponential function $y = f(x) = e^x = \exp(x)$. It can be defined via a power series, a limit or as inverse of a parameter integral [VERIFY the last]:
 \begin{equation}
 e^x 
+= \exp(x)
 = \sum_{k=0}^{\infty} \frac{x^k}{k!}
-= \lim_{n \rightarrow \infty} \left( 1 + \frac{x}{n} \right)^n
+= \lim_{n \rightarrow \infty} \left( 1 + \frac{x}{n} \right)^n, \quad
+x = \int_1^y \frac{1}{t} \, dt
+\end{equation}
+% continuous fraction
+It satisfies the following differential equation and functional equation:
+\begin{equation}
+\frac{d}{dx} e^x = e^x, \quad
+e^{x+y} = e^x e^y
 \end{equation}
 
 % give differential equation and functional equation that exp satisfies - maybe some other types of equation, too?
@@ -274,9 +293,14 @@ e^x
 % https://de.wikipedia.org/wiki/Exponentialfunktion
 % https://en.wikipedia.org/wiki/Exponential_function
 
-\subsubsection{Trigonometric Functions}
-
-
+\subsubsection{Hyperbolic Functions}
+When we decompose the exponential function into its odd and even parts, we obtain the so called hyperbolic sine and cosine functions $\sinh(x), \cosh(x)$ and when we form their quotient, we obtain the hyperbolic tangent: $\tanh(x)$
+\begin{equation}
+ \sinh(x) =	\frac{e^x - e^{-x}}{2}, \quad	
+ \cosh(x) =	\frac{e^x + e^{-x}}{2}, \quad
+ \tanh(x) =	\frac{\sinh(x)}{\cosh(x)} 
+          = \frac{e^x - e^{-x}}{e^x + e^{-x}}
+\end{equation}
 
 \subsection{Special Functions}
 % gamma, bessel, elliptic integrals

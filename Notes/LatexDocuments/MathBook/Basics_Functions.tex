@@ -78,6 +78,7 @@ e^x = \sum_{k=0}^\infty \frac{x^k}{k!}, \quad
 Power series are often used to expand the domain of a function - for example, from the real to the complex numbers. The thing is that all we need to evaluate a power series is to know, how to add or multiply two objects together and how to scale an object by a factor. When we have objects on which we have these 3 operations defined, we can evaluate, for example, the exponential function of that object via the above power series. The "object" can be a real or complex number - or it can be something else such as a matrix or an operator. We'll see later what these things are. Of course, such a power series does not need to originate from already known functions. It can be made up in any way you like - you just need to prescribe some rule to compute the weights. How you came up with that rule doesn't matter. What matters is the question, whether or not the series actually converges. More on that in the section about series in the calculus chapter.
 
 \paragraph{Continued Fractions}
+Another infinite process that is sometimes useful to define a function is called a \emph{continued fraction expansion}...TBC...
 
 \paragraph{Inverse Functions}
 A function can be defined by its inverse function. For example, the logarithm can be defined to be the inverse to the exponential function. ToDo: arcsin, ...
@@ -135,7 +136,7 @@ An integral equation is an equation where an unknown function $f$ appears under 
 \begin{equation}
  \int_a^b f(u) h(x-u) \, du = g(x)
 \end{equation}
-We could interpret $g$ is a recorded signal, $h$ as the impulse response or "kernel" of a filter and we want to reconstruct $f$ as it was before it went through the filter. The desired function $f$ appears under a convolution integral. This is sort of equation is a particular kind of integral equation and does indeed define a function $f$.
+for some constants $a,b$ (which are often minus and plus infinity). We could interpret $g$ is a recorded signal, $h$ as the impulse response or "kernel" of a filter and we want to reconstruct $f$ as it was before it went through the filter. The desired function $f$ appears under a convolution integral. This is sort of equation is a particular kind of integral equation and does indeed define a function $f$.
 
 %...TBC...
 %ToDo: bring an example involving deconvolution - we are given a signal $g(x)$ which is supposed to be our desired $f(x)$ convolved with some known kernel $h(x)$. Then $f(x)$ appears under the convolution integral. Finding it involves deconvolution...can perhaps be done in the Foruier domain - but that's not the problem of the definition

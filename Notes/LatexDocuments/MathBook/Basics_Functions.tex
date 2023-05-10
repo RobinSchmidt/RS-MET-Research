@@ -24,7 +24,7 @@ f(x) = f_e(x) + f_o(x)
 % surjective: codomain coincides with image?
 
 \subsection{Defining a Function}
-One way to define a function is to prescribe a simple \emph{calculation rule} such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. Up to until a few hundred years, this was the only way that was acceptable for mathematicians to define a function. Today, we have become a lot more liberal in that regard and allow functions to be defined in more esoteric ways. 
+One way to define a function is to prescribe a simple \emph{calculation rule} such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. Up to until a few hundred years, this was the only way that was acceptable for mathematicians to define a function. Today, we have become a lot more liberal in that regard and allow functions to be defined in more esoteric ways. Some of these ways will involve concepts that are discussed only later in the book. If you don't understand these definitions, you can skip them on a first reading.
 
 \medskip
 A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number like, this way of defining a function is called a \emph{piecewise definition}. They are written down like this:
@@ -58,15 +58,30 @@ Functions can be defined by the limit of some infinite recursive process or algo
 % https://demonstrations.wolfram.com/BolzanosFunction/
 
 \medskip
-The infinite process is sometimes defined to be an infinite sum. The individual terms are defined in terms of already known, simpler functions. An example of such a definition is the Weierstrass function defined as: ...
+The infinite process is sometimes defined to be an infinite sum. The individual terms are defined in terms of already known, simpler functions. An example of such a definition is the Weierstrass function defined as:
 \begin{equation}
-f(x) =
+f(x) = \sum_{n=0}^\infty a^n \cos(b^n \pi x), 
+\qquad 0 < a < 1, \; b \in \mathbb{N}, odd, b \geq 7
 \end{equation}
-This function has also a self-similar nature.
-%Another way to define a function
-
+It has two tweakable parameters $a,b$. It is defined as an infinite sum of exponentially weighted sinusoidal functions. This function has also a self-similar nature and a couple of strange properties that were unheard of in mathematics up to the 19th century such as being continuous everywhere but differentiable nowhere.
 % https://en.wikipedia.org/wiki/Weierstrass_function
 
+\medskip
+Often we will encounter infinite sums of weighted powers of $x$. A function definition based on such a sum is called a \emph{power series} definition. Most of our common functions can be expressed as such a power series even though they may have originally have been constructed by other ways. Exponential and sinusoidal functions are usually first defined by means of limiting processes or geometric constructions respectively. However, they do also have power series based definitions. They can be found from the original definitions by means of a Taylor expansion. This leads to:
+\begin{equation}
+e^x = \sum_{k=0}^\infty \frac{x^k}{k!}, \quad
+\sin(x) = ...
+\end{equation}
+Power series are often used to expand the domain of a function - for example, from the real to the complex numbers. The thing is that all we need to evaluate a power series is to know, how to add or multiply two objects together and how to scale an object by a factor. When we have objects on which we have these 3 operations defined, we can evaluate, for example, the exponential function of that object via the above power series. The "object" can be a real or complex number - or it can be something else such as a matrix or an operator. We'll see later what these things are. Of course, such a power series does not need to originate from already known functions. It can be made up in any way you like - you just need to prescribe some rule to compute the weights. How you came up with that rule doesn't matter. What matters is the question, whether or not the series actually converges. More on that in the section about series in the calculus chapter.
+
+\medskip
+Speaking of convergence, consider the following infinite sum:
+\begin{equation}
+ f(x) = \sum_{n=1}^\infty \frac{1}{n^x}
+\end{equation}
+This sum converges only for $x > 1$. If we allow complex arguments, the condition is $\Re(x) > 1$. So in the complex plane, this sum above defines a function for those complex numbers whose real part is greater than one. For other values, the function is as of yet undefined. However...
+
+%Such sums can also define
 
 \medskip
 You may wonder how we are supposed to evaluate functions that are defined by some infinite process. The answer is: on a computer, we cannot really represent real numbers exactly anyway. Our floating point numbers are always approximations. So, from a practical point of view, it is good enough to be able to evaluate functions up to some precision. For the infinite processes, that usually means that we can obtain a sufficiently precise approximation of the function by only doing a finite number of steps until we deem the result to be close enough. The best we can expect is to precise within one ulp ("unit in the last place"). Usually, we'll accept even much higher errors.

@@ -24,10 +24,12 @@ f(x) = f_e(x) + f_o(x)
 % surjective: codomain coincides with image?
 
 \subsection{Defining a Function}
-One way to define a function is to prescribe a simple \emph{calculation rule} such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. Up to until a few hundred years, this was the only way that was acceptable for mathematicians to define a function. Today, we have become a lot more liberal in that regard and allow functions to be defined in more esoteric ways. Some of these ways will involve concepts that are discussed only later in the book. If you don't understand these definitions, you can skip them on a first reading.
 
-\medskip
-A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number like, this way of defining a function is called a \emph{piecewise definition}. They are written down like this:
+\paragraph{Explicit Rules}
+One way to define a function is to prescribe a simple \emph{calculation rule} such as $f(x) = x^2 + 3 x - 5$ that applies equally to all possible inputs $x$. Up to until a few hundred years, this was the only way that was acceptable for mathematicians to define a function. Today, we have become a lot more liberal in that regard and allow functions to be defined in more esoteric ways. Some of these ways will involve concepts that are discussed only later in the book. If you don't understand these definitions, you can skip them on a first reading. In a first pass, you need to understand only this and the next way.
+
+\paragraph{Piecewise Definitions}
+A slightly more complicated way to define a function would be to have different calculation rules for different subsets of the domain. If these subsets are succesive intervals of the real number line, this way of defining a function is called a \emph{piecewise definition}. They are written down like this:
 \begin{equation}
 f(x) = 
 \begin{cases} 
@@ -38,7 +40,7 @@ f(x) =
 \end{equation}
 This means, the function will output $0$ for $x < 0$ and $-x$ when $x$ is between zero and one (including zero, excluding one) and $x^2$ when $x \geq 1$. The example function is discontinuous at $x=1$. It jumps from $-1$ to $+1$ there. At zero, it has a corner - that is: a discontinuity in its slope.
 
-\medskip
+\paragraph{Conditional Definitions}
 The piecewise definition is a specific kind of a conditional definition where the conditions are of the form "if $x$ is in interval ... then ...". A function can also be defined by more general conditions such as:
 \begin{equation}
 f(x) = 
@@ -49,15 +51,16 @@ f(x) =
 \end{equation}
 The function given above is called the Dirichlet function or indicator function of the rational numbers. It outputs one for rational inputs and zero for irrational inputs.
 
-\medskip
+\paragraph{Definition by Data}
 A function can also be defined by recorded data points of some measurement. To turn these discrete data points into a continuous function, one would also have to prescribe some sort of \emph{interpolation} rule such as "connect the dots by straight lines". The data together with the interpolation rule constitute a bona fide function: we can give it an input $x$ and it will give back an output $y$. 
 
-\medskip
-Functions can be defined by the limit of some infinite recursive process or algorithm. An example of that is Bolzano's function. Such functions will often show self-similar, "fractal" behavior: you can zoom in as much as you like and it will always look similar. ToDo: explain construction rule
+\paragraph{Algorithmic}
+Functions can be defined by the limit of some infinite recursive process or algorithm. An example of that is Bolzano's function. Such functions will often show self-similar, "fractal" behavior: you can zoom in as much as you like and it will always look similar. 
+...TBC...ToDo: explain construction rule
 % https://de.wikipedia.org/wiki/Bolzanofunktion
 % https://demonstrations.wolfram.com/BolzanosFunction/
 
-\medskip
+\paragraph{Infinite Sums}
 The infinite process is sometimes defined to be an infinite sum. The individual terms are defined in terms of already known, simpler functions. An example of such a definition is the Weierstrass function defined as:
 \begin{equation}
 f(x) = \sum_{n=0}^\infty a^n \cos(b^n \pi x), 
@@ -66,7 +69,7 @@ f(x) = \sum_{n=0}^\infty a^n \cos(b^n \pi x),
 It has two tweakable parameters $a,b$. It is defined as an infinite sum of exponentially weighted sinusoidal functions. This function has also a self-similar nature and a couple of strange properties that were unheard of in mathematics up to the 19th century such as being continuous everywhere but differentiable nowhere.
 % https://en.wikipedia.org/wiki/Weierstrass_function
 
-\medskip
+\paragraph{Power Series}
 Often we will encounter infinite sums of weighted powers of $x$. A function definition based on such a sum is called a \emph{power series} definition. Most of our common functions can be expressed as such a power series even though they may have originally have been constructed by other ways. Exponential and sinusoidal functions are usually first defined by means of limiting processes or geometric constructions respectively. However, they do also have power series based definitions. They can be found from the original definitions by means of a Taylor expansion. This leads to:
 \begin{equation}
 e^x = \sum_{k=0}^\infty \frac{x^k}{k!}, \quad
@@ -74,24 +77,30 @@ e^x = \sum_{k=0}^\infty \frac{x^k}{k!}, \quad
 \end{equation}
 Power series are often used to expand the domain of a function - for example, from the real to the complex numbers. The thing is that all we need to evaluate a power series is to know, how to add or multiply two objects together and how to scale an object by a factor. When we have objects on which we have these 3 operations defined, we can evaluate, for example, the exponential function of that object via the above power series. The "object" can be a real or complex number - or it can be something else such as a matrix or an operator. We'll see later what these things are. Of course, such a power series does not need to originate from already known functions. It can be made up in any way you like - you just need to prescribe some rule to compute the weights. How you came up with that rule doesn't matter. What matters is the question, whether or not the series actually converges. More on that in the section about series in the calculus chapter.
 
-\medskip
+\paragraph{Continued Fractions}
+
+\paragraph{Analytic Continuation}
 Speaking of convergence, consider the following infinite sum:
 \begin{equation}
  f(x) = \sum_{n=1}^\infty \frac{1}{n^x}
 \end{equation}
-This sum converges only for $x > 1$. If we allow complex arguments, the condition is $\Re(x) > 1$. So in the complex plane, this sum above defines a function for those complex numbers whose real part is greater than one. For other values, the function is as of yet undefined. However, complex analysis provides a tool known as \emph{analytic continuation} by means of which we can uniquely expand the domain of the function to the whole complex plane except for the single point $x=1$. The so defined function is known as the Riemann Zeta function and an important object in number theory due to its unexpected connection to prime numbers. The point that I want to make here is that the process of analytic continuation gives us yet another way to define a function.
+This sum converges only for $x > 1$. If we allow complex arguments, the condition is $\Re(x) > 1$. So in the complex plane, this sum above defines a function for those complex numbers whose real part is greater than one. For other values, the function is as of yet undefined. However, as we will see later, complex analysis provides a tool known as \emph{analytic continuation} by means of which we can uniquely expand the domain of the function to the whole complex plane except for the single point $x=1$. The so defined function is known as the Riemann Zeta function and an important object in number theory due to its unexpected connection to prime numbers. The point that I want to make here is that the process of analytic continuation gives us yet another way to define a function.
 
-\medskip
+\paragraph{Interlude - Evaluation}
 You may wonder how we are supposed to evaluate functions that are defined by some infinite process. The answer is: on a computer, we cannot really represent real numbers exactly anyway. Our floating point numbers are always approximations. So, from a practical point of view, it is good enough to be able to evaluate functions up to some precision. For the infinite processes, that usually means that we can obtain a sufficiently precise approximation of the function by only doing a finite number of steps until we deem the result to be close enough. The best we can expect is to precise within one ulp ("unit in the last place"). Usually, we'll accept even much higher errors.
 
-\medskip
-Now let's consider the factorial function $n! = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n$. As it stands, it's defined only for natural numbers. There is a way to define it for all real and even complex numbers. The key lies in the observation of the factorial's function equation given by $n! = n \cdot (n-1)!$. In our expanded definition, we want that equation to be satisfied for all real inputs. So we search a function $f(x)$ for which the functional equation $f(x) = x \cdot f(x-1)$ holds true. It can be shown that the following integral based definitions:
+\paragraph{Functional Equations}
+Now let's consider the factorial function $n! = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n$. As it stands, it's defined only for natural numbers. There is a way to define it for all real and even complex numbers. The key lies in the observation of the factorial's functional equation which is given by $n! = n \cdot (n-1)!$. In our expanded definition, we want that equation to be satisfied for all real inputs. So we search for a continuous function $f(x)$ for which the functional equation $f(x) = x \cdot f(x-1)$ holds true. It can be shown that the following integral based definitions:
 \begin{equation}
 \Pi(x)    = \int_0^\infty t^x e^{-t} \, dt, \quad
 \Gamma(x) = \Pi(x-1) = \int_0^\infty t^{x-1} e^{-t} \, dt,
 \end{equation}
 do indeed lead to functions that satisfy the desired functional equation. The first definition agrees with the factorials at the naturals, i.e. $\Pi(x) = x!$ for $x \in \mathbb{N}$. That means, it interpolates (i.e. makes continuous) the formerly discrete factorial function. The second definition is called the \emph{gamma function} and it agrees with the shifted factorial function. There is some discussion
-\href{https://math.stackexchange.com/questions/1362523/why-is-the-gamma-function-off-by-1-from-the-factorial}{here} about why the gamma function might have been defined with that strange shift. Supposedly, it will make some higher level stuff more convenient but at first, it seems more unnatural and inconvenient than the $\Pi$ function. Nevertheles, it's the gamma function that is used in math all over the place. Anyway, my point here is that a function definition can be based on a functional equation. In this case here, the solution of the functiona equation led to a definition in terms of a \emph{parameter integral} which is an integral in which the integrand depends on a parameter - here $x$.
+\href{https://math.stackexchange.com/questions/1362523/why-is-the-gamma-function-off-by-1-from-the-factorial}{here} about why the gamma function might have been defined with that strange shift. Supposedly, it will make some higher level stuff more convenient but at first, it seems more unnatural and inconvenient than the $\Pi$ function. Nevertheles, it's the gamma function that is used in math all over the place. Anyway, my point here is that a function definition can be based on a functional equation. 
+[VERIFY all of this!]
+
+\paragraph{Parameter Integrals}
+In this case of the factorial function, the solution of the functional equation led to a definition in terms of a \emph{parameter integral} which is an integral in which the integrand depends on a parameter - here $x$.
 I think, the general way to define a function $f$ in terms of a parameter integral is to have some function $g(x,t)$ and then use:
 \begin{equation}
  f(x)  = \int_{a(x)}^{b(x)} g(t,x) \, dt
@@ -103,34 +112,61 @@ For $\Pi(x)$ we have $g(x,t) = t^x e^{-x}, a(x) = 0, b(x) = \infty$.
 % https://math.stackexchange.com/questions/1362523/why-is-the-gamma-function-off-by-1-from-the-factorial
 % https://mathoverflow.net/questions/20960/why-is-the-gamma-function-shifted-from-the-factorial-by-1
 % https://de.wikipedia.org/wiki/Parameterintegral
+% Arens pg 409 ff, Bärwolff pg 166 (1 example),
 
-\medskip
+\paragraph{Antiderivatives}
 Speaking of integrals - we sometimes have a known function $f$ and want to define another function $F$ as an antiderivative of $f$. An important example is the area under a Gaussian bell curve from minus infinity up to some value $x$:
 \begin{equation}
  F(x)  = \int_{-\infty}^{x} e^{-t^2}  \, dt
 \end{equation}
-I think, this can also be seen as another special case of a "parameter integral" definition with $g(x,t)=e^{-t^2}, a(x)= -\infty, b(x)=x$? ...figure out!
+I think, this can also be seen as another special case of a "parameter integral" definition with $g(x,t)=e^{-t^2}, a(x)= -\infty, b(x)=x$? ...figure out! Explain the erf-function
 
-\medskip
-Having seen how function can be defined via integrals, the next step is consider functions that are defined by differential equations...TBC...
+\paragraph{Differential Equations}
+Finding an antiderivative is a problem of the form: for a given $g(x)$, find a function $f(x)$ such that $f'(x) = g(x)$. That equation is actually a special case of a more general class of equations called differential equations. These are equations in which the unknown function $f$ and derivatives of it may appear. A function $f$ that satisfies the differential equation is called a solution of the differential equation. Of course, saying something like: "let $f$ be the solution to the following differential equation..." is also a way of defining a function. There are some caveats, though: differential equations typically have many solutions so we need some additional constraints (typically boundary conditions or initial conditions) to pick out one of those solutions uniquely ...TBC...give examples for how exp and sin can be defined by an ODE
+%Having seen how function can be defined via integrals, the next step is consider functions that are defined by differential equations...TBC...
 
 % differential equations - start with simple examples like exp, sin, cos, the give more complex examples like Bessel
 
-\medskip
+\paragraph{Integral Equations}
+An integral equation is an equation where an unknown function $f$ appears under an integral sign. Like with differential equations, solving the integral equation amounts to finding $f$. For example, imagine that we have two known functions $g, h$ and we want to find $f$ such that:
+\begin{equation}
+ \int_a^b f(u) h(x-u) \, du = g(x)
+\end{equation}
+We could interpret $g$ is a recorded signal, $h$ as the impulse response or "kernel" of a filter and we want to reconstruct $f$ as it was before it went through the filter. The desired function $f$ appears under a convolution integral. This is sort of equation is a particular kind of integral equation and does indeed define a function $f$.
+
+%...TBC...
+%ToDo: bring an example involving deconvolution - we are given a signal $g(x)$ which is supposed to be our desired $f(x)$ convolved with some known kernel $h(x)$. Then $f(x)$ appears under the convolution integral. Finding it involves deconvolution...can perhaps be done in the Foruier domain - but that's not the problem of the definition
+
+\paragraph{Implicit Equations}
 %When using differential equations to define a function, the general idea was to say something like: "let $f$ be a function that satisfies the following equation". The equation contained $f$ and its derivatives.
-Now we want to cosider functions defined by so called \emph{implicit equations}. These are equations of the form $g(x,y) = 0$ for some given function $g$. They define a set of points in the $xy$-plane. Now, we can define a function $y(x)$ by requiring that it should satisfy our implicit equation, i.e. $g(x,y(x)) = 0$ is satisfied for all $x$ in some domain. That's an implicit definition of $y(x)$. For example, we could define:
+Now we want to cosider functions defined by so called \emph{implicit equations}. These are equations of the form $g(x,y) = 0$ for some given function bivariate $g$. They define a set of points in the $xy$-plane. Now, we can define a function $y(x)$ by requiring that it should satisfy our implicit equation, i.e. $g(x,y(x)) = 0$ is satisfied for all $x$ in some domain. That's an implicit definition for $y(x)$. For example, we could require the following equation to hold:
 \begin{equation}
  y e^y = x \;  \Leftrightarrow \; x - y e^y = 0 
 \end{equation}
-In this case $g(x,y) = x - y e^y$. I did not make up this example. The so defined function $y(x)$ is called the "Lambert-W" function or "product-logarithm" function. Of course, that implicit definition tells us nothing at all about how we would go about evaluating $y$ for a given $x$. Nonetheless, it is a valid definition. Definitions do not necessarily need to prescribe an explicit evaluation algorithm. They tell us \emph{what} it is, not \emph{how} you compute it. There are algorithms to solve such implicit equations though. But that's a topic for a later chapter.
+In this case $g(x,y) = x - y e^y$. I did not make up this example. The so defined function $y(x)$ is called the "Lambert-W" function or "product-logarithm" function. Of course, that implicit definition tells us nothing at all about how we would go about evaluating $y$ for a given $x$. Nonetheless, it is a valid definition. Definitions do not necessarily need to prescribe an explicit evaluation algorithm. They are supposed to tell us \emph{what} it is, not \emph{how} we may compute it. If they do tell us how to compute it, that's a bonus. There are algorithms to solve such implicit equations though. But that's a topic for a later chapter. By the way, a differential equation can also be given in implicit form.
+
+%\paragraph{Implicit Differential Equations}
+% well - so far we have said nothing in the paragraph about diffeqs that restricts us to explicit ones so we may consider the implicit ones to be already subsumed
+
+%What about an implicit differential equation
+
+\paragraph{A Non Function}
+Consider the following nonsensical looking attempt of defining a function:
+\begin{equation}
+f(x) = 
+\begin{cases} 
+0       \quad& x \neq 0 \\
+\infty       & x = 0
+\end{cases} \qquad \text{with} \qquad
+\int_{-\infty}^{\infty} f(x) \, dx = 1
+\end{equation}
+We are trying to define a "function" that is zero everywhere except at zero. There it should have an infinitely tall and infinitely thin spike. The (infinite) height of the spike should be adjusted in such a way that the total area under the function is unity. This "function" is called the Dirac delta function - and it isn't really a function because the definition does not really make sense formally. But when this strange function-like object appears under an integral, it suddenly starts to make a lot of sense and is very useful. We'll meet this bizarre Dirac spike again later in the chapter about functional analysis where it will be more rigorously defined as a \emph{distribution} which is a certain kind of \emph{functional}.
 
 
-%A function can also be defined by various kinds of equations such as implicit, differential, functional, etc.
-
+%ToDo: integral equation
 % maybe make these subsubsection of an "Elementary functions"  section
 
-\medskip
-Whoa! That was a tour de force! I have presented quite a lot of ways how a mathematical function can be defined some of which required some rather high level math which doesn't really belong into such an early chapter. I did this to point out that the idea of defining a "function" can, when intepreted liberally as we do in the morden world, include much more diverse and creative ways rather than just a simple calculation rule. However - most functions that we encounter in everyday life are not of such a complicated nature. There's a set of functions that tends to pop up everywhere and constitutes a sort of basic mathematical vocabulary that everybody needs to be familiar with. I'm talking about the so called...
+\paragraph{Whoa!} That was a tour de force! I have presented quite a lot of ways how a mathematical function can be defined some of which required some rather high level math which doesn't really belong into such an early chapter. I did this to point out that the idea of "defining a function" can, when intepreted liberally as we do in the modern world, include much more diverse and creative ways rather than just a simple and explicit calculation rule. However - most functions that we encounter in everyday life are not of such a complicated nature. There's a set of functions that tends to pop up everywhere and constitutes a sort of basic mathematical vocabulary that everybody needs to be familiar with. I'm talking about the so called...
 
 \subsection{Elementary Functions}
 In general, a function can be any mapping. But there is a certain set of functions that permeates mathematics so thoroughly that it has been given a special name: the elementary functions. These are all functions that can be constructed by a finite formula involving only the 4 basic arithmetic operations, roots, exponentials, logarithms, trigonometric functions and the inverses of all these functions.
@@ -226,6 +262,17 @@ The set of algebraic functions contains all the functions that can be constructe
 % partial fraction expansion
 
 \subsubsection{Exponential Functions}
+The exponential function can be defined in various ways:
+\begin{equation}
+e^x 
+= \sum_{k=0}^{\infty} \frac{x^k}{k!}
+= \lim_{n \rightarrow \infty} \left( 1 + \frac{x}{n} \right)^n
+\end{equation}
+
+% give differential equation and functional equation that exp satisfies - maybe some other types of equation, too?
+
+% https://de.wikipedia.org/wiki/Exponentialfunktion
+% https://en.wikipedia.org/wiki/Exponential_function
 
 \subsubsection{Trigonometric Functions}
 
@@ -271,7 +318,6 @@ todo:
 -definite or indefinite integral of some given function, examples:
  erf (int of Gauss), jacobi-elliptic (int of 1/sqrt(...))
 -as the solution of a given problem (let f(x) be the solution of ..blabla)
-
 -differential equations, examples: Bessel
 -integral equation, example: assume that a kernel h(x) is given (for example Gauss-func) and
  some function g(x) is given. We seek f(x) such that g = convolve(f,h). Useful in signal reconstruction (compensate for undesired filtering)

@@ -91,8 +91,7 @@ Now let's consider the factorial function $n! = 1 \cdot 2 \cdot 3 \cdot \ldots \
 \Gamma(x) = \Pi(x-1) = \int_0^\infty t^{x-1} e^{-t} \, dt,
 \end{equation}
 do indeed lead to functions that satisfy the desired functional equation. The first definition agrees with the factorials at the naturals, i.e. $\Pi(x) = x!$ for $x \in \mathbb{N}$. That means, it interpolates (i.e. makes continuous) the formerly discrete factorial function. The second definition is called the \emph{gamma function} and it agrees with the shifted factorial function. There is some discussion
-\href{https://math.stackexchange.com/questions/1362523/why-is-the-gamma-function-off-by-1-from-the-factorial}{here} about why the gamma function might have been defined with that strange shift. Supposedly, it will make some higher level stuff more convenient but at first, it seems unnatural and inconvenient. Anyway, my point here is that a function definition can be based on a functional equation. In this case here, a definition in terms of a \emph{parameter integral} which is an integral in which the integrand depends on a parameter - here $x$.
-
+\href{https://math.stackexchange.com/questions/1362523/why-is-the-gamma-function-off-by-1-from-the-factorial}{here} about why the gamma function might have been defined with that strange shift. Supposedly, it will make some higher level stuff more convenient but at first, it seems more unnatural and inconvenient than the $\Pi$ function. Nevertheles, it's the gamma function that is used in math all over the place. Anyway, my point here is that a function definition can be based on a functional equation. In this case here, the solution of the functiona equation led to a definition in terms of a \emph{parameter integral} which is an integral in which the integrand depends on a parameter - here $x$.
 I think, the general way to define a function $f$ in terms of a parameter integral is to have some function $g(x,t)$ and then use:
 \begin{equation}
  f(x)  = \int_{a(x)}^{b(x)} g(t,x) \, dt
@@ -105,6 +104,13 @@ For $\Pi(x)$ we have $g(x,t) = t^x e^{-x}, a(x) = 0, b(x) = \infty$.
 % https://mathoverflow.net/questions/20960/why-is-the-gamma-function-shifted-from-the-factorial-by-1
 % https://de.wikipedia.org/wiki/Parameterintegral
 
+\medskip
+Speaking of integrals - we sometimes have a known function $f$ and want to define another function $F$ as an antiderivative of $f$. An important example is the area under a Gaussian bell curve from minus infinity up to some value $x$:
+\begin{equation}
+ F(x)  = \int_{-\infty}^{x} e^{-t^2}  \, dt
+\end{equation}
+I think, this can also be seen as another special case of a "parameter integral" definition with $g(x,t)=e^{-t^2}, a(x)= -\infty, b(x)=x$? ...figure out!
+
 
 
 
@@ -113,6 +119,8 @@ For $\Pi(x)$ we have $g(x,t) = t^x e^{-x}, a(x) = 0, b(x) = \infty$.
 
 % maybe make these subsubsection of an "Elementary functions"  section
 
+\medskip
+Whoa! That was a tour de force! I have presented quite a lot of ways how a mathematical function can be defined some of which required some rather high level math which doesn't really belong into such an early chapter. I did this to point out that the idea of defining a "function" can, when intepreted liberally as we do in the morden world, include much more diverse and creative ways rather than just a simple calculation rule. However - most functions that we encounter in everyday life are not of such a complicated nature. There's a set of functions that tends to pop up everywhere and constitutes a sort of basic mathematical vocabulary that everybody needs to be familiar with. I'm talking about the so called...
 
 \subsection{Elementary Functions}
 In general, a function can be any mapping. But there is a certain set of functions that permeates mathematics so thoroughly that it has been given a special name: the elementary functions. These are all functions that can be constructed by a finite formula involving only the 4 basic arithmetic operations, roots, exponentials, logarithms, trigonometric functions and the inverses of all these functions.
@@ -238,6 +246,11 @@ done:
 -other types of series , example: Weierstrass function - also in "Monster der Analysis"
 -series in some domain, analytic continuation where the series diverges, example:
  Riemann Zeta function.
+-functional equations, examples: 
+ f(x + y) = f(x) * f(y)  ->  f(x) = exp(x)
+ f(a x) = b f(x)  ->  f(x) = x^(b/a) or x^(a/b)
+ f(x+1) = x * f(x) -> Gamma-function, leads to a definition via an integral
+-(parameter) integrals...?
 
 todo:
 -definite or indefinite integral of some given function, examples:
@@ -247,12 +260,7 @@ todo:
  y + exp(y) = x + sin(x), y - exp(y) = x + sin(x), y - exp(y) = x - sin(x), y + exp(y) = sqrt(x^x)
  is this an example?: https://en.wikipedia.org/wiki/Lambert_W_function
  if not, then maybe it should be considered as yet another way to define a function
--functional equations, examples: 
- f(x + y) = f(x) * f(y)  ->  f(x) = exp(x)
- f(a x) = b f(x)  ->  f(x) = x^(b/a) or x^(a/b)
- f(x+1) = x * f(x) -> Gamma-function, leads to a definition via an integral
 -differential equations, examples: Bessel
--(parameter) integrals...?
 -integral equation, example: assume that a kernel h(x) is given (for example Gauss-func) and
  some function g(x) is given. We seek f(x) such that g = convolve(f,h). Useful in signal reconstruction (compensate for undesired filtering)
 -delay differential? what about something like f(x+1/2) - f(x-1/2) = f'(x) or equivalently

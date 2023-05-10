@@ -54,12 +54,22 @@ A function can also be defined by recorded data points of some measurement. To t
 
 \medskip
 Functions can be defined by the limit of some infinite recursive process or algorithm. An example of that is Bolzano's function. Such functions will often show self-similar, "fractal" behavior: you can zoom in as much as you like and it will always look similar. ToDo: explain construction rule
-
 % https://de.wikipedia.org/wiki/Bolzanofunktion
 % https://demonstrations.wolfram.com/BolzanosFunction/
 
+\medskip
+The infinite process is sometimes defined to be an infinite sum. The individual terms are defined in terms of already known, simpler functions. An example of such a definition is the Weierstrass function defined as: ...
+\begin{equation}
+f(x) =
+\end{equation}
+This function has also a self-similar nature.
+%Another way to define a function
+
 % https://en.wikipedia.org/wiki/Weierstrass_function
 
+
+\medskip
+You may wonder how we are supposed to evaluate functions that are defined by some infinite process. The answer is: on a computer, we cannot really represent real numbers exactly anyway. Our floating point numbers are always approximations. So, from a practical point of view, it is good enough to be able to evaluate functions up to some precision. For the infinite processes, that usually means that we can obtain a sufficiently precise approximation of the function by only doing a finite number of steps until we deem the result to be close enough. The best we can expect is to precise within one ulp ("unit in the last place"). Usually, we'll accept even much higher errors.
 
 %A function can also be defined by various kinds of equations such as implicit, differential, functional, etc.
 

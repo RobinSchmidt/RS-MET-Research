@@ -103,12 +103,15 @@ That formula to compute the new list of $c$-coefficients from the $a$- and $b$-c
 \paragraph{Division}
 Let's now see, if we can reverse the process. Let's assume that we know the coefficient arrays $c_n$ and $b_n$ and want to figure out all the $a_n$. We need to make sure that the coefficients for like powers of $x$ match. For example, at the top of the triangle, we have the product $a_0 b_0$. That's how we computed the coeff for the constant term in the product polynomial $c_0$. So we have $c_0 = a_0 b_0$. That actually already tells us $a_0 = c_0 / b_0$. Now look at the line immediately below the tip of the triangle. The sum in brackets must equal $c_1$. But $c_1 = a_0 b_1 + a_1 b_0$ means $a_1 = (c_1 -a_0 b_1)/b_0$. We have found our next coefficient! Everything on the right is already known, The $b$-coeffs are assumed to be known anyway and $a_0$ has just been computed in the previous step. One line more to establish the pattern: we must have $c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ so we have $a_2 = (c_2 - a_0 b_2 - a_1 b_1)/b_0$. In general:
 \begin{equation}
-a_n = \left(  c_n - \sum_{k=0}^{n-1} a_k b_{n-k} \right) / b_0
+a_n = \frac{1}{b_0} (  c_n - \sum_{k=0}^{n-1} a_k b_{n-k} ) 
 \end{equation}
+...but there's a caveat: what, if $b_0 = 0$? Maybe we should find $m$ as the index of the first nonzero $b$-coeff and use $b_m$ as divisor? I think, the upper limit of the sum can then be reduced to $n-m-1$. -> figure out!
 
 %Oh my dog! Polynomial division! That pesky algorithm that we all once had to learn in school and then have forgotten for good! Worry not - you won't have to relearn it here and now. Executing algorithms with pencil and paper is not something we humans like to do and I personally find it as pointless as the next guy. Instead, I'll give you computer code for it, so we'll never ever have to do it again by hand. ....
 
-% what if c = 1, b = 1 + x^2 - what a would we get by deconv? maybe some sort of polynomial approximation of 1 / (1 + x^2)?
+% what if c = 1, b = 1 + x^2 - what a would we get by deconv? maybe some sort of polynomial approximation of 1 / (1 + x^2)? We get a0 = 1, a2 = -1, a4 = +1. I guess all odd coeffs are zero and the +-1 pattern for the even coeffs continues? Figure out! But it does indeed look like taking more such terms improves the approximation, see:
+% https://www.desmos.com/calculator/7rekjnfmtw
+% move this comment to the cpp code where we implement or test this deconv algo - make an experiment! Compare coeffs to Taylor coeffs and the Approximation to the Taylor approximation!
 
 \paragraph{Composition}
 

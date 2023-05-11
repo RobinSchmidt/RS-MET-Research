@@ -81,7 +81,7 @@ Power series are often used to expand the domain of a function - for example, fr
 Another infinite process that is sometimes useful to define a function is called a \emph{continued fraction expansion}...TBC...
 
 \paragraph{Inverse Functions}
-A function can be defined by its inverse function. In general, you can take any function $y = g(x)$ and then define another function $f$ by asking for a given $y$: What $x$ would I have to plug into my function $g$ to get that $y$. For example, the logarithm can be defined to be the inverse to the exponential function. For a slightly more interesting example, consider the function $g(x) = x e^x$. Its inverse can not be eassily expressed in terms of common functions. Yet, it does have an inverse. That function is called the "product logarithm" or "Lambert-W" function.
+A function can be defined by its inverse function. In general, you can take any function $y = g(x)$ and then define another function $f$ by asking for a given $y$: What $x$ would I have to plug into my function $g$ to get that $y$. For example, the logarithm can be defined to be the inverse of the exponential function. For a slightly more interesting example, consider the function $g(x) = x e^x$. Its inverse can not be eassily expressed in terms of common functions. Yet, it does have an inverse (with some caveats). The inverse function of $x e^x$ is called the "product logarithm" or "Lambert-W" function and has applications in the solution of equations where an unknown $x$ appears as base and as exponent...TBC...
 % https://en.wikipedia.org/wiki/Lambert_W_function
 % https://en.wikipedia.org/wiki/Lambert_W_function#Applications
 % y = x e^x  <->  log(y) = log(x) + x
@@ -158,6 +158,14 @@ for some constants $a,b$ (which are often minus and plus infinity). We could int
 % y e^y = x \;  \Leftrightarrow \; x - y e^y = 0 
 %\end{equation}
 %In this case $g(x,y) = x - y e^y$. I did not make up this example. The so defined function $y(x)$ is called the "Lambert-W" function or "product-logarithm" function. Of course, that implicit definition tells us nothing at all about how we would go about evaluating $y$ for a given $x$. Nonetheless, it is a valid definition. Definitions do not necessarily need to prescribe an explicit evaluation algorithm. They are supposed to tell us \emph{what} it is, not \emph{how} we may compute it. If they do tell us how to compute it, that's a bonus. There are algorithms to solve such implicit equations though. But that's a topic for a later chapter. By the way, a differential equation can also be given in implicit form.
+
+% y + sin(y)   = x e^x      a wiggly version of Lambert-W
+% y + sin(a y) = x e^x      wiggles get stronger for a > 1, it becomes multi-valued
+% https://www.desmos.com/calculator/mowoqggdpj
+
+% x tanh(x) = y atan(y)     has two graphs
+% https://www.desmos.com/calculator/9cfsbbm0d9
+
 
 %\paragraph{Implicit Differential Equations}
 % well - so far we have said nothing in the paragraph about diffeqs that restricts us to explicit ones so we may consider the implicit ones to be already subsumed

@@ -81,7 +81,7 @@ Power series are often used to expand the domain of a function - for example, fr
 Another infinite process that is sometimes useful to define a function is called a \emph{continued fraction expansion}...TBC...
 
 \paragraph{Inverse Functions}
-A function can be defined by its inverse function. In general, you can take any function $y = g(x)$ and then define another function $f$ by asking for a given $y$: What $x$ would I have to plug into my function $g$ to get that $y$. For example, the logarithm can be defined to be the inverse of the exponential function. For a slightly more interesting example, consider the function $g(x) = x e^x$. Its inverse can not be eassily expressed in terms of common functions. Yet, it does have an inverse (with some caveats). The inverse function of $x e^x$ is called the "product logarithm" or "Lambert-W" function and has applications in the solution of equations where an unknown $x$ appears as base and as exponent...TBC...
+A function can be defined by its inverse function. In general, you can take any function $y = g(x)$ and then define another function $f$ by asking for a given $y$: What $x$ would I have to plug into my function $g$ to get that $y$. For example, the logarithm can be defined to be the inverse of the exponential function. For a slightly more interesting example, consider the function $g(x) = x e^x$. Its inverse can not be eassily expressed in terms of common functions. Yet, it does have an inverse (with some caveats). The inverse function of $x e^x$ is called the "product logarithm" or "Lambert-W" function and has applications in the solution of equations where an unknown $x$ appears as base and as exponent or inside and outside of a logarithm.
 % https://en.wikipedia.org/wiki/Lambert_W_function
 % https://en.wikipedia.org/wiki/Lambert_W_function#Applications
 % y = x e^x  <->  log(y) = log(x) + x
@@ -90,6 +90,9 @@ A function can be defined by its inverse function. In general, you can take any 
 % $f(y) = g^{-1}(y)$
 %ToDo: arcsin, ...
 %$ actually, the Lambert-W function is a case of an inverse function - in this case, the inverse of x e^x. maybe for implicit functions use y e^y = x + sin(x)
+
+
+% move implicit functions here - inverse is a special case of that
 
 \paragraph{Analytic Continuation}
 Speaking of convergence, consider the following infinite sum:
@@ -151,13 +154,13 @@ for some constants $a,b$ (which are often minus and plus infinity). We could int
 
 \paragraph{Implicit Equations}
 %When using differential equations to define a function, the general idea was to say something like: "let $f$ be a function that satisfies the following equation". The equation contained $f$ and its derivatives.
-
-
-%Now we want to cosider functions defined by so called \emph{implicit equations}. These are equations of the form $g(x,y) = 0$ for some given function bivariate $g$. They define a set of points in the $xy$-plane. Now, we can define a function $y(x)$ by requiring that it should satisfy our implicit equation, i.e. $g(x,y(x)) = 0$ is satisfied for all $x$ in some domain. That's an implicit definition for $y(x)$. For example, we could require the following equation to hold:
+Now we want to cosider functions defined by so called \emph{implicit equations}. These are equations of the form $g(x,y) = 0$ for some given function bivariate $g$. They define a set of points in the $xy$-plane. Now, we can define a function $y(x)$ by requiring that it should satisfy our implicit equation, i.e. $g(x,y(x)) = 0$ is satisfied for all $x$ in some domain. That's an implicit definition for $y(x)$. For example, we could require the following equation to hold:
 %\begin{equation}
 % y e^y = x \;  \Leftrightarrow \; x - y e^y = 0 
 %\end{equation}
 %In this case $g(x,y) = x - y e^y$. I did not make up this example. The so defined function $y(x)$ is called the "Lambert-W" function or "product-logarithm" function. Of course, that implicit definition tells us nothing at all about how we would go about evaluating $y$ for a given $x$. Nonetheless, it is a valid definition. Definitions do not necessarily need to prescribe an explicit evaluation algorithm. They are supposed to tell us \emph{what} it is, not \emph{how} we may compute it. If they do tell us how to compute it, that's a bonus. There are algorithms to solve such implicit equations though. But that's a topic for a later chapter. By the way, a differential equation can also be given in implicit form.
+
+% https://en.wikipedia.org/wiki/Implicit_function
 
 % y + sin(y)   = x e^x      a wiggly version of Lambert-W
 % y + sin(a y) = x e^x      wiggles get stronger for a > 1, it becomes multi-valued

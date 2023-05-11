@@ -82,6 +82,7 @@ Another infinite process that is sometimes useful to define a function is called
 
 \paragraph{Inverse Functions}
 A function can be defined by its inverse function. For example, the logarithm can be defined to be the inverse to the exponential function. ToDo: arcsin, ...
+%$ actually, the Lambert-W function is a case of an inverse function - in this case, the inverse of x e^x. maybe for implicit functions use y e^y = x + sin(x)
 
 \paragraph{Analytic Continuation}
 Speaking of convergence, consider the following infinite sum:
@@ -91,7 +92,7 @@ Speaking of convergence, consider the following infinite sum:
 This sum converges only for $x > 1$. If we allow complex arguments, the condition is $\Re(x) > 1$. So in the complex plane, this sum above defines a function for those complex numbers whose real part is greater than one. For other values, the function is as of yet undefined. However, as we will see later, complex analysis provides a tool known as \emph{analytic continuation} by means of which we can uniquely expand the domain of the function to the whole complex plane except for the single point $x=1$. The so defined function is known as the Riemann Zeta function and an important object in number theory due to its unexpected connection to prime numbers. The point that I want to make here is that the process of analytic continuation gives us yet another way to define a function.
 
 \paragraph{Interlude - Evaluation}
-You may wonder how we are supposed to evaluate functions that are defined by some infinite process. The answer is: on a computer, we cannot really represent real numbers exactly anyway. Our floating point numbers are always approximations. So, from a practical point of view, it is good enough to be able to evaluate functions up to some precision. For the infinite processes, that usually means that we can obtain a sufficiently precise approximation of the function by only doing a finite number of steps until we deem the result to be close enough. The best we can expect is to precise within one ulp ("unit in the last place"). Usually, we'll accept even much higher errors.
+You may wonder how we are supposed to evaluate functions that are defined by some infinite process. The answer is: on a computer, we cannot really represent real numbers exactly anyway. Our floating point numbers are always approximations. So, from a practical point of view, it is good enough to be able to evaluate functions up to some precision. For the infinite processes, that usually means that we can obtain a sufficiently precise approximation of the function by only doing a finite number of steps until we deem the result to be close enough. The best we can expect is to be precise within one ulp ("unit in the last place"). Usually, we'll accept even much higher errors.
 
 \paragraph{Functional Equations}
 Now let's consider the factorial function $n! = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n$. As it stands, it's defined only for natural numbers. There is a way to define it for all real and even complex numbers. The key lies in the observation of the factorial's functional equation which is given by $n! = n \cdot (n-1)!$. In our expanded definition, we want that equation to be satisfied for all real inputs. So we search for a continuous function $f(x)$ for which the functional equation $f(x) = x \cdot f(x-1)$ holds true. It can be shown that the following integral based definitions:
@@ -136,7 +137,7 @@ An integral equation is an equation where an unknown function $f$ appears under 
 \begin{equation}
  \int_a^b f(u) h(x-u) \, du = g(x)
 \end{equation}
-for some constants $a,b$ (which are often minus and plus infinity). We could interpret $g$ is a recorded signal, $h$ as the impulse response or "kernel" of a filter and we want to reconstruct $f$ as it was before it went through the filter. The desired function $f$ appears under a convolution integral. This is sort of equation is a particular kind of integral equation and does indeed define a function $f$.
+for some constants $a,b$ (which are often minus and plus infinity). We could interpret $g$ as a recorded signal, $h$ as the impulse response or "kernel" of a filter and we want to reconstruct $f$ as it was before it went through the filter. The desired function $f$ appears under a convolution integral. This sort of equation is a particular kind of integral equation and does indeed define a function $f$.
 
 %...TBC...
 %ToDo: bring an example involving deconvolution - we are given a signal $g(x)$ which is supposed to be our desired $f(x)$ convolved with some known kernel $h(x)$. Then $f(x)$ appears under the convolution integral. Finding it involves deconvolution...can perhaps be done in the Foruier domain - but that's not the problem of the definition
@@ -164,13 +165,13 @@ f(x) =
 \end{cases} \qquad \text{with} \qquad
 \int_{-\infty}^{\infty} f(x) \, dx = 1
 \end{equation}
-We are trying to define a "function" that is zero everywhere except at zero. There it should have an infinitely tall and infinitely thin spike. The (infinite) height of the spike should be adjusted in such a way that the total area under the function is unity. This "function" is called the Dirac delta function - and it isn't really a function because the definition does not really make sense formally. But when this strange function-like object appears under an integral, it suddenly starts to make a lot of sense and is very useful. We'll meet this bizarre Dirac spike again later in the chapter about functional analysis where it will be more rigorously defined as a \emph{distribution} which is a certain kind of \emph{functional}.
+We are trying to define a "function" that is zero everywhere except at zero. There, it should have an infinitely tall and infinitely thin spike. The (infinite) height of the spike should be adjusted in such a way that the total area under the function is unity. This "function" is called the Dirac delta function - and it isn't really a function because the definition does not really make sense formally. But when this strange function-like object appears under an integral, it suddenly starts to make a lot of sense and is very useful. We'll meet this bizarre Dirac spike again later in the chapter about functional analysis where it will be more rigorously defined as a \emph{distribution} which is a certain kind of \emph{functional}.
 
 
 %ToDo: integral equation
 % maybe make these subsubsection of an "Elementary functions"  section
 
-\paragraph{Whoa!} That was a tour de force! I have presented quite a lot of ways how a mathematical function can be defined some of which required some rather high level math which doesn't really belong into such an early chapter. I did this to point out that the idea of "defining a function" can, when intepreted liberally as we do in the modern world, include much more diverse and creative ways rather than just a simple and explicit calculation rule. However - most functions that we encounter in everyday life are not of such a complicated nature. There's a set of functions that tends to pop up everywhere and constitutes a sort of basic mathematical vocabulary that everybody needs to be familiar with. I'm talking about the so called...
+\paragraph{Whoa!} That was a tour de force! I have presented quite a lot of ways how a mathematical function can be defined. Some of them required some rather high level math which doesn't really belong into such an early chapter. I did this to point out that the idea of "defining a function" can, when intepreted liberally as we do in the modern world, include much more diverse and creative ways rather than just a simple and explicit calculation rule. However - most functions that we encounter in everyday life are not of such a complicated nature. There's a set of functions that tends to pop up everywhere and constitutes a sort of basic mathematical vocabulary that everybody needs to be familiar with. I'm talking about the so called...
 
 \subsection{Elementary Functions}
 In general, a function can be any mapping. But there is a certain set of functions that permeates mathematics so thoroughly that it has been given a special name: the elementary functions. These are all functions that can be constructed by a finite formula involving only the 4 basic arithmetic operations, roots, exponentials, logarithms, trigonometric functions and the inverses of all these functions.
@@ -295,7 +296,7 @@ e^{x+y} = e^x e^y
 % https://en.wikipedia.org/wiki/Exponential_function
 
 \subsubsection{Hyperbolic Functions}
-When we decompose the exponential function into its odd and even parts, we obtain the so called hyperbolic sine and cosine functions $\sinh(x), \cosh(x)$ and when we form their quotient, we obtain the hyperbolic tangent: $\tanh(x)$
+When we decompose the exponential function into its odd and even parts, we obtain the so called hyperbolic sine and cosine functions $\sinh(x), \cosh(x)$ and when we form their quotient, we obtain the hyperbolic tangent $\tanh(x)$:
 \begin{equation}
  \sinh(x) =	\frac{e^x - e^{-x}}{2}, \quad	
  \cosh(x) =	\frac{e^x + e^{-x}}{2}, \quad

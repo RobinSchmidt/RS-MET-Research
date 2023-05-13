@@ -6082,6 +6082,9 @@ public:
   zero or one. */
   T getNumFactors(T n) const { return (T) factors[n].size(); }
 
+  T getNthPrime(T n) const { return primes[n]; }  // verify!
+
+
   bool isPrime(T n) const { return getNumFactors(n) == 1; }
 
 

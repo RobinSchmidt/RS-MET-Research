@@ -82,7 +82,7 @@ Array                  Candidates  to-final  to-swap  to-right   increment
  the swap sections is non-empty and if so, compare the head-item in "swap" with the head-item in 
  "right" and otherwise, compare the head-item in "left"...
 -Hmmm...I think, as soon as the write pointer catches up to the swap pointer, the whole idea falls 
- apart...or does it? Or can we repait it? Maybe we can force the S pointer to be always at least 1 
+ apart...or does it? Or can we repair it? Maybe we can force the S pointer to be always at least 1 
  position further right than the W pointer?
 -Or wait: when this happens, we are actually in the same situation as at the very start, just with
  an array of roughly half the length - so maybe we can now just invoke a recursive call for the 
@@ -119,6 +119,17 @@ Array           Candidates  to-final  to-swap  increment
  out-of-bounds access attempt
  
  
+Try: 
+1 5 7 8 9|2 3 6  ...maybe it doesn't work bcs length difference between two partial arrays is
+                 2? Maybe they nee to be of same length? Or maybe difference of 1 is still OK?
+ 
+1 5 7 8|2 3 5 9
+
+Maybe develop the idea conceptually using a separate swap array. That may be simpler to think about.
+It may then turn out, that we actually can use the 2nd partial array for that but initially, we 
+think of it a separate array
+    
+ 
  
 ...well...unsurprisingly, this problem seems to be well known - and is perhaps harder than I naively 
 thought:
@@ -138,5 +149,5 @@ https://github.com/h2database/h2database/blob/master/h2/src/tools/org/h2/dev/sor
 https://www.programiz.com/dsa/merge-sort
  
  
-https://en.cppreference.com/w/cpp/algorithm/inplace_merge
+https://en.cppreference.com/w/cpp/algorithm/inplace_merge    ...allocates :-(
  

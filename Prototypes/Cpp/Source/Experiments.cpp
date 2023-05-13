@@ -8745,7 +8745,7 @@ void testComplexPolar()
   // -Negation (additive inverse): -(r*exp(i*a)) = r*exp(i*(a-pi))
   //  ...hmm...but negating twice does not bring us back to where we started but instead has added 
   //  -2*pi to the angle...maybe try to figure out a subtraction rule from the addition rule and then 
-  //  define -z by 0-z...if that makes sense
+  //  define -z by 0-z...if that makes sense...but zero actually has no defined angle
   //  or: maybe use either a-pi or a+pi depending on what value a has, maybe take principal value 
   //  of a and use a-pi if positive and a+pi if negative -> check, if this give a true additive 
   //  inverse...maybe we need to also take into account, how many time we need to subtract or add

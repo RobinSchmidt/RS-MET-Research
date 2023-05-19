@@ -98,6 +98,9 @@ A function can be defined by its inverse function. In general, you can take any 
 %ToDo: arcsin, ...
 %$ actually, the Lambert-W function is a case of an inverse function - in this case, the inverse of x e^x. maybe for implicit functions use y e^y = x + sin(x)
 
+% W solves the ODE: y' = y / (x*(1+y)), see:
+% https://www.youtube.com/watch?v=cMZ_blqKKZU
+
 \paragraph{Implicit Equations}
 Defining a function via its inverse is a special case of an implicit function definition. In a more general setting, we could have a bivariate function of the form $g(x,y) = 0$. In the case of the product logarithm function, we would have $x = y e^y$, so $g(x,y) = 0 = y e^y - x$.  This is an equation that can be solved for $x$ on one side of the equation. That's why we can define a function in terms of the inverse of the other side. But that doesn't always have to be the case. Consider modifying the equation $x = y e^y$ to $x + x^5 = y e^y$ or, equivalently $g(x,y) = 0 = y e^y - x - x^5$. Now, we can't  solve for $x$ on one side. And as before, we can't solve for y either. Still, we can ask: "for a given $y$, what value of $x$ can I plug into $g(x,y)$ such that it evaluates to zero?". There doesn't have to be a solution and if there is one, it doesn't need to be unique. But if there is a unique solution, then that equation defines a function. If there are multiple solutions, we may pick one of them to be our function of interest. You can play with the function defined by $ y e^y = x + b \sin(a x)$ a bit here on Desmos: \href{https://www.desmos.com/calculator/jfxwuhot8k}{jfxwuhot8k}. Tweak the parameters $a,b$. When any of them is zero, then the function is the regular product-log functions. When both are nonzero, we get a wiggly version of it. ...TBC...
 

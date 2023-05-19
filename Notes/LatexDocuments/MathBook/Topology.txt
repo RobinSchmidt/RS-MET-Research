@@ -1,0 +1,17 @@
+A topological space S is a tuple(?) S = (X,T) where X is some set and T is a set of subsets, called
+"a" topology, if it satisfies:
+
+  1) T contains the empty set and the whole set X
+  2) Arbitrary unions of elements of T are also in T.
+  3) Finite intersections of elements of T are also in T.
+  
+We say:
+
+  1) If A is in T, then A is an open set (why?).
+  2) If x is in A and A is in T, then A is an (open?) neighborhood of x.
+
+
+
+Resources:
+
+https://www.youtube.com/watch?v=yXYpQGULpLw  SEPARATION BUT MATHEMATICALLY: What Types of Mathematical Topologies are there? | Nathan Dalaklis

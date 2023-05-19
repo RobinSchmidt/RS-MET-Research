@@ -39,8 +39,13 @@ Consider $2^3 = 2 \cdot 2 \cdot 2 = 8$. We have already said that in this contex
 \medskip
 Consider $2^3 = 8$ again but now let's assume that the base 2 is fixed and we consider the unary operation of raising 2 to any arbitrary power $p$. As before, we are given the result of the operation - 8 - and we want to figure out that the power $p$ that 2 was raised to, to produce that number 8. Again, this should be possible because no other exponent than 3 will produce 8 when 2 is raised to the power of it. ...
 
-% mention tetration (briefly), list the laws for powers, maybe introduce roots and logarithms
-
+% -list the laws for powers
+% -explain how each operation can be though of iterating a lower-level operation
+%  -> add is iterated increment/successor
+%  -> mul is iterated addition
+%  -> pow is iterated multiplication
+% -mention tetration (briefly), see https://www.youtube.com/watch?v=BR_2bKV1XDk, 
+% -maybe introduce roots and logarithms
 
 
 % euclidean algo, gcd, lcm, coprime
@@ -97,7 +102,12 @@ OK, nice - so the set of rational numbers is a field. We can add, subtract, mult
 % -explain completeness, Cauchy sequences
 % -maybe briefly explain Dedekind cuts (that's why we introduced the intervals before the
 %  real numbers)
-% intervals, uncountability (Cantor's 2nd diagonal argument), algebraic numbers (as subset...but wait - they can be complex, too)
+% -intervals, uncountability (Cantor's 2nd diagonal argument), 
+% -algebraic numbers (as % subset...but wait - they can be complex, too)
+% -explain how operations like add/mul/pow are extended to the reals
+% -maybe that should explain it for rationals first, then approximate reals by rationals
+%  and take a limit
+% -maybe the explanantion for the rationals should be in the section of the rationals.
 
 \subsection{Complex Numbers}
 The set of real numbers forms an ordered, Dedekind-complete field. Does "complete" mean, we are now done with building our number system? Unfortunately not yet. There is still one kind of equation left that we can write down with our basic arithmetic operators but which we still cannot yet solve. But this one will really be the last one, so we see the light at the end of the tunnel! The equation, I'm talking about, is $x^2 = -1$. Solving for $x$ formally yields $x = \sqrt{-1}$, but we know that any real number muliplied by itself will produce a nonnegative result, so this weird square root of minus one cannot be a real number. We will now do a similar step as we did when postulating the existence of negative numbers. Those can be thought of as resulting from taking a natural number and multiplying it by some, then hypothetical and unnatural, new object - namely, by the number $-1$, which we could call the "negative unit" (a nonstandard term, I just made up) and which up to then, wasn't a thing. In analogy, we now define the square root of minus one as the "imaginary unit", which is indeed standard terminology, denoted by $\i$. Just like multiplying a natural number $n$ by the "negative unit" $-1$ gave us the negative counterpart of $n$, namely $-n$, multiplying any real number $r$ by the imaginary unit $\i$ gives us the imaginary counterpart of $r$, namely $\i r$. The general law $\sqrt{a b} = \sqrt{a} \sqrt{b}$ of square roots now allows us to take square roots of any negative number: we just factor out the square root of minus one, for example: $\sqrt{-9} = \sqrt{9} \sqrt{-1} = 3 \i$. The square root of minus nine is three times the imaginary unit.

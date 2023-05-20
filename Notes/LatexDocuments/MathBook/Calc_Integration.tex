@@ -9,7 +9,7 @@ Imagine we have a function $y = f(x)$ and want to compute the area that is enclo
 Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value somewhere inside the $i$th subinterval. That means, the product $f(x_i)  \Delta x_i$ inside the sum can be intepreted as "height times width" where the height is given by the function value and the width by the subinterval length. This product is indeed an area of a rectangle. If we assume to break down the original interval $[a,b]$ into $n$ equally sized subintervals, we can compute the width as $\Delta x_i = (b-a)/n$. When $n$ gets large, each $\Delta x_i$ becomes small and the rectangles become narrow rectangular columns. The larger we make $n$, the more closely the sum of narrow rectangle areas approximates our actual desired area until in the limit, the approximation becomes exact.
 
 \medskip
-The given formula is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result. If that isn't the case, the function is not considered to be Riemann integrable. For continuous functions, it will always be the case, though.
+The given formula is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result. If that isn't the case, the function is not considered to be Riemann-integrable. For continuous functions, it will always be the case, though.
 
 \medskip
 The interpretation of the Riemann integral as an area is actually a somewhat sloppy interpretation: it works only when we assume that the function graph is above the $x$-axis for the whole integration interval. If this is not the case, the portions below the $x$-axis will actually produce negative contributions to the total area. If the function is more below the $x$-axis than above, the "area" may even become negative. It is more useful to think about the integral as a sort of "signed area". If we divide the integral by the width of the integration interval, i.e. by $b-a$, we obtain an average value of the function over the interval $[a,b]$.
@@ -135,10 +135,35 @@ ToDo: give Sage and Mathematica code to calculate definite integrals - maybe som
 % What about techniques to find definite integrals without having to find an antiderivative first? I think, going through the complex plane and using the residue theorem is a way to do this.
 
 \subsection{The Lebesgue Integral} 
-Most functions that we will typically encounter in applications are indeed Riemann-integrable, so the definition Riemann integral is all we need to integrate them. However, in certain areas of mathematics, some more exotic functions pop up which are not Riemann integrable. An example is the Dirichlet function which is $1$ at the rationals and $0$ at the irrationals. But not all is lost: a more powerful (albeit more complicated) definition of an integral exists under which some of these wilder functions become integrable. This is the Lebesgue integral - for Riemann-integrable functions, it produces the same results but it can be applied to a wider range of functions. The general idea is to not split the integration interval on the $x$-axis into many subintervals but rather the $y$-axis ...TBC...
-
+Most functions that we will typically encounter in applications are indeed Riemann-integrable, so the definition Riemann integral is all we need to integrate them. However, in certain areas of mathematics, some more exotic functions pop up which are not Riemann integrable. An example is the Dirichlet function which is $1$ at the rationals and $0$ at the irrationals. But not all is lost: a more powerful (albeit more complicated) definition of an integral exists under which some of these wilder functions become integrable. This is the Lebesgue integral - for Riemann-integrable functions, it produces the same results but it can be applied to a wider range of functions. Some functions that are not Riemann-integrable are Lebesgue-integrable. The general idea is to not split the integration interval on the $x$-axis into many subintervals but rather split the $y$-axis into intervals and add up horizontal slabs rather than vertical columns. To define the Lebesgue integral formally, we will first need to define the notion of a measure.
 
 %https://en.wikipedia.org/wiki/Lebesgue_integration
+
+\subsubsection{Measure Theory}
+Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive natural number $n$. Informally, a measure on $A$ is a function, typically denoted as $\mu(X)$, into which we can plug in a subset $X$ of $A$ as input and it spits out a nonnegative real number or infinity as output. A first attempt to formalize it could look like: $\mu: \mathcal{P}(A) \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ where $\mathcal{P}(A)$ denotes the power set of $A$, i.e. the set of all subsets of A. However, that is not yet quite right. The domain is actually not the set of \emph{all} subsets of $A$, but a set of subsets with some constraints. These constraints are encapsulated in the definition of a so called $\sigma$-algebra.
+
+\paragraph{Definition: $\sigma$-Algebra} Given a set $A$, a $\sigma$-algebra $\Sigma$ on $A$ is a set of subsets of $A$ such that: (1) $\Sigma$ contains $A$ itself, (2) $\Sigma$ is closed under taking the complement, (3) $\Sigma$ is closed under taking countable unions. From this definition, it follows that $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too.
+
+\medskip
+With this definition in place, we can now state the actual formal definition of what a measure is.
+
+\paragraph{Definition: Measure} Given a set $A$ and a $\sigma$-algebra $\Sigma$ on $A$, a measure $\mu$ on $A$ is a function $\mu: \Sigma \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ such that: (1)...TBC...
+
+% Outer mu_o(A) vs inner measure mu_i(A) vs measure mu(A):
+% -outer measure is defined for all subsets of X whereas inner measure only for measurable subsets
+% -outer measure corresponds to upper and inner to lower Riemann sums
+% -outer measure is countably subadditive, inner measure (countably?) superadditive
+% -measure without qualifier is countably additive
+
+%https://math.stackexchange.com/questions/714193/what-is-the-difference-between-outer-measure-and-inner-measure
+
+%https://www.quora.com/What-is-the-intuition-behind-outer-and-inner-measure-of-a-set-How-can-you-show-that-measure-of-2-3-on-R-is-1-only-using-definition-without-using-the-theorem-that-measure-equals-length
+
+%https://en.wikipedia.org/wiki/Outer_measure
+%https://en.wikipedia.org/wiki/Inner_measure
+%https://en.wikipedia.org/wiki/Measure_(mathematics)
+%https://en.wikipedia.org/wiki/%CE%A3-algebra
+
 
 
 \begin{comment}

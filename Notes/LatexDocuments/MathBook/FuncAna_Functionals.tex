@@ -4,6 +4,29 @@
 In functional analysis, we will encounter a lot of integrals. Sometimes, however, we will have to deal with functions or function-like objects that are not Riemann integrable. A new notion of integrals is desired that will give the same results in the case of Riemann integrable functions but is applicable to a wider range of objects. That's what the Lesbesgue integral does for us. To define the Lebesgue integral, we will first need to define the notion of a measure.
 
 \subsubsection{Measure Theory}
+Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive natural number $n$. Informally, a measure on $A$ is a function, typically denoted as $\mu(X)$, into which we can plug in a subset $X$ of $A$ as input and it spits out a nonnegative real number or infinity as output. A first attempt to formalize it could look like: $\mu: \mathcal{P}(A) \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ where $\mathcal{P}(A)$ denotes the power set of $A$, i.e. the set of all subsets of A. However, that is not yet quite right. The domain is actually not the set of \emph{all} subsets of $A$, but a set of subsets with some constraints. These constraints are encapsulated in the definition of a so called $\sigma$-algebra.
+
+\paragraph{Definiton: $\sigma$-Algebra} Given a set $A$, a $\sigma$-algebra $\Sigma$ on $A$ is a set of subsets of $A$ such that: (1) $\Sigma$ contains $A$ itself, (2) $\Sigma$ is closed under taking the complement, (3) $\Sigma$ is closed under taking countable unions. From this definition, it follows that $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too.
+
+\medskip
+With this definition in place, we can now state the actual formal definition of what a measure is.
+
+\paragraph{Definiton: Measure} Given a set $A$ and a $\sigma$-algebra $\Sigma$ on $A$, a measure $\mu$ on $A$ is a function $\mu: \Sigma \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ such that: (1)...TBC...
+
+% Outer mu_o(A) vs inner measure mu_i(A) vs measure mu(A):
+% -outer measure is defined for all subsets of X whereas inner measure only for measurable subsets
+% -outer measure corresponds to upper and inner to lower Riemann sums
+% -outer measure is countably subadditive, inner measure (countably?) superadditive
+% -measure without qualifier is countably additive
+
+%https://math.stackexchange.com/questions/714193/what-is-the-difference-between-outer-measure-and-inner-measure
+
+%https://www.quora.com/What-is-the-intuition-behind-outer-and-inner-measure-of-a-set-How-can-you-show-that-measure-of-2-3-on-R-is-1-only-using-definition-without-using-the-theorem-that-measure-equals-length
+
+%https://en.wikipedia.org/wiki/Outer_measure
+%https://en.wikipedia.org/wiki/Inner_measure
+%https://en.wikipedia.org/wiki/Measure_(mathematics)
+%https://en.wikipedia.org/wiki/%CE%A3-algebra
 
 \subsubsection{The Lebesgue Integral}
 

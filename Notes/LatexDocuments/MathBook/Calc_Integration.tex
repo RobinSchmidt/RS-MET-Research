@@ -108,6 +108,10 @@ Finding an antiderivative for a given function is hard. Unlike for differentiati
 
 ToDo: give some example code to let SageMath and Wolfram Alpha calculate antiderivatives, try to figure out how Sage can be convinced to use the Axiom engine
 
+
+
+
+
 %¯\_(ツ)_/¯
 
 % maybe for the statement that Mathematica does not implement the full Risch algo, bring the example from Weitz's video at around 23 min:
@@ -130,6 +134,11 @@ ToDo: give Sage and Mathematica code to calculate definite integrals - maybe som
 
 % What about techniques to find definite integrals without having to find an antiderivative first? I think, going through the complex plane and using the residue theorem is a way to do this.
 
+\subsection{The Lebesgue Integral} 
+Most functions that we will typically encounter in applications are indeed Riemann-integrable, so the definition Riemann integral is all we need to integrate them. However, in certain areas of mathematics, some more exotic functions pop up which are not Riemann integrable. An example is the Dirichlet function which is $1$ at the rationals and $0$ at the irrationals. But not all is lost: a more powerful (albeit more complicated) definition of an integral exists under which some of these wilder functions become integrable. This is the Lebesgue integral - for Riemann-integrable functions, it produces the same results but it can be applied to a wider range of functions. The general idea is to not split the integration interval on the $x$-axis into many subintervals but rather the $y$-axis ...TBC...
+
+
+%https://en.wikipedia.org/wiki/Lebesgue_integration
 
 
 \begin{comment}

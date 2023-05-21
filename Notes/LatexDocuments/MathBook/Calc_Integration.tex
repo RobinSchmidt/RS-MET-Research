@@ -144,7 +144,13 @@ Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive n
 
 \paragraph{Definition: $\sigma$-Algebra} Given a set $A$, a $\sigma$-algebra $\Sigma$ on $A$ is a set of subsets of $A$ such that: (1) $\Sigma$ contains $A$ itself, (2) $\Sigma$ is closed under taking the complement, (3) $\Sigma$ is closed under taking countable unions. From this definition, it follows that $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too.
 
-\paragraph{Definition: Measure} Given a set $A$ and a $\sigma$-algebra $\Sigma$ on $A$, a measure $\mu$ on $A$ is a function $\mu: \Sigma \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ such that: (1)...TBC...
+\paragraph{Definition: Measure} Given a set $A$ and a $\sigma$-algebra $\Sigma$ on $A$, a measure $\mu$ on $A$ is a function $\mu: \Sigma \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ such that: (1) $\mu$ is non-negative: $\forall X: \mu(X) \geq 0$, (2) $\mu$ assigns zero to the empty set: $\mu(\emptyset) = 0$, (3) $\mu$ is countably additive aka $\sigma$-additive:
+\begin{equation}
+\mu \left( \bigcup_{k=1}^{\infty} X_k \right) = \sum_{k=1}^{\infty}	\mu(X_k)
+\end{equation}
+for any countable collection $\{X_k\}_{k=1}^{\infty}$ of pairwise disjoint sets $X_k$ where each such $X_k$ is a subset (or element? FIGURE OUT!) of $\Sigma$.
+
+% $\Cup_{k=1}^{\infty} = \sum_{k=1}^{\infty}$
 
 % Outer mu_o(A) vs inner measure mu_i(A) vs measure mu(A):
 % -outer measure is defined for all subsets of X whereas inner measure only for measurable subsets

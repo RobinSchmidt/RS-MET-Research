@@ -61,11 +61,17 @@ The idea is now to simply allow the input $x$ to be complex valued to define the
 
 
 \subsection{Complex Differentiation}
-Having a little arsenal of complex functions $f: \mathbb{C} \rightarrow \mathbb{C}$ at our disposal, we can now start to do some calculus with them. Naturally, the first thing we may want to do, is to define a derivative for complex functions. Recall our definition of differentiability for vector fields in $2D$:
+Having a little arsenal of complex functions $f: \mathbb{C} \rightarrow \mathbb{C}$ at our disposal, we can now start to do some calculus with them. Naturally, the first thing we may want to do, is to define a derivative for complex functions. Recall our definition of differentiability for vector fields in $2D$. For a function $f: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ with $f(x,y) = (u(x,y), v(x,y))$ to be differentiable at some point $(x_0, y_0)$, we demanded that the partial derivatives $\partial u / \partial x, \partial u / \partial y, \partial v / \partial x, \partial v / \partial y$ need to exist at that point. But that alone was not enough. We additionally demanded that
 ...tbc...
 
 \subsubsection{The Cauchy-Riemann Equations}
 
+% This has also a potentially interesting formula:
+% https://en.wikipedia.org/wiki/Differentiable_function#Differentiability_in_complex_analysis
+% lim_{h \rightarrow 0}
+
+\subsubsection{Holomorphic, Meromorphic and Analytic Functions}
+It's time to define some more jargon. A complex function is said to be \emph{holomorphic} on some domain iff it is complex differentiable on that domain. If it is holomorphic on that domain except for some isolated poles, then it is said to be \emph{meromorphic} on that domain.
 
 \subsection{Complex Integration}
 

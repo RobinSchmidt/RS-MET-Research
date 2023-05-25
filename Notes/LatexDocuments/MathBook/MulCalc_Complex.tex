@@ -19,13 +19,22 @@ we already know what we would have to do to evaluate them for any given input $z
 % explain Polya vector fields.
 
 \subsubsection{Roots, Multifunctions and Algebraic Functions}
-Consider the square root function again. In the definition of the real valued $f(x) = \sqrt{x}$, we already saw a foreshadowing of a potential problem. First of all, we noticed that some real numbers - namely the negative numbers - had no square roots at all. Some other real numbers - the positive ones - actually had two square roots. The two square roots of $4$ are $+2$ and $-2$, for example. We kind of dodged these issues but just saying that for negative inputs, the square root is undefined and for positive input, \emph{the} square root is \emph{defined} to be the positive solution. In the context of complex analysis, we will have to take this issue more seriously. 
+Consider the square root function again. In the definition of the real valued $f(x) = \sqrt{x}$, we already saw a foreshadowing of a potential problem. First of all, we noticed that some real numbers - namely the negative numbers - had no square roots at all. Some other real numbers - the positive ones - actually had two square roots. The two square roots of $4$ are $+2$ and $-2$, for example. We kind of dodged these issues by just saying that for negative inputs, the square root is undefined and for positive input, \emph{the} square root is \emph{defined} to be the positive solution. In the context of complex analysis, we will have to take this issue more seriously. 
 
 \medskip
 Let's first consider the problem of being unable to meaningfully define the square root for negative inputs. In the realm of complex numbers, that problem goes away completely. The purpose of defining $\i = \sqrt{-1}$ was precisely to deal with that situation. To evaluate $\sqrt{-4}$, we re-express it as $\sqrt{4} \sqrt{-1}$ using our usual laws for square roots to arrive at the solution $\sqrt{-4} = 2 \i$. And in case you wonder (you should!): yes - it is indeed allowed to use these laws. They continue to hold in the complex case. But again, $2 \i$ is not the only possible solution and $-2 \i$ is just as good a solution. Again, we actually have found two solutions. You can verify this by just squaring $2 \i$ and $-2 \i$. In both cases, you'll get $-4$.
 
 \medskip
-Secondly, let's think about what to make of the fact that we got not one but two values. When I said "solution", you may have asked yourself "solution to what equation"? It is actually a bit sloppy to say $\i = \sqrt{-1}$ and it would be more precise to say that $\i$ is some number that solves the equation $x^2 = -1$ and $-\i$ is actually a second solution to that equation. Recall that a general quadratic equation of the form $a_0 + a_1 x + a_2 x^2 = 0$ has solutions given by the formula ....
+Secondly, let's think about what to make of the fact that we got not one but two values. When I said "solution", you may have asked yourself "solution to what equation"? It is actually a bit sloppy to say $\i = \sqrt{-1}$ and it would be more precise to say that $\i$ is some number that solves the equation $x^2 = -1$ or, equivalently, to  $1 + x^2 = 0$ and $-\i$ is actually a second solution to that (quadratic) equation. Recall that a general quadratic equation of the form $a_0 + a_1 x + a_2 x^2 = 0$  always has two solutions given by the quadratic formula and that in general, according to the fundamental theorem of algebra, a polynomial of degree $n$ has exactly $n$ complex roots (i.e. solutions) when we count them with their respective multiplicities. When we are asked to take an $n$th root of some number $c$, i.e. we want to compute $\sqrt[n]{c}$, we can rephrase this question as: "what numbers $z$ have the property that $z^n = c$?" or, equivalently, "what numbers $z$ solve the equation $z^n - c = 0$". Of course, we recognize this as a special case of trying to find the roots of a polynomial of degree $n$ and so we expect $n$ solutions. These $n$ solutions are given by:
+\begin{equation}
+ z^n = c = r e^{\i \phi} \quad \Leftrightarrow \quad
+ z = \sqrt[n]{c} = \sqrt[n]{r} e^{\i \frac{\phi + 2 \pi k}{n}} \quad \text{for } k = 0,\ldots,n-1
+\end{equation}
+VERIFY! where we have expressed $c$ in its polar form as $c = r e^{\i \phi}$ with $r = |c|, \phi = \angle c$. The factor $\sqrt[n]{r}$ is the square root of the magnitude of $c$ and that magnitude is just a nonnegative real number, so we know how to take that root. It's just our old $n$th root that we already know from real analysis. The other factor $e^{\i \frac{\phi + 2 \pi k}{n}}$ is new though, so let's give it some attention.
+
+
+%\medskip
+%Indeed, the equation $z^n = c$ has $n$ solutions
 
 
 ...TBC...

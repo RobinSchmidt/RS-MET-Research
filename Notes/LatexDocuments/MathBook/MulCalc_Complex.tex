@@ -3,13 +3,20 @@ Complex calculus is the calculus of functions that map a complex number to anoth
 
 
 \subsection{Complex Functions}
+Complex functions are functions $f$ into which we can plug in a complex number $z$ as input and get out another complex number $w$ as output. We write $w = f(z)$. If we split input and output into their real and imagniray parts: $z = x + \i y, w = u  + \i v$, we can write the complex function in terms of two bivariate component functions: $u = u(x,y), v = v(x,y)$ such that $w = f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$. In this form, a complex function is quite reminiscent of a vector field in $2D$ and in our interpretation of complex path integrals, we will indeed refer back to our intuitions about path integrals in $\mathbb{R}^2$.
 
 \subsubsection{Rational Functions}
-Among the simplest functions are monomials, i.e. functions of the type $f(z) = a z^n$ for some fixed complex number $a$ and some integer $n$. We already know how to multiply together two complex numbers which means we also know how to multiply a complex number by itself several times. So we have everything we need to evaluate the expression $a z^n$ and the result will be another complex number. We also know how to add complex numbers So we can take sums of terms of the form above. Such weighted sums of powers of the input variable are just our good old friends, the polynomials. Complex division is also already defined, so we can also divide the outputs of two polynomials. That means, rational functions of a complex variable are also already defined wihtout requiring us to think much about it.
+Among the simplest functions are monomials, i.e. functions of the type $f(z) = a z^n$ for some fixed complex number $a$ and some integer $n$. We already know how to multiply together two complex numbers which means we also know how to multiply a complex number $z$ by itself several times to form $z^n$. So we have everything we need to evaluate the expression $a z^n$ and the result will be another complex number. That means, this expression defines a complex function and so it is one of specimen we are going to investigate here. We also know how to add complex numbers, so we can also already take sums of terms of the form above. Such weighted sums of powers of the input variable are just our good old friends, the polynomials. Complex division is also already defined, so we can also divide the outputs of two polynomials. That means, rational functions of a complex variable are also already defined wihtout requiring us to think much about it. In summary, for complex functions $w = f(z)$ of the form:
+\begin{equation}
+f(z) = \frac{\sum_{k=0}^{M} a_k z^k}{\sum_{k=0}^{N} b_k z^k}
+\end{equation}
+we already know what we would have to do to evaluate them for any given input $z$. For other types of functions, we'll have to put in some more thought...
 
-% maybe tackel the important function f(z) = 1/z, i.e. complex inversion
+% maybe tackle the important function f(z) = 1/z, i.e. complex inversion
+% explain Polya vector fields.
 
 \subsubsection{Roots and Multifunctions}
+Consider the square-root function again. In the definition of the real valued $f(x) = \sqrt{x}$, we already saw a foreshadowing of a potential problem. First of all, we noticed that some real numbers - namely the negative numbers - had no square roots at all. Some other real numbers - the positive ones - actually had two square roots. The two square roots of $4$ are $+2$ and $-2$, for example. We kind of dodged these issues but just saying that for negative inputs, the square root is undefined and for positive input, \emph{the} square root is defined to be the positive solution. In th context of complex analysis, we will take this issue more seriously ....
 
 \subsubsection{Exponential and Trigonometric functions}
 

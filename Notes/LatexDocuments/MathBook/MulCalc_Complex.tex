@@ -1,5 +1,62 @@
 \section{Complex Calculus}
-Complex calculus is the calculus of functions that map a complex number to another complex number. Since input and output are both 2-dimensional, it makes sense to look at complex calculus from the perspective of 2D vector fields. For a function $w = f(z) = u(x,y) + \i v(x,y)$ to be differentiable in the complex sense, the partial derivatives of the component functions $u,v$ with respect to $x,y$ must exist and satisfy the Cauchy-Riemann (CR) differential equations: $u_x = v_y, u_y = -v_x$. This condition has wide ranging implications which allow a lot of simplifications to be made in the computations of path integrals. This can also help to evaluate certain definite real integrals that would otherwise be hard to do. If the function $f$ is considered as a mapping that maps points from the $z$-plane to the $w$-plane, the CR equations imply that the images of curves in the $z-$plane that intersect at a given angle, will intersect at the same angle in the $w$-plane. Such an angle-preserving mapping is also called a conformal mapping. If a function is complex differentiable at a given point $z_0$, this implies that all higher order derivatives also exist and that the function can be locally expanded in a Taylor series that converges in a circular region whose radius extends to the nearest critical point [verify!]. A critical point is...
+Complex calculus is the calculus of functions that map a complex number to another complex number. Since input and output are both 2-dimensional, it makes sense to look at complex calculus from the perspective of 2D vector fields. For a function $w = f(z) = u(x,y) + \i v(x,y)$ to be differentiable in the complex sense, the partial derivatives of the component functions $u,v$ with respect to $x,y$ must exist and satisfy the Cauchy-Riemann (CR) differential equations: $u_x = v_y, u_y = -v_x$. This condition has wide ranging implications which allow a lot of simplifications to be made in the computations of path integrals. If the function $f$ is considered as a mapping that maps points from the $z$-plane to the $w$-plane, the CR equations imply that the images of curves in the $z-$plane that intersect at a given angle, will intersect at the same angle in the $w$-plane. Such an angle-preserving mapping is also called a conformal mapping. If a function is complex differentiable at a given point $z_0$, this implies that all higher order derivatives also exist and that the function can be locally expanded in a Taylor series that converges in a circular region whose radius extends to the nearest singular point. If a function can be expanded in a convergent Taylor series around some point $z_0$, it is said to be \emph{analytic} at that point. A singluar point is a point is a point where the function "misbehaves" in some way. In most cases, the misbehavior is due to a division by zero. For example, the (real) function $f(x) = 1 / (1 - x^2)$ has singular points at $x = \pm 1$. Of course, we can also regard $f$ as a complex function by just allowing $x$ to be complex. But in that case, it is more common to use $z$ instead of $x$ for the name of the independent variable. The complex function $f(z) = 1 / (1 + z^2)$ has no singular points along the real axis but it does have singularities $z = \pm \i$. We will find that line integrals similar to those from $2D$ vector calculus will have a value of zero around any closed loop when that loop does not contain any singularities. And when the loop does contain singularities, the integral can be evaluated via a simple sum over some special values, called \emph{residues}, which are associated with these singularities and are comparatively easy to compute. That fact is what helps to simplify the evaluation of some definite integrals. With some ingenuity, it will even help to evaluate certain real integrals which would be hard to evaluate otherwise. Path integrals over paths that are not closed loops are actually path independent and given by simple differences between values at the endpoints of an antiderivative - just like in $1D$ calculus. But we are in $2D$, so a complex antiderivative is actually more like a potential.
+
+
+\subsection{Complex Functions}
+
+\subsubsection{Rational Functions}
+Among the simplest functions are monomials, i.e. functions of the type $f(z) = a z^n$ for some fixed complex number $a$ and some integer $n$. We already know how to multiply together two complex numbers which means we also know how to multiply a complex number by itself several times. So we have everything we need to evaluate the expression $a z^n$ and the result will be another complex number. We also know how to add complex numbers So we can take sums of terms of the form above. Such weighted sums of powers of the input variable are just our good old friends, the polynomials. Complex division is also already defined, so we can also divide the outputs of two polynomials. That means, rational functions of a complex variable are also already defined wihtout requiring us to think much about it.
+
+% maybe tackel the important function f(z) = 1/z, i.e. complex inversion
+
+\subsubsection{Roots and Multifunctions}
+
+\subsubsection{Exponential and Trigonometric functions}
+
+
+
+\subsection{Complex Differentiation}
+
+\subsection{Complex Integration}
+
+\subsection{Laurent Series}
+
+\subsection{Analytic Continuation}
+As a motivating example, consider the function $f(s)$ defined by the infinite sum:
+\begin{equation}
+f(s) = \sum_{n=1}^{\infty} = \frac{1}{n^s}
+\end{equation}
+The usage of $s$ as argument is just a common convention for this particular function. It is indeed a well defined and even analytic function whenever that infinite sum converges. As we know for our discussion in the series section, this sum does indeed converge for $s > 1$ when we assume $s$ to be real. More generally, if we allow $s$ to be complex, the condition for convergence is that the real part of $s$ must be greater than one. For inputs with real part less than or equal to one, the function is as of yet undefined. However, complex analysis provides us with a technique by which we can uniquely extend the domain of the function to almost the whole complex plane. That technique is called \emph{analytic continuation}. As said, for $\Re(s) > 1$, $f$ is indeed an analytic function. ...
+
+
+% explain the mapping theroem (Riemann?) see Arens add-on material (I think) - something about polygons in the complex plane
+
+
+
+
+
+% But is it not really like a scalar potential (via gradient) or vector potential (via curl) - right? ToDo: figure out the exact connection between potentials and complex antiderivatives. What would the scalar potential of the vector field f(x,y) = (x^2-y^2, 2xy) be? It comes from the complex function z^2. How does it relate to the antiderivative z^3/3 of z^2?
+
+% It has been said, that a power series around a point where $f$ is analytic converges in a disc around the expansion center that extends to the nearest singularity. What, if we try to epand the function aorund such a singular point itself? Predictably, it doesn't work - but a generalization that allows also for negative powers, called a Laurent series, may work.
+
+% How do we find the Laurent coeffs? Apparently, we cant just evaluate the function or derivatives at the point because the function will typically be undefined at that point. It's via an integral:
+
+% https://en.wikipedia.org/wiki/Laurent_series
+% https://mathworld.wolfram.com/LaurentSeries.html
+
+% Does this mean, this integral for a_n aggrees with the derivative for n >= 0 for regular points? Try to apply the integral formula for the coeffs to some smooth function like sin or exp. the resulting coeffs should 0 for n < 0 and agree with the Taylor coeffs for n >= 0, I guess? Yes - indeed - see formula 5 here:
+
+% https://math.mit.edu/~jorloff/18.04/notes/topic7.pdf
+
+% Motivate Laurent series with the example f(x) = (1+x)/(x^3-x^2) or (1+x)/(x^3+x^2) and try to expand it as power series around x0=0. We will see that we will need to allow for negative powers. Maybe for the example, the coeffs can be found by partial fraction expansion?
+
+% https://en.wikipedia.org/wiki/Singularity_(mathematics)#Complex_analysis
+% https://complex-analysis.com/content/classification_of_singularities.html
+% https://www.britannica.com/topic/singularity-complex-functions
+% https://en.wikipedia.org/wiki/Critical_point_(mathematics)
+% https://en.wikipedia.org/wiki/Singular_point_of_a_curve
+% https://en.wikipedia.org/wiki/Radius_of_convergence#Radius_of_convergence_in_complex_analysis
+% https://mathworld.wolfram.com/Singularity.html
 
 
 %todo: say something about multivariable complex calculus
@@ -12,3 +69,21 @@ Complex calculus is the calculus of functions that map a complex number to anoth
 
 % https://www.youtube.com/playlist?list=PLDcSwjT2BF_UDdkQ3KQjX5SRQ2DLLwv0R
 % Essence of complex analysis  by Mathemaniac, uses a vector-field approach
+
+\begin{comment}
+	
+	
+https://en.wikipedia.org/wiki/Elliptic_function
+https://en.wikipedia.org/wiki/Modular_form
+https://en.wikipedia.org/wiki/Automorphic_form	
+
+https://en.wikipedia.org/wiki/Hyperelliptic_curve
+
+That looks pretty nice:
+https://math.mit.edu/~jorloff/18.04/notes/
+
+"Cauchy’s theorem is analogous to Green’s theorem for curl free vector fields"
+Here, in 3.6:
+https://math.mit.edu/~jorloff/18.04/notes/topic3.pdf
+	
+\end{comment}

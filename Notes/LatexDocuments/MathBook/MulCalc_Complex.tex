@@ -10,13 +10,7 @@ Among the simplest functions are monomials, i.e. functions of the type $f(z) = a
 \begin{equation}
 f(z) = \frac{\sum_{k=0}^{M} a_k z^k}{\sum_{k=0}^{N} b_k z^k}
 \end{equation}
-we already know what we would have to do to evaluate them for any given input $z$. 
-
-\paragraph{Specializations and Applications}
-Some special cases are important enough to have special names. When both numerator and denominator are only first orders polynomials, i.e. the function is of the form $f(z) = (a z  + b) / (c z + d)$, the function is also called a \emph{Moebius transformation}. In some contexts, such functions are also called \emph{linear fractional transform} and the so called \emph{bilinear transform} in digital signal processing is also a special case of such a function. Speaking of signal processing, rational functions where numerator and denominator or quadratic polynomials are alse quite common there. They occur as transfer functions of so called \emph{biquad} filters (for biquadratic) which can be sued as basic building block for all kinds of filters.
-
-
-For other types of functions, we'll have to put in some more thought...
+we already know what we would have to do to evaluate them for any given input $z$. For other types of functions, we'll have to put in some more thought...
 
 % https://en.wikipedia.org/wiki/Linear_fractional_transformation
 % https://en.wikipedia.org/wiki/Bilinear_transform
@@ -31,7 +25,10 @@ Consider the square root function again. In the definition of the real valued $f
 Let's first consider the problem of being unable to meaningfully define the square root for negative inputs. In the realm of complex numbers, that problem goes away completely. The purpose of defining $\i = \sqrt{-1}$ was precisely to deal with that situation. To evaluate $\sqrt{-4}$, we re-express it as $\sqrt{4} \sqrt{-1}$ using our usual laws for square roots to arrive at the solution $\sqrt{-4} = 2 \i$. And in case you wonder (you should!): yes - it is indeed allowed to use these laws. They continue to hold in the complex case. But again, $2 \i$ is not the only possible solution and $-2 \i$ is just as good a solution. Again, we actually have found two solutions. You can verify this by just squaring $2 \i$ and $-2 \i$. In both cases, you'll get $-4$.
 
 \medskip
-Secondly, let's think about what to make of the fact that we got not one but two values. When I said "solution", you may have asked yourself "solution to what equation"? It is actually a bit sloppy to say $\i = \sqrt{-1}$ and it would be more precise to say that $\i$ is some number that solves the equation $x^2 = -1$ and $-\i$ is actually a second solution to that equation...tbc
+Secondly, let's think about what to make of the fact that we got not one but two values. When I said "solution", you may have asked yourself "solution to what equation"? It is actually a bit sloppy to say $\i = \sqrt{-1}$ and it would be more precise to say that $\i$ is some number that solves the equation $x^2 = -1$ and $-\i$ is actually a second solution to that equation
+
+
+...TBC...
 
 
 %The problem of not being able to define a square root (or, in fact $n$th root) for ceratin inputs will vanish - in the complex domain, negative numbers do have square roots, albeit "imaginary" ones. 
@@ -76,13 +73,37 @@ The usage of $s$ as argument is just a common convention for this particular fun
 
 % Hmm...but the Riemann Zeta function is not really a power series. At least not in z - but it is one in 1/z. Actually, the simplemost one - with all coeffs being 1. It's like a Laurent series with zero coeffs a_n for n >= 0 and unit coeffs fo n < 0, right? ...wait - no! That would be the case if it would be a sum over 1/s^n but it is actually a sum over 1/n^s
 
-
 % explain the mapping theroem (Riemann?) see Arens add-on material (I think) - something about polygons in the complex plane
 
 
+\subsection{Applications}
+Functions of complex variables have numerous applications in fields like digital signal processing, fluid dynamics, quantum mechanics, (real) integration, differential equations, number theory etc. We'll now look at some of them.
+
+\subsubsection{Rational Functions and Filter Theory}
+
+\subsubsection{Elliptic Functions and Filter Design}
+
+\subsubsection{Modular Forms and Number Theory}
+
+\subsubsection{Conformal Mapping and Geometry}
+% or maybe "Conformal Mapping and Fluid Dynamics"
+
+
+%\subsection{Important Classes of Complex Functions}
 
 
 
+% Some special cases of rational functions are important enough to have special names. When both numerator and denominator are only first orders polynomials, i.e. the function is of the form $f(z) = (a z  + b) / (c z + d)$, the function is also called a \emph{Moebius transformation}. In some contexts, such functions are also called \emph{linear fractional transform} and the so called \emph{bilinear transform} in digital signal processing is also a special case of such a function. Speaking of signal processing, rational functions where numerator and denominator are quadratic polynomials are alse quite common there. They occur as transfer functions of so called \emph{biquad} filters (for biquadratic) which can be sued as basic building block for all kinds of filters. Those more general filters have also rational functions as transfer functions. 
+
+
+% https://en.wikipedia.org/wiki/Kramers%E2%80%93Kronig_relations
+
+% https://www.johndcook.com/blog/applied-complex-analysis/
+
+
+\begin{comment}
+	
+	
 % But is it not really like a scalar potential (via gradient) or vector potential (via curl) - right? ToDo: figure out the exact connection between potentials and complex antiderivatives. What would the scalar potential of the vector field f(x,y) = (x^2-y^2, 2xy) be? It comes from the complex function z^2. How does it relate to the antiderivative z^3/3 of z^2?
 
 % It has been said, that a power series around a point where $f$ is analytic converges in a disc around the expansion center that extends to the nearest singularity. What, if we try to epand the function aorund such a singular point itself? Predictably, it doesn't work - but a generalization that allows also for negative powers, called a Laurent series, may work.
@@ -116,9 +137,7 @@ The usage of $s$ as argument is just a common convention for this particular fun
 % https://www.youtube.com/watch?v=UOuxo6SA8Uc  25:30
 
 % https://www.youtube.com/playlist?list=PLDcSwjT2BF_UDdkQ3KQjX5SRQ2DLLwv0R
-% Essence of complex analysis  by Mathemaniac, uses a vector-field approach
-
-\begin{comment}
+% Essence of complex analysis  by Mathemaniac, uses a vector-field approach	
 	
 	
 https://en.wikipedia.org/wiki/Elliptic_function

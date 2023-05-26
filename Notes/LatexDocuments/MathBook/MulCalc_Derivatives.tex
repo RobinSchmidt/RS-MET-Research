@@ -59,10 +59,16 @@ So far, we assumed that $f$ has only a single output, i.e. defines a scalar fiel
 \end{equation}	
 is called the Jacobian matrix	of $\mathbf{f}$ at $\mathbf{x}$. It's a generalization of the derivative. We see that in this generalization, the derivative of a vector-valued function is a matrix-valued function. The $k$th row of the matrix is the transpose of the gradient of the $k$th component function $f_k$. In a more terse notation, you can also suppress the index $\mathbf{f}$ and the argument $\mathbf{x}$ and just write $\mathbf{J}$ instead of $\mathbf{J_f}(\mathbf{x})$, if it's clear from the context about which $\mathbf{f}$ we are talking and that $\mathbf{f}$ is a function of $\mathbf{x}$. Just like 1D derivatives do, it defines a linear approximation to $\mathbf{f}$ at a given $\mathbf{x}$ in the sense that for a small vector  $\mathbf{h}$, we have:
 \begin{equation}
+\label{Eq:JacobianApproximation}
  \mathbf{f}(\mathbf{x + h}) \approx 
- \mathbf{f}(\mathbf{x}) + \mathbf{J  h}
+ \mathbf{f}(\mathbf{x}) + \mathbf{J  h} \qquad \text{in the sense of:}  \qquad
+ \lim_{\mathbf{h \rightarrow 0}} 
+ \frac{\lVert \mathbf{f(x+h) - f(x) - J h} \rVert}
+ {\lVert \mathbf{h} \rVert} = 0
 \end{equation}	
-when $\mathbf{J} = \mathbf{J_f}(\mathbf{x})$ is the Jacobian of  $\mathbf{f}$ at  $\mathbf{x}$. Having the individual gradients of the component functions in the rows rather than in the columns ensures that we can formulate the linear approximation by left multiplication of the matrix with some small delta vector. The Jacobian matrix of a scalar valued function is actually the transpose of its gradient vector and I'm not sure, why the definition of the gradient has been chosen to be a column vector rather that a row vector. Maybe because in pure vector algebra (i.e. before matrices enter the stage), there's no notion of "row-" and "column" vectors. There are just vectors. We should perhaps more properly have said row- and column \emph{matrices} anyway. The determinant of the Jacobian matrix will play an important role in the change of variables formula for multiple integrals which we will see later. 
+when $\mathbf{J} = \mathbf{J_f}(\mathbf{x})$ is the Jacobian of  $\mathbf{f}$ at  $\mathbf{x}$. Having the individual gradients of the component functions in the rows rather than in the columns ensures that we can formulate the linear approximation by left multiplication of the matrix with some small delta vector. The Jacobian matrix of a scalar valued function is actually the transpose of its gradient vector and I'm not sure, why the definition of the gradient has been chosen to be a column vector rather that a row vector. Maybe because in pure vector algebra (i.e. before matrices enter the stage), there's no notion of "row-" and "column" vectors. There are just vectors. We should perhaps more properly have said row- and column \emph{matrices} anyway. The determinant of the Jacobian matrix will play an important role in the change of variables formula for multiple integrals which we will see later. The approximation property of the Jacobian stated in \ref{Eq:JacobianApproximation} can also be seen as the definition of the derivative of $\mathbf{f}$ in the following way: we say that $\mathbf{f}$ is differentiable at $\mathbf{x}$, iff a matrix $\mathbf{J}$ exists, such that this equation holds true for any (small) direction vector $\mathbf{h}$. In this case, we call the matrix $\mathbf{J}$ the derivative of $\mathbf{f}$ at $\mathbf{x}$.
+
+% Weitz, DiffGeo, pg 114
 
 % maybe put the babbling about row- and column-vectors into a footnote
 

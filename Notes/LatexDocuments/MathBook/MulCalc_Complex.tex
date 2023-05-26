@@ -34,11 +34,14 @@ Secondly, let's think about what to make of the fact that we got not one but two
 \end{equation}
 where we have expressed $c$ in its polar form as $c = r e^{\i \phi}$ with $r = |c|, \phi = \angle c$. The factor $\sqrt[n]{r}$ is the square root of the magnitude of $c$ and that magnitude is just a nonnegative real number, so we know how to take that root. It's just our old $n$th root that we already know from real analysis. The other factor $e^{\i \frac{\phi + 2 \pi k}{n}}$ is new though, so let's give it some attention. First of all, we note it contains a dummy variable $k$ which is supposed to be an integer in the range $0,\ldots,n-1$. That means, we actually get $n$ different solutions - one for each value of $k$. For $k = 0$, the solution simplifies to $\sqrt[n]{r} e^{\i \frac{\phi}{n}}$ which we recognize as a complex number whose radius is given by the $n$th root of the radius of the input and whose angle is given by the angle of the input divided by $n$. For $k=1$, the radius of the solution is the same but the angle is advanced by an increment of $2\pi / n$. For $k=2$, the angle is advanced by another such increment and so on up to $k=n-1$. Would we plug in $k=n$, we would have come full circle and back to our first $k=0$ solution, so values of $k \geq n$ do not give us any new solutions. In principle, we could allow $k$ to be any integer, but we would just cyclically get the same solutions over and over. Negative $k$ would also not yield anything new either. Stepping $k$ through $-1,-2,\ldots$, we'd just cycle through our set of solutions backwards. So, it's sensible to restrict $k$ to the range $0,\ldots,n-1$ because that range covers all of our $n$ solutions. These $n$ solutions lie all on a circle of radius $\sqrt[n]{r}$ and are distributed equidistantly around the circle, separated by an angle increment of $2 \pi / n$. The initial angle, i.e. the one of the first solution, is given by $\phi / n$.
 
+\medskip
+
+
 %
 ...TBC...
 
 \paragraph{The Roots of Unity}
-
+Let's have a look at the equation $z^n = 1$ for some given positive integer $n$. The complex numbers that solve that equation are called the $n$th roots of unity. Geometrically, they are the vertices of an $n$-sided regular polygon that has one of its corners at $z = 1$. ...tbc...
 
 %\medskip
 %Indeed, the equation $z^n = c$ has $n$ solutions
@@ -50,6 +53,7 @@ where we have expressed $c$ in its polar form as $c = r e^{\i \phi}$ with $r = |
 %The problem of not being able to define a square root (or, in fact $n$th root) for ceratin inputs will vanish - in the complex domain, negative numbers do have square roots, albeit "imaginary" ones. 
 
 % principal values, Riemann surfaces, primitive roots
+% https://en.wikipedia.org/wiki/Riemann_surface
 
 \subsubsection{Exponential and Trigonometric functions}
 Extending the domains of rational and algebraic functions from the real to the complex numbers was a straightforward process requiring only some algebra. The $n$th roots are a bit messy to deal with because we needed to introduce the concept of multivalued functions but they nevertheless did not require much higher level math tools to define. To extend the domains of the exponential and trigonometric functions, we'll need a bigger gun from calculus: power series. The nice thing about power series is that in order to evaluate them, we only need to know how to perform additions and multiplications - and we actually indeed do know, how to add and multiply complex numbers! Using the power series representation of a function is a very common technique in math whenever we desire to define functions of arguments that are not simple numbers. The same idea can also be applied to matrices, multivectors and even operators. But here, we are interested in complex numbers. Let's recall the power series of some functions:
@@ -68,18 +72,42 @@ The idea is now to simply allow the input $x$ to be complex valued to define the
 
 
 \subsection{Complex Differentiation}
-Having a little arsenal of complex functions $f: \mathbb{C} \rightarrow \mathbb{C}$ at our disposal, we can now start to do some calculus with them. Naturally, the first thing we may want to do, is to define a notion of a derivative for complex functions. Recall our definition of differentiability for vector fields in $2D$. For a function $f: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ with $f(x,y) = (u(x,y), v(x,y))$ to be differentiable at some point $(x_0, y_0)$, we demanded that the partial derivatives $\partial u / \partial x, \partial u / \partial y, \partial v / \partial x, \partial v / \partial y$ need to exist at that point. For a complex function $f: \mathbb{C} \rightarrow \mathbb{C}$ with $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$, we will also require the existence of these partial derivatives. But for $f$ to be called complex differentiable, that condition is not enough.
+Having a little arsenal of complex functions $f: \mathbb{C} \rightarrow \mathbb{C}$ at our disposal, we can now start to do some calculus with them. Naturally, the first thing we may want to do, is to define a notion of a derivative for complex functions. Recall our definition of differentiability for vector fields in $2D$. For a function $f: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ with $f(x,y) = (u(x,y), v(x,y))$ to be differentiable at some point $(x_0, y_0)$, we demanded that the partial derivatives $\partial u / \partial x, \partial u / \partial y, \partial v / \partial x, \partial v / \partial y$ need to exist at that point. For a complex function $f: \mathbb{C} \rightarrow \mathbb{C}$ with $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$, we will also require the existence of these partial derivatives for which we will use the more convenient notation $u_x, u_y, v_x, v_y$. For $f$ to be called complex differentiable, the existence of the partial derivatives is not enough.
 
 \subsubsection{The Cauchy-Riemann Equations}
+A complex function $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$ is said to be complex differentiable, iff the four possible partial derivatives $u_x, u_y, v_x, v_y$ exist and satisfy the system of equations:
+\begin{equation}
+ u_x = v_y, \; u_y = -v_x
+\end{equation}
+These equations are called the \emph{Cauchy-Riemann equations}. It is a system of two partial differential equations.
+
+% ToDo: explain motivation - why do we require this? What does it mean geometrically? Is it related to the limit of the difference quotient being independent from the direction of approaching some $z_0$?
+
+\paragraph{Example} Let's take $f(z) = z^2$ as an example function. Expressing it 
+
 
 % This has also a potentially interesting formula:
 % https://en.wikipedia.org/wiki/Differentiable_function#Differentiability_in_complex_analysis
-% ah - no - that'S actually nto specific to the complex case. It's quite generall true for derivatives - see Wietz, DiffGeo, Eq 9.3
+% ah - no - that's actually nto specific to the complex case. It's quite generall true for derivatives - see Wietz, DiffGeo, Eq 9.3
+
+% mention connection to harmonic functions, Laplace equation, harmonic conjugates
+
+% https://en.wikipedia.org/wiki/Cauchy%E2%80%93Riemann_equations
+
 
 \subsubsection{Holomorphic, Meromorphic and Analytic Functions}
 It's time to define some more jargon. A complex function is said to be \emph{holomorphic} on some domain iff it is complex differentiable on that domain. If it is holomorphic on that domain except for some isolated poles, then it is said to be \emph{meromorphic} on that domain. A function is said to be \emph{analytic}, if it can be locally expanded into a convergent Taylor series. In the context of complex analysis, holomorphy and analyticity imply each other and are therefore often used interchangably. That means: to show that a complex function is analytic (i.e. Taylor expandable), it is enough to show that it is holomorphic (i.e. that its complex derivative exists). In more general multivariable calculus contexts, the requirement of being Taylor expandable is a much stronger requirement than just mere differentiability but in complex analysis, differentiability already comes with big implications, one of them being Taylor expandibility.
 
 \subsection{Complex Integration}
+
+% I think, when we split the integral into its real and imaginary parts, the real part can be intepreted as a work integral along the path and the imaginary part as a flux integral across the path?
+
+% Consider the Polya vector field of $f$:
+% u(x,y) =  \Re(f(z)) =  \Re(f(x + \i y))
+% v(x,y) = -\Im(f(z)) = -\Im(f(x + \i y))
+
+
+% Maybe at first, consider an integral along a straight line between two complex numbers $a,b$ parametrized as $c(t) = (1-t) a + t b$ for $t \in [0,1]$. We can then approximate more complicated paths by a bunch of such straight line segements.
 
 \subsubsection{The Polya Vector Field}
 
@@ -168,6 +196,8 @@ Functions of complex variables have numerous applications in fields like digital
 
 % https://www.youtube.com/playlist?list=PLDcSwjT2BF_UDdkQ3KQjX5SRQ2DLLwv0R
 % Essence of complex analysis  by Mathemaniac, uses a vector-field approach	
+
+
 	
 	
 https://en.wikipedia.org/wiki/Elliptic_function

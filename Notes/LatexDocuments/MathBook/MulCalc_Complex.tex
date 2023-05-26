@@ -77,7 +77,7 @@ Having a little arsenal of complex functions $f: \mathbb{C} \rightarrow \mathbb{
   f'(z)	= \lim_{\Delta z \rightarrow 0 }
   \frac{f(z + \Delta z) - f(z)}{\Delta z}
 \end{equation}
-where $\Delta z$ is some arbitrary (small) complex number. For this derivative to be well defined, we must make sure that this limit does not depend on the direction of $\Delta z$. Recall our definition of differentiability for vector fields in 2D. For a function $f: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ with $f(x,y) = (u(x,y), v(x,y))$ to be differentiable at some point $(x_0, y_0)$, we demanded that the partial derivatives $\partial u / \partial x, \partial u / \partial y, \partial v / \partial x, \partial v / \partial y$ need to exist at that point. For a complex function $f: \mathbb{C} \rightarrow \mathbb{C}$ with $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$, we will also require the existence of these partial derivatives for which we will use the more convenient notation $u_x, u_y, v_x, v_y$. For $f$ to be called complex differentiable, the existence of the partial derivatives is not enough. The independence of the limit from the direction of $\Delta z$ is ensured by...
+where $\Delta z$ is some arbitrary (small) complex number. For this derivative to be well defined, we must make sure that this limit does not depend on the direction of $\Delta z$. Recall our definition of differentiability for vector fields in 2D. For a function $f: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ with $f(x,y) = (u(x,y), v(x,y))$ to be differentiable at some point $(x_0, y_0)$, we demanded that the partial derivatives $\partial u / \partial x, \partial u / \partial y, \partial v / \partial x, \partial v / \partial y$ need to exist at that point. For a complex function $f: \mathbb{C} \rightarrow \mathbb{C}$ with $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$, we will also require the existence of these partial derivatives for which we will use the more convenient notation $u_x, u_y, v_x, v_y$. For $f$ to be called complex differentiable, the existence of the partial derivatives is not enough. The independence of the limit from the direction of $\Delta z$ must also be ensured. This additional requirement is captured in...
 
 \subsubsection{The Cauchy-Riemann Equations}
 A complex function $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$ is said to be complex differentiable, iff the four possible partial derivatives $u_x, u_y, v_x, v_y$ exist and satisfy the system of equations:
@@ -89,7 +89,7 @@ These equations are called the \emph{Cauchy-Riemann equations}. It is a system o
  \mathbf{J} = \begin{pmatrix} u_x & u_y \\	 v_y & v_y \end{pmatrix}
             = \begin{pmatrix} u_x & u_y \\	-u_y & u_x \end{pmatrix}
 \end{equation}
-Geometrically, matrices of this form represent a rotation paired with a uniform scaling. Such a geometric transformation might also be called an \emph{amplitwist}. This term was first suggested by Tristan Needham in his excellent book "Visual Complex Analysis" and I like its descriptiveness. From an information theoretic point of view, it makes sense that the Jacobian can only have two degrees of freedom if we assume that we want to encode the derivative in a complex number. This is precisely what we want to do here: The derivative of some complex function $f$ at some value $z_0$ should just be a complex number.
+Geometrically, matrices of this form represent a rotation paired with a uniform scaling. Such a geometric transformation might also be called an \emph{amplitwist}. This term was first suggested by Tristan Needham in his excellent book "Visual Complex Analysis" and I like its descriptiveness. From an information theoretic point of view, it makes sense that the Jacobian can only have two degrees of freedom if we assume that we want to encode the derivative in a complex number. This is precisely what we want to do here: The derivative of some complex function $f$ at some value $z_0$ should just be a complex number, i.e. an object with two degrees of freedom rather than the four which a general, unconstrained Jacobian would have.
 
 
 %From an information-theoretic point of view, this is required such that we can encode the information in a complex number which also has two degrees of freedom
@@ -98,7 +98,7 @@ Geometrically, matrices of this form represent a rotation paired with a uniform 
 
 % ToDo: explain motivation - why do we require this? What does it mean geometrically? (f is locally an amplitwist) Is it related to the limit of the difference quotient being independent from the direction of approaching some $z_0$?. From an information theory point of view, we require that the Jacobian matrix can only have two degrees of freedom such that can encode the derivative (i.e. Jacobain) at a point in a complex number.
 
-\paragraph{Example} Let's take $f(z) = z^2$ as an example function. Expressing it 
+\paragraph{Example} Let's take $f(z) = z^2$ as an example function. Expressing it as $f(x + \i y) = u(x,y) + \i v(x,y)$, we find that $u(x,y) = x^2 - y^2, v(x,y) = 2 x y$. The partial deriavtives are given by $u_x = 2 x, u_y = - 2 y, v_x = 2 y, v_y = 2 x$. We verify that the Cauchy-Riemann equations are indeed satisfied for this function.
 
 
 % This has also a potentially interesting formula:

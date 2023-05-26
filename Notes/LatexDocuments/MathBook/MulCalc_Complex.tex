@@ -91,13 +91,6 @@ These equations are called the \emph{Cauchy-Riemann equations}. It is a system o
 \end{equation}
 Geometrically, matrices of this form represent a rotation paired with a uniform scaling. Such a geometric transformation might also be called an \emph{amplitwist}. This term was first suggested by Tristan Needham in his excellent book "Visual Complex Analysis" and I like its descriptiveness. From an information theoretic point of view, it makes sense that the Jacobian can only have two degrees of freedom if we assume that we want to encode the derivative in a complex number. This is precisely what we want to do here: The derivative of some complex function $f$ at some value $z_0$ should just be a complex number, i.e. an object with two degrees of freedom rather than the four which a general, unconstrained Jacobian would have.
 
-
-%From an information-theoretic point of view, this is required such that we can encode the information in a complex number which also has two degrees of freedom
-
-%From a geometric point of view, we note that the restriction to antisymmetric matrices implies a restriction to rotations paired with uniform scaling - which is precisely what a multiplication by a complex number does.
-
-% ToDo: explain motivation - why do we require this? What does it mean geometrically? (f is locally an amplitwist) Is it related to the limit of the difference quotient being independent from the direction of approaching some $z_0$?. From an information theory point of view, we require that the Jacobian matrix can only have two degrees of freedom such that can encode the derivative (i.e. Jacobain) at a point in a complex number.
-
 \paragraph{Example} Let's take $f(z) = z^2$ as an example function. Expressing it as $f(x + \i y) = u(x,y) + \i v(x,y)$, we find that $u(x,y) = x^2 - y^2, v(x,y) = 2 x y$. The partial deriavtives are given by $u_x = 2 x, u_y = - 2 y, v_x = 2 y, v_y = 2 x$. We verify that the Cauchy-Riemann equations are indeed satisfied for this function.
 
 

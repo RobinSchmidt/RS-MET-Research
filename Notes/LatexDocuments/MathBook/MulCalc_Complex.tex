@@ -93,12 +93,17 @@ Geometrically, matrices of this form represent a rotation paired with a uniform 
 
 \paragraph{Example} Let's take $f(z) = z^2$ as an example function. Expressing it as $f(x + \i y) = u(x,y) + \i v(x,y)$, we find that $u(x,y) = x^2 - y^2, v(x,y) = 2 x y$. The partial deriavtives are given by $u_x = 2 x, u_y = - 2 y, v_x = 2 y, v_y = 2 x$. We verify that the Cauchy-Riemann equations are indeed satisfied for this function.
 
+% Try to find a scalar potential u for the vector field (u_x, u_y) = (2x, -2y) and another scalar potential v for the vector field (v_x, v_y) = (2x, 2y). Try also to find a scalar potential for (x^2-y^2, 2 x y)
+
+% What about the idea of trying to find a vector field when a Jacobian is given? Maybe it can be traced back to finding scalar potential for the rows (or columns) of the Jacobian?
 
 % This has also a potentially interesting formula:
 % https://en.wikipedia.org/wiki/Differentiable_function#Differentiability_in_complex_analysis
 % ah - no - that's actually nto specific to the complex case. It's quite generall true for derivatives - see Wietz, DiffGeo, Eq 9.3
 
 % mention connection to harmonic functions, Laplace equation, harmonic conjugates
+
+%
 
 % https://en.wikipedia.org/wiki/Cauchy%E2%80%93Riemann_equations
 
@@ -118,6 +123,8 @@ It's time to define some more jargon. A complex function is said to be \emph{hol
 % Maybe at first, consider an integral along a straight line between two complex numbers $a,b$ parametrized as $c(t) = (1-t) a + t b$ for $t \in [0,1]$. We can then approximate more complicated paths by a bunch of such straight line segements.
 
 \subsubsection{The Polya Vector Field}
+
+% Irrotational vector fields have a symmetric Jacobian (by the second fundamental theorem for potential fields). Holomorphic functions have antisymmetric Jacobians. Maybe that's the reason we need to negate the imaginary part? Wait - no - it's actually antisymmetric plus a nonzero main diagonal
 
 \subsubsection{Cauchy's Integral Formula}
 

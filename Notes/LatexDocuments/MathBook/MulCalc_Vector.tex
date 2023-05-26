@@ -164,16 +164,23 @@ We have seen how we are able to produce new fields by applying differential oper
 So, if we encounter a vector field $\mathbf{f}$ in some application, how do find its scalar potential? First things first - we should first figure out whether or not such a scalar potential even exists. Fortunately, there's a simple criterion for that: For a given vector field $\mathbf{f}$, a scalar potential $F$ exists, if and only if the curl of the vector field is identically zero. Such vector fields are also called \emph{irrotational}. Due to the fact that curl is only defined in 3D, this definition is only applicable in 3D. In the more general case, the requirement is that the Jacobian matrix of the vector field is symmetric. This fact is so important that it is actually called \emph{second fundamental theorem for potential fields} (we'll see the first one later). %(Bärwolff, pg 560 - aka integrability criterion?)
 Let's assume we have checked the criterion and now we actually want to find the potential....TBC...
 
+\paragraph{Example} Consider the 2D vector field $\mathbf{f}(x,y) = (x^2-y^2, -2 x y)$. ...tbc...
+
+% maybe use as example a 3D vector field coming from the potential 1/r^2 where r^2 = x^2+y^2+z^2 and try to reconstruct the potential
+
 %-explain non-uniqueness - we are allowed to add any constant
 % what about the Laplacian? does it play nor role here?
 
 \subsubsection{Finding Vector Potentials}
 If we encounter a vector field $\mathbf{f}$ and we want to know whether or not there exists a vector potential for $\mathbf{f}$, i.e. a vector field $\mathbf{F}$ whose curl $\mathbf{f}$ is: $\curl \mathbf{F} = \nabla \times \mathbf{F} = \mathbf{f}$, a necessary and sufficient condition for such a vector potential $\mathbf{F}$ to exist is that the divergence of $\mathbf{f}$ must be identically zero: $\dive \mathbf{f} = \nabla \cdot \mathbf{f} = 0$. After verifying that this is the case, we can start to work out the vector potential $\mathbf{F}$ of the vector field $\mathbf{f}$ as follows: ...TBC...
 
+
+
 %- they are not unique . we can always add the gradient of an arbitrary scalar field - see Feynman Lectures, Vol. 2, Ch. 14
 
 %-mention how this translates to higher dimensions - the divergence based existence criterion carries over as is (right?) - but curl is undefined in nD - we need to do it in the context of exterior calculus
 
+% What about the idea of trying to find a vector field when a Jacobian is given? Maybe it can be traced back to finding scalar potentials for the rows (or columns) of the Jacobian?
 
 \subsection{Harmonic Functions}
 A so called \emph{harmonic function} is a scalar field $f$ whose Laplacian is identically zero. That means, it satisfies the so called Laplace equation $\Delta f = 0$ for all possible inputs. The Laplace equation is a partial differential equation that features prominently in physics. Harmonic functions of 2 variables are closely related to the field of complex analysis which we will encounter later ...TBC...

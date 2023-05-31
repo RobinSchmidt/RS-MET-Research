@@ -86,10 +86,19 @@ A complex function $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$ is said to be compl
 \end{equation}
 These equations are called the \emph{Cauchy-Riemann equations}. It is a system of two partial differential equations that puts some quite rigid constraints on the partial derivatives. Note that for a general 2D vector field, the Jacobian matrix has four independent entries, i.e. four degrees of freedom. When we collect the partial derivatives of a complex function into a Jacobian matrix, we are effectively demanding that the matrix may only have two degrees of freedom. If we would pick $u_x$ and $u_y$ freely, then $v_x$ and $v_y$ would automatically follow, for example. Our Jacobians must look like:
 \begin{equation}
- \mathbf{J} = \begin{pmatrix} u_x & u_y \\	 v_y & v_y \end{pmatrix}
-            = \begin{pmatrix} u_x & u_y \\	-u_y & u_x \end{pmatrix}
+ \mathbf{J} =   \begin{pmatrix} u_x & u_y \\	 v_y & v_y \end{pmatrix}
+            =   \begin{pmatrix} u_x & u_y \\	-u_y & u_x \end{pmatrix}
 \end{equation}
-Geometrically, matrices of this form represent a rotation paired with a uniform scaling. Such a geometric transformation might also be called an \emph{amplitwist}. This term was first suggested by Tristan Needham in his excellent book "Visual Complex Analysis" and I like its descriptiveness. From an information theoretic point of view, it makes sense that the Jacobian can only have two degrees of freedom if we assume that we want to encode the derivative in a complex number. This is precisely what we want to do here: The derivative of some complex function $f$ at some value $z_0$ should just be a complex number, i.e. an object with two degrees of freedom rather than the four which a general, unconstrained Jacobian would have.
+Geometrically, matrices of this form represent a rotation paired with a uniform scaling and can be expressed as:
+\begin{equation}
+	 \mathbf{J} = r \begin{pmatrix}  \cos(\phi)   & \sin(\phi)   \\	
+                              	 	-\sin(\phi)   & \cos(\phi)   \end{pmatrix}
+	\quad \text{where}  \quad
+	r = \sqrt{u_x^2 + u_y^2}, \; \phi = \atan2(u_y, u_x)
+\end{equation}
+Such a geometric transformation might also be called an \emph{amplitwist}. This term was first suggested by Tristan Needham in his excellent book "Visual Complex Analysis" and I like its descriptiveness. Note also that sich an amplitwist is precisely the sort of transformation that a multiplication by a complex number achieves. That complex number is of course none other than the value of our derivative. ...tbc...
+
+%From an information theoretic point of view, it makes sense that the Jacobian can only have two degrees of freedom if we assume that we want to encode the derivative in a complex number. This is precisely what we want to do here: The derivative of some complex function $f$ at some value $z_0$ should just be a complex number, i.e. an object with two degrees of freedom rather than the four which a general, unconstrained Jacobian would have.
 
 \paragraph{Example} Let's take $f(z) = z^2$ as an example function. Expressing it as $f(x + \i y) = u(x,y) + \i v(x,y)$, we find that $u(x,y) = x^2 - y^2, v(x,y) = 2 x y$. The partial deriavtives are given by $u_x = 2 x, u_y = - 2 y, v_x = 2 y, v_y = 2 x$. We verify that the Cauchy-Riemann equations are indeed satisfied for this function.
 

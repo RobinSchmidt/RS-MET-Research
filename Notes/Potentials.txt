@@ -23,3 +23,25 @@ x_2, should match corresponding terms that have already been computed in steps (
 already accumulated into our final F, so we should not add them again. In all the integrations, we 
 use an integration constant of 0. At every step, the integration constant may actually be a function 
 of the remaining variables. That's precisely the stuff, we add in the subsequent steps.
+
+Example:
+
+  f_x(x,y,z) = 2yz + 3y + 5z + 11
+  f_y(x,y,z) = 2xz + 3x + 7z + 13
+  f_z(x,y,z) = 2xy + 5x + 7y + 17
+
+(1) F  = integral of f_x wrt x
+       = 2yzx + 3yx + 5zx + 11x
+(2) F += terms of integral of f_y wrt y that don't depend on x, the integral is:
+         I = 2xzy + 3xy + 7zy + 13y  ->  select 7zy + 13y, add to F
+	F  = 2yzx + 3yx + 5zx + 11x + 7zy + 13y
+(3) F += terms of integral of f_z wrt z that don't depend on x and/or y, the integral is:
+         I = 2xyz + 5xz + 7yz + 17z  ->  select 17z, add to F
+    F  = 2yzx + 3yx + 5zx + 11x + 7zy + 13y + 17z
+	
+So the end result is (with a little reordering):
+   
+   F  = 2xyz + 3xy + 5xz + 7yz + 11x + 13y + 17z
+  	
+Forming the partial derivatives of F wrt to x,y,z, we'll get back our f_x,f_y,f_z above, so F is 
+indeed a valid potential for our vector field.

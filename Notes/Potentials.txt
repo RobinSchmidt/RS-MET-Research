@@ -45,3 +45,7 @@ So the end result is (with a little reordering):
   	
 Forming the partial derivatives of F wrt to x,y,z, we'll get back our f_x,f_y,f_z above, so F is 
 indeed a valid potential for our vector field.
+
+ToDo:
+-Try the algorithm with some more complicated functions. I'm not yet totally sure, if it will always
+ work. Baerwolff has a slightly more complicated algorithm on page 562.

@@ -236,5 +236,26 @@ https://math.mit.edu/~jorloff/18.04/notes/
 "Cauchy’s theorem is analogous to Green’s theorem for curl free vector fields"
 Here, in 3.6:
 https://math.mit.edu/~jorloff/18.04/notes/topic3.pdf
+
+
+-What about double-integrals like:
+ I = \int_R u(x,y) \, dA, I = \int_R v(x,y) \, dA, I = \int_R u(x,y) + v(x,y) \, dA
+ I = \int_R u(x,y) - v(x,y) \, dA
+ where dA = dx dy  or dA = r d\phi dr? Maybe the last is zero if the region R has circular symmetry because v is the same as u but rotated? I think, in the case of 
+ f(z)=z^2, u and v are related by a roation of 45°...maybe for z^n, it's a rotation of
+ 90°/n and an analytic function can be viewed as a weighted sum of such z^n terms?
+ 
+-What about constructing a potential for the Polya vector field? Such a potential 
+ should exist, right? We could call it "Polya-Potential". It would encode the full 4D
+ information of the function w = f(z) in just 3D and thereby make it visualizable. We
+ would have to construct a function p = p(x,y) such that p_x = u, p_y = v (or -v). But
+ it wouldn't be unique, right? We could add any constant. Scalar potentials exist for
+ vector fields whose rotattion is zero.
+ 
+-Can we say something interesting about double-integrals of such Polya-Potentials?
+
+-Does a vector potential also exist? I think so - the condition is that the divergence
+ must be zero. Maybe the vector potential is just the complex antiderivative or at
+ least simply related ot it?
 	
 \end{comment}

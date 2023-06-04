@@ -24,9 +24,10 @@ The f,g equations lead to:
 
   G = -f^z + a(x,y), F = g^z + b(x,y)
 
-where we use the superscript notation, subolized by the caret ^, to denote 
+where we use the superscript notation, symbolized by the caret ^, to denote 
 integration ("antidifferentiation") with respect to the superscripted 
-variable, so f^z is f integrated with respect to z. With a(x,y), b(x,y), we
+variable, so f^z is f integrated with respect to z. This notation is motivated
+by the subscript notation for partial derivatives. With a(x,y), b(x,y), we
 denote the integration "constants". They are constant only with respect 
 to z but can still be functions of x and y. We can now compute the integrals 
 f^z, g^z and are left with the task to figure out some appropriate integration

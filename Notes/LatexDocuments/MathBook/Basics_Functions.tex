@@ -2,11 +2,11 @@
 Functions are like machines that take some input and produce some output. In the case of mathematical functions, these inputs and outputs are usually numbers. There are more general notions, taking other types of inputs and producing other types of output, for example sets, vectors, matrices, etc. but here, we will mainly look at functions that take one number as input and produce another number as output and those two numbers will typically assumed to be real numbers.
 
 \subsection{Domain and Range}
-The two sets (of numbers) from which inputs can be taken and outputs will be produced are called the domain and range of the function respectively. Functions are usually denoted by lowercase letters such as $f,g,h$ etc. If a function takes real numbers as inputs and also produces real numbers as output, we write this as: $f: \mathbb{R} \rightarrow \mathbb{R}$. The argument is usually denoted by $x$ and of the function and is written in parentheses and the output is often denoted by $y$. When we write something like $y = f(x)$, we mean that the function $f$ produces the number $y$ as output when we give it the number $x$ as input. An example could be $y = f(x) = x^2$. The function woul just square the input and return that as result. 
+The two sets (of numbers) from which inputs can be taken and outputs will be produced are called the \emph{domain} and \emph{range} of the function respectively. Functions are usually denoted by lowercase letters such as $f,g,h$ etc. If a function takes real numbers as inputs and also produces real numbers as output, we write this as: $f: \mathbb{R} \rightarrow \mathbb{R}$. The argument is usually denoted by $x$ and of the function and is written in parentheses and the output is often denoted by $y$. When we write something like $y = f(x)$, we mean that the function $f$ produces the number $y$ as output when we give it the number $x$ as input. An example could be $y = f(x) = x^2$. The function would just square the input and return that as result. 
 
-\medskip
+%\medskip
 \subsubsection{Codomain and Image}
-There is a little ambiguity with respect to the notion of range. It may mean either one these two things: sometimes it may mean the set of numbers from which outputs can \emph{potentially} be drawn and sometimes the (possibly smaller) set of numbers, that can \emph{actually} be the result. For example, if the domain of $f(x) = x^2$, is taken to be the set real numbers $\mathbb{R}$, we could think of $f$ as a mapping between real numbers and real numbers, i.e. $f: \mathbb{R} \rightarrow \mathbb{R}$. However, not all possible real numbers are reached because the result of $x^2$ will never be a negative number. We could also consider $f$ as a function from the real numbers to the \emph{nonnegative} real numbers, i.e. $f: \mathbb{R} \rightarrow \mathbb{R}^+_0$. To distinguish these two notions, sometimes the term "codomain" is used for the set that outputs could potentially be drawn from and "image" is used for the set from which numbers are actually produced by the function for a given input domain.
+There is a little ambiguity with respect to the notion of range. It may mean either one these two things: sometimes it may mean the set of numbers from which outputs can \emph{potentially} be drawn and sometimes the (possibly smaller) set of numbers, that can \emph{actually} be the result. For example, if the domain of $f(x) = x^2$, is taken to be the set real numbers $\mathbb{R}$, we could think of $f$ as a mapping between real numbers and real numbers, i.e. $f: \mathbb{R} \rightarrow \mathbb{R}$. However, not all possible real numbers are reached because the result of $x^2$ will never be a negative number. We could also consider $f$ as a function from the real numbers to the \emph{nonnegative} real numbers, i.e. $f: \mathbb{R} \rightarrow \mathbb{R}^+_0$. To distinguish these two notions, sometimes the term "codomain" is used for the set that outputs could potentially be drawn from and "image" is used for the set from which numbers are actually produced by the function for a given input domain. You may also find authors talk about the image of a set under a function $f$ where that set is a subset of the domain of $f$. By this, they mean the set of output values that a function produces for the given set of input values. For example, the image of the interval $[3,5)$ under $f(x) = x^2$ is the interval $[9,25)$. The converse of this is called the \emph{pre-image} which is the set of input values that gives rise to a given set of output values. The pre-image of $[9,25)$ under $f(x) = x^2$ is $[3,5) \cup (-5,-3]$, for example.
 
 % https://en.wikipedia.org/wiki/Domain_of_a_function
 % https://en.wikipedia.org/wiki/Range_of_a_function
@@ -226,10 +226,12 @@ A polynomial can be written in various forms. Some important canonical forms are
       = a_n \prod_{k=1}^{n} (x - r_k)
       = a_0 + x(a_1 + x(a_2 + \ldots + x(a_{n-1} + x a_n)))
 \end{equation}
-where the weights $a_k$ in the sum form are called the coefficients of the polynomial and the highest power $n$ for which there is a nonzero coefficient is called the degree of the polynomial. The $r_k$ in the product form are called the roots of the polynomial. These are the values of $x$ where the output of the function $y = f(x)$ is zero. This is immediately obvious from the fact that a product is zero as soon as any of its factors is zero, which will clearly be the case if $x = r_k$ for one of the $r_k$. The roots $r_k$ may be real or complex and are not necessarily distinct. The number of times by which a root appears in the product is called the multiplicity of the root. An important theorem, the fundamental theorem of algebra, states that every polynomial of degree $n$ has exactly $n$ such roots (counted with multiplicity, i.e. a double root counts twice, etc.). A polynomial of degree 1, i.e. a function of the form $f(x) = a_0 + a_1  x$, is a very simple special case which is of practical importance and is sometimes - somewhat inconsistently - called a linear function. This terminology is inconsistent because such a function satisfies the usual requirements for linearity - homogeneity and additivity - only when the additive constant is zero, i.e. when $a_0 = 0$. Nevertheless, you'll find that terminology used often. The practical importance of such linear functions is that we will often use them to approximate more complicated functions - a process known as linearization. 
+where the weights $a_k$ in the sum form are called the coefficients of the polynomial and the highest power $n$ for which there is a nonzero coefficient is called the degree of the polynomial. The $r_k$ in the product form are called the roots of the polynomial. These are the values of $x$ where the output of the function $y = f(x)$ is zero. This is immediately obvious from the fact that a product is zero as soon as any of its factors is zero, which will clearly be the case if $x = r_k$ for one of the $r_k$. The roots $r_k$ may be real or complex and are not necessarily distinct. The number of times by which a root appears in the product is called the multiplicity of the root. An important theorem, the \emph{fundamental theorem of algebra}, states that every polynomial of degree $n$ has exactly $n$ such roots (counted with multiplicity, i.e. a double root counts twice, etc.). You will sometimes find a weaker form of this statement called fundamental theorem of algebra, namely the statement that each polynomial of nonzero degree has a root. But the stronger statement immediately follows from the possibility of splitting off a linear factor. It's usually preferable for a theorem to make the most precise and strongest possible statement from the weakest possible assumptions unless, perhaps, doing so would get in the way of comprehensibility. But that's not the case here so that's why I prefer the version of the theorem that I stated first. A polynomial of degree 1, i.e. a function of the form $f(x) = a_0 + a_1  x$, is a very simple special case which is of practical importance and is sometimes - somewhat inconsistently - called a linear function. This terminology is inconsistent because such a function satisfies the usual requirements for linearity - homogeneity and additivity - only when the additive constant is zero, i.e. when $a_0 = 0$. Nevertheless, you'll find that terminology used often, especially in high-school level math texts. That's because in these contexts, what they usually mean by "linear" is: "defines a line" rather than thes more abstract homogeneity and additivity properties. In more advanced university-level texts, they may also be called \emph{affine} functions. In this context, "affine" usually means: "linear plus some offset". The practical importance of such affine functions is that we will often use them to approximate more complicated functions - a process known as linearization. A polynomial of degree 2, i.e. a function of the form $f(x) = a_0 + a_1 x + a_2 x^2$, is also called a quadratic polynomial. Such polynomials are often the used to approximate an arbitrary function around a minimum or maximum in the context of optimization problems. They can also be used as a more accurate approximation than linear ones around arbitrary points. Polynomials are generally used to do all sorts of approximations because polynomials are often much easier to deal with than other types of functions - especially when it comes to problems involving some calculus.
+
+% quadratic approximations, biquads
 
 \paragraph{Evaluation}
-The evaluation of a polynomial is best done in nested form. This is the most efficient way and also one of the most stable ways numerically. We assume that the polynomial is given as a list or array of $n$ coefficients $a_0, \ldots, a_n$.
+The evaluation of a polynomial is best done in nested form. This is the computationally most efficient way and also one of the most stable ways numerically. We assume that the polynomial is given as a list or array of $n$ coefficients $a_0, \ldots, a_n$.
 \begin{lstlisting}
 def polyEval(p, x):
 	"""Evaluates the polynomial p at the given x using Horner's algorithm"""
@@ -277,7 +279,8 @@ Let's now see, if we can reverse the process. Let's assume that we know the coef
 \begin{equation}
 a_n = \frac{1}{b_0} (  c_n - \sum_{k=0}^{n-1} a_k b_{n-k} ) 
 \end{equation}
-...but there's a caveat: what, if $b_0 = 0$? Maybe we should find $m$ as the index of the first nonzero $b$-coeff and use $b_m$ as divisor? I think, the upper limit of the sum can then be reduced to $n-m-1$. -> figure out! What about polynomial division with remainder?
+...but there's a caveat: what, if $b_0 = 0$? Maybe we should find $m$ as the index of the first nonzero $b$-coeff and use $b_m$ as divisor? I think, the upper limit of the sum can then be reduced to $n-m-1$. -> figure out! What about polynomial division with remainder? Maybe apply the deconv-algo to sequences $c_n, b_n$ where $c_n$ actually did \emph{not} arise from a product involving $b_n$?
+
 
 %Oh my dog! Polynomial division! That pesky algorithm that we all once had to learn in school and then have forgotten for good! Worry not - you won't have to relearn it here and now. Executing algorithms with pencil and paper is not something we humans like to do and I personally find it as pointless as the next guy. Instead, I'll give you computer code for it, so we'll never ever have to do it again by hand. ....
 
@@ -286,8 +289,11 @@ a_n = \frac{1}{b_0} (  c_n - \sum_{k=0}^{n-1} a_k b_{n-k} )
 % move this comment to the cpp code where we implement or test this deconv algo - make an experiment! Compare coeffs to Taylor coeffs and the Approximation to the Taylor approximation!
 
 \paragraph{Composition}
+We can also compose two polynomials in the sense that we take an input $x$, then first apply one polynomial $y = p(x)$ and to the result $y$, we then apply another polynomial $z = q(y) = q(p(x))$. The so defined function will be yet another polynomial. When $p$ has degree $m$ and $q$ has degree $n$, then the nested polynomial defined by $q(p(x))$ will have degree $m n$.
 
-%You will sometimes find a weaker form of this statement called fundamental theorem of algebra, namely a statement that each polynomial has a root. But the stronger statement immediately follows from the possibility of splitting off a linear factor.
+TODO: give algorithm for computing the coeffs of the nested polynomial in terms of coeffs of the two input polynomials
+
+% degree is m n
 
 %..tbc..
 % product form, fundamental theorem of algebra, linear functions as special case
@@ -298,6 +304,9 @@ A rational function is a ratio or quotient of two polynomials, i.e. function of 
 \begin{equation}
  f(x) = \frac{\sum_{k=0}^n a_k x^k}{\sum_{k=0}^m b_k x^k}
 \end{equation}
+Functions of that form
+
+% poles, zeros, cancellation
 
 \paragraph{Partial Fraction Expansion}
 
@@ -347,6 +356,36 @@ When we decompose the exponential function into its odd and even parts, we obtai
 They can all also be directly be defined by a power series:
 
 \subsection{Special Functions}
+
+\subsubsection{Gamma Function}
+The Gamma function, denoted as $\Gamma(z)$, can be seen as a generalization of the (shifted) factorial function $(n-1)!$ to the whole complex plane. For $\Re(z)>0$ it is usually defined via a parameter integral like so:
+\begin{equation}
+\Gamma(z) =	\int_{0}^{\infty} t^{z-1} e^{-t} \, dt 
+          = 2 \int_{0}^{\infty} t^{2z-1} e^{-t^2} \, dt 
+          = \int_{0}^{1} (\log(1/t))^{z-1}  \, dt 	
+\end{equation}
+Some important properties are:
+\begin{equation}
+\Gamma(n) = (n-1)!, \quad	
+\Gamma(z+1) = z \Gamma(z), \quad
+\Gamma(\overline{z}) = \overline{\Gamma(z)}, \quad
+\Gamma(z) \Gamma(1-z) = \frac{\pi}{\sin(\pi z)}
+\end{equation}
+The first equation is a statment that $\Gamma$ interpolates the shifted factorial. The second says that the functional equation known from the factorial continues to hold for general complex inputs $z$.
+
+
+
+
+%where I have also listed some of its important properties, namely
+
+
+% https://mathworld.wolfram.com/GammaFunction.html
+% https://en.wikipedia.org/wiki/Gamma_function
+
+%https://www.youtube.com/watch?v=R7djflEwPwQ
+
+
+
 % gamma, bessel, elliptic integrals
 
 

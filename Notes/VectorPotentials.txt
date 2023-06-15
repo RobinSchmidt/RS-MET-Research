@@ -63,12 +63,53 @@ additional equation:
 
   F_x + G_y + H_z = 0
 
-hmm...if we keep using H = const, we would have H_z = 0, so F_x = - G_y, so:
+hmm...if we keep using H = const, we would have H_z = 0, so F_x = -G_y, so:
 
-  h = G_x - F_y = 2*G_x
+  h = G_x - F_y = 2*G_x      edit:...wait..no! that would require F_y = -G_x
+
+Maybe, together with the equation from earlier:
+
+  G = -f^z + a(x,y)
+  
+we could find a different way to determine a(x,y)? Like
+
+  G = -f^z + a(x,y) = (h/2)^x
+  
+This needs to be tested...
+
+Or - maybe to obtain a divergence-free solution, we can proceed as before and then add an 
+appropriate (curl-free?) field to our found solution? Maybe we should compute the divergence of the
+found vector potential and find a curl-free vector field that has as divergence the negative of 
+that and add it to cancel the divergence?
 
 
+see:  http://galileo.math.siu.edu/Courses/251/S12/vpot.pdf
+There, they do not only assume H(x,y,z) = const but even simpler H(x,y,z) = 0.
 
-needs to be tested
-see:
-http://galileo.math.siu.edu/Courses/251/S12/vpot.pdf
+
+https://math.stackexchange.com/questions/3160500/finding-a-vector-potential-for-a-solenoidal-vector-field
+
+----------------------------------------------------------------------------------------------------
+
+What about writing the given vector field as v = (v1, v2, v3), the desired vector potential as 
+w = (w1, w2, w3), the partial differential operators with respect to x,y,z as dx,dy,dz. Then the 
+system of equations to solve looks like:
+
+  dy w3 - dz w2 = v1, dz w1 - dx w3 = v2, dx w2 - dy w1 = v3
+  
+and we can write this as a matrix equation with a matrix containing the operators dx,dy,dz as:
+
+  [ 0  -dz  dy] [w1]   [v1]
+  [ dz  0  -dx] [w2] = [v2]
+  [-dy  dx  0 ] [w3]   [v3]
+  
+and apply the Gaussian elimination algo to that? We would have to interpret the product of two 
+operators as applying one after the other and the "division" by an operator as applying the inverse,
+i.e. something like dz/dy would mean: differentiate with respect to z and integrate with respect to 
+y. But I'm afraid, the matrix is singular and therefore admits infinitely many solutions. But maybe
+we can incorporate other conditions like div = 0 as additional rows like so:
+
+  [ 0  -dz  dy] [w1]   [v1]
+  [ dz  0  -dx] [w2] = [v2]
+  [-dy  dx  0 ] [w3]   [v3]
+  [ dx  dy  dz]        [0 ]

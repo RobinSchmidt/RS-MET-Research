@@ -1,2 +1,12 @@
 \chapter{Multilinear Algebra}
-Multilinear algebra is the study of operations that take multiple inputs and are linear in each of those inputs. For example, consider the sandwich product of two vectors and a matrix: $\mathbf{z = x^T A y}$. The matrix $\mathbf{A}$ can be thought of defining an operation that takes two vectors as inputs and produces a scalar as output. The so defined operation is indeed linear in both inputs in the sense that it makes no difference whether you add or scale at the input or output side.
+Multilinear algebra is the study of operations that take multiple inputs and are linear in each of those inputs. For example, consider the sandwich product of two vectors with a matrix sandwiched between them: $\mathbf{z = x^T A y}$. The matrix $\mathbf{A}$ can be thought of defining an operation that takes two vectors as inputs and produces a scalar as output. The so defined operation is indeed linear in both inputs in the sense that it makes no difference whether you sum or scale one of the inputs or the output. In this case, the sandwich product is also called \emph{bilinear} where the "bi" indicates that it has two (vector-valued) arguments. Oftentimes, our multilinear functions of interest will take multiple vectors as inputs and produce a scalar as output. That's also one of the ways, we may think of tensors: as scalar-valued functions of multiple vector-valued arguments. Although, in the case of tensors, the arguments may not only be vectors but also so called covectors, which we will define later. The determinant of a square matrix can actually also be thought of as a multilinear function, if we interpret the columns (or rows) of the matrix as being the individual (vector-valued) arguments. One important feature of the determinant, when viewed as such a multilinear function, is that it changes its sign whenever we swap two of its arguments. A function with that behavior is called \emph{alternating}. So, in the context of multilinar algebra, the determinant of a matrix (seen here as a tuple of vectors), may be called an "alternating multilinear function".
+
+
+\begin{comment}
+-explain how the determinant is an alternating multilinear function in the columns
+ (or rows) of a square matrix. That means, the columns of the matrix are taken as
+ the individual inputs.
+-explain, how covectors can be used to "measure" the length of a vector in an 
+ arbitrary coordinate system and how this relates to the old scalar product.
+-explain recripcoal frames, biorthogonal bases
+\end{comment}

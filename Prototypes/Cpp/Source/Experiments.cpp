@@ -11206,13 +11206,31 @@ void testRiemannZeta()
   t = pi*pi/6;
 
   // Use the (slowly converging) original sum definition for evaluation. The error is roughly given
-  // by the reciprocal of the number of terms:
+  // by the reciprocal of the number of terms such that multiplying the number of terms by 10 will
+  // give one additional correct decimal digit.
   z = RZF::evalViaOriginalSum(s,    10); e = t-z; // e ~ 0.1    = 1/10
   z = RZF::evalViaOriginalSum(s,   100); e = t-z; // e ~ 0.01   = 1/100
   z = RZF::evalViaOriginalSum(s,  1000); e = t-z; // e ~ 0.001  = 1/1000
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z; // e ~ 0.0001 = 1/10000
 
+  // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
+  s = 3;
+  t = 1.202056903159594285399738;// Computed by Wolfram Alpha via riemannzeta(3)
+  z = RZF::evalViaOriginalSum(s,    10); e = t-z; 
+  z = RZF::evalViaOriginalSum(s,   100); e = t-z;
+  z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 10000); e = t-z; 
 
+  // For s = 4, each tenfold increase of the number of terms gives 3 additional correct digits:
+  s = 4;
+  t = pi*pi*pi*pi/90;
+  z = RZF::evalViaOriginalSum(s,    10); e = t-z; 
+  z = RZF::evalViaOriginalSum(s,   100); e = t-z;
+  z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
+
+
+  // ToDo: compute relative error, too
 
 
   int dummy = 0; 

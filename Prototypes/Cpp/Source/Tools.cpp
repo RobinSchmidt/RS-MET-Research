@@ -6934,6 +6934,35 @@ protected:
 //
 // But we don't do a implementation of that here, though because that would be boring.
 
+//=================================================================================================
+
+/** A class that implements various algorithms to evaluate the Riemann zeta function for complex 
+arguments and some related functions. It's meant for exploring the properties of the function by
+facilitating to plot it but also to numercially verify certain indentities etc. */
+
+class rsRiemannZetaFunction
+{
+
+public:
+
+   using Complex = std::complex<double>;
+
+   static Complex evalViaOriginalSum(Complex s, int numTerms);
+
+   static Complex evalViaAlternatingSum(Complex s, int numTerms);
+
+   static Complex evalViaBinomialSum(Complex s, int numTerms);
+
+
+
+
+
+protected:
+
+
+};
+
+
 
 //=================================================================================================
 /*

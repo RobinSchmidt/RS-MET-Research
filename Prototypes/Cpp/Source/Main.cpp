@@ -82,7 +82,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testGeneratingFunction();
   //testCatalanNumbers();
   //testSmoothCrossFade();
-  testMerge();
+  //testMerge();
+
+  testRiemannZeta();
 
 
   return 0;

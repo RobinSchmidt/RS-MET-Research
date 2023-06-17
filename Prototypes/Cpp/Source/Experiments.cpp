@@ -11186,6 +11186,17 @@ void testMerge()
 }
 
 
+void testRiemannZeta()
+{
+  using RZF = rsRiemannZetaFunction;
+
+
+
+
+  int dummy = 0; 
+}
+
+
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {

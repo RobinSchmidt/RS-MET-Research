@@ -6964,7 +6964,7 @@ public:
 
    static std::complex<double> evalViaLaurentSeries(std::complex<double> s, int numTerms);
 
-   static std::complex<double> evaluateViaEulerProduct(std::complex<double> s, int numTerms, 
+   static std::complex<double> evalViaEulerProduct(std::complex<double> s, int numTerms, 
      int* primes);
 
 
@@ -7027,8 +7027,18 @@ std::complex<double> rsRiemannZetaFunction::evalViaBinomialSum(
   }
   return sum / (1.0 - pow(2.0, 1.0-s));
 }
+//template rsUint64 RAPT::rsBinomialCoefficient(rsUint64, rsUint64); // doesn'T work!
 
-//template rsUint64 RAPT::rsBinomialCoefficient(rsUint64, rsUint64);
+
+std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
+  std::complex<double> s, int numTerms, int* primes)
+{
+  RAPT::rsAssert(numTerms <= 10000);
+  std::complex<double> prod = 1;
+  for(int n = 0; n < numTerms; n++)
+    prod *= 1.0 / (1.0 - pow(double(primes[n]), -s));
+  return prod;
+}
 
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)

@@ -11199,6 +11199,9 @@ void testRiemannZeta()
   Complex t;         // target value
   Complex e;         // error = target - output
 
+
+  int* primes = rosic::PrimeNumbers::_getPrimeArray();
+
   // Compute z(2) via various algorithms. The value z(2) is the sum of reciprocal squares. This is
   // a famous problem known as the "Basel problem" which was solved by Euler. The value is given
   // by z(2) = sum_{n=1}^{\infty} 1/n = pi^2/6:
@@ -11219,12 +11222,16 @@ void testRiemannZeta()
   z = RZF::evalViaAlternatingSum(s,  1000); e = t-z;
   z = RZF::evalViaAlternatingSum(s, 10000); e = t-z;
 
-
   z = RZF::evalViaBinomialSum(s, 10); e = t-z;
   z = RZF::evalViaBinomialSum(s, 20); e = t-z;
   z = RZF::evalViaBinomialSum(s, 25); e = t-z;
   z = RZF::evalViaBinomialSum(s, 29); e = t-z;
   //z = RZF::evalViaBinomialSum(s, 30); e = t-z;  // error goes up again - check for overflow
+
+  z = RZF::evalViaEulerProduct(s,    10, primes); e = t-z; 
+  z = RZF::evalViaEulerProduct(s,   100, primes); e = t-z; 
+  z = RZF::evalViaEulerProduct(s,  1000, primes); e = t-z; 
+  z = RZF::evalViaEulerProduct(s, 10000, primes); e = t-z; 
 
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;

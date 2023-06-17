@@ -11262,7 +11262,16 @@ void testRiemannZeta()
 
 
 
-  // ToDo: compute relative error, too
+  // ToDo: 
+  // -Compute relative error, too
+  // -Implement a function RZW::eval(s) that dispatches between the various algorithms depending
+  //  on the input s and automatically chooses the correct number of terms to achieve a relative
+  //  precision of around 1.e-13 or something...like we would nomrally expect for double-precision
+  //  evaluations
+
+  // Resources:
+  // -Only for real s: https://en.cppreference.com/w/cpp/numeric/special_functions/riemann_zeta
+  // - https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
 
 
   int dummy = 0; 

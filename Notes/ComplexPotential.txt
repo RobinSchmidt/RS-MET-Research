@@ -48,14 +48,42 @@ What about integrating w1 with respect to x to get P and w2 with respect to y to
   Q =       - x*y^2 + g(x)
 
 And to find f(y), scan Q for terms that *only* depend on y (there is none, so f(y) = 0) or find g(x) 
-by scanning P for terms that depend *only* on x (that gives g(x) = x^3/3). The substitute the so 
-found f (or g) into P (or Q). Or what about equatiing p and Q:
+by scanning P for terms that depend *only* on x (that gives g(x) = x^3/3). Then substitute the so 
+found f (or g) into P (or Q). Or what about equating p and Q:
 
   P = Q 
   x^3/3 - x*y^2 + f(y) = - x*y^2 + g(x)
   x^3/3 + f(y) = g(x)
 
 ...not sure, what is the "best" algorithm
+
+----------------------------------------------------------------------------------------------------
+Potential for z^n
+
+  z^n = (x + iy)^n = \sum_{k=0}^n x^k (iy)^(n-k)
+
+The following Sage code can be used for experimentation. Tweak n:
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+n = 5
+z = x + I*y
+w = z^n
+w.real(), w.imag()
+
+n=0: Re = 1,                                   Im = 0 
+n=1: Re = x,                                   Im = y
+n=2: Re = x^2 - y^2,                           Im = 2*x*y
+n=3: Re = x^3 - 3*x*y^2,                       Im = 3*x^2*y - y^3
+n=4: Re = x^4 - 6*x^2*y^2 + y^4,               Im = 4*x^3*y - 4*x*y^3
+n=5: Re = x^5 - 10*x^3*y^2 + 5*x*y^4,          Im = 5*x^4*y - 10*x^2*y^3 + y^5
+n=6: Re = x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6, Im = 6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+
+We always take binomial coeffs from the n-th line of Pascal's triangle. The coeffs of each line go
+alternatingly into the real and imaginary part. Within these parts, there's also a sign alternation. 
+They multiply terms of the form x^k y^(n-k) where k starts at n in the real part and at n-1 in the 
+imaginary part and decrements by 2 from term to term.
 
 
 Notes:
@@ -69,8 +97,10 @@ potential of f(z) - z instead of f(z) itself. The zeros of f(z) - z should be th
 f(z).
 
 ToDo:
--work out the potential for some other important functions such as 1/z, exp(z),
+-work out the potential for some other important functions such as z^n, 1/z, exp(z),
  sin(z), cos(z), log(z), etc.
+ 
+ 
 
 
 

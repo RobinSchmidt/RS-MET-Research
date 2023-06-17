@@ -6963,7 +6963,8 @@ public:
    static std::complex<double> evalViaBinomialSum(std::complex<double> s, int numTerms);
 
    static std::complex<double> evalViaEulerProduct(std::complex<double> s, int numTerms, 
-     int* primes);
+     const int* primeTable);
+   // requires a table of prime numbers at least as large as numTerms
 
    static std::complex<double> evalViaLaurentSeries(std::complex<double> s, int numTerms);
 
@@ -7034,7 +7035,7 @@ std::complex<double> rsRiemannZetaFunction::evalViaBinomialSum(
 
 
 std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
-  std::complex<double> s, int numTerms, int* primes)
+  std::complex<double> s, int numTerms, const int* primes)
 {
   RAPT::rsAssert(numTerms <= 10000);
   std::complex<double> prod = 1;

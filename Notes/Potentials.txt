@@ -49,3 +49,78 @@ indeed a valid potential for our vector field.
 ToDo:
 -Try the algorithm with some more complicated functions. I'm not yet totally sure, if it will always
  work. Baerwolff has a slightly more complicated algorithm on page 562.
+ 
+----------------------------------------------------------------------------------------------------
+Under construction:
+
+Assume that we have numerical data for a vector field v(x,y), u(x,y) and we know that this data 
+represents a potential field. How can we find a corresponding potential numerically?
+
+Idea:
+-Integrate u with respect to x using trapezoidal integration row-wise. Call the result U.
+-Integrate v with respect to y using trapezoidal integration column-wise. Call the result V.
+-They should match up to functions only in the other variable, i.e. the real potential is a function
+ p(x,y) = U(x,y) + f(y) = V(x,y) + g(x). I think, to find f(y) we can use V - U or likewise to find 
+ g(x) we can use U - V. U contain components of p that depend on x, V contains only components that 
+ depend on y. In U-V and V-U, the terms that depend on both x and y will cancel and it remains only
+ the missing part that depends on the other variable. ..I'm totally not sure about that - it's just 
+ an idea. Ah - no: U - V = g(x) - f(y) and V - U = f(y) - g(x)
+ 
+Let's take an example. The 2D potential is given by:
+
+  p(x,y) = 3x^3 + 2y^4 + 5xy
+  
+The vector field u(x,y), v(x,y) is obtained by taking partial derivatives:
+
+  u(x,y) = p_x(x,y) = 9x^2 + 5y
+  v(x,y) = p_y(x,y) = 8y^3 + 5x
+
+To get back p, we integrate u with respect to x and call it U and integrate v with respect to y and 
+call it V:
+
+  U = U(x,y) = 3x^3 + 5xy = g(x) + h(x,y)
+  V = V(x,y) = 2y^4 + 5xy = f(y) + h(x,y)
+  
+Take the sum, call it W:
+    
+  W := U+V = 3x^3 + 2y^4 + 10xy  = g(x) + f(y) + 2 h(x,y)
+
+This a linear system of 3 equations for g,f,h which we can solve for either of the 3. U,V,U+V=W are 
+the known right hand sides, g,f,h are the variables. Let's try to solve for the common part 
+h = h(x,y):
+
+  U =  h + g
+  V =  h + f
+  W = 2h + g + f
+  
+...ah..no...the last line is linearly dependent on the first two (its their sum), so the system is 
+singular
+  
+
+
+
+
+Now take the differences:
+
+  U-V = (3x^3 + 5xy) - (2y^4 + 5xy) = 3x^3 - 2y^4         = g(x) - f(y)
+  V-U = (2y^4 + 5xy) - (3x^3 + 5xy) = 2y^4 - 3x^3         = f(y) - g(x)
+  U+V = (3x^3 + 5xy) + (2y^4 + 5xy) = 3x^3 + 2y^4 + 10xy  = g(x) + f(y) + 2 h(x,y)
+
+where h(x,y) is the cross-part, the common terms that appear in both integrals which is the 5xy term 
+here in this example.
+
+...hmm... don't know, if that leads anywhere
+
+
+...maybe another way:
+
+   U = U(x,y) = 3x^3 + 5xy + f(y)
+   V = V(x,y) = 2y^4 + 5xy + g(x)
+  
+The numerical integration will assume f(y) = g(x) = 0. But that's wrong. We need to figure out what 
+the actual f(y) and/or g(x) was.
+
+  1: U - V = (3x^3 + 5xy + f(y)) - (2y^4 + 5xy + g(x)) = (3x^3 + f(y)) - (2y^4 + g(x))
+  2: V - U = (2y^4 + 5xy + g(x)) - (3x^3 + 5xy + f(y)) = (2y^4 + g(x)) - (3x^3 + f(y))
+  
+Solve 1  

@@ -11220,6 +11220,10 @@ void testRiemannZeta()
   z = RZF::evalViaAlternatingSum(s, 10000); e = t-z;
 
 
+  z = RZF::evalViaBinomialSum(s, 10); e = t-z;
+  z = RZF::evalViaBinomialSum(s, 20); e = t-z;
+  z = RZF::evalViaBinomialSum(s, 25); e = t-z;
+  z = RZF::evalViaBinomialSum(s, 30); e = t-z;  // error goes up again - check for overflow
 
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;

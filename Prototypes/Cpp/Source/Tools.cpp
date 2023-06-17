@@ -7004,6 +7004,24 @@ std::complex<double> rsRiemannZetaFunction::evalViaAlternatingSum(
   return eta / (1.0 - pow(2.0, 1.0-s));
 }
 
+std::complex<double> rsRiemannZetaFunction::evalViaBinomialSum(
+  std::complex<double> s, int numTerms)
+{
+  std::complex<double> sum = 0;
+  for(int n = 0; n <= numTerms; n++)
+  {
+    std::complex<double> subsum = 0;
+    for(int k = 0; k <= n; k++)
+    {
+      int bnk  = RAPT::rsBinomialCoefficient(n, k);
+      int sign = pow(-1, k);  // optimize!
+      subsum += double(sign * bnk) * pow(k+1.0, -s);
+    }
+    sum += subsum / pow(2, n+1);
+  }
+  return sum / (1.0 - pow(2.0, 1.0-s));
+}
+
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)
 {
   double sign = +1.0;

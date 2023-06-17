@@ -6962,10 +6962,13 @@ public:
 
    static std::complex<double> evalViaBinomialSum(std::complex<double> s, int numTerms);
 
-   static std::complex<double> evalViaLaurentSeries(std::complex<double> s, int numTerms);
-
    static std::complex<double> evalViaEulerProduct(std::complex<double> s, int numTerms, 
      int* primes);
+
+   static std::complex<double> evalViaLaurentSeries(std::complex<double> s, int numTerms);
+
+
+
 
 
 
@@ -7040,6 +7043,31 @@ std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
   return prod;
 }
 
+std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
+  std::complex<double> s, int numTerms)
+{
+  RAPT::rsAssert(numTerms <= 11);
+
+  // We use a precomputed table of the Stieltjes constants:
+  // https://en.wikipedia.org/wiki/Stieltjes_constants
+  double g[11];
+  g[0]  = +0.5772156649015328606065120900824024310421593359;
+  g[1]  = -0.0728158454836767248605863758749013191377363383;
+  g[2]  = -0.0096903631928723184845303860352125293590658061;
+  g[3]  = +0.0020538344203033458661600465427533842857158044;
+  g[4]  = +0.0023253700654673000574681701775260680009044694;
+  g[5]  = +0.0007933238173010627017533348774444448307315394;
+  g[6]  = -0.0002387693454301996098724218419080042777837151;
+  g[7]  = -0.0005272895670577510460740975054788582819962534;
+  g[8]  = -0.0003521233538030395096020521650012087417291805;
+  g[9]  = -0.0000343947744180880481779146237982273906207895;
+  g[10] = +0.0002053328149090647946837222892370653029598537;
+
+  std::complex<double> sum = 0;
+
+
+  return sum;
+}
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)
 {

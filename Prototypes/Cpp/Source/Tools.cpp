@@ -7007,13 +7007,19 @@ std::complex<double> rsRiemannZetaFunction::evalViaAlternatingSum(
 std::complex<double> rsRiemannZetaFunction::evalViaBinomialSum(
   std::complex<double> s, int numTerms)
 {
+  RAPT::rsAssert(numTerms <= 29);
+  // In some first tests, the error decreased until numTerms reached 29. With 30, it went up 
+  // again. I guess, we have overflow issues in the computation of the binomial coeffs. 
+  // -> Figure out. For production, the computation of binomial coeffs should be replaced by an 
+  // algo based on Pascal's triangle anyway. It's still a very early prototype
+
   std::complex<double> sum = 0;
   for(int n = 0; n <= numTerms; n++)
   {
     std::complex<double> subsum = 0;
     for(int k = 0; k <= n; k++)
     {
-      int bnk  = RAPT::rsBinomialCoefficient(n, k);
+      int bnk = RAPT::rsBinomialCoefficient(n, k);
       int sign = pow(-1, k);  // optimize!
       subsum += double(sign * bnk) * pow(k+1.0, -s);
     }
@@ -7021,6 +7027,9 @@ std::complex<double> rsRiemannZetaFunction::evalViaBinomialSum(
   }
   return sum / (1.0 - pow(2.0, 1.0-s));
 }
+
+//template rsUint64 RAPT::rsBinomialCoefficient(rsUint64, rsUint64);
+
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)
 {

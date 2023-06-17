@@ -72,13 +72,14 @@ z = x + I*y
 w = z^n
 w.real(), w.imag()
 
-n=0: Re = 1,                                   Im = 0 
-n=1: Re = x,                                   Im = y
-n=2: Re = x^2 - y^2,                           Im = 2*x*y
-n=3: Re = x^3 - 3*x*y^2,                       Im = 3*x^2*y - y^3
-n=4: Re = x^4 - 6*x^2*y^2 + y^4,               Im = 4*x^3*y - 4*x*y^3
-n=5: Re = x^5 - 10*x^3*y^2 + 5*x*y^4,          Im = 5*x^4*y - 10*x^2*y^3 + y^5
-n=6: Re = x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6, Im = 6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+n=0:  Re = 1,                                        Im = 0 
+n=1:  Re = x,                                        Im = y
+n=2:  Re = x^2 - y^2,                                Im = 2*x*y
+n=3:  Re = x^3 - 3*x*y^2,                            Im = 3*x^2*y - y^3
+n=4:  Re = x^4 - 6*x^2*y^2  + y^4,                   Im = 4*x^3*y - 4*x*y^3
+n=5:  Re = x^5 - 10*x^3*y^2 + 5*x*y^4,               Im = 5*x^4*y - 10*x^2*y^3 + y^5
+n=6:  Re = x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      Im = 6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+n=7:  Re = x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  Im = 7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
 
 We always take binomial coeffs from the n-th line of Pascal's triangle. The coeffs of each line go
 alternatingly into the real and imaginary part. Within these parts, there's also a sign alternation. 

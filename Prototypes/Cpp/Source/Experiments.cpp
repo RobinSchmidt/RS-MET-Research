@@ -11197,10 +11197,21 @@ void testRiemannZeta()
   Complex s;         // input value
   Complex z;         // output value
   Complex t;         // target value
+  Complex e;         // error = target - output
 
+  // Compute z(2) via various algorithms. The value z(2) is the sum of reciprocal squares. This is
+  // a famous problem known as the "Basel problem" which was solved by Euler. The value is given
+  // by z(2) = sum_{n=1}^{\infty} 1/n = pi^2/6:
   s = 2;
-  t = pi*pi/6; // zeta(2) = pi^2/6
-  z = RZF::evalViaOriginalSum(s, 1000);
+  t = pi*pi/6;
+
+  // Use the (slowly converging) original sum definition for evaluation:
+  z = RZF::evalViaOriginalSum(s,    10); e = t-z; // e ~ 0.1    = 1/10
+  z = RZF::evalViaOriginalSum(s,   100); e = t-z; // e ~ 0.01   = 1/100
+  z = RZF::evalViaOriginalSum(s,  1000); e = t-z; // e ~ 0.001  = 1/1000
+  z = RZF::evalViaOriginalSum(s, 10000); e = t-z; // e ~ 0.0001 = 1/10000
+
+
   // With 1000 terms, only the first 3 digits are right. The convergence is rather slow
 
 

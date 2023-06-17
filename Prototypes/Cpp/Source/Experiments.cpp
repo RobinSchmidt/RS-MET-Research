@@ -11205,18 +11205,12 @@ void testRiemannZeta()
   s = 2;
   t = pi*pi/6;
 
-  // Use the (slowly converging) original sum definition for evaluation:
+  // Use the (slowly converging) original sum definition for evaluation. The error is roughly given
+  // by the reciprocal of the number of terms:
   z = RZF::evalViaOriginalSum(s,    10); e = t-z; // e ~ 0.1    = 1/10
   z = RZF::evalViaOriginalSum(s,   100); e = t-z; // e ~ 0.01   = 1/100
   z = RZF::evalViaOriginalSum(s,  1000); e = t-z; // e ~ 0.001  = 1/1000
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z; // e ~ 0.0001 = 1/10000
-
-
-  // With 1000 terms, only the first 3 digits are right. The convergence is rather slow
-
-
-
-
 
 
 

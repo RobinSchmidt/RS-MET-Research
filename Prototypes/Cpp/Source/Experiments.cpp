@@ -11228,10 +11228,15 @@ void testRiemannZeta()
   z = RZF::evalViaBinomialSum(s, 29); e = t-z;
   //z = RZF::evalViaBinomialSum(s, 30); e = t-z;  // error goes up again - check for overflow
 
-  z = RZF::evalViaEulerProduct(s,    10, primes); e = t-z; 
-  z = RZF::evalViaEulerProduct(s,   100, primes); e = t-z; 
-  z = RZF::evalViaEulerProduct(s,  1000, primes); e = t-z; 
-  z = RZF::evalViaEulerProduct(s, 10000, primes); e = t-z; 
+  z = RZF::evalViaEulerProduct(s,    10, primes); e = t-z;
+  z = RZF::evalViaEulerProduct(s,   100, primes); e = t-z;
+  z = RZF::evalViaEulerProduct(s,  1000, primes); e = t-z;
+  z = RZF::evalViaEulerProduct(s, 10000, primes); e = t-z;
+
+  // The Laurent series seems to converge rather quickly:
+  z = RZF::evalViaLaurentSeries(s,  5); e = t-z; // e ~ -6.8e-6
+  z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -6.4e-12
+  // ..but maybe that's just because s = 2 ist still quite close to the pole at s = 1?
 
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;

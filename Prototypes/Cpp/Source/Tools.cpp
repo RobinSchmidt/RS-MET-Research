@@ -7046,7 +7046,7 @@ std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
 std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   std::complex<double> s, int numTerms)
 {
-  RAPT::rsError("Not yet implemented");
+  //RAPT::rsError("Not yet implemented");
   RAPT::rsAssert(numTerms <= 11);
 
   // We use a precomputed table of the Stieltjes constants:
@@ -7064,9 +7064,11 @@ std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   g[9]  = -0.0000343947744180880481779146237982273906207895;
   g[10] = +0.0002053328149090647946837222892370653029598537;
 
-  std::complex<double> sum = 0;
-
-
+  std::complex<double> z   = s - 1.0;  // we expand in power of (s-1)^n
+  std::complex<double> sum = 1.0 / z;  // first term for n = -1
+  for(int n = 0; n < numTerms; n++) {
+    double c = g[n] * pow(-1.0, n) * RAPT::rsInverseFactorials[n];
+    sum += c * pow(z, n); }
   return sum;
 }
 

@@ -6950,13 +6950,19 @@ public:
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of zeta itself */
 
+   /** Evaluates the zeta function via z(s) = \sum_{n=1}^N n^(-s) where N = numTerms. This sum 
+   converges only for real(s) > 1. */
    static Complex evalViaOriginalSum(Complex s, int numTerms);
+   // todo: say something about the speed of convergence. I think, it will converge faster when
+   // real(s) is larger
 
    static Complex evalViaAlternatingSum(Complex s, int numTerms);
 
    static Complex evalViaBinomialSum(Complex s, int numTerms);
 
    static Complex evalViaLaurentSeries(Complex s, int numTerms);
+
+   static Complex evaluateViaEulerProduct(Complex s, int numTerms, int* primes);
 
 
 

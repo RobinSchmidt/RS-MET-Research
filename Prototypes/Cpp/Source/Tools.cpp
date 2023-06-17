@@ -6956,6 +6956,8 @@ public:
    // todo: say something about the speed of convergence. I think, it will converge faster when
    // real(s) is larger - see experiment testRiemannZeta()
 
+   /** Evaluates the Riemann zeta function via the related Dirichlet eta function like so:
+   z(s) = eta(s) / (1-2^(1-s). This converges for real(s) > 0. */
    static std::complex<double> evalViaAlternatingSum(std::complex<double> s, int numTerms);
 
    static std::complex<double> evalViaBinomialSum(std::complex<double> s, int numTerms);
@@ -6975,6 +6977,9 @@ public:
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of functions related to zeta */
 
+   /** The dirichlet eta function is a variant of the Riemann zeta function which alternating 
+   signs in the summation. Its given by  eta(s) = \sum_{n=1}^N (-1)^(n-1) * n^(-s). The sum 
+   converges for real(s) > 0. */
    static std::complex<double> evalDirchletEta(std::complex<double> s, int numTerms);
 
 
@@ -6998,8 +7003,6 @@ std::complex<double> rsRiemannZetaFunction::evalViaAlternatingSum(
   std::complex<double> eta = evalDirchletEta(s, numTerms);
   return eta / (1.0 - pow(2.0, 1.0-s));
 }
-
-
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)
 {

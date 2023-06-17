@@ -84,7 +84,14 @@ n=7:  Re = x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  Im = 7*x^6*y - 35*x^4*y^3 +
 We always take binomial coeffs from the n-th line of Pascal's triangle. The coeffs of each line go
 alternatingly into the real and imaginary part. Within these parts, there's also a sign alternation. 
 They multiply terms of the form x^k y^(n-k) where k starts at n in the real part and at n-1 in the 
-imaginary part and decrements by 2 from term to term.
+imaginary part and decrements by 2 from term to term. To find the potential, we can integrate the 
+real part with respect to x. When n is even, we can assume that the part of the potential that 
+depends only on y (the integration constant) is just zero because in these cases, the imaginary 
+parts have no term that purely depends on y but not on x. For odd n, the f(y) term is given by 
++- y^(n+1) / (n+1) where + is used for 1,5,9,13,... and - for 3,7,11,15,... This results from 
+observing the purely y-dependent part of the imaginary part and integrating it with respect to y.
+Oh - but wait - it must be negated for the Polya field, so maybe the +- must be the other way 
+around.
 
 
 Notes:

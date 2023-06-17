@@ -11190,6 +11190,23 @@ void testRiemannZeta()
 {
   using RZF = rsRiemannZetaFunction;
 
+  using Complex = std::complex<double>;
+
+  double pi = PI;
+
+  Complex s;         // input value
+  Complex z;         // output value
+  Complex t;         // target value
+
+  s = 2;
+  t = pi*pi/6; // zeta(2) = pi^2/6
+  z = RZF::evalViaOriginalSum(s, 1000);
+  // With 1000 terms, only the first 3 digits are right. The convergence is rather slow
+
+
+
+
+
 
 
 

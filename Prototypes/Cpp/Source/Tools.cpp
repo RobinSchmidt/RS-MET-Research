@@ -6947,6 +6947,9 @@ public:
 
    using Complex = std::complex<double>;
 
+   //----------------------------------------------------------------------------------------------
+   /** \name Evaluation of zeta itself */
+
    static Complex evalViaOriginalSum(Complex s, int numTerms);
 
    static Complex evalViaAlternatingSum(Complex s, int numTerms);
@@ -6958,10 +6961,29 @@ public:
 
 
 
+   //----------------------------------------------------------------------------------------------
+   /** \name Evaluation of the Polya potential of zeta */
+
+
+   //----------------------------------------------------------------------------------------------
+   /** \name Evaluation of functions related to zeta */
+
+   static Complex evalDirchletEta(Complex s, int numTerms);
+
+
 protected:
 
 
 };
+
+std::complex<double> rsRiemannZetaFunction::evalViaOriginalSum(
+  std::complex<double> s, int numTerms)
+{
+  std::complex<double> sum = 0;
+  for(int n = 1; n <= numTerms; n++)
+    sum += pow(n, -s);
+  return sum;
+}
 
 
 

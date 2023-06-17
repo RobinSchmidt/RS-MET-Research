@@ -6945,24 +6945,25 @@ class rsRiemannZetaFunction
 
 public:
 
-   using Complex = std::complex<double>;
+   //using Complex = std::complex<double>;
 
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of zeta itself */
 
    /** Evaluates the zeta function via z(s) = \sum_{n=1}^N n^(-s) where N = numTerms. This sum 
    converges only for real(s) > 1. */
-   static Complex evalViaOriginalSum(Complex s, int numTerms);
+   static std::complex<double> evalViaOriginalSum(std::complex<double> s, int numTerms);
    // todo: say something about the speed of convergence. I think, it will converge faster when
-   // real(s) is larger
+   // real(s) is larger - see experiment testRiemannZeta()
 
-   static Complex evalViaAlternatingSum(Complex s, int numTerms);
+   static std::complex<double> evalViaAlternatingSum(std::complex<double> s, int numTerms);
 
-   static Complex evalViaBinomialSum(Complex s, int numTerms);
+   static std::complex<double> evalViaBinomialSum(std::complex<double> s, int numTerms);
 
-   static Complex evalViaLaurentSeries(Complex s, int numTerms);
+   static std::complex<double> evalViaLaurentSeries(std::complex<double> s, int numTerms);
 
-   static Complex evaluateViaEulerProduct(Complex s, int numTerms, int* primes);
+   static std::complex<double> evaluateViaEulerProduct(std::complex<double> s, int numTerms, 
+     int* primes);
 
 
 
@@ -6974,7 +6975,7 @@ public:
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of functions related to zeta */
 
-   static Complex evalDirchletEta(Complex s, int numTerms);
+   static std::complex<double> evalDirchletEta(std::complex<double> s, int numTerms);
 
 
 protected:
@@ -6990,6 +6991,26 @@ std::complex<double> rsRiemannZetaFunction::evalViaOriginalSum(
     sum += pow(n, -s);
   return sum;
 }
+
+std::complex<double> rsRiemannZetaFunction::evalViaAlternatingSum(
+  std::complex<double> s, int numTerms)
+{
+  std::complex<double> eta = evalDirchletEta(s, numTerms);
+  return eta / (1.0 - pow(2.0, 1.0-s));
+}
+
+
+
+std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)
+{
+  double sign = +1.0;
+  std::complex<double> sum = 0;
+  for(int n = 1; n <= numTerms; n++) {
+    sum  += sign * pow(n, -s);
+    sign *= -1.0; }
+  return sum;
+}
+
 
 
 

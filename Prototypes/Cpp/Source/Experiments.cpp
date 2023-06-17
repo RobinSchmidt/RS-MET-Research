@@ -11213,6 +11213,14 @@ void testRiemannZeta()
   z = RZF::evalViaOriginalSum(s,  1000); e = t-z; // e ~ 0.001  = 1/1000
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z; // e ~ 0.0001 = 1/10000
 
+  // Converges faster - I think, we get 2 digits per x10 more terms:
+  z = RZF::evalViaAlternatingSum(s,    10); e = t-z;
+  z = RZF::evalViaAlternatingSum(s,   100); e = t-z;
+  z = RZF::evalViaAlternatingSum(s,  1000); e = t-z;
+  z = RZF::evalViaAlternatingSum(s, 10000); e = t-z;
+
+
+
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;
   t = 1.202056903159594285399738;// Computed by Wolfram Alpha via riemannzeta(3)
@@ -11228,6 +11236,9 @@ void testRiemannZeta()
   z = RZF::evalViaOriginalSum(s,   100); e = t-z;
   z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
+
+
+
 
 
   // ToDo: compute relative error, too

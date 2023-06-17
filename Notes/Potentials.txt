@@ -17,7 +17,7 @@ Before excuting this algo, it may make sense to verify that a potential exists (
 symmetry of the Jacobian, I think). After the potential has been found, it may make sense to verify 
 that the so found F is indeed a potential by taking all the partial derivatives of F (i.e. dF/dx_1,
 ..., df/dx_n) and comparing them with the given f_1,...,f_n. They should match. At each step of the 
-algotithm, the terms that *do* depend on previous integration variables should match those of the
+algorithm, the terms that *do* depend on previous integration variables should match those of the
 previously computed expressions. For example, in step (3), those terms that do depend on x_1 and/or 
 x_2, should match corresponding terms that have already been computed in steps (1), (2). They are 
 already accumulated into our final F, so we should not add them again. In all the integrations, we 

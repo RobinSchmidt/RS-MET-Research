@@ -7046,6 +7046,7 @@ std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
 std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   std::complex<double> s, int numTerms)
 {
+  RAPT::rsError("Not yet implemented");
   RAPT::rsAssert(numTerms <= 11);
 
   // We use a precomputed table of the Stieltjes constants:

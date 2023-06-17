@@ -6953,6 +6953,7 @@ public:
 
    static Complex evalViaBinomialSum(Complex s, int numTerms);
 
+   static Complex evalViaLaurentSeries(Complex s, int numTerms);
 
 
 

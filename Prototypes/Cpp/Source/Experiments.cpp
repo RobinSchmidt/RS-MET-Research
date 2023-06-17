@@ -11233,10 +11233,11 @@ void testRiemannZeta()
   z = RZF::evalViaEulerProduct(s,  1000, primes); e = t-z;
   z = RZF::evalViaEulerProduct(s, 10000, primes); e = t-z;
 
-  // The Laurent series seems to converge rather quickly:
+  // The Laurent series seems to converge rather quickly. But it seems, the quick convergence
+  // is only due to s = 2 being close to the expansion point at s = 1. For s farther away from 
+  // s = 1, the convergence slows down considerably:
   z = RZF::evalViaLaurentSeries(s,  5); e = t-z; // e ~ -6.8e-6
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -6.4e-12
-  // ..but maybe that's just because s = 2 ist still quite close to the pole at s = 1?
 
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;
@@ -11253,6 +11254,9 @@ void testRiemannZeta()
   z = RZF::evalViaOriginalSum(s,   100); e = t-z;
   z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
+
+  z = RZF::evalViaLaurentSeries(s,  5); e = t-z; // e ~ -1.6e-3
+  z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -1.0e-6
 
 
 

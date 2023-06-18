@@ -7105,8 +7105,8 @@ std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double>
 std::complex<double> rsRiemannZetaFunction::dirichletTermViaReIm(std::complex<double> s, int n)
 {
   // n^(-s) / (1 - 2^(1-s))
-  std::complex<double> tn = pow(n, -s) / (1.0 - pow(2.0, 1.0-s)); // preliminary
-
+  std::complex<double> tn = pow(n, -s) / (1.0 - pow(2.0, 1.0-s)); // preliminary, for test
+  // Maybe move into a function dirichletTermDirect and use in unit tests
 
   double x = real(s);
   double y = imag(s);
@@ -7114,22 +7114,35 @@ std::complex<double> rsRiemannZetaFunction::dirichletTermViaReIm(std::complex<do
   double p = log(2);
 
   double sp = sin(p*y);
-  double sw = sin(w*y);
   double cp = cos(p*y);
+  double sw = sin(w*y);
   double cw = cos(w*y);
   double ep = exp(p*x);
   double ew = exp(w*x);
-  double d  = 4*cw*ep*ew - (ep*ep + 4)*ew;
-  double a  = 2*cp*ep - ep*ep;
+  double d  = 4*ep*cp*ew - (ep*ep + 4)*ew;
+  double a  = 2*ep*cp - ep*ep;
   double re = (2*ep*sp*sw + a*cw) / d;
-  double im = (2*ep*cw*sp - a*sw) / d;
-  // If all is correct, re,im should match tn.re, tn.im ...but nope - something is still wrong!
+  double im = (2*ep*sp*cw - a*sw) / d;
+  // If all is coorect, then (re,im) should match (tn.re,tn.im). Yep - looks good.
 
+  return std::complex(re, im);
+  //return tn;
 
-
-
-
-  return tn;
+  // ToDo: 
+  // -Optimize:
+  //  -get rid of second division by using s = 1/d
+  //  -use rsSinCos
+  //  -p is a constant, define as static const
+  //  -maybe some exp calls can be merged with some log calls and cancel? 
+  //   exp(w*x) = exp(log(n)*x) = n^x...yeah...no...that would be a pessimization.
+  //   Likewise exp(p*x) = exp(log(2)*x) = 2^x. That could perhaps be worthwhile when a fast
+  //   routine for 2^x is available (faster than exp).
+  //  -Maybe a couple of products that are used twice can be computed once: ep*cp, ep*ep, 2*ep*sp.
+  //   But that will probably be done by the compiler anyway.
+  //  -Overall, it seems that we need one log, 2 exp, 2 sin/cos pairs, 1 div and a bunch of 
+  //   add, sub, mul
+  //  -On the other hand, this function is not supposed to be relevant for production code anyway
+  //   so maybe optimizing it is pointless.
 }
 
 

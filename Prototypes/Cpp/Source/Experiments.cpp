@@ -11271,7 +11271,7 @@ void testRiemannZeta()
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
 
 
-  z = RZF::dirichletTermViaReIm(s, 3);
+  z = RZF::dirichletTermViaReIm(s, 5);
 
 
 

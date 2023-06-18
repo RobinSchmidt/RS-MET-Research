@@ -11198,6 +11198,7 @@ void testRiemannZeta()
   Complex z;         // output value
   Complex t;         // target value
   Complex e;         // error = target - output
+  Complex i(0, 1);   // imaginary unit
 
 
   int* primes = rosic::PrimeNumbers::_getPrimeArray();
@@ -11232,10 +11233,11 @@ void testRiemannZeta()
   z = RZF::evalViaEulerProduct(s,   100, primes); e = t-z;
   z = RZF::evalViaEulerProduct(s,  1000, primes); e = t-z;
   z = RZF::evalViaEulerProduct(s, 10000, primes); e = t-z;
+  // Dont go above 10000 bcs the primes array has only 10000 entries!
 
   // The Laurent series seems to converge rather quickly. But it seems, the quick convergence
   // is only due to s = 2 being close to the expansion point at s = 1. For s farther away from 
-  // s = 1, the convergence slows down considerably:
+  // s = 1, the convergence slows down considerably (see the evaluations for s = 4):
   z = RZF::evalViaLaurentSeries(s,  5); e = t-z; // e ~ -6.8e-6
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -6.4e-12
 
@@ -11259,6 +11261,14 @@ void testRiemannZeta()
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -1.0e-6
 
 
+  // Now let's try a complex argument 2 + 3i:
+  s = 2.0 + 3.0*i;
+  t = 0.7980219851462757206 - 0.1137443080529385002*i;
+
+  z = RZF::evalViaOriginalSum(s,    10); e = t-z;
+  z = RZF::evalViaOriginalSum(s,   100); e = t-z;
+  z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
 
 
 

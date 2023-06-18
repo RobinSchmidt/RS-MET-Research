@@ -7037,7 +7037,11 @@ std::complex<double> rsRiemannZetaFunction::evalViaBinomialSum(
 std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
   std::complex<double> s, int numTerms, const int* primes)
 {
-  RAPT::rsAssert(numTerms <= 10000);
+  //RAPT::rsAssert(numTerms <= 10000);
+  // 10000 is the size of the array returned by rosic::PrimeNumbers::_getPrimeArray() which
+  // is passed in the test...but ensuring that primes has at least numTerms entries is actually
+  // the business of the caller
+
   std::complex<double> prod = 1;
   for(int n = 0; n < numTerms; n++)
     prod *= 1.0 / (1.0 - pow(double(primes[n]), -s));

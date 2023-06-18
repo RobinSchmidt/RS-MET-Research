@@ -91,7 +91,13 @@ parts have no term that purely depends on y but not on x. For odd n, the f(y) te
 +- y^(n+1) / (n+1) where + is used for 1,5,9,13,... and - for 3,7,11,15,... This results from 
 observing the purely y-dependent part of the imaginary part and integrating it with respect to y.
 Oh - but wait - it must be negated for the Polya field, so maybe the +- must be the other way 
-around.
+around. Let's see if we can make a general formula for the real part:
+
+n even: Re = sum_{k=0}^{n/2} c_nk x^2k y^(n-2k)  
+n odd:  
+
+with c_nk = ...
+
 
 
 Notes:

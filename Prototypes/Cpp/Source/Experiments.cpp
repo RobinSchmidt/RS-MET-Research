@@ -11270,6 +11270,7 @@ void testRiemannZeta()
   s = -1;
   t = -1/12.;
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ 1.5e-8
+  z = RZF::evalViaBoostSum(     s,  5); e = t-z; // e = -2.75  -> formula doesn't work here
 
 
   // Now let's try a complex argument 2 + 3i:

@@ -57,6 +57,27 @@ found f (or g) into P (or Q). Or what about equating p and Q:
 
 ...not sure, what is the "best" algorithm
 
+
+----------------------------------------------------------------------------------------------------
+Potential for 1/z. We'll use SageMath to find real and imaginary part of complex inversion:
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+t = 1 / (x + I * y)
+t.real(), t.imag()
+
+which gives as answer:
+
+  (x/(x^2 + y^2), -y/(x^2 + y^2))
+  
+So the Polya vector field for 1/z is given by:
+
+  u(x,y) = x / (x^2 + y^2)
+  v(x,y) = y / (x^2 + y^2)
+  
+  
+  
 ----------------------------------------------------------------------------------------------------
 Potential for z^n
 

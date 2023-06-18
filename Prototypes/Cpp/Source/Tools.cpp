@@ -6970,8 +6970,8 @@ public:
 
 
 
-
-
+   // ToDo: implement this formula:
+   // https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
 
 
    //----------------------------------------------------------------------------------------------
@@ -6981,7 +6981,7 @@ public:
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of functions related to zeta */
 
-   /** The dirichlet eta function is a variant of the Riemann zeta function which alternating 
+   /** The Dirichlet eta function is a variant of the Riemann zeta function which alternating 
    signs in the summation. Its given by  eta(s) = \sum_{n=1}^N (-1)^(n-1) * n^(-s). The sum 
    converges for real(s) > 0. */
    static std::complex<double> evalDirchletEta(std::complex<double> s, int numTerms);
@@ -7031,7 +7031,8 @@ std::complex<double> rsRiemannZetaFunction::evalViaBinomialSum(
   }
   return sum / (1.0 - pow(2.0, 1.0-s));
 }
-//template rsUint64 RAPT::rsBinomialCoefficient(rsUint64, rsUint64); // doesn'T work!
+// template rsUint64 RAPT::rsBinomialCoefficient(rsUint64, rsUint64); // doesn't work!
+// ..try to move into rs_testing and see if it works from there
 
 
 std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
@@ -7051,7 +7052,6 @@ std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
 std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   std::complex<double> s, int numTerms)
 {
-  //RAPT::rsError("Not yet implemented");
   RAPT::rsAssert(numTerms <= 11);
 
   // We use a precomputed table of the Stieltjes constants:
@@ -7068,6 +7068,13 @@ std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   g[8]  = -0.0003521233538030395096020521650012087417291805;
   g[9]  = -0.0000343947744180880481779146237982273906207895;
   g[10] = +0.0002053328149090647946837222892370653029598537;
+  // This table is preliminary. ToDo: 
+  // Remove leading zeros and let all coeffs have the same number of significant digits (~20). Use
+  // g[1] = -7.281e-2 notation. Maybe instead of storing g[n], store the final coeffs 
+  // (-1)^n * g[n] / n!. The g[n] will eventually grow large as n gets larger, so it may make sense
+  // to divide by the n! to keep them in check. Have more coeffs - at least 100, maybe 10000. Maybe 
+  // write a program to compute them in SageMath or Mathematica or maybe in C++ using rsBigFloat.
+  // Figure out the range of s for which this algorithms yields satisfying results precision wise.
 
   std::complex<double> z   = s - 1.0;  // we expand in power of (s-1)^n
   std::complex<double> sum = 1.0 / z;  // first term for n = -1

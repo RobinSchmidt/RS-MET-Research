@@ -72,6 +72,8 @@ z = x + I*y
 w = z^n
 w.real(), w.imag()
 
+This code gives the following results:
+
 n=0:  Re = 1,                                        Im = 0 
 n=1:  Re = x,                                        Im = y
 n=2:  Re = x^2 - y^2,                                Im = 2*x*y
@@ -98,6 +100,12 @@ n odd:
 
 with c_nk = ...
 
+ToDo: write a function double rsPolyaPotentialPowInt(double x, double y, int n) that computes
+the Polya potential for f(z) = z^n = (x + iy)^n. Maybe make a class rsPolyaPotential with static 
+members powInt, exp, reciprocal, etc. Verify the correctness by computing partial derivatives with 
+respect to x and y numerically and compare the results to the reral and (negated) imaginary parts of
+an evaluation of the actual complex function. Maybe evaluate at least at 0,1,-1,i,-i... maybe also
+1+i,-1+i,1-i,-1-i
 
 
 Notes:

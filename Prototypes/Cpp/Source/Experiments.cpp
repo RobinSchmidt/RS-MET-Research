@@ -11241,6 +11241,12 @@ void testRiemannZeta()
   z = RZF::evalViaLaurentSeries(s,  5); e = t-z; // e ~ -6.8e-6
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -6.4e-12
 
+
+  z = RZF::evalViaBoostSum(s,  5); e = t-z;  // e ~ 1.2e-5 
+  z = RZF::evalViaBoostSum(s, 10); e = t-z;  // e ~ 2.5e-10
+  z = RZF::evalViaBoostSum(s, 15); e = t-z;  // e ~ 6.2e-15
+
+
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;
   t = 1.202056903159594285399738;// Computed by Wolfram Alpha via riemannzeta(3)
@@ -11260,6 +11266,11 @@ void testRiemannZeta()
   z = RZF::evalViaLaurentSeries(s,  5); e = t-z; // e ~ -1.6e-3
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -1.0e-6
 
+  // For z(-1) = -1/12
+  s = -1;
+  t = -1/12.;
+  z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ 1.5e-8
+
 
   // Now let's try a complex argument 2 + 3i:
   s = 2.0 + 3.0*i;
@@ -11271,6 +11282,8 @@ void testRiemannZeta()
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
 
 
+
+  // Test:
   z = RZF::dirichletTermViaReIm(s, 5);
 
 

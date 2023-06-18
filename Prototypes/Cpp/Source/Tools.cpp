@@ -6969,6 +6969,8 @@ public:
    static std::complex<double> evalViaLaurentSeries(std::complex<double> s, int numTerms);
 
 
+   static std::complex<double> evalViaBoostSum(std::complex<double> s, int n);
+
 
    // ToDo: implement this formula:
    // https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
@@ -7090,6 +7092,23 @@ std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
     double c = g[n] * pow(-1.0, n) * RAPT::rsInverseFactorials[n];
     sum += c * pow(z, n); }
   return sum;
+}
+
+std::complex<double> rsRiemannZetaFunction::evalViaBoostSum(std::complex<double> s, int n)
+{
+  auto coeff = [](int j, int n)
+  {
+    int sum = 0;
+    for(int k = 0; k <= j-n; k++)
+      sum += rsBinomialCoefficient(n, k);
+    return pow(-1, j) * (sum - pow(2, n));  // optimize away the pow(-1, j)
+  };
+
+  std::complex<double> sum = 0;
+  for(int j = 0; j <= 2*n-1; j++)
+    sum += coeff(j, n) / pow(j+1, s);
+
+  return -sum / (pow(s, n) * (1.0-pow(2.0, 1.0-s)));
 }
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)

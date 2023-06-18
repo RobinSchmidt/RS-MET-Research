@@ -7105,8 +7105,31 @@ std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double>
 std::complex<double> rsRiemannZetaFunction::dirichletTermViaReIm(std::complex<double> s, int n)
 {
   // n^(-s) / (1 - 2^(1-s))
-  return pow(n, -s) / (1.0 - pow(2.0, 1.0-s)); // preliminary
+  std::complex<double> tn = pow(n, -s) / (1.0 - pow(2.0, 1.0-s)); // preliminary
 
+
+  double x = real(s);
+  double y = imag(s);
+  double w = log(n);
+  double p = log(2);
+
+  double sp = sin(p*y);
+  double sw = sin(w*y);
+  double cp = cos(p*y);
+  double cw = cos(w*y);
+  double ep = exp(p*x);
+  double ew = exp(w*x);
+  double d  = 4*cw*ep*ew - (ep*ep + 4)*ew;
+  double a  = 2*cp*ep - ep*ep;
+  double re = (2*ep*sp*sw + a*cw) / d;
+  double im = (2*ep*cw*sp - a*sw) / d;
+  // If all is correct, re,im should match tn.re, tn.im ...but nope - something is still wrong!
+
+
+
+
+
+  return tn;
 }
 
 

@@ -67,16 +67,32 @@ assume(y, "real")
 t = 1 / (x + I * y)
 t.real(), t.imag()
 
-which gives as answer:
-
-  (x/(x^2 + y^2), -y/(x^2 + y^2))
-  
-So the Polya vector field for 1/z is given by:
+which gives: (x/(x^2 + y^2), -y/(x^2 + y^2)), so the Polya vector field for 1/z is given by:
 
   u(x,y) = x / (x^2 + y^2)
   v(x,y) = y / (x^2 + y^2)
   
+Let's integrate u with respect to x and v with respect to y to find the potential:  
   
+var("x y")  
+u = x / (x^2 + y^2)
+v = y / (x^2 + y^2)
+Pu = integral(u, x)
+Pv = integral(v, y)
+Pu, Pv
+
+which gives: (1/2*log(x^2 + y^2), 1/2*log(x^2 + y^2)), so the Polya potential for 1/z is given by:
+ 
+  p(x,y) = log(x^2 + y^2) / 2
+  
+It can be verified to be indeed a potential for u,v via:
+  
+var("x y")  
+p = log(x^2 + y^2) / 2
+px = diff(p, x)
+py = diff(p, y)
+px, py  
+
   
 ----------------------------------------------------------------------------------------------------
 Potential for z^n

@@ -6987,6 +6987,14 @@ public:
    static std::complex<double> evalDirchletEta(std::complex<double> s, int numTerms);
 
 
+   /** Implements the formula to compute real and imaginary part of the n-th term in the Dirichlet 
+   function, i.e. n^(-s) / (1 - 2^(1-s)) but without resorting to complex numbers. This is just for
+   verifying the derived formulas for re and im numerically and probably has no practical 
+   application in production. These formulas may serve as starting point for finding a Polya 
+   potential for such a term. I did not yet succeed cracking the integrals, though. */
+   static std::complex<double> dirichletTermViaReIm(std::complex<double> s, int n);
+
+
 protected:
 
 
@@ -7094,6 +7102,12 @@ std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double>
   return sum;
 }
 
+std::complex<double> rsRiemannZetaFunction::dirichletTermViaReIm(std::complex<double> s, int n)
+{
+  // n^(-s) / (1 - 2^(1-s))
+  return pow(n, -s) / (1.0 - pow(2.0, 1.0-s)); // preliminary
+
+}
 
 
 

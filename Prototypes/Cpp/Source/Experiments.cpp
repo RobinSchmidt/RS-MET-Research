@@ -11287,7 +11287,32 @@ void testRiemannZeta()
   // Test:
   z = RZF::dirichletTermViaReIm(s, 5);
 
+  // For testing the formula in the paper
+  int c[5];   // coeff
+  int px[5];  // power of x
+  int py[5];  // power of y
 
+  // Even n:
+  int n = 6;
+  for(int k = 0; k <= n/2; k++)
+  {
+    c[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
+    px[k] = n-2*k;
+    py[k] = 2*k;
+  }
+
+  // Odd n:
+  n = 7;
+  //for(int k = 0; k <= (n-1)/2; k++)
+  for(int k = 0; k <= n/2; k++)    // floor division should also work
+  {
+    c[k] = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
+    px[k] = n-2*k;
+    py[k] = 2*k;
+  }
+
+  // Actually, it's now exactly the same code in b ot cases. The floor division takes care of the 
+  // (n-1) in case of odd n
 
   // ToDo: 
   // -Compute relative error, too

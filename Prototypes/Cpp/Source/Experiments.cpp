@@ -11287,40 +11287,30 @@ void testRiemannZeta()
   // Test:
   z = RZF::dirichletTermViaReIm(s, 5);
 
-  // For testing the formula in the paper
-  static const int N = 5;
-  int uc[N],  vc[N];   // coeffs of u and v
-  int upx[N], vpx[N];  // powers of x in u and v
-  int upy[N], vpy[N];  // powers of y in u and v
-
-  // Even n:
-  int n = 6;
+  // For testing the formula in the paper about the Riemann zeta Polya potential. Compare
+  // results with the sage output
+  static const int N = 5; // length of coeff/power arrays
+  int uc[N],  vc[N];      // coeffs of u and v
+  int upx[N], vpx[N];     // powers of x in u and v
+  int upy[N], vpy[N];     // powers of y in u and v
+  int n = 7;              // tweak! the power of (x + i*y)^n
   for(int k = 0; k <= n/2; k++)
   {
     uc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
-    vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1); // not yet sure...
     upx[k] = n-2*k;
     upy[k] = 2*k;
+  }
+  for(int k = 0; k <= (n-1)/2; k++)
+  {
+    vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1); // not yet sure...
     vpx[k] = n-2*k-1; // verify!
     vpy[k] = 2*k+1;   // verify!
   }
-  // Looks like for even n, we get an x^(-1) power in v.
+
+
+
 
   int dummy = 0; 
-
-  /*
-  // Odd n:
-  n = 7;
-  //for(int k = 0; k <= (n-1)/2; k++)
-  for(int k = 0; k <= n/2; k++)    // floor division should also work
-  {
-    uc[k] = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
-    upx[k] = n-2*k;
-    upy[k] = 2*k;
-  }
-  // Actually, it's now exactly the same code in b ot cases. The floor division takes care of the 
-  // (n-1) in case of odd n
-  */
 
   // ToDo: 
   // -Compute relative error, too

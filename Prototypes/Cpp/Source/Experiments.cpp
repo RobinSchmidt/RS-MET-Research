@@ -11288,31 +11288,39 @@ void testRiemannZeta()
   z = RZF::dirichletTermViaReIm(s, 5);
 
   // For testing the formula in the paper
-  int c[5];   // coeff
-  int px[5];  // power of x
-  int py[5];  // power of y
+  static const int N = 5;
+  int uc[N],  vc[N];   // coeffs of u and v
+  int upx[N], vpx[N];  // powers of x in u and v
+  int upy[N], vpy[N];  // powers of y in u and v
 
   // Even n:
   int n = 6;
   for(int k = 0; k <= n/2; k++)
   {
-    c[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
-    px[k] = n-2*k;
-    py[k] = 2*k;
+    uc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
+    vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1); // not yet sure...
+    upx[k] = n-2*k;
+    upy[k] = 2*k;
+    vpx[k] = n-2*k-1; // verify!
+    vpy[k] = 2*k+1;   // verify!
   }
+  // Looks like for even n, we get an x^(-1) power in v.
 
+  int dummy = 0; 
+
+  /*
   // Odd n:
   n = 7;
   //for(int k = 0; k <= (n-1)/2; k++)
   for(int k = 0; k <= n/2; k++)    // floor division should also work
   {
-    c[k] = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
-    px[k] = n-2*k;
-    py[k] = 2*k;
+    uc[k] = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
+    upx[k] = n-2*k;
+    upy[k] = 2*k;
   }
-
   // Actually, it's now exactly the same code in b ot cases. The floor division takes care of the 
   // (n-1) in case of odd n
+  */
 
   // ToDo: 
   // -Compute relative error, too
@@ -11326,7 +11334,7 @@ void testRiemannZeta()
   // - https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
 
 
-  int dummy = 0; 
+
 }
 
 

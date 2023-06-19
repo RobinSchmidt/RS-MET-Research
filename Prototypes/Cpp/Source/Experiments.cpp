@@ -11294,25 +11294,17 @@ void testRiemannZeta()
   int upx[N], vpx[N];     // powers of x in u and v
   int upy[N], vpy[N];     // powers of y in u and v
   int n = 7;              // tweak! the power of (x + i*y)^n, use 6 or 7
-  for(int k = 0; k <= n/2; k++)
-  {
+  for(int k = 0; k <= n/2; k++) {
     uc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
     upx[k] = n-2*k;
-    upy[k] = 2*k;
-  }
-  for(int k = 0; k <= (n-1)/2; k++)
-  {
-    vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1); // not yet sure...
-    //vpx[k] = n-2*k-1; // verify!
-    vpx[k] = n-(2*k+1); // verify!
-    vpy[k] = 2*k+1;   // verify!
-  }
+    upy[k] = 2*k;   }
+  for(int k = 0; k <= (n-1)/2; k++) {
+    vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
+    vpx[k] = n-(2*k+1);
+    vpy[k] = 2*k+1;   }
   // maybe use m = 2*k in the upper loop and m = 2*k+1 in the lower loop. That unifies the 
   // formulas a bit. Maybe move these algorithms into class rsBivariatePolynomial. Maybe have a 
   // function getRealCoeffsComplexPower/getImagCoeffsComplexPower
-
-
-
 
   int dummy = 0; 
 

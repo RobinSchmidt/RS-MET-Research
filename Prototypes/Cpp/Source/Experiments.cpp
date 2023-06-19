@@ -11492,11 +11492,19 @@ void testRiemannZeta()
   mv = rsImagCoeffsComplexPower(     n, vc, vpx, vpy);
   mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);
 
-  x = 2;
-  y = 3;
-  u = evalPoly(x, y, mu, uc, upx, upy);
-  v = evalPoly(x, y, mv, vc, vpx, vpy);
-  p = evalPoly(x, y, mp, pc, ppx, ppy);
+  double ua, va;  // approximations of u,v using a numerical derivative on the potential
+
+  x  = 2;
+  y  = 3;
+  h  = 0.01;
+  u  = evalPoly(x,   y, mu, uc, upx, upy);
+  v  = evalPoly(x,   y, mv, vc, vpx, vpy);
+  p  = evalPoly(x,   y, mp, pc, ppx, ppy);
+  pu = evalPoly(x+h, y, mp, pc, ppx, ppy);
+  pl = evalPoly(x-h, y, mp, pc, ppx, ppy);
+  ua = (pu-pl)/(2*h);
+
+
 
 
   int dummy = 0;

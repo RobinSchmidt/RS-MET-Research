@@ -11543,10 +11543,10 @@ void testRiemannZeta()
       ok &= vpx[k] == n - (2*k+1);
       ok &= vpy[k] == 2*k+1;
     }
-    // I think, it's actually correct behavior that mv = 0 for n = 0, so the check
-    // ok &= mv == (n-1)/2 + 1; might apply only to the n > 1 case. That is: that the n = 0 case
-    // fails and had to be excluded from the test is not a problem with the tested function but 
-    // with the test code here.
+    // I think, it's actually correct behavior that mv = 0 is returned from 
+    // rsImagCoeffsComplexPower for n = 0. The check ok &= mv == (n-1)/2 + 1; might apply only 
+    // to the n > 0 case. That is: that the n = 0 case fails and had to be excluded from the test 
+    // is not a problem with the tested function but with the test code here.
   }
 
   RAPT::rsAssert(ok);

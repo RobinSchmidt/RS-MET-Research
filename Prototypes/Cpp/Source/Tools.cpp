@@ -6980,6 +6980,9 @@ public:
    static void vectorFieldViaOriginalSum(double x, double y, double* u, double* v, 
      int numTerms);
 
+   static void vectorFieldViaLaurentSerisSum(double x, double y, double* u, double* v, 
+     int numTerms);
+
 
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of the Polya potential of zeta */
@@ -7136,8 +7139,8 @@ std::complex<double> rsRiemannZetaFunction::evalViaBoostSum(std::complex<double>
   return -sum / (pow(s, n) * (1.0-pow(2.0, 1.0-s)));
 }
 
-void rsRiemannZetaFunction::vectorFieldViaOriginalSum(double x, double y, double* u, double* v,
-  int numTerms)
+void rsRiemannZetaFunction::vectorFieldViaOriginalSum(
+  double x, double y, double* u, double* v, int numTerms)
 {
   *u = 0;
   *v = 0;
@@ -7147,6 +7150,30 @@ void rsRiemannZetaFunction::vectorFieldViaOriginalSum(double x, double y, double
     *u += exp(-w*x) * cos(w*y);
     *v += exp(-w*x) * sin(w*y);
   }
+}
+
+// Two free helper functions that may eventually go into class rsbivariatePolynomial. They compute
+int rsRealCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
+{
+  for(int k = 0; k <= n/2; k++) 
+  {
+    coeffs[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
+    xPowers[k] = n-2*k;
+    yPowers[k] = 2*k;
+  }
+  return n/2; 
+  // We return the number of nonzero terms
+}
+
+
+
+void rsRiemannZetaFunction::vectorFieldViaLaurentSerisSum(
+  double x, double y, double* u, double* v, int numTerms)
+{
+  *u = 0;
+  *v = 0;
+
+
 }
 
 double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int numTerms)

@@ -11201,6 +11201,7 @@ void testRiemannZeta()
   Complex e;         // error = target - output
 
   double  x, y;      // real and imaginary part of input
+  double  u, v;      // real and imaginary part of Polya vector field
   double  p;         // potential
 
   int     N;         // number of terms in approximations
@@ -11298,6 +11299,8 @@ void testRiemannZeta()
   x = real(s); y = imag(s); N = 1000;
   p = RZF::potentialViaOriginalSum(x, y, N);  // converges in 283 steps
 
+  RZF::vectorFieldViaOriginalSum(x, y, &u, &v, N); // OK: u,v match t.re, -t.im
+
   // To see, if the partial derivatives of the potential really give the desired results (real and
   // negative imaginary part of zeta), we do some numerical differentiation using a central 
   // difference approximation:
@@ -11305,14 +11308,13 @@ void testRiemannZeta()
   double pu, pl;    // upper and lower evaluation result
   pu = RZF::potentialViaOriginalSum(x+h, y, N);
   pl = RZF::potentialViaOriginalSum(x-h, y, N);
-  x  = (pu-pl)/(2*h);
-  h  = 0.01;
+  u  = (pu-pl)/(2*h);
   pu = RZF::potentialViaOriginalSum(x, y+h, N);
   pl = RZF::potentialViaOriginalSum(x, y-h, N);
-  y  = (pu-pl)/(2*h);
-  // x looks good but y is totally off. It seems like the numeric approximation is not good enough?
-  // Using more terms seems to make a big difference. Or could the formula for the potential be 
-  // wrong? Maybe we are missing a term that depends only on y but not on x?
+  v  = (pu-pl)/(2*h);
+  // OK: u,v match t.re, -t.im up to some error that can be expected due to the numeric 
+  // differentiaton approximation
+
 
 
   // Test:

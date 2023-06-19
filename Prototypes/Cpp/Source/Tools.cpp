@@ -6974,6 +6974,12 @@ public:
    // https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
 
 
+   //----------------------------------------------------------------------------------------------
+   /** \name Evaluation of the Polya vector field of zeta */
+
+   static void vectorFieldViaOriginalSum(double x, double y, double* u, double* v, 
+     int numTerms);
+
 
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of the Polya potential of zeta */
@@ -6981,6 +6987,7 @@ public:
    /** Evaluates the Polya potential using the formula that was derived from the original sum.
    It converges only for x > 1 (I think - verify!). */
    static double potentialViaOriginalSum(double x, double y, int numTerms);
+
 
 
 
@@ -7123,6 +7130,19 @@ std::complex<double> rsRiemannZetaFunction::evalViaBoostSum(std::complex<double>
   return -sum / (pow(s, n) * (1.0-pow(2.0, 1.0-s)));
 }
 
+void rsRiemannZetaFunction::vectorFieldViaOriginalSum(double x, double y, double* u, double* v,
+  int numTerms)
+{
+  *u = 0;
+  *v = 0;
+  for(int n = 1; n <= numTerms; n++)
+  {
+    double w = log(double(n));
+    *u += exp(-w*x) * cos(w*y);
+    *v += exp(-w*x) * sin(w*y);
+  }
+}
+
 double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int numTerms)
 {
   double sum = 0;
@@ -7138,7 +7158,8 @@ double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int nu
 // In a test using numeric derivatives, it turns out that the partial derivative with respect to
 // y is still wrong. Maybe we are missing a term that depends only on y in our formula for the 
 // potential? The partial derivative wrt x gives the correct result, namely the real part of zeta,
-// so the formula seems to be not totally wrong.
+// so the formula seems to be not totally wrong. I think, maybe the n=1 term being just x is wrong.
+
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)
 {

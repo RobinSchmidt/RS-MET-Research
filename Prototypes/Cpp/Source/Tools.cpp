@@ -6971,9 +6971,9 @@ int rsImagCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
   // The edge case must be treated separately:
   if(n == 0)
   {
-    coeffs[0]  = 0;
-    xPowers[0] = 0;
-    yPowers[0] = 0;
+    //coeffs[0]  = 0;
+    //xPowers[0] = 0;
+    //yPowers[0] = 0;
     return 0;
   }
   // Check, if we really need to assign zeros to coeffs[0], etc. That might actually be 

@@ -6954,7 +6954,8 @@ protected:
 // where a integer-division is used in the upper summation limit, if necessarry and B(n,k) is the
 // binomial coefficient n-choose-k.
 
-int rsRealCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
+template<class T>
+int rsRealCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)
 {
   int k;
   for(k = 0; k <= n/2; k++) 
@@ -6966,7 +6967,8 @@ int rsRealCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
   return k;   // We return the number of nonzero terms
 }
 
-int rsImagCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
+template<class T>
+int rsImagCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)
 {
   // The edge case must be treated separately:
   if(n == 0)
@@ -6994,7 +6996,7 @@ int rsPotentialCoeffsComplexPower(int n, double* coeffs, int* xPowers, int* yPow
   int k;
 
 
-
+  return k;
 }
 // Function based on integrating rsImagCoeffsComplexPower with respect to y, then adding as
 // "integration constant" a term of the form x^(n+1) / (n+1). It's constant with respect to y but
@@ -7269,8 +7271,12 @@ double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int nu
 
 double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int numTerms)
 {
+  RAPT::rsError("Not yet implemented");
+
+  double sum = 0;
 
 
+  return sum;
 }
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)

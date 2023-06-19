@@ -7155,17 +7155,43 @@ void rsRiemannZetaFunction::vectorFieldViaOriginalSum(
 // Two free helper functions that may eventually go into class rsbivariatePolynomial. They compute
 int rsRealCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
 {
-  for(int k = 0; k <= n/2; k++) 
+  int k;
+  for(k = 0; k <= n/2; k++) 
   {
     coeffs[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
     xPowers[k] = n-2*k;
     yPowers[k] = 2*k;
   }
-  return n/2; 
+  return k; 
+
+  //return n/2; 
   // We return the number of nonzero terms
 }
 
+int rsImagCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
+{
+  // The edge case must be treated separately:
+  if(n == 0)
+  {
+    coeffs[0]  = 0;
+    xPowers[0] = 0;
+    yPowers[0] = 0;
+    return 0;
+  }
+  // Check, if we really need to assign zeros to coeffs[0], etc. That might actually be 
+  // superfluous.
 
+  int k;
+  for(k = 0; k <= (n-1)/2; k++) 
+  {
+    coeffs[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
+    xPowers[k] = n-(2*k+1);
+    yPowers[k] = 2*k+1;   
+  }
+  return k;
+
+  //return (n-1)/2;
+}
 
 void rsRiemannZetaFunction::vectorFieldViaLaurentSerisSum(
   double x, double y, double* u, double* v, int numTerms)

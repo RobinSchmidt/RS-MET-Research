@@ -11366,7 +11366,35 @@ void testRiemannZeta()
   int uc[5],  vc[5];      // Coeffs of u and v
   int upx[5], vpx[5];     // Powers of x in u and v
   int upy[5], vpy[5];     // Powers of y in u and v
-  int n = 7;              // Tweak! the power of (x + i*y)^n, use 6 or 7
+  int n = 6;              // Tweak! the power of (x + i*y)^n, use 6 or 7
+  int mu, mv;             // number of nonzero terms in the bivariate polynomials u,v
+  mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
+  mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
+
+  bool ok = true;
+
+  n = 0;
+  mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
+  mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
+  ok &= mu == 1 && mv == 0;
+  ok &= uc[0] == 1 && upx[0] == 0 && upy[0] == 0; // 1 * x^0 * y^0
+
+  n = 1;
+  mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
+  mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
+  ok &= mu == 1 && mv == 1;
+  ok &= uc[0] == 1 && upx[0] == 1 && upy[0] == 0; // 1 * x^1 * y^0
+  ok &= vc[0] == 1 && vpx[0] == 0 && vpy[0] == 1; // 1 * x^0 * y^1
+
+
+
+  RAPT::rsAssert(ok);
+
+  int dummy = 0; 
+  // OK - that looks good. The coeffs and power match the Sage output so the formuals and code seem
+  // to be correct.
+
+  /*
   for(int k = 0; k <= n/2; k++) {
     uc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
     upx[k] = n-2*k;
@@ -11375,40 +11403,21 @@ void testRiemannZeta()
     vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
     vpx[k] = n-(2*k+1);
     vpy[k] = 2*k+1;   }
-  // Checking the edge cases:
-  // The n = 1 case seems to work for u and v.
-  // The n = 0 case seems to work for u but fails for v. We get v_0(x,y) = 2 * x^(-1) * y^1 
-  // but we would like to get 0 * x^0 * y^0. Check what rsBinomialCoefficient(0, 1) returns because
-  // n = 0 and 2*k+1 = 1 when we call it. We do one iteration of the loop, namely, the k = 0 
-  // iteration. Calling rsBinomialCoefficient(0, 1) results in the recursive call
-  // rsBinomialCoefficient(0, -1) via the branch:
-  //
-  //   else if(2*k > n)
-  //     return rsBinomialCoefficient(n, n-k);
-  //
-  // Actually, I'm not sure why that branch even exists. It's not documented. Figure out and 
-  // document!
-  //
-  // In Sage, binomial(0,1) returns 0. I think, we need a guard in rsBinomialCoefficient.
-  //
-  // OK - DONE. Now we formally get v_0(x,y) = 0 * x^(-1) * y^1 = 0 * y/x. But since the coeff is 
-  // 0, it doesn't actually matter what the powers of x and y are, so I guess, this is fine. We 
-  // must just take care of the possibility of returning a -1 power when we use this function to 
-  // fill the coefficient matrix of rsBivariatePolynomial. We might ty to write a zero into the 
-  // C(-1, 1) element of an 1x1 matrix. This is an access violation. The zero should actually go 
-  // into C(0, 0). For the current purposes, it's fine, though.
+    */
+
+  // The code of both loops has now been copied into some free functions:
+  //   rsRealCoeffsComplexPower, rsImagCoeffsComplexPower
+  // If it works from there, the code here may be replaced by calling these functions.
+  // ...done
   //
   // ToDo: Move this code into rsBivariatePolynomial and write a unit test for it that 
   // programmatically checks the results for n = 0..7, i.e. does programmatically what we did here
-  // by manual inspection in the debugger.
-
-  //int test = -1/2;
-
+  // by manual inspection in the debugger. The text above with the sage code and output should go
+  // as comment into the unit test.
 
 
-  int dummy = 0; 
-  // OK - that looks good. The coeffs and power match the Sage output so the formuals and code seem
-  // to be correct.
+
+
 
   // ToDo: 
   // -Compute relative error, too

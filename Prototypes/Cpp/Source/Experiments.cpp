@@ -11522,7 +11522,7 @@ void testRiemannZeta()
 
   // ToDo: maybe include a test using a loop over n with the explicit formulas from the zeta paper
   // That will also verify the formulas.
-  for(n = 1; n <= 7; n++)  // ToDo: mayb include n = 0 case later, too
+  for(n = 1; n <= 7; n++)  // ToDo: maybe include n = 0 case later, too.
   {
     mu  = rsRealCoeffsComplexPower(n, uc, upx, upy);
     ok &= mu == n/2 + 1;  
@@ -11546,7 +11546,9 @@ void testRiemannZeta()
     // I think, it's actually correct behavior that mv = 0 is returned from 
     // rsImagCoeffsComplexPower for n = 0. The check ok &= mv == (n-1)/2 + 1; might apply only 
     // to the n > 0 case. That is: that the n = 0 case fails and had to be excluded from the test 
-    // is not a problem with the tested function but with the test code here.
+    // is not a problem with the tested function but with the test code here. Maybe we can later
+    // test n higher than 7, too but we may have to increase the sizes of the arrays to accomodate 
+    // for that.
   }
 
   RAPT::rsAssert(ok);
@@ -11565,7 +11567,10 @@ void testRiemannZeta()
   int ppx[6], ppy[6];  // Powers of x and y in P
   int mp;
 
-  n = 0;  // dont go over 7 or increase the array sizes for pc, etc.
+  n = 7;  // dont go over 7 or increase the array sizes for pc, etc.
+
+  // do this in a loop n=0..7:
+
   mu = rsRealCoeffsComplexPower(     n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(     n, vc, vpx, vpy);
   mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);

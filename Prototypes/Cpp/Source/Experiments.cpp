@@ -11302,7 +11302,7 @@ void testRiemannZeta()
   //   re(w) = u(x,y) = \sum_{k=0}^{n/2}     (-1)^k * B(n,2*k)   * x^(n-2*k)     * y^(2*k)
   //   im(w) = v(x,y) = \sum_{k=0}^{(n-1)/2} (-1)^k * B(n,2*k+1) * x^(n-(2*k+1)) * y^(2*k+1)
   //
-  // where a floor-division is used in the upper summation limit, if necessarry and B(n,k) is the
+  // where a integer-division is used in the upper summation limit, if necessarry and B(n,k) is the
   // binomial coefficient n-choose-k.
   //
   // Below is code for testing the formula. The code generates the coeffs and powers of x and y 
@@ -11368,6 +11368,8 @@ void testRiemannZeta()
   // ToDo: Move this code into rsBivariatePolynomial and write a unit test for it that 
   // programmatically checks the results for n = 0..7, i.e. does programmatically what we did here
   // by manual inspection in the debugger.
+
+  //int test = -1/2;
 
 
 

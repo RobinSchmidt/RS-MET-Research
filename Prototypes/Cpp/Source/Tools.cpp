@@ -7014,13 +7014,13 @@ public:
 
 protected:
 
-  static const double g[11];  // rename to gamma
+  static const double gamma[11];  // rename to gamma
   // Precomputed table of the Stieltjes constants, see:
   // https://en.wikipedia.org/wiki/Stieltjes_constants
 
 };
 
-const double rsRiemannZetaFunction::g[11] = 
+const double rsRiemannZetaFunction::gamma[11] = 
 { 
   +0.5772156649015328606065120900824024310421593359,
   -0.0728158454836767248605863758749013191377363383,
@@ -7108,7 +7108,7 @@ std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   std::complex<double> z   = s - 1.0;  // we expand in power of (s-1)^n
   std::complex<double> sum = 1.0 / z;  // first term for n = -1
   for(int n = 0; n < numTerms; n++) {
-    double c = g[n] * pow(-1.0, n) * RAPT::rsInverseFactorials[n];
+    double c = gamma[n] * pow(-1.0, n) * RAPT::rsInverseFactorials[n];
     sum += c * pow(z, n); }
   return sum;
 }

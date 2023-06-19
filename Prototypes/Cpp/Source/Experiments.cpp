@@ -11394,6 +11394,18 @@ void testRiemannZeta()
   ok &= uc[0] ==  1 && upx[0] == 2 && upy[0] == 0; //  1 * x^2 * y^0
   ok &= uc[1] == -1 && upx[1] == 0 && upy[1] == 2; // -1 * x^0 * y^2
 
+  ok &= vc[0] ==  2 && vpx[0] == 1 && vpy[0] == 1; //  2 * x^1 * y^1
+
+  n = 3;
+  mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
+  mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
+  ok &= mu == 2 && mv == 2;
+
+  ok &= uc[0] ==  1 && upx[0] == 3 && upy[0] == 0; //  1 * x^3 * y^0
+  ok &= uc[1] == -3 && upx[1] == 1 && upy[1] == 2; // -3 * x^1 * y^2 
+
+  ok &= vc[0] ==  3 && vpx[0] == 2 && vpy[0] == 1; //  3 * x^2 * y^1
+  ok &= vc[1] == -1 && vpx[1] == 0 && vpy[1] == 3; // -1 * x^0 * y^3
 
 
   RAPT::rsAssert(ok);

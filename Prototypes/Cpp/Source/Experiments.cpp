@@ -11220,15 +11220,15 @@ void testRiemannZeta()
   // Use the (slowly converging) original sum definition for evaluation. The error is roughly given
   // by the reciprocal of the number of terms such that multiplying the number of terms by 10 will
   // give one additional correct decimal digit.
-  z = RZF::evalViaOriginalSum(s,    10); e = t-z; // e ~ 0.1    = 1/10
-  z = RZF::evalViaOriginalSum(s,   100); e = t-z; // e ~ 0.01   = 1/100
-  z = RZF::evalViaOriginalSum(s,  1000); e = t-z; // e ~ 0.001  = 1/1000
+  z = RZF::evalViaOriginalSum(s, 10); e = t-z; // e ~ 0.1    = 1/10
+  z = RZF::evalViaOriginalSum(s, 100); e = t-z; // e ~ 0.01   = 1/100
+  z = RZF::evalViaOriginalSum(s, 1000); e = t-z; // e ~ 0.001  = 1/1000
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z; // e ~ 0.0001 = 1/10000
 
   // Converges faster - I think, we get 2 digits per x10 more terms:
-  z = RZF::evalViaAlternatingSum(s,    10); e = t-z;
-  z = RZF::evalViaAlternatingSum(s,   100); e = t-z;
-  z = RZF::evalViaAlternatingSum(s,  1000); e = t-z;
+  z = RZF::evalViaAlternatingSum(s, 10); e = t-z;
+  z = RZF::evalViaAlternatingSum(s, 100); e = t-z;
+  z = RZF::evalViaAlternatingSum(s, 1000); e = t-z;
   z = RZF::evalViaAlternatingSum(s, 10000); e = t-z;
 
   z = RZF::evalViaBinomialSum(s, 10); e = t-z;
@@ -11237,20 +11237,20 @@ void testRiemannZeta()
   z = RZF::evalViaBinomialSum(s, 29); e = t-z;
   //z = RZF::evalViaBinomialSum(s, 30); e = t-z;  // error goes up again - check for overflow
 
-  z = RZF::evalViaEulerProduct(s,    10, primes); e = t-z;
-  z = RZF::evalViaEulerProduct(s,   100, primes); e = t-z;
-  z = RZF::evalViaEulerProduct(s,  1000, primes); e = t-z;
+  z = RZF::evalViaEulerProduct(s, 10, primes); e = t-z;
+  z = RZF::evalViaEulerProduct(s, 100, primes); e = t-z;
+  z = RZF::evalViaEulerProduct(s, 1000, primes); e = t-z;
   z = RZF::evalViaEulerProduct(s, 10000, primes); e = t-z;
   // Dont go above 10000 bcs the primes array has only 10000 entries!
 
   // The Laurent series seems to converge rather quickly. But it seems, the quick convergence
   // is only due to s = 2 being close to the expansion point at s = 1. For s farther away from 
   // s = 1, the convergence slows down considerably (see the evaluations for s = 4):
-  z = RZF::evalViaLaurentSeries(s,  5); e = t-z; // e ~ -6.8e-6
+  z = RZF::evalViaLaurentSeries(s, 5); e = t-z; // e ~ -6.8e-6
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -6.4e-12
 
 
-  z = RZF::evalViaBoostSum(s,  5); e = t-z;  // e ~ 1.2e-5 
+  z = RZF::evalViaBoostSum(s, 5); e = t-z;  // e ~ 1.2e-5 
   z = RZF::evalViaBoostSum(s, 10); e = t-z;  // e ~ 2.5e-10
   z = RZF::evalViaBoostSum(s, 15); e = t-z;  // e ~ 6.2e-15
 
@@ -11258,45 +11258,45 @@ void testRiemannZeta()
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;
   t = 1.202056903159594285399738;// Computed by Wolfram Alpha via riemannzeta(3)
-  z = RZF::evalViaOriginalSum(s,    10); e = t-z; 
-  z = RZF::evalViaOriginalSum(s,   100); e = t-z;
-  z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
-  z = RZF::evalViaOriginalSum(s, 10000); e = t-z; 
+  z = RZF::evalViaOriginalSum(s, 10); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 100); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 1000); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
 
   // For s = 4, each tenfold increase of the number of terms gives 3 additional correct digits:
   s = 4;
   t = pi*pi*pi*pi/90;
-  z = RZF::evalViaOriginalSum(s,    10); e = t-z; 
-  z = RZF::evalViaOriginalSum(s,   100); e = t-z;
-  z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 10); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 100); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 1000); e = t-z;
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
 
-  z = RZF::evalViaLaurentSeries(s,  5); e = t-z; // e ~ -1.6e-3
+  z = RZF::evalViaLaurentSeries(s, 5); e = t-z; // e ~ -1.6e-3
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -1.0e-6
 
   // For z(-1) = -1/12
   s = -1;
   t = -1/12.;
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ 1.5e-8
-  z = RZF::evalViaBoostSum(     s,  5); e = t-z; // e = -2.75  -> sum doesn't converge here
+  z = RZF::evalViaBoostSum(s, 5); e = t-z; // e = -2.75  -> sum doesn't converge here
 
 
   // Now let's try a complex argument 2 + 3i:
   s = 2.0 + 3.0*i;
   t = 0.7980219851462757206 - 0.1137443080529385002*i;
 
-  z = RZF::evalViaOriginalSum(s,    10); e = t-z;
-  z = RZF::evalViaOriginalSum(s,   100); e = t-z;
-  z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 10); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 100); e = t-z;
+  z = RZF::evalViaOriginalSum(s, 1000); e = t-z;
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
 
   // Now we try the potnetial functions, we choose an s with somewhat larger part to get fast 
   // convergence for the formula based on the original sum:
   s = 7.0 + 3.0*i;
   t = 0.995717018743288950877 - 0.00668545877934824427446*i; // riemannzeta(7 + 3 I)
-  z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
-  x = real(s); 
-  y = imag(s); 
+  z = RZF::evalViaOriginalSum(s, 1000); e = t-z;
+  x = real(s);
+  y = imag(s);
   N = 1000;
   p = RZF::potentialViaOriginalSum(x, y, N);       // converges in ~283 steps
   RZF::vectorFieldViaOriginalSum(x, y, &u, &v, N); // OK: u,v match t.re, -t.im
@@ -11316,10 +11316,10 @@ void testRiemannZeta()
   // differentiaton approximation
 
   s = 2.0 + 1.0*i;
-  x = real(s); 
+  x = real(s);
   y = imag(s);
   t = 1.15035570325490267174 - 0.4375308659196078811175*i; // riemannzeta(2 + I)
-  RZF::vectorFieldViaOriginalSum(  x, y, &u, &v, N);  z = u - i*v; e = t-z;
+  RZF::vectorFieldViaOriginalSum(x, y, &u, &v, N);  z = u - i*v; e = t-z;
   RZF::vectorFieldViaLaurentSeries(x, y, &u, &v, 11); z = u - i*v; e = t-z; // ~ e-10
   // OK, at s = 2+i, the computation of the Polya vector field via the Laurent series is quite
   // accurate. So, the formulas/algorithm is apparently correct.
@@ -11367,9 +11367,9 @@ void testRiemannZeta()
   //
   // ToDo: Move this code into the unit tests for rapt after the functions themselves have been
   // add to rsBivariatePolynomial. The comment text here should also go into that unit test.
-  
+
   //static const int N = 5; // Length of coeff/power arrays
-  double uc[5],  vc[5];   // Coeffs of u and v
+  double uc[5], vc[5];   // Coeffs of u and v
   int upx[5], vpx[5];     // Powers of x in u and v
   int upy[5], vpy[5];     // Powers of y in u and v
   int n;                  // The power of (x + i*y)^n.
@@ -11473,16 +11473,35 @@ void testRiemannZeta()
 
   RAPT::rsAssert(ok);
 
-  // Test creating the Polya potential. We also create
+  // Test creating the Polya potential. We also create the corresponding arrays for the real and 
+  // imaginary part so we can compare results of evaluating them to results of numerically 
+  // differentiating the potential. ...TBC...
 
-  double Pc[5];        // Coeffs of P
-  int Ppx[5], Ppy[5];  // Powers of x and y in P
-  int mP;
+  // shorthand:
+  auto evalPoly = [](double x, double y, int m, double* coeffs, int* xPowers, int* yPowers)
+  {
+    return rsEvaluateBivariatePolynomial(x, y, m, coeffs, xPowers, yPowers);
+  };
+
+  double pc[5];        // Coeffs of P
+  int ppx[5], ppy[5];  // Powers of x and y in P
+  int mp;
 
   n = 5;
   mu = rsRealCoeffsComplexPower(     n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(     n, vc, vpx, vpy);
-  mP = rsPotentialCoeffsComplexPower(n, Pc, Ppx, Ppy);
+  mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);
+
+  x = 2;
+  y = 3;
+  u = evalPoly(x, y, mu, uc, upx, upy);
+  v = evalPoly(x, y, mv, vc, vpx, vpy);
+  p = evalPoly(x, y, mp, pc, ppx, ppy);
+
+
+  int dummy = 0;
+
+
 
 
 

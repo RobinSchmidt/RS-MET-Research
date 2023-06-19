@@ -7011,6 +7011,16 @@ int rsPotentialCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)
 // The negation is because we have based our function on the imag part which needs to be negated
 // for the Polya vector field. 
 
+template<class T>
+T rsEvaluateBivariatePolynomial(T x, T y, int m, T* coeffs, int* xPowers, int* yPowers)
+{
+  T z = T(0);
+  for(int k = 0; k < m; k++)
+    z += coeffs[k] * pow(x, xPowers[k]) * pow(y, yPowers[k]);
+  return z;
+}
+// Maybe not the most efficient way to do it, but this is just for experimentation
+
 
 //=================================================================================================
 

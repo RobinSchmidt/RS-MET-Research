@@ -11342,9 +11342,12 @@ void testRiemannZeta()
     vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
     vpx[k] = n-(2*k+1);
     vpy[k] = 2*k+1;   }
-  // ToDo: check edge cases n=0,1
-  // It seems like the edge case of n = 0 fails for the imaginary part, i.e. the v(x,y) part.
-  // -> figure out and fix! The n = 1 case seems to work in both cases. 
+  // Checking the edge cases:
+  // The n = 1 case seems to work for u and v.
+  // The n = 0 case seems to work for u but fails for v. We get v_0(x,y) = 2 * x^(-1) * y^1 
+  // but we would like to get 0 * x^0 * y^0. Check what rsBinomialCoefficient(0, 1) returns because
+  // n = 0 and 2*k+1 = 1 when we call it. We do one iteration of the loop, namely, the k = 0 
+  // iteration...tbc...
 
 
 

@@ -11493,20 +11493,33 @@ void testRiemannZeta()
   mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);
 
   double ua, va;  // approximations of u,v using a numerical derivative on the potential
+  double tol = 1.e-5;
+  double err;
 
-  x  = 2;
-  y  = 3;
-  h  = 0.01;
-  u  = evalPoly(x,   y, mu, uc, upx, upy);
-  v  = evalPoly(x,   y, mv, vc, vpx, vpy);
-  p  = evalPoly(x,   y, mp, pc, ppx, ppy);
-  pu = evalPoly(x+h, y, mp, pc, ppx, ppy);
-  pl = evalPoly(x-h, y, mp, pc, ppx, ppy);
-  ua = (pu-pl)/(2*h);
+  x   = 2;
+  y   = 3;
+  h   = 0.0001;
+  u   = evalPoly(x,   y, mu, uc, upx, upy);
+  v   = evalPoly(x,   y, mv, vc, vpx, vpy);
+  p   = evalPoly(x,   y, mp, pc, ppx, ppy);
+
+  pu  = evalPoly(x+h, y, mp, pc, ppx, ppy);
+  pl  = evalPoly(x-h, y, mp, pc, ppx, ppy);
+  ua  = (pu-pl)/(2*h);
+  err = ua - u;
+  ok &= abs(err) <= tol;
+
+  pu  = evalPoly(x, y+h, mp, pc, ppx, ppy);
+  pl  = evalPoly(x, y-h, mp, pc, ppx, ppy);
+  va  = -(pu-pl)/(2*h); // Minus because of negation in Polya vector field
+  err = va - v;
+  ok &= abs(err) <= tol;
 
 
 
 
+
+  RAPT::rsAssert(ok);
   int dummy = 0;
 
 

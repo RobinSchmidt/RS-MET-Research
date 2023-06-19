@@ -11319,7 +11319,7 @@ void testRiemannZeta()
   x = real(s);
   y = imag(s);
   t = 1.15035570325490267174 - 0.4375308659196078811175*i; // riemannzeta(2 + I)
-  RZF::vectorFieldViaOriginalSum(x, y, &u, &v, N);  z = u - i*v; e = t-z;
+  RZF::vectorFieldViaOriginalSum(  x, y, &u, &v, N);  z = u - i*v; e = t-z;
   RZF::vectorFieldViaLaurentSeries(x, y, &u, &v, 11); z = u - i*v; e = t-z; // ~ e-10
   // OK, at s = 2+i, the computation of the Polya vector field via the Laurent series is quite
   // accurate. So, the formulas/algorithm is apparently correct.
@@ -11332,6 +11332,9 @@ void testRiemannZeta()
   // fast for testing and/or may use a lot of terms in the original sum.
   // ...TBC...
 
+  p  = RZF::potentialViaOriginalSum(  x, y, 10000);
+  pl = RZF::potentialViaLaurentSeries(x, y, 11);
+  // nope! no match!
 
 
 

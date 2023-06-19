@@ -7290,12 +7290,27 @@ double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int nu
 
 double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int numTerms)
 {
-  RAPT::rsError("Not yet implemented");
+  RAPT::rsAssert(numTerms <= numGammas);
 
-  double sum = 0;
+  int a[numGammas], px[numGammas], py[numGammas];  // Temp arrays for coeffs and powers
+  auto P_n = [&](double x, double y, int n)
+  {
+    int m = rsPotentialCoeffsComplexPower(n, a, px, py);
+    double sum = 0.0;
+    for(int k = 0; k < m; k++)
+      sum += a[k] * pow(x, px[k]) * pow(y, py[k]);
+    return sum;
+  };
 
+  x -= 1.0;
+  double P = log(x*x + y*y) / 2;
+  for(int n = 0; n < numTerms; n++)
+    P += laurentSeriesCoeff(n) * P_n(x, y, n);
+  return P;
 
-  return sum;
+  // The code here closely parallels the one in vectorFieldViaLaurentSeries. It's just simpler
+  // because we need to compute only one funtion rather than two. See comments there for more 
+  // details about what's going on
 }
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)

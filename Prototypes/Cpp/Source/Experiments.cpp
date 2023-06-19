@@ -11411,16 +11411,29 @@ void testRiemannZeta()
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
   ok &= mu == 3 && mv == 2;
-
+  // u:
   ok &= uc[0] ==  1 && upx[0] == 4 && upy[0] == 0; //  1 * x^4 * y^0
   ok &= uc[1] == -6 && upx[1] == 2 && upy[1] == 2; // -6 * x^2 * y^2 
   ok &= uc[2] ==  1 && upx[2] == 0 && upy[2] == 4; //  1 * x^0 * y^4
-
+  // v:
   ok &= vc[0] ==  4 && vpx[0] == 3 && vpy[0] == 1; //  4 * x^3 * y^1
   ok &= vc[1] == -4 && vpx[1] == 1 && vpy[1] == 3; // -4 * x^1 * y^3
 
-  //   4:  x^4 - 6*x^2*y^2  + y^4                     4*x^3*y - 4*x*y^3
-  //   5:  x^5 - 10*x^3*y^2 + 5*x*y^4                 5*x^4*y - 10*x^2*y^3 + y^5
+  // n=5: u = x^5 - 10*x^3*y^2 + 5*x*y^4,  v = 5*x^4*y - 10*x^2*y^3 + y^5
+  n = 5;
+  mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
+  mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
+  ok &= mu == 3 && mv == 3;
+  // u:
+  ok &= uc[0] ==   1 && upx[0] == 5 && upy[0] == 0; //   1 * x^5 * y^0
+  ok &= uc[1] == -10 && upx[1] == 3 && upy[1] == 2; // -10 * x^3 * y^2
+  ok &= uc[2] ==   5 && upx[2] == 1 && upy[2] == 4; //   5 * x^1 * y^4
+  // v:
+  ok &= vc[0] ==   5 && vpx[0] == 4 && vpy[0] == 1; //   5 * x^4 * y^1
+  ok &= vc[1] == -10 && vpx[1] == 2 && vpy[1] == 3; // -10 * x^2 * y^3
+  ok &= vc[2] ==   1 && vpx[2] == 0 && vpy[2] == 5; //   1 * x^0 * y^5
+
+
   //   6:  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6        6*x^5*y - 20*x^3*y^3 + 6*x*y^5
   //   7:  x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6    7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
 

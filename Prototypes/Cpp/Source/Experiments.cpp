@@ -11291,7 +11291,9 @@ void testRiemannZeta()
   // This code below may go elsewhere eventually. It's currently here only because we need such a 
   // formula/code as subroutine to find the potential for the zeta function via its Laurent series
   // representation. That's the context in which it was developed, but it may be useful in 
-  // different contexts as well.
+  // different contexts as well. Maybe eventually these (mini-)algorithms should go into class 
+  // rsBivariatePolynomial. Maybe have a function getRealCoeffsComplexPower,
+  // getImagCoeffsComplexPower there.
   //
   // When forming a power of a complex variable z, i.e. w = z^n, we want to find explicit 
   // expressions for real and imaginary part of w in terms of real and imaginary parts of 
@@ -11303,7 +11305,7 @@ void testRiemannZeta()
   // where a floor-division is used in the upper summation limit, if necessarry and B(n,k) is the
   // binomial coefficient n-choose-k.
   //
-  // Below is code for testing the formula. It generates the coeffs and powers of x and y 
+  // Below is code for testing the formula. The code generates the coeffs and powers of x and y 
   // according to the given formula. The outputs can be compared in the debugger to the results 
   // from the SageMath output for the code:
   //
@@ -11327,11 +11329,11 @@ void testRiemannZeta()
   //   6:  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6        6*x^5*y - 20*x^3*y^3 + 6*x*y^5
   //   7:  x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6    7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
   
-  static const int N = 5; // length of coeff/power arrays
-  int uc[N],  vc[N];      // coeffs of u and v
-  int upx[N], vpx[N];     // powers of x in u and v
-  int upy[N], vpy[N];     // powers of y in u and v
-  int n = 7;              // tweak! the power of (x + i*y)^n, use 6 or 7
+  static const int N = 5; // Length of coeff/power arrays
+  int uc[N],  vc[N];      // Coeffs of u and v
+  int upx[N], vpx[N];     // Powers of x in u and v
+  int upy[N], vpy[N];     // Powers of y in u and v
+  int n = 7;              // Tweak! the power of (x + i*y)^n, use 6 or 7
   for(int k = 0; k <= n/2; k++) {
     uc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
     upx[k] = n-2*k;
@@ -11340,10 +11342,8 @@ void testRiemannZeta()
     vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
     vpx[k] = n-(2*k+1);
     vpy[k] = 2*k+1;   }
-  // maybe use m = 2*k in the upper loop and m = 2*k+1 in the lower loop. That unifies the 
-  // formulas a bit. Maybe move these algorithms into class rsBivariatePolynomial. Maybe have a 
-  // function getRealCoeffsComplexPower/getImagCoeffsComplexPower
   // ToDo: check edge cases n=0,1
+
 
   int dummy = 0; 
   // OK - that looks good. The coeffs and power match the Sage output so the formuals and code seem

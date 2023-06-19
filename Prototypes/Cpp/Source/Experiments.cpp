@@ -11305,19 +11305,28 @@ void testRiemannZeta()
   //
   // Below is code for testing the formula. It generates the coeffs and powers of x and y 
   // according to the given formula. The outputs can be compared in the debugger to the results 
-  // from the sage output for the code:
+  // from the SageMath output for the code:
   //
+  //   n = 5                 # Tweak! It's a user parameter.
   //   var("x y")
   //   assume(x, "real")
   //   assume(y, "real")
-  //   n = 5
   //   z = x + I*y
   //   w = z^n
   //   w.real(), w.imag()
   //
-  // Outputs for n = 0..7 are shown in the Riemann zeta paper and in Notes/ComplexPotential.txt 
-  // here in the RS-MET-Research repo.
-
+  // Outputs for n = 0..7 are:
+  //
+  //   n   Real                                       Imag
+  //   0:  1                                          0 
+  //   1:  x                                          y
+  //   2:  x^2 - y^2                                  2*x*y
+  //   3:  x^3 - 3*x*y^2                              3*x^2*y - y^3
+  //   4:  x^4 - 6*x^2*y^2  + y^4                     4*x^3*y - 4*x*y^3
+  //   5:  x^5 - 10*x^3*y^2 + 5*x*y^4                 5*x^4*y - 10*x^2*y^3 + y^5
+  //   6:  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6        6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+  //   7:  x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6    7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
+  
   static const int N = 5; // length of coeff/power arrays
   int uc[N],  vc[N];      // coeffs of u and v
   int upx[N], vpx[N];     // powers of x in u and v

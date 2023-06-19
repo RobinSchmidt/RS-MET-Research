@@ -7035,7 +7035,7 @@ public:
    static void vectorFieldViaOriginalSum(double x, double y, double* u, double* v, 
      int numTerms);
 
-   static void vectorFieldViaLaurentSerisSum(double x, double y, double* u, double* v, 
+   static void vectorFieldViaLaurentSeriesSum(double x, double y, double* u, double* v, 
      int numTerms);
 
 
@@ -7077,7 +7077,8 @@ public:
 
 protected:
 
-  static const double gamma[11];  // rename to gamma
+  static const int numGammas = 11;
+  static const double gamma[numGammas]; 
   // Precomputed table of the Stieltjes constants, see:
   // https://en.wikipedia.org/wiki/Stieltjes_constants
 
@@ -7166,12 +7167,11 @@ std::complex<double> rsRiemannZetaFunction::evalViaEulerProduct(
 std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   std::complex<double> s, int numTerms)
 {
-  RAPT::rsAssert(numTerms <= 11);
+  RAPT::rsAssert(numTerms <= numGammas);
 
   std::complex<double> z   = s - 1.0;  // we expand in power of (s-1)^n
   std::complex<double> sum = 1.0 / z;  // first term for n = -1
   for(int n = 0; n < numTerms; n++) {
-    //double c = gamma[n] * pow(-1.0, n) * RAPT::rsInverseFactorials[n];
     double c = laurentSeriesCoeff(n);
     sum += c * pow(z, n); }
   return sum;
@@ -7207,11 +7207,13 @@ void rsRiemannZetaFunction::vectorFieldViaOriginalSum(
   }
 }
 
-void rsRiemannZetaFunction::vectorFieldViaLaurentSerisSum(
+void rsRiemannZetaFunction::vectorFieldViaLaurentSeriesSum(
   double x, double y, double* u, double* v, int numTerms)
 {
+  RAPT::rsAssert(numTerms <= numGammas);
   *u = 0;
   *v = 0;
+
 
 }
 

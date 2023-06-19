@@ -11333,7 +11333,7 @@ void testRiemannZeta()
   int uc[N],  vc[N];      // Coeffs of u and v
   int upx[N], vpx[N];     // Powers of x in u and v
   int upy[N], vpy[N];     // Powers of y in u and v
-  int n = 7;              // Tweak! the power of (x + i*y)^n, use 6 or 7
+  int n = 0;              // Tweak! the power of (x + i*y)^n, use 6 or 7
   for(int k = 0; k <= n/2; k++) {
     uc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
     upx[k] = n-2*k;
@@ -11343,6 +11343,10 @@ void testRiemannZeta()
     vpx[k] = n-(2*k+1);
     vpy[k] = 2*k+1;   }
   // ToDo: check edge cases n=0,1
+  // It seems like the edge case of n = 0 fails for the imaginary part, i.e. the v(x,y) part.
+  // -> figure out and fix! The n = 1 case seems to work in both cases. 
+
+
 
 
   int dummy = 0; 

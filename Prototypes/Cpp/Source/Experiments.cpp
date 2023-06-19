@@ -11315,9 +11315,7 @@ void testRiemannZeta()
   // OK: u,v match t.re, -t.im up to some error that can be expected due to the numeric 
   // differentiaton approximation
 
-  s = 2.0 + 1.0*i;
-  x = real(s);
-  y = imag(s);
+  s = 2.0 + 1.0*i; x = real(s); y = imag(s);
   t = 1.15035570325490267174 - 0.4375308659196078811175*i; // riemannzeta(2 + I)
   RZF::vectorFieldViaOriginalSum(  x, y, &u, &v, N);  z = u - i*v; e = t-z;
   RZF::vectorFieldViaLaurentSeries(x, y, &u, &v, 11); z = u - i*v; e = t-z; // ~ e-10
@@ -11332,9 +11330,13 @@ void testRiemannZeta()
   // fast for testing and/or may use a lot of terms in the original sum.
   // ...TBC...
 
-  p  = RZF::potentialViaOriginalSum(  x, y, 10000);
-  pl = RZF::potentialViaLaurentSeries(x, y, 11);
-  // nope! no match!
+  //s  = 2.0 + 1.0*i; x = real(s); y = imag(s);
+  //t  = pi*pi/6;
+  p  = RZF::potentialViaOriginalSum(  x, y, 10000);  // ~ 1.71
+  pl = RZF::potentialViaLaurentSeries(x, y, 11);      // ~ 0.93
+  // nope! no match! Is this a convergence problem or is still something wrong with the math?
+  // the original sum seems to have converged. I tried using 1000000 and it didn't change the 
+  // result much, so perhaps the math in potentialViaLaurentSeries is still wrong
 
 
 

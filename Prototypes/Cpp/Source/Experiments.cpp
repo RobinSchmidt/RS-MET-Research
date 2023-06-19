@@ -11522,7 +11522,7 @@ void testRiemannZeta()
 
   // ToDo: maybe include a test using a loop over n with the explicit formulas from the zeta paper
   // That will also verify the formulas.
-  for(n = 1; n <= 7; n++)  // include n=0 case later, too
+  for(n = 1; n <= 7; n++)  // ToDo: mayb include n = 0 case later, too
   {
     mu  = rsRealCoeffsComplexPower(n, uc, upx, upy);
     ok &= mu == n/2 + 1;  
@@ -11536,15 +11536,17 @@ void testRiemannZeta()
     }
 
     mv  = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
-    ok &= mv == (n-1)/2 + 1;
+    ok &= mv == (n-1)/2 + 1;     // This makes the n=0 case fail. We have excluded it currently
     for(int k = 0; k < mv; k++)  // k = 0..(n-1)/2, end inclusive
     {
       ok &= vc[k]  == pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
       ok &= vpx[k] == n - (2*k+1);
       ok &= vpy[k] == 2*k+1;
     }
-
-    int dummy = 0;
+    // I think, it's actually correct behavior that mv = 0 for n = 0, so the check
+    // ok &= mv == (n-1)/2 + 1; might apply only to the n > 1 case. That is: that the n = 0 case
+    // fails and had to be excluded from the test is not a problem with the tested function but 
+    // with the test code here.
   }
 
   RAPT::rsAssert(ok);

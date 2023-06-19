@@ -11374,83 +11374,78 @@ void testRiemannZeta()
   // Do a unit test:
   bool ok = true;
 
-  // n=0: u = 1,  v = 0 
   n = 0;
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
   ok &= mu == 1 && mv == 0;
+  // check u = 1:
   ok &= uc[0] == 1 && upx[0] == 0 && upy[0] == 0; // 1 * x^0 * y^0
 
-  // n=1: u = x,  v = y
   n = 1;
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
   ok &= mu == 1 && mv == 1;
-  // check u:
+  // check u = x:
   ok &= uc[0] == 1 && upx[0] == 1 && upy[0] == 0; // 1 * x^1 * y^0
-  // check v:
+  // check v = y:
   ok &= vc[0] == 1 && vpx[0] == 0 && vpy[0] == 1; // 1 * x^0 * y^1
 
-  // n=2: u = x^2 - y^2, v = 2*x*y
   n = 2;
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
   ok &= mu == 2 && mv == 1;
-  // check u:
+  // check u = x^2 - y^2:
   ok &= uc[0] ==  1 && upx[0] == 2 && upy[0] == 0; //  1 * x^2 * y^0
   ok &= uc[1] == -1 && upx[1] == 0 && upy[1] == 2; // -1 * x^0 * y^2
-  // check v:
+  // check v = 2*x*y:
   ok &= vc[0] ==  2 && vpx[0] == 1 && vpy[0] == 1; //  2 * x^1 * y^1
 
-  // n=3: u = x^3 - 3*x*y^2,  v = 3*x^2*y - y^3
   n = 3;
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
   ok &= mu == 2 && mv == 2;
-  // check u:
+  // check u = x^3 - 3*x*y^2:
   ok &= uc[0] ==  1 && upx[0] == 3 && upy[0] == 0; //  1 * x^3 * y^0
   ok &= uc[1] == -3 && upx[1] == 1 && upy[1] == 2; // -3 * x^1 * y^2 
-  // check v:
+  // check v = 3*x^2*y - y^3:
   ok &= vc[0] ==  3 && vpx[0] == 2 && vpy[0] == 1; //  3 * x^2 * y^1
   ok &= vc[1] == -1 && vpx[1] == 0 && vpy[1] == 3; // -1 * x^0 * y^3
 
-  // n=4: u = x^4 - 6*x^2*y^2 + y^4,  v = 4*x^3*y - 4*x*y^3
   n = 4;
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
   ok &= mu == 3 && mv == 2;
-  // check u:
+  // check u = x^4 - 6*x^2*y^2 + y^4:
   ok &= uc[0] ==  1 && upx[0] == 4 && upy[0] == 0; //  1 * x^4 * y^0
   ok &= uc[1] == -6 && upx[1] == 2 && upy[1] == 2; // -6 * x^2 * y^2 
   ok &= uc[2] ==  1 && upx[2] == 0 && upy[2] == 4; //  1 * x^0 * y^4
-  // check v:
+  // check v = 4*x^3*y - 4*x*y^3:
   ok &= vc[0] ==  4 && vpx[0] == 3 && vpy[0] == 1; //  4 * x^3 * y^1
   ok &= vc[1] == -4 && vpx[1] == 1 && vpy[1] == 3; // -4 * x^1 * y^3
 
-  // n=5: u = x^5 - 10*x^3*y^2 + 5*x*y^4,  v = 5*x^4*y - 10*x^2*y^3 + y^5
   n = 5;
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
   ok &= mu == 3 && mv == 3;
-  // check u:
+  // check u = x^5 - 10*x^3*y^2 + 5*x*y^4:
   ok &= uc[0] ==   1 && upx[0] == 5 && upy[0] == 0; //   1 * x^5 * y^0
   ok &= uc[1] == -10 && upx[1] == 3 && upy[1] == 2; // -10 * x^3 * y^2
   ok &= uc[2] ==   5 && upx[2] == 1 && upy[2] == 4; //   5 * x^1 * y^4
-  // check v:
+  // check v = 5*x^4*y - 10*x^2*y^3 + y^5:
   ok &= vc[0] ==   5 && vpx[0] == 4 && vpy[0] == 1; //   5 * x^4 * y^1
   ok &= vc[1] == -10 && vpx[1] == 2 && vpy[1] == 3; // -10 * x^2 * y^3
   ok &= vc[2] ==   1 && vpx[2] == 0 && vpy[2] == 5; //   1 * x^0 * y^5
 
-  // n=6: u = x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,  v = 6*x^5*y - 20*x^3*y^3 + 6*x*y^5
   n = 6;
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
   ok &= mu == 4 && mv == 3;
-  // check u:
+  // check u = x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6:
   ok &= uc[0] ==   1 && upx[0] == 6 && upy[0] == 0; //   1 * x^6 * y^0
   ok &= uc[1] == -15 && upx[1] == 4 && upy[1] == 2; // -15 * x^4 * y^2
   ok &= uc[2] ==  15 && upx[2] == 2 && upy[2] == 4; //  15 * x^2 * y^4
   ok &= uc[3] ==  -1 && upx[3] == 0 && upy[3] == 6; //  -1 * x^0 * y^6
+  // check v = 6*x^5*y - 20*x^3*y^3 + 6*x*y^5:
 
 
 

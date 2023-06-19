@@ -11306,10 +11306,13 @@ void testRiemannZeta()
   pu = RZF::potentialViaOriginalSum(x+h, y, N);
   pl = RZF::potentialViaOriginalSum(x-h, y, N);
   x  = (pu-pl)/(2*h);
+  h  = 0.01;
   pu = RZF::potentialViaOriginalSum(x, y+h, N);
   pl = RZF::potentialViaOriginalSum(x, y-h, N);
   y  = (pu-pl)/(2*h);
-  // x looks good but y is totally off
+  // x looks good but y is totally off. It seems like the numeric approximation is not good enough?
+  // Using more terms seems to make a big difference. Or could the formula for the potential be 
+  // wrong? Maybe we are missing a term that depends only on y but not on x?
 
 
   // Test:

@@ -7012,14 +7012,36 @@ public:
    static std::complex<double> dirichletTermViaReIm(std::complex<double> s, int n);
 
 
-
-
-
-
 protected:
 
+  static const double g[11];  // rename to gamma
+  // Precomputed table of the Stieltjes constants, see:
+  // https://en.wikipedia.org/wiki/Stieltjes_constants
 
 };
+
+const double rsRiemannZetaFunction::g[11] = 
+{ 
+  +0.5772156649015328606065120900824024310421593359,
+  -0.0728158454836767248605863758749013191377363383,
+  -0.0096903631928723184845303860352125293590658061,
+  +0.0020538344203033458661600465427533842857158044,
+  +0.0023253700654673000574681701775260680009044694,
+  +0.0007933238173010627017533348774444448307315394,
+  -0.0002387693454301996098724218419080042777837151,
+  -0.0005272895670577510460740975054788582819962534,
+  -0.0003521233538030395096020521650012087417291805,
+  -0.0000343947744180880481779146237982273906207895,
+  +0.0002053328149090647946837222892370653029598537 
+};
+// This table is preliminary. ToDo: 
+// Remove leading zeros and let all coeffs have the same number of significant digits (~20). Use
+// g[1] = -7.281e-2 notation. Maybe instead of storing g[n], store the final coeffs 
+// (-1)^n * g[n] / n!. The g[n] will eventually grow large as n gets larger, so it may make sense
+// to divide by the n! to keep them in check. Have more coeffs - at least 100, maybe 10000. Maybe 
+// write a program to compute them in SageMath or Mathematica or maybe in C++ using rsBigFloat.
+// Figure out the range of s for which this algorithms yields satisfying results precision wise.
+
 
 std::complex<double> rsRiemannZetaFunction::evalViaOriginalSum(
   std::complex<double> s, int numTerms)
@@ -7082,28 +7104,6 @@ std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   std::complex<double> s, int numTerms)
 {
   RAPT::rsAssert(numTerms <= 11);
-
-  // We use a precomputed table of the Stieltjes constants:
-  // https://en.wikipedia.org/wiki/Stieltjes_constants
-  double g[11];
-  g[0]  = +0.5772156649015328606065120900824024310421593359;
-  g[1]  = -0.0728158454836767248605863758749013191377363383;
-  g[2]  = -0.0096903631928723184845303860352125293590658061;
-  g[3]  = +0.0020538344203033458661600465427533842857158044;
-  g[4]  = +0.0023253700654673000574681701775260680009044694;
-  g[5]  = +0.0007933238173010627017533348774444448307315394;
-  g[6]  = -0.0002387693454301996098724218419080042777837151;
-  g[7]  = -0.0005272895670577510460740975054788582819962534;
-  g[8]  = -0.0003521233538030395096020521650012087417291805;
-  g[9]  = -0.0000343947744180880481779146237982273906207895;
-  g[10] = +0.0002053328149090647946837222892370653029598537;
-  // This table is preliminary. ToDo: 
-  // Remove leading zeros and let all coeffs have the same number of significant digits (~20). Use
-  // g[1] = -7.281e-2 notation. Maybe instead of storing g[n], store the final coeffs 
-  // (-1)^n * g[n] / n!. The g[n] will eventually grow large as n gets larger, so it may make sense
-  // to divide by the n! to keep them in check. Have more coeffs - at least 100, maybe 10000. Maybe 
-  // write a program to compute them in SageMath or Mathematica or maybe in C++ using rsBigFloat.
-  // Figure out the range of s for which this algorithms yields satisfying results precision wise.
 
   std::complex<double> z   = s - 1.0;  // we expand in power of (s-1)^n
   std::complex<double> sum = 1.0 / z;  // first term for n = -1

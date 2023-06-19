@@ -7152,14 +7152,8 @@ double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int nu
     //sum += cos(w*y) / (w *pow(n, x));  // this formula looks nicer in a textbook
     sum += exp(-w*x) * cos(w*y) / w;     // this formula is more efficient
   }
-  //return x + y - sum; // test
   return x - sum;
 }
-// In a test using numeric derivatives, it turns out that the partial derivative with respect to
-// y is still wrong. Maybe we are missing a term that depends only on y in our formula for the 
-// potential? The partial derivative wrt x gives the correct result, namely the real part of zeta,
-// so the formula seems to be not totally wrong. I think, maybe the n=1 term being just x is wrong.
-
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)
 {

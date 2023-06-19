@@ -11333,10 +11333,54 @@ void testRiemannZeta()
   //s  = 2.0 + 1.0*i; x = real(s); y = imag(s);
   //t  = pi*pi/6;
   p  = RZF::potentialViaOriginalSum(  x, y, 10000);  // ~ 1.71
-  pl = RZF::potentialViaLaurentSeries(x, y, 11);      // ~ 0.93
+  pl = RZF::potentialViaLaurentSeries(x, y, 11);     // ~ 0.93
+  pl = RZF::potentialViaLaurentSeries(x, y, 8); 
+  pl = RZF::potentialViaLaurentSeries(x, y, 5); 
   // nope! no match! Is this a convergence problem or is still something wrong with the math?
   // the original sum seems to have converged. I tried using 1000000 and it didn't change the 
-  // result much, so perhaps the math in potentialViaLaurentSeries is still wrong
+  // result much, so perhaps the math in potentialViaLaurentSeries is still wrong. Maybe it 
+  // misbehaves in edge cases or maybe we run into overflow. Try using less terms! Done! Makes 
+  // no difference. Maybe it's because the two ways of computing a potential have a different 
+  // constant offset? Potentials are not unique! Try using the Laurent based potential to compute
+  // zeta via numerical derivatives! If that turns out to be the case, try to "normalize" them all
+  // perhaps by fixing the value at 0 or at infinity or whatever is convenient.
+
+
+
+  h  = 0.0001;
+
+  // Once again via original sum:
+  N  = 100000;
+  pu = RZF::potentialViaOriginalSum(x+h, y, N);
+  pl = RZF::potentialViaOriginalSum(x-h, y, N);
+  u  = (pu-pl)/(2*h);
+  pu = RZF::potentialViaOriginalSum(x, y+h, N);
+  pl = RZF::potentialViaOriginalSum(x, y-h, N);
+  v  = -(pu-pl)/(2*h);
+
+  // Now via Laurent series:
+  N  = 11;
+  pu = RZF::potentialViaLaurentSeries(x+h, y, N);
+  pl = RZF::potentialViaLaurentSeries(x-h, y, N);
+  u  = (pu-pl)/(2*h);
+  pu = RZF::potentialViaLaurentSeries(x, y+h, N);
+  pl = RZF::potentialViaLaurentSeries(x, y-h, N);
+  v  = -(pu-pl)/(2*h);
+  // Nope ...but it gets kinda into the right direction. Maybe the convergence is just painfully 
+  // slow? Try a point closer to s=1:
+
+  s = 1.2 + 0.1*i; x = real(s); y = imag(s);
+  t = 4.59163272866373770917 - 1.9929157582669758070 * i;  // riemannzeta(1.2 + 0.1 I)
+  pu = RZF::potentialViaLaurentSeries(x+h, y, N);
+  pl = RZF::potentialViaLaurentSeries(x-h, y, N);
+  u  = (pu-pl)/(2*h);
+  pu = RZF::potentialViaLaurentSeries(x, y+h, N);
+  pl = RZF::potentialViaLaurentSeries(x, y-h, N);
+  v  = -(pu-pl)/(2*h);
+  // ...OK, yes - for tha value of s, our u,v results are indeed a lot closer to the target. Maybe
+  // the convergence is indeed very slow. Try to use more terms. For that, we need to store more
+  // gamma or laurent coefficients which we need to produce with Sage or Mathematica.
+  // 
 
 
 
@@ -11492,7 +11536,7 @@ void testRiemannZeta()
   int ppx[6], ppy[6];  // Powers of x and y in P
   int mp;
 
-  n = 6;  // dont go over 7 or increase the array sizes for pc, etc.
+  n = 0;  // dont go over 7 or increase the array sizes for pc, etc.
   mu = rsRealCoeffsComplexPower(     n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(     n, vc, vpx, vpy);
   mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);

@@ -7301,6 +7301,8 @@ double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int 
       sum += a[k] * pow(x, px[k]) * pow(y, py[k]);
     return sum;
   };
+  // is numGammas actually the correct size for these arrays? I think not. they are not necessarily
+  // the same size as numGammas, I think.
 
   x -= 1.0;
   double P = log(x*x + y*y) / 2;

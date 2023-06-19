@@ -11301,7 +11301,8 @@ void testRiemannZeta()
 
   RZF::vectorFieldViaOriginalSum(x, y, &u, &v, N); // OK: u,v match t.re, -t.im
 
-
+  x = 2; y = 0; t = pi*pi/6;  // preliminary
+  RZF::vectorFieldViaLaurentSeries(x, y, &u, &v, 11); 
 
   // To see, if the partial derivatives of the potential really give the desired results (real and
   // negative imaginary part of zeta), we do some numerical differentiation using a central 

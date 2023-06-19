@@ -11295,9 +11295,21 @@ void testRiemannZeta()
   t = 0.995717018743288950877 - 0.00668545877934824427446*i; // riemannzeta(7 + 3 I)
   z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
 
-
   x = real(s); y = imag(s); N = 1000;
   p = RZF::potentialViaOriginalSum(x, y, N);  // converges in 283 steps
+
+  // To see, if the partial derivatives of the potential really give the desired results (real and
+  // negative imaginary part of zeta), we do some numerical differentiation using a central 
+  // difference approximation:
+  double h = 0.001;  // stepsize in numeric differentiation
+  double pu, pl;    // upper and lower evaluation result
+  pu = RZF::potentialViaOriginalSum(x+h, y, N);
+  pl = RZF::potentialViaOriginalSum(x-h, y, N);
+  x  = (pu-pl)/(2*h);
+  pu = RZF::potentialViaOriginalSum(x, y+h, N);
+  pl = RZF::potentialViaOriginalSum(x, y-h, N);
+  y  = (pu-pl)/(2*h);
+  // x looks good but y is totally off
 
 
   // Test:

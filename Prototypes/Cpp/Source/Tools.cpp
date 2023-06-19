@@ -7210,17 +7210,11 @@ void rsRiemannZetaFunction::vectorFieldViaOriginalSum(
 void rsRiemannZetaFunction::vectorFieldViaLaurentSeries(
   double x, double y, double* u, double* v, int numTerms)
 {
-  x -= 1.0;  // because of the shift: z = s-1, see paper for explanation
-
   RAPT::rsAssert(numTerms <= numGammas);
-  *u = x / (x*x + y*y);  // the n = -1 term
-  *v = y / (x*x + y*y);
 
-  // Temporary arrays for the coefficients and powers
-  int a[numGammas], px[numGammas], py[numGammas];
-
-  //double test = pow(0.0, 0.0); // = 1
-
+  // Internal subroutines to compute the u_n, v_n terms, i.e. the real and imaginary parts of
+  // (x + i*y)^n:
+  int a[numGammas], px[numGammas], py[numGammas];  // Temp arrays for coeffs and powers
   auto u_n = [&](double x, double y, int n)
   {
     int m = rsRealCoeffsComplexPower(n, a, px, py);
@@ -7229,20 +7223,23 @@ void rsRiemannZetaFunction::vectorFieldViaLaurentSeries(
       sum += a[k] * pow(x, px[k]) * pow(y, py[k]);
     return sum;
   };
-
-  auto v_n = [](double x, double y, int n)
+  auto v_n = [&](double x, double y, int n)
   {
+    int m = rsImagCoeffsComplexPower(n, a, px, py);
     double sum = 0.0;
-
+    for(int k = 0; k < m; k++)
+      sum += a[k] * pow(x, px[k]) * pow(y, py[k]);
     return sum;
   };
 
-
+  // Compute the Laurent series up to the desired number of terms:
+  x  -= 1.0;              // Because of the shift: z = s-1, see paper for explanation
+  *u  = x / (x*x + y*y);  // That's the n = -1 term for u_n, i.e. u_{-1}
+  *v  = y / (x*x + y*y);  // ...same for v_n
   for(int n = 0; n < numTerms; n++)
   {
     *u += laurentSeriesCoeff(n) * u_n(x, y, n);
-    *v -= laurentSeriesCoeff(n) * v_n(x, y, n);
-    // The minus for v is because of the negation in the Polya vector field.
+    *v -= laurentSeriesCoeff(n) * v_n(x, y, n); // Minus due to negation in Polya vector field.
   }
 }
 

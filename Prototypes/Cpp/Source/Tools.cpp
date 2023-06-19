@@ -6991,16 +6991,24 @@ int rsImagCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)
   return k;
 }
 
-int rsPotentialCoeffsComplexPower(int n, double* coeffs, int* xPowers, int* yPowers)
+template<class T>
+int rsPotentialCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)
 {
-  int k;
-
-
-  return k;
+  int m = rsImagCoeffsComplexPower(n, coeffs, xPowers, yPowers);
+  for(int k = 0; k < m; k++) {    // integrate wrt y
+    yPowers[k] += 1;
+    coeffs[k] /= yPowers[k]; }
+  coeffs[m]  = T(1) / (n+1);      // integration constant is a function of x given by
+  xPowers[m] = n+1;               // x^(n+1) / (n+1)
+  yPowers[m] = 0;
+  return m+1;
 }
-// Function based on integrating rsImagCoeffsComplexPower with respect to y, then adding as
+// The function is based on integrating rsImagCoeffsComplexPower with respect to y, then adding as
 // "integration constant" a term of the form x^(n+1) / (n+1). It's constant with respect to y but
-// a function of x.
+// a function of x. One could also integrate rsRealCoeffsComplexPower with respect to x and then
+// either add a y^(n+1) / (n+1) term when n is odd. See the pattern of coeffs for re/im parts in 
+// the unit tests. Maybe implement both and test both - just for proof of concept.
+// ...but what about the negation?
 
 
 //=================================================================================================

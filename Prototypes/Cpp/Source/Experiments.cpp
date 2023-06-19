@@ -11369,13 +11369,13 @@ void testRiemannZeta()
   // add to rsBivariatePolynomial. The comment text here should also go into that unit test.
   
   //static const int N = 5; // Length of coeff/power arrays
-  int uc[5],  vc[5];      // Coeffs of u and v
+  double uc[5],  vc[5];   // Coeffs of u and v
   int upx[5], vpx[5];     // Powers of x in u and v
   int upy[5], vpy[5];     // Powers of y in u and v
-  int n = 6;              // Tweak! the power of (x + i*y)^n, use 6 or 7
+  int n;                  // The power of (x + i*y)^n.
   int mu, mv;             // number of nonzero terms in the bivariate polynomials u,v
-  mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
-  mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
+  //mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
+  //mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
 
   // Do a unit test:
   bool ok = true;
@@ -11473,8 +11473,16 @@ void testRiemannZeta()
 
   RAPT::rsAssert(ok);
 
+  // Test creating the Polya potential. We also create
 
+  double Pc[5];        // Coeffs of P
+  int Ppx[5], Ppy[5];  // Powers of x and y in P
+  int mP;
 
+  n = 5;
+  mu = rsRealCoeffsComplexPower(     n, uc, upx, upy);
+  mv = rsImagCoeffsComplexPower(     n, vc, vpx, vpy);
+  mP = rsPotentialCoeffsComplexPower(n, Pc, Ppx, Ppy);
 
 
 

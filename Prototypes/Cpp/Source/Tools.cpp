@@ -6995,20 +6995,21 @@ template<class T>
 int rsPotentialCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)
 {
   int m = rsImagCoeffsComplexPower(n, coeffs, xPowers, yPowers);
-  for(int k = 0; k < m; k++) {    // integrate wrt y
-    yPowers[k] += 1;
-    coeffs[k] /= yPowers[k]; }
-  coeffs[m]  = T(1) / (n+1);      // integration constant is a function of x given by
-  xPowers[m] = n+1;               // x^(n+1) / (n+1)
-  yPowers[m] = 0;
-  return m+1;
+  for(int k = 0; k < m; k++) {             // Integrate wrt y by incrementing y exponent and
+    yPowers[k] += 1;                       // dividing the coeff by the new y-exponent.
+    coeffs[k] = -coeffs[k] / yPowers[k]; } // The negation is because we use the imag part.
+  coeffs[m]  = T(1) / (n+1);               // The integration constant is a function of x
+  xPowers[m] = n+1;                        // given by x^(n+1) / (n+1)
+  yPowers[m] = 0;                          // ...times y^0
+  return m+1;                              // Output arrays are longer by 1 now
 }
 // The function is based on integrating rsImagCoeffsComplexPower with respect to y, then adding as
 // "integration constant" a term of the form x^(n+1) / (n+1). It's constant with respect to y but
 // a function of x. One could also integrate rsRealCoeffsComplexPower with respect to x and then
 // either add a y^(n+1) / (n+1) term when n is odd. See the pattern of coeffs for re/im parts in 
 // the unit tests. Maybe implement both and test both - just for proof of concept.
-// ...but what about the negation?
+// The negation is because we have based our function on the imag part which needs to be negated
+// for the Polya vector field. 
 
 
 //=================================================================================================

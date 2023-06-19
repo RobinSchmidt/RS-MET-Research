@@ -11287,8 +11287,37 @@ void testRiemannZeta()
   // Test:
   z = RZF::dirichletTermViaReIm(s, 5);
 
-  // For testing the formula in the paper about the Riemann zeta Polya potential. Compare
-  // results with the sage output
+  //---------------------------------------------------------------------------
+  // This code below may go elsewhere eventually. It's currently here only because we need such a 
+  // formula/code as subroutine to find the potential for the zeta function via its Laurent series
+  // representation. That's the context in which it was developed, but it may be useful in 
+  // different contexts as well.
+  //
+  // When forming a power of a complex variable z, i.e. w = z^n, we want to find explicit 
+  // expressions for real and imaginary part of w in terms of real and imaginary parts of 
+  // z = x + i*y. Set w = u + i*v. We get:
+  // 
+  //   re(w) = u(x,y) = \sum_{k=0}^{n/2}     (-1)^k * B(n,2*k)   * x^(n-2*k)     * y^(2*k)
+  //   im(w) = v(x,y) = \sum_{k=0}^{(n-1)/2} (-1)^k * B(n,2*k+1) * x^(n-(2*k+1)) * y^(2*k+1)
+  //
+  // where a floor-division is used in the upper summation limit, if necessarry and B(n,k) is the
+  // binomial coefficient n-choose-k.
+  //
+  // Below is code for testing the formula. It generates the coeffs and powers of x and y 
+  // according to the given formula. The outputs can be compared in the debugger to the results 
+  // from the sage output for the code:
+  //
+  //   var("x y")
+  //   assume(x, "real")
+  //   assume(y, "real")
+  //   n = 5
+  //   z = x + I*y
+  //   w = z^n
+  //   w.real(), w.imag()
+  //
+  // Outputs for n = 0..7 are shown in the Riemann zeta paper and in Notes/ComplexPotential.txt 
+  // here in the RS-MET-Research repo.
+
   static const int N = 5; // length of coeff/power arrays
   int uc[N],  vc[N];      // coeffs of u and v
   int upx[N], vpx[N];     // powers of x in u and v
@@ -11305,8 +11334,11 @@ void testRiemannZeta()
   // maybe use m = 2*k in the upper loop and m = 2*k+1 in the lower loop. That unifies the 
   // formulas a bit. Maybe move these algorithms into class rsBivariatePolynomial. Maybe have a 
   // function getRealCoeffsComplexPower/getImagCoeffsComplexPower
+  // ToDo: check edge cases n=0,1
 
   int dummy = 0; 
+  // OK - that looks good. The coeffs and power match the Sage output so the formuals and code seem
+  // to be correct.
 
   // ToDo: 
   // -Compute relative error, too

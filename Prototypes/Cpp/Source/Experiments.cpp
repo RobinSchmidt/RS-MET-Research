@@ -11298,8 +11298,7 @@ void testRiemannZeta()
   x = real(s); 
   y = imag(s); 
   N = 1000;
-  p = RZF::potentialViaOriginalSum(x, y, N);  // converges in 283 steps
-
+  p = RZF::potentialViaOriginalSum(x, y, N);       // converges in ~283 steps
   RZF::vectorFieldViaOriginalSum(x, y, &u, &v, N); // OK: u,v match t.re, -t.im
 
   // To see, if the partial derivatives of the potential really give the desired results (real and

@@ -6989,6 +6989,18 @@ int rsImagCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
   return k;
 }
 
+int rsPotentialCoeffsComplexPower(int n, double* coeffs, int* xPowers, int* yPowers)
+{
+  int k;
+
+
+
+}
+// Function based on integrating rsImagCoeffsComplexPower with respect to y, then adding as
+// "integration constant" a term of the form x^(n+1) / (n+1). It's constant with respect to y but
+// a function of x.
+
+
 //=================================================================================================
 
 /** A class that implements various algorithms to evaluate the Riemann zeta function for complex 
@@ -7047,7 +7059,7 @@ public:
    static double potentialViaOriginalSum(double x, double y, int numTerms);
 
 
-
+   static double potentialViaLaurentSeries(double x, double y, int numTerms);
 
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of functions related to zeta */
@@ -7253,6 +7265,12 @@ double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int nu
     sum += exp(-w*x) * cos(w*y) / w;     // this formula is more efficient
   }
   return x - sum;
+}
+
+double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int numTerms)
+{
+
+
 }
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)

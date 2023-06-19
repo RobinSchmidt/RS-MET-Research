@@ -6934,6 +6934,61 @@ protected:
 //
 // But we don't do a implementation of that here, though because that would be boring.
 
+
+//=================================================================================================
+
+// This code below may go elsewhere eventually. It's currently here only because we need such a 
+// formula/code as subroutine to find the potential for the zeta function via its Laurent series
+// representation. That's the context in which it was developed, but it may be useful in 
+// different contexts as well. Maybe eventually these (mini-)algorithms should go into class 
+// rsBivariatePolynomial. Maybe have a function getRealCoeffsComplexPower,
+// getImagCoeffsComplexPower there.
+//
+// When forming a power of a complex variable z, i.e. w = z^n, we want to find explicit 
+// expressions for real and imaginary part of w in terms of real and imaginary parts of 
+// z = x + i*y. Set w = u + i*v. We get:
+// 
+//   re(w) = u(x,y) = \sum_{k=0}^{n/2}     (-1)^k * B(n,2*k)   * x^(n-2*k)     * y^(2*k)
+//   im(w) = v(x,y) = \sum_{k=0}^{(n-1)/2} (-1)^k * B(n,2*k+1) * x^(n-(2*k+1)) * y^(2*k+1)
+//
+// where a integer-division is used in the upper summation limit, if necessarry and B(n,k) is the
+// binomial coefficient n-choose-k.
+
+int rsRealCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
+{
+  int k;
+  for(k = 0; k <= n/2; k++) 
+  {
+    coeffs[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
+    xPowers[k] = n-2*k;
+    yPowers[k] = 2*k;
+  }
+  return k;   // We return the number of nonzero terms
+}
+
+int rsImagCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
+{
+  // The edge case must be treated separately:
+  if(n == 0)
+  {
+    coeffs[0]  = 0;
+    xPowers[0] = 0;
+    yPowers[0] = 0;
+    return 0;
+  }
+  // Check, if we really need to assign zeros to coeffs[0], etc. That might actually be 
+  // superfluous because if we return 0, client code is not supposed to read the arrays anyway.
+
+  int k;
+  for(k = 0; k <= (n-1)/2; k++) 
+  {
+    coeffs[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
+    xPowers[k] = n-(2*k+1);
+    yPowers[k] = 2*k+1;   
+  }
+  return k;
+}
+
 //=================================================================================================
 
 /** A class that implements various algorithms to evaluate the Riemann zeta function for complex 
@@ -7152,53 +7207,11 @@ void rsRiemannZetaFunction::vectorFieldViaOriginalSum(
   }
 }
 
-// Two free helper functions that may eventually go into class rsbivariatePolynomial. They compute
-int rsRealCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
-{
-  int k;
-  for(k = 0; k <= n/2; k++) 
-  {
-    coeffs[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
-    xPowers[k] = n-2*k;
-    yPowers[k] = 2*k;
-  }
-  return k; 
-
-  //return n/2; 
-  // We return the number of nonzero terms
-}
-
-int rsImagCoeffsComplexPower(int n, int* coeffs, int* xPowers, int* yPowers)
-{
-  // The edge case must be treated separately:
-  if(n == 0)
-  {
-    coeffs[0]  = 0;
-    xPowers[0] = 0;
-    yPowers[0] = 0;
-    return 0;
-  }
-  // Check, if we really need to assign zeros to coeffs[0], etc. That might actually be 
-  // superfluous.
-
-  int k;
-  for(k = 0; k <= (n-1)/2; k++) 
-  {
-    coeffs[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
-    xPowers[k] = n-(2*k+1);
-    yPowers[k] = 2*k+1;   
-  }
-  return k;
-
-  //return (n-1)/2;
-}
-
 void rsRiemannZetaFunction::vectorFieldViaLaurentSerisSum(
   double x, double y, double* u, double* v, int numTerms)
 {
   *u = 0;
   *v = 0;
-
 
 }
 

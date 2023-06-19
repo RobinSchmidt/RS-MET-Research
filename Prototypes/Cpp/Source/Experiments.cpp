@@ -11321,26 +11321,10 @@ void testRiemannZeta()
   z = RZF::dirichletTermViaReIm(s, 5);
 
   //---------------------------------------------------------------------------
-  // This code below may go elsewhere eventually. It's currently here only because we need such a 
-  // formula/code as subroutine to find the potential for the zeta function via its Laurent series
-  // representation. That's the context in which it was developed, but it may be useful in 
-  // different contexts as well. Maybe eventually these (mini-)algorithms should go into class 
-  // rsBivariatePolynomial. Maybe have a function getRealCoeffsComplexPower,
-  // getImagCoeffsComplexPower there.
   //
-  // When forming a power of a complex variable z, i.e. w = z^n, we want to find explicit 
-  // expressions for real and imaginary part of w in terms of real and imaginary parts of 
-  // z = x + i*y. Set w = u + i*v. We get:
-  // 
-  //   re(w) = u(x,y) = \sum_{k=0}^{n/2}     (-1)^k * B(n,2*k)   * x^(n-2*k)     * y^(2*k)
-  //   im(w) = v(x,y) = \sum_{k=0}^{(n-1)/2} (-1)^k * B(n,2*k+1) * x^(n-(2*k+1)) * y^(2*k+1)
-  //
-  // where a integer-division is used in the upper summation limit, if necessarry and B(n,k) is the
-  // binomial coefficient n-choose-k.
-  //
-  // Below is code for testing the formula. The code generates the coeffs and powers of x and y 
-  // according to the given formula. The outputs can be compared in the debugger to the results 
-  // from the SageMath output for the code:
+  // Below is code for unit testing the functions rsReal/ImagCoeffsComplexPower. The functions 
+  // generate the coeffs and powers of x and y for the real and imag parts of (x + i y)^n. The 
+  // target values have been obtained with from the SageMath output for the code:
   //
   //   n = 5                 # Tweak! It's a user parameter.
   //   var("x y")
@@ -11361,6 +11345,9 @@ void testRiemannZeta()
   //   5:  x^5 - 10*x^3*y^2 + 5*x*y^4                 5*x^4*y - 10*x^2*y^3 + y^5
   //   6:  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6        6*x^5*y - 20*x^3*y^3 + 6*x*y^5
   //   7:  x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6    7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
+  //
+  // ToDo: Move this code into the unit tests for rapt after the functions themselves have been
+  // add to rsBivariatePolynomial. The comment text here should also go into that unit test.
   
   //static const int N = 5; // Length of coeff/power arrays
   int uc[5],  vc[5];      // Coeffs of u and v
@@ -11467,26 +11454,6 @@ void testRiemannZeta()
 
   RAPT::rsAssert(ok);
 
-  /*
-  for(int k = 0; k <= n/2; k++) {
-    uc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);
-    upx[k] = n-2*k;
-    upy[k] = 2*k;   }
-  for(int k = 0; k <= (n-1)/2; k++) {
-    vc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
-    vpx[k] = n-(2*k+1);
-    vpy[k] = 2*k+1;   }
-    */
-
-  // The code of both loops has now been copied into some free functions:
-  //   rsRealCoeffsComplexPower, rsImagCoeffsComplexPower
-  // If it works from there, the code here may be replaced by calling these functions.
-  // ...done
-  //
-  // ToDo: Move this code into rsBivariatePolynomial and write a unit test for it that 
-  // programmatically checks the results for n = 0..7, i.e. does programmatically what we did here
-  // by manual inspection in the debugger. The text above with the sage code and output should go
-  // as comment into the unit test.
 
 
 

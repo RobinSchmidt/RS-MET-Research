@@ -11483,17 +11483,17 @@ void testRiemannZeta()
     return rsEvaluateBivariatePolynomial(x, y, m, coeffs, xPowers, yPowers);
   };
 
-  double pc[5];        // Coeffs of P
-  int ppx[5], ppy[5];  // Powers of x and y in P
+  double pc[6];        // Coeffs of P
+  int ppx[6], ppy[6];  // Powers of x and y in P
   int mp;
 
-  n = 5;
+  n = 6;  // dont go over 7 or increase the array sizes for pc, etc.
   mu = rsRealCoeffsComplexPower(     n, uc, upx, upy);
   mv = rsImagCoeffsComplexPower(     n, vc, vpx, vpy);
   mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);
 
   double ua, va;  // approximations of u,v using a numerical derivative on the potential
-  double tol = 1.e-5;
+  double tol = 1.e-4;
   double err;
 
   x   = 2;

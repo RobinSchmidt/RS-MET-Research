@@ -11450,16 +11450,22 @@ void testRiemannZeta()
   ok &= vc[1] == -20 && vpx[1] == 3 && vpy[1] == 3; // -20 * x^3 * y^3
   ok &= vc[2] ==   6 && vpx[2] == 1 && vpy[2] == 5; //   6 * x^1 * y^5
 
-
-
-  // n=7: u = x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  v = 7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
-
+  n = 7;
+  mu = rsRealCoeffsComplexPower(n, uc, upx, upy);
+  mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
+  ok &= mu == 4 && mv == 4;
+  // check u = x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6:
+  ok &= uc[0] ==   1 && upx[0] == 7 && upy[0] == 0; //   1 * x^7 * y^0
+  ok &= uc[1] == -21 && upx[1] == 5 && upy[1] == 2; // -21 * x^5 * y^2
+  ok &= uc[2] ==  35 && upx[2] == 3 && upy[2] == 4; //  35 * x^3 * y^4
+  ok &= uc[3] ==  -7 && upx[3] == 1 && upy[3] == 6; //  -7 * x^1 * y^6
+  // check v = 7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7:
+  ok &= vc[0] ==   7 && vpx[0] == 6 && vpy[0] == 1; //   7 * x^6 * y^1
+  ok &= vc[1] == -35 && vpx[1] == 4 && vpy[1] == 3; // -35 * x^4 * y^3
+  ok &= vc[2] ==  21 && vpx[2] == 2 && vpy[2] == 5; //  21 * x^2 * y^5
+  ok &= vc[3] ==  -1 && vpx[3] == 0 && vpy[3] == 7; //  -1 * x^0 * y^7
 
   RAPT::rsAssert(ok);
-
-  int dummy = 0; 
-  // OK - that looks good. The coeffs and power match the Sage output so the formuals and code seem
-  // to be correct.
 
   /*
   for(int k = 0; k <= n/2; k++) {

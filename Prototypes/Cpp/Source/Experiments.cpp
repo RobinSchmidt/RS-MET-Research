@@ -11192,13 +11192,20 @@ void testRiemannZeta()
 
   using Complex = std::complex<double>;
 
-  double pi = PI;
+  double pi = PI;    // semicircle constant
+  Complex i(0, 1);   // imaginary unit
 
   Complex s;         // input value
   Complex z;         // output value
   Complex t;         // target value
   Complex e;         // error = target - output
-  Complex i(0, 1);   // imaginary unit
+
+  double  x, y;      // real and imaginary part of input
+  double  p;         // potential
+
+  int     N;         // number of terms in approximations
+
+
 
 
   int* primes = rosic::PrimeNumbers::_getPrimeArray();
@@ -11282,6 +11289,15 @@ void testRiemannZeta()
   z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
 
+  // Now we try the potnetial functions, we choose an s with somewhat larger part to get fast 
+  // convergence for the formula based on the original sum:
+  s = 7.0 + 3.0*i;
+  t = 0.995717018743288950877 - 0.00668545877934824427446*i; // riemannzeta(7 + 3 I)
+  z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
+
+
+  x = real(s); y = imag(s); N = 1000;
+  p = RZF::potentialViaOriginalSum(x, y, N);  // converges in 283 steps
 
 
   // Test:
@@ -11329,10 +11345,10 @@ void testRiemannZeta()
   //   6:  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6        6*x^5*y - 20*x^3*y^3 + 6*x*y^5
   //   7:  x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6    7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
   
-  static const int N = 5; // Length of coeff/power arrays
-  int uc[N],  vc[N];      // Coeffs of u and v
-  int upx[N], vpx[N];     // Powers of x in u and v
-  int upy[N], vpy[N];     // Powers of y in u and v
+  //static const int N = 5; // Length of coeff/power arrays
+  int uc[5],  vc[5];      // Coeffs of u and v
+  int upx[5], vpx[5];     // Powers of x in u and v
+  int upy[5], vpy[5];     // Powers of y in u and v
   int n = 7;              // Tweak! the power of (x + i*y)^n, use 6 or 7
   for(int k = 0; k <= n/2; k++) {
     uc[k]  = pow(-1, k) * rsBinomialCoefficient(n, 2*k);

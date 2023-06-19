@@ -6970,14 +6970,18 @@ public:
 
 
    static std::complex<double> evalViaBoostSum(std::complex<double> s, int n);
-
-
-   // ToDo: implement this formula:
+   // implements this formula:
    // https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
+
 
 
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of the Polya potential of zeta */
+
+   /** Evaluates the Polya potential using the formula that was derived from the original sum.
+   It converges only for x > 1 (I think - verify!). */
+   static double potentialViaOriginalSum(double x, double y, int numTerms);
+
 
 
    //----------------------------------------------------------------------------------------------
@@ -6989,12 +6993,20 @@ public:
    static std::complex<double> evalDirchletEta(std::complex<double> s, int numTerms);
 
 
+   //----------------------------------------------------------------------------------------------
+   /** \name Some subroutines, e.g. functions to evaluate individual terms in series expansions 
+   etc. */
+
    /** Implements the formula to compute real and imaginary part of the n-th term in the Dirichlet 
    function, i.e. n^(-s) / (1 - 2^(1-s)) but without resorting to complex numbers. This is just for
    verifying the derived formulas for re and im numerically and probably has no practical 
    application in production. These formulas may serve as starting point for finding a Polya 
    potential for such a term. I did not yet succeed cracking the integrals, though. */
    static std::complex<double> dirichletTermViaReIm(std::complex<double> s, int n);
+
+
+
+
 
 
 protected:
@@ -7109,6 +7121,18 @@ std::complex<double> rsRiemannZetaFunction::evalViaBoostSum(std::complex<double>
     sum += coeff(j, n) / pow(j+1, s);
 
   return -sum / (pow(s, n) * (1.0-pow(2.0, 1.0-s)));
+}
+
+double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int numTerms)
+{
+  double sum = 0;
+  for(int n = 2; n <= numTerms; n++)
+  {
+    double w = log(double(n));
+    //sum += cos(w*y) / (w *pow(n, x));  // this formula looks nicer in a textbook
+    sum += exp(-w*x) * cos(w*y) / w;     // this formula is more efficient
+  }
+  return x - sum;
 }
 
 std::complex<double> rsRiemannZetaFunction::evalDirchletEta(std::complex<double> s, int numTerms)

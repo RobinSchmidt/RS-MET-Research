@@ -7011,6 +7011,11 @@ public:
    potential for such a term. I did not yet succeed cracking the integrals, though. */
    static std::complex<double> dirichletTermViaReIm(std::complex<double> s, int n);
 
+   /** Returns the n-th coefficient in the Laurent series expansion of zeta. The first nonzero 
+   coeff has index -1 and is equal to 1. For n >= 0 coeffs, a table involving the Stieltjes 
+   constants gamma[n] is used. */
+   static double laurentSeriesCoeff(int n);
+
 
 protected:
 
@@ -7108,7 +7113,8 @@ std::complex<double> rsRiemannZetaFunction::evalViaLaurentSeries(
   std::complex<double> z   = s - 1.0;  // we expand in power of (s-1)^n
   std::complex<double> sum = 1.0 / z;  // first term for n = -1
   for(int n = 0; n < numTerms; n++) {
-    double c = gamma[n] * pow(-1.0, n) * RAPT::rsInverseFactorials[n];
+    //double c = gamma[n] * pow(-1.0, n) * RAPT::rsInverseFactorials[n];
+    double c = laurentSeriesCoeff(n);
     sum += c * pow(z, n); }
   return sum;
 }
@@ -7208,6 +7214,16 @@ std::complex<double> rsRiemannZetaFunction::dirichletTermViaReIm(std::complex<do
   //   so maybe optimizing it is pointless.
 }
 
+
+double rsRiemannZetaFunction::laurentSeriesCoeff(int n)
+{
+  RAPT::rsAssert(n <= 10, "We have not yet tabulated coeffs higher than 10");
+
+  if(n <  -1) return 0.0;  // Laurent series coeffs for (s-1)^(-n) are 0 for n > 1.
+  if(n == -1) return 1.0;  // This is the residue at the pole at s = 1.
+  return gamma[n] * pow(-1.0, n) * RAPT::rsInverseFactorials[n]; 
+  // The coeffs for nonnegative powers of s can be computed using the Stieltjes constants.
+}
 
 
 //=================================================================================================

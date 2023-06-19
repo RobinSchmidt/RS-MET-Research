@@ -11295,14 +11295,12 @@ void testRiemannZeta()
   s = 7.0 + 3.0*i;
   t = 0.995717018743288950877 - 0.00668545877934824427446*i; // riemannzeta(7 + 3 I)
   z = RZF::evalViaOriginalSum(s,  1000); e = t-z;
-
-  x = real(s); y = imag(s); N = 1000;
+  x = real(s); 
+  y = imag(s); 
+  N = 1000;
   p = RZF::potentialViaOriginalSum(x, y, N);  // converges in 283 steps
 
   RZF::vectorFieldViaOriginalSum(x, y, &u, &v, N); // OK: u,v match t.re, -t.im
-
-  x = 2; y = 0; t = pi*pi/6;  // preliminary
-  RZF::vectorFieldViaLaurentSeries(x, y, &u, &v, 11); 
 
   // To see, if the partial derivatives of the potential really give the desired results (real and
   // negative imaginary part of zeta), we do some numerical differentiation using a central 
@@ -11317,6 +11315,25 @@ void testRiemannZeta()
   v  = (pu-pl)/(2*h);
   // OK: u,v match t.re, -t.im up to some error that can be expected due to the numeric 
   // differentiaton approximation
+
+  s = 2.0 + 1.0*i;
+  x = real(s); 
+  y = imag(s);
+  t = 1.15035570325490267174 - 0.4375308659196078811175*i; // riemannzeta(2 + I)
+  RZF::vectorFieldViaOriginalSum(  x, y, &u, &v, N);  z = u - i*v; e = t-z;
+  RZF::vectorFieldViaLaurentSeries(x, y, &u, &v, 11); z = u - i*v; e = t-z; // ~ e-10
+  // OK, at s = 2+i, the computation of the Polya vector field via the Laurent series is quite
+  // accurate. So, the formulas/algorithm is apparently correct.
+
+  // Next step: compute the Polya potential via the Laurent series, compare it to the 
+  // Polya-potential computed by the original formula ...but the problem seems to be the the
+  // original formula and the Laurent series do not seem to converge quickly for some common
+  // point. The Laurent seris converges quickly for s close to 1, the original sum converges 
+  // quickly for large real part of s. We should pick a point where both converge reasonably 
+  // fast for testing and/or may use a lot of terms in the original sum.
+  // ...TBC...
+
+
 
 
 

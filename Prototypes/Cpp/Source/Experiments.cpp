@@ -11520,6 +11520,25 @@ void testRiemannZeta()
   ok &= vc[2] ==  21 && vpx[2] == 2 && vpy[2] == 5; //  21 * x^2 * y^5
   ok &= vc[3] ==  -1 && vpx[3] == 0 && vpy[3] == 7; //  -1 * x^0 * y^7
 
+  // ToDo: maybe include a test using a loop over n with the explicit formulas from the zeta paper
+  // That will also verify the formulas.
+  for(n = 1; n <= 7; n++)  // include n=0 case later, too
+  {
+    mu  = rsRealCoeffsComplexPower(n, uc, upx, upy);
+    ok &= mu == n/2 + 1;  
+    // The + 1 is because the function returns the number of coeffs whereas the n/2 in the 
+    // formula, is the upper summation index which one less.
+    for(int k = 0; k < mu; k++)  // k = 0..n/2, end inclusive
+    {
+      ok &= uc[k]  == pow(-1, k) * rsBinomialCoefficient(n, 2*k);
+      ok &= upx[k] == n - 2*k;
+      ok &= upy[k] == 2*k;
+    }
+
+
+    int dummy = 0;
+  }
+
   RAPT::rsAssert(ok);
 
   // Test creating the Polya potential. We also create the corresponding arrays for the real and 

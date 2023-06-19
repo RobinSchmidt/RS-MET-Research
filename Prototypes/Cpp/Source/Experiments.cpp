@@ -11535,6 +11535,14 @@ void testRiemannZeta()
       ok &= upy[k] == 2*k;
     }
 
+    mv  = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
+    ok &= mv == (n-1)/2 + 1;
+    for(int k = 0; k < mv; k++)  // k = 0..(n-1)/2, end inclusive
+    {
+      ok &= vc[k]  == pow(-1, k) * rsBinomialCoefficient(n, 2*k+1);
+      ok &= vpx[k] == n - (2*k+1);
+      ok &= vpy[k] == 2*k+1;
+    }
 
     int dummy = 0;
   }

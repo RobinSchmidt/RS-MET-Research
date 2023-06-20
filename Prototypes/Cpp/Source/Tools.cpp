@@ -7161,8 +7161,20 @@ const double rsRiemannZetaFunction::gamma[32] =
   +.3557728855573160947913538e-2,
   -.7513325997815228933135160e-2
 };
+// These numbers have been taken from here: 
+//   http://www.plouffe.fr/simon/constants/stieltjesgamma.txt
+// This textfile is also here in the repo in the Misc folder. It has many more digits. I have used
+// the first 25 digits and rounded up the digit(s) before the first removed digit whenever the 
+// first removed digit was >= 5. The table there has more gammas, but I have used only the first 32
+// so far because that nicely matches with the table-length of RAPT::rsInverseFactorials which we 
+// need in conjunction with the Stieltjes constants to produce the Laurent series coeffs for zeta.
+// Maybe instead of storing the gammas, we could store the final coeffs (-1)^n * g[n] / n!. The 
+// gammas will eventually grow large as n gets larger, so it may make sense to divide by the n! to 
+// keep them in check. On the other hand, the unadorned Stieltjes constants themselves might be 
+// useful in other contexts as well, so maybe it's better to keep them in pure form. 
 
 
+// Old - obsolete:
 /*
 const double rsRiemannZetaFunction::gamma[11] = 
 { 
@@ -7181,15 +7193,8 @@ const double rsRiemannZetaFunction::gamma[11] =
 */
 // This table is preliminary. ToDo: 
 // Remove leading zeros and let all coeffs have the same number of significant digits (~20). Use
-// g[1] = -7.281e-2 notation. Maybe instead of storing g[n], store the final coeffs 
-// (-1)^n * g[n] / n!. The g[n] will eventually grow large as n gets larger, so it may make sense
-// to divide by the n! to keep them in check. Have more coeffs - at least 100, maybe 10000. Maybe 
-// write a program to compute them in SageMath or Mathematica or maybe in C++ using rsBigFloat.
-// Figure out the range of s for which this algorithms yields satisfying results precision wise.
+// g[1] = -7.281e-2 notation. 
 
-// http://www.plouffe.fr/simon/constants/stieltjesgamma.txt
-// This textfile is also here in the repo in the Misc folder
-// Maybe use the first 32 to match the table-length of RAPT::rsInverseFactorials
 
 std::complex<double> rsRiemannZetaFunction::evalViaOriginalSum(
   std::complex<double> s, int numTerms)

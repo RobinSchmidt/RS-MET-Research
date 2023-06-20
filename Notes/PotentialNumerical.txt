@@ -1,58 +1,3 @@
-Given a vector field:
-
-  f(x_1,...,x_n) = (f_1(x_1,..,x_n), ..., f_n(x_1,..,x_n))
-  
-we want to find a scalar field F(x_1,..,x_n) whose gradient is the given vector field f. To find it,
-we may proceed as follows (I think):
-
-(1) Integrate f_1 wrt x_1, call the result F ("wrt" = "with respect to")
-(2) Integrate f_2 wrt x_2, add those terms to F that don't depend on x_1
-(3) Integrate f_3 wrt x_3, add those terms to F that don't depend on x_1, x_2
-(4) Integrate f_4 wrt x_4, add those terms to F that don't depend on x_1, x_2, x_3
-(5) Integrate f_5 wrt x_5, add those terms to F that don't depend on x_1, x_2, x_3, x_4
-...
-(n) Integrate f_n wrt x_n, add those terms to F that don't depend on x_1, ..., x_{n-1}
-
-Before excuting this algo, it may make sense to verify that a potential exists (by checking the 
-symmetry of the Jacobian, I think). After the potential has been found, it may make sense to verify 
-that the so found F is indeed a potential by taking all the partial derivatives of F (i.e. dF/dx_1,
-..., df/dx_n) and comparing them with the given f_1,...,f_n. They should match. At each step of the 
-algorithm, the terms that *do* depend on previous integration variables should match those of the
-previously computed expressions. For example, in step (3), those terms that do depend on x_1 and/or 
-x_2, should match corresponding terms that have already been computed in steps (1), (2). They are 
-already accumulated into our final F, so we should not add them again. In all the integrations, we 
-use an integration constant of 0. At every step, the integration constant may actually be a function 
-of the remaining variables. That's precisely the stuff, we add in the subsequent steps.
-
-Example:
-
-  f_x(x,y,z) = 2yz + 3y + 5z + 11
-  f_y(x,y,z) = 2xz + 3x + 7z + 13
-  f_z(x,y,z) = 2xy + 5x + 7y + 17
-
-(1) F  = integral of f_x wrt x
-       = 2yzx + 3yx + 5zx + 11x
-(2) F += terms of integral of f_y wrt y that don't depend on x, the integral is:
-         I = 2xzy + 3xy + 7zy + 13y  ->  select 7zy + 13y, add to F
-	F  = 2yzx + 3yx + 5zx + 11x + 7zy + 13y
-(3) F += terms of integral of f_z wrt z that don't depend on x and/or y, the integral is:
-         I = 2xyz + 5xz + 7yz + 17z  ->  select 17z, add to F
-    F  = 2yzx + 3yx + 5zx + 11x + 7zy + 13y + 17z
-	
-So the end result is (with a little reordering):
-   
-   F  = 2xyz + 3xy + 5xz + 7yz + 11x + 13y + 17z
-  	
-Forming the partial derivatives of F wrt to x,y,z, we'll get back our f_x,f_y,f_z above, so F is 
-indeed a valid potential for our vector field.
-
-ToDo:
--Try the algorithm with some more complicated functions. I'm not yet totally sure, if it will always
- work. Baerwolff has a slightly more complicated algorithm on page 562.
- 
-----------------------------------------------------------------------------------------------------
-Under construction:
-
 Assume that we have numerical data for a vector field v(x,y), u(x,y) and we know that this data 
 represents a potential field. How can we find a corresponding potential numerically? Let's assume we 
 have 2 2D data arrays u(i,j), v(i,j) representing the functions u(x,y), v(x,y) where the x,y are 
@@ -94,7 +39,7 @@ If we make an ansatz based on a forward difference:
 we could actually solve both equations for p(i,j). Setting them equal would give one equation for
 the two values p(i+1,j) and p(i,j+1). I don't know, if that leads anywhere.
 
-
+----------------------------------------------------------------------------------------------------
 Other Idea (may be obsolete because it doesn't work?):
 -Integrate u with respect to x using trapezoidal integration row-wise. Call the result U.
 -Integrate v with respect to y using trapezoidal integration column-wise. Call the result V.

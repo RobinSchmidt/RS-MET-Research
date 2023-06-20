@@ -7150,7 +7150,7 @@ const double rsRiemannZetaFunction::gamma[11] =
 
 // http://www.plouffe.fr/simon/constants/stieltjesgamma.txt
 // This textfile is also here in the repo in the Misc folder
-
+// Maybe use the first 32 to match the table-length of RAPT::rsInverseFactorials
 
 std::complex<double> rsRiemannZetaFunction::evalViaOriginalSum(
   std::complex<double> s, int numTerms)

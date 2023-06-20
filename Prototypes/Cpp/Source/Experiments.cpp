@@ -11422,6 +11422,10 @@ void testRiemannZeta()
   z = zetaViaLaurentPot(s, 11, h, h); e = t-z; ok &= abs(e) < 5.e-10;
   z = zetaViaLaurentPot(s, 20, h, h); e = t-z; ok &= abs(e) < 8.e-12;
   z = zetaViaLaurentPot(s, 31, h, h); e = t-z; ok &= abs(e) < 8.e-12;
+  // Being able to attain an error in the e-12 range is actually pretty good considering the fact
+  // that we use numeric differentiation which itself introduces an error. I have tweaked h to 
+  // reduce it but it's only coarsely tuned so far. Maybe we can fine tune it even more to get
+  // even lower errors. we might also want to use different stepsizes h for x and y.
 
 
   s = 0.5 + 14.134725142 * i; x = real(s); y = imag(s);  // First nontrivial zero of zeta
@@ -11430,16 +11434,16 @@ void testRiemannZeta()
   z = RZF::evalViaBoostSum(s, 5);     e = t-z; ok &= abs(e) < 5.e-6;
 
   z = zetaViaLaurentPot(s, 31, h, h); e = t-z; 
-  // Error is through the roof! Its around 20 + 20*i. I guess, the series converges very slowly
-  // that far away from the expansion center s = 1. When observing the iterations in the debugger,
-  // it is apparent that the contributions to the sum are not even yet in decreasing mode. They hop 
-  // around all over the place. Seems like Laurent series are very different from Taylor series
-  // in this regard. In a Taylor series, the bulk of the approximation is in the first few 
-  // iterations and subsequent iterations add ever smaller refinements. Here, it seems that quite 
-  // big contributions can added in later iterations. Eventually, the contributions must die out to
-  // zero in a Laurent series too (otherwise, it couldn't converge) but initially, that doesn't 
-  // seem to be the case. There's a wild jumping around action going on before it settles down.
-  // That's a pretty inconvenient property!
+  // Error is through the roof! Its around 20 + 20*i for 11 terms. I guess, the series converges 
+  // very slowly that far away from the expansion center s = 1. When observing the iterations in 
+  // the debugger, it is apparent that the contributions to the sum are not even yet in decreasing
+  // mode. They hop around all over the place. Seems like Laurent series are very different from 
+  // Taylor series in this regard. In a Taylor series, the bulk of the approximation is in the 
+  // first few iterations and subsequent iterations add ever smaller refinements. Here, it seems 
+  // that quite big contributions can added in later iterations. Eventually, the contributions must
+  // die out to zero in a Laurent series too (otherwise, it couldn't converge) but initially, that 
+  // doesn't seem to be the case. There's a wild jumping around action going on before it settles 
+  // down. That's a pretty inconvenient property!
 
 
 

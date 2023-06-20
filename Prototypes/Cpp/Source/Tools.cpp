@@ -7307,8 +7307,16 @@ double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int 
   // the same size as numGammas, I think. They might be smaller. Maybe more in the numGammas/2 
   // ballpark. Figure out and change it also in vectorFieldViaLaurentSeries
 
+  static const double K = 0.53929867655706210;
+  // The constant that ensures that the potential is 0 at s = 0. When we have more coeffs to be 
+  // able to make more accurate computations, that should be recomputed by setting it temporarily 
+  // to 0, computing the potnetia at s=0, and then subtracting it. When doing this, we should 
+  // ensure in the degbugger that the series actually converges, i.e. later iterations do not 
+  // change the vaule of P anymore. with at at most 11 terms, it was not yet fully converged to 
+  // double precision so the value here is preliminary.
+
   x -= 1.0;
-  double P = log(x*x + y*y) / 2;
+  double P = K + log(x*x + y*y) / 2;
   for(int n = 0; n < numTerms; n++)
   {
     double c  = laurentSeriesCoeff(n);  // the n-th coeffs

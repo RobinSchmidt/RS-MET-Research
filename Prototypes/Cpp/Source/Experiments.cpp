@@ -11338,6 +11338,16 @@ void testRiemannZeta()
   // all the potential computing functions perhaps by fixing the value at 0 or at infinity or 
   // whatever is convenient.
 
+  // Maybe normalize them at (2,0) which is a point wher all formulas converge:
+  //s = 2; x = real(s); y = imag(s);
+  //p  = RZF::potentialViaOriginalSum(  x, y, 10000000);  // 1.3944782169729908
+  //pl = RZF::potentialViaLaurentSeries(x, y, 11);        // 0.61194119166930305
+
+  s = 0; x = real(s); y = imag(s);
+  //p  = RZF::potentialViaOriginalSum(  x, y, 10000000);  // divergent
+  pl = RZF::potentialViaLaurentSeries(x, y, 11);        // almost zero due to normalization
+
+
   h  = 0.0001;
   double eu, ev;
 

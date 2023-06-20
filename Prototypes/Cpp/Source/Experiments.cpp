@@ -11651,12 +11651,12 @@ void plotZetaPotential()
 {
   using RZF = rsRiemannZetaFunction;
 
-  int Nx = 10;
-  int Ny = 50;
-  double xMin = 0.0;
-  double xMax = 1.0;
-  double yMin = 0.0;
-  double yMax = 3.0;
+  int Nx = 33;
+  int Ny = 65;
+  double xMin =  0.0;
+  double xMax =  1.0;
+  double yMin = 21.0;
+  double yMax = 25.0;
 
 
   using Vec = std::vector<double>;
@@ -11686,6 +11686,8 @@ void plotZetaPotential()
 
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
   plt.plot3D();
+
+  // The first few nontrivial zeros of zeta are at x = 1/2, y = 14.1, 21.0, 25.0, 30.4, 32.9, 37.6.
 }
 
 

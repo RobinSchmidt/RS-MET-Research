@@ -514,7 +514,9 @@ P(x,y) = \frac{\ln(x^2 + y^2)}{2} + \sum_{n=0}^{\infty} c_n P_n(x,y)
 where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$.
 
 \section{Putting the Formulas to Use}
-The hard work of the derivation is done. Now that we have some (moderately complex but still managable) formulas at our disposal to compute the Polya potential for zeta, we can use them to explore the beast that we have created. Among others, I have implemented formulas (\ref{Eq:PolyaPotentialOriginal}) and (\ref{Eq:PolyaPotentialLaurent}) and did some first tests. To prove that it works, I evaluated the formulas, then took numerical partial derivatives to verify that we can indeed re-create zeta by taking the gradient. It works - but these tests also revealed that the potential computed by the different formulas differs a constant offset. That is not necessarily suprising and no problem - potentials are not unique and determined only up to a constant shift. It may make sense to normalize the potential in a way that is convenient. I've shifted it such that it returns zero for $s=0$.  ...TBC...
+The hard work of the derivation is done. Now that we have some (moderately complex but still managable) formulas at our disposal to compute the Polya potential for zeta, we can use them to explore the beast that we have created. Among others, I have implemented formulas (\ref{Eq:PolyaPotentialOriginal}) and (\ref{Eq:PolyaPotentialLaurent}) and did some first tests. To prove that it works, I evaluated the formulas, then took numerical partial derivatives to verify that we can indeed re-create zeta by taking the gradient. It works - but these tests also revealed that the potential computed by the different formulas differs a constant offset. That is not necessarily suprising and no problem - potentials are not unique and determined only up to a constant shift. It may make sense to normalize the potential in a way that is convenient. I've shifted it such that it returns zero for $s=0$. 
+
+...TBC...
 
 ToDo: add cite to the github repo
 

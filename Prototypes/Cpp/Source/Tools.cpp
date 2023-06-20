@@ -7280,7 +7280,9 @@ void rsRiemannZetaFunction::vectorFieldViaLaurentSeries(
 double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int numTerms)
 {
   static const double K = -0.24323834874662564;
-  // Constant offset to make output zero at (x,y) = (0,0)
+  // Constant offset to make output zero at (x,y) = (0,0). Maybe use that in the initialization
+  // of the sum. Maybe do
+  // sum = x - 0.24... 
 
 
   double sum = 0;
@@ -7309,15 +7311,22 @@ double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int 
   };
   // Is numGammas actually the correct size for these arrays? I think not. They are not necessarily
   // the same size as numGammas, I think. They might be smaller. Maybe more in the numGammas/2 
-  // ballpark. Figure out and change it also in vectorFieldViaLaurentSeries
+  // ballpark. Figure out and change it also in vectorFieldViaLaurentSeries. Look at the sage 
+  // output for the polynomials in the test code. We need arrays long enough to hold all coeffs, 
+  // i.e. the length should be given by the maximum number of terms in the bivariate polynomial to
+  // be expected. I think, it's around n/2 because half of the coeffs go into u and half into v.
+  // P has one coeff more that v.
 
   static const double K = 0.53929867655706210;
   // The constant that ensures that the potential is 0 at s = 0. When we have more coeffs to be 
   // able to make more accurate computations, that should be recomputed by setting it temporarily 
-  // to 0, computing the potnetia at s=0, and then subtracting it. When doing this, we should 
-  // ensure in the degbugger that the series actually converges, i.e. later iterations do not 
-  // change the vaule of P anymore. with at at most 11 terms, it was not yet fully converged to 
-  // double precision so the value here is preliminary.
+  // to 0, computing the potential at s=0, and then subtracting it, i.e. use its negation as K. 
+  // When doing this, we should ensure in the degbugger that the series actually converges, i.e. 
+  // later iterations do not change the value of P anymore. With at at most 11 terms, it was not 
+  // yet fully converged to double precision so the value here is preliminary. After it has been 
+  // recomputed more accurately, the constant in potentialViaOriginalSum must also be recomputed by
+  // taking this functionas reference and make both functions match for example at s=2 (we can't 
+  // use the other sum at s=0 because it diverges there).
 
   x -= 1.0;
   double P = K + log(x*x + y*y) / 2;
@@ -7325,8 +7334,11 @@ double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int 
   {
     double c  = laurentSeriesCoeff(n);  // the n-th coeffs
     double Pn = P_n(x, y, n);           // the P_n contribution
-    double d  = c*Pn;                    // delta to be added
+    double d  = c*Pn;                   // delta to be added
     P += d;
+
+    // During development, it may make sense to split it up into baby-steps like that to see 
+    // what's going on. Later, we'll use just one line like so:
 
     //P += laurentSeriesCoeff(n) * P_n(x, y, n);
   }

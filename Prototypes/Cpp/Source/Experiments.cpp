@@ -11429,7 +11429,15 @@ void testRiemannZeta()
 
   z = zetaViaLaurentPot(s, 11, h, h); e = t-z; 
   // Error is through the roof! Its around 20 + 20*i. I guess, the series converges very slowly
-  // that far away from the expansion center s = 1. ToDo: Observe iterations in debugger
+  // that far away from the expansion center s = 1. When observing the iterations in the debugger,
+  // it is apparent that the contributions to the sum are not even yet in decreasing mode. They hop 
+  // around all over the place. Seems like Laurent series are very different from Taylor series
+  // in this regard. In a Taylor series, the bulk of the approximation is in the first few 
+  // iterations and subsequent iterations add ever smaller refinements. Here, it seems that quite 
+  // big contributions can added in later iterations. Eventually, the contributions must die out to
+  // zero in a Laurent series too (otherwise, it couldn't converge) but initially, that doesn't 
+  // seem to be the case. There's a wild jumping around action going on before it settles down.
+  // That's a pretty inconvenient property!
 
 
 

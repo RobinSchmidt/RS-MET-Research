@@ -11562,24 +11562,23 @@ void testRiemannZeta()
   for(n = 1; n <= 7; n++)  // start at n=0 later
   {
     mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);
-    ok &= mp ==  (n-1)/2 + 2; // verify!
-
-    for(int k = 0; k < mp-1; k++) // mp-1 bcs the last is for the "integration constant"
+    ok &= mp ==  (n-1)/2 + 2;     // mp must be 1 more than mv in the case for v in test above
+    double t;                     // for target values (maybe remove if we don't need a tolerance)
+    for(int k = 0; k < mp-1; k++) // only up to mp-1 bcs the last is for the "integration constant"
     {
-      double t = -pow(-1.0, k) * rsBinomialCoefficient(n, 2*k+1) / (2*k+2);
+      t   = -pow(-1.0, k) * rsBinomialCoefficient(n, 2*k+1) / (2*k+2);
       ok &= abs(pc[k]-t) <= tol;
       ok &= ppx[k] == n - (2*k+1);
       ok &= ppy[k] == 2*k+2;
-      int dummy = 0;
     }
 
-    // Check integration constant:
-
-
-    int dummy = 0;
+    // Check integration constant which is (1.0/(n+1)) * x^(n+1) * y^0  and is put into the last 
+    // slot of the array:
+    t = 1.0 / (n+1);
+    ok &= abs(pc[mp-1]-t) <= tol;
+    ok &= ppx[mp-1] == n+1;
+    ok &= ppy[mp-1] == 0;
   }
-
-
 
   // Shorthand:
   auto evalPoly = [](double x, double y, int m, double* coeffs, int* xPowers, int* yPowers)

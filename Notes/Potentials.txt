@@ -55,9 +55,10 @@ Under construction:
 
 Assume that we have numerical data for a vector field v(x,y), u(x,y) and we know that this data 
 represents a potential field. How can we find a corresponding potential numerically? Let's assume we 
-have a 2D data arrays u(i,j),v(i,j) representing the functions u(x,y),v(x,y) where the x,y are 
+have 2 2D data arrays u(i,j), v(i,j) representing the functions u(x,y), v(x,y) where the x,y are 
 equidistant with stepsize dx,dy respectively. The situation could look like this:
 
+                u(i,j)                          v(i,j)                             p(i,j)
      j                               j                                  j
   i:     0   1   2   3   4   5    i:     0   1   2   3   4   5       i:     0   1   2   3   4   5
      0  u00 u01 u02 u03 u04 u05      0  v00 v01 v02 v03 v04 v05         0  p00 p01 p02 p03 p04 p05
@@ -76,7 +77,7 @@ means, we can make the ansatz:
   u(i,j) = (p(i+1,j) - p(i-1,j)) / (2*dx),   v(i,j) = (p(i,j+1) - p(i,j-1)) / (2*dy)
 
 Maybe such an ansatz can lead to a (sparse) linear system for the p(i,j). Maybe, if we cleverly 
-vectorize the matrices, it could even tridiaogonal or maybe pentadiagonal? If we make an ansatz 
+vectorize the matrices, it could even tridiagonal or maybe pentadiagonal? If we make an ansatz 
 based on a forward difference:
 
   u(i,j) = (p(i+1,j) - p(i,j)) / dx,   v(i,j) = (p(i,j+1) - p(i,j)) / dy

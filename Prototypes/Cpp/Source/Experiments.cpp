@@ -11415,11 +11415,13 @@ void testRiemannZeta()
   z = RZF::evalViaBoostSum(s, 15);  e = t-z; ok &= abs(e) < 7.e-15;
 
 
+  h  = 0.00001;
   s = 2.0 + 1.0*i; 
   t = 1.15035570325490267174 - 0.4375308659196078811175*i; 
   //z = RZF::evalViaBoostSum(s, 15); e = t-z; ok &= abs(e) < 5.e-6;  // FAILS!
-  z = zetaViaLaurentPot(s, 11, h, h); e = t-z; ok &= abs(e) < 2.e-9;
-
+  z = zetaViaLaurentPot(s, 11, h, h); e = t-z; ok &= abs(e) < 5.e-10;
+  z = zetaViaLaurentPot(s, 20, h, h); e = t-z; ok &= abs(e) < 8.e-12;
+  z = zetaViaLaurentPot(s, 31, h, h); e = t-z; ok &= abs(e) < 8.e-12;
 
 
   s = 0.5 + 14.134725142 * i; x = real(s); y = imag(s);  // First nontrivial zero of zeta
@@ -11427,7 +11429,7 @@ void testRiemannZeta()
   h  = 0.01;
   z = RZF::evalViaBoostSum(s, 5);     e = t-z; ok &= abs(e) < 5.e-6;
 
-  z = zetaViaLaurentPot(s, 11, h, h); e = t-z; 
+  z = zetaViaLaurentPot(s, 31, h, h); e = t-z; 
   // Error is through the roof! Its around 20 + 20*i. I guess, the series converges very slowly
   // that far away from the expansion center s = 1. When observing the iterations in the debugger,
   // it is apparent that the contributions to the sum are not even yet in decreasing mode. They hop 

@@ -7461,7 +7461,7 @@ std::complex<double> rsRiemannZetaFunction::dirichletTermViaReIm(std::complex<do
 
 double rsRiemannZetaFunction::laurentSeriesCoeff(int n)
 {
-  RAPT::rsAssert(n <= 10, "We have not yet tabulated coeffs higher than 10");
+  RAPT::rsAssert(n < 32, "We have not yet tabulated coeffs higher than n=31");
 
   if(n <  -1) return 0.0;  // Laurent series coeffs for (s-1)^(-n) are 0 for n > 1.
   if(n == -1) return 1.0;  // This is the residue at the pole at s = 1.

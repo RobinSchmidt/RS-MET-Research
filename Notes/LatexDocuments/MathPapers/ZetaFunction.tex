@@ -128,7 +128,7 @@ where $\mu(n)$ is the Moebius mu-function. ...TBC...explain mu...where does this
 % file:///C:/Users/rob/Downloads/Papers/RiemannHypothesis-BrianConrey.pdf
 
 \subsubsection{Boost Implementation Formula}
-The following formula is used in the implementation of the zeta function in the boost C++ library (see \cite{Boost}). The formula also gives a bound for the error $R(s)$ when using an approximation with $2n-1$ terms:
+The following formula is used in the implementation of the zeta function in the Boost C++ library (see \cite{Boost}). The formula also gives a bound for the error $R(s)$ when using an approximation with $2n-1$ terms:
 \begin{equation}
 \zeta(s)
 = \frac{-1}{s^n(1-2^{1-s})}	\sum_{j=0}^{2n-1} \frac{e_{jn}}{(j+1)^s} + R(s) 
@@ -174,15 +174,15 @@ The zeta function obeys the folloing reflection formulas:
 \zeta(1-s) = 2 \sin(\pi \frac{1-s}{2})(2 \pi^{-s}) \Gamma(s) \zeta(s), \quad
 \zeta(s) = 2^s \pi^{s-1} \sin(\frac{\pi s}{2}) \Gamma(1-s) \zeta(1-s)
 \end{equation}
-see \cite{Boost}, \cite{Wiki}. VERIFY!
+see \cite{Boost}, \cite{Wiki}. [ToDo: VERIFY them and write them in a more consistent form (they have been grabbed from different sources)! Maybe explain the gamma function briefly.]
 
 \section{Polya Potentials}
-The Polya vector field of a complex function $f = f(z)$ is a 2D vector field, i.e. a function $(u(x,y), v(x,y)): \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that is obtained from the complex function $f$ by using $u(x,y) = \Re(f), v(x,y) = -\Im(f)$ where $x = \Re(z), y = \Im(z)$. Negating the imaginary part of $f$ in the definition $v$ has the effect of turning the Cauchy-Riemann conditions for analytic complex functions into the condition that gives the vector field a symmetric Jacobian [VERIFY!]. In turn, a symmetric Jacobian is a necessary and sufficient condition for the vector field to be a potential field, i.e. a vector field that can be obtained from a scalar field by the operation of taking its gradient. The potential for the Polya vector field is what I call the "Polya potential" of the complex function $f$ and it's an object that I have not yet seen as being used in complex analysis. Maybe taking a closer look at it can reveal some new insights. The goal is to derive expressions for the Polya potentials of the zeta function and then analyze this Polya potential instead of the zeta function itself. I hope that it will turn out to be simpler to understand because its just a simple scalar field over $\mathbb{R}^2$, i.e. a 3D thing rather than a 4D one - but it contains nonetheless the same amount of information. The all important zeros of the zeta function will be mapped to the stationary points (extrema or saddles) of the Polya potential. The Polya potential might also be amenable to the tools of differential geometry like figuring out main curvature directions at the stationary points, figuring out the geodesics between the stationary points, etc. I don't really know yet what to do with it - first we need to find it.
+The Polya vector field of a complex function $f = f(z)$ is a 2D vector field, i.e. a function $(u(x,y), v(x,y)): \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that is obtained from the complex function $f$ by using $u(x,y) = \Re(f), v(x,y) = -\Im(f)$ where $x = \Re(z), y = \Im(z)$. Negating the imaginary part of $f$ in the definition $v$ has the effect of turning the Cauchy-Riemann conditions for analytic complex functions into the condition that gives the vector field a symmetric Jacobian [VERIFY!]. In turn, a symmetric Jacobian is a necessary and sufficient condition for the vector field to be a potential field, i.e. a vector field that can be obtained from a scalar field by the operation of taking its gradient. In fact, the Jacobian of the vector field will become the Hessian of the potential [VERIFY!]. The potential for the Polya vector field is what I call the "Polya potential" of the complex function $f$ and it's an object that I have not yet seen as being used in complex analysis. Maybe taking a closer look at it can reveal some new insights. The goal is to derive expressions for the Polya potentials of the zeta function and then analyze this Polya potential instead of the zeta function itself. I hope that it will turn out to be simpler to understand because its just a simple scalar field over $\mathbb{R}^2$, i.e. a 3D thing rather than a 4D one - but it contains nonetheless the same amount of information. The all important zeros of the zeta function will be mapped to the stationary points (extrema or saddles) of the Polya potential. The Polya potential might also be amenable to the tools of differential geometry like figuring out main curvature directions at the stationary points, figuring out the geodesics between the stationary points, etc. I don't really know yet what to do with it - first we need to find it.
 
 \subsection{Polya Vector Field and Potenial via Original Sum}
 
 \subsubsection{Vector Field}
-Let's start with the definition of $\zeta$ via its sum formula given in (\ref{Eq:OriginalSum}) and massage it a bit:
+Let's start with the representation of $\zeta$ via its sum formula given in (\ref{Eq:OriginalSum}) and massage it a bit:
 \begin{equation}
 \zeta(s)
 = \sum_{n=1}^{\infty} \frac{1}{n^s}
@@ -414,10 +414,10 @@ z^n = (x + \i y)^n = \sum_{k=0}^n \binom{n}{k}  x^k (\i y)^{n-k}
 \end{equation}
 To see what that means in terms of real and imaginary part of the result of $z^n$, we'll again use a little snippet of Sage code where we can tweak \texttt{n} and inspect the results:
 \begin{verbatim}
+n = 5	               # You may tweak this parameter
 var("x y")
 assume(x, "real")
 assume(y, "real")
-n = 5
 z = x + I*y
 w = z^n
 w.real(), w.imag()
@@ -476,7 +476,7 @@ which gives $(1/2*\log(x^2 + y^2), 1/2*\log(x^2 + y^2))$, so the Polya potential
 \label{Eq:PolyaPotentialLaurentInvTerm}	% call the other term for z^n ...PowTerm
 \boxed{p_{-1}(x,y) = \frac{\ln(x^2 + y^2)}{2}}
 \end{equation}
-By the way, in this case, integrating $u$ with respect to $x$ and $v$ with respect to $y$ yielded the exact same results here and that common result is our (contribution to the) potential. In a more general case where a vector field functions $u,v$ contain terms that depend on $x$ or $y$ alone and/or a constant term, that doesn't need to be the case. These terms need to be taken into account by "integration constants", i.e. when integrating $u$ with respect to $x$, we could have to add a function $f(y)$ as integration constant (constant with respect to $x$ but can depend on $y$). That $f(y)$ would show up as terms independent of $x$ in the integral of $v$ with respect to $y$. Vice versa, $v$ integrated with respect to $y$ may miss terms that depend only on $x$ which will show up only in the integral of $u$ with respect to $x$. That's why we need to compute both integrals. The "integration constants" turned out to be zero here, though. Hence, both integrals produced the exact same result. More on that later, when we consider the $z^n$ terms.
+By the way, in this case, integrating $u$ with respect to $x$ and $v$ with respect to $y$ yielded the exact same results here and that common result is our (contribution to the) potential. In a more general case where a vector field functions $u,v$ contain terms that depend on $x$ or $y$ alone and/or a constant term, that doesn't need to be the case. These terms need to be taken into account by "integration constants", i.e. when integrating $u$ with respect to $x$, we could have to add a function $f(y)$ as integration constant (constant with respect to $x$ but can depend on $y$). That $f(y)$ would show up as terms independent of $x$ in the integral of $v$ with respect to $y$. Vice versa, $v$ integrated with respect to $y$ may miss terms that depend only on $x$ which will show up only in the integral of $u$ with respect to $x$. That's why we need to compute both integrals. The "integration constants" turned out to be zero here, though. Hence, both integrals produced the exact same result. When we next consider the $z^n$ terms, that will not be the case and we will need to be more careful about that.
 
 \medskip
 To find the potential for the $z^n$ terms, we'll need to take (\ref{Eq:PolyaFieldLaurentPowTerm}) which is repeated here:
@@ -485,7 +485,7 @@ u_n(x,y) = \sum_{k=0}^{n/2} (-1)^k \binom{n}{2 k} x^{n-2k} y^{2k}
 ,\qquad
 v_n(x,y) = -\sum_{k=0}^{(n-1)/2} (-1)^k \binom{n}{2k+1} x^{n-(2k+1)} y^{2k+1}
 \end{equation}
-and integrate $u_n(x,y)$ with respect to ("wrt") $x$ and $v_n(x,y)$ wrt to $y$. We'll call the integration results $U_n, V_n$ respectively:
+and integrate $u_n(x,y)$ with respect to ("wrt") $x$ and $v_n(x,y)$ wrt to $y$. We'll call the integration results $U_n, V_n$ respectively. The functions $u,v$ are just simple bivariate polynomials, so integrating wrt to $x$ involves incrementing the $x$-exponents in all terms by one and dividing the terms by their new exponents. Same story for $y$. This gives:
 \begin{equation}
 U_n(x,y) = \sum_{k=0}^{n/2} \binom{n}{2 k} \frac{(-1)^k x^{n-2k+1} y^{2k}}{n-2k+1}
 ,\qquad
@@ -494,7 +494,7 @@ V_n(x,y) = -\sum_{k=0}^{(n-1)/2} \binom{n}{2k+1} \frac{(-1)^k x^{n-(2k+1)} y^{2k
 When doing these integrations, all the terms that involve both $x$ and $y$ should match in both of these integrals. But if $u$ contains terms that don't depend on $y$, i.e. a constant term and/or terms that only have $x$ in them but no $y$, then the integral of $u$ wrt $x$ may contain some etxra terms that only depend on $x$ and don't appear in the integral of $v$ wrt $y$. Likewise, if $v$ has terms that don't depend on $x$, they will give rise to terms that only depend on $y$ in the integral of $v$ wrt to $y$ which do not show up in the integral of $u$ wrt $x$. Such additional terms in either of these integrals can be regarded as integration constants - they are constant with respect to our integration variable but may depend on the other variable.
 
 \medskip
-We can in general just always use $V_n(x,y)$ and add to it a $x^{n+1}/(n+1)$ term as integration constant because all the $u_n$ have exactly one term that is independent of $y$ and that term is always $x^n$ which, when integrated, gives $x^{n+1}/(n+1)$. That gives:
+We can in general just always use $V_n(x,y)$ and add to it a $x^{n+1}/(n+1)$ term as integration constant because all the $u_n$ have exactly one term that is independent of $y$ and that term is always $x^n$ (see the Sage output) which, when integrated, gives $x^{n+1}/(n+1)$. That gives:
 \begin{equation}
 \label{Eq:PolyaPotentialLaurentTerm}	
 \boxed{	
@@ -502,8 +502,7 @@ P_n(x,y) = \frac{x^{n+1}}{n+1}
            -\sum_{k=0}^{(n-1)/2} \binom{n}{2k+1} \frac{(-1)^k x^{n-(2k+1)} y^{2k+2}}{2k+2}
 }
 \end{equation}
-VERIFY that! 
-The full Polya potential is then be given by re-assembling the sum:
+[VERIFY that!] The full Polya potential is then given by re-assembling the sum, as usual:
 \begin{equation}
 \label{Eq:PolyaPotentialLaurent}	
 \boxed{
@@ -511,15 +510,12 @@ P(x,y) = \frac{\ln(x^2 + y^2)}{2} + \sum_{n=0}^{\infty} c_n P_n(x,y)
 }
 \quad \text{where } c_n = \frac{(-1)^n \gamma_n}{n!}
 \end{equation}
-where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$.
+where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$ and $\gamma_n$ are the Stieltjes constants. I think, this expression should converge in the same domain as the original Laurent series, i.e. for all $z \neq 1$ because when integrating or differentiating convergent sums term-wise, the result will have the same radius of convergence. The speed of convergence might be different, though.\textcolor{red}{[I guess...figure out! ToDo: Maybe drag the slightly problematic $n=0$ term out of the sum. I think, it's just given by $P_0(x,y) = x$ because the sum in $P_0$ is supposed to give the zero function and only the $x^{n+1}/(n+1) = x^1/1$ remains]}.
 
 \section{Putting the Formulas to Use}
-The hard work of the derivation is done. Now that we have some (moderately complex but still managable) formulas at our disposal to compute the Polya potential for zeta, we can use them to explore the beast that we have created. Among others, I have implemented formulas (\ref{Eq:PolyaPotentialOriginal}) and (\ref{Eq:PolyaPotentialLaurent}) and did some first tests. To prove that it works, I evaluated the formulas, then took numerical partial derivatives to verify that we can indeed re-create zeta by taking the gradient. It works - but these tests also revealed that the potential computed by the different formulas differs a constant offset. That is not necessarily suprising and no problem - potentials are not unique and determined only up to a constant shift. It may make sense to normalize the potential in a way that is convenient. I've shifted it such that it returns zero for $s=0$. 
+The hard work of the derivation is done. Now that we have some (moderately complex but still managable) formulas at our disposal to compute the Polya potential for zeta, we can use them to explore the beast that we have created. Among others, I have implemented formulas (\ref{Eq:PolyaPotentialOriginal}) and (\ref{Eq:PolyaPotentialLaurent}) and did some first tests. To prove that it works, I evaluated the formulas, then took numerical partial derivatives to verify that we can indeed re-create zeta by taking the gradient. It works - but these tests also revealed that the potential computed by the different formulas differs by a constant offset. That is not necessarily suprising and no problem. Potentials are not unique and determined only up to a constant shift. It may make sense to normalize the potential in a way that is convenient. I've shifted it such that it returns zero for $s=0$ for the evaluation based on (\ref{Eq:PolyaPotentialLaurent}) and matched the result of (\ref{Eq:PolyaPotentialOriginal}) to it at $s=2$ (because (\ref{Eq:PolyaPotentialLaurent}) can't be used at $s=0$). The code for this can be found somewhere in my personal research repository on GitHub \cite{GitHub}. It's written in C++. This repo has also the LaTeX source for this article.
 
 ...TBC...
-
-ToDo: add cite to the github repo
-
 
 %Numerical tests revealed that the potential computed via (\ref{Eq:PolyaPotentialLaurent}) has a different constant offset than when we use (\ref{Eq:PolyaPotentialOriginal}). Maybe we should add constants to all potential formulas to normalize the output at some chosen input $(x,y)$. Maybe set $P(x,y) = 0$ at $(0,0)$ or at $(+\infty, 0)$ or at $(2,0)$? 
 
@@ -576,6 +572,12 @@ ToDo: add cite to the github repo
 
 \bibitem{Wiki} Wikipedia, \textit{Riemann\_zeta\_function},
 \href{https://en.wikipedia.org/wiki/Riemann_zeta_function}{en.wikipedia.org/wiki/Riemann\_zeta\_function}
+
+\bibitem{GitHub} RS-MET-Research, \textit{Repository on GitHub}
+\href{https://github.com/RobinSchmidt/RS-MET-Research}{github.com/RobinSchmidt/RS-MET-Research}
+
+%https://github.com/RobinSchmidt/RS-MET-Research
+
 
 \end{thebibliography}
  
@@ -637,6 +639,12 @@ Questions:
  where t = [0,inf), i.e. curves whose x,y coordinates are the critical line and whose z-coordinate is given by the Polya potential of zeta. Maybe analyze curvature and 
  torsion of such curves. If we want to use t = [0,1), we could use y(t) = t / (1-t)
  instead. That function goes from 0 to inf as t goes from 0 to 1
+-What about the integral representation(s) of zeta? Can they be used to find expressions
+ for the Polya potential, too? I think, we would just need to integrate the integrand 
+ just like in the sums, we just integrated the summands/terms. The outer integral 
+ just stays put and re-assembles all the contributions just like with the discrete
+ sums. Such integral based representations of the potential might be not terribly 
+ useful for evaluation purposes but may be useful for theoretical purposes.
 
 ToDo:
 -Maybe split out a paper about computing Polya potentials for some simple functions

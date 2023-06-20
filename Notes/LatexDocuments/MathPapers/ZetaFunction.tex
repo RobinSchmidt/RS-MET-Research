@@ -452,8 +452,7 @@ So, these are the $u_n(x,y), v_n(x,y)$ parts of the Polya vector field of a sing
 }
 \quad \text{where } c_n = \frac{(-1)^n \gamma_n}{n!}
 \end{equation}
-where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$. Be careful to not forget about the offset of $-1$ for $x$ with respect to $\Re(s)$ because we used $z = s-1$ for the derivation. The $\gamma_n$ are still the Stieltjes constants, as before. %I'll abstain from giving a formula for $v(x,y)$ because for the purpose of deriving a potential, we will integrate $u$ with respect to $x$ rather than $v$ with respect to $y$ anyway. We just need to be careful in the case of odd $n$ to add some $\pm y^{n+1} / (n+1)$ term to the potential for the $f(y)$ integration constant. I'll explain this later.
-
+where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$. Be careful to not forget about the offset of $-1$ for $x$ with respect to $\Re(s)$ because we used $z = s-1$ for the derivation. The $\gamma_n$ are still the Stieltjes constants, as before.
 
 
 
@@ -511,16 +510,12 @@ P(x,y) = \frac{\ln(x^2 + y^2)}{2} + \sum_{n=0}^{\infty} c_n P_n(x,y)
 }
 \quad \text{where } c_n = \frac{(-1)^n \gamma_n}{n!}
 \end{equation}
+where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$.
+
+...TBC...Numerical tests indicate that the potential computed via (\ref{Eq:PolyaPotentialLaurent}) has a different constant offset than when we use (\ref{Eq:PolyaPotentialOriginal}). Maybe we should add constants to all potential formulas to normalize the output at some chosen input $(x,y)$. Maybe set $P(x,y) = 0$ at $(0,0)$ or at $(+\infty, 0)$ or at $(2,0)$? 
 
 %  \frac{\ln(x^2 + y^2)}{2}
 % Maybe to avoid the complication of the edge case for n=0, we could actually just leave the term out by adjusting some summation limit and perhaps dragging the term out of the sum - we'll see. I think, it's simply P_0(x,y) = x. Maybe drag the n=1 term out as well. We have P_1(x,y) = 1. But that doesn't really matter anyway. It's just a constant that shifts the whole function up or down. Maybe it's more elegant to include it for consistency. Not sure yet.
-
-
-
-
-
-...TBC...
-
 
 %To find the potential for the $z^n$ terms, we'll need to take (\ref{Eq:PolyaFieldLaurentPowTerm}) and integrate that $u_n(x,y)$ with respect to $x$. When $n$ is even, we can assume that the part of the potential that depends only on $y$ (the x-integration constant) is just zero because in these cases, the imaginary $v(x,y)$ parts have no term that purely depends on $y$ but not on $x$, as can be seen from the sage output. For odd $n$, the $f(y)$ term is given by $\pm y^{n+1} / (n+1)$ where $+$ is used for $1,5,9,13,...$ and $-$ for $3,7,11,15,... $This results from observing the purely $y$-dependent part of the imaginary part $v$ and integrating it with respect to $y$. I didn't give a full formula for $v = v_n(x,y)$ because the only thing that will be different when integrating $v$ with respect to $y$ rather than $u$ with respect to $x$ is the possible presence of the integral of an $\pm y^n$ term which we can just add as integration constant $f(y)$ to our result of integrating $u$ with respect to $x$. In general, one would integrate $u$ wrt $x$ and $v$ wrt to $y$. All terms that depend on both $x,y$ would match. But $u$ wrt $x$ could have additional $x$-only terms and $v$ wrt $y$ could have additional $y$-only terms. When we integrate $u$ wrt $x$, we get all the common terms that depend on both $x$ and $y$ plus all the $x$-only terms, so the only possibly missing thing are the $y$-only terms, if present. I didn't bother to derive an expression for the full $v$ because
 

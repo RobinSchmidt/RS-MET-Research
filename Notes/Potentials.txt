@@ -54,9 +54,22 @@ ToDo:
 Under construction:
 
 Assume that we have numerical data for a vector field v(x,y), u(x,y) and we know that this data 
-represents a potential field. How can we find a corresponding potential numerically?
+represents a potential field. How can we find a corresponding potential numerically? Let's assume we 
+have a 2D data arrays u(i,j),v(i,j) representing the functions u(x,y),v(x,y) where the x,y are 
+equidistant with stepsize dx,dy respectively. The situation could look like this:
 
-Idea:
+     j                               j                                  j
+  i:     0   1   2   3   4   5    i:     0   1   2   3   4   5       i:     0   1   2   3   4   5
+     0  u00 u01 u02 u03 u04 u05      0  v00 v01 v02 v03 v04 v05         0  p00 p01 p02 p03 p04 p05
+     1  u10 u11 u12 u13 u14 u15      1  v10 v11 v12 v13 v14 v15         1  p10 p11 p12 p13 p14 p15
+     2  u20 u21 u22 u23 u24 u25      2  v20 v21 v22 v23 v24 v25         2  p20 p21 p22 p23 p24 p25
+     3  u30 u31 u32 u33 u34 u35      3  v30 v31 v32 v33 v34 v35         3  p30 p31 p32 p33 p34 p35
+
+where the u,v-matrices are known and the p-matrix is to be computed. p should become the potential
+of u,v.
+
+
+Idea (may be obsolete because it doesn't work?):
 -Integrate u with respect to x using trapezoidal integration row-wise. Call the result U.
 -Integrate v with respect to y using trapezoidal integration column-wise. Call the result V.
 -They should match up to functions only in the other variable, i.e. the real potential is a function

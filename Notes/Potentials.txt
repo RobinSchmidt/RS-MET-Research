@@ -68,8 +68,24 @@ equidistant with stepsize dx,dy respectively. The situation could look like this
 where the u,v-matrices are known and the p-matrix is to be computed. p should become the potential
 of u,v.
 
+Idea:
 
-Idea (may be obsolete because it doesn't work?):
+Let's assume the u,v have arisen from p via numerical differentiation via central differencing. That
+means, we can make the ansatz:
+
+  u(i,j) = (p(i+1,j) - p(i-1,j)) / (2*dx),   v(i,j) = (p(i,j+1) - p(i,j-1)) / (2*dy)
+
+Maybe such an ansatz can lead to a (sparse) linear system for the p(i,j). Maybe, if we cleverly 
+vectorize the matrices, it could even tridiaogonal or maybe pentadiagonal? If we make an ansatz 
+based on a forward difference:
+
+  u(i,j) = (p(i+1,j) - p(i,j)) / dx,   v(i,j) = (p(i,j+1) - p(i,j)) / dy
+
+we could actually solve both equations for p(i,j). Setting them equal would give one equation for
+the two values p(i+1,j) and p(i,j+1). I don't know, if that leads anywhere.
+
+
+Other Idea (may be obsolete because it doesn't work?):
 -Integrate u with respect to x using trapezoidal integration row-wise. Call the result U.
 -Integrate v with respect to y using trapezoidal integration column-wise. Call the result V.
 -They should match up to functions only in the other variable, i.e. the real potential is a function

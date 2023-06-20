@@ -515,7 +515,17 @@ where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$ and $\gamma_n$ are the Stie
 \section{Putting the Formulas to Use}
 The hard work of the derivation is done. Now that we have some (moderately complex but still managable) formulas at our disposal to compute the Polya potential for zeta, we can use them to explore the beast that we have created. Among others, I have implemented formulas (\ref{Eq:PolyaPotentialOriginal}) and (\ref{Eq:PolyaPotentialLaurent}) and did some first tests. To prove that it works, I evaluated the formulas, then took numerical partial derivatives to verify that we can indeed re-create zeta by taking the gradient. It works - but these tests also revealed that the potential computed by the different formulas differs by a constant offset. That is not necessarily suprising and no problem. Potentials are not unique and determined only up to a constant shift. It may make sense to normalize the potential in a way that is convenient. I've shifted it such that it returns zero for $s=0$ for the evaluation based on (\ref{Eq:PolyaPotentialLaurent}) and matched the result of (\ref{Eq:PolyaPotentialOriginal}) to it at $s=2$ (because (\ref{Eq:PolyaPotentialLaurent}) can't be used at $s=0$). The code for this can be found somewhere in my personal research repository on GitHub \cite{GitHub}. It's written in C++. This repo has also the LaTeX source for this article.
 
+\subsection{Plotting}
+The first thing we naturally want to do is to plot our potential function $P(x,y)$. It's just a bivariate function, so we can plot it as a surface above the $xy$-plane in a 3D plot. The most interesting part of $\zeta$ is the critical strip for $0 \leq x \leq 1$. That's where the nontrivial zeros of $\zeta$ live. These are the main subject of the famous Riemann hypothesis. Zeros of $\zeta(s)$ translate to extrema (minima or maxima) or saddles of $P(x,y)$. These three kinds of special points are called stationary points.
 ...TBC...
+
+\subsection{Analyzing the Curvature}
+It could be interesting to view the surface defined by $P(x,y)$ through the lens of differential geometry. Differential geometry of 2D surfaces deals mostly with questions about curvature of these surfaces but also with things like geodesics, torsion of curves (in the surface), etc.. ...TBC... Some wild questions: Could it be that the stationary points are connected by geodesics? Could these geodesics have $x=1/2$ everywhere? Could that mean something with regard to the Riemann hypothesis?
+
+%The setting is usually framed in the following way: we assume that we have 3 bivariate functions $x(u,v), y(u,v), z(u,v)$ where in this notation, out $u,v$ are actually assumed to be inputs and $x,y,z$ outputs, i.e. the notation is the other way around compared to what we used previously in the context of vector fields where $x,y$ were the inputs and $u,v$ the outputs.
+
+%which, in the special case of a bivariate function, is related ...TBC...
+
 
 %Numerical tests revealed that the potential computed via (\ref{Eq:PolyaPotentialLaurent}) has a different constant offset than when we use (\ref{Eq:PolyaPotentialOriginal}). Maybe we should add constants to all potential formulas to normalize the output at some chosen input $(x,y)$. Maybe set $P(x,y) = 0$ at $(0,0)$ or at $(+\infty, 0)$ or at $(2,0)$? 
 
@@ -647,6 +657,11 @@ Questions:
  useful for evaluation purposes but may be useful for theoretical purposes.
 
 ToDo:
+-Give expressions for the entries of the Jacobian. They can be derived from the 
+ expressions of the Polya vector fields. Such expressions may be needed to compute
+ the curvature of the surface defined by the potential and other differential 
+ geometry features
+
 -Maybe split out a paper about computing Polya potentials for some simple functions
  like 1/z, z^n. That paper could then also tackle some more functions like exp(z), sin(z),
  z^(n), etc. Cite that paper here.

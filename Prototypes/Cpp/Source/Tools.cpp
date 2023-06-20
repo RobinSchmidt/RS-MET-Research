@@ -7122,6 +7122,7 @@ protected:
   static const double gamma[numGammas]; 
   // Precomputed table of the Stieltjes constants, see:
   // https://en.wikipedia.org/wiki/Stieltjes_constants
+  // https://de.wikipedia.org/wiki/Stieltjes-Konstanten
 
 };
 
@@ -7146,6 +7147,9 @@ const double rsRiemannZetaFunction::gamma[11] =
 // to divide by the n! to keep them in check. Have more coeffs - at least 100, maybe 10000. Maybe 
 // write a program to compute them in SageMath or Mathematica or maybe in C++ using rsBigFloat.
 // Figure out the range of s for which this algorithms yields satisfying results precision wise.
+
+// http://www.plouffe.fr/simon/constants/stieltjesgamma.txt
+// This textfile is also here in the repo in the Misc folder
 
 
 std::complex<double> rsRiemannZetaFunction::evalViaOriginalSum(

@@ -11567,13 +11567,13 @@ void testRiemannZeta()
     for(int k = 0; k < mp-1; k++) // mp-1 bcs the last is for the "integration constant"
     {
       double t = -pow(-1.0, k) * rsBinomialCoefficient(n, 2*k+1) / (2*k+2);
-
       ok &= abs(pc[k]-t) <= tol;
-
-
+      ok &= ppx[k] == n - (2*k+1);
+      ok &= ppy[k] == 2*k+2;
       int dummy = 0;
-
     }
+
+    // Check integration constant:
 
 
     int dummy = 0;

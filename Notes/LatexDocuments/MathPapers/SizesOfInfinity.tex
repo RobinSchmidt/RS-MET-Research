@@ -1,0 +1,515 @@
+%\documentclass[12pt, twocolumn]{article}
+\documentclass[12pt]{article}
+%\documentclass[12pt]{scrartcl}  % to make \subtitle work
+%\usepackage{fullpage}           % makes all margins 1 inch?
+\topmargin=-1.0cm
+\textheight=23cm
+\evensidemargin=-1.0cm
+\oddsidemargin=-1.0cm
+\textwidth=19cm
+\setcounter{secnumdepth}{-1}     % suppress numbering of sections
+\usepackage{amsmath}
+\usepackage{amssymb}             % for mathbb
+%\usepackage[latin1]{inputenc}   % why?
+\usepackage{graphicx}
+\usepackage{float}               % for positioning graphics via [h!]
+\usepackage{pstricks}
+%\usepackage{pst-plot}
+\usepackage{hyperref}            % for hyperlinks
+%\usepackage{booktabs}
+%\usepackage{fancyhdr}           % for headers and footers
+
+%\pagestyle{fancy} 
+%\rhead{}
+%\rfoot{article available at: \htmladdnormallink{www.rs-met.com}{http://www.rs-met.com}}
+
+% set the footer:
+%\rfoot{http://www.rs-met.com}
+
+\begin{document}
+
+% formatting:
+\parindent=0in
+\parskip=0pt
+\pagenumbering{roman}
+
+% main text
+\pagenumbering{arabic} \setcounter{page}{1}
+
+\title{The Sizes of Infinity [DRAFT]\\ {\Large Quantifying the Size of Infinite Sets via Growth Functions}}
+%\title{The Size of Infinity \ }
+%\subtitle{(Subtitle)}
+\author{Robin Schmidt}
+\maketitle
+
+\section{Disclaimer}
+This is a first draft about some cranky ideas of a non mathematician. Many arguments are very hand-wavy and may very well turn out to be plain wrong. I may even get some of the known facts wrong. In the not unlikely case of it all being rubbish, I apologize in advance for wasting your time, dear reader. However, in my humble opinion, the results of these explorations are appealing enough that I dare to hope that even in the case of it all being nonsense, some of the main ideas can inspire real mathematicians do something similar, but the right way. Maybe they even did already and I'm unaware of it which could very well be the case. My math knowledge is very limited. Maybe I'm making bold claims about some well known and totally unremarkable things. In that case, please excuse my boldness born out of an excited blown mind.
+
+\section{Notation}
+The following notation is used throughout the article:
+\begin{center}
+\begin{tabular}{ |p{2cm}|p{6cm}||p{3cm}|p{5cm}|  }
+\hline
+\multicolumn{4}{|c|}{Notation used in this article} \\
+\hline
+Symbol & Meaning & Symbol & Meaning  \\
+\hline
+$A,B,C$                & General sets                     & $\{1,2,3, \ldots, n\}$ & Set with elements $1$ to $n$ \\
+$A \cap B$             & Intersection of sets $A,B$       & $\mathbb{N}^+$         & Positive natural numbers \\
+$A \cup B$             & Union of sets $A,B$              & $\mathbb{N}$           & Natural numbers        \\
+$A \setminus B$        & Set difference $A$ minus $B$     & $\mathbb{Z}$           & Integer numbers  \\
+$A \times B$           & Set product $A$ times $B$        & $\mathbb{Q}$           & Rational numbers  \\
+$A^B$                  & Set of functions from $B$ to $A$ & $\mathbb{R}$           & Real numbers  \\
+$2^A = \mathcal{P}(A)$ & Power set of $A$                 & $[a,b]$                & Closed interval from $a$ to $b$\\
+$A \subset B$          & $A$ is strict subset of $B$      & $(a,b)$                & Open interval from $a$ to $b$\\
+$A \subseteq B$        & $A$ is subset of $B$             & $[a,b)$                & Right open interval $a$ to $b$\\
+$|A|$                  & Cardinality of set $A$           & $(a,b]$                & Left open interval $a$ to $b$\\
+\hline
+\end{tabular}
+\end{center}
+The table isn't complete. It includes only those notations that are important for the whole article. If some notation is only used in a short section, I don't list it here but rather explain it on the spot where it is being used.
+% todo: maybe also use the notation $[5]$ for $\{1,2,3,4,5\}$
+% https://www.overleaf.com/learn/latex/Tables
+
+\section{Preview}
+A new way to quantify the size of sets is proposed that allows a more fine-grained quantification of the sizes of infinite sets than the cardinal numbers do. A univariate function $f: \mathbb{R} \rightarrow \mathbb{R}$ is assigned to each set and its limiting behavior when the argument goes to infinity tells us something about the size of the set. We will call $f$ the "growth function" of the set or just "growth" and use the letter $u$ for the argument to indicate that we intend to let it go to infinity ($u$ from the german word "unendlich" which means infinite). We will find that a finite set $A$ will just get the constant function $f(u) = |A|$ assigned, where $|A|$ is the number of elements. For subsets of $\mathbb{N}^n$ or $\mathbb{N}^n \times \mathbb{Z}^m$  like $\mathbb{Q}$, $f(u)$ will grow at most polynomially and for continuous sets, $f(u)$ will grow at least exponentially. We will consider the natural numbers without zero $\mathbb{N}^+$ as the prototypical example for a set of a countably infinite size and we will, by definition/convention, assign the identity function $f(u) = u$ to it. What exact functions we will have to assign to other infinite sets depends on that (arbitrary) choice. With that in place, the natural numbers with zero included $\mathbb{N}$ will get a growth function of $g(u) = u + 1$ because they have one element more. Since $\lim_{u \rightarrow \infty} f(u) - g(u) = -1 < 0$, we will conclude that $\mathbb{N}^+$ has a (by one) smaller size than $\mathbb{N}$. For the square numbers - a sparser subset of $\mathbb{N}$ - the growth will be $f(u) = \sqrt{u}$, for the even numbers it will be $f(u) = u/2$, for pairs of positive natural numbers it will be $f(u) = u^2$, for the real unit interval $[0,1)$, we'll get $f(u) = 2^u$ etc. So, as can be anticipated from these examples, growth functions allow for a much finer grained measurement of infinite sets than cardinality does and the results are closer to our intuition. By that measure, there are indeed half as many even numbers as there are naturals and $\mathbb{N}$ is one bigger than $\mathbb{N}^+$ - they are not just all the same size called "countably infinite". This article will describe the general framework as well as procedures for finding the appropriate growth functions for certain kinds of sets.
+
+% Maybe f should be N -> N, nope: R -> R is appropriate because we get the real weights later when cosidering real intervals
+
+\section{Introduction}
+Infinite sets come in different sizes. That mindblowing realization came to Georg Cantor in the late 1800s and he developed a notion by which we can compare the sizes of infinite sets. That notion is known as cardinality. Via these cardinalities, we can distinguish the size of the set of natural numbers $\mathbb{N}$ from the size of the set of the real numbers $\mathbb{R}$ - the latter set is larger. We cannot, however, distinguish between the size of the naturals $\mathbb{N}$ and that of the rational numbers $\mathbb{Q}$. Cantor's cardinalities would classify both sets as "countably infinite" and that's it. $\mathbb{N}$, $\mathbb{Q}$, $\mathbb{N} \times \mathbb{N}$, $\mathbb{N}^n$ for any $n$ and many more sets are lumped together into the same size bin even though our intuition would tell us that there should be far more rational numbers than natural numbers. Cantor's notion of cardinality is too coarse-grained to see the difference. As a not too far fetched analogy from computer science, this is a bit like lumping together the algorithm for linear search (which has complexity $\mathcal{O}(n)$) with the algorithm for naive matrix multiplication (which has complexity $\mathcal{O}(n^3)$) into the same broad class of "polynomial" algorithms. In some contexts, that may be good enough but sometimes we'd like to have a somewhat more precise characterization. In the realm of the larger, "uncountably infinite" sets like $\mathbb{R}$, cardinality is also unable to distiguish between the number of elements of the real interval $[0,1]$ and the unit square $[0,1] \times [0,1$]. A 2D continuum is considered to be of the same size of infinity as its 1D counterpart. It contains just as many points. Something that totally defies our intuition as well. Cantor himself proved this fact and famously commented his proof with "I see it, but I don't believe it". The idea to produce the required bijection between pairs of numbers and a single number is actually shockingly simple: just interleave ("zip") the decimal expansions of the two numbers into one - or de-interleave ("unzip") the result again. It is even true that all (bounded or unbounded) subsets of $\mathbb{R}^n$ for any $n$ are lumped together into the same size-class of the continuum. Maybe it shouldn't be so surprising after seeing that $\mathbb{N}$ and $\mathbb{N}^n$ are also considered to be equally large. Keeping with our analogy with computer science, this can be likened to lumping toghether the class of exponential algorithms even though their rate of growth may vary wildly.
+
+% mention Cantor's quote "ich sehe es aber ich kann es nicht glauben"  or "Ich sehe es, aber ich glaube es nicht."
+% https://de.wikipedia.org/wiki/Georg_Cantor
+% https://www.nd-aktuell.de/artikel/1076030.die-hierarchie-des-unendlichen.html
+
+
+\section{Countable Sets}
+
+\subsection{Finite Sets and Extrapolation}
+For finite sets, their size is just the number of elements. To tackle infinite sets, the idea is to observe certain facts in the finite case and then extrapolate these facts to the infinite case. In this context, by "extrapolate" we mean that these facts should remain true in the infinite case. One thing that is true about finite sets is that two finite sets have the same size, if and only if we can establish a bijection between the sets. Cantor extrapolated that fact from the finite to the infinite case by \emph{defining} that two infinite sets are of equal size when there's a bijection between them. It's important to emphasize that this is a definition, not a theorem. Cantor \emph{chooses} to base his notion of equality of set sizes on the existence of a bijection and all the counterintuitive facts about sizes of infinity are consequences of this choice. The so defined notion of a set's size is called its cardinality and the notation for the cardinality of a set $A$ is to write $|A|$ - pretty much like taking the norm of a vector or absolute value of a complex number which is a good fit because all these notations also measure size. Let's take an inventory of some important facts about cardinalities of finite sets:
+\begin{enumerate}
+  \item Bijection Criterion: $|A| = |B| \quad  \Leftrightarrow  \quad$ there exists a bijection between $A$ and $B$
+  \item Additivity: $|A \cup B| = |A| + |B| - |A \cap B|$ 
+  \item Subtractivity:  $|A \setminus B| = |A| - |A \cap B|$ 
+  \item Multiplicativity:  $|A \times B| = |A| |B|$ 
+  \item Power Law: $|A^B| = |A|^{|B|}$
+  \item Power Set Law: $|2^A| = 2^{|A|} \qquad$  where $2^A$ is just another notation for $\mathcal{P}(A)$
+  \item Strict Monotonicity: $A \subset B \quad \Rightarrow \quad |A| < |B|$
+%  \item Additive Growth: $|A \cup B| > \max(|A|,|B|) \quad$  if $\quad A \cap B \neq \emptyset$ redundant with strict monotonicity
+  \item Multiplicative Growth: $|A \times B| > \max(|A|,|B|) \quad$ if $\quad |A| > 1 \wedge |B| > 1$
+\end{enumerate}
+%add growth criteria for addition an multiplication: $|A \cup B| > \max(|A|,|B|)  if A \cap B \neq \emptyset$
+%where $|A \cup B|$ is the union, $A \setminus B$ is the set difference "$A$ without $B$", $|A \cap B|$ the intersection, $A \subset B$ the strict subset relation, $A^B$ the set of all functions from $B$ to A and $2^A = \mathcal{P}(A)$ the power set of $A$ which can be seen as a special case of a function from $A$ to the set $\{0,1\}$. In axiomatic set theory the symbol $2$ is sometimes really just seen as a \emph{name} for the set $\{0,1\}$. That means $2^A$ is really just a shorthand for $\{0,1\}^A$ which is the set of all functions from $A$ into the set $\{0,1\}$ which encodes the set of subsets of $A$. 
+The additivity condition is sometimes als formulated as $|A \cup B| = |A| + |B|$ when $A,B$ are disjoint or as $|A \sqcup B| = |A| + |B|$ where $|A \sqcup B|$ is the disjoint union. We don't want to restrict ourselves to disjoint sets nor do we want to deal with the more complicated operation of taking a disjoint union so we just subtract out the number of the doubly counted items again. Some of the names of the listed facts are not standardized - I just made them up to be able to refer to the facts by name later.
+
+\paragraph{} The goal is to define a notion of set size for which at least some of these facts about finite sets carry over to the infinite case. Cardinalities satisfy the bijection property by definition. They also do satisfy additivity (at least when formulated via the disjoint union - not sure about our version above [FIGURE out!]) and multiplicativity but only thanks to defining addition and multiplication of infinite cardinal numbers in a rather peculiar way to make it so [nah - WRONG - they are defined via the underlying set operations]. Namely, for nonzero cardinal numbers $\kappa, \lambda$, we will have $\kappa + \lambda = \kappa \cdot \lambda = \max(\kappa, \lambda)$ as soon as one of $\kappa, \lambda$ is infinite. They do not satisfy strict montonicity but only the weaker, non-strict version of it $A \subseteq B \Rightarrow |A| \leq |B|$ [VERIFY!]. Richard Dedekind even elevates the violation of strict monotonicity to be the defining property of infinite sets: an infinite set is \emph{defined} to be a set that can have a strict subset of the same cardinality as the whole set itself. The whole is not greater than a part.
+% https://en.wikipedia.org/wiki/Dedekind-infinite_set
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_6_Z3
+In Cantor's framework, cardinal numbers are the sort of object that gets assigned to sets and these cardinal numbers are a way to \emph{measure} the size of the set. The natural numbers \emph{are} cardinal numbers - namely, the finite cardinal numbers - but there are infinite cardinal numbers, too. The word "measure" is a giveaway as well. There's actually a field called "measure theory" which is also about assigning a number to a set. In measure theory, the number is not some esoteric new kind of number but just a good old (nonegative) real number (or infinity). Here, in the to be developed framework, we also want to assign some kind of object to a set - one that we can add to, subtract from, multiply by and raise to a power of another one. Then, we can map the respective set operation to their counterpart on the measuring objects. Real numbers and cardinal numbers are of that kind - they support these operations (although, I think, in the context of measure theory, only addition is relevant). But what else could that object be? What other kinds of objects support the desired operations? I want to make the case that it might be appropriate to assign a simple real valued function $f$ to a set. If that function is chosen appropriately, it can "measure" the size of the set by way of its asymptotic growth behavior. And when we perform set operations like forming cartesian products or power sets, their measure functions just undergo the corresponding operations in the function space. %By using the laws, we force them to hold.
+% By that way of characterizing the sizes of set, we'll hopefully (!) preserve all [VERIFY!] the laws that apply to the finite case to the infinite case - except one: the bijectivity criterion. In that way, we'll create a framework to measure sizes of infinite sets that is complementary to cardinal numbers: they preserve the bijectivity at the expense of breaking all the other laws, we'll do it exactly the other way around: break bijectivity to save the other laws.
+% wait no - that's wrong - cardinal numbers satisfy the other laws too - but only by defining the operations +,*,^ in a counterintuitive way
+
+
+% some of these actually do hold for cardinal numbers but only because cardinal addition and multiplication are defined in a peculiar way to make it so, see https://www.youtube.com/watch?v=qijXa3U4Nag 
+% Strict monotonicity does not hold, only the weaker non-strict variant (I think)
+
+% for <=, there exists the injection criterion:
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_4_Z4
+
+% Explains why addition s defined via the disjoint set
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_12_Z2
+% yeah - it makes sense - defining set addition by using the union and subtracting out the intersections yields the empty set when adding a set to itself
+
+% what about commutativity, associativity, distributivity, power law a^(b+c) = a^b * a^c? I think all these laws for functions are inherited from their codomain, i.e. if these are true for the codomain, these are true for the functions themselves because eventually, applying the operation to the results of the evaluations of, say f(x)^g(x), is what we mean by f(x)^g(x). We cann also compose functions. Can we also compose sets in a corresponding way? Maybe we could define composition of the set {a,b,c} with {0,1} as {{a,{0,1}},{b,{0,1}},{c,{0,1}}} and  {0,1} composed with {a,b} as {{0,{a,b,c}},{1,{a,b,c}}} or vice versa? We cobine each element of one set with the whole other set? ...but no - that doesn't seem to correspond to function composition. Could be an interesting operation to investigate anyway
+
+\subsection{Intuitions about Size}
+As said, of these listed properties of sizes of finite sets, Cantor singles out the bijectivity criterion as the most important property that should be retained in the infinite case. All the counterintuitive facts about cardinalities can be traced back to that decision. The first consequence is that we have to give up strict monotonicity. That leads to counterintuitive conclusions like the one that there are just as many even numbers as there are natural numbers. Our intuition (mine, at least) would tell us that, in some sense, there should be twice as many natural numbers as even numbers. If we consider the set of all pairs of natural numbers $\mathbb{N} \times \mathbb{N}$, our intuition tells us that we should get something that is in some sense quadratically as big as $\mathbb{N}$. Yet, the cardinalities of these sets are equal. These intuitions can perhaps be explained by having a mental image of the sets not as having a timeless eternal existence but instead as being built up over time and looking at the end result when time "reaches" infinity. ...which it - of course - never does, but nonetheless it may make sense to frame the situation that way. There is some other real world intuition of how sizes behave: If two things initially start with the same size and then grow over time, then the one that grows faster will end up being bigger at the end. What I will try to do here is to develop an alternative notion of set size that gives up on carrying over the bijectivity criterion to the infinite case in favor of some of the other properties from the list above which infinite cardinalities violate. It's mainly based on this idea of growth. Growth is change of size, so - in a very informal way - a sort of "derivative" of size.
+
+%\paragraph{} Back to 
+
+%
+
+% may got into the counting functions section:
+%We imagine taking discrete steps in time, so each time step will correspond to a natural number $n$. If we imagine a machine/procedure/algorithm that produces one (or more) element(s) of the set at each time step n, then we can ask the question: how many elements have been produced up to now, i.e. up to time step $n$. and compare that number to
+
+% Q should be (almost) qudratically bigger than N
+%desirable properties of 
+
+
+\subsection{Counting Functions}
+Actually, the idea of using growth as measure of size it not so new after all. For example, mathematicians are very interested in the question of how many prime numbers there are. The theorem of Euclid says that there are infinitely many. Because primes are a subset of the naturals, in terms of cardinalities, it means there are countably infinitely many primes. But that answer does not satisfy the mathematicians. It's way too unspecific. To characterize the number of prime numbers more precisely, they take some natural number $n$ and ask: how many prime numbers are there which are less than or equal to $n$. That defines a function $f(n)$ which is called the prime counting function and often denoted as $\pi(n)$. The $\pi$ here has nothing to do with the semicircle constant from geometry - it's just the same notation used for an entirely different thing. This function $\pi(n)$ has a couple of noteworthy features: it is monotonically increasing and unbounded. That means it grows without bounds and this unbounded growth captures the fact that there are infinitely many primes. But it contains more information. In particular, we are interested in how fast it grows as the argument gets larger. 
+
+\paragraph{} This is basically the general idea that we adopt for measuring the size of a set - at least for the countable ones: we define a function $f$ that arises from "building" the set in question and then look at how fast the function grows. When constructing such counting functions, we will use the letter $n$ for the argument to indicate that we want to plug in a finite natural number that indicates the construction step. When $f(n)$ has been found, we'll replace the letter $n$ by $u$ to indicate that we intend to let it go to infinity ($u$ from the german word "unendlich" which means infinite). Because the primes and its counting function are rather complicated, we'll first look at something much simpler: the "square counting function". It will answer the question: "How many square numbers are there?" and it will do so more precisely than by just replying "countably infinitely many" - the answer we would get for asking for the cardinality of the set of square numbers. It is not hard to see that the number of square numbers up to some number $n$ is given by $f(n) = \lfloor \sqrt{n} \rfloor$ where $\lfloor \ldots \rfloor$ denotes the floor function. Just list all the square numbers up to some square number $n$, say $n=25$, in a set: $C_{25} = \{1,4,9,16,25\}$ and compare its size to the size of the set of positive natural numbers up to $n$ given by $\mathbb{N}^+_{\leq 25} = \{1,2,3,\ldots,24,25\}$. ...TBC... %Imagine an iterative algorithm that, at any iteration number $n$, produces the set of square numbers less than or equal to $n$ as output. We denote the output set at iterations number $n$ and $C_n$. The letter $C$ is meant to convey that this is our "current" set, the set that we have built up to now - where "now" is $n$.
+
+\subsubsection{Some Simple Counting Functions}
+We have already mentioned the prime counting function $\pi(n)$. It's conceptually a simple idea, although actually evaluating it for some given $n$ is anything but simple. Finding a neat formula for it is actually one of the holy grails of mathematics. But it's nonetheless a simple idea from a conceptual point of view. The square counting function is conceptually just as simple and it is even easy to give a formula for it: $f(n) = \lfloor \sqrt{n} \rfloor$. The most simple counting function of all is arguably the counting function for the positive natural numbers $\mathbb{N}^+$. It's just the identity function $f(n) = n$. What about the set of all pairs of positive natural numbers $\mathbb{N}^+ \times \mathbb{N}^+$? Assigning $f(n) = n^2$ seems the obvious choice and would satisfy the multiplicativity law from our list above. But can we construct this function in some way that is more generally applicable while still seeming "obvious"? Eventually, we want to assign functions to sets that are not simply a cartesian product of two sets, whose growth function $f$ we already know. We want a way to construct growth functions that is somehow derived from the idea of counting functions. How about asking: How many pairs of numbers $(p,q)$ in  $\mathbb{N}^+ \times \mathbb{N}^+$ are there, such that $p \leq m, q \leq n$? The answer would be the bivariate function $f_2(m,n) = m n$. To turn it into a univariate function, we'd just define $f(n) = f_2(n,n) = n^2$ and we are done. The general idea here is that whenever we need to deal with a multivariate counting function, we can turn it into a univariate one by simply assigning the same argument to all of its inputs. For the natural numbers including the zero, which we denote as $\mathbb{N}$, we have one element more than in $\mathbb{N}^+$ and our growth function turns out to be $f(n) = n+1$, if we take the counting function approach. That looks right. For the integer numbers $\mathbb{Z}$, we'd use $f(n) = 2 n + 1$ to model our intuition that there are twice as many integers than positive naturals (for all the negative numbers) plus one more (for the zero).
+
+% Maybe include the growth function for powers of two: f(u) = log_2(u)
+% what happnes if we count N+ x N+ differently, namely by not requiring the max(p,q) <= n but p + q <= n?
+% I think, we get again some quadratic function but with a different scale factor? But may seems to be appropriate because it respect the multiplicativity rule
+
+\subsubsection{The Counting Function for $\mathbb{Q}$}
+After these simple cases where it was pretty obvious, what function we should assign to our sets, we'll now look at a more interesting case. How many rational numbers are there? What function should we assign to them? Rational numbers can be expressed as pairs of an integer number for the numerator and a positive natural number for the denominator. So, we are looking at a subset of $\mathbb{Z} \times \mathbb{N}^+$. Just taking the product of the counting functions for $\mathbb{Z}$ and $\mathbb{N}^+$ would yield $f(n) = (2 n + 1) n = 2 n^2 + n$. But that would overcount because it would also include all the reducible fractions that we somehow want to weed out. Maybe let's first look at the nonzero positive fractions, i.e. a subset of $\mathbb{N}^+ \times \mathbb{N}^+$, weed out the elements that stand for a reducible fraction, then multiply by two to get all the negative siblings and add one for counting the zero. A fraction is reducible, if numerator and denominator have at least one common prime factor and is irreducible, if numerator and denominator are coprime [VERIFY]. ...TBC...
+
+% We need to extract the subset of N+ x N+ for which the first eleemnt is coprime to the 2nd. That extracts the irreducible fractions (I think)
+
+% I think, this is the coprime counting function:
+% https://en.wikipedia.org/wiki/Euler%27s_totient_function
+% Maybe for our final univariate f(n), we need to integrate (or rather sum) the totient function up to n? Maybe we should sidestep going into the bivariate realm?
+% maybe it looks asymptotically a bit like n^2 / log(n) ?
+
+% num den
+%  1   1,2,3,4,5,6,7,8,9,...
+%  2   1,3,5,7,9,11,13,15,...
+%  3   1,2,4,5,7,8,10,11,13,...
+%  4   1,3,5,7,9,11,13,15
+
+%\subsubsection{The Counting Function for $\mathbb{A}$}
+%It is well known that the algebraic numbers $\mathbb{A}$, which are the solutions of polynomials with integer coefficients, are countable, too
+%we need to define the height of a polynomial. Maybe instead of using the sum of degree and absolute values of coeffs, use the max. ...will this give different results? ...hopefully only quantitatively
+
+\subsubsection{Combinatorial Sets}
+Combinatorics is a subfield of mathemathics that deals with sets of objects that can be enumerated - and are therefore countable - but where the number of possible objects grows notoriously fast as function of some size parameter $n$. This is aptly called "combinatorial explosion". As an example, consider the set of all permutations of $n$ objects, that is: the number of ways that $n$ objects can be put into a different order. The number of ways you can do this is given by the factorial function $n! = 1\cdot 2\cdot 3\cdot \ldots \cdot n$. This function grows even faster than any exponential function. If we ask for the size of the set of "all permutations" (whatever that means), it seems to make sense to ask: how many permutations are there for up to $n$ objects and the answer would be a sum (up to $n$) of the factorials - a function that grows even (slightly) faster than the factorial itself. That function should then be our growth function $f$ for the size of the set of all permutations. Right? (Genuine question - I'm not sure). I don't care to figure out an exact formula here. The point is that we have found an example of an enumerable set that would give rise to a growth function that grows faster than any exponential function. We'll come back to this later. In combinatorics, we encounter many more sets with ridiculously fast growing functions - like the number of all possible graphs with $n$ nodes, ...[TODO: bring a couple of more examples]. On the flip side, the factorials themselves are a \emph{very sparse} subset of the natural numbers. The first few factorials are: $1,1,2,6,24,120,720,5040,40320,362880,3628800,\ldots$ - so the number of factorials less or equal to $n$ grows extremely slowly. Just as permutations are enumerable - with a very fast growing count, so are factorials - with a very slow growing count. In terms of cardinality, we would say that the set of all permutations and the set of all factorials have the same size: countably infinite. It really feels that there should be more permutations than factorials, doesn't it?
+
+%-Resources for combinatorics:
+%https://en.wikipedia.org/wiki/Graph_enumeration
+%https://en.wikipedia.org/wiki/Enumerative_combinatorics
+%https://en.wikipedia.org/wiki/Combinatorial_explosion
+
+\section{Uncountable Sets}
+
+\subsubsection{The Growth Function for $\mathcal{P}(\mathbb{N}^+$)}
+Even though the power set of the natural numbers $\mathcal{P}(\mathbb{N}^+)$ is uncountable in the sense that we can't find a bijection between this set and the natural numbers, we may still be able to assign some counting function to it. Assigning a counting function and establishing a bijection to the naturals are entirely different concepts. Nevertheless, we'll now shift terminology a little and prefer to talk about "growth functions" rather than "counting functions" with the intention to convey the idea that growth functions are somehow generalized counting functions. We'll also start more often using $u$ instead of $n$ for the input of $f$ to convey, that we are mainly interested in the function's behavior, when the argument approaches infinity. So far, the sets that we have encountered had numbers as elements. The set $\mathcal{P}(\mathbb{N}^+)$ has sets of numbers as elements, namely subsets of $\mathbb{N}^+$. Previously, we asked questions like: "how many numbers less or equal to $n$ does the set have". Now we ask the question: How many subsets $S$ does $\mathbb{N}^+$ have, such that \emph{all} of the elements of $S$ are less or equal to $n$. For example: How many subsets does $\mathbb{N}^+$ have, whose elements are all less or equal to $2$. Let's list them all: $\emptyset, \{1\}, \{2\}, \{1,2\}$. These are $4$ and they are all possible ones. So, we have $f(2) = 4$. Let's see what $f(3)$ is. The subsets of $\mathbb{N}^+$ with all elements less or equal to $3$ are: $\emptyset, \{1\}, \{2\}, \{3\}, \{1,2\}, \{1,3\}, \{2,3\}, \{1,2,3\}$. These are $8$, so $f(3) = 8$. It's not hard to convince yourself that the general answer is $f(n) = 2^n$. So, $f(u) = 2^u$ is our growth function for $\mathcal{P}(\mathbb{N}^+)$. Recalling that we had $f(u) = u$ for $\mathbb{N}^+$ and finding $f(u) = 2^u$ for $\mathcal{P}(\mathbb{N}^+)$, we see that the power set law from our list is satisfied.
+
+\paragraph{} 
+Now, the reader might rightfully object: Why should the proposed question be the \emph{right} one? If we had asked a different question, we may have gotten an entirely different $f$. Does the so found $f$ really reflect any intrinsic feature of the set or did we just pick the question strategically to get a desired answer that somehow falls in line with our preconceptions? Fair point. The intention of this whole endeavour is to actually eventually bypass the step of finding the counting function by hand and instead rather just \emph{invoke} the power law \emph{rather than} making up $f$ in some other way and then \emph{verify} that the law holds. In the great scheme of things, we want to enforce the laws to hold by constructing our growth functions by invoking the laws. But it's nonetheless reassuring that a naturally seeming question about counting can be constructed that leads to an answer that observes the power law. The name of the game is to sacrifice the bijection criterion in favor of saving some of the other laws - hopefully all of them. To figure out a growth function from scratch, if we really have to do it, the general idea is to look at a finite subset of our infinite set, \emph{somehow} parameterize it with a natural number $n$ that captures the size in the most natural way and then replace $n$ by $u$ to look at how this finite subset grows as $n$ gets bigger and ultimately to infinity.
+%I don't have a satisfying answer to this other than: all we are doing here is to try to capture some vague intuitions about infinity, so maybe it's not wrong to let intuition be our guide? The general theme here is to look at a finite subset of our infinite set that we \emph{somehow} parameterize with a natural number $n$ and then look at how this finite subset grows as $n$ gets bigger and ultimately to infinity. But exactly \emph{how} we do that is a matter of choice. It is via this choice how we incorporate our intuitions. And, of course, we want to retain as many of the laws for finite sets as possible when we move to the infinite case. So far, we have broken only the bijection criterion but retained everything else. [VERIFY!] Maybe the name of the game is to sacrifice the bijection criterion in favor of saving all the other laws? We'll see....TBC...
+
+% what about P(N)? should f(u) = 2^n + 1 or 2^(n+1) ...i think, the latter
+
+%\subsubsection{The Counting Function for ${\mathbb{N}^+}^{\mathbb{N}^+}$}}
+\subsubsection{The Growth Function for $A^B$}
+By the notation $A^B$ where $A,B$ are both sets, we mean the set of all possible functions from $B$ to $A$. In set theory, you may also encounter the notation ${}^{B}A$ but we won't use that here. Our power law for finite sets says $|A^B| = |A|^{|B|}$, so we could just extrapolate that and say: for two sets $A,B$ with known growth functions $f(u), g(u)$, we just assign $f(u)^{g(u)}$ as growth function to $A^B$. [TODO...Can we also phrase or derive this differently tha captures some intuition?] For example, the growth function for the set of all functions from $\mathbb{N}^+$ to $\mathbb{N}^+$ would be $f(u) = u^u$. This is a function with superexponential growth. In terms of cardinality, it would be lumped together with $\mathcal{P}(\mathbb{N}^+)$ which has just exponential growth $f(u) = 2^u$, so in our framework of measuring set size, ${\mathbb{N}^+}^{\mathbb{N}^+}$ is deemed to be "larger" than $\mathcal{P}(\mathbb{N}^+) = 2^{\mathbb{N}^+}$ while in terms of cardinality, both would be deemed to be of the same size [VERIFY!].
+%Maybe justify it by a small example - maybe the number of all functions from {1,2,3} to {1,2,3,4} and vice versa.
+
+%This say (I think) that N^N and 2^N have the same cardinality
+%https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_9_Z6
+%https://en.wikipedia.org/wiki/Baire_space_(set_theory)#Properties
+
+
+% ${}^{1}_{2}x^{3}_{4}$ 
+% https://tex.stackexchange.com/questions/11542/left-and-right-subscript-superscript
+
+
+%
+%Maybe just appeal to the power law?
+
+% Ask, how many subsets does N^+_{\leq n} have. What do we mean by that? I think, we count the number of subsets in which each element is \leq n
+
+%Maybe move into a section that describes more generally, how we construct f(u) - it's not necesarrily always by counting functions - this only applies to countably infinite sets.
+%Okay, maybe even simpler would be "counting functions" for finite sets. We would just assign the constant function that always returns the number of elements. In this case, "counting function" is actually a wrong term. Remember that we eventually want to construct a function that charcterizes the size of a set.
+
+
+
+
+\paragraph{}
+%Counting functions are the general idea to assign growth functions to countable sets. In general, we imagine to have some iterative algorithm which at time step $n$ has produced a subset $C_n$ of size $f(n)$ of the to be built set....tbc...
+
+%Let's see, how the counting function for the positive rational numbers $\mathbb{Q}^+$ could look like. 
+
+%derive the counting function for the power set of the naturals
+
+%The index $25$ in $C_{}$ stands for the iteration number of our imagined square number production algorithm. At each "iteration" $n$, 
+
+% explain why we don't start at zero. The reason is that $|\mathbb{N}^+_{\leq 25}| = 25$ - if we would include zero, we' get ugly off by one errors later when we define the ratio function between the size of the produced set and the size of the index set
+
+%-justify why it makes no difference for the counting function how we enumerate the set. From the construction, it seems that it could matter. But, of course, it doesn't matter - or if it does, everything here is broken and meaningless. We actually need a proof that it doesn't.
+
+%-explain the prime counting function and generalize to other counting functions - maybe a subsection "counting functions"
+%-explain why we choose N_1 as reference set instead of N_0. The reason is the convenient fact that count(u) = u for N+ whereas for N_0 we would get count(u) = u+1
+
+% derive the actual counting functions or at least algorithms to compute them for rational and algebraic numbers, see:
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_7_Z6
+% For the algebraic numbers, the algorithm my be quite complicated...it's actually doubtful that it will be polynomial. Maybe polynomials arise only when dealing with (subsets of) $N^n$ which, I think, the algebraic numbers are not in. See https://www.youtube.com/watch?v=RsGluQK-TK0 at around 12 for an idea to enumerate the polynomials
+
+
+
+
+
+\section{The Continuum}
+
+\subsection{The Unit Interval $[0,1)$ of Real Numbers}
+It is well known that the real numbers are uncountable. Even finite intervals are. There is even a rather canonical bijection between the half-open real unit interval $[0,1)$ and the power set of the positive natural numbers $\mathcal{P}(\mathbb{N}^+)$ [MAYBE explain it]. Since we have already found our $f(u) = 2^u$ for $\mathcal{P}(\mathbb{N}^+)$, we could just say: OK, then for the unit interval $[0,1)$, we should probably also assign $f(u) = 2^u$ as growth function. But wait! Appealing to bijections might be invalid if we don't want ideas about cardinality sneak in. The difference between the previous situations and now is that now we have a continuous set of finite extent, so we can't really meaningfully ask questions like "how many elements are there such that some thing is less or equal to $n$". The continuum is also one of the fundamental sets for which we cannot just construct the growth function from already known ones by using the laws. We have to come up with a different question that captures our intuition about the set. Previously, we constructed finite subsets of our infinite set by limiting the size of the innermost elements to our size parameter $n$. Maybe it's more appropriate here to start with the whole set $[0,1)$ and deconstruct it. Let's start with the whole set $[0,1)$ and put it into a set: $C_0 = \{[0,1)\}$ where the $C$ is meant to indicate that this is our "current" set and the subscript is meant to indicate an iteration number in a kind of recursive splitting algorithm. Now split all members of $C$ in half: $C_1 = \{[0,1/2), [1/2,1)\}$. Do it again: $C_2 = \{[0,1/4), [1/4,2/4), [2/4,3/4), [3/4,1)\}$ and again: $C_3 = \{[0,1/8), [1/8,2/8), [2/8,3/8), [3/8,4/8), [4/8,5/8), [6/8,7/8), [7/8,1)\}$. And so on. At any iteration $n$, the union of all the subintervals contained in $C_n$ gives us back our original unit interval with no double counts, i.e. the subintervals in $C_n$ are always disjoint. If we look at the first interval in a general $C_n$, we see that is given by $[0,1/2^n)$ and $1/2^n$ is the length of \emph{all} the subintervals and there are $2^n$ of them. If we now ask ourselves: "how many points are there in $[0,1)$", identify a "point" $p$ with the degenerate closed interval $[p,p]$ and somehow "believe" that all the subintervals that are created in our deconstruction process shrink to such a point as the iteration number $n$ goes to infinity, i.e. $\lim_{n \rightarrow \infty} [p,p + 1/2^n) = [p,p]$, then we are again lead to the counting function $f(n) = 2^n$ when we agree that counting the number of subintervals at step $n$ is the right thing to count. Remember, the number of subintervals at iteration number $n$ was $2^n$. 
+
+%...wait..maybe we need to consider something like $ [p - a / 2^n,p + b / 2^n)$ with $a+b = 1$
+% maybe mention that we want, in the limit, our set C_n to consist of singleton sets, representing single points
+
+\paragraph{}
+Now, I admit that this way of arriving at $f(u) = 2^u$ seems a bit willy nilly. I just pulled this recursive subdivision algorithm like a rabbit out of the hat and claimed that this is the \emph{right} way to model our intuition about how many points $[0,1)$ contains. This needs a bit more justification. The idea behind it is actually pretty much exactly the same as that behind the canonical bijection between $[0,1)$ and $\mathcal{P}(\mathbb{N})$ so we are actually doing this bijection thing in disguise here. I think, the process of recursive subdivision can be interpreted as "zooming in" to all points simultaneously which captures the intuition that the interval is homogeneous. Accepting that $2^u$ is the right choice for [0,1) may require some leap of faith.
+
+\paragraph{}
+It is noteworthy here to compare the so found exponential growth function $f(u) = 2^u$ for the uncountable set $[0,1)$ to the previously found a sum-of-factorials growth function for the countable set of all permutations. Factorials grow faster than exponentials and their sum even faster that that. That implies that the framework to measure set sizes in terms of growth functions is not a refinement of Cantor's cardinalities but may actually disagree with the cardinality way of comparing set sizes. One set may be considered bigger than another by cardinality yet smaller by growth. That actually surprised me a bit. I expected agreement and refinement.
+
+%\paragraph{...just an idea...}
+%We want to answer the question "how many points are in the interval". Maybe a single point can be mapped to an infinite sequence of left/right decisions. Because at each step, we could have gone the other way if the point would have been a different one, at each step, the number of paths that could have been taken is doubled and that's how arrive at 2^u? Going to a *single* point requires countably infinitely many left/right
+
+%-the idea is to "zoom in" into all subintervals simultaneously
+%-this captures our idea of [0,1) being homogeneous - we treat all parts the same way
+
+% What is the right question to ask to capture our intuition what this thing is?
+%-we want to knwo soemthing like "how many points does it contain" 
+%-it's of finite extent (contrary to what we had before)
+%-it's uniform, homgeneous, continuous
+%-we want to zoom in into all points simultaneously OR we somehwo want to "enumerate" all the points or subintervals
+%-can we appeal to some of the desired laws, in particular, the power set law?
+%-to get to one point, it takes infinetely many left/right decisions
+%-maybe the right question is: many left/right decisions n do we have to make to ensure a precision of at least  1/2^n ...but why 1/2^n - that's plucked out of thin air. Why not 1/n for example? Maybe because that's the best we can do? Bisection is best?
+%-one *single* subset of the naturals can be identified with a single point in the interval by way of encoding a binary string that gives left/right commands
+
+%-explain bijection between P(N) and [0,1)
+%-....wait - if we use a bijection between these sets to justify assigning 2^u to [0,1), aren't we using 
+% Cantor's definition internally ourselves? And if so - is this a problem? We could also find a bijection between the unit interval and the power set of {0,1,2,3,4,5,6,7,8,9} - then we would get a decimal expansion. So it seems, the basis is something we can choose. But maybe it can be proven that it must grow exponentially? Maybe we should imagine the number at each position to split a subinterval into 1/b subsubintervals where b is the base. No - the base 2 arises because we make a binary decision whether a number is included in the subset
+%-justify why it's the half-open version
+%-
+
+\subsection{Arbitrary Finite Intervals $(a,b)$,$(a,b]$,$[a,b)$,$[a,b]$}
+For the half-open unit interval, we have found our function $f(u) = 2^u$. For later convenience, we define: 
+\begin{equation}
+	U = 2^u
+\end{equation}
+For arbitrary half-open intervals $[a,b)$ or $(a,b]$, the most natural thing to do is to just scale our function for the unit interval by the length of our actual interval, so we just use $f(U) = (b-a) U$, or stated via $u$: $f(u) = (b-a) 2^u$. For the closed interval $[a,b]$, using $f(U) = (b-a) U + 1$ seems sensible since it contains one element more than the half-open one. Likewise, for the open interval $(a,b)$, the most natural choice seems to be $f(U) = (b-a) U - 1$ because it has one element less than the half-open one. In summary:
+\begin{eqnarray}
+ f(U) =& (b-a) U - 1                 & \qquad (a,b) \\
+ f(U) =& (b-a) U \quad \; \; \, \,   & \qquad [a,b),(a,b] \\
+ f(U) =& (b-a) U + 1                 & \qquad [a,b]
+\end{eqnarray}
+
+\subsection{The Entire Real Number Line}
+% I think, this may be wrong and too complicated. I think, we should just multiply the growth functions for [0,1) and Z and define the real number represented by the tuple (z,f) where z \in Z and f in [0,1) as z+f. This will result in f(u) = (2u+1)U. Hmm...that's actually a bit problematic - there are two equally valid ways to construct the reals from known sets but they yield different results. I think, our construction by symmetry below has one [0,1) interval "more" that the construction using floor + frac...or something
+A nonnegative real number could be represented as a pair of an element of $[0,1)$ for the fractional part and an element of $\mathbb{N}$ for the integer part. Using the multiplicativity rule together with our already known growth functions for the two sets, that would give rise to $f(u) = 2^u (u+1)$. To get the negative numbers as well, we could cross this with $\{0,1\}$ using the boolean value from this set to distinguish between positive and negative numbers. With that, we'd get $f(u) = 2 \cdot 2^u (u+1)$. But now we have double-counted the number zero, so we subtract one to finally arrive at
+\begin{equation}
+ f(u) = 2^{(u+1)} (u+1) - 1 = 2 U (u+1) - 1
+\end{equation}
+%old:
+%The positive real number line $\mathbb{R}^+$ is actually just $\mathbb{N}^+ \times [0,1)$ for which we already have our growth functions. We just need to multiply them to get: $f(u) = u 2^u$. The negative real number line has the same $f$, of course. To not double count the number zero, we subtract one to finally get 
+%\begin{equation}
+%f(u) = 2 u 2^u - 1
+%\end{equation}
+as growth function for the whole real number line. This function grows faster than any $f$ for a finite interval thanks to the linear factor $(u+1)$ multiplying the exponential in $u$ (or alternatively $U = 2^u$). We can interpret this as: the set of all real numbers is (linearly) bigger than any finite interval of real numbers. Seems reasonable. By the way: I liberally use $f(n)$ and $f(u)$ interchangably in this text and I may also liberally get rid of the finer details like the floor function for counting the squares, for example. That may be justified by noting that first: natural numbers are real numbers, second: we are ultimately interested in the asymptotic behavior of $f$ as the argument goes to infinity. We need to allow the argument of $f$ to be real because the weighting factors from the $[a,b)$ intervals are real numbers - and not natural ones in general. I think (not sure), the $u$ used here in this text can also be seen as an incarnation of the $\omega$ from nonstandard analysis and/or the $\omega$ from ordinal numbers. At least in a hand-wavy way. In reality, it's just a variable name for an argument of a function, whose asymptotic behavior we are interested in.
+
+%...is just $\mathbb{Z} \times [0,1)$, so we
+%-we need to multiply the function the unit-interval with that of the integers (maybe plus or minus 1 - figure out)
+%-explain why ...maybe we also need to subtract 1 form 1 of the included intervals because otherwise -inf would be included?
+%...it's not quite obvious -> figure out
+
+%Roughly speaking, the idea behind it appeals to the intuition that if two things of the same initial size grow over some time, then the thing that grows faster will end up being bigger at the end. That is certainly true if there is such an end. We extrapolate that idea to the case when there actually is no end - or the end is at infinity. In a way, this is similar to what Cantor did when \emph{defining} that two infinite sets are of equal size when there's a bijection between them. This was also initially an observation on finite sets which was stipulated to be true also for infinite sets. The proposed notion of set size is therefore more like a notion of growth which can be seen as the derivative of size. To each set, we will assign univariate function $f$ which can be interpreted as a growth function
+
+%which we will call numerosity, is based on the idea of assigning a univariate function to each set. The numerosity of a set is a function $f: \mathbb{N} \rightarrow \mathbb{R}$, whose limiting behavior when the argument goes to infinity tells us something about the size of the set. 
+
+\subsection{Euclidean Spaces $\mathbb{R}^n$}
+Having the appropriate growth functions for arbitrary real intervals already defined, we can appeal to the multiplicativity law to construct the growth functions for arbitrary hypercubes in $\mathbb{R}^n$. For example, for a rectangular closed region of $\mathbb{R}^2$ extending from $a$ to $b$ along the $x$-axis and from $c$ to $d$ along the $y$-axis, $[a,b] \times [c,d]$ by multiplicativity we would get: 
+\begin{eqnarray}
+ f(U) &=& ((b-a)U + 1) ((d-c)U + 1) \\
+      &=& (b-a)(d-c)U^2 + (b-a)U + (d-c)U + 1 \\
+      &=& A U^2 + \frac{P}{2} U + 1
+\end{eqnarray}
+The coefficients $A$ and $P/2$ in front of the $U^2$ and $U$ term are recognized as the area $A = (b-a)(d-c)$ and the semiperimeter $P/2 = (b-a) + (d-c)$ where we use $P$ to denote the perimeter. This formula with $A,P$ is actually generalizable to any simply connected region with area $A$ and perimeter $P$. In general, in 2D Euclidean space, we have the following formulas:
+\begin{eqnarray}
+f(U) =& A U^2 - (P/2) U - 1     & \qquad \text{open region} \\
+f(U) =& A U^2 + (P/2) U - 1     & \qquad \text{closed region} \\
+f(U) =& L U                     & \qquad \text{half-open curve of length } L \\
+f(U) =& 1                       & \qquad \text{single point} \\
+\end{eqnarray}
+These polynomials in $U$ define a function-valued measure on $\mathbb{R}^2$, see \cite{MathTrain1}. From these building blocks, we can compose the measure for more complicated sets by using additivity to build our set from components and/or we can use subtractivity to "carve out" a set from a larger set.
+
+\paragraph{ToDo} Generalize to regions that are not simply connected - like an annulus. Demonstrate, how we can obtain the formula for an annulus by subtraction - starting with $f$ for a disc and subtracting a $g$ for an inner disc. Demonstrate, how the formula for the closed square could be also obtained by first taking an open square and then manually adding in the terms for the boundaries. Explain how it generalizes to 3D and $n$D.
+
+% maybe add: unit squares, cubes, half open 2D region, half-open curve, closed curve (in the sense of including its endpoints OR in the sense of forming a loop - I think, these are different cases)
+
+% add some polynomials for 3D and explain the genral pattern. I think, in 3D the surface must be divided by 2 and the edges by 4? ...not sure about this...
+
+%-tackle the space R^N
+%-mention measure theory, Lebesgue measure, etc.
+
+\section{Putting it Together}
+Coming back to our initial goal of defining a way to compare sizes of infinite sets that is not based on cardinality (and therefore on bijections), we'll now put together the ideas. We assume that we have some way of assigning a univariate real function $f: \mathbb{R} \rightarrow \mathbb{R}$ to any set $S$. We call that function $f$ the growth function of the set $S$. The function $f$ measures the size of the set $S$.  With that in place, we can make the following definitions:
+
+\paragraph{Definition}
+Let $A,B$ be sets with associated growth functions $f(u), g(u)$. Consider the limit of their quotient:
+\begin{equation}
+ L_Q = \lim_{u \rightarrow \infty}	\frac{f(u)}{g(u)}
+\end{equation}
+Depending on what that limit is, we say the following things:
+\begin{eqnarray}
+ L_Q = 0:         &  A \text{ is qualitatatively smaller than } B \\
+ L_Q = \infty:    &  A \text{ is qualitatatively greater than } B \\
+ L_Q = r < 1:     &  A \text{ is quantitatatively smaller than } B \text{ by factor } r \\
+ L_Q = r > 1:     &  A \text{ is quantitatatively greater than } B \text{ by factor } r \\
+ L_Q = r = 1:     &  A \text{ is essentially the same size as } B
+\end{eqnarray}
+where we assume $r$ to be finite: $0 < r < \infty$, i.e. lines 2 and 3 are relevant only when lines 1 or 2 don't apply.
+
+\paragraph{}
+Being "qualitatatively" or "quantitatatively" greater or smaller or "essentially" the same size are the terms that are intended to be defined here. In the case of $A,B$ being essentially the same size according to the above definition, we can invoke a further, finer test to figure out, which of the sets is "weakly" greater or smaller.
+
+\paragraph{Definition}
+Let $A,B$ be sets with associated growth functions $f(u), g(u)$ which are essentially of the same size. Consider the limit of their difference:
+\begin{equation}
+	L_D = \lim_{u \rightarrow \infty} f(u) - g(u)
+\end{equation}
+Depending on what that limit is, we say the following things:
+\begin{eqnarray}
+  L_D < 0:  &  A \text{ is weakly smaller than } B \text{ by } -L_D \\
+  L_D > 0:  &  A \text{ is weakly greater than } B \text{ by }  L_D \\
+  L_D = 0:  &  A \text{ is of the same size as } B \\  
+\end{eqnarray}
+
+\paragraph{}
+The intention of these definitions is to ensure $A > B$ whenever $f$ grows faster than $g$. When $f$ grows faster than $g$ by order (in the sense of Landau symbols in complexity theory), then the $L_Q$ will be infinity. When $f$ and $g$ have the same growth order, then $L_Q$ will be some finite constant. In this case, the constant factor in front of the fastest growing term should matter to determine which set/function is greater. This is ensured by the distinction between the limit of the quotient being less or greater than 1. In this case, we can even put a number $r$ on how much greater one set is compared to the other. This number $r$ represents a size ratio.  When $L_Q$ is not just \emph{some} constant but the very special constant 1, then the constant factors in front of the fastest-growing terms in both functions also match. In this case, we may consider the finer details of the lower order terms. That's what the second limit test does. When I say "terms", I don't necessarily mean that the function must be given as a sum of terms. It's about the conceptual idea - or maybe one could think about the terms in a Taylor expansion. 
+
+\paragraph{ToDo}
+Maybe the notion of being "qualitatively" greater can be further refined by looking at how fast the limit goes to infinity. Maybe we could say things like: $A$ is linearly/quadratically/exponentially/... greater than $B$ etc. rather than just "qualitatively". It seems reasonable that $\mathbb{N} \times \mathbb{N}$ should be "linearly greater" than $\mathbb{N}$. Maybe somehow the notion of being weakly greater/smaller can also be refined? Maybe in case of "essentially equal", we could take derivatives and/or antiderivatives into account (maybe scaled by factorials or their reciprocals) to make quantitative statements of "2nd order", "3rd order" weakly greater, etc.? 
+%When derivatives are involved, how would we handle nondifferentiable functions like the prime counting function?
+
+
+
+\paragraph{}
+Here is a table for the growth functions $f(u)$ of some basic elementary sets, some of which we have already encountered and a few new ones.
+\begin{center}
+\begin{tabular}{ |p{3cm}|p{3cm}||p{3cm}|p{3cm}|  }
+	\hline
+	\multicolumn{4}{|c|}{Growth functions for some basic sets, $U = 2^u$} \\
+	\hline
+	Set & Function $f(u)$ & Set & Function $f(u)$  \\
+	\hline
+	$\mathbb{N}^+$         & $u$         & $[0,1)$          & $2^u = U$             \\
+	$\mathbb{N}$           & $u+1$       & $(a,b)$          & $(b-a) U - 1$         \\
+	$\mathbb{Z}$           & $2 u+1$     & $[a,b),(a,b]$    & $(b-a) U$             \\
+	$\{1,2,3, \ldots, n\}$ & $n$         & $[a,b]$          & $(b-a) U + 1$         \\ 
+	Primes                 & $\pi(u)$    & $\mathbb{R}$     & $2 U (u+1) - 1$       \\
+	Squares                & $\sqrt{u}$  & $\mathbb{R}^n$   & $(2 U (u+1) - 1)^n $  \\
+	Evens                  & $u/2$       & closed 2D region & $A U^2 + PU/2 + 1$    \\
+	Powers of 2            & $\log_2(u)$ & open 2D region   & $A U^2 - PU/2 + 1$    \\	
+	\hline
+\end{tabular}
+\end{center}
+% add empty set with f(u) = 0
+In order to construct growth functions for more complicated sets that are built from these elementary building blocks, the general procedure would be to look up the growth function for the elementary sets and then make use of the laws: additivity, multiplicativity, etc. For example, using the power law, the size of the set of all functions from $\mathbb{R}$ to $\mathbb{R}$, i.e. $\mathbb{R}^{\mathbb{R}}$, would be characterized by the function $f(u) = (2 U (u+1) - 1)^{2 U (u+1) - 1}$ which is a really fast growing function indeed. It's qualitatively of the order $(u 2^u)^{u 2^u}$ [VERIFY!]. The set $\mathbb{R}^{\mathbb{R}}$ is really big. If you encounter a set that can not be built from the tabulated ones, this is where some creativity is required to figure out the appropriate growth function for the set.
+% - and then you can add it to the table. The goal is to build a table of growth functions that appropriately capture the sizes of commonly occuring sets and then, starting from that table, we would use only the laws from our list about sizes of finite sets to figure out our growth functions for the more complicated sets. When we build our growth functions only from these laws, we automatically assure that they are satisfied, even in the infinite case. Of course, what function to assign to the basic sets might be open to debate and is perhaps more a philosophical rather than mathematical question.
+
+% explain generally how to find functions of more complicated sets:
+%-cartesian product: multiply the functions: h = f*g
+%-set union: add them but subtract off the function for the intersection (might be complicated to find)
+%-set subtraction: subtract function of intersection
+
+\section{Putting it to Work}
+As a first simple test, let's see what this way to characterize sizes of sets has to say about the size of the natural numbers vs the size of the even numbers. So: Let $A$ be the set of positive natural numbers with $f(u) = u$ and $B$ be the set of positive even numbers with $g(u) = u/2$. Compute the quotient limit: 
+\begin{equation}
+ L_Q = \lim_{u \rightarrow \infty}	\frac{f(u)}{g(u)}
+   	= \lim_{u \rightarrow \infty}	\frac{u}{(u/2)}
+   	= \lim_{u \rightarrow \infty}	\frac{2u}{u}     	
+   	= 2
+\end{equation}
+That's a constant $r > 1$, so according to our definition, we say $A$ is quantitatively greater than $B$ by a factor of 2. Yay! It worked! Next, let's see, how $\mathbb{N}^+$ with $f(u) = u$ and $\mathbb{N}$ with $g(u) = u+1$ compare:
+\begin{equation}
+ L_Q = \lim_{u \rightarrow \infty}	\frac{u}{u+1} = 1
+\end{equation}
+We would say, these sets are essentially of equal size. In the vast sea of infinitely many numbers, one more or less makes no essential difference. If we want to know, if one set is at least weakly greater than the other, we can do the finer difference limit test:
+\begin{equation}
+	L_D = \lim_{u \rightarrow \infty} u - (u+1) = -1
+\end{equation}
+to discover that $\mathbb{N}^+$ is weakly smaller than $\mathbb{N}$ by $1$. Let's now compare the whole of $\mathbb{R}$ to the finite closed interval $[2,5]$. From our table, we read off the following growth functions: $f(u) = 2 U (u+1) - 1, g(u) = (5-2) U +1$.
+\begin{equation}
+L_Q = \lim_{u \rightarrow \infty} \frac{2 U (u+1) - 1}{3 U +1}
+    = \lim_{u \rightarrow \infty} \frac{2^{u+1} (u+1) - 1}{3 \cdot 2^u +1} = \infty	
+\end{equation}
+So we would conclude the the whole of $\mathbb{R}$ is qualitatively greater than the finite interval. If we would inspect this quotient function closer, we would discover that it grows asymptocially linearly so we could specify this even more by saying  $\mathbb{R}$ is linearly greater than a finite interval of it. As next example, consider $\mathbb{N}^n$ and $[0,1)$ with $f(u) = u^n$ and $g(u) = U = 2^u$ respectively. Even without writing down the limit, we immediately see that the continuous $[0,1)$ with finite extent is qualitatively greater than the discrete $\mathbb{N}^n$ with infinite extent for any $n$ if we know that exponentials always dominate polynomials as $u \rightarrow \infty$.
+
+% To see the linear growth:
+% https://www.desmos.com/calculator/nvi0p99dkv
+% btw.: (f/g - 1/4) * (4/3) gives a nice one-sided saturation
+
+\paragraph{ToDo}
+Present more examples: a square of size 2 is 4 times as large as one of length 1, maybe compare the sizes of the square numbers and cube numbers, powers of two (with logarithmic $f$), etc. Try more exotic sets like $\mathbb{R} \setminus \mathbb{Q}$, $[0,1) \setminus \mathbb{Q}$, compare the primes to the squares - involves using an asymptotic approximation for $f$ like $f(u) = u / \log(u)$ - explain when it is allowed to use approximations and how good they need to be, Compare open and closed unit square, compare open unit square with one where the corners have been added (Maybe the one with corners comes out 2nd order weakly greater by 4? That would be nice!). Maybe compare permutations to some other large set like $\mathbb{N}^\mathbb{N}$. Maybe use Stirling's formula for that.
+%maybe link the Stirling Formel song :-)
+
+% -Compare the number of permutations of sets up to size n (growing like (integrated/summed) n! which can be approximated by the Stirling formula) to the continuum. I think, there we'll see a discrepancy between cardinalities and growth: the factorial is superexponential but the set of permutations can be enumerated. There are more permutations than real numbers?
+
+% -what about functions from [0,1] to R vs from [0,2] to R. The 2nd set is quantitatively greater by 2. How can we make sense of that? In a sense, we have to prescribe two times as many function values per function?
+
+\section{Conclusion}
+I proposed the idea to measure the size of a set in terms of a univariate function $f(u)$, called the set's growth function, that must \emph{somehow} be assigned to the set. If the set is constructed from elementary sets with already known growth function via set operations, finding the growth function involves just using the laws of additivity, subtractivity, mulitplicativity, etc. Constructing growth functions this way, we automatically ensure, that these laws continue to hold in the infinite case. Choosing the \emph{right} growth functions for the elementary sets themselves might be a bit controversial and perhaps even philosophical. I think, this is the achilles heel of the whole concept and a point where a more rigourous justification needs to be worked out. The base cases need special careful construction. The rest will then follow automatically. In some cases, there was an obvious, natural choice for what $f$ should be. In other cases, the choice may seem a bit arbitrary and there wasn't any good justification other than an appeal to intuition. I think, that's what this idea is about - somehow capturing our intuitions about infinity. If one is willing to accept that $f(u) = u$ for the set of positive natural numbers $\mathbb{N}^+$ and $f(u) = 2^u$ for the real unit interval $[0,1)$ are sensible choices, then one has some machinery in place to make fine grained size comparisons between many common infinite sets. There may not be any rigorous mathematical substance to these choices. They may be mere artifacts of how we \emph{model} our human \emph{intuitions} about how big the sets in question actually are. Cantor's cardinalities revolve around bijections. The consequences of setting the existence of bijections front and center for size comparisons of sets lead to a lot of counterintuitive conclusions. Many of the other rules about set sizes that we know from finite sets necessarily fail to hold in the infinite case. I made an attempt to propose a different way to characterize the size of a set - one in which we give up on the bijectivity criterion in exchange for carrying over some (maybe even all?) other laws to the infinite case (TODO: investigate closer, what happens to strict monotonicity). A notion of size that is an alternative or complementary to cardinalities. To establish this new notion of size, I have borrowed ideas from number theory, namely counting functions and from measure theory, namely the overall idea to assign a mathematical object to a set. In measure theory, that object is a real number, here it is a real valued "growth" function. One important requirement for that object is that a suitable "less than" relation can be defined and I gave such a definition for the growth functions in terms of their limiting behavior as the argument goes to infinity. When the argument goes to infinity, so will the function value if the set is infinite. The speed by which the function value approaches infinity characterizes the size of the set. The "less than" relation defined on the growth functions maps to the "smaller than" relation on sets. I think "smaller" sounds more appropriate than "less" when the objects in question are sets.
+
+\section{Acknowledgements}
+The ideas in this article were inspired mainly by the video "A New Way to Measure Sets! (How to build a strictly monotone measure)" by the YouTube channel "MathTrain" \cite{MathTrain1}. Before seeing this, I have been thinking on and off for a while how to define a notion of size comparisons between infinite sets that matches our human intuition better than cardinalities do. Seeing the idea of assigning a polynomial to a set in the middle of the night gave me a mindblowing "Heureka!" moment and I worked the whole night through and then 10 days straight totally in the flow bringing these ideas to paper (and textfiles). The main idea of assigning a "measure function" to a set is not mine and I don't claim it to be. It's from the video and belongs to the creator Joseph T. Previdi. I tried to embedd the ideas from the video into a broader context and hope that this stuff makes at least some sense. My $U = 2^u$ here in this article is the same as the $\omega$ in the video. I think, my $u$ is - in some sense - also the $\omega = 1/\varepsilon$ from nonstandard analysis [VERIFY!].
+
+% order theory? is this a thing? i mean the idea that things can be ordered by a < relation
+
+%\subsection{More Ideas}
+%
+
+\begin{thebibliography}{9}
+\bibitem{MathTrain1}
+MathTrain,
+\textit{A New Way to Measure Sets! (How to build a strictly monotone measure)},
+\href{https://www.youtube.com/watch?v=h_CFMtRQiek&t=1200s}{youtube.com/watch?v=h\_CFMtRQiek\&t=1200s} 
+
+\bibitem{Previdi1}
+ Joseph T. Previdi,
+ \textit{A strictly monotone measure on tame sets that corresponds to a numerosity},
+ \href{https://arxiv.org/abs/2008.09969}{arxiv.org/abs/2008.09969}
+\end{thebibliography}
+ 
+\end{document}
+
+\begin{comment}
+	
+philosophical remarks:
+-Cantor's view of cardinality is completely static - sets just \emph{are}. They are seen as eternal beings. This view here is more dynamic: we imagine to watch how sets are being built up over time and then we look at the "end result" when time finally "reaches" infinity. I'm using scare quotes because there is no such thing as actually "reaching" infinity.
+Time increments stepwise - the steps are the natural numbers. At each time-step, our to-be-built set is finite but at time infinity, it has infinite size - and how big that size exactly is depends on the details growth process which we model with our growth function $f$. Maybe we have some sort of "dynamic set theory"
+-The notion of set size based on the idea growth is better compatible with our intuitions - but does that mean anything? Is math supposed to model our intuitions?
+-I think, the whole notion of a "density" of numbers like the rationals hinges on the intuitive idea of imagining the numbers geometrically as populating the number line. That picture is not necessary though. Maybe it also has to do with needing an ordered set, i.e. one in which < is defined and has the apropriate properties? 
+
+-What about the set of analytic functions? How big is it? Maybe its size is that of N x R because we have a countable number of Taylor coeffs, each being a real number?
+
+Questions:
+-Does it make a difference, how we build the sets? I think it doesn't as long as at t=inf the procedure has built the same set. Oh - no:
+
+Problem with constructing the reals: depending on how exactly we approach the construction, we will get (slightly) different functions:
+
+(1) Using a simple Z x [0,1) construction by defining r = z+f where r in R, z in Z and f in [0,1), we'll get: 
+f(u) = (2u+1) 2^u
+Z:    -3       -2       -1      0     +1     +2  
+R:  [-3,-2)  [-2,-1)  [-1,0)  [0,1)  [1,2)  [2,3)
+
+(2) Using a construction by constructing R_0^+ by using N x [0,1), doubling it to get the negatives and subtracting one for the doubly-counted zero, we'll get: 
+f(u) = 2 (u+1) 2^u - 1
+N    :     0       1        2
+R^+_0:   [0,1)   [1,2)    [2,3)
+R^-_0:  (-1,0]  (-2,-1]  (-3,-2]
+
+(3) Using a construction by N^+ x [0,1) interpreting the 1 from N^+ as selecting [0,1), the 2 as selecting [1,2), the 3 as selecting [2,3), etc., doubling it to get the negatives and subtracting 1 for the doubly-counted zero, we get: 
+f(u) = 2 u 2^u - 1
+N^+  :     1       2        3
+R^+_0:   [0,1)   [1,2)    [2,3)
+R^-_0:  (-1,0]  (-2,-1]  (-3,-2]
+
+(4) Doing it like in (3) but interpreting the negative counterparts also as right-open, we avoid the double-counting of zero, so we don't need to subtract 1:
+f(u) = 2 u 2^u
+N^+  :     1       2        3
+R^+_0:   [0,1)   [1,2)    [2,3)
+R^-  :  [-1,0)  [-2,-1)  [-3,-2)
+
+...so which one is it? Perhaps, if several constructions seem to be equally "natural", use the one with the "smallest" growth function? In this case, this would be construction (3), I think. But construction (4) is simpler which is also attractive. But (3) is also more symmetric with respect to how we treat positive and negative intervals - all intervals are open away from zero. These details will matter only in the finer-grained comparisons - qualitatively, all these functions grow like 2 u 2^u = 2 U u. If we change that part about f(u) for R, we'll need to update later parts, too. Maybe it could make sense to include -0? Then we would not need to subtract off 1 in (3) and get the simpler function as in (4). Maybe we can resolve this problem from a more philosophical point of view (which is not surprising when contemplating infinity): The set of real numbers R does not actually "exist" in the same sense as the set of, say, cells in our body does. It comes into existence only when we *somehow* "construct" it in our minds. And there are different possible mental constructions that lead to equivalent results but have slight differences in how we *mentally model* the set R. And these slight differences may be reflected by the slight differences in the growth function. Again, it's all about modeling intuitions. By the way: with Q, one could actually also argue that 4/6 does not necessarily need to be considered to be the same thing as 2/3. In the real world, having four sixths of a pizza is indeed a different situation from having two thirds of pizza. They are only equivalent in the sense of "amount of pizza" - but the number of things on our plate and their geometric shapes and are quite different. Rational numbers are actually equivalence classes of fractions, i.e. of tuples from Z x Z\0.
+	
+damn: "numerosity" is already taken - at leats the term "Equinumerosity"
+%https://en.wikipedia.org/wiki/Equinumerosity
+
+
+Some Small Ideas in Math: A Set of Measure Zero Versus a Set of First Category (Meager Sets)
+https://www.youtube.com/watch?v=IhyHMgKR41g
+...talks about different ways to assign a size to a set
+
+
+\end{comment}

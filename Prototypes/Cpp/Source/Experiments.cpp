@@ -11334,8 +11334,8 @@ void testRiemannZeta()
   //t  = pi*pi/6;
   p  = RZF::potentialViaOriginalSum(  x, y, 10000);  // ~ 1.71
   pl = RZF::potentialViaLaurentSeries(x, y, 11);     // ~ 0.93
-  pl = RZF::potentialViaLaurentSeries(x, y, 8); 
-  pl = RZF::potentialViaLaurentSeries(x, y, 5); 
+  //pl = RZF::potentialViaLaurentSeries(x, y, 8); 
+  //pl = RZF::potentialViaLaurentSeries(x, y, 5); 
   // nope! no match! Is this a convergence problem or is still something wrong with the math?
   // the original sum seems to have converged. I tried using 1000000 and it didn't change the 
   // result much, so perhaps the math in potentialViaLaurentSeries is still wrong. Maybe it 
@@ -11344,8 +11344,6 @@ void testRiemannZeta()
   // constant offset? Potentials are not unique! Try using the Laurent based potential to compute
   // zeta via numerical derivatives! If that turns out to be the case, try to "normalize" them all
   // perhaps by fixing the value at 0 or at infinity or whatever is convenient.
-
-
 
   h  = 0.0001;
 
@@ -11367,22 +11365,39 @@ void testRiemannZeta()
   pl = RZF::potentialViaLaurentSeries(x, y-h, N);
   v  = -(pu-pl)/(2*h);
   // Nope ...but it gets kinda into the right direction. Maybe the convergence is just painfully 
-  // slow? Try a point closer to s=1:
+  // slow? But no - looking at the iterates, it doesn't seem to be converging too slowly.
+  // Maybe try a point closer to s=1 anyway. What if the contributions to the sum do initially
+  // increase for couple of dozens of iterates and only go down to zero later? Could that be the 
+  // case? Normally, we assume thatthe later contribution are ever smaller refinements but maybe
+  // that's not the case initially? Maybe we are just not precise enough to 
 
+
+  double hx = 0.05;
+  double hy = 0.001;
+  double eu, ev;
+  N = 11; // test
   s = 1.2 + 0.1*i; x = real(s); y = imag(s);
   t = 4.59163272866373770917 - 1.9929157582669758070 * i;  // riemannzeta(1.2 + 0.1 I)
-  pu = RZF::potentialViaLaurentSeries(x+h, y, N);
-  pl = RZF::potentialViaLaurentSeries(x-h, y, N);
-  u  = (pu-pl)/(2*h);
-  pu = RZF::potentialViaLaurentSeries(x, y+h, N);
-  pl = RZF::potentialViaLaurentSeries(x, y-h, N);
-  v  = -(pu-pl)/(2*h);
-  // ...OK, yes - for tha value of s, our u,v results are indeed a lot closer to the target. Maybe
-  // the convergence is indeed very slow. Try to use more terms. For that, we need to store more
-  // gamma or laurent coefficients which we need to produce with Sage or Mathematica.
-  // 
-
-
+  pu = RZF::potentialViaLaurentSeries(x+hx, y, N);
+  pl = RZF::potentialViaLaurentSeries(x-hx, y, N);
+  u  = (pu-pl)/(2*hx);
+  eu = u - real(t);
+  pu = RZF::potentialViaLaurentSeries(x, y+hy, N);
+  pl = RZF::potentialViaLaurentSeries(x, y-hy, N);
+  v  = -(pu-pl)/(2*hy);
+  ev = v - imag(t);
+  // ...OK, yes - for that value of s, our u,v results are indeed a lot closer to the target. 
+  // Maybe the convergence is indeed very slow. Try to use more terms. For that, we need to 
+  // store more gamma or laurent coefficients which we need to produce with Sage or Mathematica.
+  // Maybe try using less terms and see what that does to the result
+  // N = 0: u = 4,      v = -2
+  // N = 1: u = 4.577,  v = -2
+  // N > 1: it basically stays the same - not further improvements visible
+  // Increasing or decresing h also does not seem to have much effect
+  // Actually, when observing how P changes during the approximation, it seems like the function
+  // does actually converge. The later contribution are really small. It's weird. It's not totally
+  // wrong but the error is large enough to to make it implausible to attribute it to numerical 
+  // issues.
 
 
   // Test:

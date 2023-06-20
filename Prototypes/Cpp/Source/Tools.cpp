@@ -7307,7 +7307,14 @@ double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int 
   x -= 1.0;
   double P = log(x*x + y*y) / 2;
   for(int n = 0; n < numTerms; n++)
-    P += laurentSeriesCoeff(n) * P_n(x, y, n);
+  {
+    double c  = laurentSeriesCoeff(n);  // the n-th coeffs
+    double Pn = P_n(x, y, n);           // the P_n contribution
+    double d  = c*Pn;                    // delta to be added
+    P += d;
+
+    //P += laurentSeriesCoeff(n) * P_n(x, y, n);
+  }
   return P;
 
   // The code here closely parallels the one in vectorFieldViaLaurentSeries. It's just simpler

@@ -1,0 +1,639 @@
+%\documentclass[12pt, twocolumn]{article}
+\documentclass[12pt]{article}
+%\documentclass[12pt]{scrartcl}  % to make \subtitle work
+%\usepackage{fullpage}           % makes all margins 1 inch?
+\topmargin=-1.0cm
+\textheight=23cm
+\evensidemargin=-1.0cm
+\oddsidemargin=-1.0cm
+\textwidth=19cm
+\setcounter{secnumdepth}{-1}     % suppress numbering of sections
+\usepackage{amsmath}
+\usepackage{amssymb}             % for mathbb
+%\usepackage[latin1]{inputenc}   % why?
+\usepackage{graphicx}
+\usepackage{float}               % for positioning graphics via [h!]
+\usepackage{pstricks}
+%\usepackage{pst-plot}
+\usepackage{hyperref}            % for hyperlinks
+%\usepackage{booktabs}
+%\usepackage{fancyhdr}           % for headers and footers
+
+%\pagestyle{fancy} 
+%\rhead{}
+%\rfoot{article available at: \htmladdnormallink{www.rs-met.com}{http://www.rs-met.com}}
+
+% set the footer:
+%\rfoot{http://www.rs-met.com}
+
+\begin{document}
+
+% formatting:
+\parindent=0in
+\parskip=0pt
+\pagenumbering{roman}
+
+% main text
+\pagenumbering{arabic} \setcounter{page}{1}
+
+\title{The Polya Potential of the Riemann Zeta Function [DRAFT]\\ {\Large A New(?) Device for Visualization and Intuition Building}}
+%\title{The Size of Infinity \ }
+%\subtitle{(Subtitle)}
+\author{Robin Schmidt}
+\maketitle
+
+\section{Preview}
+Analytic functions $f(z)$ in the complex plane obey the Cauchy-Riemann equations. When we interpret the complex conjugate of a complex function $f: \mathbb{C} \rightarrow \mathbb{C}$ as a vector field $(u(x,y), v(x,y)): \mathbb{R}^2 \rightarrow \mathbb{R}^2$, we obtain the so called Polya vector field that is associated with the complex function. Due to the analyticity of $f$, this vector field will be potential field. That means, there exists a scalar field $p(x,y)$, called a potential, such that $u,v$ can be obtained from $p$ by taking the partial derivatives with respect to $x$ and $y$. A scalar field over the $xy$-plane is simpler than a full-blown complex function and can be more easily visualized due to requiring only 3 dimensions. Yet, it contains the same information. In this paper, I will derive expressions for such a Polya potential for the Riemann zeta function. I hope that these can be helpful in analyzing the properties of zeta. I've not yet seen the usage of such potentials anywhere in complex analysis. The Polya vector fields themselves seem to be moderately well known but their potentials seem to be mostly ignored, so far - at least to my (very limited) knowledge.  ...TBC...
+
+\section{Review of Known Formulas}
+For reference, we collect a couple of known formulas for the zeta function here because we will need to use them later.
+
+\subsection{Sum and Product Formulas}
+Here, we will give formulas for $\zeta(s)$ in terms of convergent infinite sums or products.
+
+\subsubsection{Sum Formula for $\Re(s) > 1$}
+This formula is usually taken to be the basic definition of the zeta function:
+\begin{equation}
+\label{Eq:OriginalSum}
+\zeta(s) 
+= \sum_{n=1}^{\infty} \frac{1}{n^s} 
+= \sum_{n=1}^{\infty} n^{-s}	
+\end{equation}
+It's nice and simple but is of limited use because it converges only for $\Re(s) > 1$, so it can be used only in that part of the domain. And that part is unfortunately not where the interesting stuff happens.
+% Maybe call that OriginalSum
+
+\subsubsection{Sum Formula for $\Re(s) > 0$}
+A sum that converges in the slightly larger domain where $\Re(s) > 0$, which contains the most interesting "critical strip", is given by:
+\begin{equation}
+\label{Eq:AlternatingSum}
+\zeta(s) 
+= \frac{\eta(s)}{1 - 2^{1-s}} \quad \text{where} \quad
+\eta(s)
+= \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^s}
+\end{equation}
+where $\eta(s)$ is also known as the Dirchlet eta function. See \cite{Wolfram}, Eq. 20.
+% ToDo: give reference to bibligraphy, there should be the link to wolfram mathworld and/or NIST-DLMF
+% Maybe call it Dirichlet sum or eta sum or AlternatingSum
+
+\subsubsection{Sum Formula for $s \neq 1$}
+An even more generally applicable formula based on an infinite sum is given by:
+\begin{equation}
+\label{Eq:BinomialSum}	
+\zeta(s) 
+= \frac{1}{1 - 2^{1-s}} 
+  \sum_{n=0}^{\infty} \frac{1}{2^{n+1}}
+  \sum_{k=0}^n (-1)^k \binom{n}{k} (k+1)^{-s}
+\end{equation}
+This sum converges for all $s \neq 1$. See \cite{Wolfram}, Eq. 21. [ToDo: list also Eq. 22]
+% Maybe call the fast and slow Hasse Sums or BinomialSum, 
+% BinomialSumSlow or BinomialSumHurwitz
+
+\subsubsection{Euler's Product Formula}
+The formula that relates the zeta function defined by an infinite sum over all positive natural numbers to a product over all prime numbers is called Euler's product formula and given by:
+\begin{equation}
+\label{Eq:EulerProduct}		
+\zeta(s)		
+= \sum_{n=1}^{\infty} \frac{1}{n^s}
+= \prod_{p \in \mathbb{P}} \frac{1}{1 - \frac{1}{p^s} }
+= \prod_{p \in \mathbb{P}} \frac{1}{1 - p^{-s} }    
+= \prod_{p \in \mathbb{P}} (1 - p^{-s})^{-1}
+\end{equation}
+This formula was already known to (and first derived by?) Leonhard Euler and is the starting point for the investigation of the relations between the zeta function and the prime numbers due to the fact that the product form is written in terms of primes. Both forms, sum and product, converge only for $\Re(s) > 1$ and in this part of the domain, they therefore define a function which has been called $\zeta(s)$ by Bernhard Riemann in his seminal paper. That's why it's called the "Riemann Zeta Function" (VERIFY!).
+% maybe move into first section to the sum formulas
+
+\subsubsection{Laurent Series for $s \neq 1$}
+A Laurent series is a generalization of a Taylor series that allows also for negative powers of $(x-x_0)$, i.e. there are terms with $(x-x_0)^n$ for negative $n$, too. It can be used to expand functions around poles. A Taylor series expansion is not possible at such points because the function isn't even defined there - much less being smooth there. In the case of expanding the zeta function in a Laurent series around its only pole at $s=1$, actually only one single negatively indexed coeff is nonzero. It's the coeff for $n=-1$, i.e. for the $(s-1)^{-1}$ term. The coeff for this term plays a special role in the theory of Laurent series and is called the residue of the function at the pole around which we expand the function. In the case of zeta, this resiude at the pole $s=1$ is one. The Laurent series is:
+\begin{equation}
+\label{Eq:LaurentSeries}	
+\zeta(s) = \frac{1}{s-1} + \sum_{n=0}^{\infty} \frac{(-1)^n}{n!} \gamma_n (s-1)^n
+\quad \text{where} \quad
+\gamma_n = \lim_{m \rightarrow \infty}
+\Bigl( \sum_{k=1}^{m} \frac{(\ln(k))^n}{k} - \frac{(\ln(m))^{n+1}}{n+1}  \Bigr)
+\end{equation}
+The coefficients $\gamma_n$ are called the Stieltjes constants and $\gamma_0$ is the Euler-Mascheroni constant. 
+% https://mathworld.wolfram.com/RiemannZetaFunction.html Eq 24
+% https://de.wikipedia.org/wiki/Riemannsche_Zeta-Funktion#Global_konvergente_Laurent-Reihe
+% https://de.wikipedia.org/wiki/Stieltjes-Konstanten
+% https://mathworld.wolfram.com/StieltjesConstants.html
+
+\subsubsection{Reciprocal Function}
+A sum formula for the reciprocal of the zeta function is given by:
+\begin{equation}
+\frac{1}{\zeta(s)} = \sum_{n=0}^{\infty} \frac{\mu(n)}{n^s}
+\end{equation}
+where $\mu(n)$ is the Moebius mu-function. ...TBC...explain mu...where does this sum converge?
+% https://en.wikipedia.org/wiki/M%C3%B6bius_function
+% Formula also in Conrey, 1.1
+% http://fuchs-braun.com/media/fe00fcba93c4caccffff802cffffffef.pdf
+% file:///C:/Users/rob/Downloads/Papers/RiemannHypothesis-BrianConrey.pdf
+
+\subsubsection{Boost Implementation Formula}
+The following formula is used in the implementation of the zeta function in the boost C++ library (see \cite{Boost}). The formula also gives a bound for the error $R(s)$ when using an approximation with $2n-1$ terms:
+\begin{equation}
+\zeta(s)
+= \frac{-1}{s^n(1-2^{1-s})}	\sum_{j=0}^{2n-1} \frac{e_{jn}}{(j+1)^s} + R(s) 
+\quad \text{where} \quad
+e_{jn} = (-1)^j \sum_{k=0}^{j-n} \binom{n}{k} - 2^n, \;
+|R(s)| \leq \frac{1}{8^n |1-2^{1-s}|}
+\end{equation}
+For negative arguments $s$, it uses the reflection formula to make the argument positive. TODO: figure out where this sum converges. Does it diverge for negative $s$? A first test with $s=-1$ failed, so maybe it converges only fo $\Re(s) > 0$?
+
+
+%\href{https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html}{https://www.boost.org/doc/libs/1\_65\_0/libs/math/doc/html/math\_toolkit/zetas/zeta.html}
+
+% https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
+
+
+
+%\subsection{Reflection Formulas}
+
+%\subsection{Integral Formulas}
+
+
+\subsection{Misc Formulas}
+
+\subsubsection{Pole and Residue at $s=1$}
+At $s = 1$, the zeta function has a simple pole with a residue of $1$. That means:
+\begin{equation}
+\lim_{s \rightarrow 1} \bigl( \zeta(s)  (s-1) \bigr) = 1
+\end{equation}
+We also have:
+\begin{equation}
+\lim_{s \rightarrow 1} \bigl( \zeta(s) - \frac{1}{s-1} \bigr) = \gamma
+\quad \text{where} \quad
+\gamma 
+= \lim_{n \rightarrow \infty} \bigl( \sum_{k=1}^n \frac{1}{k} - \ln(n) \bigr)
+= 0.5772156649 \ldots
+\end{equation}
+The constant $\gamma$ is known as the Euler-Mascheroni constant.
+% https://mathworld.wolfram.com/RiemannZetaFunction.html Eq 15
+
+\subsubsection{Reflection Formulas}
+The zeta function obeys the folloing reflection formulas:
+\begin{equation}
+\zeta(1-s) = 2 \sin(\pi \frac{1-s}{2})(2 \pi^{-s}) \Gamma(s) \zeta(s), \quad
+\zeta(s) = 2^s \pi^{s-1} \sin(\frac{\pi s}{2}) \Gamma(1-s) \zeta(1-s)
+\end{equation}
+see \cite{Boost}, \cite{Wiki}. VERIFY!
+
+\section{Polya Potentials}
+The Polya vector field of a complex function $f = f(z)$ is a 2D vector field, i.e. a function $(u(x,y), v(x,y)): \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that is obtained from the complex function $f$ by using $u(x,y) = \Re(f), v(x,y) = -\Im(f)$ where $x = \Re(z), y = \Im(z)$. Negating the imaginary part of $f$ in the definition $v$ has the effect of turning the Cauchy-Riemann conditions for analytic complex functions into the condition that gives the vector field a symmetric Jacobian [VERIFY!]. In turn, a symmetric Jacobian is a necessary and sufficient condition for the vector field to be a potential field, i.e. a vector field that can be obtained from a scalar field by the operation of taking its gradient. The potential for the Polya vector field is what I call the "Polya potential" of the complex function $f$ and it's an object that I have not yet seen as being used in complex analysis. Maybe taking a closer look at it can reveal some new insights. The goal is to derive expressions for the Polya potentials of the zeta function and then analyze this Polya potential instead of the zeta function itself. I hope that it will turn out to be simpler to understand because its just a simple scalar field over $\mathbb{R}^2$, i.e. a 3D thing rather than a 4D one - but it contains nonetheless the same amount of information. The all important zeros of the zeta function will be mapped to the stationary points (extrema or saddles) of the Polya potential. The Polya potential might also be amenable to the tools of differential geometry like figuring out main curvature directions at the stationary points, figuring out the geodesics between the stationary points, etc. I don't really know yet what to do with it - first we need to find it.
+
+\subsection{Polya Vector Field and Potenial via Original Sum}
+
+\subsubsection{Vector Field}
+Let's start with the definition of $\zeta$ via its sum formula given in (\ref{Eq:OriginalSum}) and massage it a bit:
+\begin{equation}
+\zeta(s)
+= \sum_{n=1}^{\infty} \frac{1}{n^s}
+= \sum_{n=1}^{\infty} n^{-s}
+= \sum_{n=1}^{\infty} e^{-s \ln(n)}
+\end{equation}
+Let's set $s = x + \i y$ and $\omega_n = \ln(n)$. That gives:
+\begin{equation}
+\zeta(s)
+= \sum_{n=1}^{\infty} e^{-(x + \i y) \omega_n}
+= \sum_{n=1}^{\infty} e^{-\omega_n x} e^{-\i \omega_n y}
+= \sum_{n=1}^{\infty} e^{-\omega_n x} (\cos(\omega_n y) - \i \sin (\omega_n y))
+\end{equation}
+ By splitting the sum into its real and imaginary component, we obtain the following Polya vector field for the zeta function $\zeta(s)$:
+\begin{equation}
+\label{Eq:PolyaFieldOriginal}	
+\boxed{
+u(x,y) = \sum_{n=1}^{\infty} e^{-\omega_n x} \cos(\omega_n y), \quad
+v(x,y) = \sum_{n=1}^{\infty} e^{-\omega_n x} \sin(\omega_n y) 
+}
+\quad \text{where} \quad \omega_n = \ln(n) 
+\end{equation}
+Note how negating the imaginary part has cancelled the minus sign for the sine component. At the moment, these expressions are only valid for $\Re(s) = x > 1$ because that was the condition for the sum-based definition of $\zeta$ to converge in the first place.
+
+\subsubsection{Potential}
+The next task is to find a potential for the given vector field. Since partial derivatives are linear operators, we may focus on a single (general) pair of terms inside the sums, find a potential for these terms and then sum the potentials for all the terms. Let's call such single terms:
+\begin{equation}
+u_n(x,y) = e^{-\omega_n x} \cos(\omega_n y), \quad
+v_n(x,y) = e^{-\omega_n x} \sin(\omega_n y)  \quad \text{where} \quad
+\omega_n = \ln(n)
+\end{equation}
+A potential for such a pair can be found as:
+\begin{equation}
+p_n(x,y) = - \frac{1}{\omega_n}  e^{-\omega_n x} \cos(k \omega_n)
+\end{equation}
+which can easily be verified by just taking the partial derivatives of $p_n$ with respect to $x,y$ and seeing that they indeed match $u_n, v_n$. Reassembling the individual terms into the sum, we will obtain the full Polya potential which we will denote by $P(x,y)$ as:
+\begin{equation}
+P(x,y)	
+= \sum_{n=1}^{\infty} p_n(x,y) 
+= \sum_{n=1}^{\infty}  - \frac{1}{\omega_n}  e^{-\omega_n x} \cos(\omega_n y)
+= \sum_{n=1}^{\infty}  - \frac{e^{-\ln(n) x} \cos(\ln(n) y)}{\ln(n)}  
+\end{equation}
+Where in the last step, we have replaced $\omega_n$ by $\ln(n)$ again. But now we see a problem: for $n=1$, we would get a division by zero. Fortunately, that's easily fixed by dragging the $n=1$ term out of the sum and treating it separately. Going back to our original expressions for $u_n, v_n$ and setting $n=1$ inside them amounts to setting $\omega_n=0$. So:
+\begin{equation}
+u_1(x,y) = e^{-0 x} \cos(0 y) = 1, \quad
+v_1(x,y) = e^{-0 x} \sin(0 y) = 0  \quad
+\end{equation}
+and a potential for that partial vector field is easily verified to be given by $p_1(x,y) = x$. So, our overall potential $P(x,y)$ should be:
+\begin{equation}
+P(x,y) = x - \sum_{n=2}^{\infty} \frac{e^{-\ln(n) x} \cos(\ln(n) y)}{\ln(n)}  
+\end{equation}
+which can be written a bit nicer as:
+\begin{equation}
+\label{Eq:PolyaPotentialOriginal}		
+\boxed{ P(x,y) = x - \sum_{n=2}^{\infty} \frac{\cos(\ln(n) y)}{n^x \ln(n)}  }
+\end{equation}
+The so found expression looks rather nice and simple but let's still keep in mind that this expression is valid only for $x > 1$ and the interesting stuff in the zeta function happens for $x < 1$. So we actually need expressions for the Polya potential that are valid in that part of the domain. This was just the warm-up...
+
+% Done (at least the part about renaming k to omega_n):
+%\medskip
+%TODO: Use $\omega$ or $\omega_n$ instead of $k$. The reason is that we later may want to derive a similar formula based on the sum formula that contains binomial coeffs and that formula uses $k$ already inside the binomial coeff. Also, $\omega$ is more suggestive because it indeed represents a frequency. In the formula using the eta function, we may also get factors with $\ln(2) y$ - maybe use $\varphi$ for the resulting phase offset there.
+
+
+\subsection{The Polya Vector Field and Potential via Alternating Sum}
+
+\subsubsection{Vector Field}
+To find expressions for the Polya vector field for $\Re(s) > 0$, we start with the alternating sum formula given in (\ref{Eq:AlternatingSum}) which we repeat here in a slightly different form:
+\begin{equation}
+\zeta(s) 
+= \frac{1}{1 - 2^{1-s}} \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{n^s}
+= \sum_{n=1}^{\infty} \frac{(-1)^{n-1}}{(1 - 2^{1-s}) n^s}
+= \sum_{n=1}^{\infty} (-1)^{n-1} \frac{n^{-s}}{1 - 2^{1-s}}
+\end{equation}
+Let's focus on a single term of this sum, excluding the $(-1)^{n-1}$ alternation factor, call it $t_n(s)$ and transform it in a way that allows us to separate it into its real and imaginary parts:
+\begin{equation}
+\label{Eq:AlternatingTerm}
+t_n(s) 
+= \frac{n^{-s}}{1 - 2^{1-s}}
+= \frac{n^{-s}}{1 - 2^1 2^{-s}}
+= \frac{n^{-s}}{1 - 2  e^{-s \ln(2) }}
+= \frac{e^{- \omega_n s}}{1 - 2  e^{- \varphi s}}
+= \frac{e^{- \omega_n (x + \i y)}}{1 - 2  e^{- \varphi (x + \i y)}}
+\end{equation}
+where we have again used $s = x + \i y$, defined $\omega_n = \ln(n)$ as before and additionally defined $\varphi = \ln(2)$ for convenience. Splitting this into expressions for real and imaginary part as functions of $x$ and $y$ is something that I really don't want to do by hand. Instead, let's use SageMath with the following code (using $w,p$ for $\omega_n, \varphi$):
+\begin{verbatim}
+var("x y w p")
+assume(x, "real")
+assume(y, "real")
+assume(w, "real"); assume(w >= 0)
+assume(p, "real"); assume(p >= 0)
+t = exp(-w*(x + I*y)) / (1 - 2*exp(-p*(x + I*y)))
+tr = t.real().simplify_full()
+ti = t.imag().simplify_full()
+latex(tr), latex(ti)
+\end{verbatim}
+This produces the following expressions (after some manual simplification of the output):
+\begin{eqnarray}
+\Re(x,y)
+= \frac{2 e^{p x} \sin(p y) \sin(w y) + (2 \cos(p y) e^{p x} - e^{2 p x}) \cos(w y)}
+       {4 \cos(p y) e^{p x + w x} - (e^{2 p x} + 4) e^{w x}} \\
+\Im(x,y)
+= \frac{2 e^{p x} \cos(w y) \sin(p y) - (2 \cos(p y) e^{p x} - e^{2 p x}) \sin(w y)}
+       {4 \cos(p y) e^{p x + w x} - (e^{2 p x} + 4) e^{w x}}
+\end{eqnarray}
+The Polya vector field for a single term would the be given by $u(x,y) = \Re(x,y), v(x,y) = -\Im(x,y)$ as usual and the full field would be given be re-assembling all the terms into the sum.
+
+% ToDo: Verify expression numerically...
+% For an implementation, use intermediates for common subexpressions:
+% sp = sin(py), sw = sin(wy), cp = cos(py), cw = cos(wy), ep = exp(px), ew = exp(wx)
+% d = 4 cp ep ew - (ep^2 + 4) ew, a = 2 cp ep - ep^2
+% Re = (2 ep sp sw + a*cw) / d, Im = (2 ep cw sp - a*sw) / d
+
+% Actually, replacing the latex(tr), latex(ti) line by just tr, ti and then translating
+% the result manually to latex might be more useful that massagign the latex output.
+% replacing the
+%   t = exp(-w*(x + I*y)) / (1 - 2*exp(-p*(x + I*y)))
+% by
+%   t = n^(-(x + I*y)) / (1 - 2^(1 - (x + I*y)))
+% in the Sage code (declaring n as another var in the 1st line), gives very different
+% and more complicated results for tr, ti. 
+
+\subsubsection{Potential}
+Finding a potential involves integrating $\Re$ with respect to $x$ and/or $\Im$ with respect to $y$. Unfortunately, that seems to be hard to do symbolically. Sage does not seem to succeed. When trying to just append \texttt{integrate(tr, x)} or \texttt{integrate(ti, y)}, Sage calculates for a very long time but then doesn't show any output. Let's try to manually massage the functions a bit further by introducing constant parameters $a_i$ in $\Re$ for all subexpressions that depend only on $y$ before trying to integrate $\Re$ with respect to $x$. 
+\begin{equation}
+\Re(x)
+= \frac{a_1 e^{p x} + ( a_2 e^{p x} - e^{2 p x}) a_3 }
+       {a_4 e^{p x + w x} - (e^{2 p x} + 4) e^{w x}}
+\end{equation}
+where
+\begin{equation}
+a_1 = 2 \sin(p y) \sin(w y), \,
+a_2 = 2 \cos(p y), \,
+a_3 = \cos(w y), \,
+a_4 = 4 \cos(p y) 
+\end{equation}
+We may also introduce constants $b_i$ for all subexpressions that depend only on $x$ in $\Im$ before trying to integrate $\Im$ with respect to $y$.
+\begin{equation}
+\Im(y)
+= \frac{2 b_1 \cos(w y) \sin(p y) - (2 \cos(p y) b_1 - b_1^2) \sin(w y)}
+{4 \cos(p y) b_1 b_2 - (b_1^2 + 4) b_2}
+\end{equation}
+where
+\begin{equation}
+b_1 = e^{p x}, \,
+b_2 = e^{w x}
+\end{equation}
+Let's try integrating $\Re$ with respect to $x$:
+\begin{verbatim}
+var("x w p a1 a2 a3 a4")
+num = a1*e^(p*x) + (a2*e^(p*x) - e^(2*p*x))*a3
+den = a4*e^(p*x+w*x) - (e^(2*p*x)+4)*e^(w*x)
+f = num/den
+f = f.simplify_full()
+F = integral(f, x)
+F
+\end{verbatim}
+So far, this doesn't seem to work. OK, let's try $\Im$ with respect to $y$ instead:
+\begin{verbatim}
+var("y w p b1 b2")
+num = 2*b1*cos(w*y)*sin(p*y) - (2*cos(p*y)*b1 - b1^2)*sin(w*y)
+den = 4*cos(p*y)*b1*b2 - (b1^2 + 4)*b2
+f = num/den
+f = f.simplify_full()
+F = integral(f, y)
+F
+\end{verbatim}
+This also does not yet seem to work out. Maybe try Mathematica or some other computer algebra systems. ...we'll see...
+
+
+\subsection{The Polya Vector Field and Potential via Binomial Sum}
+
+%\subsubsection{Vector Field}
+
+Next, we want to derive expressions that can be used for all $s \neq 1$ from formula (\ref{Eq:BinomialSum}) which was given by:
+\begin{equation}
+\zeta(s) 
+= \frac{1}{1 - 2^{1-s}} 
+  \sum_{n=0}^{\infty} \frac{1}{2^{n+1}}
+  \sum_{k=0}^n (-1)^k \binom{n}{k} (k+1)^{-s}
+=\sum_{n=0}^{\infty} \sum_{k=0}^n 
+ \frac{(-1)^k}{2^{n+1}} \binom{n}{k} \frac{(k+1)^{-s}}{1 - 2^{1-s}} 
+\end{equation}
+Again we want to derive expressions for real and imaginary parts for a general term of the sum. Here, the terms are of the form:
+\begin{equation}
+t_k(s) 
+= \frac{(k+1)^{-s}}{1 - 2^{1-s}} 
+= \frac{e^{-s \ln(k+1)} }{1 - 2  e^{-s \ln(2) }}
+= \frac{e^{- \omega_k (x + \i y)}}{1 - 2  e^{- \varphi (x + \i y)}}
+\end{equation}
+All the stuff before it boils down to being just a coefficient. We again used $s = x + \i y$, $\varphi = \ln(2)$ as before and now we use $\omega_k = \ln(k+1)$. The result looks exactly like what we had for the alternating sum in \ref{Eq:AlternatingTerm} just that we now need to replace $\omega_n$ by $\omega_k$. Everything else stays the same, so the formulas for real and imaginary part that we derived earlier can also be re-used just now with $w = \omega_k$ instead of $w = \omega_n$. That means, the formulas for the potential can also be re-used ...as soon as we succeed cracking these pesky integrals, that is.
+
+\subsection{The Polya Vector Field and Potential via Laurent Series}
+
+\subsubsection{Vector Field}
+Now we start with the representation of zeta via its Laurent series expansion given in (\ref{Eq:LaurentSeries}) as:
+\begin{equation}
+\zeta(s) 
+= \frac{1}{s-1} + \sum_{n=0}^{\infty} \frac{(-1)^n}{n!} \gamma_n (s-1)^n
+= \frac{1}{z} + \sum_{n=0}^{\infty} c_n z^n
+= \sum_{n=-1}^{\infty} c_n z^n
+\end{equation}
+where, for covenience, we have defined $z = s-1$ and called the coeffs $c_n = (-1)^n \gamma_n / n!, \, c_{-1} = 1$. What we now have to do is to find expressions for the Polya vector fields of $1/z$ and $z^n$ for a general nonnegative integer $n$. 
+
+\medskip
+Let's start with the $1/z$ part. We'll use SageMath to find real and imaginary part of complex inversion:
+\begin{verbatim}
+var("x y")
+assume(x, "real")
+assume(y, "real")
+t = 1 / (x + I * y)
+t.real(), t.imag()	
+\end{verbatim}
+which gives $(x/(x^2 + y^2), -y/(x^2 + y^2))$, so the Polya vector field for $1/z$ is given by:
+\begin{equation}
+\label{Eq:PolyaFieldLaurentInvTerm}	
+\boxed{
+u_{-1}(x,y) = \frac{x}{x^2 + y^2}, \quad % x / (x^2 + y^2)
+v_{-1}(x,y) = \frac{y}{x^2 + y^2} % = y / (x^2 + y^2)
+}
+\end{equation}
+% maybe use frac to make it look nicer
+We have given the $u,v$ the $-1$ index/subscript to indicate that these represent the vector field contribution from the $1/z = z^{-1}$ term. The intention is that the index matches the power of $z$.
+
+\medskip
+Now we turn to the contributions to the vector field from the $z^n$ terms for $n \geq 0$. Setting $z = x + \i y$ and expanding $z^n$ according to the binomial theorem, we get:
+\begin{equation}
+z^n = (x + \i y)^n = \sum_{k=0}^n \binom{n}{k}  x^k (\i y)^{n-k}
+\end{equation}
+To see what that means in terms of real and imaginary part of the result of $z^n$, we'll again use a little snippet of Sage code where we can tweak \texttt{n} and inspect the results:
+\begin{verbatim}
+var("x y")
+assume(x, "real")
+assume(y, "real")
+n = 5
+z = x + I*y
+w = z^n
+w.real(), w.imag()
+\end{verbatim}
+This code gives the following results for \texttt{n = 0..7}:
+\begin{verbatim}
+n  Real                                      Imag
+0: 1,                                        0 
+1: x,                                        y
+2: x^2 - y^2,                                2*x*y
+3: x^3 - 3*x*y^2,                            3*x^2*y - y^3
+4: x^4 - 6*x^2*y^2  + y^4,                   4*x^3*y - 4*x*y^3
+5: x^5 - 10*x^3*y^2 + 5*x*y^4,               5*x^4*y - 10*x^2*y^3 + y^5
+6: x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+7: x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
+\end{verbatim}
+We always take binomial coeffs from the $n$-th line of Pascal's triangle. The coeffs of each line go alternatingly into the real and imaginary part. Within these parts, there's also a sign alternation. They multiply terms of the form $x^k y^{n-k}$ where $k$ starts at $n$ in the real part and at $n-1$ in the imaginary part and decrements by $2$ from term to term. We can make a general formula from these observations:
+\begin{equation}
+\label{Eq:PolyaFieldLaurentPowTerm}
+\boxed{		
+u_n(x,y) = \sum_{k=0}^{n/2} (-1)^k \binom{n}{2 k} x^{n-2k} y^{2k}
+,\qquad
+v_n(x,y) = -\sum_{k=0}^{(n-1)/2} (-1)^k \binom{n}{2k+1} x^{n-(2k+1)} y^{2k+1}
+}
+\end{equation}
+% Maybe move these derivations into a separate paper about general Polya potentials of complex functions and refer to it here. 
+So, these are the $u_n(x,y), v_n(x,y)$ parts of the Polya vector field of a single term $z^n = (x + \i y)^n$ for $n \geq 0$. The upper summation limits are understood to be meant in the sense of integer division, i.e. if the result of the division by 2 is a non-integer, it will be rounded down towards zero. There is a little complication for the edge case of $n=0$ for $v_n$, i.e. for $v_0(x,y)$. In this case, the sum would formally run from $0$ to $-1/2$. Due to the integer division behavior, it actually runs from $0$ to $0$, i.e. produces exactly one term for $k=0$ which according to the formula turns out to be $v_0(x,y) = 0 x^{-1} y^1$ if we assume the 0-choose-1 binomial coefficient to be zero, which is the common convention. This result is actually kinda correct mathematically - we just want $v_0(x,y)$ to be the zero function. But when coding this stuff up, we need to be careful to treat this edge case correctly because it doesn't really fit the pattern of an $x^n y^m$ term for $n,m \geq 0$. In a coding context that works with bivariate polynomials, we might probably want to express the zero function as $v_0(x,y) = 0 x^0 y^0$ instead. With these expressions and our previously found expressions for the $u_{-1}(x,y), v_{-1}(x,y)$ parts of $1/z = z^{-1}$, we can now re-assemble the complete Polya vector field of the infinite Laurent series. That gives us $u(x,y), v(x,y)$, i.e. the Polya vector field of $\zeta(s)$. It is given by:
+\begin{equation}
+\label{Eq:PolyaFieldLaurent}	
+\boxed{
+ u(x,y) = \frac{x}{x^2 + y^2} + \sum_{n=0}^{\infty} c_n u_n(x,y), \quad
+ v(x,y) = \frac{y}{x^2 + y^2} + \sum_{n=0}^{\infty} c_n v_n(x,y),  
+}
+\quad \text{where } c_n = \frac{(-1)^n \gamma_n}{n!}
+\end{equation}
+where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$. Be careful to not forget about the offset of $-1$ for $x$ with respect to $\Re(s)$ because we used $z = s-1$ for the derivation. The $\gamma_n$ are still the Stieltjes constants, as before. %I'll abstain from giving a formula for $v(x,y)$ because for the purpose of deriving a potential, we will integrate $u$ with respect to $x$ rather than $v$ with respect to $y$ anyway. We just need to be careful in the case of odd $n$ to add some $\pm y^{n+1} / (n+1)$ term to the potential for the $f(y)$ integration constant. I'll explain this later.
+
+
+
+
+
+
+
+
+\subsubsection{Potential}
+To find the potential for the $1/z$ part, let's use the result in (\ref{Eq:PolyaFieldLaurentInvTerm}) and integrate $u$ with respect to $x$ and $v$ with respect to $y$:  
+\begin{verbatim}
+var("x y")  
+u = x / (x^2 + y^2)
+v = y / (x^2 + y^2)
+Pu = integral(u, x)
+Pv = integral(v, y)
+Pu, Pv
+\end{verbatim}
+which gives $(1/2*\log(x^2 + y^2), 1/2*\log(x^2 + y^2))$, so the Polya potential for $1/z$ is given by:
+\begin{equation}
+\label{Eq:PolyaPotentialLaurentInvTerm}	% call the other term for z^n ...PowTerm
+\boxed{p_{-1}(x,y) = \frac{\ln(x^2 + y^2)}{2}}
+\end{equation}
+By the way, in this case, integrating $u$ with respect to $x$ and $v$ with respect to $y$ yielded the exact same results here and that common result is our (contribution to the) potential. In a more general case where a vector field functions $u,v$ contain terms that depend on $x$ or $y$ alone and/or a constant term, that doesn't need to be the case. These terms need to be taken into account by "integration constants", i.e. when integrating $u$ with respect to $x$, we could have to add a function $f(y)$ as integration constant (constant with respect to $x$ but can depend on $y$). That $f(y)$ would show up as terms independent of $x$ in the integral of $v$ with respect to $y$. Vice versa, $v$ integrated with respect to $y$ may miss terms that depend only on $x$ which will show up only in the integral of $u$ with respect to $x$. That's why we need to compute both integrals. The "integration constants" turned out to be zero here, though. Hence, both integrals produced the exact same result. More on that later, when we consider the $z^n$ terms.
+
+\medskip
+To find the potential for the $z^n$ terms, we'll need to take (\ref{Eq:PolyaFieldLaurentPowTerm}) which is repeated here:
+\begin{equation}
+u_n(x,y) = \sum_{k=0}^{n/2} (-1)^k \binom{n}{2 k} x^{n-2k} y^{2k}
+,\qquad
+v_n(x,y) = -\sum_{k=0}^{(n-1)/2} (-1)^k \binom{n}{2k+1} x^{n-(2k+1)} y^{2k+1}
+\end{equation}
+and integrate $u_n(x,y)$ with respect to ("wrt") $x$ and $v_n(x,y)$ wrt to $y$. We'll call the integration results $U_n, V_n$ respectively:
+\begin{equation}
+U_n(x,y) = \sum_{k=0}^{n/2} \binom{n}{2 k} \frac{(-1)^k x^{n-2k+1} y^{2k}}{n-2k+1}
+,\qquad
+V_n(x,y) = -\sum_{k=0}^{(n-1)/2} \binom{n}{2k+1} \frac{(-1)^k x^{n-(2k+1)} y^{2k+2}}{2k+2}
+\end{equation}
+When doing these integrations, all the terms that involve both $x$ and $y$ should match in both of these integrals. But if $u$ contains terms that don't depend on $y$, i.e. a constant term and/or terms that only have $x$ in them but no $y$, then the integral of $u$ wrt $x$ may contain some etxra terms that only depend on $x$ and don't appear in the integral of $v$ wrt $y$. Likewise, if $v$ has terms that don't depend on $x$, they will give rise to terms that only depend on $y$ in the integral of $v$ wrt to $y$ which do not show up in the integral of $u$ wrt $x$. Such additional terms in either of these integrals can be regarded as integration constants - they are constant with respect to our integration variable but may depend on the other variable.
+
+\medskip
+I think, we can in general just always use $V_n(x,y)$ and add to it a $x^{n+1}/(n+1)$ term as integration constant because all the $u_n$ have exactly one term that is independent of $y$ and that term is always $x^n$ which, when integrated, gives $x^{n+1}/(n+1)$. Verify that! So that would give:
+\begin{equation}
+\label{Eq:PolyaPotentialLaurentTerm}	
+\boxed{	
+P_n(x,y) = \frac{x^{n+1}}{n+1} 
+           -\sum_{k=0}^{(n-1)/2} \binom{n}{2k+1} \frac{(-1)^k x^{n-(2k+1)} y^{2k+2}}{2k+2}
+}
+\end{equation}
+VERIFY that! 
+The full Polya potential would then be given by re-assembling the sum:
+\begin{equation}
+\label{Eq:PolyaPotentialLaurent}	
+\boxed{
+P(x,y) = \frac{\ln(x^2 + y^2)}{2} + \sum_{n=0}^{\infty} c_n P_n(x,y)
+}
+\quad \text{where } c_n = \frac{(-1)^n \gamma_n}{n!}
+\end{equation}
+
+%  \frac{\ln(x^2 + y^2)}{2}
+% Maybe to avoid the complication of the edge case for n=0, we could actually just leave the term out by adjusting some summation limit and perhaps dragging the term out of the sum - we'll see. I think, it's simply P_0(x,y) = x. Maybe drag the n=1 term out as well. We have P_1(x,y) = 1. But that doesn't really matter anyway. It's just a constant that shifts the whole function up or down. Maybe it's more elegant to include it for consistency. Not sure yet.
+
+
+
+
+
+...TBC...
+
+
+%To find the potential for the $z^n$ terms, we'll need to take (\ref{Eq:PolyaFieldLaurentPowTerm}) and integrate that $u_n(x,y)$ with respect to $x$. When $n$ is even, we can assume that the part of the potential that depends only on $y$ (the x-integration constant) is just zero because in these cases, the imaginary $v(x,y)$ parts have no term that purely depends on $y$ but not on $x$, as can be seen from the sage output. For odd $n$, the $f(y)$ term is given by $\pm y^{n+1} / (n+1)$ where $+$ is used for $1,5,9,13,...$ and $-$ for $3,7,11,15,... $This results from observing the purely $y$-dependent part of the imaginary part $v$ and integrating it with respect to $y$. I didn't give a full formula for $v = v_n(x,y)$ because the only thing that will be different when integrating $v$ with respect to $y$ rather than $u$ with respect to $x$ is the possible presence of the integral of an $\pm y^n$ term which we can just add as integration constant $f(y)$ to our result of integrating $u$ with respect to $x$. In general, one would integrate $u$ wrt $x$ and $v$ wrt to $y$. All terms that depend on both $x,y$ would match. But $u$ wrt $x$ could have additional $x$-only terms and $v$ wrt $y$ could have additional $y$-only terms. When we integrate $u$ wrt $x$, we get all the common terms that depend on both $x$ and $y$ plus all the $x$-only terms, so the only possibly missing thing are the $y$-only terms, if present. I didn't bother to derive an expression for the full $v$ because
+
+%Oh - but wait - it must be negated for the Polya field, so maybe the +- must be the other way around.
+% move to the Potential section
+
+
+% Maybe demonstrate that with an example of p(x,y) = 2x^5 + 3x^4 + 7x^2y^3
+
+%Spoiler: this time, we will succeed with the integrals. 
+
+%What we will have to do here is to find potent
+
+%\subsubsection{Potential}
+
+
+% https://mathworld.wolfram.com/RiemannZetaFunction.html
+% Eq 20 is a reasonably simple looking formula for $\Re(s) > 0$
+% Eq 21 should work for any s != 1
+
+%\subsection{Real and Imaginary Parts}
+%
+%\href{https://www.youtube.com/watch?v=3XWI7-k_Yhw}{This YouTube video 3XWI7-k\_Yhw} at around 3:28 gives a formula for real and imaginary parts of the Zeta function (only applicable for $a = \Re(s) > 1$, I think):
+%\begin{equation}
+%\zeta(a + \i b) 
+%= \sum_{n=1}^{\infty} \frac{1}{n^{a + \i b}}
+%= \sum_{n=1}^{\infty} \frac{1}{n^a} e^{-\i b}
+%=      \sum_{n=1}^{\infty} \frac{\cos(b \ln n)}{n^a} 
+%  - \i \sum_{n=1}^{\infty} \frac{\sin(b \ln n)}{n^a} 
+%\end{equation}
+%where the first transformation is due to $n^{a + \i b} = n^a e^{\i b}$ but I have no idea where the $\ln n$ factors inside the cosine and sine come from. It would actually make more sense to me if they were just absent. [FIGURE OUT!]. However, with or without these frequency scale factors, this splitting into real and imaginary parts might be the first step to find an expression for the Polya potential of $\zeta(s)$. I think, the Polya vector field for a single term in the sum, i.e. for one particular $n$ would be:
+%\begin{equation}
+%u(x,y) = \frac{\cos(k y)}{n^x}, \quad
+%v(x,y) = \frac{\sin(k y)}{n^x}
+%\end{equation}
+%where either $k = \ln n$ or $k = 1$ depending on whether I am right or the video is right (I've switched to using $x,y$ instead of $a,b$). ToDo: check that this defines a potential field (it should!), then find an expression for the potential. ...ah - I think, the mistake is that  $n^{a + \i b} = n^a e^{\i b}$ is wrong. It must actually be $n^{a + \i b} = n^a n^{\i b}$. Then, one can transform $n^{\i b} = e^{\i b \ln n}$. However, I think, finding a Polya potential using this vector field will only work for the uninteresting $\Re(s) > 1$ part. I don't think, that we can just reflect the potential using the reflection formula. We probably have to use the reflection formula first and use that to find the potential for the interesting part of the zeta function - which might be very difficult.
+
+
+\begin{thebibliography}{9}
+	
+\bibitem{Edwards} H.M. Edwards, \textit{Riemann's Zeta Function},
+\href{http://www.stat.ucla.edu/~ywu/Riemann.pdf}{www.stat.ucla.edu/\~ywu/Riemann.pdf}
+
+\bibitem{Wolfram} Wolfram Mathworld, \textit{RiemannZetaFunction},
+\href{https://mathworld.wolfram.com/RiemannZetaFunction.html}{mathworld.wolfram.com/RiemannZetaFunction.html}
+
+\bibitem{Boost} Boost, \textit{Riemann Zeta Function}, \\
+\href{https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html}{https://www.boost.org/doc/libs/1\_65\_0/libs/math/doc/html/math\_toolkit/zetas/zeta.html}
+
+\bibitem{Wiki} Wikipedia, \textit{Riemann\_zeta\_function},
+\href{https://en.wikipedia.org/wiki/Riemann_zeta_function}{en.wikipedia.org/wiki/Riemann\_zeta\_function}
+
+\end{thebibliography}
+ 
+ 
+\end{document}
+
+
+
+\begin{comment}
+	
+
+Links:
+https://en.wikipedia.org/wiki/Riemann_zeta_function
+https://de.wikipedia.org/wiki/Riemannsche_Zeta-Funktion
+https://mathworld.wolfram.com/RiemannZetaFunction.html
+https://brilliant.org/wiki/riemann-zeta-function/#_=_
+
+https://www.sciencedirect.com/topics/mathematics/riemann-zeta-function
+List of book excerpts relating to zeta
+
+https://www.mathematik.uni-muenchen.de/~forster/v/zeta/RZF_chap01.pdf
+
+http://www.stat.ucla.edu/~ywu/Riemann.pdf  (Whole Book on Zeta!)
+
+https://dlmf.nist.gov/search/search?q=riemann+zeta#
+Lots of stuff about Zeta
+
+
+https://dlmf.nist.gov/25.2#E1  Sum expansions of Zeta
+
+Evaluation:
+https://en.wikipedia.org/wiki/Riemann_zeta_function#Numerical_algorithms
+https://en.wikipedia.org/wiki/Odlyzko%E2%80%93Sch%C3%B6nhage_algorithm
+https://en.wikipedia.org/wiki/Riemann%E2%80%93Siegel_formula
+http://numbers.computation.free.fr/Constants/Miscellaneous/zetaevaluations.html
+
+Questions:
+-Could there be a process similar to analytic continuation for curl-free
+ vector fields, i.e. potnetial fields? Maybe some sort of "curl-free 
+ continuation" or "conservative continuation" or "symmetric continuation" 
+ (where the "symmetric" refers to the Jacobian matrix)?
+-What about the multi-valuednessof the logarithm that occurs in the potential for
+ the Laurent series? Maybe we somehow need to add provisions to select the correct 
+ branch to make the potential continuous?
+-When we have formulas for the Polya potential, maybe analyze it from a 
+ differential geometry point of view. What's the curvature, Laplacian? What 
+ are the geodesics that connect neighboring minima/maxima on the critical line? 
+ Maybe the whole geodesic is on the critical line? If so, what does that tell us?
+ At the extrema, what is the direction of the biggest curvature? I think, that's
+ the eigenvector of the Hessian that corresponds to the larger eigenvalue.
+-What if we consider curves in R^3 given by x(t) = 1/2, y(t) = t, z(t) = P(x(t),y(t))
+ where t = [0,inf), i.e. curves whose x,y coordinates are the critical line and whose z-coordinate is given by the Polya potential of zeta. Maybe analyze curvature and 
+ torsion of such curves. If we want to use t = [0,1), we could use y(t) = t / (1-t)
+ instead. That function goes from 0 to inf as t goes from 0 to 1
+
+ToDo:
+-Maybe split out a paper about computing Polya potentials for some simple functions
+ like 1/z, z^n. That paper could then also tackle some more functions like exp(z), sin(z),
+ z^(n), etc. Cite that paper here.
+
+-Try to write a C++ function that can take a vector field as input and compute a
+ potential for it using some sort of numerical intragation. Maybe trapezoidal 
+ and/or the inverse of the central difference differentiation.
+
+\end{comment}

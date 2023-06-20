@@ -11258,7 +11258,7 @@ void testRiemannZeta()
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -6.4e-12
 
 
-  z = RZF::evalViaBoostSum(s,  5); e = t-z; ok &= abs(e) < 2.e-5;  // e ~ 1.2e-5 
+  z = RZF::evalViaBoostSum(s, 5);  e = t-z; ok &= abs(e) < 2.e-5;  // e ~ 1.2e-5 
   z = RZF::evalViaBoostSum(s, 10); e = t-z; ok &= abs(e) < 3.e-10; // e ~ 2.5e-10
   z = RZF::evalViaBoostSum(s, 15); e = t-z; ok &= abs(e) < 7.e-15; // e ~ 6.2e-15
   z = RZF::evalViaBoostSum(s, 20); e = t-z; ok &= abs(e) < 5.e-16; // e ~ 4.4e-16
@@ -11327,12 +11327,12 @@ void testRiemannZeta()
 
   s = 2.0 + 1.0*i; x = real(s); y = imag(s);
   t = 1.15035570325490267174 - 0.4375308659196078811175*i; // riemannzeta(2 + I)
-  RZF::vectorFieldViaOriginalSum(  x, y, &u, &v, N);  z = u - i*v; e = t-z;
+  RZF::vectorFieldViaOriginalSum(x, y, &u, &v, N);  z = u - i*v; e = t-z;
   RZF::vectorFieldViaLaurentSeries(x, y, &u, &v, 11); z = u - i*v; e = t-z; // ~ e-10
   // OK, at s = 2+i, the computation of the Polya vector field via the Laurent series is quite
   // accurate. So, the formulas/algorithm is apparently correct.
 
-  p  = RZF::potentialViaOriginalSum(  x, y, 10000);  // 1.4665 763544930253
+  p  = RZF::potentialViaOriginalSum(x, y, 10000);  // 1.4665 763544930253
   pl = RZF::potentialViaLaurentSeries(x, y, 11);     // 1.4665 826607566605
 
 
@@ -11347,7 +11347,7 @@ void testRiemannZeta()
   // computation to the original sum and subtracting the results at a value where both converge.
   // I've chosen s =2 for this:
   s = 2; x = real(s); y = imag(s);
-  p  = RZF::potentialViaOriginalSum(  x, y, 10000000);  // 1.1512398682263651
+  p  = RZF::potentialViaOriginalSum(x, y, 10000000);  // 1.1512398682263651
   pl = RZF::potentialViaLaurentSeries(x, y, 11);        // 1.1512398682263651
   double d = p - pl;                                    // is now zero, after nromalization
 
@@ -11386,13 +11386,63 @@ void testRiemannZeta()
   ev = v - imag(t);     // 1.0510784465012080e-09
   ok &= abs(ev) <= 1.e-8;
 
+  // Test numerically evaluating the Laurent based potential at the zeros of zeta:
+
+  // Helper/convenience function to evaluate zeta via numerically differentiating the potential 
+  // computed via the Laurent series based formula:
+  auto zetaViaLaurentPot = [](Complex s, int numTerms, double hx, double hy)
+  {
+    double x = real(s); 
+    double y = imag(s); 
+    double pu, pl, u, v;
+
+    // Partial derivative of potential with respect to x:
+    pu = RZF::potentialViaLaurentSeries(x+hx, y, numTerms);
+    pl = RZF::potentialViaLaurentSeries(x-hx, y, numTerms);
+    u  = (pu-pl)/(2*hx);
+
+    // Partial derivative of potential with respect to y:
+    pu = RZF::potentialViaLaurentSeries(x, y+hy, numTerms);
+    pl = RZF::potentialViaLaurentSeries(x, y-hy, numTerms);
+    v  = (pu-pl)/(2*hy);
+
+    return Complex(u, -v);
+  };
+
+
+  s = 2.0; 
+  t = pi*pi/6.0; 
+  z = RZF::evalViaBoostSum(s, 15);  e = t-z; ok &= abs(e) < 7.e-15;
+
+
+  s = 2.0 + 1.0*i; 
+  t = 1.15035570325490267174 - 0.4375308659196078811175*i; 
+  //z = RZF::evalViaBoostSum(s, 15); e = t-z; ok &= abs(e) < 5.e-6;  // FAILS!
+  z = zetaViaLaurentPot(s, 11, h, h); e = t-z; ok &= abs(e) < 2.e-9;
+
+
+
+  s = 0.5 + 14.134725142 * i; x = real(s); y = imag(s);  // First nontrivial zero of zeta
+  t = 0;
+  h  = 0.01;
+  z = RZF::evalViaBoostSum(s, 5);     e = t-z; ok &= abs(e) < 5.e-6;
+
+  z = zetaViaLaurentPot(s, 11, h, h); e = t-z; 
+  // Error is through the roof! Its around 20 + 20*i. I guess, the series converges very slowly
+  // that far away from the expansion center s = 1. ToDo: Observe iterations in debugger
+
+
+
+
   // Test:
   z = RZF::dirichletTermViaReIm(s, 5);
 
 
 
 
-
+  //-----------------------------------------------------------------------------------------------
+  // This code may go into an extra function. it has nothing to do directly with the zeta function.
+  // Only indirectly in the sense of being a preliminary to it:
 
   //---------------------------------------------------------------------------
   //
@@ -11559,6 +11609,8 @@ void testRiemannZeta()
 
   RAPT::rsAssert(ok);
 
+
+
   // Test creating the Polya potential. We also create the corresponding arrays for the real and 
   // imaginary part so we can compare results of evaluating them to results of numerically 
   // differentiating the potential.
@@ -11712,11 +11764,11 @@ void plotZetaPotential()
     }
   }
 
-
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
   plt.plot3D();
 
-  // The first few nontrivial zeros of zeta are at x = 1/2, y = 14.1, 21.0, 25.0, 30.4, 32.9, 37.6.
+
+
 
   // Observations:
   // -There seem to be only saddles and no extrema except for the hole/funnel at s = 1 where it 
@@ -11725,7 +11777,11 @@ void plotZetaPotential()
   //  Maybe the evaluation algo is not yet up to it?
   // -When zooming in into the first nontrivial zero at s = 1/2 + 14.1i, it looks strange - as if 
   //  there is no saddle. Maybe that's just the weird perspectivic plot? Try to evaluate the 
-  //  numerical derivative at the 1st nontrivial zero.
+  //  numerical derivative at the 1st nontrivial zero. ...OK - done. It's in the function 
+  //  testRiemannZeta(); and the line looks like z = zetaViaLaurentPot(s, 11, h, h); the resulting
+  //  error with 11 terms is about 20 + 20*i. Clearly, the potential calculations has not yet 
+  //  converged. That means all results in the plots here might be meaningless and the experiments
+  //  can be done properly only when we have more accurate evaluation functions in place.
 }
 
 

@@ -7066,7 +7066,9 @@ public:
    static std::complex<double> evalViaBoostSum(std::complex<double> s, int n);
    // implements this formula:
    // https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
-
+   //
+   // Function returns totally wrong result for s = 2.0 + 1.0*i; There's some code in the test
+   // function that tests this but is currently commented out... -> figure this out!
 
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of the Polya vector field of zeta */

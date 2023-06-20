@@ -11551,28 +11551,49 @@ void testRiemannZeta()
 
   // Test creating the Polya potential. We also create the corresponding arrays for the real and 
   // imaginary part so we can compare results of evaluating them to results of numerically 
-  // differentiating the potential. ...TBC...
+  // differentiating the potential.
 
-  // shorthand:
+  double pc[6];        // Coeffs of P
+  int ppx[6], ppy[6];  // Powers of x and y in P
+  int mp;
+  double tol = 0;
+
+  // Test coeffcient calculation function by using the explicit formula form the paper:
+  for(n = 1; n <= 7; n++)  // start at n=0 later
+  {
+    mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);
+    ok &= mp ==  (n-1)/2 + 2; // verify!
+
+    for(int k = 0; k < mp-1; k++) // mp-1 bcs the last is for the "integration constant"
+    {
+      double t = -pow(-1.0, k) * rsBinomialCoefficient(n, 2*k+1) / (2*k+2);
+
+      ok &= abs(pc[k]-t) <= tol;
+
+
+      int dummy = 0;
+
+    }
+
+
+    int dummy = 0;
+  }
+
+
+
+  // Shorthand:
   auto evalPoly = [](double x, double y, int m, double* coeffs, int* xPowers, int* yPowers)
   {
     return rsEvaluateBivariatePolynomial(x, y, m, coeffs, xPowers, yPowers);
   };
 
-  double pc[6];        // Coeffs of P
-  int ppx[6], ppy[6];  // Powers of x and y in P
-  int mp;
-
-  // n = 7;  // dont go over 7 or increase the array sizes for pc, etc.
-
-  // do this in a loop n=0..7:
-
-  double tol = 1.e-4;
+  // Test of numercially differentiting the potential to see, if we get back the functions defined
+  // by re, im (x + i*y)^n:
+  tol = 1.e-4;
   x   = 2;
   y   = 3;
   h   = 0.0001;
-
-  for(n = 0; n <= 7; n++)
+  for(n = 0; n <= 7; n++)  // dont go over 7 or increase the array sizes for pc, etc.
   {
     double ua, va;  // approximations of u,v using a numerical derivative on the potential
     double err;

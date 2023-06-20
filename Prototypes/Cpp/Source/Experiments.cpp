@@ -11781,7 +11781,21 @@ void plotZetaPotential()
   }
 
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
-  plt.plot3D();
+  plt.addCommand("set palette rgbformulae 8, 9, 7");
+  plt.addCommand("set style fill solid 1.0 noborder");
+  plt.addCommand("set pm3d depthorder noborder");
+  plt.addCommand("set pm3d lighting specular 0.6");
+
+  //plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w lines notitle");
+  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
+  plt.invokeGNUPlot();
+
+
+
+  //plt.plot3D();
+  // Shading commands are taken from here 
+  //   https://gnuplot.sourceforge.net/demo_5.2/pm3d_lighting.html
+  // but they don't seem to work. Maybe because the "with pm3d" in the splot command must be added
 
 
 
@@ -11801,6 +11815,10 @@ void plotZetaPotential()
   //  ...OK - now with 31 terms, the surface looks very different indeed. But I think, the sum is
   //  still not yet converged. The error of computing zeta via numeric differentiation is still 
   //  high. Maybe we need yet more terms. Maybe try 63.
+
+  // ToDo:
+
+  //
 }
 
 

@@ -7279,6 +7279,10 @@ void rsRiemannZetaFunction::vectorFieldViaLaurentSeries(
 
 double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int numTerms)
 {
+  static const double K = -0.24323834874662564;
+  // Constant offset to make output zero at (x,y) = (0,0)
+
+
   double sum = 0;
   for(int n = 2; n <= numTerms; n++)
   {
@@ -7286,7 +7290,7 @@ double rsRiemannZetaFunction::potentialViaOriginalSum(double x, double y, int nu
     //sum += cos(w*y) / (w *pow(n, x));  // this formula looks nicer in a textbook
     sum += exp(-w*x) * cos(w*y) / w;     // this formula is more efficient
   }
-  return x - sum;
+  return K + x - sum;
 }
 
 double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int numTerms)

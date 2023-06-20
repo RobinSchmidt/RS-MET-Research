@@ -11322,35 +11322,62 @@ void testRiemannZeta()
   // OK, at s = 2+i, the computation of the Polya vector field via the Laurent series is quite
   // accurate. So, the formulas/algorithm is apparently correct.
 
-  // Next step: compute the Polya potential via the Laurent series, compare it to the 
-  // Polya-potential computed by the original formula ...but the problem seems to be the the
-  // original formula and the Laurent series do not seem to converge quickly for some common
-  // point. The Laurent seris converges quickly for s close to 1, the original sum converges 
-  // quickly for large real part of s. We should pick a point where both converge reasonably 
-  // fast for testing and/or may use a lot of terms in the original sum.
-  // ...TBC...
+  p  = RZF::potentialViaOriginalSum(  x, y, 10000);  // 1.4665 763544930253
+  pl = RZF::potentialViaLaurentSeries(x, y, 11);     // 1.4665 826607566605
 
-  p  = RZF::potentialViaOriginalSum(  x, y, 10000);  // ~ 1.71
-  pl = RZF::potentialViaLaurentSeries(x, y, 11);     // ~ 0.93
-  // They differ. I think, it's because the two ways of computing a potential have a different 
-  // constant offset. Potentials are not unique. When using both potential functions to compute 
-  // zeta via numerical derivatives, they yield similar results. Maybe we should try to "normalize"
-  // all the potential computing functions perhaps by fixing the value at 0 or at infinity or 
-  // whatever is convenient.
 
-  // Maybe normalize them at (2,0) which is a point wher all formulas converge:
-  //s = 2; x = real(s); y = imag(s);
-  //p  = RZF::potentialViaOriginalSum(  x, y, 10000000);  // 1.3944782169729908
-  //pl = RZF::potentialViaLaurentSeries(x, y, 11);        // 0.61194119166930305
-
+  // We want to normalize the potential such that it has the value 0 at (x,y) = (0,0). At (0,0),
+  // we nee to use the Laurent series because the roiginal sum diverges there:
   s = 0; x = real(s); y = imag(s);
   //p  = RZF::potentialViaOriginalSum(  x, y, 10000000);  // divergent
   pl = RZF::potentialViaLaurentSeries(x, y, 11);        // almost zero due to normalization
 
+  // Maybe normalize them at (2,0) which is a point wher all formulas converge:
+  // The original sum was normalized by comparing the output of the already normalized Laurent
+  // computation to the original sum and subtracting the results at a value where both converge.
+  // I've chosen s =2 for this:
+  s = 2; x = real(s); y = imag(s);
+  p  = RZF::potentialViaOriginalSum(  x, y, 10000000);  // 1.1512398682263651
+  pl = RZF::potentialViaLaurentSeries(x, y, 11);        // 1.1512398682263651
+  double d = p - pl;                                    // is now zero, after nromalization
+
+  // Now we use Laurent and original potential to compute zeta(2 + i) via numerical differentiation 
+  // of the potential:
+
+  s = 2.0 + 1.0*i; x = real(s); y = imag(s);
+  t = 1.15035570325490267174 - 0.4375308659196078811175*i; // riemannzeta(2 + I)
 
   h  = 0.0001;
   double eu, ev;
 
+  // Via original sum:
+  N  = 10000;
+  pu = RZF::potentialViaOriginalSum(x+h, y, N);
+  pl = RZF::potentialViaOriginalSum(x-h, y, N);
+  u  = (pu-pl)/(2*h);
+  eu = u - real(t);     // 5.9488977676158683e-05
+  pu = RZF::potentialViaOriginalSum(x, y+h, N);
+  pl = RZF::potentialViaOriginalSum(x, y-h, N);
+  v  = -(pu-pl)/(2*h);
+  ev = v - imag(t);     // -3.8215149125941927e-05
+
+  // Now via Laurent series:
+  N  = 11;
+  pu = RZF::potentialViaLaurentSeries(x+h, y, N);
+  pl = RZF::potentialViaLaurentSeries(x-h, y, N);
+  u  = (pu-pl)/(2*h);
+  eu = u - real(t);     // -1.0419010099127490e-09
+  pu = RZF::potentialViaLaurentSeries(x, y+h, N);
+  pl = RZF::potentialViaLaurentSeries(x, y-h, N);
+  v  = -(pu-pl)/(2*h);
+  ev = v - imag(t);     // 1.0510784465012080e-09
+
+
+
+  // Test:
+  z = RZF::dirichletTermViaReIm(s, 5);
+
+  /*
   // Once again via original sum:
   N  = 100000;
   pu = RZF::potentialViaOriginalSum(x+h, y, N);
@@ -11378,7 +11405,6 @@ void testRiemannZeta()
   // increase for couple of dozens of iterates and only go down to zero later? Could that be the 
   // case? Normally, we assume thatthe later contribution are ever smaller refinements but maybe
   // that's not the case initially? Maybe we are just not precise enough to 
-
 
   N = 11; // test
   s = 1.2 + 0.1*i; x = real(s); y = imag(s);
@@ -11410,12 +11436,13 @@ void testRiemannZeta()
   // be the case? 
   // OK - found it! the mistake was that the a-array was declared as int so the coeffs were 
   // rounded. Now we seem to get better precision
-  // 
+  //
+  */
 
 
 
-  // Test:
-  z = RZF::dirichletTermViaReIm(s, 5);
+
+
 
   //---------------------------------------------------------------------------
   //

@@ -11605,7 +11605,7 @@ void testRiemannZeta()
     // Target values for u,v:
     u   = evalPoly(x, y, mu, uc, upx, upy);
     v   = evalPoly(x, y, mv, vc, vpx, vpy);
-    //p   = evalPoly(x, y, mp, pc, ppx, ppy); // bonus
+    //p   = evalPoly(x, y, mp, pc, ppx, ppy); // bonus, not used in test
 
     // Check u against numercial partial derivative of p wrt x:
     pu  = evalPoly(x+h, y, mp, pc, ppx, ppy);

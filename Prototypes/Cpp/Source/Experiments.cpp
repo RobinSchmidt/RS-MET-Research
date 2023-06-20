@@ -11744,7 +11744,7 @@ void plotZetaPotential()
 
 
   xMin = -6;  xMax =  2; yMin =  -4; yMax =  +4; Nx = 41; Ny = 41; // 
-  xMin = -8;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 41; Ny = 41; // 
+  xMin = -8;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
 
   //xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // pole at s = 1
   //xMin = 0.9; xMax = 1.1; yMin = -0.1; yMax = +0.1; Nx = 21; Ny = 21; // pole again, zoomed in
@@ -11785,6 +11785,10 @@ void plotZetaPotential()
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
   plt.addCommand("set pm3d lighting specular 0.6");
+
+  plt.addCommand("set term wxt background rgb \"black\"");
+
+
 
   //plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w lines notitle");
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");

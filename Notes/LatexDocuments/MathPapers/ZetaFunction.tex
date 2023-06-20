@@ -247,6 +247,7 @@ The so found expression looks rather nice and simple but let's still keep in min
 
 
 \subsection{The Polya Vector Field and Potential via Alternating Sum}
+[This section did not yet succeed to crack the required integrals so you may want to skip it and go directly to the derivation of the Laurent series based expression of the potential]
 
 \subsubsection{Vector Field}
 To find expressions for the Polya vector field for $\Re(s) > 0$, we start with the alternating sum formula given in (\ref{Eq:AlternatingSum}) which we repeat here in a slightly different form:
@@ -433,7 +434,7 @@ n  Real                                      Imag
 6: x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      6*x^5*y - 20*x^3*y^3 + 6*x*y^5
 7: x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
 \end{verbatim}
-We always take binomial coeffs from the $n$-th line of Pascal's triangle. The coeffs of each line go alternatingly into the real and imaginary part. Within these parts, there's also a sign alternation. They multiply terms of the form $x^k y^{n-k}$ where $k$ starts at $n$ in the real part and at $n-1$ in the imaginary part and decrements by $2$ from term to term. We can make a general formula from these observations:
+We always take binomial coeffs from the $n$-th line of Pascal's triangle. The coeffs of each line go alternatingly into the real and imaginary part. Within these parts, there's also a sign alternation. They multiply terms of the form $x^k y^{n-k}$ where $k$ starts at $n$ in the real part and at $n-1$ in the imaginary part and decrements by $2$ from term to term. We can make general formulas from these observations (these formulas aren't supposed to be obvious and took me quite a while to figure out):
 \begin{equation}
 \label{Eq:PolyaFieldLaurentPowTerm}
 \boxed{		
@@ -493,7 +494,7 @@ V_n(x,y) = -\sum_{k=0}^{(n-1)/2} \binom{n}{2k+1} \frac{(-1)^k x^{n-(2k+1)} y^{2k
 When doing these integrations, all the terms that involve both $x$ and $y$ should match in both of these integrals. But if $u$ contains terms that don't depend on $y$, i.e. a constant term and/or terms that only have $x$ in them but no $y$, then the integral of $u$ wrt $x$ may contain some etxra terms that only depend on $x$ and don't appear in the integral of $v$ wrt $y$. Likewise, if $v$ has terms that don't depend on $x$, they will give rise to terms that only depend on $y$ in the integral of $v$ wrt to $y$ which do not show up in the integral of $u$ wrt $x$. Such additional terms in either of these integrals can be regarded as integration constants - they are constant with respect to our integration variable but may depend on the other variable.
 
 \medskip
-I think, we can in general just always use $V_n(x,y)$ and add to it a $x^{n+1}/(n+1)$ term as integration constant because all the $u_n$ have exactly one term that is independent of $y$ and that term is always $x^n$ which, when integrated, gives $x^{n+1}/(n+1)$. Verify that! So that would give:
+We can in general just always use $V_n(x,y)$ and add to it a $x^{n+1}/(n+1)$ term as integration constant because all the $u_n$ have exactly one term that is independent of $y$ and that term is always $x^n$ which, when integrated, gives $x^{n+1}/(n+1)$. That gives:
 \begin{equation}
 \label{Eq:PolyaPotentialLaurentTerm}	
 \boxed{	
@@ -502,7 +503,7 @@ P_n(x,y) = \frac{x^{n+1}}{n+1}
 }
 \end{equation}
 VERIFY that! 
-The full Polya potential would then be given by re-assembling the sum:
+The full Polya potential is then be given by re-assembling the sum:
 \begin{equation}
 \label{Eq:PolyaPotentialLaurent}	
 \boxed{
@@ -512,7 +513,13 @@ P(x,y) = \frac{\ln(x^2 + y^2)}{2} + \sum_{n=0}^{\infty} c_n P_n(x,y)
 \end{equation}
 where $x = \Re(z) = \Re(s) - 1, y = \Im(z) = \Im(s)$.
 
-...TBC...Numerical tests indicate that the potential computed via (\ref{Eq:PolyaPotentialLaurent}) has a different constant offset than when we use (\ref{Eq:PolyaPotentialOriginal}). Maybe we should add constants to all potential formulas to normalize the output at some chosen input $(x,y)$. Maybe set $P(x,y) = 0$ at $(0,0)$ or at $(+\infty, 0)$ or at $(2,0)$? 
+\section{Putting the Formulas to Use}
+The hard work of the derivation is done. Now that we have some (moderately complex but still managable) formulas at our disposal to compute the Polya potential for zeta, we can use them to explore the beast that we have created. Among others, I have implemented formulas (\ref{Eq:PolyaPotentialOriginal}) and (\ref{Eq:PolyaPotentialLaurent}) and did some first tests. To prove that it works, I evaluated the formulas, then took numerical partial derivatives to verify that we can indeed re-create zeta by taking the gradient. It works - but these tests also revealed that the potential computed by the different formulas differs a constant offset. That is not necessarily suprising and no problem - potentials are not unique and determined only up to a constant shift. It may make sense to normalize the potential in a way that is convenient. I've shifted it such that it returns zero for $s=0$.  ...TBC...
+
+ToDo: add cite to the github repo
+
+
+%Numerical tests revealed that the potential computed via (\ref{Eq:PolyaPotentialLaurent}) has a different constant offset than when we use (\ref{Eq:PolyaPotentialOriginal}). Maybe we should add constants to all potential formulas to normalize the output at some chosen input $(x,y)$. Maybe set $P(x,y) = 0$ at $(0,0)$ or at $(+\infty, 0)$ or at $(2,0)$? 
 
 %  \frac{\ln(x^2 + y^2)}{2}
 % Maybe to avoid the complication of the edge case for n=0, we could actually just leave the term out by adjusting some summation limit and perhaps dragging the term out of the sum - we'll see. I think, it's simply P_0(x,y) = x. Maybe drag the n=1 term out as well. We have P_1(x,y) = 1. But that doesn't really matter anyway. It's just a constant that shifts the whole function up or down. Maybe it's more elegant to include it for consistency. Not sure yet.
@@ -591,6 +598,13 @@ https://www.mathematik.uni-muenchen.de/~forster/v/zeta/RZF_chap01.pdf
 
 http://www.stat.ucla.edu/~ywu/Riemann.pdf  (Whole Book on Zeta!)
 
+Very beautiful book on zeta:
+The Riemann Zeta Function and the connection to Hamiltonians in Physics
+https://fse.studenttheses.ub.rug.nl/11904/1/Riemann_zeta_function.pdf
+-on page 13, it has an interesting representation of zeta as integral over a 
+ sawtooth-like  function
+ 
+ 
 https://dlmf.nist.gov/search/search?q=riemann+zeta#
 Lots of stuff about Zeta
 

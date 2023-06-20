@@ -11651,13 +11651,20 @@ void plotZetaPotential()
 {
   using RZF = rsRiemannZetaFunction;
 
-  int Nx = 33;
-  int Ny = 65;
+  int Nx = 21;
+  int Ny = 21;
   double xMin =  0.0;
   double xMax =  1.0;
   double yMin = 21.0;
   double yMax = 25.0;
 
+
+  //xMin = -10;  xMax =   0; yMin =  -1; yMax =  +1; Nx = 41; Ny = 21; // trivial zeros
+  //xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // pole at s = 1
+  xMin = 0.9; xMax = 1.1; yMin = -0.1; yMax = +0.1; Nx = 21; Ny = 21; // pole again, zoomed in
+  //xMin = -3; xMax = -1; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 1st trivial zero at s = -2
+  //xMin = -5; xMax = -3; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 2nd trivial zero at s = -4
+  //xMin = -7; xMax = -5; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 2nd trivial zero at s = -6
 
   using Vec = std::vector<double>;
   using Mat = RAPT::rsMatrix<double>;
@@ -11688,6 +11695,10 @@ void plotZetaPotential()
   plt.plot3D();
 
   // The first few nontrivial zeros of zeta are at x = 1/2, y = 14.1, 21.0, 25.0, 30.4, 32.9, 37.6.
+
+  // Observations:
+  // -There seem to be only saddles and no extrema except for the hole/funnel at s = 1 where it goes 
+  //  to ...weher? -inf?. That's a  weird landscape!
 }
 
 

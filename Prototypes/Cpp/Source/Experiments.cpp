@@ -11206,7 +11206,7 @@ void testRiemannZeta()
 
   int     N;         // number of terms in approximations
 
-
+  bool ok = true;    // For turning it into a unit test later
 
 
   int* primes = rosic::PrimeNumbers::_getPrimeArray();
@@ -11356,10 +11356,12 @@ void testRiemannZeta()
   pl = RZF::potentialViaOriginalSum(x-h, y, N);
   u  = (pu-pl)/(2*h);
   eu = u - real(t);     // 5.9488977676158683e-05
+  ok &= abs(eu) <= 1.e-4;
   pu = RZF::potentialViaOriginalSum(x, y+h, N);
   pl = RZF::potentialViaOriginalSum(x, y-h, N);
   v  = -(pu-pl)/(2*h);
   ev = v - imag(t);     // -3.8215149125941927e-05
+  ok &= abs(ev) <= 1.e-4;
 
   // Now via Laurent series:
   N  = 11;
@@ -11367,77 +11369,15 @@ void testRiemannZeta()
   pl = RZF::potentialViaLaurentSeries(x-h, y, N);
   u  = (pu-pl)/(2*h);
   eu = u - real(t);     // -1.0419010099127490e-09
+  ok &= abs(eu) <= 1.e-8;
   pu = RZF::potentialViaLaurentSeries(x, y+h, N);
   pl = RZF::potentialViaLaurentSeries(x, y-h, N);
   v  = -(pu-pl)/(2*h);
   ev = v - imag(t);     // 1.0510784465012080e-09
-
-
+  ok &= abs(ev) <= 1.e-8;
 
   // Test:
   z = RZF::dirichletTermViaReIm(s, 5);
-
-  /*
-  // Once again via original sum:
-  N  = 100000;
-  pu = RZF::potentialViaOriginalSum(x+h, y, N);
-  pl = RZF::potentialViaOriginalSum(x-h, y, N);
-  u  = (pu-pl)/(2*h);
-  eu = u - real(t);
-  pu = RZF::potentialViaOriginalSum(x, y+h, N);
-  pl = RZF::potentialViaOriginalSum(x, y-h, N);
-  v  = -(pu-pl)/(2*h);
-  ev = v - imag(t);
-
-  // Now via Laurent series:
-  N  = 11;
-  pu = RZF::potentialViaLaurentSeries(x+h, y, N);
-  pl = RZF::potentialViaLaurentSeries(x-h, y, N);
-  u  = (pu-pl)/(2*h);
-  eu = u - real(t);
-  pu = RZF::potentialViaLaurentSeries(x, y+h, N);
-  pl = RZF::potentialViaLaurentSeries(x, y-h, N);
-  v  = -(pu-pl)/(2*h);
-  ev = v - imag(t);
-  // Nope ...but it gets kinda into the right direction. Maybe the convergence is just painfully 
-  // slow? But no - looking at the iterates, it doesn't seem to be converging too slowly.
-  // Maybe try a point closer to s=1 anyway. What if the contributions to the sum do initially
-  // increase for couple of dozens of iterates and only go down to zero later? Could that be the 
-  // case? Normally, we assume thatthe later contribution are ever smaller refinements but maybe
-  // that's not the case initially? Maybe we are just not precise enough to 
-
-  N = 11; // test
-  s = 1.2 + 0.1*i; x = real(s); y = imag(s);
-  t = 4.59163272866373770917 - 1.9929157582669758070 * i;  // riemannzeta(1.2 + 0.1 I)
-  //s  = 2.0; x = real(s); y = imag(s);
-  //t  = pi*pi/6;
-  pu = RZF::potentialViaLaurentSeries(x+h, y, N);
-  pl = RZF::potentialViaLaurentSeries(x-h, y, N);
-  u  = (pu-pl)/(2*h);
-  eu = u - real(t);
-  pu = RZF::potentialViaLaurentSeries(x, y+h, N);
-  pl = RZF::potentialViaLaurentSeries(x, y-h, N);
-  v  = -(pu-pl)/(2*h);
-  ev = v - imag(t);
-  // ...OK, yes - for that value of s, our u,v results are indeed a lot closer to the target. 
-  // Maybe the convergence is indeed very slow. Try to use more terms. For that, we need to 
-  // store more gamma or laurent coefficients which we need to produce with Sage or Mathematica.
-  // Maybe try using less terms and see what that does to the result
-  // N = 0: u = 4,      v = -2
-  // N = 1: u = 4.577,  v = -2
-  // N > 1: it basically stays the same - not further improvements visible
-  // Increasing or decresing h also does not seem to have much effect
-  // Actually, when observing how P changes during the approximation, it seems like the function
-  // does actually converge. The later contribution are really small. It's weird. It's not totally
-  // wrong but the error is large enough to to make it implausible to attribute it to numerical 
-  // issues. for the s = 2, t = zeta(2) = pi^2/6 = 1.6449340668482264 case, we actually get
-  // something like v = 1.5780502504713561. But the potentialViaLaurentSeries did definitely 
-  // converge. Very strange. ...the Pn inside the iteration ist zero most of the time. Should that
-  // be the case? 
-  // OK - found it! the mistake was that the a-array was declared as int so the coeffs were 
-  // rounded. Now we seem to get better precision
-  //
-  */
 
 
 
@@ -11483,7 +11423,7 @@ void testRiemannZeta()
   //mv = rsImagCoeffsComplexPower(n, vc, vpx, vpy);
 
   // Do a unit test:
-  bool ok = true;
+
 
   n = 0;
   mu = rsRealCoeffsComplexPower(n, uc, upx, upy);

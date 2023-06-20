@@ -11651,18 +11651,41 @@ void plotZetaPotential()
 {
   using RZF = rsRiemannZetaFunction;
 
-  int Nx = 100;
-  int Ny = 500;
+  int Nx = 10;
+  int Ny = 50;
   double xMin = 0.0;
   double xMax = 1.0;
   double yMin = 0.0;
-  double yMax = 5.0;
+  double yMax = 3.0;
 
 
+  using Vec = std::vector<double>;
+  using Mat = RAPT::rsMatrix<double>;
+
+  Vec x(Nx), y(Ny);
+  Mat P(Nx, Ny);
+
+  GNUPlotter plt;
+  plt.rangeLinear(&x[0], Nx, xMin, xMax);
+  plt.rangeLinear(&y[0], Ny, yMin, yMax);
+
+  for(int i = 0; i < Nx; i++)
+  {
+    for(int j = 0; j < Ny; j++)
+    {
+      int numTerms = 11;
+      // Preliminary. Later, we may want to go higher. Currently, we don't have enough precomputed
+      // gamma coeffs. We may want to make the number of terms dependent on the distance to s=1
+      // where it converges most quickly, I think. Maybe the function should have an error estimate
+      // based on the last added term or something.
+
+      P(i, j) = RZF::potentialViaLaurentSeries(x[i], y[j], numTerms);
+    }
+  }
 
 
-  double x, y;      // real and imaginary part of input
-
+  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+  plt.plot3D();
 }
 
 

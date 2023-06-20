@@ -11743,14 +11743,16 @@ void plotZetaPotential()
   double yMax = 25.0;
 
 
-  //xMin = -10;  xMax =   0; yMin =  -1; yMax =  +1; Nx = 41; Ny = 21; // trivial zeros
+  xMin = -6;  xMax =  2; yMin =  -4; yMax =  +4; Nx = 41; Ny = 41; // 
+  xMin = -8;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 41; Ny = 41; // 
+
   //xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // pole at s = 1
   //xMin = 0.9; xMax = 1.1; yMin = -0.1; yMax = +0.1; Nx = 21; Ny = 21; // pole again, zoomed in
   //xMin = -3; xMax = -1; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 1st trivial zero at s = -2
   //xMin = -5; xMax = -3; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 2nd trivial zero at s = -4
   //xMin = -7; xMax = -5; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 2nd trivial zero at s = -6
   //xMin = 0.4; xMax = 0.6; yMin = 12; yMax = 16; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
-  xMin = 0.4; xMax = 0.6; yMin = 14.0; yMax = 14.2; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
+  //xMin = 0.4; xMax = 0.6; yMin = 14.0; yMax = 14.2; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
   //xMin = 0.4; xMax = 0.6; yMin = 10; yMax = 40; Nx = 21; Ny = 41; // 1st 6 nontrivial zeros
 
 
@@ -11768,7 +11770,7 @@ void plotZetaPotential()
   {
     for(int j = 0; j < Ny; j++)
     {
-      int numTerms = 11;
+      int numTerms = 31;
       // Preliminary. Later, we may want to go higher. Currently, we don't have enough precomputed
       // gamma coeffs. We may want to make the number of terms dependent on the distance to s=1
       // where it converges most quickly, I think. Maybe the function should have an error estimate
@@ -11796,6 +11798,9 @@ void plotZetaPotential()
   //  error with 11 terms is about 20 + 20*i. Clearly, the potential calculations has not yet 
   //  converged. That means all results in the plots here might be meaningless and the experiments
   //  can be done properly only when we have more accurate evaluation functions in place.
+  //  ...OK - now with 31 terms, the surface looks very different indeed. But I think, the sum is
+  //  still not yet converged. The error of computing zeta via numeric differentiation is still 
+  //  high. Maybe we need yet more terms. Maybe try 63.
 }
 
 

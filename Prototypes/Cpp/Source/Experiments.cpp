@@ -11649,6 +11649,24 @@ void testRiemannZeta()
 
 void plotZetaPotential()
 {
+  // We explore the landscape of the Polya potential of the zeta function by creating plots of it 
+  // around points of interest such as the trivial zeros at s = -2*n, the nontrivial zeros at 
+  // s = 1/2 + i * something or around the pole at s = 1. The y coordinates (imaginary parts) of 
+  // the first 6 nontrivial zeros of zeta can be generated with SageMath as follows:
+  //
+  // zeros = zeta_zeros()
+  // for k in range(6):
+  //     print(zeros[k])
+  //
+  // That produces: 
+  //
+  //   14.134725142, 21.022039639, 25.01085758, 30.424876126, 32.935061588, 37.586178159
+  //
+  // The zeros of the zeta function should give rise to stationary points in the Polya potential.
+  // Some first investigations revealed that there seem to be no extrema. It's just saddles 
+  // everywhere.
+
+
   using RZF = rsRiemannZetaFunction;
 
   int Nx = 21;

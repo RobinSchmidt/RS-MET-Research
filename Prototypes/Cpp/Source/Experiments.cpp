@@ -11567,36 +11567,44 @@ void testRiemannZeta()
   int ppx[6], ppy[6];  // Powers of x and y in P
   int mp;
 
-  n = 7;  // dont go over 7 or increase the array sizes for pc, etc.
+  // n = 7;  // dont go over 7 or increase the array sizes for pc, etc.
 
   // do this in a loop n=0..7:
 
-  mu = rsRealCoeffsComplexPower(     n, uc, upx, upy);
-  mv = rsImagCoeffsComplexPower(     n, vc, vpx, vpy);
-  mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);
-
-  double ua, va;  // approximations of u,v using a numerical derivative on the potential
   double tol = 1.e-4;
-  double err;
-
   x   = 2;
   y   = 3;
   h   = 0.0001;
-  u   = evalPoly(x,   y, mu, uc, upx, upy);
-  v   = evalPoly(x,   y, mv, vc, vpx, vpy);
-  p   = evalPoly(x,   y, mp, pc, ppx, ppy);
 
-  pu  = evalPoly(x+h, y, mp, pc, ppx, ppy);
-  pl  = evalPoly(x-h, y, mp, pc, ppx, ppy);
-  ua  = (pu-pl)/(2*h);
-  err = ua - u;
-  ok &= abs(err) <= tol;
+  for(n = 0; n <= 7; n++)
+  {
+    double ua, va;  // approximations of u,v using a numerical derivative on the potential
+    double err;
 
-  pu  = evalPoly(x, y+h, mp, pc, ppx, ppy);
-  pl  = evalPoly(x, y-h, mp, pc, ppx, ppy);
-  va  = -(pu-pl)/(2*h); // Minus because of negation in Polya vector field
-  err = va - v;
-  ok &= abs(err) <= tol;
+    // Compute coeffs and exponents for re, im and potential:
+    mu = rsRealCoeffsComplexPower(     n, uc, upx, upy);
+    mv = rsImagCoeffsComplexPower(     n, vc, vpx, vpy);
+    mp = rsPotentialCoeffsComplexPower(n, pc, ppx, ppy);
+
+    // Target values for u,v:
+    u   = evalPoly(x, y, mu, uc, upx, upy);
+    v   = evalPoly(x, y, mv, vc, vpx, vpy);
+    //p   = evalPoly(x, y, mp, pc, ppx, ppy); // bonus
+
+    // Check u against numercial partial derivative of p wrt x:
+    pu  = evalPoly(x+h, y, mp, pc, ppx, ppy);
+    pl  = evalPoly(x-h, y, mp, pc, ppx, ppy);
+    ua  = (pu-pl)/(2*h);
+    err = ua - u;
+    ok &= abs(err) <= tol;
+
+    // Check v against numercial partial derivative of p wrt y:
+    pu  = evalPoly(x, y+h, mp, pc, ppx, ppy);
+    pl  = evalPoly(x, y-h, mp, pc, ppx, ppy);
+    va  = -(pu-pl)/(2*h); // Minus because of negation in Polya vector field
+    err = va - v;
+    ok &= abs(err) <= tol;
+  }
 
 
 

@@ -7247,7 +7247,8 @@ void rsRiemannZetaFunction::vectorFieldViaLaurentSeries(
 
   // Internal subroutines to compute the u_n, v_n terms, i.e. the real and imaginary parts of
   // (x + i*y)^n:
-  int a[numGammas], px[numGammas], py[numGammas];  // Temp arrays for coeffs and powers
+  double a[numGammas]; 
+  int px[numGammas], py[numGammas];  // Temp arrays for coeffs and powers
   auto u_n = [&](double x, double y, int n)
   {
     int m = rsRealCoeffsComplexPower(n, a, px, py);
@@ -7292,7 +7293,8 @@ double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int 
 {
   RAPT::rsAssert(numTerms <= numGammas);
 
-  int a[numGammas], px[numGammas], py[numGammas];  // Temp arrays for coeffs and powers
+  double a[numGammas]; 
+  int px[numGammas], py[numGammas]; 
   auto P_n = [&](double x, double y, int n)
   {
     int m = rsPotentialCoeffsComplexPower(n, a, px, py);
@@ -7301,8 +7303,9 @@ double rsRiemannZetaFunction::potentialViaLaurentSeries(double x, double y, int 
       sum += a[k] * pow(x, px[k]) * pow(y, py[k]);
     return sum;
   };
-  // is numGammas actually the correct size for these arrays? I think not. they are not necessarily
-  // the same size as numGammas, I think.
+  // Is numGammas actually the correct size for these arrays? I think not. They are not necessarily
+  // the same size as numGammas, I think. They might be smaller. Maybe more in the numGammas/2 
+  // ballpark. Figure out and change it also in vectorFieldViaLaurentSeries
 
   x -= 1.0;
   double P = log(x*x + y*y) / 2;

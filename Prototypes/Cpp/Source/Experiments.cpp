@@ -11332,8 +11332,8 @@ void testRiemannZeta()
 
   //s  = 2.0 + 1.0*i; x = real(s); y = imag(s);
   //t  = pi*pi/6;
-  p  = RZF::potentialViaOriginalSum(  x, y, 10000);  // ~ 1.71
-  pl = RZF::potentialViaLaurentSeries(x, y, 11);     // ~ 0.93
+  //p  = RZF::potentialViaOriginalSum(  x, y, 10000);  // ~ 1.71
+  //pl = RZF::potentialViaLaurentSeries(x, y, 11);     // ~ 0.93
   //pl = RZF::potentialViaLaurentSeries(x, y, 8); 
   //pl = RZF::potentialViaLaurentSeries(x, y, 5); 
   // nope! no match! Is this a convergence problem or is still something wrong with the math?
@@ -11347,6 +11347,7 @@ void testRiemannZeta()
 
   h  = 0.0001;
 
+  /*
   // Once again via original sum:
   N  = 100000;
   pu = RZF::potentialViaOriginalSum(x+h, y, N);
@@ -11364,6 +11365,7 @@ void testRiemannZeta()
   pu = RZF::potentialViaLaurentSeries(x, y+h, N);
   pl = RZF::potentialViaLaurentSeries(x, y-h, N);
   v  = -(pu-pl)/(2*h);
+  */
   // Nope ...but it gets kinda into the right direction. Maybe the convergence is just painfully 
   // slow? But no - looking at the iterates, it doesn't seem to be converging too slowly.
   // Maybe try a point closer to s=1 anyway. What if the contributions to the sum do initially
@@ -11376,8 +11378,10 @@ void testRiemannZeta()
   double hy = 0.001;
   double eu, ev;
   N = 11; // test
-  s = 1.2 + 0.1*i; x = real(s); y = imag(s);
-  t = 4.59163272866373770917 - 1.9929157582669758070 * i;  // riemannzeta(1.2 + 0.1 I)
+  //s = 1.2 + 0.1*i; x = real(s); y = imag(s);
+  //t = 4.59163272866373770917 - 1.9929157582669758070 * i;  // riemannzeta(1.2 + 0.1 I)
+  s  = 2.0; x = real(s); y = imag(s);
+  t  = pi*pi/6;
   pu = RZF::potentialViaLaurentSeries(x+hx, y, N);
   pl = RZF::potentialViaLaurentSeries(x-hx, y, N);
   u  = (pu-pl)/(2*hx);
@@ -11397,7 +11401,14 @@ void testRiemannZeta()
   // Actually, when observing how P changes during the approximation, it seems like the function
   // does actually converge. The later contribution are really small. It's weird. It's not totally
   // wrong but the error is large enough to to make it implausible to attribute it to numerical 
-  // issues.
+  // issues. for the s = 2, t = zeta(2) = pi^2/6 = 1.6449340668482264 case, we actually get
+  // something like v = 1.5780502504713561. But the potentialViaLaurentSeries did definitely 
+  // converge. Very strange. ...the Pn inside the iteration ist zero most of the time. Should that
+  // be the case? 
+  // OK - found it! the mistake was that the a-array was declared as int so the coeffs were 
+  // rounded. Now we seem to get better precision
+  // 
+
 
 
   // Test:

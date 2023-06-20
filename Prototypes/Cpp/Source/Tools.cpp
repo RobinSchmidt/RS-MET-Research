@@ -7005,11 +7005,13 @@ int rsPotentialCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)
 }
 // The function is based on integrating rsImagCoeffsComplexPower with respect to y, then adding as
 // "integration constant" a term of the form x^(n+1) / (n+1). It's constant with respect to y but
-// a function of x. One could also integrate rsRealCoeffsComplexPower with respect to x and then
-// either add a y^(n+1) / (n+1) term when n is odd. See the pattern of coeffs for re/im parts in 
-// the unit tests. Maybe implement both and test both - just for proof of concept.
-// The negation is because we have based our function on the imag part which needs to be negated
-// for the Polya vector field. 
+// a function of x. Alternatively, one could also integrate rsRealCoeffsComplexPower with respect 
+// to x and then add a y^(n+1) / (n+1) term when n is odd. See the pattern of coeffs for re/im 
+// parts in the unit tests or the zeta paper. Maybe implement both and test both - just for proof 
+// of concept. They should lead to coeff arrays that represent the same polynomial but the coeffs 
+// may come out in different order when doing it the other way. The negation is because we have 
+// based our function on integrating the imag part (with respect to y). And that imag part needs to
+// be negated for the Polya vector field. 
 
 template<class T>
 T rsEvaluateBivariatePolynomial(T x, T y, int m, T* coeffs, int* xPowers, int* yPowers)
@@ -7019,7 +7021,11 @@ T rsEvaluateBivariatePolynomial(T x, T y, int m, T* coeffs, int* xPowers, int* y
     z += coeffs[k] * pow(x, xPowers[k]) * pow(y, yPowers[k]);
   return z;
 }
-// Maybe not the most efficient way to do it, but this is just for experimentation
+// Maybe not the most efficient way to do it, but this is just for experimentation. When doing 
+// something like this in production, we may write a class for sparse bivariate polynomials that
+// stores an array of triples: (coeff, xPower, yPower). Maybe the struct for that triple could be 
+// named rsSparseBivariatePolynomial::Term. The general rsBivariatePolynomial class stores the 
+// coeffs as matrix which is overkill here because most entries would be zero.
 
 
 //=================================================================================================

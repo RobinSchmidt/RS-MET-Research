@@ -11788,9 +11788,13 @@ void plotZetaPotential()
 
   plt.addCommand("set term wxt background rgb \"black\"");
 
+  plt.addCommand("set border lw 3 lc rgb \"white\"");
+  plt.addCommand("set xtics textcolor rgb \"white\"");
+  plt.addCommand("set ytics textcolor rgb \"white\"");
+  plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
+  plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
+  //plt.addCommand("set key textcolor rgb \"white\"");  // shows the filename
 
-
-  //plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w lines notitle");
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
   plt.invokeGNUPlot();
 

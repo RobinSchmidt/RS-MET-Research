@@ -11373,22 +11373,19 @@ void testRiemannZeta()
   // case? Normally, we assume thatthe later contribution are ever smaller refinements but maybe
   // that's not the case initially? Maybe we are just not precise enough to 
 
-
-  double hx = 0.05;
-  double hy = 0.001;
   double eu, ev;
   N = 11; // test
-  //s = 1.2 + 0.1*i; x = real(s); y = imag(s);
-  //t = 4.59163272866373770917 - 1.9929157582669758070 * i;  // riemannzeta(1.2 + 0.1 I)
-  s  = 2.0; x = real(s); y = imag(s);
-  t  = pi*pi/6;
-  pu = RZF::potentialViaLaurentSeries(x+hx, y, N);
-  pl = RZF::potentialViaLaurentSeries(x-hx, y, N);
-  u  = (pu-pl)/(2*hx);
+  s = 1.2 + 0.1*i; x = real(s); y = imag(s);
+  t = 4.59163272866373770917 - 1.9929157582669758070 * i;  // riemannzeta(1.2 + 0.1 I)
+  //s  = 2.0; x = real(s); y = imag(s);
+  //t  = pi*pi/6;
+  pu = RZF::potentialViaLaurentSeries(x+h, y, N);
+  pl = RZF::potentialViaLaurentSeries(x-h, y, N);
+  u  = (pu-pl)/(2*h);
   eu = u - real(t);
-  pu = RZF::potentialViaLaurentSeries(x, y+hy, N);
-  pl = RZF::potentialViaLaurentSeries(x, y-hy, N);
-  v  = -(pu-pl)/(2*hy);
+  pu = RZF::potentialViaLaurentSeries(x, y+h, N);
+  pl = RZF::potentialViaLaurentSeries(x, y-h, N);
+  v  = -(pu-pl)/(2*h);
   ev = v - imag(t);
   // ...OK, yes - for that value of s, our u,v results are indeed a lot closer to the target. 
   // Maybe the convergence is indeed very slow. Try to use more terms. For that, we need to 

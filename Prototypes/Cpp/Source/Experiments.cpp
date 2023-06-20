@@ -11661,10 +11661,14 @@ void plotZetaPotential()
 
   //xMin = -10;  xMax =   0; yMin =  -1; yMax =  +1; Nx = 41; Ny = 21; // trivial zeros
   //xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // pole at s = 1
-  xMin = 0.9; xMax = 1.1; yMin = -0.1; yMax = +0.1; Nx = 21; Ny = 21; // pole again, zoomed in
+  //xMin = 0.9; xMax = 1.1; yMin = -0.1; yMax = +0.1; Nx = 21; Ny = 21; // pole again, zoomed in
   //xMin = -3; xMax = -1; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 1st trivial zero at s = -2
   //xMin = -5; xMax = -3; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 2nd trivial zero at s = -4
   //xMin = -7; xMax = -5; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 2nd trivial zero at s = -6
+  //xMin = 0.4; xMax = 0.6; yMin = 12; yMax = 16; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
+  xMin = 0.4; xMax = 0.6; yMin = 14.0; yMax = 14.2; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
+  //xMin = 0.4; xMax = 0.6; yMin = 10; yMax = 40; Nx = 21; Ny = 41; // 1st 6 nontrivial zeros
+
 
   using Vec = std::vector<double>;
   using Mat = RAPT::rsMatrix<double>;
@@ -11697,8 +11701,13 @@ void plotZetaPotential()
   // The first few nontrivial zeros of zeta are at x = 1/2, y = 14.1, 21.0, 25.0, 30.4, 32.9, 37.6.
 
   // Observations:
-  // -There seem to be only saddles and no extrema except for the hole/funnel at s = 1 where it goes 
-  //  to ...weher? -inf?. That's a  weird landscape!
+  // -There seem to be only saddles and no extrema except for the hole/funnel at s = 1 where it 
+  //  goes to ...where? -inf?. That's a  weird landscape!
+  // -When trying to plot the range where the nontrivial zeros live, we get very large values. 
+  //  Maybe the evaluation algo is not yet up to it?
+  // -When zooming in into the first nontrivial zero at s = 1/2 + 14.1i, it looks strange - as if 
+  //  there is no saddle. Maybe that's just the weird perspectivic plot? Try to evaluate the 
+  //  numerical derivative at the 1st nontrivial zero.
 }
 
 

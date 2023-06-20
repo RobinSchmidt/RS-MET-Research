@@ -21,17 +21,30 @@ Idea:
 Let's assume the u,v have arisen from p via numerical differentiation via central differencing. That
 means, we can make the ansatz:
 
-  u(i,j) = (p(i+1,j) - p(i-1,j)) / (2*dx),   v(i,j) = (p(i,j+1) - p(i,j-1)) / (2*dy)
+
  
 Maybe such an ansatz can lead to a (sparse) linear system for the p(i,j). Maybe, if we cleverly 
 vectorize the matrices, it could even tridiagonal or maybe pentadiagonal? This formual applies only 
 to inner, points. If the index ranges are i = 0,...,I-1 and j = 0,...,J-1, then the formula above 
 applies only to i = 1,..,I-2, j = 1,...,J-2. For the edges and corners, we may either use special 
-formulas or just leave them out for the moment.
+formulas or just leave them out for the moment. We want to write the set of equations in the form:
+
+  A * vec(P) = vec(u,v)
+
+where A is a coefficient matrix and  vec(P), vec(u,v) are so appropriate vectorizations of the 
+matrices. Let's rewrite the ansatz as:
+
+  p(i+1, j  ) - p(i-1, j  ) = 2*dx * u(i,j)
+  p(i,   j+1) - p(i,   j-1) = 2*dy * v(i,j)
+
+Let's assume, vectorizing a matrix just means re-interpreting it as vector without re-ordering it in 
+memory. That means, we just concatenate all the rows, one after another, into one big vector.
 
 
 
 
+
+----------------------------------------------------------------------------------------------------
 If we make an ansatz based on a forward difference:
 
   u(i,j) = (p(i+1,j) - p(i,j)) / dx,   v(i,j) = (p(i,j+1) - p(i,j)) / dy

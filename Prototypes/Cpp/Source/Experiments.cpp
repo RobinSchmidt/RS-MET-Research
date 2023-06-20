@@ -11211,6 +11211,14 @@ void testRiemannZeta()
 
   int* primes = rosic::PrimeNumbers::_getPrimeArray();
 
+  // ToDo:
+  //
+  // Many of the tests do not yet have a programmatic check like the lines for the boost sum:
+  //   ok &= abs(e) < 3.e-10;
+  // The code was initially written for experimental inspection or the errors in the debugger and 
+  // later I added these checks to some of the lines to turn it into a unit test. But that is not 
+  // yet complete.
+
   // Compute z(2) via various algorithms. The value z(2) is the sum of reciprocal squares. This is
   // a famous problem known as the "Basel problem" which was solved by Euler. The value is given
   // by z(2) = sum_{n=1}^{\infty} 1/n = pi^2/6:
@@ -11250,15 +11258,17 @@ void testRiemannZeta()
   z = RZF::evalViaLaurentSeries(s, 11); e = t-z; // e ~ -6.4e-12
 
 
-  z = RZF::evalViaBoostSum(s, 5); e = t-z;  // e ~ 1.2e-5 
-  z = RZF::evalViaBoostSum(s, 10); e = t-z;  // e ~ 2.5e-10
-  z = RZF::evalViaBoostSum(s, 15); e = t-z;  // e ~ 6.2e-15
+  z = RZF::evalViaBoostSum(s,  5); e = t-z; ok &= abs(e) < 2.e-5;  // e ~ 1.2e-5 
+  z = RZF::evalViaBoostSum(s, 10); e = t-z; ok &= abs(e) < 3.e-10; // e ~ 2.5e-10
+  z = RZF::evalViaBoostSum(s, 15); e = t-z; ok &= abs(e) < 7.e-15; // e ~ 6.2e-15
+  z = RZF::evalViaBoostSum(s, 20); e = t-z; ok &= abs(e) < 5.e-16; // e ~ 4.4e-16
 
 
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;
   t = 1.202056903159594285399738;// Computed by Wolfram Alpha via riemannzeta(3)
   z = RZF::evalViaOriginalSum(s, 10); e = t-z;
+
   z = RZF::evalViaOriginalSum(s, 100); e = t-z;
   z = RZF::evalViaOriginalSum(s, 1000); e = t-z;
   z = RZF::evalViaOriginalSum(s, 10000); e = t-z;
@@ -11622,16 +11632,8 @@ void testRiemannZeta()
     ok &= abs(err) <= tol;
   }
 
-
-
-
-
   RAPT::rsAssert(ok);
   int dummy = 0;
-
-
-
-
 
   // ToDo: 
   // -Compute relative error, too
@@ -11643,8 +11645,23 @@ void testRiemannZeta()
   // Resources:
   // -Only for real s: https://en.cppreference.com/w/cpp/numeric/special_functions/riemann_zeta
   // - https://www.boost.org/doc/libs/1_65_0/libs/math/doc/html/math_toolkit/zetas/zeta.html
+}
+
+void plotZetaPotential()
+{
+  using RZF = rsRiemannZetaFunction;
+
+  int Nx = 100;
+  int Ny = 500;
+  double xMin = 0.0;
+  double xMax = 1.0;
+  double yMin = 0.0;
+  double yMax = 5.0;
 
 
+
+
+  double x, y;      // real and imaginary part of input
 
 }
 

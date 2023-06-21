@@ -11855,6 +11855,51 @@ void plotZetaPotential()
   //
 }
 
+void testNumericPotential()
+{
+  // We try to implement the idea outlined in Notes/PotentialNumeric.txt
+
+  using Real = float;
+  using Mat  = rsMatrix<Real>;
+  using Vec  = std::vector<Real>;
+
+  int M = 4;   // number of rows
+  int N = 5;   // number of columns
+
+  Real xMin = 0.0;
+  Real xMax = 10.0;
+  Real yMin = 0.0;
+  Real yMax = 10.0;
+
+  Mat P(M, N), U(M, N), V(M, N);  // Potential and its numerical x- and y-derivatives
+
+  Real dx = (xMax-xMin) / M;
+  Real dy = (yMax-yMin) / N;
+
+  // Fill the potential with the function exp(x)*sin(y)
+  int i, j;
+  for(i = 0; i < M; i++) {
+    for(j = 0; j < N; j++) {
+      Real x  = xMin + i*dx;
+      Real y  = yMin + j*dy;
+      P(i, j) = exp(x) * sin(y); }}
+
+  // Obtain the numerical partial derivative with respect to x:
+  for(i = 1; i < M-1; i++)
+    for(j = 0; j < N; j++) 
+      U(i, j) = (U(i+1, j) - U(i-1, j)) / (2*dx);  // central diff for general point
+  for(j = 0; j < N; j++) 
+    U(i, j) = (U(0, j) - U(1, j)) / dx;            // forward diff at left boundary
+  for(j = 0; j < N; j++) 
+    U(i, j) = (U(M-1, j) - U(M-2, j)) / dx;        // backward diff at right boundary
+
+
+
+
+
+  int dummy = 0;
+}
+
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

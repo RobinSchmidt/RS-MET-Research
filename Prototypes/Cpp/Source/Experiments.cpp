@@ -11861,7 +11861,7 @@ void testNumericPotential()
 {
   // We try to implement the idea outlined in Notes/PotentialNumeric.txt
 
-  using Real = float;
+  using Real = double;
   using Mat  = rsMatrix<Real>;
   using Vec  = std::vector<Real>;
 
@@ -11951,7 +11951,6 @@ void testNumericPotential()
     {
       R(N+s+k,  s+k-1) = d;
       R(N+s+k,  s+k+1) = c;
-
     }
   }
 

@@ -11857,28 +11857,24 @@ void plotZetaPotential()
 
 void testNumericPotential()
 {
-  // We try to implement the idea outlined in Notes/PotentialNumeric.txt
+  // We implement the idea outlined in Notes/PotentialNumeric.txt. ...tbc..
 
   using Real = double;
   using Mat  = rsMatrix<Real>;
   using Vec  = std::vector<Real>;
 
-  int I = 4;   // number of rows
-  int J = 5;   // number of columns
+  // User tweakables:
+  int  I    = 4;       // number of rows or x-samples
+  int  J    = 5;       // number of columns or y-samples
+  Real xMin = 0.0;     // minimum x-value
+  Real xMax = 10.0;    // maximum x-value
+  Real yMin = 0.0;     // minimum y-value
+  Real yMax = 10.0;    // maximum y-value
 
-  //I = 2; J = 2;  // for test
-
-  Real xMin = 0.0;
-  Real xMax = 10.0;
-  Real yMin = 0.0;
-  Real yMax = 10.0;
-
-  Mat P(I, J), U(I, J), V(I, J);  // Potential and its numerical x- and y-derivatives
-
+  // Create the data for a potential. We use the function exp(x)*cos(y) as our potential:
+  Mat P(I, J);
   Real dx = (xMax-xMin) / I;
   Real dy = (yMax-yMin) / J;
-
-  // Fill the potential with the function exp(x)*cos(y)
   int i, j;
   for(i = 0; i < I; i++) {
     for(j = 0; j < J; j++) {
@@ -11886,44 +11882,26 @@ void testNumericPotential()
       Real y  = yMin + j*dy;
       P(i, j) = exp(x) * cos(y); }}
 
-  // Move into functions rsNumericDerivativeX,  rsNumericDerivativeY
+  // Obtain the gradient field of the potential P by numeric differentiation:
+  Mat U = rsNumericDerivativeX(P, dx);
+  Mat V = rsNumericDerivativeY(P, dy);
 
-  /*
-  // Obtain the numerical partial derivative with respect to x:
-  for(i = 1; i < I-1; i++)
-    for(j = 0; j < J; j++) 
-      U(i, j) = (P(i+1, j) - P(i-1, j)) / (2*dx);  // central diff for general point
-  for(j = 0; j < J; j++) 
-    U(0, j) = (P(1, j) - P(0, j)) / dx;            // forward diff at left boundary / top row
-  for(j = 0; j < J; j++) 
-    U(I-1, j) = (P(I-1, j) - P(I-2, j)) / dx;      // backward diff at right boundary / bottom row
-    */
-  U = rsNumericDerivativeX(P, dx);
-
-  /*
-  // Obtain the numerical partial derivative with respect to y:
-  for(i = 0; i < I; i++)
-    for(j = 1; j < J-1; j++) 
-      V(i, j) = (P(i, j+1) - P(i, j-1)) / (2*dy);  // central diff for general point
-  for(i = 0; i < I; i++)
-    V(i, 0) = (P(i, 1) - P(i, 0)) / dy;            // forward diff at bottom boundary / left column
-  for(i = 0; i < I; i++)
-    V(i, J-1) = (P(i, J-1) - P(i, J-2)) / dy;      // backward diff at top boundary / right column
-    */
-
-  V = rsNumericDerivativeY(P, dy);
-
-
-  // OK - we have now some data. Now we want to try to recover the potential P from U,V. Let's call
-  // our recovered potential Q. To make the solution unique (i.e. the matrix of the problem problem 
-  // nonsingular), We need to specify the desired value K of the potential at some given index pair
-  // i,j. We pick that desired value from the original potential for a match:
-  i = 2;             // Row index of defined constant
-  j = 3;             // Column index of defined constant
-  Real K = P(i, j);  // Value of potential at i,j
+  // Now we want to recover the potential P from the vector field U,V. Let's call our recovered 
+  // potential Q. To make the solution unique (i.e. the matrix of the problem nonsingular), We need
+  // to specify the desired value K of the potential at some given index pair i,j. We pick that 
+  // desired value from the original potential for a match:
+  i = 2;             // Row index of desired value
+  j = 3;             // Column index desired value
+  Real K = P(i, j);  // desired value of potential at i,j
   Mat  Q = rsNumericPotential(U, V, dx, dy, K, i, j);  // Do it!
   // Yep! Looks good! Q and P match!
 
+
+  // ToDo:
+  // -Turn this into a programmatic unit test by comparing the matrices P and Q, i.e. define
+  //  D = P-Q and check that D is zero (up to a tolerance). The computation of the potential uses
+  //  as ansatz equations exactly the same equations that we indeed use to obtain our numeric 
+  //  derivatives so the reconstructed potential should indeed match the original one.
 
   // Notes:
   // -

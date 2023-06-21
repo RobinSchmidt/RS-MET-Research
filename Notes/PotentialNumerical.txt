@@ -54,9 +54,6 @@ memory. That means, we just concatenate all the rows, one after another, into on
 assume a row-major memory layout here). For our example with the 4x5 matrices, we would get a linear 
 system of equations that looks as follows:
 
-Abbreviations in the Ansatz column: L: left, I: inner, R: right, T: top, B: bottom, CD: central 
-difference, FD: forward difference, BD: backward difference
-
                                                                  What the line means     Ansatz
 
   B _ _ _ _ A _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00        U00 = (P10-P00)/dx      L,FD
@@ -79,42 +76,37 @@ difference, FD: forward difference, BD: backward difference
   _ _ _ _ _ _ _ _ _ _ _ _ B _ _ _ _ A _ _    P32      U32        U32 = (P32-P22)/dx          R,BD
   _ _ _ _ _ _ _ _ _ _ _ _ _ B _ _ _ _ A _    P33      U33        U33 = (P33-P23)/dx          R,BD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ B _ _ _ _ A    P34  =   U34        U34 = (P34-P24)/dx          R,BD
-  D C _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V00        V00 = (P01-P00)/dx      T,FD
+  D C _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V00        V00 = (P01-P00)/dy      T,FD
   d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V01        V01 = (P02-P00)/(2dy)     I,CD
   _ d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V02        V02 = (P03-P01)/(2dy)     I,CD
   _ _ d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V03        V03 = (P04-P02)/(2dy)     I,CD
   _ _ _ D C _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V04        V04 = (P04-P03)/dy          B,BD
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V10  
+  _ _ _ _ _ D C _ _ _ _ _ _ _ _ _ _ _ _ _             V10        V10 = (P11-P10)/dy      T,FD
   _ _ _ _ _ d _ c _ _ _ _ _ _ _ _ _ _ _ _             V11        V11 = (P12-P10)/(2dy)     I,CD
   _ _ _ _ _ _ d _ c _ _ _ _ _ _ _ _ _ _ _             V12        V12 = (P13-P11)/(2dy)     I,CD
   _ _ _ _ _ _ _ d _ c _ _ _ _ _ _ _ _ _ _             V13        V13 = (P14-P12)/(2dy)     I,CD
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V14   
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V20      
+  _ _ _ _ _ _ _ _ D C _ _ _ _ _ _ _ _ _ _             V14        V14 = (P14-P13)/dy          B,DB   
+  _ _ _ _ _ _ _ _ _ _ D C _ _ _ _ _ _ _ _             V20        V20 = (P21-P20)/dy      T,FD
   _ _ _ _ _ _ _ _ _ _ d _ c _ _ _ _ _ _ _             V21        V21 = (P22-P20)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ d _ c _ _ _ _ _ _             V22        V22 = (P23-P21)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ _ d _ c _ _ _ _ _             V23        V23 = (P24-P22)/(2dy)     I,CD
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V24   
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V30  
+  _ _ _ _ _ _ _ _ _ _ _ _ _ D C _ _ _ _ _             V24        V24 = (P24-P23)/dy          B,BD
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ D C _ _ _             V30        V30 = (P30-P31)/dy      T,FD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c _ _             V31        V31 = (P32-P30)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c _             V32        V32 = (P33-P31)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c             V33        V33 = (P34-P32)/(2dy)     I,CD
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V34  
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ D C             V34        V34 = (P34-P33)/dx          B,BD
   
--Distances: 
- b,a: 2*numCols = 2*5 = 10
- B,A:   numCols = 5
- d,c: 2
- D,C: 1
+Abbreviations used in the Ansatz column: L: left, I: inner, R: right, T: top, B: bottom, CD: central 
+difference, FD: forward difference, BD: backward difference.
 
-ToDo (partially done):
-The matrix needs to be filled appropriately. It will be sparse. Each row will have two nonzero
-entries which can be either (mostly) a or b in the upper half or (mostly) c or d in the lower half. 
-All rows and columns of the matrix that involve boundary points of P, will need special coefficients 
-based on the forward or backward difference ansatz for the boundary points [ToDo: figure out the 
-details!]. W'ell use the underscore _ to indicate zero entries. Use A=2a, B=2b, C=2c, D=2d in the 
-matrix for the rows/cols that involve boundary points
+For U = dP/dx = P_x, we have 10 (= 2*5) inner points (two rows) because the top and bottom matrix 
+rows count as boundary points. For V = dP/dy = P_y, we have 12 (= 3*4) inner points (3 columns) 
+because the left and right matrix columns count as boundary points. The distances between the two
+nonzero elements in each row are given by: dist(b,a) = 2*numCols = 2*5 = 10, 
+dist(B,A) = numCols = 5, dist(d,c) = 2, dist(D,C) = 1.
 
-We can interpret this as a linear system of equations of the form:
+We can interpret this matrix equation as a linear system of equations of the form:
 
   M * p = vertcat(u,v) = w
      
@@ -125,16 +117,29 @@ least squares problem by premultiplying both sides with M^T.
 
   M^T * M * p = M^T * w
 
-which will reduce the number of equations to 20. ...TBC...
+which will reduce the number of equations to 20.
 
-
-
-
+ToDo:
+-Implement it. The tricky part will be assembling the matrix. Then make a unit test as follows: 
+ Create some artbitrary matrix to serve as the potential P. Maybe fill it with some function values. 
+ Obtain numerical partial derivatives from P, call them U,V. Feed these U,V into the routine to 
+ compute the potential and call the computed potential Q. Compare Q to the original potentetial P. 
+ If the numerical differencing uses central differences for inner points and forward or backward 
+ differences for boundary points, then Q should match P up to rounding errors.
 
 
 Notes:
 -The matrix is sparse but unstructured. Maybe with some clever re-ordering of the vectors, we could
- bring it into a more structured sparse form, like - say - pentadiagonal?
+ bring it into a more structured sparse form, like - say - pentadiagonal? But that looks like a 
+ nightmare to do. We actually need to restructure not M itself but rather M^T * M. The better idea
+ would probably be to just use a sparse matrix library or write a (simple) class for sparse matrices 
+ myself. Solving sparse systems is typically done with iterative methods like Jacobi or Gauss-Seidel
+ iterations. I have some prototype code for that somewhere already (either in the main repo or in 
+ the research repo). Using dense matrices may be OK for proof of concept and some unit tests on 
+ small toy problems but eventually, we want to apply it to bigger data matrices, like 100x100. For 
+ an m-by-n data matrix, the vectors will be of size m*n and the coefficient matrix of the system of 
+ size 2*m^2*n^2 (I think), so we really need a sparse implementation to handle real world data 
+ matrices.
 -We could make a different ansatz based on a different formula to compute numerical derivatives. A 
  higher order finite difference approximation would give rise to more nonzero coefficients in the 
  matrix. The result might be more accurate at the cost of more computations due to a less sparse 

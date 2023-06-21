@@ -57,7 +57,7 @@ memory. That means, we just concatenate all the rows, one after another, into on
 assume a row-major memory layout here). For our example with the 4x5 matrices, we would get a linear 
 system of equations that looks as follows:
 
-                                                                         What the line means
+                                                                 What the line means
 
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00
   b _ a _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01        U01 = (P02-P00)/(2dx)
@@ -84,7 +84,7 @@ system of equations that looks as follows:
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V02
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V03
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V04
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V10
+  d _ _ _ _ _ _ _ _ _ c _ _ _ _ _ _ _ _ _             V10        V10 = (P20-P00)/(2dy)   ..verify!
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V11
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V12
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V13

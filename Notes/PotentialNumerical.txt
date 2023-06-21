@@ -1,27 +1,27 @@
-Assume that we have numerical data for a vector field v(x,y), u(x,y) and we know that this data 
+Assume that we have numerical data for a vector field U(x,y), V(x,y) and we know that this data 
 represents a potential field. How can we find a corresponding potential numerically? Let's assume we 
-have 2 2D data arrays u(i,j), v(i,j) representing the functions u(x,y), v(x,y) where the x,y are 
+have 2 2D data arrays u(i,j), v(i,j) representing the functions U(x,y), V(x,y) where the x,y are 
 equidistant with stepsize dx,dy respectively. The situation could look like this:
 
-                u(i,j)                          v(i,j)                             p(i,j)
+                U(i,j)                          V(i,j)                             P(i,j)
      i                               i                                  i
   j:     0   1   2   3   4   5    j:     0   1   2   3   4   5       j:     0   1   2   3   4   5
-     0  u00 u01 u02 u03 u04 u05      0  v00 v01 v02 v03 v04 v05         0  p00 p01 p02 p03 p04 p05
-     1  u10 u11 u12 u13 u14 u15      1  v10 v11 v12 v13 v14 v15         1  p10 p11 p12 p13 p14 p15
-     2  u20 u21 u22 u23 u24 u25      2  v20 v21 v22 v23 v24 v25         2  p20 p21 p22 p23 p24 p25
-     3  u30 u31 u32 u33 u34 u35      3  v30 v31 v32 v33 v34 v35         3  p30 p31 p32 p33 p34 p35
+     0  U00 U01 U02 U03 U04 U05      0  V00 V01 V02 V03 V04 V05         0  P00 P01 P02 P03 P04 P05
+     1  U10 U11 U12 U13 U14 U15      1  V10 V11 V12 V13 V14 V15         1  P10 P11 P12 P13 P14 P15
+     2  U20 U21 U22 U23 U24 U25      2  V20 V21 V22 V23 V24 V25         2  P20 P21 P22 P23 P24 P25
+     3  U30 U31 U32 U33 U34 U35      3  V30 V31 V32 V33 V34 V35         3  P30 P31 P32 P33 P34 P35
 
-where the u,v-matrices are known and the p-matrix is to be computed. p should become the potential
-of u,v. Note that the visual depiction is misleading in what is x and what is y: x or i goes down 
+where the U,V-matrices are known and the P-matrix is to be computed. P should become the potential
+of U,V. Note that the visual depiction is misleading in what is x and what is y: x or i goes down 
 vertically/row-wise while y or j goes horizontally or column-wise. But that's just the visual 
 interpretation of the arrays and doesn't matter conceptually.
 
 Idea:
 
-Let's assume the u,v have arisen from p via numerical differentiation via central differencing. That
+Let's assume the U,V have arisen from p via numerical differentiation via central differencing. That
 means, we can make the ansatz:
 
-  u(i,j) = (p(i+1,j) - p(i-1,j)) / (2*dx),   v(i,j) = (p(i,j+1) - p(i,j-1)) / (2*dy)
+  U(i,j) = (P(i+1,j) - P(i-1,j)) / (2*dx),   V(i,j) = (P(i,j+1) - P(i,j-1)) / (2*dy)
  
 Maybe such an ansatz can lead to a (sparse) linear system for the p(i,j). Maybe, if we cleverly 
 vectorize the matrices, it could even tridiagonal or maybe pentadiagonal? This formula applies only 
@@ -29,20 +29,43 @@ to inner, points. If the index ranges are i = 0,...,I-1 and j = 0,...,J-1, then 
 applies only to i = 1,..,I-2, j = 1,...,J-2. For the edges and corners, we may either use special 
 formulas or just leave them out for the moment. We want to write the set of equations in the form:
 
-  mat * vec(P) = vec(u,v)
+  mat * vec(P) = vec(U,V)
 
-where mat is a coefficient matrix and vec(P), vec(u,v) are so appropriate vectorizations of the 
+where mat is a coefficient matrix and vec(P), vec(U,V) are so appropriate vectorizations of the 
 matrices. Let's rewrite the ansatz as:
 
-  p(i+1, j  ) - p(i-1, j  ) = 2*dx * u(i,j)
-  p(i,   j+1) - p(i,   j-1) = 2*dy * v(i,j)
+  P(i+1, j  ) - P(i-1, j  ) = 2*dx * U(i,j)
+  P(i,   j+1) - P(i,   j-1) = 2*dy * V(i,j)
 
 Let's assume, vectorizing a matrix just means re-interpreting it as vector without re-ordering it in 
-memory. That means, we just concatenate all the rows, one after another, into one big vector. 
+memory. That means, we just concatenate all the rows, one after another, into one big vector. For 
+our example with the 4x6 matrices, we would get a linear system of equations that looks as follows:
 
 
-For 
-our example with the 4x6 matrices, we would get 
+
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P02      U02
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P03      U03
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P04      U04
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P05      U05
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P10      U10
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P11      U11
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P12      U12
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P13      U13
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P14      U14
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P15      U15
+  
+  ...
+
+
+
+
+
+
+
+
+
 
 
 

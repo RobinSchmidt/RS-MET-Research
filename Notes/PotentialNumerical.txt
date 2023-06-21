@@ -57,7 +57,7 @@ system of equations that looks as follows:
 Abbreviations in the Ansatz column: L: left, I: inner, R: right, T: top, B: bottom, CD: central 
 difference, FD: forward difference, BD: backward difference
 
-                                                                 What the line means      Ansatz
+                                                                 What the line means     Ansatz
 
   B _ _ _ _ A _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00        U00 = (P10-P00)/dx      L,FD
   _ B _ _ _ _ A _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01        U01 = (P11-P01)/dx      L,FD
@@ -79,11 +79,11 @@ difference, FD: forward difference, BD: backward difference
   _ _ _ _ _ _ _ _ _ _ _ _ B _ _ _ _ A _ _    P32      U32        U32 = (P32-P22)/dx          R,BD
   _ _ _ _ _ _ _ _ _ _ _ _ _ B _ _ _ _ A _    P33      U33        U33 = (P33-P23)/dx          R,BD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ B _ _ _ _ A    P34  =   U34        U34 = (P34-P24)/dx          R,BD
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V00
+  D C _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V00        V00 = (P01-P00)/dx      T,FD
   d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V01        V01 = (P02-P00)/(2dy)     I,CD
   _ d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V02        V02 = (P03-P01)/(2dy)     I,CD
   _ _ d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V03        V03 = (P04-P02)/(2dy)     I,CD
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V04
+  _ _ _ D C _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V04        V04 = (P04-P03)/dy          B,BD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V10  
   _ _ _ _ _ d _ c _ _ _ _ _ _ _ _ _ _ _ _             V11        V11 = (P12-P10)/(2dy)     I,CD
   _ _ _ _ _ _ d _ c _ _ _ _ _ _ _ _ _ _ _             V12        V12 = (P13-P11)/(2dy)     I,CD

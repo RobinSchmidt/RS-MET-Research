@@ -11891,7 +11891,8 @@ void plotZetaPotentialNumeric()
 
   // Preliminary (ToDo: make it look nicer!):
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
-  plt.plot3D();
+  plotSurfaceDark(plt);
+  //plt.plot3D();
   int dummy = 0;
 
 

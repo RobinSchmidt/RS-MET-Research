@@ -7564,7 +7564,7 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   //plotMatrix(M, true); // Uncomment to inspect the coefficient matrix
 
   // Assemble the right hand side vector w as concatentation of vectorized U,V and the additional 
-  // K as last element. Pseudocode: w = concatenate(vec(U), vec(V), 1)
+  // contant K (== Konstant) as last element. Pseudocode: w = concatenate(vec(U), vec(V), K)
   Mat w(2*N+1, 1);
   const T* ptr = U.getDataPointerConst();
   for(int n = 0; n < N; n++)
@@ -7585,8 +7585,34 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
 }
 
 // ToDo: 
-// To make this idea useful in practice, we need an implementation based on sparse matrices. The 
-// dense matrix based implementation here can only serve as proof of concept.
+// -To make this idea useful in practice, we need an implementation based on sparse matrices. The 
+//  dense matrix based implementation here can only serve as proof of concept.
+// -Implement a numerical Helmoltz decomposition as follows:
+//  -obtain potential P
+//  -obtain numerical derivatives of P. They will be (numerically) curl-free
+
+/** Under construction. Not yet tested */
+
+template<class T>
+void rsHelmholtzDecomposition(
+  const rsMatrix<T>& F1, const rsMatrix<T>& F2, T dx, T dy,
+  rsMatrix<T>& G1, rsMatrix<T>& G2, rsMatrix<T>& R1, rsMatrix<T>& R2)
+{
+  rsMatrix<T> P = rsNumericPotential(Fx, Fy, dx, dy);
+  G1 = rsNumericDerivativeX(P, dx);
+  G2 = rsNumericDerivativeY(P, dy);
+  R1 = F1 - G1;
+  R2 = F2 - G2;
+
+  // The idea is to enforce G to be (numerically) curl-free by letting it be the numeric gradient
+  // of a sort of pseudo-potential for F that we obtain via our rsNumericPotential routine. If F 
+  // isn't (numerically) curl-free, then no potential exists for F and the rsNumericPotential 
+  // routine will produce the best approximation to an actual potential in a least squares sense
+  // (I think). Then, G will be the best curl-free approximation to F. And R is then just the 
+  // residual F - G. See:
+  // https://en.wikipedia.org/wiki/Helmholtz_decomposition
+}
+// Not yet tested
 
 
 

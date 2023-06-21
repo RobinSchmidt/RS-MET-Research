@@ -14,10 +14,10 @@ this:
 
 where the U,V-matrices are known and the P-matrix is to be computed. P should become the potential
 of U,V. Note that the visual depiction is misleading in what is x and what is y: x or i goes down 
-vertically/row-wise while y or j goes horizontally or column-wise. But that's just the visual 
+vertically or row-wise while y or j goes horizontally or column-wise. But that's just the visual 
 interpretation of the arrays and doesn't matter conceptually.
 
-Let's assume the U,V data matrices have arisen from p via numerical (partial) differentiation via 
+Let's assume the U,V data matrices have arisen from P via numerical (partial) differentiation via 
 central differencing. That means, we can make the Ansatz:
 
   U(i,j) = (P(i+1, j  ) - P(i-1, j  )) / (2*dx)    and    
@@ -26,8 +26,8 @@ central differencing. That means, we can make the Ansatz:
 This formula applies only to inner points. That is, if the index ranges are i = 0,...,I-1 and 
 j = 0,...,J-1, then the formula above applies only to i = 1,..,I-2, j = 1,...,J-2. For reference, we
 call that Ansatz "I,CD" for: "inner point, central difference". For the boundary points at the 
-edges (first and last row and column of the matrix), we may either use special formulas based on 
-forward or backward differences:
+edges (first and last row and column of the matrix), we may use special formulas based on forward or 
+backward differences:
 
                                               Applies to       Ansatz name
 										
@@ -36,10 +36,7 @@ forward or backward differences:
   V(i,j) = (P(i,   j+1) - P(i,   j  )) / dy   j = 0,   all i   T,FD (top row,      foward diff.)
   V(i,j) = (P(i,   j  ) - P(i,   j-1)) / dy   j = J-1, all i   B,FD (bottom row,   backward diff.)
  
-...or just leave them out for the moment and just compute the potential only for the inner points. 
-We could tell the user to pad the matrices at the boundaries (by repitition of the last value or 
-(better) by linear extrapolation) or do that ourselves in a convenience function. We want to write 
-the set of equations in the form:
+We want to pose the problem as a linear system of equations in the form:
 
   M * vec(P) = vec(U,V)
 
@@ -56,9 +53,9 @@ where we define:
   
 Let's assume, vectorizing a matrix just means re-interpreting it as vector without re-ordering it in 
 memory. That means, we just concatenate all the rows, one after another, into one big vector (I 
-assume a row-major memory layout here). For our example with the 4x5 matrices, we have N = 4*5 = 20 
-unknowns, namely the entries of P. We will get an overdetermined linear system of 2*N = 40 equations 
-that looks in matrix form as follows (RHS means right hand side):
+assume a row-major memory layout here). For our example with the 4x5 matrices, we have 
+N = I*J * 4*5 = 20 unknowns, namely the entries of P. We will get an overdetermined linear system of 
+2*N+1 = 41 equations that looks in matrix form as follows (RHS means right hand side):
 
            Matrix                         * Vector =  RHS        What the line means     Ansatz
 
@@ -104,41 +101,32 @@ that looks in matrix form as follows (RHS means right hand side):
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ D C             V34        V34 = (P34-P33)/dx          B,BD
   _ _ _ _ _ _ _ 1 _ _ _ _ _ _ _ _ _ _ _ _              K         P12 = K                   Konstant 
   
+The very last line/equation is needed to make the system nonsingular. Without it, the matrix is 
+singular because there are infinitely many solutions that work as a potential for the same vector 
+field. They differ by a constant shift. The last line fixes P12 at K which can be a user-provided 
+constant. The index of the last 1 in the line selects where we want to fix the potential. Here it is 
+at index corresponding to P12. If we want to fix the potential at index i,j in the data matrix, the 
+corresponding index in the coefficient matrix i*J + j, here 1*5 + 2 = 7. The triple i,j,K can 
+be given by the user and default to 0, 0, 0.0.
+  
 For U = dP/dx = P_x, we have 10 (= 2*5) inner points (two rows) because the top and bottom matrix 
 rows count as boundary points. For V = dP/dy = P_y, we have 12 (= 3*4) inner points (3 columns) 
 because the left and right matrix columns count as boundary points. The distances between the two
 nonzero elements in each row are given by: dist(b,a) = 2*J = 2*5 = 10, dist(B,A) = J = 5, 
-dist(d,c) = 2, dist(D,C) = 1. The very last line/equation is needed to make the system nonsingular.
-Without it, the matrix is singular because there are infinitely many solutions that work as a 
-potential for the same vector field. They differ by a constant shift. The last line fixes P12 at K 
-which can be a user-provided constant. The index of the last 1 in the line selects where we want to 
-fix the potential. Here it is at index corresponding to P12. If we want to fix the potential at 
-index i,j in the data matrix, the corresponding index in the coefficient matrix i*J + j, here 
-1*5 + 2 = 7. The triple i,j,K can be given by the user and default to 0,0,0.0
-
+dist(d,c) = 2, dist(D,C) = 1. 
 
 We can interpret this matrix equation as a linear system of equations of the form:
 
-  M * p = vertcat(u,v) = w
+  M * p = vertcat(u,v,K) = w
      
-where p,u,v are the vectorizations of P,U,V and w = vertcat(u,v) means vertical concatenation of u 
-and v (I think, vertcat is the Matlab name for this operation, IIRC). If N = I*J = 4*5 = 20, we will 
-get 2*N = 40 equations for our 20 unknowns. That's an overdetermined system which we may solve as a 
-least squares problem by premultiplying both sides with M^T.
+where p,u,v are the vectorizations of P,U,V and w = vertcat(u,v,K) means vertical concatenation of u 
+and v and the constant K (I think, vertcat is the Matlab name for this operation, IIRC). If 
+N = I*J = 4*5 = 20, we will get 2*N+1 = 41 equations for our 20 unknowns. That's an overdetermined 
+system which we may solve as a least squares problem by premultiplying both sides with M^T.
 
   M^T * M * p = M^T * w
 
 which will reduce the number of equations to 20.
-
-ToDo:
--Implement it and make a unit test as follows: Create some artbitrary matrix to serve as the 
- potential P. Maybe fill it with some function values. Obtain numerical partial derivatives from P, 
- call them U,V. Feed these U,V into the routine to compute the potential and call the computed 
- potential Q. Compare Q to the original potentetial P. If the numerical differencing uses central 
- differences for inner points and forward or backward differences for boundary points, then Q should 
- match P up to rounding errors. The tricky part will be assembling the matrix. During development,
- first fill the matrix elements for the inner points and let the unit test only check these. Then 
- add the code for the boundary points together with associated tests step by step.
 
 Notes:
 -The matrix is sparse but unstructured. Maybe with some clever re-ordering of the vectors, we could
@@ -157,8 +145,8 @@ Notes:
  matrix. The result might be more accurate at the cost of more computations due to a less sparse 
  matrix. We could perhaps also use formulas for numerical integration (i.e. trapezoidal et al) for 
  the ansatz (not sure, if that makes sense, though).
--I think, if we numerically differentiate our so obtained potential (using the same differencing 
- formula as was used in the ansatz), we will obtain some sort of best curl-free approximation of our
+-I think, if we numerically differentiate our so obtained potential using the same differencing 
+ formula as was used in the ansatz, we will obtain some sort of best curl-free approximation of our
  original vector field. If it has been (numerically) curl-free in the first place, we should get it 
  back as it was. By "numerically curl-free", I mean a curl-free condition in which derivatives have 
  been replaced by numeric approximations via finite differences. Maybe that can be useful to 

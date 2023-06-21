@@ -227,10 +227,6 @@ h = h(x,y):
 ...ah..no...the last line is linearly dependent on the first two (its their sum), so the system is 
 singular
   
-
-
-
-
 Now take the differences:
 
   U-V = (3x^3 + 5xy) - (2y^4 + 5xy) = 3x^3 - 2y^4         = g(x) - f(y)
@@ -255,4 +251,9 @@ the actual f(y) and/or g(x) was.
   2: V - U = (2y^4 + 5xy + g(x)) - (3x^3 + 5xy + f(y)) = (2y^4 + g(x)) - (3x^3 + f(y))
   
 Solve 1  
+
+...hmm...however we spin it, we don't seem to get enough equations. Maybe we can obtain more 
+equations based on directional derivatives into the diagonal directions? Maybe something like
+
+  U =
 

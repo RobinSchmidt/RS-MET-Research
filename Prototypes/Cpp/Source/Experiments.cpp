@@ -11855,11 +11855,12 @@ void plotZetaPotential()
   //
 }
 
-void testNumericPotential()
+bool testNumericPotential() // Function can be used as unit-test, too
 {
-  // We implement the idea outlined in Notes/PotentialNumeric.txt. ...tbc..
+  // We test the implementation of the idea outlined in Notes/PotentialNumeric.txt here in this 
+  // repo
 
-  using Real = double;
+  using Real = float;
   using Mat  = rsMatrix<Real>;
   using Vec  = std::vector<Real>;
 
@@ -11894,32 +11895,19 @@ void testNumericPotential()
   j = 3;             // Column index desired value
   Real K = P(i, j);  // desired value of potential at i,j
   Mat  Q = rsNumericPotential(U, V, dx, dy, K, i, j);  // Do it!
-  // Yep! Looks good! Q and P match!
 
+  // Yep! Looks good! Q and P match! We may eventually turn this function into a programmatic unit
+  // test. The computation of the potential uses as ansatz equations exactly the same equations 
+  // that we indeed use to obtain our numeric derivatives so the reconstructed potential should 
+  // indeed match the original one up to a numerical tolerance. We check that now:
 
-  // ToDo:
-  // -Turn this into a programmatic unit test by comparing the matrices P and Q, i.e. define
-  //  D = P-Q and check that D is zero (up to a tolerance). The computation of the potential uses
-  //  as ansatz equations exactly the same equations that we indeed use to obtain our numeric 
-  //  derivatives so the reconstructed potential should indeed match the original one.
-
-  // Notes:
-  // -
-
-  // The matrix R^T * R is apparently singular. That is true even in the smallest possible 
-  // IxJ = 2x2 case. Ahh! I know! It's supposed to be singular because there are infinitely
-  // many solution because the potential is not unique. We may add an artificial condition that
-  // fixes the value of the potential at a given point, i.e. at a given pair of indices. For 
-  // example, we could require P(0,0) = 0, or more generally P(i,j) = K and let the user set up
-  // i,j,K
-  // See:
-  // https://math.stackexchange.com/questions/1340719/numerically-find-a-potential-field-from-gradient
-  // There, it is suggested to just remove one equation from the system. ...but that's kinda 
-  // inconvenient. I think, adding an additional condition is more convenient.. So, that means, the
-  // matrix R should get one row more more. If we append it at the bottom, the code above can remain
-  // as is. The line should have all zeros and one 1 at i*J + j
-
-  int dummy = 0;
+  bool ok  = true;
+  Real tol = 1.e-3;   // We need quite abig tolerance!
+  Mat  D   = Q - P;
+  Real err = D.getAbsoluteMaximum();
+  ok &= err <= tol;
+ 
+  return ok;
 }
 
 

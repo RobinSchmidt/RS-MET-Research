@@ -7502,12 +7502,13 @@ rsMatrix<T> rsNumericDerivativeY(const rsMatrix<T>& P, T dy)
     V(i, J-1) = (P(i, J-1) - P(i, J-2)) / dy;      // backward diff at top boundary / right column
   return V;
 }
-// move these 2 into RAPT::rsNumericDifferentiator, optimize away the divisions
+// Move these 2 into RAPT::rsNumericDifferentiator, optimize away the divisions
 
 
 /** Computes a potential for a vector field given in the matrices U(i,j), V(i,j) numerically.
 
-For details see the textfile her in the repo:
+For details see the textfile here in the repo:
+https://github.com/RobinSchmidt/RS-MET-Research/blob/master/Notes/PotentialNumerical.txt
 
 ...TBC...  */
 
@@ -7592,6 +7593,9 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   return P;
 }
 
+// ToDo: 
+// To make this idea useful in practice, we need an implementation based on sparse matrices. The 
+// dense matrix based implementation here can only serve as proof of concept.
 
 
 

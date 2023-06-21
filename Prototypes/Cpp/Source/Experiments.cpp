@@ -11759,7 +11759,7 @@ void plotZetaPotential()
   //xMin = 0.4; xMax = 0.6; yMin = 12; yMax = 16; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
   //xMin = 0.4; xMax = 0.6; yMin = 14.0; yMax = 14.2; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
   //xMin = 0.4; xMax = 0.6; yMin = 10; yMax = 40; Nx = 21; Ny = 41; // 1st 6 nontrivial zeros
-  xMin = 0.4;  xMax =  0.6; yMin = 12; yMax = 13; Nx = 101; Ny = 101; // close to convergence breakdown
+  //xMin = 0.4;  xMax =  0.6; yMin = 12; yMax = 13; Nx = 101; Ny = 101; // close to convergence breakdown
 
 
   using Vec = std::vector<double>;
@@ -11790,7 +11790,7 @@ void plotZetaPotential()
   plt.addCommand("set palette rgbformulae 8, 9, 7");
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
-  plt.addCommand("set pm3d lighting specular 0.6");
+  plt.addCommand("set pm3d lighting specular 0.2");
 
   plt.addCommand("set term wxt background rgb \"black\"");
 
@@ -11818,6 +11818,8 @@ void plotZetaPotential()
   // -There seem to be only saddles and no extrema except for the hole/funnel at s = 1 where it 
   //  goes to ...where? -inf?. That's a  weird landscape! I expected to see alternating minima and 
   //  maxima.
+  // -P has (even) symmetry with respect to y
+  // -Looking directly from above is also pretty intersting.
   // -When trying to plot the range where the nontrivial zeros live, we get very large values. 
   //  Maybe the evaluation algo is not yet up to it?
   // -When zooming in into the first nontrivial zero at s = 1/2 + 14.1i, it looks strange - as if 

@@ -11925,6 +11925,16 @@ void testNumericPotential()
   Real c = 1/(2*dy); Real C = 1/dy; Real d = -c; Real D = -C;
 
   // add the b,a coeffs:
+  //int k;
+  for(int k = 0; k < N; k++)
+  {
+    R(k+J, k) = b;
+
+  }
+
+
+
+  /*
   int m, n;
   for(m = 0; m < N; m++)   
   {
@@ -11933,10 +11943,8 @@ void testNumericPotential()
       R(m,       n) = b;
       //R(m + 2*J, n) = a;
     }
-
-
-
   }
+  */
 
  
   plotMatrix(R, true);

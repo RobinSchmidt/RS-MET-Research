@@ -3,13 +3,13 @@ represents a potential field. How can we find a corresponding potential numerica
 have 2 2D data arrays u(i,j), v(i,j) representing the functions U(x,y), V(x,y) where the x,y are 
 equidistant with stepsize dx,dy respectively. The situation could look like this:
 
-                U(i,j)                          V(i,j)                             P(i,j)
-     i                               i                                  i
-  j:     0   1   2   3   4   5    j:     0   1   2   3   4   5       j:     0   1   2   3   4   5
-     0  U00 U01 U02 U03 U04 U05      0  V00 V01 V02 V03 V04 V05         0  P00 P01 P02 P03 P04 P05
-     1  U10 U11 U12 U13 U14 U15      1  V10 V11 V12 V13 V14 V15         1  P10 P11 P12 P13 P14 P15
-     2  U20 U21 U22 U23 U24 U25      2  V20 V21 V22 V23 V24 V25         2  P20 P21 P22 P23 P24 P25
-     3  U30 U31 U32 U33 U34 U35      3  V30 V31 V32 V33 V34 V35         3  P30 P31 P32 P33 P34 P35
+                U(i,j)                      V(i,j)                         P(i,j)
+     i                           i                              i
+  j:     0   1   2   3   4    j:     0   1   2   3   4       j:     0   1   2   3   4 
+     0  U00 U01 U02 U03 U04      0  V00 V01 V02 V03 V04         0  P00 P01 P02 P03 P04
+     1  U10 U11 U12 U13 U14      1  V10 V11 V12 V13 V14         1  P10 P11 P12 P13 P14
+     2  U20 U21 U22 U23 U24      2  V20 V21 V22 V23 V24         2  P20 P21 P22 P23 P24
+     3  U30 U31 U32 U33 U34      3  V30 V31 V32 V33 V34         3  P30 P31 P32 P33 P34
 
 where the U,V-matrices are known and the P-matrix is to be computed. P should become the potential
 of U,V. Note that the visual depiction is misleading in what is x and what is y: x or i goes down 
@@ -34,34 +34,73 @@ formulas or just leave them out for the moment. We want to write the set of equa
 where mat is a coefficient matrix and vec(P), vec(U,V) are so appropriate vectorizations of the 
 matrices. Let's rewrite the ansatz as:
 
-  P(i+1, j  ) - P(i-1, j  ) = 2*dx * U(i,j)
-  P(i,   j+1) - P(i,   j-1) = 2*dy * V(i,j)
+  a*P(i+1, j  ) + b*P(i-1, j  ) = U(i,j)
+  c*P(i,   j+1) + d*P(i,   j-1) = V(i,j)
 
+where 
+
+  a = 1/(2*dx), b = -1/(2*dx), c = 1/(2*dy), d = -1/(2*dy). 
+  
 Let's assume, vectorizing a matrix just means re-interpreting it as vector without re-ordering it in 
 memory. That means, we just concatenate all the rows, one after another, into one big vector. For 
-our example with the 4x6 matrices, we would get a linear system of equations that looks as follows:
-
-
+our example with the 4x5 matrices, we would get a linear system of equations that looks as follows:
 
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P02      U02
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P03      U03
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P04      U04
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P05      U05
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P10      U10
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P11      U11
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P12      U12
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P13      U13
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P14      U14
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P15      U15
-  
-  ...
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P20      U20
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P21      U21
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P22      U22
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P23      U23
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P24      U24
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P30      U30
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P31      U31
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P32      U32
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P33      U33
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P34  =   U34
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V00
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V01
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V02
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V03
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V04
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V10
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V11
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V12
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V13
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V14
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V20
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V21
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V22
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V23
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V24
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V30
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V31
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V32
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V33
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V34  
 
+ToDo: The matrix needs to be filled appropriately. It will be sparse. Each row will have two nonzero
+coeffs which can be either a or b in the upper half or c or d in the lower half.
 
+We can interpret this as a linear system of the form:
 
+  A * p = vertcat(u,v) = w
+     
+where p,u,v are the vectorizations of P,U,V and w = vertcat(u,v) means vertical concatenation of u 
+and v (I think, vertcat is the Matlab name for this operation, IIRC). If N = I*J = 4*5 = 20, we will 
+get 2*N = 40 equations for our 20 unknowns. That's an overdetermined system which we may solve as a 
+least squares problem by premultiplying both sides with A^T.
 
+  A^T * A * p = A^T * w
 
+which will reduce the number of equations to 20. ...TBC...
 
 
 

@@ -161,7 +161,11 @@ Notes:
  formula as was used in the ansatz), we will obtain some sort of best curl-free approximation of our
  original vector field. If it has been (numerically) curl-free in the first place, we should get it 
  back as it was. By "numerically curl-free", I mean a curl-free condition in which derivatives have 
- been replaced by numeric approximations via finite differences.
+ been replaced by numeric approximations via finite differences. Maybe that can be useful to 
+ decompose vector fields according to the Helmoltz decomposition theorem. We could subtract the
+ curl-free approximation from the original field to get the curl only. The remainder is then div 
+ plus constant flow, I think. See 
+ https://en.wikipedia.org/wiki/Helmholtz_decomposition
 -When we use the best curl-free approximation algorithm with a negated V, we might obtain a best
  (numerically) analytic approximation to an arbitrary given complex function that is represented
  by U,V. By "numerically analytic", I mean a function that satisfies the numerical pendants of the

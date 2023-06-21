@@ -52,8 +52,9 @@ where
   a = 1/(2*dx), b = -1/(2*dx), c = 1/(2*dy), d = -1/(2*dy)
   
 Let's assume, vectorizing a matrix just means re-interpreting it as vector without re-ordering it in 
-memory. That means, we just concatenate all the rows, one after another, into one big vector. For 
-our example with the 4x5 matrices, we would get a linear system of equations that looks as follows:
+memory. That means, we just concatenate all the rows, one after another, into one big vector (I 
+assume a row-major memory layout here). For our example with the 4x5 matrices, we would get a linear 
+system of equations that looks as follows:
 
                                                                          What the line means
 
@@ -68,9 +69,9 @@ our example with the 4x5 matrices, we would get a linear system of equations tha
   _ _ _ _ _ _ _ b _ a _ _ _ _ _ _ _ _ _ _ _ _ _ _    P13      U13        U13 = (P14-P12)/(2dx)
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P14      U14
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P20      U20
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P21      U21
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P22      U22
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P23      U23
+  _ _ _ _ _ _ _ _ _ _ b _ a _ _ _ _ _ _ _ _ _ _ _    P21      U21        U21 = (P22-P20)/(2dx)
+  _ _ _ _ _ _ _ _ _ _ _ b _ a _ _ _ _ _ _ _ _ _ _    P22      U22        U22 = (P23-P21)/(2dx)
+  _ _ _ _ _ _ _ _ _ _ _ _ b _ a _ _ _ _ _ _ _ _ _    P23      U23        U23 = (P24-P22)/(2dx)
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P24      U24
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P30      U30
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P31      U31

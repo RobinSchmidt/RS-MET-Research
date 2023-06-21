@@ -74,7 +74,7 @@ system of equations that looks as follows:
   _ _ _ _ _ _ _ _ _ _ _ _ b _ a _ _ _ _ _ _ _ _ _    P23      U23        U23 = (P24-P22)/(2dx)
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P24      U24
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P30      U30
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P31      U31
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ b _ a _ _ _ _ _ _    P31      U31        U31 = (P32-P30)/(2dx)
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P32      U32
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P33      U33
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P34  =   U34
@@ -99,7 +99,8 @@ system of equations that looks as follows:
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V33
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V34  
 
-ToDo: The matrix needs to be filled appropriately. It will be sparse. Each row will have two nonzero
+ToDo (partially done):
+The matrix needs to be filled appropriately . It will be sparse. Each row will have two nonzero
 coeffs which can be either (mostly) a or b in the upper half or (mostly) c or d in the lower half. 
 All rows and columns of the matrix that involve boundary points of P, will need special coefficients 
 based on the forward or backward difference ansatz for the boundary points [ToDo: figure out the 

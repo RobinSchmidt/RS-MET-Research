@@ -11759,6 +11759,7 @@ void plotZetaPotential()
   //xMin = 0.4; xMax = 0.6; yMin = 12; yMax = 16; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
   //xMin = 0.4; xMax = 0.6; yMin = 14.0; yMax = 14.2; Nx = 21; Ny = 41; // 1st nontrivial zeros y ~ 14.1
   //xMin = 0.4; xMax = 0.6; yMin = 10; yMax = 40; Nx = 21; Ny = 41; // 1st 6 nontrivial zeros
+  xMin = 0.4;  xMax =  0.6; yMin = 12; yMax = 13; Nx = 101; Ny = 101; // close to convergence breakdown
 
 
   using Vec = std::vector<double>;
@@ -11815,7 +11816,8 @@ void plotZetaPotential()
 
   // Observations:
   // -There seem to be only saddles and no extrema except for the hole/funnel at s = 1 where it 
-  //  goes to ...where? -inf?. That's a  weird landscape!
+  //  goes to ...where? -inf?. That's a  weird landscape! I expected to see alternating minima and 
+  //  maxima.
   // -When trying to plot the range where the nontrivial zeros live, we get very large values. 
   //  Maybe the evaluation algo is not yet up to it?
   // -When zooming in into the first nontrivial zero at s = 1/2 + 14.1i, it looks strange - as if 

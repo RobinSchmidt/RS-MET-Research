@@ -11876,22 +11876,27 @@ void testNumericPotential()
   Real dx = (xMax-xMin) / M;
   Real dy = (yMax-yMin) / N;
 
-  // Fill the potential with the function exp(x)*sin(y)
+  // Fill the potential with the function exp(x)*cos(y)
   int i, j;
   for(i = 0; i < M; i++) {
     for(j = 0; j < N; j++) {
       Real x  = xMin + i*dx;
       Real y  = yMin + j*dy;
-      P(i, j) = exp(x) * sin(y); }}
+      P(i, j) = exp(x) * cos(y); }}
 
   // Obtain the numerical partial derivative with respect to x:
   for(i = 1; i < M-1; i++)
     for(j = 0; j < N; j++) 
-      U(i, j) = (U(i+1, j) - U(i-1, j)) / (2*dx);  // central diff for general point
+      U(i, j) = (P(i+1, j) - P(i-1, j)) / (2*dx);  // central diff for general point
   for(j = 0; j < N; j++) 
-    U(i, j) = (U(0, j) - U(1, j)) / dx;            // forward diff at left boundary
+    U(0, j) = (P(0, j) - P(1, j)) / dx;            // forward diff at left boundary
   for(j = 0; j < N; j++) 
-    U(i, j) = (U(M-1, j) - U(M-2, j)) / dx;        // backward diff at right boundary
+    U(M-1, j) = (P(M-1, j) - P(M-2, j)) / dx;      // backward diff at right boundary
+
+  // Obtain the numerical partial derivative with respect to y:
+  for(i = 0; i < M; i++)
+    for(j = 1; j < N-1; j++) 
+      V(i, j) = (P(i, j+1) - P(i, j-1)) / (2*dy);  // central diff for general point
 
 
 

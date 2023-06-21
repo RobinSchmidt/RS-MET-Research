@@ -11855,6 +11855,8 @@ void plotZetaPotential()
   //
 }
 
+//template<class T>
+
 void testNumericPotential()
 {
   // We try to implement the idea outlined in Notes/PotentialNumeric.txt
@@ -11867,9 +11869,9 @@ void testNumericPotential()
   int J = 5;   // number of columns
 
   Real xMin = 0.0;
-  Real xMax = 10.0;
+  Real xMax = 20.0;
   Real yMin = 0.0;
-  Real yMax = 10.0;
+  Real yMax = 20.0;
 
   Mat P(I, J), U(I, J), V(I, J);  // Potential and its numerical x- and y-derivatives
 
@@ -11901,6 +11903,59 @@ void testNumericPotential()
     V(i, 0) = (P(i, 0) - P(i, 1)) / dy;            // forward diff at bottom boundary / left column
   for(i = 0; i < I; i++)
     V(i, J-1) = (P(i, J-1) - P(i, J-2)) / dy;      // backward diff at top boundary / right column
+
+  // OK - we have now some data. now we want to try to recover the potential P from U,V. Let's call
+  // our recovered potential Q:
+
+
+  // We need vectorized versions of U,V and their concatenation for the right hand side of the 
+  // linear system:
+  Vec u = toVector(U.getDataPointerConst(), U.getSize());
+  Vec v = toVector(V.getDataPointerConst(), V.getSize());
+  Vec w = RAPT::rsConcatenate(u, v);
+  // ToDo: Maybe add u = U.toVector(); as convenience function to rsMatrix
+
+  // Now we assemble the coefficient matrix:
+  int N = I*J;   // Number of unknowns = number of columns of coeff matrix
+  int M = 2*N;   // Number of equations = number of rows of coeffs matrix
+
+  Mat R(M, N);   // we use R bcs M (as used in the text) is aready taken
+
+  Real a = 1/(2*dx); Real A = 1/dx; Real b = -a; Real B = -A;
+  Real c = 1/(2*dy); Real C = 1/dy; Real d = -c; Real D = -C;
+
+  // add the b,a coeffs:
+  int m, n;
+  for(m = 0; m < N; m++)   
+  {
+    for(n = J; n < N-J; n++)  
+    {
+      R(m,       n) = b;
+      //R(m + 2*J, n) = a;
+    }
+
+
+
+  }
+
+ 
+  plotMatrix(R, true);
+  //rsPlotMatrix
+  //rsPrintMatrix(R);
+
+
+  //for(int 
+
+
+
+
+
+
+
+  //Mat Q(I, J);
+
+  // We need vectorizations of 
+
 
 
   int dummy = 0;

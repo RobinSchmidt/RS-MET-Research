@@ -11749,6 +11749,7 @@ void plotZetaPotential()
 
   //xMin = -6;  xMax =  2; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
   xMin = -8;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
+  //xMin = -6;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
   //xMin = -2.0; xMax = 4.0; yMin = -3; yMax = +3; Nx = 101; Ny = 101; 
   //xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 101; Ny = 101; // pole/funnel at s = 1
   //xMin = -8.0; xMax = 0.8; yMin = -3; yMax = +3; Nx = 101; Ny = 101;
@@ -11790,16 +11791,25 @@ void plotZetaPotential()
   plt.addCommand("set palette rgbformulae 8, 9, 7");
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
-  plt.addCommand("set pm3d lighting specular 0.2");
+  plt.addCommand("set pm3d lighting specular 0.25");
 
   plt.addCommand("set term wxt background rgb \"black\"");
+  //plt.addCommand("set term wxt background rgb \"white\"");
 
-  plt.addCommand("set border lw 3 lc rgb \"white\"");
+
+
+  plt.addCommand("set border lw 1 lc rgb \"white\"");
+
+  plt.addCommand("set grid lw 1 lc rgb \"white\"");
+
+
   plt.addCommand("set xtics textcolor rgb \"white\"");
   plt.addCommand("set ytics textcolor rgb \"white\"");
   plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
   plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
   //plt.addCommand("set key textcolor rgb \"white\"");  // shows the filename
+
+  // set grid y2tics lt 0 lw 1 lc rgb "#008800"
 
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
   plt.invokeGNUPlot();
@@ -11832,6 +11842,13 @@ void plotZetaPotential()
   //  ...OK - now with 31 terms, the surface looks very different indeed. But I think, the sum is
   //  still not yet converged. The error of computing zeta via numeric differentiation is still 
   //  high. Maybe we need yet more terms. Maybe try 63.
+  // -Check the second derivatives (i.e. Hessian) at the saddles. The one at s=-8 looks very flat 
+  //  as if some higher derivatives are also zero. the one at -4 looks also flat, as done the one
+  //  at -6. For the -4 and -8 saddle, the "wings" in the y-direction go downward, for the -6 
+  //  saddle, the wings go upward. It goes like this: -2: down, -4: down, -6: up, -8: down, ...
+  //  etc. ToDo: explore the pattern of up/down further
+  // -Q: Could it be that each trivial zero is connected to a nontrivial one by some sort of 
+  //  ridge? Maybe try to find geodesics between trivial and nontrivial zeros.
 
   // ToDo:
 

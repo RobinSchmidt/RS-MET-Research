@@ -26,20 +26,30 @@ means, we can make the ansatz:
 Maybe such an ansatz can lead to a (sparse) linear system for the p(i,j). Maybe, if we cleverly 
 vectorize the matrices, it could even tridiagonal or maybe pentadiagonal? This formula applies only 
 to inner, points. If the index ranges are i = 0,...,I-1 and j = 0,...,J-1, then the formula above 
-applies only to i = 1,..,I-2, j = 1,...,J-2. For the edges and corners, we may either use special 
-formulas or just leave them out for the moment. We want to write the set of equations in the form:
+applies only to i = 1,..,I-2, j = 1,...,J-2, i.e. to the inner points. For the boundary points at 
+the edges and corners, we may either use special formulas based on forward or backward differences:
+
+ U(i,j) = (P(i+1,j) - P(i,  j)) / dx      i = 0
+ U(i,j) = (P(i,  j) - P(i-1,j)) / dx      i = I-1
+ V(i,j) = (P(i,j+1) - P(i,  j)) / dy      j = 0
+ V(i,j) = (P(i,j  ) - P(i,j-1)) / dy      j = J-1
+ 
+...or just leave them out for the moment and just compute the potential only for the inner points. 
+We could tell the user to pad the matrices at the boundaries (by repitition of last value or 
+(better) by linear extrapolation) or do that ourselves in a convenience function. We want to write 
+the set of equations in the form:
 
   mat * vec(P) = vec(U,V)
 
-where mat is a coefficient matrix and vec(P), vec(U,V) are so appropriate vectorizations of the 
-matrices. Let's rewrite the ansatz as:
+where mat is a coefficient matrix and vec(P), vec(U,V) are appropriate vectorizations of the 
+matrices. Let's rewrite the ansatz for the inner points as:
 
   a*P(i+1, j  ) + b*P(i-1, j  ) = U(i,j)
   c*P(i,   j+1) + d*P(i,   j-1) = V(i,j)
 
 where 
 
-  a = 1/(2*dx), b = -1/(2*dx), c = 1/(2*dy), d = -1/(2*dy). 
+  a = 1/(2*dx), b = -1/(2*dx), c = 1/(2*dy), d = -1/(2*dy)
   
 Let's assume, vectorizing a matrix just means re-interpreting it as vector without re-ordering it in 
 memory. That means, we just concatenate all the rows, one after another, into one big vector. For 
@@ -87,7 +97,10 @@ our example with the 4x5 matrices, we would get a linear system of equations tha
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V34  
 
 ToDo: The matrix needs to be filled appropriately. It will be sparse. Each row will have two nonzero
-coeffs which can be either a or b in the upper half or c or d in the lower half.
+coeffs which can be either (mostly) a or b in the upper half or (mostly) c or d in the lower half. 
+All rows and columns of the matrix that involve boundary points of P, will need special coefficients 
+based on the forward or backward difference ansatz for the boundary points [ToDo: figure out the 
+details!]. 
 
 We can interpret this as a linear system of the form:
 

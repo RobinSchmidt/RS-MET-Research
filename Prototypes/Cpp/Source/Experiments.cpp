@@ -11871,9 +11871,9 @@ void testNumericPotential()
   //I = 2; J = 2;  // for test
 
   Real xMin = 0.0;
-  Real xMax = 1.0;
+  Real xMax = 10.0;
   Real yMin = 0.0;
-  Real yMax = 1.0;
+  Real yMax = 10.0;
 
   Mat P(I, J), U(I, J), V(I, J);  // Potential and its numerical x- and y-derivatives
 
@@ -11919,9 +11919,9 @@ void testNumericPotential()
 
   // Now we assemble the coefficient matrix:
   int N = I*J;   // Number of unknowns = number of columns of coeff matrix
-  int M = 2*N;   // Number of equations = number of rows of coeffs matrix
+  //int M = 2*N;   // Number of equations = number of rows of coeffs matrix
 
-  Mat R(M, N);   // we use R bcs M (as used in the text) is aready taken
+  Mat R(2*N+1, N);   // we use R bcs M (as used in the text) is aready taken
 
   Real a = 1/(2*dx); Real A = 1/dx; Real b = -a; Real B = -A;
   Real c = 1/(2*dy); Real C = 1/dy; Real d = -c; Real D = -C;
@@ -11956,7 +11956,21 @@ void testNumericPotential()
     }
   }
 
+  // Add the last row for the additional condition to let the potential have some given value at
+  // some given position:
+  i = 1;             // Row index in data matrix Q or P.
+  j = 2;             // Column index in data matrix Q or P.
+  int  k = i*J + j;  // Column index coefficient matrix R.
+  Real K = P(i, j);  // Constant that Q(i, j) gets assigned to
+  R(2*N, k) = 1;     // At position k in the last line
+  w.push_back(K);    // Desired value K = Q(i,j) must be added to RHS
+
+
+
+  // We grabbed K here from the original potential P for a match. In reality, the triple i,j,K can
+  // be user given (defaulting to 0, 0, 0.0)
   Mat RT  = R.getTranspose();
+  Vec wp  = RT * w;           // w' = R^T * w
   Mat RTR = RT * R;           // for the solver
 
   plotMatrix(R,   true);  // OK - looks good, like in the textfile
@@ -11964,13 +11978,15 @@ void testNumericPotential()
 
 
   // Now solve the system:
-  Vec wp = RT * w;           // w' = R^T * w
+
   Vec q  = rsLinearAlgebraNew::solve(RTR, wp);     // Q in vectorized form
-  // q is all zero! WTF! Seems like the matrix is singular!
+  // The result seems to be totally wrong. The only value that matches is the K constant at k. 
 
   //Mat Q = 
 
 
+  // Notes:
+  // -
 
   // The matrix R^T * R is apparently singular. That is true even in the smallest possible 
   // IxJ = 2x2 case. Ahh! I know! It's supposed to be singular because there are infinitely
@@ -11978,6 +11994,12 @@ void testNumericPotential()
   // fixes the value of the potential at a given point, i.e. at a given pair of indices. For 
   // example, we could require P(0,0) = 0, or more generally P(i,j) = K and let the user set up
   // i,j,K
+  // See:
+  // https://math.stackexchange.com/questions/1340719/numerically-find-a-potential-field-from-gradient
+  // There, it is suggested to just remove one equation from the system. ...but that's kinda 
+  // inconvenient. I think, adding an additional condition is more convenient.. So, that means, the
+  // matrix R should get one row more more. If we append it at the bottom, the code above can remain
+  // as is. The line should have all zeros and one 1 at i*J + j
 
 
 

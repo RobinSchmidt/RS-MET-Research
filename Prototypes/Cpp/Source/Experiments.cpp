@@ -11862,6 +11862,10 @@ void plotZetaPotentialNumeric()
   double yRange  =  0.2;
 
 
+  xCenter = 0.5;
+  yCenter = 14.134725142;
+
+
   double xMin = xCenter - xRange/2;
   double xMax = xCenter + xRange/2;
   double yMin = yCenter - yRange/2;
@@ -11884,7 +11888,8 @@ void plotZetaPotentialNumeric()
       Complex s(x[i], y[j]);
       Complex z;
 
-      z = RZF::evalViaLaurentSeries(s, 31);
+      //z = RZF::evalViaLaurentSeries(s, 31);
+      z = RZF::evalViaBoostSum(s, 25);
 
       U(i, j) =  real(z);
       V(i, j) = -imag(z);
@@ -11897,10 +11902,19 @@ void plotZetaPotentialNumeric()
   Mat P = rsNumericPotential(U, V, dx, dy);
 
 
-  // Preliminary (make it look nicer!):
+  // Preliminary (ToDo: make it look nicer!):
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
   plt.plot3D();
   int dummy = 0;
+
+
+  // Observations:
+  // -At the fist nontrivial zero, the evalViaLaurentSeries does not converge within 31 terms.
+  // -With the boost formula, we indeed see a saddle which is osrt of diagonally aligned. But 
+  //  the actual value range is rediculously small - like in the 10^-20 range. Moreover, the 
+  //  range seems to depend on the number of terms: more terms -> smaller range.
+  //
+
 }
 
 bool testNumericPotential() // Function can be used as unit-test, too

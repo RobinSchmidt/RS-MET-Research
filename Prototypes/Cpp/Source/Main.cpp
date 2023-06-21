@@ -86,8 +86,9 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testRiemannZeta();
   //plotZetaPotential();
+  plotZetaPotentialNumeric();
 
-  testNumericPotential();
+  //testNumericPotential();
 
 
   return 0;

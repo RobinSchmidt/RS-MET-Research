@@ -11788,30 +11788,21 @@ void plotZetaPotential()
   }
 
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+
+  // Factor out into plotSurfaceDark(plt)
   plt.addCommand("set palette rgbformulae 8, 9, 7");
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
   plt.addCommand("set pm3d lighting specular 0.25");
-
   plt.addCommand("set term wxt background rgb \"black\"");
-  //plt.addCommand("set term wxt background rgb \"white\"");
-
-
-
   plt.addCommand("set border lw 1 lc rgb \"white\"");
-
   plt.addCommand("set grid lw 1 lc rgb \"white\"");
-
-
   plt.addCommand("set xtics textcolor rgb \"white\"");
   plt.addCommand("set ytics textcolor rgb \"white\"");
   plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
   plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
-  //plt.addCommand("set key textcolor rgb \"white\"");  // shows the filename
-
-  // set grid y2tics lt 0 lw 1 lc rgb "#008800"
-
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
+
   plt.invokeGNUPlot();
 
 
@@ -11850,9 +11841,68 @@ void plotZetaPotential()
   // -Q: Could it be that each trivial zero is connected to a nontrivial one by some sort of 
   //  ridge? Maybe try to find geodesics between trivial and nontrivial zeros.
 
-  // ToDo:
+}
 
-  //
+void plotZetaPotentialNumeric()
+{
+  // We use rsNumericPotential together with zeta evaluation algorithms to get an idea of zeta's 
+  // Polya potential around the nontrivial zeros. Due to the dense matrix implementation, we need 
+  // to restrict ourselves to a small neighborhood. Maybe use 11x11 matrices.
+
+  using RZF = rsRiemannZetaFunction;
+  using Vec = std::vector<double>;
+  using Mat = RAPT::rsMatrix<double>;
+  using Complex = std::complex<double>;
+
+  int Nx = 11;
+  int Ny = 11;
+  double xCenter = -4.0;
+  double xRange  =  0.2;
+  double yCenter =  0.0;
+  double yRange  =  0.2;
+
+
+  double xMin = xCenter - xRange/2;
+  double xMax = xCenter + xRange/2;
+  double yMin = yCenter - yRange/2;
+  double yMax = yCenter + yRange/2;
+
+  Vec x(Nx), y(Ny);
+
+  Mat U(Nx, Ny);
+  Mat V(Nx, Ny);
+
+  GNUPlotter plt;
+  plt.rangeLinear(&x[0], Nx, xMin, xMax);
+  plt.rangeLinear(&y[0], Ny, yMin, yMax);
+
+  // Compute Polya vector field of zeta:
+  for(int i = 0; i < Nx; i++)
+  {
+    for(int j = 0; j < Ny; j++)
+    {
+      Complex s(x[i], y[j]);
+      Complex z;
+
+      z = RZF::evalViaLaurentSeries(s, 31);
+
+      U(i, j) =  real(z);
+      V(i, j) = -imag(z);
+    }
+  }
+
+  // preliminary:
+  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], U.getDataPointer());
+  plt.plot3D();
+
+
+
+  Mat P(Nx, Ny);
+
+
+
+
+  int dummy = 0;
 }
 
 bool testNumericPotential() // Function can be used as unit-test, too

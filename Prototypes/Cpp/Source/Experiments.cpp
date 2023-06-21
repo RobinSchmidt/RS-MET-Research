@@ -11886,6 +11886,8 @@ void testNumericPotential()
       Real y  = yMin + j*dy;
       P(i, j) = exp(x) * cos(y); }}
 
+  // Move into functions rsNumericDerivativeX,  rsNumericDerivativeY
+
   // Obtain the numerical partial derivative with respect to x:
   for(i = 1; i < I-1; i++)
     for(j = 0; j < J; j++) 
@@ -11904,89 +11906,15 @@ void testNumericPotential()
   for(i = 0; i < I; i++)
     V(i, J-1) = (P(i, J-1) - P(i, J-2)) / dy;      // backward diff at top boundary / right column
 
-  // OK - we have now some data. now we want to try to recover the potential P from U,V. Let's call
-  // our recovered potential Q:
-
-
-  // We need vectorized versions of U,V and their concatenation for the right hand side of the 
-  // linear system:
-  Vec u = toVector(U.getDataPointerConst(), U.getSize());
-  Vec v = toVector(V.getDataPointerConst(), V.getSize());
-  Vec w = RAPT::rsConcatenate(u, v);
-  // ToDo: Maybe add u = U.toVector(); as convenience function to rsMatrix
-
-  // Now we assemble the coefficient matrix:
-  int N = I*J;   // Number of unknowns = number of columns of coeff matrix
-  //int M = 2*N;   // Number of equations = number of rows of coeffs matrix
-
-  Mat R(2*N+1, N);   // we use R bcs M (as used in the text) is aready taken
-
-  Real a = 1/(2*dx); Real A = 1/dx; Real b = -a; Real B = -A;
-  Real c = 1/(2*dy); Real C = 1/dy; Real d = -c; Real D = -C;
-
-  // Add the b,a coeffs:
-  for(int k = 0; k < N-2*J; k++) 
-  {
-    R(k+J, k)     = b;
-    R(k+J, k+2*J) = a;
-  }
-  // Add the B,A coeffs:
-  for(int k = 0; k < J; k++)
-  {
-    R(k,     k)       = B;
-    R(k,     k+J)     = A;
-    R(N-1-k, N-1-k)   = A;
-    R(N-1-k, N-1-k-J) = B;
-  }
-
-  // Add the d,c coeffs:
-  for(i = 0; i < I; i++)    // loop over the blocks
-  {
-    int s = i*J;            // start of i-th block
-    R(N+s,     s    ) = D;
-    R(N+s,     s+1  ) = C;
-    R(N+s+J-1, s+J-1) = C;
-    R(N+s+J-1, s+J-2) = D;
-    for(int k = 1; k < J-1; k++)
-    {
-      R(N+s+k, s+k-1) = d;
-      R(N+s+k, s+k+1) = c;
-    }
-  }
-
-  // Add the last row for the additional condition to let the potential have some given value at
-  // some given position:
-  i = 2;             // Row index in data matrix Q or P.
-  j = 3;             // Column index in data matrix Q or P.
-  int  k = i*J + j;  // Column index coefficient matrix R.
-  Real K = P(i, j);  // Constant that Q(i, j) gets assigned to
-  R(2*N, k) = 1;     // At position k in the last line
-  w.push_back(K);    // Desired value K = Q(i,j) must be added to RHS
-
-
-
-  // We grabbed K here from the original potential P for a match. In reality, the triple i,j,K can
-  // be user given (defaulting to 0, 0, 0.0)
-  Mat RT  = R.getTranspose();
-  Vec wp  = RT * w;           // w' = R^T * w
-  Mat RTR = RT * R;           // for the solver
-
-  plotMatrix(R,   true);  // OK - looks good, like in the textfile
-  plotMatrix(RTR, true); 
-
-
-  // Now solve the system:
-
-  Vec q  = rsLinearAlgebraNew::solve(RTR, wp);     // Q in vectorized form
-  // The result seems to be totally wrong. The only value that matches is the K constant at k. 
-  // That probably means the the line for the constant in the matrix is the only correct one?
-  // Verify all matrix coeffs and also the formulas in the computation of the numerical 
-  // derivatives. If there's an error there, it could totally mess up everything as well. We 
-  // suppose that our ansatz equations exactly match the numerical differencing equations used
-  // here. The forward diff for U and V seems wrong! Fixed!
-
-  // Now via the function:
-  Mat Q = rsNumericPotential(U, V, dx, dy, K, i, j);
+  // OK - we have now some data. Now we want to try to recover the potential P from U,V. Let's call
+  // our recovered potential Q. To make the solution unique (i.e. the matrix of the problem problem 
+  // nonsingular), We need to specify the desired value K of the potential at some given index pair
+  // i,j. We pick that desired value from the original potential for a match:
+  i = 2;             // Row index of defined constant
+  j = 3;             // Column index of defined constant
+  Real K = P(i, j);  // Value of potential at i,j
+  Mat  Q = rsNumericPotential(U, V, dx, dy, K, i, j);  // Do it!
+  // Yep! Looks good! Q and P match!
 
 
   // Notes:
@@ -12004,8 +11932,6 @@ void testNumericPotential()
   // inconvenient. I think, adding an additional condition is more convenient.. So, that means, the
   // matrix R should get one row more more. If we append it at the bottom, the code above can remain
   // as is. The line should have all zeros and one 1 at i*J + j
-
-
 
   int dummy = 0;
 }

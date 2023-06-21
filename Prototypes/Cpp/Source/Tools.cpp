@@ -7532,11 +7532,11 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   int i = iKonstant;     // Row index in data matrix Q or P.
   int j = jKonstant;     // Column index in data matrix Q or P.
   int k = i*J + j;       // Column index coefficient matrix R.
-  R(2*N, k) = 1;         // At position k in the last line
+  R(2*N, k) = 1;         // Add a coeff on 1 at position k in the last line
   //plotMatrix(R, true); // Uncomment to inspect the coefficient matrix
 
   // Assemble the right hand side vector w as concatentation of vectorized U,V and the additional 
-  // K as last element
+  // K as last element - pseudocode: w = vertcat(vec(U), vec(V), 1)
   Mat w(2*N+1, 1);
   const T* ptr = U.getDataPointerConst();
   for(int n = 0; n < N; n++)

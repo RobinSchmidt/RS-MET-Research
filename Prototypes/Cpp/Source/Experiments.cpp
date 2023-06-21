@@ -11443,7 +11443,11 @@ void testRiemannZeta()
   // that quite big contributions can added in later iterations. Eventually, the contributions must
   // die out to zero in a Laurent series too (otherwise, it couldn't converge) but initially, that 
   // doesn't seem to be the case. There's a wild jumping around action going on before it settles 
-  // down. That's a pretty inconvenient property!
+  // down. That's a pretty inconvenient property! Maybe analyze this further by factoring out a 
+  // laurentSeriesTerm(x, y, n) faunction that returns c_n * P_n(x,y), then pick an s and plot 
+  // these terms as function of n (n = -1, 0, 1, 2, 3, ..., numTerms). Maybe pick x = 1/2 and 
+  // make plots for y = 0,1,2,3,4,... and investigate how the terms first jump around and then 
+  // eventually drop off and how that offdropping behaves as function of y.
 
 
 
@@ -11743,10 +11747,11 @@ void plotZetaPotential()
   double yMax = 25.0;
 
 
-  xMin = -6;  xMax =  2; yMin =  -4; yMax =  +4; Nx = 41; Ny = 41; // 
+  //xMin = -6;  xMax =  2; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
   xMin = -8;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
-
-  //xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // pole at s = 1
+  //xMin = -2.0; xMax = 4.0; yMin = -3; yMax = +3; Nx = 101; Ny = 101; 
+  //xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 101; Ny = 101; // pole/funnel at s = 1
+  //xMin = -8.0; xMax = 0.8; yMin = -3; yMax = +3; Nx = 101; Ny = 101;
   //xMin = 0.9; xMax = 1.1; yMin = -0.1; yMax = +0.1; Nx = 21; Ny = 21; // pole again, zoomed in
   //xMin = -3; xMax = -1; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 1st trivial zero at s = -2
   //xMin = -5; xMax = -3; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 2nd trivial zero at s = -4

@@ -11854,8 +11854,8 @@ void plotZetaPotentialNumeric()
   using Mat = RAPT::rsMatrix<double>;
   using Complex = std::complex<double>;
 
-  int Nx = 11;
-  int Ny = 11;
+  int Nx = 15;
+  int Ny = 15;
   double xCenter = -8.0;
   double xRange  =  0.2;
   double yCenter =  0.0;
@@ -11889,7 +11889,10 @@ void plotZetaPotentialNumeric()
       Complex z;
 
       //z = RZF::evalViaLaurentSeries(s, 31);
-      z = RZF::evalViaBoostSum(s, 25);
+      //z = RZF::evalViaBoostSum(s, 25);
+      z = RZF::evalViaBinomialSum(s, 29);
+      //z = RZF::evalViaAlternatingSum(s, 100000);
+
 
       U(i, j) =  real(z);
       V(i, j) = -imag(z);
@@ -11913,7 +11916,17 @@ void plotZetaPotentialNumeric()
   // -With the boost formula, we indeed see a saddle which is osrt of diagonally aligned. But 
   //  the actual value range is rediculously small - like in the 10^-20 range. Moreover, the 
   //  range seems to depend on the number of terms: more terms -> smaller range.
-  //
+  // -The binomial sum looks like it's converging with 29 terms up to half of the digits
+  // -The alternating sum can be used up to 100000 before it just gets too long to wait for the
+  //  results (with Nx = Ny = 11)
+  // -Using an 21x21 grid already takes quite long for computing the numeric potential. The 
+  //  matrix M is of size 883x441 in this case. The longest time takes the computation of
+  //  M^T * M. Much longer than the actual solving step. Check matrix-multiply code, if we may
+  // have a performance bug there. 15x15 is still fine, though. 
+
+  // ToDo:
+  // -Fingure out, why the boost sum behaves so strangely. 
+  // -Maybe try using the boost implementation itself.
 
 }
 

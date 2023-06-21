@@ -11924,14 +11924,17 @@ void testNumericPotential()
   Real a = 1/(2*dx); Real A = 1/dx; Real b = -a; Real B = -A;
   Real c = 1/(2*dy); Real C = 1/dy; Real d = -c; Real D = -C;
 
-  // add the b,a coeffs:
-  //int k;
-  //for(int k = 0; k < N/2; k++)  // what if N is odd?
+  // Add the b,a coeffs:
   for(int k = 0; k < N-2*J; k++) 
   {
     R(k+J, k)     = b;
     R(k+J, k+2*J) = a;
-
+  }
+  // Add the B,A coeffs:
+  for(int k = 0; k < J; k++)
+  {
+    R(k, k)   = B;
+    R(k, k+J) = A;
   }
 
 

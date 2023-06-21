@@ -11949,7 +11949,7 @@ void testNumericPotential()
     R(N+s+J-1, s+J-2) = C;
     for(int k = 1; k < J-1; k++)
     {
-     
+      R(N+s+k,  s+k-1  ) = d;
 
     }
   }

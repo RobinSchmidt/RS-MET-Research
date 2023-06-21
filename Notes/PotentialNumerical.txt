@@ -17,32 +17,28 @@ of U,V. Note that the visual depiction is misleading in what is x and what is y:
 vertically/row-wise while y or j goes horizontally or column-wise. But that's just the visual 
 interpretation of the arrays and doesn't matter conceptually.
 
-Idea:
+Let's assume the U,V data matrices have arisen from p via numerical (partial) differentiation via 
+central differencing. That means, we can make the ansatz:
 
-Let's assume the U,V have arisen from p via numerical differentiation via central differencing. That
-means, we can make the ansatz:
-
-  U(i,j) = (P(i+1,j) - P(i-1,j)) / (2*dx),   V(i,j) = (P(i,j+1) - P(i,j-1)) / (2*dy)
+  U(i,j) = (P(i+1,j) - P(i-1,j)) / (2*dx)    and    V(i,j) = (P(i,j+1) - P(i,j-1)) / (2*dy)
  
-Maybe such an ansatz can lead to a (sparse) linear system for the p(i,j). Maybe, if we cleverly 
-vectorize the matrices, it could even tridiagonal or maybe pentadiagonal? This formula applies only 
-to inner, points. If the index ranges are i = 0,...,I-1 and j = 0,...,J-1, then the formula above 
-applies only to i = 1,..,I-2, j = 1,...,J-2, i.e. to the inner points. For the boundary points at 
-the edges and corners, we may either use special formulas based on forward or backward differences:
+This formula applies only to inner points. that is, if the index ranges are i = 0,...,I-1 and 
+j = 0,...,J-1, then the formula above applies only to i = 1,..,I-2, j = 1,...,J-2. For the boundary 
+points at the edges, we may either use special formulas based on forward or backward differences:
 
- U(i,j) = (P(i+1,j) - P(i,  j)) / dx      i = 0
- U(i,j) = (P(i,  j) - P(i-1,j)) / dx      i = I-1
- V(i,j) = (P(i,j+1) - P(i,  j)) / dy      j = 0
- V(i,j) = (P(i,j  ) - P(i,j-1)) / dy      j = J-1
+  U(i,j) = (P(i+1,j) - P(i,  j)) / dx      i = 0
+  U(i,j) = (P(i,  j) - P(i-1,j)) / dx      i = I-1
+  V(i,j) = (P(i,j+1) - P(i,  j)) / dy      j = 0
+  V(i,j) = (P(i,j  ) - P(i,j-1)) / dy      j = J-1
  
 ...or just leave them out for the moment and just compute the potential only for the inner points. 
-We could tell the user to pad the matrices at the boundaries (by repitition of last value or 
+We could tell the user to pad the matrices at the boundaries (by repitition of the last value or 
 (better) by linear extrapolation) or do that ourselves in a convenience function. We want to write 
 the set of equations in the form:
 
-  mat * vec(P) = vec(U,V)
+  M * vec(P) = vec(U,V)
 
-where mat is a coefficient matrix and vec(P), vec(U,V) are appropriate vectorizations of the 
+where M is a coefficient matrix and vec(P), vec(U,V) are appropriate vectorizations of the 
 matrices. Let's rewrite the ansatz for the inner points as:
 
   a*P(i+1, j  ) + b*P(i-1, j  ) = U(i,j)
@@ -102,14 +98,14 @@ system of equations that looks as follows:
   
 
 ToDo (partially done):
-The matrix needs to be filled appropriately . It will be sparse. Each row will have two nonzero
-coeffs which can be either (mostly) a or b in the upper half or (mostly) c or d in the lower half. 
+The matrix needs to be filled appropriately. It will be sparse. Each row will have two nonzero
+entries which can be either (mostly) a or b in the upper half or (mostly) c or d in the lower half. 
 All rows and columns of the matrix that involve boundary points of P, will need special coefficients 
 based on the forward or backward difference ansatz for the boundary points [ToDo: figure out the 
 details!]. W'ell use the underscore _ to indicate zero entries. Use A=2a, B=2b, C=2c, D=2d in the 
 matrix for the rows/cols that involve boundary points
 
-We can interpret this as a linear system of the form:
+We can interpret this as a linear system of equations of the form:
 
   M * p = vertcat(u,v) = w
      
@@ -127,7 +123,13 @@ which will reduce the number of equations to 20. ...TBC...
 
 
 
-
+Notes:
+-The matrix is sparse but unstructured. Maybe with some clever re-ordering of the vectors, we could
+ bring it into a more structured sparse form, like - say - pentadiagonal?
+-We could make a different ansatz based on a different formula to compute numerical derivatives. A 
+ higher order finite difference approximation would give rise to more nonzero coefficients in the 
+ matrix. The result might be more accurate at the cost of more computations due to a less sparse 
+ matrix.
 
 
 

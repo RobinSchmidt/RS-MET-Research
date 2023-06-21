@@ -158,6 +158,8 @@ Notes:
  (numerically) analytic approximation to an arbitrary given complex function that is represented
  by U,V. By "numerically analytic", I mean a function that satisfies the numerical pendants of the
  Cauchy-Riemann equations where the derivatives are replaced by finite differences.
+-I think, the same approach can be applied to 3D problems, too. Constructing the matrices might be
+ even more tedious, though.
  
 ----------------------------------------------------------------------------------------------------
 Resources:

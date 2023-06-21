@@ -11788,23 +11788,7 @@ void plotZetaPotential()
   }
 
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
-
-  // Factor out into plotSurfaceDark(plt)
-  plt.addCommand("set palette rgbformulae 8, 9, 7");
-  plt.addCommand("set style fill solid 1.0 noborder");
-  plt.addCommand("set pm3d depthorder noborder");
-  plt.addCommand("set pm3d lighting specular 0.25");
-  plt.addCommand("set term wxt background rgb \"black\"");
-  plt.addCommand("set border lw 1 lc rgb \"white\"");
-  plt.addCommand("set grid lw 1 lc rgb \"white\"");
-  plt.addCommand("set xtics textcolor rgb \"white\"");
-  plt.addCommand("set ytics textcolor rgb \"white\"");
-  plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
-  plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
-  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
-
-  plt.invokeGNUPlot();
-
+  plotSurfaceDark(plt);
 
 
   //plt.plot3D();

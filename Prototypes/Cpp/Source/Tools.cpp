@@ -4,6 +4,25 @@ using namespace rosic;
 
 //=================================================================================================
 
+
+void plotSurfaceDark(GNUPlotter& plt)
+{
+  plt.addCommand("set palette rgbformulae 8, 9, 7");
+  plt.addCommand("set style fill solid 1.0 noborder");
+  plt.addCommand("set pm3d depthorder noborder");
+  plt.addCommand("set pm3d lighting specular 0.25");
+  plt.addCommand("set term wxt background rgb \"black\"");
+  plt.addCommand("set border lw 1 lc rgb \"white\"");
+  plt.addCommand("set grid lw 1 lc rgb \"white\"");
+  plt.addCommand("set xtics textcolor rgb \"white\"");
+  plt.addCommand("set ytics textcolor rgb \"white\"");
+  plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
+  plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
+  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
+  plt.invokeGNUPlot();
+}
+
+
 /** A class to let console applications show their progress when performing a long task. It 
 repeatedly writes a "percentage done" in the format " 45%" to the console. Note that the initial
 whitespace is intentional to allow for the first digit when it hits 100%. It deletes and overwrites
@@ -7613,6 +7632,10 @@ void rsHelmholtzDecomposition(
   // https://en.wikipedia.org/wiki/Helmholtz_decomposition
 }
 // Not yet tested
+
+
+
+
 
 
 

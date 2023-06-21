@@ -11900,6 +11900,7 @@ void testNumericPotential()
     */
   U = rsNumericDerivativeX(P, dx);
 
+  /*
   // Obtain the numerical partial derivative with respect to y:
   for(i = 0; i < I; i++)
     for(j = 1; j < J-1; j++) 
@@ -11908,6 +11909,10 @@ void testNumericPotential()
     V(i, 0) = (P(i, 1) - P(i, 0)) / dy;            // forward diff at bottom boundary / left column
   for(i = 0; i < I; i++)
     V(i, J-1) = (P(i, J-1) - P(i, J-2)) / dy;      // backward diff at top boundary / right column
+    */
+
+  V = rsNumericDerivativeY(P, dy);
+
 
   // OK - we have now some data. Now we want to try to recover the potential P from U,V. Let's call
   // our recovered potential Q. To make the solution unique (i.e. the matrix of the problem problem 

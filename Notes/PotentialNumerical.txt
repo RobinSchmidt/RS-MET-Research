@@ -18,18 +18,23 @@ vertically/row-wise while y or j goes horizontally or column-wise. But that's ju
 interpretation of the arrays and doesn't matter conceptually.
 
 Let's assume the U,V data matrices have arisen from p via numerical (partial) differentiation via 
-central differencing. That means, we can make the ansatz:
+central differencing. That means, we can make the Ansatz:
 
-  U(i,j) = (P(i+1,j) - P(i-1,j)) / (2*dx)    and    V(i,j) = (P(i,j+1) - P(i,j-1)) / (2*dy)
+  U(i,j) = (P(i+1, j  ) - P(i-1, j  )) / (2*dx)    and    
+  V(i,j) = (P(i,   j+1) - P(i,   j-1)) / (2*dy)
  
 This formula applies only to inner points. That is, if the index ranges are i = 0,...,I-1 and 
-j = 0,...,J-1, then the formula above applies only to i = 1,..,I-2, j = 1,...,J-2. For the boundary 
-points at the edges, we may either use special formulas based on forward or backward differences:
+j = 0,...,J-1, then the formula above applies only to i = 1,..,I-2, j = 1,...,J-2. For reference, we
+call that Ansatz "I,CD" for: "inner point, central difference". For the boundary points at the 
+edges (first and last row and column of the matrix), we may either use special formulas based on 
+forward or backward differences:
 
-  U(i,j) = (P(i+1,j) - P(i,  j)) / dx      i = 0
-  U(i,j) = (P(i,  j) - P(i-1,j)) / dx      i = I-1
-  V(i,j) = (P(i,j+1) - P(i,  j)) / dy      j = 0        left
-  V(i,j) = (P(i,j  ) - P(i,j-1)) / dy      j = J-1
+                                              Applies to       Ansatz name
+										
+  U(i,j) = (P(i+1, j  ) - P(i,   j  )) / dx   i = 0,   all j   L,FD (left column,  forward diff.)
+  U(i,j) = (P(i,   j  ) - P(i-1, j  )) / dx   i = I-1, all j   R,FD (right column, backward diff.)
+  V(i,j) = (P(i,   j+1) - P(i,   j  )) / dy   j = 0,   all i   T,FD (top row,      foward diff.)
+  V(i,j) = (P(i,   j  ) - P(i,   j-1)) / dy   j = J-1, all i   B,FD (bottom row,   backward diff.)
  
 ...or just leave them out for the moment and just compute the potential only for the inner points. 
 We could tell the user to pad the matrices at the boundaries (by repitition of the last value or 
@@ -44,17 +49,18 @@ matrices. Let's rewrite the ansatz for the inner points as:
   a*P(i+1, j  ) + b*P(i-1, j  ) = U(i,j)
   c*P(i,   j+1) + d*P(i,   j-1) = V(i,j)
 
-where 
+where we define:
 
   a = 1/(2*dx), b = -1/(2*dx), c = 1/(2*dy), d = -1/(2*dy)
   A = 1/dx,     B = -1/dx,     C = 1/dy,     D = -1/dy
   
 Let's assume, vectorizing a matrix just means re-interpreting it as vector without re-ordering it in 
 memory. That means, we just concatenate all the rows, one after another, into one big vector (I 
-assume a row-major memory layout here). For our example with the 4x5 matrices, we would get a linear 
-system of equations that looks as follows:
+assume a row-major memory layout here). For our example with the 4x5 matrices, we have N = 4*5 = 20 
+unknowns, namely the entries of P. We will get an overdetermined linear system of 2*N = 40 equations 
+that looks in matrix form as follows (RHS means right hand side):
 
-                                                                 What the line means     Ansatz
+           Matrix                         * Vector =  RHS        What the line means     Ansatz
 
   B _ _ _ _ A _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00        U00 = (P10-P00)/dx      L,FD
   _ B _ _ _ _ A _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01        U01 = (P11-P01)/dx      L,FD
@@ -97,9 +103,6 @@ system of equations that looks as follows:
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c             V33        V33 = (P34-P32)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ D C             V34        V34 = (P34-P33)/dx          B,BD
   
-Abbreviations used in the Ansatz column: L: left, I: inner, R: right, T: top, B: bottom, CD: central 
-difference, FD: forward difference, BD: backward difference.
-
 For U = dP/dx = P_x, we have 10 (= 2*5) inner points (two rows) because the top and bottom matrix 
 rows count as boundary points. For V = dP/dy = P_y, we have 12 (= 3*4) inner points (3 columns) 
 because the left and right matrix columns count as boundary points. The distances between the two
@@ -120,13 +123,14 @@ least squares problem by premultiplying both sides with M^T.
 which will reduce the number of equations to 20.
 
 ToDo:
--Implement it. The tricky part will be assembling the matrix. Then make a unit test as follows: 
- Create some artbitrary matrix to serve as the potential P. Maybe fill it with some function values. 
- Obtain numerical partial derivatives from P, call them U,V. Feed these U,V into the routine to 
- compute the potential and call the computed potential Q. Compare Q to the original potentetial P. 
- If the numerical differencing uses central differences for inner points and forward or backward 
- differences for boundary points, then Q should match P up to rounding errors.
-
+-Implement it and make a unit test as follows: Create some artbitrary matrix to serve as the 
+ potential P. Maybe fill it with some function values. Obtain numerical partial derivatives from P, 
+ call them U,V. Feed these U,V into the routine to compute the potential and call the computed 
+ potential Q. Compare Q to the original potentetial P. If the numerical differencing uses central 
+ differences for inner points and forward or backward differences for boundary points, then Q should 
+ match P up to rounding errors. The tricky part will be assembling the matrix. During development,
+ first fill the matrix elements for the inner points and let the unit test only check these. Then 
+ add the code for the boundary points together with associated tests step by step.
 
 Notes:
 -The matrix is sparse but unstructured. Maybe with some clever re-ordering of the vectors, we could

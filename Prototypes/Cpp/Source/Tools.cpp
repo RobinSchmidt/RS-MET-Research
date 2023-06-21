@@ -7471,6 +7471,26 @@ double rsRiemannZetaFunction::laurentSeriesCoeff(int n)
 
 //=================================================================================================
 
+
+template<class T>
+rsMatrix<T> rsNumericDerivativeX(const rsMatrix<T>& P, T dx)
+{
+  int I = P.getNumRows();     // Number of rows in data matrix
+  int J = P.getNumColumns();  // Number of columns in data matrix
+  rsMatrix<T> U(I, J);
+  for(int i = 1; i < I-1; i++)
+    for(int j = 0; j < J; j++) 
+      U(i, j) = (P(i+1, j) - P(i-1, j)) / (2*dx);  // central diff for general point
+  for(int j = 0; j < J; j++) 
+    U(0, j) = (P(1, j) - P(0, j)) / dx;            // forward diff at left boundary / top row
+  for(int j = 0; j < J; j++) 
+    U(I-1, j) = (P(I-1, j) - P(I-2, j)) / dx;      // backward diff at right boundary / bottom row
+  return U;
+}
+
+
+
+
 /** Computes a potential for a vector field given in the matrices U(i,j), V(i,j) numerically.
 
 ...TBC...  */

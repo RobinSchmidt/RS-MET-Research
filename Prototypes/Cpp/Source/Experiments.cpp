@@ -11888,6 +11888,7 @@ void testNumericPotential()
 
   // Move into functions rsNumericDerivativeX,  rsNumericDerivativeY
 
+  /*
   // Obtain the numerical partial derivative with respect to x:
   for(i = 1; i < I-1; i++)
     for(j = 0; j < J; j++) 
@@ -11896,6 +11897,8 @@ void testNumericPotential()
     U(0, j) = (P(1, j) - P(0, j)) / dx;            // forward diff at left boundary / top row
   for(j = 0; j < J; j++) 
     U(I-1, j) = (P(I-1, j) - P(I-2, j)) / dx;      // backward diff at right boundary / bottom row
+    */
+  U = rsNumericDerivativeX(P, dx);
 
   // Obtain the numerical partial derivative with respect to y:
   for(i = 0; i < I; i++)

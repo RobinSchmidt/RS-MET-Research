@@ -11864,43 +11864,43 @@ void testNumericPotential()
   using Vec  = std::vector<Real>;
 
   int I = 4;   // number of rows
-  int N = 5;   // number of columns
+  int J = 5;   // number of columns
 
   Real xMin = 0.0;
   Real xMax = 10.0;
   Real yMin = 0.0;
   Real yMax = 10.0;
 
-  Mat P(I, N), U(I, N), V(I, N);  // Potential and its numerical x- and y-derivatives
+  Mat P(I, J), U(I, J), V(I, J);  // Potential and its numerical x- and y-derivatives
 
   Real dx = (xMax-xMin) / I;
-  Real dy = (yMax-yMin) / N;
+  Real dy = (yMax-yMin) / J;
 
   // Fill the potential with the function exp(x)*cos(y)
   int i, j;
   for(i = 0; i < I; i++) {
-    for(j = 0; j < N; j++) {
+    for(j = 0; j < J; j++) {
       Real x  = xMin + i*dx;
       Real y  = yMin + j*dy;
       P(i, j) = exp(x) * cos(y); }}
 
   // Obtain the numerical partial derivative with respect to x:
   for(i = 1; i < I-1; i++)
-    for(j = 0; j < N; j++) 
+    for(j = 0; j < J; j++) 
       U(i, j) = (P(i+1, j) - P(i-1, j)) / (2*dx);  // central diff for general point
-  for(j = 0; j < N; j++) 
+  for(j = 0; j < J; j++) 
     U(0, j) = (P(0, j) - P(1, j)) / dx;            // forward diff at left boundary / top row
-  for(j = 0; j < N; j++) 
+  for(j = 0; j < J; j++) 
     U(I-1, j) = (P(I-1, j) - P(I-2, j)) / dx;      // backward diff at right boundary / bottom row
 
   // Obtain the numerical partial derivative with respect to y:
   for(i = 0; i < I; i++)
-    for(j = 1; j < N-1; j++) 
+    for(j = 1; j < J-1; j++) 
       V(i, j) = (P(i, j+1) - P(i, j-1)) / (2*dy);  // central diff for general point
   for(i = 0; i < I; i++)
     V(i, 0) = (P(i, 0) - P(i, 1)) / dy;            // forward diff at bottom boundary / left column
   for(i = 0; i < I; i++)
-    V(i, N-1) = (P(i, N-1) - P(i, N-2)) / dy;      // backward diff at top boundary / right column
+    V(i, J-1) = (P(i, J-1) - P(i, J-2)) / dy;      // backward diff at top boundary / right column
 
 
   int dummy = 0;

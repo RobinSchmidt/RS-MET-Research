@@ -7598,7 +7598,7 @@ void rsHelmholtzDecomposition(
   const rsMatrix<T>& F1, const rsMatrix<T>& F2, T dx, T dy,
   rsMatrix<T>& G1, rsMatrix<T>& G2, rsMatrix<T>& R1, rsMatrix<T>& R2)
 {
-  rsMatrix<T> P = rsNumericPotential(Fx, Fy, dx, dy);
+  rsMatrix<T> P = rsNumericPotential(F1, F2, dx, dy);
   G1 = rsNumericDerivativeX(P, dx);
   G2 = rsNumericDerivativeY(P, dy);
   R1 = F1 - G1;

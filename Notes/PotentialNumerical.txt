@@ -1,7 +1,8 @@
 Assume that we have numerical data for a vector field U(x,y), V(x,y) and we know that this data 
 represents a potential field. How can we find a corresponding potential numerically? Let's assume we 
-have 2 2D data arrays u(i,j), v(i,j) representing the functions U(x,y), V(x,y) where the x,y are 
-equidistant with stepsize dx,dy respectively. The situation could look like this:
+have 2 2D data arrays U(i,j), U(i,j) representing the functions U(x,y), V(x,y) where the x,y are 
+equidistant with stepsize dx,dy respectively. In a 4x5 toy scenario, the situation could look like 
+this:
 
                 U(i,j)                      V(i,j)                         P(i,j)
      i                           i                              i
@@ -75,8 +76,8 @@ system of equations that looks as follows:
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P24      U24
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P30      U30
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ b _ a _ _ _ _ _ _    P31      U31        U31 = (P32-P30)/(2dx)
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P32      U32
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P33      U33
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ b _ a _ _ _ _ _    P32      U32        U32 = (P33-P31)/(2dx)
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ b _ a _ _ _ _    P33      U33        U23 = (P34-P32)/(2dx)
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P34  =   U34
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V00
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V01
@@ -98,6 +99,8 @@ system of equations that looks as follows:
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V32
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V33
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V34  
+  
+matrix has 4 cols too many!  
 
 ToDo (partially done):
 The matrix needs to be filled appropriately . It will be sparse. Each row will have two nonzero

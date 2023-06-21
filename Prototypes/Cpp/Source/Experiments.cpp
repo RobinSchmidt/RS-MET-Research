@@ -11893,7 +11893,7 @@ void testNumericPotential()
     for(j = 0; j < J; j++) 
       U(i, j) = (P(i+1, j) - P(i-1, j)) / (2*dx);  // central diff for general point
   for(j = 0; j < J; j++) 
-    U(0, j) = (P(0, j) - P(1, j)) / dx;            // forward diff at left boundary / top row
+    U(0, j) = (P(1, j) - P(0, j)) / dx;            // forward diff at left boundary / top row
   for(j = 0; j < J; j++) 
     U(I-1, j) = (P(I-1, j) - P(I-2, j)) / dx;      // backward diff at right boundary / bottom row
 
@@ -11902,7 +11902,7 @@ void testNumericPotential()
     for(j = 1; j < J-1; j++) 
       V(i, j) = (P(i, j+1) - P(i, j-1)) / (2*dy);  // central diff for general point
   for(i = 0; i < I; i++)
-    V(i, 0) = (P(i, 0) - P(i, 1)) / dy;            // forward diff at bottom boundary / left column
+    V(i, 0) = (P(i, 1) - P(i, 0)) / dy;            // forward diff at bottom boundary / left column
   for(i = 0; i < I; i++)
     V(i, J-1) = (P(i, J-1) - P(i, J-2)) / dy;      // backward diff at top boundary / right column
 
@@ -11958,8 +11958,8 @@ void testNumericPotential()
 
   // Add the last row for the additional condition to let the potential have some given value at
   // some given position:
-  i = 1;             // Row index in data matrix Q or P.
-  j = 2;             // Column index in data matrix Q or P.
+  i = 2;             // Row index in data matrix Q or P.
+  j = 3;             // Column index in data matrix Q or P.
   int  k = i*J + j;  // Column index coefficient matrix R.
   Real K = P(i, j);  // Constant that Q(i, j) gets assigned to
   R(2*N, k) = 1;     // At position k in the last line
@@ -11981,6 +11981,11 @@ void testNumericPotential()
 
   Vec q  = rsLinearAlgebraNew::solve(RTR, wp);     // Q in vectorized form
   // The result seems to be totally wrong. The only value that matches is the K constant at k. 
+  // That probably means the the line for the constant in the matrix is the only correct one?
+  // Verify all matrix coeffs and also the formulas in the computation of the numerical 
+  // derivatives. If there's an error there, it could totally mess up everything as well. We 
+  // suppose that our ansatz equations exactly match the numerical differencing equations used
+  // here. The forward diff for U and V seems wrong! Fixed!
 
   //Mat Q = 
 

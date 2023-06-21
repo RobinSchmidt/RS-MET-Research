@@ -11889,17 +11889,18 @@ void testNumericPotential()
     for(j = 0; j < N; j++) 
       U(i, j) = (P(i+1, j) - P(i-1, j)) / (2*dx);  // central diff for general point
   for(j = 0; j < N; j++) 
-    U(0, j) = (P(0, j) - P(1, j)) / dx;            // forward diff at left boundary
+    U(0, j) = (P(0, j) - P(1, j)) / dx;            // forward diff at left boundary / top row
   for(j = 0; j < N; j++) 
-    U(M-1, j) = (P(M-1, j) - P(M-2, j)) / dx;      // backward diff at right boundary
+    U(M-1, j) = (P(M-1, j) - P(M-2, j)) / dx;      // backward diff at right boundary / bottom row
 
   // Obtain the numerical partial derivative with respect to y:
   for(i = 0; i < M; i++)
     for(j = 1; j < N-1; j++) 
       V(i, j) = (P(i, j+1) - P(i, j-1)) / (2*dy);  // central diff for general point
-
-
-
+  for(i = 0; i < M; i++)
+    V(i, 0) = (P(i, 0) - P(i, 1)) / dy;            // forward diff at bottom boundary / left column
+  for(i = 0; i < M; i++)
+    V(i, N-1) = (P(i, N-1) - P(i, N-2)) / dy;      // backward diff at top boundary / right column
 
 
   int dummy = 0;

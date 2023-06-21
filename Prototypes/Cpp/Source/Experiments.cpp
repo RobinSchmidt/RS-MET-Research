@@ -11945,8 +11945,8 @@ void testNumericPotential()
     int s = i*J;          // start of i-th block
     R(N+s,     s  ) = D;
     R(N+s,     s+1) = C;
-    R(N+s+J-1, s+J-1) = D;
-    R(N+s+J-1, s+J-2) = C;
+    R(N+s+J-1, s+J-1) = C;
+    R(N+s+J-1, s+J-2) = D;
     for(int k = 1; k < J-1; k++)
     {
       R(N+s+k,  s+k-1) = d;

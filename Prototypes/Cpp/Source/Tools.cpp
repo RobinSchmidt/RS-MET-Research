@@ -7580,7 +7580,7 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   Mat wp  = MT * w;             // w' = M^T * w. Right hand side for the solver.
   Mat P(I, J);                  // Our result. The estimate of the potential for U and V.
   rsMatrixView p(N, 1, P.getDataPointer());  // The solver wants p, the vectorized view of P.
-  rsLinearAlgebraNew::solve(RTR, p, wp);     // Invoke the linear system solver.
+  rsLinearAlgebraNew::solve(MTM, p, wp);     // Invoke the linear system solver.
   return P;
 }
 

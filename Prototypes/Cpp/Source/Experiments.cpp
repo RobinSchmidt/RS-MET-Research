@@ -11926,9 +11926,10 @@ void testNumericPotential()
 
   // add the b,a coeffs:
   //int k;
-  for(int k = 0; k < N; k++)
+  for(int k = 0; k < N/2; k++)
   {
-    R(k+J, k) = b;
+    R(k+J, k)     = b;
+    R(k+J, k+2*J) = a;
 
   }
 

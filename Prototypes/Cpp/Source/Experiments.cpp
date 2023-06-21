@@ -11855,7 +11855,91 @@ void plotZetaPotential()
   //
 }
 
-//template<class T>
+template<class T>
+rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx, T dy,
+  T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
+{
+  using Mat = rsMatrix<T>;
+  //using Vec = std::vector<T>;
+
+  int I = U.getNumRows();     // Number of rows
+  int J = U.getNumColumns();  // Number of columns
+  int N = I*J;                // Number of unknowns = number of columns of coeff matrix
+
+
+
+  // Now we assemble the coefficient matrix:
+  Mat R(2*N+1, N);            // ToDo rename to M to match textfile
+
+  // Compute coeffs that appear in the matrix:
+  T a = 1/(2*dx); 
+  T A = 1/dx; 
+  T b = -a; 
+  T B = -A;
+  T c = 1/(2*dy); 
+  T C = 1/dy; 
+  T d = -c; 
+  T D = -C;
+
+  // Add the b,a coeffs to the matrix:
+  for(int k = 0; k < N-2*J; k++) 
+  {
+    R(k+J, k)     = b;
+    R(k+J, k+2*J) = a;
+  }
+  // Add the B,A coeffs to the matrix:
+  for(int k = 0; k < J; k++)
+  {
+    R(k,     k)       = B;
+    R(k,     k+J)     = A;
+    R(N-1-k, N-1-k)   = A;
+    R(N-1-k, N-1-k-J) = B;
+  }
+
+  // Add the d,c,D,C coeffs to the matrix:
+  for(int i = 0; i < I; i++)    // loop over the blocks
+  {
+    int s = i*J;                // start of i-th block
+    R(N+s,     s    ) = D;
+    R(N+s,     s+1  ) = C;
+    R(N+s+J-1, s+J-1) = C;
+    R(N+s+J-1, s+J-2) = D;
+    for(int k = 1; k < J-1; k++)
+    {
+      R(N+s+k, s+k-1) = d;
+      R(N+s+k, s+k+1) = c;
+    }
+  }
+
+  // Add the last row for the additional condition to let the potential have some given value at
+  // some given position:
+  int i = iKonstant;     // Row index in data matrix Q or P.
+  int j = jKonstant;     // Column index in data matrix Q or P.
+  int k = i*J + j;       // Column index coefficient matrix R.
+  //T   K = Konstant;       // Constant that Q(i, j) gets assigned to
+  R(2*N, k) = 1;         // At position k in the last line
+  //plotMatrix(R, true); // Uncomment to inspect the coefficient matrix
+
+  // Assemble the RHS vector w as concatentation of vectorized U,V and the additional K as last
+  // element
+  Mat w(2*N+1, 1);
+  const T* ptr = U.getDataPointerConst();
+  for(int n = 0; n < N; n++)
+    w(n, 0) = ptr[n];
+  ptr = V.getDataPointerConst();
+  for(int n = 0; n < N; n++)
+    w(N+n, 0) = ptr[n];
+  w(2*N, 0) = Konstant;         // Desired value K = P(i, j) must be added to RHS as last element
+
+  // Solve the system via a least squares approach:
+  Mat RT  = R.getTranspose();  // R^T
+  Mat RTR = RT * R;            // R^T * R. Least squares coeff matrix for the solver.
+  Mat wp  = RT * w;            // w' = R^T * w. Right hand side for the solver
+  Mat P(I, J);                 // Our resul
+  rsMatrixView p(N, 1, P.getDataPointer());
+  rsLinearAlgebraNew::solve(RTR, p, wp);
+  return P;
+}
 
 void testNumericPotential()
 {
@@ -11987,7 +12071,8 @@ void testNumericPotential()
   // suppose that our ansatz equations exactly match the numerical differencing equations used
   // here. The forward diff for U and V seems wrong! Fixed!
 
-  //Mat Q = 
+  // Now via the function:
+  Mat Q = rsNumericPotential(U, V, dx, dy, K, i, j);
 
 
   // Notes:

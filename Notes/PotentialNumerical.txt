@@ -54,11 +54,10 @@ memory. That means, we just concatenate all the rows, one after another, into on
 assume a row-major memory layout here). For our example with the 4x5 matrices, we would get a linear 
 system of equations that looks as follows:
 
-
                                                                  What the line means     Ansatz
 
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00 
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01  
+  B _ _ _ _ A _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00        U00 = (P10-P00)/dx      left
+  _ B _ _ _ _ A _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01        U01 = (P11-P01)/dx      left
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P02      U02  
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P03      U03  
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P04      U04
@@ -93,13 +92,16 @@ system of equations that looks as follows:
   _ _ _ _ _ _ _ _ _ _ _ _ d _ c _ _ _ _ _             V23        V23 = (P24-P22)/(2dy)   inner
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V24   
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V30  
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V31
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V32
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V33
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c _ _             V31        V31 = (P32-P30)/(2dy)   inner
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c _             V32        V32 = (P33-P31)/(2dy)   inner
+  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c             V33        V33 = (P34-P32)/(2dy)   inner
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _             V34  
   
--Distance between b,a: 2*numRows (2*5 = 10)  
--Distance between d,c: 2
+-Distances: 
+ b,a: 2*numCols = 2*5 = 10
+ B,A:   numCols = 5
+ d,c: 2
+ D,C: 1
 ----------------------------------------------------------------------------------------------------
 Remove, when the correct version is done
 Oh - no - I tink this is all wrong! In the uppar half, I would have to use differences in the 1st

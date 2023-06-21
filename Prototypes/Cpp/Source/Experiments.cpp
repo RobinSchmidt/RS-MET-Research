@@ -11956,9 +11956,25 @@ void testNumericPotential()
   }
 
 
+  plotMatrix(R, true);  // OK - looks good, like in the textfile
+
+  // Now solve the system:
+  //Mat Q(N);
+  Mat RT  = R.getTranspose();
+  Vec wp  = RT * w;           // w' = R^T * w
+  Mat RTR = RT * R;           // for the solver
+  Vec q   = rsLinearAlgebraNew::solve(RTR, wp);     // Q in vectorized form
+  // q is all zero! WTF! Seems like the matrix is singular!
+
+  //Mat Q = 
 
 
-  plotMatrix(R, true);
+  //rsLinearAlgebraNew::solve(RTR, Q, wp);
+
+  //Q.reshape(I, J);
+
+  plotMatrix(RTR, true); 
+
  
   //plotMatrix(R.getTranspose(), true);
   //rsPlotMatrix

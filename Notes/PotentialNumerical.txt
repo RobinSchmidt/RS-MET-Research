@@ -102,12 +102,20 @@ that looks in matrix form as follows (RHS means right hand side):
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c _             V32        V32 = (P33-P31)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c             V33        V33 = (P34-P32)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ D C             V34        V34 = (P34-P33)/dx          B,BD
+  _ _ _ _ _ _ _ 1 _ _ _ _ _ _ _ _ _ _ _ _              K                                 Konstant 
   
 For U = dP/dx = P_x, we have 10 (= 2*5) inner points (two rows) because the top and bottom matrix 
 rows count as boundary points. For V = dP/dy = P_y, we have 12 (= 3*4) inner points (3 columns) 
 because the left and right matrix columns count as boundary points. The distances between the two
-nonzero elements in each row are given by: dist(b,a) = 2*numCols = 2*5 = 10, 
-dist(B,A) = numCols = 5, dist(d,c) = 2, dist(D,C) = 1.
+nonzero elements in each row are given by: dist(b,a) = 2*J = 2*5 = 10, dist(B,A) = J = 5, 
+dist(d,c) = 2, dist(D,C) = 1. The very last line/equation is needed to make the system nonsingular.
+Without it, the matrix is singular because there are infinitely many solutions that work as a 
+potential for the same vector field. They differ by a constant shift. The last line fixes P12 at K 
+which can be a user-provided constant. The index of the last 1 in the line selects where we want to 
+fix the potential. Here it is at index corresponding to P12. If we want to fix the potential at 
+index i,j in the data matrix, the corresponding index in the coefficient matrix i*J + j, here 
+1*5 + 2 = 7. The triple i,j,K can be given by the user and default to 0,0,0.0
+
 
 We can interpret this matrix equation as a linear system of equations of the form:
 

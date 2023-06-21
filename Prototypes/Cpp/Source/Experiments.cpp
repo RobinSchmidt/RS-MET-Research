@@ -11868,10 +11868,12 @@ void testNumericPotential()
   int I = 4;   // number of rows
   int J = 5;   // number of columns
 
+  //I = 2; J = 2;  // for test
+
   Real xMin = 0.0;
-  Real xMax = 20.0;
+  Real xMax = 1.0;
   Real yMin = 0.0;
-  Real yMax = 20.0;
+  Real yMax = 1.0;
 
   Mat P(I, J), U(I, J), V(I, J);  // Potential and its numerical x- and y-derivatives
 
@@ -11940,57 +11942,42 @@ void testNumericPotential()
   }
 
   // Add the d,c coeffs:
-  for(i = 0; i < I; i++)  // loop over the blocks
+  for(i = 0; i < I; i++)    // loop over the blocks
   {
-    int s = i*J;          // start of i-th block
-    R(N+s,     s  ) = D;
-    R(N+s,     s+1) = C;
+    int s = i*J;            // start of i-th block
+    R(N+s,     s    ) = D;
+    R(N+s,     s+1  ) = C;
     R(N+s+J-1, s+J-1) = C;
     R(N+s+J-1, s+J-2) = D;
     for(int k = 1; k < J-1; k++)
     {
-      R(N+s+k,  s+k-1) = d;
-      R(N+s+k,  s+k+1) = c;
+      R(N+s+k, s+k-1) = d;
+      R(N+s+k, s+k+1) = c;
     }
   }
 
+  Mat RT  = R.getTranspose();
+  Mat RTR = RT * R;           // for the solver
 
-  plotMatrix(R, true);  // OK - looks good, like in the textfile
+  plotMatrix(R,   true);  // OK - looks good, like in the textfile
+  plotMatrix(RTR, true); 
+
 
   // Now solve the system:
-  //Mat Q(N);
-  Mat RT  = R.getTranspose();
-  Vec wp  = RT * w;           // w' = R^T * w
-  Mat RTR = RT * R;           // for the solver
-  Vec q   = rsLinearAlgebraNew::solve(RTR, wp);     // Q in vectorized form
+  Vec wp = RT * w;           // w' = R^T * w
+  Vec q  = rsLinearAlgebraNew::solve(RTR, wp);     // Q in vectorized form
   // q is all zero! WTF! Seems like the matrix is singular!
 
   //Mat Q = 
 
 
-  //rsLinearAlgebraNew::solve(RTR, Q, wp);
 
-  //Q.reshape(I, J);
-
-  plotMatrix(RTR, true); 
-
- 
-  //plotMatrix(R.getTranspose(), true);
-  //rsPlotMatrix
-  //rsPrintMatrix(R);
-
-
-  //for(int 
-
-
-
-
-
-
-
-  //Mat Q(I, J);
-
-  // We need vectorizations of 
+  // The matrix R^T * R is apparently singular. That is true even in the smallest possible 
+  // IxJ = 2x2 case. Ahh! I know! It's supposed to be singular because there are infinitely
+  // many solution because the potential is not unique. We may add an artificial condition that
+  // fixes the value of the potential at a given point, i.e. at a given pair of indices. For 
+  // example, we could require P(0,0) = 0, or more generally P(i,j) = K and let the user set up
+  // i,j,K
 
 
 

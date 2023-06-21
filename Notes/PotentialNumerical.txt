@@ -55,10 +55,12 @@ Let's assume, vectorizing a matrix just means re-interpreting it as vector witho
 memory. That means, we just concatenate all the rows, one after another, into one big vector. For 
 our example with the 4x5 matrices, we would get a linear system of equations that looks as follows:
 
+                                                                         What the line means
+
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00
   b _ a _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01        U01 = (P02-P00)/(2dx)
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P02      U02
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P03      U03
+  _ b _ a _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P02      U02        U02 = (P03-P01)/(2dx)
+  _ _ b _ a _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P03      U03        U03 = (P04-P02)/(2dx)
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P04      U04
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P10      U10
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P11      U11
@@ -100,18 +102,19 @@ ToDo: The matrix needs to be filled appropriately. It will be sparse. Each row w
 coeffs which can be either (mostly) a or b in the upper half or (mostly) c or d in the lower half. 
 All rows and columns of the matrix that involve boundary points of P, will need special coefficients 
 based on the forward or backward difference ansatz for the boundary points [ToDo: figure out the 
-details!]. W'ell use the underscore _ to indicate zero entries
+details!]. W'ell use the underscore _ to indicate zero entries. Use A=2a, B=2b, C=2c, D=2d in the 
+matrix for the rows/cols that involve boundary points
 
 We can interpret this as a linear system of the form:
 
-  A * p = vertcat(u,v) = w
+  M * p = vertcat(u,v) = w
      
 where p,u,v are the vectorizations of P,U,V and w = vertcat(u,v) means vertical concatenation of u 
 and v (I think, vertcat is the Matlab name for this operation, IIRC). If N = I*J = 4*5 = 20, we will 
 get 2*N = 40 equations for our 20 unknowns. That's an overdetermined system which we may solve as a 
-least squares problem by premultiplying both sides with A^T.
+least squares problem by premultiplying both sides with M^T.
 
-  A^T * A * p = A^T * w
+  M^T * M * p = M^T * w
 
 which will reduce the number of equations to 20. ...TBC...
 

@@ -7522,9 +7522,9 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
 
   // Now we assemble the coefficient matrix:
   using Mat = rsMatrix<T>;
-  Mat R(2*N+1, N);            // ToDo rename to M to match notation in textfile
+  Mat M(2*N+1, N);
 
-  // Compute coeffs that appear in the matrix:
+  // Compute the coeffs that appear in the matrix:
   T a = 1/(2*dx); 
   T A = 1/dx; 
   T b = -a; 
@@ -7534,46 +7534,37 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   T d = -c; 
   T D = -C;
 
-  // Add the b,a coeffs to the matrix:
-  for(int k = 0; k < N-2*J; k++) 
-  {
-    R(k+J, k)     = b;
-    R(k+J, k+2*J) = a;
-  }
-  // Add the B,A coeffs to the matrix:
-  for(int k = 0; k < J; k++)
-  {
-    R(k,     k)       = B;
-    R(k,     k+J)     = A;
-    R(N-1-k, N-1-k)   = A;
-    R(N-1-k, N-1-k-J) = B;
-  }
+  // Add the b,a and B,A coeffs to the matrix:
+  for(int k = 0; k < N-2*J; k++) {
+    M(k+J, k)     = b;
+    M(k+J, k+2*J) = a; }
+  for(int k = 0; k < J; k++) {
+    M(k,     k)       = B;
+    M(k,     k+J)     = A;
+    M(N-1-k, N-1-k)   = A;
+    M(N-1-k, N-1-k-J) = B; }
 
-  // Add the d,c,D,C coeffs to the matrix:
-  for(int i = 0; i < I; i++)    // loop over the blocks
-  {
+  // Add the d,c, and D,C coeffs to the matrix:
+  for(int i = 0; i < I; i++) {  // loop over the blocks
     int s = i*J;                // start of i-th block
-    R(N+s,     s    ) = D;
-    R(N+s,     s+1  ) = C;
-    R(N+s+J-1, s+J-1) = C;
-    R(N+s+J-1, s+J-2) = D;
-    for(int k = 1; k < J-1; k++)
-    {
-      R(N+s+k, s+k-1) = d;
-      R(N+s+k, s+k+1) = c;
-    }
-  }
+    M(N+s,     s    ) = D;
+    M(N+s,     s+1  ) = C;
+    M(N+s+J-1, s+J-1) = C;
+    M(N+s+J-1, s+J-2) = D;
+    for(int k = 1; k < J-1; k++) {
+      M(N+s+k, s+k-1) = d;
+      M(N+s+k, s+k+1) = c;   }}
 
   // Add the last row for the additional condition to let the potential have some given value at
   // some given position:
   int i = iKonstant;     // Row index in data matrix Q or P.
   int j = jKonstant;     // Column index in data matrix Q or P.
   int k = i*J + j;       // Column index coefficient matrix R.
-  R(2*N, k) = 1;         // Add a coeff on 1 at position k in the last line
-  //plotMatrix(R, true); // Uncomment to inspect the coefficient matrix
+  M(2*N, k) = 1;         // Add a coeff on 1 at position k in the last line
+  //plotMatrix(M, true); // Uncomment to inspect the coefficient matrix
 
   // Assemble the right hand side vector w as concatentation of vectorized U,V and the additional 
-  // K as last element - pseudocode: w = vertcat(vec(U), vec(V), 1)
+  // K as last element. Pseudocode: w = concatenate(vec(U), vec(V), 1)
   Mat w(2*N+1, 1);
   const T* ptr = U.getDataPointerConst();
   for(int n = 0; n < N; n++)
@@ -7584,12 +7575,12 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   w(2*N, 0) = Konstant;         // Desired value K = P(i, j) must be added to RHS as last element
 
   // Solve the system via a least squares approach:
-  Mat RT  = R.getTranspose();  // R^T
-  Mat RTR = RT * R;            // R^T * R. Least squares coeff matrix for the solver.
-  Mat wp  = RT * w;            // w' = R^T * w. Right hand side for the solver
-  Mat P(I, J);                 // Our resul
-  rsMatrixView p(N, 1, P.getDataPointer());
-  rsLinearAlgebraNew::solve(RTR, p, wp);
+  Mat MT  = M.getTranspose();   // M^T
+  Mat MTM = MT * M;             // M^T * M. Least squares coeff matrix for the solver.
+  Mat wp  = MT * w;             // w' = M^T * w. Right hand side for the solver.
+  Mat P(I, J);                  // Our result. The estimate of the potential for U and V.
+  rsMatrixView p(N, 1, P.getDataPointer());  // The solver wants p, the vectorized view of P.
+  rsLinearAlgebraNew::solve(RTR, p, wp);     // Invoke the linear system solver.
   return P;
 }
 

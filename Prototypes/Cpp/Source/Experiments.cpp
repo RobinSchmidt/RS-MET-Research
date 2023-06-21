@@ -11943,27 +11943,23 @@ void testNumericPotential()
   for(i = 0; i < I; i++)  // loop over the blocks
   {
     int s = i*J;          // start of i-th block
-    R(N+s, s  ) = D;
-    R(N+s, s+1) = C;
-
+    R(N+s,     s  ) = D;
+    R(N+s,     s+1) = C;
+    R(N+s+J-1, s+J-1) = D;
+    R(N+s+J-1, s+J-2) = C;
     for(int k = 1; k < J-1; k++)
     {
      
 
     }
-
-
-
-
-
   }
 
 
 
 
-
- 
   plotMatrix(R, true);
+ 
+  //plotMatrix(R.getTranspose(), true);
   //rsPlotMatrix
   //rsPrintMatrix(R);
 

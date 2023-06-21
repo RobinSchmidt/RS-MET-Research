@@ -11856,7 +11856,7 @@ void plotZetaPotentialNumeric()
 
   int Nx = 11;
   int Ny = 11;
-  double xCenter = -4.0;
+  double xCenter = -8.0;
   double xRange  =  0.2;
   double yCenter =  0.0;
   double yRange  =  0.2;
@@ -11891,17 +11891,15 @@ void plotZetaPotentialNumeric()
     }
   }
 
-  // preliminary:
-  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], U.getDataPointer());
+  // Compute Polya potential from Polya vector field numerically:
+  double dx = (xMax-xMin) / Nx;
+  double dy = (yMax-yMin) / Ny;
+  Mat P = rsNumericPotential(U, V, dx, dy);
+
+
+  // Preliminary (make it look nicer!):
+  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
   plt.plot3D();
-
-
-
-  Mat P(Nx, Ny);
-
-
-
-
   int dummy = 0;
 }
 

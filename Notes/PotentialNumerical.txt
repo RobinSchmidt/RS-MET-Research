@@ -56,7 +56,7 @@ memory. That means, we just concatenate all the rows, one after another, into on
 our example with the 4x5 matrices, we would get a linear system of equations that looks as follows:
 
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P00      U00
-  _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01
+  b _ a _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P01      U01        U01 = (P02-P00)/(2dx)
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P02      U02
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P03      U03
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    P04      U04
@@ -100,7 +100,7 @@ ToDo: The matrix needs to be filled appropriately. It will be sparse. Each row w
 coeffs which can be either (mostly) a or b in the upper half or (mostly) c or d in the lower half. 
 All rows and columns of the matrix that involve boundary points of P, will need special coefficients 
 based on the forward or backward difference ansatz for the boundary points [ToDo: figure out the 
-details!]. 
+details!]. W'ell use the underscore _ to indicate zero entries
 
 We can interpret this as a linear system of the form:
 

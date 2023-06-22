@@ -12034,6 +12034,11 @@ bool testNumericPotential()
   Real err = D.getAbsoluteMaximum();
   ok &= err <= tol;
 
+  // Now try to estimate P from P_x alone:
+  Q = _rsNumericPotential(P_x, dx);
+  // Nope that doesn't work yet. Result is zero. Maybe the matrix is singular? But why?
+
+
   rsAssert(ok);
   return ok;
 

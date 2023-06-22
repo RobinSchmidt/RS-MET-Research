@@ -7538,7 +7538,6 @@ rsMatrix<T> rsNumericDerivativeY(const rsMatrix<T>& P, T dy)
 // boundary points as well, the data matrices must be at least of size 3x3. Now we can also allow
 // 2x2 data matrices.
 
-
 /** Computes a potential for a vector field given in the matrices P_x(i,j), P_y(i,j) numerically. 
 The notation P_x, P_y is meant to suggest that these data matrices represent the partial 
 derivatives of some potential P with respect to x and y. The data is assumed to be equally spaced 
@@ -7554,9 +7553,10 @@ numerical differentiation formulas used in these routines. Note that the roundof
 actually be quite substantial though because the systems to be solved tend to be quite large. We 
 may need better numeric linear algebra routines someday. Eventually, this should be done using a 
 sparse system solver anyway. This implementation here is more for proof of concept. It can be used
-for data matrices of sizes of maybe 20x20 or maybe a bit more. But not like 100x100 or 1000x1000 as
-would typically be needed for numerical simulation and plotting purposes. For details about the 
-idea behind the algorithm, see the file Notes/PotentialNumerical.txt here in this repo.   */
+for data matrices of sizes of maybe 20x20 (i.e. 400 unknowns for P) or maybe a bit more. But not 
+like 100x100 or 1000x1000 as would typically be needed for numerical simulation and plotting 
+purposes. For details about the idea behind the algorithm, see the file 
+Notes/PotentialNumerical.txt here in this repo.   */
 template<class T>
 rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T dx, T dy,
   T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
@@ -7629,6 +7629,69 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T
   rsLinearAlgebraNew::solve(MTM, p, wp);     // Invoke the linear system solver.
   return P;
 }
+
+// Under construction. Does not yet work. Is supposed to construct the potential from P_x alone.
+// We don'T give the caller the opportunity to fix the potential bcs that would make the code 
+// here messier. It can be adjusted afterwards, if desired
+template<class T>
+rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
+{
+  int I = P_x.getNumRows();     // Number of rows in data matrices
+  int J = P_x.getNumColumns();  // Number of columns in data matrices
+  int N = I*J;                  // Number of unknowns = number of columns of coeff matrix
+
+  // Now we assemble the coefficient matrix:
+  using Mat = rsMatrix<T>;
+  Mat M(N, N);
+
+  // Compute the coeffs that appear in the matrix:
+  T a = 1/(2*dx); 
+  T A = 1/dx; 
+  T b = -a; 
+  T B = -A;
+
+  // Add the b,a and B,A coeffs to the matrix:
+  for(int k = 0; k < J; k++) {     
+    M(k, k)           = B;
+    M(k, k+J)         = A;
+    M(N-1-k, N-1-k)   = A;
+    M(N-1-k, N-1-k-J) = B;  }
+  for(int k = 0; k < N-2*J; k++) {
+    M(k+J, k)     = b;
+    M(k+J, k+2*J) = a;  }
+  M(0, 0) = 1;             // 0th row is for constant term. We overwrite the values that the
+  M(0, J) = 0;             // loop wrote here (I didn't want to mess with the loop itself)
+  plotMatrix(M, true);
+  // Actually the M(0,0) = 1; M(0,J) = 0 is supposed to make the matrix nonsingular. But it 
+  // doesn't! Oh! When we don't make demands about the y-derivative and only prescribe an 
+  // x-derivative, it actually means that we could add an arbitrary function of y, i.e. we would 
+  // have to prescribe a whole matrix row of P-values to make the problem nonsingular. We are 
+  // actually just trying to solve mutliple decoupled 1D problems simultaneously, but each
+  // solution to such a 1D problem could have its own shift which would have to be determined
+  // by a constant. I think, the whole idea of computing the potential form a single partial 
+  // derivative alone may not be workable. Could there be other ways to find the harmonic 
+  // conjugate numerically? Maybe something based on Laplace's equation:
+  //   https://en.wikipedia.org/wiki/Harmonic_function
+  // Maybe: differentiate with respect to x, then integrate result with respect to y, then 
+  // negate? we would have P_xx + P_yy = 0  ->  P_yy = -P_xx  ->  P_y = int -P_xx dy
+  // ...but that would also require an integration "constant" that is a function of x. Maybe that
+  // could be provided by the user as a "boundary condition"? But if the user provides such a
+  // boundary condition, then this could be also used in an idea like this one here
+
+  // Assemble the right hand side vector w:
+  Mat w(N, 1);
+  w(0, 0) = 1.0;           // fix constant
+  const T* ptr = P_x.getDataPointerConst();
+  for(int n = 1; n < N; n++)
+    w(n, 0) = ptr[n];
+
+  // Solve the system via a least squares approach:
+  Mat P(I, J);                              // Our result.
+  rsMatrixView p(N, 1, P.getDataPointer()); // The solver wants p, the vectorized view of P.
+  rsLinearAlgebraNew::solve(M, p, w);       // Invoke the linear system solver.
+  return P;
+}
+
 
 // ToDo: 
 // -To make this idea useful in practice, we need an implementation based on sparse matrices. The 

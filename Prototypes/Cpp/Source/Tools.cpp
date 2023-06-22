@@ -7539,24 +7539,32 @@ rsMatrix<T> rsNumericDerivativeY(const rsMatrix<T>& P, T dy)
 // 2x2 data matrices.
 
 
-/** Computes a potential for a vector field given in the matrices U(i,j), V(i,j) numerically. The 
-data is assumed to be equally spaced with stepsizes dx, dy in the x- and y-directions repsectively.
-If U and V were obtained by numerically differentiating some scalar field (or potential) P with 
+/** Computes a potential for a vector field given in the matrices P_x(i,j), P_y(i,j) numerically. 
+The notation P_x, P_y is meant to suggest that these data matrices represent the partial 
+derivatives of some potential P with respect to x and y. The data is assumed to be equally spaced 
+with stepsizes dx, dy in the x- and y-directions repsectively. A potential is unique only up to a 
+constant shift. That's why the caller can specify the desired value "Konstant" of the potential at 
+some index pair "iKonstant", "jKonstant". By default, the potential will be zero at i=0, j=0 but 
+the caller can change that via these parameters.
+
+If P_x and P_y were obtained by numerically differentiating some scalar field (or potential) P with 
 respect to x and y via the routines rsNumericDerivativeX/Y, then this function should reconstruct 
-the potential P up to roundoff error. For details about the idea behind the algorithm, see the file
-Notes/PotentialNumerical.txt here in this repo. Note that the roundoff error may actually be quite 
-large. We may need better numeric linear algebra routines someday. Eventually, this should be done 
-using a sparse system solver anyway. This implementation here is more for proof of concept. A 
-potential is unique only up to a constant shift. That's why the caller can specify the desired 
-value "Konstant" of the potential at some index pair "iKonstant", "jKonstant". By default, the 
-potential will be zero at i=0, j=0 but the caller can change that via these parameters. */
+the potential P up to roundoff error because the formulas we used in our ansatz here match the 
+numerical differentiation formulas used in these routines. Note that the roundoff error may 
+actually be quite substantial though because the systems to be solved tend to be quite large. We 
+may need better numeric linear algebra routines someday. Eventually, this should be done using a 
+sparse system solver anyway. This implementation here is more for proof of concept. It can be used
+for data matrices of sizes of maybe 20x20 or maybe a bit more. But not like 100x100 or 1000x1000 as
+would typically be needed for numerical simulation and plotting purposes. For details about the 
+idea behind the algorithm, see the file Notes/PotentialNumerical.txt here in this repo.   */
 template<class T>
-rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx, T dy,
+rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T dx, T dy,
   T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
 {
-  int I = U.getNumRows();     // Number of rows in data matrices
-  int J = U.getNumColumns();  // Number of columns in data matrices
-  int N = I*J;                // Number of unknowns = number of columns of coeff matrix
+  int I = P_x.getNumRows();     // Number of rows in data matrices
+  int J = P_x.getNumColumns();  // Number of columns in data matrices
+  int N = I*J;                  // Number of unknowns = number of columns of coeff matrix
+  rsAssert(P_y.hasShape(I, J), "P_x and P_y must have the same shape");
 
   // Now we assemble the coefficient matrix:
   using Mat = rsMatrix<T>;
@@ -7604,10 +7612,10 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   // Assemble the right hand side vector w as concatentation of vectorized U,V and the additional 
   // contant K (== Konstant) as last element. Pseudocode: w = concatenate(vec(U), vec(V), K)
   Mat w(2*N+1, 1);
-  const T* ptr = U.getDataPointerConst();
+  const T* ptr = P_x.getDataPointerConst();
   for(int n = 0; n < N; n++)
     w(n, 0) = ptr[n];
-  ptr = V.getDataPointerConst();
+  ptr = P_y.getDataPointerConst();
   for(int n = 0; n < N; n++)
     w(N+n, 0) = ptr[n];
   w(2*N, 0) = Konstant;         // Desired value K = P(i, j) must be added to RHS as last element
@@ -7621,7 +7629,6 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   rsLinearAlgebraNew::solve(MTM, p, wp);     // Invoke the linear system solver.
   return P;
 }
-// Maybe rename U,V into P_x, P_y
 
 // ToDo: 
 // -To make this idea useful in practice, we need an implementation based on sparse matrices. The 

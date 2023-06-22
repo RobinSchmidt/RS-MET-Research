@@ -7546,7 +7546,10 @@ respect to x and y via the routines rsNumericDerivativeX/Y, then this function s
 the potential P up to roundoff error. For details about the idea behind the algorithm, see the file
 Notes/PotentialNumerical.txt here in this repo. Note that the roundoff error may actually be quite 
 large. We may need better numeric linear algebra routines someday. Eventually, this should be done 
-using a sparse system solver anyway. This implementation here is more for proof of concept. */
+using a sparse system solver anyway. This implementation here is more for proof of concept. A 
+potential is unique only up to a constant shift. That's why the caller can specify the desired 
+value "Konstant" of the potential at some index pair "iKonstant", "jKonstant". By default, the 
+potential will be zero at i=0, j=0 but the caller can change that via these parameters. */
 template<class T>
 rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx, T dy,
   T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
@@ -7618,6 +7621,7 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
   rsLinearAlgebraNew::solve(MTM, p, wp);     // Invoke the linear system solver.
   return P;
 }
+// Maybe rename U,V into P_x, P_y
 
 // ToDo: 
 // -To make this idea useful in practice, we need an implementation based on sparse matrices. The 

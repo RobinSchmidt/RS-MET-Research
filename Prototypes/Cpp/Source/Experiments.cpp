@@ -11998,7 +11998,7 @@ bool testNumericPotential()
 
   // Create the data for a potential. We use the function exp(x)*cos(y) as our potential. The 
   // function should not matter. It should actually also work when we would fill P with random 
-  // data (ToDo: try it!).
+  // data (ToDo: try it!):
   Mat P(I, J);
   Real dx = (xMax-xMin) / I;
   Real dy = (yMax-yMin) / J;
@@ -12014,7 +12014,7 @@ bool testNumericPotential()
   Mat P_x = rsNumericDerivativeX(P, dx);  // P_x = dP/dx
   Mat P_y = rsNumericDerivativeY(P, dy);  // P_y = dP/dy
 
-  // Now we want to recover the potential P from the vector field U,V. Let's call our recovered 
+  // Now we want to recover the potential P from the gradient field. Let's call our recovered 
   // potential Q. To make the solution unique (i.e. the matrix of the problem nonsingular), We need
   // to specify the desired value K of the potential at some given index pair i,j. We pick that 
   // desired value from the original potential for a match:

@@ -7640,9 +7640,15 @@ void rsHelmholtzDecomposition(
 // given only U = dP/dx = P_x and want to reconstruct V = dP/dy = P_y from it. We could use the 
 // same approach just with a shorter matrix. We would use only the upper half of it (plus the one 
 // line for the extra condition to make the system nonsingular). So, instead of 2*N+1 equations for
-// N unknwons, we'd get N+1 euqations. It would still be a least-squares probelm due to the extra 
-// + 1 line (Q: could we get rid of the M^T * M line by replacing one equation by the extra 
-// condition instead of adding it?)
+// N unknwons, we'd get N+1 equations. It would still be a least-squares problem due to the extra 
+// + 1 line (unless we implement the idea of not adding the condition as extra line but using it to
+// replace 2 of our original equations. Here then, we would use it to replace only 1 equation, 
+// hence leading to a square matrix M and thus avoiding the M^T * M step, see 
+// PotentialNumerical.txt for more details). Having the potential P reconstructed from U alone, we
+// could numercally differentiate P with respect to y to obtain V. Likewise, if we would only have 
+// V, we could reconstruct U by using only the lower half of the matrix and differentiating the 
+// resulting P with respect to X. (Q: What happens, if we do it the wrong way, i.e. feed in V when
+// the algo expects U or the other way around?)
 
 
 

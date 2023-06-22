@@ -11975,7 +11975,7 @@ void plotZetaPotentialNumeric()
 
 bool testNumericPotential() // Function can be used as unit-test, too
 {
-  // We test the implementation of the idea outlined in Notes/PotentialNumeric.txt here in this 
+  // We test rsNumericPotential outlined in Notes/PotentialNumeric.txt here in this 
   // repo
 
   using Real = float;
@@ -12020,11 +12020,12 @@ bool testNumericPotential() // Function can be used as unit-test, too
   // indeed match the original one up to a numerical tolerance. We check that now:
 
   bool ok  = true;
-  Real tol = 1.e-3;   // We need quite abig tolerance!
+  Real tol = 1.e-3;   // We need quite a big tolerance!
   Mat  D   = Q - P;
   Real err = D.getAbsoluteMaximum();
   ok &= err <= tol;
- 
+
+  rsAssert(ok);
   return ok;
 
   // Notes:

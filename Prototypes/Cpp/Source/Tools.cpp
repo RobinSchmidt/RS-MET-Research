@@ -7526,8 +7526,7 @@ rsMatrix<T> rsNumericDerivativeY(const rsMatrix<T>& P, T dy)
 
 /** Computes a potential for a vector field given in the matrices U(i,j), V(i,j) numerically.
 
-For details see the textfile here in the repo:
-https://github.com/RobinSchmidt/RS-MET-Research/blob/master/Notes/PotentialNumerical.txt
+For details see the textfile here in the repo: Notes/PotentialNumerical.txt
 
 ...TBC...  */
 

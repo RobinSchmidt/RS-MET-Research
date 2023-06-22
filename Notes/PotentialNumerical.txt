@@ -25,7 +25,7 @@ central differencing. That means, we can make the Ansatz:
  
 This formula applies only to inner points. That is, if the index ranges are i = 0,...,I-1 and 
 j = 0,...,J-1, then the formula above applies only to i = 1,..,I-2, j = 1,...,J-2. For reference, we
-call that Ansatz "I,CD" for: "inner point, central difference". For the boundary points at the 
+call that ansatz "I,CD" for: "inner point, central difference". For the boundary points at the 
 edges (first and last row and column of the matrix), we may use special formulas based on forward or 
 backward differences:
 
@@ -99,10 +99,24 @@ N = I*J * 4*5 = 20 unknowns, namely the entries of P. We will get an overdetermi
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c _             V32        V32 = (P33-P31)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ d _ c             V33        V33 = (P34-P32)/(2dy)     I,CD
   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ D C             V34        V34 = (P34-P33)/dx          B,BD
-  _ _ _ _ _ _ _ 1 _ _ _ _ _ _ _ _ _ _ _ _              K         P12 = K                   Konstant 
+  _ _ _ _ _ _ _ 1 _ _ _ _ _ _ _ _ _ _ _ _              K          K  =  P12                Konstant 
   
-The very last line/equation is needed to make the system nonsingular. Without it, the matrix is 
-singular because there are infinitely many solutions that work as a potential for the same vector 
+ 
+We can interpret this matrix equation as a linear system of equations of the form:
+
+  M * p = vertcat(u,v,K) = w
+     
+where p,u,v are the vectorizations of P,U,V and w = vertcat(u,v,K) means vertical concatenation of u 
+and v and the constant K (I think, vertcat is the Matlab name for this operation, IIRC). If 
+N = I*J = 4*5 = 20, we will get 2*N+1 = 41 equations for our 20 unknowns. That's an overdetermined 
+system which we may solve as a least squares problem by premultiplying both sides with M^T.
+
+  M^T * M * p = M^T * w
+
+which will reduce the number of equations to 20.  
+  
+The very last line/equation is needed to make the system nonsingular. Without it, the matrix M^T * M 
+is singular because there are infinitely many solutions that work as a potential for the same vector 
 field. They differ by a constant shift. The last line fixes P12 at K which can be a user-provided 
 constant. The index of the last 1 in the line selects where we want to fix the potential. Here it is 
 at index corresponding to P12 as example. If we want to fix the potential at index i,j in the data 
@@ -115,18 +129,7 @@ because the left and right matrix columns count as boundary points. The distance
 nonzero elements in each row are given by: dist(b,a) = 2*J = 2*5 = 10, dist(B,A) = J = 5, 
 dist(d,c) = 2, dist(D,C) = 1. 
 
-We can interpret this matrix equation as a linear system of equations of the form:
 
-  M * p = vertcat(u,v,K) = w
-     
-where p,u,v are the vectorizations of P,U,V and w = vertcat(u,v,K) means vertical concatenation of u 
-and v and the constant K (I think, vertcat is the Matlab name for this operation, IIRC). If 
-N = I*J = 4*5 = 20, we will get 2*N+1 = 41 equations for our 20 unknowns. That's an overdetermined 
-system which we may solve as a least squares problem by premultiplying both sides with M^T.
-
-  M^T * M * p = M^T * w
-
-which will reduce the number of equations to 20.
 
 Notes:
 -The matrix is sparse but unstructured. Maybe with some clever re-ordering of the vectors, we could

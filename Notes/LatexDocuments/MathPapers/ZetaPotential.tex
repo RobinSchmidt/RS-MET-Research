@@ -678,12 +678,37 @@ ToDo:
  geometry features. Of fundamental importance in diff. geo. is the metric tensor, so 
  maybe try to compute expressions for that first. I think, for this, we don't even need
  the potential and can start directly with the partial derivatives of it which are 
- actually our given functions. But wait - no we need the potential - using the notation 
- from here https://en.wikipedia.org/wiki/Metric_tensor we would get:
+ actually our given functions. Using the notation from here
+ https://en.wikipedia.org/wiki/Metric_tensor we would get:
    r(u,v) = (x(u,v),y(u,v),z(u,v)) = (u,v,P(u,v))
  and with
-   E = r_u . r_u ,  F = r_u - r_v ,  G = r_v . r_v
-
+   E = r_u . r_u ,  F = r_u . r_v ,  G = r_v . r_v
+   r_u = (1,0,P_u), r_v = (0,1,P_v)
+ so: E = P_u^2, F = P_u P_v, G = P_v^2   
+ Maybe to not get confused, call the coordinates in the diff-geo part a,b instead of 
+ u,v. Then we can keep using u,v for the real and negated imag part of our complex 
+ function, i.e. the partial derivatives of P which are then also functions of a,b
+   r(a,b) = (x(a,b),y(a,b),z(a,b)) = (a,b,P(a,b))
+ Then
+   E = r_a . r_a, F = r_a . r_b, G = r_b . r_b
+   r_a = (1,0,P_a), r_b = (0,1,P_b)
+   E = P_a^2, F = P_a P_b, G = P_b^2    
+ and then we can use our original Polya vector field notation for u, v and we have:  
+   P_a = u(a,b), P_b = v(a,b)
+ and so: 
+   E = u^2, F = u v, G = v^2
+ ...that seems to mean that in order to to do diffgeo on complex potentials, we don't 
+ even need an expression for the potential itself. Expressions for the real and imag part 
+ of the function are enough. Does that mean, we can forget about the embedding of the 
+ potential surface in 3D and just think about its intrinsic geometry? Maybe work it out
+ for a simple but not trivial example function like z^2 or 1/z or e^z or z^2 / (1 + z)
+ or ((z+1)*(z-1)) / ((z+i)*(z-i)). What happens if we apply the formulas for E,F,G for the
+ metric tensor to a general vector field that is not necessarily derived from a potential
+ and therefore has no geometric interpretation in terms of a surface? Can this still say
+ something of interest about the vector field? Maybe compute its determinant. Then we have
+ scalar field derived from the vector field. Maybe plot it for some well understood example
+ fields. 
+   
 -Maybe split out a paper about computing Polya potentials for some simple functions
  like 1/z, z^n. That paper could then also tackle some more functions like exp(z), sin(z),
  z^(n), etc. Cite that paper here. In that paper, we could also define a new type of 

@@ -11846,8 +11846,8 @@ void plotZetaPotentialNumeric()
   double yRange  =  0.2;
 
   // Origin:
-  xCenter = 0.0;
-  yCenter = 0.0;
+  //xCenter = 0.0;
+  //yCenter = 0.0;
 
   // Close to the funnel:
   //xCenter = 1.11;
@@ -11855,8 +11855,8 @@ void plotZetaPotentialNumeric()
 
 
   // Nontrivial zeros/saddles:
-  //xCenter = 0.5;
-  //yCenter = 14.134725142;
+  xCenter = 0.5;
+  yCenter = 14.134725142;
   //yCenter = 21.022039639;
   //yCenter = 25.01085758;
 
@@ -11901,7 +11901,7 @@ void plotZetaPotentialNumeric()
       //z = 1. / s; if(s == 0.0) z = 0;  // funnel
 
       //z = sqrt(s);    // plot has strange ripples for Nx=Ny=21
-      z = pow(s, 1./3); // dito
+      //z = pow(s, 1./3); // dito
       // ToDo: check, if differentiating the numerical potential for these does indeed give back
       // the original function ething is wrong here.
 

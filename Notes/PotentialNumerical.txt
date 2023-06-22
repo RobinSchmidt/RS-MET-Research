@@ -141,7 +141,7 @@ Notes:
  the research repo). Using dense matrices may be OK for proof of concept and some unit tests on 
  small toy problems but eventually, we want to apply it to bigger data matrices, like 100x100. For 
  an m-by-n data matrix, the vectors will be of size m*n and the coefficient matrix of the system of 
- size 2*m^2*n^2 (I think), so we really need a sparse implementation to handle real world data 
+ size 2*m^2*n^2+1 (I think), so we really need a sparse implementation to handle real world data 
  matrices.
 -We could make a different ansatz based on a different formula to compute numerical derivatives. A 
  higher order finite difference approximation would give rise to more nonzero coefficients in the 
@@ -167,7 +167,7 @@ Notes:
  
 ToDo: 
 
-Instead of appending the extra line for P12 = K, try just replacing the two rows corresponding 
+Instead of appending the extra line for K = P12, try just replacing the two rows corresponding 
 to P12, namely:
 
   _ _ b _ _ _ _ _ _ _ _ _ a _ _ _ _ _ _ _    row with index  7 = i*J + j
@@ -179,7 +179,7 @@ by the single row:
   _ _ _ _ _ _ _ 1 _ _ _ _ _ _ _ _ _ _ _ _  
   
 and also replace the two corresponding right hand sides U12, V12 with the single right hand side K. 
-Instead of imposing an additional equation (i.e an additional constraint) to make the matrix 
+Instead of imposing an additional equation (i.e. an additional constraint) to make the matrix 
 nonsingular, we would replace two of the original equations by our constraint equation. For 
 production code, that might be nicer because we would deal with slightly smaller matrices (2 lines 
 less: 2*N-1 instead of 2*N+1 lines). However, assembling the matrix programmatically may get messier 

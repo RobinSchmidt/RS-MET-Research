@@ -11838,16 +11838,27 @@ void plotZetaPotentialNumeric()
   using Mat = RAPT::rsMatrix<double>;
   using Complex = std::complex<double>;
 
-  int Nx = 15;
-  int Ny = 15;
+  int Nx = 21;
+  int Ny = 21;
   double xCenter = -8.0;
   double xRange  =  0.2;
   double yCenter =  0.0;
   double yRange  =  0.2;
 
+  // Origin:
+  //xCenter = 0.0;
+  //yCenter = 0.0;
 
+  // Close to the funnel:
+  //xCenter = 1.11;
+  //yCenter = 0.0;
+
+
+  // Nontrivial zeros/saddles:
   xCenter = 0.5;
   yCenter = 14.134725142;
+  //yCenter = 21.022039639;
+  //yCenter = 25.01085758;
 
 
   double xMin = xCenter - xRange/2;
@@ -11877,6 +11888,19 @@ void plotZetaPotentialNumeric()
       z = RZF::evalViaBinomialSum(s, 29);
       //z = RZF::evalViaAlternatingSum(s, 100000);
 
+      // Just for fun some other functions (these should be evaluated at 0):
+      //z = exp(s);  
+      //z = s;            // pringle, saddle
+      //z = s*s;        // trifold-pringle
+      //z = s*s*s;      // nice pavillon with 4 legs
+      //z = s*s*s*s;  
+      //z = s*s*s*s*s;    // 6-fold symmetry, hexagonish
+      //z = (s*s*s) / (1. + 2.*s + s*s);
+      //exp(s*s);
+      //z = sin(s) / s; if(s == 0.0) z = 1;
+      //z = 1. / s; if(s == 0.0) z = 0;  // funnel
+
+
 
       U(i, j) =  real(z);
       V(i, j) = -imag(z);
@@ -11897,16 +11921,22 @@ void plotZetaPotentialNumeric()
 
   // Observations:
   // -At the fist nontrivial zero, the evalViaLaurentSeries does not converge within 31 terms.
-  // -With the boost formula, we indeed see a saddle which is osrt of diagonally aligned. But 
+  // -With the boost formula, we indeed see a saddle which is sort of diagonally aligned. But 
   //  the actual value range is rediculously small - like in the 10^-20 range. Moreover, the 
-  //  range seems to depend on the number of terms: more terms -> smaller range.
+  //  range seems to depend on the number of terms: more terms -> smaller range. That seems 
+  //  wrong.
   // -The binomial sum looks like it's converging with 29 terms up to half of the digits
   // -The alternating sum can be used up to 100000 before it just gets too long to wait for the
   //  results (with Nx = Ny = 11)
   // -Using an 21x21 grid already takes quite long for computing the numeric potential. The 
   //  matrix M is of size 883x441 in this case. The longest time takes the computation of
   //  M^T * M. Much longer than the actual solving step. Check matrix-multiply code, if we may
-  // have a performance bug there. 15x15 is still fine, though. 
+  //  have a performance bug there. 15x15 is still fine, though. 
+  // -For the higher nontrivial zeros, the saddles seem to align more and more diagonally. But I
+  //  need to make sure, that the zeta results are actually correct for these higher zeros.
+  // -So far, no function I have tried produced extrema. Try more. What does it  take for a 
+  //  complex function to prduce extrema in the potential? Try to start with a potential like
+  //  1 / (1 + x^2 + y^2) and look at the vector field and complex function it produces. 
 
   // ToDo:
   // -Figure out, why the boost sum behaves so strangely. Is this an implementation error?

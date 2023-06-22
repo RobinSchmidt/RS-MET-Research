@@ -7528,11 +7528,14 @@ rsMatrix<T> rsNumericDerivativeY(const rsMatrix<T>& P, T dy)
 // Move these 2 into RAPT::rsNumericDifferentiator
 
 
-/** Computes a potential for a vector field given in the matrices U(i,j), V(i,j) numerically.
-
-For details see the textfile here in the repo: Notes/PotentialNumerical.txt
-
-...TBC...  */
+/** Computes a potential for a vector field given in the matrices U(i,j), V(i,j) numerically. The 
+data is assumed to be equally spaced with stepsizes dx, dy in the x- and y-directions repsectively.
+If U and V were obtained by numerically differentiating some scalar field (or potential) P with 
+respect to x and y via the routines rsNumericDerivativeX/Y, then this function should reconstruct 
+the potential P up to roundoff error. For details about the idea behind the algorithm, see the file
+Notes/PotentialNumerical.txt here in this repo. Note that the roundoff error may actually be quite 
+large. We may need better numeric linear algebra routines someday. Eventually, this should be done 
+using a sparse system solver anyway. This implementation here is more for proof of concept. */
 
 template<class T>
 rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx, T dy,

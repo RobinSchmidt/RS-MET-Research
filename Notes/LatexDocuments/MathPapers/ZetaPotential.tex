@@ -675,7 +675,14 @@ ToDo:
 -Give expressions for the entries of the Jacobian. They can be derived from the 
  expressions of the Polya vector fields. Such expressions may be needed to compute
  the curvature of the surface defined by the potential and other differential 
- geometry features
+ geometry features. Of fundamental importance in diff. geo. is the metric tensor, so 
+ maybe try to compute expressions for that first. I think, for this, we don't even need
+ the potential and can start directly with the partial derivatives of it which are 
+ actually our given functions. But wait - no we need the potential - using the notation 
+ from here https://en.wikipedia.org/wiki/Metric_tensor we would get:
+   r(u,v) = (x(u,v),y(u,v),z(u,v)) = (u,v,P(u,v))
+ and with
+   E = r_u . r_u ,  F = r_u - r_v ,  G = r_v . r_v
 
 -Maybe split out a paper about computing Polya potentials for some simple functions
  like 1/z, z^n. That paper could then also tackle some more functions like exp(z), sin(z),

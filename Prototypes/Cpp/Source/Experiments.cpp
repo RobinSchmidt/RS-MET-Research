@@ -11748,10 +11748,10 @@ void plotZetaPotential()
 
 
   //xMin = -6;  xMax =  2; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
-  xMin = -8;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
+  //xMin = -8;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
   //xMin = -6;  xMax =  0; yMin =  -4; yMax =  +4; Nx = 101; Ny = 101; // 
   //xMin = -2.0; xMax = 4.0; yMin = -3; yMax = +3; Nx = 101; Ny = 101; 
-  //xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 101; Ny = 101; // pole/funnel at s = 1
+  xMin = 0.0; xMax = 2.0; yMin = -1; yMax = +1; Nx = 101; Ny = 101; // pole/funnel at s = 1
   //xMin = -8.0; xMax = 0.8; yMin = -3; yMax = +3; Nx = 101; Ny = 101;
   //xMin = 0.9; xMax = 1.1; yMin = -0.1; yMax = +0.1; Nx = 21; Ny = 21; // pole again, zoomed in
   //xMin = -3; xMax = -1; yMin = -1; yMax = +1; Nx = 21; Ny = 21; // 1st trivial zero at s = -2
@@ -11846,8 +11846,8 @@ void plotZetaPotentialNumeric()
   double yRange  =  0.2;
 
   // Origin:
-  //xCenter = 0.0;
-  //yCenter = 0.0;
+  xCenter = 0.0;
+  yCenter = 0.0;
 
   // Close to the funnel:
   //xCenter = 1.11;
@@ -11855,8 +11855,8 @@ void plotZetaPotentialNumeric()
 
 
   // Nontrivial zeros/saddles:
-  xCenter = 0.5;
-  yCenter = 14.134725142;
+  //xCenter = 0.5;
+  //yCenter = 14.134725142;
   //yCenter = 21.022039639;
   //yCenter = 25.01085758;
 
@@ -11899,6 +11899,11 @@ void plotZetaPotentialNumeric()
       //exp(s*s);
       //z = sin(s) / s; if(s == 0.0) z = 1;
       //z = 1. / s; if(s == 0.0) z = 0;  // funnel
+
+      //z = sqrt(s);    // plot has strange ripples for Nx=Ny=21
+      z = pow(s, 1./3); // dito
+      // ToDo: check, if differentiating the numerical potential for these does indeed give back
+      // the original function ething is wrong here.
 
 
 
@@ -11962,7 +11967,7 @@ void plotZetaPotentialNumeric()
   //   imaginary parts. An upward facing cliff indicates high negative y- or high postive imaginary
   //   parts.
   // -We could use RGB for re, im, pot (real, imaginary, potential)
-  // -Data for multifunctions must be siúitably unwrapped before appyling the numeric potential 
+  // -Data for multifunctions must be suitably unwrapped before appyling the numeric potential 
   //  finder. Maybe that problem can be cricumvented when we use analytic expressions for Polya
   //  potentials
 

@@ -7490,40 +7490,45 @@ double rsRiemannZetaFunction::laurentSeriesCoeff(int n)
 
 //=================================================================================================
 
+/** Given a data matrix P containing values P(i,j) of a scalar (or potential) field P(x,y) with 
+equidistantly sampled data with stepsize dx in the x-direction, this function computes a numerical 
+estimate of the partial derivative of P with respect to x. It uses a central difference formula for 
+the inner points and a forward or backward difference formula for the boundary points. */
 template<class T>
 rsMatrix<T> rsNumericDerivativeX(const rsMatrix<T>& P, T dx)
 {
   int I = P.getNumRows();     // Number of rows in data matrix
   int J = P.getNumColumns();  // Number of columns in data matrix
-  rsMatrix<T> U(I, J);
+  rsMatrix<T> P_x(I, J);      // Our result: P_x = dP/dx
   T s = T(1) / dx;
   for(int j = 0; j < J; j++) 
-    U(0, j) = (P(1, j) - P(0, j)) * s;            // forward diff at left boundary / top row
+    P_x(0, j) = (P(1, j) - P(0, j)) * s;          // forward diff at left boundary / top row
   for(int j = 0; j < J; j++) 
-    U(I-1, j) = (P(I-1, j) - P(I-2, j)) * s;      // backward diff at right boundary / bottom row
+    P_x(I-1, j) = (P(I-1, j) - P(I-2, j)) * s;    // backward diff at right boundary / bottom row
   s *= T(0.5);
   for(int i = 1; i < I-1; i++)
     for(int j = 0; j < J; j++) 
-      U(i, j) = (P(i+1, j) - P(i-1, j)) * s;      // central diff for general point
-  return U;
+      P_x(i, j) = (P(i+1, j) - P(i-1, j)) * s;    // central diff for inner point
+  return P_x;
 }
 
+/** Like rsNumericDerivativeX but for the partial derivative with respect to y. */
 template<class T>
 rsMatrix<T> rsNumericDerivativeY(const rsMatrix<T>& P, T dy)
 {
   int I = P.getNumRows();     // Number of rows in data matrix
   int J = P.getNumColumns();  // Number of columns in data matrix
-  rsMatrix<T> V(I, J);
+  rsMatrix<T> P_y(I, J);      // Our result: P_y = dP/dy
   T s = T(1) / dy;
   for(int i = 0; i < I; i++)
-    V(i, 0) = (P(i, 1) - P(i, 0)) * s;            // forward diff at bottom boundary / left column
+    P_y(i, 0) = (P(i, 1) - P(i, 0)) * s;          // forward diff at bottom boundary / left column
   for(int i = 0; i < I; i++)
-    V(i, J-1) = (P(i, J-1) - P(i, J-2)) * s;      // backward diff at top boundary / right column
+    P_y(i, J-1) = (P(i, J-1) - P(i, J-2)) * s;    // backward diff at top boundary / right column
   s *= T(0.5);
   for(int i = 0; i < I; i++)
     for(int j = 1; j < J-1; j++) 
-      V(i, j) = (P(i, j+1) - P(i, j-1)) * s;      // central diff for general point
-  return V;
+      P_y(i, j) = (P(i, j+1) - P(i, j-1)) * s;    // central diff for inner point
+  return P_y;
 }
 // Move these 2 into RAPT::rsNumericDifferentiator
 
@@ -7536,7 +7541,6 @@ the potential P up to roundoff error. For details about the idea behind the algo
 Notes/PotentialNumerical.txt here in this repo. Note that the roundoff error may actually be quite 
 large. We may need better numeric linear algebra routines someday. Eventually, this should be done 
 using a sparse system solver anyway. This implementation here is more for proof of concept. */
-
 template<class T>
 rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx, T dy,
   T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)

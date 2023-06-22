@@ -11947,8 +11947,24 @@ void plotZetaPotentialNumeric()
   //  match the original U,V, this should serve as re-assurance that U,V was indeed curl-free 
   //  which might be an indicator that the function was evaluated correctly, i.e. the algo 
   //  converged. We don't expect an  exact match though, because the reconstructed U,V are 
-  // forced to be *numerically* curl-free while our original Polya vector field is actually 
-  // supposed to be analytically curl-free (i.e. the underlying continuous function is curl-free).
+  //  forced to be *numerically* curl-free while our original Polya vector field is actually 
+  //  supposed to be analytically curl-free (i.e. the underlying continuous function is curl-free).
+
+  // Ideas:
+  // -The whole machinery can be used for a new way of visualizing arbitrary (analytic) complex 
+  //  functions. We just plot their Polya potentials as 3D surfaces. The function *must* be 
+  //  analytic though, otherwise, no Polya potential exists and the idea therefore breaks down 
+  //  (Q: what about isolated singularities like poles?).
+  // -The interpretation of thes plots would be as follows:
+  //  -A steep leftward facing cliff indicates high positive x-parts and therefore high positive 
+  //   real parts. A rightward facing cliff indicates high negative x- or real parts.
+  //  -A steep downward facing cliff indicates high positive y-parts and thereform high negative
+  //   imaginary parts. An upward facing cliff indicates high negative y- or high postive imaginary
+  //   parts.
+  // -We could use RGB for re, im, pot (real, imaginary, potential)
+  // -Data for multifunctions must be siúitably unwrapped before appyling the numeric potential 
+  //  finder. Maybe that problem can be cricumvented when we use analytic expressions for Polya
+  //  potentials
 
 }
 

@@ -11889,7 +11889,6 @@ void plotZetaPotentialNumeric()
   Mat P = rsNumericPotential(U, V, dx, dy);
 
 
-  // Preliminary (ToDo: make it look nicer!):
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
   plotSurfaceDark(plt);
   //plt.plot3D();
@@ -11910,8 +11909,14 @@ void plotZetaPotentialNumeric()
   // have a performance bug there. 15x15 is still fine, though. 
 
   // ToDo:
-  // -Fingure out, why the boost sum behaves so strangely. 
+  // -Figure out, why the boost sum behaves so strangely. Is this an implementation error?
   // -Maybe try using the boost implementation itself.
+  // -Try to reconstruct U,V from P via numeric differentiation of P. When the results closely 
+  //  match the original U,V, this should serve as re-assurance that U,V was indeed curl-free 
+  //  which might be an indicator that the function was evaluated correctly, i.e. the algo 
+  //  converged. We don't expect an  exact match though, because the reconstructed U,V are 
+  // forced to be *numerically* curl-free while our original Polya vector field is actually 
+  // supposed to be analytically curl-free (i.e. the underlying continuous function is curl-free).
 
 }
 

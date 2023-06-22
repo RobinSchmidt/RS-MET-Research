@@ -679,7 +679,15 @@ ToDo:
 
 -Maybe split out a paper about computing Polya potentials for some simple functions
  like 1/z, z^n. That paper could then also tackle some more functions like exp(z), sin(z),
- z^(n), etc. Cite that paper here.
+ z^(n), etc. Cite that paper here. In that paper, we could also define a new type of 
+ complex integral. For the regular complex integral, we have
+ $I   = \int_a^b f(z) dz = F(b) - F(a)$ where $F$ is an antiderivative of $f$. Let's define
+ $I_P = \int_a^b \overline{f}(z) dz = P(b) - P(a)$ where $P$ is a Polya potential for $f$.
+ I think, this identity should hold (verify!). Unlike $I$, $I_P$ would always be a real 
+ number. Q: what happens if we do such an integral around a closed loop around a (simple) 
+ pole? The regular integral would return the residue of the pole (times $2 \pi \i$, I think). What would this new integral return in this case? Maybe try it numerically! Or maybe try
+ to analytically find a path integral of the Polya potential of $1/z$ given by 
+ $u = x/(x^2+y^2), v = y/(x^2+y^2)$ around a loop enclosing $0$, maybe the unit circle.
 
 -Try to write a C++ function that can take a vector field as input and compute a
  potential for it using some sort of numerical intragation. Maybe trapezoidal 

@@ -11937,6 +11937,8 @@ void plotZetaPotentialNumeric()
   // -So far, no function I have tried produced extrema. Try more. What does it  take for a 
   //  complex function to prduce extrema in the potential? Try to start with a potential like
   //  1 / (1 + x^2 + y^2) and look at the vector field and complex function it produces. 
+  // -It seems like 1st order zeros in f(s) produce saddles, 2nd order zeros, trifold-saddles 
+  //  andn-th order zeros (n+1)-fold saddles.
 
   // ToDo:
   // -Figure out, why the boost sum behaves so strangely. Is this an implementation error?

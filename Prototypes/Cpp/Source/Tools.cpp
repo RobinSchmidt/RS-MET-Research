@@ -7693,8 +7693,10 @@ void rsHelmholtzDecomposition(
 }
 // Not yet tested, just an idea, so far
 
-
-
+// This video, at around 7:30
+// https://www.youtube.com/watch?v=NtoIXhUgqSk
+// says that the divergence of a Polya vector field of an analytic functions is also zero. What
+// remains of a vector field if both divergence and curl are zero?
 
 
 

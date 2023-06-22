@@ -11973,10 +11973,16 @@ void plotZetaPotentialNumeric()
 
 }
 
-bool testNumericPotential() // Function can be used as unit-test, too
+// Function can later be used as unit-test, too. we programmatically check, if the results are as 
+// expected and return true if so and false otherwise.
+bool testNumericPotential() 
 {
-  // We test rsNumericPotential outlined in Notes/PotentialNumeric.txt here in this 
-  // repo
+  // We test rsNumericPotential() by creating an example potential field P, numerically 
+  // differentiating it with respect to x and y and reconstruct the potential from these numerical 
+  // partial derivatives. Because our code to compute numerical partial derivatives matches the
+  // equations used in the ansatz computing for the numeric potential, we expect a match up to
+  // roundoff error. This roundoff error can be quite substantial, though due to the system to be
+  // solved being quite large. 
 
   using Real = float;
   using Mat  = rsMatrix<Real>;
@@ -11990,7 +11996,9 @@ bool testNumericPotential() // Function can be used as unit-test, too
   Real yMin = 0.0;     // minimum y-value
   Real yMax = 4.0;     // maximum y-value
 
-  // Create the data for a potential. We use the function exp(x)*cos(y) as our potential:
+  // Create the data for a potential. We use the function exp(x)*cos(y) as our potential. The 
+  // function should not matter. It should actually also work when we would fill P with random 
+  // data (ToDo: try it!).
   Mat P(I, J);
   Real dx = (xMax-xMin) / I;
   Real dy = (yMax-yMin) / J;
@@ -12000,10 +12008,11 @@ bool testNumericPotential() // Function can be used as unit-test, too
       Real x  = xMin + i*dx;
       Real y  = yMin + j*dy;
       P(i, j) = exp(x) * cos(y); }}
+  //plotMatrix(P, true);
 
-  // Obtain the gradient field of the potential P by numeric differentiation:
-  Mat U = rsNumericDerivativeX(P, dx);
-  Mat V = rsNumericDerivativeY(P, dy);
+  // Obtain the gradient field of the potential P by numeric partial differentiation:
+  Mat P_x = rsNumericDerivativeX(P, dx);  // P_x = dP/dx
+  Mat P_y = rsNumericDerivativeY(P, dy);  // P_y = dP/dy
 
   // Now we want to recover the potential P from the vector field U,V. Let's call our recovered 
   // potential Q. To make the solution unique (i.e. the matrix of the problem nonsingular), We need
@@ -12012,7 +12021,7 @@ bool testNumericPotential() // Function can be used as unit-test, too
   i = 2;             // Row index of desired value
   j = 3;             // Column index desired value
   Real K = P(i, j);  // desired value of potential at i,j
-  Mat  Q = rsNumericPotential(U, V, dx, dy, K, i, j);  // Do it!
+  Mat  Q = rsNumericPotential(P_x, P_y, dx, dy, K, i, j);  // Do it!
 
   // Yep! Looks good! Q and P match! We may eventually turn this function into a programmatic unit
   // test. The computation of the potential uses as ansatz equations exactly the same equations 

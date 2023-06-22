@@ -7623,11 +7623,8 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
 // -To make this idea useful in practice, we need an implementation based on sparse matrices. The 
 //  dense matrix based implementation here can only serve as proof of concept. Maybe to handle 
 //  larger data, we could compute the potential for (overlapping) patches and stitch them together.
-//  The overlap ensure that for the final result, we use only inner points. We should maybe match 
+//  The overlap ensures that for the final result, we use only inner points. We should maybe match 
 //  up the first inner point via the constant offsets.
-// -Implement a numerical Helmoltz decomposition as follows:
-//  -obtain potential P
-//  -obtain numerical derivatives of P. They will be (numerically) curl-free
 
 // Another idea would be to use the same idea to reconstruct a harmonic conjugate of a given U or V
 // numerically (I think, that's what it is called what we are doing here. Verify that!): Assume, we 

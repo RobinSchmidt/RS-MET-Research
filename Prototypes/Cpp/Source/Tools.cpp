@@ -7613,6 +7613,47 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& U, const rsMatrix<T>& V, T dx,
 //  -obtain potential P
 //  -obtain numerical derivatives of P. They will be (numerically) curl-free
 
+// Another idea would be to use the same idea to reconstruct a harmonic conjugate of a given U or V
+// numerically (I think, that's what it is called what we are doing here. Verify that!): Assume, we 
+// have given only U = dP/dx = P_x and want to reconstruct V = dP/dy = P_y from it. We could use 
+// the same approach just with a shorter matrix M. We would use only the upper half of it (plus the 
+// one line for the extra condition to make the system nonsingular). So, instead of 2*N+1 equations 
+// for N unknowns, we'd get N+1 equations. It would still be a least-squares problem due to the 
+// extra + 1 line (unless we implement the idea of not adding the condition as extra line but using 
+// it to replace 2 of our original equations. Here then, we would use it to replace only 1 
+// equation, hence leading to a square matrix M and thus avoiding the M^T * M step, see 
+// PotentialNumerical.txt for more details). Having the potential P reconstructed from U alone, we 
+// could numercally differentiate P with respect to y to obtain V. Likewise, if we would only have 
+// V, we could reconstruct U by using only the lower half of the matrix and differentiating the 
+// resulting P with respect to X. (Q: What happens, if we do it the wrong way, i.e. feed in V when 
+// the algo expects U or the other way around?)
+//
+// To facilitate this, maybe we should factor out the loops to add the the coeffs to the matrix, 
+// i.e. the code that follows the comments:
+//
+//    // Add the b,a and B,A coeffs to the matrix:
+//    // Add the d,c, and D,C coeffs to the matrix:
+// 
+// If we only want to use the second, lower half of the matrix, only the lower loop would have to 
+// be used but without the "N+" in the row index, i.e. all assigments like:
+//
+//   M(N+s,     s    ) = D;
+//
+// would be need to replaced by
+//
+//   M(0+s,     s    ) = D;
+//
+// which we could generalize to a
+//
+//   M(S+s,     s    ) = D;
+//
+// where S is a shift/offset that can be passed to the factored out function. It would be N or 0
+// depending on whether we want to put that part of the matrix on top or halfway down. Maybe for
+// consistency, we could add such a shift parameter also to the routine to assemble the upper part.
+// Maybe the functions could be named assemblePotentialCoeffsDiffX, assemblePotentialCoeffsDiffY.
+// When refactoring like this, make sure that testNumericPotential() passes at all stages.
+
+
 /** Under construction. Not yet tested */
 
 template<class T>
@@ -7637,20 +7678,7 @@ void rsHelmholtzDecomposition(
 // Not yet tested, just an idea, so far
 
 
-// Another idea would be to use the same idea to reconstruct a harmonic conjugate of a given U or V
-// numerically (I think, that's what it is called what we are doing here. Verify that!): Assume, we 
-// have given only U = dP/dx = P_x and want to reconstruct V = dP/dy = P_y from it. We could use 
-// the same approach just with a shorter matrix M. We would use only the upper half of it (plus the 
-// one line for the  extra condition to make the system nonsingular). So, instead of 2*N+1 equations 
-// for N unknowns, we'd get N+1 equations. It would still be a least-squares problem due to the 
-// extra + 1 line (unless we implement the idea of not adding the condition as extra line but using 
-// it to replace 2 of our original equations. Here then, we would use it to replace only 1 
-// equation, hence leading to a square matrix M and thus avoiding the M^T * M step, see 
-// PotentialNumerical.txt for more details). Having the potential P reconstructed from U alone, we 
-// could numercally differentiate P with respect to y to obtain V. Likewise, if we would only have 
-// V, we could reconstruct U by using only the lower half of the matrix and differentiating the 
-// resulting P with respect to X. (Q: What happens, if we do it the wrong way, i.e. feed in V when 
-// the algo expects U or the other way around?)
+
 
 
 

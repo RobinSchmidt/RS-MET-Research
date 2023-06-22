@@ -11986,9 +11986,9 @@ bool testNumericPotential() // Function can be used as unit-test, too
   int  I    = 4;       // number of rows or x-samples
   int  J    = 5;       // number of columns or y-samples
   Real xMin = 0.0;     // minimum x-value
-  Real xMax = 10.0;    // maximum x-value
+  Real xMax = 4.0;     // maximum x-value
   Real yMin = 0.0;     // minimum y-value
-  Real yMax = 10.0;    // maximum y-value
+  Real yMax = 4.0;     // maximum y-value
 
   // Create the data for a potential. We use the function exp(x)*cos(y) as our potential:
   Mat P(I, J);
@@ -12026,6 +12026,13 @@ bool testNumericPotential() // Function can be used as unit-test, too
   ok &= err <= tol;
  
   return ok;
+
+  // Notes:
+  // -The xMin = yMin = 0, xMax = yMax = 4 boundaries yield a nice looking plot when uncommenting
+  //  the plotMatrix(M, true); line in rsNumericPotential. When the ranges are larger, the single
+  //  1 coeff on the last line is much bigger than all others such that theri colors are fainter.
+  //  On the other hand, when the raneg is bigger, the coeff on the last line gets too faint. The
+  //  setting is the sweet spot to make everything nicely visible.
 }
 
 

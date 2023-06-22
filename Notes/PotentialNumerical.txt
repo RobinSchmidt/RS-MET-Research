@@ -105,9 +105,26 @@ The very last line/equation is needed to make the system nonsingular. Without it
 singular because there are infinitely many solutions that work as a potential for the same vector 
 field. They differ by a constant shift. The last line fixes P12 at K which can be a user-provided 
 constant. The index of the last 1 in the line selects where we want to fix the potential. Here it is 
-at index corresponding to P12. If we want to fix the potential at index i,j in the data matrix, the 
-corresponding index in the coefficient matrix i*J + j, here 1*5 + 2 = 7. The triple i,j,K can 
-be given by the user and default to 0, 0, 0.0.
+at index corresponding to P12 as example. If we want to fix the potential at index i,j in the data 
+matrix, the corresponding index in the coefficient matrix is i*J + j, here 1*5 + 2 = 7. The triple 
+i,j,K can be given by the user and default to 0, 0, 0.0. ToDo: instead of appending the extra line 
+for P12 = K, try just replacing the two rows corresponding to P12, namely:
+
+  _ _ b _ _ _ _ _ _ _ _ _ a _ _ _ _ _ _ _    row with index  7 = i*J + j
+  _ _ _ _ _ _ d _ c _ _ _ _ _ _ _ _ _ _ _    row with index 27 = i*J + j + N  where N = I*J = 20
+  
+  
+by the single row:
+
+  _ _ _ _ _ _ _ 1 _ _ _ _ _ _ _ _ _ _ _ _  
+  
+and also replace the two corresponding right hand sides U12, V12 with the single right hand side K. 
+Instead of imposing an additional equation (i.e an additional constraint) to make the matrix 
+nonsingular, we would replace two of the original equations by our constraint equation. For 
+production code, that might be nicer because we would deal with slightly smaller matrices (2 lines 
+less: 2*N-1 instead of 2*N+1 lines). However, assembling the matrix programmatically may get messier 
+because the regular structure gets broken. If doing this, let's keep the orginal implementation as 
+prototype for reference anyway.
   
 For U = dP/dx = P_x, we have 10 (= 2*5) inner points (two rows) because the top and bottom matrix 
 rows count as boundary points. For V = dP/dy = P_y, we have 12 (= 3*4) inner points (3 columns) 

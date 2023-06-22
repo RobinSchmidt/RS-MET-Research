@@ -7635,6 +7635,14 @@ void rsHelmholtzDecomposition(
   // https://en.wikipedia.org/wiki/Helmholtz_decomposition
 }
 // Not yet tested
+//
+// Another idea would be to use the same idea to reconstruct a harmonic conjugate. Assume, we have 
+// given only U = dP/dx = P_x and want to reconstruct V = dP/dy = P_y from it. We could use the 
+// same approach just with a shorter matrix. We would use only the upper half of it (plus the one 
+// line for the extra condition to make the system nonsingular). So, instead of 2*N+1 equations for
+// N unknwons, we'd get N+1 euqations. It would still be a least-squares probelm due to the extra 
+// + 1 line (Q: could we get rid of the M^T * M line by replacing one equation by the extra 
+// condition instead of adding it?)
 
 
 

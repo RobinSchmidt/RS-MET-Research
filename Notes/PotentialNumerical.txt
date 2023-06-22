@@ -185,7 +185,27 @@ production code, that might be nicer because we would deal with slightly smaller
 less: 2*N-1 instead of 2*N+1 lines). However, assembling the matrix programmatically may get messier 
 because the regular structure gets broken. If doing this, let's keep the orginal implementation as 
 prototype for reference anyway.
- 
+
+Maybe we could use a 2nd order (i.e. 3 term) formula for the boundary points, too. I think, in this 
+case, a block of the lower half of the matrix would become:
+
+  X Y Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+  d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+  _ d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+  _ _ d _ c _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+  _ _ Q R S _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+where X,Y,Z,Q,R,S are some new coeffs (not necessarily different, but I don't know yet what they are
+so I kept it general) and the first and last line of the upper half of the matrix would become:
+
+  B _ _ _ _ A _ _ _ _ F _ _ _ _ _ _ _ _ _ 
+  _ _ _ _ _ _ _ _ _ G _ _ _ _ B _ _ _ _ A   
+
+for some other new coeffs F,G and the lines below or above would also have these coeffs on them, 
+spaced by 5 from A. It may seem weird that the boundary points use 3 coeffs/terms while the inner 
+point use only 2. But that is misleading: the inner points also use 3 terms. It just happens to be 
+the case that the coeff for the middle term is zero in the central difference formula.
+
 
 Resources:
 

@@ -7496,13 +7496,15 @@ rsMatrix<T> rsNumericDerivativeX(const rsMatrix<T>& P, T dx)
   int I = P.getNumRows();     // Number of rows in data matrix
   int J = P.getNumColumns();  // Number of columns in data matrix
   rsMatrix<T> U(I, J);
+  T s = T(1) / dx;
+  for(int j = 0; j < J; j++) 
+    U(0, j) = (P(1, j) - P(0, j)) * s;            // forward diff at left boundary / top row
+  for(int j = 0; j < J; j++) 
+    U(I-1, j) = (P(I-1, j) - P(I-2, j)) * s;      // backward diff at right boundary / bottom row
+  s *= T(0.5);
   for(int i = 1; i < I-1; i++)
     for(int j = 0; j < J; j++) 
-      U(i, j) = (P(i+1, j) - P(i-1, j)) / (2*dx);  // central diff for general point
-  for(int j = 0; j < J; j++) 
-    U(0, j) = (P(1, j) - P(0, j)) / dx;            // forward diff at left boundary / top row
-  for(int j = 0; j < J; j++) 
-    U(I-1, j) = (P(I-1, j) - P(I-2, j)) / dx;      // backward diff at right boundary / bottom row
+      U(i, j) = (P(i+1, j) - P(i-1, j)) * s;      // central diff for general point
   return U;
 }
 
@@ -7512,16 +7514,18 @@ rsMatrix<T> rsNumericDerivativeY(const rsMatrix<T>& P, T dy)
   int I = P.getNumRows();     // Number of rows in data matrix
   int J = P.getNumColumns();  // Number of columns in data matrix
   rsMatrix<T> V(I, J);
+  T s = T(1) / dy;
+  for(int i = 0; i < I; i++)
+    V(i, 0) = (P(i, 1) - P(i, 0)) * s;            // forward diff at bottom boundary / left column
+  for(int i = 0; i < I; i++)
+    V(i, J-1) = (P(i, J-1) - P(i, J-2)) * s;      // backward diff at top boundary / right column
+  s *= T(0.5);
   for(int i = 0; i < I; i++)
     for(int j = 1; j < J-1; j++) 
-      V(i, j) = (P(i, j+1) - P(i, j-1)) / (2*dy);  // central diff for general point
-  for(int i = 0; i < I; i++)
-    V(i, 0) = (P(i, 1) - P(i, 0)) / dy;            // forward diff at bottom boundary / left column
-  for(int i = 0; i < I; i++)
-    V(i, J-1) = (P(i, J-1) - P(i, J-2)) / dy;      // backward diff at top boundary / right column
+      V(i, j) = (P(i, j+1) - P(i, j-1)) * s;      // central diff for general point
   return V;
 }
-// Move these 2 into RAPT::rsNumericDifferentiator, optimize away the divisions
+// Move these 2 into RAPT::rsNumericDifferentiator
 
 
 /** Computes a potential for a vector field given in the matrices U(i,j), V(i,j) numerically.

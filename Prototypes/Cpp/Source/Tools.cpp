@@ -7321,7 +7321,7 @@ std::complex<double> rsRiemannZetaFunction::evalViaStackOverflowAlgo(std::comple
 
   using Complex = std::complex<double>;
 
-  std::vector<Complex> a_arr(maxNumTerms + 1);   // rename to a
+  std::vector<Complex> a(maxNumTerms + 1);   // rename to a
 
   Complex half(0.5);
   Complex one( 1.0);
@@ -7330,23 +7330,23 @@ std::complex<double> rsRiemannZetaFunction::evalViaStackOverflowAlgo(std::comple
   Complex sum( 0.0);
   Complex sumOld(1.0e+20); // Maybe rename to sumOld
 
-  a_arr[0] = half / (one - std::pow(two, (one - s))); // initialize with a_0 = 0.5 / (1 - 2^(1-s))
-  sum += a_arr[0];
+  a[0] = half / (one - std::pow(two, (one - s))); // initialize with a_0 = 0.5 / (1 - 2^(1-s))
+  sum += a[0];
 
   for (int n = 1; n <= maxNumTerms; n++)
   {
-    Complex nCplx(n, 0.0);   // complex index - try to get rid..or maybe just rename to nC
+    Complex nC(n, 0.0);   // complex index - try to get rid..or maybe just rename to nC
 
     for (int k = 0; k < n; k++)
     {
-      Complex kCplx(k, 0.0); // complex index - try to get rid or rename to kC
+      Complex kC(k, 0.0); // complex index - try to get rid or rename to kC
 
-      a_arr[k] *= half * (nCplx / (nCplx - kCplx));
-      sum += a_arr[k];
+      a[k] *= half * (nC / (nC - kC));
+      sum += a[k];
     }
 
-    a_arr[n] = (rev * a_arr[n - 1] * std::pow((nCplx / (nCplx + one)), s) / nCplx);
-    sum += a_arr[n];
+    a[n] = (rev * a[n-1] * std::pow((nC / (nC + one)), s) / nC);
+    sum += a[n];
 
 
     if(std::abs(sumOld - sum) < lowerThresh) break; // Algorithm has converged.
@@ -7362,6 +7362,7 @@ std::complex<double> rsRiemannZetaFunction::evalViaStackOverflowAlgo(std::comple
   // -Make tests to figure out at which values of s divergence happens and document that.
   // -Maybe make lowerThresh a user parameter, maybe call it precision or errorBound or maxError 
   //  or something. I think, that is what it is.
+  // Use rsAbs, rsPow etc instead of std::abs, std::pow
 }
 
 /*

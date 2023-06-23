@@ -84,11 +84,11 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSmoothCrossFade();
   //testMerge();
 
-  //testRiemannZeta();
+  testRiemannZeta();
   //plotZetaPotential();
   //plotZetaPotentialNumeric();
 
-  testNumericPotential();
+  //testNumericPotential();
 
 
   return 0;

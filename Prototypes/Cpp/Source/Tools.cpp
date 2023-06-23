@@ -7630,9 +7630,9 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T
   return P;
 }
 
-// Under construction. Does not yet work. Is supposed to construct the potential from P_x alone.
-// We don'T give the caller the opportunity to fix the potential bcs that would make the code 
-// here messier. It can be adjusted afterwards, if desired
+// Under construction. Does not yet work. It is supposed to construct the potential from P_x 
+// alone. We don't give the caller the opportunity to fix the potential bcs that would make the 
+// code here messier. It can be adjusted afterwards, if desired.
 template<class T>
 rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 {
@@ -7668,15 +7668,15 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
   // have to prescribe a whole matrix row of P-values to make the problem nonsingular. We are 
   // actually just trying to solve mutliple decoupled 1D problems simultaneously, but each
   // solution to such a 1D problem could have its own shift which would have to be determined
-  // by a constant. I think, the whole idea of computing the potential form a single partial 
+  // by a constant. I think, the whole idea of computing the potential from a single partial 
   // derivative alone may not be workable. Could there be other ways to find the harmonic 
   // conjugate numerically? Maybe something based on Laplace's equation:
   //   https://en.wikipedia.org/wiki/Harmonic_function
   // Maybe: differentiate with respect to x, then integrate result with respect to y, then 
-  // negate? we would have P_xx + P_yy = 0  ->  P_yy = -P_xx  ->  P_y = int -P_xx dy
+  // negate? We would use P_xx + P_yy = 0  ->  P_yy = -P_xx  ->  P_y = integrate -P_xx dy
   // ...but that would also require an integration "constant" that is a function of x. Maybe that
   // could be provided by the user as a "boundary condition"? But if the user provides such a
-  // boundary condition, then this could be also used in an idea like this one here
+  // boundary condition, then this could be also used in an idea like this one here.
 
   // Assemble the right hand side vector w:
   Mat w(N, 1);
@@ -7699,6 +7699,8 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 //  larger data, we could compute the potential for (overlapping) patches and stitch them together.
 //  The overlap ensures that for the final result, we use only inner points. We should maybe match 
 //  up the first inner point via the constant offsets.
+// -see rsSparseMatrix in Prototypes.h in the main RS-MET repo. There's also an experiment
+//  iterativeLinearSolvers() that uses it already and there are also some unit test already.
 
 // Another idea would be to use the same idea to reconstruct a harmonic conjugate of a given U or V
 // numerically (I think, that's what it is called what we are doing here. Verify that!): Assume, we 

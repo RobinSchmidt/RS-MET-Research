@@ -11861,12 +11861,12 @@ void plotZetaPotentialNumeric()
 
   // Nontrivial zeros/saddles:
   xCenter = 0.5;
-  //yCenter = 14.134725142;
+  yCenter = 14.134725142;
   //yCenter = 21.022039639;
   //yCenter = 25.01085758;
   //yCenter = 30.424876126;
   //yCenter = 32.935061588;
-  yCenter = 37.586178159;
+  //yCenter = 37.586178159;
 
 
   double xMin = xCenter - xRange/2;
@@ -11912,6 +11912,7 @@ void plotZetaPotentialNumeric()
       //exp(s*s);
       //z = sin(s) / s; if(s == 0.0) z = 1;
       //z = 1. / s; if(s == 0.0) z = 0;  // funnel
+
 
       //z = sqrt(s);    // plot has strange ripples for Nx=Ny=21
       //z = pow(s, 1./3); // dito
@@ -11972,6 +11973,13 @@ void plotZetaPotentialNumeric()
   // -Try to find the main curvature directions at each point and draw lines in these directions.
   //  their length should indicate the amount of curvature. Try to follow these directions from the
   //  saddles. Where do the go to? Maybe the connect the nontrivial with the trivial saddles?
+  // -Try to use polynomial defined via its zeros like (s-z1)*(s-z2)*(s-z3)*... and use the zeta
+  //  zeros for z1,z2,z3,.... Maybe always use triples made of pairs of nontrivial zeros and a 
+  //  trivial zero, like  
+  //    f(s) = (s - (h+14.1i)) * (s - (h*14.1i)) * (s + (-2)) * ...
+  //  Maybe divide final result by (s-1) for the pole. I guess, that will approximate zeta and
+  //  when we use more zeros, we get better approximations?
+
 
 
   // Ideas:

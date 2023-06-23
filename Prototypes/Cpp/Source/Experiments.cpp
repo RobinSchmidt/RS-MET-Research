@@ -11264,7 +11264,7 @@ void testRiemannZeta()
   z = RZF::evalViaBoostSum(s, 20); e = t-z; ok &= abs(e) < 5.e-16; // e ~ 4.4e-16
 
 
-  z = RZF::evalViaStackOverflowAlgo(s, 30); e = t-z; ok &= abs(e) < 2.e-5;
+  z = RZF::evalViaStackOverflowAlgo(s, 30); e = t-z; ok &= abs(e) < 2.e-6;
   // Algo converges at n = 18
 
 

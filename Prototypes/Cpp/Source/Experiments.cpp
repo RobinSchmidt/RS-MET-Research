@@ -11933,6 +11933,9 @@ void plotZetaPotentialNumeric()
 
 
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+  plt.setPixelSize(1200, 600);
+  //plt.addCommand("set view 50, 225, 1, 1");  // 50, 225 good for nontrivial zeta zeros
+  plt.addCommand("set view 0, 180");     // 0, 180 means from above
   plotSurfaceDark(plt);
   //plt.plot3D();
   int dummy = 0;
@@ -11956,12 +11959,17 @@ void plotZetaPotentialNumeric()
   // -For the higher nontrivial zeros, the saddles seem to align more and more diagonally. But I
   //  need to make sure, that the zeta results are actually correct for these higher zeros.
   // -So far, no function I have tried produced extrema. Try more. What does it  take for a 
-  //  complex function to prduce extrema in the potential? Try to start with a potential like
-  //  1 / (1 + x^2 + y^2) and look at the vector field and complex function it produces. 
+  //  complex function to produce extrema in the potential? Try to start with a bell-shaped 
+  //  potential like 1 / (1 + x^2 + y^2) or 1 / exp(x^2 + y^2) and look at the vector field and
+  //  complex function it produces. What is that function? Derive expressions for its real and 
+  //  imag part and try to find a complex expression in z that produces these.
   // -It seems like 1st order zeros in f(s) produce saddles, 2nd order zeros, trifold-saddles 
   //  andn-th order zeros (n+1)-fold saddles.
 
   // ToDo:
+  // -Use plot settings: 
+  //  -perspective corresponding view: 50, 225 
+  //  -bigger size
   // -Figure out, why the boost sum behaves so strangely. Is this an implementation error?
   // -Maybe try using the boost implementation itself.
   // -Try to reconstruct U,V from P via numeric differentiation of P. When the results closely 

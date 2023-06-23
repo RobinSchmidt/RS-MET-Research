@@ -11932,10 +11932,12 @@ void plotZetaPotentialNumeric()
   Mat P = rsNumericPotential(U, V, dx, dy);
 
 
+
+
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
   plt.setPixelSize(1200, 600);
-  //plt.addCommand("set view 50, 225, 1, 1");  // 50, 225 good for nontrivial zeta zeros
-  plt.addCommand("set view 0, 180");     // 0, 180 means from above
+  plt.addCommand("set view 50, 225, 1, 1");  // 50, 225 good for nontrivial zeta zeros, (1,1 is for optional scaling)
+  //plt.addCommand("set view 0, 180");     // 0, 180 means from above
   plotSurfaceDark(plt);
   //plt.plot3D();
   int dummy = 0;
@@ -12021,6 +12023,7 @@ bool testNumericPotential()
 
   using Real = float;
   using Mat  = rsMatrix<Real>;
+  using MatS = rsSparseMatrix<Real>;
   using Vec  = std::vector<Real>;
 
   // User tweakables:
@@ -12069,8 +12072,17 @@ bool testNumericPotential()
   Real err = D.getAbsoluteMaximum();
   ok &= err <= tol;
 
+
+  // Now let's try it with the algorithm based on sparse matrices:
+  Q   = rsNumericPotentialSparse(P_x, P_y, dx, dy, K, i, j); // is still under construction
+  D   = Q - P;
+  err = D.getAbsoluteMaximum();
+  ok &= err <= tol; 
+  //
+
+
   // Now try to estimate P from P_x alone:
-  Q = _rsNumericPotential(P_x, dx);
+  //Q = _rsNumericPotential(P_x, dx);
   // Nope that doesn't work yet. Result is zero. Maybe the matrix is singular? But why?
 
 

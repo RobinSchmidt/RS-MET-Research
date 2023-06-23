@@ -7793,6 +7793,67 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 // Maybe the functions could be named assemblePotentialCoeffsDiffX, assemblePotentialCoeffsDiffY.
 // When refactoring like this, make sure that testNumericPotential() passes at all stages.
 
+// sparse-matrix based implementation of rsNumericPotentialSparse. This should eventually become the
+// regular one (without the qualification "Sparse") and the other should be named "...Proto" to 
+// indicate that it's a prototype (based on dense matrices which is impractical for all but very 
+// small data matrices.
+template<class T>
+rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T dx, T dy,
+  T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
+{
+
+  int I = P_x.getNumRows();     // Number of rows in data matrices
+  int J = P_x.getNumColumns();  // Number of columns in data matrices
+  int N = I*J;                  // Number of unknowns = number of columns of coeff matrix
+  rsAssert(P_y.hasShape(I, J), "P_x and P_y must have the same shape");
+  using Mat  = rsMatrix<T>;
+  using MatS = rsSparseMatrix<T>;
+
+
+  // Assemble the coefficient matrix:
+  MatS M(2*N+1, N);
+
+  // Compute the coeffs that appear in the matrix:
+  T a = 1/(2*dx); 
+  T A = 1/dx; 
+  T b = -a; 
+  T B = -A;
+  T c = 1/(2*dy); 
+  T C = 1/dy; 
+  T d = -c; 
+  T D = -C;
+
+  //M.reserve(...);  
+  // toDo: figure out a formula for haow many nonzero elements the matrix will have. I think, it's
+  // 4*N+1 ...verify that!
+
+  
+  // Add the b,a and B,A coeffs to the matrix:
+  for(int k = 0; k < N-2*J; k++) 
+  {
+    M.appendFastAndUnsafe(k+J, k,     b);       // M(k+J, k)     = b;
+    M.appendFastAndUnsafe(k+J, k+2*J, a);       // M(k+J, k+2*J) = a; 
+  }
+  for(int k = 0; k < J; k++) 
+  {
+    M.appendFastAndUnsafe(k,     k,       B);   // M(k,     k)       = B;
+    M.appendFastAndUnsafe(k,     k+J,     A);   // M(k,     k+J)     = A;
+    M.appendFastAndUnsafe(N-1-k, N-1-k,   A);   // M(N-1-k, N-1-k)   = A;
+    M.appendFastAndUnsafe(N-1-k, N-1-k-J, B);   // M(N-1-k, N-1-k-J) = B; 
+  }
+ 
+
+
+  plotMatrix(MatS::toDense(M), true);
+
+
+
+
+  Mat P(I, J);
+  return P;
+}
+
+
 
 /** Under construction. Not yet tested */
 

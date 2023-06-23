@@ -7314,32 +7314,39 @@ std::complex<double> rsRiemannZetaFunction::evalViaBoostSum(std::complex<double>
 }
 
 std::complex<double> rsRiemannZetaFunction::evalViaStackOverflowAlgo(std::complex<double> s, 
-  int MAXNUM)
+  int MAXNUM)  // rename MAXNUM to maxNumTerms
 {
   const double LOWER_THRESHOLD = 1.0e-6;
   const double UPPER_BOUND = 1.0e+4;
+  // ToDo:
+  // -rename to lowerThresh, upperBound
+  // -maybe make lowerThresh a user parameter, maybe call it precision or errorBound or maxError or
+  //  something. I think, that is what it is.
 
   using Complex = std::complex<double>;
 
-  std::vector<Complex> a_arr(MAXNUM + 1);
+  std::vector<Complex> a_arr(MAXNUM + 1);   // rename to a
 
-  Complex half(0.5,     0.0);
-  Complex one( 1.0,     0.0);
-  Complex two( 2.0,     0.0);
-  Complex rev(-1.0,     0.0);
-  Complex sum( 0.0,     0.0);
-  Complex prev(1.0e+20, 0.0);
+  // Try to get rid of these. Use constants in the code:
+  Complex half(0.5);
+  Complex one( 1.0);
+  Complex two( 2.0);
+  Complex rev(-1.0);
+
+
+  Complex sum( 0.0);
+  Complex prev(1.0e+20); // rename to sumOld
 
   a_arr[0] = half / (one - std::pow(two, (one - s))); // initialize with a_0 = 0.5 / (1 - 2^(1-s))
   sum += a_arr[0];
 
   for (int n = 1; n <= MAXNUM; n++)
   {
-    Complex nCplx(n, 0.0); // complex index
+    Complex nCplx(n, 0.0);   // complex index - try to get rid..or maybe just rename to nC
 
     for (int k = 0; k < n; k++)
     {
-      Complex kCplx(k, 0.0); // complex index
+      Complex kCplx(k, 0.0); // complex index - try to get rid or rename to kC
 
       a_arr[k] *= half * (nCplx / (nCplx - kCplx));
       sum += a_arr[k];
@@ -7349,16 +7356,23 @@ std::complex<double> rsRiemannZetaFunction::evalViaStackOverflowAlgo(std::comple
     sum += a_arr[n];
 
 
-    if (std::abs(prev - sum) < LOWER_THRESHOLD)//If the difference is less than or equal to the threshold value, it is considered to be convergent and the calculation is terminated.
-      break;
+    if (std::abs(prev - sum) < LOWER_THRESHOLD)
+      break; // Algorithm has converged.
+    // Maybe return sum insted of breaking
 
-    if (std::abs(sum) > UPPER_BOUND)//doesn't work for large values, so it gets terminated when it exceeds UPPER_BOUND
-      break;
+    if (std::abs(sum) > UPPER_BOUND)  
+      break; // Algorithm has diverged.
+    // ToDo: 
+    // -Maybe indicate error somehow. Maybe return sign(sum) * inf or nan
+    // -Make tests to figure out at which values of s this happens and document that.
 
-    prev = sum;
+    prev = sum;  // update old value of sum to facilitate convergence check
   }
 
   return sum;
+  // ToDo: 
+  // -Figure out why this array is needed. Can we reformulat the algo in a way that avoids it? 
+  //  It causes a heap allocation which is undesirable.
 
 }
 

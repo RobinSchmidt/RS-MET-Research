@@ -11264,6 +11264,11 @@ void testRiemannZeta()
   z = RZF::evalViaBoostSum(s, 20); e = t-z; ok &= abs(e) < 5.e-16; // e ~ 4.4e-16
 
 
+  z = RZF::evalViaStackOverflowAlgo(s, 30); e = t-z; ok &= abs(e) < 2.e-5;
+  // Algo converges at n = 18
+
+
+
   // For s = 3, each tenfold increase of the number of terms gives 2 additional correct digits:
   s = 3;
   t = 1.202056903159594285399738;// Computed by Wolfram Alpha via riemannzeta(3)

@@ -1,3 +1,5 @@
+QOI: "The Quite OK Image Format for Fast, Lossless Compression" (of images)
+
 Main website:
 https://qoiformat.org/
 

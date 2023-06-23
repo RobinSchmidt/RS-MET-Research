@@ -11861,9 +11861,12 @@ void plotZetaPotentialNumeric()
 
   // Nontrivial zeros/saddles:
   xCenter = 0.5;
-  yCenter = 14.134725142;
+  //yCenter = 14.134725142;
   //yCenter = 21.022039639;
   //yCenter = 25.01085758;
+  //yCenter = 30.424876126;
+  //yCenter = 32.935061588;
+  yCenter = 37.586178159;
 
 
   double xMin = xCenter - xRange/2;
@@ -11890,8 +11893,13 @@ void plotZetaPotentialNumeric()
 
       //z = RZF::evalViaLaurentSeries(s, 31);
       //z = RZF::evalViaBoostSum(s, 25);
-      z = RZF::evalViaBinomialSum(s, 29);
+      //z = RZF::evalViaBinomialSum(s, 29);
       //z = RZF::evalViaAlternatingSum(s, 100000);
+
+      z = RZF::evalViaStackOverflowAlgo(s, 80);
+      // With error threshold of 1.e-6, it converges in 33 iterations around the first nontrivial 
+      // zero. The number of iterations n taken is  1: 33, 2: 41, 3: 45, 4: 50, 5: 53, 6: 59
+
 
       // Just for fun some other functions (these should be evaluated at 0):
       //z = exp(s);  
@@ -11930,6 +11938,8 @@ void plotZetaPotentialNumeric()
 
 
   // Observations:
+  // -The formula from stackoverflow seem to work best.
+  // -The saddles look more and more twisted at the higher zeros
   // -At the fist nontrivial zero, the evalViaLaurentSeries does not converge within 31 terms.
   // -With the boost formula, we indeed see a saddle which is sort of diagonally aligned. But 
   //  the actual value range is rediculously small - like in the 10^-20 range. Moreover, the 
@@ -11959,6 +11969,10 @@ void plotZetaPotentialNumeric()
   //  converged. We don't expect an  exact match though, because the reconstructed U,V are 
   //  forced to be *numerically* curl-free while our original Polya vector field is actually 
   //  supposed to be analytically curl-free (i.e. the underlying continuous function is curl-free).
+  // -Try to find the main curvature directions at each point and draw lines in these directions.
+  //  their length should indicate the amount of curvature. Try to follow these directions from the
+  //  saddles. Where do the go to? Maybe the connect the nontrivial with the trivial saddles?
+
 
   // Ideas:
   // -The whole machinery can be used for a new way of visualizing arbitrary (analytic) complex 

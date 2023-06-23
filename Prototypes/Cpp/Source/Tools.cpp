@@ -7316,32 +7316,31 @@ std::complex<double> rsRiemannZetaFunction::evalViaBoostSum(std::complex<double>
 std::complex<double> rsRiemannZetaFunction::evalViaStackOverflowAlgo(
   std::complex<double> s, int maxNumTerms)
 {
-  const double lowerThresh = 1.0e-6;
-  const double upperBound  = 1.0e+4;
+  const double lowerThresh = 1.0e-6;                      // Precision, error tolerance (?)
+  const double upperBound  = 1.0e+4;                      // For divergence check
   using Complex = std::complex<double>;
-  std::vector<Complex> a(maxNumTerms + 1);
-  Complex half(0.5);
-  Complex one( 1.0);
-  Complex two( 2.0);
-  Complex rev(-1.0);
-  Complex sum( 0.0);
-  Complex sumOld(1.0e+20);
+  std::vector<Complex> a(maxNumTerms+1);                  // Array of...what?
+  Complex half(0.5), one(1), two(2), neg(-1);             // Some constants in complex format
+  Complex sum(0);                                         // Main accumulator for result
+  Complex sumOld(1.0e+20);                                // Convergence check facilitator
   a[0] = half / (one - pow(two, (one - s)));              // Init a[0] = 0.5 / (1 - 2^(1-s))
   sum += a[0];
   for(int n = 1; n <= maxNumTerms; n++) {
-    Complex nC(n, 0.0);                                   // Index n converted to complex.
+    Complex nC(n);                                        // Index n converted to complex
     for (int k = 0; k < n; k++) {
-      Complex kC(k, 0.0);                                 // Index k converted to complex.
+      Complex kC(k);                                      // Index k converted to complex
       a[k] *= half * (nC / (nC - kC));
       sum += a[k];  }
-    a[n] = (rev * a[n-1] * pow((nC/(nC+one)), s) / nC);
+    a[n] = (neg * a[n-1] * pow((nC/(nC+one)), s) / nC);
     sum += a[n];
-    if(abs(sumOld - sum) < lowerThresh) break;            // Algorithm has converged.
-    if(abs(sum)          > upperBound)  break;            // Algorithm has diverged.
+    if(abs(sumOld - sum) < lowerThresh) 
+      break;                                              // Algorithm has converged
+    if(abs(sum)          > upperBound)  
+      break;                                              // Algorithm has diverged
     sumOld = sum; }                                       // Facilitate convergence check
   return sum;
   // ToDo: 
-  // -Figure out why this array is needed. Can we reformulat the algo in a way that avoids it? 
+  // -Figure out why this array is needed. Can we reformulate the algo in a way that avoids it? 
   //  It causes a heap allocation which is undesirable.
   // -Maybe indicate divergence somehow to the caller. Maybe return sign(sum) * inf or nan
   // -Make tests to figure out at which values of s divergence happens and document that.
@@ -7351,57 +7350,8 @@ std::complex<double> rsRiemannZetaFunction::evalViaStackOverflowAlgo(
 
   // Implementation is based on the code posted here:
   // https://stackoverflow.com/questions/41549533/riemann-zeta-function-with-complex-argument
+  // The original code is also stored in Libraries/Snippets/Misc/RiemannZeta.cpp
 }
-
-/*
-This is the original code from:
-https://stackoverflow.com/questions/41549533/riemann-zeta-function-with-complex-argument
-
-const long double LOWER_THRESHOLD = 1.0e-6;
-const long double UPPER_BOUND = 1.0e+4;
-const int MAXNUM = 100;
-
-std::complex<long double> zeta(const std::complex<long double>& s)
-{
-  std::complex<long double> a_arr[MAXNUM + 1];
-  std::complex<long double> half(0.5, 0.0);
-  std::complex<long double> one(1.0, 0.0);
-  std::complex<long double> two(2.0, 0.0);
-  std::complex<long double> rev(-1.0, 0.0);
-  std::complex<long double> sum(0.0, 0.0);
-  std::complex<long double> prev(1.0e+20, 0.0);
-
-  a_arr[0] = half / (one - std::pow(two, (one - s))); //initialize with a_0 = 0.5 / (1 - 2^(1-s))
-  sum += a_arr[0];
-
-  for (int n = 1; n <= MAXNUM; n++)
-  {
-    std::complex<long double> nCplx(n, 0.0); //complex index
-
-    for (int k = 0; k < n; k++)
-    {
-      std::complex<long double> kCplx(k, 0.0); //complex index
-
-      a_arr[k] *= half * (nCplx / (nCplx - kCplx));
-      sum += a_arr[k];
-    }
-
-    a_arr[n] = (rev * a_arr[n - 1] * std::pow((nCplx / (nCplx + one)), s) / nCplx);
-    sum += a_arr[n];
-
-
-    if (std::abs(prev - sum) < LOWER_THRESHOLD)//If the difference is less than or equal to the threshold value, it is considered to be convergent and the calculation is terminated.
-      break;
-
-    if (std::abs(sum) > UPPER_BOUND)//doesn't work for large values, so it gets terminated when it exceeds UPPER_BOUND
-      break;
-
-    prev = sum;
-  }
-
-  return sum;
-}
-*/
 
 void rsRiemannZetaFunction::vectorFieldViaOriginalSum(
   double x, double y, double* u, double* v, int numTerms)

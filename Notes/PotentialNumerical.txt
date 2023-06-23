@@ -1,6 +1,6 @@
 Assume that we have numerical data for a vector field U(x,y), V(x,y) and we know that this data 
 represents a potential field. How can we find a corresponding potential numerically? Let's assume we 
-have 2 2D data arrays U(i,j), U(i,j) representing the functions U(x,y), V(x,y) where the x,y are 
+have 2 2D data arrays U(i,j), V(i,j) representing the functions U(x,y), V(x,y) where the x,y are 
 equidistant with stepsize dx,dy respectively. In a 4x5 toy scenario, the situation could look like 
 this:
 

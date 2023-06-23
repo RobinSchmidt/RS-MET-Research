@@ -245,7 +245,8 @@ def polyEval(p, x):
 	return y
 \end{lstlisting}
 This way of evaluating a polynomial is also known as Horner's rule.
-...hmm...not sure, if code should appear in the normal text. maybe put it into an appendix?
+...hmm...not sure, if code should appear in the normal text. maybe put it into an appendix? 
+
 
 \paragraph{Addition and Subtraction}
 Polynomials, given as arrays of coefficients, can be added and subtracted element wise. If the input arrays are of different length, i.e. the polynomials are of a different degree, the lower degree coefficient array has to be padded with zeros to match the length of the larger one.
@@ -272,7 +273,9 @@ The coefficient $c_n$ in the resulting polynomial is the sum of all products of 
 \end{equation}
 That formula to compute the new list of $c$-coefficients from the $a$- and $b$-coefficients is called convolution. Multiplication of two polynomials is achieved by convolving their coefficient lists. Convolution is an important mathematical operation that crops up in different variations everywhere. Polynomial multiplication is just one of the many places. Signal processing is full of it. Its continuous variant plays a role in the solution of certain differential equations which are all over the place in physics.
 
-...TBC... give Python code for it
+...TBC... give Python code for it 
+% \bigl(\sum_{n=0}^N  a_n x^n\bigr) \bigl( \sum_{k=0}^M b_k x^k \bigr) = $\sum_{n=0}^{N+M} c_n x^n, wher c_n = ...
+% give a similar formula also for nesting and deconvolution
 
 \paragraph{Division}
 Let's now see, if we can reverse the process. Let's assume that we know the coefficient arrays $c_n$ and $b_n$ and want to figure out all the $a_n$. We need to make sure that the coefficients for like powers of $x$ match. For example, at the top of the triangle, we have the product $a_0 b_0$. That's how we computed the coeff for the constant term in the product polynomial $c_0$. So we have $c_0 = a_0 b_0$. That actually already tells us $a_0 = c_0 / b_0$. Now look at the line immediately below the tip of the triangle. The sum in brackets must equal $c_1$. But $c_1 = a_0 b_1 + a_1 b_0$ means $a_1 = (c_1 -a_0 b_1)/b_0$. We have found our next coefficient! Everything on the right is already known, The $b$-coeffs are assumed to be known anyway and $a_0$ has just been computed in the previous step. One line more to establish the pattern: we must have $c_2 = a_0 b_2 + a_1 b_1 + a_2 b_0$ so we have $a_2 = (c_2 - a_0 b_2 - a_1 b_1)/b_0$. In general:

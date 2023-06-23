@@ -7089,6 +7089,9 @@ public:
    // Function returns totally wrong result for s = 2.0 + 1.0*i; There's some code in the test
    // function that tests this but is currently commented out... -> figure this out!
 
+   // ToDo: add evaluation function based on the code posted here:
+   // https://stackoverflow.com/questions/41549533/riemann-zeta-function-with-complex-argument
+
    //----------------------------------------------------------------------------------------------
    /** \name Evaluation of the Polya vector field of zeta */
 

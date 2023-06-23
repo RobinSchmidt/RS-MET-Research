@@ -118,9 +118,9 @@ which will reduce the number of equations to 20.
 The very last line/equation is needed to make the system nonsingular. Without it, the matrix M^T * M 
 is singular because there are infinitely many solutions that work as a potential for the same vector 
 field. They differ by a constant shift. The last line fixes P12 at K which can be a user-provided 
-constant. The index of the last 1 in the line selects where we want to fix the potential. Here it is 
+constant. The index of the 1 in the last line selects where we want to fix the potential. Here it is 
 at index corresponding to P12 as example. If we want to fix the potential at index i,j in the data 
-matrix, the corresponding index in the coefficient matrix is i*J + j, here 1*5 + 2 = 7. The triple 
+matrix P, the corresponding index in the coefficient matrix is i*J + j, here 1*5 + 2 = 7. The triple 
 i,j,K can be given by the user and default to 0, 0, 0.0. 
 
 For U = dP/dx = P_x, we have 10 (= 2*5) inner points (two rows) because the top and bottom matrix 

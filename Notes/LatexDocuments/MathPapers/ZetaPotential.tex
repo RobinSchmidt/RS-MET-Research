@@ -710,9 +710,18 @@ ToDo:
  fields. 
    
 -Maybe split out a paper about computing Polya potentials for some simple functions
- like 1/z, z^n. That paper could then also tackle some more functions like exp(z), sin(z),
- z^(n), etc. Cite that paper here. In that paper, we could also define a new type of 
- complex integral. For the regular complex integral, we have
+ like 1/z, z^n, (1/z)^n. That paper could then also tackle some more functions like exp, 
+ sin, cos, tan, log, sqrt, pow, sinh, cosh, tanh, asin, acos, etc. Cite that paper here. 
+-Try to find a prodcut rule and quotient rule for Polya potentials. Maybe it should be 
+ based on multiplication and division of the power series coeffs, i.e. convolution and
+ deconvolution, aka Cauchy-product (an Cauchy-quotient?). Actually, that would be rules 
+ for multiplying and divding power series in general. It doesn't matter if we use the 
+ result to compute coeffs for the pwer series of Polya potential or for soemthing else.
+ Could product and quotien rule for f*g and f/g be possible that avoids the use of a 
+ power series expansion and is just written in terms of f,g themselves? What about a 
+ chain rule? Maybe that should be based on an algorithm to nest polynomials.
+-In that paper, we could also define a new type of complex integral. For the regular 
+ complex integral, we have
  $I   = \int_a^b f(z) dz = F(b) - F(a)$ where $F$ is an antiderivative of $f$. Let's define
  $I_P = \int_a^b \overline{f(z)} dz = P(b) - P(a)$ where $P$ is a Polya potential for $f$.
  I think, this identity should hold (verify!). Unlike $I$, $I_P$ would always be a real 
@@ -723,8 +732,5 @@ ToDo:
  Ah - this video defines soemthing similar:
  https://www.youtube.com/watch?v=itEqPTJpxUo
 
--Try to write a C++ function that can take a vector field as input and compute a
- potential for it using some sort of numerical intragation. Maybe trapezoidal 
- and/or the inverse of the central difference differentiation.
 
 \end{comment}

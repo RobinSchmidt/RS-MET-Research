@@ -7335,11 +7335,11 @@ std::complex<double> rsRiemannZetaFunction::evalViaStackOverflowAlgo(std::comple
 
   for (int n = 1; n <= maxNumTerms; n++)
   {
-    Complex nC(n, 0.0);   // complex index - try to get rid..or maybe just rename to nC
+    Complex nC(n, 0.0);           // Index n converted to complex.
 
     for (int k = 0; k < n; k++)
     {
-      Complex kC(k, 0.0); // complex index - try to get rid or rename to kC
+      Complex kC(k, 0.0);         // Index k converted to complex.
 
       a[k] *= half * (nC / (nC - kC));
       sum += a[k];

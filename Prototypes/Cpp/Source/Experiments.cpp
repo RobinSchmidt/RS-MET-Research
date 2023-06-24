@@ -12135,7 +12135,7 @@ void testPotentialPlotter()
   //using Vec     = std::vector<Real>;
 
  
-  //Complex i(0, 1);
+  Complex i(0, 1);
 
 
 
@@ -12144,45 +12144,35 @@ void testPotentialPlotter()
   //f = [](Complex z) { return -1; };           // rightward down-ramp
   //f = [](Complex z) { return Complex(0, 1); };  // upward downramp
   //f = [](Complex z) { return z; };
-  f = [](Complex z) { return z*z; };
-  //f = [](Complex z) { return z*z*z; };
-
+  //f = [&](Complex z) { return (z - 0.4f*i); };
+  //f = [](Complex z) { return z*z; };
+  //f = [](Complex z) { return z*z*z; };      // z^3
+  //f = [](Complex z) { return z*z*z*z; };      // z^4
+  //f = [](Complex z) { return z*z*z*z*z; };    // z^5
+  //f = [](Complex z) { return exp(z); };
+  f = [](Complex z) { return sin(z); };
 
   Image img;
   Plt plt;
 
-  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 21, 21);  
+  using C = Complex;
+
+  //img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 101, 101);
 
 
-  // Ovservations:
-  // -The Polya potnetials of constant functions look plausible
-  // -The potential of z^2 shows a minimum in the north and maximum in the south. At zero, there
-  //  is actually a southward gradient. That seems wrong.
-  // -When not negating the imgainary part, we get the expected saddle shape. But why? Compare
-  //  code to plotZetaPotentialNumeric - there, we do negate and also get the saddle - I think.
 
-  // Old:
-  // Takes long for z^2, result is black for z^2 and z
-  // -the P matrix in getPolyaPotentialImage look actually good. 
-  // -the min/max values in rsImageProcessor<T>::normalize look also good
-  // -the plotMatrix(P, true); call produces a nonzero result. But it doesn't look as expected
-  //  for f(z) = z
-  // -for f(z) = 1, it takes even longer to compute. Maybe the convergence of the Gauss-Seidel 
-  //  solver is bad for simple functions?
-  // -for f(z) = 1, the plotMatrix result looks plausible
-  // -for f(z) = z^2, we see a minimum and a maximum. That seems wrong!
-  // -Ah - I think, it is because rsimage stores the data internally differently that rsMatrix
-  //  with respect to why x and y mean. I have now switched to use rsMatrix in the data generation
-  //  and that fixes it.
+  img = plt.getPolyaPotentialImage([](C z) { return z*z; }, -PI, +PI, -1, +1, 11, 11);
 
-  // -I think, the assignment operator for rsImage is not implemented correctly. Solutions:
-  //  -Implement assigment operator
-  //  -Get rid of the manual memory management and use std::vector in rsImage. Then, the compiler
-  //   generated operator should be good enough.
-  //  -> done. now the file is not black anymore
-  // -But: It still looks wrong. Moreover, the image is transposed compared to the matrix. But I
-  //  think, that may actually be right. The plotMatrix function does indeed show the transposed
-  //  matrix, so we may want to to keep it like that
+
+  //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -PI, +PI, -1, +1, 101, 101);
+
+  //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2*PI, +2*PI, 101, 101);
+  // Hangs because the Gauss-Seidel iteration is unable to attain the desired accuracy. The 
+  // iteration error undulates around 0.0005. Solutions:
+  // -Reduce the desired precision and/or
+  // -Give the iteration a maxNumIterations parameter. 
+  // -Try other iterations like SOR. That probably won't help with the attainable accuracy but 
+  //  perhaps with convergence speed.
 
 
 
@@ -12197,7 +12187,9 @@ void testPotentialPlotter()
   //  Expections: 1: rightward linear ramp (upward to the right), -1: leftward linear ramp,
   //  i: downward ramp, -i: upward ramp, 1+i: right-down, ..., z: paraboloid..wait no
   //  ...but what function would a paraboloid like x^2 + y^2 mean?
-  //  f_x = 2x, f_y = 2y  ->  f(z) = 2 z.r - 2 z.i
+  //  f_x = 2x, f_y = 2y  ->  f(z) = 2 z.r - 2 z.i I guess, the Polya vector field would probably 
+  //  have a nonzero divergence and therefore not satisfy one of the two Cauchy-Riemann eqautions.
+  // -Try other iteration methods. Gauss-Seidel is rather slow. Maybe others are better for this?
 }
 
 

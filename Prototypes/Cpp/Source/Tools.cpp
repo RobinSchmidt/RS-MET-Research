@@ -7949,6 +7949,8 @@ complex functions as well.
 
 just a stub st the moment
 
+maybe get rid of the class and let getPolyaPotentialImage just be a free function.
+
 ...TBC... 
 
 */
@@ -7998,8 +8000,6 @@ protected:
 template<class T>
 rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 {
-  //rsImage<T> img(mat.getNumRows(), mat.getNumColumns(), mat.getDataPointerConst());
-
   int w = mat.getNumColumns();
   int h = mat.getNumRows();
   rsImage<T> img(w, h);
@@ -8009,7 +8009,6 @@ rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
   if(normalize)
     rsImageProcessor<T>::normalize(img);
   return img;
-
   // ToDo:
   // -Maybe give the user options, how the matrix row/cols should be interpreted in terms of pixel
   //  coordinates, i.e. how we map between the two index pairs
@@ -8022,30 +8021,23 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
 {
   // Create Polya vector field data (maybe factor out)
   rsMatrix<T> u(w, h), v(w, h);
-  T dx = (xMax - xMin) / w;    // or should we divide by (w-1)?  igure out!
-  T dy = (yMax - yMin) / h;    // dito
-  for(int j = 0; j < h; j++)
-  {
+  T dx = (xMax - xMin) / w;
+  T dy = (yMax - yMin) / h;
+  for(int j = 0; j < h; j++) {
     T y = yMin + j*dy;
-    for(int i = 0; i < w; i++)
-    {
+    for(int i = 0; i < w; i++) {
       T x = xMin + i*dx;
       Complex z(x, y);
       Complex w = f(z);
       u(i, j) =  real(w);
-      v(i, j) = -imag(w);
-      //v(i, j) = imag(w);      // test - this seems to produce the expected saddle shapes
-      // ...but actually, we should negate - however, the plot look implausible when we do
-      // negate and plausible when we don't
-    }
-  }
+      v(i, j) = -imag(w); }}
 
   // Create the Polya potential from the Polya vector field: 
   rsMatrixView<T> um(w, h, u.getDataPointer());
   rsMatrixView<T> vm(w, h, v.getDataPointer());
   //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
   rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
-  plotMatrix(P, false);
+  //plotMatrix(P, false);  // for test
 
   // Convert matrix P to image with normalization and return it:
   rsImage<T> img = rsMatrixToImage(P, true);

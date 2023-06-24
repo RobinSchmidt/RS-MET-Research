@@ -7954,7 +7954,7 @@ just a stub st the moment
 
 */
 
-template<class TPix, class TVal>
+template<class T>
 class rsPotentialPlotter
 {
 
@@ -7962,13 +7962,30 @@ public:
 
   //rsImageContourPlotter
 
-  void drawPotential(const rsImage<TVal>& u, const rsImage<TVal>& v, rsImage<TPix>& target); 
+  using Complex = std::complex<T>;
 
+  rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
+    T xMin, T xMax, T yMin, T yMax, int pixelWidth, int pixelHeight);
+
+
+
+
+  void drawPotential(const rsImage<T>& u, const rsImage<T>& v, rsImage<T>& target); 
+
+
+  // ToDo:
+  // steColorMap
 
 
 protected:
 
 };
+// Notes:
+// -I considered to give it two template parameters TPix, TVal like rsImageContourPlotter, but that
+//  doesn't seem to make sense here and one common T seems enough. There, we may want to use 
+//  TPix != TVal becase the class actually *draws* lines in some user given color. But we don't do
+//  that here, so we don't need that complication.
+//
 // ToDo:
 // -see rsImageContourPlotter for API design
 // -Maybe use it to split an arbitrary image int 3 components: curl, div, rest. I'm not yet sure
@@ -7977,9 +7994,21 @@ protected:
 //  that further? ..Oh wait - no - a single image cannot be decomposed like that. We need a vector 
 //  field input, i.e. a pair of images.
 
-template<class TPix, class TVal>
-void rsPotentialPlotter<TPix, TVal>::drawPotential(
-  const rsImage<TVal>& u, const rsImage<TVal>& v, rsImage<TPix>& target)
+template<class T>
+rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
+  std::function<Complex (Complex z)> f,
+  T xMin, T xMax, T yMin, T yMax, int w, int h)
+{
+  rsImage<T> img(w, h);
+
+
+  return img;
+}
+
+
+template<class T>
+void rsPotentialPlotter<T>::drawPotential(
+  const rsImage<T>& u, const rsImage<T>& v, rsImage<T>& target)
 {
   //rsImage<TVal> P = getPotential(u, v); //
 

@@ -12129,14 +12129,27 @@ bool testNumericPotential()
 
 void testPotentialPlotter()
 {
-  using Real = float;
-  using Mat  = rsMatrix<Real>;
-  using MatS = rsSparseMatrix<Real>;
-  using Vec  = std::vector<Real>;
-  using Plt  = rsPotentialPlotter<Real, Real>;
+  using Real    = float;
+  using Complex = std::complex<Real>;
+  using Func    = std::function<Complex(Complex)>;
+  using Image   = rsImage<Real>;
+  using Plt     = rsPotentialPlotter<Real>;
+  //using Mat     = rsMatrix<Real>;
+  //using Vec     = std::vector<Real>;
+
+ 
+
+
+
+  Func f; 
+  f = [](Complex z) { return z*z; };
+
+
 
 
   Plt plt;
+
+  plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 51, 51);
 
 
   int dummy = 0;

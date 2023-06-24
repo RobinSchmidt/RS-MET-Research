@@ -8011,7 +8011,7 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
 {
   // Create Polya vector field data (maybe factor out)
   rsImage<T> u(w, h), v(w, h);
-  T dx = (xMax - xMin) / w;  // or should we divide by (w-1)?  ...I think so - figure out!
+  T dx = (xMax - xMin) / w;   // or should we divide by (w-1)?  ...I think so - figure out!
   T dy = (yMax - yMin) / h;  // dito
   for(int j = 0; j < h; j++)
   {
@@ -8030,6 +8030,7 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   rsMatrixView<T> um(w, h, u.getPixelPointer(0, 0));
   rsMatrixView<T> vm(w, h, v.getPixelPointer(0, 0));
   rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
+  plotMatrix(P, true);
 
   // Convert matrix P to image with normalization and return it:
   return rsMatrixToImage(P, true);

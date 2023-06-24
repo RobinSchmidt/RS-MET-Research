@@ -12012,12 +12012,7 @@ void plotZetaPotentialNumeric()
   // -Write a function that takes a matrix of complex values, creates the Poly-potential from it
   //  numerically and returns an rsImage. Or maybe make it a class rsPolyaPotentialPlotter with
   //  functions like setColorMap, etc.
-  // -Plot potentials of f(z) = 1, -1, i, -i, 1+i, 1-i, -1+i, -1-i, z, z+1, z^2, (z-1)*(z+1),
-  //  (z-1)*(z+1)*(z+i)*(z-i), 1/z, 1/z^2
-  //  Expections: 1: rightward linear ramp (upward to the right), -1: leftward linear ramp,
-  //  i: downward ramp, -i: upward ramp, 1+i: right-down, ..., z: paraboloid..wait no
-  //  ...but what function would a paraboloid like x^2 + y^2 mean?
-  //  f_x = 2x, f_y = 2y  ->  f(z) = 2 z.r - 2 z.i
+
 
 
 
@@ -12142,20 +12137,40 @@ void testPotentialPlotter()
 
 
   Func f; 
+  //f = [](Complex z) { return 1; };
+  //f = [](Complex z) { return z; };
   f = [](Complex z) { return z*z; };
-
 
 
 
   Image img;
   Plt plt;
 
-  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 21, 21);  // takes long, result is black
+  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 21, 21);  
+  // Takes long for z^2, result is black for z^2 and z
+  // -the P matrix in getPolyaPotentialImage look actually good. 
+  // -the min/max values in rsImageProcessor<T>::normalize look also good
+  // -the plotMatrix(P, true); call produces a nonzero result. But it doesn't look as expected
+  //  for f(z) = z
+  // -for f(z) = 1, it takes even longer to compute. Maybe the convergence of the Gauss-Seidel 
+  //  solver is bad for simple functions?
+  // -for f(z) = 1, the plotMatrix result looks plausible
+  // -for f(z) = z^2, we see a minimum and a maximum. That seems wrong!
+
 
 
   writeImageToFilePPM(img, "PolyaPotential.ppm");
 
   int dummy = 0;
+
+
+  // ToDo:
+  // -Plot potentials of f(z) = 1, -1, i, -i, 1+i, 1-i, -1+i, -1-i, z, z+1, z^2, (z-1)*(z+1),
+  //  (z-1)*(z+1)*(z+i)*(z-i), 1/z, 1/z^2
+  //  Expections: 1: rightward linear ramp (upward to the right), -1: leftward linear ramp,
+  //  i: downward ramp, -i: upward ramp, 1+i: right-down, ..., z: paraboloid..wait no
+  //  ...but what function would a paraboloid like x^2 + y^2 mean?
+  //  f_x = 2x, f_y = 2y  ->  f(z) = 2 z.r - 2 z.i
 }
 
 

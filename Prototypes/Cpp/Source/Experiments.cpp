@@ -12150,7 +12150,7 @@ void testPotentialPlotter()
   Image img;
   Plt plt;
 
-  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 51, 51);
+  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 21, 21);  // takes long
 
 
   int dummy = 0;

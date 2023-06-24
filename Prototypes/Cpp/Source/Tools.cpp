@@ -7716,10 +7716,9 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T
 // indicate that it's a prototype (based on dense matrices which is impractical for all but very 
 // small data matrices.
 template<class T>
-rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T dx, T dy,
-  T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
+rsMatrix<T> rsNumericPotentialSparse(const rsMatrixView<T>& P_x, const rsMatrixView<T>& P_y, 
+  T dx, T dy, T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
 {
-
   int I = P_x.getNumRows();     // Number of rows in data matrices
   int J = P_x.getNumColumns();  // Number of columns in data matrices
   int N = I*J;                  // Number of unknowns = number of columns of coeff matrix
@@ -7997,13 +7996,21 @@ protected:
 //  field input, i.e. a pair of images.
 
 template<class T>
+rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
+{
+  rsImage<T> img(mat.getNumRows(), mat.getNumColumns(), mat.getDataPointerConst());
+  if(normalize)
+    rsImageProcessor<T>::normalize(img);
+  return img;
+}
+
+template<class T>
 rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   std::function<Complex (Complex z)> f,
   T xMin, T xMax, T yMin, T yMax, int w, int h)
 {
-  rsImage<T> img(w, h), u(w, h), v(w, h);
-
   // Create Polya vector field data (maybe factor out)
+  rsImage<T> u(w, h), v(w, h);
   T dx = (xMax - xMin) / w;  // or should we divide by (w-1)?  ...I think so - figure out!
   T dy = (yMax - yMin) / h;  // dito
   for(int j = 0; j < h; j++)
@@ -8019,8 +8026,21 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
     }
   }
 
+  // Create the Polya potential from the Polya vector field: 
+  rsMatrixView<T> um(w, h, u.getPixelPointer(0, 0));
+  rsMatrixView<T> vm(w, h, v.getPixelPointer(0, 0));
+  rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
 
-  return u; // Preliminary. ToDo: compute the Polya potential from u,v and return that
+  // Convert matrix P to image with normalization and return it:
+  return rsMatrixToImage(P, true);
+
+  //rsImage<T> img = rsMatrixToImage(P);
+  // ToDo: 
+  // -nomarlize: 
+  //  -subtract off min to adjust min to zero
+  //  -divide by (new) max to adjust max to one
+
+  //return u; // Preliminary. ToDo: compute the Polya potential from u,v and return that
   // Problem is: rsNumericPotentialSparse wants its input data as rsMatrix but here we prefer to 
   // work with rsImage. Possible solution: 
   // -let rsNumericPotentialSparse take rsMatrixView an convert back and forth without copy by 

@@ -7964,6 +7964,8 @@ public:
 
   using Complex = std::complex<T>;
 
+
+  /** Under construction */
   rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
     T xMin, T xMax, T yMin, T yMax, int pixelWidth, int pixelHeight);
 
@@ -7999,10 +8001,32 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   std::function<Complex (Complex z)> f,
   T xMin, T xMax, T yMin, T yMax, int w, int h)
 {
-  rsImage<T> img(w, h);
+  rsImage<T> img(w, h), u(w, h), v(w, h);
+
+  // Create Polya vector field data (maybe factor out)
+  T dx = (xMax - xMin) / w;  // or should we divide by (w-1)?  ...I think so - figure out!
+  T dy = (yMax - yMin) / h;  // dito
+  for(int j = 0; j < h; j++)
+  {
+    T y = yMin + j*dy;
+    for(int i = 0; i < w; i++)
+    {
+      T x = xMin + i*dx;
+      Complex z(x, y);
+      Complex w = f(z);
+      u(i, j) =  real(w);
+      v(i, j) = -imag(w);
+    }
+  }
 
 
-  return img;
+  return u; // Preliminary. ToDo: compute the Polya potential from u,v and return that
+  // Problem is: rsNumericPotentialSparse wants its input data as rsMatrix but here we prefer to 
+  // work with rsImage. Possible solution: 
+  // -let rsNumericPotentialSparse take rsMatrixView an convert back and forth without copy by 
+  //  just re-interpreting the data.
+
+  //return img;
 }
 
 

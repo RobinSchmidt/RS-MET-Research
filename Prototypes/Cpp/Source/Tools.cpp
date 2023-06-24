@@ -8033,7 +8033,8 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   plotMatrix(P, true);
 
   // Convert matrix P to image with normalization and return it:
-  return rsMatrixToImage(P, true);
+  rsImage<T> img = rsMatrixToImage(P, true);
+  return img;
 
   //rsImage<T> img = rsMatrixToImage(P);
   // ToDo: 

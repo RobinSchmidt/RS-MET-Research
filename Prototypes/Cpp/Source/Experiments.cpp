@@ -12157,6 +12157,11 @@ void testPotentialPlotter()
   // -for f(z) = 1, the plotMatrix result looks plausible
   // -for f(z) = z^2, we see a minimum and a maximum. That seems wrong!
 
+  // -I think, the assignment operator for rsImage is not implemented correctly. Solutions:
+  //  -Implement assigment operator
+  //  -Get rid of the manual memory management and use std::vector in rsImage. Then, the compiler
+  //   generated operator should be good enough.
+
 
 
   writeImageToFilePPM(img, "PolyaPotential.ppm");

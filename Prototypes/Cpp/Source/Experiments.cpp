@@ -12133,20 +12133,33 @@ void testPotentialPlotter()
   //using Vec     = std::vector<Real>;
 
  
+  //Complex i(0, 1);
 
 
 
   Func f; 
-  f = [](Complex z) { return 1; };
+  //f = [](Complex z) { return  1; };           // P = rightward up-ramp
+  //f = [](Complex z) { return -1; };           // rightward down-ramp
+  //f = [](Complex z) { return Complex(0, 1); };  // upward downramp
   //f = [](Complex z) { return z; };
-  //f = [](Complex z) { return z*z; };
-
+  f = [](Complex z) { return z*z; };
+  //f = [](Complex z) { return z*z*z; };
 
 
   Image img;
   Plt plt;
 
-  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 11, 11);  
+  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 101, 101);  
+
+
+  // Ovservations:
+  // -The Polya potnetials of constant functions look plausible
+  // -The potential of z^2 shows a minimum in the north and maximum in the south. At zero, there
+  //  is actually a southward gradient. That seems wrong.
+  // -When not negating the imgainary part, we get the expected saddle shape. But why? Compare
+  //  code to plotZetaPotentialNumeric - there, we do negate and also get the saddle - I think.
+
+  // Old:
   // Takes long for z^2, result is black for z^2 and z
   // -the P matrix in getPolyaPotentialImage look actually good. 
   // -the min/max values in rsImageProcessor<T>::normalize look also good

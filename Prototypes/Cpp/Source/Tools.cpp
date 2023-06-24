@@ -8011,8 +8011,8 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
 {
   // Create Polya vector field data (maybe factor out)
   rsImage<T> u(w, h), v(w, h);
-  T dx = (xMax - xMin) / w;   // or should we divide by (w-1)?  ...I think so - figure out!
-  T dy = (yMax - yMin) / h;  // dito
+  T dx = (xMax - xMin) / w;    // or should we divide by (w-1)?  igure out!
+  T dy = (yMax - yMin) / h;    // dito
   for(int j = 0; j < h; j++)
   {
     T y = yMin + j*dy;
@@ -8022,34 +8022,23 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
       Complex z(x, y);
       Complex w = f(z);
       u(i, j) =  real(w);
-      v(i, j) = -imag(w);
+      //v(i, j) = -imag(w);
+      v(i, j) = imag(w);      // test - this seems to produce the expected saddle shapes
+      // ...but actually, we should negate - however, the plot look implausible when we do
+      // negate and plausible when we don't
     }
   }
 
   // Create the Polya potential from the Polya vector field: 
   rsMatrixView<T> um(w, h, u.getPixelPointer(0, 0));
   rsMatrixView<T> vm(w, h, v.getPixelPointer(0, 0));
-  rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
-  //rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
+  //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
+  rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
   plotMatrix(P, false);
 
   // Convert matrix P to image with normalization and return it:
   rsImage<T> img = rsMatrixToImage(P, true);
   return img;
-
-  //rsImage<T> img = rsMatrixToImage(P);
-  // ToDo: 
-  // -nomarlize: 
-  //  -subtract off min to adjust min to zero
-  //  -divide by (new) max to adjust max to one
-
-  //return u; // Preliminary. ToDo: compute the Polya potential from u,v and return that
-  // Problem is: rsNumericPotentialSparse wants its input data as rsMatrix but here we prefer to 
-  // work with rsImage. Possible solution: 
-  // -let rsNumericPotentialSparse take rsMatrixView an convert back and forth without copy by 
-  //  just re-interpreting the data.
-
-  //return img;
 }
 
 

@@ -7692,8 +7692,8 @@ rsMatrix<T> rsNumericPotential(const rsMatrixView<T>& P_x, const rsMatrixView<T>
   Mat MTM = MT * M;             // M^T * M. Least squares coeff matrix for the solver.
   Mat wp  = MT * w;             // w' = M^T * w. Right hand side for the solver.
   Mat P(I, J);                  // Our result. The estimate of the potential for U and V.
-  rsMatrixView p(N, 1, P.getDataPointer());  // The solver wants p, the vectorized view of P.
-  rsLinearAlgebraNew::solve(MTM, p, wp);     // Invoke the linear system solver.
+  rsMatrixView p(N, 1, P.getDataPointer());        // The solver wants p, a vectorized view of P.
+  int its = rsLinearAlgebraNew::solve(MTM, p, wp); // Invoke the linear system solver.
   return P;
 }
 // ToDo: 
@@ -7788,7 +7788,13 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrixView<T>& P_x, const rsMatrixV
   MatS MTM = MT * M;           // M^T * M. Least squares coeff matrix for the solver.
   Vec  wp  = MT * w;           // w' = M^T * w. Right hand side for the solver.
   T    tol = 1.e-6;            // Error tolerance for iterative solver, ToDo: make parameter
-  int  its = MatS::solveGaussSeidel(MTM, P.getDataPointer(), &wp[0], tol); 
+
+  //int  its = MatS::solveGaussSeidel(MTM, P.getDataPointer(), &wp[0], tol); 
+
+  T   sor = 1.5;               // SOR parameter, 1: Gauss-Seidel, 0: Jacobi
+  std::vector<T> wrk(P.getSize());
+  int its = MatS::solveSOR(MTM, P.getDataPointer(), &wp[0], tol, &wrk[0], sor); 
+
   return P;
 }
 

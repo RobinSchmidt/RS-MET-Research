@@ -12162,6 +12162,12 @@ void testPotentialPlotter()
 
 
   img = plt.getPolyaPotentialImage([](C z) { return z*z; }, -PI, +PI, -1, +1, 11, 11);
+  // Iterations taken by solver:
+  // w = 0.0:  30025   (Jacobi)
+  // w = 0.5:  22594
+  // w = 1.0:  15481   (Gauss-Seidel)
+  // w = 1.5:   7957
+
 
 
   //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -PI, +PI, -1, +1, 101, 101);

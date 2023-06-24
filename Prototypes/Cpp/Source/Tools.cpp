@@ -7632,25 +7632,29 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T
   T D = -C;
 
   // Add the b,a and B,A coeffs to the matrix:
-  for(int k = 0; k < N-2*J; k++) {
-    M(k+J, k)     = b;
+  for(int k = 0; k < N-2*J; k++) {  
+    M(k+J, k)     = b;                // b,a coeffs for inner points
     M(k+J, k+2*J) = a; }
-  for(int k = 0; k < J; k++) {
-    M(k,     k)       = B;
+  for(int k = 0; k < J; k++) {    
+    M(k,     k)       = B;            // B,A coeffs for boundary points
     M(k,     k+J)     = A;
     M(N-1-k, N-1-k)   = A;
     M(N-1-k, N-1-k-J) = B; }
 
   // Add the d,c, and D,C coeffs to the matrix:
-  for(int i = 0; i < I; i++) {  // loop over the blocks
-    int s = i*J;                // start of i-th block
+  for(int i = 0; i < I; i++) {        // loop over the blocks
+    int s = i*J;                      // start of i-th block
+    for(int k = 1; k < J-1; k++) {    // d,c coeffs for inner points
+      M(N+s+k, s+k-1) = d;
+      M(N+s+k, s+k+1) = c; }}
+  for(int i = 0; i < I; i++) { 
+    int s = i*J;
     M(N+s,     s    ) = D;
     M(N+s,     s+1  ) = C;
     M(N+s+J-1, s+J-1) = C;
-    M(N+s+J-1, s+J-2) = D;
-    for(int k = 1; k < J-1; k++) {
-      M(N+s+k, s+k-1) = d;
-      M(N+s+k, s+k+1) = c;   }}
+    M(N+s+J-1, s+J-2) = D; }
+
+
 
   // Add the last row for the additional condition to let the potential have some given value at
   // some given position:
@@ -7680,7 +7684,157 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T
   rsLinearAlgebraNew::solve(MTM, p, wp);     // Invoke the linear system solver.
   return P;
 }
+// ToDo: 
+// -To make this idea useful in practice, we need an implementation based on sparse matrices. The 
+//  dense matrix based implementation here can only serve as proof of concept. Maybe to handle 
+//  larger data, we could compute the potential for (overlapping) patches and stitch them together.
+//  The overlap ensures that for the final result, we use only inner points. We should maybe match 
+//  up the first inner point via the constant offsets.
+// -see rsSparseMatrix in Prototypes.h in the main RS-MET repo. There's also an experiment
+//  iterativeLinearSolvers() that uses it already and there are also some unit test already.
+// -factor out the loops involing the B,A,D,C coeffs into a function "addBoundaryCoeffs"
+//  the idea is that we may later give the user the option to select between using different
+//  ansatz formulas for the boundary points (and maybe also for the inner points). That's why it
+//  wil be convenient to have function to add these. Maybe move the whole code into a class
+//  rsNumericalPotentialFinder2D. have functions like setInnerPointFormula, 
+//  setBoundaryPointFormula or setFormulaForInterior, setFormulaForBoundary
 
+// sparse-matrix based implementation of rsNumericPotentialSparse. This should eventually become the
+// regular one (without the qualification "Sparse") and the other should be named "...Proto" to 
+// indicate that it's a prototype (based on dense matrices which is impractical for all but very 
+// small data matrices.
+template<class T>
+rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T dx, T dy,
+  T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
+{
+
+  int I = P_x.getNumRows();     // Number of rows in data matrices
+  int J = P_x.getNumColumns();  // Number of columns in data matrices
+  int N = I*J;                  // Number of unknowns = number of columns of coeff matrix
+  rsAssert(P_y.hasShape(I, J), "P_x and P_y must have the same shape");
+  using Mat  = rsMatrix<T>;
+  using MatS = rsSparseMatrix<T>;
+
+
+  // Assemble the coefficient matrix:
+  MatS M(2*N+1, N);
+
+  // Compute the coeffs that appear in the matrix:
+  T a = 1/(2*dx); 
+  T A = 1/dx; 
+  T b = -a; 
+  T B = -A;
+  T c = 1/(2*dy); 
+  T C = 1/dy; 
+  T d = -c; 
+  T D = -C;
+
+  //M.reserve(...);  
+  // toDo: figure out a formula for haow many nonzero elements the matrix will have. I think, it's
+  // 4*N+1 ...verify that!
+
+  auto setCoeff = [&](int i, int j, T c) { M.appendFastAndUnsafe(i, j, c); };
+
+
+  // Add the b,a and B,A coeffs to the matrix:
+  for(int k = 0; k < N-2*J; k++) {
+    setCoeff(k+J, k,     b);        // M(k+J, k)         = b;
+    setCoeff(k+J, k+2*J, a); }      // M(k+J, k+2*J)     = a; 
+  for(int k = 0; k < J; k++) {
+    setCoeff(k,     k,       B);    // M(k,     k)       = B;
+    setCoeff(k,     k+J,     A);    // M(k,     k+J)     = A;
+    setCoeff(N-1-k, N-1-k,   A);    // M(N-1-k, N-1-k)   = A;
+    setCoeff(N-1-k, N-1-k-J, B); }  // M(N-1-k, N-1-k-J) = B; 
+
+
+
+
+
+
+  plotMatrix(MatS::toDense(M), true);
+
+
+
+
+  Mat P(I, J);
+  return P;
+}
+
+
+/** Under construction. Not yet tested */
+
+template<class T>
+void rsHelmholtzDecomposition(
+  const rsMatrix<T>& F1, const rsMatrix<T>& F2, T dx, T dy,
+  rsMatrix<T>& G1, rsMatrix<T>& G2, rsMatrix<T>& R1, rsMatrix<T>& R2)
+{
+  rsMatrix<T> P = rsNumericPotential(F1, F2, dx, dy); // todo: use sparse implementation
+  G1 = rsNumericDerivativeX(P, dx);
+  G2 = rsNumericDerivativeY(P, dy);
+  R1 = F1 - G1;
+  R2 = F2 - G2;
+
+  // The idea is to enforce G to be (numerically) curl-free by letting it be the numeric gradient
+  // of a sort of pseudo-potential for F that we obtain via our rsNumericPotential routine. If F 
+  // isn't (numerically) curl-free, then no potential exists for F and the rsNumericPotential 
+  // routine should produce the best approximation to an actual potential in a least squares sense
+  // (I think). Then, G will be the best curl-free approximation to F. And R is then just the 
+  // residual F - G. See:
+  // https://en.wikipedia.org/wiki/Helmholtz_decomposition
+}
+// Not yet tested, just an idea, so far
+
+// This video, at around 7:30
+// https://www.youtube.com/watch?v=NtoIXhUgqSk
+// says that the divergence of a Polya vector field of an analytic functions is also zero. What
+// remains of a vector field if both divergence and curl are zero?
+
+
+
+
+
+
+
+// Another idea would be to use the same idea to reconstruct a harmonic conjugate of a given U or V
+// numerically (I think, that's what it is called what we are doing here. Verify that!): Assume, we 
+// have given only U = dP/dx = P_x and want to reconstruct V = dP/dy = P_y from it. We could use 
+// the same approach just with a shorter matrix M. We would use only the upper half of it (plus the 
+// one line for the extra condition to make the system nonsingular). So, instead of 2*N+1 equations 
+// for N unknowns, we'd get N+1 equations. It would still be a least-squares problem due to the 
+// extra + 1 line (unless we implement the idea of not adding the condition as extra line but using 
+// it to replace 2 of our original equations. Here then, we would use it to replace only 1 
+// equation, hence leading to a square matrix M and thus avoiding the M^T * M step, see 
+// PotentialNumerical.txt for more details). Having the potential P reconstructed from U alone, we 
+// could numercally differentiate P with respect to y to obtain V. Likewise, if we would only have 
+// V, we could reconstruct U by using only the lower half of the matrix and differentiating the 
+// resulting P with respect to X. (Q: What happens, if we do it the wrong way, i.e. feed in V when 
+// the algo expects U or the other way around?)
+//
+// To facilitate this, maybe we should factor out the loops to add the the coeffs to the matrix, 
+// i.e. the code that follows the comments:
+//
+//    // Add the b,a and B,A coeffs to the matrix:
+//    // Add the d,c, and D,C coeffs to the matrix:
+// 
+// If we only want to use the second, lower half of the matrix, only the lower loop would have to 
+// be used but without the "N+" in the row index, i.e. all assigments like:
+//
+//   M(N+s,     s    ) = D;
+//
+// would be need to replaced by
+//
+//   M(0+s,     s    ) = D;
+//
+// which we could generalize to a
+//
+//   M(S+s,     s    ) = D;
+//
+// where S is a shift/offset that can be passed to the factored out function. It would be N or 0
+// depending on whether we want to put that part of the matrix on top or halfway down. Maybe for
+// consistency, we could add such a shift parameter also to the routine to assemble the upper part.
+// Maybe the functions could be named assemblePotentialCoeffsDiffX, assemblePotentialCoeffsDiffY.
+// When refactoring like this, make sure that testNumericPotential() passes at all stages.
+//
 // Under construction. Does not yet work. It is supposed to construct the potential from P_x 
 // alone. We don't give the caller the opportunity to fix the potential bcs that would make the 
 // code here messier. It can be adjusted afterwards, if desired.
@@ -7691,7 +7845,7 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
   int J = P_x.getNumColumns();  // Number of columns in data matrices
   int N = I*J;                  // Number of unknowns = number of columns of coeff matrix
 
-  // Now we assemble the coefficient matrix:
+                                // Now we assemble the coefficient matrix:
   using Mat = rsMatrix<T>;
   Mat M(N, N);
 
@@ -7744,144 +7898,7 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 }
 
 
-// ToDo: 
-// -To make this idea useful in practice, we need an implementation based on sparse matrices. The 
-//  dense matrix based implementation here can only serve as proof of concept. Maybe to handle 
-//  larger data, we could compute the potential for (overlapping) patches and stitch them together.
-//  The overlap ensures that for the final result, we use only inner points. We should maybe match 
-//  up the first inner point via the constant offsets.
-// -see rsSparseMatrix in Prototypes.h in the main RS-MET repo. There's also an experiment
-//  iterativeLinearSolvers() that uses it already and there are also some unit test already.
 
-// Another idea would be to use the same idea to reconstruct a harmonic conjugate of a given U or V
-// numerically (I think, that's what it is called what we are doing here. Verify that!): Assume, we 
-// have given only U = dP/dx = P_x and want to reconstruct V = dP/dy = P_y from it. We could use 
-// the same approach just with a shorter matrix M. We would use only the upper half of it (plus the 
-// one line for the extra condition to make the system nonsingular). So, instead of 2*N+1 equations 
-// for N unknowns, we'd get N+1 equations. It would still be a least-squares problem due to the 
-// extra + 1 line (unless we implement the idea of not adding the condition as extra line but using 
-// it to replace 2 of our original equations. Here then, we would use it to replace only 1 
-// equation, hence leading to a square matrix M and thus avoiding the M^T * M step, see 
-// PotentialNumerical.txt for more details). Having the potential P reconstructed from U alone, we 
-// could numercally differentiate P with respect to y to obtain V. Likewise, if we would only have 
-// V, we could reconstruct U by using only the lower half of the matrix and differentiating the 
-// resulting P with respect to X. (Q: What happens, if we do it the wrong way, i.e. feed in V when 
-// the algo expects U or the other way around?)
-//
-// To facilitate this, maybe we should factor out the loops to add the the coeffs to the matrix, 
-// i.e. the code that follows the comments:
-//
-//    // Add the b,a and B,A coeffs to the matrix:
-//    // Add the d,c, and D,C coeffs to the matrix:
-// 
-// If we only want to use the second, lower half of the matrix, only the lower loop would have to 
-// be used but without the "N+" in the row index, i.e. all assigments like:
-//
-//   M(N+s,     s    ) = D;
-//
-// would be need to replaced by
-//
-//   M(0+s,     s    ) = D;
-//
-// which we could generalize to a
-//
-//   M(S+s,     s    ) = D;
-//
-// where S is a shift/offset that can be passed to the factored out function. It would be N or 0
-// depending on whether we want to put that part of the matrix on top or halfway down. Maybe for
-// consistency, we could add such a shift parameter also to the routine to assemble the upper part.
-// Maybe the functions could be named assemblePotentialCoeffsDiffX, assemblePotentialCoeffsDiffY.
-// When refactoring like this, make sure that testNumericPotential() passes at all stages.
-
-// sparse-matrix based implementation of rsNumericPotentialSparse. This should eventually become the
-// regular one (without the qualification "Sparse") and the other should be named "...Proto" to 
-// indicate that it's a prototype (based on dense matrices which is impractical for all but very 
-// small data matrices.
-template<class T>
-rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T dx, T dy,
-  T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
-{
-
-  int I = P_x.getNumRows();     // Number of rows in data matrices
-  int J = P_x.getNumColumns();  // Number of columns in data matrices
-  int N = I*J;                  // Number of unknowns = number of columns of coeff matrix
-  rsAssert(P_y.hasShape(I, J), "P_x and P_y must have the same shape");
-  using Mat  = rsMatrix<T>;
-  using MatS = rsSparseMatrix<T>;
-
-
-  // Assemble the coefficient matrix:
-  MatS M(2*N+1, N);
-
-  // Compute the coeffs that appear in the matrix:
-  T a = 1/(2*dx); 
-  T A = 1/dx; 
-  T b = -a; 
-  T B = -A;
-  T c = 1/(2*dy); 
-  T C = 1/dy; 
-  T d = -c; 
-  T D = -C;
-
-  //M.reserve(...);  
-  // toDo: figure out a formula for haow many nonzero elements the matrix will have. I think, it's
-  // 4*N+1 ...verify that!
-
-  
-  // Add the b,a and B,A coeffs to the matrix:
-  for(int k = 0; k < N-2*J; k++) 
-  {
-    M.appendFastAndUnsafe(k+J, k,     b);       // M(k+J, k)     = b;
-    M.appendFastAndUnsafe(k+J, k+2*J, a);       // M(k+J, k+2*J) = a; 
-  }
-  for(int k = 0; k < J; k++) 
-  {
-    M.appendFastAndUnsafe(k,     k,       B);   // M(k,     k)       = B;
-    M.appendFastAndUnsafe(k,     k+J,     A);   // M(k,     k+J)     = A;
-    M.appendFastAndUnsafe(N-1-k, N-1-k,   A);   // M(N-1-k, N-1-k)   = A;
-    M.appendFastAndUnsafe(N-1-k, N-1-k-J, B);   // M(N-1-k, N-1-k-J) = B; 
-  }
- 
-
-
-  plotMatrix(MatS::toDense(M), true);
-
-
-
-
-  Mat P(I, J);
-  return P;
-}
-
-
-
-/** Under construction. Not yet tested */
-
-template<class T>
-void rsHelmholtzDecomposition(
-  const rsMatrix<T>& F1, const rsMatrix<T>& F2, T dx, T dy,
-  rsMatrix<T>& G1, rsMatrix<T>& G2, rsMatrix<T>& R1, rsMatrix<T>& R2)
-{
-  rsMatrix<T> P = rsNumericPotential(F1, F2, dx, dy);
-  G1 = rsNumericDerivativeX(P, dx);
-  G2 = rsNumericDerivativeY(P, dy);
-  R1 = F1 - G1;
-  R2 = F2 - G2;
-
-  // The idea is to enforce G to be (numerically) curl-free by letting it be the numeric gradient
-  // of a sort of pseudo-potential for F that we obtain via our rsNumericPotential routine. If F 
-  // isn't (numerically) curl-free, then no potential exists for F and the rsNumericPotential 
-  // routine should produce the best approximation to an actual potential in a least squares sense
-  // (I think). Then, G will be the best curl-free approximation to F. And R is then just the 
-  // residual F - G. See:
-  // https://en.wikipedia.org/wiki/Helmholtz_decomposition
-}
-// Not yet tested, just an idea, so far
-
-// This video, at around 7:30
-// https://www.youtube.com/watch?v=NtoIXhUgqSk
-// says that the divergence of a Polya vector field of an analytic functions is also zero. What
-// remains of a vector field if both divergence and curl are zero?
 
 
 

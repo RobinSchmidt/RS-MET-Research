@@ -166,6 +166,9 @@ Notes:
  
  
 ToDo: 
+-Maybe implement a variant that allows for non-equally spaced data. it should take x,y arrays that
+ say, where the samples are
+
 
 Instead of appending the extra line for K = P12, try just replacing the two rows corresponding 
 to P12, namely:

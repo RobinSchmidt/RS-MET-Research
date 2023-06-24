@@ -11851,8 +11851,10 @@ void plotZetaPotentialNumeric()
   double yRange  =  0.2;
 
   // Origin:
-  //xCenter = 0.0;
-  //yCenter = 0.0;
+  xCenter = 0.0;
+  yCenter = 0.0;
+  xRange  = 2.0;
+  yRange  = 2.0;
 
   // Close to the funnel:
   //xCenter = 1.11;
@@ -11860,12 +11862,12 @@ void plotZetaPotentialNumeric()
 
 
   // Nontrivial zeros/saddles:
-  xCenter = 0.5;
+  //xCenter = 0.5;
   //yCenter = 14.134725142;
   //yCenter = 21.022039639;
   //yCenter = 25.01085758;
   //yCenter = 30.424876126;
-  yCenter = 32.935061588;
+  //yCenter = 32.935061588;
   //yCenter = 37.586178159;
 
 
@@ -11896,7 +11898,7 @@ void plotZetaPotentialNumeric()
       //z = RZF::evalViaBinomialSum(s, 29);
       //z = RZF::evalViaAlternatingSum(s, 100000);
 
-      z = RZF::evalViaStackOverflowAlgo(s, 80);
+      //z = RZF::evalViaStackOverflowAlgo(s, 80);
       // With error threshold of 1.e-6, it converges in 33 iterations around the first nontrivial 
       // zero. The number of iterations n taken is  1: 33, 2: 41, 3: 45, 4: 50, 5: 53, 6: 59
 
@@ -11904,7 +11906,7 @@ void plotZetaPotentialNumeric()
       // Just for fun some other functions (these should be evaluated at 0):
       //z = exp(s);  
       //z = s;            // pringle, saddle
-      //z = s*s;        // trifold-pringle
+      z = s*s;        // trifold-pringle
       //z = s*s*s;      // nice pavillon with 4 legs
       //z = s*s*s*s;  
       //z = s*s*s*s*s;    // 6-fold symmetry, hexagonish
@@ -12149,7 +12151,7 @@ void testPotentialPlotter()
   Image img;
   Plt plt;
 
-  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 101, 101);  
+  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 21, 21);  
 
 
   // Ovservations:
@@ -12169,6 +12171,9 @@ void testPotentialPlotter()
   //  solver is bad for simple functions?
   // -for f(z) = 1, the plotMatrix result looks plausible
   // -for f(z) = z^2, we see a minimum and a maximum. That seems wrong!
+  // -Ah - I think, it is because rsimage stores the data internally differently that rsMatrix
+  //  with respect to why x and y mean. I have now switched to use rsMatrix in the data generation
+  //  and that fixes it.
 
   // -I think, the assignment operator for rsImage is not implemented correctly. Solutions:
   //  -Implement assigment operator

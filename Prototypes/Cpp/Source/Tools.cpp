@@ -7609,8 +7609,8 @@ like 100x100 or 1000x1000 as would typically be needed for numerical simulation 
 purposes. For details about the idea behind the algorithm, see the file 
 Notes/PotentialNumerical.txt here in this repo.   */
 template<class T>
-rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T dx, T dy,
-  T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
+rsMatrix<T> rsNumericPotential(const rsMatrixView<T>& P_x, const rsMatrixView<T>& P_y, 
+  T dx, T dy, T Konstant = T(0), int iKonstant = 0, int jKonstant = 0)
 {
   int I = P_x.getNumRows();     // Number of rows in data matrices
   int J = P_x.getNumColumns();  // Number of columns in data matrices
@@ -8029,8 +8029,9 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   // Create the Polya potential from the Polya vector field: 
   rsMatrixView<T> um(w, h, u.getPixelPointer(0, 0));
   rsMatrixView<T> vm(w, h, v.getPixelPointer(0, 0));
-  rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
-  plotMatrix(P, true);
+  rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
+  //rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
+  plotMatrix(P, false);
 
   // Convert matrix P to image with normalization and return it:
   rsImage<T> img = rsMatrixToImage(P, true);

@@ -1,0 +1,5 @@
+The secondary repos like RS-MET-Research, RS-MET-Tests, etc. should use the same branch structure as
+the main RS-MET repo. We should avoid situations in which, say, a master branch of the Research repo 
+depends on code in the develop or work branch of the main repo. 
+
+(That's currently the case -> fix that)

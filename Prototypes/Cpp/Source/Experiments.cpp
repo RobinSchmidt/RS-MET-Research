@@ -12137,16 +12137,16 @@ void testPotentialPlotter()
 
 
   Func f; 
-  //f = [](Complex z) { return 1; };
+  f = [](Complex z) { return 1; };
   //f = [](Complex z) { return z; };
-  f = [](Complex z) { return z*z; };
+  //f = [](Complex z) { return z*z; };
 
 
 
   Image img;
   Plt plt;
 
-  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 21, 21);  
+  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 11, 11);  
   // Takes long for z^2, result is black for z^2 and z
   // -the P matrix in getPolyaPotentialImage look actually good. 
   // -the min/max values in rsImageProcessor<T>::normalize look also good
@@ -12161,6 +12161,10 @@ void testPotentialPlotter()
   //  -Implement assigment operator
   //  -Get rid of the manual memory management and use std::vector in rsImage. Then, the compiler
   //   generated operator should be good enough.
+  //  -> done. now the file is not black anymore
+  // -But: It still looks wrong. Moreover, the image is transposed compared to the matrix. But I
+  //  think, that may actually be right. The plotMatrix function does indeed show the transposed
+  //  matrix, so we may want to to keep it like that
 
 
 

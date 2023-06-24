@@ -12150,8 +12150,10 @@ void testPotentialPlotter()
   Image img;
   Plt plt;
 
-  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 21, 21);  // takes long
+  img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 21, 21);  // takes long, result is black
 
+
+  writeImageToFilePPM(img, "PolyaPotential.ppm");
 
   int dummy = 0;
 }

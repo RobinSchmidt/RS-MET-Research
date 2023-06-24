@@ -7664,8 +7664,8 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T
   M(2*N, k) = 1;         // Add a coeff on 1 at position k in the last line
   //plotMatrix(M, true); // Uncomment to inspect the coefficient matrix
 
-  // Assemble the right hand side vector w as concatentation of vectorized U,V and the additional 
-  // contant K (== Konstant) as last element. Pseudocode: w = concatenate(vec(U), vec(V), K)
+  // Assemble the right hand side vector w as concatentation of vectorized P_x, P_y and the 
+  // additional constant K (== Konstant) as last element:
   Mat w(2*N+1, 1);
   const T* ptr = P_x.getDataPointerConst();
   for(int n = 0; n < N; n++)
@@ -7674,6 +7674,18 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T
   for(int n = 0; n < N; n++)
     w(N+n, 0) = ptr[n];
   w(2*N, 0) = Konstant;         // Desired value K = P(i, j) must be added to RHS as last element
+
+  // Maybe write this as:
+  //   rsMatrixView p_x(N, 1, p_x.getDataPointerConst()); // vectorized view of P_x
+  //   rsMatrixView p_x(N, 1, p_y.getDataPointerConst()); // vectorized view of P_y
+  //   rsMatrixView one(1, 1, { 1 });
+  //   w = rsMatrix::concatenateVertically(p_x, p_y);
+  //   w = rsMatrix::concatenateVertically(w, one);
+  // should behave like Matlab's vertcat:
+  //   https://www.mathworks.com/help/matlab/ref/double.vertcat.html
+  // Although, doing it like this is more efficient because it uses only one allocation and the two
+  // w = ...; assignments would each do an allocation. But maybe we can have a function that takes a 
+  // variable number of arguments. 
 
   // Solve the system via a least squares approach:
   Mat MT  = M.getTranspose();   // M^T
@@ -7695,7 +7707,7 @@ rsMatrix<T> rsNumericPotential(const rsMatrix<T>& P_x, const rsMatrix<T>& P_y, T
 // -factor out the loops involing the B,A,D,C coeffs into a function "addBoundaryCoeffs"
 //  the idea is that we may later give the user the option to select between using different
 //  ansatz formulas for the boundary points (and maybe also for the inner points). That's why it
-//  wil be convenient to have function to add these. Maybe move the whole code into a class
+//  will be convenient to have function to add these. Maybe move the whole code into a class
 //  rsNumericalPotentialFinder2D. have functions like setInnerPointFormula, 
 //  setBoundaryPointFormula or setFormulaForInterior, setFormulaForBoundary
 
@@ -7712,6 +7724,7 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& 
   int J = P_x.getNumColumns();  // Number of columns in data matrices
   int N = I*J;                  // Number of unknowns = number of columns of coeff matrix
   rsAssert(P_y.hasShape(I, J), "P_x and P_y must have the same shape");
+  using Vec  = std::vector<T>;
   using Mat  = rsMatrix<T>;
   using MatS = rsSparseMatrix<T>;
 
@@ -7754,10 +7767,29 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& 
   setCoeff(2*N, k, 1);                   // Add a coeff on 1 at position k in the last line
   plotMatrix(MatS::toDense(M), true);
 
+  // Establish the right hand side vector w as concatentation of vectorized P_x, P_y and the 
+  // additional contant K (== Konstant) as last element:
+  Vec w(2*N+1);
+  const T* ptr = P_x.getDataPointerConst();
+  for(int n = 0; n < N; n++)
+    w[n] = ptr[n];
+  ptr = P_y.getDataPointerConst();
+  for(int n = 0; n < N; n++)
+    w[N+n] = ptr[n];
+  w[2*N] = Konstant;
+  // Maybe use: 
+  //   rsArrayTools:copy::(P_x.getDataPointerConst(), &w[0], N);
+  //   rsArrayTools:copy::(P_y.getDataPointerConst(), &w[N], N);
+  //   w(2*N) = Konstant;
 
 
-
-  Mat P(I, J);
+  // Solve the system via a least squares approach and Gauss-Seidel iteration:
+  Mat  P(I, J);                // Our result. The potential P.
+  MatS MT  = M.getTranspose(); // M^T
+  MatS MTM = MT * M;           // M^T * M. Least squares coeff matrix for the solver.
+  Vec  wp  = MT * w;           // w' = M^T * w. Right hand side for the solver.
+  T    tol = 1.e-6;            // Error tolerance for iterative solver, ToDo: make parameter
+  int  its = MatS::solveGaussSeidel(MTM, P.getDataPointer(), &wp[0], tol); 
   return P;
 }
 

@@ -7791,12 +7791,25 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrixView<T>& P_x, const rsMatrixV
 
   //int  its = MatS::solveGaussSeidel(MTM, P.getDataPointer(), &wp[0], tol); 
 
-  T   sor = 1.5;               // SOR parameter, 1: Gauss-Seidel, 0: Jacobi
+  T   sor = 1.95;             // SOR parameter. Must be < 2. 0: Jacobi, 1: Gauss-Seidel
   std::vector<T> wrk(P.getSize());
   int its = MatS::solveSOR(MTM, P.getDataPointer(), &wp[0], tol, &wrk[0], sor); 
 
   return P;
 }
+// ToDo: 
+// -Maybe instead of handpicking the sor parameter, try to use the optimal one for the problem at 
+//  hand. That depends on the spectral radius of the iteration matrix. Maybe it makes sense to 
+//  estimate that before starting the iteration. Maybe a few vector iterations to estimate the 
+//  largest eigenvalue can be used for this. If we only do a few such iterations (say 20), it 
+//  could be worthwhile as a precompuation. Or maybe we could do some empirical tests with 
+//  matrices of different sizes and shapes and use the data obtained to derive an empirical 
+//  formula for the optimal SOR coeff as function of I and J. Maybe it's just a 1D function of 
+//  N. Maybe it's just a constant. But the important thing to note is that this value depends 
+//  only on the coefficient matrix and not on the input data P_x, P_y (because that goes only 
+//  into the right hand side). The matrices are always the same and depend onyl on the size 
+//  (maybe shape) of the input matrices.
+// -Can we assemble MTM directly without resorting to the (expensive) matrix multiplication step?
 
 
 /** Under construction. Not yet tested */

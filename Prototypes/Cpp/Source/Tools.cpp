@@ -7765,7 +7765,7 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& 
   int j = jKonstant;                     // Column index in data matrix Q or P.
   int k = i*J + j;                       // Column index coefficient matrix R.
   setCoeff(2*N, k, 1);                   // Add a coeff on 1 at position k in the last line
-  plotMatrix(MatS::toDense(M), true);
+  //plotMatrix(MatS::toDense(M), true);
 
   // Establish the right hand side vector w as concatentation of vectorized P_x, P_y and the 
   // additional contant K (== Konstant) as last element:

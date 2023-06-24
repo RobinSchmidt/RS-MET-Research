@@ -11929,7 +11929,8 @@ void plotZetaPotentialNumeric()
   // Compute Polya potential from Polya vector field numerically:
   double dx = (xMax-xMin) / Nx;
   double dy = (yMax-yMin) / Ny;
-  Mat P = rsNumericPotential(U, V, dx, dy);
+  //Mat P = rsNumericPotential(U, V, dx, dy);
+  Mat P = rsNumericPotentialSparse(U, V, dx, dy);  // Much faster!
 
 
 

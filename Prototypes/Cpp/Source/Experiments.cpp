@@ -12003,6 +12003,10 @@ void plotZetaPotentialNumeric()
   //  functions like setColorMap, etc.
   // -Plot potentials of f(z) = 1, -1, i, -i, 1+i, 1-i, -1+i, -1-i, z, z+1, z^2, (z-1)*(z+1),
   //  (z-1)*(z+1)*(z+i)*(z-i), 1/z, 1/z^2
+  //  Expections: 1: rightward linear ramp (upward to the right), -1: leftward linear ramp,
+  //  i: downward ramp, -i: upward ramp, 1+i: right-down, ..., z: paraboloid..wait no
+  //  ...but what function would a paraboloid like x^2 + y^2 mean?
+  //  f_x = 2x, f_y = 2y  ->  f(z) = 2 z.r - 2 z.i
 
 
 

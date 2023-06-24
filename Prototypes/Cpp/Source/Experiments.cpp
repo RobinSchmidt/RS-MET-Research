@@ -11843,8 +11843,8 @@ void plotZetaPotentialNumeric()
   using Mat = RAPT::rsMatrix<double>;
   using Complex = std::complex<double>;
 
-  int Nx = 21;
-  int Ny = 21;
+  int Nx = 51;
+  int Ny = 51;
   double xCenter = -8.0;
   double xRange  =  0.2;
   double yCenter =  0.0;
@@ -11955,10 +11955,15 @@ void plotZetaPotentialNumeric()
   // -The binomial sum looks like it's converging with 29 terms up to half of the digits
   // -The alternating sum can be used up to 100000 before it just gets too long to wait for the
   //  results (with Nx = Ny = 11)
-  // -Using an 21x21 grid already takes quite long for computing the numeric potential. The 
-  //  matrix M is of size 883x441 in this case. The longest time takes the computation of
-  //  M^T * M. Much longer than the actual solving step. Check matrix-multiply code, if we may
-  //  have a performance bug there. 15x15 is still fine, though. 
+  // -With the dense implementation, using an 21x21 grid already takes quite long for computing 
+  //  the numeric potential. The matrix M is of size 883x441 in this case. The longest time takes
+  //  the computation of M^T * M. Much longer than the actual solving step. Check matrix-multiply
+  //  code, if we may have a performance bug there. 15x15 is still fine, though. Or maybe it's 
+  //  indeed to be expected that the matrix-multiply is the most expensive step of the algo?
+  // -With the sparse implementation, we can go to around 51x51. However, here also the 
+  //  MTM = MT * M; setp seems to take the longest time. Maybe we can avoid it completely by 
+  //  adapting the solver to take two matrices, MT and M, and do 2 matrix-vector muls inside each
+  //  iteration. We would avoid the explicit computation of M^T * M.
   // -For the higher nontrivial zeros, the saddles seem to align more and more diagonally. But I
   //  need to make sure, that the zeta results are actually correct for these higher zeros.
   // -So far, no function I have tried produced extrema. Try more. What does it  take for a 

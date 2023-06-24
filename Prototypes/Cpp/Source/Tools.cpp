@@ -7822,10 +7822,20 @@ void rsHelmholtzDecomposition(
 // says that the divergence of a Polya vector field of an analytic functions is also zero. What
 // remains of a vector field if both divergence and curl are zero?
 
+// see:
+// https://www.youtube.com/watch?v=xa5xornH2ok
+// Are all vector fields the gradient of a potential? ... and the Helmholtz Decomposition
 
+// https://oliver-richters.de/helmholtz/
+// https://arxiv.org/pdf/2102.09556.pdf 
+// Helmholtz decomposition and potential functions for n-dimensional analytic vector fields
+// -defines a generalization of curl as antisymmetric matrix -> could be relevant for 
+//  rsNumericDifferentiator
 
-
-
+// -In the Helmholtz decomposition, a vector field is split into a gradient field and the rest. 
+//  The gradient field will be guaranteed to be curl free, but it may still feature divergence. 
+//  Can we split it further into curl and div by making an appropriate ansatz using numerical 
+//  differentiation formuals?
 
 
 // Another idea would be to use the same idea to reconstruct a harmonic conjugate of a given U or V
@@ -7932,6 +7942,50 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 
 
 
+
+//=================================================================================================
+
+/** A class for plotting potentials of vector fields. Can be used to plot Polya potentials of 
+complex functions as well. 
+
+just a stub st the moment
+
+...TBC... 
+
+*/
+
+template<class TPix, class TVal>
+class rsPotentialPlotter
+{
+
+public:
+
+  //rsImageContourPlotter
+
+  void drawPotential(const rsImage<TVal>& u, const rsImage<TVal>& v, rsImage<TPix>& target); 
+
+
+
+protected:
+
+};
+// ToDo:
+// -see rsImageContourPlotter for API design
+// -Maybe use it to split an arbitrary image int 3 components: curl, div, rest. I'm not yet sure
+//  how to do that, though, I think, via the potential, we can split off a component that is both 
+//  curl-free and divergence-free. The residual would be curl + divergence. But could we split 
+//  that further? ..Oh wait - no - a single image cannot be decomposed like that. We need a vector 
+//  field input, i.e. a pair of images.
+
+template<class TPix, class TVal>
+void rsPotentialPlotter<TPix, TVal>::drawPotential(
+  const rsImage<TVal>& u, const rsImage<TVal>& v, rsImage<TPix>& target)
+{
+  //rsImage<TVal> P = getPotential(u, v); //
+
+
+  int dummy = 0;
+}
 
 
 

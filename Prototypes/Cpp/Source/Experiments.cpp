@@ -11973,7 +11973,18 @@ void plotZetaPotentialNumeric()
   //  complex function to produce extrema in the potential? Try to start with a bell-shaped 
   //  potential like 1 / (1 + x^2 + y^2) or 1 / exp(x^2 + y^2) and look at the vector field and
   //  complex function it produces. What is that function? Derive expressions for its real and 
-  //  imag part and try to find a complex expression in z that produces these.
+  //  imag part and try to find a complex expression in z that produces these. Maybe it's not 
+  //  possible because analytic functions are a subset of all gradient fields that sastisfy the 
+  //  additional condition that the divergence of the Polya vector field is zero? Being the 
+  //  gradient of some scalar field does itself not seem to ensure the div-free property. See:
+  //  https://www.youtube.com/watch?v=xa5xornH2ok by Steve Brunton
+  //    "Are all vector fields the gradient of a potential? ... and the Helmholtz Decomposition"
+  //  ...so, do the Cauchy-Riemann equations if fact say: curl(conj(f)) = 0, div(conj(f)) = 0?
+  //  Yes, I think so: u_x = v_y means div(conj(f)) = 0, u_y = -v_x means curl(conj(f)) = 0
+  //  Cauchy-Riemann demands more that just a symmetric Jacobian. It additionally demands the 
+  //  diagonal elements to be equal. In the negation of v by creating the Polya vector field,
+  //  this implies that the sum of the diag elemenent of the Jacobian (which is the divergence) is
+  //  zero, I think. But there seem to be different terminologies in use
   // -It seems like 1st order zeros in f(s) produce saddles, 2nd order zeros, trifold-saddles 
   //  andn-th order zeros (n+1)-fold saddles.
 
@@ -12114,6 +12125,23 @@ bool testNumericPotential()
   //  On the other hand, when the raneg is bigger, the coeff on the last line gets too faint. The
   //  setting is the sweet spot to make everything nicely visible.
 }
+
+
+void testPotentialPlotter()
+{
+  using Real = float;
+  using Mat  = rsMatrix<Real>;
+  using MatS = rsSparseMatrix<Real>;
+  using Vec  = std::vector<Real>;
+  using Plt  = rsPotentialPlotter<Real, Real>;
+
+
+  Plt plt;
+
+
+  int dummy = 0;
+}
+
 
 
 // fast inverse square root approximation from Quake engine

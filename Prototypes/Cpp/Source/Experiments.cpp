@@ -11998,6 +11998,11 @@ void plotZetaPotentialNumeric()
   //    f(s) = (s - (h+14.1i)) * (s - (h*14.1i)) * (s + (-2)) * ...
   //  Maybe divide final result by (s-1) for the pole. I guess, that will approximate zeta and
   //  when we use more zeros, we get better approximations?
+  // -Write a function that takes a matrix of complex values, creates the Poly-potential from it
+  //  numerically and returns an rsImage. Or maybe make it a class rsPolyaPotentialPlotter with
+  //  functions like setColorMap, etc.
+  // -Plot potentials of f(z) = 1, -1, i, -i, 1+i, 1-i, -1+i, -1-i, z, z+1, z^2, (z-1)*(z+1),
+  //  (z-1)*(z+1)*(z+i)*(z-i), 1/z, 1/z^2
 
 
 

@@ -7715,10 +7715,6 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& 
   using Mat  = rsMatrix<T>;
   using MatS = rsSparseMatrix<T>;
 
-
-  // Assemble the coefficient matrix:
-  MatS M(2*N+1, N);
-
   // Compute the coeffs that appear in the matrix:
   T a = 1/(2*dx); 
   T A = 1/dx; 
@@ -7729,28 +7725,33 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrix<T>& P_x, const rsMatrix<T>& 
   T d = -c; 
   T D = -C;
 
-  //M.reserve(...);  
-  // toDo: figure out a formula for haow many nonzero elements the matrix will have. I think, it's
-  // 4*N+1 ...verify that!
-
+  // Assemble the coefficient matrix:
+  MatS M(2*N+1, N);
+  M.reserve(4*N+1);  // Verify formula!
   auto setCoeff = [&](int i, int j, T c) { M.appendFastAndUnsafe(i, j, c); };
-
-
-  // Add the b,a and B,A coeffs to the matrix:
   for(int k = 0; k < N-2*J; k++) {
-    setCoeff(k+J, k,     b);        // M(k+J, k)         = b;
-    setCoeff(k+J, k+2*J, a); }      // M(k+J, k+2*J)     = a; 
+    setCoeff(k+J, k,     b);        // M(k+J,   k)       = b;
+    setCoeff(k+J, k+2*J, a); }      // M(k+J,   k+2*J)   = a;
   for(int k = 0; k < J; k++) {
     setCoeff(k,     k,       B);    // M(k,     k)       = B;
     setCoeff(k,     k+J,     A);    // M(k,     k+J)     = A;
     setCoeff(N-1-k, N-1-k,   A);    // M(N-1-k, N-1-k)   = A;
-    setCoeff(N-1-k, N-1-k-J, B); }  // M(N-1-k, N-1-k-J) = B; 
-
-
-
-
-
-
+    setCoeff(N-1-k, N-1-k-J, B); }  // M(N-1-k, N-1-k-J) = B;
+  for(int i = 0; i < I; i++) {
+    int s = i*J; 
+    for(int k = 1; k < J-1; k++) {
+      setCoeff(N+s+k, s+k-1, d);
+      setCoeff(N+s+k, s+k+1, c); }}
+  for(int i = 0; i < I; i++) { 
+    int s = i*J;
+    setCoeff(N+s,     s,     D);
+    setCoeff(N+s,     s+1,   C);
+    setCoeff(N+s+J-1, s+J-1, C);
+    setCoeff(N+s+J-1, s+J-2, D); }
+  int i = iKonstant;                     // Row index in data matrix Q or P.
+  int j = jKonstant;                     // Column index in data matrix Q or P.
+  int k = i*J + j;                       // Column index coefficient matrix R.
+  setCoeff(2*N, k, 1);                   // Add a coeff on 1 at position k in the last line
   plotMatrix(MatS::toDense(M), true);
 
 

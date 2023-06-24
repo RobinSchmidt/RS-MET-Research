@@ -11843,8 +11843,8 @@ void plotZetaPotentialNumeric()
   using Mat = RAPT::rsMatrix<double>;
   using Complex = std::complex<double>;
 
-  int Nx = 51;
-  int Ny = 51;
+  int Nx = 21;
+  int Ny = 21;
   double xCenter = -8.0;
   double xRange  =  0.2;
   double yCenter =  0.0;
@@ -11861,11 +11861,11 @@ void plotZetaPotentialNumeric()
 
   // Nontrivial zeros/saddles:
   xCenter = 0.5;
-  yCenter = 14.134725142;
+  //yCenter = 14.134725142;
   //yCenter = 21.022039639;
   //yCenter = 25.01085758;
   //yCenter = 30.424876126;
-  //yCenter = 32.935061588;
+  yCenter = 32.935061588;
   //yCenter = 37.586178159;
 
 
@@ -11937,10 +11937,13 @@ void plotZetaPotentialNumeric()
 
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
   plt.setPixelSize(1200, 600);
-  plt.addCommand("set view 50, 225, 1, 1");  // 50, 225 good for nontrivial zeta zeros, (1,1 is for optional scaling)
-  //plt.addCommand("set view 0, 180");     // 0, 180 means from above
-  plotSurfaceDark(plt);
-  //plt.plot3D();
+  //plt.addCommand("set view 50, 225");  // 50, 225: good for nontrivial zeta zeros, x-axis reversed
+  plt.addCommand("set view 35, 45");     // 35,  45: also good, x-axis natural
+  //plt.addCommand("set view 90, 90");     // 90,  90: view y-dependency
+  //plt.addCommand("set view 90, 0");      // 90,   0: view x-dependency
+  //plt.addCommand("set view 0, 180");   // 0,  180: from above
+  //plotSurfaceDark(plt);
+  plt.plot3D();
   int dummy = 0;
 
 

@@ -12121,6 +12121,11 @@ bool testNumericPotential()
   //  1 coeff on the last line is much bigger than all others such that theri colors are fainter.
   //  On the other hand, when the raneg is bigger, the coeff on the last line gets too faint. The
   //  setting is the sweet spot to make everything nicely visible.
+
+  // ToDo:
+  // -Make a test that compares the numerically computed polya potential with analytically 
+  //  computed ones for some knwo functions for which we have analytic expressions for the Polya
+  //  Potential.
 }
 
 
@@ -12195,10 +12200,17 @@ void testPotentialPlotter()
 
   //img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -1, +1, 101, 101);
 
-  img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51);
+  //img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51);
 
 
-  //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -PI, +PI, -1, +1, 101, 101);
+  img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
+  // -Looks like -cos(x) * cosh(y). Verify analytically!
+  // -Doesn't converge for -2*PI, +2*PI, -4, +4, 51, 21
+
+  img = plt.getPolyaPotentialImage([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
+  // -Looks like sin(x) * cosh(y)
+
+
 
   //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2*PI, +2*PI, 101, 101);
   // Hangs because the Gauss-Seidel iteration is unable to attain the desired accuracy. The 

@@ -8025,16 +8025,15 @@ rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
   rsImage<T> img(w, h);
   for(int i = 0; i < w; i++)
     for(int j = 0; j < h; j++)
-    {
       img(i, j) = mat(i, j);
-      //img(i, j) = mat(j, i);    // why not mat(i, j)?
-    }
   if(normalize)
     rsImageProcessor<T>::normalize(img);
   return img;
   // ToDo:
   // -Maybe give the user options, how the matrix row/cols should be interpreted in terms of pixel
-  //  coordinates, i.e. how we map between the two index pairs
+  //  coordinates, i.e. how we map between the two index pairs. At the moment, we interpret the
+  //  row index of the matrix as x-coordinate in the image and the column index as y-coordinate. 
+  //  That means, when looking at the matrix itself, it represents the transposed/rotated image.
 }
 
 template<class T>

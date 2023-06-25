@@ -8060,7 +8060,7 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
   rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
   //plotMatrix(P, true);  // for test
-  plotMatrix(P, false);  // for test
+  //plotMatrix(P, false);  // for test
 
   // Convert matrix P to image with normalization and return it:
   rsImage<T> img = rsMatrixToImage(P, true);

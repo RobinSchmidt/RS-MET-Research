@@ -12171,17 +12171,17 @@ void testPotentialPlotter()
 
   //img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -1, +1, 101, 101);
 
-  //img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51);
+  plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Exp.ppm");
 
 
-  //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
+  plot([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Sin.ppm");
   // -Looks like -cos(x) * cosh(y). Verify analytically!
   // -Doesn't converge for -2*PI, +2*PI, -4, +4, 51, 21
 
-  //img = plt.getPolyaPotentialImage([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
+  plot([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Cos.ppm");
   // -Looks like sin(x) * cosh(y)
 
-  //img = plt.getPolyaPotentialImage([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51);
+  plot([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51, "PolyaPotential_Sinh.ppm");
   // cos(y) * cosh(x)
 
 

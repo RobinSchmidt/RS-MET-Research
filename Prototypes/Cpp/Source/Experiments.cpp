@@ -12169,24 +12169,11 @@ void testPotentialPlotter()
   // as function of the sor parameter (by inspecting "its" in rsNumericPotentialSparse() at the 
   // bottom in the debugger):
   //img = plt.getPolyaPotentialImage([](C z) { return z*z; }, -PI, +PI, -1, +1, 11, 11);
-  // Number of iterations taken by solver as function of SOR parameter w:
-  //  w     its
-  // 0.0:  30025   (Jacobi)
-  // 0.5:  22594
-  // 1.0:  15481   (Gauss-Seidel)
-  // 1.5:   7957
-  // 1.6:   6743
-  // 1.7:   5077
-  // 1.8:   3461
-  // 1.9:   1775
-  // 1.95:   782
-  // 1.955: FAIL   with that value the iteration failed to attain the desired accuracy
-  // 1.96:   591
-  // 1.965:  669
-  // 1.97:   753
-  // 1.975:  961
-  // 1.98:  1146
-  // 1.99:  2139
+  // Number of iterations N taken by solver as function of SOR parameter w:
+  //
+  // w: 0.0   0.5   1.0   1.5  1.6  1.7  1.8  1.9  1.9 1.955 1.96 1.965 1.97 1.975 1.98 1.99
+  // N: 30025 22594 15481 7957 6743 5077 3461 1775 782 FAIL  591  669   753  961   1146 2139
+
 
   //img = plt.getPolyaPotentialImage([](C z) { return z*z; }, -1, +1, -1, +1, 101, 101);
   //  w     its
@@ -12197,6 +12184,8 @@ void testPotentialPlotter()
   // 1.8:   825
   // 1.9:   450
   // 1.95:  FAIL
+
+
 
   //img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -1, +1, 101, 101);
 

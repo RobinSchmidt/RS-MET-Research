@@ -8065,9 +8065,8 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   // Convert matrix P to image with normalization and return it:
   rsImage<T> img = rsMatrixToImage(P, true);
 
-  /*
   // Plot contour lines (does not yet work well, therefore commented out):
-  int numContourLines = 4;   // make member, give the user a setter for that
+  int numContourLines = 6;   // make member, give the user a setter for that
   rsImageContourPlotter<T, T> cp;
     rsImage<T> tmp = img;
   for(int i = 0; i < numContourLines; i++)
@@ -8079,9 +8078,18 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   // This does not yet look good. At least not on low resolution images. Many contours are missed
   // (with numContourLines = 5). Maybe try to first resample the image to higher resolution and 
   // then add the contours to that upsampled image.
-  */
+  // For the Polya potential of f(z) = z^2, they look actually not so bad. But for exp, they look
+  // kinda garbage. -> Figure out what's going wrong there!
+  // Maybe we should make sure to include contour lines at the height of the staionary points
 
   return img;
+
+  // ToDo:
+  // -Maybe rename w,h to Nx,Ny. They are supposed to represent the number of samples in x and y 
+  //  direction. the final pixel size should be a multiple of that, i.e. the final image should be
+  //  obtained by upsampling using bilinear or bicubic interpolation. Make a function 
+  //  upsample(img, kx, ky) in rsImageProcessor that returns an image that is upsampled by factors 
+  //  kx, ky in x- and y-direction repsectively. The upsampling factors should be class members.
 }
 
 

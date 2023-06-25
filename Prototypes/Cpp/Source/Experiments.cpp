@@ -12159,17 +12159,19 @@ void testPotentialPlotter()
   // as function of the sor parameter (by inspecting "its" in rsNumericPotentialSparse() at the 
   // bottom in the debugger):
   //img = plt.getPolyaPotentialImage([](C z) { return z*z; }, -PI, +PI, -1, +1, 11, 11);
-  // Number of iterations N taken by solver as function of SOR parameter w:
+  // Number of iterations N taken by solver as function of SOR parameter w for an image size of 
+  // 11x11:
   //
   // w: 0.0   0.5   1.0   1.5  1.6  1.7  1.8  1.9  1.9 1.955 1.96 1.965 1.97 1.975 1.98 1.99
   // N: 30025 22594 15481 7957 6743 5077 3461 1775 782 FAIL  591  669   753  961   1146 2139
 
-  //img = plt.getPolyaPotentialImage([](C z) { return z*z; }, -1, +1, -1, +1, 101, 101);
+  //plot([](C z) { return z*z; }, -1, +1, -1, +1, 101, 101, "PolyPotential_zSquared.ppm");
+  // Iteration counts for z^2 for a range of x = -1..+1, y = -1..+1 and an image size of 101x101:
   // w:  1.0  1.5  1.6  1.7  1.8 1.9 1.95
   // N:  3148 1791 1483 1164 825 450 FAIL
 
+  plot([](C z) { return z*z*z; }, -1, +1, -1, +1, 101, 101, "PolyPotential_zCubed.ppm");
 
-  //img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -1, +1, 101, 101);
 
   plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Exp.ppm");
   //plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 41, 101, "PolyaPotential_Exp.ppm");

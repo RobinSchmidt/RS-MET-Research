@@ -12210,8 +12210,11 @@ void testPotentialPlotter()
   //img = plt.getPolyaPotentialImage([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
   // -Looks like sin(x) * cosh(y)
 
-  img = plt.getPolyaPotentialImage([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51);
+  //img = plt.getPolyaPotentialImage([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51);
   // cos(y) * cosh(x)
+
+  img = plt.getPolyaPotentialImage([](C z) { return sqrt(z); }, -1, +1, -1, +1, 21, 51);
+
 
 
   //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2*PI, +2*PI, 101, 101);

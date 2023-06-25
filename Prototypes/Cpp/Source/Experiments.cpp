@@ -12203,13 +12203,15 @@ void testPotentialPlotter()
   //img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51);
 
 
-  img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
+  //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
   // -Looks like -cos(x) * cosh(y). Verify analytically!
   // -Doesn't converge for -2*PI, +2*PI, -4, +4, 51, 21
 
   //img = plt.getPolyaPotentialImage([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
   // -Looks like sin(x) * cosh(y)
 
+  img = plt.getPolyaPotentialImage([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51);
+  // cos(y) * cosh(x)
 
 
   //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2*PI, +2*PI, 101, 101);
@@ -12218,7 +12220,7 @@ void testPotentialPlotter()
   // -Reduce the desired precision and/or
   // -Give the iteration a maxNumIterations parameter. 
   // -Try other iterations like SOR. That probably won't help with the attainable accuracy but 
-  //  perhaps with convergence speed.
+  //  perhaps with convergence speed....done -> yes, it helps to improve convergence
 
 
 
@@ -12236,6 +12238,7 @@ void testPotentialPlotter()
   //  f_x = 2x, f_y = 2y  ->  f(z) = 2 z.r - 2 z.i I guess, the Polya vector field would probably 
   //  have a nonzero divergence and therefore not satisfy one of the two Cauchy-Riemann eqautions.
   // -Try other iteration methods. Gauss-Seidel is rather slow. Maybe others are better for this?
+  // -Add contour lines
 }
 
 

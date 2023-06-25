@@ -12133,53 +12133,27 @@ void testPotentialPlotter()
 {
   using Real    = float;
   using Complex = std::complex<Real>;
-  using Func    = std::function<Complex(Complex)>;
-  using Image   = rsImage<Real>;
-  using Plt     = rsPotentialPlotter<Real>;
-  //using Mat     = rsMatrix<Real>;
-  //using Vec     = std::vector<Real>;
-
- 
-  Complex i(0, 1);
-
-  /*
-  // Obsolete
-  Func f; 
-  //f = [](Complex z) { return  1; };           // P = rightward up-ramp
-  //f = [](Complex z) { return -1; };           // rightward down-ramp
-  //f = [](Complex z) { return Complex(0, 1); };  // upward downramp
-  //f = [](Complex z) { return z; };
-  //f = [&](Complex z) { return (z - 0.4f*i); };
-  //f = [](Complex z) { return z*z; };
-  //f = [](Complex z) { return z*z*z; };      // z^3
-  //f = [](Complex z) { return z*z*z*z; };      // z^4
-  //f = [](Complex z) { return z*z*z*z*z; };    // z^5
-  //f = [](Complex z) { return exp(z); };
-  f = [](Complex z) { return sin(z); };
-  */
 
 
 
-  Image img;
-  Plt plt;
-  using C = Complex;
-
-  auto plot = [](Func f, Real xMin, Real xMax, Real yMin, Real yMax, 
+  // Helper function. Takes a complex function, plot range, pixel size and file path to create an
+  // image file with a plot of the Polya potential of the given function.
+  auto plot = [](std::function<Complex(Complex)> f, 
+    Real xMin, Real xMax, Real yMin, Real yMax, 
     int width, int height, const char *path)
   {
-    Image img;
-    Plt plt;
-    using C = Complex;
+    rsImage<Real> img;
+    rsPotentialPlotter<Real> plt;
+    // ToDo: set the plotter up with thigs like
+    // -setNumContourLines(8)
+    // -setMarkStationaryPoints(true)
     img = plt.getPolyaPotentialImage(f, xMin, xMax, yMin, yMax, width, height);
     writeImageToFilePPM(img, path);
   };
 
 
 
-
-
-  //img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 101, 101);
-
+  using C = Complex;
 
   // With this example, I have taken some data for how many iterations the iterative solver needed
   // as function of the sor parameter (by inspecting "its" in rsNumericPotentialSparse() at the 
@@ -12211,10 +12185,8 @@ void testPotentialPlotter()
   // cos(y) * cosh(x)
 
 
-  plot([](C z) { return sqrt(z); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Sqrt.ppm");
-
-  //img = plt.getPolyaPotentialImage([](C z) { return sqrt(z); }, -1, +1, -1, +1, 31, 31);
-  //img = plt.getPolyaPotentialImage([](C z) { return cbrt(z); }, -1, +1, -1, +1, 31, 31);
+  plot([](C z) { return sqrt(z);     }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Sqrt.ppm");
+  plot([](C z) { return pow(z, 1.3); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Cbrt.ppm");
   // -Both have a discontinuity in the derivative along branch cut. It creates ripples in the 
   //  y-direction through the data in the produced P.
   // -Maybe the ripple could be reduced by using a higher order ansatz? But maybe that could make

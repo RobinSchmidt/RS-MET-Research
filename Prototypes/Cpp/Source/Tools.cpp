@@ -7791,7 +7791,7 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrixView<T>& P_x, const rsMatrixV
 
   //int  its = MatS::solveGaussSeidel(MTM, P.getDataPointer(), &wp[0], tol); 
 
-  T   sor = 1.95;             // SOR parameter. Must be < 2. 0: Jacobi, 1: Gauss-Seidel
+  T   sor = 1.9;              // SOR parameter. Must be < 2. 0: Jacobi, 1: Gauss-Seidel
   std::vector<T> wrk(P.getSize());
   int its = MatS::solveSOR(MTM, P.getDataPointer(), &wp[0], tol, &wrk[0], sor); 
 
@@ -7928,6 +7928,7 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
   M(0, 0) = 1;             // 0th row is for constant term. We overwrite the values that the
   M(0, J) = 0;             // loop wrote here (I didn't want to mess with the loop itself)
   plotMatrix(M, true);
+  //plotMatrix(M, false);
   // Actually the M(0,0) = 1; M(0,J) = 0 is supposed to make the matrix nonsingular. But it 
   // doesn't! Oh! When we don't make demands about the y-derivative and only prescribe an 
   // x-derivative, it actually means that we could add an arbitrary function of y, i.e. we would 
@@ -8019,12 +8020,15 @@ protected:
 template<class T>
 rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 {
-  int w = mat.getNumColumns();
-  int h = mat.getNumRows();
+  int w = mat.getNumRows();
+  int h = mat.getNumColumns();
   rsImage<T> img(w, h);
   for(int i = 0; i < w; i++)
     for(int j = 0; j < h; j++)
+    {
       img(i, j) = mat(i, j);
+      //img(i, j) = mat(j, i);    // why not mat(i, j)?
+    }
   if(normalize)
     rsImageProcessor<T>::normalize(img);
   return img;
@@ -8056,7 +8060,8 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   rsMatrixView<T> vm(w, h, v.getDataPointer());
   //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
   rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
-  //plotMatrix(P, false);  // for test
+  //plotMatrix(P, true);  // for test
+  plotMatrix(P, false);  // for test
 
   // Convert matrix P to image with normalization and return it:
   rsImage<T> img = rsMatrixToImage(P, true);

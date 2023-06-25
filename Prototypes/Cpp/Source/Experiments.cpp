@@ -12207,7 +12207,7 @@ void testPotentialPlotter()
   // -Looks like -cos(x) * cosh(y). Verify analytically!
   // -Doesn't converge for -2*PI, +2*PI, -4, +4, 51, 21
 
-  img = plt.getPolyaPotentialImage([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
+  //img = plt.getPolyaPotentialImage([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21);
   // -Looks like sin(x) * cosh(y)
 
 

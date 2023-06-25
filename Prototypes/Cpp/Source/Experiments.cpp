@@ -12214,6 +12214,7 @@ void testPotentialPlotter()
   // cos(y) * cosh(x)
 
   img = plt.getPolyaPotentialImage([](C z) { return sqrt(z); }, -1, +1, -1, +1, 21, 51);
+  // has discontinuity in derivative along branch cut which ripples through the data
 
 
 

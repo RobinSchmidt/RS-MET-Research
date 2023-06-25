@@ -12142,8 +12142,8 @@ void testPotentialPlotter()
  
   Complex i(0, 1);
 
-
-
+  /*
+  // Obsolete
   Func f; 
   //f = [](Complex z) { return  1; };           // P = rightward up-ramp
   //f = [](Complex z) { return -1; };           // rightward down-ramp
@@ -12156,11 +12156,27 @@ void testPotentialPlotter()
   //f = [](Complex z) { return z*z*z*z*z; };    // z^5
   //f = [](Complex z) { return exp(z); };
   f = [](Complex z) { return sin(z); };
+  */
+
+
 
   Image img;
   Plt plt;
-
   using C = Complex;
+
+  auto plot = [](Func f, Real xMin, Real xMax, Real yMin, Real yMax, 
+    int width, int height, const char *path)
+  {
+    Image img;
+    Plt plt;
+    using C = Complex;
+    img = plt.getPolyaPotentialImage(f, xMin, xMax, yMin, yMax, width, height);
+    writeImageToFilePPM(img, path);
+  };
+
+
+
+
 
   //img = plt.getPolyaPotentialImage(f, -1, +1, -1, +1, 101, 101);
 
@@ -12174,12 +12190,9 @@ void testPotentialPlotter()
   // w: 0.0   0.5   1.0   1.5  1.6  1.7  1.8  1.9  1.9 1.955 1.96 1.965 1.97 1.975 1.98 1.99
   // N: 30025 22594 15481 7957 6743 5077 3461 1775 782 FAIL  591  669   753  961   1146 2139
 
-
   //img = plt.getPolyaPotentialImage([](C z) { return z*z; }, -1, +1, -1, +1, 101, 101);
   // w:  1.0  1.5  1.6  1.7  1.8 1.9 1.95
   // N:  3148 1791 1483 1164 825 450 FAIL
-
-
 
 
   //img = plt.getPolyaPotentialImage([](C z) { return exp(z); }, -1, +1, -1, +1, 101, 101);
@@ -12197,7 +12210,10 @@ void testPotentialPlotter()
   //img = plt.getPolyaPotentialImage([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51);
   // cos(y) * cosh(x)
 
-  img = plt.getPolyaPotentialImage([](C z) { return sqrt(z); }, -1, +1, -1, +1, 31, 31);
+
+  plot([](C z) { return sqrt(z); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Sqrt.ppm");
+
+  //img = plt.getPolyaPotentialImage([](C z) { return sqrt(z); }, -1, +1, -1, +1, 31, 31);
   //img = plt.getPolyaPotentialImage([](C z) { return cbrt(z); }, -1, +1, -1, +1, 31, 31);
   // -Both have a discontinuity in the derivative along branch cut. It creates ripples in the 
   //  y-direction through the data in the produced P.
@@ -12220,7 +12236,7 @@ void testPotentialPlotter()
 
 
 
-  writeImageToFilePPM(img, "PolyaPotential.ppm");
+  //writeImageToFilePPM(img, "PolyaPotential.ppm");
 
   int dummy = 0;
 

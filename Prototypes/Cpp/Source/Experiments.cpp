@@ -12213,9 +12213,17 @@ void testPotentialPlotter()
   //img = plt.getPolyaPotentialImage([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51);
   // cos(y) * cosh(x)
 
-  img = plt.getPolyaPotentialImage([](C z) { return sqrt(z); }, -1, +1, -1, +1, 21, 51);
-  // has discontinuity in derivative along branch cut which ripples through the data
+  img = plt.getPolyaPotentialImage([](C z) { return sqrt(z); }, -1, +1, -1, +1, 31, 31);
+  //img = plt.getPolyaPotentialImage([](C z) { return cbrt(z); }, -1, +1, -1, +1, 31, 31);
+  // -Both have a discontinuity in the derivative along branch cut. It creates ripples in the 
+  //  y-direction through the data in the produced P.
+  // -Maybe the ripple could be reduced by using a higher order ansatz? But maybe that could make
+  //  it even worse. I don't Know.
+  // -I tried to use an even number of datapoints in the hope that having or not having a datapoint 
+  //  exactly *on* the branch cut may help to get rid of the ripple. But that doesn't seem to 
+  //  make a difference
 
+  //img = plt.getPolyaPotentialImage([](C z) { return pow(z, 1./3.); }, -1, +1, -1, +1, 32, 32);
 
 
   //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2*PI, +2*PI, 101, 101);
@@ -12243,6 +12251,11 @@ void testPotentialPlotter()
   //  have a nonzero divergence and therefore not satisfy one of the two Cauchy-Riemann eqautions.
   // -Try other iteration methods. Gauss-Seidel is rather slow. Maybe others are better for this?
   // -Add contour lines
+  // -Give the user an option to set low and high clipping thresholds for u and v. That helps to 
+  //  deal with functions that shoot off to infinity at some values. We need that for funvtions 
+  //  with poles such as 1/z, log(z), etc.
+  // -All these extra options do indeed seem to justify an implementation as class with
+  //  setters. We don't want to pass all these options as function parameters.
 }
 
 

@@ -8064,6 +8064,23 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
 
   // Convert matrix P to image with normalization and return it:
   rsImage<T> img = rsMatrixToImage(P, true);
+
+  /*
+  // Plot contour lines (does not yet work well, therefore commented out):
+  int numContourLines = 4;   // make member, give the user a setter for that
+  rsImageContourPlotter<T, T> cp;
+    rsImage<T> tmp = img;
+  for(int i = 0; i < numContourLines; i++)
+  {
+    T level = T(i) / T(numContourLines);
+    cp.drawContour(tmp, level, img, T(1), true);
+  }
+  rsImageProcessor<T>::normalize(img);  // May need new normalization after adding contours
+  // This does not yet look good. At least not on low resolution images. Many contours are missed
+  // (with numContourLines = 5). Maybe try to first resample the image to higher resolution and 
+  // then add the contours to that upsampled image.
+  */
+
   return img;
 }
 

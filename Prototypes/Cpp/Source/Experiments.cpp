@@ -12035,11 +12035,20 @@ void plotZetaPotentialNumeric()
   //   packing of the lines indicates the steepness in x- and y-direction, iff the contours are 
   //   drawn on equidistant height (which is a good reason to indeed use equidistant heights for 
   //   the countour levels).
-  //  -On such a height map for Polya potentials, there may be some other lines of interest 
-  //   (besides the equal height contours aka level curves). Among these are: lines of 
-  //   re(f) = dP/dy = 0, im(f) = dP/dy = 0, principal curvature lines (especially around the 
-  //   saddles), geodesics between certain pairs of stationary points, lines of zero mean 
-  //   curvature, ...
+  // -On such a height map for Polya potentials, there may be some other lines of interest 
+  //  (besides the equal height contours aka level curves). Among these are: lines of 
+  //  re(f) = dP/dy = 0, im(f) = dP/dy = 0, principal curvature lines (especially around the 
+  //  saddles), geodesics between certain pairs of stationary points, lines of zero mean 
+  //  curvature, ...
+  // -Another intersting thing may be to try to estimate Laurent expansion coefficients by 
+  //  numerically computing the path integrals that appear in their formula. We could do this 
+  //  either on data or on a std::function that defines f(z). We should use rectangles as closed 
+  //  contours to get a convenient sum of 4 1D integrals (I think). It would be interesting to see,
+  //  if the accuracy of the estimate depends on the size of the contour. Maybe not when using 
+  //  std::function but maybe when using matrix data, bigger rectangles are better because more 
+  //  data is being used? That algorithm can also be used to compute Taylor coeffs numerically
+  //  because when the contour does not enclose any pole, The negative Laurent coeffs are zero
+  //  and the nonnegative ones coincide with the Taylor coeffs (I think).
   // -We could use RGB for re, im, pot (real, imaginary, potential)
   // -Data for multifunctions must be suitably unwrapped before appyling the numeric potential 
   //  finder. Maybe that problem can be cricumvented when we use analytic expressions for Polya

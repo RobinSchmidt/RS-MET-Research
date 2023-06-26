@@ -7986,9 +7986,27 @@ public:
   using Complex = std::complex<T>;
 
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+
+  /** Sets scaling factors for the final image to be produced. The idea is that the actual 
+  evaluation of the potential might have to done on a grid that is coarser than the final image due
+  to it being too compuational expensive to directly evaluate it on a finer grid. We would the 
+  evaluate it on a coarser grid and obtain the final image using interpolation of this coarse grid 
+  data.  ...tbc... */
+  void setImageScaling(int newScaleX, int newScaleY) { scaleX = newScaleX; scaleY = newScaleY; }
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Plotting
+
+
+
   /** Under construction */
   rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
-    T xMin, T xMax, T yMin, T yMax, int pixelWidth, int pixelHeight);
+    T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
 
 
 
@@ -8001,6 +8019,8 @@ public:
 
 
 protected:
+
+  int scaleX = 1, scaleY = 1;
 
 };
 // Notes:
@@ -8039,15 +8059,15 @@ rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 template<class T>
 rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   std::function<Complex (Complex z)> f,
-  T xMin, T xMax, T yMin, T yMax, int w, int h)
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
   // Create Polya vector field data (maybe factor out)
-  rsMatrix<T> u(w, h), v(w, h);
-  T dx = (xMax - xMin) / w;
-  T dy = (yMax - yMin) / h;
-  for(int j = 0; j < h; j++) {
+  rsMatrix<T> u(Nx, Ny), v(Nx, Ny);
+  T dx = (xMax - xMin) / Nx;
+  T dy = (yMax - yMin) / Ny;
+  for(int j = 0; j < Ny; j++) {
     T y = yMin + j*dy;
-    for(int i = 0; i < w; i++) {
+    for(int i = 0; i < Nx; i++) {
       T x = xMin + i*dx;
       Complex z(x, y);
       Complex w = f(z);
@@ -8055,8 +8075,8 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
       v(i, j) = -imag(w); }}
 
   // Create the Polya potential from the Polya vector field: 
-  rsMatrixView<T> um(w, h, u.getDataPointer());
-  rsMatrixView<T> vm(w, h, v.getDataPointer());
+  rsMatrixView<T> um(Nx, Ny, u.getDataPointer());
+  rsMatrixView<T> vm(Nx, Ny, v.getDataPointer());
   //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
   rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
   //plotMatrix(P, true);  // for test
@@ -8089,7 +8109,8 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   //  direction. the final pixel size should be a multiple of that, i.e. the final image should be
   //  obtained by upsampling using bilinear or bicubic interpolation. Make a function 
   //  upsample(img, kx, ky) in rsImageProcessor that returns an image that is upsampled by factors 
-  //  kx, ky in x- and y-direction repsectively. The upsampling factors should be class members.
+  //  kx, ky in x- and y-direction repsectively. The upsampling factors should be class members
+  //  with a setter
 }
 
 

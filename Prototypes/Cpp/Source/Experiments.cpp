@@ -12170,11 +12170,13 @@ void testPotentialPlotter()
   // w:  1.0  1.5  1.6  1.7  1.8 1.9 1.95
   // N:  3148 1791 1483 1164 825 450 FAIL
 
-  plot([](C z) { return z*z*z; }, -1, +1, -1, +1, 101, 101, "PolyPotential_zCubed.ppm");
+  //plot([](C z) { return z*z*z; }, -1, +1, -1, +1, 101, 101, "PolyPotential_zCubed.ppm");
 
 
   plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Exp.ppm");
   //plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 41, 101, "PolyaPotential_Exp.ppm");
+  // -With scale = 1, the contours in the bottom section of the image are missing. Figure out 
+  //  why! Is this a bug in the contour plotting code?
 
 
   plot([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Sin.ppm");
@@ -12231,6 +12233,11 @@ void testPotentialPlotter()
   //  with poles such as 1/z, log(z), etc.
   // -All these extra options do indeed seem to justify an implementation as class with
   //  setters. We don't want to pass all these options as function parameters.
+  // -Make an implemenation that uses analytic formalus to compute the Polya potential. Using 
+  //  function evaluation together with numeric computation of the potnetial should only be a last
+  //  resort solution, if formulas for analytic evaluation are not available or their evaluation 
+  //  algos do not work in the region of interest. Compare the results of both ways to plot Polya
+  //  potentials.
 }
 
 

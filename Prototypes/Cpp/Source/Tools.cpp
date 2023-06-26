@@ -8126,8 +8126,23 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Plotting
 
-  rsImage<T> getHeightMapImage(const rsMatrix<T> potential, 
-    T xMin, T xMax, T yMin, T yMax);
+  /** Given a matrix z of height values and a range of x- and y-values such that 
+  z(i, j) = height(x_i, y_i) where x_i = xMin + (xMax-xMin) / Nx where Nx is the number of samples 
+  of the height z along the x-axis (given by z.numRows) and likewise for y_i, this function 
+  produces an image of that height data by converting the matrix to an image, possibly scaling it
+  up according to our scaling settings and post-processing the result by drawing in contour lines, 
+  etc. (ToDo: later we may also draw in the coordinate axes)   */
+  rsImage<T> getHeightMapImage(const rsMatrix<T> z, T xMin, T xMax, T yMin, T yMax);
+
+  // ToDo:
+  // -Add a function that does the same thing but instead of taking a data matrix, it takes a 
+  //  std::function<T(T, T)> with two inputs and one output. Eventually, we want to pass functions 
+  //  like rsPolyaPotentialEvaluator::square (wrapped into std::function) to that
+
+
+  /** A helper function to convert data from rsMatrix to rsImage. */
+  static rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize);
+
 
 protected:
 
@@ -8143,10 +8158,8 @@ protected:
 // ToDo:
 // -see rsImageContourPlotter for API design
 
-
-// Move to somewhere else or make it a member function of rsHeightMapPlotter:
 template<class T>
-rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
+rsImage<T> rsHeightMapPlotter<T>::rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 {
   int w = mat.getNumRows();
   int h = mat.getNumColumns();
@@ -8163,7 +8176,6 @@ rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
   //  row index of the matrix as x-coordinate in the image and the column index as y-coordinate. 
   //  That means, when looking at the matrix itself, it represents the transposed/rotated image.
 }
-
 
 template<class T>
 rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const rsMatrix<T> P, 
@@ -8197,7 +8209,10 @@ rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const rsMatrix<T> P,
 
 //=================================================================================================
 
-/** A class for plotting Polya potentials of complex functions. ...TBC...  */
+/** A class for plotting Polya potentials of complex functions. It pulls together functionality 
+from rsHeightMapPlotter (which is a superclass of this) and rsPolyaPotentialEvaluator (which is 
+used locally where needed). The class makes it convenient to produce images of Polya potentials of
+complex functions. ...tbc...  */
 
 template<class T>
 class rsPolyaPotentialPlotter : public rsHeightMapPlotter<T>

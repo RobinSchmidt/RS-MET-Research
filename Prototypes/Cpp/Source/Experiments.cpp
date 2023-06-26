@@ -12152,7 +12152,7 @@ void testPotentialPlotter()
 
   // Helper function. Takes a complex function, plot range, pixel size and file path to create an
   // image file with a plot of the Polya potential of the given function.
-  auto plot = [&](std::function<Complex(Complex)> f, 
+  auto plotN = [&](std::function<Complex(Complex)> f, 
     Real xMin, Real xMax, Real yMin, Real yMax, 
     int width, int height, const char *path)
   {
@@ -12167,7 +12167,8 @@ void testPotentialPlotter()
     img = plt.getPolyaPotentialImage(f, xMin, xMax, yMin, yMax, width, height);
     writeImageToFilePPM(img, path);
   };
-
+  // The N in plotN stands for "numerical". The intention is to add a function plotA, that uses
+  // analytical evaluation.
 
 
   using C = Complex;
@@ -12188,25 +12189,25 @@ void testPotentialPlotter()
   // N:  3148 1791 1483 1164 825 450 FAIL
 
 
-  plot([](C z) { return z*z;   }, -1, +1, -1, +1, 31, 31, "PolyPotential_zSquared.ppm");
-  plot([](C z) { return z*z*z; }, -1, +1, -1, +1, 31, 31, "PolyPotential_zCubed.ppm");
+  plotN([](C z) { return z*z;   }, -1, +1, -1, +1, 31, 31, "PolyPotential_zSquared.ppm");
+  plotN([](C z) { return z*z*z; }, -1, +1, -1, +1, 31, 31, "PolyPotential_zCubed.ppm");
 
-  plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Exp.ppm");
+  plotN([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Exp.ppm");
   //plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 41, 101, "PolyaPotential_Exp.ppm");
 
-  plot([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Sin.ppm");
+  plotN([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Sin.ppm");
   // -Looks like -cos(x) * cosh(y). Verify analytically! ...done: yep, is correct.
   // -Doesn't converge for -2*PI, +2*PI, -4, +4, 51, 21
 
-  plot([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Cos.ppm");
+  plotN([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Cos.ppm");
   // -Looks like sin(x) * cosh(y)
 
-  plot([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51, "PolyaPotential_Sinh.ppm");
+  plotN([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51, "PolyaPotential_Sinh.ppm");
   // cos(y) * cosh(x)
 
 
-  plot([](C z) { return sqrt(z);     }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Sqrt.ppm");
-  plot([](C z) { return pow(z, 1.3); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Cbrt.ppm");
+  plotN([](C z) { return sqrt(z);     }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Sqrt.ppm");
+  plotN([](C z) { return pow(z, 1.3); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Cbrt.ppm");
   // -Both have a discontinuity in the derivative along branch cut. It creates ripples in the 
   //  y-direction through the data in the produced P.
   // -Maybe the ripple could be reduced by using a higher order ansatz? But maybe that could make
@@ -12215,7 +12216,7 @@ void testPotentialPlotter()
   //  exactly *on* the branch cut may help to get rid of the ripple. But that doesn't seem to 
   //  make a difference
 
-  plot([](C z) { return log(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Log.ppm");
+  plotN([](C z) { return log(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Log.ppm");
   // doesn't converge
 
 
@@ -12248,12 +12249,12 @@ void testPotentialPlotter()
   // -Try other iteration methods. Gauss-Seidel is rather slow. Maybe others are better for this?
   // -Add contour lines
   // -Give the user an option to set low and high clipping thresholds for u and v. That helps to 
-  //  deal with functions that shoot off to infinity at some values. We need that for funvtions 
+  //  deal with functions that shoot off to infinity at some values. We need that for functions 
   //  with poles such as 1/z, log(z), etc.
   // -All these extra options do indeed seem to justify an implementation as class with
   //  setters. We don't want to pass all these options as function parameters.
   // -Make an implemenation that uses analytic formulas to compute the Polya potential. Using 
-  //  function evaluation together with numeric computation of the potnetial should only be a last
+  //  function evaluation together with numeric computation of the potential should only be a last
   //  resort solution, if formulas for analytic evaluation are not available or their evaluation 
   //  algos do not work in the region of interest. Compare the results of both ways to plot Polya
   //  potentials.

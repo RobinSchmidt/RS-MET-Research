@@ -12202,7 +12202,8 @@ void testPotentialPlotter()
 
   plotA([](R x, R y) { return PE::square(x, y); }, -1, +1, -1, +1, 601, 601, 
     "PolyPotential_zSquaredA.ppm");
-
+  // With an even number of contours, we see (almost) the vertical contours along the imaginary
+  // axis. With an odd number, it looks visually better. Try 24 vs 25.
 
 
 

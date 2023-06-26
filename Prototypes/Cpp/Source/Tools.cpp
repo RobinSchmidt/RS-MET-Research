@@ -8212,7 +8212,6 @@ rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const std::function<T(T x, T
     for(int i = 0; i < w; i++) {
       T x = xMin + i*dx;
       img(i, j) = f(x, y); }}
-  //return img;
   return postProcess(img, xMin, xMax, yMin, yMax);
 }
 
@@ -8224,34 +8223,6 @@ rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const rsMatrix<T> P,
   // drawing in some contour lines:
   rsImage<T> img = rsMatrixToImage(P, true);
   return postProcess(img, xMin, xMax, yMin, yMax);
-
-
-  /*
-  // Factor out into into postProcessImage(img, xMin, ...):
-
-
-  if(scaleX > 1 || scaleY > 1)
-    img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
-
-  // Plot contour lines:
-  int numContourLines = 6;   // make member, give the user a setter for that
-  rsImageContourPlotter<T, T> cp;  
-  rsImage<T> tmp = img;
-  for(int i = 0; i < numContourLines; i++)
-  {
-    T level = T(i) / T(numContourLines);
-    cp.drawContour(tmp, level, img, T(1), true);
-  }
-  rsImageProcessor<T>::normalize(img);  // May need new normalization after adding contours
-  // Maybe in the contour plotter, use a saturating addition when drawing in the pixels. That could 
-  // avoid the second normalization and also look better overall.
-
-  return img;
-
-  // Notes
-  // The xMin, ... parameters are not yet used here but maybe we can use them later to draw 
-  // coordinate axes.
-  */
 }
 
 template<class T>
@@ -8264,13 +8235,13 @@ rsImage<T> rsHeightMapPlotter<T>::postProcess(const rsImage<T> imgIn,
     img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
 
   // Plot contour lines:
-  int numContourLines = 6;   // make member, give the user a setter for that
+  int numContourLines = 40;   // make member, give the user a setter for that
   rsImageContourPlotter<T, T> cp;  
   rsImage<T> tmp = img;
   for(int i = 0; i < numContourLines; i++)
   {
     T level = T(i) / T(numContourLines);
-    cp.drawContour(tmp, level, img, T(1), true);
+    cp.drawContour(tmp, level, img, T(0.1875), true);
   }
   rsImageProcessor<T>::normalize(img);  // May need new normalization after adding contours
   // Maybe in the contour plotter, use a saturating addition when drawing in the pixels. That could 

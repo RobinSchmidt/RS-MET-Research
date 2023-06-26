@@ -8123,7 +8123,7 @@ maybe get rid of the class and let getPolyaPotentialImage just be a free functio
 */
 
 template<class T>
-class rsPotentialPlotter
+class rsHeightMapPlotter
 {
 
 public:
@@ -8152,7 +8152,7 @@ public:
 
 
 
-  rsImage<T> getPotentialImage(const rsMatrix<T> potential, 
+  rsImage<T> getHeightMapImage(const rsMatrix<T> potential, 
     T xMin, T xMax, T yMin, T yMax);
   // ToDo:
   // -Move into a class rsHeightMapPlotter.
@@ -8195,7 +8195,7 @@ protected:
 //  that further? ..Oh wait - no - a single image cannot be decomposed like that. We need a vector 
 //  field input, i.e. a pair of images.
 
-// Move to somewhere else:
+// Move to somewhere else or make it a member function of rsHeighMapPlotter:
 template<class T>
 rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 {
@@ -8216,9 +8216,8 @@ rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 }
 
 
-
 template<class T>
-rsImage<T> rsPotentialPlotter<T>::getPotentialImage(const rsMatrix<T> P, 
+rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const rsMatrix<T> P, 
   T xMin, T xMax, T yMin, T yMax)
 {
   // Convert matrix P to image and post-process it by scaling it up to the final resolution and
@@ -8249,27 +8248,15 @@ rsImage<T> rsPotentialPlotter<T>::getPotentialImage(const rsMatrix<T> P,
 // rename to getHeightMapImage
 
 template<class T>
-rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
+rsImage<T> rsHeightMapPlotter<T>::getPolyaPotentialImage(
   std::function<Complex (Complex z)> f,
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
   rsMatrix<T> P = rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
     f, xMin, xMax, yMin, yMax, Nx, Ny);                 // Find Polya potential numerically
-  return getPotentialImage(P, xMin, xMax, yMin, yMax);  // Convert data to image and post-process
+  return getHeightMapImage(P, xMin, xMax, yMin, yMax);  // Convert data to image and post-process
 }
 
-/*
-// Obsolete?:
-template<class T>
-void rsPotentialPlotter<T>::drawPotential(
-  const rsImage<T>& u, const rsImage<T>& v, rsImage<T>& target)
-{
-  //rsImage<TVal> P = getPotential(u, v); //
-
-
-  int dummy = 0;
-}
-*/
 
 
 

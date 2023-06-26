@@ -8083,11 +8083,15 @@ public:
   /** Given a complex function w = f(z) where f is assumed to be holomorphic, this function 
   produces a data matrix of the Polya potential of this function by means of function evaluation 
   and numerical estimation of a potential for the so produced Polya vector field data. The 
-  estimation algorithm is rather expensive and also still somewhat unreliable with regard to 
-  convergence and the results are only approximate. So, if it is possible to produce the Polya 
-  potential by an analytic expression, it's better to do it that way. This function should be used 
-  only as last resort if it's not reasonably possible to find an analytic solution. The function f
-  needs to be holomorphic because otherwise, a Polya potnetial does not even exist.  */
+  estimation algorithm is rather expensive, works only for smallish numbers for the number of 
+  samples (say, something like numSamplesX * numSamplesY = 1000, like 20x50 or 30x30) such that for
+  producing larger sized images, it has to be used in conjunction with upsampling. Using it on a
+  full resolution grid of, say, 500x500 pixels is still out of the question. It is also still 
+  somewhat unreliable with regard to convergence and the results are only approximate anyway. So, 
+  if it is at all possible to produce the Polya potential data by an analytic expression, it's 
+  better to do it that way. This function should be used only as last resort if it's not reasonably
+  possible to find an analytic solution. The function f needs to be holomorphic because otherwise, 
+  a Polya potential does not even exist. */
   rsMatrix<T> estimatePolyaPotential(std::function<Complex (Complex z)> f, 
     T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
   // ToDo: 

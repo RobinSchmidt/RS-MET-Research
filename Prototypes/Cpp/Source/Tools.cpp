@@ -7962,10 +7962,11 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 
 //=================================================================================================
 
-/** Class to evaluate the Polya vector fields and Polya potentials for various functions. The 
-evaluation functions come in two flavors: One that takes two input parameters anr returns a value.
-That variant computes the potential. And one that takes two input parameters and two output 
-parameters by pointer. That variant computes the vector field. */
+/** Class to evaluate the Polya vector fields and Polya potentials for various complex functions
+w = f(z). The evaluation functions based on analytic expressions come in two flavors: One that 
+takes two input parameters and returns a value. That variant computes the potential. And one that 
+takes two input parameters and two output parameters by pointer. That variant computes the vector 
+field. */
 
 template<class T>
 class rsPolyaPotentialEvaluator
@@ -8079,22 +8080,44 @@ public:
   // \name Plotting
 
 
+  /** Given a complex function w = f(z) where f is assumed to be holomorphic, this function 
+  produces a data matrix of the Polya potential of this function by means of function evaluation 
+  and numerical estimation of a potential for the so produced Polya vector field data. The 
+  estimation algorithm is rather expensive and also still somewhat unreliable with regard to 
+  convergence and the results are only approximate. So, if it is possible to produce the Polya 
+  potential by an analytic expression, it's better to do it that way. This function should be used 
+  only as last resort if it's not reasonably possible to find an analytic solution. The function f
+  needs to be holomorphic because otherwise, a Polya potnetial does not even exist.  */
   rsMatrix<T> estimatePolyaPotential(std::function<Complex (Complex z)> f, 
     T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
+  // ToDo: 
+  // -Move into class rsPolyaPotentialEvaluator.
+  // -Handle meromorphic functions (= mostly holomorpic but with isolated poles). I think, We 
+  //  could do this by introducing upper and lower clipping thresholds in the evaluation of the 
+  //  Polya vector field to clip/tame the infinities at the poles. The estimated Polya potential 
+  //  will then be wrong in these regions. I think, it may look linear there because the clipped 
+  //  vector field is then constant there. But depends on how exactly we clip. We could simply clip 
+  //  real and imag seperately but we could also clip the magnitude and retain the phase.
 
 
   rsImage<T> getPotentialImage(const rsMatrix<T> potential, 
     T xMin, T xMax, T yMin, T yMax);
+  // ToDo:
+  // -Move into a class rsHeightMapPlotter.
+  // -Rename to getHeightMapImage
 
 
   /** Under construction */
   rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
     T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
+  // ToDo:
+  // -Move into a class rsPolyaPotentialPlotter
+  // -This class should be a subclass of rsHeightMapPlotter and use rsPolyaPotentialEvaluator where
+  //  needed
 
 
 
-
-  void drawPotential(const rsImage<T>& u, const rsImage<T>& v, rsImage<T>& target); 
+  //void drawPotential(const rsImage<T>& u, const rsImage<T>& v, rsImage<T>& target); 
 
 
   // ToDo:
@@ -8174,7 +8197,9 @@ rsMatrix<T> rsPotentialPlotter<T>::estimatePolyaPotential(
 // independent of the rsPolyaPotentialEvaluator. The member function getPolyaPotentialImage (which 
 // will introduce such a dependency) could be turned either into a free function or we make a class 
 // rsPolyaPotentialPlotter that derives from rsHeightMapPlotter and uses an  
-// rsPolyaPotentialEvaluator, where needed.
+// rsPolyaPotentialEvaluator, where needed. Yes rsHieghtMapPlotter seems like a good name for such 
+// a class. The term "height map" is used commonly for this kind of thing:
+// https://en.wikipedia.org/wiki/Heightmap
 
 template<class T>
 rsImage<T> rsPotentialPlotter<T>::getPotentialImage(const rsMatrix<T> P, 
@@ -8205,48 +8230,19 @@ rsImage<T> rsPotentialPlotter<T>::getPotentialImage(const rsMatrix<T> P,
   // The xMin, ... parameters are not yet used here but maybe we can use them later to draw 
   // coordinate axes.
 }
+// rename to getHeightMapImage
 
 template<class T>
 rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   std::function<Complex (Complex z)> f,
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
-  // Find Polya potential numerically:
-  rsMatrix<T> P = estimatePolyaPotential(f, xMin, xMax, yMin, yMax, Nx, Ny);
-
-
-  // Factor out into createImage. Should take the matrix as input (and maybe some additional 
-  // post-processing params like the scale factors and number of contours) and return the image
-  // as output:
-
+  rsMatrix<T> P = estimatePolyaPotential(f, xMin, xMax, yMin, yMax, Nx, Ny);  // Find Polya potential numerically:
   return getPotentialImage(P, xMin, xMax, yMin, yMax);
-
-
-  /*
-  // Convert matrix P to image and post-process it by scaling it up to the final resolution and
-  // drawing in some contour lines:
-  rsImage<T> img = rsMatrixToImage(P, true);
-  if(scaleX > 1 || scaleY > 1)
-    img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
-
-  // Plot contour lines:
-  int numContourLines = 6;   // make member, give the user a setter for that
-  rsImageContourPlotter<T, T> cp;
-    rsImage<T> tmp = img;
-  for(int i = 0; i < numContourLines; i++)
-  {
-    T level = T(i) / T(numContourLines);
-    cp.drawContour(tmp, level, img, T(1), true);
-  }
-  rsImageProcessor<T>::normalize(img);  // May need new normalization after adding contours
-  // Maybe in the contour plotter, use a saturating addition when drawing in the pixels. That could 
-  // avoid the second normalization and also look better overall.
-
-  return img;
-  */
 }
 
-
+/*
+// Obsolete?:
 template<class T>
 void rsPotentialPlotter<T>::drawPotential(
   const rsImage<T>& u, const rsImage<T>& v, rsImage<T>& target)
@@ -8256,6 +8252,7 @@ void rsPotentialPlotter<T>::drawPotential(
 
   int dummy = 0;
 }
+*/
 
 
 

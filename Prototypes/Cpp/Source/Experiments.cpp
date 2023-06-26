@@ -12035,6 +12035,11 @@ void plotZetaPotentialNumeric()
   //   packing of the lines indicates the steepness in x- and y-direction, iff the contours are 
   //   drawn on equidistant height (which is a good reason to indeed use equidistant heights for 
   //   the countour levels).
+  //  -On such a height map for Polya potentials, there may be some other lines of interest 
+  //   (besides the equal height contours aka level curves). Among these are: lines of 
+  //   re(f) = dP/dy = 0, im(f) = dP/dy = 0, principal curvature lines (especially around the 
+  //   saddles), geodesics between certain pairs of stationary points, lines of zero mean 
+  //   curvature, ...
   // -We could use RGB for re, im, pot (real, imaginary, potential)
   // -Data for multifunctions must be suitably unwrapped before appyling the numeric potential 
   //  finder. Maybe that problem can be cricumvented when we use analytic expressions for Polya
@@ -12140,8 +12145,8 @@ void testPotentialPlotter()
   using Real    = float;
   using Complex = std::complex<Real>;
 
-  int scaleX = 10;
-  int scaleY = 10;
+  int scaleX = 20;
+  int scaleY = 20;
 
 
 

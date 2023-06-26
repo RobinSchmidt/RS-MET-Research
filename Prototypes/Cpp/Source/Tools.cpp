@@ -8083,14 +8083,13 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   //plotMatrix(P, false);  // for test
 
 
-
-  // Convert matrix P to image and post-process that:
-
+  // Convert matrix P to image and post-process it by scaling it up to the final resolution and
+  // drawing in some contour lines:
   rsImage<T> img = rsMatrixToImage(P, true);
   if(scaleX > 1 || scaleY > 1)
     img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
 
-  // Plot contour lines (does not yet work well, therefore commented out):
+  // Plot contour lines:
   int numContourLines = 6;   // make member, give the user a setter for that
   rsImageContourPlotter<T, T> cp;
     rsImage<T> tmp = img;
@@ -8100,22 +8099,10 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
     cp.drawContour(tmp, level, img, T(1), true);
   }
   rsImageProcessor<T>::normalize(img);  // May need new normalization after adding contours
-  // This does not yet look good. At least not on low resolution images. Many contours are missed
-  // (with numContourLines = 5). Maybe try to first resample the image to higher resolution and 
-  // then add the contours to that upsampled image.
-  // For the Polya potential of f(z) = z^2, they look actually not so bad. But for exp, they look
-  // kinda garbage. -> Figure out what's going wrong there!
-  // Maybe we should make sure to include contour lines at the height of the staionary points
+  // Maybe in the contour plotter, use a saturating addition when drawing in the pixels. That could 
+  // avoid the second normalization and also look better overall.
 
   return img;
-
-  // ToDo:
-  // -Maybe rename w,h to Nx,Ny. They are supposed to represent the number of samples in x and y 
-  //  direction. the final pixel size should be a multiple of that, i.e. the final image should be
-  //  obtained by upsampling using bilinear or bicubic interpolation. Make a function 
-  //  upsample(img, kx, ky) in rsImageProcessor that returns an image that is upsampled by factors 
-  //  kx, ky in x- and y-direction repsectively. The upsampling factors should be class members
-  //  with a setter
 }
 
 

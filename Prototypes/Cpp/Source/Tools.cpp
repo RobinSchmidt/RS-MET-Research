@@ -7963,10 +7963,13 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 //=================================================================================================
 
 /** Class to evaluate the Polya vector fields and Polya potentials for various complex functions
-w = f(z). The evaluation functions based on analytic expressions come in two flavors: One that 
-takes two input parameters and returns a value. That variant computes the potential. And one that 
-takes two input parameters and two output parameters by pointer. That variant computes the vector 
-field. */
+w = f(z). It implements a bunch of functions that can evaluate the Polya vector field and potential
+for certain common elementary functions directly via analytic expressions and it also facilitates 
+the numerical etsimation of the Polya potential for functions, where such analytic formulas are not
+(yet) avaibale. The evaluation functions based on analytic expressions come in two flavors: One 
+that takes two input parameters and returns a value. That variant computes the potential. And one 
+that takes two input parameters and two output parameters by pointer. That variant computes the 
+vector field. */
 
 template<class T>
 class rsPolyaPotentialEvaluator
@@ -8001,8 +8004,7 @@ public:
   static rsMatrix<T> estimatePolyaPotential(std::function<Complex (Complex z)> f, 
     T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
   // ToDo: 
-  // -[Done] Move into class rsPolyaPotentialEvaluator. 
-  // -Handle meromorphic functions (= mostly holomorpic but with isolated poles). I think, We 
+  // -Handle meromorphic functions (= mostly holomorpic but with isolated poles). I think, we 
   //  could do this by introducing upper and lower clipping thresholds in the evaluation of the 
   //  Polya vector field to clip/tame the infinities at the poles. The estimated Polya potential 
   //  will then be wrong in these regions. I think, it may look linear there because the clipped 
@@ -8105,8 +8107,6 @@ rsMatrix<T> rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
 // rsPolyaPotentialEvaluator, where needed. Yes rsHieghtMapPlotter seems like a good name for such 
 // a class. The term "height map" is used commonly for this kind of thing:
 // https://en.wikipedia.org/wiki/Heightmap
-
-
 
 
 //=================================================================================================

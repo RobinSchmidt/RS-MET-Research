@@ -7982,6 +7982,11 @@ public:
   static T    square(T x, T y) { return x*x*x/3 - x*y*y; } 
   static void square(T x, T y, T* u, T* v) { *u = x*x - y*y; *v = -2*x*y; }
 
+
+
+
+
+
 };
 // Needs tests.
 
@@ -8031,6 +8036,8 @@ public:
 // cosh(z): (cos(y)*cosh(x), -sin(y)*sinh(x), cos(y)*sinh(x), cos(y)*sinh(x))
 // tanh(z): (sinh(2*x)/(cos(2*y) + cosh(2*x)), -sin(2*y)/(cos(2*y) + cosh(2*x)),
 //          1/2*log(cos(2*y) + cosh(2*x)), 1/2*log(cos(2*y) + cosh(2*x)))
+// sqrt(z): (sqrt(abs(x + I*y))*cos(1/2*arctan2(y, x)), -sqrt(abs(x + I*y))*sin(1/2*arctan2(y, x)))
+//          The integrals didn't succeed -> Try it by hand or other CAS!
 //
 // ToDo: 
 // -Do also z^p for general p (real or complex)

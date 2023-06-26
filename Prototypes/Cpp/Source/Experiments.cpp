@@ -12023,12 +12023,18 @@ void plotZetaPotentialNumeric()
   //  functions. We just plot their Polya potentials as 3D surfaces. The function *must* be 
   //  analytic though, otherwise, no Polya potential exists and the idea therefore breaks down 
   //  (Q: what about isolated singularities like poles?).
-  // -The interpretation of thes plots would be as follows:
-  //  -A steep leftward facing cliff indicates high positive x-parts and therefore high positive 
-  //   real parts. A rightward facing cliff indicates high negative x- or real parts.
-  //  -A steep downward facing cliff indicates high positive y-parts and thereform high negative
-  //   imaginary parts. An upward facing cliff indicates high negative y- or high postive imaginary
-  //   parts.
+  // -The interpretation of these plots would be as follows:
+  //  -A steep leftward/west facing cliff indicates high positive x-parts and therefore high 
+  //   positive real parts. A rightward/east facing cliff indicates high negative x- or real parts.
+  //  -A steep downward/south facing cliff indicates high positive y-parts and thereform high 
+  //   negative imaginary parts. An upward/north facing cliff indicates high negative y- or high 
+  //   postive imaginary parts.
+  //  -When we look from above and draw contour lines, they can help with the interpretation, too:
+  //   a vertical contour means that the imaginary part of w is zero at that z. A horizontal 
+  //   contour means that the real part of w is zero. The density of the horizontal and/or vertical
+  //   packing of the lines indicates the steepness in x- and y-direction, iff the contours are 
+  //   drawn on equidistant height (which is a good reason to indeed use equidistant heights for 
+  //   the countour levels).
   // -We could use RGB for re, im, pot (real, imaginary, potential)
   // -Data for multifunctions must be suitably unwrapped before appyling the numeric potential 
   //  finder. Maybe that problem can be cricumvented when we use analytic expressions for Polya
@@ -12217,7 +12223,7 @@ void testPotentialPlotter()
   // -Reduce the desired precision and/or
   // -Give the iteration a maxNumIterations parameter. 
   // -Try other iterations like SOR. That probably won't help with the attainable accuracy but 
-  //  perhaps with convergence speed....done -> yes, it helps to improve convergence
+  //  perhaps with convergence speed....done -> yes, it helps to improve convergence speed
 
 
 
@@ -12241,54 +12247,11 @@ void testPotentialPlotter()
   //  with poles such as 1/z, log(z), etc.
   // -All these extra options do indeed seem to justify an implementation as class with
   //  setters. We don't want to pass all these options as function parameters.
-  // -Make an implemenation that uses analytic formalus to compute the Polya potential. Using 
+  // -Make an implemenation that uses analytic formulas to compute the Polya potential. Using 
   //  function evaluation together with numeric computation of the potnetial should only be a last
   //  resort solution, if formulas for analytic evaluation are not available or their evaluation 
   //  algos do not work in the region of interest. Compare the results of both ways to plot Polya
   //  potentials.
-
-  // Sage code for finding expressions for Polya vector fields and their potentials. In the example,
-  // we use w = f(z) = 1/z. For other functions, just change the "w = 1 / z" line:
-  //
-  // var("x y")
-  // assume(x, "real")
-  // assume(y, "real")
-  // z = x + I*y
-  // w = 1 / z               # function of interest
-  // u =  w.real() 
-  // v = -w.imag()
-  // U = integral(u, x)
-  // V = integral(v, y)
-  // u, v, U, V
-  //
-  // Results:
-  // 1/z:     (x/(x^2 + y^2), y/(x^2 + y^2), 1/2*log(x^2 + y^2), 1/2*log(x^2 + y^2))
-  // z^2:     (x^2 - y^2, -2*x*y, 1/3*x^3 - x*y^2, -x*y^2)
-  // z^3:     (x^3 - 3*x*y^2, -3*x^2*y + y^3, 1/4*x^4 - 3/2*x^2*y^2, -3/2*x^2*y^2 + 1/4*y^4)
-  // z^4:     (x^4 - 6*x^2*y^2 + y^4, -4*x^3*y + 4*x*y^3, 
-  //          1/5*x^5 - 2*x^3*y^2 + x*y^4, -2*x^3*y^2 + x*y^4)
-  // 1/z^2:   ((x^2 - y^2)/(4*x^2*y^2 + (x^2 - y^2)^2), 2*x*y/(4*x^2*y^2 + (x^2 - y^2)^2),
-  //           -x/(x^2 + y^2), -x/(x^2 + y^2))
-  // 1/z^3:   ((x^3 - 3*x*y^2)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2),
-  //           (3*x^2*y - y^3)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2),
-  //          -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4),
-  //          -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4))
-  // exp(z):  (cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
-  // sin(z):  (cosh(y)*sin(x), -cos(x)*sinh(y), -cos(x)*cosh(y), -cos(x)*cosh(y))
-  // cos(z):  (cos(x)*cosh(y), sin(x)*sinh(y), cosh(y)*sin(x), cosh(y)*sin(x))
-  // tan(z):  (sin(2*x)/(cos(2*x) + cosh(2*y)), -sinh(2*y)/(cos(2*x) + cosh(2*y)),
-  //          -1/2*log(cos(2*x) + cosh(2*y)),-1/2*log(cos(2*x) + cosh(2*y)))
-
-  // sinh(z): (cos(y)*sinh(x), -cosh(x)*sin(y), cos(y)*cosh(x), cos(y)*cosh(x)) 
-  // cosh(z): (cos(y)*cosh(x), -sin(y)*sinh(x), cos(y)*sinh(x), cos(y)*sinh(x))
-  // tanh(z): (sinh(2*x)/(cos(2*y) + cosh(2*x)), -sin(2*y)/(cos(2*y) + cosh(2*x)),
-  //          1/2*log(cos(2*y) + cosh(2*x)), 1/2*log(cos(2*y) + cosh(2*x)))
-  //
-  // ToDo: 
-  // -Do also z^p for geneal p (real or complex)
-  // -Trying to let sage assume that p is a positive integer doesn't seem to change anything. In 
-  //  that case, we get polynomials with coeffs obtained from binomial coeffs. See zeta paper.
-  // -Try to derive a similar expression for 1 / z^n
 }
 
 

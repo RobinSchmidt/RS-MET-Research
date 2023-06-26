@@ -7977,10 +7977,12 @@ public:
   static T    reciprocal(T x, T y) { return 0.5 * log(x*x + y*y); }
   static void reciprocal(T x, T y, T* u, T * v) { T s = 1/(x*x + y*y); *u = s * x; *v = s * y; }
 
-
-
+  // f(z) = z^2
+  static T    square(T x, T y) { return x*x*x/3 - x*y*y; } 
+  static void square(T x, T y, T* u, T* v) { *u = x*x - y*y; *v = -2*x*y; }
 
 };
+// Needs tests.
 
 // The expressions were found with SageMath using the code below. In the example, we use 
 // w = f(z) = 1/z. For other functions, just change the "w = 1 / z" line. In cases where you get
@@ -8077,6 +8079,9 @@ public:
   // \name Plotting
 
 
+  rsMatrix<T> estimatePolyaPotential(std::function<Complex (Complex z)> f, 
+    T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
+
 
   /** Under construction */
   rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
@@ -8111,6 +8116,7 @@ protected:
 //  that further? ..Oh wait - no - a single image cannot be decomposed like that. We need a vector 
 //  field input, i.e. a pair of images.
 
+// Move to somewhere else:
 template<class T>
 rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 {
@@ -8131,11 +8137,11 @@ rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 }
 
 template<class T>
-rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
+rsMatrix<T> rsPotentialPlotter<T>::estimatePolyaPotential(
   std::function<Complex (Complex z)> f,
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
-  // Create Polya vector field data (maybe factor out)
+  // Create Polya vector field data:
   rsMatrix<T> u(Nx, Ny), v(Nx, Ny);
   T dx = (xMax - xMin) / Nx;
   T dy = (yMax - yMin) / Ny;
@@ -8155,6 +8161,49 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
   //plotMatrix(P, true);  // for test
   //plotMatrix(P, false);  // for test
+
+  return P;
+}
+
+
+template<class T>
+rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
+  std::function<Complex (Complex z)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+{
+  // Factor out into findPolyaPotentialNumerically:
+
+  /*
+  // Create Polya vector field data:
+  rsMatrix<T> u(Nx, Ny), v(Nx, Ny);
+  T dx = (xMax - xMin) / Nx;
+  T dy = (yMax - yMin) / Ny;
+  for(int j = 0; j < Ny; j++) {
+    T y = yMin + j*dy;
+    for(int i = 0; i < Nx; i++) {
+      T x = xMin + i*dx;
+      Complex z(x, y);
+      Complex w = f(z);
+      u(i, j) =  real(w);
+      v(i, j) = -imag(w); }}
+
+  // Create the Polya potential from the Polya vector field: 
+  rsMatrixView<T> um(Nx, Ny, u.getDataPointer());
+  rsMatrixView<T> vm(Nx, Ny, v.getDataPointer());
+  //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
+  rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
+  //plotMatrix(P, true);  // for test
+  //plotMatrix(P, false);  // for test
+  */
+
+
+  rsMatrix<T> P = estimatePolyaPotential(f, xMin, xMax, yMin, yMax, Nx, Ny);
+
+
+  // Factor out into createImage. Should take the matrix as input (and maybe some additional 
+  // post-processing params like the scale factors and number of contours) and return the image
+  // as output:
+
 
 
   // Convert matrix P to image and post-process it by scaling it up to the final resolution and

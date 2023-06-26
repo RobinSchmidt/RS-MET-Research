@@ -12165,22 +12165,46 @@ void testPotentialPlotter()
     Real xMin, Real xMax, Real yMin, Real yMax, 
     int width, int height, const char *path)
   {
-    rsImage<Real> img;
+    //rsImage<Real> img;
     rsPolyaPotentialPlotter<Real> plt;
-
     plt.setImageScaling(scaleX, scaleY);
     // ToDo: set the plotter up with thigs like
     // -setNumContourLines(8)
     // -setMarkStationaryPoints(true)
 
-    img = plt.getPolyaPotentialImage(f, xMin, xMax, yMin, yMax, width, height);
+    rsImage<Real> img = plt.getPolyaPotentialImage(f, xMin, xMax, yMin, yMax, width, height);
     writeImageToFilePPM(img, path);
   };
   // The N in plotN stands for "numerical". The intention is to add a function plotA, that uses
   // analytical evaluation.
 
 
+  auto plotA = [&](std::function<Real(Real x, Real y)> f,
+    Real xMin, Real xMax, Real yMin, Real yMax,
+    int width, int height, const char* path)
+  {
+    rsHeightMapPlotter<Real> plt;
+    //plt.setImageScaling(scaleX, scaleY); // No! analytic evaluations don't need scaling
+
+    rsImage<Real> img = plt.getHeightMapImage(f, xMin, xMax, yMin, yMax, width, height);
+    // Is just noise! May it's not normalized? We need the post-processing!
+
+
+    writeImageToFilePPM(img, path);
+  };
+
+
+
   using C = Complex;
+  using R = Real;
+
+  using PE = rsPolyaPotentialEvaluator<Real>;
+
+  plotA([](R x, R y) { return PE::square(x, y); }, -1, +1, -1, +1, 100, 100, 
+    "PolyPotential_zSquaredA.ppm");
+
+
+
 
   // With this example, I have taken some data for how many iterations the iterative solver needed
   // as function of the sor parameter (by inspecting "its" in rsNumericPotentialSparse() at the 
@@ -12228,9 +12252,7 @@ void testPotentialPlotter()
   plotN([](C z) { return log(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Log.ppm");
   // doesn't converge
 
-
   //img = plt.getPolyaPotentialImage([](C z) { return pow(z, 1./3.); }, -1, +1, -1, +1, 32, 32);
-
 
   //img = plt.getPolyaPotentialImage([](C z) { return sin(z); }, -2*PI, +2*PI, -2*PI, +2*PI, 101, 101);
   // Hangs because the Gauss-Seidel iteration is unable to attain the desired accuracy. The 

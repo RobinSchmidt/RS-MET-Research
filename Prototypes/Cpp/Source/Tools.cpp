@@ -8134,6 +8134,11 @@ public:
   etc. (ToDo: later we may also draw in the coordinate axes)   */
   rsImage<T> getHeightMapImage(const rsMatrix<T> z, T xMin, T xMax, T yMin, T yMax);
 
+
+  rsImage<T> getHeightMapImage(const std::function<T(T x, T y)>& f, 
+    T xMin, T xMax, T yMin, T yMax, int w, int h);
+
+
   // ToDo:
   // -Add a function that does the same thing but instead of taking a data matrix, it takes a 
   //  std::function<T(T, T)> with two inputs and one output. Eventually, we want to pass functions 
@@ -8175,6 +8180,20 @@ rsImage<T> rsHeightMapPlotter<T>::rsMatrixToImage(const rsMatrixView<T>& mat, bo
   //  coordinates, i.e. how we map between the two index pairs. At the moment, we interpret the
   //  row index of the matrix as x-coordinate in the image and the column index as y-coordinate. 
   //  That means, when looking at the matrix itself, it represents the transposed/rotated image.
+}
+template<class T>
+rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const std::function<T(T x, T y)>& f,
+  T xMin, T xMax, T yMin, T yMax, int w, int h)
+{
+  rsImage<T> img(w, h);
+  T dx = xMin + (xMax - xMin) / w;
+  T dy = yMin + (yMax - yMin) / h;
+  for(int j = 0; j < h; j++) {
+    T y = yMin + j*dy;
+    for(int i = 0; i < w; i++) {
+      T x = xMin + i*dx;
+      img(i, j) = f(x, y); }}
+  return img;
 }
 
 template<class T>

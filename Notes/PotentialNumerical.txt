@@ -163,6 +163,28 @@ Notes:
  Cauchy-Riemann equations where the derivatives are replaced by finite differences.
 -I think, the same approach can be applied to 3D problems, too. Constructing the matrices might be
  even more tedious, though.
+-I think, when the original vector field u,v was not a gradient field in the first place, then the 
+ result produced by this algorithm will be some scalar field whose gradient approximates our 
+ original vector field in some least-squares sense? It will be the best (numerically) curl-free 
+ approximation to our original field and and subtracting it from our original field will give us
+ the pure curl component?
+-Could we produce the pure curl component directly more directly by using a suitable ansatz 
+ involving differences of numerical partial derivatives? Could we also produce a pure divergence 
+ component by a similar ansatz? When trying this, be careful to not confuse "curl component" and 
+ "divergence component" (which are both vector fields) with the curl and divergence themselves 
+ (which are both scalar fields in 2D - in 3D, curl is also a vector field but here we are in 2D). 
+ By "divergence component", I mean the component of the vector field that contains only its
+ divergence.
+-The goal is to split any vector field F(x,y) into 3 components: F(x,y) = C(x,y) + D(x,y) + R(x,y) 
+ where C is the pure curl, D the pure divergence and R everything else (the residual).
+-A vector field that is obtained as gradient of a scalar field is guaranteed to be curl-free but it 
+ may have divergence.
+-To extract the divergence D from F, maybe we need to solve the problem (F-D)*(F-D) = min, where *
+ means the dot product. But that would jsut produce D=F. I think, we need to apply constraints to D.
+-Maybe a general constrained least-squares problem of the form (A*x-b)^2 = (A*x-b)^T (A*x-b) = min
+ subject to a set of constraints C*x = d can be solved as (P*y-q)^T (P*y-q) = min where 
+ P = vertcat(A,C), q = vertcat(b,d), y = vertcat(x,l) where y is the unknown vector to be computed 
+ and its upper part is our desired solution and its lower part l are the Lagrange multipliers?
  
  
 ToDo: 
@@ -217,7 +239,11 @@ The answer suggests to make an ansatz based on the formula for trapezoidal integ
 similar to my idea of the ansatz using a central difference approximation
 
 ----------------------------------------------------------------------------------------------------
-Other Idea (may be obsolete because it doesn't work?):
+
+
+----------------------------------------------------------------------------------------------------
+Other idea for an algrithm to find the potential that avoids the big linear system. Under 
+construction. May turn out to be not workable.
 
 -Integrate u with respect to x using trapezoidal integration row-wise. Call the result U.
 -Integrate v with respect to y using trapezoidal integration column-wise. Call the result V.
@@ -297,4 +323,4 @@ reconstruct it, right? Or wrong? So, we would get U_r = 5xy + f(y), where the in
 "reconstructed". We could do the same thing with V wrt x.
 
 ...not sure, if any of this is workable...
-----------------------------------------------------------------------------------------------------
+

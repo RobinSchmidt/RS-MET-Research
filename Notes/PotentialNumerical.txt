@@ -290,8 +290,8 @@ the actual f(y) and/or g(x) was.
   
 Solve 1  
 
-...hmm...however we spin it, we don't seem to get enough equations. Maybe we can obtain more 
-equations based on directional derivatives into the diagonal directions? Maybe something like
-
-  U =
-
+...hmm...however we spin it, we don't seem to get enough equations. ...unless maybe we also 
+integrate u wrt x *and* y and also v wrt x and y. The common terms in both integrals should be 
+equal. Or differentiate U wrt y and V wrt x and try to work out something from this? Maybe we can 
+obtain more equations based on directional derivatives into the diagonal directions involving x and 
+y? 

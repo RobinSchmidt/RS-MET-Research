@@ -12276,7 +12276,13 @@ void testPotentialPlotter()
   // exp(z):  (cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
   // sin(z):  (cosh(y)*sin(x), -cos(x)*sinh(y), -cos(x)*cosh(y), -cos(x)*cosh(y))
   // cos(z):  (cos(x)*cosh(y), sin(x)*sinh(y), cosh(y)*sin(x), cosh(y)*sin(x))
-  //
+  // tan(z):  (sin(2*x)/(cos(2*x) + cosh(2*y)), -sinh(2*y)/(cos(2*x) + cosh(2*y)),
+  //          -1/2*log(cos(2*x) + cosh(2*y)),-1/2*log(cos(2*x) + cosh(2*y)))
+
+  // sinh(z): (cos(y)*sinh(x), -cosh(x)*sin(y), cos(y)*cosh(x), cos(y)*cosh(x)) 
+  // cosh(z): (cos(y)*cosh(x), -sin(y)*sinh(x), cos(y)*sinh(x), cos(y)*sinh(x))
+  // tanh(z): (sinh(2*x)/(cos(2*y) + cosh(2*x)), -sin(2*y)/(cos(2*y) + cosh(2*x)),
+  //          1/2*log(cos(2*y) + cosh(2*x)), 1/2*log(cos(2*y) + cosh(2*x)))
   //
   // ToDo: 
   // -Do also z^p for geneal p (real or complex)

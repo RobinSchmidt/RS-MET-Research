@@ -7855,6 +7855,11 @@ void rsHelmholtzDecomposition(
 //  Can we split it further into curl and div by making an appropriate ansatz using numerical 
 //  differentiation formuals?
 
+// -Maybe wa can split an arbitrary vector field into 3 components: curl, div, rest. I'm not yet 
+//  sure how to do that, though, I think, via the potential, we can split off a component that is
+//  both curl-free and divergence-free. The residual would be curl + divergence. But could we 
+//  split that further? 
+
 
 // Another idea would be to use the same idea to reconstruct a harmonic conjugate of a given U or V
 // numerically (I think, that's what it is called what we are doing here. Verify that!): Assume, we 
@@ -7958,7 +7963,6 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
   rsLinearAlgebraNew::solve(M, p, w);       // Invoke the linear system solver.
   return P;
 }
-
 
 //=================================================================================================
 
@@ -8069,7 +8073,6 @@ public:
 //  that case, we get polynomials with coeffs obtained from binomial coeffs. See zeta paper.
 // -Try to derive a similar expression for 1 / z^n
 
-
 template<class T>
 rsMatrix<T> rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
   std::function<Complex (Complex z)> f,
@@ -8098,29 +8101,10 @@ rsMatrix<T> rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
 
   return P;
 }
-// Maybe move this into class rsPolyaPotentialEvaluator. It fits better into this. Maybe the class
-// rsPotentialPlotter can then be renamed into something more general like rsFunctionPlotter2D, 
-// rsHeightMapPlotter, rsTerrainPlotter, rsTopologicalMapPlotter or something. It should then be 
-// independent of the rsPolyaPotentialEvaluator. The member function getPolyaPotentialImage (which 
-// will introduce such a dependency) could be turned either into a free function or we make a class 
-// rsPolyaPotentialPlotter that derives from rsHeightMapPlotter and uses an  
-// rsPolyaPotentialEvaluator, where needed. Yes rsHieghtMapPlotter seems like a good name for such 
-// a class. The term "height map" is used commonly for this kind of thing:
-// https://en.wikipedia.org/wiki/Heightmap
-
 
 //=================================================================================================
 
-/** A class for plotting potentials of vector fields. Can be used to plot Polya potentials of 
-complex functions as well. 
-
-just a stub st the moment
-
-maybe get rid of the class and let getPolyaPotentialImage just be a free function.
-
-...TBC... 
-
-*/
+/** A class for plotting height maps ...TBC...  */
 
 template<class T>
 class rsHeightMapPlotter
@@ -8128,14 +8112,8 @@ class rsHeightMapPlotter
 
 public:
 
-  //rsImageContourPlotter
-
-  using Complex = std::complex<T>;
-
-
   //-----------------------------------------------------------------------------------------------
   // \name Setup
-
 
   /** Sets scaling factors for the final image to be produced. The idea is that the actual 
   evaluation of the potential might have to done on a grid that is coarser than the final image due
@@ -8145,36 +8123,11 @@ public:
   void setImageScaling(int newScaleX, int newScaleY) { scaleX = newScaleX; scaleY = newScaleY; }
 
 
-
   //-----------------------------------------------------------------------------------------------
   // \name Plotting
 
-
-
-
   rsImage<T> getHeightMapImage(const rsMatrix<T> potential, 
     T xMin, T xMax, T yMin, T yMax);
-  // ToDo:
-  // -Move into a class rsHeightMapPlotter.
-  // -Rename to getHeightMapImage
-
-
-  /** Under construction */
-  rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
-    T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
-  // ToDo:
-  // -Move into a class rsPolyaPotentialPlotter
-  // -This class should be a subclass of rsHeightMapPlotter and use rsPolyaPotentialEvaluator where
-  //  needed
-
-
-
-  //void drawPotential(const rsImage<T>& u, const rsImage<T>& v, rsImage<T>& target); 
-
-
-  // ToDo:
-  // steColorMap
-
 
 protected:
 
@@ -8189,13 +8142,9 @@ protected:
 //
 // ToDo:
 // -see rsImageContourPlotter for API design
-// -Maybe use it to split an arbitrary image int 3 components: curl, div, rest. I'm not yet sure
-//  how to do that, though, I think, via the potential, we can split off a component that is both 
-//  curl-free and divergence-free. The residual would be curl + divergence. But could we split 
-//  that further? ..Oh wait - no - a single image cannot be decomposed like that. We need a vector 
-//  field input, i.e. a pair of images.
 
-// Move to somewhere else or make it a member function of rsHeighMapPlotter:
+
+// Move to somewhere else or make it a member function of rsHeightMapPlotter:
 template<class T>
 rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
 {
@@ -8245,22 +8194,38 @@ rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const rsMatrix<T> P,
   // The xMin, ... parameters are not yet used here but maybe we can use them later to draw 
   // coordinate axes.
 }
-// rename to getHeightMapImage
+
+//=================================================================================================
+
+/** A class for plotting Polya potentials of complex functions. ...TBC...  */
 
 template<class T>
-rsImage<T> rsHeightMapPlotter<T>::getPolyaPotentialImage(
+class rsPolyaPotentialPlotter : public rsHeightMapPlotter<T>
+{
+
+public:
+
+  using Complex = std::complex<T>; 
+
+  /** Given a complex function w = f(z) and and ranges for the real and imaginary parts of the 
+  function argument (xMin, ...) and a number of samples for sampling the function along the real 
+  (x) and imaginary (y) axis, this function produces an image of the function's Polya vector 
+  field. tbc... */
+  rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
+    T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
+
+};
+
+template<class T>
+rsImage<T> rsPolyaPotentialPlotter<T>::getPolyaPotentialImage(
   std::function<Complex (Complex z)> f,
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
   rsMatrix<T> P = rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
-    f, xMin, xMax, yMin, yMax, Nx, Ny);                 // Find Polya potential numerically
-  return getHeightMapImage(P, xMin, xMax, yMin, yMax);  // Convert data to image and post-process
+    f, xMin, xMax, yMin, yMax, Nx, Ny);              // Find Polya potential numerically
+  return rsHeightMapPlotter<T>::getHeightMapImage(
+    P, xMin, xMax, yMin, yMax);                      // Convert data to image and post-process
 }
-
-
-
-
-
 
 
 

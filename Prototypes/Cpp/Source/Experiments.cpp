@@ -12157,7 +12157,7 @@ void testPotentialPlotter()
     int width, int height, const char *path)
   {
     rsImage<Real> img;
-    rsHeightMapPlotter<Real> plt;
+    rsPolyaPotentialPlotter<Real> plt;
 
     plt.setImageScaling(scaleX, scaleY);
     // ToDo: set the plotter up with thigs like

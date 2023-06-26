@@ -7810,6 +7810,17 @@ rsMatrix<T> rsNumericPotentialSparse(const rsMatrixView<T>& P_x, const rsMatrixV
 //  into the right hand side). The matrices are always the same and depend onyl on the size 
 //  (maybe shape) of the input matrices.
 // -Can we assemble MTM directly without resorting to the (expensive) matrix multiplication step?
+// -Maybe try to improve the convergence by implementing a multigrid method. Let's for example 
+//  assume the data to be originally on a 100x30 grid. First, downsample to a 64x16 grid (take 
+//  half-sizes and round to the next power of two). Then downsample these grids further to 
+//  32x8, 16x4, 8x2. This downsampling should use averaging of the 4 involved datapoints. Then 
+//  solve the 8x2 problem. Interpolate the solution to 16x4 and use that as initial guess to solve
+//  the 16x4 problem. Then use that (interpolated) solution as initial guess for the 32x8 problem,
+//  then for 64x16 problem. Finally interpolate the 64x16 problem to the original 30x100 grid
+//  and solve the problem there. The first decimation and last interpolation steps may be a bit 
+//  more complicated but as soon as we have grids with powers of 2, decimation and interpolation
+//  are easy.
+
 
 
 /** Under construction. Not yet tested */

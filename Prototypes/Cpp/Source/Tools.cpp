@@ -8082,8 +8082,13 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   //plotMatrix(P, true);  // for test
   //plotMatrix(P, false);  // for test
 
-  // Convert matrix P to image with normalization and return it:
+
+
+  // Convert matrix P to image and post-process that:
+
   rsImage<T> img = rsMatrixToImage(P, true);
+  if(scaleX > 1 || scaleY > 1)
+    img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
 
   // Plot contour lines (does not yet work well, therefore commented out):
   int numContourLines = 6;   // make member, give the user a setter for that

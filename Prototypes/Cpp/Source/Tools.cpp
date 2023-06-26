@@ -7960,6 +7960,28 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 }
 
 
+//=================================================================================================
+
+/** Class to evaluate the Polya vecor fields and Polya potentials for various functions. The 
+evaluation functions come in two flavors: One that takes two input parameters anr returns a value.
+That computes the potential. And one that takes two input parameters and two output parameters (by
+pointer). That computes the vector field. */
+
+template<class T>
+class rsPolyaPotentialEvaluator
+{
+
+public:
+
+  // f(z) = 1/z
+  static T    reciprocal(T x, T y) { return 0.5 * log(x*x + y*y); }
+  static void reciprocal(T x, T y, T* u, T * v) { T s = 1/(x*x + y*y); *u = s * x; *v = s * y; }
+
+
+  //  (x/(x^2 + y^2), y/(x^2 + y^2), 1/2*log(x^2 + y^2), 1/2*log(x^2 + y^2))
+
+};
+
 
 
 //=================================================================================================

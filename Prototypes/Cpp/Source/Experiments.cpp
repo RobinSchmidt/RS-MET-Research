@@ -12184,7 +12184,7 @@ void testPotentialPlotter()
   //plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 41, 101, "PolyaPotential_Exp.ppm");
 
   plot([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Sin.ppm");
-  // -Looks like -cos(x) * cosh(y). Verify analytically!
+  // -Looks like -cos(x) * cosh(y). Verify analytically! ...done: yep, is correct.
   // -Doesn't converge for -2*PI, +2*PI, -4, +4, 51, 21
 
   plot([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Cos.ppm");
@@ -12246,6 +12246,43 @@ void testPotentialPlotter()
   //  resort solution, if formulas for analytic evaluation are not available or their evaluation 
   //  algos do not work in the region of interest. Compare the results of both ways to plot Polya
   //  potentials.
+
+  // Sage code for finding expressions for Polya vector fields and their potentials. In the example,
+  // we use w = f(z) = 1/z. For other functions, just change the "w = 1 / z" line:
+  //
+  // var("x y")
+  // assume(x, "real")
+  // assume(y, "real")
+  // z = x + I*y
+  // w = 1 / z               # function of interest
+  // u =  w.real() 
+  // v = -w.imag()
+  // U = integral(u, x)
+  // V = integral(v, y)
+  // u, v, U, V
+  //
+  // Results:
+  // 1/z:     (x/(x^2 + y^2), y/(x^2 + y^2), 1/2*log(x^2 + y^2), 1/2*log(x^2 + y^2))
+  // z^2:     (x^2 - y^2, -2*x*y, 1/3*x^3 - x*y^2, -x*y^2)
+  // z^3:     (x^3 - 3*x*y^2, -3*x^2*y + y^3, 1/4*x^4 - 3/2*x^2*y^2, -3/2*x^2*y^2 + 1/4*y^4)
+  // z^4:     (x^4 - 6*x^2*y^2 + y^4, -4*x^3*y + 4*x*y^3, 
+  //          1/5*x^5 - 2*x^3*y^2 + x*y^4, -2*x^3*y^2 + x*y^4)
+  // 1/z^2:   ((x^2 - y^2)/(4*x^2*y^2 + (x^2 - y^2)^2), 2*x*y/(4*x^2*y^2 + (x^2 - y^2)^2),
+  //           -x/(x^2 + y^2), -x/(x^2 + y^2))
+  // 1/z^3:   ((x^3 - 3*x*y^2)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2),
+  //           (3*x^2*y - y^3)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2),
+  //          -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4),
+  //          -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4))
+  // exp(z):  (cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
+  // sin(z):  (cosh(y)*sin(x), -cos(x)*sinh(y), -cos(x)*cosh(y), -cos(x)*cosh(y))
+  // cos(z):  (cos(x)*cosh(y), sin(x)*sinh(y), cosh(y)*sin(x), cosh(y)*sin(x))
+  //
+  //
+  // ToDo: 
+  // -Do also z^p for geneal p (real or complex)
+  // -Trying to let sage assume that p is a positive integer doesn't seem to change anything. In 
+  //  that case, we get polynomials with coeffs obtained from binomial coeffs. See zeta paper.
+  // -Try to derive a similar expression for 1 / z^n
 }
 
 

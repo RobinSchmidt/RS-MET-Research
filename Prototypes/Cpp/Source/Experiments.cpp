@@ -12200,7 +12200,7 @@ void testPotentialPlotter()
 
   using PE = rsPolyaPotentialEvaluator<Real>;
 
-  plotA([](R x, R y) { return PE::square(x, y); }, -1, +1, -1, +1, 100, 100, 
+  plotA([](R x, R y) { return PE::square(x, y); }, -1, +1, -1, +1, 301, 301, 
     "PolyPotential_zSquaredA.ppm");
 
 

@@ -8205,8 +8205,8 @@ rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const std::function<T(T x, T
   T xMin, T xMax, T yMin, T yMax, int w, int h)
 {
   rsImage<T> img(w, h);
-  T dx = xMin + (xMax - xMin) / w;
-  T dy = yMin + (yMax - yMin) / h;
+  T dx = (xMax - xMin) / w;
+  T dy = (yMax - yMin) / h;
   for(int j = 0; j < h; j++) {
     T y = yMin + j*dy;
     for(int i = 0; i < w; i++) {

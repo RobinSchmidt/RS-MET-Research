@@ -8083,6 +8083,10 @@ public:
     T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
 
 
+  rsImage<T> getPotentialImage(const rsMatrix<T> potential, 
+    T xMin, T xMax, T yMin, T yMax);
+
+
   /** Under construction */
   rsImage<T> getPolyaPotentialImage(std::function<Complex (Complex z)> f, 
     T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
@@ -8164,48 +8168,18 @@ rsMatrix<T> rsPotentialPlotter<T>::estimatePolyaPotential(
 
   return P;
 }
-
+// Maybe move this into class rsPolyaPotentialEvaluator. It fits better into this. Maybe the class
+// rsPotentialPlotter can then be renamed into something more general like rsFunctionPlotter2D, 
+// rsHeightMapPlotter, rsTerrainPlotter, rsTopologicalMapPlotter or something. It should then be 
+// independent of the rsPolyaPotentialEvaluator. The member function getPolyaPotentialImage (which 
+// will introduce such a dependency) could be turned either into a free function or we make a class 
+// rsPolyaPotentialPlotter that derives from rsHeightMapPlotter and uses an  
+// rsPolyaPotentialEvaluator, where needed.
 
 template<class T>
-rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
-  std::function<Complex (Complex z)> f,
-  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+rsImage<T> rsPotentialPlotter<T>::getPotentialImage(const rsMatrix<T> P, 
+  T xMin, T xMax, T yMin, T yMax)
 {
-  // Factor out into findPolyaPotentialNumerically:
-
-  /*
-  // Create Polya vector field data:
-  rsMatrix<T> u(Nx, Ny), v(Nx, Ny);
-  T dx = (xMax - xMin) / Nx;
-  T dy = (yMax - yMin) / Ny;
-  for(int j = 0; j < Ny; j++) {
-    T y = yMin + j*dy;
-    for(int i = 0; i < Nx; i++) {
-      T x = xMin + i*dx;
-      Complex z(x, y);
-      Complex w = f(z);
-      u(i, j) =  real(w);
-      v(i, j) = -imag(w); }}
-
-  // Create the Polya potential from the Polya vector field: 
-  rsMatrixView<T> um(Nx, Ny, u.getDataPointer());
-  rsMatrixView<T> vm(Nx, Ny, v.getDataPointer());
-  //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
-  rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
-  //plotMatrix(P, true);  // for test
-  //plotMatrix(P, false);  // for test
-  */
-
-
-  rsMatrix<T> P = estimatePolyaPotential(f, xMin, xMax, yMin, yMax, Nx, Ny);
-
-
-  // Factor out into createImage. Should take the matrix as input (and maybe some additional 
-  // post-processing params like the scale factors and number of contours) and return the image
-  // as output:
-
-
-
   // Convert matrix P to image and post-process it by scaling it up to the final resolution and
   // drawing in some contour lines:
   rsImage<T> img = rsMatrixToImage(P, true);
@@ -8226,6 +8200,50 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   // avoid the second normalization and also look better overall.
 
   return img;
+
+  // Notes:
+  // The xMin, ... parameters are not yet used here but maybe we can use them later to draw 
+  // coordinate axes.
+}
+
+template<class T>
+rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
+  std::function<Complex (Complex z)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+{
+  // Find Polya potential numerically:
+  rsMatrix<T> P = estimatePolyaPotential(f, xMin, xMax, yMin, yMax, Nx, Ny);
+
+
+  // Factor out into createImage. Should take the matrix as input (and maybe some additional 
+  // post-processing params like the scale factors and number of contours) and return the image
+  // as output:
+
+  return getPotentialImage(P, xMin, xMax, yMin, yMax);
+
+
+  /*
+  // Convert matrix P to image and post-process it by scaling it up to the final resolution and
+  // drawing in some contour lines:
+  rsImage<T> img = rsMatrixToImage(P, true);
+  if(scaleX > 1 || scaleY > 1)
+    img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
+
+  // Plot contour lines:
+  int numContourLines = 6;   // make member, give the user a setter for that
+  rsImageContourPlotter<T, T> cp;
+    rsImage<T> tmp = img;
+  for(int i = 0; i < numContourLines; i++)
+  {
+    T level = T(i) / T(numContourLines);
+    cp.drawContour(tmp, level, img, T(1), true);
+  }
+  rsImageProcessor<T>::normalize(img);  // May need new normalization after adding contours
+  // Maybe in the contour plotter, use a saturating addition when drawing in the pixels. That could 
+  // avoid the second normalization and also look better overall.
+
+  return img;
+  */
 }
 
 

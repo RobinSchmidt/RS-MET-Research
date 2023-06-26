@@ -7974,6 +7974,9 @@ class rsPolyaPotentialEvaluator
 
 public:
 
+  using Complex = std::complex<T>;
+
+
   // f(z) = 1/z
   static T    reciprocal(T x, T y) { return 0.5 * log(x*x + y*y); }
   static void reciprocal(T x, T y, T* u, T * v) { T s = 1/(x*x + y*y); *u = s * x; *v = s * y; }
@@ -7983,9 +7986,28 @@ public:
   static void square(T x, T y, T* u, T* v) { *u = x*x - y*y; *v = -2*x*y; }
 
 
-
-
-
+  /** Given a complex function w = f(z) where f is assumed to be holomorphic, this function 
+  produces a data matrix of the Polya potential of this function by means of function evaluation 
+  and numerical estimation of a potential for the so produced Polya vector field data. The 
+  estimation algorithm is rather expensive, works only for smallish numbers for the number of 
+  samples (say, something like numSamplesX * numSamplesY = 1000, like 20x50 or 30x30) such that for
+  producing larger sized images, it has to be used in conjunction with upsampling. Using it on a
+  full resolution grid of, say, 500x500 pixels is still out of the question. It is also still 
+  somewhat unreliable with regard to convergence and the results are only approximate anyway. So, 
+  if it is at all possible to produce the Polya potential data by an analytic expression, it's 
+  better to do it that way. This function should be used only as last resort if it's not reasonably
+  possible to find an analytic solution. The function f needs to be holomorphic because otherwise, 
+  a Polya potential does not even exist. */
+  static rsMatrix<T> estimatePolyaPotential(std::function<Complex (Complex z)> f, 
+    T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
+  // ToDo: 
+  // -[Done] Move into class rsPolyaPotentialEvaluator. 
+  // -Handle meromorphic functions (= mostly holomorpic but with isolated poles). I think, We 
+  //  could do this by introducing upper and lower clipping thresholds in the evaluation of the 
+  //  Polya vector field to clip/tame the infinities at the poles. The estimated Polya potential 
+  //  will then be wrong in these regions. I think, it may look linear there because the clipped 
+  //  vector field is then constant there. But depends on how exactly we clip. We could simply clip 
+  //  real and imag seperately but we could also clip the magnitude and retain the phase.
 
 };
 // Needs tests.
@@ -8046,6 +8068,47 @@ public:
 // -Try to derive a similar expression for 1 / z^n
 
 
+template<class T>
+rsMatrix<T> rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
+  std::function<Complex (Complex z)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+{
+  // Create Polya vector field data (maybe factor out):
+  rsMatrix<T> u(Nx, Ny), v(Nx, Ny);
+  T dx = (xMax - xMin) / Nx;
+  T dy = (yMax - yMin) / Ny;
+  for(int j = 0; j < Ny; j++) {
+    T y = yMin + j*dy;
+    for(int i = 0; i < Nx; i++) {
+      T x = xMin + i*dx;
+      Complex z(x, y);
+      Complex w = f(z);
+      u(i, j) =  real(w);
+      v(i, j) = -imag(w); }}
+
+  // Create the Polya potential from the Polya vector field: 
+  rsMatrixView<T> um(Nx, Ny, u.getDataPointer());
+  rsMatrixView<T> vm(Nx, Ny, v.getDataPointer());
+  //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
+  rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
+  //plotMatrix(P, true);  // for test
+  //plotMatrix(P, false);  // for test
+
+  return P;
+}
+// Maybe move this into class rsPolyaPotentialEvaluator. It fits better into this. Maybe the class
+// rsPotentialPlotter can then be renamed into something more general like rsFunctionPlotter2D, 
+// rsHeightMapPlotter, rsTerrainPlotter, rsTopologicalMapPlotter or something. It should then be 
+// independent of the rsPolyaPotentialEvaluator. The member function getPolyaPotentialImage (which 
+// will introduce such a dependency) could be turned either into a free function or we make a class 
+// rsPolyaPotentialPlotter that derives from rsHeightMapPlotter and uses an  
+// rsPolyaPotentialEvaluator, where needed. Yes rsHieghtMapPlotter seems like a good name for such 
+// a class. The term "height map" is used commonly for this kind of thing:
+// https://en.wikipedia.org/wiki/Heightmap
+
+
+
+
 //=================================================================================================
 
 /** A class for plotting potentials of vector fields. Can be used to plot Polya potentials of 
@@ -8087,28 +8150,6 @@ public:
   // \name Plotting
 
 
-  /** Given a complex function w = f(z) where f is assumed to be holomorphic, this function 
-  produces a data matrix of the Polya potential of this function by means of function evaluation 
-  and numerical estimation of a potential for the so produced Polya vector field data. The 
-  estimation algorithm is rather expensive, works only for smallish numbers for the number of 
-  samples (say, something like numSamplesX * numSamplesY = 1000, like 20x50 or 30x30) such that for
-  producing larger sized images, it has to be used in conjunction with upsampling. Using it on a
-  full resolution grid of, say, 500x500 pixels is still out of the question. It is also still 
-  somewhat unreliable with regard to convergence and the results are only approximate anyway. So, 
-  if it is at all possible to produce the Polya potential data by an analytic expression, it's 
-  better to do it that way. This function should be used only as last resort if it's not reasonably
-  possible to find an analytic solution. The function f needs to be holomorphic because otherwise, 
-  a Polya potential does not even exist. */
-  rsMatrix<T> estimatePolyaPotential(std::function<Complex (Complex z)> f, 
-    T xMin, T xMax, T yMin, T yMax, int numSamplesX, int numSamplesY);
-  // ToDo: 
-  // -Move into class rsPolyaPotentialEvaluator.
-  // -Handle meromorphic functions (= mostly holomorpic but with isolated poles). I think, We 
-  //  could do this by introducing upper and lower clipping thresholds in the evaluation of the 
-  //  Polya vector field to clip/tame the infinities at the poles. The estimated Polya potential 
-  //  will then be wrong in these regions. I think, it may look linear there because the clipped 
-  //  vector field is then constant there. But depends on how exactly we clip. We could simply clip 
-  //  real and imag seperately but we could also clip the magnitude and retain the phase.
 
 
   rsImage<T> getPotentialImage(const rsMatrix<T> potential, 
@@ -8174,43 +8215,7 @@ rsImage<T> rsMatrixToImage(const rsMatrixView<T>& mat, bool normalize)
   //  That means, when looking at the matrix itself, it represents the transposed/rotated image.
 }
 
-template<class T>
-rsMatrix<T> rsPotentialPlotter<T>::estimatePolyaPotential(
-  std::function<Complex (Complex z)> f,
-  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
-{
-  // Create Polya vector field data:
-  rsMatrix<T> u(Nx, Ny), v(Nx, Ny);
-  T dx = (xMax - xMin) / Nx;
-  T dy = (yMax - yMin) / Ny;
-  for(int j = 0; j < Ny; j++) {
-    T y = yMin + j*dy;
-    for(int i = 0; i < Nx; i++) {
-      T x = xMin + i*dx;
-      Complex z(x, y);
-      Complex w = f(z);
-      u(i, j) =  real(w);
-      v(i, j) = -imag(w); }}
 
-  // Create the Polya potential from the Polya vector field: 
-  rsMatrixView<T> um(Nx, Ny, u.getDataPointer());
-  rsMatrixView<T> vm(Nx, Ny, v.getDataPointer());
-  //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
-  rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
-  //plotMatrix(P, true);  // for test
-  //plotMatrix(P, false);  // for test
-
-  return P;
-}
-// Maybe move this into class rsPolyaPotentialEvaluator. It fits better into this. Maybe the class
-// rsPotentialPlotter can then be renamed into something more general like rsFunctionPlotter2D, 
-// rsHeightMapPlotter, rsTerrainPlotter, rsTopologicalMapPlotter or something. It should then be 
-// independent of the rsPolyaPotentialEvaluator. The member function getPolyaPotentialImage (which 
-// will introduce such a dependency) could be turned either into a free function or we make a class 
-// rsPolyaPotentialPlotter that derives from rsHeightMapPlotter and uses an  
-// rsPolyaPotentialEvaluator, where needed. Yes rsHieghtMapPlotter seems like a good name for such 
-// a class. The term "height map" is used commonly for this kind of thing:
-// https://en.wikipedia.org/wiki/Heightmap
 
 template<class T>
 rsImage<T> rsPotentialPlotter<T>::getPotentialImage(const rsMatrix<T> P, 
@@ -8248,8 +8253,9 @@ rsImage<T> rsPotentialPlotter<T>::getPolyaPotentialImage(
   std::function<Complex (Complex z)> f,
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
-  rsMatrix<T> P = estimatePolyaPotential(f, xMin, xMax, yMin, yMax, Nx, Ny);  // Find Polya potential numerically:
-  return getPotentialImage(P, xMin, xMax, yMin, yMax);
+  rsMatrix<T> P = rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
+    f, xMin, xMax, yMin, yMax, Nx, Ny);                 // Find Polya potential numerically
+  return getPotentialImage(P, xMin, xMax, yMin, yMax);  // Convert data to image and post-process
 }
 
 /*

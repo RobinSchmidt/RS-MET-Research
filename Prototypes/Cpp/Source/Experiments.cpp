@@ -12154,8 +12154,8 @@ void testPotentialPlotter()
   using Real    = float;
   using Complex = std::complex<Real>;
 
-  int scaleX = 20;
-  int scaleY = 20;
+  //int scaleX = 20;
+  //int scaleY = 20;
 
 
 
@@ -12165,9 +12165,11 @@ void testPotentialPlotter()
     Real xMin, Real xMax, Real yMin, Real yMax, 
     int width, int height, const char *path)
   {
+
+
     //rsImage<Real> img;
     rsPolyaPotentialPlotter<Real> plt;
-    plt.setImageScaling(scaleX, scaleY);
+    plt.setImageScaling(20, 20);
     // ToDo: set the plotter up with thigs like
     // -setNumContourLines(8)
     // -setMarkStationaryPoints(true)
@@ -12187,9 +12189,6 @@ void testPotentialPlotter()
     //plt.setImageScaling(scaleX, scaleY); // No! analytic evaluations don't need scaling
 
     rsImage<Real> img = plt.getHeightMapImage(f, xMin, xMax, yMin, yMax, width, height);
-    // Is just noise! May it's not normalized? We need the post-processing!
-
-
     writeImageToFilePPM(img, path);
   };
 
@@ -12223,25 +12222,25 @@ void testPotentialPlotter()
   // N:  3148 1791 1483 1164 825 450 FAIL
 
 
-  plotN([](C z) { return z*z;   }, -1, +1, -1, +1, 31, 31, "PolyPotential_zSquared.ppm");
-  plotN([](C z) { return z*z*z; }, -1, +1, -1, +1, 31, 31, "PolyPotential_zCubed.ppm");
+  plotN([](C z) { return z*z;   }, -1, +1, -1, +1, 31, 31, "PolyPotential_zSquaredN.ppm");
+  plotN([](C z) { return z*z*z; }, -1, +1, -1, +1, 31, 31, "PolyPotential_zCubedN.ppm");
 
-  plotN([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Exp.ppm");
+  plotN([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_ExpN.ppm");
   //plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 41, 101, "PolyaPotential_Exp.ppm");
 
-  plotN([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Sin.ppm");
+  plotN([](C z) { return sin(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_SinN.ppm");
   // -Looks like -cos(x) * cosh(y). Verify analytically! ...done: yep, is correct.
   // -Doesn't converge for -2*PI, +2*PI, -4, +4, 51, 21
 
-  plotN([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_Cos.ppm");
+  plotN([](C z) { return cos(z); }, -2*PI, +2*PI, -2, +2, 51, 21, "PolyaPotential_CosN.ppm");
   // -Looks like sin(x) * cosh(y)
 
-  plotN([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51, "PolyaPotential_Sinh.ppm");
+  plotN([](C z) { return sinh(z); }, -2, +2, -2*PI, +2*PI, 21, 51, "PolyaPotential_SinhN.ppm");
   // cos(y) * cosh(x)
 
 
-  plotN([](C z) { return sqrt(z);     }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Sqrt.ppm");
-  plotN([](C z) { return pow(z, 1.3); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_Cbrt.ppm");
+  plotN([](C z) { return sqrt(z);     }, -1, +1, -1, +1, 31, 31, "PolyaPotential_SqrtN.ppm");
+  plotN([](C z) { return pow(z, 1.3); }, -1, +1, -1, +1, 31, 31, "PolyaPotential_CbrtN.ppm");
   // -Both have a discontinuity in the derivative along branch cut. It creates ripples in the 
   //  y-direction through the data in the produced P.
   // -Maybe the ripple could be reduced by using a higher order ansatz? But maybe that could make
@@ -12250,7 +12249,7 @@ void testPotentialPlotter()
   //  exactly *on* the branch cut may help to get rid of the ripple. But that doesn't seem to 
   //  make a difference
 
-  plotN([](C z) { return log(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Log.ppm");
+  plotN([](C z) { return log(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_LogN.ppm");
   // doesn't converge
 
   //img = plt.getPolyaPotentialImage([](C z) { return pow(z, 1./3.); }, -1, +1, -1, +1, 32, 32);

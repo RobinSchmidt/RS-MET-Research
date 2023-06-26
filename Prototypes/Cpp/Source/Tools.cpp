@@ -8217,6 +8217,11 @@ rsImage<T> rsHeightMapPlotter<T>::getHeightMapImage(const rsMatrix<T> P,
   // Convert matrix P to image and post-process it by scaling it up to the final resolution and
   // drawing in some contour lines:
   rsImage<T> img = rsMatrixToImage(P, true);
+
+
+  // Factor out into into postProcessImage(img, xMin, ...):
+
+
   if(scaleX > 1 || scaleY > 1)
     img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
 

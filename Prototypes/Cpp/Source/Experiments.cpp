@@ -12204,6 +12204,10 @@ void testPotentialPlotter()
   //  exactly *on* the branch cut may help to get rid of the ripple. But that doesn't seem to 
   //  make a difference
 
+  plot([](C z) { return log(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_Log.ppm");
+  // doesn't converge
+
+
   //img = plt.getPolyaPotentialImage([](C z) { return pow(z, 1./3.); }, -1, +1, -1, +1, 32, 32);
 
 

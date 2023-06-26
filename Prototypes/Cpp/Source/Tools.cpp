@@ -7962,10 +7962,10 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 
 //=================================================================================================
 
-/** Class to evaluate the Polya vecor fields and Polya potentials for various functions. The 
+/** Class to evaluate the Polya vector fields and Polya potentials for various functions. The 
 evaluation functions come in two flavors: One that takes two input parameters anr returns a value.
-That computes the potential. And one that takes two input parameters and two output parameters (by
-pointer). That computes the vector field. */
+That variant computes the potential. And one that takes two input parameters and two output 
+parameters by pointer. That variant computes the vector field. */
 
 template<class T>
 class rsPolyaPotentialEvaluator
@@ -7978,10 +7978,62 @@ public:
   static void reciprocal(T x, T y, T* u, T * v) { T s = 1/(x*x + y*y); *u = s * x; *v = s * y; }
 
 
-  //  (x/(x^2 + y^2), y/(x^2 + y^2), 1/2*log(x^2 + y^2), 1/2*log(x^2 + y^2))
+
 
 };
 
+// The expressions were found with SageMath using the code below. In the example, we use 
+// w = f(z) = 1/z. For other functions, just change the "w = 1 / z" line. In cases where you get
+// different expressions for U and V, they will differ only in the terms that depend on one 
+// variable only. For example, for w = z^2, you'll get (U,V) = (1/3*x^3 - x*y^2, -x*y^2). U differs
+// from V, but only by a term that depends only on x but not on y. That's the "integration 
+// constant" that has to be added to V when v is integrated with respect to y. It's a constant with
+// respect to y but depends on x. It comes about because u contains a term that depends only on x, 
+// namely x^2. That's why we always compute both integrals. Often, they will be equal. But if they 
+// do differ, we have to collect also the difference terms into out final expression for the 
+// potential. Just always collect all the common terms that depend on both variables (these should 
+// always match in the two expressions) and then add to that the difference terms from both 
+// expressions, if any are present. These difference terms should always depend only on one of the 
+// variables (on x in U, on y in V).
+//
+// var("x y")
+// assume(x, "real")
+// assume(y, "real")
+// z = x + I*y
+// w = 1 / z               # function of interest
+// u =  w.real() 
+// v = -w.imag()
+// U = integral(u, x)
+// V = integral(v, y)
+// u, v, U, V
+//
+// Results:
+// 1/z:     (x/(x^2 + y^2), y/(x^2 + y^2), 1/2*log(x^2 + y^2), 1/2*log(x^2 + y^2))
+// z^2:     (x^2 - y^2, -2*x*y, 1/3*x^3 - x*y^2, -x*y^2)
+// z^3:     (x^3 - 3*x*y^2, -3*x^2*y + y^3, 1/4*x^4 - 3/2*x^2*y^2, -3/2*x^2*y^2 + 1/4*y^4)
+// z^4:     (x^4 - 6*x^2*y^2 + y^4, -4*x^3*y + 4*x*y^3, 
+//          1/5*x^5 - 2*x^3*y^2 + x*y^4, -2*x^3*y^2 + x*y^4)
+// 1/z^2:   ((x^2 - y^2)/(4*x^2*y^2 + (x^2 - y^2)^2), 2*x*y/(4*x^2*y^2 + (x^2 - y^2)^2),
+//           -x/(x^2 + y^2), -x/(x^2 + y^2))
+// 1/z^3:   ((x^3 - 3*x*y^2)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2),
+//           (3*x^2*y - y^3)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2),
+//          -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4),
+//          -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4))
+// exp(z):  (cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
+// sin(z):  (cosh(y)*sin(x), -cos(x)*sinh(y), -cos(x)*cosh(y), -cos(x)*cosh(y))
+// cos(z):  (cos(x)*cosh(y), sin(x)*sinh(y), cosh(y)*sin(x), cosh(y)*sin(x))
+// tan(z):  (sin(2*x)/(cos(2*x) + cosh(2*y)), -sinh(2*y)/(cos(2*x) + cosh(2*y)),
+//          -1/2*log(cos(2*x) + cosh(2*y)),-1/2*log(cos(2*x) + cosh(2*y)))
+// sinh(z): (cos(y)*sinh(x), -cosh(x)*sin(y), cos(y)*cosh(x), cos(y)*cosh(x)) 
+// cosh(z): (cos(y)*cosh(x), -sin(y)*sinh(x), cos(y)*sinh(x), cos(y)*sinh(x))
+// tanh(z): (sinh(2*x)/(cos(2*y) + cosh(2*x)), -sin(2*y)/(cos(2*y) + cosh(2*x)),
+//          1/2*log(cos(2*y) + cosh(2*x)), 1/2*log(cos(2*y) + cosh(2*x)))
+//
+// ToDo: 
+// -Do also z^p for general p (real or complex)
+// -Trying to let sage assume that p is a positive integer doesn't seem to change anything. In 
+//  that case, we get polynomials with coeffs obtained from binomial coeffs. See zeta paper.
+// -Try to derive a similar expression for 1 / z^n
 
 
 //=================================================================================================

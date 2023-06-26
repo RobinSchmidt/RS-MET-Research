@@ -216,13 +216,6 @@ https://math.stackexchange.com/questions/1340719/numerically-find-a-potential-fi
 The answer suggests to make an ansatz based on the formula for trapezoidal integration but seems 
 similar to my idea of the ansatz using a central difference approximation
 
-
-
-
-
-
-
-
 ----------------------------------------------------------------------------------------------------
 Other Idea (may be obsolete because it doesn't work?):
 
@@ -294,4 +287,14 @@ Solve 1
 integrate u wrt x *and* y and also v wrt x and y. The common terms in both integrals should be 
 equal. Or differentiate U wrt y and V wrt x and try to work out something from this? Maybe we can 
 obtain more equations based on directional derivatives into the diagonal directions involving x and 
-y? 
+y? But I think, that may fail, when the original vector field contains terms that depend on (x+y) or 
+(x-y) only. We basically rotate our coodinate system to the x+y and x-y axes and in this new system,
+we face the same problems just now with our new coordinates instead of the original x and y.
+
+But what, if we differentiate U = 3x^3 + 5xy + f(y) wrt y and then integrate it wrt y again? The 
+differentiation would get rid of the 3x^3 term and the subsequent integration would *not* 
+reconstruct it, right? Or wrong? So, we would get U_r = 5xy + f(y), where the index _r stands for 
+"reconstructed". We could do the same thing with V wrt x.
+
+...not sure, if any of this is workable...
+----------------------------------------------------------------------------------------------------

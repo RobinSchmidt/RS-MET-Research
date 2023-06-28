@@ -145,6 +145,31 @@ Having tables for the Polya potentials of some basic elementary functions is wel
  
  
  
+ 
+To see what that means in terms of real and imaginary part of the result of $z^n$, we'll again use a little snippet of Sage code where we can tweak \texttt{n} and inspect the results:
+\begin{verbatim}
+n = 5	               # You may tweak this parameter
+var("x y")
+assume(x, "real")
+assume(y, "real")
+z = x + I*y
+w = z^n
+w.real(), w.imag()
+\end{verbatim}
+This code gives the following results for \texttt{n = 0..7}:
+\begin{verbatim}
+n  Real                                      Imag
+0: 1,                                        0 
+1: x,                                        y
+2: x^2 - y^2,                                2*x*y
+3: x^3 - 3*x*y^2,                            3*x^2*y - y^3
+4: x^4 - 6*x^2*y^2  + y^4,                   4*x^3*y - 4*x*y^3
+5: x^5 - 10*x^3*y^2 + 5*x*y^4,               5*x^4*y - 10*x^2*y^3 + y^5
+6: x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+7: x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
+\end{verbatim} 
+ 
+ 
 Negative powers of z, i.e z^(-n)
 
 var("x y")
@@ -163,9 +188,9 @@ Results for n = 2..6:
 n  Real part of numerator                          Imaginary part of numerator
 2  x^2 - y^2                                       2*x*y                         
 3  x^3 - 3*x*y^2                                   3*x^2*y - y^3                  
-4  x^4 - 6*x^2*y^2 + y^4                           4*(x^3*y - x*y^3)              
+4  x^4 - 6*x^2*y^2  + y^4                          4*x^3*y - 4*x*y^3
 5  x^5 - 10*x^3*y^2 + 5*x*y^4                      5*x^4*y - 10*x^2*y^3 + y^5
-6  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6             2*(3*x^5*y - 10*x^3*y^3 + 3*x*y^5)
+6  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6             6*x^5*y - 20*x^3*y^3 + 6*x*y^5
 
 n  Denominator
 2  (x^2 - y^2)^2                           +  4*x^2*y^2

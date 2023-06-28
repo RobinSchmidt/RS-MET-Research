@@ -18,7 +18,7 @@ vertically or row-wise while y or j goes horizontally or column-wise. But that's
 interpretation of the arrays and doesn't matter conceptually.
 
 Let's assume the U,V data matrices have arisen from P via numerical (partial) differentiation via 
-central differencing. That means, we can make the Ansatz:
+central differencing. That means, we can make the ansatz:
 
   U(i,j) = (P(i+1, j  ) - P(i-1, j  )) / (2*dx)    and    
   V(i,j) = (P(i,   j+1) - P(i,   j-1)) / (2*dy)
@@ -32,9 +32,9 @@ backward differences:
                                               Applies to       Ansatz name
 										
   U(i,j) = (P(i+1, j  ) - P(i,   j  )) / dx   i = 0,   all j   L,FD (left column,  forward diff.)
-  U(i,j) = (P(i,   j  ) - P(i-1, j  )) / dx   i = I-1, all j   R,FD (right column, backward diff.)
+  U(i,j) = (P(i,   j  ) - P(i-1, j  )) / dx   i = I-1, all j   R,BD (right column, backward diff.)
   V(i,j) = (P(i,   j+1) - P(i,   j  )) / dy   j = 0,   all i   T,FD (top row,      foward diff.)
-  V(i,j) = (P(i,   j  ) - P(i,   j-1)) / dy   j = J-1, all i   B,FD (bottom row,   backward diff.)
+  V(i,j) = (P(i,   j  ) - P(i,   j-1)) / dy   j = J-1, all i   B,BD (bottom row,   backward diff.)
  
 We want to pose the problem as a linear system of equations in the form:
 
@@ -184,12 +184,14 @@ Notes:
 -Maybe a general constrained least-squares problem of the form (A*x-b)^2 = (A*x-b)^T (A*x-b) = min
  subject to a set of constraints C*x = d can be solved as (P*y-q)^T (P*y-q) = min where 
  P = vertcat(A,C), q = vertcat(b,d), y = vertcat(x,l) where y is the unknown vector to be computed 
- and its upper part is our desired solution and its lower part l are the Lagrange multipliers?
+ and its upper part is our desired solution x and its lower part l are the Lagrange multipliers? Or 
+ maybe the matrix would look more like P = [A, 0; 0, C], i.e. A left-padded with zeros and C 
+ right-padded such that their number of columns match the number of elements of q.
  
  
 ToDo: 
 -Maybe implement a variant that allows for non-equally spaced data. it should take x,y arrays that
- say, where the samples are
+ say, where the samples are...tbc...
 
 
 Instead of appending the extra line for K = P12, try just replacing the two rows corresponding 

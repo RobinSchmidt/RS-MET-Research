@@ -12154,20 +12154,12 @@ void testPotentialPlotter()
   using Real    = float;
   using Complex = std::complex<Real>;
 
-  //int scaleX = 20;
-  //int scaleY = 20;
-
-
-
   // Helper function. Takes a complex function, plot range, pixel size and file path to create an
   // image file with a plot of the Polya potential of the given function.
   auto plotN = [&](std::function<Complex(Complex)> f, 
     Real xMin, Real xMax, Real yMin, Real yMax, 
     int width, int height, const char *path)
   {
-
-
-    //rsImage<Real> img;
     rsPolyaPotentialPlotter<Real> plt;
     plt.setImageScaling(20, 20);
     // ToDo: set the plotter up with thigs like
@@ -12180,30 +12172,25 @@ void testPotentialPlotter()
   // The N in plotN stands for "numerical". The intention is to add a function plotA, that uses
   // analytical evaluation.
 
-
   auto plotA = [&](std::function<Real(Real x, Real y)> f,
     Real xMin, Real xMax, Real yMin, Real yMax,
     int width, int height, const char* path)
   {
     rsHeightMapPlotter<Real> plt;
-    //plt.setImageScaling(scaleX, scaleY); // No! analytic evaluations don't need scaling
-
     rsImage<Real> img = plt.getHeightMapImage(f, xMin, xMax, yMin, yMax, width, height);
     writeImageToFilePPM(img, path);
   };
 
 
 
-  using C = Complex;
-  using R = Real;
-
+  using C  = Complex;
+  using R  = Real;
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   plotA([](R x, R y) { return PE::square(x, y); }, -1, +1, -1, +1, 601, 601, 
     "PolyPotential_zSquaredA.ppm");
   // With an even number of contours, we see (almost) the vertical contours along the imaginary
   // axis. With an odd number, it looks visually better. Try 24 vs 25.
-
 
 
   // With this example, I have taken some data for how many iterations the iterative solver needed
@@ -12264,11 +12251,15 @@ void testPotentialPlotter()
 
 
 
-  //writeImageToFilePPM(img, "PolyaPotential.ppm");
-
   int dummy = 0;
 
-
+  // Observations:
+  // -The contours of the numerically obtained plots show heavy artifacts. That shouldn't be too 
+  //  surprising given the fact that we perform the actual potential calculation on a very low 
+  //  resolution grid which we then scale up by a factor of twenty using simple bilinear 
+  //  interpolation. Maybe much better results could be obtained using bicubic interpolation?
+  //  https://en.wikipedia.org/wiki/Bicubic_interpolation
+  //
   // ToDo:
   // -Plot potentials of f(z) = 1, -1, i, -i, 1+i, 1-i, -1+i, -1-i, z, z+1, z^2, (z-1)*(z+1),
   //  (z-1)*(z+1)*(z+i)*(z-i), 1/z, 1/z^2, exp(i*z)
@@ -12277,18 +12268,15 @@ void testPotentialPlotter()
   //  ...but what function would a paraboloid like x^2 + y^2 mean?
   //  f_x = 2x, f_y = 2y  ->  f(z) = 2 z.r - 2 z.i I guess, the Polya vector field would probably 
   //  have a nonzero divergence and therefore not satisfy one of the two Cauchy-Riemann eqautions.
-  // -Try other iteration methods. Gauss-Seidel is rather slow. Maybe others are better for this?
-  // -Add contour lines
   // -Give the user an option to set low and high clipping thresholds for u and v. That helps to 
   //  deal with functions that shoot off to infinity at some values. We need that for functions 
   //  with poles such as 1/z, log(z), etc.
   // -All these extra options do indeed seem to justify an implementation as class with
   //  setters. We don't want to pass all these options as function parameters.
-  // -Make an implemenation that uses analytic formulas to compute the Polya potential. Using 
-  //  function evaluation together with numeric computation of the potential should only be a last
-  //  resort solution, if formulas for analytic evaluation are not available or their evaluation 
-  //  algos do not work in the region of interest. Compare the results of both ways to plot Polya
-  //  potentials.
+  // -What about a hybrid evaluation algo for the zeta potential: use trapezoidal integration
+  //  with respect to y on function values and add an "integration constant" from an analytic 
+  //  expression in x. It's just a weighted (by c_n) sum of terms of the form x^(n+1) / (n+1), 
+  //  I think.
 }
 
 

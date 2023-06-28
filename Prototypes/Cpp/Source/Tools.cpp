@@ -7998,7 +7998,7 @@ public:
   using Complex = std::complex<T>;
 
 
-  // f(z) = 1/z
+  // f(z) = 1/z, has pole at z=0
   static T    reciprocal(T x, T y) { return 0.5 * log(x*x + y*y); }
   static void reciprocal(T x, T y, T* u, T * v) { T s = 1/(x*x + y*y); *u = s * x; *v = s * y; }
 

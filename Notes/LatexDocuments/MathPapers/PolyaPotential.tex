@@ -1,0 +1,76 @@
+%\documentclass[12pt, twocolumn]{article}
+\documentclass[12pt]{article}
+%\documentclass[12pt]{scrartcl}  % to make \subtitle work
+%\usepackage{fullpage}           % makes all margins 1 inch?
+\topmargin=-1.0cm
+\textheight=23cm
+\evensidemargin=-1.0cm
+\oddsidemargin=-1.0cm
+\textwidth=19cm
+\setcounter{secnumdepth}{-1}     % suppress numbering of sections
+\usepackage{amsmath}
+\usepackage{amssymb}             % for mathbb
+%\usepackage[latin1]{inputenc}   % why?
+\usepackage{graphicx}
+\usepackage{float}               % for positioning graphics via [h!]
+\usepackage{pstricks}
+%\usepackage{pst-plot}
+\usepackage{hyperref}            % for hyperlinks
+%\usepackage{booktabs}
+%\usepackage{fancyhdr}           % for headers and footers
+
+%\pagestyle{fancy} 
+%\rhead{}
+%\rfoot{article available at: \htmladdnormallink{www.rs-met.com}{http://www.rs-met.com}}
+
+% set the footer:
+%\rfoot{http://www.rs-met.com}
+
+\begin{document}
+
+% formatting:
+\parindent=0in
+\parskip=0pt
+\pagenumbering{roman}
+
+% main text
+\pagenumbering{arabic} \setcounter{page}{1}
+
+\title{The Polya Potential of Complex Functions [DRAFT]\\ {\Large A New(?) Tool for Visualization, Analysis and Intuition Building}}
+%\title{The Size of Infinity \ }
+%\subtitle{(Subtitle)}
+\author{Robin Schmidt}
+\maketitle
+
+\section{Analytic Functions}
+
+%Analytic functions $f(z)$ in the complex plane obey the Cauchy-Riemann equations. When we interpret the complex conjugate of a complex function $f: \mathbb{C} \rightarrow \mathbb{C}$ as a vector field $(u(x,y), v(x,y)): \mathbb{R}^2 \rightarrow \mathbb{R}^2$, we obtain the so called Polya vector field that is associated with the complex function. Due to the analyticity of $f$, this vector field will be potential field. That means, there exists a scalar field $p(x,y)$, called a potential, such that $u,v$ can be obtained from $p$ by taking the partial derivatives with respect to $x$ and $y$. A scalar field over the $xy$-plane is simpler than a full-blown complex function and can be more easily visualized due to requiring only three dimensions rather than four. Yet, it contains the same information. In this paper, I will derive expressions for such a Polya potential for the Riemann zeta function. I hope that these can be helpful in analyzing the properties of zeta. I've not yet seen the usage of such potentials anywhere in complex analysis. The Polya vector fields themselves seem to be moderately well known but their potentials seem to be mostly ignored, so far - at least to my (very limited) knowledge.  ...TBC...
+
+\section{Polya Potentials}
+%The Polya vector field of a complex function $f = f(z)$ is a 2D vector field, i.e. a function $(u(x,y), v(x,y)): \mathbb{R}^2 \rightarrow \mathbb{R}^2$ that is obtained from the complex function $f$ by using $u(x,y) = \Re(f), v(x,y) = -\Im(f)$ where $x = \Re(z), y = \Im(z)$. Negating the imaginary part of $f$ in the definition $v$ has the effect of turning the Cauchy-Riemann conditions for analytic complex functions into the condition that makes the Polya vector field curl-free (by virtue of $u_y = v_x$) and divergence-free (by virtue of $u_x = - v_y$). To avoid confusion, note that in my notation here, I use $v(x,y) = -\Im(f)$ whereas in a typical complex analysis textbook, you're are more likely to see things like $f(z) = f(x + \i y) = u(x,y) + \i v(x,y)$, i.e. $v(x,y) = \Im(f)$. I use the already negated imaginary part of $f$ for defining $v$ here to be consistent with notations suitable for vector fields. Without the negation, the Cauchy-Riemann eqautions would look like $u_x = v_y, u_y = -v_x$ and that's how you'll see them in textbooks, but here, where we are dealing with the Polya vector field with the negation already baked into $v$, they look like $u_x = -v_y, u_y = v_x$. The curl-free condition $u_y = v_x$ makes the Jacobian of the Polya vector field symmetric and in turn, a symmetric Jacobian is a necessary and sufficient condition for the vector field to be a gradient field, i.e. a vector field that can be obtained from a scalar field by the operation of taking its gradient. Symmetry of the Jacobian is in itself already enough to make the vector field a gradient field. But we have a further constraint: the divergence-free property $u_x = -v_y$ lets our Jacobian have a trace (sum of diagonal elements) of zero. Our vector field is not just any arbitrary gradient field but a very special kind of gradient field - namely, one that is divergence-free. In this context, the scalar field whose gradient our vector field is, is called the (scalar) potential of the vector field. In fact, the Jacobian of the vector field is just the Hessian of the potential. The potential for the Polya vector field of a complex function $f(z)$ is what I call the "Polya potential" of the complex function and it's an object that I have not yet seen as being used in complex analysis. Maybe taking a closer look at it can reveal some new insights. The goal is to derive expressions for the Polya potential of the zeta function and then analyze this Polya potential instead of the zeta function itself. I hope that it will turn out to be simpler to understand because its just a simple scalar field over $\mathbb{R}^2$, i.e. a 3D thing rather than a 4D one - but it contains nonetheless the same amount of information. We have taken advantage of the analyticity of zeta to achieve a dimensionality reduction of the problem. The all important zeros of the zeta function will be mapped to the stationary points of its Polya potential. Stationary points of a scalar field are points, where the gradient vanishes. In general, there are three types of such stationary poinrs: minima, maxima and saddle points. Experiments suggest that in the case of Polya potentials of complex functions, only saddles occur [I think, this might be a consequence of the additional divergence-free property - figure out!]. The Polya potential is a surface in 3D space, so it is also amenable to the tools of differential geometry like figuring out main curvature directions at the stationary points, figuring out the geodesics between the stationary points, etc.. Polya potentials give us a new angle of attack to analyze complex functions and, of course, to visualize them to hopefully build some intuition.
+
+
+
+
+
+
+
+\begin{thebibliography}{9}
+	
+\bibitem{GitHub} RS-MET-Research, \textit{Repository on GitHub}
+\href{https://github.com/RobinSchmidt/RS-MET-Research}{github.com/RobinSchmidt/RS-MET-Research}
+
+\bibitem{PotentialNumerical} PotentialNumerical.txt, \textit{File in my research repo}
+\href{https://github.com/RobinSchmidt/RS-MET-Research/blob/master/Notes/PotentialNumerical.txt}{Notes/PotentialNumerical.txt}
+
+\end{thebibliography}
+ 
+ 
+\end{document}
+
+
+
+\begin{comment}
+	
+
+\end{comment}

@@ -72,8 +72,17 @@ This produces the result:
 \begin{verbatim}
 (x^2 - y^2, -2*x*y, 1/3*x^3 - x*y^2, -x*y^2)
 \end{verbatim}
-
-
+In this example, we indeed see that $U$, the integral of $u$ wrt $x$, does indeed contain a term that depends only on $x$ but not on $y$, namlely $x^3/3$. That is the function of $x$ that would have to be added as integration "constant" to $V$ to give the full potential. The term that depends on both $x$ and $y$, namely $-x y^2$, is the same in $U$ and $V$, as it should be. So, we found the desired expressions for our Polya vector field for the complex function $f(z) = z^2$. They are:
+\begin{equation}
+f(z) = z^2: \quad 
+u(x,y) = x^2 - y^2, \; 
+v(x,y) = -2 x y, \quad 
+p(x,y) = \frac{x^3}{3} -x y^2
+\end{equation}
+Replacing the line \texttt{w = z\textasciicircum2 } by some other function, say \texttt{w = exp(z)}, we can get the expressions for other fucntions of interest. For $f(z) = e^z$, the result is:
+\begin{verbatim}
+(cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
+\end{verbatim}
 
 
 

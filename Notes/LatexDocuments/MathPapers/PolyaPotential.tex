@@ -54,21 +54,37 @@ When we interpret the complex conjugate of a complex function $f$ as a vector fi
 \section{Polya Potentials}
 In general, a potential $p(x,y)$ for a given 2D vector field $u(x,y), v(x,y)$ is a scalar field whose partial derivatives with respect to $x$ and $y$ are equal to our two given bivariate functions $u$ and $v$ that define our vector field. That means $p$ must be such that $u = \partial p / \partial x = p_x$ and $v = \partial p / \partial v = p_y$. Our intention here is, of course, to let $u,v$ be the real and negated imaginary part of a complex function $f(z) = f(x + \i y)$, i.e. the Polya vector field of $f$. The potential for the Polya vector field of a complex function $f(z)$ is what I call the "Polya potential" of the complex function $f$. So, given $u$ and $v$ and assuming that $u,v$ indeed define a potential field, how do we find a potential $p(x,y)$ for our pair of bivariate functions? The equation $u = p_x$ suggests that to  find $p$, we might integrate $u$ with respect to $x$. In the following, "with respect to" will be abbreviated as "wrt". Also, the equation $v = p_y$ suggests that we might integrate $v$ wrt $y$. So does that mean we can choose either of the two ways and both will give us the same result? In some cases, it does indeed work out like that. But there's a little complication: In both integrations, there could be integration constants and these "constants" are actually constant only wrt our integration variable but can depend on the other variable. To take this into account, we may evaluate both of these integrals. All of their terms that depend on both $x$ and $y$ should match but we may get extra terms that depend only on $x$ when integrating $u$ wrt $x$ and other extra terms that depend only on $y$ when integrating $v$ wrt $y$. These "extra terms" are the desired integration "constants". What we have to do is to collect all the common terms that depend on $x$ and $y$ and add to the that the extra terms that depend only on $x$ or only on $y$ from both results to get our final expression for $p(x,y)$. In some cases, these extra terms turn out to be zero but at other times they are not. This will become clearer when we see examples.
 
-...tbc..
+\section{Polya Vector Fields and Potentials of Elementary Functions}
+Now we want to build a little inventory of expressions for Polya vector fields and their potentials for some important elementary functions. The way I want to do this is by using a little snippet of SageMath code into which we can plug in our function of interest $f(z)$ and it spits out expressions for the components $u,v$ of the associated Polya vector field and the integrals of $u$ and $v$ with respect to $x$ or $y$ from which we can read off our Polya potential $p(x,y)$. You can execute that snippet yourself in SageCell \cite{SageCell}. In the example code, we consider the function $f(z) = z^2$.
+\begin{verbatim}
+var("x y")
+assume(x, "real")
+assume(y, "real")
+z = x + I*y
+w = z^2                 # function of interest
+u =  w.real() 
+v = -w.imag()
+U = integral(u, x)
+V = integral(v, y)
+u, v, U, V	
+\end{verbatim}
+This produces the result:
+\begin{verbatim}
+(x^2 - y^2, -2*x*y, 1/3*x^3 - x*y^2, -x*y^2)
+\end{verbatim}
+
+
 
 
 
 
 %In this context, the scalar field whose gradient our vector field is, is called the (scalar) potential of the vector field. In fact, the Jacobian of the vector field is just the Hessian of the potential. The potential for the Polya vector field of a complex function $f(z)$ is what I call the "Polya potential" of the complex function and it's an object that I have not yet seen as being used in complex analysis. Maybe taking a closer look at it can reveal some new insights. The goal is to derive expressions for the Polya potential of the zeta function and then analyze this Polya potential instead of the zeta function itself. I hope that it will turn out to be simpler to understand because its just a simple scalar field over $\mathbb{R}^2$, i.e. a 3D thing rather than a 4D one - but it contains nonetheless the same amount of information. We have taken advantage of the analyticity of zeta to achieve a dimensionality reduction of the problem. The all important zeros of the zeta function will be mapped to the stationary points of its Polya potential. Stationary points of a scalar field are points, where the gradient vanishes. In general, there are three types of such stationary poinrs: minima, maxima and saddle points. Experiments suggest that in the case of Polya potentials of complex functions, only saddles occur [I think, this might be a consequence of the additional divergence-free property - figure out!]. The Polya potential is a surface in 3D space, so it is also amenable to the tools of differential geometry like figuring out main curvature directions at the stationary points, figuring out the geodesics between the stationary points, etc.. Polya potentials give us a new angle of attack to analyze complex functions and, of course, to visualize them to hopefully build some intuition.
 
-
-
-
-
-
-
 \begin{thebibliography}{9}
 	
+\bibitem{SageCell} SageCell, \textit{Online SageMath Evaluator}
+\href{https://sagecell.sagemath.org/}{sagecell.sagemath.org/}
+
 \bibitem{GitHub} RS-MET-Research, \textit{Repository on GitHub}
 \href{https://github.com/RobinSchmidt/RS-MET-Research}{github.com/RobinSchmidt/RS-MET-Research}
 

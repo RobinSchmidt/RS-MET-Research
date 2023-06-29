@@ -54,7 +54,7 @@ When we interpret the complex conjugate of a complex function $f$ as a vector fi
 \section{Polya Potentials}
 In general, a potential $p(x,y)$ for a given 2D vector field $u(x,y), v(x,y)$ is a scalar field whose partial derivatives with respect to $x$ and $y$ are equal to our two given bivariate functions $u$ and $v$ that define our vector field. That means $p$ must be such that $u = \partial p / \partial x = p_x$ and $v = \partial p / \partial v = p_y$. Our intention here is, of course, to let $u,v$ be the real and negated imaginary part of a complex function $f(z) = f(x + \i y)$, i.e. the Polya vector field of $f$. The potential for the Polya vector field of a complex function $f(z)$ is what I call the "Polya potential" of the complex function $f$. So, given $u$ and $v$ and assuming that $u,v$ indeed define a potential field, how do we find a potential $p(x,y)$ for our pair of bivariate functions? The equation $u = p_x$ suggests that to  find $p$, we might integrate $u$ with respect to $x$. In the following, "with respect to" will be abbreviated as "wrt". Also, the equation $v = p_y$ suggests that we might integrate $v$ wrt $y$. So does that mean we can choose either of the two ways and both will give us the same result? In some cases, it does indeed work out like that. But there's a little complication: In both integrations, there could be integration constants and these "constants" are actually constant only wrt our integration variable but can depend on the other variable. To take this into account, we may evaluate both of these integrals. All of their terms that depend on both $x$ and $y$ should match but we may get extra terms that depend only on $x$ when integrating $u$ wrt $x$ and other extra terms that depend only on $y$ when integrating $v$ wrt $y$. These "extra terms" are the desired integration "constants". What we have to do is to collect all the common terms that depend on $x$ and $y$ and add to the that the extra terms that depend only on $x$ or only on $y$ from both results to get our final expression for $p(x,y)$. In some cases, these extra terms turn out to be zero but at other times they are not. As a general rule, such extra terms pop up in $U$ whenever $u$ has terms that are independent of $y$, i.e. constant or dependent only on $x$ and they pop up in $V$, whenever $v$ has terms independent of $x$, i.e. constant or dependent only on $y$. This will become clearer when we see examples.
 
-\section{Polya Vector Fields and Potentials of Elementary Functions}
+\section{Polya Vector Fields and Potentials of Basic Functions}
 Now we want to build a little inventory of expressions for Polya vector fields and their potentials for some important elementary functions. The way I want to do this is by using a little snippet of SageMath code into which we can plug in our function of interest $f(z)$ and it spits out expressions for the components $u,v$ of the associated Polya vector field and the integrals of $u$ and $v$ with respect to $x$ or $y$ from which we can read off our Polya potential $p(x,y)$. You can execute that snippet yourself in SageCell \cite{SageCell}. In the example code, we consider the function $f(z) = z^2$.
 \begin{verbatim}
 var("x y")
@@ -94,36 +94,39 @@ In this case, $U$ and $V$ were indeed exactly equal and we didn't have to collec
 
 % Make tables of:
 % -small powers of z including -1,0,1,2,3, include f(z) = c = a + i b = const
-% -exponential: exp, pow
+% -exponential: exp, pow, exp(i*z) -> important for Fourier series
 % -trig: sin, cos, tan, cos/sin, 1/sin, 1/cos
 % -hyp: sinh, cosh, tanh, ...
 % -inverses: log, atan, asin
 % -general formula for z^n, n >=  0  
 % -general formula for z^n, n <= -2
 
-\section{Rules for Composite Functions}
-Having tables for the Polya potentials of some basic elementary functions is well and good but often we have to deal with more complicated functions. The simplest case of that is when our function of interest $f$ is given by a weighted sum of functions whose potentials we already know. In this case, the full potential is just the weighted sum of the individual potentials with the same weights as in $f$. This even extends to infinite weighted sums which is useful when we have a series expansion of our $f$ like, for example, a Taylor-, Laurent- or Fourier series. For functions $f$ that are not just (possibly infinite) sums of terms whose potential we already know, we could just plug our $f$ into the little Sage script and see, what it produces. What we will discover is that things get messy really quick. Of course they do - after all, we are dealing with integrals here. Maybe you can get something more reasonable with other CAS systems like Mathematica or manually with some integration wizardry if you are a Richard Feynman type of person. But I want to go down some other route here.
+\section{Rules for Complicated Functions}
+Having tables for the Polya potentials of some basic elementary functions is well and good but often we have to deal with more complicated functions. For a given function $f$, we could just plug it into the little Sage script and see, what it produces. What we will discover is that things get messy really quick. Of course they do - after all, we are dealing with integrals here. Maybe you can get something more reasonable with other CAS systems like Mathematica or manually with some integration wizardry if you are a Richard Feynman type of person. You could perhaps deal with products using integration by parts or deal with composite functions using substitutions. But I want to go down some other route here. I will assume that our function $f(z)$ is given as some sort of combination (product, quotient or composition) of two other functions $g(z), h(z)$ for which we know a series expansion. I want to give formulas or algorithms to obtain a series expansion for $f$. This may actually be applicable in completely different contexts as well. 
 
-\medskip
-I will assume that our function $f(z)$ is given as some sort of combination (product, quotient or composition) of two other functions $g(z), h(z)$ for which we know a series expansion. I want to give formulas or algorithms to obtain a series expansion for $f$. This may actually be applicable in completely different context as well. Let's start with the product first. We assume that:
+\subsection{Weighted Sums and Series}
+The simplest case of that is when our function of interest $f$ is given by a weighted sum of functions whose potentials we already know, i.e. $f(z) = a g(z) + b h(z)$ for some constants $a,b$. In this case, the full potential is just the weighted sum of the individual potentials with the same weights as in $f$. This even extends to infinite weighted sums which is useful when we have a series expansion of our $f$ like, for example, a Taylor-, Laurent- or Fourier series. 
+
+\subsection{Products}
+Let's turn to products. We assume that:
 \begin{equation}
-f(z) = g(z) h(z), \quad
+f(z) = g(z) h(z) \quad \text{where}  \quad
 g(z) = \sum_k a_k z^k, \quad
 h(z) = \sum_m b_m z^m
 \end{equation}
-where I have deliberately kept the ranges of $k$ and $m$ ambiguous. They could go from zero to some finite number in which case we would be dealing with polynomials, from zero to infinity in which case we would be dealing with power series, from minus infinity to plus infinity in which case we would be dealing with Laurent series, etc.. The question is now: what would the coefficients $c_n$ of a series expansion of $f$ look like. we assume:
+where I have deliberately kept the ranges of $k$ and $m$ ambiguous. They could go from zero to some finite number in which case we would be dealing with polynomials, from zero to infinity in which case we would be dealing with power series, from minus infinity to plus infinity in which case we would be dealing with Laurent series, etc.. The question is now: what would the coefficients $c_n$ of a series expansion of $f$ look like. We assume:
 \begin{equation}
 f(z) = \sum_n c_n z^n
 \end{equation}
-and want to figure out the $c_n$ in terms of the $a_k$ and $b_m$.
+and want to figure out the $c_n$ in terms of the $a_k$ and $b_m$. The solution to that problem is actually well known: the sequence $c_n$ is given by the convolution of the sequences $a_k$ and $b_m$. Such a product of two given series expansions is also known as the Cauchy-Product of these series [VERIFY!]. So, to find a Polya potential of a product of two functions $g,h$ given as series expansions, we could construct a series expansion of $f$ using the Cauchy product, i.e. convolution, and then use the formulas for the Polya potentials of $z^n$ from our tables. 
 
+\subsection{Quotients}
+For a quotient $f(z) = g(z) / h(z)$, we would need to do a deconvolution.......TBC...
 
-% $f(z) = g(z) h(z)$
+\subsection{Composite Functions}
+For a function $f$ that results from composing (aka nesting or chaining) two functions such that $f(z) = g(h(z))$, an algorithm for finding the $c_n$ could look as follows ....TBC...
 
 %A benign looking function such as \texttt{exp(z)*sin(z\textasciicircum2)} containing a multiplication and a composition, will produce very complicated expressions that even contain the \texttt{erf} erf function. But 
-
-...TBC...
-
 
 %that are formed from the basic functions by mathematical operations like multiplication, division and nesting. Addition and subtraction ins unproblematic because in this case, we can also just add or subtract the corresponding Polya potentials due to linearity.
 
@@ -136,6 +139,14 @@ and want to figure out the $c_n$ in terms of the $a_k$ and $b_m$.
 
 % mention building Polya potententials from Talyor sereis, Laurent series, and Fourier series
 % partial fraction expansions for rational functions
+
+
+
+
+
+
+
+
 
 %In this context, the scalar field whose gradient our vector field is, is called the (scalar) potential of the vector field. In fact, the Jacobian of the vector field is just the Hessian of the potential. The potential for the Polya vector field of a complex function $f(z)$ is what I call the "Polya potential" of the complex function and it's an object that I have not yet seen as being used in complex analysis. Maybe taking a closer look at it can reveal some new insights. The goal is to derive expressions for the Polya potential of the zeta function and then analyze this Polya potential instead of the zeta function itself. I hope that it will turn out to be simpler to understand because its just a simple scalar field over $\mathbb{R}^2$, i.e. a 3D thing rather than a 4D one - but it contains nonetheless the same amount of information. We have taken advantage of the analyticity of zeta to achieve a dimensionality reduction of the problem. The all important zeros of the zeta function will be mapped to the stationary points of its Polya potential. Stationary points of a scalar field are points, where the gradient vanishes. In general, there are three types of such stationary poinrs: minima, maxima and saddle points. Experiments suggest that in the case of Polya potentials of complex functions, only saddles occur [I think, this might be a consequence of the additional divergence-free property - figure out!]. The Polya potential is a surface in 3D space, so it is also amenable to the tools of differential geometry like figuring out main curvature directions at the stationary points, figuring out the geodesics between the stationary points, etc.. Polya potentials give us a new angle of attack to analyze complex functions and, of course, to visualize them to hopefully build some intuition.
 

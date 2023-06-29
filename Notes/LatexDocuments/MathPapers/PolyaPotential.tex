@@ -108,23 +108,13 @@ g(z) = \sum_k a_k z^k, \quad
 h(z) = \sum_m b_m z^m, \qquad
 f(z) = \sum_n c_n z^n
 \end{equation}
-where the $a_k, b_m$ are known and we set out to figure out formulas or algorithms to compute the $c_n$ in terms of the known $a_k, b_m$. The function $f(z)$ is assumed to be given in terms of $g,h$ as a weighted sum $f(z) = a g(z) + b h(z)$, as product $f(z) = g(z) h(z)$, as quotient $f(z) = g(z) / h(z)$ or as composition $f(z) = g(h(z))$
+where the $a_k, b_m$ are known and we set out to figure out formulas or algorithms to compute the $c_n$ in terms of the known $a_k, b_m$. The function $f(z)$ is assumed to be given in terms of $g,h$ as a weighted sum $f(z) = a g(z) + b h(z)$, as product $f(z) = g(z) h(z)$, as quotient $f(z) = g(z) / h(z)$ or as composition $f(z) = g(h(z))$. I have deliberately kept the ranges of $k$ and $m$ ambiguous. They could go from zero to some finite number in which case we would be dealing with polynomials, from zero to infinity in which case we would be dealing with power series, from minus infinity to plus infinity in which case we would be dealing with Laurent series, etc.. The question is now: what would the coefficients $c_n$ of a series expansion of $f$ look like.
 
 \subsection{Weighted Sums and Series}
 The simplest case of that is when our function of interest $f$ is given by a weighted sum of functions whose potentials we already know, i.e. $f(z) = a g(z) + b h(z)$ for some constants $a,b$. In this case, the full potential is just the weighted sum of the individual potentials with the same weights as in $f$. This even extends to infinite weighted sums which is useful when we have a series expansion of our $f$ like, for example, a Taylor-, Laurent- or Fourier series. 
 
 \subsection{Products}
-Let's turn to products. We assume that:
-\begin{equation}
-f(z) = g(z) h(z) \quad \text{where}  \quad
-g(z) = \sum_k a_k z^k, \quad
-h(z) = \sum_m b_m z^m
-\end{equation}
-where I have deliberately kept the ranges of $k$ and $m$ ambiguous. They could go from zero to some finite number in which case we would be dealing with polynomials, from zero to infinity in which case we would be dealing with power series, from minus infinity to plus infinity in which case we would be dealing with Laurent series, etc.. The question is now: what would the coefficients $c_n$ of a series expansion of $f$ look like. We assume:
-\begin{equation}
-f(z) = \sum_n c_n z^n
-\end{equation}
-and want to figure out the $c_n$ in terms of the $a_k$ and $b_m$. The solution to that problem is actually well known: the sequence $c_n$ is given by the convolution of the sequences $a_k$ and $b_m$. Such a product of two given series expansions is also known as the Cauchy-Product of these series [VERIFY!]. So, to find a Polya potential of a product of two functions $g,h$ given as series expansions, we could construct a series expansion of $f$ using the Cauchy product, i.e. convolution, and then use the formulas for the Polya potentials of $z^n$ from our tables. 
+Let's turn to products. The solution to that problem is actually well known: the sequence $c_n$ is given by the convolution of the sequences $a_k$ and $b_m$. Such a product of two given series expansions is also known as the Cauchy-Product of these series [VERIFY!]. So, to find a Polya potential of a product of two functions $g,h$ given as series expansions, we could construct a series expansion of $f$ using the Cauchy product, i.e. convolution, and then use the formulas for the Polya potentials of $z^n$ from our tables. 
 
 \subsection{Quotients}
 For a quotient $f(z) = g(z) / h(z)$, we would need to do a deconvolution.......TBC...

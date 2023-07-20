@@ -64,7 +64,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testParticleSystem();
   //testWeightedAverages();
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff
-  //testModularForms();
+  testModularForms();
   //testIntegerGroup();
   //testBiPeriodicFunctions();
 

@@ -144,13 +144,21 @@ Most functions that we will typically encounter in applications are indeed Riema
 
 %https://en.wikipedia.org/wiki/Lebesgue_integration
 
-\subsubsection{Measure Theory}
+\subsubsection{Measures}
 Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive natural number $n$. Informally, a measure on $A$ is a function, typically denoted as $\mu(X)$, into which we can plug in a subset $X$ of $A$ as input and it spits out a nonnegative real number or infinity as output. A first attempt to formalize it could look like: $\mu: \mathcal{P}(A) \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ where $\mathcal{P}(A)$ denotes the power set of $A$, i.e. the set of all subsets of A. However, the actual definition is slightly more complicated and more general. The domain of $\mu$ is not necessarily the set of \emph{all} subsets of $A$, although it could be. Instead, it is some set of subsets that satisfies some constraints. These constraints are encapsulated in the definition of a so called $\sigma$-algebra. With this definition in place, we will be able to state the actual formal definition of what a measure is.
 
-\paragraph{Definition: $\sigma$-Algebra} Given a set $A$, a $\sigma$-algebra $\Sigma$ on $A$ is a set of subsets of $A$ such that: (1) $\Sigma$ contains $A$ itself, (2) $\Sigma$ is closed under taking the complement, (3) $\Sigma$ is closed under taking countable unions. From this definition, it follows that the empty set $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too.
+\paragraph{Definition: $\sigma$-Algebra} Given a set $A$, a $\sigma$-algebra $\Sigma$ on $A$ is a set of subsets of $A$ such that: (1) $\Sigma$ contains $A$ itself, (2) $\Sigma$ is closed under taking the complement, (3) $\Sigma$ is closed under taking countable unions.
 
 \medskip
-The extreme examples of such $\sigma$-algebras on a set $A$ are ${\emptyset, A}$ and $\mathcal{P}(A)$. The former is the smallest possible and the latter is the largest possible $\sigma$-algebra.
+From this definition, it follows that the empty set $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too. The extreme examples of such $\sigma$-algebras on a set $A$ are $\{\emptyset, A\}$ and $\mathcal{P}(A)$. The former is the smallest possible and the latter is the largest possible $\sigma$-algebra on $A$. Now, if $\mathcal{P}(A)$ qualifies as a $\sigma$-algebra, you might wonder why we go through the hassle of making such a definition instead of just always using $\mathcal{P}(A)$ as the domain of our measure function $\mu$. Why not just always take the largest possible domain? Why throw in such a complication just to restrict $\mu$ to possibly smaller domains? The answer is that for some choices of the set $A$, $\mathbb{R}$ being among these choices, it is impossible to construct a measure function $\mu$ on $\mathcal{P}(A)$ with certain desired properties. More on that later.
+
+
+
+
+
+
+%...TBC...[I don't really know why this is - maybe some weird sets $A$ have subsets that are not measurable and therefore need to be excluded from the domain or something? Figure out!]
+
 
 % According to this video:
 % https://www.youtube.com/watch?v=FtEmLexUw3Y&list=PLBh2i93oe2quIJS-j1NpbzEvQCmN00F5o
@@ -159,14 +167,33 @@ The extreme examples of such $\sigma$-algebras on a set $A$ are ${\emptyset, A}$
 
 % ToDo: explain, why this complication with the sigma-algebra is necessary. Why don't we just always use P(A) as the domain. Does it have to do with non-measurable sets? At the end of the video, he says that he'll explain this in later videos.
 
+% At the end (11:14) of the 2nd video, he says, we have to use the Borel sigma algebra and not the power set because mu should satisfy some rules. Maybe after makeing these 2 definitions (sigma-alg, measure), define the Borel-algebra for R^n and explain why the power-set itself is not suitable. 
 
-\paragraph{Definition: Measure} Given a set $A$ and a $\sigma$-algebra $\Sigma$ on $A$, a measure $\mu$ on $A$ is a function $\mu: \Sigma \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ such that: (1) $\mu$ is non-negative: $\forall X: \mu(X) \geq 0$, (2) $\mu$ assigns zero to the empty set: $\mu(\emptyset) = 0$, (3) $\mu$ is countably additive aka $\sigma$-additive:
+% the 3rd video at 10:20 gives examples for measures: counting measure, Dirac measure,
+% at 12:00, it gives calculation rules in [0, inf], especially important: 0*inf = 0 specifically in measure theory when multiplying volumes
+
+% 4th video:
+
+
+\paragraph{Definition: Measure} Given a set $A$ and a $\sigma$-algebra $\Sigma$ on $A$, a measure $\mu$ on $A$ is a function $\mu: \Sigma \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$, which we may also write as $\mu: \Sigma \rightarrow [0, \infty]$, such that: (1) $\mu$ is non-negative: $\forall X: \mu(X) \geq 0$, (2) $\mu$ assigns zero to the empty set: $\mu(\emptyset) = 0$, (3) $\mu$ is countably additive aka $\sigma$-additive:
 \begin{equation}
 \mu \left( \bigcup_{k=1}^{\infty} X_k \right) = \sum_{k=1}^{\infty}	\mu(X_k)
 \end{equation}
-for any countable collection $\{X_k\}_{k=1}^{\infty}$ of pairwise disjoint sets $X_k$ where each such $X_k$ is a subset (or element? FIGURE OUT!) of $\Sigma$.
+for any countable collection $\{X_k\}_{k=1}^{\infty}$ of pairwise disjoint sets $X_k$ where each such $X_k$ is an element of $\Sigma$. 
 
-...TBC...
+%...TBC...
+% todo:
+% Bring example: counting measure, Dirac measure (work for all sets)
+% for R^n: require additionally: 
+%   \mu([0,1]^n) = 1 (unit hypercube as unit hypervoulme), 
+%   \mu(X + x) = \mu(X)  (translation invariance)
+% Define the Lebesgue measure on the Borel algebra on R^n, explain why P(R^n) is not suitable as domain
+
+
+\subsubsection{The Lesbesgue Measure}
+After these general considerations, we now want to construct a measure $\mu$ on the set of real numbers $\mathbb{R}$. That means, we want to define a function into which we plug in a subset of $\mathbb{R}$ and it spits out a nonegative real number or infinity. Intuitively, that measure should suitably generalize the idea of a length of an interval $[a,b]$, so we would certainly expect that $\mu([a,b]) = b-a$. Furthermore, we would expect $\mu$ to be translation invariant, i.e. $\mu(X + t) = \mu(X)$ for any measurable set $X \subseteq \mathbb{R}$ and any real number $t \in \mathbb{R}$ that acts as a translation or offset that shifts the set $X$ by an amount of $t$ along the real number line. The construction of such a function $\mu$ on the whole power set $\mathcal{P}(\mathbb{R})$ turns out to be impossible, though. That's the reason why we need this complication with the $\sigma$-algebras. So, if we can't use $\mathcal{P}(\mathbb{R})$ as our $\sigma$-algebra, i.e. as the domain of $\mu$, what other set of of subsets of $\mathbb{R}$ could be suitable to serve as our $\sigma$-algebra? The answer turns out to be the so called Borel algebra ...TBC...
+
+
 
 % $\Cup_{k=1}^{\infty} = \sum_{k=1}^{\infty}$
 

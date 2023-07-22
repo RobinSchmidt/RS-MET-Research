@@ -145,9 +145,20 @@ Most functions that we will typically encounter in applications are indeed Riema
 %https://en.wikipedia.org/wiki/Lebesgue_integration
 
 \subsubsection{Measure Theory}
-Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive natural number $n$. Informally, a measure on $A$ is a function, typically denoted as $\mu(X)$, into which we can plug in a subset $X$ of $A$ as input and it spits out a nonnegative real number or infinity as output. A first attempt to formalize it could look like: $\mu: \mathcal{P}(A) \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ where $\mathcal{P}(A)$ denotes the power set of $A$, i.e. the set of all subsets of A. However, that is not yet quite right. The domain is actually not the set of \emph{all} subsets of $A$, but a set of subsets with some constraints. These constraints are encapsulated in the definition of a so called $\sigma$-algebra. With this definition in place, we will be able to state the actual formal definition of what a measure is.
+Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive natural number $n$. Informally, a measure on $A$ is a function, typically denoted as $\mu(X)$, into which we can plug in a subset $X$ of $A$ as input and it spits out a nonnegative real number or infinity as output. A first attempt to formalize it could look like: $\mu: \mathcal{P}(A) \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ where $\mathcal{P}(A)$ denotes the power set of $A$, i.e. the set of all subsets of A. However, the actual definition is slightly more complicated and more general. The domain of $\mu$ is not necessarily the set of \emph{all} subsets of $A$, although it could be. Instead, it is some set of subsets that satisfies some constraints. These constraints are encapsulated in the definition of a so called $\sigma$-algebra. With this definition in place, we will be able to state the actual formal definition of what a measure is.
 
-\paragraph{Definition: $\sigma$-Algebra} Given a set $A$, a $\sigma$-algebra $\Sigma$ on $A$ is a set of subsets of $A$ such that: (1) $\Sigma$ contains $A$ itself, (2) $\Sigma$ is closed under taking the complement, (3) $\Sigma$ is closed under taking countable unions. From this definition, it follows that $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too.
+\paragraph{Definition: $\sigma$-Algebra} Given a set $A$, a $\sigma$-algebra $\Sigma$ on $A$ is a set of subsets of $A$ such that: (1) $\Sigma$ contains $A$ itself, (2) $\Sigma$ is closed under taking the complement, (3) $\Sigma$ is closed under taking countable unions. From this definition, it follows that the empty set $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too.
+
+\medskip
+The extreme examples of such $\sigma$-algebras on a set $A$ are ${\emptyset, A}$ and $\mathcal{P}(A)$. The former is the smallest possible and the latter is the largest possible $\sigma$-algebra.
+
+% According to this video:
+% https://www.youtube.com/watch?v=FtEmLexUw3Y&list=PLBh2i93oe2quIJS-j1NpbzEvQCmN00F5o
+%   Measure Theory - Part 1 - Sigma Algebras [dark version]
+% at around 11 min, the power set of a set A is actually a sigma-algebra (namely the largest possible sigma algebra) so it seems, we could indeed use our "first attempt" is actually workable. We *could* use the set of all subsets as the domain for the measure mu. But we could also use other sets of subsets. So, the initial attempt is not really wrong but the actual attempt is somehow more general rather than more restricted. ...but this generality makes it somehow unnecessarily complicated. The video says that using the power set is the best-case scenario in the sense that all subsets of A are measurable.
+
+% ToDo: explain, why this complication with the sigma-algebra is necessary. Why don't we just always use P(A) as the domain. Does it have to do with non-measurable sets? At the end of the video, he says that he'll explain this in later videos.
+
 
 \paragraph{Definition: Measure} Given a set $A$ and a $\sigma$-algebra $\Sigma$ on $A$, a measure $\mu$ on $A$ is a function $\mu: \Sigma \rightarrow \mathbb{R}^+_0 \cup \{  \infty \}$ such that: (1) $\mu$ is non-negative: $\forall X: \mu(X) \geq 0$, (2) $\mu$ assigns zero to the empty set: $\mu(\emptyset) = 0$, (3) $\mu$ is countably additive aka $\sigma$-additive:
 \begin{equation}
@@ -173,6 +184,8 @@ for any countable collection $\{X_k\}_{k=1}^{\infty}$ of pairwise disjoint sets 
 %https://en.wikipedia.org/wiki/Inner_measure
 %https://en.wikipedia.org/wiki/Measure_(mathematics)
 %https://en.wikipedia.org/wiki/%CE%A3-algebra
+
+
 
 
 

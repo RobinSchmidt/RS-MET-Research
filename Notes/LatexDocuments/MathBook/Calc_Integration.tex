@@ -10,12 +10,13 @@ Imagine we have a function $y = f(x)$ and want to compute the area that is enclo
  I = \int_a^b f(x) \, dx = \lim_{n \rightarrow \infty}  \sum_{i=1}^n f(x_i) \, \Delta x_i
 \end{equation}
 Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value somewhere inside the $i$th subinterval. That means, the product $f(x_i)  \Delta x_i$ inside the sum can be intepreted as "height times width" where the height is given by the function value and the width by the subinterval length. This product is indeed an area of a rectangle. If we assume to break down the original interval $[a,b]$ into $n$ equally sized subintervals, we can compute the width as $\Delta x_i = (b-a)/n$. When $n$ gets large, each $\Delta x_i$ becomes small and the rectangles become narrow rectangular columns. The larger we make $n$, the more closely the sum of narrow rectangle areas approximates our actual desired area until in the limit, the approximation becomes exact.
+% maybe use \xi_i instead of x_i. That's common in math books
 
 \medskip
 The given formula is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result. If that isn't the case, the function is not considered to be Riemann-integrable. For continuous functions, it will always be the case, though.
 
 \medskip
-The interpretation of the Riemann integral as an area is actually a somewhat sloppy interpretation: it works only when we assume that the function graph is above the $x$-axis for the whole integration interval. If this is not the case, the portions below the $x$-axis will actually produce negative contributions to the total area because the $f(x_i)$ factors will be negative in this case. If the function is more below the $x$-axis than above, the "area" may even become negative. It is more useful to think about the integral as a sort of "signed area". If we divide the integral by the width of the integration interval, i.e. by $b-a$, we obtain an average value of the function over the interval $[a,b]$.
+The interpretation of the Riemann integral as an area is actually a somewhat sloppy interpretation: it works only when we assume that the function graph is above the $x$-axis for the whole integration interval. If this is not the case, the portions below the $x$-axis will actually produce negative contributions to the total area because the $f(x_i)$ factors will be negative in this case. If the function is more below the $x$-axis than above, the "area" may even become negative. It is more useful to think about the integral as a sort of \emph{"signed area"} or an \emph{"area balance"} over the interval $[a,b]$. If we divide the value $I$ of the integral by the width of the integration interval, i.e. by $b-a$, we obtain an \emph{average} value of the function over the interval $[a,b]$. This average would be the unique value $c$ that a constant function would need to have, such that the (signed) area of the rectangle with width $b-a$ and height $c$ gives rise to the same signed area as $f$.
 
 %\paragraph{The Lesbesgue Integral}
 
@@ -35,7 +36,9 @@ The reason for calling it an antiderivative is, as you may have guessed, its rel
 \begin{equation}
  \int f(x) \, dx = 	\{ F(x) + C : F'(x) = f(x) \} = F(x) + C \qquad \text{where } C \in \mathbb{R}
 \end{equation}
-In this equation, the set builder notation in the middle is the formal definition and the right hand side is a less formal shorthand notation. The constant $C$ is called the integration constant. To relate that definition to our former expression with the variable upper integration limit $b$, we note that different choices of the lower integration limit $a$ would give rise to different integration constants $C$. Specifically, if we define $F_0(x)$ to be the particular antiderivative of $f$ with integration constant zero, then we would get $C = -F_0(a)$ in the general case. [VERIFY!]
+In this equation, the set builder notation in the middle is the formal definition and the right hand side is a less formal shorthand notation. The constant $C$ is called the integration constant. To relate that definition to our former expression with the variable upper integration limit $b$, we note that different choices of the lower integration limit $a$ would give rise to different integration constants $C$. Specifically, we get $C = F(a)$. [TODO: explain why - see Arens, pg. 388]
+
+%Specifically, if we define $F_0(x)$ to be the particular antiderivative of $f$ with integration constant zero, then we would get $C = -F_0(a)$ in the general case. [VERIFY! See Arens, pg 388 - it says $C = F(a)$, I think]
 % is it: C = F(a) or C = f(a) or C = a or something else? if a = b then F(b) = 0 when we choose C = 0...maybe C = F(b) - F(a)?
 % Let f(x) = x^2, then F(x) = x^3/3 + C
 % https://www.wolframalpha.com/input?i=integrate+x%5E2+dx+from+x%3Da+to+b
@@ -48,7 +51,11 @@ We have approached derivatives and integrals from geometric problems involving t
 \begin{equation}
  \int_a^b f(x) \, dx = F(b) - F(a)
 \end{equation}
-With that theorem in hand, we can easily compute (signed) areas under the graph of a function $f$ provided that we know an antiderivative $F$ of $f$. We just need to evaluate our antiderivative at two points and subtract the results. To find such an antiderivative for some simple functions, we just need to read our table of derivatives backwards. For more complicated functions, there are certain laws that we can use. %Before we get to them, let's try to convince ourselves that this theorem is plausible. 
+For the difference of $F$ evaluated at the endpoints that appears on the right hand side, the following notations are common:
+\begin{equation}
+ F(b) - F(a) = \Big[ F(x) \Big]_a^b = F(x) \bigg\rvert_a^b
+\end{equation}
+This notation is useful when instead of the symbolic $F(x)$, we deal with a written out and possibly complicated expression for $F(x)$, like e.g. $x + e^x \cos(2 x^2 + \pi x /2 )$, because then we don't need to write it out twice. With the fundamental theorem of calculus in hand, we can easily compute (signed) areas under the graph of a function $f$ over an interval $[a,b]$ provided that we know an antiderivative $F$ of $f$. We just need to evaluate our antiderivative $F$ at two points $b$ and $a$ and subtract the results. To find such an antiderivative for some simple functions, we just need to read our table of derivatives backwards. For more complicated functions, there are certain laws that we can use. %Before we get to them, let's try to convince ourselves that this theorem is plausible. 
 
 %...TBC...
 
@@ -57,6 +64,8 @@ With that theorem in hand, we can easily compute (signed) areas under the graph 
 % give an intuitive understanding of why this should be true: if a function has a high value at the upper (i.e. right) integration limit, then shifting the right integration limit further to the right should increase the area under the graph faster than when it has a low value.
 
 % Note how only the boundary values actually count - this will later generalize to other integral theorems
+
+% Introduce the two notations with the brackets and the vertical line for F(b) - F(a)
 
 \subsection{Integration Laws} 
 ToDo: Explain rules for linearity, reversal, splitting, ...
@@ -76,11 +85,15 @@ Write the function $f(x)$ to be integrated as a product $u(x)v(x)$ such that the
 \begin{equation}
   \int_a^b u(x) v'(x) \, dx = \Big[u(x) v(x)\Big]_a^b - \int_a^b u'(x) v(x) \, dx
 \end{equation}
+The formulas can be derived from the product rule of differentiation.
+
 With $u = u(x), du = u'(x) dx, v = v(x), dv = v'(x) dx$, an indefinite integral can be written using the differentials $du, dv$ as:
 \begin{equation}
   \int u \, dv \ =\ uv - \int v \, du
 \end{equation}
-The formulas can be derived from the product rule of differentiation.
+
+
+% ToDo: maybe formulate it without using primes. Instead use $u,v$ in the LHS and $u,U,v,V$ in the RHS. Explain the notation with the big brackets for evaluating at the endpoints and subtracting. Or maybe use the notation with the right vertical line
 
 \paragraph{Example} Let's find the indefinite integral of $f(x) = 2 x \ln x \, dx$ using $u' = 2 x, v = \ln x$ such that $u = x^2, v' = 1/x$ and $v' u = x^2/x = x$. Note that the roles of $u,v$ are reversed here. They are just dummy names and you'll find formulas using both conventions, so a bit of flexibility is good:
 \begin{align}

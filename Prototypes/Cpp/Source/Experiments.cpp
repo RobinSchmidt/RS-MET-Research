@@ -1381,11 +1381,7 @@ std::vector<T> resampleLinear(const std::vector<T> x, int N)
   std::vector<T> y(N);
   double dx = double(x.size()) / double(y.size());
   for(int i = 0; i < N; i++)
-  {
-    double pos = i * dx;         // Read-position in x-array
-    y[i] = AT::interpolatedValueAt(&x[0], Nx, pos);
-    int dummy = 0;
-  }
+    y[i] = AT::interpolatedValueAt(&x[0], Nx, i*dx);
   return y;
 }
 // Maybe factor out a function AT::resampleLinear(T* x, int Nx, T* y, int Ny)...or maybe don't

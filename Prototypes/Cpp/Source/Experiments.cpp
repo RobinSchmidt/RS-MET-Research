@@ -1471,18 +1471,19 @@ bool testUpDownSample()
   // downsampling. The goal is to find schemes that provide a better upsampling quality than
   // using sample duplication. For example, linear interpolation could be used for upsampling. But
   // then we would need to do something else for the downsampling step to achieve a lossless 
-  // up/down roundtrip. Maybe a 5-point moving average with coeffs [-0.25, 0.5, 0.5, 0.5, -0.25] 
-  // could work? ..let's try it...
+  // up/down roundtrip. Of course, we could just naively downsample the linearly upsampled signal 
+  // by discarding the samples that were used to fill the gaps because the original samples are 
+  // still present unchanged in the upsampled signal. However, it may be better to apply some sort
+  // of filtering before downsampling. It is actually possible to achieve exact reconstruction with
+  // a variety of 5-point filters parametrized by a single parameter. This is detailed below.
+  
 
-  // The eventual goal is to later make a 2D version of the found schemes to use them for image
-  // processing in upsampled images. But first things first and the first thing is the 1D version.
-  // For the 2D version, start with the assumption of bilinear interpolation for upsampling. Maybe
-  // we'll need a 5x5 kernel.
 
 
   // We create an input signal
   using Real = double;
   using Vec  = std::vector<Real>;
+  using Mat  = RAPT::rsMatrix<Real>;
   using AT   = RAPT::rsArrayTools;
 
   // Might be of use:
@@ -1572,6 +1573,33 @@ bool testUpDownSample()
   err = x - xr;
   ok &= rsIsAllZeros(err);
 
+  // Now plot frequency responses for various values of a0:
+
+  Real aLo  = 0.5;
+  Real aHi  = 1.0;
+  int  aNum = 10;
+
+  Mat  kernels(7, 5);
+  for(int i = 0; i < aNum; i++)
+  {
+    a0 = aLo + i*(aHi-aLo)/(aNum-1);
+    a1 = 1 - a0;
+    a2 = -a1 / 2;
+    h  = Vec({a2, a1, a0, a1, a2});
+    kernels.setRow(i, &h[0]);
+  }
+
+
+  using Plt = SpectrumPlotter<Real>;
+  Plt plt;
+  plt.setFloorLevel(-60);
+  plt.setFreqAxisUnit(Plt::FreqAxisUnits::normalized);
+  plt.plotDecibelSpectraOfRows(kernels);
+  // The plots are not normalized to 0 dB. Figure out why and fix it!
+
+  // Observations:
+  // -All freq responses meet in the point at 0.25*fs, 0dB
+
 
   // ToDo:
   // -Write function upsampleViaDuplication and use it together with AT::decimateViaMean. This 
@@ -1581,8 +1609,36 @@ bool testUpDownSample()
   //  do this, maybe plot frequence responses for various a0 from 0.5 to 1 or maybe from 0 to 1. 
   //  And/or creae some (brown?) noise, downsample it, then upsample it and see what looks best in 
   //  terms of being close to the original (down-then-up is, of course, no identity operation due 
-  //  to information loss in the downsampling)
+  //  to information loss in the downsampling). The desired frequency response is that of a 
+  //  halfband filter.
   // -Try to create a scheme using cubic interpolation in the upsampling step.
+  // -The eventual goal is to later make a 2D version of the found schemes to use them for image
+  //  processing in upsampled images. But first things first and the first thing is the 1D version.
+  //  For the 2D version, start with the assumption of bilinear interpolation for upsampling. Maybe
+  //  we'll need a 5x5 kernel. The conditions on the coeffs may be more complicated. Maybe express 
+  //  the kernel as:
+  //
+  //    e f c f e
+  //    f d b d f
+  //    c b a b c
+  //    f d b d f
+  //    e f c f e
+  //
+  // where a = a0, b = a1, c = a2 in the old notation. Bilinear interpolation would spread into 4
+  // output pixels. I think the condition that kernel must sum to 1 remains. In this case, this 
+  // means: a + 4*(b+c+d+e) + 8*f = 1. Maybe the a + 2(b+c) = 1 condition should also remain valid
+  // because when we apply this to a single line, it should work as before? Maybe the d,e coeffs 
+  // should be equal to a,b divided by sqrt(2). The rationale is to make the kernel values 
+  // dependent on distance from the center. We have 6 coeffs, so we need 5 equations if we want to 
+  // treat a as free parameter as before. Maybe this is good:
+  //
+  //   (1) 1 = a + 2*(b+c)                   as before: a1 = 1 - a0
+  //   (2) 0 = c + b/2                       as before: a2 = -a1 / 2
+  //   (3) 1 = a + 4*(b+c+d+e) + 8*f         total sum of unity
+  //   (4) d = b / sqrt(2)
+  //   (5) e = c / sqrt(2)
+  // 
+
 
 
   // See:

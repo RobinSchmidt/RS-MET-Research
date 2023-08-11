@@ -1371,8 +1371,33 @@ void testComplexGaussBlurIIR()
 
 }
 
+bool testUpDownSample()
+{
+  // Some experiments with upsampling/downsampling schemes that are supposed to be an identity
+  // operation when exacuted in sequence. A simple scheme for upsampling by 2 would be to use 
+  // sample duplication for upsampling and to use the average of two successive samples for 
+  // downsampling. The goal is to find schemes that provide a better upsampling quality than
+  // using sample duplication. For example, linear interpolation could be used for upsampling. But
+  // then we would need to do something else for the downsampling step to achieve a lossless 
+  // up/down roundtrip ...TBC...
+  // The eventual goal is to later make a 2D version of the found schemes to use them for image
+  // processing in upsampled images. But first things first and the first thing is the 1D version.
 
 
+  // We create an input signal
+  using Real = double;
+  using Vec  = std::vector<Real>;
+
+
+
+  bool ok = true;
+
+
+
+  return ok;
+}
+
+//-------------------------------------------------------------------------------------------------
 
 template<class T>
 void addInfectionSpeck(RAPT::rsImage<T>& I, const RAPT::rsImage<T>& P, 
@@ -1726,6 +1751,8 @@ void epidemic()
 }
 // SIR model in python:
 // https://www.youtube.com/watch?v=wEvZmBXgxO0
+
+//-------------------------------------------------------------------------------------------------
 
 
 // class for testing rsTensor - we use a subclass to get access to some protected members that we 

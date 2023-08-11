@@ -1,5 +1,6 @@
 //#include "Tools.cpp"  // this includes rapt and rosic
-#include "Experiments.cpp"  // includes Tools.cpp
+#include "Experiments.cpp"  // includes Tools.cpp which includes libraries rapt and rosic 
+                            // ...what about the rs_testing module? wher is this included?
 
 int main (int /*argc*/, char* /*argv[]*/)
 {
@@ -10,8 +11,11 @@ int main (int /*argc*/, char* /*argv[]*/)
   std::cout << back << back;  // delete cd
   std::cout << "CD";          // write CD - should result in abCD - seems to work
   getchar();
+  // OK - this can be deleted. It has been integrated into class rsConsoleProgressIndicator
+  // in Tools.cpp
   */
 
+  // Image processing:
   //testGaussBlurFIR();
   //testGaussBlurIIR();
   //testMultiPass();
@@ -21,8 +25,11 @@ int main (int /*argc*/, char* /*argv[]*/)
   //animateComplexExponentialBlur();
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
+  testUpDownSample();
+
   //epidemic();
 
+  // Tensors and differential geometry:
   //testTensor();
   //testPlane();
   //testManifoldPlane();
@@ -33,6 +40,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifoldEarth();
   
   //testSortedSet();
+
+  // Autodiff:
   //testAutoDiff();
   //testAutoDiff2();
   //testAutoDiff3();
@@ -43,33 +52,42 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testVectorMultiplication3D();
   //testHermiteInterpolation();
+
+  // PDE solvers on nonuniform meshes:
   //testMeshGeneration();
   //testTransportEquation();
   //testWaveEquation();
   //testBiModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
+
+  // Geometric algebra:
   //testExteriorAlgebra3D();
   //testGeometricAlgebra();
+
+
   //testEulerTransformation();
   //testGreensFunction();  // stub
   //testComplexPolar();    // stub
   //testRationalTrigonometry();
   //testLeveledNumber();
-  //testNewtonFractal();
+  //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testFiniteField();
   //testGeneralizedCollatz();
   //testParticleSystem();
   //testWeightedAverages();
+
+  // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff
-  testModularForms();
+  //testModularForms();
   //testIntegerGroup();
   //testBiPeriodicFunctions();
 
   //testAttractors();
 
+  // MIMO Filters:
   //testMimoTransferMatrix();
   //testMimoFilters();        // just a stub - not much in there yet, mostly comments
   //testStateSpaceFilters();
@@ -84,11 +102,13 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSmoothCrossFade();
   //testMerge();
 
+
+  // Riemann zeta function:
   //testRiemannZeta();
   //plotZetaPotential();
   //plotZetaPotentialNumeric();
   //testNumericPotential();
-  testPotentialPlotter();
+  //testPotentialPlotter();
 
 
 

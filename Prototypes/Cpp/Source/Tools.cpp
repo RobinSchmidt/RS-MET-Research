@@ -1,10 +1,10 @@
 #include "../JuceLibraryCode/JuceHeader.h"
-using namespace RAPT;
-using namespace rosic;
+using namespace RAPT;   // maybe get rid
+using namespace rosic;  // dito
 
 //=================================================================================================
 
-
+// Move to library, maybe into rs_testing module into TestTools/Plotting.h
 void plotSurfaceDark(GNUPlotter& plt)
 {
   plt.addCommand("set palette rgbformulae 8, 9, 7");
@@ -41,7 +41,8 @@ public:
     unsigned char back = 8;                // backspace, see http://www.asciitable.com/
     for(int i = 1; i <= numChars; i++)
       std::cout << back;                   // delete  characters
-    // can we do better? like first creating a string of backspaces and writing it to cout in one 
+
+    // Can we do better? Like first creating a string of backspaces and writing it to cout in one 
     // go?
   }
 

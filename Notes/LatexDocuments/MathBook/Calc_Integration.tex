@@ -36,9 +36,12 @@ The reason for calling it an antiderivative is, as you may have guessed, its rel
 \begin{equation}
  \int f(x) \, dx = 	\{ F(x) + C : F'(x) = f(x) \} = F(x) + C \qquad \text{where } C \in \mathbb{R}
 \end{equation}
-In this equation, the set builder notation in the middle is the formal definition and the right hand side is a less formal shorthand notation. The constant $C$ is called the integration constant. To relate that definition to our former expression with the variable upper integration limit $b$, we note that different choices of the lower integration limit $a$ would give rise to different integration constants $C$. Specifically, we get $C = F(a)$. [TODO: explain why - see Arens, pg. 388]
+In this equation, the set builder notation in the middle is the formal definition and the right hand side is a less formal shorthand notation. The constant $C$ is called the integration constant. To relate that definition to our former expression with the variable upper integration limit $b$, we note that different choices of the lower integration limit $a$ would give rise to different integration constants $C$. Specifically, if we define $F_0(x)$ to be the particular antiderivative of $f$ with integration constant zero, then we would get $C = -F_0(a)$ in the general case. [VERIFY! See Arens, pg 388, beware of $c$ occurring on the other side of the equation there]
 
-%Specifically, if we define $F_0(x)$ to be the particular antiderivative of $f$ with integration constant zero, then we would get $C = -F_0(a)$ in the general case. [VERIFY! See Arens, pg 388 - it says $C = F(a)$, I think]
+
+%Specifically, we get $C = -F(a)$. [VERIFY, explain why - see Arens, pg. 388]
+
+%
 % is it: C = F(a) or C = f(a) or C = a or something else? if a = b then F(b) = 0 when we choose C = 0...maybe C = F(b) - F(a)?
 % Let f(x) = x^2, then F(x) = x^3/3 + C
 % https://www.wolframalpha.com/input?i=integrate+x%5E2+dx+from+x%3Da+to+b

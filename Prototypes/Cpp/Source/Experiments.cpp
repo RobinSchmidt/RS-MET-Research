@@ -1453,14 +1453,31 @@ bool testUpDownSample()
   // This kernel has been found by considering the situation arising from upsampling an impulse by a 
   // factor 2 via linear interpolation. This gives:
   //
+  //   in-index:      0         1         2         3         4
   //   input:        0.0       0.0       1.0       0.0       0.0
   //   upsampled:    0.0  0.0  0.0  0.5  1.0  0.5  0.0  0.0  0.0  0.0
+  //   out-index:     0    1    2    3    4    5    6    7    8    9
   //
-  // ...tbc...
+  // Then I observed that the spike of 1 at input sample index 2 gets spread into the 3 output 
+  // samples 3,4,5 with weights 0.5,1,0.5. To reconstruct the 1 from these 3 output values with 
+  // some averaging, we can just add them all up and divide by 2: (0.5 + 1.0 + 0.5) / 2 = 1. That 
+  // suggests to use a 3-point moving average with weights 0.5,0.5,0.5. But now the total sum of 
+  // the weights is 1.5 and also with such a 3 point kernel, the reconstructed sample at index 3 
+  // would be 0.25 instead of 0. But appending weights of -0.25 to both ends of the kernel fixes
+  // both of these problems.
 
   // Test some other kernels:
   //h = Vec({-0.5, 0.5, 1.0, 0.5, -0.5});  // Does not work
   //h = Vec({-0.25, 0.4, 0.7, 0.4, -0.25});  // Nope!
+
+  // What general conditions do we need? I think:
+  // -(1) The total sum should be 1
+  // -(2) The ends must be -0.5 times the values next to the end
+  // -Let's express the kernel in general as [a2 a1 a0 a1 a2] where a0 is the center coeff. I 
+  //  think, the conditions can now be formulated as:
+  //    (1) a0 + 2*(a1+a2) = 1
+  //    (2) a2 = -a1/2
+  //  this should give us a one parametric family of filter kernels. Maybe use a0 as parameter...
 
 
   // Apply the filter kernel to y (maybe factor out):

@@ -1412,8 +1412,16 @@ std::vector<T> upsampleBy2(const std::vector<T> x)
   int Ny = 2*Nx-1;
   std::vector<T> y(Ny);
 
-  for(int i = 0; i < Nx; i++)
-    y[2*i] = x[i];
+  //for(int i = 0; i < Nx; i++)
+  //  y[2*i] = x[i];
+
+
+  for(int i = 0; i < Nx-1; i++)
+  {
+    y[2*i]   = x[i];
+    y[2*i+1] = 0.5 * (x[i] + x[i+1]);
+  }
+  y[Ny-1] = x[Nx-1];
 
 
   return y;

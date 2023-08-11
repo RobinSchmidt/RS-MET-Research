@@ -1586,13 +1586,12 @@ bool testUpDownSample()
     a2 = -a1 / 2;
     h  = Vec({a2, a1, a0, a1, a2});
     kernels.setRow(i, h);
-    //kernels.setRow(i, &h[0]);
   }
 
 
   using Plt = SpectrumPlotter<Real>;
   Plt plt;
-  plt.setFloorLevel(-80);
+  plt.setFloorLevel(-100);
   plt.setFreqAxisUnit(Plt::FreqAxisUnits::normalized);
   plt.plotDecibelSpectraOfRows(kernels);
   // The plots are not normalized to 0 dB. Figure out why and fix it!
@@ -1654,9 +1653,23 @@ bool testUpDownSample()
   //  general sum_{i,j} bi*aj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
   //  the kernel i.e. the maximum index when we assume index 0 to be at the center and let the 
   //  leftward indices be negative. We don't write a_{-1}, a_{-2} though, because they are equal
-  //  to a_1, a_2 due to symmetry (using LaTeX subscript notation here for the index). Maybe use
-  //  notation d0, d1, d2, ... for the downsampling coeffs and u0, u1, u2 for the upsampling 
-  //  coeffs.
+  //  to a_1, a_2 due to symmetry (using LaTeX subscript notation here for the index). 
+  // -OK - let's try it with a0 = 0.75, a1 = 0.25, a2 = -0.125
+  //    b = [b2 b1 b0 b1 b2] = [ 0.0   0.5, 1,   0.5   0.0]
+  //    a = [a2 a1 a0 a1 a2] = [-0.125 0.25 0.75 0.25 -0.125]
+  //  so we get:
+  //    b0*a2 + b1*a1 + b2*a0 = 1*(-0.125) + 0.5*0.25 + 0*0.75 = -0.125 + 0.125 = 0
+  //  so the formula works in this case. I'm not sure, if it's generally the right formula, though.
+  //  let's try a0 = 0.8, a1 = 0.2, a2 = -0.1 and b0 = 1, b1 = 0.5, b2 = 0 as before:
+  //    1*(-0.1) + 0.5*0.2 + 0*0.8 = -0.1 + 0.1 = 0
+  //  OK, wokrs in this case, too. But whether the formula with the sum holds in general for longer
+  //  kernels needs to be figured out. If it does work, we have a way to produce a downsampling 
+  //  kernel when the upsampling kernel is given (or the other way around)
+  // -Maybe use notation d0, d1, d2, ... for the downsampling coeffs and u0, u1, u2 for the 
+  //  upsampling  coeffs.
+  // -It would be interesting, if this could also work for IIR filters. When we have an analytic 
+  //  expression for a_n, we may be able to derive an expression of b_n and then design a filter
+  //  that has thatb_n sequence as impulse response.
 
 
 

@@ -1460,10 +1460,12 @@ bool testUpDownSample()
   // Crop the filtered yf to the original length of y by discarding the first and last 2 samples:
   int tail = Nh/2;  // tail == 2. Does this also work for even Nh? Try it!
   yf = crop(yf, tail, (Nyf-1)-tail);
-
-
+  rsAssert(yf.size() == Ny);
 
   // Now decimate yf naively. this should give back x:
+  Vec xr(Nx);
+  AT::decimate(&yf[0], Ny, &xr[0], 2);
+  // OK - it works for our test signal. Try it on a more complex signal.
 
 
   // ToDo:

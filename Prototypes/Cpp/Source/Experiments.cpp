@@ -1647,6 +1647,16 @@ bool testUpDownSample()
   //  Try to use the upsampling variant and check, if upsample -> downsample is lossless. If not,
   //  take the upsampling as is and try to derive a suitable downsampling that makes the roundtrip 
   //  lossless.
+  // -Maybe we can somehow generalize this: given an upsampling kernel, find a (set of) 
+  //  downsampling kernels that yield a lossless roundtrip. The upsampling kernel for linear 
+  //  interpolation in 1D can be written as [0.5, 1, 0.5] = [b1 b0 b1]. I think, it is the 0.5 that
+  //  appears in the a2 = -0.5*a1 condition. I think, we must have b0*a2 + b1*a1 = 0? ...and in 
+  //  general sum_{i,j} bi*aj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
+  //  the kernel i.e. the maximum index when we assume index 0 to be at the center and let the 
+  //  leftward indices be negative. We don't write a_{-1}, a_{-2} though, because they are equal
+  //  to a_1, a_2 due to symmetry (using LaTeX subscript notation here for the index). Maybe use
+  //  notation d0, d1, d2, ... for the downsampling coeffs and u0, u1, u2 for the upsampling 
+  //  coeffs.
 
 
 

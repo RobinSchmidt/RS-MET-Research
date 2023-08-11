@@ -1443,12 +1443,17 @@ std::vector<T> downsampleBy2(const std::vector<T> y, T a0 = T(1))
   T a1 = T(1) - a0;
   T a2 = -a1 * T(0.5);
 
-
-
+  // Compute and return output:
+  x[0] = y[0];
+  for(int i = 1; i < Nx-1; i++) {  // i is index into x
+    int j = 2*i;                   // j is center index into y
+    x[i] = a0 * y[j] + a1 * (y[j-1]+y[j+1]) + a2 * (y[j-2]+y[j+2]);  }
+  x[Nx-1] = y[Ny-1];
+  return x;
 
   // ToDo:
-  // Maybe optimize the special case a0 = 1. Not sure, if it's worth it. Depends on how commonly we
-  // expect this to occur
+  // Maybe optimize the special case a0 = 1 (and therefore a1 = a2 = 0). Not sure, if it's worth 
+  // it. Depends on how commonly we expect this to occur. Probably not so often.
 }
 
 
@@ -1511,7 +1516,8 @@ bool testUpDownSample()
   // would be 0.25 instead of 0. But appending weights of -0.25 to both ends of the kernel fixes
   // both of these problems. What general conditions do we need? I think:
   // -(1) The total sum of weights should be 1
-  // -(2) The ends must be -0.5 times the values next to the end
+  // -(2) The ends must be -0.5 times the values next to the end. I think, this is because the 
+  //      spike spreads with weight 0.5 into the adjacent samples int the oversampled signal.
   // -Let's express the kernel in general as [a2 a1 a0 a1 a2] where a0 is the center coeff. I 
   //  think, the conditions can now be formulated as:
   //    (1) a0 + 2*(a1+a2) = 1
@@ -1559,9 +1565,12 @@ bool testUpDownSample()
   // That takes the downsampling filter parameter defaulting to 1
 
   // Now with the convenience functions:
-  x  = Vec({7,-2,1,-6,5,-3,4,-1,3}); 
-  y  = upsampleBy2(x);
-  xr = downsampleBy2(y);
+  a0  = 0.625;
+  x   = Vec({7,-2,1,-6,5,-3,4,-1,3}); 
+  y   = upsampleBy2(x);
+  xr  = downsampleBy2(y, a0);
+  err = x - xr;
+  ok &= rsIsAllZeros(err);
 
 
   // ToDo:

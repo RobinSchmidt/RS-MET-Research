@@ -1587,6 +1587,9 @@ bool testUpDownSample1D()
   plt.plotDecibelSpectraOfRows(kernels);
   // The plots are not normalized to 0 dB. Figure out why and fix it!
 
+  rsAssert(ok);
+  return ok;
+
   // Observations:
   // -All freq responses meet in the point at 0.25*fs, 0dB
   // -They seem to all have a bump at around 0.165*fs
@@ -1635,13 +1638,15 @@ bool testUpDownSample1D()
   //  that has that b_n sequence as impulse response.
   // -The eventual goal is to later make a 2D version of the found schemes to use them for image
   //  processing in upsampled images. But first things first and the first thing is the 1D version.
+  // -See also:
+  //  https://en.wikipedia.org/wiki/Upsampling
+  //  https://en.wikipedia.org/wiki/Downsampling_(signal_processing)
+}
 
-
-
-
-  //  For the 2D version, start with the assumption of bilinear interpolation for upsampling. Maybe
-  //  we'll need a 5x5 kernel. The conditions on the coeffs may be more complicated. Maybe express 
-  //  the kernel as:
+bool testUpDownSample2D()
+{
+  // For the 2D version, start with the assumption of bilinear interpolation for upsampling. We'll 
+  // need a 5x5 kernel for downsampling. Let's express the kernel as:
   //
   //    e f c f e
   //    f d b d f
@@ -1649,13 +1654,13 @@ bool testUpDownSample1D()
   //    f d b d f
   //    e f c f e
   //
-  //  where a = a0, b = a1, c = a2 in the old notation. Bilinear interpolation would spread into 4
-  //  output pixels. I think the condition that kernel must sum to 1 remains. In this case, this 
-  //  means: a + 4*(b+c+d+e) + 8*f = 1. Maybe the a + 2(b+c) = 1 condition should also remain valid
-  //  because when we apply this to a single line, it should work as before? Maybe the d,e coeffs 
-  //  should be equal to a,b divided by sqrt(2). The rationale is to make the kernel values 
-  //  dependent on distance from the center. We have 6 coeffs, so we need 5 equations if we want to 
-  //  treat a as free parameter as before. Maybe this is good:
+  // where a = a0, b = a1, c = a2 in the old notation used for the 1D case. Bilinear interpolation 
+  // would spread into 4 output pixels. I think the condition that kernel must sum to 1 remains. In 
+  // this case, this means: a + 4*(b+c+d+e) + 8*f = 1. Maybe the a + 2(b+c) = 1 condition should 
+  // also remain valid because when we apply this to a single line, it should work as before? Maybe 
+  // the d,e coeffs should be equal to a,b divided by sqrt(2). The rationale is to make the kernel
+  // values dependent on distance from the center. We have 6 coeffs, so we need 5 equations if we 
+  // want to treat a as free parameter as before. Maybe this is good:
   //
   //    (1) 1 = a + 2*(b+c)                   as before: a1 = 1 - a0
   //    (2) 0 = c + b/2                       as before: a2 = -a1 / 2
@@ -1668,19 +1673,6 @@ bool testUpDownSample1D()
   //  interpolateBilinear(const rsImage<T>& img, 2, 2)
 
 
-  // See:
-  // https://en.wikipedia.org/wiki/Upsampling
-  // https://en.wikipedia.org/wiki/Downsampling_(signal_processing)
-
-
-
-  rsAssert(ok);
-  return ok;
-}
-
-
-bool testUpDownSample2D()
-{
   bool ok = true;
 
 

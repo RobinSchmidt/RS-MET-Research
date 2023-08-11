@@ -1493,8 +1493,8 @@ bool testUpDownSample1D()
   int Ny = 2*Nx;
   Vec y  = resampleLinear(x, Ny);
 
-  // Define the filter kernel:
-  Vec h({-0.25, 0.5, 0.5, 0.5, -0.25});
+  // Define the filter kernel for downsampling:
+  Vec h({-0.25, 0.5, 0.5, 0.5, -0.25});   // maybe rename h to a
   // This kernel has been found by considering the situation arising from upsampling an impulse by a 
   // factor 2 via linear interpolation. This gives:
   //
@@ -1553,12 +1553,8 @@ bool testUpDownSample1D()
   // reconstructed first and last values are wrong. All other reconstructed values will be correct
   // though, regardless of first and last input samples in x. Maybe the kernel h is appropriate 
   // only for inner points? A simple remedy would be to just pad x with zeros before upsampling and
-  // cropping after downsampling. But maybe we can solve it more elegantly? Maybe we need to use 
-  // special kernels for first and last samples. Maybe first, we should combine the filtering and 
-  // decimation steps into a single procedure. Maybe a function like 
-  //   xr = downsampleBy2(y, a0 = 1)
-  // That takes the downsampling filter parameter defaulting to 1
-
+  // cropping after downsampling. But below, we solve it more elegantly anyway...
+  
   // Now with the convenience functions:
   a0  = 0.625;
   x   = Vec({7,-2,1,-6,5,-3,4,-1,3}); 
@@ -1601,6 +1597,12 @@ bool testUpDownSample1D()
   // -Conclusion: a0 = 0.75 seems a good overall choice for the downsampling. 
 
   // ToDo:
+  // -Figure out the z-domain transfer function of downsampling filter a. I think, it's
+  //    H(z) = a0 + a1*(z^-1 + z^1) + a2*(z^-2 + z^2)
+  //  Setting it to zero gives:
+  //    0 = a0     + a1*(z^-1 + z^1) + a2*(z^-2 + z^2)
+  //      = a0*z^2 + a1*(z+z^3)      + a2*(1 + z^4)
+  //  Try to solve it explicitly as function of a0. It's a quartic, so it should be possible.
   // -Write function upsampleViaDuplication and use it together with AT::decimateViaMean. This 
   //  should also give a lossless roundtrip. However, the quality of the upsampled data will be
   //  suboptimal. Is it possible to use something other than pixel duplication for the upsampling 
@@ -1625,8 +1627,8 @@ bool testUpDownSample1D()
   //  leftward indices be negative. We don't write a_{-1}, a_{-2} though, because they are equal
   //  to a_1, a_2 due to symmetry (using LaTeX subscript notation here for the index). 
   // -OK - let's try it with a0 = 0.75, a1 = 0.25, a2 = -0.125
-  //    b = [b2 b1 b0 b1 b2] = [ 0.0   0.5, 1,   0.5   0.0]
-  //    a = [a2 a1 a0 a1 a2] = [-0.125 0.25 0.75 0.25 -0.125]
+  //    b = [b2 b1 b0 b1 b2] = [ 0      0.5   1     0.5    0    ]
+  //    a = [a2 a1 a0 a1 a2] = [-0.125  0.25  0.75  0.25  -0.125]
   //  so we get:
   //    b0*a2 + b1*a1 + b2*a0 = 1*(-0.125) + 0.5*0.25 + 0*0.75 = -0.125 + 0.125 = 0
   //  so the formula works in this case. I'm not sure, if it's generally the right formula, though.
@@ -1674,7 +1676,55 @@ bool testUpDownSample1D_2()
 
   // Maybe impose additionally: b0 + 2*(b1 + b2) = 2 because this is the sum which the linear 
   // interpolation upsampling kernel gives. Maybe also require b0 = 1, also like in linear 
-  // interpolation.
+  // interpolation. Or maybe leave b0 as free parameter. OK, so we have 2 equations:
+  //   (1)  0 = b1/4 + b2/2
+  //   (2)  2 = b0 + 2*(b1 + b2)
+  // although the second is questionable. I think, the number 2 can be explained by the fact that 
+  // we upsample by a factor of 2. If we would upsample by 3, then the coeffs should sum to 3, I 
+  // guess. We'll see. Let's solve the 1st equatiuon for b2:
+  //   b2 = -b1/2
+  // This is very reminscent of the a2 = -a1/2 that we had above. Interesting! Substituting b2 into 
+  // (2) and solving for b1 gives:
+  //   2 = b0 + 2*(b1 - b1/2)  ->  b1 = 2 - b0
+
+
+  // OK - let's try it:
+
+  // For convenience:
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  //using Mat  = RAPT::rsMatrix<Real>;
+  //using AT   = RAPT::rsArrayTools;
+
+
+  // Create test signal
+  Vec x({7,-2,1,-6,5,-3,4,-1,3});
+  int Nx = (int) x.size();
+
+  // Upsample by a factor of 2:
+  int Ny = 2*Nx;  // verify!
+  Vec y(Ny);
+  y[0] = x[0];
+  for(int i = 1; i < Ny-1; i++)
+  {
+    int j = 2*i;
+    y[i] = 0.5*x[j] + 0.25*(x[j-1] + x[j+1]); // a0 = 0.5, a1 = 0.25
+  }
+  y[Ny-1] = x[Nx-1];
+
+
+  // ToDo:
+  // -Let the user prescribe the downsampling kernel a0,a1 or maybe even a0,a1,a2. Then compute
+  //  the upsampling kernel b0,b1,b2 from:
+  //    (1)  0 = b0*a2 + b1*a1 + a0*b2         (1st term is 0 bcs a2 = 0 here)
+  //    (2)  2 = b0 + 2*(b1 + b2)
+  // -Do also the converse: Let the user specify the upsampling kernel as b0,b1,b2 and compute from
+  //  that the downsampling kernel a0,a1,a2 from:
+  //    (1)  0 = a0*b2 + a1*b1 + a2*b0
+  //    (2)  1 = a0 + 2*(a1 + a2)
+  // -These sets of equations look nicely symmetric. The 1st is always the same, the 2nd has equal
+  //  right hand sides (just with roles of a and b swapped)
+
 
 
   rsAssert(ok);

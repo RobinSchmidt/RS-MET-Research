@@ -1477,7 +1477,13 @@ bool testUpDownSample()
   //  think, the conditions can now be formulated as:
   //    (1) a0 + 2*(a1+a2) = 1
   //    (2) a2 = -a1/2
-  //  this should give us a one parametric family of filter kernels. Maybe use a0 as parameter...
+  //  this should give us a one parametric family of filter kernels. Maybe use a0 as parameter. 
+  //  Substitute a2 = -a1/2 into (1): a0 + 2*(a1 - a1/2) = 1 and solve for a1:
+  //  a1 = 1 - a0
+  Real a0 = 0.75;
+  Real a1 = 1 - a0;
+  Real a2 = -a1 / 2;
+  h = Vec({a2, a1, a0, a1, a2});
 
 
   // Apply the filter kernel to y (maybe factor out):

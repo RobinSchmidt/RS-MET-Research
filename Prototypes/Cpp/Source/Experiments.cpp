@@ -1457,6 +1457,9 @@ std::vector<T> downsampleBy2_Lin(const std::vector<T> y, T a0 = T(1))
 }
 
 
+
+
+
 bool testUpDownSample1D()
 {
   // Some experiments with upsampling/downsampling schemes that are supposed to be an identity
@@ -1600,7 +1603,8 @@ bool testUpDownSample1D()
   // ToDo:
   // -Write function upsampleViaDuplication and use it together with AT::decimateViaMean. This 
   //  should also give a lossless roundtrip. However, the quality of the upsampled data will be
-  //  suboptimal.
+  //  suboptimal. Is it possible to use something other than pixel duplication for the upsampling 
+  //  when we assume to decimate via mean?
   // -See also: AT::decimate, AT::decimateViaMean, AT::movingAverage3pt
   // -Maybe create some brown noise, downsample it, then upsample it and see what *looks* best
   //  visually in terms of being close to the original (down-then-up is, of course, no identity 
@@ -1645,6 +1649,38 @@ bool testUpDownSample1D()
   //  https://en.wikipedia.org/wiki/Upsampling
   //  https://en.wikipedia.org/wiki/Downsampling_(signal_processing)
 }
+
+
+bool testUpDownSample1D_2()
+{
+  bool ok = true;
+
+  // Let's assume that we are given the downsampling kernel as [a1 a0 a1] = [0.25 0.5 0.25]. Now we 
+  // want to find a corresponding upsampling kernel [b1 b0 b1] or [b2 b1 b0 b1 b2]. Consider the 
+  // situation:
+  //
+  //   in-index:   0   1   2   3   4   5    6    7    8
+  //   in-value:   2   4   8   6   4   2   -2    4    2
+  //   out-value:  2      6.5      4       0.5        2
+  //   out-index:  0       1       2        3         4
+  // 
+  // The 6.5 at out-index 1 is computed as 0.25*4 + 0.5*8 + 0.5*6, i.e. we use a 3-point averaging
+  // kernel of the form [0.25 0.5 0.25]
+
+  // Let's assume, our hypothesized condition  
+  //   b0*a2 + b1*a1 + b2*a0 = 0
+  // is the correct equation. Then with our given a0 = 0.5, a1 = 0.25, a2 = 0, this becomes:
+  //   b0*0 + b1*0.25 + b2*0.5 = 0
+
+  // Maybe impose additionally: b0 + 2*(b1 + b2) = 2 because this is the sum which the linear 
+  // interpolation upsampling kernel gives. Maybe also require b0 = 1, also like in linear 
+  // interpolation.
+
+
+  rsAssert(ok);
+  return ok;
+}
+
 
 bool testUpDownSample2D()
 {

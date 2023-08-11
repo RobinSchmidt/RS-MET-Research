@@ -1372,10 +1372,24 @@ void testComplexGaussBlurIIR()
 }
 
 
+// Move to RAPT:
+template<class T>
+void resampleLinear(const T* x, int Nx, T* y, int Ny)
+{
+  double dx = double(Nx) / double(Ny);
+  for(int i = 0; i < Ny; i++)
+    y[i] = RAPT::rsArrayTools::interpolatedValueAt(x, Nx, i*dx);
+}
+
 // Convenience function to resample the givne vector x to new length N
 template<class T>
 std::vector<T> resampleLinear(const std::vector<T> x, int N)
 {
+  std::vector<T> y(N);
+  resampleLinear(&x[0], (int)x.size(), &y[0], N);
+  return y;
+
+  /*
   using AT = RAPT::rsArrayTools;
   int Nx = (int) x.size();
   std::vector<T> y(N);
@@ -1383,6 +1397,7 @@ std::vector<T> resampleLinear(const std::vector<T> x, int N)
   for(int i = 0; i < N; i++)
     y[i] = AT::interpolatedValueAt(&x[0], Nx, i*dx);
   return y;
+  */
 }
 // Maybe factor out a function AT::resampleLinear(T* x, int Nx, T* y, int Ny)...or maybe don't
 // put it into rsArrayTools but into Interpolation.h next to resampleNonUniformLinear

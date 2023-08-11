@@ -25,7 +25,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //animateComplexExponentialBlur();
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
-  testUpDownSample();                 // up- and downsampling with lossless roundtrip
+  testUpDownSample1D();              // up- and downsampling with lossless roundtrip
+  testUpDownSample2D();              // stub, dito but for images
 
   //epidemic();
 
@@ -105,10 +106,10 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Riemann zeta function:
   //testRiemannZeta();
-  //plotZetaPotential();
-  //plotZetaPotentialNumeric();
-  //testNumericPotential();
-  //testPotentialPlotter();
+  plotZetaPotential();
+  plotZetaPotentialNumeric();
+  testNumericPotential();
+  testPotentialPlotter();
 
 
 

@@ -1457,13 +1457,7 @@ std::vector<T> downsampleBy2(const std::vector<T> y, T a0 = T(1))
 }
 
 
-
-// Convenience function for filtering:
-
-
-
-
-bool testUpDownSample()
+bool testUpDownSample1D()
 {
   // Some experiments with upsampling/downsampling schemes that are supposed to be an identity
   // operation when executed in sequence. A simple scheme for upsampling by 2 would be to use 
@@ -1478,16 +1472,13 @@ bool testUpDownSample()
   // a variety of 5-point filters parametrized by a single parameter. This is detailed below.
   
 
-
-
-  // We create an input signal
+  // For convenience:
   using Real = double;
   using Vec  = std::vector<Real>;
   using Mat  = RAPT::rsMatrix<Real>;
   using AT   = RAPT::rsArrayTools;
 
-  // Might be of use:
-  // AT::decimate, AT::decimateViaMean, AT::movingAverage3pt
+
 
   bool ok = true;
 
@@ -1573,12 +1564,12 @@ bool testUpDownSample()
   err = x - xr;
   ok &= rsIsAllZeros(err);
 
-  // Now plot frequency responses for various values of a0:
-
+  // Create kernels for various values of a0 and store then in a 2D array. The 1st index is the 
+  // kernel index, then 2nd is the sample index:
   Real aLo  = 0.5;
   Real aHi  = 1.0;
   int  aNum = 7;
-  Mat  kernels(aNum, 5);  // the kernels have length 5
+  Mat  kernels(aNum, 5);  // The kernels have length 5
   for(int i = 0; i < aNum; i++)
   {
     a0 = aLo + i*(aHi-aLo)/(aNum-1);
@@ -1588,7 +1579,7 @@ bool testUpDownSample()
     kernels.setRow(i, h);
   }
 
-
+  // Plot frequency responses for the kernels:
   using Plt = SpectrumPlotter<Real>;
   Plt plt;
   plt.setFloorLevel(-100);
@@ -1599,23 +1590,55 @@ bool testUpDownSample()
   // Observations:
   // -All freq responses meet in the point at 0.25*fs, 0dB
   // -They seem to all have a bump at around 0.165*fs
-  // -For a0 = 0.75, there seems to be a notch at the nyquist freq 0.5*fs
-  // -Conclusion: a0 = 0.75 seems a good overall choice
-
+  // -For a0 = 0.75, there seems to be a notch at the nyquist freq 0.5*fs. 
+  // -The desired freq-response is that of a halfband filter because we use it to downsample by 2.
+  // -Conclusion: a0 = 0.75 seems a good overall choice for the downsampling. 
 
   // ToDo:
   // -Write function upsampleViaDuplication and use it together with AT::decimateViaMean. This 
   //  should also give a lossless roundtrip. However, the quality of the upsampled data will be
   //  suboptimal.
-  // -Figure out which coefficient a0 gives the best downsampling quality for general signals. To 
-  //  do this, maybe plot frequence responses for various a0 from 0.5 to 1 or maybe from 0 to 1. 
-  //  And/or creae some (brown?) noise, downsample it, then upsample it and see what looks best in 
-  //  terms of being close to the original (down-then-up is, of course, no identity operation due 
-  //  to information loss in the downsampling). The desired frequency response is that of a 
-  //  halfband filter.
-  // -Try to create a scheme using cubic interpolation in the upsampling step.
+  // -See also: AT::decimate, AT::decimateViaMean, AT::movingAverage3pt
+  // -Maybe create some brown noise, downsample it, then upsample it and see what *looks* best
+  //  visually in terms of being close to the original (down-then-up is, of course, no identity 
+  //  operation due to information loss in the downsampling). 
+  // -Try to create a scheme using cubic interpolation in the upsampling step. 
+  // -Try also the "Magic Kernel"
+  //    https://johncostella.com/magic/
+  //    https://johncostella.com/magic/mks.pdf
+  //  Try to use the upsampling variant and check, if upsample -> downsample is lossless. If not,
+  //  take the upsampling as is and try to derive a suitable downsampling that makes the roundtrip 
+  //  lossless.
+  // -Maybe we can somehow generalize this: given an upsampling kernel, find a (set of) 
+  //  downsampling kernels that yield a lossless roundtrip. The upsampling kernel for linear 
+  //  interpolation in 1D can be written as [0.5, 1, 0.5] = [b1 b0 b1]. I think, it is the 0.5 that
+  //  appears in the a2 = -0.5*a1 condition. I think, we must have b0*a2 + b1*a1 = 0? ...and in 
+  //  general sum_{i,j} bi*aj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
+  //  the kernel i.e. the maximum index when we assume index 0 to be at the center and let the 
+  //  leftward indices be negative. We don't write a_{-1}, a_{-2} though, because they are equal
+  //  to a_1, a_2 due to symmetry (using LaTeX subscript notation here for the index). 
+  // -OK - let's try it with a0 = 0.75, a1 = 0.25, a2 = -0.125
+  //    b = [b2 b1 b0 b1 b2] = [ 0.0   0.5, 1,   0.5   0.0]
+  //    a = [a2 a1 a0 a1 a2] = [-0.125 0.25 0.75 0.25 -0.125]
+  //  so we get:
+  //    b0*a2 + b1*a1 + b2*a0 = 1*(-0.125) + 0.5*0.25 + 0*0.75 = -0.125 + 0.125 = 0
+  //  so the formula works in this case. I'm not sure, if it's generally the right formula, though.
+  //  let's try a0 = 0.8, a1 = 0.2, a2 = -0.1 and b0 = 1, b1 = 0.5, b2 = 0 as before:
+  //    1*(-0.1) + 0.5*0.2 + 0*0.8 = -0.1 + 0.1 = 0
+  //  OK, works in this case, too. But whether the formula with the sum holds in general for longer
+  //  kernels needs to be figured out. If it does work, we have a way to produce a downsampling 
+  //  kernel when the upsampling kernel is given (or the other way around)
+  // -Maybe use notation d0, d1, d2, ... for the downsampling coeffs and u0, u1, u2 for the 
+  //  upsampling  coeffs.
+  // -It would be interesting, if this could also work for IIR filters. When we have an analytic 
+  //  expression for a_n, we may be able to derive an expression of b_n and then design a filter
+  //  that has that b_n sequence as impulse response.
   // -The eventual goal is to later make a 2D version of the found schemes to use them for image
   //  processing in upsampled images. But first things first and the first thing is the 1D version.
+
+
+
+
   //  For the 2D version, start with the assumption of bilinear interpolation for upsampling. Maybe
   //  we'll need a 5x5 kernel. The conditions on the coeffs may be more complicated. Maybe express 
   //  the kernel as:
@@ -1640,37 +1663,9 @@ bool testUpDownSample()
   //    (4) d = b / sqrt(2)
   //    (5) e = c / sqrt(2)
   // 
-  // -Try also the "Magic Kernel"
-  //    https://johncostella.com/magic/
-  //    https://johncostella.com/magic/mks.pdf
-  //  Try to use the upsampling variant and check, if upsample -> downsample is lossless. If not,
-  //  take the upsampling as is and try to derive a suitable downsampling that makes the roundtrip 
-  //  lossless.
-  // -Maybe we can somehow generalize this: given an upsampling kernel, find a (set of) 
-  //  downsampling kernels that yield a lossless roundtrip. The upsampling kernel for linear 
-  //  interpolation in 1D can be written as [0.5, 1, 0.5] = [b1 b0 b1]. I think, it is the 0.5 that
-  //  appears in the a2 = -0.5*a1 condition. I think, we must have b0*a2 + b1*a1 = 0? ...and in 
-  //  general sum_{i,j} bi*aj = 0  where i = 2-j and the 2 is the length of the "forward wing" of 
-  //  the kernel i.e. the maximum index when we assume index 0 to be at the center and let the 
-  //  leftward indices be negative. We don't write a_{-1}, a_{-2} though, because they are equal
-  //  to a_1, a_2 due to symmetry (using LaTeX subscript notation here for the index). 
-  // -OK - let's try it with a0 = 0.75, a1 = 0.25, a2 = -0.125
-  //    b = [b2 b1 b0 b1 b2] = [ 0.0   0.5, 1,   0.5   0.0]
-  //    a = [a2 a1 a0 a1 a2] = [-0.125 0.25 0.75 0.25 -0.125]
-  //  so we get:
-  //    b0*a2 + b1*a1 + b2*a0 = 1*(-0.125) + 0.5*0.25 + 0*0.75 = -0.125 + 0.125 = 0
-  //  so the formula works in this case. I'm not sure, if it's generally the right formula, though.
-  //  let's try a0 = 0.8, a1 = 0.2, a2 = -0.1 and b0 = 1, b1 = 0.5, b2 = 0 as before:
-  //    1*(-0.1) + 0.5*0.2 + 0*0.8 = -0.1 + 0.1 = 0
-  //  OK, wokrs in this case, too. But whether the formula with the sum holds in general for longer
-  //  kernels needs to be figured out. If it does work, we have a way to produce a downsampling 
-  //  kernel when the upsampling kernel is given (or the other way around)
-  // -Maybe use notation d0, d1, d2, ... for the downsampling coeffs and u0, u1, u2 for the 
-  //  upsampling  coeffs.
-  // -It would be interesting, if this could also work for IIR filters. When we have an analytic 
-  //  expression for a_n, we may be able to derive an expression of b_n and then design a filter
-  //  that has thatb_n sequence as impulse response.
-
+  // -For upsampling in the 2D case, see also rsImageProcessor<T>::interpolateBilinear. But maybe
+  //  implement an optimized version for upsampling by 2. It should give the same result as
+  //  interpolateBilinear(const rsImage<T>& img, 2, 2)
 
 
   // See:
@@ -1682,6 +1677,19 @@ bool testUpDownSample()
   rsAssert(ok);
   return ok;
 }
+
+
+bool testUpDownSample2D()
+{
+  bool ok = true;
+
+
+
+
+  rsAssert(ok);
+  return ok;
+}
+
 
 //-------------------------------------------------------------------------------------------------
 

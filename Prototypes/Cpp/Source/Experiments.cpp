@@ -1441,7 +1441,7 @@ bool testUpDownSample()
   bool ok = true;
 
   // Create test signal
-  Vec x({0,-2,1,3,-1,0});         // preliminary - use something more complex later
+  Vec x({0,-2,1,5,-3,4,-1,0});         // preliminary - use something more complex later
   int Nx = (int) x.size();
 
   // Upsample by a factor of 2:
@@ -1450,6 +1450,18 @@ bool testUpDownSample()
 
   // Define the filter kernel:
   Vec h({-0.25, 0.5, 0.5, 0.5, -0.25});
+  // This kernel has been found by considering the situation arising from upsampling an impulse by a 
+  // factor 2 via linear interpolation. This gives:
+  //
+  //   input:        0.0       0.0       1.0       0.0       0.0
+  //   upsampled:    0.0  0.0  0.0  0.5  1.0  0.5  0.0  0.0  0.0  0.0
+  //
+  // ...tbc...
+
+  // Test some other kernels:
+  //h = Vec({-0.5, 0.5, 1.0, 0.5, -0.5});  // Does not work
+  //h = Vec({-0.25, 0.4, 0.7, 0.4, -0.25});  // Nope!
+
 
   // Apply the filter kernel to y (maybe factor out):
   int Nh  = (int) h.size();
@@ -1465,24 +1477,29 @@ bool testUpDownSample()
   // Now decimate yf naively. This should give back x:
   Vec xr(Nx);
   AT::decimate(&yf[0], Ny, &xr[0], 2);
-  Vec err = x - xr;  // Error intrdouced in roundtrip
-  // OK - it works, but only if the first and last samples of x are zero. The kernel may be 
-  // appropriate only for inner points? A simple remedy would be to just pad x with zeros before 
-  // upsampling and cropping after downsampling. But maybe we can solve it more elegantly? Maybe
-  // we need to use special kernels for first and last samples. Maybe first, we should combine the
-  // filtering and decimation steps into a single procedure.
+  Vec err = x - xr;  // Error introduced in roundtrip
+  ok &= rsIsAllZeros(err);
+  // OK - it works, but only if the first and last samples of x are zero. Otherwise, the 
+  // reconstructed first and last values are wrong. All other reconstructed values will be correct
+  // though, regardless of first and last input samples in x. Maybe the kernel h is appropriate 
+  // only for inner points? A simple remedy would be to just pad x with zeros before upsampling and
+  // cropping after downsampling. But maybe we can solve it more elegantly? Maybe we need to use 
+  // special kernels for first and last samples. Maybe first, we should combine the filtering and 
+  // decimation steps into a single procedure.
 
 
   // ToDo:
-  // -write function upsampleViaDuplication
-  // -use it together with AT::decimateViaMean
-  // -this should give a lossless roundtrip
+  // -Write function upsampleViaDuplication and use it together with AT::decimateViaMean. This 
+  //  should also give a lossless roundtrip. However, the quality of the upsampled data will be
+  //  suboptimal.
+  // -Try to create a scheme using cubic interpolation in the upsampling step.
 
 
   // See:
   // https://en.wikipedia.org/wiki/Upsampling
   // https://en.wikipedia.org/wiki/Downsampling_(signal_processing)
 
+  rsAssert(ok);
   return ok;
 }
 

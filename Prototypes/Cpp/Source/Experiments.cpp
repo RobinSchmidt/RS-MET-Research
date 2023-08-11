@@ -1441,7 +1441,7 @@ bool testUpDownSample()
   bool ok = true;
 
   // Create test signal
-  Vec x({0,0,1,0,0,0});         // preliminary - use something more complex later
+  Vec x({0,-2,1,3,-1,0});         // preliminary - use something more complex later
   int Nx = (int) x.size();
 
   // Upsample by a factor of 2:
@@ -1462,10 +1462,15 @@ bool testUpDownSample()
   yf = crop(yf, tail, (Nyf-1)-tail);
   rsAssert(yf.size() == Ny);
 
-  // Now decimate yf naively. this should give back x:
+  // Now decimate yf naively. This should give back x:
   Vec xr(Nx);
   AT::decimate(&yf[0], Ny, &xr[0], 2);
-  // OK - it works for our test signal. Try it on a more complex signal.
+  Vec err = x - xr;  // Error intrdouced in roundtrip
+  // OK - it works, but only if the first and last samples of x are zero. The kernel may be 
+  // appropriate only for inner points? A simple remedy would be to just pad x with zeros before 
+  // upsampling and cropping after downsampling. But maybe we can solve it more elegantly? Maybe
+  // we need to use special kernels for first and last samples. Maybe first, we should combine the
+  // filtering and decimation steps into a single procedure.
 
 
   // ToDo:

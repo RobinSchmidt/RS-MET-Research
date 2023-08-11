@@ -1577,6 +1577,11 @@ bool testUpDownSample()
   // -Write function upsampleViaDuplication and use it together with AT::decimateViaMean. This 
   //  should also give a lossless roundtrip. However, the quality of the upsampled data will be
   //  suboptimal.
+  // -Figure out which coefficient a0 gives the best downsampling quality for general signals. To 
+  //  do this, maybe plot frequence responses for various a0 from 0.5 to 1 or maybe from 0 to 1. 
+  //  And/or creae some (brown?) noise, downsample it, then upsample it and see what looks best in 
+  //  terms of being close to the original (down-then-up is, of course, no identity operation due 
+  //  to information loss in the downsampling)
   // -Try to create a scheme using cubic interpolation in the upsampling step.
 
 

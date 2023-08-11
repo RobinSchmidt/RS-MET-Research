@@ -1372,7 +1372,7 @@ void testComplexGaussBlurIIR()
 }
 
 
-// Move to RAPT:
+// Move to RAPT, either next to resampleNonUniformLinear in Interpolation.h or into rsArrayTools:
 template<class T>
 void resampleLinear(const T* x, int Nx, T* y, int Ny)
 {
@@ -1388,29 +1388,44 @@ std::vector<T> resampleLinear(const std::vector<T> x, int N)
   std::vector<T> y(N);
   resampleLinear(&x[0], (int)x.size(), &y[0], N);
   return y;
-
-  /*
-  using AT = RAPT::rsArrayTools;
-  int Nx = (int) x.size();
-  std::vector<T> y(N);
-  double dx = double(x.size()) / double(y.size());
-  for(int i = 0; i < N; i++)
-    y[i] = AT::interpolatedValueAt(&x[0], Nx, i*dx);
-  return y;
-  */
 }
-// Maybe factor out a function AT::resampleLinear(T* x, int Nx, T* y, int Ny)...or maybe don't
-// put it into rsArrayTools but into Interpolation.h next to resampleNonUniformLinear
+
+// Maybe move to RAPT:
+template<class T>
+std::vector<T> crop(const std::vector<T> x, int first, int last)
+{
+  int Ny = last - first + 1;
+  std::vector<T> y(Ny);
+  for(int i = 0; i < Ny; i++)
+    y[i] = x[i+first];
+  return y;
+
+
+  // We could perhaps do it in-place by shifting elements leftward by "first" and then resizing
+  // to "last - first + 1".
+
+  // See:
+  // https://stackoverflow.com/questions/421573/best-way-to-extract-a-subvector-from-a-vector
+}
+
+
+
+// Convenience function for filtering:
+
+
+
 
 bool testUpDownSample()
 {
   // Some experiments with upsampling/downsampling schemes that are supposed to be an identity
-  // operation when exacuted in sequence. A simple scheme for upsampling by 2 would be to use 
+  // operation when executed in sequence. A simple scheme for upsampling by 2 would be to use 
   // sample duplication for upsampling and to use the average of two successive samples for 
   // downsampling. The goal is to find schemes that provide a better upsampling quality than
   // using sample duplication. For example, linear interpolation could be used for upsampling. But
   // then we would need to do something else for the downsampling step to achieve a lossless 
-  // up/down roundtrip ...TBC...
+  // up/down roundtrip. Maybe a 5-point moving average with coeffs [-0.25, 0.5, 0.5, 0.5, -0.25] 
+  // could work? ..let's try it...
+
   // The eventual goal is to later make a 2D version of the found schemes to use them for image
   // processing in upsampled images. But first things first and the first thing is the 1D version.
 
@@ -1421,17 +1436,45 @@ bool testUpDownSample()
   using AT   = RAPT::rsArrayTools;
 
   // Might be of use:
-  // AT::decimate, AT::decimateViaMean, RAPT::resampleNonUniformLinear
+  // AT::decimate, AT::decimateViaMean, AT::movingAverage3pt
 
   bool ok = true;
 
-  // Up/downsample by a factor of 2:
-  Vec x({0,0,1,0,0,0});      // Test signal
+  // Create test signal
+  Vec x({0,0,1,0,0,0});         // preliminary - use something more complex later
   int Nx = (int) x.size();
+
+  // Upsample by a factor of 2:
   int Ny = 2*Nx;
   Vec y  = resampleLinear(x, Ny);
 
+  // Define the filter kernel:
+  Vec h({-0.25, 0.5, 0.5, 0.5, -0.25});
 
+  // Apply the filter kernel to y (maybe factor out):
+  int Nh  = (int) h.size();
+  int Nyf = Ny + Nh - 1;     // length of filtered y
+  Vec yf(Nyf);
+  AT::convolve(&y[0], Ny, &h[0], Nh, &yf[0]);
+
+  // Crop the filtered yf to the original length of y by discarding the first and last 2 samples:
+  int tail = Nh/2;  // tail == 2. Does this also work for even Nh? Try it!
+  yf = crop(yf, tail, (Nyf-1)-tail);
+
+
+
+  // Now decimate yf naively. this should give back x:
+
+
+  // ToDo:
+  // -write function upsampleViaDuplication
+  // -use it together with AT::decimateViaMean
+  // -this should give a lossless roundtrip
+
+
+  // See:
+  // https://en.wikipedia.org/wiki/Upsampling
+  // https://en.wikipedia.org/wiki/Downsampling_(signal_processing)
 
   return ok;
 }

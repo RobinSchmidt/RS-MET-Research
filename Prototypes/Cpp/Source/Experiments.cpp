@@ -1409,7 +1409,7 @@ std::vector<T> crop(const std::vector<T> x, int first, int last)
 // to be inserted samples. If N is the length of, the output will have length 2*N-1. The -1 is 
 // because for input N samples, there are N-1 gaps to be filled.
 template<class T>
-std::vector<T> upsampleBy2(const std::vector<T> x)
+std::vector<T> upsampleBy2_Lin(const std::vector<T> x)
 {
   int Nx = (int) x.size();
   int Ny = 2*Nx-1;
@@ -1421,22 +1421,22 @@ std::vector<T> upsampleBy2(const std::vector<T> x)
   return y;
 }
 
-// Downsamples the signal y by a factor of two. This is the inverse operation of upsampleBy2. Doing
-// a roundtrip of upsampling and downsampling should give the original signal back exactly (up to
-// roundoff error). You can optionally pass a filter parameter that controls some filtering before
-// the downsampling. A coeff of 1 means no filtering at all, i.e. naive decimation by just taking
-// every even indexed sample and discarding the odd indexed ones. A coeff of 0.5 introduces a 
-// rather strong filtering. The roundtrip identity should hold regardless of the a0 coefficient. 
+// Downsamples the signal y by a factor of two. This is the inverse operation of upsampleBy2_Lin. 
+// Doing a roundtrip of upsampling and downsampling should give the original signal back exactly 
+// (up to roundoff error). You can optionally pass a filter parameter that controls some filtering 
+// before the downsampling. A coeff of 1 means no filtering at all, i.e. naive decimation by just 
+// taking every even indexed sample and discarding the odd indexed ones. A coeff of 0.5 introduces 
+// a rather strong filtering. The roundtrip identity should hold regardless of the a0 coefficient. 
 // ...TBC...
 template<class T>
-std::vector<T> downsampleBy2(const std::vector<T> y, T a0 = T(1))
+std::vector<T> downsampleBy2_Lin(const std::vector<T> y, T a0 = T(1))
 {
   int Ny = (int) y.size();
   rsAssert(rsIsOdd(Ny));
-  // We assume that y has been created via upsampleBy2 and this function will always produce 
+  // We assume that y has been created via upsampleBy2_Lin and this function will always produce 
   // outputs of odd length. ToDo: Try to lift this restriction later
 
-  int Nx = (Ny+1) / 2;  // Inverts the formula Ny = 2*Nx-1 in upsampleBy2
+  int Nx = (Ny+1) / 2;  // Inverts the formula Ny = 2*Nx-1 in upsampleBy2_Lin
   std::vector<T> x(Nx);
 
   // Compute the other filter coeffs:
@@ -1559,8 +1559,8 @@ bool testUpDownSample1D()
   // Now with the convenience functions:
   a0  = 0.625;
   x   = Vec({7,-2,1,-6,5,-3,4,-1,3}); 
-  y   = upsampleBy2(x);
-  xr  = downsampleBy2(y, a0);
+  y   = upsampleBy2_Lin(x);
+  xr  = downsampleBy2_Lin(y, a0);
   err = x - xr;
   ok &= rsIsAllZeros(err);
 
@@ -1636,6 +1636,9 @@ bool testUpDownSample1D()
   // -It would be interesting, if this could also work for IIR filters. When we have an analytic 
   //  expression for a_n, we may be able to derive an expression of b_n and then design a filter
   //  that has that b_n sequence as impulse response.
+  // -Maybe approach it the other way around: assume the downsampling algorithm as given and try to 
+  //  find an appropriate upsampling algorithm such that up -> down gives the identity. Maybe 
+  //  assume averaging as downsampling method
   // -The eventual goal is to later make a 2D version of the found schemes to use them for image
   //  processing in upsampled images. But first things first and the first thing is the 1D version.
   // -See also:
@@ -1671,6 +1674,11 @@ bool testUpDownSample2D()
   // -For upsampling in the 2D case, see also rsImageProcessor<T>::interpolateBilinear. But maybe
   //  implement an optimized version for upsampling by 2. It should give the same result as
   //  interpolateBilinear(const rsImage<T>& img, 2, 2)
+  // -I think, the upsampling kernel for linear bilinear interpolation is givne by:
+  //
+  //   0.0  0.25  0.0
+  //   0.25 
+
 
 
   bool ok = true;

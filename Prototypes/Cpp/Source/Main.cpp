@@ -25,7 +25,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //animateComplexExponentialBlur();
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
-  testUpDownSample();
+  testUpDownSample();                 // up- and downsampling with lossless roundtrip
 
   //epidemic();
 

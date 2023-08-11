@@ -1378,10 +1378,10 @@ void resampleLinear(const T* x, int Nx, T* y, int Ny)
 {
   double dx = double(Nx) / double(Ny);
   for(int i = 0; i < Ny; i++)
-    y[i] = RAPT::rsArrayTools::interpolatedValueAt(x, Nx, i*dx);
+    y[i] = RAPT::rsArrayTools::interpolatedValueAt(x, Nx, double(i)*dx);
 }
 
-// Convenience function to resample the givne vector x to new length N
+// Convenience function to resample the given vector x to new length N
 template<class T>
 std::vector<T> resampleLinear(const std::vector<T> x, int N)
 {
@@ -1399,13 +1399,31 @@ std::vector<T> crop(const std::vector<T> x, int first, int last)
   for(int i = 0; i < Ny; i++)
     y[i] = x[i+first];
   return y;
-
-
-  // We could perhaps do it in-place by shifting elements leftward by "first" and then resizing
-  // to "last - first + 1".
-
-  // See:
+  // We could perhaps do it in place by shifting elements leftward by "first" and then resizing
+  // to "last - first + 1". See also:
   // https://stackoverflow.com/questions/421573/best-way-to-extract-a-subvector-from-a-vector
+}
+
+
+template<class T>
+std::vector<T> upsampleBy2(const std::vector<T> x)
+{
+  int Nx = (int) x.size();
+  int Ny = 2*Nx-1;
+  std::vector<T> y(Ny);
+
+  for(int i = 0; i < Nx; i++)
+    y[2*i] = x[i];
+
+
+  return y;
+}
+
+
+template<class T>
+std::vector<T> downsampleBy2(const std::vector<T> x, T a0 = T(1))
+{
+
 }
 
 
@@ -1428,6 +1446,8 @@ bool testUpDownSample()
 
   // The eventual goal is to later make a 2D version of the found schemes to use them for image
   // processing in upsampled images. But first things first and the first thing is the 1D version.
+  // For the 2D version, start with the assumption of bilinear interpolation for upsampling. Maybe
+  // we'll need a 5x5 kernel.
 
 
   // We create an input signal
@@ -1441,7 +1461,7 @@ bool testUpDownSample()
   bool ok = true;
 
   // Create test signal
-  Vec x({0,-2,1,5,-3,4,-1,0});         // preliminary - use something more complex later
+  Vec x({0,-2,1,-6,5,-3,4,-1,0});         // First and last mus currently be zero
   int Nx = (int) x.size();
 
   // Upsample by a factor of 2:
@@ -1464,26 +1484,27 @@ bool testUpDownSample()
   // suggests to use a 3-point moving average with weights 0.5,0.5,0.5. But now the total sum of 
   // the weights is 1.5 and also with such a 3 point kernel, the reconstructed sample at index 3 
   // would be 0.25 instead of 0. But appending weights of -0.25 to both ends of the kernel fixes
-  // both of these problems.
-
-  // Test some other kernels:
-  //h = Vec({-0.5, 0.5, 1.0, 0.5, -0.5});  // Does not work
-  //h = Vec({-0.25, 0.4, 0.7, 0.4, -0.25});  // Nope!
-
-  // What general conditions do we need? I think:
-  // -(1) The total sum should be 1
+  // both of these problems. What general conditions do we need? I think:
+  // -(1) The total sum of weights should be 1
   // -(2) The ends must be -0.5 times the values next to the end
   // -Let's express the kernel in general as [a2 a1 a0 a1 a2] where a0 is the center coeff. I 
   //  think, the conditions can now be formulated as:
   //    (1) a0 + 2*(a1+a2) = 1
   //    (2) a2 = -a1/2
-  //  this should give us a one parametric family of filter kernels. Maybe use a0 as parameter. 
+  //  This should give us a 1-parametric family of filter kernels. Maybe use a0 as parameter. 
   //  Substitute a2 = -a1/2 into (1): a0 + 2*(a1 - a1/2) = 1 and solve for a1:
-  //  a1 = 1 - a0
-  Real a0 = 0.75;
+  //  a1 = 1 - a0. Let's try it:
+  Real a0 = 0.625;     // interesting values: 1, 0.75, 0.6875, 2/3, 0.625, 0.5
   Real a1 = 1 - a0;
   Real a2 = -a1 / 2;
   h = Vec({a2, a1, a0, a1, a2});
+  // Yes! It works! We now can tweak the kernel by tweaking a0. Setting a0 = 1 just takes the 
+  // middle sample and does not do any filtering at all. Using a0 = 0.5 introduces a rather strong
+  // filtering. Maybe we should impose the additional condition that a1 = a0/2. That leads to 
+  // a0 = 2/3. That's not a very nice number in base 2 though and leades to rounding errors. Using 
+  // a0 = 0.75 may be a bit to little filtering. Maybe use 11/16 = 0.6875 or 10/16 = 0.625. Maybe
+  // try to figure out the 2D version, then try a couple of values of a0 and select the best 
+  // downsampling filter by eye.
 
 
   // Apply the filter kernel to y (maybe factor out):
@@ -1508,7 +1529,14 @@ bool testUpDownSample()
   // only for inner points? A simple remedy would be to just pad x with zeros before upsampling and
   // cropping after downsampling. But maybe we can solve it more elegantly? Maybe we need to use 
   // special kernels for first and last samples. Maybe first, we should combine the filtering and 
-  // decimation steps into a single procedure.
+  // decimation steps into a single procedure. Maybe a function like 
+  //   xr = downsampleBy2(y, a0 = 1)
+  // That takes the downsampling filter parameter defaulting to 1
+
+  // Now with the convenience functions:
+  x = Vec({7,-2,1,-6,5,-3,4,-1,3}); 
+  y = upsampleBy2(x);
+
 
 
   // ToDo:

@@ -1371,6 +1371,26 @@ void testComplexGaussBlurIIR()
 
 }
 
+
+// Convenience function to resample the givne vector x to new length N
+template<class T>
+std::vector<T> resampleLinear(const std::vector<T> x, int N)
+{
+  using AT = RAPT::rsArrayTools;
+  int Nx = (int) x.size();
+  std::vector<T> y(N);
+  double dx = double(x.size()) / double(y.size());
+  for(int i = 0; i < N; i++)
+  {
+    double pos = i * dx;         // Read-position in x-array
+    y[i] = AT::interpolatedValueAt(&x[0], Nx, pos);
+    int dummy = 0;
+  }
+  return y;
+}
+// Maybe factor out a function AT::resampleLinear(T* x, int Nx, T* y, int Ny)...or maybe don't
+// put it into rsArrayTools but into Interpolation.h next to resampleNonUniformLinear
+
 bool testUpDownSample()
 {
   // Some experiments with upsampling/downsampling schemes that are supposed to be an identity
@@ -1387,10 +1407,18 @@ bool testUpDownSample()
   // We create an input signal
   using Real = double;
   using Vec  = std::vector<Real>;
+  using AT   = RAPT::rsArrayTools;
 
-
+  // Might be of use:
+  // AT::decimate, AT::decimateViaMean, RAPT::resampleNonUniformLinear
 
   bool ok = true;
+
+  // Up/downsample by a factor of 2:
+  Vec x({0,0,1,0,0,0});      // Test signal
+  int Nx = (int) x.size();
+  int Ny = 2*Nx;
+  Vec y  = resampleLinear(x, Ny);
 
 
 

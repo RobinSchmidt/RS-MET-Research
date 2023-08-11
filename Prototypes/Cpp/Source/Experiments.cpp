@@ -1577,28 +1577,31 @@ bool testUpDownSample()
 
   Real aLo  = 0.5;
   Real aHi  = 1.0;
-  int  aNum = 10;
-
-  Mat  kernels(7, 5);
+  int  aNum = 7;
+  Mat  kernels(aNum, 5);  // the kernels have length 5
   for(int i = 0; i < aNum; i++)
   {
     a0 = aLo + i*(aHi-aLo)/(aNum-1);
     a1 = 1 - a0;
     a2 = -a1 / 2;
     h  = Vec({a2, a1, a0, a1, a2});
-    kernels.setRow(i, &h[0]);
+    kernels.setRow(i, h);
+    //kernels.setRow(i, &h[0]);
   }
 
 
   using Plt = SpectrumPlotter<Real>;
   Plt plt;
-  plt.setFloorLevel(-60);
+  plt.setFloorLevel(-80);
   plt.setFreqAxisUnit(Plt::FreqAxisUnits::normalized);
   plt.plotDecibelSpectraOfRows(kernels);
   // The plots are not normalized to 0 dB. Figure out why and fix it!
 
   // Observations:
   // -All freq responses meet in the point at 0.25*fs, 0dB
+  // -They seem to all have a bump at around 0.165*fs
+  // -For a0 = 0.75, there seems to be a notch at the nyquist freq 0.5*fs
+  // -Conclusion: a0 = 0.75 seems a good overall choice
 
 
   // ToDo:
@@ -1624,26 +1627,34 @@ bool testUpDownSample()
   //    f d b d f
   //    e f c f e
   //
-  // where a = a0, b = a1, c = a2 in the old notation. Bilinear interpolation would spread into 4
-  // output pixels. I think the condition that kernel must sum to 1 remains. In this case, this 
-  // means: a + 4*(b+c+d+e) + 8*f = 1. Maybe the a + 2(b+c) = 1 condition should also remain valid
-  // because when we apply this to a single line, it should work as before? Maybe the d,e coeffs 
-  // should be equal to a,b divided by sqrt(2). The rationale is to make the kernel values 
-  // dependent on distance from the center. We have 6 coeffs, so we need 5 equations if we want to 
-  // treat a as free parameter as before. Maybe this is good:
+  //  where a = a0, b = a1, c = a2 in the old notation. Bilinear interpolation would spread into 4
+  //  output pixels. I think the condition that kernel must sum to 1 remains. In this case, this 
+  //  means: a + 4*(b+c+d+e) + 8*f = 1. Maybe the a + 2(b+c) = 1 condition should also remain valid
+  //  because when we apply this to a single line, it should work as before? Maybe the d,e coeffs 
+  //  should be equal to a,b divided by sqrt(2). The rationale is to make the kernel values 
+  //  dependent on distance from the center. We have 6 coeffs, so we need 5 equations if we want to 
+  //  treat a as free parameter as before. Maybe this is good:
   //
-  //   (1) 1 = a + 2*(b+c)                   as before: a1 = 1 - a0
-  //   (2) 0 = c + b/2                       as before: a2 = -a1 / 2
-  //   (3) 1 = a + 4*(b+c+d+e) + 8*f         total sum of unity
-  //   (4) d = b / sqrt(2)
-  //   (5) e = c / sqrt(2)
+  //    (1) 1 = a + 2*(b+c)                   as before: a1 = 1 - a0
+  //    (2) 0 = c + b/2                       as before: a2 = -a1 / 2
+  //    (3) 1 = a + 4*(b+c+d+e) + 8*f         total sum of unity
+  //    (4) d = b / sqrt(2)
+  //    (5) e = c / sqrt(2)
   // 
+  // -Try also the "Magic Kernel"
+  //    https://johncostella.com/magic/
+  //    https://johncostella.com/magic/mks.pdf
+  //  Try to use the upsampling variant and check, if upsample -> downsample is lossless. If not,
+  //  take the upsampling as is and try to derive a suitable downsampling that makes the roundtrip 
+  //  lossless.
 
 
 
   // See:
   // https://en.wikipedia.org/wiki/Upsampling
   // https://en.wikipedia.org/wiki/Downsampling_(signal_processing)
+
+
 
   rsAssert(ok);
   return ok;

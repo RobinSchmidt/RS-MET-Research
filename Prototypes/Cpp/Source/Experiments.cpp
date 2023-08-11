@@ -1404,34 +1404,51 @@ std::vector<T> crop(const std::vector<T> x, int first, int last)
   // https://stackoverflow.com/questions/421573/best-way-to-extract-a-subvector-from-a-vector
 }
 
-
+// Upsamples the signal x by a factor of two by inserting samples in between the given samples 
+// using linear interpolation which boils down to taking the average of two input samples for the
+// to be inserted samples. If N is the length of, the output will have length 2*N-1. The -1 is 
+// because for input N samples, there are N-1 gaps to be filled.
 template<class T>
 std::vector<T> upsampleBy2(const std::vector<T> x)
 {
   int Nx = (int) x.size();
   int Ny = 2*Nx-1;
   std::vector<T> y(Ny);
-
-  //for(int i = 0; i < Nx; i++)
-  //  y[2*i] = x[i];
-
-
-  for(int i = 0; i < Nx-1; i++)
-  {
+  for(int i = 0; i < Nx-1; i++) {
     y[2*i]   = x[i];
-    y[2*i+1] = 0.5 * (x[i] + x[i+1]);
-  }
+    y[2*i+1] = 0.5 * (x[i] + x[i+1]); }
   y[Ny-1] = x[Nx-1];
-
-
   return y;
 }
 
-
+// Downsamples the signal y by a factor of two. This is the inverse operation of upsampleBy2. Doing
+// a roundtrip of upsampling and downsampling should give the original signal back exactly (up to
+// roundoff error). You can optionally pass a filter parameter that controls some filtering before
+// the downsampling. A coeff of 1 means no filtering at all, i.e. naive decimation by just taking
+// every even indexed sample and discarding the odd indexed ones. A coeff of 0.5 introduces a 
+// rather strong filtering. The roundtrip identity should hold regardless of the a0 coefficient. 
+// ...TBC...
 template<class T>
-std::vector<T> downsampleBy2(const std::vector<T> x, T a0 = T(1))
+std::vector<T> downsampleBy2(const std::vector<T> y, T a0 = T(1))
 {
+  int Ny = (int) y.size();
+  rsAssert(rsIsOdd(Ny));
+  // We assume that y has been created via upsampleBy2 and this function will always produce 
+  // outputs of odd length. ToDo: Try to lift this restriction later
 
+  int Nx = (Ny+1) / 2;  // Inverts the formula Ny = 2*Nx-1 in upsampleBy2
+  std::vector<T> x(Nx);
+
+  // Compute the other filter coeffs:
+  T a1 = T(1) - a0;
+  T a2 = -a1 * T(0.5);
+
+
+
+
+  // ToDo:
+  // Maybe optimize the special case a0 = 1. Not sure, if it's worth it. Depends on how commonly we
+  // expect this to occur
 }
 
 
@@ -1542,9 +1559,9 @@ bool testUpDownSample()
   // That takes the downsampling filter parameter defaulting to 1
 
   // Now with the convenience functions:
-  x = Vec({7,-2,1,-6,5,-3,4,-1,3}); 
-  y = upsampleBy2(x);
-
+  x  = Vec({7,-2,1,-6,5,-3,4,-1,3}); 
+  y  = upsampleBy2(x);
+  xr = downsampleBy2(y);
 
 
   // ToDo:

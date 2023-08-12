@@ -1455,6 +1455,8 @@ std::vector<T> upsampleBy2_Lin(const std::vector<T>& x)
   //  way that is most useful in the discrete case. A discrete approximation of a Gaussian bell 
   //  using n+1 samples may be best represented by the n-th line of the triangle divided by 2^n.
   //  It should have a sum of exactly 1.
+  // -Implement the schemes using [1 2 1]/4, [1 3 3 1]/8 and [1 4 6 4 1]/16, [1 5 10 10 5 1]/32 and
+  //  derive and implement the corresponding downsampling scheme
 }
 
 // Downsamples the signal y by a factor of two. This is the inverse operation of upsampleBy2_Lin. 
@@ -1492,7 +1494,7 @@ std::vector<T> downsampleBy2_Lin(const std::vector<T>& y, T a0 = T(1))
   //  it. Depends on how commonly we expect this to occur. Probably not so often.
 }
 
-// Convenicne function for filtering a signal vector x with an impulse response h. The output will 
+// Convenience function for filtering a signal vector x with an impulse response h. The output will 
 // have a length of x.size() + h.size() - 1 but it may optionally be cropped to the length of the 
 // original signal x.
 template<class T>
@@ -1509,6 +1511,13 @@ std::vector<T> filter(const std::vector<T>& x, const std::vector<T>& h,
     y = crop(y, tail, (Ny-1)-tail);
     rsAssert(y.size() == Nx); }
   return y;
+
+  // ToDo:
+  // -Check, if the cropping works also for even Nh. If not, check the formula tail = Nh/2. Maybe
+  //  it needs to be tail = (Nh-1)/2 or tail = (Nh+1)/2. And/or maybe the amount to crop from start
+  //  and end need to be different, i.e. we need an asymmetric crop. Not sure...
+  // -When it works in all cases, maybe move the function to the library. Then add unit tests for
+  //  filter length Nh = 0,1,2,3,4,5. That should suffice to be confident that it works.
 }
 
 bool testUpDownSample1D()

@@ -1729,6 +1729,10 @@ bool testUpDownSample1D_2()
   Real a1 = 0.25;
   Real a2 = 0.0;
 
+  // Try some other kernels:
+  //a0 = 0.6; a1 = 0.2; a2 = 0.0;  // Nope! Totally fails!
+
+
   // Define coeffs of the upsampling (interpolation) kernel b:
   Real b0 = 1.25;
   Real b1 = 2 - b0;

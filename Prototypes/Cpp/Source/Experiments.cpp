@@ -1758,18 +1758,15 @@ bool testUpDownSample1D_2()
 
   // Apply the upsampling filter:
   Vec b({b2, b1, b0, b1, b2});
-  Vec yf = filter(y, b);
-  
-
-
-  y[0] = x[0];
-  // ...
-  y[Ny-1] = x[Nx-1];
-
-
-
-
-  // Ah - no - somehow I think, I have confused this. In upsampling, we really want to take over
+  Vec yf = filter(y, b, true);
+  // With this upsampling scheme, none of the original sample values from x survive in yf. The 
+  // values are now all intermingled with some neighbor values. That's a bit strange because it
+  // violates our intuition that the upsampled data should interpolate the original data, i.e. 
+  // takes on the values of the original data at sample indices in y that correspond exactly to
+  // sample indices in x. We'd expect y[6] to be equal to x[3] for example - but it isn't. But 
+  // that's OK - exact interpolation might not be the most important property of an up/downsampling
+  // scheme. All we care about is the lossless roundtrip and that might be possible even without
+  // the interpolation property. In an interpolating upsampling scheme, we want to take over
   // the datapoints x[i] as is where the upsampled index j is given by 2*i, i.e. we want
   // y[2*i] = x[i]. It's just the y[2*i+1] that we need to fill in. With linear interpolation, 
   // the kernel in the original domain would be [0.5 0.5] such that 
@@ -1781,12 +1778,8 @@ bool testUpDownSample1D_2()
   // these lines may approach a Gaussian bell curve? Try to plot it! Maybe add code for that to 
   // testGaussBlurFIR. I think, if we want to use the a = []
   
-  // [1 3 3 1]/4 kernel for upsampling,
-  // 
-  
   // But how could we generalize this to a 2D kernel? ...but actually a Gaussian
   // kernel is separable, so it may work out nicely.
-
 
 
 

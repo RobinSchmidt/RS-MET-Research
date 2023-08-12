@@ -1404,6 +1404,9 @@ std::vector<T> crop(const std::vector<T>& x, int first, int last)
   // https://stackoverflow.com/questions/421573/best-way-to-extract-a-subvector-from-a-vector
 }
 
+
+// Move these 2 into rsResampler:
+
 // Upsamples the signal x by a factor of two by inserting samples in between the given samples 
 // using linear interpolation which boils down to taking the average of two input samples for the
 // to be inserted samples. If N is the length of, the output will have length 2*N-1. The -1 is 
@@ -1419,6 +1422,15 @@ std::vector<T> upsampleBy2_Lin(const std::vector<T>& x)
     y[2*i+1] = 0.5 * (x[i] + x[i+1]); }
   y[Ny-1] = x[Nx-1];
   return y;
+
+  // ToDo:
+  // -Maybe the output length should be Ny = 2*Nx. That would follow the principle of least 
+  //  surprise. Then we can let the loop run to up to i < Nx and the last output y[Ny-1] would be
+  //  just 0.5*x[Nx-1]. Formally, it would have to be 0.5 * (x[Nx-1] + x[Nx]) but x[Nx] is assumed 
+  //  to be zero. In some sense, the y[Ny-1] would then be redundant and could actually be 
+  //  discarded which is what we do here. Then the corresponding downsample function needs to be
+  //  updated accordingly, too. Maybe it should be able to handle odd length inputs too. In such a
+  //  case, we simply assume that the redundant last sample was discarded.
 }
 
 // Downsamples the signal y by a factor of two. This is the inverse operation of upsampleBy2_Lin. 
@@ -1452,8 +1464,8 @@ std::vector<T> downsampleBy2_Lin(const std::vector<T>& y, T a0 = T(1))
   return x;
 
   // ToDo:
-  // Maybe optimize the special case a0 = 1 (and therefore a1 = a2 = 0). Not sure, if it's worth 
-  // it. Depends on how commonly we expect this to occur. Probably not so often.
+  // -Maybe optimize the special case a0 = 1 (and therefore a1 = a2 = 0). Not sure, if it's worth 
+  //  it. Depends on how commonly we expect this to occur. Probably not so often.
 }
 
 // Convenicne function for filtering a signal vector x with an impulse response h. The output will 

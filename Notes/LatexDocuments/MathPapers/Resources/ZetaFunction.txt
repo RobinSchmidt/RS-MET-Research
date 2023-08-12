@@ -1,0 +1,94 @@
+
+----------------------------------------------------------------------------------------------------
+Formulas:
+
+  Z(s) = \sum_{n=1}^{\infty} \frac{1}{n^s}
+
+
+
+----------------------------------------------------------------------------------------------------
+Ideas:
+
+-Consider the Polya vector field of zeta and compute its potential P(x,y). Then, the zeros of zeta 
+ corrspond to the stationary points (minima, maxima or saddles) of P. Maybe that could be easier to
+ deal with than zeta itself because it's just a bivariate scalar function?
+
+-To compute the potential, I think, we can just compute the potential of a single term in the sum 
+ form and then add up all these potentials. Potentials superimpose linearly, I think.
+
+
+
+----------------------------------------------------------------------------------------------------
+Resources:
+
+What is the Riemann Hypothesis REALLY about?
+https://www.youtube.com/watch?v=e4kOh7qlsM4
+-has this "Riemann converter" stuff. I think, this link from the description may be the code for it:
+ http://ism.uqam.ca/~ism/pdf/Hutama-scientific%20report.pdf
+
+Analytic Number Theory [Playlist by zetamath]
+https://www.youtube.com/playlist?list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY
+-has the Bernoulli polynomial stuff
+
+
+Interpretación gráfica de la Función Zeta de Riemann
+https://www.youtube.com/watch?v=3XWI7-k_Yhw
+-has the formula for splitting zeta into real and imaginary parts
+
+What is the Riemann Hypothesis?
+https://www.youtube.com/watch?v=v9nyNBLCPks
+
+The sound of primes
+https://www.youtube.com/watch?v=sff8DEEZOfs
+https://www.youtube.com/watch?v=gBEIqKZ6bv0   part 2
+
+The Pattern to Prime Numbers?
+https://www.youtube.com/watch?v=dktH8hJadyU
+-Explains connection between Euler product and sum formula
+-Explains where the trivial zeros come from
+-Has managable formula for pi(x)
+
+
+
+The Dream: Riemann Hypothesis and F1 (RH Saga S1E1)
+https://www.youtube.com/watch?v=YTCE2SXguwU
+-stuff on the theory of L-functions
+-uses sage for some bits
+-makes the connection to the "Riemann spectrum" clear (at around 15 min, it gets interesting), shows
+ the peaks at the primes of a sum of (logarithmic) cosine waves when their freqs are given by the 
+ zeros of zeta. 
+-at 19:07, it has a couple of books on the topic. And htis paper by Brian Conrey:
+ http://fuchs-braun.com/media/fe00fcba93c4caccffff802cffffffef.pdf
+
+-------------------------------------------------
+# Sage code for generating the zeros:
+
+spectrum = zeta_zeros()
+for k in range(10):
+    print(spectrum[k])
+
+-------------------------------------------------
+# Sage code for plotting the superposition of 
+# Riemann waves:
+ 
+m = 20             # maximum for the plot
+n = 200            # number of terms to use
+z = zeta_zeros()   # a generator?
+
+def wave(x):
+  s = 0
+  for i in range(n):
+    s = s - cos(z[i] * log(x))
+  return s
+
+P = plot(wave(x), 0, m, ymin=0)
+P.show(figsize=[20,5])
+
+It seems to have peaks at prime powers p^k, too - with height 1/k? ...nah. At 1 is the biggest spike 
+but there are spikes below 1, too - apparently, at the reciprocals of the primes? Yep - seems so. 
+Maybe a plot with logarithmic x-axis could make sense. Maybe plot it from 1/m to m in this case. 
+This should compensate for the frequency drop of the harmonics. To make sense of the freq-sweep,
+re-express the log(x) argument as log(x) = x * w(x)  ->  w(x) = log(x)/x  where w(x) is the radian
+frequency in terms of x. It looks like this:
+
+https://www.desmos.com/calculator/e67sbe51ue

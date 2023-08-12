@@ -1431,6 +1431,30 @@ std::vector<T> upsampleBy2_Lin(const std::vector<T>& x)
   //  discarded which is what we do here. Then the corresponding downsample function needs to be
   //  updated accordingly, too. Maybe it should be able to handle odd length inputs too. In such a
   //  case, we simply assume that the redundant last sample was discarded.
+
+  // Notes:
+  // -Note that an upsample-by-two scheme is determined by two filter kernels - one for the even 
+  //  indexed output samples and one for the odd indexed output samples. In the case of simple 
+  //  linear interpolation implemented here, the kernels are
+  //    even: [1]
+  //    odd:  [1 1]/2 = [0.5 0.5]
+  // -The so called "magic kernel" (https://johncostella.com/magic/) would use [1 3 3 1]/8 for the
+  //  odd indexed samples. Note sure what it would use for the even indexed ones, However...
+  // -This suspiciously looks like the 4-th line of Pascal's triangle (divided by 8 = 2^3). This 
+  //  suggests to try kernes of the form:
+  //    even: [1 2 1]/4
+  //    odd:  [1 3 3 1]/8
+  //  or
+  //    even: [1 4 6 4 1]/16
+  //    odd:  [1 5 10 10 5 1]/32
+  //  in general: use the 2n-th line of the triangle divided by 2^2n for even indices and the 
+  //  (2n+1)-th line divided by 2^(2n+1) for odd indices where the index n starts at 0. For n = 0,
+  //  we obtain linear interpolation. The parameter n could be some sort of smoothing parameter.
+  // -I think, Pascal's triangle can also be interpreted as repeatedly convolving an initial 
+  //  impulse input repeatedly by the kernel [1 1]. This should converge to a Gaussian shape in a 
+  //  way that is most useful in the discrete case. A discrete approximation of a Gaussian bell 
+  //  using n+1 samples may be best represented by the n-th line of the triangle divided by 2^n.
+  //  It should have a sum of exactly 1.
 }
 
 // Downsamples the signal y by a factor of two. This is the inverse operation of upsampleBy2_Lin. 

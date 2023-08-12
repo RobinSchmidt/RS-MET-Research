@@ -1539,15 +1539,10 @@ bool testUpDownSample1D()
   // try to figure out the 2D version, then try a couple of values of a0 and select the best 
   // downsampling filter by eye.
 
-
-  // Apply the filter kernel to y (maybe factor out):
+  // Apply the filter kernel to y:
   int Nh  = (int) h.size();
-  int Nyf = Ny + Nh - 1;     // length of filtered y
-  Vec yf(Nyf);
-  AT::convolve(&y[0], Ny, &h[0], Nh, &yf[0]);
-  yf = filter(y, h);
-
-
+  Vec yf  = filter(y, h);
+  int Nyf = (int) yf.size();
 
   // Crop the filtered yf to the original length of y by discarding the first and last 2 samples:
   int tail = Nh/2;  // tail == 2. Does this also work for even Nh? Try it!

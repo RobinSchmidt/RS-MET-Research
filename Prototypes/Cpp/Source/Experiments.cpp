@@ -1743,7 +1743,7 @@ bool testUpDownSample1D_2()
 
   // Create test signal
   //Vec x({7,-2,1,-6,5,-3,4,-1,3});
-  Vec x({0,0,0,1,0,0,0});       // preliminary
+  Vec x({0,0,-2,1,5,0,0});       // preliminary
   int Nx = (int) x.size();
 
   // Upsample by a factor of 2 using zero stuffing:
@@ -1781,8 +1781,8 @@ bool testUpDownSample1D_2()
   // Now do the downsampling:
 
   Vec xr(Nx);
-  for(int i = 2; i < Nx-2; i++) {   // i is index into x
-    int j = 2*i;                    // j is center index into y
+  for(int i = 2; i < Nx-2; i++) {  // i is index into x
+    int j = 2*i;                   // j is center index into y
     xr[i] = a0*y[j] + a1*(y[j-1] + y[j+1]) + a2*(y[j-2] + y[j+2]);
     xr[i] *= 2;  // why is this needed?
   }
@@ -1791,9 +1791,10 @@ bool testUpDownSample1D_2()
   // downsampleBy2_Lin?
 
   Vec err = x - xr; 
+  ok &= rsIsAllZeros(err);
 
-
-
+  rsAssert(ok);
+  return ok;
 
   
   // But how could we generalize this to a 2D kernel? ...but actually a Gaussian
@@ -1812,11 +1813,6 @@ bool testUpDownSample1D_2()
   //    (2)  1 = a0 + 2*(a1 + a2)
   // -These sets of equations look nicely symmetric. The 1st is always the same, the 2nd has equal
   //  right hand sides (just with roles of a and b swapped)
-
-
-
-  rsAssert(ok);
-  return ok;
 }
 
 

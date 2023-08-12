@@ -1945,14 +1945,11 @@ bool testUpDownSample2D()
   img(1, 1) = 1.f;
 
   std::string name = "Impulse";
-  //int stage = 0;
-
   for(int stage = 0; stage <= numStages; stage++)
   {
     std::string path = name + std::to_string(stage) + ".ppm";
     writeImageToFilePPM(img, path.c_str());
     img = Prc::interpolateBilinear(img, 2, 2);
-    int dummy = 0;
   }
   // The last (largest) one is not saved. But this is not production code so that doesn't really 
   // matter.

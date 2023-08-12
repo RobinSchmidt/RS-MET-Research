@@ -1,0 +1,156 @@
+Negative powers of z, i.e z^(-n)
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+z = x + I*y
+w = 1 / z^5               # function of interest
+u =  w.real() 
+v = -w.imag()
+U = integral(u, x)
+V = integral(v, y)
+u, v, U, V
+
+Results for n = 2..6:
+
+n  Real part of numerator                          Imaginary part of numerator
+2  x^2 - y^2                                       2*x*y                         
+3  x^3 - 3*x*y^2                                   3*x^2*y - y^3                  
+4  x^4 - 6*x^2*y^2 + y^4                           4*(x^3*y - x*y^3)              
+5  x^5 - 10*x^3*y^2 + 5*x*y^4                      5*x^4*y - 10*x^2*y^3 + y^5
+6  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6             2*(3*x^5*y - 10*x^3*y^3 + 3*x*y^5)
+
+n  Denominator
+2  (x^2 - y^2)^2                           +  4*x^2*y^2
+3  (x^3 - 3*x*y^2)^2                       + (3*x^2*y - y^3)^2
+4  (x^4 - 6*x^2*y^2 + y^4)^2               + 16*(x^3*y - x*y^3)^2
+5  (x^5 - 10*x^3*y^2 + 5*x*y^4)^2          + (5*x^4*y - 10*x^2*y^3 + y^5)^2
+6  (x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6)^2 + 4*(3*x^5*y - 10*x^3*y^3 + 3*x*y^5)^2
+
+n  Potential
+2  -x / (x^2 + y^2)
+3  -1/2*(x^2 - y^2) / (x^4 + 2*x^2*y^2 + y^4)
+4  -1/3*(x^3 - 3*x*y^2) / (x^6 + 3*x^4*y^2 + 3*x^2*y^4 + y^6)
+5  -1/4*(x^4 - 6*x^2*y^2 + y^4) / (x^8 + 4*x^6*y^2 + 6*x^4*y^4 + 4*x^2*y^6 + y^8)
+6  -1/5*(x^5 - 10*x^3*y^2 + 5*x*y^4) / (x^10 + 5*x^8*y^2 + 10*x^6*y^4 + 10*x^4*y^6 + 5*x^2*y^8 + y^10)
+
+Looks like the numerators of real and imaginary parts are exactly as in the corresponding positive 
+powers of z? And the denominator is always Re^2 + Im^2? And in the potential, the denominator is
+(x^2 + y^2)^(n-1). And the numerator of the n-th line is the same as the real part of the (n-1)-th 
+line and the whole thing is divided by n-1?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var("x y w")
+u = exp(-w*x) * cos(w*y)
+v = exp(-w*x) * sin(w*y)
+U = integral(u, x)
+V = integral(v, y)
+U, V
+
+  -> (-cos(w*y)*e^(-w*x)/w, -cos(w*y)*e^(-w*x)/w)
+
+
+var("x y n")
+u = n^(-x) * cos(log(n)*y)
+v = n^(-x) * sin(log(n)*y)
+U = integral(u, x)
+V = integral(v, y)
+U, V
+
+  -> (-cos(y*log(n))/(n^x*log(n)), -cos(y*log(n))/(n^x*log(n)))
+  
+  
+var("x y n")
+assume(x, "real")
+assume(y, "real")
+assume(n, "real")
+#assume(n >= 0)
+#assume(n, "integer")
+z = x + I*y
+w = z^n
+u =  w.real() 
+v = -w.imag()
+U = integral(u, x)
+V = integral(v, y)
+u, v, U, V  
+
+
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+z = x + I*y
+w = 1 / z
+w.real(), w.imag()
+
+  -> (x/(x^2 + y^2), -y/(x^2 + y^2))
+  
+  
+
+var("x y w p")
+assume(x, "real")
+assume(y, "real")
+assume(w, "real")
+assume(p, "real")
+t = exp(-w*(x + I*y))
+t.real(), t.imag()
+
+
+var("x y w p")
+assume(x, "real")
+assume(y, "real")
+assume(w, "real"); assume(w >= 0)
+assume(p, "real"); assume(p >= 0)
+t = exp(-w*(x + I*y)) / (1 - 2*exp(-p*(x + I*y)))
+tr = t.real()
+ti = t.imag()
+tr.simplify_full(), ti.simplify_full()
+
+
+var("x y w p")
+assume(x, "real")
+assume(y, "real")
+assume(w, "real"); assume(w >= 0)
+assume(p, "real"); assume(p >= 0)
+t = exp(-w*(x + I*y)) / (1 - 2*exp(-p*(x + I*y)))
+tr = t.real().simplify_full()
+ti = t.imag().simplify_full()
+latex(tr), latex(ti)
+
+
+...then, maybe try:
+
+Tr = integrate(tr, x)
+Ti = integrate(tr, y)
+
+...but that leads to a very long calculation isn SageCell and no output is shown even when appending
+Tr, Ti
+
+Maybe see
+https://doc.sagemath.org/html/en/reference/calculus/sage/symbolic/integration/integral.html
+
+
+Tr = integral(tr, x)
+Tr = Tr.simplify_full()
+Tr
+
+...nope
+
+Tr = integral(tr, x, algorithm="mathematica_free")
+Tr = Tr.simplify_full()
+Tr
+
+...still no output! When commenting out the denominator in the "t = " line, thereby simplifying the
+function, a lot, we actually get an output. Maybe the output is too complicated to be shown?

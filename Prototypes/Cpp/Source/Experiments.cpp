@@ -1456,14 +1456,22 @@ std::vector<T> downsampleBy2_Lin(const std::vector<T>& y, T a0 = T(1))
   // it. Depends on how commonly we expect this to occur. Probably not so often.
 }
 
+// Convenicne function for filtering a signal vector x with an impulse response h. The output will 
+// have a length of x.size() + h.size() - 1 but it may optionally be cropped to the length of the 
+// original signal x.
 template<class T>
-std::vector<T> filter(const std::vector<T>& x, const std::vector<T>& h)
+std::vector<T> filter(const std::vector<T>& x, const std::vector<T>& h, 
+  bool cropLength = false)
 {
   int Nx = (int) x.size();                              // length of input x
   int Nh = (int) h.size();                              // length of impulse response h
   int Ny = Nx + Nh - 1;                                 // length of filtered output y
   std::vector<T> y(Ny);                                 // allocate output
   rsArrayTools::convolve(&x[0], Nx, &h[0], Nh, &y[0]);  // convolve x by h, store result to y
+  if(cropLength) {
+    int tail = Nh/2;  // Does this also work for even Nh? Try it!
+    y = crop(y, tail, (Ny-1)-tail);
+    rsAssert(y.size() == Nx); }
   return y;
 }
 
@@ -1542,12 +1550,16 @@ bool testUpDownSample1D()
   // Apply the filter kernel to y:
   int Nh  = (int) h.size();
   Vec yf  = filter(y, h);
+
+
   int Nyf = (int) yf.size();
 
   // Crop the filtered yf to the original length of y by discarding the first and last 2 samples:
   int tail = Nh/2;  // tail == 2. Does this also work for even Nh? Try it!
   yf = crop(yf, tail, (Nyf-1)-tail);
   rsAssert(yf.size() == Ny);
+  // maybe let filter optionally crop the result
+
 
   // Now decimate yf naively. This should give back x:
   Vec xr(Nx);
@@ -1747,8 +1759,7 @@ bool testUpDownSample1D_2()
   //Vec x({0,0,0,1,0,0,0});       // preliminary
   int Nx = (int) x.size();
 
-
-  // Upsample by a factor of 2:
+  // Upsample by a factor of 2 using zero stuffing:
   int Ny = 2*Nx;  // verify!
   Vec y(Ny);
   for(int i = 0; i < Nx; i++)
@@ -1757,6 +1768,11 @@ bool testUpDownSample1D_2()
     y[j]   = x[i];
     y[j+1] = 0;
   }
+
+  // Apply the upsampling filter:
+  Vec b({b2, b1, b0, b1, b2});
+  Vec yf = filter(y, b);
+  
 
 
   y[0] = x[0];

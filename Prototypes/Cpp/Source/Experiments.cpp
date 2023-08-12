@@ -1462,6 +1462,13 @@ std::vector<T> upsampleBy2_Lin(const std::vector<T>& x)
   //  accumulator should be 16 bits wide.
   // -Implement the schemes using [1 2 1]/4, [1 3 3 1]/8 and [1 4 6 4 1]/16, [1 5 10 10 5 1]/32 and
   //  derive and implement the corresponding downsampling scheme
+  // -I think, we can also express such a scheme using zero-stuffing and as post-filter use the two
+  //  kernels interleaved. For example, [1 2 1]/4 = [2 4 2]/8, [1 3 3 1]/8 would give the 
+  //  interleaved post-filtring kernel: [1 2 3 4 3 2 1]/8 ...but hey! That's just a linear ramp!
+  //  Let's try the next: [2 8 12 8 2]/32, [1 5 10 10 5 1]/32. This gives:
+  //  [1 2 5 8 10 12 10 8 5 2 1]/32. Maybe plot these interleaved kernels. The simplest one 
+  //  corresponding to linear interpolation would be: [2]/2, [1 1]/2 -> [1 2 1]/2 = [0.5 1 0.5] as
+  //  expected.
 }
 
 // Downsamples the signal y by a factor of two. This is the inverse operation of upsampleBy2_Lin. 
@@ -1876,6 +1883,10 @@ bool testUpDownSample1D_2()
   //    (2)  1 = a0 + 2*(a1 + a2)
   // -These sets of equations look nicely symmetric. The 1st is always the same, the 2nd has equal
   //  right hand sides (just with roles of a and b swapped)
+
+  // -Generalize to arbitrary resizing rates. Here we just up/downsample by 2. The only constarint 
+  //  should be that the upsampling factor is >= 1. There are some ideas for that in 
+  //  MiscMathNotes.txt in the private repo.
 }
 
 
@@ -1967,7 +1978,22 @@ bool testUpDownSample2D()
 
 
   // ToDo:
+  // -Try to get the same result by upsampling via zero-stuffing and post filtering. I think, we 
+  //  could filter vertically and horizontally by the kernel [1 2 1]/2 or use th 2D kernel
+  //    1  2  1
+  //    2  4  2   / 8    ...check the divisor...might be wrong
+  //    1  2  1
   // -Try the magic kernel and binomial kernels.
+  // -Maybe compute an isotropy measure by comparing the sum along the vertical, the horizontal
+  //  and the two diagonals. The sum along the horizontal and vertical should be the same. Maybe 
+  //  their ratio can be interpreted as an "aspect ratio". The diagonal sums should also both be 
+  //  the same. Comparing one of the diagonals to either the vertical or horizontal sum can be 
+  //  interpreted as a sort of squareness or diamondness or crossness. I think the diagonal sum
+  //  should be scaled by 1/sqrt(2) or maybe sqrt(2) itself. The goal is that a perfect circular
+  //  isotropic blob should give a ratio of 1 for vert/diag. Or maybe consider the difference 
+  //  vert-diag. To figure out whether it should be sqrt(1) or 1/sqrt(2), produce a perfect 
+  //  circular blob
+  //  
 
 
 

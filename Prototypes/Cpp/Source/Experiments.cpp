@@ -1931,7 +1931,43 @@ bool testUpDownSample2D()
 
   bool ok = true;
 
+  using TPix = float;
+  using Img  = rsImage<TPix>;
+  using Prc  = rsImageProcessor<TPix>;
 
+  // Try to repeatedly upsample a an impulse centered in a 3x3 image by a factor of 2 using 
+  // Prc::interpolateBilinear. I'm interested in how the result looks like. What shape does the 
+  // impulse become? A Gaussian blob?
+
+  int numStages = 7;   // number of upsampling stages
+
+  Img img(3, 3);
+  img(1, 1) = 1.f;
+
+  std::string name = "Impulse";
+  //int stage = 0;
+
+  for(int stage = 0; stage <= numStages; stage++)
+  {
+    std::string path = name + std::to_string(stage) + ".ppm";
+    writeImageToFilePPM(img, path.c_str());
+    img = Prc::interpolateBilinear(img, 2, 2);
+    int dummy = 0;
+  }
+  // The last (largest) one is not saved. But this is not production code so that doesn't really 
+  // matter.
+
+  // Observations:
+  // -Using Prc::interpolateBilinear for repeatedly upsampling leads to an output image in which we
+  //  don't really see a nice Gaussian circular blob. There's a clearly discernible cross of 
+  //  vertical and horizontal bright pixels. See Impulse5.ppm
+
+
+
+  //writeImageToFilePPM(img, path);
+
+
+  //img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
 
 
   rsAssert(ok);

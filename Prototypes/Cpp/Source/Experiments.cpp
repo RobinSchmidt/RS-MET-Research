@@ -1742,8 +1742,8 @@ bool testUpDownSample1D_2()
   // ..OK - they don't change in the 2nd assignment, so the general formula may be correct.
 
   // Create test signal
-  Vec x({7,-2,1,-6,5,-3,4,-1,3});
-  //Vec x({0,0,0,1,0,0,0});       // preliminary
+  //Vec x({7,-2,1,-6,5,-3,4,-1,3});
+  Vec x({0,0,0,1,0,0,0});       // preliminary
   int Nx = (int) x.size();
 
   // Upsample by a factor of 2 using zero stuffing:
@@ -1776,7 +1776,25 @@ bool testUpDownSample1D_2()
   // kernel in the original domain [1 3 3 1]/8. Linear would be [1 1]/2. Somehow these look like
   // lines of Pascal's triangle? Is that a coincidence? Maybe try also [1 5 10 10 5 1]/32. I think,
   // these lines may approach a Gaussian bell curve? Try to plot it! Maybe add code for that to 
-  // testGaussBlurFIR. I think, if we want to use the a = []
+  // testGaussBlurFIR. 
+
+  // Now do the downsampling:
+
+  Vec xr(Nx);
+  for(int i = 2; i < Nx-2; i++) {   // i is index into x
+    int j = 2*i;                    // j is center index into y
+    xr[i] = a0*y[j] + a1*(y[j-1] + y[j+1]) + a2*(y[j-2] + y[j+2]);
+    xr[i] *= 2;  // why is this needed?
+  }
+
+  // ToDo: handle edges. Maybe the loop can go from i=1 to i < Nx-1 like in
+  // downsampleBy2_Lin?
+
+  Vec err = x - xr; 
+
+
+
+
   
   // But how could we generalize this to a 2D kernel? ...but actually a Gaussian
   // kernel is separable, so it may work out nicely.

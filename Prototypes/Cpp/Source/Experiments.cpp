@@ -1736,8 +1736,17 @@ bool testUpDownSample1D_2()
 
   // Define coeffs of the upsampling (interpolation) kernel b:
   Real b0 = 1.25;       // Try some other values
+  //b0 = 1.5;
+  //b0 = 1.0;
   Real b1 = (2*a0 - a0*b0 + 2*a2*b0) / (2*(a0-a1));  // Verify!
   Real b2 = -(b0*a2 + b1*a1) / a0;                   // Verify!
+  // Some sets of coeffs are:
+  //   b0 = 1.0,   b1 = 1.0,  b2 = -0.5;
+  //   b0 = 1.5,   b1 = 0.5,  b2 = -0.25
+  //   b0 = 1.25,  b1 = 0.75, b2 = -0.375
+  // where we only select b0 and b1,b2 follow via the formulas. These b-coeffs resulted from 
+  // choosing a0 = 0.5, a1 = 0.25, a2 = 0. Maybe plot the frequency responses for various choices
+  // of b0. But the kernel for a given a. Maybe first optimize a, then select b.
 
   // Create test signal
   //Vec x({7,-2,1,-6,5,-3,4,-1,3});
@@ -1797,7 +1806,7 @@ bool testUpDownSample1D_2()
 
   // ToDo:
   // -Figure out why it doesn't work when a2 != 0. Maybe we still have mistakes in some of the 
-  //  formulas. The xr[i] /= a0 is pretty starnge anyway. I don't really understand it and have 
+  //  formulas. The xr[i] /= a0 is pretty strange anyway. I don't really understand it and have 
   //  found it by trial and error.
 
   

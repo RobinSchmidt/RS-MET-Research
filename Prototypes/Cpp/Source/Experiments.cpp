@@ -1383,7 +1383,7 @@ void resampleLinear(const T* x, int Nx, T* y, int Ny)
 
 // Convenience function to resample the given vector x to new length N
 template<class T>
-std::vector<T> resampleLinear(const std::vector<T> x, int N)
+std::vector<T> resampleLinear(const std::vector<T>& x, int N)
 {
   std::vector<T> y(N);
   resampleLinear(&x[0], (int)x.size(), &y[0], N);
@@ -1392,7 +1392,7 @@ std::vector<T> resampleLinear(const std::vector<T> x, int N)
 
 // Maybe move to RAPT:
 template<class T>
-std::vector<T> crop(const std::vector<T> x, int first, int last)
+std::vector<T> crop(const std::vector<T>& x, int first, int last)
 {
   int Ny = last - first + 1;
   std::vector<T> y(Ny);
@@ -1409,7 +1409,7 @@ std::vector<T> crop(const std::vector<T> x, int first, int last)
 // to be inserted samples. If N is the length of, the output will have length 2*N-1. The -1 is 
 // because for input N samples, there are N-1 gaps to be filled.
 template<class T>
-std::vector<T> upsampleBy2_Lin(const std::vector<T> x)
+std::vector<T> upsampleBy2_Lin(const std::vector<T>& x)
 {
   int Nx = (int) x.size();
   int Ny = 2*Nx-1;
@@ -1429,7 +1429,7 @@ std::vector<T> upsampleBy2_Lin(const std::vector<T> x)
 // a rather strong filtering. The roundtrip identity should hold regardless of the a0 coefficient. 
 // ...TBC...
 template<class T>
-std::vector<T> downsampleBy2_Lin(const std::vector<T> y, T a0 = T(1))
+std::vector<T> downsampleBy2_Lin(const std::vector<T>& y, T a0 = T(1))
 {
   int Ny = (int) y.size();
   rsAssert(rsIsOdd(Ny));
@@ -1456,9 +1456,16 @@ std::vector<T> downsampleBy2_Lin(const std::vector<T> y, T a0 = T(1))
   // it. Depends on how commonly we expect this to occur. Probably not so often.
 }
 
-
-
-
+template<class T>
+std::vector<T> filter(const std::vector<T>& x, const std::vector<T>& h)
+{
+  int Nx = (int) x.size();                              // length of input x
+  int Nh = (int) h.size();                              // length of impulse response h
+  int Ny = Nx + Nh - 1;                                 // length of filtered output y
+  std::vector<T> y(Ny);                                 // allocate output
+  rsArrayTools::convolve(&x[0], Nx, &h[0], Nh, &y[0]);  // convolve x by h, store result to y
+  return y;
+}
 
 bool testUpDownSample1D()
 {
@@ -1538,6 +1545,9 @@ bool testUpDownSample1D()
   int Nyf = Ny + Nh - 1;     // length of filtered y
   Vec yf(Nyf);
   AT::convolve(&y[0], Ny, &h[0], Nh, &yf[0]);
+  yf = filter(y, h);
+
+
 
   // Crop the filtered yf to the original length of y by discarding the first and last 2 samples:
   int tail = Nh/2;  // tail == 2. Does this also work for even Nh? Try it!
@@ -1726,7 +1736,7 @@ bool testUpDownSample1D_2()
   Real a2 = 0.0;
 
   // Define coeffs of the upsampling (interpolation) kernel b:
-  Real b0 = 1;
+  Real b0 = 1.25;
   Real b1 = 2 - b0;
   Real b2 = -b1/2;
   // ToDo: generalize these formulas such that they involve the a-coeffs. I think, these formulas
@@ -1739,27 +1749,24 @@ bool testUpDownSample1D_2()
 
   // Create test signal
   Vec x({7,-2,1,-6,5,-3,4,-1,3});
+  //Vec x({0,0,0,1,0,0,0});       // preliminary
   int Nx = (int) x.size();
-
-
-
 
 
   // Upsample by a factor of 2:
   int Ny = 2*Nx;  // verify!
   Vec y(Ny);
-
+  for(int i = 0; i < Nx; i++)
+  {
+    int  j = 2*i;
+    y[j]   = x[i];
+    y[j+1] = 0;
+  }
 
 
   y[0] = x[0];
   // ...
   y[Ny-1] = x[Nx-1];
-
-
-
-
-
-
 
 
 
@@ -1774,7 +1781,12 @@ bool testUpDownSample1D_2()
   // kernel in the original domain [1 3 3 1]/8. Linear would be [1 1]/2. Somehow these look like
   // lines of Pascal's triangle? Is that a coincidence? Maybe try also [1 5 10 10 5 1]/32. I think,
   // these lines may approach a Gaussian bell curve? Try to plot it! Maybe add code for that to 
-  // testGaussBlurFIR. But how could we generalize this to a 2D kernel? ...but actually a Gaussian
+  // testGaussBlurFIR. I think, if we want to use the a = []
+  
+  // [1 3 3 1]/4 kernel for upsampling,
+  // 
+  
+  // But how could we generalize this to a 2D kernel? ...but actually a Gaussian
   // kernel is separable, so it may work out nicely.
 
 

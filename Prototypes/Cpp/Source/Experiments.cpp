@@ -1729,21 +1729,15 @@ bool testUpDownSample1D_2()
   Real a1 = 0.25;
   Real a2 = 0.0;
 
-  // Try some other kernels:
-  a0 = 0.6; a1 = 0.2; a2 = 0.0;  // Yes. Works also.
-
+  // Try some other kernels (The kernel should satisfy a0 + 2*(a1 + a2) = 1, I think):
+  //a0 = 0.6; a1 = 0.2; a2 = 0.0;  // Yes. Works also.
+  //a0 = 0.8; a1 = 0.1; a2 = 0.0;  // also OK.
+  //a0 = 0.4; a1 = 0.2; a2 = 0.1;  // Nope! Maybe a2 != 0 is the culprit? But why?
 
   // Define coeffs of the upsampling (interpolation) kernel b:
-  Real b0 = 1.25;
-  Real b1 = 2 - b0;
-  Real b2 = -b1/2;
-  // ToDo: generalize these formulas such that they involve the a-coeffs. I think, these formulas
-  // work only when a = [0.25  0.5  0.25]
-
-  // ...I think, it's this:
-  b1 = (2*a0 - a0*b0 + 2*a2*b0) / (2*(a0-a1));
-  b2 = -(b0*a2 + b1*a1) / a0;
-  // ..OK - they don't change in the 2nd assignment, so the general formula may be correct.
+  Real b0 = 1.25;       // Try some other values
+  Real b1 = (2*a0 - a0*b0 + 2*a2*b0) / (2*(a0-a1));  // Verify!
+  Real b2 = -(b0*a2 + b1*a1) / a0;                   // Verify!
 
   // Create test signal
   //Vec x({7,-2,1,-6,5,-3,4,-1,3});
@@ -1789,9 +1783,7 @@ bool testUpDownSample1D_2()
   for(int i = 2; i < Nx-2; i++) {  // i is index into x
     int j = 2*i;                   // j is center index into y
     xr[i] = a0*y[j] + a1*(y[j-1] + y[j+1]) + a2*(y[j-2] + y[j+2]);
-
-    //xr[i] *= 2;  // why is this needed? ...works when a0 =0.5
-    xr[i] /= a0;   // ...works more generally? ..seems so
+    xr[i] /= a0;   // why is this needed?
   }
 
   // ToDo: handle edges. Maybe the loop can go from i=1 to i < Nx-1 like in
@@ -1802,6 +1794,11 @@ bool testUpDownSample1D_2()
 
   rsAssert(ok);
   return ok;
+
+  // ToDo:
+  // -Figure out why it doesn't work when a2 != 0. Maybe we still have mistakes in some of the 
+  //  formulas. The xr[i] /= a0 is pretty starnge anyway. I don't really understand it and have 
+  //  found it by trial and error.
 
   
   // But how could we generalize this to a 2D kernel? ...but actually a Gaussian

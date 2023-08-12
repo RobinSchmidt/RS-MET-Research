@@ -25,7 +25,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //animateComplexExponentialBlur();
   //plotComplexGauss1D();
   //testComplexGaussBlurIIR();
-  testUpDownSample1D();              // up- and downsampling with lossless roundtrip
+  //testUpDownSample1D();              // up- and downsampling with lossless roundtrip
   testUpDownSample1D_2();
   testUpDownSample2D();              // stub, dito but for images
 

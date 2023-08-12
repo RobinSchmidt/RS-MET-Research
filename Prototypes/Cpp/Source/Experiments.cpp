@@ -1612,12 +1612,6 @@ bool testUpDownSample1D()
   //  visually in terms of being close to the original (down-then-up is, of course, no identity 
   //  operation due to information loss in the downsampling). 
   // -Try to create a scheme using cubic interpolation in the upsampling step. 
-  // -Try also the "Magic Kernel"
-  //    https://johncostella.com/magic/
-  //    https://johncostella.com/magic/mks.pdf
-  //  Try to use the upsampling variant and check, if upsample -> downsample is lossless. If not,
-  //  take the upsampling as is and try to derive a suitable downsampling that makes the roundtrip 
-  //  lossless.
   // -Maybe we can somehow generalize this: given an upsampling kernel, find a (set of) 
   //  downsampling kernels that yield a lossless roundtrip. The upsampling kernel for linear 
   //  interpolation in 1D can be written as [0.5, 1, 0.5] = [b1 b0 b1]. I think, it is the 0.5 that
@@ -1647,6 +1641,22 @@ bool testUpDownSample1D()
   //  assume averaging as downsampling method
   // -The eventual goal is to later make a 2D version of the found schemes to use them for image
   //  processing in upsampled images. But first things first and the first thing is the 1D version.
+  // -Try also the "Magic Kernel"
+  //    https://johncostella.com/magic/
+  //    https://johncostella.com/magic/mks.pdf
+  //  Try to use the upsampling variant and check, if upsample -> downsample is lossless. If not,
+  //  take the upsampling as is and try to derive a suitable downsampling that makes the roundtrip 
+  //  lossless. Some important passages from the website text:
+  //  "I analytically derived the Fourier transform of the Magic Kernel in closed form, and found, 
+  //  incredulously, that it is simply the cube of the sinc function.[...] An alternative way of 
+  //  looking at it is that it is a “kernel” with values {1/4, 3/4, 3/4, 1/4} in each direction 
+  //  (where, in this notation, the standard “replication” or “nearest neighbor” kernel is just 
+  //  {0, 1, 1, 0}. [...]  the “magic” kernel is effectively a very simple approximation to the 
+  //  sinc function, albeit with the twist that the new sampling positions are offset by half a 
+  //  pixel from the original positions [...] the “magic” kernel can be factorized into a 
+  //  nearest-neighbor upsampling to the “doubled” (or “tiled”) grid, i.e. {1, 1}, followed by 
+  //  convolution with a regular {1/4, 1/2, 1/4} kernel  "
+
   // -See also:
   //  https://en.wikipedia.org/wiki/Upsampling
   //  https://en.wikipedia.org/wiki/Downsampling_(signal_processing)
@@ -1677,15 +1687,16 @@ bool testUpDownSample1D_2()
   // Maybe impose additionally: b0 + 2*(b1 + b2) = 2 because this is the sum which the linear 
   // interpolation upsampling kernel gives. Maybe also require b0 = 1, also like in linear 
   // interpolation. Or maybe leave b0 as free parameter. OK, so we have 2 equations:
-  //   (1)  0 = b1/4 + b2/2
+  //   (1)  0 = b1/4 + b2/2 = b0*a2 + b1*a1 + b2*a0
   //   (2)  2 = b0 + 2*(b1 + b2)
   // although the second is questionable. I think, the number 2 can be explained by the fact that 
   // we upsample by a factor of 2. If we would upsample by 3, then the coeffs should sum to 3, I 
-  // guess. We'll see. Let's solve the 1st equatiuon for b2:
+  // guess. We'll see. Let's solve the 1st equation for b2:
   //   b2 = -b1/2
   // This is very reminscent of the a2 = -a1/2 that we had above. Interesting! Substituting b2 into 
   // (2) and solving for b1 gives:
-  //   2 = b0 + 2*(b1 - b1/2)  ->  b1 = 2 - b0
+  //   2 = b0 + 2*(b1 - b1/2)  
+  //   2-b0 = 2*(b1 - b1/2) = 2*b1 - b1 = b1   ->   b1 = 2 - b0
 
 
   // OK - let's try it:
@@ -1697,20 +1708,60 @@ bool testUpDownSample1D_2()
   //using AT   = RAPT::rsArrayTools;
 
 
+  // Define coeffs of the downsampling (averaging) kernel a:
+  Real a0 = 0.5;
+  Real a1 = 0.25;
+  Real a2 = 0.0;
+
+  // Define coeffs of the upsampling (interpolation) kernel b:
+  Real b0 = 1;
+  Real b1 = 2 - b0;
+  Real b2 = -b1/2;
+  // ToDo: generalize these formulas such that they involve the a-coeffs. I think, these formulas
+  // work only when a = [0.25  0.5  0.25]
+
+
   // Create test signal
   Vec x({7,-2,1,-6,5,-3,4,-1,3});
   int Nx = (int) x.size();
 
+
+
+
+
   // Upsample by a factor of 2:
   int Ny = 2*Nx;  // verify!
   Vec y(Ny);
+
+
+
   y[0] = x[0];
-  for(int i = 1; i < Ny-1; i++)
-  {
-    int j = 2*i;
-    y[i] = 0.5*x[j] + 0.25*(x[j-1] + x[j+1]); // a0 = 0.5, a1 = 0.25
-  }
+  // ...
   y[Ny-1] = x[Nx-1];
+
+
+
+
+
+
+
+
+
+
+  // Ah - no - somehow I think, I have confused this. In upsampling, we really want to take over
+  // the datapoints x[i] as is where the upsampled index j is given by 2*i, i.e. we want
+  // y[2*i] = x[i]. It's just the y[2*i+1] that we need to fill in. With linear interpolation, 
+  // the kernel in the original domain would be [0.5 0.5] such that 
+  // y[2*i+1] = 0.5 * (x[i] + x[i+1]). After upsampling with zero stuffing, i.e. just 
+  // preliminarily setting y[2*i+1] = 0, one could apply the kernel [0.5 1.0 0.5] as post 
+  // processing filter. This should give the same oversampled end result. Maybe try a 4-point
+  // kernel in the original domain [1 3 3 1]/8. Linear would be [1 1]/2. Somehow these look like
+  // lines of Pascal's triangle? Is that a coincidence? Maybe try also [1 5 10 10 5 1]/32. I think,
+  // these lines may approach a Gaussian bell curve? Try to plot it! Maybe add code for that to 
+  // testGaussBlurFIR. But how could we generalize this to a 2D kernel? ...but actually a Gaussian
+  // kernel is separable, so it may work out nicely.
+
+
 
 
   // ToDo:
@@ -1756,11 +1807,26 @@ bool testUpDownSample2D()
   //    (3) 1 = a + 4*(b+c+d+e) + 8*f         total sum of unity
   //    (4) d = b / sqrt(2)
   //    (5) e = c / sqrt(2)
+  //
+  // Maybe the 2D version of the kernel can be simply obtained by convolving a horizontal and a 
+  // vertical version of the 1D kernel? I think, that is equivalen to to putting weighted copy of
+  // the kernel into each row (or column) of the 5x5 kernel where the weight is again taken from 
+  // the corresponding column (or row) index. That means, if the 1D kernel is [c b a b c]m then the 
+  // 2D version would be:
+  //
+  //   cc  bc  ac  bc  cc                     [c]
+  //   cb  bb  ab  bb  cb                     [b]
+  //   ca  ba  aa  ba  ca  =  [c b a b c]  *  [a]
+  //   cb  bb  ab  bb  ab                     [b]
+  //   cc  bc  ac  bc  cc                     [c]
+  //
+  // where * denotes convolution...or does it? What we have here looks actually more like a tensor
+  // product. ...figure out!
   // 
   // -For upsampling in the 2D case, see also rsImageProcessor<T>::interpolateBilinear. But maybe
   //  implement an optimized version for upsampling by 2. It should give the same result as
   //  interpolateBilinear(const rsImage<T>& img, 2, 2)
-  // -I think, the upsampling kernel for linear bilinear interpolation is givne by:
+  // -I think, the upsampling kernel for linear bilinear interpolation is given by:
   //
   //   0.0  0.25  0.0
   //   0.25 

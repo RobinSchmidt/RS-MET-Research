@@ -1454,7 +1454,12 @@ std::vector<T> upsampleBy2_Lin(const std::vector<T>& x)
   //  impulse input repeatedly by the kernel [1 1]. This should converge to a Gaussian shape in a 
   //  way that is most useful in the discrete case. A discrete approximation of a Gaussian bell 
   //  using n+1 samples may be best represented by the n-th line of the triangle divided by 2^n.
-  //  It should have a sum of exactly 1.
+  //  It should have a sum of exactly 1. The numbers are also nice for a fixed point implementation
+  //  because the are multiples of small inverse powers of 2. This can be implemented by using the
+  //  unnormalized coeffs (such as [1 3 3 1]), add everything up and then do the division by 
+  //  shifting. For a floating point implementation, it makes more sense to use the normalized 
+  //  coeffs [1 3 3 1]/8 directly. But maybe make unit tests on 8-bit images using shifting. The 
+  //  accumulator should be 16 bits wide.
   // -Implement the schemes using [1 2 1]/4, [1 3 3 1]/8 and [1 4 6 4 1]/16, [1 5 10 10 5 1]/32 and
   //  derive and implement the corresponding downsampling scheme
 }

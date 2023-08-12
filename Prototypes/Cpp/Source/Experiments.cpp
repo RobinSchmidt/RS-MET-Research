@@ -1547,21 +1547,8 @@ bool testUpDownSample1D()
   // try to figure out the 2D version, then try a couple of values of a0 and select the best 
   // downsampling filter by eye.
 
-  // Apply the filter kernel to y:
-  int Nh  = (int) h.size();
-  Vec yf  = filter(y, h);
-
-
-  int Nyf = (int) yf.size();
-
-  // Crop the filtered yf to the original length of y by discarding the first and last 2 samples:
-  int tail = Nh/2;  // tail == 2. Does this also work for even Nh? Try it!
-  yf = crop(yf, tail, (Nyf-1)-tail);
-  rsAssert(yf.size() == Ny);
-  // maybe let filter optionally crop the result
-
-
-  // Now decimate yf naively. This should give back x:
+  // Apply the filter kernel to y and then decimate yf naively. This should give back x:
+  Vec yf = filter(y, h, true);
   Vec xr(Nx);
   AT::decimate(&yf[0], Ny, &xr[0], 2);
   Vec err = x - xr;  // Error introduced in roundtrip

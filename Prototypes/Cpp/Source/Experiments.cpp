@@ -1958,16 +1958,7 @@ bool testUpDownSample2D()
       img = Prc::interpolateBilinear(img, 2, 2);
   }
 
-  /*
-  for(int stage = 0; stage <= numStages; stage++)
-  {
-    std::string path = name + std::to_string(stage) + ".ppm";
-    writeImageToFilePPM(img, path.c_str());
-    img = Prc::interpolateBilinear(img, 2, 2);
-  }
-  */
-  // The last (largest) one is not saved. But this is not production code so that doesn't really 
-  // matter.
+
 
   // Observations:
   // -Using Prc::interpolateBilinear for repeatedly upsampling leads to an output image in which we
@@ -1975,11 +1966,9 @@ bool testUpDownSample2D()
   //  vertical and horizontal bright pixels. See Impulse5.ppm
 
 
+  // ToDo:
+  // -Try the magic kernel and binomial kernels.
 
-  //writeImageToFilePPM(img, path);
-
-
-  //img = rsImageProcessor<T>::interpolateBilinear(img, scaleX, scaleY);
 
 
   rsAssert(ok);

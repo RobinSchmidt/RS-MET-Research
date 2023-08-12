@@ -1697,6 +1697,18 @@ bool testUpDownSample1D_2()
   // (2) and solving for b1 gives:
   //   2 = b0 + 2*(b1 - b1/2)  
   //   2-b0 = 2*(b1 - b1/2) = 2*b1 - b1 = b1   ->   b1 = 2 - b0
+  //
+  // Let's solve the 1st equation for b2 assuming general a-coeffs:
+  //   b2 = -(b0*a2 + b1*a1) / a0      (= -(b0*0 + b1*0.25) / 0.5 = -b1/2 for our choice of a)
+  // Substitute b2 into (2):
+  //   2 = b0 + 2*(b1 - (b0*a2 + b1*a1) / a0)
+  // and solve for b1 using wolfram alpüha with "solve 2 = b0 + 2 (b1 - (b0 a2 + b1 a1)/a0) for b1"
+  // gives:
+  //   b1 = (2*a0 - a0*b0 + 2*a2*b0) / (2*(a0-a1))
+  // and the equation for b2 is already given above. Here it is again:
+  //   b2 = -(b0*a2 + b1*a1) / a0 
+
+
 
 
   // OK - let's try it:
@@ -1720,6 +1732,10 @@ bool testUpDownSample1D_2()
   // ToDo: generalize these formulas such that they involve the a-coeffs. I think, these formulas
   // work only when a = [0.25  0.5  0.25]
 
+  // ...I think, it's this:
+  b1 = (2*a0 - a0*b0 + 2*a2*b0) / (2*(a0-a1));
+  b2 = -(b0*a2 + b1*a1) / a0;
+  // ..OK - they don't change in the 2nd assignment, so the general formula may be correct.
 
   // Create test signal
   Vec x({7,-2,1,-6,5,-3,4,-1,3});

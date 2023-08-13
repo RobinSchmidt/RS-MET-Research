@@ -1970,7 +1970,17 @@ bool testUpDownSample2D()
     TPix mean  = IKM::mean(img);            // starts at 1/9, approaches 1/4
     TPix sumH  = IKM::centerSumHorz(img);   // 2^stage
     TPix sumV  = IKM::centerSumVert(img);   // 2^stage
+
+    TPix sumD1 = IKM::centerSumDiag1(img);  // 1, 1.5, 2.75, 5.375, 10.6875 -> find formula!
+    // stage  sumD1
+    // 0:     1
+    // 1:     1 + 2 * 0.5^2
+    // 2:     1 + 2 * (0.5^2 + 0.25^2) ...no...seems wrong
+    // 
+
+
     TPix asRat = IKM::aspectRatio(img);     // 1
+
 
     // Interpolate to next stage or leave loop:
     stage++;

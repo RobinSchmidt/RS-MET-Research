@@ -52,6 +52,8 @@ public:
 
   static T centerSumVert(const rsImage<T>& img);
 
+  static T centerSumDiag1(const rsImage<T>& img);
+
 
   // do two diag versions, too
 
@@ -116,6 +118,18 @@ T rsImageKernelMeasures<T>::centerSumVert(const RAPT::rsImage<T>& img)
   int j = (w-1) / 2;
   for(int i = 0; i < img.getWidth(); i++)
     sum += img(i, j);
+  return sum;
+}
+
+template<class T>
+T rsImageKernelMeasures<T>::centerSumDiag1(const RAPT::rsImage<T>& img)
+{
+  int w = img.getWidth();
+  int h = img.getHeight();
+  int n = rsMin(w, h); 
+  T sum(0);
+  for(int i = 0; i < n; i++)
+    sum += img(i, i);
   return sum;
 }
 

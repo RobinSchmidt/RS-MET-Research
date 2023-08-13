@@ -1992,8 +1992,25 @@ bool testUpDownSample2D()
   }
 
 
+  // Test the anisotropy measurement witth a perfectly isotropic kernel:
+  img.setSize(3, 3);
+  img.clear();
+  TPix c = 0.5;
+  TPix s = 1.0/sqrt(2);
+  img(1, 1) = 1.f;  // center
+  img(1, 0) = c;    // center left
+  img(1, 2) = c;    // center right
+  img(0, 1) = c;    // center top
+  img(2, 1) = c;    // center bottom
+  img(0, 0) = s*c;  // top left
+  img(0, 2) = s*c;  // top right
+  img(2, 0) = s*c;  // bottom left
+  img(2, 2) = s*c;  // bottom right
+  TPix anIso = IKM::anisotropy(img);  // should be zero
+  ok &= anIso == 0;
 
-
+  rsAssert(ok);
+  return ok;
 
 
   // Observations:
@@ -2021,9 +2038,16 @@ bool testUpDownSample2D()
   //  
 
 
-
-  rsAssert(ok);
-  return ok;
+  // Some notes for designing an isotropic fixed point kernel of size 3x3:
+  // -
+  // -181/128 is a decent approximation of sqrt(7) and 181/256 a decent approximation of 1/sqrt(2)
+  //  ...but that may be worthless because we actually need a divisor of 255 because that's what
+  //  1 maps to. Or maybe we should map 1 to 256. When the pixels are 8 bit, we will need a 16 bit
+  //  accumulator anyway, so it makes sense. The kernel could look like:
+  //
+  //    [181  128  181]
+  //    [128  256  128]   /   256
+  //    [181  128  181]
 }
 
 

@@ -1978,8 +1978,9 @@ bool testUpDownSample2D()
     // 2:     1 + 2 * (0.5^2 + 0.25^2) ...no...seems wrong
     // 
 
-
     TPix asRat = IKM::aspectRatio(img);     // 1
+
+    TPix anIso = IKM::anisotropy(img);
 
 
     // Interpolate to next stage or leave loop:

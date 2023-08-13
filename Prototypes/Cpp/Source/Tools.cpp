@@ -54,6 +54,9 @@ public:
 
   static T centerSumDiag1(const rsImage<T>& img);
 
+  //static T centerSumDiag2(const rsImage<T>& img);
+  // maybe instead of Diag1/2, call them DownDiag and UpDiag
+
 
   // do two diag versions, too
 
@@ -62,7 +65,14 @@ public:
 
 
 
-  static T isotropy(const rsImage<T>& img);
+
+  static T anisotropy(const rsImage<T>& img);
+  // Measures the difference of (sh + sv) - (sd1w + sd2w) where:
+  // sh:   centerSumHorz
+  // sv:   centerSumVert
+  // sd1w: weighted diagonal sum 1 (weights for pixels not at the center are sqrt(2))
+  // sd1w: weighted diagonal sum 2
+  // Maybe rename to crossness
 
 
 
@@ -134,14 +144,55 @@ T rsImageKernelMeasures<T>::centerSumDiag1(const RAPT::rsImage<T>& img)
 }
 
 
-/*
 template<class T>
-T rsImageKernelMeasures<T>::isotropy(const RAPT::rsImage<T>& img)
+T rsImageKernelMeasures<T>::anisotropy(const RAPT::rsImage<T>& img)
 {
-  T sum(0);
+  int w = img.getWidth();
+  int h = img.getHeight();
+  rsAssert(w == h);
 
+  // Form the horizontal center sum:
+  T sh = centerSumHorz(img);
+
+  // Form the weighted diagonal center sum:
+  int c = (h-1) / 2;              // center
+  T sdw(0);                       // initialize sum to 0
+  sdw += img(c, c);               // center pixel gets a weight of 1
+  T s = sqrt(2);                  // weight for off-center diagonal pixels
+  for(int i = 0; i < c; i++)
+    sdw += s * img(i, i);
+  for(int i = c+1; i < h; i++)
+    sdw += s * img(i, i);
+
+  // Compute the anisotropy:
+  T a = (sh - sdw) / h;
+  return a;
+
+  // For this measurement to make sense, the kernel needs to satsify certain symmetries which we
+  // check here:
+  T sv = centerSumVert(img);
+  rsAssert(rsIsOdd(w));
+  rsAssert(sv == sh);
+  // maybe do
+  //rsAssert( isHorizontallySymmetric(img) );
+  //rsAssert( isVerticallySymmetric(img) );
+  //rsAssert( isDownDiagonallySymmetric(img) );
+  //rsAssert( isUpDiagonallySymmetric(img) );
+  //rsAssert( isRotationallySymmetric(img) );
+  // maybe check all possible symmetries of a square. How many are there? I think, it's 8, see
+  // https://proofwiki.org/wiki/Definition:Symmetry_Group_of_Square
+  // http://mathonline.wikidot.com/the-group-of-symmetries-of-the-square
+  // Maybe the kernel should have all of them
 }
-*/
+// ToDo:
+// Test it with the perfectly isotropic kernel
+//
+//  s*c  c  s*c
+//   c   1   c
+//  s*c  c  s*c
+//
+// where s = 1/sqrt(2). This should have an anisotropy of zero for any c. Try c = 0.5.
+
 
 
 //=================================================================================================

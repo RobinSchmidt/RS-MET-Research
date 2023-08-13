@@ -52,7 +52,7 @@ public:
 
   static T centerSumVert(const rsImage<T>& img);
 
-  static T centerSumDiag1(const rsImage<T>& img);
+  static T centerSumDiagDown(const rsImage<T>& img);
 
   //static T centerSumDiag2(const rsImage<T>& img);
   // maybe instead of Diag1/2, call them DownDiag and UpDiag
@@ -65,14 +65,19 @@ public:
 
 
 
+  /** Measures how anisotropic the kernel is by comparing the sum of the center horizontal strip 
+  and the diagonal strip where the off-center pixel values in the diagonal strip are weighted by
+  sqrt(2) because they are by that factor farther away from the center pixel. A circularly 
+  symmetric (i.e. perfectly isotropic) kernel should give an anisotropy of zero. A kernel that 
+  looks like a cross should give a very high value
 
+  ...TBC...
+  
+  For this computation to make sense, we need to assume that the kernel is rotationally symmetric 
+  for a rotation of 90° such that there is no difference between centerSumHorz and centerSumVert 
+  and also no difference between centerSumDiagDown and centerSumDiagUp.  */
   static T anisotropy(const rsImage<T>& img);
-  // Measures the difference of (sh + sv) - (sd1w + sd2w) where:
-  // sh:   centerSumHorz
-  // sv:   centerSumVert
-  // sd1w: weighted diagonal sum 1 (weights for pixels not at the center are sqrt(2))
-  // sd1w: weighted diagonal sum 2
-  // Maybe rename to crossness
+  // Maybe rename to crossness, diamondness, squareness, twinkle
 
 
 
@@ -132,7 +137,7 @@ T rsImageKernelMeasures<T>::centerSumVert(const RAPT::rsImage<T>& img)
 }
 
 template<class T>
-T rsImageKernelMeasures<T>::centerSumDiag1(const RAPT::rsImage<T>& img)
+T rsImageKernelMeasures<T>::centerSumDiagDown(const RAPT::rsImage<T>& img)
 {
   int w = img.getWidth();
   int h = img.getHeight();
@@ -165,7 +170,8 @@ T rsImageKernelMeasures<T>::anisotropy(const RAPT::rsImage<T>& img)
     sdw += s * img(i, i);
 
   // Compute the anisotropy:
-  T a = (sh - sdw) / h;
+  //T a = (sh - sdw) / h;  
+  T a = (sh - sdw) / (h - 1);  // (h-1) may make sense bcs the center pixel may not count
   return a;
 
   // For this measurement to make sense, the kernel needs to satsify certain symmetries which we
@@ -184,14 +190,6 @@ T rsImageKernelMeasures<T>::anisotropy(const RAPT::rsImage<T>& img)
   // http://mathonline.wikidot.com/the-group-of-symmetries-of-the-square
   // Maybe the kernel should have all of them
 }
-// ToDo:
-// Test it with the perfectly isotropic kernel
-//
-//  s*c  c  s*c
-//   c   1   c
-//  s*c  c  s*c
-//
-// where s = 1/sqrt(2). This should have an anisotropy of zero for any c. Try c = 0.5.
 
 
 

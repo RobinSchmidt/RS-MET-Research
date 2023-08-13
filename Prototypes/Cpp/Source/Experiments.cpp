@@ -51,6 +51,9 @@ void gaussBlur3x3(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y)
       y(i, j) = (T(1)/T(4))*x(i, j) + a + d;
     }
   }
+
+  // ToDo:
+  // -Handle edges
 }
 
 template<class T>
@@ -128,9 +131,14 @@ void gaussBlur7x7(const RAPT::rsImage<T>& x, RAPT::rsImage<T>& y)
 // Todo: 
 // -handle boundaries
 // -implement a general filter3x3 function that takes a 3x3 image to be used as filter kernel
-// -Implement Guassian filters of sizes 5x5, 7x7, see:
+// -implement a general filer(img, kernel) function. Maybe use the convolution routine from 
+//  rsMatrix (we may create an rsMatrixView). ...but maybe the 2D convolution routine should be 
+//  dragged out of rsMatrix. Maybe have a class rsArrayTools2D similar to rsArrayTools and let it 
+//  have a function convolve(const T *x, int Mx, int Nx, const T* h, int Mh, int Nh, T* y)
+// -Implement Gaussian filters of sizes 5x5, 7x7, see:
 //  https://homepages.inf.ed.ac.uk/rbf/HIPR2/gsmooth.htm
 //  https://www.researchgate.net/figure/Discrete-approximation-of-the-Gaussian-kernels-3x3-5x5-7x7_fig2_325768087
+//  ...done - but we don't handle the edges yet
 // -Implement the "magic kernel" and its sharp variant:
 //  http://www.johncostella.com/magic/ http://www.johncostella.com/magic/mks.pdf
 
@@ -1967,19 +1975,11 @@ bool testUpDownSample2D()
     // We interpret the interpolated image as filter kernel and take some measurments of it. The 
     // goal is to find some measurements that say something about the quality of the resampling. Of
     // particular interest is the isotropy of the filter.
-    TPix mean  = IKM::mean(img);            // starts at 1/9, approaches 1/4
-    TPix sumH  = IKM::centerSumHorz(img);   // 2^stage
-    TPix sumV  = IKM::centerSumVert(img);   // 2^stage
-
-    TPix sumD1 = IKM::centerSumDiag1(img);  // 1, 1.5, 2.75, 5.375, 10.6875 -> find formula!
-    // stage  sumD1
-    // 0:     1
-    // 1:     1 + 2 * 0.5^2
-    // 2:     1 + 2 * (0.5^2 + 0.25^2) ...no...seems wrong
-    // 
-
-    TPix asRat = IKM::aspectRatio(img);     // 1
-
+    TPix mean  = IKM::mean(img);               // starts at 1/9, approaches 1/4
+    TPix sumH  = IKM::centerSumHorz(img);      // 2^stage
+    TPix sumV  = IKM::centerSumVert(img);      // 2^stage
+    TPix sumD1 = IKM::centerSumDiagDown(img);  // 1, 1.5, 2.75, 5.375, 10.6875 -> find formula!
+    TPix asRat = IKM::aspectRatio(img);        // 1
     TPix anIso = IKM::anisotropy(img);
 
 
@@ -1997,7 +1997,7 @@ bool testUpDownSample2D()
   img.clear();
   TPix c = 0.5;
   TPix s = 1.0/sqrt(2);
-  img(1, 1) = 1.f;  // center
+  img(1, 1) = 1;    // center
   img(1, 0) = c;    // center left
   img(1, 2) = c;    // center right
   img(0, 1) = c;    // center top
@@ -2008,6 +2008,34 @@ bool testUpDownSample2D()
   img(2, 2) = s*c;  // bottom right
   TPix anIso = IKM::anisotropy(img);  // should be zero
   ok &= anIso == 0;
+
+  // Now compute anisotropy of a cross (should give 1?)
+  //
+  //   0  1  0
+  //   1  1  1
+  //   0  1  0
+  //  
+  img.clear();
+  img(1, 1) = 1;    // center
+  img(1, 0) = 1;    // center left
+  img(1, 2) = 1;    // center right
+  img(0, 1) = 1;    // center top
+  img(2, 1) = 1;    // center bottom
+  anIso = IKM::anisotropy(img);     // 1
+  img(1, 1) = 0;    // center
+  anIso = IKM::anisotropy(img);     // also 1, the center pixel makes no difference
+  // Maybe it would be nice if for this pattern, we'd get 1 as output. Then we can name the
+  // measurement crossness. Try it with bigger crosses. Maybe it approaches 1? Maybe we should 
+  // divide by (h-1) rather than h to make it give 1 independently from the kernel size? For a 
+  // diagonal cross, it would be nice to get -1.
+
+
+  //
+  //   1  0  1
+  //   0  1  0
+  //   1  0  1
+  //  
+
 
   rsAssert(ok);
   return ok;

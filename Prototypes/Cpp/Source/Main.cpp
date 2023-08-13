@@ -16,7 +16,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   */
 
   // Image processing:
-  //testGaussBlurFIR();
+  testGaussBlurFIR();
   //testGaussBlurIIR();
   //testMultiPass();
   //testImageFilterSlanted();

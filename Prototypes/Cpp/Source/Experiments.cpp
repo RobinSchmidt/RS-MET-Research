@@ -2024,7 +2024,7 @@ bool testUpDownSample2D()
   img(1, 2) = 1;    // center right
   img(0, 1) = 1;    // center top
   img(2, 1) = 1;    // center bottom
-  anIso = IKM::anisotropy(img);     // 1
+  anIso = IKM::anisotropy(img);     // +1
   img(1, 1) = 0;    // center
   anIso = IKM::anisotropy(img);     // also 1, the center pixel makes no difference
   // Maybe it would be nice if for this pattern, we'd get 1 as output. Then we can name the
@@ -2043,15 +2043,15 @@ bool testUpDownSample2D()
   img(0, 2) = 1;    // top right
   img(2, 0) = 1;    // bottom left
   img(2, 2) = 1;    // bottom right
-  anIso = IKM::anisotropy(img);    // -sqrt(2)
-  // It would be really nice, if we would get -1 for the diagonal cross. Maybe we should divide
-  // negative values by sqrt(2)?
+  anIso = IKM::anisotropy(img);    // -1
 
+  /*
   img(0, 0) = s;    // top left
   img(0, 2) = s;    // top right
   img(2, 0) = s;    // bottom left
   img(2, 2) = s;    // bottom right
-  anIso = IKM::anisotropy(img);    // -1
+  anIso = IKM::anisotropy(img);    // -1/sqrt(2)
+  */
 
 
 

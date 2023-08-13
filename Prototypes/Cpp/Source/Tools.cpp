@@ -172,6 +172,11 @@ T rsImageKernelMeasures<T>::anisotropy(const RAPT::rsImage<T>& img)
   // Compute the anisotropy:
   //T a = (sh - sdw) / h;  
   T a = (sh - sdw) / (h - 1);  // (h-1) may make sense bcs the center pixel may not count
+
+  // Ad hoc to normalize value for diagonal cross to -1:
+  if(a < 0)
+    a *= 1.0 / sqrt(2);
+
   return a;
 
   // For this measurement to make sense, the kernel needs to satsify certain symmetries which we

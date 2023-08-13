@@ -46,6 +46,16 @@ public:
   static T mean(const rsImage<T>& img) { return sum(img) / img.getNumPixels(); }
 
 
+  /** Sum of pixel values of the horizontal center line */
+  static T centerSumHorz(const rsImage<T>& img);
+
+  // do a vert-version and two diag versions, too
+
+
+  static T isotropy(const rsImage<T>& img);
+
+
+
 
   //T sum;      // sum of all values
   //T energy;   // sum of all values squared
@@ -56,7 +66,8 @@ public:
   // -symmetryVert:  top wing - bottom wing (..dito)
   // -symmetryDiag1: top left wing - bottom right wing
   // -symmetryDiag2: top right wing - bottom left wing
-  // -mean, max
+  // -mean, max, rms (root-mean-square)
+  // -isotropy
 
 };
 
@@ -69,6 +80,38 @@ T rsImageKernelMeasures<T>::sum(const RAPT::rsImage<T>& img)
       sum += img(i, j);
   return sum;
 }
+
+template<class T>
+T rsImageKernelMeasures<T>::centerSumHorz(const RAPT::rsImage<T>& img)
+{
+  //rsAssert(
+
+  int h = img.getHeight();
+
+  T sum(0);
+  int i = (h-1) / 2;
+
+  for(int j = 0; j < img.getHeight(); j++)
+    sum += img(i, j);
+
+
+  // ToDo:
+  // For even h, we need to scan 2 horizontal lines near the center and compute their average.
+
+
+
+  return sum;
+}
+
+
+/*
+template<class T>
+T rsImageKernelMeasures<T>::isotropy(const RAPT::rsImage<T>& img)
+{
+  T sum(0);
+
+}
+*/
 
 
 //=================================================================================================

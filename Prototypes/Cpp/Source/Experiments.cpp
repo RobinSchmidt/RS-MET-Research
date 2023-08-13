@@ -1960,12 +1960,18 @@ bool testUpDownSample2D()
   int stage = 0;
   while(true)
   {
+    // Write current image to a file:
     std::string path = name + std::to_string(stage) + ".ppm";
     writeImageToFilePPM(img, path.c_str());
+
+    // We interpret the interpolated image as filter kernel and take some measurments of it. The 
+    // goal is to find some measurements that say something about the quality of the resampling. Of
+    // particular interest is the isotropy of the filter.
+    TPix mean = IKM::mean(img);            // starts at 1/9, approaches 1/4
+    TPix sumH = IKM::centerSumHorz(img);   // 2^stage
+
+    // Interpolate to next stage or leave loop:
     stage++;
-
-    TPix mean = IKM::mean(img); // approaches 0.25
-
     if(stage > numStages)
       break;
     else

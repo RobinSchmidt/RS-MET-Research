@@ -2045,45 +2045,32 @@ bool testUpDownSample2D()
   img(2, 2) = 1;    // bottom right
   anIso = IKM::crossness(img);    // -1
 
-  // Try a bigger crosses:
-  //int n = 5;
-
+  // Make a unit test with crosses of different sizes:
   TPix tol = 1.e-6;
-  for(int n = 3; n <= 11; n += 2)
+  for(int n = 3; n <= 11; n += 2)  // kernel sizes: 3x3, 5x5, ..., 11x11
   {
-
+    // A straight cross:
     img.setSize(n, n);
     img.clear();
-    int m = (n-1) / 2;  // m: middle
-    for(int i = 0; i < n; i++)
-    {
+    int m = (n-1) / 2;             // m: middle
+    for(int i = 0; i < n; i++) {
       img(m, i) = 1;
-      img(i, m) = 1;
-    }
-    writeImageToFilePPM(img, "Cross.ppm");
+      img(i, m) = 1; }
+    //writeImageToFilePPM(img, "Cross.ppm");
     anIso = IKM::crossness(img);   // 1
     ok &= rsIsCloseTo(anIso, TPix(+1), tol);
 
-    // Now a diagonal cross:
+    // A diagonal cross:
     img.clear();
-    for(int i = 0; i < n; i++)
-    {
-      img(i, i) = 1;
-      img(i, n-1-i) = 1;
-    }
-    writeImageToFilePPM(img, "CrossDiag.ppm");
+    for(int i = 0; i < n; i++) {
+      img(i, i)     = 1;
+      img(i, n-1-i) = 1;   }
+    //writeImageToFilePPM(img, "CrossDiag.ppm");
     anIso = IKM::crossness(img); // -1
     ok &= rsIsCloseTo(anIso, TPix(-1), tol);
   }
-  // Maybe make a unit-test for crossness:
-  // -Generate crosses of various sizes (3x3, 5x5, 7x7, ...) and check that crossness is 1 (or
-  //  -1 for the diagonal crosses)
-  // -We may actually just put the code above in a loop for(n = 3; n <= nMax; n +=2) ... and add
-  //  ok &= rsIsCloseTo(anIso, +1, tol) and ok &= rsIsCloseTo(anIso, -1, tol)
 
-
-
-
+  // Maybe delete the now redundant code that tests the 3x3 crosses manually
 
   rsAssert(ok);
   return ok;

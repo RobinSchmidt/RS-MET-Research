@@ -2032,12 +2032,29 @@ bool testUpDownSample2D()
   // divide by (h-1) rather than h to make it give 1 independently from the kernel size? For a 
   // diagonal cross, it would be nice to get -1.
 
-
   //
   //   1  0  1
   //   0  1  0
   //   1  0  1
   //  
+  img.clear();
+  img(1, 1) = 1;    // center
+  img(0, 0) = 1;    // top left
+  img(0, 2) = 1;    // top right
+  img(2, 0) = 1;    // bottom left
+  img(2, 2) = 1;    // bottom right
+  anIso = IKM::anisotropy(img);    // -sqrt(2)
+  // It would be really nice, if we would get -1 for the diagonal cross. Maybe we should divide
+  // negative values by sqrt(2)?
+
+  img(0, 0) = s;    // top left
+  img(0, 2) = s;    // top right
+  img(2, 0) = s;    // bottom left
+  img(2, 2) = s;    // bottom right
+  anIso = IKM::anisotropy(img);    // -1
+
+
+
 
 
   rsAssert(ok);

@@ -2012,40 +2012,14 @@ bool testUpDownSample2D()
   TPix anIso = IKM::crossness(img);  // should be zero
   ok &= anIso == 0;
 
-  // Now compute anisotropy of a cross (should give 1?)
-  //
-  //   0  1  0
-  //   1  1  1
-  //   0  1  0
-  //  
-  img.clear();
-  img(1, 1) = 1;    // center
-  img(1, 0) = 1;    // center left
-  img(1, 2) = 1;    // center right
-  img(0, 1) = 1;    // center top
-  img(2, 1) = 1;    // center bottom
-  anIso = IKM::crossness(img);     // +1
-  img(1, 1) = 0;    // center
-  anIso = IKM::crossness(img);     // also 1, the center pixel makes no difference
-  // Maybe it would be nice if for this pattern, we'd get 1 as output. Then we can name the
-  // measurement crossness. Try it with bigger crosses. Maybe it approaches 1? Maybe we should 
-  // divide by (h-1) rather than h to make it give 1 independently from the kernel size? For a 
-  // diagonal cross, it would be nice to get -1.
 
+  // Make a unit test for the crossness computation with crosses of different sizes. 
+  // The 3x3 kernels for the straight and diagonal cross look like
   //
-  //   1  0  1
-  //   0  1  0
-  //   1  0  1
+  //   0  1  0       1  0  1
+  //   1  1  1       0  1  0
+  //   0  1  0       1  0  1
   //  
-  img.clear();
-  img(1, 1) = 1;    // center
-  img(0, 0) = 1;    // top left
-  img(0, 2) = 1;    // top right
-  img(2, 0) = 1;    // bottom left
-  img(2, 2) = 1;    // bottom right
-  anIso = IKM::crossness(img);    // -1
-
-  // Make a unit test with crosses of different sizes:
   TPix tol = 1.e-6;
   for(int n = 3; n <= 11; n += 2)  // kernel sizes: 3x3, 5x5, ..., 11x11
   {
@@ -2069,8 +2043,9 @@ bool testUpDownSample2D()
     anIso = IKM::crossness(img); // -1
     ok &= rsIsCloseTo(anIso, TPix(-1), tol);
   }
+  // Maybe also include the isotropic kernels into this test
 
-  // Maybe delete the now redundant code that tests the 3x3 crosses manually
+
 
   rsAssert(ok);
   return ok;

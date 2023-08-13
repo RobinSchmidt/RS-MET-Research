@@ -1980,7 +1980,7 @@ bool testUpDownSample2D()
     TPix sumV  = IKM::centerSumVert(img);      // 2^stage
     TPix sumD1 = IKM::centerSumDiagDown(img);  // 1, 1.5, 2.75, 5.375, 10.6875 -> find formula!
     TPix asRat = IKM::aspectRatio(img);        // 1
-    TPix anIso = IKM::anisotropy(img);
+    TPix anIso = IKM::crossness(img);
     // Maybe the measurements should ignore the boundary pixel which are there only for technical 
     // reasons and are always black, so they don't actually belong to the kernel. Maybe use a 
     // cropped image to do the measurements.
@@ -2009,7 +2009,7 @@ bool testUpDownSample2D()
   img(0, 2) = s*c;  // top right
   img(2, 0) = s*c;  // bottom left
   img(2, 2) = s*c;  // bottom right
-  TPix anIso = IKM::anisotropy(img);  // should be zero
+  TPix anIso = IKM::crossness(img);  // should be zero
   ok &= anIso == 0;
 
   // Now compute anisotropy of a cross (should give 1?)
@@ -2024,9 +2024,9 @@ bool testUpDownSample2D()
   img(1, 2) = 1;    // center right
   img(0, 1) = 1;    // center top
   img(2, 1) = 1;    // center bottom
-  anIso = IKM::anisotropy(img);     // +1
+  anIso = IKM::crossness(img);     // +1
   img(1, 1) = 0;    // center
-  anIso = IKM::anisotropy(img);     // also 1, the center pixel makes no difference
+  anIso = IKM::crossness(img);     // also 1, the center pixel makes no difference
   // Maybe it would be nice if for this pattern, we'd get 1 as output. Then we can name the
   // measurement crossness. Try it with bigger crosses. Maybe it approaches 1? Maybe we should 
   // divide by (h-1) rather than h to make it give 1 independently from the kernel size? For a 
@@ -2043,7 +2043,7 @@ bool testUpDownSample2D()
   img(0, 2) = 1;    // top right
   img(2, 0) = 1;    // bottom left
   img(2, 2) = 1;    // bottom right
-  anIso = IKM::anisotropy(img);    // -1
+  anIso = IKM::crossness(img);    // -1
 
   // Try a bigger cross:
   int n = 5;
@@ -2056,21 +2056,22 @@ bool testUpDownSample2D()
     img(i, m) = 1;
   }
   //writeImageToFilePPM(img, "Cross5x5.ppm");
-  anIso = IKM::anisotropy(img);   // 1
+  anIso = IKM::crossness(img);   // 1
 
   // Now a diagonal cross:
   img.clear();
   for(int i = 0; i < n; i++)
   {
-    img(i,     i    ) = 1;
-    img(n-1-i, n-1-i) = 1;
+    img(i, i    ) = 1;
+    img(i, n-1-i) = 1;
   }
   writeImageToFilePPM(img, "CrossDiag5x5.ppm");
-  anIso = IKM::anisotropy(img); // -1
-
+  anIso = IKM::crossness(img); // -1
   // Maybe make a unit-test for crossness:
   // -Generate crosses of various sizes (3x3, 5x5, 7x7, ...) and check that crossness is 1 (or
   //  -1 for the diagonal crosses)
+  // -We may actually just put the code above in a loop for(n = 3; n <= nMax; n +=2) ... and add
+  //  ok &= rsIsCloseTo(anIso, +1, tol) and ok &= rsIsCloseTo(anIso, -1, tol)
 
 
 

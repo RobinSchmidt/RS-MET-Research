@@ -76,7 +76,7 @@ public:
   For this computation to make sense, we need to assume that the kernel is rotationally symmetric 
   for a rotation of 90° such that there is no difference between centerSumHorz and centerSumVert 
   and also no difference between centerSumDiagDown and centerSumDiagUp.  */
-  static T anisotropy(const rsImage<T>& img);
+  static T crossness(const rsImage<T>& img);
   // Maybe rename to crossness, diamondness, squareness, twinkle
 
 
@@ -150,7 +150,7 @@ T rsImageKernelMeasures<T>::centerSumDiagDown(const RAPT::rsImage<T>& img)
 
 
 template<class T>
-T rsImageKernelMeasures<T>::anisotropy(const RAPT::rsImage<T>& img)
+T rsImageKernelMeasures<T>::crossness(const RAPT::rsImage<T>& img)
 {
   int w = img.getWidth();
   int h = img.getHeight();
@@ -176,6 +176,7 @@ T rsImageKernelMeasures<T>::anisotropy(const RAPT::rsImage<T>& img)
   // Ad hoc to normalize value for diagonal cross to -1:
   if(a < 0)
     a *= 1.0 / sqrt(2);
+  // That's rather unelegant. Can we do something better?
 
   return a;
 

@@ -68,8 +68,9 @@ public:
   /** Measures how anisotropic the kernel is by comparing the sum of the center horizontal strip 
   and the diagonal strip where the off-center pixel values in the diagonal strip are weighted by
   sqrt(2) because they are by that factor farther away from the center pixel. A circularly 
-  symmetric (i.e. perfectly isotropic) kernel should give an anisotropy of zero. A kernel that 
-  looks like a cross should give a very high value
+  symmetric (i.e. perfectly isotropic) kernel should give a crossness of zero. A kernel that 
+  looks like a cross gives a value of 1 and a kernel that looks like a diagonal cross gives a
+  value of -1.
 
   ...TBC...
   

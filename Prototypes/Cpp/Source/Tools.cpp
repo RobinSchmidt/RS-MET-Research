@@ -23,6 +23,56 @@ void plotSurfaceDark(GNUPlotter& plt)
 }
 
 
+
+//=================================================================================================
+
+/** A class to represnt some measures of an image filtering kernel. These measurements may be 
+relevant to assess the featues and quality of a filter kernel.
+
+...TBC...
+
+*/
+
+template<class T>
+class rsImageKernelMeasures
+{
+
+public:
+
+  /** Sum of all values. */
+  static T sum(const rsImage<T>& img);
+
+
+  static T mean(const rsImage<T>& img) { return sum(img) / img.getNumPixels(); }
+
+
+
+  //T sum;      // sum of all values
+  //T energy;   // sum of all values squared
+
+  // ToDo:
+  // -aspect ratio:  horizontal centerline sum / vertical centerline sum
+  // -symmetryHorz:  right wing - left wing (both including the centerline for odd width and height
+  // -symmetryVert:  top wing - bottom wing (..dito)
+  // -symmetryDiag1: top left wing - bottom right wing
+  // -symmetryDiag2: top right wing - bottom left wing
+  // -mean, max
+
+};
+
+template<class T>
+T rsImageKernelMeasures<T>::sum(const RAPT::rsImage<T>& img)
+{
+  T sum(0);
+  for(int j = 0; j < img.getHeight(); j++)
+    for(int i = 0; i < img.getWidth(); i++)
+      sum += img(i, j);
+  return sum;
+}
+
+
+//=================================================================================================
+
 /** A class to let console applications show their progress when performing a long task. It 
 repeatedly writes a "percentage done" in the format " 45%" to the console. Note that the initial
 whitespace is intentional to allow for the first digit when it hits 100%. It deletes and overwrites

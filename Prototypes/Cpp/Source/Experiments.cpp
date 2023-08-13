@@ -1945,12 +1945,13 @@ bool testUpDownSample2D()
   using TPix = float;
   using Img  = rsImage<TPix>;
   using Prc  = rsImageProcessor<TPix>;
+  using IKM  = rsImageKernelMeasures<TPix>;
 
   // Try to repeatedly upsample a an impulse centered in a 3x3 image by a factor of 2 using 
   // Prc::interpolateBilinear. I'm interested in how the result looks like. What shape does the 
   // impulse become? A Gaussian blob?
 
-  int numStages = 7;   // number of upsampling stages
+  int numStages = 8;   // number of upsampling stages
 
   Img img(3, 3);
   img(1, 1) = 1.f;
@@ -1963,11 +1964,16 @@ bool testUpDownSample2D()
     writeImageToFilePPM(img, path.c_str());
     stage++;
 
+    TPix mean = IKM::mean(img); // approaches 0.25
+
     if(stage > numStages)
       break;
     else
       img = Prc::interpolateBilinear(img, 2, 2);
   }
+
+
+
 
 
 

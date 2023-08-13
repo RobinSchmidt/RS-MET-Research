@@ -1970,7 +1970,7 @@ bool testUpDownSample2D()
   {
     // Write current image to a file:
     std::string path = name + std::to_string(stage) + ".ppm";
-    writeImageToFilePPM(img, path.c_str());
+    //writeImageToFilePPM(img, path.c_str());
 
     // We interpret the interpolated image as filter kernel and take some measurments of it. The 
     // goal is to find some measurements that say something about the quality of the resampling. Of
@@ -2045,13 +2045,32 @@ bool testUpDownSample2D()
   img(2, 2) = 1;    // bottom right
   anIso = IKM::anisotropy(img);    // -1
 
-  /*
-  img(0, 0) = s;    // top left
-  img(0, 2) = s;    // top right
-  img(2, 0) = s;    // bottom left
-  img(2, 2) = s;    // bottom right
-  anIso = IKM::anisotropy(img);    // -1/sqrt(2)
-  */
+  // Try a bigger cross:
+  int n = 5;
+  img.setSize(n, n);
+  img.clear();
+  int m = (n-1) / 2;  // m: middle
+  for(int i = 0; i < n; i++)
+  {
+    img(m, i) = 1;
+    img(i, m) = 1;
+  }
+  //writeImageToFilePPM(img, "Cross5x5.ppm");
+  anIso = IKM::anisotropy(img);   // 1
+
+  // Now a diagonal cross:
+  img.clear();
+  for(int i = 0; i < n; i++)
+  {
+    img(i,     i    ) = 1;
+    img(n-1-i, n-1-i) = 1;
+  }
+  writeImageToFilePPM(img, "CrossDiag5x5.ppm");
+  anIso = IKM::anisotropy(img); // -1
+
+  // Maybe make a unit-test for crossness:
+  // -Generate crosses of various sizes (3x3, 5x5, 7x7, ...) and check that crossness is 1 (or
+  //  -1 for the diagonal crosses)
 
 
 

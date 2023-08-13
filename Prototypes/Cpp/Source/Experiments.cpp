@@ -2014,12 +2014,15 @@ bool testUpDownSample2D()
 
 
   // Make a unit test for the crossness computation with crosses of different sizes. 
-  // The 3x3 kernels for the straight and diagonal cross look like
+  // The 3x3 kernels for the straight and diagonal cross look like:
   //
   //   0  1  0       1  0  1
   //   1  1  1       0  1  0
   //   0  1  0       1  0  1
   //  
+  // The isotropic kernel is an overlay of the two crosses in which the diagonal one is weighted
+  // by a factor of 1/sqrt(2) ..well...not quite...but almost
+
   TPix tol = 1.e-6;
   for(int n = 3; n <= 11; n += 2)  // kernel sizes: 3x3, 5x5, ..., 11x11
   {
@@ -2055,7 +2058,7 @@ bool testUpDownSample2D()
       img(i, i)     = s*c;
       img(i, n-1-i) = s*c;   }
     img(m, m) = 1;       // center (should not matter but anyway)
-    writeImageToFilePPM(img, "DoubleCross.ppm");
+    //writeImageToFilePPM(img, "DoubleCross.ppm");
     anIso = IKM::crossness(img); // 0
     ok &= rsIsCloseTo(anIso, TPix(0), tol);
   }

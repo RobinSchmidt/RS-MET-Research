@@ -1994,35 +1994,19 @@ bool testUpDownSample2D()
       img = Prc::interpolateBilinear(img, 2, 2);
   }
 
-
-  // Test the anisotropy measurement witth a perfectly isotropic kernel:
-  img.setSize(3, 3);
-  img.clear();
-  TPix c = 0.5;
-  TPix s = 1.0/sqrt(2);
-  img(1, 1) = 1;    // center
-  img(1, 0) = c;    // center left
-  img(1, 2) = c;    // center right
-  img(0, 1) = c;    // center top
-  img(2, 1) = c;    // center bottom
-  img(0, 0) = s*c;  // top left
-  img(0, 2) = s*c;  // top right
-  img(2, 0) = s*c;  // bottom left
-  img(2, 2) = s*c;  // bottom right
-  TPix anIso = IKM::crossness(img);  // should be zero
-  ok &= anIso == 0;
-
-
-  // Make a unit test for the crossness computation with crosses of different sizes. 
-  // The 3x3 kernels for the straight and diagonal cross look like:
+  // Unit test for the crossness computation with crosses and (pseudo) isotropic kernels of 
+  // different sizes. The 3x3 kernels for the straight and diagonal cross and the isotropic one 
+  // look like:
   //
-  //   0  1  0       1  0  1
-  //   1  1  1       0  1  0
-  //   0  1  0       1  0  1
+  //   0  1  0       1  0  1      k  c  k
+  //   1  1  1       0  1  0      c  1  c  
+  //   0  1  0       1  0  1      k  c  k
   //  
-  // The isotropic kernel is an overlay of the two crosses in which the diagonal one is weighted
-  // by a factor of 1/sqrt(2) ..well...not quite...but almost
-
+  // where c = 0.5 and k = c/sqrt(2). The isotropic kernel should give zero crossness for any value
+  // of c but we use only 0.5 in the test. The straight cross should give a crossness of +1 and the 
+  // diagonal cross a crossness of -1. The "isotropic" kernels of size > 3x3 are not really 
+  // isotropic - they are only isotropic with respect to those pixels that actually enter the 
+  // crossness computation which is good enough for this test.
   TPix tol = 1.e-6;
   for(int n = 3; n <= 11; n += 2)  // kernel sizes: 3x3, 5x5, ..., 11x11
   {
@@ -2035,8 +2019,8 @@ bool testUpDownSample2D()
       img(m, i) = 1;
       img(i, m) = 1; }
     //writeImageToFilePPM(img, "Cross.ppm");
-    anIso = IKM::crossness(img);   // 1
-    ok &= rsIsCloseTo(anIso, TPix(+1), tol);
+    TPix crs = IKM::crossness(img);   // 1
+    ok &= rsIsCloseTo(crs, TPix(+1), tol);
 
     // A diagonal cross:
     img.clear();
@@ -2044,8 +2028,8 @@ bool testUpDownSample2D()
       img(i, i)     = 1;
       img(i, n-1-i) = 1;   }
     //writeImageToFilePPM(img, "CrossDiag.ppm");
-    anIso = IKM::crossness(img); // -1
-    ok &= rsIsCloseTo(anIso, TPix(-1), tol);
+    crs = IKM::crossness(img); // -1
+    ok &= rsIsCloseTo(crs, TPix(-1), tol);
 
     // An isotropic double-cross:
     img.clear();
@@ -2059,12 +2043,9 @@ bool testUpDownSample2D()
       img(i, n-1-i) = s*c;   }
     img(m, m) = 1;       // center (should not matter but anyway)
     //writeImageToFilePPM(img, "DoubleCross.ppm");
-    anIso = IKM::crossness(img); // 0
-    ok &= rsIsCloseTo(anIso, TPix(0), tol);
+    crs = IKM::crossness(img); // 0
+    ok &= rsIsCloseTo(crs, TPix(0), tol);
   }
-  // Maybe also include the isotropic kernels into this test
-
-
 
   rsAssert(ok);
   return ok;

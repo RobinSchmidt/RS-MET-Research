@@ -2023,10 +2023,11 @@ bool testUpDownSample2D()
   TPix tol = 1.e-6;
   for(int n = 3; n <= 11; n += 2)  // kernel sizes: 3x3, 5x5, ..., 11x11
   {
-    // A straight cross:
     img.setSize(n, n);
-    img.clear();
     int m = (n-1) / 2;             // m: middle
+
+    // A straight cross:
+    img.clear();
     for(int i = 0; i < n; i++) {
       img(m, i) = 1;
       img(i, m) = 1; }
@@ -2042,6 +2043,21 @@ bool testUpDownSample2D()
     //writeImageToFilePPM(img, "CrossDiag.ppm");
     anIso = IKM::crossness(img); // -1
     ok &= rsIsCloseTo(anIso, TPix(-1), tol);
+
+    // An isotropic double-cross:
+    img.clear();
+    TPix c = 0.5;
+    TPix s = 1.0/sqrt(2);
+    for(int i = 0; i < n; i++) {  
+      img(m, i) = c;
+      img(i, m) = c; }
+    for(int i = 0; i < n; i++) {
+      img(i, i)     = s*c;
+      img(i, n-1-i) = s*c;   }
+    img(m, m) = 1;       // center (should not matter but anyway)
+    writeImageToFilePPM(img, "DoubleCross.ppm");
+    anIso = IKM::crossness(img); // 0
+    ok &= rsIsCloseTo(anIso, TPix(0), tol);
   }
   // Maybe also include the isotropic kernels into this test
 

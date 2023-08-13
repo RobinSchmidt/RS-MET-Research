@@ -49,7 +49,15 @@ public:
   /** Sum of pixel values of the horizontal center line */
   static T centerSumHorz(const rsImage<T>& img);
 
-  // do a vert-version and two diag versions, too
+
+  static T centerSumVert(const rsImage<T>& img);
+
+
+  // do two diag versions, too
+
+
+  static T aspectRatio(const rsImage<T>& img) { return centerSumHorz(img) / centerSumVert(img); }
+
 
 
   static T isotropy(const rsImage<T>& img);
@@ -84,22 +92,30 @@ T rsImageKernelMeasures<T>::sum(const RAPT::rsImage<T>& img)
 template<class T>
 T rsImageKernelMeasures<T>::centerSumHorz(const RAPT::rsImage<T>& img)
 {
-  //rsAssert(
-
   int h = img.getHeight();
+
+  rsAssert(rsIsOdd(h)); 
+  // Currently, this is implemented only for kernels with odd height. ToDo: For even h, we need to 
+  // scan 2 horizontal lines near the center and compute their average.
 
   T sum(0);
   int i = (h-1) / 2;
-
   for(int j = 0; j < img.getHeight(); j++)
     sum += img(i, j);
+  return sum;
 
+  // Maybe factor out a sumHorz(img, i) function. that takes the sum of the i-th line
+}
 
-  // ToDo:
-  // For even h, we need to scan 2 horizontal lines near the center and compute their average.
-
-
-
+template<class T>
+T rsImageKernelMeasures<T>::centerSumVert(const RAPT::rsImage<T>& img)
+{
+  int w = img.getWidth();
+  rsAssert(rsIsOdd(w)); // see comment in centerSumHorz, situation is analogous here
+  T sum(0);
+  int j = (w-1) / 2;
+  for(int i = 0; i < img.getWidth(); i++)
+    sum += img(i, j);
   return sum;
 }
 

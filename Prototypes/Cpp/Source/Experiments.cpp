@@ -1967,8 +1967,10 @@ bool testUpDownSample2D()
     // We interpret the interpolated image as filter kernel and take some measurments of it. The 
     // goal is to find some measurements that say something about the quality of the resampling. Of
     // particular interest is the isotropy of the filter.
-    TPix mean = IKM::mean(img);            // starts at 1/9, approaches 1/4
-    TPix sumH = IKM::centerSumHorz(img);   // 2^stage
+    TPix mean  = IKM::mean(img);            // starts at 1/9, approaches 1/4
+    TPix sumH  = IKM::centerSumHorz(img);   // 2^stage
+    TPix sumV  = IKM::centerSumVert(img);   // 2^stage
+    TPix asRat = IKM::aspectRatio(img);     // 1
 
     // Interpolate to next stage or leave loop:
     stage++;

@@ -1981,6 +1981,9 @@ bool testUpDownSample2D()
     TPix sumD1 = IKM::centerSumDiagDown(img);  // 1, 1.5, 2.75, 5.375, 10.6875 -> find formula!
     TPix asRat = IKM::aspectRatio(img);        // 1
     TPix anIso = IKM::anisotropy(img);
+    // Maybe the measurements should ignore the boundary pixel which are there only for technical 
+    // reasons and are always black, so they don't actually belong to the kernel. Maybe use a 
+    // cropped image to do the measurements.
 
 
     // Interpolate to next stage or leave loop:

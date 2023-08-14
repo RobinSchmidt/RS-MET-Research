@@ -2047,6 +2047,8 @@ bool testUpDownSample2D()
     ok &= rsIsCloseTo(crs, TPix(0), tol);
   }
 
+
+
   rsAssert(ok);
   return ok;
 
@@ -2063,21 +2065,25 @@ bool testUpDownSample2D()
   //    1  2  1
   //    2  4  2   / 8    ...check the divisor...might be wrong
   //    1  2  1
+  // -Then do the same with an isotropic 3x3 kernel. But I think, the isotropic kernle is not 
+  //  separable. I think, the general condition for separability is that each row is a scalar 
+  //  multiple of the same "prototype" row where the weights come from the vertical column (or vice
+  //  versa, i.e. the columns are multiples of a prototype column weighted by coeffs from the 
+  //  horizontal kernel.
   // -Try the magic kernel and binomial kernels.
-  // -Maybe compute an isotropy measure by comparing the sum along the vertical, the horizontal
-  //  and the two diagonals. The sum along the horizontal and vertical should be the same. Maybe 
-  //  their ratio can be interpreted as an "aspect ratio". The diagonal sums should also both be 
-  //  the same. Comparing one of the diagonals to either the vertical or horizontal sum can be 
-  //  interpreted as a sort of squareness or diamondness or crossness. I think the diagonal sum
-  //  should be scaled by 1/sqrt(2) or maybe sqrt(2) itself. The goal is that a perfect circular
-  //  isotropic blob should give a ratio of 1 for vert/diag. Or maybe consider the difference 
-  //  vert-diag. To figure out whether it should be sqrt(1) or 1/sqrt(2), produce a perfect 
-  //  circular blob
-  //  
+  //
+  // -Try to write an algorithm that takes a 2D kernel as input and factors it into 2 1D kernels
+  //  in the least squeres sense. Define the error function:
+  //    E = (1/2) sum_{i=1}^M sum_{j=1}^N (v_i h_j - k_{ij})^2
+  //  where v_i, h_i are the coeffs of the vertical and horizontal 1D kernels, k_{ij} is the given
+  //  2D kernel with height M and width N such that v is of length M and h is of length N. The 
+  //  partial derivatives are (verify!): 
+  //    d E / d v_i = sum_{j=1}^N h_j * (v_i h_j - k_ij)
+  //    d E / d h_i = sum_{i=1}^M v_i * (v_i h_j - k_ij)
+  //  Maybe solve the problem by a gradient based optimizer.
 
 
   // Some notes for designing an isotropic fixed point kernel of size 3x3:
-  // -
   // -181/128 is a decent approximation of sqrt(7) and 181/256 a decent approximation of 1/sqrt(2)
   //  ...but that may be worthless because we actually need a divisor of 255 because that's what
   //  1 maps to. Or maybe we should map 1 to 256. When the pixels are 8 bit, we will need a 16 bit

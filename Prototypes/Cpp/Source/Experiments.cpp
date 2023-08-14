@@ -2079,8 +2079,10 @@ bool testUpDownSample2D()
   //  2D kernel with height M and width N such that v is of length M and h is of length N. The 
   //  partial derivatives are (verify!): 
   //    d E / d v_i = sum_{j=1}^N h_j * (v_i h_j - k_ij)
-  //    d E / d h_i = sum_{i=1}^M v_i * (v_i h_j - k_ij)
-  //  Maybe solve the problem by a gradient based optimizer.
+  //    d E / d h_j = sum_{i=1}^M v_i * (v_i h_j - k_ij)
+  //  Maybe solve the problem by a gradient based optimizer. As initial guess for v_i, h_j use
+  //  the constant given by square root of the mean of the input kernel such that the initial
+  //  product kernel has the same mean as the input kernel
 
 
   // Some notes for designing an isotropic fixed point kernel of size 3x3:

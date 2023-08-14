@@ -2065,11 +2065,11 @@ bool testUpDownSample2D()
   //    1  2  1
   //    2  4  2   / 8    ...check the divisor...might be wrong
   //    1  2  1
-  // -Then do the same with an isotropic 3x3 kernel. But I think, the isotropic kernle is not 
+  // -Then do the same with an isotropic 3x3 kernel. But I think, the isotropic kernel is not 
   //  separable. I think, the general condition for separability is that each row is a scalar 
   //  multiple of the same "prototype" row where the weights come from the vertical column (or vice
   //  versa, i.e. the columns are multiples of a prototype column weighted by coeffs from the 
-  //  horizontal kernel.
+  //  horizontal kernel).
   // -Try the magic kernel and binomial kernels.
   //
   // -Try to write an algorithm that takes a 2D kernel as input and factors it into 2 1D kernels

@@ -133,5 +133,9 @@ ToDo:
  to nD as: f(x+a) = exp(a . nabla) f(x). Now x and a are vectors, . is the dot-product and nabla is 
  the formal vector of the partial derivative operators.
  
+ Researchers Use Group Theory to Speed Up Algorithms — Introduction to Groups
+ https://www.youtube.com/watch?v=KufsL2VgELo
+ 
+ 
  https://mathworld.wolfram.com/HypergeometricSeries.html
  Introduce it as generalization of geometric series in the series section of calculus chapter

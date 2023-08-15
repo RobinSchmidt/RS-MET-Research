@@ -13033,7 +13033,11 @@ float Q_rsqrt(float number)
 // https://www.youtube.com/watch?v=p8u_k2LIZyo
 // https://medium.com/hard-mode/the-legendary-fast-inverse-square-root-e51fee3b49d9
 
-
+// Translation:
+// "evil floating point bit level hacking": use i to re-interpret y as long
+// "what the fuck?": Right-shifting divides the exponent by 2, thus applies the sqrt to the 
+//  exponent while the mantissa is being halved, so (i >> 1) computes sqrt(i/2), I think. Then 
+//  negating it produces the inversion??? yeah...WTF
 
 
 // todo: implement adaptive filters: LMS, GAL, GALL, RLS, LSL, FTF, see:

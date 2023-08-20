@@ -97,24 +97,6 @@ Now, for the table to specify an operation that does satisfy our group requireme
 \medskip
 But be that as it may. Multiplication tables are an important tool in the analysis of finite groups because these tables completely specify (and hopefully reveal) the structure of a given group at hand. For example, we may easily find out whether or not a group is commutative. This is the case, if and only if the multiplication table is symmetric across the main diagonal. But as we will see when we come to the topic of subgroups, finite groups can have more structure than that. But after all that abstract stuff, let's first have a look at...
 
-\subsection{Some Examples}
-Now that we have defined what a group is in an abstract sense and have a tool in hand to specify a group, 
-let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
-
-\subsection{Subgroups}
-If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: All the negative even integers are among the even integers - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough.
-
-
-%It's forbidden by the requirement of having a unique $a_i^{-1}$ for each $a_i$.
-
-%This is necessary for invertibility - to invert an element, you look into its row
-
-% Neutral element: there must be some element a_k for which the corresponding row and column just repeats the header row and column.
-% Inverse elements: it must be a Latin square
-% Associativity: ...that's not so easy to see, I guess - but can be verified programmatically in O(N^3)
-% For commutative groups, the matrix is symmetric (across the main diagonal)
-% To read off an inverse element of a_i, look into the row of a_i and find the neutral element, then the column j where it was found has as it's header a_j = a_i^{-1}
-
 % Not every Latin square is a Cayley table:
 % https://proofwiki.org/wiki/Latin_Square_is_not_necessarily_Cayley_Table_of_Group
 
@@ -126,6 +108,22 @@ If a subset of the underlying set of a group forms itself a group under the same
 
 % Q: Does it actually make any sense to do linear algebra with Caley tables? If we have two Caley tables of two different groups (of the same size) - what is their product? Will it also be a Caley table of a group? ...maybe try it with some examples. I guess that would mean that Latin squares would need to form a subgroup of the group of all matrices under matrix multipication. Do they?
 % https://en.wikipedia.org/wiki/Latin_square
+
+
+
+\subsection{Some Examples}
+Now that we have defined what a group is in an abstract sense and have a tool in hand to specify a group, 
+let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
+
+\subsection{Subgroups}
+If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough.
+
+\medskip
+The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using the machinery of subgroups. 
+
+%The topic of subgroups is actually more interesting when we look at finite groups.
+
+
 
 
 % use the Klein Four group as example...or maybe the group of symmetries of a triangle

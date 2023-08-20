@@ -76,6 +76,29 @@ I hope you will agree that these are quite a lot of potentially useful facts. Es
 
 
 \subsection{Cayley Tables}
+Let's assume that we have a finite set $A$ with $N$ elements and let's assume that we have labeled all set elements by a unique index between $1$ and $N$, so our set is $A = \{ a_1, a_2, a_3, \ldots, a_N \}$. To define a binary operation on such a set, we may write down a table in which the headers of the rows and columns are the set elements and the cells tell us, what output the operation will produce, when we combine the elements that appear in the headers of our rows and columns. That means, when we view the table as a matrix $C$, the element $c_{ij}$ of the matrix will be given by the product $a_i a_j$. I call it a "matrix" here because that's the data structure one would use for this in an implementation - but we do not intend to do any linear algebra with it. For our purposes here, it's just a 2D table of elements which we want to read out.
+
+\[
+\setlength{\extrarowheight}{5pt}% local setting
+\begin{array}{l|*{5}{l}}
+	    & a_1   & a_2  & a_3 & a_4  & a_5 \\
+	\hline
+	a_1 & a_1 a_1 & a_1 a_2 & a_1 a_3 & a_1 a_4  & a_1 a_5 \\
+	a_2 & X & X & X & X  & X \\
+	a_3 & X & X & X & X  & X \\
+	a_4 & X & X & X & X  & X \\
+	a_5 & X & X & X & X  & X \\
+\end{array} 
+\]
+
+
+
+
+% Not every Latin square is a Cayley table:
+% https://proofwiki.org/wiki/Latin_Square_is_not_necessarily_Cayley_Table_of_Group
+
+% Q: Does it actually make any sense to do linear algebra with Caley tables? If we have two Caley tables of two different groups (of the same size) - what is their product? Will it also be a Caley table of a group? ...maybe try it with some examples. I guess that would mean that Latin squares would need to form a subgroup of the group of all matrices under matrix multipication. Do they?
+% https://en.wikipedia.org/wiki/Latin_square
 
 
 % use the Klein Four group as example...or maybe the group of symmetries of a triangle

@@ -110,8 +110,18 @@ But be that as it may. Multiplication tables are an important tool in the analys
 % https://en.wikipedia.org/wiki/Latin_square
 
 \subsection{Some Examples}
-Now that we have defined what a group is in an abstract sense and have a tool in hand to specify a group, 
-let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
+Now that we have defined what a group is in an abstract sense and have a tool in hand to specify a group, let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
+
+\subsubsection{Numbers}
+We have already mentioned that the integer numbers form a group under addition. So do the rational numbers, real numbers and complex numbers. So, in math notation that means:  $(\mathbb{Z}, +), (\mathbb{Q}, +), (\mathbb{R}, +), (\mathbb{C}, +)$ all form groups. These latter three number systems also form groups under multiplication if we remove the number zero. If we denote by a superscript asterisk the set with the zero removed, for example $\mathbb{Q}^{\ast} = \mathbb{Q} \setminus \{0\}$, then we can state with math notation: The pairs $(\mathbb{Q}^{\ast}, \cdot), (\mathbb{R}^{\ast}, \cdot), (\mathbb{C}^{\ast}, \cdot)$ also form groups. A bit less familiar, but very important in number theory and some areas of computer science are the modular integers. I don't want to digress too much into explaining what they are here at this point, but if know what they are, then let me tell you that they also do form groups under modular addition. If the modulus is prime, they also form groups under modular multiplication. They actually even form fields, in this case - a more complex algebraic structure that we will encounter later. There are many more number systems that have the structure of a group and often even more complex structures. 
+
+\subsubsection{Groups of Matrices}
+
+\subsubsection{Symmetries of a Regular Polygon}
+Imagine a regular polygon in the $xy$-plane centered at the origin. Maybe let's take the square. It is a very symmetrical shape in the sense that we can perform a lot of geometric transformations to it that leave it looking exactly the same. We could reflect it about a horizontal or a vertical axis or about one of the two diagonal axes. 
+%% mention that we can represent these symmetries via matrices - a foreshadowing to representation theory.
+
+
 
 % use the Klein Four group as example...or maybe the group of symmetries of a triangle
 
@@ -144,6 +154,8 @@ The integers under addition are an infinite group. But we now want to focus on f
 \subsubsection{Cosets}
 
 
+
+\subsection{Homomorphisms and Isomorphisms}
 
 
 

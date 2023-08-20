@@ -94,18 +94,27 @@ This table is supposed to represent the results of our group operation. From the
 \medskip
 Now, for the table to specify an operation that does satisfy our group requirements, it must satisfy some constraints. Firstly, it must be a so called Latin square which is a matrix in which each row and each column contains every element from the set exactly once. That this is necessary can be seen as follows: suppose you know a product $p = a_i a_j$ and you also know one of the factors, say $a_i$. Then, it should be possible to find the other factor $a_j = a_i^{-1} p$ by scanning the row of $a_i$ until you find $p$ and then read off the column header where you found it. That must be $a_j$. But for that to work for any $p \in G$, you can't have duplicate elements on the rows because then you wouldn't know, which column header you should read off - and hence, the product is not uniquely invertible. This can't be in a group. Another constraint is that there must be some row and column that just lists the elements in the same order as they appear in the header - that's the row/column of the neutral element. They must cross on the diagonal, i.e. row and column index must be the same. These criteria are rather easy to check. If they fail, the table is not a valid multiplication table. But if they hold, the table could still be invalid. These criteria are necessary but not sufficient. We also need to verify the associativity and that's the hard part. Of course, it can naively be verified algorithmically in $\mathcal{O}(N^3)$ by verifying for every possible triple $a_i, a_j, a_k$ that $(a_i a_j) a_k = a_i (a_j a_k)$. There are algorithms that can do better than that in certain cases (search for "Light's associativity test") but as of now, this seems indeed to be an $\mathcal{O}(N^3)$ problem in terms of worst case complexity.
 
+\medskip
+But be that as it may. Multiplication tables are an important tool in the analysis of finite groups because these tables completely specify (and hopefully reveal) the structure of a given group at hand. For example, we may easily find out whether or not a group is commutative. This is the case, if and only if the multiplication table is symmetric across the main diagonal. But as we will see when we come to the topic of subgroups, finite groups can have more structure than that. But after all that abstract stuff, let's first have a look at...
+
+\subsection{Some Examples}
+Now that we have defined what a group is in an abstract sense and have a tool in hand to specify a group, 
+let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
+
+
+
+\subsection{Subgroups}
+
+
 %It's forbidden by the requirement of having a unique $a_i^{-1}$ for each $a_i$.
 
 %This is necessary for invertibility - to invert an element, you look into its row
-
 
 % Neutral element: there must be some element a_k for which the corresponding row and column just repeats the header row and column.
 % Inverse elements: it must be a Latin square
 % Associativity: ...that's not so easy to see, I guess - but can be verified programmatically in O(N^3)
 % For commutative groups, the matrix is symmetric (across the main diagonal)
 % To read off an inverse element of a_i, look into the row of a_i and find the neutral element, then the column j where it was found has as it's header a_j = a_i^{-1}
-
-
 
 % Not every Latin square is a Cayley table:
 % https://proofwiki.org/wiki/Latin_Square_is_not_necessarily_Cayley_Table_of_Group
@@ -150,5 +159,7 @@ https://en.wikipedia.org/wiki/Cayley_table
 https://en.wikipedia.org/wiki/Dihedral_group
 
 https://en.wikipedia.org/wiki/Category:Theorems_in_group_theory
+
+-what about Cayley graphs?
 
 \end{comment}

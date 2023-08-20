@@ -75,27 +75,46 @@ I hope you will agree that these are quite a lot of potentially useful facts. Es
 % https://mathstats.uncg.edu/sites/pauli/112/HTML/secgroupexp.html
 
 
-\subsection{Cayley Tables}
-Let's assume that we have a finite set $A$ with $N$ elements and let's assume that we have labeled all set elements by a unique index between $1$ and $N$, so our set is $A = \{ a_1, a_2, a_3, \ldots, a_N \}$. To define a binary operation on such a set, we may write down a table in which the headers of the rows and columns are the set elements and the cells tell us, what output the operation will produce, when we combine the elements that appear in the headers of our rows and columns. That means, when we view the table as a matrix $C$, the element $c_{ij}$ of the matrix will be given by the product $a_i a_j$. I call it a "matrix" here because that's the data structure one would use for this in an implementation - but we do not intend to do any linear algebra with it. For our purposes here, it's just a 2D table of elements which we want to read out.
-
+\subsection{Multiplication Tables}
+Let's assume that we have a finite set $A$ with $N$ elements and let's assume that we have labeled all set elements by a unique index between $1$ and $N$, so our set is $A = \{ a_1, a_2, a_3, \ldots, a_N \}$. To define a binary operation on such a set, we may write down a table in which the headers of the rows and columns are the set elements and the cells tell us, what output the operation will produce, when we combine the elements that appear in the headers of our rows and columns. That means, when we view the table as a matrix $T$, the element $t_{ij}$ of the matrix will be given by the product $a_i a_j$. I call it a "matrix" here because that's the data structure one might naturally want to use for this in an (naive) implementation - but we do not intend to do any linear algebra with it. For our purposes here, it's just a 2D table of elements which we want to read out and I may use the terms "matrix" and "table" interchangably. For $N=5$, such a table would look like this:
 \[
 \setlength{\extrarowheight}{5pt}% local setting
-\begin{array}{l|*{5}{l}}
+\begin{array}{l|*{5}{c}}
 	    & a_1   & a_2  & a_3 & a_4  & a_5 \\
 	\hline
 	a_1 & a_1 a_1 & a_1 a_2 & a_1 a_3 & a_1 a_4  & a_1 a_5 \\
-	a_2 & X & X & X & X  & X \\
-	a_3 & X & X & X & X  & X \\
-	a_4 & X & X & X & X  & X \\
-	a_5 & X & X & X & X  & X \\
+	a_2 & a_2 a_1 & a_2 a_2 & a_2 a_3 & a_2 a_4  & a_2 a_5 \\
+	a_3 & a_3 a_1 & a_3 a_2 & a_3 a_3 & a_3 a_4  & a_3 a_5 \\
+	a_4 & a_4 a_1 & a_4 a_2 & a_4 a_3 & a_4 a_4  & a_4 a_5 \\
+	a_5 & a_5 a_1 & a_5 a_2 & a_5 a_3 & a_5 a_4  & a_5 a_5 \\
 \end{array} 
 \]
+This table is supposed to represent the results of our group operation. From the row header, we take the left factor $a_i$, from the column header, we take the right factor $a_j$ and into the cell $t_{ij}$, we write the product $a_i a_j$. Again, I say "factor" and "product" but actually mean it in a more general and abstract sense as "operand" and "result". Such a table of all possible products of group elements is called a multiplication table, also known as Cayley table. By using such tables, we have a completely general way to specify any binary operation on a finite set of elements. We just need to define an indexing scheme for our set elements and then write the values of all possible products into the cells of the table. It is customary to write the neutral element into the header of the first row and first column.
 
+\medskip
+Now, for the table to specify an operation that does satisfy our group requirements, it must satisfy some constraints. Firstly, it must be a so called Latin square which is a matrix in which each row and each column contains every element from the set exactly once. That this is necessary can be seen as follows: suppose you know a product $p = a_i a_j$ and you also know one of the factors, say $a_i$. Then, it should be possible to find the other factor $a_j = a_i^{-1} p$ by scanning the row of $a_i$ until you find $p$ and then read off the column header where you found it. That must be $a_j$. But for that to work for any $p \in G$, you can't have duplicate elements on the rows because then you wouldn't know, which column header you should read off - and hence, the product is not uniquely invertible. This can't be in a group. Another constraint is that there must be some row and column that just lists the elements in the same order as they appear in the header - that's the row/column of the neutral element. They must cross on the diagonal, i.e. row and column index must be the same. These criteria are rather easy to check. If they fail, the table is not a valid multiplication table. But if they hold, the table could still be invalid. These criteria are necessary but not sufficient. We also need to verify the associativity and that's the hard part. Of course, it can naively be verified algorithmically in $\mathcal{O}(N^3)$ by verifying for every possible triple $a_i, a_j, a_k$ that $(a_i a_j) a_k = a_i (a_j a_k)$. There are algorithms that can do better than that in certain cases (search for "Light's associativity test") but as of now, this seems indeed to be an $\mathcal{O}(N^3)$ problem in terms of worst case complexity.
+
+%It's forbidden by the requirement of having a unique $a_i^{-1}$ for each $a_i$.
+
+%This is necessary for invertibility - to invert an element, you look into its row
+
+
+% Neutral element: there must be some element a_k for which the corresponding row and column just repeats the header row and column.
+% Inverse elements: it must be a Latin square
+% Associativity: ...that's not so easy to see, I guess - but can be verified programmatically in O(N^3)
+% For commutative groups, the matrix is symmetric (across the main diagonal)
+% To read off an inverse element of a_i, look into the row of a_i and find the neutral element, then the column j where it was found has as it's header a_j = a_i^{-1}
 
 
 
 % Not every Latin square is a Cayley table:
 % https://proofwiki.org/wiki/Latin_Square_is_not_necessarily_Cayley_Table_of_Group
+
+% https://math.stackexchange.com/questions/1297564/verifying-if-a-multiplication-table-is-from-a-group
+
+% https://math.stackexchange.com/questions/168663/is-there-an-easy-way-to-see-associativity-or-non-associativity-from-an-operation
+
+% https://en.wikipedia.org/wiki/Light's_associativity_test
 
 % Q: Does it actually make any sense to do linear algebra with Caley tables? If we have two Caley tables of two different groups (of the same size) - what is their product? Will it also be a Caley table of a group? ...maybe try it with some examples. I guess that would mean that Latin squares would need to form a subgroup of the group of all matrices under matrix multipication. Do they?
 % https://en.wikipedia.org/wiki/Latin_square

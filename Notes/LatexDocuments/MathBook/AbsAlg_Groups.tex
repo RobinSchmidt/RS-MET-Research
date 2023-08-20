@@ -141,18 +141,16 @@ s_i s_j = r_{i-j}
 \end{equation}	
 where the additions of the indices have to be performed modulo $n$. As we know from analytic geometry, we can represent general rotations and reflections by $2 \times 2$ matrices over $\mathbb{R}$ and that we can represent the combination of such transformations as multiplications of the respective matrices. The matrices for the $r_k, s_k$ are in this case given by:
 \begin{equation}
+\theta_k =\frac{2 \pi k}{n},  \quad
+c_k = \cos(\theta_k), s_k = \sin(\theta_k), \quad	
 r_k = \begin{pmatrix}  c_k & -s_k \\  s_k  &  c_k  \end{pmatrix}, \;
 s_k = \begin{pmatrix}  c_k &  s_k \\  s_k  & -c_k  \end{pmatrix} \quad
-\text{ where }
-c_k = \cos(\theta_k), s_k = \sin(\theta_k) \quad
-\text{ where }
-\theta_k =\frac{2 \pi k}{n}
 \end{equation}	
-
-% the identity is includes as r_0
-This is a little foreshadowing into the field of representation theory which asserts that every group can be represented as a group of matrices where the group operation translates to matrix multiplication.
+The identity transformation is included as $r_0$. The fact that we can \emph{represent} the symmetries via matrices is a little foreshadowing into the field of representation theory which asserts that every group can be represented as a group of matrices where the group operation translates to matrix multiplication. The symmetry groups of regular polygons are also called \emph{dihedral} groups. The etymology has something to do with polygons having two ("di") faces ("hedrons") but I don't really get what this has to do with it.
 
 % https://en.wikipedia.org/wiki/Dihedral_group
+% https://en.wiktionary.org/wiki/dihedral_group
+% https://de.wikipedia.org/wiki/Diedergruppe
 
 % mention that we can represent these symmetries via matrices - a foreshadowing to representation theory.
 % the r, r2, r^3 thing is a foreshadowing to generators

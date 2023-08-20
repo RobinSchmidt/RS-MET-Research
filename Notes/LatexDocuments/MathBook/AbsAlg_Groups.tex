@@ -109,22 +109,9 @@ But be that as it may. Multiplication tables are an important tool in the analys
 % Q: Does it actually make any sense to do linear algebra with Caley tables? If we have two Caley tables of two different groups (of the same size) - what is their product? Will it also be a Caley table of a group? ...maybe try it with some examples. I guess that would mean that Latin squares would need to form a subgroup of the group of all matrices under matrix multipication. Do they?
 % https://en.wikipedia.org/wiki/Latin_square
 
-
-
 \subsection{Some Examples}
 Now that we have defined what a group is in an abstract sense and have a tool in hand to specify a group, 
 let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
-
-\subsection{Subgroups}
-If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough.
-
-\medskip
-The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using the machinery of subgroups. 
-
-%The topic of subgroups is actually more interesting when we look at finite groups.
-
-
-
 
 % use the Klein Four group as example...or maybe the group of symmetries of a triangle
 
@@ -147,6 +134,17 @@ The integers under addition are an infinite group. But we now want to focus on f
 % Bool
 
 %\paragraph{Invertible Functions with Composition}
+
+\subsection{Subgroups}
+If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough.
+
+\medskip
+The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using the machinery of subgroups. 
+
+\subsubsection{Cosets}
+
+
+
 
 
 \begin{comment}

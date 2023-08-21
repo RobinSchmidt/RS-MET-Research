@@ -17,7 +17,7 @@ Existence of inverse elements:
 Let's translate that foreign mathspeak to plain English: Closure means that when we combine any two elements from our set with the operation, the result will be another element from the set. We also say that the set is \emph{closed} under the given operation. Sometimes, this first rule is not even explicitly stated as such but just somehow implicitly assumed by defining that all binary operations already have to satisfy this to be even called by the name binary operation. But if one allows a more general notion of what a binary operation is, allowing inputs and outputs to come from different sets: $op: A \times B \rightarrow C$, it makes sense to explicitly require this closure. Associativity requires that when we combine 3 elements $a,b,c$ via our operation by firstly combining $a$ and $b$ and then secondly combining the result of that with $c$ yields the same final result as combining $a$ with the result of the combination of $b$ and $c$. This is an abstraction of the idea that $(2+3)+4 = 2+(3+4)$ because $5+4 = 2+7$. The second rule says that there must exist some special element $e$ within the set which, when combined with any element $a$ from the set, just gives back $a$ itself. This special element $e$ is called the neutral element because it changes nothing when it's being combined with any element from the set. It's an abstraction of the idea that $0+x = x$ for any $x$ whatsoever. The number zero is the neutral element of addition in the integers. At the outset, it may seem that we should actually be more precise and call it the left-neutral element because we require it to behave neutrally only from the left. However, group theory gives us the theorem that any left-neutral element is automatically always also right-neutral, so it's justified to just call it the neutral element without any left or right qualifier. Group theory also gives us the theorem that such a neutral element is always unique so it's indeed justified to call it \emph{the} neutral element instead of \emph{a} neutral element. By the way, it is common to refer by the term "group" also to the underlying set rather than the pair if it's clear from the context about which operation we talk. The last rule requires that for any element $a$ from the group there must exist some element $a^{-1}$ also from the group, such that when we form the combination $ a^{-1} \circ a$ via our group operation, then the neutral element will come out as result. This element $a^{-1}$ is called the inverse element to $a$. So, the rules says that such inverse elements must exist for all group elements. In the integers with addition, the inverse element to $3$ is $-3$ because $-3 + 3 = 0$ and zero is the neutral element. Again, we need to require only the existence of left-inverses and group theory assures us that any left-inverse element is proven to always automatically also be right-inverse and is unique so we are justified to call it the inverse element. We may begin to see the value of group theory. If we want to verify that right-inverses exist in some brand new mathematical structure that we came up with, we actually just need to check these three simple conditions and if they hold true, we are good and can in fact assert a lot more properties of our structure without needing to verify them all separately.
 
 \paragraph{Notation and Terminology}
-So far, we have used the symbol $\circ$ in infix notation like in $c = a \circ b$ to denote the combination of elements $a,b$ by our group operation. This was done to indicate that we don't not necessarily mean a concrete well known operation such as addition or multiplication. Depending on the context, the group operation may indeed be addition. Or it may be multiplication. Or something else entirely. It may also mean the composition of certain \emph{actions} in the sense of performing one action after another. We may be used to the circle being used for function composition and indeed, if we consider only invertible (i.e. strictly monotonic) functions, they do indeed form a group under function composition (where "under" here means: "with the group operation being"). This usage of the circle is not universal. You will also often encounter the dot being used: $c = a \cdot b$ and sometimes the operation symbol is scrapped entirely: $c = a b$ like we often do with multiplication when dealing with numbers, matrices, functions and so on. From now on, we will also adopt these notations. We will also denote the combination of an element $a$ with itself as $a^2$, i.e. $a^2 = a a = a \cdot a$. In general we will denote by $a^n$ the idea to combine $a$ with itself $n-1$ times. That is, we have $n$ "factors" all of them being $a$ and we have $n-1$ "dots" in between them: $a^4 = a \cdot a \cdot a \cdot a$. The group operation is sometimes just called "multiplication" even though it is understood that a generalized, more abstract operation is meant. In the definition of a group, we did not require the operation to be commutative. However, if the operation does happen to be also commutative, i.e. if $a b = b a$ for all $a,b \in G$, then we call the group a \emph{commutative} group or some people also call it an \emph{Abelian} group. I prefer use descriptive names whenever possible - no offense to Niels Henrik Abel (hopefully). In such a commutative group, it makes no difference whether we pre- or post-multiply by an element. This holds of course also for inverses, so $c = b^{-1} a$ is equivalent to $c = a b^{-1}$ for any $a,b \in G$. That's why, for commutative groups, you'll sometimes find the division notation $c = \frac{a}{b}$ because the inherent ambiguity in this notation about whether pre- or post-multiplication of $a$ by $b^{-1}$ is meant, makes no difference because both ways yield the same result anyway. We won't use that notation here, though because we won't assume our groups to be commutative in general. If we are dealing with such a commutative group, we will have even more theorems at our disposal. When we are dealing with a group that is not generally commutative, it may still happen that for some specific choice of $a,b$ the equation $a b = b a$ holds. In such a case, we say that "$a$ and $b$ commute".
+So far, we have used the symbol $\circ$ in infix notation like in $c = a \circ b$ to denote the combination of elements $a,b$ by our group operation. This was done to indicate that we don't not necessarily mean a concrete well known operation such as addition or multiplication. Depending on the context, the group operation may indeed be addition. Or it may be multiplication. Or something else entirely. It may also mean the composition of certain \emph{actions} in the sense of performing one action after another. We may be used to the circle being used for function composition and indeed, if we consider only invertible (i.e. strictly monotonic) functions, they do indeed form a group under function composition (where "under" here means: "with the group operation being"). This usage of the circle is not universal. You will also often encounter the dot being used: $c = a \cdot b$ and sometimes the operation symbol is scrapped entirely: $c = a b$ like we often do with multiplication when dealing with numbers, matrices, functions and so on. From now on, we will also adopt these notations. We will also denote the combination of an element $a$ with itself as $a^2$, i.e. $a^2 = a a = a \cdot a$. In general we will denote by $a^n$ the idea to combine $a$ with itself $n-1$ times. That is, we have $n$ "factors" all of them being $a$ and we have $n-1$ "dots" in between them: $a^4 = a \cdot a \cdot a \cdot a$. The group operation is sometimes just called "multiplication" even though it is understood that a generalized, more abstract operation is meant. In the definition of a group, we did not require the operation to be commutative. However, if the operation does happen to be also commutative, i.e. if $a b = b a$ for all $a,b \in G$, then we call the group a \emph{commutative} group or some people also call it an \emph{Abelian} group. I prefer use descriptive names whenever possible - no offense to Niels Henrik Abel (hopefully). In such a commutative group, it makes no difference whether we pre- or post-multiply by an element. This holds of course also for inverses, so $c = b^{-1} a$ is equivalent to $c = a b^{-1}$ for any $a,b \in G$. That's why, for commutative groups, you'll sometimes find the division notation $c = \frac{a}{b}$ because the inherent ambiguity in this notation about whether pre- or post-multiplication of $a$ by $b^{-1}$ is meant, makes no difference because both ways yield the same result anyway. We won't use that notation here, though because we won't assume our groups to be commutative in general. If we are dealing with such a commutative group, we will have even more theorems at our disposal. When we are dealing with a group that is not generally commutative, it may still happen that for some specific choice of $a,b$ the equation $a b = b a$ holds. In such a case, we say that "$a$ and $b$ commute". The number of elements in a group's underlying set is called the \emph{order} of the group.
 % Maybe use the dot right from the start
 
 \subsection{Some Elementary Theorems}
@@ -165,13 +165,6 @@ The set of all invertible (i.e. bijective) functions from any set $S$ to itself 
 
 \paragraph{} Another interesting group of functions under composition with a particular functional form are the Moebius transformations which are functions of the form [...TBC...Maybe we need to be a bit careful about the poles. Maybe they are not invertible there?]
 
-%[Q: Is thes existence of inverses of x^p just a special case of the argument for closure or a clash of notation? In the LHS the $...^{-1}$ means function inversion ]
-
-
-% associativity - analogy: 
-
-% mention some special groups: power Moebius transfromation
-
 %https://en.wikipedia.org/wiki/Symmetric_group
 
 \paragraph{Permutations}
@@ -190,37 +183,39 @@ Another important class of groups is that of permutation groups. In a certain se
 
 % use the Klein Four group as example...or maybe the group of symmetries of a triangle
 
-%\subsection{Some Examples}
-%Now that we have defined what a group is in an abstract sense, let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
-%
-%
-%\paragraph{Integers with Addition}
-%
-%\paragraph{Nonzero Rationals with Multiplication}
-%
-%\paragraph{Modular Integers with Modular Addition}
-%
-%\paragraph{Rotations in the Plane}
-%
-%\paragraph{Permutations}
-%%bring this last
-
-%%\paragraph{The Modular Integers with Prime Modulus with Modular Multiplication}
-% Bool
-
-%\paragraph{Invertible Functions with Composition}
-
-
 \paragraph{}
 OK - now we have seen a couple of examples of groups that seem to be very different. Yet, they all share a lot of commonalities which are distilled in group theory into theorems that abstract away from the concrete examples. The theorems will hold for all of these concrete groups and many more. That's the power of abstraction. Let's now take a deeper dive into what these commonalities are...
 
 \subsection{Generators}
+A generator of a group $\mathcal{G}$ is a subset of the underlying set $G$ which, by forming all possible products (if necessary, recursively) between the elements of this subset, can generate all elements in the set $G$.
+
+\paragraph{Example 1} Recall the set of all rotations by multiples of 90 degrees, i.e. by 0, 90, 180 and 270 degrees. I have already mentioned that the whole set of these four rotations can be obtained by repeatedly chaining the 90 degree rotation with itself. After four such chainings, we arrive at 360 degrees and we can stop because at that point, we are back where we started. We have reached the identity element - a rotation of 360 degrees is the same as one by 0 degrees. Going any further, we would enter a loop and would not produce any new rotations that we didn't already produce before. Thus, the 90 degree rotation is a generator of the set of all rotations by multiples of 90 degrees. More precisely speaking, it's the singleton set containing only the 90 degree rotation which is our generator.
+
+\paragraph{Example 2} In general, generators are not single elements but sets and not all generators consist of only a single element. The previous example was a very simple special case. As a slightly more interesting example, consider the set of two $2 \times 2$ matrices:
+\begin{equation}
+S = \begin{pmatrix}  0 & -1 \\  1  &  0  \end{pmatrix}, \;
+T = \begin{pmatrix}  1 &  1 \\  0  &  1  \end{pmatrix} \quad
+\end{equation}
+we are allowed to form all possible products between these two matrices with as many factors as we like, for example, in no particular order: $S, T, S^2, S^3, T^6, S T, S T^2, T^5 S^9, S^9 T^5, \ldots$. It turns out that this set of two matrices generates the group of all matrices with integer coefficients that have a determinant of $1$ where, as usual, the group operation is taken to be matrix multiplication.
+
+% https://en.wikipedia.org/wiki/Modular_group
+
+
+\subsubsection{Order of an Element}
+In finite groups, it turns out that we can take any element $a$ and if we repeatedly multiply it by itself (i.e. form powers of it), we will eventually hit the identity. At some point $m$, we will have $a^m = e$. That number $m$ is called the \emph{order} of the element $a$ in the group. The identity element $e$ has order $1$, of course. A word of caution: the term "order" in group theory is overloaded to mean two things: when we talk about the order of an element, it means what I just said. But when we talk about the order of a group as a whole, then the term means the number of elements in the group. Which sense is meant by the word "order" can be inferred from the "datatype" to which it is applied to - is it a group element or a group? That's exactly how overloading of function names works in programming. 
+
+
+%\subsection{Order}
+% 2 notions: of a group (number of elemnts), of an element (number of times to multiply by itself to rech e)
 
 \subsection{Subgroups}
 If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough.
 
 \medskip
 The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using the machinery of subgroups. 
+
+% Lagrange's Theorem
+
 
 \subsubsection{Cosets}
 
@@ -252,11 +247,14 @@ Isomorphisms are homomorphisms that satisfy some additional constraints. These a
 That's why isomorphisms are so important in group theory. They are a tool to convince ourselves that two superficially very different mathematical setups are actually in some sense the same such that we can transfer knowlegde obtained in one domain to the other. Or even better: abstract out the commonalities explicitly, as we do in abstract algebra.
 % Was our homomorpism above actually an isomorphism? What about injecting the inamginary unit itno the expoenent? I think, then it becomes a homo- but not isomorphism (see Riley, Hobson et. al., page 1060)
 
-% Etymology: The internet say tha "iso" means "equal" whereas "homo" means "the same" - and there is supposed to be a subtle difference. It actually says that the difference is such that "homo" should be the stronger form and "iso" the weaker - but here it's clearly the other way around. I don't know - it's a mess!
+\paragraph{}
+Isomorphisms are the most important kind of morphisms in group theory, followed by homomorphisms [my personal judgement - VERIFY]. There are also monomorphisms which are injective homomorphisms and epimorphisms which are surjective homomorphisms. They are somewhere in between the homomorphisms and isomorphsims in terms of how constrained they are. An automorphism is an isomorphism from a group to itself.
 
-% 
+% https://en.wikipedia.org/wiki/Automorphism
+% https://en.wikipedia.org/wiki/Automorphism_group
 
-% ToDo: Isomorphism, Epimorphism, Monomorphism, Automorphism
+
+
 
 
 \begin{comment}

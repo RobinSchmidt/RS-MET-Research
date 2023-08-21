@@ -115,7 +115,7 @@ Now that we have defined what a group is in an abstract sense and have a tool in
 \subsubsection{Numbers}
 We have already mentioned that the integer numbers form a group under addition. So do the rational numbers, real numbers and complex numbers. So, in math notation that means:  $(\mathbb{Z}, +), (\mathbb{Q}, +), (\mathbb{R}, +), (\mathbb{C}, +)$ all form groups. These latter three number systems also form groups under multiplication if we remove the number zero. If we denote by a superscript asterisk the set with the zero removed, for example $\mathbb{Q}^{\ast} = \mathbb{Q} \setminus \{0\}$, then we can state with math notation: The pairs $(\mathbb{Q}^{\ast}, \cdot), (\mathbb{R}^{\ast}, \cdot), (\mathbb{C}^{\ast}, \cdot)$ also form groups. A bit less familiar, but very important in number theory and some areas of computer science are the modular integers. I don't want to digress too much into explaining what they are here at this point, but if know what they are, then let me tell you that they also do form groups under modular addition. If the modulus is prime, they also form groups under modular multiplication. They actually even form fields, in this case - a more complex algebraic structure that we will encounter later. There are many more number systems that have the structure of a group and often even more complex structures. 
 
-\subsubsection{Groups of Matrices}
+\subsubsection{Matrices}
 Consider the set of all regular (i.e. invertible) $n \times n$ matrices for some $n$. This set forms a group under matrix multiplication. This group is clearly not commutative because we know that matrix multiplication isn't. You may find many different subsets of this group of \emph{all} invertible matrices which are closed under matrix multiplication and inversion and which contain the identity matrix. These subsets may be finite or infinite. Let's take $n=2$. A simple example for a finite subset of that kind is given by the set of matrices that rotate by multiples of 90 degrees:
 \begin{equation}
 r^0 = \begin{pmatrix}  1 &  0 \\  0  &  1  \end{pmatrix}, \;
@@ -131,7 +131,7 @@ I have suggestively written the index as superscript like an exponent because th
 
 % bring the set of rotations by multiples of 90° as example. point out that one of the matrices behaves like the imaginary unit. give the cayley table, call the matrices e, r, r^2, r^3...hmm..maybe using I for the identity is better than e
 
-\subsubsection{Symmetries of a Regular Polygon}
+\subsubsection{Symmetries}
 Imagine a regular polygon in the $xy$-plane centered at the origin. Maybe let's take the square. It is a very symmetrical shape in the sense that we can perform a lot of geometric transformations to it that leave it looking exactly the same. We could reflect it about a horizontal or a vertical axis or about one of the two diagonal axes. We could also rotate by the angles 90, 180 or 270 degrees and that would also leave our square unchanged. Of course, the "do nothing" operation also leaves it unchanged. If we want to make a group, we need a neutral element, so the do nothing operation aka identity has to be also in the set. Let's call that identity $e$, as always. Let's call the 90 degree rotation $r$ and note that the other two rotations can be obtained by applying $r$ twice or thrice respectively - so let's call them $r^2$ and $r^3$. Let's call the horizontal and vertical reflections $h$ and $v$ and the reflection about the downward and upward diagonals $d$ and $u$. I now claim that the set $\{ e,r,r^2,r^3,h,v,d,u \}$ forms a group under the operation of performing one of these actions after another. That group is called the symmetry group of the square. I could now give you the multiplication table for the eight possible products. But I won't - because in this case, we have something much better: an explicit formula for its entries that works not only for a square but for any regular polygon. Generally, every regular polygon with $n$ sides has such a symmetry group and it will always consist of exactly $n$ rotations and $n$ reflections. Let $r_0,\ldots,r_{n-1}$ denote all the rotations and $s_0, \ldots,s_{n-1}$ denote all the reflections. Then the products (i.e. compositions) of any of these can be computed by:
 \begin{equation}
 r_i r_j = r_{i+j}, \quad
@@ -146,7 +146,7 @@ c_k = \cos(\theta_k), s_k = \sin(\theta_k), \quad
 r_k = \begin{pmatrix}  c_k & -s_k \\  s_k  &  c_k  \end{pmatrix}, \;
 s_k = \begin{pmatrix}  c_k &  s_k \\  s_k  & -c_k  \end{pmatrix} \quad
 \end{equation}	
-The identity transformation is included as $r_0$. The fact that we can \emph{represent} the symmetries via matrices is a little foreshadowing into the field of representation theory which asserts that every group can be represented as a group of matrices where the group operation translates to matrix multiplication. The symmetry groups of regular polygons are also called \emph{dihedral} groups. The etymology has something to do with polygons having two ("di") faces ("hedrons") but I don't really get what this has to do with it [ToDo: try to figure it out].
+The identity transformation is included as $r_0$. The fact that we can \emph{represent} the symmetries via matrices is a little foreshadowing into the field of representation theory which asserts that \emph{every} group can be represented as a group of matrices where the group operation translates to matrix multiplication. The symmetry groups of regular polygons are also called \emph{dihedral} groups. The etymology has something to do with polygons having two ("di") faces ("hedrons") but I don't really get what this has to do with it. The explanations I have seen so far are not really satisfying. [ToDo: try to figure it out]
 
 % https://en.wikipedia.org/wiki/Dihedral_group
 % https://en.wiktionary.org/wiki/dihedral_group
@@ -158,6 +158,30 @@ The identity transformation is included as $r_0$. The fact that we can \emph{rep
 
 % https://proofwiki.org/wiki/Symmetry_Group_of_Square/Cayley_Table
 
+\paragraph{Functions}
+The set of all invertible (i.e. bijective) functions from any set $S$ to itself forms a group under the operation of function composition. It has even a special name: it's called the symmetric group over $S$. Let's verify the axioms: Closure: chaining a function from $S$ to $S$ with another function from $S$ to $S$ gives of course a combined function that is again a function from $S$ to $S$. Associativity: For three functions $f,g,h$, if you apply (f-after-g) after h, it's the same as applying f after (g-after-h). So, associativity is verified. The neutral element is just the identity function and it is indeed invertible (it's its own inverse) and the existence of inverse functions is assured by requiring the functions in our set to be invertible (Duh! Thank you Captain Obvious!).
+
+...TBC...
+
+% 
+
+%Invertible Functions with Composition
+
+%https://en.wikipedia.org/wiki/Symmetric_group
+
+\paragraph{Permutations}
+Another important class of groups is that of permutation groups. In a certain sense, they can be seen as the prototypical examples of all groups. Permutation groups were studied before group theory was even a thing and in hindsight, it turned out that important results that were found for these permutation groups were in fact more general and apply to all groups. A permutation group consists of the set of all permutations, i.e. re-orderings, that we can apply to an ordered collection of $n$ objects. It is clear that when we permute (reorder) such a collection twice in a row, the total result is again a permutation (reordering). So, closure is verified. It's also clear that we can invert any reordering by an action that is again a permutation. So, existence of inverses is verified. The do-nothing action also counts as a permutation - that's our neutral element. Associativity checks also out because a permutation is just a special kind of function and function composition is always associative ...TBC...
+
+%That's why an important theorem of group theory, namely Lagrange's theorem, is named after Joseph-Louis Lagrange
+
+%https://en.wikipedia.org/wiki/Permutation
+%https://en.wikipedia.org/wiki/Permutation_group
+%https://en.wikipedia.org/wiki/Cayley%27s_theorem
+%https://en.wikipedia.org/wiki/Symmetric_group
+
+% https://math.libretexts.org/Bookshelves/Combinatorics_and_Discrete_Mathematics/Applied_Discrete_Structures_(Doerr_and_Levasseur)/15%3A_Group_Theory_and_Applications/15.03%3A_Permutation_Groups
+
+% https://mathresearch.utsa.edu/wiki/index.php?title=Composition_of_Functions
 
 % use the Klein Four group as example...or maybe the group of symmetries of a triangle
 
@@ -181,6 +205,11 @@ The identity transformation is included as $r_0$. The fact that we can \emph{rep
 
 %\paragraph{Invertible Functions with Composition}
 
+
+\paragraph{}
+OK - now we have seen a couple of examples of groups that seem to be very different. Yet, they all share a lot of commonalities which are distilled in group theory into theorems that abstract away from the concrete examples. Let's now take a deeper dive into what these commonalities are...
+
+
 \subsection{Subgroups}
 If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough.
 
@@ -192,6 +221,22 @@ The integers under addition are an infinite group. But we now want to focus on f
 
 
 \subsection{Homomorphisms and Isomorphisms}
+Assume we have a group $\mathcal{G} = (G, \circ)$ and another group $\mathcal{H} = (H, \diamond)$. Assume furthermore that we have a function $f: G \rightarrow H$ that maps elements from $G$ to elements from $H$. That function is called a group homomorphism from $G$ to $H$ if it has the following property for all $a,b \in G$:
+\begin{equation}
+f(a \circ b) = f(a) \diamond f(b)
+\end{equation}
+This equation says that it doesn't matter whether we firstly combine $a$ and $b$ in $G$ via $\circ$ and then secondly map the result over to $H$ via $f$ or if we firstly map $a$ and $b$ separately over to $H$ via $f$ and then secondly combine them over there via $\diamond$. The end result should be the same in both cases. Such a function $f$ is constrained to preserve the structure of group $G$ while mapping over to group $H$ and it may or may not exist. If such a homomorphism does exist then we can find the structure of group $G$ within group $H$ in the sense that the image of $G$ is a subgroup of $H$. Note that, as promised, I'm sloppy with using $G$ and $H$ as stand-in in some places where it would actually be more correct to write $\mathcal{G}$ and $\mathcal{H}$. Formally, it makes no sense to talk about a subgroup of $H$ because $H$ is just a set and the group is actually the pair $\mathcal{H}$. But to state that stuff formally correctly would be very awkward and confusing. Formally correctly, one would have to say that $f$ maps $G$ to a subset of $H$ and that subset happens to be the underlying set of a subgroup of $\mathcal{H}$. Nobody wants to speak like that so this slight sloppiness is quite common and acceptable in group theory [VERIFY!]. Anyway - the essence of a homomorphism is that the function $f$ maps from $G$ to $H$ and thereby preserves the structure of $\mathcal{G}$ within $\mathcal{H}$ - and such a thing may or may not be possible for two given groups at hand.
+
+\paragraph{Example}
+Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and $f: \mathbb{R} \rightarrow \mathbb{R}^+$ with $f(x) = e^x$. That is, we consider the exponential function as a map from the real numbers with addition to the positive real numbers with multiplication. It is indeed a homomorphism between these two groups because $e^{a+b} = e^a \cdot e^b$ for all $a,b \in \mathbb{R}$. On the left hand side, we first add $a$ and $b$ (adding is the group operation of $\mathcal{G}$) and then map the sum over via $f$. On the right hand side, we first map $a$ and $b$ over seperately via $f$ and then multiply (multiplication is the group operation of $\mathcal{H}$). As we know from the laws of exponential functions, the result is the same, so $f$ is indeed a homomorphism.
+
+% maybe say something about the logarithm as inverse homomorphism...but maybe later
+% verify that neutral and inverse elements get mapped to their counterparts
+
+\paragraph{} Homomorphisms have some noteworthy properties: ...TBC...
+
+
+%https://mathworld.wolfram.com/GroupHomomorphism.html
 
 
 

@@ -159,13 +159,18 @@ The identity transformation is included as $r_0$. The fact that we can \emph{rep
 % https://proofwiki.org/wiki/Symmetry_Group_of_Square/Cayley_Table
 
 \paragraph{Functions}
-The set of all invertible (i.e. bijective) functions from any set $S$ to itself forms a group under the operation of function composition. It has even a special name: it's called the symmetric group over $S$. Let's verify the axioms: Closure: chaining a bijective function from $S$ to $S$ with another bijective function from $S$ to $S$ gives of course a combined function that is again a bijective function from $S$ to $S$. Associativity: For three functions $f,g,h$, if you apply ($f$-after-$g$) after $h$, it's the same as applying $f$ after ($g$-after-$h$). Saying it like this makes it obvious that function composition is actually always associative - no matter whether the functions are bijective or not. The neutral element is just the identity function and it is indeed invertible (it's its own inverse) and the existence of inverse functions is assured by requiring the functions in our set to be invertible (Duh! Thank you Captain Obvious!).
+The set of all invertible (i.e. bijective) functions from any set $S$ to itself forms a group under the operation of function composition. It has even a special name: it's called the symmetric group over $S$. Let's verify the axioms: Closure: chaining a bijective function from $S$ to $S$ with another bijective function from $S$ to $S$ gives of course a combined function that is again a bijective function from $S$ to $S$. Associativity: For three functions $f,g,h$, if you apply ($f$-after-$g$) after $h$, it's the same as applying $f$ after ($g$-after-$h$). Saying it like this makes it obvious that function composition is actually always associative - no matter whether the functions are bijective or not. It's like putting on pants and shoes first and then a jacket vs putting on pants first and then shoes and a jacket. The neutral element is just the identity function and it is indeed invertible (it's its own inverse) and the existence of inverse functions is assured by requiring the functions in our set to be invertible (Duh! Thank you Captain Obvious!).
 
-...TBC...
+\paragraph{} There are also some subsets of the big set of all invertible functions with particular functional forms that also form groups under composition. Consider the real powers of $x$ over the nonnegative real numbers: $f: \mathbb{R}^+_0 \rightarrow \mathbb{R}^+_0, \; f(x) = x^p, \; p \in \mathbb{R}$. Closure is easily verified: $(x^p)^q = x^{p q}$. Existence of inverses: $(x^p)^{-1} = x^{\frac{1}{p}}$. Note the clash of notations here: On the left hand side, the $...^{-1}$ stands for function inversion and \emph{not} for the exponent $-1$! If it would mean an exponent, then the right hand side should be $x^{-p}$ but it actually is $x^{\frac{1}{p}}$, i.e. the $p$-th root of $x$. That's a pitfall which I fell into myself when I was initially writing this section. The identity is in set as $f(x) = x = x^1$ and associativity holds like it does for any function. We need to restrict ourselves to nonnegative real inputs because when we allow negative arguments, even integer powers are not invertible anymore and roots and other fractional powers become complex and multivalued, so we rule such cases out.
 
-% 
+\paragraph{} Another interesting group of functions under composition with a particular functional form are the Moebius transformations which are functions of the form [...TBC...Maybe we need to be a bit careful about the poles. Maybe they are not invertible there?]
 
-%Invertible Functions with Composition
+%[Q: Is thes existence of inverses of x^p just a special case of the argument for closure or a clash of notation? In the LHS the $...^{-1}$ means function inversion ]
+
+
+% associativity - analogy: 
+
+% mention some special groups: power Moebius transfromation
 
 %https://en.wikipedia.org/wiki/Symmetric_group
 
@@ -209,6 +214,7 @@ Another important class of groups is that of permutation groups. In a certain se
 \paragraph{}
 OK - now we have seen a couple of examples of groups that seem to be very different. Yet, they all share a lot of commonalities which are distilled in group theory into theorems that abstract away from the concrete examples. The theorems will hold for all of these concrete groups and many more. That's the power of abstraction. Let's now take a deeper dive into what these commonalities are...
 
+\subsection{Generators}
 
 \subsection{Subgroups}
 If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough.
@@ -248,6 +254,26 @@ https://en.wikipedia.org/wiki/Dihedral_group
 
 https://en.wikipedia.org/wiki/Category:Theorems_in_group_theory
 
+Ideas:
+-Algorithm to find the subgroups of a given finite group G
+ -take an element a form the group and repeatedly apply the group operation to a with itself,
+  i.e. produce the powers of a: a^1,a^2,a^3, .... At some point, we will hit the neutral 
+  element and after that cycle back to a. 
+ -all the elements that were generated from a (commutative) subgroup of G. It must be
+  commutative because writing out the powers just gives a long string of a - like 
+  a^5 = a a a a a. Obviously, the order in which we write the as doesn't matter because it's 
+  all just as anyway.
+ -If any elements from the group were not hit by the powers of a, select one of the leftovers
+  and repeat the same process with that. that should generate another subgroup.
+ -Repeat that until nothing is left over. that should find all subgroups.
+-Algorithm for factoring a finite group G:
+ -Input should be a Cayley table, output an array of Cayley tables.
+ -Find the subgroups of G via the algo above
+
+Questions:
+-Can we get even more generality by replacing some of the equalities by more general
+ equivalence relations? Maybe not, because maybe we can achieve the same effect by using as
+ underlying sets quotient sets.
 -what about Cayley graphs?
 
 \end{comment}

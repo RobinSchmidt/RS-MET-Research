@@ -226,7 +226,11 @@ The integers under addition are an infinite group. But we now want to focus on f
 
 
 
-\subsection{Homomorphisms and Isomorphisms}
+\subsection{Morphisms (Iso-, Homo- and more)}
+Morphisms in group theory are functions $f$ that map from the underlying set of one group to the underlying set of another group. In group theory, you don't commonly encounter the term morphism all by itself. It's usually prefixed by some qualifier because we are mostly interested in functions that satisfy certain constraints. The most important specimen are isomorphisms and homomorphisms. There are also epimorphisms, monomorphisms and automorphisms. Let's see what they are.
+
+\subsubsection{Homomorphisms}
+
 Assume we have a group $\mathcal{G} = (G, \circ)$ and another group $\mathcal{H} = (H, \diamond)$. Assume furthermore that we have a function $f: G \rightarrow H$ that maps elements from $G$ to elements from $H$. That function is called a group homomorphism from $G$ to $H$ if it has the following property for all $a,b \in G$:
 \begin{equation}
 f(a \circ b) = f(a) \diamond f(b)
@@ -239,11 +243,16 @@ Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and
 % maybe say something about the logarithm as inverse homomorphism...but maybe later
 % verify that neutral and inverse elements get mapped to their counterparts
 
-\paragraph{} Homomorphisms have some noteworthy properties: ...TBC...
-
+\paragraph{} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The kernel of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ k \in G: f(k) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. Now we can say that: (1) The image of $G$ under $f$ is a subgroup of $H$. (2)  The kernel of $f$ is a normal subgroup of $G$.
 
 %https://mathworld.wolfram.com/GroupHomomorphism.html
 
+\subsection{Isomorphisms}
+Isomorphisms are homomorphisms that satisfy some additional constraints. These are: (1) Different elements of $G$ must be mapped to different elements of $H$. That is: $f$ must be injective. (2) Every element of $H$ must be reached by $f$. That is: $f$ must be surjective. Taken together, these two additional requirements require $f$ to be bijective and therefore invertible.
+
+% If two groups are isomorphic, they are structurally the same. One is actually the other in disguise and vice versa in the sense that the elements of the underlying sets are just renamed with respect to one another.
+
+% ToDo: Isomorphism, Epimorphism, Monomorphism, Automorphism
 
 
 \begin{comment}
@@ -283,7 +292,7 @@ Ideas:
   an order? Figure out! If not, maybe  the third row, or at least part of it (maybe except the
   first two elements), should be ordered too...and so on? Maybe that ordering algorithm could 
   then also be used to check two tables of isomorphy - just order them both and then compare 
-  for equality.
+  for equality. We would establish a canonical form of Cayley tables.
  -The algo can be used to combine more that 2 tables by taking the result of one application
   as input to the next iteration, i.e. we "fold" the array of input tables via the so
   defined the binary operation between two tables.

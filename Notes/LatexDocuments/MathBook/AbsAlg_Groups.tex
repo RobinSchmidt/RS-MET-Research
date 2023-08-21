@@ -200,7 +200,6 @@ we are allowed to form all possible products between these two matrices with as 
 
 % https://en.wikipedia.org/wiki/Modular_group
 
-
 \subsubsection{Order of an Element}
 In finite groups, it turns out that we can take any element $a$ and if we repeatedly multiply it by itself (i.e. form powers of it), we will eventually hit the identity. At some point $m$, we will have $a^m = e$. That number $m$ is called the \emph{order} of the element $a$ in the group. The identity element $e$ has order $1$, of course. A word of caution: the term "order" in group theory is overloaded to mean two things: when we talk about the order of an element, it means what I just said. But when we talk about the order of a group as a whole, then the term means the number of elements in the group. Which sense is meant by the word "order" can be inferred from the "datatype" to which it is applied to - is it a group element or a group? That's exactly how overloading of function names works in programming. 
 
@@ -209,10 +208,23 @@ In finite groups, it turns out that we can take any element $a$ and if we repeat
 % 2 notions: of a group (number of elemnts), of an element (number of times to multiply by itself to rech e)
 
 \subsection{Subgroups}
-If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough.
+If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough. 
 
 \medskip
-The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using the machinery of subgroups. 
+As is often the case in mathematical definitions, the edge cases are included in the definitions of terms. A group itself also counts as a subgroup of its own. Also, the group consisting only of the identity element counts as subgroup of any group. These two subgroups always exist for any group and are called the trivial subgroups.
+
+\medskip
+The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using the machinery of subgroups. Infinity cannot be factorized but this factorization is the thing we are now interested in.
+
+\paragraph{Example}
+Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to understand as the set of integers modulo $12$ with modular addition modulo $12$ as group operation. Because $12$ has many divisors, $\mathcal{G}$ has quite a lot of (nontrivial) subgroups. You can easily verify that $\{0,2,4,6,8,10\}, \{0,3,6,9\}, \{0,4,8\}, \{0,6\}$ are subgroups of that group. As any group, it has also the trivial subgroups $\{ 0 \}$ and $\mathcal{G}$ itself but we are not interested in them.
+
+% https://math.stackexchange.com/questions/208063/calculation-of-subgroups-of-z-12
+% https://www.quora.com/How-do-you-find-the-subgroups-of-z12
+
+%It's Cayley table (I don't want to call it multiplication table here) reveals some interesting structure
+
+% maybe use +_{12} - a plus with subscript 12 to denote modular additiona...but mayb not
 
 % Lagrange's Theorem
 

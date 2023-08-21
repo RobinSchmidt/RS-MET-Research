@@ -217,7 +217,7 @@ As is often the case in mathematical definitions, the edge cases are included in
 The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using the machinery of subgroups. Infinity cannot be factorized but this factorization is the thing we are now interested in.
 
 \paragraph{Example}
-Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to understand as the set of integers modulo $12$ with modular addition modulo $12$ as group operation. Because $12$ has many divisors, $\mathcal{G}$ has quite a lot of (nontrivial) subgroups. You can easily verify that $\{0,2,4,6,8,10\}, \{0,3,6,9\}, \{0,4,8\}, \{0,6\}$ are subgroups of that group. As any group, it has also the trivial subgroups $\{ 0 \}$ and $\mathcal{G}$ itself but we are not interested in them.
+Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to understand as the set of integers modulo $12$ with modular addition modulo $12$ as group operation. Because $12$ has many divisors, $\mathcal{G}$ has quite a lot of (nontrivial) subgroups. You can easily verify that $\{0,2,4,6,8,10\}, \{0,3,6,9\}, \{0,4,8\}, \{0,6\}$ are subgroups of that group. As any group, it has also the trivial subgroups $\{ 0 \}$ and $\mathcal{G}$ itself but we are not interested in them. ...TBC...
 
 % https://math.stackexchange.com/questions/208063/calculation-of-subgroups-of-z-12
 % https://www.quora.com/How-do-you-find-the-subgroups-of-z12
@@ -230,6 +230,19 @@ Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to un
 
 
 \subsubsection{Cosets}
+
+% Riley, pg 1066:
+%% Two cosets are either disjoint or identical
+
+
+\paragraph{Langrange's Theorem} If $\mathcal{G}$ is a finite group of order $g$ and $\mathcal{S}$ is a subgroup of  $\mathcal{G}$ of order $s$, then $g$ is a multiple of $s$.
+
+\medskip
+In other words, the theorem says that the order of the full group must be divisible by the order of any of its subgroups. This immediately implies that groups of prime order cannot have any nontrivial subgroups because nothing divides a prime (besides itself and one - the trivial divisors).
+
+%If $\mathcal{S} = (S,\circ)$ is a subgroup of order $|S|$ of a finite group $\mathcal{G} = (G,\circ)$, then the order $|G|$ of $\mathcal{G}$ is a multiple
+
+
 
 
 
@@ -255,7 +268,7 @@ Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and
 %https://mathworld.wolfram.com/GroupHomomorphism.html
 
 \subsection{Isomorphisms}
-Isomorphisms are homomorphisms that satisfy some additional constraints. These are: (1) Different elements of $G$ must be mapped to different elements of $H$. That is: $f$ must be injective. (2) Every element of $H$ must be reached by $f$. That is: $f$ must be surjective. Taken together, these two additional requirements require $f$ to be bijective and therefore invertible. Therefore, an isomorphism is a homomorphism that works in both directions. That means: mapping from $G$ to $H$ preserves the structure of $G$ in $H$ and mapping back from $H$ to $G$ preserves the structure of $H$ in $G$. Again, an isomorphism between two given groups may or may not exist. If one does exist, we may say that the two groups are isomorphic which means: of equal form \footnote{The internet says that "iso" means "equal" whereas "homo" means "the same" - and there is supposed to be a subtle difference. But it actually says that the difference is such that "homo" should be the stronger form (identity) and "iso" the weaker form (equivalence) - but here it's clearly the other way around: iso is the stronger form of sameness-morphism than homo. I don't know what to make of that. It's a mess!}. If two groups are isomorphic, they are structurally the same. One is actually the other in disguise and vice versa in the sense that the elements of the underlying sets are just renamed with respect to one another. 
+Isomorphisms are homomorphisms that satisfy some additional constraints. These are: (1) Different elements of $G$ must be mapped to different elements of $H$. That is: $f$ must be injective. (2) Every element of $H$ must be reached by $f$. That is: $f$ must be surjective. Taken together, these two additional requirements require $f$ to be bijective and therefore invertible. Therefore, an isomorphism is a homomorphism that works in both directions. That means: mapping from $G$ to $H$ preserves the structure of $G$ in $H$ and mapping back from $H$ to $G$ preserves the structure of $H$ in $G$. Again, an isomorphism between two given groups may or may not exist. If one does exist, we may say that the two groups are isomorphic which means: of equal form \footnote{The internet says that "iso" means "equal" whereas "homo" means "the same" - and there is supposed to be a subtle difference. But it actually says that the difference is such that "homo" should be the stronger form (identity) and "iso" the weaker form (equivalence) - but here it's clearly the other way around: iso is the stronger form of sameness-morphism than homo. I don't know what to make of that. It's a mess!}. If two groups are isomorphic, they are structurally the same. One is actually the other in disguise and vice versa in the sense that the elements of the underlying sets are just "renamed" with respect to one another via $f$. 
 That's why isomorphisms are so important in group theory. They are a tool to convince ourselves that two superficially very different mathematical setups are actually in some sense the same such that we can transfer knowlegde obtained in one domain to the other. Or even better: abstract out the commonalities explicitly, as we do in abstract algebra.
 % Was our homomorpism above actually an isomorphism? What about injecting the inamginary unit itno the expoenent? I think, then it becomes a homo- but not isomorphism (see Riley, Hobson et. al., page 1060)
 

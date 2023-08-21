@@ -139,7 +139,7 @@ r_i s_j = s_{i+j}, \quad
 s_i r_j = s_{i-j}, \quad
 s_i s_j = r_{i-j}
 \end{equation}	
-where the additions of the indices have to be performed modulo $n$. As we know from analytic geometry, we can represent general rotations and reflections by $2 \times 2$ matrices over $\mathbb{R}$ and that we can represent the combination of such transformations as multiplications of the respective matrices. The matrices for the $r_k, s_k$ are in this case given by:
+where the additions or subtractions of the indices have to be performed modulo $n$. As we know from analytic geometry, we can represent general rotations and reflections by $2 \times 2$ matrices over $\mathbb{R}$ and that we can represent the combination of such transformations as multiplications of the respective matrices. The matrices for the $r_k, s_k$ are in this case given by:
 \begin{equation}
 \theta_k =\frac{2 \pi k}{n},  \quad
 c_k = \cos(\theta_k), s_k = \sin(\theta_k), \quad	
@@ -170,7 +170,7 @@ The set of all invertible (i.e. bijective) functions from any set $S$ to itself 
 %https://en.wikipedia.org/wiki/Symmetric_group
 
 \paragraph{Permutations}
-Another important class of groups is that of permutation groups. In a certain sense, they can be seen as the prototypical examples of all groups. Permutation groups were studied before group theory was even a thing and in hindsight, it turned out that important results that were found for these permutation groups were in fact more general and apply to all groups. A permutation group consists of the set of all permutations, i.e. re-orderings, that we can apply to an ordered collection of $n$ objects. It is clear that when we permute (reorder) such a collection twice in a row, the total result is again a permutation (reordering). So, closure is verified. It's also clear that we can invert any reordering by an action that is again a permutation. So, existence of inverses is verified. The do-nothing action also counts as a permutation - that's our neutral element. Associativity checks also out because a permutation is just a special kind of function and function composition is always associative ...TBC...
+Another important class of groups is that of permutation groups. In a certain sense, they can be seen as the prototypical examples of all groups. Permutation groups were studied before group theory was even a thing and in hindsight, it turned out that important results that were found for these permutation groups were in fact more general and apply to all groups. A permutation group consists of the set of all permutations, i.e. re-orderings, that we can apply to an ordered collection of $n$ objects. It is clear that when we permute (reorder) such a collection twice in a row, the total result is again a permutation (reordering). So, closure is verified. It's also clear that we can invert any reordering by an action that is again a permutation. So, existence of inverses is verified. The do-nothing action also counts as a permutation - that's our neutral element. Associativity checks also out because a permutation is just a special kind of function and as we have just seen, function composition is always associative ...TBC...
 
 %That's why an important theorem of group theory, namely Lagrange's theorem, is named after Joseph-Louis Lagrange
 

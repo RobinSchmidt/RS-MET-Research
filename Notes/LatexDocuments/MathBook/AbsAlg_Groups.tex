@@ -279,8 +279,11 @@ Ideas:
   of cobining tables commutative which kight be desirable. How could such an ordering look 
   like? the first row and column should always list the lements in natural order because it's
   the row/col of the neutral element. Maybe we could say that the next row/col should be in 
-  ascending order? Is that enough to uniquely determine an order? Figure out! If not, maybe 
-  the third row, or at least part of it, should be ordered too...and so on?
+  ascending order (execpt maybe for the first element)? Is that enough to uniquely determine 
+  an order? Figure out! If not, maybe  the third row, or at least part of it (maybe except the
+  first two elements), should be ordered too...and so on? Maybe that ordering algorithm could 
+  then also be used to check two tables of isomorphy - just order them both and then compare 
+  for equality.
  -The algo can be used to combine more that 2 tables by taking the result of one application
   as input to the next iteration, i.e. we "fold" the array of input tables via the so
   defined the binary operation between two tables.

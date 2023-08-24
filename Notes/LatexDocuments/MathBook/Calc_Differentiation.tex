@@ -25,9 +25,29 @@ This means: take the derivative of $f$ with respect to $x$, then evaluate the re
 
 %ToDo: Introduce the "evaluated at" notation with the vertical bar on the right.
 
+\paragraph{An Alternative Definition}
+An alternative definition that you won't usually find in textbooks is this:
+\begin{equation}
+ f'(x) = \lim_{t \rightarrow 1} \frac{f(t x) - f(x)}{ t x - x }
+\end{equation}
+If we apply this definition to the function $f(x) = x^2$, we get:
+\begin{equation}
+f'(x) = \lim_{t \rightarrow 1} \frac{(t x)^2 - x^2}{ t x - x }
+      = \lim_{t \rightarrow 1} \frac{t^2 x^2 - x^2}{ t x - x }
+      = \lim_{t \rightarrow 1} \frac{x^2 (t^2 - 1)}{ x (t - 1)}
+      = x \lim_{t \rightarrow 1} \frac{(t^2 - 1)}{(t - 1)}         
+\end{equation}
+where in the last step, we noted that $x$ does not depend on $t$ so it could be dragged out of the limit. We now see that the derivative is proportional to $x$ and what is left is to figure out the constant of proportionality from the limit, that involves only $t$ but not $x$ anymore. We factor the numerator as $t^2 - 1 = (t-1)(t+1)$ to get:
+\begin{equation}
+f'(x) = x \lim_{t \rightarrow 1} \frac{(t-1)(t+1)}{(t - 1)}     
+      = x \lim_{t \rightarrow 1} t+1
+      = 2 x
+\end{equation}
+which gives us the same result. This alternative definition is also related to the so called quantum derivative which is basically the same definition just without taking the limit. Sometimes, this alternative definition is much easier to evaluate than the standard definition. That's why I wanted to mention it. This is especially true when $f(x) = x^n$. With the standard definition, you'd have to expand a term of the form $(x+h)^n$ using the binomial theorem whereas with the alternative definition, things cancel nicely. However, usually, we do not evaluate derivatives via the definition over a limit (standard or alternative) anyway. Instead, we use...
+%Fortunately, we don't have to go through this tedious procedure via the limit every time we need to compute a derivative.
 
 \subsection{Differentiation Rules}
-Fortunately, we don't have to go through this tedious procedure via the limit everytime we need to compute a derivative. Instead, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). These rules are for any two functions $f$ and $g$ and any constant $a$:
+Instead of evaluating derivatives from first principles every time, we see one, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). These rules are for any two functions $f$ and $g$ and any constant $a$:
 
 \medskip
 \begin{tabular}{c c c l}
@@ -62,3 +82,23 @@ With the derivative, we have an operation to produce a new "derived" function fr
 ...TBC...
 
 % give all different notations $f'', f''', f^{(k)}, \frac{d^k}{d x^k}, D^k, \ddot{f}, \dddot{f}$
+
+
+
+
+\begin{comment}
+	
+This video has an interesting alternative definition of the derivative:
+
+https://www.youtube.com/watch?v=XfWgfZ5V2qI  New Definition of the Derivative
+
+f'(x) = \lim_{t \rightarrow 1} \frac{f(tx) - f(x)}{t x  - x}
+
+which is often algebraically simpler to evaluate - especially for powers of x. No binomial theorem is needed. 
+
+It has also this useful formula:
+(t^n - 1) = (t-1) (1 + t + t^2 + t^3 + ... + t^{n-1})	
+which might be integrated somewhere in the elementary algebra section
+	
+\end{comment}
+

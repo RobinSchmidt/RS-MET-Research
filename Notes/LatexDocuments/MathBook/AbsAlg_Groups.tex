@@ -187,7 +187,7 @@ Another important class of groups is that of permutation groups. In a certain se
 OK - now we have seen a couple of examples of groups that seem to be very different. Yet, they all share a lot of commonalities which are distilled in group theory into theorems that abstract away from the concrete examples. The theorems will hold for all of these concrete groups and many more. That's the power of abstraction. Let's now take a deeper dive into what these commonalities are...
 
 \subsection{Generators}
-A generator of a group $\mathcal{G}$ is a subset of the underlying set $G$ which, by forming all possible products (if necessary, recursively) between the elements of this subset, can generate all elements in the set $G$.
+A generator of a group $\mathcal{G}$ is a subset of the underlying set $G$ which, by forming all possible products (if necessary, recursively) between the elements of this subset and their inverses, can generate all elements in the set $G$.
 
 \paragraph{Example 1} Recall the set of all rotations by multiples of 90 degrees, i.e. by 0, 90, 180 and 270 degrees. I have already mentioned that the whole set of these four rotations can be obtained by repeatedly chaining the 90 degree rotation with itself. After four such chainings, we arrive at 360 degrees and we can stop because at that point, we are back where we started. We have reached the identity element - a rotation of 360 degrees is the same as one by 0 degrees. Going any further, we would enter a loop and would not produce any new rotations that we didn't already produce before. Thus, the 90 degree rotation is a generator of the set of all rotations by multiples of 90 degrees. More precisely speaking, it's the singleton set containing only the 90 degree rotation which is our generator.
 
@@ -196,7 +196,7 @@ A generator of a group $\mathcal{G}$ is a subset of the underlying set $G$ which
 S = \begin{pmatrix}  0 & -1 \\  1  &  0  \end{pmatrix}, \;
 T = \begin{pmatrix}  1 &  1 \\  0  &  1  \end{pmatrix} \quad
 \end{equation}
-we are allowed to form all possible products between these two matrices with as many factors as we like, for example, in no particular order: $S, T, S^2, S^3, T^6, S T, S T^2, T^5 S^9, S^9 T^5, \ldots$. It turns out that this set of two matrices generates the group of all matrices with integer coefficients that have a determinant of $1$ where, as usual, the group operation is taken to be matrix multiplication.
+we are allowed to form all possible products between these two matrices with as many factors as we like, for example, in no particular order: $S, T, S^{-1}, T^{-1}, S^2, S^3, T^7 S^{-3}, S T^{-1} S^2, S T^2, T^5 S^9, S^9 T^5, \ldots$. It turns out that this set of two matrices together with their inverses generates the group of all matrices with integer coefficients that have a determinant of $1$ where, as usual, the group operation is taken to be matrix multiplication.
 
 % https://en.wikipedia.org/wiki/Modular_group
 

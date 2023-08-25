@@ -86,6 +86,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testModularForms();
   //testIntegerGroup();
   //testBiPeriodicFunctions();
+  // ToDo: 
+  // -Maybe move the string-group code over here from the main repo, and write testStringGroup()
 
   //testAttractors();
 

@@ -10046,7 +10046,8 @@ void testModularForms()
 
   // See: 
   // https://www.youtube.com/watch?v=z7A_bSl8kIw  The math behind Fermat's Last Theorem | Modular Forms
-
+  // https://www.youtube.com/watch?v=LolxzYwN1TQ  Introduction to Modular Forms - Part 1 of 8
+  // ...has more parts...interesting formula at around 4:45
 
   int dummy = 0;
 }

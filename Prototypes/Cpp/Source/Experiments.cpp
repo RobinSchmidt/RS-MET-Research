@@ -9977,6 +9977,10 @@ void testModularGroup()
   // Verify indentities from here: https://kconrad.math.uconn.edu/blurbs/grouptheory/SL(2,Z).pdf:
   A = T*T*T * S * T*T * S * T*T*T*T * S;  // T^3 S T^2 S T^4 S = (17,-5 ; 7,-2)
   // ..do some more..
+  // -Check orders of S and T. S should have order 4 and T has order infinity as stated here:
+  //  https://www.youtube.com/watch?v=LolxzYwN1TQ   at around 17:20  ...order 4 as matrix, as an 
+  //  action only order 2 (around 19:10) - two matrices act the same when they are just negatives
+  //  of one another
 
 
   // Applies the modular for defined by the matrix A to the number z:
@@ -9999,6 +10003,7 @@ void testModularGroup()
   //  define these matrices using complex numbers too for compatibility...we'll see
   // -Figure out the relation to conformal geometric algebra, if any. see here (towards the end):
   //  https://www.youtube.com/watch?v=0bOiy0HVMqA
+
 
 
 
@@ -10047,7 +10052,18 @@ void testModularForms()
   // See: 
   // https://www.youtube.com/watch?v=z7A_bSl8kIw  The math behind Fermat's Last Theorem | Modular Forms
   // https://www.youtube.com/watch?v=LolxzYwN1TQ  Introduction to Modular Forms - Part 1 of 8
-  // ...has more parts...interesting formula at around 4:45
+  // ...has more parts...interesting formula at around 4:45, here is the playlist:
+  // https://www.youtube.com/playlist?list=PLJUSzeW191Qx_rdAS8sd4nTNlSyLt97Q4
+
+
+  // ToDo:
+  // -Implement the Eisenstein series. It's a double-sum over two indices m,n. Maybe try to improve
+  //  convergence by combining certain terms. Waht about those for +n and -n and/or +m and -m?
+  //  -> figure out!
+
+  // Notes:
+  // -Modular forms form a vector space. Infinite-dimensional, if the boundedness condition is
+  //  ignored, ottherwise finite-dimensional
 
   int dummy = 0;
 }

@@ -118,8 +118,8 @@ This produces:
   U =  y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
   V = -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
 
-The results are indeed different! And I don't really think, they are equivalent. Let's try evaluate 
-them both for some values of x,y:
+The results are indeed different! And I don't really think, they are equivalent. Let's try to 
+evaluate them both for some values of x,y:
 
 x = 2
 y = 3
@@ -128,10 +128,9 @@ V = -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
 U, V, N(U), N(V)
 
 This gives U = 2.328..., V = -1.769... so the expressions are indeed different. What's going on? 
-Maybe log is not analytic? Nah! But maybe verify the Cauchy-Riemann equation for log. But wait! 
-Unequal results do not necessarily mean that they are incompatible. It could still be that they have 
-some common term plus a different integration constant each. Let's try to bring V into the form of 
-U:
+Maybe verify the Cauchy-Riemann equation for log. But wait! Unequal results do not necessarily mean 
+that they are incompatible. It could still be that they have some common term plus a different 
+integration constant each. Let's try to bring V into the form of U:
 
 U =  y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
 V = -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
@@ -144,7 +143,27 @@ everything gets tangled up? Can we untangle it? Maybe subtract V from U and/or U
 cancel the "common part" and leave only the integration constants (but with negative sign for the 
 subtrcated part)
 
+var("x y")
+assume(x, "real")
+assume(y, "real")
+U =  y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
+V = -y*arctan(y/x) + 1/2*x*log(y^2/x^2 + 1)
+C = U - V
+simplify(C)
 
+----------------------------------------------------------------------------------------------------
+Let's try w = sqrt(z)
 
-Also try 
-sqrt(z)
+var("x y")
+assume(x, "real")
+assume(y, "real")
+z = x + I*y
+w = z^(1/2)                 # function of interest
+u =  w.real() 
+v = -w.imag()
+U = integral(u, x)
+V = integral(v, y)
+u, v, U, V	
+
+Sage can't even do the integrals in this case. Maybe the inverse functions are just too difficult to 
+handle?

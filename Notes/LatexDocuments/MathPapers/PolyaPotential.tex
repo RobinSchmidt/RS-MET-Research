@@ -99,28 +99,32 @@ In this case, $U$ and $V$ were indeed exactly equal and we didn't have to collec
 \hline
 $f(z)$     & $u(x,y)$           & $v(x,y)$            & $p(x,y)$  \\
 \hline
-$a + \i b$ & $a$                & $-b$                & $a x - b y $         \\
-$z$        & $x$                & $-y$                & $(x^2 - y^2)/2 $     \\
-$z^2$      & $x^2 - y^2$        & $-2xy$              & $x^3/3 - xy^2 $      \\
-$z^3$      & $...$              & $...$               & $... $               \\
-$1/z$      & $x/(x^2 + y^2)$    & $y/(x^2 + y^2)$     & $\ln(x^2+y^2)/2$     \\
-$e^z$      & $e^x \cos(y)$      & $-e^x \sin(y)$      & $e^x \cos(y) $       \\
-$\sin(z)$  & $\sin(x) \cosh(y)$ & $-\cos(x) \sinh(y)$ & $-\cos(x) \cosh(y)$  \\
+$a + \i b$ & $a$                & $-b$                & $a x - b y $                    \\
+$z$        & $x$                & $-y$                & $(x^2 - y^2)/2 $                \\
+$z^2$      & $x^2 - y^2$        & $-2xy$              & $x^3/3 - xy^2 $                 \\
+$z^3$      & $x^3 - 3 x y^2$    & $-3 x^2 y + y^3$    & $x^4/4 - 3 x^2 y^2 / 2 + y^4/4$ \\
+$1/z$      & $x/(x^2 + y^2)$    & $y/(x^2 + y^2)$     & $\ln(x^2+y^2)/2$                \\
+$e^z$      & $e^x \cos(y)$      & $-e^x \sin(y)$      & $e^x \cos(y) $                  \\
+$\sin(z)$  & $\sin(x) \cosh(y)$ & $-\cos(x) \sinh(y)$ & $-\cos(x) \cosh(y)$             \\
+$\cos(z)$  & $\cos(x) \cosh(y)$ & $\sin(x) \sinh(y)$  & $ \sin(x) \cosh(y)$             \\
+%$...$      & $...$              & $...$               & $...$             \\
 \hline
 \end{tabular}
 \end{center}
+
+% cos(z):
+% (cos(x)*cosh(y), sin(x)*sinh(y), cosh(y)*sin(x), cosh(y)*sin(x))
+
+% tan(z):
+% (sin(2*x)/(cos(2*x) + cosh(2*y)), -sinh(2*y)/(cos(2*x) + cosh(2*y)),
+% -1/2*log(cos(2*x) + cosh(2*y)), -1/2*log(cos(2*x) + cosh(2*y)))
 
 % Make tables of:
 % -small powers of z including -1,0,1,2,3, include f(z) = c = a + i b = const
 % -exponential: exp, pow, exp(i*z) -> important for Fourier series
 % -trig: sin, cos, tan, cos/sin, 1/sin, 1/cos
 % -hyp: sinh, cosh, tanh, ...
-% -inverses: log, atan, asin 
-%  ...for log it looks complicated - the U,V integrals don't seem to match. Maybe try to
-%  integrate -atan(y/x) wrt y instead of -atan2(y,x)
-%  ...gives: -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
-%  integrate log(sqrt(x^2+y^2)) wrt x
-%  ...gives:
+% -inverses: log, atan, asin %  ...for log it looks complicated, see .txt file
 % -general formula for z^n, n >=  0  
 % -general formula for z^n, n <= -2
 % -If the table grows large, maybe split into powers, trig-funcs, exp/sinh/cosh/log

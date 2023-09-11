@@ -409,7 +409,8 @@ v_{-1}(x,y) = \frac{y}{x^2 + y^2} % = y / (x^2 + y^2)
 % maybe use frac to make it look nicer
 We have given the $u,v$ the $-1$ index/subscript to indicate that these represent the vector field contribution from the $1/z = z^{-1}$ term. The intention is that the index matches the power of $z$.
 
-\medskip
+% the part below is now also in the PolyaPotential.tex paper and can be removed here:
+\medskip 
 Now we turn to the contributions to the vector field from the $z^n$ terms for $n \geq 0$. Setting $z = x + \i y$ and expanding $z^n$ according to the binomial theorem, we get:
 \begin{equation}
 z^n = (x + \i y)^n = \sum_{k=0}^n \binom{n}{k}  x^k (\i y)^{n-k}
@@ -446,7 +447,11 @@ v_n(x,y) = -\sum_{k=0}^{(n-1)/2} (-1)^k \binom{n}{2k+1} x^{n-(2k+1)} y^{2k+1}
 }
 \end{equation}
 % Maybe move these derivations into a separate paper about general Polya potentials of complex functions and refer to it here. 
-So, these are the $u_n(x,y), v_n(x,y)$ parts of the Polya vector field of a single term $z^n = (x + \i y)^n$ for $n \geq 0$. The upper summation limits are understood to be meant in the sense of integer division, i.e. if the result of the division by 2 is a non-integer, it will be rounded down towards zero. There is a little complication for the edge case of $n=0$ for $v_n$, i.e. for $v_0(x,y)$. In this case, the sum would formally run from $0$ to $-1/2$. Due to the integer division behavior, it actually runs from $0$ to $0$, i.e. produces exactly one term for $k=0$ which according to the formula turns out to be $v_0(x,y) = 0 x^{-1} y^1$ if we assume the 0-choose-1 binomial coefficient to be zero, which is the common convention. This result is actually kinda correct mathematically - we just want $v_0(x,y)$ to be the zero function. But when coding this stuff up, we need to be careful to treat this edge case correctly because it doesn't really fit the pattern of an $x^n y^m$ term for $n,m \geq 0$. In a coding context that works with bivariate polynomials, we might probably want to express the zero function as $v_0(x,y) = 0 x^0 y^0$ instead. With these expressions and our previously found expressions for the $u_{-1}(x,y), v_{-1}(x,y)$ parts of $1/z = z^{-1}$, we can now re-assemble the complete Polya vector field of the infinite Laurent series. That gives us $u(x,y), v(x,y)$, i.e. the Polya vector field of $\zeta(s)$. It is given by:
+So, these are the $u_n(x,y), v_n(x,y)$ parts of the Polya vector field of a single term $z^n = (x + \i y)^n$ for $n \geq 0$. The upper summation limits are understood to be meant in the sense of integer division, i.e. if the result of the division by 2 is a non-integer, it will be rounded down towards zero. There is a little complication for the edge case of $n=0$ for $v_n$, i.e. for $v_0(x,y)$. In this case, the sum would formally run from $0$ to $-1/2$. Due to the integer division behavior, it actually runs from $0$ to $0$, i.e. produces exactly one term for $k=0$ which according to the formula turns out to be $v_0(x,y) = 0 x^{-1} y^1$ if we assume the 0-choose-1 binomial coefficient to be zero, which is the common convention. This result is actually kinda correct mathematically - we just want $v_0(x,y)$ to be the zero function. But when coding this stuff up, we need to be careful to treat this edge case correctly because it doesn't really fit the pattern of an $x^n y^m$ term for $n,m \geq 0$. In a coding context that works with bivariate polynomials, we might probably want to express the zero function as $v_0(x,y) = 0 x^0 y^0$ instead. 
+% up to here, the text has been copied into PolyaPotential.tex, so it can be removed up to here and we
+% can refer to the PolyaPotential paper
+
+With these expressions and our previously found expressions for the $u_{-1}(x,y), v_{-1}(x,y)$ parts of $1/z = z^{-1}$, we can now re-assemble the complete Polya vector field of the infinite Laurent series. That gives us $u(x,y), v(x,y)$, i.e. the Polya vector field of $\zeta(s)$. It is given by:
 \begin{equation}
 \label{Eq:PolyaFieldLaurent}	
 \boxed{
@@ -480,6 +485,7 @@ which gives $(1/2*\log(x^2 + y^2), 1/2*\log(x^2 + y^2))$, so the Polya potential
 \end{equation}
 By the way, in this case, integrating $u$ with respect to $x$ and $v$ with respect to $y$ yielded the exact same results here and that common result is our (contribution to the) potential. In a more general case where a vector field functions $u,v$ contain terms that depend on $x$ or $y$ alone and/or a constant term, that doesn't need to be the case. These terms need to be taken into account by "integration constants", i.e. when integrating $u$ with respect to $x$, we could have to add a function $f(y)$ as integration constant (constant with respect to $x$ but can depend on $y$). That $f(y)$ would show up as terms independent of $x$ in the integral of $v$ with respect to $y$. Vice versa, $v$ integrated with respect to $y$ may miss terms that depend only on $x$ which will show up only in the integral of $u$ with respect to $x$. That's why we need to compute both integrals. The "integration constants" turned out to be zero here, though. Hence, both integrals produced the exact same result. When we next consider the $z^n$ terms, that will not be the case and we will need to be more careful about that.
 
+% text from here has also been moved into PolyaPotential.tex:
 \medskip
 To find the potential for the $z^n$ terms, we'll need to take (\ref{Eq:PolyaFieldLaurentPowTerm}) which is repeated here:
 \begin{equation}
@@ -504,6 +510,8 @@ P_n(x,y) = \frac{x^{n+1}}{n+1}
            -\sum_{k=0}^{(n-1)/2} \binom{n}{2k+1} \frac{(-1)^k x^{n-(2k+1)} y^{2k+2}}{2k+2}
 }
 \end{equation}
+% up to here, the text has been copied into PolyaPotential.tex
+
 The full Polya potential is then given by re-assembling the sum, as usual:
 \begin{equation}
 \label{Eq:PolyaPotentialLaurent}	

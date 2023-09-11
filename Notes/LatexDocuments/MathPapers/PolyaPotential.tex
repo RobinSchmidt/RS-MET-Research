@@ -92,10 +92,8 @@ p(x,y) =  e^x \cos(y)
 \end{equation}
 In this case, $U$ and $V$ were indeed exactly equal and we didn't have to collect any extra terms for the integration constants, i.e. the correct integration constants turned out to be zero. Of course, we could still add true constants that depend neither on $x$ nor on $y$ to our final expression $p(x,y)$. That is a consequence of the fact that a potential for a given vector field is generally uniquely determined only up to an additive constant. This issue might become important, if you are dealing with different representations of the same function. For example, the Riemann zeta function can be expressed in multiple different ways. In such cases, it may make sense to pin down the integration constant by prescribing a specific function value for $p(x,y)$ at a specific point $(x,y)$, for example by requiring $p(0,0) = 0$. For the time being, we'll just take that additive constant to be zero, though. Continuing like this, we can build some tables
 
-...TBC...
-
 \begin{center}
-\begin{tabular}{ |p{1cm}|p{3cm}|p{3cm}|p{5cm}|  }
+\begin{tabular}{ |p{1cm}|p{3cm}|p{3cm}|p{6cm}|  }
 \hline
 $f(z)$     & $u(x,y)$           & $v(x,y)$            & $p(x,y)$  \\
 \hline
@@ -107,18 +105,18 @@ $1/z$      & $x/(x^2 + y^2)$    & $y/(x^2 + y^2)$     & $\ln(x^2+y^2)/2$        
 $e^z$      & $e^x \cos(y)$      & $-e^x \sin(y)$      & $e^x \cos(y) $                  \\
 $\sin(z)$  & $\sin(x) \cosh(y)$ & $-\cos(x) \sinh(y)$ & $-\cos(x) \cosh(y)$             \\
 $\cos(z)$  & $\cos(x) \cosh(y)$ & $\sin(x) \sinh(y)$  & $ \sin(x) \cosh(y)$             \\
+$\tan(z)$  & $ \frac{\sin(2x)}{\cos(2x) + \cosh(2y)}$              
+           & $\frac{-\sinh(2y)}{\cos(2x) + \cosh(2y)}$               
+           & $(-1/2) \log(\cos(2x) + \cosh(2y))$             \\
 %$...$      & $...$              & $...$               & $...$             \\
 \hline
 \end{tabular}
 \end{center}
-
-% cos(z):
-% (cos(x)*cosh(y), sin(x)*sinh(y), cosh(y)*sin(x), cosh(y)*sin(x))
-
 % tan(z):
-% (sin(2*x)/(cos(2*x) + cosh(2*y)), -sinh(2*y)/(cos(2*x) + cosh(2*y)),
-% -1/2*log(cos(2*x) + cosh(2*y)), -1/2*log(cos(2*x) + cosh(2*y)))
+% sin(2*x)/(cos(2*x) + cosh(2*y)), -sinh(2*y)/(cos(2*x) + cosh(2*y)),
+% -1/2*log(cos(2*x) + cosh(2*y)), -1/2*log(cos(2*x) + cosh(2*y))
 
+...TBC...Maybe add sinh, cosh, tanh \newline
 % Make tables of:
 % -small powers of z including -1,0,1,2,3, include f(z) = c = a + i b = const
 % -exponential: exp, pow, exp(i*z) -> important for Fourier series
@@ -128,6 +126,10 @@ $\cos(z)$  & $\cos(x) \cosh(y)$ & $\sin(x) \sinh(y)$  & $ \sin(x) \cosh(y)$     
 % -general formula for z^n, n >=  0  
 % -general formula for z^n, n <= -2
 % -If the table grows large, maybe split into powers, trig-funcs, exp/sinh/cosh/log
+
+\paragraph{Positive Integer Powers}
+We now want to derive expressions for the Polya vector field and potential a general positive integer power, i.e. for functions of the form $f(z) = z^n$.
+
 
 \section{Rules for Complicated Functions}
 Having tables for the Polya potentials of some basic elementary functions is well and good but often we have to deal with more complicated functions. For a given function $f$, we could just plug it into the little Sage script and see, what it produces. What we will discover is that things get messy really quick. Of course they do - after all, we are dealing with integrals here. Maybe you can get something more reasonable with other CAS systems like Mathematica or manually with some integration wizardry if you are a Richard Feynman type of person. You could perhaps deal with products using integration by parts or deal with composite functions using substitutions. But I want to go down some other route here. I will assume that our function $f(z)$ is given as some sort of combination (product, quotient or composition) of two other functions $g(z), h(z)$ for which we know a series expansion. I want to give formulas or algorithms to obtain a series expansion for $f$. This may actually be applicable in completely different contexts as well. From the so found series expansion of $f$, we can then find the corresponding Polya potential term-wise by using our tabulated expressions for simple functions like $z^n$. The setting is as follows:

@@ -167,3 +167,29 @@ u, v, U, V
 
 Sage can't even do the integrals in this case. Maybe the inverse functions are just too difficult to 
 handle?
+
+----------------------------------------------------------------------------------------------------
+Let's try w = 1/(1+z^2). We need two more assume statement to convice Sage to integrate it:
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+assume(y+1 > 0)
+assume(y-1 > 0)
+z = x + I*y
+w = 1/(1+z^2)                # function of interest
+u =  w.real() 
+v = -w.imag()
+U = integral(u, x)
+V = integral(v, y)
+u, v, U, V	
+
+This gives:
+
+u = (x^2 - y^2 + 1)/(4*x^2*y^2 + (x^2 - y^2 + 1)^2)
+v = 2*x*y/(4*x^2*y^2 + (x^2 - y^2 + 1)^2)
+U = 1/2*arctan(x/(y + 1)) - 1/2*arctan(x/(y - 1))
+V = 1/2*arctan(1/2*(x^2 + y^2 - 1)/x)
+
+...which seems again be an incompatible result. Figure out, why this happens. Try to find the 
+simplemost example function for which this happens.

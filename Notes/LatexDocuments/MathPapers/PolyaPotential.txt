@@ -107,7 +107,7 @@ of using the code above, let's try to manually integrate log(sqrt(x^2+y^2)) wrt 
 var("x y")
 assume(x, "real")
 assume(y, "real")
-u = log(sqrt(x^2+y^2))
+u = log(sqrt(x^2+y^2))     # ln(...) works just the same
 v = -atan(y/x)
 U = integral(u, x)
 V = integral(v, y)
@@ -150,6 +150,74 @@ U =  y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
 V = -y*arctan(y/x) + 1/2*x*log(y^2/x^2 + 1)
 C = U - V
 simplify(C)
+
+Let's verify if differentiating U and V does indeed give back our original u,v:
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+U =  y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
+V = -y*arctan(y/x) + 1/2*x*log(y^2/x^2 + 1)
+u = diff(U, x)
+v = diff(V, y)
+u, v
+
+This gives:
+
+u = x^2/(x^2 + y^2) + 1/(x^2/y^2 + 1) + 1/2*log(x^2 + y^2) - 1
+v = -arctan(y/x)
+
+v looks right by u looks wrong. It should be u = log(sqrt(x^2+y^2)). Let's evaluate both expressions
+for some given values of x,y:
+
+x = 2
+y = 3
+u1 = log(sqrt(x^2+y^2))
+u2 = x^2/(x^2 + y^2) + 1/(x^2/y^2 + 1) + 1/2*log(x^2 + y^2) - 1
+u1, N(u1), u2, N(u2)
+
+gives:
+
+u1 = log(sqrt(13)) = 1.28247467873077
+u2 = 1/2*log(13)   = 1.28247467873077
+
+So the expressions seem to be indeed equivalent. Let's check the Cauchy-Riemann condition:
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+u = log(sqrt(x^2+y^2))     # ln(...) works just the same
+v = -atan(y/x)
+uy = diff(u, y)
+vx = diff(v, x)
+uy, vx
+
+gives:
+
+   uy = y/(x^2 + y^2) 
+   vx = y/(x^2*(y^2/x^2 + 1))
+
+Which are equal - the vx expression can be simplified into uy. So, the CR condititions are verified.
+
+
+Maybe the algorithm to compute U,V by integrating
+u,v and then finding like terms does not always work. Try the algo from the Bärwolff book. It's also
+desribed here:
+
+https://mathinsight.org/conservative_vector_field_find_potential
+
+This text:
+
+https://www.andrew.cmu.edu/user/yuchingw/15-3-and-15-4-handout-z8e1g9.pdf
+
+says that it's sometimes easier to find a potential by combining \int f dx, \int g dy, \int h dz in 
+the 3D case. Maybe so far, we have only encountered such easy cases.
+
+
+
+
+
+
 
 ----------------------------------------------------------------------------------------------------
 Let's try w = sqrt(z)

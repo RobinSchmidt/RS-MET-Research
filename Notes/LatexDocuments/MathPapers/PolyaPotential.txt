@@ -213,9 +213,42 @@ https://www.andrew.cmu.edu/user/yuchingw/15-3-and-15-4-handout-z8e1g9.pdf
 says that it's sometimes easier to find a potential by combining \int f dx, \int g dy, \int h dz in 
 the 3D case. Maybe so far, we have only encountered such easy cases.
 
+The algo goes like this:
+
+We start with the two equations:
+
+  (1) dP/dx = u(x,y)
+  (2) dP/dy = v(x,y)
+
+and want to find P(x,y) such that (1) and (2) hold. To satisfy (1), we integrate (1) wrt x:
+
+  P(x,y) = U(x,y) + g(y)
+
+Where U(x,y) is the integral of u(x,y) wrt x and g(y) is an as of yet unknown function of y alone 
+which is our integration constant (it's constant wrt x). Now we differentiate the so found P wrt y 
+and equate it to our given v:
+
+  dP/dy = dU/dy + dg/dy = v(x,y)
+
+such that:
+
+   dg/dy = v(x,y) - dU/dy 
+   
+which gives us an expression for dg/dy. We can integrate the RHS wrt to y to find our unknown g(y).
+To find our potential, we add that found g to U. 
 
 
-
+var("x y")
+assume(x, "real")
+assume(y, "real")
+u  = log(sqrt(x^2+y^2))     # ln(...) works just the same
+v  = -atan(y/x)
+U  = integral(u, x)
+Uy = diff(U, y)      
+gy = v - Uy
+g  = integral(gy, y)
+P  = U + g
+P
 
 
 

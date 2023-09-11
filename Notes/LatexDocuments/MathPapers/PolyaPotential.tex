@@ -97,12 +97,15 @@ In this case, $U$ and $V$ were indeed exactly equal and we didn't have to collec
 \begin{center}
 \begin{tabular}{ |p{1cm}|p{3cm}|p{3cm}|p{5cm}|  }
 \hline
-$f(z)$     & $u(x,y)$         & $v(x,y)$        & $p(x,y)$  \\
+$f(z)$     & $u(x,y)$           & $v(x,y)$            & $p(x,y)$  \\
 \hline
-$a + \i b$ & $a$              & $-b$            & $a x - b y $      \\
-$z^2$      & $x^2 - y^2$      & $-2xy$          & $x^3/3 - xy^2 $   \\
-$1/z$      & $x/(x^2 + y^2)$  & $y/(x^2 + y^2)$ & $\ln(x^2+y^2)/2$  \\
-$e^z$      & $e^x \cos(y)$    & $-e^x \sin(y)$  & $e^x \cos(y) $    \\
+$a + \i b$ & $a$                & $-b$                & $a x - b y $         \\
+$z$        & $x$                & $-y$                & $(x^2 - y^2)/2 $     \\
+$z^2$      & $x^2 - y^2$        & $-2xy$              & $x^3/3 - xy^2 $      \\
+$z^3$      & $...$              & $...$               & $... $               \\
+$1/z$      & $x/(x^2 + y^2)$    & $y/(x^2 + y^2)$     & $\ln(x^2+y^2)/2$     \\
+$e^z$      & $e^x \cos(y)$      & $-e^x \sin(y)$      & $e^x \cos(y) $       \\
+$\sin(z)$  & $\sin(x) \cosh(y)$ & $-\cos(x) \sinh(y)$ & $-\cos(x) \cosh(y)$  \\
 \hline
 \end{tabular}
 \end{center}
@@ -112,9 +115,15 @@ $e^z$      & $e^x \cos(y)$    & $-e^x \sin(y)$  & $e^x \cos(y) $    \\
 % -exponential: exp, pow, exp(i*z) -> important for Fourier series
 % -trig: sin, cos, tan, cos/sin, 1/sin, 1/cos
 % -hyp: sinh, cosh, tanh, ...
-% -inverses: log, atan, asin
+% -inverses: log, atan, asin 
+%  ...for log it looks complicated - the U,V integrals don't seem to match. Maybe try to
+%  integrate -atan(y/x) wrt y instead of -atan2(y,x)
+%  ...gives: -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
+%  integrate log(sqrt(x^2+y^2)) wrt x
+%  ...gives:
 % -general formula for z^n, n >=  0  
 % -general formula for z^n, n <= -2
+% -If the table grows large, maybe split into powers, trig-funcs, exp/sinh/cosh/log
 
 \section{Rules for Complicated Functions}
 Having tables for the Polya potentials of some basic elementary functions is well and good but often we have to deal with more complicated functions. For a given function $f$, we could just plug it into the little Sage script and see, what it produces. What we will discover is that things get messy really quick. Of course they do - after all, we are dealing with integrals here. Maybe you can get something more reasonable with other CAS systems like Mathematica or manually with some integration wizardry if you are a Richard Feynman type of person. You could perhaps deal with products using integration by parts or deal with composite functions using substitutions. But I want to go down some other route here. I will assume that our function $f(z)$ is given as some sort of combination (product, quotient or composition) of two other functions $g(z), h(z)$ for which we know a series expansion. I want to give formulas or algorithms to obtain a series expansion for $f$. This may actually be applicable in completely different contexts as well. From the so found series expansion of $f$, we can then find the corresponding Polya potential term-wise by using our tabulated expressions for simple functions like $z^n$. The setting is as follows:

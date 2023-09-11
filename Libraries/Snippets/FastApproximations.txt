@@ -1,0 +1,74 @@
+Collected fast approximations of various math functions.
+
+
+----------------------------------------------------------------------------------------------------
+Approximations for ln(cosh(x))  from 2DaT posted here:
+
+https://www.kvraudio.com/forum/viewtopic.php?t=600521&start=37
+
+
+float tanh_anti(float v)
+{
+	float x = std::abs(v);
+
+	const float n0 = 6.241440625e+05f;
+	const float n1 = 3.185180313e+05f;
+	const float n2 = 4.529447656e+04f;
+	const float n3 = 1.958249634e+03f;
+	const float n4 = 2.016489601e+01f;
+	const float n5 = 2.147578076e-02f;
+
+	const float d0 = 1.248288125e+06f;
+	const float d1 = 8.450830000e+05f;
+	const float d2 = 1.759625469e+05f;
+	const float d3 = 1.251544629e+04f;
+	const float d4 = 2.586773682e+02f;
+
+	const float ln2 = 6.931471806e-01f;
+	const float limit = 7.81f;
+
+	float x_limit = std::min(x,limit);
+
+	float x2 = x_limit * x_limit;
+
+
+	float num = n5 * x2 + n4;
+	num = num * x2 + n3;
+	num = num * x2 + n2;
+	num = num * x2 + n1;
+	num = num * x2 + n0;
+
+	num *= x2;
+
+	float den = x2 + d4;
+	den = den * x2 + d3;
+	den = den * x2 + d2;
+	den = den * x2 + d1;
+	den = den * x2 + d0;
+
+
+	float line = x - ln2;
+	float abs_val = std::max((num / den),line);
+	return abs_val;
+}
+
+double tanh_antii(double x)
+{
+	if ( abs(x) > 1e-9 )
+	{
+		double coshm1 = (std::expm1(x) + std::expm1(-x)) * 0.5;
+		return std::log1p(coshm1);
+	}
+	else
+	{
+		double x2 = x * x;
+
+		return x2* (0.5 + 1.0 / 12 * x2 + 1.0 / 45 * x2 * x2);
+	}
+}
+
+double tanh_antii(double x)
+{
+    double coshm1 = (std::expm1(x) + std::expm1(-x)) *0.5;
+    return std::log1p(coshm1);
+}

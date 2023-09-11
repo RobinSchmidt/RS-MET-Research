@@ -12579,6 +12579,16 @@ void plotZetaPotential()
   // -Q: Could it be that each trivial zero is connected to a nontrivial one by some sort of 
   //  ridge? Maybe try to find geodesics between trivial and nontrivial zeros.
 
+  // ToDo:
+  // -Write a function that can produce geodesics. It should take as:
+  //    Input:  -3 2D arrays of x(u,v), y(u,v), z(u,v) that defines the surface
+  //            -2 points on the surface p1 = (x1,y1,z1), p2 = (x2,y2,z2)
+  //            -a number N determining how many samples we take along the geodesic
+  //  and produce as:
+  //    Output: -an array of N points that are on the geodesic and connect p1 and p2
+  //  Ideally, the distances between the sample points should be kinda equally spaced
+  // -Use that function to plot the geodesics between the critical points of the Polya potential of
+  //  zeta.
 }
 
 void plotZetaPotentialNumeric()

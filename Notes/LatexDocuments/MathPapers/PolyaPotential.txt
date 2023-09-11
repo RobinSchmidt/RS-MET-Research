@@ -89,34 +89,62 @@ v = -w.imag()
 U = integral(u, x)
 V = integral(v, y)
 u, v, U, V	 
- 
- 
+  
 ----------------------------------------------------------------------------------------------------
-For w = log(z), the result looks complicated. The U,V integrals don't seem to match. Maybe try to 
-integrate -atan(y/x) wrt y instead of -atan2(y,x). Maybe also verify the Cauchy-Riemann equation for 
-log.
+For w = log(z), the U,V integrals don't seem to match. And I'm not talking about the integration 
+constants here. The results of both integrations seem to be incompatible. How can this be? The code
+above produces:
 
-Try to find the Polya potential by integrating u wrt x:
+  u = log(abs(x + I*y))
+  v = -arctan2(y, x)
+  U = I*y*log(x + I*y) + x*log(abs(x + I*y)) - x
+  V = -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
+
+and I think, the expressions for U and V are not compatible. There's even an I in U. Maybe instead 
+of using the code above, let's try to manually integrate log(sqrt(x^2+y^2)) wrt x and 
+-atan(y/x) wrt y:
 
 var("x y")
 assume(x, "real")
 assume(y, "real")
 u = log(sqrt(x^2+y^2))
-U = integral(u, x)
-U
-
-y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
-
-
-Try to find the Polya potential by integrating v wrt y:
-
-var("x y")
-assume(x, "real")
-assume(y, "real")
 v = -atan(y/x)
+U = integral(u, x)
 V = integral(v, y)
-V
+U, V
 
--1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
+This produces:
 
-...the results are indeed different! How can this be?
+  U =  y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
+  V = -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
+
+The results are indeed different! And I don't really think, they are equivalent. Let's try evaluate 
+them both for some values of x,y:
+
+x = 2
+y = 3
+U =  y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
+V = -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
+U, V, N(U), N(V)
+
+This gives U = 2.328..., V = -1.769... so the expressions are indeed different. What's going on? 
+Maybe log is not analytic? Nah! But maybe verify the Cauchy-Riemann equation for log. But wait! 
+Unequal results do not necessarily mean that they are incompatible. It could still be that they have 
+some common term plus a different integration constant each. Let's try to bring V into the form of 
+U:
+
+U =  y*arctan(x/y) + 1/2*x*log(x^2 + y^2) - x
+V = -1/2*x*(2*y*arctan(y/x)/x - log(y^2/x^2 + 1))
+  = (-1/2*x*2*y*arctan(y/x)/x - -1/2*x*log(y^2/x^2 + 1))
+  = -y*arctan(y/x) + 1/2*x*log(y^2/x^2 + 1)
+
+Maybe the expressions are indeed compatible but we don't get a clean seperation between the "common 
+part" and the "integration constants" in the sense that both parts are terms in a sum? Maybe 
+everything gets tangled up? Can we untangle it? Maybe subtract V from U and/or U from V. That should
+cancel the "common part" and leave only the integration constants (but with negative sign for the 
+subtrcated part)
+
+
+
+Also try 
+sqrt(z)

@@ -12029,26 +12029,11 @@ void testPolyaPotenialFormulas()
     if(n >= 0)
     {
       m = rsPotentialCoeffsComplexPower(n, c, xP, yP);
-
-      /*
-      Real L, R, A, B; // left, right, above, below
-      L = rsEvaluateBivariatePolynomial(x-h, y, m, c, xP, yP);
-      R = rsEvaluateBivariatePolynomial(x+h, y, m, c, xP, yP);
-      B = rsEvaluateBivariatePolynomial(x, y-h, m, c, xP, yP);
-      A = rsEvaluateBivariatePolynomial(x, y+h, m, c, xP, yP);
-      u = (R-L) / (2*h);
-      v = (A-B) / (2*h);
-      */
-
       auto P = [&](Real x, Real y) // Function to evaluate the potential P
       {
         return rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
       };
       partialDerivatives(P, x, y, h, h, &u, &v);
-
-      // Test:
-      err =  w.real() - u;  ok &= abs(err) <= tol;
-      err = -w.imag() - v;  ok &= abs(err) <= tol;
     }
     else if(n == -1)
     {
@@ -12056,24 +12041,7 @@ void testPolyaPotenialFormulas()
       {
         return 0.5 * log(x*x + y*y);
       };
-
-      /*
-      Real L, R, A, B; // left, right, above, below
-      L = P(x-h, y);
-      R = P(x+h, y);
-      B = P(x, y-h);
-      A = P(x, y+h);
-      u = (R-L) / (2*h);
-      v = (A-B) / (2*h);
-      // Maybe factor out duplicated code into function
-      // getNumericalPartialDerivatives(P, x, y, h, &u, &v)
-      */
-
       partialDerivatives(P, x, y, h, h, &u, &v);
-
-      // Test:
-      err =  w.real() - u;  ok &= abs(err) <= tol;
-      err = -w.imag() - v;  ok &= abs(err) <= tol;
     }
     else
     {
@@ -12085,74 +12053,22 @@ void testPolyaPotenialFormulas()
         Real den = (n-1) * pow(x*x + y*y, n-1);
         return num / den;
       };
-
-      // Compute the numerical derivatives again:
-
-      /*
-      Real L, R, A, B; // left, right, above, below
-      L = P(x-h, y);
-      R = P(x+h, y);
-      B = P(x, y-h);
-      A = P(x, y+h);
-      u = (R-L) / (2*h);
-      v = (A-B) / (2*h);
-      // Maybe factor out duplicated code into function
-      // getNumericalPartialDerivatives(P, x, y, h, &u, &v)
-      */
-
       partialDerivatives(P, x, y, h, h, &u, &v);
-
-      // Test:
-      err =  w.real() - u;  ok &= abs(err) <= tol;
-      err = -w.imag() - v;  ok &= abs(err) <= tol;
     }
 
-
+    err =  w.real() - u;  ok &= abs(err) <= tol;
+    err = -w.imag() - v;  ok &= abs(err) <= tol;
     return ok;
   };
 
-
-
-
-  // Test formulas for powers:
-  //int n = 3;
-
   bool ok = true;
 
-
-
-  /*
-  // Nonnegative exponents:
-  for(int n = 0; n <= 5; n++)
-  {
-    ok &= testPowerField(    3.0, 2.0, n);
-    ok &= testPowerPotential(3.0, 2.0, n);
-  }
-
-  ok &= testPowerField(    3.0, 2.0, -1);
-  ok &= testPowerPotential(3.0, 2.0, -1);
-
-  // Negative exponents > 1
-  for(int n = 2; n <= 5; n++)
-  {
-    ok &= testPowerField(    3.0, 2.0, -n);
-    ok &= testPowerPotential(3.0, 2.0, -n);
-  }
-  */
-
-
-  // This loop an now replace everything above:
+  // Test the formulas for exponents in -5...+5:
   for(int n = -5; n <= +5; n++)
   {
     ok &= testPowerField(    3.0, 2.0, n);
     ok &= testPowerPotential(3.0, 2.0, n);
   }
-
-
-
-
-
-  // ToDo: n = -1, later, test it all in one loop from -5...+5
 
 
   int dummy = 0; 

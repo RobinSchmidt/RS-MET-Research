@@ -302,7 +302,12 @@ should produce:
 
 (* {{f[x, y] -> E^(3 y)/3 + x^2 y + C[1] + Cos[x]}} *)
 
-...but not really in Wolfram Alpha. Maybe try in Mathematica itself.
+...but not really in Wolfram Alpha. But it works in Wolfram Cloud. OK, so let's now try the same 
+technique with our actual function of interest..
+
+DSolve[{D[f[x, y], x] == Log[Sqrt[x^2 + y^2]], D[f[x, y], y] == -ArcTan[y/x] }, f[x, y], {x, y}]
+
+...this just gives the input back as output. Apparently Mathematica can't do it.
 
 ----------------------------------------------------------------------------------------------------
 Let's try w = sqrt(z)

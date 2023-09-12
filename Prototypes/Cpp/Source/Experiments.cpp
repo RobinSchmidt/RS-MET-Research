@@ -13077,10 +13077,34 @@ void testPotentialPlotter()
   using R  = Real;
   using PE = rsPolyaPotentialEvaluator<Real>;
 
+  plotA([](R x, R y) { return PE::sin(x, y); }, -2*PI, +2*PI, -2, +2, 1001, 401, 
+    "PolyPotential_zSin.ppm");
+
+  plotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -1, +1, 601, 601, 
+    "PolyPotential_zExp.ppm");
+
+  plotA([](R x, R y) { return PE::power(x, y, -1); }, -1, +1, -1, +1, 601, 601, 
+    "PolyPotential_z^-1.ppm");
+
+  plotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 601, 601, 
+    "PolyPotential_z^0.ppm");
+
+  plotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 601, 601, 
+    "PolyPotential_z^1.ppm");
+
+  plotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 601, 601, 
+    "PolyPotential_z^2.ppm");
+
   plotA([](R x, R y) { return PE::square(x, y); }, -1, +1, -1, +1, 601, 601, 
-    "PolyPotential_zSquaredA.ppm");
+    "PolyPotential_zSquared.ppm");
   // With an even number of contours, we see (almost) the vertical contours along the imaginary
   // axis. With an odd number, it looks visually better. Try 24 vs 25.
+
+
+
+
+  // write a function a*z for a complex a
+
 
 
   // With this example, I have taken some data for how many iterations the iterative solver needed
@@ -13097,6 +13121,7 @@ void testPotentialPlotter()
   // Iteration counts for z^2 for a range of x = -1..+1, y = -1..+1 and an image size of 101x101:
   // w:  1.0  1.5  1.6  1.7  1.8 1.9 1.95
   // N:  3148 1791 1483 1164 825 450 FAIL
+
 
 
   plotN([](C z) { return z*z;   }, -1, +1, -1, +1, 31, 31, "PolyPotential_zSquaredN.ppm");
@@ -13126,7 +13151,7 @@ void testPotentialPlotter()
   //  exactly *on* the branch cut may help to get rid of the ripple. But that doesn't seem to 
   //  make a difference
 
-  plotN([](C z) { return log(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_LogN.ppm");
+  //plotN([](C z) { return log(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_LogN.ppm");
   // doesn't converge
 
   //img = plt.getPolyaPotentialImage([](C z) { return pow(z, 1./3.); }, -1, +1, -1, +1, 32, 32);

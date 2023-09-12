@@ -11939,7 +11939,7 @@ template<class Tx, class Ty, class F>
 void partialDerivatives(const F& f, const Tx& x, const Tx& y, 
   const Tx& hx, const Tx& hy, Ty* f_x, Ty* f_y)
 {
-  Tx L, R, A, B; // left, right, above, below
+  Ty L, R, A, B; // left, right, above, below
   L = f(x-hx, y);
   R = f(x+hx, y);
   B = f(x, y-hy);
@@ -12030,6 +12030,7 @@ void testPolyaPotenialFormulas()
     {
       m = rsPotentialCoeffsComplexPower(n, c, xP, yP);
 
+      /*
       Real L, R, A, B; // left, right, above, below
       L = rsEvaluateBivariatePolynomial(x-h, y, m, c, xP, yP);
       R = rsEvaluateBivariatePolynomial(x+h, y, m, c, xP, yP);
@@ -12037,6 +12038,13 @@ void testPolyaPotenialFormulas()
       A = rsEvaluateBivariatePolynomial(x, y+h, m, c, xP, yP);
       u = (R-L) / (2*h);
       v = (A-B) / (2*h);
+      */
+
+      auto P = [&](Real x, Real y) // Function to evaluate the potential P
+      {
+        return rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+      };
+      partialDerivatives(P, x, y, h, h, &u, &v);
 
       // Test:
       err =  w.real() - u;  ok &= abs(err) <= tol;

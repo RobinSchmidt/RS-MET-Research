@@ -7228,6 +7228,47 @@ T rsEvaluateBivariatePolynomial(T x, T y, int m, T* coeffs, int* xPowers, int* y
 // coeffs as matrix which is overkill here because most entries would be zero.
 
 
+/** Computes the Polya vector field u(x,y), v(x,y) for for the integer power function f(z) = z^n 
+where n is an integer. */
+template<class T>
+void rsPolyaFieldPower(T x, T y, int n, T* u, T* v)
+{
+  static const int maxN = 20;
+  T   c[maxN];        // polynomial coeffs for u
+  int xP[maxN];       // exponents/powers for x values
+  int yP[maxN];       // exponents/powers for y values
+  int m;              // number of terms
+
+  // Compute real part:
+  m  = rsRealCoeffsComplexPower(abs(n), c, xP, yP);
+  *u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+
+  // Compute imag part (negated because we want the Polya vector field):
+  m  = rsImagCoeffsComplexPower(abs(n), c, xP, yP);
+  *v = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+
+  // For negative exponents, the result has to be divided by u^2 + v^2:
+  T s = 1;
+  if(n == -1)
+  {
+    s = 1 / (x*x + y*y);
+    *u = s*x;
+    *v = s*y;
+  }
+  else if(n < 0)
+  {
+    s  = 1 / (*u * *u + *v * *v);
+    *u *=  s;
+    *v *= -s;  // Minus is needed. But why?
+  }
+}
+
+
+
+
+
+
+
 //=================================================================================================
 
 /** A class that implements various algorithms to evaluate the Riemann zeta function for complex 

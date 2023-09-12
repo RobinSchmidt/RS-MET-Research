@@ -11949,6 +11949,10 @@ void partialDerivatives(const F& f, const Tx& x, const Tx& y,
 }
 // May eventually go into rsNumericDifferentiator
 
+
+
+
+
 void testPolyaPotenialFormulas()
 {
   // Uses:
@@ -12001,6 +12005,9 @@ void testPolyaPotenialFormulas()
       u *=  s;
       v *= -s;  // Minus is needed. But why?
     }
+
+    rsPolyaFieldPower(x, y, n, &u, &v);
+
 
     // Test:
     err =  w.real() - u;  ok &= abs(err) <= tol;

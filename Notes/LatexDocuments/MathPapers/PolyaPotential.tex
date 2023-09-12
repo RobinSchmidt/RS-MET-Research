@@ -144,17 +144,17 @@ w.real(), w.imag()
 \end{verbatim}
 This code gives the following results for \texttt{n = 0..7}:
 \begin{verbatim}
-	n  Real                                      Imag
-	0: 1,                                        0 
-	1: x,                                        y
-	2: x^2 - y^2,                                2*x*y
-	3: x^3 - 3*x*y^2,                            3*x^2*y - y^3
-	4: x^4 - 6*x^2*y^2  + y^4,                   4*x^3*y - 4*x*y^3
-	5: x^5 - 10*x^3*y^2 + 5*x*y^4,               5*x^4*y - 10*x^2*y^3 + y^5
-	6: x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      6*x^5*y - 20*x^3*y^3 + 6*x*y^5
-	7: x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
+n  Real                                      Imag
+0: 1,                                        0 
+1: x,                                        y
+2: x^2 - y^2,                                2*x*y
+3: x^3 - 3*x*y^2,                            3*x^2*y - y^3
+4: x^4 - 6*x^2*y^2  + y^4,                   4*x^3*y - 4*x*y^3
+5: x^5 - 10*x^3*y^2 + 5*x*y^4,               5*x^4*y - 10*x^2*y^3 + y^5
+6: x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+7: x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
 \end{verbatim}
-We always take binomial coeffs from the $n$-th line of Pascal's triangle. The coeffs of each line go alternatingly into the real and imaginary part. Within these parts, there's also a sign alternation. They multiply terms of the form $x^k y^{n-k}$ where $k$ starts at $n$ in the real part and at $n-1$ in the imaginary part and decrements by $2$ from term to term. We can make general formulas from these observations (these formulas aren't supposed to be obvious and took me quite a while to figure out):
+Note that here, we have not yet negated the imaginary parts, so we'll have to do that later. We always take binomial coeffs from the $n$-th line of Pascal's triangle. The coeffs of each line go alternatingly into the real and imaginary part. Within these parts, there's also a sign alternation. They multiply terms of the form $x^k y^{n-k}$ where $k$ starts at $n$ in the real part and at $n-1$ in the imaginary part and decrements by $2$ from term to term. We can make general formulas from these observations (these formulas aren't supposed to be obvious and took me quite a while to figure out):
 \begin{equation}
 \label{Eq:PolyaFieldPositivePowers}
 \boxed{		
@@ -183,6 +183,87 @@ We can in general just always use $V_n(x,y)$ and add to it a $x^{n+1}/(n+1)$ ter
 	-\sum_{k=0}^{(n-1)/2} \binom{n}{2k+1} \frac{(-1)^k x^{n-(2k+1)} y^{2k+2}}{2k+2}
 }
 \end{equation}
+
+\subsection{Negative Integer Powers}
+Let's now derive expressions for the Polya vector field and potential a general negative integer power, i.e. for functions of the form $f(z) = 1/z^n = z^{-n}$.
+
+  
+
+We will again try a couple of examples and try to spot the patterns. We'll use this script:
+\begin{verbatim}
+n = 3                     # exponent without the minus sign
+var("x y")
+assume(x, "real")
+assume(y, "real")
+z = x + I*y
+w = 1 / z^n               # function of interest
+u =  w.real() 
+v = -w.imag()
+U = integral(u, x)
+V = integral(v, y)
+u, v, U, V
+\end{verbatim}
+This code produces the result:
+\begin{verbatim}
+u = (x^3 - 3*x*y^2)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2)
+v = (3*x^2*y - y^3)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2)
+U = V = -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4)
+\end{verbatim}
+We observe that for $u$ and $v$, we get rational functions with equal denominators. Let's produce more results for \texttt{n = 2..6} and look at the numerators of $u$ and $v$ as well as at the common denominators. Numerators first:
+\begin{verbatim}
+n  Numerator of u                                  Numerator of v
+2  x^2 - y^2                                       2*x*y                         
+3  x^3 - 3*x*y^2                                   3*x^2*y - y^3                  
+4  x^4 - 6*x^2*y^2  + y^4                          4*x^3*y - 4*x*y^3
+5  x^5 - 10*x^3*y^2 + 5*x*y^4                      5*x^4*y - 10*x^2*y^3 + y^5
+6  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6             6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+\end{verbatim}
+The denominators are:
+\begin{verbatim}
+n  Denominator
+2  (x^2 - y^2)^2                           +  4*x^2*y^2
+3  (x^3 - 3*x*y^2)^2                       + (3*x^2*y - y^3)^2
+4  (x^4 - 6*x^2*y^2 + y^4)^2               + 16*(x^3*y - x*y^3)^2
+5  (x^5 - 10*x^3*y^2 + 5*x*y^4)^2          + (5*x^4*y - 10*x^2*y^3 + y^5)^2
+6  (x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6)^2 + 4*(3*x^5*y - 10*x^3*y^3 + 3*x*y^5)^2
+\end{verbatim}
+And finally, the potentials:
+\begin{verbatim}
+n  Potential
+2  -x / (x^2 + y^2)
+3  -1/2*(x^2 - y^2) / (x^4 + 2*x^2*y^2 + y^4)
+4  -1/3*(x^3 - 3*x*y^2) / (x^6 + 3*x^4*y^2 + 3*x^2*y^4 + y^6)
+5  -1/4*(x^4 - 6*x^2*y^2 + y^4) / (x^8 + 4*x^6*y^2 + 6*x^4*y^4 + 4*x^2*y^6 + y^8)
+6  -1/5*(x^5 - 10*x^3*y^2 + 5*x*y^4)  / 
+        (x^10 + 5*x^8*y^2 + 10*x^6*y^4 + 10*x^4*y^6 + 5*x^2*y^8 + y^10)
+\end{verbatim}
+Looks like the numerators of real and imaginary parts are exactly as in the corresponding positive powers of $z$? And the denominator is always $u^2 + v^2$? And in the potential, the denominator is $(x^2 + y^2)^{n-1}$. And the numerator of the $n$-th line is the same as the real part of the $(n-1)$-th line and the whole thing is divided by $n-1$?  So, I think, the general formulas for the Polya vector field and potential for $f(z) = 1/z^n$ are:
+
+\begin{equation}
+\label{Eq:PolyaFieldNegativePowers}
+\boxed
+{		
+\tilde{u}_n(x,y) = \frac{u_n}{u_n^2 + v_n^2} ,\;
+\tilde{v}_n(x,y) = \frac{v_n}{u_n^2 + v_n^2} ,\quad
+\tilde{P}_n(x,y) = \frac{-u_{n-1}}{(n-1)(x^2+y^2)^{n-1}}
+}
+\end{equation}
+where $u_n, v_n$ are the expressions for the corresponding positive power. It turns out that the case for $n=1$ doesn't follow the pattern, so we treat it separately. The result is actually already included in the table further above
+
+% $1/z$      & $x/(x^2 + y^2)$    & $y/(x^2 + y^2)$     & $\ln(x^2+y^2)/2$  
+
+
+[...but these formulas need to be verified. Do it numerically! Maybe move the Sage derivations into an appendix and keep only the results in the main text. Maybe instead of the tilde, use $u_{-n}$ etc.]
+
+% 
+
+
+
+
+
+%$1/z$      & $x/(x^2 + y^2)$    & $y/(x^2 + y^2)$     & $\ln(x^2+y^2)/2$  
+
+
 
 
 \section{Rules for Complicated Functions}
@@ -219,10 +300,6 @@ For a function $f$ that results from composing (aka nesting or chaining) two fun
 
 % mention building Polya potententials from Talyor sereis, Laurent series, and Fourier series
 % partial fraction expansions for rational functions
-
-
-
-
 
 
 

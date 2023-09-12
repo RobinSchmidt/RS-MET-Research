@@ -11966,7 +11966,7 @@ void testPolyaPotenialFormulas()
 
   static const int maxN = 10;  // maximal power allowed - get rid!
 
-  // Tests the power formula, i.e. the formula for computing the vector field for f(z) = z^n:
+  // Tests the formula for computing the vector field for f(z) = z^n:
   auto testPowerField = [](Real x, Real y, int n)
   {
     // Compute the power directly and via the function rsPolyaFieldPower:
@@ -11984,79 +11984,36 @@ void testPolyaPotenialFormulas()
     return ok;
   };
 
-
+  // Tests the formula for computing the potential field for f(z) = z^n:
   auto testPowerPotential = [](Real x, Real y, int n)
   {
-    bool ok  = true;
-    Complex z(x, y);
-    Complex w = pow(z, n);
-
-    Real c[maxN];        // polynomial coeffs for u
-    int  xP[maxN];       // exponents/powers for x values
-    int  yP[maxN];       // exponents/powers for y values
-    int  m;              // number of terms
+    // Compute numerical derivatives of the potential:
+    Real h = 0.0001;   // stepsize for numerical derivative
     Real u, v;
-    Real err;
-
-    // We us numerical derivatives of the potential...
-    Real tol = 1.e-5;    // we need a higher tolerance for this
-    Real h   = 0.0001;   // stepsize for numerical derivative
-
-    /*
-    if(n >= 0)
-    {
-      m = rsPotentialCoeffsComplexPower(n, c, xP, yP);
-      auto P = [&](Real x, Real y) // Function to evaluate the potential P
-      {
-        return rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-      };
-      partialDerivatives(P, x, y, h, h, &u, &v);
-    }
-    else if(n == -1)
-    {
-      auto P = [&](Real x, Real y) // Function to evaluate the potential P
-      {
-        return 0.5 * log(x*x + y*y);
-      };
-      partialDerivatives(P, x, y, h, h, &u, &v);
-    }
-    else
-    {
-      n = -n;  // make sign positive
-      m = rsRealCoeffsComplexPower(n-1, c, xP, yP);
-      auto P = [&](Real x, Real y) // Function to evaluate the potential P
-      {
-        Real num = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-        Real den = (n-1) * pow(x*x + y*y, n-1);
-        return num / den;
-      };
-      partialDerivatives(P, x, y, h, h, &u, &v);
-    }
-    */
-
-
-
     auto P = [&](Real x, Real y) // Function to evaluate the potential P
     {
       return rsPolyaPotentialPower(x, y, n);
     };
     partialDerivatives(P, x, y, h, h, &u, &v);
 
-
+    // Compare to reference computation:
+    Complex z(x, y);
+    Complex w = pow(z, n);
+    Real err;
+    Real tol = 1.e-5;    // we need a higher tolerance for this
+    bool ok  = true;
     err =  w.real() - u;  ok &= abs(err) <= tol;
     err = -w.imag() - v;  ok &= abs(err) <= tol;
     return ok;
   };
 
-  bool ok = true;
-
   // Test the formulas for exponents in -5...+5:
+  bool ok = true;
   for(int n = -5; n <= +5; n++)
   {
     ok &= testPowerField(    3.0, 2.0, n);
     ok &= testPowerPotential(3.0, 2.0, n);
   }
-
 
   int dummy = 0; 
 }

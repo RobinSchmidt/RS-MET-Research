@@ -11936,6 +11936,7 @@ void testMerge()
 
 void testPolyaPotenialFormulas()
 {
+  // Uses:
   // rsRealCoeffsComplexPower, rsImagCoeffsComplexPower - called in vectorFieldViaLaurentSeries
   // rsPotentialCoeffsComplexPower -  called in potentialViaLaurentSeries
 
@@ -11960,18 +11961,15 @@ void testPolyaPotenialFormulas()
     int  m;              // number of terms
     Real u, v;
     Real err;
-
-
     Real tol = 1.e-12;
-
 
     // Compute real part:
     m = rsRealCoeffsComplexPower(abs(n), c, xP, yP);
     u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
 
-    // Compute imag part:
+    // Compute imag part (negated because we want the Polya vector field):
     m = rsImagCoeffsComplexPower(abs(n), c, xP, yP);
-    v = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP); // - bcs we want the Polya vector field
+    v = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
 
     // For negative exponents, the result has to be divided by u^2 + v^2:
     Real s = 1;
@@ -11980,23 +11978,18 @@ void testPolyaPotenialFormulas()
     {
       s = 1 / (x*x + y*y);
       u = s*x;
-      v = s*y;  // Or maybe we need a minus here, too? ...nope - works without
+      v = s*y;
     }
     else if(n < 0)
     {
       s  = 1 / (u*u + v*v);
-      u *= s;
-      //v *= s;  
-      v *= -s;  // Yes! Minus is needed. But why?
+      u *=  s;
+      v *= -s;  // Minus is needed. But why?
     }
-    // ToDo: treat special case n = -1
 
     // Test:
     err =  w.real() - u;  ok &= abs(err) <= tol;
     err = -w.imag() - v;  ok &= abs(err) <= tol;
-          // Todo: compare to -w.imag for consistency, i.e. use err = -w.imag() - v;
-
-
     return ok;
   };
 
@@ -12036,7 +12029,24 @@ void testPolyaPotenialFormulas()
     }
     else if(n == -1)
     {
+      auto P = [&](Real x, Real y) // Function to evaluate the potential P
+      {
+        return 0.5 * log(x*x + y*y);
+      };
 
+      Real L, R, A, B; // left, right, above, below
+      L = P(x-h, y);
+      R = P(x+h, y);
+      B = P(x, y-h);
+      A = P(x, y+h);
+      u = (R-L) / (2*h);
+      v = (A-B) / (2*h);
+      // Maybe factor out duplicated code into function
+      // getNumericalPartialDerivatives(P, x, y, h, &u, &v)
+
+      // Test:
+      err =  w.real() - u;  ok &= abs(err) <= tol;
+      err = -w.imag() - v;  ok &= abs(err) <= tol;
     }
     else
     {
@@ -12057,12 +12067,14 @@ void testPolyaPotenialFormulas()
       A = P(x, y+h);
       u = (R-L) / (2*h);
       v = (A-B) / (2*h);
+      // Maybe factor out duplicated code into function
+      // getNumericalPartialDerivatives(P, x, y, h, &u, &v)
+
 
       // Test:
       err =  w.real() - u;  ok &= abs(err) <= tol;
       err = -w.imag() - v;  ok &= abs(err) <= tol;
     }
-    // Treat special case n = -1
 
 
     return ok;
@@ -12086,7 +12098,8 @@ void testPolyaPotenialFormulas()
     ok &= testPowerPotential(3.0, 2.0, n);
   }
 
-  ok &= testPowerField(3.0, 2.0, -1);
+  ok &= testPowerField(    3.0, 2.0, -1);
+  ok &= testPowerPotential(3.0, 2.0, -1);
 
   // Negative exponents > 1
   for(int n = 2; n <= 5; n++)

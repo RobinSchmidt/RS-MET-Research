@@ -11964,7 +11964,7 @@ void testPolyaPotenialFormulas()
   using Poly    = RAPT::rsPolynomial<Real>;
   using Vec     = std::vector<Real>;
 
-  static const int maxN = 10;  // maximal power allowed - get rid!
+  //static const int maxN = 10;  // maximal power allowed - get rid!
 
   // Tests the formula for computing the vector field for f(z) = z^n:
   auto testPowerField = [](Real x, Real y, int n)
@@ -12013,6 +12013,13 @@ void testPolyaPotenialFormulas()
   }
 
   int dummy = 0; 
+
+  // ToDo:
+  // -Figure out and document what the limits for n are. In the implementation we work with static
+  //  arrays of some fixed length given by some maxN. Maybe implement the functions using a 
+  //  workspace and let a convenience function use a std::vector for that workspace.
+  // -Implement more functions to compute Polya vector fields and potentials for other kinds of 
+  //  functions. Create contour plots of such functions.
 }
 
 void testRiemannZeta()

@@ -243,9 +243,9 @@ Looks like the numerators of real and imaginary parts are exactly as in the corr
 \label{Eq:PolyaFieldNegativePowers}
 \boxed
 {		
-\tilde{u}_n(x,y) = \frac{u_n}{u_n^2 + v_n^2} ,\;
-\tilde{v}_n(x,y) = \frac{v_n}{u_n^2 + v_n^2} ,\quad
-\tilde{P}_n(x,y) = \frac{-u_{n-1}}{(n-1)(x^2+y^2)^{n-1}}
+u_{-n}(x,y) = \frac{u_n}{u_n^2 + v_n^2} ,\;
+v_{-n}(x,y) = \frac{v_n}{u_n^2 + v_n^2} ,\quad
+P_{-n}(x,y) = \frac{-u_{n-1}}{(n-1)(x^2+y^2)^{n-1}}
 }
 \end{equation}
 where $u_n, v_n$ are the expressions for the corresponding positive power. It turns out that the case for $n=1$ doesn't follow the pattern, so we treat it separately. The result is actually already included in the table further above
@@ -253,7 +253,7 @@ where $u_n, v_n$ are the expressions for the corresponding positive power. It tu
 % $1/z$      & $x/(x^2 + y^2)$    & $y/(x^2 + y^2)$     & $\ln(x^2+y^2)/2$  
 
 
-[...but these formulas need to be verified. Do it numerically! Maybe move the Sage derivations into an appendix and keep only the results in the main text. Maybe instead of the tilde, use $u_{-n}$ etc.]
+[Maybe move the Sage derivations into an appendix and keep only the results in the main text.]
 
 % 
 

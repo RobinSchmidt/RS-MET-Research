@@ -11975,7 +11975,12 @@ void testPolyaPotenialFormulas()
 
     // For negative exponents, the result has to be divided by u^2 + v^2:
     Real s = 1;
-    if(n < 0)
+
+    if(n == -1)
+    {
+      // ....
+    }
+    else if(n < 0)
     {
       s  = 1 / (u*u + v*v);
       u *=  s;
@@ -11986,10 +11991,6 @@ void testPolyaPotenialFormulas()
     // Test:
     err = w.real() - u;  ok &= abs(err) <= tol;
     err = w.imag() - v;  ok &= abs(err) <= tol;
-
-
-
-
     return ok;
   };
 
@@ -12027,6 +12028,10 @@ void testPolyaPotenialFormulas()
       err =  w.real() - u;  ok &= abs(err) <= tol;
       err = -w.imag() - v;  ok &= abs(err) <= tol;
     }
+    else if(n == -1)
+    {
+
+    }
     else
     {
       n = -n;  // make sign positive
@@ -12051,6 +12056,7 @@ void testPolyaPotenialFormulas()
       err =  w.real() - u;  ok &= abs(err) <= tol;
       err = -w.imag() - v;  ok &= abs(err) <= tol;
     }
+    // Treat special case n = -1
 
 
     return ok;

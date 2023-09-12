@@ -11964,52 +11964,21 @@ void testPolyaPotenialFormulas()
   using Poly    = RAPT::rsPolynomial<Real>;
   using Vec     = std::vector<Real>;
 
-  static const int maxN = 10;  // maximal power allowed
+  static const int maxN = 10;  // maximal power allowed - get rid!
 
-
-  // Tests the power formula, i.e. the formual for computing the vector field for f(z) = z^2:
+  // Tests the power formula, i.e. the formula for computing the vector field for f(z) = z^n:
   auto testPowerField = [](Real x, Real y, int n)
   {
-    bool ok = true;
+    // Compute the power directly and via the function rsPolyaFieldPower:
     Complex z(x, y);
     Complex w = pow(z, n);
-
-    Real c[maxN];        // polynomial coeffs for u
-    int  xP[maxN];       // exponents/powers for x values
-    int  yP[maxN];       // exponents/powers for y values
-    int  m;              // number of terms
     Real u, v;
-    Real err;
-    Real tol = 1.e-12;
-
-    // Compute real part:
-    m = rsRealCoeffsComplexPower(abs(n), c, xP, yP);
-    u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-
-    // Compute imag part (negated because we want the Polya vector field):
-    m = rsImagCoeffsComplexPower(abs(n), c, xP, yP);
-    v = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-
-    // For negative exponents, the result has to be divided by u^2 + v^2:
-    Real s = 1;
-
-    if(n == -1)
-    {
-      s = 1 / (x*x + y*y);
-      u = s*x;
-      v = s*y;
-    }
-    else if(n < 0)
-    {
-      s  = 1 / (u*u + v*v);
-      u *=  s;
-      v *= -s;  // Minus is needed. But why?
-    }
-
     rsPolyaFieldPower(x, y, n, &u, &v);
 
-
-    // Test:
+    // Test, if the two computations deliver the same result:
+    Real err;
+    Real tol = 1.e-12;
+    bool ok  = true;
     err =  w.real() - u;  ok &= abs(err) <= tol;
     err = -w.imag() - v;  ok &= abs(err) <= tol;
     return ok;

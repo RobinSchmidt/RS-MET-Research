@@ -12020,33 +12020,35 @@ void testPolyaPotenialFormulas()
   typedef void (*VecField)(Real, Real, Real*, Real*);
   typedef Real (*PotField)(Real, Real);
 
-  PotField P = PPE::reciprocal;
-  VecField V = PPE::reciprocal;
+  //PotField P = PPE::reciprocal;
+  //VecField V = PPE::reciprocal;
 
-  /*
-  auto test = [](Real x, Real y, Complex target, const VecField& uv, const PotField& P)
+
+
+  //auto test = [](Real x, Real y, Complex w, VecField V, PotField P)
+  //{
+  //  bool ok  = true;
+  //  Real tol = 1.e-12;
+
+
+
+  //  return ok;
+  //};
+
+
+  auto test = [](Complex z, Complex w, VecField V, PotField P)
   {
     bool ok  = true;
     Real tol = 1.e-12;
 
-    return ok;
-  };
-  */
+    Real x = z.real();
+    Real y = z.imag();
 
-  /*
-  auto testVec = [](Real x, Real y, Complex target, const VecField& uv)
-  {
-    bool ok  = true;
-    Real tol = 1.e-12;
+    Real u, v;
+    V(x, y, &u, &v);
+    ok &= rsIsCloseTo(u,  w.real(), tol);
+    ok &= rsIsCloseTo(v, -w.imag(), tol);
 
-    return ok;
-  };
-  */
-
-  auto test = [](Real x, Real y, Complex target, VecField V, PotField P)
-  {
-    bool ok  = true;
-    Real tol = 1.e-12;
 
     return ok;
   };
@@ -12061,7 +12063,7 @@ void testPolyaPotenialFormulas()
   // Write a function
   // test(x, y, 1.0/z, PPE::reciprocal, PPE::reciprocal, tol1, tol2)
 
-  ok &= test(x, y, 1.0/z, PPE::reciprocal, PPE::reciprocal);
+  ok &= test(z, 1.0/z, PPE::reciprocal, PPE::reciprocal);
 
 
 

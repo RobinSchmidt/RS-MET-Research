@@ -11934,6 +11934,69 @@ void testMerge()
   int dummy = 0; 
 }
 
+void testPolyaPotenialFormulas()
+{
+  // rsRealCoeffsComplexPower, rsImagCoeffsComplexPower - called in vectorFieldViaLaurentSeries
+  // rsPotentialCoeffsComplexPower -  called in potentialViaLaurentSeries
+
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using Poly    = RAPT::rsPolynomial<Real>;
+  using Vec     = std::vector<Real>;
+
+  static const int maxN = 10;  // maximal power allowed
+
+
+
+
+  // Tests the power formula
+  auto testPower = [](Real x, Real y, int n)
+  {
+    Real tol = 1.e-12;
+    bool ok = true;
+
+
+    Complex z(x, y);
+    Complex w = pow(z, n);
+
+    Real c[maxN];        // polynomial coeffs
+    int  xP[maxN];       // exponents/powers for x values
+    int  yP[maxN];       // exponents/powers for y values
+
+    int  m;              // number of terms
+
+    Real u, v, P;
+    Real err;
+
+    m = rsRealCoeffsComplexPower(n, c, xP, yP);
+
+    u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+    err = w.real() - u;
+    ok &= abs(err) <= tol;
+
+    
+
+
+
+
+
+
+
+    return ok;
+  };
+
+
+  // Test formulas for powers:
+  //int n = 3;
+
+  bool ok = true;
+
+  ok &= testPower(3.0, 2.0, 2);
+
+
+
+  int dummy = 0; 
+}
 
 void testRiemannZeta()
 {

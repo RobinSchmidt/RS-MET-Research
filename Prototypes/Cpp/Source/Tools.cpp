@@ -7165,6 +7165,7 @@ int rsRealCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)
   }
   return k;   // We return the number of nonzero terms
 }
+// Maybe rename xPowers to xExponents etc.
 
 template<class T>
 int rsImagCoeffsComplexPower(int n, T* coeffs, int* xPowers, int* yPowers)

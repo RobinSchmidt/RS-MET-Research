@@ -11967,11 +11967,11 @@ void testPolyaPotenialFormulas()
     Real err;
 
     // Compute real part:
-    m = rsRealCoeffsComplexPower(n, c, xP, yP);
+    m = rsRealCoeffsComplexPower(abs(n), c, xP, yP);
     u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
 
     // Compute imag part:
-    m = rsImagCoeffsComplexPower(n, c, xP, yP);
+    m = rsImagCoeffsComplexPower(abs(n), c, xP, yP);
     v = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
 
     // For negative exponents, the result has to be divided by u^2 + v^2:
@@ -11979,8 +11979,8 @@ void testPolyaPotenialFormulas()
     if(n < 0)
     {
       s  = 1 / (u*u + v*v);
-      u *= s;
-      v *= s;
+      u *=  s;
+      v *= -s;  // Yes! Minus!
     }
     // ToDo: treat special case n = -1
 
@@ -12001,9 +12001,18 @@ void testPolyaPotenialFormulas()
 
   bool ok = true;
 
+  // Negative exponents > 1
+  for(int n = 2; n <= 5; n++)
+    ok &= testPower(3.0, 2.0, -n);
+
+  // Nonnegative exponents:
   for(int n = 0; n <= 5; n++)
     ok &= testPower(3.0, 2.0, n);
 
+
+
+
+  // ToDo: n = -1, later, test it all in one loop from -5...+5
 
 
   int dummy = 0; 

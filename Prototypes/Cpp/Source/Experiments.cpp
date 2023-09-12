@@ -12012,7 +12012,7 @@ void testPolyaPotenialFormulas()
     ok &= testPowerPotential(3.0, 2.0, n);
   }
 
-  int dummy = 0; 
+  rsAssert(ok);
 
   // ToDo:
   // -Figure out and document what the limits for n are. In the implementation we work with static

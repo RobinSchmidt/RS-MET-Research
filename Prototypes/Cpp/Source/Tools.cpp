@@ -7228,77 +7228,6 @@ T rsEvaluateBivariatePolynomial(T x, T y, int m, T* coeffs, int* xPowers, int* y
 // coeffs as matrix which is overkill here because most entries would be zero.
 
 
-/** Computes the Polya vector field u(x,y), v(x,y) for the integer power function f(z) = z^n 
-where n is an integer. */
-template<class T>
-void rsPolyaFieldPower(T x, T y, int n, T* u, T* v)
-{
-  static const int maxN = 20;
-  T   c[maxN];        // polynomial coeffs for u
-  int xP[maxN];       // exponents/powers for x values
-  int yP[maxN];       // exponents/powers for y values
-  int m;              // number of terms
-
-  // Compute real part:
-  m  = rsRealCoeffsComplexPower(abs(n), c, xP, yP);
-  *u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-
-  // Compute imag part (negated because we want the Polya vector field):
-  m  = rsImagCoeffsComplexPower(abs(n), c, xP, yP);
-  *v = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-
-  // For negative exponents, the result has to be divided by u^2 + v^2:
-  T s = 1;
-  if(n == -1)
-  {
-    s = 1 / (x*x + y*y);
-    *u = s*x;
-    *v = s*y;
-  }
-  else if(n < 0)
-  {
-    s  = 1 / (*u * *u + *v * *v);
-    *u *=  s;
-    *v *= -s;  // Minus is needed. But why?
-  }
-}
-
-/** Computes the Polya potentila P(x,y) for the integer power function f(z) = z^n 
-where n is an integer. */
-template<class T>
-T rsPolyaPotentialPower(T x, T y, int n)
-{
-  static const int maxN = 20;
-  T   c[maxN];        // polynomial coeffs for u
-  int xP[maxN];       // exponents/powers for x values
-  int yP[maxN];       // exponents/powers for y values
-  int m;              // number of terms
-
-  if(n >= 0)
-  {
-    m = rsPotentialCoeffsComplexPower(n, c, xP, yP);
-    return rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-  }
-  else if(n == -1)
-  {
-    return 0.5 * log(x*x + y*y);
-  }
-  else
-  {
-    n = -n;  // make sign positive
-    m = rsRealCoeffsComplexPower(n-1, c, xP, yP); 
-    T num = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-    T den = (n-1) * pow(x*x + y*y, n-1);
-    return num / den;
-  }
-}
-
-
-
-
-
-
-
 //=================================================================================================
 
 /** A class that implements various algorithms to evaluate the Riemann zeta function for complex 
@@ -8258,6 +8187,12 @@ public:
   static T    square(T x, T y) { return x*x*x/3 - x*y*y; } 
   static void square(T x, T y, T* u, T* v) { *u = x*x - y*y; *v = -2*x*y; }
 
+  // f(z) = z^n
+  static T    power(T x, T y, int n);
+  static void power(T x, T y, int n, T* u, T* v);
+  // integrate the code from arpund line 7231 ff
+
+
 
   /** Given a complex function w = f(z) where f is assumed to be holomorphic, this function 
   produces a data matrix of the Polya potential of this function by means of function evaluation 
@@ -8339,6 +8274,73 @@ public:
 //  that case, we get polynomials with coeffs obtained from binomial coeffs. See zeta paper.
 // -Try to derive a similar expression for 1 / z^n
 
+
+/** Computes the Polya vector field u(x,y), v(x,y) for the integer power function f(z) = z^n 
+where n is an integer. */
+template<class T>
+void rsPolyaFieldPower(T x, T y, int n, T* u, T* v)
+{
+  static const int maxN = 20;
+  T   c[maxN];        // polynomial coeffs for u
+  int xP[maxN];       // exponents/powers for x values
+  int yP[maxN];       // exponents/powers for y values
+  int m;              // number of terms
+
+                      // Compute real part:
+  m  = rsRealCoeffsComplexPower(abs(n), c, xP, yP);
+  *u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+
+  // Compute imag part (negated because we want the Polya vector field):
+  m  = rsImagCoeffsComplexPower(abs(n), c, xP, yP);
+  *v = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+
+  // For negative exponents, the result has to be divided by u^2 + v^2:
+  T s = 1;
+  if(n == -1)
+  {
+    s = 1 / (x*x + y*y);
+    *u = s*x;
+    *v = s*y;
+  }
+  else if(n < 0)
+  {
+    s  = 1 / (*u * *u + *v * *v);
+    *u *=  s;
+    *v *= -s;  // Minus is needed. But why?
+  }
+}
+
+/** Computes the Polya potentila P(x,y) for the integer power function f(z) = z^n 
+where n is an integer. */
+template<class T>
+T rsPolyaPotentialPower(T x, T y, int n)
+{
+  static const int maxN = 20;
+  T   c[maxN];        // polynomial coeffs for u
+  int xP[maxN];       // exponents/powers for x values
+  int yP[maxN];       // exponents/powers for y values
+  int m;              // number of terms
+
+  if(n >= 0)
+  {
+    m = rsPotentialCoeffsComplexPower(n, c, xP, yP);
+    return rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+  }
+  else if(n == -1)
+  {
+    return 0.5 * log(x*x + y*y);
+  }
+  else
+  {
+    n = -n;  // make sign positive
+    m = rsRealCoeffsComplexPower(n-1, c, xP, yP); 
+    T num = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+    T den = (n-1) * pow(x*x + y*y, n-1);
+    return num / den;
+  }
+}
+
+
 template<class T>
 rsMatrix<T> rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
   std::function<Complex (Complex z)> f,
@@ -8367,6 +8369,8 @@ rsMatrix<T> rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
 
   return P;
 }
+
+
 
 //=================================================================================================
 

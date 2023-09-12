@@ -12008,34 +12008,15 @@ void testPolyaPotenialFormulas()
   Complex w;
 
   // Test reciprocal:
-  w = 1.0/z;
-  PPE::reciprocal(x, y);
-
-  //using PotField = std::function<Real(Real, Real)>;
-  //using VecField = std::function<void(Real, Real, Real*, Real*)>;
+  //w = 1.0/z;
+  //PPE::reciprocal(x, y);
 
 
-  //using PotField = Real (*foo)(Real, Real);
-
+  // A helper function taking a complex number z, the corresponding value w = f(z) and a pointer
+  // to a vector field and potential filed function. Check, if the evctor field and numerical 
+  // derivatives of the potnetial field match conj(w):
   typedef void (*VecField)(Real, Real, Real*, Real*);
   typedef Real (*PotField)(Real, Real);
-
-  //PotField P = PPE::reciprocal;
-  //VecField V = PPE::reciprocal;
-
-
-
-  //auto test = [](Real x, Real y, Complex w, VecField V, PotField P)
-  //{
-  //  bool ok  = true;
-  //  Real tol = 1.e-12;
-
-
-
-  //  return ok;
-  //};
-
-
   auto test = [](Complex z, Complex w, VecField V, PotField P)
   {
     bool ok  = true;
@@ -12044,11 +12025,18 @@ void testPolyaPotenialFormulas()
     Real x = z.real();
     Real y = z.imag();
 
+    // Test vector field function V:
     Real u, v;
     V(x, y, &u, &v);
     ok &= rsIsCloseTo(u,  w.real(), tol);
     ok &= rsIsCloseTo(v, -w.imag(), tol);
 
+    // Test potential filed function P:
+    tol = 1.e-5;       // for the numerical derivatives, we need a much higher tolerance
+    Real h = 0.0001;   // stepsize for numerical derivative
+    partialDerivatives(P, x, y, h, h, &u, &v);
+    ok &= rsIsCloseTo(u,  w.real(), tol);
+    ok &= rsIsCloseTo(v, -w.imag(), tol);
 
     return ok;
   };

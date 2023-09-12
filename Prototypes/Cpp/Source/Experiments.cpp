@@ -12109,6 +12109,13 @@ void testPolyaPotenialFormulas()
   }
 
 
+  // This loop an now replace everything above:
+  for(int n = -5; n <= +5; n++)
+  {
+    ok &= testPowerField(    3.0, 2.0, n);
+    ok &= testPowerPotential(3.0, 2.0, n);
+  }
+
 
 
 

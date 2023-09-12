@@ -11961,10 +11961,8 @@ void testPolyaPotenialFormulas()
 
   using Real    = double;
   using Complex = std::complex<Real>;
-  using Poly    = RAPT::rsPolynomial<Real>;
   using Vec     = std::vector<Real>;
-
-  //static const int maxN = 10;  // maximal power allowed - get rid!
+  using PPE     =  rsPolyaPotentialEvaluator<Real>;
 
   // Tests the formula for computing the vector field for f(z) = z^n:
   auto testPowerField = [](Real x, Real y, int n)
@@ -11973,7 +11971,7 @@ void testPolyaPotenialFormulas()
     Complex z(x, y);
     Complex w = pow(z, n);
     Real u, v;
-    rsPolyaFieldPower(x, y, n, &u, &v);
+    PPE::power(x, y, n, &u, &v);
 
     // Test, if the two computations deliver the same result:
     Real err;
@@ -11990,7 +11988,7 @@ void testPolyaPotenialFormulas()
     // Compute numerical derivatives of the potential:
     Real h = 0.0001;   // stepsize for numerical derivative
     Real u, v;
-    auto P = [&](Real x, Real y) { return rsPolyaPotentialPower(x, y, n); }; // Potential P
+    auto P = [&](Real x, Real y) { return PPE::power(x, y, n); }; // Potential P
     partialDerivatives(P, x, y, h, h, &u, &v);
 
     // Compare to reference computation:
@@ -12013,13 +12011,6 @@ void testPolyaPotenialFormulas()
   }
 
   rsAssert(ok);
-
-  // ToDo:
-  // -Figure out and document what the limits for n are. In the implementation we work with static
-  //  arrays of some fixed length given by some maxN. Maybe implement the functions using a 
-  //  workspace and let a convenience function use a std::vector for that workspace.
-  // -Implement more functions to compute Polya vector fields and potentials for other kinds of 
-  //  functions. Create contour plots of such functions.
 }
 
 void testRiemannZeta()

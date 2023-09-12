@@ -8190,8 +8190,14 @@ public:
   // f(z) = z^n
   static T    power(T x, T y, int n);
   static void power(T x, T y, int n, T* u, T* v);
-  // integrate the code from arpund line 7231 ff
+  // ToDo:
+  // -Figure out and document what the limits for n are. In the implementation we work with static
+  //  arrays of some fixed length given by some maxN. Maybe implement the functions using a 
+  //  workspace and let a convenience function use a std::vector for that workspace.
 
+
+  // -Implement more functions to compute Polya vector fields and potentials for other kinds of 
+  //  functions. Create contour plots of such functions.
 
 
   /** Given a complex function w = f(z) where f is assumed to be holomorphic, this function 
@@ -8245,17 +8251,6 @@ public:
 // u, v, U, V
 //
 // Results:
-// 1/z:     (x/(x^2 + y^2), y/(x^2 + y^2), 1/2*log(x^2 + y^2), 1/2*log(x^2 + y^2))
-// z^2:     (x^2 - y^2, -2*x*y, 1/3*x^3 - x*y^2, -x*y^2)
-// z^3:     (x^3 - 3*x*y^2, -3*x^2*y + y^3, 1/4*x^4 - 3/2*x^2*y^2, -3/2*x^2*y^2 + 1/4*y^4)
-// z^4:     (x^4 - 6*x^2*y^2 + y^4, -4*x^3*y + 4*x*y^3, 
-//          1/5*x^5 - 2*x^3*y^2 + x*y^4, -2*x^3*y^2 + x*y^4)
-// 1/z^2:   ((x^2 - y^2)/(4*x^2*y^2 + (x^2 - y^2)^2), 2*x*y/(4*x^2*y^2 + (x^2 - y^2)^2),
-//           -x/(x^2 + y^2), -x/(x^2 + y^2))
-// 1/z^3:   ((x^3 - 3*x*y^2)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2),
-//           (3*x^2*y - y^3)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2),
-//          -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4),
-//          -1/2*(x^2 - y^2)/(x^4 + 2*x^2*y^2 + y^4))
 // exp(z):  (cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
 // sin(z):  (cosh(y)*sin(x), -cos(x)*sinh(y), -cos(x)*cosh(y), -cos(x)*cosh(y))
 // cos(z):  (cos(x)*cosh(y), sin(x)*sinh(y), cosh(y)*sin(x), cosh(y)*sin(x))
@@ -8278,7 +8273,7 @@ public:
 /** Computes the Polya vector field u(x,y), v(x,y) for the integer power function f(z) = z^n 
 where n is an integer. */
 template<class T>
-void rsPolyaFieldPower(T x, T y, int n, T* u, T* v)
+void rsPolyaPotentialEvaluator<T>::power(T x, T y, int n, T* u, T* v)
 {
   static const int maxN = 20;
   T   c[maxN];        // polynomial coeffs for u
@@ -8286,7 +8281,7 @@ void rsPolyaFieldPower(T x, T y, int n, T* u, T* v)
   int yP[maxN];       // exponents/powers for y values
   int m;              // number of terms
 
-                      // Compute real part:
+  // Compute real part:
   m  = rsRealCoeffsComplexPower(abs(n), c, xP, yP);
   *u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
 
@@ -8313,7 +8308,7 @@ void rsPolyaFieldPower(T x, T y, int n, T* u, T* v)
 /** Computes the Polya potentila P(x,y) for the integer power function f(z) = z^n 
 where n is an integer. */
 template<class T>
-T rsPolyaPotentialPower(T x, T y, int n)
+T rsPolyaPotentialEvaluator<T>::power(T x, T y, int n)
 {
   static const int maxN = 20;
   T   c[maxN];        // polynomial coeffs for u

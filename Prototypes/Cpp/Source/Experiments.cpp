@@ -12002,13 +12002,85 @@ void testPolyaPotenialFormulas()
     return ok;
   };
 
-  // Test the formulas for exponents in -5...+5:
+  Real x = 3, y = 2;
+  Real u, v;
+  Complex z(x, y);
+  Complex w;
+
+  // Test reciprocal:
+  w = 1.0/z;
+  PPE::reciprocal(x, y);
+
+  //using PotField = std::function<Real(Real, Real)>;
+  //using VecField = std::function<void(Real, Real, Real*, Real*)>;
+
+
+  //using PotField = Real (*foo)(Real, Real);
+
+  typedef void (*VecField)(Real, Real, Real*, Real*);
+  typedef Real (*PotField)(Real, Real);
+
+  PotField P = PPE::reciprocal;
+  VecField V = PPE::reciprocal;
+
+  /*
+  auto test = [](Real x, Real y, Complex target, const VecField& uv, const PotField& P)
+  {
+    bool ok  = true;
+    Real tol = 1.e-12;
+
+    return ok;
+  };
+  */
+
+  /*
+  auto testVec = [](Real x, Real y, Complex target, const VecField& uv)
+  {
+    bool ok  = true;
+    Real tol = 1.e-12;
+
+    return ok;
+  };
+  */
+
+  auto test = [](Real x, Real y, Complex target, VecField V, PotField P)
+  {
+    bool ok  = true;
+    Real tol = 1.e-12;
+
+    return ok;
+  };
+
+
+
+
   bool ok = true;
+
+  //using VecField = std::function<int&()> 
+
+  // Write a function
+  // test(x, y, 1.0/z, PPE::reciprocal, PPE::reciprocal, tol1, tol2)
+
+  ok &= test(x, y, 1.0/z, PPE::reciprocal, PPE::reciprocal);
+
+
+
+  //ok &= testVec(x, y, 1.0/z, PPE::reciprocal);
+
+
+
+  // Test the formulas for powers z^n for exponents in -5...+5:
+
   for(int n = -5; n <= +5; n++)
   {
-    ok &= testPowerField(    3.0, 2.0, n);
-    ok &= testPowerPotential(3.0, 2.0, n);
+    ok &= testPowerField(    x, y, n);
+    ok &= testPowerPotential(x, y, n);
   }
+
+
+
+
+
 
   rsAssert(ok);
 }

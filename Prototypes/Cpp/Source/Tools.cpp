@@ -7228,7 +7228,7 @@ T rsEvaluateBivariatePolynomial(T x, T y, int m, T* coeffs, int* xPowers, int* y
 // coeffs as matrix which is overkill here because most entries would be zero.
 
 
-/** Computes the Polya vector field u(x,y), v(x,y) for for the integer power function f(z) = z^n 
+/** Computes the Polya vector field u(x,y), v(x,y) for the integer power function f(z) = z^n 
 where n is an integer. */
 template<class T>
 void rsPolyaFieldPower(T x, T y, int n, T* u, T* v)
@@ -7260,6 +7260,36 @@ void rsPolyaFieldPower(T x, T y, int n, T* u, T* v)
     s  = 1 / (*u * *u + *v * *v);
     *u *=  s;
     *v *= -s;  // Minus is needed. But why?
+  }
+}
+
+/** Computes the Polya potentila P(x,y) for the integer power function f(z) = z^n 
+where n is an integer. */
+template<class T>
+T rsPolyaPotentialPower(T x, T y, int n)
+{
+  static const int maxN = 20;
+  T   c[maxN];        // polynomial coeffs for u
+  int xP[maxN];       // exponents/powers for x values
+  int yP[maxN];       // exponents/powers for y values
+  int m;              // number of terms
+
+  if(n >= 0)
+  {
+    m = rsPotentialCoeffsComplexPower(n, c, xP, yP);
+    return rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+  }
+  else if(n == -1)
+  {
+    return 0.5 * log(x*x + y*y);
+  }
+  else
+  {
+    n = -n;  // make sign positive
+    m = rsRealCoeffsComplexPower(n-1, c, xP, yP); 
+    T num = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+    T den = (n-1) * pow(x*x + y*y, n-1);
+    return num / den;
   }
 }
 

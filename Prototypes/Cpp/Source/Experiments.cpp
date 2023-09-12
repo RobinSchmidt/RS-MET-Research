@@ -11990,10 +11990,7 @@ void testPolyaPotenialFormulas()
     // Compute numerical derivatives of the potential:
     Real h = 0.0001;   // stepsize for numerical derivative
     Real u, v;
-    auto P = [&](Real x, Real y) // Function to evaluate the potential P
-    {
-      return rsPolyaPotentialPower(x, y, n);
-    };
+    auto P = [&](Real x, Real y) { return rsPolyaPotentialPower(x, y, n); }; // Potential P
     partialDerivatives(P, x, y, h, h, &u, &v);
 
     // Compare to reference computation:

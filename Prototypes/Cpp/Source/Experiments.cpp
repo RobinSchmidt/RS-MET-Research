@@ -11990,7 +11990,8 @@ void testPolyaPotenialFormulas()
 
   bool ok = true;
 
-  ok &= testPower(3.0, 2.0, 2);
+  for(int n = 0; n <= 5; n++)
+    ok &= testPower(3.0, 2.0, n);
 
 
 

@@ -11984,13 +11984,16 @@ void testPolyaPotenialFormulas()
     {
       s  = 1 / (u*u + v*v);
       u *=  s;
-      v *= -s;  // Yes! Minus is needed!
+      v *= -s;  // Yes! Minus is needed. ...try to get rid
     }
     // ToDo: treat special case n = -1
 
     // Test:
     err = w.real() - u;  ok &= abs(err) <= tol;
     err = w.imag() - v;  ok &= abs(err) <= tol;
+          // Todo: compare to -w.imag for consistency, i.e. use err = -w.imag() - v;
+
+
     return ok;
   };
 

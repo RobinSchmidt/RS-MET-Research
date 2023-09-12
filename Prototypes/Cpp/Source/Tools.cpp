@@ -8178,10 +8178,8 @@ public:
 
   using Complex = std::complex<T>;
 
-
   // f(z) = 1/z, has pole at z=0
-  //static T    _reciprocal(T x, T y) { return 0.5 * log(x*x + y*y); }  // for a syntax test
-  static T    reciprocal(T x, T y) { return 0.5 * log(x*x + y*y); }
+  static T    reciprocal(T x, T y) { return 0.5 * rsLog(x*x + y*y); }
   static void reciprocal(T x, T y, T* u, T * v) { T s = 1/(x*x + y*y); *u = s * x; *v = s * y; }
 
   // f(z) = z^2
@@ -8197,8 +8195,8 @@ public:
   //  workspace and let a convenience function use a std::vector for that workspace.
 
   // f(z) = e^z = exp(z)
-  static T    exp(T x, T y, int n) { return exp(x)*cos(y); }
-  static void exp(T x, T y, T* u, T* v) { *u = exp(x)*cos(y); *v = -exp(x)*sin(y); }
+  static T    exp(T x, T y) { return rsExp(x)*rsCos(y); }
+  static void exp(T x, T y, T* u, T* v) { *u = rsExp(x)*rsCos(y); *v = -rsExp(x)*rsSin(y); }
 
   // exp(z):  (cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
 

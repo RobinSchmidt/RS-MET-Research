@@ -12044,8 +12044,10 @@ void testPolyaPotenialFormulas()
 
   bool ok = true;
 
-  ok &= test(z, 1.0/z, PPE::reciprocal, PPE::reciprocal);
-  ok &= test(z, z*z,   PPE::square,     PPE::square);
+  ok &= test(z, 1.0/z,  PPE::reciprocal, PPE::reciprocal);
+  ok &= test(z, z*z,    PPE::square,     PPE::square);
+  ok &= test(z, exp(z), PPE::exp,        PPE::exp);
+
 
 
   // Test the formulas for powers z^n for exponents in -5...+5:

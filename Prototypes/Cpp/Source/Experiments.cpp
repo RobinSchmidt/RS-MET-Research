@@ -11957,7 +11957,7 @@ void testPolyaPotenialFormulas()
     Complex z(x, y);
     Complex w = pow(z, n);
 
-    Real c[maxN];        // polynomial coeffs
+    Real c[maxN];        // polynomial coeffs for u
     int  xP[maxN];       // exponents/powers for x values
     int  yP[maxN];       // exponents/powers for y values
 
@@ -11966,17 +11966,28 @@ void testPolyaPotenialFormulas()
     Real u, v, P;
     Real err;
 
-    // Test real part:
+    // Compute real part:
     m = rsRealCoeffsComplexPower(n, c, xP, yP);
     u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-    err = w.real() - u;
-    ok &= abs(err) <= tol;
 
-    // Test imag part:
+    // Compute imag part:
     m = rsImagCoeffsComplexPower(n, c, xP, yP);
     v = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
-    err = w.imag() - v;
-    ok &= abs(err) <= tol;
+
+    // For negative exponents, the result has to be divided by u^2 + v^2:
+    Real s = 1;
+    if(n < 0)
+    {
+      s  = 1 / (u*u + v*v);
+      u *= s;
+      v *= s;
+    }
+    // ToDo: treat special case n = -1
+
+
+    // Test:
+    err = w.real() - u;  ok &= abs(err) <= tol;
+    err = w.imag() - v;  ok &= abs(err) <= tol;
 
     
 

@@ -11947,8 +11947,6 @@ void testPolyaPotenialFormulas()
   static const int maxN = 10;  // maximal power allowed
 
 
-
-
   // Tests the power formula
   auto testPower = [](Real x, Real y, int n)
   {
@@ -11968,18 +11966,19 @@ void testPolyaPotenialFormulas()
     Real u, v, P;
     Real err;
 
+    // Test real part:
     m = rsRealCoeffsComplexPower(n, c, xP, yP);
-
     u = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
     err = w.real() - u;
     ok &= abs(err) <= tol;
 
+    // Test imag part:
+    m = rsImagCoeffsComplexPower(n, c, xP, yP);
+    v = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+    err = w.imag() - v;
+    ok &= abs(err) <= tol;
+
     
-
-
-
-
-
 
 
     return ok;

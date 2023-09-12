@@ -11934,6 +11934,21 @@ void testMerge()
   int dummy = 0; 
 }
 
+
+template<class Tx, class Ty, class F>
+void partialDerivatives(const F& f, const Tx& x, const Tx& y, 
+  const Tx& hx, const Tx& hy, Ty* f_x, Ty* f_y)
+{
+  Tx L, R, A, B; // left, right, above, below
+  L = f(x-hx, y);
+  R = f(x+hx, y);
+  B = f(x, y-hy);
+  A = f(x, y+hy);
+  *f_x = (R-L) / (2*hx);
+  *f_y = (A-B) / (2*hy);
+}
+// May eventually go into rsNumericDifferentiator
+
 void testPolyaPotenialFormulas()
 {
   // Uses:
@@ -12034,6 +12049,7 @@ void testPolyaPotenialFormulas()
         return 0.5 * log(x*x + y*y);
       };
 
+      /*
       Real L, R, A, B; // left, right, above, below
       L = P(x-h, y);
       R = P(x+h, y);
@@ -12043,6 +12059,9 @@ void testPolyaPotenialFormulas()
       v = (A-B) / (2*h);
       // Maybe factor out duplicated code into function
       // getNumericalPartialDerivatives(P, x, y, h, &u, &v)
+      */
+
+      partialDerivatives(P, x, y, h, h, &u, &v);
 
       // Test:
       err =  w.real() - u;  ok &= abs(err) <= tol;
@@ -12060,6 +12079,8 @@ void testPolyaPotenialFormulas()
       };
 
       // Compute the numerical derivatives again:
+
+      /*
       Real L, R, A, B; // left, right, above, below
       L = P(x-h, y);
       R = P(x+h, y);
@@ -12069,7 +12090,9 @@ void testPolyaPotenialFormulas()
       v = (A-B) / (2*h);
       // Maybe factor out duplicated code into function
       // getNumericalPartialDerivatives(P, x, y, h, &u, &v)
+      */
 
+      partialDerivatives(P, x, y, h, h, &u, &v);
 
       // Test:
       err =  w.real() - u;  ok &= abs(err) <= tol;
@@ -12090,7 +12113,7 @@ void testPolyaPotenialFormulas()
 
 
 
-
+  /*
   // Nonnegative exponents:
   for(int n = 0; n <= 5; n++)
   {
@@ -12107,6 +12130,7 @@ void testPolyaPotenialFormulas()
     ok &= testPowerField(    3.0, 2.0, -n);
     ok &= testPowerPotential(3.0, 2.0, -n);
   }
+  */
 
 
   // This loop an now replace everything above:

@@ -12002,6 +12002,7 @@ void testPolyaPotenialFormulas()
     Real tol = 1.e-5;    // we need a higher tolerance for this
     Real h   = 0.0001;   // stepsize for numerical derivative
 
+    /*
     if(n >= 0)
     {
       m = rsPotentialCoeffsComplexPower(n, c, xP, yP);
@@ -12031,6 +12032,16 @@ void testPolyaPotenialFormulas()
       };
       partialDerivatives(P, x, y, h, h, &u, &v);
     }
+    */
+
+
+
+    auto P = [&](Real x, Real y) // Function to evaluate the potential P
+    {
+      return rsPolyaPotentialPower(x, y, n);
+    };
+    partialDerivatives(P, x, y, h, h, &u, &v);
+
 
     err =  w.real() - u;  ok &= abs(err) <= tol;
     err = -w.imag() - v;  ok &= abs(err) <= tol;

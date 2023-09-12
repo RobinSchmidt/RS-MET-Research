@@ -12047,6 +12047,7 @@ void testPolyaPotenialFormulas()
   ok &= test(z, 1.0/z,  PPE::reciprocal, PPE::reciprocal);
   ok &= test(z, z*z,    PPE::square,     PPE::square);
   ok &= test(z, exp(z), PPE::exp,        PPE::exp);
+  ok &= test(z, sin(z), PPE::sin,        PPE::sin);
 
 
 

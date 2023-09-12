@@ -8165,7 +8165,7 @@ rsMatrix<T> _rsNumericPotential(const rsMatrix<T>& P_x, T dx)
 w = f(z). It implements a bunch of functions that can evaluate the Polya vector field and potential
 for certain common elementary functions directly via analytic expressions and it also facilitates 
 the numerical etsimation of the Polya potential for functions, where such analytic formulas are not
-(yet) avaibale. The evaluation functions based on analytic expressions come in two flavors: One 
+(yet) available. The evaluation of functions based on analytic expressions come in two flavors: One 
 that takes two input parameters and returns a value. That variant computes the potential. And one 
 that takes two input parameters and two output parameters by pointer. That variant computes the 
 vector field. */
@@ -8198,7 +8198,9 @@ public:
   static T    exp(T x, T y) { return rsExp(x)*rsCos(y); }
   static void exp(T x, T y, T* u, T* v) { *u = rsExp(x)*rsCos(y); *v = -rsExp(x)*rsSin(y); }
 
-  // exp(z):  (cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
+  // f(z) = sin(z)
+  static T    sin(T x, T y) { return -rsCos(x)*rsCosh(y); }
+  static void sin(T x, T y, T* u, T* v) { *u = rsCosh(y)*rsSin(x); *v = -rsCos(x)*rsSinh(y); }
 
 
   // -Implement more functions to compute Polya vector fields and potentials for other kinds of 
@@ -8256,8 +8258,6 @@ public:
 // u, v, U, V
 //
 // Results:
-// exp(z):  (cos(y)*e^x, -e^x*sin(y), cos(y)*e^x, cos(y)*e^x)
-// sin(z):  (cosh(y)*sin(x), -cos(x)*sinh(y), -cos(x)*cosh(y), -cos(x)*cosh(y))
 // cos(z):  (cos(x)*cosh(y), sin(x)*sinh(y), cosh(y)*sin(x), cosh(y)*sin(x))
 // tan(z):  (sin(2*x)/(cos(2*x) + cosh(2*y)), -sinh(2*y)/(cos(2*x) + cosh(2*y)),
 //          -1/2*log(cos(2*x) + cosh(2*y)),-1/2*log(cos(2*x) + cosh(2*y)))
@@ -8272,7 +8272,6 @@ public:
 // -Do also z^p for general p (real or complex)
 // -Trying to let sage assume that p is a positive integer doesn't seem to change anything. In 
 //  that case, we get polynomials with coeffs obtained from binomial coeffs. See zeta paper.
-// -Try to derive a similar expression for 1 / z^n
 
 
 /** Computes the Polya vector field u(x,y), v(x,y) for the integer power function f(z) = z^n 

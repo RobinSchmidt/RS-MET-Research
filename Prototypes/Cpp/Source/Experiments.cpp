@@ -11971,26 +11971,29 @@ void testPolyaPotenialFormulas()
 
     // Compute imag part:
     m = rsImagCoeffsComplexPower(abs(n), c, xP, yP);
-    v = rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+    v = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP); // - bcs we want the Polya vector field
 
     // For negative exponents, the result has to be divided by u^2 + v^2:
     Real s = 1;
 
     if(n == -1)
     {
-      // ....
+      s = 1 / (x*x + y*y);
+      u = s*x;
+      v = s*y;  // Or maybe we need a minus here, too? ...nope - works without
     }
     else if(n < 0)
     {
       s  = 1 / (u*u + v*v);
-      u *=  s;
-      v *= -s;  // Yes! Minus is needed. ...try to get rid
+      u *= s;
+      //v *= s;  
+      v *= -s;  // Yes! Minus is needed. But why?
     }
     // ToDo: treat special case n = -1
 
     // Test:
-    err = w.real() - u;  ok &= abs(err) <= tol;
-    err = w.imag() - v;  ok &= abs(err) <= tol;
+    err =  w.real() - u;  ok &= abs(err) <= tol;
+    err = -w.imag() - v;  ok &= abs(err) <= tol;
           // Todo: compare to -w.imag for consistency, i.e. use err = -w.imag() - v;
 
 
@@ -12074,12 +12077,16 @@ void testPolyaPotenialFormulas()
   bool ok = true;
 
 
+
+
   // Nonnegative exponents:
   for(int n = 0; n <= 5; n++)
   {
     ok &= testPowerField(    3.0, 2.0, n);
     ok &= testPowerPotential(3.0, 2.0, n);
   }
+
+  ok &= testPowerField(3.0, 2.0, -1);
 
   // Negative exponents > 1
   for(int n = 2; n <= 5; n++)

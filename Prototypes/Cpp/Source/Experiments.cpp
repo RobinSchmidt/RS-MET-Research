@@ -12020,7 +12020,30 @@ void testPolyaPotenialFormulas()
       R = rsEvaluateBivariatePolynomial(x+h, y, m, c, xP, yP);
       B = rsEvaluateBivariatePolynomial(x, y-h, m, c, xP, yP);
       A = rsEvaluateBivariatePolynomial(x, y+h, m, c, xP, yP);
+      u = (R-L) / (2*h);
+      v = (A-B) / (2*h);
 
+      // Test:
+      err =  w.real() - u;  ok &= abs(err) <= tol;
+      err = -w.imag() - v;  ok &= abs(err) <= tol;
+    }
+    else
+    {
+      n = -n;  // make sign positive
+      m = rsRealCoeffsComplexPower(n-1, c, xP, yP);
+      auto P = [&](Real x, Real y) // Function to evaluate the potential P
+      {
+        Real num = -rsEvaluateBivariatePolynomial(x, y, m, c, xP, yP);
+        Real den = (n-1) * pow(x*x + y*y, n-1);
+        return num / den;
+      };
+
+      // Compute the numerical derivatives again:
+      Real L, R, A, B; // left, right, above, below
+      L = P(x-h, y);
+      R = P(x+h, y);
+      B = P(x, y-h);
+      A = P(x, y+h);
       u = (R-L) / (2*h);
       v = (A-B) / (2*h);
 
@@ -12051,7 +12074,10 @@ void testPolyaPotenialFormulas()
 
   // Negative exponents > 1
   for(int n = 2; n <= 5; n++)
-    ok &= testPowerField(3.0, 2.0, -n);
+  {
+    ok &= testPowerField(    3.0, 2.0, -n);
+    ok &= testPowerPotential(3.0, 2.0, -n);
+  }
 
 
 

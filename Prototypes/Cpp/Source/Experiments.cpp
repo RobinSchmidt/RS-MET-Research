@@ -12042,25 +12042,13 @@ void testPolyaPotenialFormulas()
   };
 
 
-
-
   bool ok = true;
 
-  //using VecField = std::function<int&()> 
-
-  // Write a function
-  // test(x, y, 1.0/z, PPE::reciprocal, PPE::reciprocal, tol1, tol2)
-
   ok &= test(z, 1.0/z, PPE::reciprocal, PPE::reciprocal);
-
-
-
-  //ok &= testVec(x, y, 1.0/z, PPE::reciprocal);
-
+  ok &= test(z, z*z,   PPE::square,     PPE::square);
 
 
   // Test the formulas for powers z^n for exponents in -5...+5:
-
   for(int n = -5; n <= +5; n++)
   {
     ok &= testPowerField(    x, y, n);

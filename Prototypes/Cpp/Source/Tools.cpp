@@ -22,7 +22,19 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.invokeGNUPlot();
 }
 
-
+template<class T>
+void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+{
+  std::vector<T>    x(Nx), y(Ny);
+  RAPT::rsMatrix<T> P(Nx, Ny);
+  plt.rangeLinear(&x[0], Nx, xMin, xMax);
+  plt.rangeLinear(&y[0], Ny, yMin, yMax);
+  for(int i = 0; i < Nx; i++)
+    for(int j = 0; j < Ny; j++)
+      P(i, j) = f(x[i], y[j]);
+  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+}
 
 //=================================================================================================
 

@@ -13088,20 +13088,12 @@ void testPotentialPlotter()
   auto splotA = [&](std::function<Real(Real x, Real y)> f,
     Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
   {
-    Vec x(Nx), y(Ny);
-    Mat P(Nx, Ny);
     GNUPlotter plt;
-    plt.rangeLinear(&x[0], Nx, xMin, xMax);
-    plt.rangeLinear(&y[0], Ny, yMin, yMax);
-    for(int i = 0; i < Nx; i++)
-      for(int j = 0; j < Ny; j++)
-        P(i, j) = f(x[i], y[j]);
-    plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+    addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
 
     //plt.addCommand("set contour surface");  // contours on the surface
     plt.addCommand("set contour base");     // contours in the base plane
     //plt.addCommand("set contour both");     // contours in base plane and on surface
-
     plt.plot3D();
 
     //plotSurfaceDark(plt); // Maybe try other ways
@@ -13109,9 +13101,11 @@ void testPotentialPlotter()
     // View: 66, 138
   };
   // Maybe rename P to dataP and then f to P
+  // For contour plots, see:
+  // https://gnuplot.sourceforge.net/demo_5.2/contours.html
 
 
-
+  // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
 
 
   // ToDo:

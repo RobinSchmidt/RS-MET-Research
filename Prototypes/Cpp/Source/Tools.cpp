@@ -3,8 +3,27 @@ using namespace RAPT;   // maybe get rid
 using namespace rosic;  // dito
 
 //=================================================================================================
+// Convenience functions for certain types of plots. Maybe move to library, maybe into rs_testing 
+// module into TestTools/Plotting.h
 
-// Move to library, maybe into rs_testing module into TestTools/Plotting.h
+/** Given a bivariate function f = f(x,y), ranges for x and y and numbers of samples along x and y,
+this function generates the data matrix of the heights produced by f and adds the data as matrix 
+data to teh plotter object. */
+template<class T>
+void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+{
+  std::vector<T>    x(Nx), y(Ny);
+  RAPT::rsMatrix<T> P(Nx, Ny);
+  plt.rangeLinear(&x[0], Nx, xMin, xMax);
+  plt.rangeLinear(&y[0], Ny, yMin, yMax);
+  for(int i = 0; i < Nx; i++)
+    for(int j = 0; j < Ny; j++)
+      P(i, j) = f(x[i], y[j]);
+  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+}
+
+/** Produces a surface plot in dark mode. */
 void plotSurfaceDark(GNUPlotter& plt)
 {
   plt.addCommand("set palette rgbformulae 8, 9, 7");
@@ -22,19 +41,26 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.invokeGNUPlot();
 }
 
-template<class T>
-void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
-  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+void plotContours(GNUPlotter& plt)
 {
-  std::vector<T>    x(Nx), y(Ny);
-  RAPT::rsMatrix<T> P(Nx, Ny);
-  plt.rangeLinear(&x[0], Nx, xMin, xMax);
-  plt.rangeLinear(&y[0], Ny, yMin, yMax);
-  for(int i = 0; i < Nx; i++)
-    for(int j = 0; j < Ny; j++)
-      P(i, j) = f(x[i], y[j]);
-  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+  // Experimental - may need to be tweaked:
+  plt.addCommand("set pm3d map impl");
+  plt.addCommand("set contour");
+  plt.addCommand("set style increment user");  // ?
+  plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
+  plt.addCommand("set cntrparam levels incr -0.3,0.1,0.5");  // ?
+  plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
+  plt.addCommand("set autoscale fix");
+  //plt.addCommand("set size ratio -1");
+  //plt.addCommand("set size square");
+  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
+  plt.invokeGNUPlot();
+
+  // See:
+  // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
 }
+
+
 
 //=================================================================================================
 

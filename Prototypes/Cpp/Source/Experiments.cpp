@@ -13104,52 +13104,15 @@ void testPotentialPlotter()
   // For contour plots, see:
   // https://gnuplot.sourceforge.net/demo_5.2/contours.html
 
-
+  // Like splotA but instead produces a contour map:
   auto cplotA = [&](std::function<Real(Real x, Real y)> f,
     Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
   {
     GNUPlotter plt;
     addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
-
-    // Experimental - may need to be tweaked:
-    plt.addCommand("set pm3d map impl");
-    plt.addCommand("set contour");
-    plt.addCommand("set style increment user");  // ?
-    plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
-    plt.addCommand("set cntrparam levels incr -0.3,0.1,0.5");  // ?
-    plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
-    plt.addCommand("set autoscale fix");
-    //plt.addCommand("set size ratio -1");
     plt.addCommand("set size square");
-    plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
-    plt.invokeGNUPlot();
-    // factor out into plotContours(plt); 
-
-
-    //plt.plot3D();
-
-    //plotSurfaceDark(plt); // Maybe try other ways
-
-    // View: 66, 138
+    plotContours(plt);
   };
-  /*
-  set pm3d map impl
-  set contour
-  set style increment user
-  do for [i=1:18] { set style line i lc rgb "black"}
-  set cntrparam levels incr -0.3,0.1,0.5
-  set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')
-  set autoscale fix
-  splot 'test.txt' w pm3d notitle
-  */
-
-  // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
-
-
-
-
-  // ToDo:
-  // -Make a function cplotA that produces a contour plot using GNUPlotCPP
 
 
 

@@ -13098,7 +13098,12 @@ void testPotentialPlotter()
         P(i, j) = f(x[i], y[j]);
     plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
 
+    //plt.addCommand("set contour surface");  // contours on the surface
+    plt.addCommand("set contour base");     // contours in the base plane
+    //plt.addCommand("set contour both");     // contours in base plane and on surface
+
     plt.plot3D();
+
     //plotSurfaceDark(plt); // Maybe try other ways
 
     // View: 66, 138

@@ -13113,7 +13113,7 @@ void testPotentialPlotter()
     plt.addCommand("set size square");
     // plt.addCommand("set size ratio -1");
 
-    Vec levels = {-0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6};  // preliminary
+    Vec levels = {-0.6, -0.4, -0.2, 0.0, +0.1, +0.2, +0.4, +0.6};  // preliminary
 
     plotContours(plt, levels);
   };

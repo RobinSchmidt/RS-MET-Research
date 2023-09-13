@@ -9,18 +9,19 @@ using namespace rosic;  // dito
 template<class T>
 void generateMatrixData(std::function<T(T x, T y)> f, 
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny,
-  std::vector<T>& x, std::vector<T>& y, RAPT::rsMatrix<T>& P) // rename P to z
+  std::vector<T>& x, std::vector<T>& y, RAPT::rsMatrix<T>& z)
 {
   x = RAPT::rsRangeLinear(xMin, xMax, Nx);
   y = RAPT::rsRangeLinear(yMin, yMax, Ny);
-  P.setShape(Nx, Ny);
+  z.setShape(Nx, Ny);
   for(int i = 0; i < Nx; i++)
     for(int j = 0; j < Ny; j++)
-      P(i, j) = f(x[i], y[j]);
+      z(i, j) = f(x[i], y[j]);
   // ToDo:
   // -Maybe use rsArrayTools::rangeLinear to make sure that no re-allocations take place in the
   //  assignemnt of std::vector
 }
+// Maybe pass output parameter by pointer
 
 
 /** Given a bivariate function f = f(x,y), ranges for x and y and numbers of samples along x and y,
@@ -30,25 +31,14 @@ template<class T>
 void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
-  /*
-  std::vector<T>    x(Nx), y(Ny);
-  RAPT::rsMatrix<T> P(Nx, Ny);
-  plt.rangeLinear(&x[0], Nx, xMin, xMax);
-  plt.rangeLinear(&y[0], Ny, yMin, yMax);
-  for(int i = 0; i < Nx; i++)
-    for(int j = 0; j < Ny; j++)
-      P(i, j) = f(x[i], y[j]);
-      */
-
-
   std::vector<T> x, y;
-  RAPT::rsMatrix<T> P;
-  generateMatrixData(f, xMin, xMax, yMin, yMax, Nx, Ny, x, y, P);
-  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+  RAPT::rsMatrix<T> z;
+  generateMatrixData(f, xMin, xMax, yMin, yMax, Nx, Ny, x, y, z);
+  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
 }
 // Maybe factor out the function that generates the P-matrix into a function getDataMatrix(...).
 // Instead of just adding the data to plt, we may want tot analyze the produced data to set up plt.
-// For example, we may wanto to figure out the min and max values to set up the z-range and/or 
+// For example, we may want to to figure out the min and max values to set up the z-range and/or 
 // levels for contour lines in a contour plot
 
 void setToDarkMode(GNUPlotter& plt)

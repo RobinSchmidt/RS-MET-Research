@@ -13115,12 +13115,15 @@ void testPotentialPlotter()
     plt.addCommand("set pm3d map impl");
     plt.addCommand("set contour");
     plt.addCommand("set style increment user");  // ?
-    plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\"}"); // ?
+    plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
     plt.addCommand("set cntrparam levels incr -0.3,0.1,0.5");  // ?
     plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
     plt.addCommand("set autoscale fix");
+    //plt.addCommand("set size ratio -1");
+    plt.addCommand("set size square");
     plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
     plt.invokeGNUPlot();
+    // factor out into plotContours(plt); 
 
 
     //plt.plot3D();

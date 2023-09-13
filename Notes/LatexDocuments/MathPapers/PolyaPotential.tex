@@ -90,8 +90,7 @@ u(x,y) =  e^x \cos(y), \;
 v(x,y) = -e^x \sin(y), \quad 
 P(x,y) =  e^x \cos(y)
 \end{equation}
-In this case, $U$ and $V$ were indeed exactly equal and we didn't have to collect any extra terms for the integration constants, i.e. the correct integration constants turned out to be zero. Of course, we could still add true constants that depend neither on $x$ nor on $y$ to our final expression $P(x,y)$. That is a consequence of the fact that a potential for a given vector field is generally uniquely determined only up to an additive constant. This issue might become important, if you are dealing with different representations of the same function. For example, the Riemann zeta function can be expressed in multiple different ways. In such cases, it may make sense to pin down the integration constant by prescribing a specific function value for $P(x,y)$ at a specific point $(x,y)$, for example by requiring $P(0,0) = 0$. For the time being, we'll just take that additive constant to be zero, though. Continuing like this, we can build some tables
-
+In this case, $U$ and $V$ were indeed exactly equal and we didn't have to collect any extra terms for the integration constants, i.e. the correct integration constants turned out to be zero. Of course, we could still add true constants that depend neither on $x$ nor on $y$ to our final expression $P(x,y)$. That is a consequence of the fact that a potential for a given vector field is generally uniquely determined only up to an additive constant. This issue might become important, if you are dealing with different representations of the same function. For example, the Riemann zeta function can be expressed in multiple different ways. In such cases, it may make sense to pin down the integration constant by prescribing a specific function value for $P(x,y)$ at a specific point $(x,y)$, for example by requiring $P(0,0) = 0$. For the time being, we'll just take that additive constant to be zero, though. Continuing like this, we can build the following table:
 \begin{center}
 \begin{tabular}{ |p{1cm}|p{3cm}|p{3cm}|p{6cm}|  }
 \hline
@@ -116,15 +115,15 @@ $\tan(z)$  & $ \frac{\sin(2x)}{\cos(2x) + \cosh(2y)}$
 % sin(2*x)/(cos(2*x) + cosh(2*y)), -sinh(2*y)/(cos(2*x) + cosh(2*y)),
 % -1/2*log(cos(2*x) + cosh(2*y)), -1/2*log(cos(2*x) + cosh(2*y))
 
-...TBC...Verify formulas (also numerically). Maybe add sinh, cosh, tanh \newline
+...TBC...Verify formulas (also numerically). Maybe add sinh, cosh, tanh, Moebius-trafo \newline
 % Make tables of:
 % -small powers of z including -1,0,1,2,3, include f(z) = c = a + i b = const
+% -f(z) = a z + b for complex a,b
+% -f(z) = (a z + b) / (c z + d) for complex a,b,c,d
 % -exponential: exp, pow, exp(i*z) -> important for Fourier series
-% -trig: sin, cos, tan, cos/sin, 1/sin, 1/cos
+% -trig: sin, cos, tan, 1/tan = cos/sin, 1/sin, 1/cos
 % -hyp: sinh, cosh, tanh, ...
 % -inverses: log, atan, asin %  ...for log it looks complicated, see .txt file
-% -general formula for z^n, n >=  0  
-% -general formula for z^n, n <= -2
 % -If the table grows large, maybe split into powers, trig-funcs, exp/sinh/cosh/log
 
 \subsection{Positive Integer Powers}
@@ -257,6 +256,8 @@ One of the main goals of this investigation is to provide a new way of visualizi
 [ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]
 
 
+
+
 \section{Rules for Complicated Functions}
 Having tables for the Polya potentials of some basic elementary functions is well and good but often we have to deal with more complicated functions. For a given function $f$, we could just plug it into the little Sage script and see, what it produces. What we will discover is that things get messy really quick. Of course they do - after all, we are dealing with integrals here. Maybe you can get something more reasonable with other CAS systems like Mathematica or manually with some integration wizardry if you are a Richard Feynman type of person. You could perhaps deal with products using integration by parts or deal with composite functions using substitutions. But I want to go down some other route here. I will assume that our function $f(z)$ is given as some sort of combination (product, quotient or composition) of two other functions $g(z), h(z)$ for which we know a series expansion. I want to give formulas or algorithms to obtain a series expansion for $f$. This may actually be applicable in completely different contexts as well. From the so found series expansion of $f$, we can then find the corresponding Polya potential term-wise by using our tabulated expressions for simple functions like $z^n$. The setting is as follows:
 \begin{equation}
@@ -292,10 +293,13 @@ For a function $f$ that results from composing (aka nesting or chaining) two fun
 % mention building Polya potententials from Talyor sereis, Laurent series, and Fourier series
 % partial fraction expansions for rational functions
 
+\subsection{Numerical Evaluation}
+If all of our attempts to derive an analytic expression for the Polya potential of some function of interest fail, we may have no other choice than to turn to a numerical approximation. Inside my research codebase \cite{GitHub}, I written have a little function that takes as input a vector field and produces as output a scalar field whose numerical partial derivatives, computed via a central difference formula, match the given vector field data. I explain the algorithm in \cite{PotentialNumerical}.
 
 
 
 
+% Old text snippet - obsolete?:
 %In this context, the scalar field whose gradient our vector field is, is called the (scalar) potential of the vector field. In fact, the Jacobian of the vector field is just the Hessian of the potential. The potential for the Polya vector field of a complex function $f(z)$ is what I call the "Polya potential" of the complex function and it's an object that I have not yet seen as being used in complex analysis. Maybe taking a closer look at it can reveal some new insights. The goal is to derive expressions for the Polya potential of the zeta function and then analyze this Polya potential instead of the zeta function itself. I hope that it will turn out to be simpler to understand because its just a simple scalar field over $\mathbb{R}^2$, i.e. a 3D thing rather than a 4D one - but it contains nonetheless the same amount of information. We have taken advantage of the analyticity of zeta to achieve a dimensionality reduction of the problem. The all important zeros of the zeta function will be mapped to the stationary points of its Polya potential. Stationary points of a scalar field are points, where the gradient vanishes. In general, there are three types of such stationary poinrs: minima, maxima and saddle points. Experiments suggest that in the case of Polya potentials of complex functions, only saddles occur [I think, this might be a consequence of the additional divergence-free property - figure out!]. The Polya potential is a surface in 3D space, so it is also amenable to the tools of differential geometry like figuring out main curvature directions at the stationary points, figuring out the geodesics between the stationary points, etc.. Polya potentials give us a new angle of attack to analyze complex functions and, of course, to visualize them to hopefully build some intuition.
 
 \begin{thebibliography}{9}
@@ -320,8 +324,12 @@ For a function $f$ that results from composing (aka nesting or chaining) two fun
 
 \begin{comment}
 	
+Notes:
+-Using a capital P to denote the potential is consistent with the one used on  wikipedia.
+	
 ToDo:
--use capital P to denote the potential. This notation is consistent with the one used on  wikipedia
+-Write a "Conclusion" section that hints at the implementation for numerically computing 
+ potentials. Use that implementation to produce plots of the Polya potentials of sqrt and log.
 
 Resources:
 https://en.wikipedia.org/wiki/Scalar_potential	

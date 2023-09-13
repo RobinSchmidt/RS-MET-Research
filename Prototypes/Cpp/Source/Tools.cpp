@@ -8309,7 +8309,7 @@ void rsPolyaPotentialEvaluator<T>::power(T x, T y, int n, T* u, T* v)
   }
 }
 
-/** Computes the Polya potentila P(x,y) for the integer power function f(z) = z^n 
+/** Computes the Polya potential P(x,y) for the integer power function f(z) = z^n 
 where n is an integer. */
 template<class T>
 T rsPolyaPotentialEvaluator<T>::power(T x, T y, int n)
@@ -8361,12 +8361,14 @@ rsMatrix<T> rsPolyaPotentialEvaluator<T>::estimatePolyaPotential(
   // Create the Polya potential from the Polya vector field: 
   rsMatrixView<T> um(Nx, Ny, u.getDataPointer());
   rsMatrixView<T> vm(Nx, Ny, v.getDataPointer());
-  //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  // for test
   rsMatrix<T> P = rsNumericPotentialSparse(um, vm, dx, dy);
-  //plotMatrix(P, true);  // for test
-  //plotMatrix(P, false);  // for test
-
   return P;
+
+  // For tests. Uses dense matrix implementation. Practical only for very small problems, i.e. 
+  // small Nx, Ny:
+  //rsMatrix<T> P = rsNumericPotential(um, vm, dx, dy);  
+  //plotMatrix(P, true);   // for test
+  //plotMatrix(P, false);  // for test
 }
 
 

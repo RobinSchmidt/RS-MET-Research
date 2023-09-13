@@ -13041,11 +13041,21 @@ bool testNumericPotential()
 
 void testPotentialPlotter()
 {
+  // Tests the classes rsPolyaPotentialEvaluator for evaluation of Polya potentials and 
+  // rsPolyaPotentialPlotter for plotting them. Produces some .ppm files.
+
+  // ToDo:
+  // -Use the evaluator but delegate the actual plotting to GNUPlotCPP.
+
   using Real    = float;
   using Complex = std::complex<Real>;
+  using Vec     = std::vector<Real>;
+  using Mat     = RAPT::rsMatrix<Real>;
+
 
   // Helper function. Takes a complex function, plot range, pixel size and file path to create an
-  // image file with a plot of the Polya potential of the given function.
+  // image file with a plot of the Polya potential of the given function. It uses numerial 
+  // evaluation of the Polya potential. That's what the N stands for.
   auto plotN = [&](std::function<Complex(Complex)> f, 
     Real xMin, Real xMax, Real yMin, Real yMax, 
     int width, int height, const char *path)
@@ -13062,6 +13072,7 @@ void testPotentialPlotter()
   // The N in plotN stands for "numerical". The intention is to add a function plotA, that uses
   // analytical evaluation.
 
+  // Like plotN but uses an analytic expression for the Polya potential that must be given via f.
   auto plotA = [&](std::function<Real(Real x, Real y)> f,
     Real xMin, Real xMax, Real yMin, Real yMax,
     int width, int height, const char* path)
@@ -13070,6 +13081,36 @@ void testPotentialPlotter()
     rsImage<Real> img = plt.getHeightMapImage(f, xMin, xMax, yMin, yMax, width, height);
     writeImageToFilePPM(img, path);
   };
+  // Maybe rename f to P
+
+  // Like plotA but doesn't produce a .ppm file but instead invokes GNUPlotCPP to produce a surface
+  // plot:
+  auto splotA = [&](std::function<Real(Real x, Real y)> f,
+    Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
+  {
+    Vec x(Nx), y(Ny);
+    Mat P(Nx, Ny);
+    GNUPlotter plt;
+    plt.rangeLinear(&x[0], Nx, xMin, xMax);
+    plt.rangeLinear(&y[0], Ny, yMin, yMax);
+    for(int i = 0; i < Nx; i++)
+      for(int j = 0; j < Ny; j++)
+        P(i, j) = f(x[i], y[j]);
+    plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
+
+    plt.plot3D();
+    //plotSurfaceDark(plt); // Maybe try other ways
+
+    // View: 66, 138
+  };
+  // Maybe rename P to dataP and then f to P
+
+
+
+
+
+  // ToDo:
+  // -Make a function cplotA that produces a contour plot using GNUPlotCPP
 
 
 
@@ -13077,26 +13118,18 @@ void testPotentialPlotter()
   using R  = Real;
   using PE = rsPolyaPotentialEvaluator<Real>;
 
-  plotA([](R x, R y) { return PE::sin(x, y); }, -2*PI, +2*PI, -2, +2, 1001, 401, 
-    "PolyPotential_zSin.ppm");
+  // Analytic Polya potnetials, plotted as surface plots using GNUPlotCPP:
+  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
 
-  plotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -1, +1, 601, 601, 
-    "PolyPotential_zExp.ppm");
 
-  plotA([](R x, R y) { return PE::power(x, y, -1); }, -1, +1, -1, +1, 601, 601, 
-    "PolyPotential_z^-1.ppm");
-
-  plotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 601, 601, 
-    "PolyPotential_z^0.ppm");
-
-  plotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 601, 601, 
-    "PolyPotential_z^1.ppm");
-
-  plotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 601, 601, 
-    "PolyPotential_z^2.ppm");
-
-  plotA([](R x, R y) { return PE::square(x, y); }, -1, +1, -1, +1, 601, 601, 
-    "PolyPotential_zSquared.ppm");
+  // Analytic Polya potnetials, plotted into .ppm files:
+  plotA([](R x, R y) { return PE::sin(x, y); }, -2*PI, +2*PI, -2, +2, 1001, 401, "PolyPotential_zSin.ppm");
+  plotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -1, +1, 601, 601,        "PolyPotential_zExp.ppm");
+  plotA([](R x, R y) { return PE::power(x, y, -1); }, -1, +1, -1, +1, 601, 601,  "PolyPotential_z^-1.ppm");
+  plotA([](R x, R y) { return PE::power(x, y,  0); }, -1, +1, -1, +1, 601, 601,  "PolyPotential_z^0.ppm");
+  plotA([](R x, R y) { return PE::power(x, y,  1); }, -1, +1, -1, +1, 601, 601,  "PolyPotential_z^1.ppm");
+  plotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 601, 601,  "PolyPotential_z^2.ppm");
+  plotA([](R x, R y) { return PE::square(x, y); }, -1, +1, -1, +1, 601, 601,     "PolyPotential_zSquared.ppm");
   // With an even number of contours, we see (almost) the vertical contours along the imaginary
   // axis. With an odd number, it looks visually better. Try 24 vs 25.
 

@@ -13119,9 +13119,9 @@ void testPotentialPlotter()
     Vec levels = {-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 
                   +0.1, +0.2, +0.3, +0.4, +0.5, +0.6, +0.7, +0.8};
 
-    plt.setPixelSize(800, 800);
+    plt.setPixelSize(600, 600);
 
-    plotContours(plt, levels);
+    plotContours(plt, levels, true); // true: use constant colors between contours
   };
 
   using C  = Complex;
@@ -13129,7 +13129,7 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potnetials, plotted as surface plots using GNUPlotCPP:
-  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
+  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201);
 
 

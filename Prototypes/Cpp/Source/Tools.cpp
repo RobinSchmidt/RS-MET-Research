@@ -4,7 +4,7 @@ using namespace rosic;  // dito
 
 //=================================================================================================
 // Convenience functions for certain types of plots. Maybe move to library, maybe into rs_testing 
-// module into TestTools/Plotting.h
+// module into TestTools/Plotting.h. Maybe at some point even into GNUPlotCPP itself.
 
 /** Given a bivariate function f = f(x,y), ranges for x and y and numbers of samples along x and y,
 this function generates the data matrix of the heights produced by f and adds the data as matrix 
@@ -50,15 +50,22 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.invokeGNUPlot();
 }
 
-void plotContours(GNUPlotter& plt, const std::vector<float> levels)
+void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
 {
   // Experimental - may need to be tweaked...
 
   setToDarkMode(plt);
   plt.addCommand("set pm3d map impl");
   plt.addCommand("set contour");
-  plt.addCommand("set style increment user");  // ?
-  plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
+
+  //plt.addCommand("set style increment user");  // ?
+  // What does this do?
+
+  //plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
+  // This comes from copy/paste from some website. The 18 is probably becase the plot there had 18 
+  // levels. Maybe we should either make the upper bound dynamic (using levels.size()) or just 
+  // scrap the command. I think, this is the default line style anyway?
+
   plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
   plt.addCommand("set autoscale fix");  // ?
 
@@ -69,13 +76,17 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
     cmd += "," + std::to_string(levels[i]);
   plt.addCommand(cmd);
 
-  // Use constant color fills between the contour lines:
-  cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
-  plt.addCommand(cmd);
-  std::string range = "[" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
-  plt.addCommand("set zrange " + range);   // range for z values
-  plt.addCommand("set cbrange " + range);  // color bar range
-  // ToDo: make this optional, let the user pass a bool useConstColors
+  //bool useConstColors = true; // make parameter
+
+  // Use constant color fills between the contour lines if desired:
+  if(useConstColors)
+  {
+    cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
+    plt.addCommand(cmd);
+    std::string range = "[" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
+    plt.addCommand("set zrange " + range);   // range for z values
+    plt.addCommand("set cbrange " + range);  // color bar range
+  }
 
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();
@@ -90,9 +101,17 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
   // Questions:
   // -What happens, if the levels are non-equidistant? I guess, in this case, the alignment between
   //  constant color region boundaries and contour lines gets messed up.
+
+  // ToDo:
+  // -Make using constant colors this optional, let the user pass a bool useConstColors.
+  // -Implement a convenience function that determines the appropriate levels for the contours 
+  //  automatically from the data. But we do not have the data availble here. It must be done on a 
+  //  higher level, where the data is still available. 
 }
 
-
+// ToDo:
+// Maybe plot also the Polya vector field. Use strength of color (opacity and/or brightness) so 
+// indicate field strength. Let the arrows all have the same length.
 
 //=================================================================================================
 

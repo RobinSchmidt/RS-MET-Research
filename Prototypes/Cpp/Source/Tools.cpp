@@ -6,6 +6,23 @@ using namespace rosic;  // dito
 // Convenience functions for certain types of plots. Maybe move to library, maybe into rs_testing 
 // module into TestTools/Plotting.h. Maybe at some point even into GNUPlotCPP itself.
 
+template<class T>
+void generateMatrixData(std::function<T(T x, T y)> f, 
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny,
+  std::vector<T>& x, std::vector<T>& y, RAPT::rsMatrix<T>& P) // rename P to z
+{
+  x = RAPT::rsRangeLinear(xMin, xMax, Nx);
+  y = RAPT::rsRangeLinear(yMin, yMax, Ny);
+  P.setShape(Nx, Ny);
+  for(int i = 0; i < Nx; i++)
+    for(int j = 0; j < Ny; j++)
+      P(i, j) = f(x[i], y[j]);
+  // ToDo:
+  // -Maybe use rsArrayTools::rangeLinear to make sure that no re-allocations take place in the
+  //  assignemnt of std::vector
+}
+
+
 /** Given a bivariate function f = f(x,y), ranges for x and y and numbers of samples along x and y,
 this function generates the data matrix of the heights produced by f and adds the data as matrix 
 data to teh plotter object. */
@@ -13,6 +30,7 @@ template<class T>
 void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
+  /*
   std::vector<T>    x(Nx), y(Ny);
   RAPT::rsMatrix<T> P(Nx, Ny);
   plt.rangeLinear(&x[0], Nx, xMin, xMax);
@@ -20,6 +38,12 @@ void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
   for(int i = 0; i < Nx; i++)
     for(int j = 0; j < Ny; j++)
       P(i, j) = f(x[i], y[j]);
+      */
+
+
+  std::vector<T> x, y;
+  RAPT::rsMatrix<T> P;
+  generateMatrixData(f, xMin, xMax, yMin, yMax, Nx, Ny, x, y, P);
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
 }
 // Maybe factor out the function that generates the P-matrix into a function getDataMatrix(...).

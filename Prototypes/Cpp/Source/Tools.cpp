@@ -46,7 +46,7 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.invokeGNUPlot();
 }
 
-void plotContours(GNUPlotter& plt)
+void plotContours(GNUPlotter& plt, const std::vector<float> levels)
 {
   // Experimental - may need to be tweaked:
   plt.addCommand("set pm3d map impl");

@@ -13112,10 +13112,11 @@ void testPotentialPlotter()
     addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
     plt.addCommand("set size square");
     // plt.addCommand("set size ratio -1");
-    plotContours(plt);
+
+    Vec levels = {-0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6};  // preliminary
+
+    plotContours(plt, levels);
   };
-
-
 
   using C  = Complex;
   using R  = Real;

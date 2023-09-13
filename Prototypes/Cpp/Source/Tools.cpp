@@ -27,16 +27,8 @@ void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
 // For example, we may wanto to figure out the min and max values to set up the z-range and/or 
 // levels for contour lines in a contour plot
 
-
-/** Produces a surface plot in dark mode. */
-void plotSurfaceDark(GNUPlotter& plt)
+void setToDarkMode(GNUPlotter& plt)
 {
-  plt.addCommand("set palette rgbformulae 8, 9, 7");
-  plt.addCommand("set style fill solid 1.0 noborder");
-  plt.addCommand("set pm3d depthorder noborder");
-  plt.addCommand("set pm3d lighting specular 0.25");
-
-  // Factor out to setToDarkMode:
   plt.addCommand("set term wxt background rgb \"black\"");
   plt.addCommand("set border lw 1 lc rgb \"white\"");
   plt.addCommand("set grid lw 1 lc rgb \"white\"");
@@ -44,26 +36,25 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.addCommand("set ytics textcolor rgb \"white\"");
   plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
   plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
+}
 
-
+/** Produces a surface plot in dark mode. */
+void plotSurfaceDark(GNUPlotter& plt)
+{
+  setToDarkMode(plt);
+  plt.addCommand("set palette rgbformulae 8, 9, 7");
+  plt.addCommand("set style fill solid 1.0 noborder");
+  plt.addCommand("set pm3d depthorder noborder");
+  plt.addCommand("set pm3d lighting specular 0.25");
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
   plt.invokeGNUPlot();
 }
 
 void plotContours(GNUPlotter& plt, const std::vector<float> levels)
 {
-  // Experimental - may need to be tweaked:
+  // Experimental - may need to be tweaked...
 
-  // Factor out to setToDarkMode:
-  plt.addCommand("set term wxt background rgb \"black\"");
-  plt.addCommand("set border lw 1 lc rgb \"white\"");
-  plt.addCommand("set grid lw 1 lc rgb \"white\"");
-  plt.addCommand("set xtics textcolor rgb \"white\"");
-  plt.addCommand("set ytics textcolor rgb \"white\"");
-  plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
-  plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
-
-
+  setToDarkMode(plt);
   plt.addCommand("set pm3d map impl");
   plt.addCommand("set contour");
   plt.addCommand("set style increment user");  // ?
@@ -84,7 +75,7 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
   std::string range = "[" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
   plt.addCommand("set zrange " + range);   // range for z values
   plt.addCommand("set cbrange " + range);  // color bar range
-  // ToDo: make this optional
+  // ToDo: make this optional, let the user pass a bool useConstColors
 
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();

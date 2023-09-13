@@ -13094,9 +13094,9 @@ void testPotentialPlotter()
     //plt.addCommand("set contour surface");  // contours on the surface
     //plt.addCommand("set contour base");     // contours in the base plane
     //plt.addCommand("set contour both");     // contours in base plane and on surface
-    plt.plot3D();
+    //plt.plot3D();
 
-    //plotSurfaceDark(plt); // Maybe try other ways
+    plotSurfaceDark(plt); // Maybe try other ways
 
     // View: 66, 138
   };
@@ -13129,7 +13129,7 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potnetials, plotted as surface plots using GNUPlotCPP:
-  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
+  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201);
 
 

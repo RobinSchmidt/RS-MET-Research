@@ -69,13 +69,22 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
 
   // set cntrparam level
 
-
   //plt.addCommand("set cntrparam levels incr -0.3,0.1,0.5");  // ?
-
 
   // Nope - fails:
   //plt.addCommand("levels = -1:0.125:1;");
   //plt.addCommand("contourf(X,Y,f,levels);");
+
+  //cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
+
+  cmd = "set palette maxcolors 12"; // test
+
+  plt.addCommand(cmd);
+
+  cmd = "set zrange [" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
+  plt.addCommand(cmd);
+
+  // set zrange [-0.04:0.04]
 
 
   //plt.addCommand("set palette maxcolors 12");
@@ -83,12 +92,14 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
   // https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
   // It sort of works but it is not in sync with the contour lines
 
+  // Seems like we don'T get 6 colors but 8. Why? Maybe that's a hardcoded lower limit?
+  // Try in 12 colors seems to work and the lines alight with the boundaries of the colored regions.
+  // But there are more colored regions that lines
+
 
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();
 
-  // OK - it sort of works but we need to give the user tthe option to decide, where the contour 
-  // lines should be. Maybe pass in an array of floats for the contour levels
 
   // See:
   // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines

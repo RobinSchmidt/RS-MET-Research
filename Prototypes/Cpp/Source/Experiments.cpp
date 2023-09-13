@@ -13113,9 +13113,11 @@ void testPotentialPlotter()
     plt.addCommand("set size square");
     // plt.addCommand("set size ratio -1");
 
-    Vec levels = {-0.8, -0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6, +0.8};  // preliminary
+    //Vec levels = {-0.8, -0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6, +0.8};  // preliminary
     //Vec levels = {-0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6};  // preliminary
     // ToDo: determine the appropriate levels from the data.
+    Vec levels = {-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 
+                  +0.1, +0.2, +0.3, +0.4, +0.5, +0.6, +0.7, +0.8};
 
     plt.setPixelSize(800, 800);
 

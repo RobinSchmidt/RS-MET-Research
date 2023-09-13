@@ -53,7 +53,7 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
   plt.addCommand("set contour");
   plt.addCommand("set style increment user");  // ?
   plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
-  plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
+  //plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
   plt.addCommand("set autoscale fix");  // ?
 
   std::string cmd;
@@ -69,10 +69,27 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
   // contour lines which is, of course, an ugly mess. I don't know how to fix this. Maybe I should 
   // use my own contour filling code for this and forget about trying to convince GNUPlot to do
   // what I want.
-  //cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
-  //plt.addCommand(cmd);
+  cmd = "set palette maxcolors " + std::to_string(levels.size() - 1); // try -1, +1, +0, etc.
+  plt.addCommand(cmd);
+
+  std::string range = "[" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
+
   //cmd = "set zrange [" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
+  //cmd = "set zrange " + range;
   //plt.addCommand(cmd);
+
+  plt.addCommand("set zrange " + range);   // range for z values
+  plt.addCommand("set cbrange " + range);  // color bar range
+
+  //plt.addCommand("set zrange [-0.6:0.6]");
+  //plt.addCommand("set zrange [-0.8:0.8]");
+  //plt.addCommand("set zrange [-0.9:0.9]");
+  //plt.addCommand("set zrange [-1.0:1.0]");
+
+
+
+  // set color bar range:
+  //set cbrange [MIN:MAX]
 
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();

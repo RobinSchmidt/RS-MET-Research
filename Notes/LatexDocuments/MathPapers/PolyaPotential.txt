@@ -324,7 +324,31 @@ V = integral(v, y)
 u, v, U, V	
 
 Sage can't even do the integrals in this case. Maybe the inverse functions are just too difficult to 
-handle?
+handle? When I comment the computation of the integrals and look only at u,v, I get:
+
+u =  sqrt(abs(x + I*y))*cos(1/2*arctan2(y, x))
+v = -sqrt(abs(x + I*y))*sin(1/2*arctan2(y, x))
+
+which we can manipulate into: 
+
+u =  (x^2 + y^2)^(1/4) * cos(arctan2(y, x) / 2)
+v = -(x^2 + y^2)^(1/4) * sin(arctan2(y, x) / 2)
+
+Let's try to find U from that:
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+u = (x^2 + y^2)^(1/4) * cos(arctan(y/x) / 2)
+U = integral(u, x)
+U
+
+That actually works and gives:
+
+U = 2/3*((x^2 + y^2)*cos(1/4*arctan2(y, x))^2 
+    + (x^2 + y^2)*sin(1/4*arctan2(y, x))^2)*cos(3/2*arctan2(y, x))/(x^2 + y^2)^(1/4)
+
+But trying the same for V fails. Maybe try it with Mathematica.
 
 ----------------------------------------------------------------------------------------------------
 Let's try w = 1/(1+z^2). We need two more assume statement to convice Sage to integrate it:

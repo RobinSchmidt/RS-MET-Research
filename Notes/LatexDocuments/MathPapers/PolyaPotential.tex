@@ -254,6 +254,8 @@ where $u_n, v_n$ are the expressions for the corresponding positive power. It tu
 \section{Plotting the Polya Potentials}
 One of the main goals of this investigation is to provide a new way of visualizing complex functions, so we shall now look at some plots...TBC...
 
+[ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]
+
 
 \section{Rules for Complicated Functions}
 Having tables for the Polya potentials of some basic elementary functions is well and good but often we have to deal with more complicated functions. For a given function $f$, we could just plug it into the little Sage script and see, what it produces. What we will discover is that things get messy really quick. Of course they do - after all, we are dealing with integrals here. Maybe you can get something more reasonable with other CAS systems like Mathematica or manually with some integration wizardry if you are a Richard Feynman type of person. You could perhaps deal with products using integration by parts or deal with composite functions using substitutions. But I want to go down some other route here. I will assume that our function $f(z)$ is given as some sort of combination (product, quotient or composition) of two other functions $g(z), h(z)$ for which we know a series expansion. I want to give formulas or algorithms to obtain a series expansion for $f$. This may actually be applicable in completely different contexts as well. From the so found series expansion of $f$, we can then find the corresponding Polya potential term-wise by using our tabulated expressions for simple functions like $z^n$. The setting is as follows:

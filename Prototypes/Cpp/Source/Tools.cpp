@@ -53,10 +53,8 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
   plt.addCommand("set contour");
   plt.addCommand("set style increment user");  // ?
   plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
-
   plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
   plt.addCommand("set autoscale fix");  // ?
-
 
   std::string cmd;
   //cmd = "set cntrparam levels " + std::to_string(levels[0]);
@@ -65,37 +63,16 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
     cmd += "," + std::to_string(levels[i]);
   plt.addCommand(cmd);
 
-  // https://subscription.packtpub.com/book/data/9781849517249/10/ch10lvl1sec101/making-a-labeled-contour-plot
-
-  // set cntrparam level
-
-  //plt.addCommand("set cntrparam levels incr -0.3,0.1,0.5");  // ?
-
-  // Nope - fails:
-  //plt.addCommand("levels = -1:0.125:1;");
-  //plt.addCommand("contourf(X,Y,f,levels);");
-
-  //cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
-
-  cmd = "set palette maxcolors 12"; // test
-
-  plt.addCommand(cmd);
-
-  cmd = "set zrange [" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
-  plt.addCommand(cmd);
-
-  // set zrange [-0.04:0.04]
-
-
-  //plt.addCommand("set palette maxcolors 12");
-  // Take from here:
+  // I'm trying to get an effect like here:
   // https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
-  // It sort of works but it is not in sync with the contour lines
-
-  // Seems like we don'T get 6 colors but 8. Why? Maybe that's a hardcoded lower limit?
-  // Try in 12 colors seems to work and the lines alight with the boundaries of the colored regions.
-  // But there are more colored regions that lines
-
+  // It sort of works but the boundaries of the constant color regions are not in sync with the 
+  // contour lines which is, of course, an ugly mess. I don't know how to fix this. Maybe I should 
+  // use my own contour filling code for this and forget about trying to convince GNUPlot to do
+  // what I want.
+  //cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
+  //plt.addCommand(cmd);
+  //cmd = "set zrange [" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
+  //plt.addCommand(cmd);
 
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();
@@ -104,6 +81,7 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels)
   // See:
   // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
   // https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
+  // https://subscription.packtpub.com/book/data/9781849517249/10/ch10lvl1sec101/making-a-labeled-contour-plot
   // http://lowrank.net/gnuplot/plotpm3d-e.html
   // -has interesting funcion: x^2 * y^2 * exp(-(x^2 + y^2))
 }

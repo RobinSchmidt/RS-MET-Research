@@ -13111,6 +13111,7 @@ void testPotentialPlotter()
     GNUPlotter plt;
     addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
     plt.addCommand("set size square");
+    // plt.addCommand("set size ratio -1");
     plotContours(plt);
   };
 

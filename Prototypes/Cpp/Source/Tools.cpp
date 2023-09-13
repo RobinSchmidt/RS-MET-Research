@@ -22,6 +22,11 @@ void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
       P(i, j) = f(x[i], y[j]);
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
 }
+// Maybe factor out the function that generates the P-matrix into a function getDataMatrix(...).
+// Instead of just adding the data to plt, we may want tot analyze the produced data to set up plt.
+// For example, we may wanto to figure out the min and max values to set up the z-range and/or 
+// levels for contour lines in a contour plot
+
 
 /** Produces a surface plot in dark mode. */
 void plotSurfaceDark(GNUPlotter& plt)
@@ -50,14 +55,30 @@ void plotContours(GNUPlotter& plt)
   plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
   plt.addCommand("set cntrparam levels incr -0.3,0.1,0.5");  // ?
   plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
-  plt.addCommand("set autoscale fix");
-  //plt.addCommand("set size ratio -1");
-  //plt.addCommand("set size square");
+  plt.addCommand("set autoscale fix");  // ?
+
+  // Nope - fails:
+  //plt.addCommand("levels = -1:0.125:1;");
+  //plt.addCommand("contourf(X,Y,f,levels);");
+
+
+  //plt.addCommand("set palette maxcolors 12");
+  // Take from here:
+  // https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
+  // It sort of works but it is not in sync with the contour lines
+
+
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();
 
+  // OK - it sort of works but we need to give the user tthe option to decide, where the contour 
+  // lines should be. Maybe pass in an array of floats for the contour levels
+
   // See:
   // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
+  // https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
+  // http://lowrank.net/gnuplot/plotpm3d-e.html
+  // -has interesting funcion: x^2 * y^2 * exp(-(x^2 + y^2))
 }
 
 

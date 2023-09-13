@@ -294,7 +294,7 @@ For a function $f$ that results from composing (aka nesting or chaining) two fun
 % partial fraction expansions for rational functions
 
 \subsection{Numerical Evaluation}
-If all of our attempts to derive an analytic expression for the Polya potential of some function of interest fail, we may have no other choice than to turn to a numerical approximation. Inside my research codebase \cite{GitHub}, I written have a little function that takes as input a vector field and produces as output a scalar field whose numerical partial derivatives, computed via a central difference formula, match the given vector field data. I explain the algorithm in \cite{PotentialNumerical}.
+If all of our attempts to derive an analytic expression for the Polya potential of some function of interest fail, we may have no other choice than to turn to a numerical approximation. Inside my research codebase \cite{GitHub}, I written have a little function that takes as input a vector field and produces as output a scalar field whose numerical partial derivatives, computed via a central difference formula, match the given vector field data. I explain the algorithm in \cite{PotentialNumerical}. Well, there is actually nothing computed via the central difference formula, but I use the central difference formula as an ansatz. I imagine that our given 2D arrays that determine the vector field have been computed by such a formula and then I ask, what the scalar field must look like to produce such numerical derivatives. That leads to an overdetermined linear system of equations which I solve using a least squares approach.
 
 
 

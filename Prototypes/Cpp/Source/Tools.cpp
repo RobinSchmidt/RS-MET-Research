@@ -35,6 +35,8 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
   plt.addCommand("set pm3d lighting specular 0.25");
+
+  // Factor out to setToDarkMode:
   plt.addCommand("set term wxt background rgb \"black\"");
   plt.addCommand("set border lw 1 lc rgb \"white\"");
   plt.addCommand("set grid lw 1 lc rgb \"white\"");
@@ -42,6 +44,8 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.addCommand("set ytics textcolor rgb \"white\"");
   plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
   plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
+
+
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
   plt.invokeGNUPlot();
 }
@@ -49,58 +53,52 @@ void plotSurfaceDark(GNUPlotter& plt)
 void plotContours(GNUPlotter& plt, const std::vector<float> levels)
 {
   // Experimental - may need to be tweaked:
+
+  // Factor out to setToDarkMode:
+  plt.addCommand("set term wxt background rgb \"black\"");
+  plt.addCommand("set border lw 1 lc rgb \"white\"");
+  plt.addCommand("set grid lw 1 lc rgb \"white\"");
+  plt.addCommand("set xtics textcolor rgb \"white\"");
+  plt.addCommand("set ytics textcolor rgb \"white\"");
+  plt.addCommand("set xlabel \"X\" textcolor rgb \"white\"");
+  plt.addCommand("set ylabel \"Y\" textcolor rgb \"white\"");
+
+
   plt.addCommand("set pm3d map impl");
   plt.addCommand("set contour");
   plt.addCommand("set style increment user");  // ?
   plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
-  //plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
+  plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
   plt.addCommand("set autoscale fix");  // ?
 
+  // Add the copntour lines:
   std::string cmd;
-  //cmd = "set cntrparam levels " + std::to_string(levels[0]);
   cmd = "set cntrparam levels discrete " + std::to_string(levels[0]);
   for(int i = 1; i < levels.size(); i++)
     cmd += "," + std::to_string(levels[i]);
   plt.addCommand(cmd);
 
-  // I'm trying to get an effect like here:
-  // https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
-  // It sort of works but the boundaries of the constant color regions are not in sync with the 
-  // contour lines which is, of course, an ugly mess. I don't know how to fix this. Maybe I should 
-  // use my own contour filling code for this and forget about trying to convince GNUPlot to do
-  // what I want.
-  cmd = "set palette maxcolors " + std::to_string(levels.size() - 1); // try -1, +1, +0, etc.
+  // Use constant color fills between the contour lines:
+  cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
   plt.addCommand(cmd);
-
   std::string range = "[" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
-
-  //cmd = "set zrange [" + std::to_string(levels[0]) + ":" + std::to_string(rsLast(levels)) + "]";
-  //cmd = "set zrange " + range;
-  //plt.addCommand(cmd);
-
   plt.addCommand("set zrange " + range);   // range for z values
   plt.addCommand("set cbrange " + range);  // color bar range
-
-  //plt.addCommand("set zrange [-0.6:0.6]");
-  //plt.addCommand("set zrange [-0.8:0.8]");
-  //plt.addCommand("set zrange [-0.9:0.9]");
-  //plt.addCommand("set zrange [-1.0:1.0]");
-
-
-
-  // set color bar range:
-  //set cbrange [MIN:MAX]
+  // ToDo: make this optional
 
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();
-
 
   // See:
   // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
   // https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
   // https://subscription.packtpub.com/book/data/9781849517249/10/ch10lvl1sec101/making-a-labeled-contour-plot
   // http://lowrank.net/gnuplot/plotpm3d-e.html
-  // -has interesting funcion: x^2 * y^2 * exp(-(x^2 + y^2))
+  // -has interesting function: x^2 * y^2 * exp(-(x^2 + y^2))
+
+  // Questions:
+  // -What happens, if the levels are non-equidistant? I guess, in this case, the alignment between
+  //  constant color region boundaries and contour lines gets messed up.
 }
 
 

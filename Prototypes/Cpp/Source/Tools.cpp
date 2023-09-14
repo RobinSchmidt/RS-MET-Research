@@ -64,7 +64,7 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.invokeGNUPlot();
 }
 
-// Under construction. Intentional usage:
+// Under construction. Does not yet seem to work. Intentional usage:
 //
 //   int N = 20;
 //   setLineStyles(plt, "lc rgb \"red\"",   1, N, 3);
@@ -91,12 +91,29 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 }
 // Move into class GNUPlotter as member function. It's generally useful.
 
+enum class ColorPalette
+{
+  bipolarBlueToYellow = 0,
+
+  numColorPalettes
+};
+void setColorPalette(GNUPlotter& plt, ColorPalette palette)
+{
+  using CP = ColorPalette;
+
+  switch(palette)
+  {
+  case CP::bipolarBlueToYellow: plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"); break;
+    // ...more to come
+  }
+}
+
 void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
 {
   setToDarkMode(plt);
   plt.addCommand("set pm3d map impl");
   plt.addCommand("set contour");
-  plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
+  //plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
   //plt.addCommand("set autoscale fix");  // What does this do?
 
   // Add the contour lines:

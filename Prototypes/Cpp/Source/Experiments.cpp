@@ -13107,44 +13107,46 @@ void testPotentialPlotter()
   // Like splotA but instead produces a contour map:
   auto cplotA = [&](std::function<Real(Real x, Real y)> f,
     Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny,
-    int numContours, Real zMin, Real zMax)
+    int numContours, Real zMin = 0, Real zMax = 0)
   {
+    // Generate the data and figure out appropriate values for zMin/zMax if the user hasn't given a 
+    // valid z-range and generate the array of the contour levels that will drawn in as contour 
+    // lines:
+    std::vector<Real> x, y;
+    RAPT::rsMatrix<Real> z;
+    generateMatrixData(f, xMin, xMax, yMin, yMax, Nx, Ny, x, y, z);
+    if(zMin >= zMax) {
+      zMin = z.getMinimum();
+      zMax = z.getMaximum(); }
+    Vec levels = RAPT::rsRangeLinear(zMin, zMax, numContours);  // Create array of contour levels
+
+    // Old - does not allow to set zMin/zMax automatically:
+    //addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
+
+    // Create and set up the plotter object and use it to plot the data:
     GNUPlotter plt;
-    addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
-
-    // ToDo: make zMin, zMax optional. If missing, detect appropriate value from the data 
-    // automatically
-
-    //Real zMin = -0.8;
-    //Real zMax = +0.8;
-    //int numContours = 17;
-
-
-    Vec levels = RAPT::rsRangeLinear(zMin, zMax, numContours);
-
-    // ToDo: figure this out from the data:
-    //Vec levels = {-0.8, -0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6, +0.8};  // preliminary
-    //Vec levels = {-0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6};  // preliminary
-    // ToDo: determine the appropriate levels from the data.
-    //Vec levels = {-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 
-    //              +0.1, +0.2, +0.3, +0.4, +0.5, +0.6, +0.7, +0.8};
-
-
-
+    plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
     plt.setPixelSize(600, 600);
     plt.addCommand("set size square");
-    // plt.addCommand("set size ratio -1");
+    setColorPalette(plt, ColorPalette::bipolarBlueToYellow);
+    // plt.addCommand("set size ratio -1");  // What does this do?
     plotContours(plt, levels, true); // true: use constant colors between contours
   };
+  // Maybe drag the setup of the color palette to here
 
   using C  = Complex;
   using R  = Real;
   using PE = rsPolyaPotentialEvaluator<Real>;
 
-  // Analytic Polya potnetials, plotted as surface plots using GNUPlotCPP:
+  // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
   //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
-  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
+  //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
+  //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
+  //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
+  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
 
+  //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
+  //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
 
   // Analytic Polya potnetials, plotted into .ppm files:
   plotA([](R x, R y) { return PE::sin(x, y); }, -2*PI, +2*PI, -2, +2, 1001, 401, "PolyPotential_zSin.ppm");
@@ -13158,9 +13160,11 @@ void testPotentialPlotter()
   // axis. With an odd number, it looks visually better. Try 24 vs 25.
 
 
+  // Good ranges with fitting numContours:
+  // (-5..+5, 21), (-0.8..+0.8, 17), (-0.7..+0.7, 15), (-0.7..+0.7, 21), (-0.7..+0.7, 29), 
+  // (-6..+6, 13), (-6..+6, 25),
 
 
-  // write a function a*z for a complex a
 
 
 
@@ -13244,6 +13248,7 @@ void testPotentialPlotter()
   //  fields and potentials given a coeff array of a complex polynomial. Plot surfaces for
   //  f(z) = (x+1)*(x-1), f(z) = (x+1)*(x-1)*(x+i)*(x-i). Try to figure out the geodesics between
   //  the critical points in the Polya potential.
+  // -Write a function a*z for a complex a. Also implement Moebius transforms.
   // -Give the user an option to set low and high clipping thresholds for u and v. That helps to 
   //  deal with functions that shoot off to infinity at some values. We need that for functions 
   //  with poles such as 1/z, log(z), etc.
@@ -13253,6 +13258,9 @@ void testPotentialPlotter()
   //  with respect to y on function values and add an "integration constant" from an analytic 
   //  expression in x. It's just a weighted (by c_n) sum of terms of the form x^(n+1) / (n+1), 
   //  I think.
+  // -Pick a single value for y (like y = 2) and let x traverse a range -k...+k (like -5..+5) and 
+  //  plot the real and imaginary parts of u,v,P as functions of x for f(z) = z^n (take n=1,..,8). 
+  //  From the Polya potential plots, I'd expect to see some sort of oscillation.
 }
 
 

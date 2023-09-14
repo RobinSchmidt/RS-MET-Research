@@ -13143,7 +13143,7 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
+  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
@@ -13239,6 +13239,10 @@ void testPotentialPlotter()
   //  resolution grid which we then scale up by a factor of twenty using simple bilinear 
   //  interpolation. Maybe much better results could be obtained using bicubic interpolation?
   //  https://en.wikipedia.org/wiki/Bicubic_interpolation
+  // -The potential of z^2 is the monkey saddle: https://en.wikipedia.org/wiki/Monkey_saddle
+  //  It has an umbilical point at the origin:   https://en.wikipedia.org/wiki/Umbilical_point
+  //  This is already an observation through the lens of differential geometry. I think, all powers
+  //  z^n have such an umbilical point at the origin.
   //
   // ToDo:
   // -Plot potentials of f(z) = 1, -1, i, -i, 1+i, 1-i, -1+i, -1-i, z, z+1, z^2, (z-1)*(z+1),

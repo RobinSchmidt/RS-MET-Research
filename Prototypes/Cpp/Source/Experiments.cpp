@@ -13131,7 +13131,7 @@ void testPotentialPlotter()
     setToDarkMode(plt);
     //setColorPalette(plt, ColorPalette::bipolarBlueToYellow);
     //setColorPalette(plt, ColorPalette::viridis);
-    setColorPalette(plt, ColorPalette::plasma);
+    setColorPalette(plt, ColorPalette::magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
     plotContours(plt, levels, true); // true: use constant colors between contours

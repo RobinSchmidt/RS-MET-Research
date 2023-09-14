@@ -13106,21 +13106,34 @@ void testPotentialPlotter()
 
   // Like splotA but instead produces a contour map:
   auto cplotA = [&](std::function<Real(Real x, Real y)> f,
-    Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
+    Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny,
+    int numContours, Real zMin, Real zMax)
   {
     GNUPlotter plt;
     addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
-    plt.addCommand("set size square");
-    // plt.addCommand("set size ratio -1");
 
+    // ToDo: make zMin, zMax optional. If missing, detect appropriate value from the data 
+    // automatically
+
+    //Real zMin = -0.8;
+    //Real zMax = +0.8;
+    //int numContours = 17;
+
+
+    Vec levels = RAPT::rsRangeLinear(zMin, zMax, numContours);
+
+    // ToDo: figure this out from the data:
     //Vec levels = {-0.8, -0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6, +0.8};  // preliminary
     //Vec levels = {-0.6, -0.4, -0.2, 0.0, +0.2, +0.4, +0.6};  // preliminary
     // ToDo: determine the appropriate levels from the data.
-    Vec levels = {-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 
-                  +0.1, +0.2, +0.3, +0.4, +0.5, +0.6, +0.7, +0.8};
+    //Vec levels = {-0.8, -0.7, -0.6, -0.5, -0.4, -0.3, -0.2, -0.1, 0.0, 
+    //              +0.1, +0.2, +0.3, +0.4, +0.5, +0.6, +0.7, +0.8};
+
+
 
     plt.setPixelSize(600, 600);
-
+    plt.addCommand("set size square");
+    // plt.addCommand("set size ratio -1");
     plotContours(plt, levels, true); // true: use constant colors between contours
   };
 
@@ -13130,7 +13143,7 @@ void testPotentialPlotter()
 
   // Analytic Polya potnetials, plotted as surface plots using GNUPlotCPP:
   //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
-  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201);
+  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
 
 
   // Analytic Polya potnetials, plotted into .ppm files:
@@ -13227,6 +13240,10 @@ void testPotentialPlotter()
   //  ...but what function would a paraboloid like x^2 + y^2 mean?
   //  f_x = 2x, f_y = 2y  ->  f(z) = 2 z.r - 2 z.i I guess, the Polya vector field would probably 
   //  have a nonzero divergence and therefore not satisfy one of the two Cauchy-Riemann eqautions.
+  // -Implement a function that produces the coeff arrays of polynomials for the Polya vector 
+  //  fields and potentials given a coeff array of a complex polynomial. Plot surfaces for
+  //  f(z) = (x+1)*(x-1), f(z) = (x+1)*(x-1)*(x+i)*(x-i). Try to figure out the geodesics between
+  //  the critical points in the Polya potential.
   // -Give the user an option to set low and high clipping thresholds for u and v. That helps to 
   //  deal with functions that shoot off to infinity at some values. We need that for functions 
   //  with poles such as 1/z, log(z), etc.

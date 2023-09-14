@@ -64,6 +64,33 @@ void plotSurfaceDark(GNUPlotter& plt)
   plt.invokeGNUPlot();
 }
 
+// Under construction. Intentional usage:
+//
+//   int N = 20;
+//   setLineStyles(plt, "lc rgb \"red\"",   1, N, 3);
+//   setLineStyles(plt, "lc rgb \"green\"", 2, N, 3);
+//   setLineStyles(plt, "lc rgb \"blue\"",  3, N, 3);
+//
+// All lines up to N should be alternatingly red, green and blue. It doesn't seem to work yet, 
+// though. At least not in the context of contour plots. The contour lines are always black even if
+// we call the function like that. Calling:
+//
+//   plt.addCommand("set style increment user");
+//
+// before also doesn't help. The contours are still black. -> Figure out!
+void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iEnd, int iInc)
+{
+  std::string range = 
+    std::to_string(iStart) + ":" + std::to_string(iEnd) + ":" + std::to_string(iInc);
+  std::string cmd = "do for [i=" + range  + "] { set style line i " + style + " }";
+  plt.addCommand(cmd);
+
+  // See:
+  // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
+  // http://www.gnuplotting.org/tag/for/
+}
+// Move into class GNUPlotter as member function. It's generally useful.
+
 void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
 {
   // Experimental - may need to be tweaked...
@@ -72,13 +99,23 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
   plt.addCommand("set pm3d map impl");
   plt.addCommand("set contour");
 
-  //plt.addCommand("set style increment user");  // ?
+
+  /*
+  plt.addCommand("set style increment user");
+  setLineStyles(plt, "lc rgb \"red\"",   1, 20, 3);
+  setLineStyles(plt, "lc rgb \"green\"", 2, 20, 3);
+  setLineStyles(plt, "lc rgb \"blue\"",  3, 20, 3);
+  */
+
+
   // What does this do?
 
   //plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
   // This comes from copy/paste from some website. The 18 is probably becase the plot there had 18 
   // levels. Maybe we should either make the upper bound dynamic (using levels.size()) or just 
   // scrap the command. I think, this is the default line style anyway?
+  // Factor out into a function setLineStyle(plt, string& style, int iStart, int iEnd, int iInc)
+
 
   plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
   plt.addCommand("set autoscale fix");  // ?

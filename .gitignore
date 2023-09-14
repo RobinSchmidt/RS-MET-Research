@@ -39,6 +39,7 @@ Misc/Formulas.synctex.gz
 Prototypes/Cpp/Builds/VisualStudio2019/Thumbs.db
 Prototypes/Cpp/Builds/VisualStudio2019/enc_temp_folder/
 *.png
+*.svg
 *.db
 Prototypes/Cpp/Builds/VisualStudio2019/x64/Debug/ConsoleApp/Experiments_ConsoleApp.vcxproj.FileListAbsolute.txt
 *.gz

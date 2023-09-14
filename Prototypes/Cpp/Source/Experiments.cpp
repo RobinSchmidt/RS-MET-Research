@@ -13128,8 +13128,10 @@ void testPotentialPlotter()
     plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
     plt.setPixelSize(600, 600);
     plt.addCommand("set size square");
+    setToDarkMode(plt);
     setColorPalette(plt, ColorPalette::bipolarBlueToYellow);
     // plt.addCommand("set size ratio -1");  // What does this do?
+    // plt.addCommand("set autoscale fix");  // What does this do?
     plotContours(plt, levels, true); // true: use constant colors between contours
   };
   // Maybe drag the setup of the color palette to here

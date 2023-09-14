@@ -110,12 +110,6 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
 
 void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
 {
-  setToDarkMode(plt);
-  plt.addCommand("set pm3d map impl");
-  plt.addCommand("set contour");
-  //plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
-  //plt.addCommand("set autoscale fix");  // What does this do?
-
   // Add the contour lines:
   std::string cmd;
   cmd = "set cntrparam levels discrete " + std::to_string(levels[0]);
@@ -134,27 +128,23 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
   }
 
   // Plot:
+  plt.addCommand("set pm3d map impl");
+  plt.addCommand("set contour");
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();
-
-  // See:
-  // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
-  // https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
-  // https://subscription.packtpub.com/book/data/9781849517249/10/ch10lvl1sec101/making-a-labeled-contour-plot
-  // http://lowrank.net/gnuplot/plotpm3d-e.html
-  // -has interesting function: x^2 * y^2 * exp(-(x^2 + y^2))
 
   // Questions:
   // -What happens, if the levels are non-equidistant? I guess, in this case, the alignment between
   //  constant color region boundaries and contour lines gets messed up.
-
-  // ToDo:
-  // -Make using constant colors this optional, let the user pass a bool useConstColors.
-  // -Implement a convenience function that determines the appropriate levels for the contours 
-  //  automatically from the data. But we do not have the data availble here. It must be done on a 
-  //  higher level, where the data is still available. 
 }
 
+// See:
+// https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
+// https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
+// https://subscription.packtpub.com/book/data/9781849517249/10/ch10lvl1sec101/making-a-labeled-contour-plot
+// http://lowrank.net/gnuplot/plotpm3d-e.html
+// -has interesting function: x^2 * y^2 * exp(-(x^2 + y^2))
+//
 // ToDo:
 // Maybe plot also the Polya vector field. Use strength of color (opacity and/or brightness) so 
 // indicate field strength. Let the arrows all have the same length.

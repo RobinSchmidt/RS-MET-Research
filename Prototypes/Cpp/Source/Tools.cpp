@@ -93,7 +93,8 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 
 enum class ColorPalette
 {
-  bipolarBlueToYellow = 0,
+  bipolarBlueToYellow = 0,  // maybe just anem it blueGreenYellow
+  viridis,
 
   numColorPalettes
 };
@@ -104,9 +105,30 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
   switch(palette)
   {
   case CP::bipolarBlueToYellow: plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"); break;
+  case CP::viridis: plt.addCommand("set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"); break;
+
     // ...more to come
   }
 }
+/*
+set style line  1 lt 1 lc rgb '#440154' # dark purple
+set style line  2 lt 1 lc rgb '#472c7a' # purple
+set style line  3 lt 1 lc rgb '#3b518b' # blue
+set style line  4 lt 1 lc rgb '#2c718e' # blue
+set style line  5 lt 1 lc rgb '#21908d' # blue-green
+set style line  6 lt 1 lc rgb '#27ad81' # green
+set style line  7 lt 1 lc rgb '#5cc863' # green
+set style line  8 lt 1 lc rgb '#aadc32' # lime green
+set style line  9 lt 1 lc rgb '#fde725' # yellow
+*/
+
+// ToDo:
+// -Find more beautiful colormaps - unipolar and bipolar
+//
+// See:
+// http://www.gnuplotting.org/tag/palette/
+// http://www.gnuplotting.org/tag/colormap/
+// https://github.com/Gnuplotting/gnuplot-palettes
 
 void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
 {

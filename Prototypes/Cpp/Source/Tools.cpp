@@ -95,10 +95,10 @@ enum class ColorPalette  // Maybe rename to ColorMap or NamedColorMap or ColorMa
 {
   // Unipolar maps:
   magma,
-  printable,
+  printable,          // black-blue-pink-orange-yellow-white. Translates well to grayscale.
   plasma,
-  viridis,
-  viridisBrt,         // Similar to viridis but a bit brighter
+  viridis,            // From dark blue via green to yellow.
+  viridisBrt,         // Similar to viridis but a bit brighter.
 
   // Bipolar maps:
   prpGrnRed,
@@ -126,7 +126,7 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
   plt.addCommand(c);
 }
 /*
-set palette rgb 30,31,32;
+
 */
 
 // ToDo:

@@ -13126,11 +13126,14 @@ void testPotentialPlotter()
     // Create and set up the plotter object and use it to plot the data:
     GNUPlotter plt;
     plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
-    plt.setPixelSize(600, 600);
-    plt.addCommand("set size square");
+    //plt.setPixelSize(600, 600);
+    plt.setPixelSize(3*(Nx-1), 3*(Ny-1));  // kinda ad hoc. Does it make sense?
+    //plt.setPixelSize(Nx, Ny);
+    if(Nx == Ny)
+      plt.addCommand("set size square");
     setToDarkMode(plt);
-    setColorPalette(plt, ColorPalette::viridis);
-    //setColorPalette(plt, ColorPalette::printable);
+    //setColorPalette(plt, ColorPalette::viridis);
+    setColorPalette(plt, ColorPalette::printable);
     //setColorPalette(plt, ColorPalette::magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
@@ -13143,14 +13146,22 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
+  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+  //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
 
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
+
+  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 17, -4, +4);
+  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 25, -4, +4);
+
+  splotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 41, 41);
+  cplotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 201, 801, 19, -3, +3);
+
+
 
   // Analytic Polya potnetials, plotted into .ppm files:
   plotA([](R x, R y) { return PE::sin(x, y); }, -2*PI, +2*PI, -2, +2, 1001, 401, "PolyPotential_zSin.ppm");
@@ -13239,10 +13250,18 @@ void testPotentialPlotter()
   //  resolution grid which we then scale up by a factor of twenty using simple bilinear 
   //  interpolation. Maybe much better results could be obtained using bicubic interpolation?
   //  https://en.wikipedia.org/wiki/Bicubic_interpolation
-  // -The potential of z^2 is the monkey saddle: https://en.wikipedia.org/wiki/Monkey_saddle
-  //  It has an umbilical point at the origin:   https://en.wikipedia.org/wiki/Umbilical_point
+  // -The potential of z^2 is the scaled monkey saddle: https://en.wikipedia.org/wiki/Monkey_saddle
+  //  It has an umbilical point at the origin: https://en.wikipedia.org/wiki/Umbilical_point
   //  This is already an observation through the lens of differential geometry. I think, all powers
-  //  z^n have such an umbilical point at the origin.
+  //  z^n have such an umbilical point at the origin. Here is a paper about such higher order 
+  //  saddles:
+  //  https://www.researchgate.net/publication/256808897_Monkey_Starfish_and_Octopus_Saddles
+  //  I think, z^4 produces the starfish saddle. I think, it is generally true that a zero of order
+  //  n in f(z) introduces a (n+1)th order saddle in P(x,y). Can this be proven? I think, a zero
+  //  of order n implies that we can locally approximate the potnetial around the zero by the 
+  //  potential of c * z^n for some constant c. Check it with the sine function
+  // -The potential of e^z = exp(z) does not have any saddles at all. It only has grooves. The 
+  //  shape is exponential along the x-direction and sinusoidal along the y-direction
   //
   // ToDo:
   // -Plot potentials of f(z) = 1, -1, i, -i, 1+i, 1-i, -1+i, -1-i, z, z+1, z^2, (z-1)*(z+1),

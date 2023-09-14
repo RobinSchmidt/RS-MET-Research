@@ -13130,7 +13130,7 @@ void testPotentialPlotter()
     plt.addCommand("set size square");
     setToDarkMode(plt);
     //setColorPalette(plt, ColorPalette::viridis);
-    setColorPalette(plt, ColorPalette::viridisBrt);
+    setColorPalette(plt, ColorPalette::prpGrnRed);
     //setColorPalette(plt, ColorPalette::magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?

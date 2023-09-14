@@ -100,12 +100,17 @@ enum class ColorPalette  // Maybe rename to ColorMap or NamedColorMap or ColorMa
   viridisBrt,         // Similar to viridis but a bit brighter
 
   // Bipolar maps:
+  prpGrnRed,
+
+
   numColorPalettes
 };
 // use suffixes Brt for Bright, Drk for dark
 
 void setColorPalette(GNUPlotter& plt, ColorPalette palette)
 {
+  std::string c;  // The command
+
   using CP = ColorPalette;
   switch(palette)
   {
@@ -114,6 +119,8 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
   case CP::plasma:     plt.addCommand("set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"); break;
   case CP::magma:      plt.addCommand("set palette defined (0 '#000004', 1 '#1c1044', 2 '#4f127b', 3 '#812581', 4 '#b5367a', 5 '#e55964', 6 '#fb8761', 7 '#fec287', 8 '#fbfdbf')"); break;
 
+  case CP::prpGrnRed:  plt.addCommand("set palette rgbformulae 33,13,10");
+
     // ...more to come
   }
 }
@@ -121,30 +128,28 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
 
 */
 
-
 // ToDo:
 // -Find more beautiful colormaps - unipolar and bipolar
 //
 // See:
 // http://www.gnuplotting.org/tag/palette/
 // http://www.gnuplotting.org/tag/colormap/
+//
+// Sources of some of the color maps:
+// viridisBrt: https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
+// prpGrnRed:  https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
+//
+// magma, plasma, viridis:
 // https://github.com/Gnuplotting/gnuplot-palettes
 //
-// Of these, I also like:
+// This git repo has many more. Of these, I also like:
 //   unipolar: bupu, greys, inferno, parula. pubu, purples, sand,
 //   bipolar:  bentcoolwarm, brbg, gnbu, gnpu, jet, moreland, piyg, prgn, puor, rdbu, rdylbu, rdylgn,
 //             spectral, turbo, ylgn, ylorbr
 //   alternating: paired
 // Those which I like but are also integrated here (magma, viridis, etc.) are not listed anymore. 
-//
-//
-// viridisBrt, the brighter version of viridis was found here:
-// https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
-//
-// The map used here looks also nice:
-// https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
-// It uses:
-// set palette rgbformulae 33,13,10
+
+
 
 void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
 {

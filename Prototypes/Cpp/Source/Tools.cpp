@@ -93,32 +93,11 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 
 void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
 {
-  // Experimental - may need to be tweaked...
-
   setToDarkMode(plt);
   plt.addCommand("set pm3d map impl");
   plt.addCommand("set contour");
-
-
-  /*
-  plt.addCommand("set style increment user");
-  setLineStyles(plt, "lc rgb \"red\"",   1, 20, 3);
-  setLineStyles(plt, "lc rgb \"green\"", 2, 20, 3);
-  setLineStyles(plt, "lc rgb \"blue\"",  3, 20, 3);
-  */
-
-
-  // What does this do?
-
-  //plt.addCommand("do for [i=1:18] { set style line i lc rgb \"black\" }"); // ?
-  // This comes from copy/paste from some website. The 18 is probably becase the plot there had 18 
-  // levels. Maybe we should either make the upper bound dynamic (using levels.size()) or just 
-  // scrap the command. I think, this is the default line style anyway?
-  // Factor out into a function setLineStyle(plt, string& style, int iStart, int iEnd, int iInc)
-
-
   plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1',2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')");
-  plt.addCommand("set autoscale fix");  // ?
+  //plt.addCommand("set autoscale fix");  // What does this do?
 
   // Add the copntour lines:
   std::string cmd;
@@ -126,8 +105,6 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
   for(int i = 1; i < levels.size(); i++)
     cmd += "," + std::to_string(levels[i]);
   plt.addCommand(cmd);
-
-  //bool useConstColors = true; // make parameter
 
   // Use constant color fills between the contour lines if desired:
   if(useConstColors)
@@ -139,6 +116,7 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
     plt.addCommand("set cbrange " + range);  // color bar range
   }
 
+  // Plot:
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
   plt.invokeGNUPlot();
 

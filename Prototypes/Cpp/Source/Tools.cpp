@@ -91,24 +91,28 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 }
 // Move into class GNUPlotter as member function. It's generally useful.
 
-enum class ColorPalette
+enum class ColorPalette  // Maybe rename to ColorMap or NamedColorMap or ColorMapName
 {
+  // Unipolar maps:
   magma,
   plasma,
   viridis,
-  blueGreenYellow,  // similar to viridis but a bit brighter, maybe rename to viridisBrighter
+  viridisBrt,         // Similar to viridis but a bit brighter
 
+  // Bipolar maps:
   numColorPalettes
 };
+// use suffixes Brt for Bright, Drk for dark
+
 void setColorPalette(GNUPlotter& plt, ColorPalette palette)
 {
   using CP = ColorPalette;
   switch(palette)
   {
-  case CP::blueGreenYellow: plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"); break;
-  case CP::viridis:         plt.addCommand("set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"); break;
-  case CP::plasma:          plt.addCommand("set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"); break;
-  case CP::magma:           plt.addCommand("set palette defined (0 '#000004', 1 '#1c1044', 2 '#4f127b', 3 '#812581', 4 '#b5367a', 5 '#e55964', 6 '#fb8761', 7 '#fec287', 8 '#fbfdbf')"); break;
+  case CP::viridisBrt: plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"); break;
+  case CP::viridis:    plt.addCommand("set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"); break;
+  case CP::plasma:     plt.addCommand("set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"); break;
+  case CP::magma:      plt.addCommand("set palette defined (0 '#000004', 1 '#1c1044', 2 '#4f127b', 3 '#812581', 4 '#b5367a', 5 '#e55964', 6 '#fb8761', 7 '#fec287', 8 '#fbfdbf')"); break;
 
     // ...more to come
   }
@@ -126,7 +130,15 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
 // http://www.gnuplotting.org/tag/colormap/
 // https://github.com/Gnuplotting/gnuplot-palettes
 //
-// The brighter version of viridis was found here:
+// Of these, I also like:
+//   unipolar: bupu, greys, inferno, parula. pubu, purples, sand,
+//   bipolar:  bentcoolwarm, brbg, gnbu, gnpu, jet, moreland, piyg, prgn, puor, rdbu, rdylbu, rdylgn,
+//             spectral, turbo, ylgn, ylorbr
+//   alternating: paired
+// Those which I like but are also integrated here (magma, viridis, etc.) are not listed anymore. 
+//
+//
+// viridisBrt, the brighter version of viridis was found here:
 // https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
 //
 // The map used here looks also nice:

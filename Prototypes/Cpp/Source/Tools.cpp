@@ -93,8 +93,9 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 
 enum class ColorPalette
 {
-  bipolarBlueToYellow = 0,  // maybe just anem it blueGreenYellow
+  plasma,
   viridis,
+  blueGreenYellow,  // similar to viridis but a bit brighter, maybe rename to viridisBrighter
 
   numColorPalettes
 };
@@ -104,22 +105,16 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
 
   switch(palette)
   {
-  case CP::bipolarBlueToYellow: plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"); break;
-  case CP::viridis: plt.addCommand("set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"); break;
+  case CP::blueGreenYellow: plt.addCommand("set palette defined (0 '#352a87', 1 '#0363e1', 2 '#1485d4', 3 '#06a7c6', 4 '#38b99e', 5 '#92bf73', 6 '#d9ba56', 7 '#fcce2e', 8 '#f9fb0e')"); break;
+  case CP::viridis:         plt.addCommand("set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"); break;
+  case CP::plasma:          plt.addCommand("set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"); break;
+
 
     // ...more to come
   }
 }
 /*
-set style line  1 lt 1 lc rgb '#440154' # dark purple
-set style line  2 lt 1 lc rgb '#472c7a' # purple
-set style line  3 lt 1 lc rgb '#3b518b' # blue
-set style line  4 lt 1 lc rgb '#2c718e' # blue
-set style line  5 lt 1 lc rgb '#21908d' # blue-green
-set style line  6 lt 1 lc rgb '#27ad81' # green
-set style line  7 lt 1 lc rgb '#5cc863' # green
-set style line  8 lt 1 lc rgb '#aadc32' # lime green
-set style line  9 lt 1 lc rgb '#fde725' # yellow
+
 */
 
 // ToDo:

@@ -95,6 +95,7 @@ enum class ColorPalette  // Maybe rename to ColorMap or NamedColorMap or ColorMa
 {
   // Unipolar maps:
   magma,
+  printable,
   plasma,
   viridis,
   viridisBrt,         // Similar to viridis but a bit brighter
@@ -118,13 +119,14 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
   case CP::plasma:     c = "set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"; break;
   case CP::magma:      c = "set palette defined (0 '#000004', 1 '#1c1044', 2 '#4f127b', 3 '#812581', 4 '#b5367a', 5 '#e55964', 6 '#fb8761', 7 '#fec287', 8 '#fbfdbf')"; break;
   case CP::prpGrnRed:  c = "set palette rgbformulae 33,13,10";
+  case CP::printable:  c = "set palette rgbformulae 30,31,32";
 
     // ...more to come
   }
   plt.addCommand(c);
 }
 /*
-
+set palette rgb 30,31,32;
 */
 
 // ToDo:
@@ -147,6 +149,11 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
 //             spectral, turbo, ylgn, ylorbr
 //   alternating: paired
 // Those which I like but are also integrated here (magma, viridis, etc.) are not listed anymore. 
+// Here are yet more colormaps:
+// http://gnuplot.info/demo/pm3dcolors.html
+// I like:  traditional pm3d, AFM hot, black-blue-violet-yellow-white (printable in grayscale), 
+// rainbow
+// set palette rgbformulae 7,5,15
 
 
 

@@ -13288,6 +13288,8 @@ void testPotentialPlotter()
   // -Pick a single value for y (like y = 2) and let x traverse a range -k...+k (like -5..+5) and 
   //  plot the real and imaginary parts of u,v,P as functions of x for f(z) = z^n (take n=1,..,8). 
   //  From the Polya potential plots, I'd expect to see some sort of oscillation.
+  // -Or: pick a radius r and let the angle traverse 0..2pi. We'll get some wiggling function. Will
+  //  it be sinusoidal or some other shape? Will the shape depend on the radius?
 }
 
 

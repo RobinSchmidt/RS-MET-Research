@@ -13133,7 +13133,8 @@ void testPotentialPlotter()
       plt.addCommand("set size square");
     setToDarkMode(plt);
     //setColorPalette(plt, ColorPalette::viridis);
-    setColorPalette(plt, ColorPalette::printable);
+    //setColorPalette(plt, ColorPalette::printable);
+    setColorPalette(plt, ColorPalette::prpGrnRed);
     //setColorPalette(plt, ColorPalette::magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
@@ -13150,7 +13151,7 @@ void testPotentialPlotter()
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
 
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
@@ -13158,8 +13159,8 @@ void testPotentialPlotter()
   //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 17, -4, +4);
   //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 25, -4, +4);
 
-  splotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 41, 41);
-  cplotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 201, 801, 19, -3, +3);
+  //splotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 41, 41);
+  //cplotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 201, 801, 19, -3, +3);
 
 
 

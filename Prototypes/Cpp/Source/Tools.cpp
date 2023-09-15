@@ -118,8 +118,8 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
   case CP::viridis:    c = "set palette defined (0 '#440154', 1 '#472c7a', 2 '#3b518b', 3 '#2c718e', 4 '#21908d', 5 '#27ad81', 6 '#5cc863', 7 '#aadc32', 8 '#fde725')"; break;
   case CP::plasma:     c = "set palette defined (0 '#0c0887', 1 '#4b03a1', 2 '#7d03a8', 3 '#a82296', 4 '#cb4679', 5 '#e56b5d', 6 '#f89441', 7 '#fdc328', 8 '#f0f921')"; break;
   case CP::magma:      c = "set palette defined (0 '#000004', 1 '#1c1044', 2 '#4f127b', 3 '#812581', 4 '#b5367a', 5 '#e55964', 6 '#fb8761', 7 '#fec287', 8 '#fbfdbf')"; break;
-  case CP::prpGrnRed:  c = "set palette rgbformulae 33,13,10";
-  case CP::printable:  c = "set palette rgbformulae 30,31,32";
+  case CP::prpGrnRed:  c = "set palette rgbformulae 33,13,10"; break;
+  case CP::printable:  c = "set palette rgbformulae 30,31,32"; break;
 
     // ...more to come
   }

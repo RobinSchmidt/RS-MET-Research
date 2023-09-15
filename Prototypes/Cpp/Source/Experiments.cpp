@@ -13089,14 +13089,15 @@ void testPotentialPlotter()
     Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
   {
     GNUPlotter plt;
-    //addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
     plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
 
     //plt.addCommand("set contour surface");  // contours on the surface
     //plt.addCommand("set contour base");     // contours in the base plane
     //plt.addCommand("set contour both");     // contours in base plane and on surface
     //plt.plot3D();
+    // needs numContours, etc.
 
+    plt.setPixelSize(800, 600);
     plotSurfaceDark(plt); // Maybe try other ways
 
     // View: 66, 138
@@ -13136,10 +13137,11 @@ void testPotentialPlotter()
     if(Nx == Ny)
       plt.addCommand("set size square");
     plt.setToDarkMode();
-    plt.setColorPalette(CP::viridisBrt);
+    //plt.setColorPalette(CP::_test);
+    //plt.setColorPalette(CP::viridisBrt);
     //plt.setColorPalette(CP::printable);
-    //plt.setColorPalette(CP::prpGrnRed);
-    //plt.setColorPalette(ColorPalette::magma);
+    plt.setColorPalette(CP::BrBG);
+    //plt.setColorPalette(CP::magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
     plotContours(plt, levels, true); // true: use constant colors between contours
@@ -13151,7 +13153,7 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
+  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
@@ -13295,6 +13297,9 @@ void testPotentialPlotter()
   //  From the Polya potential plots, I'd expect to see some sort of oscillation.
   // -Or: pick a radius r and let the angle traverse 0..2pi. We'll get some wiggling function. Will
   //  it be sinusoidal or some other shape? Will the shape depend on the radius?
+
+  // For contour filling on the 3D plot, see:
+  // https://gnuplot.sourceforge.net/demo_6.1/contourfill.html
 }
 
 

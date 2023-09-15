@@ -44,7 +44,14 @@ void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
 void plotSurfaceDark(GNUPlotter& plt)
 {
   plt.setToDarkMode();
-  plt.addCommand("set palette rgbformulae 8, 9, 7");
+
+  using CP = GNUPlotter::ColorPalette;
+  //plt.addCommand("set palette rgbformulae 8, 9, 7");   // burgund...white
+  //plt.setColorPalette(CP::moreland);
+  //plt.setColorPalette(CP::printable);
+  plt.setColorPalette(CP::magma);
+
+
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
   plt.addCommand("set pm3d lighting specular 0.25");

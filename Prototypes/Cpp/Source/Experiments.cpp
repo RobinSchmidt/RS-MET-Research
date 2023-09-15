@@ -13124,18 +13124,21 @@ void testPotentialPlotter()
     //addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
 
     // Create and set up the plotter object and use it to plot the data:
+
     GNUPlotter plt;
+    using CP = GNUPlotter::ColorPalette;
+
     plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
     //plt.setPixelSize(600, 600);
     plt.setPixelSize(3*(Nx-1), 3*(Ny-1));  // kinda ad hoc. Does it make sense?
     //plt.setPixelSize(Nx, Ny);
     if(Nx == Ny)
       plt.addCommand("set size square");
-    setToDarkMode(plt);
-    //setColorPalette(plt, ColorPalette::viridis);
-    //setColorPalette(plt, ColorPalette::printable);
-    setColorPalette(plt, ColorPalette::prpGrnRed);
-    //setColorPalette(plt, ColorPalette::magma);
+    plt.setToDarkMode();
+    plt.setColorPalette(CP::viridisBrt);
+    //plt.setColorPalette(CP::printable);
+    //plt.setColorPalette(CP::prpGrnRed);
+    //plt.setColorPalette(ColorPalette::magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
     plotContours(plt, levels, true); // true: use constant colors between contours

@@ -91,6 +91,10 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 }
 // Move into class GNUPlotter as member function. It's generally useful.
 
+
+
+// This color palette stuff is currently being integrated into GNUPlotCPP. When done, delete it 
+// here:
 enum class ColorPalette  // Maybe rename to ColorMap or NamedColorMap or ColorMapName
 {
   // Unipolar maps:
@@ -106,8 +110,6 @@ enum class ColorPalette  // Maybe rename to ColorMap or NamedColorMap or ColorMa
 
   numColorPalettes
 };
-// use suffixes Brt for Bright, Drk for dark
-
 void setColorPalette(GNUPlotter& plt, ColorPalette palette)
 {
   std::string c;            // The command to be passed to plt
@@ -125,35 +127,8 @@ void setColorPalette(GNUPlotter& plt, ColorPalette palette)
   }
   plt.addCommand(c);
 }
-/*
 
-*/
 
-// ToDo:
-// -Find more beautiful colormaps - unipolar and bipolar
-//
-// See:
-// http://www.gnuplotting.org/tag/palette/
-// http://www.gnuplotting.org/tag/colormap/
-//
-// Sources of some of the color maps:
-// viridisBrt: https://stackoverflow.com/questions/35818875/gnuplot-pm3d-with-contour-lines
-// prpGrnRed:  https://stackoverflow.com/questions/20977368/filled-contour-plot-with-constant-color-between-contour-lines
-//
-// magma, plasma, viridis:
-// https://github.com/Gnuplotting/gnuplot-palettes
-//
-// This git repo has many more. Of these, I also like:
-//   unipolar: bupu, greys, inferno, parula. pubu, purples, sand,
-//   bipolar:  bentcoolwarm, brbg, gnbu, gnpu, jet, moreland, piyg, prgn, puor, rdbu, rdylbu, rdylgn,
-//             spectral, turbo, ylgn, ylorbr
-//   alternating: paired
-// Those which I like but are also integrated here (magma, viridis, etc.) are not listed anymore. 
-// Here are yet more colormaps:
-// http://gnuplot.info/demo/pm3dcolors.html
-// I like:  traditional pm3d, AFM hot, black-blue-violet-yellow-white (printable in grayscale), 
-// rainbow
-// set palette rgbformulae 7,5,15
 
 
 

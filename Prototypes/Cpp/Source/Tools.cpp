@@ -26,16 +26,15 @@ void generateMatrixData(std::function<T(T x, T y)> f,
 
 /** Given a bivariate function f = f(x,y), ranges for x and y and numbers of samples along x and y,
 this function generates the data matrix of the heights produced by f and adds the data as matrix 
-data to teh plotter object. */
+data to the plotter object. */
+/*
 template<class T>
 void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
   T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
 {
-  std::vector<T> x, y;
-  RAPT::rsMatrix<T> z;
-  generateMatrixData(f, xMin, xMax, yMin, yMax, Nx, Ny, x, y, z);
-  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
+  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
 }
+*/
 // Maybe factor out the function that generates the P-matrix into a function getDataMatrix(...).
 // Instead of just adding the data to plt, we may want tot analyze the produced data to set up plt.
 // For example, we may want to to figure out the min and max values to set up the z-range and/or 

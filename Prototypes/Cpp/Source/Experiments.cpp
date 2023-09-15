@@ -13089,7 +13089,8 @@ void testPotentialPlotter()
     Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
   {
     GNUPlotter plt;
-    addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
+    //addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
+    plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
 
     //plt.addCommand("set contour surface");  // contours on the surface
     //plt.addCommand("set contour base");     // contours in the base plane
@@ -13150,7 +13151,7 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
+  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 21, 21);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);

@@ -13138,10 +13138,10 @@ void testPotentialPlotter()
       plt.addCommand("set size square");
     plt.setToDarkMode();
     //plt.setColorPalette(CP::_test);
-    //plt.setColorPalette(CP::viridisBrt);
-    //plt.setColorPalette(CP::printable);
-    plt.setColorPalette(CP::BrBG);
-    //plt.setColorPalette(CP::magma);
+    plt.setColorPalette(CP::UA_viridisBrt);
+    //plt.setColorPalette(CP::F_printable);
+    //plt.setColorPalette(CP::AS_BrBG);
+    //plt.setColorPalette(CP::SW_magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
     plotContours(plt, levels, true); // true: use constant colors between contours

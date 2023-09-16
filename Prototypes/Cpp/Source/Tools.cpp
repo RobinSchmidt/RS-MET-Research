@@ -47,9 +47,9 @@ void plotSurfaceDark(GNUPlotter& plt)
 
   using CP = GNUPlotter::ColorPalette;
   //plt.addCommand("set palette rgbformulae 8, 9, 7");   // burgund...white
-  //plt.setColorPalette(CP::moreland);
-  //plt.setColorPalette(CP::printable);
-  plt.setColorPalette(CP::magma);
+  //plt.setColorPalette(CP::KM_moreland);
+  //plt.setColorPalette(CP::F_printable);
+  plt.setColorPalette(CP::SW_magma);
 
 
   plt.addCommand("set style fill solid 1.0 noborder");

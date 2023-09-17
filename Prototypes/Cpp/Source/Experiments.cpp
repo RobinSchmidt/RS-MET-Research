@@ -13099,23 +13099,18 @@ void testPotentialPlotter()
 
     using CP = GNUPlotter::ColorPalette;
     plt.setColorPalette(CP::CB_YlGnBu, true);
-    //plt.setColorPalette(CP::CB_YlOrRd, true);
-
-    //plt.addCommand("set lmargin 0");  // left
     plt.addCommand("set lmargin at screen 0.18");  // left
-    plt.addCommand("set rmargin at screen 0.79"); 
-
-    plt.addCommand("set bmargin at screen 0.25"); 
-    plt.addCommand("set tmargin at screen 0.85"); 
-
-    // Somehwo, the left and right margin settings seem to interact. They are not independent. WTF!
-
-    //plt.addCommand("set rmargin at screen 1.0");  // right
-    //plt.addCommand("set bmargin 0");  // bottom
-    //plt.addCommand("set tmargin 0");  // top
-
+    plt.addCommand("set rmargin at screen 0.79");  // right
+    plt.addCommand("set bmargin at screen 0.25");  // bottom
+    plt.addCommand("set tmargin at screen 0.85");  // top
+    // The values have been found by trial and error. Somehow, the left and right margin settings 
+    // seem to interact. They are not independent. When setting the right margin, the left margin 
+    // also gets modified and vice versa. WTF! Same for top and bottom. Figure out what's going on! 
+    // Maybe add a function plt.setMargins(top, left, bottom, right) or (left, right, bottom, top). 
+    // But this function should behave in a way that lets the user set the margins independently.
+    // 
+    // See:
     // https://gnuplot.sourceforge.net/docs_4.2/node200.html
-    // maybe add a function plt.setMargins(top, left, bottom, right) or left, right, bottom, top,
     // https://gnuplot.sourceforge.net/demo/margins.html
 
 
@@ -13167,6 +13162,8 @@ void testPotentialPlotter()
     //plt.setColorPalette(CP::SW_magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
+
+
     plotContours(plt, levels, true); // true: use constant colors between contours
   };
   // Maybe drag the setup of the color palette to here

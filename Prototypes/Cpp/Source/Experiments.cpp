@@ -13099,6 +13099,7 @@ void testPotentialPlotter()
 
     using CP = GNUPlotter::ColorPalette;
     plt.setColorPalette(CP::CB_YlGnBu, true);
+    //plt.setColorPalette(CP::GP_Sand, true);
 
 
     //plt.addCommand("set lmargin at screen 0.18");  // left
@@ -13161,7 +13162,7 @@ void testPotentialPlotter()
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
     plt.setColorPalette(CP::CB_YlGnBu, true);
-    //plt.setColorPalette(CP::SW_magma);
+    //plt.setColorPalette(CP::GP_Sand);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
 

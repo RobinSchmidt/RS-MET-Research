@@ -43,19 +43,19 @@ void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
 /** Produces a surface plot in dark mode. */
 void plotSurfaceDark(GNUPlotter& plt)
 {
-  plt.setToDarkMode();
+  //plt.setToDarkMode();
 
   using CP = GNUPlotter::ColorPalette;
   //plt.addCommand("set palette rgbformulae 8, 9, 7");   // burgund...white
   //plt.setColorPalette(CP::KM_moreland);
   //plt.setColorPalette(CP::F_printable);
-  plt.setColorPalette(CP::SW_magma);
+  //plt.setColorPalette(CP::SW_magma);
 
 
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
   plt.addCommand("set pm3d lighting specular 0.25");
-  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d");
+  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d notitle");
   plt.invokeGNUPlot();
 }
 // ToDo:

@@ -13097,7 +13097,30 @@ void testPotentialPlotter()
     //plt.plot3D();
     // needs numContours, etc.
 
-    plt.setPixelSize(800, 600);
+    using CP = GNUPlotter::ColorPalette;
+    plt.setColorPalette(CP::CB_YlGnBu, true);
+    //plt.setColorPalette(CP::CB_YlOrRd, true);
+
+    //plt.addCommand("set lmargin 0");  // left
+    plt.addCommand("set lmargin at screen 0.18");  // left
+    plt.addCommand("set rmargin at screen 0.79"); 
+
+    plt.addCommand("set bmargin at screen 0.25"); 
+    plt.addCommand("set tmargin at screen 0.85"); 
+
+    // Somehwo, the left and right margin settings seem to interact. They are not independent. WTF!
+
+    //plt.addCommand("set rmargin at screen 1.0");  // right
+    //plt.addCommand("set bmargin 0");  // bottom
+    //plt.addCommand("set tmargin 0");  // top
+
+    // https://gnuplot.sourceforge.net/docs_4.2/node200.html
+    // maybe add a function plt.setMargins(top, left, bottom, right) or left, right, bottom, top,
+    // https://gnuplot.sourceforge.net/demo/margins.html
+
+
+    plt.setPixelSize(900, 600);
+    plt.setToDarkMode();
     plotSurfaceDark(plt); // Maybe try other ways
 
     // View: 66, 138
@@ -13136,11 +13159,11 @@ void testPotentialPlotter()
     //plt.setPixelSize(Nx, Ny);
     if(Nx == Ny)
       plt.addCommand("set size square");
-    plt.setToDarkMode();
+    //plt.setToDarkMode();
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
-    plt.setColorPalette(CP::AS_Purples);
+    plt.setColorPalette(CP::CB_YlGnBu, true);
     //plt.setColorPalette(CP::SW_magma);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
@@ -13153,11 +13176,14 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+  // -I think, the colormap CB_YlGnBu with inversion looks suitable for both the 3D surface and the
+  //  contour plot
+
 
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);

@@ -13099,10 +13099,12 @@ void testPotentialPlotter()
 
     using CP = GNUPlotter::ColorPalette;
     plt.setColorPalette(CP::CB_YlGnBu, true);
-    plt.addCommand("set lmargin at screen 0.18");  // left
-    plt.addCommand("set rmargin at screen 0.79");  // right
-    plt.addCommand("set bmargin at screen 0.25");  // bottom
-    plt.addCommand("set tmargin at screen 0.85");  // top
+
+
+    //plt.addCommand("set lmargin at screen 0.18");  // left
+    //plt.addCommand("set rmargin at screen 0.79");  // right
+    //plt.addCommand("set bmargin at screen 0.25");  // bottom
+    //plt.addCommand("set tmargin at screen 0.85");  // top
     // The values have been found by trial and error. Somehow, the left and right margin settings 
     // seem to interact. They are not independent. When setting the right margin, the left margin 
     // also gets modified and vice versa. WTF! Same for top and bottom. Figure out what's going on! 
@@ -13154,7 +13156,7 @@ void testPotentialPlotter()
     //plt.setPixelSize(Nx, Ny);
     if(Nx == Ny)
       plt.addCommand("set size square");
-    //plt.setToDarkMode();
+    plt.setToDarkMode();
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
@@ -13180,7 +13182,7 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);

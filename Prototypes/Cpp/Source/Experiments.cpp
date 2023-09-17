@@ -13112,7 +13112,7 @@ void testPotentialPlotter()
     // See:
     // https://gnuplot.sourceforge.net/docs_4.2/node200.html
     // https://gnuplot.sourceforge.net/demo/margins.html
-
+    // https://stackoverflow.com/questions/29376374/how-do-gnuplot-margins-work-in-multiplot-mode
 
     plt.setPixelSize(900, 600);
     plt.setToDarkMode();
@@ -13163,6 +13163,13 @@ void testPotentialPlotter()
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
 
+    //plt.addCommand("set lmargin at screen 0.0");  // left
+    //plt.addCommand("set rmargin at screen 1.0");  // right
+    //plt.addCommand("set lmargin 1");  // left
+    //plt.addCommand("set rmargin 1");  // right
+    //plt.addCommand("set bmargin 1");  // bottom
+    //plt.addCommand("set tmargin 1");  // top
+    // ...it doesn't work as expected. I have no idea, how GnuPlot handles margins. It's a mess!
 
     plotContours(plt, levels, true); // true: use constant colors between contours
   };
@@ -13173,7 +13180,7 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);

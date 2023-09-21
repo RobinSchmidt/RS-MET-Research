@@ -13215,8 +13215,19 @@ void testPotentialPlotter()
     plt.setTitle("Polya Vector Field");
 
     plt.setPixelSize(600, 600);
-    if(Nx == Ny)
-      plt.addCommand("set size square");
+
+    plt.addCommand("set bmargin at screen 0.0");  // bottom
+    plt.addCommand("set tmargin at screen 1.0");  // left
+    plt.addCommand("set lmargin at screen 0.0");  // left
+    plt.addCommand("set rmargin at screen 1.0");  // right
+    //plt.addCommand("set lmargin 1");  // left
+    //plt.addCommand("set rmargin 1");  // right
+    //plt.addCommand("set bmargin 1");  // bottom
+    //plt.addCommand("set tmargin 1");  // top
+
+    //if(Nx == Ny)
+    //  plt.addCommand("set size square");
+
     plt.plot();
   };
 

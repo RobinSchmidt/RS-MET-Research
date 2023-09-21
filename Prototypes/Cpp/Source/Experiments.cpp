@@ -13216,10 +13216,12 @@ void testPotentialPlotter()
 
     plt.setPixelSize(600, 600);
 
-    plt.addCommand("set bmargin at screen 0.0");  // bottom
-    plt.addCommand("set tmargin at screen 1.0");  // left
-    plt.addCommand("set lmargin at screen 0.0");  // left
-    plt.addCommand("set rmargin at screen 1.0");  // right
+    plt.addCommand("set bmargin at screen 0.1");  // bottom, B
+    plt.addCommand("set tmargin at screen 0.9");  // top, T
+    plt.addCommand("set lmargin at screen 0.07"); // left, L
+    plt.addCommand("set rmargin at screen 0.87"); // right, R
+    // I think, we need T-B = R-L to get an aspect ratio of 1?
+
     //plt.addCommand("set lmargin 1");  // left
     //plt.addCommand("set rmargin 1");  // right
     //plt.addCommand("set bmargin 1");  // bottom

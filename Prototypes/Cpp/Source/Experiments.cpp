@@ -13157,10 +13157,10 @@ void testPotentialPlotter()
 
     plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
     //plt.setPixelSize(600, 600);
-    plt.setPixelSize(3*(Nx-1), 3*(Ny-1));  // kinda ad hoc. Does it make sense?
+    //plt.setPixelSize(3*(Nx-1), 3*(Ny-1));  // kinda ad hoc. Does it make sense?
     //plt.setPixelSize(Nx, Ny);
-    if(Nx == Ny)
-      plt.addCommand("set size square");
+    //if(Nx == Ny)
+    //  plt.addCommand("set size square");
     //plt.setToDarkMode();
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
@@ -13183,6 +13183,12 @@ void testPotentialPlotter()
 
     plt.setTitle("Polya Potential Contours");
 
+    plt.setPixelSize(600, 600);
+    plt.addCommand("set bmargin at screen 0.1");  // B: bottom
+    plt.addCommand("set tmargin at screen 0.9");  // T: top
+    plt.addCommand("set lmargin at screen 0.07"); // L: left
+    plt.addCommand("set rmargin at screen 0.87"); // R: right
+
     plotContours(plt, levels, true); // true: use constant colors between contours
   };
   // Maybe drag the setup of the color palette to here
@@ -13203,34 +13209,25 @@ void testPotentialPlotter()
     using CP = GNUPlotter::ColorPalette;
     plt.addVectorField2D(fu, fv, Nx, xMin, xMax, Ny, yMin, yMax);
     plt.setRange(xMin, xMax, yMin, yMax);
-
-    //plt.setToDarkMode();
-    //plt.setColorPalette(CP::CB_YlGnBu9m, true);
-
     plt.setColorPalette(CP::CB_YlGnBu9m, false);
     //plt.setColorPalette(CP::RS_BkWt, true);
-    //plt.setColorPalette(CP::GF_Printable, true);
-    //plt.setColorPalette(CP::GP_Sand, true);
-
     plt.setTitle("Polya Vector Field");
 
     plt.setPixelSize(600, 600);
-
-    plt.addCommand("set bmargin at screen 0.1");  // bottom, B
-    plt.addCommand("set tmargin at screen 0.9");  // top, T
-    plt.addCommand("set lmargin at screen 0.07"); // left, L
-    plt.addCommand("set rmargin at screen 0.87"); // right, R
-    // I think, we need T-B = R-L to get an aspect ratio of 1?
-
-    //plt.addCommand("set lmargin 1");  // left
-    //plt.addCommand("set rmargin 1");  // right
-    //plt.addCommand("set bmargin 1");  // bottom
-    //plt.addCommand("set tmargin 1");  // top
+    plt.addCommand("set bmargin at screen 0.1");  // B: bottom
+    plt.addCommand("set tmargin at screen 0.9");  // T: top
+    plt.addCommand("set lmargin at screen 0.07"); // L: left
+    plt.addCommand("set rmargin at screen 0.87"); // R: right
+    // I think, we need T-B = R-L to get an aspect ratio of 1? Here, we use T-B = R-L = 0.9. 
+    // ToDo: Verify, if the aspect ratio is indeed 1.
 
     //if(Nx == Ny)
     //  plt.addCommand("set size square");
+    // I think, this interferes with the set _margin commands
 
     plt.plot();
+
+    // ToDo: set up lines - don't use dotting, use a faint solid gray instead
   };
 
 

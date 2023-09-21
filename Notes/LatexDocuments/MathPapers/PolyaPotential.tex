@@ -18,6 +18,8 @@
 \usepackage{hyperref}            % for hyperlinks
 %\usepackage{booktabs}
 %\usepackage{fancyhdr}           % for headers and footers
+%\usepackage{caption}
+\usepackage{subcaption}
 
 %\pagestyle{fancy} 
 %\rhead{}
@@ -253,9 +255,32 @@ where $u_n, v_n$ are the expressions for the corresponding positive power. It tu
 \section{Plotting the Polya Potentials}
 One of the main goals of this investigation is to provide a new way of visualizing complex functions, so we shall now look at some plots...TBC...
 
+\begin{figure}[h]
+\label{fig:SquareSurface}	
+\centering
+\includegraphics[width=1.0\textwidth]{../MathFigures/PolyaSurfaceSquare.png}
+\caption{Polya potential surface of $f(z) = z^2$}
+\end{figure}
+
+\begin{figure}[h]
+\label{fig:SquareVectorsAndContours}	
+\centering
+\begin{subfigure}[b]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{../MathFigures/PolyaVectorsSquare.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{../MathFigures/PolyaContoursSquare.png}
+\end{subfigure}
+\caption{Polya vector field and potential contours of $f(z) = z^2$}
+\end{figure}
+
 [ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]
 
+% https://tex.stackexchange.com/questions/5433/can-i-use-an-image-located-on-the-web-in-a-latex-document
 
+% https://user-images.githubusercontent.com/1833099/269307809-32ae0079-b006-41f5-844a-68dc2c36d668.png
 
 
 \section{Rules for Complicated Functions}

@@ -1,0 +1,1 @@
+To render the LaTeX documents with figures, look into ReadMe.txt in the MathFigures folder.

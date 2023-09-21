@@ -13098,7 +13098,7 @@ void testPotentialPlotter()
     // needs numContours, etc.
 
     using CP = GNUPlotter::ColorPalette;
-    plt.setColorPalette(CP::CB_YlGnBu, true);
+    plt.setColorPalette(CP::CB_YlGnBu9m, true);
     //plt.setColorPalette(CP::GP_Sand, true);
 
 
@@ -13161,7 +13161,7 @@ void testPotentialPlotter()
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
-    plt.setColorPalette(CP::CB_YlGnBu, true);
+    plt.setColorPalette(CP::CB_YlGnBu9m, true);
     //plt.setColorPalette(CP::GP_Sand);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
@@ -13178,6 +13178,31 @@ void testPotentialPlotter()
   };
   // Maybe drag the setup of the color palette to here
 
+
+  // Like splotA and cplotA but produces a vector field plot.
+  auto vplotA = [&](
+    std::function<void(Real x, Real y, Real* u, Real* v)> f,
+    Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
+  {
+    // Some API adaptor business:
+    std::function<Real(Real x, Real y)> fu, fv;
+    fu = [&](Real x, Real y) { Real u, v; f(x, y, &u, &v); return u; };
+    fv = [&](Real x, Real y) { Real u, v; f(x, y, &u, &v); return v; };
+
+    // Plotting:
+    GNUPlotter plt;
+    using CP = GNUPlotter::ColorPalette;
+    plt.addDataVectorField2D(fu, fv, Nx, xMin, xMax, Ny, yMin, yMax);
+    plt.setToDarkMode();
+    plt.setColorPalette(CP::CB_YlGnBu9m, true);
+    plt.plot();
+    // This is still very wrong!
+  };
+
+
+
+
+
   using C  = Complex;
   using R  = Real;
   using PE = rsPolyaPotentialEvaluator<Real>;
@@ -13188,8 +13213,13 @@ void testPotentialPlotter()
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
+
   // -I think, the colormap CB_YlGnBu with inversion looks suitable for both the 3D surface and the
   //  contour plot
+
+
 
 
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);

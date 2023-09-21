@@ -13098,7 +13098,7 @@ void testPotentialPlotter()
     // needs numContours, etc.
 
     using CP = GNUPlotter::ColorPalette;
-    plt.setColorPalette(CP::CB_YlGnBu9m, true);
+    plt.setColorPalette(CP::CB_YlGnBu9m, false);
     //plt.setColorPalette(CP::GP_Sand, true);
 
 
@@ -13118,7 +13118,7 @@ void testPotentialPlotter()
     // https://stackoverflow.com/questions/29376374/how-do-gnuplot-margins-work-in-multiplot-mode
 
     plt.setPixelSize(900, 600);
-    plt.setToDarkMode();
+    //plt.setToDarkMode();
     plotSurfaceDark(plt); // Maybe try other ways
 
     // View: 66, 138
@@ -13157,11 +13157,11 @@ void testPotentialPlotter()
     //plt.setPixelSize(Nx, Ny);
     if(Nx == Ny)
       plt.addCommand("set size square");
-    plt.setToDarkMode();
+    //plt.setToDarkMode();
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
-    plt.setColorPalette(CP::CB_YlGnBu9m, true);
+    plt.setColorPalette(CP::CB_YlGnBu9m, false);
     //plt.setColorPalette(CP::GP_Sand);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
@@ -13173,6 +13173,7 @@ void testPotentialPlotter()
     //plt.addCommand("set bmargin 1");  // bottom
     //plt.addCommand("set tmargin 1");  // top
     // ...it doesn't work as expected. I have no idea, how GnuPlot handles margins. It's a mess!
+    // Maybe it has to do with the "set size square" command? Could it be that these two interfere?
 
     plotContours(plt, levels, true); // true: use constant colors between contours
   };
@@ -13193,9 +13194,16 @@ void testPotentialPlotter()
     GNUPlotter plt;
     using CP = GNUPlotter::ColorPalette;
     plt.addVectorField2D(fu, fv, Nx, xMin, xMax, Ny, yMin, yMax);
-    plt.setToDarkMode();
-    plt.setColorPalette(CP::CB_YlGnBu9m, true);
-    plt.setPixelSize(600, 600); 
+    plt.setRange(xMin, xMax, yMin, yMax);
+
+    //plt.setToDarkMode();
+    //plt.setColorPalette(CP::CB_YlGnBu9m, true);
+
+    plt.setColorPalette(CP::CB_YlGnBu9m, false);
+
+    plt.setPixelSize(600, 600);
+    if(Nx == Ny)
+      plt.addCommand("set size square");
     plt.plot();
   };
 
@@ -13208,13 +13216,13 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 15, -0.7, +0.7);
   //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  //cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
 
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 15, 15);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
 
   // -I think, the colormap CB_YlGnBu with inversion looks suitable for both the 3D surface and the
   //  contour plot

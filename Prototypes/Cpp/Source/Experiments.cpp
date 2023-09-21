@@ -13098,7 +13098,8 @@ void testPotentialPlotter()
     // needs numContours, etc.
 
     using CP = GNUPlotter::ColorPalette;
-    plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    //plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    plt.setColorPalette(CP::RS_BkWt, true);
     //plt.setColorPalette(CP::GP_Sand, true);
 
 
@@ -13161,7 +13162,8 @@ void testPotentialPlotter()
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
-    plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    //plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    plt.setColorPalette(CP::RS_BkWt, true);
     //plt.setColorPalette(CP::GP_Sand);
     // plt.addCommand("set size ratio -1");  // What does this do?
     // plt.addCommand("set autoscale fix");  // What does this do?
@@ -13199,7 +13201,8 @@ void testPotentialPlotter()
     //plt.setToDarkMode();
     //plt.setColorPalette(CP::CB_YlGnBu9m, true);
 
-    plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    //plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    plt.setColorPalette(CP::RS_BkWt, true);
 
     plt.setPixelSize(600, 600);
     if(Nx == Ny)

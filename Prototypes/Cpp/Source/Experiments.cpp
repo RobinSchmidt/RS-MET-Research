@@ -13120,6 +13120,8 @@ void testPotentialPlotter()
 
     plt.setPixelSize(900, 600);
     //plt.setToDarkMode();
+    plt.setTitle("Polya Potential Surface");
+
     plotSurfaceDark(plt); // Maybe try other ways
 
     // View: 66, 138
@@ -13177,6 +13179,8 @@ void testPotentialPlotter()
     // ...it doesn't work as expected. I have no idea, how GnuPlot handles margins. It's a mess!
     // Maybe it has to do with the "set size square" command? Could it be that these two interfere?
 
+    plt.setTitle("Polya Potential Contours");
+
     plotContours(plt, levels, true); // true: use constant colors between contours
   };
   // Maybe drag the setup of the color palette to here
@@ -13203,6 +13207,8 @@ void testPotentialPlotter()
 
     //plt.setColorPalette(CP::CB_YlGnBu9m, false);
     plt.setColorPalette(CP::RS_BkWt, true);
+
+    plt.setTitle("Polya Vector Field");
 
     plt.setPixelSize(600, 600);
     if(Nx == Ny)

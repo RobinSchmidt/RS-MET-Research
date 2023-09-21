@@ -13356,6 +13356,8 @@ void testPotentialPlotter()
   //  n in f(z) introduces a (n+1)th order saddle in P(x,y). Can this be proven? I think, a zero
   //  of order n implies that we can locally approximate the potnetial around the zero by the 
   //  potential of c * z^n for some constant c. Check it with the sine function
+  //  Some more distantly related surfaces:
+  //  https://mathworld.wolfram.com/HandkerchiefSurface.html
   // -The potential of e^z = exp(z) does not have any saddles at all. It only has grooves. The 
   //  shape is exponential along the x-direction and sinusoidal along the y-direction
   //

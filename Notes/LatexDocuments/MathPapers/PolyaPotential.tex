@@ -253,17 +253,19 @@ where $u_n, v_n$ are the expressions for the corresponding positive power. It tu
 [Maybe move the Sage derivations into an appendix and keep only the results in the main text. Refer to the implementation of the formulas]
 
 \section{Plotting the Polya Potentials}
-One of the main goals of this investigation is to provide a new way of visualizing complex functions, so we shall now look at some plots...TBC...
-
+One of the main goals of this investigation is to provide a new way of visualizing complex functions, so we shall now look at some plots. As a first example, we will have a look at the function $f(z) = z^2$. In figure \ref{Fig:SquareSurface}, we see the Polya potential of $f(z) = z^2$ drawn as a surface above the $xy$-plane.
 \begin{figure}[h]
-\label{fig:SquareSurface}	
+\caption{Polya potential surface $P(x,y) = x^3/3 - x y^2$ of the function $f(z) = z^2$}	
+\label{Fig:SquareSurface}	
 \centering
 \includegraphics[width=1.0\textwidth]{../MathFigures/PolyaSurfaceSquare.png}
-\caption{Polya potential surface of $f(z) = z^2$}
 \end{figure}
-
+% Maybe we should have axis labels for the x-and y-axis!
+% It's important to define the label below the caption. Otherwise, there will be just be a [??] in the text for the reference.
+Let's analyze some important features of that surface to develop some intuition, how to interpret such plots. The $x$-axis goes from top-left to bottom-right and the $y$-axis from bottom-left to top-right. When we move on the surface along the $x$-axis along the $y=0$ line, we we climb up from a low height, then reach some saddle at $(0,0)$ and then start climbing again. The direction of steepest ascent, i.e. the gradient, points exactly along our direction of movement. When we move along the $x$-axis for $y=0$, we precisely follow the direction of the gradient. That is to say, the gradient always points into the positive $x$-direction, except for the single point $(0,0)$ where it momentarily vanishes. This behavior can also be seen from the plot of the Polya vector field in figure \ref{Fig:SquareVectorsAndContours}. Along the center horizontal line where $y=0$, the arrows always point to the right, i.e. in the direction of the positive $x$-axis.
 \begin{figure}[h]
-\label{fig:SquareVectorsAndContours}	
+\caption{Polya vector field and Polya potential contours of $f(z) = z^2$}	
+\label{Fig:SquareVectorsAndContours}	
 \centering
 \begin{subfigure}[b]{0.49\textwidth}
 \centering
@@ -273,14 +275,14 @@ One of the main goals of this investigation is to provide a new way of visualizi
 \centering
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursSquare.png}
 \end{subfigure}
-\caption{Polya vector field and potential contours of $f(z) = z^2$}
 \end{figure}
+The so surface for $z^2$ is given by $P(x,y) = x^3/3 - x y^2$
 
-[ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]
+%In figure \ref{Fig:SquareVectorsAndContours}, we see the corresponding Polya vector field together with a contour plot of its Polya potential.
 
-% https://tex.stackexchange.com/questions/5433/can-i-use-an-image-located-on-the-web-in-a-latex-document
 
-% https://user-images.githubusercontent.com/1833099/269307809-32ae0079-b006-41f5-844a-68dc2c36d668.png
+
+%[ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]
 
 
 \section{Rules for Complicated Functions}
@@ -337,6 +339,9 @@ If all of our attempts to derive an analytic expression for the Polya potential 
 
 \bibitem{PotentialNumerical} PotentialNumerical.txt, \textit{File in my research repo}
 \href{https://github.com/RobinSchmidt/RS-MET-Research/blob/master/Notes/PotentialNumerical.txt}{Notes/PotentialNumerical.txt}
+
+\bibitem{MonkeySaddleWiki} Monkey Saddle, \textit{Wikipedia article}
+\href{https://wikipedia.org/wiki/Monkey_saddle}{wikipedia.org/Monkey\_saddle}
 
 %http://rs-met.com/documents/dsp/DefiniteIntegrationOfPolynomialsWithPolynomialsAsLimits.pdf
 

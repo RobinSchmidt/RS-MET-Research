@@ -295,6 +295,10 @@ In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$
 
 % Can we say something about the angle of $f(z)$ in terms of the contour lines? Maybe it's always the angle of a tangent to the contour line, rotated by 90°? clock- or counterclockwise? I think, we need to take the tangent and rotate it clockwise by 90° to get the gradient. Rotating it counterclockwise instead would give the direction of w = f(z)...I think...verify! ..hmm..nope - that seems to fail at (x,y) = (-0.5,0). There, we would need to rotate clockwise. But at (0,0.5), we need to rotate counterclockwise. Maybe the contour-line information is not enough. We really also nee to look at the colors - where is the blue? We always need to rotate toward blue, I think.
 
+% Maybe we can say that the gradient always points from one contour like to the next and the strength/steepness is inversely proportional to the distance of the next contour when we assume the countours to be equidistant?
+
+% Maybe we can draw in streamlines? in z^2, we have 3 straight streamlines. 1 horizontal, one at 60 and one at 120 degrees
+
 % Remember that strength of coloring indicates, what length the arrow should have if we wouldn't have normalized its length for plotting reasons.
 
 % Rules:
@@ -322,7 +326,7 @@ In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$
 %In figure \ref{Fig:SquareVectorsAndContours}, we see the corresponding Polya vector field together with a contour plot of its Polya potential.
 
 
-\subsection{Plots for $f(z) = z^n$}
+\subsection{Plots for Nonegative Powers: $f(z) = z^n$}
 We now want to look at plots for functions of the form $f(z) = z^n$ for some nonnegative integer $n$. We have already seen that the Polya potential for $f(z) = z^2$ gives us $P(x,y) = x^3/ 3 - x y^2$ which is, up to scaling, the so called monkey saddle. In general, we will get a saddle surface of order $n+1$ for the Polya potentials $P(x,y)$ for complex functions of the form $f(z) = z^n$ [VERIFY!]. For a discussion of such higher order saddles, see \cite{HighOrderSaddles}.
 % Show plots for z^0, z^1, z^2, z^3, z^4, z^5
 
@@ -330,6 +334,22 @@ We now want to look at plots for functions of the form $f(z) = z^n$ for some non
 
 
 %[ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]
+
+
+\subsection{Plots for Negative Powers: $f(z) = z^{-n}$}
+
+\subsection{Plots for Exponential, Trigonometric and Hyperbolic Functions}
+
+\subsection{Plots for Polynomials}
+% (z-1)(z+1), (z-1)(z+1)(z-i)
+
+\subsection{Plots for Rational Functions}
+% Moebius trafo, 
+
+%\subsection{Plots for Roots and Logarithm}
+
+%\subsection{Plots for Special Functions}
+% Zeta, Lambert-W, Gamma, 
 
 
 \section{Rules for Complicated Functions}

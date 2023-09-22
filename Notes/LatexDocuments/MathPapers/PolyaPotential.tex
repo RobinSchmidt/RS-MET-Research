@@ -365,7 +365,16 @@ Notes:
 ToDo:
 -Write a "Conclusion" section that hints at the implementation for numerically computing 
  potentials. Use that implementation to produce plots of the Polya potentials of sqrt and log.
--Don't use z for the height as in z = P(x,y) when we already use z as argument to f = f(z). The letter z means different things in these two situations which is a clash of notation. Maybe use P instead of z, i.e. write P = P(x,y)
+-Don't use z for the height as in z = P(x,y) when we already use z as argument to f = f(z). The
+ letter z means different things in these two situations which is a clash of notation. Maybe use 
+ P instead of z, i.e. write P = P(x,y) - done
+-Mention that the  polynomials for u,v,P are homogeneous. All terms have the same degree
+-Figure out expressions for u,v,P in polar coordinates, i.e. P(r,a) instead of P(x,y). 
+ Maybe in polar coordinates, we may get expressions for P for log, sqrt, etc.? The wikipedia 
+ article about the monkey saddle gives the formula cos(3*a)/r^3. We would need the pre-factor 
+ 1/3 here. Maybe in general, for z^n, the formula is P(r,a) = cos((n+1) a) / ((n+1) r^(n+1))?
+
+
 
 Resources:
 https://en.wikipedia.org/wiki/Scalar_potential	

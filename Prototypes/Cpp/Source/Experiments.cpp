@@ -13358,6 +13358,7 @@ void testPotentialPlotter()
   //  potential of c * z^n for some constant c. Check it with the sine function
   //  Some more distantly related surfaces:
   //  https://mathworld.wolfram.com/HandkerchiefSurface.html
+  //  https://mathworld.wolfram.com/CrossedTrough.html
   // -The potential of e^z = exp(z) does not have any saddles at all. It only has grooves. The 
   //  shape is exponential along the x-direction and sinusoidal along the y-direction
   //

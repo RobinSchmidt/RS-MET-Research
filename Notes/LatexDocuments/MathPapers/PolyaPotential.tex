@@ -252,7 +252,9 @@ where $u_n, v_n$ are the expressions for the corresponding positive power. It tu
 
 [Maybe move the Sage derivations into an appendix and keep only the results in the main text. Refer to the implementation of the formulas]
 
-\section{Plotting the Polya Potentials}
+%\section{Plotting the Polya Potentials and Interpreting the Plots}
+\section{Interpreting Plots of Polya Potentials}
+\subsection{Plots for $f(z) = z^2$}
 One of the main goals of this investigation is to provide a new way of visualizing complex functions, so we shall now look at some plots. As a first example, we will have a look at the function $f(z) = z^2$. In figure \ref{Fig:SquareSurface}, we see the Polya potential of $f(z) = z^2$, which is given by $P(x,y) = x^3/3 - x y^2$, drawn as a surface above the $xy$-plane. 
 \begin{figure}[h]
 \caption{Polya potential surface $P(x,y) = x^3/3 - x y^2$ of the function $f(z) = z^2$}	
@@ -276,12 +278,42 @@ Let's analyze some important features of that surface to develop some intuition,
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursSquare.png}
 \end{subfigure}
 \end{figure}
-We interpret this as follows: when the input to $P(x,y)$ is of the form $(x,0)$, then the gradient will point into some direction $(a,0)$ where $a$ is always positive except at $(0,0)$ where $a=0$. More quantitatively, $a=x^2$ which is the partial derivative wrt $x$ of $P(x,y) = x^3/3 - x y^2$ along the line where $y=0$. The surface for $f(z) = z^2$ given by $P(x,y) = x^3/3 - x y^2$ is, up to a scale factor, actually well known: it is called the monkey saddle, see \cite{MonkeySaddleWiki}. In contrast to a regular saddle, which provides channels for the two legs of a horseman, the monkey saddle also provides an additional third channel for the tail. In the plot of the contour map on the right of figure \ref{Fig:SquareVectorsAndContours}, we notice that wherever a contour line has vertical segment, the corresponding arrow of the vector field would be horizontal. This can also be seen as a consequence of the fact that on any surface described by a bivariate function $P(x,y)$, the gradient is always orthogonal to the lines of constant height, i.e. the contour lines. This fact gives us a general rule for how to interpret contour map plots such as the one in the right of figure \ref{Fig:SquareVectorsAndContours}: wherever we see contour lines densely bunched together, there is a steep gradient - that is: a gradient with high absolute value. The direction of that gradient (steep or not) is always perpendicular to the contour line at the given point. From the two possible perpendicular directions, it's the one that points upward, i.e. toward increasing $P$-values. In our plots here, that means into the direction of greater darkness and more blue. Up to now, we have identified the part of the domain, where the output of $f(z) = z^2$ is purely real, i.e. the gradient of $P(x,y)$ is horizontal. The parts of the domain where this happens are precisely the $x$- and $y$-axis. Along the $x$-axis, the gradient points to the right indicating a positive real part of $f(z)$ and along the $y$-axis, the gradient points to the left indicating a negative real part of $f(z)$. Along these axes, the imaginary part of $f(z)$ is zero. Let's now identify the part of the domain where the gradient is vertical meaning that the output of $f(z)$ is purely imaginary. This is most easily identified in the vector field plot in the left of figure \ref{Fig:SquareVectorsAndContours}. Purely vertical arrows occur along the diagonals. Of you follow a diagonal from the top-left to the bottom-right, you will see that the arrows along this diagonal will always point upward
+We interpret this as follows: when the input to $P(x,y)$ is of the form $(x,0)$, then the gradient will point into some horizontal direction $(a,0)$ where $a$ is always positive except at $(0,0)$ where $a=0$. More quantitatively, $a=x^2$ which is the partial derivative wrt $x$ of $P(x,y) = x^3/3 - x y^2$ along the line where $y=0$. The surface for $f(z) = z^2$ given by $P(x,y) = x^3/3 - x y^2$ is, up to a scale factor, actually well known: it is called the monkey saddle, see \cite{MonkeySaddleWiki}. In contrast to a regular saddle, which provides channels for the two legs of a horseman, the monkey saddle also provides an additional third channel for the tail of the monkey. In the plot of the contour map on the right of figure \ref{Fig:SquareVectorsAndContours}, we notice that wherever a contour line has a vertical segment, the corresponding arrow of the vector field is horizontal. This can also be seen as a consequence of the fact that on any surface described by a bivariate function $P(x,y)$, the gradient is always orthogonal to the lines of constant height, i.e. the contour lines. This fact gives us a general rule for how to interpret contour map plots such as the one in the right of figure \ref{Fig:SquareVectorsAndContours}: wherever we see contour lines densely bunched together, there is a steep gradient - that is: a gradient with high absolute value. The direction of that gradient (steep or not) is always perpendicular to the contour line at the given point. From the two possible perpendicular directions, it's the one that points upward, i.e. toward increasing $P$-values. In our plots here, that means into the direction of greater darkness and more blue. Up to now, we have identified the part of the domain, where the output of $f(z) = z^2$ is purely real, i.e. the gradient of $P(x,y)$ is horizontal. The parts of the domain where this happens are precisely the $x$- and $y$-axis. Along the $x$-axis, the gradient points to the right indicating a positive real part of $f(z)$ and along the $y$-axis, the gradient points to the left indicating a negative real part of $f(z)$. Along these axes, the imaginary part of $f(z)$ is zero. Let's now identify the part of the domain where the gradient is vertical meaning that the output of $f(z)$ is purely imaginary. This is most easily identified in the vector field plot in the left of figure \ref{Fig:SquareVectorsAndContours}. Purely vertical arrows occur along the diagonals. Look at the diagonal going from the top-left to the bottom-right. Along this diagonal, all the arrays point upward. Remembering that the Polya vector field is the complex conjugate of our actual $f(z)$, i.e. involves a negation of the imaginary part, we may conclude that along this diagonal, $f(z)$ is purely imaginary with negative imaginary part. Likewise, along the diagonal from the bottom-left to the top-right, we see downward pointing arrows indicating a positive purely imaginary value in $f(z)$. Focus on the arrow at $(x,y) = (0.5,0.5)$. It points straight downward. Let's compute $w = f(z) = z^2$ at $z = (1 + \i) / 2$ which is the complex number corresponding to this point. The result is $w = \i / 2$.
 
 ....TBC...
 
+\subsection{General Rules for Interpreting Contour Plots}
+In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$. We had the surface plot for the Polya potential, the vector field plot for the Polya vector field and the contour map plot for the Polya potential. Any one of these three kinds of plot contains the \emph{full} information about $f(z)$ encoded in different ways. Eventually, we want to settle to only one single type of plot and become proficient in reading it. The one, I want to settle for, is the contour map plot of the Polya potential. We want to train our ability to look at such a plot and understand what $f(z)$ does from that plot. Since the plot contains the full information, it must be possible. However, understanding such a plot from a glance is not nearly as intuitive as understanding a simple plot of a real function. But maybe there's some hope to develop such an intuition with practice.
+
+
+
+% Rules:
+% -vertical contour segments correspond to horizontal arrows and therefor to purely real outputs 
+%  of f(z)
+% -if on crossing such a vertical segment from left to right, the value of P increases, the real
+%  output is positive and if P decreases, the real output is negative
+% -horizontal contour segments correspond to vertical arrows and therfore to purely imaginary
+%  outputs of f(z)
+% -if on crossing such a horizontal segmen from bottom to top, the value of P increases, the 
+%  imaginary part is negative and if P decarease, the imaginary part is negative.
+% -the density of the contour lines indicates the steepness of the gradient and whic corresponds
+%  to the absolute value of $f(z)$. Steep gradients result in "strong" arrows, i.e. dark-blue 
+%  arrows. Remember that strength of coloring indicates, what length the arrow should have if
+%  we wouldn't have normalized its length for plotting reasons.
+% -The gradient is always perpedicular to the contour lines and points into the direction of
+%  increasing P, i.e. towards the blue
+
+% ToDo:
+% -explain hwo the gradient changes as we move along the unit-circle counterclockwise.The arrow
+%  moves clockwise around a circle twice. ...are the arrows really all ona circle, i.e. have
+%  all the same length? What if we move around an arbitrary circle rather than the unit
+%  circle?
+
 %In figure \ref{Fig:SquareVectorsAndContours}, we see the corresponding Polya vector field together with a contour plot of its Polya potential.
 
+
+
+\subsection{Plots for $f(z) = z^3$}
 
 
 %[ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]

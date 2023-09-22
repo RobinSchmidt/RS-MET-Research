@@ -286,11 +286,16 @@ We interpret this as follows: when the input to $P(x,y)$ is of the form $(x,0)$,
 In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$. We had the surface plot for the Polya potential, the vector field plot for the Polya vector field and the contour map plot for the Polya potential. Any one of these three kinds of plot contains the \emph{full} information about $f(z)$ encoded in different ways. Eventually, we want to settle to only one single type of plot and become proficient in reading it. The one, I want to settle for, is the contour map plot of the Polya potential. We want to train our ability to look at such a plot and understand what $f(z)$ does from that plot. Since the plot contains the full information, it must be possible. However, understanding such a plot from a glance is not nearly as intuitive as understanding a simple plot of a real function. But maybe there's some hope to develop such an intuition with practice. We will first state some general rules.
 
 \begin{itemize}
-\item Vertical contour segments correspond to purely real outputs of $f(z)$. This is because they correspond to horizontal arrows fro the gradient. If, on crossing such a vertical segment from left to right, the value of $P$ increases, the real output is positive and if $P$ decreases, the real output is negative.
-
+\item The gradient is always perpendicular to the contour lines and points into the direction of increasing P, i.e. towards the blue.
+\item Vertical contour segments correspond to purely real outputs of $f(z)$. This is because they correspond to horizontal arrows for the gradient. If, on crossing such a vertical segment from left to right, the value of $P$ increases, the real output is positive and if $P$ decreases, the real output is negative.
+\item Horizontal contour segments correspond to purely imaginary outputs of $f(z)$. This is because they correspond to vertical arrows for the gradient. If, on crossing such a horizontal segment from bottom to top, the value of $P$ increases, the imaginary output is negative and if $P$ decreases, the imaginary output is positive.
+\item The local density of the contour lines indicates the steepness of the gradient at that point. In turn, this steepness corresponds to the absolute value of $f(z)$. Steep gradients result in "strong" arrows, i.e. dark-blue arrows.
+\item The local direction of a contour line determines the direction of the gradient at that point. ...TBC...
 \end{itemize}
 
+% Can we say something about the angle of $f(z)$ in terms of the contour lines? Maybe it's always the angle of a tangent to the contour line, rotated by 90°? clock- or counterclockwise? I think, we need to take the tangent and rotate it clockwise by 90° to get the gradient. Rotating it counterclockwise instead would give the direction of w = f(z)...I think...verify! ..hmm..nope - that seems to fail at (x,y) = (-0.5,0). There, we would need to rotate clockwise. But at (0,0.5), we need to rotate counterclockwise. Maybe the contour-line information is not enough. We really also nee to look at the colors - where is the blue? We always need to rotate toward blue, I think.
 
+% Remember that strength of coloring indicates, what length the arrow should have if we wouldn't have normalized its length for plotting reasons.
 
 % Rules:
 % -vertical contour segments correspond to horizontal arrows and therefor to purely real outputs 
@@ -317,8 +322,9 @@ In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$
 %In figure \ref{Fig:SquareVectorsAndContours}, we see the corresponding Polya vector field together with a contour plot of its Polya potential.
 
 
-
-\subsection{Plots for $f(z) = z^3$}
+\subsection{Plots for $f(z) = z^n$}
+We now want to look at plots for functions of the form $f(z) = z^n$ for some nonnegative integer $n$. We have already seen that the Polya potential for $f(z) = z^2$ gives us, up to scaling, the monkey saddle $P(x,y) = x^3/ 3 - x y^2$. In general, ...tbc
+% We get a saddle point of order n+1
 
 
 %[ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]
@@ -370,17 +376,20 @@ If all of our attempts to derive an analytic expression for the Polya potential 
 
 \begin{thebibliography}{9}
 	
-\bibitem{SageCell} SageCell, \textit{Online SageMath Evaluator}
+\bibitem{SageCell} SageCell, \textit{Online SageMath Evaluator,}
 \href{https://sagecell.sagemath.org/}{sagecell.sagemath.org/}
 
 \bibitem{GitHub} RS-MET-Research, \textit{Repository on GitHub}
 \href{https://github.com/RobinSchmidt/RS-MET-Research}{github.com/RobinSchmidt/RS-MET-Research}
 
-\bibitem{PotentialNumerical} PotentialNumerical.txt, \textit{File in my research repo}
+\bibitem{PotentialNumerical} PotentialNumerical.txt, \textit{File in my research repo,}
 \href{https://github.com/RobinSchmidt/RS-MET-Research/blob/master/Notes/PotentialNumerical.txt}{Notes/PotentialNumerical.txt}
 
-\bibitem{MonkeySaddleWiki} Monkey Saddle, \textit{Wikipedia article}
+\bibitem{MonkeySaddleWiki} Monkey Saddle, \textit{Wikipedia article,}
 \href{https://wikipedia.org/wiki/Monkey_saddle}{wikipedia.org/Monkey\_saddle}
+
+\bibitem{HighOrderSaddles} Monkey, Starfish and Octopus Saddles, \textit{Scott Dale Peckham,}
+\href{https://www.researchgate.net/publication/256808897_Monkey_Starfish_and_Octopus_Saddles	}{https://www.researchgate.net/publication/256808897\_Monkey\_Starfish\_and\_Octopus\_Saddles}
 
 %http://rs-met.com/documents/dsp/DefiniteIntegrationOfPolynomialsWithPolynomialsAsLimits.pdf
 

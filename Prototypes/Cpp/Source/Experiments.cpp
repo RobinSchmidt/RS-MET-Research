@@ -13266,9 +13266,17 @@ void testPotentialPlotter()
   // Create the plots for the paper about Polya potentials:
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
 
+
+  // z^-5, octupole(?):
+  cplotA([](R x, R y)      { return PE::power(x, y, -5); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }, -1, +1, -1, +1, 21, 21);
+  // https://en.wiktionary.org/wiki/octupole
+
   // z^-4, hexapole(?):
+  //splotA([](R x, R y)      { return PE::power(x, y, -4); }, -1, +1, -1, +1, 31, 31);
   cplotA([](R x, R y)      { return PE::power(x, y, -4); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }, -1, +1, -1, +1, 21, 21);
+  // https://en.wiktionary.org/wiki/hexapole#English
 
   // z^-3, quadrupole(?):
   cplotA([](R x, R y)      { return PE::power(x, y, -3); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
@@ -13285,6 +13293,11 @@ void testPotentialPlotter()
   // z^-1, monopole:
   cplotA([](R x, R y)      { return PE::power(x, y, -1); },       -1, +1, -1, +1, 201, 201, 21, -4.5, +0.5);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1,  21,  21);
+  // needs a unipolar color map
+
+  // -For z^-n, we get a monopole field for n = 1 and for n > 1, we get the field of a 2*(n-1) 
+  //  pole, i.e. a field with 2*(n-1) lobes
+  // -The monopole should use a unipolar color map, the multipoles a diverging map
 
 
 

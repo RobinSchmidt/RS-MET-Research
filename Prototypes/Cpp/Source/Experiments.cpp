@@ -13240,7 +13240,7 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Create the plots for the paper about Polya potentials:
-  cplotA([](R x, R y) { return PE::power(x, y,  5); }, -1, +1, -1, +1, 201, 201, 27, -0.5, +0.5);
+
 
 
   // f(z) = z^2 as surface-, arrow- and contour-plot:
@@ -13252,8 +13252,10 @@ void testPotentialPlotter()
   cplotA([](R x, R y) { return PE::power(x, y,  0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y,  1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 201, 201, 27, -1.0, +0.3);
-  cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 27, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3);
+  cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y,  5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
+
 
 
   // Notes:

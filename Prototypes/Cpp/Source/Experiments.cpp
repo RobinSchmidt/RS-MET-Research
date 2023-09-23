@@ -13179,7 +13179,8 @@ void testPotentialPlotter()
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
-    plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    //plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    plt.setColorPalette(CP::CJ_BuYlRd11, false);
     //plt.setColorPalette(CP::RS_BkWt, true);
     //plt.setColorPalette(CP::GF_Printable, true);
     //plt.setColorPalette(CP::GP_Sand, true);
@@ -13225,8 +13226,11 @@ void testPotentialPlotter()
     plt.setRange(xMin, xMax, yMin, yMax);
 
     //plt.setColorPalette(CP::CB_YlGnBu9m, false);
-    plt.setColorPalette(CP::CB_YlGnBu9t, false);
-    //plt.setColorPalette(CP::CB_YlGnBu9mt, false);
+    //plt.setColorPalette(CP::CB_YlGnBu9t, false);
+    plt.setColorPalette(CP::CB_YlGnBu9mt, false);
+
+
+
 
     //plt.setColorPalette(CP::RS_BkWt, true);
     //plt.setToLightMode();
@@ -13262,12 +13266,26 @@ void testPotentialPlotter()
   // Create the plots for the paper about Polya potentials:
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
 
+  // z^-4, hexapole(?):
+  cplotA([](R x, R y)      { return PE::power(x, y, -4); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }, -1, +1, -1, +1, 21, 21);
+
+  // z^-3, quadrupole(?):
+  cplotA([](R x, R y)      { return PE::power(x, y, -3); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);
+  // https://de.wikipedia.org/wiki/Quadrupol
+  // https://en.wikipedia.org/wiki/Quadrupole
+
+  // z^-2, dipole:
+  //cplotA([](R x, R y)      { return PE::power(x, y, -2); },       -1, +1, -1, +1, 201, 201, 49, -8.0, +8.0);
+  cplotA([](R x, R y)      { return PE::power(x, y, -2); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }, -1, +1, -1, +1, 21, 21);
+  // Maybe use a diverging colomap for this, CB_Spectral11 or CJ_BuYlRd11 - yes, looks better!
+
   // z^-1, monopole:
   cplotA([](R x, R y)      { return PE::power(x, y, -1); },       -1, +1, -1, +1, 201, 201, 21, -4.5, +0.5);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1,  21,  21);
 
-
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }, -1, +1, -1, +1, 21, 21);
 
 
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);

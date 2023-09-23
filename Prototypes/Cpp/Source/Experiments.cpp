@@ -13121,7 +13121,7 @@ void testPotentialPlotter()
 
     plt.setPixelSize(900, 600);
     //plt.setToDarkMode();
-    plt.setToLightMode();
+    //plt.setToLightMode();
 
 
     plt.setTitle("Polya Potential Surface");
@@ -13165,7 +13165,7 @@ void testPotentialPlotter()
     //if(Nx == Ny)
     //  plt.addCommand("set size square");
     //plt.setToDarkMode();
-    plt.setToLightMode();
+    //plt.setToLightMode();
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
@@ -13215,7 +13215,7 @@ void testPotentialPlotter()
     plt.setRange(xMin, xMax, yMin, yMax);
     plt.setColorPalette(CP::CB_YlGnBu9m, false);
     //plt.setColorPalette(CP::RS_BkWt, true);
-    plt.setToLightMode();
+    //plt.setToLightMode();
     plt.setTitle("Polya Vector Field");
 
     plt.setPixelSize(600, 600);
@@ -13235,22 +13235,40 @@ void testPotentialPlotter()
     // ToDo: set up lines - don't use dotting, use a faint solid gray instead
   };
 
-
-
-
-
   using C  = Complex;
   using R  = Real;
   using PE = rsPolyaPotentialEvaluator<Real>;
 
-  // Analytic Polya potentials, plotted as surface plots using GNUPlotCPP:
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
+  // Create the plots for the paper about Polya potentials:
+
+
+
+  // f(z) = z^2 as surface-, arrow- and contour-plot:
   splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
-  // -I think, the colormap CB_YlGnBu with inversion looks suitable for both the 3D surface and the
-  //  contour plot
+
+  // f(z) = z^n for n = 0,1,2,3,4,5
+  cplotA([](R x, R y) { return PE::power(x, y,  0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y,  1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
+  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
+  cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 201, 201, 27, -1.0, +0.3);
+  cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 27, -1.0, +1.0);
 
 
+  // Notes:
+  // -For the contour plots of z^n, it doesn't make any visual difference whether we choose the 
+  //  plot range to be -1..+1 or -2..+2. If we scale everything appropiately (i.e. set the z-range
+  //  accordingly), the plots will look the same just with different numbers on the color bar. For 
+  //  example we can plot z^4 in -1..+1 with a z-range of -1..+1 or plot it in -2..+2 with a 
+  //  z-range of -26..+26. The plots will look similar. There differences in the placement of the 
+  //  contours, though.
+
+  // Let's define R = 10*(zMax-zMin), N = numContours-1 (= numColors). I think, to have a contour 
+  // line at z=0, we must have either of these be true:
+  // -N is a multiple of R
+  // -zMin = -zMax and n is even
+  // -> Verify these! Maybe find more..
 
 
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);

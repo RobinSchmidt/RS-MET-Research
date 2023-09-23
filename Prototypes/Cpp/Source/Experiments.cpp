@@ -13217,9 +13217,15 @@ void testPotentialPlotter()
     using CP = GNUPlotter::ColorPalette;
     plt.addVectorField2D(fu, fv, Nx, xMin, xMax, Ny, yMin, yMax);
     plt.setRange(xMin, xMax, yMin, yMax);
-    plt.setColorPalette(CP::CB_YlGnBu9m, false);
+
+    //plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    //plt.setColorPalette(CP::CB_YlGnBu9t, false);
+    plt.setColorPalette(CP::CB_YlGnBu9mt, false);
+
     //plt.setColorPalette(CP::RS_BkWt, true);
     //plt.setToLightMode();
+
+
     plt.setTitle("Polya Vector Field");
 
     plt.setPixelSize(600, 600);
@@ -13236,7 +13242,10 @@ void testPotentialPlotter()
 
     plt.plot();
 
-    // ToDo: set up lines - don't use dotting, use a faint solid gray instead
+    // ToDo:
+    // -Use a color palette that is truncated at the light values. It should not go all the way to
+    //  white. The lightest color should be something like 20% dark or something
+    // -Set up lines - don't use dotting, use a faint solid gray instead
   };
 
   using C  = Complex;
@@ -13244,14 +13253,13 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Create the plots for the paper about Polya potentials:
-  cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
-  splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
-
+  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
+  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
+  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }, -1, +1, -1, +1, 21, 21);
+  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);
 
 
   // f(z) = z^2 as surface-, arrow- and contour-plot:
-  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 101, 101);
   splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
@@ -13266,11 +13274,19 @@ void testPotentialPlotter()
   // Maybe we should really always give the contour plot together with the arrow plot
 
 
+  // Expreimental:
+  cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
+  splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
   //
   // -The arrow plot for z^-1 points outward from the origin. It has a source there.
   // -The arrow plot of z^-2 look like a dipole. But it needs a different color map. It is too
   //  faint at the outsides. For the contour plot, we may need clipping of the z-values. I think, 
   //  this is a general requirement for plotting functions with poles.
+  // -The CB_YlGnBu9t, CB_YlGnBu9mt try to solve the color map problem but it'S still suboptimal. I
+  //  think instead of just truncating the map, we need a nonlinear re-mapping of the colors 
+  //  perhaps according to a power rule. The dark range must be expanded and the light range must 
+  //  be shrunken. Maybe a linfrac mapping could be useful, too.
 
 
   // Notes:

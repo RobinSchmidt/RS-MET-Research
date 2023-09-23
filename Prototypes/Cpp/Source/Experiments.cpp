@@ -13095,7 +13095,11 @@ void testPotentialPlotter()
     //plt.addCommand("set contour base");     // contours in the base plane
     //plt.addCommand("set contour both");     // contours in base plane and on surface
     //plt.plot3D();
-    // needs numContours, etc.
+    // -Needs numContours, etc.
+    // -Plotting the contours requires high Nx,Ny because otherwise, there will be artifacts. 
+    //  However, high Nx,Ny make also the surface too smooth such that the 3D structure is less 
+    //  visible. The tesselation of the surface into quadrilaterals really helps to see the 3D
+    //  structure more clearly. Too much smoothness is not so desirable.
 
     using CP = GNUPlotter::ColorPalette;
     plt.setColorPalette(CP::CB_YlGnBu9m, false);
@@ -13240,10 +13244,14 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Create the plots for the paper about Polya potentials:
+  cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
+  splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
 
 
 
   // f(z) = z^2 as surface-, arrow- and contour-plot:
+  //splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 101, 101);
   splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
@@ -13255,7 +13263,14 @@ void testPotentialPlotter()
   cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3);
   cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y,  5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
+  // Maybe we should really always give the contour plot together with the arrow plot
 
+
+  //
+  // -The arrow plot for z^-1 points outward from the origin. It has a source there.
+  // -The arrow plot of z^-2 look like a dipole. But it needs a different color map. It is too
+  //  faint at the outsides. For the contour plot, we may need clipping of the z-values. I think, 
+  //  this is a general requirement for plotting functions with poles.
 
 
   // Notes:

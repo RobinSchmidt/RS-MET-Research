@@ -13154,6 +13154,12 @@ void testPotentialPlotter()
       zMax = z.getMaximum(); }
     Vec levels = RAPT::rsRangeLinear(zMin, zMax, numContours);  // Create array of contour levels
 
+    // Clip the matrix data:
+    for(int i = 0; i < z.getNumRows(); i++)
+      for(int j = 0; j < z.getNumColumns(); j++)
+        z(i, j) = RAPT::rsClip(z(i, j), zMin, zMax);
+    //z.clipToRange(zMin, zMax);  // Maybe implement that function
+
     // Old - does not allow to set zMin/zMax automatically:
     //addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
 
@@ -13219,8 +13225,8 @@ void testPotentialPlotter()
     plt.setRange(xMin, xMax, yMin, yMax);
 
     //plt.setColorPalette(CP::CB_YlGnBu9m, false);
-    //plt.setColorPalette(CP::CB_YlGnBu9t, false);
-    plt.setColorPalette(CP::CB_YlGnBu9mt, false);
+    plt.setColorPalette(CP::CB_YlGnBu9t, false);
+    //plt.setColorPalette(CP::CB_YlGnBu9mt, false);
 
     //plt.setColorPalette(CP::RS_BkWt, true);
     //plt.setToLightMode();
@@ -13244,7 +13250,8 @@ void testPotentialPlotter()
 
     // ToDo:
     // -Use a color palette that is truncated at the light values. It should not go all the way to
-    //  white. The lightest color should be something like 20% dark or something
+    //  white. The lightest color should be something like 20% dark or something. ..done
+    //  using CB_YlGnBu9t now
     // -Set up lines - don't use dotting, use a faint solid gray instead
   };
 
@@ -13254,9 +13261,16 @@ void testPotentialPlotter()
 
   // Create the plots for the paper about Polya potentials:
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
-  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
-  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }, -1, +1, -1, +1, 21, 21);
-  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);
+
+  // z^-1, monopole:
+  cplotA([](R x, R y)      { return PE::power(x, y, -1); },       -1, +1, -1, +1, 201, 201, 21, -4.5, +0.5);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1,  21,  21);
+
+
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }, -1, +1, -1, +1, 21, 21);
+
+
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);
 
 
   // f(z) = z^2 as surface-, arrow- and contour-plot:
@@ -13274,7 +13288,7 @@ void testPotentialPlotter()
   // Maybe we should really always give the contour plot together with the arrow plot
 
 
-  // Expreimental:
+  // Experimental:
   cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
   splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);

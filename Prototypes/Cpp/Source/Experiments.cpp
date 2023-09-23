@@ -13121,6 +13121,9 @@ void testPotentialPlotter()
 
     plt.setPixelSize(900, 600);
     //plt.setToDarkMode();
+    plt.setToLightMode();
+
+
     plt.setTitle("Polya Potential Surface");
 
     plotSurfaceDark(plt); // Maybe try other ways
@@ -13162,6 +13165,7 @@ void testPotentialPlotter()
     //if(Nx == Ny)
     //  plt.addCommand("set size square");
     //plt.setToDarkMode();
+    plt.setToLightMode();
     //plt.setColorPalette(CP::_test);
     //plt.setColorPalette(CP::UA_viridisBrt);
     //plt.setColorPalette(CP::F_printable);
@@ -13211,6 +13215,7 @@ void testPotentialPlotter()
     plt.setRange(xMin, xMax, yMin, yMax);
     plt.setColorPalette(CP::CB_YlGnBu9m, false);
     //plt.setColorPalette(CP::RS_BkWt, true);
+    plt.setToLightMode();
     plt.setTitle("Polya Vector Field");
 
     plt.setPixelSize(600, 600);

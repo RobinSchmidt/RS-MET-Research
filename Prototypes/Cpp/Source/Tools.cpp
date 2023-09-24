@@ -222,6 +222,11 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   // -Verify, if the aspect ratio is indeed 1.
   // -Don't hardcode these numbers! Have a function that can be called like 
   //  setDrawingArea(0.1, 0.9, 0.07, 0.87)
+
+  // Get rid of the axis labels:
+  plt->addCommand("set xlabel \"\""); // use empty string as label
+  plt->addCommand("set ylabel \"\"");
+  // ToDo: let the user specify axis labels
 }
 
 

@@ -13278,6 +13278,7 @@ void testPotentialPlotter()
   // generally?
 
   // f(z) = z^n for n = 0,1,2,3,4,5
+  //int N = 21;
   cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
   cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
@@ -13298,7 +13299,8 @@ void testPotentialPlotter()
   //  -zMin = -zMax and n is even
   //  -> Verify these! Maybe find more..
   // In the case here, we have R = 10*(zMax-zMin) =  10*(0.3 - -1.0) = 13. numContours must be 
-  // k*R + 1, so 14 and 27 work.
+  // k*R + 1, so 14 and 27 work. For the others, we use 21. 29 also works but it looks a bit busy. 
+  // Especially for higher exponents.
 
 
 
@@ -13351,10 +13353,10 @@ void testPotentialPlotter()
   // https://de.wikipedia.org/wiki/Dipol_(Physik)
 
   // z^-1, monopole:
-  pltC.setOutputRange(-4.5, +0.5);
+  pltC.setOutputRange(-3.0, +0.5);
   pltC.setNumContours(21);
   pltC.setSamplingResolution(200, 200);  // Monopoles are not that demanding in terms of resolution
-  pltC.setColorPalette(CP::CB_YlGnBu9m, false);
+  pltC.setColorPalette(CP::CB_YlGnBu9m, true); // blue stays negative
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -1); });       pltC.plot();
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }); pltV.plot();
   // https://en.wikipedia.org/wiki/Magnetic_monopole
@@ -13369,9 +13371,9 @@ void testPotentialPlotter()
 
 
   // Experimental:
-  cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
-  splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
+  //cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
+  //splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
+  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
   //
   // -The arrow plot for z^-1 points outward from the origin. It has a source there.
   // -The arrow plot of z^-2 look like a dipole. But it needs a different color map. It is too

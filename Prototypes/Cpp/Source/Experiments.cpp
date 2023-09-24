@@ -9865,7 +9865,9 @@ void testPowerCommutator()
   // Observations:
   // -The black/white image shows not much interesting structure. Generally, the exponent is always
   //  more important that the base. But what if we multiply the base by some fixed number, i.e. 
-  //  look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more interesting?
+  //  look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more interesting? ..not really. 
+  //  It just extends teh white triangle to the right. Using (k*a)^b vs b^(a/k) seems to give the 
+  //  same picture as a^b vs b^a.
 }
 
 void testParticleSystem()

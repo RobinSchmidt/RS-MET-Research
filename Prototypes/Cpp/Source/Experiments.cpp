@@ -13359,20 +13359,25 @@ void testPotentialPlotter()
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
 
 
+  using CP = GNUPlotter::ColorPalette;
   rsContourMapPlotter<Real>  pltC;
   rsVectorFieldPlotter<Real> pltV;
   pltC.setInputRange(-1, +1, -1, +1);
   pltV.setInputRange(-1, +1, -1, +1);
+  pltC.setPixelSize(600, 600);
+  pltV.setPixelSize(600, 600);
   pltV.setArrowDensity(21, 21);
 
   //  z^-5, octupole, https://en.wiktionary.org/wiki/octupole
   pltC.setFunction([](R x, R y) { return PE::power(x, y, -5); });
-  //pltC.setSamplingResolution(401, 401);
-  pltC.setSamplingResolution(101, 101);    // draft
+  pltC.setSamplingResolution(401, 401);      // high quality
+  //pltC.setSamplingResolution(101, 101);    // draft
   pltC.setOutputRange(-5.0, +5.0);
   pltC.setNumContours(31);
+  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltC.plot();
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); });
+  pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
   pltV.plot();
 
 

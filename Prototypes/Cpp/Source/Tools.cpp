@@ -155,6 +155,11 @@ public:
 
   void setTitle(const std::string& newTitle) { title = newTitle; }
 
+
+  void setColorPalette(GNUPlotter::ColorPalette newMap, bool reverse)
+  { colorMap = newMap; reverseColors = reverse; }
+
+
   void setupPlotter(GNUPlotter* plt);
 
 protected:
@@ -170,6 +175,9 @@ protected:
   int pixelHeight = 600;
   std::string title;
   bool dark = false;
+
+  GNUPlotter::ColorPalette colorMap = GNUPlotter::ColorPalette::EF_Viridis;
+  bool reverseColors = false;
 };
 
 
@@ -182,9 +190,12 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
     plt->setToLightMode();
 
 
-  using CP = GNUPlotter::ColorPalette;
-  plt->setColorPalette(CP::CJ_BuYlRd11, false);
+  //using CP = GNUPlotter::ColorPalette;
+  //plt->setColorPalette(CP::CJ_BuYlRd11, false);
   // Let the user choose this!
+
+  plt->setColorPalette(colorMap, reverseColors);
+
 
   if(!title.empty())
     plt->setTitle(title);
@@ -303,7 +314,13 @@ void rsVectorFieldPlotter<T>::plot()
   // Plotting:
   GNUPlotter plt;
   plt.addVectorField2D(fu, fv, numArrowsX, xMin, xMax, numArrowsY, yMin, yMax);
-  plt.setRange(xMin, xMax, yMin, yMax);  // Maybe move into setupPlotter()
+
+  //plt.setRange(xMin, xMax, yMin, yMax);  // Maybe move into setupPlotter()
+  // Maybe we should have margins? It tends to look better with margins when some of the arrows 
+  // point out of the rectangle defined by xMin, xMax, yMin, yMax. But then, it may be out of sync
+  // with a corresponding contour map plot
+
+
   setupPlotter(&plt);
   plt.plot();
 }

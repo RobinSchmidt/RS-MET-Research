@@ -13342,7 +13342,7 @@ void testPotentialPlotter()
 
   // z^-3, quadrupole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -3); });       pltC.plot();
-  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
+  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
   // https://de.wikipedia.org/wiki/Quadrupol
   // https://en.wikipedia.org/wiki/Quadrupole
 

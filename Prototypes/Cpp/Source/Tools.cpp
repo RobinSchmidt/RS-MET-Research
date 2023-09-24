@@ -138,34 +138,55 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
 
 
 
-
-
-
-
-
 // Maybe move them into rs_testing/TestTools/Plotting.h:
+
+/** Baseclass for 2 field plotters */
+
 template<class T>
-class ContourMapPlotter
+class rsFieldPlotter2D
+{
+
+public:
+
+  void setInputRange(T minX, T maxX, T minY, T maxY) 
+  { xMin = minX; xMax = maxX; yMin = minY; yMax = maxY; }
+
+  void setPixelSize(int width, int height) { pixelWidth  = width; pixelHeight = height; }
+
+  void setTitle(const std::string& newTitle) { title = newTitle; }
+
+protected:
+
+  // Data setup:
+  T xMin = 0;
+  T xMax = 1;
+  T yMin = 0;
+  T yMax = 1;
+
+  // Plotting setup:
+  int pixelWidth  = 600;
+  int pixelHeight = 600;
+  std::string title;
+  bool dark = false;
+};
+
+
+
+
+template<class T>
+class rsContourMapPlotter : public rsFieldPlotter2D<T>
 {
 
 public:
 
   void setFunction(const std::function<T(T x, T y)>& newFunction) { f = newFunction; }
 
-  void setInputRange(T minX, T maxX, T minY, T maxY) 
-  { xMin = minX; xMax = maxX; yMin = minY; yMax = maxY; }
-
   void setOutputRange(T minZ, T maxZ) { zMin = minZ; zMax = maxZ; }
 
   void setNumContours(int newNumber) { numContours = newNumber; }
 
-
-  void setPixelSize(int width, int height) { pixelWidth  = width; pixelHeight = height; }
-
   void setSamplingResolution(int numSamplesX, int numSamplesY) 
   { Nx = numSamplesX; Ny = numSamplesY; }
-
-  void setTitle(const std::string& newTitle) { title = newTitle; }
 
 
   void plot();
@@ -174,10 +195,6 @@ protected:
 
   // Data setup:
   std::function<T(T x, T y)> f;
-  T xMin = 0; 
-  T xMax = 1; 
-  T yMin = 0; 
-  T yMax = 1;
   T zMin = 0;
   T zMax = 0;
   bool clipData = true;
@@ -186,15 +203,12 @@ protected:
   int Nx          = 101;
   int Ny          = 101;
   int numContours = 21;
-  int pixelWidth  = 600;
-  int pixelHeight = 600;
-  std::string title;
-  bool dark = false;
+
 };
 
 
 template<class T>
-void ContourMapPlotter<T>::plot()
+void rsContourMapPlotter<T>::plot()
 {
   // Generate the data and figure out appropriate values for zMin/zMax if the user hasn't given a 
   // valid z-range and generate the array of the contour levels that will drawn in as contour 
@@ -220,6 +234,8 @@ void ContourMapPlotter<T>::plot()
 
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
 
+
+  // Move into baseclass setupPlotter(&plt) :
   if(dark)
     plt.setToDarkMode();
   else
@@ -237,6 +253,8 @@ void ContourMapPlotter<T>::plot()
   plt.addCommand("set lmargin at screen 0.07"); // L: left
   plt.addCommand("set rmargin at screen 0.87"); // R: right
   // ToDo: don't hardcode these numbers!
+
+
 
   plotContours(plt, levels, true); 
 }

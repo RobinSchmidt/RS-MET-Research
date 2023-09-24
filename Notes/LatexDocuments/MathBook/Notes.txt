@@ -91,9 +91,11 @@ Let's map out the chapter dependencies. We try to make chapters on one level dep
 on levels below it. On the left, we write the chapter, on the raigh after the arrow, we list the 
 chapters it depends on. Hopefully, this can evetuall be drawnas a graph.
 
+Level -1:
+Logic
+Set Theory
 
-Level 0 (Independent):
-Foundations
+Level 0:
 Numbers
 Arithmetic
 
@@ -106,6 +108,7 @@ Euclidean Geometry     ->  Functions (sin, cos, ..)
 Matrices               ->  Vectors
 Limits                 ->  Functions
 Exterior Algebra       ->  Vectors, Arithmetic (binomial coeffs)
+Group Theory           ->  Numbers, Arithmetic, Functions (for homomorphisms)
 
 Level 3:
 Analytic Geometry      ->  Euclidean Geometry, Vectors
@@ -113,6 +116,9 @@ Differentiation        ->  Limits
 Integration            ->  Limits
 Linear Algebra         ->  Vectors, Matrices
 Geometric Algebra      ->  Exterior Algebra
+Discrete Probability   ->  Functions, Limits
+Representation Theory  ->  Group Theory, Matrices
+Rings, Fields          ->  Group Theory
 
 Level 4:
 Series                 ->  Functions, Differentiation (for Taylor)
@@ -121,17 +127,20 @@ Multiple Integrals     ->  Integration
 Tensor Algebra         ->  Matrices, Linear Algebra
 Algebraic Geometry     ->  Analytic Geometry, Functions
 Differential Equations ->  Functions, Differentiation
-Operators              ->  Linear Algebra, Functions
-Functionals            ->  Functions, Integrals 
+Continuous Probability ->  Discrete Probability, Integrals
+Vector Spaces          ->  Fields, Vectors
 
 Level 5:
 Vector Calculus        ->  Partial Derivatives, Multiple Integrals
 Differential Geometry  ->  Partial Derivatives, Multiple Integrals
 Optimization           ->  Partial Derivatives, Multiple Integrals
-Integral Trafos        ->  Operators, Functionals (computing a Fourier coeff is a functional)
 Partial Diff. Eq.      ->  Diff. Eq., Part. Derivatives
+Operators              ->  Linear Algebra, Functions, Vector Spaces
+Functionals            ->  Functions, Integrals, Vector Spaces
+Statistics             ->  Cont. Probability
 
 Level 6:
+Integral Trafos        ->  Operators, Functionals (computing a Fourier coeff is a functional)
 Complex Calculus       ->  Vector Calculus
 Exterior Calculus      ->  Vector Calculus
 Tensor Calculus        ->  Vector Calculus, Tensor Algebra, Differential Geometry
@@ -139,6 +148,11 @@ Calc. of Variations    ->  Optimization
 
 Level 7:
 Geometric Calculus     ->  Exterior Calculus
+Tensor Diff. Eq.       ->  Tensor Calculus, Part. Diff. Eq.
+Integral Equations     ->  Integral Trafos
+
+
+Not yet classified:
 
 
 

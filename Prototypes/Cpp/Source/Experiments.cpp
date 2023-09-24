@@ -9824,17 +9824,48 @@ void testPowerCommutator()
 
 
   using BigInt = double;  // Preliminary. May kinda work for smaller values of a,b
+  using BigRat = double;  // For big rational numbers
 
-  int w = 10;  // Image width
-  int h = 10;  // Image height
+  int w = 50;  // Image width
+  int h = 50;  // Image height
 
   // The different images. BW: black/white. GQ: gray via quotient, GD: gray via difference.
   RAPT::rsImage<float> imgBW(w, h);
 
+  for(int j = 0; j < h; j++)
+  {
+    for(int i = 0; i < w; i++)
+    {
+      BigInt a  = BigInt(i);
+      BigInt b  = BigInt(j);
+      BigInt ab = rsPow(a, b);                    // a^b
+      BigInt ba = rsPow(b, a);                    // b^a
+      BigRat q  = BigRat(ab)    / BigRat(ba);     // Quotient
+      BigRat c  = BigRat(ab-ba) / BigRat(ab+ba);  // Commutator (normalized)
+
+      // I think c is in -1..+1? Verify!
+
+      // Color the black/white image:
+      if(a == b)
+        imgBW(i, j) = 0.5f;
+      else if(ab > ba)
+        imgBW(i, j) = 1.0f;
+      else if(ab < ba)
+        imgBW(i, j) = 0.0f;
+      else
+        imgBW(i, j) = 0.5f;    // Happens for a^b == b^a but a != b. Can this happen?
+    }
+  }
 
 
-
+  // Write images to files:
+  writeImageToFilePPM(imgBW, "PowerCommutatorBW.ppm");
   int dummy = 0;
+
+  // Observations:
+  // -The black/white image shows not much interesting structure. Generally, the exponent is always
+  //  more important that the base. But what if we multiply the base by some fixed number, i.e. 
+  //  look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more interesting?
 }
 
 void testParticleSystem()

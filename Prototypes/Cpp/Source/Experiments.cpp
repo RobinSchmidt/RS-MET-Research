@@ -9808,7 +9808,9 @@ void testGeneralizedCollatz()
 
 void testPowerCommutator()
 {
-  // Power non-commutativity
+  // We investigate the non-commutativity of the power or exponentiation operation. How does this 
+  // non-commutativity depend on the inputs? Which is bigger a^b or b^a? How does the answer to 
+  // that question depend on the actual values of a and b?.
   //
   // Take a pair of nonegative integers a,b and figure out, if a^b > b^a. Interpret a,b, as pixel
   // coordinates. If a^b > b^a, color the pixel white. If a^b < b^a, color the pixel black. If 
@@ -9865,13 +9867,15 @@ void testPowerCommutator()
   int dummy = 0;
 
   // Observations:
-  // -The black/white image shows not much interesting structure. Generally, the exponent is always
-  //  more important that the base. But what if we multiply the base by some fixed number, i.e. 
-  //  look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more interesting? ..not really. 
-  //  It just extends teh white triangle to the right. Using (k*a)^b vs b^(a/k) seems to give the 
-  //  same picture as a^b vs b^a.
-  // -In most cases a^b > b^a when a < b. The exponent "counts more" than the base in determining 
-  //  the size of the output. The only exception is (a,b) = (2,3). 2^3 = 8 and 3^2 = 9.
+  // -The black/white image shows not much interesting structure. Generally, the exponent is almost 
+  //  always more important that the base. But what if we multiply the base by some fixed number, 
+  //  i.e. look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more interesting? Not 
+  //  really. It just extends the white triangle to the right. Using (k*a)^b vs b^(a/k) seems to 
+  //  give the same picture as a^b vs b^a.
+  // -In most cases a^b > b^a when a < b. That means, the exponent "counts more" than the base in 
+  //  determining the size of the output. If you have two numbers of different size and want to get
+  //  the biggest power, you should put the bigger of the two numbers into the exponent. The only 
+  //  exception is (a,b) = (2,3). 2^3 = 8 and 3^2 = 9.
   // -There's only one pair for which a != b but a^b == b^a and that pair is (2,4). We have 
   //  2^4 = 4^2 = 16. We don't count (4,2) as a separate pair. It's kinda the same due to symmetry.
   // -The PowerCommutatorGD has some mildly more interesting stuff going on
@@ -9883,6 +9887,14 @@ void testPowerCommutator()
   //  non-commutativity depends in an interesting way on the ratio or difference between x and y?
   //  ...soo - maybe it could be turned into an univariate function? Maybe the normalization factor 
   //  could be a different one like sqrt(x^2 + y^2) or just (x + y). 
+  // -What are the values of x,y for which x^y = y^x? If we allow only natural numbers for (x,y), 
+  //  we only get the pair (2,4) and its symmetric sibling (4,2). But if we allow real numbers for 
+  //  (x,y), we should get a 1D continuum of solutions. What curve does it describe? We are looking
+  //  for the solution set of the equation x^y = y^x or x^y - y^x = 0. That has a bit of algebraic
+  //  geometry flavor to it but the equation is non-algebraic. If we have a solution (x,y), what is 
+  //  the corresponding value z = x^y = y^x at our (x,y). At (2,4), we have z = 16 but what about 
+  //  other pairs (x,y)? The solution set is the straight line y = x together with some sort of 
+  //  hyperbola: https://www.desmos.com/calculator/wz4nru7rzz
   // -Take also a look at f(x,y) = x^y / y^x. We may need some special definitions for when the 
   //  denominator becomes zero.
 }

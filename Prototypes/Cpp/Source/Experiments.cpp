@@ -9812,13 +9812,13 @@ void testPowerCommutator()
   //
   // Take a pair of nonegative integers a,b and figure out, if a^b > b^a. Interpret a,b, as pixel
   // coordinates. If a^b > b^a, color the pixel white. If a^b < b^a, color the pixel black. If 
-  // a^b = b^a, color the pixel gray. Will we get an interesting structure from that? Maybe a 
-  // fractal? We will need big integer arithmetic for that because the numbers will get big really 
-  // quick. Or maybe we can use float/double? Maybe instead of just using black and white, look at 
-  // the quotient q = a^b / b^a. If q > 1, color the pixel with gray value 1 - 1/q. If q < 1, color
-  // the pixel with gray value q. Does that make sense? Or maybe we need 1 - 1/(2q) and q/2? Figure 
-  // out! The goal is to get a gray value of 0.5 when a^b = b^a, white for a^b > 0, b^a = 0, black 
-  // for a^b = 0, b^a > 0. Or: Maybe define a sort of normalized commutator: 
+  // a^b = b^a, color the pixel gray. Will we get an interesting structure from that? We will need 
+  // big integer arithmetic for that because the numbers will get big really quick. Or maybe we can
+  // use float/double? Maybe instead of just using black and white, look at the quotient 
+  // q = a^b / b^a. If q > 1, color the pixel with gray value 1 - 1/q. If q < 1, color the pixel 
+  // with gray value q. Does that make sense? Or maybe we need 1 - 1/(2q) and q/2? Figure out! The 
+  // goal is to get a gray value of 0.5 when a^b = b^a, white for a^b > 0, b^a = 0, black for 
+  // a^b = 0, b^a > 0. Or: Maybe define a sort of normalized commutator: 
   //   c = (a^b - b^a) / (a^b + b^a) 
   // and use that to color the pixel. ...TBC...
 
@@ -9841,12 +9841,10 @@ void testPowerCommutator()
       BigInt ab = rsPow(a, b);                    // a^b
       BigInt ba = rsPow(b, a);                    // b^a
       BigRat q  = BigRat(ab)    / BigRat(ba);     // Quotient
-      BigRat c  = BigRat(ab-ba) / BigRat(ab+ba);  // Commutator (normalized)
-
-      // I think c is in -1..+1? Verify!
-      imgGD(i, j) = 0.5 + 0.5*c;
-
-
+      BigRat c  = BigRat(ab-ba) / BigRat(ab+ba);  // Commutator, normalized to -1..+1
+    
+      // Color the grayscale image for the normalized commutator:
+      imgGD(i, j) = 0.5 + 0.5*c; // map -1..+1 to 0..1
 
       // Color the black/white image:
       if(a == b)
@@ -9872,6 +9870,8 @@ void testPowerCommutator()
   //  look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more interesting? ..not really. 
   //  It just extends teh white triangle to the right. Using (k*a)^b vs b^(a/k) seems to give the 
   //  same picture as a^b vs b^a.
+  // -In most cases a^b > b^a when a < b. The exponent "counts more" than the base in determining 
+  //  the size of the output. The only exception is (a,b) = (2,3). 2^3 = 8 and 3^2 = 9.
   // -There's only one pair for which a != b but a^b == b^a and that pair is (2,4). We have 
   //  2^4 = 4^2 = 16. We don't count (4,2) as a separate pair. It's kinda the same due to symmetry.
   // -The PowerCommutatorGD has some mildly more interesting stuff going on
@@ -9882,7 +9882,9 @@ void testPowerCommutator()
   //  interesting about the (non)commutativity of the exponentiation operation? maybe the amout of 
   //  non-commutativity depends in an interesting way on the ratio or difference between x and y?
   //  ...soo - maybe it could be turned into an univariate function? Maybe the normalization factor 
-  // could be a different one like sqrt(x^2 + y^2) or just (x + y). 
+  //  could be a different one like sqrt(x^2 + y^2) or just (x + y). 
+  // -Take also a look at f(x,y) = x^y / y^x. We may need some special definitions for when the 
+  //  denominator becomes zero.
 }
 
 void testParticleSystem()

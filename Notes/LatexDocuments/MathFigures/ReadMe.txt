@@ -2,6 +2,8 @@ In order to be able to render the LaTex documents with all the figures, you'll n
 the file MathFigures.zip from here:
 
 https://drive.google.com/file/d/18dU0gKdBlIdxY66NGPbunZ-XJKyUJ5jY/view?usp=drive_link
+https://drive.google.com/drive/folders/1tnHzT8PrDhperqDPG3Q3pBAs2sepBbgD
+
 
 and extract its contents to this folder.
 

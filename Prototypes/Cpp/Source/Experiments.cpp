@@ -9826,11 +9826,11 @@ void testPowerCommutator()
   using BigInt = double;  // Preliminary. May kinda work for smaller values of a,b
   using BigRat = double;  // For big rational numbers
 
-  int w = 50;  // Image width
-  int h = 50;  // Image height
+  int w = 20;  // Image width
+  int h = 20;  // Image height
 
   // The different images. BW: black/white. GQ: gray via quotient, GD: gray via difference.
-  RAPT::rsImage<float> imgBW(w, h);
+  RAPT::rsImage<float> imgBW(w, h), imgGD(w, h);
 
   for(int j = 0; j < h; j++)
   {
@@ -9844,6 +9844,9 @@ void testPowerCommutator()
       BigRat c  = BigRat(ab-ba) / BigRat(ab+ba);  // Commutator (normalized)
 
       // I think c is in -1..+1? Verify!
+      imgGD(i, j) = 0.5 + 0.5*c;
+
+
 
       // Color the black/white image:
       if(a == b)
@@ -9860,6 +9863,7 @@ void testPowerCommutator()
 
   // Write images to files:
   writeImageToFilePPM(imgBW, "PowerCommutatorBW.ppm");
+  writeImageToFilePPM(imgGD, "PowerCommutatorGD.ppm");
   int dummy = 0;
 
   // Observations:
@@ -9868,6 +9872,17 @@ void testPowerCommutator()
   //  look at (k*a)^b vs b^a for some k >= 1? Will that mae the pic more interesting? ..not really. 
   //  It just extends teh white triangle to the right. Using (k*a)^b vs b^(a/k) seems to give the 
   //  same picture as a^b vs b^a.
+  // -There's only one pair for which a != b but a^b == b^a and that pair is (2,4). We have 
+  //  2^4 = 4^2 = 16. We don't count (4,2) as a separate pair. It's kinda the same due to symmetry.
+  // -The PowerCommutatorGD has some mildly more interesting stuff going on
+
+  // ToDo:
+  // -Investigate the real valued bivariate function f(x,y) = (x^y - y^x) / (x^y + y^x). It's the 
+  //  smooth version of our normalized commutator function. Maybe it can tell us something 
+  //  interesting about the (non)commutativity of the exponentiation operation? maybe the amout of 
+  //  non-commutativity depends in an interesting way on the ratio or difference between x and y?
+  //  ...soo - maybe it could be turned into an univariate function? Maybe the normalization factor 
+  // could be a different one like sqrt(x^2 + y^2) or just (x + y). 
 }
 
 void testParticleSystem()

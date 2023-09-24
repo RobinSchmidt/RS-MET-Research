@@ -155,6 +155,8 @@ public:
 
   void setTitle(const std::string& newTitle) { title = newTitle; }
 
+  void setupPlotter(GNUPlotter* plt);
+
 protected:
 
   // Data setup:
@@ -169,6 +171,31 @@ protected:
   std::string title;
   bool dark = false;
 };
+
+
+template<class T>
+void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
+{
+  if(dark)
+    plt->setToDarkMode();
+  else
+    plt->setToLightMode();
+
+
+  using CP = GNUPlotter::ColorPalette;
+  plt->setColorPalette(CP::CJ_BuYlRd11, false);
+  // Let the user choose this!
+
+  if(!title.empty())
+    plt->setTitle(title);
+  plt->setPixelSize(pixelWidth, pixelHeight);
+
+  plt->addCommand("set bmargin at screen 0.1");  // B: bottom
+  plt->addCommand("set tmargin at screen 0.9");  // T: top
+  plt->addCommand("set lmargin at screen 0.07"); // L: left
+  plt->addCommand("set rmargin at screen 0.87"); // R: right
+  // ToDo: don't hardcode these numbers!
+}
 
 
 
@@ -230,32 +257,8 @@ void rsContourMapPlotter<T>::plot()
 
 
   GNUPlotter plt;
-  using CP = GNUPlotter::ColorPalette;
-
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
-
-
-  // Move into baseclass setupPlotter(&plt) :
-  if(dark)
-    plt.setToDarkMode();
-  else
-    plt.setToLightMode();
-
-  plt.setColorPalette(CP::CJ_BuYlRd11, false);
-  // Let the user choose this!
-
-  if(!title.empty())
-    plt.setTitle(title);
-  plt.setPixelSize(pixelWidth, pixelHeight);
-
-  plt.addCommand("set bmargin at screen 0.1");  // B: bottom
-  plt.addCommand("set tmargin at screen 0.9");  // T: top
-  plt.addCommand("set lmargin at screen 0.07"); // L: left
-  plt.addCommand("set rmargin at screen 0.87"); // R: right
-  // ToDo: don't hardcode these numbers!
-
-
-
+  setupPlotter(&plt);
   plotContours(plt, levels, true); 
 }
 

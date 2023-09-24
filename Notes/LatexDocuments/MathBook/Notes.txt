@@ -86,8 +86,59 @@ some notes on the order of the chapters
 -maybe make a part about weird, non-mainstream topics. for example, rational trigonometry, 
  fractional calculus, ...
  
+ 
+Let's map out the chapter dependencies. We try to make chapters on one level depend only on chapters 
+on levels below it. On the left, we write the chapter, on the raigh after the arrow, we list the 
+chapters it depends on. Hopefully, this can evetuall be drawnas a graph.
 
 
+Level 0 (Independent):
+Foundations
+Numbers
+Arithmetic
+
+Level 1:
+Functions              ->  Numbers, Arithmetic
+Vectors                ->  Numbers
+
+Level 2:
+Euclidean Geometry     ->  Functions (sin, cos, ..)
+Matrices               ->  Vectors
+Limits                 ->  Functions
+Exterior Algebra       ->  Vectors, Arithmetic (binomial coeffs)
+
+Level 3:
+Analytic Geometry      ->  Euclidean Geometry, Vectors
+Differentiation        ->  Limits
+Integration            ->  Limits
+Linear Algebra         ->  Vectors, Matrices
+Geometric Algebra      ->  Exterior Algebra
+
+Level 4:
+Series                 ->  Functions, Differentiation (for Taylor)
+Partial Derivatives    ->  Differentiation, Matrices (for Jacobi, Hessian)
+Multiple Integrals     ->  Integration
+Tensor Algebra         ->  Matrices, Linear Algebra
+Algebraic Geometry     ->  Analytic Geometry, Functions
+Differential Equations ->  Functions, Differentiation
+Operators              ->  Linear Algebra, Functions
+Functionals            ->  Functions, Integrals 
+
+Level 5:
+Vector Calculus        ->  Partial Derivatives, Multiple Integrals
+Differential Geometry  ->  Partial Derivatives, Multiple Integrals
+Optimization           ->  Partial Derivatives, Multiple Integrals
+Integral Trafos        ->  Operators, Functionals (computing a Fourier coeff is a functional)
+Partial Diff. Eq.      ->  Diff. Eq., Part. Derivatives
+
+Level 6:
+Complex Calculus       ->  Vector Calculus
+Exterior Calculus      ->  Vector Calculus
+Tensor Calculus        ->  Vector Calculus, Tensor Algebra, Differential Geometry
+Calc. of Variations    ->  Optimization
+
+Level 7:
+Geometric Calculus     ->  Exterior Calculus
 
 
 

@@ -88,8 +88,9 @@ some notes on the order of the chapters
  
  
 Let's map out the chapter dependencies. We try to make chapters on one level depend only on chapters 
-on levels below it. On the left, we write the chapter, on the raigh after the arrow, we list the 
-chapters it depends on. Hopefully, this can evetuall be drawnas a graph.
+on levels below it. On the left, we write the chapter, on the right after the arrow, we list the 
+chapters it depends on. Hopefully, this can eventually be drawn as a graph. Maybe it could also be 
+acceptable to have a dependency on a chapwer on the same level when that chapter is listed before.
 
 Level -1:
 Logic
@@ -154,7 +155,11 @@ Integral Equations     ->  Integral Trafos
 
 Not yet classified:
 
-
+To show these relationships graphically, maybe look into:
+https://graphviz.org/
+https://sourceforge.net/projects/dia-installer/
+https://texample.net/tikz/examples/tag/graphs/
+https://mathoverflow.net/questions/55200/good-programs-for-drawing-weighted-directed-graphs
 
 ToDo:
 -Introduce wedge product in the context of vector algebra, along with the dot-product and 

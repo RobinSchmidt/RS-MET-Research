@@ -140,6 +140,9 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
 
 
 
+
+
+
 // Maybe move them into rs_testing/TestTools/Plotting.h:
 template<class T>
 class ContourMapPlotter
@@ -153,6 +156,9 @@ public:
   { xMin = minX; xMax = maxX; yMin = minY; yMax = maxY; }
 
   void setOutputRange(T minZ, T maxZ) { zMin = minZ; zMax = maxZ; }
+
+  void setNumContours(int newNumber) { numContours = newNumber; }
+
 
   void setPixelSize(int width, int height) { pixelWidth  = width; pixelHeight = height; }
 

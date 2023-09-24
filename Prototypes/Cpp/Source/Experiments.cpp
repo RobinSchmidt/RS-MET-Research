@@ -13359,6 +13359,18 @@ void testPotentialPlotter()
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
 
 
+  ContourMapPlotter<Real> pltC;
+  pltC.setInputRange(-1, +1, -1, +1);
+
+  //  z^-5, octupole, https://en.wiktionary.org/wiki/octupole
+  pltC.setFunction([](R x, R y) { return PE::power(x, y, -5); });
+  pltC.setSamplingResolution(401, 401);
+  pltC.setOutputRange(-5.0, +5.0);
+  pltC.setNumContours(31);
+  pltC.plot();
+
+
+
   // z^-5, octupole(?):
   cplotA([](R x, R y)      { return PE::power(x, y, -5); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }, -1, +1, -1, +1, 21, 21);

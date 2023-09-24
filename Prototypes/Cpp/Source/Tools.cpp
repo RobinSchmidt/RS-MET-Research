@@ -54,7 +54,19 @@ void plotSurfaceDark(GNUPlotter& plt)
 
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
-  plt.addCommand("set pm3d lighting specular 0.25");
+
+
+  //plt.addCommand("set pm3d lighting specular 0.25");
+  plt.addCommand("set pm3d lighting primary 0.6 specular 0.0");
+  https://stackoverflow.com/questions/71490416/how-to-make-the-choice-in-3d-color-palette-in-gnuplot-with-light-effect
+  // "primary 0.0" is brighter than "primary 0.5". "primary 1.0" makes the underside completely 
+  // black. I think this number adjusts between ambient light and sourced light where 0.0 uses 
+  // ambient light only (underside is just as bright as upside) whereas 1.0 makes the underside
+  // completely black. I think, "specular 0.0" is good for coarser meshes wher the quadrilaterals
+  // give cues. For fine meshes, a bit more specular light may be beneficial (or it may not).
+  // "primary 0.6 specular 0.0" looks good with a coarse mesh
+
+
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d notitle");
   plt.invokeGNUPlot();
 }

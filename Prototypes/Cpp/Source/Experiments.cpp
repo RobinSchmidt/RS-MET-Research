@@ -13194,11 +13194,16 @@ void testPotentialPlotter()
     //  structure more clearly. Too much smoothness is not so desirable.
 
     using CP = GNUPlotter::ColorPalette;
-    plt.setColorPalette(CP::CB_YlGnBu9m, false);
+    plt.setColorPalette(CP::CJ_BuYlRd11, false);
+    //plt.setColorPalette(CP::CB_YlGnBu9m, false);
+
     //plt.setColorPalette(CP::RS_BkWt, true);
     //plt.setColorPalette(CP::GF_Printable, true);    //
     //plt.setColorPalette(CP::GP_Sand, true);
 
+    //plt.addCommand("set pm3d lighting primary 0.5 specular 0.0");
+    https://stackoverflow.com/questions/71490416/how-to-make-the-choice-in-3d-color-palette-in-gnuplot-with-light-effect
+    // seems to have no effect
 
     //plt.addCommand("set lmargin at screen 0.18");  // left
     //plt.addCommand("set rmargin at screen 0.79");  // right
@@ -13358,7 +13363,22 @@ void testPotentialPlotter()
   // Create the plots for the paper about Polya potentials:
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
 
-  // Create and set up the plotters for the vector fields and contou maps:
+  // f(z) = z^2 as surface-, arrow- and contour-plot:
+  splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
+  cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+
+  // f(z) = z^n for n = 0,1,2,3,4,5
+  cplotA([](R x, R y) { return PE::power(x, y,  0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y,  1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
+  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
+  cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3); // why asymmetric z-range in only this case?
+  cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y,  5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
+  // Maybe we should really always give the contour plot together with the arrow plot
+
+
+  // Create and set up the plotters for the vector fields and contour maps:
   using CP = GNUPlotter::ColorPalette;
   rsContourMapPlotter<Real>  pltC;
   rsVectorFieldPlotter<Real> pltV;
@@ -13420,19 +13440,7 @@ void testPotentialPlotter()
   //  pole, i.e. a field with 2*(n-1) lobes
   // -The monopole should use a unipolar color map, the multipoles a diverging map
 
-  // f(z) = z^2 as surface-, arrow- and contour-plot:
-  splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
-  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
 
-  // f(z) = z^n for n = 0,1,2,3,4,5
-  cplotA([](R x, R y) { return PE::power(x, y,  0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y,  1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
-  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3); // why asymmetric z-range in only this case?
-  cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y,  5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
-  // Maybe we should really always give the contour plot together with the arrow plot
 
 
   // Experimental:

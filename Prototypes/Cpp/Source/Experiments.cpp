@@ -13197,14 +13197,6 @@ void testPotentialPlotter()
     plt.setColorPalette(CP::CJ_BuYlRd11, false);
     //plt.setColorPalette(CP::CB_YlGnBu9m, false);
 
-    //plt.setColorPalette(CP::RS_BkWt, true);
-    //plt.setColorPalette(CP::GF_Printable, true);    //
-    //plt.setColorPalette(CP::GP_Sand, true);
-
-    //plt.addCommand("set pm3d lighting primary 0.5 specular 0.0");
-    https://stackoverflow.com/questions/71490416/how-to-make-the-choice-in-3d-color-palette-in-gnuplot-with-light-effect
-    // seems to have no effect
-
     //plt.addCommand("set lmargin at screen 0.18");  // left
     //plt.addCommand("set rmargin at screen 0.79");  // right
     //plt.addCommand("set bmargin at screen 0.25");  // bottom
@@ -13219,6 +13211,8 @@ void testPotentialPlotter()
     // https://gnuplot.sourceforge.net/docs_4.2/node200.html
     // https://gnuplot.sourceforge.net/demo/margins.html
     // https://stackoverflow.com/questions/29376374/how-do-gnuplot-margins-work-in-multiplot-mode
+    //
+    // Move this comment elsewhere. Maybe into rsFieldPlotter2D<T>::setupPlotter
 
     plt.setPixelSize(900, 600);
     //plt.setToDarkMode();

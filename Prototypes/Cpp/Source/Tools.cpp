@@ -285,7 +285,7 @@ void rsContourMapPlotter<T>::plot()
   GNUPlotter plt;
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
   setupPlotter(&plt);
-  plotContours(plt, levels, true); 
+  plotContours(plt, levels, true);   // Make this a member function! It's currently free.
 }
 
 

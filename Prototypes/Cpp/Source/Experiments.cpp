@@ -13249,6 +13249,15 @@ void testPotentialPlotter()
     std::function<void(Real x, Real y, Real* u, Real* v)> f,
     Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
   {
+    rsVectorFieldPlotter<Real> plt;
+    plt.setFunction(f);
+    plt.setInputRange(xMin, xMax, yMin, yMax);
+    plt.setArrowDensity(Nx, Ny);
+    //plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9m, false);
+    plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
+    plt.plot();
+
+    /*
     // Some API adaptor business:
     std::function<Real(Real x, Real y)> fu, fv;
     fu = [&](Real x, Real y) { Real u, v; f(x, y, &u, &v); return u; };
@@ -13292,6 +13301,7 @@ void testPotentialPlotter()
     //  white. The lightest color should be something like 20% dark or something. ..done
     //  using CB_YlGnBu9t now
     // -Set up lines - don't use dotting, use a faint solid gray instead
+    */
   };
 
   using C  = Complex;
@@ -13305,6 +13315,8 @@ void testPotentialPlotter()
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
   cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+  // For the vplot, the CB_YlGnBu9t colormap looks best for z^2. Maybe we should use that 
+  // generally?
 
   // f(z) = z^n for n = 0,1,2,3,4,5
   cplotA([](R x, R y) { return PE::power(x, y,  0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);

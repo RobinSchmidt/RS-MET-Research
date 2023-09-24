@@ -13281,17 +13281,9 @@ void testPotentialPlotter()
   cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
   cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-
-  //cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3);
   cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 14, -1.0, +0.3);
-  //cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +0.3); // no contour at z=0
-
-  //cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +1.0);
-
-  //cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
   cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 21, -0.5, +0.5);
-
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial

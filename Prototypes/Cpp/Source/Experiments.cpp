@@ -13256,52 +13256,6 @@ void testPotentialPlotter()
     //plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9m, false);
     plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
     plt.plot();
-
-    /*
-    // Some API adaptor business:
-    std::function<Real(Real x, Real y)> fu, fv;
-    fu = [&](Real x, Real y) { Real u, v; f(x, y, &u, &v); return u; };
-    fv = [&](Real x, Real y) { Real u, v; f(x, y, &u, &v); return v; };
-
-    // Plotting:
-    GNUPlotter plt;
-    using CP = GNUPlotter::ColorPalette;
-    plt.addVectorField2D(fu, fv, Nx, xMin, xMax, Ny, yMin, yMax);
-    plt.setRange(xMin, xMax, yMin, yMax);
-
-    //plt.setColorPalette(CP::CB_YlGnBu9m, false);
-    //plt.setColorPalette(CP::CB_YlGnBu9t, false);
-    plt.setColorPalette(CP::CB_YlGnBu9mt, false);
-
-
-
-
-    //plt.setColorPalette(CP::RS_BkWt, true);
-    //plt.setToLightMode();
-
-
-    plt.setTitle("Polya Vector Field");
-
-    plt.setPixelSize(600, 600);
-    plt.addCommand("set bmargin at screen 0.1");  // B: bottom
-    plt.addCommand("set tmargin at screen 0.9");  // T: top
-    plt.addCommand("set lmargin at screen 0.07"); // L: left
-    plt.addCommand("set rmargin at screen 0.87"); // R: right
-    // I think, we need T-B = R-L to get an aspect ratio of 1? Here, we use T-B = R-L = 0.9. 
-    // ToDo: Verify, if the aspect ratio is indeed 1.
-
-    //if(Nx == Ny)
-    //  plt.addCommand("set size square");
-    // I think, this interferes with the set _margin commands
-
-    plt.plot();
-
-    // ToDo:
-    // -Use a color palette that is truncated at the light values. It should not go all the way to
-    //  white. The lightest color should be something like 20% dark or something. ..done
-    //  using CB_YlGnBu9t now
-    // -Set up lines - don't use dotting, use a faint solid gray instead
-    */
   };
 
   using C  = Complex;
@@ -13309,7 +13263,12 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Create the plots for the paper about Polya potentials:
-  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
+
 
   // f(z) = z^2 as surface-, arrow- and contour-plot:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
@@ -13319,13 +13278,18 @@ void testPotentialPlotter()
   // generally?
 
   // f(z) = z^n for n = 0,1,2,3,4,5
-  cplotA([](R x, R y) { return PE::power(x, y,  0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y,  1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
-  cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3); // why asymmetric z-range in only this case?
-  cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y,  5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
-  // Maybe we should really always give the contour plot together with the arrow plot
+  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
+  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
+  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3);
+  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
+  // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
+  // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
+  // farthest away from the origin so there, we typically see the most extreme values of the radial
+  // factor. It's a coincidence that for n=3, the saddle is shaped such that at these farthest away
+  // points P(x,y) goes down towards all four corners. For other exponents, the height of P more 
+  // distributed at the corners.
 
 
   // Create and set up the plotters for the vector fields and contour maps:
@@ -13347,7 +13311,7 @@ void testPotentialPlotter()
 
   //  z^-5, octupole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }); pltV.plot();
+  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }); pltV.plot();
   // https://en.wiktionary.org/wiki/octupole
   // GNUPlot gives warning about undefined matrix values. Check the generated data! Maybe when 
   // that is fixed, we can get away with a lower resolution than setSamplingResolution(401, 401)?
@@ -13361,12 +13325,12 @@ void testPotentialPlotter()
 
   // z^-4, hexapole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -4); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }); pltV.plot();
+  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }); pltV.plot();
   // https://en.wiktionary.org/wiki/hexapole#English
 
   // z^-3, quadrupole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -3); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
+  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
   // https://de.wikipedia.org/wiki/Quadrupol
   // https://en.wikipedia.org/wiki/Quadrupole
 
@@ -13385,10 +13349,11 @@ void testPotentialPlotter()
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }); pltV.plot();
   // https://en.wikipedia.org/wiki/Magnetic_monopole
 
-
   // -For z^-n, we get a monopole field for n = 1 and for n > 1, we get the field of a 2*(n-1) 
   //  pole, i.e. a field with 2*(n-1) lobes
   // -The monopole should use a unipolar color map, the multipoles a diverging map
+  // -Maybe for the paper, only plot the arrow-map for the monopole and dipole but not for higher
+  //  order multipoles
 
 
 

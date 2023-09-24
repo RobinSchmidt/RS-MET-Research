@@ -13226,7 +13226,7 @@ void testPotentialPlotter()
     // View: 66, 138
   };
   // Maybe rename P to dataP and then f to P
-  // For contour plots, see:
+  // For sufaces with contour lines, see:
   // https://gnuplot.sourceforge.net/demo_5.2/contours.html
 
   // Like splotA but instead produces a contour map:
@@ -13234,71 +13234,15 @@ void testPotentialPlotter()
     Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny,
     int numContours, Real zMin = 0, Real zMax = 0)
   {
-    // Generate the data and figure out appropriate values for zMin/zMax if the user hasn't given a 
-    // valid z-range and generate the array of the contour levels that will drawn in as contour 
-    // lines:
-    std::vector<Real> x, y;
-    RAPT::rsMatrix<Real> z;
-    generateMatrixData(f, xMin, xMax, yMin, yMax, Nx, Ny, x, y, z);
-    if(zMin >= zMax) {
-      zMin = z.getMinimum();
-      zMax = z.getMaximum(); }
-    Vec levels = RAPT::rsRangeLinear(zMin, zMax, numContours);  // Create array of contour levels
-
-    // Clip the matrix data:
-    for(int i = 0; i < z.getNumRows(); i++)
-      for(int j = 0; j < z.getNumColumns(); j++)
-        z(i, j) = RAPT::rsClip(z(i, j), zMin, zMax);
-    //z.clipToRange(zMin, zMax);  // Maybe implement that function
-
-    // Old - does not allow to set zMin/zMax automatically:
-    //addHeightData(plt, f, xMin, xMax, yMin, yMax, Nx, Ny);
-
-    // Create and set up the plotter object and use it to plot the data:
-
-    GNUPlotter plt;
-    using CP = GNUPlotter::ColorPalette;
-
-    plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
-    //plt.setPixelSize(600, 600);
-    //plt.setPixelSize(3*(Nx-1), 3*(Ny-1));  // kinda ad hoc. Does it make sense?
-    //plt.setPixelSize(Nx, Ny);
-    //if(Nx == Ny)
-    //  plt.addCommand("set size square");
-    //plt.setToDarkMode();
-    //plt.setToLightMode();
-    //plt.setColorPalette(CP::_test);
-    //plt.setColorPalette(CP::UA_viridisBrt);
-    //plt.setColorPalette(CP::F_printable);
-    //plt.setColorPalette(CP::CB_YlGnBu9m, false);
-    plt.setColorPalette(CP::CJ_BuYlRd11, false);
-    //plt.setColorPalette(CP::RS_BkWt, true);
-    //plt.setColorPalette(CP::GF_Printable, true);
-    //plt.setColorPalette(CP::GP_Sand, true);
-    // plt.addCommand("set size ratio -1");  // What does this do?
-    // plt.addCommand("set autoscale fix");  // What does this do?
-
-    //plt.addCommand("set lmargin at screen 0.0");  // left
-    //plt.addCommand("set rmargin at screen 1.0");  // right
-    //plt.addCommand("set lmargin 1");  // left
-    //plt.addCommand("set rmargin 1");  // right
-    //plt.addCommand("set bmargin 1");  // bottom
-    //plt.addCommand("set tmargin 1");  // top
-    // ...it doesn't work as expected. I have no idea, how GnuPlot handles margins. It's a mess!
-    // Maybe it has to do with the "set size square" command? Could it be that these two interfere?
-
-    plt.setTitle("Polya Potential Contours");
-
-    plt.setPixelSize(600, 600);
-    plt.addCommand("set bmargin at screen 0.1");  // B: bottom
-    plt.addCommand("set tmargin at screen 0.9");  // T: top
-    plt.addCommand("set lmargin at screen 0.07"); // L: left
-    plt.addCommand("set rmargin at screen 0.87"); // R: right
-
-    plotContours(plt, levels, true); // true: use constant colors between contours
+    rsContourMapPlotter<Real> plt;
+    plt.setFunction(f);
+    plt.setInputRange(xMin, xMax, yMin, yMax);
+    plt.setOutputRange(zMin, zMax);
+    plt.setSamplingResolution(Nx, Ny);
+    plt.setNumContours(numContours);
+    plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
+    plt.plot();
   };
-  // Maybe drag the setup of the color palette to here
-
 
   // Like splotA and cplotA but produces a vector field plot.
   auto vplotA = [&](

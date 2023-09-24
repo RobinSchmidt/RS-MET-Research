@@ -328,8 +328,7 @@ In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$
 
 
 \subsection{Plots for Nonegative Powers: $f(z) = z^n$}
-We now want to look at plots for functions of the form $f(z) = z^n$ for some nonnegative integer $n$. We have already seen that the Polya potential for $f(z) = z^2$ gives us $P(x,y) = x^3/ 3 - x y^2$ which is, up to scaling, the so called monkey saddle. In general, we will get a saddle surface of order $n+1$ for the Polya potentials $P(x,y)$ for complex functions of the form $f(z) = z^n$ [VERIFY!]. For a discussion of such higher order saddles, see \cite{HighOrderSaddles}.
-
+We now want to look at plots for functions of the form $f(z) = z^n$ for some nonnegative integer $n$. We have already seen that the Polya potential for $f(z) = z^2$ gives us $P(x,y) = x^3/ 3 - x y^2$ which is, up to scaling, the so called monkey saddle. Let's start with the simplemost cases of the constant function$f(z) = z^0 = 1$ and the identity $f(z) = z^1 = z$. the contour maps for these are shown in figure \ref{Fig:ContoursPow_0_1}. 
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = z^0$ and $f(z) = z^1$}	
 \label{Fig:ContoursPow_0_1}	
@@ -343,6 +342,12 @@ We now want to look at plots for functions of the form $f(z) = z^n$ for some non
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursPow1.png}
 \end{subfigure}
 \end{figure}
+In the case of the constant function $f(z) = 1$, we see equidistant vertical lines as contour lines. The upward direction of the function goes to the right. That means, our arrows would all point to the right, no matter where in the plane they start and they would all have the same length (or color), namely a length of 1. Would we have chosen a constant different from 1, say $f(z) = c$ for some arbitrary complex number $c$, we would observe the following: For bigger numbers, the contour lines would be more densely packed and for smaller numbers, they would be more spaced out. For a negative number, the high (red) values would be to the left and the low (blue) values woudl be to the right. For a purely imaginary $c$, the contours would be horizontal and for some arbitrary complex number with nonzero real and imaginary part, the contours would be slanted at an angle [ToDo: explain how the angle of the contours is related to the angle of $c$ and the spacing to the magnitude of $c$].
+
+
+
+
+
 
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = z^2$ and $f(z) = z^3$}	
@@ -357,6 +362,8 @@ We now want to look at plots for functions of the form $f(z) = z^n$ for some non
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursPow3.png}
 \end{subfigure}
 \end{figure}
+
+In general, we will get a saddle surface of order $n+1$ for the Polya potentials $P(x,y)$ for complex functions of the form $f(z) = z^n$ [VERIFY!]. For a discussion of such higher order saddles, see \cite{HighOrderSaddles}.
 
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = z^4$ and $f(z) = z^5$}	

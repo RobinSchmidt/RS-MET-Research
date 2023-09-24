@@ -194,7 +194,11 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   plt->addCommand("set tmargin at screen 0.9");  // T: top
   plt->addCommand("set lmargin at screen 0.07"); // L: left
   plt->addCommand("set rmargin at screen 0.87"); // R: right
-  // ToDo: don't hardcode these numbers!
+  // I think, we need T-B = R-L to get an aspect ratio of 1? Here, we use T-B = R-L = 0.9. 
+  // ToDo: 
+  // -Verify, if the aspect ratio is indeed 1.
+  // -Don't hardcode these numbers! Have a function that can be called like 
+  //  setDrawingArea(0.1, 0.9, 0.07, 0.87)
 }
 
 
@@ -227,12 +231,11 @@ protected:
   bool clipData = true;
 
   // Plotting setup:
-  int Nx          = 101;
+  int Nx          = 101;  // rename to resX of x-resolution or numSamplesX
   int Ny          = 101;
   int numContours = 21;
 
 };
-
 
 template<class T>
 void rsContourMapPlotter<T>::plot()
@@ -253,7 +256,7 @@ void rsContourMapPlotter<T>::plot()
     for(int i = 0; i < z.getNumRows(); i++)
       for(int j = 0; j < z.getNumColumns(); j++)
         z(i, j) = RAPT::rsClip(z(i, j), zMin, zMax); }
-  //z.clipToRange(zMin, zMax);  // Maybe implement that function
+  // ToDo: Maybe implement and use a function z.clipToRange(zMin, zMax);
 
 
   GNUPlotter plt;
@@ -264,18 +267,46 @@ void rsContourMapPlotter<T>::plot()
 
 
 
-/*
 template<class T>
-class VectorFieldPlotter
+class rsVectorFieldPlotter : public rsFieldPlotter2D<T>
 {
 
 public:
 
+  void setFunction(const std::function<void(T x, T y, T* u, T* v)>& newFunction) 
+  { f = newFunction; }
+
+  void setArrowDensity(int densX, int densY) { numArrowsX = densX; numArrowsY = densY; }
+
+
+  void plot();
+
 protected:
 
-};
-*/
+  // Data setup:
+  std::function<void(T x, T y, T* u, T* v)> f;
 
+  // Plotting Setup:
+  int numArrowsX = 21;
+  int numArrowsY = 21;
+};
+
+template<class T>
+void rsVectorFieldPlotter<T>::plot()
+{
+  // Some API adaptor business:
+  std::function<T(T x, T y)> fu, fv;
+  fu = [&](T x, T y) { T u, v; f(x, y, &u, &v); return u; };
+  fv = [&](T x, T y) { T u, v; f(x, y, &u, &v); return v; };
+  // ToDo: Let GNUPlotter accept a function like our f to define a 2D vector field directly.
+
+  // Plotting:
+  GNUPlotter plt;
+  plt.addVectorField2D(fu, fv, numArrowsX, xMin, xMax, numArrowsY, yMin, yMax);
+  plt.setRange(xMin, xMax, yMin, yMax);  // Maybe move into setupPlotter()
+  setupPlotter(&plt);
+  plt.plot();
+}
 
 //=================================================================================================
 

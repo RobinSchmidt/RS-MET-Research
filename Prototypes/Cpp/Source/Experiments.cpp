@@ -13359,8 +13359,11 @@ void testPotentialPlotter()
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
 
 
-  rsContourMapPlotter<Real> pltC;
+  rsContourMapPlotter<Real>  pltC;
+  rsVectorFieldPlotter<Real> pltV;
   pltC.setInputRange(-1, +1, -1, +1);
+  pltV.setInputRange(-1, +1, -1, +1);
+  pltV.setArrowDensity(21, 21);
 
   //  z^-5, octupole, https://en.wiktionary.org/wiki/octupole
   pltC.setFunction([](R x, R y) { return PE::power(x, y, -5); });
@@ -13369,6 +13372,11 @@ void testPotentialPlotter()
   pltC.setOutputRange(-5.0, +5.0);
   pltC.setNumContours(31);
   pltC.plot();
+  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); });
+  pltV.plot();
+
+
+
 
 
 

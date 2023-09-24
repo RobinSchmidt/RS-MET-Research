@@ -137,6 +137,119 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
 
 
 
+
+
+
+// Maybe move them into rs_testing/TestTools/Plotting.h:
+template<class T>
+class ContourMapPlotter
+{
+
+public:
+
+  void setFunction(const std::function<T(T x, T y)>& newFunction) { f = newFunction; }
+
+  void setInputRange(T minX, T maxX, T minY, T maxY) 
+  { xMin = minX; xMax = maxX; yMin = minY; yMax = maxY; }
+
+  void setOutputRange(T minZ, T maxZ) { zMin = minZ; zMax = maxZ; }
+
+  void setPixelSize(int width, int height) { pixelWidth  = width; pixelHeight = height; }
+
+  void setSamplingResolution(int numSamplesX, int numSamplesY) 
+  { Nx = numSamplesX; Ny = numSamplesY; }
+
+  void setTitle(const std::string& newTitle) { title = newTitle; }
+
+
+  void plot();
+
+protected:
+
+  // Data setup:
+  std::function<T(T x, T y)> f;
+  T xMin = 0; 
+  T xMax = 1; 
+  T yMin = 0; 
+  T yMax = 1;
+  T zMin = 0;
+  T zMax = 0;
+  bool clipData = true;
+
+  // Plotting setup:
+  int Nx          = 101;
+  int Ny          = 101;
+  int numContours = 21;
+  int pixelWidth  = 600;
+  int pixelHeight = 600;
+  std::string title;
+  bool dark = false;
+};
+
+
+template<class T>
+void ContourMapPlotter<T>::plot()
+{
+  // Generate the data and figure out appropriate values for zMin/zMax if the user hasn't given a 
+  // valid z-range and generate the array of the contour levels that will drawn in as contour 
+  // lines:
+  std::vector<T> x, y;
+  RAPT::rsMatrix<T> z;
+  generateMatrixData(f, xMin, xMax, yMin, yMax, Nx, Ny, x, y, z);
+  if(zMin >= zMax) {
+    zMin = z.getMinimum();
+    zMax = z.getMaximum(); }
+  std::vector<T> levels = RAPT::rsRangeLinear(zMin, zMax, numContours);  // Array of contour levels
+
+  // Clip the matrix data:
+  if(clipData == true) {
+    for(int i = 0; i < z.getNumRows(); i++)
+      for(int j = 0; j < z.getNumColumns(); j++)
+        z(i, j) = RAPT::rsClip(z(i, j), zMin, zMax); }
+  //z.clipToRange(zMin, zMax);  // Maybe implement that function
+
+
+  GNUPlotter plt;
+  using CP = GNUPlotter::ColorPalette;
+
+  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
+
+  if(dark)
+    plt.setToDarkMode();
+  else
+    plt.setToLightMode();
+
+  plt.setColorPalette(CP::CJ_BuYlRd11, false);
+  // Let the user choose this!
+
+  if(!title.empty())
+    plt.setTitle(title);
+  plt.setPixelSize(pixelWidth, pixelHeight);
+
+  plt.addCommand("set bmargin at screen 0.1");  // B: bottom
+  plt.addCommand("set tmargin at screen 0.9");  // T: top
+  plt.addCommand("set lmargin at screen 0.07"); // L: left
+  plt.addCommand("set rmargin at screen 0.87"); // R: right
+  // ToDo: don't hardcode these numbers!
+
+  plotContours(plt, levels, true); 
+}
+
+
+
+/*
+template<class T>
+class VectorFieldPlotter
+{
+
+public:
+
+protected:
+
+};
+*/
+
+
 //=================================================================================================
 
 /** A class to represent some measures of an image filtering kernel. These measurements may be 

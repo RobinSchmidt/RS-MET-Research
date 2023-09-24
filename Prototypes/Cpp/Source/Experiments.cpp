@@ -13263,11 +13263,11 @@ void testPotentialPlotter()
   using PE = rsPolyaPotentialEvaluator<Real>;
 
   // Create the plots for the paper about Polya potentials:
-  splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
-  splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
-  splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31);
-  splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
-  splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
 
 
   // f(z) = z^2 as surface-, arrow- and contour-plot:
@@ -13281,15 +13281,33 @@ void testPotentialPlotter()
   cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
   cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3);
-  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
+
+  //cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3);
+  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 14, -1.0, +0.3);
+  //cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +0.3); // no contour at z=0
+
+  //cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +1.0);
+
+  //cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
+  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 21, -0.5, +0.5);
+
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial
   // factor. It's a coincidence that for n=3, the saddle is shaped such that at these farthest away
   // points P(x,y) goes down towards all four corners. For other exponents, the height of P more 
-  // distributed at the corners.
+  // distributed at the corners. Due to the asymmetric z-range, we also need a different number of 
+  // contours in order to get a contour line at z = 0. It works with 14 or 27 contours. I think, in
+  // general, the rule is as follows: Let's define R = 10*(zMax-zMin), 
+  // N = numContours-1 (= numColors). I think, to have a contour line at z=0, we must have either 
+  // of these be true:
+  //  -N is a multiple of R
+  //  -zMin = -zMax and n is even
+  //  -> Verify these! Maybe find more..
+  // In the case here, we have R = 10*(zMax-zMin) =  10*(0.3 - -1.0) = 13. numContours must be 
+  // k*R + 1, so 14 and 27 work.
+
 
 
   // Create and set up the plotters for the vector fields and contour maps:
@@ -13381,11 +13399,7 @@ void testPotentialPlotter()
   //  z-range of -26..+26. The plots will look similar. There differences in the placement of the 
   //  contours, though.
 
-  // Let's define R = 10*(zMax-zMin), N = numContours-1 (= numColors). I think, to have a contour 
-  // line at z=0, we must have either of these be true:
-  // -N is a multiple of R
-  // -zMin = -zMax and n is even
-  // -> Verify these! Maybe find more..
+
 
 
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);

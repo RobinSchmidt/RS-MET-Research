@@ -9808,6 +9808,21 @@ void testGeneralizedCollatz()
 
 void testPowerCommutator()
 {
+  // Power non-commutativity
+  //
+  // Take a pair of nonegative integers a,b and figure out, if a^b > b^a. Interpret a,b, as pixel
+  // coordinates. If a^b > b^a, color the pixel white. If a^b < b^a, color the pixel black. If 
+  // a^b = b^a, color the pixel gray. Will we get an interesting structure from that? Maybe a 
+  // fractal? We will need big integer arithmetic for that because the numbers will get big really 
+  // quick. Or maybe we can use float/double? Maybe instead of just using black and white, look at 
+  // the quotient q = a^b / b^a. If q > 1, color the pixel with gray value 1 - 1/q. If q < 1, color
+  // the pixel with gray value q. Does that make sense? Or maybe we need 1 - 1/(2q) and q/2? Figure 
+  // out! The goal is to get a gray value of 0.5 when a^b = b^a, white for a^b > 0, b^a = 0, black 
+  // for a^b = 0, b^a > 0. Or: Maybe define a sort of normalized commutator: 
+  //   c = (a^b - b^a) / (a^b + b^a) 
+  // and use that to color the pixel. ...TBC...
+
+
   using BigInt = double;  // Preliminary. May kinda work for smaller values of a,b
 
   int w = 10;  // Image width

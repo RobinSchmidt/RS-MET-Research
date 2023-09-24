@@ -315,7 +315,7 @@ void rsVectorFieldPlotter<T>::plot()
   GNUPlotter plt;
   plt.addVectorField2D(fu, fv, numArrowsX, xMin, xMax, numArrowsY, yMin, yMax);
 
-  //plt.setRange(xMin, xMax, yMin, yMax);  // Maybe move into setupPlotter()
+  plt.setRange(xMin, xMax, yMin, yMax);  // Maybe move into setupPlotter()
   // Maybe we should have margins? It tends to look better with margins when some of the arrows 
   // point out of the rectangle defined by xMin, xMax, yMin, yMax. But then, it may be out of sync
   // with a corresponding contour map plot

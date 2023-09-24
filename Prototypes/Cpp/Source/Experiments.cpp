@@ -13367,28 +13367,45 @@ void testPotentialPlotter()
   pltC.setPixelSize(600, 600);
   pltV.setPixelSize(600, 600);
   pltV.setArrowDensity(21, 21);
+  pltC.setSamplingResolution(400, 400);      // high quality
+  //pltC.setSamplingResolution(100, 100);    // draft
+  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
 
-  //  z^-5, octupole, https://en.wiktionary.org/wiki/octupole
+  //  z^-5, octupole:
   pltC.setFunction([](R x, R y) { return PE::power(x, y, -5); });
-  pltC.setSamplingResolution(401, 401);      // high quality
-  //pltC.setSamplingResolution(101, 101);    // draft
   pltC.setOutputRange(-5.0, +5.0);
   pltC.setNumContours(31);
-  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltC.plot();
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); });
-  pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
   pltV.plot();
+  // https://en.wiktionary.org/wiki/octupole
+  // GNUPlot gives warning about undefined matrix values. Check the generated data! Maybe when 
+  // that is fixed, we can get away with a lower resolution than setSamplingResolution(401, 401)?
+  // I use this high resolution mainly to get rid of the artifacts in the middle. Maybe that 
+  // artifact comes from the pole there? OK - yes - it seems to be the case. When using 101,101,
+  // we do get an evaluation point at the pole at 0,0 but when using 100,100, the pole is avoided
+  // same with 401,401 vs 400,400. But I wonder why the clipping doesn't take care of that. Maybe
+  // it's a NaN due to 0/0? However, the gist is: when there's a pole at 0,0, try to avoid 0,0 as
+  // evaluation point. Otherwise,we probably want to have an evaluation point at 0,0.
+  // ...move that text to the "Observations" section
+
+  // z^-4, hexapole:
+  pltC.setFunction([](R x, R y) { return PE::power(x, y, -4); });
+  pltC.plot();
+  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); });
+  pltV.plot();
+  // https://en.wiktionary.org/wiki/hexapole#English
 
 
-
-
-
-
+  /*
   // z^-5, octupole(?):
   cplotA([](R x, R y)      { return PE::power(x, y, -5); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }, -1, +1, -1, +1, 21, 21);
   // https://en.wiktionary.org/wiki/octupole
+  */
+
+
 
   // z^-4, hexapole(?):
   //splotA([](R x, R y)      { return PE::power(x, y, -4); }, -1, +1, -1, +1, 31, 31);

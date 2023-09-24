@@ -135,10 +135,12 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
 // Maybe plot also the Polya vector field. Use strength of color (opacity and/or brightness) so 
 // indicate field strength. Let the arrows all have the same length.
 
+
+
 //=================================================================================================
 
-/** A class to represnt some measures of an image filtering kernel. These measurements may be 
-relevant to assess the featues and quality of a filter kernel.
+/** A class to represent some measures of an image filtering kernel. These measurements may be 
+relevant to assess the features and quality of a filter kernel.
 
 ...TBC...
 
@@ -173,15 +175,19 @@ public:
 
 
   static T aspectRatio(const rsImage<T>& img) { return centerSumHorz(img) / centerSumVert(img); }
-
+  // Why only the center sum? Wouldn't it make more sense to take all rows and all columns? But no!
+  // In this case, we would in both cases just sum over all pixels and the ratio would always be 
+  // unity. And if we have to pick one row and one column, the center makes the most sense. Maybe it 
+  // would make sense to use all rows/cols if we introduce a weight for each row/col that depends on
+  // how far away that row/col is from the center - maybe like 1/distance or something.
 
 
   /** Measures how anisotropic the kernel is by comparing the sum of the center horizontal strip 
   and the diagonal strip where the off-center pixel values in the diagonal strip are weighted by
   sqrt(2) because they are by that factor farther away from the center pixel. A circularly 
   symmetric (i.e. perfectly isotropic) kernel should give a crossness of zero. A kernel that 
-  looks like a cross gives a value of 1 and a kernel that looks like a diagonal cross gives a
-  value of -1.
+  looks like a cross (like a plus +) gives a value of 1 and a kernel that looks like a diagonal 
+  cross (like an x) gives a value of -1.
 
   ...TBC...
   

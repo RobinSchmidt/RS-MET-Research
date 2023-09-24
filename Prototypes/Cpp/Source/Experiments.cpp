@@ -9806,6 +9806,21 @@ void testGeneralizedCollatz()
   int dummy = 0;
 }
 
+void testPowerCommutator()
+{
+  using BigInt = double;  // Preliminary. May kinda work for smaller values of a,b
+
+  int w = 10;  // Image width
+  int h = 10;  // Image height
+
+  // The different images. BW: black/white. GQ: gray via quotient, GD: gray via difference.
+  RAPT::rsImage<float> imgBW(w, h);
+
+
+
+
+  int dummy = 0;
+}
 
 void testParticleSystem()
 {

@@ -58,13 +58,17 @@ void plotSurfaceDark(GNUPlotter& plt)
 
   //plt.addCommand("set pm3d lighting specular 0.25");
   plt.addCommand("set pm3d lighting primary 0.6 specular 0.0");
+  //plt.addCommand("set pm3d lighting primary 0.6 specular 0.25");
   https://stackoverflow.com/questions/71490416/how-to-make-the-choice-in-3d-color-palette-in-gnuplot-with-light-effect
   // "primary 0.0" is brighter than "primary 0.5". "primary 1.0" makes the underside completely 
   // black. I think this number adjusts between ambient light and sourced light where 0.0 uses 
   // ambient light only (underside is just as bright as upside) whereas 1.0 makes the underside
   // completely black. I think, "specular 0.0" is good for coarser meshes wher the quadrilaterals
   // give cues. For fine meshes, a bit more specular light may be beneficial (or it may not).
-  // "primary 0.6 specular 0.0" looks good with a coarse mesh
+  // "primary 0.6 specular 0.0" looks good with a coarse mesh. Some specular light (like 0.25) 
+  // seems to work well with unipolar darkish color-maps like CB_YlGnBu9m but not so good with 
+  // bipolar maps with a whiteish color in the middle like CJ_BuYlRd11. A little bit like 0.1
+  // ight be OK - but it really depends on the angle.
 
 
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d notitle");

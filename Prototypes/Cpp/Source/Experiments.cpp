@@ -13219,7 +13219,7 @@ void testPotentialPlotter()
     //plt.setToLightMode();
 
 
-    plt.setTitle("Polya Potential Surface");
+    //plt.setTitle("Polya Potential Surface");
 
     plotSurfaceDark(plt); // Maybe try other ways
 

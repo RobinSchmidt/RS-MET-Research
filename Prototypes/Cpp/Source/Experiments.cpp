@@ -13415,21 +13415,10 @@ void testPotentialPlotter()
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }); pltV.plot();
   // https://en.wikipedia.org/wiki/Magnetic_monopole
 
-  /*
-  // z^-1, monopole:
-  cplotA([](R x, R y)      { return PE::power(x, y, -1); },       -1, +1, -1, +1, 201, 201, 21, -4.5, +0.5);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1,  21,  21);
-  // needs a unipolar color map
-  */
 
   // -For z^-n, we get a monopole field for n = 1 and for n > 1, we get the field of a 2*(n-1) 
   //  pole, i.e. a field with 2*(n-1) lobes
   // -The monopole should use a unipolar color map, the multipoles a diverging map
-
-
-
-  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);
-
 
   // f(z) = z^2 as surface-, arrow- and contour-plot:
   splotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 31, 31);
@@ -13440,7 +13429,7 @@ void testPotentialPlotter()
   cplotA([](R x, R y) { return PE::power(x, y,  0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y,  1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
   cplotA([](R x, R y) { return PE::power(x, y,  2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3);
+  cplotA([](R x, R y) { return PE::power(x, y,  3); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +0.3); // why asymmetric z-range in only this case?
   cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 301, 301, 27, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y,  5); }, -1, +1, -1, +1, 401, 401, 27, -0.5, +0.5);
   // Maybe we should really always give the contour plot together with the arrow plot

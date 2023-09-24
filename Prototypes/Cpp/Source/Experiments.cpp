@@ -13358,27 +13358,26 @@ void testPotentialPlotter()
   // Create the plots for the paper about Polya potentials:
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
 
-
+  // Create and set up the plotters for the vector fields and contou maps:
   using CP = GNUPlotter::ColorPalette;
   rsContourMapPlotter<Real>  pltC;
   rsVectorFieldPlotter<Real> pltV;
   pltC.setInputRange(-1, +1, -1, +1);
   pltV.setInputRange(-1, +1, -1, +1);
+  pltC.setOutputRange(-5.0, +5.0);
   pltC.setPixelSize(600, 600);
   pltV.setPixelSize(600, 600);
+  pltC.setNumContours(31);
   pltV.setArrowDensity(21, 21);
   pltC.setSamplingResolution(400, 400);      // high quality
   //pltC.setSamplingResolution(100, 100);    // draft
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
 
+
   //  z^-5, octupole:
-  pltC.setFunction([](R x, R y) { return PE::power(x, y, -5); });
-  pltC.setOutputRange(-5.0, +5.0);
-  pltC.setNumContours(31);
-  pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); });
-  pltV.plot();
+  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });       pltC.plot();
+  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }); pltV.plot();
   // https://en.wiktionary.org/wiki/octupole
   // GNUPlot gives warning about undefined matrix values. Check the generated data! Maybe when 
   // that is fixed, we can get away with a lower resolution than setSamplingResolution(401, 401)?
@@ -13395,13 +13394,11 @@ void testPotentialPlotter()
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }); pltV.plot();
   // https://en.wiktionary.org/wiki/hexapole#English
 
-
   // z^-3, quadrupole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -3); });       pltC.plot();
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
   // https://de.wikipedia.org/wiki/Quadrupol
   // https://en.wikipedia.org/wiki/Quadrupole
-
 
   // z^-2, dipole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -2); });       pltC.plot();
@@ -13409,40 +13406,21 @@ void testPotentialPlotter()
   // https://en.wikipedia.org/wiki/Dipole
   // https://de.wikipedia.org/wiki/Dipol_(Physik)
 
-  /*
-  // z^-5, octupole(?):
-  cplotA([](R x, R y)      { return PE::power(x, y, -5); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }, -1, +1, -1, +1, 21, 21);
-  // https://en.wiktionary.org/wiki/octupole
-  */
-  /*
-  // z^-4, hexapole(?):
-  //splotA([](R x, R y)      { return PE::power(x, y, -4); }, -1, +1, -1, +1, 31, 31);
-  cplotA([](R x, R y)      { return PE::power(x, y, -4); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }, -1, +1, -1, +1, 21, 21);
-  // https://en.wiktionary.org/wiki/hexapole#English
-  */
-  /*
-  // z^-3, quadrupole(?):
-  cplotA([](R x, R y)      { return PE::power(x, y, -3); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);
-  // https://de.wikipedia.org/wiki/Quadrupol
-  // https://en.wikipedia.org/wiki/Quadrupole
-  */
-  /*
-  // z^-2, dipole:
-  //cplotA([](R x, R y)      { return PE::power(x, y, -2); },       -1, +1, -1, +1, 201, 201, 49, -8.0, +8.0);
-  cplotA([](R x, R y)      { return PE::power(x, y, -2); },       -1, +1, -1, +1, 401, 401, 31, -5.0, +5.0);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }, -1, +1, -1, +1, 21, 21);
-  // Maybe use a diverging colomap for this, CB_Spectral11 or CJ_BuYlRd11 - yes, looks better!
-  */
+  // z^-1, monopole:
+  pltC.setOutputRange(-4.5, +0.5);
+  pltC.setNumContours(21);
+  pltC.setSamplingResolution(200, 200);  // Monopoles are not that demanding in terms of resolution
+  pltC.setColorPalette(CP::CB_YlGnBu9m, false);
+  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -1); });       pltC.plot();
+  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }); pltV.plot();
+  // https://en.wikipedia.org/wiki/Magnetic_monopole
 
-
-
+  /*
   // z^-1, monopole:
   cplotA([](R x, R y)      { return PE::power(x, y, -1); },       -1, +1, -1, +1, 201, 201, 21, -4.5, +0.5);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1,  21,  21);
   // needs a unipolar color map
+  */
 
   // -For z^-n, we get a monopole field for n = 1 and for n > 1, we get the field of a 2*(n-1) 
   //  pole, i.e. a field with 2*(n-1) lobes
@@ -13450,7 +13428,7 @@ void testPotentialPlotter()
 
 
 
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);
+  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }, -1, +1, -1, +1, 21, 21);
 
 
   // f(z) = z^2 as surface-, arrow- and contour-plot:

@@ -13329,7 +13329,8 @@ void testPotentialPlotter()
   // For pdf paper: exp(z):
   pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
   pltC.setInputRange(-1, +1, -2*pi, +2*pi);     // 
-  pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
+  //pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
+  pltC.setOutputRange(-3, +3);
   pltC.setNumContours(31);                // Tweak!
   pltC.setSamplingResolution(250, 750);   // Tweak!
   pltC.setPixelSize(400, 1200);            // Tweak!

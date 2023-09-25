@@ -13345,6 +13345,10 @@ void testPotentialPlotter()
   // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
   // http://www.gnuplot.info/docs_4.2/node295.html
 
+  pltC.addCommand("set ytics center offset -1,0");
+
+  // set xtics center offset 0,-1
+
   pltC.plot();
   pltC.clearCommands();  // clear them for the next plot
   // It's so tall! Maybe we should put the arrow plot next to it

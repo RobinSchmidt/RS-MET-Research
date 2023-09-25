@@ -13324,24 +13324,19 @@ void testPotentialPlotter()
   // naturally calls for "portrait" format which is inconvenient for a figure in the document.
 
   // Under construction:
-  //Real pi = RAPT::RS_PI;
   Real pi = PI;
   // For pdf paper: exp(z):
   pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
-  pltC.setInputRange(-1, +1, -2*pi, +2*pi);     // 
-  //pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
-  pltC.setOutputRange(-3, +3);
-  pltC.setNumContours(31);                // Tweak!
-  pltC.setSamplingResolution(200, 400);   // Tweak!
-  //pltC.setPixelSize(400, 1200);            // Tweak!
-  //pltC.setPixelSize(400, 800);            // Tweak!
+  pltC.setInputRange(-1, +1, -2*pi, +2*pi);          // Show two periods along imaginary axis.
+  pltC.setOutputRange(-3, +3);                       // x in -1..+1 -> z in -e..+e -> round to +-3
+  pltC.setNumContours(31);
+  pltC.setSamplingResolution(200, 400);
   pltC.setPixelSize(350, 700); 
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
-  pltC.addCommand("set ytics pi");
-  pltC.addCommand("set format y '%.0P{/Symbol p}'");
-  //pltC.setDrawRectangle(0.07, 0.87, 0.05, 0.95);
   pltC.setDrawRectangle(0.08, 0.88, 0.03, 0.99);
-  pltC.addCommand("set ytics center offset -1.5,0");
+  pltC.addCommand("set ytics pi");                   // Show y-tics at multiples of pi
+  pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
+  pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
   pltC.addCommand("set xtics center offset 0,1.5");
   pltC.plot();
   pltC.clearCommands();  // clear them for the next plot
@@ -13349,13 +13344,6 @@ void testPotentialPlotter()
   // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
   // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
   // http://www.gnuplot.info/docs_4.2/node295.html
-
-
-
-  // It's so tall! Maybe we should put the arrow plot next to it
-  // We need more left margin, I think
-  // When the x-range is -1..+1, we need a z-range -e..+e, so maybe let's round it to to -2.7..+2.7
-  // or to -3..+3
 
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 

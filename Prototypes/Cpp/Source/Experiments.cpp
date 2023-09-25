@@ -13336,23 +13336,18 @@ void testPotentialPlotter()
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltC.addCommand("set ytics pi");
   pltC.addCommand("set format y '%.0P{/Symbol p}'");
-
-  // The y-tics are placed improperly. They bleed into the drawing area. Try to fix that:
   pltC.setDrawRectangle(0.07, 0.87, 0.05, 0.95);
-
-
-  //pltC.setDrawRectangle(0.2, 0.8, 0.1, 0.9);
-  // Nope! That doesn't help to place the y-tics properly.
+  pltC.addCommand("set ytics center offset -1.5,0");
+  pltC.addCommand("set xtics center offset 0,1.5");
+  pltC.plot();
+  pltC.clearCommands();  // clear them for the next plot
+  // About placing the tics - which si what we need here:
   // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
   // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
   // http://www.gnuplot.info/docs_4.2/node295.html
 
-  pltC.addCommand("set ytics center offset -1.5,0");
 
-  pltC.addCommand("set xtics center offset 0,1.5");  // test
 
-  pltC.plot();
-  pltC.clearCommands();  // clear them for the next plot
   // It's so tall! Maybe we should put the arrow plot next to it
   // We need more left margin, I think
   // When the x-range is -1..+1, we need a z-range -e..+e, so maybe let's round it to to -2.7..+2.7

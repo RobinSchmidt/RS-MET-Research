@@ -284,8 +284,7 @@ We interpret this as follows: when the input to $P(x,y)$ is of the form $(x,0)$,
 ....TBC...
 
 \subsection{General Rules for Interpreting Contour Plots}
-In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$. We had the surface plot for the Polya potential, the vector field plot for the Polya vector field and the contour map plot for the Polya potential. Any one of these three kinds of plot contains the \emph{full} information about $f(z)$ encoded in different ways. Eventually, we want to settle to only one single type of plot and become proficient in reading it. The one, I want to settle for, is the contour map plot of the Polya potential. We want to train our ability to look at such a plot and understand what $f(z)$ does from that plot. Since the plot contains the full information, it must be possible. However, understanding such a plot from a glance is not nearly as intuitive as understanding a simple plot of a real function. But maybe there's some hope to develop such an intuition with practice. We will first state some general rules.
-
+In the previous section, we have looked at 3 different ways to plot functions related to $f(z) = z^2$ which encode its behavior completely. We had the surface plot for the Polya potential, the vector field plot for the Polya vector field and the contour map plot for the Polya potential. Any one of these three kinds of plot contains the \emph{full} information about $f(z)$ encoded in different ways. Eventually, we want to settle to only one single type of plot and become proficient in reading it. The one, I want to settle for, is the contour map plot of the Polya potential. We want to train our ability to look at such a plot and understand what $f(z)$ does from that plot. Since the plot contains the full information, it must be possible. However, understanding such a plot from a glance is not nearly as intuitive as understanding a simple plot of a real function. But maybe there's some hope to develop such an intuition with practice. We will first state some general rules.
 \begin{itemize}
 \item The gradient is always perpendicular to the contour lines and points into the direction of increasing P, i.e. towards the red colors.
 \item Vertical contour segments correspond to purely real outputs of $f(z)$. This is because they correspond to horizontal arrows for the gradient. If, on crossing such a vertical segment from left to right, the value of $P$ increases, the real output is positive and if $P$ decreases, the real output is negative.
@@ -293,6 +292,9 @@ In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$
 \item The local density of the contour lines indicates the steepness of the gradient at that point. In turn, this steepness corresponds to the absolute value of $f(z)$. Steep gradients result in "strong" arrows, i.e. dark-blue arrows.
 \item The local direction of a contour line determines the direction of the gradient at that point. ...TBC...
 \end{itemize}
+When we want to read such a contour plot, we need two steps of interpretation: (1) We must be able see the arrows from the contours, i.e. mentally translate the contour plot into an arrow plot. (2) interpret the arrows as real and (negated) imaginary part - or better yet: as magnitude and angle - of a complex number.
+
+% we need two skills: (1) see the arrows from the contours, (2) interpret the arrows are real and negated imaginary part...or better: as magnitude and angle
 
 % Can we say something about the angle of $f(z)$ in terms of the contour lines? Maybe it's always the angle of a tangent to the contour line, rotated by 90°? clock- or counterclockwise? I think, we need to take the tangent and rotate it clockwise by 90° to get the gradient. Rotating it counterclockwise instead would give the direction of w = f(z)...I think...verify! ..hmm..nope - that seems to fail at (x,y) = (-0.5,0). There, we would need to rotate clockwise. But at (0,0.5), we need to rotate counterclockwise. Maybe the contour-line information is not enough. We really also nee to look at the colors - where is the blue? We always need to rotate toward blue, I think.
 
@@ -359,6 +361,10 @@ Let's next look at the potentials for $z^2$ and $z^3$. These are shown in figure
 \end{figure}
 For $z^2$, we already know that we get the monkey saddle, i.e. a saddle with space for two legs plus a tail. Let's remind ourselves that for $z^1$, we got a regular saddle which, in this context, is sometimes also called a horse saddle. It has space for tow legs only so it would be suitable for humans. For $z^3$, we get a kind of saddle in which a four legged animal could sit comfortably. Note the different scaling on the color bar for $z^3$. The range is asymmetric here and the zero level is shifted more into the reds because that is the range where the values of $P(x,y)$ happen to fall in when the $x-$ and $y-$ranges are both $[-1,+1]$. In this range, the surface goes more down then up because the corners of the plot rectangle happen to coincide with all minima of $P$ and we generally expect more extreme values further away from the origin and the corners are furthest from the origin. That's merely a technical aspect of the plotting. Anyway - we saw that for $z^1$, we got a regular two-leg saddle, for $z^2$ we got a 3-leg saddle and for $z^3$ we got a 4-leg saddle. A pattern seems to be emerging - and it is indeed true that for $z^n$, our potential surface $P(x,y)$ looks like a saddle surface of order $n+1$. For a discussion of such higher order saddles, see \cite{HighOrderSaddles}.
 
+% z^3: outward arrows to left,right,top,bottom and inward arrows along the diagonals.
+
+
+
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = z^4$ and $f(z) = z^5$}	
 \label{Fig:ContoursPow_4_5}	
@@ -410,8 +416,16 @@ Well - OK - that may not be what we may have expected. Instead of a tripole and 
 
 \subsection{Plots for Exponential, Trigonometric and Hyperbolic Functions}
 
+% Ideas for including tall graphics:
+% Put the image rotated into the document:
+% https://latex.org/forum/viewtopic.php?t=9323
+% https://tex.stackexchange.com/questions/101645/how-to-turn-latex-figure-by-90-degrees-along-with-the-caption
+% Let the text flow next to the image:
+% https://tex.stackexchange.com/questions/55161/how-to-arrange-image-and-text-to-appear-side-by-side
+
 \subsection{Plots for Polynomials}
 % (z-1)(z+1), (z-1)(z+1)(z-i)
+% I'm interested in the geodesic between the zeros of f (i.e. flat points of P) - what shape do they have?
 
 \subsection{Plots for Rational Functions}
 % Moebius trafo, 

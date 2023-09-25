@@ -13258,11 +13258,7 @@ void testPotentialPlotter()
     plt.plot();
   };
 
-  using C  = Complex;
-  using R  = Real;
-  using PE = rsPolyaPotentialEvaluator<Real>;
-
-  // Create the plots for the paper about Polya potentials:
+  // Surface plots for z^n where n > 0:
   //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
   //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
   //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31);
@@ -13270,21 +13266,27 @@ void testPotentialPlotter()
   //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
 
 
-  // f(z) = z^2 as surface-, arrow- and contour-plot:
+  // Create the plots for the paper about Polya potentials:
+  using C  = Complex;
+  using R  = Real;
+  using PE = rsPolyaPotentialEvaluator<Real>;
+
+  /*
+  // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
   cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
   // For the vplot, the CB_YlGnBu9t colormap looks best for z^2. Maybe we should use that 
   // generally?
 
-  // f(z) = z^n for n = 0,1,2,3,4,5
-  //int N = 21;
+  // For pdf paper: f(z) = z^n for n = 0,1,2,3,4,5
   cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
   cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
   cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 14, -1.0, +0.3);
   cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +1.0);
   cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 21, -0.5, +0.5);
+  */
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial
@@ -13303,11 +13305,41 @@ void testPotentialPlotter()
   // Especially for higher exponents.
 
 
-
   // Create and set up the plotters for the vector fields and contour maps:
   using CP = GNUPlotter::ColorPalette;
   rsContourMapPlotter<Real>  pltC;
   rsVectorFieldPlotter<Real> pltV;
+
+  // exp(i*z):
+  //pltC.setFunction([](R x, R y) { return PE::exp_i(x, y); });
+  //pltC.setInputRange(-8, +8, -2, +0.5);     //
+  //pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
+  //pltC.setNumContours(21);                // Tweak!
+  //pltC.setSamplingResolution(800, 200);   // Tweak!
+  //pltC.setPixelSize(800, 200);            // Tweak!
+  //pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  //pltC.plot();
+  // Maybe it can be used in the paper instead of exp(z) itself with some text explaining that 
+  // exp(z) would be obtained by rotation. exp(i*z) is nicer to plot in "landscape" format. exp(z)
+  // naturally calls for "portrait" format which is inconvenient for a figure in the document.
+
+  // Under construction:
+  // For pdf paper: exp(z):
+  pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
+  //pltC.setInputRange(-2, +2, -6, +6);     // 4 x 12
+  pltC.setInputRange(-1, +1, -8, +8);     // 
+  pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
+  pltC.setNumContours(31);                // Tweak!
+  pltC.setSamplingResolution(250, 750);   // Tweak!
+  pltC.setPixelSize(400, 1200);            // Tweak!
+  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  pltC.plot();
+  // It's so tall! Maybe we should put the arrow plot next to it
+  // The y-axis should go from -2pi to 2pi and the ticks should be at -2pi, -pi, pi, 2pi
+
+
+  // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
+  // some of the plots:
   pltC.setInputRange(-1, +1, -1, +1);
   pltV.setInputRange(-1, +1, -1, +1);
   pltC.setOutputRange(-5.0, +5.0);
@@ -13315,13 +13347,12 @@ void testPotentialPlotter()
   pltV.setPixelSize(600, 600);
   pltC.setNumContours(31);
   pltV.setArrowDensity(21, 21);
-  pltC.setSamplingResolution(400, 400);      // high quality
-  //pltC.setSamplingResolution(100, 100);    // draft
+  pltC.setSamplingResolution(400, 400);            // The negative powers need high resolution
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
 
 
-  //  z^-5, octupole:
+  // For pdf paper: z^-5, octupole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });       pltC.plot();
   //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }); pltV.plot();
   // https://en.wiktionary.org/wiki/octupole
@@ -13335,24 +13366,24 @@ void testPotentialPlotter()
   // evaluation point. Otherwise,we probably want to have an evaluation point at 0,0.
   // ...move that text to the "Observations" section
 
-  // z^-4, hexapole:
+  // For pdf paper: z^-4, hexapole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -4); });       pltC.plot();
   //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }); pltV.plot();
   // https://en.wiktionary.org/wiki/hexapole#English
 
-  // z^-3, quadrupole:
+  // For pdf paper: z^-3, quadrupole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -3); });       pltC.plot();
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
   // https://de.wikipedia.org/wiki/Quadrupol
   // https://en.wikipedia.org/wiki/Quadrupole
 
-  // z^-2, dipole:
+  // For pdf paper: z^-2, dipole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -2); });       pltC.plot();
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }); pltV.plot();
   // https://en.wikipedia.org/wiki/Dipole
   // https://de.wikipedia.org/wiki/Dipol_(Physik)
 
-  // z^-1, monopole:
+  // For pdf paper: z^-1, monopole:
   pltC.setOutputRange(-3.0, +0.5);
   pltC.setNumContours(21);
   pltC.setSamplingResolution(200, 200);  // Monopoles are not that demanding in terms of resolution
@@ -13393,17 +13424,19 @@ void testPotentialPlotter()
   //  z-range of -26..+26. The plots will look similar. There differences in the placement of the 
   //  contours, though.
 
+  //splotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 41, 41);
+  //cplotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 201, 801, 19, -3, +3);
+  // Maybe plot exp(i*z) instead because then we can make the x-range longer than the y-range which
+  // fits better into the document - i.e. the plot is wide instead of tall.
 
+  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 17, -4, +4);
+  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 25, -4, +4);
 
 
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
 
-  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 17, -4, +4);
-  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 25, -4, +4);
 
-  //splotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 41, 41);
-  //cplotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 201, 801, 19, -3, +3);
 
 
 

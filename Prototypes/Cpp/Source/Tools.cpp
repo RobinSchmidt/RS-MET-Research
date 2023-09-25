@@ -175,6 +175,12 @@ public:
   void setColorPalette(GNUPlotter::ColorPalette newMap, bool reverse)
   { colorMap = newMap; reverseColors = reverse; }
 
+  // Adds a custom command that will be passed to the plotter after the standard commands have been
+  // passed. Can be used to set up special plotting options or to override the default behavior:
+  void addCommand(const std::string& command) { commands.push_back(command); }
+
+  void clearCommands() { commands.clear(); }
+
 
   void setupPlotter(GNUPlotter* plt);
 
@@ -194,6 +200,9 @@ protected:
 
   GNUPlotter::ColorPalette colorMap = GNUPlotter::ColorPalette::EF_Viridis;
   bool reverseColors = false;
+
+  std::vector<std::string> commands;  // Additional commands set by the user for customization
+  // maybe rename to userCommands or customCommands
 };
 
 
@@ -231,6 +240,11 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   plt->addCommand("set xlabel \"\""); // use empty string as label
   plt->addCommand("set ylabel \"\"");
   // ToDo: let the user specify axis labels
+
+  // Use the custom command list to set additional user-defined options or to override the default
+  // settings:
+  for(size_t i = 0; i < commands.size(); i++)
+    plt->addCommand(commands[i]);
 }
 
 
@@ -8523,6 +8537,11 @@ public:
   // f(z) = e^z = exp(z)
   static T    exp(T x, T y) { return rsExp(x)*rsCos(y); }
   static void exp(T x, T y, T* u, T* v) { *u = rsExp(x)*rsCos(y); *v = -rsExp(x)*rsSin(y); }
+
+  // f(z) = e^(i*z)
+  static T    exp_i(T x, T y) { return exp(-y, x); }
+  static void exp_i(T x, T y, T* u, T* v) { exp(-y, x, u, v); }
+  // Verify these formulas!
 
   // f(z) = sin(z)
   static T    sin(T x, T y) { return -rsCos(x)*rsCosh(y); }

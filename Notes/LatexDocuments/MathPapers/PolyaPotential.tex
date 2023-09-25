@@ -328,7 +328,7 @@ In the previous section, we have looked at 3 different ways to plot $f(z) = z^2$
 
 
 \subsection{Plots for Nonegative Powers: $f(z) = z^n$}
-We now want to look at plots for functions of the form $f(z) = z^n$ for some nonnegative integer $n$. We have already seen that the Polya potential for $f(z) = z^2$ gives us $P(x,y) = x^3/ 3 - x y^2$ which is, up to scaling, the so called monkey saddle. Let's start with the simplemost cases of the constant function$f(z) = z^0 = 1$ and the identity $f(z) = z^1 = z$. the contour maps for these are shown in figure \ref{Fig:ContoursPow_0_1}. 
+We now want to look at plots for functions of the form $f(z) = z^n$ for some nonnegative integer $n$. We have already seen that the Polya potential for $f(z) = z^2$ gives us $P(x,y) = x^3/ 3 - x y^2$ which is, up to scaling, the so called monkey saddle. Let's look at some powers other than 2. Let's start with the simplemost cases of the constant function $f(z) = z^0 = 1$ and the identity $f(z) = z^1 = z$. The contour maps for these are shown in figure \ref{Fig:ContoursPow_0_1}. 
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = z^0$ and $f(z) = z^1$}	
 \label{Fig:ContoursPow_0_1}	
@@ -342,13 +342,8 @@ We now want to look at plots for functions of the form $f(z) = z^n$ for some non
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursPow1.png}
 \end{subfigure}
 \end{figure}
-In the case of the constant function $f(z) = 1$, we see equidistant vertical lines as contour lines. The upward direction of the function goes to the right. That means, our arrows would all point to the right, no matter where in the plane they start and they would all have the same length (or color), namely a length of 1. Would we have chosen a constant different from 1, say $f(z) = c$ for some arbitrary complex number $c$, we would observe the following: For bigger numbers, the contour lines would be more densely packed and for smaller numbers, they would be more spaced out. For a negative number, the high (red) values would be to the left and the low (blue) values woudl be to the right. For a purely imaginary $c$, the contours would be horizontal and for some arbitrary complex number with nonzero real and imaginary part, the contours would be slanted at an angle [ToDo: explain how the angle of the contours is related to the angle of $c$ and the spacing to the magnitude of $c$].
-
-
-
-
-
-
+In the case of the constant function $f(z) = 1$, we see equidistant vertical lines as contour lines. The upward direction of the function goes to the right which is indicated by having blue colors on the left and red colors on the right. We should try to see the arrows of the gradient field in our heads. In this simple case, our arrows would all point to the right, no matter where in the plane they start and they would all have the same length (or color), namely a length of 1. Would we have chosen a constant different from 1, say $f(z) = c$ for some arbitrary complex number $c$, we would observe the following: For bigger numbers, the contour lines would be more densely packed indicating a steeper gradient and for smaller numbers, they would be more spaced out indicating a shallower gradient. For a negative number, the high (red) values would be to the left and the low (blue) values would be to the right. For a purely imaginary $c$, the contours would be horizontal and for some arbitrary complex number with nonzero real and imaginary part, the contours would be slanted at an angle [ToDo: explain how the angle of the contours is related to the angle of $c$ and the spacing to the magnitude of $c$]. For the identity function $f(z) = z$, our potential function is given by $P(x,y) = (x^2 - y^2)/2$. That's a parabolic hyperboloid also known as a plain old saddle surface. When we move along a centered horizontal line from left to right, i.e. $y = 0, x \in [-1,+1]$, we first go down (red to yellow) then  up again (yellow to red). We move through a bowl. So, in the left part, our gradient also points to the left and in the right part, it points to the right. This is completely in line from what we expect from the identity function. The gradient always points outward from the origin and it also gets steeper the more we move outward. The further we are away from zero, the bigger the value and the sign of the value matches the sign of our position. Let's now look at a centered vertical line such that $x = 0, y \in [-1,+1]$. We start from low (blue), then move up to yellow and then descend again into the blue. We move over a peak. The arrows would always point inward toward the origin. Now let's have a look at the diagonals. Along these, the gradient always points into a direction perpendicular to our direction of movement. At the origin itself, the gradient is zero. the origin is a flat point of our potential. ...TBC...
+Let's next look at the potentials for $z^2$ and $z^3$. These are shown in figure \ref{Fig:ContoursPow_2_3}. We have already seen the $z^2$ case, but we will repeat it here to put it into its proper context.
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = z^2$ and $f(z) = z^3$}	
 \label{Fig:ContoursPow_2_3}	
@@ -362,8 +357,7 @@ In the case of the constant function $f(z) = 1$, we see equidistant vertical lin
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursPow3.png}
 \end{subfigure}
 \end{figure}
-
-In general, we will get a saddle surface of order $n+1$ for the Polya potentials $P(x,y)$ for complex functions of the form $f(z) = z^n$ [VERIFY!]. For a discussion of such higher order saddles, see \cite{HighOrderSaddles}.
+For $z^2$, we already know that we get the monkey saddle, i.e. a saddle with space for two legs plus a tail. Let's remind ourselves that for $z^1$, we got a regular saddle which, in this context, is sometimes also called a horse saddle. It has space for tow legs only so it would be suitable for humans. For $z^3$, we get a kind of saddle in which a four legged animal could sit comfortably. Note the different scaling on the color bar for $z^3$. The range is asymmetric here and the zero level is shifted more into the reds because that is the range where the values of $P(x,y)$ happen to fall in when the $x-$ and $y-$ranges are both $[-1,+1]$. In this range, the surface goes more down then up because the corners of the plot rectangle happen to coincide with all minima of $P$ and we generally expect more extreme values further away from the origin and the corners are furthest from the origin. That's merely a technical aspect of the plotting. Anyway - we saw that for $z^1$, we got a regular two-leg saddle, for $z^2$ we got a 3-leg saddle and for $z^3$ we got a 4-leg saddle. A pattern seems to be emerging - and it is indeed true that for $z^n$, our potential surface $P(x,y)$ looks like a saddle surface of order $n+1$. For a discussion of such higher order saddles, see \cite{HighOrderSaddles}.
 
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = z^4$ and $f(z) = z^5$}	
@@ -378,13 +372,7 @@ In general, we will get a saddle surface of order $n+1$ for the Polya potentials
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursPow5.png}
 \end{subfigure}
 \end{figure}
-
-% Show plots for z^0, z^1, z^2, z^3, z^4, z^5
-
-% We get a saddle point of order n+1
-
-
-%[ToDo: Give some 3D plots and/or contour maps of Polya potentials. Explain how these plots can be interpreted. Example functions: $z, a z, z^2, z^3, 1/z, exp(z), sin(z), ...$]
+There is another noteworthy feature of this sequence of saddle surfaces: The higher the order of the saddle, the flatter the interior region near the origin and the steeper the cliffs further away from the origin. ...TBC...
 
 \subsection{Plots for Negative Powers: $f(z) = z^{-n}$}
 

@@ -513,6 +513,26 @@ Notes:
 -Using a capital P to denote the potential is consistent with the one used on  wikipedia.
 	
 ToDo:
+-Add tables for Polya potentials of positive powers of z in this verbatim text format.
+ At the moment, we have only expressions for the Polya vector fields for z^n, n > 0
+
+-Explain the difference in P(x,y) for f(i z) and i f(z), i.e. pre- or post rotation by 90°. 
+ Will it give the same result? If not, why not? Give general rules for rotating a potential.
+ Example exp(z):
+   exp(  z)   ->   exp( x) * cos( y)
+   exp(i z)   ->   sin( x) * exp(-y)
+ i exp(z  )   ->  -exp(-x) * sin( y)
+ i exp(i z)   ->   cos( x) * exp(-y)
+ They are all different. Try also variants using -i and -1 as (pre- and post) factors. When
+ there's an i in the argument, the exponential goes along the y-axis. I think, rotation is 
+ done by multiplying the input by i.
+ 
+-Maybe give expressions for c z^n and (c z)^n for complex c. Maybe given them in polar
+ coordinates, too. Maybe plot the Polya potentials in polar coordinates. I mean, let's show a 
+ polar grid and truncate the graph to a circle at some radius rather than to a rectangle.
+ "set grid polar 30.0000 lw 1.5"
+ https://stackoverflow.com/questions/74844744/gnuplot-set-angular-grid-limits-in-polar-plot
+
 -The placement of the plots in the document makes no sense when using the placement  option h
  for all plots. How can we convince LaTeX to place them where they belong? Maybe we need to make
  a special appendix for the figures.
@@ -532,6 +552,16 @@ ToDo:
  Maybe in polar coordinates, we may get expressions for P for log, sqrt, etc.? The wikipedia 
  article about the monkey saddle gives the formula cos(3*a)/r^3. We would need the pre-factor 
  1/3 here. Maybe in general, for z^n, the formula is P(r,a) = cos((n+1) a) / ((n+1) r^(n+1))?
+-We could also express the output in polar coordinates, i.e. have two functions:
+ d(r, phi), psi(r, phi) where d stands for distance. In the case of f(z) = z^n, we would have 
+ d(r, phi) = r^n, psi(r, phi) = n phi. In the Polya vector field, we would just negate psi, I 
+ think. Now we could use P(r, phi) = r^(n+1) / (n+1) + (n/2) phi^2 as potential in terms of r 
+ and phi, i.e. the polar coordinates of z. That would give the desired partial derivatives wrt 
+ to r and phi. -> Try it out! It would simplify the computation of Polya potentials of powers 
+ of z and may also enable us to find expressions for sqrt(z), log(z), z^c for arbitrary real 
+ or complex c, etc.
+-What are the Cauchy-Riemann equations in polar coordinates?
+ 
 -What is the Polya potential for a function a z^n? I think, if a is real, we can just multiply
  the Polya potential of z^n by the same a. But what if a is complex? Maybe we need to multiply
  the result by |a| but in addtion, before feeding x,y into the bivariate polynomial, we need to

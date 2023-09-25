@@ -8569,6 +8569,11 @@ public:
   static void sin(T x, T y, T* u, T* v) { *u = rsCosh(y)*rsSin(x); *v = -rsCos(x)*rsSinh(y); }
 
 
+  // zerosAt_1_m1
+  // f(z) = (z-1) * (z+1), u(x,y) = x^2 - y^2 - 1, v(x,y) = -2*x*y, P(x,y) = (1/3)*x^3 - x*y^2 - x
+
+
+
   // -Implement more functions to compute Polya vector fields and potentials for other kinds of 
   //  functions. Create contour plots of such functions.
 
@@ -8633,6 +8638,7 @@ public:
 //          1/2*log(cos(2*y) + cosh(2*x)), 1/2*log(cos(2*y) + cosh(2*x)))
 // sqrt(z): (sqrt(abs(x + I*y))*cos(1/2*arctan2(y, x)), -sqrt(abs(x + I*y))*sin(1/2*arctan2(y, x)))
 //          The integrals didn't succeed -> Try it by hand or other CAS!
+// (z-1)*(z+1): (x^2 - y^2 - 1, -2*x*y, 1/3*x^3 - x*y^2 - x, -x*y^2)
 //
 // ToDo: 
 // -Do also z^p for general p (real or complex)

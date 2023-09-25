@@ -13338,7 +13338,9 @@ void testPotentialPlotter()
   pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
   pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
   pltC.addCommand("set xtics center offset 0,1.5");
-  //pltC.plot();
+  pltC.plot();
+
+
   pltC.clearCommands();  // clear them for the next plot
   // About placing the tics - which si what we need here:
   // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
@@ -13369,6 +13371,20 @@ void testPotentialPlotter()
   // Using and output range of z = -1.5..+1.5 with 31 contours also works for having a contour at 
   // P(x,y) = 0.
   // Sin(z) has also (even) symmetry wrt to y-axis. Exp had only symmetry wrt to the x-axis.
+  // P(x,y) = -cos(x) * cosh(y)
+
+  // Plot also cos(z): P(x,y) = sin(x) * cosh(y)...hmm...that's not really interesting. It's just
+  // sin shifted. Not different enough to justify yet another figure.
+  // Is there actually a function that has sinh(y) in it? That would justify another figure. 
+  // cosh(z) has P(x,y) = sinh(x) * cos(y). It has a sinh(x) in it - but we want sinh(y). Maybe 
+  // rotate input or output by multiplying by i? Or maybe try to start with something like 
+  // cos(x) * sinh(y), take the partial derivatives, check Cauchy-Riemman and if it holds, try to 
+  // find f(z). cos(i*z) has P(x,y) = cos(y)*sinh(x). sinh(I*z) has P(x,y) = -sin(x)*sinh(y)
+  // sinh(-I*z) has P(x,y) = sin(x)*sinh(y). We get cos(x)*sinh(y) from -i*cos(z). For i*cos(z), we
+  // get -cos(x) * sinh(y).
+  // sinh is a rotated sin? What sort of symmetry would it be when a function satisfies 
+  // f(i z) = i f(z)? Rotational symmetry by 90°? The Polya potential for z^3, i.e. the 4th order 
+  // saddle has such a symmetry, I think.
 
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 

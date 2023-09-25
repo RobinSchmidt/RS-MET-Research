@@ -13324,18 +13324,24 @@ void testPotentialPlotter()
   // naturally calls for "portrait" format which is inconvenient for a figure in the document.
 
   // Under construction:
+  //Real pi = RAPT::RS_PI;
+  Real pi = PI;
   // For pdf paper: exp(z):
   pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
   //pltC.setInputRange(-2, +2, -6, +6);     // 4 x 12
-  pltC.setInputRange(-1, +1, -8, +8);     // 
+  //pltC.setInputRange(-1, +1, -7, +7);     // 
+  pltC.setInputRange(-1, +1, -2*pi, +2*pi);     // 
   pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
   pltC.setNumContours(31);                // Tweak!
   pltC.setSamplingResolution(250, 750);   // Tweak!
   pltC.setPixelSize(400, 1200);            // Tweak!
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  pltC.addCommand("set ytics pi");
+  pltC.addCommand("set format y '%.0P{/Symbol p}'");
   pltC.plot();
+  pltC.clearCommands();  // clear them for the next plot
   // It's so tall! Maybe we should put the arrow plot next to it
-  // The y-axis should go from -2pi to 2pi and the ticks should be at -2pi, -pi, pi, 2pi
+  // We need more left margin, I think
 
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 

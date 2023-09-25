@@ -214,18 +214,16 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   else
     plt->setToLightMode();
 
-
-  //using CP = GNUPlotter::ColorPalette;
-  //plt->setColorPalette(CP::CJ_BuYlRd11, false);
-  // Let the user choose this!
-
-  plt->setColorPalette(colorMap, reverseColors);
-
-
   if(!title.empty())
     plt->setTitle(title);
-  plt->setPixelSize(pixelWidth, pixelHeight);
 
+
+  plt->setColorPalette(colorMap, reverseColors);
+  plt->setPixelSize(pixelWidth, pixelHeight);
+  plt->setRange(xMin, xMax, yMin, yMax);
+
+
+  // Preliminary - make this customizable:
   plt->addCommand("set bmargin at screen 0.1");  // B: bottom
   plt->addCommand("set tmargin at screen 0.9");  // T: top
   plt->addCommand("set lmargin at screen 0.07"); // L: left
@@ -350,7 +348,7 @@ void rsVectorFieldPlotter<T>::plot()
   GNUPlotter plt;
   plt.addVectorField2D(fu, fv, numArrowsX, xMin, xMax, numArrowsY, yMin, yMax);
 
-  plt.setRange(xMin, xMax, yMin, yMax);  // Maybe move into setupPlotter()
+  //plt.setRange(xMin, xMax, yMin, yMax);  // Maybe move into setupPlotter()
   // Maybe we should have margins? It tends to look better with margins when some of the arrows 
   // point out of the rectangle defined by xMin, xMax, yMin, yMax. But then, it may be out of sync
   // with a corresponding contour map plot

@@ -13336,7 +13336,8 @@ void testPotentialPlotter()
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltC.addCommand("set ytics pi");
   pltC.addCommand("set format y '%.0P{/Symbol p}'");
-  pltC.setDrawRectangle(0.07, 0.87, 0.05, 0.95);
+  //pltC.setDrawRectangle(0.07, 0.87, 0.05, 0.95);
+  pltC.setDrawRectangle(0.07, 0.87, 0.03, 0.99);
   pltC.addCommand("set ytics center offset -1.5,0");
   pltC.addCommand("set xtics center offset 0,1.5");
   pltC.plot();

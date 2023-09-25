@@ -513,12 +513,14 @@ Notes:
 -Using a capital P to denote the potential is consistent with the one used on  wikipedia.
 	
 ToDo:
--The placement of the plots in the document makes no sense. How can we convince LaTeX to 
- place them where they belong? Maybe we need to make a special appendix for the figures.
+-The placement of the plots in the document makes no sense when using the placement  option h
+ for all plots. How can we convince LaTeX to place them where they belong? Maybe we need to make
+ a special appendix for the figures.
  https://www.overleaf.com/learn/latex/Positioning_images_and_tables
  ..hmm...OK - placing some with h and some with p seems to give reasonable results. I think,
  whenever we have a lot of plots in quick succession, it makes sens to use p whereas for a
- plot that occurs sporadically with a lot of text, h seems to give better results.
+ plot that occurs sporadically within a lot of text, h seems to give better results. Maybe try 
+ also the option H which really enforces the "here" placement.
  
 -Write a "Conclusion" section that hints at the implementation for numerically computing 
  potentials. Use that implementation to produce plots of the Polya potentials of sqrt and log.

@@ -375,7 +375,7 @@ For $z^2$, we already know that we get the monkey saddle, i.e. a saddle with spa
 There is another noteworthy feature of this sequence of saddle surfaces: The higher the order of the saddle, the flatter the interior region near the origin and the steeper the cliffs further away from the origin. ...TBC...
 
 \subsection{Plots for Negative Powers: $f(z) = z^{-n}$}
-
+Having seen Polya potentials of positive power of $z$, the logical next step is to ask how Polya potentials for negative powers of $z$ look like. In figure \ref{Fig:ContoursInvPow_1_2}, we see the contour maps for $1/z$ and $1/z^2$. 
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = 1/z$ and $f(z) = 1/z^2$}	
 \label{Fig:ContoursInvPow_1_2}	
@@ -389,7 +389,9 @@ There is another noteworthy feature of this sequence of saddle surfaces: The hig
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursInvPow2.png}
 \end{subfigure}
 \end{figure}
-
+They have a very different quality compared to what we have seen before. For $f(z) = 1/z$, the Polya potential is given by $P(x,y) = \ln(x^2+y^2)/2$. The first thing we note is that the value of $P$ depends only on $x^2 + y^2$ which is the squared distance from the origin, so we conclude that $P$ must be circularly symmetric - which is what we see in the plot. The second important feature is that the function goes to minus infinity when $z$ goes to zero. There is an infinitely deep hole in the middle. If we imagine the arrows, the would all point outward from the origin. If we imagine the vector field to be some sort of velocity field of a fluid, it almost looks as if there would be some sort of source at the origin from where stuff flows out. For $f(z) = 1/z^2$, the situation looks quite different. here, fluid would be flowing into the origin from the left and just as much fluid flows out of the origin to the right. Again, try to picture the arrows in your head - this is the skill we want to acquire. They always point toward red and they point more strongly when the contour lines are denser. To summarize our observations, for $f(z) = 1/z$, we get a Polya vector field that looks like a point source with field lines pointing outward from the origin. It looks like the potential of a monopole. For $f(z) = 1/z^2$, the Polya vector field looks like a dipole field with field lines pointing into the origin from the left and out of the origin to the right. So, let's see, if we get a tripole and quadrupole for $1/z^3$ and $1/z^4$. The Polya potentials for these functions are shown in figure \ref*{Fig:ContoursInvPow_3_4}.
+% they flatten out, the further we go away from zero
+% they have a singularity at the origin
 \begin{figure}[h]
 \caption{Polya potential contours of $f(z) = 1/z^3$ and $f(z) = 1/z^4$}	
 \label{Fig:ContoursInvPow_3_4}	
@@ -403,7 +405,7 @@ There is another noteworthy feature of this sequence of saddle surfaces: The hig
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursInvPow4.png}
 \end{subfigure}
 \end{figure}
-
+Well - OK - that may not be what we may have expected. Instead of a tripole and a quadrupole, we actually get a quadrupole and a hexapole. I don't know, if a tripole is even a thing. Probably not. For the quadrupole, the field lines or gradient arrows would point outward horizontally and inward vertically and go orthogonally over the diagonals. In the hexapole, the field points in from the left and out to the right, in from top-right and out to bottom-left, in from bottom-right and out to top-left. In general, we get an $2(n-1)$-th order pole for $n > 1$ and for the special case of $n = 1$, we get a monopole. In complex analysis, the function $1/z$ is somewhat special and stands out from the crowd.
 
 
 \subsection{Plots for Exponential, Trigonometric and Hyperbolic Functions}

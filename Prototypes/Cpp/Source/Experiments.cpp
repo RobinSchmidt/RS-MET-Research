@@ -13332,13 +13332,15 @@ void testPotentialPlotter()
   //pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
   pltC.setOutputRange(-3, +3);
   pltC.setNumContours(31);                // Tweak!
-  pltC.setSamplingResolution(250, 750);   // Tweak!
-  pltC.setPixelSize(400, 1200);            // Tweak!
+  pltC.setSamplingResolution(200, 400);   // Tweak!
+  //pltC.setPixelSize(400, 1200);            // Tweak!
+  //pltC.setPixelSize(400, 800);            // Tweak!
+  pltC.setPixelSize(350, 700); 
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltC.addCommand("set ytics pi");
   pltC.addCommand("set format y '%.0P{/Symbol p}'");
   //pltC.setDrawRectangle(0.07, 0.87, 0.05, 0.95);
-  pltC.setDrawRectangle(0.07, 0.87, 0.03, 0.99);
+  pltC.setDrawRectangle(0.08, 0.88, 0.03, 0.99);
   pltC.addCommand("set ytics center offset -1.5,0");
   pltC.addCommand("set xtics center offset 0,1.5");
   pltC.plot();

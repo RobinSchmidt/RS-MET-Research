@@ -13357,6 +13357,18 @@ void testPotentialPlotter()
   // -Maybe put a countour and arrow plot together with a surface plot into one figure that spans a 
   //  complete page
 
+  // sin(z)
+  pltC.setFunction([](R x, R y) { return PE::sin(x, y); });
+  pltC.setInputRange(-2*pi, +2*pi, -1, +1);
+  pltC.setOutputRange(-1.5, +1.5);   // cosh(1) = 1.54308063481524
+  //pltC.setOutputRange(-0, +0);
+  pltC.setNumContours(31);
+  pltC.setSamplingResolution(800, 200);
+  pltC.setPixelSize(1000, 250); 
+  pltC.plot();
+  // Has also symmetry wrt to y-axis
+
+
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
   // some of the plots:
   pltC.setInputRange(-1, +1, -1, +1);

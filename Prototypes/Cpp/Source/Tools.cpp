@@ -203,6 +203,14 @@ protected:
 
   std::vector<std::string> commands;  // Additional commands set by the user for customization
   // maybe rename to userCommands or customCommands
+
+  double left   = 0.07;  // Left margin.
+  double right  = 0.87;  // One minus right margin.
+  double bottom = 0.1;   // Bottom margin
+  double top    = 0.9;   // One minus top margin
+  // Let's abbreviate "left" by "L", "right" by "R", etc.. I think, we need T-B = R-L to get an 
+  // aspect ratio of 1? Here, we use T-B = R-L = 0.8. -> Figure this out and document it properly.
+  // What setting do we need to get a 1:1 aspect ratio, given that the pixel-size is square?
 };
 
 
@@ -222,7 +230,12 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   plt->setPixelSize(pixelWidth, pixelHeight);
   plt->setRange(xMin, xMax, yMin, yMax);
 
+  plt->addCommand("set lmargin at screen " + std::to_string(left));
+  plt->addCommand("set rmargin at screen " + std::to_string(right));
+  plt->addCommand("set tmargin at screen " + std::to_string(top));
+  plt->addCommand("set bmargin at screen " + std::to_string(bottom));
 
+  /*
   // Preliminary - make this customizable:
   plt->addCommand("set bmargin at screen 0.1");  // B: bottom
   plt->addCommand("set tmargin at screen 0.9");  // T: top
@@ -233,6 +246,8 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   // -Verify, if the aspect ratio is indeed 1.
   // -Don't hardcode these numbers! Have a function that can be called like 
   //  setDrawingArea(0.1, 0.9, 0.07, 0.87)
+  */
+
 
   // Get rid of the axis labels:
   plt->addCommand("set xlabel \"\""); // use empty string as label

@@ -13328,8 +13328,6 @@ void testPotentialPlotter()
   Real pi = PI;
   // For pdf paper: exp(z):
   pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
-  //pltC.setInputRange(-2, +2, -6, +6);     // 4 x 12
-  //pltC.setInputRange(-1, +1, -7, +7);     // 
   pltC.setInputRange(-1, +1, -2*pi, +2*pi);     // 
   pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
   pltC.setNumContours(31);                // Tweak!

@@ -331,7 +331,7 @@ When we want to read such a contour plot, we need two steps of interpretation: (
 
 \subsection{Plots for Nonegative Powers: $f(z) = z^n$}
 We now want to look at plots for functions of the form $f(z) = z^n$ for some nonnegative integer $n$. We have already seen that the Polya potential for $f(z) = z^2$ gives us $P(x,y) = x^3/ 3 - x y^2$ which is, up to scaling, the so called monkey saddle. Let's look at some powers other than 2. Let's start with the simplemost cases of the constant function $f(z) = z^0 = 1$ and the identity $f(z) = z^1 = z$. The contour maps for these are shown in figure \ref{Fig:ContoursPow_0_1}. 
-\begin{figure}[h]
+\begin{figure}[p]
 \caption{Polya potential contours of $f(z) = z^0$ and $f(z) = z^1$}	
 \label{Fig:ContoursPow_0_1}	
 \centering
@@ -346,7 +346,7 @@ We now want to look at plots for functions of the form $f(z) = z^n$ for some non
 \end{figure}
 In the case of the constant function $f(z) = 1$, we see equidistant vertical lines as contour lines. The upward direction of the function goes to the right which is indicated by having blue colors on the left and red colors on the right. We should try to see the arrows of the gradient field in our heads. In this simple case, our arrows would all point to the right, no matter where in the plane they start and they would all have the same length (or color), namely a length of 1. Would we have chosen a constant different from 1, say $f(z) = c$ for some arbitrary complex number $c$, we would observe the following: For bigger numbers, the contour lines would be more densely packed indicating a steeper gradient and for smaller numbers, they would be more spaced out indicating a shallower gradient. For a negative number, the high (red) values would be to the left and the low (blue) values would be to the right. For a purely imaginary $c$, the contours would be horizontal and for some arbitrary complex number with nonzero real and imaginary part, the contours would be slanted at an angle [ToDo: explain how the angle of the contours is related to the angle of $c$ and the spacing to the magnitude of $c$]. For the identity function $f(z) = z$, our potential function is given by $P(x,y) = (x^2 - y^2)/2$. That's a parabolic hyperboloid also known as a plain old saddle surface. When we move along a centered horizontal line from left to right, i.e. $y = 0, x \in [-1,+1]$, we first go down (red to yellow) then  up again (yellow to red). We move through a bowl. So, in the left part, our gradient also points to the left and in the right part, it points to the right. This is completely in line from what we expect from the identity function. The gradient always points outward from the origin and it also gets steeper the more we move outward. The further we are away from zero, the bigger the value and the sign of the value matches the sign of our position. Let's now look at a centered vertical line such that $x = 0, y \in [-1,+1]$. We start from low (blue), then move up to yellow and then descend again into the blue. We move over a peak. The arrows would always point inward toward the origin. Now let's have a look at the diagonals. Along these, the gradient always points into a direction perpendicular to our direction of movement. At the origin itself, the gradient is zero. the origin is a flat point of our potential. ...TBC...
 Let's next look at the potentials for $z^2$ and $z^3$. These are shown in figure \ref{Fig:ContoursPow_2_3}. We have already seen the $z^2$ case, but we will repeat it here to put it into its proper context.
-\begin{figure}[h]
+\begin{figure}[p]
 \caption{Polya potential contours of $f(z) = z^2$ and $f(z) = z^3$}	
 \label{Fig:ContoursPow_2_3}	
 \centering
@@ -363,9 +363,7 @@ For $z^2$, we already know that we get the monkey saddle, i.e. a saddle with spa
 
 % z^3: outward arrows to left,right,top,bottom and inward arrows along the diagonals.
 
-
-
-\begin{figure}[h]
+\begin{figure}[p]
 \caption{Polya potential contours of $f(z) = z^4$ and $f(z) = z^5$}	
 \label{Fig:ContoursPow_4_5}	
 \centering
@@ -382,7 +380,7 @@ There is another noteworthy feature of this sequence of saddle surfaces: The hig
 
 \subsection{Plots for Negative Powers: $f(z) = z^{-n}$}
 Having seen Polya potentials of positive power of $z$, the logical next step is to ask how Polya potentials for negative powers of $z$ look like. In figure \ref{Fig:ContoursInvPow_1_2}, we see the contour maps for $1/z$ and $1/z^2$. 
-\begin{figure}[h]
+\begin{figure}[p]
 \caption{Polya potential contours of $f(z) = 1/z$ and $f(z) = 1/z^2$}	
 \label{Fig:ContoursInvPow_1_2}	
 \centering
@@ -518,6 +516,9 @@ ToDo:
 -The placement of the plots in the document makes no sense. How can we convince LaTeX to 
  place them where they belong? Maybe we need to make a special appendix for the figures.
  https://www.overleaf.com/learn/latex/Positioning_images_and_tables
+ ..hmm...OK - placing some with h and some with p seems to give reasonable results. I think,
+ whenever we have a lot of plots in quick succession, it makes sens to use p whereas for a
+ plot that occurs sporadically with a lot of text, h seems to give better results.
  
 -Write a "Conclusion" section that hints at the implementation for numerically computing 
  potentials. Use that implementation to produce plots of the Polya potentials of sqrt and log.

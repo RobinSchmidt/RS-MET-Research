@@ -13344,7 +13344,18 @@ void testPotentialPlotter()
   // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
   // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
   // http://www.gnuplot.info/docs_4.2/node295.html
-
+  // Points of interest:
+  // -(x,y) = (0, pi): z = -1 + 0*i. This is Euler's famous formula. Arrow is horizontal and points
+  //  down to blue. That means, the value is negative. The line density is unity and the colors
+  //  are around -1. Oh - but no - that's a coincidence: the actual color is irrelevant. It 
+  //  corresponds to the height but we are only interested in the steepness.
+  // -(x,y) = (1, pi/2): z = 0 + i*e. Arrow would be vertical and point down into the 
+  //  screen/paper (into the blue). Vertical means purely imaginary. Down means positive due to 
+  //  negation. The density of the lines should be roughly 3 times higher (actually e times) than
+  //  at (x,y) = (0, pi/2)
+  // -(x,y) = (0, pi/2): 
+  // -Maybe put a countour and arrow plot together with a surface plot into one figure that spans a 
+  //  complete page
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
   // some of the plots:

@@ -13338,7 +13338,9 @@ void testPotentialPlotter()
   pltC.addCommand("set format y '%.0P{/Symbol p}'");
 
   // The y-tics are placed improperly. They bleed into the drawing area. Try to fix that:
-  //pltC.setDrawRectangle(0.1, 0.9, 0.1, 0.9);
+  pltC.setDrawRectangle(0.07, 0.87, 0.05, 0.95);
+
+
   //pltC.setDrawRectangle(0.2, 0.8, 0.1, 0.9);
   // Nope! That doesn't help to place the y-tics properly.
   // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot

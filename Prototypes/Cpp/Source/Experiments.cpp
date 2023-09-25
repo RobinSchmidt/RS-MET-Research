@@ -13362,7 +13362,7 @@ void testPotentialPlotter()
   pltC.setInputRange(-2*pi, +2*pi, -1, +1);
   pltC.setOutputRange(-1.6, +1.6);       // cosh(1) = 1.54308063481524
   pltC.setNumContours(17);               // 
-  pltC.setSamplingResolution(800, 200);
+  pltC.setSamplingResolution(1000, 250);
   pltC.setPixelSize(1000, 250);
   pltC.setDrawRectangle(0.05, 0.9, 0.1, 0.95);
   pltC.plot();

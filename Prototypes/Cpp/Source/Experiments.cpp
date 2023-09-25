@@ -13338,7 +13338,7 @@ void testPotentialPlotter()
   pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
   pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
   pltC.addCommand("set xtics center offset 0,1.5");
-  pltC.plot();
+  //pltC.plot();
   pltC.clearCommands();  // clear them for the next plot
   // About placing the tics - which si what we need here:
   // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
@@ -13360,12 +13360,11 @@ void testPotentialPlotter()
   // sin(z)
   pltC.setFunction([](R x, R y) { return PE::sin(x, y); });
   pltC.setInputRange(-2*pi, +2*pi, -1, +1);
-  //pltC.setOutputRange(-1.5, +1.5);   // cosh(1) = 1.54308063481524
-  //pltC.setNumContours(31);
-  pltC.setOutputRange(-1.6, +1.6);   // cosh(1) = 1.54308063481524
-  pltC.setNumContours(17);           // 
+  pltC.setOutputRange(-1.6, +1.6);       // cosh(1) = 1.54308063481524
+  pltC.setNumContours(17);               // 
   pltC.setSamplingResolution(800, 200);
-  pltC.setPixelSize(1000, 250); 
+  pltC.setPixelSize(1000, 250);
+  pltC.setDrawRectangle(0.05, 0.9, 0.1, 0.95);
   pltC.plot();
   // Using and output range of z = -1.5..+1.5 with 31 contours also works for having a contour at 
   // P(x,y) = 0.

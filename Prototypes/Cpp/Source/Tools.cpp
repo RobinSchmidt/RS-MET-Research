@@ -169,6 +169,14 @@ public:
 
   void setPixelSize(int width, int height) { pixelWidth  = width; pixelHeight = height; }
 
+  void setDrawRectangle(double newLeft, double newRight, double newBottom, double newTop)
+  {
+    left   = newLeft;
+    right  = newRight;
+    bottom = newBottom;
+    top    = newTop;
+  }
+
   void setTitle(const std::string& newTitle) { title = newTitle; }
 
 

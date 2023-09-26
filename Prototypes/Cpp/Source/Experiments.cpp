@@ -13727,7 +13727,7 @@ void polyaPlotExperiments()
   // P(x,y) = 1/3*x^3 - x*y^2 - x
   // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
-  //cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
   //splotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
   // The saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
   // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
@@ -13755,7 +13755,7 @@ void polyaPlotExperiments()
   // f(z)   = (z+i)*(z-i)
   // P(x,y) = 1/3*x^3 - x*y^2 + x
   auto zerosAt_I_mI = [](R x, R y) { return x*x*x/3 - x*y*y + x; };
-  //cplotA([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  cplotA([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
   // This landscape is also problematic. We would actually have to go along a contour to reach the 
   // next saddle.
 
@@ -13775,9 +13775,17 @@ void polyaPlotExperiments()
 
   // 3 saddles at -i,0,+i, i.e. along a vertical line:
   // f(z)   = (z+i)*z*(z-i)
-  // P(x,y) = 
-
-
+  // P(x,y) = -3/2*x^2*y^2 + 1/4*x^4 + 1/2*x^2 + 1/4*y^4 - 1/2*y^2
+  auto zerosAt_mI_0_I = [](R x, R y) 
+  { 
+    R y2 = y*y;  // y^2
+    R x2 = x*x;  // x^2
+    return -3./2*x2*y2 + 1./4*x2*x2 + 1./2*x2 + 1./4*y2*y2 - 1./2*y2;
+  };
+  cplotA([&](R x, R y) { return zerosAt_mI_0_I(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
+  // This is basically just like (z+1)*z*(z-1) but rotated by 90 degrees, so it's nothing new 
+  // really. But then, why is the landscape of (z+i)*(z-i) not just a rotated version of 
+  // (z+1)*(z-1)? Maybe it has to do with the even or odd degree?
 
 
   // 3 saddles at 1,i,-1 i.e. around a triangle with a 90° and two 45° angles:

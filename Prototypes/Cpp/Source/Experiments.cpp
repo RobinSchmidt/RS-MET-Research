@@ -13748,16 +13748,18 @@ void polyaPlotExperiments()
 
   // f(z)   = (z+1)*(z-1)*(z-i)*(z+i)
   // P(x,y) = 1/5*x^5 - 2*x^3*y^2 + x*y^4 - x
+  // Saddles: (-1,0,+0.8), (+1,0,-0.8), (0,-1,0), (0,+1,0)
   auto zerosAt_1_m1_I_mI = [](R x, R y) 
   { 
     R y2 = y*y;  // y^2
     R x2 = x*x;  // x^2
     return x2*x2*x/5 - 2*x2*x*y2 + x*y2*y2 - x;
   };
-  cplotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 41, -4.f, +4.f);
-  // There are no contours through (-1,0),(+1,0). Contours through (0,-1),(0,+1) are there, though
-  // by using 49,-8,+8 
-  // saddle coordinates are: (-1,0,+4/5), (+1,0,-4/5), (0,-1,0), (0,+1,0)
+  cplotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
+         -1.5, +1.5, -1.5, +1.5, 201, 201, 41, -4.f, +4.f);
+
+
+
 
 
   // Notes:

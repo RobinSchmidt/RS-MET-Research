@@ -13258,6 +13258,11 @@ void testPotentialPlotter()
     plt.plot();
   };
 
+
+  using C  = Complex;
+  using R  = Real;
+  using PE = rsPolyaPotentialEvaluator<Real>;
+
   // Surface plots for z^n where n > 0:
   //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
   //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
@@ -13265,12 +13270,34 @@ void testPotentialPlotter()
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
   //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
 
+  // Surface and contour plots for some polynomials
+  //splotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
+  cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.0, +8.0);
+  // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
+  // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
+  // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
+  // 49 works because 16/48 = 1/3 so -2/3 and +2/3 are among the contour levels
+  // But shouldn't the surface look like a monkey saddle further away from the oRigin? It doesn't 
+  // look like that but maybe we have zoomed in too far to see it. Or - well - actually it does!
+  // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
+  // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
+  // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
+  // P(x,y) and the 2 would more than cancel it and actually add an upward slope.
+  // It looks like the straight line between (-1,0) and (+1,0) is the geodesic between these points
+  // and it seems to be the direction of the gradient except at the saddles. There, the gradient 
+  // vanishes and the direction is at 45° angles with the contours. Maybe figure out the main 
+  // curvature directions and the zero-curvature directions. I think geodesics are directions of
+  // zero curvature? No - that makes no sense! Geodesics exist between two points. Directions of
+  // vanishing curvature exist at a single point. Imagine a saddle like x^2 - y^2. It curves up 
+  // into the x-direction and down into the y-direction. These are the directions of maximum 
+  // curvature. Along the diagonals, The curvature should be zero. Maybe it is generally the case
+  // that such lines of zero curvature connect the saddles? If true, that would give us a way to 
+  // start at one saddle and figure out the path to the next.
+  // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
+  // here. It's too specific to be included into a general purpose class.
+
 
   // Create the plots for the paper about Polya potentials:
-  using C  = Complex;
-  using R  = Real;
-  using PE = rsPolyaPotentialEvaluator<Real>;
-
   /*
   // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
@@ -13387,6 +13414,9 @@ void testPotentialPlotter()
   // saddle has such a symmetry, I think.
 
 
+
+
+
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
   // some of the plots:
   pltC.setInputRange(-1, +1, -1, +1);
@@ -13446,6 +13476,9 @@ void testPotentialPlotter()
   // -The monopole should use a unipolar color map, the multipoles a diverging map
   // -Maybe for the paper, only plot the arrow-map for the monopole and dipole but not for higher
   //  order multipoles
+
+
+
 
 
 

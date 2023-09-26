@@ -3,6 +3,9 @@ of scratchpad for the actual tex file. It also contains Sage code to produce the
 in the paper.
 
 
+
+
+
 ----------------------------------------------------------------------------------------------------
 Sage Code for producing the expressions for z^n for positive n:
  
@@ -16,6 +19,7 @@ assume(y, "real")
 z = x + I*y
 w = z^n
 w.real(), w.imag()
+
 
 This code gives the following results for \texttt{n = 0..7}:
 
@@ -46,8 +50,6 @@ V = integral(v, y)
 u, v, U, V
 
 
-
-
 Results for n = 2..6:
 
 n  Real part of numerator                          Imaginary part of numerator
@@ -65,11 +67,11 @@ n  Denominator
 6  (x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6)^2 + 4*(3*x^5*y - 10*x^3*y^3 + 3*x*y^5)^2
 
 n  Potential
-2  -x / (x^2 + y^2)
-3  -1/2*(x^2 - y^2) / (x^4 + 2*x^2*y^2 + y^4)
-4  -1/3*(x^3 - 3*x*y^2) / (x^6 + 3*x^4*y^2 + 3*x^2*y^4 + y^6)
-5  -1/4*(x^4 - 6*x^2*y^2 + y^4) / (x^8 + 4*x^6*y^2 + 6*x^4*y^4 + 4*x^2*y^6 + y^8)
-6  -1/5*(x^5 - 10*x^3*y^2 + 5*x*y^4) / (x^10 + 5*x^8*y^2 + 10*x^6*y^4 + 10*x^4*y^6 + 5*x^2*y^8 + y^10)
+2  (-1/1) *  x                           / (x^2 + y^2)
+3  (-1/2) * (x^2 - y^2)                  / (x^4 + 2*x^2*y^2 + y^4)
+4  (-1/3) * (x^3 - 3*x*y^2)              / (x^6 + 3*x^4*y^2 + 3*x^2*y^4 + y^6)
+5  (-1/4) * (x^4 - 6*x^2*y^2 + y^4)      / (x^8 + 4*x^6*y^2 + 6*x^4*y^4 + 4*x^2*y^6 + y^8)
+6  (-1/5) * (x^5 - 10*x^3*y^2 + 5*x*y^4) / (x^10 + 5*x^8*y^2 + 10*x^6*y^4 + 10*x^4*y^6 + 5*x^2*y^8 + y^10)
 
 Looks like the numerators of real and imaginary parts are exactly as in the corresponding positive 
 powers of z? And the denominator is always Re^2 + Im^2? And in the potential, the denominator is 
@@ -375,3 +377,36 @@ V = 1/2*arctan(1/2*(x^2 + y^2 - 1)/x)
 
 ...which seems again be an incompatible result. Figure out, why this happens. Try to find the 
 simplemost example function for which this happens.
+
+----------------------------------------------------------------------------------------------------
+Some Ideas:
+
+-For potential functions with multiple saddles, figure out the geodesics that connect these saddles.
+ What shape does it have as curve in R^3 and what shape has its projection down to the xy-plane? Try
+ this with the Riemann zeta function. Maybe the geodesics between neighboring nontrivial saddles are
+ straight lines when projected down to the xy-plane? What shapes connect the trivial with the 
+ nontrivial saddles?
+ 
+-Verify in plots and numerically, if the following things are true and if so, try to prove them. At 
+ the moment, these statements are just my hunches:
+ -For a saddle of order n (a regular saddle has order 2, a monkey saddle 3, etc.): 
+  -All directional derivatives up to n-1 vanish at the saddle point.
+  -There are n directions into which additionally also the n-th directional derivative vanishes.
+  -These directions are precisely halfway in between the directions of the contours that meet at 
+   the saddle. At a saddle of order n, n contour lines meet.
+  -The angle between these directions is a multiple of 360°/n.
+  -If you follow these directions, you'll be lead either to a neighboring saddle or else you'll be 
+   on the fastest path to infinity. I think, away from the saddle, these directions coincide with 
+   the direction of the gradient but at the saddle itself, the gradient is zero but at the saddle,
+   these directions can be used as a replacement for the gradient if want want to head off to the 
+   next saddle or to infinity. Gradient descent starting from anwhere is actually supposed o take 
+   you to some nearby saddle but if the starting point is one where the gradient vanishes, we need 
+   another way to pick the direction and this could be it.
+  -Or - wait - maybe it's the other way around: along the n contour lines that meet at the saddle,
+   *all* derivatives vanish. by derivative, I mean the directional derivative into the direction of 
+   the contour line. And in between these directions, there are n directions into which the n-th 
+   derivative is extremal (minimal or maximal, .i.e highly positive or highly negative). Away from 
+   the saddle, these directions can be replaced by the gradient. We always take the direction of the
+   extremal highest, non-vanishing derivative. Normally, this is the gradient but at saddles, we 
+   need to use a higher derivative to determine our direction.
+  

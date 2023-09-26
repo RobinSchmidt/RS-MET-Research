@@ -8571,6 +8571,7 @@ public:
 
   // zerosAt_1_m1
   // f(z) = (z-1) * (z+1), u(x,y) = x^2 - y^2 - 1, v(x,y) = -2*x*y, P(x,y) = (1/3)*x^3 - x*y^2 - x
+  static T    zerosAt_1_m1(T x, T y) { return x*x*x/3 - x*y*y - x; } 
 
 
 

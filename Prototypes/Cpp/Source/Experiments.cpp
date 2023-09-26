@@ -13246,6 +13246,11 @@ void setupForSquarePlot(rsFieldPlotter2D<T>* plt)
   plt->setDrawRectangle(L, R, B, T);
   plt->setPixelSize((int)W, (int)H); // Maybe use round. But we assume it to be integers anyway.
 }
+// Maybe rename to setupForPolyaPlotPowers ...or maybe let it take xMin, xMax, yMin, yMax or just
+// xRange and yRange and take that into account also. Maybe compute 
+// r = xrange / yRange and use W = N*(T-B) * r;  or  H = N*(R-L) / r;  or scale both by sqrt(r)  
+// but that will often lead to noninteger values. Maybe interpre the number N as a rough 
+// target height
 
 // Like splotA but instead produces a contour map:
 template<class T>
@@ -13277,6 +13282,7 @@ void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
   plt.setPixelSize(600, 600);
   //plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9m, false);
   plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
+  setupForSquarePlot(&plt);
   plt.plot();
 };
 
@@ -13461,7 +13467,7 @@ void makePlotsForPolyaPaper()
 
   // Surface and contour plots for some polynomials
   //splotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
-  cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2.f, +2.f, -2.f, +2.f, 201, 201, 49, -8.f, +8.f);
+  //cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2.f, +2.f, -2.f, +2.f, 201, 201, 49, -8.f, +8.f);
   // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
   // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
   // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
@@ -13486,6 +13492,7 @@ void makePlotsForPolyaPaper()
   // here. It's too specific to be included into a general purpose class.
 
 
+  /*
   // Create the plots for the paper about Polya potentials:
   // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
@@ -13517,77 +13524,21 @@ void makePlotsForPolyaPaper()
   // In the case here, we have R = 10*(zMax-zMin) =  10*(0.3 - -1.0) = 13. numContours must be 
   // k*R + 1, so 14 and 27 work. For the others, we use 21. 29 also works but it looks a bit busy. 
   // Especially for higher exponents.
+  */
 
 
-  // exp(i*z):
-  //pltC.setFunction([](R x, R y) { return PE::exp_i(x, y); });
-  //pltC.setInputRange(-8, +8, -2, +0.5);     //
-  //pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
-  //pltC.setNumContours(21);                // Tweak!
-  //pltC.setSamplingResolution(800, 200);   // Tweak!
-  //pltC.setPixelSize(800, 200);            // Tweak!
-  //pltC.setColorPalette(CP::CJ_BuYlRd11, false);
-  //pltC.plot();
-  // Maybe it can be used in the paper instead of exp(z) itself with some text explaining that 
-  // exp(z) would be obtained by rotation. exp(i*z) is nicer to plot in "landscape" format. exp(z)
-  // naturally calls for "portrait" format which is inconvenient for a figure in the document.
 
 
-  // Under construction:
-  R pi = PI;
-  // For pdf paper: exp(z):
-  pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
-  pltC.setInputRange(-1, +1, -2*pi, +2*pi);          // Show two periods along imaginary axis.
-  pltC.setOutputRange(-3, +3);                       // x in -1..+1 -> z in -e..+e -> round to +-3
-  pltC.setNumContours(31);
-  pltC.setSamplingResolution(200, 400);
-  pltC.setPixelSize(350, 700); 
-  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
-  pltC.setDrawRectangle(0.08, 0.88, 0.03, 0.99);
-  pltC.addCommand("set ytics pi");                   // Show y-tics at multiples of pi
-  pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
-  pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
-  pltC.addCommand("set xtics center offset 0,1.5");
-  pltC.plot();
-  pltC.clearCommands();  // clear them for the next plot
-  // About placing the tics - which si what we need here:
-  // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
-  // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
-  // http://www.gnuplot.info/docs_4.2/node295.html
-  // Points of interest:
-  // -(x,y) = (0, pi): z = -1 + 0*i. This is Euler's famous formula. Arrow is horizontal and points
-  //  down to blue. That means, the value is negative. The line density is unity and the colors
-  //  are around -1. Oh - but no - that's a coincidence: the actual color is irrelevant. It 
-  //  corresponds to the height but we are only interested in the steepness.
-  // -(x,y) = (1, pi/2): z = 0 + i*e. Arrow would be vertical and point down into the 
-  //  screen/paper (into the blue). Vertical means purely imaginary. Down means positive due to 
-  //  negation. The density of the lines should be roughly 3 times higher (actually e times) than
-  //  at (x,y) = (0, pi/2)
-  // -(x,y) = (0, pi/2): 
-  // -Maybe put a countour and arrow plot together with a surface plot into one figure that spans a 
-  //  complete page
-
-  // sin(z)
-  pltC.setFunction([](R x, R y) { return PE::sin(x, y); });
-  pltC.setInputRange(-2*pi, +2*pi, -1, +1);
-  pltC.setOutputRange(-1.6, +1.6);       // cosh(1) = 1.54308063481524
-  pltC.setNumContours(17);               // 
-  pltC.setSamplingResolution(1000, 250);
-  pltC.setPixelSize(1000, 250);
-  pltC.setDrawRectangle(0.05, 0.9, 0.1, 0.95);
-  pltC.plot();
-  // Using and output range of z = -1.5..+1.5 with 31 contours also works for having a contour at 
-  // P(x,y) = 0.
-  // Sin(z) has also (even) symmetry wrt to y-axis. Exp had only symmetry wrt to the x-axis.
-  // P(x,y) = -cos(x) * cosh(y)
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
   // some of the plots:
   pltC.setInputRange(-1, +1, -1, +1);
   pltV.setInputRange(-1, +1, -1, +1);
   pltC.setOutputRange(-5.0, +5.0);
-  pltC.setPixelSize(600, 600);
-  pltV.setPixelSize(600, 600);
+  setupForSquarePlot(&pltC);
+  setupForSquarePlot(&pltV);
+  //pltC.setPixelSize(600, 600);
+  //pltV.setPixelSize(600, 600);
   pltC.setNumContours(31);
   pltV.setArrowDensity(21, 21);
   pltC.setSamplingResolution(400, 400);            // The negative powers need high resolution
@@ -13640,6 +13591,75 @@ void makePlotsForPolyaPaper()
   // -The monopole should use a unipolar color map, the multipoles a diverging map
   // -Maybe for the paper, only plot the arrow-map for the monopole and dipole but not for higher
   //  order multipoles
+
+
+
+  // Under construction:
+  R pi = PI;
+  // For pdf paper: exp(z):
+  pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
+  pltC.setInputRange(-1, +1, -2*pi, +2*pi);          // Show two periods along imaginary axis.
+  pltC.setOutputRange(-3, +3);                       // x in -1..+1 -> z in -e..+e -> round to +-3
+  pltC.setNumContours(31);
+  pltC.setSamplingResolution(200, 400);
+  pltC.setPixelSize(350, 700); 
+  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  pltC.setDrawRectangle(0.08, 0.88, 0.03, 0.99);
+  pltC.addCommand("set ytics pi");                   // Show y-tics at multiples of pi
+  pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
+  pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
+  pltC.addCommand("set xtics center offset 0,1.5");
+  pltC.plot();
+  pltC.clearCommands();  // clear them for the next plot
+  // About placing the tics - which si what we need here:
+  // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
+  // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
+  // http://www.gnuplot.info/docs_4.2/node295.html
+  // Points of interest:
+  // -(x,y) = (0, pi): z = -1 + 0*i. This is Euler's famous formula. Arrow is horizontal and points
+  //  down to blue. That means, the value is negative. The line density is unity and the colors
+  //  are around -1. Oh - but no - that's a coincidence: the actual color is irrelevant. It 
+  //  corresponds to the height but we are only interested in the steepness.
+  // -(x,y) = (1, pi/2): z = 0 + i*e. Arrow would be vertical and point down into the 
+  //  screen/paper (into the blue). Vertical means purely imaginary. Down means positive due to 
+  //  negation. The density of the lines should be roughly 3 times higher (actually e times) than
+  //  at (x,y) = (0, pi/2)
+  // -(x,y) = (0, pi/2): 
+  // -Maybe put a countour and arrow plot together with a surface plot into one figure that spans a 
+  //  complete page
+
+  // sin(z)
+  pltC.setFunction([](R x, R y) { return PE::sin(x, y); });
+  pltC.setInputRange(-2*pi, +2*pi, -1, +1);
+  pltC.setOutputRange(-1.6, +1.6);       // cosh(1) = 1.54308063481524
+  pltC.setNumContours(17);               // 
+  pltC.setSamplingResolution(1000, 250);
+  pltC.setPixelSize(1000, 250);
+  pltC.setDrawRectangle(0.05, 0.9, 0.1, 0.95);
+  pltC.plot();
+  // Using and output range of z = -1.5..+1.5 with 31 contours also works for having a contour at 
+  // P(x,y) = 0.
+  // Sin(z) has also (even) symmetry wrt to y-axis. Exp had only symmetry wrt to the x-axis.
+  // P(x,y) = -cos(x) * cosh(y)
+  // Could be optimized wrt top margin
+
+
+  // exp(i*z):
+  //pltC.setFunction([](R x, R y) { return PE::exp_i(x, y); });
+  //pltC.setInputRange(-8, +8, -2, +0.5);     //
+  //pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
+  //pltC.setNumContours(21);                // Tweak!
+  //pltC.setSamplingResolution(800, 200);   // Tweak!
+  //pltC.setPixelSize(800, 200);            // Tweak!
+  //pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  //pltC.plot();
+  // Maybe it can be used in the paper instead of exp(z) itself with some text explaining that 
+  // exp(z) would be obtained by rotation. exp(i*z) is nicer to plot in "landscape" format. exp(z)
+  // naturally calls for "portrait" format which is inconvenient for a figure in the document.
+
+
+
+
 
 
   // Experimental:
@@ -13696,6 +13716,9 @@ void makePlotsForPolyaPaper()
   //  sinh is a rotated sin? What sort of symmetry would it be when a function satisfies 
   //  f(i z) = i f(z)? Rotational symmetry by 90°? The Polya potential for z^3, i.e. the 4th order 
   //  saddle has such a symmetry, I think.
+
+  // This has nice colormaps and colorbars - how was this plot created?
+  // https://en.wikipedia.org/wiki/Complex_logarithm#/media/File:Complex_log_domain.svg
 }
 
 // fast inverse square root approximation from Quake engine

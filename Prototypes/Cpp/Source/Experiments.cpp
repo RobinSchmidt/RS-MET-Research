@@ -13242,6 +13242,21 @@ void cplotA(std::function<float(T x, T y)> f,
   plt.plot();
 };
 
+// Like splotA and cplotA but produces a vector field plot.
+template<class Real>
+void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
+  Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
+{
+  rsVectorFieldPlotter<Real> plt;
+  plt.setFunction(f);
+  plt.setInputRange(xMin, xMax, yMin, yMax);
+  plt.setArrowDensity(Nx, Ny);
+  //plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9m, false);
+  plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
+  plt.plot();
+};
+
+
 
 
 void testPotentialPlotter()
@@ -13376,6 +13391,7 @@ void testPotentialPlotter()
 
   auto cplotA = ::cplotA<Real>;
 
+  /*
   // Like splotA and cplotA but produces a vector field plot.
   auto vplotA = [&](
     std::function<void(Real x, Real y, Real* u, Real* v)> f,
@@ -13389,6 +13405,9 @@ void testPotentialPlotter()
     plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
     plt.plot();
   };
+  */
+
+  auto vplotA = ::vplotA<Real>;
 
 
   using C  = Complex;

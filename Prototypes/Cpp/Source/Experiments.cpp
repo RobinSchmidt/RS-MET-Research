@@ -13673,7 +13673,11 @@ void makePlotsForPolyaPaper()
   int dummy = 0;
 
   // ToDo:
-  //
+
+  // -add a function to GNUPlotCPP setOutputFileName, setOutputDirectory. When the name is 
+  //  non-empty, re-direct the output into the file. Deduce the file format from the extension that
+  //  must be present in the filename. If there is no valid extension, just produce .png by default
+  //  (or maybe pdf - not yet sure)
   // -Plot also cos(z): P(x,y) = sin(x) * cosh(y)...hmm...that's not really interesting. It's just
   //  sin shifted. Not different enough to justify yet another figure.
   //  Is there actually a function that has sinh(y) in it? That would justify another figure. 

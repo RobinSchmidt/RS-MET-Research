@@ -13729,16 +13729,11 @@ void polyaPlotExperiments()
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
   cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
   //splotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
-  // The saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
-  // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
-  // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
-  // 49 works because 16/48 = 1/3 so -2/3 and +2/3 are among the contour levels
-  // But shouldn't the surface look like a monkey saddle further away from the oRigin? It doesn't 
-  // look like that but maybe we have zoomed in too far to see it. Or - well - actually it does!
   // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
   // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
   // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
   // P(x,y) and the 2 would more than cancel it and actually add an upward slope.
+  //
   // It looks like the straight line between (-1,0) and (+1,0) is the geodesic between these points
   // and it seems to be the direction of the gradient except at the saddles. There, the gradient 
   // vanishes and the direction is at 45° angles with the contours. Maybe figure out the main 
@@ -13749,6 +13744,10 @@ void polyaPlotExperiments()
   // curvature. Along the diagonals, The curvature should be zero. Maybe it is generally the case
   // that such lines of zero curvature connect the saddles? If true, that would give us a way to 
   // start at one saddle and figure out the path to the next.
+  //
+  // I think -8,+8,49 works for the last 3 parameters because 16/48 = 1/3 so -2/3 and +2/3 are 
+  // among the contour levels.
+
 
 
   // 2 saddles at i,-i:
@@ -13843,6 +13842,7 @@ void polyaPlotExperiments()
   //  to forget about the vector field and only think in terms of the potential? I try to picture 
   //  the arrows in my head but maybe I shouldn't and just take P as is.
 
+
   // ToDo:
   // -Try other configurations of saddles:
   //  -around regular polygons (triangle, square, pentagon, hexagon, ...)
@@ -13850,6 +13850,16 @@ void polyaPlotExperiments()
   //  -around irregular polygons
   //  -along a zig-zag path like a W or M: (-2,-1),(-1,+1),(0,-1),(1,+1),(2,-1)
   // -Compute trajectories using our given rule and draw them in
+  // -I think, contours occur at zMin + k * (zMax - zMin) / (numContours - 1) for all integer k.
+  //  Figure this out and add it to the documentation of the rsContourPlotter class. This is the
+  //  formula we need to figure out appropriate settings for zMin, zMax, numcontours in order to
+  //  get contour lines at specific heights. Here we want contours at the heights of our saddles
+  //  such that we get crossing contours exactly on the saddle. Maybe give the class a function 
+  //  setContourSpacing(double newSpacing, int numContours, double reference = 0) or something.
+  //  Maybe not with numcontours as parameter but some sort of numSteps by which we go above and 
+  //  below the reference. This function should set zMin and zMax as
+  //  reference +- numSteps*newSpacing ...or something similar
+
 
 
   int dummy = 0;

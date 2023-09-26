@@ -13264,134 +13264,10 @@ void testPotentialPlotter()
   using R   = float;                         // Data type for real numbers (float or double)
   using C   = std::complex<R>;
   using PE  = rsPolyaPotentialEvaluator<R>;
-  using CP  = GNUPlotter::ColorPalette;
 
   // Abbreviations for functions that produce a plot and write it into a .ppm file:
   auto plotN = ::plotN<R>;
   auto plotA = ::plotA<R>;
-
-  // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
-  // Gnuplot:
-  auto splotA = ::splotA<R>;
-  auto cplotA = ::cplotA<R>;
-  auto vplotA = ::vplotA<R>;
-
-  // Create and set up the plotters for the vector fields and contour maps:
-  rsContourMapPlotter<R>  pltC;
-  rsVectorFieldPlotter<R> pltV;
-
-
-
-
-
-
-
-
-
-  // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
-  // some of the plots:
-  pltC.setInputRange(-1, +1, -1, +1);
-  pltV.setInputRange(-1, +1, -1, +1);
-  pltC.setOutputRange(-5.0, +5.0);
-  pltC.setPixelSize(600, 600);
-  pltV.setPixelSize(600, 600);
-  pltC.setNumContours(31);
-  pltV.setArrowDensity(21, 21);
-  pltC.setSamplingResolution(400, 400);            // The negative powers need high resolution
-  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
-  pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
-
-
-  // For pdf paper: z^-5, octupole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });       pltC.plot();
-  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }); pltV.plot();
-  // https://en.wiktionary.org/wiki/octupole
-  // GNUPlot gives warning about undefined matrix values. Check the generated data! Maybe when 
-  // that is fixed, we can get away with a lower resolution than setSamplingResolution(401, 401)?
-  // I use this high resolution mainly to get rid of the artifacts in the middle. Maybe that 
-  // artifact comes from the pole there? OK - yes - it seems to be the case. When using 101,101,
-  // we do get an evaluation point at the pole at 0,0 but when using 100,100, the pole is avoided
-  // same with 401,401 vs 400,400. But I wonder why the clipping doesn't take care of that. Maybe
-  // it's a NaN due to 0/0? However, the gist is: when there's a pole at 0,0, try to avoid 0,0 as
-  // evaluation point. Otherwise,we probably want to have an evaluation point at 0,0.
-  // ...move that text to the "Observations" section
-
-  // For pdf paper: z^-4, hexapole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -4); });       pltC.plot();
-  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }); pltV.plot();
-  // https://en.wiktionary.org/wiki/hexapole#English
-
-  // For pdf paper: z^-3, quadrupole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -3); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
-  // https://de.wikipedia.org/wiki/Quadrupol
-  // https://en.wikipedia.org/wiki/Quadrupole
-
-  // For pdf paper: z^-2, dipole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -2); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }); pltV.plot();
-  // https://en.wikipedia.org/wiki/Dipole
-  // https://de.wikipedia.org/wiki/Dipol_(Physik)
-
-  // For pdf paper: z^-1, monopole:
-  pltC.setOutputRange(-3.0, +0.5);
-  pltC.setNumContours(21);
-  pltC.setSamplingResolution(200, 200);  // Monopoles are not that demanding in terms of resolution
-  pltC.setColorPalette(CP::CB_YlGnBu9m, true); // blue stays negative
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -1); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }); pltV.plot();
-  // https://en.wikipedia.org/wiki/Magnetic_monopole
-
-  // -For z^-n, we get a monopole field for n = 1 and for n > 1, we get the field of a 2*(n-1) 
-  //  pole, i.e. a field with 2*(n-1) lobes
-  // -The monopole should use a unipolar color map, the multipoles a diverging map
-  // -Maybe for the paper, only plot the arrow-map for the monopole and dipole but not for higher
-  //  order multipoles
-
-
-
-
-
-
-
-  // Experimental:
-  //cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
-  //splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
-  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
-  //
-  // -The arrow plot for z^-1 points outward from the origin. It has a source there.
-  // -The arrow plot of z^-2 look like a dipole. But it needs a different color map. It is too
-  //  faint at the outsides. For the contour plot, we may need clipping of the z-values. I think, 
-  //  this is a general requirement for plotting functions with poles.
-  // -The CB_YlGnBu9t, CB_YlGnBu9mt try to solve the color map problem but it'S still suboptimal. I
-  //  think instead of just truncating the map, we need a nonlinear re-mapping of the colors 
-  //  perhaps according to a power rule. The dark range must be expanded and the light range must 
-  //  be shrunken. Maybe a linfrac mapping could be useful, too.
-
-
-  // Notes:
-  // -For the contour plots of z^n, it doesn't make any visual difference whether we choose the 
-  //  plot range to be -1..+1 or -2..+2. If we scale everything appropiately (i.e. set the z-range
-  //  accordingly), the plots will look the same just with different numbers on the color bar. For 
-  //  example we can plot z^4 in -1..+1 with a z-range of -1..+1 or plot it in -2..+2 with a 
-  //  z-range of -26..+26. The plots will look similar. There differences in the placement of the 
-  //  contours, though.
-
-  //splotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 41, 41);
-  //cplotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 201, 801, 19, -3, +3);
-  // Maybe plot exp(i*z) instead because then we can make the x-range longer than the y-range which
-  // fits better into the document - i.e. the plot is wide instead of tall.
-
-  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 17, -4, +4);
-  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 25, -4, +4);
-
-
-  //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
-  //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
-
-
-
-
 
   // Analytic Polya potentials, plotted into .ppm files:
   plotA([](R x, R y) { return PE::sin(x, y); }, -2*PI, +2*PI, -2, +2, 1001, 401, "PolyPotential_zSin.ppm");
@@ -13422,7 +13298,6 @@ void testPotentialPlotter()
   // Iteration counts for z^2 for a range of x = -1..+1, y = -1..+1 and an image size of 101x101:
   // w:  1.0  1.5  1.6  1.7  1.8 1.9 1.95
   // N:  3148 1791 1483 1164 825 450 FAIL
-
 
 
   plotN([](C z) { return z*z;   }, -1.f, +1.f, -1.f, +1.f, 31, 31, "PolyPotential_zSquaredN.ppm");
@@ -13464,7 +13339,6 @@ void testPotentialPlotter()
   // -Give the iteration a maxNumIterations parameter. 
   // -Try other iterations like SOR. That probably won't help with the attainable accuracy but 
   //  perhaps with convergence speed....done -> yes, it helps to improve convergence speed
-
 
 
   int dummy = 0;
@@ -13680,6 +13554,102 @@ void makePlotsForPolyaPaper()
   // P(x,y) = 0.
   // Sin(z) has also (even) symmetry wrt to y-axis. Exp had only symmetry wrt to the x-axis.
   // P(x,y) = -cos(x) * cosh(y)
+
+  // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
+  // some of the plots:
+  pltC.setInputRange(-1, +1, -1, +1);
+  pltV.setInputRange(-1, +1, -1, +1);
+  pltC.setOutputRange(-5.0, +5.0);
+  pltC.setPixelSize(600, 600);
+  pltV.setPixelSize(600, 600);
+  pltC.setNumContours(31);
+  pltV.setArrowDensity(21, 21);
+  pltC.setSamplingResolution(400, 400);            // The negative powers need high resolution
+  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
+
+
+  // For pdf paper: z^-5, octupole:
+  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });       pltC.plot();
+  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }); pltV.plot();
+  // https://en.wiktionary.org/wiki/octupole
+  // GNUPlot gives warning about undefined matrix values. Check the generated data! Maybe when 
+  // that is fixed, we can get away with a lower resolution than setSamplingResolution(401, 401)?
+  // I use this high resolution mainly to get rid of the artifacts in the middle. Maybe that 
+  // artifact comes from the pole there? OK - yes - it seems to be the case. When using 101,101,
+  // we do get an evaluation point at the pole at 0,0 but when using 100,100, the pole is avoided
+  // same with 401,401 vs 400,400. But I wonder why the clipping doesn't take care of that. Maybe
+  // it's a NaN due to 0/0? However, the gist is: when there's a pole at 0,0, try to avoid 0,0 as
+  // evaluation point. Otherwise,we probably want to have an evaluation point at 0,0.
+  // ...move that text to the "Observations" section
+
+  // For pdf paper: z^-4, hexapole:
+  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -4); });       pltC.plot();
+  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }); pltV.plot();
+  // https://en.wiktionary.org/wiki/hexapole#English
+
+  // For pdf paper: z^-3, quadrupole:
+  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -3); });       pltC.plot();
+  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
+  // https://de.wikipedia.org/wiki/Quadrupol
+  // https://en.wikipedia.org/wiki/Quadrupole
+
+  // For pdf paper: z^-2, dipole:
+  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -2); });       pltC.plot();
+  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }); pltV.plot();
+  // https://en.wikipedia.org/wiki/Dipole
+  // https://de.wikipedia.org/wiki/Dipol_(Physik)
+
+  // For pdf paper: z^-1, monopole:
+  pltC.setOutputRange(-3.0, +0.5);
+  pltC.setNumContours(21);
+  pltC.setSamplingResolution(200, 200);  // Monopoles are not that demanding in terms of resolution
+  pltC.setColorPalette(CP::CB_YlGnBu9m, true); // blue stays negative
+  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -1); });       pltC.plot();
+  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }); pltV.plot();
+  // https://en.wikipedia.org/wiki/Magnetic_monopole
+
+  // -For z^-n, we get a monopole field for n = 1 and for n > 1, we get the field of a 2*(n-1) 
+  //  pole, i.e. a field with 2*(n-1) lobes
+  // -The monopole should use a unipolar color map, the multipoles a diverging map
+  // -Maybe for the paper, only plot the arrow-map for the monopole and dipole but not for higher
+  //  order multipoles
+
+
+  // Experimental:
+  //cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
+  //splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
+  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
+  //
+  // -The arrow plot for z^-1 points outward from the origin. It has a source there.
+  // -The arrow plot of z^-2 look like a dipole. But it needs a different color map. It is too
+  //  faint at the outsides. For the contour plot, we may need clipping of the z-values. I think, 
+  //  this is a general requirement for plotting functions with poles.
+  // -The CB_YlGnBu9t, CB_YlGnBu9mt try to solve the color map problem but it'S still suboptimal. I
+  //  think instead of just truncating the map, we need a nonlinear re-mapping of the colors 
+  //  perhaps according to a power rule. The dark range must be expanded and the light range must 
+  //  be shrunken. Maybe a linfrac mapping could be useful, too.
+
+
+  // Notes:
+  // -For the contour plots of z^n, it doesn't make any visual difference whether we choose the 
+  //  plot range to be -1..+1 or -2..+2. If we scale everything appropiately (i.e. set the z-range
+  //  accordingly), the plots will look the same just with different numbers on the color bar. For 
+  //  example we can plot z^4 in -1..+1 with a z-range of -1..+1 or plot it in -2..+2 with a 
+  //  z-range of -26..+26. The plots will look similar. There differences in the placement of the 
+  //  contours, though.
+
+  //splotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 41, 41);
+  //cplotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 201, 801, 19, -3, +3);
+  // Maybe plot exp(i*z) instead because then we can make the x-range longer than the y-range which
+  // fits better into the document - i.e. the plot is wide instead of tall.
+
+  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 17, -4, +4);
+  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 25, -4, +4);
+
+
+  //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
+  //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
 
 
 

@@ -13763,19 +13763,21 @@ void polyaPlotExperiments()
   // 3 saddles at -1,0,+1, i.e. along a horizontal line:
   // f(z)   = (z+1)*z*(z-1)
   // P(x,y) = -3/2*x^2*y^2 + 1/4*x^4 - 1/2*x^2 + 1/4*y^4 + 1/2*y^2
+  // Saddles:  (-1,0,-0.25), (0,0,0), (1,0,-0.25)
   auto zerosAt_m1_0_1 = [](R x, R y) 
   { 
     R y2 = y*y;  // y^2
     R x2 = x*x;  // x^2
     return -3./2*x2*y2 + 1./4*x2*x2 - 1./2*x2 + 1./4*y2*y2 + 1./2*y2;
   };
-  cplotA([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  cplotA([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
 
 
-  // -3/2*x^2*y^2 + 1/4*x^4 - 1/2*x^2
-  // -3/2*x^2*y^2                     + 1/4*y^4 + 1/2*y^2
+  // 3 saddles at -i,0,+i, i.e. along a vertical line:
+  // f(z)   = (z+i)*z*(z-i)
+  // P(x,y) = 
 
-  // -3/2*x^2*y^2 + 1/4*x^4 - 1/2*x^2 + 1/4*y^4 + 1/2*y^2
+
 
 
   // 3 saddles at 1,i,-1 i.e. around a triangle with a 90° and two 45° angles:

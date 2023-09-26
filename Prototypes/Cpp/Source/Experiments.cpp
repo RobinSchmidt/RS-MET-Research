@@ -13191,10 +13191,10 @@ void splotA(std::function<T(T x, T y)> f,
   plt.setColorPalette(CP::CJ_BuYlRd11, false);
   //plt.setColorPalette(CP::CB_YlGnBu9m, false);
 
-  //plt.addCommand("set lmargin at screen 0.18");  // left
-  //plt.addCommand("set rmargin at screen 0.79");  // right
-  //plt.addCommand("set bmargin at screen 0.25");  // bottom
-  //plt.addCommand("set tmargin at screen 0.85");  // top
+  plt.addCommand("set lmargin at screen 0.17");  // left
+  plt.addCommand("set rmargin at screen 0.78");  // right
+  plt.addCommand("set bmargin at screen 0.18");  // bottom
+  plt.addCommand("set tmargin at screen 0.86");  // top
   // The values have been found by trial and error. Somehow, the left and right margin settings 
   // seem to interact. They are not independent. When setting the right margin, the left margin 
   // also gets modified and vice versa. WTF! Same for top and bottom. Figure out what's going on! 
@@ -13208,16 +13208,18 @@ void splotA(std::function<T(T x, T y)> f,
   //
   // Move this comment elsewhere. Maybe into rsFieldPlotter2D<T>::setupPlotter
 
-  plt.setPixelSize(900, 600);
+  plt.setPixelSize(1000, 500);
   //plt.setToDarkMode();
   //plt.setToLightMode();
 
 
   //plt.setTitle("Polya Potential Surface");
 
+  plt.addCommand("set view 70,35"); 
+
   plotSurfaceDark(plt); // Maybe try other ways
 
-  // View: 66, 138
+  // View: 66,138; 70,35
 };
 // Maybe rename P to dataP and then f to P
 // For sufaces with contour lines, see:
@@ -13434,6 +13436,13 @@ void testPotentialPlotter()
   //  implement formulas based on polar coordinates. I think, the formulas for u,v,P for f(z) = z^n 
   //  may be simpler in polar coordinates...but I have not yet figured them out, so that may be 
   //  wrong.
+  // -Plot some types of elliptic functions:
+  //  https://en.wikipedia.org/wiki/Jacobi_elliptic_functions
+  //  https://en.wikipedia.org/wiki/Weierstrass_elliptic_function
+  //  https://en.wikipedia.org/wiki/Lemniscate_elliptic_functions
+  //  https://en.wikipedia.org/wiki/Dixon_elliptic_functions
+  //  https://en.wikipedia.org/wiki/Abel_elliptic_functions
+
 
   // For contour filling on the 3D plot, see:
   // https://gnuplot.sourceforge.net/demo_6.1/contourfill.html
@@ -13457,49 +13466,22 @@ void makePlotsForPolyaPaper()
   rsContourMapPlotter<R>  pltC;
   rsVectorFieldPlotter<R> pltV;
 
-
   // Surface plots for z^n where n > 0:
   //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
   //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
   //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31);
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
   //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
+  // These are not actually used in the paper
 
-  // Surface and contour plots for some polynomials
-  //splotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
-  //cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2.f, +2.f, -2.f, +2.f, 201, 201, 49, -8.f, +8.f);
-  // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
-  // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
-  // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
-  // 49 works because 16/48 = 1/3 so -2/3 and +2/3 are among the contour levels
-  // But shouldn't the surface look like a monkey saddle further away from the oRigin? It doesn't 
-  // look like that but maybe we have zoomed in too far to see it. Or - well - actually it does!
-  // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
-  // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
-  // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
-  // P(x,y) and the 2 would more than cancel it and actually add an upward slope.
-  // It looks like the straight line between (-1,0) and (+1,0) is the geodesic between these points
-  // and it seems to be the direction of the gradient except at the saddles. There, the gradient 
-  // vanishes and the direction is at 45° angles with the contours. Maybe figure out the main 
-  // curvature directions and the zero-curvature directions. I think geodesics are directions of
-  // zero curvature? No - that makes no sense! Geodesics exist between two points. Directions of
-  // vanishing curvature exist at a single point. Imagine a saddle like x^2 - y^2. It curves up 
-  // into the x-direction and down into the y-direction. These are the directions of maximum 
-  // curvature. Along the diagonals, The curvature should be zero. Maybe it is generally the case
-  // that such lines of zero curvature connect the saddles? If true, that would give us a way to 
-  // start at one saddle and figure out the path to the next.
-  // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
-  // here. It's too specific to be included into a general purpose class.
-
-
-  /*
   // Create the plots for the paper about Polya potentials:
   // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
-  cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
-  // For the vplot, the CB_YlGnBu9t colormap looks best for z^2. Maybe we should use that 
-  // generally?
+  //cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+  // The splot can be optimized (too big much margins)
+  // The cplot is not actually used. We use the plot for z^2 from the sequence of plots below. Here, it
+  // is the same function just with a different number of contours.
 
   // For pdf paper: f(z) = z^n for n = 0,1,2,3,4,5
   cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
@@ -13524,10 +13506,6 @@ void makePlotsForPolyaPaper()
   // In the case here, we have R = 10*(zMax-zMin) =  10*(0.3 - -1.0) = 13. numContours must be 
   // k*R + 1, so 14 and 27 work. For the others, we use 21. 29 also works but it looks a bit busy. 
   // Especially for higher exponents.
-  */
-
-
-
 
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
@@ -13657,11 +13635,6 @@ void makePlotsForPolyaPaper()
   // exp(z) would be obtained by rotation. exp(i*z) is nicer to plot in "landscape" format. exp(z)
   // naturally calls for "portrait" format which is inconvenient for a figure in the document.
 
-
-
-
-
-
   // Experimental:
   //cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
   //splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
@@ -13697,9 +13670,6 @@ void makePlotsForPolyaPaper()
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
 
-
-
-
   int dummy = 0;
 
   // ToDo:
@@ -13720,6 +13690,55 @@ void makePlotsForPolyaPaper()
   // This has nice colormaps and colorbars - how was this plot created?
   // https://en.wikipedia.org/wiki/Complex_logarithm#/media/File:Complex_log_domain.svg
 }
+
+void polyaPlotExperiments()
+{
+  // Some experiments with Polya potnetial plots. We want to figure out some properties of these 
+  // surfaces by looking at these plots:
+
+  // Some abbreviations for data types:
+  using R   = float;                         // Data type for real numbers (float or double)
+  using C   = std::complex<R>;
+  using PE  = rsPolyaPotentialEvaluator<R>;
+  using CP  = GNUPlotter::ColorPalette;
+
+  // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
+  // Gnuplot:
+  auto splotA = ::splotA<R>;
+  auto cplotA = ::cplotA<R>;
+  auto vplotA = ::vplotA<R>;
+
+  // Create and set up the plotters for the vector fields and contour maps:
+  rsContourMapPlotter<R>  pltC;
+  rsVectorFieldPlotter<R> pltV;
+
+  // Surface and contour plots for some polynomials
+  splotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
+  cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2.f, +2.f, -2.f, +2.f, 201, 201, 49, -8.f, +8.f);
+  // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
+  // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
+  // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
+  // 49 works because 16/48 = 1/3 so -2/3 and +2/3 are among the contour levels
+  // But shouldn't the surface look like a monkey saddle further away from the oRigin? It doesn't 
+  // look like that but maybe we have zoomed in too far to see it. Or - well - actually it does!
+  // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
+  // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
+  // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
+  // P(x,y) and the 2 would more than cancel it and actually add an upward slope.
+  // It looks like the straight line between (-1,0) and (+1,0) is the geodesic between these points
+  // and it seems to be the direction of the gradient except at the saddles. There, the gradient 
+  // vanishes and the direction is at 45° angles with the contours. Maybe figure out the main 
+  // curvature directions and the zero-curvature directions. I think geodesics are directions of
+  // zero curvature? No - that makes no sense! Geodesics exist between two points. Directions of
+  // vanishing curvature exist at a single point. Imagine a saddle like x^2 - y^2. It curves up 
+  // into the x-direction and down into the y-direction. These are the directions of maximum 
+  // curvature. Along the diagonals, The curvature should be zero. Maybe it is generally the case
+  // that such lines of zero curvature connect the saddles? If true, that would give us a way to 
+  // start at one saddle and figure out the path to the next.
+  // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
+  // here. It's too specific to be included into a general purpose class.
+}
+
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

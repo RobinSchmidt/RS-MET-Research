@@ -13168,6 +13168,63 @@ auto plotA = [&](std::function<T(T x, T y)> f,
 // rename to rsPlotPotentialAnalytic or rsWritePotentialAnalytic bcs "Plot" suggests to open a 
 // Gnuplot window whereas we write a .ppm file. Maybe call it PlotFile or PlotPpm
 
+// Like plotA but doesn't produce a .ppm file but instead invokes GNUPlotCPP to produce a surface
+// plot:
+template<class T>
+void splotA(std::function<T(T x, T y)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+{
+  GNUPlotter plt;
+  plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
+
+  //plt.addCommand("set contour surface");  // contours on the surface
+  //plt.addCommand("set contour base");     // contours in the base plane
+  //plt.addCommand("set contour both");     // contours in base plane and on surface
+  //plt.plot3D();
+  // -Needs numContours, etc.
+  // -Plotting the contours requires high Nx,Ny because otherwise, there will be artifacts. 
+  //  However, high Nx,Ny make also the surface too smooth such that the 3D structure is less 
+  //  visible. The tesselation of the surface into quadrilaterals really helps to see the 3D
+  //  structure more clearly. Too much smoothness is not so desirable.
+
+  using CP = GNUPlotter::ColorPalette;
+  plt.setColorPalette(CP::CJ_BuYlRd11, false);
+  //plt.setColorPalette(CP::CB_YlGnBu9m, false);
+
+  //plt.addCommand("set lmargin at screen 0.18");  // left
+  //plt.addCommand("set rmargin at screen 0.79");  // right
+  //plt.addCommand("set bmargin at screen 0.25");  // bottom
+  //plt.addCommand("set tmargin at screen 0.85");  // top
+  // The values have been found by trial and error. Somehow, the left and right margin settings 
+  // seem to interact. They are not independent. When setting the right margin, the left margin 
+  // also gets modified and vice versa. WTF! Same for top and bottom. Figure out what's going on! 
+  // Maybe add a function plt.setMargins(top, left, bottom, right) or (left, right, bottom, top). 
+  // But this function should behave in a way that lets the user set the margins independently.
+  // 
+  // See:
+  // https://gnuplot.sourceforge.net/docs_4.2/node200.html
+  // https://gnuplot.sourceforge.net/demo/margins.html
+  // https://stackoverflow.com/questions/29376374/how-do-gnuplot-margins-work-in-multiplot-mode
+  //
+  // Move this comment elsewhere. Maybe into rsFieldPlotter2D<T>::setupPlotter
+
+  plt.setPixelSize(900, 600);
+  //plt.setToDarkMode();
+  //plt.setToLightMode();
+
+
+  //plt.setTitle("Polya Potential Surface");
+
+  plotSurfaceDark(plt); // Maybe try other ways
+
+  // View: 66, 138
+};
+// Maybe rename P to dataP and then f to P
+// For sufaces with contour lines, see:
+// https://gnuplot.sourceforge.net/demo_5.2/contours.html
+
+
+
 // Like splotA but instead produces a contour map:
 template<class T>
 void cplotA(std::function<float(T x, T y)> f,
@@ -13239,7 +13296,7 @@ void testPotentialPlotter()
 
   auto plotA = ::plotA<Real>;
 
-
+  /*
   // Like plotA but doesn't produce a .ppm file but instead invokes GNUPlotCPP to produce a surface
   // plot:
   auto splotA = [&](std::function<Real(Real x, Real y)> f,
@@ -13293,6 +13350,12 @@ void testPotentialPlotter()
   // Maybe rename P to dataP and then f to P
   // For sufaces with contour lines, see:
   // https://gnuplot.sourceforge.net/demo_5.2/contours.html
+  */
+
+  auto splotA = ::splotA<Real>;
+
+
+
 
   /*
   // Like splotA but instead produces a contour map:

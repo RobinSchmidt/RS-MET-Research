@@ -13724,7 +13724,7 @@ void polyaPlotExperiments()
 
 
   // f(z)   = (z+1)*(z-1)
-  // P(x,y) =
+  // P(x,y) = 1/3*x^3 - x*y^2 - x
   // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
   //cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
@@ -13751,6 +13751,25 @@ void polyaPlotExperiments()
   // start at one saddle and figure out the path to the next.
   // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
   // here. It's too specific to be included into a general purpose class.
+
+
+  // 3 saddles at 1,i,-1 i.e. around a triangle with a 90° and two 45° angles:
+  // f(z)   = (z+1)*(z-1)*(z-i)
+  // P(x,y) = 1/4*x^4 - 3/2*x^2*y^2 + x^2*y - 1/2*x^2 - 1/3*y^3 + 1/2*y^2 - y
+  // Saddles:  (-1,0,-0.25), (1,0,-0.25), (0,1,-5/6)
+  auto zerosAt_1_m1_I = [](R x, R y) 
+  { 
+    R y2 = y*y;  // y^2
+    R x2 = x*x;  // x^2
+    return x2*x2/4 - 3*x2*y2/2 + x2*y - 1*x2/2 - 1*y2*y/3 + 1*y2/2 - y;
+  };
+  cplotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
+         -1.5, +1.5, -1.5, +1.5, 201, 201, 61, -5.f, +5.f);
+  // The z-coordinate of the top saddle is -5/6 = -0.833333. We can force a contour line through it
+  // by using 61,-5,+5 for the last 3 params but then we don't get contours through the left and 
+  // right saddle with z coordinates of -0.25. 
+  // I think, the top "saddle" may not even be a saddle at all...check the surface plot!
+
 
   // 4 saddles at 1,i,-1,-i, i.e. around a square:
   // f(z)   = (z+1)*(z-1)*(z-i)*(z+i)

@@ -409,4 +409,17 @@ Some Ideas:
    the saddle, these directions can be replaced by the gradient. We always take the direction of the
    extremal highest, non-vanishing derivative. Normally, this is the gradient but at saddles, we 
    need to use a higher derivative to determine our direction.
+  -The goal is to develop an algorithm that is a generalization of gradient descent to find the 
+   closest saddle. If we already are at a saddle, the closest saddle is the point where we are but 
+   in this case, we want to find one of the neighboring saddles. The gradient vanishes so we pick a 
+   direction based on a higher derivative. For a 2nd order saddle, that would be one of the four 
+   directions of extremal curvature. It's four and not two because we count the opposing directions 
+   as two directions. For a 3rd order saddle, it will be one of the 6 directions of extremal 3rd 
+   derivative, etc. As soon as we are a tiny bit away from the saddle, we can switch back to using 
+   the gradient.
+  -To find such a direction numerically, we could also evaluate the length of the gradient in a 
+   circluar neighborhood around the saddle and pick one of the angles where this length becomes 
+   extremal. The higher derivative criterion is more a theoretical thing. In practice, some sort of
+   bisection strategy or 1D gradient desecent of the length of the gradient as function of angle may
+   be more suitable.
   

@@ -13699,6 +13699,12 @@ void polyaPlotExperiments()
 {
   // Some experiments with Polya potential plots. We want to figure out some properties of these 
   // surfaces by looking at these plots. ...TBC...
+  // One thing of interest is how we would go from one saddle to the next using some special lines
+  // given by the geometry of the surface. From a general point, if we follow the gradient, we
+  // should either run into a saddle or else head to plus or minus infinity the fastest way 
+  // possible. At the saddles themselves where the gradients (and possibly more derivatives) 
+  // vanish, we may instead take directions given by angle bisectors between the contour lines that
+  // meet there.
 
   // Some abbreviations for data types:
   using R   = float;                         // Data type for real numbers (float or double)
@@ -13746,6 +13752,7 @@ void polyaPlotExperiments()
   // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
   // here. It's too specific to be included into a general purpose class.
 
+  // 4 saddles at 1,i,-1,-i, i.e. around a square:
   // f(z)   = (z+1)*(z-1)*(z-i)*(z+i)
   // P(x,y) = 1/5*x^5 - 2*x^3*y^2 + x*y^4 - x
   // Saddles: (-1,0,+0.8), (+1,0,-0.8), (0,-1,0), (0,+1,0)
@@ -13757,6 +13764,14 @@ void polyaPlotExperiments()
   };
   cplotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
          -1.5, +1.5, -1.5, +1.5, 201, 201, 41, -4.f, +4.f);
+  splotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
+    -1.5, +1.5, -1.5, +1.5, 41, 41);
+  // It looks like from the left saddle at (-1,0), we would always head off to the right saddle at
+  // (+1,0) and never to the top or bottom saddle, if we take the angle bisectors of the meeting
+  // contour lines as initial direction and then follow the gradient. From the top or bottom 
+  // saddle, we have two options to head off - to the left or right. From left and right saddles,
+  // 3 directions go to infinity and only 1 to a neighbor saddle. From the top and bottom saddle,
+  // 2 directions head off to infinity and 2 to neighbor saddles
 
 
 
@@ -13764,6 +13779,13 @@ void polyaPlotExperiments()
 
   // Notes:
   // -The functions have been found using the sage script from the Polya potential paper.
+
+  // ToDo:
+  // -Try other configurations of saddles:
+  //  -around regular polygons (triangle, square, pentagon, hexagon, ...)
+  //  -along a line
+  //  -around irregular polygons
+  //  -along a zig-zag path like a W or M: (-2,-1),(-1,+1),(0,-1),(1,+1),(2,-1)
 
 
   int dummy = 0;

@@ -13702,7 +13702,7 @@ void polyaPlotExperiments()
 
   // Some abbreviations for data types:
   using R   = float;                         // Data type for real numbers (float or double)
-  using C   = std::complex<R>;
+  //using C   = std::complex<R>;
   //using PE  = rsPolyaPotentialEvaluator<R>;
   //using CP  = GNUPlotter::ColorPalette;
 
@@ -13717,12 +13717,13 @@ void polyaPlotExperiments()
   //rsVectorFieldPlotter<R> pltV;
 
 
-  // f(z) = (z+1)*(z-1)
+  // f(z)   = (z+1)*(z-1)
+  // P(x,y) =
   // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
-  cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  //cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
   //splotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
-  // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
+  // The saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
   // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
   // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
   // 49 works because 16/48 = 1/3 so -2/3 and +2/3 are among the contour levels
@@ -13744,6 +13745,24 @@ void polyaPlotExperiments()
   // start at one saddle and figure out the path to the next.
   // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
   // here. It's too specific to be included into a general purpose class.
+
+  // f(z)   = (z+1)*(z-1)*(z-i)*(z+i)
+  // P(x,y) = 1/5*x^5 - 2*x^3*y^2 + x*y^4 - x
+  auto zerosAt_1_m1_I_mI = [](R x, R y) 
+  { 
+    R y2 = y*y;  // y^2
+    R x2 = x*x;  // x^2
+    return x2*x2*x/5 - 2*x2*x*y2 + x*y2*y2 - x;
+  };
+  cplotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 41, -4.f, +4.f);
+  // There are no contours through (-1,0),(+1,0). Contours through (0,-1),(0,+1) are there, though
+  // by using 49,-8,+8 
+  // saddle coordinates are: (-1,0,+4/5), (+1,0,-4/5), (0,-1,0), (0,+1,0)
+
+
+  // Notes:
+  // -The functions have been found using the sage script from the Polya potential paper.
+
 
   int dummy = 0;
 }

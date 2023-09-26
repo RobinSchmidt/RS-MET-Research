@@ -13626,6 +13626,8 @@ void testPotentialPlotter()
   //  shape is exponential along the x-direction and sinusoidal along the y-direction
   //
   // ToDo:
+  // -Split out a function to plot the figures for the paper. Maybe call it 
+  //  makePlotsForPolyaPaper()
   // -Plot potentials of f(z) = 1, -1, i, -i, 1+i, 1-i, -1+i, -1-i, z, z+1, z^2, (z-1)*(z+1),
   //  (z-1)*(z+1)*(z+i)*(z-i), 1/z, 1/z^2, exp(i*z)
   //  Expections: 1: rightward linear ramp (upward to the right), -1: leftward linear ramp,
@@ -13652,6 +13654,14 @@ void testPotentialPlotter()
   //  From the Polya potential plots, I'd expect to see some sort of oscillation.
   // -Or: pick a radius r and let the angle traverse 0..2pi. We'll get some wiggling function. Will
   //  it be sinusoidal or some other shape? Will the shape depend on the radius?
+  // -Currently, the way we evaluate a function like z^n in rsPolyaPotentialEvaluator is absolutely
+  //  wasteful if we need to evaluate the function at multiple points - and for the plots, we 
+  //  evaluate it at a lot of points. For each function value to be computed, the coefficient 
+  //  arrays for the polynomials are re-computed from scratch. Fix that by writing functions that
+  //  return a std::function object that can be used to evaluate it at many points. And/or 
+  //  implement formulas based on polar coordinates. I think, the formulas for u,v,P for f(z) = z^n 
+  //  may be simpler in polar coordinates...but I have not yet figured them out, so that may be 
+  //  wrong.
 
   // For contour filling on the 3D plot, see:
   // https://gnuplot.sourceforge.net/demo_6.1/contourfill.html

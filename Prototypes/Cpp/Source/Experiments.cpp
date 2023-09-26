@@ -13158,6 +13158,41 @@ void plotN(
 
 
 
+//template<class Real>
+//void cplotA(std::function<Real(Real x, Real y)> f,
+//  Real xMin, Real xMax, Real yMin, Real yMax, 
+//  int Nx, int Ny, int numContours, 
+//  Real zMin = 0, Real zMax = 0)
+//{
+//  rsContourMapPlotter<Real> plt;
+//  plt.setFunction(f);
+//  plt.setInputRange(xMin, xMax, yMin, yMax);
+//  plt.setOutputRange(zMin, zMax);
+//  plt.setSamplingResolution(Nx, Ny);
+//  plt.setNumContours(numContours);
+//  plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
+//  plt.plot();
+//};
+
+// Like splotA but instead produces a contour map:
+template<class T>
+void cplotA(std::function<float(T x, T y)> f,
+  T xMin, T xMax, T yMin, T yMax, 
+  int Nx, int Ny, int numContours, 
+  T zMin = 0, T zMax = 0)
+{
+  rsContourMapPlotter<float> plt;
+  plt.setFunction(f);
+  plt.setInputRange(xMin, xMax, yMin, yMax);
+  plt.setOutputRange(zMin, zMax);
+  plt.setSamplingResolution(Nx, Ny);
+  plt.setNumContours(numContours);
+  plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
+  plt.plot();
+};
+
+
+
 void testPotentialPlotter()
 {
   // Tests the classes rsPolyaPotentialEvaluator for evaluation of Polya potentials and 
@@ -13257,6 +13292,7 @@ void testPotentialPlotter()
   // For sufaces with contour lines, see:
   // https://gnuplot.sourceforge.net/demo_5.2/contours.html
 
+  /*
   // Like splotA but instead produces a contour map:
   auto cplotA = [&](std::function<Real(Real x, Real y)> f,
     Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny,
@@ -13271,6 +13307,9 @@ void testPotentialPlotter()
     plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
     plt.plot();
   };
+  */
+
+  auto cplotA = ::cplotA<Real>;
 
   // Like splotA and cplotA but produces a vector field plot.
   auto vplotA = [&](
@@ -13300,7 +13339,7 @@ void testPotentialPlotter()
 
   // Surface and contour plots for some polynomials
   //splotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
-  cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.0, +8.0);
+  cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2.f, +2.f, -2.f, +2.f, 201, 201, 49, -8.f, +8.f);
   // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
   // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
   // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think

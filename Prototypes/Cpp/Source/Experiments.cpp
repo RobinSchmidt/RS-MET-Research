@@ -13281,152 +13281,8 @@ void testPotentialPlotter()
   rsVectorFieldPlotter<R> pltV;
 
 
-  // Surface plots for z^n where n > 0:
-  //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
-  //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
-  //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31);
-  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
-  //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
-
-  // Surface and contour plots for some polynomials
-  //splotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
-  cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2.f, +2.f, -2.f, +2.f, 201, 201, 49, -8.f, +8.f);
-  // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
-  // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
-  // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
-  // 49 works because 16/48 = 1/3 so -2/3 and +2/3 are among the contour levels
-  // But shouldn't the surface look like a monkey saddle further away from the oRigin? It doesn't 
-  // look like that but maybe we have zoomed in too far to see it. Or - well - actually it does!
-  // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
-  // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
-  // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
-  // P(x,y) and the 2 would more than cancel it and actually add an upward slope.
-  // It looks like the straight line between (-1,0) and (+1,0) is the geodesic between these points
-  // and it seems to be the direction of the gradient except at the saddles. There, the gradient 
-  // vanishes and the direction is at 45° angles with the contours. Maybe figure out the main 
-  // curvature directions and the zero-curvature directions. I think geodesics are directions of
-  // zero curvature? No - that makes no sense! Geodesics exist between two points. Directions of
-  // vanishing curvature exist at a single point. Imagine a saddle like x^2 - y^2. It curves up 
-  // into the x-direction and down into the y-direction. These are the directions of maximum 
-  // curvature. Along the diagonals, The curvature should be zero. Maybe it is generally the case
-  // that such lines of zero curvature connect the saddles? If true, that would give us a way to 
-  // start at one saddle and figure out the path to the next.
-  // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
-  // here. It's too specific to be included into a general purpose class.
 
 
-  // Create the plots for the paper about Polya potentials:
-  /*
-  // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
-  splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
-  cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
-  // For the vplot, the CB_YlGnBu9t colormap looks best for z^2. Maybe we should use that 
-  // generally?
-
-  // For pdf paper: f(z) = z^n for n = 0,1,2,3,4,5
-  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
-  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 14, -1.0, +0.3);
-  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 21, -0.5, +0.5);
-  */
-  // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
-  // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
-  // farthest away from the origin so there, we typically see the most extreme values of the radial
-  // factor. It's a coincidence that for n=3, the saddle is shaped such that at these farthest away
-  // points P(x,y) goes down towards all four corners. For other exponents, the height of P more 
-  // distributed at the corners. Due to the asymmetric z-range, we also need a different number of 
-  // contours in order to get a contour line at z = 0. It works with 14 or 27 contours. I think, in
-  // general, the rule is as follows: Let's define R = 10*(zMax-zMin), 
-  // N = numContours-1 (= numColors). I think, to have a contour line at z=0, we must have either 
-  // of these be true:
-  //  -N is a multiple of R
-  //  -zMin = -zMax and n is even
-  //  -> Verify these! Maybe find more..
-  // In the case here, we have R = 10*(zMax-zMin) =  10*(0.3 - -1.0) = 13. numContours must be 
-  // k*R + 1, so 14 and 27 work. For the others, we use 21. 29 also works but it looks a bit busy. 
-  // Especially for higher exponents.
-
-
-
-
-  // exp(i*z):
-  //pltC.setFunction([](R x, R y) { return PE::exp_i(x, y); });
-  //pltC.setInputRange(-8, +8, -2, +0.5);     //
-  //pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
-  //pltC.setNumContours(21);                // Tweak!
-  //pltC.setSamplingResolution(800, 200);   // Tweak!
-  //pltC.setPixelSize(800, 200);            // Tweak!
-  //pltC.setColorPalette(CP::CJ_BuYlRd11, false);
-  //pltC.plot();
-  // Maybe it can be used in the paper instead of exp(z) itself with some text explaining that 
-  // exp(z) would be obtained by rotation. exp(i*z) is nicer to plot in "landscape" format. exp(z)
-  // naturally calls for "portrait" format which is inconvenient for a figure in the document.
-
-  // Under construction:
-  R pi = PI;
-  // For pdf paper: exp(z):
-  pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
-  pltC.setInputRange(-1, +1, -2*pi, +2*pi);          // Show two periods along imaginary axis.
-  pltC.setOutputRange(-3, +3);                       // x in -1..+1 -> z in -e..+e -> round to +-3
-  pltC.setNumContours(31);
-  pltC.setSamplingResolution(200, 400);
-  pltC.setPixelSize(350, 700); 
-  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
-  pltC.setDrawRectangle(0.08, 0.88, 0.03, 0.99);
-  pltC.addCommand("set ytics pi");                   // Show y-tics at multiples of pi
-  pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
-  pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
-  pltC.addCommand("set xtics center offset 0,1.5");
-  pltC.plot();
-
-
-  pltC.clearCommands();  // clear them for the next plot
-  // About placing the tics - which si what we need here:
-  // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
-  // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
-  // http://www.gnuplot.info/docs_4.2/node295.html
-  // Points of interest:
-  // -(x,y) = (0, pi): z = -1 + 0*i. This is Euler's famous formula. Arrow is horizontal and points
-  //  down to blue. That means, the value is negative. The line density is unity and the colors
-  //  are around -1. Oh - but no - that's a coincidence: the actual color is irrelevant. It 
-  //  corresponds to the height but we are only interested in the steepness.
-  // -(x,y) = (1, pi/2): z = 0 + i*e. Arrow would be vertical and point down into the 
-  //  screen/paper (into the blue). Vertical means purely imaginary. Down means positive due to 
-  //  negation. The density of the lines should be roughly 3 times higher (actually e times) than
-  //  at (x,y) = (0, pi/2)
-  // -(x,y) = (0, pi/2): 
-  // -Maybe put a countour and arrow plot together with a surface plot into one figure that spans a 
-  //  complete page
-
-  // sin(z)
-  pltC.setFunction([](R x, R y) { return PE::sin(x, y); });
-  pltC.setInputRange(-2*pi, +2*pi, -1, +1);
-  pltC.setOutputRange(-1.6, +1.6);       // cosh(1) = 1.54308063481524
-  pltC.setNumContours(17);               // 
-  pltC.setSamplingResolution(1000, 250);
-  pltC.setPixelSize(1000, 250);
-  pltC.setDrawRectangle(0.05, 0.9, 0.1, 0.95);
-  pltC.plot();
-  // Using and output range of z = -1.5..+1.5 with 31 contours also works for having a contour at 
-  // P(x,y) = 0.
-  // Sin(z) has also (even) symmetry wrt to y-axis. Exp had only symmetry wrt to the x-axis.
-  // P(x,y) = -cos(x) * cosh(y)
-
-  // Plot also cos(z): P(x,y) = sin(x) * cosh(y)...hmm...that's not really interesting. It's just
-  // sin shifted. Not different enough to justify yet another figure.
-  // Is there actually a function that has sinh(y) in it? That would justify another figure. 
-  // cosh(z) has P(x,y) = sinh(x) * cos(y). It has a sinh(x) in it - but we want sinh(y). Maybe 
-  // rotate input or output by multiplying by i? Or maybe try to start with something like 
-  // cos(x) * sinh(y), take the partial derivatives, check Cauchy-Riemman and if it holds, try to 
-  // find f(z). cos(i*z) has P(x,y) = cos(y)*sinh(x). sinh(I*z) has P(x,y) = -sin(x)*sinh(y)
-  // sinh(-I*z) has P(x,y) = sin(x)*sinh(y). We get cos(x)*sinh(y) from -i*cos(z). For i*cos(z), we
-  // get -cos(x) * sinh(y).
-  // sinh is a rotated sin? What sort of symmetry would it be when a function satisfies 
-  // f(i z) = i f(z)? Rotational symmetry by 90°? The Polya potential for z^3, i.e. the 4th order 
-  // saddle has such a symmetry, I think.
 
 
 
@@ -13532,6 +13388,9 @@ void testPotentialPlotter()
 
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
+
+
+
 
 
   // Analytic Polya potentials, plotted into .ppm files:
@@ -13676,7 +13535,171 @@ void testPotentialPlotter()
 
 void makePlotsForPolyaPaper()
 {
+  // Some abbreviations for data types:
+  using R   = float;                         // Data type for real numbers (float or double)
+  using C   = std::complex<R>;
+  using PE  = rsPolyaPotentialEvaluator<R>;
+  using CP  = GNUPlotter::ColorPalette;
 
+  // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
+  // Gnuplot:
+  auto splotA = ::splotA<R>;
+  auto cplotA = ::cplotA<R>;
+  auto vplotA = ::vplotA<R>;
+
+  // Create and set up the plotters for the vector fields and contour maps:
+  rsContourMapPlotter<R>  pltC;
+  rsVectorFieldPlotter<R> pltV;
+
+
+  // Surface plots for z^n where n > 0:
+  //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
+
+  // Surface and contour plots for some polynomials
+  //splotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
+  cplotA([](R x, R y) { return PE::zerosAt_1_m1(x, y); }, -2.f, +2.f, -2.f, +2.f, 201, 201, 49, -8.f, +8.f);
+  // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
+  // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
+  // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
+  // 49 works because 16/48 = 1/3 so -2/3 and +2/3 are among the contour levels
+  // But shouldn't the surface look like a monkey saddle further away from the oRigin? It doesn't 
+  // look like that but maybe we have zoomed in too far to see it. Or - well - actually it does!
+  // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
+  // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
+  // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
+  // P(x,y) and the 2 would more than cancel it and actually add an upward slope.
+  // It looks like the straight line between (-1,0) and (+1,0) is the geodesic between these points
+  // and it seems to be the direction of the gradient except at the saddles. There, the gradient 
+  // vanishes and the direction is at 45° angles with the contours. Maybe figure out the main 
+  // curvature directions and the zero-curvature directions. I think geodesics are directions of
+  // zero curvature? No - that makes no sense! Geodesics exist between two points. Directions of
+  // vanishing curvature exist at a single point. Imagine a saddle like x^2 - y^2. It curves up 
+  // into the x-direction and down into the y-direction. These are the directions of maximum 
+  // curvature. Along the diagonals, The curvature should be zero. Maybe it is generally the case
+  // that such lines of zero curvature connect the saddles? If true, that would give us a way to 
+  // start at one saddle and figure out the path to the next.
+  // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
+  // here. It's too specific to be included into a general purpose class.
+
+
+  // Create the plots for the paper about Polya potentials:
+  // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
+  splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
+  cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
+  // For the vplot, the CB_YlGnBu9t colormap looks best for z^2. Maybe we should use that 
+  // generally?
+
+  // For pdf paper: f(z) = z^n for n = 0,1,2,3,4,5
+  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
+  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
+  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 14, -1.0, +0.3);
+  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +1.0);
+  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 21, -0.5, +0.5);
+  // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
+  // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
+  // farthest away from the origin so there, we typically see the most extreme values of the radial
+  // factor. It's a coincidence that for n=3, the saddle is shaped such that at these farthest away
+  // points P(x,y) goes down towards all four corners. For other exponents, the height of P more 
+  // distributed at the corners. Due to the asymmetric z-range, we also need a different number of 
+  // contours in order to get a contour line at z = 0. It works with 14 or 27 contours. I think, in
+  // general, the rule is as follows: Let's define R = 10*(zMax-zMin), 
+  // N = numContours-1 (= numColors). I think, to have a contour line at z=0, we must have either 
+  // of these be true:
+  //  -N is a multiple of R
+  //  -zMin = -zMax and n is even
+  //  -> Verify these! Maybe find more..
+  // In the case here, we have R = 10*(zMax-zMin) =  10*(0.3 - -1.0) = 13. numContours must be 
+  // k*R + 1, so 14 and 27 work. For the others, we use 21. 29 also works but it looks a bit busy. 
+  // Especially for higher exponents.
+
+
+  // exp(i*z):
+  //pltC.setFunction([](R x, R y) { return PE::exp_i(x, y); });
+  //pltC.setInputRange(-8, +8, -2, +0.5);     //
+  //pltC.setOutputRange(0.0, 0.0);          // Invalid range triggers automatic range selection
+  //pltC.setNumContours(21);                // Tweak!
+  //pltC.setSamplingResolution(800, 200);   // Tweak!
+  //pltC.setPixelSize(800, 200);            // Tweak!
+  //pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  //pltC.plot();
+  // Maybe it can be used in the paper instead of exp(z) itself with some text explaining that 
+  // exp(z) would be obtained by rotation. exp(i*z) is nicer to plot in "landscape" format. exp(z)
+  // naturally calls for "portrait" format which is inconvenient for a figure in the document.
+
+
+  // Under construction:
+  R pi = PI;
+  // For pdf paper: exp(z):
+  pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
+  pltC.setInputRange(-1, +1, -2*pi, +2*pi);          // Show two periods along imaginary axis.
+  pltC.setOutputRange(-3, +3);                       // x in -1..+1 -> z in -e..+e -> round to +-3
+  pltC.setNumContours(31);
+  pltC.setSamplingResolution(200, 400);
+  pltC.setPixelSize(350, 700); 
+  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+  pltC.setDrawRectangle(0.08, 0.88, 0.03, 0.99);
+  pltC.addCommand("set ytics pi");                   // Show y-tics at multiples of pi
+  pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
+  pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
+  pltC.addCommand("set xtics center offset 0,1.5");
+  pltC.plot();
+  pltC.clearCommands();  // clear them for the next plot
+  // About placing the tics - which si what we need here:
+  // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
+  // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
+  // http://www.gnuplot.info/docs_4.2/node295.html
+  // Points of interest:
+  // -(x,y) = (0, pi): z = -1 + 0*i. This is Euler's famous formula. Arrow is horizontal and points
+  //  down to blue. That means, the value is negative. The line density is unity and the colors
+  //  are around -1. Oh - but no - that's a coincidence: the actual color is irrelevant. It 
+  //  corresponds to the height but we are only interested in the steepness.
+  // -(x,y) = (1, pi/2): z = 0 + i*e. Arrow would be vertical and point down into the 
+  //  screen/paper (into the blue). Vertical means purely imaginary. Down means positive due to 
+  //  negation. The density of the lines should be roughly 3 times higher (actually e times) than
+  //  at (x,y) = (0, pi/2)
+  // -(x,y) = (0, pi/2): 
+  // -Maybe put a countour and arrow plot together with a surface plot into one figure that spans a 
+  //  complete page
+
+  // sin(z)
+  pltC.setFunction([](R x, R y) { return PE::sin(x, y); });
+  pltC.setInputRange(-2*pi, +2*pi, -1, +1);
+  pltC.setOutputRange(-1.6, +1.6);       // cosh(1) = 1.54308063481524
+  pltC.setNumContours(17);               // 
+  pltC.setSamplingResolution(1000, 250);
+  pltC.setPixelSize(1000, 250);
+  pltC.setDrawRectangle(0.05, 0.9, 0.1, 0.95);
+  pltC.plot();
+  // Using and output range of z = -1.5..+1.5 with 31 contours also works for having a contour at 
+  // P(x,y) = 0.
+  // Sin(z) has also (even) symmetry wrt to y-axis. Exp had only symmetry wrt to the x-axis.
+  // P(x,y) = -cos(x) * cosh(y)
+
+
+
+
+  int dummy = 0;
+
+  // ToDo:
+  //
+  // -Plot also cos(z): P(x,y) = sin(x) * cosh(y)...hmm...that's not really interesting. It's just
+  //  sin shifted. Not different enough to justify yet another figure.
+  //  Is there actually a function that has sinh(y) in it? That would justify another figure. 
+  //  cosh(z) has P(x,y) = sinh(x) * cos(y). It has a sinh(x) in it - but we want sinh(y). Maybe 
+  //  rotate input or output by multiplying by i? Or maybe try to start with something like 
+  //  cos(x) * sinh(y), take the partial derivatives, check Cauchy-Riemman and if it holds, try to 
+  //  find f(z). cos(i*z) has P(x,y) = cos(y)*sinh(x). sinh(I*z) has P(x,y) = -sin(x)*sinh(y)
+  //  sinh(-I*z) has P(x,y) = sin(x)*sinh(y). We get cos(x)*sinh(y) from -i*cos(z). For i*cos(z), 
+  //  we get -cos(x) * sinh(y).
+  //  sinh is a rotated sin? What sort of symmetry would it be when a function satisfies 
+  //  f(i z) = i f(z)? Rotational symmetry by 90°? The Polya potential for z^3, i.e. the 4th order 
+  //  saddle has such a symmetry, I think.
 }
 
 // fast inverse square root approximation from Quake engine

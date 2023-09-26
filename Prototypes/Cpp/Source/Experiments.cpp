@@ -13722,12 +13722,12 @@ void polyaPlotExperiments()
   //rsContourMapPlotter<R>  pltC;
   //rsVectorFieldPlotter<R> pltV;
 
-
+  // 2 saddles at 1,-1:
   // f(z)   = (z+1)*(z-1)
   // P(x,y) = 1/3*x^3 - x*y^2 - x
   // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
-  //cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
   //splotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
   // The saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
   // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
@@ -13749,14 +13749,16 @@ void polyaPlotExperiments()
   // curvature. Along the diagonals, The curvature should be zero. Maybe it is generally the case
   // that such lines of zero curvature connect the saddles? If true, that would give us a way to 
   // start at one saddle and figure out the path to the next.
-  // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
-  // here. It's too specific to be included into a general purpose class.
+
+
+
+
 
 
   // 3 saddles at 1,i,-1 i.e. around a triangle with a 90° and two 45° angles:
   // f(z)   = (z+1)*(z-1)*(z-i)
   // P(x,y) = -3/2*x^2*y^2 + x^2*y - 1/2*x^2 + 1/4*x^4 + 1/4*y^4 - 1/3*y^3 + 1/2*y^2 - y
-  // Saddles:  (-1,0,-0.25), (1,0,-0.25), (0,1,-5/6)
+  // Saddles:  (-1,0,-0.25), (1,0,-0.25), (0,1,-7/12=-0.58333)
   auto zerosAt_1_m1_I = [](R x, R y) 
   { 
     R y2 = y*y;  // y^2
@@ -13765,20 +13767,16 @@ void polyaPlotExperiments()
     //return x2*x2/4 - 3*x2*y2/2 + x2*y - 1*x2/2 - 1*y2*y/3 + 1*y2/2 - y;
   };
   cplotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
-         -1.5, +1.5, -1.5, +1.5, 201, 201, 61, -5.f, +5.f);
+    -1.5, +1.5, -1.5, +1.5, 201, 201, 49, -2.f, +2.f);
   splotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
     -1.5, +1.5, -1.5, +1.5, 41, 41);
-  // Old:
-  // The z-coordinate of the top saddle is -5/6 = -0.833333. We can force a contour line through it
-  // by using 61,-5,+5 for the last 3 params but then we don't get contours through the left and 
-  // right saddle with z coordinates of -0.25. 
-  // I think, the top "saddle" may not even be a saddle at all...check the surface plot!
-  // ...yes - it looks like there is no saddle there - but how can this be? We have placed a zero 
-  // into f(z) az z = i, so P *must* have a point with vanishing gradient there!
-  // Verify all the formulas! Maybe there's a mistake in them ...OK - yes! found it!
-
-
-
+  // Hmm...OK...this seems to be a problematic configuration of seddles. From the top saddle there 
+  // doesn't seem to be a clear path into the left or right saddle. Maybe all 4 paths determined by
+  // the rule above would lead to infinity? Maybe in a "good" landscape, the paths determined by 
+  // our rule will lead us into the neighbor saddle but in bad landscapes, all paths lead to 
+  // infinity? The neighbor saddle may or may not be inside the attractor basin of our current
+  // position.
+  
 
   // 4 saddles at 1,i,-1,-i, i.e. around a square:
   // f(z)   = (z+1)*(z-1)*(z-i)*(z+i)

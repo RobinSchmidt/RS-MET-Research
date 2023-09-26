@@ -13133,8 +13133,6 @@ bool testNumericPotential()
 
 // Rename them and move to Tools.cpp:
 
-
-// Shall replace the local function in testPotentialPlotter - but that doesn't work yet:
 // Helper function. Takes a complex function, plot range, pixel size and file path to create an
 // image file with a plot of the Polya potential of the given function. It uses numerial 
 // evaluation of the Polya potential. That's what the N stands for.
@@ -13153,26 +13151,22 @@ void plotN(
   rsImage<T> img = plt.getPolyaPotentialImage(f, xMin, xMax, yMin, yMax, width, height);
   writeImageToFilePPM(img, path);
 };
+// rename to rsPlotPolyaPotentialNumeric
 // The N in plotN stands for "numerical". The intention is to add a function plotA, that uses
 // analytical evaluation.
 
-
-
-//template<class Real>
-//void cplotA(std::function<Real(Real x, Real y)> f,
-//  Real xMin, Real xMax, Real yMin, Real yMax, 
-//  int Nx, int Ny, int numContours, 
-//  Real zMin = 0, Real zMax = 0)
-//{
-//  rsContourMapPlotter<Real> plt;
-//  plt.setFunction(f);
-//  plt.setInputRange(xMin, xMax, yMin, yMax);
-//  plt.setOutputRange(zMin, zMax);
-//  plt.setSamplingResolution(Nx, Ny);
-//  plt.setNumContours(numContours);
-//  plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
-//  plt.plot();
-//};
+// Like plotN but uses an analytic expression for the Polya potential that must be given via f.
+template<class T>
+auto plotA = [&](std::function<T(T x, T y)> f,
+  T xMin, T xMax, T yMin, T yMax,
+  int width, int height, const char* path)
+{
+  rsHeightMapPlotter<T> plt;
+  rsImage<T> img = plt.getHeightMapImage(f, xMin, xMax, yMin, yMax, width, height);
+  writeImageToFilePPM(img, path);
+};
+// rename to rsPlotPotentialAnalytic or rsWritePotentialAnalytic bcs "Plot" suggests to open a 
+// Gnuplot window whereas we write a .ppm file. Maybe call it PlotFile or PlotPpm
 
 // Like splotA but instead produces a contour map:
 template<class T>
@@ -13211,6 +13205,7 @@ void testPotentialPlotter()
   // Helper function. Takes a complex function, plot range, pixel size and file path to create an
   // image file with a plot of the Polya potential of the given function. It uses numerial 
   // evaluation of the Polya potential. That's what the N stands for.
+  /*
   auto plotN = [&](std::function<Complex(Complex)> f, 
     Real xMin, Real xMax, Real yMin, Real yMax, 
     int width, int height, const char *path)
@@ -13224,9 +13219,12 @@ void testPotentialPlotter()
     rsImage<Real> img = plt.getPolyaPotentialImage(f, xMin, xMax, yMin, yMax, width, height);
     writeImageToFilePPM(img, path);
   };
+  */
   // The N in plotN stands for "numerical". The intention is to add a function plotA, that uses
   // analytical evaluation.
+  auto plotN = ::plotN<Real>;
 
+  /*
   // Like plotN but uses an analytic expression for the Polya potential that must be given via f.
   auto plotA = [&](std::function<Real(Real x, Real y)> f,
     Real xMin, Real xMax, Real yMin, Real yMax,
@@ -13237,6 +13235,10 @@ void testPotentialPlotter()
     writeImageToFilePPM(img, path);
   };
   // Maybe rename f to P
+  */
+
+  auto plotA = ::plotA<Real>;
+
 
   // Like plotA but doesn't produce a .ppm file but instead invokes GNUPlotCPP to produce a surface
   // plot:

@@ -13697,14 +13697,14 @@ void makePlotsForPolyaPaper()
 
 void polyaPlotExperiments()
 {
-  // Some experiments with Polya potnetial plots. We want to figure out some properties of these 
-  // surfaces by looking at these plots:
+  // Some experiments with Polya potential plots. We want to figure out some properties of these 
+  // surfaces by looking at these plots. ...TBC...
 
   // Some abbreviations for data types:
   using R   = float;                         // Data type for real numbers (float or double)
   using C   = std::complex<R>;
-  using PE  = rsPolyaPotentialEvaluator<R>;
-  using CP  = GNUPlotter::ColorPalette;
+  //using PE  = rsPolyaPotentialEvaluator<R>;
+  //using CP  = GNUPlotter::ColorPalette;
 
   // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
   // Gnuplot:
@@ -13713,23 +13713,15 @@ void polyaPlotExperiments()
   auto vplotA = ::vplotA<R>;
 
   // Create and set up the plotters for the vector fields and contour maps:
-  rsContourMapPlotter<R>  pltC;
-  rsVectorFieldPlotter<R> pltV;
-
-  // zerosAt_1_m1
-  // f(z) = (z-1) * (z+1), u(x,y) = x^2 - y^2 - 1, v(x,y) = -2*x*y, P(x,y) = (1/3)*x^3 - x*y^2 - x
-  //static T    zerosAt_1_m1(T x, T y) { return x*x*x/3 - x*y*y - x; } 
-
-  // P(x,y) for f(z) = (z+1)*(z-1)
-  auto zerosAt_1_m1 = [](R x, R y) 
-  { 
-    return x*x*x/3 - x*y*y - x; 
-  };
+  //rsContourMapPlotter<R>  pltC;
+  //rsVectorFieldPlotter<R> pltV;
 
 
-  // Surface and contour plots for some polynomials
-  //splotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
+  // f(z) = (z+1)*(z-1)
+  // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
+  auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
   cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  //splotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
   // the saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
   // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
   // zMin + k * (zMax - zMin) / (numContours - 1) for all integer k, I think
@@ -13752,6 +13744,8 @@ void polyaPlotExperiments()
   // start at one saddle and figure out the path to the next.
   // Maybe take the function zerosAt_1_m1 out of rsPolyaPotentialEvaluator and define it directly 
   // here. It's too specific to be included into a general purpose class.
+
+  int dummy = 0;
 }
 
 

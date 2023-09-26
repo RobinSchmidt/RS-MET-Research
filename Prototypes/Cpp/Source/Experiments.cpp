@@ -13131,6 +13131,10 @@ bool testNumericPotential()
 }
 
 
+
+
+
+
 void testPotentialPlotter()
 {
   // Tests the classes rsPolyaPotentialEvaluator for evaluation of Polya potentials and 
@@ -13667,7 +13671,10 @@ void testPotentialPlotter()
   // https://gnuplot.sourceforge.net/demo_6.1/contourfill.html
 }
 
+void makePlotsForPolyaPaper()
+{
 
+}
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

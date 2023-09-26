@@ -13236,6 +13236,9 @@ void cplotA(std::function<float(T x, T y)> f,
   plt.setOutputRange(zMin, zMax);
   plt.setSamplingResolution(Nx, Ny);
   plt.setNumContours(numContours);
+  plt.setPixelSize(600, 600);
+  //plt.setDrawRectangle(0.07, 0.87, 0.1, 0.9);  // tweak!
+  // It seems like to get an aspect ratio of 1, we need R-L = T-B
   plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
   plt.plot();
 };
@@ -13249,6 +13252,7 @@ void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
   plt.setFunction(f);
   plt.setInputRange(xMin, xMax, yMin, yMax);
   plt.setArrowDensity(Nx, Ny);
+  plt.setPixelSize(600, 600);
   //plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9m, false);
   plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
   plt.plot();

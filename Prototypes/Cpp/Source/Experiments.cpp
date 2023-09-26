@@ -13770,6 +13770,8 @@ void polyaPlotExperiments()
     return -3./2*x2*y2 + 1./4*x2*x2 - 1./2*x2 + 1./4*y2*y2 + 1./2*y2;
   };
   cplotA([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
+  cplotA([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -0.5, +0.5, -0.5, +0.5, 201, 201, 41, -0.15f, +0.15f);
+
 
 
   // 3 saddles at -i,0,+i, i.e. along a vertical line:

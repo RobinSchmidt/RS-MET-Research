@@ -13260,17 +13260,11 @@ void testPotentialPlotter()
   // Tests the classes rsPolyaPotentialEvaluator for evaluation of Polya potentials and 
   // rsPolyaPotentialPlotter for plotting them. Produces some .ppm files.
 
-  // ToDo:
-  // -Use the evaluator but delegate the actual plotting to GNUPlotCPP.
-
   // Some abbreviations for data types:
   using R   = float;                         // Data type for real numbers (float or double)
   using C   = std::complex<R>;
-  using Vec = std::vector<R>;
-  using Mat = RAPT::rsMatrix<R>;
   using PE  = rsPolyaPotentialEvaluator<R>;
   using CP  = GNUPlotter::ColorPalette;
-  // Figure out if we still need Vec and Mat - if not, get rid
 
   // Abbreviations for functions that produce a plot and write it into a .ppm file:
   auto plotN = ::plotN<R>;
@@ -13540,10 +13534,7 @@ void testPotentialPlotter()
   //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
 
 
-
-
-
-  // Analytic Polya potnetials, plotted into .ppm files:
+  // Analytic Polya potentials, plotted into .ppm files:
   plotA([](R x, R y) { return PE::sin(x, y); }, -2*PI, +2*PI, -2, +2, 1001, 401, "PolyPotential_zSin.ppm");
   plotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -1, +1, 601, 601,        "PolyPotential_zExp.ppm");
   plotA([](R x, R y) { return PE::power(x, y, -1); }, -1, +1, -1, +1, 601, 601,  "PolyPotential_z^-1.ppm");
@@ -13558,11 +13549,6 @@ void testPotentialPlotter()
   // Good ranges with fitting numContours:
   // (-5..+5, 21), (-0.8..+0.8, 17), (-0.7..+0.7, 15), (-0.7..+0.7, 21), (-0.7..+0.7, 29), 
   // (-6..+6, 13), (-6..+6, 25),
-
-
-
-
-
   // With this example, I have taken some data for how many iterations the iterative solver needed
   // as function of the sor parameter (by inspecting "its" in rsNumericPotentialSparse() at the 
   // bottom in the debugger):

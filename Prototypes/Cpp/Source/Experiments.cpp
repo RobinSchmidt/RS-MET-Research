@@ -13131,7 +13131,30 @@ bool testNumericPotential()
 }
 
 
+// Rename them and move to Tools.cpp:
 
+
+// Shall replace the local function in testPotentialPlotter - but that doesn't work yet:
+// Helper function. Takes a complex function, plot range, pixel size and file path to create an
+// image file with a plot of the Polya potential of the given function. It uses numerial 
+// evaluation of the Polya potential. That's what the N stands for.
+template<class T>
+void plotN(
+  std::function<std::complex<T>(std::complex<T>)> f, 
+  T xMin, T xMax, T yMin, T yMax, 
+  int width, int height, const char *path)
+{
+  rsPolyaPotentialPlotter<T> plt;
+  plt.setImageScaling(20, 20);
+  // ToDo: set the plotter up with thigs like
+  // -setNumContourLines(8)
+  // -setMarkStationaryPoints(true)
+
+  rsImage<T> img = plt.getPolyaPotentialImage(f, xMin, xMax, yMin, yMax, width, height);
+  writeImageToFilePPM(img, path);
+};
+// The N in plotN stands for "numerical". The intention is to add a function plotA, that uses
+// analytical evaluation.
 
 
 
@@ -13148,7 +13171,8 @@ void testPotentialPlotter()
   using Vec     = std::vector<Real>;
   using Mat     = RAPT::rsMatrix<Real>;
 
-
+  // Shall be replaced by a free function defined outside - but at the moment, the replacement does
+  // not seem to work. We get a compiler error when we try to call it here:
   // Helper function. Takes a complex function, plot range, pixel size and file path to create an
   // image file with a plot of the Polya potential of the given function. It uses numerial 
   // evaluation of the Polya potential. That's what the N stands for.
@@ -13563,8 +13587,8 @@ void testPotentialPlotter()
 
 
 
-  plotN([](C z) { return z*z;   }, -1, +1, -1, +1, 31, 31, "PolyPotential_zSquaredN.ppm");
-  plotN([](C z) { return z*z*z; }, -1, +1, -1, +1, 31, 31, "PolyPotential_zCubedN.ppm");
+  plotN([](C z) { return z*z;   }, -1.f, +1.f, -1.f, +1.f, 31, 31, "PolyPotential_zSquaredN.ppm");
+  plotN([](C z) { return z*z*z; }, -1.f, +1.f, -1.f, +1.f, 31, 31, "PolyPotential_zCubedN.ppm");
 
   plotN([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 21, 51, "PolyaPotential_ExpN.ppm");
   //plot([](C z) { return exp(z); }, -1, +1, -2*PI, +2*PI, 41, 101, "PolyaPotential_Exp.ppm");

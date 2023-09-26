@@ -13727,7 +13727,7 @@ void polyaPlotExperiments()
   // P(x,y) = 1/3*x^3 - x*y^2 - x
   // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
-  cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  //cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
   //splotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
   // The saddles are at heights +-2/3, so we want contours there. We also want a contour at 0
   // C = numContours = 41 gives us a contour at 0 but not at +-2/3. Contours occur at
@@ -13751,8 +13751,31 @@ void polyaPlotExperiments()
   // start at one saddle and figure out the path to the next.
 
 
+  // 2 saddles at i,-i:
+  // f(z)   = (z+i)*(z-i)
+  // P(x,y) = 1/3*x^3 - x*y^2 + x
+  auto zerosAt_I_mI = [](R x, R y) { return x*x*x/3 - x*y*y + x; };
+  //cplotA([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  // This landscape is also problematic. We would actually have to go along a contour to reach the 
+  // next saddle.
 
 
+  // 3 saddles at -1,0,+1, i.e. along a horizontal line:
+  // f(z)   = (z+1)*z*(z-1)
+  // P(x,y) = -3/2*x^2*y^2 + 1/4*x^4 - 1/2*x^2 + 1/4*y^4 + 1/2*y^2
+  auto zerosAt_m1_0_1 = [](R x, R y) 
+  { 
+    R y2 = y*y;  // y^2
+    R x2 = x*x;  // x^2
+    return -3./2*x2*y2 + 1./4*x2*x2 - 1./2*x2 + 1./4*y2*y2 + 1./2*y2;
+  };
+  cplotA([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+
+
+  // -3/2*x^2*y^2 + 1/4*x^4 - 1/2*x^2
+  // -3/2*x^2*y^2                     + 1/4*y^4 + 1/2*y^2
+
+  // -3/2*x^2*y^2 + 1/4*x^4 - 1/2*x^2 + 1/4*y^4 + 1/2*y^2
 
 
   // 3 saddles at 1,i,-1 i.e. around a triangle with a 90° and two 45° angles:
@@ -13768,8 +13791,8 @@ void polyaPlotExperiments()
   };
   cplotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
     -1.5, +1.5, -1.5, +1.5, 201, 201, 49, -2.f, +2.f);
-  splotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
-    -1.5, +1.5, -1.5, +1.5, 41, 41);
+  //splotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
+  //  -1.5, +1.5, -1.5, +1.5, 41, 41);
   // Hmm...OK...this seems to be a problematic configuration of seddles. From the top saddle there 
   // doesn't seem to be a clear path into the left or right saddle. Maybe all 4 paths determined by
   // the rule above would lead to infinity? Maybe in a "good" landscape, the paths determined by 
@@ -13790,8 +13813,8 @@ void polyaPlotExperiments()
   };
   cplotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
          -1.5, +1.5, -1.5, +1.5, 201, 201, 41, -4.f, +4.f);
-  splotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
-    -1.5, +1.5, -1.5, +1.5, 41, 41);
+  //splotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
+  //  -1.5, +1.5, -1.5, +1.5, 41, 41);
   // It looks like from the left saddle at (-1,0), we would always head off to the right saddle at
   // (+1,0) and never to the top or bottom saddle, if we take the angle bisectors of the meeting
   // contour lines as initial direction and then follow the gradient. From the top or bottom 
@@ -13805,6 +13828,10 @@ void polyaPlotExperiments()
 
   // Notes:
   // -The functions have been found using the sage script from the Polya potential paper.
+  // -Maybe at the end of the day, it could even be benficial to completely forget about the 
+  //  original function f(z) and just think in terms of P(x,y)? Just like in physics it is simpler
+  //  to forget about the vector field and only think in terms of the potential? I try to picture 
+  //  the arrows in my head but maybe I shouldn't and just take P as is.
 
   // ToDo:
   // -Try other configurations of saddles:
@@ -13812,6 +13839,7 @@ void polyaPlotExperiments()
   //  -along a line
   //  -around irregular polygons
   //  -along a zig-zag path like a W or M: (-2,-1),(-1,+1),(0,-1),(1,+1),(2,-1)
+  // -Compute trajectories using our given rule and draw them in
 
 
   int dummy = 0;

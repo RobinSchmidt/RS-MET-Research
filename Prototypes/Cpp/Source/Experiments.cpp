@@ -13223,6 +13223,30 @@ void splotA(std::function<T(T x, T y)> f,
 // For sufaces with contour lines, see:
 // https://gnuplot.sourceforge.net/demo_5.2/contours.html
 
+template<class T>
+void setupForSquarePlot(rsFieldPlotter2D<T>* plt)
+{
+  int N = 700;  
+  // Rough overall pixel size, should be a multiple of 50 and >= 700 so we get a integers for width
+  // and height and a big enough size such that the text is properly shown. Let the caller pass
+  // this optionally. Resulting squares in the Polya plots for the paper: N = 700: 67 x 67, 
+  // N = 750: 72 x 72
+
+  // These have been found by trial and error:
+  double L = 0.07;
+  double R = 0.87;
+  double B = 0.05; // Bottom pixels of the x-axis tics are exactly bottom pixels of the image
+  double T = 0.99; // There's some small extra white space of 3 pixels at the top
+
+  // These formulas for width and height seem to make sense:
+  double W = N*(T-B);
+  double H = N*(R-L);
+
+  // Set up the plotter:
+  plt->setDrawRectangle(L, R, B, T);
+  plt->setPixelSize((int)W, (int)H); // Maybe use round. But we assume it to be integers anyway.
+}
+
 // Like splotA but instead produces a contour map:
 template<class T>
 void cplotA(std::function<float(T x, T y)> f,
@@ -13236,42 +13260,8 @@ void cplotA(std::function<float(T x, T y)> f,
   plt.setOutputRange(zMin, zMax);
   plt.setSamplingResolution(Nx, Ny);
   plt.setNumContours(numContours);
-
-  //plt.setPixelSize(600, 600);
-  //plt.setDrawRectangle(0.07, 0.87, 0.1, 0.9);  // tweak!
-  // It seems like to get an aspect ratio of 1, we need R-L = T-B
-  // Maybe more generally, we need (R-L) / (T-B) = W / H
-
-  // Factor out - maybe into class rsFieldPlotter:
-  int    N = 700;  // rough overall pixel size, should be a multiple of 50 and >= 700
-  double L = 0.07;
-  double R = 0.87;
-  double B = 0.05;
-  double T = 0.99;
-  double W = N*(T-B);
-  double H = N*(R-L);
-  plt.setDrawRectangle(L, R, B, T);
-  plt.setPixelSize((int)W, (int)H); // Maybe use round. But we assume it to be integer anyway
-  // N = 700 makes each square 67 x 67
-  // N = 750: 72 x 72
-
-  //plt.setDrawRectangle(0.07, 0.87, 0.05, 0.99);
-  // with w,h = 600,600
-  // B = 0.05: The bottom pixels of the x-axis tics are exactly in the bottom pixels of the image
-  // T = 0.99: There's some small extra white space of 3 pixels at the top
-
-  // leads to a "square" of 61 x 71 pixels with W x H = 600 x 600
-
-  // R-L = 0.80
-  // T-B = 0.94
-
-  // Let's choose some N and use try W = N*(T-B) = N*0.94, H = N*(R-L) = N*0.8
-  // Let's 
-  // 
-
-  //plt.setDrawRectangle(0.05, 0.99, 0.05, 0.99);
-
   plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
+  setupForSquarePlot(&plt);
   plt.plot();
 };
 

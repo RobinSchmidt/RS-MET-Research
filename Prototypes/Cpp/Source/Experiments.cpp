@@ -13263,25 +13263,28 @@ void testPotentialPlotter()
   // ToDo:
   // -Use the evaluator but delegate the actual plotting to GNUPlotCPP.
 
-  using Real    = float;
-  using Complex = std::complex<Real>;
-  using Vec     = std::vector<Real>;
-  using Mat     = RAPT::rsMatrix<Real>;
-  using C       = Complex;
-  using R       = Real;
-  using PE      = rsPolyaPotentialEvaluator<Real>;
-  // ToDo: get rid of Real, Complex and use only R, C
-
+  // Some abbreviations for data types:
+  using R   = float;                         // Data type for real numbers (float or double)
+  using C   = std::complex<R>;
+  using Vec = std::vector<R>;
+  using Mat = RAPT::rsMatrix<R>;
+  using PE  = rsPolyaPotentialEvaluator<R>;
+  using CP  = GNUPlotter::ColorPalette;
+  // Figure out if we still need Vec and Mat - if not, get rid
 
   // Abbreviations for functions that produce a plot and write it into a .ppm file:
-  auto plotN = ::plotN<Real>;
-  auto plotA = ::plotA<Real>;
+  auto plotN = ::plotN<R>;
+  auto plotA = ::plotA<R>;
 
   // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
   // Gnuplot:
-  auto splotA = ::splotA<Real>;
-  auto cplotA = ::cplotA<Real>;
-  auto vplotA = ::vplotA<Real>;
+  auto splotA = ::splotA<R>;
+  auto cplotA = ::cplotA<R>;
+  auto vplotA = ::vplotA<R>;
+
+  // Create and set up the plotters for the vector fields and contour maps:
+  rsContourMapPlotter<R>  pltC;
+  rsVectorFieldPlotter<R> pltV;
 
 
   // Surface plots for z^n where n > 0:
@@ -13353,10 +13356,7 @@ void testPotentialPlotter()
   // Especially for higher exponents.
 
 
-  // Create and set up the plotters for the vector fields and contour maps:
-  using CP = GNUPlotter::ColorPalette;
-  rsContourMapPlotter<Real>  pltC;
-  rsVectorFieldPlotter<Real> pltV;
+
 
   // exp(i*z):
   //pltC.setFunction([](R x, R y) { return PE::exp_i(x, y); });
@@ -13372,7 +13372,7 @@ void testPotentialPlotter()
   // naturally calls for "portrait" format which is inconvenient for a figure in the document.
 
   // Under construction:
-  Real pi = PI;
+  R pi = PI;
   // For pdf paper: exp(z):
   pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
   pltC.setInputRange(-1, +1, -2*pi, +2*pi);          // Show two periods along imaginary axis.

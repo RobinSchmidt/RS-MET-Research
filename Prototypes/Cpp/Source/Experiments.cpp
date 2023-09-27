@@ -4305,31 +4305,41 @@ void testGeodesic()
   R   u1 = 0, v1 = 0;        // Start point
   R   u2 = 1, v2 = 1;        // End point
   int N  = 51;               // Number of points. Should be at least 2.
-
+  R length;
  
-  // Initialize a trajectory:
+  // Initialize a trajectory as straight line:
   Vec u = rsRangeLinear(u1, u2, N);
   Vec v = rsRangeLinear(v1, v2, N);
+  length = getTrajectoryLength(surface, &u[0], &v[0], N); // 5.91607761
+  // When the surface is a plane, this straight line in uv-space gives a straight line on the plane
+  // in xyz-space which *is* the geodesic on the plane. Therefore, the length value will be the
+  // length of the geodesic in the case of a plane.
 
-  // Use some weird initial shape:
+  // Now deform the initial shape in uv-space into something non-straight:
   for(int n = 0; n < N; n++)
   {
     u[n] = u[n]*u[n];
     v[n] = sqrt(v[n]);
   }
-  R length = getTrajectoryLength(surface, &u[0], &v[0], N); // 6.70873356
+  length = getTrajectoryLength(surface, &u[0], &v[0], N); // 6.70873356
   rsPlotVectors(u, v);
+  // OK - the length of the trajectory in xyz-space has increased due to the deformation. This is
+  // what we expect.
 
   // Use the geodesic finder to optimize the weird initial trajectory into a geodesic:
   GF  gf;
   gf.setSurface(surface);
   bool success = gf.optimizeGeodesic(N, &u[0], &v[0]);
+  // This should turn the deformed trajectory back into a straight line when the surface is a 
+  // plane.
 
 
-  //bool success = gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
+  // Check, if the length is back to the length of the (straight line) geodesic:
+  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 5.91608000
+  // OK - this looks good! The length is indeed back to 5.916..., so not everything is totally 
+  // wrong...
 
 
-  length = getTrajectoryLength(surface, &u[0], &v[0], N);
   rsPlotVectors(u, v);
   // When the surface is the plane, then after the iteration, u and v have converged to the same
   // shape which means that the trajectory in xyz-space is indeed a straight line. However, the 
@@ -4338,6 +4348,8 @@ void testGeodesic()
   // be enough, if they are linearly related.
 
   // Maybe plot also array for x,y,z that would result from the final u,v
+
+
 
 
   // 5.20946980 after init for someSurface with N = 11 

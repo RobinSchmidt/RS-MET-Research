@@ -2869,12 +2869,14 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
     T dx = xH - xL;
     T dy = yH - yL;
     T dz = zH - zL;
-    return dx*dx + dy*dy + dz*dz;     // squared segment length
-    //return sqrt(dx*dx + dy*dy + dz*dz); // actual segment length
+    return dx*dx + dy*dy + dz*dz;     // squared segment length - seems good
+    //return rsAbs(dx) + rsAbs(dy) + rsAbs(dz); // nope - not good either
+    //return sqrt(dx*dx + dy*dy + dz*dz); // actual segment length - not good!
   };
   // -Maybe make this a member function
   // -Try using the square segment length - don't take the sqrt
   // -Try using other length measures like the sum of the absolute values
+  // -Maybe try raising the ds^2 to some power and see how this affects convergence
 
   // Helper function to compute the length of the bi-segment from (uL,vL) to (uM,vM) to (uH,vH).
   // The indices L,M,H stand for low, middle, high. 
@@ -2914,7 +2916,6 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   bool converged = false;
   T thresh = T(1) / T(8192); // 1/2^13. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
-  //int maxIts = 10000;
   while(!converged && numIts < maxIts)
   {
     // Estimate changes in total squared length when we wiggle u[i], v[i]
@@ -2923,7 +2924,7 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
       du[n] = lengthChangeU(n);  // dL / du[n] ...or something proportional
       dv[n] = lengthChangeV(n);  // dL / dv[n]
     }
-    // Maybe we need to divide by N?
+    // Maybe we need to divide by N? ...naah - seems fine.
 
     // Adapt the trajectory:
     for(int n = 1; n < N-1; n++)
@@ -2950,11 +2951,28 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   // Maybe return the number of iterations. This is interesting for client code during development.
 
   // ToDo:
+  // -Let the algorithm automatically select an appropriate adaption rate like so:
+  //  -After each iteration, check, if the length has actually decreased. 
+  //   -If yes, increase the adaption rate by a factor of 2.
+  //   -If not, undo the step and decrease the adaption rate by a factor of 4.
+  //  -Maybe the scheme can be refined. Maybe there should be a case, where the adaption rate
+  //   stays the same and maybe that case should actually be the most likely one. Otherwise, the
+  //   too erratic oscillations of the adaption rate may make things worse.
+  //  -Maybe when the length descreased by some relative amount within a certain "good" range, keep
+  //   the rate. If the length increased, undo the step and decrease the rate. If the length 
+  //   decreased but only by a small (relative) amount, increase the rate. Maybe we should say that
+  //   the good range is a length decrease by 5%-10%. So:
+  //   -Increase of length leads to taking back the step and decrease of adaption rate
+  //   -Decrease of length by an amount >= 10% lets us keep the rate as is
+  //   -Decrease of length by an amount  < 10% lets us increase the rate
+  //   The 10% should not be hardcoded but be a user parameter with a reasonable default. The 
+  //   increase/decrease factors may also be exposed as user parameters. Maybe by default use 2 for
+  //   the increase and 4 for the decrease (i.e. multiply by 1/4).
   // -Include a way to normalize the speed of the trajectory. Maybe this can be done by introducing
   //  another term in the local gradient that does depend on the relative difference of the
   //  partial segments in the bisegment at n. Currently, the function we minimize is the length
   //  of each bisegment with no regard to the relative lengths of the two partial segments that 
-  //  make up the bisegment.
+  //  make up the bisegment. ...not necesa
 }
 
 //-------------------------------------------------------------------------------------------------

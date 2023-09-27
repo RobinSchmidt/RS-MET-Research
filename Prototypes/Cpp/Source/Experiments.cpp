@@ -4327,7 +4327,7 @@ void testGeodesic()
   // Geodesic parameters (endpoints and number of points):
   R   u1 = 0, v1 = 0;        // Start point
   R   u2 = 1, v2 = 1;        // End point
-  int N  = 51;              // Number of points. Should be at least 2.
+  int N  = 51;               // Number of points. Should be at least 2.
   R length;
 
   R adaptRate = 0.01;

@@ -13256,12 +13256,12 @@ void setupForSquarePlot(rsFieldPlotter2D<T>* plt)
 
 // Like splotA but instead produces a contour map:
 template<class T>
-void cplotA(std::function<float(T x, T y)> f,
+void cplotA(std::function<T(T x, T y)> f,  // why float? use T
   T xMin, T xMax, T yMin, T yMax, 
   int Nx, int Ny, int numContours, 
   T zMin = 0, T zMax = 0)
 {
-  rsContourMapPlotter<float> plt;
+  rsContourMapPlotter<T> plt;
   plt.setFunction(f);
   plt.setInputRange(xMin, xMax, yMin, yMax);
   plt.setOutputRange(zMin, zMax);
@@ -13273,7 +13273,7 @@ void cplotA(std::function<float(T x, T y)> f,
 };
 
 // Like splotA and cplotA but produces a vector field plot.
-template<class Real>
+template<class Real>  // use T
 void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
   Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
 {
@@ -13281,12 +13281,27 @@ void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
   plt.setFunction(f);
   plt.setInputRange(xMin, xMax, yMin, yMax);
   plt.setArrowDensity(Nx, Ny);
-  plt.setPixelSize(600, 600);
+  plt.setPixelSize(600, 600);  // obsolete?
   //plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9m, false);
   plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
   setupForSquarePlot(&plt);
   plt.plot();
 };
+
+template<class T>
+void plotGradientField(std::function<T(T x, T y)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+{
+  rsGradientFieldPlotter<T> plt;
+  plt.setFunction(f);
+  plt.setInputRange(xMin, xMax, yMin, yMax);
+  plt.setArrowDensity(Nx, Ny);
+  plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
+  setupForSquarePlot(&plt);
+  plt.plot();
+}
+
+
 
 
 void testPotentialPlotter()
@@ -13714,9 +13729,10 @@ void polyaPlotExperiments()
 
   // Abbreviations for functions to create a  surface-, contour- and vector- (or arrow-) plot via
   // Gnuplot:
-  auto plotS = ::splotA<R>;    // Surface
-  auto plotC = ::cplotA<R>;    // Contours
+  auto plotS = ::splotA<R>;              // Surface
+  auto plotC = ::cplotA<R>;              // Contours
   //auto vplotA = ::vplotA<R>;
+  auto plotG = ::plotGradientField<R>;
 
   // Create and set up the plotters for the vector fields and contour maps:
   //rsContourMapPlotter<R>  pltC;
@@ -13728,7 +13744,8 @@ void polyaPlotExperiments()
   // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
   plotC([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
-  plotS([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
+  //plotS([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
+  plotG([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 21, 21);
   // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
   // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
   // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
@@ -13748,6 +13765,9 @@ void polyaPlotExperiments()
   // I think -8,+8,49 works for the last 3 parameters because 16/48 = 1/3 so -2/3 and +2/3 are 
   // among the contour levels.
 
+  
+ 
+
 
 
   // 2 saddles at i,-i:
@@ -13755,6 +13775,7 @@ void polyaPlotExperiments()
   // P(x,y) = 1/3*x^3 - x*y^2 + x
   auto zerosAt_I_mI = [](R x, R y) { return x*x*x/3 - x*y*y + x; };
   plotC([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  plotG([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 21, 21);
   // This landscape is also problematic. We would actually have to go along a contour to reach the 
   // next saddle.
 

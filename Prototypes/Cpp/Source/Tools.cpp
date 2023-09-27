@@ -2857,8 +2857,8 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
     T dx = xH - xL;
     T dy = yH - yL;
     T dz = zH - zL;
-    //return dx*dx + dy*dy + dz*dz;     // squared segment length
-    return sqrt(dx*dx + dy*dy + dz*dz); // actual segment length
+    return dx*dx + dy*dy + dz*dz;     // squared segment length
+    //return sqrt(dx*dx + dy*dy + dz*dz); // actual segment length
   };
   // -Maybe make this a member function
   // -Try using the square segment length - don't take the sqrt

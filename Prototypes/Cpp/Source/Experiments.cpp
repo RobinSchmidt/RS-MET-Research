@@ -4348,8 +4348,11 @@ void testGeodesic()
     //u[n] = pow(u[n], 2.0);
     //v[n] = pow(v[n], 0.5);
 
-    u[n] = pow(u[n], 2.8);
-    v[n] = pow(v[n], 0.7);
+    //u[n] = pow(u[n], 2.8);
+    //v[n] = pow(v[n], 0.7);
+
+    u[n] = u[n] + 0.1 * sin(3 * 2*PI*u[n]);
+    v[n] = v[n] - 0.1 * sin(2 * 2*PI*v[n]);
   }
   length = getTrajectoryLength(surface, &u[0], &v[0], N); // 6.70873356
   rsPlotVectors(u, v);
@@ -4380,7 +4383,11 @@ void testGeodesic()
   // the squared length instead of the length itself, the final result looks much closer to a 
   // straight line when initializing u with squares and v with sqrt. Figure out if the squared 
   // length works better in general or if this is an artifact of the particular initialization 
-  // function. For other powers, it seems also to be better
+  // function. For other powers, it seems also to be better.
+  // I think, it could be possible that using the sum of squares, i.e. the squared lengths, 
+  // automatically penalizes imbalances in the two subsegment lengths that make up the bisegment.
+  // That would be cool! We would not need to take any special care to explicitly try to make the
+  // speed constant. 
 
   // Maybe plot also array for x,y,z that would result from the final u,v
 

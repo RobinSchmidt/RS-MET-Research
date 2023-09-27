@@ -4341,11 +4341,11 @@ void testGeodesic()
   // Now deform the initial shape in uv-space into something non-straight:
   for(int n = 0; n < N; n++)
   {
-    u[n] = pow(u[n], 2.8);
-    v[n] = pow(v[n], 0.7);
+    //u[n] = pow(u[n], 2.8);
+    //v[n] = pow(v[n], 0.7);
 
-    //u[n] = u[n] + 0.1 * sin(3 * 2*PI*u[n]);
-    //v[n] = v[n] - 0.1 * sin(2 * 2*PI*v[n]);
+    u[n] = u[n] + 0.1 * sin(3 * 2*PI*u[n]);
+    v[n] = v[n] - 0.1 * sin(2 * 2*PI*v[n]);
   }
   length = getTrajectoryLength(surface, &u[0], &v[0], N); // 6.70873356
   rsPlotVectors(u, v);

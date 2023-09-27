@@ -2777,7 +2777,7 @@ public:
   and v are the arrays for the output and they must have length N. At the end, we will have
   u[0] = u1, v[0] = v1, u[N-1] = u2, v[N-1] = v2 and the points in between are filled appropriately
   so as to produce a sampled geodesic. */
-  void findGeodesic(T u1, T v1, T u2, T v2, int numPoints, T* u, T* v);
+  bool findGeodesic(T u1, T v1, T u2, T v2, int numPoints, T* u, T* v);
 
 
   /** Computes length of the segment between () */
@@ -2810,7 +2810,7 @@ protected:
 };
 
 template<class T>
-void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v)
+bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v)
 {
   // Temporary arrays to hold the partial derivatives:
   std::vector<T> du(N), dv(N);
@@ -2838,10 +2838,12 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
     T dx = xH - xL;
     T dy = yH - yL;
     T dz = zH - zL;
-    T ds = sqrt(dx*dx + dy*dy + dz*dz);
-    return ds;
+    //return dx*dx + dy*dy + dz*dz;     // squared segment length
+    return sqrt(dx*dx + dy*dy + dz*dz); // actual segment length
+    //return ds;
   };
   // maybe make this a member function
+  // maybe use the square segment length - don't take the sqrt
 
   // Helper function to compute the length of the bi-segment from (uL,vL) to (uM,vM) to (uH,vH).
   // The indices L,M,H stand for low, middle, high. 
@@ -2849,6 +2851,7 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   {
     return segmentLength(uL, vL, uM, vM) + segmentLength(uM, vM, uH, vH);
   };
+  // Can be optimized to use only 3 calls to surface() instead of the 4 used now
 
   // Helper function to compute change in length of the bisegment at node n when we wiggle u[n]
   // ...explain better...computes the local partial derivative
@@ -2877,8 +2880,8 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
   // affect the total length ...TBC...
   bool converged = false;
-  T etaU   = 0.002;               // Adaption rate. Tweak to optimze convergence speed
-  T etaV   = 0.002;
+  T etaU   = 0.005;               // Adaption rate. Tweak to optimze convergence speed
+  T etaV   = 0.005;
   T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
   int maxIts = 10000;
@@ -2911,6 +2914,7 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
     numIts++;
   }
 
+  return converged;
 
   int dummy = 0;
 

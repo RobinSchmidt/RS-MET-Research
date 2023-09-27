@@ -4257,8 +4257,10 @@ void testGeodesic()
   // Some random surface that I just made up:
   Surf someSurface = [](R u, R v, R* x, R* y, R* z)
   {
-    *x = u*u*v + 2*u;
-    *y = v*v*u + 3*v;
+    //*x = u*u*v + 2*u;
+    //*y = v*v*u + 3*v;
+    *x = exp(u) * sin(v);
+    *y = exp(v) * cos(u);
     *z = sqrt(u*u + v*v);
   };
 
@@ -4298,24 +4300,24 @@ void testGeodesic()
 
   R   u1 = 0, v1 = 0;        // Start point
   R   u2 = 1, v2 = 1;        // End point
-  int N  = 101;              // Number of points. Should be at least 2.
+  int N  = 51;               // Number of points. Should be at least 2.
 
   // 
   //Vec u(N), v(N);
   Vec u = rsRangeLinear(u1, u2, N);
   Vec v = rsRangeLinear(v1, v2, N);
 
-  R length = getTrajectoryLength(surface, &u[0], &v[0], N); 
+  R length = getTrajectoryLength(surface, &u[0], &v[0], N); // 2.83332992
 
 
   GF  gf;
   gf.setSurface(surface);
-  gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
+  bool success = gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
 
 
 
 
-  length = getTrajectoryLength(surface, &u[0], &v[0], N); 
+  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 2.79550314
   // 5.20946980 after init for someSurface with N = 11 
   // 5.20757866 after iteration with eta = 0.01. Something is clearly wrong! We stay close to
   // the initial length. Also, it doesn't seem to converge

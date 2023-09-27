@@ -4235,16 +4235,22 @@ void testGeodesic()
 
 
   // Define the surface:
+
+  // A simple plane:
+  Surf plane = [](R u, R v, R* x, R* y, R* z)
+  {
+    *x = 1 + 2*u + 3*v;
+    *y = 2 - 1*u + 2*v;
+    *z = 5 + 4*u - 1*v;
+  };
+
+  // Hyperboloic paraboloid in polar coordinates (I think - verify!):
   Surf polarHyperbParab = [](R u, R v, R* x, R* y, R* z)
   {
     *x = u * cos(v);
     *y = u * sin(v);
     *z = *x * *x  -  *y * *y;  // z = x^2 - y^2
   };
-  // This is a hyperboloic paraboloid in polar coordinates...I think...that's what I had in mind,
-  // at least.
-  // rename function to polarHyperbParab
-  // We interpret u,v as radius and angle, i.e. as polar coordinates,
 
   // Hyperbolic Paraboloid:
   Surf hyperbParab = [](R u, R v, R* x, R* y, R* z)
@@ -4265,7 +4271,8 @@ void testGeodesic()
   };
 
 
-  Surf surface = someSurface;
+
+  Surf surface = plane;
 
 
   // Helper function to compute the length of a trajectory in xyz-space given a sequence of N 
@@ -4295,35 +4302,43 @@ void testGeodesic()
 
 
   // Geodesic parameters (endpoints and number of points):
-  //R   u1 = 0.5, v1 = PI/2;   // Start point
-  //R   u2 = 2.0, v2 = PI;     // End point
-
   R   u1 = 0, v1 = 0;        // Start point
   R   u2 = 1, v2 = 1;        // End point
   int N  = 51;               // Number of points. Should be at least 2.
 
-  // 
-  //Vec u(N), v(N);
+ 
+  // Initialize a trajectory:
   Vec u = rsRangeLinear(u1, u2, N);
   Vec v = rsRangeLinear(v1, v2, N);
 
-  R length = getTrajectoryLength(surface, &u[0], &v[0], N); // 2.833...
+  // Use some weird initial shape:
+  for(int n = 0; n < N; n++)
+  {
+    u[n] = u[n]*u[n];
+    v[n] = sqrt(v[n]);
+  }
+  R length = getTrajectoryLength(surface, &u[0], &v[0], N); // 6.70873356
+  rsPlotVectors(u, v);
 
-
+  // Use the geodesic finder to optimize the weird initial trajectory into a geodesic:
   GF  gf;
   gf.setSurface(surface);
-  bool success = gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
+  bool success = gf.optimizeGeodesic(N, &u[0], &v[0]);
 
 
+  //bool success = gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
 
 
-  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 2.795...
+  length = getTrajectoryLength(surface, &u[0], &v[0], N);
+  rsPlotVectors(u, v);
+  // Maybe plot also array for x,y,z that would result from the final u,v
+
+
   // 5.20946980 after init for someSurface with N = 11 
   // 5.20757866 after iteration with eta = 0.01. Something is clearly wrong! We stay close to
   // the initial length. Also, it doesn't seem to converge
 
-  rsPlotVectors(u, v);
-  // Maybe plot also array for x,y,z that would result from the final u,v
+
 
 
 

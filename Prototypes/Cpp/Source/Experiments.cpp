@@ -4330,7 +4330,7 @@ void testGeodesic()
   int N  = 51;               // Number of points. Should be at least 2.
   R length;
 
-  R adaptRate = 0.005;
+  R adaptRate = 0.01;
  
   // Initialize a trajectory as straight line:
   Vec u = rsRangeLinear(u1, u2, N);
@@ -4390,27 +4390,36 @@ void testGeodesic()
 
   // Observations:
   // -For the plane with thes sinusoidally wiggly initialization, we get the following numIts:
+  //
   //    adaptRate = 0.001, N = 51  ->  numIts = 4644
-  //    adaptRate = 0.005, N = 51  ->  numIts = 829
+  //    adaptRate = 0.005, N = 51  ->  numIts = 904
   //    adaptRate = 0.01,  N = 51  ->  numIts = 452
-  //    adaptRate = 0.02,  N = 51  ->  numIts = 38 but it FAILS!
-  //  How can it fail (i.e. not converge) but nevertheless return with an iteration nmuber less
-  //  than maxIts? The du,dv arrays do indeed drop to zero at iteration 38. How can this be? Maybe
+  //    adaptRate = 0.02,  N = 51  ->  numIts = 10000 and it FAILS!
+  //    adaptRate = 0.02,  N = 51  ->  numIts = 17    and it FAILS!
+  //
+  //  How can it fail (i.e. not converge) but nevertheless return with an iteration number less
+  //  than maxIts? The du,dv arrays do indeed drop to zero at iteration 17. How can this be? Maybe
   //  in lengthChangeU/V the (sH - sL) difference produce zero when sH and sL are out of the sane
   //  range? Adding an RAPT::rsAssert(sH < 10000)  to the local function  lengthChangeU() in
   //  rsGeodesicFinder<T>::optimizeGeodesic does indeed trigger. I guess the numbers are both very
   //  big but relatively close to each other such that their difference numerically evaluates
   //  to zero. For a production version of the code, we should be able to detect such situations.
   //  During research and experimentation, we may get away with it.
-
+  //
+  // Conclusion:
+  // -For the plane as example surface and adaption rate of around 0.01 produces the fastest 
+  //  possible convergence. Going higher leads to divergence and going lower slows down the 
+  //  convergence. At that rate, we need around 500 iterations.
+  //
   // ToDo:
-  // -Factor out the iteration function such that it can be called separately without the init
-  //  step.
+  // -Check, if the number of iterations and/or desired adaption rates depend on the number of 
+  //  points N. If so, try to figure out a normalization scheme to make it independent.
+
 
 
   // See also:
   // - https://de.wikipedia.org/wiki/Regul%C3%A4re_Fl%C3%A4che
-
+  //
   // Example surfaces:
   // -Helicoid: https://mathinsight.org/parametrized_surface_introduction
   // -Cone and cylinder: https://mathinsight.org/parametrized_surface_examples

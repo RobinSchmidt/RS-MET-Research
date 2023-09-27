@@ -4255,7 +4255,7 @@ void testGeodesic()
   };
 
 
-  Surf surface = polarHyperbParab;
+  Surf surface = hyperbParab;
 
 
 
@@ -4298,7 +4298,7 @@ void testGeodesic()
   R length = getTrajectoryLength(surface, &u[0], &v[0], N); 
   //
   // 5.63763714 after init for polarHyperbParab
-
+  // 4.24971485 after init for hyperbParab
 
 
   int dummy = 0;

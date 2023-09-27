@@ -39,7 +39,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifold2();
   //testManifoldPolar();
   //testManifoldSphere();
-  testManifoldEarth();
+  //testManifoldEarth();
   testGeodesic();
   
   //testSortedSet();

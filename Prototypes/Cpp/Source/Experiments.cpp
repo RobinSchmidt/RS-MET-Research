@@ -4250,7 +4250,7 @@ void testGeodesic()
   // More experimentation is needed...TBC...
 
 
-  using R    = float;  // Real numbers
+  using R    = float;                 // Real number type
   using GF   = rsGeodesicFinder<R>;
   using Vec  = std::vector<R>;
   using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;
@@ -4267,6 +4267,7 @@ void testGeodesic()
     *z = 5 + 4*u - 1*v;
   };
 
+  /*
   // Hyperboloic paraboloid in polar coordinates (I think - verify!):
   Surf polarHyperbParab = [](R u, R v, R* x, R* y, R* z)
   {
@@ -4292,6 +4293,7 @@ void testGeodesic()
     *y = exp(v) * cos(u);
     *z = sqrt(u*u + v*v);
   };
+  */
 
 
 
@@ -4320,7 +4322,8 @@ void testGeodesic()
     }
     return length;
   };
-  // This function may actually be useful to have in the library so maybe drag it out.
+  // This function may actually be useful to have in the library so maybe drag it out. Maybe 
+  // rename to getCurveLength, getSurfaceCurveLength, getCurveOnSurfaceLength
 
 
   // Geodesic parameters (endpoints and number of points):
@@ -4335,7 +4338,7 @@ void testGeodesic()
   // Initialize a trajectory as straight line:
   Vec u = rsRangeLinear(u1, u2, N);
   Vec v = rsRangeLinear(v1, v2, N);
-  R length = getTrajectoryLength(surface, &u[0], &v[0], N); // 5.91607761
+  R geodesicLength = getTrajectoryLength(surface, &u[0], &v[0], N); // 5.91607761
   // When the surface is a plane, this straight line in uv-space gives a straight line on the plane
   // in xyz-space which *is* the geodesic on the plane. Therefore, the length value will be the
   // length of the geodesic in the case of a plane.
@@ -4346,7 +4349,7 @@ void testGeodesic()
     u[n] = u[n] + 0.1 * sin(3 * 2*PI*u[n]);
     v[n] = v[n] + 0.2 * sin(2 * 2*PI*v[n]);
   }
-  length = getTrajectoryLength(surface, &u[0], &v[0], N); // 9.94319916
+  R initialCurveLength = getTrajectoryLength(surface, &u[0], &v[0], N); // 9.94319916
   //rsPlotVectors(u, v);
   // OK - the length of the trajectory in xyz-space has increased due to the deformation. This is
   // what we expect.
@@ -4361,10 +4364,19 @@ void testGeodesic()
 
 
   // Check, if the length is back to the length of the (straight line) geodesic:
-  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 5.91608000
+  bool ok = true;
+  R minimizedCurveLength = getTrajectoryLength(surface, &u[0], &v[0], N);  // 5.91608000
+  R err = geodesicLength - minimizedCurveLength;
+  R tol = 1.e-5;
+  ok &= rsAbs(err <= tol);
+
+
   // OK - this looks good! The length is indeed back to 5.916..., so not everything is totally 
   // wrong...
-
+  // ToDo: add a programmtic test for whether the length here is equal to the length of the 
+  // original geodesic:
+  // bool ok;
+  // ok &= rsIsCloseTo(length, geodesicLength);
 
   rsPlotVectors(u, v);
   // When the surface is the plane, then after the iteration, u and v have converged to the same
@@ -4381,6 +4393,10 @@ void testGeodesic()
   // automatically penalizes imbalances in the two subsegment lengths that make up the bisegment.
   // That would be cool! We would not need to take any special care to explicitly try to make the
   // speed constant. 
+
+  // OK - let's now try a more interesting surface. Maybe let's try the Polya potential of
+  // f(z) = (z+1)*(z-1)*(z+i) and try to finde the geodesic between the saddles at i, +1. But maybe
+  // let's do that in polyaPlotExperiments()
 
   // Maybe plot also array for x,y,z that would result from the final u,v
 
@@ -14037,7 +14053,6 @@ void polyaPlotExperiments()
     R y2 = y*y;  // y^2
     R x2 = x*x;  // x^2
     return -3./2*x2*y2 + x2*y - 1./2*x2 + 1./4*x2*x2 + 1./4*y2*y2 - 1./3*y2*y + 1./2*y2 - y;
-    //return x2*x2/4 - 3*x2*y2/2 + x2*y - 1*x2/2 - 1*y2*y/3 + 1*y2/2 - y;
   };
   plotC([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
         -1.5, +1.5, -1.5, +1.5, 201, 201, 49, -2.f, +2.f);
@@ -14087,6 +14102,8 @@ void polyaPlotExperiments()
 
 
   // ToDo:
+
+  // -Find a geodesic between two saddles of zerosAt_1_m1_I. See testGeodesic()
   // -Try other configurations of saddles:
   //  -around regular polygons (triangle, square, pentagon, hexagon, ...)
   //  -along a line

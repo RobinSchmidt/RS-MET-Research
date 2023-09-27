@@ -4235,7 +4235,7 @@ void testGeodesic()
 
 
   // Define the surface:
-  Surf S = [](R u, R v, R* x, R* y, R* z)
+  Surf polarHyperbParab = [](R u, R v, R* x, R* y, R* z)
   {
     *x = u * cos(v);
     *y = u * sin(v);
@@ -4243,7 +4243,21 @@ void testGeodesic()
   };
   // This is a hyperboloic paraboloid in polar coordinates...I think...that's what I had in mind,
   // at least.
+  // rename function to polarHyperbParab
   // We interpret u,v as radius and angle, i.e. as polar coordinates,
+
+  // Hyperbolic Paraboloid:
+  Surf hyperbParab = [](R u, R v, R* x, R* y, R* z)
+  {
+    *x = u;
+    *y = v;
+    *z = u*u - v*v;  // z = x^2 - y^2
+  };
+
+
+  Surf surface = polarHyperbParab;
+
+
 
   // Geodesic parameters (endpoints and number of points):
   R   u1 = 0.5, v1 = PI/2;   // Start point
@@ -4253,7 +4267,7 @@ void testGeodesic()
   // 
   Vec u(N), v(N);
   GF  gf;
-  gf.setSurface(S);
+  gf.setSurface(surface);
   gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
 
   // Helper function to compute the length of a trajectory in xyz-space given a sequence of N 
@@ -4281,7 +4295,9 @@ void testGeodesic()
   // This function may actually be useful to have in the library so maybe drag it out.
 
 
-  R length = getTrajectoryLength(S, &u[0], &v[0], N); // 5.63763714 after init
+  R length = getTrajectoryLength(surface, &u[0], &v[0], N); 
+  //
+  // 5.63763714 after init for polarHyperbParab
 
 
 

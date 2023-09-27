@@ -2818,7 +2818,7 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // Initialize the u,v arrays by linearly interpolating between u1,u2 and v1,v2 respectively:
   AT::fillWithRangeLinear(u, N, u1, u2);
   AT::fillWithRangeLinear(v, N, v1, v2);
-  //return;  // preliminary, during development
+  return;  // preliminary, during development
 
 
 
@@ -2875,7 +2875,9 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   T etaU   = 1;               // Adaption rate. Tweak to optimze convergence speed
   T etaV   = 1;
   T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
-  while(!converged)
+  int numIts = 0;
+  int maxIts = 1000;
+  while(!converged && numIts <= maxIts)
   {
     // Estimate changes in total squared length when we wiggle u[i], v[i]
     for(int n = 1; n < N-1; n++)
@@ -2900,6 +2902,8 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
       if(rsAbs(du[n]) > thresh || rsAbs(dv[n]) > thresh) {
         converged = false;
         break; }}
+
+    numIts++;
   }
 
 

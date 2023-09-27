@@ -4300,14 +4300,14 @@ void testGeodesic()
 
   R   u1 = 0, v1 = 0;        // Start point
   R   u2 = 1, v2 = 1;        // End point
-  int N  = 51;               // Number of points. Should be at least 2.
+  int N  = 21;               // Number of points. Should be at least 2.
 
   // 
   //Vec u(N), v(N);
   Vec u = rsRangeLinear(u1, u2, N);
   Vec v = rsRangeLinear(v1, v2, N);
 
-  R length = getTrajectoryLength(surface, &u[0], &v[0], N); // 2.83332992
+  R length = getTrajectoryLength(surface, &u[0], &v[0], N); // 2.833...
 
 
   GF  gf;
@@ -4317,7 +4317,7 @@ void testGeodesic()
 
 
 
-  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 2.79550314
+  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 2.795...
   // 5.20946980 after init for someSurface with N = 11 
   // 5.20757866 after iteration with eta = 0.01. Something is clearly wrong! We stay close to
   // the initial length. Also, it doesn't seem to converge

@@ -4229,13 +4229,13 @@ void testGeodesic()
 {
   using R    = float;  // Real numbers
   using GF   =  rsGeodesicFinder<R>;
-
-  using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>; 
+  using Vec  = std::vector<R>;
+  using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;
   // Function defining a parametric surface x(u,v), y(u,v), z(u,v)
 
 
   // Define the surface:
-  Surf s = [](R u, R v, R* x, R* y, R* z)
+  Surf S = [](R u, R v, R* x, R* y, R* z)
   {
     *x = u * cos(v);
     *y = u * sin(v);
@@ -4245,9 +4245,16 @@ void testGeodesic()
   // at least.
   // We interpret u,v as radius and angle, i.e. as polar coordinates,
 
+  // Geodesic parameters (endpoints and number of points):
+  R   u1 = 0.5, v1 = PI/2;   // Start point
+  R   u2 = 2.0, v2 = PI;     // End point
+  int N  = 11;               // Number of points. Should be at least 2.
 
-
-  GF gf;
+  // 
+  Vec u(N), v(N);
+  GF  gf;
+  gf.setSurface(S);
+  gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
 
 
 

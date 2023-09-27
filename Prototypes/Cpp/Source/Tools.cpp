@@ -2770,6 +2770,12 @@ public:
   /** Sets up the 3 bivariate mathematical functions that define the surface. @see Surface. */
   void setSurface(const Surface& newSurface) { surface = newSurface; }
 
+
+  /** Sets the adaption rates for the gradient descent procudure. */
+  void setAdaptionRates(T newRateU, T newRateV) { etaU = newRateU; etaV = newRateV; }
+  // ToDo: document this better
+
+
   /** Computes a geodesic from point p1 to point p2 where p1 = (u1,v1) and p2 = (u2,v2), i.e. the
   points are given by their u,v coordinates in the parameter space. So, these are points on the 2D 
   map of the surface, not points on the surface itself in the 3D space. The geodesic is produced as
@@ -2806,6 +2812,12 @@ protected:
   T hv = T(1) / T(1024);
 
   int maxIts = 10000;
+
+  // Adaption rate. Tweak to optimze convergence speed:
+  T etaU = 0.01;
+  T etaV = 0.01;
+  // rename to adaptU, adaptV or learnU, learnV...not sure...
+
 
   // ToDo: 
   // -Have a member that decides whether we should equalize the speed of the geodesic, i.e. 
@@ -2881,6 +2893,7 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
     RAPT::rsAssert(n >= 1 && n < N-1);
     T sH = biSegmentLength(u[n-1], v[n-1], u[n]+hu, v[n], u[n+1], v[n+1]);
     T sL = biSegmentLength(u[n-1], v[n-1], u[n]-hu, v[n], u[n+1], v[n+1]);
+    //RAPT::rsAssert(sH < 10000);  // for debug
     return (sH - sL) / (2*hu);
   };
 
@@ -2899,9 +2912,6 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
   // affect the total length ...TBC...
   bool converged = false;
-  T etaU   = 0.04;               // Adaption rate. Tweak to optimze convergence speed
-  T etaV   = 0.04;
-  //T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
   T thresh = T(1) / T(8192); // 1/2^13. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
   //int maxIts = 10000;

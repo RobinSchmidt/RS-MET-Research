@@ -4329,6 +4329,8 @@ void testGeodesic()
   R   u2 = 1, v2 = 1;        // End point
   int N  = 51;               // Number of points. Should be at least 2.
   R length;
+
+  R adaptRate = 0.005;
  
   // Initialize a trajectory as straight line:
   Vec u = rsRangeLinear(u1, u2, N);
@@ -4341,27 +4343,25 @@ void testGeodesic()
   // Now deform the initial shape in uv-space into something non-straight:
   for(int n = 0; n < N; n++)
   {
-    //u[n] = pow(u[n], 2.8);
-    //v[n] = pow(v[n], 0.7);
-
     u[n] = u[n] + 0.1 * sin(3 * 2*PI*u[n]);
-    v[n] = v[n] - 0.1 * sin(2 * 2*PI*v[n]);
+    v[n] = v[n] + 0.2 * sin(2 * 2*PI*v[n]);
   }
-  length = getTrajectoryLength(surface, &u[0], &v[0], N); // 6.70873356
-  //rsPlotVectors(u, v);
+  length = getTrajectoryLength(surface, &u[0], &v[0], N); // 9.94319916
+  rsPlotVectors(u, v);
   // OK - the length of the trajectory in xyz-space has increased due to the deformation. This is
   // what we expect.
 
   // Use the geodesic finder to optimize the weird initial trajectory into a geodesic:
   GF  gf;
   gf.setSurface(surface);
+  gf.setAdaptionRates(adaptRate, adaptRate);
   int numIts = gf.optimizeGeodesic(N, &u[0], &v[0]);
   // This should turn the deformed trajectory back into a straight line when the surface is a 
   // plane.
 
 
   // Check, if the length is back to the length of the (straight line) geodesic:
-  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 5.9160...
+  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 5.91608000
   // OK - this looks good! The length is indeed back to 5.916..., so not everything is totally 
   // wrong...
 
@@ -4386,18 +4386,22 @@ void testGeodesic()
 
 
 
-
-  // 5.20946980 after init for someSurface with N = 11 
-  // 5.20757866 after iteration with eta = 0.01. Something is clearly wrong! We stay close to
-  // the initial length. Also, it doesn't seem to converge
-
-
-
-
-
   int dummy = 0;
 
-
+  // Observations:
+  // -For the plane with thes sinusoidally wiggly initialization, we get the following numIts:
+  //    adaptRate = 0.001, N = 51  ->  numIts = 4644
+  //    adaptRate = 0.005, N = 51  ->  numIts = 829
+  //    adaptRate = 0.01,  N = 51  ->  numIts = 452
+  //    adaptRate = 0.02,  N = 51  ->  numIts = 38 but it FAILS!
+  //  How can it fail (i.e. not converge) but nevertheless return with an iteration nmuber less
+  //  than maxIts? The du,dv arrays do indeed drop to zero at iteration 38. How can this be? Maybe
+  //  in lengthChangeU/V the (sH - sL) difference produce zero when sH and sL are out of the sane
+  //  range? Adding an RAPT::rsAssert(sH < 10000)  to the local function  lengthChangeU() in
+  //  rsGeodesicFinder<T>::optimizeGeodesic does indeed trigger. I guess the numbers are both very
+  //  big but relatively close to each other such that their difference numerically evaluates
+  //  to zero. For a production version of the code, we should be able to detect such situations.
+  //  During research and experimentation, we may get away with it.
 
   // ToDo:
   // -Factor out the iteration function such that it can be called separately without the init

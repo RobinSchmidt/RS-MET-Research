@@ -4256,6 +4256,32 @@ void testGeodesic()
   gf.setSurface(S);
   gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
 
+  // Helper function to compute the length of a trajectory in xyz-space given a sequence of N 
+  // points in uv-space:
+  auto getTrajectoryLength = [](const Surf& surface, R* u, R* v, int N)
+  {
+    R length = 0;
+    R xOld, yOld, zOld;
+    surface(u[0], v[0], &xOld, &yOld, &zOld);
+    for(int n = 1; n < N; n++)
+    {
+      R x, y, z;
+      surface(u[n], v[n], &x, &y, &z);
+      R dx = x - xOld;
+      R dy = y - yOld;
+      R dz = z - zOld;
+      R ds = sqrt(dx*dx + dy*dy + dz*dz);  // Length of segment
+      length += ds;
+      xOld = x;
+      yOld = y;
+      zOld = z;
+    }
+    return length;
+  };
+
+
+  R length = getTrajectoryLength(S, &u[0], &v[0], N); // 5.63763714 after init
+
 
 
   int dummy = 0;

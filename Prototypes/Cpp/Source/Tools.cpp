@@ -2818,7 +2818,7 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // Initialize the u,v arrays by linearly interpolating between u1,u2 and v1,v2 respectively:
   AT::fillWithRangeLinear(u, N, u1, u2);
   AT::fillWithRangeLinear(v, N, v1, v2);
-  return;  // preliminary, during development
+  //return;  // preliminary, during development
 
 
 
@@ -2872,8 +2872,8 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
   // affect the total length ...TBC...
   bool converged = false;
-  T etaU   = 1;               // Adaption rate. Tweak to optimze convergence speed
-  T etaV   = 1;
+  T etaU   = 0.02;               // Adaption rate. Tweak to optimze convergence speed
+  T etaV   = 0.02;
   T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
   int maxIts = 1000;

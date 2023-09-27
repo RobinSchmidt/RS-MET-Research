@@ -4298,7 +4298,9 @@ void testGeodesic()
   R length = getTrajectoryLength(surface, &u[0], &v[0], N); 
   //
   // 5.63763714 after init for polarHyperbParab
-  // 4.24971485 after init for hyperbParab
+  // 4.24971485 after init for hyperbParab, 4.24930620 after iteration -> not much change at all
+  // WTF? Maybe for a hyperbolic paraboloid, the projections of the geodesics down to the 
+  // xy-plane are indeed straight lines?
 
 
   int dummy = 0;

@@ -4341,8 +4341,15 @@ void testGeodesic()
   // Now deform the initial shape in uv-space into something non-straight:
   for(int n = 0; n < N; n++)
   {
-    u[n] = u[n]*u[n];
-    v[n] = sqrt(v[n]);
+    //u[n] = u[n]*u[n];
+    //v[n] = sqrt(v[n]);
+
+
+    //u[n] = pow(u[n], 2.0);
+    //v[n] = pow(v[n], 0.5);
+
+    u[n] = pow(u[n], 2.8);
+    v[n] = pow(v[n], 0.7);
   }
   length = getTrajectoryLength(surface, &u[0], &v[0], N); // 6.70873356
   rsPlotVectors(u, v);
@@ -4371,7 +4378,9 @@ void testGeodesic()
   // be enough, if they are linearly related.
   // It turns out that when in the local segmentLength() function in optimizeGeodesic() we return
   // the squared length instead of the length itself, the final result looks much closer to a 
-  // straight line when initializing u with squares and v with sqrt
+  // straight line when initializing u with squares and v with sqrt. Figure out if the squared 
+  // length works better in general or if this is an artifact of the particular initialization 
+  // function. For other powers, it seems also to be better
 
   // Maybe plot also array for x,y,z that would result from the final u,v
 

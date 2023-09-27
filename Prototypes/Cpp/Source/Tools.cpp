@@ -2821,13 +2821,7 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   //return;  // preliminary, during development
 
 
-  // Helper function to compute change in length...TBC..
-  /*
-  auto lengthChange = [](int n)
-  {
-  
-  };
-  */
+
 
 
   // Helper function to compute the length of the segment from (uL,vL) to (uH,vH). The indices L,H
@@ -2842,12 +2836,34 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
     T ds = sqrt(dx*dx + dy*dy + dz*dz);
     return ds;
   };
+  // maybe make this a member function
 
   // Helper function to compute the length of the bi-segment from (uL,vL) to (uM,vM) to (uH,vH).
-  // The indices L,M,H stand for low, middle, high
+  // The indices L,M,H stand for low, middle, high. 
   auto biSegmentLength = [&](T uL, T vL, T uM, T vM, T uH, T vH)
   {
     return segmentLength(uL, vL, uM, vM) + segmentLength(uM, vM, uH, vH);
+  };
+
+  // Helper function to compute change in length of the bisegment at node n when we wiggle u[n]
+  // ...explain better...computes the local partial derivative
+  // The bisegment at a node with index n is defined to be the pair of segments into and out of 
+  // the node.
+  auto lengthChangeU = [&](int n)
+  {
+    RAPT::rsAssert(n >= 1 && n < N-1);
+    T sH = biSegmentLength(u[n-1], v[n-1], u[n]+hu, v[n], u[n+1], v[n+1]);
+    T sL = biSegmentLength(u[n-1], v[n-1], u[n]-hu, v[n], u[n+1], v[n+1]);
+    return (sH - sL) / (2*hu);
+  };
+
+  // Same for v:
+  auto lengthChangeV = [&](int n)
+  {
+    RAPT::rsAssert(n >= 1 && n < N-1);
+    T sH = biSegmentLength(u[n-1], v[n-1], u[n], v[n]+hv, u[n+1], v[n+1]);
+    T sL = biSegmentLength(u[n-1], v[n-1], u[n], v[n]-hv, u[n+1], v[n+1]);
+    return (sH - sL) / (2*hv);
   };
 
 
@@ -2856,15 +2872,23 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
   // affect the total length ...TBC...
   bool converged = false;
+  T etaU   = 1;               // Adaption rate. Tweak to optimze convergence speed
+  T etaV   = 1;
   T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
   while(!converged)
   {
     // Estimate changes in total squared length when we wiggle u[i], v[i]
-    for(int i = 1; i < N-1; i++)
+    for(int n = 1; n < N-1; n++)
     {
+      du[n] = lengthChangeU(n);
+      dv[n] = lengthChangeV(n);
+    }
 
-
-
+    // Adapt the trajectory:
+    for(int n = 1; n < N-1; n++)
+    {
+      u[n] -= etaU * du[n];
+      v[n] -= etaV * dv[n];
     }
 
 
@@ -2872,14 +2896,23 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
     // or dv that is greater than our convergence threshold, we consider the algorithm not yet 
     // converged. If all values are <= thresh, the algo is considered converged.
     converged = true;
-    for(int i = 1; i < N-1; i++) {    // du,dv only contain interesting values from 1...N-2
-      if(rsAbs(du[i]) > thresh || rsAbs(dv[i]) > thresh) {
+    for(int n = 1; n < N-1; n++) {    // du,dv only contain interesting values from 1...N-2
+      if(rsAbs(du[n]) > thresh || rsAbs(dv[n]) > thresh) {
         converged = false;
         break; }}
   }
 
 
   int dummy = 0;
+
+  // ToDo:
+  // -Have a maxIterations member and stop the iteration when it is exceeded
+  // -Report whether or not we have converged in a boolean return value
+  // -Include a way to normalize the speed of the trajectory. Maybe this can be done by introducing
+  //  another term in the local gradient that does depend on the relative difference of the
+  //  partial segments in the bisegment at n. Currently, the function we minimize is the length
+  //  of each bisegment with no regard to the relative lengths of the two partial segments that 
+  //  make up the bisegment.
 }
 
 /*

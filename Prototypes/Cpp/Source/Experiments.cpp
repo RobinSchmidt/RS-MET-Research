@@ -4331,6 +4331,12 @@ void testGeodesic()
 
   length = getTrajectoryLength(surface, &u[0], &v[0], N);
   rsPlotVectors(u, v);
+  // When the surface is the plane, then after the iteration, u and v have converged to the same
+  // shape which means that the trajectory in xyz-space is indeed a straight line. However, the 
+  // functions for u,v themselves are not straight lines because we do not enforce unit speed.
+  // To define a line in x,y,z space, it's enough when u and v are the same, I think. It may even
+  // be enough, if they are linearly related.
+
   // Maybe plot also array for x,y,z that would result from the final u,v
 
 

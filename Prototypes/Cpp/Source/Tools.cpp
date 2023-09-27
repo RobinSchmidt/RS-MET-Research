@@ -2897,8 +2897,8 @@ bool rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
   // affect the total length ...TBC...
   bool converged = false;
-  T etaU   = 0.01;               // Adaption rate. Tweak to optimze convergence speed
-  T etaV   = 0.01;
+  T etaU   = 0.002;               // Adaption rate. Tweak to optimze convergence speed
+  T etaV   = 0.002;
   T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
   int maxIts = 10000;

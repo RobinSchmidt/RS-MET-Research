@@ -1190,6 +1190,7 @@ void writeToVideoFileMP4(
 // i get exactly the same filesize
 
 //=================================================================================================
+// Differential geometry stuff:
 
 /** Class for representing a parametric plane (parametrized by s and t) given in terms of 3 vectors
 u,v,w:
@@ -1342,6 +1343,7 @@ inline std::vector<T> rsChunk(const std::vector<T>& v, int start, int length)
   rsArrayTools::copy(&v[start], &r[0], length);
   return r;
 }
+// rename to rsSubArray or rsSubVector and move into RAPT
 
 //-------------------------------------------------------------------------------------------------
 
@@ -2734,6 +2736,70 @@ protected:
 // sphere) and the embedding space (e.g. R^3, the 3D Euclidean space)
 
 
+//-------------------------------------------------------------------------------------------------
+
+/** A class to find geodesics of a surface ...TBC...
+
+
+ToDo:
+-Maybe rename to rsGeodesicFinderParamSurf to indicate that it is meant for parametric surfaces. In
+ 3D, there are at least 2 way of defining a surface: parametrically as x(u,v), y(u,v), z(u,v)
+ or implicitly as F(x,y,z) = 0. Here, we assume a parametric definition.
+
+*/
+
+template<class T>
+class rsGeodesicFinder
+{
+
+public:
+
+  /** Computes a geodesic from point p1 to point p2. The geodesic is produced as a sequence of
+  N coordinate vectors g[i] where g[0] = p1 and g[N-1] = p2. Each g[i] represents a vector 
+  of coordinates u[i], v[i] along the geodesic. */
+  std::vector<RAPT::rsVector2D<T>> findGeodesic(rsVector2D<T> p1, rsVector2D<T> p2, int numPoints);
+  
+
+protected:
+
+  std::function<void(T u, T v, T* x, T* y, T* z)> xyz;
+  // Function that computes x,y,z from u,v where u,v are input parameters and x,y,z are output 
+  // parameters
+
+  // Approximation stepsizes for computing the partial derivatives:
+  T hu = T(1) / T(1024);
+  T hv = T(1) / T(1024);
+
+  // ToDo: 
+  // -Have a member that decides whether we should equalize the speed of the geodesic, i.e. 
+  //  whether or not we attempt to make the distances between the steps along the geodesic equal
+  //  in x,y,z-space.
+
+};
+
+template<class T>
+std::vector<RAPT::rsVector2D<T>> rsGeodesicFinder<T>::findGeodesic(
+  rsVector2D<T> p1, rsVector2D<T> p2, int numPoints)
+{
+  using Vec2D = RAPT::rsVector2D<T>;
+
+  std::vector<RAPT::rsVector2D<T>> geo(N), grd(N); // geodesic and gradient
+
+
+  // Something to do:
+  // -Init g[i] as a linear interpolation from p1 to p2 in coordinate space.
+  // -Iterate until convergence:
+  //  -At each inner point (i.e. for each i in 1...N-2) of the current geodesic estimate:
+  //   -Compute the local change of the distance function with respect to u[i], v[i]
+  //   -Adjust u[i], v[i] a little bit such that the distance becomes smaller
+
+  return geo;
+}
+
+
+//-------------------------------------------------------------------------------------------------
+// Coordinate conversion formulas:
+
 // formluas from:
 // https://en.wikipedia.org/wiki/Spherical_coordinate_system#Coordinate_system_conversions
 
@@ -2781,6 +2847,7 @@ void sphericalToCartesian(T r, T theta, T phi, T* x, T* y, T* z)
 //  close together (-> figure out details) - the bottom line is that we have to take care assigning
 //  u-coordinates to make sure, the specify a valid point
 
+//=================================================================================================
 // Set operations on std::vector (not yet tested):
 
 /** Returns a set C consisting of elements that are in A and in B. */

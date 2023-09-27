@@ -13900,7 +13900,8 @@ void polyaPlotExperiments()
   //  we need to define our target point and *then* we can attempt to find the right path and 
   //  therefore the right direction at evry point. But here, the path is the primary thin and the 
   //  direction forllows from it whereas in the other attempt, the direction was the primary thing
-  //  and we attempt to construct a path from it.
+  //  and we attempt to construct a path from it. Perhaps we can do it by haing an initial 
+  //  direction. Then we can just follow the geodesic that initially points into the direction.
 
 
 

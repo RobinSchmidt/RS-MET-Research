@@ -26,7 +26,18 @@ https://mathworld.wolfram.com/Atlas.html
 
 
 ToDo:
--Explain, how we can get a local parametrization from and implicit equation using partial derivatives...I'm not sure, if that's possible but I think, it should be.
+-There are at least 2 ways of defining a surface in 3D: 
+ -parametrically as x(u,v), y(u,v), z(u,v) - that's the DG approach
+ -implicitly as F(x,y,z) = 0 - that's the AG approach
+-An explicit form z = f(x,y) can be seen a special case of both:
+ parametric: x(u,v) = u, y(u,v) = v, z(u,v) = f(u,v)
+ implicit:   F(x, y, f(x,y)) = 0
+-Explain, how we can get a local parametrization from an implicit equation using
+ partial derivatives...I'm not sure, if that's possible but I think, it should be.
+-Maybe we could also try to convert locally to an explicit form. It would become locally
+ a 1D root-finding problem of F(x,y,z) = 0. Here, x,y are plugged in and can be seen as 
+ parameters and we want to find z.
+-Explain how we may get an implicit form from a given parametrization
 
 
 %An Amazing Theorem for Tangents (Fabricius-Bjerre Theorem)

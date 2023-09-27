@@ -4327,7 +4327,7 @@ void testGeodesic()
   // Geodesic parameters (endpoints and number of points):
   R   u1 = 0, v1 = 0;        // Start point
   R   u2 = 1, v2 = 1;        // End point
-  int N  = 51;               // Number of points. Should be at least 2.
+  int N  = 21;               // Number of points. Should be at least 2.
   R length;
 
   R adaptRate = 0.01;
@@ -4389,6 +4389,7 @@ void testGeodesic()
   int dummy = 0;
 
   // Observations:
+  //
   // -For the plane with thes sinusoidally wiggly initialization, we get the following numIts:
   //
   //    adaptRate = 0.001, N = 51  ->  numIts = 4644
@@ -4406,6 +4407,9 @@ void testGeodesic()
   //  to zero. For a production version of the code, we should be able to detect such situations.
   //  During research and experimentation, we may get away with it.
   //
+  // -When using an adaption rate of 0.01 and n = 21, we converge in 88 steps. That's a lot better
+  //  than 452 for the 51 points.
+  //
   // Conclusion:
   // -For the plane as example surface and adaption rate of around 0.01 produces the fastest 
   //  possible convergence. Going higher leads to divergence and going lower slows down the 
@@ -4414,6 +4418,8 @@ void testGeodesic()
   // ToDo:
   // -Check, if the number of iterations and/or desired adaption rates depend on the number of 
   //  points N. If so, try to figure out a normalization scheme to make it independent.
+  //  ...done - yes - there is some dependence
+  //  
 
 
 

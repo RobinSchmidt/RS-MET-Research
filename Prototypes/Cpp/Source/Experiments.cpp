@@ -4327,7 +4327,7 @@ void testGeodesic()
   // Geodesic parameters (endpoints and number of points):
   R   u1 = 0, v1 = 0;        // Start point
   R   u2 = 1, v2 = 1;        // End point
-  int N  = 101;              // Number of points. Should be at least 2.
+  int N  = 51;              // Number of points. Should be at least 2.
   R length;
 
   R adaptRate = 0.01;
@@ -4347,7 +4347,7 @@ void testGeodesic()
     v[n] = v[n] + 0.2 * sin(2 * 2*PI*v[n]);
   }
   length = getTrajectoryLength(surface, &u[0], &v[0], N); // 9.94319916
-  rsPlotVectors(u, v);
+  //rsPlotVectors(u, v);
   // OK - the length of the trajectory in xyz-space has increased due to the deformation. This is
   // what we expect.
 
@@ -4411,10 +4411,13 @@ void testGeodesic()
   //  than 452 for the 51 points. With N = 11, we need only 24 iterations and with N = 5 we need 
   //  only 8 (but in this case, the initialization is aready close to the result because the 
   //  sinusoidal wiggling happens to not do very much at the sampling points). With N = 101, we 
-  //  need 1499 iterations. Maybe some sort of "multigrid"-like method could be suitable where we 
-  //  first estimate a geodesic at low resolution, then interpolate that up to higher resolution
-  //  and iterate further on the higher resolution, then interpolate to a yet higher resolution and
-  //  iterate on that resolution and so on until the final target resolution has been obtained.
+  //  need 1499 iterations and at N = 201 we need 4737 iterations. Maybe some sort of 
+  //  "multigrid"-like method could be suitable where we first estimate a geodesic at low 
+  //  resolution, then interpolate that up to higher resolution and iterate further on the higher
+  //  resolution, then interpolate to a yet higher resolution and iterate on that resolution and so
+  //  on until the final target resolution has been obtained. It seems also to be the case that the
+  //  maximally possible adaption rate before the algo breaks down is independent of the number of 
+  //  points N but that needs some more tests.
   //
   // Conclusion:
   // -For the plane as example surface and adaption rate of around 0.01 produces the fastest 
@@ -4425,6 +4428,7 @@ void testGeodesic()
   // -Check, if the number of iterations and/or desired adaption rates depend on the number of 
   //  points N. If so, try to figure out a normalization scheme to make it independent.
   //  ...done - yes - there is some dependence
+  // -
   //  
 
 

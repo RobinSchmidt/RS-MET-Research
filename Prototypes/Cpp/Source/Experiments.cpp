@@ -4323,8 +4323,18 @@ void testGeodesic()
   // the initial length. Also, it doesn't seem to converge
 
   rsPlotVectors(u, v);
+  // Maybe plot also array for x,y,z that would result from the final u,v
+
+
 
   int dummy = 0;
+
+  // ToDo:
+  // -Factor out the iteration function such that it can be called separately without the init
+  //  step.
+  // -Take a plane as example surface.
+  // -Init the trajectory with some weird shape that is not a straight line
+  // -Call the iteration. It should drag the weird initial shape toward a straight line.
 
   // See also:
   // - https://de.wikipedia.org/wiki/Regul%C3%A4re_Fl%C3%A4che

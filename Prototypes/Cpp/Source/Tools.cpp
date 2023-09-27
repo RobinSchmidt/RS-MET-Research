@@ -2780,6 +2780,9 @@ public:
   bool findGeodesic(T u1, T v1, T u2, T v2, int numPoints, T* u, T* v);
 
 
+  bool optimizeGeodesic(int numPoints, T* u, T* v);
+  // find a better name
+
   /** Computes length of the segment between () */
   //T segmentLength(T uL, T vL, T uH, T vH);
 
@@ -2812,6 +2815,16 @@ protected:
 template<class T>
 bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v)
 {
+  // Initialize the u,v arrays by linearly interpolating between u1,u2 and v1,v2 respectively:
+  using AT = RAPT::rsArrayTools;
+  AT::fillWithRangeLinear(u, N, u1, u2);
+  AT::fillWithRangeLinear(v, N, v1, v2);
+  return optimizeGeodesic(N, u, v);
+}
+
+template<class T>
+bool rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
+{
   // It does not seem to work yet. There's probably still something fundamentally wrong...
 
   // The idea is to start wih an initial guess that just connects the points (u1,v1), (u2,v2) by
@@ -2831,16 +2844,6 @@ bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // ToDo: 
   // -Factor out a function that uses a workspace to avoid allocation. Then keep this function
   //  as convenience function
-
-  using AT = RAPT::rsArrayTools;
-
-  // Initialize the u,v arrays by linearly interpolating between u1,u2 and v1,v2 respectively:
-  AT::fillWithRangeLinear(u, N, u1, u2);
-  AT::fillWithRangeLinear(v, N, v1, v2);
-  //return;  // preliminary, during development
-
-
-
 
 
   // Helper function to compute the length of the segment from (uL,vL) to (uH,vH). The indices L,H
@@ -2931,39 +2934,13 @@ bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
 
   return converged;
 
-  int dummy = 0;
-
   // ToDo:
-  // -Have a maxIterations member and stop the iteration when it is exceeded
-  // -Report whether or not we have converged in a boolean return value
   // -Include a way to normalize the speed of the trajectory. Maybe this can be done by introducing
   //  another term in the local gradient that does depend on the relative difference of the
   //  partial segments in the bisegment at n. Currently, the function we minimize is the length
   //  of each bisegment with no regard to the relative lengths of the two partial segments that 
   //  make up the bisegment.
 }
-
-/*
-template<class T>
-std::vector<RAPT::rsVector2D<T>> rsGeodesicFinder<T>::findGeodesic(
-  rsVector2D<T> p1, rsVector2D<T> p2, int numPoints)
-{
-  using Vec2D = RAPT::rsVector2D<T>;
-
-  std::vector<RAPT::rsVector2D<T>> geo(N), grd(N); // geodesic and gradient
-
-
-  // Something to do:
-  // -Init g[i] as a linear interpolation from p1 to p2 in coordinate space.
-  // -Iterate until convergence:
-  //  -At each inner point (i.e. for each i in 1...N-2) of the current geodesic estimate:
-  //   -Compute the local change of the distance function with respect to u[i], v[i]
-  //   -Adjust u[i], v[i] a little bit such that the distance becomes smaller
-
-  return geo;
-}
-*/
-
 
 //-------------------------------------------------------------------------------------------------
 // Coordinate conversion formulas:

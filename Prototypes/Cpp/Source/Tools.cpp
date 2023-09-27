@@ -381,6 +381,57 @@ void rsVectorFieldPlotter<T>::plot()
   plt.plot();
 }
 
+
+
+/** Under Construction....
+Subclass of rsVectorFieldPlotter that can plot a gradient field of a given scalar field. It 
+takes a scalar field as input like the rsContourPlotter class does but doesn't plot the contours 
+but instead a numerically evaluated gradient field.  */
+template<class T>
+class rsGradientFieldPlotter : public rsVectorFieldPlotter<T>
+{
+
+public:
+
+  void setFunction(const std::function<T(T x, T y)>& newFunction);
+
+protected:
+
+  std::function<T(T x, T y)> P; // The potential function whose gradient we plot as vector field.
+  T hx = T(1)/T(1024);          // Step size for the numeric gradient evaluation in x-direction
+  T hy = T(1)/T(1024); 
+  
+private:
+
+  void setFunction(const std::function<void(T x, T y, T* u, T* v)>& newFunction) {}
+  // We make this inherited function unavailable to client code.
+
+
+};
+
+template<class T>
+void rsGradientFieldPlotter<T>::setFunction(const std::function<T(T x, T y)>& newFunction) 
+{ 
+  P = newFunction;
+
+  // Create a function for evaluating the gradient numerically by a central difference:
+  std::function<void(T x, T y, T* u, T* v)> g;
+  g = [this](T x, T y, T* u, T* v)
+  {
+    T hi, lo;
+    hi = P(x+hx, y);
+    lo = P(x-hx, y);
+    *u = (hi-lo) / (2*hx);
+    hi = P(x, y+hy);
+    lo = P(x, y-hy);
+    *v = (hi-lo) / (2*hy);
+  };
+
+  // Set the so produced g as vector-field function:
+  rsVectorFieldPlotter<T>::setFunction(g);
+}
+
+
 //=================================================================================================
 
 /** A class to represent some measures of an image filtering kernel. These measurements may be 

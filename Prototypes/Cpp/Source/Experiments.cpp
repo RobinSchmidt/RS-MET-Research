@@ -13712,11 +13712,11 @@ void polyaPlotExperiments()
   //using PE  = rsPolyaPotentialEvaluator<R>;
   //using CP  = GNUPlotter::ColorPalette;
 
-  // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
+  // Abbreviations for functions to create a  surface-, contour- and vector- (or arrow-) plot via
   // Gnuplot:
-  auto splotA = ::splotA<R>;
-  auto cplotA = ::cplotA<R>;
-  auto vplotA = ::vplotA<R>;
+  auto plotS = ::splotA<R>;    // Surface
+  auto plotC = ::cplotA<R>;    // Contours
+  //auto vplotA = ::vplotA<R>;
 
   // Create and set up the plotters for the vector fields and contour maps:
   //rsContourMapPlotter<R>  pltC;
@@ -13727,8 +13727,8 @@ void polyaPlotExperiments()
   // P(x,y) = 1/3*x^3 - x*y^2 - x
   // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
-  cplotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
-  //splotA([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
+  plotC([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  plotS([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
   // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
   // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
   // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
@@ -13754,7 +13754,7 @@ void polyaPlotExperiments()
   // f(z)   = (z+i)*(z-i)
   // P(x,y) = 1/3*x^3 - x*y^2 + x
   auto zerosAt_I_mI = [](R x, R y) { return x*x*x/3 - x*y*y + x; };
-  cplotA([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  plotC([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
   // This landscape is also problematic. We would actually have to go along a contour to reach the 
   // next saddle.
 
@@ -13769,8 +13769,8 @@ void polyaPlotExperiments()
     R x2 = x*x;  // x^2
     return -3./2*x2*y2 + 1./4*x2*x2 - 1./2*x2 + 1./4*y2*y2 + 1./2*y2;
   };
-  cplotA([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
-  cplotA([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -0.5, +0.5, -0.5, +0.5, 201, 201, 41, -0.15f, +0.15f);
+  plotC([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
+  plotC([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -0.5, +0.5, -0.5, +0.5, 201, 201, 41, -0.15f, +0.15f);
 
 
 
@@ -13783,7 +13783,7 @@ void polyaPlotExperiments()
     R x2 = x*x;  // x^2
     return -3./2*x2*y2 + 1./4*x2*x2 + 1./2*x2 + 1./4*y2*y2 - 1./2*y2;
   };
-  cplotA([&](R x, R y) { return zerosAt_mI_0_I(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
+  plotC([&](R x, R y) { return zerosAt_mI_0_I(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
   // This is basically just like (z+1)*z*(z-1) but rotated by 90 degrees, so it's nothing new 
   // really. But then, why is the landscape of (z+i)*(z-i) not just a rotated version of 
   // (z+1)*(z-1)? Maybe it has to do with the even or odd degree?
@@ -13800,8 +13800,8 @@ void polyaPlotExperiments()
     return -3./2*x2*y2 + x2*y - 1./2*x2 + 1./4*x2*x2 + 1./4*y2*y2 - 1./3*y2*y + 1./2*y2 - y;
     //return x2*x2/4 - 3*x2*y2/2 + x2*y - 1*x2/2 - 1*y2*y/3 + 1*y2/2 - y;
   };
-  cplotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
-    -1.5, +1.5, -1.5, +1.5, 201, 201, 49, -2.f, +2.f);
+  plotC([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
+        -1.5, +1.5, -1.5, +1.5, 201, 201, 49, -2.f, +2.f);
   //splotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
   //  -1.5, +1.5, -1.5, +1.5, 41, 41);
   // Hmm...OK...this seems to be a problematic configuration of seddles. From the top saddle there 
@@ -13822,8 +13822,8 @@ void polyaPlotExperiments()
     R x2 = x*x;  // x^2
     return x2*x2*x/5 - 2*x2*x*y2 + x*y2*y2 - x;
   };
-  cplotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
-         -1.5, +1.5, -1.5, +1.5, 201, 201, 41, -4.f, +4.f);
+  plotC([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
+        -1.5, +1.5, -1.5, +1.5, 201, 201, 41, -4.f, +4.f);
   //splotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
   //  -1.5, +1.5, -1.5, +1.5, 41, 41);
   // It looks like from the left saddle at (-1,0), we would always head off to the right saddle at
@@ -13861,6 +13861,10 @@ void polyaPlotExperiments()
   //  Maybe not with numcontours as parameter but some sort of numSteps by which we go above and 
   //  below the reference. This function should set zMin and zMax as
   //  reference +- numSteps*newSpacing ...or something similar
+  // -Maybe write a function that can at any point evaluate the sepposed direction that leads us 
+  //  into the next saddle according to the rules that we try to find. It could be the direction
+  //  of the gradient or maybe something else. Maybe first try the gradient. We shoul have some 
+  //  function like vplotA but using a numerical gradient computation
 
 
 

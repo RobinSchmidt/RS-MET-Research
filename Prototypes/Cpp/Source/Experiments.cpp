@@ -4278,6 +4278,7 @@ void testGeodesic()
     }
     return length;
   };
+  // This function may actually be useful to have in the library so maybe drag it out.
 
 
   R length = getTrajectoryLength(S, &u[0], &v[0], N); // 5.63763714 after init

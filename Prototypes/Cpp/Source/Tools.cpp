@@ -2780,7 +2780,7 @@ public:
   bool findGeodesic(T u1, T v1, T u2, T v2, int numPoints, T* u, T* v);
 
 
-  bool optimizeGeodesic(int numPoints, T* u, T* v);
+  int optimizeGeodesic(int numPoints, T* u, T* v);
   // find a better name
 
   /** Computes length of the segment between () */
@@ -2805,6 +2805,8 @@ protected:
   T hu = T(1) / T(1024);
   T hv = T(1) / T(1024);
 
+  int maxIts = 10000;
+
   // ToDo: 
   // -Have a member that decides whether we should equalize the speed of the geodesic, i.e. 
   //  whether or not we attempt to make the distances between the steps along the geodesic equal
@@ -2819,11 +2821,11 @@ bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   using AT = RAPT::rsArrayTools;
   AT::fillWithRangeLinear(u, N, u1, u2);
   AT::fillWithRangeLinear(v, N, v1, v2);
-  return optimizeGeodesic(N, u, v);
+  return optimizeGeodesic(N, u, v) < maxIts;
 }
 
 template<class T>
-bool rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
+int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
 {
   // It does not seem to work yet. There's probably still something fundamentally wrong...
 
@@ -2899,10 +2901,11 @@ bool rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   bool converged = false;
   T etaU   = 0.002;               // Adaption rate. Tweak to optimze convergence speed
   T etaV   = 0.002;
-  T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
+  //T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
+  T thresh = T(1) / T(16384); // 1/2^14. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
-  int maxIts = 10000;
-  while(!converged && numIts <= maxIts)
+  //int maxIts = 10000;
+  while(!converged && numIts < maxIts)
   {
     // Estimate changes in total squared length when we wiggle u[i], v[i]
     for(int n = 1; n < N-1; n++)
@@ -2920,6 +2923,8 @@ bool rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
     }
 
 
+    numIts++;
+
     // Check convergence criterion. The criterion is that whenever there is an absolute value in du
     // or dv that is greater than our convergence threshold, we consider the algorithm not yet 
     // converged. If all values are <= thresh, the algo is considered converged.
@@ -2928,11 +2933,11 @@ bool rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
       if(rsAbs(du[n]) > thresh || rsAbs(dv[n]) > thresh) {
         converged = false;
         break; }}
-
-    numIts++;
   }
 
-  return converged;
+  return numIts;
+  //return converged;
+  // Maybe return the number of iterations. This is interesting for client code during development.
 
   // ToDo:
   // -Include a way to normalize the speed of the trajectory. Maybe this can be done by introducing

@@ -4329,13 +4329,13 @@ void testGeodesic()
   // Use the geodesic finder to optimize the weird initial trajectory into a geodesic:
   GF  gf;
   gf.setSurface(surface);
-  bool success = gf.optimizeGeodesic(N, &u[0], &v[0]);
+  int numIts = gf.optimizeGeodesic(N, &u[0], &v[0]);
   // This should turn the deformed trajectory back into a straight line when the surface is a 
   // plane.
 
 
   // Check, if the length is back to the length of the (straight line) geodesic:
-  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 5.91608000
+  length = getTrajectoryLength(surface, &u[0], &v[0], N);  // 5.9160...
   // OK - this looks good! The length is indeed back to 5.916..., so not everything is totally 
   // wrong...
 

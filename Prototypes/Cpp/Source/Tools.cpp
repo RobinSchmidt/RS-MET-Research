@@ -2766,7 +2766,7 @@ public:
   using Surface = std::function<void(T u, T v, T* x, T* y, T* z)>;
 
   /** Sets up the 3 bivariate mathematical functions that define the surface. @see Surface. */
-  void setSurface(const Surface& newSurface) { S = newSurface; }
+  void setSurface(const Surface& newSurface) { surface = newSurface; }
 
   /** Computes a geodesic from point p1 to point p2 where p1 = (u1,v1) and p2 = (u2,v2), i.e. the
   points are given by their u,v coordinates in the parameter space. So, these are points on the 2D 
@@ -2787,7 +2787,7 @@ public:
 
 protected:
 
-  Surface S;
+  Surface surface;
 
   //std::function<void(T u, T v, T* x, T* y, T* z)> xyz;
   // Function that computes x,y,z from u,v where u,v are input parameters and x,y,z are output 
@@ -2818,6 +2818,39 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // Initialize the u,v arrays by linearly interpolating between u1,u2 and v1,v2 respectively:
   AT::fillWithRangeLinear(u, N, u1, u2);
   AT::fillWithRangeLinear(v, N, v1, v2);
+  //return;  // preliminary, during development
+
+
+  // Helper function to compute change in length...TBC..
+  /*
+  auto lengthChange = [](int n)
+  {
+  
+  };
+  */
+
+
+  // Helper function to compute the length of the segment from (uL,vL) to (uH,vH). The indices L,H
+  // stand for low, high:
+  auto segmentLength = [this](T uL, T vL, T uH, T vH)
+  {
+    T xL, yL, zL; surface(uL, vL, &xL, &yL, &zL);
+    T xH, yH, zH; surface(uH, vH, &xH, &yH, &zH);
+    T dx = xH - xL;
+    T dy = yH - yL;
+    T dz = zH - zL;
+    T ds = sqrt(dx*dx + dy*dy + dz*dz);
+    return ds;
+  };
+
+  // Helper function to compute the length of the bi-segment from (uL,vL) to (uM,vM) to (uH,vH).
+  // The indices L,M,H stand for low, middle, high
+  auto biSegmentLength = [&](T uL, T vL, T uM, T vM, T uH, T vH)
+  {
+    return segmentLength(uL, vL, uM, vM) + segmentLength(uM, vM, uH, vH);
+  };
+
+
 
   // Now we enter the iteration to minimize the total length of the corresponding trajectory in 
   // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
@@ -2826,6 +2859,13 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
   while(!converged)
   {
+    // Estimate changes in total squared length when we wiggle u[i], v[i]
+    for(int i = 1; i < N-1; i++)
+    {
+
+
+
+    }
 
 
     // Check convergence criterion. The criterion is that whenever there is an absolute value in du

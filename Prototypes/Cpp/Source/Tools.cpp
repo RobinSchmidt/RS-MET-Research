@@ -2746,6 +2746,11 @@ ToDo:
  3D, there are at least 2 way of defining a surface: parametrically as x(u,v), y(u,v), z(u,v)
  or implicitly as F(x,y,z) = 0. Here, we assume a parametric definition.
 
+
+
+References:
+ https://en.wikipedia.org/wiki/Parametric_surface
+
 */
 
 template<class T>
@@ -2754,15 +2759,37 @@ class rsGeodesicFinder
 
 public:
 
-  /** Computes a geodesic from point p1 to point p2. The geodesic is produced as a sequence of
-  N coordinate vectors g[i] where g[0] = p1 and g[N-1] = p2. Each g[i] represents a vector 
-  of coordinates u[i], v[i] along the geodesic. */
-  std::vector<RAPT::rsVector2D<T>> findGeodesic(rsVector2D<T> p1, rsVector2D<T> p2, int numPoints);
+  /** We assume that the surface is given mathematically by a triple of functions x(u,v), y(u,v), 
+  z(u,v). In the code, we represent that triple as a single std::function object with 2 input 
+  parameters for u,v and 3 output parameters for x,y,z. As usual, input parameters are passed by 
+  value and output parameters are passed by pointer. */
+  using Surface = std::function<void(T u, T v, T* x, T* y, T* z)>;
+
+  /** Sets up the 3 bivariate mathematical functions that define the surface. @see Surface. */
+  void setSurface(const Surface& newSurface) { S = newSurface; }
+
+  /** Computes a geodesic from point p1 to point p2 where p1 = (u1,v1) and p2 = (u2,v2), i.e. the
+  points are given by their u,v coordinates in the parameter space. So, these are points on the 2D 
+  map of the surface, not points on the surface itself in the 3D space. The geodesic is produced as
+  a sequence of N (== numPoints) coordinate vectors u[i], v[i] along the geodesic. That means, u 
+  and v are the arrays for the output and they must have length N. At the end, we will have
+  u[0] = u1, v[0] = v1, u[N-1] = u2, v[N-1] = v2 and the points in between are filled appropriately
+  so as to produce a sampled geodesic. */
+  void findGeodesic(T u1, T v1, T u2, T v2, int numPoints, T* u, T* v);
+
+
+
+  //std::vector<RAPT::rsVector2D<T>> findGeodesic(rsVector2D<T> p1, rsVector2D<T> p2, int numPoints);
   
+  // ToDo: 
+  // -Maybe avoid usage of rsVector2D by making the function void taking arrays u,v, both of length
+  //  
 
 protected:
 
-  std::function<void(T u, T v, T* x, T* y, T* z)> xyz;
+  Surface S;
+
+  //std::function<void(T u, T v, T* x, T* y, T* z)> xyz;
   // Function that computes x,y,z from u,v where u,v are input parameters and x,y,z are output 
   // parameters
 
@@ -2777,6 +2804,45 @@ protected:
 
 };
 
+template<class T>
+void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v)
+{
+  // Temporary arrays to hold the partial derivatives:
+  std::vector<T> du(N), dv(N);
+  // ToDo: 
+  // -Factor out a function that uses a workspace to avoid allocation. Then keep this function
+  //  as convenience function
+
+  using AT = RAPT::rsArrayTools;
+
+  // Initialize the u,v arrays by linearly interpolating between u1,u2 and v1,v2 respectively:
+  AT::fillWithRangeLinear(u, N, u1, u2);
+  AT::fillWithRangeLinear(v, N, v1, v2);
+
+  // Now we enter the iteration to minimize the total length of the corresponding trajectory in 
+  // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
+  // affect the total length ...TBC...
+  bool converged = false;
+  T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
+  while(!converged)
+  {
+
+
+    // Check convergence criterion. The criterion is that whenever there is an absolute value in du
+    // or dv that is greater than our convergence threshold, we consider the algorithm not yet 
+    // converged. If all values are <= thresh, the algo is considered converged.
+    converged = true;
+    for(int i = 1; i < N-1; i++) {    // du,dv only contain interesting values from 1...N-2
+      if(rsAbs(du[i]) > thresh || rsAbs(dv[i]) > thresh) {
+        converged = false;
+        break; }}
+  }
+
+
+  int dummy = 0;
+}
+
+/*
 template<class T>
 std::vector<RAPT::rsVector2D<T>> rsGeodesicFinder<T>::findGeodesic(
   rsVector2D<T> p1, rsVector2D<T> p2, int numPoints)
@@ -2795,6 +2861,7 @@ std::vector<RAPT::rsVector2D<T>> rsGeodesicFinder<T>::findGeodesic(
 
   return geo;
 }
+*/
 
 
 //-------------------------------------------------------------------------------------------------

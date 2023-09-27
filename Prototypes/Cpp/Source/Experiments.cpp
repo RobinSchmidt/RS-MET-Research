@@ -4225,6 +4225,47 @@ void testManifoldEllipsoid()
 // https://www.youtube.com/watch?v=L9WR78xvCPY The Metric Tensor in 20 Glorious Minutes
 
 
+void testGeodesic()
+{
+  using R    = float;  // Real numbers
+  using GF   =  rsGeodesicFinder<R>;
+
+  using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>; 
+  // Function defining a parametric surface x(u,v), y(u,v), z(u,v)
+
+
+  // Define the surface:
+  Surf s = [](R u, R v, R* x, R* y, R* z)
+  {
+    *x = u * cos(v);
+    *y = u * sin(v);
+    *z = *x * *x  -  *y * *y;  // z = x^2 - y^2
+  };
+  // This is a hyperboloic paraboloid in polar coordinates...I think...that's what I had in mind,
+  // at least.
+  // We interpret u,v as radius and angle, i.e. as polar coordinates,
+
+
+
+  GF gf;
+
+
+
+  int dummy = 0;
+
+  // See also:
+  // - https://de.wikipedia.org/wiki/Regul%C3%A4re_Fl%C3%A4che
+
+  // Example surfaces:
+  // -Helicoid: https://mathinsight.org/parametrized_surface_introduction
+  // -Cone and cylinder: https://mathinsight.org/parametrized_surface_examples
+  // -plane
+  // -ToDo: torus, sphere, elliposoid, surfaces of revolution, 
+  // 
+}
+
+//=================================================================================================
+
 
 // code from:
 // https://www.geeksforgeeks.org/print-subsets-given-size-set/

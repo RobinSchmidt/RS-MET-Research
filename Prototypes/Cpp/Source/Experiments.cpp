@@ -13766,10 +13766,6 @@ void polyaPlotExperiments()
   // among the contour levels.
 
   
- 
-
-
-
   // 2 saddles at i,-i:
   // f(z)   = (z+i)*(z-i)
   // P(x,y) = 1/3*x^3 - x*y^2 + x
@@ -13791,7 +13787,8 @@ void polyaPlotExperiments()
     return -3./2*x2*y2 + 1./4*x2*x2 - 1./2*x2 + 1./4*y2*y2 + 1./2*y2;
   };
   plotC([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
-  plotC([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -0.5, +0.5, -0.5, +0.5, 201, 201, 41, -0.15f, +0.15f);
+  plotG([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 21, 21);
+  //plotC([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -0.5, +0.5, -0.5, +0.5, 201, 201, 41, -0.15f, +0.15f);
 
 
 
@@ -13823,6 +13820,7 @@ void polyaPlotExperiments()
   };
   plotC([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
         -1.5, +1.5, -1.5, +1.5, 201, 201, 49, -2.f, +2.f);
+  plotG([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, -1.5, +1.5, -1.5, +1.5, 31, 31);
   //splotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
   //  -1.5, +1.5, -1.5, +1.5, 41, 41);
   // Hmm...OK...this seems to be a problematic configuration of seddles. From the top saddle there 
@@ -13845,6 +13843,7 @@ void polyaPlotExperiments()
   };
   plotC([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
         -1.5, +1.5, -1.5, +1.5, 201, 201, 41, -4.f, +4.f);
+  plotG([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, -1.5, +1.5, -1.5, +1.5, 31, 31);
   //splotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
   //  -1.5, +1.5, -1.5, +1.5, 41, 41);
   // It looks like from the left saddle at (-1,0), we would always head off to the right saddle at
@@ -13886,6 +13885,22 @@ void polyaPlotExperiments()
   //  into the next saddle according to the rules that we try to find. It could be the direction
   //  of the gradient or maybe something else. Maybe first try the gradient. We shoul have some 
   //  function like vplotA but using a numerical gradient computation
+  // -To figure out what direction could work, consider the function f(z) = z with (x^2-y^2)/2
+  //  as potnetial. That's the simples possible case. The goal is now to fid at every point a 
+  //  direction that leads us straight into the saddle at (0,0). Try different directions and 
+  //  plot a vector field plot for them. It doesn't need to be the gradient. Maybe try the 
+  //  direction of least curvature. Maybe we need to solve this numerically:
+  //  https://en.wikipedia.org/wiki/Solving_the_geodesic_equations
+  //  https://en.wikipedia.org/wiki/Geodesic
+  //  https://en.wikipedia.org/wiki/Geodesic_curvature
+  //  see also the starfish saddle paper for other types of curvature - and here:
+  //  https://en.wikipedia.org/wiki/Curvature#Surfaces
+  // -Maybe it is futile to try to find a local criterion that at every point will lead us 
+  //  into the nearest saddle along a geodesic without even knowing where that saddle is. Maybe
+  //  we need to define our target point and *then* we can attempt to find the right path and 
+  //  therefore the right direction at evry point. But here, the path is the primary thin and the 
+  //  direction forllows from it whereas in the other attempt, the direction was the primary thing
+  //  and we attempt to construct a path from it.
 
 
 

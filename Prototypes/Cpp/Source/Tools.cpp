@@ -2785,27 +2785,23 @@ public:
   so as to produce a sampled geodesic. */
   bool findGeodesic(T u1, T v1, T u2, T v2, int numPoints, T* u, T* v);
 
-
+  /** Given a trajectory in uv-space of length N (= numPoints) represented by the arrays u,v of 
+  coordinates which represent points (u[n], v[n]), n = 0...N-1 in uv-space, this function tries to 
+  numerically optimize the trajectory so as to achieve the shortest possible corresponding length 
+  in xyz-space while keeping the endpoints fixed. Therefore, given an arbitrary trajectory, this 
+  function numerically finds a nearby geodesic between the two end points. The trajectory will 
+  also be one with constant speed, i.e. constant distance between the nodes in xyz-space.  */
   int optimizeGeodesic(int numPoints, T* u, T* v);
-  // find a better name
+  // Find a better name: optimizeTrajectory, shortenTrajectory, minimizeTrajectoryLength, 
+  // minimizeCurveLength, minimizePathLength, shortenPath, shortestPathOnSurface, 
+  // minimizePathOnSurface
 
-  /** Computes length of the segment between () */
-  //T segmentLength(T uL, T vL, T uH, T vH);
 
-
-  //std::vector<RAPT::rsVector2D<T>> findGeodesic(rsVector2D<T> p1, rsVector2D<T> p2, int numPoints);
-  
-  // ToDo: 
-  // -Maybe avoid usage of rsVector2D by making the function void taking arrays u,v, both of length
-  //  
 
 protected:
 
   Surface surface;
 
-  //std::function<void(T u, T v, T* x, T* y, T* z)> xyz;
-  // Function that computes x,y,z from u,v where u,v are input parameters and x,y,z are output 
-  // parameters
 
   // Approximation stepsizes for computing the partial derivatives:
   T hu = T(1) / T(1024);
@@ -2817,13 +2813,6 @@ protected:
   T etaU = 0.01;
   T etaV = 0.01;
   // rename to adaptU, adaptV or learnU, learnV...not sure...
-
-
-  // ToDo: 
-  // -Have a member that decides whether we should equalize the speed of the geodesic, i.e. 
-  //  whether or not we attempt to make the distances between the steps along the geodesic equal
-  //  in x,y,z-space.
-
 };
 
 template<class T>
@@ -2860,19 +2849,26 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   //  as convenience function
 
 
-  // Helper function to compute the length of the segment from (uL,vL) to (uH,vH). The indices L,H
-  // stand for low, high:
+  // Helper function to compute the squared length of the segment from (uL,vL) to (uH,vH). The 
+  // indices L,H stand for low, high:
   auto segmentLength = [this](T uL, T vL, T uH, T vH)
   {
     T xL, yL, zL; surface(uL, vL, &xL, &yL, &zL);
     T xH, yH, zH; surface(uH, vH, &xH, &yH, &zH);
-    T dx = xH - xL;
-    T dy = yH - yL;
-    T dz = zH - zL;
-    return dx*dx + dy*dy + dz*dz;     // squared segment length - seems good
+    T dx  = xH - xL;
+    T dy  = yH - yL;
+    T dz  = zH - zL;
+    T ds2 = dx*dx + dy*dy + dz*dz;    // squared segment length 
+    return ds2;
+
+    //return pow(ds2, 0.95);          
+    // Just for experimentations It seems to make it worse for any exponent other than 1. 
+    // This is god news! The simplest formula is also the best!
+    
     //return rsAbs(dx) + rsAbs(dy) + rsAbs(dz); // nope - not good either
     //return sqrt(dx*dx + dy*dy + dz*dz); // actual segment length - not good!
   };
+  // rename to segmentLengthSq or squaredSegmentLength
   // -Maybe make this a member function
   // -Try using the square segment length - don't take the sqrt
   // -Try using other length measures like the sum of the absolute values
@@ -2884,7 +2880,8 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   {
     return segmentLength(uL, vL, uM, vM) + segmentLength(uM, vM, uH, vH);
   };
-  // Can be optimized to use only 3 calls to surface() instead of the 4 used now
+  // Can be optimized to use only 3 calls to surface() instead of the 4 used now. Currently,
+  // surface() is called twice with uM, vM.
 
   // Helper function to compute change in length of the bisegment at node n when we wiggle u[n]
   // ...explain better...computes the local partial derivative
@@ -2947,8 +2944,6 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   }
 
   return numIts;
-  //return converged;
-  // Maybe return the number of iterations. This is interesting for client code during development.
 
   // ToDo:
   // -Let the algorithm automatically select an appropriate adaption rate like so:
@@ -2968,11 +2963,6 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   //   The 10% should not be hardcoded but be a user parameter with a reasonable default. The 
   //   increase/decrease factors may also be exposed as user parameters. Maybe by default use 2 for
   //   the increase and 4 for the decrease (i.e. multiply by 1/4).
-  // -Include a way to normalize the speed of the trajectory. Maybe this can be done by introducing
-  //  another term in the local gradient that does depend on the relative difference of the
-  //  partial segments in the bisegment at n. Currently, the function we minimize is the length
-  //  of each bisegment with no regard to the relative lengths of the two partial segments that 
-  //  make up the bisegment. ...not necesa
 }
 
 //-------------------------------------------------------------------------------------------------

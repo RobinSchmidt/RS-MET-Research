@@ -4227,8 +4227,31 @@ void testManifoldEllipsoid()
 
 void testGeodesic()
 {
+  // We test the class rsGeodesicFinder which implements an iterative algorithm to optimize a given
+  // initial trajectory between two points into a trajectory of minimal length between the same two
+  // points by a sort of gradient descent strategy. To test this, we take a plane as example 
+  // surface and init the trajectory with some weird shape that is not a straight line. Then we
+  // invoke the iterative algorithm. It should drag the weird initial shape toward a straight line.
+  //
+  // It does seem to partially work. The end result of the iteration is indeed a straight line, but
+  // it is not traversed with constant speed, i.e. the trajectory points are not equally spaced. 
+  // That is not surprising because we do not yet have any code in place that enforces this. Also,
+  // the algorithm always takes the maximum number of iterations, so it doesn't consider itself to 
+  // have converged. Maybe at the end, the solution oscillates? Maybe that could be a consequence 
+  // of not trying to enforce constant speed? 
+  //
+  // I can imagine two possible ways of enforcing constant speed:
+  // (1) After each update step, resample the current trajectory to achiev constant spacing between
+  //     the nodes in xyz-space
+  // (2) Add a term to the error function that penalizes local imbalances of the lengths of the two
+  //     segments that go into and out of every node. Then, the gradient descent should minimize 
+  //     a weighted sum of the total length and the length imbalances.
+  //
+  // More experimentation is needed...TBC...
+
+
   using R    = float;  // Real numbers
-  using GF   =  rsGeodesicFinder<R>;
+  using GF   = rsGeodesicFinder<R>;
   using Vec  = std::vector<R>;
   using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;
   // Function defining a parametric surface x(u,v), y(u,v), z(u,v)
@@ -4346,6 +4369,9 @@ void testGeodesic()
   // functions for u,v themselves are not straight lines because we do not enforce unit speed.
   // To define a line in x,y,z space, it's enough when u and v are the same, I think. It may even
   // be enough, if they are linearly related.
+  // It turns out that when in the local segmentLength() function in optimizeGeodesic() we return
+  // the squared length instead of the length itself, the final result looks much closer to a 
+  // straight line when initializing u with squares and v with sqrt
 
   // Maybe plot also array for x,y,z that would result from the final u,v
 
@@ -4362,12 +4388,12 @@ void testGeodesic()
 
   int dummy = 0;
 
+
+
   // ToDo:
   // -Factor out the iteration function such that it can be called separately without the init
   //  step.
-  // -Take a plane as example surface.
-  // -Init the trajectory with some weird shape that is not a straight line
-  // -Call the iteration. It should drag the weird initial shape toward a straight line.
+
 
   // See also:
   // - https://de.wikipedia.org/wiki/Regul%C3%A4re_Fl%C3%A4che

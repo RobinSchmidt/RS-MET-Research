@@ -2859,10 +2859,10 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
     T dz = zH - zL;
     //return dx*dx + dy*dy + dz*dz;     // squared segment length
     return sqrt(dx*dx + dy*dy + dz*dz); // actual segment length
-    //return ds;
   };
-  // maybe make this a member function
-  // maybe use the square segment length - don't take the sqrt
+  // -Maybe make this a member function
+  // -Try using the square segment length - don't take the sqrt
+  // -Try using other length measures like the sum of the absolute values
 
   // Helper function to compute the length of the bi-segment from (uL,vL) to (uM,vM) to (uH,vH).
   // The indices L,M,H stand for low, middle, high. 
@@ -2902,7 +2902,7 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   T etaU   = 0.002;               // Adaption rate. Tweak to optimze convergence speed
   T etaV   = 0.002;
   //T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
-  T thresh = T(1) / T(16384); // 1/2^14. Preliminary. Chosen ad hoc. Make this a settable member.
+  T thresh = T(1) / T(8192); // 1/2^13. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
   //int maxIts = 10000;
   while(!converged && numIts < maxIts)

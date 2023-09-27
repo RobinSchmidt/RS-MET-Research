@@ -2812,6 +2812,20 @@ protected:
 template<class T>
 bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v)
 {
+  // It does not seem to work yet. There's probably still something fundamentally wrong...
+
+  // The idea is to start wih an initial guess that just connects the points (u1,v1), (u2,v2) by
+  // a straight line and then considers the corresponding trajectory in xyz-space. We compute a 
+  // sort of local gradient at each u[n], v[n], i.e. compute by how much the total length would
+  // change when we would wiggle one u[n], v[n] at a time. Then we do an adaption step of the 
+  // whole u,v arrays based on these predicted length changes. The length change itself when 
+  // wiggling a given trjactory point (u[n], v[n]) is computed by considering the two trajectory 
+  // segments going into and out of the point. We call these two trajectory segments going into and
+  // out of node n the bi-segment at node n. The whole idea is basically gradient descent applied 
+  // to the total length of the trajectory where the parameter vector is the totality of all the 
+  // u[n], v[n].
+
+
   // Temporary arrays to hold the partial derivatives:
   std::vector<T> du(N), dv(N);
   // ToDo: 
@@ -2880,8 +2894,8 @@ bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
   // affect the total length ...TBC...
   bool converged = false;
-  T etaU   = 0.005;               // Adaption rate. Tweak to optimze convergence speed
-  T etaV   = 0.005;
+  T etaU   = 0.01;               // Adaption rate. Tweak to optimze convergence speed
+  T etaV   = 0.01;
   T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
   int maxIts = 10000;
@@ -2890,9 +2904,10 @@ bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
     // Estimate changes in total squared length when we wiggle u[i], v[i]
     for(int n = 1; n < N-1; n++)
     {
-      du[n] = lengthChangeU(n);
-      dv[n] = lengthChangeV(n);
+      du[n] = lengthChangeU(n);  // dL / du[n] ...or something proportional
+      dv[n] = lengthChangeV(n);  // dL / dv[n]
     }
+    // Maybe we need to divide by N?
 
     // Adapt the trajectory:
     for(int n = 1; n < N-1; n++)

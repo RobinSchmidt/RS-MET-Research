@@ -4327,7 +4327,7 @@ void testGeodesic()
   // Geodesic parameters (endpoints and number of points):
   R   u1 = 0, v1 = 0;        // Start point
   R   u2 = 1, v2 = 1;        // End point
-  int N  = 21;               // Number of points. Should be at least 2.
+  int N  = 101;              // Number of points. Should be at least 2.
   R length;
 
   R adaptRate = 0.01;
@@ -4408,7 +4408,13 @@ void testGeodesic()
   //  During research and experimentation, we may get away with it.
   //
   // -When using an adaption rate of 0.01 and n = 21, we converge in 88 steps. That's a lot better
-  //  than 452 for the 51 points.
+  //  than 452 for the 51 points. With N = 11, we need only 24 iterations and with N = 5 we need 
+  //  only 8 (but in this case, the initialization is aready close to the result because the 
+  //  sinusoidal wiggling happens to not do very much at the sampling points). With N = 101, we 
+  //  need 1499 iterations. Maybe some sort of "multigrid"-like method could be suitable where we 
+  //  first estimate a geodesic at low resolution, then interpolate that up to higher resolution
+  //  and iterate further on the higher resolution, then interpolate to a yet higher resolution and
+  //  iterate on that resolution and so on until the final target resolution has been obtained.
   //
   // Conclusion:
   // -For the plane as example surface and adaption rate of around 0.01 produces the fastest 

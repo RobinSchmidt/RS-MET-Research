@@ -4348,7 +4348,7 @@ void testGeodesic()
     v[n] = v[n] - 0.1 * sin(2 * 2*PI*v[n]);
   }
   length = getTrajectoryLength(surface, &u[0], &v[0], N); // 6.70873356
-  rsPlotVectors(u, v);
+  //rsPlotVectors(u, v);
   // OK - the length of the trajectory in xyz-space has increased due to the deformation. This is
   // what we expect.
 

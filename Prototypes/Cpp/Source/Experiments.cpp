@@ -4254,21 +4254,17 @@ void testGeodesic()
     *z = u*u - v*v;  // z = x^2 - y^2
   };
 
+  // Some random surface that I just made up:
+  Surf someSurface = [](R u, R v, R* x, R* y, R* z)
+  {
+    *x = u*u*v + 2*u;
+    *y = v*v*u + 3*v;
+    *z = sqrt(u*u + v*v);
+  };
 
-  Surf surface = hyperbParab;
 
+  Surf surface = someSurface;
 
-
-  // Geodesic parameters (endpoints and number of points):
-  R   u1 = 0.5, v1 = PI/2;   // Start point
-  R   u2 = 2.0, v2 = PI;     // End point
-  int N  = 11;               // Number of points. Should be at least 2.
-
-  // 
-  Vec u(N), v(N);
-  GF  gf;
-  gf.setSurface(surface);
-  gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
 
   // Helper function to compute the length of a trajectory in xyz-space given a sequence of N 
   // points in uv-space:
@@ -4295,13 +4291,36 @@ void testGeodesic()
   // This function may actually be useful to have in the library so maybe drag it out.
 
 
-  R length = getTrajectoryLength(surface, &u[0], &v[0], N); 
-  //
-  // 5.63763714 after init for polarHyperbParab
-  // 4.24971485 after init for hyperbParab, 4.24930620 after iteration -> not much change at all
-  // WTF? Maybe for a hyperbolic paraboloid, the projections of the geodesics down to the 
-  // xy-plane are indeed straight lines?
 
+  // Geodesic parameters (endpoints and number of points):
+  //R   u1 = 0.5, v1 = PI/2;   // Start point
+  //R   u2 = 2.0, v2 = PI;     // End point
+
+  R   u1 = 0, v1 = 0;        // Start point
+  R   u2 = 1, v2 = 1;        // End point
+  int N  = 101;              // Number of points. Should be at least 2.
+
+  // 
+  //Vec u(N), v(N);
+  Vec u = rsRangeLinear(u1, u2, N);
+  Vec v = rsRangeLinear(v1, v2, N);
+
+  R length = getTrajectoryLength(surface, &u[0], &v[0], N); 
+
+
+  GF  gf;
+  gf.setSurface(surface);
+  gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
+
+
+
+
+  length = getTrajectoryLength(surface, &u[0], &v[0], N); 
+  // 5.20946980 after init for someSurface with N = 11 
+  // 5.20757866 after iteration with eta = 0.01. Something is clearly wrong! We stay close to
+  // the initial length. Also, it doesn't seem to converge
+
+  rsPlotVectors(u, v);
 
   int dummy = 0;
 

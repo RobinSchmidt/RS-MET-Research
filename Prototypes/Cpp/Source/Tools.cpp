@@ -2738,7 +2738,9 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 
-/** A class to find geodesics of a surface ...TBC...
+/** Under construction. Does not yet work.
+
+A class to find geodesics of a surface ...TBC...
 
 
 ToDo:
@@ -2777,6 +2779,9 @@ public:
   so as to produce a sampled geodesic. */
   void findGeodesic(T u1, T v1, T u2, T v2, int numPoints, T* u, T* v);
 
+
+  /** Computes length of the segment between () */
+  //T segmentLength(T uL, T vL, T uH, T vH);
 
 
   //std::vector<RAPT::rsVector2D<T>> findGeodesic(rsVector2D<T> p1, rsVector2D<T> p2, int numPoints);
@@ -2872,11 +2877,11 @@ void rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
   // xyz-space. We do these by checking locally (i.e. at each i), how tweaking u[i], v[i] would 
   // affect the total length ...TBC...
   bool converged = false;
-  T etaU   = 0.02;               // Adaption rate. Tweak to optimze convergence speed
-  T etaV   = 0.02;
+  T etaU   = 0.002;               // Adaption rate. Tweak to optimze convergence speed
+  T etaV   = 0.002;
   T thresh = T(1) / T(65536); // 1/2^16. Preliminary. Chosen ad hoc. Make this a settable member.
   int numIts = 0;
-  int maxIts = 1000;
+  int maxIts = 10000;
   while(!converged && numIts <= maxIts)
   {
     // Estimate changes in total squared length when we wiggle u[i], v[i]

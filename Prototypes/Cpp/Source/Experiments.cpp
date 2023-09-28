@@ -14205,7 +14205,7 @@ void polyaGeodesics()
   using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;  // Parametric surface
 
 
-  int N = 51; // Number of points along geodesic
+  int N = 11; // Number of points along geodesic
 
   // Polya potential with 3 saddles at 1,i,-1. Prefix pp stands for Polya potential
   auto pp_zerosAt_1_m1_I = [](R x, R y) 
@@ -14257,7 +14257,9 @@ void polyaGeodesics()
   rsContourMapPlotter<R> cplt;
   setupForContourPlot<R>(cplt, [&](R x, R y) { return pp_zerosAt_1_m1_I(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
-  cplt.addPath(g1);
+  //cplt.addPath(g1);
+  //cplt.addPath(g2);
+  cplt.addPath(g3);
   cplt.plot();
 
 

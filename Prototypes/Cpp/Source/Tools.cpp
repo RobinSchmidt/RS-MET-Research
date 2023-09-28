@@ -2738,7 +2738,7 @@ protected:
 
 //-------------------------------------------------------------------------------------------------
 
-/** Under construction. Does not yet work.
+/** Under construction. Works partially.
 
 A class to find geodesics of a surface ...TBC...
 
@@ -2771,9 +2771,15 @@ public:
   void setSurface(const Surface& newSurface) { surface = newSurface; }
 
 
-  /** Sets the adaption rates for the gradient descent procudure. */
+  /** Sets the adaption rates for the gradient descent like numeric procudure. */
   void setAdaptionRates(T newRateU, T newRateV) { etaU = newRateU; etaV = newRateV; }
-  // ToDo: document this better
+  // ToDo: 
+  // -Document this better
+  // Notes:
+  // -I say gradient descent "like" and not just gradient descent because I came up with the algo
+  //  heuristically without actually explicitly defining a cost function to minimize. I believe, 
+  //  the algo can be framed in terms of minimizing such a cost functioh, though. I think, I 
+  //  minimize the sum of the squared lengths of the path segments in xyz-space.
 
 
   /** Computes a geodesic from point p1 to point p2 where p1 = (u1,v1) and p2 = (u2,v2), i.e. the
@@ -2785,6 +2791,7 @@ public:
   so as to produce a sampled geodesic. */
   bool findGeodesic(T u1, T v1, T u2, T v2, int numPoints, T* u, T* v);
 
+
   /** Given a trajectory in uv-space of length N (= numPoints) represented by the arrays u,v of 
   coordinates which represent points (u[n], v[n]), n = 0...N-1 in uv-space, this function tries to 
   numerically optimize the trajectory so as to achieve the shortest possible corresponding length 
@@ -2793,7 +2800,7 @@ public:
   also be one with constant speed, i.e. constant distance between the nodes in xyz-space.  */
   int optimizeGeodesic(int numPoints, T* u, T* v);
   // Find a better name: optimizeTrajectory, shortenTrajectory, minimizeTrajectoryLength, 
-  // minimizeCurveLength, minimizePathLength, shortenPath, shortestPathOnSurface, 
+  // minimizeCurveLength, minimizePathLength*, shortenPath, shortestPathOnSurface, 
   // minimizePathOnSurface
 
 
@@ -2964,6 +2971,34 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   //   increase/decrease factors may also be exposed as user parameters. Maybe by default use 2 for
   //   the increase and 4 for the decrease (i.e. multiply by 1/4).
 }
+
+/** Convenience function. ...TBC... */
+template<class T>
+std::vector<RAPT::rsVector2D<T>> rsFindGeodesic(T u1, T v1, T u2, T v2, int numPoints)
+{
+  int N = numPoints;
+  std::vector<T> u(N), v(N);
+  std::vector<rsVector2D<T>> g(N);
+  rsGeodesicFinder<T> gf;
+  bool success = gf.findGeodesic(u1, v1, u2, v2, N, u, v);
+  if(success)
+    for(int n = 0; n < N; n++)
+      g[n] = rsVector2D(u[n], v[n]);
+  return g;
+}
+// -Needs test
+// -Maybe the "if(success)" conditional should go away. The rsGeodesicFinder should always produce
+//  some result that makes at least some sense. It should not be possible that it produces pure 
+//  garbage due to a diverging numerical scheme. The proper solution is not to produce no geodesic
+//  at all (i.e. one of all zero vectors) in this case but rather preventing the algo from 
+//  producing garbage in the first place. In the worst case, it should produce a trajectory that 
+//  corresponds to a straight line in uv-space even if that is not a proper geodesic on the surface
+//  in xyz-space. But it should never produce the garbage of a diverged numerical scheme. It 
+//  currently may, so this needs to be fixed.
+// -The function is realized as free function rather than as (static) member function of 
+//  rsGeodesicFinder to keep the class independent from rsVector2D. This reduces coupling. So far, 
+//  rsGeodesicFinder's only dependency is std::function and it would be nice if we could keep it 
+//  that way.
 
 //-------------------------------------------------------------------------------------------------
 // Coordinate conversion formulas:

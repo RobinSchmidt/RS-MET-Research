@@ -4251,9 +4251,9 @@ void testGeodesic()
 
 
   using R    = float;                 // Real number type
-  using GF   = rsGeodesicFinder<R>;
+  //using GF   = rsGeodesicFinder<R>;
   using Vec  = std::vector<R>;
-  using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;
+  using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;  // Surface x(u,v), y(u,v), z(u,v)
   // Function defining a parametric surface x(u,v), y(u,v), z(u,v)
 
 
@@ -4355,7 +4355,7 @@ void testGeodesic()
   // what we expect.
 
   // Use the geodesic finder to optimize the weird initial trajectory into a geodesic:
-  GF  gf;
+  rsGeodesicFinder<R> gf;
   gf.setSurface(surface);
   gf.setAdaptionRates(adaptRate, adaptRate);
   int numIts = gf.optimizeGeodesic(N, &u[0], &v[0]);
@@ -4435,6 +4435,10 @@ void testGeodesic()
   //  maximally possible adaption rate before the algo breaks down is independent of the number of 
   //  points N but that needs some more tests.
   //
+  // -It seems that the final error in the u-vector is less than in the v-vector. With N=51, 
+  //  the u-vector has only the last 3 digits wrong whereas the v-vector has the last 5 digits 
+  //  wrong. Figure out why this is the case!
+  //
   // Conclusion:
   // -For the plane as example surface and adaption rate of around 0.01 produces the fastest 
   //  possible convergence. Going higher leads to divergence and going lower slows down the 
@@ -4446,7 +4450,24 @@ void testGeodesic()
   //  ...done - yes - there is some dependence
   // -
   //  
-
+  // Ideas:
+  // -When using higher adaption rates, I sometimes observed a wiggle at the spatial Nyquist 
+  //  frequency in the end result. That means, if we look at u[n], the u-array oscillates betwenn
+  //  u[n-1] and u[n] and then oscillates back between u[n] and u[n+1]...and so on, for the whole 
+  //  produced array (of course, it could happen for the v-array as well - or for both). This 
+  //  Nyquist oscillation indicates that inside the gradient descent algo, at the end of the 
+  //  iteration, the solution was oscillating between two spatial solutions. There could be two 
+  //  ways to combat this oscillation within the algo:
+  //  -Use a spatial moving average filter of length 2 at the end of each iteration, i.e. filter
+  //   the u,v arrays at the end of each iteration "spatially", i.e. over array index n.
+  //  -Use a temporal moving average filter of length 2 to smooth the adpation steps over time 
+  //   where by "time" I mean iteration number i of the algo. We could also introduce momentum in
+  //   adaption algo which should have a similar smoothing effect. But to reduce the Nyquist 
+  //   oscillation specifically, it seems desirable  to use a filter with a zero at Nyquist and not
+  //   just a simple one-pole. Maybe a one-pole/one-zero filter with a zero at Nyquist could be 
+  //   best. I assume here, that the spatial Nyquist oscillation in the produced result came from a
+  //   temporal Nyquist oscillation in the algo but it needs to be verified, if this is actually 
+  //   the case!
 
 
   // See also:
@@ -4457,7 +4478,7 @@ void testGeodesic()
   // -Cone and cylinder: https://mathinsight.org/parametrized_surface_examples
   // -plane
   // -ToDo: torus, sphere, elliposoid, surfaces of revolution, 
-  // 
+  // -See the differential geometry book by Taha Sochi for more examples.
 }
 
 //=================================================================================================

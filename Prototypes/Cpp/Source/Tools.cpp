@@ -109,7 +109,7 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 
 
 // ToDo:
-// -Move that functionality into GNUPlotter
+// -Move that functionality into GNUPlotter ...done in plotContourMap?
 void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
 {
   // Add the contour lines:
@@ -329,6 +329,7 @@ void rsContourMapPlotter<T>::plot()
   GNUPlotter plt;
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
   setupPlotter(&plt);
+  //plt.plotContourMap
   plotContours(plt, levels, true);   // Make this a member function! It's currently free.
 }
 

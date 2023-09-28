@@ -14259,11 +14259,18 @@ void polyaGeodesics()
   // ToDo:
   // -Try to combine a contour plot with the geodesics. Maybe make a subclass of rsContourPlotter
   //  for that. I think, drawing them in a purple or dark-magenta tone and with a thickness higher
-  //  than that of the contour would look good. But that seems to be difficult to achieve. Maybe we
-  //  need to create separate plots for the contours and the geodesics and combine them with an 
+  //  than that of the contours would look good. But that seems to be difficult to achieve. Maybe 
+  //  we need to create separate plots for the contours and the geodesics and combine them with an 
   //  image editor manually. Or maybe don't use GNUPlotter for that at all and instead use my own
   //  contour plotting implementation. But that doesn't support colormaps. So maybe do the contours
   //  in grayscale and add the geodesics in some color
+  // -Maybe it should be a class rsContourPlotterWithPaths...or: maybe addinge the paths can be 
+  //  done in the baseclass because it may make sense for arrow-plots, too. There, we may want to 
+  //  draw field lines.
+  // -Try to combine an arrow-plot with some field lines. Maybe try to draw some field-line 
+  //  segments starting from some of the arrows. But they may or may not hit other arrows. Perhaps
+  //  it's better to let the user pick starting points for the field-lines manually. To pick them
+  //  later automatically would be the next step.
 }
 
 

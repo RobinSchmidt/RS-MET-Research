@@ -156,7 +156,9 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
 
 // Maybe move them into rs_testing/TestTools/Plotting.h:
 
-/** Baseclass for 2 field plotters */
+/** Baseclass for 2D field plotters. Factors out the stuff that is common to different kinds of 2D 
+field plotters. Subclasses are rsFieldPlotter2D for creating arrow plots of 2D vector fields and 
+rsContourMapPlotter for creating contour maps of 2D scalar fields. */
 
 template<class T>
 class rsFieldPlotter2D
@@ -189,6 +191,10 @@ public:
 
   void clearCommands() { commands.clear(); }
 
+  void addPath(const std::vector<rsVector2D<T>>& path) { paths.push_back(path); }
+
+  void clearPaths() { paths.clear(); }
+
 
   void setupPlotter(GNUPlotter* plt);
 
@@ -219,53 +225,45 @@ protected:
   // Let's abbreviate "left" by "L", "right" by "R", etc.. I think, we need T-B = R-L to get an 
   // aspect ratio of 1? Here, we use T-B = R-L = 0.8. -> Figure this out and document it properly.
   // What setting do we need to get a 1:1 aspect ratio, given that the pixel-size is square?
+
+
+  std::vector<std::vector<rsVector2D<T>>> paths;
+  // An array of paths where each path is given as an array of points p_i = (x,y)_i. These paths 
+  // are drawn into the plot over the actual data. In the subclass rsFieldPlotter2D, these paths 
+  // could, for example, be used to draw in field lines and in the subclass rsContourMapPlotter, 
+  // they could be used to draw in geodesics between points of interest. They could also be used to 
+  // draw in other "lines of interest" such as lines of constant curvature or whatever.
 };
 
 
 template<class T>
 void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
 {
+  // Style setup:
   if(dark)
     plt->setToDarkMode();
   else
     plt->setToLightMode();
-
   if(!title.empty())
     plt->setTitle(title);
-
-
   plt->setColorPalette(colorMap, reverseColors);
   plt->setPixelSize(pixelWidth, pixelHeight);
   plt->setRange(xMin, xMax, yMin, yMax);
-
   plt->addCommand("set lmargin at screen " + std::to_string(left));
   plt->addCommand("set rmargin at screen " + std::to_string(right));
   plt->addCommand("set tmargin at screen " + std::to_string(top));
   plt->addCommand("set bmargin at screen " + std::to_string(bottom));
+  plt->addCommand("set xlabel \"\""); // Use empty string as label to get rid of it
+  plt->addCommand("set ylabel \"\""); // ToDo: let the user specify axis labels
 
-  /*
-  // Preliminary - make this customizable:
-  plt->addCommand("set bmargin at screen 0.1");  // B: bottom
-  plt->addCommand("set tmargin at screen 0.9");  // T: top
-  plt->addCommand("set lmargin at screen 0.07"); // L: left
-  plt->addCommand("set rmargin at screen 0.87"); // R: right
-  // I think, we need T-B = R-L to get an aspect ratio of 1? Here, we use T-B = R-L = 0.9. 
-  // ToDo: 
-  // -Verify, if the aspect ratio is indeed 1.
-  // -Don't hardcode these numbers! Have a function that can be called like 
-  //  setDrawingArea(0.1, 0.9, 0.07, 0.87)
-  */
-
-
-  // Get rid of the axis labels:
-  plt->addCommand("set xlabel \"\""); // use empty string as label
-  plt->addCommand("set ylabel \"\"");
-  // ToDo: let the user specify axis labels
-
-  // Use the custom command list to set additional user-defined options or to override the default
-  // settings:
+  // Plot customizations:
   for(size_t i = 0; i < commands.size(); i++)
     plt->addCommand(commands[i]);
+  // We use use the custom "commands" list to set additional user-defined options and/or to 
+  // override the default settings from the style setup above.
+
+  // Add the paths:
+  // ...
 }
 
 
@@ -329,7 +327,6 @@ void rsContourMapPlotter<T>::plot()
   GNUPlotter plt;
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
   setupPlotter(&plt);
-  //plt.plotContourMap
   plotContours(plt, levels, true);   // Make this a member function! It's currently free.
 }
 

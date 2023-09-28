@@ -14235,13 +14235,18 @@ void polyaGeodesics()
   //RAPT::rsPlotArraysXY(N, &u[0], &v[0]);
 
 
-
-  
-  /*
   // Compute the 3 geodesics between the 3 saddles:
   Path g1 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,   0.f, +1.f, N); // left side
   Path g2 = rsFindGeodesic(zerosAt_1_m1_I, +1.f, 0.f,   0.f, +1.f, N); // right side
   Path g3 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,  +1.f, +0.f, N); // bottom side
+
+  rsContourMapPlotter<R> cplt;
+
+
+
+  
+  /*
+
   // This is an inconvenient format for plotting!
 
   // Preliminary

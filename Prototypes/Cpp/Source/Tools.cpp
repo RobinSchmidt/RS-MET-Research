@@ -111,7 +111,9 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 
 // ToDo:
 // -Move that functionality into GNUPlotter ...done in plotContourMap?
-void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
+
+void prepareForContourPlot(GNUPlotter& plt,
+  const std::vector<float> levels, bool useConstColors = true)
 {
   // Add the contour lines:
   std::string cmd;
@@ -134,11 +136,16 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
   plt.addCommand("set pm3d map impl");
   plt.addCommand("set contour");
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
-  plt.invokeGNUPlot();
 
   // Questions:
   // -What happens, if the levels are non-equidistant? I guess, in this case, the alignment between
   //  constant color region boundaries and contour lines gets messed up.
+}
+
+void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useConstColors = true)
+{
+  prepareForContourPlot(plt, levels, useConstColors);
+  plt.invokeGNUPlot();
 }
 
 // See:
@@ -350,7 +357,19 @@ void rsContourMapPlotter<T>::plot()
   GNUPlotter plt;
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
   setupPlotter(&plt);
-  plotContours(plt, levels, true);   // Make this a member function! It's currently free.
+
+  // Add the paths:
+  //std::string lineAttribs = "lw 2";
+  //plt->drawLine(lineAttribs, 0,0,  1,1);  // test
+  //plt->drawPolyLine("lw 2", { 1,2,2,1 }, { 1,1,2,2 });
+
+  prepareForContourPlot(plt, levels, true);
+  plt.invokeGNUPlot();
+
+
+  //plotContours(plt, levels, true);   // Make this a member function! It's currently free.
+  // Split out the invokeGnuplot call from this function. all the rest should go into a function
+  // prepareForContourPolt
 }
 
 

@@ -2835,9 +2835,9 @@ bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v
 template<class T>
 int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
 {
-  // It does not seem to work yet. There's probably still something fundamentally wrong...
 
-  // The idea is to start wih an initial guess that just connects the points (u1,v1), (u2,v2) by
+  // Old:
+  // The idea is to start with an initial guess that just connects the points (u1,v1), (u2,v2) by
   // a straight line and then considers the corresponding trajectory in xyz-space. We compute a 
   // sort of local gradient at each u[n], v[n], i.e. compute by how much the total length would
   // change when we would wiggle one u[n], v[n] at a time. Then we do an adaption step of the 
@@ -2849,11 +2849,9 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   // u[n], v[n].
 
 
-  // Temporary arrays to hold the partial derivatives:
-  std::vector<T> du(N), dv(N);
-  // ToDo: 
-  // -Factor out a function that uses a workspace to avoid allocation. Then keep this function
-  //  as convenience function
+
+  std::vector<T> du(N), dv(N);  // Temporary arrays to hold the partial derivatives.
+
 
 
   // Helper function to compute the squared length of the segment from (uL,vL) to (uH,vH). The 
@@ -2901,6 +2899,10 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   // ...explain better...computes the local partial derivative
   // The bisegment at a node with index n is defined to be the pair of segments into and out of 
   // the node.
+
+  // Helper function to compute change in cost function when we wiggle u[n]. I think, it's the 
+  // partial derivative of the cost function with respect to u[n] although I didn't even 
+  // explicitly write down such an error function, let alone taking derivatives of it.
   auto lengthChangeU = [&](int n)
   {
     RAPT::rsAssert(n >= 1 && n < N-1);
@@ -2909,6 +2911,19 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
     //RAPT::rsAssert(sH < 10000);  // for debug
     return (sH - sL) / (2*hu);
   };
+  // Rename: It's not really the length change but a change in a cost function that I never 
+  // bothered to write down. But that cost is *not* the total length of the trajectory. That would
+  // only be the case, if segmentLengthSq would return sqrt(ds2). But it does return ds2 itself 
+  // which means the cost function would be something like the sum of the squares of the segment 
+  // lengths. Yeah - I think, we we are somewhere in least-squares territory with this algo. 
+  // Minimizing the total length seems reasonable when we deal with infinitesimally small segments
+  // like in calculus but here we are dealing numerically with short segments of nonzero lengths in
+  // which case minimizing the sum of the squared lengths of the segments makes sense as cost 
+  // function. I don't really know, if such a thing would still make sense when the segment lengths
+  // tend to zero though. Perhaps not because a squared infinitesimal is usually taken to be zero
+  // in calculus, so we would try to minimize an integral over the zero function. In the finite 
+  // case, it makes sense, though.
+  // maybe call it costChangeInU
 
   // Same for v:
   auto lengthChangeV = [&](int n)
@@ -2932,10 +2947,9 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
     // Estimate changes in total squared length when we wiggle u[i], v[i]
     for(int n = 1; n < N-1; n++)
     {
-      du[n] = lengthChangeU(n);  // dL / du[n] ...or something proportional
-      dv[n] = lengthChangeV(n);  // dL / dv[n]
+      du[n] = lengthChangeU(n);  // dC / du[n] ...or something proportional
+      dv[n] = lengthChangeV(n);  // dC / dv[n]
     }
-    // Maybe we need to divide by N? ...naah - seems fine.
 
     // Adapt the trajectory:
     for(int n = 1; n < N-1; n++)
@@ -2955,13 +2969,16 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
       if(rsAbs(du[n]) > thresh || rsAbs(dv[n]) > thresh) {
         converged = false;
         break; }}
+    // Maybe we should have separate thresholds for du and dv, i.e. threshU, threshV. That would
+    // seem to be more consistent with having possibly different adaption rates etaU, etaV. But 
+    // maybe we should use a single adaption rate anyway. We'll see...
   }
 
   return numIts;
 
   // ToDo:
   // -Let the algorithm automatically select an appropriate adaption rate like so:
-  //  -After each iteration, check, if the length has actually decreased. 
+  //  -After each iteration, check, if the length (or the cost) has actually decreased. 
   //   -If yes, increase the adaption rate by a factor of 2.
   //   -If not, undo the step and decrease the adaption rate by a factor of 4.
   //  -Maybe the scheme can be refined. Maybe there should be a case, where the adaption rate
@@ -2977,6 +2994,8 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   //   The 10% should not be hardcoded but be a user parameter with a reasonable default. The 
   //   increase/decrease factors may also be exposed as user parameters. Maybe by default use 2 for
   //   the increase and 4 for the decrease (i.e. multiply by 1/4).
+  // -Factor out a function that uses a workspace to avoid allocation. Then keep this function
+  //  as convenience function
 }
 
 /** Convenience function. ...TBC... */

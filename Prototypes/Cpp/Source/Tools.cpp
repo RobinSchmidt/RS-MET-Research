@@ -2798,7 +2798,7 @@ public:
   in xyz-space while keeping the endpoints fixed. Therefore, given an arbitrary trajectory, this 
   function numerically finds a nearby geodesic between the two end points. The trajectory will 
   also be one with constant speed, i.e. constant distance between the nodes in xyz-space.  */
-  int optimizeGeodesic(int numPoints, T* u, T* v);
+  int minimizePathLength(int numPoints, T* u, T* v);
   // Find a better name: optimizeTrajectory, shortenTrajectory, minimizeTrajectoryLength, 
   // minimizeCurveLength, minimizePathLength*, shortenPath, shortestPathOnSurface, 
   // minimizePathOnSurface
@@ -2825,34 +2825,54 @@ protected:
 template<class T>
 bool rsGeodesicFinder<T>::findGeodesic(T u1, T v1, T u2, T v2, int N, T* u, T* v)
 {
-  // Initialize the u,v arrays by linearly interpolating between u1,u2 and v1,v2 respectively:
+  // Initialize the u,v arrays by linearly interpolating between u1,u2 and v1,v2 respectively. 
+  // This will in general not yield a geodesic (it will in the case of a plane and maybe a couple
+  // of other common surfaces).
   using AT = RAPT::rsArrayTools;
   AT::fillWithRangeLinear(u, N, u1, u2);
   AT::fillWithRangeLinear(v, N, v1, v2);
-  return optimizeGeodesic(N, u, v) < maxIts;
+
+  // We take the path defined by the linear interpolation as an initial guess for the algorithmic 
+  // minimization procedure.
+  return minimizePathLength(N, u, v) < maxIts;
 }
 
 template<class T>
-int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
+int rsGeodesicFinder<T>::minimizePathLength(int N, T* u, T* v)
 {
-
-  // Old:
-  // The idea is to start with an initial guess that just connects the points (u1,v1), (u2,v2) by
-  // a straight line and then considers the corresponding trajectory in xyz-space. We compute a 
-  // sort of local gradient at each u[n], v[n], i.e. compute by how much the total length would
-  // change when we would wiggle one u[n], v[n] at a time. Then we do an adaption step of the 
-  // whole u,v arrays based on these predicted length changes. The length change itself when 
-  // wiggling a given trjactory point (u[n], v[n]) is computed by considering the two trajectory 
-  // segments going into and out of the point. We call these two trajectory segments going into and
-  // out of node n the bi-segment at node n. The whole idea is basically gradient descent applied 
-  // to the total length of the trajectory where the parameter vector is the totality of all the 
-  // u[n], v[n].
-
+  // Algorithm:
+  // We take the path defined in coordinate space (i.e. uv-space) by the arrays u[n],v[n] where 
+  // n = 0..N-1 as an initial guess for an algorithmic minimization procedure that proceeds as 
+  // follows: for each point p[n] = (u[n],v[n]) with n = 1...N-2, i.e. for each point except the 
+  // endpoints, we measure what happens to the bisegment of the path consisting of the two segments
+  // that go into and out of p[n] when we wiggle u[n] or v[n] a tiny little bit. The measurement 
+  // that we take is the sum of the squared lengths of the two segments in xyz-space as defined by
+  // the surface equations x(u,v), y(u,v), z(u,v). Then, we modify p[n] in such a way that this 
+  // measurement decreases. We do this repeatedly until the algorithm converges, i.e. the p[n] do 
+  // not change anymore. I think, this can be framed as a gradient descent algorithm where the 
+  // u[n],v[n] n = 1...N-2 are the parameters and there is a cost function to be minimized. I never
+  // bothered to explicitly write down such a cost function though, much less taking derivatives of 
+  // it, but I think, it would have to be something like the sum of the squares of lengths of the 
+  // path segments.
+  //
+  // Minimizing the sum of the squares of the segment lengths ds^2 = dx^2 + dy^2 + dz^2 rather than
+  // the sum of the lengths ds themselves has some advantages. First of all, it saves us from 
+  // taking a square-root in the innermost loop. But it's not only beneficial from a computational 
+  // cheapness point of view but rather actually makes the algorithm better. Just minimizing the 
+  // sum of the lengths would not try to attempt to achieve a constant speed trajectory, i.e. it 
+  // would not try to balance the lengths of the individual path segments. Using the squares does. 
+  // Apparently, using ds^2 rather than ds also penalizes an unbalanced distribution of the lengths
+  // of the two segments in each bisegment. This is plausible because for any positive a,b with 
+  // a + b = c for some constant c, the quantity a^2 + b^2 is minimized when a = b = c/2. 
+  //
+  // That euqation generalizes to sums of more than 2 terms and should actually also hold for any 
+  // power p greater than 1, i.e. for fixed a + b = c, the choice a = b = c/2 minimizes a^p + b^p 
+  // (verify!). So, any p > 1 should lead to a constant speed trajectory. Still p = 2 seems to be 
+  // the optimal choice in terms of convergence speed. But some more experimentation may need to be
+  // done on this.
 
 
   std::vector<T> du(N), dv(N);  // Temporary arrays to hold the partial derivatives.
-
-
 
   // Helper function to compute the squared length of the segment from (uL,vL) to (uH,vH). The 
   // indices L,H stand for low, high.
@@ -2890,6 +2910,7 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
   //  of the function parameters. It doesn't matter because the local definition would shadow them
   //  as intended. It may be confusing and bad style, though. Maybe rename the function parameters
   //  to uStart, vStart, uEnd, vEnd. Then, we can do the renaming here without any clash.
+  //  Hah - that problem has gone away due to refactoring...
   // -Can be optimized to use only 3 calls to surface() instead of the 4 used now. Currently,
   //  surface() is called twice with uM, vM. If we do this, the function segmentLengthSq may 
   //  actually become obsolete. We should keep it around somewhere for documentation reasons, 

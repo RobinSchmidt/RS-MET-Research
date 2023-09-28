@@ -4360,7 +4360,7 @@ void testGeodesic()
   rsGeodesicFinder<R> gf;
   gf.setSurface(surface);
   gf.setAdaptionRates(adaptRate, adaptRate);
-  int numIts = gf.optimizeGeodesic(N, &u[0], &v[0]);
+  int numIts = gf.minimizePathLength(N, &u[0], &v[0]);
   // This should turn the deformed trajectory back into a straight line when the surface is a 
   // plane.
 

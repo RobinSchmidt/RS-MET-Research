@@ -301,42 +301,16 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
 template<class T>
 void rsFieldPlotter2D<T>::addPathsToPlot(GNUPlotter* plt)
 {
-  // Under construction:
-  //plt.drawCircle("fc rgb \"blue\" fs transparent solid 0.5 front", 0, 0, 0.5);
+  std::string lineAttribs = "lw 2 front";
+  plt->drawLine(lineAttribs, 0,0,  1,1);  // Test
+  // OK - works. The "front" is important and it's also important that the commands generated from
+  // these call appear before the splot command in the command file
 
-  // Test:
-  plt->addCommand("set arrow from 0,0 to 1,0 front"); 
-  // OK - this produces an arrow. It is important to call that before calling
-  // prepareForContourPlot. Otherwise, the arrow won't show up. The "front" is also very 
-  // important
 
-  // Add the paths:
-  //std::string lineAttribs = "lw 2";
-  //plt.drawLine(lineAttribs, 0,0,  1,1);  // test
-  // Produces command
-  //   set arrow from 0,0 to 1,1 nohead lw 2
-  // on line 47, as last command. No line is visible.
+  int dummy = 0;
 
-  //plt.drawPolyLine("lw 2", { 1,2,2,1 }, { 1,1,2,2 });
-
-  //plt.drawCircle("fc rgb \"blue\" fs transparent solid 0.5 front", 0, 0, 0.5);
-  // Nope! no circle is drawn!
-  // Aha! we must add the drawing commands *before* the splot command! I tried it by manually
-  // modifying the command file before the plt.invokeGNUPlot command
-
-  //plt.drawText("", "Text", 0,0);
-  // Doesn't draw anything either. Maybe it's because of the usage of "w pm3d" in
-  //   splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle
-
-  // see:
-  // https://sourceforge.net/p/gnuplot/bugs/2516/
-  // https://comp.graphics.apps.gnuplot.narkive.com/m9IFvQ0I/overlay-arrows-onto-a-gray-map-pm3d
+  // See:
   // http://www.gnuplot.info/demo/arrowstyle.html
-  // "set arrow from 0,0 to 1,0 front"
-
-  //plt.addCommand("set arrow from 0,0 to 1,0 front");  // Nope! Doesnt work
-  // Move this into a function addPathsToPlot. Should go as protected function into 
-  // rsFieldPlotter2D
 }
 
 

@@ -3005,13 +3005,16 @@ int rsGeodesicFinder<T>::minimizePathLength(int N, T* u, T* v)
 
 /** Convenience function. ...TBC... */
 template<class T>
-std::vector<RAPT::rsVector2D<T>> rsFindGeodesic(T u1, T v1, T u2, T v2, int numPoints)
+std::vector<RAPT::rsVector2D<T>> rsFindGeodesic(
+  const std::function<void(T u, T v, T* x, T* y, T* z)>& surface, 
+  T u1, T v1, T u2, T v2, int numPoints)
 {
   int N = numPoints;
   std::vector<T> u(N), v(N);
   std::vector<rsVector2D<T>> g(N);
   rsGeodesicFinder<T> gf;
-  bool success = gf.findGeodesic(u1, v1, u2, v2, N, u, v);
+  gf.setSurface(surface);
+  bool success = gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
   if(success)
     for(int n = 0; n < N; n++)
       g[n] = rsVector2D(u[n], v[n]);

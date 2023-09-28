@@ -14005,22 +14005,11 @@ void polyaPlotExperiments()
   // vanish, we may instead take directions given by angle bisectors between the contour lines that
   // meet there.
 
-  // Some abbreviations for data types:
-  using R   = float;                         // Data type for real numbers (float or double)
-  //using C   = std::complex<R>;
-  //using PE  = rsPolyaPotentialEvaluator<R>;
-  //using CP  = GNUPlotter::ColorPalette;
-
-  // Abbreviations for functions to create a  surface-, contour- and vector- (or arrow-) plot via
-  // Gnuplot:
+  // Some abbreviations for convenience:
+  using R    = float;                    // Data type for real numbers (float or double)
   auto plotS = ::splotA<R>;              // Surface
   auto plotC = ::cplotA<R>;              // Contours
-  //auto vplotA = ::vplotA<R>;
-  auto plotG = ::plotGradientField<R>;
-
-  // Create and set up the plotters for the vector fields and contour maps:
-  //rsContourMapPlotter<R>  pltC;
-  //rsVectorFieldPlotter<R> pltV;
+  auto plotG = ::plotGradientField<R>;   // Gradient arrows 
 
   // 2 saddles at 1,-1:
   // f(z)   = (z+1)*(z-1)
@@ -14140,6 +14129,10 @@ void polyaPlotExperiments()
 
 
 
+
+
+
+
   // Notes:
   // -The functions have been found using the sage script from the Polya potential paper.
   // -Maybe at the end of the day, it could even be benficial to completely forget about the 
@@ -14189,6 +14182,41 @@ void polyaPlotExperiments()
   //  direction. Then we can just follow the geodesic that initially points into the direction.
 
 
+
+  int dummy = 0;
+}
+
+void polyaGeodesics()
+{
+  // We try to create:
+  // Plots of polya potentials with geodesics between the saddles.
+
+  using R    = float;
+  using Path = std::vector<rsVector2D<R>>;                       // Sampled path in uv-space
+  using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;  // Parametric surface
+
+
+  int N = 51; // Number of points along geodesic
+
+  // Polya potential with 3 saddles at 1,i,-1. Prefix pp stands for Polya potential
+  auto pp_zerosAt_1_m1_I = [](R x, R y) 
+  { 
+    R y2 = y*y;  // y^2
+    R x2 = x*x;  // x^2
+    return -3./2*x2*y2 + x2*y - 1./2*x2 + 1./4*x2*x2 + 1./4*y2*y2 - 1./3*y2*y + 1./2*y2 - y;
+  };
+
+  // Parametric surface definition for the Polya potential surface with 3 saddles:
+  Surf zerosAt_1_m1_I = [&](R u, R v, R* x, R* y, R* z)
+  {
+    *x = u;
+    *y = v;
+    *z = pp_zerosAt_1_m1_I(u, v);
+  };
+
+  
+  //
+  Path g1 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,  0.f, +1.f, N);
 
   int dummy = 0;
 }

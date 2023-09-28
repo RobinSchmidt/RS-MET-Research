@@ -40,7 +40,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifoldPolar();
   //testManifoldSphere();
   //testManifoldEarth();
-  testGeodesic();
+  //testGeodesic();
   
   //testSortedSet();
 
@@ -116,7 +116,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //plotZetaPotentialNumeric();
   //testNumericPotential();
   //testPotentialPlotter();
-  polyaPlotExperiments();
+  //polyaPlotExperiments();
+  polyaGeodesics();
   makePlotsForPolyaPaper();
 
 

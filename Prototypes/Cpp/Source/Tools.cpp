@@ -2865,96 +2865,80 @@ int rsGeodesicFinder<T>::minimizePathLength(int N, T* u, T* v)
   // of the two segments in each bisegment. This is plausible because for any positive a,b with 
   // a + b = c for some constant c, the quantity a^2 + b^2 is minimized when a = b = c/2. 
   //
-  // That euqation generalizes to sums of more than 2 terms and should actually also hold for any 
+  // That equation generalizes to sums of more than 2 terms and should actually also hold for any 
   // power p greater than 1, i.e. for fixed a + b = c, the choice a = b = c/2 minimizes a^p + b^p 
   // (verify!). So, any p > 1 should lead to a constant speed trajectory. Still p = 2 seems to be 
   // the optimal choice in terms of convergence speed. But some more experimentation may need to be
   // done on this.
-
-
-  std::vector<T> du(N), dv(N);  // Temporary arrays to hold the partial derivatives.
-
-  // Helper function to compute the squared length of the segment from (uL,vL) to (uH,vH). The 
-  // indices L,H stand for low, high.
-  auto segmentLengthSq = [this](T uL, T vL, T uH, T vH)
-  {
-    T xL, yL, zL; surface(uL, vL, &xL, &yL, &zL);
-    T xH, yH, zH; surface(uH, vH, &xH, &yH, &zH);
-    T dx  = xH - xL;
-    T dy  = yH - yL;
-    T dz  = zH - zL;
-    T ds2 = dx*dx + dy*dy + dz*dz;  // ds2: ds^2 = dx^2 + dy^2 + dz^2. Squared segment length
-    return ds2;
-  };
-  // It was found experimentally that returning the squared length ds^2 itself rather than the 
-  // actual length given by ds = sqrt(ds^2) works best. I also tried other powers of ds2 and 
-  // also |dx|+|dy|+|dz|. Of all these possibilities, ds^2 turned out to be the best choice by 
-  // far. The best thing is: we don't even need any special provisions to explicitly try to 
-  // enforce a constant speed trajectory. It happens automatically. Apparently, using ds^2 rather
-  // than ds also penalizes an unbalanced distribution of the lengths of the two segments in each
-  // bisegment. This is plausible because for any positive a,b with a + b = c for some constant c,
-  // the quantity a^2 + b^2 is minimized when a = b = c/2. That equation should actually hold for 
-  // any power p greater than 1, i.e. for fixed a + b = c, the choice a = b = c/2 minimizes 
-  // a^p + b^p (verify!). So, any p > 1 should lead to a constant speed trajectory. Still p = 2
-  // seems to be the optimal choice in terms of convergence speed. But some more experimentation
-  // may need to be done on this.
-
-  // Helper function to compute the sum of the squared lengths of the bi-segment from (uL,vL) to 
-  // (uM,vM) to (uH,vH). The indices L,M,H stand for low, middle, high.
-  auto biSegmentLength = [&](T uL, T vL, T uM, T vM, T uH, T vH)
-  {
-    return segmentLengthSq(uL, vL, uM, vM) + segmentLengthSq(uM, vM, uH, vH);
-  };
-  // -Rename: it's actually the sum of the two squared lengths of the two segments in the given
-  //  bisegment. Maybe rename parameters to u1, v1, u2, v2, u3, v3. But this clashes with the names
-  //  of the function parameters. It doesn't matter because the local definition would shadow them
-  //  as intended. It may be confusing and bad style, though. Maybe rename the function parameters
-  //  to uStart, vStart, uEnd, vEnd. Then, we can do the renaming here without any clash.
-  //  Hah - that problem has gone away due to refactoring...
-  // -Can be optimized to use only 3 calls to surface() instead of the 4 used now. Currently,
-  //  surface() is called twice with uM, vM. If we do this, the function segmentLengthSq may 
-  //  actually become obsolete. We should keep it around somewhere for documentation reasons, 
-  //  though. An optimized computation here may obfuscate what is actually going on.
-
-  // Helper function to compute change in length of the bisegment at node n when we wiggle u[n]
-  // ...explain better...computes the local partial derivative
-  // The bisegment at a node with index n is defined to be the pair of segments into and out of 
-  // the node.
-
-  // Helper function to compute change in cost function when we wiggle u[n]. I think, it's the 
-  // partial derivative of the cost function with respect to u[n] although I didn't even 
-  // explicitly write down such an error function, let alone taking derivatives of it.
-  auto lengthChangeU = [&](int n)
-  {
-    RAPT::rsAssert(n >= 1 && n < N-1);
-    T sH = biSegmentLength(u[n-1], v[n-1], u[n]+hu, v[n], u[n+1], v[n+1]);
-    T sL = biSegmentLength(u[n-1], v[n-1], u[n]-hu, v[n], u[n+1], v[n+1]);
-    //RAPT::rsAssert(sH < 10000);  // for debug
-    return (sH - sL) / (2*hu);
-  };
-  // Rename: It's not really the length change but a change in a cost function that I never 
-  // bothered to write down. But that cost is *not* the total length of the trajectory. That would
-  // only be the case, if segmentLengthSq would return sqrt(ds2). But it does return ds2 itself 
-  // which means the cost function would be something like the sum of the squares of the segment 
-  // lengths. Yeah - I think, we we are somewhere in least-squares territory with this algo. 
+  //
   // Minimizing the total length seems reasonable when we deal with infinitesimally small segments
   // like in calculus but here we are dealing numerically with short segments of nonzero lengths in
   // which case minimizing the sum of the squared lengths of the segments makes sense as cost 
   // function. I don't really know, if such a thing would still make sense when the segment lengths
   // tend to zero though. Perhaps not because a squared infinitesimal is usually taken to be zero
   // in calculus, so we would try to minimize an integral over the zero function. In the finite 
-  // case, it makes sense, though.
-  // maybe call it costChangeInU
+  // case, it makes sense, though. I think, we we are somewhere in least-squares territory with 
+  // this algo. 
 
-  // Same for v:
-  auto lengthChangeV = [&](int n)
+
+  std::vector<T> du(N), dv(N);  // Temporary arrays to hold the partial derivatives.
+
+  // Local function to compute the squared length of the segment from (u1,v1) to (u2,v2).
+  auto segmentLengthSq = [this](T u1, T v1, T u2, T v2)
+  {
+    T x1, y1, z1; surface(u1, v1, &x1, &y1, &z1);
+    T x2, y2, z2; surface(u2, v2, &x2, &y2, &z2);
+    T dx  = x2 - x1;
+    T dy  = y2 - y1;
+    T dz  = z2 - z1;
+    T ds2 = dx*dx + dy*dy + dz*dz;  // ds2: ds^2 = dx^2 + dy^2 + dz^2. Squared segment length
+    return ds2;
+  };
+  // It was found experimentally that returning the squared length ds^2 itself rather than the 
+  // actual length given by ds = sqrt(ds^2) works best. I also tried other powers of ds2 and 
+  // also |dx|+|dy|+|dz|. Of all these possibilities, ds^2 turned out to be the best choice. 
+
+
+  // Local function to compute the sum of the squared lengths of the bi-segment from (u1,v1) to 
+  // (u2,v2) to (u3,v3).
+  auto biSegmentCost = [&](T u1, T v1, T u2, T v2, T u3, T v3)
+  {
+    return segmentLengthSq(u1, v1, u2, v2) + segmentLengthSq(u2, v2, u3, v3);
+  };
+  // -Can be optimized to use only 3 calls to surface() instead of the 4 used now. Currently,
+  //  surface() is called twice with uM, vM. If we do this, the function segmentLengthSq may 
+  //  actually become obsolete. We should keep it around somewhere for documentation reasons, 
+  //  though. An optimized computation here may obfuscate what is actually going on.
+  // -Actually, if we would only use a one-sided difference rather than a central difference to
+  //  estimate the gradient, we may save a couple of more evaluations if we consolidate all 
+  //  evaluations in a higher level function like costChangeU. Maybe we could reduce the
+  //  total number of evaluations by a factor of (almost) 2? But the less accurate gradient 
+  //  evaluation may change the behavior of the algo. Maybe it's overall beneficial nonetheless. 
+  //  There is definitely some potential for optimizations in this algorithm. Maybe we should keep
+  //  this implementation as prototype for reference (and unit tests) and implement an optimized 
+  //  version, too.
+
+
+  // Local function to compute change in cost function when we wiggle u[n]. I think, it's the 
+  // partial derivative of the cost function with respect to u[n] although I didn't even 
+  // explicitly write down such an error function, let alone taking derivatives of it.
+  auto costChangeU = [&](int n)
   {
     RAPT::rsAssert(n >= 1 && n < N-1);
-    T sH = biSegmentLength(u[n-1], v[n-1], u[n], v[n]+hv, u[n+1], v[n+1]);
-    T sL = biSegmentLength(u[n-1], v[n-1], u[n], v[n]-hv, u[n+1], v[n+1]);
-    return (sH - sL) / (2*hv);
+    T sH = biSegmentCost(u[n-1], v[n-1], u[n]+hu, v[n], u[n+1], v[n+1]);
+    T sL = biSegmentCost(u[n-1], v[n-1], u[n]-hu, v[n], u[n+1], v[n+1]);
+    //RAPT::rsAssert(sH < 10000);  // for debug
+    return (sH - sL) / (2*hu);     // Central difference approximation of (partial) derivative
   };
 
+  // Like costChangeU but for v:
+  auto costChangeV = [&](int n)
+  {
+    RAPT::rsAssert(n >= 1 && n < N-1);
+    T sH = biSegmentCost(u[n-1], v[n-1], u[n], v[n]+hv, u[n+1], v[n+1]);
+    T sL = biSegmentCost(u[n-1], v[n-1], u[n], v[n]-hv, u[n+1], v[n+1]);
+    return (sH - sL) / (2*hv);
+  };
 
 
   // Now we enter the iteration to minimize the total length of the corresponding trajectory in 
@@ -2965,14 +2949,14 @@ int rsGeodesicFinder<T>::minimizePathLength(int N, T* u, T* v)
   int numIts = 0;
   while(!converged && numIts < maxIts)
   {
-    // Estimate changes in total squared length when we wiggle u[i], v[i]
+    // Estimate changes in total cost when we wiggle u[n],v[n] for all inner points:
     for(int n = 1; n < N-1; n++)
     {
-      du[n] = lengthChangeU(n);  // dC / du[n] ...or something proportional
-      dv[n] = lengthChangeV(n);  // dC / dv[n]
+      du[n] = costChangeU(n);  // dC / du[n] ...or something proportional
+      dv[n] = costChangeV(n);  // dC / dv[n]
     }
 
-    // Adapt the trajectory:
+    // Adapt the path:
     for(int n = 1; n < N-1; n++)
     {
       u[n] -= etaU * du[n];
@@ -2986,7 +2970,7 @@ int rsGeodesicFinder<T>::minimizePathLength(int N, T* u, T* v)
     // or dv that is greater than our convergence threshold, we consider the algorithm not yet 
     // converged. If all values are <= thresh, the algo is considered converged.
     converged = true;
-    for(int n = 1; n < N-1; n++) {    // du,dv only contain interesting values from 1...N-2
+    for(int n = 1; n < N-1; n++) {
       if(rsAbs(du[n]) > thresh || rsAbs(dv[n]) > thresh) {
         converged = false;
         break; }}

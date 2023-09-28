@@ -14259,7 +14259,11 @@ void polyaGeodesics()
   // ToDo:
   // -Try to combine a contour plot with the geodesics. Maybe make a subclass of rsContourPlotter
   //  for that. I think, drawing them in a purple or dark-magenta tone and with a thickness higher
-  //  than that of the contour would look good.
+  //  than that of the contour would look good. But that seems to be difficult to achieve. Maybe we
+  //  need to create separate plots for the contours and the geodesics and combine them with an 
+  //  image editor manually. Or maybe don't use GNUPlotter for that at all and instead use my own
+  //  contour plotting implementation. But that doesn't support colormaps. So maybe do the contours
+  //  in grayscale and add the geodesics in some color
 }
 
 

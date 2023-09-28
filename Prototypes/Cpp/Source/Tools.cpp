@@ -315,17 +315,19 @@ void rsFieldPlotter2D<T>::addPathsToPlot(GNUPlotter* plt)
     T x1 = paths[0][0].x;
     T y1 = paths[0][0].y;
     std::string attribs = "lw 2 front";
-    for(size_t j = 0; j < paths.size(); j++)
+    for(size_t j = 1; j < paths[i].size(); j++)
     {
       T x2 = paths[i][j].x;
       T y2 = paths[i][j].y;
       plt->drawLine(attribs, x1, y1, x2, y2);
+      x1 = x2;
+      y1 = y2;
     }
   }
   int dummy = 0;
 
   // Notes:
-  // -The "front" is important and it's also important that the commands generated from these call
+  // -The "front" is important and it's also important that the commands generated from these calls
   //  appear before the splot command in the command file.
   //
   // ToDo:

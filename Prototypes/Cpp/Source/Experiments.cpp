@@ -14224,6 +14224,9 @@ void polyaGeodesics()
   };
 
 
+  //Surf S = zerosAt_1_m1_I;
+
+
   rsGeodesicFinder<R> gf;
   gf.setSurface(zerosAt_1_m1_I);
 
@@ -14246,12 +14249,16 @@ void polyaGeodesics()
 
 
   // Compute the 3 geodesics between the 3 saddles:
+
   Path g1 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,   0.f, +1.f, N); // left side
   Path g2 = rsFindGeodesic(zerosAt_1_m1_I, +1.f, 0.f,   0.f, +1.f, N); // right side
   Path g3 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,  +1.f, +0.f, N); // bottom side
 
   rsContourMapPlotter<R> cplt;
-
+  setupForContourPlot<R>(cplt, [&](R x, R y) { return pp_zerosAt_1_m1_I(x, y); }, 
+    -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
+  cplt.addPath(g1);
+  cplt.plot();
 
 
   

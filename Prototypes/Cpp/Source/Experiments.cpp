@@ -14192,6 +14192,7 @@ void polyaGeodesics()
   // Plots of polya potentials with geodesics between the saddles.
 
   using R    = float;
+  using Vec  = std::vector<R>;
   using Path = std::vector<rsVector2D<R>>;                       // Sampled path in uv-space
   using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;  // Parametric surface
 
@@ -14214,11 +14215,48 @@ void polyaGeodesics()
     *z = pp_zerosAt_1_m1_I(u, v);
   };
 
+
+  rsGeodesicFinder<R> gf;
+  gf.setSurface(zerosAt_1_m1_I);
+
+  Vec u(N), v(N); 
+  GNUPlotter plt;
+  gf.findGeodesic(-1, 0,   0, +1, N, &u[0], &v[0]);   // left side
+  plt.addDataArrays(N, &u[0], &v[0]);
+  gf.findGeodesic(+1, 0,   0, +1, N, &u[0], &v[0]);   // right side
+  plt.addDataArrays(N, &u[0], &v[0]);
+  gf.findGeodesic(-1, 0,  +1,  0, N, &u[0], &v[0]);   // bottom side
+  plt.addDataArrays(N, &u[0], &v[0]);
+  plt.plot();
+
+
+  //RAPT::rsPlotArraysXY(N, &u[0], &v[0]);
+
+
+
   
-  //
-  Path g1 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,  0.f, +1.f, N);
+  /*
+  // Compute the 3 geodesics between the 3 saddles:
+  Path g1 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,   0.f, +1.f, N); // left side
+  Path g2 = rsFindGeodesic(zerosAt_1_m1_I, +1.f, 0.f,   0.f, +1.f, N); // right side
+  Path g3 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,  +1.f, +0.f, N); // bottom side
+  // This is an inconvenient format for plotting!
+
+  // Preliminary
+  auto plotPath = [](const Path& path)
+  {
+    int dummy = 0;
+  };
+
+  plotPath(g1);
+  */
+
 
   int dummy = 0;
+
+  // ToDo:
+  // -Try to combine a contour plot with the geodesics. Maybe make a subclass of rsContourPlotter
+  //  for that.
 }
 
 

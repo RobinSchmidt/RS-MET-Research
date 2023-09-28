@@ -14228,7 +14228,9 @@ void polyaGeodesics()
   gf.findGeodesic(-1, 0,  +1,  0, N, &u[0], &v[0]);   // bottom side
   plt.addDataArrays(N, &u[0], &v[0]);
   plt.plot();
-
+  // The left and right sides are almost straight, just slightly bent inwards. The bottom side 
+  // bends inwards some more. When comparing that to the contour plot the the Polya surface, that
+  // shape looks plausible.
 
   //RAPT::rsPlotArraysXY(N, &u[0], &v[0]);
 
@@ -14256,7 +14258,8 @@ void polyaGeodesics()
 
   // ToDo:
   // -Try to combine a contour plot with the geodesics. Maybe make a subclass of rsContourPlotter
-  //  for that.
+  //  for that. I think, drawing them in a purple or dark-magenta tone and with a thickness higher
+  //  than that of the contour would look good.
 }
 
 

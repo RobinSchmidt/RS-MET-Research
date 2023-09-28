@@ -116,8 +116,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //plotZetaPotentialNumeric();
   //testNumericPotential();
   //testPotentialPlotter();
-  //polyaPlotExperiments();
-  polyaGeodesics();
+  polyaPlotExperiments();
+  //polyaGeodesics();
   makePlotsForPolyaPaper();
 
 

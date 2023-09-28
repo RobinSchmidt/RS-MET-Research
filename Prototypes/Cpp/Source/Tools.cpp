@@ -262,7 +262,26 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   // We use use the custom "commands" list to set additional user-defined options and/or to 
   // override the default settings from the style setup above.
 
+  /*
+  // Try to draw the paths - but it doesn't seem to work:
   // Add the paths:
+  std::string lineAttribs = "lw 2";
+  plt->drawLine(lineAttribs, 0,0,  1,1);  // test
+  //plt->drawPolyLine("lw 2", { 1,2,2,1 }, { 1,1,2,2 });
+  // Produces the command:
+  //
+  // set arrow from 0,0 to 1,1 nohead 
+  //
+  // in line 40 of the generated gnuplotcommands.txt file. I don't see any line being drawn in the
+  // plot though. Perhaps the attributes are such that it becomes invisible. And/or maybe the 
+  // actual contour map is drawn on top the produced line and thus is overdrawing it. in this case,
+  // we should try to position the "set arrow ..." command later in the command file. mayb after
+  // splot command in line 47. That would imply that we can't do it here in setupPlot but rather
+  // must do it in the 2 callers in our 2 subclasses. OK - the attributes seem OK. i think, we
+  // indeed need to put these drawing commands after the splot command. That requires some 
+  // refactoring...
+  */
+
   // ...
 }
 

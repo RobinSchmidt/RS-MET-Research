@@ -13049,7 +13049,7 @@ void plotZetaPotential()
   }
 
   plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], P.getDataPointer());
-  plotSurfaceDark(plt);
+  plotSurface(plt);
 
 
   //plt.plot3D();
@@ -13096,6 +13096,10 @@ void plotZetaPotential()
   //  Ideally, the distances between the sample points should be kinda equally spaced
   // -Use that function to plot the geodesics between the critical points of the Polya potential of
   //  zeta.
+  // -Plot the zero contours of the real and imaginary part of zeta. Where these sets of contours 
+  //  cross, we'll get a zero of zeta. maybe the contour curves make interesting shapes? Maybe draw
+  //  also some other contours (but fainter). Maybe some structure will emerge? Maybe collect the 
+  //  results in a pdf "Geometric Explorations of the Riemann Zeta function"
 }
 
 void plotZetaPotentialNumeric()
@@ -13496,14 +13500,9 @@ void splotA(std::function<T(T x, T y)> f,
   //plt.setToDarkMode();
   //plt.setToLightMode();
 
-
   //plt.setTitle("Polya Potential Surface");
-
   plt.addCommand("set view 70,35"); 
-
-  plotSurfaceDark(plt); // Maybe try other ways
-
-  // View: 66,138; 70,35
+  plotSurface(plt);
 };
 // Maybe rename P to dataP and then f to P
 // For sufaces with contour lines, see:
@@ -14272,10 +14271,31 @@ void polyaGeodesics()
   // -Maybe it should be a class rsContourPlotterWithPaths...or: maybe addinge the paths can be 
   //  done in the baseclass because it may make sense for arrow-plots, too. There, we may want to 
   //  draw field lines.
+  // -Draw some geodesics between points other than the saddles. How do their directiosn relate to
+  //  directions of the contours, if at all? Maybe try one from (-1,-1) to (+1,-1)
+  // -Try to draw other lines of interest related to curvature. Maybe lines of minimum, maximum and
+  //  zero Gaussian curvature could be interesting. But such plots might be easier to achieve 
+  //  outside Gnuplot on a height map on the the pixel level. Of course, the lines of maximum 
+  //  gradient are also interesting but these are precisely the field lines. But yeah...maybe we 
+  //  should add (some of) them to a contour-plot, too. Maybe let some emanate from the saddles - 
+  //  but the gradient vanishes at the saddle itself so there, we should use something else. 
+  //  Something based on higher derivatives
   // -Try to combine an arrow-plot with some field lines. Maybe try to draw some field-line 
   //  segments starting from some of the arrows. But they may or may not hit other arrows. Perhaps
   //  it's better to let the user pick starting points for the field-lines manually. To pick them
   //  later automatically would be the next step.
+  // -Try to find a way to start st some arbitrary point with some arbitrary initial direction and
+  //  produce a geodesic from that point into that direction. I guess, to find the next point, we 
+  //  just advance one step into that direction. But at the second point, how do we figure out the
+  //  second direction? Maybe by solving the geodesic equation at that point? We need some way to 
+  //  be able to compute an outgoing geodesic direction from an incoming geodesic direction. In the
+  //  limit of having the distance between the points going to zero, these directions should match,
+  //  of course. Maybe make an ansatz based on an equation that we would use when we would try to
+  //  numerically estimate the geodesic curvature at a given point, given three neighboring points
+  //  on the geodesic. Set that anatz to zero. In a numerical estimation, we would use the
+  //  previous, current and next point to compute the geodesic curvature at the current point. 
+  //  Here, we would use the previous and current point and the geodesic curvature (of zero) to 
+  //  compute the next point.
 }
 
 

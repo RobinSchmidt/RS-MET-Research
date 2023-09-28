@@ -41,11 +41,12 @@ void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
 // levels for contour lines in a contour plot
 
 /** Produces a surface plot in dark mode. */
-void plotSurfaceDark(GNUPlotter& plt)
+void plotSurface(GNUPlotter& plt)
 {
   //plt.setToDarkMode();
+  // We should delete this and ranem the function to plotSurface
 
-  using CP = GNUPlotter::ColorPalette;
+  //using CP = GNUPlotter::ColorPalette;
   //plt.addCommand("set palette rgbformulae 8, 9, 7");   // burgund...white
   //plt.setColorPalette(CP::KM_moreland);
   //plt.setColorPalette(CP::F_printable);
@@ -279,7 +280,10 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   // splot command in line 47. That would imply that we can't do it here in setupPlot but rather
   // must do it in the 2 callers in our 2 subclasses. OK - the attributes seem OK. i think, we
   // indeed need to put these drawing commands after the splot command. That requires some 
-  // refactoring...
+  // refactoring.
+  // BTW: the drawPolyLine call just produces a bunch of "set arrow " commands. It would perhaps be
+  // nicer, if we could just produce a single "set polyline" command for gnuplot. Figure out, if 
+  // there is such a thing, i.e. if gnuplot supports polylines.
   */
 
   // ...

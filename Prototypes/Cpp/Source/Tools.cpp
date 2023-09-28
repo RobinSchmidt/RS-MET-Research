@@ -301,14 +301,37 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
 template<class T>
 void rsFieldPlotter2D<T>::addPathsToPlot(GNUPlotter* plt)
 {
-  std::string lineAttribs = "lw 2 front";
-  plt->drawLine(lineAttribs, 0,0,  1,1);  // Test
-  // OK - works. The "front" is important and it's also important that the commands generated from
-  // these call appear before the splot command in the command file
+  //if(paths.empty())
+  //  return;
 
+  //std::string lineAttribs = "lw 2 front";
+  //plt->drawLine(lineAttribs, 0,0,  1,1);  // Test
+  // OK - works. 
 
+  for(size_t i = 0; i < paths.size(); i++)
+  {
+    if(paths[i].empty())
+      continue;
+    T x1 = paths[0][0].x;
+    T y1 = paths[0][0].y;
+    std::string attribs = "lw 2 front";
+    for(size_t j = 0; j < paths.size(); j++)
+    {
+      T x2 = paths[i][j].x;
+      T y2 = paths[i][j].y;
+      plt->drawLine(attribs, x1, y1, x2, y2);
+    }
+  }
   int dummy = 0;
 
+  // Notes:
+  // -The "front" is important and it's also important that the commands generated from these call
+  //  appear before the splot command in the command file.
+  //
+  // ToDo:
+  // -Let the caller set the line attributes. Have member std::vector<std::string> pathAttributes 
+  //  or maybe just pathColors ...
+  //
   // See:
   // http://www.gnuplot.info/demo/arrowstyle.html
 }

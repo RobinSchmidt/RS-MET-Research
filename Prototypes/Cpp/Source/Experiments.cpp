@@ -13537,6 +13537,20 @@ void setupForSquarePlot(rsFieldPlotter2D<T>* plt)
 // but that will often lead to noninteger values. Maybe interpre the number N as a rough 
 // target height
 
+
+template<class T>
+void setupForContourPlot(rsContourMapPlotter<T>& plt, std::function<T(T x, T y)> f,
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny, int numContours, T zMin = 0, T zMax = 0)
+{
+  plt.setFunction(f);
+  plt.setInputRange(xMin, xMax, yMin, yMax);
+  plt.setOutputRange(zMin, zMax);
+  plt.setSamplingResolution(Nx, Ny);
+  plt.setNumContours(numContours);
+  plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
+  setupForSquarePlot(&plt);
+}
+
 // Like splotA but instead produces a contour map:
 template<class T>
 void cplotA(std::function<T(T x, T y)> f,  // why float? use T
@@ -13545,13 +13559,7 @@ void cplotA(std::function<T(T x, T y)> f,  // why float? use T
   T zMin = 0, T zMax = 0)
 {
   rsContourMapPlotter<T> plt;
-  plt.setFunction(f);
-  plt.setInputRange(xMin, xMax, yMin, yMax);
-  plt.setOutputRange(zMin, zMax);
-  plt.setSamplingResolution(Nx, Ny);
-  plt.setNumContours(numContours);
-  plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
-  setupForSquarePlot(&plt);
+  setupForContourPlot(plt, f, xMin, xMax, yMin, yMax, Nx, Ny, numContours, zMin, zMax);
   plt.plot();
 };
 
@@ -13570,6 +13578,7 @@ void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
   setupForSquarePlot(&plt);
   plt.plot();
 };
+// refactor like cplotA
 
 template<class T>
 void plotGradientField(std::function<T(T x, T y)> f,
@@ -14218,6 +14227,7 @@ void polyaGeodesics()
   rsGeodesicFinder<R> gf;
   gf.setSurface(zerosAt_1_m1_I);
 
+  /*
   Vec u(N), v(N); 
   GNUPlotter plt;
   gf.findGeodesic(-1, 0,   0, +1, N, &u[0], &v[0]);   // left side
@@ -14227,6 +14237,7 @@ void polyaGeodesics()
   gf.findGeodesic(-1, 0,  +1,  0, N, &u[0], &v[0]);   // bottom side
   plt.addDataArrays(N, &u[0], &v[0]);
   plt.plot();
+  */
   // The left and right sides are almost straight, just slightly bent inwards. The bottom side 
   // bends inwards some more. When comparing that to the contour plot the the Polya surface, that
   // shape looks plausible.

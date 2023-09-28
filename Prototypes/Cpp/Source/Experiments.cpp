@@ -4336,14 +4336,16 @@ void testGeodesic()
 
 
   // Initialize a trajectory as straight line:
-  Vec u = rsRangeLinear(u1, u2, N);
-  Vec v = rsRangeLinear(v1, v2, N);
-  R geodesicLength = getTrajectoryLength(surface, &u[0], &v[0], N); // 5.91607761
+  Vec ut = rsRangeLinear(u1, u2, N);  // u-coordinates of true geodesic
+  Vec vt = rsRangeLinear(v1, v2, N);  // v-coordinates of true geodesic
+  R geodesicLength = getTrajectoryLength(surface, &ut[0], &vt[0], N); // 5.91607761
   // When the surface is a plane, this straight line in uv-space gives a straight line on the plane
   // in xyz-space which *is* the geodesic on the plane. Therefore, the length value will be the
   // length of the geodesic in the case of a plane.
 
   // Now deform the initial shape in uv-space into something non-straight:
+  Vec u = ut;
+  Vec v = vt;
   for(int n = 0; n < N; n++)
   {
     u[n] = u[n] + 0.1 * sin(3 * 2*PI*u[n]);
@@ -4378,7 +4380,7 @@ void testGeodesic()
   // bool ok;
   // ok &= rsIsCloseTo(length, geodesicLength);
 
-  rsPlotVectors(u, v);
+  rsPlotVectors(u, v, u-ut, v-vt);
   // When the surface is the plane, then after the iteration, u and v have converged to the same
   // shape which means that the trajectory in xyz-space is indeed a straight line. However, the 
   // functions for u,v themselves are not straight lines because we do not enforce unit speed.
@@ -4437,7 +4439,12 @@ void testGeodesic()
   //
   // -It seems that the final error in the u-vector is less than in the v-vector. With N=51, 
   //  the u-vector has only the last 3 digits wrong whereas the v-vector has the last 5 digits 
-  //  wrong. Figure out why this is the case!
+  //  wrong. Figure out why this is the case! ...ok - we now plot the difference between the true
+  //  geodesics and the produced geodesics. It turns out that the final error in u looks like low 
+  //  level noise of the order of 3e-7 whereas in the error in v, we see an additional sinusoidal
+  //  component at the much higher level of 6e-5. That means, the final error in v is 200 times 
+  //  higher than in u and it is not random but systematic. The sine makes two full cycles just as
+  //  the sine that we write into the initial v-array (on top of the linear component from vt). 
   //
   // Conclusion:
   // -For the plane as example surface and adaption rate of around 0.01 produces the fastest 

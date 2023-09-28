@@ -4348,8 +4348,8 @@ void testGeodesic()
   Vec v = vt;
   for(int n = 0; n < N; n++)
   {
-    u[n] = u[n] + 0.1 * sin(3 * 2*PI*u[n]);
-    v[n] = v[n] + 0.2 * sin(2 * 2*PI*v[n]);
+    u[n] = u[n] + 0.1 * sin(3 * 2*PI*u[n]);  // amp = 0.1, freq = 3
+    v[n] = v[n] + 0.2 * sin(2 * 2*PI*v[n]);  // amp = 0.2, freq = 2
   }
   R initialCurveLength = getTrajectoryLength(surface, &u[0], &v[0], N); // 9.94319916
   rsPlotVectors(u, v);
@@ -4373,6 +4373,7 @@ void testGeodesic()
   ok &= rsAbs(err <= tol);
 
 
+
   // OK - this looks good! The length is indeed back to 5.916..., so not everything is totally 
   // wrong...
   // ToDo: add a programmtic test for whether the length here is equal to the length of the 
@@ -4381,6 +4382,9 @@ void testGeodesic()
   // ok &= rsIsCloseTo(length, geodesicLength);
 
   rsPlotVectors(u, v, u-ut, v-vt);
+  //rsPlotVectors(u-ut, v-vt);
+
+  // Old:
   // When the surface is the plane, then after the iteration, u and v have converged to the same
   // shape which means that the trajectory in xyz-space is indeed a straight line. However, the 
   // functions for u,v themselves are not straight lines because we do not enforce unit speed.
@@ -4403,8 +4407,7 @@ void testGeodesic()
   // Maybe plot also array for x,y,z that would result from the final u,v
 
 
-
-  int dummy = 0;
+  rsAssert(ok);
 
   // Observations:
   //
@@ -4437,16 +4440,32 @@ void testGeodesic()
   //  maximally possible adaption rate before the algo breaks down is independent of the number of 
   //  points N but that needs some more tests.
   //
-  // -It seems that the final error in the u-vector is less than in the v-vector. With N=51, 
-  //  the u-vector has only the last 3 digits wrong whereas the v-vector has the last 5 digits 
-  //  wrong. Figure out why this is the case! ...ok - we now plot the difference between the true
-  //  geodesics and the produced geodesics. It turns out that the final error in u looks like low 
-  //  level noise of the order of 3e-7 whereas in the error in v, we see an additional sinusoidal
-  //  component at the much higher level of 6e-5. That means, the final error in v is 200 times 
-  //  higher than in u and it is not random but systematic. The sine makes two full cycles just as
-  //  the sine that we write into the initial v-array (on top of the linear component from vt). 
+  // -In the plot of the difference between the true geodesics and the produced geodesics, it 
+  //  turns out that the final error in u looks like low level noise as expected (the mean seems to
+  //  be nonzero, though) of the order of 3e-7 whereas in the error in v, we see an additional 
+  //  unexpected sinusoidal component at the much higher level of 6e-5. That means, the final error 
+  //  in v is 200 times higher than in u and it is not random but systematic. The sine makes two 
+  //  full cycles just as the sine that we write into the initial v-array (on top of the linear 
+  //  component from vt). Normally, the u-array is initialized with a sine of freq=3 and v with 
+  //  freq=2. When we change the freq for v from 2 to 1, we see only one cycle in the final error 
+  //  and if we use 3 for both we also see a cycle of 3 in v for the error. However, when we change
+  //  the v-freq to 5, we see again 3 cycles - not 5 - but this time in the error of u instead of 
+  //  v! When both initial errors have the same frequency (of 3) and also the same amplitude (of 
+  //  0.1), we see 3 cycles in the final error in v. When we use freqs 3,4 for u,v, there's 
+  //  actually a sinusoidal error component in both u and v (also with freqs 3 and 4). With freqs 
+  //  3,5, we only see the sine in u with f=3 in the final error. Same with 3,6. When swapping the 
+  //  initial freqs, the end-results swaps from showing the sine being in u or v. We always seem
+  //  to see the sine of lower freq - but *where* it appears changes based on which of u or v gets
+  //  the lower freq.
+  //  ToDo: Check, if that behavior changes when changing the equation for the plane. Maybe one of
+  //  the coordinates u,v has stronger impact due to getting more weight in the plane equation. But
+  //  that wouldn't really explain why the behavior switches when the v-sine has higher freq than 
+  //  the u-sine. Check also, if such effects can be compensated for by using different adaption 
+  //  rates for u and v. Maybe try a plane equation like  x = y = z = a*u + b*v  and figure out, 
+  //  how the difference in final error between u and v depends on a,b. I guess, it depends on the
+  //  ratio a/b. Check, if/how that changes when adding a nonzero constant to the plane equation.
   //
-  // Conclusion:
+  // Conclusions:
   // -For the plane as example surface and adaption rate of around 0.01 produces the fastest 
   //  possible convergence. Going higher leads to divergence and going lower slows down the 
   //  convergence. At that rate, we need around 500 iterations.

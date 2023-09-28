@@ -2857,38 +2857,45 @@ int rsGeodesicFinder<T>::optimizeGeodesic(int N, T* u, T* v)
 
 
   // Helper function to compute the squared length of the segment from (uL,vL) to (uH,vH). The 
-  // indices L,H stand for low, high:
-  auto segmentLength = [this](T uL, T vL, T uH, T vH)
+  // indices L,H stand for low, high.
+  auto segmentLengthSq = [this](T uL, T vL, T uH, T vH)
   {
     T xL, yL, zL; surface(uL, vL, &xL, &yL, &zL);
     T xH, yH, zH; surface(uH, vH, &xH, &yH, &zH);
     T dx  = xH - xL;
     T dy  = yH - yL;
     T dz  = zH - zL;
-    T ds2 = dx*dx + dy*dy + dz*dz;    // squared segment length 
+    T ds2 = dx*dx + dy*dy + dz*dz;  // ds2: ds^2 = dx^2 + dy^2 + dz^2. Squared segment length
     return ds2;
-
-    //return pow(ds2, 0.95);          
-    // Just for experimentations It seems to make it worse for any exponent other than 1. 
-    // This is god news! The simplest formula is also the best!
-    
-    //return rsAbs(dx) + rsAbs(dy) + rsAbs(dz); // nope - not good either
-    //return sqrt(dx*dx + dy*dy + dz*dz); // actual segment length - not good!
   };
-  // rename to segmentLengthSq or squaredSegmentLength
-  // -Maybe make this a member function
-  // -Try using the square segment length - don't take the sqrt
-  // -Try using other length measures like the sum of the absolute values
-  // -Maybe try raising the ds^2 to some power and see how this affects convergence
+  // It was found experimentally that returning the squared length ds^2 itself rather than the 
+  // actual length given by ds = sqrt(ds^2) works best. I also tried other powers of ds2 and 
+  // also |dx|+|dy|+|dz|. Of all these possibilities, ds^2 turned out to be the best choice by 
+  // far. The best thing is: we don't even need any special provisions to explicitly try to 
+  // enforce a constant speed trajectory. It happens automatically. Apparently, using ds^2 rather
+  // than ds also penalizes an unbalanced distribution of the lengths of the two segments in each
+  // bisegment. This is plausible because for any positive a,b with a + b = c for some constant c,
+  // the quantity a^2 + b^2 is minimized when a = b = c/2. That equation should actually hold for 
+  // any power p greater than 1, i.e. for fixed a + b = c, the choice a = b = c/2 minimizes 
+  // a^p + b^p (verify!). So, any p > 1 should lead to a constant speed trajectory. Still p = 2
+  // seems to be the optimal choice in terms of convergence speed. But some more experimentation
+  // may need to be done on this.
 
-  // Helper function to compute the length of the bi-segment from (uL,vL) to (uM,vM) to (uH,vH).
-  // The indices L,M,H stand for low, middle, high. 
+  // Helper function to compute the sum of the squared lengths of the bi-segment from (uL,vL) to 
+  // (uM,vM) to (uH,vH). The indices L,M,H stand for low, middle, high.
   auto biSegmentLength = [&](T uL, T vL, T uM, T vM, T uH, T vH)
   {
-    return segmentLength(uL, vL, uM, vM) + segmentLength(uM, vM, uH, vH);
+    return segmentLengthSq(uL, vL, uM, vM) + segmentLengthSq(uM, vM, uH, vH);
   };
-  // Can be optimized to use only 3 calls to surface() instead of the 4 used now. Currently,
-  // surface() is called twice with uM, vM.
+  // -Rename: it's actually the sum of the two squared lengths of the two segments in the given
+  //  bisegment. Maybe rename parameters to u1, v1, u2, v2, u3, v3. But this clashes with the names
+  //  of the function parameters. It doesn't matter because the local definition would shadow them
+  //  as intended. It may be confusing and bad style, though. Maybe rename the function parameters
+  //  to uStart, vStart, uEnd, vEnd. Then, we can do the renaming here without any clash.
+  // -Can be optimized to use only 3 calls to surface() instead of the 4 used now. Currently,
+  //  surface() is called twice with uM, vM. If we do this, the function segmentLengthSq may 
+  //  actually become obsolete. We should keep it around somewhere for documentation reasons, 
+  //  though. An optimized computation here may obfuscate what is actually going on.
 
   // Helper function to compute change in length of the bisegment at node n when we wiggle u[n]
   // ...explain better...computes the local partial derivative

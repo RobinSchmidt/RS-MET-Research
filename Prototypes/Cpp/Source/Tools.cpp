@@ -40,44 +40,41 @@ void addHeightData(GNUPlotter& plt, std::function<T(T x, T y)> f,
 // For example, we may want to to figure out the min and max values to set up the z-range and/or 
 // levels for contour lines in a contour plot
 
-/** Produces a surface plot in dark mode. */
+/** Produces a surface plot ...TBC... */
 void plotSurface(GNUPlotter& plt)
 {
-  //plt.setToDarkMode();
-  // We should delete this and ranem the function to plotSurface
-
-  //using CP = GNUPlotter::ColorPalette;
-  //plt.addCommand("set palette rgbformulae 8, 9, 7");   // burgund...white
-  //plt.setColorPalette(CP::KM_moreland);
-  //plt.setColorPalette(CP::F_printable);
-  //plt.setColorPalette(CP::SW_magma);
-
-
   plt.addCommand("set style fill solid 1.0 noborder");
   plt.addCommand("set pm3d depthorder noborder");
-
-
-  //plt.addCommand("set pm3d lighting specular 0.25");
   plt.addCommand("set pm3d lighting primary 0.6 specular 0.0");
-  //plt.addCommand("set pm3d lighting primary 0.6 specular 0.25");
-  https://stackoverflow.com/questions/71490416/how-to-make-the-choice-in-3d-color-palette-in-gnuplot-with-light-effect
+  // https://stackoverflow.com/questions/71490416/how-to-make-the-choice-in-3d-color-palette-in-gnuplot-with-light-effect
   // "primary 0.0" is brighter than "primary 0.5". "primary 1.0" makes the underside completely 
   // black. I think this number adjusts between ambient light and sourced light where 0.0 uses 
   // ambient light only (underside is just as bright as upside) whereas 1.0 makes the underside
-  // completely black. I think, "specular 0.0" is good for coarser meshes wher the quadrilaterals
-  // give cues. For fine meshes, a bit more specular light may be beneficial (or it may not).
+  // completely black. I think, "specular 0.0" is good for coarser meshes where the segmentation
+  // into quadrilaterals give cues about structure of the surface. For fineer meshes, these cues go
+  // away a bit more specular light may be beneficial (or it may not). A setting of 
   // "primary 0.6 specular 0.0" looks good with a coarse mesh. Some specular light (like 0.25) 
   // seems to work well with unipolar darkish color-maps like CB_YlGnBu9m but not so good with 
   // bipolar maps with a whiteish color in the middle like CJ_BuYlRd11. A little bit like 0.1
-  // ight be OK - but it really depends on the angle.
+  // might be OK - but it really depends on the angle. Experimentation is needed...
 
 
-  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d notitle");
+  //plt.plot3D();
+  // This will produce the file but it will be only a wireframe drawing. Interestingly, The 
+  // wireframe drawing produces a larger .png file. For the PolyaSurfacePow2.png for the
+  // paper, the wirframe file takes 144 kB and the nice rendering 89 kB.
+
+  // ...so we do it ourselves:
+  plt.setupOutputTerminal();
+  //plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d notitle");
+  plt.addCommand("splot '" + plt.getDataPath() + "' i 0 nonuniform matrix with pm3d notitle");
   plt.invokeGNUPlot();
+
+  // splot C:/Temp/gnuplotData.dat i 0 nonuniform matrix with pm3d notitle
 }
 // ToDo:
-// -Remove the call to setDarkMode. Maybe also the set palette ... command. This should be done by the 
-//  caller
+// -Try to use plt.plot3D instead of the 3 bottom lines. For this, we need to change how the splot
+//  command is generated intenally - and I don't know yet how.
 // -Maybe move into class GNUPlotter. If so, adapt the splot command to use the dataPath instead of the 
 //  hardcoded path.
 

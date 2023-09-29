@@ -13460,14 +13460,14 @@ auto plotA = [&](std::function<T(T x, T y)> f,
 // plot:
 template<class T>
 void splotA(std::function<T(T x, T y)> f,
-  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny/*, std::string fileName = ""*/)
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny, std::string fileName = "")
 {
   GNUPlotter plt;
   plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
 
-  //if(fileName != "")
-  //  plt.setOutputFilePath("C:/Temp/Plots/" + fileName);
-  // We get again the problem with the not recognized default argument
+  if(fileName != "")
+    plt.setOutputFilePath("C:/Temp/" + fileName);
+    // I think, the folder must pre-exist, otherwise Gnuplot will produce an error message
 
   //plt.addCommand("set contour surface");  // contours on the surface
   //plt.addCommand("set contour base");     // contours in the base plane
@@ -13778,16 +13778,16 @@ void makePlotsForPolyaPaper()
   rsVectorFieldPlotter<R> pltV;
 
   // Surface plots for z^n where n > 0:
-  //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31);
-  //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31);
-  //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31);
-  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31);
-  //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31);
+  //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
   // These are not actually used in the paper
 
   // Create the plots for the paper about Polya potentials:
   // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
-  splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31);
+  splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, "PolyaSurfacePow2.png");
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
   //cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
   // The splot can be optimized (too big much margins)
@@ -14022,6 +14022,7 @@ void polyaPlotExperiments()
   auto plotS = ::splotA<R>;              // Surface
   auto plotC = ::cplotA<R>;              // Contours
   auto plotG = ::plotGradientField<R>;   // Gradient arrows 
+
 
   // 2 saddles at 1,-1:
   // f(z)   = (z+1)*(z-1)
@@ -14382,7 +14383,8 @@ void testPlotToFile()
 
 void funcWithOptionalArg(int arg1, int optArg = 0)
 {
-  // I don't actually do anything! I only exist to demonstrate some C++ compiler behavior!
+  // I'm a function with an optional argument but I don't actually do anything! I only exist to 
+  // demonstrate some C++ compiler behavior!
 }
 void testDefaultArguments()
 {
@@ -14392,18 +14394,31 @@ void testDefaultArguments()
 
   funcWithOptionalArg(1, 2);     // This is fine.
   funcWithOptionalArg(1);        // This also.
-  auto f = funcWithOptionalArg;  // Local abbreviation for the function name.
+
+  // Now we introduce a short and convenient local abbreviation for the long, unwieldy and ugly 
+  // original function name:
+  auto f = funcWithOptionalArg;
   f(1, 2);                       // This is fine.
   //f(1);                        // ERROR: "too few arguments for call"
 
+  // But we really do want a local abbreviation! Let's try to introduce another local abbreviation
+  // in a more complicated syntax using an explicit lamda function definition with its own 
+  // parameters which it just passes through to an explicit call of the function whose name we want
+  // to abbreviate:
+  auto f2 = [](int arg1, int optArg = 0) { return funcWithOptionalArg(arg1, optArg); };
+  f2(1, 2);                      // This is fine.
+  f2(1);                         // Now this is fine, too.
+
   // Conclusion:
-  // The error happens when we introduce local abbreviations for the function names. Local 
-  // abbrevations play nicely with default arguments! That's sad! I like local abbreviations. :-(
+  // The error happens when we introduce local abbreviations for the function names using the 
+  // simple syntax with auto and an assigment. Using the more complicated lambda function syntax 
+  // works. It seems like the simple syntax creates a function pointer whereas the lambda syntax 
+  // creates a lamda function object of some sort. They look different in the debugger. It would be
+  // nicer if the simpler syntax could be used but on the bright side, the more complicated syntax
+  // allows us to redefine the default values for the optional arguments and also allows us to make
+  // more or less of the arguments optional, so it's actually a bit more flexible.
   //
   // ToDo:
-  // -Figure out if we can solve this somehow, i.e. introduce an abbreviation that also allows
-  //  for default arguments. Maybe we need to define it explicitly as lamda function (no auto)
-  //  and give the lamda also a default argument
   // -Move the code somewhere else. Into some section of the codebase with educational code 
   //  examples. Projects/CppExperiments could be a good place for that.
 }

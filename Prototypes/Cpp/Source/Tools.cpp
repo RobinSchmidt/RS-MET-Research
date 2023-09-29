@@ -301,31 +301,18 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
 template<class T>
 void rsFieldPlotter2D<T>::addPathsToPlot(GNUPlotter* plt)
 {
-  //if(paths.empty())
-  //  return;
-
-  //std::string lineAttribs = "lw 2 front";
-  //plt->drawLine(lineAttribs, 0,0,  1,1);  // Test
-  // OK - works. 
-
-  for(size_t i = 0; i < paths.size(); i++)
-  {
+  for(size_t i = 0; i < paths.size(); i++) {
     if(paths[i].empty())
       continue;
-    T x1 = paths[0][0].x;
-    T y1 = paths[0][0].y;
-    //std::string attribs = "lw 2.5 lc rgb \"purple\" front";
+    T x1 = paths[i][0].x;
+    T y1 = paths[i][0].y;
     std::string attribs = "lw 3 lc rgb \"#8844FF\" front";
-    for(size_t j = 1; j < paths[i].size(); j++)
-    {
+    for(size_t j = 1; j < paths[i].size(); j++) {
       T x2 = paths[i][j].x;
       T y2 = paths[i][j].y;
       plt->drawLine(attribs, x1, y1, x2, y2);
       x1 = x2;
-      y1 = y2;
-    }
-  }
-  int dummy = 0;
+      y1 = y2; }}
 
   // Notes:
   // -The "front" is important and it's also important that the commands generated from these calls
@@ -333,7 +320,8 @@ void rsFieldPlotter2D<T>::addPathsToPlot(GNUPlotter* plt)
   //
   // ToDo:
   // -Let the caller set the line attributes. Have member std::vector<std::string> pathAttributes 
-  //  or maybe just pathColors ...
+  //  or maybe just pathColors. Hardcoding a thick purple line is not suitable for general 
+  //  purpose use.
   //
   // See:
   // http://www.gnuplot.info/demo/arrowstyle.html

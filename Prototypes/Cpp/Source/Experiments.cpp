@@ -14196,16 +14196,17 @@ void polyaPlotExperiments()
 
 void polyaGeodesics()
 {
-  // We try to create:
-  // Plots of polya potentials with geodesics between the saddles.
+  // We plot the Polya potential of f(z) = (z-1)*(z+1)(z-i) as contour plot with geodesics between
+  // the 3 saddles drawn in.
 
+  // Setup:
+  int N = 21; // Number of points along geodesic
+
+  // Abbreviations:
   using R    = float;
   using Vec  = std::vector<R>;
   using Path = std::vector<rsVector2D<R>>;                       // Sampled path in uv-space
   using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;  // Parametric surface
-
-
-  int N = 11; // Number of points along geodesic
 
   // Polya potential with 3 saddles at 1,i,-1. Prefix pp stands for Polya potential
   auto pp_zerosAt_1_m1_I = [](R x, R y) 
@@ -14223,75 +14224,24 @@ void polyaGeodesics()
     *z = pp_zerosAt_1_m1_I(u, v);
   };
 
-
-  //Surf S = zerosAt_1_m1_I;
-
-
+  // Compute the 3 geodesics between the 3 saddles:
   rsGeodesicFinder<R> gf;
   gf.setSurface(zerosAt_1_m1_I);
+  Path g1 = rsFindGeodesic(zerosAt_1_m1_I,  -1.f, 0.f,   0.f, +1.f,  N); // left side
+  Path g2 = rsFindGeodesic(zerosAt_1_m1_I,  +1.f, 0.f,   0.f, +1.f,  N); // right side
+  Path g3 = rsFindGeodesic(zerosAt_1_m1_I,  -1.f, 0.f,  +1.f, +0.f,  N); // bottom side
 
-  /*
-  Vec u(N), v(N); 
-  GNUPlotter plt;
-  gf.findGeodesic(-1, 0,   0, +1, N, &u[0], &v[0]);   // left side
-  plt.addDataArrays(N, &u[0], &v[0]);
-  gf.findGeodesic(+1, 0,   0, +1, N, &u[0], &v[0]);   // right side
-  plt.addDataArrays(N, &u[0], &v[0]);
-  gf.findGeodesic(-1, 0,  +1,  0, N, &u[0], &v[0]);   // bottom side
-  plt.addDataArrays(N, &u[0], &v[0]);
-  plt.plot();
-  */
-  // The left and right sides are almost straight, just slightly bent inwards. The bottom side 
-  // bends inwards some more. When comparing that to the contour plot the the Polya surface, that
-  // shape looks plausible.
-
-  //RAPT::rsPlotArraysXY(N, &u[0], &v[0]);
-
-
-  // Compute the 3 geodesics between the 3 saddles:
-
-  Path g1 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,   0.f, +1.f, N); // left side
-  Path g2 = rsFindGeodesic(zerosAt_1_m1_I, +1.f, 0.f,   0.f, +1.f, N); // right side
-  Path g3 = rsFindGeodesic(zerosAt_1_m1_I, -1.f, 0.f,  +1.f, +0.f, N); // bottom side
-
-  rsContourMapPlotter<R> cplt;
-  setupForContourPlot<R>(cplt, [&](R x, R y) { return pp_zerosAt_1_m1_I(x, y); }, 
+  // Plot contour map together with the geodesics:
+  rsContourMapPlotter<R> plt;
+  setupForContourPlot<R>(plt, [&](R x, R y) { return pp_zerosAt_1_m1_I(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
-  //cplt.addPath(g1);
-  //cplt.addPath(g2);
-  cplt.addPath(g3);
-  cplt.plot();
-
-
-  
-  /*
-
-  // This is an inconvenient format for plotting!
-
-  // Preliminary
-  auto plotPath = [](const Path& path)
-  {
-    int dummy = 0;
-  };
-
-  plotPath(g1);
-  */
-
-
-  int dummy = 0;
+  plt.addPath(g1);
+  plt.addPath(g2);
+  plt.addPath(g3);
+  plt.plot();
 
   // ToDo:
-  // -Try to combine a contour plot with the geodesics. Maybe make a subclass of rsContourPlotter
-  //  for that. I think, drawing them in a purple or dark-magenta tone and with a thickness higher
-  //  than that of the contours would look good. But that seems to be difficult to achieve. Maybe 
-  //  we need to create separate plots for the contours and the geodesics and combine them with an 
-  //  image editor manually. Or maybe don't use GNUPlotter for that at all and instead use my own
-  //  contour plotting implementation. But that doesn't support colormaps. So maybe do the contours
-  //  in grayscale and add the geodesics in some color
-  // -Maybe it should be a class rsContourPlotterWithPaths...or: maybe addinge the paths can be 
-  //  done in the baseclass because it may make sense for arrow-plots, too. There, we may want to 
-  //  draw field lines.
-  // -Draw some geodesics between points other than the saddles. How do their directiosn relate to
+  // -Draw some geodesics between points other than the saddles. How do their directions relate to
   //  directions of the contours, if at all? Maybe try one from (-1,-1) to (+1,-1)
   // -Try to draw other lines of interest related to curvature. Maybe lines of minimum, maximum and
   //  zero Gaussian curvature could be interesting. But such plots might be easier to achieve 
@@ -14304,7 +14254,7 @@ void polyaGeodesics()
   //  segments starting from some of the arrows. But they may or may not hit other arrows. Perhaps
   //  it's better to let the user pick starting points for the field-lines manually. To pick them
   //  later automatically would be the next step.
-  // -Try to find a way to start st some arbitrary point with some arbitrary initial direction and
+  // -Try to find a way to start at some arbitrary point with some arbitrary initial direction and
   //  produce a geodesic from that point into that direction. I guess, to find the next point, we 
   //  just advance one step into that direction. But at the second point, how do we figure out the
   //  second direction? Maybe by solving the geodesic equation at that point? We need some way to 
@@ -14316,6 +14266,13 @@ void polyaGeodesics()
   //  previous, current and next point to compute the geodesic curvature at the current point. 
   //  Here, we would use the previous and current point and the geodesic curvature (of zero) to 
   //  compute the next point.
+  // -Maybe an advanced geodesic finder algorithm could at each point on the geodesic also find the
+  //  direction. That could then be used to draw the geodesic via a cubic Bezier spline which use
+  //  these defined directions at the nodes. We would use Hermite interpolation between the points.
+  //  Actually, that could be implemented on top of the current geodesic finder if we have an 
+  //  algorithm that takes as input a point on the geodesic and returns as output the direction. 
+  //  ..but no - that makes no sense. Through each point go many geodesics depending on the start-
+  //  and end point.
 }
 
 

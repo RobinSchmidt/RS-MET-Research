@@ -14196,13 +14196,15 @@ void polyaPlotExperiments()
 
 void polyaGeodesics()
 {
-  // We produce a couple of contour map plots of Polya potentials P(x,y) with geodesics between the 
-  // saddles drawn in. We produce the following plots:
+  // We produce a couple of contour map plots of Polya potentials P(x,y) with geodesics between 
+  // certain points of interest drawn in. We produce the following plots:
   //
   // 1: f(z) = (z-1)*(z+1)(z-i). The 3 saddles form a triangle with a right angle at i and two 45°
   // angles at -1 and +1. The geodesics for left and right sides of the triangle are almost 
   // straight but not quite. They bend inwards a tiny little bit. The bottom side bends 
-  // inwards/upwards more visibly.
+  // inwards/upwards more visibly. We also draw the geodesic between (-1,-1) and (+1,-1). It bends
+  // upward in the y-direction considerably to avoid the height increase in the z-direction that
+  // it otherwise have to climb up (and then down again).
   //
   // 2: f(z) = ...
 
@@ -14237,9 +14239,10 @@ void polyaGeodesics()
   rsContourMapPlotter<R> plt;
   setupForContourPlot<R>(plt, [&](R x, R y) { return P(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
-  plt.addPath(rsFindGeodesic(S,  -1.f, 0.f,   0.f, +1.f,  N));   // left side
-  plt.addPath(rsFindGeodesic(S,  +1.f, 0.f,   0.f, +1.f,  N));   // right side
-  plt.addPath(rsFindGeodesic(S,  -1.f, 0.f,  +1.f, +0.f,  N));   // bottom side
+  plt.addPath(rsFindGeodesic(S,  -1.f,  0.f,   0.f, +1.f,  N));  // Left side of triangle.
+  plt.addPath(rsFindGeodesic(S,  +1.f,  0.f,   0.f, +1.f,  N));  // Right side of triangle.
+  plt.addPath(rsFindGeodesic(S,  -1.f,  0.f,  +1.f, +0.f,  N));  // Bottom side of triangle.
+  plt.addPath(rsFindGeodesic(S,  -1.f, -1.f,  +1.f, -1.f,  N));  // Over the ridge
   plt.plot();
 
   // Observations:

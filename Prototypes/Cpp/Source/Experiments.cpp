@@ -14300,7 +14300,14 @@ void polyaGeodesics()
   //  ..but no - that makes no sense. Through each point go many geodesics depending on the start-
   //  and end point.
   // -Try to optimize the geodesic finding algorithm For the geodesics plotted here, it typically
-  //  takes ~5000 iterations to converge. That's very slow!
+  //  takes ~5000 iterations to converge. That's very slow! Experimentation has revealed that for
+  //  this problem, we can actually choose a slightly higher adaption rate of 0.02. But at 0.025,
+  //  the algo fails to converge. We really need a way to automatically increase and decrease the
+  //  adaption rate and maybe a momentum term, too. But for that purpose, it would really be better
+  //  to implement the optimization algorithm generically. It should take a 
+  //    std::function<TErr(int numParams, TPar* params)>
+  //  object as objective function. Does it make sense to allow TErr to be different from TPar? 
+  //  Maybe not. It should take the parameter vector as input. 
   //
   // Questions:
   // -It would seem plausible that when we have a constellation of saddles that form a convex 

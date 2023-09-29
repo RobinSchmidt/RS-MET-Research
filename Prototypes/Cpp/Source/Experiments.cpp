@@ -14241,17 +14241,34 @@ void polyaGeodesics()
   rsContourMapPlotter<R> plt;
   setupForContourPlot<R>(plt, [&](R x, R y) { return P(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
+
   plt.addPath(findGeodesic(S,  -1.0,  0.0,   0.0, +1.0,  N));  // Left side of triangle.
   plt.addPath(findGeodesic(S,  +1.0,  0.0,   0.0, +1.0,  N));  // Right side of triangle.
-  plt.addPath(findGeodesic(S,  -1.0,  0.0,  +1.0, +0.0,  N));  // Bottom side of triangle.
+
+  // Horizontal grid lines:
   plt.addPath(findGeodesic(S,  -1.0, -1.0,  +1.0, -1.0,  N));  // Over a steep ridge.
   plt.addPath(findGeodesic(S,  -1.0, -0.5,  +1.0, -0.5,  N));  // Over a shallower ridge.
+  plt.addPath(findGeodesic(S,  -1.0,  0.0,  +1.0, +0.0,  N));  // Bottom side of triangle.
+  plt.addPath(findGeodesic(S,  -1.0, +0.5,  +1.0, +0.5,  N));
+  plt.addPath(findGeodesic(S,  -1.0, +1.0,  +1.0, +1.0,  N));
+
+  // Vertical grid lines:
+  plt.addPath(findGeodesic(S,  -1.0, -1.0,  -1.0, +1.0,  N));
+  plt.addPath(findGeodesic(S,  -0.5, -1.0,  -0.5, +1.0,  N));
+  plt.addPath(findGeodesic(S,  -0.0, -1.0,   0.0, +1.0,  N));
+  plt.addPath(findGeodesic(S,  +0.5, -1.0,  +0.5, +1.0,  N));
+  plt.addPath(findGeodesic(S,  +1.0, -1.0,  +1.0, +1.0,  N));
+  // Maybe factor out a function 
+  //  addGeodesicGrid(plt, s, xMin, xMax, numX, yMin, yMax, numY, numPoints)
+  // and use it to create the "geodesic grid"
+
+
   plt.plot();
 
 
   // ToDo:
-  // -Draw some geodesics between points other than the saddles. How do their directions relate to
-  //  directions of the contours, if at all? Maybe try one from (-1,-1) to (+1,-1)
+  // -Draw some geodesics on a simple saddle. Maybe use the geodesic grid
+  // -Make a 3D surface plot with geodesics drawn in.
   // -Try to draw other lines of interest related to curvature. Maybe lines of minimum, maximum and
   //  zero Gaussian curvature could be interesting. But such plots might be easier to achieve 
   //  outside Gnuplot on a height map on the the pixel level. Of course, the lines of maximum 

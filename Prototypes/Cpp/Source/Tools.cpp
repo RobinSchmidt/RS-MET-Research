@@ -306,7 +306,7 @@ void rsFieldPlotter2D<T>::addPathsToPlot(GNUPlotter* plt)
       continue;
     T x1 = paths[i][0].x;
     T y1 = paths[i][0].y;
-    std::string attribs = "lw 3 lc rgb \"#8844FF\" front";
+    std::string attribs = "lw 3 lc rgb \"#408844FF\" front";
     for(size_t j = 1; j < paths[i].size(); j++) {
       T x2 = paths[i][j].x;
       T y2 = paths[i][j].y;

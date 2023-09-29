@@ -14299,6 +14299,8 @@ void polyaGeodesics()
   //  algorithm that takes as input a point on the geodesic and returns as output the direction. 
   //  ..but no - that makes no sense. Through each point go many geodesics depending on the start-
   //  and end point.
+  // -Try to optimize the geodesic finding algorithm For the geodesics plotted here, it typically
+  //  takes ~5000 iterations to converge. That's very slow!
   //
   // Questions:
   // -It would seem plausible that when we have a constellation of saddles that form a convex 

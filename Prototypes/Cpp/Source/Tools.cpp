@@ -3067,20 +3067,29 @@ int rsGeodesicFinder<T>::minimizePathLength(int N, T* u, T* v)
 template<class T>
 std::vector<RAPT::rsVector2D<T>> rsFindGeodesic(
   const std::function<void(T u, T v, T* x, T* y, T* z)>& surface, 
-  T u1, T v1, T u2, T v2, int numPoints)
+  T u1, T v1, T u2, T v2, int numPoints/*, T adaptRate = T(0.01)*/)
 {
   int N = numPoints;
   std::vector<T> u(N), v(N);
   std::vector<rsVector2D<T>> g(N);
   rsGeodesicFinder<T> gf;
   gf.setSurface(surface);
+  //gf.setAdaptionRates(adaptRate, adaptRate);
   bool success = gf.findGeodesic(u1, v1, u2, v2, N, &u[0], &v[0]);
   if(success)
     for(int n = 0; n < N; n++)
       g[n] = rsVector2D(u[n], v[n]);
   return g;
 }
-// -Needs test
+// Notes:
+// -When we uncomment the adaptRate parameter, we get a compiler error "too few arguments for call"
+//  for some caller code that calls it without an argument for the adaptRate parameter. But the
+//  the parameter is supposed to be optional with a default value of 0.01. Apparently I'm doing 
+//  something wrong with regard to specifying the default value - but what? I think, the calling 
+//  code should compile just fine when the function gets called without the adaptRate parameter. It
+//  is the last parameter and it has a default value - so it should be considered optional by the 
+//  compiler - but apparently isn't. WTF? ToDo: Try to create a minimal code example that triggers
+//  this sort of behavior and figure out what's going on.
 // -Maybe the "if(success)" conditional should go away. The rsGeodesicFinder should always produce
 //  some result that makes at least some sense. It should not be possible that it produces pure 
 //  garbage due to a diverging numerical scheme. The proper solution is not to produce no geodesic

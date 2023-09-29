@@ -14205,7 +14205,11 @@ void polyaGeodesics()
   // inwards/upwards more visibly. We also draw the geodesic between (-1,-1) and (+1,-1). It bends
   // upward in the y-direction considerably to avoid the height increase in the z-direction that
   // it otherwise have to climb up (and then down again). We also have one geodesic a bit higher
-  // where the ridge is less steep such that it needs to not bend as much.
+  // between (-1,-0.5) and (+1,-0.5) where the ridge is less steep such that it needs to not bend 
+  // as much. 
+  // Update: Now we even draw a full "grid" of geodesics plus diagonals plus a sort of "unit 
+  // diamond" connecting 1,i,-1,-i. It would be a proper grid when the surface would be a plane. 
+  // But the lines are distorted. The lines of the diamond are close to being straight, though.
   //
   // 2: f(z) = ...
 
@@ -14318,6 +14322,15 @@ void polyaGeodesics()
   //    std::function<TErr(int numParams, TPar* params)>
   //  object as objective function. Does it make sense to allow TErr to be different from TPar? 
   //  Maybe not. It should take the parameter vector as input. 
+  // -When a production version is done, apply it to the Riemann zeta function to produce geodesics
+  //  between the saddles corresponding to its zeros. But evaluating the zeta function is costly so
+  //  maybe in addition to an optimized geodesic finder class, we should also implement the 
+  //  evaluation of the Polya potential zeta via a precomputed 2D array. That means, in the 
+  //  rectangle of interest, we evaluate P(x,y) *once* and store that data in a matrix and for 
+  //  producing the geodesics, we (bilinearly) interpolate that pre-computed data whenever we need
+  //  to evaluate P (which we do need to evaluate often in the geodesic finder process even when
+  //  SCG is used).
+  //  
   //
   // Questions:
   // -It would seem plausible that when we have a constellation of saddles that form a convex 

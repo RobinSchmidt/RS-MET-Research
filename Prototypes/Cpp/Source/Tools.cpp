@@ -2805,10 +2805,11 @@ A class to find geodesics of a surface ...TBC...
 
 
 ToDo:
--Maybe rename to rsGeodesicFinderParamSurf to indicate that it is meant for parametric surfaces. In
- 3D, there are at least 2 way of defining a surface: parametrically as x(u,v), y(u,v), z(u,v)
- or implicitly as F(x,y,z) = 0. Here, we assume a parametric definition.
 
+-Maybe rename to rsGeodesicFinderParamSurf or rsSurfaceGeodesicFinder to indicate that it is meant
+ for parametric surfaces. We could imagine to have geodesic finders for manifolds in higher 
+ dimensions and even in 3D, there are at least 2 way of defining a surface: parametrically as 
+ x(u,v), y(u,v), z(u,v) or implicitly as F(x,y,z) = 0. Here, we assume a parametric definition.
 
 
 References:
@@ -3063,6 +3064,45 @@ int rsGeodesicFinder<T>::minimizePathLength(int N, T* u, T* v)
   // -Factor out a function that uses a workspace to avoid allocation. Then keep this function
   //  as convenience function
 }
+
+// This implementation of rsGeodesicFinder is merely a prototype. It's inefficient due to using a
+// simple/naive gradient descent approach and the computation of the gradient itself is not yet 
+// fully optimized. It is also not as flexible as it could be. It only works for parametrically
+// defined 2D surfaces embedded in 3D. An implementation of rsGeodesicFinder for production code 
+// should:
+// -Allow for an arbitrary dimensionality of the embedding space. Or it may completely forget about
+//  the embedding space at all and instead make use of the metric tensor for computing the 
+//  distance. In the case of a surface, the metric tensor is a 2x2 matrix. It can be produced from 
+//  the parametric representation but in general, we may imagine it to be produced in other ways. 
+//  Or maybe the geodesic finder should take another type of std::function. One that takes as input
+//  two vectors in coordinate space (here: uv-space) and returns the squared distance (here:
+//  computed as squared Euclidean distance in xyz-space). The class would be oblivious of how the 
+//  distance is computed - be it from the parametric equations, the metric tensor or in any other 
+//  way. That would seem to be the most flexible approach and the user doesn't even need to know 
+//  anything about what a metric tensor is (which may be a scary word, if you don't know what it 
+//  is). So, instead of using:
+//    std::function<void(T u, T v, T* x, T* y, T* z)> surface;
+//  we would use a function:
+//    std::function<T(int dim, T* p1, T* p2)> distance;
+//  which takes two input vectors/points p1,p2 of dimensionality dim as inputs and returns as 
+//  output the distance between these points.
+// -Use better optimization algorithms such as the scaled conjugate gradient algorithm. To make 
+//  this work, we need a generic implementation of these algorithms with a suitable API to pass the 
+//  objective function that we can drop in here. Maybe check if GradientBasedMinimizer in the main
+//  RS-MET codebase in rs_testing/Legacy can be adapteed for that purpose. I think, the API should
+//  have an object for the minimizer with setters like:
+//    minimizer.setAlgorithm(Minimizer::Algorithm::ScaledConjugateGradient);
+//    minimizer.setCostFunction(myCostFunction);
+//  where the latter takes the objective function in the form of 
+//    std::function<T(int numParams, T* params)>. The return value is the value of the objective 
+//  function and the input is the parameter vector "params" of length "numParams". To that cost 
+//  function, we would pass a suitably flattened array of points (perhaps interleaving the 
+//  coordinates u,v i.e. u[i] = params[2*i], v[i] = params[2*i+1] or however).
+// When implementing such a production version, the prototype should be kept around in a 
+// "Prototypes" folder for reference, though. It has good documentation and education value and can
+// be used in unit tests to check the production version against.
+
+
 
 /** Convenience function. ...TBC... */
 template<class T>

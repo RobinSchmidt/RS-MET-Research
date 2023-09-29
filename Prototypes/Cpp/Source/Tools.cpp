@@ -58,19 +58,15 @@ void plotSurface(GNUPlotter& plt)
   // bipolar maps with a whiteish color in the middle like CJ_BuYlRd11. A little bit like 0.1
   // might be OK - but it really depends on the angle. Experimentation is needed...
 
-
   //plt.plot3D();
   // This will produce the file but it will be only a wireframe drawing. Interestingly, The 
   // wireframe drawing produces a larger .png file. For the PolyaSurfacePow2.png for the
   // paper, the wirframe file takes 144 kB and the nice rendering 89 kB.
 
-  // ...so we do it ourselves:
+  // Because we can't use plot3D, we add the commands and invoke Gnuplot ourselves:
   plt.setupOutputTerminal();
-  //plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix with pm3d notitle");
   plt.addCommand("splot '" + plt.getDataPath() + "' i 0 nonuniform matrix with pm3d notitle");
   plt.invokeGNUPlot();
-
-  // splot C:/Temp/gnuplotData.dat i 0 nonuniform matrix with pm3d notitle
 }
 // ToDo:
 // -Try to use plt.plot3D instead of the 3 bottom lines. For this, we need to change how the splot

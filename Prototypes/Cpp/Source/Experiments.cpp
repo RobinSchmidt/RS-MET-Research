@@ -13761,6 +13761,10 @@ void testPotentialPlotter()
 
 void makePlotsForPolyaPaper()
 {
+  // ToDo:
+  // -Follow the same schem that we use in splotA to produce an output file also for all other 
+  //  plots, i.e. adapt vplotA and cplotA also to admit file output.
+
   // Some abbreviations for data types:
   using R   = float;                         // Data type for real numbers (float or double)
   using C   = std::complex<R>;
@@ -13778,11 +13782,11 @@ void makePlotsForPolyaPaper()
   rsVectorFieldPlotter<R> pltV;
 
   // Surface plots for z^n where n > 0:
-  //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
-  //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31, "");
-  //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31, "");
-  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31, "");
-  //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
+  splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
+  splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31, "");
+  splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31, "");
+  splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31, "");
+  splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
   // These are not actually used in the paper
 
   // Create the plots for the paper about Polya potentials:

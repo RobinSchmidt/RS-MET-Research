@@ -14196,20 +14196,18 @@ void polyaPlotExperiments()
 
 void polyaGeodesics()
 {
-  // We plot the Polya potential of f(z) = (z-1)*(z+1)(z-i) as contour plot with geodesics between
-  // the 3 saddles drawn in.
+  // We plot the Polya potential P(x,y) of f(z) = (z-1)*(z+1)(z-i) as contour plot with geodesics
+  // between the 3 saddles drawn in.
 
   // Setup:
-  int N = 21; // Number of points along geodesic
+  int N = 21;                                                    // Number of points along geodesic
 
   // Abbreviations:
-  using R    = float;
-  using Vec  = std::vector<R>;
-  using Path = std::vector<rsVector2D<R>>;                       // Sampled path in uv-space
+  using R    = float;                                            // Real number type
   using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;  // Parametric surface
 
-  // Polya potential with 3 saddles at 1,i,-1. Prefix pp stands for Polya potential
-  auto pp_zerosAt_1_m1_I = [](R x, R y) 
+  // Polya potential P(x,y) with 3 saddles at 1,i,-1. Prefix pp stands for Polya potential.
+  auto pp_zerosAt_1_m1_I = [](R x, R y)
   { 
     R y2 = y*y;  // y^2
     R x2 = x*x;  // x^2
@@ -14224,20 +14222,13 @@ void polyaGeodesics()
     *z = pp_zerosAt_1_m1_I(u, v);
   };
 
-  // Compute the 3 geodesics between the 3 saddles:
-  rsGeodesicFinder<R> gf;
-  gf.setSurface(zerosAt_1_m1_I);
-  Path g1 = rsFindGeodesic(zerosAt_1_m1_I,  -1.f, 0.f,   0.f, +1.f,  N); // left side
-  Path g2 = rsFindGeodesic(zerosAt_1_m1_I,  +1.f, 0.f,   0.f, +1.f,  N); // right side
-  Path g3 = rsFindGeodesic(zerosAt_1_m1_I,  -1.f, 0.f,  +1.f, +0.f,  N); // bottom side
-
-  // Plot contour map together with the geodesics:
+  // Plot contour map together with the 3 geodesics between the 3 saddles:
   rsContourMapPlotter<R> plt;
   setupForContourPlot<R>(plt, [&](R x, R y) { return pp_zerosAt_1_m1_I(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
-  plt.addPath(g1);
-  plt.addPath(g2);
-  plt.addPath(g3);
+  plt.addPath(rsFindGeodesic(zerosAt_1_m1_I,  -1.f, 0.f,   0.f, +1.f,  N)); // left side
+  plt.addPath(rsFindGeodesic(zerosAt_1_m1_I,  +1.f, 0.f,   0.f, +1.f,  N)); // right side
+  plt.addPath(rsFindGeodesic(zerosAt_1_m1_I,  -1.f, 0.f,  +1.f, +0.f,  N)); // bottom side
   plt.plot();
 
   // ToDo:

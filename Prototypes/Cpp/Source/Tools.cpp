@@ -435,6 +435,10 @@ void rsVectorFieldPlotter<T>::plot()
 
   setupPlotter(&plt);
   plt.plot();
+
+  // ToDo:
+  // -Call the function to add the paths to the plot. Test it by drawing some vector field with
+  //  field lines.
 }
 
 

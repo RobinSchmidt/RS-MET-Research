@@ -14357,7 +14357,7 @@ void testPlotToFile()
   GNUPlotter plt;
   //plt.setToDarkMode();
   plt.addDataFunctions(501, 0.0, 10.0, &sin, &cos);
-  plt.setOutputFilePath("C:/Temp/gnuplotOutput.png");
+  //plt.setOutputFilePath("C:/Temp/gnuplotOutput.png");
   plt.plot();
 
   // Observations

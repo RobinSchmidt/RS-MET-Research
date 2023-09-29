@@ -14239,10 +14239,13 @@ void polyaGeodesics()
   rsContourMapPlotter<R> plt;
   setupForContourPlot<R>(plt, [&](R x, R y) { return P(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
-  plt.addPath(rsFindGeodesic(S,  -1.f,  0.f,   0.f, +1.f,  N));  // Left side of triangle.
-  plt.addPath(rsFindGeodesic(S,  +1.f,  0.f,   0.f, +1.f,  N));  // Right side of triangle.
-  plt.addPath(rsFindGeodesic(S,  -1.f,  0.f,  +1.f, +0.f,  N));  // Bottom side of triangle.
-  plt.addPath(rsFindGeodesic(S,  -1.f, -1.f,  +1.f, -1.f,  N));  // Over the ridge
+  plt.addPath(rsFindGeodesic(S,  -1.0f,  0.0f,   0.0f, +1.0f,  N));  // Left side of triangle.
+  plt.addPath(rsFindGeodesic(S,  +1.0f,  0.0f,   0.0f, +1.0f,  N));  // Right side of triangle.
+  plt.addPath(rsFindGeodesic(S,  -1.0f,  0.0f,  +1.0f, +0.0f,  N));  // Bottom side of triangle.
+  plt.addPath(rsFindGeodesic(S,  -1.0f, -1.0f,  +1.0f, -1.0f,  N));  // Over the ridge
+  plt.addPath(rsFindGeodesic(S,  -1.0f, -0.5f,  +1.0f, -0.5f,  N));
+
+
   plt.plot();
 
   // Observations:

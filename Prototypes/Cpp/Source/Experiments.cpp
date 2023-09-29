@@ -14196,8 +14196,16 @@ void polyaPlotExperiments()
 
 void polyaGeodesics()
 {
-  // We plot the Polya potential P(x,y) of f(z) = (z-1)*(z+1)(z-i) as contour plot with geodesics
-  // between the 3 saddles drawn in.
+  // We produce a couple of contour map plots of Polya potentials P(x,y) with geodesics between the 
+  // saddles drawn in. We produce the following plots:
+  //
+  // 1: f(z) = (z-1)*(z+1)(z-i). The 3 saddles form a triangle with a right angle at i and two 45°
+  // angles at -1 and +1. The geodesics for left and right sides of the triangle are almost 
+  // straight but not quite. They bend inwards a tiny little bit. The bottom side bends 
+  // inwards/upwards more visibly.
+  //
+  // 2: f(z) = ...
+
 
   // Setup:
   int N = 21;                                                    // Number of points along geodesic
@@ -14206,31 +14214,36 @@ void polyaGeodesics()
   using R    = float;                                            // Real number type
   using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;  // Parametric surface
 
-  // Polya potential P(x,y) with 3 saddles at 1,i,-1. Prefix pp stands for Polya potential.
-  auto pp_zerosAt_1_m1_I = [](R x, R y)
+  // Polya potential P(x,y) with 3 saddles at 1,i,-1:
+  auto P = [](R x, R y)
   { 
     R y2 = y*y;  // y^2
     R x2 = x*x;  // x^2
     return -3./2*x2*y2 + x2*y - 1./2*x2 + 1./4*x2*x2 + 1./4*y2*y2 - 1./3*y2*y + 1./2*y2 - y;
+    // This expression has been found as usual using my standard Sage script for this purpose. See 
+    // the pdf paper about Polya potentials for details.
   };
 
-  // Parametric surface definition for the Polya potential surface with 3 saddles:
-  Surf zerosAt_1_m1_I = [&](R u, R v, R* x, R* y, R* z)
+  // Parametric surface S: R^2 -> R^3 for the Polya potential of P(x,y). The surface 
+  // parametrization is given by: x(u,v) = u, y(u,v) = v, z(u,v) = P(x,y) = P(u,v).
+  Surf S = [&](R u, R v, R* x, R* y, R* z)
   {
     *x = u;
     *y = v;
-    *z = pp_zerosAt_1_m1_I(u, v);
+    *z = P(u, v);
   };
 
   // Plot contour map together with the 3 geodesics between the 3 saddles:
   rsContourMapPlotter<R> plt;
-  setupForContourPlot<R>(plt, [&](R x, R y) { return pp_zerosAt_1_m1_I(x, y); }, 
+  setupForContourPlot<R>(plt, [&](R x, R y) { return P(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
-  plt.addPath(rsFindGeodesic(zerosAt_1_m1_I,  -1.f, 0.f,   0.f, +1.f,  N)); // left side
-  plt.addPath(rsFindGeodesic(zerosAt_1_m1_I,  +1.f, 0.f,   0.f, +1.f,  N)); // right side
-  plt.addPath(rsFindGeodesic(zerosAt_1_m1_I,  -1.f, 0.f,  +1.f, +0.f,  N)); // bottom side
+  plt.addPath(rsFindGeodesic(S,  -1.f, 0.f,   0.f, +1.f,  N));   // left side
+  plt.addPath(rsFindGeodesic(S,  +1.f, 0.f,   0.f, +1.f,  N));   // right side
+  plt.addPath(rsFindGeodesic(S,  -1.f, 0.f,  +1.f, +0.f,  N));   // bottom side
   plt.plot();
 
+  // Observations:
+  //
   // ToDo:
   // -Draw some geodesics between points other than the saddles. How do their directions relate to
   //  directions of the contours, if at all? Maybe try one from (-1,-1) to (+1,-1)
@@ -14264,6 +14277,18 @@ void polyaGeodesics()
   //  algorithm that takes as input a point on the geodesic and returns as output the direction. 
   //  ..but no - that makes no sense. Through each point go many geodesics depending on the start-
   //  and end point.
+  //
+  // Questions:
+  // -It would seem plausible that when we have a constellation of saddles that form a convex 
+  //  polygon, that the geodesics between the saddles always bend inward into the polygon. Is that
+  //  true? I'm assuming 2nd order saddles here, i.e. just plain old horse saddles. But maybe it
+  //  could still hold in the case when some of the saddles are of higher order?
+  // -But no! This perhaps can't be true: consider a diamond shape made of 2 triangles. The side
+  //  that connects the saddles and is part of both of the triangles cannot bend inward into both
+  //  triangles at the same time because one triangle's inward direction is the others outward
+  //  direction. ...but maybe in such a case, the geodesic is just a straight line? Try it! Maybe 
+  //  use (z-2)*(z+2)*(z-i)*(z*i). We use 2 and not 1 to make the situation not too symmetric.
+  //  Maybe use an even more asymmetric situation.
 }
 
 

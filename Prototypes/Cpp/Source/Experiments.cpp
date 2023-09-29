@@ -14204,7 +14204,8 @@ void polyaGeodesics()
   // straight but not quite. They bend inwards a tiny little bit. The bottom side bends 
   // inwards/upwards more visibly. We also draw the geodesic between (-1,-1) and (+1,-1). It bends
   // upward in the y-direction considerably to avoid the height increase in the z-direction that
-  // it otherwise have to climb up (and then down again).
+  // it otherwise have to climb up (and then down again). We also have one geodesic a bit higher
+  // where the ridge is less steep such that it needs to not bend as much.
   //
   // 2: f(z) = ...
 
@@ -14215,6 +14216,7 @@ void polyaGeodesics()
   // Abbreviations:
   using R    = float;                                            // Real number type
   using Surf = std::function<void(R u, R v, R* x, R* y, R* z)>;  // Parametric surface
+  auto findGeodesic = rsFindGeodesic<R>;
 
   // Polya potential P(x,y) with 3 saddles at 1,i,-1:
   auto P = [](R x, R y)
@@ -14239,17 +14241,14 @@ void polyaGeodesics()
   rsContourMapPlotter<R> plt;
   setupForContourPlot<R>(plt, [&](R x, R y) { return P(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
-  plt.addPath(rsFindGeodesic(S,  -1.0f,  0.0f,   0.0f, +1.0f,  N));  // Left side of triangle.
-  plt.addPath(rsFindGeodesic(S,  +1.0f,  0.0f,   0.0f, +1.0f,  N));  // Right side of triangle.
-  plt.addPath(rsFindGeodesic(S,  -1.0f,  0.0f,  +1.0f, +0.0f,  N));  // Bottom side of triangle.
-  plt.addPath(rsFindGeodesic(S,  -1.0f, -1.0f,  +1.0f, -1.0f,  N));  // Over the ridge
-  plt.addPath(rsFindGeodesic(S,  -1.0f, -0.5f,  +1.0f, -0.5f,  N));
-
-
+  plt.addPath(findGeodesic(S,  -1.0,  0.0,   0.0, +1.0,  N));  // Left side of triangle.
+  plt.addPath(findGeodesic(S,  +1.0,  0.0,   0.0, +1.0,  N));  // Right side of triangle.
+  plt.addPath(findGeodesic(S,  -1.0,  0.0,  +1.0, +0.0,  N));  // Bottom side of triangle.
+  plt.addPath(findGeodesic(S,  -1.0, -1.0,  +1.0, -1.0,  N));  // Over a steep ridge.
+  plt.addPath(findGeodesic(S,  -1.0, -0.5,  +1.0, -0.5,  N));  // Over a shallower ridge.
   plt.plot();
 
-  // Observations:
-  //
+
   // ToDo:
   // -Draw some geodesics between points other than the saddles. How do their directions relate to
   //  directions of the contours, if at all? Maybe try one from (-1,-1) to (+1,-1)

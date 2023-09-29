@@ -13460,10 +13460,14 @@ auto plotA = [&](std::function<T(T x, T y)> f,
 // plot:
 template<class T>
 void splotA(std::function<T(T x, T y)> f,
-  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny/*, std::string fileName = ""*/)
 {
   GNUPlotter plt;
   plt.addDataBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f);
+
+  //if(fileName != "")
+  //  plt.setOutputFilePath("C:/Temp/Plots/" + fileName);
+  // We get again the problem with the not recognized default argument
 
   //plt.addCommand("set contour surface");  // contours on the surface
   //plt.addCommand("set contour base");     // contours in the base plane
@@ -14373,6 +14377,33 @@ void testPlotToFile()
   //  the papers.
 }
 
+
+
+
+template<class T>
+void funcWithOptionalArg1(T x, T y, int N, T opt = T(0.01))
+{
+
+}
+void testDefaultArguments()
+{
+  // Throw-away code to figure out some weird compiler behavior with regard to sometimes not 
+  // recognizing default arguments for parameters and complaining when the functions is called with
+  // too few arguments even though the last args are supposed to be optional.
+
+  funcWithOptionalArg1(1.f, 2.f, 42, 5.0f);  // This is fine
+  funcWithOptionalArg1(1.f, 2.f, 42);        // This also.
+
+  auto f = funcWithOptionalArg1<float>;      // Local abbreviation for the function name.
+  f(1.f, 2.f, 42, 5.0f);                     // This is fine.
+  //f(1.f, 2.f, 42);                         // Error: "too few arguments for call"
+
+  // It happens when we introduce local abbreviations fro the function names. Local abbrevvations
+  // do not interact well with default arguments!
+
+  // ToDo:
+  // -Move the code somewhere else
+}
 
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)

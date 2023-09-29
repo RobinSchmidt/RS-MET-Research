@@ -14380,6 +14380,14 @@ void testPlotToFile()
   //   "set term wxt background rgb \"black\"" etc. commands
   //  -In addPlotCommand() add an appropriate "set term" command based on the contents of 
   //   outputFilePath, backgroundColor, pixelWidth, pixelHeight
+  // -When this feature is complete, write a function that batch produces all the figures for the
+  //  Polya potnetial paper. In the future, I want to have such a function for each paper that uses 
+  //  figures and maybe have one higher level function that calls all of them one after another.
+  //  In the folder where the .tex files for the papers reside, add documentation for how to render
+  //  the image files for the figures. This way, we don't need to include the image files 
+  //  themselves into the repo (which would bloat its size unreasonably) but only the rednering 
+  //  code which is far less data. Nonetheless, the repo includes everything needed to reproduce
+  //  the papers.
 }
 
 

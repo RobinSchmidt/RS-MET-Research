@@ -14350,6 +14350,22 @@ void polyaGeodesics()
 }
 
 
+void testPlotToFile()
+{
+  // We test the file export functionality of GNUPlotCPP
+
+  GNUPlotter plt;
+  plt.addDataFunctions(501, 0.0, 10.0, &sin, &cos);
+  plt.plot();
+ 
+
+
+
+
+  int dummy = 0;
+}
+
+
 // fast inverse square root approximation from Quake engine
 float Q_rsqrt(float number)
 {

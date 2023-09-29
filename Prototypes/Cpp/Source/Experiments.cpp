@@ -14355,13 +14355,31 @@ void testPlotToFile()
   // We test the file export functionality of GNUPlotCPP ...TBC...
 
   GNUPlotter plt;
-  plt.setToDarkMode();
+  //plt.setToDarkMode();
   plt.addDataFunctions(501, 0.0, 10.0, &sin, &cos);
   plt.setOutputFilePath("C:/Temp/gnuplotOutput.png");
   plt.plot();
+
+  // Observations
+  // -It doesn't work when using setToDarkMode. Apparently, only the line colors are set up but not
+  //  the background color which is not surprising because setToDarkMode directly invokes a
+  //  "set terminal" command. But these should be deferred until immediately before the "plot"
+  //  call.
+
  
   // ToDo:
   // -Test producing .png, .pdf, .svg outputs
+  // -Remove all direct invocations of "set terminal" or "set term". Such calls should be deferred
+  //  to some section immediately before the plot call, i.e. go into addPlotCommand(). Such calls
+  //  occur in setPixelSize (line 539), setToDarkMode (line 319), setToLightMode (line 343). To do 
+  //  this properly, we should:
+  //  -Keep a member for the background color (perhaps a std::string).
+  //  -Keep members for pixel width and height (integers)
+  //  -In setPixelSize() just update the width, height members and remove the "set term" command.
+  //  -In setToDarkMode(), setToLightMode() set the backgound color member and remove the
+  //   "set term wxt background rgb \"black\"" etc. commands
+  //  -In addPlotCommand() add an appropriate "set term" command based on the contents of 
+  //   outputFilePath, backgroundColor, pixelWidth, pixelHeight
 }
 
 

@@ -14352,17 +14352,16 @@ void polyaGeodesics()
 
 void testPlotToFile()
 {
-  // We test the file export functionality of GNUPlotCPP
+  // We test the file export functionality of GNUPlotCPP ...TBC...
 
   GNUPlotter plt;
+  plt.setToDarkMode();
   plt.addDataFunctions(501, 0.0, 10.0, &sin, &cos);
+  plt.setOutputFilePath("C:/Temp/gnuplotOutput.png");
   plt.plot();
  
-
-
-
-
-  int dummy = 0;
+  // ToDo:
+  // -Test producing .png, .pdf, .svg outputs
 }
 
 

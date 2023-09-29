@@ -14380,10 +14380,9 @@ void testPlotToFile()
 
 
 
-template<class T>
-void funcWithOptionalArg(T arg1, T optArg = T(0))
+void funcWithOptionalArg(int arg1, int optArg = 0)
 {
-
+  // I don't actually do anything! I only exist to demonstrate some C++ compiler behavior!
 }
 void testDefaultArguments()
 {
@@ -14391,20 +14390,22 @@ void testDefaultArguments()
   // recognizing default arguments for parameters and complaining when the function is called with
   // too few arguments even though the last args are supposed to be optional.
 
-  funcWithOptionalArg(1.f, 2.f);        // This is fine
-  funcWithOptionalArg(1.f);             // This also.
-
-  auto f = funcWithOptionalArg<float>;  // Local abbreviation for the function name.
-  f(1.f, 2.f);                          // This is fine.
-  //f(1.f);                             // Error: "too few arguments for call"
+  funcWithOptionalArg(1, 2);     // This is fine.
+  funcWithOptionalArg(1);        // This also.
+  auto f = funcWithOptionalArg;  // Local abbreviation for the function name.
+  f(1, 2);                       // This is fine.
+  //f(1);                        // ERROR: "too few arguments for call"
 
   // Conclusion:
-  // The error happens when we introduce local abbreviations fro the function names. Local 
-  // abbrevations play nicely with default arguments!
+  // The error happens when we introduce local abbreviations for the function names. Local 
+  // abbrevations play nicely with default arguments! That's sad! I like local abbreviations. :-(
   //
   // ToDo:
-  // -Move the code somewhere else
-  // -Figure out if it also happens when we don't use templates.
+  // -Figure out if we can solve this somehow, i.e. introduce an abbreviation that also allows
+  //  for default arguments. Maybe we need to define it explicitly as lamda function (no auto)
+  //  and give the lamda also a default argument
+  // -Move the code somewhere else. Into some section of the codebase with educational code 
+  //  examples. Projects/CppExperiments could be a good place for that.
 }
 
 // fast inverse square root approximation from Quake engine

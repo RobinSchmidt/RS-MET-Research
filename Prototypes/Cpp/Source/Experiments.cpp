@@ -14242,9 +14242,6 @@ void polyaGeodesics()
   setupForContourPlot<R>(plt, [&](R x, R y) { return P(x, y); }, 
     -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
 
-  plt.addPath(findGeodesic(S,  -1.0,  0.0,   0.0, +1.0,  N));  // Left side of triangle.
-  plt.addPath(findGeodesic(S,  +1.0,  0.0,   0.0, +1.0,  N));  // Right side of triangle.
-
   // Horizontal grid lines:
   plt.addPath(findGeodesic(S,  -1.0, -1.0,  +1.0, -1.0,  N));  // Over a steep ridge.
   plt.addPath(findGeodesic(S,  -1.0, -0.5,  +1.0, -0.5,  N));  // Over a shallower ridge.
@@ -14261,6 +14258,19 @@ void polyaGeodesics()
   // Maybe factor out a function 
   //  addGeodesicGrid(plt, s, xMin, xMax, numX, yMin, yMax, numY, numPoints)
   // and use it to create the "geodesic grid"
+
+  // Top of the diamond:
+  plt.addPath(findGeodesic(S,  -1.0,  0.0,   0.0, +1.0,  N));  // Left side of triangle.
+  plt.addPath(findGeodesic(S,  +1.0,  0.0,   0.0, +1.0,  N));  // Right side of triangle.
+
+  // Bottom of the diamond:
+  plt.addPath(findGeodesic(S,  -1.0,  0.0,   0.0, -1.0,  N));
+  plt.addPath(findGeodesic(S,  +1.0,  0.0,   0.0, -1.0,  N)); 
+
+  // Diagonals:
+  plt.addPath(findGeodesic(S,  -1.0, +1.0,  +1.0, -1.0,  N));  // Downward
+  plt.addPath(findGeodesic(S,  -1.0, -1.0,  +1.0, +1.0,  N));  // Upward
+
 
 
   plt.plot();
@@ -14320,6 +14330,10 @@ void polyaGeodesics()
   //  direction. ...but maybe in such a case, the geodesic is just a straight line? Try it! Maybe 
   //  use (z-2)*(z+2)*(z-i)*(z*i). We use 2 and not 1 to make the situation not too symmetric.
   //  Maybe use an even more asymmetric situation.
+  // -Are constellations possible that allow us to have multiple geodesics between two points? I 
+  //  think, probably not. I can imagine multiple geodesics between two points only in a landscape
+  //  that features peaks and valleys - not in such a saddlescape. But maybe that's just my lack of
+  //  imagination.
 }
 
 

@@ -56,10 +56,6 @@ n  Potential
 6
 7
 
-
-
-
-
 ToDo:
 -List results for the potential. could it be that it is just the real part from above divided by n?
  
@@ -441,7 +437,8 @@ Some Ideas:
   -If there is just one saddle, could it be that some aspects of the metric tensor of the Polya 
    potential surface depend only on the distance from the saddle but not on the direction. Maybe
    the infinitesimal area scaling could factor could be such a quantity?
-  -What about taking double integrals of P(x,y) over a circular area around a saddle. If there are 
+  -[Done - Nope, this doesn't seem to be the case]:
+   What about taking double integrals of P(x,y) over a circular area around a saddle. If there are 
    no other saddle nearby, this should always average out to almost the function value at the 
    center, I think. Consider one saddle alone and think of its symmetries. Maybe it even works 
    for shape that are symmetric only wrt rotations to multiples of 90° (and not necessarily all
@@ -487,6 +484,7 @@ that is is euqal to some value that depends on where the integration region is c
 integral actually represent the local average? What about integration constants?
 
 ToDo:
--Try more Poly potentials
+-Try more Poly potentials ...OK - done ...and it fails! This zero result seems to be specific to
+ P(x,y) = x^2 - y^2 ...and it should actually be (x^2 - y^2) / 2 anyway.
 -Try non-square integration regions (it will probably not laways be zero in this case)
 

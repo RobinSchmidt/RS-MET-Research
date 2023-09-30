@@ -13760,17 +13760,38 @@ void testPotentialPlotter()
   // https://gnuplot.sourceforge.net/demo_6.1/contourfill.html
 }
 
-void makePlotsForPolyaPaper()
+void makePlotsForPolyaPotentialPaper()
 {
+  // This function creates the plots for the paper "The Polya Potential of Complex Functions" whose
+  // LaTeX source file "PolyaPotential.tex" is also in this repo, namely in the folder
+  // "Notes/LatexDocuments/MathPapers". The plots will be written into files into 
+  // some temporary directory (currently "C:/Temp", which must exist on the machine that code runs 
+  // on) and they will get the appropriate filenames that are expected by the LaTeX document. The
+  // so generated files are not and shall never be part of this repo because having lots of media
+  // files in the repo would blow its size up unreasonably, especially when the content of these 
+  // media files may be updated from time to time (due to, say, changing some plotting style 
+  // setting like axis labels, colors, pixel-size, etc.). In order to render the pdf paper from the
+  // latex source, these image files must first be re-generated and then moved put in the 
+  // appropriate folder "Notes/LatexDocuments/MathFigures" after the repo has been freshly cloned 
+  // from the github server to the local development machine.
+  //
+  // There a lot of code lines that are commented out. These are for experimental purposes and can 
+  // be uncommented to create some other plots that are not (yet?) included into the paper. These 
+  // plots will not be written into files but rather shown immediately on screen. Should any of 
+  // them be included into the paper at later time, that should, of course, be changed and these 
+  // plots should then also be written into files following the pattern established by the other 
+  // created files.
+
+
   // ToDo:
   // -Follow the same schem that we use in splotA to produce an output file also for all other 
   //  plots, i.e. adapt vplotA and cplotA also to admit file output.
 
   // Some abbreviations for data types:
-  using R   = float;                         // Data type for real numbers (float or double)
-  using C   = std::complex<R>;
-  using PE  = rsPolyaPotentialEvaluator<R>;
-  using CP  = GNUPlotter::ColorPalette;
+  using R  = float;                         // Data type for real numbers (float or double)
+  using C  = std::complex<R>;
+  using PE = rsPolyaPotentialEvaluator<R>;
+  using CP = GNUPlotter::ColorPalette;
 
   // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
   // Gnuplot:
@@ -13788,16 +13809,16 @@ void makePlotsForPolyaPaper()
   //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31, "");
   //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31, "");
   //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
-  // These are not actually used in the paper
+  // These are not actually used in the paper. That's why we don't specify filenames. When the code
+  // is uncommented, the plots will show up on the screen rather than being written into files.
 
-  // Create the plots for the paper about Polya potentials:
-  // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
-  splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, "PolyaSurfacePow2.png");
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21, "PolyaVectorsPow2.png");
-  //cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
-  // The splot can be optimized (too big much margins)
-  // The cplot is not actually used. We use the plot for z^2 from the sequence of plots below. Here, it
-  // is the same function just with a different number of contours.
+
+  // f(z) = z^2 as surface- and arrow-plot:
+  splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, 
+    "PolyaSurfacePow2.png");
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21, 
+    "PolyaVectorsPow2.png");
+
 
   // For pdf paper: f(z) = z^n for n = 0,1,2,3,4,5
   cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);

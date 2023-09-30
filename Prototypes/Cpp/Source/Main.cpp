@@ -118,7 +118,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPotentialPlotter();
   //polyaPlotExperiments();
   //polyaGeodesics();
-  makePlotsForPolyaPaper();
+
+  // Batch creation of plots:
+  makePlotsForPolyaPotentialPaper();
 
   // Throw away code:
   //testPlotToFile();

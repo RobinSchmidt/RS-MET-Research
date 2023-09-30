@@ -13784,6 +13784,15 @@ void makePlotsForPolyaPotentialPaper()
 
 
   // ToDo:
+  // -When rendering to .png files, the font size on the axes is larger than when rendering to the
+  //  screen (using the wxt terminal). This breaks our finely adjusted pixel-size. the y-axis
+  //  xtics are now partially out of the image. Fix this! I think, when setting the terminal, one 
+  //  may specify options for font-sizes, etc.
+  //  OK - I now specify explictly the font to be 'Verdana,10' in the "set terminal" command. That
+  //  seems to let us have identical fonts in wxt and pngcairo terminals. But still: the vertical 
+  //  spacing between the x-axis and the axis tics is too large in the png output for the contour 
+  //  plots. It is fine in the wxt output for the contour plots and it is also fine for the png 
+  //  output for the arrow plots. WTF?
   // -Follow the same schem that we use in splotA to produce an output file also for all other 
   //  plots, i.e. adapt vplotA and cplotA also to admit file output.
 

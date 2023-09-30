@@ -128,6 +128,7 @@ void prepareForContourPlot(GNUPlotter& plt,
   // Plot:
   plt.addCommand("set pm3d map impl");
   plt.addCommand("set contour");
+  plt.setupOutputTerminal();
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
 
   // Questions:

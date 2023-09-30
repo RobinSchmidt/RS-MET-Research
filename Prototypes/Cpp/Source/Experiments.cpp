@@ -13806,7 +13806,7 @@ void makePlotsForPolyaPotentialPaper()
   // is uncommented, the plots will show up on the screen rather than being written into files. 
   // is realized by passing the empty string for the filename.
 
-  /*
+
   // Surface- and arrow-plot for f(z) = z^2:
   plotS([](R x, R y) {      return PE::power(x, y, 2); },       -1,+1, -1,+1, 31,31,
     "PolyaSurfacePow2.png");
@@ -13827,7 +13827,6 @@ void makePlotsForPolyaPotentialPaper()
     "PolyaContoursPow4.png");
   plotC([](R x, R y) { return PE::power(x, y, 5); }, -1,+1, -1,+1, N,N, 21, -0.5,+0.5,
     "PolyaContoursPow5.png");
-    */
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial
@@ -13850,15 +13849,10 @@ void makePlotsForPolyaPotentialPaper()
   // actually correct.
 
 
-  // Create and set up an rsContourMapPlotter object that will be used for some of the coming 
-  // plots:
-  rsContourMapPlotter<R> pltC;
-
-
-
-  // Inverse powers, i.e. 1/z^n for n = 1..5:
+  // Create plots for the inverse powers, i.e. z^-n = 1/z^n for n = 1..5:
   auto plotInvPow = [&](int n)
   {
+    rsContourMapPlotter<R> pltC;
     pltC.setFunction([&](R x, R y) { return PE::power(x, y, -n); });
     pltC.setOutputFileName("PolyaContoursInvPow" + std::to_string(n) + ".png");
     setupForSquarePlot(&pltC);
@@ -13866,20 +13860,22 @@ void makePlotsForPolyaPotentialPaper()
     pltC.setInputRange(-1, +1, -1, +1);
     if(n > 1) 
     {
+      // This setup looks good for 1/z^n when n > 1:
       pltC.setOutputRange(-5.0, +5.0);
       pltC.setNumContours(31);
-      pltC.setColorPalette(CP::CJ_BuYlRd11, false); 
+      pltC.setColorPalette(CP::CJ_BuYlRd11, false);
+      // The picture is a (2*(n-1))-th order pole.
     }
     else 
     {
-      // 1/z = z^-1 needs a different setup:
+      // 1/z = z^-1 is special and needs a different setup:
       pltC.setOutputRange(-3.0, +0.5);
       pltC.setNumContours(21);
-      pltC.setColorPalette(CP::CB_YlGnBu9m, true); 
+      pltC.setColorPalette(CP::CB_YlGnBu9m, true);
+      // The picture is a monopole.
     }
     pltC.plot();
   };
-
   plotInvPow(1);  // z^-1, monopole
   plotInvPow(2);  // z^-2, dipole
   plotInvPow(3);  // z^-3, quadrupole
@@ -13887,15 +13883,13 @@ void makePlotsForPolyaPotentialPaper()
   plotInvPow(5);  // z^-5, octupole
 
 
-  // Inversion, i.e. 1/z = z^-1 with a potential of a monopole, is special enough to get its own, 
-  // customized plotting setup:
-  //pltC.setFunction([](R x, R y) { return PE::power(x, y, -1); });
-  //pltC.plot();
 
 
+  // From here come plots that are not yet in the paper:
 
-
-
+  // Create and set up an rsContourMapPlotter object that will be used for some of the coming 
+  // plots:
+  rsContourMapPlotter<R> pltC;
 
   // Under construction:
   R pi = PI;
@@ -13930,6 +13924,9 @@ void makePlotsForPolyaPotentialPaper()
   // -(x,y) = (0, pi/2): 
   // -Maybe put a countour and arrow plot together with a surface plot into one figure that spans a 
   //  complete page
+  // -Maybe plot exp(i*z) instead because then we can make the x-range longer than the y-range 
+  //  which fits better into the document - i.e. the plot is wide instead of tall.
+
 
   // sin(z)
   pltC.setFunction([](R x, R y) { return PE::sin(x, y); });
@@ -13960,20 +13957,14 @@ void makePlotsForPolyaPotentialPaper()
   // exp(z) would be obtained by rotation. exp(i*z) is nicer to plot in "landscape" format. exp(z)
   // naturally calls for "portrait" format which is inconvenient for a figure in the document.
 
-  // Experimental:
-  //cplotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 201, 201, 21, -2.0, +2.0);
-  //splotA([](R x, R y) { return PE::power(x, y,  -1); }, -1, +1, -1, +1, 31, 31);
-  //vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }, -1, +1, -1, +1, 21, 21);
-  //
-  // -The arrow plot for z^-1 points outward from the origin. It has a source there.
-  // -The arrow plot of z^-2 look like a dipole. But it needs a different color map. It is too
-  //  faint at the outsides. For the contour plot, we may need clipping of the z-values. I think, 
-  //  this is a general requirement for plotting functions with poles.
-  // -The CB_YlGnBu9t, CB_YlGnBu9mt try to solve the color map problem but it'S still suboptimal. I
-  //  think instead of just truncating the map, we need a nonlinear re-mapping of the colors 
-  //  perhaps according to a power rule. The dark range must be expanded and the light range must 
-  //  be shrunken. Maybe a linfrac mapping could be useful, too.
 
+
+
+ 
+
+
+
+  int dummy = 0;
 
   // Notes:
   // -For the contour plots of z^n, it doesn't make any visual difference whether we choose the 
@@ -13982,22 +13973,6 @@ void makePlotsForPolyaPotentialPaper()
   //  example we can plot z^4 in -1..+1 with a z-range of -1..+1 or plot it in -2..+2 with a 
   //  z-range of -26..+26. The plots will look similar. There differences in the placement of the 
   //  contours, though.
-
-  //splotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 41, 41);
-  //cplotA([](R x, R y) { return PE::exp(x, y); }, -1, +1, -8, +8, 201, 801, 19, -3, +3);
-  // Maybe plot exp(i*z) instead because then we can make the x-range longer than the y-range which
-  // fits better into the document - i.e. the plot is wide instead of tall.
-
-  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 17, -4, +4);
-  //cplotA([](R x, R y) { return PE::sin(x, y); }, -8, +8, -2, +2, 801, 201, 25, -4, +4);
-
-
-  //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1, +1, -1, +1, 201, 201, 17, -0.8, +0.8);
-  //cplotA([](R x, R y) { return PE::power(x, y,  4); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 25, -6.0, +6.0);
-
-  int dummy = 0;
-
-  // Notes:
   // -When creating plots of potentials with poles, it may make sense to select the sampling 
   //  resolution in such a way that the potnetial is not evaluated exctly at the pole. That may 
   //  produce infinities or even NaNs and that may lead to artifacts in the plot.
@@ -14271,7 +14246,11 @@ void polyaGeodesics()
 
 
   // Setup:
-  int N = 21;                                                    // Number of points along geodesic
+  int numGeodesicPoints = 25;   // Number of points along geodesic, 21..25
+  int sampleResolution  = 601;  // Number of function samples along x- and y-axis, 201..601
+  // The lower value in the given intevals is for a quick draft plot and the high value for a
+  // high quality plot that takes a while to render.
+
 
   // Abbreviations:
   using R    = float;                                            // Real number type
@@ -14299,8 +14278,10 @@ void polyaGeodesics()
 
   // Plot contour map together with the 3 geodesics between the 3 saddles:
   rsContourMapPlotter<R> plt;
+  int N   = numGeodesicPoints;
+  int res = sampleResolution;
   setupForContourPlot<R>(plt, [&](R x, R y) { return P(x, y); }, 
-    -1.5f, +1.5f, -1.5f, +1.5f, 201, 201, 49, -2.f, +2.f);
+    -1.5f, +1.5f, -1.5f, +1.5f, res, res, 49, -2.f, +2.f);
 
   // Horizontal grid lines:
   plt.addPath(findGeodesic(S,  -1.0, -1.0,  +1.0, -1.0,  N));  // Over a steep ridge.
@@ -14335,7 +14316,13 @@ void polyaGeodesics()
 
   plt.plot();
 
-
+  // Notes:
+  // -Trying to use a higher number of points for the geodesics such as 41, the geodesic finder
+  //  algorithm doesn't succeed. 25 still works, 26 doesn't. It's weird that the center vertical 
+  //  geodesic seems to lead to divergence, too. It's actually straight so the initial guess should
+  //  be close. But maybe it's because of the adaption to unit speed. For this, it may need quite 
+  //  some steps.
+  // 
   // ToDo:
   // -Draw some geodesics on a simple saddle. Maybe use the geodesic grid
   // -Make a 3D surface plot with geodesics drawn in.

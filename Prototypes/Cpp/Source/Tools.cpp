@@ -119,17 +119,8 @@ void prepareForContourPlot(GNUPlotter& plt,
     for(int i = 1; i < levels.size(); i++)
       cmd += "," + std::to_string(levels[i]);
     plt.addCommand(cmd);
-
-    // Use a tranparent black for the contour lines:
-    //const char c[9] = "00000000";
-    const char c[9] = "AA000000";  // I tried 00,44,88,AA,CC. AA looks best in pngcairo.
+    const char c[9] = "AA000000";
     plt.setGraphColors(c, c, c, c, c, c, c, c, c, c);
-
-
-    //plt.setGraphColors(c, c, c, c, c, c, c, c, c, c);
-    //plt.setGraphColors("FF0000", "00FF00", "0000FF");
-    // Do we really have to pass 10 colors? We should be able to pass just one!
-    // This seems to make no difference
   }
 
   // Use constant color fills between the contour lines if desired:
@@ -145,8 +136,24 @@ void prepareForContourPlot(GNUPlotter& plt,
   // Plot:
   plt.addCommand("set pm3d map impl");
   plt.setupOutputTerminal();
-  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
 
+  plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
+  // use plt.getDataPath
+
+
+  // Notes:
+  // -For the contour line color setting in the  const char c[9] = "AA000000";  assignment, I tried
+  //  also 00,44,88,AA,CC. AA looks best for pngcairo. Unfortunately, when embedding the png into a 
+  //  pdf in LaTeX, the plots do not look so good anymore. In some plots, the contour lines
+  //  disappear completely. But using 88 or 00 doesn't seem to help either. In the pdf, some of 
+  //  the plots will just look bad, no matter what setting we use here. Maybe try to manually
+  //  export the plots from the GUI application. That is an absolute chore but seems to give better 
+  //  results. How Gnuplot inteprets the color setting is a complete mess anyway. The color 
+  //  channels are ignored completely, only the alpha channel does something - but in pngcairo, 
+  //  there always seems to be some extra transparency on top if the setting. It does not behave at 
+  //  all as one would expect it to. Finding a setting that looks good for a pdf is a matter of 
+  //  trial and error.
+  //
   // Questions:
   // -What happens, if the levels are non-equidistant? I guess, in this case, the alignment between
   //  constant color region boundaries and contour lines gets messed up.

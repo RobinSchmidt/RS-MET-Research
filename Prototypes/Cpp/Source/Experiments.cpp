@@ -13784,9 +13784,7 @@ void makePlotsForPolyaPotentialPaper()
   // plots should then also be written into files following the pattern established by the other 
   // created files.
 
-  // ...but actually, there are still some problems with the rendering of the pngcairo terminal 
-  // that make the plot look ugly..
-  // 
+
 
   // ToDo:
   // -When rendering to .png files, the font size on the axes is larger than when rendering to the
@@ -13820,23 +13818,6 @@ void makePlotsForPolyaPotentialPaper()
   auto cplotA = ::cplotA<R>;  // Plot a contour map.
   auto vplotA = ::vplotA<R>;  // Plot a vector field as arrow map.
 
-  // Create and set up the plotters for the vector fields and contour maps:
-  rsContourMapPlotter<R>  pltC;
-  rsVectorFieldPlotter<R> pltV;
-  // Maybe try to get rid and only use calls to the abbreviated functions above. Using stateful
-  // plotter objects makes it hard to move around the ploting code to change its order.
-
-  /*
-  // Debug test to compare result from wxt and pngcairo terminals:
-  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, 601,601, 21, -0.7,+0.7,
-    "PolyaContoursPow2.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, 601,601, 21, -0.7,+0.7,
-    "");
-    */
-
-  //cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, 601,601, 21, -0.7,+0.7,
-  //  "PolyaContoursPow2.png");
-
 
   // Surface plots for z^n where n > 0:
   //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
@@ -13848,7 +13829,6 @@ void makePlotsForPolyaPotentialPaper()
   // is uncommented, the plots will show up on the screen rather than being written into files.
 
 
-  /*
   // Surface- and arrow-plot for f(z) = z^2:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, 
     "PolyaSurfacePow2.png");
@@ -13856,19 +13836,19 @@ void makePlotsForPolyaPotentialPaper()
     "PolyaVectorsPow2.png");
 
   // Contour plots for f(z) = z^n for n = 0,1,2,3,4,5:
-  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1,+1, -1,+1, 201,201, 21, -1.0,+1.0,
+  int N = 601;  // not sure if 600 or 601 is better
+  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1,+1, -1,+1, N,N, 21, -1.0,+1.0,
     "PolyaContoursPow0.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1,+1, -1,+1, 201,201, 21, -0.5,+0.5,
+  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1,+1, -1,+1, N,N, 21, -0.5,+0.5,
     "PolyaContoursPow1.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, 201,201, 21, -0.7,+0.7,
+  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, N,N, 21, -0.7,+0.7,
     "PolyaContoursPow2.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, 301,301, 14, -1.0,+0.3,
+  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, N,N, 14, -1.0,+0.3,
     "PolyaContoursPow3.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1,+1, -1,+1, 301,301, 21, -1.0,+1.0,
+  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1,+1, -1,+1, N,N, 21, -1.0,+1.0,
     "PolyaContoursPow4.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1,+1, -1,+1, 401,401, 21, -0.5,+0.5,
+  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1,+1, -1,+1, N,N, 21, -0.5,+0.5,
     "PolyaContoursPow5.png");
-    */
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial
@@ -13890,14 +13870,12 @@ void makePlotsForPolyaPotentialPaper()
   // height into the documentation of rsContourMapPlotter. But before doing so, verify if it is 
   // actually correct.
 
-  // Contour plots for f(z) = 1/z^n for n = 2,3,4,5:
-  //cplotA([](R x, R y) { return PE::power(x, y, -2); }, -1,+1, -1,+1, 400,400, 31, -5.0,+5.0,
-  //  "PolyaContoursInvPow2.png");
 
-
-
-
-
+  // Create and set up the plotters for the vector fields and contour maps:
+  rsContourMapPlotter<R>  pltC;
+  rsVectorFieldPlotter<R> pltV;
+  // Maybe try to get rid and only use calls to the abbreviated functions above. Using stateful
+  // plotter objects makes it hard to move around the ploting code to change its order.
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
   // some of the plots:
@@ -13910,22 +13888,28 @@ void makePlotsForPolyaPotentialPaper()
   //pltV.setPixelSize(600, 600);
   pltC.setNumContours(31);
   pltV.setArrowDensity(21, 21);
-  pltC.setSamplingResolution(400, 400);            // The negative powers need high resolution
+  pltC.setSamplingResolution(600, 600);            // The negative powers need high resolution
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
 
 
   auto plotInvPow = [&](int n)
   {
-    pltC.setSamplingResolution(600, 600);
+    //pltC.setSamplingResolution(600, 600);
     pltC.setFunction([&](R x, R y) { return PE::power(x, y, -n); });
     pltC.setOutputFileName("PolyaContoursInvPow" + std::to_string(n) + ".png");
     pltC.plot();
   };
-  plotInvPow(2);
+  plotInvPow(2);  // z^-2, dipole
+  plotInvPow(3);  // z^-3, quadrupole
+  plotInvPow(4);  // z^-4, hexapole
+  plotInvPow(5);  // z^-5, octupole
 
 
 
+
+  /*
+  // Now obsolete - replaced by the code above:
   // For pdf paper: z^-5, octupole:
   pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });
   pltC.plot();
@@ -13957,6 +13941,7 @@ void makePlotsForPolyaPotentialPaper()
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }); pltV.plot();
   // https://en.wikipedia.org/wiki/Dipole
   // https://de.wikipedia.org/wiki/Dipol_(Physik)
+  */
 
 
 
@@ -14078,12 +14063,19 @@ void makePlotsForPolyaPotentialPaper()
   int dummy = 0;
 
   // Notes:
+  // -When creating plots of potentials with poles, it may make sense to select the sampling 
+  //  resolution in such a way that the potnetial is not evaluated exctly at the pole. That may 
+  //  produce infinities or even NaNs and that may lead to artifacts in the plot.
   // -Unfortunately, the direct rendering into png files produces different results compared with
   //  manually exporting the png files from the GUI application one by one. The directly written
   //  png files look not as good. Especially annoying is that the contour lines are not drawn in 
   //  black but rather in gray. In regions with dense contorus, this looks ugly. in reagion with
   //  sparse contours, it may actually look even nicer than black. Nevertheless - I want my black 
   //  back!
+  //  OK - after further investigation, it turns out the the pngcairo terminal seems to have some
+  //  sort of tranparency going on. The wxt and pngcairo terminal seem to use completely different
+  //  compositing algorithms and I found a good setting for pngcairo. It looks not exactly as 
+  //  before but it's actually even better than before.
   // -Trying to produce a PolyaContoursPow2.pdf file instead of a png produced a pdf file of size 
   //  139 kB but it was unreadable with MS Edge. An svg version had a whopping 4 MB size and 
   //  actually showed some artifacts. So, png seems to be the only viable option at the moment.

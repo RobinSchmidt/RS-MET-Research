@@ -439,14 +439,38 @@ Some Ideas:
    the square is simplest to actually evaluate. Or maybe have to divide the integral by the area of 
    the integration region. That way, we compute a local average of P(x,y). So here, divide by 
    (b-a)^2
+
+----------------------------------------------------------------------------------------------------
+Here is a Sage script trying out the idea that the local average of P(x,y) *around* some (x0, y0)
+should be equal to the value *at* (x0, y0):
  
- 
+# Setup:
 var("x y")
-a  = -1                        # Lower integration limit
-b  = +1                        # Upper integration limit
-P  = x^2 - y^2                 # Polya potential
-Ix = integral(P,  x, a, b)
-I  = integral(Ix, y, a, b)
-A  = I / (b-a)^2                # Local average
-V  = P(a, b)                    # Local value
-Ix, I, A, V
+P  = x^2 - y^2                # Polya potential
+s  = 3                        # Size of square region
+x0 = 2                        # x-coordinate of center
+y0 = 5                        # y-coordinate of center
+
+# Computation:
+a  = x0 - s/2                 # Lower integration limit for x
+b  = x0 + s/2                 # Upper integration limit for x
+c  = x0 - s/2                 # Lower integration limit for y
+d  = x0 + s/2                 # Upper integration limit for y
+Ix = integral(P,  x, a, b)    # Definite integral of P wrt x in a..b
+I  = integral(Ix, y, c, d)    # Definite integral wrt x and y
+A  = I / s^2                  # Local average of P around (x0, y0)
+V  = P(x = x0, y = y0)        # Local value of P at (x0, y0)
+
+# Output:
+Ix, I, A, V 
+
+
+....aaand the result it: A and V are not equal - but: I and A seem to be always zero! Saying that 
+a certain (double) integral will alway be zero is actually be an even stronger statement that saying
+that is is euqal to some value that depends on where the integration region is centered. Does our 
+integral actually represent the local average? What about integration constants?
+
+ToDo:
+-Try more Poly potentials
+-Try non-square integration regions (it will probably not laways be zero in this case)
+

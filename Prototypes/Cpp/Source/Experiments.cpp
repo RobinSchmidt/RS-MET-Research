@@ -13762,6 +13762,8 @@ void testPotentialPlotter()
 
 void makePlotsForPolyaPotentialPaper()
 {
+  // It does not yet quite work like that - but that's the intention:
+  //
   // This function creates the plots for the paper "The Polya Potential of Complex Functions" whose
   // LaTeX source file "PolyaPotential.tex" is also in this repo, namely in the folder
   // "Notes/LatexDocuments/MathPapers". The plots will be written into files into 
@@ -13782,6 +13784,9 @@ void makePlotsForPolyaPotentialPaper()
   // plots should then also be written into files following the pattern established by the other 
   // created files.
 
+  // ...but actually, there are still some problems with the rendering of the pngcairo terminal 
+  // that make the plot look ugly..
+  // 
 
   // ToDo:
   // -When rendering to .png files, the font size on the axes is larger than when rendering to the
@@ -13792,6 +13797,10 @@ void makePlotsForPolyaPotentialPaper()
   //  seems to let us have identical fonts in wxt and pngcairo terminals. But still: the vertical 
   //  spacing between the x-axis and the axis tics is different in the contour- and arrow plots.
   //  In the arrow plot, the tic marks are closer to the axis. Why? there is no obvious reason.
+  // -In the png files, the contour lines are drawn in gray whereas in the wxt terminal, they are 
+  //  black. I'm not actually sure, which way is better. The gray tends to be nicer in areas where
+  //  contours are sparse and uglier in areas where contours are dense. Generally, I think, i'd 
+  //  prefer black
   
   //  too large in the png output for the contour 
   //  plots. It is fine in the wxt output for the contour plots and it is also fine for the png 
@@ -13817,6 +13826,9 @@ void makePlotsForPolyaPotentialPaper()
   // Maybe try to get rid and only use calls to the abbreviated functions above. Using stateful
   // plotter objects makes it hard to move around the ploting code to change its order.
 
+  // Test:
+  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, 301,301, 14, -1.0,+0.3,
+    "PolyaContoursPow3.png");
 
   // Surface plots for z^n where n > 0:
   //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
@@ -13826,7 +13838,6 @@ void makePlotsForPolyaPotentialPaper()
   //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
   // These are not actually used in the paper. That's why we don't specify filenames. When the code
   // is uncommented, the plots will show up on the screen rather than being written into files.
-
 
   // Surface- and arrow-plot for f(z) = z^2:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, 
@@ -13868,6 +13879,14 @@ void makePlotsForPolyaPotentialPaper()
   // height into the documentation of rsContourMapPlotter. But before doing so, verify if it is 
   // actually correct.
 
+  // Contour plots for f(z) = 1/z^n for n = 2,3,4,5:
+  //cplotA([](R x, R y) { return PE::power(x, y, -2); }, -1,+1, -1,+1, 400,400, 31, -5.0,+5.0,
+  //  "PolyaContoursInvPow2.png");
+
+
+
+
+
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
   // some of the plots:
@@ -13884,9 +13903,21 @@ void makePlotsForPolyaPotentialPaper()
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
 
+  /*
+  auto plotInvPow = [&](int n)
+  {
+    pltC.setFunction([&](R x, R y) { return PE::power(x, y, -n); });
+    pltC.setOutputFileName("PolyaContoursInvPow" + std::to_string(n) + ".png");
+    pltC.plot();
+  };
+  plotInvPow(2);
+  */
+
+
 
   // For pdf paper: z^-5, octupole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });       pltC.plot();
+  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });
+  pltC.plot();
   //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }); pltV.plot();
   // https://en.wiktionary.org/wiki/octupole
   // GNUPlot gives warning about undefined matrix values. Check the generated data! Maybe when 
@@ -13915,6 +13946,8 @@ void makePlotsForPolyaPotentialPaper()
   pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }); pltV.plot();
   // https://en.wikipedia.org/wiki/Dipole
   // https://de.wikipedia.org/wiki/Dipol_(Physik)
+
+
 
   // For pdf paper: z^-1, monopole:
   pltC.setOutputRange(-3.0, +0.5);
@@ -14033,12 +14066,18 @@ void makePlotsForPolyaPotentialPaper()
 
   int dummy = 0;
 
-  // ToDo:
+  // Notes:
+  // -Unfortunateyl, the direct rendering into png files produces different results compared with
+  //  manually exporting the png files from the GUI application one by one. The directly written
+  //  png files look not as good. Especially annoying is that the contour lines are not drawn in 
+  //  black but rather in gray. In regions with dense contorus, this looks ugly. in reagion with
+  //  sparse contours, it may actually look even nicer than black. Nevertheless - I want my black 
+  //  back!
+  // -Trying to produce a PolyaContoursPow2.pdf file instead of a png produced a pdf file of size 
+  //  139 kB but it was unreadable with MS Edge. An svg version had a whopping 4 MB size and 
+  //  actually showed some artifacts. So, png seems to be the only viable option at the moment.
 
-  // -add a function to GNUPlotCPP setOutputFileName, setOutputDirectory. When the name is 
-  //  non-empty, re-direct the output into the file. Deduce the file format from the extension that
-  //  must be present in the filename. If there is no valid extension, just produce .png by default
-  //  (or maybe pdf - not yet sure)
+  // ToDo:
   // -Plot also cos(z): P(x,y) = sin(x) * cosh(y)...hmm...that's not really interesting. It's just
   //  sin shifted. Not different enough to justify yet another figure.
   //  Is there actually a function that has sinh(y) in it? That would justify another figure. 

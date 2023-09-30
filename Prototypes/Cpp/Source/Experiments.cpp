@@ -13795,13 +13795,16 @@ void makePlotsForPolyaPotentialPaper()
 
   // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
   // Gnuplot:
-  auto splotA = ::splotA<R>;
-  auto cplotA = ::cplotA<R>;
-  auto vplotA = ::vplotA<R>;
+  auto splotA = ::splotA<R>;  // Plot a 2D surface floating in 3D space.
+  auto cplotA = ::cplotA<R>;  // Plot a contour map.
+  auto vplotA = ::vplotA<R>;  // Plot a vector field as arrow map.
 
   // Create and set up the plotters for the vector fields and contour maps:
   rsContourMapPlotter<R>  pltC;
   rsVectorFieldPlotter<R> pltV;
+  // Maybe try to get rid and only use calls to the abbreviated functions above. Using stateful
+  // plotter objects makes it hard to move around the ploting code to change its order.
+
 
   // Surface plots for z^n where n > 0:
   //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
@@ -13813,20 +13816,25 @@ void makePlotsForPolyaPotentialPaper()
   // is uncommented, the plots will show up on the screen rather than being written into files.
 
 
-  // f(z) = z^2 as surface- and arrow-plot:
+  // Surface- and arrow-plot for f(z) = z^2:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, 
     "PolyaSurfacePow2.png");
   vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21, 
     "PolyaVectorsPow2.png");
 
-
-  // For pdf paper: f(z) = z^n for n = 0,1,2,3,4,5
-  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0, "");
-  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5, "");
-  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7, "");
-  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 14, -1.0, +0.3, "");
-  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +1.0, "");
-  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 21, -0.5, +0.5, "");
+  // Contour plots for f(z) = z^n for n = 0,1,2,3,4,5:
+  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1,+1, -1,+1, 201,201, 21, -1.0,+1.0,
+    "PolyaContoursPow0.png");
+  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1,+1, -1,+1, 201,201, 21, -0.5,+0.5,
+    "PolyaContoursPow1.png");
+  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, 201,201, 21, -0.7,+0.7,
+    "PolyaContoursPow2.png");
+  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, 301,301, 14, -1.0,+0.3,
+    "PolyaContoursPow3.png");
+  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1,+1, -1,+1, 301,301, 21, -1.0,+1.0,
+    "PolyaContoursPow4.png");
+  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1,+1, -1,+1, 401,401, 21, -0.5,+0.5,
+    "PolyaContoursPow5.png");
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial
@@ -13843,6 +13851,10 @@ void makePlotsForPolyaPotentialPaper()
   // In the case here, we have R = 10*(zMax-zMin) =  10*(0.3 - -1.0) = 13. numContours must be 
   // k*R + 1, so 14 and 27 work. For the others, we use 21. 29 also works but it looks a bit busy. 
   // Especially for higher exponents.
+  //
+  // ToDo: Move this explanation for how to achieve that a contour line will appear at a specific
+  // height into the documentation of rsContourMapPlotter. But before doing so, verify if it is 
+  // actually correct.
 
 
   // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 

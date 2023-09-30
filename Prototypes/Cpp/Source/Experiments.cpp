@@ -13557,12 +13557,11 @@ void setupForContourPlot(rsContourMapPlotter<T>& plt, std::function<T(T x, T y)>
 
 // Like splotA but instead produces a contour map:
 template<class T>
-void cplotA(std::function<T(T x, T y)> f,  // why float? use T
-  T xMin, T xMax, T yMin, T yMax, 
-  int Nx, int Ny, int numContours, 
-  T zMin = 0, T zMax = 0)
+void cplotA(std::function<T(T x, T y)> f, T xMin, T xMax, T yMin, T yMax, int Nx, int Ny, 
+  int numContours, T zMin = 0, T zMax = 0, std::string fileName = "")
 {
   rsContourMapPlotter<T> plt;
+  plt.setOutputFileName(fileName);
   setupForContourPlot(plt, f, xMin, xMax, yMin, yMax, Nx, Ny, numContours, zMin, zMax);
   plt.plot();
 };
@@ -13577,7 +13576,7 @@ void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
   plt.setFunction(f);
   plt.setInputRange(xMin, xMax, yMin, yMax);
   plt.setArrowDensity(Nx, Ny);
-  plt.setPixelSize(600, 600);  // obsolete?
+  //plt.setPixelSize(600, 600);  // obsolete?
   //plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9m, false);
   plt.setColorPalette(GNUPlotter::ColorPalette::CB_YlGnBu9t, false);
   setupForSquarePlot(&plt);
@@ -13587,9 +13586,10 @@ void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
 
 template<class T>
 void plotGradientField(std::function<T(T x, T y)> f,
-  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny)
+  T xMin, T xMax, T yMin, T yMax, int Nx, int Ny, std::string fileName = "")
 {
   rsGradientFieldPlotter<T> plt;
+  plt.setOutputFileName(fileName);
   plt.setFunction(f);
   plt.setInputRange(xMin, xMax, yMin, yMax);
   plt.setArrowDensity(Nx, Ny);
@@ -13821,12 +13821,12 @@ void makePlotsForPolyaPotentialPaper()
 
 
   // For pdf paper: f(z) = z^n for n = 0,1,2,3,4,5
-  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5);
-  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7);
-  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 14, -1.0, +0.3);
-  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +1.0);
-  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 21, -0.5, +0.5);
+  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1, +1, -1, +1, 201, 201, 21, -1.0, +1.0, "");
+  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 201, 201, 21, -0.5, +0.5, "");
+  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 201, 201, 21, -0.7, +0.7, "");
+  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 301, 301, 14, -1.0, +0.3, "");
+  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 301, 301, 21, -1.0, +1.0, "");
+  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 401, 401, 21, -0.5, +0.5, "");
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial
@@ -14055,9 +14055,9 @@ void polyaPlotExperiments()
   // P(x,y) = 1/3*x^3 - x*y^2 - x
   // The function f(z) has zeros at -1,+1 and therefore P(x,y) has saddles at (-1,0),(+1,0).
   auto zerosAt_1_m1 = [](R x, R y) { return x*x*x/3 - x*y*y - x; };
-  plotC([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
+  plotC([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f, "");
   //plotS([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 41, 41);
-  plotG([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 21, 21);
+  plotG([&](R x, R y) { return zerosAt_1_m1(x, y); }, -2, +2, -2, +2, 21, 21, "");
   // It is a sort of forward leaning monkey saddle. Very uncomfortable to sit in. Can we also make 
   // a backward leaning monkey saddle? Maybe (z+1)*(z-1) + 2? I guess (z+1)*(z-1) + 1 would give a 
   // flat, wavy monkey saddle becauce the 1 integrates to x which cancels the -x in the current
@@ -14082,8 +14082,8 @@ void polyaPlotExperiments()
   // f(z)   = (z+i)*(z-i)
   // P(x,y) = 1/3*x^3 - x*y^2 + x
   auto zerosAt_I_mI = [](R x, R y) { return x*x*x/3 - x*y*y + x; };
-  plotC([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f);
-  plotG([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 21, 21);
+  plotC([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 201, 201, 49, -8.f, +8.f, "");
+  plotG([&](R x, R y) { return zerosAt_I_mI(x, y); }, -2, +2, -2, +2, 21, 21, "");
   // This landscape is also problematic. We would actually have to go along a contour to reach the 
   // next saddle.
 
@@ -14098,8 +14098,8 @@ void polyaPlotExperiments()
     R x2 = x*x;  // x^2
     return -3./2*x2*y2 + 1./4*x2*x2 - 1./2*x2 + 1./4*y2*y2 + 1./2*y2;
   };
-  plotC([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
-  plotG([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 21, 21);
+  plotC([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f, "");
+  plotG([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -1.5, +1.5, -1.5, +1.5, 21, 21, "");
   //plotC([&](R x, R y) { return zerosAt_m1_0_1(x, y); }, -0.5, +0.5, -0.5, +0.5, 201, 201, 41, -0.15f, +0.15f);
 
 
@@ -14113,7 +14113,7 @@ void polyaPlotExperiments()
     R x2 = x*x;  // x^2
     return -3./2*x2*y2 + 1./4*x2*x2 + 1./2*x2 + 1./4*y2*y2 - 1./2*y2;
   };
-  plotC([&](R x, R y) { return zerosAt_mI_0_I(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f);
+  plotC([&](R x, R y) { return zerosAt_mI_0_I(x, y); }, -1.5, +1.5, -1.5, +1.5, 201, 201, 33, -4.f, +4.f, "");
   // This is basically just like (z+1)*z*(z-1) but rotated by 90 degrees, so it's nothing new 
   // really. But then, why is the landscape of (z+i)*(z-i) not just a rotated version of 
   // (z+1)*(z-1)? Maybe it has to do with the even or odd degree?
@@ -14130,8 +14130,8 @@ void polyaPlotExperiments()
     return -3./2*x2*y2 + x2*y - 1./2*x2 + 1./4*x2*x2 + 1./4*y2*y2 - 1./3*y2*y + 1./2*y2 - y;
   };
   plotC([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
-        -1.5, +1.5, -1.5, +1.5, 201, 201, 49, -2.f, +2.f);
-  plotG([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, -1.5, +1.5, -1.5, +1.5, 31, 31);
+        -1.5, +1.5, -1.5, +1.5, 201, 201, 49, -2.f, +2.f, "");
+  plotG([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, -1.5, +1.5, -1.5, +1.5, 31, 31, "");
   //splotA([&](R x, R y) { return zerosAt_1_m1_I(x, y); }, 
   //  -1.5, +1.5, -1.5, +1.5, 41, 41);
   // Hmm...OK...this seems to be a problematic configuration of seddles. From the top saddle there 
@@ -14153,8 +14153,8 @@ void polyaPlotExperiments()
     return x2*x2*x/5 - 2*x2*x*y2 + x*y2*y2 - x;
   };
   plotC([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
-        -1.5, +1.5, -1.5, +1.5, 201, 201, 41, -4.f, +4.f);
-  plotG([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, -1.5, +1.5, -1.5, +1.5, 31, 31);
+        -1.5, +1.5, -1.5, +1.5, 201, 201, 41, -4.f, +4.f, "");
+  plotG([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, -1.5, +1.5, -1.5, +1.5, 31, 31, "");
   //splotA([&](R x, R y) { return zerosAt_1_m1_I_mI(x, y); }, 
   //  -1.5, +1.5, -1.5, +1.5, 41, 41);
   // It looks like from the left saddle at (-1,0), we would always head off to the right saddle at

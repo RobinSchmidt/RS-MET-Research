@@ -108,12 +108,29 @@ void setLineStyles(GNUPlotter& plt, const std::string& style, int iStart, int iE
 void prepareForContourPlot(GNUPlotter& plt,
   const std::vector<float> levels, bool useConstColors = true)
 {
-  // Add the contour lines:
+  bool drawContours = true;   // ToDo: make this a parameter
   std::string cmd;
-  cmd = "set cntrparam levels discrete " + std::to_string(levels[0]);
-  for(int i = 1; i < levels.size(); i++)
-    cmd += "," + std::to_string(levels[i]);
-  plt.addCommand(cmd);
+
+  // Add the contour lines:
+  if(drawContours)
+  {
+    plt.addCommand("set contour");
+    cmd = "set cntrparam levels discrete " + std::to_string(levels[0]);
+    for(int i = 1; i < levels.size(); i++)
+      cmd += "," + std::to_string(levels[i]);
+    plt.addCommand(cmd);
+
+    // Use a tranparent black for the contour lines:
+    //const char c[9] = "00000000";
+    const char c[9] = "AA000000";  // I tried 00,44,88,AA,CC. AA looks best in pngcairo.
+    plt.setGraphColors(c, c, c, c, c, c, c, c, c, c);
+
+
+    //plt.setGraphColors(c, c, c, c, c, c, c, c, c, c);
+    //plt.setGraphColors("FF0000", "00FF00", "0000FF");
+    // Do we really have to pass 10 colors? We should be able to pass just one!
+    // This seems to make no difference
+  }
 
   // Use constant color fills between the contour lines if desired:
   if(useConstColors)
@@ -127,7 +144,6 @@ void prepareForContourPlot(GNUPlotter& plt,
 
   // Plot:
   plt.addCommand("set pm3d map impl");
-  plt.addCommand("set contour");
   plt.setupOutputTerminal();
   plt.addCommand("splot 'C:/Temp/gnuplotData.dat' i 0 nonuniform matrix w pm3d notitle");
 

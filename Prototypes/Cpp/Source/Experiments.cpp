@@ -13826,11 +13826,16 @@ void makePlotsForPolyaPotentialPaper()
   // Maybe try to get rid and only use calls to the abbreviated functions above. Using stateful
   // plotter objects makes it hard to move around the ploting code to change its order.
 
+  /*
   // Debug test to compare result from wxt and pngcairo terminals:
-  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, 301,301, 14, -1.0,+0.3,
+  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, 601,601, 21, -0.7,+0.7,
+    "PolyaContoursPow2.png");
+  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, 601,601, 21, -0.7,+0.7,
     "");
-  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, 301,301, 14, -1.0,+0.3,
-    "PolyaContoursPow3.png");
+    */
+
+  //cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, 601,601, 21, -0.7,+0.7,
+  //  "PolyaContoursPow2.png");
 
 
   // Surface plots for z^n where n > 0:
@@ -13842,6 +13847,8 @@ void makePlotsForPolyaPotentialPaper()
   // These are not actually used in the paper. That's why we don't specify filenames. When the code
   // is uncommented, the plots will show up on the screen rather than being written into files.
 
+
+  /*
   // Surface- and arrow-plot for f(z) = z^2:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, 
     "PolyaSurfacePow2.png");
@@ -13861,6 +13868,7 @@ void makePlotsForPolyaPotentialPaper()
     "PolyaContoursPow4.png");
   cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1,+1, -1,+1, 401,401, 21, -0.5,+0.5,
     "PolyaContoursPow5.png");
+    */
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial
@@ -13906,15 +13914,15 @@ void makePlotsForPolyaPotentialPaper()
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
 
-  /*
+
   auto plotInvPow = [&](int n)
   {
+    pltC.setSamplingResolution(600, 600);
     pltC.setFunction([&](R x, R y) { return PE::power(x, y, -n); });
     pltC.setOutputFileName("PolyaContoursInvPow" + std::to_string(n) + ".png");
     pltC.plot();
   };
   plotInvPow(2);
-  */
 
 
 
@@ -14091,10 +14099,18 @@ void makePlotsForPolyaPotentialPaper()
   //     specific to contour lines.
   //  Maybe try to draw the contour plots without explicit lines between the solid fill regions 
   //  and see how that looks. The region boundaries are the implicit contour lines. Maybe it's 
-  //  also OK or maybe even better? Even if drwing lines for emphasizing the boundaries, using 
+  //  also OK or maybe even better? Even if drawing lines for emphasizing the boundaries, using 
   //  one fixed color for all may not be the best choice anyway. I think, we should use a 
   //  darkened variant of the color in between the colors of the two filled regions which the 
-  //  contour separates - not black or gray.
+  //  contour separates - not black or gray. OK - leaving out the contorus completely can look OK
+  //  but only if we increase the samplng resolution. Otherwise, the boundaries look pixelated.
+  //  We could get away with it when we were covering the boundaries with the contour lines but 
+  //  without them, the pixelation becomes apparent. Something like 601x601 seem to produce good
+  //  results but takes awhile to render and the data file is about 5 MB
+  // -I think, it would look beste when we use a high resolution and a semitransparent black for
+  //  the contours. 88000000 looks good. But it's weird. Gnuplot with wxt terminal seems to use 
+  //  only the tranparency channel. The actual color information seem to be ignored. Oh - wait!
+  //  That channel gets respected by pngcairo, too! That's good news!
 
   // ToDo:
   // -Plot also cos(z): P(x,y) = sin(x) * cosh(y)...hmm...that's not really interesting. It's just

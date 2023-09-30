@@ -13790,10 +13790,13 @@ void makePlotsForPolyaPotentialPaper()
   //  may specify options for font-sizes, etc.
   //  OK - I now specify explictly the font to be 'Verdana,10' in the "set terminal" command. That
   //  seems to let us have identical fonts in wxt and pngcairo terminals. But still: the vertical 
-  //  spacing between the x-axis and the axis tics is too large in the png output for the contour 
+  //  spacing between the x-axis and the axis tics is different in the contour- and arrow plots.
+  //  In the arrow plot, the tic marks are closer to the axis. Why? there is no obvious reason.
+  
+  //  too large in the png output for the contour 
   //  plots. It is fine in the wxt output for the contour plots and it is also fine for the png 
-  //  output for the arrow plots. WTF?
-  // -Follow the same schem that we use in splotA to produce an output file also for all other 
+  //  output for the arrow plots. WTF? ..oh 
+  // -Follow the same scheme that we use in splotA to produce an output file also for all other 
   //  plots, i.e. adapt vplotA and cplotA also to admit file output.
 
   // Some abbreviations for data types:

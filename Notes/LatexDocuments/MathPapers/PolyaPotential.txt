@@ -2,10 +2,6 @@ Some text and code snippets that may eventually go into the .tex file. This file
 of scratchpad for the actual tex file. It also contains Sage code to produce the expressions given
 in the paper.
 
-
-
-
-
 ----------------------------------------------------------------------------------------------------
 Sage Code for producing the expressions for z^n for positive n:
  
@@ -48,17 +44,20 @@ V = integral(v, y)
 u, v, U, V
 
 
-From U,V, we may read off P. After some manual manipulations, the results are:
+From the produced U,V, we may read off P. After some manual manipulations, the results are:
 
 n  Potential
 0   x
 1  (x^2 - y^2) / 2
 2  (x^3 - 3*x*y^2) / 3
-3
+3  (x^4 - 6*x^2*y^2 + y^4) / 4
 4
 5
 6
- 1/2*x^2, -1/2*y^2)
+7
+
+
+
 
 
 ToDo:

@@ -1,4 +1,8 @@
+# Archives:
 *.7z
+*.zip
+
+
 *.aux
 *.bbl
 *.blg
@@ -34,7 +38,7 @@
 *.toc
 *.user
 *.wav
-*.zip
+
 
 Misc/UnusedCode/RSLibAndTests/RSLibTests/GeneratedFiles
 Products/AudioPlugins/ToolChain/Builds/VisualStudio2015/x64/Debug/

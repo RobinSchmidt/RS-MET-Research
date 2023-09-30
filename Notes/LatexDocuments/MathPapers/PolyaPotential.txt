@@ -23,26 +23,24 @@ w.real(), w.imag()
 
 This code gives the following results for \texttt{n = 0..7}:
 
-\begin{verbatim}
 n  Real                                      Imag
-0: 1,                                        0 
-1: x,                                        y
-2: x^2 - y^2,                                2*x*y
-3: x^3 - 3*x*y^2,                            3*x^2*y - y^3
-4: x^4 - 6*x^2*y^2  + y^4,                   4*x^3*y - 4*x*y^3
-5: x^5 - 10*x^3*y^2 + 5*x*y^4,               5*x^4*y - 10*x^2*y^3 + y^5
-6: x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      6*x^5*y - 20*x^3*y^3 + 6*x*y^5
-7: x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
-\end{verbatim} 
- 
-----------------------------------------------------------------------------------------------------
-Sage Code for producing the expressions for z^n for negative n, i.e z^(-n):
+0  1,                                        0 
+1  x,                                        y
+2  x^2 - y^2,                                2*x*y
+3  x^3 - 3*x*y^2,                            3*x^2*y - y^3
+4  x^4 - 6*x^2*y^2  + y^4,                   4*x^3*y - 4*x*y^3
+5  x^5 - 10*x^3*y^2 + 5*x*y^4,               5*x^4*y - 10*x^2*y^3 + y^5
+6  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+7  x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
+
+
+Sage Code for producing the expressions for z^n for positive n:
 
 var("x y")
 assume(x, "real")
 assume(y, "real")
 z = x + I*y
-w = 1 / z^5               # function of interest
+w =  z^5                  # function of interest
 u =  w.real() 
 v = -w.imag()
 U = integral(u, x)
@@ -50,7 +48,26 @@ V = integral(v, y)
 u, v, U, V
 
 
-Results for n = 2..6:
+From U,V, we may read off P. After some manual manipulations, the results are:
+
+n  Potential
+0   x
+1  (x^2 - y^2) / 2
+2  (x^3 - 3*x*y^2) / 3
+3
+4
+5
+6
+ 1/2*x^2, -1/2*y^2)
+
+
+ToDo:
+-List results for the potential. could it be that it is just the real part from above divided by n?
+ 
+----------------------------------------------------------------------------------------------------
+For negative n, we can use the same Sage snippet and just replace the function of interest by some 
+negative power of z or take the reciprocal of the corresponding positive power (e.g. w = 1 / z^5 
+instead of w =  z^5). Here are the results for n = 2..6:
 
 n  Real part of numerator                          Imaginary part of numerator
 2  x^2 - y^2                                       2*x*y                         

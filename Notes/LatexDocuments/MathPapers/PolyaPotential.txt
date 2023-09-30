@@ -485,6 +485,17 @@ integral actually represent the local average? What about integration constants?
 
 ToDo:
 -Try more Poly potentials ...OK - done ...and it fails! This zero result seems to be specific to
- P(x,y) = x^2 - y^2 ...and it should actually be (x^2 - y^2) / 2 anyway.
--Try non-square integration regions (it will probably not laways be zero in this case)
-
+ P(x,y) = x^2 - y^2 ...and it should actually be (x^2 - y^2) / 2 anyway. For (x^3 - 3*x*y^2) / 3, it 
+ still works when x0 = y0 = 0 but with (x^4 - 6*x^2*y^2 + y^4) / 4 even that fails. So, this wild 
+ idea was nonsense after all. ...would have been too good, if true.
+-Maybe try circular integration regions. Maybe with those, it could work because they have even more 
+ symmetry. But the integrals will be much harder to evaluate. Maybe the integration region needs to
+ have the same symmetry as the saddle itself? That happend to be the case for a square region that
+ P(x,y) = (x^2 + y^2) / 2. And maybe a cirlce always works because it has all rotational symmetries
+ up to infinity. The rationale is: P(x,y) has symmetry with respect to rotations by multiples of 90°
+ ans o does the square. (x^3 - 3*x*y^2) / 3 has the same symmetries like a hexagon, 
+ (x^4 - 6*x^2*y^2 + y^4) / 4 like an octagon. Maybe if we pick integration regions that have the 
+ same symmetry, the integral will evaluate to zero. That is obvious from the plots and totally 
+ unremarkable when x0 = y0 = 0 - but if the integral is still zero when we shift the center away 
+ from the origin, that would actually be somewhat remarkable. This did work for (x^2 - y^2) / 2 and 
+ a square integration region.

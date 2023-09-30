@@ -13762,8 +13762,6 @@ void testPotentialPlotter()
 
 void makePlotsForPolyaPotentialPaper()
 {
-  // It does not yet quite work like that - but that's the intention:
-  //
   // This function creates the plots for the paper "The Polya Potential of Complex Functions" whose
   // LaTeX source file "PolyaPotential.tex" is also in this repo, namely in the folder
   // "Notes/LatexDocuments/MathPapers". The plots will be written into files into 
@@ -13785,27 +13783,6 @@ void makePlotsForPolyaPotentialPaper()
   // created files.
 
 
-
-  // ToDo:
-  // -When rendering to .png files, the font size on the axes is larger than when rendering to the
-  //  screen (using the wxt terminal). This breaks our finely adjusted pixel-size. the y-axis
-  //  xtics are now partially out of the image. Fix this! I think, when setting the terminal, one 
-  //  may specify options for font-sizes, etc.
-  //  OK - I now specify explictly the font to be 'Verdana,10' in the "set terminal" command. That
-  //  seems to let us have identical fonts in wxt and pngcairo terminals. But still: the vertical 
-  //  spacing between the x-axis and the axis tics is different in the contour- and arrow plots.
-  //  In the arrow plot, the tic marks are closer to the axis. Why? there is no obvious reason.
-  // -In the png files, the contour lines are drawn in gray whereas in the wxt terminal, they are 
-  //  black. I'm not actually sure, which way is better. The gray tends to be nicer in areas where
-  //  contours are sparse and uglier in areas where contours are dense. Generally, I think, i'd 
-  //  prefer black
-  
-  //  too large in the png output for the contour 
-  //  plots. It is fine in the wxt output for the contour plots and it is also fine for the png 
-  //  output for the arrow plots. WTF? ..oh 
-  // -Follow the same scheme that we use in splotA to produce an output file also for all other 
-  //  plots, i.e. adapt vplotA and cplotA also to admit file output.
-
   // Some abbreviations for data types:
   using R  = float;                         // Data type for real numbers (float or double)
   using C  = std::complex<R>;
@@ -13814,41 +13791,43 @@ void makePlotsForPolyaPotentialPaper()
 
   // Abbreviations for functions to create a surface-, contour- and vector- (or arrow-) plot via
   // Gnuplot:
-  auto splotA = ::splotA<R>;  // Plot a 2D surface floating in 3D space.
-  auto cplotA = ::cplotA<R>;  // Plot a contour map.
-  auto vplotA = ::vplotA<R>;  // Plot a vector field as arrow map.
+  auto plotS = ::splotA<R>;  // Plot a 2D surface floating in 3D space.
+  auto plotV = ::vplotA<R>;  // Plot a vector field as arrow map.
+  auto plotC = ::cplotA<R>;  // Plot a contour map.
 
 
   // Surface plots for z^n where n > 0:
-  //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
-  //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31, "");
-  //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31, "");
-  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31, "");
-  //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
+  //plotS([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
+  //plotS([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31, "");
+  //plotS([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31, "");
+  //plotS([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31, "");
+  //plotS([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
   // These are not actually used in the paper. That's why we don't specify filenames. When the code
-  // is uncommented, the plots will show up on the screen rather than being written into files.
+  // is uncommented, the plots will show up on the screen rather than being written into files. 
+  // is realized by passing the empty string for the filename.
 
-
+  /*
   // Surface- and arrow-plot for f(z) = z^2:
-  splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, 
+  plotS([](R x, R y) {      return PE::power(x, y, 2); },       -1,+1, -1,+1, 31,31,
     "PolyaSurfacePow2.png");
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21, 
+  plotV([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1,+1, -1,+1, 21,21,
     "PolyaVectorsPow2.png");
 
   // Contour plots for f(z) = z^n for n = 0,1,2,3,4,5:
   int N = 601;  // not sure if 600 or 601 is better
-  cplotA([](R x, R y) { return PE::power(x, y, 0); }, -1,+1, -1,+1, N,N, 21, -1.0,+1.0,
+  plotC([](R x, R y) { return PE::power(x, y, 0); }, -1,+1, -1,+1, N,N, 21, -1.0,+1.0,
     "PolyaContoursPow0.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 1); }, -1,+1, -1,+1, N,N, 21, -0.5,+0.5,
+  plotC([](R x, R y) { return PE::power(x, y, 1); }, -1,+1, -1,+1, N,N, 21, -0.5,+0.5,
     "PolyaContoursPow1.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, N,N, 21, -0.7,+0.7,
+  plotC([](R x, R y) { return PE::power(x, y, 2); }, -1,+1, -1,+1, N,N, 21, -0.7,+0.7,
     "PolyaContoursPow2.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, N,N, 14, -1.0,+0.3,
+  plotC([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, N,N, 14, -1.0,+0.3,
     "PolyaContoursPow3.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 4); }, -1,+1, -1,+1, N,N, 21, -1.0,+1.0,
+  plotC([](R x, R y) { return PE::power(x, y, 4); }, -1,+1, -1,+1, N,N, 21, -1.0,+1.0,
     "PolyaContoursPow4.png");
-  cplotA([](R x, R y) { return PE::power(x, y, 5); }, -1,+1, -1,+1, N,N, 21, -0.5,+0.5,
+  plotC([](R x, R y) { return PE::power(x, y, 5); }, -1,+1, -1,+1, N,N, 21, -0.5,+0.5,
     "PolyaContoursPow5.png");
+    */
   // z^3 is the only case that needs an asymmetric z-range. This is because the potential function
   // P(x,y) goes down at all four corners of the drawing rectangle. The corners are the points 
   // farthest away from the origin so there, we typically see the most extreme values of the radial
@@ -13871,94 +13850,50 @@ void makePlotsForPolyaPotentialPaper()
   // actually correct.
 
 
-  // Create and set up the plotters for the vector fields and contour maps:
-  rsContourMapPlotter<R>  pltC;
-  rsVectorFieldPlotter<R> pltV;
-  // Maybe try to get rid and only use calls to the abbreviated functions above. Using stateful
-  // plotter objects makes it hard to move around the ploting code to change its order.
-
-  // Common settings for the f(z) = z^n plots where n = -5,..,+5. Some of them will be changed for 
-  // some of the plots:
-  pltC.setInputRange(-1, +1, -1, +1);
-  pltV.setInputRange(-1, +1, -1, +1);
-  pltC.setOutputRange(-5.0, +5.0);
-  setupForSquarePlot(&pltC);
-  setupForSquarePlot(&pltV);
-  //pltC.setPixelSize(600, 600);
-  //pltV.setPixelSize(600, 600);
-  pltC.setNumContours(31);
-  pltV.setArrowDensity(21, 21);
-  pltC.setSamplingResolution(600, 600);            // The negative powers need high resolution
-  pltC.setColorPalette(CP::CJ_BuYlRd11, false);
-  pltV.setColorPalette(CP::CB_YlGnBu9mt, false);
+  // Create and set up an rsContourMapPlotter object that will be used for some of the coming 
+  // plots:
+  rsContourMapPlotter<R> pltC;
 
 
+
+  // Inverse powers, i.e. 1/z^n for n = 1..5:
   auto plotInvPow = [&](int n)
   {
-    //pltC.setSamplingResolution(600, 600);
     pltC.setFunction([&](R x, R y) { return PE::power(x, y, -n); });
     pltC.setOutputFileName("PolyaContoursInvPow" + std::to_string(n) + ".png");
+    setupForSquarePlot(&pltC);
+    pltC.setSamplingResolution(600, 600);
+    pltC.setInputRange(-1, +1, -1, +1);
+    if(n > 1) 
+    {
+      pltC.setOutputRange(-5.0, +5.0);
+      pltC.setNumContours(31);
+      pltC.setColorPalette(CP::CJ_BuYlRd11, false); 
+    }
+    else 
+    {
+      // 1/z = z^-1 needs a different setup:
+      pltC.setOutputRange(-3.0, +0.5);
+      pltC.setNumContours(21);
+      pltC.setColorPalette(CP::CB_YlGnBu9m, true); 
+    }
     pltC.plot();
   };
+
+  plotInvPow(1);  // z^-1, monopole
   plotInvPow(2);  // z^-2, dipole
   plotInvPow(3);  // z^-3, quadrupole
   plotInvPow(4);  // z^-4, hexapole
   plotInvPow(5);  // z^-5, octupole
 
 
-
-
-  /*
-  // Now obsolete - replaced by the code above:
-  // For pdf paper: z^-5, octupole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -5); });
-  pltC.plot();
-  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -5, u, v); }); pltV.plot();
-  // https://en.wiktionary.org/wiki/octupole
-  // GNUPlot gives warning about undefined matrix values. Check the generated data! Maybe when 
-  // that is fixed, we can get away with a lower resolution than setSamplingResolution(401, 401)?
-  // I use this high resolution mainly to get rid of the artifacts in the middle. Maybe that 
-  // artifact comes from the pole there? OK - yes - it seems to be the case. When using 101,101,
-  // we do get an evaluation point at the pole at 0,0 but when using 100,100, the pole is avoided
-  // same with 401,401 vs 400,400. But I wonder why the clipping doesn't take care of that. Maybe
-  // it's a NaN due to 0/0? However, the gist is: when there's a pole at 0,0, try to avoid 0,0 as
-  // evaluation point. Otherwise,we probably want to have an evaluation point at 0,0.
-  // ...move that text to the "Observations" section
-
-  // For pdf paper: z^-4, hexapole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -4); });       pltC.plot();
-  //pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -4, u, v); }); pltV.plot();
-  // https://en.wiktionary.org/wiki/hexapole#English
-
-  // For pdf paper: z^-3, quadrupole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -3); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -3, u, v); }); pltV.plot();
-  // https://de.wikipedia.org/wiki/Quadrupol
-  // https://en.wikipedia.org/wiki/Quadrupole
-
-  // For pdf paper: z^-2, dipole:
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -2); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -2, u, v); }); pltV.plot();
-  // https://en.wikipedia.org/wiki/Dipole
-  // https://de.wikipedia.org/wiki/Dipol_(Physik)
-  */
+  // Inversion, i.e. 1/z = z^-1 with a potential of a monopole, is special enough to get its own, 
+  // customized plotting setup:
+  //pltC.setFunction([](R x, R y) { return PE::power(x, y, -1); });
+  //pltC.plot();
 
 
 
-  // For pdf paper: z^-1, monopole:
-  pltC.setOutputRange(-3.0, +0.5);
-  pltC.setNumContours(21);
-  pltC.setSamplingResolution(200, 200);  // Monopoles are not that demanding in terms of resolution
-  pltC.setColorPalette(CP::CB_YlGnBu9m, true); // blue stays negative
-  pltC.setFunction([](R x, R y) {      return PE::power(x, y, -1); });       pltC.plot();
-  pltV.setFunction([](R x, R y, R* u, R* v) { PE::power(x, y, -1, u, v); }); pltV.plot();
-  // https://en.wikipedia.org/wiki/Magnetic_monopole
-
-  // -For z^-n, we get a monopole field for n = 1 and for n > 1, we get the field of a 2*(n-1) 
-  //  pole, i.e. a field with 2*(n-1) lobes
-  // -The monopole should use a unipolar color map, the multipoles a diverging map
-  // -Maybe for the paper, only plot the arrow-map for the monopole and dipole but not for higher
-  //  order multipoles
 
 
 
@@ -13979,7 +13914,7 @@ void makePlotsForPolyaPotentialPaper()
   pltC.addCommand("set xtics center offset 0,1.5");
   pltC.plot();
   pltC.clearCommands();  // clear them for the next plot
-  // About placing the tics - which si what we need here:
+  // About placing the tics - which is what we need here:
   // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
   // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
   // http://www.gnuplot.info/docs_4.2/node295.html

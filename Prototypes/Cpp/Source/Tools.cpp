@@ -196,6 +196,9 @@ public:
 
   void clearPaths() { paths.clear(); }
 
+  void setOutputFileName(const std::string& newName) { outputFileName = newName; }
+  // it's only the name, not the full path
+
 
   void setupPlotter(GNUPlotter* plt);
 
@@ -236,6 +239,8 @@ protected:
   // could, for example, be used to draw in field lines and in the subclass rsContourMapPlotter, 
   // they could be used to draw in geodesics between points of interest. They could also be used to 
   // draw in other "lines of interest" such as lines of constant curvature or whatever.
+
+  std::string outputFileName;
 };
 
 
@@ -258,6 +263,10 @@ void rsFieldPlotter2D<T>::setupPlotter(GNUPlotter* plt)
   plt->addCommand("set bmargin at screen " + std::to_string(bottom));
   plt->addCommand("set xlabel \"\""); // Use empty string as label to get rid of it
   plt->addCommand("set ylabel \"\""); // ToDo: let the user specify axis labels
+  if(outputFileName != "")
+    plt->setOutputFilePath("C:/Temp/" + outputFileName); // ToDo: don't hardcode the directory
+  // What happens, if we don't prepend a directory? will the file end up the current working 
+  // directory or will no file be created at all?
 
   // Plot customizations:
   for(size_t i = 0; i < commands.size(); i++)

@@ -13570,9 +13570,10 @@ void cplotA(std::function<T(T x, T y)> f,  // why float? use T
 // Like splotA and cplotA but produces a vector field plot.
 template<class Real>  // use T
 void vplotA(std::function<void(Real x, Real y, Real* u, Real* v)> f,
-  Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny)
+  Real xMin, Real xMax, Real yMin, Real yMax, int Nx, int Ny, std::string fileName = "")
 {
   rsVectorFieldPlotter<Real> plt;
+  plt.setOutputFileName(fileName);
   plt.setFunction(f);
   plt.setInputRange(xMin, xMax, yMin, yMax);
   plt.setArrowDensity(Nx, Ny);
@@ -13782,17 +13783,17 @@ void makePlotsForPolyaPaper()
   rsVectorFieldPlotter<R> pltV;
 
   // Surface plots for z^n where n > 0:
-  splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
-  splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31, "");
-  splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31, "");
-  splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31, "");
-  splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 3); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 4); }, -1, +1, -1, +1, 31, 31, "");
+  //splotA([](R x, R y) { return PE::power(x, y, 5); }, -1, +1, -1, +1, 31, 31, "");
   // These are not actually used in the paper
 
   // Create the plots for the paper about Polya potentials:
   // For pdf paper: f(z) = z^2 as surface-, arrow- and contour-plot:
   splotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 31, 31, "PolyaSurfacePow2.png");
-  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21);
+  vplotA([](R x, R y, R* u, R* v) { PE::power(x, y, 2, u, v); }, -1, +1, -1, +1, 21, 21, "PolyaVectorsPow2.png");
   //cplotA([](R x, R y) {      return PE::power(x, y, 2); },       -1, +1, -1, +1, 201, 201, 29, -0.7, +0.7);
   // The splot can be optimized (too big much margins)
   // The cplot is not actually used. We use the plot for z^2 from the sequence of plots below. Here, it

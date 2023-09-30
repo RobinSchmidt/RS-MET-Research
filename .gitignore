@@ -1,48 +1,71 @@
+#---------------------------------------------------------------------------------------------------
+# Ignored file formats:
+
 # Archives:
 *.7z
+*.gz
 *.zip
 
+# Media:
+*.mp4
+*.pdf
+*.png
+*.ppm
+*.svg
+*.wav
 
-*.aux
-*.bbl
-*.blg
-*.db
+# Build products:
+*.app
+*.component
 *.dll
 *.exe
+*.lib
+*.so
+
+# Build intermediates (C++):
+*.o
+*.obj
+
+# Build intermediates (LaTeX):
+*.aux
+*.bbl
+*.log
+*.out
+*.toc
+
+# IDE generated:
 *.exp
-*.gz
 *.idb
 *.ilk
 *.ipch
-*.lib
 *.lastbuildstate
 *.layout
-*.log
-*.mp4
-*.o
-*.obj
 *.opendb
 *.opensdf
-*.out
 *.pdb
-*.pdf
-*.pk
-*.png
-*.ppm
 *.res
 *.sdf
-*.so
 *.suo
-*.svg
 *.tlog
-*.toc
 *.user
-*.wav
 
+# Preview acceleration:
+*.db
+*.pk
+
+# Misc:
+*.blg
+
+#---------------------------------------------------------------------------------------------------
+# Ignored folders:
 
 Misc/UnusedCode/RSLibAndTests/RSLibTests/GeneratedFiles
 Products/AudioPlugins/ToolChain/Builds/VisualStudio2015/x64/Debug/
 Temp/
 Prototypes/Cpp/Builds/VisualStudio2019/enc_temp_folder/
+
+#---------------------------------------------------------------------------------------------------
+# Ignored files:
+
 Prototypes/Cpp/Builds/VisualStudio2019/x64/Debug/ConsoleApp/Experiments_ConsoleApp.vcxproj.FileListAbsolute.txt
 Projects/CppExperiments/Build/VisualStudio2019/x64/Debug/CppExperiments.vcxproj.FileListAbsolute.txt

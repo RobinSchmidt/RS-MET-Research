@@ -13826,9 +13826,12 @@ void makePlotsForPolyaPotentialPaper()
   // Maybe try to get rid and only use calls to the abbreviated functions above. Using stateful
   // plotter objects makes it hard to move around the ploting code to change its order.
 
-  // Test:
+  // Debug test to compare result from wxt and pngcairo terminals:
+  cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, 301,301, 14, -1.0,+0.3,
+    "");
   cplotA([](R x, R y) { return PE::power(x, y, 3); }, -1,+1, -1,+1, 301,301, 14, -1.0,+0.3,
     "PolyaContoursPow3.png");
+
 
   // Surface plots for z^n where n > 0:
   //splotA([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
@@ -14067,7 +14070,7 @@ void makePlotsForPolyaPotentialPaper()
   int dummy = 0;
 
   // Notes:
-  // -Unfortunateyl, the direct rendering into png files produces different results compared with
+  // -Unfortunately, the direct rendering into png files produces different results compared with
   //  manually exporting the png files from the GUI application one by one. The directly written
   //  png files look not as good. Especially annoying is that the contour lines are not drawn in 
   //  black but rather in gray. In regions with dense contorus, this looks ugly. in reagion with
@@ -14076,6 +14079,22 @@ void makePlotsForPolyaPotentialPaper()
   // -Trying to produce a PolyaContoursPow2.pdf file instead of a png produced a pdf file of size 
   //  139 kB but it was unreadable with MS Edge. An svg version had a whopping 4 MB size and 
   //  actually showed some artifacts. So, png seems to be the only viable option at the moment.
+  // -Inserting a command "set linetype 5 lc rgb \"red\" lw 5", one of the contour lines is indeed 
+  //  much thicker than the others but it is still gray and not red as we have specified. 
+  //  Apparently, when the output terminal is pngcairo, the contour lines are all drawn in gray and
+  //  ignore the linecolor setting. When using the png instead of pngcairo, we indeed get a thick 
+  //  red line. But the png terminal is not acceptable either because it produces ugly Bresenham 
+  //  lines. So, this may be a bug in the implementation of the pngcairo terminal?
+  //  -> Try to get the latest version of Gnuplot to see, if the bug is present there, too. If so
+  //     maybe file a bug report to the Gnuplot developers.
+  //  -> If not, figure out, if this problem also affects other kinds of lines or if it is 
+  //     specific to contour lines.
+  //  Maybe try to draw the contour plots without explicit lines between the solid fill regions 
+  //  and see how that looks. The region boundaries are the implicit contour lines. Maybe it's 
+  //  also OK or maybe even better? Even if drwing lines for emphasizing the boundaries, using 
+  //  one fixed color for all may not be the best choice anyway. I think, we should use a 
+  //  darkened variant of the color in between the colors of the two filled regions which the 
+  //  contour separates - not black or gray.
 
   // ToDo:
   // -Plot also cos(z): P(x,y) = sin(x) * cosh(y)...hmm...that's not really interesting. It's just

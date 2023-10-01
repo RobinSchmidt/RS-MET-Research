@@ -12473,7 +12473,6 @@ void testPolyaPotenialFormulas()
   auto numDiffR = [&](Real x, Real y, Real p)
   {
     Real h, r, a, xp, xm, yp, ym, Pp, Pm;
-
     h  = 0.0001;              // Approximation step size
     r  = sqrt(x*x + y*y);     // Radius
     a  = atan2(y, x);         // Angle
@@ -12492,16 +12491,38 @@ void testPolyaPotenialFormulas()
     return (Pp - Pm) / (2*h);
   };
 
-  // Write a similar function numDiffA for the numerical derivative of P wrt a
+  // Like numDiffR but for the numerical derivative of P with respect to a instead of r:
+  auto numDiffA = [&](Real x, Real y, Real p)
+  {
+    Real h, r, a, xp, xm, yp, ym, Pp, Pm;
+    h  = 0.0001;              // Approximation step size
+    r  = sqrt(x*x + y*y);     // Radius
+    a  = atan2(y, x);         // Angle
 
-  // 
+    // Compute high value, i.e. P with increased a:
+    xp = r * cos(a+h);
+    yp = r * sin(a+h);
+    Pp = power(xp, yp, p);
+
+    // Compute low value, i.e. P with decreased a:
+    xm = r * cos(a-h);
+    ym = r * sin(a-h);
+    Pm = power(xm, ym, p);
+
+    // Compute numrical derivative by central difference formula:
+    return (Pp - Pm) / (2*h);
+  };
+
+  // Test, if the numeric derivatives of our Polya potential for power functions implemented in
+  // polar coordinates gives the expected results:
   z = Complex(x, y);
   w = pow(z, n);
   Real rw  = abs(w);             // Radius of w
   Real aw  = arg(w);             // Angle of w
-  Real P_r = numDiffR(x, y, n);  // Should match rw. Partial derivative of P wrt r.
-
-
+  Real P_r = numDiffR(x, y, n);  // Partial derivative of P wrt r. Should match  rw.
+  Real P_a = numDiffA(x, y, n);  // Partial derivative of P wrt a. Should match -aw.
+  // The values look good actually. Then why does the comparison of "power" with "PPE::power" above
+  // fail?
 
   int dummy = 0;
 

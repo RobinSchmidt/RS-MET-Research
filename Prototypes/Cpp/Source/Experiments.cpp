@@ -13766,14 +13766,7 @@ void makePlotsForPolyaPotentialPaper()
   // LaTeX source file "PolyaPotential.tex" is also in this repo, namely in the folder
   // "Notes/LatexDocuments/MathPapers". The plots will be written into files into 
   // some temporary directory (currently "C:/Temp", which must exist on the machine that code runs 
-  // on) and they will get the appropriate filenames that are expected by the LaTeX document. The
-  // so generated files are not and shall never be part of this repo because having lots of media
-  // files in the repo would blow its size up unreasonably, especially when the content of these 
-  // media files may be updated from time to time (due to, say, changing some plotting style 
-  // setting like axis labels, colors, pixel-size, etc.). In order to render the pdf paper from the
-  // latex source, these image files must first be re-generated and then moved put in the 
-  // appropriate folder "Notes/LatexDocuments/MathFigures" after the repo has been freshly cloned 
-  // from the github server to the local development machine.
+  // on) and they will get the appropriate filenames that are expected by the LaTeX document. 
   //
   // There a lot of code lines that are commented out. These are for experimental purposes and can 
   // be uncommented to create some other plots that are not (yet?) included into the paper. These 
@@ -13958,12 +13951,6 @@ void makePlotsForPolyaPotentialPaper()
   // naturally calls for "portrait" format which is inconvenient for a figure in the document.
 
 
-
-
- 
-
-
-
   int dummy = 0;
 
   // Notes:
@@ -14027,6 +14014,9 @@ void makePlotsForPolyaPotentialPaper()
   //  sinh is a rotated sin? What sort of symmetry would it be when a function satisfies 
   //  f(i z) = i f(z)? Rotational symmetry by 90°? The Polya potential for z^3, i.e. the 4th order 
   //  saddle has such a symmetry, I think.
+  // -Maybe the plotting functions for the papers and book should go into a separate file. If 
+  //  moving them, make sure to update the ReadMe.txt in Notes/LatexDocuments because it mentions
+  //  that the plotting functions are supposed to be found here in Experiments.cpp.
 
   // This has nice colormaps and colorbars - how was this plot created?
   // https://en.wikipedia.org/wiki/Complex_logarithm#/media/File:Complex_log_domain.svg

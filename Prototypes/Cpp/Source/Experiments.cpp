@@ -12439,7 +12439,7 @@ void testPolyaPotenialFormulas()
   
   // Not yet working...or maybe...the test results are confusing:
   // Computes the Polya potential P(x,y) of f(z) = z^p for real exponents p.
-  auto power = [](Real x, Real y, Real p)
+  auto p_power = [](Real x, Real y, Real p)
   { 
     Real r = sqrt(x*x + y*y);                        // Radius
     Real a = atan2(y, x);                            // Angle
@@ -12449,12 +12449,13 @@ void testPolyaPotenialFormulas()
 
   // Some example evaluation point and power:
   x = 4;
-  y = 5;
-  int n = 3;
+  y = 3;
+  int n = 2;
 
   Real tol = 1.e-12;
   Real P1  = PPE::power(x, y, n);  // P(x,y) via cartesian formula
-  Real P2  =      power(x, y, n);  // P(x,y) via polar formula
+  Real P2  =    p_power(x, y, n);  // P(x,y) via polar formula
+  Real sqr = PPE::square(x, y);    // Test - should match P1 when n == 2. Looks OK.
   Real D = P2 - P1;                // Difference between the two computed potentials.
   ok &= rsIsCloseTo(P1, P2, tol);
   // Nope! P2 is completely different from P1 for (x,y) = (4,3), n = 1. It seems to work for 
@@ -12479,12 +12480,12 @@ void testPolyaPotenialFormulas()
     // Compute high value, i.e. P with increased r:
     xp = (r+h) * cos(a);
     yp = (r+h) * sin(a);
-    Pp = power(xp, yp, p);
+    Pp = p_power(xp, yp, p);
 
     // Compute low value, i.e. P with decreased r:
     xm = (r-h) * cos(a);
     ym = (r-h) * sin(a);
-    Pm = power(xm, ym, p);
+    Pm = p_power(xm, ym, p);
 
     // Compute numrical derivative by central difference formula:
     return (Pp - Pm) / (2*h);
@@ -12501,12 +12502,12 @@ void testPolyaPotenialFormulas()
     // Compute high value, i.e. P with increased a:
     xp = r * cos(a+h);
     yp = r * sin(a+h);
-    Pp = power(xp, yp, p);
+    Pp = p_power(xp, yp, p);
 
     // Compute low value, i.e. P with decreased a:
     xm = r * cos(a-h);
     ym = r * sin(a-h);
-    Pm = power(xm, ym, p);
+    Pm = p_power(xm, ym, p);
 
     // Compute numrical derivative by central difference formula:
     return (Pp - Pm) / (2*h);
@@ -12520,28 +12521,38 @@ void testPolyaPotenialFormulas()
   Real aw  = arg(w);             // Angle of w
   Real P_r = numDiffR(x, y, n);  // Partial derivative of P wrt r. Should match  rw.
   Real P_a = numDiffA(x, y, n);  // Partial derivative of P wrt a. Should match -aw.
-  // The values look good actually. Then why does the comparison of "power" with "PPE::power" above
-  // fail? It could mean that there is a constant offset between the two potnetials - but then the
-  // difference betwenn P1 and P2 should not depend on x,y - but it does. 
+  // The values look good for (x,y) = (4,3), n = 2 but not so much for (x,y) = (-2,-2), n = 2.
+
+
 
 
   // Wrap potential computation functions into std::function and plot them:
   std::function<Real(Real, Real)> f1, f2;
-  f1 = [&](Real x, Real y) { return      power(x, y, n); };
+  f1 = [&](Real x, Real y) { return    p_power(x, y, n); };
   f2 = [&](Real x, Real y) { return PPE::power(x, y, n); };
   GNUPlotter plt;
   int  Nx   = 21;
   int  Ny   = 21;
-  Real xMin = -1;
-  Real xMax = +1;
-  Real yMin = -1;
-  Real yMax = +1;
+  Real xMin = -2;
+  Real xMax = +2;
+  Real yMin = -2;
+  Real yMax = +2;
   plt.plotBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f1);
   plt.plotBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f2);
-  // They actually do look the same
   int dummy = 0;
 
-
+  // Observations:
+  // -Tests for the new potnetial formula for power, i.e. for z^n, based on polar coordinates:
+  //  -In the test that compues P1 and P2, we get completely different results. Explaining that by
+  //   different offsets, i.e. integration constants, doesn't explain why the difference seem to 
+  //   depend on x,y
+  //  -The numerical derivatives of the potential computed via the new formula do seem to give 
+  //   correct results when x,y are both positive.
+  //  -The plots for the power pontetial evaluated via PPE and via the polar formula implemented 
+  //   here actually do look the same but none of the looks as expected. For n = 2, we would 
+  //   expect to see the monkey saddle but get something completely different.
+  //  -This is very confusing!
+  //
 
   // ToDo:
   // -Increase the range of powers to be tested

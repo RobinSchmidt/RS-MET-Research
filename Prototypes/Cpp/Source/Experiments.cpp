@@ -12445,18 +12445,17 @@ void testPolyaPotenialFormulas()
     Real a = atan2(y, x);                            // Angle
     Real P = (pow(r, p+1) / (p+1)) - 0.5 * p * a*a;  // Potential
     return P;
-
-    //return PPE::power(x, y, n);
   };
 
   // Some example evaluation point and power:
   x = 4;
-  y = 3;
-  int n = 2;
+  y = 5;
+  int n = 3;
 
   Real tol = 1.e-12;
   Real P1  = PPE::power(x, y, n);  // P(x,y) via cartesian formula
   Real P2  =      power(x, y, n);  // P(x,y) via polar formula
+  Real D = P2 - P1;                // Difference between the two computed potentials.
   ok &= rsIsCloseTo(P1, P2, tol);
   // Nope! P2 is completely different from P1 for (x,y) = (4,3), n = 1. It seems to work for 
   // y = 0, though. Apparently, only the phase angle part of the formula is wrong. But when y = 0
@@ -12522,7 +12521,8 @@ void testPolyaPotenialFormulas()
   Real P_r = numDiffR(x, y, n);  // Partial derivative of P wrt r. Should match  rw.
   Real P_a = numDiffA(x, y, n);  // Partial derivative of P wrt a. Should match -aw.
   // The values look good actually. Then why does the comparison of "power" with "PPE::power" above
-  // fail?
+  // fail? It could mean that there is a constant offset between the two potnetials - but then the
+  // difference betwenn P1 and P2 should not depend on x,y - but it does. 
 
   int dummy = 0;
 
@@ -12530,7 +12530,9 @@ void testPolyaPotenialFormulas()
 
   // ToDo:
   // -Increase the range of powers to be tested
-  // -Implement and test formuals based on polar coordinates
+  // -Implement and test formulas based on polar coordinates
+  //  -> Kinda done but the test results are confusing. Maybe plot the potential surface via both
+  //     formulas.
 }
 
 void testRiemannZeta()

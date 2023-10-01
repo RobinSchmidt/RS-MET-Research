@@ -12451,14 +12451,19 @@ void testPolyaPotenialFormulas()
 
   // Some example evaluation point and power:
   x = 4;
-  y = 3;
+  y = 0;
   int n = 1;
 
   Real tol = 1.e-12;
   Real P1  = PPE::power(x, y, n);  // P(x,y) via cartesian formula
   Real P2  =      power(x, y, n);  // P(x,y) via polar formula
   ok &= rsIsCloseTo(P1, P2, tol);
-  // Nope! P2 is completely different from P1. 
+  // Nope! P2 is completely different from P1 for (x,y) = (4,3), n = 1. It seems to work for 
+  // y = 0, though. Apparently, only the phase angle part of the formula is wrong. But when y = 0
+  // it works also for other exponents (except -1 due to div-by-0).
+  
+  // Try to find numerical 
+  // derivatives of P wrt to r,a
 
   int dummy = 0;
 

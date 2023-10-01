@@ -12435,9 +12435,9 @@ void testPolyaPotenialFormulas()
   rsAssert(ok);
 
 
-  // Under construction: formuals based on polar cooridnates: 
+  // Under construction: formulas based on polar coordinates: 
   
-  // Not yet working:
+  // Not yet working...or maybe...the test results are confusing:
   // Computes the Polya potential P(x,y) of f(z) = z^p for real exponents p.
   auto power = [](Real x, Real y, Real p)
   { 
@@ -12524,6 +12524,21 @@ void testPolyaPotenialFormulas()
   // fail? It could mean that there is a constant offset between the two potnetials - but then the
   // difference betwenn P1 and P2 should not depend on x,y - but it does. 
 
+
+  // Wrap potential computation functions into std::function and plot them:
+  std::function<Real(Real, Real)> f1, f2;
+  f1 = [&](Real x, Real y) { return      power(x, y, n); };
+  f2 = [&](Real x, Real y) { return PPE::power(x, y, n); };
+  GNUPlotter plt;
+  int  Nx   = 21;
+  int  Ny   = 21;
+  Real xMin = -1;
+  Real xMax = +1;
+  Real yMin = -1;
+  Real yMax = +1;
+  plt.plotBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f1);
+  plt.plotBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f2);
+  // They actually do look the same
   int dummy = 0;
 
 

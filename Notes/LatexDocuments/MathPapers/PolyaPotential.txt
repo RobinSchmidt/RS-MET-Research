@@ -502,3 +502,5 @@ ToDo:
  unremarkable when x0 = y0 = 0 - but if the integral is still zero when we shift the center away 
  from the origin, that would actually not be obvious at all. This did work for (x^2 - y^2) / 2 and 
  a square integration region.
+-I think, this should then apply to all scalar fields that satisfy the Laplace PDE. I think that 
+ also means that any patch of the surface is a minimal surface wrt to its boundary.

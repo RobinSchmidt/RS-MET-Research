@@ -152,7 +152,8 @@ void prepareForContourPlot(GNUPlotter& plt,
   //  channels are ignored completely, only the alpha channel does something - but in pngcairo, 
   //  there always seems to be some extra transparency on top if the setting. It does not behave at 
   //  all as one would expect it to. Finding a setting that looks good for a pdf is a matter of 
-  //  trial and error.
+  //  trial and error. ToDo: try to use a somwehat thicker linewidth
+  //
   //
   // Questions:
   // -What happens, if the levels are non-equidistant? I guess, in this case, the alignment between

@@ -340,7 +340,7 @@ When we want to read such a contour plot, we need two steps of interpretation: (
 %In figure \ref{Fig:SquareVectorsAndContours}, we see the corresponding Polya vector field together with a contour plot of its Polya potential.
 
 
-\subsection{Plots for Nonegative Powers: $f(z) = z^n$}
+\subsection{Plots for Nonnegative Powers: $f(z) = z^n$}
 We now want to look at plots for functions of the form $f(z) = z^n$ for some nonnegative integer $n$. We have already seen that the Polya potential for $f(z) = z^2$ gives us $P(x,y) = x^3/ 3 - x y^2$ which is, up to scaling, the so called monkey saddle. Let's look at some powers other than 2. Let's start with the simplemost cases of the constant function $f(z) = z^0 = 1$ and the identity $f(z) = z^1 = z$. The contour maps for these are shown in figure \ref{Fig:ContoursPow_0_1}. 
 \begin{figure}[p]
 \caption{Polya potential contours of $f(z) = z^0$ and $f(z) = z^1$}	
@@ -395,7 +395,7 @@ For $z^2$, we already know that we get the monkey saddle, i.e. a saddle with spa
 \end{figure}
 
 \medskip
-Anyway - we saw that for $z^1$, we got a regular two-leg saddle, for $z^2$ we got a three-leg saddle and for $z^3$ we got a four-leg saddle. A pattern seems to be emerging - and it is indeed true that for $z^n$, our potential surface $P(x,y)$ looks like a saddle surface of order $n+1$. For a discussion of such higher order saddles, see \cite{HighOrderSaddles}. It has also starfish- and octopus-saddles. There is another noteworthy feature of this sequence of saddle surfaces: The higher the order of the saddle, the flatter the interior region near the origin and the steeper the cliffs further away from the origin. This can be seen in figure \ref{Fig:ContoursPow_4_5} where we see saddles of order 5 and 6 - a starfish- and a beetle-saddle (I made the last one up myself).
+Anyway - we saw that for $z^1$, we got a regular two-leg saddle, for $z^2$ we got a three-leg saddle and for $z^3$ we got a four-leg saddle. A pattern seems to be emerging - and it is indeed true that for $z^n$, our potential surface $P(x,y)$ looks like a saddle surface of order $n+1$. For a discussion of such higher order saddles, see \cite{HighOrderSaddles}. It has also starfish- and octopus-saddles. There is another noteworthy feature of this sequence of saddle surfaces: The higher the order of the saddle, the flatter the interior region near the origin and the steeper the cliffs further away from the origin. This can be seen in figure \ref{Fig:ContoursPow_4_5} where we see saddles of order 5 and 6 - a starfish- and a beetle-saddle (I made the last one up myself). Much of the region around the origin is very flat and only at the boundaries of the plots, the colors actually change a bit to indicate a bit more variability in the height values. In the center region, it's all boringly flat and therefore (almost) one-colored.
 
 \subsection{Plots for Negative Powers: $f(z) = z^{-n}$}
 Having seen Polya potentials of positive powers of $z$, the logical next step is to ask how Polya potentials for negative powers of $z$ look like. In figure \ref{Fig:ContoursInvPow_1_2}, we see the contour maps for $1/z$ and $1/z^2$. 
@@ -433,7 +433,7 @@ For $f(z) = 1/z^2$, the situation looks quite different. Here, fluid would be fl
 \end{figure}
 
 \medskip
-Well - OK - they may not look like what we may have expected. Instead of a tripole and a quadrupole, we actually get a quadrupole and a hexapole. I don't know, if a tripole is even a thing. Probably not. For the quadrupole, the field lines or gradient arrows would point outward horizontally and inward vertically and go orthogonally over the diagonals. In the hexapole, the field points in from the left and out to the right, in from top-right and out to bottom-left, in from bottom-right and out to top-left. In general, we get an $2(n-1)$-th order pole for $n > 1$ and for the special case of $n = 1$, we get a monopole. In complex analysis, the function $1/z$ is somewhat special and stands out from the crowd.
+Well - OK - they may not look like what we may have expected. Instead of a tripole and a quadrupole, we actually get a quadrupole and a hexapole. I don't know, if a tripole is even a thing. Probably not. For the quadrupole, the field lines or gradient arrows would point outward horizontally and inward vertically and go orthogonally over the diagonals. In the hexapole, the field points in from the left and out to the right, in from top-right and out to bottom-left, in from bottom-right and out to top-left. In general, we get a $2(n-1)$-th order pole for $n > 1$ and for the special case of $n = 1$, we get a monopole. In complex analysis, the function $1/z$ is generally a somewhat special citizen that stands out from the crowd of power functions. It is the odd one out in the context of Laurent series: the coefficient for $z^{-1}$ is so special that it even has its own name: the "residue". And if you remember from real calculus that $x^{-1}$ is the only power of $x$ for which the power rule of integrals $(x^{n+1}) / (n+1)$ fails to apply (as a programmer, I'd call its use here a division by zero error), it may be not so surprising to see the reciprocation function $1/z$ break a pattern yet again. 
 
 % z^n:  saddle of order n+1
 % z^0:  straight lines, flat/planar field
@@ -600,6 +600,9 @@ ToDo:
 -I think, the u(x,y), v(x,y) functions for z^n are themselves also (higher order) saddles. Is 
  it generally true that the partial derivatives of a saddle are again saddles with order one 
  less?
+ 
+-I think, our Polya potential satisfies the Laplacian equation P_xx + P_yy = 0. That's an
+ immediate consequence of the divergence free property of the vector field.
 
 Resources:
 https://en.wikipedia.org/wiki/Scalar_potential	

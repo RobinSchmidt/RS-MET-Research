@@ -53,8 +53,29 @@ Can be put near the binomial formulas
 Maybe this whole section should be called Elementary Algebra.
 This video says (at 5:25):
 https://www.youtube.com/watch?v=FQYOpD7tv30
-(elementary) algebra is the study of abstraction applied to numbers. One could perhaps also
-say: computing with letters ("Rechnen mit Buchstaben")
+(elementary) algebra is the study of abstraction applied to numbers. 
+
+One could perhaps also say: algebra is computing with letters ("Rechnen mit Buchstaben"), 
+deriving general formulas with placeholders into which we can plug in actual values (numbers).
+It's also about algorithms to compute an unknown quantity from known quantities (think 
+polynomial division, Gaussian elimination, partial fraction expansion). In this context, a 
+formula can be seen as a very simple algorithm. A formula usually translates to a single 
+assignment operation in a computer program. ..well, some formulas are a bit more complicated.
+The quadratic formula spits out two values due to the +- sqrt..., so it would translate to
+two assignments (or more when we use intermediate vars). But something like Pythagoras' 
+theorem just translates to the assignment: c = sqrt(a*a + b*b) when we assume that c is the
+unknown. A formula like lhs = rhs can often be directly translated into an assignment 
+operation which, in the context of algorithms, can be seen as a simple mini "algorithm" made
+from just a single assignment. If a is unknown, we would translate Pythagoras to 
+a = sqrt(c*c - b*b), so one formula may potentially translate to multiple different of such
+mini-algorithms. More complicated algorithms may contain branches and loops. In math notation
+branches can be expressed in the form of piecewise defined right hand sides and loops in the
+form of sequences. These sequences may actually be infinite in which case we step into
+calculus territory. An example would be the Babylonian algorithm to compute a square-root. 
+It's defined via an infinite sequence. In this specific case, the sequence is defined
+recursively. In general sequences may also be defined in other ways as well (for example,
+explicitly...i.e...by a formula for the elements).
+
 
 What other types of "Computation" could we have? Maybe I should explain the basic algorithms 
 for hand-calculations with pen and paper?

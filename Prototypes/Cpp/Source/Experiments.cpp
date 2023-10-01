@@ -12437,22 +12437,22 @@ void testPolyaPotenialFormulas()
 
   // Under construction: formuals based on polar cooridnates: 
   
+  // Not yet working:
   // Computes the Polya potential P(x,y) of f(z) = z^p for real exponents p.
   auto power = [](Real x, Real y, Real p)
   { 
-    Real r = sqrt(x*x + y*y);                      // Radius
-    Real a = atan2(y, x);                          // Angle
-    Real P = pow(r, p+1) / (p+1) - 0.5 * p * a*a;  // Potential
+    Real r = sqrt(x*x + y*y);                        // Radius
+    Real a = atan2(y, x);                            // Angle
+    Real P = (pow(r, p+1) / (p+1)) - 0.5 * p * a*a;  // Potential
     return P;
 
     //return PPE::power(x, y, n);
   };
 
-
   // Some example evaluation point and power:
   x = 4;
-  y = 0;
-  int n = 1;
+  y = 3;
+  int n = 2;
 
   Real tol = 1.e-12;
   Real P1  = PPE::power(x, y, n);  // P(x,y) via cartesian formula
@@ -12461,9 +12461,47 @@ void testPolyaPotenialFormulas()
   // Nope! P2 is completely different from P1 for (x,y) = (4,3), n = 1. It seems to work for 
   // y = 0, though. Apparently, only the phase angle part of the formula is wrong. But when y = 0
   // it works also for other exponents (except -1 due to div-by-0).
-  
-  // Try to find numerical 
-  // derivatives of P wrt to r,a
+  // Maybe we need an integration "constant"? Maybe the two computed potentials differ by a 
+  // constant only? But no - that can't be the case because then we wouldn't get a match for purely
+  // real inputs. The difference would have to be always the same, independent from the inputs but
+  // we get zero difference in some cases.
+  //
+  // ToDo: Try to find numerical derivatives of P wrt to r,a and check, if they match magnitude and
+  // (negative) angle of z^n
+
+  // Numerical derivative of above power function with respect to r at x,y with respect to r:
+  auto numDiffR = [&](Real x, Real y, Real p)
+  {
+    Real h, r, a, xp, xm, yp, ym, Pp, Pm;
+
+    h  = 0.0001;              // Approximation step size
+    r  = sqrt(x*x + y*y);     // Radius
+    a  = atan2(y, x);         // Angle
+
+    // Compute high value, i.e. P with increased r:
+    xp = (r+h) * cos(a);
+    yp = (r+h) * sin(a);
+    Pp = power(xp, yp, p);
+
+    // Compute low value, i.e. P with decreased r:
+    xm = (r-h) * cos(a);
+    ym = (r-h) * sin(a);
+    Pm = power(xm, ym, p);
+
+    // Compute numrical derivative by central difference formula:
+    return (Pp - Pm) / (2*h);
+  };
+
+  // Write a similar function numDiffA for the numerical derivative of P wrt a
+
+  // 
+  z = Complex(x, y);
+  w = pow(z, n);
+  Real rw  = abs(w);             // Radius of w
+  Real aw  = arg(w);             // Angle of w
+  Real P_r = numDiffR(x, y, n);  // Should match rw. Partial derivative of P wrt r.
+
+
 
   int dummy = 0;
 

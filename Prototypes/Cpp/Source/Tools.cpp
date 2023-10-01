@@ -119,8 +119,13 @@ void prepareForContourPlot(GNUPlotter& plt,
     for(int i = 1; i < levels.size(); i++)
       cmd += "," + std::to_string(levels[i]);
     plt.addCommand(cmd);
+
     const char c[9] = "AA000000";
-    plt.setGraphColors(c, c, c, c, c, c, c, c, c, c);
+    for(int i = 1; i <= 10; i++)  // 1...10
+      plt.addCommand("set lt " + std::to_string(i) + " lw 7 lc rgb \"#" + c + "\"" );
+
+    //plt.setGraphColors(c, c, c, c, c, c, c, c, c, c);  
+    // Old - does the same thing that we do here in the loop except not including the lw setting.
   }
 
   // Use constant color fills between the contour lines if desired:
@@ -154,6 +159,12 @@ void prepareForContourPlot(GNUPlotter& plt,
   //  all as one would expect it to. Finding a setting that looks good for a pdf is a matter of 
   //  trial and error. ToDo: try to use a somwehat thicker linewidth
   //
+  // ToDo:
+  // -Figure out what happens, we change the loop limits for the "set lt ..." commands. Then 
+  //  document it somewhere. Try uing 3..7 instead of 1..10. oK - yeah - in this case, 5 lines
+  //  are drawn with the defauls lw 1. But why 1..10? is it because we previously have the set lw
+  //  1..10 commands in the commandfile, triggered by setToLightMode()? If we do not previously 
+  //  call setToLightMode - what is the behavior then?
   //
   // Questions:
   // -What happens, if the levels are non-equidistant? I guess, in this case, the alignment between

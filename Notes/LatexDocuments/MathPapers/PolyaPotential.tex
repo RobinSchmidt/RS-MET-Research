@@ -76,7 +76,7 @@ This produces the result:
 \end{verbatim}
 In this example, we indeed see that $U$, the integral of $u$ wrt $x$, does indeed contain a term that depends only on $x$ but not on $y$, namlely $x^3/3$. That is the function of $x$ that would have to be added as integration "constant" to $V$ to give the full potential. The term that depends on both $x$ and $y$, namely $-x y^2$, is the same in $U$ and $V$, as it should be. So, we found the desired expressions for our Polya vector field and its potential for the complex function $f(z) = z^2$. They are:
 \begin{equation}
-f(z) = z^2: \quad 
+f(z) = z^2 \quad \Rightarrow \quad
 u(x,y) = x^2 - y^2, \; 
 v(x,y) = -2 x y, \quad 
 P(x,y) = \frac{x^3}{3} -x y^2
@@ -87,7 +87,7 @@ Replacing the line \texttt{w = z\textasciicircum2 } by some other function, say,
 \end{verbatim}
 so we have:
 \begin{equation}
-f(z) = e^z: \quad 
+f(z) = e^z \quad \Rightarrow \quad
 u(x,y) =  e^x \cos(y), \; 
 v(x,y) = -e^x \sin(y), \quad 
 P(x,y) =  e^x \cos(y)
@@ -188,8 +188,6 @@ We can in general just always use $V_n(x,y)$ and add to it a $x^{n+1}/(n+1)$ ter
 \subsection{Negative Integer Powers}
 Let's now derive expressions for the Polya vector field and potential a general negative integer power, i.e. for functions of the form $f(z) = 1/z^n = z^{-n}$.
 
-  
-
 We will again try a couple of examples and try to spot the patterns. We'll use this script:
 \begin{verbatim}
 n = 3                     # exponent without the minus sign
@@ -204,6 +202,7 @@ U = integral(u, x)
 V = integral(v, y)
 u, v, U, V
 \end{verbatim}
+% This is actually almost the same code as already shown above. Duplication! Remove!
 This code produces the result:
 \begin{verbatim}
 u = (x^3 - 3*x*y^2)/((x^3 - 3*x*y^2)^2 + (3*x^2*y - y^3)^2)
@@ -412,10 +411,27 @@ Having seen Polya potentials of positive powers of $z$, the logical next step is
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursInvPow2.png}
 \end{subfigure}
 \end{figure}
-They have a very different quality compared to the saddle surfaces that we have seen before. For $f(z) = 1/z$, the Polya potential is given by $P(x,y) = \ln(x^2+y^2)/2$. The first thing we note is that the value of $P$ depends only on $x^2 + y^2$ which is the squared distance from the origin, so we conclude that $P$ must be circularly symmetric - which is what we see in the plot. The second important feature is that the function goes to minus infinity when $z$ goes to zero. There is an infinitely deep hole in the middle and therefore, the plotted range was truncated at $-3$ to get a sensible picture. We see a truncated funnel and the actual funnel would go down to minus infinity. If we imagine the arrows, they would all point outward from the origin. If we imagine the vector field to be some sort of velocity field of a fluid, it almost looks as if there would be some sort of source at the origin from where stuff flows out. 
+They have a very different quality compared to the saddle surfaces that we have seen before. 
 
 \medskip
-For $f(z) = 1/z^2$, the situation looks quite different. Here, fluid would be flowing into the origin from the left and just as much fluid flows out of the origin to the right. Again, try to picture the arrows in your head - this is the skill we want to acquire. They always point toward red and they point more strongly when the contour lines are denser. To summarize our observations, for $f(z) = 1/z$, we get a Polya vector field that looks like a point source with field lines pointing outward from the origin. It looks like the potential of a monopole. For $f(z) = 1/z^2$, the Polya vector field looks like a dipole field with field lines pointing into the origin from the left and out of the origin to the right. So, let's see, if we get a tripole and quadrupole for $1/z^3$ and $1/z^4$. The Polya potentials for these functions are shown in figure \ref{Fig:ContoursInvPow_3_4}.
+Let's look at the reciprocal function $f(z) = 1/z = z^{-1}$ first. That means $n=1$ in the format $f(z) = z^{-n}$. The relevant formulas are:
+\begin{equation}
+f(z)   = \frac{1}{z} \quad \Rightarrow \quad
+P(x,y) =  \frac{\ln(x^2+y^2)}{2}
+\end{equation}
+The first thing we note is that the value of $P$ depends only on $x^2 + y^2$ which is the squared distance from the origin, so we conclude that $P$ must be circularly symmetric - which is what we see in the plot. The second important feature is that the function goes to minus infinity when $z$ goes to zero. There is an infinitely deep hole in the middle and therefore, the plotted range was truncated at $-3$ to get a sensible picture. We see a truncated funnel and the actual funnel would go down to minus infinity at the origin. If we imagine the arrows, they would all point outward from the origin. If we imagine the vector field to be some sort of velocity field of a fluid, it almost looks as if there would be some sort of source at the origin from where stuff flows out. 
+
+\medskip
+For $f(z) = 1/z^2$, the situation looks quite different. Here, fluid would be flowing into the origin from the left and just as much fluid flows out of the origin to the right. Again, try to picture the arrows in your head - this is the skill we want to acquire. They always point toward red and they point more strongly when the contour lines are denser. Again, the function values have been cut off at some threshold to get a sensible picture. This time, we have clipped off the values to both ends of the scale, specifically, at $\pm 5$. That means, anything that is greater than $5$ is also represented by full dark red and anything less than $-5$ is drawn dark blue. In reality, the function actually goes to plus and minus infinity at the same time at the origin. Whether it blows up to plus or minus infinity depends on whether we approach the origin from the left or right. But what if we approach it from the top? Let's look at the formulas:
+\begin{equation}
+f(z)   =  \frac{1}{z^2} \quad \Rightarrow \quad
+P(x,y) = -\frac{x}{x^2 + y^2}
+\end{equation}
+[TODO: explain dipole fields, maybe derive the limits for approaching $0$ from left, right, top and any other direction given by $y = a x$. Maybe plot P(x) for various fixed choices of a]
+
+
+\medskip
+To summarize our observations, for $f(z) = 1/z$, we get a Polya vector field that looks like a point source with field lines pointing outward from the origin. It looks like the potential of a monopole. For $f(z) = 1/z^2$, the Polya vector field looks like a dipole field with field lines pointing into the origin from the left and out of the origin to the right. So, let's see, if we get a tripole and quadrupole for $1/z^3$ and $1/z^4$. The Polya potentials for these functions are shown in figure \ref{Fig:ContoursInvPow_3_4}.
 % they flatten out, the further we go away from zero
 % they have a singularity at the origin
 \begin{figure}[h]
@@ -537,10 +553,14 @@ If all of our attempts to derive an analytic expression for the Polya potential 
 Notes:
 
 ToDo:
--Re-render the images for the figures with less margin at the top and bottom. Left and 
- right margins look OK but maybe see, if they can be optimized, too. For this, take the 
- plot of z^4, z^5 as reference because they have matching scales between them. There 
- should be enough space between them.
+
+-For every function whose plot we explain, also give the formulas for z,u,v,P in the same format 
+ as in the beginning of the paper
+
+-Verify the code to produce the images numerically by computing a numerical gradient of the
+ Polya potenetial to an actual evaluation of the function. Maybe implement it as a unit test.
+ Test also the analytic computation of the Polya vector field. We have the function
+ testPolyaPotentialFormulas
  
 -Add tables for Polya potentials of positive powers of z in this verbatim text format.
  At the moment, we have only expressions for the Polya vector fields for z^n, n > 0
@@ -619,9 +639,13 @@ https://en.wikipedia.org/wiki/Hyperbolic_geometry
  
 -Write a follow-up paper "Polya Potentials through the Lens of Differential Geometry" or
  "On the Differential Geometry of Polya Potentials"
+ 
+-Write a paper "Polya Potentials of Rational Functions"
+ 
 -Polya potentials P(x,y) satisfy the equation P_x + P_y = 0. This is due to the divergence free
  property of Polya vector fields. Can we deduce some facts about the differential geometry of
- P(x,y) from that?
+ P(x,y) from that? ...wait - no - they satisfy P_xx + P_yy = 0. The Laplace equation.
+
 -We may differentiate the equation wrt x and y to obtain the two equations:
  P_{xx} + P_{yx} = 0, P_{xy} + P_{yy} = 0 which implies P_{xx} = -P_{xy} = P_{yy} when we 
  assume P_{xy} = P_{yx} due to Schwartz's theorem (which we may due to analyticity). From that

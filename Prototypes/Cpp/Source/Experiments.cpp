@@ -12425,8 +12425,6 @@ void testPolyaPotenialFormulas()
   ok &= test(z, exp(z), PPE::exp,        PPE::exp);
   ok &= test(z, sin(z), PPE::sin,        PPE::sin);
 
-
-
   // Test the formulas for powers z^n for exponents in -5...+5:
   for(int n = -5; n <= +5; n++)
   {
@@ -12434,12 +12432,10 @@ void testPolyaPotenialFormulas()
     ok &= testPowerPotential(x, y, n);
   }
 
-
-
-
-
-
   rsAssert(ok);
+
+  // ToDo:
+  // -Increase the range of powers to be tested
 }
 
 void testRiemannZeta()

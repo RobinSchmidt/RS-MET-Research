@@ -57,7 +57,12 @@ n  Potential
 7
 
 ToDo:
--List results for the potential. could it be that it is just the real part from above divided by n?
+-List results for the potential. Could it be that it is just the real part from the u,v table above 
+ but shifted one row up and divided by n? That would mean that some things in the paper could be 
+ simplified. We don't need to evaluate the integral. But maybe better to do it and just at the end 
+ mention that it actually agrees with the simpler way to evaluate it. It could also simplify the 
+ code to evaluate the Polya potentials. We'd just call the function for the real part with n+1 and 
+ then divide the end result by n+1.
  
 ----------------------------------------------------------------------------------------------------
 For negative n, we can use the same Sage snippet and just replace the function of interest by some 
@@ -437,23 +442,56 @@ Some Ideas:
   -If there is just one saddle, could it be that some aspects of the metric tensor of the Polya 
    potential surface depend only on the distance from the saddle but not on the direction. Maybe
    the infinitesimal area scaling could factor could be such a quantity?
-  -[Done - Nope, this doesn't seem to be the case]:
-   What about taking double integrals of P(x,y) over a circular area around a saddle. If there are 
-   no other saddle nearby, this should always average out to almost the function value at the 
-   center, I think. Consider one saddle alone and think of its symmetries. Maybe it even works 
-   for shape that are symmetric only wrt rotations to multiples of 90° (and not necessarily all
-   angles). All the "above stuff" (values above the center value) will be counteracted by an 
-   equal amount of "below stuff". So, a square shape would also qualify but not a rectangle.
-   A regular octagon would also work, a 12-gon, 16- gon - any regular 4k-gon. But the sides could 
-   also bend in or outward, as long as they do it in the same shape every 90°. What about more
-   general points?
-   Wild guess: \int_a^b \int_c^d P(x,y) dx dy = P((c+d)/2, (a+b)/2) if the area is a square, i.e.
-   b-a = d-c. Try it! It should work for other shapes too, if they have the required symmetry but
-   the square is simplest to actually evaluate. Or maybe have to divide the integral by the area of 
-   the integration region. That way, we compute a local average of P(x,y). So here, divide by 
-   (b-a)^2
+   
+---------------------------------------------------------------------------------------------------- 
+Polya potentaial of rational functions:
 
-----------------------------------------------------------------------------------------------------
+Let's investigate the potentials of various rational functions.
+
+One pole filter:
+
+             1
+  f(z) = ---------    ->    P(x,y) = ?
+          1 + a*z
+
+...tbc...
+
+
+The potential field of general dipole can be expressed as:
+
+            a*x + b*y
+  P(x,y) = -----------
+            x^2 + y^2
+
+where a,b determine the strength and direction of the dipole. The vector (a,b) is called the 
+dipole moment, see:
+
+  https://en.wikipedia.org/wiki/Dipole#Field_from_an_electric_dipole
+
+Look also at linfracs and biquads and try to find general formulas. The eventual goal is to look at
+Polya potentials of filter transfer functions and understand from the, what the filter does
+  
+   
+----------------------------------------------------------------------------------------------------   
+[Done - Nope, this doesn't seem to be the case]:
+
+What about taking double integrals of P(x,y) over a circular area around a saddle. If there are 
+no other saddle nearby, this should always average out to almost the function value at the 
+center, I think. Consider one saddle alone and think of its symmetries. Maybe it even works 
+for shape that are symmetric only wrt rotations to multiples of 90° (and not necessarily all
+angles). All the "above stuff" (values above the center value) will be counteracted by an 
+equal amount of "below stuff". So, a square shape would also qualify but not a rectangle.
+A regular octagon would also work, a 12-gon, 16- gon - any regular 4k-gon. But the sides could 
+also bend in or outward, as long as they do it in the same shape every 90°. What about more
+general points?
+
+Wild guess: \int_a^b \int_c^d P(x,y) dx dy = P((c+d)/2, (a+b)/2) if the area is a square, i.e.
+b-a = d-c. Try it! It should work for other shapes too, if they have the required symmetry but
+the square is simplest to actually evaluate. Or maybe have to divide the integral by the area of 
+the integration region. That way, we compute a local average of P(x,y). So here, divide by 
+(b-a)^2
+
+
 Here is a Sage script trying out the idea that the local average of P(x,y) *around* some (x0, y0)
 should be equal to the value *at* (x0, y0):
  

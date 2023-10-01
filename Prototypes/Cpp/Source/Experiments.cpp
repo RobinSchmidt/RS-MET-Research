@@ -12434,8 +12434,39 @@ void testPolyaPotenialFormulas()
 
   rsAssert(ok);
 
+
+  // Under construction: formuals based on polar cooridnates: 
+  
+  // Computes the Polya potential P(x,y) of f(z) = z^p for real exponents p.
+  auto power = [](Real x, Real y, Real p)
+  { 
+    Real r = sqrt(x*x + y*y);                      // Radius
+    Real a = atan2(y, x);                          // Angle
+    Real P = pow(r, p+1) / (p+1) - 0.5 * p * a*a;  // Potential
+    return P;
+
+    //return PPE::power(x, y, n);
+  };
+
+
+  // Some example evaluation point and power:
+  x = 4;
+  y = 3;
+  int n = 1;
+
+  Real tol = 1.e-12;
+  Real P1  = PPE::power(x, y, n);  // P(x,y) via cartesian formula
+  Real P2  =      power(x, y, n);  // P(x,y) via polar formula
+  ok &= rsIsCloseTo(P1, P2, tol);
+  // Nope! P2 is completely different from P1. 
+
+  int dummy = 0;
+
+
+
   // ToDo:
   // -Increase the range of powers to be tested
+  // -Implement and test formuals based on polar coordinates
 }
 
 void testRiemannZeta()

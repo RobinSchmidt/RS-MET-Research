@@ -422,13 +422,13 @@ P(x,y) =  \frac{\ln(x^2+y^2)}{2}
 The first thing we note is that the value of $P$ depends only on $x^2 + y^2$ which is the squared distance from the origin, so we conclude that $P$ must be circularly symmetric - which is what we see in the plot. The second important feature is that the function goes to minus infinity when $z$ goes to zero. There is an infinitely deep hole in the middle and therefore, the plotted range was truncated at $-3$ to get a sensible picture. We see a truncated funnel and the actual funnel would go down to minus infinity at the origin. If we imagine the arrows, they would all point outward from the origin. If we imagine the vector field to be some sort of velocity field of a fluid, it almost looks as if there would be some sort of source at the origin from where stuff flows out. 
 
 \medskip
-For $f(z) = 1/z^2$, the situation looks quite different. Here, fluid would be flowing into the origin from the left and just as much fluid flows out of the origin to the right. Again, try to picture the arrows in your head - this is the skill we want to acquire. They always point toward red and they point more strongly when the contour lines are denser. Again, the function values have been cut off at some threshold to get a sensible picture. This time, we have clipped off the values to both ends of the scale, specifically, at $\pm 5$. That means, anything that is greater than $5$ is also represented by full dark red and anything less than $-5$ is drawn dark blue. In reality, the function actually goes to plus and minus infinity at the same time at the origin. Whether it blows up to plus or minus infinity depends on whether we approach the origin from the left or right. But what if we approach it from the top? Let's look at the formulas:
+For $f(z) = 1/z^2$, the situation in the plot looks quite different. Here, fluid would be flowing into the origin from the left and just as much fluid flows out of the origin to the right. Again, try to picture the arrows in your head - this is the skill we want to acquire. They always point toward red and they point more strongly when the contour lines are denser. Again, the function values have been cut off at some threshold to get a sensible picture. This time, we have clipped off the values to both ends of the scale, specifically, at $\pm 5$. That means, anything that is greater than $5$ is also represented by full dark red and anything less than $-5$ is drawn dark blue. In reality, the function actually goes to plus and minus infinity at the same time at the origin. Whether it blows up to plus or minus infinity depends on whether we approach the origin from the left or right. But what if we approach it from the top? Let's look at the formulas:
 \begin{equation}
 f(z)   =  \frac{1}{z^2} \quad \Rightarrow \quad
 P(x,y) = -\frac{x}{x^2 + y^2}
 \end{equation}
-[TODO: explain dipole fields, maybe derive the limits for approaching $0$ from left, right, top and any other direction given by $y = a x$. Maybe plot P(x) for various fixed choices of a]
-
+[TODO: explain dipole fields, maybe derive the limits for approaching $0$ from left, right, top and any other direction given by $y = a x$. Maybe plot $P(x)$ for various fixed choices of a]
+% I think, the limit is +inf fro approach from the left, -inf for approach from the right and zero for approach from all other directions, i.e. a != 0 and a != inf. Maybe we have to take an inner limit of x -> 0 and an outer limit for y -> 0 or something. Anyhow, it seems, we get 3 different limits for the undefined point at the origin.
 
 \medskip
 To summarize our observations, for $f(z) = 1/z$, we get a Polya vector field that looks like a point source with field lines pointing outward from the origin. It looks like the potential of a monopole. For $f(z) = 1/z^2$, the Polya vector field looks like a dipole field with field lines pointing into the origin from the left and out of the origin to the right. So, let's see, if we get a tripole and quadrupole for $1/z^3$ and $1/z^4$. The Polya potentials for these functions are shown in figure \ref{Fig:ContoursInvPow_3_4}.
@@ -447,8 +447,6 @@ To summarize our observations, for $f(z) = 1/z$, we get a Polya vector field tha
 \includegraphics[width=\textwidth]{../MathFigures/PolyaContoursInvPow4.png}
 \end{subfigure}
 \end{figure}
-
-\medskip
 Well - OK - they may not look like what we may have expected. Instead of a tripole and a quadrupole, we actually get a quadrupole and a hexapole. I don't know, if a tripole is even a thing. Probably not. For the quadrupole, the field lines or gradient arrows would point outward horizontally and inward vertically and go orthogonally over the diagonals. In the hexapole, the field points in from the left and out to the right, in from top-right and out to bottom-left, in from bottom-right and out to top-left. In general, we get a $2(n-1)$-th order pole for $n > 1$ and for the special case of $n = 1$, we get a monopole. In complex analysis, the function $1/z$ is generally a somewhat special citizen that stands out from the crowd of power functions. It is the odd one out in the context of Laurent series: the coefficient for $z^{-1}$ is so special that it even has its own name: the "residue". And if you remember from real calculus that $x^{-1}$ is the only power of $x$ for which the power rule of integrals $(x^{n+1}) / (n+1)$ fails to apply (as a programmer, I'd call its use here a division by zero error), it may be not so surprising to see the reciprocation function $1/z$ break a pattern yet again. 
 
 % z^n:  saddle of order n+1
@@ -555,7 +553,8 @@ Notes:
 ToDo:
 
 -For every function whose plot we explain, also give the formulas for z,u,v,P in the same format 
- as in the beginning of the paper
+ as in the beginning of the paper or maybe without u,v. More like in the case of 1/z, 1/z^2
+-Use paragraphs for each function instead od medskips
 
 -Verify the code to produce the images numerically by computing a numerical gradient of the
  Polya potenetial to an actual evaluation of the function. Maybe implement it as a unit test.

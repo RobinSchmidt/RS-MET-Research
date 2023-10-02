@@ -12437,7 +12437,7 @@ void testPolyaPotenialFormulas()
 
   // Under construction: formulas based on polar coordinates: 
   
-  // Not yet working...or maybe...the test results are confusing:
+  // Not yet working and the test results are confusing:
   // Computes the Polya potential P(x,y) of f(z) = z^p for real exponents p.
   auto p_power = [](Real x, Real y, Real p)
   { 
@@ -12448,8 +12448,8 @@ void testPolyaPotenialFormulas()
   };
 
   // Some example evaluation point and power:
-  x = 4;
-  y = 3;
+  x = 0.8;
+  y = 0.6;
   int n = 2;
 
   Real tol = 1.e-12;
@@ -12523,36 +12523,59 @@ void testPolyaPotenialFormulas()
   Real P_a = numDiffA(x, y, n);  // Partial derivative of P wrt a. Should match -aw.
   // The values look good for (x,y) = (4,3), n = 2 but not so much for (x,y) = (-2,-2), n = 2.
 
-
+  // Try to numerically differentiate the new formula wrt x,y:
+  Real h, Pp, Pm, P_x, P_y;
+  h   = 0.0001;
+  Pp  = p_power(x+h, y, n);
+  Pm  = p_power(x-h, y, n);
+  P_x = (Pp - Pm) / (2*h);  // Partial derivative of P wrt x. Should match  w.real.
+  Pp  = p_power(x, y+h, n);
+  Pm  = p_power(x, y-h, n);
+  P_y = (Pp - Pm) / (2*h);
+  // NOPE! Total mismatch unless y = 0, x > 0! When y = 0, x < 0, the result has correct absolute
+  // value but wrong sign.
 
 
   // Wrap potential computation functions into std::function and plot them:
   std::function<Real(Real, Real)> f1, f2;
   f1 = [&](Real x, Real y) { return    p_power(x, y, n); };
   f2 = [&](Real x, Real y) { return PPE::power(x, y, n); };
-  GNUPlotter plt;
   int  Nx   = 21;
   int  Ny   = 21;
   Real xMin = -2;
   Real xMax = +2;
   Real yMin = -2;
   Real yMax = +2;
-  plt.plotBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f1);
-  plt.plotBivariateFunction(Nx, xMin, xMax, Ny, yMin, yMax, f2);
+  plotBivariateFunction(f1, xMin, xMax, Nx, yMin, yMax, Ny);
+  plotBivariateFunction(f2, xMin, xMax, Nx, yMin, yMax, Ny);
+
+
   int dummy = 0;
 
   // Observations:
-  // -Tests for the new potnetial formula for power, i.e. for z^n, based on polar coordinates:
+  // -Tests for the new potnetial formula for power, i.e. for z^n, based on polar coordinates give
+  //  confusing results:
   //  -In the test that compues P1 and P2, we get completely different results. Explaining that by
   //   different offsets, i.e. integration constants, doesn't explain why the difference seem to 
   //   depend on x,y
   //  -The numerical derivatives of the potential computed via the new formula do seem to give 
-  //   correct results when x,y are both positive.
-  //  -The plots for the power pontetial evaluated via PPE and via the polar formula implemented 
-  //   here actually do look the same but none of the looks as expected. For n = 2, we would 
-  //   expect to see the monkey saddle but get something completely different.
-  //  -This is very confusing!
-  //
+  //   correct results when x,y are both positive. Try (x,y) = (4,3), n = 2 for example. 
+  //  -For n = 2, the plot of the potential obtained by the new formula does not look like the 
+  //   expected monkey saddle at all.
+  //  -Normally, I would say, the new formula is just wrong - but it does produce correct numerical
+  //   derivatives in some cases, so it can't be completely wrong.
+  //  -Could it be that two completely different potentials (i.e. potential that do not only differ
+  //   by a constant) give rise to the same partial derivatives? In some contexts, such things
+  //   do exist:
+  //   https://en.wikipedia.org/wiki/Gauge_theory#Classical_gauge_theory
+  //   but I think here, where we are dealing with a scalar field, we have no such case.
+  //  -when y = 0 and x > 0, the two formulas actually do produce the same results.
+  //  -Maybe implement also numDiffX,Y
+  //  -Maybe compute numerical partial derivatives of the old formula wrt r,a
+  //  -That we get correct derivatives wrt r,a may mean that I just constructed the function to
+  //   give these derivatives (which I did) - but maybe that's not even a menaingful thing to do
+  //   in the first place? ...but we can reconstruct f(z) from the produced information (at least
+  //   in those zones where the formula works), so it seems kinda meaningful.
 
   // ToDo:
   // -Increase the range of powers to be tested

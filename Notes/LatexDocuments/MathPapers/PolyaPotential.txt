@@ -471,7 +471,54 @@ dipole moment, see:
 Look also at linfracs and biquads and try to find general formulas. The eventual goal is to look at
 Polya potentials of filter transfer functions and understand from the, what the filter does
   
-   
+----------------------------------------------------------------------------------------------------
+Maybe certain things are simpler or even only tractable at all, wehn we use polar coordinates? For
+example, functions like f(z) = z^c where c is not necessarily integer but may be a real or even 
+complex number or also f(z) = log(z). So far, I have not yet succeeded to prodcue formulas for their
+Polya potentials. Maybe in polar coordinates, it's easier? 
+
+Let's assume we want to find alternative formulas based on polar coordinates for the potnetial of:
+
+  w = f(z) = z^n
+
+for an integer n. Let's take z,w be expressed in polar coordinates as
+
+  z = r * e^( i*p)  
+  w = s * e^(-i*q)
+  
+where r is the radius and p the phase angle of z (could be dented tha phi in greek) and s,q are 
+radius and angle of w. We have baked a minus sign into the definition of the angle q of w for the 
+exact same reason that we use a minus sign in the imaginary part in the cartesian formulation of the
+Polya vector field. We then have:
+
+  w = (r * e^(i*p))^n = r^n * e^(i*n*p)
+
+So we can extract the two functions:
+
+  s(r,p) =  r^n
+  q(r,p) = -n*p
+  
+The goal is now to find a single valued bivariate function P(r,p) which has these two functions as
+partial derivatives with respect to r and p. The nice thing is that s and q, both seen as functions 
+of r,p, do actually only depend on one of the variables. The phase p of z is formally an argument 
+for s but it not used in the right hand side. Same story for q and r. Due to this decoupling, it's 
+actually easy to write down a function P(r,p) with the given partial derivatives:
+
+            r^(n+1)       1
+  P(r,p) = ---------  -  --- * n * p^2
+              n+1         2
+
+
+
+
+
+
+See:
+https://users.math.msu.edu/users/shapiro/teaching/classes/425/crpolar.pdf
+https://math.stackexchange.com/questions/1245754/cauchy-riemann-equations-in-polar-form
+https://math.stackexchange.com/questions/205671/proof-of-cauchy-riemann-equations-in-polar-coordinates
+
+
 ----------------------------------------------------------------------------------------------------   
 [Done - Nope, this doesn't seem to be the case]:
 

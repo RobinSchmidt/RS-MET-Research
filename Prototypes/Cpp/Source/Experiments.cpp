@@ -12446,6 +12446,11 @@ void testPolyaPotenialFormulas()
     Real P = (pow(r, p+1) / (p+1)) - 0.5 * p * a*a;  // Potential
     return P;
   };
+  // Hmm - I don't really think that such a "mixed-coordinates" formula makes sense. What we do 
+  // here is to produce a scalar valued bivariate function in (x,y) whose partial derivatives with 
+  // respect to radius and angle (r,a) give magnitude and argument of w = f(z) = z^p. To make any
+  // sense at all, it should at least take (r,a) as arguments, not (x,y). I mean, the first thing 
+  // we do is to convert (x,y) into (r,a) anyway.
 
   // Some example evaluation point and power:
   x = 0.8;
@@ -12540,12 +12545,12 @@ void testPolyaPotenialFormulas()
   std::function<Real(Real, Real)> f1, f2;
   f1 = [&](Real x, Real y) { return    p_power(x, y, n); };
   f2 = [&](Real x, Real y) { return PPE::power(x, y, n); };
-  int  Nx   = 21;
-  int  Ny   = 21;
-  Real xMin = -2;
-  Real xMax = +2;
-  Real yMin = -2;
-  Real yMax = +2;
+  int  Nx   = 31;
+  int  Ny   = 31;
+  Real xMin = -3;
+  Real xMax = +3;
+  Real yMin = -3;
+  Real yMax = +3;
   plotBivariateFunction(f1, xMin, xMax, Nx, yMin, yMax, Ny);
   plotBivariateFunction(f2, xMin, xMax, Nx, yMin, yMax, Ny);
 
@@ -12583,6 +12588,7 @@ void testPolyaPotenialFormulas()
   // -See:
   //  https://users.math.msu.edu/users/shapiro/teaching/classes/425/crpolar.pdf
   //  https://math.stackexchange.com/questions/1245754/cauchy-riemann-equations-in-polar-form
+  //  https://math.stackexchange.com/questions/205671/proof-of-cauchy-riemann-equations-in-polar-coordinates
 
   // ToDo:
   // -Increase the range of powers to be tested

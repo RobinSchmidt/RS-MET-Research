@@ -12576,6 +12576,13 @@ void testPolyaPotenialFormulas()
   //   give these derivatives (which I did) - but maybe that's not even a menaingful thing to do
   //   in the first place? ...but we can reconstruct f(z) from the produced information (at least
   //   in those zones where the formula works), so it seems kinda meaningful.
+  //  -Could it be that we have created some sort different "representation" of the same potential
+  //   that has nothing to do with the other representation? Maybe this function represents *both*
+  //   z and w in polar coordinates and the other represents both in cartesian coordinates? We can 
+  //   construct two totally different kinds of potentials that have nothing to do with each other?
+  // -See:
+  //  https://users.math.msu.edu/users/shapiro/teaching/classes/425/crpolar.pdf
+  //  https://math.stackexchange.com/questions/1245754/cauchy-riemann-equations-in-polar-form
 
   // ToDo:
   // -Increase the range of powers to be tested

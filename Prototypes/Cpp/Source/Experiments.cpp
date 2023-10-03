@@ -12435,6 +12435,7 @@ void testPolyaPotenialFormulas()
   rsAssert(ok);
 
 
+  // Move into a function to not clutter up this one:
   // Under construction: formulas based on polar coordinates: 
   
   // Not yet working and the test results are confusing:
@@ -12453,8 +12454,8 @@ void testPolyaPotenialFormulas()
   // we do is to convert (x,y) into (r,a) anyway.
 
   // Some example evaluation point and power:
-  x = 0.8;
-  y = 0.6;
+  x = 4.0;
+  y = 3.0;
   int n = 2;
 
   Real tol = 1.e-12;
@@ -12522,10 +12523,10 @@ void testPolyaPotenialFormulas()
   // polar coordinates gives the expected results:
   z = Complex(x, y);
   w = pow(z, n);
-  Real rw  = abs(w);             // Radius of w
-  Real aw  = arg(w);             // Angle of w
-  Real P_r = numDiffR(x, y, n);  // Partial derivative of P wrt r. Should match  rw.
-  Real P_a = numDiffA(x, y, n);  // Partial derivative of P wrt a. Should match -aw.
+  Real wr  = abs(w);             // Radius of w
+  Real wa  = arg(w);             // Angle of w
+  Real P_r = numDiffR(x, y, n);  // Partial derivative of P wrt r. Should match  wr.
+  Real P_a = numDiffA(x, y, n);  // Partial derivative of P wrt a. Should match -wa.
   // The values look good for (x,y) = (4,3), n = 2 but not so much for (x,y) = (-2,-2), n = 2.
 
   // Try to numerically differentiate the new formula wrt x,y:
@@ -12538,8 +12539,28 @@ void testPolyaPotenialFormulas()
   Pm  = p_power(x, y-h, n);
   P_y = (Pp - Pm) / (2*h);
   // NOPE! Total mismatch unless y = 0, x > 0! When y = 0, x < 0, the result has correct absolute
-  // value but wrong sign.
+  // value but wrong sign. I think, what I try to do here does not make any sense anyway.
 
+  // Try to compute partual derivatives of P wrt x,y from the partial derivatives wrt r,a using the
+  // multivariable chain rule. We ues the previously numerically computed P_r, P_a values and turn 
+  // them into P_x, P_y via analytic formulas:
+  Real r2 = x*x + y*y;
+  Real r  = sqrt(r2);
+  Real rn = pow(r, n);
+  Real a  = -atan2(y, x);   // Or whould it have a minus sign?
+  P_x = rn * x/r  -  n*a * (-y/r2);  // Should match  w.real()
+  P_y = rn * y/r  -  n*a * ( x/r2);  // Should match -w.imag();
+  // For (x,y) = (4,0) we get (16,0) which is the correct result, For (3,0) we get (9,0) which is 
+  // also correct. For (0,4), we get (0.785..,16) where (-16,0) would be correct. For (-3,0) we get
+  // (-9,2.094...) where (9,0) would be correct.
+  // I think, the terms depending on the angle a are still wrong, i.e. the n*a*... stuff. Trying to
+  // flip the sign of "a" (bcs of Polya sign flip) did not help either.
+  // Could it be that wolfram swaps xy, in atan2? But
+  // https://www.wolframalpha.com/input?i=atan2%28y%2Cx%29
+  // Test - try to swap n*a*... term between P_x, P_y:
+  //P_x = rn * x/r  -  n*a * ( x/r2);  // Should match  w.real()
+  //P_y = rn * y/r  -  n*a * (-y/r2);  // Should match -w.imag();
+  // Nope! also, swapping *and* negating a doesn't help.
 
   // Wrap potential computation functions into std::function and plot them:
   std::function<Real(Real, Real)> f1, f2;

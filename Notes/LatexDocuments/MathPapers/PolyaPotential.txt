@@ -472,9 +472,9 @@ Look also at linfracs and biquads and try to find general formulas. The eventual
 Polya potentials of filter transfer functions and understand from the, what the filter does
   
 ----------------------------------------------------------------------------------------------------
-Maybe certain things are simpler or even only tractable at all, wehn we use polar coordinates? For
+Maybe certain things are simpler or even only tractable at all, when we use polar coordinates? For
 example, functions like f(z) = z^c where c is not necessarily integer but may be a real or even 
-complex number or also f(z) = log(z). So far, I have not yet succeeded to prodcue formulas for their
+complex number or also f(z) = log(z). So far, I have not yet succeeded to produce formulas for their
 Polya potentials. Maybe in polar coordinates, it's easier? 
 
 Let's assume we want to find alternative formulas based on polar coordinates for the potnetial of:
@@ -486,28 +486,38 @@ for an integer n. Let's take z,w be expressed in polar coordinates as
   z = r * e^( i*p)  
   w = s * e^(-i*q)
   
-where r is the radius and p the phase angle of z (could be dented tha phi in greek) and s,q are 
-radius and angle of w. We have baked a minus sign into the definition of the angle q of w for the 
+where r is the radius and p the phase angle of z (could be denoted as phi in greek) and s,q are 
+radius and angle of w. I have baked a minus sign into the definition of the angle q of w for the 
 exact same reason that we use a minus sign in the imaginary part in the cartesian formulation of the
-Polya vector field. We then have:
+Polya vector field. In the cartesian formulation, we negate the imaginary part. Here, we negate the 
+angle (well - does that make sense or is it even necessary? I'm not sure yet.). We then have:
 
   w = (r * e^(i*p))^n = r^n * e^(i*n*p)
 
-So we can extract the two functions:
+So we can extract the two bivariate functions:
 
   s(r,p) =  r^n
   q(r,p) = -n*p
   
+for computing s,q in terms of r,p. This is a sort of Polya vector field in polar coordinates.
 The goal is now to find a single valued bivariate function P(r,p) which has these two functions as
 partial derivatives with respect to r and p. The nice thing is that s and q, both seen as functions 
 of r,p, do actually only depend on one of the variables. The phase p of z is formally an argument 
-for s but it not used in the right hand side. Same story for q and r. Due to this decoupling, it's 
+for s but it's not used in the right hand side. Same story for q and r. Due to this decoupling, it's 
 actually easy to write down a function P(r,p) with the given partial derivatives:
 
             r^(n+1)       1
   P(r,p) = ---------  -  --- * n * p^2
               n+1         2
 
+This is a sort of potential function into which we can plug in the radius r and angle p of z and if 
+we take the partial derivatives of this function with respect to r and p, we get out the radius s 
+and angle q of w. And the formula should be applicable to non-integer values of n just the same.
+
+It was clear that it is possible to find such a potential P because s,q were decoupled. Each 
+function depends only on a single variable. But will such a construction of P be possible in general
+for any analytic function or is that a special property of the power function f(z) = z^n? Let's 
+review the Cauchy-Riemann equations in polar coordinates. They are given by
 
 
 

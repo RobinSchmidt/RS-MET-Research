@@ -12585,10 +12585,8 @@ void testPolyaPotenialFormulas()
   //   that has nothing to do with the other representation? Maybe this function represents *both*
   //   z and w in polar coordinates and the other represents both in cartesian coordinates? We can 
   //   construct two totally different kinds of potentials that have nothing to do with each other?
-  // -See:
-  //  https://users.math.msu.edu/users/shapiro/teaching/classes/425/crpolar.pdf
-  //  https://math.stackexchange.com/questions/1245754/cauchy-riemann-equations-in-polar-form
-  //  https://math.stackexchange.com/questions/205671/proof-of-cauchy-riemann-equations-in-polar-coordinates
+
+
 
   // ToDo:
   // -Increase the range of powers to be tested

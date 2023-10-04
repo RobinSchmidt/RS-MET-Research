@@ -9592,7 +9592,6 @@ bool testCommutativeHyperOperations()
   Real c = 23;
 
   // Test distributivity of *_2 over *_1. That means a *_2 (b *_1 c) = (a *_2 b)  *_1  (a *_2 c):
-
   Real b1c = op(b,   c,   1);   // b *_1 c
   Real lhs = op(a,   b1c, 2);   // Left hand side:  a *_2 (b *_1 c)
   Real a2b = op(a,   b,   2);   // a *_2 b
@@ -9608,6 +9607,17 @@ bool testCommutativeHyperOperations()
 
 
   return ok;
+
+  // Notes:
+  // -The numbers get big really quick
+  //
+  // ToDo:
+  // -Add programmatic checks like in unit test. I think, we need a relative tolerance when the 
+  //  absolute numbers are big which happens quickly. 
+  // -Try other bases to prevent th numbers from exploding so quickly. Read the comments under the 
+  //  video. Base 2 seems to have interesting additional properties. It would still lead to rather
+  //  quick growth, though. Maybe try 1.1. What if the base B is < 1? What happens in the limit 
+  //  when B = 1? 
 }
 
 

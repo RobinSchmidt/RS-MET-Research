@@ -14566,8 +14566,8 @@ void polyaGeodesics()
   //  between p1, p2. This may be important when we need to find a lot of nearby geodesics. Maybe 
   //  in the context of a higher level optimization algo, for example, to find a geodesic triangle
   //  of maximum area for a given perimeter length. For each trial triangle given by its 3 corners
-  //  we may wnat to compute the geodesics between all corners - and in one step of the algo to 
-  //  the, we may look at similar triangles.
+  //  we may want to compute the geodesics between all corners - and in one step of the algo to 
+  //  the next, we may look at very similar triangles.
   //  
 }
 

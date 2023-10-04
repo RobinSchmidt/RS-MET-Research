@@ -14554,6 +14554,16 @@ void polyaGeodesics()
   //  think, probably not. I can imagine multiple geodesics between two points only in a landscape
   //  that features peaks and valleys - not in such a saddlescape. But maybe that's just my lack of
   //  imagination.
+  //
+  // Ideas:
+  // -Imagine we have already found a geodesic from p1 to p2 and we now want to find a nearby
+  //  geodesic from q1 to q2, i.e. we assume that q1 is near p1 and q2 is near p2. It would make 
+  //  sense to not start from scratch but rather to use the information from our known geodesic
+  //  to obtain a better initial guess for the geodesic between q1 and q2. One way would be to
+  //  find the unique Moebius transform that maps p1 to q1, p2 to q2 and a third point p3 to q3.
+  //  Then transform all points of the geodesic according to that transformation. Maybe choosing 
+  //  p3 halfway along the known geodesic makes sense. Maybe also try to just use a point halfway
+  //  between p1, p2. 
 }
 
 

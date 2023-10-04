@@ -14563,7 +14563,12 @@ void polyaGeodesics()
   //  find the unique Moebius transform that maps p1 to q1, p2 to q2 and a third point p3 to q3.
   //  Then transform all points of the geodesic according to that transformation. Maybe choosing 
   //  p3 halfway along the known geodesic makes sense. Maybe also try to just use a point halfway
-  //  between p1, p2. 
+  //  between p1, p2. This may be important when we need to find a lot of nearby geodesics. Maybe 
+  //  in the context of a higher level optimization algo, for example, to find a geodesic triangle
+  //  of maximum area for a given perimeter length. For each trial triangle given by its 3 corners
+  //  we may wnat to compute the geodesics between all corners - and in one step of the algo to 
+  //  the, we may look at similar triangles.
+  //  
 }
 
 

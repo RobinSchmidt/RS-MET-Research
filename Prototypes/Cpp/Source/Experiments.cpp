@@ -9542,6 +9542,75 @@ bool testLeveledNumber()
   //     5_1 + (-5_1  + 3_0) = 5_1 + -5_1 = 0_0 = 1_-1 absorption in 1st addition 
 }
 
+
+
+// Recursive definition of the commutative (and distributive) hyperoperations defined here:
+//  https://www.youtube.com/watch?v=MP3pO7Ao88o
+// ...TBC...
+template<class T>
+T comHyperOpRec(T x, T y, int n)
+{
+  if(n == 0)
+    return x + y;
+  if(n == 1)
+    return x * y;                                    // == exp(log(x) + log(y))
+  if(n == 2)
+    return exp(log(x) * log(y));
+  if(n > 2)
+    return exp(comHyperOpRec(log(x), log(y), n-1));  // Recursion
+
+  // Notes:
+  // -I think, the n=2 case is superfluos and could be absorbed into the recursive case. But for
+  //  clarity, it makes sense to have it, I think.
+  //
+  // ToDo: 
+  // -Write also an iterative implementation
+  // -Implement cases for negative n
+}
+bool testCommutativeHyperOperations()
+{
+  // We implement the hyperoperations defined in this video:
+  //
+  //   https://www.youtube.com/watch?v=MP3pO7Ao88o
+  //
+  // and test their properties like associativity, commutativity, distributivity, their domain
+  // and range, etc. in a comment, @kjetil1845 says that these are called "commutative 
+  // hyperoperations". ..TBC...
+  //
+  // Notation:
+  // - *_1 is multiplication, *_0 = +_1 is addition, *_2 is the operation immediately above 
+  //   multiplication
+
+  bool ok = true;
+
+  using Real = double;
+  auto op    = comHyperOpRec<Real>;
+
+
+  Real a = 17;
+  Real b = 19;
+  Real c = 23;
+
+  // Test distributivity of *_2 over *_1. That means a *_2 (b *_1 c) = (a *_2 b)  *_1  (a *_2 c):
+
+  Real b1c = op(b,   c,   1);   // b *_1 c
+  Real lhs = op(a,   b1c, 2);   // Left hand side:  a *_2 (b *_1 c)
+  Real a2b = op(a,   b,   2);   // a *_2 b
+  Real a2c = op(a,   c,   2);   // a *_2 c
+  Real rhs = op(a2b, a2c, 1);   // Right hand side: (a *_2 b)  *_1  (a *_2 c)
+
+
+
+
+
+
+
+
+
+  return ok;
+}
+
+
 void testNewtonFractal()
 {
   // move this elsewhere:

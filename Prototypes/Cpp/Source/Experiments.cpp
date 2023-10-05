@@ -9553,7 +9553,7 @@ T comHyperOpRec(T x, T y, int n)
   if(n == 0)
     return x + y;
   if(n == 1)
-    return x * y;                                    // == exp(log(x) + log(y))
+    return x * y;  // == exp(log(x) + log(y))  if  x,y > 0
   if(n == 2)
     return exp(log(x) * log(y));
   if(n > 2)
@@ -9564,7 +9564,9 @@ T comHyperOpRec(T x, T y, int n)
   //  clarity, it makes sense to have it, I think.
   //
   // ToDo: 
-  // -Write also an iterative implementation
+  // -Write also an iterative implementation. Apply the log n times to the arguments, add, apply
+  //  exp n times to the result. Or: apply log n-1 times, multiply, apply exp n-1 times. I think, 
+  //  the latter allows for a larger domain of +, i.e. the n=0 operation.
   // -Implement cases for negative n
 }
 bool testCommutativeHyperOperations()
@@ -9588,7 +9590,11 @@ bool testCommutativeHyperOperations()
   // distributivity properties. The price is losing the interpretation as repeated application of
   // a lower order operation. It's a different kind operation. What we get is an infinite sequence
   // of operations where eahc operation is commutative and distributes over the operation one level
-  // below.. We need to be careful about the domains, though, ...TBC...
+  // below.. We need to be careful about the domains, though. Due to using the logarithm within the 
+  // definition of these operation, we must make sure to never feed the logarithm with zero or 
+  // negative numbers. This leads top the circumstance that for the higher order operations, the 
+  // input arguments need to have some minimum size - and that minimum required size grows big 
+  // rather quickly.....TBC...
   //
   // Notation:
   // - *_1 is multiplication, *_0 = +_1 is addition, *_2 is the operation immediately above 
@@ -9616,7 +9622,7 @@ bool testCommutativeHyperOperations()
   Real a2b = opR(a,   b,   2);   // a *_2 b
   Real a2c = opR(a,   c,   2);   // a *_2 c
   Real rhs = opR(a2b, a2c, 1);   // Right hand side: (a *_2 b)  *_1  (a *_2 c)
-  // This case is now absorbed into the loop below.
+  // This case is now absorbed into the loop below as th i=1 case.
   */
 
   // Test distributivity of *_j over *_i where j = i+1. That means:
@@ -9626,11 +9632,11 @@ bool testCommutativeHyperOperations()
   for(int i = 0; i <= 2; i++)
   {
     int  j   = i+1;
-    Real b1c = opR(b,   c,   i);   // b *_i c
-    Real lhs = opR(a,   b1c, j);   // Left hand side:  a *_j (b *_i c)
-    Real a2b = opR(a,   b,   j);   // a *_j b
-    Real a2c = opR(a,   c,   j);   // a *_j c
-    Real rhs = opR(a2b, a2c, i);   // Right hand side: (a *_j b)  *_i  (a *_j c)
+    Real bic = opR(b,   c,   i);   // b *_i c
+    Real lhs = opR(a,   bic, j);   // Left hand side:  a *_j (b *_i c)
+    Real ajb = opR(a,   b,   j);   // a *_j b
+    Real ajc = opR(a,   c,   j);   // a *_j c
+    Real rhs = opR(ajb, ajc, i);   // Right hand side: (a *_j b)  *_i  (a *_j c)
 
     // Check, if lhs and rhs are equal up to a relative tolerance;
     Real tol = 1.e-12;                    // Relative tolerance for numerical equality comparison.
@@ -9655,6 +9661,10 @@ bool testCommutativeHyperOperations()
   //  video. Base 2 seems to have interesting additional properties. It would still lead to rather
   //  quick growth, though. Maybe try 1.1. What if the base B is < 1? What happens in the limit 
   //  when B = 1? 
+  // -What about using the imaginary unit as basis or some general complex number, maybe with unit 
+  //  modulus? Could this solve the problem of exploding numbers?
+  // -Plot the surface z = f(x,y) = op(x, y, n) for various n. But it may grow quickly for larger n 
+  //  so maybe use a logarithmic z-axis. Maybe even iterated logarithms could be needed.
 }
 
 

@@ -9574,8 +9574,21 @@ bool testCommutativeHyperOperations()
   //   https://www.youtube.com/watch?v=MP3pO7Ao88o
   //
   // and test their properties like associativity, commutativity, distributivity, their domain
-  // and range, etc. in a comment, @kjetil1845 says that these are called "commutative 
-  // hyperoperations". ..TBC...
+  // and range, etc. In a comment, @kjetil1845 says that these are called "commutative 
+  // hyperoperations". The term hpyeroperations refers to higher order arithmetic operations 
+  // between two numbers where our usual operations of addition and multiplication are the 
+  // operations of lowest order - depending on conventions, of order 0 and 1 or 1 and 2. Here, we
+  // adopt the convention that addition is the 0th order operation. Usually, one interprets a 
+  // higher order operation between natural numbers as a repeated application of the operation one 
+  // order lower. For example, multiplication (1st order) is repeated addition (0th order) and 
+  // exponentiation (2nd order) is repeated multiplication. In this scheme, the next operation 
+  // would be repeated exponentiation which is called tetration. However, the so defined sequence
+  // of operations is, in general, neither commutative nor distributive over the respective 
+  // operation of order one lower. The operations defined here do have these commutativity and 
+  // distributivity properties. The price is losing the interpretation as repeated application of
+  // a lower order operation. It's a different kind operation. What we get is an infinite sequence
+  // of operations where eahc operation is commutative and distributes over the operation one level
+  // below.. We need to be careful about the domains, though, ...TBC...
   //
   // Notation:
   // - *_1 is multiplication, *_0 = +_1 is addition, *_2 is the operation immediately above 
@@ -9584,27 +9597,47 @@ bool testCommutativeHyperOperations()
   bool ok = true;
 
   using Real = double;
-  auto op    = comHyperOpRec<Real>;
+  auto opR   = comHyperOpRec<Real>;
 
 
   Real a = 17;
   Real b = 19;
   Real c = 23;
+  // Depending on how high we want to go with the order for the tests, these numbers may have to be
+  // quite big. In particular, if in the loops below we want to let i go up to n, we need the 
+  // numbers to be greater than the basis of the exponential function used (like Euler's number e) 
+  // tetrated to the n-1, I think (verify!). So, if n = 2 such that i <= 2, they must all be 
+  // greater than e^e. For n = 3, we need numbers greate than e^(e^e) etc.
 
   // Test distributivity of *_2 over *_1. That means a *_2 (b *_1 c) = (a *_2 b)  *_1  (a *_2 c):
-  Real b1c = op(b,   c,   1);   // b *_1 c
-  Real lhs = op(a,   b1c, 2);   // Left hand side:  a *_2 (b *_1 c)
-  Real a2b = op(a,   b,   2);   // a *_2 b
-  Real a2c = op(a,   c,   2);   // a *_2 c
-  Real rhs = op(a2b, a2c, 1);   // Right hand side: (a *_2 b)  *_1  (a *_2 c)
+  /*
+  Real b1c = opR(b,   c,   1);   // b *_1 c
+  Real lhs = opR(a,   b1c, 2);   // Left hand side:  a *_2 (b *_1 c)
+  Real a2b = opR(a,   b,   2);   // a *_2 b
+  Real a2c = opR(a,   c,   2);   // a *_2 c
+  Real rhs = opR(a2b, a2c, 1);   // Right hand side: (a *_2 b)  *_1  (a *_2 c)
+  // This case is now absorbed into the loop below.
+  */
 
+  // Test distributivity of *_j over *_i where j = i+1. That means:
+  //   a *_j (b *_i c) = (a *_j b)  *_i  (a *_j c). In particular, for i = 0, j = 1 we have:
+  //   a  *  (b  +  c) = (a  *  b)   +   (a  *  c). 
+  // i.e. the usual distributivity of multiplication over addition.
+  for(int i = 0; i <= 2; i++)
+  {
+    int  j   = i+1;
+    Real b1c = opR(b,   c,   i);   // b *_i c
+    Real lhs = opR(a,   b1c, j);   // Left hand side:  a *_j (b *_i c)
+    Real a2b = opR(a,   b,   j);   // a *_j b
+    Real a2c = opR(a,   c,   j);   // a *_j c
+    Real rhs = opR(a2b, a2c, i);   // Right hand side: (a *_j b)  *_i  (a *_j c)
 
-
-
-
-
-
-
+    // Check, if lhs and rhs are equal up to a relative tolerance;
+    Real tol = 1.e-12;                    // Relative tolerance for numerical equality comparison.
+    Real dif = lhs - rhs;                 // Difference between the two ways of evaluating it.
+    Real ref = rsMax(abs(lhs), abs(rhs)); // Reference value for the relative tolerance.
+    ok &= abs(dif) <= tol * ref;
+  }
 
   return ok;
 
@@ -9612,9 +9645,13 @@ bool testCommutativeHyperOperations()
   // -The numbers get big really quick
   //
   // ToDo:
-  // -Add programmatic checks like in unit test. I think, we need a relative tolerance when the 
-  //  absolute numbers are big which happens quickly. 
-  // -Try other bases to prevent th numbers from exploding so quickly. Read the comments under the 
+  // -[Done] Add programmatic checks like in unit test. I think, we need a relative tolerance when 
+  //  the 
+  //  absolute numbers are big which happens quickly.
+  // -[Done] Maybe make a loop over the order i.
+  // -Test also associativity. Maybe commutativity doesn't really need to be tested. It immediately
+  //  follows from commutativity of multiplication...we'll see
+  // -Try other bases to prevent the numbers from exploding so quickly. Read the comments under the 
   //  video. Base 2 seems to have interesting additional properties. It would still lead to rather
   //  quick growth, though. Maybe try 1.1. What if the base B is < 1? What happens in the limit 
   //  when B = 1? 

@@ -9605,7 +9605,7 @@ bool testCommutativeHyperOperations()
   using Real = double;
   auto opR   = comHyperOpRec<Real>;
 
-
+  // Input arguments:
   Real a = 17;
   Real b = 19;
   Real c = 23;
@@ -9615,15 +9615,6 @@ bool testCommutativeHyperOperations()
   // tetrated to the n-1, I think (verify!). So, if n = 2 such that i <= 2, they must all be 
   // greater than e^e. For n = 3, we need numbers greate than e^(e^e) etc.
 
-  // Test distributivity of *_2 over *_1. That means a *_2 (b *_1 c) = (a *_2 b)  *_1  (a *_2 c):
-  /*
-  Real b1c = opR(b,   c,   1);   // b *_1 c
-  Real lhs = opR(a,   b1c, 2);   // Left hand side:  a *_2 (b *_1 c)
-  Real a2b = opR(a,   b,   2);   // a *_2 b
-  Real a2c = opR(a,   c,   2);   // a *_2 c
-  Real rhs = opR(a2b, a2c, 1);   // Right hand side: (a *_2 b)  *_1  (a *_2 c)
-  // This case is now absorbed into the loop below as th i=1 case.
-  */
 
   // Test distributivity of *_j over *_i where j = i+1. That means:
   //   a *_j (b *_i c) = (a *_j b)  *_i  (a *_j c). In particular, for i = 0, j = 1 we have:
@@ -9645,22 +9636,20 @@ bool testCommutativeHyperOperations()
     ok &= abs(dif) <= tol * ref;
   }
 
+  rsAssert(ok);
   return ok;
 
   // Notes:
   // -The numbers get big really quick
   //
   // ToDo:
-  // -[Done] Add programmatic checks like in unit test. I think, we need a relative tolerance when 
-  //  the 
-  //  absolute numbers are big which happens quickly.
-  // -[Done] Maybe make a loop over the order i.
   // -Test also associativity. Maybe commutativity doesn't really need to be tested. It immediately
   //  follows from commutativity of multiplication...we'll see
   // -Try other bases to prevent the numbers from exploding so quickly. Read the comments under the 
   //  video. Base 2 seems to have interesting additional properties. It would still lead to rather
   //  quick growth, though. Maybe try 1.1. What if the base B is < 1? What happens in the limit 
   //  when B = 1? 
+  // -What about allowing complex numbers to get a greater domain for the logarithm?
   // -What about using the imaginary unit as basis or some general complex number, maybe with unit 
   //  modulus? Could this solve the problem of exploding numbers?
   // -Plot the surface z = f(x,y) = op(x, y, n) for various n. But it may grow quickly for larger n 

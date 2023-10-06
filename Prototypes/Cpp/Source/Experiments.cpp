@@ -14196,14 +14196,16 @@ void makePlotsForPolyaPotentialPaper()
   pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
   pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
   pltC.addCommand("set xtics center offset 0,1.5");
-  pltC.plot();
+  //pltC.plot();
 
   pltC.setFunction([](R x, R y) { return PE::sinh(x, y); });
   pltC.setOutputRange(-1.6, +1.6);
   pltC.setNumContours(17);
+  pltC.setOutputFileName("PolyaContoursSinh.png");
   //pltC.addCommand("unset colorbox");
-  pltC.plot();    // There are ugly artifacts in the contour lines
-  // Mayb try tweaking the line ending settings (round|butt|etc.)
+
+  pltC.plot();    
+
 
   pltC.clearCommands();  // clear them for the next plot
   // ToDo:
@@ -14217,6 +14219,8 @@ void makePlotsForPolyaPotentialPaper()
   //  http://www.gnuplot.info/docs_4.2/node295.html
   // About the colorbox:
   //   https://gnuplot.sourceforge.net/docs_4.2/node167.html
+  // About tweaking the line drwaing:
+  //   https://livebook.manning.com/book/gnuplot-in-action-second-edition/chapter-9/228
   // Points of interest:
   // -(x,y) = (0, pi): z = -1 + 0*i. This is Euler's famous formula. Arrow is horizontal and points
   //  down to blue. That means, the value is negative. The line density is unity and the colors
@@ -14229,6 +14233,12 @@ void makePlotsForPolyaPotentialPaper()
   // -(x,y) = (0, pi/2): 
   // -Maybe plot exp(i*z) instead because then we can make the x-range longer than the y-range 
   //  which fits better into the document - i.e. the plot is wide instead of tall.
+  // -There are ugly artifacts in the contour lines. Maybe lines overlap? Maybe try tweaking the 
+  //  line cap settings. pngcairo supports rounded|butt|square but wxt does not seem to support 
+  //  that setting at all. The option must be given to the "set term" command. OK - Apparently, 
+  //  "butt" is the default option and using the alternatives "rounded" or "square" makes the 
+  //  artifacts only worse. :-(
+
 
 
   // sin(z)

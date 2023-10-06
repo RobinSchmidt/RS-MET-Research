@@ -24,3 +24,8 @@ plotting style setting like axis labels, colors, pixel-size, etc.). In order to 
 from the latex source, these image files must first be re-generated and then moved put in the 
 appropriate folder "Notes/LatexDocuments/MathFigures" after the repo has been freshly cloned from 
 the github server to the local development machine.
+
+
+ToDo:
+-Maybe nevertheless put a MathFigures.zip archive with the plots somewhere such that installing 
+ Gnuplot is not required to render the papers.

@@ -14077,6 +14077,11 @@ void makePlotsForPolyaPotentialPaper()
   auto plotC = ::cplotA<R>;  // Plot a contour map.
 
 
+  //goto NewPlots; 
+  // Uncomment this only when tweaking the plots under construction to skip the plots that are 
+  // already finished.
+
+
   // Surface plots for z^n where n > 0:
   //plotS([](R x, R y) { return PE::power(x, y, 1); }, -1, +1, -1, +1, 31, 31, "");
   //plotS([](R x, R y) { return PE::power(x, y, 2); }, -1, +1, -1, +1, 31, 31, "");
@@ -14166,6 +14171,9 @@ void makePlotsForPolyaPotentialPaper()
 
 
 
+  NewPlots:
+
+
   // From here come plots that are not yet in the paper:
 
   // Create and set up an rsContourMapPlotter object that will be used for some of the coming 
@@ -14176,11 +14184,11 @@ void makePlotsForPolyaPotentialPaper()
   R pi = PI;
   // For pdf paper: exp(z):
   pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
+  pltC.setSamplingResolution(200, 400);
   pltC.setInputRange(-1, +1, -2*pi, +2*pi);          // Show two periods along imaginary axis.
   pltC.setOutputRange(-3, +3);                       // x in -1..+1 -> z in -e..+e -> round to +-3
   pltC.setNumContours(31);
-  pltC.setSamplingResolution(200, 400);
-  pltC.setPixelSize(350, 700); 
+  pltC.setPixelSize(400, 800); 
   pltC.setColorPalette(CP::CJ_BuYlRd11, false);
   pltC.setDrawRectangle(0.08, 0.88, 0.03, 0.99);
   pltC.addCommand("set ytics pi");                   // Show y-tics at multiples of pi
@@ -14203,8 +14211,6 @@ void makePlotsForPolyaPotentialPaper()
   //  negation. The density of the lines should be roughly 3 times higher (actually e times) than
   //  at (x,y) = (0, pi/2)
   // -(x,y) = (0, pi/2): 
-  // -Maybe put a countour and arrow plot together with a surface plot into one figure that spans a 
-  //  complete page
   // -Maybe plot exp(i*z) instead because then we can make the x-range longer than the y-range 
   //  which fits better into the document - i.e. the plot is wide instead of tall.
 

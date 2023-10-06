@@ -122,7 +122,7 @@ void prepareForContourPlot(GNUPlotter& plt,
 
     const char c[9] = "AA000000";
     for(int i = 1; i <= 10; i++)  // 1...10
-      plt.addCommand("set lt " + std::to_string(i) + " lw 7 lc rgb \"#" + c + "\"" );
+      plt.addCommand("set lt " + std::to_string(i) + " lw 2 lc rgb \"#" + c + "\"" );
 
     //plt.setGraphColors(c, c, c, c, c, c, c, c, c, c);  
     // Old - does the same thing that we do here in the loop except not including the lw setting.
@@ -157,7 +157,9 @@ void prepareForContourPlot(GNUPlotter& plt,
   //  channels are ignored completely, only the alpha channel does something - but in pngcairo, 
   //  there always seems to be some extra transparency on top if the setting. It does not behave at 
   //  all as one would expect it to. Finding a setting that looks good for a pdf is a matter of 
-  //  trial and error. ToDo: try to use a somwehat thicker linewidth
+  //  trial and error. ToDo: try to use a somwehat thicker linewidth - yes, using "lw 2" seem to 
+  //  give acceptable results also for the pdf. So, using "AA000000" for the color and "lw 2" for 
+  //  the linewidth seems to be the way to go.
   //
   // ToDo:
   // -Figure out what happens, we change the loop limits for the "set lt ..." commands. Then 

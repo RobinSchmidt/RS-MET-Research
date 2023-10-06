@@ -12549,11 +12549,13 @@ void testPolyaPotenialFormulas()
 
 void testPolarPotenialFormulas()
 {
+  // Some experiments with experimental formulas for Polya potentials based on polar coordinates.
+  // This stuff does not quite seem to work yet. Maybe the whole idea is nonsense anyway. Dunno.
+
+
   using Real    = double;
   using Complex = std::complex<Real>;
-  //using Vec     = std::vector<Real>;
   using PPE     =  rsPolyaPotentialEvaluator<Real>;
-
 
   Real x = 3, y = 2;
   Complex z(x, y);
@@ -12561,8 +12563,6 @@ void testPolarPotenialFormulas()
   bool ok = true;
 
 
-  // Move into a function to not clutter up this one:
-  // Under construction: formulas based on polar coordinates: 
   
   // Not yet working and the test results are confusing:
   // Computes the Polya potential P(x,y) of f(z) = z^p for real exponents p.

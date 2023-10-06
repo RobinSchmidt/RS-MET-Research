@@ -19,18 +19,18 @@ w.real(), w.imag()
 
 This code gives the following results for \texttt{n = 0..7}:
 
-n  Real                                      Imag
-0  1,                                        0 
-1  x,                                        y
-2  x^2 - y^2,                                2*x*y
-3  x^3 - 3*x*y^2,                            3*x^2*y - y^3
-4  x^4 - 6*x^2*y^2  + y^4,                   4*x^3*y - 4*x*y^3
-5  x^5 - 10*x^3*y^2 + 5*x*y^4,               5*x^4*y - 10*x^2*y^3 + y^5
-6  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6,      6*x^5*y - 20*x^3*y^3 + 6*x*y^5
-7  x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6,  7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
+n  Real                                       Imag
+0  1                                          0 
+1  x                                          y
+2  x^2 - y^2                                  2*x*y
+3  x^3 - 3*x*y^2                              3*x^2*y - y^3
+4  x^4 - 6*x^2*y^2  + y^4                     4*x^3*y - 4*x*y^3
+5  x^5 - 10*x^3*y^2 + 5*x*y^4                 5*x^4*y - 10*x^2*y^3 + y^5
+6  x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6        6*x^5*y - 20*x^3*y^3 + 6*x*y^5
+7  x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6    7*x^6*y - 35*x^4*y^3 + 21*x^2*y^5 - y^7
 
 
-Sage Code for producing the expressions for z^n for positive n:
+Sage Code for producing the expressions for the integrals U,V for z^n for positive n:
 
 var("x y")
 assume(x, "real")
@@ -51,42 +51,60 @@ n  Potential
 1  (x^2 - y^2) / 2
 2  (x^3 - 3*x*y^2) / 3
 3  (x^4 - 6*x^2*y^2 + y^4) / 4
-4
-5
-6
-7
+4  (x^5 - 10*x^3*y^2 + 5*x*y^4) / 5
+5  (x^6 - 15*x^4*y^2 + 15*x^2*y^4 - y^6) / 6
+6  (x^7 - 21*x^5*y^2 + 35*x^3*y^4 - 7*x*y^6) / 7
+7  (x^8 - 28*x^6*y^2 + 70*x^4*y^4 - 28*x^2*y^6 + y^8) / 8
 
-ToDo:
--List results for the potential. Could it be that it is just the real part from the u,v table above 
- but shifted one row up and divided by n? That would mean that some things in the paper could be 
- simplified. We don't need to evaluate the integral. But maybe better to do it and just at the end 
- mention that it actually agrees with the simpler way to evaluate it. It could also simplify the 
- code to evaluate the Polya potentials. We'd just call the function for the real part with n+1 and 
- then divide the end result by n+1.
+
+Notes:
+-It looks like the potential is just the real part from the u,v table above but shifted one row up 
+ and divided by n? That would mean that some things in the paper could be simplified. We don't need 
+ to evaluate the integral. But maybe better to do it and just at the end mention that it actually 
+ agrees with the simpler way to evaluate it. It could also simplify the code to evaluate the Polya 
+ potentials. We'd just call the function for the real part with n+1 and then divide the end result 
+ by n+1.
  
 Ideas:
 -Maybe it makes sense to give the polynomials in the above list names. Maybe call then S_n(x,y) for
- "saddle", e.g. S_2(x,y) = x^2 - y^2. Maybe call the others arising from the imaginary parts R_k
+ "saddle", e.g. S_2(x,y) = x^2 - y^2. Maybe call the others arising from the imaginary parts R_n
  as saddles of the 2nd kind or rotated saddles, e.g. R_2(x,y) = 2*x*y or maybe -2*x*y. In S_n, R_n, 
  the index n can be interpreted as the number of uphill (or downhill) directions. That 
- interpretation works even for the edge cases n = 0 and n = 1. Defining T_2(x,y) = -2*x*y seems to 
+ interpretation works even for the edge cases n = 0 and n = 1. Defining R_2(x,y) = -2*x*y seems to 
  make more sense because then, we can just introduce them as bivariate polynomials without 
  necessarily having to even mention complex powers. They can be a thing in their own right. And 
- using the minus makes them partial derivatives of some potential.
+ using the minus makes them partial derivatives of some scalar potential P(x,y).
 -Maybe the set of all such saddle polynomials S_n(x,y), R_n(x,y) can be used as a (orthogonal?) 
  basis for the vector space of all smooth bivariate functions f(x,y)? Or maybe not all but maybe an
- interesting subset. Can we produce an n-th order saddle of any rotation by a suitable linear 
+ interesting subset? Can we produce an n-th order saddle of any rotation by a suitable linear 
  combination of S_n, R_n just like we can produce a sinuosoid of any phase by a suitable linear 
  combination of sine and cosine? In polar form, the polynomials have actually a sinusoidal angular
  dependency.
 -Check, if they are already orthogonal or even orthonormal. A suitable scalar product could be the
  double integral of the product over the unit circle. If they are orthogonal but not orthonormal, 
  maybe introduce suitable scaling factors to make them orthonormal.
+-The polynomials are homogeneous - the degrees of all terms are equal.
+-Those with even index are symmetrical in the sense that x and y can be swapped. What about the odd
+ indexed ones?  I think, there are always some rotational symmetries (I think, about angles 
+ k*360°/n). In the case of even indices, the multiples 90° happen to align with these or soemthing?
+ 
+ 
+It's interesting to enter the S_n, R_n polynomials to wolfram alpha:
+
+S_5: https://www.wolframalpha.com/input?i=x%5E5+-+10*x%5E3*y%5E2+%2B+5*x*y%5E4
+R_5: https://www.wolframalpha.com/input?i=5*x%5E4*y+-+10*x%5E2*y%5E3+%2B+y%5E5
+
+..up to x=6, they can be nicely factored and the integrals over a disc or square are zero. The 
+indefinite integral of S_n wrt x seems to always be S_{n+1} / (n+1), like wise for R_n wrt y (maybe 
+plus x^{n+1} / (n+1) as integration constant?
+
+ToDo:
+-Plot the locus of the roots as y = f(x) and/or maybe as r = f(a) (radius as function of angle)
  
 ----------------------------------------------------------------------------------------------------
 For negative n, we can use the same Sage snippet and just replace the function of interest by some 
 negative power of z or take the reciprocal of the corresponding positive power (e.g. w = 1 / z^5 
-instead of w =  z^5). Here are the results for n = 2..6:
+instead of w = z^5). Here are the results for n = 2..6:
 
 n  Real part of numerator                          Imaginary part of numerator
 2  x^2 - y^2                                       2*x*y                         

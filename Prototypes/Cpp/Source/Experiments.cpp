@@ -10207,9 +10207,9 @@ void testGeneralizedCollatz()
 
 void testPowerCommutator()
 {
-  // We investigate the non-commutativity of the power or exponentiation operation. How does this 
+  // We investigate the non-commutativity of the power (or exponentiation) operation. How does this 
   // non-commutativity depend on the inputs? Which is bigger a^b or b^a? How does the answer to 
-  // that question depend on the actual values of a and b?.
+  // that question depend on the actual values of a and b?
   //
   // Take a pair of nonegative integers a,b and figure out, if a^b > b^a. Interpret a,b, as pixel
   // coordinates. If a^b > b^a, color the pixel white. If a^b < b^a, color the pixel black. If 
@@ -10224,7 +10224,7 @@ void testPowerCommutator()
   // and use that to color the pixel. ...TBC...
 
 
-  using BigInt = double;  // Preliminary. May kinda work for smaller values of a,b
+  using BigInt = double;  // Preliminary. May it's good enough for smaller values of a,b
   using BigRat = double;  // For big rational numbers
 
   int w = 20;  // Image width

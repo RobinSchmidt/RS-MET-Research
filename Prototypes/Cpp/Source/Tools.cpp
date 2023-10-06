@@ -9067,14 +9067,22 @@ public:
   static T    exp(T x, T y) { return rsExp(x)*rsCos(y); }
   static void exp(T x, T y, T* u, T* v) { *u = rsExp(x)*rsCos(y); *v = -rsExp(x)*rsSin(y); }
 
-  // f(z) = e^(i*z)
-  static T    exp_i(T x, T y) { return exp(-y, x); }
-  static void exp_i(T x, T y, T* u, T* v) { exp(-y, x, u, v); }
-  // Verify these formulas!
+  // f(z) = sinh(z)
+  static T    sinh(T x, T y) { return rsCosh(x)*rsCos(y); }
+  static void sinh(T x, T y, T* u, T* v) { *u = rsCos(y) * rsSinh(x); *v = -rsCosh(x) * rsSin(y); }
+
+
+
 
   // f(z) = sin(z)
   static T    sin(T x, T y) { return -rsCos(x)*rsCosh(y); }
   static void sin(T x, T y, T* u, T* v) { *u = rsCosh(y)*rsSin(x); *v = -rsCos(x)*rsSinh(y); }
+
+
+  // f(z) = e^(i*z)
+  static T    exp_i(T x, T y) { return exp(-y, x); }
+  static void exp_i(T x, T y, T* u, T* v) { exp(-y, x, u, v); }
+  // Verify these formulas!
 
 
   // zerosAt_1_m1

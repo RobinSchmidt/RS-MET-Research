@@ -14077,7 +14077,7 @@ void makePlotsForPolyaPotentialPaper()
   auto plotC = ::cplotA<R>;  // Plot a contour map.
 
 
-  //goto NewPlots; 
+  goto NewPlots; 
   // Uncomment this only when tweaking the plots under construction to skip the plots that are 
   // already finished.
 
@@ -14175,13 +14175,14 @@ void makePlotsForPolyaPotentialPaper()
 
 
   // From here come plots that are not yet in the paper:
+  // Under construction:
+
 
   // Create and set up an rsContourMapPlotter object that will be used for some of the coming 
   // plots:
   rsContourMapPlotter<R> pltC;
-
-  // Under construction:
   R pi = PI;
+
   // For pdf paper: exp(z):
   pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
   pltC.setSamplingResolution(200, 400);
@@ -14196,11 +14197,26 @@ void makePlotsForPolyaPotentialPaper()
   pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
   pltC.addCommand("set xtics center offset 0,1.5");
   pltC.plot();
+
+  pltC.setFunction([](R x, R y) { return PE::sinh(x, y); });
+  pltC.setOutputRange(-1.6, +1.6);
+  pltC.setNumContours(17);
+  //pltC.addCommand("unset colorbox");
+  pltC.plot();    // There are ugly artifacts in the contour lines
+  // Mayb try tweaking the line ending settings (round|butt|etc.)
+
   pltC.clearCommands();  // clear them for the next plot
+  // ToDo:
+  // -Make also plots for sinh and cosh
+  //  -The colorbox should appea only in the rightmost plot. It can be turned off via 
+  //   "unset colorbox". But then, we may need to also adjust the width of the plot. We want the
+  //   plots themselves to have equal widths
   // About placing the tics - which is what we need here:
-  // https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
-  // https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
-  // http://www.gnuplot.info/docs_4.2/node295.html
+  //   https://stackoverflow.com/questions/19425683/rotating-and-justifying-tics-in-gnuplot
+  //   https://stackoverflow.com/questions/48298431/set-position-of-one-tic-number-in-gnuplot
+  //  http://www.gnuplot.info/docs_4.2/node295.html
+  // About the colorbox:
+  //   https://gnuplot.sourceforge.net/docs_4.2/node167.html
   // Points of interest:
   // -(x,y) = (0, pi): z = -1 + 0*i. This is Euler's famous formula. Arrow is horizontal and points
   //  down to blue. That means, the value is negative. The line density is unity and the colors

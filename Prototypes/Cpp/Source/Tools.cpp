@@ -9070,9 +9070,14 @@ public:
   // f(z) = sinh(z)
   static T    sinh(T x, T y) { return rsCosh(x)*rsCos(y); }
   static void sinh(T x, T y, T* u, T* v) { *u = rsCos(y) * rsSinh(x); *v = -rsCosh(x) * rsSin(y); }
+  // needs test
 
+  // f(z) = cosh(z)
+  static T    cosh(T x, T y) { return rsCos(y)*rsSinh(x); }
+  static void cosh(T x, T y, T* u, T* v) { *u = rsCos(y)*rsCosh(x); *v = -rsSin(y)*rsSinh(x); }
+  // needs test
 
-
+  // cosh(z): (cos(y)*cosh(x), -sin(y)*sinh(x), cos(y)*sinh(x), cos(y)*sinh(x))
 
   // f(z) = sin(z)
   static T    sin(T x, T y) { return -rsCos(x)*rsCosh(y); }

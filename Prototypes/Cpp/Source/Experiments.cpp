@@ -14183,7 +14183,11 @@ void makePlotsForPolyaPotentialPaper()
   rsContourMapPlotter<R> pltC;
   R pi = PI;
 
-  // For pdf paper: exp(z):
+  // Create the plots for the exponential and hyperbolic functions (exp, sinh, cosh). They are 
+  // narrow and tall (small width, big height).
+
+  // exp(z):
+  pltC.setOutputFileName("PolyaContoursExp.png");
   pltC.setFunction([](R x, R y) { return PE::exp(x, y); });
   pltC.setSamplingResolution(200, 400);
   pltC.setInputRange(-1, +1, -2*pi, +2*pi);          // Show two periods along imaginary axis.
@@ -14196,18 +14200,25 @@ void makePlotsForPolyaPotentialPaper()
   pltC.addCommand("set format y '%.0P{/Symbol p}'"); // ..and label them properly as such
   pltC.addCommand("set ytics center offset -1.5,0"); // The tic placement needs some tweaking
   pltC.addCommand("set xtics center offset 0,1.5");
-  //pltC.plot();
+  pltC.plot();
 
+  // sinh(z):
+  pltC.setOutputFileName("PolyaContoursSinh.png");
   pltC.setFunction([](R x, R y) { return PE::sinh(x, y); });
+  pltC.setDrawRectangle(0.08, 0.85, 0.03, 0.99);
   pltC.setOutputRange(-1.6, +1.6);
   pltC.setNumContours(17);
-  pltC.setOutputFileName("PolyaContoursSinh.png");
-  //pltC.addCommand("unset colorbox");
+  pltC.plot();
 
-  pltC.plot();    
+  // cosh(z):
+  pltC.setOutputFileName("PolyaContoursCosh.png");
+  pltC.setFunction([](R x, R y) { return PE::cosh(x, y); });
+  pltC.setOutputRange(-1.2, +1.2);
+  pltC.setNumContours(25);
+  pltC.plot();
 
-
-  pltC.clearCommands();  // clear them for the next plot
+  // Clear commands for the next plot:
+  pltC.clearCommands(); 
   // ToDo:
   // -Make also plots for sinh and cosh
   //  -The colorbox should appea only in the rightmost plot. It can be turned off via 

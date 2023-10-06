@@ -111,7 +111,8 @@ int main (int /*argc*/, char* /*argv[]*/)
 
 
   // Riemann zeta function:
-  testPolyaPotenialFormulas();
+  //testPolyaPotenialFormulas();
+  testPolarPotenialFormulas();
   //testRiemannZeta();
   //plotZetaPotential();
   //plotZetaPotentialNumeric();

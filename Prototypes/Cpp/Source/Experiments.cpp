@@ -12441,15 +12441,8 @@ void partialDerivatives(const F& f, const Tx& x, const Tx& y,
 // May eventually go into rsNumericDifferentiator
 
 
-
-
-
 void testPolyaPotenialFormulas()
 {
-  // Uses:
-  // rsRealCoeffsComplexPower, rsImagCoeffsComplexPower - called in vectorFieldViaLaurentSeries
-  // rsPotentialCoeffsComplexPower -  called in potentialViaLaurentSeries
-
   using Real    = double;
   using Complex = std::complex<Real>;
   using Vec     = std::vector<Real>;
@@ -12548,6 +12541,24 @@ void testPolyaPotenialFormulas()
   }
 
   rsAssert(ok);
+
+
+  // ToDo:
+  // -Increase the range of powers to be tested
+}
+
+void testPolarPotenialFormulas()
+{
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  //using Vec     = std::vector<Real>;
+  using PPE     =  rsPolyaPotentialEvaluator<Real>;
+
+
+  Real x = 3, y = 2;
+  Complex z(x, y);
+  Complex w;
+  bool ok = true;
 
 
   // Move into a function to not clutter up this one:
@@ -12689,46 +12700,34 @@ void testPolyaPotenialFormulas()
   Real yMax = +3;
   plotBivariateFunction(f1, xMin, xMax, Nx, yMin, yMax, Ny);
   plotBivariateFunction(f2, xMin, xMax, Nx, yMin, yMax, Ny);
-
-
   int dummy = 0;
 
   // Observations:
-  // -Tests for the new potnetial formula for power, i.e. for z^n, based on polar coordinates give
-  //  confusing results:
-  //  -In the test that compues P1 and P2, we get completely different results. Explaining that by
-  //   different offsets, i.e. integration constants, doesn't explain why the difference seem to 
-  //   depend on x,y
-  //  -The numerical derivatives of the potential computed via the new formula do seem to give 
-  //   correct results when x,y are both positive. Try (x,y) = (4,3), n = 2 for example. 
-  //  -For n = 2, the plot of the potential obtained by the new formula does not look like the 
-  //   expected monkey saddle at all.
-  //  -Normally, I would say, the new formula is just wrong - but it does produce correct numerical
-  //   derivatives in some cases, so it can't be completely wrong.
-  //  -Could it be that two completely different potentials (i.e. potential that do not only differ
-  //   by a constant) give rise to the same partial derivatives? In some contexts, such things
-  //   do exist:
-  //   https://en.wikipedia.org/wiki/Gauge_theory#Classical_gauge_theory
-  //   but I think here, where we are dealing with a scalar field, we have no such case.
-  //  -when y = 0 and x > 0, the two formulas actually do produce the same results.
-  //  -Maybe implement also numDiffX,Y
-  //  -Maybe compute numerical partial derivatives of the old formula wrt r,a
-  //  -That we get correct derivatives wrt r,a may mean that I just constructed the function to
-  //   give these derivatives (which I did) - but maybe that's not even a menaingful thing to do
-  //   in the first place? ...but we can reconstruct f(z) from the produced information (at least
-  //   in those zones where the formula works), so it seems kinda meaningful.
-  //  -Could it be that we have created some sort different "representation" of the same potential
-  //   that has nothing to do with the other representation? Maybe this function represents *both*
-  //   z and w in polar coordinates and the other represents both in cartesian coordinates? We can 
-  //   construct two totally different kinds of potentials that have nothing to do with each other?
-
-
-
-  // ToDo:
-  // -Increase the range of powers to be tested
-  // -Implement and test formulas based on polar coordinates
-  //  -> Kinda done but the test results are confusing. Maybe plot the potential surface via both
-  //     formulas.
+  // -In the test that compues P1 and P2, we get completely different results. Explaining that by
+  //  different offsets, i.e. integration constants, doesn't explain why the difference seem to 
+  //  depend on x,y
+  // -The numerical derivatives of the potential computed via the new formula do seem to give 
+  //  correct results when x,y are both positive. Try (x,y) = (4,3), n = 2 for example. 
+  // -For n = 2, the plot of the potential obtained by the new formula does not look like the 
+  //  expected monkey saddle at all.
+  // -Normally, I would say, the new formula is just wrong - but it does produce correct numerical
+  //  derivatives in some cases, so it can't be completely wrong.
+  // -Could it be that two completely different potentials (i.e. potential that do not only differ
+  //  by a constant) give rise to the same partial derivatives? In some contexts, such things
+  //  do exist:
+  //  https://en.wikipedia.org/wiki/Gauge_theory#Classical_gauge_theory
+  //  but I think here, where we are dealing with a scalar field, we have no such case.
+  // -when y = 0 and x > 0, the two formulas actually do produce the same results.
+  // -Maybe implement also numDiffX,Y
+  // -Maybe compute numerical partial derivatives of the old formula wrt r,a
+  // -That we get correct derivatives wrt r,a may mean that I just constructed the function to
+  //  give these derivatives (which I did) - but maybe that's not even a menaingful thing to do
+  //  in the first place? ...but we can reconstruct f(z) from the produced information (at least
+  //  in those zones where the formula works), so it seems kinda meaningful.
+  // -Could it be that we have created some sort different "representation" of the same potential
+  //  that has nothing to do with the other representation? Maybe this function represents *both*
+  //  z and w in polar coordinates and the other represents both in cartesian coordinates? We can 
+  //  construct two totally different kinds of potentials that have nothing to do with each other?
 }
 
 void testRiemannZeta()

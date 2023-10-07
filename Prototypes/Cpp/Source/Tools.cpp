@@ -406,17 +406,27 @@ class rsContourMapPlotter : public rsFieldPlotter2D<T>
 
 public:
 
-  // ToDo:
-  //void resetToDefaults() override;
+  rsContourMapPlotter() { resetToDefaults(); }
+
+
+  void resetToDefaults() override;
 
   void setFunction(const std::function<T(T x, T y)>& newFunction) { f = newFunction; }
 
-  void setOutputRange(T minZ, T maxZ) { zMin = minZ; zMax = maxZ; }
+  void setOutputRange(T minZ, T maxZ, bool clipDataToRange = true) 
+  { 
+    zMin = minZ;
+    zMax = maxZ;
+    clipData = clipDataToRange;
+  }
+  // Invalid range (with max <= min) triggers automatic range choice, I think
+  // Maybe have separate clipping options for lower and upper limit
 
   void setNumContours(int newNumber) { numContours = newNumber; }
 
   void setSamplingResolution(int numSamplesX, int numSamplesY) 
-  { Nx = numSamplesX; Ny = numSamplesY; }
+  { resX = numSamplesX; resY = numSamplesY; }
+  // Maybe, if invalid values are passes (<= 0), use numSamplesX = pixelWidthX, etc.
 
 
   void plot();
@@ -425,16 +435,23 @@ protected:
 
   // Data setup:
   std::function<T(T x, T y)> f;
-  T zMin = 0;
-  T zMax = 0;
-  bool clipData = true;
+  T zMin, zMax;
+  bool clipData;
 
   // Plotting setup:
-  int Nx          = 101;  // rename to resX of x-resolution or numSamplesX
-  int Ny          = 101;
-  int numContours = 21;
-
+  int resX, resY, numContours;
 };
+
+template<class T>
+void rsContourMapPlotter<T>::resetToDefaults()
+{
+  rsFieldPlotter2D<T>::resetToDefaults();
+  std::function<T(T x, T y)> func = [](T x, T y){ return T(0); };
+  setFunction(func);
+  setOutputRange(T(0), T(0), true); 
+  setNumContours(21);
+  setSamplingResolution(101, 101);
+}
 
 template<class T>
 void rsContourMapPlotter<T>::plot()
@@ -444,11 +461,14 @@ void rsContourMapPlotter<T>::plot()
   // lines:
   std::vector<T> x, y;
   RAPT::rsMatrix<T> z;
-  generateMatrixData(f, xMin, xMax, yMin, yMax, Nx, Ny, x, y, z);
+  generateMatrixData(f, xMin, xMax, yMin, yMax, resX, resY, x, y, z);
   if(zMin >= zMax) {
     zMin = z.getMinimum();
     zMax = z.getMaximum(); }
   std::vector<T> levels = RAPT::rsRangeLinear(zMin, zMax, numContours);  // Array of contour levels
+
+  // ToDo: use locals for zMin, zMax - we should not set members here. this is a bug!
+
 
   // Clip the matrix data:
   if(clipData == true) {
@@ -458,7 +478,7 @@ void rsContourMapPlotter<T>::plot()
   // ToDo: Maybe implement and use a function z.clipToRange(zMin, zMax);
 
   GNUPlotter plt;
-  plt.addDataMatrixFlat(Nx, Ny, &x[0], &y[0], z.getDataPointer());
+  plt.addDataMatrixFlat(resX, resY, &x[0], &y[0], z.getDataPointer());
   setupPlotter(&plt);
   addPathsToPlot(&plt);
   plotContours(plt, levels, true);   // Make this a member function! It's currently free.

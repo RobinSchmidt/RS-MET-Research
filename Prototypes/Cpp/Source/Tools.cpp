@@ -461,21 +461,21 @@ void rsContourMapPlotter<T>::plot()
   // lines:
   std::vector<T> x, y;
   RAPT::rsMatrix<T> z;
+  T minZ = zMin;
+  T maxZ = zMax;
   generateMatrixData(f, xMin, xMax, yMin, yMax, resX, resY, x, y, z);
-  if(zMin >= zMax) {
-    zMin = z.getMinimum();
-    zMax = z.getMaximum(); }
-  std::vector<T> levels = RAPT::rsRangeLinear(zMin, zMax, numContours);  // Array of contour levels
+  if(minZ >= maxZ) {
+    minZ = z.getMinimum();
+    maxZ = z.getMaximum(); }
+  std::vector<T> levels = RAPT::rsRangeLinear(minZ, maxZ, numContours);  // Array of contour levels
 
-  // ToDo: use locals for zMin, zMax - we should not set members here. this is a bug!
-
-
-  // Clip the matrix data:
+  // Clip the matrix data, if desired:
   if(clipData == true) {
     for(int i = 0; i < z.getNumRows(); i++)
       for(int j = 0; j < z.getNumColumns(); j++)
-        z(i, j) = RAPT::rsClip(z(i, j), zMin, zMax); }
-  // ToDo: Maybe implement and use a function z.clipToRange(zMin, zMax);
+        z(i, j) = RAPT::rsClip(z(i, j), minZ, maxZ); }
+  // ToDo: 
+  // -Maybe implement and use a function z.clipToRange(minZ, maxZ);
 
   GNUPlotter plt;
   plt.addDataMatrixFlat(resX, resY, &x[0], &y[0], z.getDataPointer());

@@ -220,6 +220,10 @@ public:
     bottom = newBottom;
     top    = newTop;
   }
+  // Let's abbreviate "left" by "L", "right" by "R", etc.. I think, we need T-B = R-L to get an 
+  // aspect ratio of 1? Here, we use T-B = R-L = 0.8. -> Figure this out and document it properly.
+  // What setting do we need to get a 1:1 aspect ratio, given that the pixel-size is square?
+
 
   void setTitle(const std::string& newTitle) { title = newTitle; }
 
@@ -232,12 +236,13 @@ public:
   // Adds a custom command that will be passed to the plotter after the standard commands have been
   // passed. Can be used to set up special plotting options or to override the default behavior:
   void addCommand(const std::string& command) { commands.push_back(command); }
-
   void clearCommands() { commands.clear(); }
+  // Maybe rename to addUserCommand or addCustomCommand, adapt alos clearCommands accordingly
 
   void addPath(const std::vector<rsVector2D<T>>& path) { paths.push_back(path); }
-
   void clearPaths() { paths.clear(); }
+  // One could think that this means a file path but it's a path to draw. Try to find a better name.
+  // Maybe addPolyLine
 
   void setOutputFileName(const std::string& newName) { outputFileName = newName; }
   // it's only the name, not the full path
@@ -253,28 +258,25 @@ protected:
   void addPathsToPlot(GNUPlotter* plt);
 
   // Data setup:
-  T xMin = 0;
-  T xMax = 1;
-  T yMin = 0;
-  T yMax = 1;
+  T xMin, xMax, yMin, yMax;
 
   // Plotting setup:
-  int pixelWidth  = 600;
-  int pixelHeight = 600;
+  int pixelWidth, pixelHeight;
 
-  double left     = 0.07;  // Left margin.
-  double right    = 0.87;  // One minus right margin.
-  double bottom   = 0.1;   // Bottom margin
-  double top      = 0.9;   // One minus top margin
-  // Let's abbreviate "left" by "L", "right" by "R", etc.. I think, we need T-B = R-L to get an 
-  // aspect ratio of 1? Here, we use T-B = R-L = 0.8. -> Figure this out and document it properly.
-  // What setting do we need to get a 1:1 aspect ratio, given that the pixel-size is square?
+  double left, right, bottom, top;  // Margins
+
+  //double left     = 0.07;  // Left margin.
+  //double right    = 0.87;  // One minus right margin.
+  //double bottom   = 0.1;   // Bottom margin
+  //double top      = 0.9;   // One minus top margin
+
 
   std::string title;
 
-  bool dark = false;
-  GNUPlotter::ColorPalette colorMap = GNUPlotter::ColorPalette::EF_Viridis;
-  bool reverseColors = false;
+
+  GNUPlotter::ColorPalette colorMap; // = GNUPlotter::ColorPalette::EF_Viridis;
+  bool reverseColors;
+  bool dark;
 
 
   std::vector<std::string> commands;  // Additional commands set by the user for customization
@@ -385,14 +387,12 @@ void rsFieldPlotter2D<T>::resetToDefaults()
   setPixelSize(600, 600);
   setDrawRectangle(0.07, 0.87, 0.1, 0.9);
   setTitle("");
+  setColorPalette(GNUPlotter::ColorPalette::EF_Viridis, false);
   setToDarkMode(false);
-
-  // ...more to come...
+  clearCommands();
+  clearPaths();
+  setOutputFileName("");
 }
-
-
-
-
 
 template<class T>
 class rsContourMapPlotter : public rsFieldPlotter2D<T>

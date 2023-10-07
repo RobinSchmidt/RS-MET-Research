@@ -14217,8 +14217,6 @@ void makePlotsForPolyaPotentialPaper()
   pltC.setNumContours(25);
   pltC.plot();
 
-  // Clear commands for the next plot:
-  pltC.clearCommands(); 
   // ToDo:
   // -Make also plots for sinh and cosh
   //  -The colorbox should appea only in the rightmost plot. It can be turned off via 
@@ -14253,6 +14251,7 @@ void makePlotsForPolyaPotentialPaper()
 
 
   // sin(z)
+  pltC.clearCommands(); 
   pltC.setFunction([](R x, R y) { return PE::sin(x, y); });
   pltC.setInputRange(-2*pi, +2*pi, -1, +1);
   pltC.setOutputRange(-1.6, +1.6);       // cosh(1) = 1.54308063481524

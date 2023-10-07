@@ -14076,6 +14076,11 @@ void makePlotsForPolyaPotentialPaper()
   auto plotV = ::vplotA<R>;  // Plot a vector field as arrow map.
   auto plotC = ::cplotA<R>;  // Plot a contour map.
 
+  // Create and set up an rsContourMapPlotter object that will be used for some of the coming 
+  // plots:
+  rsContourMapPlotter<R> pltC;
+  R pi = PI;
+
 
   //goto NewPlots;
   // Uncomment this only when tweaking the plots under construction to skip the plots that are 
@@ -14170,19 +14175,6 @@ void makePlotsForPolyaPotentialPaper()
 
 
 
-
-  NewPlots:
-
-
-  // From here come plots that are not yet in the paper:
-  // Under construction:
-
-
-  // Create and set up an rsContourMapPlotter object that will be used for some of the coming 
-  // plots:
-  rsContourMapPlotter<R> pltC;
-  R pi = PI;
-
   // Create the plots for the exponential and hyperbolic functions (exp, sinh, cosh). They are 
   // narrow and tall (small width, big height).
 
@@ -14249,6 +14241,10 @@ void makePlotsForPolyaPotentialPaper()
   //  artifacts only worse. :-(
 
 
+NewPlots:
+
+  // From here come plots that are not yet in the paper:
+  // Under construction:
 
   // sin(z)
   pltC.clearCommands(); 

@@ -205,6 +205,9 @@ class rsFieldPlotter2D
 
 public:
 
+  rsFieldPlotter2D() { resetToDefaults(); }
+
+
   void setInputRange(T minX, T maxX, T minY, T maxY) 
   { xMin = minX; xMax = maxX; yMin = minY; yMax = maxY; }
 
@@ -224,6 +227,8 @@ public:
   void setColorPalette(GNUPlotter::ColorPalette newMap, bool reverse)
   { colorMap = newMap; reverseColors = reverse; }
 
+  void setToDarkMode(bool shouldBeDark) { dark = shouldBeDark; }
+
   // Adds a custom command that will be passed to the plotter after the standard commands have been
   // passed. Can be used to set up special plotting options or to override the default behavior:
   void addCommand(const std::string& command) { commands.push_back(command); }
@@ -240,6 +245,9 @@ public:
 
   void setupPlotter(GNUPlotter* plt);
 
+  virtual void resetToDefaults();
+  // Sets all internal member variables back to their defaults
+
 protected:
 
   void addPathsToPlot(GNUPlotter* plt);
@@ -253,22 +261,24 @@ protected:
   // Plotting setup:
   int pixelWidth  = 600;
   int pixelHeight = 600;
-  std::string title;
-  bool dark = false;
 
-  GNUPlotter::ColorPalette colorMap = GNUPlotter::ColorPalette::EF_Viridis;
-  bool reverseColors = false;
-
-  std::vector<std::string> commands;  // Additional commands set by the user for customization
-  // maybe rename to userCommands or customCommands
-
-  double left   = 0.07;  // Left margin.
-  double right  = 0.87;  // One minus right margin.
-  double bottom = 0.1;   // Bottom margin
-  double top    = 0.9;   // One minus top margin
+  double left     = 0.07;  // Left margin.
+  double right    = 0.87;  // One minus right margin.
+  double bottom   = 0.1;   // Bottom margin
+  double top      = 0.9;   // One minus top margin
   // Let's abbreviate "left" by "L", "right" by "R", etc.. I think, we need T-B = R-L to get an 
   // aspect ratio of 1? Here, we use T-B = R-L = 0.8. -> Figure this out and document it properly.
   // What setting do we need to get a 1:1 aspect ratio, given that the pixel-size is square?
+
+  std::string title;
+
+  bool dark = false;
+  GNUPlotter::ColorPalette colorMap = GNUPlotter::ColorPalette::EF_Viridis;
+  bool reverseColors = false;
+
+
+  std::vector<std::string> commands;  // Additional commands set by the user for customization
+  // maybe rename to userCommands or customCommands
 
 
   std::vector<std::vector<rsVector2D<T>>> paths;
@@ -367,6 +377,20 @@ void rsFieldPlotter2D<T>::addPathsToPlot(GNUPlotter* plt)
   // See:
   // http://www.gnuplot.info/demo/arrowstyle.html
 }
+
+template<class T>
+void rsFieldPlotter2D<T>::resetToDefaults()
+{
+  setInputRange(T(0), T(1), T(0), T(1));
+  setPixelSize(600, 600);
+  setDrawRectangle(0.07, 0.87, 0.1, 0.9);
+  setTitle("");
+  setToDarkMode(false);
+
+  // ...more to come...
+}
+
+
 
 
 

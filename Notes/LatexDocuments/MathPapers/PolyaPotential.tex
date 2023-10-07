@@ -448,6 +448,24 @@ To summarize our observations, for $f(z) = 1/z$, we get a Polya vector field tha
 \end{subfigure}
 \end{figure}
 Well - OK - they may not look like what we may have expected. Instead of a tripole and a quadrupole, we actually get a quadrupole and a hexapole. I don't know, if a tripole is even a thing. Probably not. For the quadrupole, the field lines or gradient arrows would point outward horizontally and inward vertically and go orthogonally over the diagonals. In the hexapole, the field points in from the left and out to the right, in from top-right and out to bottom-left, in from bottom-right and out to top-left. In general, we get a $2(n-1)$-th order pole for $n > 1$ and for the special case of $n = 1$, we get a monopole. In complex analysis, the function $1/z$ is generally a somewhat special citizen that stands out from the crowd of power functions. It is the odd one out in the context of Laurent series: the coefficient for $z^{-1}$ is so special that it even has its own name: the "residue". And if you remember from real calculus that $x^{-1}$ is the only power of $x$ for which the power rule of integrals $(x^{n+1}) / (n+1)$ fails to apply (as a programmer, I'd call its use here a division by zero error), it may be not so surprising to see the reciprocation function $1/z$ break a pattern yet again. 
+\begin{figure}[p]
+\caption{Polya potential contours of $f(z) = e^z, f(z) = \sinh(z), f(z) = \cosh(z)$}	
+\label{Fig:ContoursExpSinhCosh}	
+\centering
+\begin{subfigure}[b]{0.32\textwidth}
+\centering
+\includegraphics[width=\textwidth]{../MathFigures/PolyaContoursExp.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.32\textwidth}
+\centering
+\includegraphics[width=\textwidth]{../MathFigures/PolyaContoursSinh.png}
+\end{subfigure}
+\begin{subfigure}[b]{0.32\textwidth}
+\centering
+\includegraphics[width=\textwidth]{../MathFigures/PolyaContoursCosh.png}
+\end{subfigure}
+\end{figure}
+
 
 % z^n:  saddle of order n+1
 % z^0:  straight lines, flat/planar field
@@ -455,6 +473,9 @@ Well - OK - they may not look like what we may have expected. Instead of a tripo
 % z^-n: 
 
 \subsection{Plots for Exponential, Trigonometric and Hyperbolic Functions}
+A very important function in real analysis is the exponential function $f(x) = e^x$. It is the only function that is its own derivative. When splitting it into its symmetric and antisymmetric parts, one obtains the so called hyperbolic functions $\cosh(x), \sinh(x)$. If we take the exponential function as a function of a complex argument that produces a complex output, written as $f(z) = e^z$, we find interesting relationships between trigonometric and hyperbolic functions...TBC...
+
+
 
 % Ideas for including tall graphics:
 % Put the image rotated into the document:
@@ -463,11 +484,11 @@ Well - OK - they may not look like what we may have expected. Instead of a tripo
 % Let the text flow next to the image:
 % https://tex.stackexchange.com/questions/55161/how-to-arrange-image-and-text-to-appear-side-by-side
 
-\subsection{Plots for Polynomials}
+%\subsection{Plots for Polynomials}
 % (z-1)(z+1), (z-1)(z+1)(z-i)
 % I'm interested in the geodesic between the zeros of f (i.e. flat points of P) - what shape do they have?
 
-\subsection{Plots for Rational Functions}
+%\subsection{Plots for Rational Functions}
 % Moebius trafo, 
 
 %\subsection{Plots for Roots and Logarithm}

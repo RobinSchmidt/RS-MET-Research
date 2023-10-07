@@ -14077,7 +14077,7 @@ void makePlotsForPolyaPotentialPaper()
   auto plotC = ::cplotA<R>;  // Plot a contour map.
 
 
-  goto NewPlots; 
+  //goto NewPlots;
   // Uncomment this only when tweaking the plots under construction to skip the plots that are 
   // already finished.
 

@@ -195,6 +195,8 @@ void plotContours(GNUPlotter& plt, const std::vector<float> levels, bool useCons
 
 // Maybe move them into rs_testing/TestTools/Plotting.h:
 
+//-------------------------------------------------------------------------------------------------
+
 /** Baseclass for 2D field plotters. Factors out the stuff that is common to different kinds of 2D 
 field plotters. Subclasses are rsFieldPlotter2D for creating arrow plots of 2D vector fields and 
 rsContourMapPlotter for creating contour maps of 2D scalar fields. */
@@ -394,11 +396,18 @@ void rsFieldPlotter2D<T>::resetToDefaults()
   setOutputFileName("");
 }
 
+//-------------------------------------------------------------------------------------------------
+
+/** Suclass of rsFieldPlotter2D to plot scalar fields as contour map. */
+
 template<class T>
 class rsContourMapPlotter : public rsFieldPlotter2D<T>
 {
 
 public:
+
+  // ToDo:
+  //void resetToDefaults() override;
 
   void setFunction(const std::function<T(T x, T y)>& newFunction) { f = newFunction; }
 
@@ -455,11 +464,19 @@ void rsContourMapPlotter<T>::plot()
   plotContours(plt, levels, true);   // Make this a member function! It's currently free.
 }
 
+//-------------------------------------------------------------------------------------------------
+
+/** Suclass of rsFieldPlotter2D to plot a 2D vector fields as arrow map. */
+
 template<class T>
-class rsVectorFieldPlotter : public rsFieldPlotter2D<T>
+class rsVectorFieldPlotter : public rsFieldPlotter2D<T>  // maybe rename to ...2D
 {
 
 public:
+
+  // ToDo:
+  //void resetToDefaults() override;
+
 
   void setFunction(const std::function<void(T x, T y, T* u, T* v)>& newFunction) 
   { f = newFunction; }

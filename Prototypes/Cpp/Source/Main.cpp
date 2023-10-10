@@ -74,7 +74,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testComplexPolar();    // stub
   //testRationalTrigonometry();
   //testLeveledNumber();   // stub
-  //testCommutativeHyperOperations();
+  testCommutativeHyperOperations();
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();

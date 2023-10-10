@@ -9641,6 +9641,11 @@ bool testCommutativeHyperOperations()
 
   // Notes:
   // -The numbers get big really quick
+  // -We have x *_2 y = e^(log(x)*log(y)) = (e^(log(x)))^log(y) = (e^(log(y)))^log(x). It follows 
+  //  that x^log(y) = y^log(x) because (e^(log(y))) = x and (e^(log(y))) = y? Is that true? It 
+  //  would be a logarithm law that I wasn't aware of before.
+  // -Could it be the case that the rule log(a*b) = log(a) + log(b) could be generalized to
+  //  log(a *_j b) = log(a) *_i log(b)  where i = j-1
   //
   // ToDo:
   // -Test also associativity. Maybe commutativity doesn't really need to be tested. It immediately

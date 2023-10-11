@@ -9569,6 +9569,41 @@ T comHyperOpRec(T x, T y, int n)
   //  the latter allows for a larger domain of +, i.e. the n=0 operation.
   // -Implement cases for negative n
 }
+
+// Iterative implementation. In the video, the formual appears at around 17:03
+template<class T>
+T comHyperOpIt(T x, T y, int n)
+{
+  if(n == 0)
+    return x + y;
+  //if(n == 1)
+  //  return x * y;  // Handling the n = 1 case separately is OK but not required
+
+  if(n > 0) {
+    for(int i = 2; i <= n; i++) {
+      x = log(x);
+      y = log(y); }
+    T z = x * y;
+    for(int i = 2; i <= n; i++)
+      z = exp(z);
+    return z; }
+
+  // n < 0:
+  n = -n;
+  for(int i = 1; i <= n; i++) {
+    x = exp(x);
+    y = exp(y); }
+  T z = x * y;
+  for(int i = 1; i <= n; i++)
+    z = log(z);
+  return z;
+  // I'm not yet sure, if the n < 0 case implementation is correct. It's not yet tested.
+
+  // ToDo:
+  // -If the lower part for n < 0 is implemented and tested, try if it can absorb the n = 0 case.
+}
+
+
 bool testCommutativeHyperOperations()
 {
   // We implement the hyperoperations defined in this video:
@@ -9604,6 +9639,7 @@ bool testCommutativeHyperOperations()
 
   using Real = double;
   auto opR   = comHyperOpRec<Real>;
+  auto opI   = comHyperOpIt<Real>;
 
   // Input arguments:
   Real a = 17;
@@ -9634,7 +9670,27 @@ bool testCommutativeHyperOperations()
     Real dif = lhs - rhs;                 // Difference between the two ways of evaluating it.
     Real ref = rsMax(abs(lhs), abs(rhs)); // Reference value for the relative tolerance.
     ok &= abs(dif) <= tol * ref;
+
+    // Now, do the same test for the iterative implementation:
+    bic = opI(b,   c,   i);
+    lhs = opI(a,   bic, j);
+    ajb = opI(a,   b,   j);
+    ajc = opI(a,   c,   j);
+    rhs = opI(ajb, ajc, i);
+    dif = lhs - rhs;
+    ref = rsMax(abs(lhs), abs(rhs));
+    ok &= abs(dif) <= tol * ref;
+
+
+
+    // ToDo: 
+    // -Refactor to get rid of duplication. Make a function that takes the operation as 
+    //  parameter as in functional programming style. Maybe it should also take a,b,c and n as
+    //  parameters.
+    // -Extend the range of i, maybe to -3..+4. To do this, we may need to increase a,b,c to admit
+    //  the higher order operations. We also need to implement the recursion for n < 0.
   }
+
 
   rsAssert(ok);
   return ok;

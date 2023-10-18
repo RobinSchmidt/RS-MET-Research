@@ -1,0 +1,23 @@
+\section{Ring Theory}
+After having seen groups, the next idea to explore is that of a ring. We assume to have a commutative group $(G, +)$ as a starting point. Note that here we use $+$ to denote our commutative group operation instead of the previous usage of $\cdot$ or juxtaposition within group theory. That is because in ring theory, the dot or juxtaposition will be needed for a second operation that we now want to introduce. We have seen that the integers form a group under addition. But we can also multiply integers and we now want to capture the behavior of integers under addition and multiplication in an abstract way. To this end, we assume that we start with a commutative group (where we call the group operation "addition" from now on) and assume that we have defined a second operation between elements of the group which we intend to be our abstract multiplication. Abstractly, a ring can be defined as a triple $(R,+,\cdot)$ consisting of a set $R$ with two binary operations between elements of the set such that the following rules hold true, which we shall henceforth call ring axioms:
+
+\medskip
+\begin{tabular}{l l}
+$(R,+)$ forms a commutative group \\	
+Multiplication is associative: 
+& $\forall a,b,c \in R: \;  (a \cdot b) \cdot c = a \cdot (b \cdot c)$   \\
+A multiplicative neutral element exists: 
+& $\exists 1 \in R: \; (\forall a \in R: 1 \cdot a = a)$ \\
+Multiplicative inverse elements exist: 
+& $\forall a \in R: \; (\exists a^{-1} \in R: a^{-1} \cdot a = 1 )$ \\
+Multiplication distributes over addition: 
+& $\forall a,b,c \in R: \;$
+\end{tabular}
+\medskip
+
+\paragraph{Notation and Terminology}
+We now have not one but two operations, so we need to adapt our notation and terminology a bit to accommodate for that. We have called the operations "addition" and "multiplication" but it should be understood that we mean abstractions of these operations. We have used the symbol $1$ to denote the multiplicative neutral element. We will denote the additive neutral element, formerly known as $e$, from now on as $0$. The notation $a^{-1}$ is now used for the multiplicative inverse of $a$, so we need a new notation for the additive inverse. We will use $-a$ to denote the additive inverse of $a$. 
+
+% The additive neutral element
+%  the additive inverse of $a$ is denoted as $-a$
+%The nonzero rationals (or reals) also form a group under multiplication.

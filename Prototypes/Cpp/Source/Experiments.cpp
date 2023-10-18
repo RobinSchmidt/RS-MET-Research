@@ -4225,6 +4225,13 @@ void testManifoldEllipsoid()
 // https://www.youtube.com/watch?v=L9WR78xvCPY The Metric Tensor in 20 Glorious Minutes
 
 
+// Make a function testManifoldTorus. See:
+// http://www.rdrop.com/~half/math/torus/torus.geodesics.pdf
+//
+// https://arxiv.org/pdf/1212.6206.pdf
+// Geodesics on the Torus and other Surfaces of Revolution Clarified Using Undergraduate Physics Tricks with Bonus: Nonrelativistic and Relativistic Kepler Problems
+
+
 void testGeodesic()
 {
   // We test the class rsGeodesicFinder which implements an iterative algorithm to optimize a given

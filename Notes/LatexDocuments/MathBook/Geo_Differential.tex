@@ -53,6 +53,17 @@ ToDo:
 -Global features are things like the number of stationary points, orientability, presence or 
  absence of self-intersections, topological features such as the genus, ...
 
+-Maybe use a circle of radius 5 as example curve and represent it 
+ parametrically: c(t) = (5 cos(t), 5 sin(t))
+ implicitly:  x^2 + y^2 - 25 = 0
+ explicitly: y = +- sqrt(25 - x^2)
+ and compute the tangent vector at a point (say (4,3)) via all 3 representations. Investigate, 
+ how we can, from a given implicit equation and a point on the curve, compute coordinates of 
+ another (infinitesimally) nearby point. Parametric and explicit representations can be used
+ straightforwardly to "generate points" - but how can the implicit equation be used for that?
+ 1: by considering it a root-finding problem, 2: by assuming that we have a point given and
+ somehow obtain a nearby point? ..which we may or may not refine using a root-finder?
+
 %An Amazing Theorem for Tangents (Fabricius-Bjerre Theorem)
 %https://www.youtube.com/watch?v=7_UclB2dB0o
 

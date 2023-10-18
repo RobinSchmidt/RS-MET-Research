@@ -540,4 +540,24 @@ at around 6:40, he says that P(N) has the same cardinality as R and P(P(N)) the 
 as R^R (the set of functions from R to R)
 
 
+Maybe try to derive an expression for the growth function of the Cantor set in a way 
+analogous to what we did for the power set of the unit interval. But then I think  we'll 
+get also f(u) = 2^u. In each step, we are doubling the number of elements:
+C_0 = {                [0/1,1/1)                 }
+C_1 = {     [0/3,1/3),            [2/3,3/3)      }
+C_2 = {[0/9,1/9), [2/9,3/9), [6/9,7/9), [8/9,9/9)} 
+Somehow, we also need to take into account the lengths of the intervals and not just their 
+number. Some intuitively plausible results would be f(u) = (2/3)^u  or  f(u) = (2/3) * 2^u. Or 
+maybe something based on some notion of fractional dimension D. Maybe f(u) = D^u?
+Maybe see also this video for that:
+https://www.youtube.com/watch?v=Dlslf7cB_5Q
+...maybe the right conclusion from these dependencies of f(u) on *how* exactly we "construct" 
+our set in question is that the quantification of infinity in terms of growth functions is
+dependent on our modeling of this construction process. There is no single well-defined way
+to quantify the size of infinity of a set. We can only quantify it for a given construction 
+process. Maybe it would be more accurate to just write f(u) <= "expression" where "expression"
+arises from a specific construction process but we remain open to the idea that another construction
+process may someday be discovered that leads to a "smaller" f(u)
+
+
 \end{comment}

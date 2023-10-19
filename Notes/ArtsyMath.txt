@@ -1,14 +1,16 @@
 Collection of intersting formulas and algorithms to create art with math. The following curves are 
-given either in paramteric form (x(t), y(t)) or r(t) where t is an angle(?) or implicitly as 
-f(x,y) = 0 perhaps written as f(x,y) = g(x,y). For the implictly given curves, we could also do 
-(filled) contour plots like f(x,y) = c for some set of selected levels c.
+given either in paramteric form (x(t), y(t)) where t can be thought of as time or r(t) where t is 
+an angle "theta" or implicitly as f(x,y) = 0 perhaps written as f(x,y) = g(x,y). 
 
 ----------------------------------------------------------------------------------------------------
 From https://www.youtube.com/watch?v=nMcCgYHcDww  MATH GRAPHS = ART
 
 
+0:28: sin(x^2 + y^2) = cos(x * y), ellipses in the middle, turns into pattern further out
+
 ----------------------------------------------------------------------------------------------------
 From https://www.youtube.com/watch?v=Ey-W3xwNJU8  Math is Art
+These graphs are done with manim as said in some response to a comment
 
 0:13:  x = 8*cos(t) - 6 * (cos(8*t/3))
        y = 8*sin(t) - 6 * (sin(8*t/3)), flower via epicycles
@@ -21,10 +23,29 @@ From https://www.youtube.com/watch?v=Ey-W3xwNJU8  Math is Art
 0:37:  x = 2*cos(t) + 5 * (cos(2*t/3))
        y = 2*sin(t) - 5 * (sin(2*t/3)), smooth pentagram
 0:45:  sin(x^2) = sin(y^2), circles and hyperbolas   
+0:52:  y = x * tan(y) * cot(x), wiggly 90° wedges
+1:09:  r = exp(sin(t)) - 2*cos(4*t) + sin^5((4*t - pi)/(24)), butterfly
+1:13:  y = x * sin(x^2 + y^2), waves going out to left and right
+1:15:  tan(x^2) * tan(y^2) = cot(x * y), pattern
+1:17:  y * sin(y) = x * sin(x), wiggly concentric squares
+1:19:  2^(sin(x) + cos(y)) = exp(sin(x*y)), aggressive scribble pattern
+1:21:  y = x * sin( sin(x) / sin(y) ), pattern
+1:23:  y * sin(x^2) = x * sin(y^2), pattern
+1:25:  sin(x^2 + y^2) = tan(sin(x+y)), aggressive scribble pattern of diagonals
+1:27:  tan(x^2 * sin(y^2)) = tan(y^2 * sin(x^2)), bubbly pattern
+1:29:  tan(x^2 + y^2) * cos(x + y) = cos(x^2 + y^2), radially outward radiation
 
 
+From the comments:
+(sin(x)+(sin(x*2)+sin(x/2))/2)/2 > cos(y)  ..this is an inequality
+sin(x^y)=0
 
 
 ----------------------------------------------------------------------------------------------------
 Ideas and Questions:
+-For the implictly given curves, we could also do (filled) contour plots like f(x,y) = c for some 
+ set of selected levels c. We could either use a colormap or use 3 different variants of f(x,y) and 
+ use them for R,G,B. It may also make sense to pass the final height function z = f(x,y) through 
+ some sort of waveshaper to tame infinities at poles (if any) and/or to change the distribution
+ of the contour lines.
 -How an we create arbitrary shapes as envelopes from straight (or maybe slightly curved) lines?

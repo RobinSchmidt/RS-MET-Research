@@ -160,6 +160,7 @@ s_i s_j = r_{i-j}
 \end{equation}	
 where the additions or subtractions of the indices have to be performed modulo $n$. As we know from analytic geometry, we can represent general rotations and reflections by $2 \times 2$ matrices over $\mathbb{R}$ and that we can represent the combination of such transformations as multiplications of the respective matrices. The matrices for the $r_k, s_k$ are in this case given by:
 \begin{equation}
+\label{Eq:PolygonSymmetries}
 \theta_k =\frac{2 \pi k}{n},  \quad
 c_k = \cos(\theta_k), s_k = \sin(\theta_k), \quad	
 r_k = \begin{pmatrix}  c_k & -s_k \\  s_k  &  c_k  \end{pmatrix}, \;
@@ -300,24 +301,46 @@ Isomorphisms are the most important kind of morphisms in group theory, followed 
 % https://en.wikipedia.org/wiki/Automorphism_group
 
 
-\subsection{Classification of Finite Groups}
+\subsection{Representation Theory}
+A group is abstractly defined as a set on which a binary operation is defined that satisfies certain properties. The elements of the set can be anything. Fortunately, there is a generic way for how we may concretely represent elements of a group and also a generic way to implement its group operation. Each group element is represented by an invertible matrix and the group operation is mapped to matrix multiplication. We have already mentioned that the set of symmetries of a regular polygon can be represented by a specific set of $2 \times 2$ matrices, see \ref{Eq:PolygonSymmetries}. Such a representation of the group as a set of matrices is possible for any group whatsoever [VERIFY!]. ...TBC...
+
+
+% https://en.wikipedia.org/wiki/Representation_theory
+% https://en.wikipedia.org/wiki/Group_representation
+% https://en.wikipedia.org/wiki/Representation_theory_of_finite_groups
+
+% ToDo: give a representation of (Z,+) via matrices. We may need to use homogeneous coordinates and/or the logarithm
+
+% Is it possible to faithful represent any group via matrices?
+% https://en.wikipedia.org/wiki/Representation_theorem
+
+
+\subsection{Examples of Groups}
+
+\subsubsection{Lie Groups}
+A Lie group is a group, whose underlying set may be interpreted as points that live on a manifold. For example, the set of all rotations in 3D may be interpreted as the surface of the unit sphere.
+
+% https://en.wikipedia.org/wiki/Lie_group
+% https://de.wikipedia.org/wiki/Lie-Gruppe
+% https://mathworld.wolfram.com/LieGroup.html
+% https://en.wikipedia.org/wiki/Table_of_Lie_groups
+% https://en.wikipedia.org/wiki/Simple_Lie_group
+
+\subsubsection{Classification of Finite Groups}
 One of the great achievements of modern mathematics is the classification of all finite groups. We have something like a periodic table (as in chemistry) for groups. Another analogy could be the prime numbers - all natural numbers greater than one can be "built" multiplicatively from these prime numbers. Similarly, all groups can be constructed from a known pool of elementary groups which are called the \emph{simple groups} in this context. Simple means that they can't be broken down any further into smaller groups - but they may actually be quite complicated indeed. ...TBC...
 
 % How does the "construction" work? Is it based on the cartesian product of the underlying sets where the individual group operations are applied element-wise?
+
+% Maybe rename the subsection into "Some specific groups" and file the Lie Groups and the Classification as subsubsections. we could also include Coxeter groups here
 
 % https://en.wikipedia.org/wiki/Classification_of_finite_simple_groups
 % https://en.wikipedia.org/wiki/List_of_finite_simple_groups
 % https://en.wikipedia.org/wiki/Group_of_Lie_type
 
 
-\subsection{Representation Theory}
 
 
-\subsection{Lie Groups}
 
-% https://en.wikipedia.org/wiki/Lie_group
-% https://de.wikipedia.org/wiki/Lie-Gruppe
-% https://mathworld.wolfram.com/LieGroup.html
 
 
 \begin{comment}

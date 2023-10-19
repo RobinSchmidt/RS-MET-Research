@@ -1,4 +1,40 @@
 \section{Field Theory}
-In the realm of abstract algebra, a field is a ring with some additional requirement. 
+In the realm of abstract algebra, a \emph{field} is a ring with some additional requirements. It must be a unital ring, which means that a multiplicative identity (i.e. neutral element) must exist. We will also require that all elements except the additive identity must have multiplicative inverses. The exception is motivated by the idea that division by zero is impossible and it turns out that this will always be the case. 
 
-We will now assume that a multiplicative neutral element
+%There are some contrived, trivial edge cases where it's possible to divide by zero but these are not interesting enough to worry about [VERIFY].
+
+
+
+%We will now assume that a multiplicative neutral element
+
+
+\begin{comment}
+
+Explain the edge case where additive neutral elements have a multiplicative inverse. I think Michael Penn has a video about that called somethign like "when division by zero isn't ..." IIRC	
+
+ We have used the symbol $1$ to denote the multiplicative neutral element. 
+
+The notation $a^{-1}$ is now used for the multiplicative inverse of $a$, so we need a new notation for the additive inverse. We will use $-a$ to denote the additive inverse of $a$. In the axiom about multiplicative inverses, we have excluded the $0$ element. The additive neutral element (i.e. zero) is the only element for which we do not require to have a multiplicative inverse. It can in fact be shown that - some uninteresting trivial edge cases aside - the additive neutral element cannot possibly have a multiplicative inverse in any ring. 
+
+% The additive neutral element
+%  the additive inverse of $a$ is denoted as $-a$
+%The nonzero rationals (or reals) also form a group under multiplication.
+
+
+Closure under multiplication: 
+& $\forall a,b \in R: \; a \cdot b \in R$  \\	
+Multiplication is associative: 
+& $\forall a,b,c \in R: \;  (a \cdot b) \cdot c = a \cdot (b \cdot c)$   \\
+
+% Nope - that's an additional axiom for rings:
+%Multiplicative inverse elements exist: 
+%& $\forall a \in R \setminus \{0\} : \; (\exists a^{-1} \in R: a^{-1} \cdot a = 1 )$ \\
+
+% Sometimes required:
+%A multiplicative neutral element exists: 
+%& $\exists 1 \in R: \; (\forall a \in R: 1 \cdot a = a)$ \\
+% but sometimes, these are also called monoids (or ring with unity?)
+
+
+	
+\end{comment}

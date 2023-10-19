@@ -318,7 +318,12 @@ A group is abstractly defined as a set on which a binary operation is defined th
 \subsection{Examples of Groups}
 
 \subsubsection{Lie Groups}
-A Lie group is a group, whose underlying set may be interpreted as points that live on a manifold. 
+A Lie group is a group, whose underlying set may be interpreted as a set of points that live on a \emph{manifold}. For example, the set of all rotations of the 2D plane may be interpreted as points on the unit circle. The unit circle is a curve, i.e. a 1D manifold that we usually envision to live in a 2D embedding space. We can identify points on the unit circle with rotation angles. This group is also called the \emph{circle group} and sometimes also the \emph{special orthogonal group} of order 2 and denoted by $SO(2)$. In a matrix representation of an orthogonal group, all matrices will have a determinant of $\pm 1$ and in a special orthogonal group, they will only have determinant $1$. Orthogonal means that the matrices encode orthogonal transformations which are a combination of rotations and reflections. In the "special" ones, only rotations are allowed. This group of 2D rotations can also be represented by complex numbers of unit modulus where complex multiplication serves as group operation, i.e. encodes the composition of the rotations.
+
+
+% SO(2) is topologically a 1-torus and generally SO(n) is an n-torus
+
+...TBC...
 
 %For example, the set of all rotations in 3D may be interpreted as the surface of the unit sphere [VERIFY!]. ...nope! SO(3) is 3D, says wikipedia. A point on a sphere can't encode any rotation around an axis that goes through the point. But could the unit sphere encode some other intersting set of transformations? Or maybe a torus? I think, they may encode rotations in a given plane, say, the xy-plane. ...ah - no - for this, 1 number is sufficient..soo maybe rotations around 2 axes but not all 3?
 
@@ -329,10 +334,40 @@ A Lie group is a group, whose underlying set may be interpreted as points that l
 % https://en.wikipedia.org/wiki/Simple_Lie_group
 % https://en.wikipedia.org/wiki/Representation_of_a_Lie_group
 % https://en.wikipedia.org/wiki/Lie_algebra_representation
+% https://en.wikipedia.org/wiki/Circle_group
 % https://en.wikipedia.org/wiki/3D_rotation_group
+% https://en.wikipedia.org/wiki/Orthogonal_group
+% https://en.wikipedia.org/wiki/Orthogonal_group#Special_orthogonal_group
+
+
+% Say something about Lie algebras...or maybe defer that to a chapter about Algebras
 
 \subsubsection{Classification of Finite Groups}
-One of the great achievements of modern mathematics is the classification of all finite groups. We have something like a periodic table (as in chemistry) for groups. Another analogy could be the prime numbers - all natural numbers greater than one can be "built" multiplicatively from these prime numbers. Similarly, all groups can be constructed from a known pool of elementary groups which are called the \emph{simple groups} in this context. Simple means that they can't be broken down any further into smaller groups - but they may actually be quite complicated indeed. ...TBC...
+One of the great achievements of modern mathematics is the classification of all finite groups. We have something like a periodic table (as in chemistry) for groups. Another analogy could be the prime numbers - all natural numbers greater than one can be "built" multiplicatively from these prime numbers. Similarly, all groups can be constructed from a known pool of elementary groups which are called the \emph{simple groups} in this context. Simple means that they can't be broken down any further into smaller groups - but they may actually be quite complicated indeed. Let's state the theorem:
+
+\paragraph{Classification Theorem}
+Every finite simple group is isomorphic to one of the following groups:
+\begin{itemize}
+\item A \emph{cyclic group} of prime order.
+\item An \emph{alternating group} of degree at least $5$.
+\item A group of the \emph{Lie type}.
+\item One of 27 of the so called \emph{sporadic} groups.
+\end{itemize}
+% Theorem from Weitz video at 1:46
+
+The first 3 items describe infinite families of groups whereas the last item, the sporadic groups, are outliers that do not fit into any of the systematic ways to construct groups. Let's now have a look at what kind of groups these classed s entail
+
+\paragraph{Cyclic Groups}
+The cyclic groups are named like that because they arise from cycling through their elements from a single generator [VERIFY]. We can think of them as encoding the rotational symmetries of regular polygons. We can also think of them in terms of modular addition [VERIFY]. TBC...
+% why do we need primes? With non-primes, modular addition gives also a group - but maybe then it's not a simple group but a composed group.
+
+\paragraph{Alternating Groups}
+
+\paragraph{Groups of the Lie Type}
+% should not to be confused with Lie groups?
+
+\paragraph{Sporadic Groups}
+
 
 % How does the "construction" work? Is it based on the cartesian product of the underlying sets where the individual group operations are applied element-wise?
 
@@ -342,7 +377,8 @@ One of the great achievements of modern mathematics is the classification of all
 % https://en.wikipedia.org/wiki/List_of_finite_simple_groups
 % https://en.wikipedia.org/wiki/Group_of_Lie_type
 
-
+% Weitz:
+% https://www.youtube.com/watch?v=UhE0t3SP6E8
 
 
 

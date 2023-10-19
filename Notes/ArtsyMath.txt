@@ -34,7 +34,11 @@ These graphs are done with manim as said in some response to a comment
 1:25:  sin(x^2 + y^2) = tan(sin(x+y)), aggressive scribble pattern of diagonals
 1:27:  tan(x^2 * sin(y^2)) = tan(y^2 * sin(x^2)), bubbly pattern
 1:29:  tan(x^2 + y^2) * cos(x + y) = cos(x^2 + y^2), radially outward radiation
-
+1:31:  tan(x * sin(y)) = tan(y * sin(y)), pattern
+1:33:  tan(cos(x^2) + cos(y^2)) = sin(x * y)
+1:35:  cos(cos(x^2) + y^2) = sin(sin(y^2) + x^2), pattern with nice eye shape in the middle
+1:39:  sin(2*y) - 2*sin(x) - y = y * c, c = -3...+1, patterns
+1:43:  0.1 * cos(c * x^x), c = 0..15, cosine upward sweeps
 
 From the comments:
 (sin(x)+(sin(x*2)+sin(x/2))/2)/2 > cos(y)  ..this is an inequality
@@ -48,4 +52,8 @@ Ideas and Questions:
  use them for R,G,B. It may also make sense to pass the final height function z = f(x,y) through 
  some sort of waveshaper to tame infinities at poles (if any) and/or to change the distribution
  of the contour lines.
+-Maybe we can also do some (loopable) animations by introducing a parameter into the formulas that 
+ varies over time. We could either vary the paremeter sinusoidally or use a formula that is itself
+ periodic in the time parameter. Maybe for the implicit formulas converted to f(x,y) = c, the 
+ parameter could be the contour level.
 -How an we create arbitrary shapes as envelopes from straight (or maybe slightly curved) lines?

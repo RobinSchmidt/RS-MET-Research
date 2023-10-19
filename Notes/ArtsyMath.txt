@@ -56,4 +56,8 @@ Ideas and Questions:
  varies over time. We could either vary the paremeter sinusoidally or use a formula that is itself
  periodic in the time parameter. Maybe for the implicit formulas converted to f(x,y) = c, the 
  parameter could be the contour level.
--How an we create arbitrary shapes as envelopes from straight (or maybe slightly curved) lines?
+-How an we create arbitrary shapes (maybe given implicitly) as envelopes from straight (or maybe 
+ slightly curved) lines?
+-How can we generalize this to 3D? We can draw curves in 3 space as well and then do a perspective
+ projection which we could animate by letting the camera rotate around the object. We could also 
+ create surfaces. Maybe that could be done best in Blender.

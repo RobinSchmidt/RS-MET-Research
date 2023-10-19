@@ -380,7 +380,7 @@ Ideas:
 -Algorithm for "multiplying" two groups, given their Cayley tables
  -Input is a pair of Cayley tables, output a single Cayley table
  -I think, we need to form something like the Kronecker product of the matrices? Each element
-  of one table should give rise to a block in the combined table by being mulitplied with an
+  of one table should give rise to a block in the combined table by being multiplied with an
   element from the other table...or something....not quite sure
   ...after that, we may or may not want to reorder the table..but maybe not - it seems more
   natural to leave it like that...but maybe with the reordering, we could make the operation
@@ -395,6 +395,12 @@ Ideas:
  -The algo can be used to combine more that 2 tables by taking the result of one application
   as input to the next iteration, i.e. we "fold" the array of input tables via the so
   defined the binary operation between two tables.
+-Or is group multiplication based on the cartesian set product of the underlying sets and the 
+ tuples use their respective group operations element-wise?
+ -Maybe try that with the rotations by multiples of 90° together with the reflections about lines
+  at angles of multiples of 60 degrees, i.e. combine the rotation symmetries of the square with the
+  reflection symmetries of the hexagon. What shape would obey this collection of symmeries? Maybe
+  a 12-gon because 12 is the lcm of 4 and 6?
 
 Questions:
 -Can we get even more generality by replacing some of the equalities by more general

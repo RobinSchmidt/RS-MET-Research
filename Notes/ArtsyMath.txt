@@ -39,6 +39,8 @@ These graphs are done with manim as said in some response to a comment
 1:35:  cos(cos(x^2) + y^2) = sin(sin(y^2) + x^2), pattern with nice eye shape in the middle
 1:39:  sin(2*y) - 2*sin(x) - y = y * c, c = -3...+1, patterns
 1:43:  0.1 * cos(c * x^x), c = 0..15, cosine upward sweeps
+...there are more...
+
 
 From the comments:
 (sin(x)+(sin(x*2)+sin(x/2))/2)/2 > cos(y)  ..this is an inequality
@@ -61,3 +63,8 @@ Ideas and Questions:
 -How can we generalize this to 3D? We can draw curves in 3 space as well and then do a perspective
  projection which we could animate by letting the camera rotate around the object. We could also 
  create surfaces. Maybe that could be done best in Blender.
+-Maybe make some sort of Fibonacci spirals, i.e. draw points (circles) in positions determined by 
+ the golden angle as seen in sunflowers. Maybe these points could be more complicated objects like
+ (Gaussian) blobs of varying size. Maybe we could also use a 2D Gaussian with elliptic contours and
+ give each ellipse its own rotation angle
+-Use fractals - Lindenmayer based and iteration based. ...somehow, not yet sure how

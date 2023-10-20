@@ -236,29 +236,42 @@ Another important class of groups is that of permutation groups. In a certain se
 OK - now we have seen a couple of examples of groups that seem to be very different. Yet, they all share a lot of commonalities which are distilled in group theory into theorems that abstract away from the concrete examples. The theorems will hold for all of these concrete groups and many more. That's the power of abstraction. Let's now take a deeper dive into what these commonalities are...
 
 \subsection{Generators}
+% Wrong: the set of generators is called generating set and its elements are called generators
+
 A generator of a group $\mathcal{G}$ is a subset of the underlying set $G$ which, by forming all possible products (if necessary, recursively) between the elements of this subset and their inverses, can generate all elements in the set $G$.
 
-\paragraph{Example 1} Recall the set of all rotations by multiples of 90 degrees, i.e. by 0, 90, 180 and 270 degrees. I have already mentioned that the whole set of these four rotations can be obtained by repeatedly chaining the 90 degree rotation with itself. After four such chainings, we arrive at 360 degrees and we can stop because at that point, we are back where we started. We have reached the identity element - a rotation of 360 degrees is the same as one by 0 degrees. Going any further, we would enter a loop and would not produce any new rotations that we didn't already produce before. Thus, the 90 degree rotation is a generator of the set of all rotations by multiples of 90 degrees. More precisely speaking, it's the singleton set containing only the 90 degree rotation which is our generator.
+\paragraph{Example 1} Recall the set of all rotations by multiples of 90 degrees, i.e. by 0, 90, 180 and 270 degrees. I have already mentioned that the whole set of these four rotations can be obtained by repeatedly chaining the 90 degree rotation with itself. After four such chainings, we arrive at 360 degrees and we can stop because at that point, we are back where we started. We have reached the identity element - a rotation of 360 degrees is the same as one by 0 degrees. Going any further, we would enter a loop and would not produce any new rotations that we didn't already produce before. Thus, the 90 degree rotation is a generator of the set of all rotations by multiples of 90 degrees. More precisely speaking, it's the singleton set containing only the 90 degree rotation which is our generator. The 270 degree rotation would also have worked as a generator. It generates the same elements but in a different order. The 180 degree rotation, on the other hand, does not generate the whole group. It generates only those multiples of 90 degrees which are also multiples of 180 degrees, namely 180 and then immediately 360 which is equivalent to 0 and then 180 again which completes the cycle. This example showed a finite group of 4 elements and we have found two different generators which were both singleton sets.
 
 \paragraph{Example 2} In general, generators are not single elements but sets and not all generators consist of only a single element. The previous example was a very simple special case. As a slightly more interesting example, consider the set of two $2 \times 2$ matrices:
 \begin{equation}
 S = \begin{pmatrix}  0 & -1 \\  1  &  0  \end{pmatrix}, \;
 T = \begin{pmatrix}  1 &  1 \\  0  &  1  \end{pmatrix} \quad
 \end{equation}
-we are allowed to form all possible products between these two matrices with as many factors as we like, for example, in no particular order: $S, T, S^{-1}, T^{-1}, S^2, S^3, T^7 S^{-3}, S T^{-1} S^2, S T^2, T^5 S^9, S^9 T^5, \ldots$. It turns out that this set of two matrices together with their inverses generates the group of all matrices with integer coefficients that have a determinant of $1$ where, as usual, the group operation is taken to be matrix multiplication. [ToDo: Explain the modular group and its relation to linear fractional transforms, lattices, etc.]
+we are allowed to form all possible products between these two matrices with as many factors as we like, for example, in no particular order: $S, T, S^{-1}, T^{-1}, S^2, S^3, T^7 S^{-3}, S T^{-1} S^2, S T^2, T^5 S^9, S^9 T^5, \ldots$. It turns out that this set of two matrices together with their inverses generates the group of all matrices with integer coefficients that have a determinant of $1$ where, as usual, the group operation is taken to be matrix multiplication. Note that this set of matrices is actually an infinite set. We have found an infinite group that is \emph{finitely generated} which is another important concept in group theory.
+
+[ToDo: Explain the modular group and its relation to linear fractional transforms, lattices, etc.]
 
 % https://en.wikipedia.org/wiki/Modular_group
+
+\paragraph{Example 3} In the first example, we saw that generators may not have to be unique. The same group can have many different generators.
+
+%The first example was a In the second example, we were dealing with an infinite group
+
+
+
+% -Introduce notation with angle brackets
+% -Explain how z,+ can be generates from 1 or from any set of numbers whose gcd is 1
+% -Motivated by tha, inroduce the idea of a minimal generator
+
+
+% https://en.wikipedia.org/wiki/Generating_set_of_a_group
+% https://mathworld.wolfram.com/GroupGenerators.html
+
 
 \subsubsection{Order of an Element}
 In finite groups, it turns out that we can take any element $a$ and if we repeatedly multiply it by itself (i.e. form powers of it), we will eventually hit the identity. At some point $m$, we will have $a^m = e$. That number $m$ is called the \emph{order} of the element $a$ in the group. The identity element $e$ has order $1$, of course. A word of caution: the term "order" in group theory is overloaded to mean two things: when we talk about the order of an element, it means what I just said. But when we talk about the order of a group as a whole, then the term means the number of elements in the group. Which sense is meant by the word "order" can be inferred from the "datatype" to which it is applied to - is it a group element or a group? That's exactly how overloading of function names works in programming. 
 
 
-%\subsection{Order}
-% 2 notions: of a group (number of elemnts), of an element (number of times to multiply by itself to rech e)
-
-
-% https://en.wikipedia.org/wiki/Generating_set_of_a_group
-% https://mathworld.wolfram.com/GroupGenerators.html
 
 
 

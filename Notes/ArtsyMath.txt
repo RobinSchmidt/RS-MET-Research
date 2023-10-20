@@ -38,7 +38,20 @@ These graphs are done with manim as said in some response to a comment
 1:33:  tan(cos(x^2) + cos(y^2)) = sin(x * y)
 1:35:  cos(cos(x^2) + y^2) = sin(sin(y^2) + x^2), pattern with nice eye shape in the middle
 1:39:  sin(2*y) - 2*sin(x) - y = y * c, c = -3...+1, patterns
-1:43:  0.1 * cos(c * x^x), c = 0..15, cosine upward sweeps
+1:43:  y = 0.1 * cos(c * x^x), c = 0..15, cosine upward sweeps
+1:48:  (x + a)^2 * (x^2 + y^2) = b^2 * x^2, a = 5...-5,  b = -5...5
+1:54:  x^2 + y^2 = a * cos(4*x), a = -90...+90, bunch of vertical ovals
+1:59:  y^4 - x^4 + a*y^2 + b*x^2, a = 9...-9, b = 9...-9, hyperbolas, than figure-8, the circle and 
+       lines
+2:03:  y = cos(a) * sin(b*x), a = -9...9, b = -9...9, sinusoids
+2:08:  a^3 - sin(a) = x * y, a = -2...2
+2:12:  (cos(a) * x)^2 + (cos(a) * y)^2 = a^2, a = -5...+5, ellipses
+2:17:  sin(x) + sin(y) = cos(a), a = -9...+9, periodic pattern of rounded diamonds
+2:23:  y = 2 * cos(sin(x)*a + a*y), a = 0...5, sine frieze
+2:30:  y = 2 * sin(a * cos(x)), a = 0...10, freq-mod sine
+2:35:  r = 3 * sin(a * t), a = 1...0, flowers from circles...sort of. nice animation
+2:50:  (x^2 + y^2)^2 + 18*(x^2 + y^2) - 27 = 8 * (x^3 - 3*x*y^2), triangle with inward bent sides
+
 ...there are more...
 
 

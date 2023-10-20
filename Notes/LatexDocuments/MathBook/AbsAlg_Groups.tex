@@ -178,7 +178,7 @@ The identity transformation is included as $r_0$. The fact that we can \emph{rep
 
 % https://proofwiki.org/wiki/Symmetry_Group_of_Square/Cayley_Table
 
-\paragraph{Functions}
+\subsubsection{Functions}
 The set of all invertible (i.e. bijective) functions from any set $S$ to itself forms a group under the operation of function composition. It has even a special name: it's called the symmetric group over $S$. Let's verify the axioms: Closure: chaining a bijective function from $S$ to $S$ with another bijective function from $S$ to $S$ gives of course a combined function that is again a bijective function from $S$ to $S$. Associativity: For three functions $f,g,h$, if you apply ($f$-after-$g$) after $h$, it's the same as applying $f$ after ($g$-after-$h$). Saying it like this makes it obvious that function composition is actually always associative - no matter whether the functions are bijective or not. It's like putting on pants and shoes first and then a jacket vs putting on pants first and then shoes and a jacket. The neutral element is just the identity function and it is indeed invertible (it's its own inverse) and the existence of inverse functions is assured by requiring the functions in our set to be invertible (Duh! Thank you Captain Obvious!).
 
 \paragraph{} There are also some subsets of the big set of all invertible functions with particular functional forms that also form groups under composition. Consider the real powers of $x$ over the nonnegative real numbers: $f: \mathbb{R}^+_0 \rightarrow \mathbb{R}^+_0, \; f(x) = x^p, \; p \in \mathbb{R}$. Closure is easily verified: $(x^p)^q = x^{p q}$. Existence of inverses: $(x^p)^{-1} = x^{\frac{1}{p}}$. Note the clash of notations here: On the left hand side, the $...^{-1}$ stands for function inversion and \emph{not} for the exponent $-1$! If it would mean an exponent, then the right hand side should be $x^{-p}$ but it actually is $x^{\frac{1}{p}}$, i.e. the $p$-th root of $x$. That's a pitfall which I fell into myself when I was initially writing this section. The identity is in set as $f(x) = x = x^1$ and associativity holds like it does for any function. We need to restrict ourselves to nonnegative real inputs because when we allow negative arguments, even integer powers are not invertible anymore and roots and other fractional powers become complex and multivalued, so we rule such cases out.
@@ -187,7 +187,7 @@ The set of all invertible (i.e. bijective) functions from any set $S$ to itself 
 
 %https://en.wikipedia.org/wiki/Symmetric_group
 
-\paragraph{Permutations}
+\subsubsection{Permutations}
 Another important class of groups is that of permutation groups. In a certain sense, they can be seen as the prototypical examples of all groups. Permutation groups were studied before group theory was even a thing and in hindsight, it turned out that important results that were found for these permutation groups were in fact more general and apply to all groups. A permutation group consists of the set of all permutations, i.e. re-orderings, that we can apply to an ordered collection of $n$ objects. It is clear that when we permute (reorder) such a collection twice in a row, the total result is again a permutation (reordering). So, closure is verified. It's also clear that we can invert any reordering by an action that is again a permutation. So, existence of inverses is verified. The do-nothing action also counts as a permutation - that's our neutral element. Associativity checks also out because a permutation is just a special kind of function and as we have just seen, function composition is always associative ...TBC...
 
 %That's why an important theorem of group theory, namely Lagrange's theorem, is named after Joseph-Louis Lagrange
@@ -202,6 +202,13 @@ Another important class of groups is that of permutation groups. In a certain se
 % https://mathresearch.utsa.edu/wiki/index.php?title=Composition_of_Functions
 
 % use the Klein Four group as example...or maybe the group of symmetries of a triangle
+
+
+\subsubsection{Rubik's Cube} Rubik's Cube is often used as an example for group theory in popular and recreational math contexts. It is mechanical puzzle made of a cube in which each face is segmented into a 3-by-3 grid of little squares. Each square has one of 6 colors. In its solved position, each of the 6 faces has only squares of one single color. All 6 faces can be rotated forward and backward by 90 degrees. The challenge is to start with a cube with random distribution of the colored squares and to turn it back into its solved position. The connection to group theory is that the combinations of moves, i.e. the rotations of the faces, can be regarded as group elements. For each combination of moves, there is a corresponding combination of moves to undo it - just apply the opposite rotations in reverse order. So, existence of inverses is verified. The other group axioms are also readily verified.
+
+% https://en.wikipedia.org/wiki/Rubik%27s_Cube#Mathematics
+% https://en.wikipedia.org/wiki/Rubik%27s_Cube_group
+
 
 \paragraph{}
 OK - now we have seen a couple of examples of groups that seem to be very different. Yet, they all share a lot of commonalities which are distilled in group theory into theorems that abstract away from the concrete examples. The theorems will hold for all of these concrete groups and many more. That's the power of abstraction. Let's now take a deeper dive into what these commonalities are...

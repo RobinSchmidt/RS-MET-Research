@@ -5,7 +5,7 @@ In the realm of abstract algebra, a \emph{field} is a ring with some additional 
 \item Every element except the additive neutral element has a multiplicative inverse element.
 \item Multiplication is commutative.
 \end{itemize}
-Because these properties are stated at pretty high level, let's state them boiled down to a lower level:
+Because these properties are stated at a pretty high level, let's state them boiled down to a lower level:
 
 \medskip
 \begin{tabular}{l l}
@@ -17,6 +17,10 @@ Associativity of addition:
 & $\forall a,b,c \in \mathbb{F}: \;  (a + b) + c = a + (b + c)$   \\
 Associativity of multiplication: 
 & $\forall a,b,c \in \mathbb{F}: \;  (a \cdot b) \cdot c = a \cdot (b \cdot c)$   \\
+Commutativity of addition: 
+& $\forall a,b \in \mathbb{F}: \;  a + b = b + a$   \\
+Commutativity of multiplication: 
+& $\forall a,b \in \mathbb{F}: \;  a \cdot b = b \cdot a$   \\
 Existence of additive identity: 
 & $\exists 0 \in \mathbb{F}: \; (\forall a \in \mathbb{F}: 0 + a = a)$ \\
 Existence of multiplicative identity: 
@@ -25,12 +29,15 @@ Existence of additive inverses:
 & $\forall a \in \mathbb{F}: \; (\exists (-a) \in \mathbb{F}: (-a) + a = 0 )$ \\
 Existence of multiplicative inverses: 
 & $\forall a \in \mathbb{F}: \; (\exists a^{-1} \in \mathbb{F}: a^{-1} \cdot a = 1 )$ \\
-
-
-...
+Multiplication distributes over addition: 
+& $\forall a,b,c \in R: \;  
+a \cdot (b + c) = a \cdot b + a \cdot c, \; 
+(b + c) \cdot a = b \cdot a + c \cdot a$
 \end{tabular}
 \medskip
 
+
+...todo: verify that these are all
 
 
 % after stating the requirements in condensed form like "is commutative group for +", ... give also the whole list

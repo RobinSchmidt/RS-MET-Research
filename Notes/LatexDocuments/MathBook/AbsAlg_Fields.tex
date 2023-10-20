@@ -1,4 +1,4 @@
-\section{Field Theory}
+\section{Fields}
 In the realm of abstract algebra, a \emph{field} is a ring with some additional requirements. It must be a unital ring, which means that a multiplicative identity (i.e. neutral element) must exist. We will also require that all elements except the additive identity must have multiplicative inverses. The exception is motivated by the idea that division by zero is impossible. It turns out that this will case for any field if we want $a \cdot 0 = a \cdot (0 + 0) = a \cdot 0 + a \cdot 0$ to be true for any $a$ that is an element of our field. Furthermore, we require that the multiplication is also commutative. The prototypical examples of fields are the rational numbers $\mathbb{Q}$ and the real numbers $\mathbb{R}$. Whenever we have a field, we can do computations with the elements of the field in the same way that we are used to from elementary school. That means, we can add, subtract, multiply and divide to our hearts content with the sole exception of division by zero. As with rings, we denote a field as a triple $(\mathbb{F}, +, \cdot)$ made from an underlying set $\mathbb{F}$ and two operations which we call addition and multiplication. Formally, the requirements for a field are:
 \begin{itemize}
 \item $(\mathbb{F},+,\cdot)$ forms a unital ring, i.e. a ring with a multiplicative neutral element.
@@ -28,26 +28,18 @@ Existence of multiplicative identity:
 Existence of additive inverses: 
 & $\forall a \in \mathbb{F}: \; (\exists (-a) \in \mathbb{F}: (-a) + a = 0 )$ \\
 Existence of multiplicative inverses: 
-& $\forall a \in \mathbb{F}: \; (\exists a^{-1} \in \mathbb{F}: a^{-1} \cdot a = 1 )$ \\
+& $\forall a \in \mathbb{F} \setminus \{0\}: \; (\exists a^{-1} \in \mathbb{F}: a^{-1} \cdot a = 1 )$ \\
 Multiplication distributes over addition: 
 & $\forall a,b,c \in R: \;  
 a \cdot (b + c) = a \cdot b + a \cdot c, \; 
 (b + c) \cdot a = b \cdot a + c \cdot a$
 \end{tabular}
 \medskip
+[...todo: verify that the list si complete]
 
-
-...todo: verify that these are all
-
-
-% after stating the requirements in condensed form like "is commutative group for +", ... give also the whole list
-
-%There are some contrived, trivial edge cases where it's possible to divide by zero but these are not interesting enough to worry about [VERIFY].
-
-
-
-%We will now assume that a multiplicative neutral element
-
+Any mathematical structure that satisfies these requirements is a structure in which can do calculations and solve equations in the same way as we are used to from the real numbers.
+ 
+%As usual, $\mathbb{F}^*$ is a shorthand for $\mathbb{F} \setminus \{0\}$.
 
 \begin{comment}
 
@@ -57,24 +49,6 @@ Explain the edge case where additive neutral elements have a multiplicative inve
 
 The notation $a^{-1}$ is now used for the multiplicative inverse of $a$, so we need a new notation for the additive inverse. We will use $-a$ to denote the additive inverse of $a$. In the axiom about multiplicative inverses, we have excluded the $0$ element. The additive neutral element (i.e. zero) is the only element for which we do not require to have a multiplicative inverse. It can in fact be shown that - some uninteresting trivial edge cases aside - the additive neutral element cannot possibly have a multiplicative inverse in any ring. 
 
-% The additive neutral element
-%  the additive inverse of $a$ is denoted as $-a$
-%The nonzero rationals (or reals) also form a group under multiplication.
-
-
-Closure under multiplication: 
-& $\forall a,b \in R: \; a \cdot b \in R$  \\	
-Multiplication is associative: 
-& $\forall a,b,c \in R: \;  (a \cdot b) \cdot c = a \cdot (b \cdot c)$   \\
-
-% Nope - that's an additional axiom for rings:
-%Multiplicative inverse elements exist: 
-%& $\forall a \in R \setminus \{0\} : \; (\exists a^{-1} \in R: a^{-1} \cdot a = 1 )$ \\
-
-% Sometimes required:
-%A multiplicative neutral element exists: 
-%& $\exists 1 \in R: \; (\forall a \in R: 1 \cdot a = a)$ \\
-% but sometimes, these are also called monoids (or ring with unity?)
 
 
 Warum kann man nicht durch null teilen? Oder: Was sind Zahlen eigentlich?

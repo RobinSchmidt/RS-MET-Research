@@ -186,13 +186,11 @@ The identity transformation is included as $r_0$. The fact that we can \emph{rep
 % https://proofwiki.org/wiki/Symmetry_Group_of_Square/Cayley_Table
 
 \subsubsection{Isometries}
-The rotational and reflectional symmetries of regular polygons in $\mathbb{R}^2$ are examples of a broader class of geometric transformations that form a group under composition, namely the isometries of $n$-dimensional Euclidean spaces $\mathbb{R}^n$. An \emph{isometry} is a general geometric transformation the keeps distances unchanged. Distances are defined by a metric and general "iso" means that something is unchanged, hence the name isometry as a shorthand for isometric transformation. Reflections and rotations qualify as isometries but they do not encompass all possible isometries because the translations are missing.
+The rotational and reflectional symmetries of regular polygons in $\mathbb{R}^2$ are examples of a broader class of geometric transformations that form a group under composition, namely the isometries of $n$-dimensional Euclidean spaces $\mathbb{R}^n$. An \emph{isometry} is a general geometric transformation the keeps distances unchanged. Distances are defined by a metric and general "iso" means that something is unchanged, hence the name isometry as a shorthand for isometric transformation. Reflections and rotations qualify as isometries but they do not encompass all possible isometries because the translations are missing. If one allows for translations as well and at the same time generalizes to Euclidean spaces of arbitrary dimension $n$, one arrives at the group that encompasses all isometric transformations of $\mathbb{R}^n$. This group is also called the Euclidean group and denoted by $E(n)$ and embodies the group theoretic perspective on Euclidean geometry.
 
+%One could say that in math terms, a "symmetry" is a more general concept than an "isometry" wheareas in colloquial language, a symmetry is usually more specific. In colloquial terms, we usually mean reflectional symmetry, sometimes we also include rotational ones but rarely do we call a translational symmetry by that name. 
 
-...TBC...
-
-% One could say that in math terms, a symmetry is a more general concept than an isometry wheareas in colloquial language, a symmetry is usually more specific. In colloquial terms, we usually mean reflectional symmetry, sometimes we also include rotational ones but rarely do we call a translational symmetry by that name.
-
+% https://en.wikipedia.org/wiki/Euclidean_group
 
 \subsubsection{Functions}
 The set of all invertible (i.e. bijective) functions from any set $S$ to itself forms a group under the operation of function composition. It has even a special name: it's called the symmetric group over $S$. Let's verify the axioms: Closure: chaining a bijective function from $S$ to $S$ with another bijective function from $S$ to $S$ gives of course a combined function that is again a bijective function from $S$ to $S$. Associativity: For three functions $f,g,h$, if you apply ($f$-after-$g$) after $h$, it's the same as applying $f$ after ($g$-after-$h$). Saying it like this makes it obvious that function composition is actually always associative - no matter whether the functions are bijective or not. It's like putting on pants and shoes first and then a jacket vs putting on pants first and then shoes and a jacket. The neutral element is just the identity function and it is indeed invertible (it's its own inverse) and the existence of inverse functions is assured by requiring the functions in our set to be invertible (Duh! Thank you Captain Obvious!).
@@ -258,6 +256,11 @@ In finite groups, it turns out that we can take any element $a$ and if we repeat
 %\subsection{Order}
 % 2 notions: of a group (number of elemnts), of an element (number of times to multiply by itself to rech e)
 
+
+
+
+
+
 \subsection{Subgroups}
 If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough. 
 
@@ -318,8 +321,6 @@ Not all subgroups are created equal. There are certain special types of subgroup
 % -This can also be stated as: they are invariant under conjugation
 % -These are the basis for quotient groups
 
-
-
 \paragraph{Commutator Subgroup} The commutator subgroup of a group $G$ is the subgroup generated by all of its commutators. A \emph{commutator} $c$ of a group $G$ is an element that is generated from two elements $a,b$ via the commutator operation $[a,b] = a^{-1} b^{-1} a b$. If and only if $a$ and $b$ commute, i.e. iff $ab = ba$, then their commutator will be the identity element $e$. If they don't commute, then it will be some other element. Now we can produce the set of all possible commutators. In general, this will give a subset of $G$ which is not necessarily a subgroup. But if we use this subset as generator, we will get a subgroup and that group is called the commutator subgroup. A group that is equal to it own commutator subgroup, i.e. a group that can be fully generated by the set of its commutators, is called a \emph{perfect group}.
 
 % https://en.wikipedia.org/wiki/Commutator_subgroup
@@ -342,12 +343,11 @@ The \emph{center} of a group $G$ is the set of elements that commute with every 
 % https://en.wikipedia.org/wiki/Centralizer_and_normalizer
 % https://math.stackexchange.com/questions/1334437/difference-between-centralizer-and-center-groups
 
-
-\paragraph{Characteristic Subgroup}
+%\paragraph{Characteristic Subgroup}
+%The commutator and center subgroups are examples of so called characteristic subgroups.
 % https://en.wikipedia.org/wiki/Characteristic_subgroup
 % https://en.wikipedia.org/wiki/Automorphism
-
-
+% https://en.wikipedia.org/wiki/Free_group
 
 \subsubsection{Quotient Groups}
 We are now interested in how we can break down certain groups into smaller constituent groups. 
@@ -366,15 +366,20 @@ We are now interested in how we can break down certain groups into smaller const
 
 
 
+
+
+
 \subsection{Morphisms (Iso-, Homo- and more)}
-% Maybe this should go before the subsection about subgroups because automorphisms are referenced there
-Morphisms in group theory are functions $f$ that map from the underlying set of one group to the underlying set of another group. In group theory, you don't commonly encounter the term morphism all by itself. It's usually prefixed by some qualifier because we are mostly interested in functions that satisfy certain constraints. The most important specimen are isomorphisms and homomorphisms. There are also epimorphisms, monomorphisms and automorphisms. Let's see what they are.
+
+% Maybe this should go before the subsection about subgroups because automorphisms are referenced there. But no - a theorem stated here requires the notion of a normal subgroup. We have a cross-referencing problem here
+
+Morphisms in group theory are functions $f$ that map from the underlying set of one group to the underlying set of another group. In group theory, you don't commonly encounter the term morphism all by itself. It's usually prefixed by some qualifier because we are mostly interested in functions that satisfy certain constraints. The most important specimen are \emph{isomorphisms} and \emph{homomorphisms}. There are also \emph{epimorphisms}, \emph{monomorphisms} and \emph{automorphisms}. Let's see what they are.
 
 \subsubsection{Homomorphisms}
 
 Assume we have a group $\mathcal{G} = (G, \circ)$ and another group $\mathcal{H} = (H, \diamond)$. Assume furthermore that we have a function $f: G \rightarrow H$ that maps elements from $G$ to elements from $H$. That function is called a group homomorphism from $G$ to $H$ if it has the following property for all $a,b \in G$:
 \begin{equation}
-f(a \circ b) = f(a) \diamond f(b)
+	f(a \circ b) = f(a) \diamond f(b)
 \end{equation}
 This equation says that it doesn't matter whether we firstly combine $a$ and $b$ in $G$ via $\circ$ and then secondly map the result over to $H$ via $f$ or if we firstly map $a$ and $b$ separately over to $H$ via $f$ and then secondly combine them over there via $\diamond$. The end result should be the same in both cases. Such a function $f$ is constrained to preserve the structure of group $G$ while mapping over to group $H$ and it may or may not exist. If such a homomorphism does exist then we can find the structure of group $G$ within group $H$ in the sense that the image of $G$ is a subgroup of $H$. Note that, as promised, I'm sloppy with using $G$ and $H$ as stand-in in some places where it would actually be more correct to write $\mathcal{G}$ and $\mathcal{H}$. Formally, it makes no sense to talk about a subgroup of $H$ because $H$ is just a set and the group is actually the pair $\mathcal{H}$. But to state that stuff formally correctly would be very awkward and confusing. Formally correctly, one would have to say that $f$ maps $G$ to a subset of $H$ and that subset happens to be the underlying set of a subgroup of $\mathcal{H}$. Nobody wants to speak like that so this slight sloppiness is quite common and acceptable in group theory [VERIFY!]. Anyway - the essence of a homomorphism is that the function $f$ maps from $G$ to $H$ and thereby preserves the structure of $\mathcal{G}$ within $\mathcal{H}$ - and such a thing may or may not be possible for two given groups at hand. If it is possible, then we may say that $\mathcal{H}$ is homomorphic to $\mathcal{G}$ which means that we find the structure of $\mathcal{G}$ within $\mathcal{H}$ [VERIFY!].
 
@@ -384,7 +389,7 @@ Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and
 % maybe say something about the logarithm as inverse homomorphism...but maybe later
 % verify that neutral and inverse elements get mapped to their counterparts
 
-\paragraph{} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The kernel of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ k \in G: f(k) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. Now we can say that: (1) The image of $G$ under $f$ is a subgroup of $H$. (2)  The kernel of $f$ is a normal subgroup of $G$.
+\paragraph{} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The \emph{kernel} of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ k \in G: f(k) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. Now we can say that: (1) The image of $G$ under $f$ is a subgroup of $H$. (2)  The kernel of $f$ is a normal subgroup of $G$.
 
 %https://mathworld.wolfram.com/GroupHomomorphism.html
 
@@ -398,6 +403,7 @@ That's why isomorphisms are so important in group theory. They are a tool to con
 
 % https://en.wikipedia.org/wiki/Automorphism
 % https://en.wikipedia.org/wiki/Automorphism_group
+
 
 
 \subsection{Representation Theory}
@@ -439,6 +445,7 @@ A Lie group is a group, whose underlying set may be interpreted as a set of poin
 % https://en.wikipedia.org/wiki/3D_rotation_group
 % https://en.wikipedia.org/wiki/Orthogonal_group
 % https://en.wikipedia.org/wiki/Orthogonal_group#Special_orthogonal_group
+% https://en.wikipedia.org/wiki/Poincar%C3%A9_group
 
 % -Give examples of Lie groups
 %  -simple construction: take an existing continuous Lie group and replace R with a finite field

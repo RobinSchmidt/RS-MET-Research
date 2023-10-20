@@ -257,11 +257,15 @@ In finite groups, it turns out that we can take any element $a$ and if we repeat
 % 2 notions: of a group (number of elemnts), of an element (number of times to multiply by itself to rech e)
 
 
-
+% https://en.wikipedia.org/wiki/Generating_set_of_a_group
+% https://mathworld.wolfram.com/GroupGenerators.html
 
 
 
 \subsection{Subgroups}
+
+% https://www.youtube.com/watch?v=KufsL2VgELo&t=1138s
+
 If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough. 
 
 \medskip
@@ -271,24 +275,35 @@ As is often the case in mathematical definitions, the edge cases are included in
 The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using a machinery arising from the idea subgroups. Infinity cannot be factorized but this factorization is the thing we are now interested in. Therefore, we'll now focus on finite groups.
 
 \paragraph{Example}
-Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to understand as the set of integers modulo $12$ with modular addition modulo $12$ as group operation. Because $12$ has many divisors, $\mathcal{G}$ has quite a lot of (nontrivial) subgroups. You can easily verify that $\{0,2,4,6,8,10\}, \{0,3,6,9\}, \{0,4,8\}, \{0,6\}$ are subgroups of that group. As any group, it has also the trivial subgroups $\{ 0 \}$ and $\mathcal{G}$ itself but we are not interested in them. ...TBC...
+Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to understand as the set of integers modulo $12$ with modular addition modulo $12$ as group operation. Because $12$ has many divisors, $\mathcal{G}$ has quite a lot of (nontrivial) subgroups. You can easily verify that $\{0,2,4,6,8,10\}, \{0,3,6,9\}, \{0,4,8\}, \{0,6\}$ are subgroups of that group. These subgroups are isomorphic to $(\mathbb{Z}_{6}, +)$, $(\mathbb{Z}_{4}, +)$,$(\mathbb{Z}_{3}, +)$, $(\mathbb{Z}_{2}, +)$ respectively [VERIFY!]. As a general rule, subgroups of cyclic groups are themselves (isomorphic to) cyclic groups [VERIFY]. As any group, $\mathcal{G}$ has also the trivial subgroups $\{ 0 \}$ and $\mathcal{G}$ itself but we are not interested in them. 
 
-% ToDo:
-% explain what normal subgroups are
+%...TBC...
+
+% https://math.stackexchange.com/questions/1718041/list-all-subgroups-of-mathbb-z-6-and-mathbb-z-8
+% Maybe use Z_6 instead because we don'T want to use up too much space for the tables.
+% It says, that cyclic groups have cyclic subgroups
 
 % https://math.stackexchange.com/questions/208063/calculation-of-subgroups-of-z-12
 % https://www.quora.com/How-do-you-find-the-subgroups-of-z12
-
 %It's Cayley table (I don't want to call it multiplication table here) reveals some interesting structure
 
-% maybe use +_{12} - a plus with subscript 12 to denote modular additiona...but mayb not
+% maybe use +_{12} - a plus with subscript 12 to denote modular addition...but mayb not
 
 % is (\mathbb{Z}_{12}, +) the same group as in Weitz video - the rotations of the tetraeder?
 % https://www.youtube.com/watch?v=UhE0t3SP6E8
 
-% Lagrange's Theorem
+% and/or is it isomorphic to D_6, the 12 symmetries of a hexagon?
+% https://mathworld.wolfram.com/DihedralGroupD6.html
+% https://en.wikipedia.org/wiki/Dihedral_group_of_order_6
+% https://en.wikipedia.org/wiki/Dihedral_group
 
-% https://www.youtube.com/watch?v=MAcdesa9RqA at around 40:00 he gives a single criterion for showing that somethings is a subgroup (after that, a similar pair of conditions for subrings)
+% https://en.wikipedia.org/wiki/Tetrahedral_symmetry
+
+% hmm - no - I don't think so. Z_12 is isomorphic to the group tetrahedron symmetries but D_6 seems to be a different group of order 12. 
+% Maybe compute its subgroups, too
+
+
+% https://www.youtube.com/watch?v=MAcdesa9RqA at around 40:00 he gives a single criterion for showing that something is a subgroup (after that, a similar pair of conditions for subrings)
 
 \paragraph{Langrange's Theorem} If $\mathcal{G}$ is a finite group of order $g$ and $\mathcal{S}$ is a subgroup of  $\mathcal{G}$ of order $s$, then $g$ is a multiple of $s$.
 
@@ -299,18 +314,22 @@ In other words, the theorem says that the order of the full group must be divisi
 
 
 \subsubsection{Cosets}
+A subgroup $H$ partitions its parent group $G$ into equally sized subsets which all have a size of $|G| / |H|$. This partitioning is achieved by picking an element $a$ of $G$ that is not in $H$ and multiplying it by all elements of $H$. For the \emph{left cosets}, the picked element $a$ should be the left factor. That means, after picking $a$ from $G \setminus H$, one forms all possible products $a h$ where $h \in H$. The resulting set of elements is called the left coset of $H$ for the coset representative $a$. Of course, $a$ itself will be in the coset which it represents because $H$, by virtue of being a subgroup, contains the neutral element. The other elements that ended up in the coset can be considered as equivalent to $a$ in the sense of being in an equivalence class with $a$ serving as the representative. It turns out that any other element of the so generated coset, let's call it $a'$, would be just as good as representative. Would we have picked $a'$ instead of $a$, we would have obtained the exact same coset [VERIFY]. But there may still be other elements of $G$ that have not yet been generated. Now we pick one of these left over elements, say $b$, and do the same procedure again. Doing so, we will obtain another coset with $b$ as representative. We continue this way until we exhausted the whole group $G$, i.e. have generated all elements of the group and placed each into one of the cosets.
+
+% https://en.wikipedia.org/wiki/Coset
+% https://en.wikipedia.org/wiki/Equivalence_class
+
+%This partitioning is achieved by picking an element of $G$ that is not in $H$ and multiplying is from the left by all elements of $H$
+
+% by way of multiplying...TBC..
+
+% the size of the subsets is given by $|G| / |S|$
+% the cosets are "shifted copies" of the subgroup, notation b + <a>
+% 0 + <a> counst as its own coset
 
 % Riley, pg 1066:
 %% Two cosets are either disjoint or identical
 % Left and right cosets are generally different. If they happen to the same for some subgroup, the subgroup is called a normal subgroup (verify)
-
-% https://en.wikipedia.org/wiki/Normal_subgroup
-% https://en.wikipedia.org/wiki/Center_(group_theory)
-% https://en.wikipedia.org/wiki/Commutator_subgroup
-% https://en.wikipedia.org/wiki/Quotient_group
-% https://en.wikipedia.org/wiki/Direct_product_of_groups
-% https://en.wikipedia.org/wiki/Semidirect_product
-
 
 
 \subsubsection{Special Subgroups}
@@ -320,6 +339,9 @@ Not all subgroups are created equal. There are certain special types of subgroup
 % -Subgroups for which the left and right cosets coincide
 % -This can also be stated as: they are invariant under conjugation
 % -These are the basis for quotient groups
+% https://en.wikipedia.org/wiki/Normal_subgroup
+
+
 
 \paragraph{Commutator Subgroup} The commutator subgroup of a group $G$ is the subgroup generated by all of its commutators. A \emph{commutator} $c$ of a group $G$ is an element that is generated from two elements $a,b$ via the commutator operation $[a,b] = a^{-1} b^{-1} a b$. If and only if $a$ and $b$ commute, i.e. iff $ab = ba$, then their commutator will be the identity element $e$. If they don't commute, then it will be some other element. Now we can produce the set of all possible commutators. In general, this will give a subset of $G$ which is not necessarily a subgroup. But if we use this subset as generator, we will get a subgroup and that group is called the commutator subgroup. A group that is equal to it own commutator subgroup, i.e. a group that can be fully generated by the set of its commutators, is called a \emph{perfect group}.
 
@@ -361,8 +383,9 @@ We are now interested in how we can break down certain groups into smaller const
 % https://www.math3ma.com/blog/whats-a-quotient-group-really-part-1
 % https://math.stackexchange.com/questions/625433/what-does-factorization-of-a-group-mean
 % https://en.wikipedia.org/wiki/Algebraic-group_factorisation_algorithm
-
-
+% https://en.wikipedia.org/wiki/Direct_product_of_groups
+% https://en.wikipedia.org/wiki/Semidirect_product
+% https://www.youtube.com/watch?v=KufsL2VgELo at 25:40
 
 
 
@@ -588,5 +611,8 @@ https://www.youtube.com/watch?v=NrtN-l9ZDtU  The Coxeter Classification 2/2: Who
  
 Euler's formula with introductory group theory [by 3Blue1Brown]
 https://www.youtube.com/watch?v=mvmuCPvRoWQ
+
+Researchers Use Group Theory to Speed Up Algorithms — Introduction to Groups [by Nemean]
+https://www.youtube.com/watch?v=KufsL2VgELo
 
 \end{comment}

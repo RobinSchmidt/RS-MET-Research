@@ -138,7 +138,7 @@ But be that as it may. Multiplication tables are an important tool in the analys
 Now that we have defined what a group is in an abstract sense and have a tool in hand to specify a group, let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
 
 \subsubsection{Numbers}
-We have already mentioned that the integer numbers form a group under addition. So do the rational numbers, real numbers and complex numbers. So, in math notation that means:  $(\mathbb{Z}, +), (\mathbb{Q}, +), (\mathbb{R}, +), (\mathbb{C}, +)$ all form groups. These latter three number systems also form groups under multiplication if we remove the number zero. If we denote by a superscript asterisk the set with the zero removed, for example $\mathbb{Q}^{\ast} = \mathbb{Q} \setminus \{0\}$, then we can state with math notation: The pairs $(\mathbb{Q}^{\ast}, \cdot), (\mathbb{R}^{\ast}, \cdot), (\mathbb{C}^{\ast}, \cdot)$ also form groups. If we want to interpret these multiplicative group as symmetries, then the invariant property would be the ratio of pairs of numbers. A bit less familiar, but very important in number theory and some areas of computer science are the modular integers. I don't want to digress too much into explaining what they are here at this point, but if know what they are, then let me tell you that they also do form groups under modular addition. If the modulus is prime, they also form groups under modular multiplication. They actually even form fields, in this case - a more complex algebraic structure that we will encounter later. There are many more number systems that have the structure of a group and often even more complex structures. 
+We have already mentioned that the integer numbers form a group under addition. So do the rational numbers, real numbers and complex numbers. So, in math notation that means:  $(\mathbb{Z}, +), (\mathbb{Q}, +), (\mathbb{R}, +), (\mathbb{C}, +)$ all form groups. These latter three number systems also form groups under multiplication if we remove the number zero. If we denote by a superscript asterisk the set with the zero removed, for example $\mathbb{Q}^{\ast} = \mathbb{Q} \setminus \{0\}$, then we can state with math notation: The pairs $(\mathbb{Q}^{\ast}, \cdot), (\mathbb{R}^{\ast}, \cdot), (\mathbb{C}^{\ast}, \cdot)$ also form groups. If we want to interpret these multiplicative group as symmetries, then the invariant property would be the ratio of pairs of numbers. A bit less familiar, but very important in number theory and some areas of computer science are the modular integers. I don't want to digress too much into explaining what they are here at this point, but if know what they are, then let me tell you that they also do form groups under modular addition. If the modulus is prime, they also form groups under modular multiplication when the zero is removed. They actually even form fields, in this case - a more complex algebraic structure that we will encounter later. %There are many more number systems that have the structure of a group and often even more complex structures. 
 
 \subsubsection{Matrices}
 Consider the set of all regular (i.e. invertible) $n \times n$ matrices for some $n$. This set forms a group under matrix multiplication. This group is clearly not commutative because we know that matrix multiplication isn't. You may find many different subsets of this group of \emph{all} invertible matrices which are closed under matrix multiplication and inversion and which contain the identity matrix. These subsets may be finite or infinite. Let's take $n=2$. A simple example for a finite subset of that kind is given by the set of matrices that rotate by multiples of 90 degrees:
@@ -152,6 +152,7 @@ I have suggestively written the index as superscript like an exponent because th
 
 % Maybe introduce a bit of jargon like SO(2), SU(2), ...but maybe do that in a later section about Lie groups
 
+% Maybe mention that the group consists topologically of two disconnected parts because when going from positive to negative determinants we must cross the matrices with zero determinant which do not belong to the set. It's like with the multiplicative group of real numbers. The number zero is removed and therefore splits the set of numbers into disconnected segments (maybe mention that in the paragraph about numbers already). I think, the boundary between the two segments is an n-1 dimensional hyperplane? Verify this! In the case of 2x2 matrices, we deal with a 4-dimensional space of matrices. Those with dterminant zeor must satisy ad - bc = 0. I think, if we fix a,b,c, then we can solve for d hence the boundary is 3-dimensional.
 
 
 % bring the set of rotations by multiples of 90° as example. point out that one of the matrices behaves like the imaginary unit. give the cayley table, call the matrices e, r, r^2, r^3...hmm..maybe using I for the identity is better than e
@@ -172,7 +173,7 @@ c_k = \cos(\theta_k), s_k = \sin(\theta_k), \quad
 r_k = \begin{pmatrix}  c_k & -s_k \\  s_k  &  c_k  \end{pmatrix}, \;
 s_k = \begin{pmatrix}  c_k &  s_k \\  s_k  & -c_k  \end{pmatrix} \quad
 \end{equation}	
-The identity transformation is included as $r_0$. The fact that we can \emph{represent} the symmetries via matrices is a little foreshadowing into the field of representation theory which asserts that \emph{every} group can be represented as a group of matrices where the group operation translates to matrix multiplication. The symmetry groups of regular polygons are also called \emph{dihedral} groups. The etymology has something to do with polygons having two ("di") faces ("hedrons") but I don't really get what this has to do with it. The explanations I have seen so far are not really satisfying. [ToDo: try to figure it out]
+The identity transformation is included as $r_0$. The fact that we can \emph{represent} the symmetries via matrices is a little foreshadowing into the field of representation theory which asserts that \emph{every} group can be represented as a group of matrices where the group operation translates to matrix multiplication [VERIFY!]. The symmetry groups of regular polygons are also called \emph{dihedral} groups. The etymology has something to do with polygons having two ("di") faces ("hedrons") but I don't really get what this has to do with it. The explanations I have seen so far are not really satisfying. [ToDo: try to figure it out]
 
 % https://en.wikipedia.org/wiki/Dihedral_group
 % https://en.wiktionary.org/wiki/dihedral_group
@@ -185,7 +186,7 @@ The identity transformation is included as $r_0$. The fact that we can \emph{rep
 % https://proofwiki.org/wiki/Symmetry_Group_of_Square/Cayley_Table
 
 \subsubsection{Isometries}
-The rotational and reflectional symmetries of regular polygons in $\mathbb{R}^2$ are examples of a broader class of geometric transformations that for a group under composition, namely the isometries of $n$-dimensional Euclidean spaces $\mathbb{R}^n$. An \emph{isometry} is a general geometric transformation the keeps distances unchanged. Distances are defined by a metric and general "iso" means that something is unchanged, hence the name isometry. Reflections and rotations qualify as isometries but they do not encompass all possible isometries because the translations are missing.
+The rotational and reflectional symmetries of regular polygons in $\mathbb{R}^2$ are examples of a broader class of geometric transformations that form a group under composition, namely the isometries of $n$-dimensional Euclidean spaces $\mathbb{R}^n$. An \emph{isometry} is a general geometric transformation the keeps distances unchanged. Distances are defined by a metric and general "iso" means that something is unchanged, hence the name isometry as a shorthand for isometric transformation. Reflections and rotations qualify as isometries but they do not encompass all possible isometries because the translations are missing.
 
 
 ...TBC...
@@ -196,7 +197,7 @@ The rotational and reflectional symmetries of regular polygons in $\mathbb{R}^2$
 \subsubsection{Functions}
 The set of all invertible (i.e. bijective) functions from any set $S$ to itself forms a group under the operation of function composition. It has even a special name: it's called the symmetric group over $S$. Let's verify the axioms: Closure: chaining a bijective function from $S$ to $S$ with another bijective function from $S$ to $S$ gives of course a combined function that is again a bijective function from $S$ to $S$. Associativity: For three functions $f,g,h$, if you apply ($f$-after-$g$) after $h$, it's the same as applying $f$ after ($g$-after-$h$). Saying it like this makes it obvious that function composition is actually always associative - no matter whether the functions are bijective or not. It's like putting on pants and shoes first and then a jacket vs putting on pants first and then shoes and a jacket. The neutral element is just the identity function and it is indeed invertible (it's its own inverse) and the existence of inverse functions is assured by requiring the functions in our set to be invertible (Duh! Thank you Captain Obvious!).
 
-\paragraph{} There are also some subsets of the big set of all invertible functions with particular functional forms that also form groups under composition. Consider the real powers of $x$ over the nonnegative real numbers: $f: \mathbb{R}^+_0 \rightarrow \mathbb{R}^+_0, \; f(x) = x^p, \; p \in \mathbb{R}$. Closure is easily verified: $(x^p)^q = x^{p q}$. Existence of inverses: $(x^p)^{-1} = x^{\frac{1}{p}}$. Note the clash of notations here: On the left hand side, the $...^{-1}$ stands for function inversion and \emph{not} for the exponent $-1$! If it would mean an exponent, then the right hand side should be $x^{-p}$ but it actually is $x^{\frac{1}{p}}$, i.e. the $p$-th root of $x$. That's a pitfall which I fell into myself when I was initially writing this section. The identity is in set as $f(x) = x = x^1$ and associativity holds like it does for any function. We need to restrict ourselves to nonnegative real inputs because when we allow negative arguments, even integer powers are not invertible anymore and roots and other fractional powers become complex and multivalued, so we rule such cases out.
+\paragraph{} There are also some subsets of the big set of all invertible functions with particular functional forms that also form groups under composition. Consider the real powers of $x$ over the nonnegative real numbers: $f: \mathbb{R}^+_0 \rightarrow \mathbb{R}^+_0, \; f(x) = x^p, \; p \in \mathbb{R}$. Closure is easily verified: $(x^p)^q = x^{p q}$. Existence of inverses: $(x^p)^{-1} = x^{\frac{1}{p}}$. Note the clash of notations here: On the left hand side, the $...^{-1}$ stands for function inversion and \emph{not} for the exponent $-1$! If it would mean an exponent, then the right hand side should be $x^{-p}$ but it actually is $x^{\frac{1}{p}}$, i.e. the $p$-th root of $x$. That's a pitfall which I fell into myself when I was initially writing this section. The identity is in set as $f(x) = x = x^1$ and associativity holds like it does for any function. We need to restrict ourselves to nonnegative real inputs because when we allow negative arguments, even integer powers are not invertible anymore and roots and other fractional powers become complex and multivalued. This messy structure is then not a group anymore so we rule such cases out.
 
 \paragraph{} Another interesting group of functions under composition with a particular functional form are the Moebius transformations which are functions of the form [...TBC...Maybe we need to be a bit careful about the poles. Maybe they are not invertible there?]
 
@@ -218,11 +219,19 @@ Another important class of groups is that of permutation groups. In a certain se
 
 % use the Klein Four group as example...or maybe the group of symmetries of a triangle
 
+% Explain how continuous functions fit into this picture. They are also a sort of "reordering" but in a continuous fashion. They do not actually swap elements by reversing their < relation - but such a relation is not even required for groups and is only and artifact of representing elements of discrete groups by integers. The monotone functions only change *which* element occurs *when*. Take the nonegative reals and x^2 as example. In the "permuted" group, the number 9 occurs "earlier", namley at position 3, etc.
+
 
 \subsubsection{Rubik's Cube} Rubik's Cube is often used as an example for group theory in popular and recreational math contexts. It is mechanical puzzle made of a cube in which each face is segmented into a 3-by-3 grid of little squares. Each square has one of 6 colors. In its solved position, each of the 6 faces has only squares of one single color. All 6 faces can be rotated forward and backward by 90 degrees. The challenge is to start with a cube with random distribution of the colored squares and to turn it back into its solved position. The connection to group theory is that the combinations of moves, i.e. the rotations of the faces, can be regarded as group elements. For each combination of moves, there is a corresponding combination of moves to undo it - just apply the opposite rotations in reverse order. So, existence of inverses is verified. The other group axioms are also readily verified.
 
+% -the group elements are all possible combinations of rotations
+% -the group action is a rotation of a face
+% -give the number of elements of the group and the number objects that the group acts on.
+
 % https://en.wikipedia.org/wiki/Rubik%27s_Cube#Mathematics
 % https://en.wikipedia.org/wiki/Rubik%27s_Cube_group
+% https://en.wikibooks.org/wiki/How_to_Solve_the_Rubik%27s_Cube
+% https://en.wikipedia.org/wiki/God%27s_algorithm
 
 
 \paragraph{}
@@ -256,10 +265,13 @@ If a subset of the underlying set of a group forms itself a group under the same
 As is often the case in mathematical definitions, the edge cases are included in the definitions of terms. A group itself also counts as a subgroup of its own. Also, the group consisting only of the identity element counts as subgroup of any group. These two subgroups always exist for any group and are called the trivial subgroups.
 
 \medskip
-The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using the machinery of subgroups. Infinity cannot be factorized but this factorization is the thing we are now interested in. Therefore, we'll now focus on finite groups.
+The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using a machinery arising from the idea subgroups. Infinity cannot be factorized but this factorization is the thing we are now interested in. Therefore, we'll now focus on finite groups.
 
 \paragraph{Example}
 Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to understand as the set of integers modulo $12$ with modular addition modulo $12$ as group operation. Because $12$ has many divisors, $\mathcal{G}$ has quite a lot of (nontrivial) subgroups. You can easily verify that $\{0,2,4,6,8,10\}, \{0,3,6,9\}, \{0,4,8\}, \{0,6\}$ are subgroups of that group. As any group, it has also the trivial subgroups $\{ 0 \}$ and $\mathcal{G}$ itself but we are not interested in them. ...TBC...
+
+% ToDo:
+% explain what normal subgroups are
 
 % https://math.stackexchange.com/questions/208063/calculation-of-subgroups-of-z-12
 % https://www.quora.com/How-do-you-find-the-subgroups-of-z12
@@ -273,8 +285,15 @@ Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to un
 
 % Lagrange's Theorem
 
-
 % https://www.youtube.com/watch?v=MAcdesa9RqA at around 40:00 he gives a single criterion for showing that somethings is a subgroup (after that, a similar pair of conditions for subrings)
+
+\paragraph{Langrange's Theorem} If $\mathcal{G}$ is a finite group of order $g$ and $\mathcal{S}$ is a subgroup of  $\mathcal{G}$ of order $s$, then $g$ is a multiple of $s$.
+
+\medskip
+In other words, the theorem says that the order of the full group must be divisible by the order of any of its subgroups. This immediately implies that groups of prime order cannot have any nontrivial subgroups because nothing divides a prime (besides itself and one - the trivial divisors). The theorem does not imply that for each divisor of the order group a subgroup exists, though. 
+
+%If $\mathcal{S} = (S,\circ)$ is a subgroup of order $|S|$ of a finite group $\mathcal{G} = (G,\circ)$, then the order $|G|$ of $\mathcal{G}$ is a multiple
+
 
 \subsubsection{Cosets}
 
@@ -290,14 +309,33 @@ Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to un
 % https://en.wikipedia.org/wiki/Semidirect_product
 
 
-\paragraph{Langrange's Theorem} If $\mathcal{G}$ is a finite group of order $g$ and $\mathcal{S}$ is a subgroup of  $\mathcal{G}$ of order $s$, then $g$ is a multiple of $s$.
 
-\medskip
-In other words, the theorem says that the order of the full group must be divisible by the order of any of its subgroups. This immediately implies that groups of prime order cannot have any nontrivial subgroups because nothing divides a prime (besides itself and one - the trivial divisors). The theorem does not imply that for each divisor of the order group a subgroup exists, though. 
+\subsubsection{Special Subgroups}
+Not all subgroups are created equal. There are certain special types of subgroups that are important enough to deserve special names.
 
-%If $\mathcal{S} = (S,\circ)$ is a subgroup of order $|S|$ of a finite group $\mathcal{G} = (G,\circ)$, then the order $|G|$ of $\mathcal{G}$ is a multiple
+\paragraph{Normal Subgroups} A normal subgroup is a subgroup for which the left and right cosets coincide...TBC...
+% -Subgroups for which the left and right cosets coincide
+% -This can also be stated as: they are invariant under conjugation
+% -These are the basis for quotient groups
+
+\paragraph{Characteristic Subgroup}
+% https://en.wikipedia.org/wiki/Characteristic_subgroup
+
+\paragraph{Commutator Subgroup}
+% https://en.wikipedia.org/wiki/Commutator_subgroup
+% https://en.wikipedia.org/wiki/Perfect_group
+
+\paragraph{Torsion Subgroup}
+% https://en.wikipedia.org/wiki/Torsion_subgroup
+
+\paragraph{Center of a Group}
+% https://en.wikipedia.org/wiki/Center_(group_theory)
 
 
+
+
+\subsubsection{Quotient Groups}
+We are now interested in how we can break down certain groups into smaller constituent groups. 
 
 % How does the "construction" of non-simple finite groups work? Is it based on the cartesian product of the underlying sets where the individual group operations are applied element-wise? add a segment under the "Subgroups" section, mabye name it "Group Factorization" - look up, how it's called and how it's done
 
@@ -308,6 +346,9 @@ In other words, the theorem says that the order of the full group must be divisi
 % https://www.math3ma.com/blog/whats-a-quotient-group-really-part-1
 % https://math.stackexchange.com/questions/625433/what-does-factorization-of-a-group-mean
 % https://en.wikipedia.org/wiki/Algebraic-group_factorisation_algorithm
+
+
+
 
 
 \subsection{Morphisms (Iso-, Homo- and more)}
@@ -499,6 +540,7 @@ Questions:
  equivalence relations? Maybe not, because maybe we can achieve the same effect by using as
  underlying sets quotient sets.
 -what about Cayley graphs?
+-what about orbits and stabilizers. where do they fit in? under generators maybe?
 
 Resources:
 

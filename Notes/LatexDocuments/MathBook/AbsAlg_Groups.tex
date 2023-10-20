@@ -184,6 +184,12 @@ The identity transformation is included as $r_0$. The fact that we can \emph{rep
 
 % https://proofwiki.org/wiki/Symmetry_Group_of_Square/Cayley_Table
 
+\subsubsection{Isometries}
+The rotational and reflectional symmetries of regular polygons in $\mathbb{R}$ are examples of a broader class of geometric transformations that for a group under composition, namely the isometries of $n$-dimensional Euclidean spaces $\mathbb{R}^n$. An \emph{isometry} is a transformation the keeps distances unchanged. Distances are defined by a metric and general "iso" means that something is unchanged, hence the name isometry. ...TBC...
+
+% One could say that in math terms, a symmetry is a more general concept than an isometry wheareas in colloquial language, a symmetry is usually more specific. In colloquial terms, we usually mean reflectional symmetry, sometimes we also include rotational ones but rarely do we call a translational symmetry by that name.
+
+
 \subsubsection{Functions}
 The set of all invertible (i.e. bijective) functions from any set $S$ to itself forms a group under the operation of function composition. It has even a special name: it's called the symmetric group over $S$. Let's verify the axioms: Closure: chaining a bijective function from $S$ to $S$ with another bijective function from $S$ to $S$ gives of course a combined function that is again a bijective function from $S$ to $S$. Associativity: For three functions $f,g,h$, if you apply ($f$-after-$g$) after $h$, it's the same as applying $f$ after ($g$-after-$h$). Saying it like this makes it obvious that function composition is actually always associative - no matter whether the functions are bijective or not. It's like putting on pants and shoes first and then a jacket vs putting on pants first and then shoes and a jacket. The neutral element is just the identity function and it is indeed invertible (it's its own inverse) and the existence of inverse functions is assured by requiring the functions in our set to be invertible (Duh! Thank you Captain Obvious!).
 
@@ -290,6 +296,15 @@ In other words, the theorem says that the order of the full group must be divisi
 
 
 
+% How does the "construction" of non-simple finite groups work? Is it based on the cartesian product of the underlying sets where the individual group operations are applied element-wise? add a segment under the "Subgroups" section, mabye name it "Group Factorization" - look up, how it's called and how it's done
+
+% Maybe relevant:
+% https://en.wikipedia.org/wiki/Quotient_group
+% https://mathworld.wolfram.com/QuotientGroup.html
+% https://feog.github.io/lecture9ws.pdf
+% https://www.math3ma.com/blog/whats-a-quotient-group-really-part-1
+% https://math.stackexchange.com/questions/625433/what-does-factorization-of-a-group-mean
+% https://en.wikipedia.org/wiki/Algebraic-group_factorisation_algorithm
 
 
 \subsection{Morphisms (Iso-, Homo- and more)}
@@ -341,6 +356,8 @@ A group is abstractly defined as a set on which a binary operation is defined th
 
 \subsection{Examples of Groups}
 
+% We could also include Coxeter groups here
+
 \subsubsection{Lie Groups}
 A Lie group is a group, whose underlying set may be interpreted as a set of points that live on a \emph{manifold}. For example, the set of all rotations of the 2D plane may be interpreted as points on the unit circle. The unit circle is a curve, i.e. a 1D manifold that we usually envision to live in a 2D embedding space. We can identify points on the unit circle with rotation angles. This group is also called the \emph{circle group} and sometimes also the \emph{special orthogonal group} of order 2 and denoted by $SO(2)$. In a matrix representation of an orthogonal group, all matrices will have a determinant of $\pm 1$ and in a special orthogonal group, they will only have determinant $1$. Orthogonal means that the matrices encode orthogonal transformations which are a combination of rotations and reflections. In the "special" ones, only rotations are allowed. This group of 2D rotations can also be represented by complex numbers of unit modulus where complex multiplication serves as group operation, i.e. encodes the composition of the rotations. Note that in the representation via complex numbers, the associated manifold, namely the circle, naturally emerges as a curve in the plane. In a matrix representation, however, it might seem like the manifold lives in a 4D space because general $2 \times 2$ matrices have 4 entries. However, a manifold all by itself does not need to be thought of as being embedded into some higher dimensional space. We can also take an intrinsic point of view in which the manifold is just characterized by its own intrinsic dimensionality, which is 1 in this case, without reference to any embedding space. The embedding space is just a tool for us to visualize the manifold. More generally, we may consider the groups of rotations in an $n$D space. They are called the special orthogonal groups of order $n$ and denoted by $SO(n)$. 
 
@@ -363,8 +380,11 @@ A Lie group is a group, whose underlying set may be interpreted as a set of poin
 % https://en.wikipedia.org/wiki/Orthogonal_group
 % https://en.wikipedia.org/wiki/Orthogonal_group#Special_orthogonal_group
 
-
-% Say something about Lie algebras...or maybe defer that to a chapter about Algebras
+% -Give examples of Lie groups
+%  -simple construction: take an existing continuous Lie group and replace R with a finite field
+%    ...does it work like that? I'm not sure.
+%  -Explain E_8
+% -Say something about Lie algebras...or maybe defer that to a chapter about Algebras
 
 \subsubsection{Classification of Finite Groups}
 One of the great achievements of modern mathematics is the classification of all finite groups. We have something like a periodic table (as in chemistry) for groups. Another analogy could be the prime numbers - all natural numbers greater than one can be "built" multiplicatively from these prime numbers. Similarly, all groups can be constructed from a known pool of elementary groups which are called the \emph{simple groups} in this context. Simple means that they can't be broken down any further into smaller groups - but they may actually be quite complicated indeed. Let's state the theorem:
@@ -403,9 +423,8 @@ Recall that the set of all permutations of $n$ objects forms a group which is ca
 
 
 
-% How does the "construction" work? Is it based on the cartesian product of the underlying sets where the individual group operations are applied element-wise?
 
-% Maybe rename the subsection into "Some specific groups" and file the Lie Groups and the Classification as subsubsections. we could also include Coxeter groups here
+
 
 % https://en.wikipedia.org/wiki/Classification_of_finite_simple_groups
 % https://en.wikipedia.org/wiki/List_of_finite_simple_groups
@@ -479,6 +498,10 @@ Questions:
 -what about Cayley graphs?
 
 Resources:
+
+https://feog.github.io/groupsymmetryws-shrunk.pdf  
+Groups and Symmetries  (Lecture notes  by F. Oggier & A. M. Bruckstein)
+
 https://www.youtube.com/watch?v=QR1p0Rabuww  Joan Solà - Lie theory for the Roboticist
 
 Make a section on the classification of groups. There, we may also mention Coxeter groups:

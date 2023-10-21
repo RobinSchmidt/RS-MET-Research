@@ -6,3 +6,83 @@ Ring Theory:
 
 Number Systems Invented to Solve the Hardest Problem - History of Rings | Ring Theory E0
 https://www.youtube.com/watch?v=M-9_rZfVQVE&list=PL6VQBwZazp7YSRz9jluchQJSDRv_yQKeZ
+
+Pythagorean triples:
+-integer triples (a,b,c) that satisfy a^2 + b^2 = c^2
+-let n > m >= 1, gcd(n,m) = 1, n+m odd (i.e. not n and m both even or both odd)
+-then (a,b,c) = k * (n^2 - m^2, 2*n*m, n^2 + m^2) gives all the Pythagorean triples up to swapping 
+ a and b.
+-for k = 1, we get the simple triples that are not just a multiple of another such triple
+-proof of this is highly nontrivial
+-real solutions are easy to find: just pick a,b and use c = sqrt(a^2 + b^2) but finding integer 
+ solutions was hard.
+
+Rng: 
+-not number systems but generalizations of multiples of a number
+-important mostly as substructure of a ring
+
+Z[i]
+-smallest ring over z that contains i
+-units ar e+-1, +-i
+-every number except zero has 4 numbers that are associated with one another, example:
+ 7, -7, 7i, -7i  or  2 + 3i, 2 - 3i, -2 + 3i, -2 - 3i
+-2 is not a prime anymore, it factors as: 2 = (1+i)(1-i)
+-neither is 5: 5 = (1+2i)(1-2i)
+-a^2 + b^2 = (a+bi)(a-bi). Factoring this sum of squares into linear factors was impossible over Z
+-Z[i] can be used to find the pythagorean triples
+
+Z[2] = Z
+
+Z[1/2]:
+-we need 1/2, 7/2, 1/4, -57/16, i.e. all numbers of the form a / 2^n where a is an integer and n is
+ a positive integer. We could allow n to be positive too but that would only generate elements that 
+ are already there.
+-powers of 2 are units of this ring
+-called dyadic rationals or binary rationals
+ -used to store floating point numbers in a computer
+ 
+Z[1/2, 1/3, 1/5, 1/7, 1/11, ...] = Q
+R[i] = C
+
+Z[sqrt(-3)] = Z[sqrt(3)i]
+-invented by Euler as first of these systems to solve Fermat's last theorem for the case n = 3, i.e.
+ to show that a^3 + b^3 = c^3 has no nontrivial integer solutions (but only solutions in this ring?)
+-He needed to factor an expression of the form u^2 + 3*v^2. In Z[sqrt(-3)] , we have
+ u^2 + 3*v^2 = (u + sqrt(-3) v) (u - sqrt(-3) v) 
+-His proof was wrong though, because the factorization of numbers down to primes need to be unique 
+ and this is not the case in this ring.
+-For example, 4 factors in 2 ways: 4 = 2*2 = (1 - sqrt(-3)) (1 + sqrt(-3))
+ [actually there are also 4 = (-2)*(-2) and perhaps also (-1 - sqrt(-3)) (-1 + sqrt(-3))?]
+-This ring is *not* a unique factorization domain
+
+4th roots of 1:
+-are given by 1, i, -1, -i
+-are all on the unit circle and split it into 4ths
+-smallest ring over Z that contains all these is Z[i]
+
+3rd roots of 1:
+-given by 1, w, w^2 where w = -1/2 + i * sqrt(3)/2 = e^(2 pi i / 3)
+-split the circle into thirds
+-smallest ring over Z containing these is Z[w]
+-contains lattice points of a lattice made from equilateral triangles
+-this ring is called Eisenstein integers
+-has 6 units: 1, -1, w, w^2, -w, -w^2
+-contains sqrt(-3), too and therefore everything in Z[sqrt(-3)]
+-here, u^2 + 3*v^2 = (u + sqrt(-3) v) (u - sqrt(-3) v)  factors uniquely. 
+-4 still factors in the same 2 ways as before, BUT: over this ring, the two ways are not really 
+ considered different anymore because the two ways are associated with each other, i.e. rotated 
+ versions of the same number
+ -The factorization is now indeed unique up to pulling out units (these units are NOT present in
+  in Z[sqrt(-3)].
+ -This is analog to 4 factoring into (-2)*(-2) as well
+-This patches Euler's false proof
+-a^3 + b^3 = (a + b) (a^2 - ab + b^2) = (a + b) (a + bw) (a + bw^2)
+ -> it factors into linear factors which is crucial step in Gauss' proof of a^3 + b^3 = c^3 has no 
+ integer solutions
+ 
+a^4 + b^4 = c^4:
+-Can be proven in a similar way using the Gaussian integers
+-Can also be proven in an elementary way by writing it as:
+ (a^2)^2 + (b^2)^2 = (c^2)^2
+ 
+ 16:47

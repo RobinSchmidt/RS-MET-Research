@@ -26,6 +26,50 @@ Here, a semigroup is a structure like a group but we do not necessarily require 
 
 % ring vs rng
 
+\subsection{Adjoining Elements}
+Assume that we start with a given ring like $\mathcal{Z} = (\mathbb{Z},+,\cdot)$. We now want to add some new object that is not yet an element of the underlying set $\mathbb{Z}$ to that underlying set, i.e. we want to augment the underlying set by some new element, let's call it $x$. That process is called adjoining $x$ - or whatever that new object is called. 
+
+\subsubsection{The Polynomial Ring $\mathbb{Z}[x]$}
+Of course, just adding some single element to the underlying set destroys the ring structure. To maintain closure under addition, we must also add $x+1$, $x-1$, $x+2$, $x-2$, $x+3$ and so on. To maintain closure under multiplication, we need to add $2 x$, $-2 x$, $3 x$, etc. But that's not all. we also need to add $x^2, x^3, x^4, \ldots$ and of course also $3 x^5 - 23 x^2 + 42$ and many many more elements. By adjoining a single new object $x$, what we get when we also add everything else that is needed to maintain the required closure properties, is actually the set of all polynomials in some symbolic variable $x$ with coefficients from $\mathbb{Z}$. The result is called the ring "$\mathbb{Z}$-adjoin-$x$" and denoted by $\mathbb{Z}[x]$. ...TBC...
+
+\subsubsection{The Gaussian Integers $\mathbb{Z}[i]$}
+If instead of adjoining an unspecified symbolic variable $x$, we adjoin the symbol $\i$ for the imaginary unit with the property $\i^2 = -1$, all polynomials of degree higher than 1 will boil down to a linear polynomial of the general form $a + b \i$ where $a,b \in \mathbb{Z}$. This happens because $\i^2$ and higher powers of $\i$ can be simplified into $\pm 1$ and $\pm \i$. Consider the polynomial $2 + 3 \i + 4 \i^2 - 5 \i^3 + 6 \i^4 - 7 \i^5$. Wouldn't we have any rule, we would just keep it as a polynomial in $\i$ and we would be working with a polynomial ring just that we would now call our variable $\i$ instead of $x$. But we do have the rule $\i^2 = -1$ and when we apply it, the polynomial simplifies to ...TBC...
+
+\subsubsection{The Cyclotomic Integers $\mathbb{Z}[\zeta]$}
+Now we want to adjoin a special number $\zeta = e^{2 \pi \i / p}$ for some prime number $p$ that we choose once and for all. For the smallest prime $p=2$, we get $\zeta = e^{\pi \i} = -1$ which satisfies $\zeta^2 = 1$. In general, we will have $\zeta^p = 1$ which is called the cyclotomic equation. When we adjoin our $\zeta$ to $\mathbb{Z}$, we will obtain the cyclotomic integers [VERIFY!!] ...TBC...
+
+%that has the property
+
+% https://mathworld.wolfram.com/CyclotomicInteger.html
+% https://mathworld.wolfram.com/CyclotomicEquation.html
+% https://mathworld.wolfram.com/deMoivreNumber.html
+% http://fermatslasttheorem.blogspot.com/2006/02/cyclotomic-integers.html
+
+% what if we use $\zeta = e^{\pi \i / n}$? Then we obtain the Gaussian integers for n = 2.
+
+%, we must also add a whole bunch of other new elements, for example $x+1$, $x-1$, $x+2$, $x-2$, $2 x$, $-2 x$, $42 x - 71$, $23 x^7 + 5 x^4 - 2$, etc.
+
+%postulate that some other object that is not element, let's call it $x$,
+
+%In the example rings of the Gaussian integers $\mathbb{Z}[i]$ and the polynomial rings like $\mathbb{R}[x]$, we added a single 
+
+% https://en.wikipedia.org/wiki/Cyclotomic_field
+
+\subsection{Some Examples}
+
+
+\subsubsection{Numbers}
+ToDo: integers $\mathbb{Z}$, Gaussian Integers $\mathbb{Z}[i]$, modular integers $\mathbb{Z}_p$
+
+\subsubsection{Polynomial Rings}
+ToDo: polynomial rings over various base fields, maybe also multivariate polynomials: $\mathbb{Q}[x]$, $\mathbb{R}[x]$, $\mathbb{C}[z]$, $\mathbb{Z}_p[x]$, $\mathbb{R}[x,y]$, rings of power series like
+$\mathbb{R} \llbracket x \rrbracket$
+
+% https://math.stackexchange.com/questions/190073/what-is-mathbb-zt-what-are-the-double-brackets
+%$\mathbb{R} \llbracket x \rrbracket$
+%\llbracket
+
+
 
 
 

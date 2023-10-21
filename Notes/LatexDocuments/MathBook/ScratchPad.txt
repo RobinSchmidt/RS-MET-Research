@@ -1,5 +1,41 @@
 Some notes, scribbles, links to resources and preliminary text sections for the book
 
+----------------------------------------------------------------------------------------------------
+Group Theory:
+
+Composing C_12 from its constituent simple groups:
+
+https://en.wikipedia.org/wiki/Composition_series#For_groups
+
+For C_12, there are 3 different composition series:
+
+C_1 * C_2 = C_2
+C_2 * C_3 = C_6
+C_6 * C_2 = C_12
+
+C_1 * C_2 = C_2
+C_2 * C_2 = C_4
+C_4 * C_3 = C_12
+
+C_1 * C_3 = C_3
+C_3 * C_2 = C_6
+C_6 * C_2 = C_12
+
+...i think, in such a composition seris, the 2nd factor must always be simple and that's why we see
+no C_3 * C_4. But what if we form C_3 * C_4? Will that be the saem as C_4 * C_3? ...yeah - in case 
+of the direct product, it certainly will because the set product is commutative (up to isomorphy, 
+i.e. a set product Z_3 x Z_4 is isomorphic to Z_4 x Z_3 - it has just the elements swapped)
+
+"Any two composition series of a given group are equivalent. That is, they have the same composition 
+length and the same composition factors, up to permutation and isomorphism"
+
+
+Maybe demonstrate the construction of semidirect products with a pair of groups of which at least 
+one non-abelian. But there aren't many non-abelian small groups. The smallest is of order 6:
+
+https://en.wikipedia.org/wiki/Finite_group#Number_of_groups_of_a_given_order
+
+Maybe use that and Z_2 as other factor. that gives a group of order 12 which is still managable
 
 ----------------------------------------------------------------------------------------------------
 Ring Theory:

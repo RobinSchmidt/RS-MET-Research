@@ -74,14 +74,15 @@ Every natural number greater than one has a unique factorization in terms of pri
 % https://en.wikipedia.org/wiki/Unit_(ring_theory)
 
 \subsubsection{Associatedness}
-In the integers, we have the two units $1$ and $-1$. Any two numbers that differ only by a factor given by one the units are considered to be \emph{associated} with each other. For example $-5$ is associated with $5$ because they differ only by a factor of $-1$ which is a unit. In any ring, pairs of additive inverses are always associated with each other. In the Gaussian integers, any $a + b \i$ will be associated with $-a - b \i$. But there are more associations. In the Gaussian integers, we have 4 units, namely $1,-1,\i,-\i$ where 1 and $-1$ are still their own inverses and $\i$ and $-\i$ are inverses of each other. Multiplication by $\i$ rotates by 90 degrees counterclockwise and multiplication by $-\i$ by the same angle clockwise. In the Gaussien integers, any number $a + b \i$ will also be associated with its complex conjugate $a - b \i$ and the negative of the complex conjugate $-a + b \i$, so any Gaussian integer is a member of a quartet of 4 associated numbers. In a sense, these 4 numbers are considered to be equivalent. Associatedness is an equivalence relation on a ring $R$. If $x$ is associated with $y$, we will write $x \sim y$.
-
+In the integers, we have the two units $1$ and $-1$. Any two numbers that differ only by a factor given by one the units are considered to be \emph{associated} with each other. For example $-5$ is associated with $5$ because they differ only by a factor of $-1$ which is a unit. In any ring, pairs of additive inverses are always associated with each other. So in the Gaussian integers, any $a + b \i$ will be associated with $-a - b \i$. But there are more associates. In the Gaussian integers, we have 4 units, namely $1,-1,\i,-\i$ where 1 and $-1$ are still their own inverses and $\i$ and $-\i$ are inverses of each other. Multiplication by $\i$ rotates by 90 degrees counterclockwise and multiplication by $-\i$ by the same angle clockwise. In the Gaussian integers, any number $a + b \i$ will also be associated with its complex conjugate and the negative of the complex conjugate, so any Gaussian integer is a member of a quartet of 4 associated numbers $(a + b\i, a - b \i, -a + b \i, -a - b \i)$ which are related geometrically by rotations of multiples of 90 degrees. Associatedness is an equivalence relation on a ring $R$ and in this sense, these 4 numbers are considered to be equivalent. If $x$ is associated with $y$, we will write $x \sim y$. 
+It turns out that this equivalence relation is needed to identify certain numbers with one another to obtain a unique factorization. It will be unique only up to this equivalence - and up to the ordering of the factors, of course. For example, in $\mathbb{Z}$, the number $-6$ can be factored as $-6 = (-2) \cdot 3$ or as $-6 = 2 \cdot (-3)$. We don't want to consider these two factorizations as different so we need to identify the positives with their negative counterparts via this $\sim$ relation.
 
 % https://en.wikipedia.org/wiki/Unit_(ring_theory)#Associatedness
 
-
-
 \subsubsection{Prime Elements}
+Prime elements are a generalization of the well known prime numbers in $\mathbb{N}$ that is suitable for general rings. ...TBC...
+
+%In a ring, we have the additive inverses so 
 
 %\subsubsection{Irreducibility}
 
@@ -113,7 +114,7 @@ The notion of an \emph{ideal} is more restrictive than that of a subring. Among 
 \end{tabular}
 \medskip
 
-The "left" and "right" in this terminology refers to where the factor $r$ from the ring occurs in the product. As an example, consider again the set of even numbers $2 \mathbb{Z}$. We already know that it is a subring of $\mathbb{Z}$ because any product of any pair of even numbers is again an even number. But is it also an ideal? Yes, because it also satisfies the stronger requirement that the product of any even number with any integer number whatsoever gives again an even number. 
+The "left" and "right" in this terminology refers to where the factor $r$ from the ring occurs in the product. As an example, consider again the set of even numbers $2 \mathbb{Z}$. We already know that it is a subring of $\mathbb{Z}$ because any product of any pair of even numbers is again an even number. But is it also an ideal? Yes, because it also satisfies the stronger requirement that the product of any even number with any integer number whatsoever gives again an even number. As an example of a subring that is not an ideal, consider $\mathbb{Z}$ as a subring of $\mathbb{Z}[i]$. An ideal in $\mathbb{Z}[i]$ would be $2\mathbb{Z}[i]$, the Gaussian integers with even real and imaginary parts.
 %...TBC...
 
 % https://sites.millersville.edu/bikenaga/abstract-algebra-1/ideals-and-subrings/ideals-and-subrings.pdf
@@ -154,24 +155,27 @@ $\mathbb{R} \llbracket x \rrbracket$
 %\llbracket
 % Z[\sqrt(2)], Z[\sqrt{-3}] (historic reasons)
 
-\subsubsection{The Dyadic Rationals $\mathbb{Z}[1/2]$}
+%\subsubsection{The Dyadic Rationals $\mathbb{Z}[1/2]$}
+\subsubsection{The Dyadic Rationals $\mathbb{Z}[\frac{1}{2}]$}
+If we adjoin the number $\frac{1}{2}$ to $\mathbb{Z}$, we obtain a ring that contains all fractions that have a power of $2$ as denominator. A finite approximation of this ring is used to represent floating point numbers in a computer. If, instead of adjoining just $\frac{1}{2}$, we would adjoin also $\frac{1}{3}$, $\frac{1}{5}$, $\frac{1}{7}$, $\frac{1}{11}$, etc for all prime denominators, we would obtain $\mathbb{Q}$.
 
-\subsubsection{The Cyclotomic Integers $\mathbb{Z}[\zeta]$}
-Like we did when constructing $\mathbb{Z}[x]$ and $\mathbb{Z}[\i]$, we again start with the ring $\mathbb{Z}$. Now we want to adjoin a special number $\zeta = e^{2 \i \pi / p}$ for some fixed number $p$ that we choose once and for all. For $p=2$, we get $\zeta = e^{\i \pi} = -1$ which satisfies $\zeta^2 = 1$. In general, we will have $\zeta^p = 1$ which is called the \emph{cyclotomic equation}. When we adjoin our $\zeta$ to $\mathbb{Z}$, we will obtain the \emph{cyclotomic integers} [VERIFY!!]. 
+\subsubsection{The Cyclotomic Integers $\mathbb{Z}[\zeta_n]$}
+Consider the so called cyclotomic equation $x^n = 1$. Its solutions are the $n$th roots of unity which are sometimes also called de Moivre numbers. Cylcotomic means circle-splitting which is a fitting name because they indeed split the circle into equally sized pizza segments. We'll denote them by $\zeta_n = e^{2 \i \pi / n}$. For $n=2$, we get $\zeta_2 = e^{\i \pi} = -1$ which satisfies $\zeta_2^2 = 1$. If we adjoin $\zeta_n$ to $\mathbb{Z}$ for some given $n$, we'll obtain the ring of the cyclotomic integers for that given $n$. For $n=1$ we just adjoin 1 which was already there, so nothing changes. For $n=2$, we adjoin $-1$ which is also already there. For $n=4$, we have $\zeta_4 = e^{\i \pi / 2} = \i$, so in this case, we'll get the Gaussian integers because we adjoin $\i$. They define a square lattice in the complex plane and have the 4 units $1,-1,\i,-\i$. This can be generalized. For $n=3$, we get the so called Eisenstein integers which define a lattice of equilateral triangles in the complex plane. The ring of Eisenstein integers has the 6 units $1, -1, \zeta_3, -\zeta_3, \zeta_3^2, -\zeta_3^2$. A general cyclotomic integer for given $n$ looks like $a_0 + a_1 \zeta_n + a_2 \zeta_n^2 + \ldots + \zeta_n^{n-1}$. Powers of $\zeta_n$ higher than $n-1$ cannot occur because $\zeta_n^n$ wraps back to $1$ and then the cycle starts again pretty much like the powers of $\i$ cycle back to 1 at $\i^4$ in the complex numbers. In the complex numbers, we will also have $\zeta_4^2 = \i^2 = -1$ and $\zeta_4^3 = \i^3 = -\i$ which is why two coefficients $a_0, a_1$ are sufficient to encode a cyclotomic number with $n=4$, i.e. a complex number. Due to symmetries, the terms $a_0 \zeta_4^0 + a_2 \zeta_4^2$ and $a_1 \zeta_4^1 + a_3 \zeta_4^3$ get combined into single terms because $\zeta_4^0 = -\zeta_4^2$ and $\zeta_4^1 = -\zeta_4^3$. In number theory, one is mostly interested in the cases where $n$ is a prime number. The cyclotomic integers with prime $n$ have played a crucial role in the proof of Fermat's Last Theorem.
 
-%The Gaussian integers can be considered a sort of special case for $p=4$. ...but in general, we are interested in cases where $p$ is a prime number (maybe p should be either 4 or prime)
+% I guess, only for n=3, n=4 and n=6 we get nice regular lattices (triangular, square, hexagonal) and for other n, the lattices look more complex? Try to draw the lattice for n=5!
 
-...TBC...
-
-% In general, we are interested in fields 
-
-% If it is not clear what prime p we refer to, the zeta may be indexed by p
-%that has the property
+% x^n - 1 = (x-1) (x^{n-1} + x^{n-2} + ... + 1) because we can factor out a linear factor (x-1) from x^n - 1 because x_0 = 1 trivially solves x^n - 1 = 0 so 1 is a root of x^n - 1
 
 % https://mathworld.wolfram.com/CyclotomicInteger.html
 % https://mathworld.wolfram.com/CyclotomicEquation.html
 % https://mathworld.wolfram.com/deMoivreNumber.html
-% http://fermatslasttheorem.blogspot.com/2006/02/cyclotomic-integers.html
+% https://en.wikipedia.org/wiki/Cyclotomic_polynomial
+% https://fermatslasttheorem.blogspot.com/2006/02/cyclotomic-integers.html
+% https://fermatslasttheorem.blogspot.com/2006/05/basic-properties-of-cyclotomic.html
+% https://crypto.stanford.edu/pbc/notes/numbertheory/cyclo.html
+% https://de.wikipedia.org/wiki/Eisenstein-Zahl
+% https://en.wikipedia.org/wiki/Eisenstein_integer
+% https://mathworld.wolfram.com/EisensteinInteger.html
 
 % what if we use $\zeta = e^{\pi \i / n}$? Then we obtain the Gaussian integers for n = 2. It seem like the Gaussian integers fit into the framework of cyclotomic integers for p=4, but that is not allowed because 4 is not a prime
 
@@ -184,7 +188,9 @@ Like we did when constructing $\mathbb{Z}[x]$ and $\mathbb{Z}[\i]$, we again sta
 % https://en.wikipedia.org/wiki/Cyclotomic_field
 
 \subsubsection{Classification of Finite Rings}
-Finite rings are more complicated objects than finite groups and have more structure due to the presence of two binary operations that interact with each other. One might be inclined to expect that the task of classification of finite rings is more complicated than in the case of finite groups. But the opposite is true. This is plausible because when we have more constraints, we will actually find less mathematical structures that satisfy all these constraints. It's actually quite simple to characterize the set of all possible finite rings. Every finite \emph{simple} ring is isomorphic to $\mathbb{F}_q^{n \times n}$ which is the ring of all $n \times n$ matrices over a given finite field $\mathbb{F}_q$ of order $q$. Finite fields will be introduced in the next section. The term "simple" deserves some attention ...TBC...what is a simple ring and how can we construct the non-simple ones?
+Finite rings are more complicated objects than finite groups and have more structure due to the presence of two binary operations that interact with each other. One might be inclined to expect that the task of classification of finite rings is more complicated than in the case of finite groups. But the opposite is true. This is plausible because when we have more constraints, we will actually find less mathematical structures that satisfy all these constraints. It's actually quite simple to characterize the set of all possible finite rings. Every finite \emph{simple} ring is isomorphic to $\mathbb{F}_q^{n \times n}$ which is the ring of all $n \times n$ matrices over a given finite field $\mathbb{F}_q$ of order $q$. Finite fields will be introduced in the next section. The qualification "simple" deserves some attention, though.
+
+...TBC...what is a simple ring and how can we construct the non-simple ones?
 
 %https://en.wikipedia.org/wiki/Finite_ring
 %https://en.wikipedia.org/wiki/Simple_ring

@@ -2,8 +2,8 @@
 Outline:
 
 Part I: Continuous Mathematics
--Foundations: logic, set theory, numbers, functions (polynomials, rational, sin/exp/log, binomial
- theorem, partial fraction expansion)
+-Foundations: (elementary) logic, (elementary) set theory, numbers, functions (polynomials, 
+ rational, sin/exp/log, binomial theorem, partial fraction expansion)
 -Calculus: limits, continuity, derivatives, integrals, (Taylor) series, convergence, differential 
  equations,
 -Linear Algebra: vectors, matrices, various products (dot,cross,wedge,matrix), operators
@@ -19,14 +19,43 @@ Part I: Continuous Mathematics
 -Differential Geometry: manifolds
 
 Part II: Discrete Mathematics
--Number Theory: divisibility, primes, modular arithmetic, Gaussian integers
--Discrete Calculus: differences, sums, difference equations, z-transforms, generating functions?
--Abstract Algebra: groups, rings, fields (including finite fields), representation
--Graph Theory
--Topology
 -Combinatorics
+ -Elementary Combinatorics 
+  -Permutations, Variations, etc.
+  -Partitions
+ -Graph Theory
+ -Generating Functions
+-Number Theory: divisibility, primes, modular arithmetic, Gaussian integers
+-Discrete Calculus: 
+ -Difference Calculus
+ -Summation Calculus (Newton Gregory Formula, ...)
+ -Difference Equations
+ -Discrete Transforms:
+  -Discrete Fourier Transform
+  -Z-Transform (a kind of Discrete Laplace Transform)
+  -Transforms based on Linear Algebra (PCA, SVD, Eigenfunctions (Karhunen Loeve?), etc.)
+ -Umbral Calculus 
+  
+Part III: Foundations and Structural Matematics
+-Logic
+-Set Theory
+-Category Theory
+-Abstract Algebra: 
+ -Groups
+  -Representations
+ -Rings 
+ -Fields (including finite fields)
+ -Vector Spaces and Algebras
+ -Universal Algebra
+-Algebraic Geometry  
+-Algebraic Topology(?)
 
-Part III: Applications
+
+
+
+
+
+Part IV: Applications
 -Optimization Theory: gradient descent, linear optimization, least squares
 -Approximation Theory: Taylor, Fourier, Chebychev, orthogonal polynomials, curve fitting
 -Physics: mechanics (Newton/Lagrange/Hamilton), phase space, electrodynamics (maxwell eqs in 
@@ -42,7 +71,7 @@ Part III: Applications
 -Dynamical Systems: attractors (fixed points, periodic, chaotic), bifurcation, fractals
 -Geometry - computer graphics
 
-Part IV: Code
+Part V: Code
 -Python and/or Sage code for:
  -big integers and big floats, maybe complex arithmetic
  -polynomial and rational function computations

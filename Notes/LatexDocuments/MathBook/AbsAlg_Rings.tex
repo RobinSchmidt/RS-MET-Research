@@ -48,13 +48,25 @@ If instead of adjoining an unspecified symbolic variable $x$, we adjoin the symb
 \subsection{Structure of Rings}
 
 \subsubsection{Subrings}
-We have produced bigger rings from given ones by adjoining elements. We may also take a given ring and extract a smaller ring from it which we call a \emph{subring}. A subring is defined analogously to a subgroup: we take a subset of the underlying set. If that subset together with the two operations forms itself a ring, then we have a subring. For example, the set of even integers $2 \mathbb{Z}$ forms a subring of $\mathbb{Z}$. Some authors include the existence of a multiplicative identity into the requirements for a ring. With such a definition, $2 \mathbb{Z}$ would not qualify as subring because it has no multiplicative identity. Then, one would have to resort to call it a subrng - a subring without the i. ...TBC...
+We have produced bigger rings from given ones by adjoining elements. We may also take a given ring $R$ and extract a smaller ring from it which we call a \emph{subring} $S$. A subring is defined analogously to a subgroup: we take a subset of the underlying set. If that subset together with the two operations forms itself a ring, then we have a subring. Multiplying any element $a \in S$ from the subring with any element $b \in S$ from the subring must yield again an element $c \in S$ from the subring. For example, the set of even integers $2 \mathbb{Z}$ forms a subring of $\mathbb{Z}$. Some authors include the existence of a multiplicative identity into the requirements for a ring. With such a definition, $2 \mathbb{Z}$ would not qualify as subring because it has no multiplicative identity. Then, one would have to resort to call it a subrng - a subring without the i. ...TBC...
 % - but fortunately, I'm not one of these authors so we don't have to resort to that awkward language here in this book.
 
 % https://en.wikipedia.org/wiki/Subring
 
 \subsubsection{Ideals}
-The notion of an \emph{ideal} is more restrictive than that of a subring. Among other requirements, a subring must be closed under multiplication. Multiplying any element from the subring with any element from the subring must yield again an element from the subring. For an ideal, the closure under multiplication requirement is tightened: It must be the case that the products of elements from the ideal with elements from the original ring must again produce elements from the ideal. Consider again the set of even numbers $2 \mathbb{Z}$. It is a subring of $\mathbb{Z}$ because any product of any pair of even numbers is again an even number. But it is more than just a subring - it is also an ideal because it also satisfies the stronger requirement that the product of any even number with any integer number whatsoever gives again an even number.  ...TBC...
+The notion of an \emph{ideal} is more restrictive than that of a subring. Among other requirements, a subring $S$ must be closed under multiplication. For a subset of the underlying set of a ring $R$ to be an ideal $I$ of $R$, the closure under multiplication requirement is tightened: It must be the case that the products of elements $a \in I$ from the ideal $I$ with elements $b \in R$ from the original ring $R$ must again produce elements $c \in I$ from the ideal. If the ring is not commutative, we must distinguish between left, right and two-sided ideals. For these, we require:
+
+\medskip
+\begin{tabular}{l l}
+Left ideal:      & $\forall a \in I, r \in R: \; r a \in I$  \\
+Right ideal:     & $\forall a \in I, r \in R: \; a r \in I$  \\
+Two-sided ideal: & $\forall a \in I, r \in R: \; r a \in I \wedge a r \in I$  \\
+\end{tabular}
+\medskip
+
+The "left" and "right" in this terminology refers to where the factor $r$ from the ring occurs in the product. As an example, consider again the set of even numbers $2 \mathbb{Z}$. It is a subring of $\mathbb{Z}$ because any product of any pair of even numbers is again an even number. But it is more than just a subring - it is also an ideal because it also satisfies the stronger requirement that the product of any even number with any integer number whatsoever gives again an even number. 
+
+...TBC...
 
 % https://sites.millersville.edu/bikenaga/abstract-algebra-1/ideals-and-subrings/ideals-and-subrings.pdf
 % https://en.wikipedia.org/wiki/Ideal_(ring_theory)

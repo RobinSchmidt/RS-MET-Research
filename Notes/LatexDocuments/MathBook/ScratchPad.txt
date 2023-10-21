@@ -1,1 +1,8 @@
 Some notes, scribbles, links to resources and preliminary text sections for the book
+
+
+----------------------------------------------------------------------------------------------------
+Ring Theory:
+
+Number Systems Invented to Solve the Hardest Problem - History of Rings | Ring Theory E0
+https://www.youtube.com/watch?v=M-9_rZfVQVE&list=PL6VQBwZazp7YSRz9jluchQJSDRv_yQKeZ

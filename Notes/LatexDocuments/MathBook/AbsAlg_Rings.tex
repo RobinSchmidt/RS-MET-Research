@@ -1,22 +1,17 @@
 \section{Ring Theory}
 After having seen groups, the next idea to explore is that of a ring. We assume to have a commutative group $(G, +)$ as a starting point. Note that here we use $+$ to denote our commutative group operation instead of the previous usage of $\cdot$ or juxtaposition within group theory. That is because in ring theory, the dot or juxtaposition will be needed for a second operation that we now want to introduce. We have seen that the integers form a group under addition. But we can also multiply integers. We now want to capture the behavior of integers under addition and multiplication in an abstract way. To this end, we assume that we start with a commutative group and we will call the group operation "addition" from now on. We assume furthermore that we have defined a second operation between elements of the group which we intend to be our abstract multiplication. Abstractly, a ring can be defined as a triple $(R,+,\cdot)$ consisting of a set $R$ with two binary operations between elements of the set such that the following rules hold true, which we shall henceforth call ring axioms:
-
-\medskip
-\begin{tabular}{l l}
-$(R,+)$ forms a commutative group \\
-$(R,\cdot)$ forms a semigroup \\
-Multiplication distributes over addition: 
-& $\forall a,b,c \in R: \;  
- a \cdot (b + c) = a \cdot b + a \cdot c, \; 
- (b + c) \cdot a = b \cdot a + c \cdot a$
-\end{tabular}
-\medskip
-%maybe use an itemization instead of a tabular
-
+\begin{itemize}
+\item $(R,+)$ forms a commutative group
+\item $(R,\cdot)$ forms a semigroup (term is explained below)
+\item Multiplication distributes over addition: 
+$\forall a,b,c \in R: \;  
+a \cdot (b + c) = a \cdot b + a \cdot c, \; 
+(b + c) \cdot a = b \cdot a + c \cdot a$
+\end{itemize}
 where the most interesting thing is the last law. This law is called the distributivity law and it establishes a connection between the two operations $+$ and $\cdot$. Note that we need two versions (left and right) of the distributive law because we do not in general require multiplication to be commutative. We do require commutativity for addition, though. In writing down the distributive laws, I also implicitly assumed that $\cdot$ takes precedence over $+$ such that no parentheses are needed for the right hand sides.
 
 \paragraph{Notation and Terminology}
-Here, a semigroup is a structure like a group but we do not necessarily require the existence of inverse elements and not even a neutral element. We now have not one but two operations, so we need to adapt our notation and terminology a bit to accommodate for that. We have called the operations "addition" and "multiplication" but it should be understood that we mean abstractions of these operations. We will denote the additive neutral element, formerly known as $e$, from now on as $0$.  If multiplication happens to commutative as well, we call our ring a commutative ring. The study of such commutative rings is called commutative algebra. If the ring is commutative, one of the distributivity laws is sufficient - the other one then follows from it and commutativity. For multiplication, we do not require the existence of a neutral element because we require our structure to be only a semigroup with respect to multiplication. By the way, a semigroup in which a neutral element exists is called a monoid. A ring in which a multiplicative neutral element exists, i.e. one in which the "semigroup" requirement is upgraded to a "monoid" requirement, is called a ring with unity or \emph{unital ring}. The multiplicative neutral element is then denoted by $1$. We still don't require existence of multiplicative inverse elements. If, for some element $a$, a multiplicative inverse inverse does exist, we call $a$ a \emph{unit} [VERIFY!]. So, the units of a ring are its (multiplicatively) invertible elements.
+Here, a \emph{semigroup} is a structure like a group but we do not necessarily require the existence of inverse elements and not even a neutral element. We now have not one but two operations, so we need to adapt our notation and terminology a bit to accommodate for that. We have called the operations "addition" and "multiplication" but it should be understood that we mean abstractions of these operations. We will denote the additive neutral element, formerly known as $e$, from now on as $0$.  If multiplication happens to commutative as well, we call our ring a commutative ring. The study of such commutative rings is called commutative algebra. If the ring is commutative, one of the distributivity laws is sufficient - the other one then follows from it and commutativity. For multiplication, we do not require the existence of a neutral element because we require our structure to be only a semigroup with respect to multiplication. By the way, a semigroup in which a neutral element exists is called a monoid. A ring in which a multiplicative neutral element exists, i.e. one in which the "semigroup" requirement is upgraded to a "monoid" requirement, is called a ring with unity or \emph{unital ring}. The multiplicative neutral element is then denoted by $1$. We still don't require existence of multiplicative inverse elements. If, for some element $a$, a multiplicative inverse inverse does exist, we call $a$ a \emph{unit}. So, the units of a ring are its (multiplicatively) invertible elements.
 
 % units are neither prime nor composite? In Z, the units are +1 and -1. In Z[i], we have 1,-1,i,-i. Maybe the motivation form this term is the imaginary unit? we could call -1 the "negative unit". We have 4 kinds of numbers: primes, composites, units and zero.
 
@@ -25,6 +20,13 @@ Here, a semigroup is a structure like a group but we do not necessarily require 
 % explain change of notation for additive inverses as -a
 
 % ring vs rng
+
+% https://en.wikipedia.org/wiki/Unit_(ring_theory)
+
+% https://en.wikipedia.org/wiki/Prime_element
+% https://en.wikipedia.org/wiki/Prime_ideal
+% https://en.wikipedia.org/wiki/Primary_ideal
+% https://en.wikipedia.org/wiki/Unique_factorization_domain
 
 \subsection{Adjoining Elements}
 Assume that we start with a given ring like $\mathcal{Z} = (\mathbb{Z},+,\cdot)$. We now want to add some new object that is not yet an element of the underlying set $\mathbb{Z}$ to that underlying set, i.e. we want to augment the underlying set by some new element, let's call it $x$. That process is called adjoining $x$ - or whatever that new object is called. 

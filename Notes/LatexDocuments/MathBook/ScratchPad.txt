@@ -84,5 +84,22 @@ a^4 + b^4 = c^4:
 -Can be proven in a similar way using the Gaussian integers
 -Can also be proven in an elementary way by writing it as:
  (a^2)^2 + (b^2)^2 = (c^2)^2
+-The problem is now reframed as: can there be a Pythagoreran triple in which a,b,c are all square 
+ numbers.
+-4 is the only composite number for which this needs to be checked seperately
+-for all other composite numbers, because take for example n = 30, we can write the eq as:
+ (a^10)^3 + (b^10)^3 = (c^10)^3
+ which can only be true, if the eq can also be solve for n=3, i.e. existence of solutions for n=3
+ is a necesarry (but not suffient) condition for the eq to be true.
+-n=2 is the only number for which the necesarry condition is actually true.
+-we have to check only for the case n=4 seperately and then for primes. All other composite numbers
+ will have a prime factorization with at least 4 = 2^2 or some prime p > 2 in it, so we can always 
+ pull out such an outer prime exponent to arrive a a necesarry condition
  
- 16:47
+x^5 = 1:
+
+ 
+ 
+ 
+
+  

@@ -135,3 +135,4 @@ Dedekind's Ideals
  prime ideals
 -In the integers, these factorizations are excatly the same (because they are a UFD?)
 -in a non-UFD...
+@ 22:08

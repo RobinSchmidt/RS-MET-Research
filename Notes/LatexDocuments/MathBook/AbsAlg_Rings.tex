@@ -48,8 +48,7 @@ If instead of adjoining an unspecified symbolic variable $x$, we adjoin the symb
 \subsection{Structure of Rings}
 
 \subsubsection{Subrings}
-We have produced bigger rings from given ones by adjoining elements. We may also take a given ring $R$ and extract a smaller ring from it which we call a \emph{subring} $S$. A subring is defined analogously to a subgroup: we take a subset of the underlying set. If that subset together with the two operations forms itself a ring, then we have a subring. Multiplying any element $a \in S$ from the subring with any element $b \in S$ from the subring must yield again an element $c \in S$ from the subring. For example, the set of even integers $2 \mathbb{Z}$ forms a subring of $\mathbb{Z}$. Some authors include the existence of a multiplicative identity into the requirements for a ring. With such a definition, $2 \mathbb{Z}$ would not qualify as subring because it has no multiplicative identity. Then, one would have to resort to call it a subrng - a subring without the i. ...TBC...
-% - but fortunately, I'm not one of these authors so we don't have to resort to that awkward language here in this book.
+We have produced bigger rings from given ones by adjoining elements. We may also take a given ring $R$ and extract a smaller ring from it which we call a \emph{subring} $S$. A subring is defined analogously to a subgroup: we take a subset of the underlying set. If that subset together with the two operations forms itself a ring, then we have a subring. Multiplying any element $a \in S$ from the subring with any element $b \in S$ from the subring must yield again an element $c \in S$ from the subring. For example, the set of even integers $2 \mathbb{Z}$ forms a subring of $\mathbb{Z}$. Some authors include the existence of a multiplicative identity into the requirements for a ring. With such a definition, $2 \mathbb{Z}$ would not qualify as subring because it has no multiplicative identity. Then, one would have to resort to call it a subrng - a subring without the i [VERIFY!]. Fortunately, I have used a definition that lets us avoid that awkward language.
 
 % https://en.wikipedia.org/wiki/Subring
 
@@ -64,9 +63,8 @@ Two-sided ideal: & $\forall a \in I, r \in R: \; r a \in I \wedge a r \in I$  \\
 \end{tabular}
 \medskip
 
-The "left" and "right" in this terminology refers to where the factor $r$ from the ring occurs in the product. As an example, consider again the set of even numbers $2 \mathbb{Z}$. It is a subring of $\mathbb{Z}$ because any product of any pair of even numbers is again an even number. But it is more than just a subring - it is also an ideal because it also satisfies the stronger requirement that the product of any even number with any integer number whatsoever gives again an even number. 
-
-...TBC...
+The "left" and "right" in this terminology refers to where the factor $r$ from the ring occurs in the product. As an example, consider again the set of even numbers $2 \mathbb{Z}$. We already know that it is a subring of $\mathbb{Z}$ because any product of any pair of even numbers is again an even number. But is it also an ideal? Yes, because it also satisfies the stronger requirement that the product of any even number with any integer number whatsoever gives again an even number. 
+%...TBC...
 
 % https://sites.millersville.edu/bikenaga/abstract-algebra-1/ideals-and-subrings/ideals-and-subrings.pdf
 % https://en.wikipedia.org/wiki/Ideal_(ring_theory)
@@ -74,14 +72,48 @@ The "left" and "right" in this terminology refers to where the factor $r$ from t
 
 % under which conditions is a subring an ideal?
 
-\subsubsection{Quotient rings}
+\subsubsection{Product Rings}
 
-% ideals play the role of normal subgroups
+
+\subsubsection{Quotient Rings}
+In ring theory, ideals play a role analogous to that of the normal subgroups in group theory. There, we used normal subgroups to create quotient groups which were sets of ...TBC...
 
 % google: factor ring
 % The quotient of a ring R, by a two-sided ideal I, is denoted by R / I . The result is called a quotient or factor ring. It is the set of additive cosets { a + I | a ∈ I } , with addition and multiplication defined as ( a + I ) + ( b + I ) = a + b + I , and ( a + I ) ( b + I ) = a b + I .
 
 
+\subsubsection{Units and Association}
+Every natural number greater than one has a unique factorization in terms of prime numbers. Unique up to an arbitrary ordering of the factors, that is. The number one has be deliberately left out from the definition of what a prime number is because if we would include it the factorization in terms of primes wouldn't be unique anymore because we could multiply our number by $1^n$ for any $n$. For example $6 = 2 \cdot 3 \cdot 1^n$ for any $n$. We could repair this by stating the theorem as "in terms of primes other than 1" but that would be ugly. The number 1 is considered to be in a class of its own - it's neither a prime nor a composite number. The same is true for zero, by the way - it's another kind of very special number. Within the natural numbers, 1 is the only number that has a multiplicative inverse. This inverse is 1 itself, i.e. 1 is its own inverse. In the integers, we have two numbers that have an inverse - namely $1$ and $-1$. They also happen to be their own inverses, but that's not the important point here. Important is only that they have inverses. If we want to say something similar about unique factorizations for integers, we should exclude numbers with inverses from those factorizations because we could always multiply by an arbitrary power of such a number provided that we also include the same power of its inverse. For example $6 = 2 \cdot 3 \cdot (-1)^n$ for any even $n$. 
+
+
+% bring example of inverses and associates in the gaussian integers
+
+%It turns out that existence of inverses destroy any hope of a unique factorization of some number because
+
+%If we want to say something similar about unique factorizations for integers, we should 
+
+%and more generally rings, 
+
+
+%In a ring, some elements may have multiplicative inverses, aka reciprocal, and some don't. Those which do have reciprocals are called units.
+% maybe name it Units and Associates
+% give examples
+
+% we must exclude units from the factorization because we could multiply by a unit and its inverse as often was we wish, so there is no 
+
+% we'll get a factorization unique up to pulling out units
+
+% https://en.wikipedia.org/wiki/Unit_(ring_theory)
+% https://en.wikipedia.org/wiki/Unit_(ring_theory)#Associatedness
+
+\subsubsection{Prime Elements and Irreducibility}
+
+
+% maybe name it primes and irreducible elements or prime elements and irreducibility
+
+
+
+% in general, there is a distinctions between primality and irreducibility
 
 
 
@@ -100,8 +132,12 @@ $\mathbb{R} \llbracket x \rrbracket$
 %\llbracket
 % Z[\sqrt(2)], Z[\sqrt{-3}] (historic reasons)
 
+\subsubsection{The Dyadic Rationals $\mathbb{Z}[1/2]$}
+
 \subsubsection{The Cyclotomic Integers $\mathbb{Z}[\zeta]$}
-Like we did when constructing $\mathbb{Z}[x]$ and $\mathbb{Z}[\i]$, we again start with the ring $\mathbb{Z}$. Now we want to adjoin a special number $\zeta = e^{2 \i \pi / p}$ for some fixed number $p$ that we choose once and for all. For $p=2$, we get $\zeta = e^{\i \pi} = -1$ which satisfies $\zeta^2 = 1$. In general, we will have $\zeta^p = 1$ which is called the \emph{cyclotomic equation}. When we adjoin our $\zeta$ to $\mathbb{Z}$, we will obtain the \emph{cyclotomic integers} [VERIFY!!]. The Gaussian integers can be considered a sort of special case for $p=4$. ...but in general, we are interested in cases where $p$ is a prime number (maybe p should be either 4 or prime)
+Like we did when constructing $\mathbb{Z}[x]$ and $\mathbb{Z}[\i]$, we again start with the ring $\mathbb{Z}$. Now we want to adjoin a special number $\zeta = e^{2 \i \pi / p}$ for some fixed number $p$ that we choose once and for all. For $p=2$, we get $\zeta = e^{\i \pi} = -1$ which satisfies $\zeta^2 = 1$. In general, we will have $\zeta^p = 1$ which is called the \emph{cyclotomic equation}. When we adjoin our $\zeta$ to $\mathbb{Z}$, we will obtain the \emph{cyclotomic integers} [VERIFY!!]. 
+
+%The Gaussian integers can be considered a sort of special case for $p=4$. ...but in general, we are interested in cases where $p$ is a prime number (maybe p should be either 4 or prime)
 
 ...TBC...
 

@@ -50,8 +50,18 @@ void artsyContours()
     Real y2 = y*y;
     Real d2 = x2 + y2;
 
-    return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
+    //return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
+    // Lots of black and some lightish gray, little transition areas
+    // Maybe use for green.
+
     //return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
+    // Looks like hollow tori with holes in the surface
+    // Use for blue!
+
+    return tanh(tan(d2) * cos(x + y))  - cos(d2);
+    // Similar but holes have weirder shape
+    // Use for red!
+
 
     // Both versions look intersting. 
     // -Maybe use 3 different versions for the 3 color channels

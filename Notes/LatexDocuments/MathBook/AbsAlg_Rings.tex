@@ -14,9 +14,8 @@ where the most interesting thing is the last law. This law is called the distrib
 Here, a \emph{semigroup} is a structure like a group but we do not necessarily require the existence of inverse elements and not even a neutral element. We now have not one but two operations, so we need to adapt our notation and terminology a bit to accommodate for that. We have called the operations "addition" and "multiplication" but it should be understood that we mean abstractions of these operations. We will denote the additive neutral element, formerly known as $e$, from now on as $0$ and we will also call it the \emph{additive identity}. If multiplication happens to commutative as well, we call our ring a commutative ring. The study of such commutative rings is called commutative algebra. If the ring is commutative, one of the distributivity laws is sufficient - the other one then follows from it and commutativity. For multiplication, we do not require the existence of a neutral element because we require our structure to be only a semigroup with respect to multiplication. By the way, a semigroup in which a neutral element exists is called a monoid. A ring in which a multiplicative neutral element exists, i.e. one in which the "semigroup" requirement is upgraded to a "monoid" requirement, is called a ring with unity or \emph{unital ring}. The multiplicative neutral element is then denoted by $1$ and also called the \emph{multiplicative identity}. If we just say "identity" without a qualifier, we mean the multiplicative identity. We may also call the additive inverses \emph{negatives} and the multiplicative inverses \emph{reciprocals}. We don't require existence of reciprocals, though. If, for some element $a$, a reciprocal does exist, we call $a$ a \emph{unit}. So, the units of a ring are its (multiplicatively) invertible elements. A ring in which no (multiplicative) identity exists is sometimes called a \emph{rng}. This is no typo - it's a "ring" without the "i" and pronounced as "rung".  A ring without negatives is called a \emph{semiring} or sometimes \emph{rig}. Looks like they just leave out the first letters i and n of the name of the missing elements from the word ring. A ring without i has no identity, a ring without n has no negatives. This is just an aside - we won't use that terminology here.
 
 \subsection{Motivation}
-As said, in a general ring, we do not require the existence of multiplicative inverses for all of its elements. The absence of reciprocals at least for some elements introduces ideas like divisibility, factorizations, prime numbers, etc. Such concepts are the heart and soul of number theory. A number theoretic question of great interest was the question whether there exist integer solutions $(a,b,c)$ to the equation $a^n + b^n = c^n$ for some integer power $n$. For $n=2$, infinitely many such integer solutions exist. They are called Pythagorean triples because for $n=2$, the equation becomes $a^2 + b^2 = c^2$ such that the triples that satisfy the equation can be interpreted geometrically as side lengths of a right triangle. We can find all Pythagorean triples by the following procedure: Pick 3 integers $k,n,m$ such that $k \geq 1$, $n > m \geq 1$, $\gcd(n,m) = 1$, $n + m$ odd, which means that $n$ and $m$ shall not be both even or both odd. Then, all the triples are given by $(a,b,c) = k (n^2 - m^2, 2 n m, n^2 + m^2)$. This generates all the Pythagorean triples without duplicates. You may swap $a$ and $b$ in the solutions to get yet more solutions which are not really considered to be different. With $k=1$, you get the so called simple solutions which are not just a multiple of another solution. For $n > 2$, the answer turns out that there are no integer solutions to $a^n + b^n = c^n$. This is called "Fermat's Last Theorem" even though Fermat himself did not provide a proof. He famously scribbled into the margin of some math book that he has a proof but the margin is too small to contain it. As history has it, the quest to come up with some proof took mathematicians centuries and it is likely that Fermat's supposed proof wasn't valid because the techniques used in modern proofs were not known to Fermat. The first proof accepted by the mathematical community was provided in 1994 by Andrew Wiles, so it should now actually be called "Wiles Theorem" but this story is such a famous bit of math history that the old name will probably stick. In order to find a general proof, many more recently developed mathematical tools were needed and ring theory is one of them [VERIFY]. 
+As said, in a general ring, we do not require the existence of multiplicative inverses for all of its elements. The absence of reciprocals at least for some elements introduces ideas like divisibility, factorizations, prime numbers, etc. Such concepts are the heart and soul of number theory. A number theoretic question of great interest was the question whether there exist integer solutions $(a,b,c)$ to the equation $a^n + b^n = c^n$ for some integer power $n$. For $n=2$, infinitely many such integer solutions exist. They are called Pythagorean triples because for $n=2$, the equation becomes $a^2 + b^2 = c^2$ such that the triples that satisfy the equation can be interpreted geometrically as side lengths of a right triangle. We can find all Pythagorean triples by the following procedure: Pick 3 integers $k,n,m$ such that $k \geq 1$, $n > m \geq 1$, $\gcd(n,m) = 1$, $n + m$ odd, which means that $n$ and $m$ shall not be both even or both odd. Then, all the triples are given by $(a,b,c) = k (n^2 - m^2, 2 n m, n^2 + m^2)$. This generates all the Pythagorean triples without duplicates. You may swap $a$ and $b$ in the solutions to get yet more solutions which are not really considered to be different. With $k=1$, you get the so called simple solutions which are not just a multiple of another solution. For $n > 2$, the answer turns out that there are no integer solutions to $a^n + b^n = c^n$. This is called "Fermat's Last Theorem" even though Fermat himself did not provide a proof. He famously scribbled into the margin of some math book that he has a proof but the margin is too small to contain it. As history has it, the quest to come up with some proof took mathematicians centuries and it is likely that Fermat's supposed proof wasn't valid because the techniques used in modern proofs were not known to Fermat. The first proof accepted by the mathematical community was provided in 1994 by Andrew Wiles, so it should now actually be called "Wiles Theorem" but this story is such a famous bit of math history that the old name will probably stick. In order to find a general proof, many more recently developed mathematical tools were needed and ring theory is one of them. 
 
-%and in particular the theory of cyclotomic integers [VERIFY] .
 % Maybe one could say that ring theory is mostly concerned with questions about divisibility and factorizations and that's why it features prominently in number theory?
 
 % https://en.wikipedia.org/wiki/Fermat%27s_Last_Theorem
@@ -83,20 +82,21 @@ It turns out that this equivalence relation is needed to identify certain number
 Prime elements are a generalization of the well known prime numbers in $\mathbb{N}$ that is suitable for general rings. ...TBC...
 
 %In a ring, we have the additive inverses so 
+% https://en.wikipedia.org/wiki/Prime_element
 
-%\subsubsection{Irreducibility}
+%\subsubsection{Irreducible Elements}
+% In general, there is a distinctions between primality and irreducibility but these
+% concepts coincide in a unique factorizaion domain and also in the more general GCD domains
 
-
-% maybe name it primes and irreducible elements or prime elements and irreducibility
-
-
-
-% in general, there is a distinctions between primality and irreducibility
+% https://en.wikipedia.org/wiki/Irreducible_element
 
 
 \subsubsection{Product Rings}
+Given two rings $R$ and $S$, we can from a product ring by by forming the set product of the underlying sets and applying the ring operations element-wise to the resulting pairs of elements. This results in the so called direct product of $R$ and $S$. For example $\mathbb{Z}_{12} = \mathbb{Z}_4 \times \mathbb{Z}_3 = \mathbb{Z}_2 \times \mathbb{Z}_2 \times \mathbb{Z}_3 = \mathbb{Z}_2^2 \times \mathbb{Z}_3$. In general, for any $\mathbb{Z}_n$, we can factor the ring into smaller rings according to the prime factorization of $n$.
+% This follows from the Chinese Remainder Theorem.
 
 % https://en.wikipedia.org/wiki/Product_of_rings
+% https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 
 \subsubsection{Subrings}
 We have produced bigger rings from given ones by adjoining elements. We may also take a given ring $R$ and extract a smaller ring from it which we call a \emph{subring} $S$. A subring is defined analogously to a subgroup: we take a subset of the underlying set. If that subset together with the two operations forms itself a ring, then we have a subring. Multiplying any element $a \in S$ from the subring with any element $b \in S$ from the subring must yield again an element $c \in S$ from the subring. For example, the set of even integers $2 \mathbb{Z}$ forms a subring of $\mathbb{Z}$. Some authors include the existence of a multiplicative identity into the requirements for a ring. With such a definition, $2 \mathbb{Z}$ would not qualify as subring because it has no multiplicative identity. Then, one would have to resort to call it a subrng - a subring without the i [VERIFY!]. Fortunately, I have used a definition that lets us avoid that awkward language.
@@ -108,20 +108,75 @@ The notion of an \emph{ideal} is more restrictive than that of a subring. Among 
 
 \medskip
 \begin{tabular}{l l}
-	Left ideal:      & $\forall a \in I, r \in R: \; r a \in I$  \\
-	Right ideal:     & $\forall a \in I, r \in R: \; a r \in I$  \\
-	Two-sided ideal: & $\forall a \in I, r \in R: \; r a \in I \wedge a r \in I$  \\
+Left ideal:      & $\forall a \in I, r \in R: \; r a \in I$  \\
+Right ideal:     & $\forall a \in I, r \in R: \; a r \in I$  \\
+Two-sided ideal: & $\forall a \in I, r \in R: \; r a \in I \wedge a r \in I$  \\
 \end{tabular}
 \medskip
 
 The "left" and "right" in this terminology refers to where the factor $r$ from the ring occurs in the product. As an example, consider again the set of even numbers $2 \mathbb{Z}$. We already know that it is a subring of $\mathbb{Z}$ because any product of any pair of even numbers is again an even number. But is it also an ideal? Yes, because it also satisfies the stronger requirement that the product of any even number with any integer number whatsoever gives again an even number. As an example of a subring that is not an ideal, consider $\mathbb{Z}$ as a subring of $\mathbb{Z}[i]$. An ideal in $\mathbb{Z}[i]$ would be $2\mathbb{Z}[i]$, the Gaussian integers with even real and imaginary parts.
-%...TBC...
 
-% https://sites.millersville.edu/bikenaga/abstract-algebra-1/ideals-and-subrings/ideals-and-subrings.pdf
+\paragraph{Operations on Ideals} We can apply operations to ideal to obtain new subsets of $R$. The intersection of two ideals $I \cap J = \{a : a \in I \wedge a \in J\}$ is again an ideal. 
+
+
 % https://en.wikipedia.org/wiki/Ideal_(ring_theory)
+% https://mathworld.wolfram.com/Ideal.html
+
+% pretty concise and simple:
+% https://sites.millersville.edu/bikenaga/abstract-algebra-1/ideals-and-subrings/ideals-and-subrings.pdf
+
+% defines sum, intersection, radical, quotient:
+% https://agag-gathmann.math.rptu.de/class/commalg-2013/commalg-2013-c1.pdf
+
+% factor rings, ideal structure of z and Z_n
 % https://www.math.uci.edu/~ndonalds/math120b/3ideals.pdf
 
-% under which conditions is a subring an ideal?
+
+
+
+
+
+
+\paragraph{Principle Ideals} A principle ideal is an ideal that is generated by multiplying every element of the ring $R$ by some single, specific ring element $a$. Unless the ring is commutative, we must distinguish between left, right and two-sided versions:
+
+\medskip
+\begin{tabular}{l l}
+Left principle ideal:      & $I = R a = \{ r a : r \in R \}$ \\
+Right principle ideal:     & $I = a R = \{ a r : r \in R \}$ \\
+Two-sided principle ideal: & $I = RaR = \{ \sum_n r_n a s_n : r_n,s_n \in R \} $ \\
+\end{tabular}
+\medskip
+
+The definition of the two-sided version is the set of all finite sums of products of the form $r a s$ with $r,s \in R$. It ensures that the the closure property under addition is satisfied in the ideal. It's taken from wikipedia and it says that a citation is needed, so take it with a grain of salt.
+
+
+% https://en.wikipedia.org/wiki/Principal_ideal
+
+
+\paragraph{Prime Ideals}
+
+%\medskip
+
+% -principle ideal: an ideal generated by a single element via multiplying all ring elements by that
+%  element. Note that this is not the same as generating it via combining it with itself recursively
+%  as we did in group theory. This wouldn't work here. 2 would generate the powers of two, not the evens
+%  because we look ath the multiplicative operation. But multiplying every integer by 2 does also
+%  generate the evens. Don't confuse the notions of an *additive* generator with the generation process 
+%  here
+% -prime ideals: ideals generated by prime elements (recall that generators generate subgroups) but that's
+%  not the definition.  A prime P ideal has the property that any composite element c that is found in it 
+%  must have a factor in P (VERIFY). On wikipedia, it says: form any product ab in P, at least one of the
+%  factors must be in in P. It cannot have any products in it unless it has at least also one of the factors
+%  in it
+% -under which conditions is a subring an ideal?
+% -proper ideal: ideal other that R, nontrivial ideal: other than {0}
+
+%...TBC...
+
+
+% https://mathworld.wolfram.com/PrimeIdeal.html
+
+
 
 
 
@@ -176,15 +231,6 @@ Consider the so called cyclotomic equation $x^n = 1$. Its solutions are the $n$t
 % https://de.wikipedia.org/wiki/Eisenstein-Zahl
 % https://en.wikipedia.org/wiki/Eisenstein_integer
 % https://mathworld.wolfram.com/EisensteinInteger.html
-
-% what if we use $\zeta = e^{\pi \i / n}$? Then we obtain the Gaussian integers for n = 2. It seem like the Gaussian integers fit into the framework of cyclotomic integers for p=4, but that is not allowed because 4 is not a prime
-
-%, we must also add a whole bunch of other new elements, for example $x+1$, $x-1$, $x+2$, $x-2$, $2 x$, $-2 x$, $42 x - 71$, $23 x^7 + 5 x^4 - 2$, etc.
-
-%postulate that some other object that is not element, let's call it $x$,
-
-%In the example rings of the Gaussian integers $\mathbb{Z}[i]$ and the polynomial rings like $\mathbb{R}[x]$, we added a single 
-
 % https://en.wikipedia.org/wiki/Cyclotomic_field
 
 \subsubsection{Classification of Finite Rings}
@@ -235,6 +281,10 @@ https://www.youtube.com/watch?v=M-9_rZfVQVE&list=PL6VQBwZazp7YSRz9jluchQJSDRv_yQ
 https://en.wikipedia.org/wiki/Ring_(mathematics)
 https://de.wikipedia.org/wiki/Ring_(Algebra)
 https://en.wikipedia.org/wiki/Unit_(ring_theory)
+
+
+https://en.wikipedia.org/wiki/Integral_domain
+Has the nice set inclusion diagram
 
 
 

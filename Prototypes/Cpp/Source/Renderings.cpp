@@ -23,7 +23,7 @@ void artsyContours()
 
  
 
-  Func f;
+  //Func f;
 
 
 
@@ -39,11 +39,19 @@ void artsyContours()
   // The original function has has poles which doesn't play well with evaluating it in the 
   // whole plane so we tame it with a tanh saturator. ...TBC...
 
-  f = [&] (Real x, Real y) 
+  auto weirdTori = [&] (Real x, Real y, int variant) 
   { 
     Real x2 = x*x;
     Real y2 = y*y;
     Real d2 = x2 + y2;
+
+    Real z;
+    switch(variant)
+    {
+    case 1: return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
+    case 2: return tanh(tan(d2)) * cos(x + y) + cos(d2);  // changed sign of last cosine
+    case 3: return tanh(tan(d2)  * cos(x + y) - cos(d2)); // tames only tan part
+    }
 
 
     //return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
@@ -51,7 +59,7 @@ void artsyContours()
     // Maybe use for green.
 
 
-    return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
+    //return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
     // Looks like hollow tori with holes in the surface
     // Use for blue!
 
@@ -70,17 +78,19 @@ void artsyContours()
   };
 
 
-  Func fRed = [&](Real x, Real y)
-  {
-    return f(x, y);
-  };;
+  // Each color channel uses a different variant of the function:
+  Func fRed   = [&](Real x, Real y) { return weirdTori(x, y, 1); };
+  Func fGreen = [&](Real x, Real y) { return weirdTori(x, y, 3); };
+  Func fBlue  = [&](Real x, Real y) { return weirdTori(x, y, 2); };
+
+  Func f = fBlue;
 
 
   // Create image with function values:
   rsImageF imgFunc(width, height);
   rsImagePlotter<Real, Real> plt;
   plt.setRange(xMin, xMax, yMin, yMax);
-  plt.generateFunctionImage(fRed, imgFunc);
+  plt.generateFunctionImage(f, imgFunc);
   IP::normalize(imgFunc);
 
   // Create images with contours:

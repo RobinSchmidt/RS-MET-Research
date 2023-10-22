@@ -7,32 +7,21 @@ void artsyContours()
   using IP   = rsImageProcessor<Real>;
   using Vec  = std::vector<Real>;
 
+  // Image parameters:
+  int scale  = 4;                // scaling: 1: = 480 X 270, 4: 1920 x 1080
+  int width  = scale * 480;      // width in pixels
+  int height = scale * 270;      // height in pixels
 
-  int  w = 1920;               // width in pixels
-  int  h = 1080;               // height in pixels
-
-
-
-
-  Real xMin = -4;
-  Real xMax = +4;
-  Real yMin = -4;
-  Real yMax = +4;
-
-  Real ratio = Real(w) / Real(h);
-  xMin *= ratio;
-  xMax *= ratio;
-
-  //Vec levels({-1.0, -0.5, 0.0, +0.5, 1.0});
-
-  //Vec levels({ -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3 });
-  //Vec levels({ -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4 });
-
-  //Vec levels({ 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 });
-
-  //Vec levels({ 0.4, 0.5, 0.6 });
-  //Vec levels({ 0.3, 0.4, 0.5, 0.6, 0.7 });
+  // Plotting range parameters:
+  Real ratio = Real(width) / Real(height);  // aspect ratio
+  Real xMin  = -4 * ratio;
+  Real xMax  = +4 * ratio;
+  Real yMin  = -4;
+  Real yMax  = +4;
   Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9 });
+
+
+ 
 
   Func f;
 
@@ -56,9 +45,11 @@ void artsyContours()
     Real y2 = y*y;
     Real d2 = x2 + y2;
 
+
     //return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
     // Lots of black and some lightish gray, little transition areas
     // Maybe use for green.
+
 
     return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
     // Looks like hollow tori with holes in the surface
@@ -79,11 +70,17 @@ void artsyContours()
   };
 
 
+  Func fRed = [&](Real x, Real y)
+  {
+    return f(x, y);
+  };;
+
+
   // Create image with function values:
-  rsImageF imgFunc(w, h);
+  rsImageF imgFunc(width, height);
   rsImagePlotter<Real, Real> plt;
   plt.setRange(xMin, xMax, yMin, yMax);
-  plt.generateFunctionImage(f, imgFunc);
+  plt.generateFunctionImage(fRed, imgFunc);
   IP::normalize(imgFunc);
 
   // Create images with contours:

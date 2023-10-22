@@ -36,9 +36,38 @@ As said, in a general ring, we do not require the existence of multiplicative in
 % https://en.wikipedia.org/wiki/Primary_ideal
 % https://en.wikipedia.org/wiki/Unique_factorization_domain
 
+
+%\subsection{Basic Theorems for Rings}
+% 0 \cdot a = 0
+% http://weitz.de/files/skript.pdf
+% give a similar list of elementary rules like for group theory
+% ...but maybe that would be redundant because we alraedy know that rings form a group or
+% semigroup wrt both operations. The only interesting new thing could be general rules for
+% interactions of + and *. We have 0 * a = 0 for all rings. But just one theorem does not justify
+% a whole subsection
+
+
 \subsection{Construction of Rings}
+We will now look into ways for how we can construct new rings from existing rings. 
 
 %https://en.wikipedia.org/wiki/Ring_(mathematics)#Constructions
+
+
+\subsubsection{Matrix Rings}
+
+% https://en.wikipedia.org/wiki/Ring_(mathematics)#Matrix_ring_and_endomorphism_ring
+% https://en.wikipedia.org/wiki/Matrix_ring
+
+\subsubsection{Product Rings}
+Given two rings $R$ and $S$, we can from a product ring by forming the set product of the underlying sets and applying the ring operations element-wise to the resulting pairs of elements. This results in the so called direct product of $R$ and $S$. For example $\mathbb{Z}_{12} = \mathbb{Z}_4 \times \mathbb{Z}_3 = \mathbb{Z}_2 \times \mathbb{Z}_2 \times \mathbb{Z}_3 = \mathbb{Z}_2^2 \times \mathbb{Z}_3$. In general, for any $\mathbb{Z}_n$, we can factor the ring into smaller rings according to the prime factorization of $n$.
+% This follows from the Chinese Remainder Theorem.
+
+% This works like with th direct product of two groups
+
+% https://en.wikipedia.org/wiki/Product_of_rings
+% https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+
+
 
 \subsubsection{Adjoining Elements}
 An important idea in ring theory is the idea of starting with a given ring and \emph{adjoining} some new element to it. Assume that we start with $\mathcal{Z} = (\mathbb{Z},+,\cdot)$. We now want to add some new object that is not yet an element of the underlying set $\mathbb{Z}$ to that underlying set, i.e. we want to augment the underlying set by some new element. That process is called adjoining. 
@@ -51,20 +80,6 @@ If instead of adjoining an unspecified symbolic variable $x$, we adjoin the symb
 
 
 
-\subsubsection{Matrix Rings}
-
-% https://en.wikipedia.org/wiki/Ring_(mathematics)#Matrix_ring_and_endomorphism_ring
-% https://en.wikipedia.org/wiki/Matrix_ring
-
-\subsubsection{Product Rings}
-Given two rings $R$ and $S$, we can from a product ring by forming the set product of the underlying sets and applying the ring operations element-wise to the resulting pairs of elements. This results in the so called direct product of $R$ and $S$. For example $\mathbb{Z}_{12} = \mathbb{Z}_4 \times \mathbb{Z}_3 = \mathbb{Z}_2 \times \mathbb{Z}_2 \times \mathbb{Z}_3 = \mathbb{Z}_2^2 \times \mathbb{Z}_3$. In general, for any $\mathbb{Z}_n$, we can factor the ring into smaller rings according to the prime factorization of $n$.
-% This follows from the Chinese Remainder Theorem.
-
-% https://en.wikipedia.org/wiki/Product_of_rings
-% https://en.wikipedia.org/wiki/Chinese_remainder_theorem
-
-% A product ring has always nonzero zero divisors:
-% https://en.wikipedia.org/wiki/Zero_divisor
 
 
 
@@ -73,16 +88,6 @@ Given two rings $R$ and $S$, we can from a product ring by forming the set produ
 
 
 
-
-
-%\subsection{Basic Theorems for Rings}
-% 0 \cdot a = 0
-% http://weitz.de/files/skript.pdf
-% give a similar list of elementary rules like for group theory
-% ...but maybe that would be redundant because we alraedy know that rings form a group or
-% semigroup wrt both operations. The only interesting new thing could be general rules for
-% interactions of + and *. We have 0 * a = 0 for all rings. But just one theorem does not justify
-% a whole subsection
 
 
 
@@ -91,7 +96,22 @@ After having seen some methods to create new, larger rings from existing rings, 
 
 
 \subsubsection{Zero Divisors}
-A zero divisor 
+A \emph{zero divisor} is any element $z$ of a ring $R$ with the property that there exists at least one nonzero element $x$ in $R$ whose product with $z$ is zero. In non-commutative rings, we must distinguish between left, right and two-sided zero divisors:
+
+\medskip
+\begin{tabular}{l l}
+$z$ is left zero divisor:       & $\exists x \neq 0 \in R: \; z x = 0$  \\
+$z$ is right zero divisor:      & $\exists x \neq 0 \in R: \; x z = 0$  \\
+$z$ is two-sided zero divisor:  & $(\exists x \neq 0 \in R: \; z x = 0) 
+                              \vee (\exists y \neq 0 \in R: \; y z = 0)$  \\
+\end{tabular}
+\medskip
+
+A two-sided zero divisor is an element that is both a left and right zero divisor. Note that we do \emph{not} require $x z = 0 \wedge z x = 0$ for some $x$ from a two-sided zero divisor, i.e. we do not require that $z$ annihilates the same element $x$ from the left and from the right. Rather, we require that for each type of product with $z$ being the left or right factor, there exists some element that gets annihilated by $z$ in that product. Zero itself counts also as zero divisor and is called the trivial zero divisor. Some authors exclude zero itself from the definition of zero divisors. Doing it one or the other way is sometimes more and sometimes less convenient. I opted for this convention because it seems more consistent to me. We will later also define units which are a generalization of the idea of 1 and I view the zero divisors as a similar generalization of 0.
+
+%I opted for this convention because...It's like the godfather of all zero divisors
+
+%% there exist nonzero elements $x,y$, which may or may not be the same element, 
 
 % https://en.wikipedia.org/wiki/Zero_divisor
 % https://en.wikipedia.org/wiki/Nilpotent
@@ -99,6 +119,12 @@ A zero divisor
 
 %Just like the units generalize the notion of the number 1, the zero divisors generalize the number 0. ...TBC...
 % take as example Z^{2 x 2}
+
+
+% A product ring has always nonzero zero divisors:
+% https://en.wikipedia.org/wiki/Zero_divisor
+
+
 
 \subsubsection{Units}
 Every natural number greater than one has a unique factorization in terms of prime numbers. Unique up to an arbitrary ordering of the factors, that is. The number one has been deliberately excluded from the definition of what a prime number is because if we would include it, the factorization in terms of primes wouldn't be unique anymore because we could multiply any number by $1^n$ without changing it for any $n$. For example $6 = 2 \cdot 3 \cdot 1^n$ for any $n$. We could repair this by stating the theorem as "in terms of primes other than 1" but that would be ugly. The number 1 is considered to be in a class of its own - it's neither a prime nor a composite number. The same is true for zero, by the way - it's another kind of very special number. Within the natural numbers, 1 is the only number that has a multiplicative inverse. This inverse is 1 itself, i.e. 1 is its own inverse. In the integers, we have two numbers that have an inverse - namely $1$ and $-1$. They also happen to be their own inverses, but that's not the important point here. Important is only that they have inverses. If we want to say something similar about unique factorizations for other number systems, we should exclude numbers with inverses from those factorizations because we could always multiply by an arbitrary power of such a number provided that we also include the same power of its inverse. For example $6 = 2 \cdot 3 \cdot (-1)^n$ for any even $n$ in the integers. Because numbers that have inverses would thwart any attempt of a unique factorization (perhaps unique only up to some equivalence relation, as we will see), we consider these numbers with inverses as special enough to deserve a name: they are called \emph{units}.

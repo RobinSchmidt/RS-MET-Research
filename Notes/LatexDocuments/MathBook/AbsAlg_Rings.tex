@@ -36,15 +36,43 @@ As said, in a general ring, we do not require the existence of multiplicative in
 % https://en.wikipedia.org/wiki/Primary_ideal
 % https://en.wikipedia.org/wiki/Unique_factorization_domain
 
+\subsection{Construction of Rings}
 
-\subsection{Adjoining Elements}
+%https://en.wikipedia.org/wiki/Ring_(mathematics)#Constructions
+
+\subsubsection{Adjoining Elements}
 An important idea in ring theory is the idea of starting with a given ring and \emph{adjoining} some new element to it. Assume that we start with $\mathcal{Z} = (\mathbb{Z},+,\cdot)$. We now want to add some new object that is not yet an element of the underlying set $\mathbb{Z}$ to that underlying set, i.e. we want to augment the underlying set by some new element. That process is called adjoining. 
 
-\subsubsection{The Polynomial Ring $\mathbb{Z}[x]$}
+\paragraph{The Polynomial Ring $\mathbb{Z}[x]$}
 Let's call the new element to be adjoined $x$. We don't say anything about what that mysterious new object $x$ is supposed to be. We treat it like a symbolic variable. Of course, just adding some single element to the underlying set destroys the fulfillment of the ring requirements. To maintain closure under addition, we must also add $x+1$, $x-1$, $x+2$, $x-2$, $x+3$ and so on. To maintain closure under multiplication, we need to add $2 x$, $-2 x$, $3 x$, etc. But that's not yet all that we have to add - not even close. We also need to add $x^2, x^3, x^4, \ldots$ and of course also $3 x^5 - 23 x^2 + 42$ and many more elements. By adjoining a single new object $x$, we are forced by the closure requirements to also add all elements of the general form $a_0 + a_1 x + a_2 x^2 + a_3 x^3 + \ldots$ where $a_0, a_1, a_2, a_3, \ldots \in \mathbb{Z}$. We obtain the set of all polynomials in some symbolic variable $x$ with coefficients from $\mathbb{Z}$. The result is called the ring "$\mathbb{Z}$-adjoin-$x$" and denoted by $\mathbb{Z}[x]$.
 
-\subsubsection{The Gaussian Integers $\mathbb{Z}[\i]$}
+\paragraph{The Gaussian Integers $\mathbb{Z}[\i]$}
 If instead of adjoining an unspecified symbolic variable $x$, we adjoin the symbol $\i$ for the imaginary unit with the property $\i^2 = -1$, all polynomials of degree higher than 1 will boil down to a linear polynomial of the general form $a_0 + a_1 \i$ where $a_0,a_1 \in \mathbb{Z}$. This happens because $\i^2$ and higher powers of $\i$ can be simplified into $\pm 1$ and $\pm \i$. Consider the polynomial $2 - 3 \i + 4 \i^2 - 5 \i^3 + 6 \i^4 - 7 \i^5$. Wouldn't we have any rule, we would just keep it as a polynomial in $\i$ and we would be working with a polynomial ring just that we would now call our variable $\i$ instead of $x$. But we do have the rule $\i^2 = -1$ and when we apply it, the polynomial simplifies to $4 - 5 \i$. This will always happen. Every element of our new ring can be expressed in the form $a + b \i$ where $a,b \in \mathbb{Z}$. We denote that ring by $\mathbb{Z}[\i]$ and call it "$\mathbb{Z}$-adjoin-i" or the "Gaussian integers" after Carl Friedrich Gauss who worked a lot with numbers of that kind in his number-theoretic investigations. The picture we should have in mind for these Gaussian integers is the lattice of points of complex numbers whose real and imaginary part are integers, i.e. a lattice of points in the complex plane.
+
+
+
+\subsubsection{Matrix Rings}
+
+% https://en.wikipedia.org/wiki/Ring_(mathematics)#Matrix_ring_and_endomorphism_ring
+% https://en.wikipedia.org/wiki/Matrix_ring
+
+\subsubsection{Product Rings}
+Given two rings $R$ and $S$, we can from a product ring by forming the set product of the underlying sets and applying the ring operations element-wise to the resulting pairs of elements. This results in the so called direct product of $R$ and $S$. For example $\mathbb{Z}_{12} = \mathbb{Z}_4 \times \mathbb{Z}_3 = \mathbb{Z}_2 \times \mathbb{Z}_2 \times \mathbb{Z}_3 = \mathbb{Z}_2^2 \times \mathbb{Z}_3$. In general, for any $\mathbb{Z}_n$, we can factor the ring into smaller rings according to the prime factorization of $n$.
+% This follows from the Chinese Remainder Theorem.
+
+% https://en.wikipedia.org/wiki/Product_of_rings
+% https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+
+% A product ring has always nonzero zero divisors:
+% https://en.wikipedia.org/wiki/Zero_divisor
+
+
+
+
+
+
+
+
 
 
 %\subsection{Basic Theorems for Rings}
@@ -56,7 +84,11 @@ If instead of adjoining an unspecified symbolic variable $x$, we adjoin the symb
 % interactions of + and *. We have 0 * a = 0 for all rings. But just one theorem does not justify
 % a whole subsection
 
+
+
 \subsection{Structure of Rings}
+After having seen some methods to create new, larger rings from existing rings, we'll now look into dissecting rings into their important constituents. Some of these constituents that we will identify, such as \emph{subrings}, will themselves also be rings. That gives us another way to "construct" new rings from existing rings although it might be more appropriate to call it an "extraction" rather than a "construction".
+
 
 \subsubsection{Zero Divisors}
 A zero divisor 
@@ -139,6 +171,9 @@ The "left" and "right" in this terminology refers to where the factor $r$ from t
 % https://en.wikipedia.org/wiki/Ideal_(ring_theory)
 % https://mathworld.wolfram.com/Ideal.html
 
+% https://math.stackexchange.com/questions/1243296/are-ideals-also-rings
+%   -> if a ring is defined to have unity (as we do), then yes
+
 % pretty concise and simple:
 % https://sites.millersville.edu/bikenaga/abstract-algebra-1/ideals-and-subrings/ideals-and-subrings.pdf
 
@@ -211,35 +246,13 @@ The definition of the two-sided version is the set of all finite sums of product
 
 % https://mathworld.wolfram.com/PrimeIdeal.html
 
-
-\subsection{Construction of Rings}
-
-% The adjoining stuff should go here
-
-%https://en.wikipedia.org/wiki/Ring_(mathematics)#Constructions
-
-\subsubsection{Matrix Rings}
-
-% https://en.wikipedia.org/wiki/Ring_(mathematics)#Matrix_ring_and_endomorphism_ring
-% https://en.wikipedia.org/wiki/Matrix_ring
-
-\subsubsection{Product Rings}
-Given two rings $R$ and $S$, we can from a product ring by forming the set product of the underlying sets and applying the ring operations element-wise to the resulting pairs of elements. This results in the so called direct product of $R$ and $S$. For example $\mathbb{Z}_{12} = \mathbb{Z}_4 \times \mathbb{Z}_3 = \mathbb{Z}_2 \times \mathbb{Z}_2 \times \mathbb{Z}_3 = \mathbb{Z}_2^2 \times \mathbb{Z}_3$. In general, for any $\mathbb{Z}_n$, we can factor the ring into smaller rings according to the prime factorization of $n$.
-% This follows from the Chinese Remainder Theorem.
-
-% https://en.wikipedia.org/wiki/Product_of_rings
-% https://en.wikipedia.org/wiki/Chinese_remainder_theorem
-
-% A product ring has always nonzero zero divisors:
-% https://en.wikipedia.org/wiki/Zero_divisor
-
 \subsubsection{Quotient Rings}
 In ring theory, ideals play a role analogous to that of the normal subgroups in group theory. There, we used normal subgroups to create quotient groups which were sets of ...TBC...
 
+% maybe this should go to somewhere after ideals have been defined
+
 % google: factor ring
 % The quotient of a ring R, by a two-sided ideal I, is denoted by R / I . The result is called a quotient or factor ring. It is the set of additive cosets { a + I | a ∈ I } , with addition and multiplication defined as ( a + I ) + ( b + I ) = a + b + I , and ( a + I ) ( b + I ) = a b + I .
-
-
 
 %\subsubsection{Power Rings}
 % not sure, if it is called like that, maybe it's calle ring of functions

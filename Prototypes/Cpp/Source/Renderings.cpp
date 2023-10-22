@@ -50,10 +50,14 @@ void artsyContours()
     Real y2 = y*y;
     Real d2 = x2 + y2;
 
-    //return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
-    // has fine white lines
+    return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
+    //return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
 
-    return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
+    // Both versions look intersting. 
+    // -Maybe use 3 different versions for the 3 color channels
+    //  -The variant with most birght parts should go to blue, the middle brightness version 
+    //   to red and the low brightness version to green
+    // -Try to tuen it such that it doesn't look so diagonal
   };
 
 

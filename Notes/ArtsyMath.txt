@@ -86,6 +86,7 @@ Ideas and Questions:
  use them for R,G,B. It may also make sense to pass the final height function z = f(x,y) through 
  some sort of waveshaper to tame infinities at poles (if any) and/or to change the distribution
  of the contour lines.
+ Use rsImageContourPlotter for that
 -Maybe we can also do some (loopable) animations by introducing a parameter into the formulas that 
  varies over time. We could either vary the paremeter sinusoidally or use a formula that is itself
  periodic in the time parameter. Maybe for the implicit formulas converted to f(x,y) = c, the 

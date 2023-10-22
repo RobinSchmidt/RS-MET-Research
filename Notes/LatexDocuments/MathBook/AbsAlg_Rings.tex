@@ -61,6 +61,22 @@ Given two rings $R$ and $S$, we can from a product ring by forming the set produ
 % https://en.wikipedia.org/wiki/Product_of_rings
 % https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 
+\subsubsection{Rings of Functions}
+We can take this a step further. Rather than taking the set product of the underlying sets of the two rings, we could take the set $R^S$, i.e. the set of all functions from $S$ to $R$. This will also give a ring. In this case, $S$ doesn't even have to be itself a ring - it's enough if $S$ is a set. As an example, let $S = \mathbb{N}$ and $R = \mathbb{Z}$. Then we are working with the set $\mathbb{Z}^\mathbb{N}$ which is the set of all functions from $\mathbb{N}$ to $\mathbb{Z}$, i.e. the set of all integer valued sequences. With element-wise addition and multiplication, this set forms indeed a ring.
+
+% not sure, if it is called like that, maybe it's calle ring of functions
+
+% https://www.youtube.com/watch?v=MAcdesa9RqA at 17:27
+% Let R be a ring and S be a set, then we can consider R^S which is the set of all maps from S to R. 
+% Then R^S is also a ring.
+% Ex: S = N, R = Z. Elements of our ring are functions from n to Z, i.e. sequences of integer numbers.
+% We get a ring of such sequences by allowing to add and multiply sequences element-wise.
+
+% Maybe it has to do with this:
+% https://en.wikipedia.org/wiki/Endomorphism_ring
+
+% https://math.stackexchange.com/questions/625351/rings-of-functions
+
 
 \subsubsection{Matrix Rings}
 Given a Ring $R$, we can construct a new ring by taking square matrices with elements from our ring. Such matrix rings may be denoted by $M_n(R)$, Mat$_n(R)$ or $R^{n \times n}$. We will use the latter notation. This matrix ring has \emph{nilpotent elements} and \emph{zero divisors} (to be defined below). Its center (i.e. the set of commuting elements) consists of the scalar multiples of the identity matrix. The sets of upper or lower triangular matrices and the set of diagonal matrices over $R$ do also form rings which are, in fact, \emph{subrings} (defined later) of the ring of all square matrices over $R$. The ring of diagonal $n \times n$ matrices is isomorphic to the product ring made from $n$ copies of $R$.
@@ -254,18 +270,6 @@ In ring theory, ideals play a role analogous to that of the normal subgroups in 
 
 % google: factor ring
 % The quotient of a ring R, by a two-sided ideal I, is denoted by R / I . The result is called a quotient or factor ring. It is the set of additive cosets { a + I | a ∈ I } , with addition and multiplication defined as ( a + I ) + ( b + I ) = a + b + I , and ( a + I ) ( b + I ) = a b + I .
-
-%\subsubsection{Power Rings}
-% not sure, if it is called like that, maybe it's calle ring of functions
-
-% https://www.youtube.com/watch?v=MAcdesa9RqA at 17:27
-% Let R be a ring and S be a set, then we can consider R^S which is the set of all maps from S to R. 
-% Then R^S is also a ring.
-% Ex: S = N, R = Z. Elements of our ring are functions from n to Z, i.e. sequences of integer numbers.
-% We get a ring of such sequences by allowing to add and multiply sequences element-wise.
-
-% Maybe it has to do with this:
-% https://en.wikipedia.org/wiki/Endomorphism_ring
 
 
 

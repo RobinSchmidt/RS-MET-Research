@@ -649,7 +649,7 @@ public:
   ...TBC...
   
   For this computation to make sense, we need to assume that the kernel is rotationally symmetric 
-  for a rotation of 90° such that there is no difference between centerSumHorz and centerSumVert 
+  for a rotation of 90Â° such that there is no difference between centerSumHorz and centerSumVert 
   and also no difference between centerSumDiagDown and centerSumDiagUp.  */
   static T crossness(const rsImage<T>& img);
   // Maybe rename to crossness, diamondness, squareness, twinkle
@@ -1319,7 +1319,7 @@ void writeToVideoFileMP4(
 
   // crf: quality - smaller is better, 0 is best, 20 is already quite bad, 10 seems good enough
   // see: https://trac.ffmpeg.org/wiki/Encode/H.264
-  // The range of the CRF scale is 0–51, where 0 is lossless, 23 is the default, and 51 is worst 
+  // The range of the CRF scale is 0â€“51, where 0 is lossless, 23 is the default, and 51 is worst 
   // quality possible. Even the lossless setting may achieve compression of factor 30 with the SIRP
   // model
 
@@ -1884,7 +1884,7 @@ todo: compute lengths of curves, areas, angles, geodesics, ...
 
 References:
   (1) Principles of Tensor Calculus (Taha Sochi)
-  (2) Aufstieg zu den Einsteingleichungen (Michael Ruhrländer)
+  (2) Aufstieg zu den Einsteingleichungen (Michael RuhrlÃ¤nder)
 
 
 todo: 
@@ -6984,7 +6984,7 @@ rsMultiVector<T> rsTan(const rsMultiVector<T>& X)
 // -use a coupled Newton iteration:
 //   s[i+1] = x - s[i]/c[i];  // f[i+1] = x - f[i]/f'[i]
 //   c[i+1] = x + c[i]/s[i];  // may also use c[i]/s[i+1]
-//  ääähh...wait...not - we need to reformulate it as root finding problem, like sin(x) - s = 0
+//  Ã¤Ã¤Ã¤hh...wait...not - we need to reformulate it as root finding problem, like sin(x) - s = 0
 //  but if we replace sin(x) by our current estimate, that becomes a useless trivial identity
 // -maybe enforce sin^2(x) + cos^2(x) = 1 by renormalization: compute sin^2(x) + cos^2(x), take the
 //  norm and divide both components by it (maybe not in every iteration)
@@ -7893,7 +7893,7 @@ representation reveals some more insights. One could also represent quaternions 
 numbers z,w as q = z + w*j...tbc... 
 
 References
-  (1) Mathematik mit 2x2 Matrizen (Hans Jürgen Korsch)   */
+  (1) Mathematik mit 2x2 Matrizen (Hans JÃ¼rgen Korsch)   */
 
 template<class T> 
 class rsQuaternion2

@@ -31,7 +31,7 @@ These graphs are done with manim as said in some response to a comment
 1:19:  2^(sin(x) + cos(y)) = exp(sin(x*y)), aggressive scribble pattern
 1:21:  y = x * sin( sin(x) / sin(y) ), pattern
 1:23:  y * sin(x^2) = x * sin(y^2), pattern
-1:25:  sin(x^2 + y^2) = tan(sin(x+y)), aggressive scribble pattern of diagonals
+1:25:  sin(x^2 + y^2) = tan(sin(x+y)), aggressive radiating scribble pattern of diagonals
 1:27:  tan(x^2 * sin(y^2)) = tan(y^2 * sin(x^2)), bubbly pattern
 1:29:  tan(x^2 + y^2) * cos(x + y) = cos(x^2 + y^2), radially outward radiation
 1:31:  tan(x * sin(y)) = tan(y * sin(y)), pattern

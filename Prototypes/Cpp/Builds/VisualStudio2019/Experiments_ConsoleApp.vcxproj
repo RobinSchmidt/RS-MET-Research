@@ -146,6 +146,9 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\Source\Main.cpp"/>
+    <ClCompile Include="..\..\Source\Renderings.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Tools.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -159,6 +162,9 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\EnvelopeFollower.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\PeakFinding.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\SlewRateLimiter.cpp">
@@ -2044,6 +2050,7 @@
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\_Temp\Matrix.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\Analysis.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\EnvelopeFollower.h"/>
+    <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\PeakFinding.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\SlewRateLimiter.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\SlewRateLimiterLinear.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\AudioBasics\AudioBasics.h"/>
@@ -2742,8 +2749,10 @@
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\legacy\MovedToRAPT\ReadMe.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\legacy\minBlep.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\math\ToDo.txt"/>
+    <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\HowToAddFeatures.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\Ideas.md"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\ReadMe.md"/>
+    <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\SfzNotes.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\ToDo.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\PolyphonyInRosic.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\rosic.txt"/>

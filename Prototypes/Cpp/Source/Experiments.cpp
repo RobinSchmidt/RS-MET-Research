@@ -1,4 +1,4 @@
-﻿#include "Tools.cpp"         // this includes rapt and rosic
+#include "Tools.cpp"         // this includes rapt and rosic
 #include "Attractors.cpp"
 
 //-------------------------------------------------------------------------------------------------
@@ -14116,6 +14116,10 @@ void testPotentialPlotter()
   // https://gnuplot.sourceforge.net/demo_6.1/contourfill.html
 }
 
+
+
+
+
 void makePlotsForPolyaPotentialPaper()
 {
   // This function creates the plots for the paper "The Polya Potential of Complex Functions" whose
@@ -14415,6 +14419,8 @@ NewPlots:
   // This has nice colormaps and colorbars - how was this plot created?
   // https://en.wikipedia.org/wiki/Complex_logarithm#/media/File:Complex_log_domain.svg
 }
+
+
 
 void polyaPlotExperiments()
 {

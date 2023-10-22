@@ -1,6 +1,5 @@
-//#include "Tools.cpp"  // this includes rapt and rosic
 #include "Experiments.cpp"  // includes Tools.cpp which includes libraries rapt and rosic 
-                            // ...what about the rs_testing module? wher is this included?
+#include "Renderings.cpp"   // ...what about the rs_testing module? Where is this included?
 
 int main (int /*argc*/, char* /*argv[]*/)
 {
@@ -39,8 +38,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testManifold2();
   //testManifoldPolar();
   //testManifoldSphere();
-  testManifoldEarth();
-  testGeodesic();
+  //testManifoldEarth();
+  //testGeodesic();
   
   //testSortedSet();
 
@@ -74,7 +73,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testComplexPolar();    // stub
   //testRationalTrigonometry();
   //testLeveledNumber();   // stub
-  testCommutativeHyperOperations();
+  //testCommutativeHyperOperations();
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();
@@ -122,7 +121,11 @@ int main (int /*argc*/, char* /*argv[]*/)
   //polyaGeodesics();
 
   // Batch creation of plots:
-  makePlotsForPolyaPotentialPaper();
+  //makePlotsForPolyaPotentialPaper();  // move to Renderings.cpp
+
+  // Renderings of mathematical art:
+  artsyContours();
+
 
   // Throw away code:
   //testPlotToFile();

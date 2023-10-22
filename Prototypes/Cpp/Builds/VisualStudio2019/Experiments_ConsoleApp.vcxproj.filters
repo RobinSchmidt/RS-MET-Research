@@ -295,6 +295,9 @@
     <ClCompile Include="..\..\Source\Main.cpp">
       <Filter>Experiments\Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Renderings.cpp">
+      <Filter>Experiments\Source</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Tools.cpp">
       <Filter>Experiments\Source</Filter>
     </ClCompile>
@@ -308,6 +311,9 @@
       <Filter>JUCE Modules\rapt\Analysis</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\EnvelopeFollower.cpp">
+      <Filter>JUCE Modules\rapt\Analysis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\PeakFinding.cpp">
       <Filter>JUCE Modules\rapt\Analysis</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\SlewRateLimiter.cpp">
@@ -2212,6 +2218,9 @@
       <Filter>JUCE Modules\rapt\Analysis</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\EnvelopeFollower.h">
+      <Filter>JUCE Modules\rapt\Analysis</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\PeakFinding.h">
       <Filter>JUCE Modules\rapt\Analysis</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Analysis\SlewRateLimiter.h">
@@ -4304,10 +4313,16 @@
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\math\ToDo.txt">
       <Filter>JUCE Modules\rosic\math</Filter>
     </None>
+    <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\HowToAddFeatures.txt">
+      <Filter>JUCE Modules\rosic\unfinished\sampler</Filter>
+    </None>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\Ideas.md">
       <Filter>JUCE Modules\rosic\unfinished\sampler</Filter>
     </None>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\ReadMe.md">
+      <Filter>JUCE Modules\rosic\unfinished\sampler</Filter>
+    </None>
+    <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\SfzNotes.txt">
       <Filter>JUCE Modules\rosic\unfinished\sampler</Filter>
     </None>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rosic\unfinished\sampler\ToDo.txt">

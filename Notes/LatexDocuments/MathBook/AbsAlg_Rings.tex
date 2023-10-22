@@ -52,12 +52,6 @@ We will now look into ways for how we can construct new rings from existing ring
 
 %https://en.wikipedia.org/wiki/Ring_(mathematics)#Constructions
 
-
-\subsubsection{Matrix Rings}
-
-% https://en.wikipedia.org/wiki/Ring_(mathematics)#Matrix_ring_and_endomorphism_ring
-% https://en.wikipedia.org/wiki/Matrix_ring
-
 \subsubsection{Product Rings}
 Given two rings $R$ and $S$, we can from a product ring by forming the set product of the underlying sets and applying the ring operations element-wise to the resulting pairs of elements. This results in the so called direct product of $R$ and $S$. For example $\mathbb{Z}_{12} = \mathbb{Z}_4 \times \mathbb{Z}_3 = \mathbb{Z}_2 \times \mathbb{Z}_2 \times \mathbb{Z}_3 = \mathbb{Z}_2^2 \times \mathbb{Z}_3$. In general, for any $\mathbb{Z}_n$, we can factor the ring into smaller rings according to the prime factorization of $n$.
 % This follows from the Chinese Remainder Theorem.
@@ -67,6 +61,12 @@ Given two rings $R$ and $S$, we can from a product ring by forming the set produ
 % https://en.wikipedia.org/wiki/Product_of_rings
 % https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 
+
+\subsubsection{Matrix Rings}
+Given a Ring $R$, we can construct a new ring by taking square matrices with elements from our ring. Such matrix rings may be denoted by $M_n(R)$, Mat$_n(R)$ or $R^{n \times n}$. We will use the latter notation. This matrix ring has \emph{nilpotent elements} and \emph{zero divisors} (to be defined below). Its center (i.e. the set of commuting elements) consists of the scalar multiples of the identity matrix. The sets of upper or lower triangular matrices and the set of diagonal matrices over $R$ do also form rings which are, in fact, \emph{subrings} (defined later) of the ring of all square matrices over $R$. The ring of diagonal $n \times n$ matrices is isomorphic to the product ring made from $n$ copies of $R$.
+
+% https://en.wikipedia.org/wiki/Ring_(mathematics)#Matrix_ring_and_endomorphism_ring
+% https://en.wikipedia.org/wiki/Matrix_ring
 
 
 \subsubsection{Adjoining Elements}

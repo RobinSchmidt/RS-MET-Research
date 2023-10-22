@@ -177,12 +177,21 @@ Dedekind's Ideals
 
 
 ----------------------------------------------------------------------------------------------------
+Was sind gaußsche Zahlen?
+https://www.youtube.com/watch?v=1R12sqkcCAM
+
+-Norm of a + b*i = a^2 + b^2
+-N(x*y) = N(x) * N(y)
+-Needed for divison with remainder and GCD algo
+ 
+----------------------------------------------------------------------------------------------------
 https://en.wikipedia.org/wiki/Integral_domain
 
 rngs                              rings without identity
 rings                             rings with identity
 commutative rings                 has commutative multiplication
 integral domains                  a product is zero only if one of the factors is zero
+                                  z.D. Integritätsring?
 integrally closed domains         are complicated
 GCD domains                       any two elements have a greatest common divisor
 unique factorization domains      aka UFD, factorial ring, unique factorization is possible for 

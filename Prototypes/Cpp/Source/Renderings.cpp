@@ -18,7 +18,10 @@ void artsyContours()
 
   //std::vector<Real> levels({-1.0, -0.5, 0.0, +0.5, 1.0});
 
-  std::vector<Real> levels({ -0.1, 0, 0.1 });
+  //std::vector<Real> levels({ -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3 });
+  //std::vector<Real> levels({ -0.4, -0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3, 0.4 });
+
+  std::vector<Real> levels({ 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 });
 
 
   Func f;
@@ -44,6 +47,7 @@ void artsyContours()
     Real d2 = x2 + y2;
 
     return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
+    // has fine white lines
 
     //return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
   };

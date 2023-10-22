@@ -21,8 +21,8 @@ branch. That project is similar to the
 
 project in my main repo. It builds a command line application that runs one or more experimental 
 script-like functions that are either supposed to be run in the debugger to inspect variables 
-and/or produce some output files. Which scrip is run is decided by what function calls you uncomment
-in the Main.cpp.
+and/or produce some output files. Which script is run is decided by what function calls you 
+uncomment in the Main.cpp.
 
 
 There's also some activity in:
@@ -31,7 +31,7 @@ There's also some activity in:
 
 where I work on some latex documents where I explain some ideas. Not much to see there yet, though.
 The C++ project is also used to render the figures for the latex documents. This is explained in 
-more detail in the local ReadMe there.
+more detail in the local ReadMe file there.
 
 
 

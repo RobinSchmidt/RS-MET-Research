@@ -18,13 +18,11 @@ void artsyContours()
   Real xMax  = +4 * ratio;
   Real yMin  = -4;
   Real yMax  = +4;
-  Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9 });
+  //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9 });
+  Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });
 
 
  
-
-  //Func f;
-
 
 
   // https://www.youtube.com/watch?v=Ey-W3xwNJU8  at 1:29 has the implicit curve:
@@ -37,52 +35,79 @@ void artsyContours()
   //
   // The contour at height zero should reproduce the original image from the video. But:
   // The original function has has poles which doesn't play well with evaluating it in the 
-  // whole plane so we tame it with a tanh saturator. ...TBC...
-
+  // whole plane so we tame it with a tanh saturator placed into various places. One version 
+  // has also the sign of one of the cosines flipped. ...TBC...
   auto weirdTori = [&] (Real x, Real y, int variant) 
   { 
     Real x2 = x*x;
     Real y2 = y*y;
     Real d2 = x2 + y2;
-
-    Real z;
     switch(variant)
     {
     case 1: return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
     case 2: return tanh(tan(d2)) * cos(x + y) + cos(d2);  // changed sign of last cosine
-    case 3: return tanh(tan(d2)  * cos(x + y) - cos(d2)); // tames only tan part
+    case 3: return tanh(tan(d2)) * cos(x + y) + sin(d2);  // replaced cos with sin
+    case 4: return tanh(tan(d2)) * cos(x + y) - sin(d2); 
+    case 5: return tanh(tan(d2)  * cos(x + y) - cos(d2)); // tames only tan part
     }
+  };
 
 
-    //return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
-    // Lots of black and some lightish gray, little transition areas
-    // Maybe use for green.
+  // Factor these two functions out into a class - it should have the range settings as members:
+  auto getContourLineImage = [&](const Func& func, const Vec& levels)
+  {
+    // Create image with function values:
+    rsImageF imgFunc(width, height);
+    rsImagePlotter<Real, Real> plt;
+    plt.setRange(xMin, xMax, yMin, yMax);
+    plt.generateFunctionImage(func, imgFunc);
+    IP::normalize(imgFunc);
 
+    // Create images with contours:
+    //int  numLevels = levels.size();
+    rsImageContourPlotter<Real, Real> cp;
+    rsImageF imgCont = cp.getContourLines(imgFunc, levels, { 1.0f }, true);
+    return imgCont;
+  };
 
-    //return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
-    // Looks like hollow tori with holes in the surface
-    // Use for blue!
+  auto getContourFillImage = [&](const Func& func, const Vec& levels)
+  {
+    // Create image with function values:
+    rsImageF imgFunc(width, height);
+    rsImagePlotter<Real, Real> plt;
+    plt.setRange(xMin, xMax, yMin, yMax);
+    plt.generateFunctionImage(func, imgFunc);
+    IP::normalize(imgFunc);
 
-    //return tanh(tan(d2)) * cos(x + y) + cos(d2);  // test - changed sign of last cosine
-
-    //return tanh(tan(d2) * cos(x + y))  - cos(d2);
-    // Similar but holes have weirder shape
-    // Use for red!
-
-
-    // Both versions look intersting. 
-    // -Maybe use 3 different versions for the 3 color channels
-    //  -The variant with most birght parts should go to blue, the middle brightness version 
-    //   to red and the low brightness version to green
-    // -Try to tuen it such that it doesn't look so diagonal
+    // Create images with bin-fills:
+    rsImageContourPlotter<Real, Real> cp;
+    int  numLevels = levels.size();
+    int  numColors = numLevels + 1;
+    std::vector<Real> colors = rsRangeLinear(0.f, 1.f, numColors);
+    rsImageF imgFills = cp.getContourFills(imgFunc, levels, colors, true);
+    return imgFills;
   };
 
 
   // Each color channel uses a different variant of the function:
   Func fRed   = [&](Real x, Real y) { return weirdTori(x, y, 1); };
-  Func fGreen = [&](Real x, Real y) { return weirdTori(x, y, 3); };
+  Func fGreen = [&](Real x, Real y) { return weirdTori(x, y, 4); };
   Func fBlue  = [&](Real x, Real y) { return weirdTori(x, y, 2); };
 
+  rsImageF red   = getContourFillImage(fRed,   levels);
+  rsImageF green = getContourFillImage(fGreen, levels);
+  rsImageF blue  = getContourFillImage(fBlue,  levels);
+
+  writeImageToFilePPM(red, green, blue, "Radiation.ppm");
+
+  // Looks good: 132
+  
+
+
+
+  /*
+
+  // Old:
   Func f = fBlue;
 
 
@@ -104,10 +129,17 @@ void artsyContours()
   rsImageF imgFills = cp.getContourFills(imgFunc, levels, colors, true);
 
 
+
+
+
+
   // Write images to files:
   writeScaledImageToFilePPM(imgFunc,  "ContourInput.ppm",  1);
   writeScaledImageToFilePPM(imgCont,  "ContourLines.ppm",  1);
   writeScaledImageToFilePPM(imgFills, "ContourFills.ppm",  1);
+  */
+
+
 
 
 

@@ -8,14 +8,20 @@ void artsyContours()
   using Vec  = std::vector<Real>;
 
 
-  int  w = 800;               // width in pixels
-  int  h = 800;               // height in pixels
+  int  w = 1920;               // width in pixels
+  int  h = 1080;               // height in pixels
+
+
 
 
   Real xMin = -4;
   Real xMax = +4;
   Real yMin = -4;
   Real yMax = +4;
+
+  Real ratio = Real(w) / Real(h);
+  xMin *= ratio;
+  xMax *= ratio;
 
   //Vec levels({-1.0, -0.5, 0.0, +0.5, 1.0});
 
@@ -54,11 +60,13 @@ void artsyContours()
     // Lots of black and some lightish gray, little transition areas
     // Maybe use for green.
 
-    //return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
+    return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
     // Looks like hollow tori with holes in the surface
     // Use for blue!
 
-    return tanh(tan(d2) * cos(x + y))  - cos(d2);
+    //return tanh(tan(d2)) * cos(x + y) + cos(d2);  // test - changed sign of last cosine
+
+    //return tanh(tan(d2) * cos(x + y))  - cos(d2);
     // Similar but holes have weirder shape
     // Use for red!
 

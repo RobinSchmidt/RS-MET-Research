@@ -58,7 +58,15 @@ If instead of adjoining an unspecified symbolic variable $x$, we adjoin the symb
 
 \subsection{Structure of Rings}
 
+\subsubsection{Zero Divisors}
+A zero divisor 
 
+% https://en.wikipedia.org/wiki/Zero_divisor
+% https://en.wikipedia.org/wiki/Nilpotent
+% https://en.wikipedia.org/wiki/Idempotent_(ring_theory)
+
+%Just like the units generalize the notion of the number 1, the zero divisors generalize the number 0. ...TBC...
+% take as example Z^{2 x 2}
 
 \subsubsection{Units}
 Every natural number greater than one has a unique factorization in terms of prime numbers. Unique up to an arbitrary ordering of the factors, that is. The number one has been deliberately excluded from the definition of what a prime number is because if we would include it, the factorization in terms of primes wouldn't be unique anymore because we could multiply any number by $1^n$ without changing it for any $n$. For example $6 = 2 \cdot 3 \cdot 1^n$ for any $n$. We could repair this by stating the theorem as "in terms of primes other than 1" but that would be ugly. The number 1 is considered to be in a class of its own - it's neither a prime nor a composite number. The same is true for zero, by the way - it's another kind of very special number. Within the natural numbers, 1 is the only number that has a multiplicative inverse. This inverse is 1 itself, i.e. 1 is its own inverse. In the integers, we have two numbers that have an inverse - namely $1$ and $-1$. They also happen to be their own inverses, but that's not the important point here. Important is only that they have inverses. If we want to say something similar about unique factorizations for other number systems, we should exclude numbers with inverses from those factorizations because we could always multiply by an arbitrary power of such a number provided that we also include the same power of its inverse. For example $6 = 2 \cdot 3 \cdot (-1)^n$ for any even $n$ in the integers. Because numbers that have inverses would thwart any attempt of a unique factorization (perhaps unique only up to some equivalence relation, as we will see), we consider these numbers with inverses as special enough to deserve a name: they are called \emph{units}.
@@ -88,9 +96,7 @@ It turns out that this equivalence relation is needed to identify certain number
 % https://en.wikipedia.org/wiki/Unit_(ring_theory)#Associatedness
 
 
-\subsubsection{Zero Divisors}
-Just like the units generalize the notion of the number 1, the zero divisors generalize the number 0. ...TBC...
-% take as example Z^{2 x 2}
+
 
 
 \subsubsection{Prime Elements}
@@ -208,6 +214,8 @@ The definition of the two-sided version is the set of all finite sums of product
 
 \subsection{Construction of Rings}
 
+% The adjoining stuff should go here
+
 %https://en.wikipedia.org/wiki/Ring_(mathematics)#Constructions
 
 \subsubsection{Matrix Rings}
@@ -222,6 +230,8 @@ Given two rings $R$ and $S$, we can from a product ring by forming the set produ
 % https://en.wikipedia.org/wiki/Product_of_rings
 % https://en.wikipedia.org/wiki/Chinese_remainder_theorem
 
+% A product ring has always nonzero zero divisors:
+% https://en.wikipedia.org/wiki/Zero_divisor
 
 \subsubsection{Quotient Rings}
 In ring theory, ideals play a role analogous to that of the normal subgroups in group theory. There, we used normal subgroups to create quotient groups which were sets of ...TBC...

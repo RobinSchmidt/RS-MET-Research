@@ -2,6 +2,10 @@
 
 void rainbowRadiation()
 {
+  // Renders a picture that looks like some sort of circularly outward radiating wave. Due to the
+  // way we use different variations of the function and distributing these variations the RGB
+  // color channels, we get an image that features pretty rainbow-ish grdaients.
+
   using Real = float;
   using Func = std::function<Real(Real, Real)> ;
   using IP   = rsImageProcessor<Real>;
@@ -18,7 +22,7 @@ void rainbowRadiation()
   Real xMax  = +4 * ratio;
   Real yMin  = -4;
   Real yMax  = +4;
-  Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });
+  Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });  // Normalized contour levels to be used
 
 
   // https://www.youtube.com/watch?v=Ey-W3xwNJU8  at 1:29 has the implicit curve:
@@ -29,10 +33,12 @@ void rainbowRadiation()
   //
   //   f(x,y) = tan(x^2 + y^2) * cos(x + y) - cos(x^2 + y^2)
   //
-  // The contour at height zero should reproduce the original image from the video. But:
-  // The original function has has poles which doesn't play well with evaluating it in the 
-  // whole plane so we tame it with a tanh saturator placed into various places. One version 
-  // has also the sign of one of the cosines flipped. ...TBC...
+  // A contour line at height zero should reproduce the original image from the video. We want to
+  // create multiple contour levels instead. But there is a problem: The original function has has
+  // poles due to the tan and that doesn't play well with evaluating it in the whole plane so we 
+  // tame it with a tanh saturator placed into various places. We have some other little 
+  // modifications and implement various variants. One version has also the sign of one of the 
+  // cosines flipped, and/or replaced cos with sin.
   auto weirdTori = [&] (Real x, Real y, int variant) 
   { 
     Real x2 = x*x;
@@ -40,17 +46,18 @@ void rainbowRadiation()
     Real d2 = x2 + y2;
     switch(variant)
     {
-    case 1: return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
+    case 1: return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames only tan part by tanh
     case 2: return tanh(tan(d2)) * cos(x + y) + cos(d2);  // changed sign of last cosine
     case 3: return tanh(tan(d2)) * cos(x + y) + sin(d2);  // replaced cos with sin
-    case 4: return tanh(tan(d2)) * cos(x + y) - sin(d2); 
-    case 5: return tanh(tan(d2)  * cos(x + y) - cos(d2)); // tames only tan part
+    case 4: return tanh(tan(d2)) * cos(x + y) - sin(d2);  // and now negated the sin
+    case 5: return tanh(tan(d2)  * cos(x + y) - cos(d2)); // this tames the end result
     }
   };
 
 
-  // ToDo: Factor these two functions out into a class - it should have the range settings as 
-  // members:
+  // Helper functions to produce an rsImage with contour lines or filled contours from a 
+  // std::function. ToDo: Factor these two functions out into a class - it should have the 
+  // range settings as members:
   auto getContourLineImage = [&](const Func& func, const Vec& levels)
   {
     // Create image with function values:
@@ -65,7 +72,6 @@ void rainbowRadiation()
     rsImageF imgCont = cp.getContourLines(imgFunc, levels, { 1.0f }, true);
     return imgCont;
   };
-
   auto getContourFillImage = [&](const Func& func, const Vec& levels)
   {
     // Create image with function values:

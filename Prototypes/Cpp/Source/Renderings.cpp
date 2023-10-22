@@ -11,25 +11,18 @@ void artsyContours()
   int  h = 800;               // height in pixels
 
 
-  Real xMin = -8;
-  Real xMax = +8;
-  Real yMin = -8;
-  Real yMax = +8;
+  Real xMin = -4;
+  Real xMax = +4;
+  Real yMin = -4;
+  Real yMax = +4;
 
-  std::vector<Real> levels({-0.5, 0.0, +0.5});
+  //std::vector<Real> levels({-1.0, -0.5, 0.0, +0.5, 1.0});
 
-
+  std::vector<Real> levels({ -0.1, 0, 0.1 });
 
 
   Func f;
 
-  // Cassini curves:
-  f = [&] (Real x, Real y) { return (x*x+y*y)*(x*x+y*y) - 2*(x*x-y*y) + 1; };
-  // Drawing range is not yet optimal
-  // would perhaps be better to have an x-range from -2..+2 and a y-range from -1..+1
-  // we should make sure that 1 is among the levels in order to see the lemniskate
-  // https://de.wikipedia.org/wiki/Cassinische_Kurve
-  // https://en.wikipedia.org/wiki/Cassini_oval
 
 
   // https://www.youtube.com/watch?v=Ey-W3xwNJU8  at 1:29 has the implicit curve:
@@ -50,9 +43,9 @@ void artsyContours()
     Real y2 = y*y;
     Real d2 = x2 + y2;
 
-    //return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
+    return tanh(tan(d2) * cos(x + y) - cos(d2));  // tames only tan part
 
-    return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
+    //return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames end result
   };
 
 

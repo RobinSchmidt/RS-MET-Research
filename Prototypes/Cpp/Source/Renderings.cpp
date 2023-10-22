@@ -1,6 +1,6 @@
 
 
-void artsyContours()
+void rainbowRadiation()
 {
   using Real = float;
   using Func = std::function<Real(Real, Real)> ;
@@ -49,7 +49,8 @@ void artsyContours()
   };
 
 
-  // Factor these two functions out into a class - it should have the range settings as members:
+  // ToDo: Factor these two functions out into a class - it should have the range settings as 
+  // members:
   auto getContourLineImage = [&](const Func& func, const Vec& levels)
   {
     // Create image with function values:
@@ -60,7 +61,6 @@ void artsyContours()
     IP::normalize(imgFunc);
 
     // Create images with contours:
-    //int  numLevels = levels.size();
     rsImageContourPlotter<Real, Real> cp;
     rsImageF imgCont = cp.getContourLines(imgFunc, levels, { 1.0f }, true);
     return imgCont;
@@ -95,7 +95,7 @@ void artsyContours()
   rsImageF green = getContourFillImage(fGreen, levels);
   rsImageF blue  = getContourFillImage(fBlue,  levels);
 
-  writeImageToFilePPM(red, green, blue, "Radiation.ppm");
+  writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
 }
 
 // Maybe wrap this drawing into a class

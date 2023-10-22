@@ -124,7 +124,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //makePlotsForPolyaPotentialPaper();  // move to Renderings.cpp
 
   // Renderings of mathematical art:
-  artsyContours();
+  rainbowRadiation();
 
 
   // Throw away code:

@@ -18,11 +18,7 @@ void artsyContours()
   Real xMax  = +4 * ratio;
   Real yMin  = -4;
   Real yMax  = +4;
-  //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.9 });
   Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });
-
-
- 
 
 
   // https://www.youtube.com/watch?v=Ey-W3xwNJU8  at 1:29 has the implicit curve:
@@ -93,58 +89,13 @@ void artsyContours()
   Func fRed   = [&](Real x, Real y) { return weirdTori(x, y, 1); };
   Func fGreen = [&](Real x, Real y) { return weirdTori(x, y, 4); };
   Func fBlue  = [&](Real x, Real y) { return weirdTori(x, y, 2); };
+  // It looks good 142 for the variants of the functiosn for the RGB channels
 
   rsImageF red   = getContourFillImage(fRed,   levels);
   rsImageF green = getContourFillImage(fGreen, levels);
   rsImageF blue  = getContourFillImage(fBlue,  levels);
 
   writeImageToFilePPM(red, green, blue, "Radiation.ppm");
-
-  // Looks good: 132
-  
-
-
-
-  /*
-
-  // Old:
-  Func f = fBlue;
-
-
-  // Create image with function values:
-  rsImageF imgFunc(width, height);
-  rsImagePlotter<Real, Real> plt;
-  plt.setRange(xMin, xMax, yMin, yMax);
-  plt.generateFunctionImage(f, imgFunc);
-  IP::normalize(imgFunc);
-
-  // Create images with contours:
-  int  numLevels = levels.size();
-  rsImageContourPlotter<Real, Real> cp;
-  rsImageF imgCont = cp.getContourLines(imgFunc, levels, { 1.0f }, true);
-
-  // Create images with bin-fills:
-  int  numColors = numLevels + 1;
-  std::vector<Real> colors = rsRangeLinear(0.f, 1.f, numColors);
-  rsImageF imgFills = cp.getContourFills(imgFunc, levels, colors, true);
-
-
-
-
-
-
-  // Write images to files:
-  writeScaledImageToFilePPM(imgFunc,  "ContourInput.ppm",  1);
-  writeScaledImageToFilePPM(imgCont,  "ContourLines.ppm",  1);
-  writeScaledImageToFilePPM(imgFills, "ContourFills.ppm",  1);
-  */
-
-
-
-
-
-
-  int dummy = 0;
 }
 
 // Maybe wrap this drawing into a class

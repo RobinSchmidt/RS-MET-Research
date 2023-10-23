@@ -55,6 +55,10 @@ void rainbowRadiation()
     case 4: return tanh(tan(d2)) * cos(x + y) - sin(d2);  // and now negated the sin
     case 5: return tanh(tan(d2)  * cos(x + y) - cos(d2)); // this tames the end result
     }
+    // ToDo:
+    // -Try also to apply the tanh after tan(d2)) * cos(x + y)
+    // -Move that function into a class where we collect such functions. Maybe it should go into
+    //  a file RenderTools.cpp
   };
 
 
@@ -105,6 +109,20 @@ void rainbowRadiation()
   rsImageF blue  = getContourFillImage(fBlue,  levels);
 
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
+
+  // ToDo:
+  // -Rotate the whole picture by 45° cunterclockwise. That gives symmetry over the x and y axis 
+  //  instead of the diagonals. Use rsRotationXY for this.
+  // -The function is a bit to busy in the outward range and a bit too slow in the middle. Try to 
+  //  modify it such that the ripples are less dense far away from the origin and the inner circle
+  //  might be smaller. Maybe some nonlinear mapping like.
+  //  r = (x^2 + y^2), s = pow(r, p), x *= r, y *= r  could achieve this where p is some number to 
+  //  be found by trial and error (p=1 would change nothing). i think, to achiev the desired 
+  //  effect, we need p < 1
+  // -There are also some white-ish lines that look a bit artifacty. Try to figure out how they 
+  //  arise and get rid of them. Maybe by some post-processing. Maybe soft-clipping the intensity
+  //  values could help. Maybe green should be soft-clipped more (i.e. with lower threshold) than 
+  //  red and blue. 
 }
 
 // ToDo:

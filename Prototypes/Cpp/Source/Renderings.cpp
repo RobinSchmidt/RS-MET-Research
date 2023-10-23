@@ -53,6 +53,89 @@ T rsArtsyBivariateFunctions<T>::weirdTori(T x, T y, int variant)
   // -Try also to apply the tanh after tan(d2)) * cos(x + y)
 }
 
+//-------------------------------------------------------------------------------------------------
+
+template<class TPix, class TVal>
+class rsContourImageMaker : public rsImagePlotter<TPix, TVal>
+{
+
+public:
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  void setPixelSize(int width, int height) { this->width = width; this->height = height; }
+
+  /** decides whether we normalize the image before finding the contours. In case of normalization 
+  the contour levels should be in 0...1. Otherwise they should be in the range that the function 
+  produces naturally. */
+  void useNormalizedLevels(bool shouldNormalize) { normalize = shouldNormalize; }
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Contour Drawing
+
+
+  rsImage<TPix> contourLines(const std::function<TVal(TVal, TVal)>& func, 
+    const std::vector<TVal>& levels);
+
+  rsImage<TPix> contourFills(const std::function<TVal(TVal, TVal)>& func, 
+    const std::vector<TVal>& levels);
+
+
+protected:
+
+  int  width  = 480;
+  int  height = 270;
+
+  bool normalize = false;
+
+};
+
+template<class TPix, class TVal>
+rsImage<TPix> rsContourImageMaker<TPix, TVal>::contourLines(
+  const std::function<TVal(TVal, TVal)>& func, const std::vector<TVal>& levels)
+{
+  // Create image with function values:
+  rsImageF imgFunc(width, height);
+  rsImagePlotter<TPix, TVal>::generateFunctionImage(func, imgFunc);
+  if(normalize)
+    rsImageProcessor<TVal>::normalize(imgFunc);
+
+  // Create images with contours:
+  rsImageContourPlotter<TPix, TVal> cp;
+  rsImageF imgCont = cp.getContourLines(imgFunc, levels, { 1.0f }, true);
+  return imgCont;
+
+  // ToDo:
+  // -Instead of hardcoding the colors via the { 1.0f } in the call to getContourLines, let the 
+  //  user (optionally) pass in the array (of type TPix)
+}
+
+template<class TPix, class TVal>
+rsImage<TPix> rsContourImageMaker<TPix, TVal>::contourFills(
+  const std::function<TVal(TVal, TVal)>& func, const std::vector<TVal>& levels)
+{
+  // Create image with function values:
+  rsImageF imgFunc(width, height);
+  rsImagePlotter<TPix, TVal>::generateFunctionImage(func, imgFunc);
+  if(normalize)
+    rsImageProcessor<TVal>::normalize(imgFunc);
+
+  // Create images with bin-fills:
+  int numLevels = levels.size();
+  int numColors = numLevels + 1;
+  std::vector<TVal> colors = rsRangeLinear(0.f, 1.f, numColors);
+  rsImageF imgFills = rsImagePlotter<TPix, TVal>::getContourFills(imgFunc, levels, colors, true);
+  return imgFills;
+
+  // ToDo:
+  // -Instead of hardcoding the colors via the colors = rsRangeLinear(...) in the call to 
+  //  getContourFills, let the user (optionally) pass in the array (of type TPix)
+}
+
+
+
 
 
 //=================================================================================================
@@ -89,6 +172,13 @@ void rainbowRadiation()
   // range settings as members:
   auto getContourLineImage = [&](const Func& func, const Vec& levels)
   {
+    rsContourImageMaker<Real, Real> cim;
+    cim.setRange(xMin, xMax, yMin, yMax);
+    cim.setPixelSize(width, height);
+    cim.useNormalizedLevels(true);
+    return cim.contourLines(func, levels);
+
+    /*
     // Create image with function values:
     rsImageF imgFunc(width, height);
     rsImagePlotter<Real, Real> plt;
@@ -100,6 +190,7 @@ void rainbowRadiation()
     rsImageContourPlotter<Real, Real> cp;
     rsImageF imgCont = cp.getContourLines(imgFunc, levels, { 1.0f }, true);
     return imgCont;
+    */
   };
   auto getContourFillImage = [&](const Func& func, const Vec& levels)
   {
@@ -118,6 +209,7 @@ void rainbowRadiation()
     rsImageF imgFills = cp.getContourFills(imgFunc, levels, colors, true);
     return imgFills;
   };
+  // Maybe move to rsImagePlotter
 
 
   // Each color channel uses a different variant of the function:
@@ -131,6 +223,13 @@ void rainbowRadiation()
   rsImageF blue  = getContourFillImage(fBlue,  levels);
 
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
+
+  // Test:
+  rsImageF lines = getContourLineImage(fRed, levels);
+  writeImageToFilePPM(lines, "RainbowRadiationLines.ppm");
+
+
+
 
   // ToDo:
   // -Rotate the whole picture by 45° cunterclockwise. That gives symmetry over the x and y axis 

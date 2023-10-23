@@ -3,6 +3,61 @@
 // visualize some math or physics concepts and potentially go as figures into a math paper or the 
 // audio signals may eventually end up in some sample library or whatever.
 
+//=================================================================================================
+// Image Rendering Tools
+
+template<class T>
+class rsArtsyBivariateFunctions
+{
+
+public:
+
+  /** f(x,y) = tan(x^2 + y^2) * cos(x + y) - cos(x^2 + y^2)
+
+  This function based on the implicit curve defition:
+   
+    tan(x^2 + y^2) * cos(x + y) = cos(x^2 + y^2)
+   
+  taken from this video (at 1:29): https://www.youtube.com/watch?v=Ey-W3xwNJU8. I turned it into
+  into a function f(x,y) by bringing everything to one side and replace the zero that remains on 
+  the other side by the output. A contour line at height zero should reproduce the original image
+  from the video. We want to create multiple contour levels instead. But there is a problem: The 
+  original function has has poles due to the tan and that doesn't play well with evaluating it in 
+  the whole plane so we tame it with a tanh saturator placed into various places. We have some 
+  other little modifications and implement various variants. One version has also the sign of one 
+  of the cosines flipped, and/or replaced cos with sin. When just rendering the function itself 
+  without doing the contour filling business, it looks a bit like 3D rendered Tori, hence the 
+  name. */
+  static T weirdTori(T x, T y, int variant);
+
+
+
+
+};
+
+template<class T>
+T rsArtsyBivariateFunctions<T>::weirdTori(T x, T y, int variant)
+{
+  T x2 = x*x;
+  T y2 = y*y;
+  T d2 = x2 + y2;
+  switch(variant)
+  {
+  case 1: return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames only tan part by tanh
+  case 2: return tanh(tan(d2)) * cos(x + y) + cos(d2);  // changed sign of last cosine
+  case 3: return tanh(tan(d2)) * cos(x + y) + sin(d2);  // replaced cos with sin
+  case 4: return tanh(tan(d2)) * cos(x + y) - sin(d2);  // and now negated the sin
+  case 5: return tanh(tan(d2)  * cos(x + y) - cos(d2)); // this tames the end result
+  }
+  // ToDo:
+  // -Try also to apply the tanh after tan(d2)) * cos(x + y)
+}
+
+
+
+//=================================================================================================
+// Image Rendering Scripts
+
 void rainbowRadiation()
 {
   // Renders a picture that looks like some sort of circularly outward radiating wave. Due to the
@@ -13,9 +68,10 @@ void rainbowRadiation()
   using Func = std::function<Real(Real, Real)> ;
   using IP   = rsImageProcessor<Real>;
   using Vec  = std::vector<Real>;
+  using ABF  = rsArtsyBivariateFunctions<Real>;
 
   // Image parameters:
-  int scale  = 4;                // scaling: 1: = 480 X 270, 4: 1920 x 1080
+  int scale  = 4;                // scaling: 1: = 480 X 270 (preview), 4: 1920 x 1080 (full)
   int width  = scale * 480;      // width in pixels
   int height = scale * 270;      // height in pixels
 
@@ -42,6 +98,7 @@ void rainbowRadiation()
   // tame it with a tanh saturator placed into various places. We have some other little 
   // modifications and implement various variants. One version has also the sign of one of the 
   // cosines flipped, and/or replaced cos with sin.
+  /*
   auto weirdTori = [&] (Real x, Real y, int variant) 
   { 
     Real x2 = x*x;
@@ -60,6 +117,7 @@ void rainbowRadiation()
     // -Move that function into a class where we collect such functions. Maybe it should go into
     //  a file RenderTools.cpp
   };
+  */
 
 
   // Helper functions to produce an rsImage with contour lines or filled contours from a 
@@ -99,9 +157,9 @@ void rainbowRadiation()
 
 
   // Each color channel uses a different variant of the function:
-  Func fRed   = [&](Real x, Real y) { return weirdTori(x, y, 1); };
-  Func fGreen = [&](Real x, Real y) { return weirdTori(x, y, 4); };
-  Func fBlue  = [&](Real x, Real y) { return weirdTori(x, y, 2); };
+  Func fRed   = [&](Real x, Real y) { return ABF::weirdTori(x, y, 1); };
+  Func fGreen = [&](Real x, Real y) { return ABF::weirdTori(x, y, 4); };
+  Func fBlue  = [&](Real x, Real y) { return ABF::weirdTori(x, y, 2); };
   // It looks good 142 for the variants of the functiosn for the RGB channels
 
   rsImageF red   = getContourFillImage(fRed,   levels);

@@ -17,9 +17,16 @@ Because prime numbers are so special, it would be nice to have some sort of form
 \paragraph{Willan's Formula}
 But what exactly do I mean by "easy to evaluate". If anything is allowed, than it is indeed possible to write down an explicit formula for the $n$th prime. For example, this beast here:
 \begin{equation}
- p(n) = ...
+ p(n) = 1 + \sum_{i = 1}^{2^n} 
+ \floor[\Bigg]{
+ \Biggl(
+ \frac{n}{\sum_{j=1}^{i} \floor{ (\cos(\pi \frac{(j+1)!+1}{j})^2) } 
+  }
+ \Biggr)^{1/n}
+ }
 \end{equation}
 is due to C.P. Willans and I will not explain here why it works because that's not my point here [TODO: insert reference to an explanation]. My point is that it certainly qualifies an explicit formula but it is practically useless. The first thing we note is that the outer sum goes up to $2^n$ which already puts it into the category of exponential complexity even if we assume the thing inside the sum to be in the constant complexity realm (which it certainly isn't).
+
 
 \paragraph{The Sieve of Erathostenes}
 

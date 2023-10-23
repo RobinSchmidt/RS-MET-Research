@@ -30,9 +30,6 @@ public:
   name. */
   static T weirdTori(T x, T y, int variant);
 
-
-
-
 };
 
 template<class T>
@@ -55,13 +52,12 @@ T rsArtsyBivariateFunctions<T>::weirdTori(T x, T y, int variant)
 
 //-------------------------------------------------------------------------------------------------
 
-// rename to rsMathContourPlotter
-// We already have rsImageContourPlotter but that class is a pure image-processing facility where
-// the input is also an image. Here, the input is a std::function
-
+/** A class for creating contour plots from mathematical functions. The difference to
+rsImageContourPlotter is that that class is a pure image-processing facility where
+the input is also an image. Here, the input is a std::function. ...TBC... */
 
 template<class TPix, class TVal>
-class rsContourImageMaker : public rsImagePlotter<TPix, TVal>
+class rsMathContourPlotter : public rsImagePlotter<TPix, TVal>
 {
 
 public:
@@ -71,10 +67,7 @@ public:
 
   void setPixelSize(int width, int height) { this->width = width; this->height = height; }
 
-  //void setRange(TVal minX, TVal maxX, TVal minY, TVal maxY)
-  //{ xMin = minX; xMax = maxX; yMin = minY; yMax = maxX; }
-
-  /** decides whether we normalize the image before finding the contours. In case of normalization 
+  /** Decides whether we normalize the image before finding the contours. In case of normalization 
   the contour levels should be in 0...1. Otherwise they should be in the range that the function 
   produces naturally. */
   void useNormalizedLevels(bool shouldNormalize) { normalize = shouldNormalize; }
@@ -95,18 +88,12 @@ protected:
 
   int  width  = 480;
   int  height = 270;
-
-  //TVal xMin = -1;
-  //TVal xMax = +1;
-  //Tval yMin = -1;
-  //TVal yMax = +1;
-
   bool normalize = false;
 
 };
 
 template<class TPix, class TVal>
-rsImage<TPix> rsContourImageMaker<TPix, TVal>::contourLines(
+rsImage<TPix> rsMathContourPlotter<TPix, TVal>::contourLines(
   const std::function<TVal(TVal, TVal)>& func, const std::vector<TVal>& levels)
 {
   // Create image with function values:
@@ -126,7 +113,7 @@ rsImage<TPix> rsContourImageMaker<TPix, TVal>::contourLines(
 }
 
 template<class TPix, class TVal>
-rsImage<TPix> rsContourImageMaker<TPix, TVal>::contourFills(
+rsImage<TPix> rsMathContourPlotter<TPix, TVal>::contourFills(
   const std::function<TVal(TVal, TVal)>& func, const std::vector<TVal>& levels)
 {
   // Create image with function values:
@@ -147,9 +134,6 @@ rsImage<TPix> rsContourImageMaker<TPix, TVal>::contourFills(
   // -Instead of hardcoding the colors via the colors = rsRangeLinear(...) in the call to 
   //  getContourFills, let the user (optionally) pass in the array (of type TPix)
 }
-
-
-
 
 
 //=================================================================================================
@@ -186,53 +170,21 @@ void rainbowRadiation()
   // range settings as members:
   auto getContourLineImage = [&](const Func& func, const Vec& levels)
   {
-    rsContourImageMaker<Real, Real> cim;
+    rsMathContourPlotter<Real, Real> cim;
     cim.setRange(xMin, xMax, yMin, yMax);
     cim.setPixelSize(width, height);
     cim.useNormalizedLevels(true);
     return cim.contourLines(func, levels);
-
-    /*
-    // Create image with function values:
-    rsImageF imgFunc(width, height);
-    rsImagePlotter<Real, Real> plt;
-    plt.setRange(xMin, xMax, yMin, yMax);
-    plt.generateFunctionImage(func, imgFunc);
-    IP::normalize(imgFunc);
-
-    // Create images with contours:
-    rsImageContourPlotter<Real, Real> cp;
-    rsImageF imgCont = cp.getContourLines(imgFunc, levels, { 1.0f }, true);
-    return imgCont;
-    */
   };
   auto getContourFillImage = [&](const Func& func, const Vec& levels)
   {
-    rsContourImageMaker<Real, Real> cim;
+    rsMathContourPlotter<Real, Real> cim;
     cim.setRange(xMin, xMax, yMin, yMax);
     cim.setPixelSize(width, height);
     cim.useNormalizedLevels(true);
     return cim.contourFills(func, levels);
-
-
-    /*
-    // Create image with function values:
-    rsImageF imgFunc(width, height);
-    rsImagePlotter<Real, Real> plt;
-    plt.setRange(xMin, xMax, yMin, yMax);
-    plt.generateFunctionImage(func, imgFunc);
-    IP::normalize(imgFunc);
-
-    // Create images with bin-fills:
-    rsImageContourPlotter<Real, Real> cp;
-    int  numLevels = levels.size();
-    int  numColors = numLevels + 1;
-    std::vector<Real> colors = rsRangeLinear(0.f, 1.f, numColors);
-    rsImageF imgFills = cp.getContourFills(imgFunc, levels, colors, true);
-    return imgFills;
-    */
   };
-  // Maybe move to rsImagePlotter
+  // Try to get rid
 
 
   // Each color channel uses a different variant of the function:

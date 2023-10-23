@@ -143,31 +143,20 @@ rsImage<TPix> rsMathContourPlotter<TPix, TVal>::contourFills(
 
 //-------------------------------------------------------------------------------------------------
 
+/** Applies a 3x3 box filter to all inner pixels for which the given predicate/condition evaluates
+to true. The condition expects the pixel's value as input. */
 template<class TPix, class TPred>
 rsImage<TPix> smoothCondionally(const rsImage<TPix>& in, TPred cond)
 {
   rsImage<TPix> out(in.getWidth(), in.getHeight());
-
-
-  for(int y = 1; y < in.getHeight()-1; y++)
-  {
-
-    for(int x = 1; x < in.getWidth()-1; x++)
-    {
-      if(cond(in(x, y)))
-      {
+  for(int y = 1; y < in.getHeight()-1; y++) {
+    for(int x = 1; x < in.getWidth()-1; x++) {
+      if(cond(in(x, y))) {
         out(x, y) = (1./9) * (   in(x-1, y-1) + in(x-1, y) + in(x-1, y+1) 
                                + in(x,   y-1) + in(x,   y) + in(x,   y+1) 
-                               + in(x+1, y-1) + in(x+1, y) + in(x+1, y+1));
-      }
-      else
-      {
-        out(x, y) = in(x, y);
-      }
-    }
-  }
-
-
+                               + in(x+1, y-1) + in(x+1, y) + in(x+1, y+1)); }
+      else {
+        out(x, y) = in(x, y); }}}
   return out;
 }
 
@@ -228,8 +217,7 @@ void rainbowRadiation()
 
 
   // ToDo:
-  // -Rotate the whole picture by 45° cunterclockwise. That gives symmetry over the x and y axis 
-  //  instead of the diagonals. Use rsRotationXY for this.
+  // -Maybe darken the green channel a little bit.
   // -The function is a bit to busy in the outward range and a bit too slow in the middle. Try to 
   //  modify it such that the ripples are less dense far away from the origin and the inner circle
   //  might be smaller. Maybe some nonlinear mapping like.

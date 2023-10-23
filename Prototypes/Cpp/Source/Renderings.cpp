@@ -71,7 +71,7 @@ void rainbowRadiation()
   using ABF  = rsArtsyBivariateFunctions<Real>;
 
   // Image parameters:
-  int scale  = 4;                // scaling: 1: = 480 X 270 (preview), 4: 1920 x 1080 (full)
+  int scale  = 1;                // scaling: 1: = 480 X 270 (preview), 4: 1920 x 1080 (full)
   int width  = scale * 480;      // width in pixels
   int height = scale * 270;      // height in pixels
 
@@ -82,42 +82,6 @@ void rainbowRadiation()
   Real yMin  = -4;
   Real yMax  = +4;
   Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });  // Normalized contour levels to be used
-
-
-  // https://www.youtube.com/watch?v=Ey-W3xwNJU8  at 1:29 has the implicit curve:
-  //
-  //   tan(x^2 + y^2) * cos(x + y) = cos(x^2 + y^2)
-  //
-  // We turn it into a function f(x,y) as 
-  //
-  //   f(x,y) = tan(x^2 + y^2) * cos(x + y) - cos(x^2 + y^2)
-  //
-  // A contour line at height zero should reproduce the original image from the video. We want to
-  // create multiple contour levels instead. But there is a problem: The original function has has
-  // poles due to the tan and that doesn't play well with evaluating it in the whole plane so we 
-  // tame it with a tanh saturator placed into various places. We have some other little 
-  // modifications and implement various variants. One version has also the sign of one of the 
-  // cosines flipped, and/or replaced cos with sin.
-  /*
-  auto weirdTori = [&] (Real x, Real y, int variant) 
-  { 
-    Real x2 = x*x;
-    Real y2 = y*y;
-    Real d2 = x2 + y2;
-    switch(variant)
-    {
-    case 1: return tanh(tan(d2)) * cos(x + y) - cos(d2);  // tames only tan part by tanh
-    case 2: return tanh(tan(d2)) * cos(x + y) + cos(d2);  // changed sign of last cosine
-    case 3: return tanh(tan(d2)) * cos(x + y) + sin(d2);  // replaced cos with sin
-    case 4: return tanh(tan(d2)) * cos(x + y) - sin(d2);  // and now negated the sin
-    case 5: return tanh(tan(d2)  * cos(x + y) - cos(d2)); // this tames the end result
-    }
-    // ToDo:
-    // -Try also to apply the tanh after tan(d2)) * cos(x + y)
-    // -Move that function into a class where we collect such functions. Maybe it should go into
-    //  a file RenderTools.cpp
-  };
-  */
 
 
   // Helper functions to produce an rsImage with contour lines or filled contours from a 

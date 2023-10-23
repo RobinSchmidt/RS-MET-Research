@@ -135,6 +135,35 @@ rsImage<TPix> rsMathContourPlotter<TPix, TVal>::contourFills(
   //  getContourFills, let the user (optionally) pass in the array (of type TPix)
 }
 
+//-------------------------------------------------------------------------------------------------
+
+template<class TPix, class TPred>
+rsImage<TPix> smoothCondionally(const rsImage<TPix>& in, TPred cond)
+{
+  rsImage<TPix> out(in.getWidth(), in.getHeight());
+
+
+  for(int y = 1; y < in.getHeight()-1; y++)
+  {
+
+    for(int x = 1; x < in.getWidth()-1; x++)
+    {
+      if(cond(in(x, y)))
+      {
+        out(x, y) = (1./9) * (   in(x-1, y-1) + in(x-1, y) + in(x-1, y+1) 
+                               + in(x,   y-1) + in(x,   y) + in(x,   y+1) 
+                               + in(x+1, y-1) + in(x+1, y) + in(x+1, y+1));
+      }
+      else
+      {
+        out(x, y) = in(x, y);
+      }
+    }
+  }
+
+
+  return out;
+}
 
 //=================================================================================================
 // Image Rendering Scripts
@@ -147,7 +176,6 @@ void rainbowRadiation()
 
   using Real = float;
   using Func = std::function<Real(Real, Real)> ;
-  using IP   = rsImageProcessor<Real>;
   using Vec  = std::vector<Real>;
   using ABF  = rsArtsyBivariateFunctions<Real>;
 
@@ -165,6 +193,7 @@ void rainbowRadiation()
 
   // Normalized contour levels to be used:
   bool normalize = true;
+  //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });
   Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });
 
   // Each color channel uses a different variant of the function:
@@ -185,8 +214,11 @@ void rainbowRadiation()
 
   // Write the color channels seperately to images forinspection:
   writeImageToFilePPM(red,   "RainbowRadiationR.ppm");
-  writeImageToFilePPM(green, "RainbowRadiationG.ppm");
-  writeImageToFilePPM(blue,  "RainbowRadiationB.ppm");
+  rsImageF redS = smoothCondionally(red, [](Real v){ return v >= 0.75; });
+  writeImageToFilePPM(redS,  "RainbowRadiationR_S.ppm");
+
+  //writeImageToFilePPM(green, "RainbowRadiationG.ppm");
+  //writeImageToFilePPM(blue,  "RainbowRadiationB.ppm");
 
   // ToDo:
   // -Rotate the whole picture by 45° cunterclockwise. That gives symmetry over the x and y axis 

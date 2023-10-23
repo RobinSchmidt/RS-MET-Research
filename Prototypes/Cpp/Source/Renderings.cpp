@@ -162,31 +162,13 @@ void rainbowRadiation()
   Real xMax  = +4 * ratio;
   Real yMin  = -4;
   Real yMax  = +4;
-  Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });  // Normalized contour levels to be used
 
-
-  /*
-  // Helper functions to produce an rsImage with contour lines or filled contours from a 
-  // std::function. ToDo: Factor these two functions out into a class - it should have the 
-  // range settings as members:
-  auto getContourLineImage = [&](const Func& func, const Vec& levels)
-  {
-    rsMathContourPlotter<Real, Real> cim;
-    cim.setRange(xMin, xMax, yMin, yMax);
-    cim.setPixelSize(width, height);
-    cim.useNormalizedLevels(true);
-    return cim.contourLines(func, levels);
-  };
-  auto getContourFillImage = [&](const Func& func, const Vec& levels)
-  {
-    rsMathContourPlotter<Real, Real> cim;
-    cim.setRange(xMin, xMax, yMin, yMax);
-    cim.setPixelSize(width, height);
-    cim.useNormalizedLevels(true);
-    return cim.contourFills(func, levels);
-  };
-  // Try to get rid
-  */
+ // Normalized contour levels to be used:
+ Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });  // 1
+ //Vec levels({ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });  // 2
+ //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95 });  // 3
+ //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 1.0 }); // 4
+ //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.1, 1.2 }); // 5
 
 
   // Each color channel uses a different variant of the function:
@@ -205,22 +187,10 @@ void rainbowRadiation()
   rsImageF blue  = cim.contourFills(fBlue,  levels);
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
 
-  // Test:
-  rsImageF lines = cim.contourLines(fRed, levels);
-  writeImageToFilePPM(lines, "RainbowRadiationLines.ppm");
-
-
-  /*
-  rsImageF red   = getContourFillImage(fRed,   levels);
-  rsImageF green = getContourFillImage(fGreen, levels);
-  rsImageF blue  = getContourFillImage(fBlue,  levels);
-  writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
-
-  // Test:
-  rsImageF lines = getContourLineImage(fRed, levels);
-  writeImageToFilePPM(lines, "RainbowRadiationLines.ppm");
-  */
-
+  // Write the color channels seperately to images:
+  writeImageToFilePPM(red,   "RainbowRadiationR.ppm");
+  writeImageToFilePPM(green, "RainbowRadiationG.ppm");
+  writeImageToFilePPM(blue,  "RainbowRadiationB.ppm");
 
 
 
@@ -231,16 +201,19 @@ void rainbowRadiation()
   //  modify it such that the ripples are less dense far away from the origin and the inner circle
   //  might be smaller. Maybe some nonlinear mapping like.
   //  r = (x^2 + y^2), s = pow(r, p), x *= r, y *= r  could achieve this where p is some number to 
-  //  be found by trial and error (p=1 would change nothing). i think, to achiev the desired 
+  //  be found by trial and error (p=1 would change nothing). I think, to achieve the desired 
   //  effect, we need p < 1
   // -There are also some white-ish lines that look a bit artifacty. Try to figure out how they 
   //  arise and get rid of them. Maybe by some post-processing. Maybe soft-clipping the intensity
   //  values could help. Maybe green should be soft-clipped more (i.e. with lower threshold) than 
-  //  red and blue. 
+  //  red and blue. Or maybe green should use other levels..hmm...doesn't seem to help much
+  //  Could it be that these occur where the tan changes sign abruptly? If so, maybe it could help 
+  //  to use (conditional) smoothing? Using IrfanView's Blur 3 times seems to get rid of it
+  //  ...but no! It's too blurry overall. We really need to restrict the blur to the artifacts.
+  //  Maybe check if the pixel is white and if so, use the average of the 3x3 cell. The 
+  //  artifact is always 1 pixel wide, independently from the resolution. 
+  // -Maybe try to use unnormalized contour levels
 }
 
 // ToDo:
-// -getContourLineImage/getContourFillImage should not be local functions. They may be used for
-//  multiple images and could be library functions. Maybe move them into some library.
 // -Maybe prefix the function names with img for images, ani for animations and snd for sounds.
-//

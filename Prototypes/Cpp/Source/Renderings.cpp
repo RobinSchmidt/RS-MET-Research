@@ -1,10 +1,13 @@
-
+// This file contains functions that render images, animations or audio samples. The rendered 
+// results may serve multiple purposes. They can be either just be pretty artworks or they may 
+// visualize some math or physics concepts and potentially go as figures into a math paper or the 
+// audio signals may eventually end up in some sample library or whatever.
 
 void rainbowRadiation()
 {
   // Renders a picture that looks like some sort of circularly outward radiating wave. Due to the
-  // way we use different variations of the function and distributing these variations the RGB
-  // color channels, we get an image that features pretty rainbow-ish grdaients.
+  // way we use different variations of the function and distributing these variations to the RGB
+  // color channels, we get an image that features pretty rainbow-ish color gradients.
 
   using Real = float;
   using Func = std::function<Real(Real, Real)> ;
@@ -104,4 +107,8 @@ void rainbowRadiation()
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
 }
 
-// Maybe wrap this drawing into a class
+// ToDo:
+// -getContourLineImage/getContourFillImage should not be local functions. They may be used for
+//  multiple images and could be library functions. Maybe move them into some library.
+// -Maybe prefix the function names with img for images, ani for animations and snd for sounds.
+//

@@ -1,7 +1,37 @@
 \section{Division} 
 
 \section{Divisibility}
-A natural number like, say, $12$ can be divided by $6$ to give $2$. The result $2$ happens to be a natural number. We will denote this circumstances as $6 \mid 12$ which reads as "six divides twelve" or "six is a divisor of twelve". Conversely, it can also divided by $2$ to give $6$, so we also have $2 \mid 12$. On the other hand $12 / 5 = 2.4$ which is not a natural number, so $5$ does not divide $12$ which we write as $5 \nmid 12$. The number $12$ is also divisible by $3$ because this division results in $4$ which is also a natural number. And, of course, by symmetry, we have also that $4$ divides $12$ because that gives $3$. Looks like the set of divisors of $12$ is given by $\{2,3,4,6\}$. You may check that $12$ has no other divisors except the numbers $1$ and $12$ itself. The number itself and the number $1$ are always divisors of any number, so we call them the trivial divisors. As a matter of convention, in a list of divisors of a given number, we usually include these trivial divisors as well, so the set of divisors of $12$ is actually $\{1,2,3,4,6,12\}$. If we count the number of divisors, we get $6$. The number of divisors of a number is an important enough number theoretic feature that it has a notation: for a natural number $n$, we denote by $d(n)$ the function that maps $n$ to its number of divisors. So, we have $d(12) = 6$. This is actually a quite high value for $d$ for such a small number as $12$. As you may easily verify or take my word for it, 12 has a $d(n)$ that is greater than the $d(n)$ of all numbers below $12$. If a number has that feature, we call it a \emph{highly composite} number. If the number of divisors of a number $n$ is not "strictly greater than" but only "greater or equal to" the number of divisors of all smaller numbers, we call it a \emph{largely composite} number.
+A natural number like, say, $12$ can be divided by $6$ to give $2$. The result $2$ happens to be a natural number. We will denote this circumstances as $6 \mid 12$ which reads as "six divides twelve" or "six is a divisor of twelve". Conversely, it can also divided by $2$ to give $6$, so we also have $2 \mid 12$. On the other hand $12 / 5 = 2.4$ which is not a natural number, so $5$ does not divide $12$ which we write as $5 \nmid 12$. The number $12$ is also divisible by $3$ because this division results in $4$ which is also a natural number. And, of course, by symmetry, we have also that $4$ divides $12$ because that gives $3$. Looks like the set of divisors of $12$ is given by $\{2,3,4,6\}$. You may check that $12$ has no other divisors except the numbers $1$ and $12$ itself. The number itself and the number $1$ are always divisors of any number, so we call them the trivial divisors. As a matter of convention, in a list of divisors of a given number, we usually include these trivial divisors as well, so the set of divisors of $12$ is actually $\{1,2,3,4,6,12\}$. 
+
+\subsection{Composite Numbers}
+Any number that has nontrivial divisors is called a \emph{composite number} because we can multiplicatively "compose" that number from smaller numbers. If we count the number of divisors of $12$, we get $6$. The number of divisors of a number is an important enough number theoretic feature that it has a notation: for a natural number $n$, we denote by $d(n)$ the function that maps $n$ to its number of divisors. So, we have $d(12) = 6$. This is actually a quite high value for $d$ for such a small number as $12$. As you may easily verify or take my word for it, 12 has a $d(n)$ that is greater than the $d(n)$ of all numbers below $12$. If a number has that feature, we call it a \emph{highly composite} number. If the number of divisors of a number $n$ is not "strictly greater than" but only "greater or equal to" the number of divisors of all smaller numbers, we call it a \emph{largely composite} number. So, "highly composite" is a stronger notion that "largely composite". There is also the even stronger notion of a \emph{superiorly composite number}...TBC...
+
+\subsection{Prime Numbers}
+There are some numbers that have \emph{only} the trivial divisors. These very special numbers take the center stage in number theory and are called \emph{prime numbers}. By and large, prime numbers are defined to be numbers that are divisible only by themselves and by $1$. According to that definition, the number $1$ would actually qualify but by convention, we do not consider $1$ a prime number. This was a matter of debate among mathematicians until fairly recently (reminder: definitions can't be right or wrong - only more or less useful) but that debate is now settled.
+%The first few
+...TBC...give table of first 100 or so prime numbers.
+
+\medskip
+Because prime numbers are so special, it would be nice to have some sort of formula or algorithm to produce all the prime numbers. Ideally, we would like to define a function $p(n)$ that spits out the $n$th prime number. If you can find such a formula that is easy to evaluate, eternal fame is yours. It's not at all easy and actually one of the holy grails of mathematics.
+
+\paragraph{Willan's Formula}
+But what exactly do I mean by "easy to evaluate". If anything is allowed, than it is indeed possible to write down an explicit formula for the $n$th prime. For example, this beast here:
+\begin{equation}
+ p(n) = ...
+\end{equation}
+is due to C.P. Willans and I will not explain here why it works because that's not my point here [TODO: insert reference to an explanation]. My point is that it certainly qualifies an explicit formula but it is practically useless. The first thing we note is that the outer sum goes up to $2^n$ which already puts it into the category of exponential complexity even if we assume the thing inside the sum to be in the constant complexity realm (which it certainly isn't).
+
+\paragraph{The Sieve of Erathostenes}
+
+
+%Finding a closed form formula that spits out all the prime numbers and only prime
+%how do we find all the prime numbers? 
+
+% Willan's formula:
+% https://www.youtube.com/watch?v=j5s0h42GfvM
+% https://en.wikipedia.org/wiki/Formula_for_primes
+% https://mathworld.wolfram.com/WillansFormula.html
+% https://www.cambridge.org/core/journals/mathematical-gazette/article/abs/on-formulae-for-the-nth-prime-number/43E49D11DFEAD3E4CBC12F17C87F5EE1
 
 % we say that $12$ is divisible by $2$ and $6$ and 
 
@@ -21,6 +51,6 @@ A natural number like, say, $12$ can be divided by $6$ to give $2$. The result $
 \paragraph{Lowest Common Multiples}
 A concept that is closely related to the idea of a greatest common divisor is that of a lowest common multiple.
 
-\section{Prime Numbers}
+
 
 \subsection{Factorization}

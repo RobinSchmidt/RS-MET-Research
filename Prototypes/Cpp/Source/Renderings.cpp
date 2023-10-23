@@ -12,7 +12,7 @@ class rsArtsyBivariateFunctions
 
 public:
 
-  /** f(x,y) = tan(x^2 + y^2) * cos(x + y) - cos(x^2 + y^2)
+  /** f(x,y) = tanh(tan(x^2 + y^2)) * cos(x + y) - cos(x^2 + y^2)
 
   This function based on the implicit curve defition:
    

@@ -163,36 +163,30 @@ void rainbowRadiation()
   Real yMin  = -4;
   Real yMax  = +4;
 
- // Normalized contour levels to be used:
- Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });  // 1
- //Vec levels({ 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });  // 2
- //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95 });  // 3
- //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 1.0 }); // 4
- //Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0, 1.1, 1.2 }); // 5
-
+  // Normalized contour levels to be used:
+  bool normalize = true;
+  Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });
 
   // Each color channel uses a different variant of the function:
   Func fRed   = [&](Real x, Real y) { return ABF::weirdTori(x, y, 1); };
   Func fGreen = [&](Real x, Real y) { return ABF::weirdTori(x, y, 4); };
   Func fBlue  = [&](Real x, Real y) { return ABF::weirdTori(x, y, 2); };
-  // It looks good 142 for the variants of the functiosn for the RGB channels
+  // It looks good 142 for the variants of the functions for the RGB channels
 
-
+  // Generate the image and write it to a file:
   rsMathContourPlotter<Real, Real> cim;
   cim.setRange(xMin, xMax, yMin, yMax);
   cim.setPixelSize(width, height);
-  cim.useNormalizedLevels(true);
+  cim.useNormalizedLevels(normalize);
   rsImageF red   = cim.contourFills(fRed,   levels);
   rsImageF green = cim.contourFills(fGreen, levels);
   rsImageF blue  = cim.contourFills(fBlue,  levels);
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
 
-  // Write the color channels seperately to images:
+  // Write the color channels seperately to images forinspection:
   writeImageToFilePPM(red,   "RainbowRadiationR.ppm");
   writeImageToFilePPM(green, "RainbowRadiationG.ppm");
   writeImageToFilePPM(blue,  "RainbowRadiationB.ppm");
-
-
 
   // ToDo:
   // -Rotate the whole picture by 45° cunterclockwise. That gives symmetry over the x and y axis 
@@ -212,7 +206,8 @@ void rainbowRadiation()
   //  ...but no! It's too blurry overall. We really need to restrict the blur to the artifacts.
   //  Maybe check if the pixel is white and if so, use the average of the 3x3 cell. The 
   //  artifact is always 1 pixel wide, independently from the resolution. 
-  // -Maybe try to use unnormalized contour levels
+  // -Maybe try to use unnormalized contour levels...done...doesn't help.
+  // -Try to use a simpler function to figure out why these happen in the first place.
 }
 
 // ToDo:

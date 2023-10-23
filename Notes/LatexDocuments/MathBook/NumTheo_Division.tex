@@ -20,25 +20,27 @@ But what exactly do I mean by "easy to evaluate". If anything is allowed, than i
  p(n) = 1 + \sum_{i = 1}^{2^n} 
  \floor[\Bigg]{
  \Biggl(
- \frac{n}{\sum_{j=1}^{i} \floor{ (\cos(\pi \frac{(j+1)!+1}{j})^2) } 
+ \frac{n}{\sum_{j=1}^{i} \floor[\big]{ \bigl( \cos(\pi \frac{(j+1)!+1}{j}) \bigr)^2 } 
   }
  \Biggr)^{1/n}
  }
 \end{equation}
-is due to C.P. Willans and I will not explain here why it works because that's not my point here [TODO: insert reference to an explanation]. My point is that it certainly qualifies an explicit formula but it is practically useless. The first thing we note is that the outer sum goes up to $2^n$ which already puts it into the category of exponential complexity even if we assume the thing inside the sum to be in the constant complexity realm (which it certainly isn't).
+is due to C.P. Willans and I will not explain here why it works because that's not my point here [TODO: insert reference to an explanation]. My point is that it certainly qualifies an explicit formula but it is practically useless. The first thing we note is that the outer sum goes up to $2^n$ which already puts the evaluation of the formula into the category of algorithms with exponential time complexity. If you don't know what that means, let me just tell you that it means: "too inefficient for practical use except (maybe) for very small inputs". And that is true even if we assume the thing inside the sum to be in the realm of constant complexity - which it certainly isn't. 
 
+% Willan's formula:
+% https://en.wikipedia.org/wiki/Formula_for_primes
+% https://www.youtube.com/watch?v=j5s0h42GfvM
+% https://mathworld.wolfram.com/WillansFormula.html
+% https://www.cambridge.org/core/journals/mathematical-gazette/article/abs/on-formulae-for-the-nth-prime-number/43E49D11DFEAD3E4CBC12F17C87F5EE1
 
 \paragraph{The Sieve of Erathostenes}
+A much more practical way to produce primes is to precompute a list of primes, store it somewhere and read the $n$th entry from this list whenever the $n$th prime is needed. One algorithm to produce such a list is the sieve of Erathostenes. ...TBC...
 
 
 %Finding a closed form formula that spits out all the prime numbers and only prime
 %how do we find all the prime numbers? 
 
-% Willan's formula:
-% https://www.youtube.com/watch?v=j5s0h42GfvM
-% https://en.wikipedia.org/wiki/Formula_for_primes
-% https://mathworld.wolfram.com/WillansFormula.html
-% https://www.cambridge.org/core/journals/mathematical-gazette/article/abs/on-formulae-for-the-nth-prime-number/43E49D11DFEAD3E4CBC12F17C87F5EE1
+
 
 % we say that $12$ is divisible by $2$ and $6$ and 
 

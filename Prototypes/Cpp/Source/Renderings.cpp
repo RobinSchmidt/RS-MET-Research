@@ -180,7 +180,7 @@ void rainbowRadiation()
   using ABF  = rsArtsyBivariateFunctions<Real>;
 
   // Image parameters:
-  int scale  = 1;                // scaling: 1: = 480 X 270 (preview), 4: 1920 x 1080 (full)
+  int scale  = 4;                // scaling: 1: = 480 X 270 (preview), 4: 1920 x 1080 (full)
   int width  = scale * 480;      // width in pixels
   int height = scale * 270;      // height in pixels
 
@@ -202,7 +202,7 @@ void rainbowRadiation()
   Func fBlue  = [&](Real x, Real y) { return ABF::weirdTori(x, y, 2); };
   // It looks good 142 for the variants of the functions for the RGB channels
 
-  // Generate the image and write it to a file:
+  // Generate the raw image and write it to a file:
   rsMathContourPlotter<Real, Real> cim;
   cim.setRange(xMin, xMax, yMin, yMax);
   cim.setPixelSize(width, height);
@@ -210,15 +210,16 @@ void rainbowRadiation()
   rsImageF red   = cim.contourFills(fRed,   levels);
   rsImageF green = cim.contourFills(fGreen, levels);
   rsImageF blue  = cim.contourFills(fBlue,  levels);
+  writeImageToFilePPM(red, green, blue, "RainbowRadiationRaw.ppm");
+
+  // Apply some post-processing to get rid of soem artifacts:
+  Real thresh = 0.75;
+  red   = smoothCondionally(red,   [&](Real v){ return v >= thresh; });
+  green = smoothCondionally(green, [&](Real v){ return v >= thresh; });
+  blue  = smoothCondionally(blue,  [&](Real v){ return v >= thresh; });
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
 
-  // Write the color channels seperately to images forinspection:
-  writeImageToFilePPM(red,   "RainbowRadiationR.ppm");
-  rsImageF redS = smoothCondionally(red, [](Real v){ return v >= 0.75; });
-  writeImageToFilePPM(redS,  "RainbowRadiationR_S.ppm");
 
-  //writeImageToFilePPM(green, "RainbowRadiationG.ppm");
-  //writeImageToFilePPM(blue,  "RainbowRadiationB.ppm");
 
   // ToDo:
   // -Rotate the whole picture by 45° cunterclockwise. That gives symmetry over the x and y axis 

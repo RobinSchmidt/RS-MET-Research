@@ -35,6 +35,12 @@ public:
 template<class T>
 T rsArtsyBivariateFunctions<T>::weirdTori(T x, T y, int variant)
 {
+  // Apply a rotation by 45 degrees counterclockwise:
+  rsRotationXY<T> rot;
+  rot.setAngle(T(-0.25*PI));
+  rot.apply(&x, &y);
+
+  // This is the core functions or rather variants thereof:
   T x2 = x*x;
   T y2 = y*y;
   T d2 = x2 + y2;

@@ -165,6 +165,7 @@ void rainbowRadiation()
   Vec levels({ 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 });  // Normalized contour levels to be used
 
 
+  /*
   // Helper functions to produce an rsImage with contour lines or filled contours from a 
   // std::function. ToDo: Factor these two functions out into a class - it should have the 
   // range settings as members:
@@ -185,6 +186,7 @@ void rainbowRadiation()
     return cim.contourFills(func, levels);
   };
   // Try to get rid
+  */
 
 
   // Each color channel uses a different variant of the function:
@@ -193,15 +195,31 @@ void rainbowRadiation()
   Func fBlue  = [&](Real x, Real y) { return ABF::weirdTori(x, y, 2); };
   // It looks good 142 for the variants of the functiosn for the RGB channels
 
+
+  rsMathContourPlotter<Real, Real> cim;
+  cim.setRange(xMin, xMax, yMin, yMax);
+  cim.setPixelSize(width, height);
+  cim.useNormalizedLevels(true);
+  rsImageF red   = cim.contourFills(fRed,   levels);
+  rsImageF green = cim.contourFills(fGreen, levels);
+  rsImageF blue  = cim.contourFills(fBlue,  levels);
+  writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
+
+  // Test:
+  rsImageF lines = cim.contourLines(fRed, levels);
+  writeImageToFilePPM(lines, "RainbowRadiationLines.ppm");
+
+
+  /*
   rsImageF red   = getContourFillImage(fRed,   levels);
   rsImageF green = getContourFillImage(fGreen, levels);
   rsImageF blue  = getContourFillImage(fBlue,  levels);
-
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
 
   // Test:
   rsImageF lines = getContourLineImage(fRed, levels);
   writeImageToFilePPM(lines, "RainbowRadiationLines.ppm");
+  */
 
 
 

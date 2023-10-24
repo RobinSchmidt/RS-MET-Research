@@ -58,6 +58,7 @@ Algebraically, there is not much to say about vector addition - we just add the 
 \paragraph{Inversion}
 % could be done via Gauss-Jordan Elimination Algorithm decribed belo
 
+% Misc: transposition, hermitian tranpose, etc.
 
 
 %===================================================================================================
@@ -102,7 +103,9 @@ A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}
 Now, this is a rather implicit definition "there exists a matrix $\mathbf{P}$ such that..." and in practice, we may want to know (1) How can we decide, whether or not such a matrix exists? (2) If it does exist, is it unique? (3) If it is unique, what is it? If it isn't unique, what matrices are possible? Generally, if two matrices are similar, they represent the same geometric transformation but expressed in different coordinate systems. The matrix $\mathbf{P}$ is the matrix that transforms from one coordinate system to the other [TODO: be more specific: which way?] and is called the \emph{change of basis} matrix. In typical practical situation, this will probably be given so we don't really need to compute it from $\mathbf{A,B}$. But if we really encounter a situation where we need to, this is how it can be done:
 
 ...TBC...ToDo: give algorithm to compute $\mathbf{P}$, given $\mathbf{A,B}$
-%If two matrices are similar
+
+% Maybe use C or S instead of P (for conjugation or similarity trafo). wiki uses P, wolfram X
+% maybe other sources use P, too - so it seems to be common
 
 % How to find P: write the relation as PA = PB  ->  (PA - PB) = 0  ->  P(A-B) = 0
 % nah! only true if PA = AP, in general we have
@@ -112,6 +115,7 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{P}$ su
 
 
 % https://en.wikipedia.org/wiki/Matrix_similarity
+% https://mathworld.wolfram.com/SimilarMatrices.html
 
 
 \paragraph{Misc Special Matrices}
@@ -168,6 +172,8 @@ A diagonalization of a matrix is unfortunately not always possible [TODO: state 
 % https://en.wikipedia.org/wiki/Jordan_normal_form
 % https://en.wikipedia.org/wiki/Generalized_eigenvector
 
+% Jorand-Arnold Canonical Form (Mathe mit 2x2 Matrizen pg 44)
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{SVD - Singular Value Decomposition}
 % Orthonormal, Diagonal, Orthonormal
@@ -178,7 +184,9 @@ The other second best thing we can do when a matrix is not diagonalizable
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Additive Decompositions}
 
-
+% symmetric/antisymmetric
+% Jordan -Chevalleay (SN) decomp: A = S + N where S is diagonalizable, N is nilpotent and 
+% N and s commute: SN = NS (Mathe mit 2x2 Matrizen, pg 53)
 
 %===================================================================================================
 \subsection{Important Facts and Formulas}

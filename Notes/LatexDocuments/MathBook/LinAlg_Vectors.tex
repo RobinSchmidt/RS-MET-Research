@@ -119,7 +119,7 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{P}$ su
 
 
 
-
+%https://en.wikipedia.org/wiki/Triangular_matrix#Unitriangular_matrix
 
 
 
@@ -129,12 +129,32 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{P}$ su
 %===================================================================================================
 \subsection{Matrix Decompositions}
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{LU Decomposition}
+The LU-decomposition decomposes the matrix into a product $\mathbf{A = L U}$ where $\mathbf{L}$ is a lower triangular matrix and $\mathbf{U}$ is an upper triangular matrix. The LU-decomposition is algorithmically basically Gaussian elimination with some modifications. If you have an LU decomposition of a matrix $\mathbf{A}$ available, then it is straightforward to solve an equation $\mathbf{Ax = b}$. In practice, one often computes a decomposition of the form 
+
+..TBC...explain details of algorithms for the decomposition and the solution of linear systems.
+% Lower Triangular, Upper Triangular
+
+% https://en.wikipedia.org/wiki/LU_decomposition
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{QR Decomposition}
+%  Orthonormal, Upper Triangular
+
+%https://en.wikipedia.org/wiki/QR_decomposition
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Eigendecomposition aka Diagonalization}
+The most convenient decomposition of a matrix in terms of ease of solving equations involving the matrix and in terms of geometric interpretability of what the matrix actually does is the so called diagonalization of the matrix. ...TBC...
+
+\paragraph{Eigenvalues}
+
+\paragraph{Eigenvectors}
 
 % https://en.wikipedia.org/wiki/Diagonalizable_matrix#Diagonalization
-% https://en.wikipedia.org/wiki/Matrix_similarity
+
+
 
 
 %---------------------------------------------------------------------------------------------------
@@ -142,10 +162,17 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{P}$ su
 A diagonalization of a matrix is unfortunately not always possible [TODO: state conditions]. A Jordan normal form is one of the two second best things that we can do ...TBC...
 
 % interpretation of the Jordan cells as representing a pair of complex conjugate eigenvalues?
+% is the failure to be diagonalizable due to complex eigenvalues? Nah - I think, it's due to
+% multiplicity
+
+% https://en.wikipedia.org/wiki/Jordan_normal_form
+% https://en.wikipedia.org/wiki/Generalized_eigenvector
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Singular Value Decomposition}
+\subsubsection{SVD - Singular Value Decomposition}
+% Orthonormal, Diagonal, Orthonormal
 
+The other second best thing we can do when a matrix is not diagonalizable 
 
 
 %---------------------------------------------------------------------------------------------------

@@ -95,6 +95,11 @@ The norm of a vector captures its length. The most common norm is the Euclidean 
 
 \paragraph{Symmetry}
 
+\paragraph{Similarity}
+A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{P}$ such that $\mathbf{B} = \mathbf{P^{-1} A P}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{P}$ and post-multiplying both sides by $\mathbf{P}^{-1}$ to obtain $\mathbf{A} = \mathbf{P B P^{-1}}$. 
+%If two matrices are similar
+
+
 \paragraph{Misc Special Matrices}
 % Toeplitz, circulant, unitary (maybe file under orthogonal - it's the complex version), tringular, ...
 
@@ -113,6 +118,9 @@ The norm of a vector captures its length. The most common norm is the Euclidean 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Eigendecomposition aka Diagonalization}
+
+% https://en.wikipedia.org/wiki/Diagonalizable_matrix#Diagonalization
+% https://en.wikipedia.org/wiki/Matrix_similarity
 
 
 %---------------------------------------------------------------------------------------------------

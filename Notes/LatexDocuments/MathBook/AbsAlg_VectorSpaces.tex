@@ -18,7 +18,7 @@ For a \emph{vector space}, we need two ingredients: \emph{scalars} and \emph{vec
 The operations on or between vector spaces, like taking an orthogonal complement or forming a direct sum, are very abstract ideas indeed. To get a more hands-on feeling for what is going on, I'll suggest a possible concrete (maybe naive) implementation of these operations. 
 
 \paragraph{The Data Structure}
-Firstly, we need a way to represent a vector space as a data structure. Every vector space has a basis, so it seems to make sense to represent a vector space by its basis. A basis is just a set of vectors. We will assume here that we represent a basis of a vector space as an $m \times n$ matrix $\mathbf{B}$ whose columns are considered to be our basis vectors. The matrix has $n$ columns, so we represent an $n$-dimensional space. The number $m$ - the number of rows of the matrix - can be any number $m \geq n$ but for the operations to be nontrivial, we'll want $m > n$. We may imagine $m$ to be the dimensionality of some embedding space. That is: we want to view our vector space of interest as a subspace of some possibly higher dimensional embedding space. This is because we want to implement operations like the orthogonal complement which is defined on a subspace with respect a higher dimensional embedding space. 
+Firstly, we need a way to represent a vector space as a data structure. Every vector space has a basis, so it seems to make sense to represent a vector space by its basis. A basis is just a set of vectors. We will assume here that we represent a basis of a vector space as an $m \times n$ matrix $\mathbf{B}$ whose columns are considered to be our basis vectors. The matrix has $n$ columns, so we represent an $n$-dimensional space. The number $m$ - the number of rows of the matrix - can be any number $m \geq n$ but for the operations to be nontrivial, we'll want $m > n$. We may imagine $m$ to be the dimensionality of some embedding space. That is: we want to view our vector space of interest as a subspace of some possibly higher dimensional embedding space. This is because we want to implement operations like the orthogonal complement which is defined on a subspace with respect to a higher dimensional embedding space. 
 
 %over the field $\mathbb{R}^n$ by an $n \times m$ matrix.
 
@@ -29,5 +29,7 @@ Given a vector space represented by its basis vectors stored in the rows of an $
 \begin{comment}
 
 -discuss operations like orthogonal complement, direct sum of vector spaces etc.
+-maybe let Orthogonal complement and Direct sum be subsections, i.e. scrap the level "Operations"
+-Implementation could also be a subsection
 	
 \end{comment}

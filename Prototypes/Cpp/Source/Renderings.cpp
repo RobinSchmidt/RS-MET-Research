@@ -35,12 +35,19 @@ public:
 template<class T>
 T rsArtsyBivariateFunctions<T>::weirdTori(T x, T y, int variant)
 {
-  // Apply a rotation by 45 degrees counterclockwise:
+  // Apply a warping to make the waves less dense in the outer range:
+  T r = sqrt(x*x + y*y);
+  T s = r / pow(r, 1.05);
+  x *= s;
+  y *= s;
+
+  // Apply a rotation by 45 degrees counterclockwise to get horizontal and vertical symmetry 
+  // rather than symmetry along the diagonals:
   rsRotationXY<T> rot;
   rot.setAngle(T(-0.25*PI));
   rot.apply(&x, &y);
 
-  // This is the core functions or rather variants thereof:
+  // This is the core function or rather variants thereof:
   T x2 = x*x;
   T y2 = y*y;
   T d2 = x2 + y2;
@@ -163,7 +170,7 @@ rsImage<TPix> smoothCondionally(const rsImage<TPix>& in, TPred cond)
 //=================================================================================================
 // Image Rendering Scripts
 
-void rainbowRadiation()
+void imgRainbowRadiation()
 {
   // Renders a picture that looks like some sort of circularly outward radiating wave. Due to the
   // way we use different variations of the function and distributing these variations to the RGB
@@ -173,6 +180,7 @@ void rainbowRadiation()
   using Func = std::function<Real(Real, Real)> ;
   using Vec  = std::vector<Real>;
   using ABF  = rsArtsyBivariateFunctions<Real>;
+  using IP   = rsImageProcessor<Real>;
 
   // Image parameters:
   int scale  = 4;                // scaling: 1: = 480 X 270 (preview), 4: 1920 x 1080 (full)
@@ -207,17 +215,31 @@ void rainbowRadiation()
   rsImageF blue  = cim.contourFills(fBlue,  levels);
   writeImageToFilePPM(red, green, blue, "RainbowRadiationRaw.ppm");
 
-  // Apply some post-processing to get rid of soem artifacts:
+  // Apply some post-processing to make it look nicer:
+
+  // Conditional smoothing to get rid of the white line artifacts:
   Real thresh = 0.75;
   red   = smoothCondionally(red,   [&](Real v){ return v >= thresh; });
   green = smoothCondionally(green, [&](Real v){ return v >= thresh; });
   blue  = smoothCondionally(blue,  [&](Real v){ return v >= thresh; });
+
+
+
+  // Blur the bright green areas:
+  for(int i = 1; i <= 2*scale; i++)
+    green = smoothCondionally(green, [&](Real v){ return v >= 0.3; });
+
+  // Darken green a bit via gamma;
+  IP::gammaCorrection(green, 1.3);
+
+
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
 
 
 
   // ToDo:
-  // -Maybe darken the green channel a little bit.
+  // -Maybe darken the green channel a little bit. ..done via gamma
+  // -Maybe blur the green channel (before gamma - or maybe after - try both)
   // -The function is a bit to busy in the outward range and a bit too slow in the middle. Try to 
   //  modify it such that the ripples are less dense far away from the origin and the inner circle
   //  might be smaller. Maybe some nonlinear mapping like.

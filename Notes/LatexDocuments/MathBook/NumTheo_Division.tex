@@ -70,14 +70,22 @@ A concept that is closely related to the idea of a greatest common divisor is th
 Any natural number $n$ can be written as a product of prime numbers. That statement is an importnat theorem, called the "Fundamental Theorem of Arithmetic". In such a product, a prime number is allowed to occur multiple times so you may also hear the statement in the form: "...as a product of powers of prime numbers". The prime numbers themselves have only one single factor - the number itself. But that is also considered to be a product - namely a product over one single factor. In programmer's speak, it's a somewhat degenerate edge case (actually the even more edgy edge case is a product over zero numbers which is defined as $1$). But be that as it may - the theorem implies that we can break down any number $n$ into its prime factors. That process, or sometimes also the result of that process, is called the \emph{prime factorization} of $n$. ...TBC...
 
 
+% https://en.wikipedia.org/wiki/Square-free_integer
+% all prime factors are unique
+
 \subsubsection{Coprimality}
 Two numbers $n$ and $m$ are said to be \emph{coprime} or \emph{mututally prime} when they do not have a common prime factor in their factorization. That is equivalent to saying that their greatest common divisor is $1$. It is also equivalent to saying that their least common multiple is just the product of the two numbers [VERIFY!].
 
 
 % maybe this should be a section rather than asubsection:
-\subsection{Number Theorectic Functions}
+\subsection{Number Theoretic Functions}
 \emph{Number theoretic functions}, sometimes also called \emph{arithmetic functions}, are functions that take a natural number $n$ as input and often produce as output another number. Real or complex outputs are allowed in general but more typically, the outputs are also integers [VERIFY]. These functions encode some property about the natural numbers. we have already encountered the number of divisors function $d(n)$ as an example of such a number theoretic function. But there are many more. Before introducing them one by one, we'll first talk about some general features that these functions may or may not have.
 
 % https://en.wikipedia.org/wiki/Arithmetic_function
 
 \subsubsection{The Prime Counting Function}
+
+
+
+% number of (unique) prime factors https://en.wikipedia.org/wiki/Prime_omega_function
+% arithmetic derivative https://en.wikipedia.org/wiki/Arithmetic_derivative

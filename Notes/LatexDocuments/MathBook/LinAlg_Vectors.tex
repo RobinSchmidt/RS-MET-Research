@@ -1,18 +1,24 @@
 \section{Vectors and Matrices}
 
 \paragraph{Vectors}
-Consider a point in the 2D plane or in 3D space. To represent it mathematically, we would need a pair or a triple of numbers respectively. An $n$-dimensional vector can generally be thought of as an $n$-tuple of numbers. For intuition building, it's best to think of real numbers although in general, other kinds of numbers may also be allowed in the more general case. 
-%A vector 
+Consider a point in the 2D plane or in 3D space. To represent such a point mathematically, we would need a pair or a triple of numbers respectively. An $n$-dimensional vector can generally be thought of as an $n$-tuple of numbers. For intuition building, it's best to think of real numbers although in general, other kinds of numbers may also be allowed in the more general case. ...TBC...
+
+%A vector may not only represent a point itself, but also a translation ...tbc...
 
 
 \paragraph{Matrices}
+Vectors can be used to represent locations and translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. ...TBC...
+
+%Translations are not among the linear transformations that we can represent by matrices.
 
 
 \paragraph{Well, actually...}
-Strictly speaking, an $n$-tuple of numbers is not what a vector really $is$ by its nature. By its nature, a vector is a geometric entity such as a point in space or an arrow with a direction and length (or magnitude). The $n$-tuple or numbers is a specific representation of that geometric entity that depends on the coordinate system that we have chosen. But take that statement as a foreshadowing to a more advanced viewpoint. For the purposes of this section, it's totally okay to picture a vector as a tuple of numbers.
+Strictly speaking, an $n$-tuple of numbers is not what a vector really $is$ by its nature. By its nature, a vector is a geometric entity such as a point in space or an arrow with a direction and length. The $n$-tuple of numbers is a specific representation of that geometric entity that depends on the coordinate system that we have chosen. But take that statement as a foreshadowing to a more advanced viewpoint. For the purposes of this section, it's totally okay to picture a vector as a tuple of numbers. ...TBC...
+
+% Likewise, matrices are also only a specific representation of a linear transformation ...
 
 \medskip
-Moreover, when we look at things in a more strict way, we need to distinguish between points and vectors. ...TBC...
+Moreover, when we look at things in a more carefully, we need to distinguish between points and vectors. ...TBC...
 
 
 %===================================================================================================
@@ -22,12 +28,21 @@ Moreover, when we look at things in a more strict way, we need to distinguish be
 %\subsection{Matrices}
 
 
+
+
+
+
 %===================================================================================================
 \subsection{Operations}
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Vector Operations}
+
+\paragraph{Vector Addition}
+Algebraically, there is not much to say about vector addition - we just add the tuples element-wise and that's it. We can interpret such a vector addition geometrically at placing the vectors tip to tail. ...TBC... [ToDo: insert figure with the parallelogram picturing $\mathbf{a + b}$ and $\mathbf{b + a}$].
+
 \paragraph{Scalar Product}
+
 \paragraph{Vector Products}
 % cross-product, triple-product, wedge-product
 
@@ -35,13 +50,15 @@ Moreover, when we look at things in a more strict way, we need to distinguish be
 \subsubsection{Matrix Operations}
 \paragraph{Addition and Multiplication}
 \paragraph{Inversion}
+% could be done via Gauss-Jordan Elimination Algorithm decribed belo
+
 
 
 %===================================================================================================
 \subsection{Linear Systems of Equations}
+One important area of application of matrices and vectors is the solution of systems of linear equations
 
 % solvability, rank (may also be filed under matrix features - maybe introduce the concept here and mnetion it there again)
-
 
 
 %===================================================================================================
@@ -51,7 +68,8 @@ Moreover, when we look at things in a more strict way, we need to distinguish be
 \subsubsection{Vector Features}
 
 \paragraph{Vector Norms}
-% are a measure of length
+The norm of a vector captures its length. The most common norm is the Euclidean norm but there are others as well...TBC...
+% are a measure of length, $L_p$-norm, explain the general requirements to a norm
 
 \paragraph{Orthogonality and Angles}
 % Angles between a are defined in terms of the cosine of the norm
@@ -63,8 +81,10 @@ Moreover, when we look at things in a more strict way, we need to distinguish be
 \paragraph{Determinant}
 
 \paragraph{Norms}
+% explain norm compatibility with vector norms
 
 \paragraph{Orthogonality}
+% a (square) matrix is orthogonal when all its rows are mutually orthogonal. This implies
 
 \paragraph{Symmetry}
 
@@ -106,3 +126,8 @@ A diagonalization of a matrix is unfortunately not always possible [TODO: state 
 
 %===================================================================================================
 \subsection{Important Facts and Formulas}
+% rank-nullity theorem
+
+
+
+% Computing with spaces - operations like perp (orthogonal complement)

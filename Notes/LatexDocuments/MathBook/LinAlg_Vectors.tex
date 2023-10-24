@@ -96,16 +96,16 @@ The norm of a vector captures its length. The most common norm is the Euclidean 
 \paragraph{Symmetry}
 
 \paragraph{Similarity}
-A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{P}$ such that $\mathbf{B} = \mathbf{P^{-1} A P}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{P}$ and post-multiplying both sides by $\mathbf{P}^{-1}$ to obtain $\mathbf{A} = \mathbf{P B P^{-1}}$. 
+A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{P}$ such that $\mathbf{B} = \mathbf{P^{-1} A P}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{P}$ and post-multiplying both sides by $\mathbf{P}^{-1}$ to obtain $\mathbf{A} = \mathbf{P B P^{-1}}$.
+
+...TBC...ToDo: give algorithm to compute $\mathbf{P}$
 %If two matrices are similar
 
 % How to find P: write the relation as PA = PB  ->  (PA - PB) = 0  ->  P(A-B) = 0
 % nah! only true if PA = PB, in general we have
 % PB = AP
-
-
 % https://math.stackexchange.com/questions/14075/how-do-i-tell-if-matrices-are-similar
-
+% says the solution may not be unique - the system to solve may be singular. But the zero matrix is always a solution. A solution algo that computes a minimum norm solution would probably pick the zero matrix? ...yeah - it can't be unique because we see immediately that P could be multiplied by any scalar factor. Maybe pick a solution that has unit norm...I guess this would mean unit-Frobenius norm? 
 
 
 % https://en.wikipedia.org/wiki/Matrix_similarity

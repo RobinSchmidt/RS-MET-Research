@@ -1,0 +1,33 @@
+\section{Vector Spaces}
+For a \emph{vector space}, we need two ingredients: \emph{scalars} and \emph{vectors}. The scalars are elements of a field $\mathbb{F}$, called the \emph{base field}, and the vectors can, for intuition building, be thought of as elements of $\mathbb{F}^n$ for some positive natural number $n$. It is possible to generalize this to things like $\mathbb{F}^\mathbb{F}$, the space of all functions from $\mathbb{F}$ to $\mathbb{F}$ but thinking about $\mathbb{F}^n$ is fine. To be even more concrete, you may imagine $\mathbb{R}^3$. But we are in the abstract algebra chapter here, so let's keep it general. Actually, even $\mathbb{F}^n$ is too concrete. We will instead just use $V$ to denote the set of vectors. ...TBC...
+
+
+%===================================================================================================
+\subsection{Operations}
+
+\subsubsection{Orthogonal Complement}
+
+% https://en.wikipedia.org/wiki/Orthogonal_complement
+
+\subsubsection{Direct Sum}
+
+%https://en.wikipedia.org/wiki/Direct_sum
+
+
+\subsubsection{Implementation}
+The operations on or between vector spaces, like taking an orthogonal complement or forming a direct sum, are very abstract ideas indeed. To get a more hands-on feeling for what is going on, I'll suggest a possible concrete (maybe naive) implementation of these operations. 
+
+\paragraph{The Data Structure}
+Firstly, we need a way to represent a vector space as a data structure. Every vector space has a basis, so it seems to make sense to represent a vector space by its basis. A basis is just a set of vectors. We will assume here that we represent a basis of a vector space as an $m \times n$ matrix $\mathbf{B}$ whose columns are considered to be our basis vectors. The matrix has $n$ columns, so we represent an $n$-dimensional space. The number $m$ - the number of rows of the matrix - can be any number $m \geq n$ but for the operations to be nontrivial, we'll want $m > n$. We may imagine $m$ to be the dimensionality of some embedding space. That is: we want to view our vector space of interest as a subspace of some possibly higher dimensional embedding space. This is because we want to implement operations like the orthogonal complement which is defined on a subspace with respect a higher dimensional embedding space. 
+
+%over the field $\mathbb{R}^n$ by an $n \times m$ matrix.
+
+\paragraph{The Algorithms}
+Given a vector space represented by its basis vectors stored in the rows of an $m \times n$ matrix $\mathbf{B}$, we now want compute a matrix $\mathbf{C}$ that represents a basis for the orthogonal complement of $\mathbf{B}$ with respect to the embedding space. That is, we want to compute a basis for $\mathbf{C} = \mathbf{B}^\perp$. The shape of $\mathbf{C}$ has to be $m \times k$ where $k = m - n$ because $\mathbf{B}$ represents a basis for an $n$-dimensional subspace of the $m$-dimensional embedding space, so the number of remaining dimensions is $m-n$. ...TBC...
+
+
+\begin{comment}
+
+-discuss operations like orthogonal complement, direct sum of vector spaces etc.
+	
+\end{comment}

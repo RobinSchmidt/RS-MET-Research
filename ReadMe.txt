@@ -1,5 +1,5 @@
 This repo contains prototypes, experiments, collected information, code snippets and libraries from 
-various sources for research and devlopment. It's my main playground to try out new ideas which may 
+various sources for research and development. It's my main playground to try out new ideas which may 
 or may not at some point be moved over into the main RS-MET repo depending on if and when I consider 
 them generally useful and mature enough. This includes experimental signal processing algorithms but 
 also stuff that I do in a more recreational mode such as mathematical art rendering and image 
@@ -12,7 +12,7 @@ The main active C++ project is in the Visual Studio solution:
 
   Prototypes/Cpp/Builds/VisualStudio2019/Experiments.sln
   
-In order to build it projects, the main RS-MET repo must sit locally in the same folder as this
+In order to build the projects, the main RS-MET repo must sit locally in the same folder as this
 RS-MET-Research repo. If it still doesn't work, it might be the case that RS-MET repo has to be 
 switched to a more recently updated branch. The most up to date branch there is always the "work" 
 branch. That project is similar to the 

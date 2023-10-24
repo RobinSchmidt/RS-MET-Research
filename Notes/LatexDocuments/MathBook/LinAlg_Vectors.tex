@@ -97,15 +97,31 @@ The norm of a vector captures its length. The most common norm is the Euclidean 
 \paragraph{Symmetry}
 
 \paragraph{Similarity}
-A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{P}$ such that $\mathbf{B} = \mathbf{P^{-1} A P}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{P}$ and post-multiplying both sides by $\mathbf{P}^{-1}$ to obtain $\mathbf{A} = \mathbf{P B P^{-1}}$. The transformation That maps $\mathbf{A}$ to $\mathbf{B}$ is called a \emph{similarity transformation} or a \emph{conjugation}. Conjugation is a term from group theory which we will explain later.
+A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have, among other things, a symmetry of the relation: $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{S}$ and post-multiplying both sides by $\mathbf{S}^{-1}$ to obtain $\mathbf{A} = \mathbf{S B S^{-1}}$. The transformation that maps $\mathbf{A}$ to $\mathbf{B}$ is called a \emph{similarity transformation} or a \emph{conjugation}. Conjugation is a term from group theory which we will encounter in a later chapter. A similarity transformation does not change the basis independent properties of a matrix. In particular, it doesn't change the characteristic polynomial and therefore its eigenvalues (they are roots of the polynomial). Furthermore, it also doesn't change the determinant and trace because they are the product and sum of the eigenvalues respectively. The multiplicities (geometric and algebraic) of the eigenvalues are also invariant. The eigenvectors are mapped via the change of basis transformation $\mathbf{S}$: If $\mathbf{a}$ is an eigenvector of  $\mathbf{A}$, then $\mathbf{b} = \mathbf{S a}$ is the corresponding eigenvector of $\mathbf{B}$ [VERIFY! It might be $\mathbf{S}^{-1}$]. Other features that are invariant under a similarity transform are: rank, index of nilpotence, Jordan normal form (up to permutation of the blocks), Frobenius normal form, minimal polynomial and elementary divisors. Don't worry, if you don't know what some of these terms mean. I don't know all of them either and just wanted the list to be complete (it's taken from Wikipedia).
+
+% https://en.wikipedia.org/wiki/Matrix_similarity#Properties
+
+% I guess the eigenvectors  are just mapped via the change of basis S? I.e. b_i = S a_i or maybe
+% S^-1 a_i for a_i, b_i eigenvectors of A,B? Verify!
+
+% https://math.stackexchange.com/questions/255172/eigenvectors-of-similar-matrices
+
+% Explain how \mathbf{S^{-1} A S} works in 3 steps when being applied to a vector. We first
+% transform into the new basis via S, then apply A, then transform back into the old basis via
+% S^-1. Verify it all with numeric examples
+
+
 
 \medskip
-Now, this is a rather implicit definition "there exists a matrix $\mathbf{P}$ such that..." and in practice, we may want to know (1) How can we decide, whether or not such a matrix exists? (2) If it does exist, is it unique? (3) If it is unique, what is it? If it isn't unique, what matrices are possible? Generally, if two matrices are similar, they represent the same geometric transformation but expressed in different coordinate systems. The matrix $\mathbf{P}$ is the matrix that transforms from one coordinate system to the other [TODO: be more specific: which way?] and is called the \emph{change of basis} matrix. In typical practical situation, this will probably be given so we don't really need to compute it from $\mathbf{A,B}$. But if we really encounter a situation where we need to, this is how it can be done:
+Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ such that..." and in practice, we may want to know (1) How can we decide, whether or not such a matrix exists? (2) If it does exist, is it unique? (3) If it is unique, what is it? If it isn't unique, what matrices are possible? Generally, if two matrices are similar, they represent the same geometric transformation but expressed in different coordinate systems. The matrix $\mathbf{S}$ is the matrix that transforms from one coordinate system to the other [TODO: be more specific: which way?] and is called the \emph{change of basis} matrix. So, in a typical practical situation, this matrix $\mathbf{S}$ will probably be given to us so we don't really need to compute it from $\mathbf{A,B}$. But if we really encounter a situation where we need to, this is how it can be done:
 
-...TBC...ToDo: give algorithm to compute $\mathbf{P}$, given $\mathbf{A,B}$
+...TBC...ToDo: give algorithm to compute $\mathbf{S}$, given $\mathbf{A,B}$
+
+
 
 % Maybe use C or S instead of P (for conjugation or similarity trafo). wiki uses P, wolfram X
-% maybe other sources use P, too - so it seems to be common
+% maybe other sources use P, too - so it seems to be common. S seems also common - maybe let's
+% reserve P for permutation matrices
 
 % How to find P: write the relation as PA = PB  ->  (PA - PB) = 0  ->  P(A-B) = 0
 % nah! only true if PA = AP, in general we have
@@ -117,17 +133,25 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{P}$ su
 % https://en.wikipedia.org/wiki/Matrix_similarity
 % https://mathworld.wolfram.com/SimilarMatrices.html
 
+% https://en.wikipedia.org/wiki/Matrix_congruence
+% a stronger notion of similarity where S^{-1} = S^T
+
+% https://en.wikipedia.org/wiki/Matrix_equivalence
+% a weaker(!) notion than similarity. the equation is the same but applies also to non-square
+% matrices
 
 \paragraph{Misc Special Matrices}
 % Toeplitz, circulant, unitary (maybe file under orthogonal - it's the complex version), tringular, ...
 
 
 
-%https://en.wikipedia.org/wiki/Triangular_matrix#Unitriangular_matrix
+% https://en.wikipedia.org/wiki/Triangular_matrix#Unitriangular_matrix
 
+% https://en.wikipedia.org/wiki/Matrix_congruence
 
-
-
+% Maybe sort the features according to arity:
+% unary: A is symmetric, unitary,... 
+% binary A and B are similar, congruent, ...
 
 
 %===================================================================================================
@@ -159,7 +183,7 @@ The most convenient decomposition of a matrix in terms of ease of solving equati
 
 % https://en.wikipedia.org/wiki/Diagonalizable_matrix#Diagonalization
 
-
+% https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
 
 
 %---------------------------------------------------------------------------------------------------
@@ -171,6 +195,10 @@ A diagonalization of a matrix is unfortunately not always possible [TODO: state 
 % interpretation of the Jordan cells as representing a pair of complex conjugate eigenvalues?
 % is the failure to be diagonalizable due to complex eigenvalues? Nah - I think, it's due to
 % multiplicity
+
+% Here:
+% https://en.wikipedia.org/wiki/Matrix_similarity
+% it says that over the complex numbers, every matrix is similar to a Jordan Normal Form
 
 % https://en.wikipedia.org/wiki/Jordan_normal_form
 % https://en.wikipedia.org/wiki/Generalized_eigenvector
@@ -197,7 +225,7 @@ The other second best thing we can do when a matrix is not diagonalizable
 % rank-nullity theorem
 
 %===================================================================================================
-\subsection{Computing with Spaces}
+%\subsection{Computing with Spaces}
 
 
 %On a beginner level, one usually assumes to deal regular matrices and as soon as one encounters a singular matrix, one throws the towel
@@ -205,3 +233,9 @@ The other second best thing we can do when a matrix is not diagonalizable
 %and just says things like "there are no solutions"
 
 % Computing with spaces - operations like perp (orthogonal complement)
+
+\begin{comment}
+Explain what happens to the eigenvalues when we do certain things to a matrix (shifts, etc.)
+I have a list of that in some text file. Shifting eigenvalues and manipulating them in other ways
+can be important to improve convergence of numerical algrithms
+\end{comment}

@@ -26,7 +26,7 @@ So far, we have used the symbol $\circ$ in infix notation like in $c = a \circ b
 
 
 
-
+%===================================================================================================
 \subsection{Some Elementary Theorems}
 Let's axiomatically assume that our rules stated above are true for some given pair of a set and an operation that is of interest to us. Let's say, we have painstakingly verified them by hand and have convinced ourselves that our pair does indeed form a group. What else can we deduce from the group axioms alone without knowing anything more about our pair other than it being a group? What other properties can we assert about our pair without actually verifying them by hand? Without proof, I'll hand you down the following useful facts for any group, some of which were already mentioned: 
 \begin{enumerate}
@@ -81,7 +81,7 @@ I hope you will agree that these are quite a lot of potentially useful facts. Es
 % https://math.stackexchange.com/questions/2199421/do-the-laws-of-exponents-apply-to-a-group-as-for-real-numbers
 % https://mathstats.uncg.edu/sites/pauli/112/HTML/secgroupexp.html
 
-
+%===================================================================================================
 \subsection{Groups and Symmetries}
 One will often hear the statement that groups are an abstraction of \emph{symmetry}. A symmetry is, by definition, some transformation of an object that leaves some property of interest unchanged. Consider a square. We may rotate it by any integer multiple of 90 degrees around its center (including zero and negatives) and we may also reflect it horizontally, vertically or diagonally - all without changing its shape. In this setting, the rotations and reflections would be thought of as being the members of our group and the group operation would be to compose these transformations. It may be verified that our four rules do indeed hold true for this set of transformations, so it is indeed a group. When we say that these transformations act on the square, it may be not entirely clear, how we would "implement" such an action. We could imagine the square to live in 2D Euclidean space centered at the origin. Then, a square could be represented by 4 coordinate vectors for its 4 vertices, e.g. $(1,1),(-1,1),(-1,-1),(1,-1)$. In this setup, we would represent the transformations as matrices that can act on these vectors. This is the sort of stuff that we do in analytic geometry. Instead of thinking about the transformations as acting on vertices, we could also imagine it to act on the 2D space as whole. We should also specify what we mean by saying "the shape stays the same". In geometry, shapes of polygons are captured by the mutual distances between all the vertices. If an object is represented by a set of vertices and we apply a transformation to each vertex and after that transformation, the distances between all the vertices are the same as before, then the shape and size of the object has not changed. That's how we can verify that our transformation is indeed a symmetry for the given polygon. To recap: in this case, the group members are certain geometric transformations (reflections and rotations), the object on which the group acts is a square and the invariant property is the shape (captured in the mutual distances).
 
@@ -99,7 +99,7 @@ I find the statement "groups are an abstraction of symmetry" a bit confusing bec
 % https://www.youtube.com/watch?v=mvmuCPvRoWQ
 
 
-
+%===================================================================================================
 \subsection{Multiplication Tables}
 Let's assume that we have a finite set $A$ with $N$ elements and let's assume that we have labeled all set elements by a unique index between $1$ and $N$, so our set is $A = \{ a_1, a_2, a_3, \ldots, a_N \}$. To define a binary operation on such a set, we may write down a table in which the headers of the rows and columns are the set elements and the cells tell us, what output the operation will produce, when we combine the elements that appear in the headers of our rows and columns. That means, when we view the table as a matrix $T$, the element $t_{ij}$ of the matrix will be given by the product $a_i a_j$. I call it a "matrix" here because that's the data structure one might naturally want to use for this in an (naive) implementation - but we do not intend to do any linear algebra with it. For our purposes here, it's just a 2D table of elements which we want to read out and I may use the terms "matrix" and "table" interchangably. For $N=5$, such a table would look like this:
 \[
@@ -133,7 +133,7 @@ But be that as it may. Multiplication tables are an important tool in the analys
 
 % Q: Does it actually make any sense to do linear algebra with Caley tables? If we have two Caley tables of two different groups (of the same size) - what is their product? Will it also be a Caley table of a group? ...maybe try it with some examples. I guess that would mean that Latin squares would need to form a subgroup of the group of all matrices under matrix multipication. Do they?
 % https://en.wikipedia.org/wiki/Latin_square
-
+%===================================================================================================
 \subsection{Some Examples}
 Now that we have defined what a group is in an abstract sense and have a tool in hand to specify a group, let's look at some concrete examples of very different groups to get an appreciation for how surprisingly universally applicable these concepts are.
 
@@ -235,6 +235,7 @@ Another important class of groups is that of permutation groups. In a certain se
 \paragraph{}
 OK - now we have seen a couple of examples of groups that seem to be very different. Yet, they all share a lot of commonalities which are distilled in group theory into theorems that abstract away from the concrete examples. The theorems will hold for all of these concrete groups and many more. That's the power of abstraction. Let's now take a deeper dive into what these commonalities are...
 
+%===================================================================================================
 \subsection{Generators}
 % Wrong: the set of generators is called generating set and its elements are called generators
 
@@ -285,16 +286,33 @@ we are allowed to form all possible products between these two matrices with as 
 \subsubsection{Order of an Element}
 In finite groups, it turns out that we can take any element $a$ and if we repeatedly multiply it by itself (i.e. form powers of it), we will eventually hit the identity. At some point $m$, we will have $a^m = e$. That number $m$ is called the \emph{order} of the element $a$ in the group. The identity element $e$ has order $1$, of course. A word of caution: the term "order" in group theory is overloaded to mean two things: when we talk about the order of an element, it means what I just said. But when we talk about the order of a group as a whole, then the term means the number of elements in the group. Which sense is meant by the word "order" can be inferred from the "datatype" to which it is applied to - is it a group element or a group? That's exactly how overloading of function names works in programming. 
 
+%===================================================================================================
 \subsection{Conjugacy Classes}
-Recall from the linear algebra section the definition of similarity between two matrices.
+Recall from the linear algebra section the definition of similarity between two matrices. Two matrices $\mathbf{A,B}$ are considered to be similar, denoted by $\mathbf{A} \sim \mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. In group theory
+
+% give algorithm to compute the conjugacy class for a given g \in G
+
+% https://math.stackexchange.com/questions/102170/is-there-a-systematic-way-of-finding-the-conjugacy-class-and-or-centralizer-of-a
+
+% maybe a full subsection is a bit too much for this small topic. Maybe it actually fits into the
+% Generators subsection as subsubsection? Is there some connection between generators and 
+% conjugacy classes? That seems to be the case indeed:
+% https://math.stackexchange.com/questions/397453/finite-group-is-generated-by-a-set-of-representatives-of-conjugacy-classes
+
+% explain: centralizer, normalizer, stabilizer, orbit
+% https://en.wikipedia.org/wiki/Centralizer_and_normalizer
+
+
 
 % Maybe explain it by way of an example using 2x2 matrices
+% Or maybe use a permutation group - maybe S_3. It has 6 elements, so it would be a 6x6
+% Cayley table. We need a non-commutative group to demosntrate the concept
 
 % https://en.wikipedia.org/wiki/Conjugacy_class
 % https://mathworld.wolfram.com/ConjugacyClass.html
 % https://en.wikipedia.org/wiki/Matrix_similarity
 
-
+%===================================================================================================
 \subsection{Subgroups}
 
 % https://www.youtube.com/watch?v=KufsL2VgELo&t=1138s
@@ -353,7 +371,15 @@ A subgroup $H$ partitions its parent group $G$ into equally sized subsets which 
 Consider the group $\mathbb{Z}_{12} = \{0,1,2,3,4,5,6,7,8,9,10,11\}$ again and let that be our $G$. Let's take the subgroup generated by $\{4\}$ as our $H$. The underlying set of $H$ is given by $\langle 4 \rangle = \{0,4,8\}$ and is as a group isomorphic to $\mathbb{Z}_{3} = \{0,1,2\}$. Now let's pick an element of $\mathbb{Z}_{12}$ which is not in $\langle 4 \rangle$. The first one that occurs is $1$ so let's take that. Now form all possible products of $1$ with elements from $\langle 4 \rangle$ and put them into a set. That gives $\{1+0,1+4,1+8\} = \{1,5,9\}$. That is our first coset with representative $1$. We may also denote this as $1 + \langle 4 \rangle$. There are elements in $\mathbb{Z}_{12}$ which are neither in $H = 0 + \langle 4 \rangle$ nor in $1 + \langle 4 \rangle$, so we pick one of the leftovers. The first possibility is $2$, so we pick that. Repeating the procedure, we obtain $2 + \langle 4 \rangle = \{2,6,10\}$. We have still not exhausted $G$ so we do one more round to obtain a 4th coset given by $3 + \langle 4 \rangle = \{3,7,11\}$. So, in summary, our procedure generated the 4 cosets $0 + \langle 4 \rangle = \{0,4,8\}$, $1 + \langle 4 \rangle = \{1,5,9\}$, $2 + \langle 4 \rangle = \{2,6,10\}$, $3 + \langle 4 \rangle = \{3,7,11\}$. These are 4 cosets of size 3 and $4 \cdot 3 = 12$ which is the size of our group $G$ as it should be. Looking at the numbers, we see that they are all shifted copies of $\{0,4,8\}$ where the shift amount is given by the element of $G$ that is added from the left. You may verify yourself that, due to the behavior of modular addition, we would have arrived at the same cosets if we would have chosen other representatives. For example, the coset $\{1,5,9\}$ could also have been obtained as $5 + \langle 4 \rangle$ or $9 + \langle 4 \rangle$. The elements would have been obtained in a different order but at the end, it would be the same collection of elements - and order doesn't matter in a set. In this specific example, we would also have obtained the same sets if we had formed the right cosets instead of the left ones, i.e. $\langle 4 \rangle + 1$ instead of $1 + \langle 4 \rangle$ etc. This is so because our example group is commutative. In general, this doesn't need to be the case. In general left cosets and right cosets may be different.
 
 \paragraph{}
-The takeaway is that a subgroup $H$ always partitions a group $G$ into equally sized equivalence classes of elements which we call (left or right) cosets with respect to the subgroup $H$. The different cosets cannot have common elements, i.e. two different cosets are always disjoint. The cosets can be considered to be equivalence classes. Their elements are equivalent in the sense that each of them would give rise to the same coset when being picked in our construction algorithm. The elements that are bunched together into one coset are considered to be equivalent by an equivalence relation which we denote by $\sim$, i.e. $x \sim y$ means: "$x$ is equivalent to $y$" in the sense of "$x$ and $y$ are in the same coset". In the example, we have $0 \sim 4 \sim 8$, $1 \sim 5 \sim 9$, $2 \sim 6 \sim 10$ and $3 \sim 7 \sim 11$. If we are given two elements $x,y$ of $G$ and we want to figure out whether or not $x \sim y$, we note that this equivalence happens whenever $y = x h$ for some $h \in H$. Therefore, we may form $x^{-1} y = h$ and check if the result $h$ can be found in $H$. If so, then yes indeed: $x \sim y$, otherwise not. If we are given one element $x \in G$ and want to figure out into which coset it belongs, we compare it via $\sim$ to a representative of each of the cosets in turn. as soon as $\sim$ reports "yes", we have found our coset into which $x$ belongs [VERIFY! see comment in .tex file].
+The takeaway is that a subgroup $H$ always partitions a group $G$ into equally sized equivalence classes of elements which we call (left or right) cosets with respect to the subgroup $H$. The different cosets cannot have common elements, i.e. two different cosets are always disjoint. The cosets can be considered to be equivalence classes. Their elements are equivalent in the sense that each of them would give rise to the same coset when being picked in our construction algorithm. The elements that are bunched together into one coset are considered to be equivalent by an equivalence relation which we denote by $\equiv$, i.e. $x \equiv y$ means: "$x$ is equivalent to $y$" in the sense of "$x$ and $y$ are in the same coset". In the example, we have $0 \equiv 4 \equiv 8$, $1 \equiv 5 \equiv 9$, $2 \equiv 6 \equiv 10$ and $3 \equiv 7 \equiv 11$. If we are given two elements $x,y$ of $G$ and we want to figure out whether or not $x \equiv y$, we note that this equivalence happens whenever $y = x h$ for some $h \in H$. Therefore, we may form $x^{-1} y = h$ and check if the result $h$ can be found in $H$. If so, then yes indeed: $x \equiv y$, otherwise not. If we are given one element $x \in G$ and want to figure out into which coset it belongs, we compare it via $\equiv$ to a representative of each of the cosets in turn. as soon as $\equiv$ reports "yes", we have found our coset into which $x$ belongs [VERIFY! see comment in .tex file].
+
+% ToDo: maybe use the \equiv symbol for the equivalence realtion defined here, see:
+% https://www.geeksforgeeks.org/equality-and-inference-symbols-in-latex/
+% I think this would also be consistent with the notation used in modular arithmetic for 
+% congruence. 
+% https://en.wikipedia.org/wiki/Modular_arithmetic
+% There is also a "congruent to" symbol \cong but that's maybe not suitable
+% We may then use \sim for similarity in the sense of being in the same conjugacy class.
 
 % ToDo: give an example calculation. To do this, we may also need the list of inverse elements in Z_12 which is given by:
 %
@@ -686,5 +712,8 @@ https://www.youtube.com/watch?v=mvmuCPvRoWQ
 
 Researchers Use Group Theory to Speed Up Algorithms — Introduction to Groups [by Nemean]
 https://www.youtube.com/watch?v=KufsL2VgELo
+
+
+https://docs.gap-system.org/doc/ref/chap39.html
 
 \end{comment}

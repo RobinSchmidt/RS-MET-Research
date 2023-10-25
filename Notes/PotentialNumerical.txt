@@ -113,7 +113,7 @@ system which we may solve as a least squares problem by premultiplying both side
 
   M^T * M * p = M^T * w
 
-which will reduce the number of equations to 20.  
+which will reduce the number of equations from 41 to 20.  
   
 The very last line/equation is needed to make the system nonsingular. Without it, the matrix M^T * M 
 is singular because there are infinitely many solutions that work as a potential for the same vector 
@@ -153,7 +153,7 @@ Notes:
  original vector field. If it has been (numerically) curl-free in the first place, we should get it 
  back as it was. By "numerically curl-free", I mean a curl-free condition in which derivatives have 
  been replaced by numeric approximations via finite differences. Maybe that can be useful to 
- decompose vector fields according to the Helmoltz decomposition theorem. We could subtract the
+ decompose vector fields according to the Helmholtz decomposition theorem. We could subtract the
  curl-free approximation from the original field to get the curl only. The remainder is then div 
  plus constant flow, I think. See 
  https://en.wikipedia.org/wiki/Helmholtz_decomposition
@@ -180,7 +180,7 @@ Notes:
 -A vector field that is obtained as gradient of a scalar field is guaranteed to be curl-free but it 
  may have divergence.
 -To extract the divergence D from F, maybe we need to solve the problem (F-D)*(F-D) = min, where *
- means the dot product. But that would jsut produce D=F. I think, we need to apply constraints to D.
+ means the dot product. But that would just produce D=F. I think, we need to apply constraints to D.
 -Maybe a general constrained least-squares problem of the form (A*x-b)^2 = (A*x-b)^T (A*x-b) = min
  subject to a set of constraints C*x = d can be solved as (P*y-q)^T (P*y-q) = min where 
  P = vertcat(A,C), q = vertcat(b,d), y = vertcat(x,l) where y is the unknown vector to be computed 

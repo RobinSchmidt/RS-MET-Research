@@ -56,11 +56,41 @@ Another question besides "what is the $n$th prime" could be that we have some nu
 % https://en.wikipedia.org/wiki/Superior_highly_composite_number
 
 \subsubsection{Division with Remainder}
+% Every natural number n can written as  n = d*q + r  for every given positive natural number d
+% where q: quotient (not stardardized according to Weitz), r: remainder, d: divisor (given), 
+% n: number (given, dividend) where q,r are uniqely determined and r < d
+% what happens in rings where multiplication non-commutative?
+% -Frame division as repated subtraction:
+%  -Initialize r = n, q = 0
+%  -As long as r >= d: r -= d, q += 1
+% -This algorithm will eventually halt
+% -When it halts, q and r will be our results
+%
+% -Notation for remainders, example: 16 mod 7 = 2
+% 
+% This is a naive algorithm with tiem complexity O(n). Give better algorithm...
+
+% http://weitz.de/files/skript.pdf
 
 
-\paragraph{The Euclidean Algorithm}
+
+
+\paragraph{Modulo for Negative Numbers}
+% Take care when using the modulo operator in programming languages. It may produce different
+% results!
+
+
+
+\paragraph{Divsibility Rules}
+% give rules for decimal numbers
+% if a|b and a|c then a|(x*b + y*c) for any x,y in Z
+% special cases: a|(b+c), a|(b-c), a|(c-b)
 
 \subsubsection{Greatest Common Divisors}
+% denoted as gcd(n,m) or sometimes just as (n,m) in articles about number theory.
+
+\paragraph{The Euclidean Algorithm}
+% still to this day the best known way to compute the gcd.
 
 
 \paragraph{Lowest Common Multiples}
@@ -77,7 +107,7 @@ Any natural number $n$ can be written as a product of prime numbers. That statem
 Two numbers $n$ and $m$ are said to be \emph{coprime} or \emph{mututally prime} when they do not have a common prime factor in their factorization. That is equivalent to saying that their greatest common divisor is $1$. It is also equivalent to saying that their least common multiple is just the product of the two numbers [VERIFY!].
 
 
-% maybe this should be a section rather than asubsection:
+% maybe this should be a section rather than a subsection:
 \subsection{Number Theoretic Functions}
 \emph{Number theoretic functions}, sometimes also called \emph{arithmetic functions}, are functions that take a natural number $n$ as input and produce as output another number. Real or complex outputs are allowed in general but more typically, the outputs are also integers [VERIFY]. These functions encode some property about the natural numbers. We have already encountered the number of divisors function $d(n)$ as an example of such a number theoretic function. But there are many more. Before introducing them one by one, we'll first talk about some general features that these functions may or may not have.
 

@@ -184,6 +184,48 @@ https://www.youtube.com/watch?v=1R12sqkcCAM
 -N(x*y) = N(x) * N(y)
 -Needed for divison with remainder and GCD algo
  
+ 
+---------------------------------------------------------------------------------------------------- 
+ 
+https://www.youtube.com/watch?v=5U7aD3PizPs 
+Teilbarkeit, euklidischer Algorithmus und Lemma von Bézout (Zahlentheorie)
+
+1:20: Zahlentheorie beschäftigt sich mit den Dingen, die man *früher* Zahlen genannt hat - also mit
+      natürliche Zahlen. keine negative, Zahlen, keine Brüche, keine Größen
+-War lange Zeit Teil der reinen Mathematik - ohne Anwendungen
+-16 mod 7 = 2, 16 mod -7 = 2, -16 mod 7 = 5, -16 mod -7 = 5
+-Divibility rules:
+  2: last digit divisble by 2,  
+  3: horizontal sum divisible by 3, recursively if needed
+  4: last 2 digits, taken as number, divisble by 4
+  5: last digit divisible by  5, i.e. 5 or 0  
+  6: use rules for 2 *and* 3
+  7: take last digit, multiply by two and subtract from the number without the last digit. repeat
+     as often as needed.
+  8: last 3 digits, taken as number, dvisible by 8
+  9: horizontal sum divisible by 9
+ 10: last digit divisible by 10, i.e. 0
+-if a|b and a|c then a|(x*b + y*c) for any x,y in Z
+-58:00 Euclid's algo to compute gcd(a,b):
+ A = a 
+ B = b
+ if(A = 0)
+   return B
+ while(true)
+   if(B = 0)
+     return A
+   if(A > B)
+     A = A - B
+   else
+     B = B - A   
+	 
+-d is gcd of a,b if d divides a and b: d|a,b and	every other divisor of a,b divides d
+ d = gcd(a,b)   <==>   d|a,b  and  c|d  for any c with c|a,b
+ the greatest common divisor is a multiple of all other common divisors
+-the gcd of a and b can be expressed as linear combination of a and b.
+ d = gcd(a,b) = x*a + y*b
+ the Euclidean algo can produce the weights x,y too, if some bookeeping is added.
+ x,y are not unique
 ----------------------------------------------------------------------------------------------------
 https://en.wikipedia.org/wiki/Integral_domain
 

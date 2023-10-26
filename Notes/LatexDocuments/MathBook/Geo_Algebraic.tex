@@ -16,20 +16,50 @@ It is also possible to work in the field of rational numbers $\mathbb{Q}$ rather
 Fun fact: algebraic geometry and geometric algebra are two fields of mathematics that have nothing to do with each other. Isn't that weird? I really wonder, how connections between these fields could look like. Maybe we could start by interpreting the variables in the equations as multivectors instead of real or complex numbers? I have no idea but I think there just \emph{should} be some connection!
 
 
+\subsection{Elliptic Curves}
+
+
 
 \subsection{The Abstract Perspective}
-This section can be skipped on a first reading of the book. It references rather advanced ideas that are properly introduced only (much) later - specifically ring theory from abstract algebra.
+This section can be skipped on a first reading of the book. It references rather advanced ideas that are properly introduced only (much) later - specifically \emph{ring theory} from abstract algebra.
+
+
+\subsubsection{Elliptic Curves} 
+% asterisk means: can be skipped on first reading
+Here, we will consider a certain subset of bivariate polynomial equations that turned out to be in the sweet spot between being enough to actually tackle them and complex enough to allow for some interesting features. I'm talking about the so called elliptic curves. But didn't we already talk about ellipses as one particular type of conic section? Yeah - an \emph{elliptic curve} is actually \emph{not an ellipse} but rather the set of solutions of a bivariate polynomial equation of degree 3. ToDo: explain etymology if the term
+
+\paragraph{Group Structure $\ast$} % asterisk means: can be skipped on first reading
+The set of rational points on such an elliptic has an interesting property: together with a suitably defined binary operation between these points, they form an algebraic structure known as commutative group. That basically means that we can plug two rational points into our operation and the operation will produce another rational point on the curve. In the context of elliptic curve theory, this operation is usually denoted  with $+$ and called addition - but it is \emph{not} just the regular vector addition. ...TBC...
+% see Elliptic Tales, pg 116
+% mention that i works also when we don't work over Q but over a finite field
+% The points on the elliptic curve
 
 \subsubsection{Polynomial Rings}
-Algebraic geometry, when viewed as the business of trying to find the set of solutions of multivariate polynomial equations, is actually about quite intuitive ideas. However, when you open a textbook on algebraic geometry written for real mathematicians, you will discover that it will talk about very abstract ideas that sound like they have nothing to do with geometry. In the abstract algebra perspective of algebraic geometry, we consider quotient rings of polynomial rings. For example, in 2D, when we have a bivariate polynomial like $p(x,y) = x^2 + y^2 - 1$, we will consider the ring $\mathbb{R} \setminus (x^2 + y^2 - 1)$ and analyze its properties.
+Algebraic geometry, when viewed as the business of trying to find the set of solutions of multivariate polynomial equations, is actually about quite intuitive ideas. However, when you open a textbook on algebraic geometry written for real mathematicians, you will discover that it will talk about very abstract ideas that sound like they have nothing to do with geometry. In the abstract algebra perspective of algebraic geometry, we consider quotient rings of polynomial rings. For example, in 2D, when we have a bivariate polynomial like $p(x,y) = x^2 + y^2 - 1$, we will consider the ring $R = \mathbb{R}[x,y] \setminus (x^2 + y^2 - 1)$ and analyze its properties with the arcane machinery of ring theory. 
 
+% Is this the ring of all polynomials that are zero on p? Or is it the ring of all polynomials
+% but we are allowed only to plug in values for which p(x,y) = 0 i.e. only points on the unit
+% circle?
+% Our ring $R$ is the ring of all polynomials $q(x,y)$ that
+
+% What is algebraic geometry?
+% https://www.youtube.com/watch?v=MflpyJwhMhQ
+%
+% -Maybe this chapter should have a last section: Ring Theoretic Perspective or similar which 
+%  can be skipped on a first reading
+%
 % -Maybe bring a 1D example: take a polynomial like p(x) = (x+2)*(x-3) = x^2 - x - 6 with 
 %  roots at {-2,3}
 % -Consider the ring R[x] \ p(x)
 % -It is the ring of all polynomils that has zeros at -2,3. The set of all these polynomials
 %  is considered to form an eqivalence class.
 % -Any polynomial that is zero at -2 and 3 must have p(x) as factor, so any polynomial with p
-%  as factor is considered to be equivalent
+%  as factor is considered to be equivalent...right...or wrong?
+
+%
+% -Or is it like we we consider the ring of all polynomials but we allow only to plug in 
+%% points (x,y) for which 
+
 
 
 \begin{comment}
@@ -81,10 +111,7 @@ Fun fact
 Wie muss man fragen, um "schöne" Antworten zu bekommen? (Der Satz von Bezout):
 https://www.youtube.com/watch?v=dyehHqozzqE
 
-What is algebraic geometry?
-https://www.youtube.com/watch?v=MflpyJwhMhQ
--Maybe this chapter should have a last section: Ring Theoretic Perspective or similar which can be
- skipped on a first reading
+
 
 
 \end{comment}

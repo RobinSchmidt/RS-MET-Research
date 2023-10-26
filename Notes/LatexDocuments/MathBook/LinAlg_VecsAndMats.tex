@@ -28,19 +28,7 @@ Moreover, when we look at things in a more carefully, we need to distinguish bet
 %===================================================================================================
 %\subsection{Vectors}
 
-%===================================================================================================
-%\subsection{Matrices}
-
-
-
-
-
-
-%===================================================================================================
-\subsection{Operations}
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Vector Operations}
+\subsection{Vector Operations}
 
 \paragraph{Vector Addition}
 Algebraically, there is not much to say about vector addition - we just add the tuples element-wise and that's it. We can interpret such a vector addition geometrically at placing the vectors tip to tail. ...TBC... [ToDo: insert figure with the parallelogram picturing $\mathbf{a + b}$ and $\mathbf{b + a}$].
@@ -52,55 +40,90 @@ Algebraically, there is not much to say about vector addition - we just add the 
 \paragraph{Vector Products}
 % cross-product, triple-product, wedge-product
 
+
+
+
+
+%===================================================================================================
+
+\subsection{Matrix Operations}
+\subsubsection{Addition and Subtraction}
+
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Matrix Operations}
-\paragraph{Addition and Multiplication}
-\paragraph{Inversion}
-% could be done via Gauss-Jordan Elimination Algorithm decribed belo
+\subsubsection{Multiplication}
+
+
+%===================================================================================================
+\subsubsection{Inversion}
+% Could be done via Gauss-Jordan Elimination Algorithm decribed in the section about solvin linear 
+% systems
 
 % Misc: transposition, hermitian tranpose, etc.
 
 
 %===================================================================================================
-\subsection{Linear Systems of Equations}
-[This should be a section, not a subsection!]
-
-One important area of application of matrices and vectors is the solution of systems of linear equations
-
-% solvability, rank (may also be filed under matrix features - maybe introduce the concept here and mnetion it there again)
-
-% solution structure: particular solution plus general solution of homogeneous system
-% explain, why that structure arises
-% A solutions of the homogenous system gives zero by definition, so adding any multiple it to a
-% particular aolution does not destroy the solution property...or something
-% This solution structure is really only relevant for (consistent) singular systems that have a 
-% whole space of solutions. If the solution is unique, I think we get the special case where the
-%% space spanned by the solution of the homogeneus system is 0-dimensional...or soemthing?
-
-
-%===================================================================================================
-\subsection{Special Features}
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Vector Features}
+\subsection{Vector Features}
 
 \paragraph{Vector Norms}
 The norm of a vector captures its length. The most common norm is the Euclidean norm but there are others as well...TBC...
 % are a measure of length, $L_p$-norm, explain the general requirements to a norm
 
+
 \paragraph{Orthogonality and Angles}
 % Angles between a are defined in terms of the cosine of the norm
 % 
 
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Matrix Features}
 
-% bollean fetaures: symmetric, orthogonal, nilpotent, idempotent, unitary, normal, etc.
+\paragraph{Span of a Set of Vectors}
+As the span of a set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$, we define the set of all vectors that can be formed by arbitrary linear combinations of those vectors, i.e. the set of all vectors that can be written as:
+\begin{equation}
+ a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_2 \mathbf{v}_n 
+\end{equation}
+for some set of scalar coefficients $a_1, \ldots, a_n$.
+
+
+\paragraph{Linear Independence}
+A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$ is said to be linearly independent, if none of its elements can be expressed as a linear combination of other elements. A necessary and sufficient mathematical condition for linear independence is that the equation:
+\begin{equation}
+ a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_2 \mathbf{v}_n = \mathbf{0}
+\end{equation}
+can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial solution for the $a_i$ exists [VERIFY]. Linear independence is an important condition for a set of vectors to have. In a sense, it means that all vectors are needed and none of the is redundant. If a set of vectors is linearly independent, it means that removing one of the vectors would necessarily reduce the dimension of their span by one.
+
+
+
+%===================================================================================================
+\subsection{Matrix Features}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Special Properties}
+% By a property of a matrix, I mean a feature thata matrix may or may not have - a boolean feature, so to speak.
+
+\paragraph{Squareness}
+A matrix is called a square matrix, if it has the same number of rows as it has columns. The general rectangular array of elements forms a square.
+
+\paragraph{Symmetry}
+A matrix is symmetric if it is equal to its own transpose. That means that the rows are equal to the columns. Obviously, symmetry is a feature that only square matrices can possibly have.
+% Give fomrula for invers of transpose and/or for (AB)^T = B^T A^T iirc
+
+% boolean fetaures: symmetric, orthogonal, nilpotent, idempotent, unitary, normal, etc.
 % discrete features: rank, index of nilpotency, signature
 % scalar: determinant
 % list of scalars: eigenvalues, singular values
 % list of vectors: (left/right) (generalized) eigenvectors, singular vectors
+% boolean features of pairs of matrices: similarity (is A similar to B), 
 % matrix: set of similar matrices,
+
+% maybe put these "boolean" features into a subsection
+\paragraph{Orthogonality}
+% a (square) matrix is orthogonal when all its rows are mutually orthogonal. This implies
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Characteristic Numbers}
+
+\paragraph{Rank}
 
 \paragraph{Determinant}
 % regular/singular
@@ -108,19 +131,21 @@ The norm of a vector captures its length. The most common norm is the Euclidean 
 \paragraph{Norms}
 % explain norm compatibility with vector norms
 
+
+%---------------------------------------------------------------------------------------------------
+
+
 \paragraph{Characteristic Polynomial}
 
 \paragraph{Eigenvalues}
 
 \paragraph{Eigenvectors}
 
+\paragraph{Generalized Eigenvectors}
 
 
-% maybe put these "boolean" features into a subsection
-\paragraph{Orthogonality}
-% a (square) matrix is orthogonal when all its rows are mutually orthogonal. This implies
 
-\paragraph{Symmetry}
+
 
 \paragraph{Similarity}
 A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have, among other things, a symmetry of the relation: $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{S}$ and post-multiplying both sides by $\mathbf{S}^{-1}$ to obtain $\mathbf{A} = \mathbf{S B S^{-1}}$. The transformation that maps $\mathbf{A}$ to $\mathbf{B}$ is called a \emph{similarity transformation} or a \emph{conjugation}. Conjugation is a term from group theory which we will encounter in a later chapter. A similarity transformation does not change the basis independent properties of a matrix. In particular, it doesn't change the characteristic polynomial and therefore the eigenvalues, which are the  roots of said polynomial, are invariant under the transformation. Furthermore, it also doesn't change the determinant and trace because they are the product and sum of the eigenvalues respectively. The multiplicities (geometric and algebraic) of the eigenvalues are also invariant. The eigenvectors are mapped via the change of basis transformation $\mathbf{S}$: If $\mathbf{a}$ is an eigenvector of  $\mathbf{A}$, then $\mathbf{b} = \mathbf{S a}$ is the corresponding eigenvector of $\mathbf{B}$ [VERIFY! It might be $\mathbf{S}^{-1}$]. Other features that are invariant under a similarity transform are: rank, index of nilpotence, Jordan normal form (up to permutation of the blocks), Frobenius normal form, minimal polynomial and elementary divisors. Don't worry, if you don't know what some of these terms mean. I don't know all of them either and just wanted to list them all for completeness (the list is taken from Wikipedia).
@@ -170,37 +195,6 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 
 % https://en.wikipedia.org/wiki/Canonical_form#Linear_algebra
 
-%===================================================================================================
-\subsection{Matrix Decompositions}
-[This should be a section, not a subsection!]
-
-% https://en.wikipedia.org/wiki/Matrix_decomposition
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{LU Decomposition}
-The LU-decomposition decomposes the matrix into a product $\mathbf{A = L U}$ where $\mathbf{L}$ is a lower triangular matrix and $\mathbf{U}$ is an upper triangular matrix. The LU-decomposition is algorithmically basically Gaussian elimination with some modifications. If you have an LU decomposition of a matrix $\mathbf{A}$ available, then it is straightforward to solve an equation $\mathbf{Ax = b}$. In practice, one often computes a decomposition of the form 
-
-..TBC...explain details of algorithms for the decomposition and the solution of linear systems.
-% Lower Triangular, Upper Triangular
-
-% https://en.wikipedia.org/wiki/LU_decomposition
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{QR Decomposition}
-% Orthonormal, Upper Triangular
-% I think, the R stands for right-triangular?
-
-%https://en.wikipedia.org/wiki/QR_decomposition
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Eigendecomposition aka Diagonalization}
-The most convenient decomposition of a matrix in terms of ease of solving equations involving the matrix and in terms of geometric interpretability of what the matrix actually does is the so called diagonalization of the matrix. ...TBC...
-
-% it's also called Eigendecomposition or Spectral Decomposition
-
-\paragraph{Eigenvalues}
-
-\paragraph{Eigenvectors}
 
 % https://en.wikipedia.org/wiki/Diagonalizable_matrix#Diagonalization
 
@@ -215,7 +209,7 @@ A diagonalization of a matrix is unfortunately not always possible [TODO: state 
 
 
 
-\paragraph{Generalized Eigenvectors}
+
 
 % interpretation of the Jordan cells as representing a pair of complex conjugate eigenvalues?
 % is the failure to be diagonalizable due to complex eigenvalues? Nah - I think, it's due to

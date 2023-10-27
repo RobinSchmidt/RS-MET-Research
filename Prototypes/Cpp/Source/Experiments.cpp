@@ -10087,6 +10087,9 @@ void testPrimeFactorTable()
   //  defined as numbers with exactly 2, 3, 4, etc. factors? (my definition - check if some such 
   //  definition already exists)
   // -maybe plot cumulative sums of sums and counts of prime-factors
+  //
+  // See:
+  // https://cp-algorithms.com/algebra/factorization.html
 }
 
 bool rsIsInteger(double x, double tol)
@@ -10185,7 +10188,7 @@ void testPrimesAndMore()
   // -i have no idea what is going on! ...as expected! but the first conjecture that all sums of
   //  prime factors are lined up like this has clearly turned out to be false. ...but there may 
   //  still be something interesting going on - many factor-sums are lined up this way
-
+  //
   // ToDo:
   // -maybe use a different plotting style (dots) - maybe let plotMaxtrixRows take an optional
   //  string with gnuplot options

@@ -75,8 +75,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testLeveledNumber();   // stub
   //testCommutativeHyperOperations();
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
-  //testPrimeFactorTable();
-  //testPrimesAndMore();
+  testPrimeFactorTable();
+  testPrimesAndMore();
   //testFiniteField();     // stub
   //testGeneralizedCollatz();
   //testPowerCommutator();

@@ -1,3 +1,8 @@
+Algorithms:
+Algorithms for Competitive Programming:   https://cp-algorithms.com/index.html
+The Arcane Algorithm Archive:             https://www.algorithm-archive.org/
+
+
 
 Python repos about math, graphics, visualization:
 https://github.com/empet/Math
@@ -15,6 +20,8 @@ https://mybinder.org/v2/gh/AllenDowney/ThinkDSP/master?filepath=code%2Fchap01.ip
 
 AudioTK and related repos by Mathhieu Brucher:
 https://github.com/mbrucher
+
+
 
 
 maybe, it's possible to create demos with my own python module?

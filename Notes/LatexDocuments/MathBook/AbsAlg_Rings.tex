@@ -354,17 +354,35 @@ The following table gives rings with increasingly more features in each line. Ea
 
 \medskip
 \begin{tabular}{l l}
-Ring                         & Satisfies ring axioms \\
-Unital Ring                  & Has multiplicative identity \\
-Commutative Ring             & Multiplication is commutative \\
-Integral Domain              & Has no zero divisors \\
-Integrally Closed Domain     & Is complicated [TODO: figure out!] \\
-GCD Domain                   & Any pair of elements has greatest common divisor \\
-Unique Factorization Domain  & Unique factorization is possible \\
+Ring                        & Satisfies ring axioms \\
+Unital Ring                 & Has multiplicative identity \\
+Commutative Ring            & Multiplication is commutative \\
+Integral Domain             & Has no zero divisors \\
+Integrally Closed Domain    & Is complicated [TODO: figure out!] \\
+GCD Domain                  & Any pair of elements has greatest common divisor \\
+Unique Factorization Domain & Unique factorization is possible \\
+Principal Ideal Domain      & Every ideal is principal \\
+Euclidean Domain            & Division with remainder is possible \\
+Field                       & Multiplicative inverses exist \\
+Algebraically Closed Field  & Every non-constant polynomial has a root
 \end{tabular}
 \medskip
 
+You will find this chain of inclusions on many pages on Wikipedia but they use a ring definition that requires a multiplicative identity. I didn't include this requirement in the ring axioms such that their "rng" is our "ring" and their "ring" is our "unital ring". There is no universal consensus about this. 
+
+% This chain of inclusions can be found on wikipedia on any of these pages:
+%
+% https://en.wikipedia.org/wiki/Integral_domain
+%
+% But wikipedia uses a ring definition that reuqires a multiplicative identity. I didn't include
+% this requirement such that their "rng" is our "ring" and their "ring" is our "unital ring".
+
 % domain: like integral domain but not commutative
+% division ring:
+
+% https://en.wikipedia.org/wiki/B%C3%A9zout_domain
+% https://en.wikipedia.org/wiki/Valuation_ring
+% 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{More Examples of Rings}

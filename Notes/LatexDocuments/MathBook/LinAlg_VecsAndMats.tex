@@ -79,43 +79,7 @@ Algebraically, there is not much to say about vector addition - we just add the 
 
 
 
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Other Products}
-The matrix product as defined above is by far the most important "product-like" operation between matrices. But there are some other, too.
 
-% ToDo: list common features such as associativity and distributivity, if applicable
-% maybe move this below the "features" section because it references features such as rank, det
-% eigenvalues. etc.
-
-%---------------------------------------------------------------------------------------------------
-\paragraph{Hadamard Product} The Hadamard product of two $m \times n$ matrices is just the element-wise product. It is associative, commutative and distributive over addition. It is denoted by $\mathbf{A} \odot \mathbf{B}$ and satisfies
-
-\medskip
-\begin{tabular}{l l l l}
-Determinant: & $\det(\mathbf{A} \odot \mathbf{B})$ 
-             & $\geq \;\; \det(\mathbf{A})  \det(\mathbf{A})$   
-             & when $\mathbf{A,B}$ are positive semidefinite \\
-Rank:        & $\rank(\mathbf{A} \odot \mathbf{B}) $
-             & $\leq \;\; \rank(\mathbf{A}) \rank(\mathbf{A})$     \\
-\end{tabular}
-\medskip
-
-
-% https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
-
-%---------------------------------------------------------------------------------------------------
-\paragraph{Kronecker Product}
-
-% https://en.wikipedia.org/wiki/Kronecker_product
-% https://de.wikipedia.org/wiki/Kronecker-Produkt
-
-%---------------------------------------------------------------------------------------------------
-\paragraph{Khatri-Rao Product}
-
-% https://en.wikipedia.org/wiki/Kronecker_product#Related_matrix_operations
-
-
-% https://en.wikipedia.org/wiki/Hadamard_product_(matrices)#The_mixed-product_property
 
 %===================================================================================================
 \subsection{Vector Features}
@@ -259,6 +223,49 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 % https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix
 
 
+
+
+%===================================================================================================
+\subsection{More Exotic Operations}
+There are some lesser known operations on matrices which we will introduce here.
+
+%---------------------------------------------------------------------------------------------------
+%\subsubsection{Other Products}
+%The matrix product as defined above is by far the most important "product-like" operation between matrices. But there are some other, too.
+
+% ToDo: list common features such as associativity and distributivity, if applicable
+% maybe move this below the "features" section because it references features such as rank, det
+% eigenvalues. etc.
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Hadamard Product} The Hadamard product of two $m \times n$ matrices is just the element-wise product. It is associative, commutative and distributive over addition. It is denoted by $\mathbf{A} \odot \mathbf{B}$ and satisfies
+
+\medskip
+\begin{tabular}{l l l l}
+Determinant: & $\det(\mathbf{A} \odot \mathbf{B})$ 
+             & $\geq \;\; \det(\mathbf{A})  \det(\mathbf{A})$   
+             & when $\mathbf{A,B}$ are positive semidefinite \\
+Rank:        & $\rank(\mathbf{A} \odot \mathbf{B}) $
+             & $\leq \;\; \rank(\mathbf{A}) \rank(\mathbf{A})$     \\
+\end{tabular}
+\medskip
+
+
+% https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Kronecker Product}
+
+% https://en.wikipedia.org/wiki/Kronecker_product
+% https://de.wikipedia.org/wiki/Kronecker-Produkt
+
+\paragraph{Khatri-Rao Product}
+
+\paragraph{Tracey-Singh Product}
+
+
+% https://en.wikipedia.org/wiki/Kronecker_product#Related_matrix_operations
+% https://en.wikipedia.org/wiki/Hadamard_product_(matrices)#The_mixed-product_property
 
 
 %===================================================================================================

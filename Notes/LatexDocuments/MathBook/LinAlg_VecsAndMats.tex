@@ -226,8 +226,8 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 
 
 %===================================================================================================
-\subsection{More Exotic Operations}
-There are some lesser known operations on matrices which we will introduce here.
+\subsection{Lesser Known Definitions}
+%There are some lesser known operations on matrices which we will introduce here.
 
 %---------------------------------------------------------------------------------------------------
 %\subsubsection{Other Products}
@@ -268,10 +268,15 @@ Rank:        & $\rank(\mathbf{A} \odot \mathbf{B}) $
 % -mention approximation of matrix as weighted sum over Kronecker products of vectors
 % -maybe this is also knwon as tensor decomposition? figure out!
 %  https://en.wikipedia.org/wiki/Tensor_rank_decomposition
+% -Try to approximate mxn matrix A as a weighted sum over Kronecker products of vectors in a 
+%  least squares sense. ..has to do with separable filter kernels in image processing. Maybe make % %  the ansatz 
+%    A ~ sum_{k=1}^n u_k \otimes v_k  or  
+%    A ~ sum_{i=1}^m sum_{j=1}^n w_{ij} u_i \otimes v_j
+%  where u_i v_j are vectors and w_{ij} are scalar weights
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Block Matrices}
-Matrices whose entries are themselves also matrices (and not numbers as usual) are called block matrices. This has not really anything to do with decomposing a given matrix into constituents, though ...TBC...
+Matrices whose entries are themselves also matrices (and not numbers as usual) are called block matrices.  ...TBC...
 
 % https://en.wikipedia.org/wiki/Block_matrix
 

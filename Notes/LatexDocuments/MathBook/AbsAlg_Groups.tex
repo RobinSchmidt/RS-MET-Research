@@ -330,25 +330,20 @@ Recall from the linear algebra section the definition of similarity between two 
 
 %===================================================================================================
 \subsection{Subgroups}
-If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a \emph{subgroup} of the original group. As is often the case in mathematical definitions, the edge cases are included in the definitions of terms. A group itself also counts as a subgroup of its own. Also, the group consisting only of the identity element counts as subgroup of any group. These two subgroups always exist for any group and are called the trivial subgroups. A nontrivial subgroup is also called a proper subgroup. The notation for subgroups is as follows: If $S$ is a subgroup of $G$, we write $S \leq G$. In case of $S$ being a proper subgroup, we may also write: $S < G$. This is not read as "S is less than G" but rather as "S is a subgroup of G".
+If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a \emph{subgroup} of the original group. As is often the case in mathematical definitions, the edge cases are included in the definitions of terms. A group itself also counts as a subgroup of its own. Also, the group consisting only of the identity element counts as subgroup of any group. These two subgroups always exist for any group and are called the trivial subgroups. A nontrivial subgroup is also called a proper subgroup. The notation for subgroups is as follows: If $S$ is a subgroup of $G$, we write $S \leq G$. In case of $S$ being a proper subgroup, we may also write: $S < G$. In the context of group theory this is not read as "S is less than G" but rather as "S is a subgroup of G".
 
 % https://www.youtube.com/watch?v=KufsL2VgELo&t=1138s
-
-% ToDo: notation <, <= ...maybe use < for proper subgroup
 % https://en.wikipedia.org/wiki/Subgroup
 
-
-%\medskip
 \paragraph{Example}
 For example, the even integers under addition form a proper subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough to qualify as a group. 
 
 \medskip
 The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using a machinery arising from the idea subgroups. Infinity cannot be factorized but this factorization is the thing we are now interested in. Therefore, we'll now focus on finite groups.
+% Maybe move this text segment to the "Quotient Groups" section
 
 \paragraph{Example}
 Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to understand as the set of integers modulo $12$ with modular addition modulo $12$ as group operation. Because $12$ has many divisors, $\mathcal{G}$ has quite a lot of (nontrivial) subgroups. You can easily verify that $\{0,2,4,6,8,10\}, \{0,3,6,9\}, \{0,4,8\}, \{0,6\}$ are subgroups of that group. These subgroups are isomorphic to $(\mathbb{Z}_{6}, +)$, $(\mathbb{Z}_{4}, +)$,$(\mathbb{Z}_{3}, +)$, $(\mathbb{Z}_{2}, +)$ respectively. As a general rule, subgroups of cyclic groups are themselves (isomorphic to) cyclic groups. As any group, $\mathcal{G}$ has also the trivial subgroups $\{ 0 \}$ and $\mathbb{Z}_{12}$ itself but we are not interested in them. 
-
-%...TBC...
 
 % https://math.stackexchange.com/questions/1718041/list-all-subgroups-of-mathbb-z-6-and-mathbb-z-8
 % Maybe use Z_6 instead because we don'T want to use up too much space for the tables.
@@ -435,7 +430,7 @@ The takeaway is that a subgroup $H$ always partitions a group $G$ into equally s
 \subsubsection{Special Subgroups}
 Not all subgroups are created equal. There are certain special types of subgroups that are important enough to deserve special names.
 
-\paragraph{Normal Subgroups} The textbook definition of a \emph{normal subgroup} is:  A subgroup $N$ is called normal, iff $g^{-1} N g = N$ for any $g \in G$. In words, this may be stated as: normal subgroups are invariant under conjugation. If this is the case, then the cosets of $N$ form themselves a group. This group is, in general, not a subgroup of $G$ (TODO: Is it ever? Figure out!). The group of cosets is called a \emph{factor group} or \emph{quotient group} and denoted as $G / N$. It has $N$ as the identity element and the inverse of $g N$ is $g^{-1} N$ for any $g \in G$ [VERIFY]. Another equivalent way to characterize normal subgroups is to say their left and right cosets coincide. The notation for normal subgroups is $N \triangleleft G$.
+\paragraph{Normal Subgroups} The textbook definition of a \emph{normal subgroup} is:  A subgroup $N$ is called normal, iff $g^{-1} N g = N$ for any $g \in G$. In words, this may be stated as: normal subgroups are invariant under conjugation. If this is the case, then the cosets of $N$ form themselves a group. This group is, in general, not a subgroup of $G$ (TODO: Is it ever? Figure out!). The group of cosets is called a \emph{factor group} or \emph{quotient group} and denoted as $G / N$. It has $N$ as the identity element and the inverse of $g N$ is $g^{-1} N$ for any $g \in G$ [VERIFY]. Another equivalent way to characterize normal subgroups is to say their left and right cosets coincide. The notation for normal subgroups is $N \triangleleft G$. [TODO: list more equivalent ways to characterize a normal subgroup - see wikipedia]
 
 %...TBC...
 % https://en.wikipedia.org/wiki/Normal_subgroup

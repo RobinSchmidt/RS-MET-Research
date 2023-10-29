@@ -230,6 +230,22 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 %There are some lesser known operations on matrices which we will introduce here.
 
 %---------------------------------------------------------------------------------------------------
+\subsubsection{Block Matrices}
+Matrices whose entries are themselves also matrices (and not numbers as usual) are called block matrices. For example, such a block matrix could look like:
+\begin{equation}
+\begin{pmatrix}
+\mathbf{A} & \mathbf{B} & \mathbf{C} \\
+\mathbf{D} & \mathbf{E} & \mathbf{F} 
+\end{pmatrix}
+\end{equation}
+The constituent matrices may or may not be of equal shape, but the shapes must be related in such a way that the tiling fits together [VERIFY]. For example, we could have $\mathbf{A} = 2 \times 4$,  $\mathbf{B} = 2 \times 2$, $\mathbf{C} = 2 \times 3$, $\mathbf{D} = 3 \times 4$, $\mathbf{E} = 3 \times 2$, $\mathbf{F} = 3 \times 3$. However, when we want to add or multiply two block matrices, not only must the outer matrix shapes be compatible but also the shapes all the inner element-matrices. That may then actually constrain the shapes of the inner matrices some more. The constraints on the shapes really depend on what types of operations we want to perform with such block matrices. ...TBC...
+
+% https://en.wikipedia.org/wiki/Block_matrix
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Vectorization of a Matrix}
+
+%---------------------------------------------------------------------------------------------------
 %\subsubsection{Other Products}
 %The matrix product as defined above is by far the most important "product-like" operation between matrices. But there are some other, too.
 
@@ -250,10 +266,17 @@ Rank:        & $\rank(\mathbf{A} \odot \mathbf{B}) $
 \end{tabular}
 \medskip
 
+This product may also be called the \emph{naive matrix product}. Its applications are not so much in the realm of linear algebra but more in areas like numerical processing of 2D array data such as in image processing where we often want to do element-wise array operations. 
+
+% ToDo: give more applications
+% -in numerical processing, we often need element-wise array operations
+
 % https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Kronecker Product} The Kronecker product between an $m \times n$ matrix $\mathbf{A}$ and a $p \times q$ matrix $\mathbf{B}$ is an $mp \times nq$ matrix $\mathbf{C}$ in which each element is a product of one element from  $\mathbf{A}$ and one element from $\mathbf{B}$. ...TBC..
+\subsubsection{Kronecker Product} The Kronecker product between an $m \times n$ matrix $\mathbf{A}$ and a $p \times q$ matrix $\mathbf{B}$ is an $mp \times nq$ matrix $\mathbf{C}$ in which each element is a product of one element from $\mathbf{A}$ and one element from $\mathbf{B}$. ...TBC..
+
+% can be seen as inserting a scaled copy of the rightfactor as submatrix into the result where the scaling factor is taken from the left factor. show this by two 2x2 matrices
 
 % https://en.wikipedia.org/wiki/Kronecker_product
 % https://de.wikipedia.org/wiki/Kronecker-Produkt
@@ -264,6 +287,11 @@ Rank:        & $\rank(\mathbf{A} \odot \mathbf{B}) $
 
 % https://en.wikipedia.org/wiki/Kronecker_product#Related_matrix_operations
 % https://en.wikipedia.org/wiki/Hadamard_product_(matrices)#The_mixed-product_property
+% https://en.wikipedia.org/wiki/Khatri%E2%80%93Rao_product#Face-splitting_product
+% https://en.wikipedia.org/wiki/Hadamard_product_(matrices)#The_penetrating_face_product
+% https://en.wikipedia.org/wiki/Frobenius_inner_product
+% https://en.wikipedia.org/wiki/Pointwise_product
+% what about convolution?
 
 % -mention approximation of matrix as weighted sum over Kronecker products of vectors
 % -maybe this is also knwon as tensor decomposition? figure out!
@@ -274,18 +302,7 @@ Rank:        & $\rank(\mathbf{A} \odot \mathbf{B}) $
 %    A ~ sum_{i=1}^m sum_{j=1}^n w_{ij} u_i \otimes v_j
 %  where u_i v_j are vectors and w_{ij} are scalar weights
 
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Block Matrices}
-Matrices whose entries are themselves also matrices (and not numbers as usual) are called block matrices. For example, such a block matrix could look like:
-\begin{equation}
-\begin{pmatrix}
-\mathbf{A} & \mathbf{B} & \mathbf{C} \\
-\mathbf{D} & \mathbf{E} & \mathbf{F} 
-\end{pmatrix}
-\end{equation}
-The constituent matrices may or may not be of equal shape, but the shapes must be related in such a way that the tiling fits together [VERIFY]. For example, we could have $\mathbf{A} = 2 \times 4$,  $\mathbf{B} = 2 \times 2$, $\mathbf{C} = 2 \times 3$, $\mathbf{D} = 3 \times 4$, $\mathbf{E} = 3 \times 2$, $\mathbf{F} = 3 \times 3$. However, when we want to add or multiply two block matrices, not only must the outer matrix shapes be compatible but also the shapes all the inner element-matrices. That may then actually constrain the shapes of the inner matrices some more. The constraints on the shapes really depend on what types of operations we want to perform with such block matrices. ...TBC...
 
-% https://en.wikipedia.org/wiki/Block_matrix
 
 
 %===================================================================================================

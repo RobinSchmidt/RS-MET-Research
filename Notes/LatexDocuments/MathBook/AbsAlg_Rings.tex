@@ -98,6 +98,14 @@ An important idea in ring theory is the idea of starting with a given ring and \
 \paragraph{The Polynomial Ring $\mathbb{Z}[x]$}
 Let's call the new element to be adjoined $x$. We don't say anything about what that mysterious new object $x$ is supposed to be. We treat it like a symbolic variable. Of course, just adding some single element to the underlying set destroys the fulfillment of the ring requirements. To maintain closure under addition, we must also add $x+1$, $x-1$, $x+2$, $x-2$, $x+3$ and so on. To maintain closure under multiplication, we need to add $2 x$, $-2 x$, $3 x$, etc. But that's not yet all that we have to add - not even close. We also need to add $x^2, x^3, x^4, \ldots$ and of course also $3 x^5 - 23 x^2 + 42$ and many more elements. By adjoining a single new object $x$, we are forced by the closure requirements to also add all elements of the general form $a_0 + a_1 x + a_2 x^2 + a_3 x^3 + \ldots$ where $a_0, a_1, a_2, a_3, \ldots \in \mathbb{Z}$. We obtain the set of all polynomials in some symbolic variable $x$ with coefficients from $\mathbb{Z}$. The result is called the ring "$\mathbb{Z}$-adjoin-$x$" and denoted by $\mathbb{Z}[x]$.
 
+% https://www.youtube.com/watch?v=_RTHvweHlhE&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=25
+% Picking the coeffs and x from Z was just for concreteness. In general, they may come from any ring
+% including more exotic ones like the aforementioned product rings, matrix rings, etc. Well,
+% we didin't actually say that wpick x from Z ...hmm - but we need to pick it from some set
+% such that the multiplications between the coeffs and powers of x are defined. 
+% R(x) with parenthese means the set (field) of rational functions of x
+
+
 % https://en.wikipedia.org/wiki/Polynomial_ring
 
 % https://www.youtube.com/watch?v=MAcdesa9RqA   at around 43
@@ -147,6 +155,10 @@ Every natural number greater than one has a unique factorization in terms of pri
 
 % https://en.wikipedia.org/wiki/Unit_(ring_theory)
 % https://en.wikipedia.org/wiki/Unit_(ring_theory)#Group_of_units
+
+% https://www.youtube.com/watch?v=HHpODrFZ4YQ&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=26
+% -set of all units also denoted by $R^{\times}$
+% -set of units 1,5,7,11 of Z_12 is given as example
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Associatedness}
@@ -214,6 +226,9 @@ The "left" and "right" in this terminology refers to where the factor $r$ from t
 % but: 2,5, are ring elements and m,n are integers, so how is the product to be interpreted? In terms 
 % of repeated addition? It can't be the ring multipliation because that isn't defined on R x Z. 
 % Maybe look at (10,14) . they have a gcd of 2 so we should get (2)? or (15,21) or (10, 15)
+
+% https://www.youtube.com/watch?v=F0wA0xLZSQ8&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=28
+% -ideals are to rings what normal subgroups are to groups
 
 \paragraph{Operations on Ideals} We can apply operations to two ideals $I$ and $J$ to obtain new ideals of $R$.
 
@@ -476,6 +491,14 @@ ingredients, we have identified the base *field* C and the polynomial *ring* ove
 already working in an algebraic structure that is built from two more elementary ones. Reducing
 polynomials, factoring groups, etc. are other reductions/decompositions that occur in algebra.
 
-
+https://www.youtube.com/watch?v=87QXdOxeVmU&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=27
+Integral domains
+-> has no zero divisors
+-> solving equations by factoring and setting individual factors to zero will find all solutions
+   ...otherwise, the technique may miss some solutions
+-> solving equations by cancelling factors on both sides works. Otherwise, cancelling my produce
+   extra solutions.
+-> is defined to be also commutative, but that is actually not so important. Non-commutative version
+   is just called domain
 
 \end{comment}

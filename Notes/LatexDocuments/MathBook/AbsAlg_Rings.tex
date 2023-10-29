@@ -220,9 +220,6 @@ The "left" and "right" in this terminology refers to where the factor $r$ from t
 % of repeated addition? It can't be the ring multipliation because that isn't defined on R x Z. 
 % Maybe look at (10,14) . they have a gcd of 2 so we should get (2)? or (15,21) or (10, 15)
 
-% https://www.youtube.com/watch?v=F0wA0xLZSQ8&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=28
-% -ideals are to rings what normal subgroups are to groups
-
 \paragraph{Operations on Ideals} We can apply operations to two ideals $I$ and $J$ to obtain new ideals of $R$.
 
 \medskip
@@ -236,8 +233,6 @@ Radical:       & $\sqrt{I}$& $ = \;\; \{ r \in R : (\exists n \in \mathbb{N} :  
 \medskip
 
 In words: The intersection of two ideals consists of all their common elements. The sum of two ideals consists of all sums that can be formed from the elements of the ideals $I,J$. The product consists of all finite sums of products $i j$ where $i \in I$ and $j \in J$. The quotient ... [TODO: explain in words]. The radical on an ideal consists of all elements of the ring, some power of which lies in the ideal. You may ask yourself, if we have sum, product and quotient, then what about the difference? I think, the answer is that if we would define a difference as $I - J = \{i - j : i \in I, j \in J\}$, which may seem natural, then we would obtain the exact same set as for the sum $I + J$, so it wouldn't give us anything new. If, on the other hand, we would attempt to define the difference as $I - J = \{i \in I : i \notin J\}$, then the resulting set would not be an ideal, so such a definition would not seem to be useful (my guesses). The union of two ideal does also not give an ideal.
-
-% maybe use i,j for elements if I,J and r for elements of R
 
 % But what about defining the difference as $I - J : \{a : a \in I, a \notin J\}$. But maybe that would not give an ideal, so it's not interesting?
 
@@ -349,12 +344,34 @@ In ring theory, ideals play a role analogous to that of the normal subgroups in 
 % Maybe integrate this into the section below by making it a section about special kinds and
 % concrete examples.
 
+
 %===================================================================================================
-\subsection{More Examples of Rings}
+\subsection{A Taxonomy of Rings}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Rings with Special Properties}
+The following table gives rings with increasingly more features in each line. Each entry has the same features as all of its predecessors (i.e. all lines above it) plus some additional feature listed in the right column. So, when going down the table from top to bottom, the rings get more and more specific and all entries above a given line are supersets (i.e. generalizations with less features) of the structure on the given line.
+
+\medskip
+\begin{tabular}{l l}
+Ring                         & Satisfies ring axioms \\
+Unital Ring                  & Has multiplicative identity \\
+Commutative Ring             & Multiplication is commutative \\
+Integral Domain              & Has no zero divisors \\
+Integrally Closed Domain     & Is complicated [TODO: figure out!] \\
+GCD Domain                   & Any pair of elements has greatest common divisor \\
+Unique Factorization Domain  & Unique factorization is possible \\
+\end{tabular}
+\medskip
+
+% domain: like integral domain but not commutative
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{More Examples of Rings}
 We have seen some basic rings like $\mathbb{Z}$ which can be regarded as the prototypical example for a ring that was used as model on which the more abstract notion of a ring is based and we have seen the rings $\mathbb{Z}[x]$ and $\mathbb{Z}[i]$ which where obtained by adjoining certain kinds of new elements. Here, we will briefly mention some more examples of rings.
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Numbers}
+\paragraph{Number Rings}
 ToDo: integers $\mathbb{Z}$, Gaussian Integers $\mathbb{Z}[i]$, modular integers $\mathbb{Z}_p$
 
 %---------------------------------------------------------------------------------------------------

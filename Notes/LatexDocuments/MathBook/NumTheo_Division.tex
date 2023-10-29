@@ -57,6 +57,7 @@ Another question besides "what is the $n$th prime" could be that we have some nu
 
 \paragraph{Euclid's Theorem} There are infinitely many prime numbers.
 
+%\paragraph{Fundamental Theorem of Arithmetic} Every natural number $n$ can be written as a product of prime numbers. 
 
 \subsubsection{Division with Remainder}
 % Every natural number n can written as  n = d*q + r  for every given positive natural number d
@@ -106,12 +107,15 @@ A concept that is closely related to the idea of a greatest common divisor is th
 
 
 
-\subsubsection{Factorization}
-Any natural number $n$ can be written as a product of prime numbers. That statement is an importnat theorem, called the "Fundamental Theorem of Arithmetic". In such a product, a prime number is allowed to occur multiple times so you may also hear the statement in the form: "...as a product of powers of prime numbers". The prime numbers themselves have only one single factor - the number itself. But that is also considered to be a product - namely a product over one single factor. In programmer's speak, it's a somewhat degenerate edge case (actually the even more edgy edge case is a product over zero numbers which is defined as $1$). But be that as it may - the theorem implies that we can break down any number $n$ into its prime factors. That process, or sometimes also the result of that process, is called the \emph{prime factorization} of $n$. ...TBC...
+\subsubsection{Prime Factorization - The Fundamental Theorem of Arithmetic}
+Any positive natural number $n \geq 1$ can be written as a product of prime numbers in a way that unique up to ordering of the factors. That statement is an important theorem, called the \emph{"Fundamental Theorem of Arithmetic"}. In such a product, a prime number is allowed to occur multiple times so you may also hear the statement in the form: "...as a product of powers of prime numbers". The prime numbers themselves have only one single factor - the number itself. But that is also considered to be a product - namely a product over one single factor. In programmer's speak, it's a somewhat degenerate edge case. The even more edgy edge case is a product over zero numbers, i.e. the empty product, which is defined as $1$. So we have $1$ also covered. You may object that the factorization of $1$ is not unique because we can multiply any number of ones into the product without changing it - but remember that one is, by definition, not a prime number. The theorem implies that we can break down any number $n$ into its prime factors. That process, or sometimes also the result of that process, is called the \emph{prime factorization} of $n$.
 
+\paragraph{Naive Algorithm} A naive algorithm to obtain such a factorization of a given number $n$ could proceed as follows. Let's assume, we have a list of prime numbers available and its biggest entry is greater than or equal to $\sqrt{n}$. ...TBC...
 
 % https://en.wikipedia.org/wiki/Square-free_integer
 % all prime factors are unique
+
+\paragraph{Relevance for Cryptography} The fact that factoring numbers into their prime factors is computationally expensive for large numbers is the basis of most contemporary asymmetric encryption algorithms, i.e. those algorithms that work with a public key for encryption and a private key for decryption. ...TBC...
 
 \subsubsection{Coprimality}
 Two numbers $n$ and $m$ are said to be \emph{coprime} or \emph{mututally prime} when they do not have a common prime factor in their factorization. That is equivalent to saying that their greatest common divisor is $1$. It is also equivalent to saying that their least common multiple is just the product of the two numbers [VERIFY!].

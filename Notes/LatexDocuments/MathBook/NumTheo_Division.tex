@@ -12,7 +12,7 @@ There are some numbers that have \emph{only} the trivial divisors. These very sp
 ...TBC...give table of first 100 or so prime numbers.
 
 \medskip
-Because prime numbers are so special, it would be nice to have some sort of formula or algorithm to produce all the prime numbers. Ideally, we would like to define a function $p(n)$ that spits out the $n$th prime number. If you can find such a formula for $p(n)$ that is easy to evaluate, eternal fame is yours. It's not at all easy and actually one of the holy grails of mathematics.
+Because prime numbers are so special and important, it would be nice to have some sort of formula or algorithm to produce all the prime numbers. Ideally, we would like to define a function $p(n)$ that spits out the $n$th prime number. If you can find such a formula for $p(n)$ that is easy to evaluate, eternal fame is yours. It's not at all easy and actually one of the holy grails of mathematics.
 
 \paragraph{Willans' Formula}
 But what exactly do I mean by "easy to evaluate"? If anything is allowed, then it is indeed possible to write down an explicit formula for the $n$th prime. For example, this beast here:
@@ -25,7 +25,7 @@ But what exactly do I mean by "easy to evaluate"? If anything is allowed, then i
  \Biggr)^{1/n}
  }
 \end{equation}
-is due to C.P. Willans and I will not explain here why it works because that's not my point here [TODO: insert reference to an explanation]. My point is that it certainly qualifies as an explicit formula but it is practically useless. The first thing we note is that the outer sum goes up to $2^n$ which already puts the evaluation of the formula into the category of algorithms with exponential time complexity. If you don't know what that means, let me just tell you that it means: "too inefficient for practical use except (maybe) for very small inputs". And that is true even if we assume the thing inside the sum to be in the realm of constant complexity - which it certainly isn't. 
+is due to C.P. Willans and I will not explain here why it works because that's not my point here [TODO: insert reference to an explanation]. My point is that it certainly qualifies as an explicit formula but it is practically useless. The first thing we note is that the outer sum goes up to $2^n$ which already puts the cost of the evaluation of the formula as function of $n$ into the category of algorithms with exponential time complexity. If you don't know what that means, let me just tell you that it means: "too inefficient for practical use except (maybe) for very small inputs". And that is true even if we overly optimistically assume the thing inside the sum to be in the realm of constant complexity - which it certainly isn't. 
 
 % Willan's formula:
 % https://en.wikipedia.org/wiki/Formula_for_primes
@@ -41,7 +41,7 @@ A much more practical way to produce primes is to precompute a list of primes, s
 %We mark all numbers that are multiples of $2$ except two itself as non-prime. They are mulitples of 
 
 \paragraph{Primality Tests}
-Another question besides "what is the $n$th prime" could be that we have some number $n$ and want to figure out whether or not $n$ is a prime number. ...TBC...
+Another question besides "what is the $n$th prime" could be that we have some number $n$ given and want to figure out whether or not $n$ is a prime number. If we have a list of primes that is long enough that $n$ would be included, if it would be prime, then we could just search in this list for $n$. Assuming to use use binary search, this would have the rather efficient complexity of $\mathcal{O}(\log(n))$. If we find it, then $n$ is prime and if don't find it, then it isn't prime. If no such list is available, a naive algorithm to test primality is by "trial division": we try to divide $n$ by all numbers less than or equal to $\sqrt{n}$ and check the remainder. If in one of these trials, we get a remainder of zero, then $n$ is divisible by that number and hence not prime. If we find no such case, then $n$ is prime. That algorithm would have a complexity of $\mathcal{O}(\sqrt{n})$ and is not really practical for large $n$.
 
 
 % we say that $12$ is divisible by $2$ and $6$ and 
@@ -83,7 +83,7 @@ Another question besides "what is the $n$th prime" could be that we have some nu
 
 \paragraph{Divsibility Rules}
 % give rules for decimal numbers
-% if a|b and a|c then a|(x*b + y*c) for any x,y in Z
+% if a|b and a|c then a|(x*b + y*c) for any x,y in Z  (Bezout's Lemma(?))
 % special cases: a|(b+c), a|(b-c), a|(c-b)
 
 \subsubsection{Greatest Common Divisors}

@@ -487,6 +487,9 @@ The \emph{center} of a group $G$ is the set of elements that commute with every 
 
 % https://en.wikipedia.org/wiki/List_of_small_groups
 
+% https://www.youtube.com/watch?v=rXLz8TdckWo&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=21
+% Not all non-simple finite groups can be made via the direct product. It's more complicated.
+
 \subsubsection{Quotient Groups}
 We are now interested in how we can break down certain groups into smaller constituent groups. To see how this could work, we will first consider the opposite: how can we build a larger group from two smaller constituent groups?
 
@@ -504,6 +507,8 @@ We are now interested in how we can break down certain groups into smaller const
 
 \subsubsection{Composition Series}
 % A kind of prime factorization of the group
+
+% https://www.youtube.com/watch?v=jhVMBXl5jTA&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=22
 
 % How does the "construction" of non-simple finite groups work? Is it based on the cartesian product of the underlying sets where the individual group operations are applied element-wise? add a segment under the "Subgroups" section, mabye name it "Group Factorization" - look up, how it's called and how it's done
 
@@ -546,9 +551,20 @@ Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and
 
 % Riley/Hobson et al pg 1060 use the complex exponential as example for an isomorphism. mayb do that, too
 
+% https://www.youtube.com/watch?v=XPF5fe1WdKY&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=11
+% Has another example: Z and Z_2 the homomorphism maps the evens to 0 and the odds to 1
+% also: (Z_4,+) and({1,i,-1,i},*)
+
 \paragraph{} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The \emph{kernel} of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ k \in G: f(k) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. Now we can say that: (1) The image of $G$ under $f$ is a subgroup of $H$. (2)  The kernel of $f$ is a normal subgroup of $G$.
 
+% Make this theorem look more important bcs it is (I think)
+
 %https://mathworld.wolfram.com/GroupHomomorphism.html
+
+% https://www.youtube.com/watch?v=TngePpJ_x-I&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=14
+% The kernel of f measures how much bigger G is? But no! It's a property of f - not of G,H. The
+% kernel measures to which degree f fails to be 1-to-1. If the kernel only contains the identity,
+% then f is 1-to-1
 
 \subsection{Isomorphisms}
 Isomorphisms are homomorphisms that satisfy some additional constraints. These are: (1) Different elements of $G$ must be mapped to different elements of $H$. That is: $f$ must be injective. (2) Every element of $H$ must be reached by $f$. That is: $f$ must be surjective. Taken together, these two additional requirements require $f$ to be bijective and therefore invertible. Therefore, an isomorphism is a homomorphism that works in both directions. That means: mapping from $G$ to $H$ preserves the structure of $G$ in $H$ and mapping back from $H$ to $G$ preserves the structure of $H$ in $G$. Again, an isomorphism between two given groups may or may not exist. If one does exist, we may say that the two groups are isomorphic which means: of equal form \footnote{The internet says that "iso" means "equal" whereas "homo" means "the same" - and there is supposed to be a subtle difference. But it actually says that the difference is such that "homo" should be the stronger form (identity) and "iso" the weaker form (equivalence) - but here it's clearly the other way around: iso is the stronger form of sameness-morphism than homo. I don't know what to make of that. It's a mess!}. If two groups are isomorphic, they are structurally the same. One is actually the other in disguise and vice versa in the sense that the elements of the underlying sets are just "renamed" with respect to one another via $f$. 
@@ -590,6 +606,7 @@ A Lie group is a group, whose underlying set may be interpreted as a set of poin
 %Topologically, these groups form an $n$-torus which means ...well...nope
 % SO(2) is topologically a 1-torus and generally SO(n) is an n-torus
 
+% Lie groups are at the intersection of group theory, linear algebra and differential geometry.
 ...TBC...
 
 %For example, the set of all rotations in 3D may be interpreted as the surface of the unit sphere [VERIFY!]. ...nope! SO(3) is 3D, says wikipedia. A point on a sphere can't encode any rotation around an axis that goes through the point. But could the unit sphere encode some other intersting set of transformations? Or maybe a torus? I think, they may encode rotations in a given plane, say, the xy-plane. ...ah - no - for this, 1 number is sufficient..soo maybe rotations around 2 axes but not all 3?
@@ -638,6 +655,9 @@ The first 3 items describe infinite families of groups whereas the last item, th
 \paragraph{Cyclic Groups}
 The cyclic groups are named like that because they generate all their elements from repeatedly applying a single generator. After all elements have been generated, they cycle back to the initial element - at least when the group is finite. In the framework of interpreting group members as actions, we can think of the finite cyclic groups as encoding the rotational symmetries of regular polygons. The generator would be the basic rotation around some angle of which all the other rotation angles are integer multiples. For example, all rotations of the regular pentagon that leave it unchanged have angles that are a multiples of 72 degrees. Repeatedly applying a 72 degree rotation 5 times yields a 360 degree rotation which is the same as a 0 degree rotation which is the neutral element. Applying it once more, we are back at the  72 degree rotation again, i.e. we have cycled through all possible rotations are ar now back at our initial rotation angle. We could also have used another element as generator. Repeatedly applying a 144 (= $72 \cdot 2$) degree rotation will also hit the neutral element after 5 repetitions and applying it once more cycles back to 144 again. We can also think of the cyclic groups in terms of modular addition. The group $(\mathbb{Z}_5, +)$ is essentially the same group, i.e. it is isomorphic to the group of rotations by multiples of 72 degrees. All cyclic groups of order $p$ can be represented by $(\mathbb{Z}_p, +)$. Of course, we could also use a set of $2 \times 2$ matrices with matrix multiplication for a concrete representation. When $p$ is a prime, then the group is simple because it cannot possibly have any nontrivial subgroups, much less normal subgroups due Lagrange's theorem. The cyclic groups are commutative and they are the only simple groups with that property. That means: every simple commutative group is cyclic and every non-cyclic commutative group isn't simple. The cyclic group of order $p$ is also denoted as $Z_p$ and its order is given by $p$. 
 
+% Give notation - I think, it's $C_n$. Order of the cyclic group is equal $n$
+%
+
 \medskip
 Infinite groups such as $\mathbb{Z}$ may also be called "cyclic". The criterion is to be generated by a single generator and $\mathbb{Z}$ can be generated by $\{1\}$ or $\{-1\}$. The \emph{fundamental theorem of finitely generated commutative groups} says that any such group can be broken down to a finite number of cyclic groups.
 
@@ -649,10 +669,26 @@ Infinite groups such as $\mathbb{Z}$ may also be called "cyclic". The criterion 
 
 %  Maybe consider the rotations of a hexagon and explain, how this group can be factored
 
+
+%\paragraph{Dihedral Groups}
+% Symmetries of an n-sided polygon. There are $2n$ of them - $n$ rotations and $n$ reflections. Not commutative. Notations: $D_n, D_{2n}$
+
+
+%\paragraph{Symmetric Groups}
+
+% https://www.youtube.com/watch?v=3aNeCWRjh8I&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=16
+% Every finite group is a subgroup of a symmetric group (Cayley's Theorem)
+
+% https://www.youtube.com/watch?v=MpKG6FmcIHk&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=17
+% Cycle notation
+
 \paragraph{Alternating Groups}
 Recall that the set of all permutations of $n$ objects forms a group which is called the symmetric group of order $n$ and is denoted by $S_n$. These symmetric groups have as normal subgroup the set of all even permutations, i.e. the set of all permutations that can be achieved by an even number of swaps ("transpositions"). This subgroup of some given $S_n$ is called the alternating group and denoted by $A_n$. If $n \geq 5$, then $A_n$ is simple. This is related to the fact that for polynomials of degree $d \geq 5$ no closed form formulas exist for the zeros. The order of $A_n$ is given by $|A_n| = \frac{n !}{2}$. $A_5$ is the smallest non-commutative simple group and has 60 elements.
 
 % explain the relation to the nonexistence of formulas some more.
+
+
+
 
 \paragraph{Groups of the Lie Type} This is a big family with a lot of subfamilies...TBC...
 % should not to be confused with Lie groups?
@@ -669,7 +705,9 @@ Recall that the set of all permutations of $n$ objects forms a group which is ca
 
 % Tits group is sometimes not included into the set of sporadic groups. It sits somewhere in between being sporadic and being of Lie type
 
-
+% https://www.youtube.com/watch?v=jhVMBXl5jTA&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=22
+% monster group contains 20 of the sporadic groups as subgroups or quotient groups. These are 
+% known as the "happy family". The remaining ones are called the "pariahs"
 
 
 % https://en.wikipedia.org/wiki/Classification_of_finite_simple_groups

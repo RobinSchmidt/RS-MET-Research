@@ -70,13 +70,35 @@ Algebraically, there is not much to say about vector addition - we just add the 
 %  ...although, it could actually also fit into the "decomposition" section
 
 
-%===================================================================================================
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
 % Could be done via Gauss-Jordan Elimination Algorithm decribed in the section about solvin linear 
 % systems
 
 % Misc: transposition, hermitian tranpose, etc.
 
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Other Products}
+The matrix product as defined above is by far the most important "product-like" operation between matrices. But there are some other, too.
+
+% ToDo: list common features such as associativity and distributivity, if applicable
+
+%---------------------------------------------------------------------------------------------------
+\paragraph{Hadamard Product} The Hadamard product of two $m \times n$ matrices is just the element-wise product. It is associative, commutative and distributive over addition.
+% https://en.wikipedia.org/wiki/Hadamard_product_(matrices)
+
+%---------------------------------------------------------------------------------------------------
+\paragraph{Kronecker Product}
+
+% https://en.wikipedia.org/wiki/Kronecker_product
+% https://de.wikipedia.org/wiki/Kronecker-Produkt
+
+%---------------------------------------------------------------------------------------------------
+\paragraph{Khatri-Rao Product}
+
+% https://en.wikipedia.org/wiki/Kronecker_product#Related_matrix_operations
 
 %===================================================================================================
 \subsection{Vector Features}
@@ -218,35 +240,6 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 
 % https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
 % https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix
-
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Jordan Normal Form}
-A diagonalization of a matrix is unfortunately not always possible [TODO: state conditions]. A Jordan normal form is one of the two second best things that we can do ...TBC...
-
-
-
-
-
-
-% interpretation of the Jordan cells as representing a pair of complex conjugate eigenvalues?
-% is the failure to be diagonalizable due to complex eigenvalues? Nah - I think, it's due to
-% multiplicity
-
-% Here:
-% https://en.wikipedia.org/wiki/Matrix_similarity
-% it says that over the complex numbers, every matrix is similar to a Jordan Normal Form
-
-% https://en.wikipedia.org/wiki/Jordan_normal_form
-% https://en.wikipedia.org/wiki/Generalized_eigenvector
-
-% Jorand-Arnold Canonical Form (Mathe mit 2x2 Matrizen pg 44)
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{SVD - Singular Value Decomposition}
-% Orthonormal, Diagonal, Orthonormal
-
-The other second best thing we can do when a matrix is not diagonalizable 
 
 
 

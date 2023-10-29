@@ -244,6 +244,24 @@ The constituent matrices may or may not be of equal shape, but the shapes must b
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Vectorization of a Matrix}
+The vectorization of a matrix $\mathbf{A}$ is denoted by $\vectorize(\mathbf{A})$ is an operator that turns an $m \times n$ matrix into an $mn$-dimensional column vector by vertically stacking the columns of the matrix on top of each other. A row-wise vectorization can be obtained by $\vectorize(\mathbf{A}^T)$ so we don't define a special operator for that. 
+
+%If we identify $k$-dimensional vectors with $k \times 1$ matrices, we may actually consider this as a special case of a reshaper operation
+
+...TBC...
+
+% https://en.wikipedia.org/wiki/Vectorization_(mathematics)
+
+
+% IIRC there was some youtube video about conics that had an interesting equation involving the vec
+% operator
+
+% https://en.wikipedia.org/wiki/Matrix_calculus
+% https://www.statlect.com/matrix-algebra/vec-operator
+
+% Is there also an inverse - a matricization of a vector?
+% I think, this is a special case of (tensor) reshaping
+% https://en.wikipedia.org/wiki/Tensor_reshaping#Mode-m_Flattening_/_Mode-m_Matrixization
 
 %---------------------------------------------------------------------------------------------------
 %\subsubsection{Other Products}
@@ -292,6 +310,7 @@ This product may also be called the \emph{naive matrix product}. Its application
 % https://en.wikipedia.org/wiki/Frobenius_inner_product
 % https://en.wikipedia.org/wiki/Pointwise_product
 % what about convolution?
+% https://en.wikipedia.org/wiki/Hilbert%E2%80%93Schmidt_operator
 
 % -mention approximation of matrix as weighted sum over Kronecker products of vectors
 % -maybe this is also knwon as tensor decomposition? figure out!

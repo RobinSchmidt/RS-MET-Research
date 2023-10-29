@@ -330,13 +330,17 @@ Recall from the linear algebra section the definition of similarity between two 
 
 %===================================================================================================
 \subsection{Subgroups}
+If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a \emph{subgroup} of the original group. As is often the case in mathematical definitions, the edge cases are included in the definitions of terms. A group itself also counts as a subgroup of its own. Also, the group consisting only of the identity element counts as subgroup of any group. These two subgroups always exist for any group and are called the trivial subgroups. A nontrivial subgroup is also called a proper subgroup.
 
 % https://www.youtube.com/watch?v=KufsL2VgELo&t=1138s
 
-If a subset of the underlying set of a group forms itself a group under the same operation, then that subset together with the operation forms what is called a subgroup of the original group. For example, the even integers under addition form a subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough to qualify as a group. 
+% ToDo: notation <, <= ...maybe use < for proper subgroup
+% https://en.wikipedia.org/wiki/Subgroup
 
-\medskip
-As is often the case in mathematical definitions, the edge cases are included in the definitions of terms. A group itself also counts as a subgroup of its own. Also, the group consisting only of the identity element counts as subgroup of any group. These two subgroups always exist for any group and are called the trivial subgroups.
+
+%\medskip
+\paragraph{Example}
+For example, the even integers under addition form a proper subgroup of all the integers under addition. To see this, we just need to verify the group axioms for the even integers: Closure: Sums of even integers are again even - check. Associativity: Inherited from integer addition - check. Neutral element: Zero is among the evens - check. Inverse elements: Negating an even integer gives another even integer - check. Done. The even integers form a subgroup of the integers. The odd numbers, on the other hand, do not form a subgroup of the integers. They fail to contain the neutral element - zero is not odd. They are not even closed under addition: adding two odd numbers gives an even number. Associativity works out fine and inverses are also there - but that's not enough to qualify as a group. 
 
 \medskip
 The integers under addition are an infinite group. But we now want to focus on finite groups because many interesting theorems about subgroups are about those finite groups. In a certain way that is analogous to the prime factorization of natural numbers, finite groups can be factored into simpler constituents using a machinery arising from the idea subgroups. Infinity cannot be factorized but this factorization is the thing we are now interested in. Therefore, we'll now focus on finite groups.
@@ -372,7 +376,7 @@ Consider the group $\mathcal{G} = (\mathbb{Z}_{12}, +)$ which we here want to un
 
 % https://www.youtube.com/watch?v=MAcdesa9RqA at around 40:00 he gives a single criterion for showing that something is a subgroup (after that, a similar pair of conditions for subrings)
 
-\paragraph{Langrange's Theorem} If $\mathcal{G}$ is a finite group of order $g$ and $\mathcal{S}$ is a subgroup of  $\mathcal{G}$ of order $s$, then $g$ is a multiple of $s$.
+\paragraph{Langrange's Theorem} If $\mathcal{G}$ is a finite group of order $g$ and $\mathcal{S}$ is a subgroup of  $\mathcal{G}$ of order $s$, then $g$ is a multiple of $s$. [TODO: maybe move down - below discussion of cosets]
 
 % Maybe use |\mathcal{G}| for the order, maybe introduce that notation somewhere earlier
 
@@ -431,11 +435,13 @@ The takeaway is that a subgroup $H$ always partitions a group $G$ into equally s
 \subsubsection{Special Subgroups}
 Not all subgroups are created equal. There are certain special types of subgroups that are important enough to deserve special names.
 
-\paragraph{Normal Subgroups} The textbook definition of a \emph{normal subgroup} is:  A subgroup $N$ is called normal, iff $g^{-1} N g = N$ for any $g \in G$. In words, this may be stated as: normal subgroups are invariant under conjugation. If this is the case, then the cosets of $N$ form themselves a group. This group is, in general, not a subgroup of $G$ (TODO: Is it ever? Figure out!). The group of cosets is called a \emph{factor group} or \emph{quotient group} and denoted as $G / N$. It has $N$ as the identity element and the inverse of $g N$ is $g^{-1} N$ for any $g \in G$ [VERIFY]. Another equivalent [VERIFY] way to characterize normal subgroups is to say their left and right cosets coincide. ...TBC...
+\paragraph{Normal Subgroups} The textbook definition of a \emph{normal subgroup} is:  A subgroup $N$ is called normal, iff $g^{-1} N g = N$ for any $g \in G$. In words, this may be stated as: normal subgroups are invariant under conjugation. If this is the case, then the cosets of $N$ form themselves a group. This group is, in general, not a subgroup of $G$ (TODO: Is it ever? Figure out!). The group of cosets is called a \emph{factor group} or \emph{quotient group} and denoted as $G / N$. It has $N$ as the identity element and the inverse of $g N$ is $g^{-1} N$ for any $g \in G$ [VERIFY]. Another equivalent way to characterize normal subgroups is to say their left and right cosets coincide. ...TBC...
 % -Subgroups for which the left and right cosets coincide
 % -This can also be stated as: they are invariant under conjugation
 % -These are the basis for quotient groups
 % https://en.wikipedia.org/wiki/Normal_subgroup
+% https://en.wikipedia.org/wiki/Normal_subgroup#Equivalent_conditions
+%  -> the communtator of every n in n and g in G is in N
 
 % https://www.youtube.com/watch?v=vYKdh5oQ4Zw&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=8
 % 8:29: A subgroup $N$ is normal, iff $g^{-1} N g = N$ for any $g \in G$

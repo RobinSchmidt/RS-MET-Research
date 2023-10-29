@@ -261,3 +261,7 @@ void imgRainbowRadiation()
 
 // ToDo:
 // -Maybe prefix the function names with img for images, ani for animations and snd for sounds.
+
+
+// inspirational YouTube-Videos:
+// ZelU28SUB_k  All RGB image generator (open source)

@@ -4,7 +4,7 @@
 
 % https://en.wikipedia.org/wiki/Matrix_decomposition
 
-%---------------------------------------------------------------------------------------------------
+%===================================================================================================
 \subsection{LU Decomposition}
 The LU-decomposition decomposes the matrix into a product $\mathbf{A = L U}$ where $\mathbf{L}$ is a lower triangular matrix and $\mathbf{U}$ is an upper triangular matrix. The LU-decomposition is algorithmically basically Gaussian elimination with some modifications. If you have an LU decomposition of a matrix $\mathbf{A}$ available, then it is straightforward to solve an equation $\mathbf{Ax = b}$. In practice, one often computes a decomposition of the form 
 
@@ -13,20 +13,56 @@ The LU-decomposition decomposes the matrix into a product $\mathbf{A = L U}$ whe
 
 % https://en.wikipedia.org/wiki/LU_decomposition
 
-%---------------------------------------------------------------------------------------------------
+%===================================================================================================
 \subsection{QR Decomposition}
 % Orthonormal, Upper Triangular
 % I think, the R stands for right-triangular?
 
 %https://en.wikipedia.org/wiki/QR_decomposition
 
-%---------------------------------------------------------------------------------------------------
+%===================================================================================================
 \subsection{Eigendecomposition aka Diagonalization}
 The most convenient decomposition of a matrix in terms of ease of solving equations involving the matrix and in terms of geometric interpretability of what the matrix actually does is the so called diagonalization of the matrix. ...TBC...
 
 % it's also called Eigendecomposition or Spectral Decomposition
 
 
+%===================================================================================================
+\subsection{Non-Multiplicative Decompositions}
+The matrix decompositions that we have seen so far decompose a given matrix $A$ into a product of other matrices with certain desirable features where "product" is understood as matrix multiplication. There are some more exotic decompositions which are not based on the matrix product but on other matrix operations. We'll consider them here.
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Symmetric-Antisymmetric Decomposition}
+Any square matrix $\mathbf{M}$ can be decomposed into a sum of a symmetric matrix $\mathbf{S}$ and an antisymmetric $\mathbf{A}$ matrix as follows:
+\begin{equation}
+\mathbf{M} = \mathbf{S + A} \qquad \text{where}  \qquad
+\mathbf{S} = (\mathbf{M} + \mathbf{M}^T) / 2,  \quad
+\mathbf{A} = (\mathbf{M} - \mathbf{M}^T) / 2
+\end{equation}
+[VERIFY]
+% explain what this is good for.
+
+% Lower/Upper triangular - used as interation matrix in numerical algorithms like Gauss-Seidel.
+% This can actually be generalized to any sort of $zero-out-component$ and $residual-component$
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Jordan-Chevalley (SN) Decomposition}
+The Jordan-Chevalley (SN) decomposition decomposes a matrix as $\mathbf{A} =  \mathbf{S + N}$ where $\mathbf{S}$ is diagonalizable, $\mathbf{N}$ is nilpotent and $\mathbf{S}$ and $\mathbf{N}$ commute:
+$\mathbf{SN} = \mathbf{NS}$.
+
+% ToDo: explain application
+% see: Mathe mit 2x2 Matrizen, pg 53
+% https://en.wikipedia.org/wiki/Jordan%E2%80%93Chevalley_decomposition
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Block Matrices}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Kronecker Product}
+% -mention approximation as Kronecker product
+% -maybe htis is also knwon as tensor decomposition? figure out!
 
 
 \begin{comment}
@@ -45,5 +81,9 @@ Interpretation of matrices:
 
 -In the context of linear transformations:
  -the j-th column tells us where the j-th unit basis vector is mapped to
+ 
+Maybe have sections for
+-Product Decompositions
+
 	
 \end{comment}

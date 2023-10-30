@@ -345,6 +345,7 @@ In general, a finite group can be fully specified by giving its multiplication t
 \subsubsection{Group Diagrams}
 Groups that can be specified by such a presentation can also be visualized by a so called \emph{group diagram} also known as \emph{Cayley diagram} or \emph{Cayley graph}. ...TBC..
 
+\medskip
 \begin{tikzpicture}[rotate=90,scale=1.5]
 \tikzstyle{vertex}=[draw,thick,circle,fill=lightgray!50,minimum size=25pt,inner sep=0pt]
 \draw (-0*360/5:1) node[vertex] (v1) {$f$};
@@ -358,23 +359,24 @@ Groups that can be specified by such a presentation can also be visualized by a 
 \draw (-4*360/5:1) node[vertex] (v9) {$fr$};
 \draw (-4*360/5:2) node[vertex] (v10) {$r^4$};
 \draw (v2) -- (v1);
-%\draw (v2) — (v1);
-%\draw (v3) — (v1);
-%\draw (v4) — (v2);
-%\draw (v4) — (v3);
-%\draw (v5) — (v3);
-%\draw (v6) — (v4);
-%\draw (v6) — (v5);
-%\draw (v7) — (v5);
-%\draw (v8) — (v6);
-%\draw (v8) — (v7);
-%\draw (v9) — (v1);
-%\draw (v9) — (v7);
-%\draw (v10) — (v2);
-%\draw (v10) — (v8);
-%\draw (v10) — (v9);
+\draw (v2) -- (v1);
+\draw (v3) -- (v1);
+\draw (v4) -- (v2);
+\draw (v4) -- (v3);
+\draw (v5) -- (v3);
+\draw (v6) -- (v4);
+\draw (v6) -- (v5);
+\draw (v7) -- (v5);
+\draw (v8) -- (v6);
+\draw (v8) -- (v7);
+\draw (v9) -- (v1);
+\draw (v9) -- (v7);
+\draw (v10) -- (v2);
+\draw (v10) -- (v8);
+\draw (v10) -- (v9);
 \end{tikzpicture}
 
+% try to let the text flow to the right of the diagram or: let the diagram appear to the right, or put a few more diagrams  next to each other
 
 % aka Cayley diagrams, Cayley graph,
 

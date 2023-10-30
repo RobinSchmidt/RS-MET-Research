@@ -151,10 +151,7 @@ This table is supposed to represent the results of our group operation. From the
 Now, for the table to specify an operation that does satisfy our group requirements, it must satisfy some constraints. Firstly, it must be a so called Latin square which is a matrix in which each row and each column contains every element from the set exactly once. That this is necessary can be seen as follows: suppose you know a product $p = a_i a_j$ and you also know one of the factors, say $a_i$. Then, it should be possible to find the other factor $a_j = a_i^{-1} p$ by scanning the row of $a_i$ until you find $p$ and then read off the column header where you found it. That must be $a_j$. But for that to work for any $p \in G$, you can't have duplicate elements on the rows because then you wouldn't know, which column header you should read off - and hence, the product is not uniquely invertible. This is not allowed in a group. Another constraint is that there must be some row and column that just lists the elements in the same order as they appear in the header - that's the row/column of the neutral element. They must cross on the diagonal, i.e. row and column index must be the same. These criteria are rather easy to check. If they fail, the table is not a valid multiplication table. But if they hold, the table could still be invalid. These criteria are necessary but not sufficient. We also need to verify the associativity and that's the hard part. Of course, it can naively be verified algorithmically in $\mathcal{O}(N^3)$ by verifying for every possible triple $a_i, a_j, a_k$ that $(a_i a_j) a_k = a_i (a_j a_k)$. There are algorithms that can do better than that in certain cases (search for "Light's associativity test") but as of now, this seems indeed to be an $\mathcal{O}(N^3)$ problem in terms of worst case complexity.
 
 \medskip
-But be that as it may. Multiplication tables are an important tool in the analysis of finite groups because these tables completely specify (and hopefully reveal) the structure of a given group at hand. For example, we may easily find out whether or not a group is \emph{commutative}. This is the case, if and only if the multiplication table is \emph{symmetric} across the main diagonal. 
-
-
-% But as we will see when we come to the topic of subgroups, finite groups can have more structure than that. But after all that abstract stuff, let's first have a look at...
+But be that as it may. Multiplication tables are an important tool in the analysis of finite groups because these tables completely specify (and hopefully reveal) the structure of a given group at hand. For example, we may easily find out whether or not a group is \emph{commutative}. This is the case, if and only if the multiplication table is \emph{symmetric} across the main diagonal. But as we will see when we come to the topic of subgroups, finite groups can have more structure than that. But after all that abstract stuff, let's first have a look at...
 
 % Not every Latin square is a Cayley table:
 % https://proofwiki.org/wiki/Latin_Square_is_not_necessarily_Cayley_Table_of_Group
@@ -164,17 +161,6 @@ But be that as it may. Multiplication tables are an important tool in the analys
 % https://math.stackexchange.com/questions/168663/is-there-an-easy-way-to-see-associativity-or-non-associativity-from-an-operation
 
 % https://en.wikipedia.org/wiki/Light's_associativity_test
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Presentations \star}
-%  the \star is because we reference generators - but maybe the generator section can be moved up?
-% I think Examples and generators should go before "Multiplication Tables"
-% But the "Symmtries of a regular Polygon" mentions multiplication tables
-% ..and generators references the examples
-% The example could be moved up if we could get rid of that ref to mul-tables
-
-Giving the full multiplication table is sometimes not necessary. Sometimes, the content of that table can be encoded much more succinctly in a form that is known as a \emph{presentation} of the group. These "presentations" should not to be confused with "representations" which is an entirely different concept in group theory.
-
 
 % Q: Does it actually make any sense to do linear algebra with Caley tables? If we have two Caley tables of two different groups (of the same size) - what is their product? Will it also be a Caley table of a group? ...maybe try it with some examples. I guess that would mean that Latin squares would need to form a subgroup of the group of all matrices under matrix multipication. Do they? ...naaahhh...that doesn't make any sense!
 % https://en.wikipedia.org/wiki/Latin_square
@@ -286,7 +272,12 @@ OK - now we have seen a couple of examples of groups that seem to be very differ
 
 %===================================================================================================
 \subsection{Generators}
-% Wrong: the set of generators is called generating set and its elements are called generators
+% Maybe call that section Presentations and have subsubsections
+% -Generators
+% -Order of an Element
+% -Defining Equations
+% -Group Diagrams
+
 
 A \emph{generating set} of a group $\mathcal{G}$ is a subset of the underlying set $G$ which, by forming all possible products (if necessary, recursively) between the elements of this subset and their inverses, can generate all elements in the set $G$. The elements of such a generating set are called \emph{generators}. If we take any finite subset $\{ a, b, \ldots \}$ of the group, then we will use the notation $\langle a, b, \ldots \rangle$ for the set that can be generated by $\{ a, b, \ldots \}$. This set $\langle a, b, \ldots \rangle$ may coincide with the full underlying set of our group. In this case, $\{ a, b, \ldots \}$ is a generating set. But it may also be the case that $\{ a, b, \ldots \}$ only generates a subset of $G$. In this, it is not a generating set.
 
@@ -338,9 +329,32 @@ we are allowed to form all possible products between these two matrices with as 
 \subsubsection{Order of an Element}
 In finite groups, it turns out that we can take any element $a$ and if we repeatedly multiply it by itself (i.e. form powers of it), we will eventually hit the identity. At some point $m$, we will have $a^m = e$. That number $m$ is called the \emph{order} of the element $a$ in the group. The identity element $e$ has order $1$, of course. A word of caution: the term "order" in group theory is overloaded to mean two things: when we talk about the order of an element, it means what I just said. But when we talk about the order of a group as a whole, then the term means the number of elements in the group. Which sense is meant by the word "order" can be inferred from the "datatype" to which it is applied to - is it a group element or a group? That's exactly how overloading of function names works in programming. 
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Presentations}
+%  the \star is because we reference generators - but maybe the generator section can be moved up?
+% I think Examples and generators should go before "Multiplication Tables"
+% But the "Symmtries of a regular Polygon" mentions multiplication tables
+% ..and generators references the examples
+% The example could be moved up if we could get rid of that ref to mul-tables
+
+In general, a finite group can be fully specified by giving its multiplication table. Sometimes the content of that table can be encoded much more succinctly in a form that is known as a \emph{presentation} of the group. These "presentations" should not to be confused with "representations" which is an entirely different concept in group theory. A presentation of a group consists of specifying set of generators along with a set of \emph{defining equations} which completely determine the content of the multiplication table. ...TBC...
+
+% see ABoAA pg 47 ff
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Group Diagrams}
+Groups that can be specified by such a presentation can also be visualized by a so called \emph{group diagram} also known as \emph{Cayley diagram} or \emph{Cayley graph}. ...TBC...
+
+% aka Cayley diagrams, Cayley graph,
+
+
+%https://en.wikipedia.org/wiki/Cayley_graph
+
 %===================================================================================================
 \subsection{Conjugacy Classes}
 Recall from the linear algebra section the definition of similarity between two matrices. Two matrices $\mathbf{A,B}$ are considered to be similar, denoted by $\mathbf{A} \sim \mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. In group theory there is the notion of \emph{conjugacy} which coincides with the notion of \emph{similarity} when we consider the group of all invertible matrices, i.e. the general linear group. But when we are dealing with a more restricted group of matrices or a group that has nothing to with matrices at all, then the notion of conjugacy becomes a bit more restricted. The equation is the same, though: two group elements $a,b$ are conjugate to one another, if the equation $b = s^{-1} a s$ holds for some $s$ that must also be an element of the group. It is that latter requirement of $s$ being inside the group that makes the notion of conjugacy more restrictive ...TBC...
+
+
 
 % https://www.youtube.com/watch?v=vYKdh5oQ4Zw&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=8
 % 7:40: conjugation can also be applied to a group G or subgroup H or subset A as whole using 
@@ -837,6 +851,8 @@ Questions:
 -what about orbits and stabilizers. where do they fit in? under generators maybe?
 
 Resources:
+
+(ABoAA) : A Book of Abstract Algebra (C.P. Pinter)
 
 https://feog.github.io/groupsymmetryws-shrunk.pdf  
 Groups and Symmetries  (Lecture notes  by F. Oggier & A. M. Bruckstein)

@@ -86,6 +86,30 @@ I hope you will agree that these are quite a lot of potentially useful facts. Es
 One will often hear the statement that groups are an abstraction of \emph{symmetry}. A symmetry is, by definition, some transformation of an object that leaves some property of interest unchanged. Consider a square. We may rotate it by any integer multiple of 90 degrees around its center (including zero and negatives) and we may also reflect it horizontally, vertically or diagonally - all without changing its shape. In this setting, the rotations and reflections would be thought of as being the members of our group and the group operation would be to compose these transformations. It may be verified that our four rules do indeed hold true for this set of transformations, so it is indeed a group. When we say that these transformations act on the square, it may be not entirely clear, how we would "implement" such an action. We could imagine the square to live in 2D Euclidean space centered at the origin. Then, a square could be represented by 4 coordinate vectors for its 4 vertices, e.g. $(1,1),(-1,1),(-1,-1),(1,-1)$. In this setup, we would represent the transformations as matrices that can act on these vectors. This is the sort of stuff that we do in analytic geometry. Instead of thinking about the transformations as acting on vertices, we could also imagine it to act on the 2D space as whole. We should also specify what we mean by saying "the shape stays the same". In geometry, shapes of polygons are captured by the mutual distances between all the vertices. If an object is represented by a set of vertices and we apply a transformation to each vertex and after that transformation, the distances between all the vertices are the same as before, then the shape and size of the object has not changed. That's how we can verify that our transformation is indeed a symmetry for the given polygon. To recap: in this case, the group members are certain geometric transformations (reflections and rotations), the object on which the group acts is a square and the invariant property is the shape (captured in the mutual distances).
 % It should perhaps be explained that by applying the transformation to the vertices, we apply it only to the coordinates by we somehow keeop our indexing of the vertices fixed. I mean, *any* Euclidean transformation would be a symmetry to *any* polygon if we do not somehow fix the vertices. I mean it in the sense that, if initially we have A=(1,1)=top-right, B=(-1,1)=top-left, C=(-1,-1)=bottom-left, D=(1,-1)=bottom-right, then after the horizontal flip we have A in the top-left, etc. if we also "reflect the labels" along with the cooridinates. But, I think, to verify that the shape is the same, we need to consider the invariance of the distances between the new coordinateas but without reflecting the labels...don't know how to express this in a way that makes sense - think about it! ...I think, we must permute only the cooridnates but not the labels/indices. ..or well...no - the idea of "reflecting the labels" makes not sense anyway.
 
+%\subsubsection{The Group Action} I have informally used phrases like "the group element acts on" some object. This notion of "acting on" can be formalized as follows ...TBC... [TODO: maybe make it a section, include orbit-stabilizer theorem]
+
+% https://en.wikipedia.org/wiki/Group_action
+% https://mathworld.wolfram.com/GroupAction.html
+%
+% https://www.youtube.com/watch?v=EsBn7G2yhB8&list=PLDcSwjT2BF_VuNbn8HiHZKKy59SgnIAeO
+% 2:58: Group Action definition
+%
+% Maybe make it a section - either before Generators or before Morphisms
+%
+% https://en.wikipedia.org/wiki/Group_action#Orbits_and_stabilizers
+%
+% Orbit-Stabilizer Theorem:
+%   orb(x)   = \{ g(x) : g \in G  \}        set of objects that x can get mapped to
+%   stab(x)  = \{ g \in G : g(x) = x \}     set of trafos that leave x fixed
+% Theorem: |G| = |orb(x)| \cdot |stab(x)|  \forall x \in X
+% Other facts of interets:
+% -stab(x) is a subgroup of G also denoted as G_x
+% -something about equivalence classes?
+%
+% -We use function application notation g(x) to denote the action of g on x. We interpret g as a
+%  function that is applied to x.
+% -x is an element of X where X is the set of objects on which G acts.
+
 \medskip
 I find the statement "groups are an abstraction of symmetry" a bit confusing because it seems to be unnecessarily restrictive and complicated. The restriction is to view the group elements as transformations. We didn't say anything about such an interpretation in our axioms. Previously, they were just some arbitrary set elements. The complication is that we needed to introduce an auxiliary set, namely the set of \emph{objects} that the transformations \emph{act on}. We didn't say anything about such "objects" in our axioms. So, our definition of a group as a set together with an operation that satisfies certain rules, is both simpler and more general than the view as "abstraction of symmetry". The downside of being more general is that it is also more abstract. Anyway, let's see if we can interpret the group $(\mathbb{Z},+)$ within that mental image of symmetries. We want to interpret elements of $\mathbb{Z}$ as transformations that act on some object or set of objects. The elements of $\mathbb{Z}$ are integer numbers. They could act on other numbers by shifting (aka translating) them. We could also imagine them to act on the whole number line all at once. The number 5 shifts the number line to the right by five units, the number $-2$ shifts it to the left by two units. When we combine $5$ and $-2$ by our group operation (which is addition in this case), we obtain $3$ which represents a shift of the number line by $3$ units to the right. For a transformation to be a symmetry, we also need to specify the property that remains invariant under the transformation. In this case, this invariant property is the distance between pairs of numbers. When we imagine the shift transformation not to act on the number line as a whole but on single numbers, then the set of group elements is actually the same as the set of objects on which the group elements act. It may be confusing here that the set of objects and the set of actions is actually the same set but interpreted in two different ways namely as positions (objects) and as translations (actions). The objects and the actions have different roles and do not need to come from the same set in general. The rotations and reflections (actions) on the one hand and the  vertices (objects) on the other hand from the square example are certainly different things. A (rotation or reflection) matrix has a different data type than a vertex (i.e. a point or vector). It may also be confusing that the group operation, namely addition of numbers, seems to be the same operation as the group action - the shifting of the number line is also achieved by addition. That is also a coincidence in the case of the specific group $(\mathbb{Z},+)$. For the rotations and reflections of the square, the group operation would be composition (implemented as matrix multiplication) whereas the group action would be application (implemented as matrix-times-vector product). In some groups, we may identify the group members themselves with members of the set on which they act - objects and actions are kinda the same thing. 
 
@@ -100,6 +124,9 @@ I find the statement "groups are an abstraction of symmetry" a bit confusing bec
 % Is it true that when we can identify objects with actions, we can also always identify the group operation with the group action? Stated another way: can we find a group where we can identify objects with actions but can't identify the group operation with the group action?
 
 % https://www.youtube.com/watch?v=mvmuCPvRoWQ
+
+
+
 
 
 %===================================================================================================
@@ -810,5 +837,11 @@ https://www.youtube.com/watch?v=KufsL2VgELo
 
 
 https://docs.gap-system.org/doc/ref/chap39.html
+
+What about solving systems of equations such as:
+  a x = b y
+  c x = d y
+for x,y? What about more complicated equations involving powers and/or inverses of x,y or 
+products x y. What about more than 2 variables? Is there a general solution algorithm?
 
 \end{comment}

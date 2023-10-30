@@ -343,10 +343,10 @@ In general, a finite group can be fully specified by giving its multiplication t
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Group Diagrams}
-Groups that can be specified by such a presentation can also be visualized by a so called \emph{group diagram} also known as \emph{Cayley diagram} or \emph{Cayley graph}. ...TBC...
+Groups that can be specified by such a presentation can also be visualized by a so called \emph{group diagram} also known as \emph{Cayley diagram} or \emph{Cayley graph}. ...TBC..
 
 \begin{tikzpicture}[rotate=90,scale=1.5]
-\tikzstyle{vertex}=[draw,thick,circle,fill=lightgray!50,minimum size=20pt,inner sep=0pt]
+\tikzstyle{vertex}=[draw,thick,circle,fill=lightgray!50,minimum size=25pt,inner sep=0pt]
 \draw (-0*360/5:1) node[vertex] (v1) {$f$};
 \draw (-0*360/5:2) node[vertex] (v2) {$e$};
 \draw (-1*360/5:1) node[vertex] (v3) {$fr^4$};
@@ -357,11 +357,7 @@ Groups that can be specified by such a presentation can also be visualized by a 
 \draw (-3*360/5:2) node[vertex] (v8) {$r^3$};
 \draw (-4*360/5:1) node[vertex] (v9) {$fr$};
 \draw (-4*360/5:2) node[vertex] (v10) {$r^4$};
-
-\draw (v2) -- (v2);
-
-%\draw v2--v1;
-
+\draw (v2) -- (v1);
 %\draw (v2) — (v1);
 %\draw (v3) — (v1);
 %\draw (v4) — (v2);
@@ -382,7 +378,7 @@ Groups that can be specified by such a presentation can also be visualized by a 
 
 % aka Cayley diagrams, Cayley graph,
 
-
+% https://tikz.dev/tikz-shapes
 % https://en.wikipedia.org/wiki/Cayley_graph
 % https://beckytikz.wordpress.com/2013/09/21/some-simply-cayley-graphs/  good!
 % https://beckytikz.wordpress.com/2013/09/21/cayley-hypergraphs/

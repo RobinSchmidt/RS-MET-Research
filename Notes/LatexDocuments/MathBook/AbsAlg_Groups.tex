@@ -151,7 +151,10 @@ This table is supposed to represent the results of our group operation. From the
 Now, for the table to specify an operation that does satisfy our group requirements, it must satisfy some constraints. Firstly, it must be a so called Latin square which is a matrix in which each row and each column contains every element from the set exactly once. That this is necessary can be seen as follows: suppose you know a product $p = a_i a_j$ and you also know one of the factors, say $a_i$. Then, it should be possible to find the other factor $a_j = a_i^{-1} p$ by scanning the row of $a_i$ until you find $p$ and then read off the column header where you found it. That must be $a_j$. But for that to work for any $p \in G$, you can't have duplicate elements on the rows because then you wouldn't know, which column header you should read off - and hence, the product is not uniquely invertible. This is not allowed in a group. Another constraint is that there must be some row and column that just lists the elements in the same order as they appear in the header - that's the row/column of the neutral element. They must cross on the diagonal, i.e. row and column index must be the same. These criteria are rather easy to check. If they fail, the table is not a valid multiplication table. But if they hold, the table could still be invalid. These criteria are necessary but not sufficient. We also need to verify the associativity and that's the hard part. Of course, it can naively be verified algorithmically in $\mathcal{O}(N^3)$ by verifying for every possible triple $a_i, a_j, a_k$ that $(a_i a_j) a_k = a_i (a_j a_k)$. There are algorithms that can do better than that in certain cases (search for "Light's associativity test") but as of now, this seems indeed to be an $\mathcal{O}(N^3)$ problem in terms of worst case complexity.
 
 \medskip
-But be that as it may. Multiplication tables are an important tool in the analysis of finite groups because these tables completely specify (and hopefully reveal) the structure of a given group at hand. For example, we may easily find out whether or not a group is commutative. This is the case, if and only if the multiplication table is symmetric across the main diagonal. But as we will see when we come to the topic of subgroups, finite groups can have more structure than that. But after all that abstract stuff, let's first have a look at...
+But be that as it may. Multiplication tables are an important tool in the analysis of finite groups because these tables completely specify (and hopefully reveal) the structure of a given group at hand. For example, we may easily find out whether or not a group is \emph{commutative}. This is the case, if and only if the multiplication table is \emph{symmetric} across the main diagonal. 
+
+
+% But as we will see when we come to the topic of subgroups, finite groups can have more structure than that. But after all that abstract stuff, let's first have a look at...
 
 % Not every Latin square is a Cayley table:
 % https://proofwiki.org/wiki/Latin_Square_is_not_necessarily_Cayley_Table_of_Group
@@ -162,7 +165,15 @@ But be that as it may. Multiplication tables are an important tool in the analys
 
 % https://en.wikipedia.org/wiki/Light's_associativity_test
 
-% Q: Does it actually make any sense to do linear algebra with Caley tables? If we have two Caley tables of two different groups (of the same size) - what is their product? Will it also be a Caley table of a group? ...maybe try it with some examples. I guess that would mean that Latin squares would need to form a subgroup of the group of all matrices under matrix multipication. Do they?
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Presentations \star}
+%  the \star is because we reference generators - but maybe the generator section can be moved up?
+% I think Examples and generators should go before "Multiplication Tables"
+
+Giving the full multiplication table is sometimes not necessary. Sometimes, the content of that table can be encoded much more succinctly in a form that is known as a \emph{presentation} of the group. These "presentations" should not to be confused with "representations" which is an entirely different concept in group theory.
+
+
+% Q: Does it actually make any sense to do linear algebra with Caley tables? If we have two Caley tables of two different groups (of the same size) - what is their product? Will it also be a Caley table of a group? ...maybe try it with some examples. I guess that would mean that Latin squares would need to form a subgroup of the group of all matrices under matrix multipication. Do they? ...naaahhh...that doesn't make any sense!
 % https://en.wikipedia.org/wiki/Latin_square
 %===================================================================================================
 \subsection{Some Examples}

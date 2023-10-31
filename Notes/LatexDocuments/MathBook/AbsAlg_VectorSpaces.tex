@@ -3,6 +3,11 @@ For a \emph{vector space}, we need two ingredients: \emph{scalars} and \emph{vec
 
 
 %===================================================================================================
+\subsection{Subspaces} 
+We have seen subgroups, subrings and subfields. It may not be surprising that we define a subspace of a given vector space in an entirely analoguous way. ...TBC...
+
+
+%===================================================================================================
 \subsection{Operations}
 
 \subsubsection{Orthogonal Complement}
@@ -24,6 +29,11 @@ Firstly, we need a way to represent a vector space as a data structure. Every ve
 
 \paragraph{The Algorithms}
 Given a vector space represented by its basis vectors stored in the rows of an $m \times n$ matrix $\mathbf{B}$, we now want compute a matrix $\mathbf{C}$ that represents a basis for the orthogonal complement of $\mathbf{B}$ with respect to the embedding space. That is, we want to compute a basis for $\mathbf{C} = \mathbf{B}^\perp$. The shape of $\mathbf{C}$ has to be $m \times k$ where $k = m - n$ because $\mathbf{B}$ represents a basis for an $n$-dimensional subspace of the $m$-dimensional embedding space, so the number of remaining dimensions is $m-n$. ...TBC...
+
+% Give an algorithm that checks if some subspace V is a subspace of another subspace W. For example
+% the embedding space may be U = R^3 (U for "universal space" or "universe"), W may be a plane 
+% through the origina and V be a line thorugh the origin. It may or may not lie in the plane. The
+% algorithm should figure that out.
 
 
 \begin{comment}

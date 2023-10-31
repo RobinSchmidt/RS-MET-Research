@@ -693,26 +693,43 @@ That's why isomorphisms are so important in group theory. They are a tool to con
 % https://en.wikipedia.org/wiki/Automorphism_group
 
 
+
+
+
 %===================================================================================================
-% Maybe make a subsection Taxonomy of Groups:
-% Cyclic, Abelian, Alternating, Symmetric, Dihedral
+\subsection{Representation Theory}
+A group is abstractly defined as a set on which a binary operation is defined that satisfies certain properties. The elements of the set can be anything. Fortunately, there is a generic way for how we may concretely represent elements of a group and also a generic way to implement its group operation. Each group element is represented by an invertible matrix and the group operation is mapped to matrix multiplication. We have already mentioned that the set of symmetries of a regular polygon can be represented by a specific set of $2 \times 2$ matrices, see (\ref{Eq:PolygonSymmetries}). Such a representation of the group as a set of matrices is possible for any group whatsoever [VERIFY!]. ...TBC...
+
+
+% https://en.wikipedia.org/wiki/Representation_theory
+% https://en.wikipedia.org/wiki/Group_representation
+% https://en.wikipedia.org/wiki/Representation_theory_of_finite_groups
+
+% ToDo: give a representation of (Z,+) via matrices. We may need to use homogeneous coordinates and/or the logarithm
+
+% Is it possible to faithful represent any group via matrices?
+% https://en.wikipedia.org/wiki/Representation_theorem
+
+%===================================================================================================
+\subsection{Taxonomy of Groups}
+
+% ToDo: Cyclic, Abelian, Alternating, Symmetric, Dihedral, Coxeter
 % and this text here should go as subsubsection into it
 
-\subsection{Permutation Groups}
-A permutation of a finite set $A = \{ 1,2,\ldots,n \}$ with $n$ elements is an arrangement of its elements. Sets themselves do not have any notion of order, so we denote such an arrangement of the $n$ elements in the form of an $n$-tuple. Let's take the set $A = \{ 1,2,3 \}$ and assume its natural order is $(1,2,3)$. [TODO: introduce notation for permutations]...TBC...
+\subsubsection{Permutation Groups}
+A \emph{permutation} of a finite set $A = \{ 1,2,\ldots,n \}$ with $n$ elements is an arrangement of its elements. Sets themselves do not have any notion of order, so we denote such an arrangement of the $n$ elements in the form of an $n$-tuple. Let's take the set $A = \{ 1,2,3 \}$ and assume its natural order is $(1,2,3)$. The set of all possible arrangement of these $3$ elements in a tuple is given by $\{ (1,2,3), (1,3,2), (2,1,3), (2,3,1), (3,1,2), (3,2,1) \}$. These are all the possible $6$ arrangements or permutations of $3$ objects. In general, there are $n!$ different ways to order $n$ objects.
 
-% ToDo:
+[TODO: introduce notation for permutations]...TBC...
 
-% but sets don'T care about order? Shouldn't w use tuples?
 % https://en.wikipedia.org/wiki/Permutation
 
-\subsubsection{Transpositions and Parity}
+\paragraph{Transpositions and Parity}
 Given a tuple $x = (x_1, x_2, \ldots, x_n)$ we call the act of swapping two elements in this tuple a \emph{transposition}. It turns out that the set of all possible permutations can be partitioned into those that can be achieved only with an even number of transpositions and those that can be achieved only with an odd number of transpositions. We call the former permutations \emph{even} and the latter permutations \emph{odd}. This evenness vs oddness feature of a permutation is called \emph{parity}.
 
 % Tranposition = Swap
 % https://en.wikipedia.org/wiki/Cyclic_permutation#Transpositions
 
-\subsubsection{Decomposition into Cycles}
+\paragraph{Decomposition into Cycles}
 Any permutation can be decomposed into simpler constituents which are called \emph{cycles}. This works as follows....TBC...
 
 % a transposition is a 2-cycle 
@@ -736,28 +753,7 @@ This theorem is important because it allows us to have a more concrete picture i
 
 % Be more concrete - the theorem states more about how these subgroups look like
 
-
-
-
-%===================================================================================================
-\subsection{Representation Theory}
-A group is abstractly defined as a set on which a binary operation is defined that satisfies certain properties. The elements of the set can be anything. Fortunately, there is a generic way for how we may concretely represent elements of a group and also a generic way to implement its group operation. Each group element is represented by an invertible matrix and the group operation is mapped to matrix multiplication. We have already mentioned that the set of symmetries of a regular polygon can be represented by a specific set of $2 \times 2$ matrices, see (\ref{Eq:PolygonSymmetries}). Such a representation of the group as a set of matrices is possible for any group whatsoever [VERIFY!]. ...TBC...
-
-
-% https://en.wikipedia.org/wiki/Representation_theory
-% https://en.wikipedia.org/wiki/Group_representation
-% https://en.wikipedia.org/wiki/Representation_theory_of_finite_groups
-
-% ToDo: give a representation of (Z,+) via matrices. We may need to use homogeneous coordinates and/or the logarithm
-
-% Is it possible to faithful represent any group via matrices?
-% https://en.wikipedia.org/wiki/Representation_theorem
-
-
-\subsection{Examples of Groups}
-
-% We could also include Coxeter groups here
-
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Lie Groups}
 A Lie group is a group, whose underlying set may be interpreted as a set of points that live on a \emph{manifold}. For example, the set of all rotations of the 2D plane may be interpreted as points on the unit circle. The unit circle is a curve, i.e. a 1D manifold that we usually envision to live in a 2D embedding space. We can identify points on the unit circle with rotation angles. This group is also called the \emph{circle group} and sometimes also the \emph{special orthogonal group} of order 2 and denoted by $SO(2)$. In a matrix representation of an orthogonal group, all matrices will have a determinant of $\pm 1$ and in a special orthogonal group, they will only have determinant $1$. Orthogonal means that the matrices encode orthogonal transformations which are a combination of rotations and reflections. In the "special" ones, only rotations are allowed. This group of 2D rotations can also be represented by complex numbers of unit modulus where complex multiplication serves as group operation, i.e. encodes the composition of the rotations. Note that in the representation via complex numbers, the associated manifold, namely the circle, naturally emerges as a curve in the plane. In a matrix representation, however, it might seem like the manifold lives in a 4D space because general $2 \times 2$ matrices have 4 entries. However, a manifold all by itself does not need to be thought of as being embedded into some higher dimensional space. We can also take an intrinsic point of view in which the manifold is just characterized by its own intrinsic dimensionality, which is 1 in this case, without reference to any embedding space. This should remind us of things like intrinsic curvature in differential geometry. The embedding space is just a tool for us to visualize the manifold. More generally, we may consider the groups of rotations in an $n$D space. They are called the special orthogonal groups of order $n$ and denoted by $SO(n)$. 
 

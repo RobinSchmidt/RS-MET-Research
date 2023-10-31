@@ -695,7 +695,9 @@ That's why isomorphisms are so important in group theory. They are a tool to con
 
 %===================================================================================================
 \subsection{Permutation Groups}
-A permutation of a finite set $A = \{ 1,2,\ldots,n \}$ with $n$ elements is an arrangement of its elements. Sets themselves do not have any notion of order, so we denote such an arrangement of the $n$ elements in the form of an $n$-tuple. Let's take the set $A = \{ 1,2,3 \}$ and assume its natural order is $(1,2,3)$. ...TBC...
+A permutation of a finite set $A = \{ 1,2,\ldots,n \}$ with $n$ elements is an arrangement of its elements. Sets themselves do not have any notion of order, so we denote such an arrangement of the $n$ elements in the form of an $n$-tuple. Let's take the set $A = \{ 1,2,3 \}$ and assume its natural order is $(1,2,3)$. [TODO: introduce notation for permutations]...TBC...
+
+% ToDo:
 
 % but sets don'T care about order? Shouldn't w use tuples?
 % https://en.wikipedia.org/wiki/Permutation
@@ -707,8 +709,19 @@ Given a tuple $x = (x_1, x_2, \ldots, x_n)$ we call the act of swapping two elem
 % https://en.wikipedia.org/wiki/Cyclic_permutation#Transpositions
 
 \subsubsection{Decomposition into Cycles}
+Any permutation can be decomposed into simpler constituents which are called \emph{cycles}. This works as follows....TBC...
 
 % a transposition is a 2-cycle 
+% these cycles do not interact with one another, i.e. each cycle operates on its own a set of 
+% indices with no overlap with any of the other cycles. Therefore, it doesn't make any difference
+% in which order we apply two successive cycles - i.e. the cycles commute.
+% Of course, this has nothing to do with the question whether or not the permutations themselves
+% commute - in general, they will not. It also doesn't say that one cycle from a permutaion P1
+% commutes with one cycle from another permutation. These cycles are inner sub-permutations within
+% one single permutation. I think, two permutation will generally commute, iff they operate on 
+% different index sets. ...Or maybe that's a sufficient but not necessarry condition? Two 
+% permutations that are inverses of each other also commute but operate on the same index set.
+% Maybe their permuations matrices must be symmetric?
 
 \paragraph{Cayley's Theorem} Every group is isomorphic to a subgroup of a symmetric group.
 

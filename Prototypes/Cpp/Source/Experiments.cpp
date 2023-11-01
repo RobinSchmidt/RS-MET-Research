@@ -11889,6 +11889,44 @@ void test2x2Matrices()
   int dummy = 0;
 }
 
+void test2x2MatrixCommutation()
+{
+  // We try to produce 2x2 matrices that commute with one another in a systematic way. The first
+  // this we try is to produce a random matrix A and then ask for the set of all matrices X that 
+  // commute with the given matrix A. ...TBC...
+  //
+
+  using Real = double;
+  using Mat  = rsMatrix2x2<Real>;
+  using Vec  = rsVector2D<Real>;
+
+  // Prescribe some matrix A:
+  Real a = 4, b = 3, c = -3, d = 2;
+  Mat A(a, b, c, d);
+
+  // Now we are interested in finding a matrix X = [x, y;  z, w] that commutes with A. That is,
+  // we require AX - XA = 0. How can we charactweize the set of all 2x2 matrices that commute? 
+  // Let's write
+  //
+  //   A = [a b],  X = [x y]
+  //       [c d]       [z w]
+  //
+  // and we want: AX - XB = 0 which gives us a linear system of 4 equations for x,y,z,w when we 
+  // assume a,b,c,d to be given. 
+  //
+  //   AX = [ax+bz ay+bw],  XA = [xa+yc xb+yd]
+  //        [cx+dz cy+dw]        [za+wc zb+wd]
+  //
+  //   ax + bz = xa + yc
+  //   ay + bw = xb + yd
+  //   cx + dz = za + wc
+  //   cy + dw = zb + wd
+
+
+
+  int dummy = 0;
+}
+
 void test2x2MatrixInterpolation()
 {
   // We try to come up with an algorithm that can interpolate sensibly between two 2x2 matrices 
@@ -11908,7 +11946,7 @@ void test2x2MatrixInterpolation()
   //  reflection axis...hopefully - that would be a desirable outcome - we'll see
   // -Maybe if A and b are both symmetric, it could make more sense to do an eigendecomposition
   //  instead of an SVD?
-  // -Maybe we should take the square-roots of the entries of the diagonla matrix, linearly 
+  // -Maybe we should take the square-roots of the entries of the diagonal matrix, linearly 
   //  interpolate these and then square the results?
 
   using Real = double;

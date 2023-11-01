@@ -99,7 +99,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testStateSpaceFilters();
 
   //test2x2Matrices();               // stub
-  test2x2MatrixCommutation();        // stub
+  test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub
   //testQuaternion();
   //testChebychevEconomization();  // stub

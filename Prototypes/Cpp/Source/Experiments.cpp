@@ -11894,7 +11894,6 @@ void test2x2MatrixCommutation()
   // We try to produce 2x2 matrices that commute with one another in a systematic way. The first
   // this we try is to produce a random matrix A and then ask for the set of all matrices X that 
   // commute with the given matrix A. ...TBC...
-  //
 
   using Real = double;
   using Mat2 = rsMatrix2x2<Real>;
@@ -11917,32 +11916,48 @@ void test2x2MatrixCommutation()
   //   AX = [ax+bz ay+bw],  XA = [xa+yc xb+yd]
   //        [cx+dz cy+dw]        [za+wc zb+wd]
   //
-  //   ax + bz = xa + yc
-  //   ay + bw = xb + yd
-  //   cx + dz = za + wc
-  //   cy + dw = zb + wd
-
-
-  //  x == (c*r1 + a*r2 - d*r2)/c, y == b*r2/c, z == r2, w == r1]]
-
+  // We get 4 linear equations for the 4 unknowns x,y,z,w. Let's solve this with Sage:
   //
+  //   var("a b c d x y z w")
+  //   eq1 = a*x + b*z == x*a + y*c
+  //   eq2 = a*y + b*w == x*b + y*d
+  //   eq3 = c*x + d*z == z*a + w*c
+  //   eq4 = c*y + d*w == z*b + w*d
+  //   solve([eq1,eq2,eq3,eq4],[x,y,z,w])
+  // 
+  // gives:
+  //
+  //   x == (c*r1 + a*r2 - d*r2)/c, y == b*r2/c, z == r2, w == r1]]
+  //
+  // which means that we can choose z,w freely (r1, r2 mean: real parameter) and then x,y follow.
+  // Let's try it with our example matrix A and z = 11, w = 13:
+
+  // Compute elements of X:
   Real x, y, z, w;
   z = 11;
   w = 13;
-  x = (c*w + a*z - d*z)/c;
-  y = b*z/c;
+  x = (c*w + a*z - d*z) / c;
+  y = b*z / c;
 
+  // Assemble matrix X and check its commutator with A:
   Mat2 X(x, y, z, w);
-
   Mat2 AX = A*X;
   Mat2 XA = X*A;
   Mat2 C  = AX - XA;   // Commutator - should be the zero matrix
-  // OK - that looks good. C is indeed the zero matrix up to roundoff
+  // OK - that looks good. C is indeed the zero matrix up to roundoff.
 
 
 
 
   int dummy = 0;
+
+  // Conclusions:
+  // -For a given matrix A, the set of all matrices that commute with A is a 2-parametric family.
+  //  Q: Can we characterize that family somehow?
+  //
+  // ToDo:
+  // -Figure out the general case, i.e. the n-by-n case. Maybe it will be a family with n/2 
+  //  parameters?
 }
 
 void test2x2MatrixInterpolation()

@@ -11897,12 +11897,12 @@ void test2x2MatrixCommutation()
   //
 
   using Real = double;
-  using Mat  = rsMatrix2x2<Real>;
-  using Vec  = rsVector2D<Real>;
+  using Mat2 = rsMatrix2x2<Real>;
+  using Vec2 = rsVector2D<Real>;
 
   // Prescribe some matrix A:
-  Real a = 4, b = 3, c = -3, d = 2;
-  Mat A(a, b, c, d);
+  Real a = 2, b = 3, c = -5, d = 7;
+  Mat2 A(a, b, c, d);
 
   // Now we are interested in finding a matrix X = [x, y;  z, w] that commutes with A. That is,
   // we require AX - XA = 0. How can we charactweize the set of all 2x2 matrices that commute? 
@@ -11921,6 +11921,24 @@ void test2x2MatrixCommutation()
   //   ay + bw = xb + yd
   //   cx + dz = za + wc
   //   cy + dw = zb + wd
+
+
+  //  x == (c*r1 + a*r2 - d*r2)/c, y == b*r2/c, z == r2, w == r1]]
+
+  //
+  Real x, y, z, w;
+  z = 11;
+  w = 13;
+  x = (c*w + a*z - d*z)/c;
+  y = b*z/c;
+
+  Mat2 X(x, y, z, w);
+
+  Mat2 AX = A*X;
+  Mat2 XA = X*A;
+  Mat2 C  = AX - XA;   // Commutator - should be the zero matrix
+  // OK - that looks good. C is indeed the zero matrix up to roundoff
+
 
 
 

@@ -11904,7 +11904,7 @@ void test2x2MatrixCommutation()
   Mat2 A(a, b, c, d);
 
   // Now we are interested in finding a matrix X = [x, y;  z, w] that commutes with A. That is,
-  // we require AX - XA = 0. How can we charactweize the set of all 2x2 matrices that commute? 
+  // we require AX - XA = 0. How can we characterize the set of all 2x2 matrices that commute? 
   // Let's write
   //
   //   A = [a b],  X = [x y]
@@ -11943,9 +11943,24 @@ void test2x2MatrixCommutation()
   Mat2 X(x, y, z, w);
   Mat2 AX = A*X;
   Mat2 XA = X*A;
-  Mat2 C  = AX - XA;   // Commutator - should be the zero matrix
-  // OK - that looks good. C is indeed the zero matrix up to roundoff.
+  Mat2 C  = AX - XA;   // Commutator. Should be the zero matrix. OK - looks good.
 
+
+  // OK - now let's now try to do it via eigenvectors. Two matrices commute if (and only if?) they
+  // have the same eigenvectors. So we produce our two matrices A and X by generating them as 
+  // products S^-1 * D * S where the columns of S are the eigenvectors
+
+  // Prescrive our eigenvectors and eigenvalues for the two matrices:
+  Mat2 S(  2,3, -5,4);           // The columns are our eigenvectors
+  Mat2 D1( 3,0,  0,2);           // The diagonal elements are our eigenvalues
+  Mat2 D2(-1,0,  0,1);           // A second matrix with different eigenvalues
+
+  Mat2 Si = S.getInverse();
+  A  = Si * D1 * S;
+  X  = Si * D2 * S;
+  AX = A*X;
+  XA = X*A;
+  C  = AX - XA;                  // Commutator. Should again be zero matrix. OK - looks good.
 
 
 
@@ -11958,6 +11973,10 @@ void test2x2MatrixCommutation()
   // ToDo:
   // -Figure out the general case, i.e. the n-by-n case. Maybe it will be a family with n/2 
   //  parameters?
+  //
+  // See:
+  // https://en.wikipedia.org/wiki/Commuting_matrices
+  // https://en.wikipedia.org/wiki/Diagonalizable_matrix#Simultaneous_diagonalization
 }
 
 void test2x2MatrixInterpolation()

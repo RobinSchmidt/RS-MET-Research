@@ -11891,9 +11891,14 @@ void test2x2Matrices()
 
 void test2x2MatrixCommutation()
 {
-  // We try to produce 2x2 matrices that commute with one another in a systematic way. The first
-  // this we try is to produce a random matrix A and then ask for the set of all matrices X that 
-  // commute with the given matrix A. ...TBC...
+  // We produce 2x2 matrices that commute with one another in a systematic way. The first way we do
+  // this is to prescribe a random matrix A and then ask for the set of all matrices X that commute 
+  // with the given matrix A. That leads to a system of 4 linear equations for the 4 elements of X.
+  // It turns out that the solution has 2 free parameters. Next, we use the fact that matrix 
+  // commute if they have the same eigenvectors. We produce the matrices A and X by prescribing the
+  // two eigenvectors. Our two degrees of freedom to choose matrices from a set are then the 
+  // eigenvalues. So we produce 2 such matrices with different eigenvalues and check, if they 
+  // commute. Spoiler alert: They do.
 
   using Real = double;
   using Mat2 = rsMatrix2x2<Real>;

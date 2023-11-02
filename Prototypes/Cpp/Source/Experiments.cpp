@@ -11971,6 +11971,11 @@ void test2x2MatrixCommutation()
 
   int dummy = 0;
 
+  // Observations:
+  // -The tests confirm that the so produced matrices do indeed commute.
+  // -If S ha linear dependent eigenvectors, we get NaNs. this is not surprising because in this 
+  //  case, S has no inverse.
+  //
   // Conclusions:
   // -For a given matrix A, the set of all matrices that commute with A is a 2-parametric family.
   //  Q: Can we characterize that family somehow?

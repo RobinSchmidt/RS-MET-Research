@@ -11943,14 +11943,14 @@ void test2x2MatrixCommutation()
   Mat2 X(x, y, z, w);
   Mat2 AX = A*X;
   Mat2 XA = X*A;
-  Mat2 C  = AX - XA;   // Commutator. Should be the zero matrix. OK - looks good.
+  Mat2 C  = AX - XA;             // Commutator. Should be the zero matrix. OK - looks good.
 
 
   // OK - now let's now try to do it via eigenvectors. Two matrices commute if (and only if?) they
   // have the same eigenvectors. So we produce our two matrices A and X by generating them as 
   // products S^-1 * D * S where the columns of S are the eigenvectors
 
-  // Prescrive our eigenvectors and eigenvalues for the two matrices:
+  // Prescribe our eigenvectors and eigenvalues for the two matrices:
   Mat2 S(  2,3, -5,4);           // The columns are our eigenvectors
   Mat2 D1( 3,0,  0,2);           // The diagonal elements are our eigenvalues
   Mat2 D2(-1,0,  0,1);           // A second matrix with different eigenvalues
@@ -11969,10 +11969,20 @@ void test2x2MatrixCommutation()
   // Conclusions:
   // -For a given matrix A, the set of all matrices that commute with A is a 2-parametric family.
   //  Q: Can we characterize that family somehow?
+  // -We can just prescribe the matrix A = [a,b; c,d] and then solve the resulting linear system of
+  //  4 for the equations for X = [x,y; z,w]. The result is that we can choose z,w freely and then
+  //  x,y follow. 
+  // -Or: we can prescribe 2 eigenvectors and then take the 2 eigenvalues of our set of matrices
+  //  as the free parameters. Perhaps this is a more meaningful approach because then we know what 
+  //  we are doing so to speak.
   //
-  // ToDo:
-  // -Figure out the general case, i.e. the n-by-n case. Maybe it will be a family with n/2 
-  //  parameters?
+  // Questions:
+  // -Figure out the general case, i.e. the n-by-n case. Maybe it will be a family with n 
+  //  parameters? Yeah - I guess so: We can prescribe the eigenvectors and are then free to
+  //  chooses the n eigenvalues. But what if the eigenvectors areg somehow degenerate? 
+  //  What about multiplicities?
+  // -How can we characterize the set off *all* matrices that commute with one another? I mean, the
+  //  set that we get when we do not yet prescribe a matrix (or, equivalently, the eigenvectors)?
   //
   // See:
   // https://en.wikipedia.org/wiki/Commuting_matrices

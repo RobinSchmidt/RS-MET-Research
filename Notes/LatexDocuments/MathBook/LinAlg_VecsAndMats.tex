@@ -62,14 +62,22 @@ Algebraically, there is not much to say about vector addition - we just add the 
 \subsubsection{Addition and Subtraction}
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Multiplication}
+\subsubsection{Multiplication} In order to multiply two matrices, we must demand that the number of columns of the left factor must be equal to the number of rows in the right factor. When we multiply an $m \times p$ matrix $\mathbf{A}$ with a $p \times n$ matrix $\mathbf{B}$ and call the product $\mathbf{C}$ such that $\mathbf{A} \mathbf{B} = \mathbf{C}$, then the element $c_{ij}$ of the product can be computed from the elements $a_{ij}, b_{ij}$ of $\mathbf{A}, \mathbf{B}$ as follows:
+\begin{equation}
+ \mathbf{C} = \mathbf{A} \mathbf{B} 
+ \quad \text{where} \quad
+ c_{ij} = \sum_{k=1}^p a_{ik} b_{kj}
+\end{equation}
+The matrix $\mathbf{C}$ will have a shape of $m \times n$.
 
 % -maybe add also the Kronecker product and list formulas for its connection with the regular
 %  product
-% -maybe exmplain block matrices
+% -maybe explain block matrices
 % -But maybe put these things into a section Lesser Known Stuff
 %  ...although, it could actually also fit into the "decomposition" section
-
+% -The columns of a matrix may be interpreted as the images of the standard basis vectors
+% -The matrix product can be seen as being made up from scalar products of the rows of the left 
+%  factor with the columns of the right factor
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
@@ -147,13 +155,24 @@ A matrix is symmetric if it is equal to its own transpose. That means that the r
 \subsubsection{Characteristic Numbers}
 
 \paragraph{Rank}
+The column rank of a matrix is the number of linearly independent columns
+
+% -rank-nullity theorem
+% -row-rank equals column rank
+
+\paragraph{Trace}
+
+
 
 \paragraph{Determinant}
-% regular/singular
+% -regular/singular
+% -scaling factor for a hypervolume
+% -product of eigenvalues
 
 \paragraph{Norms}
 % explain norm compatibility with vector norms
 
+% trace
 
 %---------------------------------------------------------------------------------------------------
 

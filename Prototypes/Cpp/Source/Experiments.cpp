@@ -11986,6 +11986,9 @@ void test2x2MatrixCommutation()
   //  as the free parameters. Perhaps this is a more meaningful approach because then we know what 
   //  we are doing so to speak.
   //
+  // Notes:
+  // -The requirement A X = X A can be rewritten as  X^-1 A X = A  or as  X A X^-1 = A
+  //
   // Questions:
   // -Figure out the general case, i.e. the n-by-n case. Maybe it will be a family with n 
   //  parameters? Yeah - I guess so: We can prescribe the eigenvectors and are then free to

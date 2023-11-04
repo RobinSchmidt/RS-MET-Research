@@ -20,41 +20,78 @@ where the right hand side can be seen as an interpretation of what the tuple $(x
 
 
 \paragraph{Matrices}
-Vectors can be used to represent locations and translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. ...TBC...
+Vectors can be used to represent locations and translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are).
 
+...TBC...
+
+
+% A matrix is a 2D array of numbers, i.e. a table with rows and columns. Each cell contains a number pretty much like in a spreadsheet.
 % the columns of the matrix say where the basis vectors go
 
-%Translations are not among the linear transformations that we can represent by matrices.
+% Translations are not among the linear transformations that we can represent by matrices.
 
 
 \paragraph{Well, actually...}
-Strictly speaking, an $n$-tuple of numbers is not what a vector really $is$ by its nature. By its nature, a vector is a geometric entity such as a point in space or an arrow with a direction and length. The $n$-tuple of numbers is a specific representation of that geometric entity that depends on the coordinate system that we have chosen. But take that statement as a foreshadowing to a more advanced viewpoint. For the purposes of this section, it's totally okay to picture a vector as a tuple of numbers. ...TBC...
-
-% Likewise, matrices are also only a specific representation of a linear transformation ...
+Strictly speaking, an $n$-tuple of numbers is not what a vector really \emph{is} by its nature. By its nature, a vector is a geometric entity such as a point in space or an arrow with a direction and length. The $n$-tuple of numbers is a specific \emph{representation} of that geometric entity that depends on the coordinate system that we have chosen. But you may take that statement as a foreshadowing to a more advanced viewpoint. For the purposes of this section, it's totally okay to picture a vector as a tuple of numbers. Likewise, matrices are also only a specific representation of a linear transformation. In a different coordinate system, the same transformation would be represented by a different 2D array of numbers. We will say more about this in the context of so called \emph{change of basis} transformations.
 
 \medskip
-Moreover, when we look at things in a more carefully, we need to distinguish between points and vectors. ...TBC...
+Moreover, when we look at things in a more carefully, we need to distinguish between \emph{points} and \emph{vectors}. ...TBC...
+% Points are usually identified with their position vectors [VERIFY term], i.e. vectors that point from the origin to the given point
 
 
 %===================================================================================================
-%\subsection{Vectors}
-
 \subsection{Vector Operations}
 
-\paragraph{Vector Addition}
-Algebraically, there is not much to say about vector addition - we just add the tuples element-wise and that's it. We can interpret such a vector addition geometrically at placing the vectors tip to tail. ...TBC... [ToDo: insert figure with the parallelogram picturing $\mathbf{a + b}$ and $\mathbf{b + a}$].
-
 \paragraph{Scalar Multiplication}
+Scalar multiplication refers to the act of multiplying a vector $\mathbf{v}$ by a scalar, i.e. a number, let's say $a$. This is just done by multiplying every component of the vector by that number. Geometrically, this scales the length of the vector by a factor of $a$. That's where the name "scalar" comes from. You may interpret it as "scaler". If $a > 1$, the vector just gets longer. If $a < 1$ but still $a > 0$, the vector gets shorter but retains its direction. If $a < 0$, the vector reverses direction in addition to being lengthened or shortened (in the special case of $a=-1$, it gets only reflected). If $a = 0$, the vector actually gets collapsed into the zero vector $\mathbf{0}$.
 
-\paragraph{Scalar Product}
+\paragraph{Vector Addition}
+Algebraically, there is not much to say about vector addition - we just add the tuples component-wise and that's it. We can interpret such a vector addition geometrically at placing the vectors tip to tail. ...TBC... [ToDo: insert figure with the parallelogram picturing $\mathbf{a + b}$ and $\mathbf{b + a}$].
 
-\paragraph{Vector Products}
+% What about when dimensionalities don't match? Maybe we can zero-pad the shorter vector in certain
+% cases. Geometrically, this would mean to iamgine the low-dimensional vector spcae as being 
+% embedded into a higher dimensional space by setting the extra coordinates in the higher
+% dimensional space to zero. For example, a 2D vector (x,y) could be augmented to a 3D vector
+% (x,y,z) by just setting $z=0$. Check how graphics libraries like OpenGL handle that.
+% 
+
+\paragraph{Vector Subtraction}
+% What about subtraction? Algebraically, it's just addition of the negative but geometrically, it
+% has a meaningful interpretation, so maybe it should get is won section
+
+% maybe generalize to "Linear Combinations"
+
+\paragraph{Linear Combinations}
+A linear combination of a bunch of vectors is just a weighted sum of those vectors. That means each vector gets multiplied by a weight by our scalar multiplication w and then these scaled vectors are added up by our vector addition. Vector subtraction is also just a special case of a linear combination of two vectors where one vector gets a weight of $+1$ and the other a weight of $-1$. 
+
+\paragraph{Inner Product aka Scalar Product}
+% also know as inner product
+
+%\paragraph{Vector Products}
 % cross-product, triple-product (but this gives a scalar), wedge-product
-
 
 \paragraph{Orthogonal Projection}
 
+
+\paragraph{Outer Product}
+\paragraph{Cross Product}
+\paragraph{Wedge Product}
+\paragraph{Triple Product}
+
+
+
+
+
+
 % Norm, Normalization
+
+% Outer product (is actually a special case tensor product or Kronecker product)
+
+% Inversion
+% Divide by its length twice. Normalize and then divide by the former length. Reciprocate the length
+% but retain direction. Geometrically, it's inversion in a (hyper)sphere
+
+% In linear algebra, we mostly deal with linear combinations, the scalar product and orthogonal projections. In analytic geometry of 3D space, the cross product is also common and the triple product will occasionally be seen. The rest is less common but included for completeness sake and will be picked up in later sections. The wedge product is important in exterior and geometric algebra. The outer product will be revisited in tensor algebra (in a different guise).
 
 %===================================================================================================
 
@@ -68,14 +105,16 @@ Algebraically, there is not much to say about vector addition - we just add the 
  \quad \text{where} \quad
  c_{ij} = \sum_{k=1}^p a_{ik} b_{kj}
 \end{equation}
-The matrix $\mathbf{C}$ will have a shape of $m \times n$.
+The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!].
 
 % -maybe add also the Kronecker product and list formulas for its connection with the regular
 %  product
 % -maybe explain block matrices
 % -But maybe put these things into a section Lesser Known Stuff
 %  ...although, it could actually also fit into the "decomposition" section
-% -The columns of a matrix may be interpreted as the images of the standard basis vectors
+% -The columns of a matrix may be interpreted as the images of the standard basis vectors. But maybe
+%  this should go to a section matrix-vector operations. It may contain products like A x, x^T A,
+%  x^T A x (sandwich product)
 % -The matrix product can be seen as being made up from scalar products of the rows of the left 
 %  factor with the columns of the right factor
 

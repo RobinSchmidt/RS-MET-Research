@@ -11968,6 +11968,15 @@ void test2x2MatrixCommutation()
   C  = AX - XA;                  // Commutator. Should again be zero matrix. OK - looks good.
 
 
+  // Create two non-commuting matrices and compare the commutator as defined in matrix algebra with
+  // the commutator as defined in group theory:
+  A = Mat2(1, 2,-3,4);
+  X = Mat2(5,-6, 7,8);
+  Mat2 C1 = A*X - X*A;
+  Mat2 C2 = A*X * A.getInverse() * X.getInverse(); // Group theoretic definition of commutator.
+  // These two definitions of the commutator do indeed give different results.
+
+
 
   int dummy = 0;
 
@@ -11988,6 +11997,12 @@ void test2x2MatrixCommutation()
   //
   // Notes:
   // -The requirement A X = X A can be rewritten as  X^-1 A X = A  or as  X A X^-1 = A
+  // -In a group, we assume to have only one operation which we may interpret as matrix 
+  //  multiplication for groups of matrices. In that case, the commutator of A and X is defined 
+  //  without using subtraciton as A X A^-1 X^-1. If A and X commute, this product should be equal
+  //  to the identity matrix (not the zero matrix!). However, if we write A X A^-1 X^-1 = I and 
+  //  then right multiply both sides by X and then A, we arrive at AX = XA, i.e. at the same 
+  //  equation.
   //
   // Questions:
   // -Figure out the general case, i.e. the n-by-n case. Maybe it will be a family with n 
@@ -11996,6 +12011,33 @@ void test2x2MatrixCommutation()
   //  What about multiplicities?
   // -How can we characterize the set off *all* matrices that commute with one another? I mean, the
   //  set that we get when we do not yet prescribe a matrix (or, equivalently, the eigenvectors)?
+  // -For two matrices that don't commute, will the two definitions of a commutator:
+  //  C1 = A B - B A  and  C2 = A B A^-1 B^-1  give the same result? That would actually be
+  //  surprising. OK - done. They are different.
+  // -Can we make interesting new objects out of these two different commutators? What about 
+  //  *their* commutators?
+  // -Can we perhaps characterize the set of all commuting matrices by a manifold that is given
+  //  by a differential equation? Maybe assume A,B do indeed commute and their entries are 
+  //  functions of some parameter t (or maybe two parameters u,v). Then from:
+  //
+  //    AX = [ax+bz ay+bw],  XA = [xa+yc xb+yd]
+  //         [cx+dz cy+dw]        [za+wc zb+wd]
+  //
+  // we should have:
+  //
+  //    a_u x_u + b_u z_u = x_u a_u + y_u c_u
+  //    a_u y_u + b_u w_u = x_u b_u + y_u d_u
+  //    c_u x_u + d_u z_u = z_u a_u + w_u c_u
+  //    c_u y_u + d_u w_u = z_u b_u + w_u d_u
+  //    ...and then the same equations with _v instead of _u
+  //
+  //  where indices u,v denote partial derivative with respect to u, v. The rationale is: if A and
+  //  X commute for a given pair u,v, we want to change u,v in such a way that the resulting 
+  //  matrices A + dA, X + dX still commute, so the corresponding infinitesimal changes of the 
+  //  entries must also be equal (in addition to the entries themselves).
+  // -Maybe we could make it such that X(u,v) is always the inverse of A(u,v). What could our 
+  //  parameters u,v actually be? Eigenvalues? Determinant? Trace?
+  //
   //
   // See:
   // https://en.wikipedia.org/wiki/Commuting_matrices

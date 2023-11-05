@@ -65,7 +65,14 @@ Algebraically, there is not much to say about vector addition - we just add the 
 A linear combination of a bunch of vectors is just a weighted sum of those vectors. That means each vector gets multiplied by a weight by our scalar multiplication w and then these scaled vectors are added up by our vector addition. Vector subtraction is also just a special case of a linear combination of two vectors where one vector gets a weight of $+1$ and the other a weight of $-1$. 
 
 \paragraph{Inner Product aka Scalar Product}
-% also know as inner product
+The \emph{inner product}, also known as the scalar \emph{product} between two vectors $\mathbf{v}$ and $\mathbf{w}$ is just a number. It is computed by taking all the component-wise products and summing them up. ...TBC...
+% explain geometric interpretation
+% -coefficient of projection
+% -correlation in the sense of: how similar is the direction of the vectors (when bot are
+%  normalized)
+% Mention different (more general) definitions: 
+% -with complex conjugation,
+% -with a (positive definite) matrix sadwiched in between
 
 %\paragraph{Vector Products}
 % cross-product, triple-product (but this gives a scalar), wedge-product
@@ -214,7 +221,14 @@ The column rank of a matrix is the number of linearly independent columns
 % trace
 
 %---------------------------------------------------------------------------------------------------
-
+\subsubsection{Eigenspaces}
+When forming a product between an $n \times n$ matrix $\mathbf{A}$ and an $n$-vector $\mathbf{v}$, we will get a new $n$-vector, which will, in general, point into a different direction than  $\mathbf{v}$. There may, however, be certain special vectors which do not change direction as a result of such a multiplication by a matrix but rather just (possibly) change their length. Such special vectors are called the \emph{eigenvectors} of the matrix $\mathbf{A}$ and the length-change factor is called the corresponding \emph{eigenvalue}. The equation that expresses this circumstance is given by:
+\begin{equation}
+ \mathbf{A v} = \lambda \mathbf{v}  
+ \quad \Leftrightarrow \quad
+ \det ( \mathbf{A} - \lambda \mathbf{I} ) = 0
+\end{equation}
+[VERIFY if implication is two-sided]. ToDo: explain what this has to do with the determinant
 
 \paragraph{Characteristic Polynomial}
 
@@ -225,9 +239,15 @@ The column rank of a matrix is the number of linearly independent columns
 \paragraph{Generalized Eigenvectors}
 
 
+% Don't make the mistake of thinking that there is a one-to-one correspondence between eignevectors and eigenvalues. It is, in general, not the case that each eigenvalue has one and only one corresponding eigenvector. ...TBC...
 
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Properties of Pairs of Matrices}
 
+% -reciprocity/inversion
+% -commutativity
+% -bi-orthogonality (?)
 
 \paragraph{Similarity}
 A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have, among other things, a symmetry of the relation: $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{S}$ and post-multiplying both sides by $\mathbf{S}^{-1}$ to obtain $\mathbf{A} = \mathbf{S B S^{-1}}$. The transformation that maps $\mathbf{A}$ to $\mathbf{B}$ is called a \emph{similarity transformation} or a \emph{conjugation}. Conjugation is a term from group theory which we will encounter in a later chapter. A similarity transformation does not change the basis independent properties of a matrix. In particular, it doesn't change the characteristic polynomial and therefore the eigenvalues, which are the  roots of said polynomial, are invariant under the transformation. Furthermore, it also doesn't change the determinant and trace because they are the product and sum of the eigenvalues respectively. The multiplicities (geometric and algebraic) of the eigenvalues are also invariant. The eigenvectors are mapped via the change of basis transformation $\mathbf{S}$: If $\mathbf{a}$ is an eigenvector of  $\mathbf{A}$, then $\mathbf{b} = \mathbf{S a}$ is the corresponding eigenvector of $\mathbf{B}$ [VERIFY! It might be $\mathbf{S}^{-1}$]. Other features that are invariant under a similarity transform are: rank, index of nilpotence, Jordan normal form (up to permutation of the blocks), Frobenius normal form, minimal polynomial and elementary divisors. Don't worry, if you don't know what some of these terms mean. I don't know all of them either and just wanted to list them all for completeness (the list is taken from Wikipedia).

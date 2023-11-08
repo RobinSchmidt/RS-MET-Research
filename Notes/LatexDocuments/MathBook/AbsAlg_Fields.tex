@@ -43,7 +43,7 @@ Any mathematical structure that satisfies these requirements is a structure in w
  
 %As usual, $\mathbb{F}^*$ is a shorthand for $\mathbb{F} \setminus \{0\}$.
 
-
+%===================================================================================================
 \subsection{Subfields and Extension Fields}
 By now, you know the drill already: if a subset of the underlying set of a given field forms itself a field (under the same operations), then we say that this subset forms a subfield of our given field (under these operations). We already know examples of such subfield relations. $\mathbb{R}$ is a subfield of $\mathbb{C}$ and $\mathbb{Q}$ is a subfield of $\mathbb{R}$ and therefore also of $\mathbb{C}$ (the relation is transitive). From the perspective of $\mathbb{Q}$, the bigger fields $\mathbb{R}$ and $\mathbb{C}$ are called extension fields [VERIFY]. 
 
@@ -57,6 +57,7 @@ By now, you know the drill already: if a subset of the underlying set of a given
 It is well known that the square root of two is not a rational number. If we just adjoin $\sqrt{2}$ to the field of rational numbers and then make sure to also add everything else that is needed to continue to satisfy the field axioms, we obtain an extended field which we denote by $\mathbb{Q}(\sqrt{2})$. This is totally analogous to what we did with rings when adjoining a new element, just that for fields we use parentheses like $(\ldots)$ instead of brackets like $[\ldots]$ It turns out that the elements of our extended field can always be written in the form $a + b \sqrt{2}$ where $a,b \in \mathbb{Q}$.
 
 % What about Q(x) ...I think, this is the field of rational functions over Q?
+% Explain root field aka splitting field of a polynomial
 
 \subsubsection{Algebraic Closure of a Field}
 % In an algebraically closed field, we can solve any polynomial equation. In fact, it will always
@@ -120,6 +121,41 @@ https://www.youtube.com/watch?v=Ct2fyigNgPY
 
 
 https://en.wikipedia.org/wiki/Field_of_fractions
+
+-Maybe to explain agebraic extensions and root fields, use Z as base-ring and extend by 
+ fractions like 1/2, 1/3 etc. Use p(x) = 0 = (x + 1/2) * (x + 1/3) = x^2 + x/2 + x/3 + 1/6
+ leading to 0 = 6 x^2 + 6x/2 + 6x/3 + 1 = 6 x^2 + 5 x + 1. The root ring is Z[1/6]
+ ...hmm...don't know, if the analogy to root fields really works out
+-I think, in general, a polynomial (x + 1/a)*(x + 1/b)*(x + 1/c)*... results in a root ring of
+ Z[1/lcm(a,b,c,...)], so we can always adjoin all roots of p by adjoining a single fraction. With
+ root fields over Q, we really need to adjoin multiple elements - one for each root, I think. That
+ also means that this permutation business with the Galois group is much simpler. We have only one
+ element adjoined, so a general element of Z[1/n] will look like a + b/n and the only two 
+ automorphisms Z[1/n]  ->  Z[1/n] that keep Z fixed are  a + b/n  ->  a + b/n  and
+ a + b/n  ->   a - b/n. So, the "Galois group" (automorphism group that keep base ring fixed) will
+ always only have two elements: the identity and the "fractional conjugation" (i.e. the one that
+ negates the fractional part)
+-But maybe it's instructive nevertheless to point this stuff out 	
+
+https://mathworld.wolfram.com/SplittingField.html
+I think, this is the same as the root-field? yes:
+https://www.collinsdictionary.com/dictionary/english/root-field
+I think, it's called "splitting field" because the polynomial "splits" into linear factors
+
+
+https://en.wikipedia.org/wiki/Galois_group
+https://de.wikipedia.org/wiki/Galoisgruppe
+https://mathworld.wolfram.com/GaloisGroup.html
+The Galois group of a polynomial of degree n (or rather, the polynomial's splitting field) is always
+a subgroup of S_n (the symmetric group of order n, i.e. the group of all possible permutations
+of n elements). In the "worst case", it is S_n itself. Up to n = 4, S_n itself is "solvable" (and
+therefore also all its subgroups are solvable). A group G is solvabel, if it has a sequence of
+normal subgroups 
+  ${e} = G_0 \subset G_1 \ldots \subset G_m = G$
+such that each $G_k$ is a normal subgroup of $G_{k+1}$ and $G_{k+1} / G_k$ is abelian. An equivalent
+definition is that g has a normal series in which all quotient groups are cyclic of prime order.
+
+see ABoAA, pg 338, 342, 343
 
 	
 \end{comment}

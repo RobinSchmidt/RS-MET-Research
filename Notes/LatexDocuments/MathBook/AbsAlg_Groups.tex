@@ -587,7 +587,19 @@ A subgroup $H$ of some group $G$ may itself not be a normal subgroup of $G$ but 
 
 % TODO: check, if an alternative definition $[a,b] = a b a^{-1} b^{-1}$ is used somewhere. The
 % definition above is from wikipedia. I have used the reversed definition in some code but that
-% may be wrong.
+% may be wrong. ...YES: in ABoAA, page 152. Check, if it makes any difference to use one or the
+% other definition. Maybe it corresponds to BA - AB rather than AB - BA for matrices?
+
+% It says some more intersting thinsg: When we form Q = G/H where H is the commutator subbgroup of 
+% G, the we obtain a commutative group, i.e. a group whose only commutator is the trivial commutator
+% $e$ which always exsits. The number of distinct commutators may be regarded as a measure for how 
+% far away a group is from being commutative
+
+% My own idea: another measure for non-commutativeness could be to compare the number of pairs
+% (a,b) for which we get a nontrivial commutator to the total number of possible pairs (a,b). Maybe
+% we should makes sure that a != b and disregard the order of a,b in the tuple, i.e. count (a,b) and
+% (b,a) as the same thing. Maybe take all two-element sets ("doubleton sets?") {a,b}. The goal is to
+% get 0 when the group is commutaive and 1 when it is as non-commutative as it could possibly be.
 
 % https://en.wikipedia.org/wiki/Commutator_subgroup
 % https://en.wikipedia.org/wiki/Commutator

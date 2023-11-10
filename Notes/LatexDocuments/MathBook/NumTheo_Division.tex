@@ -36,6 +36,14 @@ is due to C.P. Willans and I will not explain here why it works because that's n
 % https://mathworld.wolfram.com/WillansFormula.html
 % https://www.cambridge.org/core/journals/mathematical-gazette/article/abs/on-formulae-for-the-nth-prime-number/43E49D11DFEAD3E4CBC12F17C87F5EE1
 
+% Michael Penn presents an alternative formula here:
+% https://www.youtube.com/watch?v=eQ4ozNU6Mck
+% -This formula is somewhat simpler because it doesn't need the cosine.
+% -These formulas are built from Wilson's theorem which implies (is actually equivalent to): 
+%  p is prime iff (p-2)! = 1 (mod p)
+% -The upper summation limit 2^n is needed because the n-th prime is <= 2^n. With a tighter bound,
+%  we could perhaps reduce this limit to something more sane.
+
 \paragraph{The Sieve of Erathostenes}
 A much more practical way to produce primes is to precompute a list of primes, store it somewhere and read the $n$th entry from this list whenever the $n$th prime is needed. One algorithm to produce such a list is the sieve of Erathostenes. The algorithm works as follows: We start with a list of all numbers up to some upper limit $m$. The first prime in this list is $2$. We pick $2$ and mark all multiples of it (except $2$ itself) as non-prime. They can't be prime because they are multiples of $2$. Then we scan the list for the first number that is not yet marked as non-prime. That would be $3$. Then again we  mark all proper multiples of $3$ as non-prime. Repeat: the next is $5$. And so on. When we are done, all numbers in our list that are not marked as non-prime are primes. We can actually stop when we reach $\sqrt{m}$ because ...TBC...
 

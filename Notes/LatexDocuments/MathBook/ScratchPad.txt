@@ -323,6 +323,41 @@ x = -(b + C + A/B)  /  (3a)
 https://de.wikipedia.org/wiki/Galoistheorie			 
 
 
+
+Other videos on that topic:
+1EWUsef0iFs  But why is there no quintic formula? | Galois Theory
+BSHv9Elk1MU  Why There's 'No' Quintic Formula (proof without Galois theory)
+zCU9tZ2VkWc  Why you can't solve quintic equations (Galois theory approach) #SoME2 
+aaW30_f2on0  Grant Sanderson (3Blue1Brown) | Unsolvability of the Quintic | The Cartesian Cafe w/ Timothy Nguyen
+2eOw_TKsFXg  How do we know the quintic is unsolvable?   
+9aUsTlBjspE  The Insolvability of the Quintic
+ 
+
+
+
+
+Weitz takes the example polynomial:  x^5 - x - a = 0  where a is a parameter that can be 
+continuously tweaked in the complex plane. For a = 0, we have  x^5 - x = 0  and the roots are 0 and 
+1,i,-1,-i. I think in general x^n - x = 0 has roots at 0 and the (n-1)-th roots of unity. I think 
+the idea is that any algorithm that should produce the n roots of a degree n polynomial needs to 
+consist of n formulas f_1, ..., f_n each of which should be continuous(!!) function of the n+1 
+coeffs a0,...,a_n. The formulas for n=3, and n=4 seem to be built in a way that they need a square 
+root in the 1st step, a 3rd root in the 2nd step and a 4th root in the 3rd step. Each of these n-th
+roots produces n solutions which must enter *all* into the next step. At the end we have n! 
+solutions of which only n are distinct. For n = 3, we get 6 = 3! paths through the tree down to the 
+solutions. For n = 4, we get 24 = 4! paths through the tree. But of these 24 solutions, only 4 are
+distinct.
+
+I guess each solution r_1 = ..., r_n = corresponds to one path through the tree that generates the 
+solutions. I guess for n <= 4, two different paths that permute a solution in some way, must do this 
+in a way that leads to continuous functions f_1,...f_n whereas in the n > 4 case, that is not the 
+case anymore?
+
+2eOw_TKsFXg  seems to use the same approach as Weitz
+
+
+
+
 ----------------------------------------------------------------------------------------------------
 https://www.youtube.com/watch?v=rYijIEl3euU  8 minutes of Counterintuitive Math
 

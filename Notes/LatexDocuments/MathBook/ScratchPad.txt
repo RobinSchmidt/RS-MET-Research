@@ -331,8 +331,9 @@ zCU9tZ2VkWc  Why you can't solve quintic equations (Galois theory approach) #SoM
 aaW30_f2on0  Grant Sanderson (3Blue1Brown) | Unsolvability of the Quintic | The Cartesian Cafe w/ Timothy Nguyen
 2eOw_TKsFXg  How do we know the quintic is unsolvable?   
 9aUsTlBjspE  The Insolvability of the Quintic
- 
-
+Ct2fyigNgPY  Galois Theory Explained Simply
+50zPH63AdUA  What is...the Abel-Ruffini theorem?
+SFXQ_920d4s  An Overview of the True Quintic Formula...and Why You Should Never Use It
 
 
 
@@ -355,8 +356,8 @@ case anymore?
 
 2eOw_TKsFXg  seems to use the same approach as Weitz
 
-
-
+This paper is very nice:
+https://arxiv.org/abs/2011.05162  Abel-Ruffini's Theorem: Complex but Not Complicated!
 
 ----------------------------------------------------------------------------------------------------
 https://www.youtube.com/watch?v=rYijIEl3euU  8 minutes of Counterintuitive Math

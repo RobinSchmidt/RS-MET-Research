@@ -379,6 +379,13 @@ Geometric Algebra:
 
 https://www.youtube.com/watch?v=B035yDsLfDc&list=PL4TOpi2EWY8Z-FHbbosrBeTt66zQAupqx
 
+
+----------------------------------------------------------------------------------------------------
+Averages:
+
+https://www.youtube.com/watch?v=PBVfkJccqqs  how to find the median ... of a function!
+https://www.youtube.com/watch?v=830nq6j6a-E  the Stolarsky mean
+
 ----------------------------------------------------------------------------------------------------
 Theory of Computation:
 

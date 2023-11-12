@@ -92,11 +92,13 @@ The formulas can be derived from the product rule of differentiation. Another wa
 \begin{equation}
   \int_a^b u(x) v(x) \, dx = \Big[u(x) V(x)\Big]_a^b - \int_a^b u'(x) V(x) \, dx
 \end{equation}
-Writing it this way, the formula tells us more directly what we have to do when we want to integrate a product of two given functions $u(x), v(x)$: we have to differentiate $u$ and integrate $v$. Therefore, when we see a function that is built as a product of other functions, we should look out for a factor that is easy to differentiate (and call it $u$) and a factor that is easy to integrate (and call it $v$) - and then use the rule. The factors $u,v$ should be chosen in such a way that $u'(x) V(x)$ is easier to integrate than the original product $u(x) v(x)$. Recognizing how to split a given function into such factors that make use of this rule worthwhile is one of the ingredients of the black art of finding integrals. With $u = u(x), du = u'(x) dx, v = v(x), dv = v'(x) dx$, an indefinite integral can be written using the differentials $du, dv$ as:
+Writing it this way, the formula tells us more directly what we have to do when we want to integrate a product of two given functions $u(x), v(x)$: we have to differentiate $u$ and integrate $v$. Therefore, when we see a function that is built as a product of other functions, we should look out for a factor that is easy to differentiate (and call it $u$) and a factor that is easy to integrate (and call it $v$ - or $v'$ if you prefer the first notation) - and then use the rule. The factors $u,v$ should be chosen in such a way that $u'(x) V(x)$ is easier to integrate than the original product $u(x) v(x)$. Recognizing how to split a given function into such factors that make usage of this rule worthwhile is one of the ingredients of the black art of finding integrals. There is yet another way to state the rule: with $u = u(x), du = u'(x) dx, v = v(x), dv = v'(x) dx$, an indefinite integral can also be written using the differentials $du, dv$ as:
 \begin{equation}
   \int u \, dv \ =\ uv - \int v \, du
 \end{equation}
-TODO: explain that notation in more detail - does it work also for definite integrals? Explain differentials! TODO: give some heuristics for assigning $u$ and $v$. Maybe give an (not too simple) example.
+TODO: explain that notation in more detail - does it work also for definite integrals? Explain differentials! TODO: give some heuristics for assigning $u$ and $v$. 
+
+%Maybe give an (not too simple) example.
 
 % ToDo: maybe formulate it without using primes. Instead use $u,v$ in the LHS and $u,U,v,V$ in the RHS. Explain the notation with the big brackets for evaluating at the endpoints and subtracting. Or maybe use the notation with the right vertical line
 
@@ -104,7 +106,8 @@ TODO: explain that notation in more detail - does it work also for definite inte
 \begin{align}
   \int 2 x \ln x \, dx = x^2 \ln x - \int x \, dx = x^2 \ln x - \frac{x^2}{2} + C
 \end{align}
-...yeah, the $+ C$ has been neglected (i.e. taken to be zero) in the formulas above. It's more convenient to just add the integration constant at the very end of the calculation. In many cases, you will probably forget about it. This amounts to taking it to be zero which is often the most natural choice anyway. However, you should keep in the back of your head that you can always add an integration constant and in some cases (e.g. when solving differential equations), that constant actually has a role and matters.
+...yeah, the $+ C$ has been neglected (i.e. taken to be zero) in the formulas above. It's more convenient to just add the integration constant at the very end of the calculation. In many cases, you will probably forget about it completely and often that's fine. It amounts to taking it to be zero which is often the most natural choice anyway. However, you should keep in the back of your head that you can always add an integration constant and in some cases (e.g. when solving differential equations), that constant actually has a role and matters.
+TODO: maybe use the 2nd notation (we currently use the 1st)
 
 
 %\newline % we want some vertical space - newline doe not really cut it
@@ -121,13 +124,18 @@ TODO: explain that notation in more detail - does it work also for definite inte
 \subsubsection{Integration by Substitution} 
 
 \subsubsection{Integration by Partial Fraction Expansion} 
+Partial fraction expansion is often listed as an integration technique and therefore taught in the context of integration. I personally think that partial fraction expansion itself fits better into a general section about the algebra of rational functions. Integration \emph{by} partial fraction expansion is then just usage of that purely algebraic technique in the context of integration - but not an integration technique per se. In fact, partial fraction expansions can be useful in several other contexts. But be that as it may - here is how it works: we assume that we are dealing with a rational function, i.e. a function defined by a quotient of polynomials. ...TBC...
 
+
+%This technique is often listed as an "integration technique" although it is at it core just an algebraic transformation
+
+% What else is there? Logarithmice integration? Intgration of the inverse?
 
 
 \subsubsection{The Risch Algorithm}
-Finding an antiderivative for a given function is hard. Unlike for differentiation, for integration there is no simple mechanical set of rules that we can just blindly apply and be sure that it will always lead us to the result. Except: there actually is one - but with a caveat: it is not really suitable for execution by humans using pencil and paper. It's too complicated and messy for that. However, computers can deal with it easily, provided they have the appropriate software installed. This set of rules is embodied in the Risch algorithm and some variation of this algorithm is usually integrated into every computer algebra system. The Risch algorithm can be given an elementary function as input and if the function has an elementary antiderivative, the algorithm will find it and return it as output. If the algorithm didn't find an elementary antiderivative, then it has proven that none exists. Not all such systems implement the full algorithm and some may implement custom extensions (on top of the full or partial algo) to enable it to deal also with certain non-elementary functions, also kown as "special functions". When faced with some integral, my advice would be to reach for such a software. Wolfram's "Mathematica" is pretty good at integration and has a free web interface called "Wolfram Alpha" which is often good enough. If it doesn't succeed, you may have to look further, but that should probably be the first thing to try. I don't think, it implements the full Risch algo, though. On the other hand, it apparently implements some extensions that allow it to also deal with some special functions. The free and open source system "Axiom" does indeed implement the full Risch algo - or so I have heard. You may also want to try "SageMath" which, at the time of this writing and to the best of my knowledge, is currently the most extensive free and open source math software. Its more like an umbrella software that lets you access multiple other math software systems under the hood with a unified, Python-like syntax. Its computer algebra engine is by default "Maxima" but it can access others, too. Supposedly, Axiom is actually among them, but I couldn't get that to work yet. I did not yet try very hard, though. $:-|$
+Finding an antiderivative for a given function is hard. Unlike for differentiation, for integration there is no simple mechanical set of rules that we can just blindly apply on autopilot and be sure that it will always lead us to the result. Except: there actually is one - but with a caveat: it is not really suitable for execution by humans using pencil and paper. It's too complicated and messy for that. However, computers can deal with it just fine, provided they have the appropriate software installed. This set of rules is embodied in the Risch algorithm and some variation of this algorithm is usually integrated into every computer algebra system. The Risch algorithm takes an elementary function as input and if the function has an elementary antiderivative, the algorithm will find it and return it as output. If the algorithm didn't find an elementary antiderivative, then it has proven that none exists. Not all such systems implement the full algorithm and some may implement custom extensions (on top of the full or partial algo) to enable it to deal also with certain non-elementary functions, also kown as "special functions". When faced with some integral, my advice would be to reach for such a software. Wolfram's "Mathematica" is pretty good at integration and has a free web interface called "Wolfram Alpha" which is often good enough. If it doesn't succeed, you may have to look further, but that should probably be the first thing to try. I don't think, it implements the full Risch algo, though. On the other hand, it apparently implements some extensions that allow it to also deal with some special functions. The free and open source system "Axiom" does indeed implement the full Risch algo - or so I have heard. You may also want to try "SageMath" which, at the time of this writing and to the best of my knowledge, is currently the most extensive free and open source math software. Its more like an umbrella software that lets you access multiple other math software systems under the hood with a unified, Python-like syntax. Its computer algebra engine is by default "Maxima" but it can access others, too. Supposedly, Axiom is actually among them, but I couldn't get that to work yet. I did not yet try very hard, though. $:-|$
 
-ToDo: give some example code to let SageMath and Wolfram Alpha calculate antiderivatives, try to figure out how Sage can be convinced to use the Axiom engine
+TODO: give some example code to let SageMath and Wolfram Alpha calculate antiderivatives, try to figure out how Sage can be convinced to use the Axiom engine
 
 
 
@@ -151,7 +159,7 @@ The techniques explained above are for finding antiderivatives also known as ind
 ...TBC...what other techniques are there?
 
 
-ToDo: give Sage and Mathematica code to calculate definite integrals - maybe some for which antiderivatives cannot be found
+TODO: give Sage and Mathematica code to calculate definite integrals - maybe some for which antiderivatives cannot be found
 
 % Maybe use \int_{-\infty}^{\infty} e^{-x^2} = \sqrt{\pi} as example. Mention, that the erf-function ahs beend defined to be the antiderivative of the (normalized?) Gaussian bell function
 

@@ -1,5 +1,5 @@
 \section{Matrix Decomposition}
-
+By a matrix decomposition, we mean a way to express a given matrix $\mathbf{A}$ in some way via other matrices. This "some way" is usually a matrix product and these "other matrices" typically have some desirable features which makes them more conducive to understand what is going on and/or to facilitate certain algorithmic computations. For example, the so called "singular value decomposition" (SVD) is good for building intuition because it decomposes the matrix into a rotation, an axis-aligned scaling and another rotation - all these operations are easily understood geometrically. The "lower-upper" (LU) decomposition is good for solving linear systems of equations. There are also additive decompositions as well as decompositions based on other types of matrix products (such as the Kronecker product) but the most important ones are certainly the decompositions based on the regular matrix product.
 
 
 % https://en.wikipedia.org/wiki/Matrix_decomposition
@@ -22,9 +22,14 @@ The LU-decomposition decomposes the matrix into a product $\mathbf{A = L U}$ whe
 
 %===================================================================================================
 \subsection{Eigendecomposition aka Diagonalization}
-The most convenient decomposition of a matrix in terms of ease of solving equations involving the matrix and in terms of geometric interpretability of what the matrix actually does is the so called diagonalization of the matrix. ...TBC...
+The most convenient decomposition of a matrix in terms of ease of solving equations involving the matrix and in terms of geometric interpretability of what the matrix actually does is the so called \emph{diagonalization} of the matrix. It's also called \emph{eigendecomposition} or \emph{spectral decomposition}. The latter name derives from the fact that the \emph{spectrum} of a matrix is defined to be the set of its eigenvalues. As you may guess from the term "eigendecomposition", the eigenvalues (and eigenvectors) play a prominent role in this kind of decomposition. The matrix $\mathbf{A}$ is expressed as $\mathbf{A} = \mathbf{V} \mathbf{\Lambda} \mathbf{V}^{-1}$ where the $i$-th column of $\mathbf{V}$ is the $i$-th eigenvector $\mathbf{v}_i$ of $\mathbf{A}$ and $\mathbf{\Lambda}$ is a diagonal matrix whose diagonal entry at position $(i,i)$ is the eigenvalue $\lambda_i$. 
 
-% it's also called Eigendecomposition or Spectral Decomposition
+Unfortunately, such diagonalization is not always possible. If it is possible for a given matrix, then we call that matrix \emph{diagonalizable}.
+
+...TBC...
+
+% If A is diagonalizable, it is similar to a diagonal matrix. That means, there exists some coordinate system in which the linear transformation represented by A takes the form of an axis-aligned scaling.
+
 
 % https://en.wikipedia.org/wiki/Diagonalizable_matrix#Simultaneous_diagonalization
 % A set of matrices commutes iff it is simultaneously diagonalizable
@@ -34,6 +39,12 @@ The most convenient decomposition of a matrix in terms of ease of solving equati
 % the eigenvectors. The columns of a matrix always say, where they map the standard basis vectors
 % to. Then we apply a scaling along the new axes in the new coordinate system. Then we undo the
 % initial transformation.
+
+% The eigendecomposition is also useful for computing the matrix exponential
+
+% Explain connection to similarity transforms.
+
+% https://en.wikipedia.org/wiki/Eigendecomposition_of_a_matrix
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Jordan Normal Form}

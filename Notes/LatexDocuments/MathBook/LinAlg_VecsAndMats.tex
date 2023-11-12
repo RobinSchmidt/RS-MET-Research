@@ -174,6 +174,9 @@ can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Special Properties}
+% Maybe move that below the characteristioc numbers and eigenspaces subsections because some 
+% properties may be defined in terms of these numbers (e.g.: contractive: all eigvals < 1 in 
+% abs-val)
 % By a property of a matrix, I mean a feature thata matrix may or may not have - a boolean feature, so to speak.
 
 \paragraph{Squareness}
@@ -196,7 +199,9 @@ A matrix is symmetric if it is equal to its own transpose. That means that the r
 \paragraph{Orthogonality}
 % a (square) matrix is orthogonal when all its rows are mutually orthogonal. This implies
 
+\paragraph{Definiteness}
 
+% -contractive (all eigenvalues < 1 in absolute value)
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Characteristic Numbers}
@@ -251,12 +256,15 @@ If we expand the left hand side of the characteristic equation $\det ( \mathbf{A
 % matrices satsify their own characteristic equation
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Properties of Pairs of Matrices}
+%\subsubsection{Properties of Pairs of Matrices}
+\subsubsection{Relations between Matrices}
+We have seen "boolean properties" (programmer speak) of single matrices, i.e. features that a given matrix may or may not have such as symmetry, definiteness, etc. There are also some of these boolean properties that pairs of matrices may or may not have. Another way to say that is two matrices may or may not be in a certain relation with one another. Some important of such relations will be defined now.
 
 % Could also be called "Relations between Matrices"
 % -reciprocity/inversion
 % -commutativity
 % -bi-orthogonality (?)
+% -what about asymmetric relations - maybe something like <, i.e. an order..maybe based on a norm?
 
 \paragraph{Similarity}
 A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have, among other things, a symmetry of the relation: $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{S}$ and post-multiplying both sides by $\mathbf{S}^{-1}$ to obtain $\mathbf{A} = \mathbf{S B S^{-1}}$. The transformation that maps $\mathbf{A}$ to $\mathbf{B}$ is called a \emph{similarity transformation} or a \emph{conjugation}. Conjugation is a term from group theory which we will encounter in a later chapter. A similarity transformation does not change the basis independent properties of a matrix. In particular, it doesn't change the characteristic polynomial and therefore the eigenvalues, which are the  roots of said polynomial, are invariant under the transformation. Furthermore, it also doesn't change the determinant and trace because they are the product and sum of the eigenvalues respectively. The multiplicities (geometric and algebraic) of the eigenvalues are also invariant. The eigenvectors are mapped via the change of basis transformation $\mathbf{S}$: If $\mathbf{a}$ is an eigenvector of  $\mathbf{A}$, then $\mathbf{b} = \mathbf{S a}$ is the corresponding eigenvector of $\mathbf{B}$ [VERIFY! It might be $\mathbf{S}^{-1}$]. Other features that are invariant under a similarity transform are: rank, index of nilpotence, Jordan normal form (up to permutation of the blocks), Frobenius normal form, minimal polynomial and elementary divisors. Don't worry, if you don't know what some of these terms mean. I don't know all of them either and just wanted to list them all for completeness (the list is taken from Wikipedia).

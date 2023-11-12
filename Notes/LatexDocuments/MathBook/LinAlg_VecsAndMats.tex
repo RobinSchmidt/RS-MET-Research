@@ -1,14 +1,14 @@
 \section{Vectors and Matrices}
 
 \paragraph{Vectors}
-Consider a point in the 2D plane or in 3D space. To represent such a point mathematically, we would need a pair or a triple of numbers respectively. An $n$-dimensional vector can generally be thought of as an $n$-tuple of numbers. For intuition building, it's best to think of real numbers although in general, other kinds of numbers may also be allowed in the more general case. Such a vector can not only represent a position in space but also a translation. Imagine the $xy$-plane. The vector $(x,y) = (3,2)$ could encode the action of first going $3$ units into the $x$-direction (usually to the right) and the going $2$ units into the $y$-direction (usually upward). Of course, we could as go first the $2$ units into the $y$-direction and the $3$ units into the $x$-direction - the location we would end up would be the same in both cases. Vectors are usually denoted as columns. For example, a vector $\mathbf{v}$ with given $x$ and $y$ values is written as:
+Consider a point in the 2D plane or in 3D space. To represent such a point mathematically, we would need a pair or a triple of numbers respectively. An $n$-dimensional vector can generally be thought of as an $n$-tuple of numbers. For intuition building, it's best to think of real numbers although in general, other kinds of numbers may also be allowed in the more general case. Such a vector can not only represent a position in space but also a translation. Imagine the $xy$-plane. The vector $(x,y) = (3,2)$ could encode the action of first going $3$ units into the $x$-direction (usually to the right) and then going $2$ units into the $y$-direction (usually upward). Of course, we could as well go first the $2$ units into the $y$-direction and the $3$ units into the $x$-direction - the location we would end up would be the same in both cases. Vectors are usually denoted as columns. For example, a vector $\mathbf{v}$ with given $x$ and $y$ values is written as:
 \begin{equation}
 \mathbf{v} 
 = \begin{pmatrix} x \\ y \end{pmatrix} 
 =   x \cdot \begin{pmatrix} 1 \\ 0 \end{pmatrix} 
   + y \cdot \begin{pmatrix} 0 \\ 1 \end{pmatrix} 
 \end{equation}
-where the right hand side can be seen as an interpretation of what the tuple $(x,y)$ actually encodes. We imagine $x$ to be a scaling factor of a unit vector into the $x$ direction 
+where the right hand side can be seen as an interpretation of what the tuple $(x,y)$ actually encodes. We imagine $x$ to be a scaling factor of a unit vector into the $x$ direction...
 
 ...TBC...
 
@@ -35,9 +35,10 @@ Vectors can be used to represent locations and translations. Translations are a 
 Strictly speaking, an $n$-tuple of numbers is not what a vector really \emph{is} by its nature. By its nature, a vector is a geometric entity such as a point in space or an arrow with a direction and length. The $n$-tuple of numbers is a specific \emph{representation} of that geometric entity that depends on the coordinate system that we have chosen. But you may take that statement as a foreshadowing to a more advanced viewpoint. For the purposes of this section, it's totally okay to picture a vector as a tuple of numbers. Likewise, matrices are also only a specific representation of a linear transformation. In a different coordinate system, the same transformation would be represented by a different 2D array of numbers. We will say more about this in the context of so called \emph{change of basis} transformations.
 
 \medskip
-Moreover, when we look at things in a more carefully, we need to distinguish between \emph{points} and \emph{vectors}. ...TBC...
-% Points are usually identified with their position vectors [VERIFY term], i.e. vectors that point from the origin to the given point
+Moreover, when we look at things more carefully, we need to distinguish between \emph{points} and \emph{vectors}. A point represents just a location and it does not really make any sense to add a location to another location. What is Berlin plus Paris supposed to mean? It makes no sense - even when expressed as geolocations! (By the way: I'm conveniently assuming a flat map here. Taking the spherical earth into account is a further complication which is of no relevance to my point). A vector, on the other hand, represents an arrow which we interpret as a translation. It does indeed make sense to add translations: we just perform one after the other. We may first go 30 km east and 20 km north and thereafter go 40 km east and 50 km north - that makes perfect sense. However - in practice (like in vector graphics APIs), points are usually identified with their \emph{position vectors} (aka location vector or radius vector), i.e. vectors that point from the origin to the given point. Represented as such, we actually can add points in our graphics code - we just should ask ourselves, if it makes any sense to do so in our particular case.
+% ...TBC...
 
+% https://en.wikipedia.org/wiki/Position_(geometry)
 
 %===================================================================================================
 \subsection{Vector Operations}
@@ -62,10 +63,10 @@ Algebraically, there is not much to say about vector addition - we just add the 
 % maybe generalize to "Linear Combinations"
 
 \paragraph{Linear Combinations}
-A linear combination of a bunch of vectors is just a weighted sum of those vectors. That means each vector gets multiplied by a weight by our scalar multiplication w and then these scaled vectors are added up by our vector addition. Vector subtraction is also just a special case of a linear combination of two vectors where one vector gets a weight of $+1$ and the other a weight of $-1$. 
+A linear combination of a bunch of vectors is just a weighted sum of those vectors. That means each vector gets multiplied by a weight via our scalar multiplication and then these scaled vectors are added up via our vector addition. Vector subtraction is also just a special case of a linear combination of two vectors where one vector gets a weight of $+1$ and the other a weight of $-1$. 
 
 \paragraph{Inner Product aka Scalar Product}
-The \emph{inner product}, also known as the scalar \emph{product} between two vectors $\mathbf{v}$ and $\mathbf{w}$ is just a number. It is computed by taking all the component-wise products and summing them up. ...TBC...
+The \emph{inner product}, also known as the \emph{scalar product} between two vectors $\mathbf{v}$ and $\mathbf{w}$ is just a number. It is computed by taking all the component-wise products and summing them up. ...TBC...
 % explain geometric interpretation
 % -coefficient of projection
 % -correlation in the sense of: how similar is the direction of the vectors (when bot are
@@ -252,6 +253,7 @@ If we expand the left hand side of the characteristic equation $\det ( \mathbf{A
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Properties of Pairs of Matrices}
 
+% Could also be called "Relations between Matrices"
 % -reciprocity/inversion
 % -commutativity
 % -bi-orthogonality (?)

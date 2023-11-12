@@ -134,7 +134,17 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 % Misc: transposition, hermitian tranpose, etc.
 
 
+%===================================================================================================
+\subsection{Matrix-Vector Operations}
+The bread and butter of linear algebra from a geometric perspective is the interplay between matrices and vectors. Vectors encode positions and therefore also geometric shapes which are defined by the positions of their vertices. Matrices encode geometric transformations such as reflections, rotations, scalings, etc. We can interpret such a transformation as an \emph{action} that is applied to a shape, i.e. to a set of vectors. A matrix can \emph{act on} a vector or - in passive language - can be \emph{applied to} the vector. This action is effected by forming the matrix-vector product. We actually do not really need to define any new product. Instead, we observe that column vectors can be interpreted as special matrices - namely as matrices that just have a single column, i.e. as $n \times 1$ matrices where $n$ is the dimensionality of the vector. We can multiply such an $n$-vector $\mathbf{v}$, seen as $n \times 1$ matrix, from the left with an $n \times n$ matrix  $\mathbf{A}$ using the rules of matrix multiplication to get another $n \times 1$ matrix, i.e. another $n$-vector $\mathbf{w} = \mathbf{A v}$. 
 
+% we could also use an m x n matrix - thereby also produce a dimensionality change. If m < n, it is a dimensionality reduction, i.e. some sort of projection is involved
+
+ ...TBC...
+
+% Left-product, right -product, sandwich product
+% we can interpret these procuts as matrix-matrix products by considering the vector as an nx1 or 1xn matrix
+% Matrices "act on" or can be "applied to" vectors
 
 
 %===================================================================================================
@@ -166,7 +176,7 @@ A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$ is said 
 \end{equation}
 can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial solution for the $a_i$ exists [VERIFY]. Linear independence is an important condition for a set of vectors to have. In a sense, it means that all vectors are needed and none of them is redundant. If a set of vectors is linearly independent, it means that removing one of the vectors would necessarily reduce the dimension of their span by one.
 
-
+% TODO: explain basis (ordered or not)
 
 %===================================================================================================
 \subsection{Matrix Features}
@@ -240,7 +250,8 @@ which is called the characteristic equation. [the right one, I think]
 \paragraph{Eigenvalues and Characteristic Polynomial}
 If we expand the left hand side of the characteristic equation $\det ( \mathbf{A} - \lambda \mathbf{I} ) = 0$ according to the rules for how determinants are computed, it will turn out that we will get a polynomial in $\lambda$ of degree $n$. This polynomial is called the \emph{characteristic polynomial} of the matrix  $\mathbf{A}$. The right hand side says that this polynomial should be equal to zero for $\lambda$ to be an eigenvalue. Another way to say that is that an eigenvalue $\lambda$ is a root of the characteristic polynomial. ...TBC...
 
-% Algebraic multiplicity
+% Algebraic multiplicity, geometric multiplicity
+% left and right eigenvectors
 
 %\paragraph{Eigenvalues}
 
@@ -248,7 +259,13 @@ If we expand the left hand side of the characteristic equation $\det ( \mathbf{A
 
 \paragraph{Generalized Eigenvectors}
 
+\paragraph{Invariant Subspaces}
 
+% We have learned that an eigenvector of a matrix $\mathbf{A}$ is a vector $\mathbf{v}$ that doesn't change direction under the transformation that is achieved when $\mathbf{A}$ is acting on  $\mathbf{v}$ via the product $\mathbf{w} = \mathbf{A} \mathbf{v}$
+
+% I think, we can pick any subset of the set of all (generalized?) eigenvectors and use this subset as a basis for an invariant subspace, i.e. a subspace that is mapped to itself under the matrix A. That the matrix cannot "lift" a vector out of this subsapce is clear when we express the vector as linear combination of the eigenvectors. Then, each component of the vector in that basis will just be scaled by applying the matrix. No components into other directions will be created.
+
+% https://en.wikipedia.org/wiki/Invariant_subspace
 
 
 % Don't make the mistake of thinking that there is a one-to-one correspondence between eignevectors and eigenvalues. It is, in general, not the case that each eigenvalue has one and only one corresponding eigenvector. ...TBC...

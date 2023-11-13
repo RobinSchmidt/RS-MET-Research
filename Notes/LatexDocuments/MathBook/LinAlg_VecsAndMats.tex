@@ -7,12 +7,20 @@ Consider a point in the 2D plane or in 3D space. To represent such a point mathe
 = \begin{pmatrix} x \\ y \end{pmatrix} 
 =   x \cdot \begin{pmatrix} 1 \\ 0 \end{pmatrix} 
   + y \cdot \begin{pmatrix} 0 \\ 1 \end{pmatrix} 
+\qquad \text{or}  \qquad
+\mathbf{v} = (x,y) = x \cdot (1, 0) + y \cdot (0, 1)
 \end{equation}
-where the right hand side can be seen as an interpretation of what the tuple $(x,y)$ actually encodes. We imagine $x$ to be a scaling factor of a unit vector into the $x$ direction...
+where the right hand sides can be seen as an interpretation of what the tuple $(x,y)$ actually encodes. We imagine $x$ to be a scaling factor (aka coefficient) of a unit vector $(1,0)$ into the $x$-direction and $y$ to be a coefficient for a unit vector $(0,1)$ into the $y$-direction. The left and right versions are just different notations. The right notation using tuples is more convenient when embedding an equation in a text or when vertical space shall be saved. In non-embedded equations, most books will usually use the left notation where vectors are written as columns with the components stacked vertically. 
+
+%You may also (rarely) see the notation $\mathbf{v} = (x \;\, y)^T$, i.e. like tuple notation but without the comma and a superscript $T$. This $T$ stands for \emph{transposition} which, in this case, means to turn the row into a column.
+
+% Explain notation: when the components are separated by a comma, we see the vectors as tuples. Without commas, we could write them as $(1 0)^T$ where the superscript $T$ in $(\ldots)^T$ stands for \emph{transposition} which, in this case, means to turn the row into a column.
 
 ...TBC...
 
 % Give the standard basis (1,0),(0,1) of R^2, explain how any vector can be expressed as a linear combination of them. done
+
+% Explain the uniot basis vectors and the zerop vector
 
 % Explain how the sum is "formal"
 
@@ -27,6 +35,8 @@ Vectors can be used to represent locations and translations. Translations are a 
 
 % A matrix is a 2D array of numbers, i.e. a table with rows and columns. Each cell contains a number pretty much like in a spreadsheet.
 % the columns of the matrix say where the basis vectors go
+
+% We need to define what the identity matrix is. Maybe the zero matrix, too
 
 % Translations are not among the linear transformations that we can represent by matrices.
 
@@ -132,6 +142,7 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 % systems
 
 % Misc: transposition, hermitian tranpose, etc.
+
 
 
 %---------------------------------------------------------------------------------------------------

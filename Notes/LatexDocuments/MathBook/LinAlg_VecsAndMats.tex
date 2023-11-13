@@ -287,8 +287,12 @@ If we expand the left hand side of the characteristic equation $\det ( \mathbf{A
 
 \paragraph{Eigenvectors}
 
-\paragraph{Generalized Eigenvectors}
-A regular eigenvector $\mathbf{v}$ to an eigenvalue $\lambda$ is a vector with the property $\mathbf{A v} = \lambda \mathbf{v}$, i.e. a solution to the equation $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$. Let's give the matrix in this equation a name: $\mathbf{N} = \mathbf{A} - \lambda \mathbf{I}$ so we can write: $\mathbf{N v} = \mathbf{0}$ instead for the eigenvector equation. Now a generalized eigenvector is a vector $\mathbf{v}$ with the property  $\mathbf{N}^k \mathbf{v} = \mathbf{0}$ for some natural number $k$. [VERIFY, Figure out if $k$ has a special name. Order? Weight? Degree?]
+\paragraph{Generalized Eigenvectors} [!!!VERIFY ALL!!!]
+An eigenvector $\mathbf{v}$ with eigenvalue $\lambda$ is a vector with the property $\mathbf{A v} = \lambda \mathbf{v}$, i.e. a solution to the eigenvector equation $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$. Let's give the matrix in this equation a name: $\mathbf{N} = \mathbf{A} - \lambda \mathbf{I}$ so we can write more simply: $\mathbf{N v} = \mathbf{0}$ for the eigenvector equation. Now a \emph{generalized eigenvector} is a vector $\mathbf{v}$ with the property  $\mathbf{N}^k \mathbf{v} = \mathbf{0}$ for some natural number $k \geq 1$. [VERIFY, Figure out if $k $ has a special name. Order? Weight? Degree?]. For $k=1$, this equation reduces to the defining equation of our plain old eigenvectors. ...TBC...
+
+% Generalized eigenvectors become important when the geometric multiplicity of an eigenvalue is less than its algebraic multiplicity. 
+
+% what about the edge case $k = 0$. then the matrix becomes then identity matrix and the equation has only the trivial solution. So, could we say that the zero vector is a generalized eigenvector of roder zero?
 
 
 \paragraph{Invariant Subspaces}

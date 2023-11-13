@@ -290,22 +290,28 @@ If we expand the left hand side of the characteristic equation $\det ( \mathbf{A
 %\paragraph{Eigenvalues}
 
 \paragraph{Eigenvectors}
-If we have an eigenvalue $\lambda$, we may also want to know the corresponding eigenvector(s). Multiple eigenvectors that correspond to a single eigenvalue may only exist when the algebraic multiplicity is greater than 1. The number of eigenvectors that correspond to a given eigenvalue is called the \emph{geometric multiplicity} of the eigenvalue and denoted by $\geo(\lambda)$ and that geometric multiplicity is always at most equal to the algebraic multiplicity: $\geo(\lambda) \leq \alg(\lambda)$. But it can be less than that. In such a case, the eigenvalue is called a \emph{defective eigenvalue}. A matrix that has defective eigenvalues is called a \emph{defective matrix} [VERIFY!]
+If we have an eigenvalue $\lambda$, we may also want to know the corresponding eigenvector(s). Multiple eigenvectors that correspond to a single eigenvalue may only exist when the algebraic multiplicity is greater than one. The number of eigenvectors that correspond to a given eigenvalue is called the \emph{geometric multiplicity} of the eigenvalue and denoted by $\geo(\lambda)$ and that geometric multiplicity is always at most equal to the algebraic multiplicity: $\geo(\lambda) \leq \alg(\lambda)$. But it can be less than that. In such a case, the eigenvalue is called a \emph{defective eigenvalue}. A matrix that has defective eigenvalues is called a \emph{defective matrix} [VERIFY!]. To find an eigenvector for an eigenvalue $\lambda$, we need to solve the linear system of equations represented by $\mathbf{A v} = \lambda \mathbf{v}$.  This can be rewritten as $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$ which is in the standard form $\mathbf{A x} = \mathbf{b}$ that we need for solving such equations. In this form, $\mathbf{x}$ is the unknown vector that we are trying to find, $\mathbf{A}$ is a known matrix and $\mathbf{b}$ is a known right hand side vector. We will learn later how to solve such equations. At this point, it should only be pointed out that the solution to such an equation is not necessarily a unique vector and indeed, in our case here it can't be unique because eigenvectors can always be scaled at will. That latter statement means that if $\mathbf{v}$ is an eigenvector, then any scaled version of $\mathbf{v}$ will also be an eigenvector. It is therefore common practice to normalize eigenvectors to unit length.
+
+% ...but i think, the system is alway singular - we will at least get a 1D continuum of solutions because eigenvectors can be scaled at will.
+
+%If $\alg(\lambda) > 1$, it may happen that this system has no unique solution but rather a whole space of solutions
 
 ...TBC...
+
+% Can it happen that the geometric multiplcity is zero? If so - what does it mean?
 
 % If the algebraic multiplicity of $\lambda$ is $1$, then there can be only one such eigen
 
 % Multiple eigenvectors can only exist when the algebraic multiplicity is gretaer than 1
 
-\paragraph{Generalized Eigenvectors} We established that an eigenvector $\mathbf{v}$ with eigenvalue $\lambda$ is a vector with the property $\mathbf{A v} = \lambda \mathbf{v}$. That equation can be rewritten as $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$. A \emph{generalized eigenvector} with \emph{rank} $r$ is a vector $\mathbf{v}$ that satisfies $(\mathbf{A} - \lambda \mathbf{I})^r \mathbf{v} = \mathbf{0}$. The rank $r \geq 1$ is a natural number and it is understood to be the smallest possible number for which that equation is satisfied, i.e. we also require  $(\mathbf{A} - \lambda \mathbf{I})^{r-1} \mathbf{v} \neq \mathbf{0}$. For $r = 1$, the generalized equation reduces to the defining equation of our plain old ordinary eigenvectors. Generalized eigenvectors become important when the geometric multiplicity of an eigenvalue $\lambda$ is less than its algebraic multiplicity, i.e. when we are dealing with defective eigenvalues.   ...TBC...
+\paragraph{Generalized Eigenvectors} We established that an eigenvector $\mathbf{v}$ with eigenvalue $\lambda$ is a vector with the property $\mathbf{A v} = \lambda \mathbf{v}$ which can be rewritten as $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$. A \emph{generalized eigenvector} with \emph{rank} $r$ is a vector $\mathbf{v}$ that satisfies $(\mathbf{A} - \lambda \mathbf{I})^r \mathbf{v} = \mathbf{0}$. The rank $r \geq 1$ is a natural number and it is understood to be the smallest possible number for which that equation is satisfied, i.e. we also require  $(\mathbf{A} - \lambda \mathbf{I})^{r-1} \mathbf{v} \neq \mathbf{0}$. For $r = 1$, the generalized equation reduces to the defining equation of ordinary eigenvectors. Generalized eigenvectors become important when the geometric multiplicity of an eigenvalue $\lambda$ is less than its algebraic multiplicity, i.e. when we are dealing with defective eigenvalues.   ...TBC...
 
 
 %Let's give the matrix in this equation a name: $\mathbf{N} = \mathbf{A} - \lambda \mathbf{I}$ so we can write more simply: $\mathbf{N v} = \mathbf{0}$ for the eigenvector equation. Now a \emph{generalized eigenvector} is a vector $\mathbf{v}$ with the property  $\mathbf{N}^r \mathbf{v} = \mathbf{0}$ for some natural number $r \geq 1$ which is called the \emph{rank} of the generalized eigenvector. For $k=1$, this equation reduces to the defining equation of our plain old eigenvectors. ...TBC...
 
 % 
 
-% what about the edge case $k = 0$. then the matrix becomes then identity matrix and the equation has only the trivial solution. So, could we say that the zero vector is a generalized eigenvector of roder zero?
+% what about the edge case $k = 0$. then the matrix becomes then identity matrix and the equation has only the trivial solution. So, could we say that the zero vector is a generalized eigenvector of rank zero? Is that useful? I mean, it's trivial but maybe it completes a general pattern in a satisfying way? I think we have a chain of subspaces of decreasing dimension when dealing wit generalized eigenvectors and the zero vector can indeed be seen a 0-dimensional subspace?
 
 % https://en.wikipedia.org/wiki/Generalized_eigenvector
 

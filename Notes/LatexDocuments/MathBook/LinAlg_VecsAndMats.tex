@@ -205,7 +205,7 @@ The norm of a vector captures its length. The most common norm is the Euclidean 
 \paragraph{Span of a Set of Vectors}
 As the span of a set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$, we define the set of all vectors that can be formed by arbitrary linear combinations of those vectors, i.e. the set of all vectors that can be written as:
 \begin{equation}
- a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_2 \mathbf{v}_n 
+ a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_n \mathbf{v}_n 
 \end{equation}
 for some set of scalar coefficients $a_1, \ldots, a_n$.
 
@@ -213,7 +213,7 @@ for some set of scalar coefficients $a_1, \ldots, a_n$.
 \paragraph{Linear Independence}
 A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$ is said to be linearly independent, if none of its elements can be expressed as a linear combination of other elements. A necessary and sufficient mathematical condition for linear independence is that the equation:
 \begin{equation}
- a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_2 \mathbf{v}_n = \mathbf{0}
+ a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_n \mathbf{v}_n = \mathbf{0}
 \end{equation}
 can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial solution for the $a_i$ exists [VERIFY]. Linear independence is an important condition for a set of vectors to have. In a sense, it means that all vectors are needed and none of them is redundant. If a set of vectors is linearly independent, it means that removing one of the vectors would necessarily reduce the dimension of their span by one.
 
@@ -346,7 +346,7 @@ An eigenspace of an $n \times n$ matrix $\mathbf{A}$ associated with a given eig
 %It is, in general, not the case that each eigenvalue has one and only one corresponding eigenvector. ...TBC...
 
 \paragraph{Invariant Subspaces}
-We have learned that an eigenvector of a matrix $\mathbf{A}$ is a vector $\mathbf{v}$ that doesn't change direction under the transformation that is achieved when $\mathbf{A}$ is acting on  $\mathbf{v}$ via the product $\mathbf{w} = \mathbf{A} \mathbf{v}$. We can pick any subset of the set of all (generalized?) eigenvectors and use this subset as a basis for an invariant subspace, i.e. a subspace that is mapped to itself under the matrix A. That the matrix cannot "lift" a vector out of this subsapce is clear when we express the vector as linear combination of the eigenvectors. Then, each component of the vector in that basis will just be scaled by applying the matrix. No components into other directions will be created. [VERIFY ALL]
+We have learned that an eigenvector of a matrix $\mathbf{A}$ is a vector $\mathbf{v}$ that doesn't change direction under the transformation that is achieved when $\mathbf{A}$ is acting on  $\mathbf{v}$ via the product $\mathbf{w} = \mathbf{A} \mathbf{v}$. We can pick any subset of the set of all (generalized?) eigenvectors and use this subset as a basis for an invariant subspace, i.e. a subspace that is mapped to itself under the matrix A. That the matrix cannot "lift" a vector out of this subspace is clear when we express the vector as linear combination of the selected eigenvectors. Then, each component of the vector in that basis will just be scaled by applying the matrix. No components into other directions will be created. [VERIFY ALL]
 
 % https://en.wikipedia.org/wiki/Invariant_subspace
 % https://www.statlect.com/matrix-algebra/invariant-subspace

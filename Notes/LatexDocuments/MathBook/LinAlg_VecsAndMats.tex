@@ -339,13 +339,11 @@ An eigenspace of an $n \times n$ matrix $\mathbf{A}$ associated with a given eig
 % https://en.wikipedia.org/wiki/Modal_matrix#Generalized_modal_matrix
 
 
-\paragraph{Simpler Special Cases} In the important special case where all eigenvalues are distinct, much of the considerations above simplify considerably. When all eigenvalues $\lambda_i$ are distinct, it means that all the algebraic multiplicities are one and therefore also all the geometric multiplicities are one because of the general rule $1 \leq \geo(\lambda) \leq \alg(\lambda)$. That, in turn, implies that there is a one-to-one correspondence between eigenvalues and eigenvectors. Each eigenvalue has exactly one corresponding eigenvector. This has the further implication that the matrix is diagonalizable. We'll see later what that means. Suffice to say here that this feature is usually a good thing. For diagonalizability, it is actually already enough if the algebraic and geometric multiplicities of all eigenvalues match: $\forall i: \geo(\lambda_i) = \alg(\lambda_i)$. 
+\paragraph{Simpler Special Cases} In the important special case where all eigenvalues are distinct, much of the considerations above simplify considerably. When all eigenvalues $\lambda_i$ are distinct, it means that all the algebraic multiplicities are one and therefore also all the geometric multiplicities are one because of the general rule $1 \leq \geo(\lambda) \leq \alg(\lambda)$. That, in turn, implies that there is a one-to-one correspondence between eigenvalues and eigenvectors. Each eigenvalue has exactly one corresponding eigenvector. Don't make the all too tempting mistake of assuming that this is always so in the general case. It is only so in this special friendly case which is fortunately quite common [VERIFY!]. This distinctness of eigenvalues has the further implication that the matrix is diagonalizable. We'll see later what that means. Suffice to say here that this feature is usually a good thing. For diagonalizability, it is actually already enough if the algebraic and geometric multiplicities of all eigenvalues match: $\forall i: \geo(\lambda_i) = \alg(\lambda_i)$. 
 
+%Don't make the mistake of thinking that there is a one-to-one correspondence between eigenvectors and eigenvalues in general. 
 
-
-
-
-
+%It is, in general, not the case that each eigenvalue has one and only one corresponding eigenvector. ...TBC...
 
 \paragraph{Invariant Subspaces}
 
@@ -356,7 +354,7 @@ An eigenspace of an $n \times n$ matrix $\mathbf{A}$ associated with a given eig
 % https://en.wikipedia.org/wiki/Invariant_subspace
 
 
-% Don't make the mistake of thinking that there is a one-to-one correspondence between eignevectors and eigenvalues. It is, in general, not the case that each eigenvalue has one and only one corresponding eigenvector. ...TBC...
+
 
 % matrices satsify their own characteristic equation
 

@@ -283,20 +283,27 @@ If we expand the left hand side of the characteristic equation $\det ( \mathbf{A
 % Algebraic multiplicity, geometric multiplicity
 % left and right eigenvectors
 
+% https://en.wikipedia.org/wiki/Eigenvalues_and_eigenvectors
+
 %\paragraph{Eigenvalues}
 
 \paragraph{Eigenvectors}
 
-\paragraph{Generalized Eigenvectors} [!!!VERIFY ALL!!!]
-An eigenvector $\mathbf{v}$ with eigenvalue $\lambda$ is a vector with the property $\mathbf{A v} = \lambda \mathbf{v}$, i.e. a solution to the eigenvector equation $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$. Let's give the matrix in this equation a name: $\mathbf{N} = \mathbf{A} - \lambda \mathbf{I}$ so we can write more simply: $\mathbf{N v} = \mathbf{0}$ for the eigenvector equation. Now a \emph{generalized eigenvector} is a vector $\mathbf{v}$ with the property  $\mathbf{N}^r \mathbf{v} = \mathbf{0}$ for some natural number $r \geq 1$ which is called the \emph{rank} of the generalized eigenvector. For $k=1$, this equation reduces to the defining equation of our plain old eigenvectors. ...TBC...
+\paragraph{Generalized Eigenvectors} We established that an eigenvector $\mathbf{v}$ with eigenvalue $\lambda$ is a vector with the property $\mathbf{A v} = \lambda \mathbf{v}$. That equation can be rewritten as $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$. A \emph{generalized eigenvector} with \emph{rank} $r$ is a vector $\mathbf{v}$ that satisfies $(\mathbf{A} - \lambda \mathbf{I})^r \mathbf{v} = \mathbf{0}$. The rank $r \geq 1$ is a natural number and it is understood to be the smallest possible number for which that equation is satisfied, i.e. we also require  $(\mathbf{A} - \lambda \mathbf{I})^{r-1} \mathbf{v} \neq \mathbf{0}$. For $r = 1$, the generalized equation reduces to the defining equation of our plain old ordinary eigenvectors. Generalized eigenvectors become important when the geometric multiplicity of an eigenvalue $\lambda$ is less than its algebraic multiplicity.  In such a case, the eigenvalue is called a defective eigenvalue. ...TBC...
 
-% Generalized eigenvectors become important when the geometric multiplicity of an eigenvalue is less than its algebraic multiplicity.  In such a case, the eigenvalue is called a defective eigenvalue.
+
+%Let's give the matrix in this equation a name: $\mathbf{N} = \mathbf{A} - \lambda \mathbf{I}$ so we can write more simply: $\mathbf{N v} = \mathbf{0}$ for the eigenvector equation. Now a \emph{generalized eigenvector} is a vector $\mathbf{v}$ with the property  $\mathbf{N}^r \mathbf{v} = \mathbf{0}$ for some natural number $r \geq 1$ which is called the \emph{rank} of the generalized eigenvector. For $k=1$, this equation reduces to the defining equation of our plain old eigenvectors. ...TBC...
+
+% 
 
 % what about the edge case $k = 0$. then the matrix becomes then identity matrix and the equation has only the trivial solution. So, could we say that the zero vector is a generalized eigenvector of roder zero?
 
 % https://en.wikipedia.org/wiki/Generalized_eigenvector
 
 % Maybe don't give the matrix a name but write it out. May result in less text overall. Why N? Karpfinger uses it - but this is not a good reason. What does this matrix represent? It shifts eigenvalues, I think? Figure out!
+
+% https://en.wikipedia.org/wiki/Modal_matrix
+% https://en.wikipedia.org/wiki/Modal_matrix#Generalized_modal_matrix
 
 \paragraph{Invariant Subspaces}
 

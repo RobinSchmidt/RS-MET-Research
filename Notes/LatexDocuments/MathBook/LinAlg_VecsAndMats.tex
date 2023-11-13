@@ -436,13 +436,15 @@ Matrices whose entries are themselves also matrices (and not numbers as usual) a
 \mathbf{D} & \mathbf{E} & \mathbf{F} 
 \end{pmatrix}
 \end{equation}
-The constituent matrices may or may not be of equal shape, but the shapes must be related in such a way that the tiling fits together [VERIFY]. For example, we could have $\mathbf{A} = 2 \times 4$,  $\mathbf{B} = 2 \times 2$, $\mathbf{C} = 2 \times 3$, $\mathbf{D} = 3 \times 4$, $\mathbf{E} = 3 \times 2$, $\mathbf{F} = 3 \times 3$. However, when we want to add or multiply two block matrices, not only must the outer matrix shapes be compatible but also the shapes all the inner element-matrices. That may then actually constrain the shapes of the inner matrices some more. The constraints on the shapes really depend on what types of operations we want to perform with such block matrices. ...TBC...
+The constituent matrices may or may not be of equal shape, but the shapes must be related in such a way that the tiling fits together [VERIFY]. For example, we could have $\mathbf{A} = 2 \times 4$,  $\mathbf{B} = 2 \times 2$, $\mathbf{C} = 2 \times 3$, $\mathbf{D} = 3 \times 4$, $\mathbf{E} = 3 \times 2$, $\mathbf{F} = 3 \times 3$. However, when we want to add or multiply two block matrices, not only must the outer matrix shapes be compatible but also the shapes of all the inner element-matrices. That may then actually constrain the shapes of the inner matrices some more. The constraints on the shapes really depend on what types of operations we want to perform with such block matrices. ...TBC...
 
 % https://en.wikipedia.org/wiki/Block_matrix
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Vectorization of a Matrix}
-The vectorization of a matrix $\mathbf{A}$ is denoted by $\vectorize(\mathbf{A})$ is an operator that turns an $m \times n$ matrix into an $mn$-dimensional column vector by vertically stacking the columns of the matrix on top of each other. A row-wise vectorization can be obtained by $\vectorize(\mathbf{A}^T)$ so we don't define a special operator for that. 
+The vectorization of a matrix $\mathbf{A}$ is denoted by $\vectorize(\mathbf{A})$ and is an operator that turns an $m \times n$ matrix into an $mn$-dimensional column vector by vertically stacking the columns of the matrix on top of each other. A row-wise vectorization can be obtained by $\vectorize(\mathbf{A}^T)$ so we don't define a special operator for that. 
+
+% explain "reshape" functions for matrices in software and what role the memory layout plays (row major vs column major)
 
 %If we identify $k$-dimensional vectors with $k \times 1$ matrices, we may actually consider this as a special case of a reshaper operation
 

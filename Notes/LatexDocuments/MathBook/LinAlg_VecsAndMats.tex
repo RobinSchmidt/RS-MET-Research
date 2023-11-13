@@ -75,6 +75,8 @@ Algebraically, there is not much to say about vector addition - we just add the 
 \paragraph{Linear Combinations}
 A linear combination of a bunch of vectors is just a weighted sum of those vectors. That means each vector gets multiplied by a weight via our scalar multiplication and then these scaled vectors are added up via our vector addition. Vector subtraction is also just a special case of a linear combination of two vectors where one vector gets a weight of $+1$ and the other a weight of $-1$. 
 
+
+
 \paragraph{Inner Product aka Scalar Product}
 The \emph{inner product}, also known as the \emph{scalar product} between two vectors $\mathbf{v}$ and $\mathbf{w}$ is just a number. It is computed by taking all the component-wise products and summing them up. ...TBC...
 % explain geometric interpretation
@@ -215,9 +217,47 @@ A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$ is said 
 \begin{equation}
  a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_n \mathbf{v}_n = \mathbf{0}
 \end{equation}
-can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial solution for the $a_i$ exists [VERIFY]. Linear independence is an important condition for a set of vectors to have. In a sense, it means that all vectors are needed and none of them is redundant. If a set of vectors is linearly independent, it means that removing one of the vectors would necessarily reduce the dimension of their span by one.
+can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial solution for the $a_i$ exists [VERIFY]. Linear independence is an important condition for a set of vectors to have. In a sense, it means that all vectors are needed and none of them is redundant. 
+
+%If a set of vectors is linearly independent, it means that removing one of the vectors would necessarily reduce the \emph{dimension} of their span by one. 
+%\newline TODO: define the term "dimension" formally.
 
 % TODO: explain basis (ordered or not)
+
+\paragraph{Dimension}
+The sense in which none of the vectors is redundant in a linearly independent set of vectors is the following: If we would remove any of the vectors, the space spanned by the remaining set vectors would get reduced in dimension (by one). The \emph{dimension} of a space is the smallest number of vectors that is needed to span that space, i.e. to make any point in the space "reachable" via a linear combination of these vectors.
+
+\paragraph{Basis}
+A \emph{set} $\{\mathbf{v}_1, \ldots, \mathbf{v}_n \}$ of linearly independent vectors that spans a given space is called a \emph{basis} for that space. A \emph{tuple} $(\mathbf{v}_1, \ldots, \mathbf{v}_n)$ of such vectors is called an \emph{ordered basis}.
+
+TODO: Explain the standard basis
+
+
+\paragraph{Orthogonalization via Gram-Schmidt Algorithm}
+
+
+% TODO: explain how we could order a given basis:
+% Idea: 
+% -Compute for each vector in the basis the center of gravity / center of mass 
+% -To do this, use the absoulte values of the entries
+% -Order the basis vectors according to ascending center of gravity.
+% -The idea is that the ordered basis kind of "roughly resembles" the standard basis. If the algo
+%  gets the standard basis in shuffled order as input, it will return it in the correct order.
+% -What about a basis like (1,1), (1,-1)? the center of mass is the same for both (at "index" 0.5)
+%  Maybe in such a case, we should also consider angles: choose the vector that aligns best with
+%  the standard basis vector of that index. If more of them align best, choose the one with
+%  positive angle
+%
+% Try to find a way to canonicalize a basis B = b_1,..,_b_n. That process could involve (in that
+% order)
+% -Ordering of the vectors according to center of weight
+% -Tweaking the initial vector b_1 to align most closely with e_1 = (1,0,0,...) without leaving
+%  the span of b_1,...,b_n. That means: if e_1 is actually in the span of B, then the updated b_1
+%  will indeed become e_1 itself
+% -Gram-Schmidt orthogonalization of the remaining vectors b_k, k = 2,...,n
+%  -Maybe in each step, try to align the vector b_k as closely as possible with e_k
+% 
+
 
 %===================================================================================================
 \subsection{Matrix Features}

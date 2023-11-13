@@ -225,15 +225,19 @@ can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial 
 % TODO: explain basis (ordered or not)
 
 \paragraph{Dimension}
-The sense in which none of the vectors is redundant in a linearly independent set of vectors is the following: If we would remove any of the vectors, the space spanned by the remaining set vectors would get reduced in dimension (by one). The \emph{dimension} of a space is the smallest number of vectors that is needed to span that space, i.e. to make any point in the space "reachable" via a linear combination of these vectors.
+The sense in which none of the vectors is redundant in a linearly independent set of vectors is the following: If we would remove any of the vectors, the space spanned by the remaining set vectors would get reduced in dimension (by one). The \emph{dimension} of a space is the smallest number of vectors that is needed to span that space, i.e. to make any point in the space "reachable" via a linear combination of these basis vectors. Why do we make a big of this? Clearly, the dimension of $\mathbb{R}^n$ is just $n$ right? So why all the fuss about linearly independent vectors? The reason is in linear algebra, we also often deal with \emph{subspaces} of a given, higher dimensional embedding space. This embedding space could be $\mathbb{R}^n$ but we could consider a subspace of dimension $m < n$ that is spanned by a set of just $m$ vectors rather than $n$.
+
+%TODO: explain that the space can be a subspace of some embedding space
 
 \paragraph{Basis}
-A \emph{set} $\{\mathbf{v}_1, \ldots, \mathbf{v}_n \}$ of linearly independent vectors that spans a given space is called a \emph{basis} for that space. A \emph{tuple} $(\mathbf{v}_1, \ldots, \mathbf{v}_n)$ of such vectors is called an \emph{ordered basis}.
+A \emph{set} $\{\mathbf{b}_1, \ldots, \mathbf{b}_n \}$ of linearly independent vectors that spans a given space is called a \emph{basis} for that space. A \emph{tuple} $(\mathbf{b}_1, \ldots, \mathbf{b}_n)$ of such vectors is called an \emph{ordered basis}. The vectors $\mathbf{b}_i$ in such a basis (ordered or not) are called the \emph{basis vectors}.
 
 TODO: Explain the standard basis
 
+% https://en.wikipedia.org/wiki/Basis_(linear_algebra)
 
 \paragraph{Orthogonalization via Gram-Schmidt Algorithm}
+When we have a given an arbitrary ordered basis $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$, the basis vectors will be in general neither normalized to unit length nor orthogonal to one another. The process of \emph{Gram-Schmidt orthogonalization} may be used to derive another basis $C$ from $B$ that has these two (often desirable) features while spanning the same space as $B$. It's an algorithm that works as follows: ...TBC...
 
 
 % TODO: explain how we could order a given basis:

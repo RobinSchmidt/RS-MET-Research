@@ -278,7 +278,9 @@ which is called the characteristic equation. [the right one, I think]
 [VERIFY if implication is two-sided]. TODO: explain what this has to do with the determinant
 
 \paragraph{Eigenvalues and Characteristic Polynomial}
-If we expand the left hand side of the characteristic equation $\det ( \mathbf{A} - \lambda \mathbf{I} ) = 0$ according to the rules for how determinants are computed, it will turn out that we will get a polynomial in $\lambda$ of degree $n$. This polynomial is called the \emph{characteristic polynomial} of the matrix  $\mathbf{A}$. The right hand side says that this polynomial should be equal to zero for $\lambda$ to be an eigenvalue. Another way to say that is that an eigenvalue $\lambda$ is a root of the characteristic polynomial. ...TBC...
+If we expand the left hand side of the characteristic equation $\det ( \mathbf{A} - \lambda \mathbf{I} ) = 0$ according to the rules for how determinants are computed, it will turn out that we will get a polynomial in $\lambda$ of degree $n$. This polynomial is called the \emph{characteristic polynomial} of the matrix  $\mathbf{A}$. The right hand side says that this polynomial should be equal to zero for $\lambda$ to be an eigenvalue. Another way to say that is that an eigenvalue $\lambda$ is a root of the characteristic polynomial. We know that roots of polynomials may have a multiplicity, i.e. in the product form of the polynomial, the linear factor that corresponds to the root may occur multiple times. The multiplicity of the eigenvalue as the root of the characteristic polynomial is called the \emph{algebraic multiplicity} of the eigenvalue and denoted by $\alg(\lambda)$.
+
+...TBC...
 
 % Algebraic multiplicity, geometric multiplicity
 % left and right eigenvectors
@@ -288,13 +290,15 @@ If we expand the left hand side of the characteristic equation $\det ( \mathbf{A
 %\paragraph{Eigenvalues}
 
 \paragraph{Eigenvectors}
-If we have an eigenvalue $\lambda$, we may also want to know the corresponding eigenvector(s). Multiple eigenvectors that correspond to a single eigenvalue may only exist when the algebraic multiplicity is greater than 1. The number of eigenvectors that correspond to a given eigenvalue is called the \emph{geometric multiplicity} of the eigenvalue and denoted by $geo(\lambda)$ and that geometric multiplicity is always at most equal to the algebraic multiplicity: $geo(\lambda) \leq alg(\lambda)$.
+If we have an eigenvalue $\lambda$, we may also want to know the corresponding eigenvector(s). Multiple eigenvectors that correspond to a single eigenvalue may only exist when the algebraic multiplicity is greater than 1. The number of eigenvectors that correspond to a given eigenvalue is called the \emph{geometric multiplicity} of the eigenvalue and denoted by $\geo(\lambda)$ and that geometric multiplicity is always at most equal to the algebraic multiplicity: $\geo(\lambda) \leq \alg(\lambda)$. But it can be less than that. In such a case, the eigenvalue is called a \emph{defective eigenvalue}. A matrix that has defective eigenvalues is called a \emph{defective matrix} [VERIFY!]
+
+...TBC...
 
 % If the algebraic multiplicity of $\lambda$ is $1$, then there can be only one such eigen
 
 % Multiple eigenvectors can only exist when the algebraic multiplicity is gretaer than 1
 
-\paragraph{Generalized Eigenvectors} We established that an eigenvector $\mathbf{v}$ with eigenvalue $\lambda$ is a vector with the property $\mathbf{A v} = \lambda \mathbf{v}$. That equation can be rewritten as $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$. A \emph{generalized eigenvector} with \emph{rank} $r$ is a vector $\mathbf{v}$ that satisfies $(\mathbf{A} - \lambda \mathbf{I})^r \mathbf{v} = \mathbf{0}$. The rank $r \geq 1$ is a natural number and it is understood to be the smallest possible number for which that equation is satisfied, i.e. we also require  $(\mathbf{A} - \lambda \mathbf{I})^{r-1} \mathbf{v} \neq \mathbf{0}$. For $r = 1$, the generalized equation reduces to the defining equation of our plain old ordinary eigenvectors. Generalized eigenvectors become important when the geometric multiplicity of an eigenvalue $\lambda$ is less than its algebraic multiplicity.  In such a case, the eigenvalue is called a defective eigenvalue. ...TBC...
+\paragraph{Generalized Eigenvectors} We established that an eigenvector $\mathbf{v}$ with eigenvalue $\lambda$ is a vector with the property $\mathbf{A v} = \lambda \mathbf{v}$. That equation can be rewritten as $(\mathbf{A} - \lambda \mathbf{I}) \mathbf{v} = \mathbf{0}$. A \emph{generalized eigenvector} with \emph{rank} $r$ is a vector $\mathbf{v}$ that satisfies $(\mathbf{A} - \lambda \mathbf{I})^r \mathbf{v} = \mathbf{0}$. The rank $r \geq 1$ is a natural number and it is understood to be the smallest possible number for which that equation is satisfied, i.e. we also require  $(\mathbf{A} - \lambda \mathbf{I})^{r-1} \mathbf{v} \neq \mathbf{0}$. For $r = 1$, the generalized equation reduces to the defining equation of our plain old ordinary eigenvectors. Generalized eigenvectors become important when the geometric multiplicity of an eigenvalue $\lambda$ is less than its algebraic multiplicity, i.e. when we are dealing with defective eigenvalues.   ...TBC...
 
 
 %Let's give the matrix in this equation a name: $\mathbf{N} = \mathbf{A} - \lambda \mathbf{I}$ so we can write more simply: $\mathbf{N v} = \mathbf{0}$ for the eigenvector equation. Now a \emph{generalized eigenvector} is a vector $\mathbf{v}$ with the property  $\mathbf{N}^r \mathbf{v} = \mathbf{0}$ for some natural number $r \geq 1$ which is called the \emph{rank} of the generalized eigenvector. For $k=1$, this equation reduces to the defining equation of our plain old eigenvectors. ...TBC...

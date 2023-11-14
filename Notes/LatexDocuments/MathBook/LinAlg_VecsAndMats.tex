@@ -205,11 +205,11 @@ The norm of a vector captures its length. The most common norm is the Euclidean 
 
 
 \paragraph{Span of a Set of Vectors}
-As the span of a set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$, we define the set of all vectors that can be formed by arbitrary linear combinations of those vectors, i.e. the set of all vectors that can be written as:
+As the \emph{span} of a set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$, we define the set of all vectors that can be formed by arbitrary linear combinations of those vectors, i.e. the set of all vectors that can be written as:
 \begin{equation}
  a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_n \mathbf{v}_n 
 \end{equation}
-for some set of scalar coefficients $a_1, \ldots, a_n$.
+for some set of scalar coefficients $a_1, \ldots, a_n$. The span of a set of vectors is itself a vector space: We can add two vectors from that space to get another vector which is again in the same space. And we can also scale the vectors from that space without leaving the space. We also say that our vectors span the space - where "span" is being used as a verb. The span (noun) of a set of vectors is the space that is spanned (verb) by these vectors. I know that this sounds silly and self referential. Often, the span of a set of vectors is a subspace of some larger embedding space. For example, in $3D$ space, a set of two vectors could span a $2D$ subspace, i.e. a $2D$ plane that is embedded in $3D$ space.
 
 
 \paragraph{Linear Independence}
@@ -220,7 +220,9 @@ A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$ is said 
 can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial solution for the $a_i$ exists [VERIFY]. Linear independence is an important condition for a set of vectors to have. In a sense, it means that all vectors are needed and none of them is redundant. 
 
 \paragraph{Dimension}
-The sense in which none of the vectors is redundant in a linearly independent set of vectors is the following: If we would remove any of the vectors, the space spanned by the remaining set vectors would get reduced in dimension (by one). The \emph{dimension} of a space is the smallest number of vectors that is needed to span that space, i.e. to make any point in the space "reachable" via a linear combination of these basis vectors. Why do we make a big fuss of this? Clearly, the dimension of $\mathbb{R}^n$ is just $n$ right? So why all the fuss about linearly independent vectors? The reason is that in linear algebra, we also often deal with \emph{subspaces} of a given, higher dimensional embedding space. This embedding space could be $\mathbb{R}^n$ but we could consider a subspace of dimension $m < n$ that is spanned by a set of just $m$ vectors rather than $n$.
+The sense in which none of the vectors is redundant in a linearly independent set of vectors is the following: If we would remove any of the vectors, we would lose a degree of freedom to move around. The space spanned by the remaining set of vectors would get reduced in dimension (by one). The \emph{dimension} of a space is the smallest number of vectors that is needed to span that space, i.e. to make any point in the space "reachable" via a linear combination of these basis vectors. Why do we make a big fuss of this? Clearly, the dimension of $\mathbb{R}^n$ is just $n$ right? So why all the fuss about linearly independent vectors? The reason is that in linear algebra, we also often deal with \emph{subspaces} of a given, higher dimensional embedding space. This embedding space could be $\mathbb{R}^n$ but we could consider a subspace of dimension $m < n$ that is spanned by a set of just $m$ vectors rather than $n$.
+
+% The dimension is the number of degrees of freedom or number of independent directions that we can move in
 
 \paragraph{Basis}
 A \emph{set} $\{\mathbf{b}_1, \ldots, \mathbf{b}_n \}$ of linearly independent vectors that spans a given space is called a \emph{basis} for that space. A \emph{tuple} $(\mathbf{b}_1, \ldots, \mathbf{b}_n)$ of such vectors is called an \emph{ordered basis}. The vectors $\mathbf{b}_i$ in such a basis (ordered or not) are called the \emph{basis vectors}. For example, the so called \emph{standard basis} (aka canonical basis or natural basis) for $\mathbb{R}^3$ is given by the 3 vectors $\mathbf{e}_1 = (1,0,0), \mathbf{e}_2 = (0,1,0), \mathbf{e}_3 = (0,0,1)$. It is a common convention to denote the $n$ vectors of the standard basis of $\mathbb{R}^n$ as $\mathbf{e}_i, i = 1,\ldots,n$. Specifically in $\mathbb{R}^3$, one may also encounter the notation $\mathbf{e}_x, \mathbf{e}_y, \mathbf{e}_z$ or $\hat{\mathbf{x}}, \hat{\mathbf{y}}, \hat{\mathbf{z}}$ or  $\mathbf{i}, \mathbf{j}, \mathbf{k}$. We'll stick to the general notation $\mathbf{e}_i$ here.

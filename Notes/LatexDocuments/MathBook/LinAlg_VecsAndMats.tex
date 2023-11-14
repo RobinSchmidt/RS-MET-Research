@@ -219,26 +219,16 @@ A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$ is said 
 \end{equation}
 can be satisfied only if all the $a_i$ are equal to zero, i.e. only the trivial solution for the $a_i$ exists [VERIFY]. Linear independence is an important condition for a set of vectors to have. In a sense, it means that all vectors are needed and none of them is redundant. 
 
-%If a set of vectors is linearly independent, it means that removing one of the vectors would necessarily reduce the \emph{dimension} of their span by one. 
-%\newline TODO: define the term "dimension" formally.
-
-% TODO: explain basis (ordered or not)
-
 \paragraph{Dimension}
-The sense in which none of the vectors is redundant in a linearly independent set of vectors is the following: If we would remove any of the vectors, the space spanned by the remaining set vectors would get reduced in dimension (by one). The \emph{dimension} of a space is the smallest number of vectors that is needed to span that space, i.e. to make any point in the space "reachable" via a linear combination of these basis vectors. Why do we make a big of this? Clearly, the dimension of $\mathbb{R}^n$ is just $n$ right? So why all the fuss about linearly independent vectors? The reason is in linear algebra, we also often deal with \emph{subspaces} of a given, higher dimensional embedding space. This embedding space could be $\mathbb{R}^n$ but we could consider a subspace of dimension $m < n$ that is spanned by a set of just $m$ vectors rather than $n$.
-
-%TODO: explain that the space can be a subspace of some embedding space
+The sense in which none of the vectors is redundant in a linearly independent set of vectors is the following: If we would remove any of the vectors, the space spanned by the remaining set vectors would get reduced in dimension (by one). The \emph{dimension} of a space is the smallest number of vectors that is needed to span that space, i.e. to make any point in the space "reachable" via a linear combination of these basis vectors. Why do we make a big fuss of this? Clearly, the dimension of $\mathbb{R}^n$ is just $n$ right? So why all the fuss about linearly independent vectors? The reason is that in linear algebra, we also often deal with \emph{subspaces} of a given, higher dimensional embedding space. This embedding space could be $\mathbb{R}^n$ but we could consider a subspace of dimension $m < n$ that is spanned by a set of just $m$ vectors rather than $n$.
 
 \paragraph{Basis}
-A \emph{set} $\{\mathbf{b}_1, \ldots, \mathbf{b}_n \}$ of linearly independent vectors that spans a given space is called a \emph{basis} for that space. A \emph{tuple} $(\mathbf{b}_1, \ldots, \mathbf{b}_n)$ of such vectors is called an \emph{ordered basis}. The vectors $\mathbf{b}_i$ in such a basis (ordered or not) are called the \emph{basis vectors}.
-
-TODO: Explain the standard basis
+A \emph{set} $\{\mathbf{b}_1, \ldots, \mathbf{b}_n \}$ of linearly independent vectors that spans a given space is called a \emph{basis} for that space. A \emph{tuple} $(\mathbf{b}_1, \ldots, \mathbf{b}_n)$ of such vectors is called an \emph{ordered basis}. The vectors $\mathbf{b}_i$ in such a basis (ordered or not) are called the \emph{basis vectors}. For example, the so called standard basis for $\mathbb{R}^3$ is given by the 3 vectors $\mathbf{e}_1 = (1,0,0), \mathbf{e}_2 = (0,1,0), \mathbf{e}_3 = (0,0,1)$. It is a common convention to denote the $n$ vectors of the standard basis of $\mathbb{R}^n$ as $\mathbf{e}_i, i = 1,\ldots,n$.
 
 % https://en.wikipedia.org/wiki/Basis_(linear_algebra)
 
 \paragraph{Orthogonalization via Gram-Schmidt Algorithm}
-When we have a given an arbitrary ordered basis $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$, the basis vectors will be in general neither normalized to unit length nor orthogonal to one another. The process of \emph{Gram-Schmidt orthogonalization} may be used to derive another basis $C$ from $B$ that has these two (often desirable) features while spanning the same space as $B$. It's an algorithm that works as follows: ...TBC...
-
+When we have given an arbitrary ordered basis $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$, the basis vectors $\mathbf{b}_i$ will be in general neither normalized to unit length nor orthogonal to one another. The process of \emph{Gram-Schmidt orthogonalization} may be used to derive another basis $C$ from $B$ that has these two (often desirable) features while spanning the same space as $B$. It's an algorithm that works as follows: ...TBC...
 
 % TODO: explain how we could order a given basis:
 % Idea: 

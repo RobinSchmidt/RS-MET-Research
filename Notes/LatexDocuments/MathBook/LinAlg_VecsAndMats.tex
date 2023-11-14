@@ -253,7 +253,13 @@ When we have given an arbitrary ordered basis $B = (\mathbf{b}_1, \ldots, \mathb
 % -Gram-Schmidt orthogonalization of the remaining vectors b_k, k = 2,...,n
 %  -Maybe in each step, try to align the vector b_k as closely as possible with e_k
 % 
-
+% -Maybe find a basis that minimizes the distance to a given basis. Maybe if we write the basis as
+%  matrix (basis vectors go into the columns), we could definethe distance as Frobenius norm of the
+%  difference between our basis and the given basis.
+% -Maybe the given basis should be a suitable subset of the standard basis. Which subset is suitable
+%  could be figured out using the "center of gravity" approach. For each b_i, find it's center of
+%  gravity (it can be interpreted as a non-integer index in 1...n), round and pick e_n. But some 
+%  care must be taken if two cneter of gravities round to the same index like 2.6 and 3.4.
 
 %===================================================================================================
 \subsection{Matrix Features}

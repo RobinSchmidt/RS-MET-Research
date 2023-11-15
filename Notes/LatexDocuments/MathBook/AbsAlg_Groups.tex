@@ -631,7 +631,9 @@ Not all subgroups are created equal. There are certain special types of subgroup
 
 
 
-\paragraph{Normal Subgroups} A subgroup $H$ of a given group $G$ is called a \emph{normal subgroup} iff $g^{-1} H g = H$ for every $g \in G$. In words, this may be stated as: normal subgroups are invariant under conjugation. Another equivalent way to characterize normal subgroups is to say their left and right cosets coincide. The notation for normal subgroups is $H \triangleleft G$. A subgroup $H$ of some group $G$ may itself not be a normal subgroup of $G$ but it may contain smaller subgroups that are normal subgroups of $G$. The largest of those is called the \emph{normal core} of $H$. If $H$ is already a normal subgroup, then its normal core is $H$ itself, of course. [TODO: list more equivalent ways to characterize a normal subgroup - there are many - see wikipedia]
+\paragraph{Normal Subgroups} A subgroup $H$ of a given group $G$ is called a \emph{normal subgroup} iff $g^{-1} H g = H$ for every $g \in G$. In words, this may be stated as: normal subgroups are invariant under conjugation. Another equivalent way to characterize normal subgroups is to say their left and right cosets coincide. The notation for normal subgroups is $H \triangleleft G$. A subgroup $H$ of some group $G$ may itself not be a normal subgroup of $G$ but it may contain smaller subgroups that are normal subgroups of $G$. The largest of those is called the \emph{normal core} of $H$. If $H$ is already a normal subgroup, then its normal core is $H$ itself, of course. Normal subgroups are often denoted by the letter $N$ instead of $H$. We will occasionally use that notation here, too.
+
+[TODO: list more equivalent ways to characterize a normal subgroup - there are many - see wikipedia]
 
 
 % maybe mention p-cores
@@ -705,7 +707,7 @@ The \emph{center} of a group $G$ is the set of elements that commute with every 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Factoring Groups}
-We are now interested in how we can break down certain groups into smaller constituent groups. It will turn out that in the case of finite groups, this breakdown is somewhat analogous to breaking down natural numbers into their prime factorization in number theory. For this, we need a few more tools.
+We are now interested in how we can decompose certain groups into smaller constituent groups. It will turn out that in the case of finite groups, this decomposition is somewhat analogous to decomposing natural numbers into their prime factorization in number theory. To approach such a decomposition or factorization, we need a few more tools.
 
 % see ABoAA, pg 147 ff
 
@@ -713,9 +715,15 @@ We are now interested in how we can break down certain groups into smaller const
 Recall that the left coset for a given group element $g \in G$ with respect to a given subgroup $H \subset G$ is defined to be the set $g H = \{ g h : h \in H \}$. We now want to define a multiplication operation between such cosets, i.e. an operation between two cosets $a H$ and $b H$ where $a,b \in G$. The way we do it is to define $a H \cdot b H = a b \cdot H$, i.e. we trace this new \emph{coset multiplication} operation back to our known group multiplication applied to the representatives $a, b$ of our cosets $a H, b H$. For this definition to make sense, we must require that the result $ab \cdot H$ should always be the same coset, no matter which particular representatives we choose from $aH$ and $bH$. We should be able to also choose other representatives, say $c \in a H, d \in b H$ and get the same result, i.e. it must be the case that $a b H = c d H$ even if $a \neq c$ or $b \neq d$ as long as $a H = c H$ and $b H = d H$ which as a weaker condition than $a = c$ and $b = d$. Or stated in yet another way:  $ab$ must be in the same coset as $cd$ when $a$ is in the same coset as $c$ and $b$ is in the same coset as $d$. So - will this requirement always be satisfied? The answer is: Not in general but it will indeed work out if $H$ is a \emph{normal} subgroup of $G$. (TODO: figure out if this an "if and only if"). That is the most important feature of normal subgroups because it allows us to define the super important concept of...
 
 \paragraph{Quotient Groups}
-With the definition of coset multiplication at our disposal, we are now ready for introducing a very important idea in group theory: the notion of a so called \emph{quotient group}. We start with a given group $G$ and a normal subgroup $H$. Now we put all the left cosets of $H$ in $G$ into a set in its own right, i.e. we form a set of sets (namely: a set of these cosets). This set is given by $Q = \{ g H : g \in G \} =  \{ g h : g \in G, h \in H \}$. Of course, we could do the analoguous thing with the right cosets, too. This set of cosets $Q$ forms a group in its own right under the operation of coset multiplication. The group $Q$ is called a \emph{quotient group} or \emph{factor group} of $G$ and denoted as $G / H$. It has $H = e H$ as the identity element and the inverse of $g H$ is $g^{-1} H$ for any $g \in G$. This group $Q = G / H$ is, in general, not a subgroup of $G$ (if that happens, it's just by "coincidence").
+With the definition of coset multiplication at our disposal, we are now ready for introducing a very important idea in group theory: the notion of a so called \emph{quotient group}. We start with a given group $G$ and a normal subgroup $H$. Now we put all the left cosets of $H$ in $G$ into a set in its own right, i.e. we form a set of sets (namely: a set of these cosets). This set is given by $Q = \{ g H : g \in G \} =  \{ g h : g \in G, h \in H \}$. Of course, we could do the analoguous thing with the right cosets, too. This set of cosets $Q$ forms a group in its own right under the operation of coset multiplication. The group $Q$ is called a \emph{quotient group} or \emph{factor group} of $G$ and denoted as $G / H$. It has $H = e H$ as the identity element and the inverse of $g H$ is $g^{-1} H$ for any $g \in G$. This group $Q = G / H$ is, in general, not a subgroup of $G$ (if that happens, it's just by "coincidence"). Note that the groups $Q$ and $H$ have completely different roles here. It is not valid to just "solve" the equation for $H$ by writing $H = G / Q$ as we could do if $Q,G,H$ were numbers. With groups, that would be total nonsense. There are certain analogies between factoring natural numbers and factoring groups, but these analogies go only so far. 
 
-% Maybe ise $N$ to denote normal subgroups, $H$ for general subgroups and $Q$ for quotient groups
+...TBC...
+
+\medskip
+[TODO: Figure out if there are special cases where $Q = G / H \Leftrightarrow H = G / Q$ does indeed work out. Maybe when both $Q$ and $H$ are both (maximal) normal subgroups of $G$?]
+
+
+% Maybe use $N$ to denote normal subgroups, $H$ for general subgroups and $Q$ for quotient groups
 
 % I think, if we create a group as direct product like Z_2 x Z_2, then Z_2 occurs indeed in both roles: as normal subgroup and quotient group. In that case, a subgroup occurs as factor twice, i.e. the group is not square-free in analogy with number theory. But by that line of reasoning, actually G/H should always be another(!) subgroup of G
 
@@ -726,8 +734,11 @@ With the definition of coset multiplication at our disposal, we are now ready fo
 % In german, a normal subgroup is called "Normalteiler" which would transliterate to english as 
 % "normal divider" or "normal divisor". I think, that better captures the role ...TBC
 
+% Maybe use as notation: Q = P / D where Q: quotient, P: product, D: divisor. I think, "quotient"
+% is better than "factor" as term because "factor" may suggest that both factors play the same or
+% at least a similar role.
 
-...TBC...
+
 
 % Explain that G/H is a "homomorphic" image of G (ABoAA 149) and natural homomorphism f(g) = gH
 

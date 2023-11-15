@@ -502,7 +502,14 @@ That's why isomorphisms are so important in group theory. They are a tool to con
 % https://en.wikipedia.org/wiki/Automorphism
 % https://en.wikipedia.org/wiki/Automorphism_group
 
-TODO: talk about homomorphic images (see \cite{ABoAA} pg 136 ff), maybe say a bit more about automorphisms - they ae kinda important, too
+TODO: talk about homomorphic images (see \cite{ABoAA} pg 136 ff)
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Automorphisms}
+
+% The set of automorphisms on a group $G$ forms itself a group under the operation of composition. Welcome to the (first?) meta level of group theory!
+
+%maybe say a bit more about automorphisms - they ae kinda important, too
 
 
 
@@ -534,7 +541,7 @@ A \emph{short exact sequence} is characterized by just two maps $f$ and $g$ and 
  \quad
  1 \xrightarrow{} A \xrightarrow{f} B \xrightarrow{g} C \xrightarrow{} 1
 \end{equation}
-The more verbose notations just append the trivial group at both ends in different notations and the appended maps from/to the trivial group are necessarily are also trivial (there is nothing to choose for such a map). I will prefer the short notation here. In this context, a general exact sequence is sometimes also called a \emph{long exact} sequence. Such short exact sequences are important because the encapsulate a relationship of the middle group $B$ with the two outer groups $A,C$ which may let us think of $B$ being somehow built out of $A$ and $C$. We may also say that $B$ is an extension of $C$ by $A$. We will talk about \emph{group extensions} in more detail later.
+The more verbose notations just append the trivial group at both ends in different notations and the appended maps from/to the trivial group are necessarily are also trivial (there is nothing to choose for such a map). I will prefer the short notation here. In this context, a general exact sequence is sometimes also called a \emph{long exact sequence}. Such short exact sequences are important because they encapsulate a relationship of the middle group $B$ with the two outer groups $A,C$ which may let us think of $B$ being somehow built out of $A$ and $C$. We may also say that $B$ is an extension of $C$ by $A$. We will talk about \emph{group extensions} in more detail later.
 
 % https://mathworld.wolfram.com/ShortExactSequence.html
 % https://www.hiroleetanaka.com/pdfs/2014-fall-122-lecture-15-simple-groups-SES.pdf
@@ -748,12 +755,12 @@ We are now interested in how we can decompose certain groups into smaller consti
 Recall that the left coset for a given group element $g \in G$ with respect to a given subgroup $H \subset G$ is defined to be the set $g H = \{ g h : h \in H \}$. We now want to define a multiplication operation between such cosets, i.e. an operation between two cosets $a H$ and $b H$ where $a,b \in G$. The way we do it is to define $a H \cdot b H = a b \cdot H$, i.e. we trace this new \emph{coset multiplication} operation back to our known group multiplication applied to the representatives $a, b$ of our cosets $a H, b H$. For this definition to make sense, we must require that the result $ab \cdot H$ should always be the same coset, no matter which particular representatives we choose from $aH$ and $bH$. We should be able to also choose other representatives, say $c \in a H, d \in b H$ and get the same result, i.e. it must be the case that $a b H = c d H$ even if $a \neq c$ or $b \neq d$ as long as $a H = c H$ and $b H = d H$ which as a weaker condition than $a = c$ and $b = d$. Or stated in yet another way:  $ab$ must be in the same coset as $cd$ when $a$ is in the same coset as $c$ and $b$ is in the same coset as $d$. So - will this requirement always be satisfied? The answer is: Not in general but it will indeed work out if $H$ is a \emph{normal} subgroup of $G$. (TODO: figure out if this an "if and only if"). That is the most important feature of normal subgroups because it allows us to define the super important concept of...
 
 \paragraph{Quotient Groups}
-With the definition of coset multiplication at our disposal, we are now ready for introducing a very important idea in group theory: the notion of a so called \emph{quotient group}. We start with a given group $G$ and a normal subgroup $H$. Now we put all the left cosets of $H$ in $G$ into a set in its own right, i.e. we form a set of sets (namely: a set of these cosets). This set is given by $Q = \{ g H : g \in G \} =  \{ g h : g \in G, h \in H \}$. Of course, we could do the analoguous thing with the right cosets, too. This set of cosets $Q$ forms a group in its own right under the operation of coset multiplication. The group $Q$ is called a \emph{quotient group} or \emph{factor group} of $G$ and denoted as $G / H$. It has $H = e H$ as the identity element and the inverse of $g H$ is $g^{-1} H$ for any $g \in G$. This group $Q = G / H$ is, in general, not a subgroup of $G$ (if that happens, it's just by "coincidence"). Note that the groups $Q$ and $H$ have completely different roles here. It is not valid to just "solve" the equation for $H$ by writing $H = G / Q$ as we could do if $Q,G,H$ were numbers. With groups, that would be total nonsense. There are certain analogies between factoring natural numbers and factoring groups, but these analogies go only so far. 
+With the definition of coset multiplication at our disposal, we are now ready for introducing a very important idea in group theory: the notion of a so called \emph{quotient group}. We start with a given group $G$ and a normal subgroup $N$. Now we put all the left cosets of $N$ in $G$ into a set in its own right, i.e. we form a set of sets (namely: a set of these cosets). This set is given by $Q = \{ g N : g \in G \} =  \{ g n : g \in G, n \in N \}$. Of course, we could do the analoguous thing with the right cosets, too. This set of cosets $Q$ forms a group in its own right under the operation of coset multiplication. The group $Q$ is called a \emph{quotient group} or \emph{factor group} of $G$ and denoted as $G / N$. It has $N = e N$ as the identity element and the inverse of $g N$ is $g^{-1} N$ for any $g \in G$. This group $Q = G / N$ is, in general, not a subgroup of $G$ (if that happens, it's just by "coincidence"). Note that the groups $Q$ and $N$ have completely different roles here. It is not valid to just "solve" the equation for $N$ by writing $N = G / Q$ as we could do if $Q,G,N$ were numbers. With groups, that would be total nonsense. There are certain analogies between factoring natural numbers and factoring groups, but these analogies go only so far. 
 
 ...TBC...
 
 \medskip
-[TODO: Figure out if there are special cases where $Q = G / H \Leftrightarrow H = G / Q$ does indeed work out. Maybe when both $Q$ and $H$ are both (maximal) normal subgroups of $G$?]
+[TODO: Figure out if there are special cases where $Q = G / N \Leftrightarrow N = G / Q$ does indeed work out. Maybe when both $Q$ and $N$ are both (maximal) normal subgroups of $G$?]
 
 
 % Maybe use $N$ to denote normal subgroups, $H$ for general subgroups and $Q$ for quotient groups
@@ -798,7 +805,7 @@ With the definition of coset multiplication at our disposal, we are now ready fo
 %===================================================================================================
 
 \subsection{Group Extensions}
-Now that we have learned how to decompose a group into simpler constituent factors, the natural question is how to put them back together. The definition of the quotient group $Q = G / H$ seems to suggest that $G$ is in some way a "product group" of the groups $Q$ and $H$. We would expect to see something like: If $Q = G / H$ then $G = Q \cdot H$ and vice versa. That is kind of true, but it is quite a bit more complicated than that. In the case of numbers, we learn about multiplication first and then about division later as the corresponding inverse process. In this case, multiplication is fairly straightforward while division is much harder. Not so with groups. Here, a better analogy might be a clockwork - it's much easier to take it apart than putting it back together. The problem of composing groups from smaller constituent groups is called the \emph{group extension} problem. 
+Now that we have learned how to decompose a group into simpler constituent factors, the natural question is how to put them back together. The definition of the quotient group $Q = G / N$ seems to suggest that $G$ is in some way a "product group" of the groups $Q$ and $N$. We would expect to see something like: If $Q = G / N$ then $G = Q \cdot N$ and vice versa. That is kind of true, but it is quite a bit more complicated than that. In the case of numbers, we learn about multiplication first and then about division later as the corresponding inverse process. In this case, multiplication is fairly straightforward while division is much harder. Not so with groups. Here, a better analogy might be a clockwork - it's much easier to take it apart than putting it back together. The problem of composing groups from smaller constituent groups is called the \emph{group extension} problem. 
 
 % https://en.wikipedia.org/wiki/Group_extension
 % https://en.wikipedia.org/wiki/Exact_sequence#Short_exact_sequence
@@ -818,7 +825,7 @@ The first subproblem of the group extension problem is to define a suitable prod
 %Imagine we want to combine a $2$-element with a $5$ element group. We have a $2 \times 2$ and a $5 \times 5$ table given - with $4$ and $25$, together $29$ elements. From that, we want to build a $10 \times 10$ multiplication table, i.e. a table with $100$ elements.
 
 \paragraph{Direct Product}
-The most straightforward way to define a product between two groups $G$ and $H$ is to just form the set product of their underlying sets, i.e. the set of pairs $(g,h)$ where $g \in G, h \in H$, and use component-wise multiplication via the respective group operations of $G$ and $H$ to define the group operation on $G \times H$. The result is a new group which is called the \emph{direct product} of $G$ and $H$ and denoted by $G \times H$, i.e. by the same cross symbol that is used for the cartesian product of sets. The direct product is commutative in the sense that $G \times H$ is isomorphic to $H \times G$.
+The most straightforward way to define a product between two groups $G$ and $N$ is to just form the set product of their underlying sets, i.e. the set of pairs $(g,n)$ where $g \in G, n \in N$, and use component-wise multiplication via the respective group operations of $G$ and $N$ to define the group operation on $G \times N$. The result is a new group which is called the \emph{direct product} of $G$ and $N$ and denoted by $G \times N$, i.e. by the same cross symbol that is used for the cartesian product of sets. The direct product is commutative in the sense that $G \times N$ is isomorphic to $N \times G$.
 
 % ABoAA pg 42: Direct Product
 % https://en.wikipedia.org/wiki/Direct_product_of_groups
@@ -1221,5 +1228,8 @@ Micheal Penn on Dihedral groups
 -at 11:00 he gives the presentation aka generators and relations form
 -after that comes a nice way to simplify a complicated product of elements
 
+
+https://en.wikipedia.org/wiki/Homology_(mathematics)#Group_homology
+https://mathworld.wolfram.com/Homology.html
 
 \end{comment}

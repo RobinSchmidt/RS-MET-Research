@@ -412,7 +412,7 @@ Groups that can be specified by such a presentation can also be visualized by a 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Conjugacy Classes}
-Recall from the linear algebra section the definition of similarity between two matrices. Two matrices $\mathbf{A,B}$ are considered to be similar, denoted by $\mathbf{A} \sim \mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. In group theory there is the notion of \emph{conjugacy} which coincides with the notion of \emph{similarity} when we consider the group of all invertible matrices, i.e. the general linear group. But when we are dealing with a more restricted group of matrices or a group that has nothing to with matrices at all, then the notion of conjugacy becomes a bit more restricted. The equation is the same, though: two group elements $a,b$ are conjugate to one another, if the equation $b = s^{-1} a s$ holds for some $s$ that must also be an element of the group. It is that latter requirement of $s$ being inside the group that makes the notion of conjugacy more restrictive ...TBC...[ToDO: explain how groups can be generated from representatives of conjugacy classes]
+Recall from the linear algebra section the definition of similarity between two matrices. Two matrices $\mathbf{A,B}$ are considered to be similar, denoted by $\mathbf{A} \sim \mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. In group theory there is the notion of \emph{conjugacy} which coincides with the notion of \emph{similarity} when we consider the group of all invertible matrices, i.e. the general linear group. But when we are dealing with a more restricted group of matrices or a group that has nothing to with matrices at all, then the notion of conjugacy becomes a bit more restricted. The equation is the same, though: two group elements $a,b$ are conjugate to one another, if the equation $b = s^{-1} a s$ holds for some $s$ that must also be an element of the group. It is that latter requirement of $s$ being inside the group that makes the notion of conjugacy more restrictive ...TBC...[TODO: explain how groups can be generated from representatives of conjugacy classes]
 
 % https://www.youtube.com/watch?v=vYKdh5oQ4Zw&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=8
 % 7:40: conjugation can also be applied to a group G or subgroup H or subset A as whole using 
@@ -747,16 +747,33 @@ With the definition of coset multiplication at our disposal, we are now ready fo
 %===================================================================================================
 
 \subsection{Group Extensions}
-Now that we have learned how to decompose a group into simpler constituent factors, the natural question is how to put them back together. The definition of the quotient group $Q = G / H$ seems to suggest that $G$ is in some way a "product group" of the groups $Q$ and $H$. We would expect to see something like: If $Q = G / H$ then $G = Q \cdot H$ and vice versa. That is kind of true, but it is quite a bit more complicated than that. In the case of numbers, we learn about multiplication first and then about division as the corresponding inverse process. And in this case, multiplication is fairly straightforward while division is much harder. Not so with groups. Here a better analogy might be a clockwork - it's much easier to take it apart than putting it back together. The problem of composing groups from smaller constituent groups is called the group extension problem. For one thing, there is not one single "product" operation that you can apply to groups but many. Let's have a look at the most important ones.
+Now that we have learned how to decompose a group into simpler constituent factors, the natural question is how to put them back together. The definition of the quotient group $Q = G / H$ seems to suggest that $G$ is in some way a "product group" of the groups $Q$ and $H$. We would expect to see something like: If $Q = G / H$ then $G = Q \cdot H$ and vice versa. That is kind of true, but it is quite a bit more complicated than that. In the case of numbers, we learn about multiplication first and then about division as the corresponding inverse process. And in this case, multiplication is fairly straightforward while division is much harder. Not so with groups. Here a better analogy might be a clockwork - it's much easier to take it apart than putting it back together. The problem of composing groups from smaller constituent groups is called the \emph{group extension} problem. For one thing, there is not one single "product" operation that you can apply to groups but many. Let's have a look at the most important ones.
 
 % https://en.wikipedia.org/wiki/Group_extension
 % https://en.wikipedia.org/wiki/Exact_sequence#Short_exact_sequence
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Direct Product}
+The most straightforward way to define a product between two groups $G$ and $H$ is to just form the set product of their underlying sets (i.e. the set of pairs $(g,h), g \in G, h \in H$) and use component-wise multiplication. The result is a new group which is called the \emph{direct product} of $G$ and $H$ and denoted by $G \times H$, i.e. by the same cross symbol that is used for the cartesian product of sets. 
+
+% ABoAA pg 42: Direct Product
+% https://en.wikipedia.org/wiki/Direct_product_of_groups
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Semidirect Product}
+To understand the \emph{semidirect product} let's consider two example groups: the group of translations and the group of invertible linear transformations in the Euclidean plane. What we want to build as their "product" is the group of so called affine transformations in the plane. The group of translations is represented by vectors whose group operation is vector addition. The group of linear transformations is represented by matrices whose group operation is matrix multiplication. So, let's call the groups $V$ and $M$ respectively.
+
+%This is a group of geometric transformations that allows us to linearly transform a vector via a matrix
+
+% i.e. those transformations that can be composed from a linear transformation
+
+%in the plane - and it is not as simple as the direct product. When combining two affine transformations
+%We cannot just add the translation vectors
+
+% https://www.youtube.com/watch?v=n-YrdmlcNQ4
+% Ultimate Recipe to Construct Every Finite Group | Group Extensions and Computational Group Theory
+% at 24:00
+% it is another split extension and a generalization of the direct product
 
 % Subdirect product
 
@@ -772,9 +789,7 @@ Now that we have learned how to decompose a group into simpler constituent facto
 
 % https://en.wikipedia.org/wiki/Group_extension
 
-% https://www.youtube.com/watch?v=n-YrdmlcNQ4
-% Ultimate Recipe to Construct Every Finite Group | Group Extensions and Computational Group Theory
-% Is precisely about that.
+
 
 % The most relevant idea seems to be "composition series" and "composition factors"
 % https://en.wikipedia.org/wiki/Composition_series#For_groups
@@ -783,9 +798,7 @@ Now that we have learned how to decompose a group into simpler constituent facto
 % If $A \triangleleft G$ and $B \triangleleft H$ then 
 % (G \times H) / (A \times B) is isomorphic to (G/A) \times (H/B)
 
-% ABoAA pg 42: Direct Product
 
-% https://en.wikipedia.org/wiki/Direct_product_of_groups
 % https://en.wikipedia.org/wiki/Semidirect_product
 % https://en.wikipedia.org/wiki/Zappa%E2%80%93Sz%C3%A9p_product
 % https://en.wikipedia.org/wiki/Wreath_product

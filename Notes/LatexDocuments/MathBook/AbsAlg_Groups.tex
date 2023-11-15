@@ -810,17 +810,13 @@ Now that we have learned how to decompose a group into simpler constituent facto
 % https://en.wikipedia.org/wiki/Group_extension
 % https://en.wikipedia.org/wiki/Exact_sequence#Short_exact_sequence
 
-% maybe make a subsubsection Products of groups where the idividual products are paragraphs
-% another subsection could be Exact Sequences
-
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Products of Groups}
-The first subproblem of the group extension problem is to define a suitable product operation between groups. It will turn out
+The first subproblem of the group extension problem is to define a suitable product operation between groups. As we have seen, when we factor out a normal subgroup $N$ from a given group $G$, we get the two groups $N$ and $Q = G / N$ where $N$ is a normal subgroup of $G$ and the quotient group $Q$ is not necessarily a subgroup of $G$ let alone a normal one. When we have these two $N$ and $Q$ groups in hand, a natural question is how to "multiply" them back together to get our original $G$ back. All we know is how their elements behave with respect to multiplication within their group - but there's still a lot of leeway for how they might interact [VERIFY] in some, to be created product group. Think in terms of multiplication tables: Imagine, we decompose a 10 element group into a 5-element normal subgroup $N$ and a 2-element quotient group $Q$. These groups will have multiplication tables of sizes $5 \times 5$ and $2 \times 2$ respectively. Together, the two tables have $25 + 4 = 29$ elements whereas our original $10 \times 10$ table of $G$ had $100$ elements. Apparently, we have lost some information and that lost information cannot be uniquely retrieved from the multiplication tables of $N$ and $Q$. We must additionally specify, \emph{how} the two groups should be combined to from the larger group and there are multiple ways to do so. The only constraint that we have to satisfy is that the result must again be a valid group multiplication table. 
 
-%is that there is not one single "product" operation that you can apply to groups but many. Let's first have a look at the most important ones.
+%The way we do it in the direct product works and is the most obvious way to do it - but it is by no means the only one that is possible.
 
-% When we factor out a normal subgroup $H$ from $G$, we get the two groups $H$ and $Q = G / H$ where $H$ is a normal subgroup of $G$ and the quotient group $Q$ is not necessarily a subgroup of $G$. When we have these two groups in hand, all we know is how their elements behave with respect to multiplication within their group - but there's still a lot of leeway for how they might interact [VERIFY] in some, to be created product group. Think in terms of multiplication tables: Imagine, we decompose a 10 element group into a 5-element normal subgroup and a 2-element quotient group. These factorization results will have multiplication tables of sizes $5 \times 5$ and $2 \times 2$ respectively. Together, the two tables have $29$ elements whereas our original $10 \times 10$ table had $100$ elements. Apparently, we have lost some information and that lost information cannot be uniquely retrieved from the two factors alone. We must additionaly specify, \emph{how} the two groups should be combined to from the larger group. The only constraint that we have to satisfy is that the result must again be a valid group multiplication table. The way we do it in the direct product works and is the most obviuos way to do it - but it is by no means the only one that is possible.
-
+%It will turn out that there is not one single "product" operation that you can apply to groups but many. Let's first have a look at the most important ones.
 
 %Imagine we want to combine a $2$-element with a $5$ element group. We have a $2 \times 2$ and a $5 \times 5$ table given - with $4$ and $25$, together $29$ elements. From that, we want to build a $10 \times 10$ multiplication table, i.e. a table with $100$ elements.
 

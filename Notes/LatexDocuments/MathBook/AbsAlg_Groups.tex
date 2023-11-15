@@ -453,8 +453,9 @@ Recall from the linear algebra section the definition of similarity between two 
 
 % Maybe this should go before the subsection about subgroups because automorphisms are referenced there. But no - a theorem stated here requires the notion of a normal subgroup. We have a cross-referencing problem here
 
-Morphisms in group theory are functions $f$ that map from the underlying set of one group to the underlying set of another group. In group theory, you don't commonly encounter the term morphism all by itself. It's usually prefixed by some qualifier because we are mostly interested in functions that satisfy certain constraints. The most important specimen are \emph{isomorphisms} and \emph{homomorphisms}. There are also \emph{epimorphisms}, \emph{monomorphisms} and \emph{automorphisms}. Let's see what they are.
+Morphisms in group theory are functions $f$ that map from the underlying set of one group to the underlying set of another group. The morphisms that we encounter in group theory are usually prefixed by some qualifier because we are mostly interested in functions that satisfy certain constraints. The most important specimen are \emph{isomorphisms} and \emph{homomorphisms}. There are also \emph{epimorphisms}, \emph{monomorphisms} and \emph{automorphisms}. Let's see what they are.
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Homomorphisms}
 
 Assume we have a group $\mathcal{G} = (G, \circ)$ and another group $\mathcal{H} = (H, \diamond)$. Assume furthermore that we have a function $f: G \rightarrow H$ that maps elements from $G$ to elements from $H$. That function is called a group homomorphism from $G$ to $H$ if it has the following property for all $a,b \in G$:
@@ -475,9 +476,12 @@ Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and
 % Has another example: Z and Z_2 the homomorphism maps the evens to 0 and the odds to 1
 % also: (Z_4,+) and({1,i,-1,i},*)
 
-\paragraph{} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The \emph{kernel} of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ k \in G: f(k) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. Now we can say that: (1) The image of $G$ under $f$ is a subgroup of $H$. (2)  The kernel of $f$ is a normal subgroup of $G$.
+\paragraph{Kernel and Image} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The \emph{kernel} of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ g \in G: f(g) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. The \emph{image} of $f$ is the set of elements of $H$ that are actually reached by $f$: $\im(f) = \{ h \in H: (\exists g \in G: f(g) = h )\}$
 
-% Make this theorem look more important bcs it is (I think)
+\paragraph{Theorem} Let $f$ be a group homomorphism from $G$ to $H$. Then the following two facts are true: (1) The image of $G$ under $f$ is a subgroup of $H$. (2) The kernel of $f$ in $G$ is a normal subgroup of $G$.
+
+\medskip Subgroups (normal or not) will be defined below.
+[TODO: figure out if this theorem has a name]
 
 %https://mathworld.wolfram.com/GroupHomomorphism.html
 
@@ -486,6 +490,7 @@ Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and
 % kernel measures to which degree f fails to be 1-to-1. If the kernel only contains the identity,
 % then f is 1-to-1
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Isomorphisms}
 Isomorphisms are homomorphisms that satisfy some additional constraints. These are: (1) Different elements of $G$ must be mapped to different elements of $H$. That is: $f$ must be injective. (2) Every element of $H$ must be reached by $f$. That is: $f$ must be surjective. Taken together, these two additional requirements require $f$ to be bijective and therefore invertible. Therefore, an isomorphism is a homomorphism that works in both directions. That means: mapping from $G$ to $H$ preserves the structure of $G$ in $H$ and mapping back from $H$ to $G$ preserves the structure of $H$ in $G$. Again, an isomorphism between two given groups may or may not exist. If one does exist, we may say that the two groups are isomorphic which means: of equal form \footnote{The internet says that "iso" means "equal" whereas "homo" means "the same" - and there is supposed to be a subtle difference. But it actually says that the difference is such that "homo" should be the stronger form (identity) and "iso" the weaker form (equivalence) - but here it's clearly the other way around: an isomorphism is a stronger form of sameness than a homomorphism. I don't know what to make of that. It's a mess!}. If two groups are isomorphic, they are structurally the same. One is actually the other in disguise and vice versa in the sense that the elements of the underlying sets are just "renamed" with respect to one another via $f$. 
 That's why isomorphisms are so important in group theory. They are a tool to convince ourselves that two superficially very different mathematical setups are actually in some sense the same such that we can transfer knowlegde obtained in one domain to the other. Or even better: abstract out the commonalities explicitly, as we do in abstract algebra.
@@ -500,6 +505,29 @@ That's why isomorphisms are so important in group theory. They are a tool to con
 TODO: talk about homomorphic images (see \cite{ABoAA} pg 136 ff)
 
 
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Exact Sequences}
+An exact sequence is a sequence of groups $G_0, G_1, G_2, \ldots, G_n$ and morphisms $f_1, f_2, \ldots, f_n$ such that the image of one morphism equals the kernel of the next. Such an exact sequence is denoted as:
+\begin{equation}
+ G_0 \xrightarrow{f_1} G_1 
+     \xrightarrow{f_2} G_2 
+     \xrightarrow{f_3} G_3
+     \xrightarrow{f_4} 
+     \ldots
+     \xrightarrow{f_n} G_n  
+\end{equation}
+
+
+%An exact sequence is a sequence of morphisms between objects (for example, groups, rings, modules, and, more generally, objects of an abelian category) such that the image of one morphism equals the kernel of the next.
+
+% of groups and group homomorphisms
+
+% https://en.wikipedia.org/wiki/Exact_sequence
+
+
+%https://tex.stackexchange.com/questions/103988/rightarrow-with-text-above-it
 
 
 
@@ -757,7 +785,10 @@ With the definition of coset multiplication at our disposal, we are now ready fo
 
 % https://en.wikipedia.org/wiki/Coset
 
-% explain normal chains/sequences
+
+
+% https://en.wikipedia.org/wiki/Quotient_group
+% https://mathworld.wolfram.com/QuotientGroup.html
 
 %===================================================================================================
 
@@ -797,8 +828,6 @@ Let's now generalize and formalize this sort of behavior. We need some way to de
 
 % It is clear that the semidirect product is not commutative since the two factors clearly play different roles. The right factor acts on elements of the left factor whereas this is not the case the other way around.
 
-% https://en.wikipedia.org/wiki/Semidirect_product
-% https://en.wikipedia.org/wiki/Splitting_lemma
 
 
 % inner and outer: I think, for an outer semidirect product, the two groups are arbitrary whereas 
@@ -812,13 +841,21 @@ Let's now generalize and formalize this sort of behavior. We need some way to de
 % at 24:00
 % it is another split extension and a generalization of the direct product
 
-% Subdirect product
+% https://en.wikipedia.org/wiki/Zappa%E2%80%93Sz%C3%A9p_product
+% https://en.wikipedia.org/wiki/Wreath_product
+% https://en.wikipedia.org/wiki/Free_product
+% https://en.wikipedia.org/wiki/Goursat%27s_lemma
+% https://en.wikipedia.org/wiki/Subdirect_product
+% https://en.wikipedia.org/wiki/Direct_product_of_groups
+% https://en.wikipedia.org/wiki/Semidirect_product
+% https://en.wikipedia.org/wiki/Splitting_lemma
 
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Composition Series}
 
+% explain normal chains/sequences
 
-%..well...it seems to be more complicated...
-%...TBC...TODO: explain direct and semidirect products and maybe other products, explain how this relates to the idea of quotient groups (this seems to be quite a bit more complicated than one might naively expect)
 
 % The most relevant idea seems to be "composition series" and "composition factors"
 % https://en.wikipedia.org/wiki/Composition_series#For_groups
@@ -827,12 +864,6 @@ Let's now generalize and formalize this sort of behavior. We need some way to de
 % If $A \triangleleft G$ and $B \triangleleft H$ then 
 % (G \times H) / (A \times B) is isomorphic to (G/A) \times (H/B)
 
-
-% https://en.wikipedia.org/wiki/Zappa%E2%80%93Sz%C3%A9p_product
-% https://en.wikipedia.org/wiki/Wreath_product
-% https://en.wikipedia.org/wiki/Free_product
-% https://en.wikipedia.org/wiki/Goursat%27s_lemma
-% https://en.wikipedia.org/wiki/Subdirect_product
 
 % https://math.stackexchange.com/questions/2723737/quotient-of-product-of-groups
 
@@ -853,7 +884,7 @@ Let's now generalize and formalize this sort of behavior. We need some way to de
 % https://www.youtube.com/watch?v=rXLz8TdckWo&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=21
 % Not all non-simple finite groups can be made via the direct product. It's more complicated.
 
-\paragraph{Composition Series}
+%\paragraph{Composition Series}
 % A kind of prime factorization of the group
 
 % https://www.youtube.com/watch?v=jhVMBXl5jTA&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=22
@@ -861,15 +892,13 @@ Let's now generalize and formalize this sort of behavior. We need some way to de
 % How does the "construction" of non-simple finite groups work? Is it based on the cartesian product of the underlying sets where the individual group operations are applied element-wise? add a segment under the "Subgroups" section, mabye name it "Group Factorization" - look up, how it's called and how it's done
 
 % Maybe relevant:
-% https://en.wikipedia.org/wiki/Quotient_group
-% https://mathworld.wolfram.com/QuotientGroup.html
+
 % https://en.wikipedia.org/wiki/Group_extension
 % https://feog.github.io/lecture9ws.pdf
 % https://www.math3ma.com/blog/whats-a-quotient-group-really-part-1
 % https://math.stackexchange.com/questions/625433/what-does-factorization-of-a-group-mean
 % https://en.wikipedia.org/wiki/Algebraic-group_factorisation_algorithm
-% https://en.wikipedia.org/wiki/Direct_product_of_groups
-% https://en.wikipedia.org/wiki/Semidirect_product
+
 % https://www.youtube.com/watch?v=KufsL2VgELo at 25:40
 % https://en.wikipedia.org/wiki/Composition_series#For_groups
 % https://en.wikipedia.org/wiki/Subgroup_series#Normal_series.2C_subnormal_series

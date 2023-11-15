@@ -509,7 +509,7 @@ TODO: talk about homomorphic images (see \cite{ABoAA} pg 136 ff)
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Exact Sequences}
-An \emph{exact sequence} is a sequence of groups $G_0, G_1, G_2, \ldots, G_n$ and morphisms $f_1, f_2, \ldots, f_n$ such that the image of one morphism equals the kernel of the next. Such an exact sequence is denoted as:
+An \emph{exact sequence} is a sequence of groups $G_0, G_1, G_2, \ldots, G_n$ and morphisms (or maps) $f_1, f_2, \ldots, f_n$ such that the image of one map equals the kernel of the next. Such an exact sequence is denoted as:
 \begin{equation}
  G_0 \xrightarrow{f_1} G_1 
      \xrightarrow{f_2} G_2 
@@ -519,10 +519,30 @@ An \emph{exact sequence} is a sequence of groups $G_0, G_1, G_2, \ldots, G_n$ an
      \xrightarrow{f_n} G_n  
 %https://tex.stackexchange.com/questions/103988/rightarrow-with-text-above-it     
 \end{equation}
-The sequence is said to be \emph{exact at} some particular $G_i$, if $\im(f_i) = \ker(f_{i+1})$ and said to be \emph{exact} without the qualifier "at", if it is exact at all $G_i$ with $1 \leq i \leq n$.
+The sequence is said to be \emph{exact at} some particular $G_i$, if $\im(f_i) = \ker(f_{i+1})$ and said to be \emph{exact} without the qualifier "at", if it is exact at all $G_i$ with $1 \leq i \leq n$. It is also possible that such an exact sequence goes on forever, i.e. has infinite length rather than finite length $n$ [Q: can it also infinitely continue to the left?]. 
+
+\paragraph{Short Exact Sequences}
+A short exact sequence is characterized by just two maps $f$ and $g$ and three groups $A,B,C$ and can be written down in various more or less verbose ways, namely as:
+\begin{equation}
+ A \xrightarrow{f} B \xrightarrow{g} C,
+ \quad 
+ \{e\} \xrightarrow{} A \xrightarrow{f} B \xrightarrow{g} C \xrightarrow{} \{e\},
+ \quad 
+ 0 \xrightarrow{} A \xrightarrow{f} B \xrightarrow{g} C \xrightarrow{} 0,
+ \quad
+ 1 \xrightarrow{} A \xrightarrow{f} B \xrightarrow{g} C \xrightarrow{} 1
+\end{equation}
+
+
 
 % https://en.wikipedia.org/wiki/Exact_sequence
 % https://en.wikipedia.org/wiki/Split_exact_sequence
+
+% https://mathworld.wolfram.com/ShortExactSequence.html
+
+% https://en.wikipedia.org/wiki/Splitting_lemma
+
+% https://www.hiroleetanaka.com/pdfs/2014-fall-122-lecture-15-simple-groups-SES.pdf
 
 
 

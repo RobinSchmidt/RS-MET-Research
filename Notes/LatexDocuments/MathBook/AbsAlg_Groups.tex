@@ -764,14 +764,19 @@ The most straightforward way to define a product between two groups $G$ and $H$ 
 To understand the \emph{semidirect product} let's consider two example groups: the group of translations and the group of invertible linear transformations in the Euclidean plane. What we want to build as their "product" is the group of so called "affine transformations" in the plane. The group of translations is represented by vectors whose group operation is vector addition. The group of linear transformations is represented by matrices whose group operation is matrix multiplication. So, let's call the groups $V$ and $M$ respectively. When we chain one affine transformation after another, the result will again be an affine transformation - the affine transformations do indeed form a group which is somehow made from translations and linear transformations. With regard to the underlying sets, the semidirect product does the same thing as the direct product - it's just the set of tuples, i.e. our product group elements look like $(\mathbf{a},\mathbf{A})$ where $\mathbf{a} \in V, \mathbf{A} \in M$. For the group operation, we want to combine two such tuples, say  $(\mathbf{a},\mathbf{A})$ and $(\mathbf{b},\mathbf{B})$. To this end, the answer is not $(\mathbf{a + b},\mathbf{A B})$. That would be wrong. It is not what would result when performing the two given affine transformations one after the other. You can easily convince yourself that the correct result is $(\mathbf{a + A b},\mathbf{A B})$ by applying two affine transforms to a vector. Note that $(\mathbf{b},\mathbf{B})$ comes first, then $(\mathbf{a},\mathbf{A})$ because function composition is read from right to left, as usual. You will see that due to the distributivity of multiplication over addition, the matrix $\mathbf{A}$ from the second trafo will also affect the translation vector $\mathbf{b}$ from the first trafo. 
 
 \medskip
-Let's now generalize and formalize this sort of behavior. We need some way to define, how an element from our right factor group (the matrix group $M$) may "act on" an element of the left factor group (the vector group $V$). In our example, that was, of course, the well known matrix-vector product. In general, we define a family of functions $\varphi$, one function for each member of the right factor (for each matrix), that takes as input a member of the left group (a vector) and spits out another such member (another vector). ...TBC...
+Let's now generalize and formalize this sort of behavior. We need some way to define, how an element from our right factor group (the matrix group $M$) may "act on" an element of the left factor group (the vector group $V$). In our example, that was, of course, the well known matrix-vector product. In general, we define a family of functions $\varphi$, one function for each member of the right factor (for each matrix), that takes as input a member of the left group (a vector) and spits out another such member (another vector). 
+
+...TBC...
 
 % https://en.wikipedia.org/wiki/Semidirect_product
-
+% https://en.wikipedia.org/wiki/Splitting_lemma
 
 
 % inner and outer: I think, for an outer semidirect product, the two groups are arbitrary whereas 
-% for and inner, they are both subgroups (one of them normal)?
+% for and inner, they are both subgroups (one of them normal)? And the function phi is defined in a % particular way via conjugation?
+
+% The left group must be the normal subgroup, the right group is a general subgroup
+% N * H and the function phi must be from the group of automorphisms on N
 
 % https://www.youtube.com/watch?v=n-YrdmlcNQ4
 % Ultimate Recipe to Construct Every Finite Group | Group Extensions and Computational Group Theory

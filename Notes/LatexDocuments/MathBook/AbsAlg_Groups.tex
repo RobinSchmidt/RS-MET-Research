@@ -752,9 +752,12 @@ Now that we have learned how to decompose a group into simpler constituent facto
 % https://en.wikipedia.org/wiki/Group_extension
 % https://en.wikipedia.org/wiki/Exact_sequence#Short_exact_sequence
 
+% maybe make a subsubsection Products of groups where the idividual products are paragraphs
+% another subsection could be Exact Sequences
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Direct Product}
-The most straightforward way to define a product between two groups $G$ and $H$ is to just form the set product of their underlying sets, i.e. the set of pairs $(g,h)$ where $g \in G, h \in H$, and use component-wise multiplication via the respective group operations of $G$ and $H$ to define the group operation on $G \times H$. The result is a new group which is called the \emph{direct product} of $G$ and $H$ and denoted by $G \times H$, i.e. by the same cross symbol that is used for the cartesian product of sets. 
+The most straightforward way to define a product between two groups $G$ and $H$ is to just form the set product of their underlying sets, i.e. the set of pairs $(g,h)$ where $g \in G, h \in H$, and use component-wise multiplication via the respective group operations of $G$ and $H$ to define the group operation on $G \times H$. The result is a new group which is called the \emph{direct product} of $G$ and $H$ and denoted by $G \times H$, i.e. by the same cross symbol that is used for the cartesian product of sets. The direct product is commutative in the sense that $G \times H$ is isomorphic to $H \times G$.
 
 % ABoAA pg 42: Direct Product
 % https://en.wikipedia.org/wiki/Direct_product_of_groups
@@ -767,6 +770,8 @@ To understand the \emph{semidirect product} let's consider two example groups: t
 Let's now generalize and formalize this sort of behavior. We need some way to define, how an element from our right factor group (the matrix group $M$) may "act on" an element of the left factor group (the vector group $V$). In our example, that was, of course, the well known matrix-vector product. In general, we define a family of functions $\varphi$, one function for each member of the right factor (for each matrix), that takes as input a member of the left group (a vector) and spits out another such member (another vector). 
 
 ...TBC...
+
+% It is clear that the semidirect product is not commutative since the two factors clearly play different roles. The right factor acts on elements of the left factor whereas this is not the case the other way around.
 
 % https://en.wikipedia.org/wiki/Semidirect_product
 % https://en.wikipedia.org/wiki/Splitting_lemma

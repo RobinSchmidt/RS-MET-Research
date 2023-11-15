@@ -761,11 +761,16 @@ The most straightforward way to define a product between two groups $G$ and $H$ 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Semidirect Product}
-To understand the \emph{semidirect product} let's consider two example groups: the group of translations and the group of invertible linear transformations in the Euclidean plane. What we want to build as their "product" is the group of so called affine transformations in the plane. The group of translations is represented by vectors whose group operation is vector addition. The group of linear transformations is represented by matrices whose group operation is matrix multiplication. So, let's call the groups $V$ and $M$ respectively.
+To understand the \emph{semidirect product} let's consider two example groups: the group of translations and the group of invertible linear transformations in the Euclidean plane. What we want to build as their "product" is the group of so called "affine transformations" in the plane. The group of translations is represented by vectors whose group operation is vector addition. The group of linear transformations is represented by matrices whose group operation is matrix multiplication. So, let's call the groups $V$ and $M$ respectively. When we chain one affine transformation after another, the result will again be an affine transformation - the affine transformations do indeed form a group which is somehow made from translations and linear transformation. With regard to the underlying sets, the semidirect product does the same thing as the direct product - it's just the set of tuples, i.e. our product group elements look like $(\mathbf{a},\mathbf{A})$ where $\mathbf{a} \in V, \mathbf{A} \in M$. For the group operation, we want to combine two such tuples, say  $(\mathbf{a},\mathbf{A})$ and $(\mathbf{b},\mathbf{B})$. To this end, the answer is not $(\mathbf{a+b},\mathbf{AB})$. That would be wrong. It is not what would result when performing the two given affine transformations one after the other.
+
+%With regard to the group operation, however, it is not enough to just separately multiply the two matrices and add the two vectors to find the composed transformation from two given ones. ...TBC...
 
 %This is a group of geometric transformations that allows us to linearly transform a vector via a matrix
 
 % i.e. those transformations that can be composed from a linear transformation
+
+% inner and outer: I think, for an outer semidirect product, the two groups are arbitrary whereas 
+% for and inner, they are both subgroups (one of them normal)?
 
 %in the plane - and it is not as simple as the direct product. When combining two affine transformations
 %We cannot just add the translation vectors

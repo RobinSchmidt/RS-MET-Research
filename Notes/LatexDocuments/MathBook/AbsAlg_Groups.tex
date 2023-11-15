@@ -86,7 +86,23 @@ I hope you will agree that these are quite a lot of potentially useful facts. Es
 One will often hear the statement that groups are an abstraction of \emph{symmetry}. A symmetry is, by definition, some transformation of an object that leaves some property of interest unchanged. Consider a square. We may rotate it by any integer multiple of 90 degrees around its center (including zero and negatives) and we may also reflect it horizontally, vertically or diagonally - all without changing its shape. In this setting, the rotations and reflections would be thought of as being the members of our group and the group operation would be to compose these transformations. It may be verified that our four rules do indeed hold true for this set of transformations, so it is indeed a group. When we say that these transformations act on the square, it may be not entirely clear, how we would "implement" such an action. We could imagine the square to live in 2D Euclidean space centered at the origin. Then, a square could be represented by 4 coordinate vectors for its 4 vertices, e.g. $(1,1),(-1,1),(-1,-1),(1,-1)$. In this setup, we would represent the transformations as matrices that can act on these vectors. This is the sort of stuff that we do in analytic geometry. Instead of thinking about the transformations as acting on vertices, we could also imagine it to act on the 2D space as whole. We should also specify what we mean by saying "the shape stays the same". In geometry, shapes of polygons are captured by the mutual distances between all the vertices. If an object is represented by a set of vertices and we apply a transformation to each vertex and after that transformation, the distances between all the vertices are the same as before, then the shape and size of the object has not changed. That's how we can verify that our transformation is indeed a symmetry for the given polygon. To recap: in this case, the group members are certain geometric transformations (reflections and rotations), the object on which the group acts is a square and the invariant property is the shape (captured in the mutual distances).
 % It should perhaps be explained that by applying the transformation to the vertices, we apply it only to the coordinates by we somehow keeop our indexing of the vertices fixed. I mean, *any* Euclidean transformation would be a symmetry to *any* polygon if we do not somehow fix the vertices. I mean it in the sense that, if initially we have A=(1,1)=top-right, B=(-1,1)=top-left, C=(-1,-1)=bottom-left, D=(1,-1)=bottom-right, then after the horizontal flip we have A in the top-left, etc. if we also "reflect the labels" along with the cooridinates. But, I think, to verify that the shape is the same, we need to consider the invariance of the distances between the new coordinateas but without reflecting the labels...don't know how to express this in a way that makes sense - think about it! ...I think, we must permute only the cooridnates but not the labels/indices. ..or well...no - the idea of "reflecting the labels" makes not sense anyway.
 
-%\subsubsection{The Group Action} I have informally used phrases like "the group element acts on" some object. This notion of "acting on" can be formalized as follows ...TBC... [TODO: maybe make it a section, include orbit-stabilizer theorem]
+\medskip
+I find the statement "groups are an abstraction of symmetry" a bit confusing because it seems to be unnecessarily restrictive and complicated. The restriction is to view the group elements as transformations. We didn't say anything about such an interpretation in our axioms. Previously, they were just some arbitrary set elements. The complication is that we needed to introduce an auxiliary set, namely the set of \emph{objects} that the transformations \emph{act on}. We didn't say anything about such "objects" in our axioms. So, our definition of a group as a set together with an operation that satisfies certain rules, is both simpler and more general than the view as "abstraction of symmetry". The downside of being more general is that it is also more abstract. Anyway, let's see if we can interpret the group $(\mathbb{Z},+)$ within that mental image of symmetries. We want to interpret elements of $\mathbb{Z}$ as transformations that act on some object or set of objects. The elements of $\mathbb{Z}$ are integer numbers. They could act on other numbers by shifting (aka translating) them. We could also imagine them to act on the whole number line all at once. The number 5 shifts the number line to the right by five units, the number $-2$ shifts it to the left by two units. When we combine $5$ and $-2$ by our group operation (which is addition in this case), we obtain $3$ which represents a shift of the number line by $3$ units to the right. For a transformation to be a symmetry, we also need to specify the property that remains invariant under the transformation. In this case, this invariant property is the distance between pairs of numbers. When we imagine the shift transformation not to act on the number line as a whole but on single numbers, then the set of group elements is actually the same as the set of objects on which the group elements act. It may be confusing here that the set of objects and the set of actions is actually the same set but interpreted in two different ways namely as positions (objects) and as translations (actions). The objects and the actions have different roles and do not need to come from the same set in general. The rotations and reflections (actions) on the one hand and the  vertices (objects) on the other hand from the square example are certainly different things. A (rotation or reflection) matrix has a different data type than a vertex (i.e. a point or vector). It may also be confusing that the group operation, namely addition of numbers, seems to be the same operation as the group action - the shifting of the number line is also achieved by addition. That is also a coincidence in the case of the specific group $(\mathbb{Z},+)$. For the rotations and reflections of the square, the group operation would be composition (implemented as matrix multiplication) whereas the group action would be application (implemented as matrix-times-vector product). In some groups, we may identify the group members themselves with members of the set on which they act - objects and actions are kinda the same thing. 
+
+% ...but I think there is always some sort of homomorphism by which we can do such an identification of group members with members of the set that is acted on? Figure out! maybe mention it. Or maybe not - it may just add confusion to talk about things like homomorphisms at this stage.
+
+%In other groups, we can't do this.
+
+% or can we - see this video at 38:01
+% https://www.youtube.com/watch?v=UhE0t3SP6E8
+% We can identify group elements with bijective maps from the group to itself. What about the rotations. normally, they act on R^2. But we may also let them act on the rotations themselvse. Then we get a permutation group
+
+% Is it true that when we can identify objects with actions, we can also always identify the group operation with the group action? Stated another way: can we find a group where we can identify objects with actions but can't identify the group operation with the group action?
+
+% https://www.youtube.com/watch?v=mvmuCPvRoWQ
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Group Action} I have informally used phrases like "the group element acts on" some object. This notion of "acting on" can be formalized as follows ...TBC... [TODO:  include orbit-stabilizer theorem]
 
 % https://en.wikipedia.org/wiki/Group_action
 % https://mathworld.wolfram.com/GroupAction.html
@@ -110,24 +126,6 @@ One will often hear the statement that groups are an abstraction of \emph{symmet
 % -We use function application notation g(x) to denote the action of g on x. We interpret g as a
 %  function that is applied to x.
 % -x is an element of X where X is the set of objects on which G acts.
-
-\medskip
-I find the statement "groups are an abstraction of symmetry" a bit confusing because it seems to be unnecessarily restrictive and complicated. The restriction is to view the group elements as transformations. We didn't say anything about such an interpretation in our axioms. Previously, they were just some arbitrary set elements. The complication is that we needed to introduce an auxiliary set, namely the set of \emph{objects} that the transformations \emph{act on}. We didn't say anything about such "objects" in our axioms. So, our definition of a group as a set together with an operation that satisfies certain rules, is both simpler and more general than the view as "abstraction of symmetry". The downside of being more general is that it is also more abstract. Anyway, let's see if we can interpret the group $(\mathbb{Z},+)$ within that mental image of symmetries. We want to interpret elements of $\mathbb{Z}$ as transformations that act on some object or set of objects. The elements of $\mathbb{Z}$ are integer numbers. They could act on other numbers by shifting (aka translating) them. We could also imagine them to act on the whole number line all at once. The number 5 shifts the number line to the right by five units, the number $-2$ shifts it to the left by two units. When we combine $5$ and $-2$ by our group operation (which is addition in this case), we obtain $3$ which represents a shift of the number line by $3$ units to the right. For a transformation to be a symmetry, we also need to specify the property that remains invariant under the transformation. In this case, this invariant property is the distance between pairs of numbers. When we imagine the shift transformation not to act on the number line as a whole but on single numbers, then the set of group elements is actually the same as the set of objects on which the group elements act. It may be confusing here that the set of objects and the set of actions is actually the same set but interpreted in two different ways namely as positions (objects) and as translations (actions). The objects and the actions have different roles and do not need to come from the same set in general. The rotations and reflections (actions) on the one hand and the  vertices (objects) on the other hand from the square example are certainly different things. A (rotation or reflection) matrix has a different data type than a vertex (i.e. a point or vector). It may also be confusing that the group operation, namely addition of numbers, seems to be the same operation as the group action - the shifting of the number line is also achieved by addition. That is also a coincidence in the case of the specific group $(\mathbb{Z},+)$. For the rotations and reflections of the square, the group operation would be composition (implemented as matrix multiplication) whereas the group action would be application (implemented as matrix-times-vector product). In some groups, we may identify the group members themselves with members of the set on which they act - objects and actions are kinda the same thing. 
-
-% ...but I think there is always some sort of homomorphism by which we can do such an identification of group members with members of the set that is acted on? Figure out! maybe mention it. Or maybe not - it may just add confusion to talk about things like homomorphisms at this stage.
-
-%In other groups, we can't do this.
-
-% or can we - see this video at 38:01
-% https://www.youtube.com/watch?v=UhE0t3SP6E8
-% We can identify group elements with bijective maps from the group to itself. What about the rotations. normally, they act on R^2. But we may also let them act on the rotations themselvse. Then we get a permutation group
-
-% Is it true that when we can identify objects with actions, we can also always identify the group operation with the group action? Stated another way: can we find a group where we can identify objects with actions but can't identify the group operation with the group action?
-
-% https://www.youtube.com/watch?v=mvmuCPvRoWQ
-
-
-
 
 
 %===================================================================================================
@@ -412,11 +410,9 @@ Groups that can be specified by such a presentation can also be visualized by a 
 % These constraints... forces the graph to look symmetrical. 
 % the Cayley graph is highly dependent on the choice of generators.
 
-%===================================================================================================
-\subsection{Conjugacy Classes}
-Recall from the linear algebra section the definition of similarity between two matrices. Two matrices $\mathbf{A,B}$ are considered to be similar, denoted by $\mathbf{A} \sim \mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. In group theory there is the notion of \emph{conjugacy} which coincides with the notion of \emph{similarity} when we consider the group of all invertible matrices, i.e. the general linear group. But when we are dealing with a more restricted group of matrices or a group that has nothing to with matrices at all, then the notion of conjugacy becomes a bit more restricted. The equation is the same, though: two group elements $a,b$ are conjugate to one another, if the equation $b = s^{-1} a s$ holds for some $s$ that must also be an element of the group. It is that latter requirement of $s$ being inside the group that makes the notion of conjugacy more restrictive ...TBC...
-
-
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Conjugacy Classes}
+Recall from the linear algebra section the definition of similarity between two matrices. Two matrices $\mathbf{A,B}$ are considered to be similar, denoted by $\mathbf{A} \sim \mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. In group theory there is the notion of \emph{conjugacy} which coincides with the notion of \emph{similarity} when we consider the group of all invertible matrices, i.e. the general linear group. But when we are dealing with a more restricted group of matrices or a group that has nothing to with matrices at all, then the notion of conjugacy becomes a bit more restricted. The equation is the same, though: two group elements $a,b$ are conjugate to one another, if the equation $b = s^{-1} a s$ holds for some $s$ that must also be an element of the group. It is that latter requirement of $s$ being inside the group that makes the notion of conjugacy more restrictive ...TBC...[ToDO: explain how groups can be generated from representatives of conjugacy classes]
 
 % https://www.youtube.com/watch?v=vYKdh5oQ4Zw&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=8
 % 7:40: conjugation can also be applied to a group G or subgroup H or subset A as whole using 
@@ -432,11 +428,12 @@ Recall from the linear algebra section the definition of similarity between two 
 % Generators subsection as subsubsection? Is there some connection between generators and 
 % conjugacy classes? That seems to be the case indeed:
 % https://math.stackexchange.com/questions/397453/finite-group-is-generated-by-a-set-of-representatives-of-conjugacy-classes
+% the group is generated by a set of representatives of conjugacy classes?
+
+% https://mathoverflow.net/questions/26979/generating-a-finite-group-from-elements-in-each-conjugacy-class
 
 % explain: centralizer, normalizer, stabilizer, orbit
 % https://en.wikipedia.org/wiki/Centralizer_and_normalizer
-
-
 
 % Maybe explain it by way of an example using 2x2 matrices
 % Or maybe use a permutation group - maybe S_3. It has 6 elements, so it would be a 6x6
@@ -445,6 +442,77 @@ Recall from the linear algebra section the definition of similarity between two 
 % https://en.wikipedia.org/wiki/Conjugacy_class
 % https://mathworld.wolfram.com/ConjugacyClass.html
 % https://en.wikipedia.org/wiki/Matrix_similarity
+
+
+
+
+%===================================================================================================
+\subsection{Morphisms (Iso-, Homo- and more)}
+
+% https://juliapoo.github.io/mathematics/2022/12/15/homomorphism-illustrated.html
+
+% Maybe this should go before the subsection about subgroups because automorphisms are referenced there. But no - a theorem stated here requires the notion of a normal subgroup. We have a cross-referencing problem here
+
+Morphisms in group theory are functions $f$ that map from the underlying set of one group to the underlying set of another group. In group theory, you don't commonly encounter the term morphism all by itself. It's usually prefixed by some qualifier because we are mostly interested in functions that satisfy certain constraints. The most important specimen are \emph{isomorphisms} and \emph{homomorphisms}. There are also \emph{epimorphisms}, \emph{monomorphisms} and \emph{automorphisms}. Let's see what they are.
+
+\subsubsection{Homomorphisms}
+
+Assume we have a group $\mathcal{G} = (G, \circ)$ and another group $\mathcal{H} = (H, \diamond)$. Assume furthermore that we have a function $f: G \rightarrow H$ that maps elements from $G$ to elements from $H$. That function is called a group homomorphism from $G$ to $H$ if it has the following property for all $a,b \in G$:
+\begin{equation}
+	f(a \circ b) = f(a) \diamond f(b)
+\end{equation}
+This equation says that it doesn't matter whether we firstly combine $a$ and $b$ in $G$ via $\circ$ and then secondly map the result over to $H$ via $f$ or if we firstly map $a$ and $b$ separately over to $H$ via $f$ and then secondly combine them over there via $\diamond$. The end result should be the same in both cases. Such a function $f$ is constrained to preserve the structure of group $G$ while mapping over to group $H$ and it may or may not exist. If such a homomorphism does exist then we can find the structure of group $G$ within group $H$ in the sense that the image of $G$ is a subgroup of $H$. Note that, as promised, I'm sloppy with using $G$ and $H$ as stand-in in some places where it would actually be more correct to write $\mathcal{G}$ and $\mathcal{H}$. Formally, it makes no sense to talk about a subgroup of $H$ because $H$ is just a set and the group is actually the pair $\mathcal{H}$. But to state that stuff formally correctly would be very awkward and confusing. Formally correctly, one would have to say that $f$ maps $G$ to a subset of $H$ and that subset happens to be the underlying set of a subgroup of $\mathcal{H}$. Nobody wants to speak like that so this slight sloppiness is quite common and acceptable in group theory [VERIFY!]. Anyway - the essence of a homomorphism is that the function $f$ maps from $G$ to $H$ and thereby preserves the structure of $\mathcal{G}$ within $\mathcal{H}$ - and such a thing may or may not be possible for two given groups at hand. If it is possible, then we may say that $\mathcal{H}$ is homomorphic to $\mathcal{G}$ which means that we find the structure of $\mathcal{G}$ within $\mathcal{H}$ [VERIFY!].
+
+\paragraph{Example}
+Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and $f: \mathbb{R} \rightarrow \mathbb{R}^+$ with $f(x) = e^x$. That is, we consider the exponential function as a map from the real numbers with addition to the positive real numbers with multiplication. It is indeed a homomorphism between these two groups because $e^{a+b} = e^a \cdot e^b$ for all $a,b \in \mathbb{R}$. On the left hand side, we first add $a$ and $b$ (adding is the group operation of $\mathcal{G}$) and then map the sum over via $f$. On the right hand side, we first map $a$ and $b$ over seperately via $f$ and then multiply (multiplication is the group operation of $\mathcal{H}$). As we know from the laws of exponential functions, the result is the same, so $f$ is indeed a homomorphism.
+
+% maybe say something about the logarithm as inverse homomorphism...but maybe later
+% verify that neutral and inverse elements get mapped to their counterparts
+
+% Riley/Hobson et al pg 1060 use the complex exponential as example for an isomorphism. mayb do that, too
+
+% https://www.youtube.com/watch?v=XPF5fe1WdKY&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=11
+% Has another example: Z and Z_2 the homomorphism maps the evens to 0 and the odds to 1
+% also: (Z_4,+) and({1,i,-1,i},*)
+
+\paragraph{} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The \emph{kernel} of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ k \in G: f(k) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. Now we can say that: (1) The image of $G$ under $f$ is a subgroup of $H$. (2)  The kernel of $f$ is a normal subgroup of $G$.
+
+% Make this theorem look more important bcs it is (I think)
+
+%https://mathworld.wolfram.com/GroupHomomorphism.html
+
+% https://www.youtube.com/watch?v=TngePpJ_x-I&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=14
+% The kernel of f measures how much bigger G is? But no! It's a property of f - not of G,H. The
+% kernel measures to which degree f fails to be 1-to-1. If the kernel only contains the identity,
+% then f is 1-to-1
+
+\subsubsection{Isomorphisms}
+Isomorphisms are homomorphisms that satisfy some additional constraints. These are: (1) Different elements of $G$ must be mapped to different elements of $H$. That is: $f$ must be injective. (2) Every element of $H$ must be reached by $f$. That is: $f$ must be surjective. Taken together, these two additional requirements require $f$ to be bijective and therefore invertible. Therefore, an isomorphism is a homomorphism that works in both directions. That means: mapping from $G$ to $H$ preserves the structure of $G$ in $H$ and mapping back from $H$ to $G$ preserves the structure of $H$ in $G$. Again, an isomorphism between two given groups may or may not exist. If one does exist, we may say that the two groups are isomorphic which means: of equal form \footnote{The internet says that "iso" means "equal" whereas "homo" means "the same" - and there is supposed to be a subtle difference. But it actually says that the difference is such that "homo" should be the stronger form (identity) and "iso" the weaker form (equivalence) - but here it's clearly the other way around: an isomorphism is a stronger form of sameness than a homomorphism. I don't know what to make of that. It's a mess!}. If two groups are isomorphic, they are structurally the same. One is actually the other in disguise and vice versa in the sense that the elements of the underlying sets are just "renamed" with respect to one another via $f$. 
+That's why isomorphisms are so important in group theory. They are a tool to convince ourselves that two superficially very different mathematical setups are actually in some sense the same such that we can transfer knowlegde obtained in one domain to the other. Or even better: abstract out the commonalities explicitly, as we do in abstract algebra.
+% Was our homomorpism above actually an isomorphism? What about injecting the inamginary unit itno the expoenent? I think, then it becomes a homo- but not isomorphism (see Riley, Hobson et. al., page 1060)
+
+\paragraph{}
+\emph{Isomorphisms} are the most important kind of morphisms in group theory, followed by \emph{homomorphisms} [my personal judgement - VERIFY]. There are also \emph{monomorphisms} which are injective homomorphisms and \emph{epimorphisms} which are surjective homomorphisms. They are somewhere in between the homomorphisms and isomorphisms in terms of how constrained they are. An \emph{automorphism} is an isomorphism from a group to itself.
+
+% https://en.wikipedia.org/wiki/Automorphism
+% https://en.wikipedia.org/wiki/Automorphism_group
+
+TODO: talk about homomorphic images (see \cite{ABoAA} pg 136 ff)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 %===================================================================================================
 \subsection{Subgroups}
@@ -559,6 +627,10 @@ The takeaway is that a subgroup $H$ always partitions a group $G$ into equally s
 \subsubsection{Special Subgroups}
 Not all subgroups are created equal. There are certain special types of subgroups that are important enough to deserve special names.
 
+
+
+
+
 \paragraph{Normal Subgroups} A subgroup $H$ of a given group $G$ is called a \emph{normal subgroup} iff $g^{-1} H g = H$ for every $g \in G$. In words, this may be stated as: normal subgroups are invariant under conjugation. Another equivalent way to characterize normal subgroups is to say their left and right cosets coincide. The notation for normal subgroups is $H \triangleleft G$. A subgroup $H$ of some group $G$ may itself not be a normal subgroup of $G$ but it may contain smaller subgroups that are normal subgroups of $G$. The largest of those is called the \emph{normal core} of $H$. If $H$ is already a normal subgroup, then its normal core is $H$ itself, of course. [TODO: list more equivalent ways to characterize a normal subgroup - there are many - see wikipedia]
 
 
@@ -670,18 +742,30 @@ With the definition of coset multiplication at our disposal, we are now ready fo
 
 % https://en.wikipedia.org/wiki/Coset
 
-
 % explain normal chains/sequences
 
+%===================================================================================================
+
+\subsection{Group Extensions}
+Now that we have learned how to decompose a group into simpler constituent factors, the natural question is how to put them back together. The definition of the quotient group $Q = G / H$ seems to suggest that $G$ is in some way a "product group" of the groups $Q$ and $H$. We would expect to see something like: If $Q = G / H$ then $G = Q \cdot H$ and vice versa. That is kind of true, but it is quite a bit more complicated than that. In the case of numbers, we learn about multiplication first and then about division as the corresponding inverse process. And in this case, multiplication is fairly straightforward while division is much harder. Not so with groups. Here a better analogy might be a clockwork - it's much easier to take it apart than putting it back together. The problem of composing groups from smaller constituent groups is called the group extension problem. For one thing, there is not one single "product" operation that you can apply to groups but many. Let's have a look at the most important ones.
+
+% https://en.wikipedia.org/wiki/Group_extension
+% https://en.wikipedia.org/wiki/Exact_sequence#Short_exact_sequence
+
 %---------------------------------------------------------------------------------------------------
-% This seems to be a bigger topic - make it a subsection after morphsims
+\subsubsection{Direct Product}
 
-\subsubsection{Product Groups}
-Now that we have learned how to dissect a group into simpler constituent factors, the natural question is how to put them back together. The definition of the quotient group $Q = G / H$ seems to suggest that $G$ is in some way a "product group" of the groups $Q$ and $H$. We would expect to see something like: If $Q = G / H$ then $G = Q H$ and vice versa...well...it seems to be more complicated...
-...TBC...TODO: explain direct and semidirect products and maybe other products, explain how this relates to the idea of quotient groups (this seems to be quite a bit more complicated than one might naively expect)
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Semidirect Product}
 
-% Normally, we learn about multiplication first and then about division as the corresponding inverse
-% process. And usually, multiplication is fairly straighforward while division is much harder. With
+% Subdirect product
+
+
+
+%..well...it seems to be more complicated...
+%...TBC...TODO: explain direct and semidirect products and maybe other products, explain how this relates to the idea of quotient groups (this seems to be quite a bit more complicated than one might naively expect)
+
+%  With
 % groups, that doesn't seem to be the case
 
 % Analogy: a jigsaw puzzle or a clockwork: taking it apart is much easier than putting it together
@@ -750,59 +834,6 @@ Now that we have learned how to dissect a group into simpler constituent factors
 % https://en.wikipedia.org/wiki/Subgroup_series#Normal_series.2C_subnormal_series
 
 
-
-%===================================================================================================
-\subsection{Morphisms (Iso-, Homo- and more)}
-
-% https://juliapoo.github.io/mathematics/2022/12/15/homomorphism-illustrated.html
-
-% Maybe this should go before the subsection about subgroups because automorphisms are referenced there. But no - a theorem stated here requires the notion of a normal subgroup. We have a cross-referencing problem here
-
-Morphisms in group theory are functions $f$ that map from the underlying set of one group to the underlying set of another group. In group theory, you don't commonly encounter the term morphism all by itself. It's usually prefixed by some qualifier because we are mostly interested in functions that satisfy certain constraints. The most important specimen are \emph{isomorphisms} and \emph{homomorphisms}. There are also \emph{epimorphisms}, \emph{monomorphisms} and \emph{automorphisms}. Let's see what they are.
-
-\subsubsection{Homomorphisms}
-
-Assume we have a group $\mathcal{G} = (G, \circ)$ and another group $\mathcal{H} = (H, \diamond)$. Assume furthermore that we have a function $f: G \rightarrow H$ that maps elements from $G$ to elements from $H$. That function is called a group homomorphism from $G$ to $H$ if it has the following property for all $a,b \in G$:
-\begin{equation}
-	f(a \circ b) = f(a) \diamond f(b)
-\end{equation}
-This equation says that it doesn't matter whether we firstly combine $a$ and $b$ in $G$ via $\circ$ and then secondly map the result over to $H$ via $f$ or if we firstly map $a$ and $b$ separately over to $H$ via $f$ and then secondly combine them over there via $\diamond$. The end result should be the same in both cases. Such a function $f$ is constrained to preserve the structure of group $G$ while mapping over to group $H$ and it may or may not exist. If such a homomorphism does exist then we can find the structure of group $G$ within group $H$ in the sense that the image of $G$ is a subgroup of $H$. Note that, as promised, I'm sloppy with using $G$ and $H$ as stand-in in some places where it would actually be more correct to write $\mathcal{G}$ and $\mathcal{H}$. Formally, it makes no sense to talk about a subgroup of $H$ because $H$ is just a set and the group is actually the pair $\mathcal{H}$. But to state that stuff formally correctly would be very awkward and confusing. Formally correctly, one would have to say that $f$ maps $G$ to a subset of $H$ and that subset happens to be the underlying set of a subgroup of $\mathcal{H}$. Nobody wants to speak like that so this slight sloppiness is quite common and acceptable in group theory [VERIFY!]. Anyway - the essence of a homomorphism is that the function $f$ maps from $G$ to $H$ and thereby preserves the structure of $\mathcal{G}$ within $\mathcal{H}$ - and such a thing may or may not be possible for two given groups at hand. If it is possible, then we may say that $\mathcal{H}$ is homomorphic to $\mathcal{G}$ which means that we find the structure of $\mathcal{G}$ within $\mathcal{H}$ [VERIFY!].
-
-\paragraph{Example}
-Let  $\mathcal{G} = (\mathbb{R}, +), \; \mathcal{H} = (\mathbb{R}^+, \cdot)$ and $f: \mathbb{R} \rightarrow \mathbb{R}^+$ with $f(x) = e^x$. That is, we consider the exponential function as a map from the real numbers with addition to the positive real numbers with multiplication. It is indeed a homomorphism between these two groups because $e^{a+b} = e^a \cdot e^b$ for all $a,b \in \mathbb{R}$. On the left hand side, we first add $a$ and $b$ (adding is the group operation of $\mathcal{G}$) and then map the sum over via $f$. On the right hand side, we first map $a$ and $b$ over seperately via $f$ and then multiply (multiplication is the group operation of $\mathcal{H}$). As we know from the laws of exponential functions, the result is the same, so $f$ is indeed a homomorphism.
-
-% maybe say something about the logarithm as inverse homomorphism...but maybe later
-% verify that neutral and inverse elements get mapped to their counterparts
-
-% Riley/Hobson et al pg 1060 use the complex exponential as example for an isomorphism. mayb do that, too
-
-% https://www.youtube.com/watch?v=XPF5fe1WdKY&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=11
-% Has another example: Z and Z_2 the homomorphism maps the evens to 0 and the odds to 1
-% also: (Z_4,+) and({1,i,-1,i},*)
-
-\paragraph{} Homomorphisms have some noteworthy properties. To state them, we first need another definition: The \emph{kernel} of $f$ is the set of elements of $G$ that are mapped by $f$ to the neutral element $e_H$ of $H$: $\ker(f) = \{ k \in G: f(k) = e_H \}$. In other words, the kernel of $f$ is the pre-image of the neutral element in $H$. Now we can say that: (1) The image of $G$ under $f$ is a subgroup of $H$. (2)  The kernel of $f$ is a normal subgroup of $G$.
-
-% Make this theorem look more important bcs it is (I think)
-
-%https://mathworld.wolfram.com/GroupHomomorphism.html
-
-% https://www.youtube.com/watch?v=TngePpJ_x-I&list=PLi01XoE8jYoi3SgnnGorR_XOW3IcK-TP6&index=14
-% The kernel of f measures how much bigger G is? But no! It's a property of f - not of G,H. The
-% kernel measures to which degree f fails to be 1-to-1. If the kernel only contains the identity,
-% then f is 1-to-1
-
-\subsubsection{Isomorphisms}
-Isomorphisms are homomorphisms that satisfy some additional constraints. These are: (1) Different elements of $G$ must be mapped to different elements of $H$. That is: $f$ must be injective. (2) Every element of $H$ must be reached by $f$. That is: $f$ must be surjective. Taken together, these two additional requirements require $f$ to be bijective and therefore invertible. Therefore, an isomorphism is a homomorphism that works in both directions. That means: mapping from $G$ to $H$ preserves the structure of $G$ in $H$ and mapping back from $H$ to $G$ preserves the structure of $H$ in $G$. Again, an isomorphism between two given groups may or may not exist. If one does exist, we may say that the two groups are isomorphic which means: of equal form \footnote{The internet says that "iso" means "equal" whereas "homo" means "the same" - and there is supposed to be a subtle difference. But it actually says that the difference is such that "homo" should be the stronger form (identity) and "iso" the weaker form (equivalence) - but here it's clearly the other way around: an isomorphism is a stronger form of sameness than a homomorphism. I don't know what to make of that. It's a mess!}. If two groups are isomorphic, they are structurally the same. One is actually the other in disguise and vice versa in the sense that the elements of the underlying sets are just "renamed" with respect to one another via $f$. 
-That's why isomorphisms are so important in group theory. They are a tool to convince ourselves that two superficially very different mathematical setups are actually in some sense the same such that we can transfer knowlegde obtained in one domain to the other. Or even better: abstract out the commonalities explicitly, as we do in abstract algebra.
-% Was our homomorpism above actually an isomorphism? What about injecting the inamginary unit itno the expoenent? I think, then it becomes a homo- but not isomorphism (see Riley, Hobson et. al., page 1060)
-
-\paragraph{}
-\emph{Isomorphisms} are the most important kind of morphisms in group theory, followed by \emph{homomorphisms} [my personal judgement - VERIFY]. There are also \emph{monomorphisms} which are injective homomorphisms and \emph{epimorphisms} which are surjective homomorphisms. They are somewhere in between the homomorphisms and isomorphisms in terms of how constrained they are. An \emph{automorphism} is an isomorphism from a group to itself.
-
-% https://en.wikipedia.org/wiki/Automorphism
-% https://en.wikipedia.org/wiki/Automorphism_group
-
-TODO: talk about homomorphic images (see \cite{ABoAA} pg 136 ff)
 
 
 

@@ -148,6 +148,10 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 %  factor with the columns of the right factor
 
 %---------------------------------------------------------------------------------------------------
+\subsubsection{Commutator}
+Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$ in general. We also say, the matrices  $\mathbf{A}$ and $\mathbf{B}$ do not \emph{commute} in general. The difference $\mathbf{C} = \mathbf{A} \mathbf{B} - \mathbf{B} \mathbf{A}$ is called the commutator of $\mathbf{A}$ and $\mathbf{B}$. It can be thought of as measuring, how non-commutative the matrices are with respect to one another. If two matrices commute, their commutator is the zero matrix.
+
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
 % Could be done via Gauss-Jordan Elimination Algorithm decribed in the section about solvin linear 
 % systems
@@ -440,6 +444,17 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 % https://en.wikipedia.org/wiki/Matrix_equivalence
 % a weaker(!) notion than similarity. the equation is the same but applies also to non-square
 % matrices
+
+\paragraph{Commuting Matrices}
+
+\paragraph{Simultaneously Diagonalizable Matrices}
+Two matrices $\mathbf{A}$ and $\mathbf{B}$ are said to be simultaneously diagonalizable if there exists a single matrix $\mathbf{P}$ such that $\mathbf{P}^{-1} \mathbf{A} \mathbf{P}$ and  $\mathbf{P}^{-1} \mathbf{B} \mathbf{P}$ are both diagonal matrices. Two matrices commute if and only if they are simultaneously diagonalizable. A set $A$ of matrices is simultaneously diagonalizable if all pairs of matrices in the the set are simultaneously diagonalizable. 
+
+% https://en.wikipedia.org/wiki/Diagonalizable_matrix#Simultaneous_diagonalization
+
+
+
+%https://en.wikipedia.org/wiki/Triangular_matrix#Simultaneous_triangularisability
 
 \paragraph{Misc Special Matrices}
 % Toeplitz, circulant, unitary (maybe file under orthogonal - it's the complex version), tringular, ...

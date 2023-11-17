@@ -126,6 +126,7 @@ The \emph{inner product}, also known as the \emph{scalar product} between two ve
 
 \subsection{Matrix Operations}
 \subsubsection{Addition and Subtraction}
+Matrices are added and subtracted element-wise. For that to work, the two matrices must have the same shapes. TODO: Define the zero matrix and its notation
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Multiplication} In order to multiply two matrices, we must demand that the number of columns of the left factor must be equal to the number of rows in the right factor. When we multiply an $m \times p$ matrix $\mathbf{A}$ with a $p \times n$ matrix $\mathbf{B}$ and call the product $\mathbf{C}$ such that $\mathbf{A} \mathbf{B} = \mathbf{C}$, then the element $c_{ij}$ of the product can be computed from the elements $a_{ij}, b_{ij}$ of $\mathbf{A}, \mathbf{B}$ as follows:
@@ -134,7 +135,7 @@ The \emph{inner product}, also known as the \emph{scalar product} between two ve
  \quad \text{where} \quad
  c_{ij} = \sum_{k=1}^p a_{ik} b_{kj}
 \end{equation}
-The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!].
+The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!]. The matrix that has zeros everywhere except on the main diagonal is called the identity matrix and denoted as usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway.
 
 % -maybe add also the Kronecker product and list formulas for its connection with the regular
 %  product

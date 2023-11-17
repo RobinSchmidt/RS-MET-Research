@@ -148,10 +148,6 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 %  factor with the columns of the right factor
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Commutator}
-Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$ in general. We also say, the matrices  $\mathbf{A}$ and $\mathbf{B}$ do not \emph{commute} in general. The difference $\mathbf{C} = \mathbf{A} \mathbf{B} - \mathbf{B} \mathbf{A}$ is called the commutator of $\mathbf{A}$ and $\mathbf{B}$. It can be thought of as measuring, how non-commutative the matrices are with respect to one another. If two matrices commute, their commutator is the zero matrix.
-
-%---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
 % Could be done via Gauss-Jordan Elimination Algorithm decribed in the section about solvin linear 
 % systems
@@ -159,6 +155,9 @@ Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{
 % Misc: transposition, hermitian tranpose, etc.
 
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Commutator}
+Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$ in general. We also say, the matrices  $\mathbf{A}$ and $\mathbf{B}$ do not \emph{commute} in general. The difference $\mathbf{C} = \mathbf{A} \mathbf{B} - \mathbf{B} \mathbf{A}$ is called the commutator of $\mathbf{A}$ and $\mathbf{B}$. It can be thought of as measuring, how non-commutative the matrices are with respect to one another. If two matrices commute, their commutator is the zero matrix. [TODO: What about $\mathbf{A} \mathbf{B} \mathbf{A}^{-1} \mathbf{B}^{-1}$. That's how the commutator is defined in group theory. It's the identity matrix if  $\mathbf{A}$ and $\mathbf{B}$ commute, I think. Figure out and explain the relation!]
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Matrix-Vector Products}

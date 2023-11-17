@@ -135,7 +135,7 @@ Matrices are added and subtracted element-wise. For that to work, the two matric
  \quad \text{where} \quad
  c_{ij} = \sum_{k=1}^p a_{ik} b_{kj}
 \end{equation}
-The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!]. The matrix that has zeros everywhere except on the main diagonal is called the identity matrix and denoted as usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway.
+The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!]. The matrix that has zeros everywhere except on the main diagonal is called the identity matrix and denoted as usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway. This matrix is te neutral element of matrix multiplication. That means that  $\mathbf{I} \mathbf{A} = \mathbf{A} = \mathbf{A} \mathbf{I}$ for any (square) matrix $\mathbf{A}$ whatsoever. In this notation, it is usually understood that the size of $\mathbf{I}$ is matched to the size of $\mathbf{A}$.
 
 % -maybe add also the Kronecker product and list formulas for its connection with the regular
 %  product
@@ -150,6 +150,7 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
+If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B}$ such that  $\mathbf{B} \mathbf{A} = \mathbf{I}$, then we call $\mathbf{B}$ a left inverse of $\mathbf{A}$. A matrix $\mathbf{C}$ with the property $\mathbf{A} \mathbf{C} = \mathbf{I}$ would be called a right inverse. It turns out that there is no difference between these two notions, i.e. left inverses are always also right inverses and vice versa so we call a matrix that has both of these properties just an inverse matrix of $\mathbf{A}$. It turns furthermore out that if such an inverse exists, then it is unique, so we call such a matrix \emph{the inverse} of $\mathbf{A}$ and denote it by $\mathbf{A}^{-1}$. Finding such an inverse for a given matrix $\mathbf{A}$ can be done by an algorithm called Gauss-Jordan elimination which we will be explained later. [VERIFY!]
 % Could be done via Gauss-Jordan Elimination Algorithm decribed in the section about solvin linear 
 % systems
 
@@ -158,7 +159,7 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Commutator}
-Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$ in general. We also say, the matrices  $\mathbf{A}$ and $\mathbf{B}$ do not \emph{commute} in general. The difference $\mathbf{C} = \mathbf{A} \mathbf{B} - \mathbf{B} \mathbf{A}$ is called the commutator of $\mathbf{A}$ and $\mathbf{B}$. It can be thought of as measuring, how non-commutative the matrices are with respect to one another. If two matrices commute, their commutator is the zero matrix. [TODO: What about $\mathbf{A} \mathbf{B} \mathbf{A}^{-1} \mathbf{B}^{-1}$. That's how the commutator is defined in group theory. It's the identity matrix if  $\mathbf{A}$ and $\mathbf{B}$ commute, I think. Figure out and explain the relation!]
+Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$ in general. We also say, the matrices  $\mathbf{A}$ and $\mathbf{B}$ do not \emph{commute} in general. The difference of the two possible products $\mathbf{C} = \mathbf{A} \mathbf{B} - \mathbf{B} \mathbf{A}$ is called the commutator of $\mathbf{A}$ and $\mathbf{B}$. It can be thought of as measuring, how non-commutative the matrices are with respect to one another. If two matrices commute, their commutator is the zero matrix. [TODO: What about $\mathbf{A} \mathbf{B} \mathbf{A}^{-1} \mathbf{B}^{-1}$. That's how the commutator is defined in group theory. It's the identity matrix if  $\mathbf{A}$ and $\mathbf{B}$ commute, I think. Figure out and explain the relation between these two conflicting definitions!]
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Matrix-Vector Products}
@@ -445,7 +446,7 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 % a weaker(!) notion than similarity. the equation is the same but applies also to non-square
 % matrices
 
-\paragraph{Commuting Matrices}
+%\paragraph{Commuting Matrices}
 
 \paragraph{Simultaneously Diagonalizable Matrices}
 Two matrices $\mathbf{A}$ and $\mathbf{B}$ are said to be simultaneously diagonalizable if there exists a single matrix $\mathbf{P}$ such that $\mathbf{P}^{-1} \mathbf{A} \mathbf{P}$ and  $\mathbf{P}^{-1} \mathbf{B} \mathbf{P}$ are both diagonal matrices. Two matrices commute if and only if they are simultaneously diagonalizable. A set $A$ of matrices is simultaneously diagonalizable if all pairs of matrices in the the set are simultaneously diagonalizable. 
@@ -459,6 +460,7 @@ Two matrices $\mathbf{A}$ and $\mathbf{B}$ are said to be simultaneously diagona
 \paragraph{Misc Special Matrices}
 % Toeplitz, circulant, unitary (maybe file under orthogonal - it's the complex version), tringular, ...
 
+% https://en.wikipedia.org/wiki/Involution_(mathematics)
 
 % https://en.wikipedia.org/wiki/Normal_matrix
 % https://en.wikipedia.org/wiki/Triangular_matrix#Unitriangular_matrix

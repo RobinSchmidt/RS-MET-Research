@@ -437,6 +437,12 @@ Averages:
 https://www.youtube.com/watch?v=PBVfkJccqqs  how to find the median ... of a function!
 https://www.youtube.com/watch?v=830nq6j6a-E  the Stolarsky mean
 
+
+Variance/Covariance/Correlation stuff:
+
+https://en.wikipedia.org/wiki/Wiener%E2%80%93Khinchin_theorem
+
+
 ----------------------------------------------------------------------------------------------------
 Theory of Computation:
 

@@ -125,6 +125,8 @@ The \emph{inner product}, also known as the \emph{scalar product} between two ve
 %===================================================================================================
 
 \subsection{Matrix Operations}
+
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Addition and Subtraction}
 Matrices are added and subtracted element-wise. For that to work, the two matrices must have the same shapes. TODO: Define the zero matrix and its notation
 
@@ -135,7 +137,7 @@ Matrices are added and subtracted element-wise. For that to work, the two matric
  \quad \text{where} \quad
  c_{ij} = \sum_{k=1}^p a_{ik} b_{kj}
 \end{equation}
-The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!]. The matrix that has zeros everywhere except on the main diagonal is called the identity matrix and denoted as usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway. This matrix is te neutral element of matrix multiplication. That means that  $\mathbf{I} \mathbf{A} = \mathbf{A} = \mathbf{A} \mathbf{I}$ for any (square) matrix $\mathbf{A}$ whatsoever. In this notation, it is usually understood that the size of $\mathbf{I}$ is matched to the size of $\mathbf{A}$.
+The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!]. The matrix that has zeros everywhere except on the main diagonal is called the identity matrix and denoted as usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway. This matrix is te neutral element of matrix multiplication. That means that  $\mathbf{I} \mathbf{A} = \mathbf{A} = \mathbf{A} \mathbf{I}$ for any (square) matrix $\mathbf{A}$ whatsoever. In this notation, it is usually understood that the size of $\mathbf{I}$ is matched to the size of $\mathbf{A}$. Matrix multiplication is associative: $(\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{A} (\mathbf{B} \mathbf{C})$ and distributive over matrix addition and subtraction: $\mathbf{A} (\mathbf{B} \pm \mathbf{C}) = \mathbf{A} \mathbf{B} \pm \mathbf{A} \mathbf{C}$ but it is not generally commutative: $\mathbf{AB} \neq \mathbf{BA}$. 
 
 % -maybe add also the Kronecker product and list formulas for its connection with the regular
 %  product
@@ -147,6 +149,14 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 %  x^T A x (sandwich product)
 % -The matrix product can be seen as being made up from scalar products of the rows of the left 
 %  factor with the columns of the right factor
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Transposition}
+The operation of turning the rows of a matrix into the columns of a new matrix and therefore also the columns into rows is called \emph{transposition} of a matrix. This is denoted by a superscript $T$ as in $\mathbf{A}^T$. When a matrix is complex, then most of the time we want to combine transposition with complex conjugation of the elements because that's how many formulas for real matrices involving the transpose generalize to the complex case. The combined operation of transposition and conjugation is sometimes called \emph{Hermitian transpose} and denoted by a superscript $H$ as $\mathbf{A}^H$. But there are other notations for that too, for example using a dagger: $\mathbf{A}^\dagger$ or an asterisk $\mathbf{A}^*$. We will use the $H$ here.
+
+%ToDo: mention conjugate transpose
+
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
@@ -284,7 +294,17 @@ A matrix is called a square matrix, if it has the same number of rows as it has 
 A matrix is symmetric if it is equal to its own transpose. That means that the rows are equal to the columns. Obviously, symmetry is a feature that only square matrices can possibly have.
 % Give fomrula for invers of transpose and/or for (AB)^T = B^T A^T iirc
 
-% boolean fetaures: symmetric, orthogonal, nilpotent, idempotent, unitary, normal, etc.
+% maybe put these "boolean" features into a subsection
+\paragraph{Orthogonality}
+% a (square) matrix is orthogonal when all its rows are mutually orthogonal. This implies
+
+\paragraph{Definiteness}
+
+% boolean fetaures: nilpotent, idempotent, unitary, normal,  self-adjoint,
+% contractive (all eigenvalues < 1 in absolute value, vectors get shorter), self-inverse
+% (aka involution), is there something like "unipotent" such that some power of the matrix is the
+% identity matrix?
+%
 % discrete features: rank, index of nilpotency, signature
 % scalar: determinant, condition number
 % list of scalars: eigenvalues, singular values
@@ -293,13 +313,9 @@ A matrix is symmetric if it is equal to its own transpose. That means that the r
 %   diagonalizable,
 % matrix: set of similar matrices,
 
-% maybe put these "boolean" features into a subsection
-\paragraph{Orthogonality}
-% a (square) matrix is orthogonal when all its rows are mutually orthogonal. This implies
 
-\paragraph{Definiteness}
 
-% -contractive (all eigenvalues < 1 in absolute value)
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Characteristic Numbers}
@@ -588,7 +604,37 @@ This product may also be called the \emph{naive matrix product}. Its application
 
 %===================================================================================================
 \subsection{Important Facts and Formulas}
-% rank-nullity theorem
+
+\paragraph{Spectral Theorem}
+% -spectral theorem: https://www.youtube.com/watch?v=4zD8Kd3HgJA
+%  https://en.wikipedia.org/wiki/Spectral_theorem
+
+\paragraph{Transposition Formulas}
+\begin{equation}
+(\mathbf{A_1 A_2 \ldots  A_n})^T = \mathbf{A_n}^T \ldots \mathbf{A_2}^T \mathbf{A_1}^T
+\end{equation}
+
+
+\paragraph{Inversion Formulas}
+\begin{equation}
+(\mathbf{A_1 A_2 \ldots  A_n})^{-1} = \mathbf{A_n}^{-1} \ldots \mathbf{A_2}^{-1} \mathbf{A_1}^{-1}
+\end{equation}
+
+% https://en.wikipedia.org/wiki/Woodbury_matrix_identity
+% https://tlienart.github.io/posts/2018/12/13-matrix-inversion-lemmas/index.html
+% https://www.statlect.com/matrix-algebra/matrix-inversion-lemmas
+% http://www0.cs.ucl.ac.uk/staff/g.ridgway/mil/mil.pdf
+
+% https://stattrek.com/matrix-algebra/matrix-theorems
+
+\paragraph{Rank Nullity Theorem}
+
+% -rank-nullity theorem
+% https://en.wikipedia.org/wiki/Rank%E2%80%93nullity_theorem
+
+
+
+% -matrix inversion lemma
 
 %===================================================================================================
 %\subsection{Computing with Spaces}

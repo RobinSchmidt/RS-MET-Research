@@ -159,30 +159,50 @@ The techniques explained above are for finding antiderivatives also known as ind
 
 
 \paragraph{Improper Integrals}
+Improper integrals are definite integrals in which one or both of the integration limits are infinity or there may be points inside the integration interval where the integrand is undefined. In the former case, there are some subcases to consider. It may be the case the the lower or upper limit is finite and the other limit is infinite. In both cases, the value of the integral is defined by replacing the infinite limit by some variable and the considering the limit as this variable approaches infinity:
+\begin{equation}
+\int_a^{\infty} f(x) \; dx = \lim_{b \rightarrow \infty} \int_a^b f(x) \; dx
+\qquad \text{or} \qquad
+\int_{-\infty}^b f(x) \; dx = \lim_{a \rightarrow -\infty} \int_a^b f(x) \; dx
+\end{equation}
+It may also be the case, that both integration limits are infinite. In such cases, it is possible to split the integral at some intermediate point into two integrals of the type above:
+\begin{equation}
+\int_{-\infty}^{\infty} f(x) \; dx = \int_{-\infty}^c f(x) \; dx + \int_c^{\infty} f(x) \; dx
+\end{equation}
+which can each be evaluated separately via the limit technique. It can also be evaluated as a double limit:
+\begin{equation}
+\int_{-\infty}^{\infty} f(x) \; dx = \lim_{a \rightarrow -\infty} \lim_{b \rightarrow \infty} \int_a^b f(x) \; dx
+\end{equation}
+[Q: Does it matter in which order the limits are taken? It better should not!], [TODO: explain improper integrals with singularities at finite values]
+
 
 % https://en.wikipedia.org/wiki/Improper_integral
 
+% A limitation of the technique of improper integration is that the limit must be taken with respect to one endpoint at a time. Thus, for instance, an improper integral of the form
+
+% It may also be the case that the undefined point occurs somewher in the middle of the interval. In such a case, one would just split the intgral into two at that critical point 
 
 \paragraph{Cauchy's Principal Value}
+We have just see how an improper integral of the form $\int_{-\infty}^{\infty} f(x) \; dx$ can sometimes be evaluated by splitting it into two and adding the results:  $\int_{-\infty}^{\infty} = \int_{-\infty}^c + \int_c^{\infty}$ . But what if the two summands diverge in opposite directions such that we end up with an indeterminate form of the type $\infty - \infty$? In such a case....TBC...
 
 % https://en.wikipedia.org/wiki/Cauchy_principal_value
+% https://de.wikipedia.org/wiki/Cauchyscher_Hauptwert
+% https://mathworld.wolfram.com/CauchyPrincipalValue.html
 
 
-
-
-\paragraph{Glasser's Master Theorem} tells us something about the definite integral of a function $f: \mathbb{R} \rightarrow \mathbb{R}$ over the whole real number line:
+\paragraph{Glasser's Master Theorem} tells us something about the definite integral of a function $f: \mathbb{R} \rightarrow \mathbb{R}$ over the whole real number line. A nice special case is this formulation:
 \begin{equation}
  \int_{-\infty}^{\infty} f(x) \; dx  = 
  \int_{-\infty}^{\infty} f(x - \frac{a}{x}) \; dx 
  \qquad \forall a > 0
 \end{equation}
-The theorem applies if the integral converges absolutely. The integrals are to be understood in the sense of a Cauchy principal value. This is actually a special case that can be generalized as follows:
+The theorem applies if the integral converges absolutely. The integrals are to be understood in the sense of a Cauchy principal value. The special case above can be generalized as follows:
 \begin{equation}
  \int_{-\infty}^{\infty} f(x) \; dx  = 
- \int_{-\infty}^{\infty} f \left( x - a - \sum_{n=1}^N \frac{a_n}{x -b_n} \right) \; dx 
+ \int_{-\infty}^{\infty} f \left( x - \sum_{n=1}^N \frac{a_n}{x - b_n} - c \right) \; dx 
  \qquad \text{if } \forall n: a_n > 0
 \end{equation}
-See \cite{GlasserMasterWiki} for more information. This identity can be useful for solving....TBC...
+which is the theorem proper. Here $a_n, b_n, c$ are all real numbers. The special case can recovered from the general one by setting $N=1, a_1=a, b_1=0, c=0$. See \cite{GlasserMasterWiki} for more information. This identity can be useful for solving....TBC...
 [VERIFY!]
 
 % https://www.youtube.com/watch?v=yilsH_GrscM

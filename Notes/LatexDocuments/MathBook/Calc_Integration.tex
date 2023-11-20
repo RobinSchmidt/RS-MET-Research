@@ -76,7 +76,7 @@ ToDo: Explain rules for linearity, reversal, splitting, ...
 %\paragraph{Notations} 
 % Maybe introduce a functional notation $I_a^b[f] = \int_a^b f(x) dx$ for definite integrals and an operator notation $I[f] = \int f(x) dx$ for indefinite integrals. It should be consistent with the notation used in the Operators section in the Functional Analysis chapter. The notation is more compact and allows the laws to be written down in smaller table. Also introduce the notation with the vertical bar to mean "evaluated at upper and lower limit, then subtracted"
 
-\subsection{Improper Integrals} 
+%\subsection{Improper Integrals} 
 %-infinite integration limits
 %-singularities within the integration interval
 
@@ -154,7 +154,7 @@ TODO: give some example code to let SageMath and Wolfram Alpha calculate antider
 %and tricks to find antiderivatives by hand
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Finding Definite Integrals}
+\subsubsection{Techniques for Definite Integrals}
 The techniques explained above are for finding antiderivatives also known as indefinite integrals. Once you have found an indefinite integral, it is trivial to evaluate a corresponding definite integral by just evaluating your antiderivative at two points and subtracting the results. There are cases where all you want is a definite integral, i.e. basically just a number as opposed to a full-blown function. For this, going through the process of finding an antiderivative first might be overkill. It may sometimes even be impossible to find one, at least in terms of elementary functions. Yet, it may still be perfectly possible to give a neat value for the desired definite integral. One important technique to achieve this involves using the "residue theorem" which is one of the important results of complex analysis. We will see this later...TBC...what other techniques are there?
 
 
@@ -183,7 +183,16 @@ which can each be evaluated separately via the limit technique. It can also be e
 % It may also be the case that the undefined point occurs somewher in the middle of the interval. In such a case, one would just split the intgral into two at that critical point 
 
 \paragraph{Cauchy's Principal Value}
-We have just see how an improper integral of the form $\int_{-\infty}^{\infty} f(x) \; dx$ can sometimes be evaluated by splitting it into two and adding the results:  $\int_{-\infty}^{\infty} = \int_{-\infty}^c + \int_c^{\infty}$ . But what if the two summands diverge in opposite directions such that we end up with an indeterminate form of the type $\infty - \infty$? In such a case....TBC...
+We have just see how an improper integral of the form $\int_{-\infty}^{\infty} f(x) \; dx$ can sometimes be evaluated by splitting it into two and adding the results:  $\int_{-\infty}^{\infty} = \int_{-\infty}^c + \int_c^{\infty}$ . But what if the two summands diverge in opposite directions such that we end up with an indeterminate form of the type $\infty - \infty$? In such a case, we say that the \emph{Cauchy principal value} of the integral is given by:
+\begin{equation}
+PV \int_{-\infty}^{\infty} f(x) \; dx = \lim_{a \rightarrow \infty} \int_{-a}^a f(x) \; dx
+\end{equation}
+That is: we pick a single parameter $a$, derive an expression for the definite integral in the symmetric interval from $-a$ to $+a$ and then take the limit of that expression as $a$ approaches infinity.
+
+
+
+
+....TBC...
 
 % https://en.wikipedia.org/wiki/Cauchy_principal_value
 % https://de.wikipedia.org/wiki/Cauchyscher_Hauptwert
@@ -196,13 +205,13 @@ We have just see how an improper integral of the form $\int_{-\infty}^{\infty} f
  \int_{-\infty}^{\infty} f(x - \frac{a}{x}) \; dx 
  \qquad \forall a > 0
 \end{equation}
-The theorem applies if the integral converges absolutely. The integrals are to be understood in the sense of a Cauchy principal value. The special case above can be generalized as follows:
+The theorem applies if the integral converges absolutely. If necessary, the can be interpreted in the sense of a Cauchy principal value. The special case above can be generalized as follows:
 \begin{equation}
  \int_{-\infty}^{\infty} f(x) \; dx  = 
  \int_{-\infty}^{\infty} f \left( x - \sum_{n=1}^N \frac{a_n}{x - b_n} - c \right) \; dx 
  \qquad \text{if } \forall n: a_n > 0
 \end{equation}
-which is the theorem proper. Here $a_n, b_n, c$ are all real numbers. The special case can recovered from the general one by setting $N=1, a_1=a, b_1=0, c=0$. See \cite{GlasserMasterWiki} for more information. This identity can be useful for solving....TBC...
+which is the theorem proper. Here $a_n, b_n, c$ are all real numbers. The special case can recovered from the general one by setting $N=1, a_1=a, b_1=0, c=0$. See \cite{GlasserMasterWiki} for more information. This identity can be useful for solving integrals in which....TBC...
 [VERIFY!]
 
 % https://www.youtube.com/watch?v=yilsH_GrscM

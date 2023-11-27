@@ -1,0 +1,56 @@
+
+
+Features:
+
+- Implementation goals and considerations:
+  - Should be templatized and at least work with float, double, SIMD-vectors, multiprecision-float.
+    That rules out usage of std::complex. We need a more flexible complex datatype that can work 
+	with SIMD and multiprecision.
+  - Should be realtime capable: sample and buffer based processing functions shall never allocate 
+    memory. Filter parameter updates (e.g. change of cutoff freq) should also work without 
+	allocations. They also shall not acquire locks. Any thread-sync should be done on a higher level
+	and is not within the responsibility of this library.
+  - Should be implemented as C++20 module.
+  - Should define two C++20 concepts: Signal and Parameter
+  - Maybe a library for dealing with polynomials and rational functions should be factored out. Such
+    a library may be useful in its own right.
+
+- Prototype Designs:
+  - Butterworth, Chebychev 1/2, Elliptic lowpass and low-shelving filters via closed form formulas
+    for the s-plane poles and zeros
+  - Bessel, Papoulis, Halpern and Gaussian via formulas for polynomial coeffs and root-finder
+
+- Frequency transformations:
+  - s-plane LP/LP, LP/HP, LP/BP, LP/BR, LP/LS (LS = low-shelv)
+  - z-plane LP/LP, ... (Constantinides formulas)
+  - bilinear s-to-z and z-to-s transform
+  - s-to-z via MZTi, Nyquist frequency match
+
+- Different implementation structures and conversion routines for the coeffs of the different 
+  structures:
+  - ZPK-form (zeros, poles, gain) - that's the form in which prototypes are designed.
+  - Biquad cascade (called second order sections (SOS) in Matlab)
+  - Lattice form 
+  - Parallel biquads (good for parallelization and bidirectional application)
+  - Direct form (not recommened to use but for the sake of completeness)
+  - Biquads can be implemented in SVF (state variable) form and state-vector form and in all 4 
+    direct forms.
+  
+- Implementations should be applicable to:
+  - Realtime processing as in audio plugin, i.e. sample-by-sample processing should be possible.
+  - Batch-processing on multi-dimensional arrays by using strides, i.e. we filter along a particular 
+    dimension
+  - We should be able to apply them bidirectionally using the exact formulas for the states after
+    (ringout/warm-up)
+  - Should be applicable to non-uniformly sampled data.
+ 
+- More feature ideas: 
+  - Maybe compensation allpass designs
+  - Maybe transitional filters can be provided, too
+  - Maybe iterative design of arbitrary filters based on iterative optimization - but: maybe that 
+    should be based on some library dedicated to iterative optimization. Maybe it should be and
+	optional feature and if that feature is not needed, the rest of the library will work without
+	having the optimization library installed.  
+  
+  
+  

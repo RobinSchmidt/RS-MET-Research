@@ -219,7 +219,7 @@ Now we want to define what is means to apply a function such as the exponential 
 % sqrt
 
 \paragraph{$\star$ Functions of a Vector}
-We have seen that it is possible to define functions of a matrix via the Taylor series. Can we do something like that with vectors, too? Well, the Taylor series approach requires that we need a way to multiply the variable (repeatedly) by itself to form powers. For that, we need a multiplication to be defined. For vectors, we have seen various products. Can one of them be meaningfully iterated? The scalar product takes two vectors as input - but it produces a scalar as output, so that doesn't seem to work out. The cross product could look like a promising candidate. It takes two vectors and input and produces another vector as output. Unfortunately, it works only in 3D - but even there, it doesn't really help much because the cross product of a vector with itself will juts produce the zero vector. I'm not aware of any meaningful way to define a \emph{vector valued} function of a vector similarly as we did for matrices. However, we will later in geometric algebra encounter the so called \emph{multivectors} of which the vectors form a subset. For these multivectors, it is indeed possible to define functions that return another multivector - just like we did for matrices.
+We have seen that it is possible to define functions of a matrix via the Taylor series. Can we do something like that with vectors, too? Well, the Taylor series approach requires that we need a way to multiply the variable (repeatedly) by itself to form powers. For that, we need a multiplication to be defined. For vectors, we have seen various products. Can one of them be meaningfully iterated? The scalar product takes two vectors as input - but it produces a scalar as output, so that doesn't seem to work out. The cross product could look like a promising candidate. It takes two vectors and input and produces another vector as output. Unfortunately, it works only in 3D - but even there, it doesn't really help much because the cross product of a vector with itself will just produce the zero vector. I'm not aware of any meaningful way to define a \emph{vector valued} function of a vector similarly as we did for matrices. However, we will later in geometric algebra encounter the so called \emph{multivectors} of which the vectors form a subset. For these multivectors, it is indeed possible to define functions that return another multivector - just like we did for matrices.
 
 \medskip
 TODO: explain kernel an image of a matrix
@@ -631,6 +631,17 @@ This product may also be called the \emph{naive matrix product}. Its application
 %  where u_i v_j are vectors and w_{ij} are scalar weights
 
 
+
+% https://www.youtube.com/watch?v=i0cp3iQXSk8
+% defines a "tilt product" between two (unit) vectors: tilt(u, v) = v  u^T - u v^T. So it's
+% kind of like the commutator of the outer product of two vectors. Yields a matrix which can
+% be used to encode rotations via the matrix exponential. For orthogonal u,v, there's the
+% closed form formula for a rotation by an angle theta: 
+%   exp(tilt(u,v)) = I + sin(theta)*tilt(u,v) + (1-cos(theta))*(tilt(u,v))^2
+% The tilt product gives a matrix which projects vectors ont the uv-plane *and* rotates them
+% in this plane by the angle between u and v. He calls the formula "Generalized Euler's"
+% formula. It's also similar to Rodrigues rotation formula
+% It has also some formulas for tze matrix epxonential
 
 
 %===================================================================================================

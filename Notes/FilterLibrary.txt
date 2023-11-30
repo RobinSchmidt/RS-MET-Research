@@ -3,7 +3,7 @@
 Features:
 
 - Implementation goals and considerations:
-  - Should be templatized and at least work with float, double, SIMD-vectors, multiprecision-float.
+  - Should be templatized and at least support float, double, SIMD-vectors, multiprecision-float.
     That rules out usage of std::complex. We need a more flexible complex datatype that can work 
 	with SIMD and multiprecision.
   - Should be realtime capable: sample and buffer based processing functions shall never allocate 
@@ -39,7 +39,7 @@ Features:
 - Implementations should be applicable to:
   - Realtime processing as in audio plugin, i.e. sample-by-sample processing should be possible.
   - Batch-processing on multi-dimensional arrays by using strides, i.e. we filter along a particular 
-    dimension
+    dimension. Should ideally be compatible with std::mdspan - at least for strided layouts. 
   - We should be able to apply them bidirectionally using the exact formulas for the states after
     (ringout/warm-up)
   - Should be applicable to non-uniformly sampled data.
@@ -51,6 +51,39 @@ Features:
     should be based on some library dedicated to iterative optimization. Maybe it should be and
 	optional feature and if that feature is not needed, the rest of the library will work without
 	having the optimization library installed.  
+  - Maybe biquad designs based on magnitude samples 
+  - Crossover designs with perfect reconstruction  
   
   
-  
+----------------------------------------------------------------------------------------------------
+
+- For mdSpan, see:
+  Https://www.youtube.com/watch?v=eD-ceG-oByA
+  https://www.youtube.com/watch?v=aFCLmQEkPUw
+  - mdarray is the owning version (like vector is to span)
+  - rank (= number of dimensions) must be known at compile time
+
+
+C++ Standard Parallelism - Bryce Adelstein Lelbach - CppNorth 2022
+https://www.youtube.com/watch?v=r1COmv0CdW4&list=PLpGV-BujcAKFVCWOBj2548vuxJ1lV5w6-&index=15
+43:10: could go into rsMatrix someday
+49:33: standardized linear algebra is on the way! yay! :-O
+
+Multidimensional C++ - Bryce Adelstein Lelbach - CppNorth 2022
+https://www.youtube.com/watch?v=aFCLmQEkPUw&list=PLpGV-BujcAKFVCWOBj2548vuxJ1lV5w6-&index=23
+34:30: talks about compiler hints for non-aliasing pointers
+
+SIMD Libraries in C++ - Jeff Garland - CppNow 2023
+https://www.youtube.com/watch?v=hlgCeWC9jxI
+https://en.cppreference.com/w/cpp/experimental/simd/simd
+https://en.cppreference.com/w/cpp/experimental/simd
+
+STL std::span | Modern Cpp Series
+https://www.youtube.com/watch?v=OQu2pZILjDo
+-The length can be a runtime or compile-time variable. I guess that implies that for a typical
+ convolution routine, the compiler could generate *many* versions for all sorts of different 
+ compile-time constants for the length of the span? That might be bad. Although, it may inline such
+ a small routine anyway.
+ 
+ 
+ 

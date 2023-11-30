@@ -77,15 +77,37 @@ A linear combination of a bunch of vectors is just a weighted sum of those vecto
 
 
 
-\paragraph{Inner Product aka Scalar Product}
-The \emph{inner product}, also known as the \emph{scalar product} between two vectors $\mathbf{v}$ and $\mathbf{w}$ is just a number. It is computed by taking all the component-wise products and summing them up. ...TBC...
+\paragraph{Inner Product}
+The \emph{inner product}, also known as the \emph{scalar product} or \emph{dot product} between two vectors $\mathbf{v}$ and $\mathbf{w}$ is just a number. It is computed by taking all the component-wise products and summing them up. That would be the algebraic definition. It can also be defined geometrically as the product of the lengths of the two vectors times the cosine of the angle between them. In 3D with $\mathbf{v} = (v_x, v_y, v_z)$ and $\mathbf{w} = (w_x, w_y, w_z)$ we have:
+\begin{equation}
+ \mathbf{v} \cdot \mathbf{w} 
+ = v_x w_x + v_y w_y + v_z w_z 
+ = |\mathbf{v}| |\mathbf{w}| \cos( \angle(\mathbf{v}, \mathbf{w}) )
+\end{equation}
+where on the right we have used two notations that we have yet to explain: By $|\mathbf{v}|$ we denote the length or so called \emph{norm} of the vector $\mathbf{v}$. We can compute it simply by taking the square root of the dot product of the vector $\mathbf{v}$ with itself. By $\angle(\mathbf{v}, \mathbf{w})$ we mean the angle between the two vectors $\mathbf{v}$ and $\mathbf{w}$. To compute this angle, we can just take the arc-cosine of the dot product of the two normalized vectors $\mathbf{\hat{v}} = \mathbf{v} / |\mathbf{v}|$ and  $\mathbf{\hat{w}} = \mathbf{w} / |\mathbf{w}|$. So we have:
+\begin{equation}
+|\mathbf{v}| = \sqrt{ \mathbf{v} \cdot \mathbf{v}}, 
+\qquad 
+\angle(\mathbf{v}, \mathbf{w}) = 
+ \arccos \left( \frac{\mathbf{v} \cdot \mathbf{w}} {|\mathbf{v}|  |\mathbf{w}|} \right)
+\end{equation}
+If this definition appears circular, remember that we can always use the purely algebraic definition to compute the dot product which does not yet reference the norm or angle. We see that geometrically, the dot product gives us two things: lengths and angles.
+
+
+ ...TBC...
 % explain geometric interpretation
+% -exaplin norm and angle notation
+% -aka dot product
 % -coefficient of projection
 % -correlation in the sense of: how similar is the direction of the vectors (when bot are
 %  normalized)
 % Mention different (more general) definitions: 
 % -with complex conjugation,
 % -with a (positive definite) matrix sadwiched in between
+% -give both definitions v w = v1*w1 + v2*w2 = |v| |w| cos(angle)
+% -explain generalization to comlex vectors. I think the left factor is conjugated. Or is it the
+%  right one? Does it matter. Maybe not with complex numbers but maybe with further generalizations
+%  to vectors of quaternions or other kinds of non-commutative numbers.
 
 %\paragraph{Vector Products}
 % cross-product, triple-product (but this gives a scalar), wedge-product
@@ -103,7 +125,10 @@ The \emph{inner product}, also known as the \emph{scalar product} between two ve
 
 
 \paragraph{Outer Product}
+
 \paragraph{Cross Product}
+% -give algebraic and geometric definitions (geometric: sine of the angle, perpedicular to 
+%  the plane spanned etc.)
 
 \paragraph{Wedge Product}
 % does not really belong here because it results in a bivector

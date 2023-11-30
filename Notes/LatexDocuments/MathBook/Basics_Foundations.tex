@@ -140,11 +140,22 @@ As we see, relations are quite flexible and can be used to model several importa
 \end{eqnarray}
 We may iterate the product operation in the following way: Form the product $A \times B$ and then take the result of that and form the product with a third set $C$ to get: $(A \times B) \times C$. What we formally get would be a set of pairs where the first element is itself a pair of elements from $A$ and $B$ and the second element is an element from $C$. Elements of $(A \times B) \times C$ would look like $((a,b),c)$ where $a \in A, b \in B, c \in C$. On the other hand, elements of $A \times (B \times C)$ would be of the form $(a, (b,c))$. Formally, this is a different set, so our set product is formally not associative. However, the set $(A \times B) \times C$ is isomorphic (i.e. of the "same form") to $A \times (B \times C)$ and in many practical applications, what we actually want to form is not a set of nested pairs but rather a set of triples $(a,b,c)$ with no further inner structuring. We will adopt the convention that when we write a set product with multiple factors without any parentheses like: $A \times B \times C$, we mean the set of triples $(a,b,c)$ where $a \in A, b \in B, c \in C$. And this, of course, generalizes to quadruples, quintuples, etc. We will also use the notation $A^n$ to mean a set of $n$-tuples in which each element is from $A$.
 
+
+
 \medskip
 There are a lot of algebraic equations involving these operators.... [TODO: give a rather comprehensive list of useful set-algebraic equations]
 
 \medskip
 In addition to these basic and most common set operations, there are a couple of more, less common ones. [TODO: explain symmetric difference, disjoint union, $A^B$, $2^A$, quotient set i.e. set of equivalence classes, ... then maybe give more equations involving those less common operations]
+
+% https://en.wikipedia.org/wiki/Disjoint_union
+% https://en.wikipedia.org/wiki/Symmetric_difference
+
+% https://math.stackexchange.com/questions/1631396/what-is-the-difference-between-disjoint-union-and-union
+
+% Weitz uses a union symbol with a dot above to denote a union of disjoint sets. see:
+% https://www.youtube.com/watch?v=RcDjuXLK-Jg&list=PLb0zKSynM2PDUcEEkjv48Y_4N9CBFyzsz&index=7
+% at 9:00.  ...don't confuse this with the "disjoint union" operation which artificially makes sets disjoint before froming the union. Maybe explain both notations in the section of set theory 
 
 
 

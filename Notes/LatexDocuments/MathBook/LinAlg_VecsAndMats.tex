@@ -95,19 +95,19 @@ If this definition appears circular, remember that we can always use the purely 
 
 
  ...TBC...
-% explain geometric interpretation
-% -exaplin norm and angle notation
-% -aka dot product
+% explain geometric interpretations
 % -coefficient of projection
-% -correlation in the sense of: how similar is the direction of the vectors (when bot are
+% -correlation in the sense of: how similar is the direction of the vectors (when both are
 %  normalized)
 % Mention different (more general) definitions: 
 % -with complex conjugation,
 % -with a (positive definite) matrix sadwiched in between
 % -give both definitions v w = v1*w1 + v2*w2 = |v| |w| cos(angle)
 % -explain generalization to comlex vectors. I think the left factor is conjugated. Or is it the
-%  right one? Does it matter. Maybe not with complex numbers but maybe with further generalizations
+%  right one? Does it matter? Maybe not with complex numbers but maybe with further generalizations
 %  to vectors of quaternions or other kinds of non-commutative numbers.
+% -Maybe the discussion of the geometric menaing could be deferred to the section about analytic
+%  geometry. bbut we can actually mention it here already - it doesn't hurt to be a bit repetitive
 
 %\paragraph{Vector Products}
 % cross-product, triple-product (but this gives a scalar), wedge-product
@@ -165,7 +165,7 @@ Matrices are added and subtracted element-wise. For that to work, the two matric
  \quad \text{where} \quad
  c_{ij} = \sum_{k=1}^p a_{ik} b_{kj}
 \end{equation}
-The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!]. The matrix that has zeros everywhere except on the main diagonal is called the identity matrix and denoted as usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway. This matrix is te neutral element of matrix multiplication. That means that  $\mathbf{I} \mathbf{A} = \mathbf{A} = \mathbf{A} \mathbf{I}$ for any (square) matrix $\mathbf{A}$ whatsoever. In this notation, it is usually understood that the size of $\mathbf{I}$ is matched to the size of $\mathbf{A}$. Matrix multiplication is associative: $(\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{A} (\mathbf{B} \mathbf{C})$ and distributive over matrix addition and subtraction: $\mathbf{A} (\mathbf{B} \pm \mathbf{C}) = \mathbf{A} \mathbf{B} \pm \mathbf{A} \mathbf{C}$ but it is not generally commutative: $\mathbf{AB} \neq \mathbf{BA}$. 
+The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!]. The matrix that has zeros everywhere except on the main diagonal is called the identity matrix and denoted as usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway. This matrix is the neutral element of matrix multiplication. That means that  $\mathbf{I} \mathbf{A} = \mathbf{A} = \mathbf{A} \mathbf{I}$ for any (square) matrix $\mathbf{A}$ whatsoever. In this notation, it is usually understood that the size of $\mathbf{I}$ is matched to the size of $\mathbf{A}$. Matrix multiplication is associative: $(\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{A} (\mathbf{B} \mathbf{C})$ and distributive over matrix addition and subtraction: $\mathbf{A} (\mathbf{B} \pm \mathbf{C}) = \mathbf{A} \mathbf{B} \pm \mathbf{A} \mathbf{C}$ but it is not generally commutative: $\mathbf{AB} \neq \mathbf{BA}$. 
 
 % -maybe add also the Kronecker product and list formulas for its connection with the regular
 %  product
@@ -180,7 +180,7 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Transposition}
-The operation of turning the rows of a matrix into the columns of a new matrix and therefore also the columns into rows is called \emph{transposition} of a matrix. This is denoted by a superscript $T$ as in $\mathbf{A}^T$. When a matrix is complex, then most of the time we want to combine transposition with complex conjugation of the elements because that's how many formulas for real matrices involving the transpose generalize to the complex case. It's rare to see transposition or complex conjugation all by itself applied to a complex matrix (it happens occasionally, though). The combined operation of transposition and conjugation is sometimes called \emph{Hermitian transpose} and denoted by a superscript $H$ as $\mathbf{A}^H$. But there are other notations for that too, for example using a dagger: $\mathbf{A}^\dagger$ or an asterisk $\mathbf{A}^*$ [VERIFY!]. But watch out - often the asterisk denotes only complex conjugation alone.
+The operation of turning the rows of a matrix into the columns of a new matrix and therefore also the columns into rows is called \emph{transposition} of a matrix. This is denoted by a superscript $T$ as in $\mathbf{A}^T$. When a matrix is complex, then most of the time we want to combine transposition with complex conjugation of the elements because that's how many formulas for real matrices involving the transpose generalize to the complex case. It's rare to see transposition or complex conjugation all by itself applied to a complex matrix (it happens occasionally, though). The combined operation of transposition and conjugation is sometimes called \emph{Hermitian transpose} and denoted by a superscript $H$ as $\mathbf{A}^H$. But there are other notations for that too, for example using a dagger: $\mathbf{A}^\dagger$ or an asterisk $\mathbf{A}^*$ [VERIFY!]. But watch out - often the asterisk denotes only complex conjugation alone and the dagger is also often used for the (pseudo-)inverse.
 
 % https://en.wikipedia.org/wiki/Adjugate_matrix
 % https://www.varsitytutors.com/hotmath/hotmath_help/topics/adjoint-of-a-matrix
@@ -189,7 +189,7 @@ The operation of turning the rows of a matrix into the columns of a new matrix a
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
-If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B}$ such that  $\mathbf{B} \mathbf{A} = \mathbf{I}$, then we call $\mathbf{B}$ a left inverse of $\mathbf{A}$. A matrix $\mathbf{C}$ with the property $\mathbf{A} \mathbf{C} = \mathbf{I}$ would be called a right inverse. It turns out that there is no difference between these two notions, i.e. left inverses are always also right inverses and vice versa so we call a matrix that has both of these properties just an inverse matrix of $\mathbf{A}$. It turns furthermore out that if such an inverse exists, then it is unique, so we call such a matrix \emph{the inverse} of $\mathbf{A}$ and denote it by $\mathbf{A}^{-1}$. Finding such an inverse for a given matrix $\mathbf{A}$ can be done by an algorithm called Gauss-Jordan elimination which we will be explained later. [VERIFY!]
+If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B}$ such that  $\mathbf{B} \mathbf{A} = \mathbf{I}$, then we call $\mathbf{B}$ a left inverse of $\mathbf{A}$. A matrix $\mathbf{C}$ with the property $\mathbf{A} \mathbf{C} = \mathbf{I}$ would be called a right inverse. It turns out that there is no difference between these two notions, i.e. left inverses are always also right inverses and vice versa so we call a matrix that has both of these properties just an inverse matrix of $\mathbf{A}$. It turns furthermore out that if such an inverse exists, then it is unique, so we call such a matrix \emph{the inverse} of $\mathbf{A}$ and denote it by $\mathbf{A}^{-1}$. Finding such an inverse for a given matrix $\mathbf{A}$ can be done by an algorithm called Gauss-Jordan elimination which we will be explained later. [VERIFY!] [TODO: explain pseudo-inverse]
 % Could be done via Gauss-Jordan Elimination Algorithm decribed in the section about solvin linear 
 % systems
 

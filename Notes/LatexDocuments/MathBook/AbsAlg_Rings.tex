@@ -124,6 +124,20 @@ After having seen some methods to create new, larger rings from existing rings, 
 % Subsets" or "Special Subrings" or: "Taxonomy of Elements" and "Special Subrings" or maybe name
 % the section Ideals and just mention subrings at the beginning. 
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Divisibility}
+An important relation that can be defined between two elements $a,b$ of a ring $R$ is the \emph{divisibility} relation. A ring element $a$ is called a \emph{left divisor} a ring element $b$, if there is a ring element $x$ such that $a x = b$. If $a$ is a left divisor of $b$, then $b$ is a \emph{right multiple} of $a$ and vice versa. Right divisors and left multiples are defined analogously. In a commutative ring, the two notions coincide and we just say that "$a$ is a \emph{divisor} of $b$" or that "$a$ divides $b$" and we write this as $a|b$. In a non-commutative ring, we say that $a$ is a two-sided divisor of $b$ if it is a left and right divisor at the same time, i.e. there exists an $x \in R$ such that $a x = b$ and there exists a $y \in R$ such that $y a = b$ where $x$ may be different from $y$ in general. For this divisibility relation, it matters which ring we consider. Therefore, we may qualify the relation by saying "$a$ divides $b$ in the ring $R$" if the ring $R$ isn't clear from the context. For example, $2$ does not divide $5$ in $\mathbb{Z}$ but $2$ does divide $5$ in $\mathbb{Q}$ because $2 \cdot \frac{5}{2} = 5$. As we will see later $\mathbb{Q}$, is not only a ring but even a \emph{field} and in such fields, the divisibility relation is rather uninteresting because there, every nonzero element divides every element. The divisibility relation is reflexive: $a|a$ and transitive: if $a|b$ and $b|c$ then $a|c$. These two features put divisibility into the category of a so called \emph{preorder} [VERIFY]. 
+
+
+
+
+
+% https://en.wikipedia.org/wiki/Divisibility_(ring_theory)
+% https://en.wikipedia.org/wiki/Preorder
+
+% https://math.stackexchange.com/questions/1992277/preorders-vs-partial-orders-clarification
+
+% ACRS, pg 25: the associatedness relation can be constructed from the divisibility relation by saying that two elements $a,b$ are associated if $a|b$ and $b|a$. Maybe make a small subsection about Divisibility before associatedness. Divisibility itself is a "pre partial order" relation
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Zero Divisors}
@@ -166,6 +180,8 @@ In the integers, we have the two units $1$ and $-1$. Any two numbers that differ
 It turns out that this equivalence relation is needed to identify certain numbers with one another to obtain a unique factorization. It will be unique only up to this equivalence - and up to the ordering of the factors, of course. For example, in $\mathbb{Z}$, the number $-6$ can be factored as $-6 = (-2) \cdot 3$ or as $-6 = 2 \cdot (-3)$. We don't want to consider these two factorizations as different so we need to identify the positives with their negative counterparts via this $\sim$ relation.
 
 % https://en.wikipedia.org/wiki/Unit_(ring_theory)#Associatedness
+
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Prime Elements}

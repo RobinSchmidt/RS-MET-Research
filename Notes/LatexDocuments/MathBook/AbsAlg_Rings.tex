@@ -406,6 +406,16 @@ You will find this chain of inclusions on many pages on Wikipedia but they use a
 % 
 % What is above? Semirings?
 
+% Boolean ring: everything squares to itself
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Characteristic of a Ring}
+In some rings $R$ it may happen that if we repeatedly add the multiplicative identity $1$ to itself, we may at some point hit the additive identity $0$. If that happens, the number of copies of $1$ that is needed for this to occur for the first time is called the characteristic of the ring $R$. If it doesn't ever happen, we say that the characteristic of $R$ is zero. ...TBC...
+
+
+% https://en.wikipedia.org/wiki/Characteristic_(algebra)
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{More Examples of Rings}
 We have seen some basic rings like $\mathbb{Z}$ which can be regarded as the prototypical example for a ring that was used as model on which the more abstract notion of a ring is based and we have seen the rings $\mathbb{Z}[x]$ and $\mathbb{Z}[i]$ which where obtained by adjoining certain kinds of new elements. Here, we will briefly mention some more examples of rings.
@@ -415,7 +425,7 @@ We have seen some basic rings like $\mathbb{Z}$ which can be regarded as the pro
 ToDo: integers $\mathbb{Z}$, Gaussian Integers $\mathbb{Z}[i]$, modular integers $\mathbb{Z}_p$
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Polynomial Rings}
+\paragraph{Polynomial Rings}
 ToDo: polynomial rings over various base fields, maybe also multivariate polynomials: $\mathbb{Q}[x]$, $\mathbb{R}[x]$, $\mathbb{C}[z]$, $\mathbb{Z}_p[x]$, $\mathbb{R}[x,y]$, rings of power series like
 $\mathbb{R} \llbracket x \rrbracket$
 
@@ -425,7 +435,7 @@ $\mathbb{R} \llbracket x \rrbracket$
 % Z[\sqrt(2)], Z[\sqrt{-3}] (historic reasons)
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{The Dyadic Rationals $\mathbb{Z}[\frac{1}{2}]$}
+\paragraph{The Dyadic Rationals $\mathbb{Z}[\frac{1}{2}]$}
 If we adjoin the number $\frac{1}{2}$ to $\mathbb{Z}$, we obtain a ring that contains all fractions that have a power of $2$ as denominator. A finite approximation of this ring is used to represent floating point numbers in a computer. If, instead of adjoining just $\frac{1}{2}$, we would adjoin also $\frac{1}{3}$, $\frac{1}{5}$, $\frac{1}{7}$, $\frac{1}{11}$, etc. for all prime denominators, we would obtain $\mathbb{Q}$.
 % Of course, that "etc." here means to adjoin all the infinitely many reciprocals of all the prime
 % numbers. I think, that is called in infinite extension or extension of infinite degree? Or does
@@ -433,7 +443,7 @@ If we adjoin the number $\frac{1}{2}$ to $\mathbb{Z}$, we obtain a ring that con
 % polynomial of the number to be adjoined?
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{The Cyclotomic Integers $\mathbb{Z}[\zeta_n]$}
+\paragraph{The Cyclotomic Integers $\mathbb{Z}[\zeta_n]$}
 Consider the so called cyclotomic equation $x^n = 1$. Its solutions are the $n$th roots of unity which are sometimes also called de Moivre numbers. Cylcotomic means circle-splitting which is a fitting name because they indeed split the unit circle into equally sized pizza segments. We'll denote them by $\zeta_n = e^{2 \i \pi / n}$.  If we adjoin $\zeta_n$ to $\mathbb{Z}$ for some given $n$, we'll obtain the ring of the cyclotomic integers for that given $n$. For $n=1$ we just adjoin $\zeta_1 = e^{2 \i \pi / 1} = 1$ which was already there, so nothing changes. For $n=2$, we get $\zeta_2 = e^{\i \pi} = -1$, we adjoin $-1$ which is also already there. For $n=4$, we have $\zeta_4 = e^{\i \pi / 2} = \i$, so in this case, we'll get the Gaussian integers because we adjoin $\i$. They define a square lattice in the complex plane and have the 4 units $1,-1,\i,-\i$. This can be generalized. For $n=3$, we get the so called Eisenstein integers which define a lattice of equilateral triangles in the complex plane. The ring of Eisenstein integers has the 6 units $1, -1, \zeta_3, -\zeta_3, \zeta_3^2, -\zeta_3^2$. A general cyclotomic integer for given $n$ looks like $a_0 + a_1 \zeta_n + a_2 \zeta_n^2 + \ldots + a_{n-1} \zeta_n^{n-1}$. Powers of $\zeta_n$ higher than $n-1$ cannot occur because $\zeta_n^n$ wraps back to $1$ and then the cycle starts again pretty much like the powers of $\i$ cycle back to 1 at $\i^4$ in the complex numbers. In the complex numbers, we will also have $\zeta_4^2 = \i^2 = -1$ and $\zeta_4^3 = \i^3 = -\i$ which is why two coefficients $a_0, a_1$ are sufficient to encode a cyclotomic number with $n=4$, i.e. a complex number. Due to symmetries, the terms $a_0 \zeta_4^0 + a_2 \zeta_4^2$ and $a_1 \zeta_4^1 + a_3 \zeta_4^3$ get combined into single terms because $\zeta_4^0 = -\zeta_4^2$ and $\zeta_4^1 = -\zeta_4^3$. In number theory, one is mostly interested in the cases where $n$ is a prime number. The cyclotomic integers with prime $n$ have played a crucial role in the proof of Fermat's Last Theorem.
 
 % I guess, only for n=3, n=4 and n=6 we get nice regular lattices (triangular, square, hexagonal) and for other n, the lattices look more complex? Try to draw the lattice for n=5!
@@ -451,6 +461,15 @@ Consider the so called cyclotomic equation $x^n = 1$. Its solutions are the $n$t
 % https://en.wikipedia.org/wiki/Eisenstein_integer
 % https://mathworld.wolfram.com/EisensteinInteger.html
 % https://en.wikipedia.org/wiki/Cyclotomic_field
+
+\paragraph{Ring of Power Set} Let $S$ be any set and $\mathcal{P}(S)$ be its power set, i.e. the set of all subsets of $S$. We can turn $\mathcal{P}(S)$ into a ring by defining a suitable addition and multiplication operation among subsets. Let $A, B \in \mathcal{P}(S)$. Multiplication is defined as set intersection $A \cdot B = A \cap B$ and addition is defined as the symmetric difference: $A + B = (A \cup B) \setminus (A \cap B) = (A \setminus B) \cup (B \setminus A)$. Together with the so defined operations, $\mathcal{P}(S)$ indeed becomes a ring. The multiplicative identity is given by the whole set: $1 = S$, the additive identity is the empty set: $0 = \emptyset$ and the additive inverse of $A$ is given by $A$ itself: $-A = A$. Our ring is a boolean ring of characteristic 2. See \cite{YT_PowerSetRing} for more details.
+
+% ACRS pg 48
+% https://www.youtube.com/watch?v=fvMnVKq3UtU
+% -the ring has characteristic 2
+% -it's a boolean ring (everything squares to itself)
+
+% https://en.wikipedia.org/wiki/Boolean_ring
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Classification of Finite Rings}

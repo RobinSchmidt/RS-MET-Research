@@ -12,12 +12,22 @@ Fun fact: algebraic geometry and geometric algebra are two fields of mathematics
 
 %===================================================================================================
 \subsection{Algebraic Varieties}
-An \emph{algebraic variety} is the set of solutions to a system of polynomial equations. In general, this is a set of points in an $n$-dimensional space. As a simple example, consider 2D space and the single equation $x^2 + y^2 - 25 = 0$. This equation defines a circle of radius $5$ centered at the origin of the $xy$-plane. Besides the circle, all conic sections, i.e. sets of solutions of equations of the form $0 = A x^2 + B y^2 + C x y + D x + E y + F$, fall into this category. The set of solutions of $y^2 = x^3 + a x + b$ for some given values $a,b$ is called an "elliptic curve". These are not to be confused with actual ellipses, which are special cases of conic sections. Rather, elliptic curves represent a canonical form of the generalization of conic sections up to degree 3 (verify!). If we look at 3D space, we could define 
+An \emph{algebraic variety} is the set of solutions to a system of polynomial equations $f_1(\mathbf{x}) = 0, \ldots, f_m(\mathbf{x}) = 0$ where $\mathbf{x} = (x_1, \ldots, x_n)$ and the $f_i$ are multivariate polynomials, i.e. polynomials with $n$ input variables that we may collect in an input vector $\mathbf{x}$ whenever this is notationally convenient. In general, this set of solutions is a set of points in an $n$-dimensional space. The dimensionality of the variety will typically be given by $n-m$ where $n$ is the number of variables and $m$ the number of equations [VERIFY!]. ...TBC...
 
-% The dimensionality of the variety will typically be given by $n-m$ where $n$ is the number of variables and $m$ the number of equations
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Parameterizations}
+Defining a shape as the solution set of a system of equations is also called an \emph{implicit definition}. Sometimes it is more convenient to have a more explicit representation of the set of points. A fully explicit representation would be, if we could isolate one variable and express it explicitly as function of all the others. But requiring such a functional representation is often too restrictive - there are some shapes that simply cannot represented that way. For example, we could try to represent the circle explicitly as $y = \sqrt{r^2 - x^2}$ but that would give us only the upper half the circle unless we interpret the square-root as multi-valued function, which is already inconvenient in this very simple toy example and in more complicated cases, things may get out of hand even more. If a fully explicit representation is not possible or practical, the second best thing is to let all the coordinates be functions of a set of some auxiliary variables which we call parameters. In the case of a circle, that could look like $x(t) = \cos(t), y(t) = \sin(t)$ for $t \in [0, 2 \pi]$. In such a representation we call $t$ the parameter.
+...TBC...
 
+\paragraph{Finding Rational Parameterizations}
+The parameterization of the circle via the cosine and sine functions given above is not the only possible way to parameterize the circle. It will probably be the most common one in most practical contexts (such as computer graphics) but from an algebraic point of view, it has a flaw: it requires usage of transcendental functions. Wouldn't it be much nicer in an algebraic context if we could use purely algebraic functions to parameterize it? We can and in fact, we need only rational functions - not even roots are needed. To find a rational parameterization of an implicitly given curve, we sometimes can proceed as follows:
 
-%simple examples: conic sections, elliptic curves, cassini curves, lemniskate
+...TBC...
+
+\paragraph{From Parameterization to Equation}
+Now we look at the inverse problem: We assume that we have a rational parameterization given and we ask what the corresponding implicit equation is. ...TBC...
+
+% circle: ACRS, pg 2, general: 68 - has also algorithm for the inverse problem
 
 % important questions: find a (rational) parameterization, is the zero set a manifold? what topological invariants does it have?
 
@@ -26,6 +36,38 @@ An \emph{algebraic variety} is the set of solutions to a system of polynomial eq
 
 % https://en.wikipedia.org/wiki/Algebraic_variety
 % https://mathworld.wolfram.com/AlgebraicVariety.html
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Examples}
+
+\paragraph{Circles, Spheres and Hyperspheres}
+As a simple example, consider 2D space and the single equation $x^2 + y^2 - 25 = 0$. This equation defines a circle of radius $5$ centered at the origin of the $xy$-plane. If we look at 3D space, we could define a sphere of radius $r$ via the polynomial equation in 3 variables $x^2 + y^2 + z^2 - r^2 = 0$. Note that the set of points that satisfies this equation is only the surface of the sphere, not the full ball. So, the dimensionality of the set of points that satisfies this equation is 2, not 3. 
+
+\paragraph{Conic Sections}
+A circle is defined by a bivariate polynomial of degree 2, i.e. a quadratic polynomial. The circle is therefore also called a curve of degree 2 or quadratic curve. Besides the circle, all conic sections, i.e. sets of solutions of equations of the form $0 = A x^2 + B y^2 + C x y + D x + E y + F$, fall into this category. They are called conic sections because these shapes also arise from intersecting a cone with a plane.
+
+\paragraph{Elliptic Curves}
+The set of solutions of $y^2 = x^3 + a x + b$ for some given values $a,b$ is called an "elliptic curve". These are not to be confused with actual ellipses, which are special cases of conic sections. Rather, elliptic curves represent a canonical form of the generalization of conic sections up to degree 3 (verify!).
+
+
+
+\paragraph{Torus}
+
+%simple examples: cassini curves, lemniskate, torus
+
+% AVRS, pg 72: 
+% -Nodal cubic curve: y^2 = x^2 + x^3
+% -Folium of Descartes: x^3 + y^3 = 3 x y
+
+% https://en.wikipedia.org/wiki/Lemniscate
+% https://de.wikipedia.org/wiki/Lemniskate
+
+% -Give implicit equation and parametrization(s) whereever possible and if possible also an explicit
+%  formula
+
+
 
 
 %---------------------------------------------------------------------------------------------------
@@ -63,9 +105,11 @@ What we informally and vaguely called "adding points at infinity" will now be fl
 % Explain why the space is called "projective". When w != 0, we may normalize the triple wo w=1. We can interpret the w=1 plane as a slice of xyw-space and if we cut out this slice, we get our original xy-plane back
 
 \subsubsection{Homogeneous Polynomials}
-When we are working with homogeneous coordinates, we give the space one extra coordinate. We use $(n+1)$ dimensional space but we still want to use polynomials to describe shapes in $n$-dimensional space by way of zero-sets of polynomial equations. That puts some constraints on the kinds of polynomials that we can use for this purpose. In 2D, if $(x : y : 1)$ is a point such that $p(x,y,1) = 0$, we'd better make sure that this occurs if and only if $p(x/w, y/w, w) = 0$ for any $w$ we may choose. Otherwise the shape would not be well defined. The way we ensure this is called homgenization. We take our original polynomial in $x,y$ and multiply each monomial in it by an appropriate power of $w$ such that each monomial has the same total degree.
+When we are working with homogeneous coordinates, we give the space one extra coordinate. We use $(n+1)$ dimensional space but we still want to use polynomials to describe shapes in $n$-dimensional space by way of zero-sets of polynomial equations. That puts some constraints on the kinds of polynomials that we can use for this purpose. In 2D, if $(x : y : 1)$ is a point such that $p(x,y,1) = 0$, we'd better make sure that this occurs if and only if $p(x/w, y/w, w) = 0$ for any $w$ we may choose. Otherwise the shape would not be well defined. The way we ensure this is called homgenization. We take our original polynomial in $x,y$ and multiply each monomial in it by an appropriate power of $w$ such that each monomial has the same total degree. Being homogeneous is indeed the property that we need to satisfy our constraint, because if a multivariate polynomial $f(\mathbf{x})$ is homogeneous of degree $n$, then we have $f(k \mathbf{x}) = k^n f(\mathbf{x})$ for any input multiplier $k$, so in particular, $f(k \mathbf{x}) = 0$ whenever $f(\mathbf{x}) = 0$ [VERIFY!].
 
 ...TBC...
+
+%If a polyno
 
 %===================================================================================================
 \subsection{Elliptic Curves}
@@ -83,7 +127,7 @@ The set of rational points on such an elliptic has an interesting property: toge
 
 
 
-\subsection{The Abstract Perspective $\star$}
+\subsection{$\star$ The Abstract Perspective}
 This section can be skipped on a first reading of the book. It references rather advanced ideas that are properly introduced only (much) later - specifically \emph{ring theory} from abstract algebra.
 
 
@@ -113,7 +157,7 @@ Algebraic geometry, when viewed as the business of trying to find the set of sol
 
 %
 % -Or is it like we we consider the ring of all polynomials but we allow only to plug in 
-%% points (x,y) for which 
+%  points (x,y) for which the polynomial is zero?
 
 
 

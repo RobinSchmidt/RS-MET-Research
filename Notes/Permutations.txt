@@ -18,7 +18,7 @@ yet been visited (which is 1) and do the same process. ..and so on, until all nu
 covered. In the example, the permutation consisted of 1 cycle of length 3, 3 cycles of length 2 and
 1 cycle of length 1. The length 1 cycles can be left out from the notation, since they represent
 elements which map to themselves. The identity can be written as (1) or as (). The composition of 
-the so extrcated cycles is commutative because the cycles are disjoint - each cycle operates on a 
+the so extracted cycles is commutative because the cycles are disjoint - each cycle operates on a 
 different subset of the original set, so they don't interfere with one another. The representation
 as cycles shows more clearly the structure of the permutation and makes it possible to perform the
 permutation in at most N steps without additional memory. We just work through each cycle from 
@@ -36,10 +36,28 @@ groups can be figured out by studying permutation groups - they encompass all ot
 
 
 ---------------------------------------------------------------------------------------------------
+
 Some ideas:
--the operation of composing permutations takes two permutations and produces again a permutation
--could there be another such operation that somehow relates to composition in a similar way as
- addition and multiplication relate?
+
+- The operation of composing permutations takes two permutations and produces again a permutation.
+
+- Could there be another such operation that somehow relates to composition in a similar way as
+  addition and multiplication relate? I mean, if we interpet addition as composition, could there be
+  a fitting multiplication that satisfies a distributive law over addition? Or maybe it could be the
+  other way around - i.e. interpret multiplication as composition and try to find a fitting 
+  addition?
+ 
+- This theory of permutations could perhaps help to implement a matrix transpose algorithm that 
+  works with a (provably?) minimal amount of auxiliary memory. I once contemplated to try to come up 
+  with an in-place matrix-transpose algo but failed to produce one. This theory may help to explain 
+  why I failed.
+ 
+- Maybe implement it in a class rsPermutation that has a member function getCycleDecomposition() 
+  which returns a std::vector<rsPermutation> representing the cycles. The class could have a 
+  std::vector<int> as (sole) data member. This vector should always store some permutation of 
+  0...N-1 where N is the length.
+ 
+ 
 Example using + to denote composition:
 
 Eq1:
@@ -54,7 +72,7 @@ Eq2:
 (2 3 4 1)   (4 3 1 2)   (4 3 1 2)   (2 4 3 1)
 
 ...figure out, how this * relation relates to +. Is it distributive? Or maybe we need to reverse 
-the roles? By itself, it is associative (i think) but not commutative. Swapping the inputs yields
+the roles? By itself, it is associative (I think) but not commutative. Swapping the inputs yields
 the inverse permutation:
 
 Eq3:
@@ -65,8 +83,8 @@ hmm..in that way, it behaves more like subtraction or division - swapping argume
 results. But the the results are inverses with respect to the *other* operation - which is
 kinda weird.
 
-I think, there are no inverse elements for this operation, but i think, if P is a permutation and
-Q is another, we will always have Q*P*Q = p, right? So, we can undo a left-multiplication by doing
+I think, there are no inverse elements for this operation, but I think, if P is a permutation and
+Q is another, we will always have Q*P*Q = P, right? So, we can undo a left-multiplication by doing
 a right multiplication with the same Q and vice versa. Let's try it by taking the result of Eq2 and
 applying the 1st operand to the result, but from the right
 
@@ -78,9 +96,9 @@ Let's invert the 2nd operand:
 (1 2 3 4) * (1 2 3 4)
 (2 4 3 1)   (4 1 2 3)
 
-no - that doesn't work either - it can'T: to get the identity as result, we would need the 2nd rows
-of both operands to match. hmmm...that operation does not really seem to lead to any interesting 
-structure
+no - that doesn't work either - it can't: to get the identity as result, we would need the 2nd rows
+of both operands to match. Hmmm...that operation does not really seem to lead to any interesting 
+structure. But that was just the first heavy handed guess...
 
 
 

@@ -2,7 +2,20 @@
 Algebraic geometry investigates the sets of zeros of multivariate polynomials and the geometrical shapes that are defined by these zero sets. Consider as example the bivariate polynomial $f(x,y) = x^2 + y^2 - r^2$ for some given constant $r$. Those points $(x,y)$ in the $xy$-plane for which this function produces zero as output define a geometric shape - in this case, a circle of radius $r$ centered at the origin. You can have multiple simultaneous equations that must be equal to zero and of course, you can also have more than two input variables. It's also possible to consider complex solutions, in fact, that's the more typical setting. In general, these sets of solutions to polynomial equations are called "algebraic varieties" and these are the main subject of interest in algebraic geometry.
 
 \medskip
-Besides the circle, all conic sections, i.e. sets of solutions of equations of the form $0 = A x^2 + B y^2 + C x y + D x + E y + F$, fall into this category. The set of solutions of $y^2 = x^3 + a x + b$ for some given values $a,b$ is called an "elliptic curve". These are not to be confused with actual ellipses, which are special cases of conic sections. Rather, elliptic curves represent a canonical form of the generalization of conic sections up to degree 3 (verify!).
+It is also possible to work in the field of rational numbers $\mathbb{Q}$ rather than in the field of complex numbers $\mathbb{C}$ or even in finite fields such as $\mathbb{Z}_p$ for a given prime number $p$. ...TBC..
+
+\medskip
+Fun fact: algebraic geometry and geometric algebra are two fields of mathematics that have nothing to do with each other. Isn't that weird? I really wonder, how connections between these fields could look like. Maybe we could start by interpreting the variables in the equations as multivectors instead of real or complex numbers? I have no idea but I think there just \emph{should} be some connection!
+
+
+
+
+%===================================================================================================
+\subsection{Algebraic Varieties}
+An \emph{algebraic variety} is the set of solutions to a system of polynomial equations. In general, this is a set of points in an $n$-dimensional space. As a simple example, consider 2D space and the single equation $x^2 + y^2 - 25 = 0$. This equation defines a circle of radius $5$ centered at the origin of the $xy$-plane. Besides the circle, all conic sections, i.e. sets of solutions of equations of the form $0 = A x^2 + B y^2 + C x y + D x + E y + F$, fall into this category. The set of solutions of $y^2 = x^3 + a x + b$ for some given values $a,b$ is called an "elliptic curve". These are not to be confused with actual ellipses, which are special cases of conic sections. Rather, elliptic curves represent a canonical form of the generalization of conic sections up to degree 3 (verify!). If we look at 3D space, we could define 
+
+% The dimensionality of the variety will typically be given by $n-m$ where $n$ is the number of variables and $m$ the number of equations
+
 
 %simple examples: conic sections, elliptic curves, cassini curves, lemniskate
 
@@ -10,18 +23,54 @@ Besides the circle, all conic sections, i.e. sets of solutions of equations of t
 
 % Bezout's Theorem
 
-\medskip
-It is also possible to work in the field of rational numbers $\mathbb{Q}$ rather than in the field of complex numbers $\mathbb{C}$ or even in finite fields such as $\mathbb{Z}_p$ for a given prime number $p$. ...tbc..
 
-Fun fact: algebraic geometry and geometric algebra are two fields of mathematics that have nothing to do with each other. Isn't that weird? I really wonder, how connections between these fields could look like. Maybe we could start by interpreting the variables in the equations as multivectors instead of real or complex numbers? I have no idea but I think there just \emph{should} be some connection!
+% https://en.wikipedia.org/wiki/Algebraic_variety
+% https://mathworld.wolfram.com/AlgebraicVariety.html
 
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Problematic Intersection Points}
+Consider the situation where we have two polynomial equations $f(x,y) = 0$ and $g(x,y) = 0$ in 2D and we want to find all the intersection points of the two curves that are defined by the two polynomials respectively. Such intersection points can be found by solving the equation $f(x,y) = g(x,y)$ for pairs $(x,y)$ that satisfy the equation. For simplicity, let's assume that $g(x,y) = ax + by + c$, i.e. $g$ is only of degree one such that defines a straight line. In an ideal world, we would like to see exactly $n$ intersection points between the curve $f$ and the line $g$ if the polynomial $f$ has degree $n$. We can indeed make that (and more) work by tweaking the problem setting appropriately whenever we encounter a problematic situation in our current setting.
+
+\paragraph{Intersections at Complex Coordinates}
+At first, we assume that our "current setting" takes place in the usual Euclidean $xy$-plane which we also call $\mathbb{R}^2$. If we take $f(x,y) = x^2 + y^2 + 1$ and $g(x,y) = 0$, we can easily convince ourselves that no pair $(x,y)$ will ever satisfy the equation $x^2 + y^2 + 1 = 0$. Except when we allow $x$ and $y$ to be complex valued. In that case $x = 0, y = \i$ would work, for example. So, our first tweak to the problem setting setting is that we move it from $\mathbb{R}^2$ to $\mathbb{C}^2$. This will not solve all of our problems but it gets us some way into the right direction.
+
+% -solution: use the field of complex numbers
+
+\paragraph{Intersections at Infinity}
+A second problem that we may run into is exemplified by the following situation: let $f(x,y) = 2 x - y + 1$ and $g(x,y) = 2 x - y + 2$. These define two parallel lines that obviously intersect nowhere - not even when $x$ and $y$ are allowed to be complex. The solution to this problem is, informally, that we "add points at infinity" and say that two parallel lines intersect at such a point at infinity ...TBC...
+
+% -solution: consider also intersections at infinity
+
+\paragraph{Multiplicities of Intersections}
+Consider $f(x,y) = x^2 - y$ and $g(x,y) = y$. If we draw the curves defined by setting each equation individually to zero, we will draw the parabola $y = x^2$ for $f$ and the horizontal line $y = 0$, i.e. the $x$-axis, for $g$. These two curves do not intersect but rather touch at $(x,y) = (0,0)$. The straight line $g$ is tangential to the parabola $f$ at this point. Such points of tangency highlight yet another problem that we might run into.
+ ...TBC...
+
+% perturb g a bit - shift it a bit up - the point of tangency turns into two points of intersection. In general, in teh complex domain, we will see higher order saddles so we will get more intersection points by such a perturbation when there is a higher "order of tangency" (verify!)
+
+% -tangency, tangetial intersections or rather touching points
+% -solution: count intersections with multiplicity
+
+%===================================================================================================
+\subsection{Projective Space}
+
+\subsubsection{Homogeneous Coordinates}
+What we informally and vaguely called "adding points at infinity" will now be fleshed out for real. One way to "add points at infinity" to a given space is to switch to so called homogeneous coordinates. To get a feeling for how that works, let's start with our usual Euclidean plane $\mathbb{R}^2$. We'll actually eventually apply the idea to $\mathbb{C}^n$, but imagining to start with $\mathbb{R}^2$ is okay for intuition building.
+...TBC...
+
+\subsubsection{Homogeneous Polynomials}
+When we are working with homogeneous coordinates, we give the space one extra coordinate. We use $(n+1)$ dimensional space but we still want to use polynomials to describe shapes in $n$-dimensional space by way of zero-sets of polynomial equations. That puts some constraints on the kinds of polynomials that we can use for this purpose. In 2D, if $(1 : x : y)$ is a point such that $p(1,x,y) = 0$, we'd better make sure that this occurs if and only if $p(w, wx, wy) = 0$ for any $w$ we may choose. Otherwise the shape would not be well defined. The way we ensure this is called homgenization. We take our original polynomial in $x,y$ and multiply each monomial in it by an appropriate power of $w$ such that each monomial has the same total degree.
+
+...TBC...
+
+%===================================================================================================
 \subsection{Elliptic Curves}
+
 \subsubsection{Elliptic Curves} 
 % asterisk means: can be skipped on first reading
 Here, we will consider a certain subset of bivariate polynomial equations that turned out to be in the sweet spot between being enough to actually tackle them and complex enough to allow for some interesting features. I'm talking about the so called elliptic curves. But didn't we already talk about ellipses as one particular type of conic section? Yeah - an \emph{elliptic curve} is actually \emph{not an ellipse} but rather the set of solutions of a bivariate polynomial equation of degree 3. ToDo: explain etymology if the term
 
-\paragraph{Group Structure $\star$} % asterisk means: can be skipped on first reading
+\paragraph{$\star$ Group Structure} % star means: can be skipped on first reading
 The set of rational points on such an elliptic has an interesting property: together with a suitably defined binary operation between these points, they form an algebraic structure known as commutative group. That basically means that we can plug two rational points into our operation and the operation will produce another rational point on the curve. In the context of elliptic curve theory, this operation is usually denoted  with $+$ and called addition - but it is \emph{not} just the regular vector addition. ...TBC...
 % see Elliptic Tales, pg 116
 % mention that i works also when we don't work over Q but over a finite field

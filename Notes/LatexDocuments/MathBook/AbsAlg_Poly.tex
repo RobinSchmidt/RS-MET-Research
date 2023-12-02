@@ -3,13 +3,81 @@ Linear algebra is, to a large part, about finding solution vectors $\mathbf{x}$ 
 \begin{equation}
  \sum_{n=0}^N a_n x^n = 0
 \end{equation}
-where the $a_n$ are known quantities, called the coefficients and $x$ is an unknown \emph{variable} or \emph{indeterminate} that we want to find. If on the right hand side, we have some other constant than $0$, we can just move it over to the left hand side and absorb it in the $a_0$ coefficient. The left hand side is called a polynomial in $x$. We have already met polynomials as a certain type of functions: we can plug in a value $x$ and it spits out a value $f(x)$. When polynomials are viewed as functions, it makes sense to ask: for which values of $x$ does the function produce zero as output. That question is what solving the equation $f(x) = 0$ encodes. Besides the view of polynomials as functions that produce an output for a given input and as equations that we want to solve, we may also view polynomials as formal expressions. Viewed as such an expression, a polynomial is determined by its sequence of coefficients and we forget about the functional aspect - we just think of it as a finite sequence of numbers. These sequences of polynomial coefficients admit an algebra among themselves: we can add, subtract, multiply and (with caveats) divide such sequences of polynomial coefficients. We may even consider infinite sequences which leads us to the idea of formal power series. With such power series, the formal point of view really yields a generalized view because power series can be interpreted as functions only when the series is convergent - but as formal power series, we may with them even when the series does not converge. With polynomials, we don't have that convergence problem, so we can always view a polynomial as a function - but in some contexts, we may voluntarily de-emphasize that point of view. It should also be noted that there are settings in which two polynomials with different coefficients encode the same function. That happens when we do not work over our usual real or complex numbers but over a so called finite ring. We will learn what that is in the chapter about abstract algebra. The takeaway here is that over such finite sets, there is only a finite number of possible functions from the set to itself but there is an infinite number of different coefficient sequences so some of them must encode the same function. From this point of view, the formal and functional view of polynomials differ in what it means for tow polynomials to be equal to one another. The formal sense of equality of polynomials is more restrictive than the functional sense.
+where the $a_n$ are known quantities, called the coefficients and $x$ is an unknown \emph{variable} or \emph{indeterminate} that we want to find. If on the right hand side, we have some other constant than $0$, we can just move it over to the left hand side and absorb it in the $a_0$ coefficient. The left hand side is called a polynomial in $x$. We have already met polynomials as a certain type of functions: we can plug in a value $x$ and it spits out a value $f(x)$. When polynomials are viewed as functions, it makes sense to ask: for which values of $x$ does the function produce zero as output. That question is what solving the equation $f(x) = 0$ encodes. Besides the view of polynomials as functions that produce an output for a given input and as equations that we want to solve, we may also view polynomials as formal expressions. Viewed as such an expression, a polynomial is determined by its sequence of coefficients and we forget about the functional aspect - we just think of it as a finite sequence of numbers. These sequences of polynomial coefficients admit an algebra among themselves: we can add, subtract, multiply and (with caveats) divide such sequences of polynomial coefficients. We may even consider infinite sequences which leads us to the idea of formal power series. With such power series, the formal point of view really yields a generalized view because power series can be interpreted as functions only when the series is convergent - but when seen just as formal expressions, we may work with them even when the series does not converge. With polynomials, we don't have that convergence problem, so we can always view a polynomial as a function - but in some contexts, we may voluntarily de-emphasize that point of view. It should also be noted that there are settings in which two polynomials with different coefficients encode the same function. That happens when we do not work over our usual real or complex numbers but over a finite ring. Over finite sets, there is only a finite number of possible functions from the set to itself but there is still an infinite number of different coefficient sequences so some of them must encode the same function. From this point of view, the formal and functional view of polynomials differ in what it means for two polynomials to be equal to one another. The formal sense of equality of polynomials is more restrictive than the functional sense. In the formal view, the sequences of coefficients must match whereas in the functional view, only the input/output relation must match which is, in some contexts, a weaker requirement as we have seen. Over infinite rings though, the two requirements are the same [VERIFY!].
 
 ...TBC...
+
+%===================================================================================================
+\subsection{Operations on Polynomials}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Arithmetic Operations}
+
+\paragraph{Addition and Subtraction}
+
+\paragraph{Multiplication}
+
+\paragraph{Division}
+
+\paragraph{Greatest Common Divisor}
+
+% -Euclidean algorithm for polynomials
+% -Extended euclidean algorithm
+% -least common multiple
+
+\paragraph{Composition}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Calculus Operations}
+
+\paragraph{Derivative}
+
+\paragraph{Antiderivative}
+
+\paragraph{Definite Integrals}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Miscellaneous Operations}
+
+\paragraph{Evaluation}
+
+\paragraph{Base Change}
+
+
+
+%===================================================================================================
+\subsection{Roots and Factorization}
+
+% -Factorization
+
+
+
+%===================================================================================================
+\subsection{Multivariate Polynomials}
+
+
+
+%===================================================================================================
+\subsection{Rational Functions}
+
 
 
 
 \begin{comment}
+
+ToDo:
+-Move some of the content from the section about functions over to here
+-Base change (maybe under some sort of transformatiuons) where we can also list scaling or shifting
+ the argument, raising the argument to a power
+-Root finding, Viete's theorem, formulas for quadratic, cubic and quartic case, unsolvability of
+ quintic case, companion matrix
+-Construction of (sets of) polynomials with certain porperties
+ -Interpolation polynomials
+ -Approximation polynomials
+ -Orthogonal polynomials
+-Multivariate polynomials
+ -elementary symmetric polynomials 
 
 % Interpretation of polynomials as:
 % -functions
@@ -28,7 +96,9 @@ where the $a_n$ are known quantities, called the coefficients and $x$ is an unkn
  polynomials can be added and multiplied by one another. There is even a notion of 
  polynomial division with remainder
  
- ACRS, pg 34: field of fractions
+ACRS, pg 17 ff 
+ 
+ ACRS, pg 34: field of fractions ..done in the fields section
  
 -Make subsections for:
  -Unsolvability of the Quintic (theorem of Abel-Ruffini)

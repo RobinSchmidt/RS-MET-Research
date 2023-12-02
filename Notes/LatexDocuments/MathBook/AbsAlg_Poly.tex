@@ -1,0 +1,37 @@
+\section{Polynomial Algebra}
+Linear algebra is, to a large part, about finding solution vectors $\mathbf{x}$ to equations of the general form $\mathbf{A x} = \mathbf{b}$ which are called linear equations. More generally, algebra is about the solution of algebraic equations which are defined to be equations that can be formed by using the basic arithmetic operations and roots. The roots are included because they are thought of as being inversions of the operation of repeatedly multiplying an object by itself so they are in some sense induced by the multiplication operation. Polynomial equations are an important subset of algebraic equations. In one dimension, these are equations of the general form:
+\begin{equation}
+ \sum_{n=0}^N a_n x^n = 0
+\end{equation}
+where the $a_n$ are known quantities, called the coefficients and $x$ is an unknown \emph{variable} or \emph{indeterminate} that we want to find. If on the right hand side, we have some other constant than $0$, we can just move it over to the left hand side and absorb it in the $a_0$ coefficient. The left hand side is called a polynomial in $x$. We have already met polynomials as a certain type of functions: we can plug in a value $x$ and it spits out a value $f(x)$. When polynomials are viewed as functions, it makes sense to ask: for which values of $x$ does the function produce zero as output. That question is what solving the equation $f(x) = 0$ encodes. Besides the view of polynomials as functions that produce an output for a given input and as equations that we want to solve, we may also view polynomials as formal expressions. Viewed as such an expression, a polynomial is determined by its sequence of coefficients and we forget about the functional aspect - we just think of it as a finite sequence of numbers. These sequences of polynomial coefficients admit an algebra among themselves: we can add, subtract, multiply and (with caveats) divide such sequences of polynomial coefficients. We may even consider infinite sequences which leads us to the idea of formal power series. With such power series, the formal point of view really yields a generalized view because power series can be interpreted as functions only when the series is convergent - but as formal power series, we may with them even when the series does not converge. With polynomials, we don't have that convergence problem, so we can always view a polynomial as a function - but in some contexts, we may voluntarily de-emphasize that point of view. It should also be noted that there are settings in which two polynomials with different coefficients encode the same function. That happens when we do not work over our usual real or complex numbers but over a so called finite ring. We will learn what that is in the chapter about abstract algebra. The takeaway here is that over such finite sets, there is only a finite number of possible functions from the set to itself but there is an infinite number of different coefficient sequences so some of them must encode the same function. From this point of view, the formal and functional view of polynomials differ in what it means for tow polynomials to be equal to one another. The formal sense of equality of polynomials is more restrictive than the functional sense.
+
+...TBC...
+
+
+
+\begin{comment}
+
+% Interpretation of polynomials as:
+% -functions
+% -equations to be solved
+% -formal expressions
+%  -this view generalizes to power series even when they do not converge
+
+-Two polynomials seen as formal expressions are equal iff all their coeffs are equal. 
+ When viewed as function, it may happen that two polynomials with different coefficients
+ give rise to the same function. That happens when the domain and range of the polynomial
+ is a finite ring. For such finite rings, there is only a finite number of functions from
+ the ring to itself but there is an infinite number of different coefficient sequences, so
+ some of these sequences must encode the same function.
+ 
+-As formal expressions, we can define an algebra on the set of polynomials itself: 
+ polynomials can be added and multiplied by one another. There is even a notion of 
+ polynomial division with remainder
+ 
+ ACRS, pg 34: field of fractions
+ 
+make a section on 
+-Differential Algebra 
+-Lie Algebras
+
+\end{comment}

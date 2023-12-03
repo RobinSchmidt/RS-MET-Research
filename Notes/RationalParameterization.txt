@@ -1,0 +1,30 @@
+We assume that we have an implicit definition of an algebraic variety given and we want to find a
+rational parameterization for that. There is a recipe for that which sometimes works. We'll see it
+in action on the example of the unit circle defined by the equation:
+
+  x^2 + y^2 - 1 = 0
+  
+That's our implict definition of the variety. What we want to find is a pair of rational functions
+x(t), y(t) that parameterize our given variety. 
+
+Our first step it to find some convenient fixed point P on the variety which has rational 
+coordiantes. We will pick the point 
+
+  P = (0,1) 
+  
+to be our fixed point. Next, we pick a variable second point Q. It should be chosen such that when 
+we connect P and Q by a straight line, this line should intersect our circle in a second point (the
+line will always intersect (or at least be tangent to) the circle in P). It is this seconc point of
+intersection, whose coordinates we want to figure out. The point whould be maed variable by our 
+parameter t in such a way that, when t sweeps out some interval of values, the second point of 
+intersection will sweep out our circle.
+
+
+
+
+
+
+
+
+ToDo:
+-use the same method to find a rational parameterization of an ellipsoid

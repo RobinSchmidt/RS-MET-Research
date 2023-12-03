@@ -30,6 +30,14 @@ Sometimes, we may want to model situations in which the order of entries actuall
 
 %https://en.wikipedia.org/wiki/Tuple
 
+
+\subsubsection{Multisets}
+In a set, neither the order of the elements nor their multiplicity matters where by "multiplicity" we mean the number of times, an element occurs. For example: $\{ 1,2,2 \} = \{ 2,1,2 \} = \{ 1,2 \}$. In a tuple, both of these things matter: $(1,2,2) \neq (2,1,2) \neq (1,2,3) \neq (1,2)$ where the last tuple $(1,2)$ is actually even different in terms of its "data type" from the two others which match in data type but are different tuples. There is an intermediate situation where we may want to distinguish collections based on multiplicity but not based on the exact position of occurrence of an element. A structure suited for that purpose is the so called multiset. Like in a set, it is immaterial at which position we list an item - but it does matter whether an item occurs once or twice or any other number of times. ...TBC...
+
+%the order of the components matters and of course, it also makes a difference
+
+
+
 \subsubsection{Relations}
 A relation can formally be defined to be a set of tuples. Of particular importance are binary relations, i.e. sets of 2-tuples, aka pairs. As an example, consider the two sets $A = \{1,2,5\}, B = \{0,2,4\}$. We can define a relation $R$ between the sets $A$ and $B$ as a set of pairs where the first entry comes from $A$ and the second from $B$, for example: $R = \{(1,2),(1,4),(2,4)\}$. Such a relation can be visualized pictorially by drawing the two sets side by side and drawing an arrow between each pair of elements that is in the relation. This is shown for our relation $R$ in figure .... ...TBC...
 % explain left/right totality, left/right uniqueness - see Bill Shillito's course on youtube

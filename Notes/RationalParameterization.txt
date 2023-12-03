@@ -23,7 +23,7 @@ should be chosen conveniently and such that when we connect P and Q by a straigh
 (possibly extended) line should intersect our circle in a second point, let's call it R. By 
 construction, the line will always intersect (or at least be tangent to) the circle in P. It is this 
 second point of intersection R, whose coordinates we want to figure out. It will be some function of
-the point Q: R = f(Q). The function f is what we ultimately wante to figure out. The point Q should 
+the point Q: R = f(Q). The function f is what we ultimately want to figure out. The point Q should 
 be made variable by our parameter t in such a way that, when t sweeps out some interval of values, 
 the second point of intersection Q will sweep out our circle. We will chose the point Q to be a 
 point on the x-axis with its x-coordinate being equal to t. That is:
@@ -35,7 +35,7 @@ Next, we look at the line that connects P and Q. That line can be given parametr
   L(s) = (1-s)*P + s*Q
 
 where it is important to note that the parameter that parameterizes the line, namely s, is a 
-different variable than our eventual parameter t that we wnat to use in our rational 
+different variable than our eventual parameter t that we want to use in our rational 
 parameterization (that really confused me initially). Our parametric line can be split into its x-
 and y-component:
 
@@ -138,8 +138,10 @@ solutions and these solutions would involve a square root. So, it seems like tha
 rational solution was due to being "lucky" enough, that some of the equations along the way 
 simplified in a nice way. In a different setting, it might be possible that we may need to invoke 
 the quadratic formula and if the variety if of higher degree, quite possible even the cubic or 
-quartic formula or a numeric polynomila root-finder. In such cases, our parameterization would not
-qualify as "rational" anymore - but at least, it would still qualify as algebraic. 
+quartic formula or a numeric polynomial root-finder. In such cases, our parameterization would not
+qualify as "rational" anymore - but at least, it would still qualify as algebraic. But I think, when
+the equation has only degree 2, there can only be two solutions - and one of them is s = 0 with 
+L(s=0) = P by construction. But with higher degree curves, things may get more complicated.
 
 ...I guess. I didn't try this method on other examples yet. When I do and find something 
 interesting, I'll extend this document with my findings.
@@ -168,6 +170,13 @@ ToDo, Questions:
   The sin/cos parameterization has the advantage of being "natural", i.e. by arc-length whereas the
   rational parameterization has the advantage of not needing to tap into the world of transcendental
   functions - the coordinate functions are "simpler" in some sense.
+  
+- Maybe try to use the method to find rational points on an elliptic curve (not an ellipse!). I 
+  think, this is the same idea that underlies the definition of the "addition" of points on an
+  elliptic curve. This addition is also defined in terms of an intersection of a line (namely, the
+  line that passes thorugh the two summand points) with the curve. In this case, we look for the 
+  third intersection point when two of them are given. But here, the goal is different: we want to 
+  "sweep out" all rational points on the curve with a (rational) parameter t.
   
 - Give an inverse algorithm: Given a (rational?) parameterization, find the corresponding implicit 
   equation. Ideally, we want to able to convert back and forth between implicit and parametric 

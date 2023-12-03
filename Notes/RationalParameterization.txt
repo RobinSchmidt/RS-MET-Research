@@ -14,12 +14,21 @@ coordiantes. We will pick the point
   
 to be our fixed point. Next, we pick a variable second point Q. It should be chosen such that when 
 we connect P and Q by a straight line, this line should intersect our circle in a second point (the
-line will always intersect (or at least be tangent to) the circle in P). It is this seconc point of
-intersection, whose coordinates we want to figure out. The point whould be maed variable by our 
+line will always intersect (or at least be tangent to) the circle in P). It is this second point of
+intersection, whose coordinates we want to figure out. The point should be made variable by our 
 parameter t in such a way that, when t sweeps out some interval of values, the second point of 
-intersection will sweep out our circle.
+intersection will sweep out our circle. We will chose the point Q to be a point on the x-axis with 
+its x-coordinate being equal to t. That is:
 
+  Q = (t,0)
+  
+Next, we look at the line that connects P and Q. That line can be given parametrically as:
 
+  L(s) = ((1-s)*P, s*Q)
+
+where it is important to note that the parameter that parameterizes the line, namely s, is a 
+different variable than our eventual parameter t that we wnat to use in our rational 
+parameterization (that really confused me initially). 
 
 
 

@@ -7,24 +7,26 @@ in action on the example of the unit circle defined by the equation:
 That's our implict definition of the variety. What we want to find is a pair of rational functions
 x(t), y(t) that parameterize our given variety. 
 
-Our first step it to find some convenient fixed point P on the variety which has rational 
-coordiantes. We will pick the point 
+Our first step is to find some convenient fixed point P on the variety which has rational 
+coordinates. We will pick the point 
 
   P = (0,1) 
   
-to be our fixed point. Next, we pick a variable second point Q. It should be chosen such that when 
-we connect P and Q by a straight line, this line should intersect our circle in a second point (the
-line will always intersect (or at least be tangent to) the circle in P). It is this second point of
-intersection, whose coordinates we want to figure out. The point should be made variable by our 
-parameter t in such a way that, when t sweeps out some interval of values, the second point of 
-intersection will sweep out our circle. We will chose the point Q to be a point on the x-axis with 
-its x-coordinate being equal to t. That is:
+to be our fixed point. Next, we pick a variable second point Q not assumed to be on the circle. It 
+should be chosen conveniently and such that when we connect P and Q by a straight line, this 
+(possibly extended) line should intersect our circle in a second point, let's call it R. By 
+construction, the line will always intersect (or at least be tangent to) the circle in P. It is this 
+second point of intersection R, whose coordinates we want to figure out. It will be some function of
+the point Q: R = f(Q). The function f is what we ultimately wante to figure out. The point Q should 
+be made variable by our parameter t in such a way that, when t sweeps out some interval of values, 
+the second point of intersection Q will sweep out our circle. We will chose the point Q to be a 
+point on the x-axis with its x-coordinate being equal to t. That is:
 
   Q = (t,0)
   
 Next, we look at the line that connects P and Q. That line can be given parametrically as:
 
-  L(s) = ((1-s)*P, s*Q)
+  L(s) = (1-s)*P + s*Q
 
 where it is important to note that the parameter that parameterizes the line, namely s, is a 
 different variable than our eventual parameter t that we wnat to use in our rational 
@@ -34,8 +36,10 @@ and y-component:
   x(s) = (1-s)*P_x + s*Q_x = (1-s)*0 + s*t = s*t
   y(s) = (1-s)*P_y + s*Q_y = (1-s)*1 + s*0 = 1-s
   
-Now we want to figure out a value of s, such that the point (x(s), y(s)) satisfies our circle 
-equation x^2 + y^2 - 1 = 0. So we plug in the coordinate functions x(s), y(s) into the equation:
+where we use the notation P = (P_x, P_y), Q = (Q_x, Q_y) for denoting the x- and y-coordinates of 
+our points P and Q. Now we want to figure out a value of s, such that the point (x(s), y(s)) 
+satisfies our circle equation x^2 + y^2 - 1 = 0. So we plug in the coordinate functions x(s), y(s) 
+into the equation:
 
   0 = (x(s))^2 + (y(s))^2 - 1
   0 = (s*t)^2  + (1-s)^2  - 1  
@@ -47,12 +51,12 @@ wouldn't be the case because s = 0 should, by construction, give us back our fix
 it indeed dutyfully does. We are interested in the second solution. That should give us the *other*
 intersection of our line with the circle - the one we are really interested in. We are allowed to 
 divide both sides by s because we now can assume s != 0 because we are interested in an s other than 
-zero (duh!). That brings us to:
+zero. That brings us to:
 
   0 = s*(t^2 + 1) - 2
   s = 2 / (t^2 + 1)
   
-which, by plugging that value of s into x(s), y(s) gives:
+which, by plugging that value of s into x(s), y(s), gives:
 
   x = s*t 
     = (2 / (t^2 + 1)) * t 
@@ -64,18 +68,20 @@ which, by plugging that value of s into x(s), y(s) gives:
 	= (t^2 + 1 - 2)  / (t^2 + 1)
     = (t^2 - 1) / (t^2 + 1)
   
-which are both functions of our t-parameter which determines our variabel point on the x-axis, as
+which are both functions of our t-parameter which determines our variable point on the x-axis, as
 desired. Summarizing, we have arrived at the following rational parameterization of the unit circle:
 
-  x(t) = (  2*t  ) / (t^2 + 1)
-  y(t) = (t^2 - 1) / (t^2 + 1)
+  ┌──────────────────────────────┐
+  │ x(t) = (  2*t  ) / (t^2 + 1) │
+  │ y(t) = (t^2 - 1) / (t^2 + 1) │
+  └──────────────────────────────┘
 
 It is "rational" in the sense that both coordinate functions are rational functions of the parameter
-t. That implies that when we plug in rational numbers for t, the rseulting coordinates x(t), y(t) 
-will also be rationla numbers. In fact, our parameterization generates almost all rational points on
+t. That implies that when we plug in rational numbers for t, the resulting coordinates x(t), y(t) 
+will also be rational numbers. In fact, our parameterization generates almost all rational points on
 the unit circle when t sweeps from minus infinity to plus infinity. The only missing point is our 
 original fixed point P = (0,1). This is the edge case for when the line approaches tangency when t
-approaches plus or minsu infinity. In this case, the second point of intersection Q approaches our 
+approaches plus or minus infinity. In this case, the second point of intersection Q approaches our 
 fixed first point of intersection P.
 
   
@@ -85,7 +91,10 @@ fixed first point of intersection P.
 
 
 
-
+----------------------------------------------------------------------------------------------------
 
 ToDo:
--use the same method to find a rational parameterization of an ellipsoid
+
+- Use the same method to find a rational parameterization of an ellipsoid. 
+  - Use the equation: (x/a)^2 + (y/b)^2 + (z/c)^2 - 1 = 0
+  - Use the same ansatz with the line: L(t) = (1-s)*P + s*Q

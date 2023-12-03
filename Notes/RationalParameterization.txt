@@ -28,7 +28,26 @@ Next, we look at the line that connects P and Q. That line can be given parametr
 
 where it is important to note that the parameter that parameterizes the line, namely s, is a 
 different variable than our eventual parameter t that we wnat to use in our rational 
-parameterization (that really confused me initially). 
+parameterization (that really confused me initially). Our parametric line can be split into its x-
+and y-component:
+
+  x(s) = (1-s)*P_x + s*Q_x = (1-s)*0 + s*1 = s
+  y(s) = (1-s)*Q_x + s*Q_y = (1-s)*t + s*0 = t - s*t
+  
+Now we want to figure out a value of s, such that the point (x(s), y(s)) satisfies our circle 
+equation  x^2 + y^2 - 1 = 0. So we plug in the coordinate functions x(s), y(s) into the equation:
+
+  0 = (x(s))^2 + (y(s))^2 - 1
+  0 = s^2 + (t-s*t)^2 - 1 
+  0 = s^2 + t^2 - 2*s*t^2 + s^2*t^2 - 1 
+  
+  
+  
+which gives:  
+  
+  = 0
+  
+  
 
 
 

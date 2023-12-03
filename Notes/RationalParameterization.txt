@@ -144,7 +144,8 @@ qualify as "rational" anymore - but at least, it would still qualify as algebrai
 ...I guess. I didn't try this method on other examples yet. When I do and find something 
 interesting, I'll extend this document with my findings.
 
-----------------------------------------------------------------------------------------------------
+
+====================================================================================================
 
 ToDo, Questions:
 
@@ -164,12 +165,63 @@ ToDo, Questions:
   x(t) = cos(t), y(t) = sin(t)  from  x^2 + y^2 - 1 = 0? I guess one could just write it as  
   x^2 + y^2 = 1  and then say: "Hey! I know that sin^2 + cos^2 = 1" - but looking at the implicit 
   equation and *guessing* a parameterization does not really count as a generalizable algorithm.
+  The sin/cos parameterization has the advantage of being "natural", i.e. by arc-length whereas the
+  rational parameterization has the advantage of not needing to tap into the world of transcendental
+  functions - the coordinate functions are "simpler" in some sense.
+  
+- Give an inverse algorithm: Given a (rational?) parameterization, find the corresponding implicit 
+  equation. Ideally, we want to able to convert back and forth between implicit and parametric 
+  representation at will for all sorts of algebraic varieties. Not sure, if that's possible, though.
+  See "Algebraic Curves and Riemann Surfaces..." (ACRS), pg 68
+  
+- The fact that t needs to traverse -inf...+inf could be inconvenient. There is a simple rational 
+  (bilinear) function that maps -1...+1 to -inf...+inf. Look it up - it's somewhere in the codebase 
+  near the stuff about the linfrac interpolation. Maybe we could use that to "pre-process" t. Maybe
+  it was that: f(x) = -x / ((x-1)*(x+1))? It has, by construction, poles at x = -1 and x = +1 and a 
+  zero at x = 0: https://www.desmos.com/calculator/bzemhovcv5
   
   
 Resources:  
+
+- Algebraic Curves and Riemann Surfaces for Undergraduates: The Theory of the Donut
+  https://www.amazon.de/-/en/Anil-Nerode/dp/3031116151
+  ACRS
   
 - Finding Rational Parametric Curves of Relative Degree One or Two:  
   https://maa.org/sites/default/files/pdf/cmj_ftp/CMJ/November%202010/3%20Articles/4%20Boyles/08-256%20wpics.pdf  
   
 - Rational Parametrization of Curves  
   https://www3.risc.jku.at/education/courses/ss2018/caag/08-para.pdf  
+  
+  
+----------------------------------------------------------------------------------------------------
+
+- ACRS, pg 68/69 gives the following algorithm for finding the implicit equation when a rational
+  parameterization is given. I didn't try it yet and just reproduce the algorithm as I currently 
+  understand it (which might be mistaken):
+  
+  - We start with the parametric equation f(t) = (f_x(t), f_y(t)). The book uses a greek psi 
+    instead of f and suppresses the argument t. The numerators and denominators are denoted by 
+	g_x, h_x, g_y, h_y. We have: f(t) = ( g_x(t)/h_x(t),  g_y(t)/h_y(t) )
+	
+  - We define the polynomials: 
+      p(x,y,t) = x * h_x(t) - g_x(t)
+      q(x,y,t) = y * h_y(t) - g_y(t)
+    which we interpret as polynomials in K[x,y][t] where K is the ring in which we work (e.g. the 
+    real numbers). The notation means that we first adjoin the variables x,y to K and then adjoin 
+	the variable t to the resulting ring of bivariate polynomial, so we end up with the ring of
+    trivariate polynomials K[x,y,t] (if I'm not mistaken). Even though y does not appear in p and 
+	x not in q, we'll consider them all as polynomials in the 3 variables x,y,t.
+   
+  - Now we take the *resultant* of p and q with respect to t: r = res_t(p,q). That means, when 
+    taking the resultant, we consider p,q as univariate polynomials in t and treat x,y as constant
+	parameters. The resulting resultant is a polynomial in the variables x,y: r = r(x,y). This 
+	r(x,y) is our desired implicit equation for the curve. ...if I understand it correctly. 
+	
+  - See here for the resultant:  https://en.wikipedia.org/wiki/Resultant  I think, the resultant is 
+    just the polynomial greatest common divisor and could perhaps be computed via Euclid's algo for
+	polynomials? I have an implementation of that somewhere in/near rsRationalFunction. The book 
+	uses the Sylvester matrix to define the resultant. It's the determinant of that matrix. But I 
+	think, this is not and algorithmically attractive way to actually compute it. Maybe see:
+	https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Subresultant_pseudo-remainder_sequence
+	

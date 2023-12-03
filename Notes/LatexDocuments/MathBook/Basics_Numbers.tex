@@ -97,7 +97,7 @@ So far, we've built up our number system as $\mathbb{N \subset Z \subset Q}$. In
 \subsection{Real Numbers}
 OK, nice - so the set of rational numbers is a field. We can add, subtract, multiply and divide to our hearts content without ever encountering any object that does not belong to the set (with the sole exception of division by zero). Is that finally good enough or could we still want more? The pattern of coming up with unsolvable equations continues: Consider the equation $x^2 = 2$. We can take the square root of both sides to get the solution $x = \sqrt{2}$. If the square root of two is a rational number, then we can indeed solve that equation within the rational numbers - but is it? The answer turns out to be a resounding nope! I could now present a proof for this fact (and a mathematically minded reader would rightfully demand one) but I think that would distract too much from the main line, so I just ask you to take my word for it or look it up elsewhere - there are actually many very different proofs for that fact.
 
-...tbc...
+...TBC...
 
 % -explain completeness, Cauchy sequences
 % -maybe briefly explain Dedekind cuts (that's why we introduced the intervals before the
@@ -108,6 +108,9 @@ OK, nice - so the set of rational numbers is a field. We can add, subtract, mult
 % -maybe that should explain it for rationals first, then approximate reals by rationals
 %  and take a limit
 % -maybe the explanantion for the rationals should be in the section of the rationals.
+
+% https://www.youtube.com/watch?v=iGpUS3rejso
+% at 26:35: we want a set where every nonempty subset that is bounded from above has a supremum. That's what we call "complete". ..but there's also that defintion in terms of cauchy sequences which is probably equivalent.
 
 \subsection{Complex Numbers}
 The set of real numbers forms an ordered, Dedekind-complete field. Does "complete" mean, we are now done with building our number system? Unfortunately not yet. There is still one kind of equation left that we can write down with our basic arithmetic operators but which we still cannot yet solve. But this one will really be the last one, so we see the light at the end of the tunnel! The equation, I'm talking about, is $x^2 = -1$. Solving for $x$ formally yields $x = \sqrt{-1}$, but we know that any real number muliplied by itself will produce a nonnegative result, so this weird square root of minus one cannot be a real number. We will now do a similar step as we did when postulating the existence of negative numbers. Those can be thought of as resulting from taking a natural number and multiplying it by some, then hypothetical and unnatural, new object - namely, by the number $-1$, which we could call the "negative unit" (a nonstandard term, I just made up) and which up to then, wasn't a thing. In analogy, we now define the square root of minus one as the "imaginary unit", which is indeed standard terminology, denoted by $\i$. Just like multiplying a natural number $n$ by the "negative unit" $-1$ gave us the negative counterpart of $n$, namely $-n$, multiplying any real number $r$ by the imaginary unit $\i$ gives us the imaginary counterpart of $r$, namely $\i r$. The general law $\sqrt{a b} = \sqrt{a} \sqrt{b}$ of square roots now allows us to take square roots of any negative number: we just factor out the square root of minus one, for example: $\sqrt{-9} = \sqrt{9} \sqrt{-1} = 3 \i$. The square root of minus nine is three times the imaginary unit.

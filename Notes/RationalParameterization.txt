@@ -31,21 +31,43 @@ different variable than our eventual parameter t that we wnat to use in our rati
 parameterization (that really confused me initially). Our parametric line can be split into its x-
 and y-component:
 
-  x(s) = (1-s)*P_x + s*Q_x = (1-s)*0 + s*1 = s
-  y(s) = (1-s)*Q_x + s*Q_y = (1-s)*t + s*0 = t - s*t
+  x(s) = (1-s)*P_x + s*Q_x = (1-s)*0 + s*t = s*t
+  y(s) = (1-s)*P_y + s*Q_y = (1-s)*1 + s*0 = 1-s
   
 Now we want to figure out a value of s, such that the point (x(s), y(s)) satisfies our circle 
-equation  x^2 + y^2 - 1 = 0. So we plug in the coordinate functions x(s), y(s) into the equation:
+equation x^2 + y^2 - 1 = 0. So we plug in the coordinate functions x(s), y(s) into the equation:
 
   0 = (x(s))^2 + (y(s))^2 - 1
-  0 = s^2 + (t-s*t)^2 - 1 
-  0 = s^2 + t^2 - 2*s*t^2 + s^2*t^2 - 1 
+  0 = (s*t)^2  + (1-s)^2  - 1  
+  0 = s^2*t^2 + 1 - 2*s + s^2 - 1
+  0 = s^2*(t^2 + 1) - 2*s
+  
+From the last line, we can read off that s = 0 satisfies the equation. It would be strange if it 
+wouldn't be the case because s = 0 should, by construction, give us back our fixed point P - which 
+it indeed dutyfully does. We are interested in the second solution. That should give us the *other*
+intersection of our line with the circle - the one we are really interested in. We are allowed to 
+divide both sides by s because we now can assume s != 0 because we are interested in an s other than 
+zero (duh!). That brings us to:
+
+  0 = s*(t^2 + 1) - 2
+  s = 2 / (t^2 + 1)
+  
+which, by plugging that value of s into x(s), y(s) gives:
+
+  x = s*t 
+    = (2 / (t^2 + 1)) * t 
+    = 2*t / (t^2 + 1)
+	
+  y = 1-s 
+    = 1  -  2 / (t^2 + 1)
+	= ((t^2 + 1) / (t^2 + 1))  -  (2 / (t^2 + 1))
+	= (t^2 + 1 - 2)  / (t^2 + 1)
+    = (t^2 - 1) / (t^2 + 1)
   
   
   
-which gives:  
+
   
-  = 0
   
   
 

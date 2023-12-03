@@ -30,16 +30,21 @@ Sometimes, we may want to model situations in which the order of entries actuall
 
 %https://en.wikipedia.org/wiki/Tuple
 
+% What about sequences? are they yet another way to specify a collection of objects with order? I think, the difference is that sequences are, by default, infinitely long and if we want a finite sequence, we just extend it with zeros. A tuple has always a fixed number of elements.
 
 \subsubsection{Multisets}
-In a set, neither the order of the elements nor their multiplicity matters where by "multiplicity" we mean the number of times, an element occurs. For example: $\{ 1,2,2 \} = \{ 2,1,2 \} = \{ 1,2 \}$. In a tuple, both of these things matter: $(1,2,2) \neq (2,1,2) \neq (1,2,3) \neq (1,2)$ where the last tuple $(1,2)$ is actually even different in terms of its "data type" from the two others which match in data type but are different tuples. There is an intermediate situation where we may want to distinguish collections based on multiplicity but not based on the exact position of occurrence of an element. A structure suited for that purpose is the so called multiset. Like in a set, it is immaterial at which position we list an item - but it does matter whether an item occurs once or twice or any other number of times. ...TBC...
+In a set, neither the order of the elements nor their multiplicity matters where by "multiplicity" we mean the number of times, an element occurs. For example: $\{ 1,2,2 \} = \{ 2,1,2 \} = \{ 1,2 \}$ when we assume the collections to be sets. In a tuple, both of these things matter: $(1,2,2) \neq (2,1,2) \neq (1,2)$. There is an intermediate situation where we may want to distinguish collections based on multiplicity but not based on the exact position of occurrence of an item. A structure suited for that purpose is the so called multiset. Like in a set, it is immaterial at which position we list an item - but it does matter whether an item occurs once or twice or whatever other number of times. For multisets, we would have: $\{ 1,2,2 \} = \{ 2,1,2 \} \neq \{ 1,2 \}$. Multisets are mostly denoted just like sets with curly braces and it must be inferred from the context that multisets are meant. I have also seen a notation using square-brackets to distinguish multisets from sets but that notation doesn't seem to be standard and not even widespread.
+
+% maybe move this section before the tuples and edit the text accordingly - should not reference tuples - and the tuples-text may reference multisets
 
 % https://en.wikipedia.org/wiki/Multiset
 % https://brilliant.org/wiki/multiset/#_=_
 % https://www.statisticshowto.com/multiset/
 % https://mathworld.wolfram.com/Multiset.html
 
-%the order of the components matters and of course, it also makes a difference
+% What operations do we have on multisets? There is the multiset sum explained in ACRS, pg 29. we just add the multiplicities where it is understood that objects which aren't in a multiset have a multplicity of zero. This is kinda like the set union for multisets. What about intersection? Maybe taking the minimum of the respective multiplicities of the elements could make sense?
+
+% Applicaitons: Prime factorization, roots of polynomials, multiple traversals of a curve in algebraic geometry, e.g. the polynomial euqation  (x^2 + y^2 - 1)^n = 0  contains the unit circle n times (although there is no notion of "traversal" - I think, this idea comes in only when parameterizing the curve)
 
 
 

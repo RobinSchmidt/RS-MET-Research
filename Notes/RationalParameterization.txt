@@ -180,6 +180,16 @@ ToDo, Questions:
   it was that: f(x) = -x / ((x-1)*(x+1))? It has, by construction, poles at x = -1 and x = +1 and a 
   zero at x = 0: https://www.desmos.com/calculator/bzemhovcv5
   
+- How can we ber sure that the method generates *all* rational points on the circe? Is this actually
+  the case? I think, I read it somewhere but don't know anymore where. I think, we must show that
+  *every* rational point on the circle is being covered by *some* rational value for t. Or to turn 
+  it around: Whenever the xy-coordinates of a point on the circle are rational, the corresponding 
+  t-value is also rational. -> Investigate the inverse functions t(x) and t(y). If they are rational
+  functions in t, it should work.
+  
+- Will the method also produce (all) rational points on the circle when we use some other function
+  for L(t)? Maybe a diagonal line or something even more crazy like x(t) = t, y(t) = 1/t?
+  
   
 Resources:  
 
@@ -224,4 +234,8 @@ Resources:
 	uses the Sylvester matrix to define the resultant. It's the determinant of that matrix. But I 
 	think, this is not and algorithmically attractive way to actually compute it. Maybe see:
 	https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Subresultant_pseudo-remainder_sequence
-	
+	see also: https://www.youtube.com/watch?v=dC6dxFhzKoc
+	...but I guess, I would need an implementation of the polynomial GCD for trivariate polynomials.
+	Maybe try writing a class for general multivariate polynomials. Or maybe don't and just use a
+	computer algebra system.
+	https://ask.sagemath.org/question/57421/resultant-of-symbolic-expression/

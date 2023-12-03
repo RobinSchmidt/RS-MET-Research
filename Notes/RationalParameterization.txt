@@ -1,11 +1,17 @@
+----------------------------------------------------------------------------------------------------
+Problem
+
 We assume that we have an implicit definition of an algebraic variety given and we want to find a
 rational parameterization for that. There is a recipe for that which sometimes works. We'll see it
 in action on the example of the unit circle defined by the equation:
 
   x^2 + y^2 - 1 = 0
   
-That's our implict definition of the variety. What we want to find is a pair of rational functions
+That's our implicit definition of the variety. What we want to find is a pair of rational functions
 x(t), y(t) that parameterize our given variety. 
+
+----------------------------------------------------------------------------------------------------
+Derivation
 
 Our first step is to find some convenient fixed point P on the variety which has rational 
 coordinates. We will pick the point 
@@ -75,26 +81,95 @@ desired. Summarizing, we have arrived at the following rational parameterization
   │ x(t) = (  2*t  ) / (t^2 + 1) │
   │ y(t) = (t^2 - 1) / (t^2 + 1) │
   └──────────────────────────────┘
-
-It is "rational" in the sense that both coordinate functions are rational functions of the parameter
-t. That implies that when we plug in rational numbers for t, the resulting coordinates x(t), y(t) 
-will also be rational numbers. In fact, our parameterization generates almost all rational points on
-the unit circle when t sweeps from minus infinity to plus infinity. The only missing point is our 
-original fixed point P = (0,1). This is the edge case for when the line approaches tangency when t
-approaches plus or minus infinity. In this case, the second point of intersection Q approaches our 
-fixed first point of intersection P.
-
   
+Tadaa! That's our final result!  
   
+----------------------------------------------------------------------------------------------------
+Discussion
+
+The parameterization is "rational" in the sense that both coordinate functions are rational 
+functions of the parameter t. That implies that when we plug in rational numbers for t, the 
+resulting coordinates x(t), y(t) will also be rational numbers. In fact, our parameterization 
+generates almost all rational points on the unit circle when t sweeps from minus infinity to plus 
+infinity. The only missing point is our original fixed point P = (0,1). This is the edge case for 
+when the line approaches tangency when t approaches plus or minus infinity. In this case, the second 
+point of intersection Q approaches our fixed first point of intersection P.
+
+Our found formulas are the same as those on page 2 in this book (the page is available in the
+preview):
+
+  https://www.amazon.de/-/en/Anil-Nerode/dp/3031116151
+
+but different from those shown on wikipedia:
+
+  https://en.wikipedia.org/wiki/Circle#Parametric_form
+
+First of all, the formulas on wikipedia are more general because they do not assume the unit circle
+but rather a general circle with center (a,b) and radius r. But even when setting (a,b) = (0,0) 
+and r = 1, the formulas are still different. Apparently, the formulas on wikipedia can be derived by 
+choosing a different fixed point P and/or a different formula to costruct the second point Q. 
+Another derivation that I have seen in this book  (pages 8,9 - not available in the preview):
+
+  https://www.amazon.de/-/en/Avner-Ash/dp/0691163502/
+
+arrives at formulas compatible with those on wikipedia. They choose the fixed point P = (-1,0) and 
+let the variable point Q sweep out the y-axis. Their derivtaion is also a bit simpler than mine
+because they do not use the parametric equation of the line but rather an explicit form y = f(x). I 
+have opted for the parametric line equation because I hope that this generalizes better to other
+varieties.
+
+I said in the beginning, that this recipe *sometimes* works to find a rational parameterization for 
+an implicitly defined algebraic variety. Our derivation here worked out so nicely because at some 
+point, we had this equation:
+
+  0 = s^2*(t^2 + 1) - 2*s
+
+which allowed us to divide by s on both sides which in turn allowed us to solve for s in terms of t 
+like so:
+
+   s = 2 / (t^2 + 1)
+
+Had there be a constant term c in the equation:
+
+  0 = s^2*(t^2 + 1) - 2*s + c
   
+we would have had to invoke the quadratic formula to solve for s and we might have gotten two 
+solutions and these solutions would involve a square root. So, it seems like that arriving a purely 
+rational solution was due to being "lucky" enough, that some of the equations along the way 
+simplified in a nice way. In a different setting, it might be possible that we may need to invoke 
+the quadratic formula and if the variety if of higher degree, quite possible even the cubic or 
+quartic formula or a numeric polynomila root-finder. In such cases, our parameterization would not
+qualify as "rational" anymore - but at least, it would still qualify as algebraic. 
 
-
-
+...I guess. I didn't try this method on other examples yet. When I do and find something 
+interesting, I'll extend this document with my findings.
 
 ----------------------------------------------------------------------------------------------------
 
-ToDo:
+ToDo, Questions:
 
-- Use the same method to find a rational parameterization of an ellipsoid. 
-  - Use the equation: (x/a)^2 + (y/b)^2 + (z/c)^2 - 1 = 0
-  - Use the same ansatz with the line: L(t) = (1-s)*P + s*Q
+- Use the same method to find a rational parameterization of an ellipsoid. That shows how to 
+  generalize the method to a variety of higher dimension and allows the variety itself to be 
+  tweakable in shape. I *hope* that it works out smoothly when we approach it as follows:
+  - Use the implicit equation: (x/a)^2 + (y/b)^2 + (z/c)^2 - 1 = 0 for the ellipsoid.
+  - Use the same ansatz with the line: L(s) = (1-s)*P + s*Q
+  - Use P = (0,0,c) as fixed point P. It's the point where the z-axis pierces ellipsoid.
+  - Use Q = (u,v,0) as second point Q. It is a point in the xy-plane which has the two parameters 
+    u,v that determine its x- and y- coordinates.
+  - The hope is, that when we choose u,v, to be both rational, that this will generate all rational
+    points on the ellipsoid (assuming our ellipsoid shape parameters a,b,c are also rational, of 
+	course). I have no idea yet, if it will indeed work out like that.
+  
+- How would one proceed to find the more standard parameterization for the unit circle  
+  x(t) = cos(t), y(t) = sin(t)  from  x^2 + y^2 - 1 = 0? I guess one could just write it as  
+  x^2 + y^2 = 1  and then say: "Hey! I know that sin^2 + cos^2 = 1" - but looking at the implicit 
+  equation and *guessing* a parameterization does not really count as a generalizable algorithm.
+  
+  
+Resources:  
+  
+- Finding Rational Parametric Curves of Relative Degree One or Two:  
+  https://maa.org/sites/default/files/pdf/cmj_ftp/CMJ/November%202010/3%20Articles/4%20Boyles/08-256%20wpics.pdf  
+  
+- Rational Parametrization of Curves  
+  https://www3.risc.jku.at/education/courses/ss2018/caag/08-para.pdf  

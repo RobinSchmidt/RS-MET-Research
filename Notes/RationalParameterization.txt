@@ -248,9 +248,31 @@ by dividing both sides by s:
   0 = ((u/a)^2 + (v/b)^2 + 1) * s - 2
   s = 2 / ((u/a)^2 + (v/b)^2 + 1)
   
-Pluggin this value of s into the parametric equations gives:
+Plugging this value of s into the parametric equations gives:
 
+  x(s) = (2 / ((u/a)^2 + (v/b)^2 + 1)) * u
+  y(s) = (2 / ((u/a)^2 + (v/b)^2 + 1)) * v
+  z(s) = c - (2 / ((u/a)^2 + (v/b)^2 + 1))*c
   
+Defining 
+
+  d = ((u/a)^2 + (v/b)^2 + 1)
+  
+and simplifying gives:
+
+  x(s) = (2*u / d) 
+  y(s) = (2*v / d)
+  z(s) = c - (2*c / d) = (c*d - 2*c) / d
+  
+  
+ToDo: 
+
+- Verify formulas numerically. Pick shape parameters a,b,c, pick some values for u,v, compute x,y,z
+  and plug them into the ellipsoid equation and check, if we get zero. Maybe write a little sage 
+  script. 
+
+- Maybe we can even write a sage script that automates the whole derivation such that we just need 
+  to plug in teh implicit equation
   
   
 ----------------------------------------------------------------------------------------------------

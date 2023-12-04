@@ -72,7 +72,7 @@ ToDo:
  the argument, raising the argument to a power
 -Root finding, Viete's theorem, formulas for quadratic, cubic and quartic case, unsolvability of
  quintic case, companion matrix
--Construction of (sets of) polynomials with certain porperties
+-Construction of (sets of) polynomials with certain properties
  -Interpolation polynomials
  -Approximation polynomials
  -Orthogonal polynomials
@@ -103,6 +103,8 @@ ACRS, pg 17 ff
 -Make subsections for:
  -Unsolvability of the Quintic (theorem of Abel-Ruffini)
  -Sylvester matrix, resultant, elementary symmetric polynomials
+ -discriminant, which is essentially the resultant of a polynomial and its derivative, see
+  https://en.wikipedia.org/wiki/Resultant
 
 
 
@@ -110,6 +112,8 @@ https://en.wikipedia.org/wiki/Resultant
 https://en.wikipedia.org/wiki/Elimination_theory
 https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis
 https://en.wikipedia.org/wiki/System_of_polynomial_equations
+https://en.wikipedia.org/wiki/B%C3%A9zout%27s_theorem
+https://en.wikipedia.org/wiki/Multi-homogeneous_B%C3%A9zout_theorem
 
 https://en.wikipedia.org/wiki/Reciprocal_polynomial
 
@@ -118,8 +122,22 @@ https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Subresultant_ps
  
 https://en.wikipedia.org/wiki/Sturm%27s_theorem 
 
+
 Der Fundamentalsatz über symmetrische Polynome:
 https://www.youtube.com/watch?v=_qnj3Iz6vL4
+
+Every symmetric polynomial can be expressed as algebraic combination of the elementary symmetric polynomials in a unique way. An "algebraic combination" is basically a polynomial. So we can construct *every* symmetric polynomial as polynomial of polynomials, namely the *elementary* symmetric polynomials. In Mathematica, the function SymmetricReduction can do this - takes as input a symmetric polynomial and expresses it as polynomial of elementary symmetric polynomials.
+
+Viete's theorem: the coefficient a_k of any polynomial p(x) in x of degree n with n roots x_1,...,x_n is given by the elementary symmetric polynomial e_{n,k} (or is it e_{n,n-k} ?) in the roots x_1, ..., x_n. But there's also a sign alternation, so the polynomial must be prepended by (-1)^k or (-1)^(n-k) or something. So, the theorem tells us how to express the coeffs of p(x) in terms of elementary symmetric polynomials in x_1...x_n - the coeffs are themselves expressed as multivariate polynomials in the roots.
+
+...could this theorem help to figure out what happens to the roots when we add two polynomials? The sum polynomial will be obtained by summing the coeffs - therefore, we sum these polynomials in the roots. Maybe try it with a sum of two quadratic polynomials for a simple example.
+
+
+Resultante und Sylvester-Matrix: Die algebraischen Zahlen bilden einen Körper.
+https://www.youtube.com/watch?v=dC6dxFhzKoc
+
+
+
 
 https://mathworld.wolfram.com/PolynomialDiscriminant.html
 https://math.stackexchange.com/questions/2303465/why-discriminant-of-a-polynomial-is-so-special

@@ -1,3 +1,6 @@
+The main file is MathRecipes.tex
+
+
 Rationale for writing this:
 
 Explaining a math concept to someone else is one of the best ways to ensure that one has actually

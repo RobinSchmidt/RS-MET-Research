@@ -276,6 +276,7 @@ ToDo:
   
   
 ----------------------------------------------------------------------------------------------------
+Finding the implicit equation from a given (rational) parameterization
 
 - ACRS, pg 68/69 gives the following algorithm for finding the implicit equation when a rational
   parameterization is given. I didn't try it yet and just reproduce the algorithm as I currently 
@@ -310,3 +311,34 @@ ToDo:
 	Maybe try writing a class for general multivariate polynomials. Or maybe don't and just use a
 	computer algebra system.
 	https://ask.sagemath.org/question/57421/resultant-of-symbolic-expression/
+
+
+----------------------------------------------------------------------------------------------------
+My own idea for finding the implicit equation from any kinf of parameterization
+
+We have some given pair of functions x(t), y(t). We make an ansatz for our to-be-found p(x,y):
+
+  p(x,y) = sum_{i,j} a_{ij} x^i y^j
+
+with undetermined coefficients a_{ij}. The goal is to establish a linear system of equations for 
+these coeffs. The indices i,j run from zero up to some maximum that we have decided beforehand. We
+could make it so that i+j is bounded by n which is the (maximum expected) degree of our polynomial 
+p(x,y). To get equations for the coeffs, we pick as many distinct values of t as we have 
+coefficients to determine. Each value of t gives us a pair of x,y via x(t), y(t) which we can plug
+into the ansatz. This should give us a system of equations that is linear in the to be found coeffs.
+By pikcing different values of t, we can produce as many equations as we need. It does perhaps make
+sense to sample t in such a way as to get points that cover a large range of our curve - the points
+should perhaps not be too much clustered together. That may be better for the numerical 
+conditioning of the system. 
+
+For this algo, we must decide beforehand on a maximum degree for the polynomial. If we pick a 
+degree higher than the actual polynomial has, the algorithm should automatically determine the 
+higher degree coeffs as being zero. So it seems like choosing a "sufficiently high" maximum degree 
+and then inspecting the actual degree might work (but may be watsed computaional resources). But 
+is there a better way? In the case of the circle, it was the case that the degree of the 
+polynomial happened to match the highest degree in rational parameterization. Was that a 
+coincidence or can we always assume that this happens? If so, we'd have a nice handle on the 
+degree - at least in case of a given *rational* parameterization. If the parameterization is 
+transcendental (e.g. uses sin/cos), it will be a different story. -> Figure this out!
+
+----------------------------------------------------------------------------------------------------

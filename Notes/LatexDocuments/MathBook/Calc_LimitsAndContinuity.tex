@@ -10,7 +10,14 @@ TODO: introduce mathematical notation for limits and the epsilon-delta definitio
 % https://en.wikipedia.org/wiki/Limit_of_a_function#(%CE%B5,_%CE%B4)-definition_of_limit
 
 
+% https://www.youtube.com/watch?v=n2syaXR8y_k
+% log-of-limit is limit-of-log - does that generalize to other functions?
+% this is actually a good example:
+% $\lim_{n \Rightarrow \infty} (\frac{\sqrt[n]{a} + \sqrt[n]{b}}{2})^n = \sqrt{a b} $
+
 \subsubsection{Continuity}
 If the limit of a function $f$ exists at a given $x_0$ and agrees with the actual function value $f(x_0)$, we say that the function $f$ is continuous at $x_0$. With that definition in place, we can now be more specific about what we have meant with "filling the gap in a natural way". We have filled it in such a way as to make the resulting function continuous at $x_0 = 0$. At all other values of $x_0$, it already has been continuous all along. If a function is continuous at \emph{all} values $x_0$, no matter what we choose as $x_0$, we say that the function is continuous without the qualification "at $x_0$". Intuitively, continuity means that the graph of the function has no sudden jumps (aka. discontinuities) and we can draw it without lifting the pencil or drawing vertical lines.
 
-
+% Laws for limits:
+% linearity: lim (f(x) + g(x)) = lim(f(x)) + lim (g(x)), lim(a*f(x)) = a * lim (f(x))
+% l'Hospital's rule

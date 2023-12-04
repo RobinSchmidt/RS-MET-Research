@@ -264,6 +264,27 @@ and simplifying gives:
   y(s) = (2*v / d)
   z(s) = c - (2*c / d) = (c*d - 2*c) / d
   
+Let's verify the formulas with the following snippet of sage code:  
+  
+a = 2                                      # x-extent of ellipsoid
+b = 3                                      # y-extent of ellipsoid
+c = 5                                      # z-extent of ellipsoid
+u = 7/11                                   # rational u-parameter, x-coordinate where line hits z=0
+v = 13/19                                  # rational v-parameter, y-coordinate where line hits z=0
+d = ((u/a)^2 + (v/b)^2 + 1)                # common denominator
+x = 2*u / d                                # x-coordinate on ellipsoid
+y = 2*v / d                                # y-coordinate on ellipsoid
+z = (c*d - 2*c) / d                        # z-coordinate on ellipsoid
+ok = (x/a)^2 + (y/b)^2 + (z/c)^2 - 1 == 0  # verify that (x,y,z) is on the ellipsoid
+ok, x,y,z                                  # print verification result and coordinates on ellipsoid
+
+It produces the following output:
+
+(True, 2001384/1813513, 165528/139501, -6657595/1813513)  
+  
+
+
+  
   
 ToDo: 
 

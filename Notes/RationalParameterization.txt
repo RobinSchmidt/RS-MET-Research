@@ -274,6 +274,23 @@ ToDo:
 - Maybe we can even write a sage script that automates the whole derivation such that we just need 
   to plug in teh implicit equation
   
+- Make a similar derivation for an elliptic curve. These are curves of the form: y^2 = x^3 + a*x + b
+  and a simple standard example (used in Elliptic tales) is y^2 = x^3 - x.
+  https://en.wikipedia.org/wiki/Elliptic_curve
+  https://mathworld.wolfram.com/EllipticCurve.html
+  For aesthetic reasons, we may swap the roles of x and y to get a left/right symmetric shape:
+  x^2 = y^3 + a*y + b. We may also insist that the function of x on the LHS should have only even 
+  powers and the RHS only odd powers, i.e. move the b over to the right and maybe rename things:
+  x^2 + a = y^3 + b*y. Maybe turn it into an "elliptic surface" by adding a z-coordinate as:
+  x^2 + a = y^3 + b*y + z^3 + c*z  or  x^2 + a + y^2 + b = z^3 + c*z ...or whatever. Experiment a 
+  bit for what gives nicely shaped surfaces. Then apply the algo for the rational parameterization 
+  to that. It would be an even more complictaed example due to aving higher degree. 
+  
+- Maybe after a parameterization of an elliptic surface has been found, add a second equation, e.g.:
+  x^2 + y^2 + z^2 - 1 = 0. Now look for the 3D curve that sastifies both equations simultaneously. 
+  Try to find a parameterization for that. If that is too hard, maybe start with simpler shapes like
+  a sphere and a hyperboloid. Or maybe even simpler with a sphere and a plane. Or maybe use a cone 
+  and a plane to get a literal conic section.
   
 ----------------------------------------------------------------------------------------------------
 Finding the implicit equation from a given (rational) parameterization

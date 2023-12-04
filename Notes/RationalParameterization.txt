@@ -137,7 +137,7 @@ we would have had to invoke the quadratic formula to solve for s and we might ha
 solutions and these solutions would involve a square root. So, it seems like that arriving a purely 
 rational solution was due to being "lucky" enough, that some of the equations along the way 
 simplified in a nice way. In a different setting, it might be possible that we may need to invoke 
-the quadratic formula and if the variety if of higher degree, quite possible even the cubic or 
+the quadratic formula and if the variety is of higher degree, quite possibly even the cubic or 
 quartic formula or a numeric polynomial root-finder. In such cases, our parameterization would not
 qualify as "rational" anymore - but at least, it would still qualify as algebraic. But I think, when
 the equation has only degree 2, there can only be two solutions - and one of them is s = 0 with 
@@ -174,7 +174,7 @@ ToDo, Questions:
 - Maybe try to use the method to find rational points on an elliptic curve (not an ellipse!). I 
   think, this is the same idea that underlies the definition of the "addition" of points on an
   elliptic curve. This addition is also defined in terms of an intersection of a line (namely, the
-  line that passes thorugh the two summand points) with the curve. In this case, we look for the 
+  line that passes through the two summand points) with the curve. In this case, we look for the 
   third intersection point when two of them are given. But here, the goal is different: we want to 
   "sweep out" all rational points on the curve with a (rational) parameter t.
   
@@ -189,7 +189,7 @@ ToDo, Questions:
   it was that: f(x) = -x / ((x-1)*(x+1))? It has, by construction, poles at x = -1 and x = +1 and a 
   zero at x = 0: https://www.desmos.com/calculator/bzemhovcv5
   
-- How can we ber sure that the method generates *all* rational points on the circe? Is this actually
+- How can we be sure that the method generates *all* rational points on the circe? Is this actually
   the case? I think, I read it somewhere but don't know anymore where. I think, we must show that
   *every* rational point on the circle is being covered by *some* rational value for t. Or to turn 
   it around: Whenever the xy-coordinates of a point on the circle are rational, the corresponding 
@@ -228,7 +228,7 @@ Resources:
       q(x,y,t) = y * h_y(t) - g_y(t)
     which we interpret as polynomials in K[x,y][t] where K is the ring in which we work (e.g. the 
     real numbers). The notation means that we first adjoin the variables x,y to K and then adjoin 
-	the variable t to the resulting ring of bivariate polynomial, so we end up with the ring of
+	the variable t to the resulting ring of bivariate polynomials, so we end up with the ring of
     trivariate polynomials K[x,y,t] (if I'm not mistaken). Even though y does not appear in p and 
 	x not in q, we'll consider them all as polynomials in the 3 variables x,y,t.
    

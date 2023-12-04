@@ -1,0 +1,63 @@
+\title{Dynamic Linking on Windows, Linux and Mac OSX}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+This article describes how to create and use dynamically linked libraries on the operating systems Windows, Linux and Mac OSX. We will use the GNU tools and the Code::Blocks IDE because these are available for all 3 platforms in question (in my experience, project management tends to be very bothersome when using a different toolset (compiler, IDE) on each platform).
+
+\section{What is a dynamically linked library?}
+When writing software, one often consolidates functions and classes that are used frequently and in various contexts into libraries. When an application is build, one uses these libraries by linking the application code to the library code. There are two approaches how this linking can be done: static and dynamic. Static linking is the simpler of these cases - it basically means that the library code will be embedded (i.e. copied into) into the application code itself. Libraries that are meant to be linked statically, typically have the file-extension ".lib" on windows when built with Microsoft Visual Studio and the extension ".a" (for archive) on all platforms, when built with the GNU tools (gcc, g++, etc.). The disadvantage of static linking is, that each application that uses some segment of library code will have its own copy of that library code - this is wasteful. When using dynamic linking, the application just notes that it depends on one or more library/ies and at runtime, the dynamic linker (which is part of the operating system) will load that library and link the application to it whenever the application is loaded. Alternatively, the application may explicitly load the library from within its own application code using special functions provided by the operating system's API. In any case, the library code exists only once on the user's computer and can be used by many applications, avoiding the redundancies introduced by static linking. Dynamically linked libraries have the file extension ".dll" on Windows (dynamic link library), ".so" in Linux (shared object) and ".dylib" on OSX. On Linux, there's the additional convention that the filenames start with "lib" - so, for example, a filename for a library on Linux could be "libMyLibrary.so".
+
+\section{Where is the dynamically linked library?}
+In order to be able to load the library when the application is launched, the operating system has to know where the library can be found in the file system on the user's computer. On the different operating systems, there are different strategies where to search for the library and these strategies can be controlled to some extent by the programmer in the build process of the library and/or the application.
+
+\subsection{Windows}
+
+\subsection{Linux}
+On Linux, the dynamic linker first looks in some default folders, this is typically "/usr/lib/"...
+
+\subsection{Mac OSX}
+On OSX, each dynamic library has an "install name". This is a pathname that is embedded into the library when the library is built. An application that links to the library will copy this install-name into its own code when the application is linked. When the application is launched, the dynamic linker will fetch the install name from the application, and then look for the library in the location determined by the install name. To facilitate relative paths, the install name may involve some macros that are expanded at launch time, for example, the macro "@executable\_path" expands to the parent directory of the executable file of the application. A bit more general is the macro "@loader\_path" (available form OSX 10.4 onwards) - this expands to the parent directory of the program module that loads the library. If the loader is an application, these two macros expand to the same path but if the loader is another library, in general, they won't.
+
+
+
+\section{Creating a Dynamically Linked Library}
+
+\subsection{Windows}
+On windows, yo
+
+\subsection{Linux}
+
+\subsection{Mac OSX}
+
+
+
+\section{Loading Libraries from within a Program}
+As an alternative to let the operating system automatically load the library when the application is launched, the programmer may decide to load the library himself from within the program. This has the advantage of making it possible to load the library only when it is really needed and may speed up the launch of the application as well as reducing its memory footprint. To load a dynamic library programmatically, the APIs of the operating systems provide functions for that purpose.
+
+\subsection{Windows}
+
+\subsection{Linux}
+
+\subsection{Mac OSX}
+
+
+
+
+\section{Example 1 - Direct Dependency, Loaded on Application Launch}
+
+
+\section{Example 2 - Indirect Dependency, Loaded on Application Launch}
+
+
+
+
+%/ nested dependencies
+
+
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% \bibitem{Orf} Sophocles Orfanidis. High-Order Digital Parametric Equalizer Design
+%\end{thebibliography}
+

@@ -1,0 +1,99 @@
+\title{Polynomial Base Change}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+\section{The General Case}
+Suppose, we have two sets $Q, R$ of $N+1$ polynomials where each set is supposed to form a basis for the space of polynomials of order $N$, i.e. any polynomial $P$ of order $N$ can be expressed as linear combination of the $Q_k, k = 0, \ldots, N$ and can also be expressed as a linear combination of the $R_k, k = 0, \ldots, N$. For the $Q_k$, we use the notation:
+\begin{equation}
+ \begin{aligned}
+  Q_0(x) &= &q_{00} x^0 + &q_{01} x^1 + & \ldots + & q_{0N} x^N \\ 
+  Q_1(x) &= &q_{10} x^0 + &q_{11} x^1 + & \ldots + & q_{1N} x^N \\ 
+  \vdots \\
+  Q_N(x) &= &q_{N0} x^0 + &q_{N1} x^1 + & \ldots + & q_{NN} x^N \\ 
+ \end{aligned}
+\end{equation}
+with an analogous definition for the $R_k$. We could combine the left hand sides into a vector $\mathbf{q}$ and then express the right hand sides as matrix-vector product $\mathbf{Q} \mathbf{x}$, where $\mathbf{x} = (x^0, x^1, \ldots, x^N)^T$ and $\mathbf{Q}$ is the matrix of polynomial coefficients, where each row contains the coefficients for one particular polynomial. If the $Q_k$ would just be the powers of of $x$, the matrix would be an $(N+1) \times (N+1)$ identity matrix. For the Chebychev polynomials with N=5, the matrix would look like:
+\begin{equation}
+ \begin{pmatrix}
+   1 &  0 &  0 &   0 & 0 &  0 \\ 
+   0 &  1 &  0 &   0 & 0 &  0 \\ 
+  -1 &  0 &  2 &   0 & 0 &  0 \\   
+   0 & -3 &  0 &   4 & 0 &  0 \\    
+   1 &  0 & -8 &   0 & 8 &  0 \\       
+   0 &  5 &  0 & -20 & 0 & 16 \\       
+ \end{pmatrix}
+\end{equation}
+Now suppose, we are given an expansion of an arbitrary $N$th order polynomial $P(x)$ in terms of the $Q$-polynomials:
+\begin{equation}
+ P(x) = a_0 Q_0(x) + a_1 Q_1(x) + \ldots + a_N Q_N(x)
+\end{equation}
+and we are interested in the expansion coefficients $b_k$ in terms of the $R$-polynomials, such that:
+\begin{equation}
+ P(x) = b_0 R_0(x) + b_1 R_1(x) + \ldots + b_N R_N(x)
+\end{equation}
+Comparing the coefficient for the $k$th power of $x$ leads to the system of equations:
+\begin{equation}
+ a_0 q_{0k} + a_1 q_{1k} + a_N q_{Nk} = b_0 r_{0k} + b_1 r_{1k} + b_N r_{Nk} \qquad k = 0, \ldots, N
+\end{equation}
+defining the (known) left hand sides as:
+\begin{equation}
+ c_k = \sum_{i=0}^N a_i q_{ik}, \qquad \mathbf{c} = (c_0, c_1, \ldots, c_N)^T
+\end{equation}
+we can write this as:
+\begin{equation}
+ \mathbf{R}^T \mathbf{b} = \mathbf{c}
+\end{equation}
+where $\mathbf{b} = (b_0, b_1, \ldots, b_N)^T$ and $\mathbf{R}$ is the matrix of polynomial coefficients for the polynomials from $R$. This linear system can now be solved by standard methods such as Gaussian elimination.
+
+\section{Special Cases}
+We consider the special case, where the first set $Q$ of polynomials is given by the powers of x: 
+\begin{equation}
+ Q_k(x) = x^k
+\end{equation}
+and the second set is the set of Chebychev polynomials, denoted by $T$. These are defined via the 3-term recursion: 
+\begin{equation}
+ \begin{aligned}
+  T_0(x) &= 1                          \\
+  T_1(x) &= x                          \\
+  T_k(x) &= 2x T_{n-1}(x) - T_{n-2}(x) \\
+ \end{aligned}
+\end{equation}
+Suppose, we are now given a polynomial:
+\begin{equation}
+ P(x) = a_0 x^0 + a_1 x^1 + a_2 x^2 \ldots + a_N x^N
+\end{equation}
+and we are interested in the expansion coefficients $b_k$ for the Chebychev polynomials:
+\begin{equation}
+ P(x) = b_0 T_0(x) + b_1 T_1(x) + b_2 T_2(x) + \ldots + b_N T_N(x)
+\end{equation}
+Let's write the polynomial in nested form:
+\begin{equation}
+ P(x) = a_0 + x (a_1 + x (a_2 + \ldots x(a_{N-2} + x(a_{N-1} + a_N x)) \ldots ))
+\end{equation}
+The innermost parenthesis can be seen as a polynomial of order $1$. Converting coefficients between powers and a first order Chebychev polynomial is trivial, since the coefficients are the same. That is:
+\begin{equation}
+ a_{N-1} + a_N x = a_{N-1} T_0 + a_N T_1
+\end{equation}
+where, for convenience, we dropped the argument for the $T_k$. To move one parenthesis outward, we would have to multiply both sides by $x$ and add $a_{N-2}$.
+
+
+
+%todo: generalize:
+%...the second set $R$ is defined by a 3-term recursion: 
+%\begin{equation}
+% \begin{aligned}
+%  R_0(x) &= r_{00}                                    \\
+%  R_1(x) &= r_{10} + r_{11}x                          \\
+%  R_k(x) &= (A_k x + B_k) R_{n-1}(x) + C_k R_{n-2}(x) \\
+% \end{aligned}
+%\end{equation}
+%for the Chebychev polynomials, we identify $A_k = 2, B_k = 0, C_k = 1$. In general, these coefficients could be functions of $k$, often they are themselves polynomials.
+
+
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% %\bibitem{Gum} Charles Constantine Gumas. A century old, the fast Hadamard transform proves useful in digital communications
+%\end{thebibliography}
+

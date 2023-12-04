@@ -1,0 +1,109 @@
+\section{Resonance Tuning for the digital 303 Filter}
+
+The phase response of a first order filter with a transfer function:
+\begin{equation}
+ G_1(z) = \frac{b_0}{1 + a_1 z^{-1}}
+\end{equation}
+is given by: 
+\begin{equation}
+ \angle G_1(e^{j \omega_c}) = \arctan \left(\frac{a_1 \sin (\omega_c)}
+                                                 {1 + a_1 \cos (\omega_c)} \right)
+\end{equation}
+For the Moog filter emulation, we have 4 identical stages in series such that the overall phase response (without feedback) was just 4 times this value:
+\begin{equation}
+ \angle G_4(e^{j \omega_c}) = 4 \arctan \left(\frac{a_1 \sin (\omega_c)}
+                                                  {1 + a_1 \cos (\omega_c)} \right)
+\end{equation}
+And hence the requirement for correct tuning of the resonance frequency: $\left. \angle \big( z^{-1} G_4(z) \big) \right|_{z=e^{j \omega_c}} = -\pi$ could be written as: 
+\begin{equation}
+4 \cdot \angle G_1(e^{j \omega_c}) - \omega_c = -\pi
+\end{equation}
+The calculation for the $a_1$ coefficient was found by defining:
+\begin{equation}
+\label{eqn:sct}
+\boxed
+{
+ s = \sin(\omega_c), \quad c = \cos(\omega_c), \quad t = \tan \left( \frac{\omega_c-\pi}{4} \right)
+}
+\end{equation}
+and then computing:
+\begin{equation}
+\boxed
+{
+ a_1 =  \frac{t}{s - c t}
+}
+\end{equation}
+So far for the reprise of the relevant parts of the paper 'Resonance Tuning for the digital Moog Filter'. Now we turn to the question how to modify the equations to make the filter resemble a 303 filter. The 303 has the same basic structure (ignoring nonlinearities) - 4 cascaded 1-pole lowpasses with negative feedback around the cascade. However, the 4 stages are not all equal in the 303 filter. Specifically, one of the stages (the first one?) has it's cutoff frequency twice as high as the other 3. For a digital 1-pole filter, the relation between the radian cutoff frequency $\omega_c$ and the coefficient $a_1$ is given by:
+\begin{equation}
+ a_1 = - e^{-\omega_c}
+\end{equation}
+denoting the coefficient of the modified stage with the cutoff frequency $2 \omega_c$ as $a_1'$, we have need to satisfy the condition:
+\begin{equation}
+ a_1' = - e^{-2\omega_c}
+\end{equation}
+solving both equations for $\omega_c$ and setting the right hand sides equal, allows us to express $a_1'$ in terms of $a_1$ as follows:
+\begin{equation}
+ a_1' = - a_1^2
+\end{equation}
+
+Denoting the transfer function of the modified stage as $G_1'(z)$, the requirement to get the resonant frequency right, has now to be modified to:
+\begin{equation}
+3 \angle G_1(e^{j \omega_c}) + \angle G_1'(e^{j \omega_c}) - \omega_c = -\pi
+\end{equation}
+and so we have to solve for $a_1$:
+\begin{equation}
+  3 \arctan \left(\frac{ a_1   \sin ( \omega_c)} {1 + a_1   \cos ( \omega_c)} \right) 
++   \arctan \left(\frac{-a_1^2 \sin (2\omega_c)} {1 - a_1^2 \cos (2\omega_c)} \right) 
+= \omega_c - \pi
+\end{equation}
+in analogy to our definitions of $s$ and $c$, we define:
+\begin{equation}
+\label{eqn:sc_dash}
+\boxed
+{
+ s' = \sin(2\omega_c), \quad c' = \cos(2\omega_c)
+}
+\end{equation}
+so the goal is now to solve the equation: 
+\begin{equation}
+  3 \arctan \left(\frac{ a_1   s } {1 + a_1   c } \right) 
++   \arctan \left(\frac{-a_1^2 s'} {1 - a_1^2 c'} \right) 
+= \omega_c - \pi
+\end{equation}
+explicitely for $a_1$....tbc.....
+
+\subsection{Numerical solution}
+If an explicit equation for $a_1$ is too messy to derive (or even infeasible ....but i actually don't think so), we may still be able to derive implicit forms, where $a_1$ appears alone on the left hand side and inside some terms on the right hand side. Two such forms are:
+\begin{equation}
+ a_1 = \frac{(1+a_1 c) u}{s}
+\end{equation}
+and
+\begin{equation}
+ a_1 = \frac{ \frac{a_1 s}{u}-1}{c}
+\end{equation}
+where $u$ is defined as some intermediate value for notational convenience:
+\begin{equation}
+  u = \tan \left( \frac{\omega_c-\pi-\arctan \left( \frac{-a_1^2 s'}{1-a_1^2c'}  \right) }{3}  \right) 
+\end{equation}
+and with some luck, an iterative algorithm that computes a new $a_1$ from a former estimate of itself via the right hand side will converge to some unique value which then would be the desired answer. For example, we could use the equations for the Moog coefficient for an initial estimate for $a_1$ and then iteratively apply the right hand side of one of our implicit equations to obtain a new estimate until the iteration (hopefully) converges - this technique is known as fixed point iteration. As it turns out from experiments, such a fixed point iteration for the second form converges in the range $\omega_c \in [0, \pi/8]$. Maybe other numerical methods such as root-finding converge in a wider range 
+
+....more stuff to investigate....tbc...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

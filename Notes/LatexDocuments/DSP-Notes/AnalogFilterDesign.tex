@@ -1,0 +1,90 @@
+\section{Analog Filter Design}
+
+\subsection{First Order Filters}
+The $s$-domain transfer function of a general analog first order filter is given by:
+\begin{equation}
+ H_g(s) = \frac{G_0 + B s}{1 + A s}
+\end{equation}
+with $G_0$ being the gain at frequency zero, and $A, B$ being some coefficients. The magnitude squared function for our general first order transfer function can be derived as:
+\begin{equation}
+ |H_g(s)|^2 = H_g(s) H_g(-s) 
+ = \frac{G_0 + B s}{1 + A s} \cdot \frac{G_0 - B s}{1 - A s} 
+ = \frac{G_0^2 - B^2 s^2}{1 - A^2 s^2} 
+\end{equation}
+We are interested in the values of the transfer function along the imaginary axis (i.e. the frequency response), so we let $s = j \Omega$:
+\begin{equation}
+ |H_g(s)|^2 = \frac{G_0^2 - B^2 (j \Omega)^2}{1 - A^2 (j \Omega)^2} 
+\end{equation}
+to finally arrive at:
+\begin{equation}
+ \label{Eq:MagSqInGeneral}
+ |H_g(\Omega)|^2 = \frac{G_0^2 + B^2 \Omega^2}{1 + A^2 \Omega^2} 
+\end{equation}
+as the magnitude-squared response of our filter at any given radian frequency $\Omega$. If we set $\Omega = 0$, we get the magnitude-squared at zero frequency (DC):
+\begin{equation}
+ \label{Eq:MagSqAtZeroGeneral}
+ |H_g(0)|^2 = G_0^2
+\end{equation}
+To evaluate the magnitude-squared response at infinity ($\Omega = \infty$), we recognize that the constant terms (that do not depend on $\Omega$) in the numerator and denominator become less and less influential as $\Omega$ approaches infinity. In the limit, we have:
+\begin{equation}
+ \label{Eq:MagSqAtInfGeneral}
+ |H_g(\infty)|^2 = \frac{B^2}{A^2}
+\end{equation}
+
+\subsubsection{First Order Lowpass}
+Let $f_c$ be the desired cutoff frequency of the filter in Hz (measured at the $-3.01 dB$ point) and let $\Omega_c = 2 \pi f_c$ be the corresponding radian cutoff frequency. Then, the transfer function of a continuous time first order lowpass with the desired cutoff frequency is given by:
+\begin{equation}
+ H_{lp}(s) = \frac{1}{1 + \frac{s}{\Omega_c} }
+\end{equation}
+In terms of our general transfer function, we identify $G_0 = 1, B = 0, A = 1/\Omega_c$ for this special case. The magnitude-squared function is given by:
+\begin{equation}
+ \label{Eq:MagSqAtInfLowpass}
+ |H_{lp}(\Omega)|^2 = \frac{1}{1 + \frac{\Omega^2}{\Omega_c^2} }
+\end{equation}
+
+\subsubsection{First Order Highpass}
+\begin{equation}
+ H_{hp}(s) = \frac{\frac{s}{\Omega_c}}{1 + \frac{s}{\Omega_c} }, \qquad 
+ |H_{hp}(\Omega)|^2 = \frac{ \frac{\Omega^2}{\Omega_c^2} }{ 1 + \frac{\Omega^2}{\Omega_c^2} }
+\end{equation}
+with $G_0 = 0, B = A = 1 / \Omega_c$
+
+\subsubsection{First Order High Shelving}
+Here, we want a filter with unit gain at $\Omega = 0$ and with some other gain $G$ at infinity. We define the characteristic frequency as the frequency at which the gain is the square root of the value $G$ (on a dB scale, this corresponds tho the half-gain point). So we require:
+\begin{equation}
+ |H(0)|^2 = 1, \qquad |H(\Omega_c)|^2 = G, \qquad |H(\infty)|^2 = G^2
+\end{equation}
+using these requirements in equations \ref{Eq:MagSqInGeneral}, \ref{Eq:MagSqAtZeroGeneral}, \ref{Eq:MagSqAtInfGeneral} leads to:
+\begin{equation}
+ G_0 = 1, \qquad A = \frac{1}{\Omega_c\sqrt{G}}, \qquad B = G A
+\end{equation}
+
+\subsubsection{First Order Low Shelving}
+For a low shelving filter, our requirements are:
+\begin{equation}
+ |H(0)|^2 = G^2, \qquad |H(\Omega_c)|^2 = G, \qquad |H(\infty)|^2 = 1
+\end{equation}
+which leads to:
+\begin{equation}
+ G_0 = G, \qquad A = \frac{\sqrt{G}}{\Omega_c}, \qquad B = A
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

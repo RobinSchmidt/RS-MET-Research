@@ -1,0 +1,34 @@
+\section{Biquad Design by Magnitude at 5 Frequencies}
+The transfer function of a biquad filter can be written in the form:
+\begin{equation}
+ H(z) = g \frac{1 + b_1 z^{-1} + b_2 z^{-2}} {1 + a_1 z^{-1} + a_2 z^{-2} }
+\end{equation}
+where
+\begin{equation}
+ a_1 = -2 r_p \cos(\varphi_p), \quad a_2 = r_p^2, \quad
+ b_1 = -2 r_z \cos(\varphi_z), \quad b_2 = r_z^2
+\end{equation}
+with $r_p, \varphi_p$ being the radius and angle of the pole-pair, $r_z, \varphi_z$ being the radius and angle of the zero-pair and $g$ being an overall gain factor. The squared magnitude response of this filter is given by:
+\begin{equation}
+ |H(e^{j \omega})|^2 
+ = g^2 \frac{1 + b_1^2 + b_2^2 + 2 (b_1 + b_1 b_2) \cos (\omega) + b_2 \cos(2 \omega) }
+            {1 + a_1^2 + a_2^2 + 2 (a_1 + a_1 a_2) \cos (\omega) + a_2 \cos(2 \omega) } 
+\end{equation}
+We define:
+\begin{equation}
+ c_1 := \cos(\omega), \quad c_2 := \cos(2\omega), \quad c_p := \cos(\varphi_p), \quad c_z := \cos(\varphi_z)
+\end{equation}
+so we can now write:
+\begin{equation}
+ |H(e^{j \omega})|^2 
+ = g^2 \frac{1 + (-2 r_z c_z)^2 + (r_z^2)^2 + 2 ((-2 r_z c_z) + (-2 r_z c_z) r_z^2) c_1 + r_z^2 c_2 }
+            {1 + (-2 r_p c_p)^2 + (r_p^2)^2 + 2 ((-2 r_p c_p) + (-2 r_p c_p) r_p^2) c_1 + r_p^2 c_2 } 
+ =: g^2 \frac{n}{d}
+\end{equation}
+where we have defined $n$ and $d$ as numerator and denominator of the fraction. Simplifying $n$ and $d$ yields:
+\begin{equation}
+\begin{aligned}
+ n &= 1 + r_z^4 + c_2 r_z^2 + 4 c_z (c_z r_z^2 - c_1 r_z - c_1 r_z^3) \\
+ d &= 1 + r_p^4 + c_2 r_p^2 + 4 c_p (c_p r_p^2 - c_1 r_p - c_1 r_p^3) 
+\end{aligned}
+\end{equation}

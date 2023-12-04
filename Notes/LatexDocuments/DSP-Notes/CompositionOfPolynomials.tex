@@ -1,0 +1,70 @@
+\title{Composition of Polynomials}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider the problem of finding the coefficients $c_0, \ldots c_{N_C}$ of an $N_C$th order polynomial $C(x)$ that is a composition of two polynomials $A(x)$ and $B(x)$ which have orders $N_A$ and $N_B$ respectively. 
+
+\section{Notation}
+We write the polynomials $A(x), B(x), C(x)$ as:
+\begin{equation}
+  A(x) = \sum_{m=0}^{N_A} a_m x^m, \qquad
+  B(x) = \sum_{n=0}^{N_B} b_n x^n, \qquad
+  C(x) = \sum_{k=0}^{N_C} c_k x^k
+\end{equation}
+where $C(x)$ is taken to be the composition of $A(x)$ and $B(x)$:
+\begin{equation}
+  C(x) = B \left( A(x) \right) = \sum_{n=0}^{N_B} b_n \left( \sum_{m=0}^{N_A} a_m x^m \right)^n
+\end{equation}
+The order of the resulting polynomial $C(x)$ is given by: 
+\begin{equation}
+ N_C = N_A N_B
+\end{equation}
+
+\section{Some Special Cases}
+
+\subsection{Case $N_B = 0$}
+\begin{equation}
+  C(x) = \sum_{n=0}^{0} b_n \left( \sum_{m=0}^{N_A} a_m x^m \right)^n
+       =                b_0 \left( \sum_{m=0}^{N_A} a_m x^m \right)^0
+       = b_0
+\end{equation}
+from which we see:
+\begin{equation}
+  c_0 = b_0
+\end{equation}
+
+\subsection{Case $N_A = 0$}
+\begin{equation}
+  C(x) = \sum_{n=0}^{N_B} b_n \left( \sum_{m=0}^{0} a_m x^m \right)^n
+       = \sum_{n=0}^{N_B} b_n \left( a_0 x^0 \right)^n
+       = \sum_{n=0}^{N_B} b_n a_0^n
+\end{equation}
+from which we see:
+\begin{equation}
+  c_0 = \sum_{n=0}^{N_B} b_n a_0^n
+\end{equation}
+
+\subsection{Case $N_A = 1, N_B = 1$}
+\begin{equation}
+  C(x) = \sum_{n=0}^{1} b_n \left( \sum_{m=0}^{1} a_m x^m \right)^n
+       = \sum_{n=0}^{1} b_n \left( a_0 x^0 + a_1 x^1 \right)^n
+       = b_0 (a_0 x^0 + a_1 x^1)^0 + b_1 (a_0 x^0 + a_1 x^1)^1
+\end{equation}
+simplifying and rearranging the last line, we get:
+\begin{equation}
+ C(x) = (b_0 + b_1 a_0) x^0 + (b_1 a_1) x^1
+\end{equation}
+from which we see the coefficients:
+\begin{equation}
+  c_0 = b_0 + b_1 a_0, \qquad c_1 = b_1 a_1
+\end{equation}
+
+
+
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% %\bibitem{Gum} Charles Constantine Gumas. A century old, the fast Hadamard transform proves useful in digital communications
+%\end{thebibliography}
+

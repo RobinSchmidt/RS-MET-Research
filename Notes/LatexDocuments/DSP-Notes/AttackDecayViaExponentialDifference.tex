@@ -1,0 +1,225 @@
+\title{Attack/Decay Envelope via Difference of Exponentials}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider a signal $f(t)$ given by the difference of two exponential functions with decay rates $\alpha$ and $k \alpha$, respectively:
+\begin{equation}
+ \label{Eq:TheEnvelope}
+ \boxed
+ {
+  f(t) = e^{-\alpha t} - e^{-k \alpha t}
+ }
+\end{equation}
+where $k$ is assumed to be some positive real number. When $k > 1$, the second term will die away faster than the first, so the first term will give the asymptotic decay rate of the whole signal in this case. Moreover, if we consider only positive times ($t \geq 0$), the function will initially rise from $0$ to some maximum in a curve that resembles an exponential saturation (like the loading curve of an RC filer) and then fall back to zero again. So, the whole function can be seen as representing a smooth attack/decay envelope.
+
+\section{The Peak and its Height}
+The time instant of the peak $t_p$ of the whole curve can be found by taking the derivative: 
+\begin{equation}
+ f'(t) = -\alpha e^{-\alpha t} + k \alpha e^{-k \alpha t}
+\end{equation}
+and requiring it to vanish at $t_p$:
+\begin{equation}
+  0 = -\alpha e^{-\alpha t_p} + k \alpha e^{-k \alpha t_p}
+\end{equation}
+we reorder terms and divide by $\alpha$:
+\begin{equation}
+ \label{Eq:DerivativeMustVanish}
+  0 = k e^{-k \alpha t_p} - e^{-\alpha t_p}
+\end{equation}
+Solving this equation for $t_p$ leads to:
+\begin{equation}
+ \label{Eq:TimeOfPeak}
+ t_p = \frac{\ln(k)}{(k-1) \alpha}
+\end{equation}
+The height of the peak $h_p$ can be found by plugging $t_p$ back into (\ref{Eq:TheEnvelope}):
+\begin{equation}
+ \boxed
+ {
+  h_p = f(t_p) = e^{\alpha t_p} - e^{-k \alpha t_p}
+ }
+\end{equation}
+By scaling the whole envelope by $1/h_p$, we obtain an envelope, that has a peak with its height normalized to unity.
+
+\section{Parametrization in Terms of $\alpha$ and $t_p$}
+For the user of the envelope, it would be much more convenient to specify the desired time instant of the peak, along with the asymptotic decay-rate. So, we should treat $\alpha$ and $t_p$ as given, and we now want to compute $k$ from these values. Unfortunately, it seems not to be possible to solve (\ref{Eq:TimeOfPeak}) explicitly for $k$. 
+
+\subsection{Finding $k$ as a Root Finding Problem}
+Instead, let's go back to (\ref{Eq:DerivativeMustVanish}) and consider the right hand side as a function of $k$, parametrized by a constant $c$ defined as 
+\begin{equation}
+ \boxed
+ {
+  c \hat{=} \alpha t_p
+ }
+\end{equation}
+We will denote this function as $g(k)$, so we we write:
+\begin{equation}
+ \boxed
+ {
+  g(k) = k e^{-k c} - e^{-c}
+ }
+\end{equation}
+and consider $g(k)$ as an objective function for which a root has to be found (i.e. $g(k)$ should be driven to zero), so we require:
+\begin{equation}
+  k e^{-k c} - e^{-c} = 0 \Leftrightarrow k e^{-k c} = e^{-c}
+\end{equation}
+By taking the logarithm of both sides and simplifying, this condition can also be expressed as:
+\begin{equation}
+  0 = \ln(k) + c(1-k)
+\end{equation}
+We can consider the right hand side again as an objective function that we will try to drive to zero. We will call this other function $h(k)$:
+\begin{equation}
+ \boxed
+ {
+  h(k) = \ln(k) + c(1-k)
+ }
+\end{equation}
+The reason to express the required condition in these two ways is, that we are going to use an iterative root finding algorithm, for which one or the other version may be better suited (depending on the value of the parameter $c$). By inspection, we see that $g(k) = 0$ and $h(k) = 0$ for $k = 1$, so $k = 1$ will always be a solution to our root finding problem, no matter what particular value the parameter $c$ has. Remembering that we are trying to find a value of $k$ for which the derivative of (\ref{Eq:TheEnvelope}) vanishes (for some given $\alpha, t$), we recognize that for $k=1$ the envelope $f(t)$ will be identically zero, so its derivative indeed vanishes for \emph{any} time instant $t$. This is, so to speak, the trivial solution. But we are interested in a solution for which the envelope is not identically zero. Whether or not there is another solution depends on the value of $c$. The following cases are to consider:
+\begin{enumerate}
+	\item $c \leq 0$: The functions $g, h$ are strictly monotonic and cross zero only at $k=1$. There is no other positive real solution (negative or complex solutions are meaningless in this context and out of scope of this article).
+	\item $c > 0$: The functions $g, h$ rise and then fall back again, so there is a maximum (or peak) somewhere in between and there may be another solution, which we shall denote by $k_0$. Three sub-cases are to consider:
+  \begin{enumerate}
+	  \item $c < 1$: $g, h$ first go through $(1, 0)$ and later through $(k_0, 0)$, so $k_0 > 1$.
+	  \item $c = 1$: The maxima of $g, h$	just touch $(1, 0)$, so the only solution is again $k = 1$.
+	  \item $c > 1$: $g, h$ first go through $(k_0, 0)$ and later through $(1, 0)$, so $k_0 < 1$
+  \end{enumerate}		
+\end{enumerate}
+
+\subsection{Derivatives of $g(k)$ and $h(k)$}
+We will use a Newton iteration for finding the value of $k$ for which $g(k)$ and $h(k)$ vanish, so we will need their derivatives with respect to $k$. These are given by:
+\begin{equation}
+ \boxed
+ {
+  \begin{aligned}
+   g'(k) &= e^{-c k} - k c e^{-c k} \\
+   h'(k) &= \frac{1}{k} - c
+  \end{aligned}
+ }
+\end{equation}
+With these derivatives, we can calculate the location $k_p$ of the peak of $g$ and $h$. As usual, this is done by requiring the derivative to vanish. In both cases, this leads to:
+\begin{equation}
+ \label{Eq:PeakValueForK}
+ \boxed
+ {
+  k_p = \frac{1}{c}
+ }
+\end{equation}
+Note that by construction, $g$ and $h$ were only assured to have the same zeros. The fact that they also have the same peak location just happens to be the case.
+
+\subsection{Initial Guess for $k_0$}
+This peak location will be useful for finding an initial guess for $k_0$ in the Newton iteration, because we know that for $c < 1$ we must have $k_0 > k_p$ and for $c > 1$, we must have $k_0 < k_p$. Empirically, it turned out that for $c < 1$, a Newton iteration using $h(k), h'(k)$ converges more quickly than using $g(k), g'(k)$. For $c > 1$, we have to use $g(k), g'(k)$ because with $h(k), h'(k)$, there may occur negative arguments for the logarithm inside the iteration. To start the Newton iteration, we need some suitable initial guess for $k_0$, By experimentation, the following values were found to be good as initial guesses:
+\begin{enumerate}
+ \item $c < 1$: $k_0 = 1 + 2(k_p-1)$. This puts the peak midway between $k=1$ and the guessed $k_0$.
+ \item $c > 1$: $k_0 = 0.5/c$. This was found ad hoc and seems to work well.
+\end{enumerate}	
+
+\subsection{Practical Considerations}
+In practice, we are actually only interested in the regime $0 < c < 1$ such that $k > 1$. For $c > 1, k < 1$ the second exponential in (\ref{Eq:TheEnvelope}) will have a longer decay time than the first and the whole envelope will have an asymptotic decay that is governed by the second term and the whole function will have negative instead of positive excursion. At the the border case $c = 1, k = 1$, the envelope $f(t)$ will be identically zero, as said. All of these things are undesirable for an envelope generator, so we should make sure that $c < 1$ in some higher level stage of the implementation. In terms of the user parameters, we must make sure that our desired time-instant of the peak $t_p$ is less than the time constant $\tau = 1/\alpha$ of the first exponential: $t_p < \tau$. When this is already ensured, we do not have to deal with switching between usage of $h(k), h'(k)$ or $g(k), g'(k)$, we'll just use $h(k), h'(k)$. Typically, $\leq 6$ Newton iterations are required to converge to 64-bit floating-point precision.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%We consider the problem of approximating a log-magnitude function (in decibels) that falls off with a continuously adjustable slope at a normalized radian frequency of unity. The approximant is chosen such that the transfer function will be realizable as an analog filter.
+%
+%\section{The Desired Magnitude-Squared Function}
+%The desired ideal magnitude-squared function, denoted as $M_d^2(\omega) = |H_d(\omega)|^2$ is given by:
+%\begin{equation}
+%M^2_d(\omega) = \frac{1}{\omega^{2c}}
+%\end{equation}
+%where $c$ is a design parameter that is related to the slope of the log-magnitude function. Specifically, if we denote the slope as $S$ (expressed in $dB/oct$), we have:
+%\begin{equation}
+% c = -\frac{S}{20 \log_{10}(2)}
+%\end{equation}
+%For example, for $c = 1/2$, we obtain a slope of approximately $-3 dB/oct$. In our magnitude-squared function, we have a gain of unity at the normalized radian frequency of unity.
+%
+%\section{All-Pole Approximation}
+%Having specified our ideal desired magnitude-squared response, we now turn to the subject of approximating it with a function that represents a realizable magnitude-squared function of the general form:
+%\begin{equation}
+%M^2(\omega) = \frac{N(\omega^2)}{D(\omega^2)}
+%\end{equation}
+%where $N$ and $D$ are both polynomials in $\omega^2$. In an allpole approximation, we choose the numerator polynomial to be equal to unity: $N(\omega^2)=1$, which also coincides with the numerator of $M_d^2(\omega)$. The denominator of $M_d^2(\omega)$ is given by $\omega^{2c}$. We view the denominator as a function of $\omega^2$, so let's define $x = \omega^2$, and denote the denominator function as $f(x) = f(\omega^2)$, so we have:
+%\begin{equation}
+%f(x) = x^c
+%\end{equation}
+%We now expand $f(x)$ as a power series around the point $x = 1$ and truncate the series at some natural number $N$. We denote the $N$th order approximant as $f_N(x)$:
+%\begin{equation}
+%\label{Eq:PowerSeries}
+%f(x) \approx f_N(x) = \sum_{n=0}^N \frac{f^{(n)}(1)}{n!} (x-1)^n
+%\end{equation}
+%where $f^{(n)}$ denotes the $n$th derivative of $f$, which is given by:
+%\begin{equation}
+%f^{(n)}(x) = \left( \prod_{k=0}^{n-1} (c - k) \right) x^{c-n}
+%\end{equation}
+%Evaluating this at $x = 1$ gives:
+%\begin{equation}
+%f^{(n)}(1) = \prod_{k=0}^{n-1} (c - k)
+%\end{equation}
+%Substituting this back to (\ref{Eq:PowerSeries}) gives:
+%\begin{equation}
+%f_N(x) = \sum_{n=0}^N \frac{\prod_{k=0}^{n-1} (c - k)}{n!} (x-1)^n
+%\end{equation}
+%Defining:
+%\begin{equation}
+% c_n = \frac{\prod_{k=0}^{n-1} (c - k)}{n!}, \qquad P_n(x) = (x-1)^n
+%\end{equation}
+%we can write this as:
+%\begin{equation}
+%f_N(x) = \sum_{n=0}^N c_n P_n(x)
+%\end{equation}
+%where the $c_n$ are coefficients that may be computed for a given $c$ and the $P_n$ are polynomials of order $n$ in $x$. Using the binomial theorem, we can find the polynomial coefficients of $P_n(x)$ as:
+%\begin{equation}
+%P_n(x) = \sum_{k=0}^n \underbrace{(-1)^k  \begin{pmatrix} n \\ k  \end{pmatrix}}_{a_{n, n-k}} x^{n-k}
+%\end{equation}
+%where $a_{n, n-k}$ is the coefficient that multiplies the $(n-k)$th power of $x$ in the polynomial $P_n(x)$.
+%
+%
+%\section{Pole-Zero Approximation}
+%We rewrite the ideal desired magnitude-squared response as:
+%\begin{equation}
+%M^2_d(\omega) = \frac{1}{\omega^{2c}} = \frac{(\omega^2)^{-(1-\alpha) c}}{(\omega^2)^{\alpha c}}
+%              = \frac{x^{-(1-\alpha) c}}{x^{\alpha c}}
+%\end{equation}
+%where $\alpha$ is a parameter for which we require $0 < \alpha \leq 1$. We definine:
+%\begin{equation}
+%f(x) = x^{\alpha c}, \qquad g(x) = x^{ -(1-\alpha) c}
+%\end{equation}
+%and now we do a power series expansion of $f(x)$ and $g(x)$ separately.
+%[work out the new equations...most should be more or less the same as above]
+%
+%
+%
+%%\section{Relating the slope to $c$}
+%
+%
+%
+%
+%
+%
+%
+%%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+%% \bibitem{Orf} Sophocles Orfanidis. High-Order Digital Parametric Equalizer Design
+%%\end{thebibliography}
+%

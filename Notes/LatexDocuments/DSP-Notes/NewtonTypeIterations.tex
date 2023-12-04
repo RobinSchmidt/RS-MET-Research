@@ -1,0 +1,41 @@
+\section{Newton Type Iterations}
+
+\subsection{The Univariate Case}
+
+Suppose that we want to find a root of a nonlinear function $y = f(x)$, that is, we need to solve:
+\begin{equation}
+f(x) = 0
+\end{equation}
+The value of $x$ that satisfies the equation is the root which we want to find and we denote it by $x^*$. We have an initial guess for $x^*$ which we shall denote by $x_0$. The actual value $f(x_0)$ of the function at $x_0$ is not exactly zero, so in order to improve our initial guess, we iterate:
+\begin{equation}
+ x_{n+1} = A(x_n, f)
+\end{equation}
+where $A$ is some algorithm that takes the current estimate $x_n$ and the function $f$ as inputs and generates a new estimate $x_{n+1}$. The algorithm may involve evaluation of the function $f$ and/or its derivatives $f', f'', \ldots$ at $x_n$ and/or one or more internally generated intermediate points. We define the order of convergence $p$ as....
+We also define the efficiency index of such an algorithm as: $E = p^{1/w}$ where $p$ is the order of the convergence and $w$ is the number of function evaluations per iteration. Here, we assume that evaluation of the function itself has the same cost as evaluating any of its derivatives.
+
+\subsubsection{Classical Newton Method}
+\begin{equation}
+ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}
+\end{equation}
+Order: $2$ (when $x^*$ is a simple root), Evaluations: $2$, Efficiency Index: $\sqrt{2} = 1.414213562373095$
+
+\subsubsection{Newton Method with Stepsize}
+\begin{equation}
+ x_{n+1} = x_n - \eta_n \frac{f(x_n)}{f'(x_n)}
+\end{equation}
+Order and number of evaluations depend on the particular rule how to compute the stepsize $\eta$. Some of the methods given below can be expressed as Newton-with-stepsize for an appropriate formula for $\eta_n$ in terms of $x_n, f_n, f_n', \ldots$.
+
+\subsubsection{Chebychev Method}
+\begin{equation}
+ x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} - \frac{f''(x_n) f^2(x_n)}{2 f'^3(x_n)}
+\end{equation}
+Order: $4$ (when ...?), Evaluations: $3$, Efficiency Index: $\sqrt[3]{4} = 1.587401051968199$. Can be expressed as Newton with stepsize when:
+\begin{equation}
+ \eta_n = 1 + \frac{f''(x_n) f(x_n)} {2f'^2(x_n)} %\frac{f(x_n)}{f'(x_n)}
+\end{equation}
+
+
+
+
+\subsection{The Multivariate Case}
+

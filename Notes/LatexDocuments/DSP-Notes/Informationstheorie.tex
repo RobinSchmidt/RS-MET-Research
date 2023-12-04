@@ -1,0 +1,41 @@
+\chapter{Informations- und Codierungstheorie}
+
+\section{Definitionen}
+
+\paragraph{Einzelwahrscheinlichkeit:} sei $X$ eine diskrete Zufallsvariable mit möglichen Realisierungen $x_k, \; k=1, \ldots,  K$. Die Wahrscheinlichkeit, dass $X$ den konkreten Wert $x_k$ annimmt ist:
+\begin{equation}
+ \label{eqn:Auftretenswahrscheinlichkeit}
+ p_k = P(X = x_k)
+\end{equation}
+mit den Bedingungen
+\begin{equation}
+ 0 \leq p_k \leq 1 \; \forall k \qquad \text{und} \qquad \sum_{k=1}^K p_k = 1
+\end{equation}
+
+\paragraph{Informationsgehalt} eines Ereignisses $x_k$:
+\begin{equation}
+ I(x_k) = \log \left( \frac{1}{p_k}  \right) = -\log(p_k)
+\end{equation}
+wenn der Logarithmus zur Basis 2 gewählt wird, ist die Einheit der Information $bits$, beim natürlichen Logarithmus $nats$. 1 $bit$ ist der maximale Informationsgehalt einer Ja/Nein Antwort.
+
+\paragraph{Entropie} der Zufallsvariable $X$:
+\begin{equation}
+ H(X) = E \{ I(x_k) \} = \sum_{k=1}^K p_k I(x_k) = - \sum_{k=1}^K p_k \log p_k
+\end{equation}
+die Entropie ist also der mittlere Informationsgehalt.
+
+\paragraph{maximale und relative Entropie:}
+wenn alle $K$ Elementarereignisse gleichwahrscheinlich sind (d.h. $p_k = 1/K \; \forall k$), dann ist die Entropie maximal und nimmt den Wert: $H_{max} = \log_2 K$ an. Die relative Entropie (einer Häufigkeitsverteilung) ist das Verhältnis der tatsächlichen Entropie und dieser maximal möglichen Entropie:
+\begin{equation}
+ H_r = \frac{H}{H_{max}} = \frac{H}{\log_2 K}
+\end{equation}
+Achtung: der Begriff 'relative Entropie' wird auch für die Kullback-Leibler Divergenz benutzt, diese ist aber etwas anderes.
+
+\paragraph{Redundanz einer Häufigkeitsverteilung:}
+\begin{equation}
+ R = \frac{H_{max}-H}{H_{max}} = 1 - H_r = 1 - \frac{H}{\log_2 K}
+\end{equation}
+
+
+
+\paragraph{Kodierung} Vorgang, bei dem Elemente eines Quellalphabets eindeutig auf Elemente eines Kanalalphabets abgebildet werden.

@@ -1,0 +1,141 @@
+\section{Prototype Poles and Zeros}
+
+Notation for the design parameters: 
+\begin{equation}
+\begin{aligned}
+ G:        \qquad & \text{peak/cut gain}                         \\
+ G_0:      \qquad & \text{reference gain}                        \\
+ G_B:      \qquad & \text{bandwidth gain}                        \\ 
+ f_0:      \qquad & \text{peak/cut frequency}                    \\ 
+ f_s:      \qquad & \text{sample-rate}                           \\
+ \Delta f: \qquad & \text{bandwidth measured at the level $G_B$} \\  
+\end{aligned}
+\end{equation}
+The ideal continuous time low-shelving filters magnitude-response be defined as:
+\begin{equation}
+ |H_a(\Omega)|^2 = \frac{G^2 + G_0^2 \varepsilon^2 F_N^2(w)}{1 + \varepsilon^2 F_N^2(w)}
+\end{equation}
+where $w=\Omega / \Omega_B$ is the normalized continuous time frequency variable $\varepsilon$ is a constant defined by:
+\begin{equation}
+ \varepsilon = \sqrt{ \frac{G^2-G_B^2}{G_B^2-G_0^2} }
+\end{equation}
+and the function $F_N(w)$ is given by:
+\begin{equation}
+ F_N(w) = 
+ \begin{cases}
+  w^N                               \qquad & \text{Butterworth}          \\
+  C_N(w)                            \qquad & \text{Chebychev type 1}     \\
+  1/C_N(w^{-1})                     \qquad & \text{Chebychev type 2}     \\ 
+  cd(N u K_1, k_1), w = cd(uK, k)   \qquad & \text{Chebychev type 2}     \\  
+ \end{cases}
+\end{equation}
+for $G_0=0$ and $G=1$, this reduces to the ordinary lowpass case, but this generalization allows the response to be raised on a pedestal in order to design shelving and peaking equalizers as well. The continuous time transfer function $H_a(s)$ is found by finding the left-hand $s$-plane poles and zeros. First, we distribute the overall Gain over all $N$ first order sections:
+\begin{equation}
+ g = G^{1/N} , \qquad g_0 = G_0^{1/N}
+\end{equation}
+and define the following variables:
+\begin{equation}
+ \phi_i = \frac{(2i - 1) \pi}{2N}, \qquad s_i = \sin(\phi_i), \qquad c_i = \cos(\phi_i)
+ \qquad i = 1, \ldots, L
+\end{equation}
+Now, the poles and zeros come out as:
+
+\paragraph{Butterworth poles and zeros}:
+Let
+\begin{equation}
+ \beta = \varepsilon^{-1/N} \Omega_B =  \varepsilon^{-1/N} \tan \left( \frac{\Delta \omega}{2} \right)
+\end{equation}
+the $L$ complex conjugate left-hand poles and zeros $p_i, z_i \; i = 1,\ldots,L$ are given by:
+\begin{equation}
+ p_i = \beta (-s_i + j c_i) \qquad z_i = \frac{g \beta}{g_0} (-s_i + j c_i) 
+\end{equation}
+and the additional real poles and zeros for odd order filters are:
+\begin{equation}
+ p_0 = - \beta  \qquad z_0 = -\frac{g \beta}{g_0} \qquad
+\end{equation}
+
+\paragraph{Chebychev type 1 poles and zeros}:
+Let
+\begin{equation}
+ u = \ln(g_0^{-1} \beta) \qquad v = \ln( (\varepsilon^{-1} + \sqrt{1 + \varepsilon^{-2}})^{1/N} ) \qquad
+ \beta = (G \varepsilon^{-1} + G_B \sqrt{1 + \varepsilon^{-2}})^{1/N}
+\end{equation}
+Then:
+\begin{equation}
+ p_i = \Omega_B (-s_i \sinh(v) + j c_i \cosh(v)) \qquad z_i = \Omega_B (-s_i \sinh(u) + j c_i \cosh(u))
+\end{equation}
+and for $N$ odd:
+\begin{equation}
+ p_0 = -\Omega_B \sinh(v) \qquad z_0 = -\Omega_B \sinh(u)
+\end{equation}
+
+\paragraph{Chebychev type 2 poles and zeros}:
+Let
+\begin{equation}
+ u = \ln(g^{-1} \beta) \qquad v = \ln( (\varepsilon + \sqrt{1 + \varepsilon^2 })^{1/N} ) \qquad
+ \beta = (G \varepsilon + G_B \sqrt{1 + \varepsilon^2 })^{1/N}
+\end{equation}
+Then:
+\begin{equation}
+ p_i = \Omega_B (-s_i \sinh(v) + j c_i \cosh(v))^{-1} \qquad z_i = \Omega_B (-s_i \sinh(u) + j c_i \cosh(u))^{-1}
+\end{equation}
+and for $N$ odd:
+\begin{equation}
+ p_0 = -\Omega_B (\sinh(v))^{-1} \qquad z_0 = -\Omega_B (\sinh(u))^{-1}
+\end{equation}
+
+\paragraph{Elliptic poles and zeros}:
+Assume $G \neq 0$ and $G_0 \neq 0$, let:
+\begin{equation}
+ u_i = \frac{(2i - 1) }{N}\qquad \zeta_i = \cd(u_i K, k) \qquad i = 1, \ldots, L 
+\end{equation}
+and $u_0, v_0$ are given by the solutions of the equations:
+\begin{equation}
+ \sn(j u_0 N K_1, k_1) = j \frac{G}{G_0 \varepsilon} \qquad 
+ \sn(j v_0 N K_1, k_1) = j \frac{1}{\varepsilon}
+\end{equation}
+Then:
+\begin{equation}
+ p_i = j \Omega_B \cd((u_i - j v_0)K, k) \qquad z_i = \Omega_B \cd((u_i - j u_0)K, k)
+\end{equation}
+and for $N$ odd:
+\begin{equation}
+ p_0 = j \Omega_B \sn(j v_0 K, k) \qquad z_0 = j \Omega_B \sn(j u_0 K, k)
+\end{equation}
+
+Special cases for $G = 0$ or $G_0 = 0$: let
+\begin{equation}
+ \zeta_i = \cd(u_i K, k)
+\end{equation}
+Then
+\begin{equation}
+ z_i =
+ \begin{cases}
+ j \Omega_B (k \zeta_i)^{-1} \qquad & G_0 = 0,    G \neq 0 \; \text{(lowpass design)} \\
+ j \Omega_B \zeta_i          \qquad & G_0 \neq 0, G = 0 \\
+ \end{cases}
+\end{equation}
+
+
+Assume $G = 0$ and $G_0 \neq 0$:
+\begin{equation}
+ \zeta_i = \cd(u_i K, k) \qquad z_i = j \Omega_B (k \zeta_i)^{-1}
+\end{equation}
+
+
+Assume $G \neq 0$ and $G_0 = 0$ - this is the conventional elliptic textbook design
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

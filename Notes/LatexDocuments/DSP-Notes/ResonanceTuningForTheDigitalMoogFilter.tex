@@ -1,0 +1,195 @@
+\section{Resonance Tuning for the digital Moog Filter}
+A one pole digital filter has the z-plane transfer function:
+\begin{equation}
+ G_1(z) = \frac{b_0}{1 + a_1 z^{-1}}
+\end{equation}
+When we model the Moog filter (excluding resonance) with a series connection of 4 such filters, we get the transfer function:
+\begin{equation}
+ G_4(z) = \big( G_1(z) \big)^4 = \left( \frac{b_0}{1 + a_1 z^{-1}} \right)^4
+\end{equation}
+The resonance is introduced by feeding the filters (sign inverted) output back to the input. In the digital domain, we must include a unit delay into the feedback path corresponding to a factor of $z^{-1}$. With feedback gain $k$, we obtain the net transfer function:
+\begin{equation}
+ H(z) = \frac{G_4(z)} {1 + k \cdot z^{-1} \cdot G_4(z)}
+\end{equation}
+With such a feedback, we obtain a resonant peak at that frequency where the phase response of $z^{-1} G_4(z)$ goes through $-180$ degrees (or $-\pi$). The analog Moog filter runs into self oscillation with a feedback factor of $k=4$ because the magnitude response of the filter (without feedback) at the resonant frequency is $1/4$ - such that the net feedback gain becomes unity with $k=4$. In the analog domain, the resonant frequency (the -180 degree frequency) happens to be the same frequency as the cutoff-frequency (measured at the -3 dB point) of each one of the 4 first order filter stages. In the digital domain this is not true anymore because the unit delay in the feedback path adds to phase delay such that the resonant frequency detoriates from the individual 1st order cutoff frequencies. This is particularly true for high cutoff frequencies. Because the resonant frequency is now different from the cutoff frequency, it is also not true anymore that the $G_4$-filters gain (without feedback applied) is equal to $1/4$ at the resonant frequency. This has the effect that self-oscillation does not occur at $k=4$ anymore, but we must choose a higher $k$. It seems to be convenient to introduce a resonance parameter $r$ normalized to the range $0...1$ - in the case of the analog Moog filter we would the simply put $k = 4 r$ for the feedback gain. In the digital domain the calculation of the feedback gain from the resonance will be a bit more involved, as we will see. To carry the filter over into the digital to domain, is seems to be desirable to have the following properties:
+\begin{enumerate}
+	\item the filters (normalized radian) cutoff frequency $\omega_c$ is defined as the frequency at which the resonant peak occurs: $\left. \angle \big( z^{-1} G_4(z) \big) \right|_{z=e^{j \omega_c}} = -\pi$
+	\item the filter goes into self oscillation with $r=1$, so we will have to adjust the feedback gain $k$ in such a way that it exactly compensates the magnitude response of the 4 stage ladder at $r=1$
+\end{enumerate}
+
+\subsection{The One-Pole Coefficients $b_0, a_1$}
+The general expression for the magnitude response of a first order digital filter is:
+\begin{equation}
+ |H(e^{j \omega})| = \sqrt{\frac{b_0^2 + b_1^2 + 2 b_0 b_1 \cos (\omega)}{a_0^2 + a_1^2 + 2 a_0 a_1 \cos (\omega)}}
+\end{equation}
+For our one pole filter $G_1$ with $a_0=1$ and $b_1 = 0$ this simplifies to (evaluated at $\omega=\omega_c$):
+\begin{equation}
+ |G_1(e^{j \omega_c})| = \sqrt{\frac{b_0^2}{1 + a_1^2 + 2 a_1 \cos (\omega_c)}}
+\end{equation}
+
+The general expression for the phase response of a first order filter is:
+\begin{equation}
+ \angle H(e^{j \omega}) = \arctan \left(- \frac{(a_0 b_1 - a_1 b_0) \sin (\omega)}
+                                               {a_0 b_0 + a_1 b_1 + (a_0 b_1 + a_1 b_0) \cos (\omega)} \right)
+\end{equation}
+again, with $a_0=1$ and $b_1=0$ this simplifies to (evaluated at $\omega=\omega_c$):
+\begin{equation}
+ \angle G_1(e^{j \omega_c}) = \arctan \left(\frac{a_1 \sin (\omega_c)}
+                                                 {1 + a_1 \cos (\omega_c)} \right)
+\end{equation}
+which does not depend on $b_0$ anymore. This is perhaps not surprising, because $b_0$ can as well be interpreted as a global gain factor which of course can affect only the magnitude response but not the phase response. Because phases add in a series connection, the phase response of $G_4$ is four times this value: $\angle G_4(e^{j \omega_c}) = 4 \cdot \angle G_1(e^{j \omega_c})$. Additionally, we must add the phase response from linear phase term $e^{-j \omega}$ from the unit delay (which is $-\omega_c$). The requirement $\left. \angle \big( z^{-1} G_4(z) \big) \right|_{z=e^{j \omega_c}} = -\pi$ becomes: 
+\begin{equation}
+4 \cdot \angle G_1(e^{j \omega_c}) - \omega_c = -\pi
+\end{equation}
+and so we must solve:
+\begin{equation}
+ \arctan \left(\frac{a_1 \sin (\omega_c)} {1 + a_1 \cos (\omega_c)} \right)
+ = \frac{-\pi + \omega_c}{4}
+\end{equation}
+or equivalently:
+\begin{equation}
+ \frac{a_1 \sin (\omega_c)} {1 + a_1 \cos (\omega_c)}
+ = \tan \left( \frac{\omega_c -\pi}{4} \right)
+\end{equation}
+Defining:
+\begin{equation}
+\label{eqn:sct}
+\boxed
+{
+ s = \sin(\omega_c), \quad c = \cos(\omega_c), \quad t = \tan \left( \frac{\omega_c-\pi}{4} \right)
+}
+\end{equation}
+and solving for $a_1$ gives the result:
+\begin{equation}
+\boxed
+{
+ a_1 =  \frac{t}{s - c t}
+}
+\end{equation}
+We can now calculate the $b_0$ coefficient from the condition that $b_0$ and $-a_1$ sum up to unity - that is, we want our $G_1$ filter to be a leaky integrator of the general form $y[n] = c x[n] + (1-c) y[n-1]$, so we obtain:
+\begin{equation}
+\boxed
+{
+ b_0 = 1 + a_1
+}
+\end{equation}
+
+\subsection{The Feedback Gain $k$}
+The gain in the feedback path $k$ is adjusted such that self oscillation occurs when the resonance parameter is unity. To get that, we must divide the resonance parameter $r$ by the magnitude response of the 4-stage filter at the resonance frequency $\omega_c$ (without feedback applied), thus we calculate:
+\begin{equation}
+ g_1 = \sqrt{\frac{b_0^2}{1 + a_1^2 + 2 a_1 \cos (\omega_c)}}, \quad g_4 = g_1^4, \quad k = \frac{r}{g_4}
+\end{equation}
+But we can get rid of the square root and simplify this further into
+\begin{equation}
+\boxed
+{
+ g_1^2 = \frac{b_0^2}{1 + a_1^2 + 2 a_1 c}, \quad k = \frac{r}{(g_1^2)^2}
+}
+\end{equation}
+
+\subsection{Compensating low frequency losses}
+When we turn up the resonance of the filter, we observe a drop of the gain at the low frequencies, The idea is now to compensate these losses with a first order low shelving filter which boosts the low frequencies by a factor which is reciprocal to the magnitude response of the filter at DC. So we must now evaluate the magnitude response of the complete filter (with resonance) at DC. The complex transfer function for our 4-stage filter with resonance can be evaluated as:
+\begin{equation}
+ H(z) = \frac{G_4(z)} {1 + k \cdot z^{-1} \cdot G_4(z)}
+ = \frac{b_0^4}{1 + (b_0^4 k + 4 a_1) z^{-1} + 6 a_1^2 z^{-2} + 4 a_1^3 z^{-3} +  a_1^4 z^{-4} }
+\end{equation}
+the real and imaginary part of the denominator of the corresponding frequency response are given by:
+\begin{equation}
+\begin{aligned}
+ d_r &= a_1^4 \cos(4 \omega) + 4 a_1^3 \cos(3 \omega) + 6 a_1^2 \cos(2 \omega) + (b_0^4 k + 4 a_1) \cos( \omega) + 1 \\
+ d_i &= a_1^4 \sin(4 \omega) + 4 a_1^3 \sin(3 \omega) + 6 a_1^2 \sin(2 \omega) + (b_0^4 k + 4 a_1) \sin( \omega)
+\end{aligned}
+\end{equation}
+With these definitions, we can now write down the squared magnitude response as:
+\begin{equation}
+ \left|H(e^{j \omega}) \right|^2 = H(e^{j \omega}) H^*(e^{j \omega}) 
+ = \frac{b_0^4 b_0^4}{(d_r + j d_i) (d_r - j d_i)} = \frac{b_0^8}{d_r^2 + d_i^2}
+\end{equation}
+Taking the square root of that value gives us the desired magnitude response at some arbitrary normalized radian frequency $\omega$:
+\begin{equation}
+ \left|H(e^{j \omega}) \right| = \sqrt{ \frac{b_0^8}{d_r^2 + d_i^2} }
+  = \frac{b_0^4} {\sqrt{d_r^2 + d_i^2}} 
+\end{equation}
+Matters become simpler when we evaluate this magnitude response at DC, in which case $\omega = 0$. In this case, all the cosine terms evaluate to $1$ and the sine terms evaluate to $0$, so we obtain:
+\begin{equation}
+\begin{aligned}
+ d_r &= a_1^4 + 4 a_1^3 + 6 a_1^2 + 4 a_1 + b_0^4 k + 1 \\
+ d_i &= 0
+\end{aligned}
+\end{equation}
+$d_i$ becoming zero has the additional advantage that now the square-root cancels with the square. For efficient implementation, we may use Horner's rule to rewrite $d_r$ as:
+\begin{equation}
+\boxed
+{
+ d_r = (((a_1 + 4)a_1 + 6)a_1 + 4)a_1 + b_0^4 k + 1 
+}
+\end{equation}
+and then we may evaluate the gain at DC as:
+\begin{equation}
+\boxed
+{
+ \left|H(e^{j \omega}) \right|_{\omega=0} = \frac{b_0^4}{d_r} 
+}
+\end{equation}
+Now that we know the magnitude at DC, it is a simple matter to throw in a first order low shelving filter with a DC-boost reciprocal to the value so obtained and with corner frequency adjusted somewhere below the filters cutoff/resonance frequency - for example, two octaves below. Or simply compensate by an overall gain factor.
+
+\subsection{Optimization of the calculations}
+
+The calculations in equation \ref{eqn:sct}, which is repeated here: 
+\begin{equation}
+ s = \sin(\omega_c), \quad c = \cos(\omega_c), \quad t = \tan \left( \frac{\omega_c-\pi}{4} \right)
+\end{equation}
+would normally require the calculation of three transcendental functions - however, the sine and cosine of the same argument can usually be calculated at once, leaving only the tangent of $(\omega_c-\pi)/4$ to be additionaly calculated. But we may avoid this calculation, too by defining: 
+\begin{equation}
+ \omega_4 = \frac{\omega_c}{4}, \quad s_4 = \sin(\omega_4), \quad c_4 = \cos(\omega_4), \quad t_4 = \tan(\omega_4) = \frac{s_4}{c_4}
+\end{equation}
+and note that:
+\begin{equation} 
+ t = \tan \left(\omega_4 - \frac{\pi}{4} \right)
+\end{equation}
+now we calculate the sine and cosine of $\omega_4$ at once, and obtain the tangent via division and apply the reduction formula:
+\begin{equation} 
+ \tan \left( x - \frac{\pi}{4} \right) = \frac{\tan x - 1}{1 + \tan x}
+\end{equation}
+to obtain our value $t$:
+\begin{equation} 
+ t = \frac{t_4 - 1}{1 + t_4}
+\end{equation}
+The values $s, c$ can be obtained via the multiple angle formulas:
+\begin{equation} 
+ \sin 4x = 4 \cos x (\sin x - 2 \sin^3 x), \qquad
+ \cos 4x = 1 - 8 \cos^2 x + 8 \cos^4 x
+\end{equation}
+by identifying $x$ with $\omega_4 = \omega_c/4$ and $4x$ with $\omega_c$:
+\begin{equation} 
+ s = 4 c_4 (s_4 - 2 s_4^3 ), \quad
+ c = 1 - 8 c_4^2 + 8 c_4^4
+\end{equation}
+which saves us the additional tangent calculation at the expense of two divisions and a couple of multiplications and additions - if this is worthwhile might depend on the machine.
+
+
+
+
+
+
+
+
+
+
+%the  magnitude of this can be evaluated by:
+%\begin{equation}
+% |H(e^{j \omega})| = \frac{b_0^4} {\sqrt( H_r^2 + H_i^2 )}
+%\end{equation}
+%
+%defining:
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,246 @@
+\section{Modeling Transients by Attack/Decay-Enveloped Sinusoids}
+
+\subsection{The Model}
+Assume that, by some means, we have extracted the transient component of an audio signal. We will denote this transient by $x(t)$ and we model it as a sum of enveloped sinusoids:
+\begin{equation}
+ x(t) = \sum_{n=1}^N A_n \cdot e_n(t) \cdot \sin(\omega_n t + \varphi_n)
+\end{equation}
+where $A_n$ is the amplitude of the $n$th sinusoid, $e_n(t)$ is its envelope, $\omega_n$ is its normalized radian frequency and $\varphi_n$ its initial phase. The envelope is modeled by a simple attack/decay shape given by:
+\begin{equation}
+ e_n(t) = 
+ \begin{cases}
+ c_n ( e^{-a_n t} - e^{-d_n t} ) \qquad & a_n \neq  d_n  \\
+ c_n a_n^2 t e^{-a_nt}           \qquad & a_n   =   d_n 
+ \end{cases}
+\end{equation}
+where $a_n$ is the attack time-constant, $d_n$ is the decay time-constant and $c_n$ is a normalization constant that makes sure that the maximum excursion of the envelope is unity. It can be calculated from $a_n$ and $d_n$ as follows:
+\begin{equation}
+ c_n = 
+ \begin{cases}
+ \left(  \left(\frac{d_n}{a_n}\right)^{-\frac{a_n}{d_n-a_n}} -\left(\frac{d_n}{a_n}\right)^{-\frac{d_n}{d_n-a_n}} \right)^{-1}  \qquad & a_n \neq  d_n  \\
+ a_n / e                                                                                                                        \qquad & a_n   =   d_n 
+ \end{cases}
+\end{equation}
+
+\subsection{Finding the Model Parameters}
+Our model has thus $5N$ parameters where $N$ is the number of constituent enveloped sinusoids each of which has 5 free parameters, namely: $A_n, \omega_n, \varphi_n, a_n, d_n$. Our task is now to find values for these parameters such that our original transient $x(t)$ is approximated as closely as possible. To do this, we proceed as follows: we fit one enveloped sinusoid to our transient, obtain a residual and proceed the same way with the residual - this procedure is iterated until the residual is small enough. In order to fit one enveloped sinusoid to the transient (or residual), we have to choose the 5 parameters that give the closest match. Thus, we have to optimize 5 parameters per constituent sinusoid and repeat that optimization procedure $N$ times. Our number of sinusoids $N$ does not need to be determined beforehand - we may simply stop adding more sinusoids when we are happy with the resythesized result. To operationalize our 'happiness', we may define a threshold on an error function and stop when the error falls below this threshold.
+
+
+
+
+
+
+
+
+
+
+
+
+
+%
+%
+%\section{Attack/Decay Envelope Generator}
+%To generate a simple smooth attack/decay envelope in the continuous time domain, we may feed the impulse-response of one RC-circuit into another RC-circuit. The first RC circuit can be seen as converting the incoming impulse into an exponential decay, whereas the second can be thought of as smoothing out the attack phase (rigorously, this is a somewhat arbitrary way of thinking about it, because (due to commutativity of convolution) it would be equally valid to think it vice versa). Let impulse response for the decay be given by:
+%\begin{equation}
+% x_d(t) = u(t) \cdot \alpha_d e^{ -\alpha_d t }
+%\end{equation}
+%where $\alpha_d = 1/\tau_d$, with $\tau_d$ being the time-constant of the RC circuit and $u(t)$ is the unit step function. Likewise, the impulse response of the second RC circuit is:
+%\begin{equation}
+% x_a(t) = u(t) \cdot \alpha_a e^{ -\alpha_a t }
+%\end{equation}
+%While giving a nice curve, the problem with this envelope generator is that the maximum excursion depends on the values $\alpha_a, \alpha_d$. We would like to normalize it, such that the maximum excursion is always fixed at unity. To find the proper normalization factor, we first need to find maximum excursion of the curve as is - the normalization factor will then be the reciprocal of that value. The overall curve can be expressed as the convolution of the two functions $x_d(t), x_a(t)$:
+%\begin{equation}
+% x(t) = x_d(t) * x_a(t) = \int_{-\infty}^{\infty} x_d (t-\tau) \cdot x_a (\tau) \; d \tau
+%      = \int_{-\infty}^{\infty} u(t-\tau) \alpha_d e^{ -\alpha_d (t-\tau) } \cdot u(\tau) \alpha_a e^{ -\alpha_a \tau } \; d \tau
+%\end{equation}
+%The currently infinite integration limits become finite ($0$ and $t$), by noting that $u(t)$ is identically zero for $t<0$. So we may write the convolution integral as:
+%\begin{equation}
+% x(t) = \int_0^t \alpha_d e^{ -\alpha_d (t-\tau) } \cdot \alpha_a e^{ -\alpha_a \tau } \; d \tau
+%\end{equation}
+%Let's now evaluate this integral:
+%\begin{equation}
+% x(t) = \alpha_d \alpha_a \int_0^t e^{-\alpha_d t}  e^{(\alpha_d-\alpha_a) \tau} \; d \tau
+%      = \alpha_d \alpha_a   (\alpha_d-\alpha_a) \left[ e^{-\alpha_d t}  e^{(\alpha_d-\alpha_a) \tau} \right]_0^t
+%\end{equation}
+%Pluggin' in $t$ and $0$ for the upper and lower bounds (for $\tau$), the result of the integration becomes:
+%\begin{equation}
+% x(t) = \alpha_d \alpha_a (\alpha_d-\alpha_a) (e^{-\alpha_a t} - e^{-\alpha_d t})
+%\end{equation}
+%for convenience, we define 
+%\begin{equation}
+%\label{eq:kDefinition}
+%\boxed
+%{
+% k= \alpha_d \alpha_a (\alpha_d-\alpha_a)
+%}
+%\end{equation}
+%so we may write:
+%\begin{equation}
+%\label{eq:theCurve}
+%\boxed
+%{
+% x(t) = k (e^{-\alpha_a t} - e^{-\alpha_d t})
+%}
+%\end{equation}
+%thus, the convolution of the two exponential decays equals their scaled difference. This formula will work only when $\alpha_a \neq \alpha_d$ - it will give zero when they are equal. This is clearly wrong (how can this be?), and we will treat the special case for $\alpha_a = \alpha_d$ seperately later. Let's now find the maximum of that curve - requiring the derivative to vanish at the maximum:
+%\begin{equation}
+% \frac{\partial}{\partial t} x(t) 
+% = \frac{\partial}{\partial t} k (e^{-\alpha_a t} - e^{-\alpha_d t})
+% = k (\alpha_d e^{-\alpha_d t} - \alpha_a e^{-\alpha_a t}) = 0
+%\end{equation}
+%yields:
+%\begin{equation}
+% \alpha_d e^{-\alpha_d t} = \alpha_a e^{-\alpha_a t}
+%\end{equation}
+%solving this equation for $t$ gives us the location of the peak (which we shall denote as $t_p$):
+%\begin{equation}
+%\label{eq:peakLocation}
+%\boxed
+%{
+% t_p = \frac{\ln \left( \frac{\alpha_d}{\alpha_a} \right)}{\alpha_d-\alpha_a}  
+%}
+%\end{equation}
+%Finally, plugging this value back into eq. \ref{eq:theCurve} and simplifying, we obtain the height of the peak $x_p$ as:
+%\begin{equation}
+%\label{eq:peakHeightAnalog}
+% x_p = x(t_p) = k \left(  \left(\frac{\alpha_d}{\alpha_a}\right)^{-\frac{\alpha_a}{\alpha_d-\alpha_a}} 
+%                         -\left(\frac{\alpha_d}{\alpha_a}\right)^{-\frac{\alpha_d}{\alpha_d-\alpha_a}} \right)
+%\end{equation}
+%So, this $x_p$ is now the value, by which we must divide our envelope to obtain a peak excursion of unity. However - this formula will have to be replaced by some other formula when we turn to the digital implementation.
+%
+%\subsection{Some special cases}
+%As mentioned earlier, these formulas will work only when $\alpha_d$ and $\alpha_a$ are distinct. We will now look at the case where $\alpha_a = \alpha_d$. As the $\alpha$'s are equal, we will drop the index $d$ or $a$ and just write $\alpha$. I this case, the convolution integral can be written as:
+%\begin{equation}
+% x(t) = \int_0^t \alpha e^{ -\alpha (t-\tau) } \cdot \alpha e^{ -\alpha \tau } \; d \tau
+%      = \alpha^2 \int_0^t e^{ -\alpha t } \; d \tau      
+%\end{equation}
+%This is a bit odd, since the integration variable $\tau$ has disappeared, so we just need to find the antiderivative of the constant $e^{ -\alpha t }$ with respect to $\tau$, and this is just $\tau e^{ -\alpha t }$, so:
+%\begin{equation}
+% x(t) = \left[ \alpha^2 \tau e^{ -\alpha t } \right]_0^t =  \alpha^2 t e^{ -\alpha t }
+%\end{equation}
+%Again, taking the derivative with respect to $t$ and requiring it to become zero, we find the location of the peak as:
+%\begin{equation}
+%\boxed
+%{
+% t_p = 1 / \alpha = \tau
+%}
+%\end{equation}
+%(here, $\tau$ is the time constant - this has nothing to do with the integration variable $\tau$ used earlier ...damn - a notational clash here). Evaluating $x(t)$ at $t_p$ gives the value of the peak:
+%\begin{equation}
+%\boxed
+%{
+% x_p = \alpha / e
+%}
+%\end{equation}
+%For the case, when one of the time-constants $\tau$ (but not both) becomes zero, the impulse response of one of the RC circuit will be just the impulse itself and the impulse response of the whole system is then the exponential decay realized by the other RC circuit with nonzero $\tau$. The location of the the peak is then at time zero: $t_p = 0$ and its height is given by the $\alpha$ of the other RC circuit. In formulas:
+%\begin{equation}
+%\boxed
+%{
+%\begin{aligned}
+% t_p &= 0, \quad x_p = \alpha_a  \qquad \text{for } \tau_d   =  0, \tau_a \neq 0 \\
+% t_p &= 0, \quad x_p = \alpha_d  \qquad \text{for } \tau_d \neq 0, \tau_a   =  0 
+%\end{aligned}
+%}
+%\end{equation}
+%When both time consants are zero, then the impulse response of the whole system formally reduces to an impulse of infinite height at time $t=0$.
+%
+%\subsection{The discrete time version}
+%The whole derivation so far was done in the continuous time domain. We will now look at the digital implementation. An analog RC circuit can be modeled digitally by a first order lowpass filter that realizes the difference equation:
+%\begin{equation}
+% y[n] = b_0 x[n] - a_1 y[n-1]
+%\end{equation}
+%where the coefficients are given by:
+%\begin{equation}
+% a_1 =  -e^{-\frac{1}{\tau f_s}}, \quad b_0 = 1+a_1
+%\end{equation}
+%where $\tau$ is the time constant of the filter as before and $f_s$ is the sample-rate. This filter has the $z$-domain transfer function:
+%\begin{equation}
+% H(z) =  \frac{b_0}{1+a_1 z^{-1}}
+%\end{equation}
+%Again, we assume a series connection of two such filters where we consider the first one as being responsible for the decay (so we will use $b_d$ and $a_d$ for its coefficiencts) and the second one as being responsible for the attack (so we will use $b_a$ and $a_a$ for its coefficiencts). The transfer function of this series connection is given by:
+%\begin{equation}
+% H(z) = H_d(z) H_a(z) = \frac{b_d}{1+a_d z^{-1}} \frac{b_a}{1+a_a z^{-1}} 
+%\end{equation}
+%In order to find the peak location of the impulse response of this series connection, we may still use \ref{eq:peakLocation}, but for the height of the peak, we can't use \ref{eq:peakHeightAnalog} anymore (or any of the equations that were derived for the special cases). Instead, we need to derive new formulas specifically for the digital domain. To accomplish this, we first need a closed form expression of the impulse response in terms of the sample-index $n$. We find such an expression by expanding the transfer function into partial fractions:
+%\begin{equation}
+% H(z) = \frac{b_d}{1+a_d z^{-1}} \frac{b_a}{1+a_a z^{-1}} 
+% = \frac{b_1}{1+a_1 z^{-1}} + \frac{b_2}{1+a_2 z^{-1}} 
+%\end{equation}
+%where $a_1, a_2, b_1, b_2$ are given by:
+%\begin{equation}
+% s = 1 / (a_a-a_d), \quad  b_1 = s a_a b_a b_d, \quad b_2 = s a_d b_a b_d, \quad a_1 = s(a_d-a_a)a_a, \quad a_2 = s(a_d-a_a)a_d
+%\end{equation}
+%However, this partial fraction expansion is valid only if the two poles (and consequently the two time constants) are distinct. As in the analog case, we need to treat the special case of equal time constants separately. Having found the partial fraction expansion of the transfer function, we can find the impulse response by using the inverse $z$-transform as:
+%\begin{equation}
+% h[n] = b_1 a_1^n - b_2 a_2^n \qquad \text{for } \tau_a \neq \tau_d
+%\end{equation}
+%In the case of equal time-constants, we will have $b_a = b_d = b$ and $a_a = a_d = a$ and the impulse response is given by:
+%\begin{equation}
+% h[n] = (n+1) b^2 a^n \qquad \text{for } \tau_a = \tau_d
+%\end{equation}
+%these formulas can now be used to find the height of the peak by evaluating them at the sample index $n_p$ at which the peak occurs, and this is simply given by multiplying the time of the peak occurrence with the sample-rate:
+%\begin{equation}
+% n_p = t_p f_s
+%\end{equation}
+%where the formula for $t_p$ is still the same as in the analog case, namely eq. \ref{eq:peakLocation}. This may result in a non-integer $n_p$, indicating, that the peak actually occurs in between two samples, but this is not really a problem in this context. If you are bothered by this fact, you may investigate the height at the floor and at the ceiling of the computed $n_p$ and pick the larger of the two values. If the attack is instantaneous ($\tau_a = 0$), the peak - of course - occurs at time zero and has a height of $b_d$.
+%
+%\subsection{Finding $\tau_a$ given $t_p$}
+%We have now all the formulas in place to normalize the peak of the envelope, given the two time constants $\tau_d$ and $\tau_a$. For a user of this envelope generator, $\tau_d$ and $\tau_a$ is not really a convenient parametrization. More meaningful would probably be, to let the user specify the time of the peak $t_p$ along with the decay time $\tau_d$.  
+%Unfortunately, i was not able to explicitely express  $\tau_a$ in terms of $t_p$ and $\tau_d$ from \ref{eq:peakLocation}, but i could come up with two implicit formulas:
+%\begin{equation}
+% \tau_a = - \frac{t_p}{k_1 + \ln(\tau_a)}, \qquad \text{with } k_1 = -\frac{t_p}{\tau_d} - \ln(t_d)
+%\end{equation}
+%and
+%\begin{equation}
+% \tau_a = e^{k_2 - \frac{t_p}{\tau_a}}, \qquad \text{with } k_2 = \frac{t_p}{\tau_d} + \ln(t_d) 
+%\end{equation}
+%which may be used (together with some initial guess) in a fixed point iteration. Experiments indicate that the first formula leads to a convergent fixed point iteration for $t_p \leq \tau_d$ and the second one may be used for $t_p > \tau_d$.
+%
+%\subsection{Decaying time constant $\tau_a$}
+%As it stands, the actual decay time will be governed by $\tau_d$ only if the attack-time is shorter then the decay time $\tau_d > \tau_a$ - otherwise it will always be governed by whichever of the two time-constants is larger. To put it differently, it is currently not possible to realize a long attack together with a fast decay. We may deal with this situation by letting the attack time constant itself decay away, once we have passed $t_p$ ....
+%
+%....tbc...
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%
+%%Finally, to obtain the height of the peak, we plug $t_{peak}$ into eq. \ref{eq:theCurve}:
+%%\begin{equation}
+%%\label{eq:peak}
+%%\boxed
+%%{
+%% x_{peak} = (-\alpha_a--\alpha_d) (e^{-\alpha_a t_{peak}} - e^{-\alpha_d t_{peak}})
+%%}
+%%\end{equation}
+%%
+%%
+%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

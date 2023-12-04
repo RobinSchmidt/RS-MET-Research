@@ -1,0 +1,179 @@
+\title{Contour- and Area-Integrals (DRAFT)}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider a two-dimensional vector field:
+\begin{equation}
+ \mathbf{v}(x,y) = 
+ \begin{pmatrix}
+ v_x (x, y) \\
+ v_y (x, y)
+ \end{pmatrix}
+\end{equation}
+and establish some identities between certain contour- and area integrals in this vector field.
+
+\section{The Contour Integrals}
+Consider now a contour $K$ in the $(x,y)$-plane which is given as a set of points/vectors $\mathbf{k}$ in parametric form:
+\begin{equation}
+ \mathbf{k}(t) = 
+ \begin{pmatrix}
+ x (t) \\
+ y (t)
+ \end{pmatrix}, \; t \in [t_0, t_1]
+\end{equation}
+for some values $t_0, t_1$ that define the start- and end-points of the contour. We will assume that the contour is a simple closed loop such that $\mathbf{k}(t_0) = \mathbf{k}(t_1) $. This means that our contour $K$ encloses a region $R$ in the $(x,y)$-plane. For any value of the parameter $t$, we may calculate a unit vector $\mathbf{t}$, that is tangent to the contour and another unit vector $\mathbf{n}$, that is normal to the contour (i.e. perpendicular to the tangent vector). For convenience, we drop the explicit dependence of the vectors on $t$, so we write:
+\begin{equation}
+ \dot{\mathbf{k}}=
+ \begin{pmatrix}
+ \dot{x} \\
+ \dot{y} 
+ \end{pmatrix}, \qquad
+ \mathbf{t} = \frac{1}{|\dot{\mathbf{k}}|}
+ \begin{pmatrix}
+ \dot{x} \\
+ \dot{y}
+ \end{pmatrix}, \qquad
+ \mathbf{n} = \frac{1}{|\dot{\mathbf{k}}|}
+ \begin{pmatrix}
+ \dot{y} \\
+ -\dot{x}
+ \end{pmatrix} 
+\end{equation}
+where the dot indicates a derivative with respect to $t$. 
+
+\subsection{Flux}
+We define the local flux $f$ across the contour as the projection of the vector-field itself onto the unit normal-vector to the contour:
+\begin{equation}
+ f(\mathbf{v}, t) = \mathbf{v} \cdot \mathbf{n}
+\end{equation}
+We may visualize this by imagining $\mathbf{v}$ to be a velocity field in a fluid. Then, $f$ at some value of $t$ (and hence at some position $(x,y)$), gives the velocity with which the fluid flows across the contour at this point. This is the component of the velocity field, which is perpendicular to the contour. Integrating this local flux over the whole contour gives the total flux $F$ across the cotour:
+\begin{equation}
+ \boxed
+ {
+  F(\mathbf{v}, K) = \oint_{K} \mathbf{v} \cdot \mathbf{n} \; ds 
+ }
+\end{equation}
+[todo: explain $ds$] - $ds = \sqrt{(dx)^2 + (dy)^2}$? \textbf{[check this]}
+
+\subsection{Circulation (or Work)}
+Likewise, the local circulation $w$ along the contour is given as the projection of the vector-field onto the unit tangent-vector:
+\begin{equation}
+ w(\mathbf{v}, t) = \mathbf{v} \cdot \mathbf{t}
+\end{equation}
+Maintaining the picture of a velocity field, this is the velocity component that is in the same direction as the contour itself. Again, integrating this local circulation over the whole contour gives the total circulation along (or around) the contour:
+\begin{equation}
+ \boxed
+ {
+  W(\mathbf{v}, K) = \oint_{K} \mathbf{v} \cdot \mathbf{t} \; ds 
+ }
+\end{equation}
+Another interpretation would be to think of $\mathbf{v}$ as a force field. In this interpretation, $W$ would be the work ("force times distance") expended by the field, when a particle takes a full round trip around the contour. For conservative force fields, this work would be $0$ - which is what we observe in the real world of physics.
+
+
+\section{The Area Integrals}
+
+\subsection{Divergence}
+From our vector valued function $\mathbf{v}(x,y)$, we now form a scalar-valued function $d(x,y)$ by combining partial derivatives in a particular way:
+\begin{equation}
+  d(x,y) = \frac{\partial v_x}{\partial x} + \frac{\partial v_y}{\partial y} \\
+\end{equation}
+If we imagine to be at a particular point $(x,y)$ inside the velocity field of some fluid, the first term gives the rate of change of the velocity's $x$-component as we move into the $x$-direction. A positive value means that if we move rightward, we will also accelerate rightward. It also means that when we move leftward, we will accelerate leftward. Likewise a positive value for the second term says that when we move upward or downward, we will also accelerate upward or downward respectively. Thus, the sum of the terms can be seen as a tendency of the vector field to accelerate radially outward from our current point. This quantity is called the divergence of the vector field $\mathbf{v}$ and is denoted as:
+\begin{equation}
+ \boxed
+ {
+  \dive \mathbf{v} = d(x,y) = \frac{\partial v_x}{\partial x} + \frac{\partial v_y}{\partial y} \\
+ }
+\end{equation}
+If a fluid tends to accelerate outward from a point $(x,y)$, it means that there must be some kind of fluid source at $(x,y)$ [\todo explain why - maybe by dividing mass by area or something]. If we integrate this divergence over a region $R \subseteq \mathbb{R}^2$
+\begin{equation}
+ \boxed
+ {
+  D &= \iint_R d(x,y) \; dA 
+ }
+\end{equation}
+we obtain a quantity $D$ which we shall call the source-strength of the region $R$. If $D$ is positive, fluid gets pumped into the vector field from the region $R$, if $D$ is negative, the region acts as a sink - that is: it withdraws fluid. We occasionally refer to $\dive \mathbf{v}$ as the source density. [explain the area-element $dA = dx \, dy$ \textbf{[check this]}
+
+
+\subsection{Curl}
+We now form a second scalar-valued function $c(x,y)$ by taking another linear combination of partial derivatives:
+\begin{equation}
+ c(x,y) = \frac{\partial v_y}{\partial x} - \frac{\partial v_x}{\partial y}
+\end{equation}
+Very similar to the discussion of the divergence, if we assume positive values for the terms, the interpretation of the first term is an upward-acceleration as we move rightward, and the second terms leads to a leftward acceleration as we move upward. The sum of these terms can be considered as a tendency to accelerate into a counterclockwise angular direction as we move outward from our current point \textbf{[check this]}. This quantity is called the curl of the vector field $\mathbf{v}$ and is denoted as:
+\begin{equation}
+ \boxed
+ {
+  \curl \mathbf{v} = c(x,y) = \frac{\partial v_y}{\partial x} - \frac{\partial v_x}{\partial y}
+ }
+\end{equation}
+If we integrate the curl over a region $R$:
+\begin{equation}
+ \boxed
+ {
+  C &= \iint_R c(x,y) \; dA
+ }
+\end{equation}
+we obtain a quantity $C$ which we shall call the [vorticity?].
+[todo: give interpretations to these functions $d$: source density, $c$: ?]
+[$D$: source strength? fluid injected into the region?, $C$: ?]
+
+
+
+\section{The Identities}
+The first interesting observation is now that $F = D$ - in words: the total flux across the contour equals the source strength in the region. This can be written down in the form:
+\begin{equation}
+ \boxed
+ {
+   \iint_R \dive \mathbf{v} \; dA &= \oint_{K} \mathbf{v} \cdot \mathbf{n} \; ds 
+ }
+\end{equation}
+this theorem is sometimes referred to as Gauss' theorem in 2D, as Green's theorem \textbf{[check this]} or as divergence theorem. The second observation is that $W = C$ - in words: the work done by the field as a particle moves around a closed path equals [...]. As a formula:
+\begin{equation}
+ \boxed
+ {
+   \iint_R \curl \mathbf{v} \; dA &= \oint_{K} \mathbf{v} \cdot \mathbf{t} \; ds 
+ }
+\end{equation}
+this is sometimes referred to as Stokes' theorem in 2D or curl theorem.
+
+
+\section{3 Dimensions}
+
+\section{N Dimensions}
+
+\section{The Generalization}
+When we look at the equations given so far, we observe some common structure. In fact, it seems that we have done almost the same thing twice - once for $\dive \mathbf{v}$ and once for $\curl \mathbf{v}$. The only difference is the way in which we combined partial derivatives in the area integrals and which vector we chose to form the scalar product in the line integrals. It seems natural to ask if there could be a common underlying principle. [todo - explain the general Stokes Theorem]
+
+
+
+
+\section{Example}
+\begin{equation}
+ \mathbf{v}(x,y) = 
+ \begin{pmatrix}
+ x^2 - y^2 \\
+ 2 x y
+ \end{pmatrix}, \qquad
+ \mathbf{c}(t) = 
+ \begin{pmatrix}
+   \cos(t) + 3 \\
+ 2 \sin(t) + 5 
+ \end{pmatrix}, \; t \in [0, 2 \pi[
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% %\bibitem{Gum} Charles Constantine Gumas. A century old, the fast Hadamard transform proves useful in digital communications
+%\end{thebibliography}
+

@@ -1,0 +1,12 @@
+\subsection{Finding a Zero Crossing}
+To detect an upward zero crossing with sample-accuracy, we just need to watch out for the condition that the previous sample was below zero and the current is greater or equal to zero. Sometimes we want to find the time instant of a zero-crossing with sub-sample precision - for example for (real-time) fundamental frequency estimation. A simple means to get the fractional part would be to fit a line between the previous and the current sample and solve for the zero crossing of this line. If we denote our current time instant with $1$, the current sample as $x[1]$, the time instant of the previous sample with $0$ and the previous sample with $x[0]$. The fractional part $$ of our zero crossing can then be estimated as:
+\begin{equation}
+ frac = 
+ 
+
+\end{equation}
+
+with $x[1]$ denote our current sample and $x[0]$ the previous sample
+
+
+

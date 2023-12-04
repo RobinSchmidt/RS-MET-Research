@@ -1,0 +1,269 @@
+\section{Notation}
+
+\begin{center}
+\begin{tabular}{|l|l|}
+ \hline
+ Symbol                        & Meaning                                                  \\
+ \hline
+ $f_s$                         &  sample-rate in Hz                                       \\   
+ $f$                           &  some frequency in Hz                                    \\   
+ $f_c$                         &  characteristic frequency of some filter in Hz           \\   
+ $\omega = 2 \pi f / f_s$      &  normalized radian frequency                             \\   
+ $\omega_c = 2 \pi f_c / f_s$  & characteristic frequency as normalized radian frequency  \\    
+ \hline
+\end{tabular}
+\end{center}
+
+\section{First order filters}
+
+\subsection{General Properties}
+
+\paragraph{Difference equation:}
+\begin{equation}
+ y[n] = b_0 x[n] + b_1 x[n-1] - a_1 y[n-1]
+\end{equation}
+
+\paragraph{Transfer function:}
+\begin{equation}
+ H(z) = \frac{ b_0 + b_1 z^{-1} } { 1 + a_1 z^{-1}  }
+\end{equation}
+
+\paragraph{Magnitude Response:}
+\begin{equation}
+ |H(e^{j \omega})| = \sqrt{ \frac{ b_0^2 + b_1^2 + 2b_0 b_1 \cos(\omega) } { 1 + a_1^2 + 2a_0 a_1 \cos(\omega) } }
+\end{equation}
+
+\paragraph{Phase Response:}
+\begin{equation}
+ \angle H(e^{j \omega}) = \arctan \left( - \frac{ (b_1 - a_1 b_0) \sin(\omega) } { b_0 + a_1 b_1 + ( b_1 + a_1 b_0) \cos(\omega) }  \right)
+\end{equation}
+
+%\paragraph{Group Delay:}
+
+% impulse response, step response, phase delay
+
+\subsection{Design formulas}
+
+\subsubsection{Lowpass (via impulse invariant transform)}
+\begin{equation}
+  x = e^{-\omega_c}, \quad b_0 = 1-x, \quad b_1 = 0, \quad a_1 = -x
+\end{equation}
+
+\subsubsection{Highpass (via impulse invariant transform)}
+\begin{equation}
+  x = e^{-\omega_c}, \quad b_0 = (1+x)/2, \quad b_1 = -b_0, \quad a_1 = -x
+\end{equation}
+
+\subsubsection{Lowpass (via bilinear transform)}
+\begin{equation}
+  t = \tan( \omega_c / 2 ), \quad a_1 = (1+t)/(1-t), \quad b_0 = \frac{1}{2} \sqrt{1+a_1^2+2a_1}, \quad b_1 = b_0
+\end{equation}
+
+\subsubsection{Highpass (via bilinear transform)}
+\begin{equation}
+  t = \tan( \omega_c / 2 ), \quad a_1 = (1+t)/(1-t), \quad b_0 = \frac{1}{2} \sqrt{1+a_1^2+2a_1}, \quad b_1 = -b_0
+\end{equation}
+
+\subsubsection{Allpass}
+\begin{equation}
+  t = \tan( \omega_c / 2 ), \quad x = (t-1)/(t+1), \quad a_1 = x, \quad b_0 = x, \quad b_1 = 1
+\end{equation}
+
+\subsubsection{Shelving (a la Orfanidis)} let $g$ be the desired (linear) gain factor at DC (for low-shelving) or $f_s/2$ (for high-shelving), then:
+\begin{equation}
+ \omega_a = 2 f_s \tan(\omega_c / 2), \quad g_b = \sqrt{g}, \quad \beta = \sqrt{ \frac{g_b^2-1}{g^2-g_b^2} }, \quad s = 1 / (2 f_s)
+\end{equation}
+\begin{equation}
+ p_a = -\beta \omega_a, \quad z_a = -g \beta \omega_a, \quad p = \frac{1+s p_a}{1-s p_a}, \quad z = \frac{1+s z_a}{1-s z_a}
+\end{equation}
+Low-Shelving:
+\begin{equation}
+ b_1 = -z, \quad a_1 = -p, \quad n = \sqrt{ \frac{1+a_1^2-2a_1}{1+b_1^2-2 b_1} }, \quad b_1 = n b_1, \quad b_0 = n
+\end{equation}
+High-Shelving:
+\begin{equation}
+ b_1 = -p, \quad a_1 = -z, \quad n = \sqrt{ \frac{1+a_1^2+2a_1}{1+b_1^2+2 b_1} }, \quad b_1 = n b_1, \quad b_0 = n
+\end{equation}
+
+
+\section{2nd order filters (aka Biquads)}
+
+\subsection{General Properties}
+
+\paragraph{Difference equation:}
+\begin{equation}
+ y[n] = b_0 x[n] + b_1 x[n-1] + b_2 x[n-2] - a_1 y[n-1] - a_2 y[n-2]
+\end{equation}
+
+\paragraph{Transfer function:}
+\begin{equation}
+ H(z) = \frac{ b_0 + b_1 z^{-1} + b_2 z^{-2}} { 1 + a_1 z^{-1} + a_2 z^{-2} }
+\end{equation}
+
+\paragraph{Magnitude Response:}
+\begin{equation}
+ |H(e^{j \omega})| 
+ = \sqrt{\frac{b_0^2 + b_1^2 + b_2^2 + 2 (b_0 b_1 + b_1 b_2) \cos (\omega) + 2 b_0 b_2 \cos(2 \omega) }
+              {1     + a_1^2 + a_2^2 + 2 (    a_1 + a_1 a_2) \cos (\omega) + 2    a_2 \cos(2 \omega) } }
+\end{equation}
+
+
+\subsection{Design formulas}
+\begin{equation}
+ s = \sin(\omega_c), \quad c = \cos(\omega_c), \quad \alpha = s/(2q)
+\end{equation}
+
+\subsubsection{Lowpass}
+\begin{equation}
+ n = 1 / (1+\alpha), \quad a_1 = -2cn, \quad a_2 = (1-\alpha)n, \quad b_1 = (1-c)n, \quad b_0 = b_1/2, \quad b_2 = b_0
+\end{equation}
+
+\subsubsection{Highpass}
+\begin{equation}
+ n = 1 / (1+\alpha), \quad a_1 = -2cn, \quad a_2 = (1-\alpha)n, \quad b_1 = -(1+c)n, \quad b_0 = -b_1/2, \quad b_2 = b_0
+\end{equation}
+
+\subsubsection{Bandpass}
+\begin{equation}
+ n = 1 / (1+\alpha), \quad a_1 = -2cn, \quad a_2 = (1-\alpha)n, \quad b_1 = 0, \quad b_0 = q \alpha n, \quad b_2 = -b_0
+\end{equation}
+
+
+\section{4-stage Ladder filters}
+
+\subsection{General Properties}
+
+\paragraph{Difference equations:}
+\begin{equation}
+ \begin{aligned}
+ y_1[n] &= b_0   x[n] - a_1 y_1[n-1] - k y_4[n-1]   \\
+ y_2[n] &= b_0 y_1[n] - a_1 y_2[n-1]                \\
+ y_3[n] &= b_0 y_2[n] - a_1 y_3[n-1]                \\
+ y_4[n] &= b_0 y_3[n] - a_1 y_4[n-1]                \\
+ y[n]   &= g (c_0 x[n] + c_1 y_1[n] + c_2 y_2[n] + c_3 y_3[n] + c_4 y_4[n])
+ \end{aligned}
+\end{equation}
+
+\subsection{Design formulas}
+
+\paragraph{Intermediate variables:}
+\begin{equation}
+  s = \sin(\omega_c), \quad c = \cos(\omega_c), \quad t = \tan \left( \frac{\omega_c-\pi}{4} \right)
+\end{equation}
+
+\paragraph{First order section coefficients:}
+\begin{equation}
+  a_1 = t/(s-ct), \quad b_0 = 1+a_1
+\end{equation}
+
+\paragraph{Feedback gain} let $r \in [0,1]$ be the normalized resonance parameter, then:
+\begin{equation}
+  k = r \cdot \left( \frac{1 + a_1^2 + 2 a_1 c}{b_0^2} \right)^4
+\end{equation}
+
+\paragraph{Gain compensation} let $c \in [0, 1] $ denote the amount of the desired gain-compensation, then:
+\begin{equation}
+  g = \left( \frac{ a_1^4 + 4 a_1^3 + 6 a_1^2 + 4 a_1 + b_0^4 k + 1}{b_0^4} \right)^c
+\end{equation}
+
+\paragraph{Mix coefficients for different responses:} 
+
+%\linebreak
+Lowpass responses:
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|}
+ \hline
+ Response Type                        & $c_0$ & $c_1$ & $c_2$ & $c_3$ & $c_4$                            \\
+ \hline 
+ Lowpass, 6 dB/oct                    &  $0$  & $1$   & $0$   & $0$   & $0$                              \\    
+ Lowpass, 12 dB/oct                   &  $0$  & $0$   & $1$   & $0$   & $0$                              \\  
+ Lowpass, 18 dB/oct                   &  $0$  & $0$   & $0$   & $1$   & $0$                              \\   
+ Lowpass, 24 dB/oct                   &  $0$  & $0$   & $0$   & $0$   & $1$                              \\   
+ \hline
+\end{tabular}
+\end{center}
+
+Highpass responses:
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|}
+ \hline
+ Response Type                        & $c_0$ & $c_1$ & $c_2$ & $c_3$ & $c_4$                            \\
+ \hline
+ Highpass, 6 dB/oct                   &  $1$  & $-1$  & $0$   & $0$   & $0$                              \\  
+ Highpass, 12 dB/oct                  &  $1$  & $-2$  & $1$   & $0$   & $0$                              \\   
+ Highpass, 18 dB/oct                  &  $1$  & $-3$  & $3$   & $-1$  & $0$                              \\    
+ Highpass, 24 dB/oct                  &  $1$  & $-4$  & $6$   & $-4$  & $1$                              \\    
+ \hline
+\end{tabular}
+\end{center}
+
+Bandpass responses:
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|}
+ \hline
+ Response Type                        & $c_0$ & $c_1$ & $c_2$ & $c_3$ & $c_4$                            \\
+ \hline  
+ Bandpass, 12/12 dB/oct               &  $0$  & $0$   & $1$   & $-2$  & $1$                              \\     
+ Bandpass, 6/18 dB/oct                &  $0$  & $0$   & $0$   & $1$   & $-1$                             \\    
+ Bandpass, 18/6 dB/oct                &  $0$  & $1$   & $-3$  & $3$   & $-1$                             \\     
+ Bandpass, 6/12 dB/oct                &  $0$  & $0$   & $1$   & $-1$  & $0$                              \\     
+ Bandpass, 12/6 dB/oct                &  $0$  & $1$   & $-2$  & $1$   & $0$                              \\    
+ Bandpass, 6/6 dB/oct                 &  $0$  & $1$   & $-1$  & $0$   & $0$                              \\   
+ \hline
+\end{tabular}
+\end{center}
+
+other responses:
+\begin{center}
+\begin{tabular}{|l|c|c|c|c|c|}
+ \hline
+ Response Type                        & $c_0$ & $c_1$ & $c_2$ & $c_3$ & $c_4$                            \\
+ \hline
+ Flat (but may have resonance)        &  $1$  & $0$   & $0$   & $0$   & $0$                              \\     
+ \hline
+\end{tabular}
+\end{center}
+
+
+
+
+
+
+
+
+\section{General Direct Form Filters}
+
+\paragraph{Difference Equation:}
+\begin{equation}
+ y[n] = \sum_{k=0}^M  b_k x[n-k] - \sum_{k=1}^N a_k y[n-k]
+\end{equation}
+
+\paragraph{Transfer Function:}
+\begin{equation}
+ H(z) = \frac{\sum_{k=0}^M  b_k z^{-k}} {1 + \sum_{k=1}^N a_k z^{-k}}
+\end{equation}
+
+Let:
+\begin{equation}
+ c_a = 1 + \sum_{k=1}^N a_k \cos(k \omega), \quad 
+ s_a =     \sum_{k=1}^N a_k \sin(k \omega), \quad
+ c_b =     \sum_{k=0}^M b_k \cos(k \omega), \quad
+ s_b =     \sum_{k=0}^M b_k \sin(k \omega) 
+\end{equation}
+
+\paragraph{Complex Frequency Response:}
+\begin{equation}
+ H(e^{j \omega}) = \frac{c_b - j s_b}{c_a - j s_a} = \frac{\sum_{k=0}^M  b_k e^{-jk\omega}} {1 + \sum_{k=1}^N a_k e^{-jk\omega}}
+\end{equation}
+
+\paragraph{Magnitude Response:}
+\begin{equation}
+ |H(e^{j \omega})| = \sqrt{ \frac{c_b^2 + s_b^2}{c_a^2 + s_a^2} }
+\end{equation}
+
+\paragraph{Phase Response:}
+\begin{equation}
+ \angle H(e^{j \omega}) = \atan2(s_b, c_b) - \atan2(s_a, c_a)
+\end{equation}
+
+

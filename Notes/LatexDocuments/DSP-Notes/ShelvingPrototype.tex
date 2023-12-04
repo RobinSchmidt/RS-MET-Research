@@ -1,0 +1,108 @@
+\section{Shelving Prototype}
+
+\subsection{Scaling and shifting a lowpass prototype}
+Assume that we are given a lowpass prototype transfer function $H_{LP}(s)$ as follows:
+\begin{equation}
+ H_{LP}(s) = \frac{N_{LP}(s)}{D_{LP}(s)} 
+\end{equation}
+and we want to generalize this to a low-shelving prototype transfer function. To achieve this, we scale the lowpass transfer function by a factor $B$ and offset the whole thing by a constant $A$. So, our low-shelving transfer function $H_{LS}(s)$ becomes:
+\begin{equation}
+\label{eqn:LowpassWithScaleAndOffset}
+ H_{LS}(s) = A + B H_{LP}(s) = A + B \frac{N_{LP}(s)}{D_{LP}(s)} 
+\end{equation}
+The magnitude-squared response of the shelving filter is:
+
+\begin{equation}
+\begin{aligned}
+ |H_{LS}(\Omega)|^2 &= H_{LS}(s) H_{LS}(-s) \\
+                    &= (A + B H_{LP}(s)) (A + B H_{LP}(-s)) \\
+                    &= A^2 + (B^2 + 2AB) H_{LP}(s) H_{LP}(-s)
+\end{aligned}
+\end{equation}
+from which we see:
+
+%[nah - this is wrong]
+%\begin{equation}
+% |H_{LS}(\Omega)|^2 = A^2 + (B^2 + 2AB) |H_{LP}(\Omega)|^2
+%\end{equation}
+
+Because of the lowpass characteristic of $H_{LP}$, we assume that $|H_{LP}(\Omega)|^2$ goes to zero as $\Omega$ goes to infinity, which means that the magnitude-squared response of our shelving filter at infinity is given by:
+\begin{equation}
+ G_{\infty}^2 = |H_{LS}(\infty)|^2 = A^2
+\end{equation}
+Likewise, at zero frequency, we assume that $|H_{LP}(\Omega)|^2$ has unity gain, such that the magnitude-squared response of the shelving filter at zero frequency is given by:
+\begin{equation}
+ G_0^2 = |H_{LS}(0)|^2 = A^2 + (B^2 + 2AB)
+\end{equation}
+So, in order to obtain a prescribed gain $G_0$ at zero and another prescribed gain $G_{\infty}$ at infinity, we must choose the coefficients $A, B$ as:
+\begin{equation}
+ A = G_{\infty}
+\end{equation}
+For $B$, we obtain the quadratic equation:
+\begin{equation}
+ B^2 + 2 G_{\infty} B + (G_{\infty}^2 - G_0^2) = 0
+\end{equation}
+Defining $p = 2 G_{\infty}, q = G_{\infty}^2 - G_0^2$, we calculate $B$ via the $p,q$-formula for quadratic equations:
+\begin{equation}
+ B = -\frac{p}{2} \pm \sqrt{\frac{p^2}{4} - q}
+\end{equation}
+[mmm...which of the two solution should we choose? B should be real and positive?]
+
+
+\subsection{Finding the shelving numerator and denominator}
+Now that we have found our coefficients $A, B$, we may proceed by returning to Eq. \ref{eqn:LowpassWithScaleAndOffset}, which is repeated here without writing out the dependence on $s$ explicitly:
+\begin{equation}
+ H_{LS} = A + B H_{LP} = A + B \frac{N_{LP}}{D_{LP}} 
+\end{equation}
+and algebraically bring it into the form:
+\begin{equation}
+ H_{LS} = \frac{N_{LS}}{D_{LS}} = \frac{A D_{LP} + B N_{LP}}{D_{LP}} 
+\end{equation}
+from which we see that, for the denominator we have: $D_{LS} = D_{LP}$. This means that the poles of our shelving transfer function are the same as the poles of our lowpass transfer function. The shelving numerator, however, is different from the lowpass numerator - we have: $N_{LS} = A D_{LP} + B N_{LP}$. Assuming that we know the polynomial coefficients of the lowpass numerator and denominator, such that:
+\begin{equation}
+ N_{LP}(s) = \sum_{k=0}^K n_k s^k, \qquad D_{LP}(s) = \sum_{k=0}^K d_k s^k
+\end{equation}
+where we have used $K$ to denote the order of the polynomials (some of the higher numerator coefficients may be $0$, though). We can now establish our shelving numerator polynomial as:
+\begin{equation}
+ N_{LS}(s) = \sum_{k=0}^K m_k s^k
+\end{equation}
+where
+\begin{equation}
+ m_k = A d_k + B n_k, \qquad k = 0, \ldots, K
+\end{equation}
+Having established the numerator polynomial for the shelving filter, we may find the zeros of the shelving transfer function as the roots of this numerator polynomial.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

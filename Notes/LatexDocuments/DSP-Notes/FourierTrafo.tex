@@ -1,0 +1,37 @@
+\chapter{Fourier-Transformation}
+
+\paragraph{Diskrete Fourier-Transformation (DFT):}
+\begin{equation}
+ X[k] = \sum_{n=0}^{N-1} x[n] \; e^{-j 2 \pi n k / N} \qquad k=0,1, \ldots , N-1
+\end{equation}
+
+\paragraph{Inverse Diskrete Fourier-Transformation (IDFT):}
+\begin{equation}
+ x[n] = \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{j 2 \pi n k / N} \qquad n=0,1, \ldots , N-1
+\end{equation}
+
+\paragraph{Zeitdiskrete Fourier-Transformation (DTFT):}
+\begin{equation}
+ X(e^{j \Omega}) = \sum_{n=-\infty}^{\infty} x[n] \; e^{-j \Omega n}
+\end{equation}
+
+\paragraph{Inverse Zeitdiskrete Fourier-Transformation (IDTFT):}
+\begin{equation}
+ x[n] = \frac{1}{2 \pi} \int_{-\pi}^{\pi} X(e^{j \Omega}) 
+\end{equation}
+stimmt das?
+
+\paragraph{Umrechnung Frequenz/Bin-Index:} sei $k$ der Bin-Index, f die Frequenz in $Hz$, $f_s$ die Sample-Rate,  $\Omega = 2 \pi f / f_s$ die zugehörige normierte Kreisfrequenz und $N$ die DFT-Blocklänge:
+\begin{equation}
+ \begin{aligned}
+  f       &= \frac{k f_s}{N}         \\
+  \Omega  &= \frac{2 \pi k}{N}       \\
+ \end{aligned}
+\end{equation}
+
+
+\paragraph{Fourier-Reihe:}
+
+\paragraph{Fourier-Transformation:}
+
+\paragraph{inverse Fourier-Transformation:}

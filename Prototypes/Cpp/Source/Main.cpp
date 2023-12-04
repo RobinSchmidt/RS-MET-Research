@@ -57,8 +57,8 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // PDE solvers on nonuniform meshes:
   //testMeshGeneration();
-  //testTransportEquation();
-  //testWaveEquation();
+  testTransportEquation();
+  testWaveEquation();
   //testBiModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase

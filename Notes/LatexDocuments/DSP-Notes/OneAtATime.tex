@@ -1,0 +1,101 @@
+\documentclass[12pt]{article}
+
+%\usepackage{fullpage}         %sorgt dafr, dass alle Rnder 1 inch breit sind
+\topmargin=-1.0cm
+\textheight=23cm
+\evensidemargin=-1.0cm
+\oddsidemargin=-1.0cm
+\textwidth=19cm
+
+\setcounter{secnumdepth}{-1}    % suppress numbering of sections
+
+% todo: include them only in the actual papers where they are used - but maybe that's not possible?
+\usepackage{amsmath}
+\usepackage{amssymb}            % fr mathbb
+\usepackage[latin1]{inputenc}   % damit man umlaute tippen kann? obsolete?
+\usepackage{graphicx}
+\usepackage{float}              % damit man mit [h!] die grafik platzieren kann, wo man will
+\usepackage{pstricks}
+\usepackage{pst-plot}
+\usepackage{hyperref}           % for hyperlinks
+\usepackage{booktabs}
+\usepackage{fancyhdr}           % for headers and footers
+
+\DeclareMathOperator{\am}{am}                  % Amplitudenfunktion
+\DeclareMathOperator{\arccot}{arccot}          % arcus cotangens
+\DeclareMathOperator{\atan2}{atan2}            % arcus tangens eines Quotienten mit Fallunterscheidung
+\DeclareMathOperator{\Ci}{Ci}                  % Integralcosinus
+\DeclareMathOperator{\cd}{cd}                  % Jacobi-Funktion cn
+\DeclareMathOperator{\cn}{cn}                  % Jacobi-Funktion cn
+\DeclareMathOperator{\cosech}{cosech}          % Cosekans hyperbolicus
+\DeclareMathOperator{\dn}{dn}                  % Jacobi-Funktion dn
+\DeclareMathOperator{\erf}{erf}                % Error-Funktion
+\DeclareMathOperator{\erfc}{erfc}              % komplementre Error-Funktion
+\DeclareMathOperator{\diag}{diag}              % Diagonalmatrix
+\DeclareMathOperator{\dive}{div}               % Divergenz
+\DeclareMathOperator{\Ei}{Ei}                  % Integralexponentialfunktion
+\DeclareMathOperator{\grad}{grad}              % Gradient
+\DeclareMathOperator{\Li}{Li}                  % Integrallogarithmus
+\DeclareMathOperator{\Res}{Res}                % Residuum
+\DeclareMathOperator{\rot}{rot}                % Rotation
+\DeclareMathOperator{\sech}{sech}              % Sekans hyperbolicus
+\DeclareMathOperator{\sign}{sign}              % signum-Funktion
+\DeclareMathOperator{\Si}{Si}                  % Integralsinus
+\DeclareMathOperator{\sinc}{sinc}              % sinc-Funktion
+\DeclareMathOperator{\sn}{sn}                  % Jacobi-Funktion sn
+
+\usepackage{listings}            % source code formatting 
+%\lstset{language=C++}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+	backgroundcolor=\color{white},   
+	basicstyle=\footnotesize\ttfamily,  % the size of the fonts that are used for the code
+	captionpos=none,                    % no captions (and no empty space either)
+	commentstyle=\color{mygreen},       % comment style
+	frame=single,	                      % adds a frame around the code
+	keywordstyle=\color{blue},          % keyword style
+	language=C++,
+	stringstyle=\color{mymauve},        % string literal style
+	columns=flexible,                   %
+	keepspaces=true,                    % keeps spaces in text
+	tabsize=2,
+}
+
+
+
+
+
+
+
+\pagestyle{fancy} 
+%\rhead{}
+%\rfoot{article available at: \htmladdnormallink{www.rs-met.com}{http://www.rs-met.com}}
+
+
+% set the footer:
+\rfoot{http://www.rs-met.com}
+
+\begin{document}
+
+%Formatierungseinstellungen:
+\parindent=0in
+\parskip=0pt
+
+%hier kommen ein paar Vorbemerkungen (Inhalsverzeichnis, etc.)
+\pagenumbering{roman}
+
+% hier werden Skalierungsfaktoren fr die verschiedenen Arten von Abbildungen definiert:
+\def\diagramScale{0.6}
+\def\plotScale{0.66}
+
+%ab hier beginnt der eigentliche Text:
+\pagenumbering{arabic} \setcounter{page}{1}
+
+% Hauptteil:
+% \include{TransientModeling} 
+% \include{PowerSeries} 
+ \include{GradientsFromDirectionalDerivatives} 
+  
+\end{document}

@@ -1,0 +1,638 @@
+\title{Tensor Tutorial}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+%This paper demonstrates some tensor algebraic concepts by means of an example in 2 dimensions.
+Many texts about tensors begin by introducing the tensor-specific notation and then develop the concepts using this (at this point still new and unfamiliar) notation. This introduction takes a different route - we first introduce some tensor concepts using (assumed to be) familiar matrix/vector notation and later re-express these ideas in the tensor specific notation. I believe, it's easier to understand this way around.
+
+\section{Vectors as Weighted Sums of Basis Vectors}
+Suppose, we have a vector $\mathbf{x} = (x_1, x_2)^T$ in $\mathbb{R}^2$, where $x_1, x_2$ refer to the components of the vector in the canonical basis of $\mathbb{R}^2$:
+\begin{equation}
+ \mathbf{x} 
+ =
+ \begin{pmatrix} 
+  x_1 \\
+  x_2
+ \end{pmatrix}
+ =
+ x_1 \mathbf{e}_1 + x_2 \mathbf{e}_2
+ = 
+ x_1  
+ \begin{pmatrix} 
+  1 \\
+  0
+ \end{pmatrix}
+ +
+ x_2  
+ \begin{pmatrix} 
+  0 \\
+  1
+ \end{pmatrix} 
+\end{equation}
+where we have used the basis vectors of the canonical basis, given by: 
+\begin{equation}
+ \mathbf{e}_1 
+ =
+ \begin{pmatrix} 
+  1 \\
+  0
+ \end{pmatrix}, \quad
+ \mathbf{e}_2 
+ =
+ \begin{pmatrix} 
+  0 \\
+  1
+ \end{pmatrix} 
+\end{equation}
+Assembling these basis vectors row-wise (as row vectors) into a matrix, we obtain the $2 \times 2$ identity matrix:
+\begin{equation}
+ \mathbf{E}
+ =
+ \begin{pmatrix} 
+  \mathbf{e}_1^T  \\
+  \mathbf{e}_2^T 
+ \end{pmatrix}
+ =
+ \begin{pmatrix} 
+  1 & 0\\
+  0 & 1
+ \end{pmatrix} 
+\end{equation}
+Now suppose, we want to express $\mathbf{x}$ with respect to a different set of basis vectors $A = \{\mathbf{a}_1, \mathbf{a}_2\}$ with a corresponding different basis-matrix, say:
+\begin{equation}
+ \mathbf{a}_1 
+ =
+ \begin{pmatrix} 
+  a_{11} \\
+  a_{12}
+ \end{pmatrix}, \quad
+ \mathbf{a}_2 
+ =
+ \begin{pmatrix} 
+  a_{21} \\
+  a_{22}
+ \end{pmatrix}, \quad
+ \mathbf{A}
+ =
+ \begin{pmatrix} 
+  \mathbf{a}_1^T  \\
+  \mathbf{a}_2^T 
+ \end{pmatrix} 
+ =
+ \begin{pmatrix} 
+  a_{11} & a_{12} \\
+  a_{21} & a_{22}
+ \end{pmatrix} 
+\end{equation}
+We will write the components of $\mathbf{x}$ with respect to this basis $A$ as $x_1^A, x_2^A$. Using these components, we can write the vector $\mathbf{x}$ as:
+\begin{equation}
+ \mathbf{x} 
+ =
+ x_1^A \mathbf{a}_1 + x_2^A \mathbf{a}_2
+ = 
+ x_1^A
+ \begin{pmatrix} 
+  a_{11} \\
+  a_{12} 
+ \end{pmatrix}
+ +
+ x_2^A
+ \begin{pmatrix} 
+  a_{21} \\
+  a_{22} 
+ \end{pmatrix} 
+ =   
+ \begin{pmatrix} 
+  x_1 \\
+  x_2
+ \end{pmatrix}  
+\end{equation}
+The components $x_1^A, x_2^A$ are the coefficients that are needed to construct the vector $\mathbf{x}$ from the basis vectors $\mathbf{a}_1, \mathbf{a}_2$. We see that this is a system of 2 equations in the 2 unknowns $x_1^A, x_2^A$:
+\begin{eqnarray}
+  x_1^A a_{11} + x_2^A a_{21} &=& x_1 \\
+  x_1^A a_{12} + x_2^A a_{22} &=& x_2 
+\end{eqnarray}
+which we may also write in matrix notation:
+\begin{equation}
+ \begin{pmatrix} 
+  x_1 \\
+  x_2
+ \end{pmatrix}
+ =
+ \begin{pmatrix} 
+  a_{11} & a_{21} \\
+  a_{12} & a_{22}
+ \end{pmatrix}
+ \begin{pmatrix} 
+  x_1^A \\
+  x_2^A
+ \end{pmatrix} 
+ \Leftrightarrow
+ \begin{pmatrix} 
+  x_1^A \\
+  x_2^A
+ \end{pmatrix} 
+ = 
+ \begin{pmatrix} 
+  a_{11} & a_{21} \\
+  a_{12} & a_{22}
+ \end{pmatrix}^{-1} 
+ \begin{pmatrix} 
+  x_1 \\
+  x_2
+ \end{pmatrix} 
+\end{equation}
+where we recognize the matrix as the transpose of our matrix $\mathbf{A}$ and so we may write:
+\begin{equation}
+ \begin{pmatrix} 
+  x_1^A \\
+  x_2^A 
+ \end{pmatrix}
+ =
+ (\mathbf{A}^T)^{-1}
+ \begin{pmatrix} 
+  x_1 \\
+  x_2
+ \end{pmatrix}
+\end{equation}
+Using the general relation $(\mathbf{M}^T)^{-1} = (\mathbf{M}^{-1})^T$ for any matrix $\mathbf{M}$ and denoting such an inverted-and-transposed matrix as $\mathbf{M}^{-T}$ and boldly generalizing in the obvious way to an arbitrary number of dimensions:
+\begin{equation}
+\label{Eq:CanonicalToPrimal}
+\boxed{
+ \mathbf{x}^A
+ =
+ \mathbf{A}^{-T} \mathbf{x}
+}
+\end{equation}
+where $\mathbf{x}$ is now an $N$-dimensional vector and $\mathbf{A}$ is an $N \times N$ matrix, the rows of which are given by the $N$ vectors that are assumed to constitute a basis in $\mathbb{R}^N$. Note that we use the symbol $\mathbf{x}$ without superscript whenever the components of $\mathbf{x}$ refer to the canonical basis $E = \mathbf{e}_1, \ldots, \mathbf{e}_N$. Whenever we use a basis other than the canonical, we'll signify this other basis by using a superscript on the vector. Equation (\ref{Eq:CanonicalToPrimal}) is readily solved for $\mathbf{x}$ given $\mathbf{x}^A$:
+\begin{equation}
+\label{Eq:PrimalToCanonical}
+\boxed
+{
+ \mathbf{x}
+ =
+ \mathbf{A}^T  \mathbf{x}^A
+}
+\end{equation}
+
+\subsection{The Dual Basis}
+Suppose, we are given a set of basis vectors such as $A = \{ \mathbf{a}_1, \mathbf{a}_2 \}$, which we will call our primal basis. Another set of basis vectors, which we denote by $\bar{A} = \{ \bar{\mathbf{a}}_1, \bar{\mathbf{a}}_2 \}$, is said to be a dual basis with respect to our primal basis $A$ if the following condition holds:
+\begin{equation}
+\label{Eq:DefinitionDualBasis}
+ \mathbf{a}_i \bar{\mathbf{a}}_j 
+ = \delta_{ij}  \qquad i, j = 1, \ldots, N
+\end{equation}
+where $\delta_{ij}$ is the Kronecker delta, defined as: 
+\begin{equation}
+\label{Eq:KroneckerDelta}
+\boxed
+{
+ \delta_{ij}
+ \hat{=}
+ \begin{cases}
+  1 & \quad \text{if } i = j \\
+  0 & \quad \text{if } i \neq j
+ \end{cases}
+}
+\end{equation}
+Expanding (\ref{Eq:DefinitionDualBasis}) for the 2-dimensional case results in 4 equations:
+\begin{equation}
+ \mathbf{a}_1 \bar{\mathbf{a}}_1 = 1, \;
+ \mathbf{a}_1 \bar{\mathbf{a}}_2 = 0, \;
+ \mathbf{a}_2 \bar{\mathbf{a}}_1 = 0, \;
+ \mathbf{a}_2 \bar{\mathbf{a}}_2 = 1 
+\end{equation}
+Writing $\bar{\mathbf{a}}_1 = (\bar{a}_{11}, \bar{a}_{12})^T, \bar{\mathbf{a}}_2 = (\bar{a}_{21}, \bar{a}_{22})^T$, this expands to:
+\begin{equation}
+ a_{11} \bar{a}_{11} + a_{12} \bar{a}_{12} = 1, \;
+ a_{11} \bar{a}_{21} + a_{12} \bar{a}_{22} = 0, \;
+ a_{21} \bar{a}_{11} + a_{22} \bar{a}_{12} = 0, \;
+ a_{21} \bar{a}_{21} + a_{22} \bar{a}_{22} = 1
+\end{equation}
+where $\bar{a}_{11}, \bar{a}_{12}, \bar{a}_{21}, \bar{a}_{22}$ are the 4 unknowns that we want to solve for. We may write these 4 equations as the matrix equation:
+\begin{equation}
+ \underbrace{
+ \begin{pmatrix} 
+  a_{11} & a_{12} \\
+  a_{21} & a_{22} 
+ \end{pmatrix} 
+ }_{\mathbf{A}}
+ \underbrace{
+ \begin{pmatrix} 
+  \bar{a}_{11} & \bar{a}_{21} \\
+  \bar{a}_{12} & \bar{a}_{22}
+ \end{pmatrix} 
+ }_{\bar{\mathbf{A}}^T} 
+ =
+ \underbrace{
+ \begin{pmatrix} 
+   1 & 0 \\
+   0 & 1
+ \end{pmatrix} 
+ }_{\mathbf{E}} 
+ \quad \Rightarrow \quad \mathbf{A} \bar{\mathbf{A}}^T = \mathbf{E}
+\end{equation}
+where the matrix $\bar{\mathbf{A}}$ is defined (analogously to $\mathbf{A}$) as consisting of rows which are given by the basis vectors $\bar{\mathbf{a}}_1, \bar{\mathbf{a}}_2$. Solving for $\bar{\mathbf{A}}$ gives:
+\begin{equation}
+\label{Eq:PrimalToDual}
+\boxed
+{
+ \bar{\mathbf{A}} = \mathbf{A}^{-T}
+}
+\end{equation}
+which we may also generalize to an arbitrary number of dimensions. So we have a way of constructing our dual basis $\bar{A}$ from any given primal basis $A$. Moreover, by solving this equation for $\mathbf{A}$, we have also a way to construct the primal basis $A$ from the dual basis $\bar{A}$:
+\begin{equation}
+\label{Eq:DualToPrimal}
+\boxed
+{
+ \mathbf{A} = \bar{\mathbf{A}}^{-T}
+}
+\end{equation}
+So the relations (\ref{Eq:PrimalToDual}), (\ref{Eq:DualToPrimal}) between the two basis-matrices $\mathbf{A}$ and $\bar{\mathbf{A}}$ are symmetrical - either one is obtained from the other by transposing and inverting. That is to say, if $\bar{A}$ is the dual basis with respect to $A$ then $A$ is also the dual basis with respect to $\bar{A}$. Comparing equation (\ref{Eq:PrimalToDual}) to (\ref{Eq:CanonicalToPrimal}), we note that we may rewrite (\ref{Eq:CanonicalToPrimal}) as:
+\begin{equation}
+\label{Eq:CanonicalToPrimalViaDual}
+ \mathbf{x}^A = \bar{\mathbf{A}} \mathbf{x}
+\end{equation}
+Remembering that the rows of $\bar{\mathbf{A}}$ are the basis vectors of $\bar{A}$, we see, that the component $x_i^A$ (the $i$th component of $\mathbf{x}^A$) is given by the scalar product of $\mathbf{x}$ and the $i$th basis vector $\bar{\mathbf{a}}_i$ from the dual basis $\bar{A}$:
+\begin{equation}
+ x_i^A = \bar{\mathbf{a}}_i \mathbf{x}
+\end{equation}
+In other words: the weight (or multiplier) $x_i^A$ for $\mathbf{a}_i$ in the construction of a vector $\mathbf{x}$ from a basis $A$ is given by the projection of $\mathbf{x}$ on the corresponding vector $\bar{\mathbf{a}}_i$ from the dual basis $\bar{A}$. By virtue of the symmetry of the relations mentioned above, the converse is also true:
+\begin{equation}
+ x_i^{\bar{A}} = \mathbf{a}_i \mathbf{x}
+\end{equation}
+$x_i^{\bar{A}}$ is the $i$th component of the vector $\mathbf{x}$ with respect to the dual basis $\bar{A}$ and this component is given by the projection of $\mathbf{x}$ on the $i$th basis vector $\mathbf{a}_i$ from the primal basis $A$. The whole vector may be written as:
+\begin{equation}
+\label{Eq:CanonicalToDualViaPrimal}
+ \mathbf{x}^{\bar{A}} = \mathbf{A} \mathbf{x}
+\end{equation}
+where $\mathbf{x}^{\bar{A}} = (x_1^{\bar{A}}, \ldots, x_N^{\bar{A}})^T$.
+
+\subsection{Conversion Between Primal and Dual Basis via the Metric Matrix}
+Now suppose, we are given a vector $\mathbf{x}^A$ in terms of its components with respect to an arbitrary primal basis $A$ and want to compute its components with respect to the corresponding dual basis $\bar{A}$. Substituting (\ref{Eq:PrimalToCanonical}) into (\ref{Eq:CanonicalToDualViaPrimal}) gives:
+\begin{equation}
+ \mathbf{x}^{\bar{A}} = \mathbf{A} \mathbf{A}^T  \mathbf{x}^A
+\end{equation}
+We define:
+\begin{equation}
+\label{Eq:MetricMatrix}
+\boxed
+{
+ \mathbf{G}^{A} \hat{=} \mathbf{A} \mathbf{A}^T
+}
+\end{equation}
+and so:
+\begin{equation}
+\label{Eq:PrimalToDualViaMetric}
+ \mathbf{x}^{\bar{A}} = \mathbf{G}^{A} \mathbf{x}^A
+\end{equation}
+We call $\mathbf{G}^{A}$ the metric matrix with respect to $A$. From (\ref{Eq:MetricMatrix}) and our knowledge about how matrix multiplication works, we see that the element $g_{ij}^A$ in the $i$th row and $j$th column of $\mathbf{G}^{A}$ is given by the scalar product of the basis vectors $\mathbf{a}_i$ and $\mathbf{a}_j$:
+\begin{equation}
+ g_{ij}^A = \mathbf{a}_i \mathbf{a}_j
+\end{equation}
+By symmetry of the relations between dual and primal bases, we also have:
+\begin{equation}
+ \mathbf{G}^{\bar{A}} = \bar{\mathbf{A}} \bar{\mathbf{A}}^T, \quad
+ \mathbf{x}^{A} = \mathbf{G}^{\bar{A}} \mathbf{x}^{\bar{A}}, \quad
+ g_{ij}^{\bar{A}} = \bar{\mathbf{a}}_i \bar{\mathbf{a}}_j
+\end{equation}
+[is $\mathbf{G}^{\bar{A}}$ the inverse of $\mathbf{G}^{A}$?], [maybe define $g^A$ (without subscripts) as the determinant of the metric matrix]
+
+\subsubsection{Metric Matrix for Orthonormal Bases}
+Let our basis $A$ be orthonormal, such that $\mathbf{a}_i \mathbf{a}_j = \delta_{i_j}$. Don't confuse this requirement with (\ref{Eq:DefinitionDualBasis}), where there's a bar above the $\mathbf{a}_j$ - here we require a constraint between vectors from the same (primal) basis. By inspection of (\ref{Eq:MetricMatrix}) and a moment of thought, we realize that this orthonormality constraint implies, that the metric matrix $\mathbf{G}^{A}$ will reduce to the identity matrix:
+\begin{equation}
+ \mathbf{G}^{A} = \mathbf{E} \qquad \text{iff $A$ is orthonormal} 
+\end{equation}
+
+\footnotesize
+\paragraph{}Example:
+Let $\phi$ be an arbitrary angle and $s = \sin \phi, \; c = \cos \phi$. We choose our primal basis $A$ in $\mathbb{R}^2$ to be given by $\mathbf{a}_1 = (c, s)^T, \; \mathbf{a}_2 = (-s, c)^T$. These two basis vectors represent a basis that is the the same canonical basis but rotated by the angle $\phi$. In a pure rotation, the angle between the basis vectors remains rigid as do the lengths of the basis vectors, hence this basis is still orthonormal. Our basis matrix $\mathbf{A}$ is given by:
+\begin{equation}
+ \mathbf{A} 
+ = 
+ \begin{pmatrix} 
+  \mathbf{a}_1^T  \\
+  \mathbf{a}_2^T 
+ \end{pmatrix} 
+ =
+ \begin{pmatrix} 
+   c & s  \\
+  -s & c
+ \end{pmatrix} 
+\end{equation}
+Now we compute the metric matrix for this basis by means of (\ref{Eq:MetricMatrix}):
+\begin{equation}
+ \mathbf{G}^{A} 
+ = 
+ \mathbf{A} \mathbf{A}^T
+ = 
+ \begin{pmatrix} 
+   c & s  \\
+  -s & c
+ \end{pmatrix} 
+ \begin{pmatrix} 
+  c & -s  \\
+  s &  c
+ \end{pmatrix}   
+ = 
+ \begin{pmatrix} 
+   c^2 + s^2 & -cs + sc  \\
+  -sc  + cs  & s^2 + c^2
+ \end{pmatrix}
+ = 
+ \begin{pmatrix} 
+  1 & 0 \\
+  0 & 1
+ \end{pmatrix}    
+\end{equation}
+where the main-diagonal elements can be seen to be unity by virtue of $\sin^2 \phi + \cos^2 \phi = 1$ for any angle $\phi$.
+\normalsize
+
+\paragraph{}
+Given the fact that $\mathbf{G}^{A}$ is the identity matrix and (\ref{Eq:PrimalToDualViaMetric}), we see that the components of a vector $\mathbf{x}$ with respect to the primal basis ($\mathbf{x}^A$) must equal the components of $\mathbf{x}$ with respect to the dual basis ($\mathbf{x}^{\bar{A}}$) from which we deduce that the dual basis must be identical to the primal basis. So, for orthonormal bases, we have:
+\begin{equation}
+ \bar{\mathbf{A}} = \mathbf{A} \qquad \text{iff $A$ is orthonormal} 
+\end{equation}
+
+
+\subsection{Converting to a Different Basis}
+Suppose, we are given two sets of basis vectors $A = \{ \mathbf{a}_1, \ldots, \mathbf{a}_N \}$ and $B = \{ \mathbf{b}_1, \ldots, \mathbf{b}_N \}$. We may express an arbitrary vector $\mathbf{x}$ via its components with respect to either one of the two bases. Appealing to (\ref{Eq:PrimalToCanonical}), we may write:
+\begin{equation}
+ \mathbf{x} = \mathbf{A}^T \mathbf{x}^A = \mathbf{B}^T \mathbf{x}^B
+\end{equation}
+from which follows:
+\begin{equation}
+ \mathbf{x}^B = \underbrace{\mathbf{B}^{-T} \mathbf{A}^T}_{\mathbf{T}^{AB}} \mathbf{x}^A, \qquad
+ \mathbf{x}^A = \underbrace{\mathbf{A}^{-T} \mathbf{B}^T}_{\mathbf{T}^{BA}} \mathbf{x}^B
+\end{equation}
+The matrix $\mathbf{T}^{AB}$, as defined above, represents a linear transformation from the components of a vector with respect to some basis $A$ to the components of the same vector with respect to some other basis $B$. The matrix $\mathbf{T}^{BA}$ represents the transformation back from basis $B$ to basis $A$ and as such must be the inverse of $\mathbf{T}^{AB}$.
+
+\section{Invariant Quantities}
+
+\subsection{Dot-Product and Norm}
+% difference between vectors, cross-product (2D, 3D - maybe N-D - burt we need the permutation symbol to define it), ab/(b \cdot c) is a 2nd order tensor (ab is an outer product)
+
+
+\section{Matrices as Weighted Sums of Basis Matrices}
+As we have already pointed out, any vector in $\mathbb{R}^2$ can be written as a linear combination (i.e. weighted sum) of $2$ basis vectors. When we choose the canonical basis $E^1 = \{\mathbf{e}_1 = (1, 0)^T, \mathbf{e}_2 = (0, 1)^T\}$, we may write any vector $\mathbf{x}$ as:
+\begin{equation}
+ \mathbf{x} 
+ =
+ \begin{pmatrix} 
+  x_1 \\
+  x_2
+ \end{pmatrix}
+ =
+ x_1 \mathbf{e}_1 + x_2 \mathbf{e}_2
+ = 
+ x_1  
+ \begin{pmatrix} 
+  1 \\
+  0
+ \end{pmatrix}
+ +
+ x_2  
+ \begin{pmatrix} 
+  0 \\
+  1
+ \end{pmatrix} 
+\end{equation}
+In the same way as we represent a vector as a sum over components times their corresponding basis vectors, we may represent matrices as components times their corresponding basis matrices. For example, in $\mathbb{R}^2$, any matrix $\mathbf{M}$ can be written as:
+\begin{eqnarray}
+ \mathbf{M} 
+ =
+ \begin{pmatrix} 
+  m_{11} & m_{12} \\
+  m_{21} & m_{22}
+ \end{pmatrix}
+ &=&
+ m_{11} \mathbf{E}_{11} + m_{12} \mathbf{E}_{12} + m_{21} \mathbf{E}_{21} + m_{22} \mathbf{E}_{22} \\
+ &=& 
+ m_{11}  
+ \begin{pmatrix} 
+  1 & 0 \\
+  0 & 0
+ \end{pmatrix}
+ +
+ m_{12}  
+ \begin{pmatrix} 
+  0 & 1 \\
+  0 & 0
+ \end{pmatrix} 
+ +
+ m_{21}  
+ \begin{pmatrix} 
+  0 & 0 \\
+  1 & 0
+ \end{pmatrix}
+ +
+ m_{22}  
+ \begin{pmatrix} 
+  0 & 0 \\
+  0 & 1
+ \end{pmatrix}  
+\end{eqnarray}
+We will call the set of matrices $E^2 = \{\mathbf{E}_{11}, \mathbf{E}_{12}, \mathbf{E}_{21}, \mathbf{E}_{22}\}$ the canonical basis of $\mathbb{R}^{2 \times 2}$. [we use the superscripts in $E^1, E^2$ to denote the rank - maybe find a better notation]. Note, that $E^2$ can be constructed from $E^1$ by taking outer products between all pairs of basis vectors from $E^1$: 
+\begin{equation}
+ \mathbf{E}_{11} = \mathbf{e}_1 \mathbf{e}_1^T, \;
+ \mathbf{E}_{12} = \mathbf{e}_1 \mathbf{e}_2^T, \;
+ \mathbf{E}_{21} = \mathbf{e}_2 \mathbf{e}_1^T, \;
+ \mathbf{E}_{22} = \mathbf{e}_2 \mathbf{e}_2^T
+\end{equation}
+[...point out the isomorphism between $\mathbb{R}^{2 \times 2}$ and $\mathbb{R}^4$, generalize to $N \times N \times \ldots$ maybe even to $N_1 \times N_2 \times \ldots \times N_R$] where each of the $N_i$ may be different (i.e. each index has a different range)]. We can show that given any basis of $\mathbb{R}^N$, such an outer product construction leads to a basis in $\mathbb{R}^{N \times N}$:
+
+\vspace{10pt}
+\footnotesize
+Let $V$ be a vector space (such as $\mathbb{R}^N$) and let $W = V \times V$ be the product space of $V$ with itself: $W \hat{=} \{ (\mathbf{u}, \mathbf{v}) | \mathbf{u}, \mathbf{v} \in V \}$. Let $f(\mathbf{u}, \mathbf{v})$ be a function from $V \times V$ to $W$ that is linear in both of its arguments (bilinear) such that: 
+\begin{eqnarray}
+\label{Eq:Bilinearity}
+ c f(\mathbf{u}, \mathbf{v})                           &=& f(c \mathbf{u}, \mathbf{v})            \\ 
+                                                       &=& f(\mathbf{u}, c\mathbf{v})             \\
+ f(\mathbf{u}, \mathbf{v}) + f(\mathbf{c}, \mathbf{v}) &=& f(\mathbf{u} + \mathbf{c}, \mathbf{v}) \\ 
+ f(\mathbf{u}, \mathbf{v}) + f(\mathbf{u}, \mathbf{c}) &=& f(\mathbf{u}, \mathbf{v} + \mathbf{c})
+\end{eqnarray}
+for any $c \in \mathbb{R}$ and any $\mathbf{c} \in \mathbb{R}^N$. To be specific, we may may choose $f(\mathbf{u}, \mathbf{v})$ as the outer product of $\mathbf{u}$ and $\mathbf{v}$ which is a matrix whose $ij$th element is given by $u_i v_j$. Let $E^V \hat{=} \{\mathbf{e}_1^V, \ldots, \mathbf{e}_N^V\}$ be a basis of $V$ that has the property that the set $E^W \hat{=} \{ f(\mathbf{e}_i^V, \mathbf{e}_j^V) | \mathbf{e}_i^V, \mathbf{e}_j^V \in E^V\}$ is a basis of $W$. You may convince yourself, that - given that $f(\mathbf{u}, \mathbf{v})$ is chosen as the outer product - the canonical basis of $\mathbb{R^N}$ has the desired property, because if we choose $E^V = (1, 0, \ldots, 0)^T, \ldots, (0, 0, \ldots, 1)^T$, then the set of the $N^2$ outer products (between any pair of basis vectors from $E^V$) will come out as the canonical basis of $\mathbb{R}^{N \times N}$. Having convinced ourselves that there exists a basis $E^V$ with the desired property, we will now proceed to show that this implies that any basis of $R^N$ must have the desired property. Let $\mathbf{W}$ be an arbitrarily chosen element of $W = V \times V$. Let $E^2$ be the canonical basis of $W$ that can be constructed by forming the outer products of any pair of basis vectors from $E^1$ (which is the canonical basis of $V$). $\mathbf{W}$ can be expressed as:
+\begin{equation}
+ \mathbf{W} = \sum_{i,j} w_{ij} \mathbf{E}_{ij} = \sum_{i,j} w_{ij} f(\mathbf{e}_i, \mathbf{e}_j)
+\end{equation}
+where the summation indices $i,j$ run from $1$ to $N$ (this is also true for the rest of this derivation). Let $A \hat{=} \{\mathbf{a}_1, \ldots, \mathbf{a}_N\}$ and $B \hat{=} \{\mathbf{b}_1, \ldots, \mathbf{b}_N\}$ be two bases of $V$, which are possibly but not necessarily distinct. It follows that we may express $\mathbf{e}_i$ in terms of the basis vectors from $A$ and likewise express $\mathbf{e}_j$ in terms of the basis vectors from $B$:
+\begin{equation}
+ \mathbf{e}_i = \sum_{k} \alpha_{ik} \mathbf{a}_k, \quad
+ \mathbf{e}_j = \sum_{l} \beta_{jl}  \mathbf{b}_l,
+\end{equation}
+for appropriately chosen coefficients $\alpha_{ik}, \beta_{jl}$. So we may write:
+\begin{equation}
+ \mathbf{W} = \sum_{i,j} w_{ij} f(\sum_{k} \alpha_{ik} \mathbf{a}_k, \sum_{l} \beta_{jl} \mathbf{b}_l)
+\end{equation}
+By virtue of the bilinearity of $f$, we may extract the summation signs and coefficients from the function:
+\begin{equation}
+ \mathbf{W} = \sum_{i,j} w_{ij} \sum_{k} \sum_{l} \alpha_{ik} \beta_{jl} f(\mathbf{a}_k, \mathbf{b}_l)
+            = \sum_{i,j,k,l} w_{ij} \alpha_{ik} \beta_{jl} f(\mathbf{a}_k, \mathbf{b}_l)
+\end{equation}
+We can simplify the quadruple-sum into a double-sum:
+\begin{equation}
+ \mathbf{W} = \sum_{k,l} \gamma_{kl} f(\mathbf{a}_k, \mathbf{b}_l)
+ \quad \text{where} \quad 
+ \gamma_{kl} = \sum_{i,j} w_{ij} \alpha_{ik} \beta_{jl}
+\end{equation}
+Since $\mathbf{W}$ was chosen arbitrarily, it follows that any dyad (square-matrix) can be expressed as a weighted sum over the images under $f$ of all pairs of basis vectors from $A$ and $B$, hence, the set of the images of all such pairs constitutes a basis in $\mathbb{R}^{N \times N}$. So, the set of dyads $S \hat{=} \{ f(\mathbf{a}_k, \mathbf{b}_l) | \mathbf{a}_k \in A, \mathbf{b}_l \in B\}$ is a basis of $W$. In tensor calculations, we typically deal with the cases that either these two bases $A, B$ are equal or dual to each other.
+
+%Generalizations: $v and u$ may be from different vector spaces, we may generalize to arbitrary rank dyads by replacing the bilinearity requirement by a multilinearity requirement and proceeding in the same way as above.
+
+\normalsize
+
+
+\section{Position Dependent Basis Vectors}
+So far, we only considered bases (sets of basis vectors) that were fixed once for all. Now we consider local bases, that is: the set of basis vectors changes from one position in space to another. To define a basis $A$ at any point $P = (p_1, p_2)^T$ in $\mathbb{R}^2$, we write the elements of the basis vectors as functions of the coordinates of the point $P$:
+\begin{equation}
+ \mathbf{a}_1 
+ =
+ \begin{pmatrix} 
+  a_{11}(p_1, p_2) \\
+  a_{12}(p_1, p_2)
+ \end{pmatrix}, \quad
+ \mathbf{a}_2 
+ =
+ \begin{pmatrix} 
+  a_{21}(p_1, p_2) \\
+  a_{22}(p_1, p_2)
+ \end{pmatrix}
+\end{equation}
+
+\footnotesize
+\paragraph{}Example:
+Define an intermediate variable: $r \hat{=} \sqrt{p_1^2 + p_2^2}$. Then, let $a_{11} = p_1/r, \; a_{12} = p_2/r, \; a_{21} = -p_2/r^2, \; a_{22} = p_1/r^2$. All the $a_{ij}$ are functions of $p_1$ and $p_2$. Our basis matrix becomes a matrix-valued function of the point $P$:
+\begin{equation}
+ \mathbf{A}(P) = \mathbf{A}(p_1, p_2) 
+ =
+ \begin{pmatrix} 
+   \frac{p_1}{r  } & \frac{p_2}{r  } \\
+  -\frac{p_2}{r^2} & \frac{p_1}{r^2}
+ \end{pmatrix}  
+ =
+ \begin{pmatrix} 
+   \frac{p_1}{\sqrt{p_1^2+p_2^2}} & \frac{p_2}{\sqrt{p_1^2+p_2^2}} \\
+  -\frac{p_2}{      p_1^2+p_2^2 } & \frac{p_1}{      p_1^2+p_2^2 }
+ \end{pmatrix}
+\end{equation}
+% this example was chosen because it is the Jacobi matrix of the polar coordinate system u_1(x_1, x_2) = \sqrt(x_1^2 + x_2^2), u_2(x_1, x_2) = \atan(x_2/x_1) ...may we will later revisit this
+\normalsize
+
+
+%If we are in an $N-$dimensional vector space, we assume to have $N$ functions $u_i(x_1, \ldots , x_N), \; i = 1,\ldots,N$ where each function $u_i$ depends on $N$ arguments.
+
+% A set of basis vectors that is the same at every location of space is called homogeneous coordinate system.
+
+
+
+\subsection{Curvilinear Coordinate Systems}
+
+
+\section{Tensor Terminology and Notation}
+
+\subsection{Index Notation}
+
+\subsubsection{Summation Convention}
+
+
+
+\subsection{Dyads, Triads, Tetrads and Polyads}
+
+\footnotesize
+[disclaimer: the material in this section has partly been inferred from stuff that i had to read between the lines in the tensor literature, so there might be gross errors - math textbook authors seem to consider some of these things either as obvious or as irrelevant]
+\normalsize
+\newline
+\newline
+
+A polyad of rank $R$ over the vector space $\mathbb{R}^N$ is a quantity that has $R$ independent indices where each index ranges from $1$ to $N$. We already know polyads of rank $R=0$ (no indices at all) as scalars, polyads of rank $R=1$ (a single index) as vectors and polyads of rank $R=2$ (two independent indices) as square-matrices. Apparently, we may generalize this progression to an arbitrary number of independent indices $R$ and call the resulting multi-index-array a polyad of rank $R$, or simply $R$-polyad. A $2$-polyad (square-matrix) is also called a dyad, a $3$-polyad is called triad and a $4$-polyad is called tetrad. A polyad of rank $R$ over a vector space of dimensionality $N$ has $N^R$ independent components. For example, a $2$-polyad (aka square-matrix) over $\mathbb{R}^3$ has $3^2 = 9$ independent components. 
+
+\subsubsection{Mental Images for Polyads}
+
+\paragraph{Hypercubes}
+The same way as we imagine a dyad (square matrix) as a square with cells that contain numbers, we may imagine triads as a kind of cube with cells that contain numbers. In analogy to a matrix, the cells would be indexed by a slice-, row- and column-index, where the slice-index goes into the "depth" direction (row- and column-index go into (negative) height- and width-direction, as usual). A triad has to be $N \times N \times N$, so it would indeed be "cubic" and not some general "block". $R$-polyads could be imagined as $R$-dimensional hypercubes with cells. But I don't really know whether or not such a mental image is useful - after all, the algebra only cares about the number of indexes and not about our mental image. ...ah, and personally, I cannot really imagine hypercubes anyway. 
+
+\paragraph{Nested Arrays, Trees}
+[...blah blah]
+% maybe establish a mental image of hierarchical indexing - a kind of tree-structure
+
+
+
+\subsubsection{Polyads as Weighted Sum of Basis Polyads}
+
+
+\subsubsection{Induced Bases} When we have chosen a set of basis vectors in $\mathbb{R}^N$, this choice of basis vectors may be used to construct a set of basis dyads in $\mathbb{R}^{N \times N}$, a set of basis triads in $\mathbb{R}^{N \times N \times N}$ and so forth. 
+[describe the general construction of the bases]
+\newline
+
+
+
+
+
+
+
+
+
+\subsubsection{The Polyadic Product}
+% w_{ijklm} = u_{ijk} v_{lm}              (single component of W)
+% W = u_{ijk} v_{lm} e_i e_j e_k e_l e_m  (sum over i,j,k,l,m)
+
+\paragraph{Special Case: The Dyadic Product}
+% w_{ij} = u_i v_j
+% W = u_i v_j e_i e_j  (sum over i, j)
+
+
+
+
+
+% concept of a sum over components (weights) times basis polyads - each component has an associated basis polyad which it will multiply, matrices as weighted sums of basis matrices, triads as weighted sums of basis triads, etc. any polyad in an N-dimensional vector space can be written as a weighted sum of N^R weights times the associated basis polyads (where R is the rank of the polyad)
+
+
+% find equations/algorithms to transform a polyad of arbitrary rank from one basis to another and (as special case) from primal to dual - probably this has to be done by writing out the full system of equations that the tensor equation represents and then writing it as a matrix/vector equation, the same thing probably will have to be done to construct the N-th rank basis tensors from a set of N basis vectors
+
+
+
+
+
+\subsection{Covariant and Contravariant Basis}
+
+%primal basis - covariant basis: basis vectors always remain tangent to the coordinate lines (co-varies with them when the coordinate-lines themselves are varied, for example using a parametrized coordinate-system like u = x + k*x/y, v = y + k*y/x) - if the coordinate lines stretch and/or change direction, as k is varied, so will do the tangent lines. (or: as we go along a coordinate line, the basis-vectors remain tangent to the coodinate lines and their length varies in accordance with the spacing of the grid interval of the coordinate line)
+
+%dual basis - contravariant basis, reciprocal basis, complementary basis
+% contravariant basis vector a^i always remains perpendicular to the hypersurface spanned by all other covariant basis vectors a_j [verify this] and changes its length inverse-proportionally to the spacing of the grid interval of a_i [verify this]
+
+% in order to keep the tensor (sum over components times basis-vectors) invariant, the components with respect to a covariant basis must contra-vary and are thus called contravariant components. so we always multiply contravariant components with covariant basis vectors or vice versa to represent a tensor. the change in the contravariant components compensates for the change in the covariant basis vectors and vice versa, such that the tensor (which is the product of the components and the basis vectors) remains invariant with respect to a change of the coordinate system. [verify this, use a parametrized coordinate system and vary the parameter]
+
+
+\subsection{Index Contraction}
+%double-contraction
+
+\subsection{Definition of a Tensor}
+[A tensor is a polyad that obeys to certain transformation rules (remains invariant?) when the basis is changed...]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Tensor Calculus}
+
+
+
+% things still to do: Jacobian matrix, Jacobian (determinant), Eq.1.13: dx^k/du^l du^l/dx^j = \delta_j^k, permutation symbol, e-delta relation, generalized e-delta relation, generalized delta, quotient law, scalar product, metric coeffs: g_{jl} g^{lk} = \delta_j^k, g_{ij} is the i-th component of the j-th dual basis vector expressed in the primal basis (or vice versa or something), symmetry (with respect to a pair of indices, total), skew symmetry (with respect..., total)
+
+
+%
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% \bibitem{Orf} Sophocles Orfanidis. ....
+%\end{thebibliography}
+%

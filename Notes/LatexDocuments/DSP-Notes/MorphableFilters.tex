@@ -1,0 +1,107 @@
+\section{Morphable Filter Types}
+
+\subsection{Lowpass/Peak/Highpass Biquad}
+\subsubsection{Calculating the poles in the $z$-plane}
+The poles of this filter type are designed in the analog domain. The transfer function of an analog biquad filter in the $s$-domain is given by:
+\begin{equation}
+ H(s) = \frac{N(s)}{D(s)} = \frac{N(s)}{s^2 + \frac{\omega_a}{Q}s + \omega_a^2}
+\end{equation}
+where $D(s)$ is the denominator, $N(s)$ is the numerator, $\omega_a$ is the analog radian pole frequency and $Q$ is the quality factor of the pole. The zeros of the transfer function are determined by the numerator $N(s)$ and they control the overall characteristic shape of the filter as follows:
+\begin{equation}
+\begin{aligned}
+ &\text{Lowpass:}    \qquad &N(s) &= \omega_a^2                \\
+ &\text{Highpass:}   \qquad &N(s) &= s^2                       \\
+ &\text{Bandpass:}   \qquad &N(s) &= \frac{\omega_a}{Q}s       \\ 
+ &\text{Bandreject:} \qquad &N(s) &= s^2 - \omega_a^2          \\  
+\end{aligned}
+\end{equation}
+But for this design procedure, we don't care about the analog zeros - the zeros will be designed directly in the $z$-domain. Shelving and peak types can be obtained by adding or subtracting lowpass-, highpass- or bandpass transfer functions from unity. We find our poles in the $z$-plane by first pre-warping the desired digital radian pole frequency $\omega_d$ to the corresponding analog radian pole frequency $\omega_a$ via the equation:
+\begin{equation}
+ \omega_a = 2 f_s \tan \left( \frac{\omega_d}{2} \right)
+\end{equation}
+with $f_s$ being the sampling frequency, and then finding the $s$-plane poles which correspond to this $\omega_a$. The poles in the $s$-plane are given by those values of $s$ where the denominator becomes zero. This leads to the equation for the analog poles:
+\begin{equation}
+ p_{a1,2} = - \frac{\omega_a}{2Q} \pm \sqrt{\frac{\omega_a^2}{4 Q^2}-\omega_a^2}
+\end{equation}
+Note that if $Q \geq 0.5$, then $\frac{1}{4 Q^2} \leq 1$ such that the term under the square root becomes $\leq 0$ yielding either zero or a purely imaginary result for the square root which in turn leads to two complex conjugate $s$-plane poles. For $Q < 0.5$, we would get two real poles. Having calculated the two poles in the $s$-plane ($p_a$), we are now in the position to translate them into poles in the $z$-plane ($p_d$) by means of the bilinear transform:
+\begin{equation}
+ p'_a = \frac{1}{2 f_s} p_a, \qquad p_d = \frac{1+p'_a}{1-p'_a}
+\end{equation}
+From the $z$-plane poles, we can now calculate the biquad feedback coefficients:
+\begin{equation}
+ a_1 = - \Re \{ p_{d1}+p_{d2} \}, \qquad a_2 = p_{d1} \cdot p_{d2}
+\end{equation}
+Again we may simplify the calculations by noting that the poles come as complex conjugate pair.
+
+\subsubsection{Calculating the zeros in the $z$-plane}
+Now we turn to the calculation of the $z$-plane zeros which will control the overall characteristic shape of the filter. We want to achieve a morph from lowpass to highpass. It is well known that placing the zeros both at $z=-1$ will give a second order lowpass filter and placing them both at $z=+1$ will give a second order highpass filter. So it seems obvious that we will have to slide the position of the zeros from $-1$ to $+1$. The delicate part is the question how to slide them in order to get a musically meaningful and intuitive transition. Assume that we have a user parameter for the morphing position denoted as $m$ which ranges between $-1, \ldots, +1$. The goal is to find the positions of the $z$-plane zeros (denoted as $z_1, z_2$) as function of $m$. The obvious and trivial mapping $z_1(m) = z_2(m) = m$ will not work well because the overall shape of the frequency response will depend on the cutoff frequency - when keeping $m$ fixed, the shape will look either more lowpassish or more highpassish depending on the position of the pole-pair. Moreover, the strength of this dependence will vary with the filters $Q$. But what we actually want is a control over the overall shape which is decoupled from the filter's other parameters. It turns out that it makes sense to specify a third response shape in between the lowpass and highpass shape and that this intermediate shape should occur for $m=0$. The choice for this intermediate shape to be considered here is a peaking response - that is: a response which has equal magnitudes at zero frequency ($z=+1$) and at the Nyquist frequency ($z=-1$) and a peak somewhere in between. As further constraints on the positions of the zeros, we will assume that they both are on the real axis (as opposed to complex conjugate zeros) and that they are both equal (we slide them along the real axis simultaneously). The magnitude response of a filter at some arbitrary frequency can be calculated by choosing the point on the unit circle which corresponds to the frequency in question and then calculating the product of the distances between this point and all the zeros divided by the product of the distances between this point and all the poles (and possibly multiplying by some overall gain factor $g$):
+\begin{equation}
+ |H(e^{j \omega})| = g \frac{\prod_{k=1}^{N} (e^{j \omega} - q_k) }{\prod_{k=1}^{M} (e^{j \omega} - p_k)   }
+\end{equation}
+where the $p_k$ and $q_k$ are the $z$-plane poles and zeros respectively and $N$ and $M$ the number of them. To fullfill our requirement to have equal magnitude at DC and Nyquist frequency, we must make these quotients of products of distances equal at $\omega = 0$ and $\omega = \pi$, or equivalently at $z=+1$ and $z=-1$. Let's denote the distance of a pole to the point that corresponds to zero frequency ($z=+1, \omega=0$) as $d_{p0}$ and the distance of the pole to the point representing Nyquist frequency ($z=-1, \omega=\pi$) as $d_{p \pi}$ and likewise the distances to the zeros as $d_{z0}$ and $d_{z \pi}$ respectively. For a filter with two complex conjugate poles, the pole distances are given by the Pythagorean theorem and come out as:
+\begin{equation}
+ d_{p0} = \sqrt{(1-p_r)^2 + p_i^2}, \qquad d_{p \pi} = \sqrt{(1+p_r)^2 + p_i^2}
+\end{equation}
+where $p_r$ and $p_i$ are the real and imaginary parts of the pole. These quantities can already be calculated at this stage because we assume the poles to be already pinpointed by the procedure above. Assuming the two zeros (which we still want to construct) to be both on the real axis, the zero distances are given by:
+\begin{equation}
+ \label{eqn:ZeroDistances}
+ d_{z0} = 1-z, \qquad d_{z \pi} = 1+z
+\end{equation}
+for the gain to be equal at $\omega = 0$ and $\omega = \pi$, we must have:
+\begin{equation}
+ |H(e^{j 0})| = |H(e^{j \pi})| \quad \Leftrightarrow \quad
+ \frac{\prod_{k=1}^{N} (e^{j 0} - q_k) }  {\prod_{k=1}^{M} (e^{j 0} - p_k)     } =
+ \frac{\prod_{k=1}^{N} (e^{j \pi} - q_k) }{\prod_{k=1}^{M} (e^{j \pi} - p_k)   }
+\end{equation}
+pluggin in the distances:
+\begin{equation}
+ \frac{\prod_{k=1}^{N} d_{z0,k} }   {\prod_{k=1}^{M} d_{p0,k}      } =
+ \frac{\prod_{k=1}^{N} d_{z \pi,k} }{\prod_{k=1}^{M} d_{p \pi,k}   }
+\end{equation}
+where $M=N=2$. Noting that we have a complex conjugate pair of poles and both zeros should be equal, we see that this simplifies to:
+\begin{equation}
+ \frac{ d_{z0}^2 } { d_{p0}^2 } = \frac{ d_{z \pi}^2 }{ d_{p \pi}^2 } \quad \Leftrightarrow \quad
+ \frac{ d_{z0}   } { d_{p0}   } = \frac{ d_{z \pi}   }{ d_{p \pi}   }
+\end{equation}
+pluggin in the expressions for the zero distances as in eq. \ref{eqn:ZeroDistances} and solving for $z$ gives the desired position of the zeros:
+\begin{equation}
+ z = \frac{ 1-\frac{d_{p0}}{d_{p \pi}} } { 1+\frac{d_{p0}}{d_{p \pi}} }
+\end{equation}
+by defining $c$ as:
+\begin{equation}
+\label{eqn:ConstantC}
+ c = \sqrt{ \frac{ (1-p_r)^2+p_i^2 } { (1+p_r)^2)+p_i^2 } }
+\end{equation}
+we can be further simplify the equation for $z$ to:
+\begin{equation}
+ z = \frac{ 1-c } { 1+c }
+\end{equation}
+To re-iterate, we have now obtained the (coincident) positions of the two zeros along the real axis for the case that the user has chosen the morph parameter $m$ to be zero. Would we have chosen the filter to have only one sliding zero, we would have to leave out the square root in eq. \ref{eqn:ConstantC}. So we have now fixed the function $z(m)$ at three points, namely: $z(m=-1)=-1, z(m=0):=z_0=\frac{1-c}{1+c}, z(m=+1)=+1$ - the next step is to find a continuous function $z(m)$ that goes through these three points. The simplest choice would be a piecewise linear interpolation which turned out to give no good results. Readers with a background in the audio-DSP field may now yell: 'three points? - sure, a quadratic parabola!' - however, that is also not suitable here because it will not give a monotonic mapping but instead may shoot over $z = \pm 1$. A function that turned out to be useful here is:
+\begin{equation}
+ z(m) = \frac{m-a}{1-ma}
+\end{equation}
+where $a$ is some constant in the range $-1, \ldots, +1$ and must be chosen such that the function goes through the 3 specified points. For the two outer points $m = \pm 1$, this is already satisfied by the general form of the expression. It only remains to determine $a$ from the position of the zero when $m=0$, which we denote as $z_0$. We obtain:
+\begin{equation}
+ z_0 = \frac{0-a}{1-m \cdot 0} \quad \Leftrightarrow \quad a = -z_0
+\end{equation}
+We now have a smooth transition from a lowpass- through peaking- to highpass-shape. As a final refinement, it turns out that the morph parameter feels somewhat more sensitive near zero than at its ends. To compensate for that, we may introduce a mapped morph parameter $m'$ as:
+\begin{equation}
+ m' = \sign(m) \cdot |m|^k
+\end{equation}
+with $k$ being some constant. In practice, a choice of $k=2$ has shown to give a good and natural feeling to the morph parameter and this choice also obviates to take the absolute value.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

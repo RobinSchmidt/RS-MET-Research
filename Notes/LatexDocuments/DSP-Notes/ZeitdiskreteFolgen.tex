@@ -1,0 +1,47 @@
+\chapter{Zeitdiskrete Folgen}
+
+\section{Definitionen}
+
+\paragraph{Abtastung:} sei $x_c(t)$ eine zeitkontinuierliche Funktion und $T_s$ die Abtastperiode, dann ist die zu $x_c(t)$ gehörende zeitdiskrete Folge:
+\begin{equation}
+ x[n] = x_c(n \cdot T_s)
+\end{equation}
+
+\paragraph{normierte Kreisfrequenz:} seien $f$ und $f_s$ eine Signalfrequenz und die Abtastrate (in $Hz$), dann ist die zu $f$ gehörige normierte Kreisfrequenz:
+\begin{equation}
+ \Omega = \frac{2 \pi f}{f_s}
+\end{equation}
+
+
+\paragraph{Einheitsimpuls:}
+\begin{equation}
+ \delta [n] = 
+  \begin{cases}
+  0 & \text{für }  n \neq 0 \\ 
+  1 & \text{für }  n = 0 
+ \end{cases} 
+\end{equation}
+
+\paragraph{Einheitssprung:}
+\begin{equation}
+ u [n] = 
+  \begin{cases}
+  0 & \text{für }  n < 0    \\
+  1 & \text{für }  n \geq 0
+ \end{cases} 
+\end{equation}
+
+es gilt:
+\begin{equation}
+ \begin{aligned}
+  \delta [n] &= u[n] - u[n-1] \\
+  u [n]      &= \sum_{m=-\infty}^n \delta[m]
+ \end{aligned}
+\end{equation}
+
+\paragraph{komplexe Exponentialfolge:} sei $z = r e^{j \Omega}$ eine komplexe Zahl
+\begin{equation}
+ x[n] = A \cdot z^n = A \cdot r^n e^{j \Omega n}
+\end{equation}
+
+

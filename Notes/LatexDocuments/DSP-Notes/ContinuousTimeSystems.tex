@@ -1,0 +1,265 @@
+\section{Continuous Time Systems}
+
+
+\subsection{The Differential Equation}
+A linear, time-invariant system in the continuous time domain can be described by a linear, constant-coefficient differential equation:
+\begin{equation}
+   a_0 y(t) + a_1 \frac{d}{dt} y(t) + a_2 \frac{d^2}{d t^2} y(t) + \ldots  
+ = b_0 x(t) + b_1 \frac{d}{dt} x(t) + b_2 \frac{d^2}{d t^2} x(t) + \ldots 
+\end{equation}
+where $x(t)$ is a known function of time that represents the input signal and $y(t)$ is the function that we try to find, representing the output signal. In  parlance of differential equations, the whole right hand side - that is: the weighted sum of $x(t)$ and its derivatives - can be regarded as a disturbance function. Would it be identically zero, we would be dealing with a homogeneous differential equation for $y(t)$ and the actual solution function would be determined by initial or boundary values. We simplify the notation by omitting the independent variable $t$ and denote derivatives with respect to $t$ with dots, as it is common in physics - so:
+\begin{equation}
+ a_0 y + a_1 \dot{y} + a_2 \ddot{y} + \ldots = b_0 x + b_1 \dot{x} + b_2 \ddot{x} + \ldots 
+\end{equation}  
+
+\subsection{The Solution for a Special Input Signal}                       
+Let's assume that our input signal $x(t)$ is given by an exponentially enveloped sinusoid. The function has the form of a complex exponential function: $x(t) = e^{st}$ where $s$ is some complex parameter [...a bit sloppy - how do we go from the real enveloped sinusoid to the complex?]. For the function and the derivatives with respect to $t$, we have:
+\begin{equation}
+ x(t) = e^{st}, \qquad \dot{x}(t) = s e^{st}, \qquad \ddot{x}(t) = s^2 e^{st}, \ldots 
+\end{equation} 
+Denoting the real part of $s$ as $\sigma$ and the imaginary part as $\omega$, such that $s = \sigma + j \omega$, we see that $x(t) = e^{(\sigma + j \omega) t} =  e^{\sigma t} e^{j \omega t}$, which represents spiraling phasor in the complex plane. The speed of the rotation is determined by $\omega$ and the spiral grows outward for increasing time $t$ when $\sigma > 0$, shrinks inward when $\sigma < 0$ and reduces to a circular motion (around the unit circle) when $\sigma = 0$.
+With this special choice of $x(t)$, the differential equation becomes:
+\begin{equation}
+ a_0 y(t) + a_1 \dot{y}(t) + a_2 \ddot{y}(t) + \ldots = b_0 e^{st} + b_1 s e^{st} + b_2 s^2 e^{st} + \ldots 
+\end{equation}  
+Still we are trying to find the function $y(t)$ that is the solution to our differential equation. Finding a solution to a differential equation means to find a function $y(t)$ that can be plugged into the differential equation and turns it into an identity when all the derivatives are evaluated. Sometimes one can find a solution by making a guess about the form of the function containing one or more parameters, plug it in, evaluate the derivatives and solve for the parameters. If parameters can be found that turn the differential equation into an identity, the particular function with the right values for the parameters will then indeed be a solution. Here, we will make the guess that the solution is of the form: $y(t) = H e^{st}$, where $H$ is a our free parameter that represents a (possibly complex) constant. Plugging the assumed solution into the differential equation yields:
+\begin{equation}
+ a_0 H e^{st} + a_1 \frac{d}{dt} H e^{st} + a_2 \frac{d^2}{dt^2} H e^{st} + \ldots = b_0 e^{st} + b_1 s e^{st} + b_2 s^2 e^{st} + \ldots 
+\end{equation}  
+evaluate the derivatives:
+\begin{equation}
+\label{eqn:Ansatz}
+ a_0 H e^{st} + a_1 H s e^{st} + a_2 H s^2 e^{st} + \ldots = b_0 e^{st} + b_1 s e^{st} + b_2 s^2 e^{st} + \ldots 
+\end{equation} 
+solve for the parameter $H$:
+\begin{equation}
+ H = \frac{b_0 e^{st} + b_1 s e^{st} + b_2 s^2 e^{st} + \ldots}{a_0 e^{st} + a_1 s e^{st} + a_2 s^2 e^{st} + \ldots}
+\end{equation} 
+and removing the common factor $e^{st}$ in the numerator and denominator:
+\begin{equation}
+ H = \frac{b_0 + b_1 s + b_2 s^2 + \ldots}{a_0 + a_1 s + a_2 s^2 + \ldots}
+\end{equation} 
+So, we now have an expression for $H$ such that the function $y(t) = H e^{st}$ is a solution to the differential equation when the input signal was given by $x(t) = e^{st}$. To reassure ourselves, that this so found function $y(t)$ is indeed a solution, we plug it back into the differential equation (in the form of Eq. \ref{eqn:Ansatz}) which gives:
+\begin{equation}
+ \frac{b_0 + b_1 s + b_2 s^2 + \ldots}{a_0 + a_1 s + a_2 s^2 + \ldots} (a_0 e^{st} + a_1 s e^{st} + a_2 s^2 e^{st} + \ldots)
+ = b_0 e^{st} + b_1 s e^{st} + b_2 s^2 e^{st} + \ldots 
+\end{equation} 
+so:
+\begin{equation}
+   (b_0 + b_1 s + b_2 s^2 + \ldots) (a_0 e^{st} + a_1 s e^{st} + a_2 s^2 e^{st} + \ldots)
+ = (a_0 + a_1 s + a_2 s^2 + \ldots) (b_0 e^{st} + b_1 s e^{st} + b_2 s^2 e^{st} + \ldots)
+\end{equation} 
+using sum notation:
+\begin{equation}
+   \left( \sum_{m=0}^M b_m s^m \right) \left( \sum_{n=0}^N a_n s^n e^{st} \right) 
+ = \left( \sum_{n=0}^N a_n s^n \right) \left( \sum_{m=0}^M b_m s^m e^{st} \right) 
+\end{equation} 
+where $N, M$ are the numbers of $a, b$ coefficients respectively. To evaluate the product of two sums, the general identity
+\begin{equation}
+ \left( \sum_{n=1}^N a_n \right) \left( \sum_{m=1}^M b_m \right) 
+ = \sum_{n=1}^N \sum_{m=1}^M a_n b_m
+\end{equation}
+can be used, which, in this case, leads to the equation:
+\begin{equation}
+ \sum_{m=1}^M \sum_{n=1}^N b_m s^m a_n s^n e^{st} = \sum_{n=1}^N \sum_{m=1}^M a_n s^n b_m s^m e^{st}
+\end{equation}
+simplfying and re-arranging a bit:
+\begin{equation}
+ \sum_{m=1}^M \sum_{n=1}^N a_n s^n b_m s^m = \sum_{n=1}^N \sum_{m=1}^M a_n s^n b_m s^m 
+\end{equation}
+which now differ only in the order of inner and outer summation - which makes no difference, hence the identity of left and right hand sides is shown. Identity of left and right hand sides, in turn, proves that our tentative solution $y(t) = H e^{st}$ is indeed a solution. ...which was actually already clear by virtue of the construction of $H$, but this proof should serve as reassurance.
+
+%uniqueness of the solution.....
+
+\subsection{The Transfer Function}   
+In the preceding section, we saw that for any input signal $x(t) = e^{st}$ with given complex parameter $s$, we can compute a complex value $H$ that, when multiplied with our input signal $x(t)$, gives our output signal $y(t)$. This means that the output signal can be found from the input signal by scaling it with a complex factor - which amounts to a scaling of the amplitude together with a shift of the sinusoid's phase. The complex exponential function $e^{st}$ is said to be an eigenfunction of the system, because the output function can be found by mere multiplication of the input function with a (complex) scalar. The complex scalar factor $H$ is called the eigenvalue [check this] that is associated with this particular eigenfunction (each choice of $s$ gives another eigenfunction, and because $s = \sigma + j \omega$, $s$ has itself already two degrees of freedom, so we basically have a two-parametric family of eigenfunctions [...check this]). The corresponding eigenvalue $H$ is a function of $s$. When we regard $H$ as a function of $s$, we write $H(s)$ and call it a transfer function, because it "transfers" our input signal $x(t) = e^{st}$ to the corresponding output signal $y(t) = H e^{st}$. In the preceding section we have already seen, that this transfer function is a ratio of two polynomials in $s$:
+\begin{equation}
+ H(s) = \frac{b_0 + b_1 s + b_2 s^2 + \ldots}{a_0 + a_1 s + a_2 s^2 + \ldots}
+\end{equation} 
+Of course, $H$ it is also a function of the coefficients $a_n, b_m$, but we considered these as fixed and given. However, any particular choice of the set of coefficients $a_n, b_m$ leads to another transfer function.
+
+\subsubsection{Poles and Zeros}
+The numerator and denominator of the transfer function are both polynomials in $s$. The fundamental theorem of algebra tell us that every polynomial of order $N$ has exactly $N$ roots - that is, input values for which the output value of the polynomial becomes zero. These roots may be real or complex and some of them may occur multiple times. For values of $s$ for which the numerator becomes zero, the value of the whole transfer function will also become zero - unless there is also a root in the denominator at the same value $s$. Therefore, these roots of the numerator are consequently called the "zeros" of our transfer function. If - on the other hand - the denominator becomes zero for some value of $s$, we formally have a division by zero. Assuming the numerator is nonzero at this $s$, we may consider the limit when the denominator approaches the root. This will give - in the limit - an infinite value for the transfer function. This is why these denominator roots are called the "poles" of the transfer function - the function looks rather like a membrane attached to a pole of infinite height in the vicinity of these points. When there are roots in the numerator and denominator at the same value of $s$, we will formally have a term like zero-divided-by-zero. In this case, we must again consider the limit when numerator and denominator both approach zero. This may yield a finite value in cases where denominator and numerator approach zero at the same rate which will be the case when the numerator's and denominator's root have the same multiplicity. In this case, the pole and zero cancel each other to give some finite value of the transfer function.
+% todo: 
+% -discuss what happens when the multiplicities are different....
+% -discuss zeros at infinity (numerator order less than denominator order)
+% -present the product form of the transfer function
+% -discuss occurence of poles/zeros in complex conjugate pairs
+
+\subsection{The Frequency Response} 
+So far, we did not put any restrictions on the choice of $s$ - it could be any complex number. We now impose the restriction that $s$ should be purely imaginary - the real part is zero. So we have: $s = \sigma + j \omega$ with $\sigma = 0$. Setting the real part to zero amounts to evaluating the transfer function along the imaginary axis in the $s$-plane. Along this axis, we have:
+\begin{equation}
+ H(\omega) = H(s) |_{s=j \omega} = \frac{b_0 + b_1 \cdot (j \omega) + b_2 \cdot (j \omega)^2 + \ldots}
+                                        {a_0 + a_1 \cdot (j \omega) + a_2 \cdot (j \omega)^2 + \ldots}
+\end{equation} 
+Evaluating the transfer function at the imaginary axis means that the envelope of the sinusoid given by $e^\sigma$ reduces to $e^0=1$ such that the particular eigenfunction is now simply an undamped complex sinusoid. Thus, $H(\omega)$ represents the complex factor by which an incoming complex sinusoid with given radian frequency $\omega$ must be scaled to give the output of the system. We may interpret the value $H(\omega)$ as the complex frequency response of the system at the radian frequency $\omega$.
+
+\subsubsection{Real an Imaginary Parts} 
+Let's define the numerator as $N(\omega)$ and the denominator as $D(\omega)$ as follows:
+\begin{equation}
+ N(\omega) = b_0 + b_1 \cdot (j \omega) + b_2 \cdot (j \omega)^2 + \ldots, \qquad
+ D(\omega) = a_0 + a_1 \cdot (j \omega) + a_2 \cdot (j \omega)^2 + \ldots
+\end{equation} 
+such that:
+\begin{equation}
+ H(\omega) = \frac{N(\omega)}{D(\omega)}
+\end{equation} 
+Our goal is now to find an expression for real and imaginary part of $N(\omega)$ and $N(\omega)$. Writing $N(\omega)$ and $D(\omega)$ as:
+\begin{equation}
+\begin{aligned}
+ N(\omega) &= b_0 j^0 \omega^0 + b_1 j^1 \omega^1 + b_2 j^2 \omega^2 + b_3 j^3 \omega^3 + \ldots \\
+ D(\omega) &= a_0 j^0 \omega^0 + a_1 j^1 \omega^1 + a_2 j^2 \omega^2 + a_3 j^3 \omega^3 + \ldots 
+\end{aligned}
+\end{equation} 
+and recognizing that:
+\begin{equation}
+ j^n = 
+ \begin{cases}
+ 1  \qquad & n \mod 4 = 0  \\
+ j  \qquad & n \mod 4 = 1  \\
+ -1 \qquad & n \mod 4 = 2  \\
+ -j \qquad & n \mod 4 = 3  \\ 
+ \end{cases}
+\end{equation} 
+Assuming the $a, b$ coefficients to be real, we deduce that the real and imaginary parts of $N(\omega)$ and $D(\omega)$ (denoted as $N_r(\omega), N_i(\omega)$ and $D_r(\omega), D_i(\omega)$ respectively) can be expressed as:
+\begin{equation}
+\begin{aligned}
+ N_r(\omega) &= b_0 \omega^0 - b_2 \omega^2 + b_4 \omega^4 - b_6 \omega^6 + \ldots \\
+ N_i(\omega) &= b_1 \omega^1 - b_3 \omega^3 + b_5 \omega^5 - b_7 \omega^7 + \ldots \\
+ D_r(\omega) &= a_0 \omega^0 - a_2 \omega^2 + a_4 \omega^4 - a_6 \omega^6 + \ldots \\
+ D_i(\omega) &= a_1 \omega^1 - a_3 \omega^3 + a_5 \omega^5 - a_7 \omega^7 + \ldots \\ 
+\end{aligned} 
+\end{equation} 
+We can see that the real parts only contain even powers of $\omega$ and the imaginary parts only contain odd powers of $\omega$ which means that $N_r, D_r$ have even symmetry and $N_i, D_i$ have odd symmetry. Denoting the real and imaginary parts of the full transfer function as $H_r(\omega), H_i(\omega)$, we can further deduce that these have even and odd symmetry, too. This can be shown like this:
+\begin{equation}
+ H = H_r + j H_i = \frac{N_r + j N_i}{D_r + j Di} 
+\end{equation} 
+where $H_r, H_i$ are given by the rules of complex division:
+\begin{equation}
+\begin{aligned}
+ H_r &= \frac{N_r D_r + N_i D_i}{D_r^2 + D_i^2} = \frac{even \cdot even + odd  \cdot odd}{even} = even \\
+ H_i &= \frac{N_i D_r - N_r D_i}{D_r^2 + D_i^2} = \frac{odd  \cdot even - even \cdot odd}{even} = odd
+\end{aligned}  
+\end{equation} 
+
+\subsubsection{Magnitude Response} 
+The value $H(\omega)$ is a complex number which we may express either in cartesian coordinates such that $H = H_r + j H_i$ or in polar coordinates such that $H = |H| e^{j \varphi}$. The absolute value (or radius) $|H|$ of this complex number is the amplitude scaling factor for an incoming sinusoid - the outgoing sinusoid will have an amplitude of $|H|$ times the amplitude of the incoming sinusoid. We denote the magnitude response function as:
+\begin{equation}
+ |H(\omega)| = \sqrt{(H_r(\omega))^2 + (H_i(\omega))^2}
+\end{equation} 
+Squaring any function yields an even function, adding two even functions gives also an even function and taking the square root from an even function gives again an even function. So we see that the magnitude response possesses even symmetry, too. 
+
+\subsubsection{Phase Response} 
+The angle $\varphi$, is given by:
+\begin{equation}
+ \varphi(\omega) = \atan2(H_i(\omega),H_r(\omega))
+\end{equation} 
+This angle represents a radian phase shift that is added to the phase of an incoming sinusoid. This angle is not unique - adding arbitrary (possibly negative) multiples of $2 \pi$ to $\varphi(\omega)$ will give the exact same output sinusoid. This may seem counterintuitive at first, but remember that sinusoids are formally signals with infinite extent to plus/minus infinity, and the frequency response, by its nature, considers only these stationary, infinite-extent signals as inputs. By convention, we will use the value which is in the interval $[-\pi, \pi]$. We'll turn to finite-extent inputs signals later when we consider the transient response. The $\atan2(y, x)$ is a two-argument version of the arctangent function that returns the angle of a vector $(x, y)^T$ in a two dimensional $x,y$ coordinate system, measured counterclockwise with respect to the positive $x$-axis. The function may be defined as:
+\begin{equation}
+ \atan2(y, x) = 
+ \begin {cases}
+ \arctan(y/x)       \qquad & x > 0           \\
+ \arctan(y/x) + \pi \qquad & x < 0, y \geq 0 \\
+ \arctan(y/x) - \pi \qquad & x < 0, y <    0 \\
+ +\pi/2             \qquad & x = 0, y >    0 \\
+ -\pi/2             \qquad & x = 0, y <    0 \\
+ \text{undefined}   \qquad & x = 0, y =    0 \\
+ \end{cases}
+\end{equation} 
+where the last (undefined) case basically says, that a vector with zero $x$ and $y$ components can be assigned to any angle because the length (radius) is zero anyway. However, for convenience, one sometimes defines $\atan2(0, 0) = 0$ which seems the most natural choice for the angle of a zero-vector - this is also what most implementations of $\atan2$ in programming languages return. To see the symmetry in the phase response, we now must consider the cases separately. The argument is a bit convoluted because of the two-argument nature of $\atan2$ whereas $\varphi(\omega)$ is really only a single argument function. I'll outline it for the first two cases: To get into the first case, our $\omega$ is such that $H_r(\omega)$ happens to be positive. In this case, $H_r(-\omega)$ will also be positive because of the even symmetry of $H_r(\omega)$, so we end up in the same branch for both, $\omega$ and $-\omega$. In this branch, we have $\varphi = \arctan(H_i/H_r)$. Dividing an odd function by an even function yields an odd function, so the argument of the arctangent is an odd function. The arctangent itself is an odd function of its argument and composing an odd function with another odd function gives again an odd function. So, for this particular choice of $\omega$, we see that $\varphi(\omega) = -\varphi(-\omega)$ - we have odd symmetry. Let's now consider the case where our $\omega$ is such that $H_r < 0$ and $H_i > 0$. For $\varphi(\omega)$ we end up in the second branch, so we have $\varphi(\omega) = \arctan(H_i/H_r) + \pi$. The symmetries of $H_r$ and $H_i$ now dictate that for $\varphi(-\omega)$ we will end up in the third branch such that $\varphi(-\omega) = \arctan(H_i/H_r) - \pi$. The $\arctan$ itself is an odd function as before, and we add $\pi$ to it on the positive $\omega$-axis and subtract $\pi$ on the negative $\omega$-axis - with the net result that the function $\varphi(\omega)$ has again odd symmetry. The argument is the same (but the other way around) for $\omega$ such that $H_r < 0$ and $H_i < 0$. Bottom line: even though the $\atan2$ function complicates matters, we can still see that $\varphi(\omega)$ possesses odd symmetry with respect to $\omega$.
+
+\paragraph{Phase Unwrapping}
+It has been mentioned that the phase angle $\varphi$ of the frequency response is only be made unique by convention - among the possible values, we choose that particular value of $\varphi$ which is in the interval $[-\pi, \pi]$. Wrapping the phase angle into this interval may lead to artificial discontinuities in the phase response. We may define an unwrapped phase response $\varphi_u(\omega)$ by adding an appropriate multiple of $2 \pi$ to $\varphi(\omega)$ such that $\varphi_u(\omega)$ becomes a continuous function of $\omega$. [how do we find the appropriate multiple of $2\pi$?]
+
+
+%
+%Thus, we see that the angle of the frequency response function has odd symmetry. 
+%%obsolete:
+%\begin{equation}
+% \varphi(\omega) = \arctan \left( \frac{H_i(\omega)}{H_r(\omega)} \right)
+%\end{equation} 
+%Dividing an odd function by an even function yields an odd function, so the argument of the arctangent is an odd function. The arctangent itself is an odd function of its argument and composing an odd function with another odd function gives again an odd function. Thus, we see that the angle of the frequency response function has odd symmetry. This angle represents a radian phase shift that is added to the phase of an incoming sinusoid. This angle is not unique - adding arbitrary (even negative) multiples of $2 \pi$ to $\varphi(\omega)$ will give the exact same output sinusoid. This may seem counterintuitive at first, but remember that sinusoids are formally signals with infinite extent to plus/minus infinity, and the frequency response, by its nature, considers only these stationary, infinite-extent signals as inputs. By convention, we will use the value which is in the interval $[-\pi, \pi]$. We'll turn to finite-extent inputs signals later when we consider the transient response.
+
+% explain phase-unwrapping - impose continuity constraint on \varphi(\omega) and choose an appropriate multiple of $2 \pi$
+
+
+\subsubsection{Phase Delay and Group Delay} 
+\paragraph{Phase Delay}
+The phase response, viewed as phase offset that is added to an incoming sinusoid can be normalized by the radian frequency of the sinusoid to give an actual time delay (in seconds) that the incoming sinusoid experiences when it goes through the system. This time delay is called the phase delay, denoted by $\tau_p$ and given by:
+\begin{equation}
+ \tau_p (\omega) = -\frac{\varphi_u(\omega)}{\omega}
+\end{equation} 
+The minus sign has been included into the definition in order to have positive phase-delay values. [check this]
+
+
+\subsubsection{Putting it all together} 
+Let's assume that our input signal is a sinusoid at radian frequency $\omega$, having a peak amplitude of $A_x$ and a phase-shift of $\phi_x$: \begin{equation}
+ x(t) = A_x \sin(\omega t + \phi_x)
+\end{equation} 
+then, our output signal will also be a sinusoid with the same radian frequency $\omega$ but possibly different amplitude and phase such that:
+\begin{equation}
+ y(t) = A_y \sin(\omega t + \phi_y)
+\end{equation} 
+where
+\begin{equation}
+ A_y = A_x |H(\omega)|, \qquad \phi_y = \phi_x + \varphi(\omega)
+\end{equation} 
+Alternatively, we may express $y(t)$ using a time delay instead of the phase response value:
+\begin{equation}
+ y(t) = A_y \sin(\omega (t - \tau) ), \qquad \text{where } \tau = \tau_p(\omega)
+\end{equation} 
+[check this]
+
+
+
+
+
+% Other input signals - superposition, linearity, etc.
+
+
+
+
+
+
+%\subsection{Convolution}  
+% describe convolution of two general functions: y(t) = x(t) * h(t)
+% derive properties like linearity
+
+
+%\subsection{The Delta Function}   
+% define it as limit of the gaussian distribution for sigma -> 0
+
+%\subsection{The Impulse Response}   
+% introduce it as system-output when the input is a delta function
+% show that the output to any signal can be seen as convolution
+
+%\subsection{The Laplace Transform}  
+
+
+
+
+
+
+%\subsubsection{Generalizing to the Time-Variant Case - Green's Functions}   
+% coefficients become functions of t - can we consider the instantaneous transfer-function and/or impulse response? ...formally try to derive something
+%dynamic convolution
+
+%\subsubsection{Generalizing to the Nonlinear Case - Volterra Kernels}  
+
+
+%\subsubsection{Nonlinear, Time-Variant Systems}  
+
+
+%\subsection{Multiple Dimensions}  
+%formally treat x(t) and y(t) as vectors in the diffeq - derivatives are understood as jacobi matrices
+
+
+
+
+
+
+
+
+
+%A fundamental property of linear time-invariant systems is that the response to a complex exponential is again a complex exponential, so we also have:
+

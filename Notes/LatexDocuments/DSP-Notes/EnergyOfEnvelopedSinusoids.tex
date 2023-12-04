@@ -1,0 +1,111 @@
+\title{Energy of Enveloped Sinusoids}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider the problem of finding the total energy of a sinusoidal function with an amplitude envelope. Our function is of the general form:
+\begin{equation}
+ f(t) = A \cdot e(t) \cdot \sin(\omega t + \phi)
+\end{equation}
+where $e(t)$ is our envelope function.
+
+\section{Preliminaries}
+In the following material, we need the following closed-form expressions for certain definite integrals:
+\begin{equation}
+\label{Eq:Integrals}
+ \int_0^{\infty} e^{-\alpha t} dt = \frac{1}{\alpha}, \quad
+ %\int_0^{\infty} e^{-\alpha t} \sin(\omega t + \phi) dt = \frac{\omega \cos \phi + \alpha \sin \phi}{\alpha^2 + \omega^2}, \quad 
+ \int_0^{\infty} e^{-\alpha t} \cos(\omega t + \phi) dt = \frac{\alpha \cos \phi - \omega \sin \phi}{\alpha^2 + \omega^2}
+\end{equation}
+
+\section{Exponentially Decaying Sinusoid}
+We consider the case, where the envelope is given by an exponentially decaying function:
+\begin{equation}
+ e(t) = e^{-\alpha t}
+\end{equation}
+where $\alpha$ determines the rate of decay. The function $f(t)$ is therefore given by:
+\begin{equation}
+\boxed
+{
+  f(t) = A \cdot  e^{-\alpha t} \cdot \sin(\omega t + \phi)
+}
+\end{equation}
+The instantaneous power is defined as the function squared:
+\begin{equation}
+  f^2(t) = \left( A \cdot  e^{-\alpha t} \cdot \sin(\omega t + \phi) \right)^2
+         = A^2 \cdot e^{-2\alpha t} \cdot \sin^2(\omega t + \phi)
+\end{equation}
+Using the trigonometric identity $\sin^2(x) = (1-\cos(2x))/2$ leads to:
+\begin{equation}
+  f^2(t) = \frac{A^2}{2} \left( e^{-2\alpha t} - e^{-2\alpha t} \cos(2\omega t + 2\phi) \right)
+\end{equation}
+The energy is defined as the definite integral of the instantaneous power over its entire range (which, in our problem setting, goes from zero to infinity):
+\begin{equation}
+  E = \int_0^{\infty} f^2(t) dt
+\end{equation}
+and so we have to evaluate:
+\begin{equation}
+\begin{aligned}
+  E &= \int_0^{\infty} \frac{A^2}{2} \left( e^{-2\alpha t} - e^{-2\alpha t} \cos(2\omega t + 2\phi) \right) \\
+    %&= \frac{A^2}{2} \int_0^{\infty} \left( e^{-2\alpha t} - e^{-2\alpha t} \cos(2\omega t + 2\phi) \right) \\
+    &= \frac{A^2}{2} \left(\int_0^{\infty}  e^{-2\alpha t} - \int_0^{\infty}  e^{-2\alpha t} \cos(2\omega t + 2\phi) \right) \\
+\end{aligned}  
+\end{equation}
+which we may evaluate using $\ref{Eq:Integrals}$, recognizing that $\alpha, \omega, \phi$ must be replaced by twice their values to match the formulas:
+\begin{equation}
+\boxed
+{
+  E = \frac{A^2}{2} \left( \frac{1}{2\alpha} - \frac{2\alpha\cos(2\phi)-2\omega\sin(2\phi)}{(2\alpha)^2+(2\omega)^2} \right) \\ 
+}
+\end{equation}
+
+\section{Sinusoid with Attack/Decay Envelope}
+Now, we consider an attack/decay  envelope, given by a difference of exponential decays with different decay rates:
+\begin{equation}
+ e(t) = e^{-\alpha_1 t} - e^{-\alpha_2 t}
+\end{equation}
+so, our function $f(t)$ is:
+\begin{equation}
+\boxed
+{
+  f(t) = A \cdot (e^{-\alpha_1 t} - e^{-\alpha_2 t}) \cdot \sin(\omega t + \phi)
+}
+\end{equation}
+the instantaneous power is given by:
+\begin{equation}
+  f^2(t) = A^2 \cdot 
+  \left(
+      e^{-2\alpha_1 t}           \sin^2(\omega t+\phi) 
+  - 2 e^{-(\alpha_1+\alpha_2) t} \sin^2(\omega t+\phi)  
+  +   e^{-2\alpha_2 t}           \sin^2(\omega t+\phi)  
+  \right)
+\end{equation}
+Now, for the evaluation of the energy integral, we proceed in a similar (but more tedious) way as above. We just have to do 3 integrals, each of which is of the same general form as the one above. The result is:
+\begin{equation}
+\boxed
+{
+  E = \frac{A^2}{2} 
+  \left( 
+   \frac{1}{2\alpha_1} + \frac{1}{2\alpha_2} - \frac{2}{\alpha_1 + \alpha_2}
+    - \frac{2\alpha_1 c - 2\omega s}{(2\alpha_1)^2+(2\omega)^2}
+    - \frac{2\alpha_2 c - 2\omega s}{(2\alpha_2)^2+(2\omega)^2} 
+    + 2\frac{(\alpha_1+\alpha_2) c -2\omega s}{(\alpha_1+\alpha_2)^2+(2\omega)^2} 
+   \right)
+}
+\end{equation}
+where $s = \sin(2 \phi), c = \cos(2 \phi)$.
+ 
+
+%TODO: allow different frequencies ($\omega_1, \omega_2$) and different start phases ($\phi_1, \phi_2$), maybe also different amplitudes
+
+%TODO: compute indefinite integrals and subsequently definite integrals with finite bounds, see page 228/229 in 
+%"Table of Integrals series and Products"' for expressions for sine and cosine and use a combination of both
+%to realize an arbitrary start-phase
+
+
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% %\bibitem{Gum} Charles Constantine Gumas. A century old, the fast Hadamard transform proves useful in digital communications
+%\end{thebibliography}
+

@@ -1,0 +1,75 @@
+\section{Frequency Warped Filters}
+
+In the paper "Spectral transformations for digital filters", A.G. Constantinides presents formulas, how to substitute $z^{-1}$ in a digital prototype lowpass filter's $z$-domain transfer function in order to achieve various filter characteristics, namely lowpass (with different cutoff frequency), highpass, bandpass and bandreject. 
+
+
+\subsection{The Substitutions for $z^{-1}$}
+
+\subsubsection{Lowpass to Lowpass}
+For the lowpss-to-lowpass transform, the substitution given by Constatintinides is:
+\begin{equation}
+g(z^{-1}) = \frac{z^{-1} - \alpha}{1 - \alpha z^{-1}}
+\end{equation}
+Later, we will write our transfer function in terms of $z$ instead of $z^{-1}$, so we will also give the equivalent substitutions for $z$ itself here. In this case, it is given by:
+\begin{equation}
+g(z) = \frac{z - \alpha}{1 - \alpha z}
+\end{equation}
+In these substitutions, $\alpha$ is a parameter that can be computed from the prototype filter's normalized radian cutoff frequency $\omega_p$ and the target filter's normalized radian cutoff frequency $\omega_t$ via:
+\begin{equation}
+\alpha = \frac{\sin( \frac{\omega_p-\omega_t}{2})}{\sin( \frac{\omega_p+\omega_t}{2})}
+\end{equation}
+We omit the sampling interval $T$ that appears in the original paper because we assume it to be unity (without loss of generality).
+
+\subsubsection{Lowpass to Highpass}
+For the lowpss-to-highpass transform, we have:
+\begin{equation}
+g(z^{-1}) = - \frac{z^{-1} + \alpha}{1 + \alpha z^{-1}}, \qquad
+g(z)      = - \frac{z + \alpha}{1 + \alpha z},           \qquad
+\alpha    = - \frac{\cos(\frac{\omega_p-\omega_t}{2})}{\cos(\frac{\omega_p+\omega_t}{2})}
+\end{equation}
+
+\subsubsection{Lowpass to Bandpass}
+For the lowpss-to-bandpass transform, with lower and upper normalized radian cutoff frequencies $\omega_l, \omega_u$, we have:
+\begin{equation}
+g(z^{-1}) = - \frac{z^{-2} + c_1 z^{-1} + c_2}{c_2 z^{-2} + c_1 z^{-1} + 1}, \qquad
+g(z)      = - \frac{c_2 + c_1 z + z^2}{1 + c_1 z + c_2 z^2},                 \qquad
+\end{equation}
+where
+\begin{equation}
+ c_1 = -\frac{2 \alpha k}{k+1}, \; c_2 = \frac{k-1}{k+1}, \qquad \text{with} \;
+ \alpha = \frac{\cos(\frac{\omega_u+\omega_l}{2})}{\cos(\frac{\omega_u-\omega_l}{2})}, \;
+ k = \cot \left( \frac{\omega_u-\omega_l}{2} \right) \tan \left( \frac{\omega_p}{2} \right)
+\end{equation}
+
+\subsubsection{Lowpass to Bandreject}
+The lowpss-to-bandreject transform is similar, excepts for the minus sign and different definitions of the constants. We have:
+\begin{equation}
+g(z^{-1}) = \frac{z^{-2} + c_1 z^{-1} + c_2}{c_2 z^{-2} + c_1 z^{-1} + 1}, \qquad
+g(z)      = \frac{c_2 + c_1 z + z^2}{1 + c_1 z + c_2 z^2},                 \qquad
+\end{equation}
+where
+\begin{equation}
+ c_1 = -\frac{2 \alpha}{k+1}, \; c_2 = \frac{1-k}{1+k}, \qquad \text{with} \;
+ \alpha = \frac{\cos(\frac{\omega_u+\omega_l}{2})}{\cos(\frac{\omega_u-\omega_l}{2})}, \;
+ k = \tan \left( \frac{\omega_u-\omega_l}{2} \right) \tan \left( \frac{\omega_p}{2} \right)
+\end{equation}
+%maybe get rid of the $z^{-1}$ versions
+
+\subsection{Interpretation 1 - Mapping Of Poles and Zeros}
+We consider a general $z$-domain transfer function given in product form:
+\begin{equation}
+H(z) = g \frac{\prod_{m=1}^M (z-q_m)}{\prod_{n=1}^N (z - p_n)}
+\end{equation}
+where $g$ is an overall gain factor and $q_m, p_n$ are the zeros and poles respectively. In this transfer function, we now have to substitute every occurrence of $z$ with the appropriate function $g(z)$. When we do this, the poles and zeros of the resulting transfer function will have moved to a new position. To find out the new positions of the poles and zeros, it will be sufficient to consider a general factor inside one of these two products, say $(z-r)$ where $r$ is either one of the poles or one of the zeros such that we have $z-r=0$, or $z=r$. Now we do the substitution for $r$ as given above to obtain our mapped root (pole or zero). Let's denote the mapped root as $r'$. 
+\subsubsection{Lowpass to Lowpass}
+For the lowpass-to-lowpass transform, we obtain:
+\begin{equation}
+ r' = \frac{r - \alpha}{r - \alpha r}
+\end{equation}
+
+
+\subsection{Interpretation 2 - Replacing Unit Delays with Allpass Filters}
+
+
+
+

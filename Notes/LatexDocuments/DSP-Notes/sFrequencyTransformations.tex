@@ -1,0 +1,35 @@
+\title{Analog Frequency Transformations}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider a general $s$-domain transfer function given in terms of its zeros, poles and an overall gain factor. The transfer function has the form:
+\begin{equation}
+H(s) = k \frac{\prod_{n=1}^N (s - z_n)} {\prod_{m=1}^M (s - p_m)}
+\end{equation}
+where $N \leq M$. Here, $M$ is the number of poles and $N$ is the number of finite zeros in the transfer function. When $N < M$, we have $M-N$ zeros at infinity. When the filter has no finite zeros at all ($N=0$), the numerator reduces to unity according to the definition of the empty product. In textbooks about filter design, spectral transformations of such a transfer function are most often expressed in terms of "substitute $s$ with this and that". Here, we will investigate, what effects these substitutions have on the zeros, poles and gain of the transfer function.
+
+\section{Lowpass to Lowpass}
+To transform a prototype lowpass transfer function with nominal radian cutoff frequency of unity, we obtain a lowpass transfer with another nominal radian cutoff frequency of $\omega_c$ by the substitution:
+\begin{equation}
+ s \leftarrow \frac{s}{\omega_c}
+\end{equation}
+So we have:
+\begin{equation}
+H(s) = k \frac{\prod_{n=1}^N (\frac{s}{\omega_c} - z_n)} {\prod_{m=1}^M (\frac{s}{\omega_c} - p_m)}
+\end{equation}
+we now manipulate the equation a bit in order to see what the new zeros, poles and gain factor are:
+\begin{equation}
+H(s) = k  \frac{ \frac{1}{\omega_c^N} \omega_c^N \prod_{n=1}^N (\frac{s}{\omega_c} - z_n)} 
+               { \frac{1}{\omega_c^M} \omega_c^M \prod_{m=1}^M (\frac{s}{\omega_c} - p_m)}
+\end{equation}
+
+etc...
+
+
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% \bibitem{Orf} Sophocles Orfanidis. High-Order Digital Parametric Equalizer Design
+%\end{thebibliography}
+

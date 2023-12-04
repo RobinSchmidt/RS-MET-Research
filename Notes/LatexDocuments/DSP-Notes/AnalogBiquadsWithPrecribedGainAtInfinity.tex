@@ -1,0 +1,292 @@
+\title{Analog Biquads with Precribed Gain at Infinity}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider the problem of finding the coefficients $B_0, B_1, B_2, A_0, A_1, A_2$ of an analog biquad transfer-function of the general form:
+\begin{equation}
+\label{Eq:TransferFunctionBiquad}
+ H(s) = \frac{B_0 + B_1 s + B_2 s^2}{A_0 + A_1 s + A_2 s^2}
+\end{equation}
+given ...
+
+
+
+\section{Motivation}
+When transforming an analog filter into the digital domain via the bilinear transform, the analog infinite frequency is mapped to the Nyquist frequency. In order to closely match an analog magnitude response with a digital filter within the Nyquist interval, it makes sense to modify the analog filter before bilinearly transforming it such that the modified filter has a gain at infinity that the unmodified filter would have at the physical Nyquist frequency. Otherwise, the modified filter's frequency response should be similar to that of the unmodified filter. So, conceptually, the overall algorithm would go something like that:
+\begin{itemize}
+	\item Design unmodified analog filter, resulting in coefficients: $A_0, A_1, A_2, B_0, B_1, B_2$.
+	\item Investigate magnitudes (and possibly derivatives) of the unmodified filter at strategically selected frequencies.
+	\item Design a modified analog filter that matches the magnitude- and derivative values of the unmodified filter but has a different gain at infinity, resulting in the modified coefficient set $\hat{A}_0, \hat{A}_1, \hat{A}_2, \hat{B}_0, \hat{B}_1, \hat{B}_2$.
+	\item Obtain the digital filter by bilinearly transforming the modified analog filter.
+\end{itemize}
+Orfanidis derived in \cite{Orf} an algorithm, that does this for bell (aka peak/dip) filters. In this paper, we will be concerned with deriving algorithms for other filter types using the same general approach. We shall denote values for the modified filter with a little hat above, as seen in the coefficient set $\hat{A}_0, \ldots$ and values for the unmodified filter without such hats. We follow this convention not only for coefficients but also for gain values $G$ vs $\hat{G}$, etc. When we require some value of the modified and unmodified filter to be equal, we will write it without the hat.
+
+\section{Setting the Stage}
+
+\subsection{Power, Slope and Curviness}
+The magnitude-squared value of the transfer-function (\ref{Eq:TransferFunctionBiquad}) is given by:
+\begin{equation}
+ |H(s)|^2 = H(s) \cdot H(-s) 
+ = \frac{B_0 + B_1 s + B_2 s^2}{A_0 + A_1 s + A_2 s^2} \cdot \frac{B_0 - B_1 s + B_2 s^2}{A_0 - A_1 s + A_2 s^2}
+\end{equation}
+Letting $s = j \Omega$, we obtain the magnitude-squared (i.e. power) response of our filter in terms of $\Omega$, which we denote by $G^2(\Omega)$. Doing this substitution for $s$ and simplifying, we obtain
+\begin{equation}
+\label{Eq:MagnitudeSquaredBiquad}
+ G^2(\Omega) = \frac{B_0^2 + (B_1^2 - 2 B_0 B_2) \Omega^2 + B_2^2 \Omega^4}{A_0^2 + (A_1^2 - 2 A_0 A_2) \Omega^2 + A_2^2 \Omega^4}
+\end{equation}
+Where we note that $\Omega$ occurs only in even powers in the above equation, so we could also see $G^2$ it as a function of $\Omega^2$ instead of $\Omega$ itself. Defining:
+\begin{equation}
+\label{Eq:AlphaBeta}
+ P = G^2,  \qquad
+ W = \Omega^2, \qquad
+ \alpha = A_1^2 - 2 A_0 A_2, \qquad
+ \beta = B_1^2 - 2 B_0 B_2
+\end{equation}
+we may also write this as:
+\begin{equation}
+\label{Eq:MagnitudeSquaredSimplified}
+ P(W) = \frac{B_0^2 + \beta W + B_2^2 W^2}{A_0^2 + \alpha W + A_2^2 W^2}
+\end{equation}
+the slope of this function, which we shall denote by $S(W)$, with respect to $W$ is given by the 1st derivative:
+\begin{equation}
+\label{Eq:MagnitudeSlope}
+ S(W) = P'(W) = \frac{(\alpha B_2^2-\beta A_2^2)W^2 + 2(A_0^2 B_2^2-A_2^2 B_0^2)W + \beta A_0^2 - \alpha B_0^2}  
+                     {(A_0^2 + \alpha W + A_2^2 W^2)^2}
+\end{equation}
+The second derivative, which we shall call "curviness" (curvature already means another, related, quantity), denoted as $C(W)$ is given by:
+\begin{equation}
+\label{Eq:MagnitudeCurvature}
+ C(W) = P''(W) = 
+ -2\frac{\gamma_0 + \gamma_1 W + \gamma_2 W^2 + \gamma_3 W^3}{(A_0^2 + a W + A_2^2 W^2)^3}
+\end{equation}
+where:
+\begin{equation}
+ \gamma_0 = A_0^2 (A_2^2 B_0^2 - B_2^2 + \alpha \beta) - \alpha^2 B_0^2, \;
+ \gamma_1 = 3 A_2^2 (\beta A_0^2 - \alpha B_0^2), \;
+\end{equation}
+\begin{equation}
+ \gamma_2 = 3 A_2^2 (A_0^2 B_2^2 - A_2^2 B_0^2), \;
+ \gamma_3 = A_2^2 (\alpha B_2^2 - \beta A_2^2)
+\end{equation}
+
+\subsection{Extrema}
+For the extrema of the power, we require the slope to vanish which means that the numerator of (\ref{Eq:MagnitudeSlope}) must equal zero. So, at the extrema, we must have:
+\begin{equation}
+\label{Eq:ConditionForExtrema}
+ (\alpha B_2^2-\beta A_2^2)W^2 + 2(A_0^2 B_2^2-A_2^2 B_0^2)W + \beta A_0^2 - \alpha B_0^2 = 0  
+\end{equation}
+
+\subsection{2 Solutions}
+If $\alpha B_2^2-\beta A_2^2$ is nonzero, we may divide (\ref{Eq:ConditionForExtrema}) by this value. This turns our condition for the extrema into the familiar form for a quadratic equation:
+\begin{equation}
+ W^2 + p W + q = 0  
+\end{equation}
+where
+\begin{equation}
+ p = \frac{2(A_0^2 B_2^2-A_2^2 B_0^2)}{\alpha B_2^2-\beta A_2^2}, \;
+ q = \frac{\beta A_0^2 - \alpha B_0^2}{\alpha B_2^2-\beta A_2^2}
+\end{equation}
+and there are two extrema located at:
+\begin{equation}
+ W_{1,2} = -\frac{p}{2} \pm \sqrt{\frac{p^2}{4} - q} 
+\end{equation}
+If $p^2/4 - q \geq 0$, these 2 solutions are both real (and coincident if $p^2/4 - q = 0$). If $p^2/4 - q < 0$, we have a pair of complex conjugate solutions in which case there is no extremum along the physical frequency axis. [VERIFY THIS]
+
+\subsection{1 Solution}
+If, on the other hand, $\alpha B_2^2-\beta A_2^2$ is zero, this quadratic equation reduces to the linear equation:
+\begin{equation}
+ 2(A_0^2 B_2^2-A_2^2 B_0^2)W + \beta A_0^2 - \alpha B_0^2 = 0  
+\end{equation}
+Assuming $2(A_0^2 B_2^2-A_2^2 B_0^2)$ to be nonzero, the solution $W_1$ of this equation and therefore the location of our extremum becomes:
+\begin{equation}
+ W_1 = -\frac{\beta A_0^2 - \alpha B_0^2}{2(A_0^2 B_2^2-A_2^2 B_0^2)} 
+\end{equation}
+
+\subsection{No Solution}
+If both, $\alpha B_2^2-\beta A_2^2$ and $2(A_0^2 B_2^2-A_2^2 B_0^2)$ are zero, we are left with the equation:
+\begin{equation}
+ \beta A_0^2 - \alpha B_0^2 = 0  
+\end{equation}
+which may or may not be true, but we can't pick a value for $W$ to make it true.
+
+\paragraph{}
+Note that all these extremum locations here are given as values for $W = \Omega^2$. To obtain the radian frequency $\Omega$ of the extrema, we need to take the square root.
+
+
+\section{Imposing Requirements}
+So far, the discussion was completely general in that it allowed for arbitrary values for all the coefficients. From now on, we shall assume $A_0 = 1$. This is actually no restriction for the transfer functions that we may realize, because every biquad transfer-function in the form of (\ref{Eq:TransferFunctionBiquad}) can be normalized such that this assumption holds. We will impose a requirement on the magnitude $G$ and therefore on the power $P = G^2$ at zero frequency: $P(W=0) = P_0$ and another such requirement at infinite frequency: $P(W=\infty) = P_i$. By inserting these particular $W$-values into (\ref{Eq:MagnitudeSquaredSimplified}) leads to: $B_0^2 = P_0, B_2^2 = P_i A_2^2$. To sum up, in the following derivations, we will replace 3 of our 6 (squared) biquad coefficients: 
+\begin{equation}
+ A_0^2 = 1, \; B_0^2 = P_0, \; B_2^2 = P_i A_2^2
+\end{equation}
+In the following sections, we will establish equations for calculating $A_2^2, \alpha, \beta$ from 3 additional requirements. After calculating these values, we will only have to do a couple of trivial calculations in order to obtain our full set of biquad coefficients, namely:
+\begin{equation}
+\label{Eq:CoeffsFromIntermediates}
+\boxed
+{
+ A_0 = 1, \;
+ A_2 = \sqrt{A_2^2}, \;
+ A_1 = \sqrt{\alpha + 2 A_2}, \;
+ B_0 = G_0, \;
+ B_2 = G_i A_2, \;
+ B_1 = \sqrt{\beta + 2 B_0 B_2}
+}
+\end{equation}
+
+\subsection{Power, Slope and Curvature at $W=1$}
+In addition to prescribing power values at zero and infinity $(P_0, P_i)$, we now want to prescribe a power, slope and curvature at unit frequency, which we shall denote as $P_1, S_1, C_1$, respectively. Using the relations in above and $W=1$ in (\ref{Eq:MagnitudeSquaredSimplified}), (\ref{Eq:MagnitudeSlope}) and (\ref{Eq:MagnitudeCurvature}), we obtain a set of 3 equations:
+\begin{eqnarray}
+ P_1 &=& \frac{P_0 + \beta + P_i A_2^2}{1 + \alpha + A_2^2}  \nonumber\\
+ S_1 &=& \frac{(2 (P_i-P_0) + \alpha P_i - \beta) A_2^2 + \beta - \alpha P_0}
+              {(1 + \alpha + A_2^2)^2}                       \nonumber\\
+ C_1 &=& -2 \frac{(3 (P_i-P_0)+\alpha P_i-\beta) A_2^4 + (3 (\beta-\alpha P_0)+P_0-P_i) A_2^2 + \alpha (\beta-\alpha P_0)}
+                 {(1 + \alpha + A_2^2)^3}
+\end{eqnarray}
+for the 3 unknowns $A_2^2, \alpha, \beta$.  Simsalabim (by means of computer algebra), the solution is:
+\begin{equation}
+\boxed
+{
+ \begin{aligned}
+  A_2^2  &= \frac{2 S_1 (S_1+P_0-P_1)+C_1 (P_0-P_1)}{2 S_1^2+C_1 (P_i-P_1)} \\
+  \alpha &= \frac{P_i A_2^2-P_0-P_1(A_2^2-1)-S_1 (A_2^2+1)}{S_1}            \\
+  \beta  &= P_1 (A_2^2+\alpha+1)-P_0-P_i A_2^2;
+ \end{aligned}
+}
+\end{equation}
+
+\subsubsection{Limiting the Curvature}
+[...]
+
+%For there to be at most one extremum in the magnitude response, we require:
+%\begin{equation}
+% C_L = 2 \frac{S_1 \mu_1 + P_1 \mu_2 + P_i \mu_3}{(P_0-P_i) (P_1-P_i)}
+%\end{equation}
+%where
+%\begin{equation}
+% \mu_1 = S_1 (P_0-P_i)+P_i (P_i-P_1-P_0)+P_0 P_1, \;
+% \mu_2 = P_1 (P_0-P_1)+P_i (2 (P_1-P_0)-P_i), \;
+%\end{equation}
+%\begin{equation}
+% \mu_3 = 2 (P_1-P_0)+P_i (P_0-1)
+%\end{equation}
+
+
+
+
+\subsection{Power and Slope at $W=1$, Power at $W_B < 1$}
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\subsection{Requirements on the Modified Filters}
+%To make our life easier, we will assume that the characteristic frequency of our filter will be normalized to unity. Filters with arbitrary characteristic frequency $\Omega_c$ can be obtained from such a prototype filter by simply scaling $A_1, B_1$ by $1 / \Omega_c$ and $A_2, B_2$ by $1 / \Omega_c^2$. We will use $G_0, G_1, G_i$ to denote gain values at zero, unit and infinite radian frequency, respectively. A slope at unit radian frequency is denoted as $S_1$ and a slope at zero frequency as $S_0$.
+%
+%% ... We require a matching magnitude-value and slope zero frequency (W=0) and at the cutoff-frequency (W=1)
+%
+%\section{Modified Transfer Functions}
+%
+%\subsection{Lowpass}
+%The unmodified 2nd order lowpass with unit radian cutoff frequency and a gain of $G_1$ at $\Omega = 1$ has the coefficients:
+%\begin{equation}
+%\label{Eq:LowpassCoeffsUnmodified}
+% B_0 = 1, \; B_1 = 0,     \; B_2 = 0, \quad 
+% A_0 = 1, \; A_1 = 1/G_1, \; A_2 = 1
+%\end{equation}
+%
+%\subsubsection{Matching the Slope at $W = 1$}
+%For our modified filter, we will use $\hat{B}_2 = G_i$ which ensures that the gain at infinity will be our prescribed value $G_i$ (assuming that we leave $A_2$ alone such that $\hat{A}_2 = A_2 = 1$). We will also leave $B_0$ alone ($\hat{B}_0 = B_0 = 1$) such that the gain at zero frequency remains at unity. In order to match the magnitude value and its slope at unit frequency, we will treat $\hat{B}_1, \hat{A}_1$ now as unknowns which have to be computed from our requirements. So, for our modified coefficient set, we have:
+%\begin{equation}
+% \hat{B}_0 = 1, \; \hat{B}_1 = ?, \; \hat{B}_2 = G_i, \quad 
+% \hat{A}_0 = 1, \; \hat{A}_1 = ?, \; \hat{A}_2 = 1
+%\end{equation}
+%with $\hat{B}_1, \hat{A}_1$ still to be determined. Note that this choice implies:
+%\begin{equation}
+% \hat{\alpha}_0 = \hat{A}_1^2 - 2, \quad \hat{\beta}_0 = \hat{B}_1^2 - 2 G_i
+%\end{equation}
+%The magnitude value of the unmodified filter at $W = 1$ is, by construction, given by $G_1$. The slope of the unmodified magnitude-squared response (as function of $W = \Omega^2$) at $W = 1$ is denoted as $S_1$ and is given by:
+%\begin{equation}
+% S_1 = P'(W=1) = -P_1 = -G_1^2
+%\end{equation}
+%This surprisingly simple formula is obtained by putting $W=1$ and the unmodified coefficient set into (\ref{Eq:MagnitudeSlope}). Requiring our modified to have a magnitude-squared value $P_1 = G_1^2$ and slope $S_1$ at $W=1$ leads to the system of two equations:
+%\begin{eqnarray}
+% P (W=1) = P_1 &=& \frac{1 + (B_1^2 - 2 G_i) + G_i^2}{1 + (A_1^2-2) + 1} \nonumber\\
+% P'(W=1) = S_1 &=& \frac{(A_1^2 - 2)G_i^2 - (B_1^2 - 2 G_i) + 2(G_i^2-1) + (B_1^2-2 G_i) - (A_1^2-2)}
+%                        {(1 + (A_1^2 - 2) +1)^2}
+%\end{eqnarray}
+%[todo: add the hats to the coeffs]
+%Simplifying the second equation, we find, that the terms containing $B_1^2$ cancel, so we directly obtain a solution for $A_1^2$:
+%\begin{equation}
+% \boxed
+% {
+%  A_1^2 = \frac{G_i^2-1}{S_1} = \frac{1-G_i^2}{G_1^2}
+% }
+%\end{equation}
+%where for the second equality, we have used our previous result $S_1 = -G_1^2$. Having found $A_1^2$, we now solve the first equation for $B_1^2$ to obtain:
+%\begin{equation}
+% \boxed
+% {
+%  B_1^2 = G_1^2 A_1^2 - (G_i-1)^2
+% }
+%\end{equation}
+%To obtain our actual coefficients, we take the square-roots an select the positive solution [todo: why not the negative solution?].
+%
+%\subsection{Highpass}
+%For the 2nd order highpass, we have the unmodified coefficient set:
+%\begin{equation}
+%\label{Eq:HighpassCoeffsUnmodified}
+% B_0 = 0, \; B_1 = 0,     \; B_2 = 1, \quad 
+% A_0 = 1, \; A_1 = 1/G_1, \; A_2 = 1
+%\end{equation}
+%For our modified coefficient set, we use:
+%\begin{equation}
+% \hat{B}_0 = 0, \; \hat{B}_1 = ?, \; \hat{B}_2 = G_i, \quad 
+% \hat{A}_0 = 1, \; \hat{A}_1 = ?, \; \hat{A}_2 = 1
+%\end{equation}
+%where again $\hat{B}_1, \hat{A}_1$ have to be determined. The slope $S_1$ at $W=1$ comes out as:
+%\begin{equation}
+% S_1 = G_1^2
+%\end{equation}
+%Establishing two equations for the two unknowns $\hat{B}_1^2, \hat{A}_1^2$ using the requirements for the gain and slope to be $G_1$ and $S_1$ at $W = 1$ as we did in the lowpass case, we obtain the surprisingly simple result:
+%\begin{equation}
+% \boxed
+% {
+%  \hat{A}_1 = \frac{G_i}{G_1}, \quad
+%  \hat{B}_1 = 0
+% }
+%\end{equation}
+%where we have already taken the square-roots. $B_1$ coming out as identically zero is a bit surprising... also, the overall match seems not as good as in the lowpass case - maybe, we can impose an additional requirement and let $\hat{A}_2$ be variable and $\hat{B}_2 = G_i \hat{A}_2$?
+%
+%
+%
+%
+%
+%\subsection{Bandpass}
+%
+%\subsection{Bandreject}
+%
+%\subsection{Bell}
+%
+%\subsection{Low-Shelf}
+%
+%\subsection{High-Shelf}
+%
+%
+%
+%\section{Application to Digital Filter Design}
+%
+%
+%
+%
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% \bibitem{Orf} Sophocles Orfanidis. ....
+%\end{thebibliography}
+%

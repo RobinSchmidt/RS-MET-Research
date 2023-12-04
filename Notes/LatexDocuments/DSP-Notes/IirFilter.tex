@@ -1,0 +1,57 @@
+\chapter{IIR-Filter}
+
+\paragraph{Differenzengleichung:}
+\begin{equation}
+ y[n] = \sum_{k=0}^N b_k x[n-k] - \sum_{k=1}^M a_k y[n-k]
+\end{equation}
+
+\paragraph{Transferfunktion:}
+\begin{equation}
+ H(z) = \frac{ \sum_{k=0}^N b_k z^{-k} } { \sum_{k=0}^M a_k z^{-k} }
+      = \frac{ \sum_{k=0}^N b_k z^{-k} } { 1 + \sum_{k=1}^M a_k z^{-k} }; \qquad a_0 = 1
+\end{equation}
+
+\paragraph{Komplexer Frequenzgang:}
+\begin{equation}
+ H(e^{j \omega})
+ = |H(e^{j \omega})| e^{\theta(j \omega)}
+ = \frac{ \sum_{k=0}^N b_k \cos(k \omega)  
+          - j \sum_{k=0}^N b_k \sin(k \omega)  
+        } 
+        { \sum_{k=0}^M a_k \cos(k \omega) 
+          - j \sum_{k=0}^M a_k \sin(k \omega) 
+        }
+\end{equation}
+
+\paragraph{Betragsfrequenzgang:}
+\begin{equation}
+ |H(e^{j \omega})| 
+ =
+ \left( \frac{   \left( \sum_{k=0}^N b_k \cos(k \omega) \right)^2 
+              +  \left( \sum_{k=0}^N b_k \sin(k \omega) \right)^2 
+             } 
+             {   \left( \sum_{k=0}^M a_k \cos(k \omega) \right)^2
+              +  \left( \sum_{k=0}^M a_k \sin(k \omega) \right)^2
+             }
+             \right)^{1/2}
+\end{equation}
+
+\paragraph{Phasenfrequenzgang:}
+\begin{equation}
+ \theta(j \omega) = - \tan^{-1} \frac{\sum_{k=0}^N b_k \sin(k \omega)}
+                                     {\sum_{k=0}^N b_k \cos(k \omega)}
+                    + \tan      \frac{\sum_{k=0}^M a_k \sin(k \omega) }
+                                     {\sum_{k=0}^M a_k \cos(k \omega)}
+\end{equation}
+Frequenzgänge nach dem Buch von Shenoi S.188 - aber er summiert im Nenner in der einen Summe bis $N$ in der anderen bis $M$ - das macht aber irgendwie keinen Sinn - was stimmt hier nun? (Achtung: ich habe $N$ in $M$ umbenannt und umgekehrt)
+
+\paragraph{Gruppenlaufzeit:}
+\begin{equation}
+ \tau(\omega) = -\frac{d \theta(j \omega)}{d \omega} 
+              = \frac{1}{1+u^2} \frac{du}{d \omega} - \frac{1}{1+v^2} \frac{dv}{d \omega}
+\end{equation}
+mit
+\begin{equation}
+ u = \frac{\sum_{k=0}^N b_k \sin(k \omega)}  {\sum_{k=0}^N b_k \cos(k \omega)}; \qquad
+ v = \frac{\sum_{k=0}^M a_k \sin(k \omega)}  {\sum_{k=0}^M a_k \cos(k \omega)}
+\end{equation}

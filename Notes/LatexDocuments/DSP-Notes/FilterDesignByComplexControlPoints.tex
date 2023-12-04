@@ -1,0 +1,104 @@
+\section{Digital Filter Design by Complex Control Points}
+
+
+
+
+\subsection{Motivation}
+When designing discrete time filters from continuous time prototype filters, the bilinear transform is often used. But this approach has the drawback of introducing warping artifacts into the frequency response of the resulting discrete time filter. Here, we present a different approach for designing the discrete time version that is based on specifying some control points on the transfer function......
+
+\subsection{Continuous Time Lowpass}
+Let $f_c$ be our cutoff frequency of the filter in Hz and let $\Omega_c = 2 \pi f_c$. Then, the transfer function of a continuous time first order lowpass with the desired cutoff frequency is given by:
+\begin{equation}
+ H(s) = \frac{1}{1 + \frac{s}{\Omega_c} }
+\end{equation}
+For our design procedure, we evaluate this continuous time transfer function at 3 strategically selected points $s_1, s_2, s_3$. Here, we choose theses $s$ to lie on the imaginary axis with 
+\begin{equation}
+ s_1 = j \Omega_1, \qquad s_2 = j \Omega_2, \qquad s_3 = j \Omega_3
+\end{equation}
+The 3 radian frequencies $\Omega_1, \Omega_2, \Omega_3$ are those at which which we desire a match between the continuous and discrete time version. Let $f_s$ denote our sampling frequency and let $\Omega_s = 2 \pi f_s$. Then, for a lowpass, it makes sense to select $\Omega_1, \Omega_2, \Omega_3$ as:
+\begin{equation}
+ \Omega_1 = 0, \qquad \Omega_2 = \Omega_c, \qquad \Omega_3 = \Omega_s / 2
+\end{equation}
+corresponding to a match at DC, the cutoff-frequency and the Nyquist frequency (which is half of the sampling frequency). Having selected our 3 $s$-values, we now compute the corresponding transfer function values $H_1, H_2, H_3$:
+\begin{equation}
+ H_1 := H(s = s_1) = \frac{1}{1 + \frac{j \Omega_1}{\Omega_c}}, \qquad 
+ H_2               = \frac{1}{1 + \frac{j \Omega_2}{\Omega_c}}, \qquad
+ H_3               = \frac{1}{1 + \frac{j \Omega_3}{\Omega_c}}
+\end{equation}
+The normalized radian frequencies $\omega_1, \omega_2, \omega_3$ in the discrete time domain that correspond to our radian frequencies $\Omega_1, \Omega_2, \Omega_3$ in the continuous time domain are given by dividing by the sampling frequency:
+\begin{equation}
+ \omega_1 = \frac{\Omega_1}{f_s}, \qquad \omega_2 = \frac{\Omega_2}{f_s}, \qquad \omega_3 = \frac{\Omega_3}{f_s}
+\end{equation}
+
+
+\subsection{The Discrete Time Transfer Function}
+The general expression for a discrete-time first order filter transfer-function in the $z$-domain is given by:
+\begin{equation}
+ H(z) = \frac{b_0 + b_1 z^{-1}}{1 + a_1 z^{-1}}
+\end{equation}
+We now choose those 3 $z$-values $z_1, z_2, z_3$ that correspond to our three $s$-values $s_1, s_2, s_3$ and require that the $z$-domain transfer-function matches the $s$-domain at these 3 points. Our $z$-values are given by:
+\begin{equation}
+ z_1 = e^{j \omega_1}, \qquad z_2 = e^{j \omega_2}, \qquad z_3 = e^{j \omega_3}
+\end{equation}
+and our matching requirement can be written as:
+\begin{equation}
+ H_1 =  \frac{b_0 + b_1 z_1^{-1}}{1 + a_1 z_1^{-1}}, \qquad
+ H_2 =  \frac{b_0 + b_1 z_2^{-1}}{1 + a_1 z_2^{-1}}, \qquad
+ H_3 =  \frac{b_0 + b_1 z_3^{-1}}{1 + a_1 z_3^{-1}}
+\end{equation}
+or, equivalently:
+\begin{equation}
+ \begin{aligned}
+  H_1 &= b_0 + b_1 z_1^{-1} - a_1 H_1 z_1^{-1}  \\
+  H_2 &= b_0 + b_1 z_2^{-1} - a_1 H_2 z_2^{-1}  \\
+  H_3 &= b_0 + b_1 z_3^{-1} - a_1 H_3 z_3^{-1}
+ \end{aligned}
+\end{equation}
+which we recognize as a system of 3 linear equations for our 3 unknowns $b_0, b_1, a_1$. Solving this system of equations gives us our desired discrete time filter coefficients. Solving the system could now be attacked with general methods such as Gaussian elimination, however, for such a small system, it's more convenient to write down the solution explicitly. Throwing the system at the computer algebra system Maxima yields the following solution:
+Let:
+\begin{equation}
+ r_1 = z_1^{-1} = e^{-j \omega_1}, \qquad r_2 = z_2^{-1} = e^{-j \omega_2}, \qquad r_3 = z_3^{-1} = e^{-j \omega_3}
+\end{equation}
+\begin{equation}
+ D := r_1(r_3 H_3-r_2 H_2)-r_2 r_3 H_3+r_2 r_3 H_2+r_1 (r_2-r_3) H_1
+\end{equation}
+Then:
+\begin{equation}
+ \begin{aligned}
+  b_0 &= -\frac{H_1 (r_1 (r_3 H_2-r_2 H_3)+r_2 r_3 H_3-r_2 r_3 H_2)+r_1 H_2 (r_2 H_3-r_3 H_3)}{D}  \\
+  b_1 &=  \frac{H_1 (r_3 H_3+r_1 (H_2-H_3)-r_2 H_2)+H_2 (r_2 H_3-r_3 H_3)}{D}  \\
+  a_1 &= -\frac{r_1 (H_3-H_2)-r_2 H_3+r_3 H_2+(r_2-r_3) H_1}{D}
+ \end{aligned}
+\end{equation}
+
+....hmmm...this leads to a filter that has complex coefficients and has the right magnitude response only on the upper half-circle
+->impose more constraints ($H(s=-j \Omega_2), H(s=-j \Omega_3)$ and let the filter have more degrees of freedom (higher order)
+...mmmm...not really what i hoped for
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%\subsection{The Model}
+%Assume that, by some means, we have extracted the transient component of an audio signal. We will denote this transient by $x(t)$ and we model it as a sum of enveloped sinusoids:
+%\begin{equation}
+% x(t) = \sum_{n=1}^N A_n \cdot e_n(t) \cdot \sin(\omega_n t + \varphi_n)
+%\end{equation}
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+\title{Solving the Bessel Equation Numerically}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider a couple of technical details in implementing a numerical solution for the Bessel differential equation using an initial-value problem solver. The Bessel differential equation is given by:
+\begin{equation}
+ x^2 y'' + x y' + (x^2 - n^2)y = 0
+\end{equation}
+where $n$ is a free parameter.
+
+
+\section{Transforming it into a 1st Order System}
+The Bessel equation is a 2nd order differential equation. In order to make it suitable for a numerical initial-value-problem solver, we need to transform it into a 2-dimensional 1st order system. First, we solve for the highest derivative:
+\begin{equation}
+ y'' = - \frac{x y' + (x^2 - n^2) y}{x^2}
+\end{equation}
+Now we define:
+\begin{equation}
+ y_1 = y, \; y_2 = y' \; 
+\end{equation}
+which implies:
+\begin{equation}
+ \begin{aligned}
+ y_1' &= &y'  &= y_2 \\
+ y_2' &= &y'' &= - \frac{x y_2 + (x^2 - n^2) y_1}{x^2}
+ \end{aligned}
+\end{equation}
+Collecting $y_1, y_2$ into a vector $\mathbf{y}$, we can write this as a vector-valued function:
+\begin{equation}
+ \mathbf{y}' =\mathbf{f}(x, \mathbf{y}) 
+\end{equation}
+which is in the form that we need for an initial value problem solver (for example, based on Runge-Kutta or whatever). A little complication arises when $x$ is close to zero because we have to divide by $x^2$ in the calculation of $y_2'$. This is treated by using the limit when $x$ approaches zero, whenever $x$ is close enough to zero. This limit is given by $-y_1$.
+
+
+
+
+
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% %\bibitem{Gum} Charles Constantine Gumas. A century old, the fast Hadamard transform proves useful in digital communications
+%\end{thebibliography}
+

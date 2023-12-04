@@ -1,0 +1,100 @@
+\section{Morphable N-stage Ladder Filter}
+A first order digital filter has the z-plane transfer function:
+\begin{equation}
+ G_1(z) = \frac{b_0 + b_1 z^{-1}}{1 + a_1 z^{-1}}
+\end{equation}
+We want to make a filter with a series connection of N such filters - this gives the transfer function:
+\begin{equation}
+ G_N(z) = \big( G_1(z) \big)^N = \left( \frac{b_0 + b_1 z^{-1}}{1 + a_1 z^{-1}} \right)^N
+\end{equation}
+Resonance is introduced by feeding the filters (sign inverted) output back to the input. In the digital domain, we must include a unit delay into the feedback path corresponding to a factor of $z^{-1}$. With feedback gain $k$, we obtain the net transfer function:
+\begin{equation}
+ H(z) = \frac{G_N(z)} {1 + k \cdot z^{-1} \cdot G_N(z)}
+\end{equation}
+With such a feedback, we obtain a resonant peak at that frequency where the phase response of $z^{-1} G_N(z)$ goes through $-180$ degrees (or $-\pi$). The design idea for a morphable ladder filter is as follows:
+\begin{itemize}
+	\item place a zero in the z-plane, at $z=-1$ for lowpass, at $z=+1$ for highpass, the morph parameter $m$ moves this zero
+ from $-1$ to $+1$, m is assumed to be in the range $0...1$ where $m=0$ is a lowpass and $m=1$ is a highpass
+ \item require $|b_0| + |b1| = 1$, together with the placement of the zero, this fixes the $b_0, b_1$-coefficients
+ \item the remaining degree of freedom - the coefficient $a_1$ - is obtained from the condition that the phase in the feedback path at the cutoff frequency is $-180°$ or $-\pi$ (for the N stage filter without feedback, but with the inavoidable unit delay)
+ \item the feedback gain is obtained from the resonance parameter by dividing it through the magnitude response at the cutoff frequency - that way, we obtain self-oscillation with unit resonance
+\end{itemize}
+
+
+\subsection{Calculating the Feedforward Coefficients $b_0, b_1$}
+Form the morph parameter $m$ we calculate the feedforward cofficients as:
+\begin{equation}
+\boxed
+{
+ b_1 = \frac{1}{2} - m, \quad b_0 = 1 - |b_1|
+}
+\end{equation}
+This results in a $z$-plane zero at $z=-1$ for $m=0$, in a zero $z=+1$ for $m=1$ and the zeros slides smoothly (linearly) from $-1$ to $+1$ as $m$ traverses $0...1$. 
+
+\subsection{Calculating the Feedback Coefficient $a_1$}
+For the $a_1$ coefficient we now need to impose our phase requirement. The general expression for the phase response of the first order filter is:
+\begin{equation}
+ \angle H(e^{j \omega}) = \arctan \left(- \frac{(b_1 - a_1 b_0) \sin (\omega)}
+                                               {b_0 + a_1 b_1 + (b_1 + a_1 b_0) \cos (\omega)} \right)
+\end{equation}
+we must evaluate this expression at our normalized radian cutoff frequency $\omega_c$ for the N stage ladder without feedback but taking into account the unit delay in the feedback path. Because phases add in a series connection, the phase response of $G_N$ is $N$ times this value: $\angle G_N(e^{j \omega_c}) = N \cdot \angle G_1(e^{j \omega_c})$. Additionally, we must add the phase response from linear phase term $e^{-j \omega}$ from the unit delay. This phase term is just $-\omega_c$). The requirement $\left. \angle \big( z^{-1} G_N(z) \big) \right|_{z=e^{j \omega_c}} = -\pi$ becomes: 
+\begin{equation}
+N \cdot \angle G_1(e^{j \omega_c}) - \omega_c = -\pi
+\end{equation}
+and so we must solve:
+\begin{equation}
+ \arctan \left(- \frac{(b_1 - a_1 b_0) \sin (\omega_c)}  {b_0 + a_1 b_1 + (b_1 + a_1 b_0) \cos (\omega_c)} \right)
+ = \frac{-\pi + \omega_c}{N}
+\end{equation}
+for $a_1$. If we define:
+\begin{equation}
+\boxed
+{
+ t = \tan \left( \frac{\omega_c - \pi}{N} \right), \quad
+ s = \sin(\omega_c), \quad
+ c = \cos(\omega_c)
+}
+\end{equation}
+solving for $a_1$ gives:
+\begin{equation}
+\boxed
+{
+ a_1 = - \frac{(b_1 c + b_0) t + b_1 s}{(b_0 c + b_1) t - b_0 s}
+}
+\end{equation}
+
+\subsection{Calculating the Feedback Factor $k1$}
+To obtain the feedback factor $k$, we calculate the magnitude response of the filter at the (normalized) cutoff frequency $\omega_c$ which is given by:
+\begin{equation}
+ |H(e^{j \omega_c})| = \sqrt{\frac{b_0^2 + b_1^2 + 2 b_0 b_1 \cos (\omega_c)}{1 + a_1^2 + 2 a_1 \cos (\omega_c)}}
+\end{equation}
+and divide our resonance parameter $r$ by that value:
+\begin{equation}
+ k = \frac{r}{|H(e^{j \omega_c})|}
+\end{equation}
+where we assume the resonance parameter to be in the range 0 and 1, such that self oscillation occurs at $r=1$. 
+
+
+\newpage
+\subsection{Summary}
+User parameters for this filter are the normalized radian resonance frequency $\omega_c$, the resonance parameter $r$, the morph parameter $m$, the number of stages $N$. With $m=0$ (lowpass) and $N=4$, we obtain a filter which is similar to the famous Moog ladder. One could make the filter stage after which the output is taken to another user parameter. Now lets put it all together, and streamline the design procedure from the user parameters to the filter coefficients into an algorithm:
+\newline
+1. calculate $b_0$ and $b_1$ from the morph parameter $m$
+\begin{equation}
+ b_1 = \frac{1}{2} - m, \quad b_0 = 1 - |b_1|\end{equation}
+2. calculate some intermediate variables from the cutoff/resonance frequency $\omega_c$:
+\begin{equation}
+ t = \tan \left( \frac{\omega_c - \pi}{N} \right), \quad
+ s = \sin(\omega_c), \quad
+ c = \cos(\omega_c)
+\end{equation}
+3. calculate the coefficient $a_1$:
+\begin{equation}
+ a_1 = - \frac{(b_1 c + b_0) t + b_1 s}{(b_0 c + b_1) t - b_0 s}
+\end{equation}
+4. calculate the feedback gain $k$ from the resonance parameter $r$:
+\begin{equation}
+ H = \sqrt{\frac{b_0^2 + b_1^2 + 2 b_0 b_1 c}{1 + a_1^2 + 2 a_1 c}}, \quad
+ k = \frac{r}{H}
+\end{equation}
+

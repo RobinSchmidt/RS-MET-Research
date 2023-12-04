@@ -1,0 +1,74 @@
+\title{Low Shelving Analog Prototype Filters}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+Most standard textbooks about analog (and digital) filter design only consider "pass" filters, that is, filters that let a certain band of frequencies pass and block another. The design procedure usually starts with the design of a prototype transfer function that is lowpass in nature and has a radian cutoff frequency normalized to unity. In this paper, we will consider a generalization of such prototype filters by - so to speak - setting a scaled lowpass prototype transfer function on a pedestal. The resulting filters will boost or attenuate low frequencies (according to the sign of the scale factor) and have a nonzero gain for high frequencies (according to the added constant that defines our pedestal). Such filters are commonly known as low-shelving filters. Starting from a low-shelving prototype, we may also obtain high-shelving and band-shelving (peaking) filters by application of the well known lowpass-to-highpass and lowpass-to-bandpass transforms in the $s$-domain. In \cite{Orf}, Orfanidis presents analytical (closed form) formulas for the poles and zeros of Butterworth, Chebychev, inverse Chebychev and elliptic low-shelving filters. In contrast to Orfanidis' work, this paper presents a numeric/algorithmic approach that is applicable to any kind of lowpass prototype design. For example, it may be used to design Bessel- or Papoulis low-shelving prototype filters, assuming the problem of the corresponding lowpass design is already solved.
+
+\section{From Lowpass to Low-Shelving}
+Let our lowpass prototype transfer function be given by:
+\begin{equation}
+\label{Eq:LowpassTransfer}
+H_{LP}(s) = k_{LP} \frac{N_{LP}(s)}{D_{LP}(s)}
+\end{equation}
+where $N_{LP}(s), D_{LP}(s)$ are the numerator and denominator polynomials and $k_{LP}$ is an overall scale factor. We assume that the leading coefficients (those that multiply the highest power of $s$) in $N_{LP}(s)$ and $D_{LP}(s)$ are normalized to unity. This is no real restriction since we can always absorb non-unity leading coefficients in the scale factor. The assumption is convenient because the leading factor will indeed come out as unity whenever we construct polynomials by multiplying out the product-form of a polynomial $p(x) = \prod_{n=1}^N (x - r_n)$ where the $r_n$ are the roots. And this is what we are going to do when we deal with pole/zero representations of transfer functions. The magnitude-squared response of this filter is given by:
+\begin{equation}
+\label{Eq:LowpassMagnitudeSquared}
+|H_{LP}(s)|^2 = H_{LP}(s)H_{LP}(-s)  = k_{LP}^2 \frac{N_{LP}(s) N_{LP}(-s)}{D_{LP}(s) D_{LP}(-s)}
+\end{equation}
+Starting from this lowpass magnitude-squared function, we obtain our low-shelving magnitude-squared function by scaling the lowpass magnitude-squared function by a factor $(G^2-G_0^2)$ and setting it on a pedestal by adding a constant $G_0^2$. The scale factor $(G^2-G_0^2)$ is chosen such that the magnitude-squared value at DC is given by $G^2$ (assuming the DC-gain of the lowpass to be unity) and this value is $(G^2-G_0^2)$ above $G_0^2$. Our low-shelving magnitude-squared function is thus:
+\begin{equation}
+\label{Eq:LowshelfMagnitudeSquared1}
+|H_{LS}(s)|^2 = G_0^2 + (G^2-G_0^2) \cdot |H_{LP}(s)|^2
+\end{equation}
+from which we also see that our low-shelving design reduces to the lowpass prototype for $G_0 = 0, G = 1$. Substituting (\ref{Eq:LowpassMagnitudeSquared}) into this equation and messing around a bit, we obtain:
+\begin{equation}
+\label{Eq:LowshelfMagnitudeSquared}
+|H_{LS}(s)|^2 = \frac{G_0^2 D_{LP}(s) D_{LP}(-s) + k_{LP}^2(G^2-G_0^2)N_{LP}(s) N_{LP}(-s)}{D_{LP}(s) D_{LP}(-s)}
+\end{equation}
+From this magnitude-squared function, we now must find the transfer function $H_{LS}(s)$ which we want to write in a form analogous to to (\ref{Eq:LowpassTransfer}), such that:
+\begin{equation}
+H_{LS}(s) = k_{LS} \frac{N_{LS}(s)}{D_{LS}(s)}
+\end{equation}
+wherein we require:
+\begin{equation}
+\label{Eq:LowshelfNumAndDen}
+\begin{aligned}
+ k_{LS}^2 N_{LS}(s) N_{LS}(-s) &= G_0^2 D_{LP}(s) D_{LP}(-s) + k_{LP}^2(G^2-G_0^2)N_{LP}(s) N_{LP}(-s) \\
+ D_{LS}(s) D_{LS}(-s)          &= D_{LP}(s) D_{LP}(-s)
+\end{aligned}
+\end{equation}
+From the second line, we immediately see that $D_{LS}(s)$ must equal $D_{LP}(s)$. This means that the poles in the low-shelving transfer function are the same as in the lowpass transfer function. The right hand side of the first line constitutes a polynomial which we construct from our known coefficients in $N_{LP}(s)$, $D_{LP}(s)$ and the constants $G_0, G, k_{LP}$. The leading coefficient of this polynomial will be our scale factor squared $k_{LS}^2$ and its left halfplane roots (those with real parts $\leq 0$) will be the zeros in our shelving transfer function. Choosing the left-halfplane zeros will give rise to a minimum phase filter. 
+
+\section{Constructing the Numerator}
+In order to find the zeros of our low-shelving transfer function, we have to construct (i.e. find the coefficients of) the polynomial: 
+\begin{equation}
+ N_{LS}(s) N_{LS}(-s) = G_0^2 D_{LP}(s) D_{LP}(-s) + k_{LP}^2(G^2-G_0^2)N_{LP}(s) N_{LP}(-s)
+\end{equation}
+What we have to work with are the coefficients of the polynomials $N_{LP}(s)$, $D_{LP}(s)$ and the constants $G_0, G, k_{LP}$. Constructing the numerator polynomial involves to first find two polynomials $N_{LP}^-(s), D_{LP}^-(s)$ such that $N_{LP}^-(s) = N_{LP}(-s)$ and $D_{LP}^-(s) = D_{LP}(-s)$. To find $N_{LP}^-(s)$, we simply take the coefficients of $N_{LP}(s)$ and sign-invert all coefficients that multiply odd powers of $s$, likewise for $D_{LP}^-(s)$. This works because a sign change in the argument to $N_{LP}(s)$ can be translated into a sign change in the odd-power coefficients. Having found the coefficients of $N_{LP}^-(s)$, we construct $N_{LP}(s) N_{LP}(-s) = N_{LP}(s) N_{LP}^-(s)$ by convolving the coefficient arrays of $N_{LP}(s)$ and $N_{LP}^-(s)$, likewise for the denominator. Once we know the coefficients of $D_{LP}(s) D_{LP}(-s)$ and $N_{LP}(s) N_{LP}(-s)$, we can multiply these coefficient arrays by the appropriate factors ($G_0^2$ and $k_{LP}^2(G^2-G_0^2)$, respectively) and add the results together to construct the coefficient array of $N_{LS}(s) N_{LS}(-s)$. That's now finally the coefficient array at which we may throw our polynomial root finder (and then select the left halfplane roots afterwards).
+
+\section{Prescribing a Midpoint Gain}
+The design procedure above ensures that the low shelving-filter has the desired gain values at zero and infinite frequency. It is sometimes desired to specify a gain at an intermediate point. For example, for lowpass filters, we usually specify the gain that the filter should have at the  cutoff frequency (which is normalized to unity, for our purposes). Likewise, we would like to specify the gain for our low-shelving filter at unit frequency as some intermediate value between $G_0$ and $G$. We shall denote this gain value by $G_B$, for bandwidth-gain. Often, setting $G_B = \sqrt{G_0 G}$, the geometric mean between $G_0$ and $G$, is a good choice. This choice will translate to an arithmetic mean when all gain-values are expressed in decibels. To obtain our prescribed gain value $G_B$ at unit frequency in the shelving filter, we note that by (\ref{Eq:LowshelfMagnitudeSquared1}), we must have:
+\begin{equation}
+ G_B^2 = G_0^2 + (G^2 - G_0^2) G_C^2
+\end{equation}
+where $G_C$ is the gain of the lowpass prototype at the (unit) cutoff frequency. Solving this equation for $G_C$ gives:
+\begin{equation}
+ G_C = \sqrt{ \frac{G_B^2 - G_0^2}{G^2 - G_0^2} }
+\end{equation}
+Thus, to obtain a prescribed shelving gain at unit frequency $G_B$, we should design our lowpass prototype such that its gain at unit frequency $G_C$ is given by the value above. For some lowpass prototype designs (for example Butterworth), we can straightforwardly prescribe the desired gain at unit cutoff and obtain the poles and zeros that will realize this gain. For other designs (for example Bessel), this is not so easily possible. For such filters, we first obtain preliminary lowpass poles and zeros, then find the frequency $\omega_c$  at which the filter has the desired gain, and then scale all poles and zeros by the reciprocal of $\omega_c$. To fix the gain at DC, we must also scale $k_{LP}$ by $\omega_c^{n_p-n_z}$ where $n_p, n_z$ are the numbers of finite poles and zeros respectively. Alternatively and possibly simpler, we could just design a low-shelving filter with the proper low- and high-frequency gain but yet unspecified bandwidth gain, then find the frequency at which the desired bandwidth gain occurs and then scale the shelver's zeros, poles and $k_{LS}$ in the same way as described above for the lowpass.
+
+\section{Boosting and Attenuating}
+Consider the special case where the pedestal is normalized to unity, such that $G_0 = 1$, corresponding to a reference gain of $0 dB$ on a decibel scale. In design procedure above, we may have either $G > 1$ which corresponds to a boost of low frequencies or $G < 1$ which corresponds to an attenuation of low frequencies. However, for some gain value $G$ and its reciprocal $1/G$, the magnitude response curves plotted on a decibel scale are not, in general, mirror images of each other. But this seems to be a desirable property since it would mean that a boost and an attenuation by the same amount would cancel each other exactly. To achieve such a cancellation, we must ensure that in a boost and an attenuation by the same amount, the poles and zeros exchange roles. So we may in any case design a boost filter by simply setting $G \leftarrow 1/G$ whenever $G < 1$ and after the poles and zeros were found, we simply swap them. After swapping, we must also invert the overall gain factor, so we assign $k_{LS} \leftarrow 1/k_{LS}$. For the more general case where $G_0 \neq 1$, we do the inversion and pole/zero-swapping for both $G$ and $G_0$, whenever $G < G_0$.
+
+%[Note: maybe we can avoid the root finder by considering a pole/zero pair at a time? it would then also be straightforward to translate the procedure to the z-domain]
+
+%\section{References}
+%\begin{enumerate}
+%	\item Sophocles Orfanidis - High-Order Digital Parametric Equalizer Design
+%\end{enumerate}
+
+\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+ \bibitem{Orf} Sophocles Orfanidis. High-Order Digital Parametric Equalizer Design
+\end{thebibliography}
+

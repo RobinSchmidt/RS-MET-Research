@@ -1,0 +1,23 @@
+\chapter{Sonstiges}
+
+\paragraph{Diskrete Faltung:}
+\begin{equation}
+  y[n] = x[n] * h[n] = \sum_{k=-\infty}^{\infty} x[k] \; h[n-k] 
+\end{equation}
+
+\paragraph{Volterra-System $N$-ter Ordnung:}
+\begin{equation}
+ \begin{aligned}
+  y[n] = & \sum_{i=1}^N y_i[n] \\
+       = & \sum_{\nu_1=0}^{\infty} h_1[\nu_1] \; x[n-\nu_1] \; +    \qquad & \text{(linearer Anteil)} \\
+         & \sum_{\nu_1=0}^{\infty} \sum_{\nu_2=0}^{\infty}  
+           h_2[\nu_1, \nu_2] \; x[n-\nu_1] \; x[n-\nu_2] \; +          \qquad & \text{(quadratischer Anteil)} \\  
+         & \sum_{\nu_1=0}^{\infty} \sum_{\nu_2=0}^{\infty} \sum_{\nu_3=0}^{\infty} 
+           h_3[\nu_1, \nu_2, \nu_3] \; x[n-\nu_1] \; x[n-\nu_2] \; x[n-\nu_3] \; +          
+           \qquad & \text{(kubischer Anteil)} \\   
+         & \qquad \vdots \\
+         & \sum_{\nu_1=0}^{\infty} \cdots \sum_{\nu_N=0}^{\infty}  
+           h_N[\nu_1, \ldots, \nu_N] \; x[n-\nu_1] \cdots x[n-\nu_N] \; \qquad & \text{(Anteil $N$-ter Ordnung)} 
+ \end{aligned}
+\end{equation}
+wobei $h_i$ der Kernel $i$-ter Orndung ist. 

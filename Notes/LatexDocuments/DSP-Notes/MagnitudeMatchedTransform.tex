@@ -1,0 +1,31 @@
+\section{Magnitude Matched $s$- to $z$-plane Transform}
+
+We consider a transform from the $s$-plane to the $z$-plane that matches the magnitude response of an analog prototype filter at 3 selected frequencies. The idea is to not map poles and zeros one at a time but consider partial filter sections and map those filter sections from the $s-$ into the $z-$ plane by imposing requirements on the magnitude response of our digital filter at 3 selected frequencies $f_1, f_2, f_3$ - namely, the requirement that the digital filter's magnitude response should match the magnitude response of the analog filter at these 3 frequencies. To achieve this, we must consider filter sections with 3 degrees of freedom at a time. We will use $\omega = 2 \pi f/f_s$ to denote a normalized radian frequency in the digital domain and $\Omega = 2 \pi f$ to denote a radian frequency in the analog domain.
+
+\subsection{Mapping a 1st order Section}
+\begin{equation}
+H(s) = G \frac{1 + B_1 s     }{1 + A_1 s     }, \qquad
+H(z) = g \frac{1 + b_1 z^{-1}}{1 + a_1 z^{-1}}
+\end{equation}
+find $g, b_1, a_1$ from $G, B_1, A_1$ such that the magnitude response of $H(\omega)$ matches that of $H(\Omega)$ at the 3 selected frequencies.
+
+
+\subsection{Mapping a 2nd order Section}
+\begin{equation}
+H(s) = G \frac{1 + B_1 s      + B_2 s^2   }{1 + A_1 s      + A_2 s^2   }, \qquad
+H(z) = g \frac{1 + b_1 z^{-1} + b_2 z^{-2}}{1 + a_1 z^{-1} + a_2 z^{-2}}
+\end{equation}
+Decompose $H(s)$ into an all-pole and all-zero filter:
+\begin{equation}
+H(s) = H_p(s) H_z(s)
+\end{equation}
+where
+\begin{equation}      
+H_p(s) = G_p \frac{1 + B_1 s + B_2 s^2}{1}, \qquad
+H_z(s) = G_z \frac{1}{1 + A_1 s + A_2 s^2}
+\end{equation}
+Each of the 2 component filters has 3 degrees of freedom, as was the case for the 1st order section. Now find Hp(z) and Hs(z) separately by matching the magnitude of $H_p(s)$ and $H_z(s)$ at the 3 selected frequencies.
+
+\subsection{Choosing the 3 Frequencies}
+For $f_1$ and $f_3$ we choose $0$ and $f_s/2$. For $f_2$ we may choose the characteristic frequency of the filter. If there are two characteristic frequencies (say $f_l, f_u$ for lower and upper cutoff frequency in bandpasses), we could use one or the other, depending on which side the pole or zero in question is with respect to the center frequency. For odd order prototypes, there will be a pole that is on neither "side" - for this this one, we choose the center frequency (geometric mean between the cutoffs). We may also choose $f_2$ as the frequency where a peak (for poles) or trough (for zeros) occurs in the analog response (this is not the same as the pole/zero angle (only approximately so for high Q values) - the derivative of the analog magnitude response should vanish). However, for some pole-pair or zero-pair configurations, there may not be such a peak (when the Q is below some threshold). In these cases, we may again revert to $f_c$ (or $f_l$ or $f_u$ in bandpasses, etc.). Or we may use the pole/zero angle in any case.
+

@@ -1,0 +1,176 @@
+\title{Digital Biquad Design by Magnitude Requirements}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider the problem of finding the coefficients $b_0, b_1, b_2, a_0, a_1, a_2$ of a discrete time biquad transfer-function of the general form:
+\begin{equation}
+\label{Eq:TransferFunctionBiquad}
+ H(z) = \frac{b_0 + b_1 z^{-1} + b_2 z^{-2}}{a_0 + a_1 z^{-1} + a_2 z^{-2}}
+\end{equation}
+given 5 requirements on the magnitude response. These requirements are given as pairs of a normalized radian frequency $\omega_n$ and a desired magnitude-response value $g_n$ which the filter should have at $\omega_n$ such that $g_n = |H(e^{j \omega_n})|$, where $n = 1, \ldots, 5$. As we shall see later, one of the biquad coefficients is actually redundant and may be set to unity. For implementation purposes, it makes most sense to normalize the transfer-function such that $a_0 = 1$. We will take care of this (re)normalization later - for the design algorithm, we have to take $a_0$ as variable.
+
+\section{From Requirements to a System of Equations}
+The magnitude-squared response of a general biquad transfer-function (\ref{Eq:TransferFunctionBiquad}) is given by:
+\begin{equation}
+\label{Eq:MagnitudeSquaredBiquad}
+ g^2(\omega) 
+ \hat{=} |H(e^{j \omega})|^2
+ = \frac{b_0^2 + b_1^2 + b_2^2 + 2 b_1 (b_0 + b_2) \cos(\omega) + 2 b_0 b_2 \cos(2 \omega)}
+        {a_0^2 + a_1^2 + a_2^2 + 2 a_1 (a_0 + a_2) \cos(\omega) + 2 a_0 a_2 \cos(2 \omega)}
+\end{equation}
+We define:
+\begin{eqnarray}
+\label{Eq:DefinitionsAB}
+ B_0 \hat{=} b_0^2 + b_1^2 + b_2^2, & B_1 \hat{=} b_1 (b_0 + b_2), & B_2 \hat{=} b_0 b_2 \nonumber\\
+ A_0 \hat{=} a_0^2 + a_1^2 + a_2^2, & A_1 \hat{=} a_1 (a_0 + a_2), & A_2 \hat{=} a_0 a_2
+\end{eqnarray}
+We have 5 magnitude-requirements at 5 normalized radian frequencies given as pairs $(\omega_n, g_n), \; n=1,\ldots,5$. Because we will mostly deal with the squared magnitude, we'll assign a name to that squared magnitude by defining $p_n \hat{=} g_n^2$ such that may now deal with the 5 pairs $(\omega_n, p_n)$.
+Using the definitions (\ref{Eq:DefinitionsAB}) in (\ref{Eq:MagnitudeSquaredBiquad}), these 5 requirements lead to the system of 5 equations:
+\begin{equation}
+ p_n = \frac{B_0 + 2 B_1 \cos(\omega_n) + 2 B_2 \cos(2 \omega_n)}
+            {A_0 + 2 A_1 \cos(\omega_n) + 2 A_2 \cos(2 \omega_n)} \qquad n = 1, \ldots, 5
+\end{equation}
+Defining furthermore:
+\begin{equation}
+\label{Eq:DefinitionsUV}
+ u_n = 2 \cos(\omega_n), \qquad v_n = 2 \cos(2 \omega_n)
+\end{equation}
+we may simplify this system to:
+\begin{equation}
+\label{Eq:MagnitudeSquaredSimplified}
+ p_n = \frac{B_0 + B_1 u_n + B_2 v_n}
+            {A_0 + A_1 u_n + A_2 v_n} \qquad n = 1, \ldots, 5
+\end{equation}
+We now fix $A_0 = 1$ and multiply both sides by the denominator - we get:
+\begin{equation}
+ p_n (1 + A_1 u_n + A_2 v_n) = p_n + p_n A_1 u_n + p_n A_2 v_n = B_0 + B_1 u_n + B_2 v_n \qquad n = 1, \ldots, 5
+\end{equation}
+Bringing the terms containing $A_1, A_2$ over to the right hand side, this beocmes:
+\begin{equation}
+ p_n = B_0 + B_1 u_n + B_2 v_n  - p_n A_1 u_n - p_n A_2 v_n \qquad n = 1, \ldots, 5
+\end{equation}
+This is a linear system of 5 equations for 5 unknowns $B_0, B_1, B_2, A_1, A_2$. We can also write this in matrix form:
+\begin{equation}
+ \begin{pmatrix}
+  1 & u_1 & v_1 & -p_1 u_1 & -p_1 v_1 \\
+  1 & u_2 & v_2 & -p_2 u_2 & -p_2 v_2 \\
+  1 & u_3 & v_3 & -p_3 u_3 & -p_3 v_3 \\
+  1 & u_4 & v_4 & -p_4 u_4 & -p_4 v_4 \\
+  1 & u_5 & v_5 & -p_5 u_5 & -p_5 v_5 \\
+ \end{pmatrix}
+ \begin{pmatrix}
+  B_0 \\
+  B_1 \\
+  B_2 \\
+  A_1 \\
+  A_2 \\
+ \end{pmatrix} 
+ = 
+ \begin{pmatrix}
+  p_1 \\
+  p_2 \\
+  p_3 \\
+  p_4 \\
+  p_5 \\
+ \end{pmatrix}  
+\end{equation}
+This system may now be solved for our intermediate variables $B_0, B_1, B_2, A_1, A_2$ by standard techniques for linear systems (such as Gaussian elimination).
+
+\section{Computing the Biquad Coefficients}
+Having obtained our intermediate variables $B_0, B_1, B_2, A_1, A_2$, the next task is to go back to the actual biquad coefficients $b_0, b_1, b_2, a_0, a_1, a_2$. From the first line of (\ref{Eq:DefinitionsAB}), we see:
+\begin{equation}
+\label{Eq:B1B2FromB0}
+ B_2 \hat{=} b_0 b_2         \Leftrightarrow b_2 = \frac{B_2}{b_0}, \qquad
+ B_1 \hat{=} b_1 (b_0 + b_2) \Leftrightarrow b_1 = \frac{B_1}{b_0 + b_2} = \frac{B_1}{b_0 + B_2/b_0}
+\end{equation}
+and so:
+\begin{equation}
+ B_0 \hat{=} b_0^2 + b_1^2 + b_2^2 
+ =   b_0^2 
+   + \left( \frac{B_1}{b_0 + B_2/b_0} \right)^2 
+   + \left( \frac{B_2}{b_0}           \right)^2
+\end{equation}
+Bringing $B_0$ over to the right hand side and evaluating the squares gives:
+\begin{equation}
+ 0 =   b_0^2 
+     + \frac{B_1^2}{b_0^2 + 2 B_2 + B_2^2 / b_0^2} 
+     + \frac{B_2^2}{b_0^2}
+     - B_0
+\end{equation}
+which we may consider as a root-finding problem for $b_0^2$. We must now solve this root-finding problem and take the square-root to obtain $b_0$ from $b_0^2$. Once $b_0$ is known, $b_1$ and $b_2$ may be computed straightforwardly by plugging $b_0$ back into (\ref{Eq:B1B2FromB0}). Empirically, it turns out that the root-finding problem may be solved by Newton iteration using $b_0^2 = 1$ as start value. The very same procedure can be used to compute $a_0, a_1, a_2$ from $A_0=1, A_1, A_2$. [TODO: investigate convergence properties of the Newton iteration more thoroughly]
+
+\subsection{A Normalized, Stable, Minimum-Phase Biquad}
+Our biquad coefficients so obtained do not necessarily lead to a stable, minimum-phase filter nor do they satisfy the $a_0 = 1$ normalization, which is usually desired for implementation purposes. Transforming the coefficient-set to a stable, minimum-phase set is done by reflecting poles and zeros outside the unit circle into the unit circle. A re-normalization to $a_0 = 1$ is straightforward by dividing all coefficients by $a_0$. 
+
+
+\section{First Order Filters}
+Of course, the same procedure can be applied to first order filters as well. Here, we have 3 degrees of freedom, so we expect to be able to satisfy at most 3 frequency/magnitude constraints simultaneously. The magnitude-squared response of a general first order transfer-function is given by:
+\begin{equation}
+ g^2(\omega) 
+ \hat{=} |H(e^{j \omega})|^2
+ = \frac{b_0^2 + b_1^2 + 2 b_0 b_1 \cos(\omega)}
+        {a_0^2 + a_1^2 + 2 a_0 a_1 \cos(\omega)}
+\end{equation}
+We define:
+\begin{eqnarray}
+ B_0 \hat{=} b_0^2 + b_1^2, & B_1 \hat{=} b_0 b_1 \nonumber\\
+ A_0 \hat{=} a_0^2 + a_1^2, & A_1 \hat{=} a_0 a_1 
+\end{eqnarray}
+and:
+\begin{equation}
+ u_n = 2 \cos(\omega_n)
+\end{equation}
+as before. This time, our system of equations is:
+\begin{equation}
+ p_n = \frac{B_0 + B_1 u_n }
+            {A_0 + A_1 u_n } \qquad n = 1, \ldots, 3
+\end{equation}
+again, letting $A_0 = 1$, we can express this in matrix form as:
+\begin{equation}
+ \begin{pmatrix}
+  1 & u_1 & -p_1 u_1 \\
+  1 & u_2 & -p_2 u_2 \\
+  1 & u_3 & -p_3 u_3 \\
+ \end{pmatrix}
+ \begin{pmatrix}
+  B_0 \\
+  B_1 \\
+  A_1 \\
+ \end{pmatrix} 
+ = 
+ \begin{pmatrix}
+  p_1 \\
+  p_2 \\
+  p_3 \\
+ \end{pmatrix}  
+\end{equation}
+we solve this system for $B_0, B_1, A_1$ and then use the definitions of $B_0, B_1$ to obtain:
+\begin{equation}
+ b_1 = \frac{B_1}{b_0}, \quad B_0 = b_0^2 + b_1^2 = b_0^2 + \frac{B_1^2}{b_0^2}
+\end{equation}
+the second equation can be expressed as:
+\begin{equation}
+ 0 = b_0^4 - B_0 b_0^2 + B_1^2
+\end{equation}
+which is a quadratic equation for $b_0^2$. This root-finding problem can be solved via the $p-q$ formula for quadratic equations. So, in the first order filter case, we do not need to resort Newton to iteration. After $b_0^2$ has been found via the $p-q$ formula, we take the square-root to obtain $b_0$ itself and use $b_1 = \frac{B_1}{b_0}$ to obtain $b_1$. The same procedure can be applied to find $a_0, a_1$ from $A_0 = 1, A_1$. After doing so, we again have to renormalize by dividing all coefficients by $a_0$, and ensure stability and minimum phase by reflecting poles and zeros into the unit circle, in case they happen to end up outside (this will be determined by our choice of one of the two possible square-roots).
+\newline
+TODO: I found, that such pole/zero reflections may change the overall gain-factor of the filter. It can be fixed by computing the gain at some selected frequency before and after these reflections and then scale the $b$-coefficients by the ratio of these gains but that seems like a hack. I need to find out what exactly happens and if there is a better fix (I already tried making the polynomials monic by dividing by the leading coefficient and later re-multiplying it in, but somehow, it did not seem to work).
+
+
+%% test:
+% \begin{pspicture}(6,6)
+%   %% Triangle in red:
+%   \psline[linecolor=red](1,1)(5,1)(1,4)(1,1)
+%   %% Bezier curve in green:
+%   \pscurve[linecolor=green,linewidth=2pt,%
+%     showpoints=true](5,5)(3,2)(4,4)(2,3)
+%   %% Circle in blue with radius 1:
+%   \pscircle[linecolor=blue,linestyle=dashed](3,2.5){1}
+% \end{pspicture}
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% \bibitem{Chr} Knud Bank Christensen. A Generalization of the Biquadratic Parameteric Equalizer, Appendix 3
+%\end{thebibliography}
+

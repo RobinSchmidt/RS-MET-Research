@@ -1,0 +1,44 @@
+\section{Modulated Delayline}
+We consider a delayline in  continuous time with a time varying delay $\tau(t)$ (expressed in seconds) the output signal of which is computed as:
+\begin{equation}
+ y(t) = x(t - \tau(t))
+\end{equation}
+where
+\begin{equation}
+ \tau(t) = \tau_0 + \delta(t)
+\end{equation}
+In this equation, $\tau_0$ is some nominal delaytime around which the time-varying delaytime oscillates. The time-varying part of the delaytime is given by $\delta(t)$. We assume this time variation to be sinusoidal, so that we have:
+\begin{equation}
+ \delta(t) = \Delta \cdot \sin(\omega_m t)
+\end{equation}
+where $\omega_m$ is the modulating angular frequency and $\Delta$ is the depth of the modulation. For the whole system to be causal, the overall delay $\tau(t)$ can at no time become less than zero: $\tau(t) \geq 0, \forall t$. This imposes the constraint $\Delta \leq \tau_0$. We now consider the instantaneous angular frequency of the output signal, denoted as $\omega_y$ under the assumption that the input signal is a sinusoid with angular frequency $\omega_x$, that is: $x(t) = \sin(\omega_x t)$. The instantaneous angular frequency of some signal is generally given by:
+\begin{equation}
+ \omega(t) = \frac{d}{dt} \varphi(t)
+\end{equation}
+with $\varphi(t)$ being the instantaneous phase. Conversely, the instantaneous phase in terms of the instantaneous angular frequency is generally given by:
+\begin{equation}
+  \varphi(t)= \int_{-\infty}^{t} \omega(u) \; du
+\end{equation}
+We also note that for our output signal $y(t)$, the instantaneous phase is given by $\varphi_y(t) = \arg(y_a(t))$ where $y_a(t)$ is the analytic signal representation of $y(t)$. So for our ouput signal $y(t)$, the instantaneous frequency will be:
+\begin{equation}
+ \omega_y(t) = \frac{d}{dt} \varphi_y(t) = \frac{d}{dt} \varphi_y(t)
+\end{equation}
+Intuively, the instantaneous output frequency will depend on the time derivative of $\tau(t)$, which is given by:
+\begin{equation}
+ \frac{d}{dt} \tau(t) = \frac{d}{dt} ( \tau_0 + \Delta \cdot \sin(\omega_m t) )
+ = \Delta \; \omega_m \cos(\omega_m t)
+\end{equation}
+
+
+
+...in order to have the maximum and minimum of the pitch shifting factor at equal musical intervals above and below, the idea is now to phase-modulate the modulating sinusoid $\sin(\omega_m t)$ itself in a way such that the maximum and minimum of its time derivative serve for the appropriate shift-factors at the extremes. We do this by introducing a phase modulation with $\frac{c}{m}=1$, that is, we use a sinusoid of $\omega_m$ for the phase modulator as well. This ensures that the overall period of the modulator signal stays the same. Denoting the amount of phase-modulation by $p$, our phase-modulated modulator becomes:
+\begin{equation}
+ \delta(t) = \Delta \cdot \sin(\omega_m t + p \sin(\omega_m t) )
+\end{equation}
+
+
+
+
+
+
+

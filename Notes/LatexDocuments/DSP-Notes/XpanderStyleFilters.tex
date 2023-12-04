@@ -1,0 +1,166 @@
+\section{Xpander style filters}
+
+\subsection{The setting}
+We assume a series connection of 4 analog one pole lowpass filters, each of which having an s-domain transfer function of:
+\begin{equation}
+ G(s) = \frac{1}{1+s}
+\end{equation}
+Next, we define the outputs tapped off after succesive stages of the filter as:
+\begin{equation}
+ H_0(s) = G^0(s) = 1,                                \quad
+ H_1(s) = G^1(s) =        \frac{1}{1+s},             \quad
+ H_2(s) = G^2(s) = \left( \frac{1}{1+s} \right)^2,   \quad  
+\end{equation}
+\begin{equation}
+ H_3(s) = G^3(s) = \left( \frac{1}{1+s} \right)^3,   \quad 
+ H_4(s) = G^4(s) = \left( \frac{1}{1+s} \right)^4,   \quad   
+\end{equation}
+We are going to form a linear combination of these output taps to get our final output - so our overall transfer function $H(s)$ will be of the form:
+\begin{equation}
+ H(s) = c_0 H_0 + c_1 H_1 + c_2 H_2 + c_3 H_3 + c_4 H_4
+\end{equation}
+with some weighting coefficients $c_i$ to be determined (the $(s)$ has been omitted on the right hand side for notational convenience). Our transfer function may also be written over a common denominator as:
+\begin{equation}
+ H(s) = \frac{c_0 s^4 + (4c_0+c_1)s^3 + (6c_0+3c_1+c_2)s^2 + (4c_0+3c_1+2c_2+c_3)s + c_0+c_1+c_2+c_3+c_4}{(1+s)^4}
+\end{equation}
+We are going to prescribe some desired transfer functions in the $s$-domain, denoted as $H_d(s)$, equate the desired transfer function to our $H(s)$ above and solve for the coefficients $c_i$. 
+
+\subsection{Lowpass responses}
+The trivial case occurs when we want to obtain an $n$th order lowpass filter (with $n \in [0,4]$) - in this case, our desired transfer function takes on the form:
+\begin{equation}
+ H_d(s) = \left( \frac{1}{1+s} \right)^n,
+\end{equation}
+which we recognize as $H_n(s)$, so we just set $c_n = 1$ and $c_i = 0, i \neq n$.
+
+\subsection{Highpass responses}
+In this case, our desired transfer function takes on the form:
+\begin{equation}
+ H_d(s) = \left( \frac{s}{1+s} \right)^n = \frac{s^n}{(1+s)^n}
+\end{equation}
+we will first  consider the case of the $4$th order highpass, such that $n=4$ in the transfer function above. So we have to solve for the $c_i$:
+\begin{equation}
+ \frac{s^4}{(1+s)^4} = \frac{c_0 s^4 + (4c_0+c_1)s^3 + (6c_0+3c_1+c_2)s^2 + (4c_0+3c_1+2c_2+c_3)s + c_0+c_1+c_2+c_3+c_4}{(1+s)^4}
+\end{equation}
+noting the equality of the denominators on both sides, this simplifies to:
+\begin{equation}
+ s^4 = c_0 s^4 + (4c_0+c_1)s^3 + (6c_0+3c_1+c_2)s^2 + (4c_0+3c_1+2c_2+c_3)s + c_0+c_1+c_2+c_3+c_4
+\end{equation}
+from which we readily deduce (by comparison of coefficients) the set of linear equations:
+\begin{equation}
+ \begin{aligned}
+   s^4: \qquad & 1 &=& c_0                    \qquad & \Rightarrow \qquad c_0 &= 1   \\
+   s^3: \qquad & 0 &=& 4c_0+c_1               \qquad & \Rightarrow \qquad c_1 &= -4  \\
+   s^2: \qquad & 0 &=& 6c_0+3c_1+c_2          \qquad & \Rightarrow \qquad c_2 &= 6   \\ 
+   s^1: \qquad & 0 &=& 4c_0+3c_1+2c_2+c_3     \qquad & \Rightarrow \qquad c_3 &= -4  \\    
+   s^0: \qquad & 0 &=&  c_0+c_1+c_2+c_3+c_4   \qquad & \Rightarrow \qquad c_4 &= 1   \\      
+ \end{aligned}
+\end{equation}
+which was easily solved on-the-fly because it was triangular. So, a linear combination of our filter taps formed as:
+\begin{equation}
+ H(s) = H_0 - 4 H_1 + 6 H_2 - 4 H_3 + H_4
+\end{equation}
+will yield the desired $4$th order highpass response. For other $n$, it is probably easiest to mutliply numerator and denominator of the left hand side with the appropriate power of $(1+s)$ so as to match the denominator on the right hand side. Doing so and comparing coefficients again gives the solutions for highpass filters of orders $1,2,3$. Here are the formulas for the highpass filters of different orders summarized:
+\begin{equation}
+ \boxed
+ {
+  \begin{aligned}
+   H(s) &= H_0 - 4 H_1 + 6 H_2 - 4 H_3 + H_4 \qquad & \text{4th order highpass} \\ 
+   H(s) &= H_0 - 3 H_1 + 3 H_2 - H_3         \qquad & \text{3rd order highpass} \\
+   H(s) &= H_0 - 2 H_1 + H_2                 \qquad & \text{2nd order highpass} \\ 
+   H(s) &= H_0 - H_1                         \qquad & \text{1st order highpass}
+  \end{aligned}
+ }
+\end{equation}
+
+\subsection{2+2 pole bandpass response}
+In this case, our desired transfer function takes on the form:
+\begin{equation}
+ H_d(s) = \left( \frac{s}{1+s} \right)^2 \cdot \left( \frac{1}{1+s} \right)^2 = \frac{s^2}{(1+s)^4}
+\end{equation}
+which we interpret as two pole highpass feeding a two pole lowpass. Now we have to solve:
+\begin{equation}
+ \frac{s^2}{(1+s)^4}
+ = \frac{c_0 s^4 + (4c_0+c_1)s^3 + (6c_0+3c_1+c_2)s^2 + (4c_0+3c_1+2c_2+c_3)s + c_0+c_1+c_2+c_3+c_4}{(1+s)^4}
+\end{equation}
+which yields:
+\begin{equation}
+ \begin{aligned}
+   s^4: \qquad & 0 &=& c_0                    \qquad & \Rightarrow \qquad c_0 &= 0   \\
+   s^3: \qquad & 0 &=& 4c_0+c_1               \qquad & \Rightarrow \qquad c_1 &= 0   \\
+   s^2: \qquad & 1 &=& 6c_0+3c_1+c_2          \qquad & \Rightarrow \qquad c_2 &= 1   \\ 
+   s^1: \qquad & 0 &=& 4c_0+3c_1+2c_2+c_3     \qquad & \Rightarrow \qquad c_3 &= -2  \\    
+   s^0: \qquad & 0 &=&  c_0+c_1+c_2+c_3+c_4   \qquad & \Rightarrow \qquad c_4 &= 1   \\      
+ \end{aligned}
+\end{equation}
+such that our desired response will be obtained by the linear combination:
+\begin{equation}
+ H(s) = H_2 - 2 H_3 + H_4
+\end{equation}
+We may also create asymmetric bandpasses by chaining a 1st order highpass with a 3rd order lowpass or a 3rd order highpass with a 1st order lowpass. The coefficients come out as:
+\begin{equation}
+ \boxed
+ {
+  \begin{aligned}
+   H(s) &= H_3 - H_4                         \qquad & \text{1st order highpass, 3rd order lowpass} \\ 
+   H(s) &= H_2 - 2 H_3 + H_4                 \qquad & \text{2nd order highpass, 2nd order lowpass} \\
+   H(s) &= H_1 - 3 H_2 + 3 H_3 - H_4         \qquad & \text{3rd order highpass, 1st order lowpass} \\ 
+  \end{aligned}
+ }
+\end{equation}
+
+\subsection{Morphing the shape}
+We now turn to the question of a smooth morph between 4th order highpass and 4th order lowpass with the 3 bandpasses as intermediate shapes. We shall denote the filter's shape by the slopes of the highpass and lowpass parts (in that order), such that the 5 different shapes that we want to go through are denoted as: $24/0, 18/6, 12/12, 6/18, 0/24$. A table for the coefficients for these 5 filter-shapes may then be written down as:
+
+
+% idea: morph through; 24/0->18/0->18/6->12/6->12/12->6/12->6/18->0/18->0/24
+% - the 4 additional intermediate shapes (18/0, 12/6, 6/12, 0/18) put one  
+% of their zeros at s=-1, cancelling the pole there (true?) 
+
+%\begin{tabular}{|m{2cm}|m{2cm}|m{2cm}|m{2cm}|m{2cm}|}
+% \toprule
+%   & $24/0$ & $18/6$ & $12/12$ & $6/18$ \\
+% \midrule[0.1em]
+% $c_0$ 
+% &                     
+% & $\sqrt{1-\cos^2 x}$ 
+% & $\frac{\tan x}{\sqrt{1+\tan^2 x}}$ 
+% & $\frac{1}{\sqrt{1+\cot^2 x}}$         \\
+% \midrule
+% $c_1$ 
+% & $\sqrt{1-\sin^2 x}$  
+% &                       
+% & $\frac{1}{\sqrt{1+\tan^2 x}}$      
+% & $\frac{\cot x}{\sqrt{1+\cot^2 x}}$  \\ 
+% \midrule
+% $c_2$ 
+% & $\frac{\sin x}{\sqrt{1-\sin^2 x}}$ 
+% & $\frac{\sqrt{1-\cos^2 x}}{\cos x}$        
+% &       
+% & $\frac{1}{\cot x}$   \\  
+% \midrule
+% $c_3$
+% & $\frac{\sqrt{1-\sin^2 x}}{\sin x}$ 
+% & $\frac{\cos x}{\sqrt{1-\cos^2 x}}$        
+% & $\frac{1}{\tan x}$     
+% &  \\
+% \bottomrule
+%\end{tabular}
+
+
+
+%In this transfer function, the bandpass was formed from a series connection of a second order highpass and a second order lowpass with equal cutoff frequencies. It may be desirable to tune the cutoff frequency of the highpass and the lowpass independently. If we denote the (normalized radian) cutoff frequencies of the highpass and lowpass as $\omega_{HP}$ and $\omega_{LP}$, we can write down our desired transfer function as:
+%\begin{equation}
+% H_d(s) = \left( \frac{s}{\omega_{HP}+s} \right)^2 \cdot \left( \frac{1}{\omega_{LP}+s} \right)^2  
+% = \frac{s^2}{(\omega_{HP}+s)^2  (\omega_{LP}+s)^2 }
+%\end{equation}
+%
+%...tbc
+
+
+
+
+
+
+
+
+

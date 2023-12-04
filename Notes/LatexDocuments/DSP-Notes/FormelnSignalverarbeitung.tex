@@ -1,0 +1,52 @@
+\documentclass[12pt]{report}
+
+\topmargin=-0.8in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textheight=10in
+\textwidth=6.5in
+
+%\usepackage{fullpage}         %sorgt dafür, dass alle Ränder 1 inch breit sind
+
+\usepackage{amsmath}
+\usepackage{amssymb}          % für mathbb
+\usepackage[latin1]{inputenc} %%% damit man ü tippen kann
+\usepackage{german}
+
+% Deklaration von einigen Operatoren:
+\DeclareMathOperator{\grad}{grad}
+\DeclareMathOperator{\dive}{div}
+\DeclareMathOperator{\rot}{rot}
+\DeclareMathOperator{\arccot}{arccot}
+\DeclareMathOperator{\Res}{Res}
+
+\begin{document}
+
+%Formatierungseinstellungen:
+\parindent=0in
+\parskip=0pt
+
+\title{Formelsammlung Signalverarbeitung (unfertige Arbeitsversion)}
+\author{zusammengestellt von Robin Schmidt}
+\date{\today}
+\maketitle
+
+%hier kommen ein paar Vorbemerkungen (Inhalsverzeichnis, etc.)
+\pagenumbering{roman}
+\tableofcontents{}
+
+% hier werden Skalierungsfaktoren für die verschiedenen Arten von Abbildungen definiert:
+\def\diagramScale{0.6}
+\def\plotScale{0.66}
+
+
+%ab hier beginnt der eigentliche Text:
+\pagenumbering{arabic} \setcounter{page}{1}
+
+% Hauptteil:
+ \include{ZeitdiskreteFolgen} 
+ \include{FourierTrafo}
+ \include{IirFilter}
+ \include{Informationstheorie} 
+ \include{Sonstiges} 
+\end{document}

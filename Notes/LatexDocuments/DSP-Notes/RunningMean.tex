@@ -1,0 +1,39 @@
+\section{Running Mean}
+Assume that we have a set of data values $x_n, \; n=1,\ldots,N$. Then, the arithmetic mean of these values is given by:
+\begin{equation}
+ m = \frac{1}{N} \sum_{n=1}^N x_n
+\end{equation}
+Now assume that we want to compute the mean on-the-fly as new data values come in. We may do so by initializing our mean with $m=0$, and for each data point that comes in, we update our mean via:
+\begin{equation}
+ m_{new} = \frac{N-1}{N} m_{old} + \frac{1}{N} x_N = \frac{(N-1) m_{old} + x_N}{N}
+\end{equation}
+where $x_N$ is the new incoming data-point and $N$ is its index (i.e. the number of accumulated data values, including the new one).
+
+\subsection{Weighted Mean}
+Next, we assume that we have a weight $w_n$ associated with each data value which determines its contribution to the computed mean value. The weighted mean may then be computed as:
+\begin{equation}
+ m = \frac{\sum_{n=1}^N w_n x_n}{\sum_{n=1}^N w_n}
+\end{equation}
+Again, we want to compute this weighted mean on-the-fly. We may do so by again initializing our mean with $m=0$, and for each data point that comes in, we update our mean via:
+\begin{equation}
+ m_{new} = \frac{ (\sum_{n=1}^{N-1} w_n) \cdot m_{old} + w_N x_N}{\sum_{n=1}^N w_n}
+\end{equation}
+To get rid of the sums, we may also compute the sum of the weights on-the-fly by initializing $W=0$, and for each incoming data-point (along with its weight), we update the sum of weights and the weighted mean via the pair of equations:
+\begin{equation}
+ W_{new} = W_{old} + w_N
+\end{equation}
+\begin{equation}
+ m_{new} = \frac{ W_{old} m_{old} + w_N x_N}{W_{new}}
+\end{equation}
+where again $x_N$ is the new incoming data-point, $N$ is its index and $w_N$ is the associated weight.
+
+
+
+
+
+
+
+
+
+
+

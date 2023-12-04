@@ -1,0 +1,61 @@
+A transform from the s- to the z-plane that matches the magnitude response of
+an analog prototype filter at 3 selected frequencies.
+
+idea: 
+We do not map poles and zeros one at a time but consider partial filter sections and map those.
+
+
+1st order section:
+
+            1 + B1*s
+H(s) = G * ----------
+            1 + A1*s
+
+
+            1 + b1*z^-1
+H(z) = g * -------------
+            1 + a1*z^-1
+
+find g, b1, a1 from G, B1, A1 such that the magnitude response of H(z) matches that of H(s) at 3 selected frequencies (say DC, fc, fs/2)
+
+
+2nd order section:
+
+            1 + B1*s + B2*s^2
+H(s) = G * -------------------
+            1 + A1*s + A2*s^2
+
+decompose into an all-pole and all-zero filter:
+
+H(s) = Hp(s) * Hz(s)
+
+where
+
+              1 + B1*s + B2*s^2
+Hp(s) = Gp * -------------------
+                     1
+
+and 
+
+                     1
+Hz(s) = Gz * -------------------
+              1 + A1*s + A2*s^2
+
+each of the 2 component filters has 3 degrees of freedom, as was the case for the 1st order section. Now find Hp(z) and Hs(z) separately by matching the magnitude of Hp(s) and Hz(s) at 3 selected frequencies.
+
+choosing the 3 frequencies:
+for f1 and f3 we choose DC and fs/2. For f2 we may choose the characteristic frequency of the filter. if there are two characteristic frequencies (as, for example in bandpasses), we could use one or the other, depending on which side the pole or zero in question is with respect to the center frequency. for odd order prototypes, there will be a pole that is on neither "side" - for this this one, we choose the center frequency (geometric mean between the cutoffs). we may also choose f2 as the frequency where a peak (for poles) or trough (for zeros) occurs in the analog response (this is not the same as the pole/zero angle (only approximately so for high Q values) - the derivative of the analog magnitude response should vanish). However, for some pole-pair or zero-pair configurations, there may not be such a peak (when the Q is below some threshold). In these cases, we may again revert to fc (or fHi or fLo in bandpasses, etc.). Or we may use the pole/zero angle in any case.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

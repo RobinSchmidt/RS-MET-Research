@@ -1,0 +1,287 @@
+\section{Fourier Theorems}
+
+\subsection{Fourier Theorems for the DFT}
+
+\subsubsection{Notation}
+Let $x[n], n = 0, 1, 2, \ldots, N-1$ be a discrete time sequence of length $N$, where each $x[n] \in \mathbb{C}$. The entire sequence/signal can be interpreted as vector in $\mathbb{C}^N$ and will be denoted as $x$ and we have: $x = (x_0, x_1, \ldots, x_{N-1})^T$. Likewise, let $X[k], k = 0, 1, 2, \ldots, N-1$ be the sequence of spectral samples obtained by taking the discrete Fourier transform (DFT) of $x$, the entire sequence will be denoted as $X$. Complex conjugation will be denoted by a bar, such that $\overline{x[n]}$ is the complex conjugate of $x[n]$. If $x$ and $X$ are a transform pair, we write: $x \leftrightarrow X$
+
+\subsubsection{Definitions}
+
+\paragraph{Even and odd functions}
+A function is said to be even if $f(-n) = f(n)$ and a function is said to be odd if $f(-n) = -f(n)$.
+
+\paragraph{Normalized radian frequency}
+\begin{equation}
+  \omega_k := 2 \pi k / N
+\end{equation}
+
+\paragraph{DFT sinusoids}
+\begin{equation}
+  s_k[n] := e^{ j \omega_k n }
+\end{equation}
+
+\paragraph{Inner product}
+\begin{equation}
+  <x, y> := \sum_{n=0}^{N-1} x[n] \overline{y[n]}
+\end{equation}
+
+\paragraph{Discrete Fourier Transform (DFT) and inverse Discrete Fourier Transform (IDFT)}
+\begin{equation}
+ \begin{aligned}
+  X[k] & :=             \sum_{n=0}^{N-1} x[n] e^{-j \omega_k n}, \qquad k = 0, 1, 2, \ldots, N-1 \qquad \text{DFT, analysis equation}    \\
+  x[n] & := \frac{1}{N} \sum_{k=0}^{N-1} X[k] e^{ j \omega_k n}, \qquad n = 0, 1, 2, \ldots, N-1 \qquad \text{IDFT, synthesis equation}  \\
+ \end{aligned}
+\end{equation}
+we may also denote the $k$th bin of the DFT of $x$ by $DFT_k(x)$.
+
+\paragraph{Ideal bandlimited interpolation in frequency}
+The ideal bandlimited interpolation of a spectrum at an arbitrary $\omega$ is defined as
+\begin{equation}
+  X(\omega) :=  \sum_{n=0}^{N-1} x[n] e^{-j \omega n}
+\end{equation}
+
+\paragraph{Periodic extension}
+\begin{equation}
+  X[k+mN] := X[k], \qquad x[n+mN] := x[n]
+\end{equation}
+for any integer $m$, thus when an index is out of the range $0, \ldots, N-1$, we just add (or subtract) an appropriate multiple of $N$.
+
+\paragraph{Flip operator}
+The $Flip$ operator reverses the order of $x$, leaving only $x[0]$ alone:
+\begin{equation}
+  Flip_n(x) := x[-n] = x[N-n]
+\end{equation}
+and $Flip(x) =  x[0], x[N-1], x[N-2], \ldots, x[2], x[1]$ denotes the entire flipped signal.
+
+\paragraph{Shift operator}
+The $Shift_{\Delta}$ operator circularly right-shifts a signal by $\Delta$ samples:
+\begin{equation}
+  Shift_{\Delta,n}(x) := x[n-\Delta]
+\end{equation}
+and $Shift_{\Delta}(x)$ denotes the entire shifted signal. The shift is circular due to the periodic extension defined above. The shifted signal can be seen as the original sequence delayed by $\Delta$ samples.
+
+\paragraph{Stretch operator}
+The $Stretch_L$ operator maps a length $N$ signal to a length $M = LN$ signal by inserting $L-1$ zeros between each pair of samples:
+\begin{equation}
+  Stretch_{L,m}(x) := 
+  \begin{cases}
+    x[m/L], \qquad & m/L \text{ integer} \\
+    0,      \qquad &     \text{ otherwise}
+  \end{cases}
+\end{equation}
+and $Stretch_L(x)$ denotes the entire stretched signal. Note that we used $m$ as index into the stretched sequence.
+
+\paragraph{Repeat operator}
+The $Repeat_L$ operator maps a length $N$ signal to a length $M = LN$ signal by repeating the signal $L$ times:
+\begin{equation}
+  Repeat_{L,m}(x) := x[m]
+\end{equation}  
+and $Repeat_L(x)$ denotes the entire repeated signal. 
+
+\paragraph{ZeroPad operator}
+The $ZeroPad_M$ operator maps a length $N$ signal to a length $M > N$ signal by appending $M-N$ zeros:
+\begin{equation}
+  ZeroPad_{M,m}(x) := 
+  \begin{cases}
+    x[m],   \qquad & 0 \leq m \leq N-1 \\
+    0,      \qquad & N \leq m \leq M-1
+  \end{cases}
+\end{equation}
+and $ZeroPad_M(x)$ denotes the entire zero-padded signal.
+
+TODO: define zero-padding for spectra (this is different)
+
+\paragraph{Select operator}
+The $Select_L$ operator maps a length $N=LM$ signal to a length $M$ signal by taking every $L$th sample, starting at sample $0$:
+\begin{equation}
+  Select_{L,m}(x) := x[mL], \qquad m=0,\ldots,M-1, M=N/L
+\end{equation}
+it is also called downsampling or decimation operator and $Select_L(x)$ denotes the entire downsampled signal. $Select_L()$ is the inverse of $Stretch_L()$, but the converse is not generally true:
+\begin{equation}
+ \begin{aligned}
+  Select_L(  Stretch_L (x) ) &=    x  \\
+  Stretch_L( Select_L  (x) ) &\neq x \qquad \text{(in general)}  \\
+ \end{aligned}
+\end{equation}
+
+\paragraph{Alias operator}
+The $Alias_L$ operator maps a length $N=LM$ signal to a length $M$ signal by partitioning the original $N$ samples into $L$ blocks of length $M$ and adding up the blocks:
+\begin{equation}
+  Alias_{L,m}(x) :=  \sum_{l=0}^{N-1} x\left[m + l\frac{N}{L} \right], \qquad m=0,\ldots,M-1, M=N/L
+\end{equation}
+and $Alias_L(x)$ denotes the entire aliased signal. The $Alias$ operator is not invertible.
+
+\paragraph{Interpolation operator}
+The $Interp_L$ operator maps a length $N$ spectrum to a length $M=LN$ spectrum via:
+\begin{equation}
+  Interp_{L,k'}(X) :=  X(\omega_{k'}), \qquad \omega_{k'} = 2 \pi k' / M, k' = 0, \ldots, M-1, M=LN
+\end{equation}
+where $X(\omega_{k'})$ is defined by ideal bandlimited interpolation as defined earlier.
+
+\paragraph{Ideal bandlimited interpolation in time}
+To interpolate a time domain signal $x$ of length $N$ to a signal of length $LN$, we use zero padding in the frequency domain:
+\begin{equation}
+ Interp_L(x) :=  IDFT( ZeroPad_{LN}(X) )
+\end{equation}
+
+\paragraph{Rectangular windowing operator}
+For any $X \in \mathbb{C}^N$ and any odd integer $M<N$, we define the length $M$ even rectangular windowing operation by:
+\begin{equation}
+  RectWin_{M,k}(X) := 
+  \begin{cases}
+    X[k],   \qquad & -\frac{M-1}{2} \leq  k  \leq \frac{M-1}{2} \\
+    0,      \qquad &  \frac{M+1}{2} \leq |k| \leq \frac{N}{2}   \\
+  \end{cases}  
+\end{equation}
+
+\paragraph{Convolution}
+\begin{equation}
+  (x * y)_n := \sum_{m=0}^{N-1} x[m] y[n-m]
+\end{equation}
+and $(x * y)$ denotes the entire convolved signal which can be expressed as:
+\begin{equation}
+  (x * y) := \sum_{n=0}^{N-1} x[n] \cdot Flip(y)
+\end{equation}
+Note that this is a circular convolution.
+
+\paragraph{Correlation}
+\begin{equation}
+  (x \star y)_n := \sum_{m=0}^{N-1} \overline{x[m]} y[n+m] = < Shift_{-n}(y), x >
+\end{equation}
+and $(x \star y)$ denotes the entire correlation sequence. $(x \star y)_n$ is the coefficient of projection onto $x$ of $y$ advanced (circularly left-shifted) by $n$ samples, where $n$ is called the correlation lag and $\overline{x[m]} y[n+m]$ is called a lagged product.
+
+\paragraph{Hermitian or conjugate Symmetry}
+If, for some spectrum, we have $X[-k] = \overline{X[k]}$, the spectrum is said to be Hermitian symmetric (or conjugate symmetric). If $X[-k] = -\overline{X[k]}$, the spectrum is said to be skew-Hermitian.
+
+\paragraph{Zero phase signal}
+A signal $x$ with a real spectrum is called a zero phase signal (although the spectral phase may be $\pi$ and not $0$ where the spectrum goes negative).
+
+\paragraph{Linear phase signal}
+A signal $x$ is said to be a linear phase signal, if its spectral phase is of the form:
+\begin{equation}
+  \Theta(\omega_k) = \pm \Delta \omega_k \pm \pi I(\omega_k)
+\end{equation}
+where $I(\omega_k)$ is an indicator function which takes on the values $0$ or $1$.
+
+\paragraph{Linear phase term}
+A term of the form $e^{-j \omega_k \Delta}$ with $\Delta \in \mathbb{R}$ is called a linear phase term because its phase is a linear function of frequency:
+\begin{equation}
+  \angle e^{-j \omega_k \Delta} = - \Delta \omega_k
+\end{equation}
+
+
+\subsubsection{Theorems}
+
+\paragraph{Even/Odd Decomposition Theorem}
+Every function $f(n)$ can be decomposed into a sum its even part $f_e(n)$ and its odd part $f_o(n)$, such that $f(n) = f_e(n) + f_o(n)$ by choosing:
+\begin{equation}
+  f_e(n) :=  \frac{f(n) + f(-n)}{2}, \qquad f_o(n) :=  \frac{f(n) - f(-n)}{2}   
+\end{equation}
+
+\paragraph{Theorem}
+The product of even functions is even, the product of odd functions is even, and the product of an even times an odd function is odd.
+
+\paragraph{Theorem}
+For any even signal $x_e \in \mathbb{C}^N$ and any odd signal $x_e \in \mathbb{C}^N$:
+\begin{equation}
+  \sum_{n=0}^{N-1} x_e[n] x_o[n] = 0
+\end{equation}
+
+\paragraph{Theorems for transfrom pairs}
+
+\begin{center}
+\begin{tabular}{|l|c|c|l|}
+ \hline
+ Name                 & Signal                 & Spectrum                & Domain \\
+ \hline
+ Linearity            &  $ \alpha x + \beta y$ & $\alpha X + \beta Y    $   & $x,y \in \mathbb{C}^N, \; \alpha, \beta \in \mathbb{C}$ \\
+ Time Conjugation     &  $ \overline{x}      $ & $ Flip(\overline{X})   $   & $x \in \mathbb{C}^N$                                    \\ 
+ Spectral Conjugation &  $ Flip(\overline{x})$ & $      \overline{X}    $   & $x \in \mathbb{C}^N$                                    \\  
+ Time Reversal        &  $ Flip(x)$            & $           Flip(X)    $   & $x \in \mathbb{C}^N$                                    \\ 
+ Time Reversal        &  $ Flip(x)$            & $      \overline{X}    $   & $x \in \mathbb{R}^N$                                    \\  
+ Convolution          &  $ x * y             $ & $     X \cdot Y        $   & $x \in \mathbb{C}^N$                                    \\   
+ Dual of Convolution  &  $ x \cdot y         $ & $\frac{1}{N} X * Y     $   & $x \in \mathbb{C}^N$                                    \\  
+ Correlation          &  $ x \star y         $ & $\overline{X} \cdot Y  $   & $x \in \mathbb{C}^N$                                    \\   
+ Stretch              &  $ Stretch_L(x)      $ & $Repeat_L(X)           $   & $x \in \mathbb{C}^N$                                    \\       
+ Aliasing             &  $ Select_L(x)       $ & $\frac{1}{N} Alias_L(X)$   & $x \in \mathbb{C}^N$                                    \\       
+ Zero Padding         &  $ ZeroPad_{LN}(x)   $ & $           Interp_L(X)$   & $x \in \mathbb{C}^N$                                    \\     
+ \hline
+\end{tabular}
+\end{center}
+
+\paragraph{Decimation Theorem}
+Decimating a signal $x$ in the time domain by factor $L$ amounts to aliasing of its spectrum by the same factor $L$:
+\begin{equation}
+  Select_L(x) \leftrightarrow Alias_L(X)
+\end{equation}
+
+\paragraph{Corollary}
+For any $x \in \mathbb{R}^N$, reversal in the time domain corresponds to conjugation in the frequency domain. Put another way, negating the spectral phase flips the signal around backwards in time:
+\begin{equation}
+ Flip(x) \leftrightarrow \overline{X}, \qquad x \in \mathbb{R}^N
+\end{equation}
+and flipping the spectrum is the same conjugating it:
+\begin{equation}
+ Flip(X) = \overline{X}, \qquad x \in \mathbb{R}^N
+\end{equation}
+
+\paragraph{Corollary}
+For any $x \in \mathbb{R}^N$, the spectrum $X \in \mathbb{C}^N$ is conjugate symmetric.
+
+\paragraph{Theorem}
+For any $x \in \mathbb{R}^N$, the real part and the magnitude of its spectrum $X$ is even and the imaginary part and the phase of $X$ is odd.
+
+\paragraph{Theorem}
+For any even $x \in \mathbb{C}^N$, the spectrum $X$ is also even
+
+\paragraph{Theorem}
+For any real even $x \in \mathbb{R}^N$, the spectrum $X$ is also real and even
+
+\paragraph{Shift Theorem}
+For any $x \in \mathbb{C}^N$ and any integer $\Delta$:
+\begin{equation}
+ DFT_k( Shift_{\Delta}(x) ) = e^{-j \omega_k \Delta} X[k]
+\end{equation}
+thus, a delay of $\Delta$ in the time domain corresponds to multiplication with the linear phase term $e^{-j \omega_k \Delta}$ in the frequency domain.
+
+\paragraph{Theorem}
+Real symmetric windows are linear phase signals
+
+\paragraph{Power Theorem}
+For any $x, y \in \mathbb{C}^N$:
+\begin{equation}
+ <x, y> = \frac{1}{N} <X,Y>
+\end{equation}
+
+\paragraph{Parselval's Theorem}
+For any $x \in \mathbb{C}^N$:
+\begin{equation}
+ || x ||^2 = \frac{1}{N} ||X||^2 \quad \Leftrightarrow \quad \sum_{n=0}^{N-1} |x[n]|^2 = \frac{1}{N} \sum_{k=0}^{N-1} |X[k]|^2
+\end{equation}
+
+\paragraph{Theorem}
+For any $x \in \mathbb{C}^N$:
+\begin{equation}
+ Interp_L(x) = IDFT(RectWin_N(DFT(Stretch_L(x))))
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+\paragraph{Commutativity of (circular) Convolution}
+\begin{equation}
+  (x * y) = (y * x)
+\end{equation}
+
+
+
+
+
+
+

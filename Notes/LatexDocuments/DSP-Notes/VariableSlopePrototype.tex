@@ -1,0 +1,86 @@
+\title{Analog Prototye Filter with Variable Slope}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider the problem of approximating a log-magnitude function (in decibels) that falls off with a continuously adjustable slope at a normalized radian frequency of unity. The approximant is chosen such that the transfer function will be realizable as an analog filter.
+
+\section{The Desired Magnitude-Squared Function}
+The desired ideal magnitude-squared function, denoted as $M_d^2(\omega) = |H_d(\omega)|^2$ is given by:
+\begin{equation}
+M^2_d(\omega) = \frac{1}{\omega^{2c}}
+\end{equation}
+where $c$ is a design parameter that is related to the slope of the log-magnitude function. Specifically, if we denote the slope as $S$ (expressed in $dB/oct$), we have:
+\begin{equation}
+ c = -\frac{S}{20 \log_{10}(2)}
+\end{equation}
+For example, for $c = 1/2$, we obtain a slope of approximately $-3 dB/oct$. In our magnitude-squared function, we have a gain of unity at the normalized radian frequency of unity.
+
+\section{All-Pole Approximation}
+Having specified our ideal desired magnitude-squared response, we now turn to the subject of approximating it with a function that represents a realizable magnitude-squared function of the general form:
+\begin{equation}
+M^2(\omega) = \frac{N(\omega^2)}{D(\omega^2)}
+\end{equation}
+where $N$ and $D$ are both polynomials in $\omega^2$. In an allpole approximation, we choose the numerator polynomial to be equal to unity: $N(\omega^2)=1$, which also coincides with the numerator of $M_d^2(\omega)$. The denominator of $M_d^2(\omega)$ is given by $\omega^{2c}$. We view the denominator as a function of $\omega^2$, so let's define $x = \omega^2$, and denote the denominator function as $f(x) = f(\omega^2)$, so we have:
+\begin{equation}
+f(x) = x^c
+\end{equation}
+We now expand $f(x)$ as a power series around the point $x = 1$ and truncate the series at some natural number $N$. We denote the $N$th order approximant as $f_N(x)$:
+\begin{equation}
+\label{Eq:PowerSeries}
+f(x) \approx f_N(x) = \sum_{n=0}^N \frac{f^{(n)}(1)}{n!} (x-1)^n
+\end{equation}
+where $f^{(n)}$ denotes the $n$th derivative of $f$, which is given by:
+\begin{equation}
+f^{(n)}(x) = \left( \prod_{k=0}^{n-1} (c - k) \right) x^{c-n}
+\end{equation}
+Evaluating this at $x = 1$ gives:
+\begin{equation}
+f^{(n)}(1) = \prod_{k=0}^{n-1} (c - k)
+\end{equation}
+Substituting this back to (\ref{Eq:PowerSeries}) gives:
+\begin{equation}
+f_N(x) = \sum_{n=0}^N \frac{\prod_{k=0}^{n-1} (c - k)}{n!} (x-1)^n
+\end{equation}
+Defining:
+\begin{equation}
+ c_n = \frac{\prod_{k=0}^{n-1} (c - k)}{n!}, \qquad P_n(x) = (x-1)^n
+\end{equation}
+we can write this as:
+\begin{equation}
+f_N(x) = \sum_{n=0}^N c_n P_n(x)
+\end{equation}
+where the $c_n$ are coefficients that may be computed for a given $c$ and the $P_n$ are polynomials of order $n$ in $x$. Using the binomial theorem, we can find the polynomial coefficients of $P_n(x)$ as:
+\begin{equation}
+P_n(x) = \sum_{k=0}^n \underbrace{(-1)^k  \begin{pmatrix} n \\ k  \end{pmatrix}}_{a_{n, n-k}} x^{n-k}
+\end{equation}
+where $a_{n, n-k}$ is the coefficient that multiplies the $(n-k)$th power of $x$ in the polynomial $P_n(x)$.
+
+
+\section{Pole-Zero Approximation}
+We rewrite the ideal desired magnitude-squared response as:
+\begin{equation}
+M^2_d(\omega) = \frac{1}{\omega^{2c}} = \frac{(\omega^2)^{-(1-\alpha) c}}{(\omega^2)^{\alpha c}}
+              = \frac{x^{-(1-\alpha) c}}{x^{\alpha c}}
+\end{equation}
+where $\alpha$ is a parameter for which we require $0 < \alpha \leq 1$. We definine:
+\begin{equation}
+f(x) = x^{\alpha c}, \qquad g(x) = x^{ -(1-\alpha) c}
+\end{equation}
+and now we do a power series expansion of $f(x)$ and $g(x)$ separately.
+[work out the new equations...most should be more or less the same as above]
+
+
+
+%\section{Relating the slope to $c$}
+
+
+
+
+
+
+
+%\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+% \bibitem{Orf} Sophocles Orfanidis. High-Order Digital Parametric Equalizer Design
+%\end{thebibliography}
+

@@ -1,0 +1,147 @@
+\section{Digital Filter Design With Prescribed Nyquist-Frequency Gain}
+
+
+\subsection{Motivation}
+There was a paper by Sophocles J. Orfanidis called "Digital Parametric Equalizer Design With Prescribed Nyquist-Frequency Gain" which derived a new design procedure for a parametric equalizer filter with peak/bell characteristic that does not suffer from the frequency warping artifacts seen in bilinear-transform design methods. Following the same approach, this paper derives procedures for designing other types of filters (lowpass, highpass, shelf, etc.) which match their analog counterparts at the Nyquist frequency.
+
+
+\subsection{First Order Filters}
+The $s$-domain transfer function of a general analog first order filter is given by:
+\begin{equation}
+ H_g(s) = \frac{G_0 + B s}{1 + A s}
+\end{equation}
+with $G_0$ being the gain at frequency zero, and $A, B$ being some coefficients. The magnitude squared function for our general first order transfer function can be derived as:
+\begin{equation}
+ |H_g(s)|^2 = H_g(s) H_g(-s) 
+ = \frac{G_0 + B s}{1 + A s} \cdot \frac{G_0 - B s}{1 - A s} 
+ = \frac{G_0^2 - B^2 s^2}{1 - A^2 s^2} 
+\end{equation}
+We are interested in the value of the transfer function along the imaginary axis, so we let $s = j \Omega$:
+\begin{equation}
+ |H_g(s)|^2 = \frac{G_0^2 - B^2 (j \Omega)^2}{1 - A^2 (j \Omega)^2} 
+\end{equation}
+to finally arrive at:
+\begin{equation}
+ |H_g(\Omega)|^2 = \frac{G_0^2 + B^2 \Omega^2}{1 + A^2 \Omega^2} 
+\end{equation}
+as the magnitude-squared response of our filter at any given radian frequency $\Omega$. If we set $\Omega = 0$, we get the magnitude-squared at zero frequency (DC):
+\begin{equation}
+ |H_g(0)|^2 = G_0^2
+\end{equation}
+To evaluate the magnitude-squared response at infinity ($\Omega = \infty$), we recognize that the constant terms (that do not depend on $\Omega$) in the numerator and denominator become less and less influential as $\Omega$ approaches infinity. In the limit, we have:
+\begin{equation}
+ \label{Eq:MagSqAtInfGeneral}
+ |H_g(\infty)|^2 = \frac{B^2}{A^2}
+\end{equation}
+
+
+\subsubsection{Discretization via Bilinear Transform}
+After we have determined our $s$-domain coefficients for the continuous time filter, we need to translate them into the discrete time $z$-domain. We use the bilinear transform with prewarping of the cutoff frequency. If we denote our normalized radian target cutoff frequency of the discrete time filter with $\omega_c$, we first compute the corresponding prewarped continuous time filter cutoff as:
+\begin{equation}
+ \Omega_{p} = \tan(\omega_c/2)
+\end{equation}
+where $\omega_c = 2 \pi f_c / f_s$ with $f_s$ as our sampling frequency. We then use the substitution:
+\begin{equation}
+ s \leftarrow \frac{1-z^{-1}}{1+z^{-1}}
+\end{equation}
+such that our transfer function becomes:
+\begin{equation}
+ H_g(z) = \frac{G_0 + B \frac{1-z^{-1}}{1+z^{-1}}}{1 + A \frac{1-z^{-1}}{1+z^{-1}}}
+\end{equation}
+after some algebraic manipulations we arrive at:
+\begin{equation}
+ H_g(z) = \frac{ \left( \frac{G_0+B}{1+A} \right) + \left( \frac{G_0-B}{1+A} \right) z^{-1} }  
+               { 1                                + \left( \frac{1-A}  {1+A} \right) z^{-1} }
+\end{equation}
+
+
+
+
+
+
+
+
+\subsubsection{First Order Lowpass}
+Let $f_c$ be the desired cutoff frequency of the filter in Hz (measured at the $-3.01 dB$ point) and let $\Omega_c = 2 \pi f_c$ be the corresponding radian cutoff frequency. Then, the transfer function of a continuous time first order prototype lowpass with the desired cutoff frequency is given by:
+\begin{equation}
+ H_{lp}(s) = \frac{1}{1 + \frac{s}{\Omega_c} }
+\end{equation}
+In terms of our general transfer function, we identify $G_0 = 1, B = 0, A = 1/\Omega_c$ for this special case. The magnitude-squared function is given by:
+\begin{equation}
+ \label{Eq:MagSqAtInfLowpass}
+ |H_{lp}(\Omega)|^2 = \frac{1}{1 + \frac{\Omega^2}{\Omega_c^2} }
+\end{equation}
+This lowpass filter has zero gain at infinity. In order to design a digital filter with a prescribed gain at the Nyquist frequency, we want to start from an analog prototype filter that has the same prescribed gain at infinity. To achieve that, we need the other degrees of freedom $A, B$ in our $s$-domain transfer function. Let the magnitude-squared at infinity be denoted by $k^2$. Then, using Eq. \ref{Eq:MagSqAtInfGeneral}, we have:
+\begin{equation}
+ |H_g(\infty)|^2 = \frac{B^2}{A^2} = k^2
+\end{equation}
+and thus:
+\begin{equation}
+ B^2 = A^2 k^2
+\end{equation}
+Now we impose the requirement that the magnitude-squared function at the cutoff frequency should still be equal to $1/2$ (which is the value of the magnitude-squared function of the non-modified filter there):
+\begin{equation}
+ |H_g(\Omega_c)|^2 = \frac{G_0^2 + B^2 \Omega^2}{1 + A^2 \Omega^2} = \frac{1}{2}
+\end{equation}
+replacing $B^2$ by $k^2 A^2$ and simplifying, we obtain an equation for $A^2$:
+\begin{equation}
+ A^2 = \frac{2 G_0^2 - 1}{\Omega_c^2(1-2 k^2)}
+\end{equation}
+For the lowpass case, our coefficient $G_0$ is already fixed at unity, so we may further simply this to:
+\begin{equation}
+ A^2 = \frac{1}{\Omega_c^2(1-2 k^2)}
+\end{equation}
+Now, we substitute this back to [...] compute $B$. That completes the design of our analog prototype filter with prescribed gain at infinity. So far, the gain at infinity is chosen arbitrarily - $k^2$ is still one of our free parameters. We now want to compute a value for $k^2$. We choose the value that our analog prototype lowpass filter would have at the target Nyquist frequency: This value is calculated by letting $\Omega$ be the radian Nyquist frequency given by: $\Omega_n = 2 \pi f_s / 2 = \pi f_s$ in our prototype magnitude-squared function (Eq. \ref{Eq:MagSqAtInfLowpass}):
+\begin{equation}
+ k^2 = |H_{lp}(\Omega_n)|^2 = \frac{1}{1 + \frac{\Omega_s^2}{\Omega_c^2} }
+\end{equation}
+
+To summarize, the procedure for designing a discrete time digital 1st order lowpass with prescribed Nyquist frequency gain procedes as follows:
+\begin{itemize}
+	\item Compute normalized radian cutoff frequency: $\omega_c = 2 \pi f_c/f_s$
+	\item Compute prewarped analog radian cutoff frequency: $\Omega_p = \tan(\omega_c/2)$		
+	\item Compute non-prewarped analog radian cutoff frequency: $\Omega_c = 2 \pi f_c$		
+	\item Compute radian Nyquist frequency: $\Omega_n = \pi f_c$
+	\item Compute the prototype filter's squared gain at the Nyquist frequency: 	$k^2 = 1 / (1 + ((\Omega_n^2)/(\Omega_c^2)) )$
+	\item Compute squared analog filter coefficients: $A^2 = 1 / (\Omega_p^2 (1-2k^2)), B^2 = A^2 k^2, G_0^2 = 1$
+	\item Compute non-squared analog filter coefficients: $A=\sqrt{A^2}, B=\sqrt{B^2}, G_0=\sqrt{G_0^2}$	
+	\item Compute digital filter coefficients: $b_0 = (G_0+B)/(1+A), b_1=(G_0-B)/(1+A), a_1=(1-A)/(1+A)$
+\end{itemize}
+There are some possibilities for streamlining in this algorithm (for example by noting that $G_0 = 1$, we may get rid of one of the square-root computations, the reciprocal of the denominator (1+A) can be pre-calculated, etc.) - but for greater generality, the algorithm was given here in this non-optimized form. These final coefficients can now be used in a first order digital filter that implements the difference equation:
+\begin{equation}
+ y[n] = b_0 x[n] + b_1 x[n-1] - a_1 y[n-1]
+\end{equation}
+
+
+
+
+
+%  double wc = 2.0*PI*frequency/sampleRate;        // normalized radian cutoff frequency
+%  double Wp = tan(wc/2.0);                        // pre-warped analog cutoff frequency                     
+%  double Wn = PI*sampleRate;                      // radian Nyquist frequency
+%  double Wc = 2.0*PI*frequency;                   // non-pre-warped analog cutoff frequency
+%  double k2 = 1.0 / (1.0 + ((Wn*Wn)/(Wc*Wc)) );   // gain of prototype at the Nyquist frequency
+%
+%  // compute analog filter coefficients:
+%  double A2  = 1.0 / (Wp*Wp*(1.0-2.0*k2));        // A^2
+%  double B2  = k2*A2;                             // B^2
+%  double G02 = 1.0;                               // G0^2                          
+%  double A   = sqrt(A2);
+%  double B   = sqrt(B2);
+%  double G0  = sqrt(G02);                         // == 1.0 -> optimize out
+%  double rD  = 1.0 / (1.0+A);                     // reciprocal of denominator
+%
+%  // compute digital filter coefficients:
+%  b0 =  rD * (G0+B);
+%  b1 =  rD * (G0-B);
+%  b2 =  0.0;
+%  a1 = -rD * (1 -A); 
+%  a2 =  0.0;
+
+
+
+
+
+
+
+

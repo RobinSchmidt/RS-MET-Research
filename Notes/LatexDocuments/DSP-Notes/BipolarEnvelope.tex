@@ -1,0 +1,26 @@
+\section{Bipolar Envelope}
+Notation:
+\begin{equation}
+ c_i = \text{instantaneous cutoff}, \quad c_n = \text{nominal cutoff}, \quad e = \text{normalized envelope output}
+\end{equation}
+\begin{equation}
+ c_u = \text{upper cutoff (when $e = 1$)}, \quad c_l = \text{lower cutoff (when $e = 0$)}
+\end{equation}
+Application of the envelope is done via the rule:
+\begin{equation}
+ c_i = c_n \cdot (1 + s (e-o))
+\end{equation}
+with scale factor $s$ and offset $o$. So we have for the upper and lower cutoff frequencies (where $e=1$ and $e=0$ respectively):
+\begin{equation}
+ c_u = c_n \cdot (1 + s (1-o)) = c_n r_u, \quad  c_l = c_n \cdot (1 - so) = c_n r_l
+\end{equation}
+where we have defined $r_u, r_l$ as the ratios between the nominal and upper/lower cutoff frequencies. Letting $po2ff(x)$ be the function that converts from a pitch-offset (in semitones) to a frequency factor, we compute the desired ratios as:
+\begin{equation}
+ r_u = po2ff(u \cdot envMod), \quad r_l = po2ff(- (1-u) \cdot envMod)
+\end{equation}
+where $envMod$ is the amount of envelope modulation in semitones and $u$ is the 'upward fraction' of the modulation. From these desired ratios, we may now compute $s, o$ as:
+\begin{equation}
+ s = r_u-r_l, \quad o = -\frac{r_l-1}{r_u-r_l}
+\end{equation}
+
+

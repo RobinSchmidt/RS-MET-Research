@@ -1,0 +1,44 @@
+\section{Bluestein FFT}
+
+The DFT of a signal $x[n], n=0, \ldots, N-1$ is given by:
+\begin{equation}
+ X[k] = \sum_{n=0}^{N-1} x[n] W^{kn}
+\end{equation}
+with the basic twiddle factor $W$ defined as: $W = e^{-j \frac{2 \pi}{N} }$. Multiply both sides with $W^{-\frac{1}{2}k^2}$:
+\begin{equation}
+ \begin{aligned}
+ W^{-\frac{1}{2}k^2} X[k] 
+ &= \sum_{n=0}^{N-1} x[n] W^{kn} W^{-\frac{1}{2}k^2} \\
+ &= \sum_{n=0}^{N-1} x[n] W^{kn - \frac{1}{2}k^2}  \\
+ &= \sum_{n=0}^{N-1} x[n] W^{\frac{1}{2} (2kn - k^2)}  
+ \end{aligned}
+\end{equation}
+Observe that $2kn - k^2 = -(n-k)^2 + n^2$ because of $(n-k)^2 = n^2 - 2kn + k^2$ - replace the $(2kn - k^2)$ term in the exponent accordingly:
+\begin{equation}
+ \begin{aligned}
+ W^{-\frac{1}{2}k^2} X[k] 
+ &= \sum_{n=0}^{N-1} x[n] W^{\frac{1}{2} (-(n-k)^2 + n^2)}  \\ 
+ \end{aligned}
+\end{equation}
+Split the $W$ exponent and re-arrange:
+\begin{equation}
+ \begin{aligned}
+ W^{-\frac{1}{2}k^2} X[k] 
+ &= \sum_{n=0}^{N-1} x[n] W^{-\frac{1}{2} (n-k)^2} W^{\frac{1}{2}n^2}  \\ 
+ &= \sum_{n=0}^{N-1} \underbrace{ x[n] W^{\frac{1}{2}n^2} }_{y[n]}  
+                     \underbrace{ W^{-\frac{1}{2} (n-k)^2} }_{h[n-k]}   \\ 
+ \end{aligned}
+\end{equation}
+Where the names $y[n]$ and $h[n-k]$ have been assigned to the sequences for convenience. With these definitions, we can rewrite the equation as:
+\begin{equation}
+ W^{-\frac{1}{2}k^2} X[k] = \sum_{n=0}^{N-1} y[n] h[n-k]
+\end{equation}
+Defining $h[n-k]$ as above implies $h[n] = W^{-\frac{1}{2} n^2}$. By substituting $k$ for $n$, this is observed to be the factor in front of the DFT coefficient on the left hand side, so we can write:
+\begin{equation}
+\label{eqn:ModulatedDFT}
+ h[k] X[k] = \sum_{n=0}^{N-1} y[n] h[n-k]
+\end{equation}
+
+\paragraph{Interpretation:}
+The right hand side of equation \ref{eqn:ModulatedDFT} is recognized as the convolution of the two sequences $y[n]$ and $h[n]$. The sequence $y[n] = x[n] W^{\frac{1}{2}n^2}$ represents our input signal modulated by the sequence $c[n] := W^{\frac{1}{2}n^2}$ and this modulating signal represents a complex sinusoid with linearly increasing frequency - a so called chirp signal. The impulse response in this convolution $h[n] = W^{-\frac{1}{2} n^2}$ is a chirp signal as well but rotating in the opposite direction when viewed as complex phasor. The left hand side represents the sequence of DFT-coefficients - again modulated by the chirp-signal $h[n]$. This means, we can obtain the modulated DFT for arbitrary $N$ by computing a convolution between a properly modulated input signal with a properly chosen impulse response. The convolution itself can be carried out via a radix-2 FFT $\rightarrow$ spectral multiplication  $\rightarrow$ radix-2 iFFT algorithm. We must note, that the convolution algorithm via spectral multiplication actually gives a result that represents a circular convolution - but what we actually need is a linear convolution. This requires zero-padding the sequence $x[n]$  to length $M$ which has to be chosen to be a power of 2 larger or equal to $2N-1$. For the impulse response $h[n]$, we must note that this sequence is non-causal and has even symmetry - in order to properly pad it, we must wrap the samples at negative time-indices $h[-n]$ to $h[M-n]$. The first $N$ coefficients in this convolution product will represent the chirp-modulated DFT sequence of our original $x[n]$. By dividing them by $h[k], k=0, \ldots N-1$ and discarding the rest of the length $M$ DFT coefficient vector, we obtain the DFT of $x[n]$. The chirp signals $h[n]$ and $c[n]$ can be precomputed for any given DFT-size or computed on the fly in linear time. This yields an overall complexity of the algorithm of $\mathcal{O}(N \log(N))$. 
+

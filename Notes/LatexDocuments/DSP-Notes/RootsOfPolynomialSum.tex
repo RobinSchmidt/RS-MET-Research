@@ -1,0 +1,59 @@
+\section{Roots of a Sum of Polynomials}
+
+We consider the problem of finding the roots of a polynomial $C(x)$ that is given as a sum of two other polynomials $A(x)$ and $B(x)$:
+\begin{equation}
+  C(x) = \sum_{n=0}^{N_c} c_n x^n = A(x) + B(x) = \sum_{n=0}^{N_a} a_n x^n + \sum_{n=0}^{N_b} b_n x^n
+\end{equation}
+where we assume that the roots and scale factors of the polynomials $A$ and $B$ are already known. Typical polynomial root finding algorithms take an array of polynomial coefficients as input and produce an array of roots (and possibly an overall scale factor which just equals the coefficient for the highest power of $x$). With such a general root finding algorithm at hand, we could convert the $A$ and $B$ polynomials into their coefficient representation, add them and throw the resulting coefficient array at our root finding algorithm. However, there's a computationally more efficient way, if the roots of $A$ and $B$ are known.
+
+\subsection{Product Form}
+Our polynomials can be expressed in coefficient form as above or in product form as:
+\begin{equation}
+\label{Eq:ProductForm}
+  C(x) = k_c \prod_{n=1}^{N_c} (x - r_n) = A(x) + B(x) = k_a \prod_{n=1}^{N_a} (x - p_n) + k_b \prod_{n=1}^{N_b} (x - q_n)
+\end{equation}
+where the $p_n, q_n, r_n$ are the roots of the $A, B, C$ polynomials respectively and the $k_a, k_b, k_c$ are their scale factors. We assume that $k_a, k_b$ as well as all of the $p_n, q_n$ are known and $k_c$ as well as all the $r_n$ are to be found. When multiplying out a product such as the ones above (excluding the overall scale factor), a monic $N$th order polynomial in coefficient form will result. Monic means that the coefficient for the highest power of $x$ is unity. That, in turn, implies, that the overall scale factor $k$ is given by the highest-power coefficient for non-monic polynomials. From that observation, we conclude:
+\begin{equation}
+  k_a = a_{N_a}, k_b = b_{N_b}, k_c = c_{N_c}
+\end{equation}
+The order of our resulting polynomial will be given by the maximum of the orders $N_a, N_b$: $N_c = max(N_a, N_b)$
+from which we conclude:
+\begin{equation}
+\boxed
+{
+  k_c = a_{N_c} + b_{N_c}
+}
+\end{equation}
+where it is understood that $a_{N_c} = 0$ if $N_a < N_c$ or $b_{N_c} = 0$ if $N_b < N_c$.
+
+\subsection{The Roots of $C(x)$}
+Having found $k_c$, we may rewrite equation \ref{Eq:ProductForm} as:
+\begin{equation}
+\label{Eq:ProductCondition}
+  \prod_{n=1}^{N_c} (x - r_n) = \frac{k_a}{k_c} \prod_{n=1}^{N_a} (x - p_n) + \frac{k_b}{k_c} \prod_{n=1}^{N_b} (x - q_n)
+\end{equation}
+This equation must hold for any value of $x$. 
+
+
+%Let's choose $x=0$, so the equation simplifies to:
+%\begin{equation}
+  %\prod_{n=1}^{N_c} (-r_n) = \frac{k_a}{k_c} \prod_{n=1}^{N_a} (-p_n) + \frac{k_b}{k_c} \prod_{n=1}^{N_b} (-q_n)
+%\end{equation}
+
+%Let's choose $x = p_m$, i.e. $x$ is taken to be a root of the first product of the right hand side. Choosing $x$ as a root of this product makes the product vanish, so we may write:
+%\begin{equation}
+  %\prod_{n=1}^{N_c} (p_m - r_n) = \frac{k_b}{k_c} \prod_{n=1}^{N_b} (p_m - q_n)
+%\end{equation}
+%The right hand side is a number, we can evaluate, say $K_m$ - so we have:
+%\begin{equation}
+  %\prod_{n=1}^{N_c} (p_m - r_n) = K_m
+%\end{equation}
+
+If we pick a particular value of $x$, we may evaluate the right hand side which will give a (possibly complex) number. If $x$ happens to be a root of the left hand side, the left hand side becomes zero. That means, the numbers $x$, we look for, must satisfy the equation:
+\begin{equation}
+\label{Eq:RootCondition}
+  0 = \frac{k_a}{k_c} \prod_{n=1}^{N_a} (x - p_n) + \frac{k_b}{k_c} \prod_{n=1}^{N_b} (x - q_n)
+\end{equation}
+
+
+

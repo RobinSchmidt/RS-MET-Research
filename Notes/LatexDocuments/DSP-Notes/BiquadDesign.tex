@@ -1,0 +1,113 @@
+\subsection{Biquad Design}
+
+
+\subsubsection{Relations between the poles and the resonance}
+When we consider only the recursive part of the biquad section, we get the difference equation:
+\begin{equation}
+ y[n] = x[n] - a_1 y[n-1] - a_2 y[n-2]
+\end{equation}
+and the corresponding transfer function:
+\begin{equation}
+ H(z) = \frac{1} {1 + a_1 z^{-1} + a_2 z^{-2}} = \frac{z^2} {z^2 + a_1 z + a_2}
+\end{equation}
+This filter has two poles in the $z$-plane which are either both real or form a complex conjugate pair. The two poles ($p_1, p_2$) occur at the zeros of the denominator, thus they satisfy the general quadratic equation:
+\begin{equation}
+ z^2 + a_1 z + a_2 = 0
+\end{equation}
+the solutions of which are found by:
+\begin{equation}
+ p_{1,2} = - \frac{a_1}{2} \pm \sqrt{ \frac{a_1^2}{4}-a_2}
+\end{equation}
+defining the discriminant as the argument of the square root:
+\begin{equation}
+ d =  \frac{a_1^2}{4} - a_2
+\end{equation}
+we have to consider the 3 cases: $d>0, d=0, d<0$. In the first case, we have two distinct real roots, in the second case we have a double real root and in the third case we have two complex conjugate roots. Filter design often involves the inverse process of what has been described: determine the $a$-coefficients from the $z$-domain locations of the poles. For resonant filters, we usually want to have a complex conjugate pair of poles, denoted as $p_1 = r e^{j \varphi}, p_2 = p_1^*= r e^{-j \varphi}$ with $r_p$ being the pole radius and $\varphi_p$ being the pole angle. For the case of complex conjugate poles, the relationship between the coefficients $a_1, a_2$ and the pole parameters $r_p, \varphi_p$ is given by:
+\begin{equation}
+\begin{aligned}
+ a_1 &= -2 r_p \cos \varphi_p \\
+ a_2 &= r_p^2
+\end{aligned}
+\end{equation}
+and
+\begin{equation}
+\begin{aligned}
+ \varphi_p &= \arccos \left( -\frac{a_1}{2 \sqrt{a_2}} \right) \\
+ r_p       &= \sqrt{a_2}
+\end{aligned}  
+\end{equation}
+The pole angle $\varphi$ determines the resonant frequency, denoted as $f_r$. With $f_s$ denoting the sample-rate, the physical resonant frequency (in $Hz$) occurs at:
+\begin{equation}
+ f_r = \frac{\varphi} {2 \pi} f_s \\
+\end{equation}
+The resonant frequency is not identical to the frequency at which the gain peaks due to the fact that each pole is sitting on the skirt of the other. The angle of the peak-gain frequency (denoted as $\psi$) can be found by the relationship:
+\begin{equation}
+ \cos(\psi) = \frac{1+r^2}{2r} \cos(\varphi)
+\end{equation}
+For high resonances ($r \approx 1$), the intuition that the peak occurs at the resonant frequency is a good approximation. In this case, the physical bandwidth $b$ (in $Hz$) of the resonant peak can be approximated as:
+\begin{equation}
+ b = - \frac{\ln r_p}{\pi} f_s
+\end{equation}
+and consequently:
+\begin{equation}
+ r_p = e^{-\frac{\pi b}{f_s}}
+\end{equation}
+
+\subsubsection{Relations between the zeros and the filter mode}
+By introducing two $z$-plane zeros into the two-pole filter described above, we can block certain frequencies and thereby create lowpass, highpass, bandpass and bandstop filters. The augmented difference equation becomes:
+\begin{equation}
+ y[n] = b_0 x[n] + b_1 x[n-1] + b_2 x[n-2] - a_1 y[n-1] - a_2 y[n-2]
+\end{equation}
+and the corresponding transfer function is:
+\begin{equation}
+ H(z) = \frac{b_0 + b_1 z^{-1} + b_2 z^{-2}} {1 + a_1 z^{-1} + a_2 z^{-2}}
+\end{equation}
+Denoting the $z$-plane zeros as $q_1, q_2$ and the poles $p_1, p_2$ (as before), we can write the transfer function in product form:
+\begin{equation}
+ H(z) = g \frac{(1 - q_1 z^{-1})(1 - q_2 z^{-1})} {(1 - p_1 z^{-1})(1 - p_2 z^{-1}) }
+\end{equation}
+which contains the two poles and two zeros explicitly and $g$ can be interpreted as a global gain factor. Now, in order to design a lowpass filter, we place two zeros at $z=-1$, that is: $q_1 = q_2 = -1$ which leads to:
+\begin{equation}
+ H_{LP}(z) = g \frac{(1 + z^{-1})(1 + z^{-1})} {(1 - p_1 z^{-1})(1 - p_2 z^{-1}) }
+           = g \frac{1 + 2 z^{-1} + z^{-2}}    {1 + a_1 z^{-1} + a_2 z^{-2}      }
+\end{equation}
+so we see that our $b$-coefficients are given by:
+\begin{equation}
+ b_0 = g, \qquad b_1 = 2 g, \qquad b_2 = g
+\end{equation}
+In order to assign a numeric value to it, we could first calculate the $a$-coefficients from the desired resonant frequency, then evaluate the magnitude of the transfer function without $g$ at $z=1$ (DC) and then use the reciprocal of the result as $g$ - this would normalize the gain at zero frequency to unity which makes sense for a lowpass filter. To evaluate the magnitude of a biquad filter at an arbitrary normalized radian frequency $\omega$, we need the formula:
+\begin{equation}
+ |H(e^{j \omega})| 
+ = \sqrt{\frac{1 + b_1^2 + b_2^2 + 2 (b_1 + b_1 b_2) \cos (\omega) + 2 b_2 \cos(2 \omega) }
+              {1 + a_1^2 + a_2^2 + 2 (a_1 + a_1 a_2) \cos (\omega) + 2 a_2 \cos(2 \omega) } }
+\end{equation}
+In the lowpass case, we want to evaluate the magnitude at $\omega=0$ (excluding $g$), so the cosine terms evaluate to $1$. Our $b_1, b_2$ coefficients are fixed at $b_1=2, b_2=1$ such that the equation simplifies to:
+\begin{equation}
+ |H(e^{j 0})| 
+ = \sqrt{\frac{16}{1 + a_1^2 + a_2^2 + 2 (a_1 + a_1 a_2)  + 2 a_2  } }
+\end{equation}
+For a highpass design, we place the zeros at $q_1 = q_2 = 1$ which leads to:
+\begin{equation}
+ H_{LP}(z) = g \frac{(1 - z^{-1})(1 - z^{-1})} {(1 - p_1 z^{-1})(1 - p_2 z^{-1}) }
+           = g \frac{1 - 2 z^{-1} + z^{-2}}    {1 + a_1 z^{-1} + a_2 z^{-2}      }
+\end{equation}
+from which we see that:
+\begin{equation}
+ b_0 = g, \qquad b_1 = -2 g, \qquad b_2 = g
+\end{equation}
+Similarly to the lowpass design, we choosed $g$ so as to normalize the magnitude response to unity at the Nyquist frequency, corresponding to $\omega = \pi$. Because $\cos(\pi) = -1$ and $\cos(2 \pi) = 1$, the magnitude (excluding $g$) comes out as:
+\begin{equation}
+ |H(e^{j 0})| 
+ = \sqrt{\frac{16}{1 + a_1^2 + a_2^2 - 2 (a_1 + a_1 a_2)  + 2 a_2  } }
+\end{equation}
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,203 @@
+\section{Basic Digital Filters}
+
+\subsection{One Pole Filter}
+
+\paragraph{Difference Equation:}
+\begin{equation}
+ y[n] = b_0 x[n] - a_1 y[n-1]
+\end{equation}
+
+\paragraph{Transfer Function:}
+\begin{equation}
+ H(z) = \frac{b_0}{1 + a_1 z^{-1}}
+\end{equation}
+
+\paragraph{Poles/Zeros:}
+\begin{equation}
+ p_1 = -a_1, \qquad z_1 = 0
+\end{equation}
+
+\paragraph{Complex Frequency Response:}
+\begin{equation}
+ H(e^{j \omega}) = \frac{b_0}{1 + a_1 e^{-j \omega}}
+\end{equation}
+
+\paragraph{Magnitude Response:}
+\begin{equation}
+ |H(e^{j \omega})| = \sqrt{\frac{b_0^2}{1 + a_1^2 + 2 a_1 \cos (\omega)}}
+\end{equation}
+
+\paragraph{Phase Response:}
+\begin{equation}
+ \angle H(e^{j \omega}) = 
+ \begin{cases}
+  atan2 (a_1 \sin(\omega), 1 + a_1 \cos (\omega) ) 
+  \qquad & \text{for } b>0 \\
+  atan2 (a_1 \sin(\omega), 1 + a_1 \cos (\omega) ) + \pi
+  \qquad & \text{for } b<0 \\ 
+ \end{cases}
+\end{equation}
+
+\paragraph{Real Part:}
+\begin{equation}
+ \Re \{ H(e^{j \omega}) \} = \frac{b_0 + a_1 b_0 \cos (\omega) }
+                                  {1 + a_1^2 + 2 a_1 \cos (\omega)}
+\end{equation}
+
+\paragraph{Imaginary Part:}
+\begin{equation}
+ \Im \{ H(e^{j \omega}) \} =  \frac{a_1 b_0 \sin (\omega) }
+                                   {1 + a_1^2 + 2 a_1 \cos (\omega)}
+\end{equation}
+
+
+
+\subsection{First Order Filter}
+
+\paragraph{Difference Equation:}
+\begin{equation}
+ y[n] = b_0 x[n] + b_1 x[n-1] - a_1 y[n-1]
+\end{equation}
+
+\paragraph{Transfer Function:}
+\begin{equation}
+ H(z) = \frac{b_0 + b_1 z^{-1}}{1 + a_1 z^{-1}}
+\end{equation}
+
+\paragraph{Poles/Zeros:}
+\begin{equation}
+ p_1 = -a_1, \qquad z_1 = -b_1/b_0
+\end{equation}
+
+\paragraph{Complex Frequency Response:}
+\begin{equation}
+ H(e^{j \omega}) = \frac{b_0 + b_1 e^{-j \omega}}{1 + a_1 e^{-j \omega}}
+\end{equation}
+
+\paragraph{Magnitude Response:}
+\begin{equation}
+ |H(e^{j \omega})| = \sqrt{\frac{b_0^2 + b_1^2 + 2 b_0 b_1 \cos (\omega)}{1 + a_1^2 + 2 a_1 \cos (\omega)}}
+\end{equation}
+
+\paragraph{Phase Response:}
+\begin{equation}
+ \angle H(e^{j \omega}) = \arctan \left(- \frac{(b_1 - a_1 b_0) \sin (\omega)}
+                                               {b_0 + a_1 b_1 + (b_1 + a_1 b_0) \cos (\omega)} \right)
+\end{equation}
+
+\paragraph{Real Part:}
+\begin{equation}
+ \Re \{ H(e^{j \omega}) \} = \frac{b_0 + a_1 b_1 + (b_1 + a_1 b_0) \cos (\omega) }
+                                  {1 + a_1^2 + 2 a_1 \cos (\omega)}
+\end{equation}
+
+\paragraph{Imaginary Part:}
+\begin{equation}
+ \Im \{ H(e^{j \omega}) \} = - \frac{(b_1 - a_1 b_0) \sin (\omega) }
+                                    {1 + a_1^2 + 2 a_1 \cos (\omega)}
+\end{equation}
+
+
+
+\subsection{Biquad}
+
+\paragraph{Difference Equation:}
+\begin{equation}
+ y[n] = b_0 x[n] + b_1 x[n-1] + b_2 x[n-2] - a_1 y[n-1] - a_2 y[n-2]
+\end{equation}
+
+\paragraph{Transfer Function:}
+\begin{equation}
+ H(z) = \frac{b_0 + b_1 z^{-1} + b_2 z^{-2}} {1 + a_1 z^{-1} + a_2 z^{-2}}
+\end{equation}
+
+\paragraph{Poles/Zeros:}
+\begin{equation}
+ p_{1,2} = -\frac{a_1}{2}       \pm \sqrt{\frac{a_1^2}{4} - a_2}, \qquad
+ z_{1,2} = -\frac{(b_1/b_0)}{2} \pm \sqrt{\frac{(b_1/b_0)^2}{4} - (b_2/b_0)}
+\end{equation}
+
+\paragraph{Complex Frequency Response:}
+\begin{equation}
+ H(e^{j \omega}) = \frac{b_0 + b_1 e^{-j \omega} + b_2 e^{-2j \omega} }{1 + a_1 e^{-j \omega} + a_2 e^{-2j \omega}}
+\end{equation}
+
+\paragraph{Magnitude Response:}
+\begin{equation}
+ |H(e^{j \omega})| 
+ = \sqrt{\frac{b_0^2 + b_1^2 + b_2^2 + 2 (b_0 b_1 + b_1 b_2) \cos (\omega) + 2 b_0 b_2 \cos(2 \omega) }
+              {1     + a_1^2 + a_2^2 + 2 (    a_1 + a_1 a_2) \cos (\omega) + 2    a_2 \cos(2 \omega) } }
+\end{equation}
+
+\newpage
+
+\subsection{General Direct Form Filter}
+
+\paragraph{Difference Equation:}
+\begin{equation}
+ y[n] = \sum_{k=0}^M  b_k x[n-k] - \sum_{k=1}^N a_k y[n-k]
+\end{equation}
+
+\paragraph{Transfer Function:}
+\begin{equation}
+ H(z) = \frac{\sum_{k=0}^M  b_k z^{-k}} {1 + \sum_{k=1}^N a_k z^{-k}}
+\end{equation}
+
+Let:
+\begin{equation}
+ c_a = 1 + \sum_{k=1}^N a_k \cos(k \omega), \quad 
+ s_a =     \sum_{k=1}^N a_k \sin(k \omega), \quad
+ c_b =     \sum_{k=0}^M b_k \cos(k \omega), \quad
+ s_b =     \sum_{k=0}^M b_k \sin(k \omega) 
+\end{equation}
+
+\paragraph{Complex Frequency Response:}
+\begin{equation}
+ H(e^{j \omega}) = \frac{c_b - j s_b}{c_a - j s_a} = \frac{\sum_{k=0}^M  b_k e^{-jk\omega}} {1 + \sum_{k=1}^N a_k e^{-jk\omega}}
+\end{equation}
+
+
+\paragraph{Magnitude Response:}
+\begin{equation}
+ |H(e^{j \omega})| = \sqrt{ \frac{c_b^2 + s_b^2}{c_a^2 + s_a^2} }
+\end{equation}
+
+% the formula below does not have the correct wrapping behavior
+% -> insert expressions for real and imaginary part -> the phase is then atan2(Im, Re)
+\paragraph{Phase Response:}
+\begin{equation}
+ \angle H(e^{j \omega}) = \atan2(s_b, c_b) - \atan2(s_a, c_a)
+\end{equation}
+
+
+
+% check this for correctness:
+%\paragraph{Group Delay:}
+%\begin{equation}
+% \tau(\omega) = \frac{1}{1+u^2} \frac{d u}{d \omega} - \frac{1}{1+v^2} \frac{d v}{d \omega}
+%\end{equation}
+%where
+%\begin{equation}
+% u = \frac{s_b}{c_b}, \qquad
+% v = \frac{s_a}{c_a} 
+%\end{equation}
+
+
+
+%\paragraph{Phase Response:}
+%\begin{equation}
+% \angle H(e^{j \omega}) = \arctan \left(- \frac{(b_1 - a_1 b_0) \sin (\omega)}
+%                                               {b_0 + a_1 b_1 + (b_1 + a_1 b_0) \cos (\omega)} \right)
+%\end{equation}
+%
+%\paragraph{Real Part:}
+%\begin{equation}
+% \Re \{ H(e^{j \omega}) \} = \frac{b_0 + a_1 b_1 + (b_1 + a_1 b_0) \cos (\omega) }
+%                                  {1 + a_1^2 + 2 a_1 \cos (\omega)}
+%\end{equation}
+%
+%\paragraph{Imaginary Part:}
+%\begin{equation}
+% \Im \{ H(e^{j \omega}) \} = - \frac{(b_1 - a_1 b_0) \sin (\omega) }
+%                                    {1 + a_1^2 + 2 a_1 \cos (\omega)}
+%\end{equation}

@@ -1,0 +1,210 @@
+\title{Analog Biquad Design by Magnitude Requirements}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+We consider the problem of finding the coefficients $B_0, B_1, B_2, A_0, A_1, A_2$ of an analog biquad transfer-function of the general form:
+\begin{equation}
+\label{Eq:TransferFunctionBiquad}
+ H(s) = \frac{B_0 + B_1 s + B_2 s^2}{A_0 + A_1 s + A_2 s^2}
+\end{equation}
+given 5 requirements on the magnitude response. These requirements are given as pairs of a radian frequency $\Omega_n$ and a desired magnitude-response value $G_n$ which the filter should have at $\Omega_n$, where $n = 1, \ldots, 5$. As we shall see later, one of the biquad coefficients above is actually redundant and may be set to unity.
+
+\section{From Requirements to a System of Equations}
+The absolute value of the transfer-function is given by:
+\begin{equation}
+ |H(s)|^2 = H(s) \cdot H(-s) 
+ = \frac{B_0 + B_1 s + B_2 s^2}{A_0 + A_1 s + A_2 s^2} \cdot \frac{B_0 - B_1 s + B_2 s^2}{A_0 - A_1 s + A_2 s^2}
+\end{equation}
+Letting $s = j \Omega$, we obtain the magnitude-squared response of our filter in terms of $\Omega$, which we denote by $G^2(\Omega)$. Doing this substitution fo $s$ and simplifying, we obtain
+\begin{equation}
+\label{Eq:MagnitudeSquaredBiquad}
+ G^2(\Omega) = \frac{B_0^2 + (B_1^2 - 2 B_0 B_2) \Omega^2 + B_2^2 \Omega^4}{A_0^2 + (A_1^2 - 2 A_0 A_2) \Omega^2 + A_2^2 \Omega^4}
+\end{equation}
+Defining:
+\begin{equation}
+\label{Eq:AlphaBeta}
+ \alpha = A_1^2 - 2 A_0 A_2, \qquad
+ \beta = B_1^2 - 2 B_0 B_2
+\end{equation}
+we may also write this as:
+\begin{equation}
+\label{Eq:MagnitudeSquaredBiquadWithAlphaBeta}
+ G^2(\Omega) = \frac{B_0^2 + \beta \Omega^2 + B_2^2 \Omega^4}{A_0^2 + \alpha \Omega^2 + A_2^2 \Omega^4}
+\end{equation}
+From now on, we shall assume $A_2 = 1$. This is no restriction for generality because every biquad transfer-function in the form of (\ref{Eq:TransferFunctionBiquad}) can be normalized such that this assumption holds. From our design requirements, we have $5$ pairs ($\Omega_n, G_n$) of radian frequencies and desired magnitude-response values at these frequencies. Inserting these pairs into (\ref{Eq:MagnitudeSquaredBiquadWithAlphaBeta}) one at a time and using $A_2 = 1$, we obtain a set of 5 equations:
+\begin{equation}
+\label{Eq:BiquadEquationSystemOriginalForm}
+ G_n^2 = \frac{B_0^2 + \beta \Omega_n^2 + B_2^2 \Omega_n^4}{A_0^2 + \alpha \Omega_n^2 + \Omega_n^4} \qquad n = 1, \ldots, 5
+\end{equation}
+Because we will have to deal mostly with the squared values of $\Omega_n, G_n$, it will be convenient to have names for these squared values, so we define:
+\begin{equation}
+ P_n \hat{=} G_n^2, \qquad Q_n \hat{=} \Omega_n^2
+\end{equation}
+Putting these definitions into (\ref{Eq:BiquadEquationSystemOriginalForm}) and re-arranging, we obtain:
+\begin{equation}
+  B_0^2 + Q_n \beta + Q_n^2 B_2^2 - P_n A_0^2 - P_n Q_n \alpha = P_n Q_n^2, \qquad n = 1, \ldots, 5
+\end{equation}
+We can interpret this set of equations as an instance of a linear system of equations for the 5 unknowns $B_0^2, \beta, B_2^2, A_0^2, \alpha$. This system is of the general form:
+\begin{equation}
+ \mathbf{A} \mathbf{x} = \mathbf{b}
+\end{equation}
+where
+\begin{equation}
+ \mathbf{A} = 
+  \begin{pmatrix}
+   1 & Q_1 & Q_1^2 & -P_1 & -P_1 Q_1 \\
+   1 & Q_2 & Q_2^2 & -P_2 & -P_2 Q_2 \\
+   1 & Q_3 & Q_3^2 & -P_3 & -P_3 Q_3 \\
+   1 & Q_4 & Q_4^2 & -P_4 & -P_4 Q_4 \\
+   1 & Q_5 & Q_5^2 & -P_5 & -P_5 Q_5 \\
+  \end{pmatrix}, \qquad
+ \mathbf{x} = 
+  \begin{pmatrix}
+   B_0^2 \\ \beta \\ B_2^2 \\ A_0^2 \\ \alpha
+  \end{pmatrix}, \qquad
+ \mathbf{b} = 
+  \begin{pmatrix}
+   P_1 Q_1^2 \\ P_2 Q_2^2 \\ P_3 Q_3^2 \\ P_4 Q_4^2 \\ P_5 Q_5^2
+  \end{pmatrix}, \qquad  
+\end{equation}
+The matrix $\mathbf{A}$ and the vector $\mathbf{b}$ are known, the vector $\mathbf{x}$ is to be computed. The solution is:
+\begin{equation}
+ \boxed
+ {
+  \mathbf{x} = \mathbf{A}^{-1} \mathbf{b}
+ }
+\end{equation}
+After solving this system of equations, we take the square-roots of $B_0^2, B_2^2, A_0^2$ to obtain $B_0, B_2, A_0$ themselves. We select the positive square-roots here [TODO: explain why]. To compute the remaining coefficients $A_1, B_1$, we insert these values into (\ref{Eq:AlphaBeta}) and solve for $A_1, B_1$:
+\begin{equation}
+ \boxed
+ {
+  A_1 = \sqrt{\alpha + 2 A_0},    \qquad
+  B_1 = \sqrt{\beta  + 2 B_0 B_2}
+ }
+\end{equation}
+where we again have used $A_2=1$ and for the square-roots, we again select the positive values. An implementation in MatLab/Octave could look like:
+\begin{verbatim}
+function [B, A] = fivePointAnalogBiquad(w, G)
+P = G.^2; Q = w.^2;
+A = [ones(5,1) Q Q.^2 -P -P.*Q]; b = P.*Q.^2;
+x = inv(A) * b;
+B0 = sqrt(x(1)); B2 = sqrt(x(3)); A0 = sqrt(x(4)); 
+A1 = sqrt(x(5) + 2*A0); B1 = sqrt(x(2) + 2*B0*B2);
+B = [B2 B1 B0]; A = [1 A1 A0];
+\end{verbatim}
+Note that this function expects column-vectors as inputs and does not do any safeguarding against potential pitfalls (to be explained later).
+ 
+\paragraph{Positive Square-Roots}
+When we were taking the square-roots, we neglected the fact that for a square-root, there are formally always two solutions. It turns out that it is sensible to always pick the positive value, here's why: From $A_1 = \sqrt{\alpha + 2 A_0}$ we recognize for there to be a real solution for $A_1$, the term under the square-root should be positive. Picking the positive square-root for $\sqrt{A_0^2}$ increases the chance for that to happen. Likewise, from $B_1 = \sqrt{\beta  + 2 B_0 B_2}$, we see that $B_0, B_1$ better should have the same sign in order to increase the chance to find a real solution for $B_1$, so we must pick the same sign for $\sqrt{B_0^2}$ and $\sqrt{B_2^2}$. By inspection of the transfer function (\ref{Eq:TransferFunctionBiquad}), we see that the transfer function value for DC (at $s = 0$) is given by $B_0/A_0$. If we don't want a sign-inversion at DC, we would have to pick $+\sqrt{B_0^2}$ for $B_0$, assuming that we have already picked $+\sqrt{A_0^2}$ for $A_0$. Together with the requirement that $B_2$ should have the same sign, we also know that we want the positive solution to $\sqrt{B_2^2}$. As we shall see in a later section, for the poles and zeros to be in the left half-plane, we want $\sign(A_1) = \sign(A_2)$ and  $\sign(B_1) = \sign(B_2)$. Knowing that $B_2$ has positive sign and $A_2$ is $+1$ anyway, we also will have to pick the positive square-roots for $A_1$ and $B_1$.
+
+
+
+\subsection{Pitfalls}
+
+[TODO: flesh out this section]
+
+\subsubsection{Singular Matrix}
+
+-matrix may be (close to) singular (rank-defective) 
+ -> we have linearly dependent rows 
+ -> the system may have a continuum of solutions
+    -> the coefficients are not unique 
+       -> interpretation: 
+          -> there are many solutions with the same magnitude response but different phase responses
+          -> try to find the minimum phase solution
+    -> try to scratch one of the equations and solve a 4x4 system
+ -> if the right-hand sides of the linearly dependent equations are incompatible, there might be no solution at all
+ 
+\subsubsection{Negative Arguments for the Square-Roots} 
+ 
+-the arguments of the square-roots may become negative
+ -> the computed coefficients are complex
+ -> no usable solution
+
+ 
+
+\subsection{Poles and Zeros}
+It has already been mentioned, that any biquad transfer function of the form (\ref{Eq:TransferFunctionBiquad}) may be normalized such that $A_2$ equals to unity. If we also allow for an overall gain factor in front of the transfer function, the numerator may also be normalized such that $B_2$ becomes unity. This works by factoring out $B_2, A_2$ in the numerator and denominator respectively, like so:
+\begin{equation}
+ H(s) = \frac{B_0 + B_1 s + B_2 s^2}{A_0 + A_1 s + A_2 s^2}
+      = \frac{B_2}{A_2} \cdot \frac{ \frac{B_0}{B_2} + \frac{B_1}{B_2} s + s^2}
+                                   { \frac{A_0}{A_2} + \frac{A_1}{A_2} s + s^2}
+\end{equation}
+Defining:
+\begin{equation}
+ K   \hat{=} \frac{B_2}{A_2}, \qquad 
+ b_0 \hat{=} \frac{B_0}{B_2}, \qquad b_1 \hat{=} \frac{B_1}{B_2}, \qquad 
+ a_0 \hat{=} \frac{A_0}{A_2}, \qquad a_1 \hat{=} \frac{A_1}{A_2},
+\end{equation}
+we may write down the transfer function as:
+\begin{equation}
+ H(s) = K \frac{ b_0 + b_1 s + s^2}{ a_0 + a_1 s + s^2}
+\end{equation}
+From this representation, we may easily compute the roots of the numerator and denominator polynomial by means of the $pq$-formula. The roots of the denominator, denoted as $p_1, p_2$, are the poles of the transfer function and the roots of the numerator, denoted as $z_1, z_2$, are its zeros. These are given by:
+\begin{equation}
+\label{Eq:PolesAndZeros}
+ p_{1,2} = -\frac{a_1}{2} \pm \sqrt{ \frac{a_1^2}{4}-a_0}, \qquad
+ z_{1,2} = -\frac{b_1}{2} \pm \sqrt{ \frac{b_1^2}{4}-b_0}
+\end{equation}
+With this equation, it becomes clear why we require $\sign(A_1) = \sign(A_2)$. Only in this case will $a_1$ be positive and hence $-a_1/2$ be negative. We require $-a_1/2$ to be negative because it contributes to the real part of a pole. If the value under square-root is negative, $-a_1/2$ will itself be the real part of a pair of complex conjugate poles, so it should better be negative for the filter to be stable. If the value under square-root is positive, we would end up with two real poles where at least one of them would be positive if $-a_1$ would already be positive. So, in any case, we want $-a_1$ to be negative for a stable filter. The same reasoning applies to the signs of $B_1$ and $B_2$, when we want to ensure a minimum-phase filter. With these poles and zeros, we may now also write the biquad transfer function in product form:
+\begin{equation}
+\label{Eq:TransferFunctionBiquadProductForm}
+ H(s) = K \frac{(s-z_1)(s-z_2)}{(s-p_1)(s-p_2)}
+\end{equation}
+
+
+\section{The Special Case $\Omega_5 = \infty$}
+The procedure given above is not applicable, when one of the frequencies, at which we want to set a target-gain, happens to be infinity (in the sense, that the magnitude response approaches the target-gain, as the frequency approaches infinity). We shall assume that the radian frequencies $\Omega_1, \ldots, \Omega_5$ are distinct and in ascending order such that $\Omega_1 < \Omega_2 < \Omega_3 < \Omega_4 < \Omega_5$. This means that if any of the radian frequencies $\Omega_n$ shall be at infinity, it will have to be $\Omega_5$ and the asymptotic gain is given by $G_5$. By inspection of (\ref{Eq:MagnitudeSquaredBiquad}), we see that the limiting value of the magnitude-squared response, as $\Omega$ approaches infinity, is given by $B_2^2 / A_2^2$. Using $A_2 = 1$, we conclude that $B_2^2$ coefficient must be equal to $G^2(\infty)$ and hence $B_2 = G(\infty) = G_5$. Knowing this value reduces the number of unknowns to 4. Using a derivation entirely analogous to the $\Omega_5 < \infty$ case, we arrive at a system of 4 equations for the remaining unknowns $B_0^2, \beta, A_0^2, \alpha$:
+\begin{equation}
+  B_0^2 + Q_n \beta - P_n A_0^2 - P_n Q_n \alpha = (P_n - P_5) Q_n^2, \qquad n = 1, \ldots, 4
+\end{equation}
+In pseudo-code:
+\begin{verbatim}
+function [B, A] = fivePointAnalogBiquadInf(w, G)
+P = G(1:4).^2; Q  = w(1:4).^2; P5 = G(5)^2;
+A = [ones(4,1) Q -P -P.*Q]; b  = (P-P5).*Q.^2;
+x = inv(A) * b;
+B0 = sqrt(x(1)); B2 = G(5); A0 = sqrt(x(3));
+A1 = sqrt(x(4) + 2*A0); B1 = sqrt(x(2) + 2*B0*B2);
+B = [B2 B1 B0]; A = [1 A1 A0];
+\end{verbatim}
+In actual code, it would perhaps be advisable to check at the beginning of \texttt{fivePointAnalogBiquad} whether \texttt{w(5)} equals infinity and if so, delegate to \texttt{fivePointAnalogBiquadInf} and continue in the normal program flow otherwise.
+
+
+\subsection{The Even More Special Case $\Omega_5 = \infty, \Omega_1 = 0$}
+Although the procedure above is not restricted in its applicability, it makes sense to consider a further specialization where $\Omega_1 = 0$. The procedure above requires to invert a $4 \times 4$ matrix but if $\Omega_1$ is fixed at zero frequency, we may get rid of the matrix inversion altogether and we also reduce the number of calls to \texttt{sqrt} from 4 to 3. It would be tiresome to present the full derivation of the algorithm here, but the idea is to recognize that $\Omega_1 = 0$ implies $B_0 = G_1 A_0$, substituting this value back into the equation system, solving the system by hand and streamlining the computations algebraically. The general idea can be found in \cite{Chr}. Without derivation, here is the algorithm:
+\begin{verbatim}
+function [B, A] = fivePointAnalogBiquadZeroInf(w, G)
+B2 = G(5);   
+P1 = G(1)^2; P2 = G(2)^2; P3 = G(3)^2; P4 = G(4)^2; P5 = G(5)^2;             
+Q2 = w(2)^2; Q3 = w(3)^2; Q4 = w(4)^2;
+Dr = 1  / (Q2*Q3*(P2-P3));
+k1 = Dr * (Q3*Q4*(P3-P4));
+k2 = Dr * (Q4*Q2*(P4-P2));
+u  = (P1-P4) + k1*(P1-P2) + k2*(P1-P3);
+w  = Q4^2*(P4-P5) + k1*Q2^2*(P2-P5) + k2*Q3^2*(P3-P5);
+A0 = sqrt(w/u);
+B0 = A0*G(1);
+c1 = P2*(Q2-A0)^2 - (Q2*G(5)-A0*G(1))^2;
+c2 = P3*(Q3-A0)^2 - (Q3*G(5)-A0*G(1))^2;
+A1 = sqrt(Dr * (Q2*c2    - Q3*c1   ));
+B1 = sqrt(Dr * (Q2*c2*P2 - Q3*c1*P3));
+B  = [B2 B1 B0];
+A  = [1  A1 A0];
+\end{verbatim}
+Note that in this function \texttt{w(1), w(5)} are not referenced. They are assumed to be fixed at $0$ and $\infty$, respectively. A condition of a singular matrix could be detected by checking the denominator in the expression \texttt{Dr = ...} against zero (this denominator represents a determinant of some $2 \times 2$ matrix that needs to be invertible). With a reasoning similar to the one above, we could check at the beginning of \texttt{fivePointAnalogBiquadInf} whether \texttt{w(1)} equals zero and if so, delegate to \texttt{fivePointAnalogBiquadZeroInf} and continue in the normal program flow otherwise. Here, however, this delegation would be only for optimization purposes and not strictly required by applicability considerations.
+
+
+\paragraph{}
+ToDo: maybe another special case where $\Omega_1 = 0$ and $\Omega_5 < \infty$ could be considered
+
+
+
+
+
+
+\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+ \bibitem{Chr} Knud Bank Christensen. A Generalization of the Biquadratic Parameteric Equalizer, Appendix 3
+\end{thebibliography}
+

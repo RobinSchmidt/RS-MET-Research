@@ -1,0 +1,225 @@
+\title{Gradients on Irregular Meshes from Directional Derivatives}
+\author{Robin Schmidt (www.rs-met.com)}
+\date{\today}
+\maketitle
+
+DRAFT
+
+\section{Motivation}
+Numerical algorithms for solving partial differential equations (PDEs) by finite difference methods are easy to understand and straightforward to use but they usually assume a regular mesh (a.k.a. grid - these two terms are used interchangably). For geometrically more complicated domains, this restriction is often inconvenient and for certain problems, we may want a higher grid resolution in certain areas, where the solution changes a lot. In such cases, finite element methods are typically used because they can deal with irregular grids just fine. On the downside, they are conceptually much more difficult to understand and harder to apply. If the problem involves a conservation law, finite volume methods may also be used. These are still relatively straightforward and can also deal with irregular meshes, but you need to have some sort of conservation law like, for example, the conservation of mass in fluid dynamic simulations. Here, we want to consider an idea that allows us to estimate (spatial) partial derivatives on an irregular mesh as a preliminary step to the eventual goal of developing a finite difference PDE solver for such irregular meshes.
+
+
+\section{Estimating Spatial Gradients}
+\subsection{Spatial Gradients on Regular Grids}
+We need to find expressions for approximating spatial derivatives from known function values on grid points. On a regular 2D grid with grid spacings $h_x, h_y$ in the x- and y-directions, we could approximate the first spatial derivatives $u_x,u_y$ of a bivariate function $u(x,y)$ with a forward difference:
+\begin{equation}
+  u_x \approx \frac{u(x+h_x,y) - u(x,y)} {h_x}  \qquad
+  u_y \approx \frac{u(x,y+h_y) - u(x,y)} {h_y}
+\end{equation}
+These two estimates of partial derivatives collected into a vector form a first order accurate numerical approximation to the gradient of $u(x,y)$ at some given point $(x,y)$. A central difference would be second order accurate, which would seem more desirable, but for the generalization to irregular grids, this one-sided forward difference is a more convenient starting point. But don't worry: in the end, we will get much better accuracy - even better than second order - by suitably combining several of such first order estimates. In fact, the central difference formula can be seen as taking the average of a forward and a backward difference, i.e. the mean of two first order accurate estimates. We'll do something similar, but with in general more than two first order estimates.
+
+\subsection{Spatial Gradients on Irregular Grids}
+In the literature for numerical methods for PDEs, it's hard to find any methods to estimate these partial derivatives on irregular grids. It's sometimes mentioned, that a 2D Taylor polynomial could be fitted to the grid point, at which we want to estimate the gradient and its neighbor vertices (TODO: references needed). I've also found a paper that describes a rather complicated method based on the Green-Gauss theorem from vector analysis \cite{Xu}. Some textbooks even state that it's outright impossible \cite{Munz} Here, i want to describe a much simpler way that i could not find mentioned anywhere. Maybe it's known already and turned out to be useless for PDE solvers and i have (yet again) re-invented the wheel - but with edges. But if not, this could turn out to be quite useful. The two key ingredients to this approach are directional derivatives and a least-squares fit.
+
+\paragraph{An Example with 3 Neighbours}
+Let $P$ be a general grid point that is currently under consideration and let's assume, the point $P$ is connected to 3 other grid points $Q,R,S$ which we will refer to as its neighbors. We want to find a formula for approximating the first spatial derivatives $u_x$ and $u_y$ at $P$ and we assume that (approximate) function values $u(P),u(Q),u(R),u(S)$ are known. We define the vectors $\mathbf{a,b,c}$ as:
+\begin{equation}
+\mathbf{a} = Q-P, \quad \mathbf{b} = R-P \quad \mathbf{c} = S-P 
+\end{equation}
+The first main idea is to approximate the 3 directional derivatives into the $\mathbf{a,b,c}$ directions at P as:
+\begin{equation}
+ u_{\mathbf{a}} \approx \frac{u(Q)-u(P)}{||\mathbf{a}||}, \quad
+ u_{\mathbf{b}} \approx \frac{u(R)-u(P)}{||\mathbf{b}||}, \quad
+ u_{\mathbf{c}} \approx \frac{u(S)-u(P)}{||\mathbf{c}||}
+\end{equation}
+Having found the estimates for the 3 directional derivatives, we now need a formula to convert them into estimates for the partial derivatives $u_x,u_y$ into the x- and y-directions which together constitue 
+the gradient vector $\mathbf{g}$. To this end, we note that the directional derivative $u_\mathbf{v}$ into any (normalized?) direction vector $\mathbf{v}$ can be computed from the gradient $\mathbf{g}$ by just taking the scalar product of the two: 
+\begin{equation}
+u_\mathbf{v} = \langle \mathbf{g,v} \rangle
+\end{equation}
+$u_\mathbf{v}$ and $\mathbf{v}$ are the things what we have given for multiple vectors $\mathbf{v = a,b,c}$ (this abuse of notation should mean: we have 3 such vectors v and they are called a,b,c). We also have the
+estimates for the directional derivatives $u_\mathbf{a},u_\mathbf{b},u_\mathbf{c}$. With these in hand, we now set up the equations:
+\begin{equation}
+u_\mathbf{a} = \langle \mathbf{g,a} \rangle, \quad
+u_\mathbf{b} = \langle \mathbf{g,b} \rangle, \quad
+u_\mathbf{c} = \langle \mathbf{g,c} \rangle
+\end{equation}
+These are 3 linear equations for our 2 unknowns $u_x,u_y$. In matrix form, our system of equations looks like this:
+\begin{equation}
+\begin{pmatrix}
+  a_x & a_y  \\
+  b_x & b_y  \\
+  c_x & c_y  \\
+\end{pmatrix}
+\begin{pmatrix}
+  u_x  \\
+  u_y  \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+  u_{\mathbf{a}}  \\
+  u_{\mathbf{b}}  \\
+  u_{\mathbf{c}}
+\end{pmatrix}
+\end{equation}
+where $a_x$ is the x-component of the vector $\mathbf{a}$, $u_x$ is the first component of our desired gradient and so on. Having 3 equations for 2 unknowns means that we have an overdetermined system and cannot expect to find an exact solution. So the second main idea is now to find an approximate solution using the method of least squares. This is accomplished by pre-multiplying by the transpose of the left 3x2 matrix and leads to the following system that we have to solve:
+\begin{equation}
+\begin{pmatrix}
+a_x & b_x & c_x  \\
+a_y & b_y & c_y  \\
+\end{pmatrix}
+\begin{pmatrix}
+a_x & a_y  \\
+b_x & b_y  \\
+c_x & c_y  \\
+\end{pmatrix}
+\begin{pmatrix}
+u_x  \\
+u_y  \\
+\end{pmatrix}
+=
+\begin{pmatrix}
+a_x & b_x & c_x  \\
+a_y & b_y & c_y  \\
+\end{pmatrix}
+\begin{pmatrix}
+u_{\mathbf{a}}  \\
+u_{\mathbf{b}}  \\
+u_{\mathbf{c}}
+\end{pmatrix}
+\end{equation}
+Writing out the sums that we have to perform to compute the matrix elements, this becomes the following nice and simple 2x2 system:
+\begin{equation}
+\begin{pmatrix}
+	a_x^2 + b_x^2 + c_x^2 & a_x a_y + b_x b_y + c_x c_y \\
+ a_x a_y + b_x b_y + c_x c_y & a_y^2 + b_y^2 + c_y^2  \\
+\end{pmatrix}
+\begin{pmatrix}
+u_x  \\
+u_y  \\
+\end{pmatrix}
+= 
+\begin{pmatrix}
+a_x u_{\mathbf{a}} + b_x u_{\mathbf{b}} + c_x u_{\mathbf{c}} \\
+a_y u_{\mathbf{a}} + b_y u_{\mathbf{b}} + c_y u_{\mathbf{c}}
+\end{pmatrix}
+\end{equation}
+which is easy to solve.
+
+\paragraph{Generalization to N Neighbours}
+Since we have set up the whole thing as a lest-squares fitting problem, the generalization to more than 3 neighbors is trivial: our matrix just gets more rows and so we must just add up more terms in these summations above. The pattern is obvious. When the number of neighbors is 2, we end up with a critically determined system: 2 equations for 2 unknowns, so no problems here either and we don't even have to treat this as a special case in an implementation because the least-squares solution just happens to become an exact solution in this special case. In the case, where there is only 1 neighbor, we are dealing with an underdetermined system, i.e. we have 1 equation for 2 unknowns. In such a case, there will in general be infinitely many solutions and it's common practice to select the solution that has the minimum Euclidean norm from this infinite set. I don't know, if that makes any sense in the context of a PDE solver but i don't care either because this situation is not supposed to occur in this context: we will create meshes where each vertex has at least 2 neighbors - even a corner vertex will.
+
+
+\section{Implementation}
+I have implemented the algorithm in C++ in the context of my RS-MET codebase, available on github at: \hyperlink{https://github.com/RobinSchmidt/RS-MET}{https://github.com/RobinSchmidt/RS-MET}. The relevant code fragment is:
+\begin{lstlisting}
+template<class T>
+void rsNumericDifferentiator<T>::gradient2D(const rsGraph<rsVector2D<T>, T>& mesh, 
+  const std::vector<T>& u, std::vector<T>& u_x, std::vector<T>& u_y)
+{
+  int N = mesh.getNumVertices();
+  rsAssert((int) u.size()   == N);
+  rsAssert((int) u_x.size() == N);
+  rsAssert((int) u_y.size() == N);
+  using Vec2 = rsVector2D<T>;
+  rsMatrix2x2<T> A;
+  Vec2 b, g;
+  for(int i = 0; i < N; i++)
+  {
+    const Vec2& vi   = mesh.getVertexData(i);   // vertex, at which we calculate the derivative
+    int numNeighbors = mesh.getNumEdges(i);     // number of neighbors of vertex vi
+
+    // If vi has no neighbors at all, we assign zeros to the partial derivatives:
+    if(numNeighbors == 0) { u_x[i] = u_y[i] = T(0); continue; }
+
+    // If vi has only one neighbor, we have only one equation for our 2 degrees of freedom 
+    // u_x[i], u_y[i], so there are infinitely many solutions. We compute the minimum norm 
+    // solution in this case:
+    if(numNeighbors == 1) {
+      int j = mesh.getEdgeTarget(i, 0);
+      const Vec2& vj = mesh.getVertexData(j);
+      Vec2 dv = vj   - vi;                      // difference vector
+      T    du = u[j] - u[i];                    // difference in function value
+      rsLinearAlgebra::solveMinNorm(dv.x, dv.y, du, &u_x[i], &u_y[i]);
+      continue; }
+
+    // The typical case is that vi has >= 2 neighbors. In this case, we have either a critically
+    // determined (numNeighbors == 2) or an overdetermined (numNeighbors > 2) system and we compute
+    // a weighted least squares solution (which, in the case of a critically determined system, 
+    // happens to be the exact solution...right?):
+    A.setZero();
+    b.setZero();
+    for(int k = 0; k < numNeighbors; k++)    // loop over neighbors of vertex i
+    {
+      // Retrieve or compute intermediate variables:
+      int j = mesh.getEdgeTarget(i, k);         // index of current neighbor of vi
+      const Vec2& vj = mesh.getVertexData(j);   // current neighbor of vi
+      Vec2 dv = vj   - vi;                      // difference vector
+      T    du = u[j] - u[i];                    // difference in function value
+      T    w  = mesh.getEdgeData(i, k);         // weight in weighted least squares
+
+      // Accumulate least-squares matrix and right-hand-side vector:
+      A.a += w * dv.x * dv.x;
+      A.b += w * dv.x * dv.y;
+      A.d += w * dv.y * dv.y;
+      b.x += w * dv.x * du;
+      b.y += w * dv.y * du;
+    }
+    A.c = A.b;  // A.c is still zero - make A symmetric
+
+    // Compute gradient that best explains the measured directional derivatives in the least 
+    // squares sense and store it in output arrays:
+    rsMatrix2x2<T>::solve(A, g, b);  // g is the gradient vector that solves A*g = b
+    u_x[i] = g.x;
+    u_y[i] = g.y;
+  }
+}
+\end{lstlisting}
+
+The code uses a general implementation of a graph data structure that has data associated with the vertices and edges. This graph data structure is used to represent meshes in a very general way. The vertices represent our mesh points and the vertex data is the 2D position of the vertex and the edge data is a simple floating point number that in this context represents a weight that can be used to adjust the sensitivity of the least-squares fit to the error at a particular neighbor. That's an additional tweak that is not yet mentioned above. The rationale is that in meshes where we have wildly different distances between the vertices, it may make sense, to weight the error according to the distance between the current center vertex and its neighbors in a way that gives more weight to closer neighbors because closer neighbors generally lead to more accurate estimates. In a numerical experiment (not the one in the next section), i found that optimal edge weighting seems to be of the form $w = 1 / d^n$ where $d$ is the distance and $n$ the number of neighbors. The rsMatrix2x2 class is a type to represent 2x2 matrices with entries a,b,c,d (top-left to bottom-right). The function values are passed in the vector \texttt{u} and the partial derivatives are returned in the vectors  \texttt{u\_x, u\_y}. These vectors must have the same number of elements as the graph has vertices. You may wonder, where the division by the norm of the difference vector is: we actually do not need to normalize our directional derivative estimates, because the same factor appears on both sides of the equation, so we can simply cancel it out as an optimization. I hope, the rest of the code is self explanatory.
+%todo: figure out, how we
+
+
+\section{Numerical Experiments}
+Using this code, i have carried out some computer experiments to assess the general viability of the method, its accurracy and so on. I have taken as example function $u(x,y)$ with its two partial derivatives $u_x,u_y$ the following:
+\begin{equation}
+u(x,y)   = \sin (x) \exp (y), \quad 
+u_x(x,y) = \cos (x) \exp (y), \quad
+u_y(x,y) = \sin (x) \exp (y)
+\end{equation}
+and i have created a simple toy "mesh" with one vertex at the center located at $(x,y)=(1,1)$ with $n$ neighbor vertices arranged around the center vertex as a regular polygon with $n$ sides and therefore also $n$ corners. For the special case $n=2$, the two neighbors are just placed some distance away from the center in the x- and y-directions.
+\begin{figure}[h]
+	\centering
+  	\includegraphics[width=0.24\textwidth]{Plots/ThreePointStencil.pdf}
+  	\includegraphics[width=0.24\textwidth]{Plots/FourPointStencil.pdf}
+  	\includegraphics[width=0.24\textwidth]{Plots/FivePointStencil.pdf}
+  	\includegraphics[width=0.24\textwidth]{Plots/SixPointStencil.pdf}
+	\caption{3,4,5 and 6 point stencils for $h=1$}
+	\label{fig:FivePointStencil}
+\end{figure}
+% todo: actually plot a 3-pt, 4-pt and 5-pt stencil
+For each $n$ from 2 up to 8, i have selected various values for the grid spacing $h$, i.e. the distance that the neighbor vertices are away from the center vertex. Then i have used this method to estimate the partial derivatives for these various values of h and compared the results to the analytically computed exact values. The goal was to find the relationship between the distance $h$ and the estimation error $E(h)$. The expectation was to find a power rule of the form $E(h) \propto h^p$ for some exponent p that depends on the number $n$ of neighbors used. That was indeed confirmed with the rule $p = n-2$ for $n \geq 3$. The left plot of figure \ref{fig:Error} shows the base-10 logarithm of the error as function of the base-2 logarithm of the vertex distance $h$. As expected, we see a linear decrease of the log of the error when the log of $h$ gets smaller (more negative). The decrease levels off at around $10^{-14}$ due to the limited precision of the 64 bit floating point numbers that were used. The right plot shows the numerically estimated order of the error obtained by comparing the errors of 2 successive h-values - basically, the numerical slopes of the functions in the left plot (up to some scaling factor). From the right plot, we can directly read off the numerically estimated error order as the y-value on which the flat line sits. Again, there are deviations from flatness due to floating point (im)precision.
+\begin{figure}[h]
+	\centering
+  	\includegraphics[width=0.45\textwidth]{Plots/Error.pdf}
+  	\includegraphics[width=0.45\textwidth]{Plots/ErrorOrder.pdf}
+	\caption{Error and error order}
+	\label{fig:Error}
+\end{figure}
+We get roughly a first order accurate estimate with 2 or 3 neighbors (black and blue), increasing to 4 (green) gives a 2nd order estimate and so on. A mesh with 3 neighbors for each vertex would lead to hexagonal grids, one with 4 neighbors to quadrilateral grids. That probably means, with 4 neighbors, arranged like in a regular rectangular grid, we recover the behavior of the central difference approximation that is usually used on such grids (TODO: verify that). Using 6 neighbors seems an attractive choice since it leads to convenient triangular grids and 4th order accuracy is actually already quite good. One could also take rectangular grids with additional connections to the 4 diagonal neighbors, leading to a 6th order accurate estimation. One could even include farther away neighbors that are not directly adjacent into the computations. The qualitative behavior of the error decrease as function of the number of neighbors seems not to care very much, how exactly these neighbors are arranged geometrically around the vertex under consideration - it doesn't even have to be at the center (this has been found in another experiment but results are preliminary).
+
+\section{Conclusion}
+A method for estimating partial derivatives on irregular grids was presented. The two key ideas that gave rise to this method are directional derivatives and least squares fitting. It was found empirically, that the accuracy of the estimation follows a $h^{n-2}$ rule where $h$ is the distance between the grid point and its neighbors and n is the number of neighbors that the grid point has. It was also found that the method used with 5 neighbors seems to be equivalent to using 2D Taylor polynomial. However, the method presented here is not restricted to 5 neighbors (which is actually a rather inconvenient number to create meshes with anyway) and it is also computationally more efficient because it doesn't require to solve a 6x6 system.
+
+\section{What's next?}
+What remains to be done is to investigate, how this gradient estimation algorithm performs in the context of an actual PDE solver. What are the conditions for stability, what's the global accuracy, etc. This will be the topic of a follow-up paper. I expect the generalization from 2 to any number of dimensions to be trivial: instead of 2D vectors and 2x2 matrices, we'll just have N-vectors and NxN matrices instead. Also, the empirical results presented here regarding accuracy and the equivalence of a neighborhood of 5 to fitting a 2D Taylor polynomial should be verified theoretically. Maybe i may try it myself, but maybe that's a job for mathematicians. I'm now off to implement my PDE solver. Stay tuned... :-)
+
+% name for the follow-up "A Finite Difference PDE Solver for Irregular Meshes"
+
+
+
+\begin{thebibliography}{9}  % 9 indicates that there are no more than 9 entries
+ \bibitem{Xu} George Xiangguo Xu, G.R. Liu. Development of Irregular-Grid Finite Difference Method (IFDM) for Governing Equations in Strong Form
+ \bibitem{Munz} Claus-Dieter Munz, Thomas Westermann. Numerische Behandlung gewöhnlicher und partieller Differentialgleichungen (pg. 228,280)
+\end{thebibliography}
+

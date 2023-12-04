@@ -1,0 +1,1 @@
+This folder contains some older notes and papers about DSP topics

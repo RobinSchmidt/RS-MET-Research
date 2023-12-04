@@ -220,12 +220,16 @@ The implicit equation of an ellipsoid is:
 
   (x/a)^2 + (y/b)^2 + (z/c)^2 - 1 = 0          see https://en.wikipedia.org/wiki/Ellipsoid
   
-The points are:
+The points P,Q are chosen as follows: P should have all coordinates zero except z and z should be 
+chosen such that it is on the ellipsoid. That means, we choose a point where the z-axis pierces the
+ellipsoid as our fixed point P. The variable point Q should be in the xy-plane, i.e. have z=0 and 
+its x- and y-coordinates are given by our u,v parameters:
 
   P = (0,0,c)
   Q = (u,v,0)
   
-The line is:
+The line again connects P and Q where the line parameter s=0 gives us the point P and s=1 gives us 
+the point Q:
 
   L(s) = (1-s)*P + s*Q
   
@@ -235,14 +239,14 @@ which leads to the 3 equations:
   y(s) = (1-s)*0 + s*v = s*v
   z(s) = (1-s)*c + s*0 = c-s*c
   
-Plugging them into the implicit equations gives:
+Plugging them into the implicit ellipsoid equation gives:
 
   0 =  (s*u/a)^2 + (s*v/b)^2 + ((c-s*c)/c)^2 - 1 
     =  (u/a)^2*s^2 + (v/b)^2*s^2 + (1-s)^2 - 1 
 	=  ((u/a)^2 + (v/b)^2) * s^2 + 1 - 2*s + s^2 - 1
 	=  ((u/a)^2 + (v/b)^2 + 1) * s^2 - 2*s	
   
-One solution is s = 0   which gives back out point P by construction. The other solution is obtained
+One solution is s=0 which gives back out point P by construction. The other solution is obtained
 by dividing both sides by s:
 
   0 = ((u/a)^2 + (v/b)^2 + 1) * s - 2
@@ -254,15 +258,19 @@ Plugging this value of s into the parametric equations gives:
   y(s) = (2 / ((u/a)^2 + (v/b)^2 + 1)) * v
   z(s) = c - (2 / ((u/a)^2 + (v/b)^2 + 1))*c
   
-Defining 
+Defining the common denominator as d:
 
-  d = ((u/a)^2 + (v/b)^2 + 1)
+  ┌───────────────────────────┐
+  │ d = (u/a)^2 + (v/b)^2 + 1 │
+  └───────────────────────────┘	  
   
-and simplifying gives:
+for convenience and simplifying gives:
 
-  x(s) = (2*u / d) 
-  y(s) = (2*v / d)
-  z(s) = c - (2*c / d) = (c*d - 2*c) / d
+  ┌──────────────────────────┐
+  │ x(u,v) = 2*u / d         │
+  │ y(u,v) = 2*v / d         │
+  │ z(u,v) = (c*d - 2*c) / d │
+  └──────────────────────────┘	
   
 Let's verify the formulas with the following snippet of sage code:  
   
@@ -270,8 +278,8 @@ a = 2                                      # x-extent of ellipsoid
 b = 3                                      # y-extent of ellipsoid
 c = 5                                      # z-extent of ellipsoid
 u = 7/11                                   # rational u-parameter, x-coordinate where line hits z=0
-v = 13/19                                  # rational v-parameter, y-coordinate where line hits z=0
-d = ((u/a)^2 + (v/b)^2 + 1)                # common denominator
+v = 13/17                                  # rational v-parameter, y-coordinate where line hits z=0
+d = (u/a)^2 + (v/b)^2 + 1                  # common denominator
 x = 2*u / d                                # x-coordinate on ellipsoid
 y = 2*v / d                                # y-coordinate on ellipsoid
 z = (c*d - 2*c) / d                        # z-coordinate on ellipsoid
@@ -280,7 +288,7 @@ ok, x,y,z                                  # print verification result and coord
 
 It produces the following output:
 
-(True, 2001384/1813513, 165528/139501, -6657595/1813513)  
+(True, 1602216/1468129, 148104/112933, -5248195/1468129) 
   
 So it indeed worked all out. We have produced a rational coordinate triple (x,y,z) which defines a 
 point on the ellipsoid. Seraching on google for "ellipsoid rational parametrization" brings up this:
@@ -293,7 +301,7 @@ probably equivalent. So - yeah - great - the parameterization algo has worked ou
 ToDo: 
 
 - Maybe we can even write a sage script that automates the whole derivation such that we just need 
-  to plug in the implicit equation?
+  to plug in the implicit equation and it spits out formulas for x(u,v), y(u,v), z(u,v)?
   
 - Make a similar derivation for an elliptic curve. These are curves of the form: y^2 = x^3 + a*x + b
   and a simple standard example (used in Elliptic tales) is y^2 = x^3 - x.
@@ -312,6 +320,11 @@ ToDo:
   Try to find a parameterization for that. If that is too hard, maybe start with simpler shapes like
   a sphere and a hyperboloid. Or maybe even simpler with a sphere and a plane. Or maybe use a cone 
   and a plane to get a literal conic section.
+  
+- It is interesting to observe that in the two rational parameterization we have seen so far, it was
+  always the case that all coordinate functions (x(t),y(t) or x(u,v),y(u,v),z(u,v)) always had a 
+  common denominator. That may also turn out to be a general feature of these parameterizations. 
+  -> Figure out!
   
 ----------------------------------------------------------------------------------------------------
 Finding the implicit equation from a given (rational) parameterization

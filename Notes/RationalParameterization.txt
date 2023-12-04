@@ -216,9 +216,9 @@ Resources:
 ----------------------------------------------------------------------------------------------------
 Derivation for the ellipsoid:
 
-The implicit equation is:
+The implicit equation of an ellipsoid is:
 
-  (x/a)^2 + (y/b)^2 + (z/c)^2 - 1 = 0
+  (x/a)^2 + (y/b)^2 + (z/c)^2 - 1 = 0          see https://en.wikipedia.org/wiki/Ellipsoid
   
 The points are:
 
@@ -282,18 +282,18 @@ It produces the following output:
 
 (True, 2001384/1813513, 165528/139501, -6657595/1813513)  
   
+So it indeed worked all out. We have produced a rational coordinate triple (x,y,z) which defines a 
+point on the ellipsoid. Seraching on google for "ellipsoid rational parametrization" brings up this:
 
-
+https://math.stackexchange.com/questions/4151942/parametric-equation-of-an-ellipsoid
   
+which seem to be the same formulas but assuming a=b=c=1. The z-formula looks different but it's 
+probably equivalent. So - yeah - great - the parameterization algo has worked out in this case.
   
 ToDo: 
 
-- Verify formulas numerically. Pick shape parameters a,b,c, pick some values for u,v, compute x,y,z
-  and plug them into the ellipsoid equation and check, if we get zero. Maybe write a little sage 
-  script. 
-
 - Maybe we can even write a sage script that automates the whole derivation such that we just need 
-  to plug in teh implicit equation
+  to plug in the implicit equation?
   
 - Make a similar derivation for an elliptic curve. These are curves of the form: y^2 = x^3 + a*x + b
   and a simple standard example (used in Elliptic tales) is y^2 = x^3 - x.

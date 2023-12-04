@@ -304,7 +304,7 @@ ToDo:
   to plug in the implicit equation and it spits out formulas for x(u,v), y(u,v), z(u,v)?
   
 - Make a similar derivation for an elliptic curve. These are curves of the form: y^2 = x^3 + a*x + b
-  and a simple standard example (used in Elliptic tales) is y^2 = x^3 - x.
+  and a simple standard example (used in Elliptic Tales) is y^2 = x^3 - x.
   https://en.wikipedia.org/wiki/Elliptic_curve
   https://mathworld.wolfram.com/EllipticCurve.html
   For aesthetic reasons, we may swap the roles of x and y to get a left/right symmetric shape:
@@ -313,9 +313,14 @@ ToDo:
   x^2 + a = y^3 + b*y. Maybe turn it into an "elliptic surface" by adding a z-coordinate as:
   x^2 + a = y^3 + b*y + z^3 + c*z  or  x^2 + a + y^2 + b = z^3 + c*z ...or whatever. Experiment a 
   bit for what gives nicely shaped surfaces. Then apply the algo for the rational parameterization 
-  to that. It would be an even more complictaed example due to aving higher degree. 
+  to that. It would be an even more complictaed example due to having higher degree. We may see 
+  something different with that - maybe we'll have to solve a quadratic and obtain two other 
+  solutions rather than one? Instead of one other intersection point R, we might find two other 
+  points R and S and their formula will require a square root? Then we'd not a rational but only an 
+  algebraic parameterization - that would still fit better into "algebraic" geometry than 
+  transcendental parameterizations like sin/cos-based ones.
   
-- Maybe after a parameterization of an elliptic surface has been found, add a second equation, e.g.:
+- Maybe after a parameterization of an elliptic surface has been found, add a second equation, e.g.
   x^2 + y^2 + z^2 - 1 = 0. Now look for the 3D curve that sastifies both equations simultaneously. 
   Try to find a parameterization for that. If that is too hard, maybe start with simpler shapes like
   a sphere and a hyperboloid. Or maybe even simpler with a sphere and a plane. Or maybe use a cone 
@@ -355,7 +360,7 @@ Finding the implicit equation from a given (rational) parameterization
     just the polynomial greatest common divisor and could perhaps be computed via Euclid's algo for
 	polynomials? I have an implementation of that somewhere in/near rsRationalFunction. The book 
 	uses the Sylvester matrix to define the resultant. It's the determinant of that matrix. But I 
-	think, this is not and algorithmically attractive way to actually compute it. Maybe see:
+	think, this is not an algorithmically attractive way to actually compute it. Maybe see:
 	https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Subresultant_pseudo-remainder_sequence
 	see also: https://www.youtube.com/watch?v=dC6dxFhzKoc
 	...but I guess, I would need an implementation of the polynomial GCD for trivariate polynomials.
@@ -365,7 +370,7 @@ Finding the implicit equation from a given (rational) parameterization
 
 
 ----------------------------------------------------------------------------------------------------
-My own idea for finding the implicit equation from any kinf of parameterization
+My own idea for finding the implicit equation from any kind of parameterization
 
 We have some given pair of functions x(t), y(t). We make an ansatz for our to-be-found p(x,y):
 
@@ -376,20 +381,30 @@ these coeffs. The indices i,j run from zero up to some maximum that we have deci
 could make it so that i+j is bounded by n which is the (maximum expected) degree of our polynomial 
 p(x,y). To get equations for the coeffs, we pick as many distinct values of t as we have 
 coefficients to determine. Each value of t gives us a pair of x,y via x(t), y(t) which we can plug
-into the ansatz. This should give us a system of equations that is linear in the to be found coeffs.
-By pikcing different values of t, we can produce as many equations as we need. It does perhaps make
+into the ansatz. This should give us a system of equations that is linear in the to-be-found coeffs.
+By picking different values of t, we can produce as many equations as we need. It does perhaps make
 sense to sample t in such a way as to get points that cover a large range of our curve - the points
 should perhaps not be too much clustered together. That may be better for the numerical 
-conditioning of the system. 
+conditioning of the system. We should also make sure that we don't run into a situation where our 
+choice of t-values leads to a singular system. We should detect such situations and if they occur, 
+choose different t values. This idea is not restricted to rational parameterizations - we can use 
+any sort of parameterization because we work over the real numbers here. Of course, we may also 
+apply it to a rational parameterization and may voluntarily restrict our choices for the t-samples 
+to be rational (it would actually be weird to pick irrational numbers anyway..or..well..depends).
 
-For this algo, we must decide beforehand on a maximum degree for the polynomial. If we pick a 
-degree higher than the actual polynomial has, the algorithm should automatically determine the 
-higher degree coeffs as being zero. So it seems like choosing a "sufficiently high" maximum degree 
-and then inspecting the actual degree might work (but may be watsed computaional resources). But 
-is there a better way? In the case of the circle, it was the case that the degree of the 
-polynomial happened to match the highest degree in rational parameterization. Was that a 
-coincidence or can we always assume that this happens? If so, we'd have a nice handle on the 
-degree - at least in case of a given *rational* parameterization. If the parameterization is 
-transcendental (e.g. uses sin/cos), it will be a different story. -> Figure this out!
+For this algo, we must decide beforehand on a maximum degree for the polynomial. If we pick a degree 
+higher than the actual polynomial has, the algorithm should automatically determine the higher 
+degree coeffs as being zero. So it seems like choosing a "sufficiently high" maximum degree and then 
+inspecting the actual degree might work (but may be wasted computational resources). But is there a 
+better way? In the case of the circle and ellipsoid, it was the case that the degree of the 
+polynomial happened to match the highest degree in rational parameterization. Was that a coincidence 
+or can we always assume that this happens? Maybe it's the degree of the denominator? If so, we'd 
+have a nice handle on the degree - at least in case of a given *rational* parameterization. If the 
+parameterization is transcendental (e.g. uses sin/cos), it will be a different story. In this case, 
+it may not even be clear that the parametric shape can be defined by a polynomial equation at all. 
+The implicit equation f(x,y,...) = 0 may have a more complicated (e.g. transcendental) f in general.
+In case of the circle with its sin/cos parameterization this turns out to be not the case but in 
+general it might be. We operate on the assumption that a polynomial implicit equation exists - which 
+might be false. -> Figure this stuff out!
 
 ----------------------------------------------------------------------------------------------------

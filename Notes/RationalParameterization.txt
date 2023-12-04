@@ -211,6 +211,46 @@ Resources:
   
 - Rational Parametrization of Curves  
   https://www3.risc.jku.at/education/courses/ss2018/caag/08-para.pdf  
+
+  
+----------------------------------------------------------------------------------------------------
+Derivation for the ellipsoid:
+
+The implicit equation is:
+
+  (x/a)^2 + (y/b)^2 + (z/c)^2 - 1 = 0
+  
+The points are:
+
+  P = (0,0,c)
+  Q = (u,v,0)
+  
+The line is:
+
+  L(s) = (1-s)*P + s*Q
+  
+which leads to the 3 equations:
+
+  x(s) = (1-s)*0 + s*u = s*u
+  y(s) = (1-s)*0 + s*v = s*v
+  z(s) = (1-s)*c + s*0 = c-s*c
+  
+Plugging them into the implicit equations gives:
+
+  0 =  (s*u/a)^2 + (s*v/b)^2 + ((c-s*c)/c)^2 - 1 
+    =  (u/a)^2*s^2 + (v/b)^2*s^2 + (1-s)^2 - 1 
+	=  ((u/a)^2 + (v/b)^2) * s^2 + 1 - 2*s + s^2 - 1
+	=  ((u/a)^2 + (v/b)^2 + 1) * s^2 - 2*s	
+  
+One solution is s = 0   which gives back out point P by construction. The other solution is obtained
+by dividing both sides by s:
+
+  0 = ((u/a)^2 + (v/b)^2 + 1) * s - 2
+  s = 2 / ((u/a)^2 + (v/b)^2 + 1)
+  
+Pluggin this value of s into the parametric equations gives:
+
+  
   
   
 ----------------------------------------------------------------------------------------------------

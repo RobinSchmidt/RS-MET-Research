@@ -10585,13 +10585,16 @@ void testSylvesterMatrix()
   Poly f({ 10, -7,  1   });  // f(x) =  10 - 7*x + 1*x^2
   Poly g({-12,  6, -4, 2});  // g(x) = -12 + 6*x - 4*x^2 + 2*x^3
 
+  Mat S;
+
+  /*
   // Find the gcd (greatest common divisor) of f and g:
   Real tol = 128 * std::numeric_limits<Real>::epsilon();      // To detect zero remainders in gcd
   Poly d   = RF::polyGCD(f.getCoeffs(), g.getCoeffs(), tol);  // d = gcd(f,g) = -2 + x
 
   // Establish the sylvester matrix of f and g. Unlike Weitz, we use the convention on wikipedia 
   // where the rows contain the coeffs of f,g in reverse order:
-  Mat S = rsSylvesterMatrix(f, g);
+  S = rsSylvesterMatrix(f, g);
   // Maybe Weitz uses the convention to put the coeff-arrays into the columns rather than in the 
   // rows because it makes the matrix more convenient to use in the matrix multiplication. With the
   // wikipedia convention, we need to use the transposed matrix in the matrix-vector product.
@@ -10609,15 +10612,14 @@ void testSylvesterMatrix()
   // vectors of f and g does indeed produce the coeff vector of s = p*f + q*g:
 
   Vec  pq = rsConcatenate(p.getCoeffs(), q.getCoeffs());
-
-
   //Vec  pq = rsConcatenate(rsReverse(p.getCoeffs()), rsReverse(q.getCoeffs())); // nope! rsreverse works in place
-
   Poly t  = p*f + q*g;              // This is our target
   Vec  u  = S.getTranspose() * pq;  // This should equal the coeff vector of t
   // Nope: t and u are not equal. Do I need to reverse something?
-
   // ...TBC...
+  */
+
+
 
   // Another example:
   f.setCoeffs({ -5, -1, -3, -2, +3, +1 }); // f = x^5 + 3*x^4 - 2*x^3 - 3*x^2 - 1*x - 5

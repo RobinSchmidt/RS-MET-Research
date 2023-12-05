@@ -10520,25 +10520,39 @@ void testSylvesterMatrix()
   // https://www.youtube.com/watch?v=dC6dxFhzKoc
 
   using Real = double;
-  //using Poly = RAPT::rsPolynomial<Real>;
-  using Vec  = std::vector<Real>;
+  using Poly = RAPT::rsPolynomial<Real>;
+  //using Vec  = std::vector<Real>;
+  using Mat  = RAPT::rsMatrix<Real>;
   using RF   = RAPT::rsRationalFunction<Real>;
 
   // Define the two polynomials of which we want to create the Sylvester matrix:
-  Vec f({ 10, -7,  1   });  // f(x) =  10 - 7*x + 1*x^2
-  Vec g({-12,  6, -4, 2});  // g(x) = -12 + 6*x - 4*x^2 + 2*x^3
+  Poly f({ 10, -7,  1   });  // f(x) =  10 - 7*x + 1*x^2
+  Poly g({-12,  6, -4, 2});  // g(x) = -12 + 6*x - 4*x^2 + 2*x^3
 
-  // Find the gcd of f and g:
-  Real tol = 128 * std::numeric_limits<Real>::epsilon();
-  Vec d = RF::polyGCD(f, g, tol);  // d = gcd(f,g) = -2 + x
+  // Find the gcd (greatest common divisor) of f and g:
+  Real tol = 128 * std::numeric_limits<Real>::epsilon();      // To detect zero remainders in gcd
+  Poly d   = RF::polyGCD(f.getCoeffs(), g.getCoeffs(), tol);  // d = gcd(f,g) = -2 + x
+
+  // Establish the sylvester matrix of f and g. We use the convention on wikipedia where the rows
+  // contain the coeffs of f,g in reverse order:
+  int m = f.getDegree();
+  int n = g.getDegree();
+  int N = m + n;                      // N = deg(f) + deg(g)
+  Mat S(N, N);
+  for(int i = 0; i < m+1; i++)
+    for(int j = 0; j < m+1; j++)
+      S(i,i+j) = f.getCoeff(j);
+
 
 
 
   int dummy = 0;
 
   // ToDo:
-  // -Try to find the determiniant of the sylvester matrix
+  // -Try to find the determinant of the Sylvester matrix
   // -Try to find p and q...I think, this requires the extended gcd algorithm?
+  // -Can we find the gcd also with the Sylvester matrix or is this just for detecting common
+  //  roots?
 
   // Notes:
   // -The resultant of a polynomial with its own derivative is called the discriminant and is 

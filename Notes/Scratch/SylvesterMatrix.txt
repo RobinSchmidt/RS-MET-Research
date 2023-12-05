@@ -56,7 +56,8 @@ https://www.youtube.com/watch?v=dC6dxFhzKoc
 If the polynomials f(x) and g(x) have a common divisor d(x), i.e. d|f and d|g, then we can write
 f = q*d and g = p*d for some (unknown) polynomials q,p. That means p*f = p*q*d = q*g which implies 
 p*f - q*g = 0. This implies that the trivial solution p=q=0 is not the only solution to that 
-equation.
+equation. ...I think, the fact that p,q are unknown means that this should hold for any p,q 
+whatsoever.
 
 If f and g have no common divisor, then p*f = q*g would imply f|q*g which in turn implies f|q 
 because f doesn't divide g. Similarly, it would imply that g|p. p*f-q*g = 0 would have only the 

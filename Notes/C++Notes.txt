@@ -67,6 +67,13 @@ https://en.cppreference.com/w/
 
 
 
+https://www.youtube.com/watch?v=zclxRbh4AN0
+At 42:12 has an interesting approach for abstracting tree-traversal from the actual computation at 
+the nodes in a way similar in spirit to the separation of iterators in linear structures. It uses 
+std::variant to implement the tree itself: a node is either a T or a std::vector<T> and it uses 
+std::visit and (the proposed, non-existent) std::overload ...but the branching must occur at 
+compile-time, I guess? Who needs that? Normally, one wants to branch at runtime.
+
 
 
 

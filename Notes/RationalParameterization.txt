@@ -320,6 +320,11 @@ ToDo:
   algebraic parameterization - that would still fit better into "algebraic" geometry than 
   transcendental parameterizations like sin/cos-based ones.
   
+- Maybe on such an "elliptic surface" as defined above, we can also define an addition just like it
+  was done for elliptic curves? Just connect two points on the surface with a line and see, where 
+  the line intersects the surface a third time. If that point is unique, then we may have a 3D 
+  version of point addition of elliptic curves.
+  
 - Maybe after a parameterization of an elliptic surface has been found, add a second equation, e.g.
   x^2 + y^2 + z^2 - 1 = 0. Now look for the 3D curve that sastifies both equations simultaneously. 
   Try to find a parameterization for that. If that is too hard, maybe start with simpler shapes like
@@ -405,6 +410,9 @@ it may not even be clear that the parametric shape can be defined by a polynomia
 The implicit equation f(x,y,...) = 0 may have a more complicated (e.g. transcendental) f in general.
 In case of the circle with its sin/cos parameterization this turns out to be not the case but in 
 general it might be. We operate on the assumption that a polynomial implicit equation exists - which 
-might be false. -> Figure this stuff out!
+might be false. What will happen, if the parameterization describes a non-polynomials variety? I 
+guess, we will get a polynomial variety that matches the parametrized variety in the chosen sample
+points but will do something else in other points. It's like a polynomial inter/extrapolation of the
+sample points that we take. -> Figure this stuff out!
 
 ----------------------------------------------------------------------------------------------------

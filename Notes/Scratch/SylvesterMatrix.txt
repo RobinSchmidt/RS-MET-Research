@@ -1,0 +1,101 @@
+Resultant and Sylvester Matrix:
+
+This post https://sage-support.narkive.com/5GruP1vO/sylvester-matrix has this code (adapted here to 
+use "print" as function rather than as command):
+
+R.<x,a> = PolynomialRing(ZZ)
+f = x^5 + 3*x^4 - 2*x^3 - 3*x^2 - a*x - 5
+g = x^5 + 7*x^4 - 5*x^3 + a*x^2 + x - 8
+M = f.sylvester_matrix(g,x)
+print(M)
+syldet=f.sylvester_matrix(1 + g, x).determinant()
+det=M.determinant()
+print(syldet)
+print(det)
+
+and it does work in https://sagecell.sagemath.org/. OK - so Sage apparently uses the convention of 
+listing the coeffs of the polynomials in the rows in descending powers of x. ACRS pg 59 writes the 
+coeffs into the rows in ascending powers of x. Wikipedia uses rows in descending power as well:
+https://en.wikipedia.org/wiki/Sylvester_matrix. In this video: 
+https://www.youtube.com/watch?v=dC6dxFhzKoc Weitz write the coeffs into the columns in descending 
+order so he uses the transposed wiki/sage convention.
+
+Suppose we have two polynomials
+
+  p = p(x) = p0 + p1*x + p2*x^2 + ... + pm*x^m
+  q = q(x) = q0 + q1*x + q2*x^2 + ... + qn*x^n
+
+and we wnat to encode the process of forming the polynomial pa + qb for two polynomials
+
+  a = a(x) = a0 + a1*x + a2*x^2 + ... + ak*x^k
+  b = b(x) = b0 + b1*x + b2*x^2 + ... + bl*x^l
+  
+in a matrix S such that the coefficient array/vector of pa + qb can be produced as the matrix-vector
+product S * vectcat(a, b)  where vectcat means the concatenation of the vectors
+
+
+
+
+https://en.wikipedia.org/wiki/Sylvester_matrix
+
+The rank of the Sylvester matrix determines the degree of the greatest common divisor of p and q:
+
+  deg(gcd(p,q)) = m + n - rank(S)
+
+
+https://en.wikipedia.org/wiki/B%C3%A9zout%27s_identity
+
+
+
+https://www.youtube.com/watch?v=dC6dxFhzKoc
+
+If the polynomials f(x) and g(x) have a common divisor d(x), i.e. d|f and d|g, then we can write
+f = q*d and g = p*d for some (unknown) polynomials q,p. That means p*f = p*q*d = q*g which implies 
+p*f - q*g = 0. This implies that the trivial solution p=q=0 is not the only solution to that 
+equation.
+
+If f and g have no common divisor, then p*f = q*g would imply f|q*g which in turn implies f|q 
+because f doesn't divide g. Similarly, it would imply that g|p. p*f-q*g = 0 would have only the 
+trivial solution p = q = 0
+
+The polynomial f and g have no common factor if anf only if p*f + q*g = 0 has only the trivial
+solution p = q = 0 (in this case, it doesn't matter if we consider p*f + q*g  or  p*f - q*g.
+
+If we consider the equation p*f + q*g = 0 as an equation to find the coeffs of p and q, then this
+will lead to a linear system whose matrix depends on the coeffs of f and g. If this system has only
+one solution, the the determinant of the matrix is nonzero. 
+
+Example - let:
+
+  f(x) = x^2 - 7*x + 10
+  g(x) = 2*x^3 - 4*x^2 + 6*x - 12
+  
+  p(x) = p2*x^2 + p1*x + p0          deg(p) < deg(g)
+  q(x) = q1*x + q0                   deg(q) < deg(f)
+
+We get for p*f + q*g = 0:
+
+    (p2 + 2*q1) * x^4 + (p1 - 7*p2 + 2*q0 - 4*q1) * x^3 + (p0 - 7*p1 + 10*p2 - 4*q0 + 6*q1) * x^2
+  + (-7*p0 + 10*p1 + 6*q0 - 12*q1) * x + (10*p0 - 12*q0)  =  0
+
+This leads to:
+
+  [ 1            2     ]  [p2]    [p2 + 2*q1                      ]
+  [-7   1       -4    2]  [p1]    [p1 - 7*p2 + 2*q0 - 4*q1        ]
+  [10  -7   1    6   -4]  [p0] =  [p0 - 7*p1 + 10*p2 - 4*q0 + 6*q1]
+  [    10  -7  -12    6]  [q1]    [
+  [        10       -12]  [q0]    [
+
+To actually compute p,q from this system, we would have to modify the matrix in such a way to get 
+the zero vector on the righthand side. ..or wait...that would give the zero matrix, I think.
+
+
+ToDo:  
+
+- Implement and test a function:
+
+  template<class T>
+  rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T>& p, const rsPolynomial<T>& q)
+  
+- 
+  

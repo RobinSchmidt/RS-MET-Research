@@ -11,12 +11,24 @@ Fun fact: algebraic geometry and geometric algebra are two fields of mathematics
 
 
 %===================================================================================================
-\subsection{Algebraic Varieties}
-An \emph{algebraic variety} is the set of solutions to a system of polynomial equations $f_1(\mathbf{x}) = 0, \ldots, f_m(\mathbf{x}) = 0$ where $\mathbf{x} = (x_1, \ldots, x_n)$ and the $f_i$ are multivariate polynomials in these variables, i.e. polynomials with $n$ input variables that we may collect into an $n$-dimensional input vector $\mathbf{x}$ whenever this is notationally convenient. In general, this set of solutions is a set of points in an $n$-dimensional space. The dimensionality of the variety will typically be given by $n-m$ where $n$ is the number of variables and $m$ the number of equations [VERIFY!]. We may also collect the collection $(f_1, \ldots , f_m)$ of functions into a vector such that we write $\mathbf{f(x) = 0}$ for the whole system of $m$ equations. If there is only one single function $f$ and a single equation, we will write $f(\mathbf{x}) = 0$. In this case, the variety will be a curve.
+\subsection{Algebraic Varieties}  % and Schemes
+An \emph{algebraic variety} is the set of solutions to a system of polynomial equations $f_1(\mathbf{x}) = 0, \ldots, f_m(\mathbf{x}) = 0$ where $\mathbf{x} = (x_1, \ldots, x_n)$ and the $f_i$ are multivariate polynomials in these variables, i.e. polynomials with $n$ input variables that we may collect into an $n$-dimensional input vector $\mathbf{x}$ whenever this is notationally convenient. In general, this set of solutions is a set of points in an $n$-dimensional space. The dimensionality of the variety will typically be given by $n-m$ where $n$ is the number of variables and $m$ the number of equations [VERIFY!]. We may also collect the collection $(f_1, \ldots , f_m)$ of functions into a vector such that we write $\mathbf{f(x) = 0}$ for the whole system of $m$ equations. If there is only one single function $f$ and a single equation, we will write $f(\mathbf{x}) = 0$. In this case, the variety will be a curve. 
+
+
+%A \emph{scheme} is similar to a variety but it takes into account multiplicities. Some part of a curve may belong to the set multiple times like when you take $(x^2 + y^2 - 1)^2 = 0$, you would get the unit circle two times because every solution of the circle equation $x^2 + y^2 - 1 = 0$ turns into two solutions when you square the polynomial on the left hand side. Varieties cannot model that because they are defined as sets - and sets do not distinguish between $\{1,2,2\}$ and $\{1,2\}$. Multisets do....
+% Nah - that's wrong - schemes are not multisets
 
  ...TBC...
 
-% ACRS uses multisets to define varieties. This is done to deal with repeated components of the curve or variety. The book doesn't use the term "variety" and instead talks about "hypersurfaces". Funny enough, it nonetheless uses the letter V for the "hypersurface" without explaining for what that V is supposed to stand. I have a hunch.
+% ACRS uses multisets to define varieties. This is done to deal with repeated components of the curve or variety. The book doesn't use the term "variety" and instead talks about "hypersurfaces". Funny enough, it nonetheless uses the letter V for the "hypersurface" without explaining for what that V is supposed to stand. I have a hunch. Seems like the "hypersurfaces" in ACRS are more like "schemes":
+
+% https://en.wikipedia.org/wiki/Algebraic_curve
+% https://en.wikipedia.org/wiki/Algebraic_surface
+
+% https://en.wikipedia.org/wiki/Scheme_(mathematics)
+% is basically like a variety but takes into account multiplicities and the underlying number system is not necessarily the familiar real or complex numbers but any commutative ring.
+
+% Explain that extended notion here, too
 
 % Explain potential multiplicity of components. A component of the variety may be included twice or thrice etc.
 
@@ -76,13 +88,15 @@ The set of solutions of $y^2 = x^3 + a x + b$ for some given values $a,b$ is cal
 
 %simple examples: cassini curves, lemniskate, torus
 
-% AVRS, pg 72: 
+% ACRS, pg 72: 
 % -Nodal cubic curve: y^2 = x^2 + x^3
 % -Folium of Descartes: x^3 + y^3 = 3 x y
 
 % https://en.wikipedia.org/wiki/Lemniscate
 % https://de.wikipedia.org/wiki/Lemniskate
 % https://en.wikipedia.org/wiki/Polynomial_lemniscate
+% https://en.wikipedia.org/wiki/Fermat_curve   x^n + y^n = z^n
+% https://en.wikipedia.org/wiki/Ruled_surface
 
 % -Give implicit equation and parametrization(s) whereever possible and if possible also an explicit
 %  formula
@@ -221,7 +235,7 @@ https://en.wikipedia.org/wiki/Projective_plane
 https://en.wikipedia.org/wiki/Rational_mapping
 
 https://en.wikipedia.org/wiki/Elliptic_curve
-https://en.wikipedia.org/wiki/Algebraic_curve
+
 https://en.wikipedia.org/wiki/Weierstrass_elliptic_function
 
 
@@ -231,6 +245,11 @@ https://en.wikipedia.org/wiki/Calabi%E2%80%93Yau_manifold
 https://en.wikipedia.org/wiki/Duality_(projective_geometry)
 
 https://en.wikipedia.org/wiki/Implicit_surface
+
+https://en.wikipedia.org/wiki/Weil_conjectures
+
+https://en.wikipedia.org/wiki/Sheaf_(mathematics)
+A sheaf is a tool for tracking data (such as sets, abelian groups, rings) attached to the open sets of a topological space. For example, for each open set, the data could be the ring of continuous functions defined on that open set.
 
 
 -conic sections in 2D and 3D, classification

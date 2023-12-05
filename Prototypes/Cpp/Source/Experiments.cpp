@@ -10519,7 +10519,7 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
   // contain the coeffs of f,g in reverse order:
   int m = p.getDegree();
   int n = q.getDegree();
-  int N = m + n;                      // N = deg(f) + deg(g)
+  int N = m + n;                         // N = deg(f) + deg(g) = size of the matrix
   rsMatrix<T> S(N, N);
 
   for(int i = 0; i < n; i++)
@@ -10550,6 +10550,9 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
 
   // https://en.wikipedia.org/wiki/Sylvester_matrix
 }
+
+// TODO:
+// -Implement Bezout matrix: https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
 
 template<class T>
 void randomizeCoeffs(rsPolynomial<T>* p, T min, T max, int seed, bool roundToInt = false)
@@ -10586,7 +10589,7 @@ void testSylvesterMatrix()
 
   Mat S;
 
-  /*
+  
   // Find the gcd (greatest common divisor) of f and g:
   Real tol = 128 * std::numeric_limits<Real>::epsilon();      // To detect zero remainders in gcd
   Poly d   = RF::polyGCD(f.getCoeffs(), g.getCoeffs(), tol);  // d = gcd(f,g) = -2 + x
@@ -10597,6 +10600,9 @@ void testSylvesterMatrix()
   // Maybe Weitz uses the convention to put the coeff-arrays into the columns rather than in the 
   // rows because it makes the matrix more convenient to use in the matrix multiplication. With the
   // wikipedia convention, we need to use the transposed matrix in the matrix-vector product.
+  // The wikipedia article about the resultant also uses the column-wise convention:
+  // https://en.wikipedia.org/wiki/Resultant so we have the situation that wikipedia does not 
+  // even internally use a common convention.
 
   // Create two random polynomials p,q with deg(p) < deg(g), deg(q) < deg(f):
   //int m = f.getDegree();
@@ -10609,7 +10615,18 @@ void testSylvesterMatrix()
 
   // Check, if muliplying the Sylvester matrix with the concatenation of the (reversed?) coeff 
   // vectors of f and g does indeed produce the coeff vector of s = p*f + q*g:
+  Poly t  = p*f + q*g;               // This is our target
+  Mat  ST = S.getTranspose();        // S^T, equals Weitz's matrix from the video
+  Vec  vp = p.getCoeffs();
+  Vec  vq = q.getCoeffs();
+  rsReverse(vp);
+  rsReverse(vq);
+  Vec  pq = rsConcatenate(vp, vq);
+  Vec  u  = ST * pq;                 // This is the result which should equal our target t.
+  // u is t reversed.
 
+
+  /*
   Vec  pq = rsConcatenate(p.getCoeffs(), q.getCoeffs());
   //Vec  pq = rsConcatenate(rsReverse(p.getCoeffs()), rsReverse(q.getCoeffs())); // nope! rsreverse works in place
   Poly t  = p*f + q*g;              // This is our target
@@ -10617,13 +10634,14 @@ void testSylvesterMatrix()
   // Nope: t and u are not equal. Do I need to reverse something?
   // ...TBC...
   */
+ 
 
 
 
   // Another example:
   f.setCoeffs({ -5, -6, -4, -2, +3, +7 });
   g.setCoeffs({ -8, +3, +8, -5, +2     });
-  S = rsSylvesterMatrix(f, g); // raises assert
+  S = rsSylvesterMatrix(f, g);
 
 
 

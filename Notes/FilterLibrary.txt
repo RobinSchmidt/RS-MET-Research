@@ -3,21 +3,29 @@
 Features:
 
 - Implementation goals and considerations:
-  - Should be templatized and at least support float, double, SIMD-vectors, multiprecision-float.
-    Would be nice, if it would also support more complicated types like matrices. The type of the 
-	parameters/coeffs and signals should possibly be different (example: scalar coeffs, multichannel 
-	signals maybe realized by simd). That may be difficult to achieve when std::complex is used for 
-	the poles and zeros. We need a more flexible complex datatype that can work with SIMD and 
-	multiprecision numbers. But it could be possible with std::complex now (check that!).
-  - Should be realtime capable: sample and buffer based processing functions shall never allocate 
+  - Should be templatized and at least support float, double, SIMD-vectors and maybe multiprecision
+    for the signals and coefficients. Would be nice, if it would also support more complicated types 
+	like matrices. The type of the parameters/coeffs and signals should possibly be different 
+	(example: scalar coeffs, multichannel signals realized by simd). SIMD coeffs can also be 
+	useful (each channel can have different coeffs) but that may be difficult to achieve when 
+	std::complex is used for the poles and zeros. We need a more flexible complex datatype that can 
+	work with SIMD and multiprecision numbers. But it could be possible with std::complex now (check 
+	that!).
+  - Should be realtime capable: sample and block based processing functions shall never allocate 
     memory. Filter parameter updates (e.g. change of cutoff freq) should also work without 
 	allocations. They also shall not acquire locks. Any thread-sync should be done on a higher level
-	anyay and is not within the scope of the responsibility of this library. This library should 
+	anyway and is not within the scope of the responsibility of this library. This library should 
 	only care about crunching numbers. Thread sync is someone else's job.
   - Should be implemented as C++20 "module".
-  - May define two C++20 "concepts": Signal and Parameter/Coefficient
+  - May define two C++20 "concepts": "Signal" and "Parameter"/"Coefficient". They must be numeric 
+    and it must be possible to arithmetically combine coeffs and signals and the result of that 
+	should be a signal. Example: coeff = float, signal = simd<float, 4>.
   - Maybe a library for dealing with polynomials and rational functions should be factored out. Such
-    a library may be useful in its own right.
+    a library may be useful in its own right. There is already boost::polynomial. Look into that and
+	see, if it's suitable. Hmm...problematic: has only a value_type used for values *and* coeffs.
+	I'd like to see separate types for value_type and coeff_type. Maybe that class could be extended
+	appropriately. There isn't very much functionality going on in that class anyway. I need much 
+	more - including root-finding aka factorization. 
   - The usual design pipeline for a digital filter is:  user-specification  ->  s-plane prototype 
     zeros/poles/gain  ->  s-plane freq trafo  ->  s-to-z trafo  ->  coeff calculation for 
     implementation structure (e.g. biquad chain)

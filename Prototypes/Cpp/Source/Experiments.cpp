@@ -10521,6 +10521,17 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
   int n = q.getDegree();
   int N = m + n;                      // N = deg(f) + deg(g)
   rsMatrix<T> S(N, N);
+
+  for(int i = 0; i < m; i++)
+    for(int j = 0; j <= m; j++)
+      S(i, i+j) = p.getCoeff(m-j);
+
+
+  for(int i = 0; i < N-n; i++)      // i think , the N-n upper limit may be wrong
+    for(int j = 0; j <= n; j++)
+      S(i+m, i+j) = q.getCoeff(n-j);
+
+  /*
   for(int i = 0; i <= m; i++)
     for(int j = 0; j <= m; j++)
       S(i, i+j) = p.getCoeff(m-j);
@@ -10528,6 +10539,7 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
   for(int i = 0; i < N-n; i++)      // i think , the N-n upper limit may be wrong
     for(int j = 0; j <= n; j++)
       S(i+m, i+j) = q.getCoeff(n-j);
+      */
   // Looks good in the first test but needs more tests (update: a second test fails).
   //
   // Document why the loop limits are what they are and why m is incremented between the loops.

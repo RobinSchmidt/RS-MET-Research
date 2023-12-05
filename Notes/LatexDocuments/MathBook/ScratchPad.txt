@@ -444,6 +444,13 @@ https://en.wikipedia.org/wiki/Wiener%E2%80%93Khinchin_theorem
 
 
 ----------------------------------------------------------------------------------------------------
+Formal Grammars, Automata, Turing Machines, ...
+
+
+Minimierung deterministischer endlicher Automaten:
+https://www.youtube.com/watch?v=2FNTDtabQz4
+
+----------------------------------------------------------------------------------------------------
 Theory of Computation:
 
 https://en.wikipedia.org/wiki/Abstract_machine

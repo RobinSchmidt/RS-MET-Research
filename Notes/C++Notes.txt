@@ -1,12 +1,13 @@
-
-===================================================================================================
+====================================================================================================
 https://www.youtube.com/watch?v=tXUXl_RzkAk
 
 Classic STL (since C++98):
-Utilities:   basic stuff like min,max,swap,etc.
-Containers:  collections of data
-Algorithms:  operate on collections of data (typically but not necessarily containers)
-Iterators:   glue/interface between containers and algorithms
+Utilities:   Basic stuff like min, max, swap, etc.
+Containers:  Collections of data (ex: vector, list, set, map)
+Algorithms:  Operate on collections of data (typically but not necessarily containers, ex: find, 
+             sort, count_if, all_of, any_of, for_each)
+Iterators:   Glue/interface between containers and algorithms. Algorithms use iterators to navigate
+             through a collection. An iterator abstracts ideas like increment, indexed access, etc.
 
 One key aspect of the design of the STL is that the containers and the algorithms which operate on
 them are entirely independent. Ideally, every algo should work with every container. Iterators 
@@ -15,7 +16,7 @@ the overloaded implementation of the "++" operator of the given iterator class k
 go the next element - even if we are iterating over a linked list instead of a contiguous array,
 for example.
 
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 Iterators:
 
 Iterators abstract the idea of iterating over a sequence. The simplest example of an iterator is a
@@ -35,9 +36,10 @@ iterator range is defined by pair of iterators [begin, end), the "end" not being
 representing the position one after the last. An "end" iterator can't be dereferenced. It may refer
 to a sentinel node in e.g. linked lists or to an unowned memory location in e.g. std::vector. 
 Reverse iterators move backward where a regular iterator moves forward and vice versa. There are
-also insert iterators that model output iterators.
+also insert iterators that model output iterators. Random access iterators allow indexed access of
+elements via the [] operator.
 
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 Containers:
 
 Sequence containers (vector, deque, list, array, forward_list) are unsorted. Associative containers
@@ -50,14 +52,18 @@ There are also container adaptors like stack or queue that endow an underlying o
 as deque, list or vector with a stack/queue interface. Priority queue is another adaptor that
 implements a heap datastructure.
 
----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
 Algorithms:
 
 Operate on (sub-ranges of) containers, taking a pair of iterators as arguments and possibly have
-additional parameter for predicates
+additional parameter for predicates ...TBC...
 
 
 
+====================================================================================================
+Resources:
+
+https://en.cppreference.com/w/
 
 
 

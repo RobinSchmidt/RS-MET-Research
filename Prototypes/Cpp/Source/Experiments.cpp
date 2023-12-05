@@ -10448,8 +10448,6 @@ void testParticleSystem()
   int dummy = 0;
 }
 
-
-
 void testWeightedAverages()
 {
   // Demonstrates two different ways of computing weighted averages of an array with one left out. 
@@ -10459,8 +10457,8 @@ void testWeightedAverages()
   // complexity O(N^2) but a better algorithm can compute the same values in O(N). This is a 
   // algorithmic pattern that can potentially be useful in other contexts, whenever each object
   // interacts with every other object. An example is a particle system where each particle excerts
-  // a gravitational attraction pon every other particle. It occurs also in Lagrange interpolation 
-  // where there are partial polynomials that consists of a product of all linear factors exscpt 
+  // a gravitational attraction on every other particle. It occurs also in Lagrange interpolation 
+  // where there are partial polynomials that consists of a product of all linear factors except 
   // one. In such a case, one can construct a "master" polynomial and then obtain the i-th by 
   // dividing out a linear factor at a time.
 
@@ -10497,7 +10495,7 @@ void testWeightedAverages()
   // Computation of the Ai, also in O(N):
   Vec Ai2(5);
   Vec Wi2(5);
-  float S = A*W;               // weighted sum
+  float S = A*W;               // weighted sum - undo division by sum of weights
   for(int i = 0; i < 5; i++) {
     float Si = S - w[i]*a[i];  // weighted sum with one left out
     Wi2[i] = W  - w[i];        // sum of weights with one left out
@@ -10513,6 +10511,44 @@ void testWeightedAverages()
   int dummy = 0;
 }
 
+
+void testSylvesterMatrix()
+{
+  // Under construction
+
+  // Example polynomials taken from here:
+  // https://www.youtube.com/watch?v=dC6dxFhzKoc
+
+  using Real = double;
+  //using Poly = RAPT::rsPolynomial<Real>;
+  using Vec  = std::vector<Real>;
+  using RF   = RAPT::rsRationalFunction<Real>;
+
+  // Define the two polynomials of which we want to create the Sylvester matrix:
+  Vec f({ 10, -7,  1   });  // f(x) =  10 - 7*x + 1*x^2
+  Vec g({-12,  6, -4, 2});  // g(x) = -12 + 6*x - 4*x^2 + 2*x^3
+
+  // Find the gcd of f and g:
+  Real tol = 128 * std::numeric_limits<Real>::epsilon();
+  Vec d = RF::polyGCD(f, g, tol);  // d = gcd(f,g) = -2 + x
+
+
+
+  int dummy = 0;
+
+  // ToDo:
+  // -Try to find the determiniant of the sylvester matrix
+  // -Try to find p and q...I think, this requires the extended gcd algorithm?
+
+  // Notes:
+  // -The resultant of a polynomial with its own derivative is called the discriminant and is 
+  //  important to distinguish (discriminate) between different configurations of the roots. For a 
+  //  real quadratic polynomial, the relevant cases are: two distinct real roots, a real double 
+  //  root, two complex conjugate roots. More generally, I think, if a polynomial has a common root
+  //  with its derivative, that root must be a double root in the original polynomial. 
+  //  https://mathworld.wolfram.com/PolynomialDiscriminant.html
+  //  https://en.wikipedia.org/wiki/Discriminant 
+}
 
 void testModularGroup()
 {

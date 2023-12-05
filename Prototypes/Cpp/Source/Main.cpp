@@ -1,19 +1,14 @@
 #include "Experiments.cpp"  // includes Tools.cpp which includes libraries rapt and rosic 
 #include "Renderings.cpp"   // ...what about the rs_testing module? Where is this included?
 
+// ToDo: 
+// -Bring some order into the code of the experiments. At the moment, they are all in the flat file
+//  Experiments.cpp. Split it into ExperimentsMath, ExperimentsData, ExperimentsPhysics/Modeling, 
+//  ExperimentsSignal, ExperimentsMisc
+
+
 int main (int /*argc*/, char* /*argv[]*/)
 {
-  /*
-  // try to delete and replace characters on the on the console programatically:
-  unsigned char back = 8;     // backspace see http://www.asciitable.com/
-  std::cout << "abcd";        // write abcd
-  std::cout << back << back;  // delete cd
-  std::cout << "CD";          // write CD - should result in abCD - seems to work
-  getchar();
-  // OK - this can be deleted. It has been integrated into class rsConsoleProgressIndicator
-  // in Tools.cpp
-  */
-
   // Image processing:
   //testGaussBlurFIR();
   //testGaussBlurIIR();
@@ -57,8 +52,8 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // PDE solvers on nonuniform meshes:
   //testMeshGeneration();
-  testTransportEquation();
-  testWaveEquation();
+  //testTransportEquation();
+  //testWaveEquation();
   //testBiModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
@@ -67,7 +62,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testExteriorAlgebra3D();
   //testGeometricAlgebra();
 
-
+  // Math:
   //testEulerTransformation();
   //testGreensFunction();  // stub
   //testComplexPolar();    // stub
@@ -82,6 +77,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();
+  testSylvesterMatrix();
 
   // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff
@@ -91,22 +87,24 @@ int main (int /*argc*/, char* /*argv[]*/)
   // ToDo: 
   // -Maybe move the string-group code over here from the main repo, and write testStringGroup()
 
-  //testAttractors();
+  //testAttractors();  // move into a section for physics/models
 
   // MIMO Filters:
   //testMimoTransferMatrix();
   //testMimoFilters();        // just a stub - not much in there yet, mostly comments
   //testStateSpaceFilters();
 
+  // Math:
   //test2x2Matrices();               // stub
-  test2x2MatrixCommutation();
+  //test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub
   //testQuaternion();
   //testChebychevEconomization();  // stub
-
   //testGeneratingFunction();
   //testCatalanNumbers();
   //testSmoothCrossFade();
+
+
   //testMerge();
 
 
@@ -122,10 +120,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //polyaGeodesics();
 
   // Batch creation of plots:
-  //makePlotsForPolyaPotentialPaper();  // move to Renderings.cpp
+  //makePlotsForPolyaPotentialPaper();  // todo: move to Renderings.cpp
 
   // Renderings of mathematical art:
-  imgRainbowRadiation();
+  //imgRainbowRadiation();
 
 
   // Throw away code:

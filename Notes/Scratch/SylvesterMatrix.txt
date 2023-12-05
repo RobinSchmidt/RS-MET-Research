@@ -25,13 +25,17 @@ Suppose we have two polynomials
   p = p(x) = p0 + p1*x + p2*x^2 + ... + pm*x^m
   q = q(x) = q0 + q1*x + q2*x^2 + ... + qn*x^n
 
-and we wnat to encode the process of forming the polynomial pa + qb for two polynomials
+and we want to encode the process of forming the polynomial pa + qb for two polynomials
 
   a = a(x) = a0 + a1*x + a2*x^2 + ... + ak*x^k
   b = b(x) = b0 + b1*x + b2*x^2 + ... + bl*x^l
   
 in a matrix S such that the coefficient array/vector of pa + qb can be produced as the matrix-vector
-product S * vectcat(a, b)  where vectcat means the concatenation of the vectors
+product S * vectcat(a, b)  where vectcat means the concatenation of the vectors. The matrix that 
+achieves this is the sylvester matrix. ...I think. 
+
+
+
 
 
 
@@ -88,6 +92,17 @@ This leads to:
 
 To actually compute p,q from this system, we would have to modify the matrix in such a way to get 
 the zero vector on the righthand side. ..or wait...that would give the zero matrix, I think.
+
+...
+
+Example to use the resultant. Consider the two algebraic numbers a,b:
+
+  a = 2 + sqrt(3)      root of f(x) = x^2 - 4*4 + 1
+  b = cbrt(2)          root of g(x) = x^3 - 2
+
+We want to find a polynomial whose root z is z = a + b. The resultant Res(f(x), g(z-x)) is such 
+a polynomial. Likewise, if z = a*b, Res(f(x), x^3*g(z/x)) is a polynomial with a*b as root.
+
 
 
 ToDo:  

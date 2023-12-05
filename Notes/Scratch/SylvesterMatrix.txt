@@ -20,6 +20,39 @@ https://en.wikipedia.org/wiki/Sylvester_matrix. In this video:
 https://www.youtube.com/watch?v=dC6dxFhzKoc Weitz write the coeffs into the columns in descending 
 order so he uses the transposed wiki/sage convention.
 
+
+The code above uses the extra variable a which we do not need for numerical test. I changed the code
+as follows:
+
+R.<x> = PolynomialRing(ZZ)
+f = 7*x^5 + 3*x^4 - 2*x^3 - 4*x^2 - 6*x - 5
+g =         2*x^4 - 5*x^3 + 8*x^2 + 3*x - 8
+M = f.sylvester_matrix(g,x)
+D = M.determinant()
+M, D
+
+so we also have two polynomials of different degrees which is better for testing. So, we have in 
+terms of coeff arrays:
+
+  f = -5, -6, -4, -2, +3, +7     deg(f) = 5
+  g = -8, +3, +8, -5, +2         deg(g) = 4
+
+Sage produces the following Sylvester matrix S(f,g):
+
+  [ 7  3 -2 -4 -6 -5  0  0  0]           
+  [ 0  7  3 -2 -4 -6 -5  0  0]           
+  [ 0  0  7  3 -2 -4 -6 -5  0]           
+  [ 0  0  0  7  3 -2 -4 -6 -5]           
+  [ 2 -5  8  3 -8  0  0  0  0]     with determinant 109181107
+  [ 0  2 -5  8  3 -8  0  0  0]           
+  [ 0  0  2 -5  8  3 -8  0  0]           
+  [ 0  0  0  2 -5  8  3 -8  0]           
+  [ 0  0  0  0  2 -5  8  3 -8]
+
+
+
+
+
 Suppose we have two polynomials
 
   p = p(x) = p0 + p1*x + p2*x^2 + ... + pm*x^m

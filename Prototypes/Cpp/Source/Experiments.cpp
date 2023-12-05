@@ -10522,14 +10522,13 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
   int N = m + n;                      // N = deg(f) + deg(g)
   rsMatrix<T> S(N, N);
 
-  for(int i = 0; i < m; i++)
+  for(int i = 0; i < n; i++)
     for(int j = 0; j <= m; j++)
       S(i, i+j) = p.getCoeff(m-j);
 
-
-  for(int i = 0; i < N-n; i++)      // i think , the N-n upper limit may be wrong
+  for(int i = 0; i < m; i++)
     for(int j = 0; j <= n; j++)
-      S(i+m, i+j) = q.getCoeff(n-j);
+      S(i+n, i+j) = q.getCoeff(n-j);
 
   /*
   for(int i = 0; i <= m; i++)
@@ -10622,8 +10621,8 @@ void testSylvesterMatrix()
 
 
   // Another example:
-  f.setCoeffs({ -5, -1, -3, -2, +3, +1 }); // f = x^5 + 3*x^4 - 2*x^3 - 3*x^2 - 1*x - 5
-  g.setCoeffs({ -8, +1, +1, -5, +7, +1 }); // g = x^5 + 7*x^4 - 5*x^3 + 1*x^2 + 1*x - 8
+  f.setCoeffs({ -5, -6, -4, -2, +3, +7 });
+  g.setCoeffs({ -8, +3, +8, -5, +2     });
   S = rsSylvesterMatrix(f, g); // raises assert
 
 

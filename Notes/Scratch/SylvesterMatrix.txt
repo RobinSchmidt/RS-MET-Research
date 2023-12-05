@@ -34,8 +34,8 @@ M, D
 so we also have two polynomials of different degrees which is better for testing. So, we have in 
 terms of coeff arrays:
 
-  f = -5, -6, -4, -2, +3, +7     deg(f) = 5
-  g = -8, +3, +8, -5, +2         deg(g) = 4
+  f = -5, -6, -4, -2, +3, +7     deg(f) = 5 = m
+  g = -8, +3, +8, -5, +2         deg(g) = 4 = n
 
 Sage produces the following Sylvester matrix S(f,g):
 
@@ -49,7 +49,9 @@ Sage produces the following Sylvester matrix S(f,g):
   [ 0  0  0  2 -5  8  3 -8  0]           
   [ 0  0  0  0  2 -5  8  3 -8]
 
-
+It is 9x9, the first polynomial occupies the first 4 rows, the second occupies the rows with indices
+4...8. I think, in general, if deg(f) = m and deg(g) = n, then f occupies rows 0...n-1 and g 
+occupies rows n...n+m-1
 
 
 

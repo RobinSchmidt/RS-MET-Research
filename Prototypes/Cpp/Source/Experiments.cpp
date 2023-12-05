@@ -10562,7 +10562,7 @@ void testSylvesterMatrix()
 
   using Real = double;
   using Poly = RAPT::rsPolynomial<Real>;
-  //using Vec  = std::vector<Real>;
+  using Vec  = std::vector<Real>;
   using Mat  = RAPT::rsMatrix<Real>;
   using RF   = RAPT::rsRationalFunction<Real>;
 
@@ -10592,7 +10592,11 @@ void testSylvesterMatrix()
 
   // Check, if muliplying the Sylvester matrix with the concatenation of the (reversed?) coeff 
   // vectors of f and g does indeed produce the coeff vector of s = p*f + q*g:
-  Poly s = p*f + q*g;  // This is our target
+  Vec  pq = rsConcatenate(p.getCoeffs(), q.getCoeffs());
+  Poly t  = p*f + q*g;              // This is our target
+  Vec  u  = S.getTranspose() * pq;  // This should equal the coeff vector of t
+  // Nope: t and u are not equal. Do I need to reverse something?
+
   // ...TBC...
 
 

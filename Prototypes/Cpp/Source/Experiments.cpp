@@ -10513,21 +10513,21 @@ void testWeightedAverages()
 
 
 template<class T>
-rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> f, const rsPolynomial<T> g)
+rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
 {
   // Establish the sylvester matrix of f and g. We use the convention on wikipedia where the rows
   // contain the coeffs of f,g in reverse order:
-  int m = f.getDegree();
-  int n = g.getDegree();
+  int m = p.getDegree();
+  int n = q.getDegree();
   int N = m + n;                      // N = deg(f) + deg(g)
   rsMatrix<T> S(N, N);
   for(int i = 0; i <= m; i++)
     for(int j = 0; j <= m; j++)
-      S(i, i+j) = f.getCoeff(m-j);
+      S(i, i+j) = p.getCoeff(m-j);
   m++;
   for(int i = 0; i < N-n; i++) 
     for(int j = 0; j <= n; j++)
-      S(i+m, i+j) = g.getCoeff(n-j);
+      S(i+m, i+j) = q.getCoeff(n-j);
   // Looks good but needs more tests.
   // Document why the loop limits are what they are and why m is incremented between the loops.
   // Rename f to p and g to q to be consistent with wikipedia
@@ -10536,6 +10536,22 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> f, const rsPolynomial<T> g)
 
   // https://en.wikipedia.org/wiki/Sylvester_matrix
 }
+
+template<class T>
+void randomizeCoeffs(rsPolynomial<T>* p, T min, T max, int seed, bool roundToInt = false)
+{
+  rsNoiseGenerator<T> prng;
+  prng.setRange(min, max);
+  prng.setSeed(seed);
+  for(int i = 0; i <= p->getDegree(); i++)  // <= is not a bug, numCoeffs is degree + 1
+  {
+    T c = prng.getSample(); 
+    if(roundToInt)
+      c = rsRound(c);
+    p->setCoeff(i, c);       // write and use setCoeff(i, prng.getSample())
+  }
+}
+
 
 void testSylvesterMatrix()
 {
@@ -10558,31 +10574,26 @@ void testSylvesterMatrix()
   Real tol = 128 * std::numeric_limits<Real>::epsilon();      // To detect zero remainders in gcd
   Poly d   = RF::polyGCD(f.getCoeffs(), g.getCoeffs(), tol);  // d = gcd(f,g) = -2 + x
 
-  // Establish the sylvester matrix of f and g. We use the convention on wikipedia where the rows
-  // contain the coeffs of f,g in reverse order:
-
-  /*
-  int m = f.getDegree();
-  int n = g.getDegree();
-  int N = m + n;                      // N = deg(f) + deg(g)
-  Mat S(N, N);
-  for(int i = 0; i <= m; i++)
-    for(int j = 0; j <= m; j++)
-      S(i, i+j) = f.getCoeff(m-j);
-  m++;
-  for(int i = 0; i < N-n; i++) 
-    for(int j = 0; j <= n; j++)
-      S(i+m, i+j) = g.getCoeff(n-j);
-  // Looks good but needs more tests.
-  // Document why the loop limits are what they are and why m is incremented between the loops.
-  // Then, move into a function
-  */
-
-
-
+  // Establish the sylvester matrix of f and g. Unlike Weitz, we use the convention on wikipedia 
+  // where the rows contain the coeffs of f,g in reverse order:
   Mat S = rsSylvesterMatrix(f, g);
+  // Maybe Weitz uses the convention to put the coeff-arrays into the columns rather than in the 
+  // rows because it makes the matrix more convenient to use in the matrix multiplication. With the
+  // wikipedia convention, we need to use the transposed matrix in the matrix-vector product.
 
+  // Create two random polynomials p,q with deg(p) < deg(g), deg(q) < deg(f):
+  //int m = f.getDegree();
+  //int n = g.getDegree();
+  Poly p(g.getDegree() - 1);  // deg(p) < deg(g)
+  Poly q(f.getDegree() - 1);  // deg(q) < deg(f)
+  int seed = 2;
+  randomizeCoeffs(&p, -9.0, +9.0, seed, true); seed++;
+  randomizeCoeffs(&q, -9.0, +9.0, seed, true);
 
+  // Check, if muliplying the Sylvester matrix with the concatenation of the (reversed?) coeff 
+  // vectors of f and g does indeed produce the coeff vector of s = p*f + q*g:
+  Poly s = p*f + q*g;  // This is our target
+  // ...TBC...
 
 
 
@@ -10602,6 +10613,8 @@ void testSylvesterMatrix()
   //  with its derivative, that root must be a double root in the original polynomial. 
   //  https://mathworld.wolfram.com/PolynomialDiscriminant.html
   //  https://en.wikipedia.org/wiki/Discriminant 
+  // -The rank of the Sylvester matrix S = S(p,q) determines the degree of the greatest common 
+  //  divisor of two polynomials p and q: deg(gcd(p,q)) = deg(p) + deg(q) - rank(S)
 }
 
 void testModularGroup()

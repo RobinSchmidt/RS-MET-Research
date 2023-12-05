@@ -10525,12 +10525,15 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
     for(int j = 0; j <= m; j++)
       S(i, i+j) = p.getCoeff(m-j);
   m++;
-  for(int i = 0; i < N-n; i++) 
+  for(int i = 0; i < N-n; i++)      // i think , the N-n upper limit may be wrong
     for(int j = 0; j <= n; j++)
       S(i+m, i+j) = q.getCoeff(n-j);
-  // Looks good but needs more tests.
+  // Looks good in the first test but needs more tests (update: a second test fails).
+  //
   // Document why the loop limits are what they are and why m is incremented between the loops.
   // Rename f to p and g to q to be consistent with wikipedia
+  //
+  // 
 
   return S;
 
@@ -10592,7 +10595,12 @@ void testSylvesterMatrix()
 
   // Check, if muliplying the Sylvester matrix with the concatenation of the (reversed?) coeff 
   // vectors of f and g does indeed produce the coeff vector of s = p*f + q*g:
+
   Vec  pq = rsConcatenate(p.getCoeffs(), q.getCoeffs());
+
+
+  //Vec  pq = rsConcatenate(rsReverse(p.getCoeffs()), rsReverse(q.getCoeffs())); // nope! rsreverse works in place
+
   Poly t  = p*f + q*g;              // This is our target
   Vec  u  = S.getTranspose() * pq;  // This should equal the coeff vector of t
   // Nope: t and u are not equal. Do I need to reverse something?

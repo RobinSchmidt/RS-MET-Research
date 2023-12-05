@@ -10548,7 +10548,7 @@ void testSylvesterMatrix()
   // This is still wrong
   //for(int i = 0; i <= n; i++)       // Maybe i should run to N-n?
   m++;
-  for(int i = 0; i <= N-n; i++)       // Maybe i should run to N-n?
+  for(int i = 0; i < N-n; i++)       // Maybe i should run to N-n?
     for(int j = 0; j <= n; j++)
     {
       S(i+m, i+j) = g.getCoeff(n-j); // i+j exceeds N-1 here

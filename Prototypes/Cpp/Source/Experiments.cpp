@@ -10541,7 +10541,7 @@ void testSylvesterMatrix()
   Mat S(N, N);
   for(int i = 0; i < m+1; i++)
     for(int j = 0; j < m+1; j++)
-      S(i,i+j) = f.getCoeff(j);
+      S(i,i+j) = f.getCoeff(m-j);
 
 
 

@@ -10539,21 +10539,16 @@ void testSylvesterMatrix()
   int n = g.getDegree();
   int N = m + n;                      // N = deg(f) + deg(g)
   Mat S(N, N);
-
   for(int i = 0; i <= m; i++)
     for(int j = 0; j <= m; j++)
-      S(i,i+j) = f.getCoeff(m-j);
-  // Looks okay so far
-
-  // This is still wrong
-  //for(int i = 0; i <= n; i++)       // Maybe i should run to N-n?
+      S(i, i+j) = f.getCoeff(m-j);
   m++;
-  for(int i = 0; i < N-n; i++)       // Maybe i should run to N-n?
+  for(int i = 0; i < N-n; i++) 
     for(int j = 0; j <= n; j++)
-    {
-      S(i+m, i+j) = g.getCoeff(n-j); // i+j exceeds N-1 here
-      int dummy = 0;
-    }
+      S(i+m, i+j) = g.getCoeff(n-j);
+  // Looks good but needs more tests.
+  // Document why the loop limits are what they are and why m is incremented between the loops
+
 
 
 

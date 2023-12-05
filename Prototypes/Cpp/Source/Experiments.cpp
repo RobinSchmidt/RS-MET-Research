@@ -10521,33 +10521,23 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
   int n = q.getDegree();
   int N = m + n;                         // N = deg(f) + deg(g) = size of the matrix
   rsMatrix<T> S(N, N);
-
   for(int i = 0; i < n; i++)
     for(int j = 0; j <= m; j++)
       S(i, i+j) = p.getCoeff(m-j);
-
   for(int i = 0; i < m; i++)
     for(int j = 0; j <= n; j++)
       S(i+n, i+j) = q.getCoeff(n-j);
-
-  /*
-  for(int i = 0; i <= m; i++)
-    for(int j = 0; j <= m; j++)
-      S(i, i+j) = p.getCoeff(m-j);
-  m++;
-  for(int i = 0; i < N-n; i++)      // i think , the N-n upper limit may be wrong
-    for(int j = 0; j <= n; j++)
-      S(i+m, i+j) = q.getCoeff(n-j);
-      */
-  // Looks good in the first test but needs more tests (update: a second test fails).
-  //
-  // Document why the loop limits are what they are and why m is incremented between the loops.
-  // Rename f to p and g to q to be consistent with wikipedia
-  //
-  // 
-
   return S;
 
+  // ToDo:
+  // -Maybe make a variant that uses getCoeff(j) instead of getCoeff(m-j) and (n-j). I think, this
+  //  convention should avoid the need for the reversal of p,q,u in the tests below. So, it would 
+  //  make these tests more natural as well as the code here. When we are at it, we could also swap
+  //  the roles of rows and columns such that we don't need to use the transposed matrix. Maybe 
+  //  call it rsModifiedSylvetserMatrix or rsNaturalSylvesterMatrix or rsSylvesterMultiplierMatrix.
+  // -Document why the loop limits are what they are.
+  //
+  // See:
   // https://en.wikipedia.org/wiki/Sylvester_matrix
 }
 
@@ -10623,7 +10613,10 @@ void testSylvesterMatrix()
   rsReverse(vq);
   Vec  pq = rsConcatenate(vp, vq);
   Vec  u  = ST * pq;                 // This is the result which should equal our target t.
-  // u is t reversed.
+  // u is t reversed. If we comment the two calls to rsReverse, the result completely different, so
+  // that doesn't seem to be the culprit. Maybe u must just be reversed at the end, too.
+  // That reversal business is messy. Maybe we should use a convention for the Sylvester matrix
+  // that doesn't need that.
 
 
   /*

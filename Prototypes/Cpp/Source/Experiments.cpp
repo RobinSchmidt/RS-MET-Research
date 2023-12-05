@@ -10512,6 +10512,31 @@ void testWeightedAverages()
 }
 
 
+template<class T>
+rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> f, const rsPolynomial<T> g)
+{
+  // Establish the sylvester matrix of f and g. We use the convention on wikipedia where the rows
+  // contain the coeffs of f,g in reverse order:
+  int m = f.getDegree();
+  int n = g.getDegree();
+  int N = m + n;                      // N = deg(f) + deg(g)
+  rsMatrix<T> S(N, N);
+  for(int i = 0; i <= m; i++)
+    for(int j = 0; j <= m; j++)
+      S(i, i+j) = f.getCoeff(m-j);
+  m++;
+  for(int i = 0; i < N-n; i++) 
+    for(int j = 0; j <= n; j++)
+      S(i+m, i+j) = g.getCoeff(n-j);
+  // Looks good but needs more tests.
+  // Document why the loop limits are what they are and why m is incremented between the loops.
+  // Rename f to p and g to q to be consistent with wikipedia
+
+  return S;
+
+  // https://en.wikipedia.org/wiki/Sylvester_matrix
+}
+
 void testSylvesterMatrix()
 {
   // Under construction
@@ -10535,6 +10560,8 @@ void testSylvesterMatrix()
 
   // Establish the sylvester matrix of f and g. We use the convention on wikipedia where the rows
   // contain the coeffs of f,g in reverse order:
+
+  /*
   int m = f.getDegree();
   int n = g.getDegree();
   int N = m + n;                      // N = deg(f) + deg(g)
@@ -10547,9 +10574,13 @@ void testSylvesterMatrix()
     for(int j = 0; j <= n; j++)
       S(i+m, i+j) = g.getCoeff(n-j);
   // Looks good but needs more tests.
-  // Document why the loop limits are what they are and why m is incremented between the loops
+  // Document why the loop limits are what they are and why m is incremented between the loops.
+  // Then, move into a function
+  */
 
 
+
+  Mat S = rsSylvesterMatrix(f, g);
 
 
 

@@ -10541,6 +10541,29 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
   // https://en.wikipedia.org/wiki/Sylvester_matrix
 }
 
+template<class T>
+rsMatrix<T> rsSylvesterMatrixModified(const rsPolynomial<T> p, const rsPolynomial<T> q)
+{
+  // A modified Sylvester matrix where we swap the roles of rows and columns to avoid the need for
+  // transposition in the matrix-vector product and leave the polynomial coefficient vectors in 
+  // their natural order (from low to high degree) to avoid the need for reversing input and output
+  // vectors. ToDo: explain in detail - what matrix-vector product we talk about
+
+  int m = p.getDegree();
+  int n = q.getDegree();
+  int N = m + n;                         // N = deg(f) + deg(g) = size of the matrix
+  rsMatrix<T> S(N, N);
+  for(int i = 0; i < n; i++)
+    for(int j = 0; j <= m; j++)
+      S(i+j, i) = p.getCoeff(j);
+  for(int i = 0; i < m; i++)
+    for(int j = 0; j <= n; j++)
+      S(i+j, i+n) = q.getCoeff(j);
+  return S;
+}
+
+
+
 // TODO:
 // -Implement Bezout matrix: https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
 // -Maybe this, too: https://en.wikipedia.org/wiki/Hurwitz_determinant
@@ -10599,8 +10622,8 @@ void testSylvesterMatrix()
   // Create two random polynomials p,q with deg(p) < deg(g), deg(q) < deg(f):
   //int m = f.getDegree();
   //int n = g.getDegree();
-  Poly p(g.getDegree() - 1);  // deg(p) < deg(g)
-  Poly q(f.getDegree() - 1);  // deg(q) < deg(f)
+  Poly p(g.getDegree() - 1);  // deg(p) < deg(g) is required
+  Poly q(f.getDegree() - 1);  // deg(q) < deg(f) is required
   int seed = 2;
   randomizeCoeffs(&p, -9.0, +9.0, seed, true); seed++;
   randomizeCoeffs(&q, -9.0, +9.0, seed, true);
@@ -10618,9 +10641,26 @@ void testSylvesterMatrix()
   rsReverse(vu);                     // Needed to make it work
   ok &= vu == t.getCoeffs();
   // That reversal business is messy. Maybe we should use a convention for the Sylvester matrix
-  // that doesn't need that.
+  // that doesn't need that. Commenting out all 3 reversals doesn't work either. I guess, to make 
+  // that work, we would additionally need to swap into pq to qp, i.e. remove all three reversals 
+  // *and* use qp instead of pq. Just a hunch -> try it! But that would still be inconvenient.
 
   rsAssert(ok);
+
+  // Now with the modified Sylvester matrix. The modifications are: transposition and left/right 
+  // reflection ...but in what order? I think in the order given: trans -> horzflip
+  Mat SM = rsSylvesterMatrixModified(f, g);
+  vp = p.getCoeffs();
+  vq = q.getCoeffs();
+  pq = rsConcatenate(vp, vq);
+  vu = SM * pq;
+  ok &= vu == t.getCoeffs();
+  // OK - that seems to work! Nice! No transpositions or reversals needed anymore with the modified
+  // Sylvester matrix.
+
+
+  rsAssert(ok);
+
 
   // Another example:
   f.setCoeffs({ -5, -6, -4, -2, +3, +7 });
@@ -10629,7 +10669,13 @@ void testSylvesterMatrix()
 
 
 
+
+
   // ToDo:
+  // -Figure out, if the determinant of the modified Sylvester is equal to the one of the regular
+  //  Sylvester matrix. Test it wih even and odd sized matrices - it might depend on that. I think, 
+  //  the horizontal flip may multiply the determinant with +-1 depending on even/odd size because 
+  //  the flip is a bunch (even or odd number) of columns-swaps.
   // -Write a unit test with a whole bunch of random examples and a couple of specifically 
   //  constructed examples that cover potentially problematic cases (edge cases, etc.). Such cases
   //  could be: p or q or both have degree 0, have formally higher degree but the coeffs are zero,

@@ -1,10 +1,40 @@
 \section{Hypercomplex Numbers}
-We have seen the real numbers and the complex numbers as an extension of the reals motivated by the desire to be able to solve polynomial equations. We arrived at a two dimensional number system. In general, when we call something a number system, we expect that to be some set of objects which we can treat (more or less) like the rational, real or complex numbers that we are used to. In particular: we expect from such a set that addition, subtraction, multiplication and division operations are defined between pairs of such set elements and we expect these operations to behave (more or less) in the same way that we know from our more familiar number systems. That is: we may expect things like associativity, commutativity and distributivity from these operations. ...TBC...
+We have seen the real numbers and the complex numbers as an extension of the reals motivated by the desire to be able to solve polynomial equations. We arrived at a two dimensional number system. One might ask the question whether or not there are other number systems out there. But what do we mean by the term "number system"? What features must an object have, such that we could reasonably call it a "number"? The answer lies mostly in the kinds of operations that we expect to be able to do with these objects. In general, when we call something a number system, we expect that to be some set of objects which we can treat (more or less) like the rational, real or complex numbers that we are used to. In particular: we expect from such a set that addition, subtraction, multiplication and division operations are defined between pairs of such set elements and we expect these operations to behave (more or less) in the same way that we know from our more familiar number systems. That is: we may expect things like associativity, commutativity and distributivity from these operations. ...TBC...
 
 % Explain what we expect from a number system
 
+% Note that we can do these things with matrices, 
 
 \subsection{Complex Numbers}
+Let's revisit the set of complex numbers and look at them through the lens of linear algebra and Euclidean geometry. Addition of complex numbers is like vector addition in $\mathbb{R}^2$ and the multiplication of complex numbers is a combination of scaling and rotation. Such an operation in the Euclidean plane can be encoded in a $2 \times 2$ matrix $\mathbf{Z}$ of the form:
+\begin{equation}
+ \mathbf{Z} 
+ = r \cdot
+ \begin{pmatrix}
+ \cos(\phi) & -\sin(\phi) \\
+ \sin(\phi) &  \cos(\phi)
+ \end{pmatrix}
+ =
+ \begin{pmatrix}
+  a & -b \\
+ b  &  a
+ \end{pmatrix} 
+\end{equation}
+I have chosen the letter $\mathbf{Z}$ for a reason: we conventionally use $z$ to denote complex numbers and indeed can we use the matrix $\mathbf{Z}$ above to represent the complex number $z = a + \i b = \cos(\phi) + \i \sin(\phi) = r \e^{\i \phi}$. 
+
+% Explain hwo we usuall think of matrices as operating on vectors when encoding geometric transformations...but we also have matrix multiplication...I think, the first column of the matrix Z represents the complex number as a vector. Matrix multiplication is just matrix vector multiplciation applied to multiple vectors at once, namely the columns of the right matrix factor
+
+
+% https://en.wikipedia.org/wiki/Rotation_matrix
+% https://en.wikipedia.org/wiki/Rotation_matrix#Relationship_with_complex_plane
+
+%From the geometric behavior of the  
+
+%We know that complex
+
+%Complex numbers
+
+% explain how complex numbers can be represented by a particular set of 2x2 matrices
 
 \subsection{Hyperbolic Numbers}
 
@@ -24,7 +54,12 @@ We have seen the real numbers and the complex numbers as an extension of the rea
 
 \begin{comment}
 
--Frame the algebras of hypercomplex numbers as particular subsets of matrices. They can
- all be represented by a constrained set of matrices
+-Frame the algebras of hypercomplex numbers as (representably by) particular subsets of
+ the set of matrices. That's why we put it into the linear algebra chapter.
+ 
+https://mathworld.wolfram.com/HypercomplexNumber.html
+https://en.wikipedia.org/wiki/Hypercomplex_number
+
+ 
 
 \end{comment}

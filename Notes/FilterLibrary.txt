@@ -166,6 +166,8 @@ Notes:
 - If this is not all achievable at the same time, make a priority list for what compositions are 
   more importnat than others.
   
+- Use doxgen with LaTeX expressions for the documentation for the math stuff
+  
 
 Multiprecision numbers:
 https://www.boost.org/doc/libs/1_83_0/libs/multiprecision/doc/html/index.html

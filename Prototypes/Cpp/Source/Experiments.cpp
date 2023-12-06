@@ -10702,6 +10702,39 @@ void testSylvesterMatrix()
 }
 
 
+/** UNDER CONSTRUCTION
+
+Given the two polynomials f and g, this function computes the Bezout matrix associated with this
+pair of polynomials. Let
+
+  f(z) = sum_{i=0}^n u_i z^i
+  g(z) = sum_{i=0}^n v_i z^i
+
+Then
+
+  B(f,g) = b_{ij} = \sum_{k=0}^{m_{ij}} ( u_{j+k+1} v_{i-k}  -  u_{i-k} v_{j+k+1} )
+
+where m_{ij} = min(i, n-j-1). It should satisfy:
+
+  \sum_{i,j = 0}^{n-1} b_{ij} x^i y^j = \frac{f(x)g(y) - f(y)g(x)} {x-y}
+
+and have the following properties: The matrix B itself is symmetric: B(i,j) = B(j,i). The map from 
+f,g to B(f,g) is antisymmetric: B(f,g) = -B(g,f) which implies that B(f,f) = 0.
+
+
+
+*/
+template<class T>
+rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T> f, const rsPolynomial<T> g)
+{
+  rsError("Not yet implemented");
+
+  rsMatrix<T> B;  // todo: init with correct size
+
+  // ...something more to do...
+
+  return B;
+}
 
 void testBezoutMatrix()
 {

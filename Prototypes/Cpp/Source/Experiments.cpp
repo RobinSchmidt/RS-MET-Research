@@ -10550,13 +10550,31 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
   // -Maybe move to RAPT
 }
 
+/** A modified Sylvester matrix where we swap the roles of rows and columns to avoid the need for
+transposition in the matrix-vector product and leave the polynomial coefficient vectors in their 
+natural order (from low to high degree) to avoid the need for reversing input and output vectors. 
+The layout is:
+
+           [p0       q0         ]
+           [p1 p0    q1 q0      ]
+           [p2 p1 p0 q2 q1 q0   ]
+  S(p,q) = [p3 p2 p1 q3 q2 q1 q0]
+           [p4 p3 p2    q3 q2 q1]
+           [   p4 p3       q3 q2]
+           [      p4          q3]
+
+ToDo: 
+-Verify, if the layout shown above is correct.
+-Explain in detail - what matrix-vector product we talk about
+-Explain what this change in layout implies for the determinant. I guess the flipping of the coeff
+ vectors leads to amultiplication by -1 when N is odd and does nothing when N is even? ..or wait. 
+ No! - for a flip, the number of colum-swaps is always even, so it should leave the determinant 
+ unchanged in all cases. */
+
 template<class T>
 rsMatrix<T> rsSylvesterMatrixModified(const rsPolynomial<T> p, const rsPolynomial<T> q)
 {
-  // A modified Sylvester matrix where we swap the roles of rows and columns to avoid the need for
-  // transposition in the matrix-vector product and leave the polynomial coefficient vectors in 
-  // their natural order (from low to high degree) to avoid the need for reversing input and output
-  // vectors. ToDo: explain in detail - what matrix-vector product we talk about
+
 
   int m = p.getDegree();
   int n = q.getDegree();

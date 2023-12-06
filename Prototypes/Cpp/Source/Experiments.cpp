@@ -10568,6 +10568,7 @@ rsMatrix<T> rsSylvesterMatrixModified(const rsPolynomial<T> p, const rsPolynomia
 // -Implement Bezout matrix: https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
 // -Maybe this, too: https://en.wikipedia.org/wiki/Hurwitz_determinant
 
+/*
 template<class T>
 void randomizeCoeffs(rsPolynomial<T>* p, T min, T max, int seed, bool roundToInt = false)
 {
@@ -10582,6 +10583,7 @@ void randomizeCoeffs(rsPolynomial<T>* p, T min, T max, int seed, bool roundToInt
     p->setCoeff(i, c);       // write and use setCoeff(i, prng.getSample())
   }
 }
+*/
 
 
 void testSylvesterMatrix()

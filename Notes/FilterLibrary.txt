@@ -96,7 +96,17 @@ Features:
 	roundoff errors	thwart these design attempts. That's usually more than enough in practice - but 
 	wouldn't it be nice, if we could design elliptic filters of order 100 as well just because we 
 	can?
-
+  - For designing the interface of the class for polynomials, one of the challenges is that for 
+    root-finders for real-valued polynomials, the roots may nevertheless be complex. My current 
+	approach to this is not very elegant. Maybe that can be done better. Speaking more generally, 
+	roots of a polynomial do not necessarily have the same data type as the coefficients. They lie 
+	in the algebraic closure of the coefficient type. For example, the complex numbers are the 
+	algebraic closure for the reals, the algebraic numbers for the rationals and it gets really wild 
+	for finite fields - the algebraic closure of a finite field is an inifinite sequence of fields:
+	https://en.wikipedia.org/wiki/Algebraic_closure
+	But maybe these cosiderations fall into the category of the "speculative generality" code smell?
+	...but a library should be as generally applicable as possible. Maybe one should somehow have a
+	third template parameter "RootType" (along with "ValueType" and "CoeffType")
   
 ----------------------------------------------------------------------------------------------------
 Notes on composability of templates:

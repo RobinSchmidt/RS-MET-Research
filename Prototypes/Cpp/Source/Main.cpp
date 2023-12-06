@@ -77,7 +77,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();
-  testSylvesterMatrix();
+  //testSylvesterMatrix();
+  testBezoutMatrix();
 
   // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff

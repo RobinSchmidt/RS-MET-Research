@@ -10570,12 +10570,9 @@ ToDo:
  vectors leads to amultiplication by -1 when N is odd and does nothing when N is even? ..or wait. 
  No! - for a flip, the number of colum-swaps is always even, so it should leave the determinant 
  unchanged in all cases. */
-
 template<class T>
 rsMatrix<T> rsSylvesterMatrixModified(const rsPolynomial<T> p, const rsPolynomial<T> q)
 {
-
-
   int m = p.getDegree();
   int n = q.getDegree();
   int N = m + n;                         // N = deg(f) + deg(g) = size of the matrix
@@ -10593,10 +10590,10 @@ rsMatrix<T> rsSylvesterMatrixModified(const rsPolynomial<T> p, const rsPolynomia
 // -Implement Bezout matrix: https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
 // -Maybe this, too: https://en.wikipedia.org/wiki/Hurwitz_determinant
 
-
 void testSylvesterMatrix()
 {
-  // Under construction
+  // We test the creation of the sylvester matrix associated with a pair of polynomials and verify
+  // that the matrix has the desired properties.
 
   // Example polynomials taken from here:
   // https://www.youtube.com/watch?v=dC6dxFhzKoc
@@ -10666,18 +10663,13 @@ void testSylvesterMatrix()
   // OK - that seems to work! Nice! No transpositions or reversals needed anymore with the modified
   // Sylvester matrix.
 
-
-  rsAssert(ok);
-
-
   // Another example:
   f.setCoeffs({ -5, -6, -4, -2, +3, +7 });
   g.setCoeffs({ -8, +3, +8, -5, +2     });
   S = rsSylvesterMatrix(f, g);
+  // ...TBC...
 
-
-
-
+  rsAssert(ok);
 
   // ToDo:
   // -Figure out, if the determinant of the modified Sylvester is equal to the one of the regular
@@ -10708,6 +10700,27 @@ void testSylvesterMatrix()
   // -The rank of the Sylvester matrix S = S(p,q) determines the degree of the greatest common 
   //  divisor of two polynomials p and q: deg(gcd(p,q)) = deg(p) + deg(q) - rank(S)
 }
+
+
+
+void testBezoutMatrix()
+{
+  // UNDER CONSTRUCTION
+  //
+  // https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
+
+  bool ok = true;
+
+
+
+  rsAssert(ok);
+
+  // See also:
+  // https://en.wikipedia.org/wiki/Routh%E2%80%93Hurwitz_theorem
+  // -> B can be used to determine, iff all roots of a polynomial are in the left half-plane, i.e.
+  //    we can dtermine stability of an analog filter without actually computing its roots.
+}
+
 
 void testModularGroup()
 {

@@ -10512,11 +10512,25 @@ void testWeightedAverages()
 }
 
 
+/** Given two polynomials p and q, this function produces the Sylvester matrix associated with this
+pair of polynomials. If the coefficient arrays of p,q are given by [p0 p1 p2 p3 p4], [q0 q1 q2 q3], 
+then the matrix looks like:
+
+           [p4 p3 p2 p1 p0      ]
+           [   p4 p3 p2 p1 p0   ]
+           [      p4 p3 p2 p1 p0]
+  S(p,q) = [q3 q2 q1 q0         ]
+           [   q3 q2 q1 q0      ]
+           [      q3 q2 q1 q0   ]
+           [         q3 q2 q1 q0]
+
+where the blank fields stand for zeros. This Sylvester matrix layout follows the convention used 
+on wikipedia here:  https://en.wikipedia.org/wiki/Sylvester_matrix  and it is also the one used by 
+SageMath but there are other conventions in use, so watch out. Some use the transposed matrix of 
+the form above. */
 template<class T>
 rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
 {
-  // Establish the sylvester matrix of f and g. We use the convention on wikipedia where the rows
-  // contain the coeffs of f,g in reverse order:
   int m = p.getDegree();
   int n = q.getDegree();
   int N = m + n;                         // N = deg(f) + deg(g) = size of the matrix
@@ -10530,15 +10544,10 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
   return S;
 
   // ToDo:
-  // -Maybe make a variant that uses getCoeff(j) instead of getCoeff(m-j) and (n-j). I think, this
-  //  convention should avoid the need for the reversal of p,q,u in the tests below. So, it would 
-  //  make these tests more natural as well as the code here. When we are at it, we could also swap
-  //  the roles of rows and columns such that we don't need to use the transposed matrix. Maybe 
-  //  call it rsModifiedSylvetserMatrix or rsNaturalSylvesterMatrix or rsSylvesterMultiplierMatrix.
+  // -Write unit tests
   // -Document why the loop limits are what they are.
-  //
-  // See:
-  // https://en.wikipedia.org/wiki/Sylvester_matrix
+  // -Explain a little bit about what this matrix is good for in the doxygen docstring.
+  // -Maybe move to RAPT
 }
 
 template<class T>
@@ -10562,28 +10571,9 @@ rsMatrix<T> rsSylvesterMatrixModified(const rsPolynomial<T> p, const rsPolynomia
   return S;
 }
 
-
-
 // TODO:
 // -Implement Bezout matrix: https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
 // -Maybe this, too: https://en.wikipedia.org/wiki/Hurwitz_determinant
-
-/*
-template<class T>
-void randomizeCoeffs(rsPolynomial<T>* p, T min, T max, int seed, bool roundToInt = false)
-{
-  rsNoiseGenerator<T> prng;
-  prng.setRange(min, max);
-  prng.setSeed(seed);
-  for(int i = 0; i <= p->getDegree(); i++)  // <= is not a bug, numCoeffs is degree + 1
-  {
-    T c = prng.getSample(); 
-    if(roundToInt)
-      c = rsRound(c);
-    p->setCoeff(i, c);       // write and use setCoeff(i, prng.getSample())
-  }
-}
-*/
 
 
 void testSylvesterMatrix()

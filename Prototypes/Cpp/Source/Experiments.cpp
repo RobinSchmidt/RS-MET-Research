@@ -10543,6 +10543,7 @@ rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
 
 // TODO:
 // -Implement Bezout matrix: https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
+// -Maybe this, too: https://en.wikipedia.org/wiki/Hurwitz_determinant
 
 template<class T>
 void randomizeCoeffs(rsPolynomial<T>* p, T min, T max, int seed, bool roundToInt = false)
@@ -10578,6 +10579,7 @@ void testSylvesterMatrix()
   Poly g({-12,  6, -4, 2});  // g(x) = -12 + 6*x - 4*x^2 + 2*x^3
 
   Mat S;
+  bool ok = true;
 
   
   // Find the gcd (greatest common divisor) of f and g:
@@ -10612,24 +10614,13 @@ void testSylvesterMatrix()
   rsReverse(vp);
   rsReverse(vq);
   Vec  pq = rsConcatenate(vp, vq);
-  Vec  u  = ST * pq;                 // This is the result which should equal our target t.
-  // u is t reversed. If we comment the two calls to rsReverse, the result completely different, so
-  // that doesn't seem to be the culprit. Maybe u must just be reversed at the end, too.
+  Vec  vu = ST * pq;                 // This is the result which should equal our target t.
+  rsReverse(vu);                     // Needed to make it work
+  ok &= vu == t.getCoeffs();
   // That reversal business is messy. Maybe we should use a convention for the Sylvester matrix
   // that doesn't need that.
 
-
-  /*
-  Vec  pq = rsConcatenate(p.getCoeffs(), q.getCoeffs());
-  //Vec  pq = rsConcatenate(rsReverse(p.getCoeffs()), rsReverse(q.getCoeffs())); // nope! rsreverse works in place
-  Poly t  = p*f + q*g;              // This is our target
-  Vec  u  = S.getTranspose() * pq;  // This should equal the coeff vector of t
-  // Nope: t and u are not equal. Do I need to reverse something?
-  // ...TBC...
-  */
- 
-
-
+  rsAssert(ok);
 
   // Another example:
   f.setCoeffs({ -5, -6, -4, -2, +3, +7 });
@@ -10638,15 +10629,20 @@ void testSylvesterMatrix()
 
 
 
-
-  int dummy = 0;
-
   // ToDo:
-  // -Try to find the determinant of the Sylvester matrix
-  // -Try to find p and q...I think, this requires the extended gcd algorithm?
+  // -Write a unit test with a whole bunch of random examples and a couple of specifically 
+  //  constructed examples that cover potentially problematic cases (edge cases, etc.). Such cases
+  //  could be: p or q or both have degree 0, have formally higher degree but the coeffs are zero,
+  //  are empty (degree zero polynomials actually have one coeff, namely a0 = 0).
+  // -Try to find the determinant of the Sylvester matrix, i.e. write a function determinant in
+  //  rsLinearAlgebraNew
+  // -Try to find p and q from t. I think, this requires the extended gcd algorithm? But that could
+  //  be totally wrong. But this linear combination stuff which sums to zero really reminds of the
+  //  https://en.wikipedia.org/wiki/B%C3%A9zout%27s_identity  but there, the rhs is not zero but d.
+  //  -> Figure out, if there's a connection anf if so, what exactly it is!
   // -Can we find the gcd also with the Sylvester matrix or is this just for detecting common
   //  roots?
-
+  //
   // Notes:
   // -The resultant of a polynomial with its own derivative is called the discriminant and is 
   //  important to distinguish (discriminate) between different configurations of the roots. For a 

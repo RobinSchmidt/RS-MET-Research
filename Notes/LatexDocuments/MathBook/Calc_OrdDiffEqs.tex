@@ -1,0 +1,12 @@
+\section{Ordinary Differential Equations} 
+Ordinary differential equations (abbreviated as ODEs) are equations in which the unknown quantity is not just a single variable like $x$, i.e. a number, but rather a full function $f:\mathbb{R} \rightarrow \mathbb{R}$. The equation may contain the function itself as well as derivatives of it. The presence of derivatives is what makes it a "differential" equation. The goal is to find a function $f = f(x)$ that obeys a certain given relationship between itself and its own derivatives. For example, the function $f(x) = \e^x$ obeys the relation $f = f'$ and the function $f(x) = \sin (x)$ obeys the relation $f'' = -f$. These two are perhaps the simplemost nontrivial examples of ODEs and are practically very relevant. In ODEs, what we are \emph{given} is the relation like $f = f''$ and what is to be found, i.e. what is \emph{unknown}, is $f$ itself. Consider the slightly more complicated example $f + a_1 f' + a_2 f'' = 0$ for some given constant coefficients $a_1, a_2$. We see that for $a_1 = 0, a_2 = 1$, this ODE reduces to the ODE for the sine: $f = -f''$ and for $a_1 = -1, a_2 = 0$, we get the ODE for the exponential function $f = f'$. Solving the differential equation means to find a function $f = f(x)$, which, when it is being plugged into the ODE and all the derivatives are evaluated, yields a true statement. It can easily be verified by evaluating the derivatives that $f = $[INSERT damped osc eq] is indeed a solution to $f + a_1 f' + a_2 f'' = 0$. \emph{Verifying} that some given function is a solution to an ODE is an easy task but \emph{finding} such a solution in the first place is hard. This is a bit like with integrals...
+
+...TBC...
+
+% give the solution to the damped oscillator equation and encourage the reader to verify that it is a solution indeed.
+
+\begin{comment}
+-solving an ODE can be seen as a certain generalization of solving an integral - explain how
+-give ODE of damped oscillator: f + a_1 f' + a_2 f'' = 0. For $a_1 = 0, a_2 = 1$ we get the ODE for exp, for $a_1 = -1, a_2 = 0$ we get the ODE for sin.
+
+\end{comment}

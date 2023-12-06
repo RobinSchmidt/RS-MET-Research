@@ -10645,10 +10645,8 @@ void testSylvesterMatrix()
   // that work, we would additionally need to swap into pq to qp, i.e. remove all three reversals 
   // *and* use qp instead of pq. Just a hunch -> try it! But that would still be inconvenient.
 
-  rsAssert(ok);
-
   // Now with the modified Sylvester matrix. The modifications are: transposition and left/right 
-  // reflection ...but in what order? I think in the order given: trans -> horzflip
+  // reflection ...but in what order? I think in the order horzflip -> trans or: trans -> vertflip
   Mat SM = rsSylvesterMatrixModified(f, g);
   vp = p.getCoeffs();
   vq = q.getCoeffs();

@@ -79,6 +79,17 @@ So far, we have seen only 2D number systems. The space we live in happens to hav
 https://mathworld.wolfram.com/HypercomplexNumber.html
 https://en.wikipedia.org/wiki/Hypercomplex_number
 
- 
+-Idea to create an n-dimenasional algebra:
+ -define a bijective mapping between n-vectors and a certain subset of n-by-n-matrices
+ -use matrix addition and multiplication
+ -perhaps the map from matrices to vectors could be: extract 1st column and the map from
+  vectors to matrices could be like in 3D (a,b,c) = a*I + b*shift(i,-1) + c*shift(I,-2)
+  where shift(A,k) is a circular shift by k of the columns - negative k shift left. That
+  mapping would at least ensure that the unit vectors map back and forth correctly which is
+  a necessary (but not sufficient) condition for it to work out. 
+ -more generally, one could map between n-vectors and m-by-m matrices with m^2 >= n
+ -to show that no nD algebra with desried properties is possible, one needs to show that
+  no such mapping can exist between n-vectors and m-by-m matrices for any m (it's trivial
+  for m^2 < n but as soon as the matrices have enough degrees of freedom, it's nontrivial)
 
 \end{comment}

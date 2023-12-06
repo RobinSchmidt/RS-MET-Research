@@ -20,9 +20,11 @@ Let's revisit the set of complex numbers and look at them through the lens of li
  b  &  a
  \end{pmatrix} 
 \end{equation}
-I have chosen the letter $\mathbf{Z}$ for a reason: we conventionally use $z$ to denote complex numbers and indeed can we use the matrix $\mathbf{Z}$ above to represent the complex number $z = a + \i b = \cos(\phi) + \i \sin(\phi) = r \e^{\i \phi}$. 
+I have chosen the letter $\mathbf{Z}$ for a reason: we conventionally use $z$ to denote complex numbers and indeed can we use the matrix $\mathbf{Z}$ above to represent the complex number $z = a + \i b = \cos(\phi) + \i \sin(\phi) = r \e^{\i \phi}$. But how does that \emph{matrix} representation fit together with the idea to represent complex numbers as \emph{vectors} in $\mathbb{R}^2$? Well, a matrix is actually nothing more then a bunch of column vectors, one next to another. We can interpret the first column of $\mathbf{Z}$ as the $\mathbb{R}^2$ vector that corresponds to $z$. Seen in this way, we see that the vector addition is apparently completely embedded in the matrix addition as well. The (redundant) second column is just there to enable multiplication - something which we can't do with vectors. So, in summary, we can use matrix addition and matrix multiplication of a very specific set of matrices to faithfully reproduce the behavior of complex addition and multiplication. It can be verified that, unlike general matrix multiplication, the multiplication of the so restricted set of matrices is commutative. Of course, the inverse of $\mathbf{Z}$ maps to the reciprocal of $z$.
 
-% Explain hwo we usuall think of matrices as operating on vectors when encoding geometric transformations...but we also have matrix multiplication...I think, the first column of the matrix Z represents the complex number as a vector. Matrix multiplication is just matrix vector multiplciation applied to multiple vectors at once, namely the columns of the right matrix factor
+...TBC...
+
+% Explain how we usually think of matrices as operating on vectors when encoding geometric transformations...but we also have matrix multiplication...I think, the first column of the matrix Z represents the complex number as a vector. Matrix multiplication is just matrix vector multiplciation applied to multiple vectors at once, namely the columns of the right matrix factor. ...so, the vector addition is actually embedded in the matrix addition as well.
 
 
 % https://en.wikipedia.org/wiki/Rotation_matrix

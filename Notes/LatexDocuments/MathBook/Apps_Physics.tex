@@ -5,13 +5,21 @@
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Newtonian Mechanics}
-Newtonian mechanics is the classical approach to classical mechanics discovered by the famous British physicist and mathematician Isaac Newton himself. Newtonian mechanics predicts, how a particle with mass $m$ will respond to the force $F$ exerted on it. It will respond by changing its state of motion. The response will be a \emph{change} of its \emph{velocity} $v$ according to the applied force. This is encapsulated in the fundamental law $F = m a$ where $a$ is the acceleration. Acceleration is literally defined as a change of velocity $v$: $a = \frac{dv}{dt}$. These scalar equations apply to motion in a single dimension. This may be good enough in some simple cases but in general, force, velocity and acceleration are generally treated as vector valued quantities (mass remains scalar, though). The appropriate mathematical framework that is used nowadays is that of vector analysis although that field was not yet developed at Newton's time. He had to use different, more elementary formulations, i.e. he had to write out all the sums of partial derivatives explicitly where we today use more convenient differential operators which encapsulate such commonly occurring sums like in div, curl, etc. [VERIFY].
+Newtonian mechanics is the classical approach to classical mechanics discovered by the famous British physicist and mathematician Isaac Newton himself. Newtonian mechanics predicts, how a particle with mass $m$ will respond to the force $F$ exerted on it. It will respond by changing its state of motion. The response will be a \emph{change} of its \emph{velocity} $v$ according to the applied force. This is encapsulated in the fundamental law $F = m a$ where $a$ is the acceleration. Acceleration is literally defined as a change of velocity $v$: $a = \frac{dv}{dt}$. These scalar equations apply to motion in a single dimension. This may be good enough in some simple cases but in general, force, velocity and acceleration are generally treated as vector valued quantities (mass remains scalar, though). The appropriate mathematical framework that is used nowadays is that of \emph{vector calculus} although that field was not yet developed at Newton's time. He had to use different, more elementary formulations, i.e. he had to write out all the sums of partial derivatives explicitly where we today use more convenient differential operators which encapsulate such commonly occurring sums like in div, curl, etc. [VERIFY]. In the modern formulation of Newtonian physics, you will see a lot of such \emph{differential operators} to compute one vector valued quantity from another at a point. You will also see a lot of \emph{line integrals}, for example to compute the energy that a particle gains or loses when it moves through a force field. You will use the theorem for \emph{potential fields} when the force field happens to be conservative, which it often is. You will see \emph{volume integrals}, for example to compute a total mass and center of mass of an object given its density as function of $x,y,z$. You will also see a lot of systems of \emph{ordinary differential equations}. That's the sort of math that is used in Newtonian mechanics. Mostly calculus.
 
 ...TBC...
 
+\paragraph{Energy and Momentum}
+
 \paragraph{Linear Motion}
+% energy and momentum
 
 \paragraph{Rotational Motion}
+
+\paragraph{Gravitation}
+
+\paragraph{Particle Systems}
+% chaotic for numObjects >= 3, applicable to solar systems
 
 % maybe use also vector 
 % give vector analysis equations for rotation
@@ -47,26 +55,54 @@ The recipe to convert back and forth between the Lagrangian and the Hamiltonian 
 % https://en.wikipedia.org/wiki/Legendre_transform_(integral_transform)
 
 
+
+
+%===================================================================================================
+\subsection{Fluid Dynamics}
+% fluid dynamics: complex calculus
+
+
 %===================================================================================================
 \subsection{Electrodynamics}
 
 % math: vector analysis: integral theorems (surface integrals in particular)
+% complex analysis ()for circuit theory)
 
 
 %===================================================================================================
 \subsection{Quantum Mechanics}
+Quantum mechanics deal with the world of atomic and subatomic particles. It turns out that their behavior is not adequately described by classical mechanics. The do not behave in a deterministic way like classical particles do but rather in a probabilistic way. This behavior is captured in a mathematical object called the wavefunction
 
 % math: Theory of linear operators, probability, Hamiltonian is also important.
+% wave-particle duality
 
 %===================================================================================================
-\subsection{Thermodynamics}
+\subsection{Statistical Mechanics and Thermodynamics}
+This subfield of physics deals with the application of Newtonian (and sometimes quantum) mechanics to particle systems with a number of particles that is so huge, that it's impossible and also not meaningful to try to describe what individual particles do. Instead, one considers the properties of the whole ensemble of particles as a whole. Notions like density, pressure and temperature are developed as \emph{emergent} properties of the whole ensemble. The mathematical tools that are required for this are the ideas from probability theory and statistics. ...TBC...
 
+% emergent laws
 % math: probability, statistics?
+
+% https://en.wikipedia.org/wiki/Thermodynamics
+% https://en.wikipedia.org/wiki/Laws_of_thermodynamics
+
+% https://en.wikipedia.org/wiki/Statistical_mechanics
+% https://www.britannica.com/science/statistical-mechanics
+
+%===================================================================================================
+\subsection{Continuum Mechanics}
+
+% describes how continuous solid (elastic) media respond to forces by deformation
+
+% math: tensor calculus, partial differential equations
+
+
+
 
 %===================================================================================================
 \subsection{Relativity}
 
-% math: tensor analysis, differential geometry
+% math: general: tensor calculus, differential geometry; special: hyperbolic numbers/geometry
 
 
 %\subsection{Elementary Particle Physics}

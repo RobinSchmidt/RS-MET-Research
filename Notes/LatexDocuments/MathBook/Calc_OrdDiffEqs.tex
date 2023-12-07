@@ -1,5 +1,5 @@
 \section{Ordinary Differential Equations} 
-Ordinary differential equations (abbreviated as ODEs) are equations in which the unknown quantity is not just a single variable like $x$, i.e. a number, but rather a full function $f:\mathbb{R} \rightarrow \mathbb{R}$. The equation may contain the function itself as well as derivatives of it. The presence of derivatives is what makes it a "differential" equation. The goal is to find a function $f = f(x)$ that obeys a certain given relationship between itself and its own derivatives. For example, the function $f(x) = \e^x$ obeys the relation $f = f'$ and the function $f(x) = \sin (x)$ obeys the relation $f = -f''$. These two are perhaps the simplemost nontrivial examples of ODEs and are practically very relevant. In ODEs, what we are \emph{given} is the relation like $f = -f''$ and what is to be found, i.e. what is \emph{unknown}, is $f$ itself. Consider the slightly more complicated example $f + a_1 f' + a_2 f'' = 0$ for some given constant coefficients $a_1, a_2$. We see that for $a_1 = 0, a_2 = 1$, this ODE reduces to the ODE for the sine: $f = -f''$ and for $a_1 = -1, a_2 = 0$, we get the ODE for the exponential function $f = f'$. Solving the differential equation means to find a function $f = f(x)$, which, when it is being plugged into the ODE and all the derivatives are evaluated, yields a true statement. It can easily be verified by evaluating the derivatives that $f = $[INSERT damped osc eq] is indeed a solution to $f + a_1 f' + a_2 f'' = 0$. \emph{Verifying} that some given function is a solution to an ODE is an easy task but \emph{finding} such a solution in the first place is hard. This is a bit like with finding vs verifying antiderivatives but even more so (meaning that finding the solution is even harder in general).
+Ordinary differential equations (abbreviated as ODEs) are equations in which the unknown quantity is not just a single variable like $x$, i.e. a number, but rather a full function $f:\mathbb{R} \rightarrow \mathbb{R}$. The equation may contain the function itself as well as derivatives of it. The presence of derivatives is what makes it a "differential" equation. The goal is to find a function $f = f(x)$ that obeys a certain given relationship between itself and its own derivatives. For example, the function $f(x) = \e^x$ obeys the relation $f = f'$ and the function $f(x) = \sin (x)$ obeys the relation $f = -f''$. These two are perhaps the simplemost nontrivial examples of ODEs and are practically very relevant. In ODEs, what we are \emph{given} is the relation like $f = -f''$ and what is to be found, i.e. what is \emph{unknown}, is $f$ itself. Consider the slightly more complicated example $f + a_1 f' + a_2 f'' = 0$ for some given constant coefficients $a_1, a_2$. We see that for $a_1 = 0, a_2 = 1$, this ODE reduces to the ODE for the sine: $f = -f''$ and for $a_1 = -1, a_2 = 0$, we get the ODE for the exponential function $f = f'$. Solving the differential equation means to find a function $f = f(x)$, which, when it is being plugged into the ODE and all the derivatives are evaluated, yields a true statement. It can straightforwardly (albeit tediously) be verified by evaluating the derivatives that $f = c_1 \e^{-\sigma x} + c_2 \e^{\sigma x}$ is indeed a solution to $f + a_1 f' + a_2 f'' = 0$ when we choose $\sigma = (a_1 + \sqrt{a_1^2 - 4 a_2})/(2 a_2)$. We will actually go through this example in more detail later. For now, I'll just say that \emph{verifying} that some given function is a solution to an ODE is an easy task but \emph{finding} such a solution in the first place is hard. This is a bit like with finding vs verifying antiderivatives but even more so - meaning that finding the solution is even harder in general. Some people even call the process of finding a solution to a differential equation as "integrating the differential equation" and integration is indeed often needed as a subtask in the process of solving an ODE. I'm not so fond of that terminology and will just call it "solving the ODE" rather than "integrating the ODE".
 
 ...TBC...
 
@@ -8,7 +8,53 @@ Ordinary differential equations (abbreviated as ODEs) are equations in which the
 % Wolfram alpha gives the solution only in complex form:
 % DSolve[f[x] + a_1 f'[x] + a_2 f''[x] == 0, f[x], x]
 
+% maybe use concrete coeffs: 9 y + 2 y' + 5 y'' = 0, y(0)=0, y'(0)=1
+% https://www.wolframalpha.com/input?i=9+y+%2B+2+y%27+%2B+5+y%27%27+%3D+0%2C+y%280%29%3D0%2C+y%27%280%29%3D1
+% this gives a nice damped oscillation
+
+
+
+
 % https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator
+% https://en.wikipedia.org/wiki/Ordinary_differential_equation
+
+\subsection{Solution Methods}
+
+\subsubsection{Analytical Methods}
+
+\paragraph{Separation of Variables}
+
+\paragraph{Making an Ansatz}
+
+% https://www.wolframalpha.com/input?i=derivative+of+e%5E%28a+x%29+sin%28w+x%29
+% https://www.wolframalpha.com/input?i=second+derivative+of+e%5E%28a+x%29+sin%28w+x%29
+
+% Maybe make a subsection "Determining the Parameters" with subsubsections "Initial Value Probelms" and "Boundary Value Probelms"
+
+\subsubsection{Numerical Methods}
+
+\paragraph{Euler's Method}
+
+\paragraph{Runge-Kutta Methods}
+
+\paragraph{Implicit Methods}
+
+
+
+\subsection{Theory of Linear ODEs}
+For the important subset of linear ODEs, we actually do have a full blown analytic solution theory. Much of this theory will closely parallel and build upon the solution theory of linear systems of equations that we know from linear algebra. ...TBC...
+
+
+% https://en.wikipedia.org/wiki/Linear_differential_equation
+
+\subsubsection{Linear ODEs with Constant Coefficients}
+
+
+%\subsubsection{Linear ODEs with Polynomial Coefficients}
+
+
+% https://en.wikipedia.org/wiki/Sturm%E2%80%93Liouville_theory
+% https://de.wikipedia.org/wiki/Sturm-Liouville-Problem
 
 \begin{comment}
 -solving an ODE can be seen as a certain generalization of solving an integral - explain how

@@ -1,5 +1,5 @@
 \section{Partial Differential Equations}
-One might think that a "partial" differential equation (abbreviated as PDE) ought to be easier to deal with than a "full" differential equation, right? Wrong! The terminology might by a bit misleading. In the context of differential equations, the term "partial" is not meant as opposite to "full" but rather refers to the fact that the equations contain partial derivatives of an unknown, to be found, multivariate function $u(x,y,\ldots)$. I think, a more appropriate term would be "multidimensional" or "multivariate" differential equations. And they are a much more difficult subject than ordinary (one-dimensional) differential equations. Despite being difficult to tackle mathematically (i.e. solve), partial differential equations can actually be quite intuitive to understand because they are usually a plausible mathematical model for a physical situation. Modeling continuous physical phenomena is the primary application domain of PDEs. A 2-dimensional PDE could model the vibration of a string under tension, such as a guitar string, for example. The motion of the string is modeled mathematically as a function of two variables: the position along the string $x$ and the time instant $t$. We want to find a function $u(x,t)$ that tells us at every instant $t$, how much the string deviates from its equilibrium position at position $x$. Or, if we freeze $t$ at $t = t_0$, we may see $u(x, t_0)$ as a one-dimensional function that gives us the shape of the string at the instant $t_0$. In the literature of PDEs, it is customary to use the letter $u$ to denote the dependent variable, so we'll adopt that notation here, too. It is also quite common to denote the derivatives of $u$ with respect to one of the independent variables via a subscript, for example $u_t$ would be the first time derivative of $u$, i.e. the string's (local) velocity. Our space and time dependent function $u(x,t)$ arises from the physical laws that govern the motion of the string which is basically an infinitesimal version of Newton's law $F = m a$. Here $a$ is the acceleration of the string - and acceleration is the second time derivative of the excursion that we are interested in, i.e. it is $a = u_{tt}$. The force $F$ that causes the acceleration is related to the local curvature of the string given by the second spatial derivative $u_{xx}$ of the excursion. The governing equation basically says: the local acceleration is proportional to the local curvature: $u_{tt} = k u_{xx}$ for some proportionality constant $k$. If this all makes sense to you and you are nodding along then congratulations! You have just casually understood the wave equation - one important example of a partial differential equation...
+One might think that a "partial" differential equation (abbreviated as PDE) ought to be easier to deal with than a "full" differential equation, right? Wrong! The terminology might by a bit misleading. In the context of differential equations, the term "partial" is not meant as opposite to "full" but rather refers to the fact that the equations contain partial derivatives of an unknown, to be found, multivariate function which is often denoted as $u = u(x,y,\ldots)$. I think, a more appropriate term would be "multidimensional" or "multivariate" differential equations. And they are a much more difficult subject than ordinary (one-dimensional) differential equations. Despite being difficult to tackle mathematically (i.e. solve), partial differential equations can actually be quite intuitive to understand because they are usually a plausible mathematical model for a physical situation. Modeling continuous physical phenomena is the primary application domain of PDEs. A 2-dimensional PDE could model the vibration of a string under tension, such as a guitar string, for example. The motion of the string is modeled mathematically as a function of two variables: the position along the string $x$ and the time instant $t$. We want to find a function $u(x,t)$ that tells us at every instant $t$, how much the string deviates at position $x$ from its (straight) equilibrium shape. Or, if we freeze $t$ at $t = t_0$, we may see $u(x, t_0)$ as a one-dimensional function that gives us the whole shape of the string at the instant $t_0$. In the literature of PDEs, it is customary to use the letter $u$ to denote the dependent variable, so we'll adopt that notation here, too. It is also quite common to denote the derivatives of $u$ with respect to one of the independent variables via a subscript, for example $u_t$ would be the first time derivative of $u$, i.e. the string's (local) velocity. Our space and time dependent function $u(x,t)$ arises from the physical laws that govern the motion of the string which is basically an infinitesimal version of Newton's law $F = m a$. Here $a$ is the acceleration of the string - and acceleration is the second time derivative of the excursion that we are interested in, i.e. it is $a = u_{tt}$. The force $F$ that causes the acceleration is related to the local curvature of the string given by the second spatial derivative $u_{xx}$ of the excursion. The governing equation basically says: the local acceleration is proportional to the (negative) local curvature: $u_{tt} = -k u_{xx}$ for some proportionality constant $k$. If this all makes sense to you and you are nodding along then congratulations! You have just casually understood the wave equation - one important example of a partial differential equation \footnote{Being primarily interested in sound, the wave equation is my personal favorite PDE. Everybody has a favorite partial differential equation, right? Right?!}.
 
 
 
@@ -10,23 +10,46 @@ One might think that a "partial" differential equation (abbreviated as PDE) ough
 
 % Make a subsection Examples and list the stuff below as subsubs and paragraphs
 
-\subsection{PDEs for Scalar Fields}
+\subsection{Examples}
+To get a feeling for how PDEs looks like and what sorts of phenomena they model, we will first have a brief look at some important examples of PDEs.
+% add Black-Scholes equation and maybe some examples from other fields like chemistry and biology. I think there was a PDE for pattern formation in furs (like leopard, giraffe, zebra, etc) - look that up. What about formation of fractals like snail-shells, romanesco, etc? or sunflowers?
 
-\subsubsection{Transport Equation}
+
+\subsubsection{PDEs for Static Equilibria}
+
+\paragraph{Poisson's Equation}
+% when rhs = 0, also known as Laplace's equation
+
+% https://en.wikipedia.org/wiki/Poisson%27s_equation
+% https://en.wikipedia.org/wiki/Laplace%27s_equation
+% https://de.wikipedia.org/wiki/Poisson-Gleichung
+% https://de.wikipedia.org/wiki/Laplace-Gleichung
+
+
+\paragraph{Minimal Surfaces}
+
+%https://en.wikipedia.org/wiki/Minimal_surface
+
+% add minimal surfaces
+
+
+\subsubsection{PDEs for Time-Varying Scalar Fields}
+
+\paragraph{Transport Equation} ...tbc...
 
 % https://en.wikibooks.org/wiki/Partial_Differential_Equations/The_transport_equation
 % https://en.wikipedia.org/wiki/Continuity_equation
 % https://www.simscale.com/docs/simwiki/numerics-background/what-is-the-transport-equation/
 
-\subsubsection{Diffusion Equation}
+\paragraph{Diffusion Equation} ...tbc...
 
 % aka Heat Equation
 
-\subsubsection{Convection-Diffusion Equation}
+\paragraph{Convection-Diffusion Equation} ...tbc...
 
 % https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation
 
-\subsubsection{Wave Equation}
+\paragraph{Wave Equation}
 
 %\begin{equation}
 %1\text{D:  } u_{tt} + u_{xx} = 0, \qquad 
@@ -41,26 +64,61 @@ One might think that a "partial" differential equation (abbreviated as PDE) ough
 n\text{D:  } c^2 u_{tt} + \Delta u = f(\mathbf{r})
 \end{equation}
 
+% add dispersive wave equation, nonlinear wave equation from numerical sound synthesis
+ ...tbc...
 
+\paragraph{Quantum Wavefunctions} ...tbc...
+
+% aka Schroedinger Equation
+% is structurally like the diffusion equation but with a twist: the coefficient is imaginary which turns the whole thing into some sort of wave equation
 
 
 % Burgers Equation
+% 
 
 
 
 
-\subsection{PDEs for Vector Fields}
 
-\subsubsection{Navier-Stokes Equations}
+\subsubsection{PDEs for Time-Varying Vector Fields}
 
-\subsubsection{Maxwell's Equations}
+\paragraph{Fluid Dynamics} ...tbc...
+
+% aka Navier-Stokes Equations
+
+% https://en.wikipedia.org/wiki/Fluid_dynamics
+% https://en.wikipedia.org/wiki/Navier%E2%80%93Stokes_equations
+
+\paragraph{Electrodynamics} ...tbc...
+% aka Maxwell's Equations
+% maybe rename to electrodynamics
+
+\paragraph{Magnetohydrodynamics} ...tbc...
 
 
-\subsection{PDEs for Tensor Fields}
+% add equtions for magneto-hydrodynamics
 
-\subsubsection{Maxwell's Equations Revisited}
+% https://en.wikipedia.org/wiki/Magnetohydrodynamics
+% https://de.wikipedia.org/wiki/Magnetohydrodynamik
+% https://de.wikipedia.org/wiki/Gau%C3%9Fsches_Einheitensystem
 
-\subsubsection{Einstein's Field Equations}
+\subsubsection{PDEs for Time-Varying Tensor Fields}
+
+\paragraph{Electrodynamics Reformulated} ...tbc...
+
+\paragraph{Gravity in General Relativity} ...tbc...
+% aka Einstein's field equations
+
+
+
+
+
+\subsection{Solution Methods}
+
+
+\subsubsection{Analytical Methods}
+
+\subsubsection{Numerical Methods}
 
 
 

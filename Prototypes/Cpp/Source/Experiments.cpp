@@ -10529,7 +10529,7 @@ on wikipedia here:  https://en.wikipedia.org/wiki/Sylvester_matrix  and it is al
 SageMath but there are other conventions in use, so watch out. Some use the transposed matrix of 
 the form above. */
 template<class T>
-rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T> p, const rsPolynomial<T> q)
+rsMatrix<T> rsSylvesterMatrix(const rsPolynomial<T>& p, const rsPolynomial<T>& q)
 {
   int m = p.getDegree();
   int n = q.getDegree();
@@ -10569,9 +10569,9 @@ ToDo:
 -Explain what this change in layout implies for the determinant. I guess the flipping of the coeff
  vectors leads to amultiplication by -1 when N is odd and does nothing when N is even? ..or wait. 
  No! - for a flip, the number of colum-swaps is always even, so it should leave the determinant 
- unchanged in all cases. */
+ unchanged in all cases. wait - no - it is always odd, I think.  */
 template<class T>
-rsMatrix<T> rsSylvesterMatrixModified(const rsPolynomial<T> p, const rsPolynomial<T> q)
+rsMatrix<T> rsSylvesterMatrixModified(const rsPolynomial<T>& p, const rsPolynomial<T>& q)
 {
   int m = p.getDegree();
   int n = q.getDegree();
@@ -10705,27 +10705,33 @@ void testSylvesterMatrix()
 /** UNDER CONSTRUCTION
 
 Given the two polynomials f and g, this function computes the Bezout matrix associated with this
-pair of polynomials. Let
+pair of polynomials. Let f anf g be both of a degree <= n such that:
 
   f(z) = sum_{i=0}^n u_i z^i
   g(z) = sum_{i=0}^n v_i z^i
 
-Then
+Here, if an actual degree of f and/or g is less than n, then some higher coeffs are just assumed to
+be zero. The Bezout matrix B(f,g) of f,g is then defined as:
 
   B(f,g) = b_{ij} = \sum_{k=0}^{m_{ij}} ( u_{j+k+1} v_{i-k}  -  u_{i-k} v_{j+k+1} )
 
-where m_{ij} = min(i, n-j-1). It should satisfy:
+where m_{ij} = min(i, n-j-1) and the matrix is indexed using a zerop-based indexing scheme. The 
+matrix should satisfy:
 
   \sum_{i,j = 0}^{n-1} b_{ij} x^i y^j = \frac{f(x)g(y) - f(y)g(x)} {x-y}
 
-and have the following properties: The matrix B itself is symmetric: B(i,j) = B(j,i). The map from 
-f,g to B(f,g) is antisymmetric: B(f,g) = -B(g,f) which implies that B(f,f) = 0.
+for any x. Furthermore, it should have the following properties: The matrix B itself is symmetric: 
+B(i,j) = B(j,i). The map from f,g to B(f,g) is antisymmetric: B(f,g) = -B(g,f) which implies that 
+B(f,f) = 0.
 
 
+References:
+
+ https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
 
 */
 template<class T>
-rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T> f, const rsPolynomial<T> g)
+rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T>& f, const rsPolynomial<T>& g)
 {
   rsError("Not yet implemented");
 
@@ -10735,6 +10741,10 @@ rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T> f, const rsPolynomial<T> g)
 
   return B;
 }
+
+// Maybe use ascii art instead of latex notation, see_
+// https://math.stackexchange.com/questions/149303/software-to-render-formulas-to-ascii-art
+// 
 
 void testBezoutMatrix()
 {

@@ -166,7 +166,10 @@ Notes:
 - If this is not all achievable at the same time, make a priority list for what compositions are 
   more importnat than others.
   
-- Use doxgen with LaTeX expressions for the documentation for the math stuff
+- Use doxgen with LaTeX expressions for the documentation for the math stuff. Or maybe use ASCII 
+  art like here: 
+  https://math.stackexchange.com/questions/149303/software-to-render-formulas-to-ascii-art
+  https://arthursonzogni.com/Diagon/#Math
   
 
 Multiprecision numbers:

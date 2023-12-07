@@ -78,13 +78,15 @@ Quantum mechanics deals with the world of atomic and subatomic particles. It tur
 % https://en.wikipedia.org/wiki/Time_evolution
 
 \subsubsection{The Schroedinger Equation}
-The  Schrodinger Equation is to quantum mechanics what $F = m a$ is to Newtonian mechanics. It is the main governing equation that determines how the system will evolve over time. It can be stated as:
+The  Schrodinger equation is to quantum mechanics what Newton's second law $F = m a$ is to Newtonian mechanics. It is the main governing equation that determines how the system will evolve over time. It can be stated as:
 \begin{equation}
- \psi_{t} = \frac{1}{\i \hbar} H \psi 
+ \boldsymbol{\psi}_{t} = \frac{1}{\i \hbar} \mathbf{H} \boldsymbol{\psi}
  \qquad \text{where} \qquad
- H = ...
+ \mathbf{H} = ...
 \end{equation}
-This is an uncommon way to write it down. I like to put the time derivative unadorned to the left hand side such that the right hand side is an explicit prescription for "what comes next". This is how we would "implement" the equation in a computer program for a numerical solver and this is the way I think about things. ...TBC...
+Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to indicate that we think about it as a vector and uppercase boldface for $\mathbf{H}$ because we think about it as a linear operator (like a matrix, but more abstractly) that acts on a vector. This is an uncommon way to write it down. I like to put the time derivative unadorned to the left hand side such that the right hand side is an explicit prescription for "what comes next". This is how we would "implement" the equation in a computer program for a numerical solver and this is the way I think about things. The operator $\mathbf{H}$ in this equation is called the "Hamiltonian" and it encodes the energy of the system. Inside it, it will typically encapsulate some spatial derivatives of $\boldsymbol{\psi}$ such that the whole equation indeed follows our usual format of writing down a partial differential equation in space and time [VERIFY!].
+
+...TBC...
 
 % https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation
 % https://en.wikipedia.org/wiki/Probability_current

@@ -10715,14 +10715,15 @@ be zero. The Bezout matrix B(f,g) of f,g is then defined as:
 
   B(f,g) = b_{ij} = \sum_{k=0}^{m_{ij}} ( u_{j+k+1} v_{i-k}  -  u_{i-k} v_{j+k+1} )
 
-where m_{ij} = min(i, n-j-1) and the matrix is indexed using a zerop-based indexing scheme. The 
-matrix should satisfy:
+where m_{ij} = min(i, n-j-1) and the matrix is indexed using a zero-based indexing scheme. The 
+matrix satisfies:
 
   \sum_{i,j = 0}^{n-1} b_{ij} x^i y^j = \frac{f(x)g(y) - f(y)g(x)} {x-y}
 
 for any x. Furthermore, it should have the following properties: The matrix B itself is symmetric: 
 B(i,j) = B(j,i). The map from f,g to B(f,g) is antisymmetric: B(f,g) = -B(g,f) which implies that 
-B(f,f) = 0.
+B(f,f) = 0. The determinant of B(f,g) is the resultant of f and g - just like with the Sylvester 
+matrix. If f(i*y) = q(y) + i*p(y) then f is Hurwitz stable iff B(p,q) is positive definite.
 
 
 References:

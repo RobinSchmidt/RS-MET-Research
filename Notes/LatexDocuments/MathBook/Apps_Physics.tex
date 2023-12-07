@@ -11,6 +11,10 @@ Newtonian mechanics is the classical approach to classical mechanics discovered 
 
 \paragraph{Energy and Momentum}
 
+% -reformulate F = m a as F = p'  ...but with the dot-notation. This formulation remains valid in relativity when the total mass depends on velocity
+
+\paragraph{Newtons 3 Laws of Motion}
+
 \paragraph{Linear Motion}
 % energy and momentum
 
@@ -82,17 +86,26 @@ The  Schrodinger equation is to quantum mechanics what Newton's second law $F = 
 \begin{equation}
  \boldsymbol{\psi}_{t} = \frac{1}{\i \hbar} \mathbf{H} \boldsymbol{\psi}
  \qquad \text{where} \qquad
- \mathbf{H} = ...
+ \mathbf{H} = T + V = 
 \end{equation}
 Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to indicate that we think about it as a vector and uppercase boldface for $\mathbf{H}$ because we think about it as a linear operator (like a matrix, but more abstractly) that acts on a vector. This is an uncommon way to write it down. I like to put the time derivative unadorned to the left hand side such that the right hand side is an explicit prescription for "what comes next". This is how we would "implement" the equation in a computer program for a numerical solver and this is the way I think about things. The operator $\mathbf{H}$ in this equation is called the "Hamiltonian" and it encodes the energy of the system. Inside it, it will typically encapsulate some spatial derivatives of $\boldsymbol{\psi}$ such that the whole equation indeed follows our usual format of writing down a partial differential equation in space and time [VERIFY!].
 
 ...TBC...
 
+% susskind eq 4.10 pg 103  and 119
+
 % https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation
 % https://en.wikipedia.org/wiki/Probability_current
 
+% https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation#Changes_of_basis
+
+% https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation#Time-dependent_equation
+% https://en.wikipedia.org/wiki/Hamiltonian_(quantum_mechanics)
+
 % maybe use vector notation for psi and matrix for H
 % 
+
+% The function Psi is a time varying scalar field, i.e. when we plugin in a quadruple t,x,y,z, it produces a scalar. But: the whole function psi is seen as vector, i.e. an element of a space of functions. The value of psi at some particular spacetime point is a (complex) scalar. That is confusing
 
 \paragraph{Bras and Kets}
 The form of the Schroedinger equation uses the notation for partial differential equations that we have introduced in the section about them using subscript $t$ for a derivative with respect to $t$. This looks different from what you will typically find in physics textbooks. There, the preferred notation for quantum mechanics is the so called bra-ket notation invented by Paul Dirac. In this notation, normal vectors are denoted as so called "ket" vectors

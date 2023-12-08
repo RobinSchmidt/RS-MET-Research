@@ -1,12 +1,16 @@
 %===================================================================================================
-\subsection{Quantum Mechanics}
+\section{Quantum Mechanics}
 Quantum mechanics deals with the world of atomic and subatomic particles. It turns out that their behavior is not adequately described by classical mechanics. Classical mechanics describes the behavior of point like particles in a deterministic way. This is not how such small particles behave. Quantum mechanics describes the behavior of spatially smeared out particles in a probabilistic way. The main tool is the so called \emph{quantum wavefunction}. This is a complex valued (!) function of space and time and typically denoted by the greek letter psi as $\psi = \psi(t,x,y,z)$. There is a law called the \emph{Born rule} that allows us to convert the complex values of the wavefunction into probabilities of observing the particle in a particular \emph{state}, e.g. at a particular position. The Schroedinger equation is a partial differential equation that determines the time evolution of the wavefunction $\psi$. And "determines" is to be taken literally here - the time evolution of the wavefunction is indeed entirely deterministic. It is just the \emph{observation} that is probabilistic, i.e. the probabilistic aspect kicks in only at the point of making an observation, i.e. at the moment when we "apply" the Born rule. There are some very deep philosophical questions with regard to what constitutes such a moment, but I won't get into these here (search for "measurement problem" if you want to read more about this). The "quantum" in quantum mechanics comes from the fact that the states in which a quantum system can be observed do not lie on a continuum. In quantum mechanics, any given physical system has a finite or countably infinite set of states that it can be found in. The observable states do not lie on a continuum as in classical mechanics but are discrete or \emph{quantized}. The main mathematical toolkit for quantum mechanics is the machinery of linear algebra - but it will often be the infinite dimensional version of it, i.e. the theory of linear operators that we have met in the section about functional analysis. Our \emph{state vectors} will often be continuous functions and our matrices will be operators that act on on these functions. That, together with the fact that we must deal with complex valued vectors or functions and that there is a very special notation in use, makes it all a bit intimidating at first - but essentially it's mostly just linear algebra.
 ...TBC...
 
 % have the matrices also a name? transition matrcies? evolution matrcies ? tiem evolution operator?
 % https://en.wikipedia.org/wiki/Time_evolution
 
+%===================================================================================================
+\subsection{Time Evolution}
+
 \subsubsection{The Schroedinger Equation}
+% maybe rename to time evolution, have schr-eq as sub-point
 The  Schrodinger equation is to quantum mechanics what Newton's second law $F = m a$ is to Newtonian mechanics. It is the main governing equation that determines how the system will evolve over time. It can be stated as:
 \begin{equation}
  \boldsymbol{\psi}_{t} = \frac{1}{\i \hbar} \mathbf{H} \boldsymbol{\psi}
@@ -35,15 +39,25 @@ Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to 
 % 
 
 
+\subsubsection{Notation}
+Although the vector spaces in quantum mechanics are always complex and often infinite-dimensional, the mathematical framework is for the most part just linear algebra (in the infinite dimensional case operator algebra). Quantum mechanics does, however, use its own peculiar notation. ...TBC...
+
+%(n complex vector spaces has its own notation
 
 \paragraph{Bras and Kets}
-The form of the Schroedinger equation uses the notation for partial differential equations that we have introduced in the section about them using subscript $t$ for a derivative with respect to $t$. This looks different from what you will typically find in physics textbooks. There, the preferred notation for quantum mechanics is the so called bra-ket notation invented by Paul Dirac. In this notation, normal vectors are denoted as so called "ket" vectors
+%The form of the Schroedinger equation uses the notation for partial differential equations that we have introduced in the section about them using subscript $t$ for a derivative with respect to $t$. This looks different from what you will typically find in physics textbooks. There, the preferred notation for quantum mechanics is the so called bra-ket notation invented by Paul Dirac. In this notation, normal vectors are denoted as so called "ket" vectors
 
 % write it in bra-ket notation
 
 % https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation
 
+%===================================================================================================
+\subsection{Observables and Measurements}
+% maybe place before Time Evolution
+
+
 \subsubsection{The Born Rule}
+% rename to measurements or observations - born rule could be a sub-point
 
 
 % time independent schroedinger equation

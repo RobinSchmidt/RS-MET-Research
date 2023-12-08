@@ -5,17 +5,22 @@ Quantum mechanics deals with the world of atomic and subatomic particles. It tur
 %That, together with the fact that we must deal with complex valued vectors or functions and that there is a very special notation in use, makes it all a bit intimidating at first - but essentially it's mostly just linear algebra.
 ...TBC...
 
-% have the matrices also a name? transition matrcies? evolution matrcies ? tiem evolution operator?
-% https://en.wikipedia.org/wiki/Time_evolution
+
+
+% https://en.wikipedia.org/wiki/Introduction_to_quantum_mechanics
 
 %===================================================================================================
 \subsection{Notation and Terminology}
-On first encounter, quantum mechanics can be very intimidating. They will talk about self-adjoint operators in infinite dimensional Hilbert spaces they will use a very peculiar notation for all of that. Don't let that scare you off! Essentially, it all boils down to linear algebra. Granted, we'll have to use vector spaces over complex numbers and these vector spaces will sometimes be infinite dimensional (i.e. spaces of continuous functions). It's linear algebra nonetheless. ...TBC...
+On first encounter, quantum mechanics can be very intimidating. They will talk about superpositions of eigenfunctions of self-adjoint operators operating on sets of square-integrable functions in infinite dimensional Hilbert spaces over the complex numbers they will use a very peculiar notation with lots of greek letters and adornments (hats, tildes, bars, asterisks) for all of that. Don't let that scare you off! Essentially, it all boils down to linear algebra. Granted, we'll have to use vector spaces over complex numbers and these vector spaces will sometimes be infinite dimensional (i.e. spaces of continuous functions). It's linear algebra nonetheless. ...TBC...
 
 %Although the vector spaces in quantum mechanics are always complex and often infinite-dimensional, the mathematical framework is for the most part just linear algebra (in the infinite dimensional case operator algebra). Quantum mechanics does, however, use its own peculiar notation. ...TBC...
 
 %(n complex vector spaces has its own notation
 % Hilbert space
+% self-adjoint = Hermitian = complex analogon of symmetric
+% unitary
+
+% https://en.wikipedia.org/wiki/Separable_space
 
 \paragraph{Bras and Kets}
 %The form of the Schroedinger equation uses the notation for partial differential equations that we have introduced in the section about them using subscript $t$ for a derivative with respect to $t$. This looks different from what you will typically find in physics textbooks. There, the preferred notation for quantum mechanics is the so called bra-ket notation invented by Paul Dirac. In this notation, normal vectors are denoted as so called "ket" vectors
@@ -64,14 +69,35 @@ On first encounter, quantum mechanics can be very intimidating. They will talk a
 \subsection{Time Evolution}
 
 \subsubsection{The Schroedinger Equation}
-% maybe rename to time evolution, have schr-eq as sub-point
-The  Schrodinger equation is to quantum mechanics what Newton's second law $F = m a$ is to Newtonian mechanics. It is the main governing equation that determines how the system will evolve over time. It can be stated as:
+The  Schroedinger equation is to quantum mechanics what Newton's second law $F = m a$ is to Newtonian mechanics. It is the main governing equation that determines how the system will evolve over time. Written out in full, it can be stated as:
 \begin{equation}
- \boldsymbol{\psi}_{t} = \frac{1}{\i \hbar} \mathbf{H} \boldsymbol{\psi}
- \qquad \text{where} \qquad
- \mathbf{H} = T + V = 
+ \i \hbar \frac{\partial}{\partial t} \Psi(\mathbf{r}, t) =
+ - \frac{\hbar^2}{2m} \left(
+ \frac{\partial^2 \Psi(\mathbf{r}, t)}{\partial x^2} + 
+ \frac{\partial^2 \Psi(\mathbf{r}, t)}{\partial y^2} + 
+ \frac{\partial^2 \Psi(\mathbf{r}, t)}{\partial z^2}
+ \right)
+ +
+ V(\mathbf{r}, t) \Psi(\mathbf{r}, t)
 \end{equation}
-Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to indicate that we think about it as a vector and uppercase boldface for $\mathbf{H}$ because we think about it as a linear operator (like a matrix, but more abstractly) that acts on a vector. This is an uncommon way to write it down. I like to put the time derivative unadorned to the left hand side such that the right hand side is an explicit prescription for "what comes next". This is how we would "implement" the equation in a computer program for a numerical solver and this is the way I think about things. The operator $\mathbf{H}$ in this equation is called the "Hamiltonian" and it encodes the energy of the system. Inside it, it will typically encapsulate some spatial derivatives of $\boldsymbol{\psi}$ such that the whole equation indeed follows our usual format of writing down a partial differential equation in space and time [VERIFY!].
+which is quite a mouthful, but we will now dissect it and introduce some notation and then write it down in a much more convenient form. The main character in the equation is $\Psi(\mathbf{r}, t)$ which is called the wavefunction. It is a continuous function of the spatial position vector $\mathbf{r} = (x,y,z)$ and of the time instant $t$. We are dealing with a time varying scalar field. The somewhat unusual twist is that it is complex valued - but it's a scalar field nonetheless - so nothing too crazy, so far. The left hand side is, up to a factor which we could easily move to the right and side, the time derivative of that wavefunction. So the equation tells us, how the scalar field changes over time time. the right hand side consists of two terms that will allow us to calculate that temporal derivative. The first term is the (scaled) sum of the second partial derivatives with respect to our three spatial coordinates. We recognize this as the Laplacian of the scalar field $\Psi$. The second term reads, with suppressed function arguments, as $V Psi$. This is just a product between the wavefunction itself and some other given function. This function $V$
+%recognized as the
+
+
+
+%\begin{equation}
+% \Psi_{t} = \frac{1}{\i \hbar} \hat{H} \Psi
+% \qquad \text{where} \qquad
+% \hat{H} = \hat{T} + \hat{V} = 
+%\end{equation}
+
+
+%\begin{equation}
+% \boldsymbol{\psi}_{t} = \frac{1}{\i \hbar} \mathbf{H} \boldsymbol{\psi}
+% \qquad \text{where} \qquad
+% \mathbf{H} = T + V = 
+%\end{equation}
+%Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to indicate that we think about it as a vector and uppercase boldface for $\mathbf{H}$ because we think about it as a linear operator (like a matrix, but more abstractly) that acts on a vector. This is an uncommon way to write it down. I like to put the time derivative unadorned to the left hand side such that the right hand side is an explicit prescription for "what comes next". This is how we would "implement" the equation in a computer program for a numerical solver and this is the way I think about things. The operator $\mathbf{H}$ in this equation is called the "Hamiltonian" and it encodes the energy of the system. Inside it, it will typically encapsulate some spatial derivatives of $\boldsymbol{\psi}$ such that the whole equation indeed follows our usual format of writing down a partial differential equation in space and time [VERIFY!].
 
 ...TBC...
 
@@ -92,9 +118,21 @@ Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to 
 % maybe use vector notation for psi and matrix for H
 % 
 
+% have the matrices also a name? transition matrices? evolution matrcies ? tiem evolution operator?
+% https://en.wikipedia.org/wiki/Time_evolution
 
 
 
+
+% Alternatives to Schoedinger equation
+
+% https://en.wikipedia.org/wiki/Matrix_mechanics
+% " Its account of quantum jumps supplanted the Bohr model's electron orbits. It did so by interpreting the physical properties of particles as matrices that evolve in time. It is equivalent to the Schrödinger wave formulation of quantum mechanics"
+
+% https://en.wikipedia.org/wiki/Heisenberg%27s_entryway_to_matrix_mechanics
+
+% https://en.wikipedia.org/wiki/Path_integral_formulation
+% "The Schrödinger equation is a diffusion equation with an imaginary diffusion constant, and the path integral is an analytic continuation of a method for summing up all possible random walks.[2]"
 
 %===================================================================================================
 \subsection{Quantum Field Theory}
@@ -124,3 +162,20 @@ A quantum field theory combines both of these aspects ...TBC...
 
 
 \subsubsection{The Standard Model of Particle Physics}
+
+
+\begin{comment}
+
+
+
+
+https://en.wikipedia.org/wiki/Matrix_mechanics#Matrix_basics
+
+"If an observable is measured and the result is a certain eigenvalue, the corresponding eigenvector is the state of the system immediately after the measurement. The act of measurement in matrix mechanics 'collapses' the state of the system. If one measures two observables simultaneously, the state of the system collapses to a common eigenvector of the two observables. Since most matrices don't have any eigenvectors in common, most observables can never be measured precisely at the same time. This is the uncertainty principle.
+
+If two matrices share their eigenvectors, they can be simultaneously diagonalized. In the basis where they are both diagonal, it is clear that their product does not depend on their order because multiplication of diagonal matrices is just multiplication of numbers. The uncertainty principle, by contrast, is an expression of the fact that often two matrices A and B do not always commute, i.e., that AB − BA does not necessarily equal 0. "
+
+
+
+
+\end{comment}

@@ -92,6 +92,10 @@ Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to 
 
 ...TBC...
 
+% The function psi is a time varying, complex valued scalar field, i.e. when we plugin in a quadruple t,x,y,z, it produces a scalar. But: the whole function psi is seen as vector, i.e. an element of a space of functions. The value of psi at some particular spacetime point is a (complex) scalar. That is confusing
+
+% How does the Hamlitonian "encode" the energy? I think, it's an operator which, when being applied to the wavefunction, computes the total energy of the system. But wouldn't that rather be a functional than an operator
+
 % susskind eq 4.10 pg 103  and 119
 
 % https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation
@@ -105,7 +109,7 @@ Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to 
 % maybe use vector notation for psi and matrix for H
 % 
 
-% The function Psi is a time varying scalar field, i.e. when we plugin in a quadruple t,x,y,z, it produces a scalar. But: the whole function psi is seen as vector, i.e. an element of a space of functions. The value of psi at some particular spacetime point is a (complex) scalar. That is confusing
+
 
 \paragraph{Bras and Kets}
 The form of the Schroedinger equation uses the notation for partial differential equations that we have introduced in the section about them using subscript $t$ for a derivative with respect to $t$. This looks different from what you will typically find in physics textbooks. There, the preferred notation for quantum mechanics is the so called bra-ket notation invented by Paul Dirac. In this notation, normal vectors are denoted as so called "ket" vectors
@@ -171,7 +175,16 @@ This subfield of physics deals with the application of Newtonian (and sometimes 
 % math: group theory? symmetry? maybe even number theory? the zeta(-1) = -1/12 occurs somewhere in string theory, I think.
 
 
+%===================================================================================================
+\subsection{Quantum Field Theory}
 
+A \emph{field theory} is a theory in which physical objects like particles are described as (scalar-, vector- or tensor-) fields that somehow interact with one another. So, in a field theory, the "particle" is not modeled as a point like object but rather as a continuous function that formally extends over all space and time. When I say it extends only "formally" over all space, you should picture in your head something like a Gaussian bell curve which also formally extends from minus to plus infinity, but tends towards zero so quickly (namely, exponentially-squared) to both sides, that it becomes negligible everywhere except for some finite region around the peak. In a field theory for particles, that is how the typical fields that model the particles behave, too [VERIFY!].
+
+\medskip
+A \emph{quantum theory} is a theory in which the values of physical quantities cannot just be anything from a continuous range but rather values from a discrete set where discrete can mean either finite or countably infinite. Which particular value from this discrete set will be observed in a particular situation will be predicted by a quantum theory only in terms of probabilities, not in a surefire deterministic sense like classical theories (field or not) would do. ...
+
+\medskip
+A quantum field theory combines both of these aspects ...TBC...
 
 
 \begin{comment}

@@ -1,72 +1,9 @@
-\section{Physics}  
+\chapter{Physics}  
 % -should be a chapter, not a section
 % -Sections should be: Classical Mechanics, Electrodynamcis, Relativity (maybe together w Electro),
 %  Quantum Mechanics (including QFT, 
 %  Standard Model), 
 % -Emergent Physics (Fluid Dynamics, Thermodynamics, Continuum Mechanics, Magnetohydrodynamics)
-
-%===================================================================================================
-\subsection{Classical Mechanics}
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Newtonian Mechanics}
-Newtonian mechanics is the classical approach to classical mechanics discovered by the famous British physicist and mathematician Isaac Newton himself. Newtonian mechanics predicts, how a particle with mass $m$ will respond to the force $F$ exerted on it. It will respond by changing its state of motion. The response will be a \emph{change} of its \emph{velocity} $v$ according to the applied force. This is encapsulated in the fundamental law $F = m a$ where $a$ is the acceleration. Acceleration is literally defined as a change of velocity $v$: $a = \frac{dv}{dt}$. These scalar equations apply to motion in a single dimension. This may be good enough in some simple cases but in general, force, velocity and acceleration are generally treated as vector valued quantities (mass remains scalar, though). The appropriate mathematical framework that is used nowadays is that of \emph{vector calculus} although that field was not yet developed at Newton's time. He had to use different, more elementary formulations, i.e. he had to write out all the sums of partial derivatives explicitly where we today use more convenient differential operators which encapsulate such commonly occurring sums like in div, curl, etc. [VERIFY]. In the modern formulation of Newtonian physics, you will see a lot of such \emph{differential operators} to compute one vector valued quantity from another at a point. You will also see a lot of \emph{line integrals}, for example to compute the energy that a particle gains or loses when it moves through a force field. You will use the theorem for \emph{potential fields} when the force field happens to be conservative, which it often is. You will see \emph{volume integrals}, for example to compute a total mass and center of mass of an object given its density as function of $x,y,z$. You will also see a lot of systems of \emph{ordinary differential equations}. That's the sort of math that is used in Newtonian mechanics. Mostly calculus.
-
-...TBC...
-
-\paragraph{Energy and Momentum}
-
-% -reformulate F = m a as F = p'  ...but with the dot-notation. This formulation remains valid in relativity when the total mass depends on velocity
-
-\paragraph{Newton's 3 Laws of Motion}
-
-\paragraph{Linear Motion}
-% energy and momentum
-
-\paragraph{Rotational Motion}
-
-\paragraph{Fictitious Forces}
-
-\paragraph{Gravitation}
-
-\paragraph{Particle Systems}
-% chaotic for numObjects >= 3, applicable to solar systems
-
-
-
-% maybe use also vector 
-% give vector analysis equations for rotation
-
-% math: vector analysis: differential operators, line integrals (for energy accrued on trajectory in force field), volume integrals (for total mass wehn density is given)
-
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Lagrangian Mechanics}
-Newtonian mechanics revolves around the equation $F = m a$ or $\mathbf{F} = m \mathbf{a}$ in multiple dimensions. In order to be applicable to predict the evolution of a given system, we typically need to be able to calculate what the the total force vector $\mathbf{F}$ is. In some problem settings, it is hard to come by with an explicit expression for the force $\mathbf{F}$. [VERIFY] In such cases, it might be easier to choose an approach that involves the kinetic and potential energies rather than the forces. Kinetic energy is the energy stored in the motion of an object whereas potential energy is energy that is stored in the position of an object. ...TBC...
-
-% a higher level approach from which the Newtonian equations emerge. is it really a "higher level" or just a different approach?
-% especially applicable to probelms with constraint forces?
-
-
-
-%
-% kinetic: energy:  motion energy
-% potential energy: positional energy
-
-% math: calculus of variations ...was that already developed at Lagrange's time?
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Hamiltonian Mechanics} [VERIFY ALL]
-In Lagrangian mechanics, the central quantity of interest was the so called Lagrangian of a system which is the kinetic energy \emph{minus} the potential energy. In Hamiltonian mechanics, the quantity of interest is the kinetic energy \emph{plus} the potential energy, i.e. the total energy. This total energy is also called the Hamiltonian in this context. ...TBC...
-
-\paragraph{The Legendre Transformation}
-The recipe to convert back and forth between the Lagrangian and the Hamiltonian formulation of a given problem is called the Legendre transformation (which should not be confused with the Legendre transform - a certain type of integral transform). ...TBC...
-
-% https://en.wikipedia.org/wiki/Legendre_transformation
-% https://de.wikipedia.org/wiki/Legendre-Transformation
-
-% https://en.wikipedia.org/wiki/Legendre_transform_(integral_transform)
-
 
 
 

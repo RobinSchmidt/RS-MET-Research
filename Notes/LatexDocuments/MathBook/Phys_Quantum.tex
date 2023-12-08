@@ -1,10 +1,64 @@
 %===================================================================================================
 \section{Quantum Mechanics}
-Quantum mechanics deals with the world of atomic and subatomic particles. It turns out that their behavior is not adequately described by classical mechanics. Classical mechanics describes the behavior of point like particles in a deterministic way. This is not how such small particles behave. Quantum mechanics describes the behavior of spatially smeared out particles in a probabilistic way. The main tool is the so called \emph{quantum wavefunction}. This is a complex valued (!) function of space and time and typically denoted by the greek letter psi as $\psi = \psi(t,x,y,z)$. There is a law called the \emph{Born rule} that allows us to convert the complex values of the wavefunction into probabilities of observing the particle in a particular \emph{state}, e.g. at a particular position. The Schroedinger equation is a partial differential equation that determines the time evolution of the wavefunction $\psi$. And "determines" is to be taken literally here - the time evolution of the wavefunction is indeed entirely deterministic. It is just the \emph{observation} that is probabilistic, i.e. the probabilistic aspect kicks in only at the point of making an observation, i.e. at the moment when we "apply" the Born rule. There are some very deep philosophical questions with regard to what constitutes such a moment, but I won't get into these here (search for "measurement problem" if you want to read more about this). The "quantum" in quantum mechanics comes from the fact that the states in which a quantum system can be observed do not lie on a continuum. In quantum mechanics, any given physical system has a finite or countably infinite set of states that it can be found in. The observable states do not lie on a continuum as in classical mechanics but are discrete or \emph{quantized}. The main mathematical toolkit for quantum mechanics is the machinery of linear algebra - but it will often be the infinite dimensional version of it, i.e. the theory of linear operators that we have met in the section about functional analysis. Our \emph{state vectors} will often be continuous functions and our matrices will be operators that act on on these functions. That, together with the fact that we must deal with complex valued vectors or functions and that there is a very special notation in use, makes it all a bit intimidating at first - but essentially it's mostly just linear algebra.
+Quantum mechanics deals with the world of atomic and subatomic particles. It turns out that their behavior is not adequately described by classical mechanics. Classical mechanics describes the behavior of point like particles in a deterministic way. This is not how such small particles behave. Quantum mechanics describes the behavior of spatially smeared out particles in a probabilistic way. The main tool is the so called \emph{quantum wavefunction}. This is a complex valued (!) function of space and time and typically denoted by the greek letter psi as $\psi = \psi(t,x,y,z)$. There is a law called the \emph{Born rule} that allows us to convert the complex values of the wavefunction into probabilities of observing the particle in a particular \emph{state}, e.g. at a particular position. The Schroedinger equation is a partial differential equation that determines the time evolution of the wavefunction $\psi$. And "determines" is to be taken literally here - the time evolution of the wavefunction is indeed entirely deterministic. It is just the \emph{observation} that is probabilistic, i.e. the probabilistic aspect kicks in only at the point of making an observation, i.e. at the moment when we "apply" the Born rule. There are some very deep philosophical questions with regard to what constitutes such a moment, but I won't get into these here (search for "measurement problem" if you want to read more about this). The "quantum" in quantum mechanics comes from the fact that the states in which a quantum system can be observed do not lie on a continuum. In quantum mechanics, any given physical system has a finite or countably infinite set of states that it can be found in. The observable states do not lie on a continuum as in classical mechanics but are discrete or \emph{quantized}. The main mathematical toolkit for quantum mechanics is the machinery of linear algebra - but it will often be the infinite dimensional version of it, i.e. the theory of linear operators that we have met in the section about functional analysis. Our \emph{state vectors} will often be continuous functions and our matrices will be operators that act on on these functions. 
+
+%That, together with the fact that we must deal with complex valued vectors or functions and that there is a very special notation in use, makes it all a bit intimidating at first - but essentially it's mostly just linear algebra.
 ...TBC...
 
 % have the matrices also a name? transition matrcies? evolution matrcies ? tiem evolution operator?
 % https://en.wikipedia.org/wiki/Time_evolution
+
+%===================================================================================================
+\subsection{Notation and Terminology}
+On first encounter, quantum mechanics can be very intimidating. They will talk about self-adjoint operators in infinite dimensional Hilbert spaces they will use a very peculiar notation for all of that. Don't let that scare you off! Essentially, it all boils down to linear algebra. Granted, we'll have to use vector spaces over complex numbers and these vector spaces will sometimes be infinite dimensional (i.e. spaces of continuous functions). It's linear algebra nonetheless. ...TBC...
+
+%Although the vector spaces in quantum mechanics are always complex and often infinite-dimensional, the mathematical framework is for the most part just linear algebra (in the infinite dimensional case operator algebra). Quantum mechanics does, however, use its own peculiar notation. ...TBC...
+
+%(n complex vector spaces has its own notation
+% Hilbert space
+
+\paragraph{Bras and Kets}
+%The form of the Schroedinger equation uses the notation for partial differential equations that we have introduced in the section about them using subscript $t$ for a derivative with respect to $t$. This looks different from what you will typically find in physics textbooks. There, the preferred notation for quantum mechanics is the so called bra-ket notation invented by Paul Dirac. In this notation, normal vectors are denoted as so called "ket" vectors
+
+% write it in bra-ket notation
+
+% https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation
+
+
+%===================================================================================================
+\subsection{Observables and Measurements}
+% maybe place before Time Evolution
+
+
+\subsubsection{The Born Rule}
+% rename to measurements or observations - born rule could be a sub-point
+
+
+% time independent schroedinger equation
+
+
+%The do not behave in a deterministic way like classical particles do but rather in a probabilistic way. This behavior is captured in a mathematical object called the quantum wavefunction which is the primary tool to describe the particle
+
+% they are also not point-like but rather spread out in space
+
+% https://en.wikipedia.org/wiki/Wave_function
+
+% https://en.wikipedia.org/wiki/Measurement_problem
+
+% Schroedinger eqaution descirbes time evolution of psi
+% Born rule describes how probabilities are derived from the wavefunction
+% https://en.wikipedia.org/wiki/Born_rule
+
+% The function can be observed only in one of the eigenstates. I think, we must form the scalar product of the state with the eigenstate to get the probability to find the system in that eigenstate?
+
+% math: Theory of linear operators, probability, Hamiltonian is also important.
+% wave-particle duality
+
+
+
+
+
+
 
 %===================================================================================================
 \subsection{Time Evolution}
@@ -39,43 +93,34 @@ Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to 
 % 
 
 
-\subsubsection{Notation}
-Although the vector spaces in quantum mechanics are always complex and often infinite-dimensional, the mathematical framework is for the most part just linear algebra (in the infinite dimensional case operator algebra). Quantum mechanics does, however, use its own peculiar notation. ...TBC...
 
-%(n complex vector spaces has its own notation
 
-\paragraph{Bras and Kets}
-%The form of the Schroedinger equation uses the notation for partial differential equations that we have introduced in the section about them using subscript $t$ for a derivative with respect to $t$. This looks different from what you will typically find in physics textbooks. There, the preferred notation for quantum mechanics is the so called bra-ket notation invented by Paul Dirac. In this notation, normal vectors are denoted as so called "ket" vectors
-
-% write it in bra-ket notation
-
-% https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation
 
 %===================================================================================================
-\subsection{Observables and Measurements}
-% maybe place before Time Evolution
+\subsection{Quantum Field Theory}
+
+A \emph{field theory} is a theory in which physical objects like particles are described as (scalar-, vector- or tensor-) fields that somehow interact with one another. So, in a field theory, the "particle" is not modeled as a point like object but rather as a continuous function that formally extends over all space and time. When I say it extends only "formally" over all space, you should picture in your head something like a Gaussian bell curve which also formally extends from minus to plus infinity, but tends towards zero so quickly (namely, exponentially-squared) to both sides, that it becomes negligible everywhere except for some finite region around the peak. In a field theory for particles, that is how the typical fields that model the particles behave, too [VERIFY!].
+
+\medskip
+A \emph{quantum theory} is a theory in which the values of physical quantities cannot just be anything from a continuous range but rather values from a discrete set where discrete can mean either finite or countably infinite. Which particular value from this discrete set will be observed in a particular situation will be predicted by a quantum theory only in terms of probabilities, not in a surefire deterministic sense like classical theories (field or not) would do. ...
+
+\medskip
+A quantum field theory combines both of these aspects ...TBC...
+
+% standard model of particle physics:
+% -fermions(constitute matter): electrons, quarks, neutrinos,..
+% -bosons (mediate interactions): photon, gluon, Z, W, Higgs, ..
+
+% -Higgs-field is scalar field (spin 0), other boson-fields are vector fields (spin 1),
+%  fermion-fields are spinor fields (spin 1/2).
+% -Spinors are made from Grassmann numbers. Their multiplication is anticommutative -> Squares of
+%  such "numbers" are zero.
+%  https://en.wikipedia.org/wiki/Grassmann_number
+%  -this is the Pauli exclusion principle - no two fermions can be in the same state - that's why
+%  electrons can't pass through each other
+
+% Quantum Field Theory visualized
+% https://www.youtube.com/watch?v=MmG2ah5Df4g
 
 
-\subsubsection{The Born Rule}
-% rename to measurements or observations - born rule could be a sub-point
-
-
-% time independent schroedinger equation
-
-
-%The do not behave in a deterministic way like classical particles do but rather in a probabilistic way. This behavior is captured in a mathematical object called the quantum wavefunction which is the primary tool to describe the particle
-
-% they are also not point-like but rather spread out in space
-
-% https://en.wikipedia.org/wiki/Wave_function
-
-% https://en.wikipedia.org/wiki/Measurement_problem
-
-% Schroedinger eqaution descirbes time evolution of psi
-% Born rule describes how probabilities are derived from the wavefunction
-% https://en.wikipedia.org/wiki/Born_rule
-
-% The function can be observed only in one of the eigenstates. I think, we must form the scalar product of the state with the eigenstate to get the probability to find the system in that eigenstate?
-
-% math: Theory of linear operators, probability, Hamiltonian is also important.
-% wave-particle duality
+\subsubsection{The Standard Model of Particle Physics}

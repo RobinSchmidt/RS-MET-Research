@@ -1,0 +1,67 @@
+%===================================================================================================
+\subsection{Quantum Mechanics}
+Quantum mechanics deals with the world of atomic and subatomic particles. It turns out that their behavior is not adequately described by classical mechanics. Classical mechanics describes the behavior of point like particles in a deterministic way. This is not how such small particles behave. Quantum mechanics describes the behavior of spatially smeared out particles in a probabilistic way. The main tool is the so called \emph{quantum wavefunction}. This is a complex valued (!) function of space and time and typically denoted by the greek letter psi as $\psi = \psi(t,x,y,z)$. There is a law called the \emph{Born rule} that allows us to convert the complex values of the wavefunction into probabilities of observing the particle in a particular \emph{state}, e.g. at a particular position. The Schroedinger equation is a partial differential equation that determines the time evolution of the wavefunction $\psi$. And "determines" is to be taken literally here - the time evolution of the wavefunction is indeed entirely deterministic. It is just the \emph{observation} that is probabilistic, i.e. the probabilistic aspect kicks in only at the point of making an observation, i.e. at the moment when we "apply" the Born rule. There are some very deep philosophical questions with regard to what constitutes such a moment, but I won't get into these here (search for "measurement problem" if you want to read more about this). The "quantum" in quantum mechanics comes from the fact that the states in which a quantum system can be observed do not lie on a continuum. In quantum mechanics, any given physical system has a finite or countably infinite set of states that it can be found in. The observable states do not lie on a continuum as in classical mechanics but are discrete or \emph{quantized}. The main mathematical toolkit for quantum mechanics is the machinery of linear algebra - but it will often be the infinite dimensional version of it, i.e. the theory of linear operators that we have met in the section about functional analysis. Our \emph{state vectors} will often be continuous functions and our matrices will be operators that act on on these functions. That, together with the fact that we must deal with complex valued vectors or functions and that there is a very special notation in use, makes it all a bit intimidating at first - but essentially it's mostly just linear algebra.
+...TBC...
+
+% have the matrices also a name? transition matrcies? evolution matrcies ? tiem evolution operator?
+% https://en.wikipedia.org/wiki/Time_evolution
+
+\subsubsection{The Schroedinger Equation}
+The  Schrodinger equation is to quantum mechanics what Newton's second law $F = m a$ is to Newtonian mechanics. It is the main governing equation that determines how the system will evolve over time. It can be stated as:
+\begin{equation}
+ \boldsymbol{\psi}_{t} = \frac{1}{\i \hbar} \mathbf{H} \boldsymbol{\psi}
+ \qquad \text{where} \qquad
+ \mathbf{H} = T + V = 
+\end{equation}
+Here I have used lowercase boldface for the wavefunction $\boldsymbol{\psi}$ to indicate that we think about it as a vector and uppercase boldface for $\mathbf{H}$ because we think about it as a linear operator (like a matrix, but more abstractly) that acts on a vector. This is an uncommon way to write it down. I like to put the time derivative unadorned to the left hand side such that the right hand side is an explicit prescription for "what comes next". This is how we would "implement" the equation in a computer program for a numerical solver and this is the way I think about things. The operator $\mathbf{H}$ in this equation is called the "Hamiltonian" and it encodes the energy of the system. Inside it, it will typically encapsulate some spatial derivatives of $\boldsymbol{\psi}$ such that the whole equation indeed follows our usual format of writing down a partial differential equation in space and time [VERIFY!].
+
+...TBC...
+
+% The function psi is a time varying, complex valued scalar field, i.e. when we plugin in a quadruple t,x,y,z, it produces a scalar. But: the whole function psi is seen as vector, i.e. an element of a space of functions. The value of psi at some particular spacetime point is a (complex) scalar. That is confusing
+
+% How does the Hamlitonian "encode" the energy? I think, it's an operator which, when being applied to the wavefunction, computes the total energy of the system. But wouldn't that rather be a functional than an operator
+
+% susskind eq 4.10 pg 103  and 119
+
+% https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation
+% https://en.wikipedia.org/wiki/Probability_current
+
+% https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation#Changes_of_basis
+
+% https://en.wikipedia.org/wiki/Schr%C3%B6dinger_equation#Time-dependent_equation
+% https://en.wikipedia.org/wiki/Hamiltonian_(quantum_mechanics)
+
+% maybe use vector notation for psi and matrix for H
+% 
+
+
+
+\paragraph{Bras and Kets}
+The form of the Schroedinger equation uses the notation for partial differential equations that we have introduced in the section about them using subscript $t$ for a derivative with respect to $t$. This looks different from what you will typically find in physics textbooks. There, the preferred notation for quantum mechanics is the so called bra-ket notation invented by Paul Dirac. In this notation, normal vectors are denoted as so called "ket" vectors
+
+% write it in bra-ket notation
+
+% https://en.wikipedia.org/wiki/Bra%E2%80%93ket_notation
+
+\subsubsection{The Born Rule}
+
+
+% time independent schroedinger equation
+
+
+%The do not behave in a deterministic way like classical particles do but rather in a probabilistic way. This behavior is captured in a mathematical object called the quantum wavefunction which is the primary tool to describe the particle
+
+% they are also not point-like but rather spread out in space
+
+% https://en.wikipedia.org/wiki/Wave_function
+
+% https://en.wikipedia.org/wiki/Measurement_problem
+
+% Schroedinger eqaution descirbes time evolution of psi
+% Born rule describes how probabilities are derived from the wavefunction
+% https://en.wikipedia.org/wiki/Born_rule
+
+% The function can be observed only in one of the eigenstates. I think, we must form the scalar product of the state with the eigenstate to get the probability to find the system in that eigenstate?
+
+% math: Theory of linear operators, probability, Hamiltonian is also important.
+% wave-particle duality

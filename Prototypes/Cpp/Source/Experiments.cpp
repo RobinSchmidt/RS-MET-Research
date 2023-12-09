@@ -10616,6 +10616,8 @@ void testSylvesterMatrix()
   Real tol = 128 * std::numeric_limits<Real>::epsilon();      // To detect zero remainders in gcd
   Poly d   = RF::polyGCD(f.getCoeffs(), g.getCoeffs(), tol);  // d = gcd(f,g) = -2 + x
 
+
+
   // Establish the sylvester matrix of f and g. Unlike Weitz, we use the convention on wikipedia 
   // where the rows contain the coeffs of f,g in reverse order:
   S = rsSylvesterMatrix(f, g);
@@ -10688,7 +10690,10 @@ void testSylvesterMatrix()
   //  -> Figure out, if there's a connection anf if so, what exactly it is!
   // -Can we find the gcd also with the Sylvester matrix or is this just for detecting common
   //  roots?
-  //
+  // -Here:  https://en.wikipedia.org/wiki/Sylvester_matrix#Applications  it is being said that
+  //  "the coefficients of this greatest common divisor may be expressed as determinants of 
+  //  submatrices of the Sylvester matrix (see Subresultant)"  -> figure out how exactly that works
+  //  out and check it programmatically
   // Notes:
   // -The resultant of a polynomial with its own derivative is called the discriminant and is 
   //  important to distinguish (discriminate) between different configurations of the roots. For a 
@@ -10702,7 +10707,7 @@ void testSylvesterMatrix()
 }
 
 
-/** UNDER CONSTRUCTION
+/** NEEDS TESTS
 
 Given the two polynomials f and g, this function computes the Bezout matrix associated with this
 pair of polynomials. Let f anf g be both of a degree <= n such that:
@@ -10734,7 +10739,6 @@ References:
 template<class T>
 rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T>& f, const rsPolynomial<T>& g)
 {
-  //rsError("Not yet implemented");
   int n = rsMax(f.getDegree(), g.getDegree());
   rsMatrix<T> B(n, n);
   for(int i = 0; i < n; i++) {
@@ -10828,6 +10832,16 @@ void testBezoutMatrix()
   // Nope! They don't match. Should they? I'm not sure. According to wikipedia, the determinant of
   // the Bezout matrix is the resultant of f and g. Isn't that exactly what the determinant of the
   // Sylvester matrix also is?
+  //
+  // Yep - the resultant is defined to be the determinant of the Sylvester matrix:
+  // https://en.wikipedia.org/wiki/Resultant#Definition
+  // https://en.wikipedia.org/wiki/Sylvester_matrix
+  // But wait! The resultant is supposed to be a polynomial, not a number. Or is it? I'm confused.
+  //
+  // Maybe we still have a bug in either the Sylvester and/or Bezout matrix calculation. Implement
+  // unit tests for both first and only if they all pass, worry about that question.
+
+
 
   rsAssert(ok);
 

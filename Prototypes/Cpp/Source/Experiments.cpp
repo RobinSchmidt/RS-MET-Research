@@ -10825,8 +10825,9 @@ void testBezoutMatrix()
   Mat S = rsSylvesterMatrix(f, g);
   Real detB = LinAlg::determinant(B);   // -192
   Real detS = LinAlg::determinant(S);   //   64
-  // Nope! They don't match. Should they? I'm not sure.
-  
+  // Nope! They don't match. Should they? I'm not sure. According to wikipedia, the determinant of
+  // the Bezout matrix is the resultant of f and g. Isn't that exactly what the determinant of the
+  // Sylvester matrix also is?
 
   rsAssert(ok);
 

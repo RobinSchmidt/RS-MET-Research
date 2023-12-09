@@ -10788,8 +10788,36 @@ void testBezoutMatrix()
   // ...OK...this looks good. But we should do some more unit tests with other polyomials and cover
   // also edge cases.
 
+  // Tests, if the matrix B satisfies the identity:
+  //   \sum_{i,j = 0}^{n-1} B(i,j) x^i y^j = (f(x)g(y) - f(y)g(x)) / (x-y)
+  // for the given x and y. 
+  auto isBezoutMatrix = [](const Mat& B, const Poly& f, const Poly& g, Real x, Real y, Real tol)
+  {
+    int n = B.getNumRows();
+    if(B.getNumColumns() != n)
+      return false;               // B does not even have the right shape!
+
+    Real sum = 0;
+    for(int i = 0; i < n; i++)
+      for(int j = 0; j < n; j++)
+        sum += B(i, j) * pow(x, i) * pow(y, j);
+
+    Real target = (f(x)*g(y) - f(y)*g(x)) / (x-y);
+
+    return abs(sum - target) <= tol;
+  };
+  // I'm not sure, if satisfying the equation for a particular pair x,y is already a sufficient 
+  // condition for B to be the Bezout matrix of f and g. Probably not - but it's certainly a 
+  // condition that we should check in a unit test. It's given on the wikipedia page. The name
+  // isBezoutMatrix is a bit misleading because it suggests that it's a sufficient condition. Try 
+  // to find a better name.
 
 
+  Real tol = 1.e-14;
+  Real x = 3;
+  Real y = 5;
+   
+  ok &= isBezoutMatrix(B, f, g, x, y, tol);
 
   rsAssert(ok);
 

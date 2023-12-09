@@ -10774,13 +10774,21 @@ void testBezoutMatrix()
   using Mat  = RAPT::rsMatrix<Real>;
   //using RF   = RAPT::rsRationalFunction<Real>;
 
-  // Define the two polynomials of which we want to create the Sylvester matrix:
-  Poly f({ 0, -1, 3 });  // f(x) = 0 - 1*x + 3*x^2
-  Poly g({ 1,  0, 5 });  // g(x) = 1 + 0*x + 5*x^2
-
   bool ok = true;
 
+  // Define the two polynomials of which we want to create the Bezout matrix:
+  Poly f({ 0, -1, 0, 3 });  // f(x) = 0 - 1*x + 0*x^2 + 3*x^3
+  Poly g({ 1,  0, 5    });  // g(x) = 1 + 0*x + 5*x^2
+
+  // Obtain the Bezout matrix of f and g and check if the result is as expected:
   Mat B = rsBezoutMatrix(f, g);
+  ok &= B == Mat(3, 3, { -1,0,3, 0,8,0, 3,0,15 });
+  // The example is from https://en.wikipedia.org/wiki/B%C3%A9zout_matrix#Examples
+
+  // ...OK...this looks good. But we should do some more unit tests with other polyomials and cover
+  // also edge cases.
+
+
 
 
   rsAssert(ok);

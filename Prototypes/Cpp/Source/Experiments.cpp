@@ -10768,8 +10768,19 @@ void testBezoutMatrix()
   //
   // https://en.wikipedia.org/wiki/B%C3%A9zout_matrix
 
+  using Real = double;
+  using Poly = RAPT::rsPolynomial<Real>;
+  //using Vec  = std::vector<Real>;
+  using Mat  = RAPT::rsMatrix<Real>;
+  //using RF   = RAPT::rsRationalFunction<Real>;
+
+  // Define the two polynomials of which we want to create the Sylvester matrix:
+  Poly f({ 0, -1, 3 });  // f(x) = 0 - 1*x + 3*x^2
+  Poly g({ 1,  0, 5 });  // g(x) = 1 + 0*x + 5*x^2
+
   bool ok = true;
 
+  Mat B = rsBezoutMatrix(f, g);
 
 
   rsAssert(ok);

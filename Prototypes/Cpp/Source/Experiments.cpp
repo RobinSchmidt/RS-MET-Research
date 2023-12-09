@@ -10734,16 +10734,23 @@ References:
 template<class T>
 rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T>& f, const rsPolynomial<T>& g)
 {
-  rsError("Not yet implemented");
-
-  rsMatrix<T> B;  // todo: init with correct size
-
-  // ...something more to do...
-
+  //rsError("Not yet implemented");
+  int n = rsMax(f.getDegree(), g.getDegree());
+  rsMatrix<T> B(n, n);
+  for(int i = 0; i < n; i++) {
+    for(int j = 0; j < n; j++) {
+      int m_ij = rsMin(i, n-j-1);
+      B(i, j) = 0;                       // Superfluous bcs B is already initialized to all zeros?
+      for(int k = 0; k <= m_ij; k++) {
+        T ul = f.getCoeffPadded(j+k+1);
+        T vl = g.getCoeffPadded(i-k);
+        T ur = f.getCoeffPadded(i-k);
+        T vr = g.getCoeffPadded(j+k+1);
+        B(i, j) += ul*vl - ur*vr;       }}}
   return B;
 }
 
-// Q: The determinant of the Sylvester matrix seems to be the same as the dterminant of the Bezout 
+// Q: The determinant of the Sylvester matrix seems to be the same as the determinant of the Bezout 
 // matrix. Does that imply that ths Sylvester matrix and the Bezout matrix are related by a 
 // similarity transformation? If so, can we compute the change of basis matrix (aka transition 
 // matrix)? Figure out! If that is the case, they must both have the same eigenvalues. The 
@@ -10756,6 +10763,7 @@ rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T>& f, const rsPolynomial<T>& g)
 
 void testBezoutMatrix()
 {
+
   // UNDER CONSTRUCTION
   //
   // https://en.wikipedia.org/wiki/B%C3%A9zout_matrix

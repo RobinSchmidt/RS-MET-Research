@@ -12,6 +12,7 @@ One might think that a "partial" differential equation (abbreviated as PDE) ough
 
 \subsection{Examples}
 To get a feeling for how PDEs looks like and what sorts of phenomena they model, we will first have a brief look at some important examples of PDEs.
+% [ToDo: maybe it's not a good idea]
 % add Black-Scholes equation and maybe some examples from other fields like chemistry and biology. I think there was a PDE for pattern formation in furs (like leopard, giraffe, zebra, etc) - look that up. What about formation of fractals like snail-shells, romanesco, etc? or sunflowers?
 
 
@@ -35,7 +36,20 @@ To get a feeling for how PDEs looks like and what sorts of phenomena they model,
 
 \subsubsection{PDEs for Time-Varying Scalar Fields}
 
-\paragraph{Transport Equation} ...tbc...
+\paragraph{Transport Equation} 
+The simplest example of a partial differential equation is the so called transport equation. It gets its name from the fact that it describes a situation where (in 2D) an initial spatial shape of a scalar field $u = u(x,y)$ propagates with constant velocity $\mathbf{v} = (v_1, v_2)$ through the space. I deliberately avoid using $x,y$ and subscripts for the components of the velocity vector $\mathbf{v}$ and use $1,2$ instead in order to avoid confusion with our notation for partial derivatives. The transport equation reads in one, two and $n$ dimensions:
+\begin{equation}
+1\text{D: } \; u_t = - v u_x , \qquad 
+2\text{D: } \; u_t = - (v_1 u_x + v_2 u_y), \qquad 
+n\text{D: } \; u_t = - \mathbf{v} \cdot \nabla u
+\end{equation}
+where in 1D, $v$ is just the speed along the $x$-axis, in 2D $v_1$ and $v_2$ are the velocity components into the $x$ and $y$ direction and in $n$D we have a general velocity vector $\mathbf{v}$ that is dotted with the gradient of our scalar field. The solutions to this equation for the $n$D case are given by:
+\begin{equation}
+u(\mathbf{r}, t) = g(\mathbf{r} - t \mathbf{v})
+\end{equation}
+where $g$ is an arbitrary initial shape. That is: we prescribe as initial condition an arbitrary shape $g(\mathbf{r})$ where $\mathbf{r}$ is our spatial coordinate vector and the time-varying $u(\mathbf{r}, t)$ is then just that initial shape $g$, but shifted at time $t$ by a displacement vector given by $t \mathbf{v}$.
+
+%...tbc..
 
 % https://en.wikibooks.org/wiki/Partial_Differential_Equations/The_transport_equation
 % https://en.wikipedia.org/wiki/Continuity_equation
@@ -117,6 +131,8 @@ I used waves on a pond of water as an example for the sort of phenomena that the
 % The $u u_x$ term is an advection term, the $u_{xxx}$ is a dispersion term
 % It has soliton solutions. Solitons are strongly stable, self-reinforcing propagating solutions. 
 % https://en.wikipedia.org/wiki/Soliton
+
+% Speed of solitons is proportional to their amplitude (Arens, pg 1091)
 
 % https://en.wikipedia.org/wiki/Korteweg%E2%80%93De_Vries_equation
 % https://de.wikipedia.org/wiki/Korteweg-de-Vries-Gleichung

@@ -10743,6 +10743,13 @@ rsMatrix<T> rsBezoutMatrix(const rsPolynomial<T>& f, const rsPolynomial<T>& g)
   return B;
 }
 
+// Q: The determinant of the Sylvester matrix seems to be the same as the dterminant of the Bezout 
+// matrix. Does that imply that ths Sylvester matrix and the Bezout matrix are related by a 
+// similarity transformation? If so, can we compute the change of basis matrix (aka transition 
+// matrix)? Figure out! If that is the case, they must both have the same eigenvalues. The 
+// eigenvectors will be different in general. Does the transition matrix between both sets of 
+// eigenvectors encode something interesting?
+
 // Maybe use ascii art instead of latex notation, see_
 // https://math.stackexchange.com/questions/149303/software-to-render-formulas-to-ascii-art
 // 

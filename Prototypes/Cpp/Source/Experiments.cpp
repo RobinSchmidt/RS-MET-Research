@@ -10692,8 +10692,11 @@ void testSylvesterMatrix()
   //  roots?
   // -Here:  https://en.wikipedia.org/wiki/Sylvester_matrix#Applications  it is being said that
   //  "the coefficients of this greatest common divisor may be expressed as determinants of 
-  //  submatrices of the Sylvester matrix (see Subresultant)"  -> figure out how exactly that works
-  //  out and check it programmatically
+  //   submatrices of the Sylvester matrix (see Subresultant)"  -> figure out how exactly that 
+  //  works out and check it programmatically. See also:
+  //  https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Subresultants  It says:
+  //  "the resultant of two polynomials P, Q is a polynomial function of the coefficients of P and 
+  //   Q which has the value zero if and only if the GCD of P and Q is not constant."
   // Notes:
   // -The resultant of a polynomial with its own derivative is called the discriminant and is 
   //  important to distinguish (discriminate) between different configurations of the roots. For a 

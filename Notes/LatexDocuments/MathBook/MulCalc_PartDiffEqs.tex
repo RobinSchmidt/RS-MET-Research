@@ -41,11 +41,31 @@ To get a feeling for how PDEs looks like and what sorts of phenomena they model,
 % https://en.wikipedia.org/wiki/Continuity_equation
 % https://www.simscale.com/docs/simwiki/numerics-background/what-is-the-transport-equation/
 
-\paragraph{Diffusion Equation} ...tbc...
-The diffusion equation, also known as heat equation, governs how a physical quantity diffuses, i.e. spreads out spatially, over time. Imagine some clump of material that has initially a homogeneous temperature except for one single hot spot. Over time, the heat will spread out from the hot spot into the whole clump until the temperature is completely homogeneous. ...TBC...
+\paragraph{Heat Equation} 
+The heat equation governs how a scalar physical quantity like temperature tends to spread out spatially over time. Imagine some clump of material that has initially a homogeneous temperature except for one single hot spot. Over time, the heat will spread out from the hot spot into the whole clump until the temperature is completely homogeneous. At the (asymptotic) end of the process, the heat from the hot spot will be dispersed over the whole object. In one, two and $n$ dimensions, the equation is:
+\begin{equation}
+1\text{D: } \; u_{t} = D u_{xx} , \qquad 
+2\text{D: } \; u_{t} = D (u_{xx} + u_{yy}), \qquad 
+n\text{D: } \; u_{t} = D \Delta u
+\end{equation}
+The right hand side of the equation is proportional the Laplacian of our scalar field $u$ with a proportionality factor $D$. Loosely speaking, the Laplacian measures, how much the value at the local spot deviates from the average value of the local neighborhood. The left hand side $u_t$ is the (temporal) rate of change of the quantity $u$ at any given spot. So the equation says: the more the local value deviates from the neighborhood, the faster it will change. The change will be towards the neighborhood average. The value at the spot will be dragged to the value of the local average and it will be dragged faster, when it deviates more. Differences in temperature from spot to spot will tend to even out over time. The value of $u$ at every location gets dragged towards the average until at the end, everything is at the same temperature which is the average temperature. ...TBC...
 
+
+% https://en.wikipedia.org/wiki/Heat_equation
+
+
+%...TBC...
+% The energy has dispersed
 
 % aka Heat Equation
+
+\paragraph{Diffusion Equation} 
+The diffusion equation is a more complicated version of the heat equation that allows the coefficient of diffusion $D$ to depend on the quantity $u$ itself such that $D = D(u)$. ...TBC...
+
+%to be different in different spatial directions and  ...TBC...
+
+% https://en.wikipedia.org/wiki/Diffusion_equation
+
 
 \paragraph{Convection-Diffusion Equation} ...tbc...
 
@@ -54,7 +74,6 @@ The diffusion equation, also known as heat equation, governs how a physical quan
 
 \paragraph{Wave Equation}
 The wave equation is what governs the propagation of disturbances in a medium. When you throw a stone into a pond of water, a circular wavefront will be formed at the point of impact which propagates radially outward. In general, there will be some physical quantity $u$, like height of a water surface or a membrane or the pressure of a gas, which we will consider to be a function of the spatial coordinates and of time.
-
 \begin{equation}
 1\text{D: } \; u_{tt} = c^2 u_{xx} , \qquad 
 2\text{D: } \; u_{tt} = c^2 (u_{xx} + u_{yy}), \qquad 
@@ -144,5 +163,12 @@ n\text{D: } \; u_{tt} = c^2 \Delta u
 
 
 \begin{comment}
+
+
+https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation
+https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation
+https://en.wikipedia.org/wiki/Klein%E2%80%93Kramers_equation
+https://en.wikipedia.org/wiki/Master_equation
+
 
 \end{comment}

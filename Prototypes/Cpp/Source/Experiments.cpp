@@ -10772,23 +10772,11 @@ void testBezoutMatrix()
   using Poly = RAPT::rsPolynomial<Real>;
   //using Vec  = std::vector<Real>;
   using Mat  = RAPT::rsMatrix<Real>;
+  using LinAlg = RAPT::rsLinearAlgebraNew;
   //using RF   = RAPT::rsRationalFunction<Real>;
 
-  bool ok = true;
 
-  // Define the two polynomials of which we want to create the Bezout matrix:
-  Poly f({ 0, -1, 0, 3 });  // f(x) = 0 - 1*x + 0*x^2 + 3*x^3
-  Poly g({ 1,  0, 5    });  // g(x) = 1 + 0*x + 5*x^2
-
-  // Obtain the Bezout matrix of f and g and check if the result is as expected:
-  Mat B = rsBezoutMatrix(f, g);
-  ok &= B == Mat(3, 3, { -1,0,3, 0,8,0, 3,0,15 });
-  // The example is from https://en.wikipedia.org/wiki/B%C3%A9zout_matrix#Examples
-
-  // ...OK...this looks good. But we should do some more unit tests with other polyomials and cover
-  // also edge cases.
-
-  // Tests, if the matrix B satisfies the identity:
+  // Function that tests, if the matrix B satisfies the identity:
   //   \sum_{i,j = 0}^{n-1} B(i,j) x^i y^j = (f(x)g(y) - f(y)g(x)) / (x-y)
   // for the given x and y. 
   auto isBezoutMatrix = [](const Mat& B, const Poly& f, const Poly& g, Real x, Real y, Real tol)
@@ -10813,13 +10801,38 @@ void testBezoutMatrix()
   // to find a better name.
 
 
+  bool ok = true;
+
+  // Define the two polynomials of which we want to create the Bezout matrix:
+  Poly f({ 0, -1, 0, 3 });  // f(x) = 0 - 1*x + 0*x^2 + 3*x^3
+  Poly g({ 1,  0, 5    });  // g(x) = 1 + 0*x + 5*x^2
+  // The example is from https://en.wikipedia.org/wiki/B%C3%A9zout_matrix#Examples
+
+  // Obtain the Bezout matrix of f and g and check if the result is as expected:
+  Mat B = rsBezoutMatrix(f, g);
+  ok &= B == Mat(3, 3, { -1,0,3, 0,8,0, 3,0,15 });
+
   Real tol = 1.e-14;
   Real x = 3;
   Real y = 5;
-   
   ok &= isBezoutMatrix(B, f, g, x, y, tol);
 
+  // OK - this looks good so far. But we should do some more unit tests with other polyomials and 
+  // cover also edge cases.
+
+
+  // Check if the determinat of the Bezout matrix and of the Sylvester matrix match:
+  Mat S = rsSylvesterMatrix(f, g);
+  Real detB = LinAlg::determinant(B);   // -192
+  Real detS = LinAlg::determinant(S);   //   64
+  // Nope! They don't match. Should they? I'm not sure.
+  
+
   rsAssert(ok);
+
+  // ToDo:
+  // -Implement more tests with random polynomials.
+  // -Check if the Bezout matrix has indeed the same determinant as the sylvester matrix.
 
   // See also:
   // https://en.wikipedia.org/wiki/Routh%E2%80%93Hurwitz_theorem

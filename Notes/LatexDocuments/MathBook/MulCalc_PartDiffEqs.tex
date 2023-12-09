@@ -42,6 +42,8 @@ To get a feeling for how PDEs looks like and what sorts of phenomena they model,
 % https://www.simscale.com/docs/simwiki/numerics-background/what-is-the-transport-equation/
 
 \paragraph{Diffusion Equation} ...tbc...
+The diffusion equation, also known as heat equation, governs how a physical quantity diffuses, i.e. spreads out spatially, over time. Imagine some clump of material that has initially a homogeneous temperature except for one single hot spot. Over time, the heat will spread out from the hot spot into the whole clump until the temperature is completely homogeneous. ...TBC...
+
 
 % aka Heat Equation
 
@@ -49,26 +51,41 @@ To get a feeling for how PDEs looks like and what sorts of phenomena they model,
 
 % https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation
 
-\paragraph{Wave Equation}
 
-%\begin{equation}
-%1\text{D:  } u_{tt} + u_{xx} = 0, \qquad 
-%2\text{D:  } u_{tt} + u_{xx} + u_{yy} = 0, \qquad 
-%n\text{D:  } u_{tt} + \Delta u = 0
-%\end{equation}
-% maybe include the factor $c^2$ and remove the 2D case, 1D and nD should be enough and form more complicated equations, listing all 3 cases may take too much space, maybe allow for an rhs f(x), f(x,y), f(r)  where r= (x,y,z) 
+\paragraph{Wave Equation}
+The wave equation is what governs the propagation of disturbances in a medium. When you throw a stone into a pond of water, a circular wavefront will be formed at the point of impact which propagates radially outward. In general, there will be some physical quantity $u$, like height of a water surface or a membrane or the pressure of a gas, which we will consider to be a function of the spatial coordinates and of time.
 
 \begin{equation}
-1\text{D:  } c^2 u_{tt} + u_{xx} = f(x), \qquad 
-2\text{D:  } c^2 u_{tt} + u_{xx} + u_{yy} = f(x,y), \qquad 
-n\text{D:  } c^2 u_{tt} + \Delta u = f(\mathbf{r})
+1\text{D: } \; u_{tt} = c^2 u_{xx} , \qquad 
+2\text{D: } \; u_{tt} = c^2 (u_{xx} + u_{yy}), \qquad 
+n\text{D: } \; u_{tt} = c^2 \Delta u
 \end{equation}
+
+% Loosely speaking, the wave equation basically says that the local acceleration is proportional to the local curvature. More strictly speaking the term "curvature" is not quite exact here but taking the Laplacian as something like a measure of curvature is not too far of either. The Laplacian measures, how far off the local value deviates from the average of the local neighborhood.
+
+% https://en.wikipedia.org/wiki/Curvature#Surfaces
+
+% maybe include the factor $c^2$ and remove the 2D case, 1D and nD should be enough and form more complicated equations, listing all 3 cases may take too much space, maybe allow for an rhs f(x), f(x,y), f(r)  where r= (x,y,z)
+
+% Maybe also show the notation with thh d'Alembert operator
+
+% Give the solutions
+
+% Maybe mention that one could include "driving terms"  as a function f(x,y,t) (in the 2D case) to the right hand side. In a numerical simulation, some added driving term could actually also be applied to u_t or even u itself rather than to u_tt
+
+%\begin{equation}
+%1\text{D:  } c^2 u_{tt} + u_{xx} = f(x), \qquad 
+%2\text{D:  } c^2 u_{tt} + u_{xx} + u_{yy} = f(x,y), \qquad 
+%n\text{D:  } c^2 u_{tt} + \Delta u = f(\mathbf{r})
+%\end{equation}
 
 % add dispersive wave equation, nonlinear wave equation from numerical sound synthesis
  ...tbc...
 
 % Die Wellengleichung EINFACH erklärt! | Wellen (1 von 10)
 % https://www.youtube.com/watch?v=X8rfJZt8Lc4&list=PLdTL21qNWp2YtT_9KUJoz-kU6kNJ8W1Vu
+
+% https://en.wikipedia.org/wiki/Wave_equation
 
 \paragraph{Quantum Wavefunctions} ...tbc...
 

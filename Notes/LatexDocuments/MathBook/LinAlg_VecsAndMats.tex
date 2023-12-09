@@ -508,7 +508,7 @@ We can see how $\mathbf{A}$ and $\mathbf{B}$ encode the same transformation by c
 
 
 \medskip
-A similarity transformation does not change the basis independent properties of a matrix. In particular, it doesn't change the characteristic polynomial and therefore the eigenvalues, which are the  roots of said polynomial, are invariant under the transformation. Furthermore, it also doesn't change the determinant and trace because they are the product and sum of the eigenvalues respectively. The multiplicities (geometric and algebraic) of the eigenvalues are also invariant. The eigenvectors are mapped via the change of basis transformation $\mathbf{S}$: If $\mathbf{a}$ is an eigenvector of  $\mathbf{A}$, then $\mathbf{b} = \mathbf{S a}$ is the corresponding eigenvector of $\mathbf{B}$ [VERIFY! It might be $\mathbf{S}^{-1}$]. Other features that are invariant under a similarity transform are: rank, index of nilpotence, Jordan normal form (up to permutation of the blocks), Frobenius normal form, minimal polynomial and elementary divisors. Don't worry, if you don't know what some of these terms mean. I don't know all of them either and just wanted to list them all for completeness (the list is taken from Wikipedia). [Q: What other transformations do not change the characteristic polynomial? Are there any? Or are similarity transformations the only kind of transformation with that property?]
+A similarity transformation does not change the basis independent properties of a matrix. In particular, it doesn't change the characteristic polynomial and therefore the eigenvalues, which are the  roots of said polynomial, are invariant under the transformation. Furthermore, it also doesn't change the determinant and trace because they are the product and sum of the eigenvalues respectively. The multiplicities (geometric and algebraic) of the eigenvalues are also invariant. The eigenvectors are mapped via the change of basis transformation $\mathbf{S}$: If $\mathbf{a}$ is an eigenvector of  $\mathbf{A}$, then $\mathbf{b} = \mathbf{S a}$ is the corresponding eigenvector of $\mathbf{B}$ [VERIFY! It might be $\mathbf{S}^{-1}$]. Note that the implication (similar $\Rightarrow$ same eigenvalues) is only one way. It doesn't hold in the other direction - two matrices with equal eigenvalues may nevertheless be dissimilar. Other features that are invariant under a similarity transform are: rank, index of nilpotence, Jordan normal form (up to permutation of the blocks), Frobenius normal form, minimal polynomial and elementary divisors. Don't worry, if you don't know what some of these terms mean. I don't know all of them either and just wanted to list them all for completeness (the list is taken from Wikipedia). [Q: What other transformations do not change the characteristic polynomial? Are there any? Or are similarity transformations the only kind of transformation with that property?]
 
 % https://en.wikipedia.org/wiki/Matrix_similarity
 % https://math.stackexchange.com/questions/255172/eigenvectors-of-similar-matrices
@@ -524,7 +524,6 @@ A similarity transformation does not change the basis independent properties of 
 Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ such that..." and in practice, we may want to know (1) How can we decide, whether or not such a matrix exists? (2) If it does exist, is it unique? (3) If it is unique, what is it? If it isn't unique, what matrices are possible? Generally, if two matrices are similar, they represent the same geometric transformation but expressed in different coordinate systems. The matrix $\mathbf{S}$ is the matrix that transforms from one coordinate system to the other [TODO: be more specific: which way?] and is called the \emph{change of basis} matrix. So, in a typical practical situation, this matrix $\mathbf{S}$ will probably be given to us so we don't really need to compute it from $\mathbf{A,B}$. But if we really encounter a situation where we need to, this is how it can be done:
 
 [...TBC...ToDo: give algorithm to compute $\mathbf{S}$, given $\mathbf{A,B}$. Maybe use high-level pseudo code and refer to an actual (to be written) implementation in the C++ codebase ]
-
 
 
 % How to find P: write the relation as PA = PB  ->  (PA - PB) = 0  ->  P(A-B) = 0
@@ -546,33 +545,39 @@ Now, this is a rather implicit definition "there exists a matrix $\mathbf{S}$ su
 
 %\paragraph{Commuting Matrices}
 
+% Similar Matrices, Change of Basis Matrices, and Diagonalisable Matrices (Linear Algebra)
+% https://www.youtube.com/watch?v=bicwfCavVgU
+
+% Change of basis | Chapter 13, Essence of linear algebra
+% https://www.youtube.com/watch?v=P2LTAUO1TdA&list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab&index=13
+
 \paragraph{Simultaneously Diagonalizable Matrices}
 Two matrices $\mathbf{A}$ and $\mathbf{B}$ are said to be simultaneously diagonalizable if there exists a single matrix $\mathbf{P}$ such that $\mathbf{P}^{-1} \mathbf{A} \mathbf{P}$ and  $\mathbf{P}^{-1} \mathbf{B} \mathbf{P}$ are both diagonal matrices. For that to happen, the matrices $\mathbf{A}$ and $\mathbf{B}$ must have the same eigenvectors because in a diagonalization, these eigenvectors appear as the columns of the diagonalizing $\mathbf{P}$ matrix [VERIFY]. Two matrices commute if and only if they are simultaneously diagonalizable. A set $A$ of matrices is simultaneously diagonalizable if all pairs of matrices in the the set are simultaneously diagonalizable.  
 
 
 \medskip
-Note how the features of being \emph{similar} and being \emph{simultaneously diagonalizable} are complementary: If two matrices are similar, then they have the same eigen\emph{values} (this implication goes only one way, by the way). If two matrices are simultaneously diagonalizable, then they have the same eigen\emph{vectors} (Q: Is this implication also only one way?). One might be tempted to conclude that, if two matrices have both features, i.e. are simliar \emph{and} simultaneously diagonalizable, then they must have the same eigenvalues \emph{and} the same eigenvectors and hence they must in fact be the same matrix [VERIFY]. But I think, that conclusion would be false because even if two matrices have the same eigenvalues and eigenvectors, the matrices may still be different because the way in which the eigenvalues and eigenvectors are paired may be different. [Figure this out! (the formation of eigenspaces is actually more complicated than values and vectors being paired 1-to-1 - but that doesn't matter for the argument)]
+Note how the features of being \emph{similar} and being \emph{simultaneously diagonalizable} are complementary: If two matrices are similar, then they have the same eigen\emph{values} (this implication goes only one way, by the way). If two matrices are simultaneously diagonalizable, then they have the same eigen\emph{vectors} (Q: Is this implication also only one way?). One might be tempted to conclude that, if two matrices have both features, i.e. are simliar \emph{and} simultaneously diagonalizable, then they must have the same eigenvalues \emph{and} the same eigenvectors and hence they must in fact be the same matrix. But I think, that conclusion would be false because even if two matrices have the same eigenvalues and eigenvectors, the matrices may still be different because the way in which the eigenvalues and eigenvectors are associated may be different. [Figure this out! I think, the diagonalizing matrices must be related by a permutation of columns?]
 
+% But maybe if two matrices have the same eigenvalues and eigenvectors, their diagonalizing matrices are related in a simple way? Or the matrices themselves have some simple relation? I think, the diagonalizing matrices must be related by a permutation of columns - because the order of the columns is what establishes the pairing between eigenvectors and -values.
 
-%That implies that if two matrices have both features, i.e. are simliar \emph{and} simultaneously diagonalizable, then they must have the same eigenvalues \emph{and} the same eigenvectors and hence they must in fact be the same matrix [VERIFY]. [TODO: there are some conclusions in here that I have drawn myself and need to be verified]
+% I think, a diagonalizing matrix S of a matrix A is *not* unique anyway unless we specify that the values on the diagonal matrix must be in a certain order (say ascending). Different diagonalizing matrices (related by column permutaions, I think) would give rise to different ordering of the eigenvalues along the diagonal.
 
 %No  - I think, the conclusion is false. Even if tow matrices have the eigenvalues and the same eigenvectors, they may still be different matrices because the way in which the eigenvalues and eigenvectors are paired may be different!
 
 %\medskip
 
-
-
-% No - it's not an iff. Two matrices with the same eigenvalues cann be dissimilar nonetheless. The implication is only one way: if tow matrices are similar, they have the same eigenvalues
+% Two matrices with the same eigenvalues can be dissimilar nonetheless:
 % https://www.youtube.com/watch?v=MOn7cLZQH-0
 
 % so, that means: similar matrices have equal eigenvalues and simulatneously diagonalizabel matrices have the same eigenvectors?
 
 % https://en.wikipedia.org/wiki/Diagonalizable_matrix#Simultaneous_diagonalization
-
-%https://en.wikipedia.org/wiki/Triangular_matrix#Simultaneous_triangularisability
+% https://en.wikipedia.org/wiki/Triangular_matrix#Simultaneous_triangularisability
 
 % https://en.wikipedia.org/wiki/Matrix_mechanics#Matrix_basics
 % Seems like matrices are simultaneously diagonalizable, if they have the same eigenvectors. ...yeah - that makes sense in the lght of the equation above
+
+
 
 
 \paragraph{Misc Special Matrices}

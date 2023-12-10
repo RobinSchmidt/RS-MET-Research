@@ -138,16 +138,7 @@ Compactness is important because ...TBC...
 \subsection{Topological Space}
 In a topological space, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements without even needing to refer to a metric. The only notion that we will need to refer to is that of an open set. Obviously, we will need an alternative but equivalent definition for what "open set" is supposed to mean if we want to do away with the metric.
 
-\paragraph{Definition: Topology} 
-Let $X$ be a set. A set $T$ of subsets of $X$ is called a topology in $X$ if it satisfies: (1) The empty set and the complex set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. The elements of a topology $T$ are called open sets.
 
-\paragraph{Definition: Topological Space} A topological space is a set $X$ on which a topology $T$ is defined.
-
-% https://en.wikipedia.org/wiki/Topological_space
-% https://mathworld.wolfram.com/TopologicalSpace.html
-
-\paragraph{Induced Topology} 
-We have seen how we can define an open subset of a set $X$ when we have a metric $d$ available. If we collect all the so defined open subsets of a set into a set $T$, then this set $T$ will indeed qualify as a topology on $X$. It is the topology that is induced by the metric $d$. [VERIFY] That means that every metric space is automatically also a topological space. But - as by now you certainly expect - the notion of a topological space is more general. There are topologies which are not (and cannot be) induced by a metric. [TODO: give an example]
 
 \subsubsection{A Taxonomy of Sets Revisited}
 We now want to revisit our taxonomy of sets. The goal is to define all those properties without using a metric.
@@ -164,6 +155,25 @@ We now want to revisit our taxonomy of sets. The goal is to define all those pro
 % 10:25
 
 
+\subsubsection{Topologies on a Set}
+
+
+\paragraph{Definition: Topology} 
+Let $X$ be a set. A set $T$ of subsets of $X$ is called a topology on $X$ if it satisfies: (1) The empty set and the complete set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. 
+
+\medskip
+With that definition, the elements of a topology $T$ are indeed precisely the open sets in $X$. [TODO: VERIFY and explain why] ...TBC...
+
+%It requires some justification to call the elements of the topology $T$ open sets. ...TBC...
+
+
+\paragraph{Definition: Topological Space} A topological space is a set $X$ on which a topology $T$ is defined.
+
+% https://en.wikipedia.org/wiki/Topological_space
+% https://mathworld.wolfram.com/TopologicalSpace.html
+
+\paragraph{Induced Topology} 
+We have seen how we can define an open subset of a set $X$ when we have a metric $d$ available. If we collect all the so defined open subsets of a set into a set $T$, then this set $T$ will indeed qualify as a topology on $X$. It is the topology that is induced by the metric $d$. [VERIFY] That means that every metric space is automatically also a topological space. But - as by now you certainly expect - the notion of a topological space is more general. There are topologies which are not (and cannot be) induced by a metric. [TODO: give an example]
 
 
 \medskip

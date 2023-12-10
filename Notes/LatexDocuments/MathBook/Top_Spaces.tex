@@ -65,10 +65,19 @@ Symmetry:                           & $d(x, y) = d(y, x)$  \\
 Triangle inequality:                & $d(x,z) \leq d(x,y) + d(y,z)$
 \end{tabular}
 \medskip
-where the positivity axiom can actually be weakened to only require the distance between distinct elements to be nonzero. [TODO: explain how positivity then follows]. Our distance function $d = d(x,y)$ is also called \emph{a metric} on the set $S$.
+where the positivity axiom can actually be weakened to only require the distance between distinct elements to be nonzero. [TODO: explain how positivity then follows]. Our distance function $d = d(x,y)$ is also called \emph{a metric} on the set $S$. 
 
 % https://www.youtube.com/watch?v=qwsvXa7nIGg
 % at 15:35 - calls the first property jsut "definite"
+
+% https://www.youtube.com/watch?v=WjuKCrys_Ig&list=PLHi0WgifODX19zsJhvCrizYEXiHY5qc9n&index=2
+
+% https://en.wikipedia.org/wiki/Pseudometric_space
+% https://en.wikipedia.org/wiki/Metric_space#Semimetrics
+% https://de.wikipedia.org/wiki/Pseudometrik
+
+% https://en.wikipedia.org/wiki/Minkowski_space#Metric_signature
+% https://mathworld.wolfram.com/MinkowskiMetric.html
 
 \paragraph{Induced Metric}
 The requirements for a norm and for a metric are sufficiently similar that we can make a natural connection between norms and metrics. If our set $S$ happens to be a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} via the norm of the difference: $d(\mathbf{x, y}) = |\mathbf{x-y}|$. Forming a difference is always possible because a normed space is required to be a vector space. With the norm induced metric, we see that every normed space can easily be turned into a metric space. So, if we assume that we construct a metric via this induction, every normed space is automatically also a metric space. But not vice versa. The definition of a metric space is less restrictive than the definition of a normed space. The set of metric spaces is more general. We lifted our idea of distance to a more abstract level. Thereby we enable ourselves to talk about distances in more general sets than vector spaces.
@@ -78,11 +87,23 @@ The requirements for a norm and for a metric are sufficiently similar that we ca
 
 \subsubsection{Examples} To get a feeling for how the so defined notion of metric is more general than our familiar Euclidean metric, let's now look at a couple of examples of metrics other than the Euclidean. 
 
-\paragraph{Manhattan Distance} ...TBC...
+\paragraph{Minkowski and Manhattan Distance}
+The Minkowski distance is to metrics what the $L^p$-norm is to norms. Let $\mathbf{x,y}$ be two vectors in $\mathbb{R}^n$ and $p \in \mathbb{Z}$. Then, the Minkowski distance of order $p$ between the vectors is defined as $d_M(\mathbf{x,y}) = (\sum_{i=0}^n |x_i - y_i|^p )^{1/p}$. The special case for $p=1$ is also called Manhattan distance or city block distance. It is the total distance that you would have to walk if you can't take the direct diagonal route but instead have to piece your path together from purely horizontal and vertical segments (or, more generally, take partial paths on an orthogonal grid). This is how the streets are laid out in Manhattan, hence the name. 
+
+\medskip
+By the way: Do not confuse the Minkowski distance with the Minkowski metric from special relativity. The latter is something else and it actually wouldn't even qualify as a metric according to our definition here because it can become negative.
+
+% do not confuse with Minkowski metric from relativity!
+
+%\paragraph{Manhattan Distance} ...TBC...
 
 \paragraph{Hamming Distance} ...TBC...
 
 \paragraph{Levenshtein Distance} ...TBC...
+
+
+%https://en.wikipedia.org/wiki/Minkowski_distance
+% ...is basically for metrics what the L^p norm is for norms
 
 
 %TODO:  Explain equivalence of metrics

@@ -3,7 +3,11 @@ Our goal here is define a notion of closeness or distance between two elements o
 
 %===================================================================================================
 \subsection{Inner Product Space}
-An inner product space is a vector space $V$ where an inner product between any pair of vectors $\mathbf{v,w}$ is defined. We denote that inner product as $\langle \mathbf{v,w} \rangle$. For example, in our familiar Euclidean vector spaces $\mathbb{R}^n$, that inner product is defined as $\langle \mathbf{v,w} \rangle = \sum_{i=0}^n v_i w_i$. We can also define such an inner product on  $\mathbb{C}^n$ as $\langle \mathbf{v,w} \rangle = \sum_{i=0}^n v_i \overline{w_i}$ where $\overline{w_i}$ denotes complex conjugation. ...TBC...
+An inner product space is a vector space $V$ where an inner product between any pair of vectors $\mathbf{v,w}$ is defined. We denote that inner product as $\langle \mathbf{v,w} \rangle$. For example, in our familiar Euclidean vector spaces $\mathbb{R}^n$, that inner product is defined as $\langle \mathbf{v,w} \rangle = \sum_{i=0}^n v_i w_i$. We can also define such an inner product on  $\mathbb{C}^n$ as $\langle \mathbf{v,w} \rangle = \sum_{i=0}^n v_i \overline{w_i}$ where $\overline{w_i}$ denotes complex conjugation. To qualify as an inner product, the function $\langle \mathbf{v,w} \rangle$ must satisfy the following properties:
+
+% bilinear, homogeneous,
+
+...TBC...
 
 % inner products induce a norm
 
@@ -14,7 +18,7 @@ An inner product space is a vector space $V$ where an inner product between any 
 
 %===================================================================================================
 \subsection{Normed Space}
-A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number. In fact, the norm function must satisfy a couple of more properties. We have already met them in slightly different form in the section about elementary functions. Let $\mathbf{v} \in V$ and let $\lambda$ be in the set of scalars. Then:
+A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number which we interpret as a measure of the size or length of the vector. To qualify as a norm, norm function must satisfy a couple of more properties. We have already met them in slightly different form in the section about elementary functions. Let $\mathbf{v} \in V$ and let $\lambda$ be in the set of scalars. Then:
 
 \medskip
 \begin{tabular}{l l}
@@ -67,7 +71,7 @@ where the positivity axiom can actually be weakened to only require the distance
 % at 15:35 - calls the first property jsut "definite"
 
 \paragraph{Induced Metric}
-The requirements for a norm and for a metric are sufficiently similar that we can make a natural connection between norms and metrics. If our set $S$ happens to be a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} as $d(\mathbf{x, y}) = |\mathbf{x-y}|$. With the norm induced metric, we see that every normed space can easily be turned into a metric space. So, if we assume that we construct a metric via this induction, every normed space is automatically also a metric space. But not vice versa. The definition of a metric space is less restrictive than the definition of a normed space. The set of metric spaces is more general. We lifted our idea of distance to a more abstract level. Thereby we enable ourselves to talk about distances in more general sets than vector spaces.
+The requirements for a norm and for a metric are sufficiently similar that we can make a natural connection between norms and metrics. If our set $S$ happens to be a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} via the norm of the difference: $d(\mathbf{x, y}) = |\mathbf{x-y}|$. Forming a difference is always possible because a normed space is required to be a vector space. With the norm induced metric, we see that every normed space can easily be turned into a metric space. So, if we assume that we construct a metric via this induction, every normed space is automatically also a metric space. But not vice versa. The definition of a metric space is less restrictive than the definition of a normed space. The set of metric spaces is more general. We lifted our idea of distance to a more abstract level. Thereby we enable ourselves to talk about distances in more general sets than vector spaces.
 
 \medskip
 [Q: Can we turn this around by saying that a metric induces a norm by defining the norm as distance from the origin $|\mathbf{x}| = d (\mathbf{x, 0})$ whenever our set happens to have some special element $\mathbf{0}$ that we call the origin?]
@@ -84,10 +88,31 @@ The requirements for a norm and for a metric are sufficiently similar that we ca
 %TODO:  Explain equivalence of metrics
 
 
-\subsubsection{Open Sets}
-We can use the metric $d$ to define the important notion of an open set. Our eventual goal will be to define an open set without referring to a metric, but let's first see how it's been done with a metric: ...TBC..
 
-\paragraph{Definition: Open Ball} Let $\epsilon$ be a real number and $x$ be an element of our metric space.  We define the open $\epsilon$-ball around $x$ as the following set:
+
+\subsubsection{Open Sets}
+We can use the metric $d$ to define the important notion of an open set. Our eventual goal will be to define an open set without referring to a metric, but let's first see how it's been done with a metric.
+
+\paragraph{Definition: Open Ball} Let $\varepsilon > 0$ be a real number and $x$ be an element of our metric space.  We define the open $\varepsilon$-ball around $x$ as the following set: $B_\varepsilon(x) = \{ y : d(x,y) < \varepsilon \}$.
+
+\medskip
+The open ball $B_\varepsilon(x)$ is the set of points, whose distance to $x$ is less than $\varepsilon$. Using $\varepsilon$ indicates that we intend to allow this value to become arbitrarily small as long as it is greater than zero. Intuitively, we may envision $B_\varepsilon(x)$ as a (possibly very small) halo around $x$.
+
+\paragraph{Definition: Inner Point} A point $x \in X$ is said to be an inner point of $x$, if there exists a $\varepsilon > 0$ such that $B_\varepsilon(x) \subseteq X$. 
+
+\medskip
+Intuitively, an inner point of a set $X$ is a point $x$ that admits us to define a (possibly small) halo around it that is fully contained in the set $X$.
+
+\paragraph{Definition: Open Set} A set $X$ is said to be open, if all of its elements are inner points. 
+
+\medskip
+Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-Ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set.
+
+%f for any of its elements $x$ there exists an $\varepsilon > 0$ such that $B_\varepsilon(x) \subseteq X$ [VERIFY!].
+
+%Intuitively, a set is open if any of its elements admits a small halo of elements around it which is also fully contained in the set. [TODO: maybe define inner points]
+
+
 
 % define open sets vai the metric
 
@@ -114,6 +139,9 @@ In a topological space, we can talk about "distances" and "closeness" between of
 
 \paragraph{Induced Topology} [TODO: explain how a metric induces a topology and therefore metric spaces are topological spaces but the latter notion is more general.]
 % Different metrics can induce the same topology.
+
+% https://www.youtube.com/watch?v=3j8GIJd5-3A&list=PLHi0WgifODX19zsJhvCrizYEXiHY5qc9n
+% 10:25
 
 \medskip
 Note how our subsequent generalizations led to the following onion like structure of subset inclusions: inner product spaces $\subset$ normed spaces $\subset$ metric spaces $\subset$ topological spaces. The topological space is now finally the abstraction that we want to work with and and upon which the mathematical field of topology revolves around.

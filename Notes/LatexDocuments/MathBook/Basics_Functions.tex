@@ -248,7 +248,7 @@ We are trying to define a "function" that is zero everywhere except at zero. The
 In general, a function can be any mapping. But there is a certain set of functions that permeates mathematics so thoroughly that it has been given a special name: the elementary functions. These are all functions that can be constructed by a finite formula involving only the 4 basic arithmetic operations, roots, exponentials, logarithms, trigonometric functions and the inverses of all these functions.
 
 % https://www.youtube.com/watch?v=l6w868U8C-M
-
+% https://en.wikipedia.org/wiki/Elementary_function
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Absolute Value aka Norm}
@@ -291,23 +291,8 @@ To reconstruct our original $x$, we can combine sign and norm: $x = \sign(x) \cd
 \paragraph{Note}
 I said formerly that an "elementary" function can only use the arithmetic operators, roots, the exponential and trig functions and the inverses of all of these. I didn't say anything about piecewise definitions, so one might reasonably question whether the absolute value and sign should qualify as "elementary". But the definition of the norm as $|x| = \sqrt{x^2}$ saves the day (in the reals, we have $\overline{x} = x$). Likewise, the (re)definition $\sign(x) = x / |x|$ saves the day for the sign function. We may need to make an exception for $x = 0$ though and maybe I'm being a bit sloppy here and maybe strictly speaking, the sign should not be listed in this category. But at least, it's certainly piecewise elementary.
 
-%But let's not be so pedantic. 
-
-% https://en.wikipedia.org/wiki/Elementary_function
-
 % Zusammenhang zwischen normierten, metrischen und topologischen Räumen
 % https://www.youtube.com/watch?v=3j8GIJd5-3A&list=PLHi0WgifODX19zsJhvCrizYEXiHY5qc9n
-
-%we would have to define a sort of "direction" function that captures
-
-% x = sign(x) \cdot |x|
-% generalizes to a normalized direction vector when x is a vector and toa unit magnitude complex number when x is complex. It is, in general, a direction.
-
-
-
-% I have said that the elementary functions can be constructed from the arithmetic operations, roots, etc. It is in fact possible to construct the absolute value for real numbers as $\sqrt{x^2}$ (and the sign function subsequently as $x / |x|$ if $x \neq 0$ and $0$ if $x = 0$) but that's not how we usually thing about these functions - at least not over the real numbers. There, the absolute function means just: throw away the minus, if present and the sign just means: retain \emph{only} the sign.
-
-% i.e. map positve numbers to +1 and negative numbers 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Polynomials}

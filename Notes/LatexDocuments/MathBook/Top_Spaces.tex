@@ -1,32 +1,48 @@
 \section{Toplogical Spaces}
 
 \subsection{Normed Space}
-A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number. In fact, the norm function must satisfy a couple of more properties - those that we have already met in the section about elementary functions. They are:
+A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number. In fact, the norm function must satisfy a couple of more properties. We have already met them in slightly different form in the section about elementary functions. Let $\mathbf{v} \in V$ and let $\lambda$ be in the set of scalars. Then:
 
 \medskip
 \begin{tabular}{l l}
 Non-negative:         & $|\mathbf{v}| \geq 0$  \\
 Positive definite:    & $|\mathbf{v}| = 0 \Leftrightarrow \mathbf{v} = \mathbf{0}$  \\
-Multiplicative:       & $|\mathbf{v} \cdot \mathbf{w}| = |\mathbf{v}| \cdot |\mathbf{w}| $  \\
+Multiplicative:       & $|\lambda \mathbf{v}| = |\lambda| \cdot |\mathbf{v}|$  \\
 Triangle inequality:  & $|\mathbf{v} + \mathbf{w}| \leq |\mathbf{v}| + |\mathbf{w}| $
 \end{tabular}
 \medskip
 
+where multiplicativity is also called absolute homogeneity.
+
 [VERIFY]...TBC..
+
+
+% https://en.wikipedia.org/wiki/Normed_vector_space
 
 \subsection{Metric Space}
 A metric space is a set $S$ in which for every pair of elements $x,y \in S$ we can compute a number $d(x,y)$ which we want to interpret as "distance" between $x$ and $y$. Note that we do not require $S$ to be a vector space - for the time being, it's just a set. The distance function $d(x,y)$ must satisfy the following properties:
 
 \medskip
 \begin{tabular}{l l}
-Non-negative:         & $d(\mathbf{x, y}) \geq 0$  \\
-Positive definite:    & $d(\mathbf{x,y }) = 0 \Leftrightarrow \mathbf{x} = \mathbf{y}$  \\
-Triangle inequality:  & $d(\mathbf{x,z}) \leq d(\mathbf{x,y}) + d(\mathbf{y,z})$
+Zero distance to itself:           & $d(x, x) = 0$  \\
+Nonzero between distinct elements: & $x \neq y \Rightarrow d(x,y) \neq 0$  \\
+Symmetry:                          & $d(x, y) = d(y, x)$  \\
+Triangle inequality:               & $d(x,z) \leq d(x,y) + d(y,z)$
 \end{tabular}
 \medskip
 
+%\medskip
+%\begin{tabular}{l l}
+%Non-negative:         & $d(\mathbf{x, y}) \geq 0$  \\
+%Positive definite:    & $d(\mathbf{x,y }) = 0 \Leftrightarrow \mathbf{x} = \mathbf{y}$  \\
+%Triangle inequality:  & $d(\mathbf{x,z}) \leq d(\mathbf{x,y}) + d(\mathbf{y,z})$
+%\end{tabular}
+%\medskip
+
 [VERIFY] ...TBC...
 
+
+% https://en.wikipedia.org/wiki/Metric_space
 
 % induced norm:
 % If we have a distance function and an origin, we can use these two to define a norm as a distance to the origin. If we have a norm and a notion of subtraction, we can use these two to define a distance as norm of a difference.

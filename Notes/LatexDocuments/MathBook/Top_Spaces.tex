@@ -88,10 +88,10 @@ The requirements for a norm and for a metric are sufficiently similar that we ca
 %TODO:  Explain equivalence of metrics
 
 
+\subsubsection{A Taxonomy of Sets}
+We can use the metric $d$ to define a certain classification of sets that is important in the field of topology. Eventually, the goal is to define all these features without resorting to a metric but let's first see how it's been done with a metric.
 
-
-\subsubsection{Open Sets}
-We can use the metric $d$ to define the important notion of an open set. Our eventual goal will be to define an open set without referring to a metric, but let's first see how it's been done with a metric.
+%the important notion of an open set. Our eventual goal will be to define an open set without referring to a metric, but let's first see how it's been done with a metric.
 
 \paragraph{Definition: Open Ball} Let $\varepsilon > 0$ be a real number and $x$ be an element of our metric space.  We define the open $\varepsilon$-ball around $x$ as the following set: $B_\varepsilon(x) = \{ y : d(x,y) < \varepsilon \}$.
 
@@ -106,22 +106,25 @@ Intuitively, an inner point of a set $X$ is a point $x$ that admits us to define
 \paragraph{Definition: Open Set} A set $X$ is said to be open, if all of its elements are inner points. 
 
 \medskip
-Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-Ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set.
+Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set.
 
-%f for any of its elements $x$ there exists an $\varepsilon > 0$ such that $B_\varepsilon(x) \subseteq X$ [VERIFY!].
+\paragraph{Definition: Closed Set} A set $X$ is closed if its complement is open [VERIFY]
 
-%Intuitively, a set is open if any of its elements admits a small halo of elements around it which is also fully contained in the set. [TODO: maybe define inner points]
+\medskip
+Do not make the mistake of thinking that "closed" is just the opposite of "open" as in "not open". That would be wrong. The half-open interval $[0,1)$ is neither open nor closed, for example. [TODO: give an example of a set that is open and closed]
 
+\paragraph{Definition: Bounded Set} A set $X$ is said to be bounded if we can find an $x \in X$ and an $\varepsilon > 0$ such that $X \subseteq B_\varepsilon(x)$ [VERIFY]. 
 
+\medskip
+The intuition behind this definition is that the set $X$ has a finite extent. We pick some element $x$ inside the set $X$ and draw a ball with radius $\varepsilon$ around it. It must be possible to find a finite radius $\varepsilon$ such that this ball contains the whole set $X$. In this case, we actually imagine $\varepsilon$ to be potentially rather large as long as it is a finite number.
 
-% define open sets vai the metric
+\paragraph{Definition: Compact Set} A set $X$ is said to be compact if it is bounded and closed.
+
+\medskip
+Compactness is important because ...TBC...
+
 
 % https://www.youtube.com/watch?v=qwsvXa7nIGg  at around 25 min
-
-%[VERIFY] ...TBC...
-
-
-
 % https://en.wikipedia.org/wiki/Metric_space#Norm_induced_metric
 % https://en.wikipedia.org/wiki/Metric_space
 
@@ -133,30 +136,45 @@ Intuitively, an open set does not have any boundary points as elements of the se
 
 %===================================================================================================
 \subsection{Topological Space}
-In a topological space, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements without even needing to refer to a metric. The only notion that we will need to refer to is that of an open set.
+In a topological space, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements without even needing to refer to a metric. The only notion that we will need to refer to is that of an open set. Obviously, we will need an alternative but equivalent definition for what "open set" is supposed to mean if we want to do away with the metric.
 
-\paragraph{Definition: Topology} Let $X$ be a set. A set $T$ of subsets of $X$ is called a topology in $X$ if it satisfies: (1) The empty set and the complex set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. The elements of a topology $T$ are called open sets.
+\paragraph{Definition: Topology} 
+Let $X$ be a set. A set $T$ of subsets of $X$ is called a topology in $X$ if it satisfies: (1) The empty set and the complex set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. The elements of a topology $T$ are called open sets.
 
-\paragraph{Induced Topology} [TODO: explain how a metric induces a topology and therefore metric spaces are topological spaces but the latter notion is more general.]
-% Different metrics can induce the same topology.
+\paragraph{Definition: Topological Space} A topological space is a set $X$ on which a topology $T$ is defined.
+
+% https://en.wikipedia.org/wiki/Topological_space
+% https://mathworld.wolfram.com/TopologicalSpace.html
+
+\paragraph{Induced Topology} 
+We have seen how we can define an open subset of a set $X$ when we have a metric $d$ available. If we collect all the so defined open subsets of a set into a set $T$, then this set $T$ will indeed qualify as a topology on $X$. It is the topology that is induced by the metric $d$. [VERIFY] That means that every metric space is automatically also a topological space. But - as by now you certainly expect - the notion of a topological space is more general. There are topologies which are not (and cannot be) induced by a metric. [TODO: give an example]
+
+\subsubsection{A Taxonomy of Sets Revisited}
+We now want to revisit our taxonomy of sets. The goal is to define all those properties without using a metric.
+
+%Our eventual goal is to abstract away the idea of a metric.
+
+%We now want to define what an open set is without referring to a metric. This will be the key abstraction that will allow us to define closeness without resorting to the numerical quantitative notion of distance that a metric is. It will be a purely qualitative notion of closeness ...TBC...
+
+
+%[TODO: explain how a metric induces a topology and therefore metric spaces are topological spaces but the latter notion is more general.]
+% Different metrics can induce the same topology. If two different metric induce the same topology, the these metrics are calle equivalent.
 
 % https://www.youtube.com/watch?v=3j8GIJd5-3A&list=PLHi0WgifODX19zsJhvCrizYEXiHY5qc9n
 % 10:25
+
+
+
 
 \medskip
 Note how our subsequent generalizations led to the following onion like structure of subset inclusions: inner product spaces $\subset$ normed spaces $\subset$ metric spaces $\subset$ topological spaces. The topological space is now finally the abstraction that we want to work with and and upon which the mathematical field of topology revolves around.
 
 
 
-
-% we have an onion like set inclusion structure: 
-
-\paragraph{Open Sets} It was said that the elements of a topology $T$ are called open sets. [TODO: explain why] 
-
-% Define open sets with metric
-
 ...TBC...
 
+
+%\subsubsection{Compactness}
 %\paragraph{Continuity}
 %\paragraph{Convergence}
 

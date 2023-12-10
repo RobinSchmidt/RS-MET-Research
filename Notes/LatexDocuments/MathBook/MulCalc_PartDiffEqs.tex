@@ -209,6 +209,50 @@ https://en.wikipedia.org/wiki/Klein%E2%80%93Kramers_equation
 https://en.wikipedia.org/wiki/Master_equation
 
 
+Reaction-Diffusion Equations:
+
+https://en.wikipedia.org/wiki/Turing_pattern
+https://en.wikipedia.org/wiki/Reaction%E2%80%93diffusion_system
+https://en.wikipedia.org/wiki/The_Chemical_Basis_of_Morphogenesis
+https://www.youtube.com/watch?v=JLkCaBwRrVo   The Mathematical Code Hidden In Nature
+
+https://www.youtube.com/watch?v=alH3yc6tX98   Can Math Explain How Animals Get Their Patterns?
+  -> shows equations in the nicest form (without explaining them):
+  da / dt = d_a * Lap(a) + F(a,b)
+  db / dt = d_b * Lap(b) + G(a,b)
+-I think, a is the concentration of the activator, b the concentration of the inhibitor, d_a and
+ d_b their respective diffusion coeffs and F,G encode the reactions. Lap(..) means the Laplacian.
+ The inhibitor spreads/diffuses faster than the activator. The initial condition is a random 
+ distribution of both.
+-What should go into F and G? Maybe F(a,b) = p*a - q*a*b, G(a,b) = r*a - s*a*b
+ p,q,r,s are all positive, p controls how the activator reproduces itself, r controls how the
+ activator produces inhibitor, q controls how the inhibitor inhibits reproduction of activator and
+ s controls how the inhibitor inhibits its own reproduction (by reducing the amount of actiavtor)?
+ Or maybe it should be  G(a,b) = r*a - s*b*b  or   G(a,b) = r*a - s*b  the last seems most plausible
+ for the bunnies-and-foxes situation. Isn't that a bit similar to how I obtained the SIRP model from
+ the SIR model - just the same idea applied to the Volterra-Lotka model?
+-We could also write these equations in 2D as
+ a_t = d_a (a_{xx} + a_{yy}) + F(a,b)
+ b_t = d_b (b_{xx} + b_{yy}) + G(a,b)
+
+
+https://www.dna.caltech.edu/courses/cs191/paperscs191/turing.pdf  Turing's original paper
+
+
+https://en.wikipedia.org/wiki/Belousov%E2%80%93Zhabotinsky_reaction
+https://en.wikipedia.org/wiki/Fisher%27s_equation
+
+https://www.youtube.com/watch?v=Tpg-wfU_3qw  Anwendung - Zelluläre Automaten zur Simulation von Morphogenese
+
+https://www.researchgate.net/publication/234144100_Morphogenesis_Origins_of_Patterns_and_Shapes
+
+...should go to biology. there we can also insert the predator-prey equations, the SIRP model
+for pandemics, lindenmayer systems, knot-theory for protein or DNA analysis, string-matching
+
+
+https://en.wikipedia.org/wiki/Autowave
+
+https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model
 
 
 \end{comment}

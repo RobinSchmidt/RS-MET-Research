@@ -252,12 +252,12 @@ In general, a function can be any mapping. But there is a certain set of functio
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Absolute Value aka Norm}
-A simple but very important function is the \emph{absolute value} of some number $x$ which we commonly write as $|x|$ and read as "absolute value of $x$" or in some contexts also "norm of $x$". The latter term applies especially in cases where $x$ is a more complicated object than a real number. Yes - that means the absolute value (or norm) function will later be generalized to more complicated objects (complex numbers, vectors, matrices, etc.) by doing so, it will retain some of its important properties and that's perhaps the chief reason why it is such an important function. It can be defined as:
+A simple but very important function is the \emph{absolute value} of some number $x$ which we commonly write as $|x|$ and read as "absolute value of $x$" or in some contexts also "norm of $x$". The latter term applies especially in cases where $x$ is a more complicated object than a real number. Yes - that means the absolute value (or norm) function will later be generalized to more complicated objects (complex numbers, vectors, matrices, etc.) and by doing so, it will retain some of its important properties and that's perhaps the chief reason why it is such an important function. For a real number $x$ it can be defined as:
 \begin{equation}
  |x| = \sqrt{\overline{x} \cdot x} = 
 \begin{cases} 
-  x \quad & x \geq 0 \\
- -x \quad & x   <  0 \\
+  x \quad & \text{iff } x \geq 0 \\
+ -x \quad & \text{iff } x   <  0 \\
 \end{cases} 
 \end{equation}
 The piecewise definition on the right hand side is how we usually think of $|x|$ when $x$ is a real number. The definition with the square-root in the middle can at this point be taken as a provision for later generalizations and you don't need to worry about this right now, if it doesn't make any sense yet (spoiler: the overline will be used for complex conjugation and the product will generalize to a so called scalar product). Our absolute value function satisfies the following conditions for all $x,y \in \mathbb{R}$:
@@ -274,7 +274,11 @@ Triangle inequality:  & $|x + y| \leq |x| + |y| $
 % Die rationalen Zahlen liegen dicht (wie feiner Staub) in der Menge der reellen Zahlen
 % https://www.youtube.com/watch?v=lWTf_Isveso
 
-These are the properties that I mentioned, which all functions shall have if they want to deserve to qualify for calling them a "norm" even when $x$ and $y$ can later be more complicated objects than real numbers.
+These are the properties that all functions shall have if they want to deserve to qualify for calling them a "norm" even when $x$ and $y$ can later be more complicated objects than real numbers. Some more properties immediately follow from these:
+
+
+
+%The first two properties may seem obvious but multiplicativity and triangle inequality are not so trivial
 
 %...TBC...[TODO: list properties]
 

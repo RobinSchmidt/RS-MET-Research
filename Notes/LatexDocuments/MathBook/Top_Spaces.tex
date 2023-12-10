@@ -7,15 +7,12 @@ A normed space is a vector space $V$ on which a norm function is defined. That m
 \begin{tabular}{l l}
 Non-negative:         & $|\mathbf{v}| \geq 0$  \\
 Positive definite:    & $|\mathbf{v}| = 0 \Leftrightarrow \mathbf{v} = \mathbf{0}$  \\
-Multiplicative:       & $|\lambda \mathbf{v}| = |\lambda| \cdot |\mathbf{v}|$  \\
-Triangle inequality:  & $|\mathbf{v} + \mathbf{w}| \leq |\mathbf{v}| + |\mathbf{w}| $
+Absolute homogeneity: & $|\lambda \mathbf{v}| = |\lambda| \cdot |\mathbf{v}|$  \\
+Triangle inequality:  & $|\mathbf{v} + \mathbf{w}| \leq |\mathbf{v}| + |\mathbf{w}|$
 \end{tabular}
 \medskip
 
-where multiplicativity is also called absolute homogeneity.
-
 [VERIFY]...TBC..
-
 
 % https://en.wikipedia.org/wiki/Normed_vector_space
 
@@ -31,49 +28,35 @@ Triangle inequality:                & $d(x,z) \leq d(x,y) + d(y,z)$
 \end{tabular}
 \medskip
 
-where the positivity axiom can actually be weakened to only require the distance between distinct elements to be nonzero. [TODO: explain how positivity then follows].
+where the positivity axiom can actually be weakened to only require the distance between distinct elements to be nonzero. [TODO: explain how positivity then follows]. Our distance function $d = d(x,y)$ is also called \emph{a metric} on the set $S$.
 
 \paragraph{Norm Induced Metric}
-If our set $S$ has the structure of a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} as $d(\mathbf{x, y}) = |\mathbf{x-y}|$. 
+The requirements for a norm and for a metric are sufficiently similar that we can make a natural connection between norms and metrics. If our set $S$ happens to be a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} as $d(\mathbf{x, y}) = |\mathbf{x-y}|$. 
 
 \medskip
 [Q: Can we turn this around by saying that a metric induces a norm by defining the norm as distance from the origin $|\mathbf{x}| = d (\mathbf{x, 0})$ whenever our set happens to have some special element $\mathbf{0}$ that we call the origin?]
 
-
-%\begin{equation}
-
-%%\end{equation}
-
-
-
-
-% https://en.wikipedia.org/wiki/Metric_space#Norm_induced_metric
-
-% In the wikipedia article, they say that the second axiom can be weakened to require only nonzero distance between distinct elements but I do not understand in detail how the positivity them follows.
-
-%From these axioms, it can be shown that: $x = y \Leftrightarrow d(x,y) = 0$.
-
-% and $x \neq y \Rightarrow d(x,y) > 0$ [Q: can that be also be turned into a mutual implication?].
-
-%\medskip
-%\begin{tabular}{l l}
-%Non-negative:         & $d(\mathbf{x, y}) \geq 0$  \\
-%Positive definite:    & $d(\mathbf{x,y }) = 0 \Leftrightarrow \mathbf{x} = \mathbf{y}$  \\
-%Triangle inequality:  & $d(\mathbf{x,z}) \leq d(\mathbf{x,y}) + d(\mathbf{y,z})$
-%\end{tabular}
-%\medskip
-
 [VERIFY] ...TBC...
 
-
+% https://en.wikipedia.org/wiki/Metric_space#Norm_induced_metric
 % https://en.wikipedia.org/wiki/Metric_space
 
-% induced norm:
-% If we have a distance function and an origin, we can use these two to define a norm as a distance to the origin. If we have a norm and a notion of subtraction, we can use these two to define a distance as norm of a difference.
+
+
+
+
+
 
 \subsection{Topological Space}
 
+
+
+
+
 \begin{comment}
+
+Zusammenhang zwischen normierten, metrischen und topologischen Räumen
+https://www.youtube.com/watch?v=3j8GIJd5-3A&list=PLHi0WgifODX19zsJhvCrizYEXiHY5qc9n
 
 
 

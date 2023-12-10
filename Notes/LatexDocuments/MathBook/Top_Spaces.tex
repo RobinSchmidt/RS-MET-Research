@@ -1,4 +1,16 @@
 \section{Toplogical Spaces}
+Our goal here is define a notion of closeness or distance between two elements of a set. But this notion shall be abstract enough to apply to sets that may be wildly different from the Euclidean spaces in which we have a good intuition for what distance means. It shall be a very general notion of distance. We will do this by starting with our familiar Euclidean space and defining more and more general kinds of spaces which will culminate in the definition of a topological space - the fundamental mathematical structure in which we will do topology.
+
+\subsection{Inner Product Space}
+An inner product space is a vector space $V$ where an inner product between any pair of vectors $\mathbf{v,w}$ is defined. We denote that inner product as $\langle \mathbf{v,w} \rangle$. For example, in our familiar Euclidean vector spaces $\mathbb{R}^n$, that inner product is defined as $\langle \mathbf{v,w} \rangle = \sum_{i=0}^n v_i w_i$. We can also define such an inner product on  $\mathbb{C}^n$ as $\langle \mathbf{v,w} \rangle = \sum_{i=0}^n v_i \overline{w_i}$ where $\overline{w_i}$ denotes complex conjugation. ...TBC...
+
+% inner products induce a norm
+
+% https://en.wikipedia.org/wiki/Inner_product_space
+
+
+
+
 
 \subsection{Normed Space}
 A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number. In fact, the norm function must satisfy a couple of more properties. We have already met them in slightly different form in the section about elementary functions. Let $\mathbf{v} \in V$ and let $\lambda$ be in the set of scalars. Then:
@@ -16,6 +28,10 @@ Triangle inequality:  & $|\mathbf{v} + \mathbf{w}| \leq |\mathbf{v}| + |\mathbf{
 
 % https://en.wikipedia.org/wiki/Normed_vector_space
 
+\paragraph{Induced Norm}
+If our vector space $V$ happens to be an inner product space, then we can use the inner product to define a norm as $|\mathbf{v}| = \sqrt{\langle \mathbf{v,v}  \rangle}$. The so defined function does indeed meet all the requirements for a norm. With this induced norm, we see that every inner product space is also a normed space. But the set of normed spaces is more general. To defined a norm, we do not necessarily need to have an inner product. Other norms are possible, too. That means, the idea of a normed space is more general than the idea of a topological space.
+
+
 \subsection{Metric Space}
 A metric space is a set $S$ in which for every pair of elements $x,y \in S$ we can compute a number $d(x,y)$ which we want to interpret as "distance" between $x$ and $y$. Note that we do not require $S$ to be a vector space - for the time being, it's just a set. The distance function $d(x,y)$ must satisfy the following properties for all $x,y \in S$:
 
@@ -27,19 +43,27 @@ Symmetry:                           & $d(x, y) = d(y, x)$  \\
 Triangle inequality:                & $d(x,z) \leq d(x,y) + d(y,z)$
 \end{tabular}
 \medskip
-
 where the positivity axiom can actually be weakened to only require the distance between distinct elements to be nonzero. [TODO: explain how positivity then follows]. Our distance function $d = d(x,y)$ is also called \emph{a metric} on the set $S$.
 
-\paragraph{Norm Induced Metric}
-The requirements for a norm and for a metric are sufficiently similar that we can make a natural connection between norms and metrics. If our set $S$ happens to be a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} as $d(\mathbf{x, y}) = |\mathbf{x-y}|$. 
+% https://www.youtube.com/watch?v=qwsvXa7nIGg
+% at 15:35 - calls the first property jsut "definite"
+
+\paragraph{Induced Metric}
+The requirements for a norm and for a metric are sufficiently similar that we can make a natural connection between norms and metrics. If our set $S$ happens to be a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} as $d(\mathbf{x, y}) = |\mathbf{x-y}|$. With the norm induced metric, we see that every normed space can easily be turned into a metric space. So, if we assume that we construct a metric via this induction, every normed space is automatically also a metric space. But not vice versa. The definition of a metric space is less restrictive than the definition of a normed space. The set of metric spaces is more general. We lifted our idea of distance to a more abstract level. Thereby we enable ourselves to talk about distances in more general sets than vector spaces.
 
 \medskip
-[Q: Can we turn this around by saying that a metric induces a norm by defining the norm as distance from the origin $|\mathbf{x}| = d (\mathbf{x, 0})$ whenever our set happens to have some special element $\mathbf{0}$ that we call the origin?]
+[Q: Can we turn this around by saying that a metric induces a norm by defining the norm as distance from the origin $|\mathbf{x}| = d (\mathbf{x, 0})$ whenever our set happens to have some special element $\mathbf{0}$ that we call the origin?], TODO: give some examples of metrics other than the Euclidean: Manhattan, Levensthein, Hamming, etc. Explain equivalence of metrics
 
-\paragraph{} 
-With the norm induced metric, we see that every normed space can easily be turned into a metric space. So, if we assume that we construct a metric via this induction, every normed space is automatically also a metric space. But not vice versa. The definition of a metric space is less restrictive than the definition of a normed space. The set of metric spaces is more general. We lifted our idea of distance to a abstract level. Thereby we enable ourselves to talk about distances in more general sets than vector spaces.
+
+%\subsubsection{Open Sets}
+
+% https://www.youtube.com/watch?v=qwsvXa7nIGg  at around 25 min
 
 %[VERIFY] ...TBC...
+
+%\paragraph{Continuity}
+%\paragraph{Convergence}
+
 
 % https://en.wikipedia.org/wiki/Metric_space#Norm_induced_metric
 % https://en.wikipedia.org/wiki/Metric_space
@@ -51,11 +75,12 @@ With the norm induced metric, we see that every normed space can easily be turne
 
 
 \subsection{Topological Space}
-In a topological space, we can talk about "distances" between elements without even needing to refer to a metric.
+In a topological space, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements without even needing to refer to a metric. The only notion that we will need to refer to is that of an open set.
 
+% Topologische Räume als Abstraktion von "Nähe"
 % https://www.youtube.com/watch?v=qwsvXa7nIGg
 
-
+% https://en.wikipedia.org/wiki/Topological_space
 
 
 

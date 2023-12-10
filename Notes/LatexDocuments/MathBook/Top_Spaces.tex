@@ -1,7 +1,7 @@
 \section{Toplogical Spaces}
 
 \subsection{Normed Space}
-A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number. In fact, the norm function must satisfy a couple of more properties - those that we have already met in the section about elementary functions which is repeated and adapted here:
+A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number. In fact, the norm function must satisfy a couple of more properties - those that we have already met in the section about elementary functions. They are:
 
 \medskip
 \begin{tabular}{l l}
@@ -12,10 +12,29 @@ Triangle inequality:  & $|\mathbf{v} + \mathbf{w}| \leq |\mathbf{v}| + |\mathbf{
 \end{tabular}
 \medskip
 
-[VERIFY]
-...TBC..
+[VERIFY]...TBC..
 
 \subsection{Metric Space}
-A metric space is a set $S$ in which for every pair of elements $x,y \in S$ we can compute a number $d(x,y)$ which we want to interpret as "distance" between $x$ and $y$. Note that we do not require $S$ to be a vector space - for the time being, it's just a set. The distance function $d(x,y)$ must satisfy the following properties ...TBC...
+A metric space is a set $S$ in which for every pair of elements $x,y \in S$ we can compute a number $d(x,y)$ which we want to interpret as "distance" between $x$ and $y$. Note that we do not require $S$ to be a vector space - for the time being, it's just a set. The distance function $d(x,y)$ must satisfy the following properties:
+
+\medskip
+\begin{tabular}{l l}
+Non-negative:         & $d(\mathbf{x, y}) \geq 0$  \\
+Positive definite:    & $d(\mathbf{x,y }) = 0 \Leftrightarrow \mathbf{x} = \mathbf{y}$  \\
+Triangle inequality:  & $d(\mathbf{x,z}) \leq d(\mathbf{x,y}) + d(\mathbf{y,z})$
+\end{tabular}
+\medskip
+
+[VERIFY] ...TBC...
+
+
+% induced norm:
+% If we have a distance function and an origin, we can use these two to define a norm as a distance to the origin. If we have a norm and a notion of subtraction, we can use these two to define a distance as norm of a difference.
 
 \subsection{Topological Space}
+
+\begin{comment}
+
+
+
+\end{comment}

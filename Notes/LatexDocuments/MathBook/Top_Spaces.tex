@@ -30,7 +30,24 @@ Triangle inequality:  & $|\mathbf{v} + \mathbf{w}| \leq |\mathbf{v}| + |\mathbf{
 % https://en.wikipedia.org/wiki/Normed_vector_space
 
 \paragraph{Induced Norm}
-If our vector space $V$ happens to be an inner product space, then we can use the inner product to define a norm as $|\mathbf{v}| = \sqrt{\langle \mathbf{v,v}  \rangle}$. The so defined function does indeed meet all the requirements for a norm. With this induced norm, we see that every inner product space is also a normed space. But the set of normed spaces is more general. To defined a norm, we do not necessarily need to have an inner product. Other norms are possible, too. That means, the idea of a normed space is more general than the idea of a topological space.
+If our vector space $V$ happens to be an inner product space, then we can use the inner product to define a norm as $|\mathbf{v}| = \sqrt{\langle \mathbf{v,v}  \rangle}$. The so defined function does indeed meet all the requirements for a norm. For any norm that was induced by an inner product, the parallelogram equation holds: $|x+y|^2 + |x-y|^2 = 2(|x|^2 + |y|^2)$. With this induced norm, we see that every inner product space is also a normed space. But the set of normed spaces is more general. To define a norm, we do not necessarily need to have an inner product. Other norms are possible, too. That means, the idea of a normed space is more general than the idea of a topological space.
+
+% https://www.youtube.com/watch?v=qwsvXa7nIGg
+% at 16:44 - for norms that are induced by an inner product, the parallelogram equation holds
+
+
+%\subsubsection{Examples} Let's now look at a couple of norms that are not induced by an inner product.
+
+%\paragraph{Sum norm} [sum of absolute values]
+
+\paragraph{$L^p$-Norm} Let's consider vectors $\mathbf{x} = (x_1, x_2, \ldots, x_n)$ in $\mathbb{R}^n$. For such a vector, the $L^p$ norm for some given real number $0 < p \leq \infty$ is defined as: $ |\mathbf{x}|_p = (|x_1|^p + |x_2|^p + \ldots + |x_n|^p)^{1/p}$. For $p=2$ we get the $L^2$ norm which is just our usual Euclidean norm. It can be verified that for $p=1$, the parallelogram equation does not hold (in fact, it holds only for $p = 2$, I think - VERIFY!). That means we have found at least one norm that is not induced by an inner product. We cannot find an inner product that would induce this norm when we believe that any such induced norm is bound to satisfy the parallelogram equation. This confirms that the notion of a normed space is more general than the notion of an inner product space.
+
+%If we assume the parallelogram equation to be true for any norm induced by an inner product, this confirms that the
+
+% https://en.wikipedia.org/wiki/Lp_space
+% https://de.wikipedia.org/wiki/Lp-Raum} 
+
+
 
 %===================================================================================================
 \subsection{Metric Space}
@@ -64,13 +81,15 @@ The requirements for a norm and for a metric are sufficiently similar that we ca
 \paragraph{Levenshtein Distance} ...TBC...
 
 
-
-
-
 %TODO:  Explain equivalence of metrics
 
 
-%\subsubsection{Open Sets}
+\subsubsection{Open Sets}
+We can use the metric $d$ to define the important notion of an open set. Our eventual goal will be to define an open set without referring to a metric, but let's first see how it's been done with a metric: ...TBC..
+
+\paragraph{Definition: Open Ball} Let $\epsilon$ be a real number and $x$ be an element of our metric space.  We define the open $\epsilon$-ball around $x$ as the following set:
+
+% define open sets vai the metric
 
 % https://www.youtube.com/watch?v=qwsvXa7nIGg  at around 25 min
 
@@ -103,7 +122,11 @@ Note how our subsequent generalizations led to the following onion like structur
 
 % we have an onion like set inclusion structure: 
 
-\paragraph{Open Sets} It was said that the elements of a topology $T$ are called open sets. [TODO: explain why] ...TBC...
+\paragraph{Open Sets} It was said that the elements of a topology $T$ are called open sets. [TODO: explain why] 
+
+% Define open sets with metric
+
+...TBC...
 
 %\paragraph{Continuity}
 %\paragraph{Convergence}
@@ -116,11 +139,17 @@ Note how our subsequent generalizations led to the following onion like structur
 % https://en.wikipedia.org/wiki/Topological_space
 % https://en.wikipedia.org/wiki/Topology
 
+\paragraph{Hausdorff Spaces} A topological space is called a Hausdorff space, when any two elements $x,y$ of that space can be separated by disjoint open sets. That means we can always find two disjoint open sets $X,Y$ such that $x$ is in $X$ but not in $Y$ and $y$ is in $Y$ but not in $X$. The set $X$ surrounds $x$ and the set $Y$ surrounds $y$ and the sets $X,Y$ don't meet or even overlap. [VERIFY!]
+
 
 \begin{comment}
 
 Zusammenhang zwischen normierten, metrischen und topologischen Räumen
 https://www.youtube.com/watch?v=3j8GIJd5-3A&list=PLHi0WgifODX19zsJhvCrizYEXiHY5qc9n
+
+Definition of closeness or neighborhood: two elements $x,y$ of $X$ are close to each other iff there exists an open set that contains both $x$ and $y$
+
+A topology is a collection of open sets.
 
 
 

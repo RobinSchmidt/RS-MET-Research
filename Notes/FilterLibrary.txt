@@ -17,11 +17,11 @@ Features:
     memory. Filter parameter updates (e.g. change of cutoff freq) should also work without 
 	allocations. They also shall not acquire locks. Any thread-sync should be done on a higher level
 	anyway and is not within the scope of the responsibility of this library. This library should 
-	only care about crunching numbers. Thread sync is someone else's job.
+	only care about crunching numbers.
 	
   - Should be implemented as C++20 "module".
   
-  - May define two C++20 "concepts": "Signal" and "Parameter"/"Coefficient". They must be numeric 
+  - May define two C++20 "concepts": "Signal" and "Parameter" or "Coefficient". They must be numeric 
     and it must be possible to arithmetically combine coeffs and signals and the result of that 
 	should be a signal. Example: coeff = float, signal = simd<float, 4>.
 	
@@ -30,11 +30,12 @@ Features:
 	see, if it's suitable. Hmm...problematic: has only a value_type used for values *and* coeffs.
 	I'd like to see separate types for value_type and coeff_type. Maybe that class could be extended
 	appropriately. There isn't very much functionality going on in that class anyway. I need much 
-	more - including root-finding aka factorization. 
+	more - including root-finding aka factorization. But actually, for the filter library, I think, 
+	we could get away with one type for value *and* coeff.
 	
   - The usual design pipeline for a digital filter is:  user-specification  ->  s-plane prototype 
     zeros/poles/gain  ->  s-plane freq trafo  ->  s-to-z trafo  ->  coeff calculation for 
-    implementation structure (e.g. biquad chain)
+    implementation structure (e.g. biquad chain, SVF-chain, etc.)
 	
   - Its should be flexible, i.e. the user can choose, which sort of s-to-z trafo shall be used 
     (bilinear, impulse-invariant, MZTi, etc.)
@@ -49,8 +50,7 @@ Features:
 - Prototype Designs:
 
   - Butterworth, Chebychev 1/2 and Elliptic lowpass and low-shelving prototype poles and zeros are 
-    computed via closed form formulas.
-    for the s-plane poles and zeros
+    computed via closed form formulas for the s-plane poles and zeros
 	
   - Bessel, Papoulis, Halpern and Gaussian prototypes are designed via formulas for polynomial 
     coeffs and a polynomial root-finder. I already have code for all of these which could be 
@@ -103,8 +103,6 @@ Features:
 	
   - We should be able to apply them bidirectionally using the exact formulas for the states after
     (ringout/warm-up)
-	
-  - Should be applicable to non-uniformly sampled data.
  
  
 - More feature ideas: 
@@ -121,6 +119,10 @@ Features:
   - Maybe biquad designs based on magnitude samples 
   
   - Crossover designs with perfect reconstruction  
+  
+  - Filtering for non-uniformly sampled data. I have some code for that already here:
+    https://github.com/RobinSchmidt/RS-MET/discussions/327
+	It requires to decompose the filter into a parallel structure
   
   
 - The design shall be inspired by:
@@ -210,12 +212,11 @@ Notes:
   is already std::ratio, but it's not (yet?) suitable for the purpose here because it is meant for
   compile-time ratios of ints.
 
-- Maybe ratio<>   
   
 Notes:
 
 - If this is not all achievable at the same time, make a priority list for what compositions are 
-  more importnat than others.
+  more important than others.
   
 - Use doxgen with LaTeX expressions for the documentation for the math stuff. Or maybe use ASCII 
   art like here: 
@@ -258,7 +259,7 @@ i.e. the type for (the powers of) x. The coeffs could be scalars and the values 
 example. We should probably not assume that the value multiplication is commutative - but we *may* 
 assume that we have a_n * x^n == x^n * a_n. But maybe it's not necessary to assume that. Not sure 
 yet. If we assume that, we may not be able to use matrices for coeffs and values. If we need to 
-assume an argumnet order, the coeff is always the left and the value the right argument in a 
+assume an argument order, the coeff is always the left and the value the right argument in a 
 multiplication. Do we need to assume that coeff*coeff multiplication is commutative? That may depend
 on the situation, i.e. on the way, the coeffs are produced. In a filter library, there's a lot going 
 on for the coefficient calculation - some of which may assume such commutativity. But what would it 
@@ -301,3 +302,9 @@ https://www.youtube.com/watch?v=OQu2pZILjDo
 Prototype Filter Design: 
 https://www.researchgate.net/publication/251816527_On_the_characteristics_of_Monotonic_L_Halpern_and_parabolic_filters 
  
+----------------------------------------------------------------------------------------------------
+Ideas for follow up projects:
+-FIR design
+-Musical filters (ladder, etc.)
+-Adaptive filters
+-Realtime Quantile-Filtering 

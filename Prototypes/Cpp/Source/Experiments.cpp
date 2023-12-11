@@ -7407,6 +7407,14 @@ void testWaveEquation()
   int dummy = 0;
 }
 
+// Very cool website with interactive PDE models:
+// https://visualpde.com/
+// https://visualpde.com/numerical-methods
+//
+// PDE animations
+// https://www.youtube.com/@NilsBerglund
+// https://github.com/nilsberglund-orleans/YouTube-simulations
+
 
 // check, if this can be removed:
 /*

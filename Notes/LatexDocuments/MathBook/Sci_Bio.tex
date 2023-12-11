@@ -17,23 +17,42 @@ Biologists call the process by which nature lets living structures take their sh
 u_t &= D_u (u_{xx} + u_{yy}) + f(u,v)  \\
 v_t &= D_v (v_{xx} + v_{yy}) + g(u,v) 
 \end{eqnarray}
-In these equations $D_u, D_v$ are the two diffusion parameters that determine, how fast the two substances tend to spread out spatially over time.
+In these equations $D_u, D_v$ are the two diffusion parameters that determine, how fast the two substances tend to spread out spatially over time. This simple 2D model can successfully create phenomena like the formation of 2D patterns like the ones seen in animal fur. By linear stability analysis, Turing determined that the following conditions should be met by $f, g, D_u, D_v$ in order to produce the desired phenomena:
+\begin{eqnarray}
+ f_u + g_v < 0, \quad 
+ f_u g_v - f_v g_u > 0, \quad
+ D_2 f_u + D_1 g_v > 0, \quad
+ D_2 f_u + D_1 g_v > 2 \sqrt{D_1 D_2 (f_u g_v - f_v g_u)}
+\end{eqnarray}
+% The formulas are form here at around 12:30:
+% https://www.youtube.com/watch?v=Rv9NKugal3g  
+[VERIFY! They look implausible: Why are there two equations of the form $D_2 f_u + D_1 g_v > \ldots$. Maybe it's an error in the source? Maybe the quantity should be in between zero and that sqrt thing?].
 
 % Inhibitor must diffuse faster than the actiavtor - short-range activation / long-range inhibition
 
 % If there's only one substance diffusing, diffusion is stabilizing. But as soon as more than one substance is diffusing, diffusion can be destabilizing
 
-% https://www.youtube.com/watch?v=Rv9NKugal3g  
-% Linear stability analysis leads to conditions that f, g, D_1, D_2 must satisfy:
-% $f_u + g_v < 0$, $f_u g_v - f_v g_u > 0$
+\medskip
+Different choices for $f$ and $g$ give rise to different models.
 
+% https://visualpde.com/  super cool website!
 
 \paragraph{Gierer-Meinhardt Model}
 
-\paragraph{Thomas Model}
+
+% http://www.scholarpedia.org/article/Gierer-Meinhardt_model
+% https://visualpde.com/mathematical-biology/gierer-meinhardt.html
+% https://www.researchgate.net/publication/226831182_Gierer_A_Meinhardt_H_A_theory_of_biological_pattern_formation_Kybernetik_12_30-_39
+
+
+
+
+%\paragraph{Thomas Model}
+% I think, it's only chemistry, not biology
 
 \paragraph{Schnakenberg Model}
 
+% https://visualpde.com/mathematical-biology/schnakenberg.html
 
 % Alan Turing Lecture 2021 'Modelling Pattern Formation in Developmental Biology'
 % https://www.youtube.com/watch?v=Rv9NKugal3g  

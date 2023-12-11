@@ -140,7 +140,7 @@ Intuitively, an interior point of a set $X$ is a point $x$ that admits us to def
 \paragraph{Definition: Open Set} A set $X$ is said to be open, if all of its elements are interior points. 
 
 \medskip
-Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set.
+Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set. The intersection of a finite set of open sets is open. The empty set is open because it contains no points, so there is no point in it which could fail to have a halo. A Euclidean space like $\mathbb{R}^n$ is also open. [what about a union?]
 
 \paragraph{Definition: Closed Set} A set $X$ is closed if its complement is open [VERIFY]
 
@@ -156,6 +156,12 @@ The intuition behind this definition is that the set $X$ has a finite extent. We
 
 \medskip
 Compactness is important because ...TBC...
+
+[TODO: give examples for all these kinds of sets - also some possibly counterintuitive ones and edge cases]
+
+% Open sets are important in analysis because in open sets, we can be sure to be able to approach any point from any direction which is what we need to define (directional) derivatives. On a boundary point, such a definition may not be possible.
+
+% Maybe define "neighborhood" of a point $x$: A set $N$ is called a neighborhood of some point $x$ if there exists an open ball around $x$ that is contained in $N$. Tha is a weaker notion than open set. An open set is neighborhood of *every* point inside it. [0,2) is a neighborhood of 1 but it is not open because it is no neighborhood of 0, for example.
 
 % Topologische Räume als Abstraktion von "Nähe"
 % https://www.youtube.com/watch?v=qwsvXa7nIGg  at around 25 min

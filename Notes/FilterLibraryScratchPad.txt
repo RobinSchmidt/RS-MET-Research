@@ -102,7 +102,11 @@ on for the coefficient calculation - some of which may assume such commutativity
 mean, for example, for a Butterworth filter to have a matrix-valued coefficient anyway? Does that 
 even make sense?
 
-
+For designing transitional filters, we may implement a class PoleZeroMorpher which operates on two
+given zpk-representations of a filter and produces a zpk-representation of a filter in between. For 
+this to work, we need to match up the poles and zeros of the two filters in the correct way. Maybe 
+that can be achieved by sorting the prototype poles and zeros according to their imaginary parts 
+(which determines the resonant frequency of the pole/zero).
   
 ----------------------------------------------------------------------------------------------------
 

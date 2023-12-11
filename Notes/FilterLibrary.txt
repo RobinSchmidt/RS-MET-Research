@@ -51,11 +51,12 @@ Features:
 - Prototype Designs:
 
   - Butterworth, Chebychev 1/2 and Elliptic lowpass and low-shelving prototype poles and zeros are 
-    computed via closed form formulas for the s-plane poles and zeros
+    computed via closed form formulas for the s-plane poles and zeros. The formulas for that can be 
+    found in the Orfanidis papers and also in my existing codebase.
     
   - Bessel, Papoulis, Halpern and Gaussian prototypes are designed via formulas for polynomial 
-    coeffs and a polynomial root-finder. I already have code for all of these which could be 
-    adapted. Maybe some other designs could be added. This book: 
+    coeffs and a subsequent polynomial root-finder. I already have code for all of these which could 
+    be adapted. Maybe some other designs could be added. This book: 
     https://link.springer.com/book/10.1007/b100752 (which I have on my bookshelf) has some more 
     designs (Legendre, ultraspherical, transitional). Maybe these can be added as well. Maybe there 
     are even more types out there which could be added. I've once seen a paper talking about 

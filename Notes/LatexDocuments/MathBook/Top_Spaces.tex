@@ -140,7 +140,7 @@ Intuitively, an interior point of a set $X$ is a point $x$ that admits us to def
 \paragraph{Definition: Open Set} A set $X$ is said to be \emph{open}, if all of its elements are interior points. 
 
 \medskip
-Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set. 
+Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set. Open sets are important in analysis because in open sets, we can be sure to be able to approach any point from any direction which is what we need to define (directional) derivatives. On a boundary point, such a definition may not be possible.
 
 \medskip
 Some important properties of open sets are: (1a) The empty set is open because it contains no points, so there is no point in it which could fail to have a halo. (1b) A Euclidean space like $\mathbb{R}^n$ is also open. (2) The intersection of a finite number of open sets is open. (3) The union of any number or even of infinitely many sets is also open. Tuck these properties away for later. Spoiler: we will see them again in the definition of \emph{a topology}.
@@ -173,7 +173,7 @@ An important observation is: If a set $A$ is closed and $(p_n)$ is a convergent 
 
 % https://www.youtube.com/watch?v=Zc54IvEtbMQ&list=PLb0zKSynM2PD3i3xMuWrUF9_txMrJMGEZ&index=24
 
-\paragraph{Definition: Bounded Set} A set $X$ is said to be \emph{bounded} if we can find an $x \in X$ and an $\varepsilon > 0$ such that $X \subseteq B_\varepsilon(x)$ [VERIFY]. 
+\paragraph{Definition: Bounded Set} A set $X$ is said to be \emph{bounded} if we can find an $x \in X$ and an $\varepsilon > 0$ such that $X \subseteq B_\varepsilon(x)$. 
 
 \medskip
 The intuition behind this definition is that the set $X$ has a finite extent. We pick some element $x$ inside the set $X$ and draw a ball with radius $\varepsilon$ around it. It must be possible to find a finite radius $\varepsilon$ such that this ball contains the whole set $X$. In this case, we actually imagine $\varepsilon$ to be potentially rather large as long as it is a finite number.
@@ -181,7 +181,8 @@ The intuition behind this definition is that the set $X$ has a finite extent. We
 \paragraph{Definition: Compact Set} A set $X$ is said to be \emph{compact} if it is bounded and closed.
 
 \medskip
-Note that this definition of compactness only applies to metric space. For more general topological spaces, the definition will be more complicated. Compactness is important because ...TBC...
+Note that this definition of compactness only applies to metric space. For more general topological spaces, the definition will have to be more complicated. Compactness is important in topology because the image of a compact set under a continuous function is again compact. 
+
 
 [TODO: give examples for all these kinds of sets - also some possibly counterintuitive ones and edge cases]
 
@@ -189,9 +190,9 @@ Note that this definition of compactness only applies to metric space. For more 
 % https://www.youtube.com/watch?v=iK9FsEm4dwU&list=PLb0zKSynM2PD3i3xMuWrUF9_txMrJMGEZ&index=25
 % 12:40
 
-% Open sets are important in analysis because in open sets, we can be sure to be able to approach any point from any direction which is what we need to define (directional) derivatives. On a boundary point, such a definition may not be possible.
 
-% Compact sets are important in topology because the image of a compact set under a continuous function is again compact.
+
+% Compact sets are important
 
 % Maybe define "neighborhood" of a point $x$: A set $N$ is called a neighborhood of some point $x$ if there exists an open ball around $x$ that is contained in $N$. Tha is a weaker notion than open set. An open set is neighborhood of *every* point inside it. [0,2) is a neighborhood of 1 but it is not open because it is no neighborhood of 0, for example.
 
@@ -211,6 +212,37 @@ Note that this definition of compactness only applies to metric space. For more 
 \subsection{Topological Space}
 In a \emph{topological space}, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements without even needing to refer to a metric. The only notion that we will need to refer to is that of an open set. Obviously, we will need an alternative but equivalent definition for what "open set" is supposed to mean if we want to do away with the metric.
 
+\subsubsection{Topologies on a Set}
+
+\paragraph{Definition: Topology} 
+Let $X$ be a set. A set $T \subseteq \mathcal{P}(X)$ of subsets of $X$ is called \emph{a topology} on $X$ if it satisfies: (1) The empty set and the complete set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$ for $n \in \mathbb{N}$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. 
+
+\medskip
+The finite case for the union can be thought of as special case of the infinite case where most (actually almost all) of the $t_k$ are empty. So it doesn't need to be stated separately. Note that our 3 requirements are satisfied by open sets as said in the remark about important properties of open sets. Here, we have turned this around and use these properties as definition for what we mean by "open". Note how this definition does not rely on a metric. ...TBC... [TODO: explain why these features capture our idea of openness in the sense of "every point is an interior point"]
+
+% I think, it has to do with how set intersection behaves
+% https://en.wikipedia.org/wiki/Open_set
+
+
+%With that definition, the elements of a topology $T$ are indeed precisely the open sets in $X$.  %[TODO: VERIFY and explain why] ...TBC...
+
+% In geometry, it is the idea of distances between points that defines shapes. When we move a vertex of a polygon to some other place, the change of shape is recorded in the way that the vertex has changed its distance to the other points of the shape. All other shape-determining quantities, such as angles, are really defined in terms of distance. Look formula ...[def. of angle as arccos of scalar product]
+
+\paragraph{Definition: Topological Space} A \emph{topological space} is a set $X$ on which a topology $T$ is defined.
+
+% https://en.wikipedia.org/wiki/Topological_space
+% https://mathworld.wolfram.com/TopologicalSpace.html
+
+\paragraph{Induced Topology} 
+We have seen how we can define an open subset of a set $X$ when we have a metric $d$ available. If we collect all the so defined open subsets of a set into a set $T$, then this set $T$ will indeed qualify as a topology on $X$. It is the topology that is induced by the metric $d$. [VERIFY] That means that every metric space is automatically also a topological space. But - by now you know the drill - the notion of a topological space is more general. There are topologies which are not (and cannot be) induced by a metric. [TODO: give an example]
+
+
+\medskip
+Note how our subsequent generalizations led to the following onion like structure of subset inclusions: inner product spaces $\subset$ normed spaces $\subset$ metric spaces $\subset$ topological spaces. The topological space is now finally the abstraction that we want to work with and upon which the mathematical field of topology revolves around. To build intuition, we will nevertheless usually use a more concrete space like $\mathbb{R}^n$ that we can intuitively understand (although even that can get hard when $n > 3$).
+
+
+
+
 
 
 \subsubsection{A Taxonomy of Sets Revisited}
@@ -228,26 +260,12 @@ We now want to revisit our taxonomy of sets. The goal is to define all those pro
 % 10:25
 
 
-\subsubsection{Topologies on a Set}
 
 
-\paragraph{Definition: Topology} 
-Let $X$ be a set. A set $T \subseteq \mathcal{P}(X)$ of subsets of $X$ is called \emph{a topology} on $X$ if it satisfies: (1) The empty set and the complete set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$ for $n \in \mathbb{N}$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. 
-
-\medskip
-The finite case for the union can be thought of as special case of the infinite case where most (actually almost all) of the $t_k$ are empty. So it doesn't need to be stated separately [VERIFY!]. With that definition, the elements of a topology $T$ are indeed precisely the open sets in $X$. [TODO: VERIFY and explain why] ...TBC...
-
-\paragraph{Definition: Topological Space} A \emph{topological space} is a set $X$ on which a topology $T$ is defined.
-
-% https://en.wikipedia.org/wiki/Topological_space
-% https://mathworld.wolfram.com/TopologicalSpace.html
-
-\paragraph{Induced Topology} 
-We have seen how we can define an open subset of a set $X$ when we have a metric $d$ available. If we collect all the so defined open subsets of a set into a set $T$, then this set $T$ will indeed qualify as a topology on $X$. It is the topology that is induced by the metric $d$. [VERIFY] That means that every metric space is automatically also a topological space. But - by now you know the drill - the notion of a topological space is more general. There are topologies which are not (and cannot be) induced by a metric. [TODO: give an example]
+% Compactness in topology:
+% https://en.wikipedia.org/wiki/Compact_space
 
 
-\medskip
-Note how our subsequent generalizations led to the following onion like structure of subset inclusions: inner product spaces $\subset$ normed spaces $\subset$ metric spaces $\subset$ topological spaces. The topological space is now finally the abstraction that we want to work with and upon which the mathematical field of topology revolves around. To build intuition, we will nevertheless usually use a more concrete space like $\mathbb{R}^n$ that we can intuitively understand (although even that can get hard when $n > 3$).
 
 
 
@@ -288,6 +306,11 @@ Definition of closeness or neighborhood: two elements $x,y$ of $X$ are close to 
 
 A topology is a collection of open sets.
 
+https://en.wikipedia.org/wiki/Topological_indistinguishability
 
+https://en.wikipedia.org/wiki/Connected_space
+"A topological space X X is said to be disconnected if it is the union of two disjoint non-empty open sets. Otherwise, X X is said to be connected."
+
+https://en.wikipedia.org/wiki/Compact_space
 
 \end{comment}

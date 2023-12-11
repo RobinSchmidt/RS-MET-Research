@@ -18,7 +18,7 @@ Features:
     allocations. They also shall not acquire locks. Any thread-sync should be done on a higher level
     anyway and is not within the scope of the responsibility of this library. This library should 
     only care about crunching numbers. Maybe that could be demonstrated by a plugin and/or a filter
-	for a popular open-source synthesizer like Surge and/or VCV Rack.
+    for a popular open-source synthesizer like Surge and/or VCV Rack.
 
   - Should be implemented as C++20 "module".
   

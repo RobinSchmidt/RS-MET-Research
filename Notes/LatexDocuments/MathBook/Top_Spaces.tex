@@ -150,7 +150,12 @@ Some important properties of open sets are: (1a) The empty set is open because i
 \paragraph{Definition: Closed Set} A set $X$ is closed if its complement is open.
 
 \medskip
-Do not make the mistake of thinking that "closed" is just the opposite of "open" as in "not open". That would be wrong. The half-open interval $[0,1)$ is neither open nor closed, for example. There are also sets that are open and closed at the same time: the empty set $\emptyset$ and a full Euclidean space $\mathbb{R}^n$ [...unless we think of it as a subspace of a larger embedding space like $\mathbb{R}^{n+1}$, I guess. VERIFY!]. If a set $A$ is closed and $p_n$ is a convergent sequence of points in $A$, i.e. every $p_n$ is in $A$, then the limit is also in $A$. The sequence cannot converge to a point outside of $A$.
+Do not make the mistake of thinking that "closed" is just the opposite of "open" as in "not open". That would be wrong. The half-open interval $[0,1)$ is neither open nor closed, for example. There are also sets that are open and closed at the same time: the empty set $\emptyset$ and a full Euclidean space $\mathbb{R}^n$ [...unless we think of it as a subspace of a larger embedding space like $\mathbb{R}^{n+1}$, I guess. VERIFY!]. 
+
+\paragraph{Definition: Convergence} We consider a sequence of points $(p_n)$ in a metric space. We say that the sequence is convergent to a point $x$ if for every $\varepsilon > 0$ there is a $n_0 \in \mathbb{N}$ such that for all $n \geq n_0$, all $p_n$ are inside the $\varepsilon$-ball around $x$. [VERIFY!]
+
+\medskip
+An important observation is: If a set $A$ is closed and $(p_n)$ is a convergent sequence of points in $A$, i.e. every $p_n$ is in $A$, then the limit is also in $A$. The sequence cannot converge to a point outside of $A$. [TODO: point out similarity to Cauchy-completeness. ]
 
 
 % Weitz in EDGI pg 63 says that these two are the only sets with that feature - but maybe that's tru only in the limited context of the book (topology in Euclidean space)

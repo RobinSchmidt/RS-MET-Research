@@ -17,8 +17,9 @@ Features:
     memory. Filter parameter updates (e.g. change of cutoff freq) should also work without 
     allocations. They also shall not acquire locks. Any thread-sync should be done on a higher level
     anyway and is not within the scope of the responsibility of this library. This library should 
-    only care about crunching numbers.
-    
+    only care about crunching numbers. Maybe that could be demonstrated by a plugin and/or a filter
+	for a popular open-source synthesizer like Surge and/or VCV Rack.
+
   - Should be implemented as C++20 "module".
   
   - May define two C++20 "concepts": "Signal" and "Parameter" or "Coefficient". They must be numeric 
@@ -158,153 +159,12 @@ Features:
     third template parameter "RootType" (along with "ValueType" and "CoeffType")
   
 
-
- 
 ====================================================================================================  
 
-Notes on composability of templates:
-
-
-In an ideal world, we want all our types to be composable at will and when we do so, it will all 
-just work, i.e. compile and(!!!) do the right thing. We want to be able to do things like:
-
-  // A complex simd vector of 4 floats:
-  complex<simd<float, 4>> csf;
-
-  // A complex multiprecision number:
-  using mp_number = boost::multiprecision::number<...>;  // shorthand for convenience
-  complex<mp_number> cmpn;           
-  
-  // A matrix of complex floats:
-  matrix<complex<float>> mcf;             
-  
-  // A rational function with complex double-precision coefficients:
-  ratio<poly<complex<double>>> rpcd;
-  
-  // A matrix of rational functions with complex multiprecision numbers as coefficients:
-  matrix<ratio<poly<complex<mp_number>>>> mrcpm;
- 
- 
-Notes: 
- 
-- Last time I checked, things like std::complex<my_simd<float, 4>> were not (yet?) possible. 
-  std::complex admitted only float, double and long double as underlying real data type. Maybe it 
-  could be made more flexible in the future? This is indeed the reason, why I'm not using it as much 
-  anymore. I formerly had my own class for complex numbers, at some time switched to use 
-  std::complex until I tried to use it for simd, to discover that it's impossible and then partially 
-  switched back to a homemade complex implementation. ...or did that chane recently? ...seems so! 
-  That would be nice!
- 
-- As can be seen from ratio<poly<...>>, my idea to implement the idea of a rational function is to
-  implement a generic class for ratios of things (think, rational numbers as first example, i.e. 
-  ratios of ints) and then instantiate that on the polynomial class. A function like "reduce" should
-  do the right thing in both cases. For rational numbers, it would just find the greatest common 
-  divisor of numerator and denominator (by e.g. Euclid's algorithm) and divide both by it. For 
-  polynomials, it should automatically invoke the polynomial variant of it. If the coeff-type is 
-  real (e.g. float or double), we may need comparisons against zero with a (relative?) tolerance, 
-  i.e. dont use if(x == 0)... but rather if( is_close_to_zero(x, tol) )... or something. This is 
-  needed in Euclid's algo to check, if the remainder is zero, for example - for polynomials, 
-  is_close_to_zero should compare each coeff to zero and return true only if *all* are close to 
-  zero.
-  
-- For rational functions, there is this idea of a partial fraction expansion. There is no analog for
-  rational numbers that I know of. Maybe there is? Maybe a sum of fractions with numerator 1? There
-  is already std::ratio, but it's not (yet?) suitable for the purpose here because it is meant for
-  compile-time ratios of ints.
-
-  
-Notes:
-
-- If this is not all achievable at the same time, make a priority list for what compositions are 
-  more important than others.
-  
-- Use doxgen with LaTeX expressions for the documentation for the math stuff. Or maybe use ASCII 
-  art like here: 
-  https://math.stackexchange.com/questions/149303/software-to-render-formulas-to-ascii-art
-  https://arthursonzogni.com/Diagon/#Math
-  
-
-Multiprecision numbers:
-https://www.boost.org/doc/libs/1_83_0/libs/multiprecision/doc/html/index.html
-
-SIMD-vectors:
-https://en.cppreference.com/w/cpp/experimental/simd/simd
-https://github.com/VcDevel/std-simd
-
-Polynomials:
-https://live.boost.org/doc/libs/1_64_0/libs/math/doc/html/math_toolkit/roots/polynomials.html
-
-Ratios:
-https://en.cppreference.com/w/cpp/numeric/ratio/ratio
-  
-Complex:
-https://en.cppreference.com/w/cpp/numeric/complex  
-
-  
-I'm not sure, if I'm using the term "composable" here correctly. This talk:
-
-  https://www.youtube.com/watch?v=zclxRbh4AN0 
-  https://cppcon.digital-medium.co.uk/wp-content/uploads/2021/10/Composable-C-Ben-Deane-CppCon-2021.pdf  
-
-has other things in mind. It's mostly about function return values. In OOP, "composition" usually 
-refers to one class having *members* of a type from another class. But I think, the term can be 
-interpreted more generally. What I mean by "composable" here is the stuff above: being able to 
-create, e.g. "matrices" of "ratios" of "polynomials" of "complex" numbers which themselves can be 
-made of primitive types (like float or double) or "simd" vectors or "multiprecision" numbers or 
-whatever - even "matrices" of something. Yep, that's right: we should be able to compose the types 
-recursively, too.
-
-For polynomials, it might make sense to distinguish between the coefficient type and the value type,
-i.e. the type for (the powers of) x. The coeffs could be scalars and the values matrices, for 
-example. We should probably not assume that the value multiplication is commutative - but we *may* 
-assume that we have a_n * x^n == x^n * a_n. But maybe it's not necessary to assume that. Not sure 
-yet. If we assume that, we may not be able to use matrices for coeffs and values. If we need to 
-assume an argument order, the coeff is always the left and the value the right argument in a 
-multiplication. Do we need to assume that coeff*coeff multiplication is commutative? That may depend
-on the situation, i.e. on the way, the coeffs are produced. In a filter library, there's a lot going 
-on for the coefficient calculation - some of which may assume such commutativity. But what would it 
-mean, for example, for a Butterworth filter to have a matrix-valued coefficient anyway? Does that 
-even make sense?
-
-
-  
-----------------------------------------------------------------------------------------------------
-
-- For mdSpan, see:
-  Https://www.youtube.com/watch?v=eD-ceG-oByA
-  https://www.youtube.com/watch?v=aFCLmQEkPUw
-  - mdarray is the owning version (like vector is to span)
-  - rank (= number of dimensions) must be known at compile time
-
-
-C++ Standard Parallelism - Bryce Adelstein Lelbach - CppNorth 2022
-https://www.youtube.com/watch?v=r1COmv0CdW4&list=PLpGV-BujcAKFVCWOBj2548vuxJ1lV5w6-&index=15
-43:10: could go into rsMatrix someday
-49:33: standardized linear algebra is on the way! yay! :-O
-
-Multidimensional C++ - Bryce Adelstein Lelbach - CppNorth 2022
-https://www.youtube.com/watch?v=aFCLmQEkPUw&list=PLpGV-BujcAKFVCWOBj2548vuxJ1lV5w6-&index=23
-34:30: talks about compiler hints for non-aliasing pointers
-
-SIMD Libraries in C++ - Jeff Garland - CppNow 2023
-https://www.youtube.com/watch?v=hlgCeWC9jxI
-https://en.cppreference.com/w/cpp/experimental/simd/simd
-https://en.cppreference.com/w/cpp/experimental/simd
-
-STL std::span | Modern Cpp Series
-https://www.youtube.com/watch?v=OQu2pZILjDo
--The length can be a runtime or compile-time variable. I guess that implies that for a typical
- convolution routine, the compiler could generate *many* versions for all sorts of different 
- compile-time constants for the length of the span? That might be bad. Although, it may inline such
- a small routine anyway.
- 
- 
-Prototype Filter Design: 
-https://www.researchgate.net/publication/251816527_On_the_characteristics_of_Monotonic_L_Halpern_and_parabolic_filters 
- 
-----------------------------------------------------------------------------------------------------
 Ideas for follow up projects:
--FIR design
+-FIR design and implementation (convolution)
 -Musical filters (ladder, etc.)
--Adaptive filters
--Realtime Quantile-Filtering 
+-Adaptive filters (would involve some R&D)
+-Realtime Quantile-Filtering (the code is basically done)
+-Numerical Calculus (interpolation, approximation (least-squares, etc.), differentiation, 
+ integration, optimization, maybe some (simple) ODE- and PDE stuff i.e. finite difference methods)

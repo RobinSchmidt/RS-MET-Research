@@ -1,8 +1,9 @@
-
+Proposal for a C++ library for the design and application of classic scientific IIR filters.
 
 Features:
 
 - Implementation goals and considerations:
+
   - Should be templatized and at least support float, double, SIMD-vectors and maybe multiprecision
     for the signals and coefficients. Would be nice, if it would also support more complicated types 
 	like matrices. The type of the parameters/coeffs and signals should possibly be different 
@@ -11,26 +12,33 @@ Features:
 	std::complex is used for the poles and zeros. We need a more flexible complex datatype that can 
 	work with SIMD and multiprecision numbers. But it could be possible with std::complex now (check 
 	that!).
+	
   - Should be realtime capable: sample and block based processing functions shall never allocate 
     memory. Filter parameter updates (e.g. change of cutoff freq) should also work without 
 	allocations. They also shall not acquire locks. Any thread-sync should be done on a higher level
 	anyway and is not within the scope of the responsibility of this library. This library should 
 	only care about crunching numbers. Thread sync is someone else's job.
+	
   - Should be implemented as C++20 "module".
+  
   - May define two C++20 "concepts": "Signal" and "Parameter"/"Coefficient". They must be numeric 
     and it must be possible to arithmetically combine coeffs and signals and the result of that 
 	should be a signal. Example: coeff = float, signal = simd<float, 4>.
+	
   - Maybe a library for dealing with polynomials and rational functions should be factored out. Such
     a library may be useful in its own right. There is already boost::polynomial. Look into that and
 	see, if it's suitable. Hmm...problematic: has only a value_type used for values *and* coeffs.
 	I'd like to see separate types for value_type and coeff_type. Maybe that class could be extended
 	appropriately. There isn't very much functionality going on in that class anyway. I need much 
 	more - including root-finding aka factorization. 
+	
   - The usual design pipeline for a digital filter is:  user-specification  ->  s-plane prototype 
     zeros/poles/gain  ->  s-plane freq trafo  ->  s-to-z trafo  ->  coeff calculation for 
     implementation structure (e.g. biquad chain)
+	
   - Its should be flexible, i.e. the user can choose, which sort of s-to-z trafo shall be used 
     (bilinear, impulse-invariant, MZTi, etc.)
+	
   - When the user just changes a cutoff frequency on a filter plugin (think: in a DAW or 
     synthesizer), the prototype poles/zeros do not need to be recomputed. The prototype pole/zero 
 	calculation is by far the most computationally expensive part so it should only be done when 
@@ -39,9 +47,11 @@ Features:
     
 
 - Prototype Designs:
+
   - Butterworth, Chebychev 1/2 and Elliptic lowpass and low-shelving prototype poles and zeros are 
     computed via closed form formulas.
     for the s-plane poles and zeros
+	
   - Bessel, Papoulis, Halpern and Gaussian prototypes are designed via formulas for polynomial 
     coeffs and a polynomial root-finder. I already have code for all of these which could be 
 	adapted. Maybe some other designs could be added. This book: 
@@ -50,44 +60,80 @@ Features:
 	are even more types out there which could be added. I've once seen a paper talking about 
 	"parabolic" filters, for example.
 
+
 - Frequency transformations:
+
   - They work on the poles and zeros (and gain), i.e. on the zpk-representation.
+  
   - s-plane to s-plane LP/LP, LP/HP, LP/BP, LP/BR, LP/LS (LS = low-shelv)
+  
   - z-plane to z-plane LP/LP, ... (Constantinides formulas)
+  
   - bilinear s-to-z and z-to-s transform
+  
   - s-to-z via MZTi, Nyquist frequency match
+  
   - Maybe some of these transformation could also be applied to other representations directly such 
     as to biquad-chain coeffs. Not sure yet - we'll see.
 
+
 - Different implementation structures and conversion routines for the coeffs of the different 
   structures:
+  
   - ZPK-form (zeros, poles, gain) - that's the form in which prototypes are designed.
+  
   - Biquad cascade (called second order sections (SOS) in Matlab)
+  
   - Lattice form 
+  
   - Parallel biquads (good for parallelization and bidirectional application)
+  
   - Direct form (not recommened to use but for the sake of completeness)
+  
   - Biquads can be implemented in SVF (state variable) form and state-vector form and in all 4 
     direct forms.
   
+  
 - Implementations should be applicable to:
+
   - Realtime processing as in audio plugin, i.e. sample-by-sample processing should be possible.
+  
   - Batch-processing on multi-dimensional arrays by using strides, i.e. we filter along a particular 
     dimension. Should ideally be compatible with std::mdspan - at least for strided layouts. 
+	
   - We should be able to apply them bidirectionally using the exact formulas for the states after
     (ringout/warm-up)
+	
   - Should be applicable to non-uniformly sampled data.
  
+ 
 - More feature ideas: 
+
   - Maybe compensation allpass designs
+  
   - Maybe transitional filters can be provided, too
+  
   - Maybe iterative design of arbitrary filters based on iterative optimization - but: maybe that 
     should be based on some library dedicated to iterative optimization. Maybe it should be and
 	optional feature and if that feature is not needed, the rest of the library will work without
 	having the optimization library installed.  
+	
   - Maybe biquad designs based on magnitude samples 
+  
   - Crossover designs with perfect reconstruction  
   
+  
+- The design shall be inspired by:
+
+  - https://github.com/vinniefalco/DSPFilters
+  
+  - https://github.com/RobinSchmidt/RS-MET/blob/master/Libraries/RobsJuceModules/rapt/Filters/Scientific/EngineersFilter.h
+    This code behind EngineersFilter already implements most of the required mathematics and can 
+	serve as a basis. My EngineersFilter plugin is based on this implementation
+
+  
 - Challenges:
+
   - The biggest challenge is perhaps the support for multiprecision (MP) types. It implies that all 
     the mathematical functions used (sin, cos, (complex) jacobi-elliptic, etc.) must work in MP. I'm
 	not sure, if it's practical to try to achieve that. But on the other hand - it would *really* be
@@ -96,6 +142,7 @@ Features:
 	roundoff errors	thwart these design attempts. That's usually more than enough in practice - but 
 	wouldn't it be nice, if we could design elliptic filters of order 100 as well just because we 
 	can?
+	
   - For designing the interface of the class for polynomials, one of the challenges is that for 
     root-finders for real-valued polynomials, the roots may nevertheless be complex. My current 
 	approach to this is not very elegant. Maybe that can be done better. Speaking more generally, 
@@ -108,7 +155,11 @@ Features:
 	...but a library should be as generally applicable as possible. Maybe one should somehow have a
 	third template parameter "RootType" (along with "ValueType" and "CoeffType")
   
-----------------------------------------------------------------------------------------------------
+
+
+ 
+====================================================================================================  
+
 Notes on composability of templates:
 
 

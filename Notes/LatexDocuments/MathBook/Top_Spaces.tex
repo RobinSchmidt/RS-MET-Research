@@ -147,10 +147,22 @@ Some important properties of open sets are: (1a) The empty set is open because i
 
 % example of a non-open infinite intersection of open sets: intersect intervals [-1/n,+1/n]. The infinite intersection is just singleton zero which is obviously not open.
 
-\paragraph{Definition: Closed Set} A set $X$ is closed if its complement is open [VERIFY]
+\paragraph{Definition: Closed Set} A set $X$ is closed if its complement is open.
 
 \medskip
-Do not make the mistake of thinking that "closed" is just the opposite of "open" as in "not open". That would be wrong. The half-open interval $[0,1)$ is neither open nor closed, for example. [TODO: give an example of a set that is open and closed]
+Do not make the mistake of thinking that "closed" is just the opposite of "open" as in "not open". That would be wrong. The half-open interval $[0,1)$ is neither open nor closed, for example. There are also sets that are open and closed at the same time: the empty set $\emptyset$ and a full Euclidean space $\mathbb{R}^n$ [...unless we think of it as a subspace of a larger embedding space like $\mathbb{R}^{n+1}$, I guess. VERIFY!]. If a set $A$ is closed and $p_n$ is a convergent sequence of points in $A$, i.e. every $p_n$ is in $A$, then the limit is also in $A$. The sequence cannot converge to a point outside of $A$.
+
+
+% Weitz in EDGI pg 63 says that these two are the only sets with that feature - but maybe that's tru only in the limited context of the book (topology in Euclidean space)
+
+%\medskip
+%[Q: what about a Euclidean subspace? It consists only of boundary points. ..so it must be closed, I think - but only when its embedded in a larger (higher dimensional) space - the "complement" is always taken with respect to something and that something is different in the case of an embedding]
+
+%[TODO: give an example of a set that is open and closed - empty set and whole Euclidean space]
+
+% 
+
+% https://www.youtube.com/watch?v=Zc54IvEtbMQ&list=PLb0zKSynM2PD3i3xMuWrUF9_txMrJMGEZ&index=24
 
 \paragraph{Definition: Bounded Set} A set $X$ is said to be bounded if we can find an $x \in X$ and an $\varepsilon > 0$ such that $X \subseteq B_\varepsilon(x)$ [VERIFY]. 
 

@@ -2,13 +2,25 @@
 
 %===================================================================================================
 \subsection{Morphogenesis}
+Biologists call the process by which nature lets living structures take their shape \emph{morphogenesis} which literally translates to "shape creation". 
+
+
+
+% https://en.wikipedia.org/wiki/Morphogenesis
+
+% Morphogenesis
+% https://www.youtube.com/watch?v=dMkvezo9t2c
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Diffusion-Reaction Equations}
+\subsubsection{Diffusion-Reaction Equations} In 1952, British genius Alan Turing published a paper called "The Chemical Basis of Morphogenesis" in which he proposed a mathematical model which could potentially explain such processes of morphogenesis. The model is based on so called \emph{reaction-diffusion equations} which, in their simplest form, are a system of two partial differential equations (in more complicated variants, there can be more than two equations [VERIFY]). The model proposes that we should consider two time varying scalar fields. In 2D, that would be two functions $u(x,y,t), v(x,y,t)$ where $x,y$ are our two spatial coordinates and $t$ is time as always. These functions model the local concentration of two chemicals, in this context called \emph{morphogens}, where $u$ plays the role of an \emph{activator} and $v$ plays the role of an \emph{inhibitor}. The presence of the activator stimulates production of more activator and more inhibitor. The presence of the inhibitor inhibits the production of both substances. The exact way in which this activation and inhibition takes place is captured in two functions $f(u,v)$ and $g(u,v)$ respectively. The function $f(u,v)$ determines how much activator $u$ is produced as the result of the presence of some amount of activator $u$ and inhibitor $v$ and the function $g(u,v)$ determines how much inhibitor is produced. Both of these functions should be increasing functions of $u$ and decreasing functions of $v$ [VERIFY]. In addition to this production process which takes place at any point in the $xy$-plane, there is also a diffusion process that lets the substances tend to spread out spatially over time. This diffusion is captured in a diffusion term of the same form that we already know from the heat equation, i.e. a diffusion constant times the Laplacian.
+
+
+
+
 
 \begin{eqnarray}
-u_{tt} &= D_u (u_{xx} + u_{yy}) + f(u,v)  \\
-v_{tt} &= D_v (v_{xx} + v_{yy}) + g(u,v) 
+u_t &= D_u (u_{xx} + u_{yy}) + f(u,v)  \\
+v_t &= D_v (v_{xx} + v_{yy}) + g(u,v) 
 \end{eqnarray}
 
 % Alan Turing Lecture 2021 'Modelling Pattern Formation in Developmental Biology'
@@ -16,8 +28,11 @@ v_{tt} &= D_v (v_{xx} + v_{yy}) + g(u,v)
 % has at 24 min examples for what f,g could be (Gierer-Meinhardt- , Thomas-, Schnakenberg- models)
 % at 12 min, has equation for conditions for the parameters
 
-% Morphogenesis
-% https://www.youtube.com/watch?v=dMkvezo9t2c
+% https://en.wikipedia.org/wiki/Turing_pattern
+% https://en.wikipedia.org/wiki/Reaction%E2%80%93diffusion_system
+
+
+
 
 % Cellular Automata
 
@@ -74,6 +89,10 @@ https://en.wikipedia.org/wiki/Fisher%27s_equation
 https://www.youtube.com/watch?v=Tpg-wfU_3qw  Anwendung - Zelluläre Automaten zur Simulation von Morphogenese
 
 https://www.researchgate.net/publication/234144100_Morphogenesis_Origins_of_Patterns_and_Shapes
+
+
+Can One Mathematical Model Explain All Patterns In Nature?
+https://www.youtube.com/watch?v=F1hX_nzTlgU
 
 
 How To Create Seamless Turing Patterns (Photoshop & Illustrator Tutorial)

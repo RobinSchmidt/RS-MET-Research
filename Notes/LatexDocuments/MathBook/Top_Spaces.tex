@@ -3,13 +3,15 @@ Our goal here is define a notion of closeness or distance between two elements o
 
 %===================================================================================================
 \subsection{Inner Product Space}
-An inner product space is a vector space $V$ where an inner product between any pair of vectors $\mathbf{v,w}$ is defined. We denote that inner product as $\langle \mathbf{v,w} \rangle$. For example, in our familiar Euclidean vector spaces $\mathbb{R}^n$, that inner product is defined as $\langle \mathbf{v,w} \rangle = \sum_{i=0}^n v_i w_i$. We can also define such an inner product on  $\mathbb{C}^n$ as $\langle \mathbf{v,w} \rangle = \sum_{i=0}^n v_i \overline{w_i}$ where $\overline{w_i}$ denotes complex conjugation. To qualify as an inner product, the function $\langle \mathbf{v,w} \rangle$ must satisfy the following properties:
+An inner product space is a vector space $V$ where an inner product between any pair of vectors $\mathbf{v,w}$ is defined. We denote that inner product as $\langle \mathbf{v,w} \rangle$. For example, in our familiar Euclidean vector spaces $\mathbb{R}^n$, that inner product is defined as $\langle \mathbf{v,w} \rangle = \sum_{i=1}^n v_i w_i$. To qualify as an inner product, the function $\langle \mathbf{v,w} \rangle$ must satisfy the following properties:
 
+
+
+%We can also define such an inner product on  $\mathbb{C}^n$ as $\langle \mathbf{v,w} \rangle = \sum_{i=1}^n v_i \overline{w_i}$ where $\overline{w_i}$ denotes complex conjugation.
 % bilinear, homogeneous,
 
-...TBC...
+...TBC...bilinear, homogeneous,...
 
-% inner products induce a norm
 
 % https://en.wikipedia.org/wiki/Inner_product_space
 
@@ -18,7 +20,7 @@ An inner product space is a vector space $V$ where an inner product between any 
 
 %===================================================================================================
 \subsection{Normed Space}
-A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number which we interpret as a measure of the size or length of the vector. To qualify as a norm, norm function must satisfy a couple of more properties. We have already met them in slightly different form in the section about elementary functions. Let $\mathbf{v} \in V$ and let $\lambda$ be in the set of scalars. Then:
+A normed space is a vector space $V$ on which a norm function is defined. That means, for each element $\mathbf{v} \in V$, we can compute the norm of $\mathbf{v}$, denoted as $|\mathbf{v}|$. The output of that function will be a non-negative real number which we interpret as a measure of the size or length of the vector. To qualify as a norm, our norm function must satisfy a couple of more properties. We have already met them in slightly different form in the section about elementary functions. Let $\mathbf{v} \in V$ and let $\lambda$ be in the set of scalars. Then:
 
 \medskip
 \begin{tabular}{l l}
@@ -44,7 +46,9 @@ If our vector space $V$ happens to be an inner product space, then we can use th
 
 %\paragraph{Sum norm} [sum of absolute values]
 
-\paragraph{$L^p$-Norm} Let's consider vectors $\mathbf{x} = (x_1, x_2, \ldots, x_n)$ in $\mathbb{R}^n$. For such a vector, the $L^p$ norm for some given real number $0 < p \leq \infty$ is defined as: $ |\mathbf{x}|_p = (|x_1|^p + |x_2|^p + \ldots + |x_n|^p)^{1/p}$. For $p=2$ we get the $L^2$ norm which is just our usual Euclidean norm. It can be verified that for $p=1$, the parallelogram equation does not hold (in fact, it holds only for $p = 2$, I think - VERIFY!). That means we have found at least one norm that is not induced by an inner product. We cannot find an inner product that would induce this norm when we believe that any such induced norm is bound to satisfy the parallelogram equation. This confirms that the notion of a normed space is more general than the notion of an inner product space.
+\paragraph{$L^p$-Norm} Let's consider vectors $\mathbf{x} = (x_1, x_2, \ldots, x_n)$ in $\mathbb{R}^n$. For such a vector, the $L^p$ norm for some given real number $0 < p \leq \infty$ is defined as: $ |\mathbf{x}|_p = (|x_1|^p + |x_2|^p + \ldots + |x_n|^p)^{1/p}$. For $p=2$ we get the $L^2$ norm which is just our usual Euclidean norm. It can be verified that for $p=1$, the parallelogram equation does not hold (in fact, it holds only for $p = 2$, I think - VERIFY!). That means we have found at least one norm that is not induced by an inner product. We cannot find an inner product that would induce this norm when we believe that any such induced norm is bound to satisfy the parallelogram equation. This confirms that the notion of a normed space is more general than the notion of an inner product space. Another important special case for the $L^p$ norm is the case where $p = \infty$. This norm just is just equal to the maximum of the absolute values of the components of $\mathbf{x}$.
+
+%[TODO: explain the $L^\infty$ norm]
 
 %If we assume the parallelogram equation to be true for any norm induced by an inner product, this confirms that the
 
@@ -65,7 +69,8 @@ Symmetry:                           & $d(x, y) = d(y, x)$  \\
 Triangle inequality:                & $d(x,z) \leq d(x,y) + d(y,z)$
 \end{tabular}
 \medskip
-where the positivity axiom can actually be weakened to only require the distance between distinct elements to be nonzero. [TODO: explain how positivity then follows]. Our distance function $d = d(x,y)$ is also called \emph{a metric} on the set $S$. 
+
+where the positivity axiom can actually be weakened to only require the distance between distinct elements to be nonzero. [TODO: explain how positivity then follows and how the implication is actually both ways]. Our distance function $d = d(x,y)$ is also called \emph{a metric} on the set $S$. 
 
 % https://www.youtube.com/watch?v=qwsvXa7nIGg
 % at 15:35 - calls the first property jsut "definite"
@@ -80,7 +85,7 @@ where the positivity axiom can actually be weakened to only require the distance
 % https://mathworld.wolfram.com/MinkowskiMetric.html
 
 \paragraph{Induced Metric}
-The requirements for a norm and for a metric are sufficiently similar that we can make a natural connection between norms and metrics. If our set $S$ happens to be a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} via the norm of the difference: $d(\mathbf{x, y}) = |\mathbf{x-y}|$. Forming a difference is always possible because a normed space is required to be a vector space. With the norm induced metric, we see that every normed space can easily be turned into a metric space. So, if we assume that we construct a metric via this induction, every normed space is automatically also a metric space. But not vice versa. The definition of a metric space is less restrictive than the definition of a normed space. The set of metric spaces is more general. We lifted our idea of distance to a more abstract level. Thereby we enable ourselves to talk about distances in more general sets than vector spaces.
+The requirements for a norm and for a metric are sufficiently similar that we can make a natural connection between norms and metrics. If our set $S$ happens to be a normed vector space $V$, then the norm defined on $V$ induces a metric on that space by defining the \emph{norm induced metric} via the norm of the difference: $d(\mathbf{x, y}) = |\mathbf{x-y}|$. Forming a difference is always possible because a normed space is required to be a vector space. With the norm induced metric, we see that every normed space can easily be turned into a metric space. So, if we assume that we construct a metric via this induction, every normed space is automatically also a metric space. But not vice versa. The definition of a metric space is less restrictive than the definition of a normed space. The set of metric spaces is more general. We lifted our idea of distance to a more abstract level. Thereby we enable ourselves to talk about distances in more general sets than normed vector spaces.
 
 \medskip
 [Q: Can we turn this around by saying that a metric induces a norm by defining the norm as distance from the origin $|\mathbf{x}| = d (\mathbf{x, 0})$ whenever our set happens to have some special element $\mathbf{0}$ that we call the origin?]
@@ -88,7 +93,7 @@ The requirements for a norm and for a metric are sufficiently similar that we ca
 \subsubsection{Examples} To get a feeling for how the so defined notion of metric is more general than our familiar Euclidean metric, let's now look at a couple of examples of metrics other than the Euclidean. 
 
 \paragraph{Minkowski and Manhattan Distance}
-The Minkowski distance is to metrics what the $L^p$-norm is to norms. Let $\mathbf{x,y}$ be two vectors in $\mathbb{R}^n$ and $p \in \mathbb{Z}$. Then, the Minkowski distance of order $p$ between the vectors is defined as $d_M(\mathbf{x,y}) = (\sum_{i=0}^n |x_i - y_i|^p )^{1/p}$. The special case for $p=1$ is also called Manhattan distance or city block distance. It is the total distance that you would have to walk if you can't take the direct diagonal route but instead have to piece your path together from purely horizontal and vertical segments (or, more generally, take partial paths on an orthogonal grid). This is how the streets are laid out in Manhattan, hence the name. 
+The Minkowski distance is to metrics what the $L^p$-norm is to norms. Let $\mathbf{x,y}$ be two vectors in $\mathbb{R}^n$ and $p \in \mathbb{Z}$. Then, the Minkowski distance of order $p$ between the vectors is defined as $d_M(\mathbf{x,y}) = (\sum_{i=1}^n |x_i - y_i|^p )^{1/p}$. The special case for $p=1$ is also called Manhattan distance or city block distance. It is the total distance that you would have to walk if you can't take the direct diagonal route but instead have to piece your path together from purely horizontal and vertical segments (or, more generally, take partial paths on an orthogonal grid). This is how the streets are laid out in Manhattan, hence the name. 
 
 \medskip
 By the way: Do not confuse the Minkowski distance with the Minkowski metric from special relativity. The latter is something else and it actually wouldn't even qualify as a metric according to our definition here because it can become negative.
@@ -123,14 +128,16 @@ We can use the metric $d$ to define a certain classification of sets that is imp
 \paragraph{Definition: Open Ball} Let $\varepsilon > 0$ be a real number and $x$ be an element of our metric space.  We define the open $\varepsilon$-ball around $x$ as the following set: $B_\varepsilon(x) = \{ y : d(x,y) < \varepsilon \}$.
 
 \medskip
-The open ball $B_\varepsilon(x)$ is the set of points, whose distance to $x$ is less than $\varepsilon$. Using $\varepsilon$ indicates that we intend to allow this value to become arbitrarily small as long as it is greater than zero. Intuitively, we may envision $B_\varepsilon(x)$ as a (possibly very small) halo around $x$.
+The open ball $B_\varepsilon(x)$ is the set of points, whose distance to $x$ is less than $\varepsilon$. Using $\varepsilon$ indicates that we intend to allow this value to become arbitrarily small as long as it is greater than zero. Intuitively, we may envision $B_\varepsilon(x)$ as a (possibly very small) halo around $x$. In $\mathbb{R}$, the "open balls" are open intervals, in $\mathbb{R}^2$ they are open circular discs, in $\mathbb{R}^3$ they are actual balls, i.e. filled spheres (but excluding the surface - that exclusion is what makes them "open") and in higher dimensions $\mathbb{R}^n$, they are filled $n$D hyperspheres (again excluding their $(n-1)$-dimensional boundary).
 
-\paragraph{Definition: Inner Point} A point $x \in X$ is said to be an inner point of $x$, if there exists an $\varepsilon > 0$ such that $B_\varepsilon(x) \subseteq X$. 
+\paragraph{Definition: Interior Point} A point $x \in X$ is said to be an inner point of $x$, if there exists an $\varepsilon > 0$ such that $B_\varepsilon(x) \subseteq X$. 
+
+%https://en.wikipedia.org/wiki/Interior_(topology)
 
 \medskip
-Intuitively, an inner point of a set $X$ is a point $x$ that admits us to define a (possibly small) halo around it that is fully contained in the set $X$.
+Intuitively, an interior point of a set $X$ is a point $x$ that admits us to define a (possibly small) halo around it that is fully contained in the set $X$.
 
-\paragraph{Definition: Open Set} A set $X$ is said to be open, if all of its elements are inner points. 
+\paragraph{Definition: Open Set} A set $X$ is said to be open, if all of its elements are interior points. 
 
 \medskip
 Intuitively, an open set does not have any boundary points as elements of the set. A boundary point of a set $X$ is usually defined to be a point $x$ where every $\varepsilon$-ball around the point contains points that are inside the set $X$ as well as points that are outside the set $X$. When a set is open, we can always find some (possibly tiny) open ball around it that is fully inside the set.
@@ -169,9 +176,9 @@ In a topological space, we can talk about "distances" and "closeness" between of
 
 
 \subsubsection{A Taxonomy of Sets Revisited}
-We now want to revisit our taxonomy of sets. The goal is to define all those properties without using a metric.
+We now want to revisit our taxonomy of sets. The goal is to define all those properties without using a metric. The central idea to make that work is that of an open set which we now want to define without these "open balls" which themselves were founded on a metric. ...TBC...
 
-%Our eventual goal is to abstract away the idea of a metric.
+% Our eventual goal is to abstract away the idea of a metric. 
 
 %We now want to define what an open set is without referring to a metric. This will be the key abstraction that will allow us to define closeness without resorting to the numerical quantitative notion of distance that a metric is. It will be a purely qualitative notion of closeness ...TBC...
 
@@ -198,11 +205,11 @@ The finite case for the union can be thought of as special case of the infinite 
 % https://mathworld.wolfram.com/TopologicalSpace.html
 
 \paragraph{Induced Topology} 
-We have seen how we can define an open subset of a set $X$ when we have a metric $d$ available. If we collect all the so defined open subsets of a set into a set $T$, then this set $T$ will indeed qualify as a topology on $X$. It is the topology that is induced by the metric $d$. [VERIFY] That means that every metric space is automatically also a topological space. But - as by now you certainly expect - the notion of a topological space is more general. There are topologies which are not (and cannot be) induced by a metric. [TODO: give an example]
+We have seen how we can define an open subset of a set $X$ when we have a metric $d$ available. If we collect all the so defined open subsets of a set into a set $T$, then this set $T$ will indeed qualify as a topology on $X$. It is the topology that is induced by the metric $d$. [VERIFY] That means that every metric space is automatically also a topological space. But - by now you know the drill - the notion of a topological space is more general. There are topologies which are not (and cannot be) induced by a metric. [TODO: give an example]
 
 
 \medskip
-Note how our subsequent generalizations led to the following onion like structure of subset inclusions: inner product spaces $\subset$ normed spaces $\subset$ metric spaces $\subset$ topological spaces. The topological space is now finally the abstraction that we want to work with and and upon which the mathematical field of topology revolves around.
+Note how our subsequent generalizations led to the following onion like structure of subset inclusions: inner product spaces $\subset$ normed spaces $\subset$ metric spaces $\subset$ topological spaces. The topological space is now finally the abstraction that we want to work with and upon which the mathematical field of topology revolves around. To build intuition, we will nevertheless usually use a more concrete space like $\mathbb{R}^n$ that we can intuitively understand (although even that can get hard when $n > 3$).
 
 
 
@@ -221,8 +228,16 @@ Note how our subsequent generalizations led to the following onion like structur
 % https://en.wikipedia.org/wiki/Topological_space
 % https://en.wikipedia.org/wiki/Topology
 
+\subsubsection{Some Special Topological Spaces}
+Some kinds of topological spaces occur often enough that mathematicians found it appropriate to assign names to them. We'll now list a few of them.
+
 \paragraph{Hausdorff Spaces} [VERIFY!] A topological space is called a Hausdorff space, when any two elements $x,y$ of that space can be separated by disjoint open sets. That means we can always find two disjoint open sets $X,Y$ such that $x$ is in $X$ but not in $Y$ and $y$ is in $Y$ but not in $X$. The set $X$ surrounds $x$ and the set $Y$ surrounds $y$ and the sets $X,Y$ don't meet or even overlap. Every metric space is a Hausdorff space.
 
+...TBC...
+
+% Banach, Hilbert, Sylow, Krylov?
+
+% banach-
 
 \begin{comment}
 

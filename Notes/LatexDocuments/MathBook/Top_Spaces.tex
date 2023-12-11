@@ -93,22 +93,21 @@ The Minkowski distance is to metrics what the $L^p$-norm is to norms. Let $\math
 \medskip
 By the way: Do not confuse the Minkowski distance with the Minkowski metric from special relativity. The latter is something else and it actually wouldn't even qualify as a metric according to our definition here because it can become negative.
 
-% do not confuse with Minkowski metric from relativity!
+\paragraph{Hamming Distance} 
+It is interesting to see a distance measure defined on a set that is very uncommon in mathematics: the set of strings - in the computer science or programmer sense. The Hamming distance between two strings is defined to be number of positions in which the two strings differ. The Hamming distance between strings of zeros and ones is an important tool in the design and analysis of error detection and correction schemes in noisy digital communication channels. 
 
-%\paragraph{Manhattan Distance} ...TBC...
+\paragraph{Levenshtein Distance} 
+The Levenshtein distance between two strings is the minimum number of editing operations (deletions, replacements or insertions of characters) that one would need to transform one string into the other. It is also a bona fide metric according to our definition. It is important in applications like automatic correction of human inputs from a computer keyboard.
 
-\paragraph{Hamming Distance} ...TBC...
+\medskip
+Both Hamming and Levenshtein distance show that the "space" of all strings can indeed be made into a metric space. We also observe that it can be done in different ways.
 
-\paragraph{Levenshtein Distance} It is interesting to see a distance measure defined on a set that is very uncommon in mathematics: the set of strings - in the computer science or programmer sense. The Levenshtein distance between two strings is the minimum number of editing operations (deletions, replacements or insertions of characters) that one would need, to transform one string into the other. It is a bona fide metric according to our definition. That means that the "space" of all strings can indeed be made into a metric space.
-%...TBC...
 
 
 %https://en.wikipedia.org/wiki/Minkowski_distance
 % ...is basically for metrics what the L^p norm is for norms
 
-
 %TODO:  Explain equivalence of metrics
-
 
 \subsubsection{A Taxonomy of Sets}
 We can use the metric $d$ to define a certain classification of sets that is important in the field of topology. Eventually, the goal is to define all these features without resorting to a metric but let's first see how it's been done with a metric.

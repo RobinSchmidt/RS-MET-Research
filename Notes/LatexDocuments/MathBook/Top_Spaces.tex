@@ -152,6 +152,10 @@ Some important properties of open sets are: (1a) The empty set is open because i
 \medskip
 Do not make the mistake of thinking that "closed" is just the opposite of "open" as in "not open". That would be wrong. The half-open interval $[0,1)$ is neither open nor closed, for example. There are also sets that are open and closed at the same time: the empty set $\emptyset$ and a full Euclidean space $\mathbb{R}^n$ [...unless we think of it as a subspace of a larger embedding space like $\mathbb{R}^{n+1}$, I guess. VERIFY!]. 
 
+% The interval $[0, \infty)$ is closed because its complement $(-\infty, 0)$ is open
+
+% https://www.youtube.com/watch?v=iK9FsEm4dwU&list=PLb0zKSynM2PD3i3xMuWrUF9_txMrJMGEZ&index=25
+
 \paragraph{Definition: Convergence} We consider a sequence of points $(p_n)$ in a metric space. We say that the sequence is \emph{convergent} to a point $x$ if for every $\varepsilon > 0$ there is a $n_0 \in \mathbb{N}$ such that for all $n \geq n_0$, all $p_n$ are inside the $\varepsilon$-ball around $x$. [VERIFY!]
 
 \medskip
@@ -181,7 +185,13 @@ Note that this definition of compactness only applies to metric space. For more 
 
 [TODO: give examples for all these kinds of sets - also some possibly counterintuitive ones and edge cases]
 
+
+% https://www.youtube.com/watch?v=iK9FsEm4dwU&list=PLb0zKSynM2PD3i3xMuWrUF9_txMrJMGEZ&index=25
+% 12:40
+
 % Open sets are important in analysis because in open sets, we can be sure to be able to approach any point from any direction which is what we need to define (directional) derivatives. On a boundary point, such a definition may not be possible.
+
+% Compact sets are important in topology because the image of a compact set under a continuous function is again compact.
 
 % Maybe define "neighborhood" of a point $x$: A set $N$ is called a neighborhood of some point $x$ if there exists an open ball around $x$ that is contained in $N$. Tha is a weaker notion than open set. An open set is neighborhood of *every* point inside it. [0,2) is a neighborhood of 1 but it is not open because it is no neighborhood of 0, for example.
 
@@ -264,6 +274,8 @@ Some kinds of topological spaces occur often enough that mathematicians found it
 ...TBC...
 
 % Banach, Hilbert, Sylow, Krylov?
+
+% Introduce notation for closure with th overline. If we have a set $X$ that is not closed, then we can add all its boundary points to obtain the smallest closed set that conatins $X$ which is called the closure of $X$...I think.
 
 % banach-
 

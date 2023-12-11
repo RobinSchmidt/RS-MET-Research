@@ -100,7 +100,9 @@ It is interesting to see a distance measure defined on a set that is very uncomm
 The Levenshtein distance between two strings is the minimum number of editing operations (deletions, replacements or insertions of characters) that one would need to transform one string into the other. It is also a bona fide metric according to our definition. It is important in applications like automatic correction of human inputs from a computer keyboard.
 
 \medskip
-Both Hamming and Levenshtein distance show that the "space" of all strings can indeed be made into a metric space. We also observe that it can be done in different ways and how distance measures can be tailored to a particular application. The errors that can occur in a noisy binary communication channel is the replacement of a zero by a one or the other way around. This is precisely what the Hamming distance measures. The kinds of errors that humans can make when entering text on a computer keyboard cannot only be replecement of a character but also the omssion or adddition of one. The Levenshtein distance was designed to capture that.
+Both Hamming and Levenshtein distance show that the "space" of all strings can indeed be made into a metric space. We also observe that it can be done in different ways and how distance measures can be tailored to a particular application. The errors that can occur in a noisy binary communication channel is the replacement of a zero by a one or the other way around. This is precisely what the Hamming distance measures. The kinds of errors that humans can make when entering text on a computer keyboard cannot only be replecement of a character but also the omssion or adddition of one. The Levenshtein distance was designed to capture that. [Q: Can a norm on strings be defined that induces the Levenshtein distance? I guess not - but can it be proven?] 
+
+%[TODO: figure out, if the Levenshtein metric can be shown to not be induced by a metric - we need to show that no metric on strings is possible that induces the Levenstein distance]
 
 
 
@@ -144,8 +146,9 @@ The intuition behind this definition is that the set $X$ has a finite extent. We
 \medskip
 Compactness is important because ...TBC...
 
-
+% Topologische Räume als Abstraktion von "Nähe"
 % https://www.youtube.com/watch?v=qwsvXa7nIGg  at around 25 min
+
 % https://en.wikipedia.org/wiki/Metric_space#Norm_induced_metric
 % https://en.wikipedia.org/wiki/Metric_space
 
@@ -180,13 +183,10 @@ We now want to revisit our taxonomy of sets. The goal is to define all those pro
 
 
 \paragraph{Definition: Topology} 
-Let $X$ be a set. A set $T$ of subsets of $X$ is called a topology on $X$ if it satisfies: (1) The empty set and the complete set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. 
+Let $X$ be a set. A set $T \subseteq \mathcal{P}(X)$ of subsets of $X$ is called a topology on $X$ if it satisfies: (1) The empty set and the complete set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$ for $n \in \mathbb{N}$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. 
 
 \medskip
-With that definition, the elements of a topology $T$ are indeed precisely the open sets in $X$. [TODO: VERIFY and explain why] ...TBC...
-
-%It requires some justification to call the elements of the topology $T$ open sets. ...TBC...
-
+The finite case for the union can be thought of as special case of the infinite case where most (actually almost all) of the $t_k$ are empty. So it doesn't need to be stated separately [VERIFY!]. With that definition, the elements of a topology $T$ are indeed precisely the open sets in $X$. [TODO: VERIFY and explain why] ...TBC...
 
 \paragraph{Definition: Topological Space} A topological space is a set $X$ on which a topology $T$ is defined.
 

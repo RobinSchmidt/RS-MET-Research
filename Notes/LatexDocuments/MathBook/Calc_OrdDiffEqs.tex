@@ -26,17 +26,22 @@ f^{(n)}(x) = F(x, f'(x), f''(x), \ldots, f^{(n-1)}(x))
 \end{equation}
 If the function $F$ does not explicitly depend on the independent variable $x$, the system is called \emph{autonomous}. If the independent variable is time, which is often the case, then we may also write $t$ instead of $x$. In this case, being "autonomous" can be interpreted as "not depending on absolute time". The system just has the same set of potential behaviors at all times. It doesn't have a clock which could potentially alter its behavior. In the context of signal processing, such a system is also called \emph{time-invariant}.
 
-%That means: it just does its thing without reference to any sort of 
-
-
 \paragraph{Implicit Form}
+For some systems, it is not possible to express it in explicit form. In such cases we must resort to the implicit form which is often less convenient to handle. In this case, we just put the $n$-th derivative also into the function $F$ as additional argument and equate everything to zero:
+\begin{equation}
+0 = F(x, f^{(n)}(x), f'(x), f''(x), \ldots, f^{(n-1)}(x))
+\end{equation}
+By the way: It may also occur that the left hand side is not zero but some other given function $g(x)$ which in this context is often interpreted as some sort of driving function that is applied to the system from the outside. But notice that this driving function can actually be absorbed into $F$ by just bringing it over to the other side. The math doesn't really change whether a term appears on one side of the equation or with opposite sign on the other side. Our interpretation or mental model about what is happening may change, though.
+
+%---------------------------------------------------------------------------------------------------
+\paragraph{Newton Notation}
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{First Order Systems}
 
 
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Newton Notation}
+
 
 
 

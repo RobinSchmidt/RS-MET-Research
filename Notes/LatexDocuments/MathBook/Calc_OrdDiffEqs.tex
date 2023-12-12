@@ -149,10 +149,25 @@ When the growth-rate is zero, nothing ever happens. Mathematically, there's noth
 Oscillatory behavior is something that we observe a lot in nature and a lot of our technology builds on systems that oscillate. If we want to build mathematical models of such processes, we will need a mathematical framework that can mimic this sort of behavior. It turns out that ODEs are very suitable for this.
 
 \paragraph{A Single Second Order ODE}
-The quintessential mathematical description of an oscillation is the sine function $f(x) = a \sin(\omega x + \varphi)$. We have already included some parameters for flexibility: $a$ for the overall amplitude, $\omega$ to control the frequency and $\varphi$ for the initial phase at $x=0$. We have already seen that such sinusoidal functions happen to arise as solutions of simple ODEs like $f = -f''$. This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
+The quintessential mathematical description of an oscillation is the sine function $f(x) = a \sin(\omega x + \varphi)$. We have already included some parameters for flexibility: $a$ for the overall amplitude, $\omega$ to control the frequency and $\varphi$ for the initial phase at $x=0$. We have already seen that such sinusoidal functions happen to arise as solutions of simple ODEs like $f = -f''$. Here, we will consider the ODE:
+\begin{equation}
+ y'' + a y' + b y = 0
+\end{equation}
+This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
+
+
+
+%\paragraph{A Mass-Spring-Damper System}
+%After these general considerations for modeling oscillations with ODEs, let's now look the prime example of a system whose behavior is modeled by that kind of ODE. ...TBC...
+
+%[TODO: explain the system, the ODE and its solution, point out what other systems are described by the exact same ODE like RLC-circuits or the linearized pendulum]
+
 
 \paragraph{A System of Two First Order ODEs}
-There is a canonical way, i.e. a recipe, by way of which it is possible to re-express an ODE of any order $n$ as a system of $n$ first order differential equations. This form is a quite convenient canonical form for solving an ODE numerically. It happens to the form that most (if not all) generic numerical ODE solvers expect their input. So, if we want to use numerical solvers, we need to be familiar with that form and we need to know how to produce it, when the ODE is given to us in a different form.
+We have seen that it is possible to re-express an ODE of any order $n$ as a system of $n$ first order differential equations. Applying this method to 
+
+
+%This form is a quite convenient canonical form for solving an ODE numerically. It happens to the form that most (if not all) generic numerical ODE solvers expect their input. So, if we want to use numerical solvers, we need to be familiar with that form and we need to know how to produce it, when the ODE is given to us in a different form.
 ...TBC...
 
 % Maybe treat the conversion between single high-order ODE and system of 1st order ODEs in a different section - the conversion is not limited to linear ODEs.
@@ -166,10 +181,8 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 
 
 
-\paragraph{A Mass-Spring-Damper System}
-After these general considerations for modeling oscillations with ODEs, let's now look the prime example of a system whose behavior is modeled by that kind of ODE. ...TBC...
 
-[TODO: explain the system, the ODE and its solution, point out what other systems are described by the exact same ODE like RLC-circuits or the linearized pendulum]
+\paragraph{Resonance}
 
 \paragraph{Nonlinear Oscillations}
 [TODO: Predator-Prey (Volterra-Lotka) model, Duffing oscillator, pendulum (not linearized)]
@@ -236,8 +249,13 @@ y' = \frac{\sin(x) (c-\cos(x))}{2},
 where our result is the leftmost formula $y = \ldots$ and the $y' = \ldots$ and $\sqrt{y} = \ldots$ I have only given to make it easier for you to verify that $y = y(x)$ is indeed a solution. Just plug the formula into the original ODE and observe how it becomes a true statement.
 
 \medskip
-[Q: Can it happen that the so found equation for $y$ cannot be solved explicitly for $y$, i.e. can we arrive at an implicit equation for $y$? I think so. Try to find an example, where this happens. Maybe something where we get an expression $H(y) = y + \sin(y)$. Basically, the function $y(x)$ that we are interested in will be the inverse of $H$. I think, the solution is $y(x) = H^{-1}(F(x))$]
+[Q: Can it happen that the so found equation for $y$ cannot be solved explicitly for $y$, i.e. can we arrive at an implicit equation for $y$? I think so. ToDo: Try to find an example, where this happens. Maybe something where we get an expression $H(y) = y + \sin(y)$. I think, the function $y(x)$ that we are interested in will be the inverse of $H$. I think, the solution is $y(x) = H^{-1}(F(x))$]
 %then we can 
+
+% Other examples (from Cycon, pg 218 ff)
+% y' = 1 - y^2   ->   y = tanh(x)
+% y' + x y = 0   ->   y = c * exp(-x^2 / 2)
+
 
 % https://www.wolframalpha.com/input?i=integral+of+y%5E%28-1%2F2%29
 % https://www.wolframalpha.com/input?i=solve+dy%2Fdx+%3D+sin%28x%29+sqrt%28y%29

@@ -51,15 +51,20 @@ where $n$ is the number of variables and also the number of equations. To an ODE
 % https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html
 
 \paragraph{Transforming High Order ODEs into 1st Order Systems}
-Fortunately, it is possible to transform higher order ODEs into this convenient format of a first order system - at least when the ODE is given in explicit form. [Q: what about implicit forms?]. Let's see how this works by way of an example. Consider the ODE:
+Fortunately, it is possible to transform higher order ODEs into this convenient format of a first order system - at least when the ODE is given in explicit form. [Q: what about implicit forms?]. Let's see how this works by way of an example. Consider the third order ODE:
 \begin{equation}
- y''' + y y'' + a (1 - (y')^2 ) = 0
+ y''' + y y'' + \beta (1 - (y')^2 ) = 0
 \end{equation}
-This is the so called Falkner-Skan equation that arises in fluid dynamics. But where the equation comes from doesn't matter, I just wanted to point out that this is a real life example. The first thing we do, it to write it in explicit form which is a trivial transformation in this case:
+This is the so called Falkner-Skan equation that arises in fluid dynamics. But where the equation comes from doesn't matter here. I just wanted to point out that this is a real life example. The first thing we do, it to write it in explicit form which is a trivial transformation in this case:
 \begin{equation}
- y''' =  - y y'' - a (1 - (y')^2 ) 
+ y''' =  - y y'' - \beta (1 - (y')^2 ) 
 \end{equation}
-Next, we introduce some auxiliary variables for $y$ and its derivatives: 
+Next, we introduce some auxiliary variables for $y$ and its derivatives: $y_1 = y, y_2 = y', y_3 = y''$. We observe that with this definition, we have: $y_1' = y_2, y_2' = y_3$. So we can write:
+\begin{eqnarray}
+ y_1' &=& y_2 \\
+ y_2' &=& y_3 \\
+ y_3' &=& -y_1 y_3 - \beta (1 - y_2^2)
+\end{eqnarray}
 
 
 %$y_0 = y, y_1 = y', y_2 = y'', y_3 = y'''$. We observe that with this definition, we have: $y_0' = y_1, y_1' = y_2, y_2' = y_3$. So we can write:

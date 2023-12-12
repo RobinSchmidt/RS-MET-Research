@@ -39,10 +39,60 @@ It has been said that the independent variable is often time in which case we de
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{First Order Systems}
-One form to write down an ODE has turned out to be particularly convenient. It is the form in which many ODE solver implementations expect their input. 
+One form to write down an ODE has turned out to be particularly convenient. It is the form in which many ODE solver implementations expect their input. The general format is:
+\begin{eqnarray}
+ y_1' &= f_1(x, y_1, y_2, \ldots, y_n) \\
+ y_2' &= f_2(x, y_1, y_2, \ldots, y_n) \\
+ \quad \ldots & \ldots \\
+ y_n' &= f_n(x, y_1, y_2, \ldots, y_n)
+\end{eqnarray}
+where $n$ is the number of variables and also the number of equations. To an ODE solver, you would somehow have to pass an array of (pointers to) the functions $f_1, f_2, \ldots, f_n$. How that works in detail will depend on the programming language and API of the solver but generally, a system of first order ODEs is the format, you want to express your ODE in if you want to use such solvers.
+
+% https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html
+
+\paragraph{Transforming High Order ODEs into 1st Order Systems}
+Fortunately, it is possible to transform higher order ODEs into this convenient format of a first order system - at least when the ODE is given in explicit form. [Q: what about implicit forms?]. Let's see how this works by way of an example. Consider the ODE:
+\begin{equation}
+ y''' + y y'' + a (1 - (y')^2 ) = 0
+\end{equation}
+This is the so called Falkner-Skan equation that arises in fluid dynamics. But where the equation comes from doesn't matter, I just wanted to point out that this is a real life example. The first thing we do, it to write it in explicit form which is a trivial transformation in this case:
+\begin{equation}
+ y''' =  - y y'' - a (1 - (y')^2 ) 
+\end{equation}
+Next, we introduce some auxiliary variables for $y$ and its derivatives: 
+
+
+%$y_0 = y, y_1 = y', y_2 = y'', y_3 = y'''$. We observe that with this definition, we have: $y_0' = y_1, y_1' = y_2, y_2' = y_3$. So we can write:
+%\begin{equation}
+% y_2' = -y_0 y_2 - a (1 - y_1^2), \qquad y_1' = y_2, \qquad y_0' = y_1
+%\end{equation}
+%This is a system of 3 ODEs
+
+% Todo: introduce the system of 1st order ODEs first and only then explain how tow transform single higher order ODEs into such systems
+
+%When an ODE is given to us in explicit form, then we can always transform it into
+
+% use as example a 3rd order nonlinar ODE
+%
+% see:
+% https://www.johndcook.com/blog/2023/01/13/third-order-odes/
+
+% Start with the 3rd order ODE
+%   y''' + y * y'' + a * (1 - (y')^2) = 0    
+% Make it explicit:
+%   y''' = -y * y'' - a * (1 - (y')^2 )
+% Introduce new variables:
+%   y_3 = y''', y_2 = y'', y_1 = y', y_0 = y
+% Observe that y_3 = y_2', y_2 = y_1', y_1 = y_0' to write:
+%   y_2' = -y_0 y_2 - a * (1 - (y')^2)
+%   y_1' = y_2
+%   y_0' = y_1
+% Instead of a single 3rd order ODE, we now have a system of 3 1st order ODEs. One of them captures our original ODE. The other two just copy variables around. What to do, if the ODE is in implcity form?
 
 
 
+% https://en.wikipedia.org/wiki/Falkner%E2%80%93Skan_boundary_layer
+% https://en.wikipedia.org/wiki/Blasius_boundary_layer
 
 
 %===================================================================================================
@@ -98,7 +148,7 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 
 
 \paragraph{Nonlinear Oscillations}
-[TODO: Predator-Prey (Volterra-Lotka) model, Duffing oscillator]
+[TODO: Predator-Prey (Volterra-Lotka) model, Duffing oscillator, pendulum (not linearized)]
 
 
 %---------------------------------------------------------------------------------------------------
@@ -120,9 +170,38 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 
 \subsubsection{Analytical Methods}
 
+%https://tutorial.math.lamar.edu/classes/de/IntroHigherOrder.aspx
+
+\paragraph{Method of Undetermined Coefficients}
+% https://tutorial.math.lamar.edu/classes/de/HOUndeterminedCoeff.aspx
+
+% Applicable, if we have some idea about the general form of the solution. We make an ansatz
+
 \paragraph{Separation of Variables}
 
-\paragraph{Making an Ansatz}
+\paragraph{Variation of Constants}
+% aka variation of parameters - but I like the formulation variation of constants more
+% https://tutorial.math.lamar.edu/classes/de/HOVariationOfParam.aspx
+
+% https://en.wikipedia.org/wiki/Variation_of_parameters
+
+\paragraph{Series Solutions}
+% https://tutorial.math.lamar.edu/classes/de/HOSeries.aspx
+
+\paragraph{Laplace Transforms}
+
+\paragraph{Integrating Factors}
+
+
+
+
+%\paragraph{Making an Ansatz}
+% Method of? Undetermined coefficients
+
+% Variation of parameters
+
+%% 
+
 
 % https://www.wolframalpha.com/input?i=derivative+of+e%5E%28a+x%29+sin%28w+x%29
 % https://www.wolframalpha.com/input?i=second+derivative+of+e%5E%28a+x%29+sin%28w+x%29
@@ -165,5 +244,14 @@ We have seen how a second order linear ODE with constant coefficients could mode
 \begin{comment}
 -solving an ODE can be seen as a certain generalization of solving an integral - explain how
 -give ODE of damped oscillator: f + a_1 f' + a_2 f'' = 0. For $a_1 = 0, a_2 = 1$ we get the ODE for exp, for $a_1 = -1, a_2 = 0$ we get the ODE for sin.
+
+Talks about self-adjoint ODEs (what is this?)
+https://huichawaii.org/wp-content/uploads/2019/06/Beccar-Varela-Maria-2019-STEM-HUIC.pdf
+
+Differential transform:
+https://core.ac.uk/download/pdf/32226457.pdf
+-Takes a continuous function and transforms it into a series of cofficients defined by its
+ MacLaurin expansion coeffs?
+ 
 
 \end{comment}

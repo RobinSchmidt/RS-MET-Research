@@ -93,7 +93,7 @@ The requirements for a norm and for a metric are sufficiently similar that we ca
 \subsubsection{Examples} To get a feeling for how the so defined notion of metric is more general than our familiar Euclidean metric, let's now look at a couple of examples of metrics other than the Euclidean. 
 
 \paragraph{Minkowski and Manhattan Distance}
-The \emph{Minkowski distance} is to metrics what the $L^p$-norm is to norms. Let $\mathbf{x,y}$ be two vectors in $\mathbb{R}^n$ and $p \in \mathbb{Z}$. Then, the Minkowski distance of order $p$ between the vectors is defined as $d_M(\mathbf{x,y}) = (\sum_{i=1}^n |x_i - y_i|^p )^{1/p}$. The special case for $p=1$ is also called Manhattan distance or city block distance. It is the total distance that you would have to walk if you can't take the direct diagonal route but instead have to piece your path together from purely horizontal and vertical segments (or, more generally, take partial paths on an orthogonal grid). This is how the streets are laid out in Manhattan, hence the name. 
+The \emph{Minkowski distance} is to metrics what the $L^p$-norm is to norms. Let $\mathbf{x,y}$ be two vectors in $\mathbb{R}^n$ and $p \in \mathbb{Z}$. Then, the Minkowski distance of order $p$ between the vectors is defined as $d_M(\mathbf{x,y}) = (\sum_{i=1}^n |x_i - y_i|^p )^{1/p}$. The special case for $p=1$ is also called Manhattan distance or city block distance or taxicab distance. It is the total distance that you would have to walk if you can't take the direct diagonal route but instead have to piece your path together from purely horizontal and vertical segments (or, more generally, take partial paths on an orthogonal grid). This is how the streets are laid out in Manhattan, hence the name. 
 
 \medskip
 By the way: Do not confuse the Minkowski distance with the Minkowski metric from special relativity. The latter is something else and it actually wouldn't even qualify as a metric according to our definition here because it can become negative.
@@ -109,6 +109,18 @@ Both Hamming and Levenshtein distance show that the "space" of all strings can i
 
 %[TODO: figure out, if the Levenshtein metric can be shown to not be induced by a metric - we need to show that no metric on strings is possible that induces the Levenstein distance]
 
+\paragraph{French Railway Metric}
+A rather unusual example for a metric in a more familiar space like $\mathbb{R}^2$ is called the French railway metric. It measures the distance that a railway has to travel to reach one station $B$ from another station $A$, if we assume that the train must always travel over a central hub $P$, like Paris, unless station $B$ happens to be on a direct line that connects $A$ and $P$. The metric $d(A,B)$ can be stated as:
+\begin{equation}
+d(A,B) =
+\begin{cases}
+|A-B|          & \qquad \text{if $P$ is on the line $\overline{AB}$} \\
+|A-P| + |P-B|  & \qquad \text{otherwise} 
+\end{cases}
+\end{equation}
+The name is obviously inspired by the (former) centralized layout of the French railway system. The so defined $d$ does indeed qualify as a metric. This should serve as an example that a metric can be a lot stranger than one usually thinks without having to be contrived.
+
+%https://de.wikipedia.org/wiki/Franz%C3%B6sische_Eisenbahnmetrik
 
 
 %https://en.wikipedia.org/wiki/Minkowski_distance
@@ -212,13 +224,17 @@ Note that this definition of compactness only applies to metric space. For more 
 \subsection{Topological Space}
 In geometry, we study shapes. These shapes are defined by the spatial relationships between the points that make up the shape. The essential quantity that captures all these spatial relationships is the notion of a distance between two points. All other shape-determining quantities like angles, sizes, etc. can ultimately be boiled down to questions about distances. In topology, we want to abstract from the actual shape and path towards this goal is to forget about quantitative measures of distance. In a \emph{topological space}, we can talk about "distances" and "closeness" between of elements and "neighborhoods" of elements in a purely qualitative way. This way will not need to refer to a metric function $d(x,y)$ that tells us precisely, how far apart the points $x$ and $y$ are. The only fundamental notion that we will need to refer to is that of an open set. In the context of metric spaces, open sets are defined via open balls which in turn are defined in terms of a metric. For topology, we will obviously need an alternative definition for what "open set" is supposed to mean if we want to do away with the metric. That new definition should be compatible with the old one in the sense of being equivalent when the space happens to be a metric space.
 
+% Maybe mention the formula for the (cosine of) angle in terms of the scalar product
+
 \subsubsection{Topologies on a Set}
 
 \paragraph{Definition: Topology} 
 Let $X$ be a set. A set $T \subseteq \mathcal{P}(X)$ of subsets of $X$ is called \emph{a topology} on $X$ if it satisfies: (1) The empty set and the complete set are in $T$: $\emptyset \in T$ and $X \in T$. (2) Any finite intersection of elements $t_k \in T$ is again in $T$: $\bigcap_{k=1}^n t_k \in T$ for $n \in \mathbb{N}$. (3) Any (finite or infinite) union of elements $t_k \in T$ is again in $T$: $\bigcup_{k=1}^\infty t_k \in T$. 
 
 \medskip
-The finite case for the union can be thought of as special case of the infinite case where most (actually almost all) of the $t_k$ are empty. So it doesn't need to be stated separately. Note that our 3 requirements are satisfied by open sets as said in the remark about important properties of open sets. Here, we have turned this around and use these properties as definition for what we mean by "open". Note how this definition does not rely on a metric. ...TBC... [TODO: explain why these features capture our idea of openness in the sense of "every point is an interior point"]
+The finite case for the union can be thought of as special case of the infinite case where most (actually almost all) of the $t_k$ are empty. So it doesn't need to be stated separately. Note that our 3 requirements are satisfied by open sets as said in the remark about important properties of open sets. Here, we will turn this around and use these properties as definition for what we mean by "open". Note how this definition does not rely on a metric. We only need sets and some properties for how these sets should behave under some elementary set operations.
+
+...TBC... [TODO: explain why these features capture our idea of openness in the sense of "every point is an interior point"]
 
 % I think, it has to do with how set intersection behaves
 % https://en.wikipedia.org/wiki/Open_set

@@ -19,6 +19,27 @@ Ordinary differential equations (abbreviated as ODEs) are equations in which the
 \subsection{Canonical Forms}
 
 
+\paragraph{Explicit Form}
+In the explicit form to write down an $n$-th order ODE, the highest derivative, i.e. the $n$-th derivative, of the unknown function $f$ appears alone on the left hand side and it is expressed as some function $F(\ldots)$ on the right hand side which takes as arguments the independent variable $x$ and well as $f$ and all of its derivatives of orders less than $n$:
+\begin{equation}
+f^{(n)}(x) = F(x, f'(x), f''(x), \ldots, f^{(n-1)}(x))
+\end{equation}
+If the function $F$ does not explicitly depend on the independent variable $x$, the system is called \emph{autonomous}. If the independent variable is time, which is often the case, then we may also write $t$ instead of $x$. In this case, being "autonomous" can be interpreted as "not depending on absolute time". The system just has the same set of potential behaviors at all times. It doesn't have a clock which could potentially alter its behavior. In the context of signal processing, such a system is also called \emph{time-invariant}.
+
+%That means: it just does its thing without reference to any sort of 
+
+
+\paragraph{Implicit Form}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{First Order Systems}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Newton Notation}
+
+
+
 %===================================================================================================
 \subsection{Modeling Behavior}
 

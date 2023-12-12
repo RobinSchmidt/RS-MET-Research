@@ -207,7 +207,7 @@ After these general considerations for modeling oscillations with ODEs, let's no
 % Applicable, if we have some idea about the general form of the solution. We make an ansatz
 
 \paragraph{Separation of Variables}
-If the ODE is given (or can be transformed into) in the special form $y' = f(x) g(y)$, i.e. the right hand side is a product of functions $f,g$ where $f$ only depends on $x$ and $g$ only depends on $y$. In this case, we can rewrite $y'$ in the Leibniz notation as $dy / dx$ and treat these $dx, dy$ differentials formally like variables. We bring everything with $y$ an one side and everything with $x$ to the other side:
+Let us assume that the ODE is given in (or can be transformed into) the special form $y' = f(x) g(y)$, i.e. the right hand side is a product of two functions $f,g$ where $f$ only depends on $x$ and $g$ only depends on $y$. In this case, we can rewrite $y'$ in the Leibniz notation as $dy / dx$ and treat these $dx, dy$ differentials formally like variables. We bring everything with $y$ to one side of the equation and everything with $x$ to the other side:
 \begin{equation}
 \frac{dy}{dx} = f(x) g(y) 
 \quad \Rightarrow \quad
@@ -215,12 +215,28 @@ If the ODE is given (or can be transformed into) in the special form $y' = f(x) 
 \quad \Rightarrow \quad
 \int \frac{1}{g(y)} dy = \int f(x) dx
 \end{equation}
-Now we integrate both sides separately with respect to their respective integration variable. Let's see this method in action on an example. Let the ODE be given as:
-
-
+Now we integrate both sides separately with respect to their respective integration variable, i.e. we evaluate the integrals. This will give us an expression of the form $H(y) = F(x)$ where $F(x)$ is an antiderivative of $f(x)$ and $H(y)$ is an antiderivative of $1/g(y)$. If we are lucky, we may be able to transform the resulting equation into an explicit expression for $y$. Let's see this method in action on an example. Let the ODE be given as:
+\begin{equation}
+y' = \frac{dy}{dx} = \sin(x) \sqrt{y} 
+\; \Rightarrow \; 
+\frac{1}{\sqrt{y}} dy = \sin(x) dx
+\; \Rightarrow \;
+\int \frac{1}{\sqrt{y}} dy = \int \sin(x) dx
+\; \Rightarrow \;
+2 \sqrt{y} + c_1 = - \cos(x) + c_2
+\end{equation}
+Combining the two integration constants $c_1, c_2$ into a single constant $c$ and solving for $y$ yields:
+\begin{equation}
+y = \left( \frac{c - \cos(x)}{2} \right)^2,
+\qquad \qquad
+y' = \frac{\sin(x) (c-\cos(x))}{2},
+\quad
+\sqrt{y} = \frac{c - \cos(x)}{2}
+\end{equation}
+where our result is the leftmost formula $y = \ldots$ and the $y' = \ldots$ and $\sqrt{y} = \ldots$ I have only given to make it easier for you to verify that $y = y(x)$ is indeed a solution. Just plug the formula into the original ODE and observe how it becomes a true statement.
 
 \medskip
-[Q: can it happen that the so found equation for $y$ cannot be solved explicitly for $y$, i.e. can we arrive at an implicit equation for $y$? Try to find an example, where this happens.]
+[Q: Can it happen that the so found equation for $y$ cannot be solved explicitly for $y$, i.e. can we arrive at an implicit equation for $y$? I think so. Try to find an example, where this happens. Maybe something where we get an expression $H(y) = y + \sin(y)$. Basically, the function $y(x)$ that we are interested in will be the inverse of $H$. I think, the solution is $y(x) = H^{-1}(F(x))$]
 %then we can 
 
 % https://www.wolframalpha.com/input?i=integral+of+y%5E%28-1%2F2%29

@@ -100,13 +100,31 @@ Next, we introduce some auxiliary variables for $y$ and its derivatives: $y_1 = 
 % https://en.wikipedia.org/wiki/Blasius_boundary_layer
 
 
+
+%===================================================================================================
+\subsection{Visualization Methods}
+
+\subsubsection{Direction Fields}
+
+% streamline plots, isoklines
+
+\subsubsection{Phase Space}
+
+
+
+
+
 %===================================================================================================
 \subsection{Modeling Behavior}
+The main purpose of differential equations - ordinary or partial - is model the behavior of systems that may occur in nature, technology, economics, society or whereever. Certain types of behavior are of particular interest.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Growth}
 
-\paragraph{Exponential Growth} [TODO: interest rates and/or bacteria growth]
+\paragraph{Exponential Growth} 
+Imagine a situation in which some quantity $y$ reproduces itself and the production rate is proportional to the amount of quantity that is already present. One example of such a situation could be the population of some species when we assume that the environment provides an unlimited amount of food and all the other necessities. The situation can be modeled by the following ODE: $y' = c y$ from some positive constant $c$ which determines the rate of growth. It can easily be verified by differentiation that $y(x) = \e^{c x}$ is a solution to this ODE.
+
+%[TODO: interest rates and/or bacteria growth]
 % standard example: bacteria or money
 
 \paragraph{Exponential Decay}
@@ -130,9 +148,6 @@ When the growth-rate is zero, nothing ever happens. Mathematically, there's noth
 \subsubsection{Oscillation}
 Oscillatory behavior is something that we observe a lot in nature and a lot of our technology builds on systems that oscillate. If we want to build mathematical models of such processes, we will need a mathematical framework that can mimic this sort of behavior. It turns out that ODEs are very suitable for this.
 
-\paragraph{A Mass-Spring-Damper System}
-[TODO: explain the system, the ODE and its solution, point out what other systems are described by the exact same ODE like RLC-circuits]
-
 \paragraph{A Single Second Order ODE}
 The quintessential mathematical description of an oscillation is the sine function $f(x) = a \sin(\omega x + \varphi)$. We have already included some parameters for flexibility: $a$ for the overall amplitude, $\omega$ to control the frequency and $\varphi$ for the initial phase at $x=0$. We have already seen that such sinusoidal functions happen to arise as solutions of simple ODEs like $f = -f''$. This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
 
@@ -151,10 +166,16 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 
 
 
+\paragraph{A Mass-Spring-Damper System}
+After these general considerations for modeling oscillations with ODEs, let's now look the prime example of a system whose behavior is modeled by that kind of ODE. ...TBC...
+
+[TODO: explain the system, the ODE and its solution, point out what other systems are described by the exact same ODE like RLC-circuits or the linearized pendulum]
 
 \paragraph{Nonlinear Oscillations}
 [TODO: Predator-Prey (Volterra-Lotka) model, Duffing oscillator, pendulum (not linearized)]
 
+% pendulum:
+% y'' + k sin(y) = 0  ->  y'' = - k sin(y)
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Chaos}
@@ -170,6 +191,9 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 
 % Maybe Mandelbrot set...but no: that arises from a discrete chaotic system
 
+
+
+
 %===================================================================================================
 \subsection{Solution Methods}
 
@@ -183,6 +207,24 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 % Applicable, if we have some idea about the general form of the solution. We make an ansatz
 
 \paragraph{Separation of Variables}
+If the ODE is given (or can be transformed into) in the special form $y' = f(x) g(y)$, i.e. the right hand side is a product of functions $f,g$ where $f$ only depends on $x$ and $g$ only depends on $y$. In this case, we can rewrite $y'$ in the Leibniz notation as $dy / dx$ and treat these $dx, dy$ differentials formally like variables. We bring everything with $y$ an one side and everything with $x$ to the other side:
+\begin{equation}
+\frac{dy}{dx} = f(x) g(y) 
+\quad \Rightarrow \quad
+\frac{1}{g(y)} dy = f(x) dx
+\quad \Rightarrow \quad
+\int \frac{1}{g(y)} dy = \int f(x) dx
+\end{equation}
+Now we integrate both sides separately with respect to their respective integration variable. Let's see this method in action on an example. Let the ODE be given as:
+
+
+
+\medskip
+[Q: can it happen that the so found equation for $y$ cannot be solved explicitly for $y$, i.e. can we arrive at an implicit equation for $y$? Try to find an example, where this happens.]
+%then we can 
+
+% https://www.wolframalpha.com/input?i=integral+of+y%5E%28-1%2F2%29
+% https://www.wolframalpha.com/input?i=solve+dy%2Fdx+%3D+sin%28x%29+sqrt%28y%29
 
 \paragraph{Variation of Constants}
 % aka variation of parameters - but I like the formulation variation of constants more
@@ -220,6 +262,8 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 \paragraph{Runge-Kutta Methods}
 
 \paragraph{Implicit Methods}
+
+
 
 
 %===================================================================================================

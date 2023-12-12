@@ -89,6 +89,9 @@ which is quite a mouthful, but we will now dissect it and introduce some notatio
 \end{equation}
 In the form in the middle, it really looks like the partial differential equations that we already met. Specifically, the term with the Laplacian closely resembles what we have seen in the diffusion equation. Just with the twist that the diffusion coefficient is imaginary. The form on the right is quite instructive as well. It has an operator that is applied to $\Psi$ and the result of that application gives us the time derivative $\Psi_t$. This is exactly the format in which we need the equation when we want to implement it in a numerical solver (like forward Euler) [VERIFY this form of the formulas - I derived them myself].
 
+% a post where i explain why the delta function is eigenfunction of teh position operator
+% https://www.facebook.com/MusicEngineer/posts/pfbid02F2LacsTjTVjhzXCV29XwyAsBQnb8gFUmUNczjVfbEfVZgHnpg2pPh3BSKTPNPdVFl
+
 %\begin{equation}
 % \Psi_{t} = \frac{1}{\i \hbar} \hat{H} \Psi
 % \qquad \text{where} \qquad

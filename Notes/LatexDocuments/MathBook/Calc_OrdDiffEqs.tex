@@ -35,11 +35,11 @@ By the way: It may also occur that the left hand side is not zero but some other
 
 %---------------------------------------------------------------------------------------------------
 \paragraph{Newton Notation}
-
+It has been said that the independent variable is often time in which case we denote it by $t$. This is because ODEs are often used to model physical processes where some quantity changes as a function of time. In the text above, I have used the so called Lagrange notation for derivatives - the one with the dash or prime as in $f', f''$ etc. Newton proposed to use dots over dependent variable to denote time derivatives. Moreover, now that the independent variable has become $t$, the letter $x$ if free again and is often used for the (one of the) dependent variable(s) such that we write things like $\dot{x}$. That would mean $x'(t)$ in Lagrange notation or $\frac{d}{dt} x(t)$ in Leibniz notation. Newton notation is often the most convenient when we are dealing with low order ODEs but gets inconvenient for higher orders. Fortunately, most ODEs in physics are only second order anyway and moreover, there is actually a way to rewrite an ODE of any order as a system of first order ODEs as we will see next.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{First Order Systems}
-
+One form to write down an ODE has turned out to be particularly convenient. It is the form in which many ODE solver implementations expect their input. 
 
 
 
@@ -98,6 +98,10 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 \subsubsection{Chaos}
 
 \paragraph{Weather Forecast} [TODO: Lorenz system]
+
+\paragraph{Double Pendulum}
+
+\paragraph{Three Body Problem}
 
 % https://de.wikipedia.org/wiki/Lorenz-Attraktor
 % https://en.wikipedia.org/wiki/Lorenz_system

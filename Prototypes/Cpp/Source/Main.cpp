@@ -23,7 +23,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testUpDownSample1D_2();
   //testUpDownSample2D();              // stub, dito but for images
 
-  //epidemic();
+  epidemic();
 
   // Tensors and differential geometry:
   //testTensor();

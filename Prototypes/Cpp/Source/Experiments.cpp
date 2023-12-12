@@ -2224,29 +2224,36 @@ void epidemic()
   // A simple model for how epidemics evolve in time is the Susceptible-Infected-Recovered (SIR) 
   // model. It is a system of 3 ordinary differential equations that model the temporal evolution
   // of the 3 functions S(t), I(t), R(t) over time. The model is given by:
+  //
   //   S' = -t*S*I
   //   I' =  t*S*I - r*I
   //   R' =          r*I
+  //
   // where the prime ' denotes the time-derivative. The reasoning behind the 2nd equation is: the 
   // t*S*I term models the number of new infecctions, which should be proportional to the number of 
   // already infected people I and also to the number of people that may get infected S. The -r*I 
   // models the number of peoples which recover, which should be proportional to the number of 
   // infected people. The proportionality factors t,r are the transmission rate and the recovery 
   // rate. S' and R' sort of follow automatically: when people transition from S to I, I goes up
-  // by t*S*I and so S must go down by the same amount. Likewise, when people transition form I to 
+  // by t*S*I and so S must go down by the same amount. Likewise, when people transition from I to 
   // R, I goes down by r*I and R must go up by the same amount. At all times, we must have: 
-  // S+I+R = P, where P is the total population size.
+  // S+I+R = P, where P is the total population size. That's an invariant. A conserved quantity.
   //
   // Here, we implement a simple extension of the SIR model that also models how the disease 
   // spreads spatially. To do so, we think of S,I,R as functions of 2D space and time: 
   // S = S(t,x,y), I = I(t,x,y), R = R(t,x,y). Here, S,I,R are densities of susceptible, infected 
   // and recovered people and P(x,y) is a general population density as function of x,y. The model
   // becomes:
+  //
   //   S' = -t*S*I_av
   //   I' =  t*S*I_av - r*I
   //   R' =             r*I
+  //
   // The only change is that the transition from S to I is now governed by I_av instead of I where
-  // I_av denotes a local spatial average of infected people.....
+  // I_av denotes a local spatial average of infected people rather than the local value at the 
+  // spot. If it were the local value at the spot, we would just have w*h independent SIR models
+  // running in parallel where w,h, are the width and height of the spatial grid. It's the local
+  // averaging that couples these otherwise independent SIR models.
   
 
   // Animation parameters:
@@ -2284,8 +2291,8 @@ void epidemic()
   float r = 0.002f;   // recovery rate
   float d = 1.0f;     // diffusion between 0..1 (crossfade between I and I_av)
 
-  // grids for population density P(x,y), density of susceptible people S(x,y), infected people 
-  // I(x,y) and recovered people R(x,y)
+  // Grids for population density P(x,y), density of susceptible people S(x,y), infected people 
+  // I(x,y) and recovered people R(x,y):
   RAPT::rsImage<float> P(w,h), S(w,h), I(w,h), R(w,h);
   RAPT::rsImage<float> I_av(w,h);  // temporary, to hold local average
 

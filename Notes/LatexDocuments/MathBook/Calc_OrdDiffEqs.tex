@@ -19,6 +19,64 @@ Ordinary differential equations (abbreviated as ODEs) are equations in which the
 \subsection{Canonical Forms}
 
 
+%===================================================================================================
+\subsection{Modeling Behavior}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Growth}
+
+\paragraph{Exponential Growth}
+% standard example: bacteria or money
+
+\paragraph{Exponential Decay}
+When the growth-rate is zero, nothing ever happens. Mathematically, there's nothing stopping us from also considering a negative "growth" rate. In such a case...TBC...
+% standard example: radioactive decay
+
+
+\paragraph{Logistic Growth}
+
+% standard example: a species in an environment with limited capacity
+
+
+% https://www.khanacademy.org/science/ap-biology/ecology-ap/population-ecology-ap/a/exponential-logistic-growth
+
+% https://en.wikipedia.org/wiki/Logistic_function
+
+% ToDo: bring SIR model example as attack-decay
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Oscillation}
+Oscillatory behavior is something that we observe a lot in nature and a lot of our technology builds on systems that oscillate. If we want to build mathematical models of such processes, we will need a mathematical framework that can mimic this sort of behavior. It turns out that ODEs are very suitable for this.
+
+\paragraph{A Single Second Order ODE}
+The quintessential mathematical description of an oscillation is the sine function $f(x) = a \sin(\omega x + \varphi)$. We have already included some parameters for flexibility: $a$ for the overall amplitude, $\omega$ to control the frequency and $\varphi$ for the initial phase at $x=0$. We have already seen that such sinusoidal functions happen to arise as solutions of simple ODEs like $f = -f''$. This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
+
+\paragraph{A System of Two First Order ODEs}
+There is a canonical way, i.e. a recipe, by way of which it is possible to re-express an ODE of any order $n$ as a system of $n$ first order differential equations. This form is a quite convenient canonical form for solving an ODE numerically. It happens to the form that most (if not all) generic numerical ODE solvers expect their input. So, if we want to use numerical solvers, we need to be familiar with that form and we need to know how to produce it, when the ODE is given to us in a different form.
+...TBC...
+
+% Maybe treat the conversion between single high-order ODE and system of 1st order ODEs in a different section - the conversion is not limited to linear ODEs.
+
+\paragraph{A Single First Order Complex ODE}
+We have seen a second order ODE can produce oscillatory behavior and that a system of two first order ODEs can reproduce that behavior as well. It seems like we need either a second derivative or two equations but there is actually a third way to produce oscillatory behavior with ODEs that requires only single first order ODE. The key is to allow the coefficient to be imaginary. If we have an ODE in a complex variable, that variable actually has two parts - the real and imaginary part - and they in which these parts interact resembles the way our two variables from our system of two ODEs interact, as we will see....TBC...
+
+% ToDo: show how splitting the complex ODE into really and imaginary parts recovers the system of 2 first order ODES
+
+%the complex multiplication actually packages up interactions
+
+\paragraph{Nonlinear Oscillations}
+[TODO: Predator-Prey (Volterra-Lotka) model, Duffing oscillator]
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Chaos}
+
+\paragraph{Weather Forecast} [TODO: Lorenz system]
+
+% https://de.wikipedia.org/wiki/Lorenz-Attraktor
+% https://en.wikipedia.org/wiki/Lorenz_system
+
+% Maybe Mandelbrot set...but no: that arises from a discrete chaotic system
 
 %===================================================================================================
 \subsection{Solution Methods}
@@ -48,24 +106,7 @@ Ordinary differential equations (abbreviated as ODEs) are equations in which the
 For the important subset of linear ODEs, we actually do have a full blown analytic solution theory. Much of this theory will closely parallel and build upon the solution theory of linear systems of equations that we know from linear algebra. ...TBC...
 
 
-\subsubsection{Oscillations}
-Oscillatory behavior is something that we observe a lot in nature and a lot of our technology builds on systems that oscillate. If we want to build mathematical models of such processes, we will need a mathematical framework that can mimic this sort of behavior. It turns out that ODEs are very suitable for this.
 
-\paragraph{A Single Second Order ODE}
-The quintessential mathematical description of an oscillation is the sine function $f(x) = a \sin(\omega x + \varphi)$. We have already included some parameters for flexibility: $a$ for the overall amplitude, $\omega$ to control the frequency and $\varphi$ for the initial phase at $x=0$. We have already seen that such sinusoidal functions happen to arise as solutions of simple ODEs like $f = -f''$. This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
-
-\paragraph{A System of Two First Order ODEs}
-There is a canonical way, i.e. a recipe, by way of which it is possible to re-express an ODE of any order $n$ as a system of $n$ first order differential equations. This form is a quite convenient canonical form for solving an ODE numerically. It happens to the form that most (if not all) generic numerical ODE solvers expect their input. So, if we want to use numerical solvers, we need to be familiar with that form and we need to know how to produce it, when the ODE is given to us in a different form.
-...TBC...
-
-% Maybe treat the conversion between single high-order ODE and system of 1st order ODEs in a different section - the conversion is not limited to linear ODEs.
-
-\paragraph{A Single First Order Complex ODE}
-We have seen a second order ODE can produce oscillatory behavior and that a system of two first order ODEs can reproduce that behavior as well. It seems like we need either a second derivative or two equations but there is actually a third way to produce oscillatory behavior with ODEs that requires only single first order ODE. The key is to allow the coefficient to be imaginary. If we have an ODE in a complex variable, that variable actually has two parts - the real and imaginary part - and they in which these parts interact resembles the way our two variables from our system of two ODEs interact, as we will see....TBC...
-
-% ToDo: show how splitting the complex ODE into realy and imaginary parts recovers the system of 2 first order ODES
-
-%the complex multiplication actually packages up interactions
 
 
 % https://en.wikipedia.org/wiki/Linear_differential_equation

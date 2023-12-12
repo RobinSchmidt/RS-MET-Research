@@ -46,21 +46,28 @@ For the important subset of linear ODEs, we actually do have a full blown analyt
 
 
 \subsubsection{Oscillations}
-Oscillatory behavior is something that we observe a lot in nature and a lot of our technology builds on systems that oscillate. 
+Oscillatory behavior is something that we observe a lot in nature and a lot of our technology builds on systems that oscillate. If we want to build mathematical models of such processes, we will need a mathematical framework that can mimic this sort of behavior. It turns out that ODEs are very suitable for this.
 
 \paragraph{A Single Second Order ODE}
-The quintessential mathematical description of an oscillation is the sine function. We have already seen that the sine function happens to be the solution of the simple ODE $f = -f''$. This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
+The quintessential mathematical description of an oscillation is the sine function $f(x) = a \sin(\omega x + \varphi)$ where we have already included some parameters for flexibility: $a$ for the overall amplitude, $\omega$ to control the frequency and $\varphi$ for the initial phase at $x=0$. We have already seen that such sinusoidal functions happen to arise as solutions of simple ODEs like $f = -f''$. This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
 
 \paragraph{A System of Two First Order ODEs}
-There is a canonical way, i.e. a recipe, by way of which it is possible to re-express an ODE of any order $n$ as a system of $n$ first order differential equations.
+There is a canonical way, i.e. a recipe, by way of which it is possible to re-express an ODE of any order $n$ as a system of $n$ first order differential equations. ...TBC...
 
 \paragraph{A Single First Order Complex ODE}
+We have seen a second order ODE can produce oscillatory behavior and that a system of two first order ODEs can reproduce that behavior as well. It seems like we need either a second derivative or two equations but there is actually a third way to produce oscillatory behavior with ODEs that requires only single first order ODE. The key is to allow the coefficient to be imaginary. If we have an ODE in a complex variable, that variable actually has two parts - the real and imaginary part - and they in which these parts interact resembles the way our two variables from our system of two ODEs interact, as we will see....TBC...
 
+% ToDo: show how splitting the complex ODE into realy and imaginary parts recovers the system of 2 first order ODES
+
+%the complex multiplication actually packages up interactions
 
 
 % https://en.wikipedia.org/wiki/Linear_differential_equation
 
 \subsubsection{Linear ODEs with Constant Coefficients}
+We have seen how a second order linear ODE with constant coefficients could model decaying (or damped) oscillations and the range of possible behaviors also included pure oscillations and pure decay processes as well. What sort of behavior we will see depends on the coefficients. Exponential growth (with or without oscillation) is actually a third kind of behavior that can be produced. We will now look into what happens when we allow higher order ODEs or, equivalently, systems of more than two first order ODEs. ...TBC...
+
+% The resulting sortd of behavior is actually not something fundamentally new - we'll just see superpositions of oscillations
 
 
 %\subsubsection{Linear ODEs with Polynomial Coefficients}

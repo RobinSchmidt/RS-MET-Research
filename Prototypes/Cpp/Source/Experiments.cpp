@@ -2455,6 +2455,24 @@ void epidemic()
   // -the parameters t,r,d could be functions of space - models regional differences in 
   //  interaction, healthcare and mobility
 
+  // Questions:
+  // -I think, what I did here is a differential equation in time but an integral equation in 
+  //  space? I mean, in continuous variables the spatial *averaging* would probably become a 
+  //  convolution integral? But on the other hand, I think, it is very similar to 
+  //  reaction-diffusion systems, so it should be possible to express it in terms of spatial
+  //  derivatives (rather than averages) as well? The averaging would have to be re-expressed as a
+  //  diffusion process. In one spatial dimension we could express the neighborhood average as:
+  //    avg[n] = (u[n-1] + u[n+1]) / 2
+  //  and the Laplacian as:
+  //    lap[n] = (u[n-1] - 2*u[n] + u[n+1]) / (2*h)
+  //  We can solve both sides for (u[n-1] + u[n+1]) and then equate them to arrive at:
+  //    avg[n] = (lap[n] * 2*h + 2*u[n]) / 2 = u[n] + h*lap[n]
+  //  If we assume h = 1, we could express a spatial averaging operator as
+  //    avg = id + lap
+  //  Does that make sense? Compare to Numerical Sound Synthesis - IIRC, it said something about
+  //  spatial averaging operators. And verify the derivation.
+
+
 }
 // SIR model in python:
 // https://www.youtube.com/watch?v=wEvZmBXgxO0

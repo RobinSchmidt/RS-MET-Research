@@ -51,18 +51,19 @@ One form to write down an ODE has turned out to be particularly convenient. It i
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Growth}
 
-\paragraph{Exponential Growth}
+\paragraph{Exponential Growth} [TODO: interest rates and/or bacteria growth]
 % standard example: bacteria or money
 
 \paragraph{Exponential Decay}
-When the growth-rate is zero, nothing ever happens. Mathematically, there's nothing stopping us from also considering a negative "growth" rate. In such a case...TBC...
+When the growth-rate is zero, nothing ever happens. Mathematically, there's nothing stopping us from also considering a negative "growth" rate. In such a case...TBC...[TODO: radiactive decay and/or RC-circuit]
 % standard example: radioactive decay
 
 
-\paragraph{Logistic Growth}
+\paragraph{Logistic Growth} [TODO: growth in environment of limited capacity]
 
 % standard example: a species in an environment with limited capacity
 
+\paragraph{Disease Spreading} [TODO: SIR model]
 
 % https://www.khanacademy.org/science/ap-biology/ecology-ap/population-ecology-ap/a/exponential-logistic-growth
 
@@ -73,6 +74,9 @@ When the growth-rate is zero, nothing ever happens. Mathematically, there's noth
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Oscillation}
 Oscillatory behavior is something that we observe a lot in nature and a lot of our technology builds on systems that oscillate. If we want to build mathematical models of such processes, we will need a mathematical framework that can mimic this sort of behavior. It turns out that ODEs are very suitable for this.
+
+\paragraph{A Mass-Spring-Damper System}
+[TODO: explain the system, the ODE and its solution, point out what other systems are described by the exact same ODE like RLC-circuits]
 
 \paragraph{A Single Second Order ODE}
 The quintessential mathematical description of an oscillation is the sine function $f(x) = a \sin(\omega x + \varphi)$. We have already included some parameters for flexibility: $a$ for the overall amplitude, $\omega$ to control the frequency and $\varphi$ for the initial phase at $x=0$. We have already seen that such sinusoidal functions happen to arise as solutions of simple ODEs like $f = -f''$. This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
@@ -89,6 +93,9 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 % ToDo: show how splitting the complex ODE into really and imaginary parts recovers the system of 2 first order ODES
 
 %the complex multiplication actually packages up interactions
+
+
+
 
 \paragraph{Nonlinear Oscillations}
 [TODO: Predator-Prey (Volterra-Lotka) model, Duffing oscillator]

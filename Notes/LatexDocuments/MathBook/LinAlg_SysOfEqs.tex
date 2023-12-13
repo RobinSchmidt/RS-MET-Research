@@ -71,7 +71,11 @@ Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Critically Determined Case}
-A first hint for which of the three situations we are dealing with is how the number of equations $m$ relates to the number of unknowns $n$. If the number of equations $m$ is equal to the number of unknowns $n$, such that $m=n$, we called this situation the \emph{critically determined case} because the number $m$ of constraints matches exactly the number $n$ of the degrees of freedom $x_1, \ldots, x_n$. In such a situation we may expect a unique solution. The idea is that each constraint reduces the number of degrees of freedom by one. After all, in such a case, the matrix $\mathbf{A}$ is an $n \times n$ matrix and we should be able to get our $\mathbf{x}$ via $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$ and $\mathbf{A}^{-1} \mathbf{b}$ is unique vector, that this formula explicitly computes, right? This is indeed a good line of reasoning but there are some pitfalls in that. Foremostly, for this to work, the matrix $\mathbf{A}$ needs to be invertible. We already know that a matrix is invertible, iff its determinant is nonzero. So that's a criterion we could apply: iff $m = n$ and $\det(\mathbf{A}) \neq 0$, we will get a unique solution vector $\mathbf{x}$ which we could (theoretically) compute via $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$. I say "theoretically" because that's a rather inefficient way to do it and in practice, we'll want to use a better algorithm - but at least it's one possible way.
+A first hint for which of the three situations we are dealing with is how the number of equations $m$ relates to the number of unknowns $n$. If the number of equations $m$ is equal to the number of unknowns $n$, such that $m=n$, we called this situation the \emph{critically determined case} because the number $m$ of constraints matches exactly the number $n$ of the degrees of freedom $x_1, \ldots, x_n$. In such a situation we may expect a unique solution. The idea is that each constraint reduces the number of degrees of freedom by one. After all, in such a case, the matrix $\mathbf{A}$ is an $n \times n$ matrix and we should be able to get our $\mathbf{x}$ via $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$ and $\mathbf{A}^{-1} \mathbf{b}$ is unique vector, that this formula explicitly computes, right? This is indeed a good line of reasoning but there are some pitfalls in that. Foremostly, for this to work, the matrix $\mathbf{A}$ needs to be invertible. We already know that a matrix is invertible, iff its determinant is nonzero. So that's a criterion we could apply: iff $m = n$ and $\det(\mathbf{A}) \neq 0$, we will get a unique solution vector $\mathbf{x}$ which we could (theoretically) compute via $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$. I say "theoretically" because that's a rather inefficient way to do it and in practice, we'll want to use a better algorithm - but at least it's one possible way. A square matrix with nonzero determinant is also called a \emph{regular} matrix.
+
+\medskip
+Now we want to look into the much more messy situation when $\det(\mathbf{A}) \neq 0$. 
+In such a situation, the LSE can have either no solution at all or a continuum of solutions. Which of these two subcases we will find ourselves in will depend on the right hand side vector $\mathbf{b}$
 
 % Take as 1st example a 2x2 matrix where the 2nd row is 1.5 times the first:
 %   2  6
@@ -95,11 +99,40 @@ A first hint for which of the three situations we are dealing with is how the nu
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Underdetermined Case}
+When we have less equations than unknowns, i.e. less constraints than degrees of freedom such that $m < n$, the we call this the \emph{underdetermined case}. We may expect a continuum of solutions, i.e. being able to choose $n-m$ parameters freely. Again, this line of reasoning is reasonable but there are again some pitfalls.
 
+
+\paragraph{Minimum Norm Solution}
+
+% give formulas for minimum norm solution
+
+% give examples for when even an underdetermined system has no solution, like
+%  1 x + 3 y + 2 z = 1
+%  2 x + 6 y + 4 z = 2
+%  3 x + 9 y + 6 z = 4   (if it would be 3, it would work)
+% maybe take an example, where the linear dependency of the matrix rows is less obvious
+
+% https://en.wikipedia.org/wiki/Underdetermined_system
+
+% https://quickmathintuitions.org/intuition-for-overdetermined-and-underdetermined-systems-of-equations/
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Overdetermined Case}
+When we have more equations than unknowns, i.e. more constraints than degrees of freedom, such that $m > n$, we call this the \emph{overdetermined case}. In such a case, we cannot generally expect an exact solution to exist. Again, there may be pitfalls for certain lucky "coincidences" of matrices and right hand sides but in general, we don't expect an exact solution.
 
+\paragraph{Least Squares Approximation}
+If an exact solution is not possible, the next best thing that we could look out for is an approximate solution. ...TBC...
+\begin{equation}
+|\mathbf{b} - \mathbf{A x}|^2 = (\mathbf{b} - \mathbf{A x})^T (\mathbf{b} - \mathbf{A x}) = \min
+\quad \Rightarrow \quad
+\boxed{ \mathbf{x} = (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbb{b} }
+\end{equation}
+
+% mention the pseudo-inverse, least squares solutions
+
+% https://people.csail.mit.edu/bkph/articles/Pseudo_Inverse.pdf
+
+% https://en.wikipedia.org/wiki/Overdetermined_system
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Homogeneous Solution}

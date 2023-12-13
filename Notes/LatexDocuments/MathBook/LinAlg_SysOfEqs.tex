@@ -99,10 +99,17 @@ In such a situation, the LSE can have either no solution at all or a continuum o
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Underdetermined Case}
-When we have less equations than unknowns, i.e. less constraints than degrees of freedom such that $m < n$, the we call this the \emph{underdetermined case}. We may expect a continuum of solutions, i.e. being able to choose $n-m$ parameters freely. Again, this line of reasoning is reasonable but there are again some pitfalls.
-
+When we have less equations than unknowns, i.e. less constraints than degrees of freedom such that $m < n$, the we call this the \emph{underdetermined case}. We may expect a continuum of solutions, i.e. being able to choose $n-m$ parameters freely. Again, this line of reasoning is reasonable but there are again some pitfalls. ...TBC...
 
 \paragraph{Minimum Norm Solution}
+\begin{equation}
+|\mathbf{x}|^2 = \mathbf{x}^T \mathbf{x} = \min 
+\quad \text{subject to} \quad 
+\mathbf{A x} = \mathbf{b}
+\quad \Rightarrow \quad
+L(\mathbf{x}, \boldsymbol{\lambda}) 
+= \mathbf{x}^T \mathbf{x} + \boldsymbol{\lambda}^T (\mathbf{b} - \mathbf{A x}) = \min
+\end{equation}
 
 % give formulas for minimum norm solution
 

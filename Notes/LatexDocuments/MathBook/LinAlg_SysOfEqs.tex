@@ -73,9 +73,8 @@ Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf
 \subsubsection{The Critically Determined Case}
 A first hint for which of the three situations we are dealing with is how the number of equations $m$ relates to the number of unknowns $n$. If the number of equations $m$ is equal to the number of unknowns $n$, such that $m=n$, we called this situation the \emph{critically determined case} because the number $m$ of constraints matches exactly the number $n$ of the degrees of freedom $x_1, \ldots, x_n$. In such a situation we may expect a unique solution. The idea is that each constraint reduces the number of degrees of freedom by one. After all, in such a case, the matrix $\mathbf{A}$ is an $n \times n$ matrix and we should be able to get our $\mathbf{x}$ via $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$ and $\mathbf{A}^{-1} \mathbf{b}$ is unique vector, that this formula explicitly computes, right? This is indeed a good line of reasoning but there are some pitfalls in that. Foremostly, for this to work, the matrix $\mathbf{A}$ needs to be invertible. We already know that a matrix is invertible, iff its determinant is nonzero. So that's a criterion we could apply: iff $m = n$ and $\det(\mathbf{A}) \neq 0$, we will get a unique solution vector $\mathbf{x}$ which we could (theoretically) compute via $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$. I say "theoretically" because that's a rather inefficient way to do it and in practice, we'll want to use a better algorithm - but at least it's one possible way. A square matrix with nonzero determinant is also called a \emph{regular} matrix.
 
-\medskip
-Now we want to look into the much more messy situation when $\det(\mathbf{A}) \neq 0$. 
-In such a situation, the LSE can have either no solution at all or a continuum of solutions. Which of these two subcases we will find ourselves in will depend on the right hand side vector $\mathbf{b}$
+\paragraph{The Significance of the Rank}
+Now we want to look into the more messy situation when $\det(\mathbf{A}) \neq 0$. In such a situation, the LSE can have either no solution at all or a continuum of solutions. Which of these two subcases we will find ourselves in will depend on the right hand side vector $\mathbf{b}$. An even more informative number than the determinant (which gives us only a binary yes/no information) is the rank $r$ of the matrix $\mathbf{A}$ and how that rank compares to the rank of the augmented matrix $(\mathbf{A|b})$. ...TBC...
 
 % Take as 1st example a 2x2 matrix where the 2nd row is 1.5 times the first:
 %   2  6
@@ -95,7 +94,7 @@ In such a situation, the LSE can have either no solution at all or a continuum o
 
 % some of the matrix rows may be redundant - if that is the case, it
 
-...TBC...
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Underdetermined Case}
@@ -148,6 +147,7 @@ If an exact solution is not possible, the next best thing that we could look out
 
 
 % In practice, one would define z = A^T b and solve A^T A x = z
+% look it up in the codebase...or better: give some python or sage code
 
 % mention the pseudo-inverse, least squares solutions
 

@@ -10,7 +10,7 @@ a_{21} x_1 + a_{22} x_2 + \ldots + a_{2n} x_n &=& b_2    \\
                                        \vdots &\vdots& \vdots \\
 a_{m1} x_1 + a_{m2} x_2 + \ldots + a_{mn} x_n &=& b_m 
 \end{eqnarray}
-The whole system can also be written down more compactly like this:
+The whole system can also be written down more compactly with sum notation like this:
 \begin{equation}
 \sum_{j=1}^n a_{ij} x_j = b_i \qquad \qquad i=1, \ldots, m
 \end{equation}
@@ -66,8 +66,53 @@ a_{m1} & a_{m2} & \ldots & a_{mn} & \vline & b_m
 %Due to the fact that this expression is stated in terms of vectors and matrices, the whole machinery of matrix decomposition becomes available 
 
 %===================================================================================================
-\subsection{Solving the System}
-Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf{x}$ that we can plug into the equation $\mathbf{A x} = \mathbf{b}$ such that this equation actually holds true. There three possibilities: (1) No solution exists. (2) A unique solution exists. (3) A continuum of solutions exists. There are no other possibilities - a system with precisely two solutions, for example, cannot happen. ...TBC...
+\subsection{Solvability the System}
+Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf{x}$ that we can plug into the equation $\mathbf{A x} = \mathbf{b}$ such that this equation actually holds true. the coefficient matrix $\mathbf{A}$ and the right hand side vector $\mathbf{b}$ are given. In general, there three possibilities: (1) No solution exists. (2) A unique solution exists. (3) A continuum of solutions exists. There are no other possibilities - a system with precisely two solutions, for example, cannot happen. If we are in case (3) where we have a continuum of solutions, that continuum can be one-dimensional, two-dimensional, etc. The mathematical theory that we want to develop will tell us, how we can recognize which of the 3 cases we are in and how to actually find the set of solutions.
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Critically Determined Case}
+A first hint for which of the three situations we are dealing with is how the number of equations $m$ relates to the number of unknowns $n$. If the number of equations $m$ is equal to the number of unknowns $n$, such that $m=n$. This is called the \emph{critically determined case} because the number $m$ of constraints matches exactly the number $n$ of the degrees of freedom $x_1, \ldots, x_n$. In such a situation we may expect a unique solution. The idea is that each constraint reduces the number of degrees of freedom by one. This is indeed a good line of reasoning but there are some pitfalls in that.
+
+% Take as 1st example a 2x2 matrix where the 2nd row is 1.5 times the first:
+%   2  6
+%   3  9
+% Take some x like 3,1 to get
+%   [2  6] * [3] = [12]
+%   [3  9]   [1]   [18]
+% But treat (3,1) as unknown (x1,x2). Show that for the rhs 12,18, we get a continuum of solutions
+% and for some other vector that is not a multiple of the b, we get no solutins...is that true?
+
+
+% Take as second example a 3x3 matrix where th 3rd row is obatined a 3*1st - 2*2nd, For example:
+%   3  2  5
+%   8  3  7 
+%  -7  0  1
+
+
+% some of the matrix rows may be redundant - if that is the case, it
+
+...TBC...
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Underdetermined Case}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Overdetermined Case}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Homogeneous Solution}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Particular Solution}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The General Solution}
+
+
 
 % solvability, rank (may also be filed under matrix features - maybe introduce the concept here and mnetion it there again)
 
@@ -83,6 +128,9 @@ Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf
 % 3 posiibilities
 
 % https://de.wikipedia.org/wiki/Satz_von_Kronecker-Capelli
+
+%===================================================================================================
+\subsection{An Algorithm for the Solution}
 
 \begin{comment}
 

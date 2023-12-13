@@ -67,7 +67,7 @@ a_{m1} & a_{m2} & \ldots & a_{mn} & \vline & b_m
 
 %===================================================================================================
 \subsection{Solvability the System}
-Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf{x}$ that we can plug into the equation $\mathbf{A x} = \mathbf{b}$ such that this equation actually holds true. the coefficient matrix $\mathbf{A}$ and the right hand side vector $\mathbf{b}$ are given. In general, there three possibilities: (1) No solution exists. (2) A unique solution exists. (3) A continuum of solutions exists. There are no other possibilities - a system with precisely two solutions, for example, cannot happen. If we are in case (3) where we have a continuum of solutions, that continuum can be one-dimensional, two-dimensional, etc. The mathematical theory that we want to develop will tell us, how we can recognize which of the 3 cases we are in and how to actually find the set of solutions.
+Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf{x}$ that we can plug into the equation $\mathbf{A x} = \mathbf{b}$ such that this equation actually holds true. the coefficient matrix $\mathbf{A}$ and the right hand side vector $\mathbf{b}$ are given. In general, there three possibilities: (1) No solution exists. (2) A unique solution exists. (3) Infinitely many solutions exists. There are no other possibilities - a system with precisely two solutions, for example, cannot happen. If we assume assume that we work in a continuous number system, i.e. the $x_j$ are continuous numbers (e.g. real or complex), then this infinity will also be of the continuous kind (uncountable). If we are in case (3) where we have a continuum of solutions, that continuum can be one-dimensional, two-dimensional, etc. The mathematical theory that we want to develop will tell us, how we can recognize which of the 3 cases we are in and how to actually find the set of solutions.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Critically Determined Case}
@@ -105,7 +105,7 @@ When we have less equations than unknowns, i.e. less constraints than degrees of
 % We may envision the space of solutions as a shifted subspace of $\mathbf{R}^n$ [VERIFY]. In 3D, this could be a plane or a line. This plane or line will typically not pass through the origin [VERIFY].
 
 \paragraph{Minimum Norm Solution}
-In a practical situation, we may want to pick one of the solutions from this infinite space of solutions. One possible criterion for making this choice is to say that we want to pick that particular solution vector $\mathbf{x}$ with the smallest possible norm, i.e. we want to pick the shortest possible solution vector. This type of problem is a called a \emph{constrained optimization problem} which we will treat later in the chapter on multivariable calculus. Here, I will just say that we minimize $|\mathbf{x}|^2$ subject to the constraint $\mathbf{A x} = \mathbf{b}$. TThis results in the following Lagrange function $L$:
+In a practical situation, we may want to pick one of the solutions from this infinite space of solutions. One possible criterion for making this choice is to say that we want to pick that particular solution vector $\mathbf{x}$ with the smallest possible norm, i.e. we want to pick the shortest possible solution vector. This type of problem is a called a \emph{constrained optimization problem} which we will treat later in the chapter on multivariable calculus. Here, I will just say that we minimize $|\mathbf{x}|^2$ subject to the constraint $\mathbf{A x} = \mathbf{b}$. This results in the following Lagrange function $L$ (which you may ignore if you don't know what that means):
 \begin{equation}
 |\mathbf{x}|^2 = \mathbf{x}^T \mathbf{x} = \min 
 \quad \text{subject to} \quad 
@@ -120,7 +120,7 @@ Forming the derivative of the Lagrange function $L$ with respect to $\mathbf{x}$
 \qquad
 \boxed{\mathbf{x} = \mathbf{A}^T (\mathbf{A} \mathbf{A}^T)^{-1} \mathbf{b}}
 \end{equation}
-where for us, only the result for $\mathbf{x}$ is relevant. The $\boldsymbol{\lambda}$-vector is a vector of auxiliary variables, called Lagrange multipliers, that we may throw away. A derivation for the formulas for the under- and overdetermined case is given in \cite{LinSysOverUnder}.
+where for us, only the result for $\mathbf{x}$ is relevant. The $\boldsymbol{\lambda}$-vector is a vector of auxiliary variables, called Lagrange multipliers, that we may throw away. A derivation for this formula for the underdetermined case (along with the derivation for and overdetermined case which we will treat next) is given in \cite{LinSysOverUnder}.
 
 % give formulas for minimum norm solution
 
@@ -139,12 +139,13 @@ where for us, only the result for $\mathbf{x}$ is relevant. The $\boldsymbol{\la
 When we have more equations than unknowns, i.e. more constraints than degrees of freedom, such that $m > n$, we call this the \emph{overdetermined case}. In such a case, we cannot generally expect an exact solution to exist. Again, there may be pitfalls for certain lucky "coincidences" of matrices and right hand sides but in general, we don't expect an exact solution.
 
 \paragraph{Least Squares Approximation}
-If an exact solution is not possible, the next best thing that we could look out for is an approximate solution. ...TBC...
+If an exact solution is not possible, the next best thing that we could look out for is an approximate solution. If the quality of the approximation is measured by the Euclidean length of the "error" vector $\mathbf{b} - \mathbf{A x}$, we will arrive at the following minimization problem:
 \begin{equation}
 |\mathbf{b} - \mathbf{A x}|^2 = (\mathbf{b} - \mathbf{A x})^T (\mathbf{b} - \mathbf{A x}) = \min
 \quad \Rightarrow \quad
 \boxed{ \mathbf{x} = (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbf{b} }
 \end{equation}
+
 
 % In practice, one would define z = A^T b and solve A^T A x = z
 
@@ -156,6 +157,7 @@ If an exact solution is not possible, the next best thing that we could look out
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Homogeneous Solution}
+% This solution may define a whole subsapce
 
 
 %---------------------------------------------------------------------------------------------------
@@ -164,7 +166,9 @@ If an exact solution is not possible, the next best thing that we could look out
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The General Solution}
+If $\mathbf{h}$ is a solution to the homogeneous system $\mathbf{A h = 0}$ (1st assumption) and $\mathbf{p}$ is a particular solution to the inhomogeneous system $\mathbf{A p = b}$ (2nd assumption), then for any scalar $k$, the vector $\mathbf{x} = \mathbf{p} + k \mathbf{h}$ is automatically also a solution to the inhomogeneous equation. This consequence is easy to see by writing $\mathbf{A} (\mathbf{p} + k \mathbf{h}) = \mathbf{b} = \mathbf{A p} + k \mathbf{A h}$. Now we note that $k \mathbf{A h}$ is zero because $\mathbf{A h = 0}$ by our first assumption and the only nonzero thing that remains is $\mathbf{A p}$ which equals $\mathbf{b}$ by our second assumption. That means that a general solution vector $\mathbf{x}$ of an inhomogeneous system of the form $\mathbf{A x = b}$ can always be written as a sum of a particular solution $\mathbf{p}$ plus some element from space of solutions to the homogeneous system. [VERIFY, TODO: explain geometric intuition of the solution set as shifted subspace]
 
+% If h is a solution to the homogeneous system A h = 0 and p is a particular solution to A p = b then for any scalar k, x = p + k h is also a soution to the inhomogeneous equation. this is easy to see by writing A (p + k h) = b = A p + k A h where k A h is zero because A h = 0
 
 
 % solvability, rank (may also be filed under matrix features - maybe introduce the concept here and mnetion it there again)

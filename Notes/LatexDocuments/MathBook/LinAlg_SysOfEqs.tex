@@ -49,6 +49,15 @@ b_{n}
 \end{pmatrix}
 \end{equation}
 This is very convenient. The whole system is encapsulated in the short expression $\mathbf{A x} = \mathbf{b}$. It is also instructive to interpret the system as way to construct a right hand side vector $\mathbf{b}$ as a weighted sum of the columns of the matrix $\mathbf{A}$ where the $x_j$ are the weighting coefficients. We could write this down as:
+\begin{equation}
+x_1 \cdot \begin{pmatrix} a_{11} \\ a_{21} \\ \vdots \\ a_{m1} \end{pmatrix} + 
+x_2 \cdot \begin{pmatrix} a_{12} \\ a_{22} \\ \vdots \\ a_{m2} \end{pmatrix} + 
+\cdots +
+x_n \cdot \begin{pmatrix} a_{1n} \\ a_{2n} \\ \vdots \\ a_{mn} \end{pmatrix} 
+= 
+\begin{pmatrix} b_1 \\ b_2 \\ \vdots \\ b_m \end{pmatrix}
+\end{equation}
+
 
 
 

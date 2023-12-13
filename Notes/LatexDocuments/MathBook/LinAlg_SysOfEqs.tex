@@ -24,7 +24,6 @@ The whole system can also be written down more compactly like this:
 \sum_{j=1}^n a_{ij} x_j = b_i \qquad \qquad i=1, \ldots, m
 \end{equation}
 The most common form is the matrix form:
-
 \begin{equation}
 \mathbf{A x} = \mathbf{b} \quad \text{where} \quad
 \mathbf{A} = 
@@ -49,10 +48,15 @@ b_{2} \\
 b_{n} 
 \end{pmatrix}
 \end{equation}
+This is very convenient. The whole system is encapsulated in the short expression $\mathbf{A x} = \mathbf{b}$. It is also instructive to interpret the system as way to construct a right hand side vector $\mathbf{b}$ as a weighted sum of the columns of the matrix $\mathbf{A}$ where the $x_j$ are the weighting coefficients. We could write this down as:
 
 
 
-We may also interpret is as way to construct a right hand side vector $\mathbf{b}$ as a weighted sum of the columns of the matrix $\mathbf{A}$ where the $x_j$ are the weighting coefficients:
+
+%Due to the fact that this expression is stated in terms of vectors and matrices, the whole machinery of matrix decomposition becomes available 
+
+
+
 
 
 \begin{comment}

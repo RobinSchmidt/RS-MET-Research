@@ -114,7 +114,8 @@ Now we want to look into the more messy situation when $\det(\mathbf{A}) \neq 0$
 
 % some of the matrix rows may be redundant - if that is the case, it
 
-
+\paragraph{Geometric Intuition} ...TBC...
+% Explain hwo in 3D, each equation determines a plane and the solution is the point at which they all intersect. In nD, each equation determines an $(n-1)$D subspace (sometimes called hyperplane). These hypeplanes also have aunique intersection point. In 2D, the "hyperplanes" are just lines and they also intersection in one specific point unless they are parallel
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Underdetermined Case}
@@ -138,7 +139,8 @@ Forming the derivative of the Lagrange function $L$ with respect to $\mathbf{x}$
 \end{equation}
 where for us, only the result for $\mathbf{x}$ is relevant. The $\boldsymbol{\lambda}$-vector is a vector of auxiliary variables, called Lagrange multipliers, that we may throw away. A derivation for this formula for the underdetermined case (along with the derivation for and overdetermined case which we will treat next) is given in \cite{LinSysOverUnder}.
 
-\paragraph{The Space of Solutions}
+%\paragraph{The Space of Solutions}
+\paragraph{Geometric Intuition}
 We may envision the space of solutions as a shifted subspace of $\mathbf{R}^n$ [VERIFY]. In 3D, this could be a plane or a line. This plane or line will typically not pass through the origin [VERIFY].
 
  ...TBC...
@@ -169,7 +171,7 @@ If an exact solution is not possible, the next best thing that we could look out
 \boxed{ \mathbf{x} = (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbf{b} }
 \end{equation}
 
-\paragraph{Geometric Intuition}
+\paragraph{Geometric Intuition} ...TBC...
 
 % Explain geoemtric intuition: The components x_i of the solution vector should serve as multipliers for the columns of matrix A. We try to find these weights in such a way as to match the right hand side vector. But when this vector is outside the span of the columns of A, there is no way we could match it eaxctly. 
 
@@ -228,10 +230,11 @@ If $\mathbf{h}$ is a solution to the homogeneous system $\mathbf{A h = 0}$ (1st 
 
 %===================================================================================================
 \subsection{An Algorithm for the Solution}
+In this section, we will develop an algorithm by which we can actually compute the solutions for linear systems of equations. The algorithm is called the Gaussian elimination algorithm and is one of the standard algorithms for this task. It can be straightforwardly implemented on a computer.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Triangular Systems}
-By an \emph{upper triangular system} of equations we mean an LSE that is in some especially nice form where the matrix is an upper triangular matrix. That means that all entries to the below the main diagonal are zero. In the  $4 \times 4$ case, this would look like this:
+By an \emph{upper triangular system} of equations we mean an LSE that is in some especially nice form where the matrix is an upper triangular matrix. That means that all entries the below the main diagonal are zero. In the  $4 \times 4$ case, this would look like this:
 \begin{equation}
 \begin{pmatrix}
 a_{11} & a_{12} & a_{13} & a_{14} \\
@@ -247,7 +250,7 @@ x_1 \\ x_2 \\ x_3 \\ x_4
 b_1 \\ b_2 \\ b_3 \\ b_4 
 \end{pmatrix}
 \end{equation}
-If the system is given in this special form, then the last row of this matrix would encode the equation $0 x_1 + 0 x_2 + 0 x_3 + a_{44} x_4 = b_4$ which we can immediately solve for $x_4 = b_4 / a_{44}$. As soon as $x_4$ is known, we can plug it into the equation represented by the second to last row and solve it fo $x_3 = (b_3 - a_{34} x_4) / a_{33}$. Now that $x_3$ and $x_4$ are known, we can plug them into the second row/equation to get $x_2 = (b_2 - a_{23} x_3 - a_{24} x_4) / a_{22}$. And finally we compute $x_1 = (b_1 - a_{12} x_2 - a_{13} x_3 - a_{14} x_4) / a_{11}$. by plugging $x_2, x_3, x_4$ into the first row. We have thus successfully computed our solution vector $\mathbf{x} = (x_1,x_2,x_3,x_4)$. In general, the formula for $x_i$ is given by:
+If the system is given in this special form, then the last row of this matrix would encode the equation $0 x_1 + 0 x_2 + 0 x_3 + a_{44} x_4 = b_4$ which we can immediately solve for $x_4 = b_4 / a_{44}$. As soon as $x_4$ is known, we can plug it into the equation represented by the second to last row and solve it for $x_3 = (b_3 - a_{34} x_4) / a_{33}$. Now that $x_3$ and $x_4$ are known, we can plug them into the second row/equation to get $x_2 = (b_2 - a_{23} x_3 - a_{24} x_4) / a_{22}$. And finally we compute $x_1 = (b_1 - a_{12} x_2 - a_{13} x_3 - a_{14} x_4) / a_{11}$ by plugging $x_2, x_3, x_4$ into the first row. We have thus successfully computed our solution vector $\mathbf{x} = (x_1,x_2,x_3,x_4)$. In general, the formula for $x_i$ is given by:
 \begin{equation}
 % x_i = \frac{b_i - \sum_{j=i+1}^n a_{ij} x_j}{a_{ii}}
  x_i = \left( b_i - \sum_{j=i+1}^n a_{ij} x_j \right) / a_{ii}
@@ -256,9 +259,15 @@ where we compute the $x_i$ in reverse order starting at index $i = n$ and going 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Elementary Row Operations}
-Unfortunately, the LSE will typically not be handed to us in this convenient upper triangular form. But there is an algorithm that we can use to transform it into such a form. Of, course, for such an algorithm to be valid, we must ensure that it doesn't change the set of solutions. We ensure that by using at every step of the algorithm only operations that do not change the solution set. These operations are called the \emph{elementary row operations}. 
+Unfortunately, the LSE will typically not be handed to us in this convenient upper triangular form. But there is an algorithm that we can use to transform it into such a form. Of, course, for such an algorithm to be valid, we must ensure that it doesn't change the set of solutions. We ensure that by using at every step of the algorithm only operations that do not change the solution set. These operations are called the \emph{elementary row operations}. ...TBC...
 %The goal of the algorithm is to bring the LSE into a form in which it is easy to solve.
 
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Reduced Row Echelon Form}
+The algorithm will lead us to such a triangular form only in the case of regular $n \times n$ matrices. For non-square and/or rank deficient matrices, we will get a form that generalizes the triangular form. We need to allow the matrix to contain even more zeros than in the triangular form. ...TBC...
+
+%We will also allow for rows of zeros at the bottom and we will allow the diagonal below which we want to see zeros to be even flatter - i.e. the columns can drop down to zero even faster. In essence, we will allow even more zeros
 
 
 \begin{comment}

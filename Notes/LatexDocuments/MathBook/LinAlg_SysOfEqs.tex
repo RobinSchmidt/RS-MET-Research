@@ -3,18 +3,18 @@ One important area of application of matrices and vectors is the solution of a \
 
 %===================================================================================================
 \subsection{Writing Down the System}
-There are several ways to write down an LSE. In its original form, we have  $m$ equations in $n$ unknowns and in each equation (with index $i = 1,\ldots, m$), each unknown $x_j$ (where $j=1,\ldots,n$) gets multiplied by a coefficient $a_{ij}$ and that whole weighted sum gets equated to a given right hand side value $b_j$. It looks like this:
+It's important to recognize an LSE when you see one and there are several of writing it down. In its original form, we have  $m$ equations in $n$ unknowns and in each equation (with index $i = 1,\ldots, m$), each unknown $x_j$ (where $j=1,\ldots,n$) gets multiplied by a coefficient $a_{ij}$ and that whole weighted sum gets equated to a given right hand side value $b_j$. It looks like this:
 \begin{eqnarray}
 a_{11} x_1 + a_{12} x_2 + \ldots + a_{1n} x_n &=& b_1    \\
 a_{21} x_1 + a_{22} x_2 + \ldots + a_{2n} x_n &=& b_2    \\
                                        \vdots &\vdots& \vdots \\
 a_{m1} x_1 + a_{m2} x_2 + \ldots + a_{mn} x_n &=& b_m 
 \end{eqnarray}
-The whole system can also be written down more compactly with sum notation like this:
+What this set of equations means is that we search for $n$ numbers $x_1, \ldots, x_n$ such that all $m$ equations are satisfied simultaneously. The whole system can also be written down more compactly with sum notation like this:
 \begin{equation}
 \sum_{j=1}^n a_{ij} x_j = b_i \qquad \qquad i=1, \ldots, m
 \end{equation}
-The most common form is the matrix form:
+In the context of tensor algebra, you may even find expressions like $a_{ij} x_j = b_i$ or $a_i^j x_j = b_i$ without the sum sign because the so called Einstein summation convention is used in which such sums are implicit whenever the same index appears twice. The most common form is the matrix form:
 \begin{equation}
 \mathbf{A x} = \mathbf{b} \quad \text{where} \quad
 \mathbf{A} = 
@@ -48,7 +48,17 @@ x_n \cdot \begin{pmatrix} a_{1n} \\ a_{2n} \\ \vdots \\ a_{mn} \end{pmatrix}
 = 
 \begin{pmatrix} b_1 \\ b_2 \\ \vdots \\ b_m \end{pmatrix}
 \end{equation}
-% It is instructive because it tells us what we are trying to achieve geometrcially: we try to build the vector b from the columns of A
+This form makes it clear that we are trying to build the vector $\mathbf{b}$ from the columns of $\mathbf{A}$. By using the notation $\mathbf{A} = (\mathbf{a}_1, \mathbf{a}_2, \ldots, \mathbf{a}_n )$, we can express this more compactly as:
+\begin{equation}
+ x_1 \mathbf{a}_1 +  x_2 \mathbf{a}_2 + \ldots + x_n \mathbf{a}_n 
+ = \sum_{j=1}^{n}  x_j \mathbf{a}_j 
+ = \mathbf{b}
+ \qquad \text{or} \qquad
+ (\mathbf{a}_1, \mathbf{a}_2, \ldots, \mathbf{a}_n ) \mathbf{x} = \mathbf{b}
+\end{equation}
+
+
+%This way of writing down the LSE is instructive because it tells us what we are trying to achieve geometrically: we try to build the vector $\mathbf{b}$ from the columns of $\mathbf{A}$.
 % Leupold has 2 other ways to write it down
 % $x_1 \mathbf{a}_1 + x_2 \mathbf{a}_2 + \ldots + x_n \mathbf{a}_n  = \mathbf{b} $
 % and

@@ -387,21 +387,26 @@ A matrix is symmetric if it is equal to its own transpose. That means that the r
 \subsubsection{Characteristic Numbers}
 
 \paragraph{Rank}
-The column rank of a matrix is the number of linearly independent columns
+The \emph{column rank} of a matrix $\mathbf{A}$ is the number of linearly independent columns. Sometimes, it is useful to view the columns $\mathbf{a}_1, \mathbf{a}_2, \ldots, \mathbf{a}_n$ of a matrix $\mathbf{A}$ as vectors. In this view, the rank of $\mathbf{A}$ is the dimension of the span of these column vectors. The \emph{row rank} is defined analogously as the number of linearly independent rows. A fundamental (and non obvious) result of linear algebra is that the column rank and the row rank are always equal. It is therefore justified to scrap the row/column qualifiers and just talk about the \emph{rank} of a matrix. We will denote the rank $r$ of a matrix $\mathbf{A}$ as $r = \rank(\mathbf{A})$. For an $(m \times n)$-matrix with rank $r$, the \emph{rank deficiency} is defined as $d = \min(m,n) - r$ [VERIFY!]. [TODO: explain row-space, column-space, nullity, rank of linear map, rank-nullity-theorem]
+
+% The rank of a linear map or operator  is defined as the dimension of its image
+
+% https://en.wikipedia.org/wiki/Rank_(linear_algebra)
+
+% column-space, row-space
 
 % -rank-nullity theorem
-% -row-rank equals column rank
+
 
 \paragraph{Trace}
-
+TODO: sum of diagonal elements, sum of eigenvalues
 
 
 \paragraph{Determinant}
-% -regular/singular
-% -scaling factor for a hypervolume
-% -product of eigenvalues
+TODO: regular/singular, scaling factor for a hypervolume, product of eigenvalues
 
 \paragraph{Norms}
+TODO: Frobenius norm, spectral norm, ..., norm compatibility (with vectors)
 % explain norm compatibility with vector norms
 
 % trace

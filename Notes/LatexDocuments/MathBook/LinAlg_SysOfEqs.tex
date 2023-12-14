@@ -48,6 +48,12 @@ x_n \cdot \begin{pmatrix} a_{1n} \\ a_{2n} \\ \vdots \\ a_{mn} \end{pmatrix}
 = 
 \begin{pmatrix} b_1 \\ b_2 \\ \vdots \\ b_m \end{pmatrix}
 \end{equation}
+% It is instructive because it tells us what we are trying to achieve geometrcially: we try to build the vector b from the columns of A
+% Leupold has 2 other ways to write it down
+% $x_1 \mathbf{a}_1 + x_2 \mathbf{a}_2 + \ldots + x_n \mathbf{a}_n  = \mathbf{b} $
+% and
+% $(\mathbf{a}_1, \mathbf{a}_2, \ldots, \mathbf{a}_n) \mathbf{x} = \mathbf{b}$
+
 Yet another form to state an LSE is in the form the \emph{augmented coefficient matrix}. In this form, we write $(\mathbf{A|b})$ and by that we mean a matrix that is built from taking $\mathbf{A}$ and adding the vector $\mathbf{b}$ to it as an additional $(n+1)$-th column:
 \begin{equation}
 (\mathbf{A|b}) = ...
@@ -65,9 +71,13 @@ a_{m1} & a_{m2} & \ldots & a_{mn} & \vline & b_m
 
 %Due to the fact that this expression is stated in terms of vectors and matrices, the whole machinery of matrix decomposition becomes available 
 
+
+
 %===================================================================================================
 \subsection{Solvability the System}
 Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf{x}$ that we can plug into the equation $\mathbf{A x} = \mathbf{b}$ such that this equation actually holds true. the coefficient matrix $\mathbf{A}$ and the right hand side vector $\mathbf{b}$ are given. In general, there three possibilities: (1) No solution exists. (2) A unique solution exists. (3) Infinitely many solutions exists. There are no other possibilities - a system with precisely two solutions, for example, cannot happen. If we assume assume that we work in a continuous number system, i.e. the $x_j$ are continuous numbers (e.g. real or complex), then this infinity will also be of the continuous kind (uncountable). If we are in case (3) where we have a continuum of solutions, that continuum can be one-dimensional, two-dimensional, etc. The mathematical theory that we want to develop will tell us, how we can recognize which of the 3 cases we are in and how to actually find the set of solutions.
+
+% b must be in the span of the columns of A. If A has full rank, then that span is the whole space, so it should be possible to find a solution
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Critically Determined Case}
@@ -100,9 +110,6 @@ Now we want to look into the more messy situation when $\det(\mathbf{A}) \neq 0$
 \subsubsection{The Underdetermined Case}
 When we have less equations than unknowns, i.e. less constraints than degrees of freedom such that $m < n$, the we call this the \emph{underdetermined case}. We may expect a continuum of solutions, i.e. being able to choose $n-m$ parameters freely. Again, this line of reasoning is reasonable but there are again some pitfalls. ...TBC...
 
-\paragraph{The Space of Solutions} ...TBC...
-% We may envision the space of solutions as a shifted subspace of $\mathbf{R}^n$ [VERIFY]. In 3D, this could be a plane or a line. This plane or line will typically not pass through the origin [VERIFY].
-
 \paragraph{Minimum Norm Solution}
 In a practical situation, we may want to pick one of the solutions from this infinite space of solutions. One possible criterion for making this choice is to say that we want to pick that particular solution vector $\mathbf{x}$ with the smallest possible norm, i.e. we want to pick the shortest possible solution vector. This type of problem is a called a \emph{constrained optimization problem} which we will treat later in the chapter on multivariable calculus. Here, I will just say that we minimize $|\mathbf{x}|^2$ subject to the constraint $\mathbf{A x} = \mathbf{b}$. This results in the following Lagrange function $L$ (which you may ignore if you don't know what that means):
 \begin{equation}
@@ -121,6 +128,11 @@ Forming the derivative of the Lagrange function $L$ with respect to $\mathbf{x}$
 \end{equation}
 where for us, only the result for $\mathbf{x}$ is relevant. The $\boldsymbol{\lambda}$-vector is a vector of auxiliary variables, called Lagrange multipliers, that we may throw away. A derivation for this formula for the underdetermined case (along with the derivation for and overdetermined case which we will treat next) is given in \cite{LinSysOverUnder}.
 
+\paragraph{The Space of Solutions}
+We may envision the space of solutions as a shifted subspace of $\mathbf{R}^n$ [VERIFY]. In 3D, this could be a plane or a line. This plane or line will typically not pass through the origin [VERIFY].
+
+ ...TBC...
+
 % give formulas for minimum norm solution
 
 % give examples for when even an underdetermined system has no solution, like
@@ -137,6 +149,8 @@ where for us, only the result for $\mathbf{x}$ is relevant. The $\boldsymbol{\la
 \subsubsection{The Overdetermined Case}
 When we have more equations than unknowns, i.e. more constraints than degrees of freedom, such that $m > n$, we call this the \emph{overdetermined case}. In such a case, we cannot generally expect an exact solution to exist. Again, there may be pitfalls for certain lucky "coincidences" of matrices and right hand sides but in general, we don't expect an exact solution.
 
+
+
 \paragraph{Least Squares Approximation}
 If an exact solution is not possible, the next best thing that we could look out for is an approximate solution. If the quality of the approximation is measured by the Euclidean length of the "error" vector $\mathbf{b} - \mathbf{A x}$, we will arrive at the following minimization problem:
 \begin{equation}
@@ -144,6 +158,12 @@ If an exact solution is not possible, the next best thing that we could look out
 \quad \Rightarrow \quad
 \boxed{ \mathbf{x} = (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbf{b} }
 \end{equation}
+
+\paragraph{Geometric Intuition}
+
+% Explain geoemtric intuition: The components x_i of the solution vector should serve as multipliers for the columns of matrix A. We try to find these weights in such a way as to match the right hand side vector. But when this vector is outside the span of the columns of A, there is no way we could match it eaxctly. 
+
+% Maybe call this paragraph The Column Space of A
 
 
 % In practice, one would define z = A^T b and solve A^T A x = z

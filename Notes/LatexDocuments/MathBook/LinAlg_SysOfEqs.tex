@@ -256,7 +256,8 @@ where we compute the $x_i$ in reverse order starting at index $i = n$ and going 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Elementary Row Operations}
-The goal of the algorithm is to bring the LSE into a form in which it is easy to solve.
+Unfortunately, the LSE will typically not be handed to us in this convenient upper triangular form. But there is an algorithm that we can use to transform it into such a form. Of, course, for such an algorithm to be valid, we must ensure that it doesn't change the set of solutions. We ensure that by using at every step of the algorithm only operations that do not change the solution set. These operations are called the \emph{elementary row operations}. 
+%The goal of the algorithm is to bring the LSE into a form in which it is easy to solve.
 
 
 

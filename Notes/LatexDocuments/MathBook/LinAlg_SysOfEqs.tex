@@ -230,8 +230,8 @@ If $\mathbf{h}$ is a solution to the homogeneous system $\mathbf{A h = 0}$ (1st 
 \subsection{An Algorithm for the Solution}
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Elementary Row Operations}
-The goal of the algorithm is to bring the LSE into a form in which it is easy to solve. For example, if the matrix $\mathbf{A}$ would be upper triangular like in this $4 \times 4$ example:
+\subsubsection{Triangular Systems}
+By an \emph{upper triangular system} of equations we mean an LSE that is in some especially nice form where the matrix is an upper triangular matrix. That means that all entries to the below the main diagonal are zero. In the  $4 \times 4$ case, this would look like this:
 \begin{equation}
 \begin{pmatrix}
 a_{11} & a_{12} & a_{13} & a_{14} \\
@@ -247,7 +247,16 @@ x_1 \\ x_2 \\ x_3 \\ x_4
 b_1 \\ b_2 \\ b_3 \\ b_4 
 \end{pmatrix}
 \end{equation}
+If the system is given in this special form, then the last row of this matrix would encode the equation $0 x_1 + 0 x_2 + 0 x_3 + a_{44} x_4 = b_4$ which we can immediately solve for $x_4 = b_4 / a_{44}$. As soon as $x_4$ is known, we can plug it into the equation represented by the second to last row and solve it fo $x_3 = (b_3 - a_{34} x_4) / a_{33}$. Now that $x_3$ and $x_4$ are known, we can plug them into the second row/equation to get $x_2 = (b_2 - a_{23} x_3 - a_{24} x_4) / a_{22}$. And finally we compute $x_1 = (b_1 - a_{12} x_2 - a_{13} x_3 - a_{14} x_4) / a_{11}$. by plugging $x_2, x_3, x_4$ into the first row. We have thus successfully computed our solution vector $\mathbf{x} = (x_1,x_2,x_3,x_4)$. In general, the formula for $x_i$ is given by:
+\begin{equation}
+% x_i = \frac{b_i - \sum_{j=i+1}^n a_{ij} x_j}{a_{ii}}
+ x_i = \left( b_i - \sum_{j=i+1}^n a_{ij} x_j \right) / a_{ii}
+\end{equation}
+where we compute the $x_i$ in reverse order starting at index $i = n$ and going down to $i = 1$. In the computation that we do first, namely the one for $i = n$, we have to perform a sum over $j$ from $n+1$ to $n$ which by convention is just the empty sum which equals zero so this general formula works even in this edge case.
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Elementary Row Operations}
+The goal of the algorithm is to bring the LSE into a form in which it is easy to solve.
 
 
 

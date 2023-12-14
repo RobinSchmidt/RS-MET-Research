@@ -72,7 +72,7 @@ a_{11} & a_{12} & \ldots & a_{1n} & \vline & b_1    \\
 a_{21} & a_{22} & \ldots & a_{2n} & \vline & b_2    \\ 
 \vdots & \vdots & \ddots & \vdots & \vline & \vdots \\
 a_{m1} & a_{m2} & \ldots & a_{mn} & \vline & b_m  
-\end{pmatrix},
+\end{pmatrix}
 \end{equation}
 
 % https://en.wikipedia.org/wiki/System_of_linear_equations#General_form
@@ -228,6 +228,28 @@ If $\mathbf{h}$ is a solution to the homogeneous system $\mathbf{A h = 0}$ (1st 
 
 %===================================================================================================
 \subsection{An Algorithm for the Solution}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Elementary Row Operations}
+The goal of the algorithm is to bring the LSE into a form in which it is easy to solve. For example, if the matrix $\mathbf{A}$ would be upper triangular like in this $4 \times 4$ example:
+\begin{equation}
+\begin{pmatrix}
+a_{11} & a_{12} & a_{13} & a_{14} \\
+ 0     & a_{22} & a_{23} & a_{24} \\
+ 0     &   0    & a_{33} & a_{34} \\ 
+ 0     &   0    &    0   & a_{44} \\ 
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\ x_2 \\ x_3 \\ x_4 
+\end{pmatrix}
+=
+\begin{pmatrix}
+b_1 \\ b_2 \\ b_3 \\ b_4 
+\end{pmatrix}
+\end{equation}
+
+
+
 
 \begin{comment}
 

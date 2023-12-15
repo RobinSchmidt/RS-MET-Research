@@ -346,40 +346,6 @@ When we have given an arbitrary ordered basis $B = (\mathbf{b}_1, \ldots, \mathb
 \subsection{Matrix Features}
 
 
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Special Properties}
-% Maybe move that below the characteristioc numbers and eigenspaces subsections because some 
-% properties may be defined in terms of these numbers (e.g.: contractive: all eigvals < 1 in 
-% abs-val)
-% By a property of a matrix, I mean a feature thata matrix may or may not have - a boolean feature, so to speak.
-
-\paragraph{Squareness}
-A matrix is called a square matrix, if it has the same number of rows as it has columns. The general rectangular array of elements forms a square.
-
-\paragraph{Symmetry}
-A matrix is symmetric if it is equal to its own transpose. That means that the rows are equal to the columns. Obviously, symmetry is a feature that only square matrices can possibly have.
-% Give fomrula for invers of transpose and/or for (AB)^T = B^T A^T iirc
-
-% maybe put these "boolean" features into a subsection
-\paragraph{Orthogonality}
-% a (square) matrix is orthogonal when all its rows are mutually orthogonal. This implies
-
-\paragraph{Definiteness}
-
-% boolean fetaures: nilpotent, idempotent, unitary, normal,  self-adjoint,
-% contractive (all eigenvalues < 1 in absolute value, vectors get shorter), self-inverse
-% (aka involution), is there something like "unipotent" such that some power of the matrix is the
-% identity matrix? regular/singular
-%
-% discrete features: rank, index of nilpotency, signature
-% scalar: determinant, condition number
-% list of scalars: eigenvalues, singular values
-% list of vectors: (left/right) (generalized) eigenvectors, singular vectors
-% boolean features of pairs of matrices: similarity (is A similar to B), simultaneously
-%   diagonalizable,
-% matrix: set of similar matrices,
-
-
 
 
 
@@ -410,6 +376,76 @@ TODO: Frobenius norm, spectral norm, ..., norm compatibility (with vectors)
 % explain norm compatibility with vector norms
 
 % trace
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Special Matrices} % Formerly "Special Properties"
+Some matrices with special features are important enough to have been given special names.
+
+% Maybe rename to speical matrices
+% Maybe move that below the characteristioc numbers and eigenspaces subsections because some 
+% properties may be defined in terms of these numbers (e.g.: contractive: all eigvals < 1 in 
+% abs-val)
+% By a property of a matrix, I mean a feature thata matrix may or may not have - a boolean feature, so to speak.
+
+
+
+\paragraph{Square Matrices}
+A matrix is called a square matrix, if it has the same number of rows as it has columns. The general rectangular array of elements forms a square.
+
+\paragraph{Regular and Singular Matrices}
+A regular matrix is a (square) matrix whose determinant is nonzero. A singular matrix is one whose determinant is zero. Regular matrices are invertible, singular ones are not. Both implications go both ways, i.e. the features "regular" and "invertible" imply each other just as "singular" and "non-invertible" do.
+
+\paragraph{Symmetric Matrices}
+A matrix is symmetric if it is equal to its own transpose. That means that the rows are equal to the columns. Obviously, symmetry is a feature that only square matrices can possibly have.
+% Give fomrula for invers of transpose and/or for (AB)^T = B^T A^T iirc
+
+% maybe put these "boolean" features into a subsection
+\paragraph{Orthogonal Matrices} A square matrix is called \emph{orthogonal} when its columns, seen as a set of vectors, form an \emph{orthonormal} set. That means, the scalar product of each column with itself must be one and the scalar product of any column with any other column must be zero. Non-obviously, this is equivalent to requiring that the rows must be orthonormal to one another. I have no idea where the inconsistency between usage of ortho\emph{gon}al and ortho\emph{norm}al between matrices and sets of vectors comes from but it seems like we are unfortunately stuck with it. Being orthogonal is equivalent to say that the inverse of the matrix is just the transpose: $\mathbf{A}^{-1} = \mathbf{A}^T$ iff $\mathbf{A}$ is orthogonal. That is a pretty convenient feature because transposing a matrix is very easy whereas inverting a matrix is quite hard (i.e. computationally expensive) in general.
+
+
+
+%all of of its columns are orthogonal to each other, i.e. the scalar product of one column with any other column gives zero. 
+
+
+%A square matrix is called \emph{orthogonal} when all of of its columns are orthogonal to each other, i.e. the scalar product of one column with any other column gives zero. 
+
+%Non-obviously, this is equivalent to requiring that the scalar product of each row with any other row gives zero [VERIFY]. 
+
+%Often it is also required that the scalar product of a column (or row) with itself must be one. This terminology is inconsistent with the definition of orthogonality of a set of vectors. When a set of vectors has this feature of pairwise orthogonality \emph{and} every vector is of unit length (that's what it means to have a scalar product of one with oneself), then that set of vectors is called \emph{orthonormal} and ortho\emph{gon}ality does not require the norms to be unity. Some (very few) authors also define matrices as ortho\emph{norm}al when both, pairwise orthogonality and unit norm of the columns (or rows), hold true and indeed use the term ortho\emph{gon}al for the less restrictive condition that is consistent with orthogonality with a set of vectors. I think using the consistent terminology is actually better but unfortunately, the inconsistent terminology seems to have prevailed. So, an ortho\emph{gon}al matrix is one whose columns (or rows) are an ortho\emph{norm}al set of vectors.
+
+% https://math.stackexchange.com/questions/316208/difference-between-orthogonal-and-orthonormal-matrices
+
+% https://www.quora.com/Why-don-t-we-call-orthogonal-matrix-just-orthonormal-matrix-if-its-columns-rows-are-orthonormal
+
+%where this additional condition leads to the stronger
+% a (square) matrix is orthogonal when all its rows are mutually orthogonal. This implies
+
+% https://en.wikipedia.org/wiki/Orthogonal_matrix
+
+\paragraph{Unitary Matrices}
+
+\paragraph{Definite Matrices}
+
+% boolean fetaures: nilpotent, idempotent, unitary, normal,  self-adjoint,
+% contractive (all eigenvalues < 1 in absolute value, vectors get shorter), self-inverse
+% (aka involution), is there something like "unipotent" such that some power of the matrix is the
+% identity matrix? regular/singular
+%
+% discrete features: rank, index of nilpotency, signature
+% scalar: determinant, condition number
+% list of scalars: eigenvalues, singular values
+% list of vectors: (left/right) (generalized) eigenvectors, singular vectors
+% boolean features of pairs of matrices: similarity (is A similar to B), simultaneously
+%   diagonalizable,
+% matrix: set of similar matrices,
+
+
+
+% https://en.wikipedia.org/wiki/Frobenius_matrix
+% https://en.wikipedia.org/wiki/Normal_matrix
+% Toeplitz, Circulant, Unitary, Jordan
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Eigenspaces}

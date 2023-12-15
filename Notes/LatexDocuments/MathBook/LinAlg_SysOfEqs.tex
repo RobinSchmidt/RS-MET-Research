@@ -259,9 +259,14 @@ where we compute the $x_i$ in reverse order starting at index $i = n$ and going 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Elementary Row Operations}
-Unfortunately, the LSE will typically not be handed to us in this convenient upper triangular form. But there is an algorithm that we can use to transform it into such a form. Of, course, for such an algorithm to be valid, we must ensure that it doesn't change the set of solutions. We ensure that by using at every step of the algorithm only operations that do not change the solution set. These operations are called the \emph{elementary row operations}. They are typically explained in terms of the augmented coefficient matrix...TBC...
+Unfortunately, the LSE will typically not be handed to us in this convenient upper triangular form. But there is an algorithm that we can use to transform it into such a form. Of, course, for such an algorithm to be valid, we must ensure that it doesn't change the set of solutions. We ensure that by using at every step of the algorithm only operations that do not change the solution set. These operations are called the \emph{elementary row operations}. They are typically explained in terms of the augmented coefficient matrix.
+
+..TBC...
 %The goal of the algorithm is to bring the LSE into a form in which it is easy to solve.
 
+% https://en.wikipedia.org/wiki/Elementary_matrix
+% https://en.wikipedia.org/wiki/Gaussian_elimination
+% https://en.wikipedia.org/wiki/LU_decomposition
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Reduced Row Echelon Form}
@@ -269,6 +274,16 @@ The algorithm will lead us to such a triangular form only in the case of regular
 
 %We will also allow for rows of zeros at the bottom and we will allow the diagonal below which we want to see zeros to be even flatter - i.e. the columns can drop down to zero even faster. In essence, we will allow even more zeros
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Spin-Offs: Rank, Determinant, Inverse, LU-Decomposition}
+The Gaussian elimination algorithm computes as a by-product also the rank of the matrix and with some minor modifications, i.e. by adding some bookkeeping, it can be made to compute the determinant as well. Is is also the basis of Gauss-Jordan elimination which can bring an LSE into the even more convenient diagonal (rather than just triangular) form which in turn serves as the basis for an algorithm to compute the inverse of a matrix. It is also the basis of the so called LU-decomposition of a matrix which we will encounter later.
+
+%matrix inversion
+
+% Solving for several right hand sides
+% -we can replace the vector $\mathbf{b}$ by a matrix $\mathbf{B}$ whose columns are the different right hand sides. The vector of unknowns $\mathbf{x}$ will also become a matrix $\mathbf{X}$ 
+
+% If we do not (yet) have all the right hand sides available, we may want to compute the LU decomposition which will allow us to easily compute a solution vector $\mathbf{x}$ for an RHS vector  $\mathbf{b}$ later ...TBC...
 
 \begin{comment}
 

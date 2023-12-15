@@ -397,22 +397,14 @@ A matrix is called a square matrix, if it has the same number of rows as it has 
 A regular matrix is a (square) matrix whose determinant is nonzero. A singular matrix is one whose determinant is zero. Regular matrices are invertible, singular ones are not. Both implications go both ways, i.e. the features "regular" and "invertible" imply each other just as "singular" and "non-invertible" do.
 
 \paragraph{Symmetric Matrices}
-A matrix is symmetric if it is equal to its own transpose. That means that the rows are equal to the columns. Obviously, symmetry is a feature that only square matrices can possibly have.
+A matrix is symmetric if it is equal to its own transpose: $\mathbf{A} = \mathbf{A}^T$. That means that the rows are equal to the columns. Obviously, symmetry is a feature that only square matrices can possibly have.
 % Give fomrula for invers of transpose and/or for (AB)^T = B^T A^T iirc
+
+\paragraph{Hermitian Matrices}
+A matrix is Hermitian if it is equal to its own Hermitian transpose: $\mathbf{A} = \mathbf{A}^H$ which is the transpose combined with complex conjugation of the elements. It is usually the right generalization of symmetric matrices when moving from the real to the complex case.
 
 % maybe put these "boolean" features into a subsection
 \paragraph{Orthogonal Matrices} A square matrix is called \emph{orthogonal} when its columns, seen as a set of vectors, form an \emph{orthonormal} set. That means, the scalar product of each column with itself must be one and the scalar product of any column with any other column must be zero. Non-obviously, this is equivalent to requiring that the rows must be orthonormal to one another. I have no idea where the inconsistency between usage of ortho\emph{gon}al and ortho\emph{norm}al between matrices and sets of vectors comes from but it seems like we are unfortunately stuck with it. Being orthogonal is equivalent to say that the inverse of the matrix is just the transpose: $\mathbf{A}^{-1} = \mathbf{A}^T$ iff $\mathbf{A}$ is orthogonal. That is a pretty convenient feature because transposing a matrix is very easy whereas inverting a matrix is quite hard (i.e. computationally expensive) in general.
-
-
-
-%all of of its columns are orthogonal to each other, i.e. the scalar product of one column with any other column gives zero. 
-
-
-%A square matrix is called \emph{orthogonal} when all of of its columns are orthogonal to each other, i.e. the scalar product of one column with any other column gives zero. 
-
-%Non-obviously, this is equivalent to requiring that the scalar product of each row with any other row gives zero [VERIFY]. 
-
-%Often it is also required that the scalar product of a column (or row) with itself must be one. This terminology is inconsistent with the definition of orthogonality of a set of vectors. When a set of vectors has this feature of pairwise orthogonality \emph{and} every vector is of unit length (that's what it means to have a scalar product of one with oneself), then that set of vectors is called \emph{orthonormal} and ortho\emph{gon}ality does not require the norms to be unity. Some (very few) authors also define matrices as ortho\emph{norm}al when both, pairwise orthogonality and unit norm of the columns (or rows), hold true and indeed use the term ortho\emph{gon}al for the less restrictive condition that is consistent with orthogonality with a set of vectors. I think using the consistent terminology is actually better but unfortunately, the inconsistent terminology seems to have prevailed. So, an ortho\emph{gon}al matrix is one whose columns (or rows) are an ortho\emph{norm}al set of vectors.
 
 % https://math.stackexchange.com/questions/316208/difference-between-orthogonal-and-orthonormal-matrices
 
@@ -424,6 +416,12 @@ A matrix is symmetric if it is equal to its own transpose. That means that the r
 % https://en.wikipedia.org/wiki/Orthogonal_matrix
 
 \paragraph{Unitary Matrices}
+%A unitary matrix is one whose Hermitian transpose is equal to its inverse: $\mathbf{A}^{-1} = \mathbf{A}^H$ iff $\mathbf{A}$ is unitary. 
+
+
+
+% https://en.wikipedia.org/wiki/Hermitian_matrix
+%https://mathworld.wolfram.com/HermitianMatrix.html
 
 \paragraph{Definite Matrices}
 

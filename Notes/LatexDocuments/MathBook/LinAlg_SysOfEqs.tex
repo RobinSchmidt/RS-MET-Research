@@ -94,7 +94,9 @@ Our main goal is to solve this system, i.e. to find one or more vectors $\mathbf
 A first hint for which of the three situations we are dealing with is how the number of equations $m$ relates to the number of unknowns $n$. If the number of equations $m$ is equal to the number of unknowns $n$, such that $m=n$, we called this situation the \emph{critically determined case} because the number $m$ of constraints matches exactly the number $n$ of the degrees of freedom $x_1, \ldots, x_n$. In such a situation we may expect a unique solution. The idea is that each constraint reduces the number of degrees of freedom by one. After all, in such a case, the matrix $\mathbf{A}$ is an $n \times n$ matrix and we should be able to get our $\mathbf{x}$ via $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$ and $\mathbf{A}^{-1} \mathbf{b}$ is unique vector, that this formula explicitly computes, right? This is indeed a good line of reasoning but there are some pitfalls in that. Foremostly, for this to work, the matrix $\mathbf{A}$ needs to be invertible. We already know that a matrix is invertible, iff its determinant is nonzero. So that's a criterion we could apply: iff $m = n$ and $\det(\mathbf{A}) \neq 0$, we will get a unique solution vector $\mathbf{x}$ which we could (theoretically) compute via $\mathbf{x} = \mathbf{A}^{-1} \mathbf{b}$. I say "theoretically" because that's a rather inefficient way to do it and in practice, we'll want to use a better algorithm - but at least it's one possible way. A square matrix with nonzero determinant is also called a \emph{regular} matrix.
 
 \paragraph{The Significance of the Rank}
-Now we want to look into the more messy situation when $\det(\mathbf{A}) \neq 0$. In such a situation, the LSE can have either no solution at all or a continuum of solutions. Which of these two subcases we will find ourselves in will depend on the right hand side vector $\mathbf{b}$. An even more informative number than the determinant (which gives us only a binary yes/no information) is the rank $r$ of the matrix $\mathbf{A}$ and how that rank compares to the rank of the augmented matrix $(\mathbf{A|b})$. ...TBC...explain rank deficiency
+Now we want to look into the more messy situation when $\det(\mathbf{A}) \neq 0$. In such a situation, the LSE can have either no solution at all or a continuum of solutions. Which of these two subcases we will find ourselves in will depend on the right hand side vector $\mathbf{b}$. An even more informative number than the determinant (which gives us only a binary yes/no information) is the rank $r$ of the matrix $\mathbf{A}$ and how that rank compares to the rank of the augmented matrix $(\mathbf{A|b})$. A system of linear equations has a solution, if and only if $\rank(\mathbf{A}) = \rank(\mathbf{A|b})$. If we assume that to be the case and call that rank $r$, then the space of solutions will be an $(n-r)$-dimensional continuum. In the special case of $r = n$, the solution will be unique, i.e. just a single point which counts as a $0$-dimensional entity, so the edge case is covered as well. If $r < n$, it effectively means that $d = n-r$ of the rows of $(\mathbf{A|b})$ are redundant in the sense that they could be formed as linear combinations of other rows. That means, we have effectively less than $n$ equations. Although we may formally have $m = n$ equations, these equations are not all linearly independent so our "effective" number of equations is actually less than $n$.
+
+...TBC...explain rank deficiency
 
 % Take as 1st example a 2x2 matrix where the 2nd row is 1.5 times the first:
 %   2  6
@@ -105,16 +107,16 @@ Now we want to look into the more messy situation when $\det(\mathbf{A}) \neq 0$
 % But treat (3,1) as unknown (x1,x2). Show that for the rhs 12,18, we get a continuum of solutions
 % and for some other vector that is not a multiple of the b, we get no solutins...is that true?
 
-
 % Take as second example a 3x3 matrix where th 3rd row is obatined a 3*1st - 2*2nd, For example:
 %   3  2  5
 %   8  3  7 
 %  -7  0  1
 
-
 % some of the matrix rows may be redundant - if that is the case, it
 
-\paragraph{Geometric Intuition} ...TBC...
+\paragraph{Geometric Intuition} Let's try to visualize the set of solutions in our heads. Imagine we have $m=n=3$, i.e. we want to find a set of points in $\mathbb{R}^3$ that solves a system of 3 given equations. If $r = 3$, then the solution is unique - we get a single point in 3D space. If $r=2$ the we get a one-dimensional continuum of solutions. The set of solutions forms a line. If $r=1$, the set of solution vectors will form a plane.
+
+%...TBC...
 % Explain hwo in 3D, each equation determines a plane and the solution is the point at which they all intersect. In nD, each equation determines an $(n-1)$D subspace (sometimes called hyperplane). These hypeplanes also have aunique intersection point. In 2D, the "hyperplanes" are just lines and they also intersection in one specific point unless they are parallel
 
 %---------------------------------------------------------------------------------------------------
@@ -259,18 +261,30 @@ where we compute the $x_i$ in reverse order starting at index $i = n$ and going 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Elementary Row Operations}
-Unfortunately, the LSE will typically not be handed to us in this convenient upper triangular form. But there is an algorithm that we can use to transform it into such a form. Of, course, for such an algorithm to be valid, we must ensure that it doesn't change the set of solutions. We ensure that by using at every step of the algorithm only operations that do not change the solution set. These operations are called the \emph{elementary row operations}. They are typically explained in terms of the augmented coefficient matrix.
+Unfortunately, the LSE will typically not be handed to us in this convenient upper triangular form. But there is an algorithm that we can use to transform it into such a form. Of, course, for such an algorithm to be valid, we must ensure that it doesn't change the set of solutions. We ensure that by using at every step of the algorithm only operations that do not change the solution set. These operations are called the \emph{elementary row operations}. They are typically explained in terms of the augmented coefficient matrix. One thing that we can do to this augmented matrix is to just swap two rows. In terms of the system of equations, it juts means to re-order the equations which obviously doesn't change the solution set. Slightly less obvious is the fact that we can multiply one of the rows by a nonzero number without changing the solution set. It corresponds to multiply one of the equations with the nonzero number which is an action that doesn't change the solutions of the respective equation. The third and most important operation is a bit more complicated: we can add an arbitrary multiple of one row to another row. From these operations, we can form the following algorithm: ...TBC...
 
-..TBC...
+
+%It is this mainly operation which, when used in a sequence with strategically selected multipliers, that lets us create the desired zeros in the matrix. 
+
+%..TBC...
 %The goal of the algorithm is to bring the LSE into a form in which it is easy to solve.
 
 % https://en.wikipedia.org/wiki/Elementary_matrix
 % https://en.wikipedia.org/wiki/Gaussian_elimination
 % https://en.wikipedia.org/wiki/LU_decomposition
 
+% https://www.math.ucdavis.edu/~linear/old/notes3.pdf
+
+\paragraph{Pivoting}
+When applying this algorithm, we need at each step to divide by one of the matrix elements ...TBC...
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Reduced Row Echelon Form}
-The algorithm will lead us to such a triangular form only in the case of regular $n \times n$ matrices. For non-square and/or rank deficient matrices, we will get a form that generalizes the triangular form. We need to allow the matrix to contain even more zeros than in the triangular form. ...TBC...
+The algorithm will lead us to such a triangular form only in the case of regular $n \times n$ matrices. For non-square and/or rank deficient matrices, we will get a form that generalizes the triangular form. We need to allow the matrix to contain even more zeros than in the triangular form. Firstly, we will allow a certain number of rows at the bottom to be completely filled with zeros. Secondly, we will allow the columns to drop down to zero even earlier than below the main diagonal.
+
+...TBC...todo: give some examples of non-triangular RREF
+
+% https://en.wikipedia.org/wiki/Row_echelon_form
 
 %We will also allow for rows of zeros at the bottom and we will allow the diagonal below which we want to see zeros to be even flatter - i.e. the columns can drop down to zero even faster. In essence, we will allow even more zeros
 

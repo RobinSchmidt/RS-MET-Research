@@ -81,7 +81,9 @@ We have \emph{defined} the negative numbers in terms of how we want them to beha
 
 
 \subsection{Rational Numbers}
-Motivated by the unsolvability of a particular equation within the realm of natural numbers, we have successfully extended the set of numbers that we have to work with. Now, we are able to solve a far greater set of equations! But there are still some other equations that we cannot yet solve. Consider the equation $3 \cdot x = 5$. Trying to isolate $x$ on the LHS calls for dividing both sides by 3. That will give $x = 5/3$, but just like the expression $3-5$ didn't represent any natural number, the expression $5/3$ does not represent any integer number. By trying to solve a particular equation, we have discovered yet another kind of number...tbc...
+Motivated by the unsolvability of a particular equation within the realm of natural numbers, we have successfully extended the set of numbers that we have to work with. Now, we are able to solve a far greater set of equations! But there are still some other equations that we cannot yet solve. Consider the equation $3 \cdot x = 5$. Trying to isolate $x$ on the LHS calls for dividing both sides by 3. That will give $x = 5/3$, but just like the expression $3-5$ didn't represent any natural number, the expression $5/3$ does not represent any integer number. By trying to solve a particular equation, we have discovered yet another kind of number. It is called a rational number. I have once heard a phrase like $5/3$ is the number that you would get, if $5$ would be divisible by $3$.
+
+...TBC...
 
 % rules for arithmetic, countability (Cantor's 1st diagonal argument), decimal expansion (fixed and floating point), explain the notion of a field - the rational numbers are the first example of a field
 
@@ -94,6 +96,8 @@ Motivated by the unsolvability of a particular equation within the realm of natu
 %\subsection{Intervals}
 %So far, we've built up our number system as $\mathbb{N \subset Z \subset Q}$. In order to approach our next set of numbers, we'll need a little preliminary, so we'll take a small break from extending our set of numbers and have a little interlude. We will need to define what an interval is
 % -define what open and closed intervals are
+% -A subset I of the real number line R is called an interval if for all r1,r2 \in I and
+%  all x \in R with r_1 < x < r_2, we have: x \in I
 
 
 %https://www.youtube.com/watch?v=d9z-DV9bLfw
@@ -108,23 +112,16 @@ Motivated by the unsolvability of a particular equation within the realm of natu
 
 
 \subsection{Real Numbers}
-OK, nice - so the set of rational numbers is a field. We can add, subtract, multiply and divide to our hearts content without ever encountering any object that does not belong to the set (with the sole exception of division by zero). Is that finally good enough or could we still want more? The pattern of coming up with unsolvable equations continues: Consider the equation $x^2 = 2$. We can take the square root of both sides to get the solution $x = \sqrt{2}$. If the square root of two is a rational number, then we can indeed solve that equation within the rational numbers - but is it? The answer turns out to be a resounding nope! I could now present a proof for this fact (and a mathematically minded reader would rightfully demand one) but I think that would distract too much from the main line, so I just ask you to take my word for it or look it up elsewhere - there are actually many very different proofs for that fact. Besides the square root of two, there are many more numbers that are still "missing". Our number line still has "gaps" and in a sense that can be made explicit, actually "most" numbers are still missing. If we "fill in" these missing numbers, we arrive at what we call the \emph{real numbers}. Defining the process of filling in the missing numbers is rather technical 
+OK, nice - so the set of rational numbers is a field. We can add, subtract, multiply and divide to our hearts content without ever encountering any object that does not belong to the set (with the sole exception of division by zero). Is that finally good enough or could we still want more? The pattern of coming up with unsolvable equations continues: Consider the equation $x^2 = 2$. We can take the square root of both sides to get the solution $x = \sqrt{2}$. If the square root of two is a rational number, then we can indeed solve that equation within the rational numbers - but is it? The answer turns out to be a resounding nope! I could now present a proof for this fact (and a mathematically minded reader would rightfully demand one) but I think that would distract too much from the main line, so I just ask you to take my word for it or look it up elsewhere - there are actually many very different proofs for that fact. Besides the square root of two, there are many more numbers that are still "missing". Our number line still has "gaps" and in a sense that can be made explicit, actually "most" numbers are still missing. If we "fill in" these missing numbers, we arrive at what we call the \emph{real numbers}. Defining the process of filling in the missing numbers is rather technical and can be skipped on a first reading.
+
+
 
 \subsubsection{$\star$ Completeness}
 
 \paragraph{Dedekind Completeness}
 
-\paragraph{Cauchy Completeness}
 
 
-\subsubsection{Density ans Sparsity}
-The rational numbers are \emph{dense} in the sense that in between any pair of rational numbers $q_1, q_2$, there are infinitely many more  rational numbers. You can see this by explicitly constructing one rational number that is between $q_1, q_2$, fro example, their average: $q_3 = (q_1 + q_2) / 2$. It is clearly again a rational number and it is also clearly in between the two original rational numbers $q_1$ and $q_2$. Now you can use your new $q_3$ together with either $q_1$ or $q_2$ to construct another rational number between $q_3$ and $q_1$ (or $q_2$). You can repeat this process ad infinitum and thereby generate infinitely many new rational numbers that are all in between $q_1$ and $q_2$
-
-Yet, they are sparse in the sense that the vast majority of all numbers on the number line is irrational.
-
-...TBC...
-
-% https://en.wikipedia.org/wiki/Ordered_field
 
 % https://en.wikipedia.org/wiki/Least-upper-bound_property
 % https://en.wikipedia.org/wiki/Completeness_of_the_real_numbers
@@ -134,6 +131,16 @@ Yet, they are sparse in the sense that the vast majority of all numbers on the n
 % The least-upper-bound property is equivalent to other forms of the completeness axiom, such as the convergence of Cauchy sequences or the nested intervals theorem.
 
 
+\paragraph{Cauchy Completeness}
+
+\subsubsection{$\star$ Order}
+The real numbers are an ordered field and they are Dedekind complete. Any other field that has these two properties is isomorphic to the real numbers. TBC...
+
+% https://en.wikipedia.org/wiki/Ordered_field
+
+
+\subsubsection{$\star$ Density ans Sparsity}
+OK - so we have now filled in the gaps between the rational numbers and thereby obtained a continuous set of numbers. How many new numbers did we get? Apparently, infinitely many - but can we specify this some more? The rational numbers are already \emph{dense} in the sense that in between \emph{any} pair of rational numbers $q_1, q_2$, there are infinitely many more  rational numbers. You can see this by explicitly constructing one rational number that is between $q_1, q_2$, for example, their average: $q_3 = (q_1 + q_2) / 2$. It is clearly again a rational number and it is also clearly in between the two original rational numbers $q_1$ and $q_2$. Now you can use your new $q_3$ together with either $q_1$ or $q_2$ to construct another rational number between $q_3$ and $q_1$ (or $q_2$). You can repeat this process ad infinitum and thereby generate infinitely many new rational numbers that are all in between $q_1$ and $q_2$. Yet, despite being so dense, they are also sparse within the reals in the sense that the vast majority of all  real numbers on the number line is irrational. Making size comparisons between infinite sets is a somewhat advanced topic for which we will need (some bits of) the theory of cardinalities and/or measure theory. We will get into some of the the details of that in later chapters. For now, it shall suffice to say that that the rationals are a set of measure zero within the reals and that the cardinality of the reals is strictly greater than that of the rationals....TBC...
 
 % -explain completeness, Cauchy sequences
 % -maybe briefly explain Dedekind cuts (that's why we introduced the intervals before the
@@ -148,8 +155,10 @@ Yet, they are sparse in the sense that the vast majority of all numbers on the n
 % https://www.youtube.com/watch?v=iGpUS3rejso
 % at 26:35: we want a set where every nonempty subset that is bounded from above has a supremum. That's what we call "complete". ..but there's also that defintion in terms of cauchy sequences which is probably equivalent.
 
+
+
 \subsection{Complex Numbers}
-The set of real numbers forms an ordered, Dedekind-complete field. Does "complete" mean, we are now done with building our number system? Unfortunately not yet. There is still one kind of equation left that we can write down with our basic arithmetic operators but which we still cannot yet solve. But this one will really be the last one, so we see the light at the end of the tunnel! The equation, I'm talking about, is $x^2 = -1$. Solving for $x$ formally yields $x = \sqrt{-1}$, but we know that any real number muliplied by itself will produce a nonnegative result, so this weird square root of minus one cannot be a real number. We will now do a similar step as we did when postulating the existence of negative numbers. Those can be thought of as resulting from taking a natural number and multiplying it by some, then hypothetical and unnatural, new object - namely, by the number $-1$, which we could call the "negative unit" (a nonstandard term, I just made up) and which up to then, wasn't a thing. In analogy, we now define the square root of minus one as the "imaginary unit", which is indeed standard terminology, denoted by $\i$. Just like multiplying a natural number $n$ by the "negative unit" $-1$ gave us the negative counterpart of $n$, namely $-n$, multiplying any real number $r$ by the imaginary unit $\i$ gives us the imaginary counterpart of $r$, namely $\i r$. The general law $\sqrt{a b} = \sqrt{a} \sqrt{b}$ of square roots now allows us to take square roots of any negative number: we just factor out the square root of minus one, for example: $\sqrt{-9} = \sqrt{9} \sqrt{-1} = 3 \i$. The square root of minus nine is three times the imaginary unit.
+We have established the set of real numbers forms an ordered, Dedekind-complete field. Does "complete" mean, we are now done with building our number system? Unfortunately not yet. There is still one kind of equation left that we can write down with our basic arithmetic operators but which we still cannot yet solve. But this one will really be the last one, so we see the light at the end of the tunnel! The equation, I'm talking about, is $x^2 = -1$. Solving for $x$ formally yields $x = \sqrt{-1}$, but we know that any real number muliplied by itself will produce a nonnegative result, so this weird square root of minus one cannot be a real number. We will now do a similar step as we did when postulating the existence of negative numbers. Those can be thought of as resulting from taking a natural number and multiplying it by some, then hypothetical and unnatural, new object - namely, by the number $-1$, which we could call the "negative unit" (a nonstandard term, I just made up) and which up to then, wasn't a thing. In analogy, we now define the square root of minus one as the "imaginary unit", which is indeed standard terminology, denoted by $\i$. Just like multiplying a natural number $n$ by the "negative unit" $-1$ gave us the negative counterpart of $n$, namely $-n$, multiplying any real number $r$ by the imaginary unit $\i$ gives us the imaginary counterpart of $r$, namely $\i r$. The general law $\sqrt{a b} = \sqrt{a} \sqrt{b}$ of square roots now allows us to take square roots of any negative number: we just factor out the square root of minus one, for example: $\sqrt{-9} = \sqrt{9} \sqrt{-1} = 3 \i$. The square root of minus nine is three times the imaginary unit.
 
 ..TBC...
 

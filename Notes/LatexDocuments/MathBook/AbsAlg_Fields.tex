@@ -43,10 +43,12 @@ Any mathematical structure that satisfies these requirements is a structure in w
 
 
 \subsubsection{Fields of Fractions}
-Given an integral domain $R$ (i.e. a commutative unital ring without zero divisors), we can construct a field from it in a way that generalizes the construction of the rational numbers from the ring of integers. It works as follows: Take all pairs $(a,b) \in R^2$ with $b \neq 0$ and identify two pairs $(a,b)$ and $(d,c)$ if they should represent the same fraction. That is, we say $(a,b) = (c,d)$ iff $a d = b c$. Let $F$ be the set of the resulting equivalence classes and let $[a,b]$ denote the equivalence class of $(a,b)$. On the set of these equivalence classes, we define addition as $[a,b] + [c,d] = [a d + bc, bd]$ and multiplication as  $[a,b] \cdot [c,d] = [ac, bd]$. As neutral elements, we use $0_F = [0_R, 1_R]$ and $1_F = [1_R, 1_R]$ where the subscript $F$ means that this is an element of our new, to be constructed field $F$ and the subscript $R$ means that it is an element from our original ring that we started with. The so constructed structure $F$ is indeed a field and it is called the \emph{field of fractions} aka the \emph{field of quotients} of $R$. If $R = \mathbb{Z}$, then we will arrive at the rational numbers $\mathbb{Q}$ but the construction is more general in that it can be applied to any integral domain. I think, the so constructed field is the smallest possible field containing the original ring $R$ in the sense that every other field containing $R$ is a strict superset of the field of fractions [VERIFY!]
+Given an integral domain $R$ (i.e. a commutative unital ring without zero divisors), we can construct a field from it in a way that generalizes the construction of the rational numbers from the ring of integers. It works as follows: Take all pairs $(a,b) \in R^2$ with $b \neq 0$ and identify two pairs $(a,b)$ and $(d,c)$ if they should represent the same fraction. That is, we say $(a,b) = (c,d)$ iff $a d = b c$. Let $F$ be the set of the resulting equivalence classes and let $[a,b]$ denote the equivalence class of $(a,b)$. On the set of these equivalence classes, we define addition as $[a,b] + [c,d] = [a d + bc, bd]$ and multiplication as  $[a,b] \cdot [c,d] = [ac, bd]$. As neutral elements, we use $0_F = [0_R, 1_R]$ and $1_F = [1_R, 1_R]$ where the subscript $F$ means that this is an element of our new, to be constructed field $F$ and the subscript $R$ means that it is an element from our original ring that we started with. The so constructed structure $F$ is indeed a field and it is called the \emph{field of fractions} aka the \emph{field of quotients} of $R$. If $R = \mathbb{Z}$, then we will arrive at the rational numbers $F = \mathbb{Q}$. This is the smallest field containing the integers and, in fact, even the smallest field containing the naturals. Of course, the construction is more general in that it can be applied to any integral domain $R$. I think, the so constructed field $F$ is the always smallest possible field containing the original ring $R$ in the sense that every other field containing $R$ is a strict superset of the field of fractions [VERIFY!]. 
 
 % see ACRS, pg 34
 % https://en.wikipedia.org/wiki/Field_of_fractions
+
+% Q is the smallest field containing N
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Subfields and Extension Fields}
@@ -86,6 +88,22 @@ If we adjoin one or more transcendental numbers, i.e. numbers like the semicircl
 \paragraph{Algebraic Extensions of $\mathbb{F}_p$}
 
 % -explain algebraic closures of finite fields. These are complicated, I think. See elliptic tales.
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Division by Zero}
+We learn already in elementary school that division by zero is "impossible". The history of mathematics is riddled with examples of things that were at one point deemed to be impossible which became possible later by extending the number system suitably. Subtracting 5 from 3 is impossible in the natural numbers but no problem in the integers. Dividing 3 by 5 is impossible in the integers but doable in the rationals. Taking the square root of 2 is impossible in the rationals but totally fine in the reals. Finally, taking the square root of a negative number is impossible in the reals but possible in the complex numbers. So, one might hope that with a suitable definition that extends our number system even further, also the problem of division by zero might be solved. Unfortunately, it turns out that doing so will necessarily invalidate one of our most basic calculation rules ...TBC...
+
+\paragraph{The Extended Real Line}...
+
+\paragraph{Hyperreal Numbers}...
+
+\paragraph{Wheel Theory}...
+
+%Was passiert, wenn man durch 0 dividiert
+%https://www.youtube.com/watch?v=_b51R7eSgxw&list=PL542920k_cOq1gzagygodiAQg5WA6h2K4&index=4
+
 
 
 
@@ -179,6 +197,7 @@ such that each $G_k$ is a normal subgroup of $G_{k+1}$ and $G_{k+1} / G_k$ is ab
 definition is that g has a normal series in which all quotient groups are cyclic of prime order.
 
 see ABoAA, pg 338, 342, 343
+
 
 	
 \end{comment}

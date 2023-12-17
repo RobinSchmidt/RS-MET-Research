@@ -89,15 +89,51 @@ Motivated by the unsolvability of a particular equation within the realm of natu
 %\paragraph{Arithmetic Operations}
 %... In higher mathematics, specifically in abstract algebra, it turns out that a more convenient way to think about arithmetic operations is to only consider addition and multiplication as basic and cast subtraction and division in terms of these two basic operations and so called inverse elements. The inverse element of a rational number $q$ with respect to addition is just its negative version, i.e. $-q$. The inverse element of $q$ with respect to multiplication is the reciprocal of $q$, written as $1/q$ or $q^{-1}$. The set of rational numbers is the first set in which both of these inverses exist for any given $q$, except for $q=0$ which has no multiplicative inverse. 
 
-\subsection{Intervals}
-So far, we've built up our number system as $\mathbb{N \subset Z \subset Q}$. In order to approach our next set of numbers, we'll need a little preliminary, so we'll take a small break from extending our set of numbers and have a little interlude.  ....
+
+
+%\subsection{Intervals}
+%So far, we've built up our number system as $\mathbb{N \subset Z \subset Q}$. In order to approach our next set of numbers, we'll need a little preliminary, so we'll take a small break from extending our set of numbers and have a little interlude. We will need to define what an interval is
 % -define what open and closed intervals are
 
 
+%https://www.youtube.com/watch?v=d9z-DV9bLfw
+%https://en.wikipedia.org/wiki/Interval_(mathematics)
+
+
+
+% Hmm - it appears it's the other way around: we first need real numbers and then define intervals based on that. I think, I wanted to defin e intervals first and the define real numbers in terms of dedkind cuts which themselves are defined as dividng the rationla number line Q into two intervals?
+
+% Maybe define minimu, maximum, infimum and supremum and then define real numbers as adding all the possible supremums and infimums - like we add sqrt(2) by saying it is the supremum of the set x \in Q: x^2 <=2
+
+
+
 \subsection{Real Numbers}
-OK, nice - so the set of rational numbers is a field. We can add, subtract, multiply and divide to our hearts content without ever encountering any object that does not belong to the set (with the sole exception of division by zero). Is that finally good enough or could we still want more? The pattern of coming up with unsolvable equations continues: Consider the equation $x^2 = 2$. We can take the square root of both sides to get the solution $x = \sqrt{2}$. If the square root of two is a rational number, then we can indeed solve that equation within the rational numbers - but is it? The answer turns out to be a resounding nope! I could now present a proof for this fact (and a mathematically minded reader would rightfully demand one) but I think that would distract too much from the main line, so I just ask you to take my word for it or look it up elsewhere - there are actually many very different proofs for that fact.
+OK, nice - so the set of rational numbers is a field. We can add, subtract, multiply and divide to our hearts content without ever encountering any object that does not belong to the set (with the sole exception of division by zero). Is that finally good enough or could we still want more? The pattern of coming up with unsolvable equations continues: Consider the equation $x^2 = 2$. We can take the square root of both sides to get the solution $x = \sqrt{2}$. If the square root of two is a rational number, then we can indeed solve that equation within the rational numbers - but is it? The answer turns out to be a resounding nope! I could now present a proof for this fact (and a mathematically minded reader would rightfully demand one) but I think that would distract too much from the main line, so I just ask you to take my word for it or look it up elsewhere - there are actually many very different proofs for that fact. Besides the square root of two, there are many more numbers that are still "missing". Our number line still has "gaps" and in a sense that can be made explicit, actually "most" numbers are still missing. If we "fill in" these missing numbers, we arrive at what we call the \emph{real numbers}. Defining the process of filling in the missing numbers is rather technical 
+
+\subsubsection{$\star$ Completeness}
+
+\paragraph{Dedekind Completeness}
+
+\paragraph{Cauchy Completeness}
+
+
+\subsubsection{Density ans Sparsity}
+The rational numbers are \emph{dense} in the sense that in between any pair of rational numbers $q_1, q_2$, there are infinitely many more  rational numbers. You can see this by explicitly constructing one rational number that is between $q_1, q_2$, fro example, their average: $q_3 = (q_1 + q_2) / 2$. It is clearly again a rational number and it is also clearly in between the two original rational numbers $q_1$ and $q_2$. Now you can use your new $q_3$ together with either $q_1$ or $q_2$ to construct another rational number between $q_3$ and $q_1$ (or $q_2$). You can repeat this process ad infinitum and thereby generate infinitely many new rational numbers that are all in between $q_1$ and $q_2$
+
+Yet, they are sparse in the sense that the vast majority of all numbers on the number line is irrational.
 
 ...TBC...
+
+% https://en.wikipedia.org/wiki/Ordered_field
+
+% https://en.wikipedia.org/wiki/Least-upper-bound_property
+% https://en.wikipedia.org/wiki/Completeness_of_the_real_numbers
+% https://en.wikipedia.org/wiki/Cauchy_sequence
+
+% https://en.wikipedia.org/wiki/Least-upper-bound_property#Logical_status
+% The least-upper-bound property is equivalent to other forms of the completeness axiom, such as the convergence of Cauchy sequences or the nested intervals theorem.
+
+
 
 % -explain completeness, Cauchy sequences
 % -maybe briefly explain Dedekind cuts (that's why we introduced the intervals before the

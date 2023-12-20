@@ -21,7 +21,7 @@ In $\mathbb{R}^N$, the Euclidean norm of a vector was defined as the square root
 Often we are not interested in the vast and unstructured set of all possible real functions but only in a subset of it, i.e. in a set of functions that meet some additional criteria. We may, for example, demand that the functions have to be continuous, differentiable, (square-)integrable, bounded, periodic, monotonic, symmetric, etc. It turns out that many of these subsets are actually also subspaces in the sense that addition of two such functions or multiplication of one of them by scalar will always give a new function that also belongs to the set. Some of these specific function spaces are important enough that they have been given special names, so we shall now familiarize ourselves with this terminology.
 
 \subsubsection{Continuity and Differentiability}
-One way to categorize functions is by considering, how smooth they are. Does a function $f$ have spikes, jumps, corners, etc? That idea is captured by the number of continuous derivatives that a function has. If a function is $k$ times continuously differentiable, then it is said to be in the class $C^k$. If a function is just itself continuous but has a discontinuous first derivative, it is in the class $C^0$ but not in the class $C^1$. An example of such a $C^0$ but not $C^1$ function would be the absolute value $f(x) = |x|$. In general, the classes with lower $k$ are less restrictive, i.e. allow more functions. But the classification is meant in an inclusive sense, i.e. a function that is in $C^k$ is automatically also in $C^j$ if $j < k$. If a function can be differentiated $k+1$ times, it means that the $k$-th derivative is not only continuous but even differentiable which is a stronger requirement. That means, a function that can be differentiated $k+1$ times is automatically at least in $C^k$. If a function can be differentiated infinitely often, it is said to be in the class $C^\infty$. Such functions are also called \emph{smooth}. If, in addition to be infinitely differentiable, it also has a convergent Taylor series at any point of its domain, it said to be in $C^\omega$ and also called \emph{analytic}\footnote{The letter $\omega$ is also used in other areas of math (ordinal numbers, nonstandard analysis) to denote "infinity". I'm not sure, if that usage there is related but to be honest, I can't see how. It seems like the $\omega$ from ordinal numbers would mean exactly the same thing as the $\infty$ symbol as it is used here. So maybe drawing a connection would be a bit hasty.}. Analytic functions are in some sense even nicer than just smooth ones.
+One way to categorize functions is by considering, how smooth they are. Does a function $f$ have spikes, jumps, corners, etc? That idea is captured by the number of continuous derivatives that a function has. If a function is $k$ times continuously differentiable, then it is said to be in the class $C^k$. If a function is just itself continuous but has a discontinuous first derivative, it is in the class $C^0$ but not in the class $C^1$. An example of such a $C^0$ but not $C^1$ function would be the absolute value $f(x) = |x|$. In general, the classes with lower $k$ are less restrictive, i.e. allow more functions. But the classification is meant in an inclusive sense, i.e. a function that is in $C^k$ is automatically also in $C^j$ if $j < k$. If a function can be differentiated $k+1$ times, it means that the $k$-th derivative is not only continuous but even differentiable which is a stronger requirement. That means, a function that can be differentiated $k+1$ times is automatically at least in $C^k$. If a function can be differentiated infinitely often, it is said to be in the class $C^\infty$. Such functions are also called \emph{smooth}. If, in addition to be infinitely differentiable, it also has a convergent Taylor series at every point of its domain, it said to be in $C^\omega$ and also called \emph{analytic}\footnote{The letter $\omega$ is also used in other areas of math (ordinal numbers, nonstandard analysis) to denote "infinity". I'm not sure, if that usage there is related but to be honest, I can't see how. It seems like the $\omega$ from ordinal numbers would mean exactly the same thing as the $\infty$ symbol as it is used here. So maybe drawing a connection would be a bit hasty.}. Analytic functions are in some sense even nicer than just smooth ones.
 
 %...TODO: define $C^k$ spaces including $C^\infty$ and $C^\omega$
 
@@ -30,7 +30,26 @@ One way to categorize functions is by considering, how smooth they are. Does a f
 % https://en.wikipedia.org/wiki/Smoothness
 % https://mathworld.wolfram.com/C-kFunction.html
 
-\subsubsection{Integrability} TODO: define $L^p$ spaces
+\subsubsection{Integrability} Functions can also be categorized according to their integrability. By analogy with the classification based on differentiability, you might guess that we consider repeated integration of a function. But that's not how it works. Instead, we consider the integral of the $p$-th power of the absolute value of the function. For example, for functions $f: \mathbb{R} \rightarrow \mathbb{R}$, we may consider the integral of the absolute value of $f$ over the whole domain: $\int_{-\infty}^{+\infty} |f(x)| \; dx$ and classify those functions for which this integral is finite as belonging to the class of \emph{absolutely integrable} functions over the real numbers. This idea could be generalized to functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$ by considering $\int_{\mathbb{R}^n} |f(x_1, x_2,\ldots,x_n)| \; dx_1 dx_2 \ldots dx_n$ and requiring that to be finite.
+
+%That is, for some given $f$, we consider the integral $\int_S |f|^p \; d \mu$ where $S$ is some set on which $f$ is defined (i.e. a subset of the domain of $f$) and $\mu$ is some measure that is defined on $S$ [VERIFY].
+
+%\begin{equation}
+%\int_S |f|^p \; d \mu
+%\end{equation}
+
+%Rather than considering repeated integration (as we did in the case), we consider
+
+TODO: define $L^p$ spaces named after Lebesgue, explain $\mathcal{L}^p, \ell^p$
+
+% https://en.wikipedia.org/wiki/Lp_space#Lp_spaces_and_Lebesgue_integrals
+
+% https://en.wikipedia.org/wiki/Lp_space
+% https://en.wikipedia.org/wiki/Absolutely_integrable_function
+% https://en.wikipedia.org/wiki/Square-integrable_function
+% https://mathworld.wolfram.com/SquareIntegrable.html
+
+% https://de.wikipedia.org/wiki/Lp-Raum
 
 
 \subsubsection{Normed Function Spaces}

@@ -30,9 +30,18 @@ One way to categorize functions is by considering, how smooth they are. Does a f
 % https://en.wikipedia.org/wiki/Smoothness
 % https://mathworld.wolfram.com/C-kFunction.html
 
-\subsubsection{Integrability} Functions can also be categorized according to their integrability. By analogy with the classification based on differentiability, you might guess that we consider repeated integration of a function. But that's not how it works. Instead, we consider the integral of the $p$-th power of the absolute value of the function. For example, for functions $f: \mathbb{R} \rightarrow \mathbb{R}$, we may consider the integral of the absolute value of $f$ over the whole domain: $\int_{-\infty}^{+\infty} |f(x)| \; dx$ and classify those functions for which this integral is finite as belonging to the class of \emph{absolutely integrable} functions over the real numbers. This idea could be generalized to functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$ by considering $\int_{\mathbb{R}^n} |f(x_1, x_2,\ldots,x_n)| \; dx_1 dx_2 \ldots dx_n$ and requiring that to be finite.
+\subsubsection{Integrability} Functions can also be categorized according to their integrability. By analogy with the classification based on differentiability, you might guess that we consider repeated integration of a function. But that's not how it works. Instead, we consider the integral of the $p$-th power of the absolute value of the function. For example, for functions $f: \mathbb{R} \rightarrow \mathbb{R}$, we may consider the integral of the absolute value of $f$ over the whole domain: $\int_{-\infty}^{+\infty} |f(x)| \; dx$ and classify those functions for which this integral is finite as belonging to the class of \emph{absolutely integrable} functions over the real numbers. Next, we may introduce an exponent $p$ to whose power we raise the absolute value and look at $\int_{-\infty}^{+\infty} |f(x)|^p \; dx$ and requiring that integral to be finite. For the special case $p=2$, we call the class of functions \emph{square integrable} and for general $p$, we call the functions \emph{$p$-th power integrable}. Generalizing further, we may consider functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$ and look at $\int_{\mathbb{R}^n} |f(x_1, x_2,\ldots,x_n)|^p \; dx_1 dx_2 \ldots dx_n$ and requiring that integral to be finite. Generalizing even further, we may consider functions from any measurable set $S$ for which a measure $\mu$ is defined into the real numbers\footnote{I guess, it could be generalized even further to allow the codomain be any set $T$ on which a suitable absolute value function is defined. $T =\mathbb{R}$ or $T = \mathbb{C}$ are two obvious choices.} $\mathbb{R}$
+
+
+%any set of objects $T$ on which an absolute value is defined (such as $T =\mathbb{R}$ or $T = \mathbb{C}$)
+
+% The normed vector space ( L p ( S , μ ) , ‖ ⋅ ‖ p ) {\displaystyle \left(L^{p}(S,\mu ),\|\cdot \|_{p}\right)} is called L p L^{p} space or the Lebesgue space of p p-th power integrable functions
+
+%This idea could be generalized to functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$ by considering $\int_{\mathbb{R}^n} |f(x_1, x_2,\ldots,x_n)|^p \; dx_1 dx_2 \ldots dx_n$ and requiring that integral to be finite.
 
 %That is, for some given $f$, we consider the integral $\int_S |f|^p \; d \mu$ where $S$ is some set on which $f$ is defined (i.e. a subset of the domain of $f$) and $\mu$ is some measure that is defined on $S$ [VERIFY].
+
+% https://en.wikipedia.org/wiki/Lp_space#Lp_spaces_and_Lebesgue_integrals
 
 %\begin{equation}
 %\int_S |f|^p \; d \mu
@@ -51,12 +60,18 @@ TODO: define $L^p$ spaces named after Lebesgue, explain $\mathcal{L}^p, \ell^p$
 
 % https://de.wikipedia.org/wiki/Lp-Raum
 
+% https://en.wikipedia.org/wiki/Measurable_function
+% https://mathworld.wolfram.com/MeasurableFunction.html
+
 
 \subsubsection{Normed Function Spaces}
 
 \paragraph{Banach Space}
 
 \paragraph{Hilbert Space}
+
+% https://en.wikipedia.org/wiki/Lp_space#Special_cases
+% L^2 is the only Hilber space among the L^p spaces
 
 \paragraph{Sobolev Space}
 

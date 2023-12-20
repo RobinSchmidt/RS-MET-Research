@@ -67,12 +67,17 @@ One way to categorize functions is by considering, how smooth they are. Does a f
 
 
 \subsubsection{Normed Function Spaces}
-Let's go back the expression $\int_{-\infty}^{+\infty} |f(x)|^p \; dx$ that defines the class of $p$-th power integrable functions $f: \mathbb{R} \rightarrow \mathbb{R}$ by the requirement that this integral must be finite. So far, we really only looked at the cases $p=1$ and $p=2$. We initially intended to let $p$ be a positive natural number but we now want to widen our perspective to allow real $p \geq 1$ and even allow for $p = \infty$. In order to get nice behavior when we let $p$ go to infinity, we will now look at the expression $(\int_{-\infty}^{+\infty} |f(x)|^p \; dx)^{1/p}$. As long as we were just concerned with the finiteness of the integral, it didn't really matter whether or not we do the $(\ldots)^{1/p}$ step at the end. But for what we want to do now - namely defining a norm that is still meaningful when $p \rightarrow \infty$ - we need this additional reciprocal exponent [VERIFY!].
+Let's go back the expression $\int_{-\infty}^{+\infty} |f(x)|^p \; dx$ that defines the class of $p$-th power integrable functions $f: \mathbb{R} \rightarrow \mathbb{R}$ by the requirement that this integral must be finite. So far, we really only looked at the cases $p=1$ and $p=2$. We initially intended to let $p$ be a positive natural number but we now want to widen our perspective to allow real $p \geq 1$ and even allow for $p = \infty$. In order to get nice behavior when we let $p$ go to infinity, we will now look at the expression $(\int_{-\infty}^{+\infty} |f(x)|^p \; dx)^{1/p}$. As long as we were just concerned with the finiteness of the integral, it didn't really matter whether or not we do the $(\ldots)^{1/p}$ step at the end. But for what we want to do now - namely defining a norm that is still meaningful when $p \rightarrow \infty$ - we need this additional reciprocal exponent [VERIFY!]. We define the $p$-norm of a function $f: S \rightarrow \mathbb{R}$ as
+\begin{equation}
+ \norm{f}_p = \left( \int_S |f|^p \; d\mu \right)^{1/p}
+\end{equation}
 
 
  ...TBC...TODO: introduce $p$-norm and $L^p$ spaces as space of equivalence classes of functions from an $\mathcal{L}^p$ space
 
 % https://en.wikipedia.org/wiki/Norm_(mathematics)#p-norm
+
+% https://web.archive.org/web/20201024063542/http://faculty.bard.edu/belk/math461/LpFunctions.pdf
 
 \paragraph{Banach Space}
 

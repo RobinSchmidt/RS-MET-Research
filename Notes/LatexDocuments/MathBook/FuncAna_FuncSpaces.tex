@@ -21,9 +21,9 @@ In $\mathbb{R}^N$, the Euclidean norm of a vector was defined as the square root
 Often we are not interested in the vast and unstructured set of all possible real functions but only in a subset of it, i.e. in a set of functions that meet some additional criteria. We may, for example, demand that the functions have to be continuous, differentiable, (square-)integrable, bounded, periodic, monotonic, symmetric, etc. It turns out that many of these subsets are actually also subspaces in the sense that addition of two such functions or multiplication of one of them by scalar will always give a new function that also belongs to the set. Some of these specific function spaces are important enough that they have been given special names, so we shall now familiarize ourselves with this terminology.
 
 \subsubsection{Continuity and Differentiability}
-One way to categorize functions is by considering, how smooth they are. Does a function $f$ have spikes, jumps, corners, etc? That idea is captured by the number of continuous derivatives that a function has. If a function is $k$ times continuously differentiable, then it is said to be in the class $C^k$. If a function is just itself continuous but has a discontinuous first derivative, it is in the class $C^0$ but not in the class $C^1$. An example of such a $C^0$ but not $C^1$ function would be the absolute value $f(x) = |x|$. In general, the classes with lower $k$ are less restrictive, i.e. allow more functions. But the classification is meant in an inclusive sense, i.e. a function that is in $C^k$ is automatically also in $C^j$ if $j < k$.
+One way to categorize functions is by considering, how smooth they are. Does a function $f$ have spikes, jumps, corners, etc? That idea is captured by the number of continuous derivatives that a function has. If a function is $k$ times continuously differentiable, then it is said to be in the class $C^k$. If a function is just itself continuous but has a discontinuous first derivative, it is in the class $C^0$ but not in the class $C^1$. An example of such a $C^0$ but not $C^1$ function would be the absolute value $f(x) = |x|$. In general, the classes with lower $k$ are less restrictive, i.e. allow more functions. But the classification is meant in an inclusive sense, i.e. a function that is in $C^k$ is automatically also in $C^j$ if $j < k$. If a function can be differentiated $k+1$ times, it means that the $k$-th derivative is not only continuous but even differentiable which is a stronger requirement. That means, a function that can be differentiated $k+1$ times is automatically at least in $C^k$. If a function can be differentiated infinitely often, it is said to be in the class $C^\infty$. Such functions are also called \emph{smooth}. If, in addition to be infinitely differentiable, it also has a convergent Taylor series at any point of its domain, it said to be in $C^\omega$ and also called \emph{analytic}\footnote{The letter $\omega$ is also used in other areas of math (ordinal numbers, nonstandard analysis) to denote "infinity". I'm not sure, if that usage there is related but to be honest, I can't see how. It seems like the $\omega$ from ordinal numbers would mean exactly the same thing as the $\infty$ symbol as it is used here. So maybe drawing a connection would be a bit hasty.}. Analytic functions are in some sense even nicer than just smooth ones.
 
-...TODO: define $C^k$ spaces including $C^\infty$ and $C^\omega$
+%...TODO: define $C^k$ spaces including $C^\infty$ and $C^\omega$
 
 % Bump functions are in  $C^\infty$ but not in $C^\omega$. Explain why!
 
@@ -31,6 +31,16 @@ One way to categorize functions is by considering, how smooth they are. Does a f
 % https://mathworld.wolfram.com/C-kFunction.html
 
 \subsubsection{Integrability} TODO: define $L^p$ spaces
+
+
+\subsubsection{Normed Function Spaces}
+
+\paragraph{Banach Space}
+
+\paragraph{Hilbert Space}
+
+\paragraph{Sobolev Space}
+
 
 %\subsubsection{Analytic Functions}
 % Smooth Functions, Differentiable Functions

@@ -30,7 +30,9 @@ One way to categorize functions is by considering, how smooth they are. Does a f
 % https://en.wikipedia.org/wiki/Smoothness
 % https://mathworld.wolfram.com/C-kFunction.html
 
-\subsubsection{Integrability} Functions can also be categorized according to their integrability. By analogy with the classification based on differentiability, you might guess that we consider repeated integration of a function. But that's not how it works. Instead, we consider the integral of the $p$-th power of the absolute value of the function. For example, for functions $f: \mathbb{R} \rightarrow \mathbb{R}$, we may consider the integral of the absolute value of $f$ over the whole domain: $\int_{-\infty}^{+\infty} |f(x)| \; dx$ and classify those functions for which this integral is finite as belonging to the class of \emph{absolutely integrable} functions over the real numbers. Next, we may introduce an exponent $p$ to whose power we raise the absolute value and look at $\int_{-\infty}^{+\infty} |f(x)|^p \; dx$ and requiring that integral to be finite. For the special case $p=2$, we call the class of functions \emph{square integrable} and for general $p$, we call the functions \emph{$p$-th power integrable}. Generalizing further, we may consider functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$ and look at $\int_{\mathbb{R}^n} |f(x_1, x_2,\ldots,x_n)|^p \; dx_1 dx_2 \ldots dx_n$ and requiring that integral to be finite. Generalizing even further, we may consider functions from any set $S$ for which a measure $\mu$ is defined into the real numbers\footnote{I guess, it could be generalized even further to allow the codomain be any set $T$ on which a suitable absolute value function is defined. $T =\mathbb{R}$ or $T = \mathbb{C}$ are two obvious choices.} $\mathbb{R}$ such that $f: S \rightarrow \mathbb{R}$ and requiring $\int_S |f|^p \; d \mu $ to be finite.
+\subsubsection{Integrability} Functions can also be categorized according to their integrability. By analogy with the classification based on differentiability, you might guess that we consider repeated integration of a function. But that's not how it works. Instead, we consider the integral of the $p$-th power of the absolute value of the function. For example, for functions $f: \mathbb{R} \rightarrow \mathbb{R}$, we may consider the integral of the absolute value of $f$ over the whole domain: $\int_{-\infty}^{+\infty} |f(x)| \; dx$ and classify those functions for which this integral is finite as belonging to the class of \emph{absolutely integrable} functions over the real numbers. Next, we may introduce an exponent $p$ to whose power we raise the absolute value and look at $\int_{-\infty}^{+\infty} |f(x)|^p \; dx$ and requiring that integral to be finite. For the special case $p=2$, we call the class of functions \emph{square integrable} and for general $p$, we call the functions \emph{$p$-th power integrable}. Generalizing further, we may consider functions $f: \mathbb{R}^n \rightarrow \mathbb{R}$ and look at $\int_{\mathbb{R}^n} |f(x_1, x_2,\ldots,x_n)|^p \; dx_1 dx_2 \ldots dx_n$ and requiring that integral to be finite. Generalizing even further, we may consider functions from any set $S$ for which a measure $\mu$ is defined into the real numbers\footnote{I guess, it could be generalized even further to allow the codomain be any set $T$ on which a suitable absolute value function is defined. $T =\mathbb{R}$ or $T = \mathbb{C}$ are two obvious choices.} $\mathbb{R}$ such that $f: S \rightarrow \mathbb{R}$ and requiring $\int_S |f|^p \; d \mu $ to be finite. This integral is apparently meant to be understood as a Lebesgue integral - so we require that the $p$-th power of the absolute value of $f$ must be Lebesgue integrable and the integral must be finite. We denote this set of functions by $\mathcal{L}^p(S,\mu)$ and call it the set of \emph{measurable functions} [VERIFY!]
+
+%When talking about measures, it is clear
 
 
 %any set of objects $T$ on which an absolute value is defined (such as $T =\mathbb{R}$ or $T = \mathbb{C}$)
@@ -49,7 +51,7 @@ One way to categorize functions is by considering, how smooth they are. Does a f
 
 %Rather than considering repeated integration (as we did in the case), we consider
 
-TODO: define $L^p$ spaces named after Lebesgue, explain $\mathcal{L}^p, \ell^p$
+%TODO: define $L^p$ spaces named after Lebesgue, explain $\mathcal{L}^p, \ell^p$
 
 % https://en.wikipedia.org/wiki/Lp_space#Lp_spaces_and_Lebesgue_integrals
 
@@ -65,6 +67,12 @@ TODO: define $L^p$ spaces named after Lebesgue, explain $\mathcal{L}^p, \ell^p$
 
 
 \subsubsection{Normed Function Spaces}
+Let's go back the expression $\int_{-\infty}^{+\infty} |f(x)|^p \; dx$ that defines the class of $p$-th power integrable functions $f: \mathbb{R} \rightarrow \mathbb{R}$ by the requirement that this integral must be finite. So far, we really only looked at the cases $p=1$ and $p=2$. We initially intended to let $p$ be a positive natural number but we now want to widen our perspective to allow real $p \geq 1$ and even allow for $p = \infty$. In order to get nice behavior when we let $p$ go to infinity, we will now look at the expression $(\int_{-\infty}^{+\infty} |f(x)|^p \; dx)^{1/p}$. As long as we were just concerned with the finiteness of the integral, it didn't really matter whether or not we do the $(\ldots)^{1/p}$ step at the end. But for what we want to do now - namely defining a norm that is still meaningful when $p \rightarrow \infty$ - we need this additional reciprocal exponent [VERIFY!].
+
+
+ ...TBC...TODO: introduce $p$-norm and $L^p$ spaces as space of equivalence classes of functions from an $\mathcal{L}^p$ space
+
+% https://en.wikipedia.org/wiki/Norm_(mathematics)#p-norm
 
 \paragraph{Banach Space}
 

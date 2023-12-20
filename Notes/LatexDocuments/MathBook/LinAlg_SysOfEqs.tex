@@ -117,7 +117,7 @@ Now we want to look into the more messy situation when $\det(\mathbf{A}) \neq 0$
 \paragraph{Geometric Intuition} Let's try to visualize the set of solutions in our heads. Imagine we have $m=n=3$, i.e. we want to find a set of points $(x_1, x_2, x_3)$  in $\mathbb{R}^3$ that solves a system of 3 given equations. If the rank $r = 3$, then the solution is unique - we get a single point in 3D space. If $r=2$ the we get a one-dimensional continuum of solutions. The set of solutions forms a line. If $r=1$, the set of solution vectors will form a plane.
 
 %...TBC...
-% Explain hwo in 3D, each equation determines a plane and the solution is the point at which they all intersect. In nD, each equation determines an $(n-1)$D subspace (sometimes called hyperplane). These hypeplanes also have aunique intersection point. In 2D, the "hyperplanes" are just lines and they also intersection in one specific point unless they are parallel
+% Explain how in 3D, each equation determines a plane and the solution is the point at which they all intersect. In nD, each equation determines an $(n-1)$D subspace (sometimes called hyperplane). These hyperplanes also have aunique intersection point. In 2D, the "hyperplanes" are just lines and they also intersection in one specific point unless they are parallel
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Underdetermined Case}
@@ -173,7 +173,10 @@ If an exact solution is not possible, the next best thing that we could look out
 \boxed{ \mathbf{x} = (\mathbf{A}^T \mathbf{A})^{-1} \mathbf{A}^T \mathbf{b} }
 \end{equation}
 
-\paragraph{Geometric Intuition} ...TBC...
+\paragraph{Geometric Intuition} 
+Recall that we may write our LSE in this form: $\sum_{j=1}^{n}  x_j \mathbf{a}_j  = \mathbf{b}$ where the $\mathbf{a}_j$ are the columns of our matrix $\mathbf{A}$. We are trying to build the vector $\mathbf{b}$ as a linear combination from these columns. This can work out only if the vector $\mathbf{b}$ happens to be in the span of the $\{ \mathbf{a}_j \}$ where $j = 1, \ldots, n$. If $\mathbf{b}$ is not in this span, we can try to find a vector $\hat{\mathbf{b}}$ within the span that is closest to $\mathbf{b}$ in the sense that $|\mathbf{b} - \hat{\mathbf{b}}|$ is minimized. This vector $\hat{\mathbf{b}}$ happens to be the orthogonal projection of $\mathbf{b}$ onto the span of $\{ \mathbf{a}_j \}$.
+
+...TBC...
 
 % Explain geoemtric intuition: The components x_i of the solution vector should serve as multipliers for the columns of matrix A. We try to find these weights in such a way as to match the right hand side vector. But when this vector is outside the span of the columns of A, there is no way we could match it eaxctly. 
 

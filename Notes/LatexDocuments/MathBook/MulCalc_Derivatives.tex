@@ -102,12 +102,30 @@ Due to the symmetry of the partial derivatives when $f$ is twice continuously di
 for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then this quadratic approximation function will be the locally (at $\mathbf{x}$) best fitting paraboloid. Such second order approximations of a multivariate scalar function play an important role in numerical optimization algorithms, i.e. algorithms that try to try to locate minima or maxima of such functions. The simpler of such algorithms use only the gradient, the more advanced ones may also use (an approximation of) the Hessian.
 
 
-\subsection{Differentials}
+\subsection{Differentials} Imagine we have a function $f(x,y)$ in two variables, for example $f(x,y) = x^y$. We can compute the partial derivatives of $f$ with respect to $x$ and $y$ as $f_x = \partial f / \partial x = y x^{y-1}$ and $f_y = \partial f / \partial y = x^y \ln x$. Consider a particular point $(x_0, y_0) = (2,3)$. We can evaluate $f$ and its partial derivatives $f_x, f_y$ at that point to get $f = 2^3 = 8, f_x = 3 \cdot 2^2 = 12, f_y = 2^3 \cdot \ln 2 \approx 5.545178$. With these three values, we can approximate our function $f$ near the point $(3,2)$ linearly as $f \approx 8 + 12 dx + 5.545178 dy$. For example, at $(2.02,3.01)$, we get $f \approx 8 + 12 \cdot 0.02 + 5.545178 \cdot 0.01 \approx 8.2955$ which is an approximation to the true value of around $8.3006$. What we did here was to define a linear function in two variables $dx,dy$ which we envision as small offsets from our given point $(x_0,y_0) = (2,3)$. These were given as $(dx,dy) = (0.02,0.01)$ in our example. These two offsets in the input variables lead to a resulting offset $df$ in the output variable $df = 12 \cdot 0.02 + 5.545178 \cdot 0.01$. This linear function in the two offset variables $dx, dy$ is called the \emph{total differential} of the function $f$ at the point $(x_0, y_0)$
+
+...TBC...
+
+% 0.69315 
+% 0.6931 4718  05599453094172321214581765680755001343602552541206800094...
+% 5.545177 4444795624753378569716654125446040010748820420329654400759...
+% % 5.545178 7 4444795624753378569716654125446040010748820420329654400759...
+
+% Bärwolff, pg 402
+
+
+%The partial differential $f$ with respect to $x$ is a linear function in a variable $dx$
+
+%At some given point $(x_0, y_0)$
 
 % https://en.wikipedia.org/wiki/Differential_of_a_function#Differentials_in_several_variables
 % https://en.wikipedia.org/wiki/Differential_of_a_function
 % https://de.wikipedia.org/wiki/Differential_(Mathematik)
 
+% https://en.wikipedia.org/wiki/Total_derivative
+
+% This is also a useful view:
+% https://en.wikipedia.org/wiki/Differential_of_a_function#General_formulation
 
 % todo: explain how it can be used in a second order (quadratic) approximation of f
 

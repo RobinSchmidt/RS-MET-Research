@@ -499,7 +499,7 @@ The first equation is a statement that $\Gamma$ interpolates the shifted factori
 
 
 \subsubsection{Multifunctions}
-In the set-theoretic framework, functions are required to be right-unique relations. We sometimes need to work with function-like objects that violate this condition. Multifunctions are multi valued functions in the sense that for a given input $x$ they produce not a unique output value $y$ but multiple values. For example, consider the equation $x^2 = 4$. It has the two solutions $+2$ and $-2$. \emph{The} square root of $4$ on $\mathbb{R}$ is usually \emph{defined} to be $+2$ - but that's a matter of definition. It would also be viable to define the square root to be multi-valued. Then, instead of giving the solution $2$, it would give the solution $\{2,-2\}$. The output would not be a single number but a whole set of numbers. This is indeed how we usually interpret the square-root function on $\mathbb{C}$. [VERIFY!] In $\mathbb{R}$, we would say that $\sqrt[4]{16} = 2$. In $\mathbb{C}$, we would say that $\sqrt[4]{16} = \{2,2\i,-2,-2\i\}$ and in general, the $n$th root of any nonzero complex number would produce a set of $n$ solutions. For logarithms on $\mathbb{C}$, things get even crazier - due to the fact that $e^z = e^{z + 2 \pi k \i}$ for any integer $k$, the logarithm of any (nonzero?) complex number is the infinite set:...
+In the set-theoretic framework, functions are required to be \emph{right-unique} relations. We sometimes need to work with function-like objects that violate this condition. \emph{Multifunctions} are multi valued functions in the sense that for a given input $x$ they produce not a unique output value $y$ but multiple values. For example, consider the equation $x^2 = 4$. It has the two solutions $+2$ and $-2$. \emph{The} square root of $4$ on $\mathbb{R}$ is usually \emph{defined} to be $+2$ - but that's a matter of definition. It would also be viable to define the square root to be multi-valued. Then, instead of giving the solution $2$, it would give the solution $\{2,-2\}$. The output would not be a single number but a whole set of numbers. This is indeed how we usually interpret the square-root function on $\mathbb{C}$. [VERIFY!] In $\mathbb{R}$, we would say that $\sqrt[4]{16} = 2$. In $\mathbb{C}$, we would say that $\sqrt[4]{16} = \{2,2\i,-2,-2\i\}$ and in general, the $n$th root of any nonzero complex number would produce a set of $n$ solutions. For logarithms on $\mathbb{C}$, things get even crazier - due to the fact that $e^z = e^{z + 2 \pi k \i}$ for any integer $k$, the logarithm of any (nonzero?) complex number is the infinite set:...
 ...TBC...
 
 %the square-root function on the real numbers. 
@@ -510,6 +510,12 @@ In the set-theoretic framework, functions are required to be right-unique relati
 % https://en.wikipedia.org/wiki/Multivalued_function
 % https://en.wikipedia.org/wiki/Set-valued_function
 % https://math.stackexchange.com/questions/3726882/square-root-as-a-multi-valued-function
+
+\subsubsection{Partial Functions}
+In our set-theoretic description, functions were also required to be \emph{left-total} relations. This requirement may also be relaxed. When doing so, we arrive at the notion of a \emph{partial function}. For such a partial function from a set $X$ to a set $Y$ we do not require the function value to be defined for any $x \in X$. There may be some $x \in X$ for which $f(x)$ is undefined. In such a case, we may write $f(x) = \, \perp$ and we may indicate missing function values by using a "partial arrow" like so: $f: X \rightharpoonup Y$. Consider the function $f(x) = 1/x$. Because division by zero is impossible, we could interpret $f$ as partial function $f: \mathbb{R} \rightharpoonup \mathbb{R}$ and set $f(0) = \, \perp$. Another possibility would be to exclude $0$ from the domain by writing $f: \mathbb{R} \setminus \{ 0 \} \rightarrow \mathbb{R}$. A third possibility would be to define $f(0)$ as any arbitrary value, i.e. define the function conditionally using different definitions in different cases. For example, we could arbitrarily define $f(0) = 0$ and $f(x) = 1/x$ for nonzero $x$.
+
+
+% https://en.wikipedia.org/wiki/Partial_function
 
 \begin{comment}
 

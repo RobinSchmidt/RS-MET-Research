@@ -23,7 +23,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testUpDownSample1D_2();
   //testUpDownSample2D();              // stub, dito but for images
 
-  epidemic();
+  //epidemic();
 
   // Tensors and differential geometry:
   //testTensor();
@@ -52,8 +52,8 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // PDE solvers on nonuniform meshes:
   //testMeshGeneration();
-  testTransportEquation();
-  testWaveEquation();
+  //testTransportEquation();
+  //testWaveEquation();
   //testBiModalFeedback();
   //testPDE_1stOrder();  // stub
   //testVertexMesh();  // moved to main codbase
@@ -68,7 +68,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testComplexPolar();    // stub
   //testRationalTrigonometry();
   //testLeveledNumber();   // stub
-  //testCommutativeHyperOperations();
+  testCommutativeHyperOperations();
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();
@@ -78,7 +78,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testParticleSystem();
   //testWeightedAverages();
   //testSylvesterMatrix();
-  testBezoutMatrix();
+  //testBezoutMatrix();
 
   // Modular forms, lattices, elliptic functions:
   //testModularGroup();         // maybe move down, closer to the other 2x2 matrix stuff

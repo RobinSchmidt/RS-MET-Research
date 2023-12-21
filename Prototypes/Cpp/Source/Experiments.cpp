@@ -9664,10 +9664,10 @@ bool testCommutativeHyperOperations()
   // operation of order one lower. The operations defined here do have these commutativity and 
   // distributivity properties. The price is losing the interpretation as repeated application of
   // a lower order operation. It's a different kind operation. What we get is an infinite sequence
-  // of operations where eahc operation is commutative and distributes over the operation one level
-  // below.. We need to be careful about the domains, though. Due to using the logarithm within the 
-  // definition of these operation, we must make sure to never feed the logarithm with zero or 
-  // negative numbers. This leads top the circumstance that for the higher order operations, the 
+  // of operations where each operation is commutative and distributes over the operation one level
+  // below. We need to be careful about the domains, though. Due to using the logarithm within the 
+  // definition of these operations, we must make sure to never feed the logarithm with zero or 
+  // negative numbers. This leads to the circumstance that for the higher order operations, the 
   // input arguments need to have some minimum size - and that minimum required size grows big 
   // rather quickly.....TBC...
   //
@@ -9689,7 +9689,7 @@ bool testCommutativeHyperOperations()
   // quite big. In particular, if in the loops below we want to let i go up to n, we need the 
   // numbers to be greater than the basis of the exponential function used (like Euler's number e) 
   // tetrated to the n-1, I think (verify!). So, if n = 2 such that i <= 2, they must all be 
-  // greater than e^e. For n = 3, we need numbers greate than e^(e^e) etc.
+  // greater than e^e. For n = 3, we need numbers greater than e^(e^e) etc.
 
 
   // Test distributivity of *_j over *_i where j = i+1. That means:
@@ -9739,7 +9739,8 @@ bool testCommutativeHyperOperations()
   // -The numbers get big really quick
   // -We have x *_2 y = e^(log(x)*log(y)) = (e^(log(x)))^log(y) = (e^(log(y)))^log(x). It follows 
   //  that x^log(y) = y^log(x) because (e^(log(y))) = x and (e^(log(y))) = y? Is that true? It 
-  //  would be a logarithm law that I wasn't aware of before.
+  //  would be a logarithm law that I wasn't aware of before. Yes - this video:
+  //  https://www.youtube.com/watch?v=ofy2Kw2sIZg  mentions the formula at 0:45, too.
   // -Could it be the case that the rule log(a*b) = log(a) + log(b) could be generalized to
   //  log(a *_j b) = log(a) *_i log(b)  where i = j-1
   //
@@ -9755,6 +9756,9 @@ bool testCommutativeHyperOperations()
   //  modulus? Could this solve the problem of exploding numbers?
   // -Plot the surface z = f(x,y) = op(x, y, n) for various n. But it may grow quickly for larger n 
   //  so maybe use a logarithmic z-axis. Maybe even iterated logarithms could be needed.
+  //
+  // See also:
+  // -https://www.youtube.com/watch?v=ofy2Kw2sIZg  The Missing Operation | Epic Math Time
 }
 
 

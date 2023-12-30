@@ -12,7 +12,7 @@ Quantum mechanics deals with the world of atomic and subatomic particles. It tur
 
 %===================================================================================================
 \subsection{Notation and Terminology}
-On first encounter, quantum mechanics can be very intimidating. They will talk about superpositions of eigenfunctions of self-adjoint operators in infinite dimensional Hilbert spaces of square-integrable functions and they will use a very peculiar notation with lots of greek letters and adornments (hats, tildes, bars, asterisks) for all of that. Don't let that scare you off! Essentially, it all boils down to linear algebra. Granted, we'll have to use vector spaces over complex numbers and these vector spaces will sometimes be infinite dimensional (i.e. spaces of continuous functions). It's linear algebra nonetheless. ...TBC...
+On first encounter, quantum mechanics can be very intimidating. They will talk about superpositions of eigenfunctions of self-adjoint operators in infinite dimensional complex Hilbert spaces of square-integrable functions and they will use a very peculiar notation with lots of greek letters and adornments (hats, tildes, bars, asterisks) for all of that. Don't let that scare you off! Essentially, it all boils down to linear algebra. Granted, we'll have to use vector spaces over complex numbers and these vector spaces will sometimes be infinite dimensional (i.e. spaces of continuous functions). It's linear algebra nonetheless. ...TBC...
 
 % operating on sets over the complex numbers
 
@@ -88,7 +88,7 @@ which is quite a mouthful, but we will now dissect it and introduce some notatio
 \Psi_t = \frac{\i \hbar}{2m} \; \Delta \Psi + \frac{V}{\i \hbar} \; \Psi
        = \left(\frac{\i \hbar}{2m} \Delta  + \frac{V}{\i \hbar} \right)  \Psi
 \end{equation}
-In the form in the middle, it really looks like the partial differential equations that we already met. Specifically, the term with the Laplacian closely resembles what we have seen in the diffusion equation. Just with the twist that the diffusion coefficient is imaginary. The form on the right is quite instructive as well. It has an operator that is applied to $\Psi$ and the result of that application gives us the time derivative $\Psi_t$. This is exactly the format in which we need the equation when we want to implement it in a numerical solver (like forward Euler) [VERIFY this form of the formulas - I derived them myself].
+In the form in the middle, it really looks like the partial differential equations that we already met. Specifically, the term with the Laplacian closely resembles what we have seen in the diffusion equation. Just with the twist that the diffusion coefficient is imaginary. The form on the right is quite instructive as well. It has an operator that is applied to $\Psi$ and the result of that application gives us the time derivative $\Psi_t$. This is exactly the format in which we need the equation when we want to implement it in a numerical solver (like forward Euler) [VERIFY this form of the formulas - I derived them myself from the written out form above].
 
 % a post where i explain why the delta function is eigenfunction of teh position operator
 % https://www.facebook.com/MusicEngineer/posts/pfbid02F2LacsTjTVjhzXCV29XwyAsBQnb8gFUmUNczjVfbEfVZgHnpg2pPh3BSKTPNPdVFl
@@ -184,6 +184,12 @@ https://en.wikipedia.org/wiki/Matrix_mechanics#Matrix_basics
 If two matrices share their eigenvectors, they can be simultaneously diagonalized. In the basis where they are both diagonal, it is clear that their product does not depend on their order because multiplication of diagonal matrices is just multiplication of numbers. The uncertainty principle, by contrast, is an expression of the fact that often two matrices A and B do not always commute, i.e., that AB − BA does not necessarily equal 0. "
 
 
+
+Inner Products | Pivotal Math of Quantum Mechanics | Quantum Theory
+https://www.youtube.com/watch?v=dLP6goswxFI
+https://www.youtube.com/watch?v=fMi6NUA85uY&list=PLVvnOdsCze6HnYJfCE9v1PHq1FfYTX99X
+-5 Axioms (general principles):
+ (1) A system is described in terms of a state-vector
 
 
 \end{comment}

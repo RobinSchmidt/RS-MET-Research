@@ -70,6 +70,8 @@ https://github.com/VcDevel/std-simd
 Polynomials:
 https://live.boost.org/doc/libs/1_64_0/libs/math/doc/html/math_toolkit/roots/polynomials.html
 
+https://www.boost.org/doc/libs/1_84_0/libs/math/doc/html/index.html
+
 Ratios:
 https://en.cppreference.com/w/cpp/numeric/ratio/ratio
   
@@ -138,7 +140,17 @@ https://www.youtube.com/watch?v=OQu2pZILjDo
  compile-time constants for the length of the span? That might be bad. Although, it may inline such
  a small routine anyway.
  
+
+https://www.boost.org/doc/libs/1_84_0/libs/math/doc/html/index.html   Math
+https://www.boost.org/doc/libs/1_84_0/libs/math/doc/html/poly.html    Chapter 11. Polynomials and Rational Functions
+
+
  
 Prototype Filter Design: 
 https://www.researchgate.net/publication/251816527_On_the_characteristics_of_Monotonic_L_Halpern_and_parabolic_filters 
  
+
+CppCon 2016: Jon Kalb “unsigned: A Guideline for Better Code"
+https://www.youtube.com/watch?v=wvtFGa6XJDU
+-recommends to not use unsigned types in APIs
+-the fact that the STL does is is considered an ugly wart

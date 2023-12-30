@@ -5,13 +5,13 @@ Features:
 - Implementation goals and considerations:
 
   - Should be templatized and at least support float, double, SIMD-vectors and maybe multiprecision
-    for the signals and coefficients. Would be nice, if it would also support more complicated types 
-    like matrices. The type of the parameters/coeffs and signals should possibly be different 
-    (example: scalar coeffs, multichannel signals realized by simd). SIMD coeffs can also be 
-    useful (each channel can have different coeffs) but that may be difficult to achieve when 
-    std::complex is used for the poles and zeros. We need a more flexible complex datatype that can 
-    work with SIMD and multiprecision numbers. But it could be possible with std::complex now (check 
-    that!).
+    for the signals and coefficients. The type of the parameters/coeffs and signals should possibly 
+    be different (examples: (1) scalar coeffs and multichannel signals realized by simd, (2) 
+    matrices for coeffs and vectors for signals for MIMO filters). SIMD coeffs can also be useful 
+    (each channel can have different coeffs) but that may be difficult to achieve when std::complex 
+    is used for the poles and zeros. We need a more flexible complex datatype that can work with 
+    SIMD and multiprecision numbers. Check if std::complex can do that now and if not, look into
+    boost::math .
     
   - Should be realtime capable: sample and block based processing functions shall never allocate 
     memory. Filter parameter updates (e.g. change of cutoff freq) should also work without 

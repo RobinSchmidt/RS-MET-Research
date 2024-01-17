@@ -37,7 +37,7 @@ struct wav_header
 struct wav_header wavh;
 
 
-const float MIDDLE_C = 256.00;  // Close enough for rock'n'roll, I guess?
+const float MIDDLE_C = 256.00;  // Yeah...well...not quite. Close enough for rock'n'roll, I guess?
 
 
 const int sample_rate = 8000;

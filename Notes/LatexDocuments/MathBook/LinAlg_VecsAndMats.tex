@@ -188,6 +188,8 @@ The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element
 % -The matrix product can be seen as being made up from scalar products of the rows of the left 
 %  factor with the columns of the right factor
 
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Transposition}
 The operation of turning the rows of a matrix into the columns of a new matrix and therefore also the columns into rows is called \emph{transposition} of a matrix. This is denoted by a superscript $T$ as in $\mathbf{A}^T$. When a matrix is complex, then most of the time we want to combine transposition with complex conjugation of the elements because that's how many formulas for real matrices involving the transpose generalize to the complex case. It's rare to see transposition or complex conjugation all by itself applied to a complex matrix (it happens occasionally, though). The combined operation of transposition and conjugation is sometimes called \emph{Hermitian transpose} and denoted by a superscript $H$ as $\mathbf{A}^H$. But there are other notations for that too, for example using a dagger: $\mathbf{A}^\dagger$ or an asterisk $\mathbf{A}^*$ [VERIFY!]. But watch out - often the asterisk denotes only complex conjugation alone and the dagger is also often used for the (pseudo-)inverse.
@@ -196,6 +198,13 @@ The operation of turning the rows of a matrix into the columns of a new matrix a
 % https://www.varsitytutors.com/hotmath/hotmath_help/topics/adjoint-of-a-matrix
 % https://en.wikipedia.org/wiki/Minor_(linear_algebra)#Inverse_of_a_matrix
 % cofactor matrix
+
+% In A^T A, we compute dot-products of the columns of the matrix - each columns dot-multiplied
+% with it self. In A A^T, the same happens with the rows. See:
+% https://www.youtube.com/watch?v=hsJ1-6ybvGM
+% at around 25 min
+
+% (AB)^T = B^T A^T
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}

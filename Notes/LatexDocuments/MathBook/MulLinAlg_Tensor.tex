@@ -46,6 +46,12 @@ Our eventual goal is to develop an algebra that is suitable to represent quantit
  rank tensors, we may be able to calculate one of the factors, given the other factor and the 
  product
 -Examples for tensor quantities are: scalars, vectors, linear maps, quadratic (bilinear) forms(?)
+-Maybe start with re-explaining what a vector is from the perspective of tensor algebra. there are
+ at least 3 ways to define a vector: (1) numeric: list of numbers, (2) geometric: arrow in space,
+ (3) abstract: element of a vector space. The first one is actually subject to the interpretation
+ v = v1*b1 + v2*b2 + ... + vn*bn where the vi are the vector componentes and the bi are the basis
+ vectors. If we say nothing about the basis vectors, it is usually implicitly understood that the
+ standard basis should be used.
 
 Let's try to express the some known products in terms of tensors and index notation:
 
@@ -81,6 +87,15 @@ https://www.youtube.com/watch?v=YxXyN2ifK8A  Visualization of tensors - part 1
 -Maybe it doesn't really matter in which order we assume the indices to be? Maybe that's an 
  "implementation detail" that is irrelevant to the underlying math?
  
+Confused by Tensors? You WON'T be after this! | Episode 1, Tensors in Physics: 
+https://www.youtube.com/watch?v=3I-_ePWm9NA
+-Very nice introduction. Starts with vectors, the explains dual vectors as linear maps from
+ vectors to scalars, then explains tensors as multilinear maps from some number dual vectors 
+ and some number of vectors to scalars.
+-Part of the upcoming playlist: 
+ https://www.youtube.com/playlist?list=PLVvnOdsCze6GqXjsibdA3HfLXsaw9hFFh
+ 
+ 
 Applications in data science:
 https://en.wikipedia.org/wiki/Tensor_decomposition
 https://en.wikipedia.org/wiki/Higher-order_singular_value_decomposition
@@ -95,7 +110,7 @@ https://www.youtube.com/playlist?list=PLT7ziIckLyd60jvS64O78wLhjauT8qJ3y
 -A bilinear map is alternating, iff its Gram matrix is antisymmetric
 -A bilinear map whose Gram matrix has det zero is called degenerate
 
-MathIntuitionBook (Zavalishin:)
+MathIntuitionBook (by Vadim Zavalishin:)
 -pg 107:
  -superscript indices 
   -transform contravariantly

@@ -234,6 +234,16 @@ The set of all invertible (i.e. bijective) functions from any set $S$ to itself 
 
 %https://en.wikipedia.org/wiki/Symmetric_group
 
+% I think, rational functions that represent transfer functions of allpass filters may also froma 
+% group. Composing (i.e. nesting) allpass filters yields another allpass and the inverse of an 
+% allpass...err...wait - no! The inverse allpass *filter* is not the same as the inverse function.
+% Filter inversion is achieved by swapping numerator and denominator - this is very different from
+% an inverse function. But what if we compose a more general allpass from first order allpasses? The
+%% first orde allpass has a Moebius trafo as transfer function so it is invertible. we could invert
+% a nesting of such functions by inverting each of them and applying these inverses in the reversed 
+% order. But wait: that gives us nothing new. Nesting of first order allpasses gives again a first 
+% order allpass
+
 \subsubsection{Permutations}
 Another important class of groups is that of permutation groups. In a certain sense, they can be seen as the prototypical examples of all groups. Permutation groups were studied before group theory was even a thing and in hindsight, it turned out that important results that were found for these permutation groups were in fact more general and apply to all groups. A permutation group consists of the set of all permutations, i.e. re-orderings, that we can apply to an ordered collection of $n$ objects. It is clear that when we permute (reorder) such a collection twice in a row, the total result is again a permutation (reordering). So, closure is verified. It's also clear that we can invert any reordering by an action that is again a permutation. So, existence of inverses is verified. The do-nothing action also counts as a permutation - that's our neutral element. Associativity checks also out because a permutation is just a special kind of function and as we have just seen, function composition is always associative ...TBC...
 

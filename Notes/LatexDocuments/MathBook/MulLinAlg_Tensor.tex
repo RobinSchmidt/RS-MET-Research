@@ -1,30 +1,48 @@
 \section{Tensor Algebra}
-Tensors are a generalization of scalars and vectors and are used to represent physical or geometrical quantities that are invariant with respect to the choice of a coordinate system. This invariance or coordinate independence seems to be a natural fit for situations where the choice of a coordinate system is arbitrary which is often the case in physics. Once a coordinate system has been chosen, these quantities can be \emph{represented} by multidimensional arrays. A scalar is just a number but can be seen as 0D array in this context. A vector is represented by a 1D array of numbers, usually written as column. A linear transformation of a vector is represented by a 2D array of numbers, i.e. a matrix. Now, we can see how this pattern should continue: we may have quantities that are representable by arrays with more than 2 dimensions - imagine slicing a bunch of matrices on top of each other for a 3D array, giving some sort of 3D block with small cubicles containing the numbers. A 4D array is harder to visualize, but we may imagine it as a list (i.e. a 1D array) of such blocks where the first index just selects, which of the blocks within the list we mean. And then we can imagine a list of such lists for a 5D array - or maybe a matrix of 3D blocks, etc. The dimensionality of the array is called the rank of the tensor. Be careful to not confuse this with dimensionality of the underlying vector space.
+Tensors are a generalization of scalars and vectors and are used to represent physical or geometrical quantities that are invariant with respect to the choice of a coordinate system. This invariance or coordinate independence seems to be a natural fit for situations where the choice of a coordinate system is arbitrary which is often the case in physics. Once a coordinate system has been chosen, these quantities can be \emph{represented} by multidimensional arrays. A scalar is just a number but can be seen as 0D array in this context. A vector is represented by a 1D array of numbers, usually written as column. A linear transformation of a vector is represented by a 2D array of numbers, i.e. a matrix. Now, we can see how this pattern should continue: we may have quantities that are representable by arrays with more than 2 dimensions - imagine slicing a bunch of matrices on top of each other for a 3D array, giving some sort of 3D block with small cubicles containing the numbers. A 4D array is harder to visualize, but we may imagine it as a list (i.e. a 1D array) of such blocks where the first index just selects, which of the blocks within the list we mean. And then we can imagine a list of such lists for a 5D array - or maybe a matrix of 3D blocks, etc. The dimensionality of the array is called the \emph{rank} of the tensor. Be careful to not confuse this with dimensionality of the underlying vector space. Be also careful to not confuse this notion of "rank" with the rank of a matrix known from linear algebra. This is just the same word for an entirely different concept.
 
 
 
+\subsection{Notation and Terminology}
 
-
-\subsection{Covariance, Contravariance and Invariance}
+\subsubsection{Covariance, Contravariance and Invariance}
 Our eventual goal is to develop an algebra that is suitable to represent quantities whose real-world meaning is independent from the arbitrariness of our choice of a coordinate system. However, in actual calculations, we have to make such a choice, so we can assign numbers to things. For example, a velocity can be represented by its velocity vector $\mathbf{v}$. The direction of movement in the real world does not depend on our chosen coordinate system but the components of the vector, i.e. the numbers in our 1D array, will. We could represent the \emph{same} vector in a different coordinate system as well. Then we would have different numbers, but the vector itself as an abstract entity would still be the same. Imagine a 2D vector and assume that we would obtain a new coordinate system by rotating both basis vectors of our old coordinate system by 30 degrees counterclockwise. The same vector in this new coordinate system would have components that appear rotated 30 degrees clockwise with respect to the vector's components in the old coordinate system. The clockwise rotation of the vector components compensates for the counterclockwise rotation of our basis vectors. We say that the vector is \emph{contravariant}: in the event of a change of the coordinate basis vectors, the components of the vector change in a way that is contrary to the change in the basis vectors. There can also be vector-like quantities that change in the same way as our basis vectors (TODO: give an example). Such quantities are called \emph{covariant}. Finally, scalars represent quantities whose numerical value never changes at all. Their values are not dependent on our choice of coordinate system. Therefore, scalars are also called \emph{invariant} quantities in the context of tensor algebra (verify!)...are there also other invariant quantities or are scalars the only ones? ..and what about mixed variance in higher rank tensors?
 
 % contravariant vectors: position, velocity, acceleration, force, electric and gravitational field
-% covariant vectors (verify): normals to planes, angular momenetum moment of inertia,  magnetic field...i think, these correspond to covectors? ...or maybe bivectors? figure out!
+% covariant vectors (verify): normals to planes, angular momentum moment of inertia,  magnetic field...i think, these correspond to covectors? ...or maybe bivectors? figure out!
 
 ..tbc...
 
+\subsubsection{Rank, Order and Dimensionality}
+% What is order? same as rank? explain that the tensor rank has nothing to do with a matrix rank
 
 
-
-%\subsection{Rank, Order and Dimensionality}
-
-%\subsection{Notation and Terminology}
-
-%\subsection{Covectors and Duality}
+\subsubsection{Covectors and Duality}
 % -Given a vector space V, the dual space is defined to be the space of linear maps from V into the real numbers and denoted as V^*. For a finite-dimensional V, which is the case we have here, V^* is isomorphic to V. 
 
 % Bilinear Maps
 % -every bilinear map can be expressed as sum of a symmetric and alternating bilinear map
+
+\subsubsection{Einstein Summation Notation}
+% 3 rules:
+% -repeated indices are summation indices akk dummy indices
+% -we use upper indices for vector components and lower indices for basis vectors
+% -for covectors (dual vectors), it's the other way around: lower indices for components, 
+%  upper indices for the basis covectors
+%
+% -For a tensor equation to make sense, the repeated index must occur once as lower and once as
+%  upper index (can it occur also twice as upper and lower index?)
+
+% explain also objets that look like tensors but aren't because they don't obey any of the 
+% transformation laws
+
+
+% the vector and covector bases satsify the Kronecker delta relation:
+%  b_i(c^j) = c^j(b_i) = \delta_i^j where c^j(b_i) means "apply the j-th basis covector to the
+%  i-th basis vector", etc - "apply" in the sense of: evaluate the expression to a scalar
+% or maybe use e_i for the basis vectors and d^j for the basis covectors (d for dual). although
+% b for basis and c for co-basis is quite nice, too. But maybe we should use c for a general
+% covector just as we use v for a general vector. We have c^i(v_i) = v_i(c^i) = \sum_i v[i]*c[i]
 
 \begin{comment}
 ====================================================================================================

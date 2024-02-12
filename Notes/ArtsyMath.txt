@@ -2,6 +2,12 @@ Collection of intersting formulas and algorithms to create art with math. The fo
 given either in paramteric form (x(t), y(t)) where t can be thought of as time or r(t) where t is 
 an angle "theta" or implicitly as f(x,y) = 0 perhaps written as f(x,y) = g(x,y). 
 
+
+----------------------------------------------------------------------------------------------------
+Playlist:  The Art of Math:
+https://www.youtube.com/playlist?list=PLSJWPl1iYeQ1P2qawYWudOekeOEGOokPr
+
+
 ----------------------------------------------------------------------------------------------------
 From https://www.youtube.com/watch?v=nMcCgYHcDww  MATH GRAPHS = ART
 

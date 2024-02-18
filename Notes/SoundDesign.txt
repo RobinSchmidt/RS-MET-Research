@@ -12,3 +12,12 @@ https://modwiggler.com/forum/viewtopic.php?t=126839
 https://www.bartonmusicalcircuits.com/saw/
 https://blog.thea.codes/the-design-of-the-juno-dco/
 https://www.musicradar.com/news/tech/blast-from-the-past-roland-alpha-juno-608881
+
+
+
+Wavetable-Synthesis:
+
+Tools and info about supported file-formats:
+https://www.kvraudio.com/forum/viewtopic.php?t=605985  Free Wavetables?
+https://www.kvraudio.com/forum/viewtopic.php?t=607153  Zebralette 3 Public Beta Announcement (Revision 15573)
+https://github.com/surge-synthesizer/surge/issues/461  Support wavetables with more than 1024 samples/frame

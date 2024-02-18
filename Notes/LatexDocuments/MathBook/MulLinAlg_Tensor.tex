@@ -112,7 +112,16 @@ https://www.youtube.com/watch?v=3I-_ePWm9NA
  and some number of vectors to scalars.
 -Part of the upcoming playlist: 
  https://www.youtube.com/playlist?list=PLVvnOdsCze6GqXjsibdA3HfLXsaw9hFFh
- 
+-in video 3, it is clarified that the tensor can also act on a subset of its vector/covector 
+ arguments - the result is then not a scalar but another tensor. I guess, this amounts to
+ "partial evaluation" - like when for a bivariate function f(x,y) we fix x (or y) and thereby
+ obtain a univariate function.
+-I think, the left-to-right placement of the (upper and lower) indices may indicate in which
+ order the tensor expects it (vector and covector) arguments - but in the end (i.e. when fully 
+ evaluated), the order doesn't really matter because of the asscoiciativity of scalar 
+ multiplication? So, some authors do not really care about the left-to-right placement, i.e.
+ don't insert spaces such that in a tensor T^i_j it is not clear whether i is the first and j
+ the second index or the other way around.
  
 Applications in data science:
 https://en.wikipedia.org/wiki/Tensor_decomposition

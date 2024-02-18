@@ -10,7 +10,7 @@ A \emph{sequence} can be defined as a function from the natural into the real nu
  a_n = \frac{1}{2^n},    \quad  
  a_n = \sqrt{n}
 \end{equation}
-The examples with an $n$ or $n^2$ in the denominator can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last two, plugging in $n=0$ poses no problem because $2^0=1$ and $\sqrt{0} = 0$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. We could also say that they are all defined on $\mathbb{N}$ and make a special case definition $a_0 = 0$ for the problematic ones. The function definition would then look a bit ugly but is entirely legitimate. Sequences themselves are a sort of preliminary to what we actually want to build up to: namely series. These are infinite sums of sequence elements.
+The examples with an $n$ or $n^2$ in the denominator can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last two, plugging in $n=0$ poses no problem because $2^0=1$ and $\sqrt{0} = 0$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. We could also say that they are all defined on $\mathbb{N}$ and make a special case definition $a_0 = 0$ for the problematic ones. The function definition would then look a bit ugly but is entirely legitimate. When we deal with sequences, we will be mostly concerned with the question of \emph{convergence} for which it doesn't really matter, if finitely many elements in an initial section are ill defined, so we will mostly ignore this detail. Sequences themselves are a sort of preliminary to what we actually want to build up to: namely series. These are infinite sums of sequence elements.
 
 \medskip
 The notation for the whole sequence is $(a_n)$. That is: By $a_n$ we mean a specific element whereas by $(a_n)$ we mean the whole sequence of elements. In a sense, a sequence can be seen as an infinite tuple so using the parentheses notation known from tuples seems like an appropriate reminder.
@@ -29,7 +29,7 @@ Another binary operation that we can perform on two sequences $(a_n),(b_n)$ is \
  c_n = \sum_{k=0}^n a_k b_{n-k} = \sum_{k=0}^n b_k a_{n-k}
 \end{equation}
 where, from the given formula, you will already correctly infer that the operation is commutative.
-[VERIFY!]. It is also associative and distributive over addition and subtraction. This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity}. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response}.
+[VERIFY!]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity}. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response}.
 % https://mathworld.wolfram.com/CauchyProduct.html
 
 \paragraph{Deconvolution}
@@ -54,6 +54,13 @@ When faced with a sequence of numbers, an important question is its behavior whe
 
 %Theorems: pointwise sum of sequences converges to sum of limits, etc.
 
+% https://www.youtube.com/watch?v=epejTvlWOXA
+% -8:33: Merkregel: Bei Grenzwertprozessen kann aus "kleiner" "kleiner-gleich" werden. Bsp: Nimm
+%  zwei relle konvergente Folgen a_n, b_n mit Grenzwerten a, b. Wenn a_n < b_n für fast alle n (also
+%  alle bis auf endlich viele) dann ist a <= b. Das (a <= b) gilt auch immer noch, wenn wir nur
+%  a_n <= b_n für fast alle n voraussetzen.
+
+
 \subsubsection{Absolute Convergence}
 An even stronger type of convergence is called \emph{absolute convergence}. If a sequence converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. ...TBC...
 
@@ -68,7 +75,7 @@ When we have a given sequence $(a_n)$, we can use it to define a new sequence, n
 \begin{equation}
  s_n = \sum_{k=0}^n a_k
 \end{equation}
-Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an infinite sum. Such infinite sums have a special name: they are called \emph{series}.
+Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}.
 ...TBC...
 
 \subsubsection{Some Sums}
@@ -90,11 +97,22 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 \subsection{Power Series}
 A power series is a series that involves a variable $x$. We imagine that we have a given sequence $(a_n)$ and we will intepret this as a sequence of coefficients of a series of powers of $x$, i.e. a sort of infinite polynomial. We will consider the series:
 \begin{equation}
+\label{Eq:PowerSeries}
  f(x) = \sum_{n=0}^\infty a_n (x-c)^n
 \end{equation}
-where $c$ is some fixed constant. It's often zero but for generality, I've already included it. On the left hand side, I already suggestively have written $f(x)$ to indicate that this "infinite polynomial" may be used to define a function - at least for those values of $x$, for which the infinite sum converges to a finite value. Note that (finite) polynomials are included as the special case in which all the coefficients $a_n$ are equal to zero for $n > k$ for some $k$ ($k$ is actually the degree of the polynomial, in this case). If the series converges for any $x$ at all, it will do so inside a disc centered at $c$ when we assume that $c$ and $x$ can be complex numbers. The radius of this disc is called the radius of convergence. In general, we could also allow complex coefficients $a_n$. For the time being, we'll focus our attention to real $x,c,a_n$ all being real numbers, though.
+where $c$ is some fixed constant. It's often zero but for generality, I've already included it. On the left hand side, I already suggestively have written $f(x)$ to indicate that this "infinite polynomial" may be used to define a function - at least for those values of $x$, for which the infinite sum converges to a finite value. Note that (finite) polynomials are included as the special case in which all the coefficients $a_n$ are equal to zero for $n > k$ for some $k$ ($k$ is actually the degree of the polynomial, in this case). If the series converges for any $x$ at all, it will do so inside a disc centered at $c$ (this is not supposed to be obvious) when we assume that $c$ and $x$ can be complex numbers. The radius of this disc is called the radius of convergence. On the boundary of this disc, the series may or may not converge and the convergence property may depend on the actual point on the boundary - so this needs to be investigated more closely, if this information is needed. The series will actually always converge for $x = c$ (we'll see later why) but what we are usually really interested in is whether or not it also converges inside come neighborhood of the expansion point $c$, i.e. whether or not the radius of convergence is nonzero. For some particularly well behaved functions, the so called \emph{entire functions}, it may even be infinite. In general, we could also allow complex coefficients $a_n$. For the time being, we'll focus our attention to real $x,c,a_n$ all being real numbers, though. A formula for the radius of convergence is given by the Cauchy-Hadamard theorem. ..TBC...
+
+
 % https://en.wikipedia.org/wiki/Radius_of_convergence
 
+% https://en.wikipedia.org/wiki/Cauchy%E2%80%93Hadamard_theorem
+% -gives formula for the radius of convergence
+
+% Maybe include this into the section about limits:
+% https://en.wikipedia.org/wiki/Limit_inferior_and_limit_superior#limit_superior
+% but it applies to sequences, so maybe include it here.
+
+% https://en.wikipedia.org/wiki/Entire_function
 
 \paragraph{Convolution Revisited}
 When we defined the convolution operation between sequences, it may have seemed somewhat arbitrary and unmotivated. In light of power series, we may give it some interpretation that also justifies why it is also called the Cauchy "product". Recall that to mutliply two (finite) polynomials, we have to convolve their lists of coefficients. The Cauchy product is basically the infinite version of that. It's a generalization in the sense that it includes the finite case as special case when we assume that the sequences just become identically zero after some $n$. The product sequence is the sequence of coefficients of an infinite product polynomial, so to speak...TBC...that can perhaps be explained better
@@ -111,11 +129,19 @@ One truly remarkable result of calculus is that a lot of functions can be expres
 f(x) = \sum_{k=0}^\infty \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k
 %     = \sum_{k=0}^n \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k + \mathcal{O}(x-x_0)^n
 \end{equation}
-For this formula to work, we require a few things. First, $f$ must be smooth at $x_0$ such that we actually can take all the derivatives. Second, we require $x$ to be within the radius of convergence of the series, i.e. close enough to $x_0$. There are some rather special functions that are indeed smooth but have a radius of convergence of zero. But we'll forget about that complication right now. For most functions, it works just fine. 
+For this formula to work, we require a few things. First, $f$ must be smooth at $x_0$ such that we actually can take all the derivatives. Second, we require $x$ to be within the radius of convergence of the series, i.e. close enough to $x_0$. There are some rather special functions that are indeed smooth but have a radius of convergence of zero. But we'll forget about that complication right now. For most functions, it works just fine. By inspecting this formula, we can see the reason why (\ref{Eq:PowerSeries}) always converges for $x=c$ or $x=x_0$ in the new notation here: the factor $(x-x_0)^k$ will be zero for any $k > 0$. For $x = x_0$ and $k = 0$, the factor $(x-x_0)^k$ actually evaluates to $0^0$. For the formula to still work at $x=x_0$, we are forced to define $0^0 = 1$ which is a quite common definition in algebra, calculus and combinatorics.
+
+% which means that for $x=x_0$, 
+
+%only the first term in the whole series is actually nonzero such that in this case, the series converges trivially.
 % maybe give a formula that splits it into a finite sum and a remainder
 
+% (at least, if we define $0^0 = 1$, which is common but not universal, so beware! VERIFY!)
+
+% https://en.wikipedia.org/wiki/Zero_to_the_power_of_zero
+
 \medskip
-The practical usefulness of this Taylor expansion lies in the fact that when we just take a finite sum instead of an infinite one, we obtain an approximation to our function. The more terms we use, the better our approximation becomes (provided that the argument is within the radius of convergence - of course). Due to that feature, Taylor expansions are used a lot in numerical computations to approximate all kinds of functions. They are also used a lot in physics to simplify complicated problems by making approximations. There, often just first or second order approximations are used, i.e. approximations up to the linear or quadratic term. Let's see what happens, when we only use a single term, i.e. only the $k=0$ term. The formula tells us to evaluate the $0$th derivative of $f$, which is $f$ itself, at $x_0$, divide by $0!$, i.e. by one and multiply that by $(x-x_0)^0 = 1$. So what we get is just $f(x_0)$. The $0$th order Taylor polynomial around $x_0$ approximates $f$ as the constant function with value $f(x_0)$. Not a very impressive approximation but at least it has the correct function value at $x_0$. If we take one term more, we obtain a linear approximation of $f$ around $x_0$. It will have a matching function value and a matching first derivative. The approximant will be a tangent to our actual function at $(x_0, f(x_0))$. The next approximation will additionaly match the second derivative and create a paraboloic approximation. And so on.
+The practical usefulness of this Taylor expansion lies in the fact that when we just take a finite sum instead of an infinite one, we obtain an approximation to our function. The more terms we use, the better our approximation becomes (provided that the argument is within the radius of convergence - of course). Due to that feature, Taylor expansions are used a lot in numerical computations to approximate all kinds of functions. They are also used a lot in physics to simplify complicated problems by making approximations. There, often just first or second order approximations are used, i.e. approximations up to the linear or quadratic term. Let's see what happens, when we only use a single term, i.e. only the $k=0$ term. The formula tells us to evaluate the $0$th derivative of $f$, which is $f$ itself, at $x_0$, divide by $0!$, i.e. by one and multiply that by $(x-x_0)^0 = 1$. So what we get is just $f(x_0)$. The $0$th order Taylor polynomial around $x_0$ approximates $f$ as the constant function with value $f(x_0)$. Not a very impressive approximation but at least it has the correct function value at $x_0$ and that's the best we could possibly hope for, when we try to approximate a function $f$ by a constant function around some $x_0$. If we take one term more, we obtain a linear approximation of $f$ around $x_0$. It will have a matching function value and a matching first derivative. The approximant will be a tangent to our actual function at $(x_0, f(x_0))$. The next approximation will additionaly match the second derivative and create a paraboloic approximation. And so on.
 
 ToDo: maybe move that into an "Applications" section
 
@@ -162,10 +188,14 @@ The Taylor expansion expressed arbitrary functions as (potentially) infinite wei
  a_k = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \cos(k x) \, dx, \quad
  b_k = \frac{1}{\pi} \int_{-\pi}^{\pi} f(x) \sin(k x) \, dx 
 \end{equation}
-We can intepret equation \ref{Eq:FourierSeries} as a synthesis formula and equation \ref{Eq:FourierCoeffs} as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function. The integration can also be performed over some other interval of length $2\pi$ like $[a,a+2\pi]$ for some $a$. 
+We can intepret (\ref{Eq:FourierSeries}) as a synthesis formula and (\ref{Eq:FourierCoeffs}) as an analysis formula in the sense that the former is used to synthesize (i.e. generate, create) a periodic function $f(x)$ whereas the latter takes a periodic function $f(x)$ as input, analyzes it, and spits out the synthesis coefficients. In signal processing terms,  the analysis formula actually computes a cross-correlation between the input function $f(x)$ and the respective sine or cosine function. The integration can also be performed over some other interval of length $2\pi$ like $[a,a+2\pi]$ for some $a$. [VERIFY! Wouldn't that change the phase of the coeffs? If not, say so and explain why not. I think, it's because our time axis anchor point $t=0$ is not really affected by that shift] 
 
 \medskip
-The requirements on $f$ are quite different from those for Taylor series. First of all and most obviously, we require $f$ to be periodic. Here, we restricted our attention to $2 \pi$-periodic functions, but the theory can easily be applied to functions with other periods by stretching the function appropriately along the $x$-axis.  For a Taylor series, we required $f$ to be smooth because we had to take (infinitely many) derivatives to compute the coeffs. For a Fourier series, $f$ does not even need to be continuous. We only require that the integrals in the analysis equation must exist and be finite. This is a much less strict requirement. If the function has jump discontinuities, it will converge to average of the values on the left and right at the jump. If we use only finitely many terms, there will be some overshoot and wiggle around the jump. This is called Gibbs's phenomenon. Taking more terms will make these wiggles narrower in width but not smaller in height. Their height will settle to something like $9\%$ of the jump height when taking ever more but still finitely many terms. They will disappear completely only due to vanishing width in the limit of infinitely many terms.
+The requirements on $f$ are quite different from those for Taylor series. First of all and most obviously, we require $f$ to be periodic. Here, we restricted our attention to $2 \pi$-periodic functions, but the theory can easily be applied to functions with other periods by stretching the function appropriately along the $x$-axis.  For a Taylor series, we required $f$ to be smooth because we had to take (infinitely many) derivatives to compute the coeffs. For a Fourier series, $f$ does not even need to be continuous. We only require that the integrals in the analysis equation must exist and be finite. This is a much less strict requirement [WAIT: I think, it's actually an independent requirement - but maybe "less strict" in some "practical" sense]. If the function has jump discontinuities, it will converge to average of the values on the left and right at the jump. If we use only finitely many terms, there will be some overshoot and wiggle around the jump. This is called Gibbs's phenomenon. Taking more terms will make these wiggles narrower in width but not smaller in height. Their height will settle to something like $9\%$ of the jump height when taking ever more but still finitely many terms. The exact amount of overshoot defines the so called Wilbraham–Gibbs constant. The overshoots will disappear completely only due to their vanishing width in the limit of infinitely many terms.
+
+% https://en.wikipedia.org/wiki/Gibbs_phenomenon
+% https://mathworld.wolfram.com/Wilbraham-GibbsConstant.html
+
 
 \subsubsection{Magnitude and Phase}
 It is well known that a weighted sum of a sine and a cosine of the same frequency can also be expressed as just a sine or just a cosine. For this, we need to give the argument an appropriate phase shift $\varphi_k$ and scale the result by an appropriate amplitude factor $A_k$. The phase shift and the scale factor depend on the relative and total amounts of the sine and cosine components in the following way.:
@@ -199,11 +229,12 @@ The theory of Fourier series if often being presented in its complex form. Doing
  f(x) = \sum_{k=-\infty}^\infty c_k  e^{\i k x}, \qquad
  c_k = \frac{1}{2\pi} \int_{-\pi}^{\pi} f(x) e^{-\i k x}  \, dx
 \end{equation}
-We could put synthesis and analysis equation together in one line and it's still shorter than the real valued analysis equation alone. Notice also how there's no special case for $c_0$ like there was for $a_0$. It may seem a little bit strange that the summation in the synthesis equation now starts at minus infinity. Shouldn't the real and imaginary parts of the non-negatively indexed coeffs $c_0, c_1, \ldots$ already contain the same amount of information as the pairs $(a_0,b_0),(a_1,b_1), \ldots$ from the real formulation? Why do we need the additional coeffs with negative indices? Indeed, when the input function is purely real valued, the negatively indexed coeffs will be redundant, but remember that we now allow, in general, complex valued functions $f(x)$ functions, too. For real valued functions $f$, the $c_k$ will be conjugate symmetric, i.e. $c_{-k} = \overline{c_k}$. [VERIFY]. A $c_k$ with a negative index $k$ formally represents the coefficient for a negative frequency. That just means the complex phasor rotates clockwise rather than counterclockwise in the corresponding $c_k  e^{\i k x}$ term in the synthesis equation. This flips the sign of the sine part, the cosine part stays the same [VERIFY]
+We have now written down the synthesis and analysis equations together into one line and it's still shorter than the real valued formulation of the analysis equation alone. Notice also how there's no special case for $c_0$ like there was for $a_0$. It may seem a little bit strange that the summation in the synthesis equation now starts at minus infinity. Shouldn't the real and imaginary parts of the non-negatively indexed coeffs $c_0, c_1, \ldots$ already contain the same amount of information as the pairs $(a_0,b_0),(a_1,b_1), \ldots$ from the real formulation? Why do we need the additional coeffs with negative indices? Indeed, when the input function  $f$ is purely real valued, the negatively indexed coeffs will be redundant, but remember that we now allow, in general, complex valued functions $f(x)$ functions, too (the input $x$ is still real, though). For the special case of real valued functions $f$, the $c_k$ will be conjugate symmetric, i.e. $c_{-k} = \overline{c_k}$. [VERIFY]. A $c_k$ with a negative index $k$ formally represents the coefficient for a negative frequency. That just means the complex phasor rotates clockwise rather than counterclockwise in the corresponding $c_k  e^{\i k x}$ term in the synthesis equation. This flips the sign of the sine part, the cosine part stays the same [VERIFY]
 
 ...TBC...
 
 \subsubsection{Theorems}
+...TBC...
 % f even -> only cosines
 % f odd  -> only sines
 % f real -> c_k conjugate symmetric, A_k even, phi_k odd, a_k even, b_k odd
@@ -215,7 +246,7 @@ We could put synthesis and analysis equation together in one line and it's still
 % taking derivatives and intergrals multiplies fourier coeffs k or 1/k
 
 \subsubsection{Aperiodic Functions}
-So far, we assumed $f$ to be periodic. If you apply the analysis equation as is to an aperiodic input function or signal $f$ and then try to resynthesize your signal via the synthesis equation, the resynthesized signal will periodically repeat the chunk of the function that you have analyzed, i.e. here the portion of the function between $0$ and $2 \pi$. You will have pretended to the analysis equation that this chunk was a period from a periodic signal when in fact it wasn't, so to speak. The theory can actually be generalized to deal properly with (some) aperiodic functions, too. This leads to the idea of the Fourier transform which will be treated in more detail in the section about integral transforms. At this point, I'll just say that the sum in the synthesis equation will be replaced by an integral, our discrete Fourier coefficients $a_n, b_n$ will be replaced by a continuous function of frequency and in the analysis equations, we will have to perform an integration from minus to plus infinity instead of over one period. Within this wider framework, the periodic functions will be found as a special case, if we also allow the spectra (i.e. the continuous functions of frequency) to be composed from (shifted and scaled) Dirac delta "functions" [VERIFY!].
+So far, we assumed $f$ to be periodic. If you apply the analysis equation as is to an aperiodic input function or signal $f$ and then try to resynthesize your signal via the synthesis equation, the resynthesized signal will periodically repeat the chunk of the function that you have analyzed, i.e. here the portion of the function between $0$ and $2 \pi$. You will have pretended to the analysis equation that this chunk was a period from a periodic signal when in fact it wasn't, so to speak. The theory can actually be generalized to deal properly with (some) aperiodic functions, too. This leads to the idea of the Fourier transform which will be treated in more detail in the section about integral transforms. At this point, I'll just say that the sum in the synthesis equation will be replaced by an integral, our discrete Fourier coefficients $a_n, b_n$ will be replaced by a continuous function of frequency and in the analysis equations, we will have to perform an integration from minus to plus infinity instead of over one period. Within this wider framework, the periodic functions will be found as a special case, if we also allow the spectra (i.e. the continuous functions of frequency) to be composed from (shifted and scaled) Dirac delta "functions" [VERIFY!]. Defining those rigorously requires some more advanced mathematical machinery that we will treat later but informally, they can be thought of as infinitely narrow spikes with infinite height and a finite nonzero area. If that doesn't seem to make any sense, then yeah - that's why this is only an informal view.
 
 
 
@@ -271,11 +302,24 @@ but maybe is should go into a section "Asymptotic Analysis" in its own right aft
 Series section. Or maybe in some section Mathematical Modeling in an Applications part.
 Maybe in a section about "Approximation Theory" together with subsctiosn about "Curve Fitting",
 "Polynomial Approximation" (Chebychev, Lest Squares, MiniMax), etc.
+-How about a Taylor-Series around "infinity"? Maybe derive expressions for a Taylor series
+ around a general x_0 and then let x_0 approach infinity for each term separately?
+-Stirling formula for factorial
 
 https://www.youtube.com/watch?v=G-29AZf-NkU
 -12:16 The limit of a sequence of continuous functions is not necessaricly continuous. Example:
  f_n(x) = x^n on [0,1]  ->  converges to 0 for x < 1 and to 1 for x = 1 and diverges for x > 1
  we need a stronger condition "gleichmäßige Konvergenz" ..dunno what that is in english
 
+Make a section about divergent series and how we may deal with them:
+-Generalized summation methods (e.g. Cesaro summation)
+-Riemann reordering theorem
+-Analytic Continuation
+See:
+https://www.youtube.com/watch?v=FmLIGN8ZGdw  The Return of -1/12 - Numberphile
+https://www.youtube.com/watch?v=YuIIjLr6vUA  Numberphile v. Math: the truth about 1+2+3+...=-1/12
+https://www.youtube.com/watch?v=jcKRGpMiVTw  Ramanujan: Making sense of 1+2+3+... = -1/12 and Co.
+https://www.youtube.com/watch?v=U0w0f0PDdPA  Can you change a sum by rearranging its numbers? --- The Riemann Series Theorem
 
+ 
 \end{comment}

@@ -22,31 +22,38 @@ Ordinary differential equations (abbreviated as ODEs) are equations in which the
 \paragraph{Explicit Form}
 In the explicit form to write down an $n$-th order ODE, the highest derivative, i.e. the $n$-th derivative, of the unknown function $f$ appears alone on the left hand side and it is expressed as some function $F(\ldots)$ on the right hand side which takes as arguments the independent variable $x$ and well as $f$ and all of its derivatives of orders less than $n$:
 \begin{equation}
-f^{(n)}(x) = F(x, f'(x), f''(x), \ldots, f^{(n-1)}(x))
+f^{(n)}(x) = F(x, f(x), f'(x), f''(x), \ldots, f^{(n-1)}(x))
 \end{equation}
-If the function $F$ does not explicitly depend on the independent variable $x$, the system is called \emph{autonomous}. If the independent variable is time, which is often the case, then we may also write $t$ instead of $x$. In this case, being "autonomous" can be interpreted as "not depending on absolute time". The system just has the same set of potential behaviors at all times. It doesn't have a clock which could potentially alter its behavior. In the context of signal processing, such a system is also called \emph{time-invariant}.
+If the function $F$ does not explicitly depend on the independent variable $x$, the equation is called \emph{autonomous}. If the independent variable is time, which is often the case, then we may also write $t$ instead of $x$. In this case, being "autonomous" can be interpreted as "not depending on absolute time". The system just has the same set of potential behaviors at all times. It doesn't have a clock which could potentially alter its behavior. In the context of signal processing, a system described by such an equation is also called \emph{time-invariant}.
 
 \paragraph{Implicit Form}
-For some systems, it is not possible to express it in explicit form. In such cases we must resort to the implicit form which is often less convenient to handle. In this case, we just put the $n$-th derivative also into the function $F$ as additional argument and equate everything to zero:
+For some ODEs, it is not possible to express it in explicit form. In such cases we must resort to the implicit form which is often less convenient to handle. In this case, we just put the $n$-th derivative also into the function $F$ as additional argument and equate everything to zero:
 \begin{equation}
-0 = F(x, f^{(n)}(x), f'(x), f''(x), \ldots, f^{(n-1)}(x))
+0 = F(x, f(x), f'(x), f''(x), \ldots, f^{(n-1)}(x), f^{(n)}(x))
 \end{equation}
 By the way: It may also occur that the left hand side is not zero but some other given function $g(x)$ which in this context is often interpreted as some sort of driving function that is applied to the system from the outside. But notice that this driving function can actually be absorbed into $F$ by just bringing it over to the other side. The math doesn't really change whether a term appears on one side of the equation or with opposite sign on the other side. Our interpretation or mental model about what is happening may change, though.
+
+% https://en.wikipedia.org/wiki/Ordinary_differential_equation
 
 %---------------------------------------------------------------------------------------------------
 \paragraph{Newton Notation}
 It has been said that the independent variable is often time in which case we denote it by $t$. This is because ODEs are often used to model physical processes where some quantity changes as a function of time. In the text above, I have used the so called Lagrange notation for derivatives - the one with the dash or prime as in $f', f''$ etc. Newton proposed to use dots over dependent variable to denote time derivatives. Moreover, now that the independent variable has become $t$, the letter $x$ if free again and is often used for the (one of the) dependent variable(s) such that we write things like $\dot{x}$. That would mean $x'(t)$ in Lagrange notation or $\frac{d}{dt} x(t)$ in Leibniz notation. Newton notation is often the most convenient when we are dealing with low order ODEs but gets inconvenient for higher orders. Fortunately, most ODEs in physics are only second order anyway and moreover, there is actually a way to rewrite an ODE of any order as a system of first order ODEs as we will see next.
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{First Order Systems}
-One form to write down an ODE has turned out to be particularly convenient. It is the form in which many ODE solver implementations expect their input. The general format is:
+\subsubsection{Systems of ODEs}
+Sometimes, we have several dependent variables and several equations that stipulate some relationship among these different dependent variables. We still assume to have just a single independent variable (e.g. time), though. With multiple independent variables, we would enter the realm of partial differential equations - a topic for later. A system of ODEs can be expressed in the following general form: ...TBC...
+
+%that describe the behavior of a physical situation. ...TBC...
+
+\paragraph{First Order Systems}
+One form to write down an ODE has turned out to be particularly convenient. It is the form in which many numerical ODE solver implementations expect their input. The general format is:
 \begin{eqnarray}
  y_1' &= f_1(x, y_1, y_2, \ldots, y_n) \\
  y_2' &= f_2(x, y_1, y_2, \ldots, y_n) \\
  \quad \ldots & \ldots \\
  y_n' &= f_n(x, y_1, y_2, \ldots, y_n)
 \end{eqnarray}
-where $n$ is the number of variables and also the number of equations. To an ODE solver, you would somehow have to pass an array of (pointers to) the functions $f_1, f_2, \ldots, f_n$. How that works in detail will depend on the programming language and API of the solver but generally, a system of first order ODEs is the format, you want to express your ODE in if you want to use such solvers.
+where $n$ is the number of variables and also the number of equations. To an ODE solver, you would somehow have to pass an array of (pointers to) the functions $f_1, f_2, \ldots, f_n$. How that works in detail will depend on the programming language and API of the solver but generally, a system of first order ODEs is the format, you want to express your ODE in, if you want to use such solvers.
 
 % https://www.mathworks.com/help/matlab/math/choose-an-ode-solver.html
 
@@ -55,6 +62,7 @@ Fortunately, it is possible to transform higher order ODEs into this convenient 
 \begin{equation}
  y''' + y y'' + \beta (1 - (y')^2 ) = 0
 \end{equation}
+% Example taken from here: https://www.johndcook.com/blog/2023/01/13/third-order-odes/
 This is the so called Falkner-Skan equation that arises in fluid dynamics. But where the equation comes from doesn't matter here. I just wanted to point out that this is a real life example. The first thing we do, it to write it in explicit form which is a trivial transformation in this case:
 \begin{equation}
  y''' =  - y y'' - \beta (1 - (y')^2 ) 
@@ -66,6 +74,8 @@ Next, we introduce some auxiliary variables for $y$ and its derivatives: $y_1 = 
  y_3' &=& -y_1 y_3 - \beta (1 - y_2^2)
 \end{eqnarray}
 
+% Is this commented stuff below obsolete? If so, delete it! I think, this is just the same stuff
+% in different notation.
 
 %$y_0 = y, y_1 = y', y_2 = y'', y_3 = y'''$. We observe that with this definition, we have: $y_0' = y_1, y_1' = y_2, y_2' = y_3$. So we can write:
 %\begin{equation}
@@ -92,13 +102,14 @@ Next, we introduce some auxiliary variables for $y$ and its derivatives: $y_1 = 
 %   y_2' = -y_0 y_2 - a * (1 - (y')^2)
 %   y_1' = y_2
 %   y_0' = y_1
-% Instead of a single 3rd order ODE, we now have a system of 3 1st order ODEs. One of them captures our original ODE. The other two just copy variables around. What to do, if the ODE is in implcity form?
 
 
+Instead of a single 3rd order ODE, we now have a system of 3 1st order ODEs. The last of them captures our original ODE. The other two just copy variables around. ...TBC...
 
 % https://en.wikipedia.org/wiki/Falkner%E2%80%93Skan_boundary_layer
 % https://en.wikipedia.org/wiki/Blasius_boundary_layer
 
+ToDo: Explain how to generalize to general systems of ODEs, i.e. how can a higher order ODE system be transformed into a first order system. Explain how it would work for implicit ODEs or ODE systems.
 
 
 %===================================================================================================
@@ -128,7 +139,7 @@ Imagine a situation in which some quantity $y$ reproduces itself and the product
 % standard example: bacteria or money
 
 \paragraph{Exponential Decay}
-When the growth-rate is zero, nothing ever happens. Mathematically, there's nothing stopping us from also considering a negative "growth" rate. In such a case...TBC...[TODO: radiactive decay and/or RC-circuit]
+When the growth-rate is zero, nothing ever happens. Mathematically, there's nothing stopping us from also considering a negative "growth" rate. In such a case...TBC...[TODO: radioactive decay and/or RC-circuit]
 % standard example: radioactive decay
 
 
@@ -153,7 +164,7 @@ The quintessential mathematical description of an oscillation is the sine functi
 \begin{equation}
  y'' + a y' + b y = 0
 \end{equation}
-This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
+This equation is called a linear second order differential equation. It is linear because it does not contain any products between $f$ and its derivatives or nonlinear functions of them. It is second order because the highest derivative of $f$ that appears in the equation is the second derivative. ...TBC...
 
 
 
@@ -164,7 +175,7 @@ This equation is called a linear second order differential equation. It is linea
 
 
 \paragraph{A System of Two First Order ODEs}
-We have seen that it is possible to re-express an ODE of any order $n$ as a system of $n$ first order differential equations. Applying this method to 
+We have seen that it is possible to re-express an ODE of any order $n$ as a system of $n$ first order differential equations. Applying this method to our example equations yields ...TBC...
 
 
 %This form is a quite convenient canonical form for solving an ODE numerically. It happens to the form that most (if not all) generic numerical ODE solvers expect their input. So, if we want to use numerical solvers, we need to be familiar with that form and we need to know how to produce it, when the ODE is given to us in a different form.
@@ -173,14 +184,13 @@ We have seen that it is possible to re-express an ODE of any order $n$ as a syst
 % Maybe treat the conversion between single high-order ODE and system of 1st order ODEs in a different section - the conversion is not limited to linear ODEs.
 
 \paragraph{A Single First Order Complex ODE}
-We have seen a second order ODE can produce oscillatory behavior and that a system of two first order ODEs can reproduce that behavior as well. It seems like we need either a second derivative or two equations but there is actually a third way to produce oscillatory behavior with ODEs that requires only single first order ODE. The key is to allow the coefficient to be imaginary. If we have an ODE in a complex variable, that variable actually has two parts - the real and imaginary part - and they in which these parts interact resembles the way our two variables from our system of two ODEs interact, as we will see....TBC...
+We have seen a second order ODE can produce oscillatory behavior and that a system of two first order ODEs can reproduce that behavior as well. It seems like we need either a second derivative or two equations but there is actually a third way to produce oscillatory behavior with ODEs that requires only single first order ODE. The key is to allow the coefficient to be imaginary. If we have an ODE in a complex variable, that variable actually has two parts - the real and imaginary part - and the way in which these parts interact resembles the way our two variables from our system of two ODEs interact, as we will see....TBC...
 
 % ToDo: show how splitting the complex ODE into really and imaginary parts recovers the system of 2 first order ODES
 
 %the complex multiplication actually packages up interactions
 
-
-
+\paragraph{Driven Oscillations}
 
 \paragraph{Resonance}
 
@@ -192,6 +202,7 @@ We have seen a second order ODE can produce oscillatory behavior and that a syst
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Chaos}
+Besides growth, decay and oscillation, ODEs can also exhibit a kind of behavior that goes by the name of \emph{deterministic chaos}. ...TBC...
 
 \paragraph{Weather Forecast} [TODO: Lorenz system]
 

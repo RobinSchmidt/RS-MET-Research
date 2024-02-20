@@ -13,7 +13,7 @@ Here, $\Delta x_i$ is the width of the $i$th subinterval and $x_i$ is a value so
 % maybe use \xi_i instead of x_i. That's common in math books
 
 \medskip
-The given formula is not quite Riemman's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result. If that isn't the case, the function is not considered to be Riemann-integrable. For continuous functions, it will always be the case, though.
+The given description is not quite Riemann's exact definition, but it's close enough to capture the idea. Riemann does not require the intervals to be equally sized but only demands that the largest of them should shrink to a width of zero as $n$ approaches infinity. He also additionally demands that it should not matter, where exactly inside the $i$th interval we pick $x_i$ to be. It could be at the left or right boundary, right in the middle, at the lowest or highest point\footnote{More strictly speaking, one would use the infimum and supremum for the lowest and highest $y$-value within the subinterval - but you may ignore that technical detail.} or whereever. The Riemann integral is only defined if it doesn't matter, i.e. if the above limit will always give the same result. If that isn't the case, the function is not considered to be Riemann-integrable. For continuous functions, it will always be the case, though.
 
 \medskip
 The interpretation of the Riemann integral as an area is actually a somewhat sloppy interpretation: it works only when we assume that the function graph is above the $x$-axis for the whole integration interval. If this is not the case, the portions below the $x$-axis will actually produce negative contributions to the total area because the $f(x_i)$ factors will be negative in this case (the $\Delta x_i$ factors are always positive by construction). If the function has more "weight" below the $x$-axis than above, the "area" may even become negative. It is more useful to think about the integral as a sort of \emph{"signed area"} or an \emph{"area balance"} over the interval $[a,b]$. If we divide the value $I$ of the integral by the width of the integration interval, i.e. by $b-a$, we obtain an \emph{average} value of the function over the interval $[a,b]$. This average would be the unique value $c$ that a constant function would need to have, such that the (signed) area of the rectangle with width $b-a$ and height $c$ gives rise to the same signed area as $f$.
@@ -183,7 +183,7 @@ which can each be evaluated separately via the limit technique. It can also be e
 % It may also be the case that the undefined point occurs somewher in the middle of the interval. In such a case, one would just split the intgral into two at that critical point 
 
 \paragraph{Cauchy's Principal Value}
-We have just see how an improper integral of the form $\int_{-\infty}^{\infty} f(x) \; dx$ can sometimes be evaluated by splitting it into two and adding the results:  $\int_{-\infty}^{\infty} = \int_{-\infty}^c + \int_c^{\infty}$ . But what if the two summands diverge in opposite directions such that we end up with an indeterminate form of the type $\infty - \infty$? In such a case, we say that the \emph{Cauchy principal value} of the integral is given by:
+We have just seen how an improper integral of the form $\int_{-\infty}^{\infty} f(x) \; dx$ can sometimes be evaluated by splitting it into two and adding the results:  $\int_{-\infty}^{\infty} = \int_{-\infty}^c + \int_c^{\infty}$ . But what if the two summands diverge in opposite directions such that we end up with an indeterminate form of the type $\infty - \infty$? In such a case, we say that the \emph{Cauchy principal value} of the integral is given by:
 \begin{equation}
 PV \int_{-\infty}^{\infty} f(x) \; dx = \lim_{a \rightarrow \infty} \int_{-a}^a f(x) \; dx
 \end{equation}
@@ -205,7 +205,7 @@ That is: we pick a single parameter $a$, derive an expression for the definite i
  \int_{-\infty}^{\infty} f(x - \frac{a}{x}) \; dx 
  \qquad \forall a > 0
 \end{equation}
-The theorem applies if the integral converges absolutely. If necessary, the can be interpreted in the sense of a Cauchy principal value. The special case above can be generalized as follows:
+The theorem applies if the integral converges absolutely. If necessary, it can be interpreted in the sense of a Cauchy principal value. The special case above can be generalized as follows:
 \begin{equation}
  \int_{-\infty}^{\infty} f(x) \; dx  = 
  \int_{-\infty}^{\infty} f \left( x - \sum_{n=1}^N \frac{a_n}{x - b_n} - c \right) \; dx 
@@ -237,6 +237,12 @@ which is the theorem proper. Here $a_n, b_n, c$ are all real numbers. The specia
 \paragraph{Using Computer Algebra Systems}
 
 TODO: give Sage and Mathematica code to calculate definite integrals - maybe some for which antiderivatives cannot be found
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Non Riemann-Integrable Functions} ToDo: explain why the Dirichlet-function is not Riemann-integrable. Maybe give a couple of more examples - preferably some with relevance in applications, i.e. some not so contrived examples.
+
+
 
 %===================================================================================================
 \subsection{The Lebesgue Integral} 

@@ -68,7 +68,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testComplexPolar();    // stub
   //testRationalTrigonometry();
   //testLeveledNumber();   // stub
-  testCommutativeHyperOperations();
+  //testCommutativeHyperOperations();
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();
@@ -119,6 +119,11 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPotentialPlotter();
   //polyaPlotExperiments();
   //polyaGeodesics();
+
+
+  // String processing:
+  testRegex();
+
 
   // Batch creation of plots:
   //makePlotsForPolyaPotentialPaper();  // todo: move to Renderings.cpp

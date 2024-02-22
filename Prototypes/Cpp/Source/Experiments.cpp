@@ -1,5 +1,6 @@
 #include "Tools.cpp"         // this includes rapt and rosic
 #include "Attractors.cpp"
+#include <regex>
 
 //-------------------------------------------------------------------------------------------------
 // move some of this code to rapt:
@@ -14657,6 +14658,72 @@ void testPotentialPlotter()
 }
 
 
+
+
+void testRegex()
+{
+  // Testing how to work with std::regex
+  //
+  // Goal: In certain source files, I want to replace occurrences of:
+  //
+  //   juce::String(("EffectName"))
+  //
+  // with 
+  //
+  //   "EffectName"
+  //
+  // because the wrapping into a constructor is not necessary anymore. Of course the string 
+  // EffecName is meant as placholder for things like "BitCrusher", "LadderFilter", etc. How can I
+  // do this with either Visual Studio Find+Rplace using the regex functionality and/or in C++ 
+  // using std::regex?
+
+  
+  // Define the string/text that should be scanned:
+  //std::string str1 = "abcdefg";
+  std::string str1 = "abXYZfg";
+
+  // Intention: we want to match strings that start with ab and end with fg and then have any 
+  // string in between the opening and closing delimiters
+  //std::string ptn1 = "ab.*fg";  // 
+
+  // Define the pattern that we look for:
+  //std::string ptn1 = "ab[:alnum:]fg";    // nope!
+  //std::string ptn1 = "ab[:alnum:]*fg"; // nope!
+  //std::string ptn1 = "ab([:alnum:]*)fg"; // nope!
+  //std::string ptn1 = "ab^$fg"; // nope!
+  //std::string ptn1 = "ab^[:alnum:]*$fg";   // nope!
+  std::string ptn1 = "^ab.*fg$";   //  Yes!
+
+  std::regex rgx1(ptn1);
+
+  std::smatch result;
+
+  bool matchFound = std::regex_search(str1, result, rgx1);
+
+  // Nope - we don't get a match. Apparently, the way the pattern is defined is still wrong. I thought that
+  // [:alnum:] means "any alphanumeric character and * means "as many repetitions as we want"
+
+
+
+  int dummy = 0;
+
+
+  // see:
+  // https://stackoverflow.com/questions/18024298/regular-expression-starting-and-ending-with-a-character-string
+  // "I would like to write a regular expression that starts with the string "wp" and ends with the
+  //  string "php" to locate a file in a directory. How do I do it?"
+  // "This should do it for you ^wp.*php$"
+  // "^wp.*\.php$ Should do the trick."
+
+  // https://howtodoinjava.com/java/regex/start-end-of-string/
+
+
+  // Regex meta symbols in ECMAScript (default grammar of std::regex):
+  // 
+  // Symbol    Meaning
+  //   .       Any character
+  //   *       Repetition
+}
 
 
 

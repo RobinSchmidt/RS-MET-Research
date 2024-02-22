@@ -14693,7 +14693,10 @@ void testRegex()
   //std::string ptn1 = "ab([:alnum:]*)fg"; // nope!
   //std::string ptn1 = "ab^$fg"; // nope!
   //std::string ptn1 = "ab^[:alnum:]*$fg";   // nope!
-  //std::string ptn1 = "^ab.*fg$";   //  Yes for "abXYZfg", no for "xyzabXYZfgxyz"
+
+  //std::string ptn1 = "^ab.*fg$";   
+  // This will find a match only str1 = "abXYZfg", not for str1 = "xyzabXYZfgxyz"
+
   std::string ptn1 = ".*^ab.*fg$.*"; //  Yes for "abXYZfg" and for "xyzabXYZfgxyz"
 
 
@@ -14702,10 +14705,8 @@ void testRegex()
   std::smatch result;
 
   bool matchFound = std::regex_search(str1, result, rgx1);
-
-  // Nope - we don't get a match. Apparently, the way the pattern is defined is still wrong. I thought that
-  // [:alnum:] means "any alphanumeric character and * means "as many repetitions as we want"
-
+  // Has 1 result: abXYZfg - but doesn't say where it was found. Do we now need to search for the
+  // substring abXYZfg again to find the location?
 
 
   int dummy = 0;

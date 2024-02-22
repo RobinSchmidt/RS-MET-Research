@@ -14681,6 +14681,7 @@ void testRegex()
   // Define the string/text that should be scanned:
   //std::string str1 = "abcdefg";
   std::string str1 = "abXYZfg";
+  //std::string str1 = "xyzabXYZfgxyz";
 
   // Intention: we want to match strings that start with ab and end with fg and then have any 
   // string in between the opening and closing delimiters
@@ -14692,7 +14693,9 @@ void testRegex()
   //std::string ptn1 = "ab([:alnum:]*)fg"; // nope!
   //std::string ptn1 = "ab^$fg"; // nope!
   //std::string ptn1 = "ab^[:alnum:]*$fg";   // nope!
-  std::string ptn1 = "^ab.*fg$";   //  Yes!
+  //std::string ptn1 = "^ab.*fg$";   //  Yes for "abXYZfg", no for "xyzabXYZfgxyz"
+  std::string ptn1 = ".*^ab.*fg$.*"; //  Yes for "abXYZfg" and for "xyzabXYZfgxyz"
+
 
   std::regex rgx1(ptn1);
 

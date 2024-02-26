@@ -14658,7 +14658,16 @@ void testPotentialPlotter()
 }
 
 
-
+/*
+// Convenience function:
+std::smatch rsRegexSearch(const std::string& text, const std::string& pattern)
+{
+  std::regex  rgx(pattern);
+  std::smatch result;
+  bool matchFound = std::regex_search(text, result, rgx);
+  return result;
+}
+*/
 
 void testRegex()
 {
@@ -14682,6 +14691,8 @@ void testRegex()
   //std::string str1 = "abcdefg";
   std::string str1 = "abXYZfg";
   //std::string str1 = "xyzabXYZfgxyz";
+  //std::string str1 = "xyzabXYZfg";
+  //std::string str1 = "abXYZfgxyz";
 
   // Intention: we want to match strings that start with ab and end with fg and then have any 
   // string in between the opening and closing delimiters
@@ -14698,15 +14709,21 @@ void testRegex()
   // This will find a match only str1 = "abXYZfg", not for str1 = "xyzabXYZfgxyz"
 
   std::string ptn1 = ".*^ab.*fg$.*"; //  Yes for "abXYZfg" and for "xyzabXYZfgxyz"
-
+  // Wait - no - it doesn't seem to work anymore for "xyzabXYZfgxyz" - WTF? It once worked. 
+  // ...I think. But maybe I misremember?
 
   std::regex rgx1(ptn1);
-
   std::smatch result;
-
   bool matchFound = std::regex_search(str1, result, rgx1);
   // Has 1 result: abXYZfg - but doesn't say where it was found. Do we now need to search for the
   // substring abXYZfg again to find the location?
+
+  
+  //result = rsRegexSearch("abXYZfg", ".*^ab.*fg$.*");
+  // Hmm - this result doesn't look right.
+
+  //matchFound = std::regex_search(std::string("abXYZfg"), result, std::regex(".*^ab.*fg$.*"));
+  // doesn't compile
 
 
   int dummy = 0;

@@ -9057,28 +9057,29 @@ void testEulerTransformation()
 
 void testCesaroSum()
 {
-  // Some experiments with Cesaro summation ...TBC...
-  // The idea of Cesaro summation is to start with a series, then build the sequence of partial 
-  // sums and then take the running average of those partial sums. The theorem is that when the 
-  // original series converges to a particular value, the Cesaro sum will converge to the same
-  // value. This is called regularity - if some process that you do to the original sum has the
-  // property that the resulting series converges to the same value, then that process has 
-  // regularity - if I understand it correctly.
+  // Some experiments with Cesaro summation inpired by this video:
+  // 
+  //   Could 1-1+1-1+1-1+1-1+... actually converge?
+  //   https://www.youtube.com/watch?v=AkPZcS8eqmA  
   //
-  // See also:
-  // Trevor Bazett on how to use Cesaro summation to counteract the gibbs Phenomenon in Fourier 
-  // series:
-  // https://www.youtube.com/watch?v=AkPZcS8eqmA  Could 1-1+1-1+1-1+1-1+... actually converge?
-  // We use the notation from the video for variable names here. 
-  //
-  // My goal is actually to try out this improved convergence of the Fourier series that get rid
-  // of the gibbs ripples...but the implementation here is not yet that far...
+  // by Trevor Bazett. He explains how to use Cesaro summation to counteract the Gibbs phenomenon
+  // in Fourier series. The idea of Cesaro summation is to start with a series, then build the 
+  // sequence of partial sums and then take the running average of those partial sums. The theorem
+  // is that when the original series converges to a particular value, the Cesaro sum will also 
+  // converge to the same value. This is called "regularity": If some process that you do to the 
+  // original sum has the property that the resulting series converges to the same value, then that
+  // process has regularity - if I understand it correctly. We use the notation from the video for 
+  // variable names here. My goal is actually to try out this improved convergence of the Fourier 
+  // series that get rid of the Gibbs ripples. That stuff is done in the function testFejerSum()
+  // below. Here we just do the preliminaries of doing Cesaroy summations of sequences of numbers.
+  // The end goal is to appliy it to sequences of functions, namely, to the n-th Fourier polynomial
+  // of a given peridoic function.
 
 
   int numTerms = 20;    // Upper summation index
 
-
-  // Function to define our input sequence a_n where n is assumed to start at 1:
+  // Function to define our input sequence a_n where n is assumed to start at 1. Uncomment one of 
+  // these to select the sequence:
 
   //auto getSeqElem = [](int n) { return pow(0.5, n); };   
   // a_n = 1/2, 1/4, 1/8, 1/16, ....
@@ -9092,18 +9093,14 @@ void testCesaroSum()
   auto getSeqElem = [](int n) { return n * pow(-1, n+1); };
   // a_n = 1, -2, 3, -4, 5, -6,...
   // s_n = 1, -1, 2, -2, 3, -3,...
-  // When we start with this series, it does not even converge in the Cesaro sense. I think, we
+  // When we start with this series, it does not even converge in the Cesaro sense. But we
   // could iterate the averaging once more to get a second order Cesaro sum - that then would 
-  // converge. Mathologer had a video about this iterated Cesaro summation. there's also a comment
-  // below the Bazett vidoe saying that this is called Hölder summation
+  // converge. Mathologer had a video about this iterated Cesaro summation. There's also a comment
+  // below the Bazett video saying that this is called Hölder summation.
 
-
-
-
-
-  using Vec = std::vector<double>;
 
   // Create our intial sequence of numbers:
+  using Vec = std::vector<double>;
   Vec a(numTerms);
   for(int n = 1; n <= numTerms; n++)
     a[n-1] = getSeqElem(n);
@@ -9126,11 +9123,21 @@ void testCesaroSum()
     A[n] = sum / (n+1);
   }
 
-  rsPlotVectors(a, s, A);
+  rsPlotVectors(a, s, A); // a: sequence, s: seq. of partial sums, A: seq. of averages
 }
 
 void testFejerSum()
 {
+  // In this function, we extend the ideas from testCesaroSum to an infinite sequence of functions.
+  // The sequence elements are now to merely numbers but functions. These functions are the 
+  // individual sinusoidal components of a periodic waveform. The series, i.e. the infinite sum of 
+  // these functions, is the Fourier series of the waveform. Any finite partial sum is a Foruier 
+  // polynomial, i.e. a bandlimited version of the waveform. These bandlimited approximations 
+  // feature the infamous Gibbs ripples. ...TBC...
+
+  //
+  // namely the Fourier polynomials
+
   // OK - so far, so good. To do next: try to apply it to Fourier series: take Cesaro sums of
   // Fourier apprximations. The goal is to produce a bandlimited sawtooth wave without Gibbs 
   // ripples (I prefer to use a saw rather than a square as example). To achieve this, it seems
@@ -9210,16 +9217,14 @@ void testFejerSum()
   //rsPlotVectors(fejerWave);
   rsPlotVectors(fourierWave, fejerWave);
 
-  // Observations:
-  // -OK - it seems to work. The fejerSaw does indeed look like a bandlimited approxiamtion to a 
-  //  saw without the Gibbs ripples.
-
-  // Do the same procedure for the square-wave:
-  // ...
-
-
-
-
+  // Observatioms:
+  // -It does indeed seem to work. Both fourierWave and fejerWave look like bandlimited 
+  //  approximations of the desired waveform. The fourierWave features the Gibbs ripples, the
+  //  fejerWave doesn't.
+  //
+  // Questions:
+  // -
+  //
   // ToDo:
   // -One eventual goal could be to derive a formula for the Fejer coefficients of a sawtooth wave.
   //  These coefficients should depend on an additional parameter: numTerms. And they should 
@@ -9245,16 +9250,12 @@ void testFejerSum()
   // Notes:
   // Looks like the Fejer coeff of the sawtooth wave or order n is given by the harmonic number 
   // H(n):  https://www.wolframalpha.com/input?i=sum+i%3D1..n+1%2Fi  (divided by 0.5*PI)
-
-
-  int dummy = 0;
-
+  //
   // See also: Fejer sums:
   // https://en.wikipedia.org/wiki/Fej%C3%A9r%27s_theorem
   // https://de.wikipedia.org/wiki/Satz_von_Fej%C3%A9r
   // https://en.wikipedia.org/wiki/Fej%C3%A9r_kernel
-
-  // See also:
+  //
   // https://www.youtube.com/watch?v=jcKRGpMiVTw at 22:45
   // -Cesaro summation is also useful to define analytic continuations of functions that are 
   //  defined via a series that converges only in some part of the complex plane. With Cesaro 
@@ -9265,7 +9266,6 @@ void testFejerSum()
   // https://www.youtube.com/watch?v=YuIIjLr6vUA at 15:58
   // -He also says that iterated Cesar sums are called generalized Cesaro summation or generalized
   //  Hölder summation.
-
 }
 
 

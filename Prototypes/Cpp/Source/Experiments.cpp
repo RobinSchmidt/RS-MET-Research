@@ -9227,7 +9227,9 @@ void testFejerSum()
   // -Why does that work for a square wave? I think that the averaging process can turn zero valued
   //  Fourier coeffs in the original Fourier series into nonzero ones. Wouldn't that imply to 
   //  destroy the odd symmetry of the squarewave? I mean, we would get nonzero coeffs for even
-  //  harmonics, right? -> Figure that out! 
+  //  harmonics, right? Maybe averaging the Fourier coeffs is not the right way to think about it
+  //  after all? But everything (Fourier-trafo, averaging) is linear, so it should not matter.
+  //  Right? Wrong? -> Figure out!
   // -In the creation of the fejerWave, I'm not sure if I should divide by numTerms or numTerms-1.
   //  In the video, the series starts with index 1 and in my first implementation here, I also did
   //  it this way. But then I included a DC term as well, i.e. a 0-th Fourier component such that
@@ -9253,12 +9255,7 @@ void testFejerSum()
   //  higher frequency coeffs. ..but actually, in Straightliner, the Gibbs ripples from spectral 
   //  truncation are not the problem because we use oversampling anyway. The ripples there are from
   //  the elliptic filter before downsampling. But may it could be useful in other contexts where
-  //  mip-maps are needed.
-  // -Check it also for a square wave. It seems that this averaging of Fourier coeffs could also
-  //  increase them - in a square, all the even coeffs are zero. If we average Foueier coeffs,
-  //  this coudl unzero them. Maybe averaging the Fourier coeffs is not the right way to think 
-  //  about after all? But everything (Fouerie-trafo, averaging) is linear, so it should not 
-  //  matter...right? Wrong? -> Figure out!
+  //  mip-maps are needed. How would that compare to just tapering off the higher coeffs?
   //
   // Notes:
   // -Looks like the Fejer coeff of the sawtooth wave or order n is given by the harmonic number 

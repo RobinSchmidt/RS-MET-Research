@@ -9161,7 +9161,7 @@ void testCesaroSum()
       saws(i, n) = saws(i-1, n) + sines(i, n);
     }
   }
-  plotMatrixRows(saws);
+  //plotMatrixRows(saws);
 
 
   Vec fejerSaw(length);
@@ -9169,7 +9169,7 @@ void testCesaroSum()
   {
     double sum = 0;
     for(int i = 0; i < numTerms; i++)
-      sum += sines(i, n);
+      sum += saws(i, n);
     sum /= numTerms;
     fejerSaw[n] = sum;
   }

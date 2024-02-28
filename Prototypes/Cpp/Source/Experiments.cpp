@@ -9138,20 +9138,35 @@ void testCesaroSum()
   int period = 150;
   using Mat = rsMatrix<double>;
   Mat sines(numTerms, length);
-  Vec saw(length);
-  //Mat saw(  numTerms, length);
+  Vec fourierSaw(length);
   for(int i = 1; i <= numTerms; i++)
   {
     double w = i * (2*PI / period);   // Radian frequency
     double a = (1.0/i) / (0.5*PI);    // Amplitude, normal Fourier coefficient
     for(int n = 0; n < length; n++)
     {
-      sines(i-1, n) = a * sin(w * n);
-      saw[n] += sines(i-1, n);
+      sines(i-1, n)  = a * sin(w * n);
+      fourierSaw[n] += sines(i-1, n);
     }
   }
 
-  rsPlotVectors(saw);
+
+  Vec fejerSaw(length);
+  for(int n = 0; n < length; n++)
+  {
+    double sum = 0;
+    for(int i = 0; i < numTerms; i++)
+      sum += sines(i, n);
+    sum /= numTerms;
+    fejerSaw[n] = sum;
+  }
+  // Nope - that's still wrong. It looks just like the fourierSaw with reduced amplitude.
+  // Ah - of course it does! We just average the sines. What we need to do is not to aerage the 
+  // sines but the partial Foruier sums. Maybe generate a saws matrix along the way
+
+
+
+  rsPlotVectors(fourierSaw, fejerSaw);
 
 
 

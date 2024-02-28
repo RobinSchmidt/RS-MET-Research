@@ -9162,6 +9162,8 @@ void testCesaroSum()
     }
   }
   //plotMatrixRows(saws);
+  
+
 
 
   Vec fejerSaw(length);
@@ -9173,28 +9175,29 @@ void testCesaroSum()
     sum /= numTerms;
     fejerSaw[n] = sum;
   }
-  // Nope - that's still wrong. It looks just like the fourierSaw with reduced amplitude.
-  // Ah - of course it does! We just average the sines. What we need to do is not to aerage the 
-  // sines but the partial Foruier sums. Maybe generate a saws matrix along the way
-
 
   //rsPlotVectors(fourierSaw);
   //rsPlotVectors(fejerSaw);
   rsPlotVectors(fourierSaw, fejerSaw);
 
+  // Observations:
+  // -OK - it seems to work. The fejerSaw does indeed look like a bandlimited approxiamtion to a 
+  //  saw without the Gibbs ripples.
 
 
-  //Vec saw1(length);
 
-
-
-
-  // One eventual goal could be to derive a formula for the Fejer coefficients of a sawtooth wave.
-  // These coefficients should depend on an additional parameter: numTerms. And they should 
-  // converge to the normal Fourier coeffs when numTerms goes to infinity. I think, these Fejer
-  // coeffs are just the running means of the normal Fourier coeffs, i.e. if
-  // a_n = 1/n in the normal Fourier series, we would instead use b_n = (sum_{k=1}^n a_k) / n.
-  // Try that.
+  // ToDo:
+  // -One eventual goal could be to derive a formula for the Fejer coefficients of a sawtooth wave.
+  //  These coefficients should depend on an additional parameter: numTerms. And they should 
+  //  converge to the normal Fourier coeffs when numTerms goes to infinity. I think, these Fejer
+  //  coeffs are just the running means of the normal Fourier coeffs, i.e. if
+  //  a_n = 1/n in the normal Fourier series, we would instead use b_n = (sum_{k=1}^n a_k) / n.
+  //  Try that.
+  // -It would be nice to generalize this to arbitrary waveforms to generate mip-maps without 
+  //  ripples for wavetables. I think instead of just truncting the spectrum, we would have to 
+  //  compute a running average of all the bins. That is 
+  //    newSpectrum[k] = sum_{i=0}^k ildSpectrum[k]
+  //  Let's try that!
 
 
   int dummy = 0;

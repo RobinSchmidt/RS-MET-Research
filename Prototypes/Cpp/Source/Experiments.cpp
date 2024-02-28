@@ -1653,7 +1653,7 @@ bool testUpDownSample1D()
   Plt plt;
   plt.setFloorLevel(-100);
   plt.setFreqAxisUnit(Plt::FreqAxisUnits::normalized);
-  plt.plotDecibelSpectraOfRows(kernels);
+  plt.plotSpectraOfRows(kernels);
   // The plots are not normalized to 0 dB. Figure out why and fix it!
 
   rsAssert(ok);
@@ -9054,6 +9054,55 @@ void testEulerTransformation()
   // Maybe for the truncated sequence, the incomplete beta function can be replaced by the complete
   // one which in turn can be expressed in terms of binomial coeffs? ...just a wild guess...
 }
+
+void testCesaroSum()
+{
+  // Some experiments with Cesaro summation ...TBC...
+
+  // Function to define our input sequence a_n where n is assumed to start at 1:
+
+  //auto getSeqElem = [](int n) { return pow(0.5, n); };   
+  // a_n = 1/2, 1/4, 1/8, 1/16, ....
+  // s_n = 1/2 + 1/4 + 1/8 + 1/16 + ... = 1/ 2^n. Converges to zero. The sum converes to 1 and is 
+  // known as the geometric series.
+
+  auto getSeqElem = [](int n) { return pow(-1, n+1); };
+  // a_n = 1,-1,1,-1,1,-1, .... = (-1)^(n+1). 
+  // s_n = 1,0,1,0,1,0,... The sum does not converge but alternates betwen 0 and 1.
+
+
+  int N = 20;  // upper summation index
+
+
+  using Vec = std::vector<double>;
+
+  // Create our intial sequence of numbers:
+  Vec seq(N);
+  for(int n = 1; n <= N; n++)
+    seq[n-1] = getSeqElem(n);
+
+  // Create the sequence of partial sums:
+  Vec parSums(N);
+  double sum = 0;
+  for(int n = 0; n < N; n++)
+  {
+    sum += seq[n];
+    parSums[n] = sum;
+  }
+
+
+  rsPlotVectors(seq, parSums);
+
+
+  int dummy = 0;
+
+
+  // See also:
+  // Trevor Bazett on how to use Cesaro summation to counteract the gibbs Phenomenon in Fourier 
+  // series:
+  // https://www.youtube.com/watch?v=AkPZcS8eqmA  Could 1-1+1-1+1-1+1-1+... actually converge?
+}
+
 
 void testGreensFunction()
 {

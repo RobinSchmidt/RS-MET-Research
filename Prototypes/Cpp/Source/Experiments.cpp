@@ -9150,6 +9150,19 @@ void testCesaroSum()
     }
   }
 
+  // Generate all the Fourier saws up to numTerms:
+  Mat saws(numTerms, length);
+  for(int n = 0; n < length; n++)
+    saws(0, n) = sines(0, n);
+  for(int i = 1; i < numTerms; i++)
+  {
+    for(int n = 0; n < length; n++)
+    {
+      saws(i, n) = saws(i-1, n) + sines(i, n);
+    }
+  }
+  plotMatrixRows(saws);
+
 
   Vec fejerSaw(length);
   for(int n = 0; n < length; n++)

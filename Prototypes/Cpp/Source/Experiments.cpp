@@ -9136,9 +9136,10 @@ void testCesaroSum()
 
   int length = 2000;
   int period = 600;
+
+  // Create all the Fourier components with their right amplitudes:
   using Mat = rsMatrix<double>;
   Mat sines(numTerms, length);
-  Vec fourierSaw(length);
   for(int i = 1; i <= numTerms; i++)
   {
     double w = i * (2*PI / period);   // Radian frequency
@@ -9146,8 +9147,18 @@ void testCesaroSum()
     for(int n = 0; n < length; n++)
     {
       sines(i-1, n)  = a * sin(w * n);
-      fourierSaw[n] += sines(i-1, n);
+      //fourierSaw[n] += sines(i-1, n);
     }
+  }
+
+  // Generate the Fourier summed saw:
+  Vec fourierSaw(length);
+  for(int n = 0; n < length; n++)
+  {
+    double sum = 0;
+    for(int i = 0; i < numTerms; i++)
+      sum += sines(i, n);
+    fourierSaw[n] = sum;
   }
 
   // Generate all the Fourier saws up to numTerms:
@@ -9159,6 +9170,7 @@ void testCesaroSum()
       saws(i, n) = saws(i-1, n) + sines(i, n); }}
   //plotMatrixRows(saws);
  
+  // Generate the fejer-summed saw:
   Vec fejerSaw(length);
   for(int n = 0; n < length; n++)
   {

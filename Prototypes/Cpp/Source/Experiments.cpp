@@ -9154,18 +9154,11 @@ void testCesaroSum()
   Mat saws(numTerms, length);
   for(int n = 0; n < length; n++)
     saws(0, n) = sines(0, n);
-  for(int i = 1; i < numTerms; i++)
-  {
-    for(int n = 0; n < length; n++)
-    {
-      saws(i, n) = saws(i-1, n) + sines(i, n);
-    }
-  }
+  for(int i = 1; i < numTerms; i++) {
+    for(int n = 0; n < length; n++) {
+      saws(i, n) = saws(i-1, n) + sines(i, n); }}
   //plotMatrixRows(saws);
-  
-
-
-
+ 
   Vec fejerSaw(length);
   for(int n = 0; n < length; n++)
   {
@@ -9196,8 +9189,16 @@ void testCesaroSum()
   // -It would be nice to generalize this to arbitrary waveforms to generate mip-maps without 
   //  ripples for wavetables. I think instead of just truncting the spectrum, we would have to 
   //  compute a running average of all the bins. That is 
-  //    newSpectrum[k] = sum_{i=0}^k ildSpectrum[k]
-  //  Let's try that!
+  //    newSpectrum[k] = (sum_{i=0}^k oldSpectrum[k]) / k
+  //  Let's try that! I think, for a sawtooth, the effect would be to progressively attentuate the
+  //  higher frequency coeffs. ..but actually, in Straightliner, the Gibbs ripples from spectral 
+  //  truncation are not the problem because we use oversampling anyway. The ripples there are from
+  //  the elliptic filter before downsampling. But may it could be useful in other contexts where
+  //  mip-maps are needed.
+  //
+  // Notes:
+  // Looks like the Fejer coeff of the sawtooth wave or order n is given by the harmonic number 
+  // H(n):  https://www.wolframalpha.com/input?i=sum+i%3D1..n+1%2Fi  (divided by 0.5*PI)
 
 
   int dummy = 0;

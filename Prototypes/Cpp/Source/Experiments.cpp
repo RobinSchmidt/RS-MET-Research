@@ -9059,7 +9059,9 @@ void testCesaroSum()
 {
   // Some experiments with Cesaro summation ...TBC...
   // The idea of Cesaro summation is to start with a series, then build the sequence of partial 
-  // sums and then take the running average of those partial sums.
+  // sums and then take the running average of those partial sums. The theorem is that when the 
+  // original series converges to a particular value, the Cesaro sum will converge to the same
+  // value.
 
   // Function to define our input sequence a_n where n is assumed to start at 1:
 

@@ -9137,7 +9137,15 @@ void testCesaroSum()
   int length = 2000;
   int period = 600;
 
-  auto fourierCoeff = [](int k) { return (1.0/k) / (0.5*PI); };      // Saw
+  //auto fourierCoeff = [](int k) { return (1.0/k) / (0.5*PI); };      // Saw
+
+  auto fourierCoeff = [](int k) 
+  { 
+    if(rsIsEven(k))
+      return 0.0;
+    return (1.0/k) / (0.5*PI); // Check scale factor !
+  }; 
+
 
   // Create all the Fourier components with their right amplitudes:
   using Mat = rsMatrix<double>;

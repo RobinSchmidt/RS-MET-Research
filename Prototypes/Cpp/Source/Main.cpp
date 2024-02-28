@@ -124,7 +124,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
 
   // String processing:
-  testRegex();
+  //testRegex();
 
 
   // Batch creation of plots:

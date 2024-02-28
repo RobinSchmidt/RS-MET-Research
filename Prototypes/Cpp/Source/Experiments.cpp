@@ -9144,7 +9144,7 @@ void testFejerSum()
   // sine-waves ...TBC...
 
   // Setup:
-  int numTerms = 15;    // Upper summation index, number of Fourier components
+  int numTerms = 21;    // Number of Fourier components (including DC)
   int length   = 3000;  // Length of the generated signal in samples
   int period   = 1000;  // Period of the generated signal in samples
 
@@ -9152,8 +9152,8 @@ void testFejerSum()
   // appropriate function to produce the Fourier coefficients:
   //auto fourierCoeff = [](int k) { return 2.0/(k*PI); };                       // Saw
 
-  auto fourierCoeff = [](int k) { return (k > 0) ? 2.0/(k*PI) : 0.0 ; };   
-  //auto fourierCoeff = [](int k) { return rsIsOdd(k) ?  4.0/(k*PI) : 0.0; };   // Square
+  //auto fourierCoeff = [](int k) { return (k > 0) ? 2.0/(k*PI) : 0.0 ; };   
+  auto fourierCoeff = [](int k) { return rsIsOdd(k) ?  4.0/(k*PI) : 0.0; };   // Square
   //auto fourierCoeff = [](int k) { return 1.0; };                              // Impulse train
 
 
@@ -9161,12 +9161,12 @@ void testFejerSum()
   // Create all the sinusoidal components with their Fourier amplitudes baked in:
   using Mat = rsMatrix<double>;
   Mat sines(numTerms, length);
-  for(int i = 1; i <= numTerms; i++)
+  for(int i = 0; i < numTerms; i++)
   {
     double w = i * (2*PI / period);    // Radian frequency "omega"
     double a = fourierCoeff(i);        // Amplitude given by Fourier coefficient
     for(int n = 0; n < length; n++)
-      sines(i-1, n) = a * sin(w * n);
+      sines(i, n) = a * sin(w * n);
   }
 
   // Generate the Fourier summed waveform:
@@ -9195,7 +9195,9 @@ void testFejerSum()
     double sum = 0;
     for(int i = 0; i < numTerms; i++)
       sum += waves(i, n);
-    sum /= numTerms;
+    //sum /= numTerms;
+    sum /= (numTerms-1);
+    //sum /= (numTerms+1);  // Nah!
     fejerWave[n] = sum;
   }
 
@@ -9219,6 +9221,13 @@ void testFejerSum()
   //  Fourier coeffs in the original Fourier series into nonzero ones. Wouldn't that imply to 
   //  destroy the odd symmetry of the squarewave. I mean, we would get nonzero coeffs for even
   //  harmonics, right? -> Figure that out!
+  // -In the creation of the fejerWave, I'm not sure if I should divide by numTerms or numTerms-1.
+  //  In the video, the series starts with index 1 and in my first implementation here, I also did
+  //  it this way. But then I included a DC term as well, i.e. a 0-th Fourier component such that
+  //  the numTerms variable now included the DC - so I think, I should divide by numTerms-1. For 
+  //  some reason, the DC component doesn't seem to count? However, I actually think, both ways are
+  //  valid in the sense that both series converge to the desired waveform - just maybe in 
+  //  different ways. 
   //
   // ToDo:
   // -Try one waveform with all Fourier coeffs equal to 1. That generates an impulse train.

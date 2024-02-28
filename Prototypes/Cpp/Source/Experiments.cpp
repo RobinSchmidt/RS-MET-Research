@@ -9132,19 +9132,19 @@ void testCesaroSum()
 
 void testFejerSum()
 {
-  // In this function, we extend the ideas from testCesaroSum to an infinite sequence of functions.
-  // The sequence elements are now to merely numbers but functions. These functions are the 
-  // individual sinusoidal components of a periodic waveform. The series, i.e. the infinite sum of 
-  // these functions, is the Fourier series of the waveform. Any finite partial sum is a Fourier 
+  // In this function, we extend the ideas from testCesaroSum above to an infinite sequence of 
+  // functions. The sequence elements are now not merely numbers but functions. These functions are
+  // the individual sinusoidal components of a periodic waveform. The series, i.e. the infinite sum
+  // of these functions, is the Fourier series of the waveform. Any finite partial sum is a Fourier 
   // polynomial, i.e. a bandlimited version of the waveform. These bandlimited approximations 
   // feature the infamous Gibbs ripples. For the experiment, we first generate all the sinusoidal
   // partials with their desired amplitudes as determined by the Fourier coefficients. From these
-  // sinuosids, we create two different bandlimited approximations of the waveform. the first is 
+  // sinusoids, we create two different bandlimited approximations of the waveform. The first is 
   // the usual truncated Fourier series. The second uses Cesaro summation on the sequence of
   // sine-waves ...TBC...
 
   // Setup:
-  int numTerms = 11;    // Number of Fourier components (including DC)
+  int numTerms = 15;    // Number of Fourier components (including DC)
   int length   = 3000;  // Length of the generated signal in samples
   int period   = 1000;  // Period of the generated signal in samples
 
@@ -9196,8 +9196,9 @@ void testFejerSum()
     double sum = 0;
     for(int i = 0; i < numTerms; i++)
       sum += waves(i, n);
-    //sum /= numTerms;      // ...was appropriate before I added the DC component.
-    sum /= (numTerms-1);    // ...but now with DC included, I think we need to do this.
+    //sum /= numTerms;       // Was appropriate before I added the DC component.
+    sum /= (numTerms-1);     // But now with DC included, I think we need to do this.
+    //sum /= (numTerms+1);   // Increasing the divisor attenuates the waveform
     fejerWave[n] = sum;
   }
 
@@ -9218,12 +9219,15 @@ void testFejerSum()
   //  train is generated - but then the saw and square waves look wrong. Turning the sine 
   //  components into cosines is not the same thing as shifting the whole waveform by a quarter of 
   //  a cycle.
+  // -When dividing by numTerms rather than (numTerms-1) in the averaging in the Fejer summation 
+  //  and creating a square wave, the minima of the fourierWave exactly touch the fejetWave and the 
+  //  fejerWave alway stays below the fourierWave - the graphs just touch but don't cross.
   //
   // Questions:
   // -Why does that work for a square wave? I think that the averaging process can turn zero valued
   //  Fourier coeffs in the original Fourier series into nonzero ones. Wouldn't that imply to 
-  //  destroy the odd symmetry of the squarewave. I mean, we would get nonzero coeffs for even
-  //  harmonics, right? -> Figure that out!
+  //  destroy the odd symmetry of the squarewave? I mean, we would get nonzero coeffs for even
+  //  harmonics, right? -> Figure that out! 
   // -In the creation of the fejerWave, I'm not sure if I should divide by numTerms or numTerms-1.
   //  In the video, the series starts with index 1 and in my first implementation here, I also did
   //  it this way. But then I included a DC term as well, i.e. a 0-th Fourier component such that

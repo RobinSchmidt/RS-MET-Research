@@ -9061,7 +9061,19 @@ void testCesaroSum()
   // The idea of Cesaro summation is to start with a series, then build the sequence of partial 
   // sums and then take the running average of those partial sums. The theorem is that when the 
   // original series converges to a particular value, the Cesaro sum will converge to the same
-  // value.
+  // value. This is called regularity - if some process that you do to the original sum has the
+  // property that the resulting series converges to the same value, then that process has 
+  // regularity - if I understand it correctly.
+  //
+  // See also:
+  // Trevor Bazett on how to use Cesaro summation to counteract the gibbs Phenomenon in Fourier 
+  // series:
+  // https://www.youtube.com/watch?v=AkPZcS8eqmA  Could 1-1+1-1+1-1+1-1+... actually converge?
+  // We use the notation from the video for variable names here. 
+  //
+  // My goal is actually to try out this improved convergence of the Fourier series that get rid
+  // of the gibbs ripples...but the implementation here is not yet that far...
+
 
   // Function to define our input sequence a_n where n is assumed to start at 1:
 
@@ -9077,50 +9089,90 @@ void testCesaroSum()
   auto getSeqElem = [](int n) { return n * pow(-1, n+1); };
   // a_n = 1, -2, 3, -4, 5, -6,...
   // s_n = 1, -1, 2, -2, 3, -3,...
-  // When we start with this series, it does not even converge in the Cesaro sense.
+  // When we start with this series, it does not even converge in the Cesaro sense. I think, we
+  // could iterate the averaging once more to get a second order Cesaro sum - that then would 
+  // converge. Mathologer had a video about this iterated Cesaro summation. there's also a comment
+  // below the Bazett vidoe saying that this is called Hölder summation
 
 
-  int N = 20;  // upper summation index
-
+  int numTerms = 10;  // upper summation index
 
   using Vec = std::vector<double>;
 
   // Create our intial sequence of numbers:
-  Vec a(N);
-  for(int n = 1; n <= N; n++)
+  Vec a(numTerms);
+  for(int n = 1; n <= numTerms; n++)
     a[n-1] = getSeqElem(n);
 
   // Create the sequence of partial sums:
-  Vec s(N);
+  Vec s(numTerms);
   double sum = 0;
-  for(int n = 0; n < N; n++)
+  for(int n = 0; n < numTerms; n++)
   {
     sum += a[n];
     s[n] = sum;
   }
 
   // Create the running average:
-  Vec A(N);
+  Vec A(numTerms);
   sum = 0;
-  for(int n = 0; n < N; n++)
+  for(int n = 0; n < numTerms; n++)
   {
     sum += s[n];
     A[n] = sum / (n+1);
   }
 
+  //rsPlotVectors(a, s, A);
 
 
-  rsPlotVectors(a, s, A);
+  // OK - so far, so good. To do next: try to apply it to Fourier series: take Cesaro sums of
+  // Fourier apprximations. The goal is to produce a bandlimited sawtooth wave without Gibbs 
+  // ripples (I prefer to use a saw rather than a square as example). To achieve this, it seems
+  // that we need to:
+  // -We need all Fourier approximations of a sawtooth wave up to N
+  // -The normally bandlimited saw is just the last, i.e. N-th Fourier approximation
+  // -The de-rippled bandlimited saw is the average of all Fourier approximations up to N, I 
+  //  think.
+
+  int length = 500;
+  int period = 150;
+  using Mat = rsMatrix<double>;
+  Mat sines(numTerms, length);
+  Vec saw(length);
+  //Mat saw(  numTerms, length);
+  for(int i = 1; i <= numTerms; i++)
+  {
+    double w = i * (2*PI / period);   // Radian frequency
+    double a = (1.0/i) / (0.5*PI);    // Amplitude, normal Fourier coefficient
+    for(int n = 0; n < length; n++)
+    {
+      sines(i-1, n) = a * sin(w * n);
+      saw[n] += sines(i-1, n);
+    }
+  }
+
+  rsPlotVectors(saw);
+
+
+
+  //Vec saw1(length);
+
+
+
+
+  // One eventual goal could be to derive a formula for the Fejer coefficients of a sawtooth wave.
+  // These coefficients should depend on an additional parameter: numTerms. And they should 
+  // converge to the normal Fourier coeffs when numTerms goes to infinity. I think, these Fejer
+  // coeffs are just the running means of the normal Fourier coeffs, i.e. if
+  // a_n = 1/n in the normal Fourier series, we would instead use b_n = (sum_{k=1}^n a_k) / n.
+  // Try that.
 
 
   int dummy = 0;
 
-
-  // See also:
-  // Trevor Bazett on how to use Cesaro summation to counteract the gibbs Phenomenon in Fourier 
-  // series:
-  // https://www.youtube.com/watch?v=AkPZcS8eqmA  Could 1-1+1-1+1-1+1-1+... actually converge?
-  // We use the notation from the video for variable names here. 
+  // See also: Fejer sums:
+  // https://en.wikipedia.org/wiki/Fej%C3%A9r%27s_theorem
+  // https://de.wikipedia.org/wiki/Satz_von_Fej%C3%A9r
 
 }
 

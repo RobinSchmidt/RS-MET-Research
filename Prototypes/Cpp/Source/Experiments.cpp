@@ -9068,12 +9068,12 @@ void testCesaroSum()
   // is that when the original series converges to a particular value, the Cesaro sum will also 
   // converge to the same value. This is called "regularity": If some process that you do to the 
   // original series has the property that the resulting series also converges to the same value, 
-  // then that process has regularity (if I understand it correctly). We use the notation from the video for 
-  // variable names here. My goal is actually to try out this improved convergence of the Fourier 
-  // series that get rid of the Gibbs ripples. That stuff is done in the function testFejerSum()
-  // below. Here we just do the preliminaries of doing Cesaroy summations of sequences of numbers.
-  // The end goal is to appliy it to sequences of functions, namely, to the n-th Fourier polynomial
-  // of a given peridoic function.
+  // then that process has regularity (if I understand it correctly). We use the notation from the 
+  // video for variable names here. My goal is actually to try out this improved convergence of the
+  // Fourier series that get rid of the Gibbs ripples. That stuff is done in the function 
+  // testFejerSum() below. Here we just do the preliminaries of doing Cesaroy summations of 
+  // sequences of numbers. The end goal is to apply it to sequences of functions, namely, to the 
+  // n-th Fourier polynomial of a given peridoic function.
 
 
   int numTerms = 20;    // Upper summation index

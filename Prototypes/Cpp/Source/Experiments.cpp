@@ -9212,6 +9212,7 @@ void testFejerSum()
   //rsPlotVectors(fejerWave);                 // Cesaro regularized truncated Fourier series
   rsPlotVectors(fourierWave, fejerWave);    // Normal and regularized truncated series
 
+
   // Observatioms:
   // -It does indeed seem to work. Both fourierWave and fejerWave look like bandlimited 
   //  approximations of the desired waveform. The fourierWave features the Gibbs ripples, the

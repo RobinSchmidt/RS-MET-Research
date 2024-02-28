@@ -9095,7 +9095,7 @@ void testCesaroSum()
   // below the Bazett vidoe saying that this is called Hölder summation
 
 
-  int numTerms = 10;  // upper summation index
+  int numTerms = 20;  // upper summation index
 
   using Vec = std::vector<double>;
 
@@ -9134,8 +9134,8 @@ void testCesaroSum()
   // -The de-rippled bandlimited saw is the average of all Fourier approximations up to N, I 
   //  think.
 
-  int length = 500;
-  int period = 150;
+  int length = 2000;
+  int period = 600;
   using Mat = rsMatrix<double>;
   Mat sines(numTerms, length);
   Vec fourierSaw(length);
@@ -9178,7 +9178,8 @@ void testCesaroSum()
   // sines but the partial Foruier sums. Maybe generate a saws matrix along the way
 
 
-
+  //rsPlotVectors(fourierSaw);
+  //rsPlotVectors(fejerSaw);
   rsPlotVectors(fourierSaw, fejerSaw);
 
 

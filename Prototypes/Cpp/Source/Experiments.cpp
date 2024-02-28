@@ -9095,7 +9095,10 @@ void testCesaroSum()
   // below the Bazett vidoe saying that this is called Hölder summation
 
 
-  int numTerms = 20;  // upper summation index
+  int numTerms = 20;    // Upper summation index, number of Fourier components
+  int length   = 2000;  // Length of the generated signal in samples
+  int period   = 800;   // Period of the generated signal in samples
+
 
   using Vec = std::vector<double>;
 
@@ -9134,8 +9137,7 @@ void testCesaroSum()
   // -The de-rippled bandlimited saw is the average of all Fourier approximations up to N, I 
   //  think.
 
-  int length = 2000;
-  int period = 800;
+  // Factor this out into a separate function testFejerSeries
 
   //auto fourierCoeff = [](int k) { return (1.0/k) / (0.5*PI); };      // Saw
 
@@ -9153,30 +9155,29 @@ void testCesaroSum()
   for(int i = 1; i <= numTerms; i++)
   {
     double w = i * (2*PI / period);   // Radian frequency
-    //double a = (1.0/i) / (0.5*PI);    // Amplitude, normal Fourier coefficient
-    double a = fourierCoeff(i);
+    double a = fourierCoeff(i);       // Amplitude, normal Fourier coefficient
     for(int n = 0; n < length; n++)
       sines(i-1, n) = a * sin(w * n);
   }
 
-  // Generate the Fourier summed saw:
-  Vec fourierSaw(length);
+  // Generate the Fourier summed waveform:
+  Vec fourierWave(length);
   for(int n = 0; n < length; n++)
   {
     double sum = 0;
     for(int i = 0; i < numTerms; i++)
       sum += sines(i, n);
-    fourierSaw[n] = sum;
+    fourierWave[n] = sum;
   }
 
   // Generate all the Fourier saws up to numTerms:
-  Mat saws(numTerms, length);
+  Mat waves(numTerms, length);
   for(int n = 0; n < length; n++)
-    saws(0, n) = sines(0, n);
+    waves(0, n) = sines(0, n);
   for(int i = 1; i < numTerms; i++) {
     for(int n = 0; n < length; n++) {
-      saws(i, n) = saws(i-1, n) + sines(i, n); }}
-  //plotMatrixRows(saws);
+      waves(i, n) = waves(i-1, n) + sines(i, n); }}
+  //plotMatrixRows(waves);
  
   // Generate the Fejer-summed saw:
   Vec fejerSaw(length);
@@ -9184,14 +9185,14 @@ void testCesaroSum()
   {
     double sum = 0;
     for(int i = 0; i < numTerms; i++)
-      sum += saws(i, n);
+      sum += waves(i, n);
     sum /= numTerms;
     fejerSaw[n] = sum;
   }
 
-  //rsPlotVectors(fourierSaw);
+  //rsPlotVectors(fourierWave);
   //rsPlotVectors(fejerSaw);
-  rsPlotVectors(fourierSaw, fejerSaw);
+  rsPlotVectors(fourierWave, fejerSaw);
 
   // Observations:
   // -OK - it seems to work. The fejerSaw does indeed look like a bandlimited approxiamtion to a 
@@ -9235,6 +9236,7 @@ void testCesaroSum()
   // See also: Fejer sums:
   // https://en.wikipedia.org/wiki/Fej%C3%A9r%27s_theorem
   // https://de.wikipedia.org/wiki/Satz_von_Fej%C3%A9r
+  // https://en.wikipedia.org/wiki/Fej%C3%A9r_kernel
 
 }
 

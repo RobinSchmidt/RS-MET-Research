@@ -9145,10 +9145,7 @@ void testCesaroSum()
     double w = i * (2*PI / period);   // Radian frequency
     double a = (1.0/i) / (0.5*PI);    // Amplitude, normal Fourier coefficient
     for(int n = 0; n < length; n++)
-    {
-      sines(i-1, n)  = a * sin(w * n);
-      //fourierSaw[n] += sines(i-1, n);
-    }
+      sines(i-1, n) = a * sin(w * n);
   }
 
   // Generate the Fourier summed saw:
@@ -9188,6 +9185,10 @@ void testCesaroSum()
   // Observations:
   // -OK - it seems to work. The fejerSaw does indeed look like a bandlimited approxiamtion to a 
   //  saw without the Gibbs ripples.
+
+  // Do the same procedure for the square-wave:
+  // ...
+
 
 
 

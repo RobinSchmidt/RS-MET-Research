@@ -65,6 +65,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // Math:
   //testEulerTransformation();
   testCesaroSum();
+  testFejerSum();
   //testGreensFunction();  // stub
   //testComplexPolar();    // stub
   //testRationalTrigonometry();

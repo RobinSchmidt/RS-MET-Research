@@ -9071,9 +9071,9 @@ void testCesaroSum()
   // then that process has regularity (if I understand it correctly). We use the notation from the 
   // video for variable names here. My goal is actually to try out this improved convergence of the
   // Fourier series that get rid of the Gibbs ripples. That stuff is done in the function 
-  // testFejerSum() below. Here we just do the preliminaries of doing Cesaroy summations of 
+  // testFejerSum() below. Here we just do the preliminaries of doing Cesaro summations of 
   // sequences of numbers. The end goal is to apply it to sequences of functions, namely, to the 
-  // n-th Fourier polynomial of a given peridoic function.
+  // n-th Fourier polynomial of a given periodic function.
 
 
   int numTerms = 20;    // Upper summation index
@@ -9121,6 +9121,8 @@ void testCesaroSum()
   {
     sum += s[n];
     A[n] = sum / (n+1);
+    // We divide by n+1 rather than n because our loop index starts at 0 whereas in the math 
+    // notation, n would start at 1.
   }
 
   rsPlotVectors(a, s, A); // a: sequence, s: seq. of partial sums, A: seq. of averages

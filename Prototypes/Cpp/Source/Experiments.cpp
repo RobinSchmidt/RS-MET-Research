@@ -9058,6 +9058,8 @@ void testEulerTransformation()
 void testCesaroSum()
 {
   // Some experiments with Cesaro summation ...TBC...
+  // The idea of Cesaro summation is to start with a series, then build the sequence of partial 
+  // sums and then take the running average of those partial sums.
 
   // Function to define our input sequence a_n where n is assumed to start at 1:
 
@@ -9066,9 +9068,14 @@ void testCesaroSum()
   // s_n = 1/2 + 1/4 + 1/8 + 1/16 + ... = 1/ 2^n. Converges to zero. The sum converes to 1 and is 
   // known as the geometric series.
 
-  auto getSeqElem = [](int n) { return pow(-1, n+1); };
+  //auto getSeqElem = [](int n) { return pow(-1, n+1); };
   // a_n = 1,-1,1,-1,1,-1, .... = (-1)^(n+1). 
   // s_n = 1,0,1,0,1,0,... The sum does not converge but alternates betwen 0 and 1.
+
+  auto getSeqElem = [](int n) { return n * pow(-1, n+1); };
+  // a_n = 1, -2, 3, -4, 5, -6,...
+  // s_n = 1, -1, 2, -2, 3, -3,...
+  // When we start with this series, it does not even converge in the Cesaro sense.
 
 
   int N = 20;  // upper summation index
@@ -9077,21 +9084,31 @@ void testCesaroSum()
   using Vec = std::vector<double>;
 
   // Create our intial sequence of numbers:
-  Vec seq(N);
+  Vec a(N);
   for(int n = 1; n <= N; n++)
-    seq[n-1] = getSeqElem(n);
+    a[n-1] = getSeqElem(n);
 
   // Create the sequence of partial sums:
-  Vec parSums(N);
+  Vec s(N);
   double sum = 0;
   for(int n = 0; n < N; n++)
   {
-    sum += seq[n];
-    parSums[n] = sum;
+    sum += a[n];
+    s[n] = sum;
+  }
+
+  // Create the running average:
+  Vec A(N);
+  sum = 0;
+  for(int n = 0; n < N; n++)
+  {
+    sum += s[n];
+    A[n] = sum / (n+1);
   }
 
 
-  rsPlotVectors(seq, parSums);
+
+  rsPlotVectors(a, s, A);
 
 
   int dummy = 0;
@@ -9101,6 +9118,8 @@ void testCesaroSum()
   // Trevor Bazett on how to use Cesaro summation to counteract the gibbs Phenomenon in Fourier 
   // series:
   // https://www.youtube.com/watch?v=AkPZcS8eqmA  Could 1-1+1-1+1-1+1-1+... actually converge?
+  // We use the notation from the video for variable names here. 
+
 }
 
 

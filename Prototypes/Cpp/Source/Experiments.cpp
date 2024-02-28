@@ -9137,13 +9137,16 @@ void testCesaroSum()
   int length = 2000;
   int period = 600;
 
+  auto fourierCoeff = [](int k) { return (1.0/k) / (0.5*PI); };      // Saw
+
   // Create all the Fourier components with their right amplitudes:
   using Mat = rsMatrix<double>;
   Mat sines(numTerms, length);
   for(int i = 1; i <= numTerms; i++)
   {
     double w = i * (2*PI / period);   // Radian frequency
-    double a = (1.0/i) / (0.5*PI);    // Amplitude, normal Fourier coefficient
+    //double a = (1.0/i) / (0.5*PI);    // Amplitude, normal Fourier coefficient
+    double a = fourierCoeff(i);
     for(int n = 0; n < length; n++)
       sines(i-1, n) = a * sin(w * n);
   }
@@ -9167,7 +9170,7 @@ void testCesaroSum()
       saws(i, n) = saws(i-1, n) + sines(i, n); }}
   //plotMatrixRows(saws);
  
-  // Generate the fejer-summed saw:
+  // Generate the Fejer-summed saw:
   Vec fejerSaw(length);
   for(int n = 0; n < length; n++)
   {

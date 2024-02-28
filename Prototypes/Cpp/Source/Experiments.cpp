@@ -9220,8 +9220,8 @@ void testFejerSum()
   //  components into cosines is not the same thing as shifting the whole waveform by a quarter of 
   //  a cycle.
   // -When dividing by numTerms rather than (numTerms-1) in the averaging in the Fejer summation 
-  //  and creating a square wave, the minima of the fourierWave exactly touch the fejetWave and the 
-  //  fejerWave alway stays below the fourierWave - the graphs just touch but don't cross.
+  //  and creating a square wave, the minima of the fourierWave exactly touch the fejerWave and the 
+  //  fejerWave always stays below the fourierWave - the graphs just touch but don't cross.
   //
   // Questions:
   // -Why does that work for a square wave? I think that the averaging process can turn zero valued
@@ -9239,8 +9239,6 @@ void testFejerSum()
   //  different ways. 
   //
   // ToDo:
-  // -Try one waveform with all Fourier coeffs equal to 1. That generates an impulse train.
-  // -Maybe include a DC term
   // -One eventual goal could be to derive a formula for the Fejer coefficients of a sawtooth wave.
   //  These coefficients should depend on an additional parameter: numTerms. And they should 
   //  converge to the normal Fourier coeffs when numTerms goes to infinity. I think, these Fejer
@@ -9249,13 +9247,14 @@ void testFejerSum()
   //  Try that.
   // -It would be nice to generalize this to arbitrary waveforms to generate (non-downsampled) 
   //  mip-maps without ripples for wavetables. I think instead of just truncting the spectrum, we 
-  //  would have to compute a running average of all the bins. That is 
+  //  would have to compute a running average of all the FFT bins. That is 
   //    newSpectrum[k] = (sum_{i=0}^k oldSpectrum[k]) / k
   //  Let's try that! I think, for a sawtooth, the effect would be to progressively attentuate the
   //  higher frequency coeffs. ..but actually, in Straightliner, the Gibbs ripples from spectral 
-  //  truncation are not the problem because we use oversampling anyway. The ripples there are from
-  //  the elliptic filter before downsampling. But may it could be useful in other contexts where
-  //  mip-maps are needed. How would that compare to just tapering off the higher coeffs?
+  //  truncation of the mip-maps are not the problem because we use oversampling anyway. The 
+  //  ripples there are from the elliptic filter before downsampling. But may it could be useful in
+  //  other contexts where mip-maps are needed. How would that compare to just tapering off the 
+  //  higher coeffs?
   //
   // Notes:
   // -Looks like the Fejer coeff of the sawtooth wave or order n is given by the harmonic number 
@@ -9271,10 +9270,10 @@ void testFejerSum()
   //  Cesaro summation is also useful to define analytic continuations of functions that are 
   //  defined via a series that converges only in some part of the complex plane. With Cesaro 
   //  summation, the region of convergence can be extended. See at 27:25. ..but that doesn't
-  //  help for the Riemann zeta function becuase in this case, all the (iterated) Cesaro sums also
+  //  help for the Riemann zeta function because in this case, all the (iterated) Cesaro sums also
   //  diverge. It works only for alternating series, I think.
   //  https://www.youtube.com/watch?v=YuIIjLr6vUA at 15:58
-  //  He also says that iterated Cesar sums are called generalized Cesaro summation or generalized
+  //  He also says that iterated Cesaro sums are called generalized Cesaro summation or generalized
   //  Hölder summation.
 }
 

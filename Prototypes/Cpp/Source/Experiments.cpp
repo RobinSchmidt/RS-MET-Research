@@ -9195,6 +9195,11 @@ void testCesaroSum()
   //  truncation are not the problem because we use oversampling anyway. The ripples there are from
   //  the elliptic filter before downsampling. But may it could be useful in other contexts where
   //  mip-maps are needed.
+  // -Check it also for a square wave. It seems that this averaging of Fourier coeffs could also
+  //  increase them - in a square, all the even coeffs are zero. If we average Foueier coeffs,
+  //  this coudl unzero them. Maybe averaging the Fourier coeffs is not the right way to think 
+  //  about after all? But everything (Fouerie-trafo, averaging) is linear, so it should not 
+  //  matter...right? Wrong? -> Figure out!
   //
   // Notes:
   // Looks like the Fejer coeff of the sawtooth wave or order n is given by the harmonic number 

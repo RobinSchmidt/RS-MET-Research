@@ -9145,7 +9145,7 @@ void testCesaroSum()
   { 
     if(rsIsEven(k))
       return 0.0;
-    return (1.0/k) / (0.5*PI); // Check scale factor !
+    return (2.0/k) / (0.5*PI);
   }; 
 
 
@@ -9170,7 +9170,7 @@ void testCesaroSum()
     fourierWave[n] = sum;
   }
 
-  // Generate all the Fourier saws up to numTerms:
+  // Generate all the Fourier waveforms up to numTerms:
   Mat waves(numTerms, length);
   for(int n = 0; n < length; n++)
     waves(0, n) = sines(0, n);
@@ -9179,20 +9179,20 @@ void testCesaroSum()
       waves(i, n) = waves(i-1, n) + sines(i, n); }}
   //plotMatrixRows(waves);
  
-  // Generate the Fejer-summed saw:
-  Vec fejerSaw(length);
+  // Generate the Fejer-summed waveform:
+  Vec fejerWave(length);
   for(int n = 0; n < length; n++)
   {
     double sum = 0;
     for(int i = 0; i < numTerms; i++)
       sum += waves(i, n);
     sum /= numTerms;
-    fejerSaw[n] = sum;
+    fejerWave[n] = sum;
   }
 
   //rsPlotVectors(fourierWave);
-  //rsPlotVectors(fejerSaw);
-  rsPlotVectors(fourierWave, fejerSaw);
+  //rsPlotVectors(fejerWave);
+  rsPlotVectors(fourierWave, fejerWave);
 
   // Observations:
   // -OK - it seems to work. The fejerSaw does indeed look like a bandlimited approxiamtion to a 
@@ -9243,6 +9243,7 @@ void testCesaroSum()
 
 void testGreensFunction()
 {
+  // Just a stub st the moment
 
   // References:
   // (1) Teubner - Tschenbuch the Mathematik

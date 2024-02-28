@@ -9135,7 +9135,7 @@ void testCesaroSum()
   //  think.
 
   int length = 2000;
-  int period = 600;
+  int period = 800;
 
   //auto fourierCoeff = [](int k) { return (1.0/k) / (0.5*PI); };      // Saw
 

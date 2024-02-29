@@ -9082,9 +9082,8 @@ void testCesaroSum()
   // these to select the sequence:
 
   //auto getSeqElem = [](int n) { return pow(0.5, n); };   
-  // a_n = 1/2, 1/4, 1/8, 1/16, ....
-  // s_n = 1/2 + 1/4 + 1/8 + 1/16 + ... = 1/ 2^n. Converges to zero. The sum converes to 1 and is 
-  // known as the geometric series.
+  // a_n = 1/2, 1/4, 1/8, 1/16, ... Converges to zero. 
+  // s_n = 1/2, 3/4, 7/8, 15/16, ... Converges to 1. Is the geometric series.
 
   //auto getSeqElem = [](int n) { return pow(-1, n+1); };
   // a_n = 1,-1,1,-1,1,-1, .... = (-1)^(n+1). 
@@ -9114,7 +9113,7 @@ void testCesaroSum()
     s[n] = sum;
   }
 
-  // Create the running average:
+  // Create the running average (ToDo: use rsArrayTools::cumulativeMean):
   Vec A(numTerms);
   sum = 0;
   for(int n = 0; n < numTerms; n++)
@@ -9204,6 +9203,34 @@ void testFejerSum()
     fejerWave[n] = sum;
   }
 
+  // We now render the fejerWave a second time using an algorithm that just uses a windowed Fourier
+  // spectrum:
+
+  // Generate array of Fourier coeffs:
+  Vec fourierCoeffs(numTerms);
+  for(int i = 0; i < numTerms; i++)
+    fourierCoeffs[i] = fourierCoeff(i);
+
+  // Generate array of Fejer-Fourier coeffs:
+  Vec fejerCoeffs(numTerms);
+  fejerCoeffs[0] = fourierCoeffs[0];   // Verify! Is this correct?
+  for(int i = 1; i < numTerms; i++)
+  {
+    double weight = double(numTerms-i) / double(numTerms-1);
+    fejerCoeffs[i] = fourierCoeffs[i] * weight;
+  }
+  rsPlotVectors(fourierCoeffs, fejerCoeffs);
+
+  // Generate the Fejer wave from the fejerCoeffs:
+  Vec fejerWave2(length);
+  for(int i = 0; i < numTerms; i++)
+  {
+    double w = i * (2*PI / period);    // Radian frequency "omega"
+    double a = fejerCoeffs[i];         // Amplitude given by Fejer coefficient
+    for(int n = 0; n < length; n++)
+      fejerWave2[n] += a * sin(w*n);
+  }
+
 
   //  Visualization:
   //plotMatrixRows(sines);                    // Individual sinuosidal components
@@ -9211,6 +9238,7 @@ void testFejerSum()
   //rsPlotVectors(fourierWave);               // Normal truncated Fourier series
   //rsPlotVectors(fejerWave);                 // Cesaro regularized truncated Fourier series
   rsPlotVectors(fourierWave, fejerWave);    // Normal and regularized truncated series
+  //rsPlotVectors(fejerWave, fejerWave2);     // Compare outputs of averaging and windowing algo
 
 
   // Observatioms:
@@ -9225,18 +9253,18 @@ void testFejerSum()
   // -When dividing by numTerms rather than (numTerms-1) in the averaging in the Fejer summation 
   //  and creating a square wave, the minima of the fourierWave exactly touch the fejerWave and the 
   //  fejerWave always stays below the fourierWave - the graphs just touch but don't cross.
+  // -fejerWave and fejerWave2 are indeed the same up to roundoff error.
+  //
+  // Conclusions:
+  // -Doing the Cesaro averaging of different time-domain signals each of which is missing more and
+  //  more harmonics corresponds to applying a triangular window to the Fourier coefficients. The 
+  //  triangular window is actually also known as Fejer window - probably that's the reason why.
   //
   // Questions:
-  // -Why does that work for a square wave? I think that the averaging process can turn zero valued
-  //  Fourier coeffs in the original Fourier series into nonzero ones. Wouldn't that imply to 
-  //  destroy the odd symmetry of the squarewave? I mean, we would get nonzero coeffs for even
-  //  harmonics, right? Maybe averaging the Fourier coeffs is not the right way to think about it
-  //  after all? But everything (Fourier-trafo, averaging) is linear, so it should not matter.
-  //  Right? Wrong? -> Figure out!
   // -In the creation of the fejerWave, I'm not sure if I should divide by numTerms or numTerms-1.
   //  In the video, the series starts with index 1 and in my first implementation here, I also did
   //  it this way. But then I included a DC term as well, i.e. a 0-th Fourier component such that
-  //  the numTerms variable now included the DC - so I think, I should divide by numTerms-1. For 
+  //  the numTerms variable now includes the DC - so I think, I should divide by numTerms-1. For 
   //  some reason, the DC component doesn't seem to count? However, I actually think, both ways are
   //  valid in the sense that both series converge to the desired waveform - just maybe in 
   //  different ways. 
@@ -9251,13 +9279,15 @@ void testFejerSum()
   // -It would be nice to generalize this to arbitrary waveforms to generate (non-downsampled) 
   //  mip-maps without ripples for wavetables. I think instead of just truncting the spectrum, we 
   //  would have to compute a running average of all the FFT bins. That is 
-  //    newSpectrum[k] = (sum_{i=0}^k oldSpectrum[k]) / k
+  //    newSpectrum[k] = (sum_{i=0}^k oldSpectrum[i]) / k
   //  Let's try that! I think, for a sawtooth, the effect would be to progressively attentuate the
   //  higher frequency coeffs. ..but actually, in Straightliner, the Gibbs ripples from spectral 
   //  truncation of the mip-maps are not the problem because we use oversampling anyway. The 
-  //  ripples there are from the elliptic filter before downsampling. But may it could be useful in
-  //  other contexts where mip-maps are needed. How would that compare to just tapering off the 
+  //  ripples there are from the elliptic filter before downsampling. But maybe it could be useful 
+  //  in other contexts where mip-maps are needed. How would that compare to just tapering off the 
   //  higher coeffs?
+  // -Try to not average the sines but instead the Fourier coeffs, i.e. create a set of 
+  //  "Fejer-corrected" Fourier coeffs and directly sythesize a waveform from those. 
   //
   // Notes:
   // -Looks like the Fejer coeff of the sawtooth wave or order n is given by the harmonic number 
@@ -9272,9 +9302,9 @@ void testFejerSum()
   //  https://www.youtube.com/watch?v=jcKRGpMiVTw at 22:45
   //  Cesaro summation is also useful to define analytic continuations of functions that are 
   //  defined via a series that converges only in some part of the complex plane. With Cesaro 
-  //  summation, the region of convergence can be extended. See at 27:25. ..but that doesn't
-  //  help for the Riemann zeta function because in this case, all the (iterated) Cesaro sums also
-  //  diverge. It works only for alternating series, I think.
+  //  summation, the region of convergence can be extended in certain cases. See at 27:25. But that
+  //  doesn't  help for the Riemann zeta function because in this case, all the (iterated) Cesaro 
+  //  sums also diverge. It works only for alternating series, I think.
   //  https://www.youtube.com/watch?v=YuIIjLr6vUA at 15:58
   //  He also says that iterated Cesaro sums are called generalized Cesaro summation or generalized
   //  Hölder summation.

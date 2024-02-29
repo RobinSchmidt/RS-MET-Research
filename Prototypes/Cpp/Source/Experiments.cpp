@@ -9259,6 +9259,8 @@ void testFejerSum()
   // -Doing the Cesaro averaging of different time-domain signals each of which is missing more and
   //  more harmonics corresponds to applying a triangular window to the Fourier coefficients. The 
   //  triangular window is actually also known as Fejer window - probably that's the reason why.
+  // -Cesaro summation is just a different perspective of the well known technique of using 
+  //  spectral tapering windows to reduce Gibbs ripple.
   //
   // Questions:
   // -In the creation of the fejerWave, I'm not sure if I should divide by numTerms or numTerms-1.

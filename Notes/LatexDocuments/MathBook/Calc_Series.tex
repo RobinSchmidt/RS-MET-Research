@@ -58,7 +58,7 @@ This is not relevant in the context of series but it's sometimes good to point o
 
 
 \subsection{Convergence}
-When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster.
+When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster. Notation: If a sequence $(a_n)$ converges to some value $a$, we will denote this as $a_n \rightarrow a$.
 
 %This sequence has a name: it's called the \emph{alternating harmonic series}.
 
@@ -69,6 +69,8 @@ When faced with a sequence of numbers, an important question is its behavior whe
 %  zwei relle konvergente Folgen a_n, b_n mit Grenzwerten a, b. Wenn a_n < b_n für fast alle n (also
 %  alle bis auf endlich viele) dann ist a <= b. Das (a <= b) gilt auch immer noch, wenn wir nur
 %  a_n <= b_n für fast alle n voraussetzen.
+
+% Notation: a_n converges to a: a_n \rightarrow a
 
 \paragraph{Convergence to Zero} The examples of convergent sequences that we have seen so far converge to zero. They are somewhat special in that regard because convergence to zero is a practically relevant special case of more general convergence. Consider $a_n = n/(n+1) = (0,1/2,2/3,3/4,4/5,\ldots)$. This sequence converges to $1$. The takeaway is that the sequences that converge to zero are an important subset of all the convergent sequences because convergence to zero of a sequence often appears as a necessary condition for certain other properties of interest to hold. We'll see this later in the context of series.
 
@@ -108,6 +110,9 @@ If a sequence really eventually blows up to either positive or negative infinity
 
 \subsubsection{Rules for Convergence and Divergence} 
 
+\paragraph{Sum Rule}
+Suppose we have two sequences $(a_n), (b_n)$ and form a third sequence by taking their pointwise sum: $c_n = a_n + b_n$. Then, if $(a_n)$ converges to $a$ and $(b_n)$ converges to $b$, then $(c_n)$ will converge to $a+b$. In math notation: $(a_n \rightarrow a, b_n \rightarrow b) \Rightarrow ((a_n + b_n) \rightarrow (a + b))$.
+
 \paragraph{Comparison Test}
 If we have a nonnegative sequence $(a_n)$ and want to know whether it converges or diverges, we can apply the following test: Suppose we have another nonnegative sequence $(b_n)$ which we already know to be convergent. Then, if we can find any index $N$ such that $a_n \leq b_n$ for all $n \geq N$, then $(a_n)$ is also convergent. Likewise, if we know that $(b_n)$ diverges and we can find an index $N$ such that $a_n \geq b_n$ for all $n \geq N$, then $(a_n)$ is also divergent.
 
@@ -140,16 +145,20 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 
 
 
-
-
-
-
-
-\subsubsection{Riemann's Reordering Theorem} is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that converge but do not converge absolutely. ...TBC...
+\subsubsection{Riemann's Reordering Theorem} There is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that converge but do not converge absolutely. ...TBC...
 
 % https://en.wikipedia.org/wiki/Riemann_series_theorem
 
-\subsubsection{Summation Methods} ToDo: Cesaro summation, Hölder Summation, ...
+\subsubsection{Summation Methods} Certain divergent series can be transformed into other series that are convergent. Of course, if we would allow any transformation, that would be trivially true and an uninteresting statement - we could just transform our divergent series into a series of all zeros, for example. We want to allow only those kinds of transformations that, when being applied to a convergent series, do not change their value. 
+
+%Of course, to make any sense, our transformation process
+
+%by processes that have the property that, when being applied to a convergent series, the resulting series will converge to the same value.
+
+% https://encyclopediaofmath.org/wiki/Regular_summation_methods
+% https://en.wikipedia.org/wiki/Divergent_series#Properties_of_summation_methods
+
+...ToDo: Cesaro summation, Hölder summation, ...
 % -Can manke certain divergent series convergent
 % -Can improve convergence properties of already convergent series - for example, get rid
 %  of Gibbs ripple. Maybe it can also increase rate of convergence
@@ -307,9 +316,12 @@ We have now written down the synthesis and analysis equations together into one 
 % taking derivatives and intergrals multiplies fourier coeffs k or 1/k
 
 \subsubsection{Aperiodic Functions}
-So far, we assumed $f$ to be periodic. If you apply the analysis equation as is to an aperiodic input function or signal $f$ and then try to resynthesize your signal via the synthesis equation, the resynthesized signal will periodically repeat the chunk of the function that you have analyzed, i.e. here the portion of the function between $0$ and $2 \pi$. You will have pretended to the analysis equation that this chunk was a period from a periodic signal when in fact it wasn't, so to speak. The theory can actually be generalized to deal properly with (some) aperiodic functions, too. This leads to the idea of the Fourier transform which will be treated in more detail in the section about integral transforms. At this point, I'll just say that the sum in the synthesis equation will be replaced by an integral, our discrete Fourier coefficients $a_n, b_n$ will be replaced by a continuous function of frequency and in the analysis equations, we will have to perform an integration from minus to plus infinity instead of over one period. Within this wider framework, the periodic functions will be found as a special case, if we also allow the spectra (i.e. the continuous functions of frequency) to be composed from (shifted and scaled) Dirac delta "functions" [VERIFY!]. Defining those rigorously requires some more advanced mathematical machinery that we will treat later but informally, they can be thought of as infinitely narrow spikes with infinite height and a finite nonzero area. If that doesn't seem to make any sense, then yeah - that's why this is only an informal view.
+So far, we assumed $f$ to be periodic. If you apply the analysis equation as is to an aperiodic input function or signal $f$ and then try to resynthesize your signal via the synthesis equation, the resynthesized signal will periodically repeat the chunk of the function that you have analyzed, i.e. here the portion of the function between $0$ and $2 \pi$. You will have pretended to the analysis equation that this chunk was a period from a periodic signal when in fact it wasn't, so to speak. The theory can actually be generalized to deal properly with (some) aperiodic functions, too. This leads to the idea of the Fourier transform which will be treated in more detail in the section about integral transforms. At this point, I'll just say that the sum in the synthesis equation will be replaced by an integral, our discrete Fourier coefficients $a_k, b_k$ will be replaced by a continuous function of frequency and in the analysis equations, we will have to perform an integration from minus to plus infinity instead of over one period. Within this wider framework, the periodic functions will be found as a special case, if we also allow the spectra (i.e. the continuous functions of frequency) to be composed from (shifted and scaled) Dirac delta "functions" [VERIFY!]. Defining those rigorously requires some more advanced mathematical machinery that we will treat later but informally, they can be thought of as infinitely narrow spikes with infinite height and a finite nonzero area. If that doesn't seem to make any sense, then yeah - that's why this is only an informal view.
 
 
+
+\subsubsection{Fourier Polynomials}
+If we truncate a Fourier series at a given index, say $n$, then we obtain what is called the \emph{Fourier polynomial} of degree $n$. ...ToDo: explain Gibbs ripples and how they can be avoided by Cesaro summation, spectral windowing, etc.
 
 
 \subsubsection{Connection to Power Series}

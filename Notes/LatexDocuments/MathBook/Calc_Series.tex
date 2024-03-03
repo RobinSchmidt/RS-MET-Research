@@ -81,33 +81,39 @@ An even stronger type of convergence is called \emph{absolute convergence}. If a
 \subsubsection{Rate of Convergence}
 We already informally used statements like "converges faster". Now we'll make more explicit what we mean by that...TBC...
 
-
-
 \subsection{Divergence}
-
+By definition, any sequence that is not convergent is called \emph{divergent}. Perhaps counterintuitively, that includes bounded series that bounce around between two or more values but always stay within a finite interval. ...TBC...
 
 \subsubsection{Divergence to Infinity}
-% analog to "convergence to zero"
+If a sequence really eventually blows up to either positive or negative infinity, we say that this sequence \emph{diverges to infinity}. We may further specify the behavior by saying that it diverges to positive or negative infinity. Stated formally, convergence to positive infinity means that for any number $a$ that we may choose, no matter how large, we may find some index $N$ such that all $a_n > a$ for $n > N$ [VERIFY]. This means that the elements $a_n$ of the sequence become arbitrarily large as $n$ increases. Divergence to negative infinity is defined analogously: the elements become arbitrarily "small" - in the sense of arbitrarily negatively large. This notion "divergence to infinity" may be closer to our intuitive sense about what "divergence" should mean. But don't forget that the actual definition of divergence does not imply that kind of behavior. In a sense, this notion "divergence to infinity" might be seen as the counterpart to "convergence to zero".
+
+% Can this be leaborated? Maybe iff a_n converges to zero then b_n = 1/a_n diverges to infinity?
+
+
 
 % What about "bestimmte Divergenz"
 % https://de.wikibooks.org/wiki/Mathe_f%C3%BCr_Nicht-Freaks:_Bestimmte_Divergenz,_uneigentliche_Konvergenz
+
+% https://math.libretexts.org/Bookshelves/Analysis/Real_Analysis_(Boman_and_Rogers)/04%3A_Convergence_of_Sequences_and_Series/4.03%3A_Divergence_of_a_Series
 
 % I think, it might be called "divergence to infinity" - see:
 % https://math.libretexts.org/Bookshelves/Analysis/Real_Analysis_(Boman_and_Rogers)/04%3A_Convergence_of_Sequences_and_Series/4.03%3A_Divergence_of_a_Series
 
 % https://math.stackexchange.com/questions/52077/types-of-divergence
 
-% Maybe write a litte section about convergence to zero as important special case
-
-
-
-
-
 
 %\subsubsection{Examples}
 %ToDo: give some more examples of absolute convergent, conditionally convergent and different kinds of divergent series (alternating but finite, to plus infinity, to minus infinity, altenating with absolute value going to infinity) - maybe also give complex examples. Maybe take ((2/3)(1+i))^n and
 %((3/4)(1+i))^n. The former should converge, the latter diverge. Maybe argue via the geometric series and absolute value. Important in practice: a_n = n^k / b^n converges to zero for k in N, b > 1. Maybe |b| > 1 is enough? n-th root of a, a > 0 -> converges to 1.
 
+\subsubsection{Rules for Convergence and Divergence} 
+
+\paragraph{Comparison Test}
+If we have a nonnegative sequence $(a_n)$ and want to know whether it converges or diverges, we can apply the following test: Suppose we have another nonnegative sequence $(b_n)$ which we already know to be convergent. Then, if we can find any index $N$ such that $a_n \leq b_n$ for all $n \geq N$, then $(a_n)$ is also convergent. Likewise, if we know that $(b_n)$ diverges and we can find an index $N$ such that $a_n \geq b_n$ for all $n \geq N$, then $(a_n)$ is also divergent.
+
+% Majorante/Minorante
+% sum rule, product rule?
+% https://www.sfu.ca/math-coursenotes/Math%20158%20Course%20Notes/sec_ComparisonTests.html
 
 
 \subsection{Infinite Sums aka Series}
@@ -132,8 +138,7 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 % Give rules for convergent series formed by our operations above - sum, product, Cauchy product. I think, in the case of the Cauchy product, we knoe that the it converges, if the two factors converge. But what else can be said? Porbably not much about the number it converges to. But maybe if we convolve two divergent series, we may end up with a convergent one? Maybe we can make them "interfere" destructively or something? What about the harmonic series 1/n and the alternating series (-1)^n. They are both individually divergent but their pointwise product is convergent, I think - it's the alternating harmonic series. What about the Cauchy product?
 
 
-%\subsubsection{Tests for Convergence and Divergence}
-% Majorante/Minorante
+
 
 
 

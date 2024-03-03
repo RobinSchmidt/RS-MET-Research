@@ -29,8 +29,18 @@ Another binary operation that we can perform on two sequences $(a_n),(b_n)$ is \
  c_n = \sum_{k=0}^n a_k b_{n-k} = \sum_{k=0}^n b_k a_{n-k}
 \end{equation}
 where, from the given formula, you will already correctly infer that the operation is commutative.
-[VERIFY!]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity}. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response}.
+[VERIFY! What about complex sequences?]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity} [VERIFY! might be only sesquilinear in complex case?]. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response}.
 % https://mathworld.wolfram.com/CauchyProduct.html
+
+% https://en.wikipedia.org/wiki/Convolution#Discrete_convolution
+
+% generalization:
+% https://math.stackexchange.com/questions/4036715/definition-of-complex-convolution
+
+% What about complex sequences? Do we need a conjugation on one of the terms?  Maybe convolution is only sesquilinear in this case? In Simon Haykin's "Adaptive Filter Theory", page 7, the convolution action of a transversal FIR filter has complex conjugation on the filter coeffs (and the lags on the input samples), i.e. y[n] = sum_k conj(w_k) x[n-k]
+
+% In complex analysis, there doesn't seem to be a conjugation:
+% https://math.stackexchange.com/questions/4653227/laurent-series-cauchy-product
 
 \paragraph{Deconvolution}
 With some caveats, it is actually possible to undo a convolution. We will call this operation \emph{deconvolution}. ...TBC...
@@ -60,13 +70,43 @@ When faced with a sequence of numbers, an important question is its behavior whe
 %  alle bis auf endlich viele) dann ist a <= b. Das (a <= b) gilt auch immer noch, wenn wir nur
 %  a_n <= b_n für fast alle n voraussetzen.
 
+\paragraph{Convergence to Zero} The examples of convergent sequences that we have seen so far converge to zero. They are somewhat special in that regard because convergence to zero is a practically relevant special case of more general convergence. Consider $a_n = n/(n+1) = (0,1/2,2/3,3/4,4/5,\ldots)$. This sequence converges to $1$. The takeaway is that the sequences that converge to zero are an important subset of all the convergent sequences because convergence to zero of a sequence often appears as a necessary condition for certain other properties of interest to hold. We'll see this later in the context of series.
+
 
 \subsubsection{Absolute Convergence}
 An even stronger type of convergence is called \emph{absolute convergence}. If a sequence converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. ...TBC...
 
 
 
+\subsubsection{Rate of Convergence}
+We already informally used statements like "converges faster". Now we'll make more explicit what we mean by that...TBC...
 
+
+
+\subsection{Divergence}
+
+
+\subsubsection{Divergence to Infinity}
+% analog to "convergence to zero"
+
+% What about "bestimmte Divergenz"
+% https://de.wikibooks.org/wiki/Mathe_f%C3%BCr_Nicht-Freaks:_Bestimmte_Divergenz,_uneigentliche_Konvergenz
+
+% I think, it might be called "divergence to infinity" - see:
+% https://math.libretexts.org/Bookshelves/Analysis/Real_Analysis_(Boman_and_Rogers)/04%3A_Convergence_of_Sequences_and_Series/4.03%3A_Divergence_of_a_Series
+
+% https://math.stackexchange.com/questions/52077/types-of-divergence
+
+% Maybe write a litte section about convergence to zero as important special case
+
+
+
+
+
+
+%\subsubsection{Examples}
+%ToDo: give some more examples of absolute convergent, conditionally convergent and different kinds of divergent series (alternating but finite, to plus infinity, to minus infinity, altenating with absolute value going to infinity) - maybe also give complex examples. Maybe take ((2/3)(1+i))^n and
+%((3/4)(1+i))^n. The former should converge, the latter diverge. Maybe argue via the geometric series and absolute value. Important in practice: a_n = n^k / b^n converges to zero for k in N, b > 1. Maybe |b| > 1 is enough? n-th root of a, a > 0 -> converges to 1.
 
 
 
@@ -75,8 +115,10 @@ When we have a given sequence $(a_n)$, we can use it to define a new sequence, n
 \begin{equation}
  s_n = \sum_{k=0}^n a_k
 \end{equation}
-Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}.
+Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}. A necessary condition for a series $(s_n)$ to converge is that the sequence $(a_n)$ of its terms converges to zero. But that is not a sufficient condition. The terms must also converge to zero "fast enough". For example, if the terms follow a power rule like $a_n = 1 / n^c$ for some constant $c > 0$, then the $a_n$ will converge to zero. But they will only converge to zero "fast enough" if $c > 1$.
 ...TBC...
+
+% For a_n = 1/n^c, it will be fast enough if |c| > 1.
 
 \subsubsection{Some Sums}
 ToDo: give formulas for finite and infinite geometric series, infinite alternating harmonic series, inverse-squares ("Basel-problem"), explain divergence of harmonic series
@@ -85,13 +127,27 @@ ToDo: give formulas for finite and infinite geometric series, infinite alternati
 
 Series that converge but do not converge absolutely, have a rather peculiar property which is encapsulated in...
 
-% expalin term "conditionally convergent"
+% explain term "conditionally convergent"
 
-\subsubsection{Riemann's Reordering Theorem}
+% Give rules for convergent series formed by our operations above - sum, product, Cauchy product. I think, in the case of the Cauchy product, we knoe that the it converges, if the two factors converge. But what else can be said? Porbably not much about the number it converges to. But maybe if we convolve two divergent series, we may end up with a convergent one? Maybe we can make them "interfere" destructively or something? What about the harmonic series 1/n and the alternating series (-1)^n. They are both individually divergent but their pointwise product is convergent, I think - it's the alternating harmonic series. What about the Cauchy product?
+
+
+%\subsubsection{Tests for Convergence and Divergence}
+% Majorante/Minorante
+
+
+
+
+
+
+\subsubsection{Riemann's Reordering Theorem} is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that converge but do not converge absolutely. ...TBC...
 
 % https://en.wikipedia.org/wiki/Riemann_series_theorem
 
-
+\subsubsection{Summation Methods} ToDo: Cesaro summation, Hölder Summation, ...
+% -Can manke certain divergent series convergent
+% -Can improve convergence properties of already convergent series - for example, get rid
+%  of Gibbs ripple. Maybe it can also increase rate of convergence
 
 
 \subsection{Power Series}
@@ -325,5 +381,6 @@ Trevor Bazett on how to use Cesaro summation to counteract the gibbs Phenomenon 
 series:
 https://www.youtube.com/watch?v=AkPZcS8eqmA  Could 1-1+1-1+1-1+1-1+... actually converge?
 
+https://en.wikipedia.org/wiki/Divergent_series
  
 \end{comment}

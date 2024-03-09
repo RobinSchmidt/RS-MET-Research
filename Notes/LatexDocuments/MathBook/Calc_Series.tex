@@ -58,7 +58,7 @@ This is not relevant in the context of series but it's sometimes good to point o
 
 
 \subsection{Convergence}
-When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster. Notation: If a sequence $(a_n)$ converges to some value $a$, we will denote this as $a_n \rightarrow a$.
+When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster. If a sequence $(a_n)$ converges to some value $a$, we will denote this as $a_n \rightarrow a$.
 
 %This sequence has a name: it's called the \emph{alternating harmonic series}.
 
@@ -87,7 +87,7 @@ We already informally used statements like "converges faster". Now we'll make mo
 By definition, any sequence that is not convergent is called \emph{divergent}. Perhaps counterintuitively, that includes bounded series that bounce around between two or more values but always stay within a finite interval. ...TBC...
 
 \subsubsection{Divergence to Infinity}
-If a sequence really eventually blows up to either positive or negative infinity, we say that this sequence \emph{diverges to infinity}. We may further specify the behavior by saying that it diverges to positive or negative infinity. Stated formally, convergence to positive infinity means that for any number $a$ that we may choose, no matter how large, we may find some index $N$ such that all $a_n > a$ for $n > N$ [VERIFY]. This means that the elements $a_n$ of the sequence become arbitrarily large as $n$ increases. Divergence to negative infinity is defined analogously: the elements become arbitrarily "small" - in the sense of arbitrarily negatively large. This notion "divergence to infinity" may be closer to our intuitive sense about what "divergence" should mean. But don't forget that the actual definition of divergence does not imply that kind of behavior. In a sense, this notion "divergence to infinity" might be seen as the counterpart to "convergence to zero": If $a_n$ diverges to (plus or minus) infinity, then $1/a_n$ converges to zero. For the converse, we must be a bit more careful - consider the alternative harmonic series as counterexample. ...TBC...
+If a sequence really eventually blows up to either positive or negative infinity, we say that this sequence \emph{diverges to infinity}. We may further specify the behavior by saying that it diverges to positive or negative infinity. Stated formally, convergence to positive infinity means that for any number $a$ that we may choose, no matter how large, we may find some index $N$ such that all $a_n > a$ for $n > N$ [VERIFY]. This means that the elements $a_n$ of the sequence become arbitrarily large as $n$ increases. Divergence to negative infinity is defined analogously: the elements become arbitrarily "small" - in the sense of arbitrarily negatively large. This notion "divergence to infinity" may be closer to our intuitive sense about what "divergence" should mean. But don't forget that the actual definition of divergence does not imply that kind of behavior. In a sense, this notion "divergence to infinity" might be seen as the counterpart to "convergence to zero": If $a_n$ diverges to (plus or minus) infinity, then $1/a_n$ converges to zero. For the converse, we must be a bit more careful - consider the alternating harmonic series as counterexample. ...TBC...
 
 % Can this be leaborated? Maybe iff a_n converges to zero then b_n = 1/a_n diverges to infinity?
 
@@ -115,11 +115,25 @@ If a sequence really eventually blows up to either positive or negative infinity
 Suppose we have two sequences $(a_n), (b_n)$ and form a third sequence by taking their pointwise sum: $c_n = a_n + b_n$. Then, if $(a_n)$ converges to $a$ and $(b_n)$ converges to $b$, then $(c_n)$ will converge to $a+b$. In math notation: $(a_n \rightarrow a, b_n \rightarrow b) \Rightarrow ((a_n + b_n) \rightarrow (a + b))$.
 
 \paragraph{Comparison Test}
-If we have a nonnegative sequence $(a_n)$ and want to know whether it converges or diverges, we can apply the following test: Suppose we have another nonnegative sequence $(b_n)$ which we already know to be convergent. Then, if we can find any index $N$ such that $a_n \leq b_n$ for all $n \geq N$, then $(a_n)$ is also convergent. Likewise, if we know that $(b_n)$ diverges and we can find an index $N$ such that $a_n \geq b_n$ for all $n \geq N$, then $(a_n)$ is also divergent.
+If we have a nonnegative sequence $(a_n)$ and want to know whether it converges or diverges, we can apply the following test: Suppose we have another nonnegative sequence $(b_n)$ which we already know to be convergent. Then, if we can find any index $N$ such that $a_n \leq b_n$ for all $n \geq N$, then $(a_n)$ is also convergent. Likewise, if we know that $(b_n)$ diverges to (positive) infinity and we can find an index $N$ such that $a_n \geq b_n$ for all $n \geq N$, then $(a_n)$ also diverges to (positive) infinity. You may sometimes find the latter statement stated like "if $(b_n)$ diverges, then $(a_n)$ also diverges" without the qualifier "to infinity". By our definition of divergence as mere absence of convergence without necessarily implying explosion to infinity, such a statement would be false: Consider as counterexample the divergent sequence $b_n = (-1)^n + 1$ that alternates between $0$ and $2$ and the sequence $a_n = 3n / (n+1)$ that converges to $3$. 
+
+% This:
+% https://www.sfu.ca/math-coursenotes/Math%20158%20Course%20Notes/sec_ComparisonTests.html
+% actually says nothing about diverging "to positive infinity" but speaks about divergence in general. But intuitively, it is not so clear to me why that more general statement should hold. ...verify! If it does indeed hold for the more general notion of convergence, explain why
+%
+% https://en.wikipedia.org/wiki/Direct_comparison_test
+%
+% Try constructing a counterexample: take a series b_n that diverges but is bounded:
+%   b_n = (-1)^n
+% Now take a series that converges to 2:
+%   a_n = (2 n) / (n+1)
+% We actually do have a_n >= b_n but a_n does *not* diverge
+% 
+
 
 % Majorante/Minorante
 % sum rule, product rule?
-% https://www.sfu.ca/math-coursenotes/Math%20158%20Course%20Notes/sec_ComparisonTests.html
+
 
 
 \subsection{Infinite Sums aka Series}

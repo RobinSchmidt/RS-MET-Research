@@ -6,3 +6,6 @@
  %colors Neutral 
  (other options are NoColor, Linux, LightBG)
 
+
+
+https://www.quora.com/How-do-I-add-the-SageMath-kernel-on-JupyterLab-preferably-on-Linux

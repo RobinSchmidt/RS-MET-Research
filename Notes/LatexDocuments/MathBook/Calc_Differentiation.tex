@@ -3,6 +3,7 @@
 \subsection{The Derivative}
 Consider an arbitrary function $f(x)$ and imagine that we want to compute the slope of the graph at a given $x_0$. We could approximate it by considering the point $(x_0, f(x_0))$ and another point on the graph a small distance $h$ further to the right $(x_0+h, f(x_0+h))$ and compute the "rise over run" quotient $(f(x_0+h) - f(x_0)) / h$ which would give us the slope of a secant. For smaller and smaller $h$, the approximation would get better and better because the secant would approach the tangent. Now we consider the limit as $h$ approaches zero. If that limit exists, it actually \emph{is} our desired slope of the tangent. We denote that tangent slope at $x_0$ as $f'(x_0)$. This leads us to the following definition:
 \begin{equation}
+\label{Eq:Derivative}
   f'(x_0) = \lim_{h \rightarrow 0} \frac{f(x_0 + h) - f(x_0)}{h}
 \end{equation}
 We note that we could compute this limit at any value of $x_0$ where that limit exists, so if the limit exists everywhere, we can actually replace $x_0$ by $x$ because $x_0$ just an arbitrary variable name anyway which we may choose any way we want, as long as the name doesn't collide with any other names in the equation. Then, this definition actually defines a whole new function $f'(x)$. This new function $f'$ ("f prime") is called the derivative of $f$.
@@ -25,26 +26,6 @@ This means: take the derivative of $f$ with respect to $x$, then evaluate the re
 
 %ToDo: Introduce the "evaluated at" notation with the vertical bar on the right.
 
-\paragraph{An Alternative Definition}
-An alternative definition that you won't usually find in textbooks is this:
-\begin{equation}
- f'(x) = \lim_{t \rightarrow 1} \frac{f(t x) - f(x)}{ t x - x }
-\end{equation}
-If we apply this definition to the function $f(x) = x^2$, we get:
-\begin{equation}
-f'(x) = \lim_{t \rightarrow 1} \frac{(t x)^2 - x^2}{ t x - x }
-      = \lim_{t \rightarrow 1} \frac{t^2 x^2 - x^2}{ t x - x }
-      = \lim_{t \rightarrow 1} \frac{x^2 (t^2 - 1)}{ x (t - 1)}
-      = x \lim_{t \rightarrow 1} \frac{(t^2 - 1)}{(t - 1)}         
-\end{equation}
-where in the last step, we noted that $x$ does not depend on $t$ so it could be dragged out of the limit. We now see that the derivative is proportional to $x$ and what is left is to figure out the constant of proportionality from the limit, that involves only $t$ but not $x$ anymore. We factor the numerator as $t^2 - 1 = (t-1)(t+1)$ to get:
-\begin{equation}
-f'(x) = x \lim_{t \rightarrow 1} \frac{(t-1)(t+1)}{(t - 1)}     
-      = x \lim_{t \rightarrow 1} t+1
-      = 2 x
-\end{equation}
-which gives us the same result. This alternative definition is also related to the so called quantum derivative which is basically the same definition just without taking the limit. Sometimes, this alternative definition is much easier to evaluate than the standard definition. That's why I wanted to mention it. This is especially true when $f(x) = x^n$. With the standard definition, you'd have to expand a term of the form $(x+h)^n$ using the binomial theorem whereas with the alternative definition, things cancel nicely. However, usually, we do not evaluate derivatives using the definition via a limit (standard or alternative) anyway. Instead, we use...
-%Fortunately, we don't have to go through this tedious procedure via the limit every time we need to compute a derivative.
 
 \subsection{Differentiation Rules}
 Instead of evaluating derivatives from first principles every time, we see one, we have a lookup list of derivatives of all important elementary functions that has been assembled once and for all by the technique above or otherwise and we have a couple of rules how to compute derivatives of more complicated functions that are created in various ways from the more basic functions (btw: Did I already say that a big theme in math is finding computational shortcuts? This is a nice example). These rules are for any two functions $f$ and $g$ and any constant $a$:
@@ -89,7 +70,76 @@ With the derivative, we have an operation to produce a new "derived" function fr
 % give all different notations $f'', f''', f^{(k)}, \frac{d^k}{d x^k}, D^k, \ddot{f}, \dddot{f}$
 
 
+\subsection{Generalizations, Alternatives and Analogies}
+The derivative, as presented here, is an idea that applies to real functions $f: \mathbb{R} \rightarrow \mathbb{R}$. There are certain related notions that apply to other contexts and generalizations of the idea and alternative but equivalent definitions of the same idea.
 
+\subsubsection{Alternative Definitions}
+
+\paragraph{Backward Difference}
+In (\ref{Eq:Derivative}), we have defined the derivative as:
+\begin{equation}
+ f'(x) = \lim_{h \rightarrow 0} \frac{f(x + h) - f(x)}{h}
+\end{equation}
+but I have changed the notation here to use $x$ instead of $x_0$ which, as said, doesn't matter because $x$ or $x_0$ are only dummy variables in this context. We could have also used the definition using a "backward difference":
+\begin{equation}
+ f'(x) = \lim_{h \rightarrow 0} \frac{f(x) - f(x-h)}{h}
+\end{equation}
+But that doesn't actually make any difference because we didn't say anything about how $h$ should approach zero. It could approach it from above or from below and the limit is implicitly required to exist in both cases and has to have the same value - recall that that's how a (two-sided) limit was defined. But if some variable $h$ approaches $0$ from below, then $-h$ approaches zero from above. If we replace every occurrence of $h$ by $-h$ in either of the two definitions and do a couple of simple algebraic transformations, we'll arrive at the respective other definition, so we see that both definitions do indeed say the same thing.
+% (f(x+h)-f(x))/h = (f(x-h)-f(x))/(-h) = (f(x)-f(x-h))/h
+
+\paragraph{Central Difference}
+
+\paragraph{q Derivatives}
+% https://en.wikipedia.org/wiki/Q-derivative
+% The definitions above are based on the $h$-calculus. There's also a $q$-calculus
+
+
+An alternative definition that you won't usually find in textbooks is this:
+\begin{equation}
+ f'(x) = \lim_{t \rightarrow 1} \frac{f(t x) - f(x)}{ t x - x }
+\end{equation}
+If we apply this definition to the function $f(x) = x^2$, we get:
+\begin{equation}
+f'(x) = \lim_{t \rightarrow 1} \frac{(t x)^2 - x^2}{ t x - x }
+      = \lim_{t \rightarrow 1} \frac{t^2 x^2 - x^2}{ t x - x }
+      = \lim_{t \rightarrow 1} \frac{x^2 (t^2 - 1)}{ x (t - 1)}
+      = x \lim_{t \rightarrow 1} \frac{(t^2 - 1)}{(t - 1)}         
+\end{equation}
+where in the last step, we noted that $x$ does not depend on $t$ so it could be dragged out of the limit. We now see that the derivative is proportional to $x$ and what is left is to figure out the constant of proportionality from the limit, that involves only $t$ but not $x$ anymore. We factor the numerator as $t^2 - 1 = (t-1)(t+1)$ to get:
+\begin{equation}
+f'(x) = x \lim_{t \rightarrow 1} \frac{(t-1)(t+1)}{(t - 1)}     
+      = x \lim_{t \rightarrow 1} t+1
+      = 2 x
+\end{equation}
+which gives us the same result. This alternative definition is also related to the so called quantum derivative which is basically the same definition just without taking the limit. Sometimes, this alternative definition is much easier to evaluate than the standard definition. That's why I wanted to mention it. This is especially true when $f(x) = x^n$. With the standard definition, you'd have to expand a term of the form $(x+h)^n$ using the binomial theorem whereas with the alternative definition, things cancel nicely. However, usually, we do not evaluate derivatives using the definition via a limit (standard or alternative) anyway. Instead, we use...
+%Fortunately, we don't have to go through this tedious procedure via the limit every time we need to compute a derivative.
+
+
+% Maybe rename to Generalizations and Alternatives
+
+\subsubsection{Generalizations}
+
+\paragraph{Derivative of a Function with Respect to Another}
+
+% Gateaux derivative, Frechet derivative
+% https://en.wikipedia.org/wiki/Derivative#Generalizations
+% https://en.wikipedia.org/wiki/Generalizations_of_the_derivative
+
+% https://en.wikipedia.org/wiki/Covariant_derivative
+
+% Quantum derivative
+% Arithmetic derivative (an analogy)
+
+
+\subsubsection{Analogies}
+There are certain derivative-like operations that can be applied to other things than real functions. They are "derivative-like" in the sense that they obey certain rules that derivatives also obey - mostly the product rule [VERIFY].
+
+\paragraph{Arithmetic Derivatives}
+
+\paragraph{Algebraic Derivations}
+In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. ...tbc...
+
+%https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
 
 \begin{comment}
 	
@@ -104,6 +154,19 @@ which is often algebraically simpler to evaluate - especially for powers of x. N
 It has also this useful formula:
 (t^n - 1) = (t-1) (1 + t + t^2 + t^3 + ... + t^{n-1})	
 which might be integrated somewhere in the elementary algebra section
+
+Differentiting a function f of x with respect to another function g of x:
+https://www.youtube.com/watch?v=1Ci2z5YE6Rg
+example: differentiate x^x with respect to x^2. Apply the chain rule to a function
+f(g(x))  ->  df/dx = df/dg * dg/dx  ->  df/dg = (df/dx) / (dg/dx)
+But what does that even mean? I think, we can interpret df/dg it as follows: We have two given functions f,g of x and ask: how much does f (infinitesimally) change, if we change g (infinitesimally)? An example could be: x is a signal amplitude, f is the signal power, i.e. f(x) ~ x^2 and g are decibels g(x) = 20*log10(x). The question would be: how much does the signal *power* change when we change the signal *level* in dB.
+
+Maybe see also:
+https://en.wikipedia.org/wiki/Riemann%E2%80%93Stieltjes_integral
+
+https://en.wikipedia.org/wiki/Quantum_calculus
+
+
 	
 \end{comment}
 

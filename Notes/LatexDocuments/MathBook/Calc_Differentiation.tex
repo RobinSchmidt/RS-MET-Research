@@ -116,11 +116,31 @@ which gives us the same result. This alternative definition is also related to t
 % https://link.springer.com/chapter/10.1007/978-1-4613-0071-7_22
 % https://en.wikipedia.org/wiki/Quantum_calculus#History
 
-% Maybe rename to Generalizations and Alternatives
 
 \subsubsection{Generalizations}
 
+\paragraph{Partial Derivatives}
+
+\paragraph{Complex Derivatives}
+
 \paragraph{Derivative of a Function with Respect to Another}
+Suppose we have a function $f$ of $x$, say $f(x) = x^6$, and we want to take the derivative of it - but not with respect to $x$ as usual, but instead with respect to some other function $g$ of $x$, say $g(x) = x^2$. What does it even mean to take such a derivative? We could intuitively imagine that we have some way to access $g(x)$ to wiggle it a little bit. We don't have direct access to $x$ for wiggling - only to $g(x)$ - but, of course, wiggling $g(x)$ will indirectly also wiggle $x$ itself. And therefore, our wiggle applied to $g(x)$ will also lead to a wiggle in $f(x)$. What we are asing for here is, how much does $f$ wiggle in response to our applied wiggle to $g$. Before deriving a general formula, let's first look at the example: $f(x) = x^6, g(x) = x^2$. We want to take the derivative of $x^6$ with respect to $x^2$. In this example, we can use a substitution $u = x^2$ in which case we get $f(u) = u^3$. Taking the derivative of $f$ with respect to $u$, we get $3 u^2$ and backsubstituting, we get $3 x^4$ as our result. But that was an easy special case. In general, the most straightforward approach is perhaps formal usage of the chain rule in Leibniz notation. We want to compute $df/dg$. The chain rule tells us that $df/dx = df/dg \cdot dg/dx$. Now $df/dx$ and $dg/dx$ are just our ordinary derivatives of $f$ and $g$ with respect to $x$, so we already know how to compute them. ...TBC...
+
+% That was all very formal. It shows the power of the Leibniz notation
+
+% Imagine a mechanism with 3 gears. The angle of the central gear is x, the angle of the left gear is g(x) and the angle of the right gear is f(x). We can't wiggle x directly - but we can wiggle g.
+
+% https://www.youtube.com/watch?v=M8iMROLjf-I
+% This example f(x) = x^6, g(x) = x^2 is particularly nice because we can tackle it in two ways: first by doing a substitution u = x^2 and then recognizing that this just turns f into u^3. Then differentiate wrt u and backsubstitute. The other, general, way involves the cahin rule. In general, the result is: df/dg = f'(x) / g'(x). For g(x) = x, this simplifies to just f'(x)/1 = f'(x) as it should.
+
+% We could perhaps also take an approach via the inverse function theorem rather than the chain rule. We can take the derivative of f(g^{-1}(x)) wrt to x...I think? ...Try it!
+
+% https://math.stackexchange.com/questions/291376/differentiate-with-respect-to-a-function
+% https://math.stackexchange.com/questions/954073/derivative-of-a-function-with-respect-to-another-function
+% https://math.stackexchange.com/questions/2437638/derivative-of-a-function-with-respect-to-another-function
+
+% I think, the Leibniz notation is abiguous because df
+
 
 % Gateaux derivative, Frechet derivative
 % https://en.wikipedia.org/wiki/Derivative#Generalizations
@@ -130,7 +150,7 @@ which gives us the same result. This alternative definition is also related to t
 
 % Quantum derivative
 % Arithmetic derivative (an analogy)
-
+% Lie Derivative
 
 \subsubsection{Analogies}
 There are certain derivative-like operations that can be applied to other things than real functions. They are "derivative-like" in the sense that they obey certain rules that derivatives also obey - mostly the product rule [VERIFY].
@@ -141,6 +161,8 @@ There are certain derivative-like operations that can be applied to other things
 In the field of abstract algebra, specifically in \emph{differential algebra}, there is the notion of a so called \emph{derivation}. ...tbc...
 
 %https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
+
+%
 
 \begin{comment}
 	

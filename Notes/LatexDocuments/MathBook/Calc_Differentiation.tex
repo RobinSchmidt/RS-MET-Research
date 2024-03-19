@@ -90,21 +90,21 @@ But that doesn't actually make any difference because we didn't say anything abo
 \paragraph{Central Difference} ...TBC...
 
 \paragraph{Quantum Derivatives}
-Common to the definitions of the derivative above is that they involved and initially finite, nonzero step size parameter $h$ and letting that step size $h$ approach zero. If one removes the limiting process, one arrives at the finite difference calculus which is also called $h$-calculus. An alternative definition that you won't usually find in general math textbooks is this:
+Common to the definitions of the derivative above is that they involved an initially finite, nonzero step size parameter $h$ and letting that step size $h$ approach zero. If one removes the limiting process, one arrives at the finite difference calculus which is also called $h$-calculus. An alternative definition that you won't usually find in general math textbooks is this:
 \begin{equation}
- f'(x) = \lim_{t \rightarrow 1} \frac{f(t x) - f(x)}{ t x - x }
+ f'(x) = \lim_{q \rightarrow 1} \frac{f(q x) - f(x)}{ q x - x }
 \end{equation}
-Instead of letting an additive constant $h$ got to zero, we let a multiplicative constant $t$ go to $1$. If we apply this definition to the function $f(x) = x^2$, we get:
+Instead of letting an additive constant $h$ got to zero, we let a multiplicative constant $q$ go to $1$. Without the limit, we would get what is also known as $q$-calculus. If we apply this definition to the function $f(x) = x^2$, we get:
 \begin{equation}
-f'(x) = \lim_{t \rightarrow 1} \frac{(t x)^2 - x^2}{ t x - x }
-      = \lim_{t \rightarrow 1} \frac{t^2 x^2 - x^2}{ t x - x }
-      = \lim_{t \rightarrow 1} \frac{x^2 (t^2 - 1)}{ x (t - 1)}
-      = x \lim_{t \rightarrow 1} \frac{(t^2 - 1)}{(t - 1)}         
+f'(x) = \lim_{q \rightarrow 1} \frac{(q x)^2 - x^2}{ q x - x }
+      = \lim_{q \rightarrow 1} \frac{q^2 x^2 - x^2}{ q x - x }
+      = \lim_{q \rightarrow 1} \frac{x^2 (q^2 - 1)}{ x (q - 1)}
+      = x \lim_{q \rightarrow 1} \frac{(q^2 - 1)}{(q - 1)}         
 \end{equation}
-where in the last step, we noted that $x$ does not depend on $t$ so it could be dragged out of the limit. We now see that the derivative is proportional to $x$ and what is left is to figure out the constant of proportionality from the limit, that involves only $t$ but not $x$ anymore. We factor the numerator as $t^2 - 1 = (t-1)(t+1)$ to get:
+where in the last step, we noted that $x$ does not depend on $q$ so it could be dragged out of the limit. We now see that the derivative is proportional to $x$ and what is left is to figure out the constant of proportionality from the limit, that involves only $q$ but not $x$ anymore. We factor the numerator as $q^2 - 1 = (q-1)(q+1)$ to get:
 \begin{equation}
-f'(x) = x \lim_{t \rightarrow 1} \frac{(t-1)(t+1)}{(t - 1)}     
-      = x \lim_{t \rightarrow 1} t+1
+f'(x) = x \lim_{q \rightarrow 1} \frac{(q-1)(q+1)}{(q - 1)}     
+      = x \lim_{q \rightarrow 1} q+1
       = 2 x
 \end{equation}
 which gives us the same result. This alternative definition is also related to the so called quantum derivative which is basically the same definition just without taking the limit. Sometimes, this alternative definition is much easier to evaluate than the standard definition. That's why I wanted to mention it. This is especially true when $f(x) = x^n$. With the standard definition, you'd have to expand a term of the form $(x+h)^n$ using the binomial theorem whereas with the alternative definition, things cancel nicely. However, usually, we do not evaluate derivatives using the definition via a limit (standard or alternative) anyway. Instead, we use our table of elementary derivatives together with our differentiation rules.

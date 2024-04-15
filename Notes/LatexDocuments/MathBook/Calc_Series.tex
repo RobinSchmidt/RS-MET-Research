@@ -60,6 +60,10 @@ This is not relevant in the context of series but it's sometimes good to point o
 \subsection{Convergence}
 When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster. If a sequence $(a_n)$ converges to some value $a$, we will denote this as $a_n \rightarrow a$.
 
+% ToDo: Bring the formal definition of copnvergence. Point out that the limit must be an 
+% element of the original set of numbers (that's the subtle difference between convergence 
+% and Cauchy sequences, I think)
+
 %This sequence has a name: it's called the \emph{alternating harmonic series}.
 
 %Theorems: pointwise sum of sequences converges to sum of limits, etc.
@@ -77,11 +81,25 @@ When faced with a sequence of numbers, an important question is its behavior whe
 
 \subsubsection{Absolute Convergence}
 An even stronger type of convergence is called \emph{absolute convergence}. If a sequence converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. ...TBC...
-
-
+[WAIT: this belongs into the series section - not into the sequences section! For sequences, absolute convergence is not a meaningful concept. Or is it?]
 
 \subsubsection{Rate of Convergence}
 We already informally used statements like "converges faster". Now we'll make more explicit what we mean by that...TBC...
+
+\subsubsection{Cauchy Sequences and Real Numbers}
+A concept related to convergence is that of Cauchy sequences. When saying that a sequence of numbers converges to some limit, there is usually an implicit assumption that the limit is also an element of the same set of numbers as the individual sequence elements. But that isn't always the case. Consider the following recursive definition of a sequence: $a_0 = 2, a_{n+1} = (a_n^2 + 2) / (2 a_n)$ for $n > 0$. It converges to the irrational number $\sqrt{2}$ but every element of the sequence is a rational number. We may therefore consider it as a sequence of rational numbers - but one that doesn't converge \emph{within} the rational numbers. To express the limit, we need to extend our number system to include $\sqrt{2}$. We could form the set $\mathbb{Q} \cup \sqrt{2}$ and say that our sequence converges within that set. However, we are of course interested in a more general extension - one that works for every imaginable sequence and not just that particular one. That's how we arrive at the set of real numbers $\mathbb{R}$. ...TBC...
+
+% No - that's not what "adjoin" means - adjoining sqrt froms the set a + b sqrt(2) for a,b, in Q
+
+%https://www.youtube.com/watch?v=E-Tquvais4w
+% Examples for non-convergent Cauchy sequences:
+% Babylonian algorithm for sqrt - limit is outside Q, therefore formally not convergent
+% in R and C, every Cauchy sequence is convergent (R and C are complete metric spaces)
+% ...
+% This may seem like nitpicking but it was important for the historical development. Imagine living in the 1800s - a time at which the real numbers were not yet defined satifactorily. It was known that irrational numbers exist - the irrationality of sqrt(2) was already known to the ancient greeks - but there wasn't yet an airtight definition for what the larger number space actually was. ...
+
+% Häufungspunkt (accumulation point?)
+% https://en.wikipedia.org/wiki/Accumulation_point
 
 \subsection{Divergence}
 By definition, any sequence that is not convergent is called \emph{divergent}. Perhaps counterintuitively, that includes bounded series that bounce around between two or more values but always stay within a finite interval. ...TBC...

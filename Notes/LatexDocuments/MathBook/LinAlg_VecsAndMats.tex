@@ -220,13 +220,31 @@ If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B
 Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$ in general. We also say, the matrices  $\mathbf{A}$ and $\mathbf{B}$ do not \emph{commute} in general. The difference of the two possible products $\mathbf{C} = \mathbf{A} \mathbf{B} - \mathbf{B} \mathbf{A}$ is called the commutator of $\mathbf{A}$ and $\mathbf{B}$. It can be thought of as measuring, how non-commutative the matrices are with respect to one another. If two matrices commute, their commutator is the zero matrix. [TODO: What about $\mathbf{A} \mathbf{B} \mathbf{A}^{-1} \mathbf{B}^{-1}$. That's how the commutator is defined in group theory. It's the identity matrix if  $\mathbf{A}$ and $\mathbf{B}$ commute, I think. Figure out and explain the relation between these two conflicting definitions!]
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Similarity Transformation}
-Another operation between two matrices $\mathbf{A}$ and $\mathbf{B}$ is defined as follows: $\mathbf{C} = \mathbf{B}^{-1} \mathbf{A} \mathbf{B}$. This operation is called a \emph{similarity transformation} also known as \emph{change of basis} transformation. ...TBC...
+\subsubsection{Sandwich Product, Change of Basis, Similarity Transformation}
+Another important operation between two matrices $\mathbf{A}$ and $\mathbf{B}$ is defined as follows: $\mathbf{C} = \mathbf{B}^{-1} \mathbf{A} \mathbf{B}$. This operation is called a \emph{similarity transformation} also known as \emph{change of basis} transformation. Because the matrix $\mathbf{A}$ is sandwiched between the matrices $\mathbf{B}^{-1}$ and $\mathbf{B}$, this operation is sometimes also called a \emph{sandwich product}. It has an interesting interpretation. Consider what the matrix $\mathbf{C}$ does when we apply it to a vector $\mathbf{x}$. Let $y = \mathbf{C x} = \mathbf{B}^{-1} \mathbf{A B x}$. Reading the iterated matrix product from right to left, we can interpret $\mathbf{C} = \mathbf{B}^{-1} \mathbf{A} \mathbf{B}$ as doing the same transformation as $\mathbf{C}$ in three steps: Firstly, the vector $\mathbf{x}$ gets transformed by the matrix $\mathbf{B}$ into a new coordinate system. Secondly, the result of that gets transformed by the matrix $\mathbf{A}$. Thirdly, the result of that gets transformed back into original coordinate system by $\mathbf{B}^{-1}$. We interpret this as follows: the matrix $\mathbf{A}$ and $\mathbf{C}$ represent the \emph{same} transformation but expressed in \emph{different} coordinate systems. The matrices $\mathbf{A}$ and $\mathbf{C}$ are said to be \emph{similar} [TODO: explain what they have in common (eigenvalues? characteristic polynomial?)]. Because the coordinate system is determined by the basis vectors, the designation as "change of basis" transformation should now also make sense. 
+..TBC...
 
 
 % is called \emph{conjugation} of  $\mathbf{A}$ by $\mathbf{B}$. It is defined as: 
 
 % https://math.stackexchange.com/questions/134796/conjugation-of-matrices-and-conjugation-of-complex-numbers
+
+
+% https://www.youtube.com/watch?v=gAPlRlmhXyI
+% A change of perspective | Linear algebra episode 7
+% Interpretation of the sandwich product: C = B^-1 A B:
+% -Consider what C does to a vector x: y = C x =  B^-1 A B x
+% -firstly, x gets transfromed by B into a new basis (or new coordinate system)
+% -secondly, the transformation A is applied in this new basis
+% -thirdly, the result is transformed back to the original coordinate system by B^-1
+% -> this pattern is useful when the desired transformation is easy to express in some specific 
+%    coordinate system
+% -For example, to project vectors onto an arbitrary line, one could first rotate the line to make it
+%  coincide with the x-axis, then set y to zero (project onto the x-axis), then rotate back. A similar
+%  procedure works for reflecting in an arbitrary line. Figuring out the partial matrices is easy. The result
+%  is a bit more complicated
+% This is an example of a more general pattern for problem solving: 
+% transform the problem, solve in trnsformed domain, transform back
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Matrix-Vector Products}
@@ -249,6 +267,9 @@ The rules of matrix multiplication would also allow to use an $m \times n$ matri
 %\medskip
 \paragraph{Sandwich Products}
 Another kind of product that can be formed between vectors and matrices is sometimes called the \emph{sandwich product}. It takes as inputs an $m \times 1$ vector $\mathbf{w}$, an $m \times n$ matrix $\mathbf{A}$ and an $n \times 1$ vector $\mathbf{v}$ and produces the product $\mathbf{w}^T \mathbf{A v}$. The transposition of $\mathbf{w}$ into $\mathbf{w}^T$ turns it into an $1 \times m$ row vector which is required to make the matrix shapes (vectors are special matrices!) compatible for multiplication. Due to associativity of matrix multiplication, it doesn't matter if you evaluate it as $\mathbf{w}^T (\mathbf{A v})$ or as $(\mathbf{w}^T \mathbf{A}) \mathbf{v}$. The result will be the same in both cases and it will be a scalar, i.e. just a number. Sandwich products are important in the definition of quadratic forms which in turn are important in defining some basic geometric shapes (ellipsoids, hyperboloids, paraboloids) and also in optimization and approximation applications. These sandwich products also appear a lot in quantum mechanics and they may serve as a formalism for generalizing the scalar product especially in the context of differential geometry.  There, the regular scalar product, which we normally use to compute the squared length of a vector, is replaced by such a sandwich product involving the so called metric tensor - which is basically just the matrix that you sandwich into the regular scalar product. [VERIFY if we also use the sandwich product to compute angles between vectors in DG or if we use it just for the length]
+
+
+
 
 \paragraph{$\star$ Functions of a Matrix}
 Now we want to define what is means to apply a function such as the exponential or trigonometric functions to a matrix. What is $f(\mathbf{X}) = \sin(\mathbf{X})$ supposed to mean when $\mathbf{X}$ is a matrix? But before looking at the sine function, let's start with something simpler: the square root function. It makes sense to say that $\sqrt{\mathbf{X}}$ is a matrix which results in $\mathbf{X}$ when being squared. That is: we want to find a matrix $\mathbf{Y}$ such that $\mathbf{Y}^2 = \mathbf{X}$ where it is understood that $\mathbf{Y}^2 = \mathbf{Y Y}$, i.e. squaring a matrix means to just form the matrix product with itself. For this to make sense, we must require that $\mathbf{Y}$ is a square matrix because otherwise we cannot form the product. When faced with this equation $\mathbf{Y}^2 = \mathbf{X}$, the first question that arises is whether or not such a matrix even exists. Assuming that it does, we would like to have some sort of algorithm to compute it. [TODO: figure out if nD Netwon iteration works for this]. Matrix functions like $\exp(\mathbf{X})$ or $\sin(\mathbf{X})$ are typically defined via the Taylor expansion of the respective function. We just take the scalar coefficients from the regular Taylor series expansion for real numbers and replace the variable $x$ with the matrix  $\mathbf{X}$. All we need to know evaluate such a Taylor series is how to multiply a matrix by a scalar and how to multiply two (square) matrices - and these are things we indeed do know by now. Of course, we must also ensure that series converges. It turns out that for $\exp, \sin, \cos, \sinh, \cosh$ and many more of our favorite functions, the series does indeed converge, so we have a working definition. Especially the matrix exponential is a very important function because it let's us write down solutions to certain systems of differential equations explicitly.

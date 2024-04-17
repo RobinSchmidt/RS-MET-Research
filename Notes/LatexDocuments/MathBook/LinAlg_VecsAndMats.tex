@@ -221,9 +221,12 @@ Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Sandwich Product, Change of Basis, Similarity Transformation}
-Another important operation between two matrices $\mathbf{A}$ and $\mathbf{B}$ is defined as follows: $\mathbf{C} = \mathbf{B}^{-1} \mathbf{A} \mathbf{B}$. This operation is called a \emph{similarity transformation} also known as \emph{change of basis} transformation. Because the matrix $\mathbf{A}$ is sandwiched between the matrices $\mathbf{B}^{-1}$ and $\mathbf{B}$, this operation is sometimes also called a \emph{sandwich product}. It has an interesting interpretation. Consider what the matrix $\mathbf{C}$ does when we apply it to a vector $\mathbf{x}$. Let $y = \mathbf{C x} = \mathbf{B}^{-1} \mathbf{A B x}$. Reading the iterated matrix product from right to left, we can interpret $\mathbf{C} = \mathbf{B}^{-1} \mathbf{A} \mathbf{B}$ as doing the same transformation as $\mathbf{C}$ in three steps: Firstly, the vector $\mathbf{x}$ gets transformed by the matrix $\mathbf{B}$ into a new coordinate system. Secondly, the result of that gets transformed by the matrix $\mathbf{A}$. Thirdly, the result of that gets transformed back into original coordinate system by $\mathbf{B}^{-1}$. We interpret this as follows: the matrix $\mathbf{A}$ and $\mathbf{C}$ represent the \emph{same} transformation but expressed in \emph{different} coordinate systems. The matrices $\mathbf{A}$ and $\mathbf{C}$ are said to be \emph{similar} [TODO: explain what they have in common (eigenvalues? characteristic polynomial?)]. Because the coordinate system is determined by the basis vectors, the designation as "change of basis" transformation should now also make sense. 
+Another important operation between two matrices $\mathbf{A}$ and $\mathbf{B}$ is defined as follows: $\mathbf{C} = \mathbf{B}^{-1} \mathbf{A} \mathbf{B}$. This operation is called a \emph{similarity transformation} also known as \emph{change of basis} transformation. Because the matrix $\mathbf{A}$ is sandwiched between the matrices $\mathbf{B}^{-1}$ and $\mathbf{B}$, this operation is sometimes also called a \emph{sandwich product}. It has an interesting interpretation. Consider what the matrix $\mathbf{C}$ does when we apply it to yet another matrix $\mathbf{X}$. Let $\mathbf{Y} = \mathbf{C X} = \mathbf{B}^{-1} \mathbf{A B X}$. Reading the iterated matrix product from right to left, we can interpret $\mathbf{B}^{-1} \mathbf{A} \mathbf{B}$ as doing the same transformation as $\mathbf{C}$ in three steps: Firstly, $\mathbf{X}$ gets transformed by $\mathbf{B}$ into a new coordinate system. Secondly, the result of that gets transformed by $\mathbf{A}$. Thirdly, the result of that gets transformed back into original coordinate system by $\mathbf{B}^{-1}$. We interpret this as follows: the matrix $\mathbf{A}$ and $\mathbf{C}$ represent the \emph{same} transformation but expressed in \emph{different} coordinate systems. The matrices $\mathbf{A}$ and $\mathbf{C}$ are said to be \emph{similar}. They share a lot of properties. The terms have not yet been introduced but for completeness, I'll list those shared properties here anyway\footnote{Did I already mention that putting math topics in a strict linear order without any forward references is difficult? (rhetorical question)}, so don't worry if you do not yet understand them: characteristic polynomial (and therefore the derived properties determinant, trace, eigenvalues and their algebraic and geometric multiplicities), minimal polynomial, rank, index of nilpotence, Jordan normal form, Frobenius normal form, and elementary divisors. Because the coordinate system is determined by the basis vectors, the designation as "change of basis" transformation should now also make sense. 
 ..TBC...
 
+% https://en.wikipedia.org/wiki/Matrix_similarity
+% https://en.wikipedia.org/wiki/Matrix_similarity#Properties
+% https://en.wikipedia.org/wiki/Elementary_divisors
 
 % is called \emph{conjugation} of  $\mathbf{A}$ by $\mathbf{B}$. It is defined as: 
 
@@ -244,7 +247,9 @@ Another important operation between two matrices $\mathbf{A}$ and $\mathbf{B}$ i
 %  procedure works for reflecting in an arbitrary line. Figuring out the partial matrices is easy. The result
 %  is a bit more complicated
 % This is an example of a more general pattern for problem solving: 
-% transform the problem, solve in trnsformed domain, transform back
+% transform the problem, solve in transformed domain, transform back
+% another example is lowpass filtering: discrete fourier transform  (DFT)-> zero out high bins -> IDFT
+% ..that's actually also a projection in the DFT domain
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Matrix-Vector Products}
@@ -266,7 +271,11 @@ The rules of matrix multiplication would also allow to use an $m \times n$ matri
 
 %\medskip
 \paragraph{Sandwich Products}
-Another kind of product that can be formed between vectors and matrices is sometimes called the \emph{sandwich product}. It takes as inputs an $m \times 1$ vector $\mathbf{w}$, an $m \times n$ matrix $\mathbf{A}$ and an $n \times 1$ vector $\mathbf{v}$ and produces the product $\mathbf{w}^T \mathbf{A v}$. The transposition of $\mathbf{w}$ into $\mathbf{w}^T$ turns it into an $1 \times m$ row vector which is required to make the matrix shapes (vectors are special matrices!) compatible for multiplication. Due to associativity of matrix multiplication, it doesn't matter if you evaluate it as $\mathbf{w}^T (\mathbf{A v})$ or as $(\mathbf{w}^T \mathbf{A}) \mathbf{v}$. The result will be the same in both cases and it will be a scalar, i.e. just a number. Sandwich products are important in the definition of quadratic forms which in turn are important in defining some basic geometric shapes (ellipsoids, hyperboloids, paraboloids) and also in optimization and approximation applications. These sandwich products also appear a lot in quantum mechanics and they may serve as a formalism for generalizing the scalar product especially in the context of differential geometry.  There, the regular scalar product, which we normally use to compute the squared length of a vector, is replaced by such a sandwich product involving the so called metric tensor - which is basically just the matrix that you sandwich into the regular scalar product. [VERIFY if we also use the sandwich product to compute angles between vectors in DG or if we use it just for the length]
+Another kind of \emph{sandwich product} can be formed when sandwiching a matrix between two vectors. It takes as inputs an $m \times 1$ vector $\mathbf{w}$, an $m \times n$ matrix $\mathbf{A}$ and an $n \times 1$ vector $\mathbf{v}$ and produces the product $\mathbf{w}^T \mathbf{A v}$. The transposition of $\mathbf{w}$ into $\mathbf{w}^T$ turns it into an $1 \times m$ row vector which is required to make the matrix shapes (vectors are special matrices!) compatible for multiplication. Due to associativity of matrix multiplication, it doesn't matter if you evaluate it as $\mathbf{w}^T (\mathbf{A v})$ or as $(\mathbf{w}^T \mathbf{A}) \mathbf{v}$. The result will be the same in both cases and it will be a scalar, i.e. just a number. Sandwich products are important in the definition of quadratic forms which in turn are important in defining some basic geometric shapes (ellipsoids, hyperboloids, paraboloids) and also in optimization and approximation applications. These sandwich products also appear a lot in quantum mechanics and they may serve as a formalism for generalizing the scalar product especially in the context of differential geometry.  There, the regular scalar product, which we normally use to compute the squared length of a vector, is replaced by such a sandwich product involving the so called metric tensor - which is basically just the matrix that you sandwich into the regular scalar product. [VERIFY if we also use the sandwich product to compute angles between vectors in DG or if we use it just for the length]
+
+
+
+
 
 
 
@@ -566,6 +575,19 @@ We have learned that an eigenvector of a matrix $\mathbf{A}$ is a vector $\mathb
 % https://www.spektrum.de/lexikon/mathematik/invarianter-unterraum/7094
 
 % matrices satsify their own characteristic equation
+
+
+
+\paragraph{Cayley Hamilton Theorem}
+We know how to multiply matrices and we also know how to scale them. Therefore we can create polynomials with scalar coefficients and (square) matrix valued inputs (and outputs). The characteristic polynomial of a matrix $\mathbf{A}$ is a polynomial with scalar coefficients. What happens, if we interpret it as polynomial that takes a matrix argument and then plug in the matrix $\mathbf{A}$? That might seem like a random thing to do so we might not expect anything in particular. No so! The Cayley Hamilton theorem tells us than when we do this, the result will always be zero matrix. That means: every matrix sastifies its own characteristic equation, i.e. the equation that sets its characteristic polynomial to zero.
+
+% https://en.wikipedia.org/wiki/Cayley%E2%80%93Hamilton_theorem
+
+\paragraph{Minimal Polynomial}
+The minimal polynomial of a matrix $\mathbf{A}$ is defined to be the monic polynomial $p(\mathbf{A})$ of smallest degree such that  $p(\mathbf{A}) = \mathbf{0}$. ...TBC...
+
+% https://en.wikipedia.org/wiki/Minimal_polynomial_(linear_algebra)
+
 
 %---------------------------------------------------------------------------------------------------
 %\subsubsection{Properties of Pairs of Matrices}

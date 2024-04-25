@@ -224,6 +224,16 @@ A similar consideration can be applied to equivalences. By definition, they are 
 % https://texample.net/tikz/examples/set-operations-illustrated-with-venn-diagrams/
 %Cardinality
 
+% Union set: A bing cup/union symbol U X means the union of all elements of X. We assume here that each element of X is itself a set - which in set theory is true because there are no other things than sets anyway
+
+% https://www.youtube.com/watch?v=szfsGJ_PGQ0
+% The Axiom of Choice
+
+% https://www.youtube.com/watch?v=szfsGJ_PGQ0
+% 26:00 - well ordering theorem - explain connection to statement that complex numbers can't be ordered - this seems to be a contradiction - but "being ordered" for complex numbers requires more - the order must be compatible with the arithemtic operations - this is a difference of meaning which is confusing and should be pointed out.
+
+
+
 \subsection{Category Theory}
 Category theory is an area of math that attempts to structure and organize mathematics itself. This section here is meant to only give a very superficial birds eye overview. Category theory has been called the "mathematics of mathematics" and - less charitably - as "abstract nonsense". Its relation to set theory has been compared to that of higher level programming languages to machine code. Category theory describes a given field of mathematics in terms of a so called \emph{category}. Such a category consists of a class of \emph{objects} and relationships between those objects, called \emph{morphisms}. You can picture the objects as nodes (as in a multigraph, see [REF needed to Graph Theory section]) and the morphisms as directed edges, depicted as arrows. Morphisms are also sometimes called arrows. The category must also have a notion of composing morphisms. When there's an arrow from node $A$ to node $B$ and another arrow from node $B$ to node $C$ then this induces an arrow from node $A$ to node $C$. This sort of \emph{composition} of morphisms into other morphisms can be pictured as traversing a path in the multigraph. The composition of morphisms must be associative. As final ingredient for a category, we need for each node a special kind of morphism, called an \emph{identity}. An identity is a morphism/arrow that goes from a node $A$ to itself and is meant to convey an abstraction of the idea of an identity function - a sort of neutral element in the realm of morphisms.
 %ToDo: composition (-> paths), identites (-> loopy edges)

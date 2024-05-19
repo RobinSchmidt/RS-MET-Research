@@ -5,9 +5,12 @@
 
 
 
-% 
+% ToDo: 
+% -give Cantor'S original defition of a set
+% -explain the naive/unrestricted comprehension axiom
 
 \subsection{Antinomies}
+% Maybe rename to paradoxes
 
 
 
@@ -17,11 +20,21 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 %Now ask: Is $R$ itself an element of $R$ or not? There are two possible answers to this question: either $R \in R$ or $R \notin R$. Let's assume that $R \notin R$, i.e. R does not contain itself as element. Then, by definition of $R$, $R$ should be an element of $R$. If, on the other hand, we assume that $R \in R$, then $R$ should not be an element of $R$.
 
 %Let $R$ be the set of all sets that does not contain itself as element. Now ask: "is $R$ and element of $R$ or not?
- ...TBC...ToDo: explain how the paradox follows from unrestricted (naive) comprehension and how it can be fixed
+
+...TBC...ToDo: explain how the paradox follows from unrestricted (naive) comprehension and how it can be fixed (I think, we need the axiom of foundation which (together with the axiom of pairing) forbids that sets can be elements of themselves)
+
+
+% https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory#2._Axiom_of_regularity_(also_called_the_axiom_of_foundation)
  
 % https://en.wikipedia.org/wiki/Axiom_schema_of_specification#Unrestricted_comprehension 
 % https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_1_Z10
 % https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_13
+
+% Naive comprehension: if P(x) is a predicate, then we can build the set S = {x:  P(x)}, i.e. the set of all objects that sastify our predicate
+
+% I think, we need the Fundierungsaxiom and need to disallow sets that can contain themselves
+% https://de.wikipedia.org/wiki/Fundierungsaxiom
+% Es gibt somit auch keine Menge, die sich selbst als Elemente enthält
 
 
 % R = (...) - whatever in R is, R does not appear in its list of elements - by definition
@@ -43,6 +56,8 @@ The most commonly uses system of axioms that mathematicians use today is the one
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory
 % https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre
 
+% https://de.wikipedia.org/wiki/Zermelo-Mengenlehre
+
 \paragraph{The Axiom of Choice}
 
 %The Axiom of Choice | Epic Math Time
@@ -51,6 +66,10 @@ The most commonly uses system of axioms that mathematicians use today is the one
 % such that f(g(y)) = y for all y in Y without explicitly specifying what g does. The proof leaves
 % the task of picking an x in X for each y in Y (such that g(y) = x, f(x) = y) to the reader. Take 
 % as example f(x) = x^2, compare the proof to the simpler proof for the bijective f(x) = x^3
+
+
+\subsubsection{Neumann, Bernays, Gödel}
+
 
 
 \section{Numbers as Sets}

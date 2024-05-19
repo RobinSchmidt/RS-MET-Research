@@ -67,7 +67,12 @@ With the derivative, we have an operation to produce a new "derived" function fr
 
 ...TBC...
 
+% ToDo:
+% -derive a formula for the definition of f'' based on using the definition of f'
+% -interpret the formula in terms of a numeric 2nd derivative when h is small.
+
 % give all different notations $f'', f''', f^{(k)}, \frac{d^k}{d x^k}, D^k, \ddot{f}, \dddot{f}$
+
 
 
 \subsection{Generalizations, Alternatives and Analogies}
@@ -86,6 +91,14 @@ but I have changed the notation here to use $x$ instead of $x_0$ which, as said,
 \end{equation}
 But that doesn't actually make any difference because we didn't say anything about how $h$ should approach zero. It could approach it from above or from below and the limit is implicitly required to exist in both cases and has to have the same value - recall that that's how a (two-sided) limit was defined. But if some variable $h$ approaches $0$ from below, then $-h$ approaches zero from above. If we replace every occurrence of $h$ by $-h$ in either of the two definitions and do a couple of simple algebraic transformations, we'll arrive at the respective other definition, so we see that both definitions do indeed say the same thing.
 % (f(x+h)-f(x))/h = (f(x-h)-f(x))/(-h) = (f(x)-f(x-h))/h
+
+% ToDo: 
+% -give nonstandard? names: forward derivative, backward derivative. 
+% -Explain notation with superscript + or - for these one-sided derivatives
+% -Explain again that *the* derivative only exists when both one-sided derivatives are
+%  equal (and the function is continuous at that point). 
+% -Explain cases where this is not the case and what the second best thing is ("continuously
+%  extendable" or something?).
 
 \paragraph{Central Difference} ...TBC...
 

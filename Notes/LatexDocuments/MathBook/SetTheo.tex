@@ -3,12 +3,45 @@
 
 \section{Naive and Axiomatic Set Theory}
 
+
+
+% 
+
 \subsection{Antinomies}
+
+
+
+\paragraph{Russel's Antinomy}
+Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \emph{proper class}? Verify!} $R$ as the set of all sets that do not contain themselves as an element. That means $R = \{x: x \notin x\}$. That means $x \in R \Leftrightarrow x \notin x$, i.e. $x$ is an element of $R$ if and only if $x$ is not an element of $x$. Here, $x$ can be \emph{any} set - for any set $x$ whatsoever, we can ask the question whether or not it is an element of $R$. Now ask what happens when we let $x = R$, i.e. we ask whether or not $R$ is an element of $R$. We immediately get the contradiction $R \in R \Leftrightarrow R \notin R$.
+
+%Now ask: Is $R$ itself an element of $R$ or not? There are two possible answers to this question: either $R \in R$ or $R \notin R$. Let's assume that $R \notin R$, i.e. R does not contain itself as element. Then, by definition of $R$, $R$ should be an element of $R$. If, on the other hand, we assume that $R \in R$, then $R$ should not be an element of $R$.
+
+%Let $R$ be the set of all sets that does not contain itself as element. Now ask: "is $R$ and element of $R$ or not?
+ ...TBC...ToDo: explain how the paradox follows from unrestricted (naive) comprehension and how it can be fixed
+ 
+% https://en.wikipedia.org/wiki/Axiom_schema_of_specification#Unrestricted_comprehension 
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_1_Z10
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_13
+
+
+% R = (...) - whatever in R is, R does not appear in its list of elements - by definition
+
+% Maybe use also R-complement as the set of all sets that contain themselves
+
+% https://de.wikipedia.org/wiki/Russellsche_Antinomie
+% https://en.wikipedia.org/wiki/Russell%27s_paradox
+
+
+% Note: the Russel set is actually not a set but a class, I think.
 
 \subsection{Systems of Axioms}
 
 
-\subsubsection{Zermelo-Fraenkel}
+\subsubsection{Zermelo, Fraenkel, Choice}
+The most commonly uses system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel together with the so called axiom of choice. This system of axioms is usually called the ZFC system (for Zermelo, Fraenkel, Choice). ...TBC...
+
+% https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory
+% https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre
 
 \paragraph{The Axiom of Choice}
 
@@ -18,6 +51,18 @@
 % such that f(g(y)) = y for all y in Y without explicitly specifying what g does. The proof leaves
 % the task of picking an x in X for each y in Y (such that g(y) = x, f(x) = y) to the reader. Take 
 % as example f(x) = x^2, compare the proof to the simpler proof for the bijective f(x) = x^3
+
+
+\section{Numbers as Sets}
+In set theory, sets are the only thing that exists. Every mathematical object must somehow be viewed as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to build numbers from sets. Set theorists will talk about things like subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
+
+%because we usually do not envision a number as a set. 
+...TBC... 
+
+\subsubsection{Ordinal Numbers}
+
+\subsubsection{Cardinal Numbers}
+
 
 
 \begin{comment}
@@ -38,6 +83,23 @@ Set Containment:
 Lebesgue-Measure:
  https://www.youtube.com/watch?v=0VD3BWDLmU0
 
-...set theory sometimes appears like a "write-only-language"
+...set theory sometimes appears like a "write-only-language
+
+% See:
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1
+
+
+
+Das Zermelo-Fraenkel-Axiomensystem der Mengenlehre (ZF)
+https://www.youtube.com/watch?v=U10UYyXv5gM&list=PLb0zKSynM2PAuxxtMK1bxYPV_bUoPtpTB&index=1&t=0s
+
+Bourbaki:
+-Collective of authors writing a series of books in the early 1900s that aimed to build up all of math axiomatically. The first volume was about set theory
+
+Was sind Kardinalzahlen? Was besagt die Kontinuumshypothese?
+https://www.youtube.com/watch?v=qijXa3U4Nag&list=PLb0zKSynM2PCrgebQsfrzEsUIuA0I_wdG&index=1&t=0s
+
+
+
 
 \end{comment}

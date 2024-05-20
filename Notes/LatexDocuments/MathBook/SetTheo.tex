@@ -1,5 +1,5 @@
 \chapter{Set Theory}
-
+[this is still very drafty and needs a lot of proofreading]
 
 \section{Naive and Axiomatic Set Theory}
 
@@ -56,6 +56,8 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 
 % Note: the Russel set is actually not a set but a class, I think.
 
+% https://en.wikipedia.org/wiki/Urelement
+
 
 \subsubsection{Cantor's Paradox}
 Calling Cantor's initial approach to set theory "naive" might be a bit unfair to him. He was, in fact, aware that his initial approach has some problems and came up with a paradoxon himself. It is actually a generalized version of Russel's paradox (VERIFY!)...TBC...
@@ -77,7 +79,54 @@ The most commonly used system of axioms that mathematicians use today is the one
 
 % https://de.wikipedia.org/wiki/Zermelo-Mengenlehre
 
-\paragraph{The Axiom of Choice}
+\paragraph{Axiom of Extensionality}
+This axiom states that two sets are equal if they contain the same elements. VERIFY
+% It follows that the order doesn't matter and element duplication doesn't matter
+% ToDo: explain the fancy name.
+
+% https://en.wikipedia.org/wiki/Axiom_of_extensionality
+
+
+\paragraph{Axiom of Pairing}
+This axioms states that whenever we have two sets $A$ and $B$, there is a set $C$ whose elements are precisely $A$ and $B$. This set is given by $C = \{A, B\}$ and is it unique by virtue of the axiom of extensionality.
+
+%Given any object A and any object B, there is a set C such that, given any object D, D is a member of C if and only if D is equal to A or D is equal to B (from wikipedia - I don't understand it).
+
+% given two objects A and B, we can find a set C whose members are exactly A and B.  We call the set C the pair of A and B, and denote it {A,B}
+
+% https://en.wikipedia.org/wiki/Axiom_of_pairing
+
+
+
+\paragraph{Axiom of Regularity}
+This axiom states that every non-empty set A contains an element that is disjoint from A. It is also known as the axiom of foundation. ...TBC...
+
+% The axiom of regularity together with the axiom of pairing implies that no set is an element of itself, and that there is no infinite sequence (an) such that ai+1 is an element of ai for all i. 
+
+% https://en.wikipedia.org/wiki/Axiom_of_regularity
+
+
+\paragraph{Axiom of Specification}
+% aka restricted comprehension
+
+% https://en.wikipedia.org/wiki/Axiom_schema_of_specification
+
+
+% The Weitz video on ZF explains it quite well. I think, the essence is that, in order to specify a set via a predicate, we first need to say, from which superset (or universal set) we form our set. A set builder notation $S = \{x: P(x)\}$ is not enough. We need to say something like  $S = \{x \in U: P(x)\}$ where $U$ is the universal set or superset from which we draw an x.
+
+%A predictate like P(x) is not enough. We must say 
+
+
+\paragraph{Axiom of Union}
+The axiom states that for each set $A$ there is a set $B$ whose elements are precisely the elements of the elements of $A$.
+
+% Imagine a set $A = \{ A_1, A_2, A_3, \ldots \} $ of sets. From every set $A_i$, pour all elements into the set $B$. The set $B$ is the union of all the sets $A_i$.
+
+
+%https://en.wikipedia.org/wiki/Axiom_of_union
+
+
+\paragraph{Axiom of Choice}
 
 %The Axiom of Choice | Epic Math Time
 %https://www.youtube.com/watch?v=Nnt4hyJYfGA
@@ -92,6 +141,19 @@ The most commonly used system of axioms that mathematicians use today is the one
 % https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Bernays%E2%80%93G%C3%B6del_set_theory
 % https://de.wikipedia.org/wiki/Neumann-Bernays-G%C3%B6del-Mengenlehre
 
+
+% https://en.wikipedia.org/wiki/Kripke%E2%80%93Platek_set_theory_with_urelements
+
+\subsubsection{Axiom Candidates}
+In this section, we will mention few other possible axioms that could be added to an existing system of axioms.
+
+\paragraph{Axiom of Constructibility}
+
+% https://en.wikipedia.org/wiki/Axiom_of_constructibility
+% https://en.wikipedia.org/wiki/Constructible_universe
+
+
+
 \section{Numbers as Sets}
 In set theory, sets are the only thing that exists. Every mathematical object must somehow be viewed as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to build numbers from sets. Set theorists will talk about things like subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
 
@@ -99,6 +161,8 @@ In set theory, sets are the only thing that exists. Every mathematical object mu
 ...TBC... 
 
 \subsection{Ordinal Numbers}
+
+% https://en.wikipedia.org/wiki/Ordinal_number
 
 \subsection{Cardinal Numbers}
 
@@ -133,9 +197,17 @@ To show that two sets $A$ and $B$ have the same cardinality, we must, by definit
 % -If both exist, then |A| <= |B| and |B| <= |A| and therefore  |A| = |B|
 
 \subsection{The Continuum Hypothesis}
-We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists (VERIFY!). This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH.  ....TBC...
+We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists (VERIFY!). This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH. We have already introduced the notation $\aleph_0 = |\mathbb{N}|$ for the cardinality of the natural numbers. The cardinality of the real numbers, i.e. the continuum, is denoted as $\mathfrak{c} = |\mathbb{R}|$ and we also already know that $|\mathbb{R}| = 2^{\aleph_0}$. With these notations, the continuum hypothesis can be written down as: $\aleph_1 = 2^{\aleph_0}$. The generalized CH, also called Cantor's aleph hypothesis, states: $\aleph_{\alpha+1} = 2^{\aleph_{\alpha}}$ for every ordinal number $\alpha$. ....TBC...
 
-%$\mathfrak{c} = 2^{\aleph_0}$. CH: $\aleph_1 = 2^{\aleph_0}$?
+% Q: Does the index of a cardinal number have to be an ordinal number?
+% Q: How many cardinal numbers are there? Countably many or uncountably many? Is this question related to the CH?
+
+
+%or as $\mathfrak{c} = 2^{\aleph_0}$
+
+
+
+%$|\mathbb{R}| = \mathfrak{c} = 2^{\aleph_0}$. CH: $\aleph_1 = 2^{\aleph_0}$?
 
 % ToDo: introduce notation \mathfrak{c}
 
@@ -144,9 +216,10 @@ The quest was now to figure out whether or not the continuum hypothesis is true 
 
 % https://en.wikipedia.org/wiki/Continuum_hypothesis
 
-
-
 \subsubsection{The Mathematical Multiverse}
+The undecidability of the CH from ZFC means that, within the system of ZFC, we can create at least two different mathematical universes - one in which the CH is true and one in which it is false. Both of these universes are equally valid in the sense that all the theorems that follow from ZFC alone, i.e. all the mathematical theorems that we use in our usual day-to-day applied math (and many more), are true in both of them VERIFY!...TBC...
+
+% https://en.wikipedia.org/wiki/Von_Neumann_universe
 
 
 % (Provably) Unprovable and Undisprovable... How??
@@ -159,6 +232,13 @@ The quest was now to figure out whether or not the continuum hypothesis is true 
 % CH implies that there exists a function on the unit square whose iterated integrals are not equal. The function is simply the indicator function of an ordering of [0, 1] 
 
 % ToDo:
+
+%\subsubsection{The Generalized Continuum Hypothesis}
+
+
+%  Cantor's aleph hypothesis
+
+% https://en.wikipedia.org/wiki/Continuum_hypothesis#Generalized_continuum_hypothesis
 
 
 \begin{comment}

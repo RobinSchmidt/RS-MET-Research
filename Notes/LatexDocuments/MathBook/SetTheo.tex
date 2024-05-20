@@ -9,19 +9,28 @@
 % -give Cantor'S original defition of a set
 % -explain the naive/unrestricted comprehension axiom
 
-\subsection{Antinomies}
+\subsection{Unrestricted Comprehension Axiom [VERIFY!]}
+In naive set theory, there is one simple and very general axiom that allows us to construct sets. Let $x$ be any kind of object and $P(x)$ a predicate, i.e. a function into which we can plug in $x$ and then $P$ will return a boolean value that tells us whether or not $x$ has some property. With $P$ in hand, we can build the set $S = \{x: P(x)\}$ of all objects that satisfy our predicate. That we can always do this, for any $P$ whatsoever, is called the \emph{unrestricted comprehension} axiom, sometimes also \emph{naive comprehension} axiom. 
+
+\subsection{Paradoxes}
+It turns out that this is a bit too liberal. With unrestricted comprehension, we can build paradoxical sets...TBC...
 % Maybe rename to paradoxes
+% mentiona the term antinomy
 
 
 
-\paragraph{Russel's Antinomy}
-Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \emph{proper class}? Verify!} $R$ as the set of all sets that do not contain themselves as an element. That means $R = \{x: x \notin x\}$. That means $x \in R \Leftrightarrow x \notin x$, i.e. $x$ is an element of $R$ if and only if $x$ is not an element of $x$. Here, $x$ can be \emph{any} set - for any set $x$ whatsoever, we can ask the question whether or not it is an element of $R$. Now ask what happens when we let $x = R$, i.e. we ask whether or not $R$ is an element of $R$. We immediately get the contradiction $R \in R \Leftrightarrow R \notin R$.
+\subsubsection{Russel's Paradox}
+Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \emph{proper class}? Verify!} $R$ as the set of all sets that do not contain themselves as an element. That means $R = \{x: x \notin x\}$. That means $x \in R \Leftrightarrow x \notin x$, i.e. $x$ is an element of $R$ if and only if $x$ is not an element of $x$. Here, $x$ can be \emph{any} set - so for any set $x$ whatsoever, we can ask the question whether or not it is an element of $R$. Now ask what happens when we let $x = R$, i.e. we ask whether or not $R$ is an element of $R$. From $x \in R \Leftrightarrow x \notin x$ with $x = R$, we immediately get the contradiction $R \in R \Leftrightarrow R \notin R$. That is obviously nonsensical. So what went wrong?
+
+\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway. We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that loop back on themselves (of which $x \in x$ is the simplest one). Ruling out such looped recursive element inclusions will later be formalized as the axiom of foundation VERIFY!...TBC...maybe we need also the axiom of restricted comprehension and/or the axiom of pairing?
+
+% Axiom schema of specification (or of separation, or of restricted comprehension)
 
 %Now ask: Is $R$ itself an element of $R$ or not? There are two possible answers to this question: either $R \in R$ or $R \notin R$. Let's assume that $R \notin R$, i.e. R does not contain itself as element. Then, by definition of $R$, $R$ should be an element of $R$. If, on the other hand, we assume that $R \in R$, then $R$ should not be an element of $R$.
 
 %Let $R$ be the set of all sets that does not contain itself as element. Now ask: "is $R$ and element of $R$ or not?
 
-...TBC...ToDo: explain how the paradox follows from unrestricted (naive) comprehension and how it can be fixed (I think, we need the axiom of foundation which (together with the axiom of pairing) forbids that sets can be elements of themselves)
+%...TBC...ToDo: explain how the paradox follows from unrestricted (naive) comprehension and how it can be fixed (I think, we need the axiom of foundation which (together with the axiom of pairing) forbids that sets can be elements of themselves)
 
 
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory#2._Axiom_of_regularity_(also_called_the_axiom_of_foundation)
@@ -48,6 +57,10 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 % Note: the Russel set is actually not a set but a class, I think.
 
 \subsection{Systems of Axioms}
+
+% -axioms describe
+%  -what sets exist
+%  -how to build new sets from existing sets - what is and what isn't allowed
 
 
 \subsubsection{Zermelo, Fraenkel, Choice}

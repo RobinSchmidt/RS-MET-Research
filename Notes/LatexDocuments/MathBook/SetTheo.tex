@@ -65,14 +65,15 @@ Calling Cantor's initial approach to set theory "naive" might be a bit unfair to
 
 
 \subsection{Systems of Axioms}
+Set theoretic systems of axioms are like the atomic building blocks that we can use for the construction of arbitrary sets. An axiom may either directly state that some kind of set exists or it may tell us, how we can build new sets from existing sets. The initial freedom, chaos and anarchy of the unrestricted comprehension axiom which leads us to all these paradoxa is gone. We only have some well defined ways to build sets.
 
 % -axioms describe
 %  -what sets exist
 %  -how to build new sets from existing sets - what is and what isn't allowed
 
 
-\subsubsection{Zermelo, Fraenkel, Choice}
-The most commonly used system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel together with the so called axiom of choice. This system of axioms is usually called the ZFC system (for Zermelo, Fraenkel, Choice). ...TBC...
+\subsubsection{Zermelo, Fraenkel}
+The most common system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel, usually augmented with the so called axiom of choice. This system of axioms is usually called the ZFC system (for Zermelo, Fraenkel, Choice). ...TBC...
 
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory
 % https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre
@@ -80,7 +81,7 @@ The most commonly used system of axioms that mathematicians use today is the one
 % https://de.wikipedia.org/wiki/Zermelo-Mengenlehre
 
 \paragraph{Axiom of Extensionality}
-This axiom states that two sets are equal if they contain the same elements. VERIFY
+This axiom states that two sets are equal iff they contain the same elements. VERIFY
 % It follows that the order doesn't matter and element duplication doesn't matter
 % ToDo: explain the fancy name.
 
@@ -97,24 +98,12 @@ This axioms states that whenever we have two sets $A$ and $B$, there is a set $C
 % https://en.wikipedia.org/wiki/Axiom_of_pairing
 
 
-
 \paragraph{Axiom of Regularity}
-This axiom states that every non-empty set A contains an element that is disjoint from A. It is also known as the axiom of foundation. ...TBC...
+This axiom states that every non-empty set $A$ contains an element that is disjoint from $A$. It is also known as the axiom of foundation. ...TBC...
 
 % The axiom of regularity together with the axiom of pairing implies that no set is an element of itself, and that there is no infinite sequence (an) such that ai+1 is an element of ai for all i. 
 
 % https://en.wikipedia.org/wiki/Axiom_of_regularity
-
-
-\paragraph{Axiom of Specification}
-% aka restricted comprehension
-
-% https://en.wikipedia.org/wiki/Axiom_schema_of_specification
-
-
-% The Weitz video on ZF explains it quite well. I think, the essence is that, in order to specify a set via a predicate, we first need to say, from which superset (or universal set) we form our set. A set builder notation $S = \{x: P(x)\}$ is not enough. We need to say something like  $S = \{x \in U: P(x)\}$ where $U$ is the universal set or superset from which we draw an x.
-
-%A predictate like P(x) is not enough. We must say 
 
 
 \paragraph{Axiom of Union}
@@ -126,7 +115,40 @@ The axiom states that for each set $A$ there is a set $B$ whose elements are pre
 %https://en.wikipedia.org/wiki/Axiom_of_union
 
 
-\paragraph{Axiom of Choice}
+\paragraph{Axiom of power set}
+% https://en.wikipedia.org/wiki/Axiom_of_power_set
+
+
+\paragraph{Axiom of Infinity}
+% https://en.wikipedia.org/wiki/Axiom_of_infinity
+
+
+\paragraph{Axiom Schema of Specification}
+% aka restricted comprehension
+
+% https://en.wikipedia.org/wiki/Axiom_schema_of_specification
+
+
+% The Weitz video on ZF explains it quite well. I think, the essence is that, in order to specify a set via a predicate, we first need to say, from which superset (or universal set) we form our set. A set builder notation $S = \{x: P(x)\}$ is not enough. We need to say something like  $S = \{x \in U: P(x)\}$ where $U$ is the universal set or superset from which we draw an x.
+
+%A predictate like P(x) is not enough. We must say 
+
+\paragraph{Axiom Schema of Replacement}
+% https://en.wikipedia.org/wiki/Axiom_schema_of_replacement
+
+
+
+
+
+
+
+\subsubsection{The Axiom of Choice}
+The axiom of choice states that for every set of sets $A = \{ A_1, A_2, A_3, \ldots \}$, we can define a family of choice functions $f_i$ such that each $f_i$ picks an element from each of the sets $A_i$ and we can pour all these chosen elements into a new set.
+
+% Plays a role similar to Euclid's 5th postulate?
+
+%\paragraph{Axiom of Choice}
+% https://en.wikipedia.org/wiki/Axiom_of_choice
 
 %The Axiom of Choice | Epic Math Time
 %https://www.youtube.com/watch?v=Nnt4hyJYfGA
@@ -134,6 +156,10 @@ The axiom states that for each set $A$ there is a set $B$ whose elements are pre
 % such that f(g(y)) = y for all y in Y without explicitly specifying what g does. The proof leaves
 % the task of picking an x in X for each y in Y (such that g(y) = x, f(x) = y) to the reader. Take 
 % as example f(x) = x^2, compare the proof to the simpler proof for the bijective f(x) = x^3
+
+% The axiom of choice is equivalent to:
+% https://en.wikipedia.org/wiki/Well-ordering_theorem
+% https://en.wikipedia.org/wiki/Zorn%27s_lemma
 
 
 \subsubsection{Neumann, Bernays, Gödel}
@@ -165,7 +191,7 @@ In set theory, sets are the only thing that exists. Every mathematical object mu
 % https://en.wikipedia.org/wiki/Ordinal_number
 
 \subsection{Cardinal Numbers}
-
+Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. ...TBC...
 
 % https://en.wikipedia.org/wiki/Cardinal_number
 % https://en.wikipedia.org/wiki/Successor_cardinal
@@ -179,7 +205,7 @@ In set theory, sets are the only thing that exists. Every mathematical object mu
 % Limeskardinalzahl?
 
 \subsubsection{Cardinal Arithmetic}
-The cardinal numbers are superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
+The cardinal numbers are a superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
 
 % https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_arithmetic
 

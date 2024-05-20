@@ -56,6 +56,12 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 
 % Note: the Russel set is actually not a set but a class, I think.
 
+
+\subsubsection{Cantor's Paradox}
+Calling Cantor's initial approach to set theory "naive" might be a bit unfair to him. He was, in fact, aware that his initial approach has some problems and came up with a paradoxon himself. It is actually a generalized version of Russel's paradox (VERIFY!)...TBC...
+%We should not get the impression that Cantor himself was totally "naive"
+
+
 \subsection{Systems of Axioms}
 
 % -axioms describe
@@ -64,7 +70,7 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 
 
 \subsubsection{Zermelo, Fraenkel, Choice}
-The most commonly uses system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel together with the so called axiom of choice. This system of axioms is usually called the ZFC system (for Zermelo, Fraenkel, Choice). ...TBC...
+The most commonly used system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel together with the so called axiom of choice. This system of axioms is usually called the ZFC system (for Zermelo, Fraenkel, Choice). ...TBC...
 
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory
 % https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre
@@ -83,7 +89,8 @@ The most commonly uses system of axioms that mathematicians use today is the one
 
 \subsubsection{Neumann, Bernays, Gödel}
 
-
+% https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Bernays%E2%80%93G%C3%B6del_set_theory
+% https://de.wikipedia.org/wiki/Neumann-Bernays-G%C3%B6del-Mengenlehre
 
 \section{Numbers as Sets}
 In set theory, sets are the only thing that exists. Every mathematical object must somehow be viewed as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to build numbers from sets. Set theorists will talk about things like subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
@@ -91,10 +98,67 @@ In set theory, sets are the only thing that exists. Every mathematical object mu
 %because we usually do not envision a number as a set. 
 ...TBC... 
 
-\subsubsection{Ordinal Numbers}
+\subsection{Ordinal Numbers}
 
-\subsubsection{Cardinal Numbers}
+\subsection{Cardinal Numbers}
 
+
+% https://en.wikipedia.org/wiki/Cardinal_number
+% https://en.wikipedia.org/wiki/Successor_cardinal
+% https://en.wikipedia.org/wiki/Limit_cardinal
+% https://en.wikipedia.org/wiki/Regular_cardinal
+% https://en.wikipedia.org/wiki/Cofinality
+% https://en.wikipedia.org/wiki/Cardinal_assignment
+
+% https://en.wikipedia.org/wiki/Aleph_number
+% https://en.wikipedia.org/wiki/Beth_number
+% Limeskardinalzahl?
+
+\subsubsection{Cardinal Arithmetic}
+The cardinal numbers are superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
+
+% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_arithmetic
+
+
+%\subsection{title}
+
+\section{Theorems and Hypotheses}
+
+\subsection{The Cantor-Bernstein Theorem}
+To show that two sets $A$ and $B$ have the same cardinality, we must, by definition, show that a bijection between $A$ and $B$ exists. The Cantor-Bernstein theorem asserts that it suffices to show that and injection from $A$ to $B$ and an injection from $B$ to $A$ exists. If these two injections exist, then the theorem assures that also a bijection between $A$ and $B$ exists. (VERIFY) Constructing these two injections (or indirectly showing that they exist) can, in some situations, be easier than showing directly that a bijection exists, so the theorem may help us to show that two sets have the same cardinality. ...TBC...
+
+% I think, the theorem can be derived by (VERIFY!):
+% -If there exists an injective function f: A to B  then  |A| <= |B|
+% -If there exists an injective function f: B to A  then  |B| <= |A|
+% -If both exist, then |A| <= |B| and |B| <= |A| and therefore  |A| = |B|
+
+\subsection{The Continuum Hypothesis}
+We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists (VERIFY!). This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH.  ....TBC...
+
+%$\mathfrak{c} = 2^{\aleph_0}$. CH: $\aleph_1 = 2^{\aleph_0}$?
+
+% ToDo: introduce notation \mathfrak{c}
+
+\subsubsection{Independence from ZFC}
+The quest was now to figure out whether or not the continuum hypothesis is true or false. As usual in axiomatic set theory, in order to prove a hypothesis true or false, one has only the axioms and the logical inference rules to work with (along with, of course, all the lower level theorems that have already been proven). So, the question in more precise terms asks: can we prove the continuum hypothesis true or false, given the ZFC axioms (or any other set of axioms). Kurt Gödel proved in 1940 that from ZFC, it cannot be proved that the continuum hypothesis is false. Paul Cohen proved in 1963 that from ZFC, it cannot be proved that the continuum hypothesis is true. These two results together mean that the continuum hypothesis is actually \emph{independent} from the ZFC axioms. This is sometimes also phrased as being \emph{undecidable} in ZFC. ...TBC...
+
+% https://en.wikipedia.org/wiki/Continuum_hypothesis
+
+
+
+\subsubsection{The Mathematical Multiverse}
+
+
+% (Provably) Unprovable and Undisprovable... How??
+% https://www.youtube.com/watch?v=1RRpC7FDfEQ&lc=UgwGg_JvrNpHhgO1Vo14AaABAg.A3Uanwul3oeA3_rQWkBsOx
+% see my comment there and the replies to it
+
+% https://en.wikipedia.org/wiki/List_of_statements_independent_of_ZFC
+
+% https://en.wikipedia.org/wiki/List_of_statements_independent_of_ZFC#Measure_theory
+% CH implies that there exists a function on the unit square whose iterated integrals are not equal. The function is simply the indicator function of an ordering of [0, 1] 
+
+% ToDo:
 
 
 \begin{comment}
@@ -105,9 +169,12 @@ ToDo:
  -Cardinal Numbers
  -Ordinal Numbers (as generalization of cardinal numbers)
  -Surreal Numbers
+ -Cantor-Bernstein Theorem
+ -Continuum Hypothesis
+ -Notation: looks like in axiomatic set theory, it's more common to use lowercase letters like x,y for sets (rather than A,B, ...)
+ -maybe use \varphi for predicates
 
-Cardilality:
--If there exists an injective function f: A to B  then  |A| <= |B|
+
 
 Set Containment:
 -If for all x in A, x in B, then A \subseteq B

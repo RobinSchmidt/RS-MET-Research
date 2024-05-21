@@ -23,10 +23,11 @@
 
 % https://en.wikipedia.org/wiki/Universal_set
 
-
+%---------------------------------------------------------------------------------------------------
 \subsection{Unrestricted Comprehension Axiom [VERIFY!]}
 In naive set theory, there is one simple and very general axiom that allows us to construct sets. Let $x$ be any kind of object and $\varphi(x)$ a predicate, i.e. a function into which we can plug in $x$ and then $\varphi$ will return a boolean value that tells us whether or not $x$ has some property. With $\varphi$ in hand, we can build the set $S = \{x: \varphi(x)\}$ of all objects that satisfy our predicate. That we can always do this, for any $\varphi$ whatsoever, is called the \emph{unrestricted comprehension} axiom, sometimes also \emph{naive comprehension} axiom. 
 
+%---------------------------------------------------------------------------------------------------
 \subsection{Paradoxes}
 It turns out that this is a bit too liberal. With unrestricted comprehension, we can build paradoxical sets...TBC...
 % Maybe rename to paradoxes
@@ -79,6 +80,7 @@ Calling Cantor's initial approach to set theory "naive" might be a bit unfair to
 %We should not get the impression that Cantor himself was totally "naive"
 
 
+%---------------------------------------------------------------------------------------------------
 \subsection{Systems of Axioms}
 Set theoretic systems of axioms are like the atomic building blocks that we can use for the construction of arbitrary sets. An axiom may either directly state that some kind of set exists or it may tell us, how we can build new sets from existing sets. The initial freedom, chaos and anarchy of the unrestricted comprehension axiom which leads us to all these paradoxa is gone. We only have some well defined ways to build sets.
 
@@ -296,10 +298,35 @@ In set theory, sets are the only thing that exists. Every mathematical object mu
 %because we usually do not envision a number as a set. 
 ...TBC... 
 
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Construction of the Number System}
+In everyday math, we usually take numbers for granted and do not really think much about them. In set theory, all the number systems that we commonly use must first be \emph{constructed} using only sets. We'll show here, how this could be done.
+
+% https://cs.uwaterloo.ca/~alopez-o/math-faq/math-faq.pdf  pg 9 ff
+% https://cs.uwaterloo.ca/~alopez-o/math-faq/node11.html
+
+\subsubsection{Natural Numbers}
+The most basic of all number systems is the system of natural numbers. We can construct the set of natural number from ZF as follows: ...TBC...
+
+\subsubsection{Integer Numbers}
+
+\subsubsection{Rational Numbers}
+
+\subsubsection{Real Numbers}
+
+\subsubsection{Complex Numbers}
+
+%---------------------------------------------------------------------------------------------------
+
+% https://en.wikipedia.org/wiki/Transfinite_number
+
 \subsection{Ordinal Numbers}
+We constructed the integers, rationals, etc. by extending the set of natural numbers $\mathbb{N}$. Here, we will consider a different extension of $\mathbb{N}$ that will also contain distinguishable infinite numbers. The resulting set of numbers is called the \emph{ordinal numbers}. In practice, natural numbers can be used for different two things: (1) counting, how many elements there are in a set, (2) ordering, i.e. putting a bunch of things into a particular order such that we can say: this is the first, this the second, etc. The difference between these two aspects of natural numbers is rather subtle for finite numbers but will become important for infinite numbers. The ordering aspect is captured by the ordinal numbers and the counting aspect will be captured by the \emph{cardinal numbers}, which are, as we will see, actually a certain subset of the ordinal numbers.
 
 % https://en.wikipedia.org/wiki/Ordinal_number
 
+%---------------------------------------------------------------------------------------------------
 \subsection{Cardinal Numbers}
 Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. ...TBC...
 
@@ -322,9 +349,13 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 %\subsection{title}
 
+
+
+
 %===================================================================================================
 \section{Theorems and Hypotheses}
 
+%---------------------------------------------------------------------------------------------------
 \subsection{The Cantor-Bernstein Theorem}
 To show that two sets $A$ and $B$ have the same cardinality, we must, by definition, show that a bijection between $A$ and $B$ exists. The Cantor-Bernstein theorem asserts that it suffices to show that and injection from $A$ to $B$ and an injection from $B$ to $A$ exists. If these two injections exist, then the theorem assures that also a bijection between $A$ and $B$ exists. (VERIFY) Constructing these two injections (or indirectly showing that they exist) can, in some situations, be easier than showing directly that a bijection exists, so the theorem may help us to show that two sets have the same cardinality. ...TBC...
 
@@ -333,11 +364,13 @@ To show that two sets $A$ and $B$ have the same cardinality, we must, by definit
 % -If there exists an injective function f: B to A  then  |B| <= |A|
 % -If both exist, then |A| <= |B| and |B| <= |A| and therefore  |A| = |B|
 
+%---------------------------------------------------------------------------------------------------
 \subsection{Tarski's Theorem}
 Tarski proved 1924 that in ZF, the theorem "For every infinite set $A$, there exists a bijection between $A$ and $A \times A$" implies the axiom of choice. The converse is also true and that was already known at that time. That means in ZF, the theorem and the axiom of choice are equivalent. 
 
 % https://en.wikipedia.org/wiki/Tarski%27s_theorem_about_choice
 
+%---------------------------------------------------------------------------------------------------
 \subsection{The Continuum Hypothesis}
 We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists (VERIFY!). This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH. We have already introduced the notation $\aleph_0 = |\mathbb{N}|$ for the cardinality of the natural numbers. The cardinality of the real numbers, i.e. the continuum, is denoted as $\mathfrak{c} = |\mathbb{R}|$ and we also already know that $|\mathbb{R}| = 2^{\aleph_0}$. With these notations, the continuum hypothesis can be written down as: $\aleph_1 = 2^{\aleph_0}$. The generalized CH, also called Cantor's aleph hypothesis, states: $\aleph_{\alpha+1} = 2^{\aleph_{\alpha}}$ for every ordinal number $\alpha$. ....TBC...
 

@@ -86,12 +86,18 @@ Set theoretic systems of axioms are like the atomic building blocks that we can 
 
 
 \subsubsection{Zermelo, Fraenkel}
-The most common system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel, usually augmented with the so called axiom of choice. This system of axioms is usually called the ZFC system (for Zermelo, Fraenkel, Choice). ...TBC...
+The most common system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel, usually augmented with the so called axiom of choice. This system of axioms is usually called the ZFC system (for Zermelo, Fraenkel, Choice). There are multiple equivalent ways to choose the set of axioms for ZFC and some of them may be redundant in the sense that they contain axioms that are not strictly necessary, i.e. could be proved as theorems from some of the other axioms. If these redundant axioms are present, then it is because they make the whole thing more intuitive and convenient [VERIFY!]
+
+...TBC...
 
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory
 % https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre
 
 % https://de.wikipedia.org/wiki/Zermelo-Mengenlehre
+
+% https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre#Die_Axiome_von_ZF_und_ZFC
+% -This actually has an axiom for the empty set and the axiom for infinite sets is replaced by the axiom that there exists a set x such that when y \in x then also y \cup \{ y \} \in x
+% -The axioms as stated there seem to make more intuitive sense than on the english wikipedia page
 
 \paragraph{Axiom of Extensionality}
 This axiom states that two sets are equal iff they contain the same elements. Formally, this means that
@@ -106,16 +112,28 @@ From the axiom, it follows that the order of the elements in a set doesn't matte
 \paragraph{Axiom of Pairing}
 This axiom states that whenever we have two sets $x$ and $y$, there is a set $z$ whose elements are precisely $x$ and $y$. This set is given by $z = \{x, y\}$ and called the \emph{pair} of $x$ and $y$. We can write it formally as:
 \begin{equation}
-\forall x \forall y \exists z \forall w: w \in z \Leftrightarrow w \in x \vee w \in y
+\forall x \forall y \exists z \forall w: (w \in z) \Leftrightarrow (w = x \vee w = y)
 \end{equation}
-The pair is unique by virtue of the axiom of extensionality. The axiom of pairing also allows us to build \emph{singletons} by simply letting $x = y$ such that  $z = \{x, y\} = \{x, x\} = \{x\}$. It also lets us build the \emph{ordered pair} $(x,y) = \{ \{x\}, \{x, y\} \}$ and from ordered pairs we can recursively build ordered $n$-tuples as $(x_1, x_2, \ldots, x_n) = ((x_1, x_2, \ldots, x_{n-1}), x_n)$.
-
+The pair is unique by virtue of the axiom of extensionality. The axiom of pairing also allows us to build \emph{singletons} by simply letting $x = y$ such that  $z = \{x, y\} = \{x, x\} = \{x\}$. It also lets us build the \emph{ordered pair} $(x,y) = \{ \{x\}, \{x, y\} \}$ and from ordered pairs we can recursively build ordered $n$-tuples as $(x_1, x_2, \ldots, x_n) = ((x_1, x_2, \ldots, x_{n-1}), x_n)$. 
 
 % in the standard formulation of the Zermelo–Fraenkel set theory, the axiom of pairing follows from the axiom schema of replacement applied to any given set with two or more elements, and thus it is sometimes omitted. 
 
 % https://en.wikipedia.org/wiki/Axiom_of_pairing
 
+\paragraph{Axiom of Union}
+The axiom states that for each set $x$ there is a set $y$ whose elements are precisely the elements of the elements of $x$.
 
+% Can we write it like this?:
+%\begin{equation}
+%\forall x \forall y \exists z \forall w: w \in z \Leftrightarrow w \in x \vee w \in y
+%\end{equation}
+
+% Imagine a set $x = \{ x_1, x_2, x_3, \ldots \} $ of sets. From every set $x_i$, pour all elements into the set $y$. The set $y$ is the union of all the sets $x_i$.
+
+
+% https://en.wikipedia.org/wiki/Axiom_of_union
+% https://en.wikipedia.org/wiki/Axiom_of_union#Relation_to_Intersection
+% https://math-garden.com/unit/nst-unions/
 
 
 \paragraph{Axiom of Regularity}
@@ -129,14 +147,7 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 % -Regularity together with pairing frobids the existence of sets that contain themselves.
 
 
-\paragraph{Axiom of Union}
-The axiom states that for each set $A$ there is a set $B$ whose elements are precisely the elements of the elements of $A$.
 
-% Imagine a set $A = \{ A_1, A_2, A_3, \ldots \} $ of sets. From every set $A_i$, pour all elements into the set $B$. The set $B$ is the union of all the sets $A_i$.
-
-
-% https://en.wikipedia.org/wiki/Axiom_of_union
-% https://en.wikipedia.org/wiki/Axiom_of_union#Relation_to_Intersection
 
 
 \paragraph{Axiom of power set}
@@ -223,6 +234,9 @@ The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2,
 
 
 % https://en.wikipedia.org/wiki/Kripke%E2%80%93Platek_set_theory_with_urelements
+
+% https://de.wikipedia.org/wiki/Scottsches_Axiomensystem
+% https://de.wikipedia.org/wiki/New_Foundations
 
 \subsubsection{Axiom Candidates}
 In this section, we will mention few other possible axioms that could be added to an existing system of axioms.
@@ -401,8 +415,37 @@ Was sind Kardinalzahlen? Was besagt die Kontinuumshypothese?
 https://www.youtube.com/watch?v=qijXa3U4Nag&list=PLb0zKSynM2PCrgebQsfrzEsUIuA0I_wdG&index=1&t=0s
 
 
+For the ZFC axioms, see:
+
+https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory#Axioms
+1. Axiom of extensionality
+2. Axiom of regularity (also called the axiom of foundation)
+3. Axiom schema of specification (or of separation, or of restricted comprehension)
+4. Axiom of pairing
+5. Axiom of union
+6. Axiom schema of replacement
+7. Axiom of infinity
+8. Axiom of power set
+9. Axiom of choice
+
+https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre#Die_Axiome_von_ZF_und_ZFC
+ 1. Extensionalitätsaxiom
+ 2. Leermengenaxiom     (not included in the English wiki page - it is redundant)
+ 3. Paarmengenaxiom
+ 4. Vereinigungsaxiom
+ 5. Unendlichkeitsaxiom
+ 6. Potenzmengenaxiom
+ 7. Fundierungsaxiom
+ 8. Aussonderungsaxiom
+ 9. Ersetzungsaxiom
+10. Auswahlaxiom
+
+
+
+
+
 How to implement the idea of sets in software:
--Make a (base)class "Set" or maybe SetZFC
+-Make a (base?)class "Set" or maybe SetZFC
 -It should have virtual functions like hasElement(const Set& elem), an equality comparison that takes two pointers to sets, etc.
 -It should have an array of pointers (or maybe direct memebrs? but maybe that's not possible) for the elements - the elements of a set are also sets
 -The empty set is the one where the elements array is empty

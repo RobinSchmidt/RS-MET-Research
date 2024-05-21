@@ -8,6 +8,8 @@
 %\exists x : \varphi(x) \Leftrightarrow \neg \forall x : \neg \varphi(x)
 %\end{eqnarray}
 
+
+%===================================================================================================
 \section{Naive and Axiomatic Set Theory}
 
 
@@ -86,9 +88,9 @@ Set theoretic systems of axioms are like the atomic building blocks that we can 
 
 
 \subsubsection{Zermelo, Fraenkel}
-The most common system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel, usually augmented with the so called axiom of choice. This system of axioms is usually called the ZFC system (for Zermelo, Fraenkel, Choice). There are multiple equivalent ways to choose the set of axioms for ZFC and some of them may be redundant in the sense that they contain axioms that are not strictly necessary, i.e. could be proved as theorems from some of the other axioms. If these redundant axioms are present, then it is because they make the whole thing more intuitive and convenient [VERIFY!]
+The most common system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel and it is abbreviated by ZF. It is usually augmented with the axiom of choice in which case it is abbreviated as ZFC. There are multiple equivalent ways to choose the set of axioms for ZF and some of them may be redundant in the sense that they contain axioms that are not strictly necessary, i.e. could be proved as theorems from some of the other axioms. If redundant axioms are present, then their purpose make the system more intuitive and convenient [VERIFY!].
 
-...TBC...
+%...TBC...
 
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory
 % https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre
@@ -98,6 +100,16 @@ The most common system of axioms that mathematicians use today is the one propos
 % https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre#Die_Axiome_von_ZF_und_ZFC
 % -This actually has an axiom for the empty set and the axiom for infinite sets is replaced by the axiom that there exists a set x such that when y \in x then also y \cup \{ y \} \in x
 % -The axioms as stated there seem to make more intuitive sense than on the english wikipedia page
+
+
+\paragraph{Axiom of Empty Set}
+This axiom states that there is an empty set. We can write it formally as:
+\begin{equation}
+\exists x \forall y: \neg (y \in x)
+\end{equation}
+This is actually one of the redundant axioms and not explicitly listed in the English wikipedia article on ZFC but in the German article, it is. It is redundant because in any set theory which has the axiom schema of specification (which we do have in ZF) and axiomatically postulates existence of any set (as the axiom of infinity in ZF does), the existence of the empty set can be derived as a theorem and therefore doesn't need to be an axiom. The empty set is unique due to the axiom of extensionality. It is usually denoted by $\emptyset$ or, less often, by $\{ \}$.
+
+% https://en.wikipedia.org/wiki/Axiom_of_empty_set
 
 \paragraph{Axiom of Extensionality}
 This axiom states that two sets are equal iff they contain the same elements. Formally, this means that
@@ -110,7 +122,7 @@ From the axiom, it follows that the order of the elements in a set doesn't matte
 % https://en.wikipedia.org/wiki/Axiom_of_extensionality
 
 \paragraph{Axiom of Pairing}
-This axiom states that whenever we have two sets $x$ and $y$, there is a set $z$ whose elements are precisely $x$ and $y$. This set is given by $z = \{x, y\}$ and called the \emph{pair} of $x$ and $y$. We can write it formally as:
+This axiom states that whenever we have two sets $x$ and $y$, then there is a set $z$ whose elements are precisely $x$ and $y$. This set is given by $z = \{x, y\}$ and called the \emph{pair} of $x$ and $y$. We can write it formally as:
 \begin{equation}
 \forall x \forall y \exists z \forall w: (w \in z) \Leftrightarrow (w = x \vee w = y)
 \end{equation}
@@ -242,14 +254,7 @@ The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2,
 In this section, we will mention few other possible axioms that could be added to an existing system of axioms.
 
 
-\paragraph{Axiom of Empty Set}
-This axiom states that there is an empty set. We can write it formally as:
-\begin{equation}
-\exists x \forall y: \neg (y \in x)
-\end{equation}
-In any set theory which has the axiom schema of separation and axiomatically postulates existence of any set, the existence of the empty set is a theorem and therefore doesn't need to be an axiom. In ZFC, we do indeed have the axiom schema of specification and we also have the axiom of infinity, so the existence of the empty set is actually a theorem in ZFC (VERIFY!). The empty is unique due to the axiom of extensionality. It is usually denoted by $\emptyset$ or (less often) by $\{ \}$.
 
-% https://en.wikipedia.org/wiki/Axiom_of_empty_set
 
 
 \paragraph{Axiom of Constructibility}
@@ -284,7 +289,7 @@ In any set theory which has the axiom schema of separation and axiomatically pos
 % -How does the empty set arise from the axioms?
 % -How do we define intersection, complement and product of two sets?
 
-
+%===================================================================================================
 \section{Numbers as Sets}
 In set theory, sets are the only thing that exists. Every mathematical object must somehow be viewed as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to build numbers from sets. Set theorists will talk about things like subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
 
@@ -317,6 +322,7 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 %\subsection{title}
 
+%===================================================================================================
 \section{Theorems and Hypotheses}
 
 \subsection{The Cantor-Bernstein Theorem}

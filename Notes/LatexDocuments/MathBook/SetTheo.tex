@@ -1,5 +1,5 @@
 \chapter{Set Theory}
-[this is still very drafty and needs a lot of proofreading]
+[this chapter is still very sketchy and incomplete and needs a lot of proofreading]
 % It's also messed up wrt to the headline levels. Look at the document structure in TeXStudio - the section headlines are at the level where normally the chapters belong - and the "Set Theory" headline is missing altogether - oh - this seems to be fixed. But the hierarchy of headlines is still not quite right
 
 % For the logic chapter that should come before this chapter:
@@ -38,7 +38,7 @@ It turns out that this is a bit too liberal. With unrestricted comprehension, we
 \subsubsection{Russel's Paradox}
 Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \emph{proper class}? Verify!} $R$ as the set of all sets that do not contain themselves as an element. That means $R = \{x: x \notin x\}$. That means $x \in R \Leftrightarrow x \notin x$, i.e. $x$ is an element of $R$ if and only if $x$ is not an element of $x$. Here, $x$ can be \emph{any} set - so for any set $x$ whatsoever, we can ask the question whether or not it is an element of $R$. Now ask what happens when we let $x = R$, i.e. we ask whether or not $R$ is an element of $R$. From $x \in R \Leftrightarrow x \notin x$ with $x = R$, we immediately get the contradiction $R \in R \Leftrightarrow R \notin R$. That is obviously nonsensical. So what went wrong?
 
-\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway. We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that loop back on themselves (of which $x \in x$ is the simplest one). Ruling out such looped recursive element inclusions will later be formalized as the axiom of foundation VERIFY!...TBC...maybe we need also the axiom of restricted comprehension and/or the axiom of pairing?
+\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one. Ruling out such looped recursive element inclusions will later be formalized as the axiom of foundation VERIFY!...TBC...maybe we need also the axiom of restricted comprehension and/or the axiom of pairing?
 
 % Axiom schema of specification (or of separation, or of restricted comprehension)
 
@@ -310,24 +310,30 @@ In everyday math, we usually take numbers for granted and do not really think mu
 The most basic of all number systems is the system of natural numbers. We can construct the set of natural number from ZF as follows: ...TBC...
 
 \subsubsection{Integer Numbers}
+...TBC...
 
 \subsubsection{Rational Numbers}
+...TBC...
 
 \subsubsection{Real Numbers}
+...TBC...
 
 \subsubsection{Complex Numbers}
+...TBC...
 
 %---------------------------------------------------------------------------------------------------
+\subsection{Transfinite Numbers}
+We constructed the integers, rationals, etc. by extending the set of natural numbers $\mathbb{N}$. Here, we will consider a different extension of $\mathbb{N}$ that will also contain distinguishable infinite numbers which are called \emph{transfinite} in this context. The resulting set of numbers is called the \emph{ordinal numbers}. In practice, natural numbers can be used for different two things: (1) counting, how many elements there are in a set, (2) ordering, i.e. putting a bunch of things into a particular order such that we can say: this is the first, this the second, etc. The difference between these two aspects of natural numbers is rather subtle for finite numbers but will become important for infinite numbers. The ordering aspect is captured by the ordinal numbers and the counting aspect will be captured by the \emph{cardinal numbers}, which are, as we will see, actually a certain subset of the ordinal numbers. We will look at both kinds of transfinite numbers in turn.
 
 % https://en.wikipedia.org/wiki/Transfinite_number
 
-\subsection{Ordinal Numbers}
-We constructed the integers, rationals, etc. by extending the set of natural numbers $\mathbb{N}$. Here, we will consider a different extension of $\mathbb{N}$ that will also contain distinguishable infinite numbers. The resulting set of numbers is called the \emph{ordinal numbers}. In practice, natural numbers can be used for different two things: (1) counting, how many elements there are in a set, (2) ordering, i.e. putting a bunch of things into a particular order such that we can say: this is the first, this the second, etc. The difference between these two aspects of natural numbers is rather subtle for finite numbers but will become important for infinite numbers. The ordering aspect is captured by the ordinal numbers and the counting aspect will be captured by the \emph{cardinal numbers}, which are, as we will see, actually a certain subset of the ordinal numbers.
+
+\subsubsection{Ordinal Numbers}
+
 
 % https://en.wikipedia.org/wiki/Ordinal_number
 
-%---------------------------------------------------------------------------------------------------
-\subsection{Cardinal Numbers}
+\subsubsection{Cardinal Numbers}
 Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. ...TBC...
 
 % https://en.wikipedia.org/wiki/Cardinal_number
@@ -341,15 +347,30 @@ Cardinal numbers are special ordinal numbers. That means the set of cardinal num
 % https://en.wikipedia.org/wiki/Beth_number
 % Limeskardinalzahl?
 
-\subsubsection{Cardinal Arithmetic}
+%\subsubsection{Cardinal Arithmetic}
+
+
+
 The cardinal numbers are a superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
 
 % https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_arithmetic
+
+\paragraph{Addition}
+
+\paragraph{Multiplication}
+
+\paragraph{Exponentiation}
+
 
 
 %\subsection{title}
 
 
+\subsubsection{Transfinite Induction}
+
+% https://en.wikipedia.org/wiki/Transfinite_induction
+% https://de.wikipedia.org/wiki/Transfinite_Induktion
+% https://mathworld.wolfram.com/TransfiniteInduction.html
 
 
 %===================================================================================================

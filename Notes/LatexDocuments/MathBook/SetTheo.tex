@@ -1,5 +1,6 @@
 \chapter{Set Theory}
 [this is still very drafty and needs a lot of proofreading]
+% It's also messed up wrt to the headline levels. Look at the document structure in TeXStudio - the section headlines are at the level where normally the chapters belong - and the "Set Theory" headline is missing altogether
 
 \section{Naive and Axiomatic Set Theory}
 
@@ -89,13 +90,13 @@ This axiom states that two sets are equal iff they contain the same elements. VE
 
 
 \paragraph{Axiom of Pairing}
-This axioms states that whenever we have two sets $A$ and $B$, there is a set $C$ whose elements are precisely $A$ and $B$. This set is given by $C = \{A, B\}$ and is it unique by virtue of the axiom of extensionality.
+This axiom states that whenever we have two sets $A$ and $B$, there is a set $C$ whose elements are precisely $A$ and $B$. This set is given by $C = \{A, B\}$ and called the pair of $A$ and $B$. It is unique by virtue of the axiom of extensionality. The axiom of pairing also allows us to build singletons by simply letting $A = B$ such that  $C = \{A, B\} = \{A, A\} = \{A\}$. It also lets us build the ordered pair $(A,B) = \{ \{A\}, \{A, B\} \}$ and from ordered pairs we can recursively build ordered $n$-tuples as $(A_1, A_2, \ldots, A_n) = ((A_1, A_2, \ldots, A_{n-1}), A_n)$.
 
-%Given any object A and any object B, there is a set C such that, given any object D, D is a member of C if and only if D is equal to A or D is equal to B (from wikipedia - I don't understand it).
-
-% given two objects A and B, we can find a set C whose members are exactly A and B.  We call the set C the pair of A and B, and denote it {A,B}
+% in the standard formulation of the Zermelo–Fraenkel set theory, the axiom of pairing follows from the axiom schema of replacement applied to any given set with two or more elements, and thus it is sometimes omitted. 
 
 % https://en.wikipedia.org/wiki/Axiom_of_pairing
+
+
 
 
 \paragraph{Axiom of Regularity}
@@ -133,6 +134,8 @@ The axiom states that for each set $A$ there is a set $B$ whose elements are pre
 
 %A predictate like P(x) is not enough. We must say 
 
+
+
 \paragraph{Axiom Schema of Replacement}
 % https://en.wikipedia.org/wiki/Axiom_schema_of_replacement
 
@@ -162,6 +165,12 @@ The axiom of choice states that for every set of sets $A = \{ A_1, A_2, A_3, \ld
 % https://en.wikipedia.org/wiki/Zorn%27s_lemma
 
 
+
+
+
+
+
+
 \subsubsection{Neumann, Bernays, Gödel}
 
 % https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Bernays%E2%80%93G%C3%B6del_set_theory
@@ -173,11 +182,47 @@ The axiom of choice states that for every set of sets $A = \{ A_1, A_2, A_3, \ld
 \subsubsection{Axiom Candidates}
 In this section, we will mention few other possible axioms that could be added to an existing system of axioms.
 
+
+\paragraph{Axiom of Empty Set}
+This axiom states that there is an empty set. We can write it formally as:
+\begin{equation}
+\exists x \forall y: \neg (y \in x)
+\end{equation}
+In any set theory which has the axiom schema of separation and axiomatically postulates existence of any set, the existence of the empty set is a theorem and therefore doesn't need to be an axiom. In ZFC, we do indeed have the axiom schema of specification and we also have the axiom of infinity, so the existence of the empty set is actually a theorem in ZFC (VERIFY!). The empty is unique due to the axiom of extensionality. It is usually denoted by $\emptyset$ or (less often) by $\{ \}$.
+
+% https://en.wikipedia.org/wiki/Axiom_of_empty_set
+
+
 \paragraph{Axiom of Constructibility}
 
 % https://en.wikipedia.org/wiki/Axiom_of_constructibility
 % https://en.wikipedia.org/wiki/Constructible_universe
 
+
+%\paragraph{Axiom Schema of Adjunction}
+%https://en.wikipedia.org/wiki/Axiom_of_adjunction
+
+
+%\paragraph{Axiom Schema of Induction}
+% https://en.wikipedia.org/wiki/Epsilon-induction
+
+
+
+
+\subsubsection{Neumann, Bernays, Gödel}
+
+
+% Treat also:
+
+% https://en.wikipedia.org/wiki/General_set_theory
+%  sufficient for all mathematics not requiring infinite sets, and is the weakest known set theory whose theorems include the Peano axioms.
+
+% https://en.wikipedia.org/wiki/Kripke%E2%80%93Platek_set_theory
+
+
+% Questions: 
+% -How does the empty set arise from the axioms?
+% -How do we define intersection, complement and product of two sets?
 
 
 \section{Numbers as Sets}
@@ -277,7 +322,7 @@ ToDo:
  -Surreal Numbers
  -Cantor-Bernstein Theorem
  -Continuum Hypothesis
- -Notation: looks like in axiomatic set theory, it's more common to use lowercase letters like x,y for sets (rather than A,B, ...)
+ -Notation: looks like in axiomatic set theory, it's more common to use lowercase letters like x,y for sets (rather than A,B, ...). That looks better in predicate logic formulas
  -maybe use \varphi for predicates
 
 

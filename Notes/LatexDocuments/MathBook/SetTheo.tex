@@ -1,6 +1,12 @@
 \chapter{Set Theory}
 [this is still very drafty and needs a lot of proofreading]
-% It's also messed up wrt to the headline levels. Look at the document structure in TeXStudio - the section headlines are at the level where normally the chapters belong - and the "Set Theory" headline is missing altogether
+% It's also messed up wrt to the headline levels. Look at the document structure in TeXStudio - the section headlines are at the level where normally the chapters belong - and the "Set Theory" headline is missing altogether - oh - this seems to be fixed. But the hierarchy of headlines is still not quite right
+
+% For the logic chapter that should come before this chapter:
+%\begin{eqnarray}
+%\forall x : \varphi(x) \Leftrightarrow \neg \exists x : \neg \varphi(x) \\
+%\exists x : \varphi(x) \Leftrightarrow \neg \forall x : \neg \varphi(x)
+%\end{eqnarray}
 
 \section{Naive and Axiomatic Set Theory}
 
@@ -9,9 +15,15 @@
 % ToDo: 
 % -give Cantor'S original defition of a set
 % -explain the naive/unrestricted comprehension axiom
+% -explain notation - hwy lowercase x,y,z etc. for sets. Looks better in logic formulas
+%  ...but A,B,C looks better elsewhere and is more consistent with other math fields. Do we
+%  want consistency with prdicate logic or with general math?
+
+% https://en.wikipedia.org/wiki/Universal_set
+
 
 \subsection{Unrestricted Comprehension Axiom [VERIFY!]}
-In naive set theory, there is one simple and very general axiom that allows us to construct sets. Let $x$ be any kind of object and $P(x)$ a predicate, i.e. a function into which we can plug in $x$ and then $P$ will return a boolean value that tells us whether or not $x$ has some property. With $P$ in hand, we can build the set $S = \{x: P(x)\}$ of all objects that satisfy our predicate. That we can always do this, for any $P$ whatsoever, is called the \emph{unrestricted comprehension} axiom, sometimes also \emph{naive comprehension} axiom. 
+In naive set theory, there is one simple and very general axiom that allows us to construct sets. Let $x$ be any kind of object and $\varphi(x)$ a predicate, i.e. a function into which we can plug in $x$ and then $\varphi$ will return a boolean value that tells us whether or not $x$ has some property. With $\varphi$ in hand, we can build the set $S = \{x: \varphi(x)\}$ of all objects that satisfy our predicate. That we can always do this, for any $\varphi$ whatsoever, is called the \emph{unrestricted comprehension} axiom, sometimes also \emph{naive comprehension} axiom. 
 
 \subsection{Paradoxes}
 It turns out that this is a bit too liberal. With unrestricted comprehension, we can build paradoxical sets...TBC...
@@ -107,11 +119,14 @@ The pair is unique by virtue of the axiom of extensionality. The axiom of pairin
 
 
 \paragraph{Axiom of Regularity}
-This axiom states that every non-empty set $A$ contains an element that is disjoint from $A$. It is also known as the axiom of foundation. ...TBC...
+This axiom states that every non-empty set $x$ contains an element that is disjoint from $x$. It is also known as the axiom of foundation. ...TBC...
 
 % The axiom of regularity together with the axiom of pairing implies that no set is an element of itself, and that there is no infinite sequence (an) such that ai+1 is an element of ai for all i. 
 
 % https://en.wikipedia.org/wiki/Axiom_of_regularity
+
+% https://en.wikipedia.org/wiki/Universal_set#Regularity_and_pairing
+% -Regularity together with pairing frobids the existence of sets that contain themselves.
 
 
 \paragraph{Axiom of Union}
@@ -120,7 +135,8 @@ The axiom states that for each set $A$ there is a set $B$ whose elements are pre
 % Imagine a set $A = \{ A_1, A_2, A_3, \ldots \} $ of sets. From every set $A_i$, pour all elements into the set $B$. The set $B$ is the union of all the sets $A_i$.
 
 
-%https://en.wikipedia.org/wiki/Axiom_of_union
+% https://en.wikipedia.org/wiki/Axiom_of_union
+% https://en.wikipedia.org/wiki/Axiom_of_union#Relation_to_Intersection
 
 
 \paragraph{Axiom of power set}
@@ -385,6 +401,15 @@ Was sind Kardinalzahlen? Was besagt die Kontinuumshypothese?
 https://www.youtube.com/watch?v=qijXa3U4Nag&list=PLb0zKSynM2PCrgebQsfrzEsUIuA0I_wdG&index=1&t=0s
 
 
-
+How to implement the idea of sets in software:
+-Make a (base)class "Set" or maybe SetZFC
+-It should have virtual functions like hasElement(const Set& elem), an equality comparison that takes two pointers to sets, etc.
+-It should have an array of pointers (or maybe direct memebrs? but maybe that's not possible) for the elements - the elements of a set are also sets
+-The empty set is the one where the elements array is empty
+-There should be functions for union and intersection and factory functions for creating certain special sets like those representing numbers, ordered pairs, etc.
+-Implement functions for addition and multiplication according to how these functions are defined set theoretically
+-Generally, implement all functions to create sets that should exist accrding to the axioms
+-Maybe have different sorts of Set like SetZFC, SetNBG, etc. - each implementing a different set of primitive axioms
+-Maybe the axioms should be implemented as static member functions and all the higher level set building functions as free functions
 
 \end{comment}

@@ -82,12 +82,14 @@ The most common system of axioms that mathematicians use today is the one propos
 % https://de.wikipedia.org/wiki/Zermelo-Mengenlehre
 
 \paragraph{Axiom of Extensionality}
-This axiom states that two sets are equal iff they contain the same elements. VERIFY
-% It follows that the order doesn't matter and element duplication doesn't matter
-% ToDo: explain the fancy name.
+This axiom states that two sets are equal iff they contain the same elements. Formally, this means that
+\begin{equation}
+\forall x \forall y \forall w: 
+(w \in x \Leftrightarrow w \in y) \Rightarrow (x = y)
+\end{equation}
+From the axiom, it follows that the order of the elements in a set doesn't matter and element duplication also doesn't matter. [VERIFY! TODO: give the statement of the axiom without the equals sign, explain the fancy name - what does "extensionality" mean?]
 
 % https://en.wikipedia.org/wiki/Axiom_of_extensionality
-
 
 \paragraph{Axiom of Pairing}
 This axiom states that whenever we have two sets $x$ and $y$, there is a set $z$ whose elements are precisely $x$ and $y$. This set is given by $z = \{x, y\}$ and called the \emph{pair} of $x$ and $y$. We can write it formally as:
@@ -151,12 +153,25 @@ The axiom states that for each set $A$ there is a set $B$ whose elements are pre
 
 
 \subsubsection{The Axiom of Choice}
-The axiom of choice states that for every set of sets $A = \{ A_1, A_2, A_3, \ldots \}$, we can define a family of choice functions $f_i$ such that each $f_i$ picks an element from each of the sets $A_i$ and we can pour all these chosen elements into a new set.
+The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2, x_3, \ldots \}$, we can define a family of choice functions $f_i$ such that each $f_i$ picks an element from each of the sets $x_i$ and we can pour all these chosen elements into a new set.
 
-% Plays a role similar to Euclid's 5th postulate?
+% Has proven to be independent from the other ZF axioms.
+% Plays a role similar to Euclid's 5th postulate.
 
-%\paragraph{Axiom of Choice}
+% The axiom of choice lets us select elements from a given family sets and then build new sets from these selected elements
+
 % https://en.wikipedia.org/wiki/Axiom_of_choice
+
+% https://de.wikipedia.org/wiki/Auswahlaxiom
+
+% https://www.spektrum.de/lexikon/mathematik/auswahlaxiom/390
+
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_3_1_Z13
+
+% Das (berühmt-berüchtigte) Auswahlaxiom
+% https://www.youtube.com/watch?v=-qPpiHZ82rw
+% 12:20 For every infinite set A, there's a bijection between A and A x A
+% Maybe add to the Theorems section
 
 %The Axiom of Choice | Epic Math Time
 %https://www.youtube.com/watch?v=Nnt4hyJYfGA
@@ -168,9 +183,18 @@ The axiom of choice states that for every set of sets $A = \{ A_1, A_2, A_3, \ld
 % The axiom of choice is equivalent to:
 % https://en.wikipedia.org/wiki/Well-ordering_theorem
 % https://en.wikipedia.org/wiki/Zorn%27s_lemma
+% Jerry Bona made the joke: "The axiom of choice is obviously true, the well ordering principle obviously false and who can tell about Zorn's lemma?" 
+% Tarski's theorem is also equivalent
+% also: trichotomy for cardinalities of sets
+% see: https://www.youtube.com/watch?v=-qPpiHZ82rw  at 23 min
+% there are even more equivalent statements
 
 
+% https://www.aleph1.info/Resource?call=Puc&permalink=mengenlehre1
+% https://www.aleph1.info/Resource?method=get&obj=Pdf&name=ema22.pdf&pagestart=279&pageend=298
 
+% Formulierung halb natürlich, halb prädikatenlogisch:
+% https://link.springer.com/chapter/10.1007/978-3-662-68094-0_7
 
 
 
@@ -224,6 +248,7 @@ In any set theory which has the axiom schema of separation and axiomatically pos
 
 % https://en.wikipedia.org/wiki/Kripke%E2%80%93Platek_set_theory
 
+% https://en.wikipedia.org/wiki/Tarski%E2%80%93Grothendieck_set_theory
 
 % Questions: 
 % -How does the empty set arise from the axioms?
@@ -271,6 +296,11 @@ To show that two sets $A$ and $B$ have the same cardinality, we must, by definit
 % -If there exists an injective function f: A to B  then  |A| <= |B|
 % -If there exists an injective function f: B to A  then  |B| <= |A|
 % -If both exist, then |A| <= |B| and |B| <= |A| and therefore  |A| = |B|
+
+\subsection{Tarski's Theorem}
+Tarski proved 1924 that in ZF, the theorem "For every infinite set $A$, there exists a bijection between $A$ and $A \times A$" implies the axiom of choice. The converse is also true and that was already known at that time. That means in ZF, the theorem and the axiom of choice are equivalent. 
+
+% https://en.wikipedia.org/wiki/Tarski%27s_theorem_about_choice
 
 \subsection{The Continuum Hypothesis}
 We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists (VERIFY!). This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH. We have already introduced the notation $\aleph_0 = |\mathbb{N}|$ for the cardinality of the natural numbers. The cardinality of the real numbers, i.e. the continuum, is denoted as $\mathfrak{c} = |\mathbb{R}|$ and we also already know that $|\mathbb{R}| = 2^{\aleph_0}$. With these notations, the continuum hypothesis can be written down as: $\aleph_1 = 2^{\aleph_0}$. The generalized CH, also called Cantor's aleph hypothesis, states: $\aleph_{\alpha+1} = 2^{\aleph_{\alpha}}$ for every ordinal number $\alpha$. ....TBC...

@@ -14,8 +14,6 @@
 %===================================================================================================
 \section{Naive and Axiomatic Set Theory}
 
-
-
 % ToDo: 
 % -give Cantor'S original defition of a set
 % -explain the naive/unrestricted comprehension axiom
@@ -27,20 +25,19 @@
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Unrestricted Comprehension Axiom [VERIFY!]}
-In naive set theory, there is one simple and very general axiom that allows us to construct sets. Let $x$ be any kind of object and $\varphi(x)$ a predicate, i.e. a function into which we can plug in $x$ and then $\varphi$ will return a boolean value that tells us whether or not $x$ has some property. With $\varphi$ in hand, we can build the set $S = \{x: \varphi(x)\}$ of all objects that satisfy our predicate. That we can always do this, for any $\varphi$ whatsoever, is called the \emph{unrestricted comprehension} axiom, sometimes also \emph{naive comprehension} axiom. 
+In naive set theory, there is one simple and very general axiom that allows us to construct sets. Let $x$ be any kind of object and $\varphi(x)$ a predicate, i.e. a function into which we can plug in a variable $x$ and then $\varphi$ will return a boolean value that tells us whether or not $x$ has some property. With $\varphi$ in hand, we can build the set $S = \{x: \varphi(x)\}$ of all objects that satisfy our predicate. That we can always do this, for any $\varphi$ whatsoever, is called the \emph{unrestricted comprehension} axiom, sometimes also \emph{naive comprehension} axiom. 
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Paradoxes}
-It turns out that this is a bit too liberal. With unrestricted comprehension, we can build paradoxical sets...TBC...
-% Maybe rename to paradoxes
-% mentiona the term antinomy
-
-
+It turns out that this is a bit too liberal. With unrestricted comprehension, we can build paradoxical sets. This is obviously undesirable for a theory that aims to be the foundation of mathematics. These paradoxes are sometimes also called antinomies. Let's now have a look at some of the most famous ones.
+% https://en.wikipedia.org/wiki/Antinomy
 
 \subsubsection{Russel's Paradox}
 Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \emph{proper class}? Verify!} $R$ as the set of all sets that do not contain themselves as an element. That means $R = \{x: x \notin x\}$. That means $x \in R \Leftrightarrow x \notin x$, i.e. $x$ is an element of $R$ if and only if $x$ is not an element of $x$. Here, $x$ can be \emph{any} set - so for any set $x$ whatsoever, we can ask the question whether or not it is an element of $R$. Now ask what happens when we let $x = R$, i.e. we ask whether or not $R$ is an element of $R$. From $x \in R \Leftrightarrow x \notin x$ with $x = R$, we immediately get the contradiction $R \in R \Leftrightarrow R \notin R$. That is obviously nonsensical. So what went wrong?
 
-\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one. Ruling out such looped recursive element inclusions will later be formalized as the axiom of foundation VERIFY!...TBC...maybe we need also the axiom of restricted comprehension and/or the axiom of pairing?
+\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
+
+%Ruling out such looped recursive element inclusions will later be formalized as the axiom of foundation VERIFY!...TBC...maybe we need also the axiom of restricted comprehension and/or the axiom of pairing?
 
 % Axiom schema of specification (or of separation, or of restricted comprehension)
 
@@ -49,7 +46,6 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 %Let $R$ be the set of all sets that does not contain itself as element. Now ask: "is $R$ and element of $R$ or not?
 
 %...TBC...ToDo: explain how the paradox follows from unrestricted (naive) comprehension and how it can be fixed (I think, we need the axiom of foundation which (together with the axiom of pairing) forbids that sets can be elements of themselves)
-
 
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory#2._Axiom_of_regularity_(also_called_the_axiom_of_foundation)
  
@@ -79,17 +75,10 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 
 \subsubsection{Cantor's Paradox}
 Calling Cantor's initial approach to set theory "naive" might be a bit unfair to him. He was, in fact, aware that his initial approach has some problems and came up with a paradoxon himself. It is actually a generalized version of Russel's paradox (VERIFY!)...TBC...
-%We should not get the impression that Cantor himself was totally "naive"
-
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Systems of Axioms}
-Set theoretic systems of axioms are like the atomic building blocks that we can use for the construction of arbitrary sets. An axiom may either directly state that some kind of set exists or it may tell us, how we can build new sets from existing sets. The initial freedom, chaos and anarchy of the unrestricted comprehension axiom which leads us to all these paradoxa is gone. We only have some well defined ways to build sets.
-
-% -axioms describe
-%  -what sets exist
-%  -how to build new sets from existing sets - what is and what isn't allowed
-
+Set theoretic systems of axioms are like the atomic building blocks that we can use for the construction of arbitrary sets. An axiom may either directly state that some kind of set exists or it may tell us, how we can build new sets from existing sets. The possible construction steps can then be applied recursively to build sets of arbitrary complexity. The initial freedom, chaos and anarchy of the unrestricted comprehension axiom which leads us to all these paradoxa will be gone. We will only have some well defined ways to build sets.
 
 \subsubsection{Zermelo, Fraenkel}
 The most common system of axioms that mathematicians use today is the one proposed by Zermelo and Frankel and it is abbreviated by ZF. It is usually augmented with the axiom of choice in which case it is abbreviated as ZFC. There are multiple equivalent ways to choose the set of axioms for ZF and some of them may be redundant in the sense that they contain axioms that are not strictly necessary, i.e. could be proved as theorems from some of the other axioms. If redundant axioms are present, then their purpose make the system more intuitive and convenient [VERIFY!].
@@ -185,14 +174,8 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 %A predictate like P(x) is not enough. We must say 
 
 
-
 \paragraph{Axiom Schema of Replacement}
 % https://en.wikipedia.org/wiki/Axiom_schema_of_replacement
-
-
-
-
-
 
 
 \subsubsection{The Axiom of Choice}
@@ -240,11 +223,6 @@ The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2,
 % https://link.springer.com/chapter/10.1007/978-3-662-68094-0_7
 
 
-
-
-
-\subsubsection{Neumann, Bernays, Gödel}
-
 % https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Bernays%E2%80%93G%C3%B6del_set_theory
 % https://de.wikipedia.org/wiki/Neumann-Bernays-G%C3%B6del-Mengenlehre
 
@@ -254,14 +232,11 @@ The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2,
 % https://de.wikipedia.org/wiki/Scottsches_Axiomensystem
 % https://de.wikipedia.org/wiki/New_Foundations
 
-\subsubsection{Axiom Candidates}
-In this section, we will mention few other possible axioms that could be added to an existing system of axioms.
+\subsubsection{Other Axioms and Systems}
+In this section, we will mention a couple of other possible axioms that could be added to an existing system of the axioms such as of ZF(C) or could be used to build new, alternative axiomatic systems. We'll also briefly look at some of these alternative systems.
 
 
-
-
-
-\paragraph{Axiom of Constructibility}
+\paragraph{Axiom of Constructibility} ...TBC...
 
 % https://en.wikipedia.org/wiki/Axiom_of_constructibility
 % https://en.wikipedia.org/wiki/Constructible_universe
@@ -274,11 +249,7 @@ In this section, we will mention few other possible axioms that could be added t
 %\paragraph{Axiom Schema of Induction}
 % https://en.wikipedia.org/wiki/Epsilon-induction
 
-
-
-
-\subsubsection{Neumann, Bernays, Gödel}
-
+\paragraph{The NBG System by Neumann, Bernays, Gödel} ...TBC...
 
 % Treat also:
 
@@ -289,6 +260,8 @@ In this section, we will mention few other possible axioms that could be added t
 
 % https://en.wikipedia.org/wiki/Tarski%E2%80%93Grothendieck_set_theory
 
+% https://de.wikipedia.org/wiki/Ackermann-Mengenlehre
+
 % Questions: 
 % -How does the empty set arise from the axioms?
 % -How do we define intersection, complement and product of two sets?
@@ -297,9 +270,13 @@ In this section, we will mention few other possible axioms that could be added t
 \section{Numbers as Sets}
 In set theory, sets are the only thing that exists. Every mathematical object must somehow be viewed as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to build numbers from sets. Set theorists will talk about things like subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
 
+% 
+
 %because we usually do not envision a number as a set. 
 ...TBC... 
 
+% https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre#ZF_mit_Urelementen
+% https://de.wikipedia.org/wiki/Urelement
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Construction of the Number System}
@@ -310,18 +287,25 @@ In everyday math, we usually take numbers for granted and do not really think mu
 
 \subsubsection{Natural Numbers}
 The most basic of all number systems is the system of natural numbers. We can construct the set of natural number from ZF as follows: ...TBC...
+% N is a monoid (a semigroup is set with associative operation and if it also has an identity element, it's calle a monoid)
+
 
 \subsubsection{Integer Numbers}
 ...TBC...
+% Z is an integral domain (commutative ring with no zero divisors - maybe we need to demand a multiplicative identity? ..see chapter about rings and be consistent with it - there are different convetions for this)
 
 \subsubsection{Rational Numbers}
 ...TBC...
+% Q is a field
 
 \subsubsection{Real Numbers}
 ...TBC...
+% in R, the order is complete  ...what does that mean? It's from the math-faq.pdf above
 
 \subsubsection{Complex Numbers}
 ...TBC...
+% C is algebraically complete
+
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Transfinite Numbers}

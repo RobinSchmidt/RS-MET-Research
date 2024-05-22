@@ -7435,9 +7435,16 @@ public:
 
   ~rsSetNaive();
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
   /** Adds the given set as element to this set. */
   void addElement(const rsSetNaive& a);
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
 
   /** Returns the cardinality, i.e. the number of elements of this set. */
   size_t getCardinality() const { return elements.size(); }
@@ -7453,6 +7460,13 @@ public:
 
   /** Returns true iff this set is equal to the given set A. */
   bool equals(const rsSetNaive& A) const;
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Factory
+
+  /** Creates the set that represents the natural number i in the von Neumann construction. */
+  static rsSetNaive makeNeumannNumber(size_t i);
+
 
 
 protected:
@@ -7508,6 +7522,22 @@ bool rsSetNaive::equals(const rsSetNaive& A) const
 {
   return hasSubset(A) && A.hasSubset(*this);
 }
+
+rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
+{
+  if(i == 0)
+    return rsSetNaive();
+  else
+  {
+    rsSetNaive A;
+    A.addElement(makeNeumannNumber(i-1));
+    return A;
+    // Verify this!
+    // We get an access violation. I think, we need to implement copy-constructor, etc. in order to
+    // create deep copies
+  }
+}
+
 
 
 rsSetNaive* rsSetNaive::getCopy() const

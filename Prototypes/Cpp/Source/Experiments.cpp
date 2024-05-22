@@ -10515,6 +10515,9 @@ void testFiniteField()
 
 void testSet()
 {
+  // We test the creation of von Neumann numbers, i.e. the set theoretical construction of the 
+  // natural numbers
+
   using Set = rsSetNaive;
 
   bool ok = true;
@@ -10530,12 +10533,15 @@ void testSet()
   s1.addElement(s0);
   ok &= !s1.isEmpty();
   ok &=  s1.getCardinality() == 1;
+  ok &=  s1.hasElement(s0);
 
   // Now the set representing the number 2:
   Set s2;
   s2.addElement(s0);
   s2.addElement(s1);
   ok &= s2.getCardinality() == 2;
+  ok &= s2.hasElement(s0);
+  ok &= s2.hasElement(s1);
 
   // Now the set representing the number 3:
   Set s3;
@@ -10543,6 +10549,15 @@ void testSet()
   s3.addElement(s1);
   s3.addElement(s2);
   ok &= s3.getCardinality() == 3;
+  ok &= s3.hasElement(s0);
+  ok &= s3.hasElement(s1);
+  ok &= s3.hasElement(s2);
+
+  // This does not yet work right:
+  //Set t0 = Set::makeNeumannNumber(0);
+  //Set t1 = Set::makeNeumannNumber(1);
+  //Set t2 = Set::makeNeumannNumber(2); // access violation!
+  //Set t3 = Set::makeNeumannNumber(3);
 
 
 

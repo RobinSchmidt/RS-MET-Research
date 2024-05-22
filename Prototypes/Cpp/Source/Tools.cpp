@@ -7433,7 +7433,17 @@ class rsSetNaive
 public:
 
 
+  /** Default constructor. Creates the empty set. */
+  rsSetNaive() {}
+
+  /** Copy constructor.  */
+  rsSetNaive(const rsSetNaive& A);
+
+
+
   ~rsSetNaive();
+
+  // ToDo: Copy/Move contructor/assignment
 
 
   //-----------------------------------------------------------------------------------------------
@@ -7485,6 +7495,14 @@ protected:
   // -Implement construction of von Neumann numbers
 
 };
+
+
+rsSetNaive::rsSetNaive(const rsSetNaive& A)
+{
+  elements.resize(A.elements.size());
+  for(size_t i = 0; i < A.elements.size(); i++)
+    elements[i] = A.elements[i]->getCopy();
+}
 
 rsSetNaive::~rsSetNaive()
 {

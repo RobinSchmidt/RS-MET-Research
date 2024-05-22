@@ -10553,12 +10553,12 @@ void testSet()
   ok &= s3.hasElement(s1);
   ok &= s3.hasElement(s2);
 
-  // This does not yet work right:
-  //Set t0 = Set::makeNeumannNumber(0);
-  //Set t1 = Set::makeNeumannNumber(1);
-  //Set t2 = Set::makeNeumannNumber(2); // access violation!
-  //Set t3 = Set::makeNeumannNumber(3);
-
+  // Create the numbers 0..3 again, this time using the factory function:
+  Set t0 = Set::makeNeumannNumber(0);
+  Set t1 = Set::makeNeumannNumber(1);
+  Set t2 = Set::makeNeumannNumber(2);
+  Set t3 = Set::makeNeumannNumber(3);
+  // Still wrong - I think, it's because we don't have the = operator implemented yet
 
 
 

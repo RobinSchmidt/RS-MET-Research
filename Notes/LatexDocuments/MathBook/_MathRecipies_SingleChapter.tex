@@ -1,82 +1,4 @@
-% This file is meant for working on a chapter. During writing, I don't want to always build the whole book after each small edit because that takes too long. So during writing, I use this file that includes only the chapter that I currently work on to speed up the edit-build-preview cycle. ...TBC...
-
-
-%\documentclass[12pt, twocolumn]{article}
-%\documentclass[12pt, openany]{book}
-\documentclass[12pt, oneside]{book}
-%\usepackage{fullpage}           % makes all margins 1 inch?
-\topmargin=-1.0cm
-\textheight=23cm
-\evensidemargin=-1.0cm
-\oddsidemargin=-1.0cm
-\textwidth=19cm
-\setcounter{secnumdepth}{-1}  % suppress numbering of sections
-\usepackage{amsmath}
-\usepackage{amssymb}          % for mathbb
-\usepackage{hyperref}
-\usepackage{array}            % For Cayley tables
-\usepackage{stmaryrd}         % for \llbracket, \rrbracket
-
-\usepackage{comment}          
-% to comment out larger sections via \begin{comment} ... \end{comment} 
-% see:
-% https://tex.stackexchange.com/questions/17816/commenting-out-large-sections
-% https://tex.stackexchange.com/questions/11177/how-to-write-hidden-notes-in-a-latex-file/73418
-
-
-\usepackage{color}               % colored text
-\usepackage{listings}            % source code formatting 
-%\lstset{language=python}
-\definecolor{mygreen}{rgb}{0,0.6,0}
-\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
-\lstset{ %
-  backgroundcolor=\color{white},   
-  %basicstyle=\footnotesize\ttfamily,  % the size of the fonts that are used for the code
-  basicstyle=\ttfamily,               % the size of the fonts that are used for the code
-  captionpos=none,                    % no captions (and no empty space either)
-  commentstyle=\color{mygreen},       % comment style
-  frame=single,	                      % adds a frame around the code
-  keywordstyle=\color{blue},          % keyword style
-  language=Python,
-  stringstyle=\color{mymauve},        % string literal style
-  columns=flexible,                   %
-  keepspaces=true,                    % keeps spaces in text
-  tabsize=4,
-}
-
-
-\usepackage{tikz}
-%\usetikzlibrary{calc} % maybe later
-\usetikzlibrary{positioning}
-
-
-%\DeclareMathOperator{\d}{d}                  % exterior derivative
-\DeclareMathOperator{\grad}{\mathbf{grad}}
-\DeclareMathOperator{\curl}{\mathbf{curl}}
-\DeclareMathOperator{\dive}{div}
-\DeclareMathOperator{\atan2}{atan2}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator{\im}{im}                 % image of a function/map
-\DeclareMathOperator{\vectorize}{vec}
-\DeclareMathOperator{\geo}{geo}               % geometric multiplicity
-\DeclareMathOperator{\alg}{alg}               % algebraic multiplicity 
-\DeclareMathOperator{\sign}{sign}    
-%\DeclareMathOperator{\Eig}{Eig} 
-
-\DeclareMathOperator{\e}{\mathrm{e}}          % for Euler's number - ToDo: use \e consistently!
-%\newcommand{\e}{\operatorname{e}}            % ...alternative definition (possibly)
-
-\usepackage{mathtools}                        % for "\DeclarePairedDelimiter" macro
-\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
-
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-
-%\let\cleardoublepage\clearpage
-
-% Maybe move the stuff up to here into a _Setup.tex file that can be included from
-% _FullBook.tex and _SingleChapter.tex
-
+\include{Setup}
 
 \begin{document}
 	
@@ -93,57 +15,10 @@
 \title{Mathematical Recipes for Scientists, Engineers and Programmers}
 \maketitle
 
+% Uncomment one chapter/section at a time to work on it:
 \include{SetTheo}
 
-
-
-% Maybe move into a file Biblio.tex
-\begin{thebibliography}{9}
-	
-\bibitem{ABoAA} A Book of Abstract Algebra, \textit{Charles C. Pinter}  \newline
-\href{http://www2.math.umd.edu/~jcohen/402/Pinter%20Algebra.pdf}
-     {www2.math.umd.edu/~jcohen/402/Pinter Algebra.pdf}
-
-\bibitem{ACRS} Algebraic Curves and Riemann Surfaces for Undergraduates, 
-\textit{AnilNerode, Noam Greenberg}  \newline
-\href{https://link.springer.com/book/10.1007/978-3-031-11616-2}
-     {https://link.springer.com/book/10.1007/978-3-031-11616-2}
-
-\bibitem{LinSysOverUnder} Solving over- and under-determined sets of equations, 
-\textit{Berthold K.P. Horn}  \newline
-\href{https://people.csail.mit.edu/bkph/articles/Pseudo_Inverse.pdf}
-     {https://people.csail.mit.edu/bkph/articles/Pseudo\_Inverse.pdf}
-
-\bibitem{SageCell} SageCell, \textit{Online SageMath Evaluator}  \newline
-\href{https://sagecell.sagemath.org/}
-     {sagecell.sagemath.org/}
-
-\bibitem{VPDE_GiererMeinhardt} Gierer-Meinhardt Model, 
-\textit{Online Interactive PDE Simulator}  \newline
-\href{https://visualpde.com/mathematical-biology/gierer-meinhardt.html}
-     {visualpde.com/mathematical-biology/gierer-meinhardt.html}
-
-\bibitem{WK_GlasserMaster} Glasser's Master Theorem, \textit{Wikipedia Article} \newline
-\href{https://en.wikipedia.org/wiki/Glasser%27s_master_theorem}
-     {https://en.wikipedia.org/wiki/Glasser\%27s\_master\_theorem}
-
-\bibitem{WK_ProjExtReals} Projectively extended real line, \textit{Wikipedia Article} \newline
-\href{https://en.wikipedia.org/wiki/Projectively_extended_real_line}
-     {https://en.wikipedia.org/wiki/Projectively\_extended\_real\_line}
-
-\bibitem{YT_PowerSetRing} A classic example -- how the power set forms a ring. 
-\textit{Michael Penn, on YouTube}
-\href{https://www.youtube.com/watch?v=fvMnVKq3UtU}
-     {https://www.youtube.com/watch?v=fvMnVKq3UtU}
-     
-\bibitem{YT_LeastAction} The Closest We Have to a Theory of Everything,
-\textit{Sabine Hossenfelder, on YouTube}
-\href{https://www.youtube.com/watch?v=A0da8TEeaeE}
-     {https://www.youtube.com/watch?v=A0da8TEeaeE}     
-
-
-\end{thebibliography}
-
+%\include{Bibliography} 
 
 \end{document}
 

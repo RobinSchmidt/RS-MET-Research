@@ -7423,9 +7423,8 @@ protected:
 
 //=================================================================================================
 
-/** Implements a set in the set theoretic sense. It's elements can only be other sets. 
-
-*/
+/** Implements a set in the set theoretic sense. It's elements can only be other sets. It's a 
+recursive data structure (similar to a tree) with sets all the way down. ...TBC... */
 
 class rsSetNaive
 {
@@ -7433,22 +7432,27 @@ class rsSetNaive
 public:
 
 
-  rsSetNaive* getCopy() const;
+  ~rsSetNaive();
 
-
+  /** Adds the given set as element to this set. */
   void addElement(const rsSetNaive& a);
 
 
+  /** Returns true iff this set has the given set A as element. */
   bool hasElement(const rsSetNaive& a) const;
 
+  /** Returns true iff this set has the given set A as subset. */
   bool hasSubset(const rsSetNaive& A) const;
 
+  /** Returns true iff this set is equal to the given set A. */
   bool equals(const rsSetNaive& A) const;
 
 
-
-
 protected:
+
+  /** Creates a deep copy of this set via the "new" operator and returns it. The caller is 
+  responsible to delete the object eventually. */
+  rsSetNaive* getCopy() const;
 
   std::vector<rsSetNaive*> elements;
   // We use a vector of pointers for purely technical reasons. That's the way, recursive data 
@@ -7456,12 +7460,10 @@ protected:
 
 };
 
-rsSetNaive* rsSetNaive::getCopy() const
+rsSetNaive::~rsSetNaive()
 {
-  rsSetNaive* c = new rsSetNaive;
   for(size_t i = 0; i < elements.size(); i++)
-    c->elements.push_back(elements[i]->getCopy());
-  return c;
+    delete elements[i];
 }
 
 void rsSetNaive::addElement(const rsSetNaive& a)
@@ -7494,6 +7496,16 @@ bool rsSetNaive::equals(const rsSetNaive& A) const
 {
   return hasSubset(A) && A.hasSubset(*this);
 }
+
+
+rsSetNaive* rsSetNaive::getCopy() const
+{
+  rsSetNaive* c = new rsSetNaive;
+  for(size_t i = 0; i < elements.size(); i++)
+    c->elements.push_back(elements[i]->getCopy());
+  return c;
+}
+
 
 
 

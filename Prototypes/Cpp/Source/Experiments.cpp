@@ -10515,7 +10515,16 @@ void testFiniteField()
 
 void testSet()
 {
-  rsSetNaive A;
+  // Create the empty set. This set corresponds to the number 0 in the von Neumann construction of 
+  // the natural numbers:
+  rsSetNaive s0;  
+
+  // Create the set that contains the empty se as element. This set corresponds to the number 1:
+  rsSetNaive s1;
+  s1.addElement(s0);
+
+
+  // ToDo: Include a memleak check. 
 
   int dummy = 0;
 }

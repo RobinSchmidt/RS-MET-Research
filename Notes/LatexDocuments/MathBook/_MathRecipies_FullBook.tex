@@ -1,0 +1,381 @@
+%\documentclass[12pt, twocolumn]{article}
+%\documentclass[12pt, openany]{book}
+\documentclass[12pt, oneside]{book}
+%\usepackage{fullpage}           % makes all margins 1 inch?
+\topmargin=-1.0cm
+\textheight=23cm
+\evensidemargin=-1.0cm
+\oddsidemargin=-1.0cm
+\textwidth=19cm
+\setcounter{secnumdepth}{-1}  % suppress numbering of sections
+\usepackage{amsmath}
+\usepackage{amssymb}          % for mathbb
+\usepackage{hyperref}
+\usepackage{array}            % For Cayley tables
+\usepackage{stmaryrd}         % for \llbracket, \rrbracket
+
+\usepackage{comment}          
+% to comment out larger sections via \begin{comment} ... \end{comment} 
+% see:
+% https://tex.stackexchange.com/questions/17816/commenting-out-large-sections
+% https://tex.stackexchange.com/questions/11177/how-to-write-hidden-notes-in-a-latex-file/73418
+
+
+\usepackage{color}               % colored text
+\usepackage{listings}            % source code formatting 
+%\lstset{language=python}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+  backgroundcolor=\color{white},   
+  %basicstyle=\footnotesize\ttfamily,  % the size of the fonts that are used for the code
+  basicstyle=\ttfamily,               % the size of the fonts that are used for the code
+  captionpos=none,                    % no captions (and no empty space either)
+  commentstyle=\color{mygreen},       % comment style
+  frame=single,	                      % adds a frame around the code
+  keywordstyle=\color{blue},          % keyword style
+  language=Python,
+  stringstyle=\color{mymauve},        % string literal style
+  columns=flexible,                   %
+  keepspaces=true,                    % keeps spaces in text
+  tabsize=4,
+}
+
+
+\usepackage{tikz}
+%\usetikzlibrary{calc} % maybe later
+\usetikzlibrary{positioning}
+
+
+%\DeclareMathOperator{\d}{d}                  % exterior derivative
+\DeclareMathOperator{\grad}{\mathbf{grad}}
+\DeclareMathOperator{\curl}{\mathbf{curl}}
+\DeclareMathOperator{\dive}{div}
+\DeclareMathOperator{\atan2}{atan2}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\im}{im}                 % image of a function/map
+\DeclareMathOperator{\vectorize}{vec}
+\DeclareMathOperator{\geo}{geo}               % geometric multiplicity
+\DeclareMathOperator{\alg}{alg}               % algebraic multiplicity 
+\DeclareMathOperator{\sign}{sign}    
+%\DeclareMathOperator{\Eig}{Eig} 
+
+\DeclareMathOperator{\e}{\mathrm{e}}          % for Euler's number - ToDo: use \e consistently!
+%\newcommand{\e}{\operatorname{e}}            % ...alternative definition (possibly)
+
+\usepackage{mathtools}                        % for "\DeclarePairedDelimiter" macro
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+%\let\cleardoublepage\clearpage
+
+% Maybe move the stuff up to here into a _Setup.tex file that can be included from
+% _FullBook.tex and _SingleChapter.tex
+
+
+\begin{document}
+	
+% formatting:
+\parindent=0in
+\parskip=0pt
+\pagenumbering{roman}
+		
+% main text
+\pagenumbering{arabic} \setcounter{page}{1}
+
+\author{Robin Schmidt}
+
+\title{Mathematical Recipes for Scientists, Engineers and Programmers}
+\maketitle
+
+\include{Preface}
+\tableofcontents
+\include{Introduction}
+
+\part{Continuous Mathematics}
+%\chapter{Basics}
+\include{Basics}
+\include{Basics_Foundations} 
+\include{Basics_Numbers}
+\include{Basics_ElemAlg}
+\include{Basics_Functions}
+
+%\chapter{Linear Algebra}
+\include{LinAlg} 
+\include{LinAlg_VecsAndMats} 
+\include{LinAlg_SysOfEqs} 
+\include{LinAlg_MatrixDecomp}
+%\include{LinAlg_Trafos}   % matrices as lin. trafos -> kernel, nullspace, etc.
+\include{MulLinAlg_HyperNums}  % Quaternions, dual numbers, hyperbolic numbers, ...
+% or maybe PolyNumbers. it's about multidiemsnional numbers, hypercomplex numbers
+
+
+
+
+
+%\chapter{Calculus}
+\include{Calc} 
+\include{Calc_LimitsAndContinuity} 
+\include{Calc_Differentiation}
+\include{Calc_Integration} 
+\include{Calc_Series}        % seqs, inf. sums, convergence, Taylor expansions, ...
+\include{Calc_OrdDiffEqs} 
+\include{Calc_Exotic}
+%\include{Calc_Applications}  % Graph sketching, optimization, find interesting points, approximation
+%\include{Calc_DifferentialEquations}
+%\subsection{Integral Transforms} % Fourier- and Laplace trafo - may go into Functional Analysis
+%\subsection{Integral Equations}
+%ToDo: finite differences, summation calculus, difference equations, z-trafo
+% see https://www.youtube.com/watch?v=4AuV93LOPcE
+
+%\chapter{Geometry}
+% maybe this fits best directly after Linear Algebra as application thereof, so maybe place Calculus before Linear Algebra but maybe if we also compute areas of shapes via integrals, calculus needs to be introduced before geometry as well...maybe be a bit more general and include some (basic) calculusly stuff like areas and volumes, optimization of shapes (cylindrical can with smallest surface area kind of stuff)..no multivariable calculus, though - that's for later. but maybe introduce bivectors and trivectors already - they are simple and intuitive and will be needed for exterior algebra
+
+
+%\chapter{Multilinear Algebra}
+\include{MulLinAlg}
+\include{MulLinAlg_Exterior}
+\include{MulLinAlg_Geometric}
+\include{MulLinAlg_Tensor} 
+
+
+%\chapter{Multivariable Calculus}
+\include{MulCalc}
+%\include{MulCalc_General} % split into: derivatives, integrals, optimization
+\include{MulCalc_Derivatives}
+\include{MulCalc_Integrals}
+\include{MulCalc_Optimization}
+\include{MulCalc_Vector} 
+\include{MulCalc_Complex} 
+\include{MulCalc_Exterior}
+\include{MulCalc_Geometric} 
+%\include{MulCalc_Matrix}   % https://en.wikipedia.org/wiki/Matrix_calculus
+%\include{MulCalc_Tensor} 
+\include{MulCalc_PartDiffEqs} 
+
+\include{Geo}
+\include{Geo_Euclidean}
+\include{Geo_Analytic}
+\include{Geo_Algebraic}
+\include{Geo_Differential}
+%\include{Geo_Fractal}
+%\include{Geo_Discrete} % but maybe this should got into the discretet math part
+% maybe the geometry chapte should go into the applications part
+
+\include{FuncAna}
+\include{FuncAna_FuncSpaces}
+\include{FuncAna_Functionals}
+\include{FuncAna_VarCalc}        % Variational Calculus
+\include{FuncAna_Operators}
+\include{FuncAna_IntTrafos}      % Integral Transforms
+\include{FuncAna_DiffEqs}        % Differential Equations
+
+
+\part{Discrete Mathematics} 
+%\include{Comb}              % Combinatorics
+%\include{Comb_Elementary}   % Permutations, Variations, Bin. Coeffs, Partitions, etc.
+%\include{Comb_Graphs}       % Combinatorial aspects of graph theory
+\include{NumTheo}            % Number Theory
+\include{NumTheo_Division}   % Divisibility, Euclidean algo, primes, factorization
+\include{NumTheo_ModArith}   % Modular arithmetic
+\include{NumTheo_DioEqs}     % Diophantine equations
+\include{NumTheo_AlgNums}    % Algebraic number fields ...need rings and fields...hmm...
+\include{NumTheo_Analytic}   % Riemann zeta, L-functions, etc
+%\include{FinStruct}         % finite structures (fields, rings, groups, etc.)
+%\include{FinStruct_ModInts} % modular integers ..may also fit into number theory
+
+%\include{GraphTheo}         % graph theory
+%https://www.youtube.com/watch?v=uTUVhsxdGS8  Spectral Graph Theory For Dummies
+
+
+\part{Structural Mathematics}   % Maybe rename to Foundations and Struct...
+%\chapter{Logic}
+\include{SetTheo}
+%\chapter{Proofs}
+%\chapter{Abstract Algebra}
+\include{AbsAlg}
+\include{AbsAlg_Groups}
+\include{AbsAlg_Rings} 
+\include{AbsAlg_Fields} 
+\include{AbsAlg_VectorSpaces} 
+\include{AbsAlg_Poly} 
+
+\include{OrdTheo} 
+
+\include{Top}
+\include{Top_Spaces}
+\include{Top_Deform}
+%\include{Top_Alg}   % algebraic topology
+
+
+%\chapter{Category Theory}
+%chapter{Theoretical Computer Science}
+
+% what about Type Theory  - maybe should go into theoreticalc computer Science?
+% theoretical CompSci should go here, too, also 
+
+
+\part{Applications of Mathematics}
+%\chapter{Approximation}
+\include{Phys}
+\include{Phys_ClassMech}
+\include{Phys_ElecDyn}
+\include{Phys_Quantum}
+\include{Phys_Emergent}
+\include{Phys_Relativity}
+\include{Phys_Everything}
+
+
+\include{Sci}        % Science
+%\include{Sci_Chem}   % Chemistry
+\include{Sci_Bio}    % Biology
+%\include{Sci_Eco}    % Economics
+%\include{Sci_Soc}    % Social Sciences
+
+%ToDo:
+% Eng (ineerig): Mech(anical), Elec(trical), Sig(nal)Proc(esssing)
+
+% Art: Mus(ic), Gra(phics),
+
+% Maybe 
+
+
+\include{Apps_ScienceAndEng}
+%\chapter{Probability and Statistics} % social sciences
+%\chapter{Information Theory}  % might fit into theoretical computer science as well
+%\include{NumAlgos}  % Numeric algorithms
+%\chapter{Signal Processing}
+% LTI-Systems, DFT/FFT, audio/image/video compression
+%\chapter{Computer Science}  
+% design/analysis of: algorithms, prog. languages, compilers, CPUs, cryptography, networks
+%\chapter{Game Theory}  
+%\chapter{Data Science}
+  
+%\include{Apps_Constants}  % formulas for computing math constants
+% some of the "applications" are inner-mathematical such as probability, info-theory or
+% constants
+
+%\include{Apps_Chaos}  
+% https://mathworld.wolfram.com/SharkovskysTheorem.html
+% https://en.wikipedia.org/wiki/Sharkovskii%27s_theorem
+% https://www.youtube.com/watch?v=NCuiwCM-AQ8
+
+% Maybe move into a file Biblio.tex
+\begin{thebibliography}{9}
+	
+\bibitem{ABoAA} A Book of Abstract Algebra, \textit{Charles C. Pinter}  \newline
+\href{http://www2.math.umd.edu/~jcohen/402/Pinter%20Algebra.pdf}
+     {www2.math.umd.edu/~jcohen/402/Pinter Algebra.pdf}
+
+\bibitem{ACRS} Algebraic Curves and Riemann Surfaces for Undergraduates, 
+\textit{AnilNerode, Noam Greenberg}  \newline
+\href{https://link.springer.com/book/10.1007/978-3-031-11616-2}
+     {https://link.springer.com/book/10.1007/978-3-031-11616-2}
+
+\bibitem{LinSysOverUnder} Solving over- and under-determined sets of equations, 
+\textit{Berthold K.P. Horn}  \newline
+\href{https://people.csail.mit.edu/bkph/articles/Pseudo_Inverse.pdf}
+     {https://people.csail.mit.edu/bkph/articles/Pseudo\_Inverse.pdf}
+
+\bibitem{SageCell} SageCell, \textit{Online SageMath Evaluator}  \newline
+\href{https://sagecell.sagemath.org/}
+     {sagecell.sagemath.org/}
+
+\bibitem{VPDE_GiererMeinhardt} Gierer-Meinhardt Model, 
+\textit{Online Interactive PDE Simulator}  \newline
+\href{https://visualpde.com/mathematical-biology/gierer-meinhardt.html}
+     {visualpde.com/mathematical-biology/gierer-meinhardt.html}
+
+\bibitem{WK_GlasserMaster} Glasser's Master Theorem, \textit{Wikipedia Article} \newline
+\href{https://en.wikipedia.org/wiki/Glasser%27s_master_theorem}
+     {https://en.wikipedia.org/wiki/Glasser\%27s\_master\_theorem}
+
+\bibitem{WK_ProjExtReals} Projectively extended real line, \textit{Wikipedia Article} \newline
+\href{https://en.wikipedia.org/wiki/Projectively_extended_real_line}
+     {https://en.wikipedia.org/wiki/Projectively\_extended\_real\_line}
+
+\bibitem{YT_PowerSetRing} A classic example -- how the power set forms a ring. 
+\textit{Michael Penn, on YouTube}
+\href{https://www.youtube.com/watch?v=fvMnVKq3UtU}
+     {https://www.youtube.com/watch?v=fvMnVKq3UtU}
+     
+\bibitem{YT_LeastAction} The Closest We Have to a Theory of Everything,
+\textit{Sabine Hossenfelder, on YouTube}
+\href{https://www.youtube.com/watch?v=A0da8TEeaeE}
+     {https://www.youtube.com/watch?v=A0da8TEeaeE}     
+
+
+\end{thebibliography}
+
+% https://visualpde.com/mathematical-biology/gierer-meinhardt.html
+
+% Why is the text of the youtube links spread out over the whole line? This doesn't happen for the other links
+
+% Maybe put the wikipedia articles in thei bibliography section, prefix the labels with Wiki or WKPD. Do the same for YouTube videos - maybe use a prefix YT
+
+% Note: when changing a bibitem{} label without changing all the corresponding cite{} calls, we will get no error messages. LaTeX will pretend that everything is alright but in the cites, we just see a question mark. This is actually something, the latex compiler should complain about - but it doesn't (at least in my TeXstudio environment). So, if it's really necessary to change a bibitem, we need a full text search (and replace) for the old label. Maybe try to avoid such changes in the first place.
+
+
+\begin{comment}
+
+ToDo:
+-Hyperlinks should appear in blue
+-Make glossary for symbols and abbreviations 
+ CR  - Cauchy-Riemann (semi standard)
+ DG  - Differential Geometry (non standard)
+ LHS - left hand side (standard)
+ LSE - linear system of equations (non-standard)
+ ODE - ordinary differential equation (standard)
+ PDE - partial differential equation (standard)
+ RHS - right hand side (standard)
+ i.e. - "it est", latin for "that means" or "which means"
+ e.g. - ?  for example
+-Make a chapter dependency graph
+
+-Maybe at the end of each section, put a little summary which may contain the most 
+ important formulas as well. Length of the text (without) should be 1 or 2 pages.
+-After the summary, also include a section with "Further Reading" that gives keywords and previews
+ an references for more in depth study of the topic
+-Maybe give algorithms in pseudocode and have actual working implementations in C++ in some repo
+ that is supplementary to the book
+
+\begin{thebibliography}{10}
+
+\bibitem{MatheRezepte}
+Christian Karpfinger. \newblock {\em Hoehere Mathematik in Rezepten, 3. Auflage}.
+\end{thebibliography}	
+
+\bibliography{Bibilography} 
+\bibliographystyle{plain}  
+
+Good reference for math symbols:
+https://www.cmor-faculty.rice.edu/~heinken/latex/symbols.pdf
+
+
+-a^2 + a^2 = 2 a^2 = c^2 has no solutions bcs the lhs has a single factor of 2 whereas all
+ other factors of the rhs and lhs must occur an even number of times due to the square. This
+ can be generalized: k a^n = c^n can have no solutions for any k and any n by a similar 
+ argument
+ 
+ 
+https://www.youtube.com/watch?v=-mfaMbraEkU  One Math Book For Every Math Subject 
+
+Maybe give code examples in C++ that can be run in a jupyter notebook environment like this:
+https://blog.jupyter.org/interactive-workflows-for-c-with-jupyter-fe9b54227d92
+https://jupyter.org/try 
+
+About notational aesthetics:
+https://tug.org/TUGboat/tb31-2/tb98kuester.pdf
+
+
+Multinomial coeffs subsume combinations, variations(?), permutations: 
+https://www.youtube.com/watch?v=nY2BHJy5Zus  My Favorite Counting Technique includes ALL of the other Three!
+
+
+\end{comment} 
+	
+\end{document}
+
+

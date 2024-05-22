@@ -8,6 +8,9 @@
 %\exists x : \varphi(x) \Leftrightarrow \neg \forall x : \neg \varphi(x)
 %\end{eqnarray}
 
+% ToDo: 
+% Mention the section about set theory in the basics section
+
 \paragraph{Notational Conventions}  In the context of predicate logic, variables are typically denoted by lowercase letters from the end of the alphabet such as $x,y,z$. In general mathematics, sets are usually denoted by uppercase letters from the begin of the alphabet such as $A,B,C$ and set elements usually by lowercase $a,b,c$. In axiomatic set theory, sets are the only thing that exists - the elements of sets are also sets - and sets appear as variables in predicate logical formulas. So we have a conflict here - which of the notational conventions should we adopt? Here, I adopt the following convention: In contexts where a lot of predicate-logical formulas appear, I will use $x,y,z, \ldots$ because using the other convention tends to look ugly there. These contexts are typically the lower levels of the theory. In higher level contexts, where predicate logical formulas become less common, I'll prefer  $A,B,C, \ldots$ for sets. [TODO: introduce $\in$, $\notin$, $\ni$]
 
 
@@ -17,18 +20,19 @@
 
 % ToDo: 
 % -give Cantor'S original defition of a set
-% -explain the naive/unrestricted comprehension axiom
-% -explain notation - hwy lowercase x,y,z etc. for sets. Looks better in logic formulas
-%  ...but A,B,C looks better elsewhere and is more consistent with other math fields. Do we
-%  want consistency with prdicate logic or with general math?
+
 
 % https://en.wikipedia.org/wiki/Universal_set
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Unrestricted Comprehension Axiom [VERIFY!]}
-In naive set theory, there is one simple and very general axiom that allows us to construct sets. Let $x$ be any kind of object and $\varphi(x)$ a predicate, i.e. a function into which we can plug in a variable $x$ and then $\varphi$ will return a boolean value that tells us whether or not $x$ has some property. With $\varphi$ in hand, we can build the set $S = \{x: \varphi(x)\}$ of all objects that satisfy our predicate. That we can always do this, for any $\varphi$ whatsoever, is called the \emph{unrestricted comprehension} axiom, sometimes also \emph{naive comprehension} axiom. 
+\subsection{Unrestricted Comprehension Principle}
+In naive set theory, there is one simple and very general principle that allows us to construct sets. Let $x$ be any kind of (mathematical) object and $\varphi(x)$ a predicate, i.e. a function into which we can plug in a variable $x$ and then $\varphi$ will return a boolean value that tells us whether or not $x$ has the property modeled by our predicate. With $\varphi$ in hand, we can build the set $S = \{x: \varphi(x)\}$ of all objects that satisfy our predicate. 
+
+%That we can always do this, for any $\varphi$ whatsoever, is called the \emph{unrestricted comprehension} axiom, sometimes also \emph{naive comprehension} axiom. 
 
 % In Weitz's video über Ordinalzahlen bei 26:45 kommt diese Definition aber wieder - diesmal für Klassen
+
+% https://en.wikipedia.org/wiki/Axiom_schema_of_specification#Unrestricted_comprehension
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Paradoxes}
@@ -40,32 +44,23 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 
 \paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
 
-%Ruling out such looped recursive element inclusions will later be formalized as the axiom of foundation VERIFY!...TBC...maybe we need also the axiom of restricted comprehension and/or the axiom of pairing?
 
-% Axiom schema of specification (or of separation, or of restricted comprehension)
 
-%Now ask: Is $R$ itself an element of $R$ or not? There are two possible answers to this question: either $R \in R$ or $R \notin R$. Let's assume that $R \notin R$, i.e. R does not contain itself as element. Then, by definition of $R$, $R$ should be an element of $R$. If, on the other hand, we assume that $R \in R$, then $R$ should not be an element of $R$.
 
-%Let $R$ be the set of all sets that does not contain itself as element. Now ask: "is $R$ and element of $R$ or not?
 
-%...TBC...ToDo: explain how the paradox follows from unrestricted (naive) comprehension and how it can be fixed (I think, we need the axiom of foundation which (together with the axiom of pairing) forbids that sets can be elements of themselves)
 
-% https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory#2._Axiom_of_regularity_(also_called_the_axiom_of_foundation)
  
 % https://en.wikipedia.org/wiki/Axiom_schema_of_specification#Unrestricted_comprehension 
 % https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_1_Z10
-% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_13
 
 % Naive comprehension: if P(x) is a predicate, then we can build the set S = {x:  P(x)}, i.e. the set of all objects that sastify our predicate
 
-% I think, we need the Fundierungsaxiom and need to disallow sets that can contain themselves
-% https://de.wikipedia.org/wiki/Fundierungsaxiom
-% Es gibt somit auch keine Menge, die sich selbst als Elemente enthält
 
 
-% R = (...) - whatever in R is, R does not appear in its list of elements - by definition
 
-% Maybe use also R-complement as the set of all sets that contain themselves
+
+
+
 
 % https://de.wikipedia.org/wiki/Russellsche_Antinomie
 % https://en.wikipedia.org/wiki/Russell%27s_paradox
@@ -76,8 +71,13 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 % https://en.wikipedia.org/wiki/Urelement
 
 
-\subsubsection{Cantor's Paradox}
-Calling Cantor's initial approach to set theory "naive" might be a bit unfair to him. He was, in fact, aware that his initial approach has some problems and came up with a paradoxon himself. It is actually a generalized version of Russel's paradox (VERIFY!)...TBC...
+%\subsubsection{Cantor's Paradox}
+%Calling Cantor's initial approach to set theory "naive" might be a bit unfair to him. He was, in fact, aware that his initial approach has some problems and came up with a paradoxon himself. It is actually a generalized version of Russel's paradox (VERIFY!)...TBC...
+
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_13
+
+% Nah, let's not metion Cantor's paradox here - it requires Cantor's theorem that the power set of a set is larger than the set itself - but this theorem actually needs a lot of set theoretic preliminaries
+
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Systems of Axioms}
@@ -154,9 +154,11 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 % https://en.wikipedia.org/wiki/Universal_set#Regularity_and_pairing
 % -Regularity together with pairing frobids the existence of sets that contain themselves.
 
+% I think, we need the Fundierungsaxiom and need to disallow sets that can contain themselves
+% https://de.wikipedia.org/wiki/Fundierungsaxiom
+% Es gibt somit auch keine Menge, die sich selbst als Elemente enthält
 
-
-
+% https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory#2._Axiom_of_regularity_(also_called_the_axiom_of_foundation)
 
 \paragraph{Axiom of power set}
 % https://en.wikipedia.org/wiki/Axiom_of_power_set
@@ -374,11 +376,18 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 % https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_arithmetic
 
-\paragraph{Addition}...TBC...
+\paragraph{Addition} For two sets $A,B$ with cardinalities $|A|,|B|$ repectively, we define the sum $|A| + |B|$ as the cardinality of the disjoint union of $A$ and $B$: $|A| + |B| = |A \sqcup B|$.
+
+...TBC...
+% 
+
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_12_Z2
+% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_addition
 
 \paragraph{Multiplication}...TBC...
 
 \paragraph{Exponentiation}...TBC...
+
 
 
 
@@ -394,6 +403,12 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 %===================================================================================================
 \section{Theorems and Hypotheses}
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Cantor's Theorem}
+Cantor's theorem says that for any set $A$, the power set set $\mathcal{P}(A)$ has a strictly greater cardinality than $A$ itself. That is: $|A| < |\mathcal{P}(A)|$. For finite sets, these two cardinalities are related by $|\mathcal{P}(A)| = 2^{|A|}$. [Q: what about infinite sets using cardinal exponentiation?]
+
+% https://en.wikipedia.org/wiki/Cantor%27s_theorem
 
 %---------------------------------------------------------------------------------------------------
 \subsection{The Cantor-Bernstein Theorem}
@@ -546,5 +561,10 @@ How to implement the idea of sets in software:
 -Generally, implement all functions to create sets that should exist accrding to the axioms
 -Maybe have different sorts of Set like SetZFC, SetNBG, etc. - each implementing a different set of primitive axioms
 -Maybe the axioms should be implemented as static member functions and all the higher level set building functions as free functions
+
+
+https://en.wikipedia.org/wiki/Foundations_of_mathematics
+https://en.wikipedia.org/wiki/Controversy_over_Cantor%27s_theory
+
 
 \end{comment}

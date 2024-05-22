@@ -7580,7 +7580,7 @@ rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
 {
   if(i == 0)
     return rsSetNaive();
-  else if(i == 1)
+  else if(i == 1)  // verify if needed
   {
     rsSetNaive A = makeNeumannNumber(0);
     A.addElement(A);
@@ -7588,6 +7588,8 @@ rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
   }
   else
   {
+    // still wrong:
+
     rsSetNaive A;
     A.elements.resize(i);
     for(size_t j = 0; j < i; j++)               // maybe start at j = 1, maybe go backwards?

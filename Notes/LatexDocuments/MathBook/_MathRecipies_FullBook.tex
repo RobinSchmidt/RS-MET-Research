@@ -1,79 +1,4 @@
-%\documentclass[12pt, twocolumn]{article}
-%\documentclass[12pt, openany]{book}
-\documentclass[12pt, oneside]{book}
-%\usepackage{fullpage}           % makes all margins 1 inch?
-\topmargin=-1.0cm
-\textheight=23cm
-\evensidemargin=-1.0cm
-\oddsidemargin=-1.0cm
-\textwidth=19cm
-\setcounter{secnumdepth}{-1}  % suppress numbering of sections
-\usepackage{amsmath}
-\usepackage{amssymb}          % for mathbb
-\usepackage{hyperref}
-\usepackage{array}            % For Cayley tables
-\usepackage{stmaryrd}         % for \llbracket, \rrbracket
-
-\usepackage{comment}          
-% to comment out larger sections via \begin{comment} ... \end{comment} 
-% see:
-% https://tex.stackexchange.com/questions/17816/commenting-out-large-sections
-% https://tex.stackexchange.com/questions/11177/how-to-write-hidden-notes-in-a-latex-file/73418
-
-
-\usepackage{color}               % colored text
-\usepackage{listings}            % source code formatting 
-%\lstset{language=python}
-\definecolor{mygreen}{rgb}{0,0.6,0}
-\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-\definecolor{mymauve}{rgb}{0.58,0,0.82}
-\lstset{ %
-  backgroundcolor=\color{white},   
-  %basicstyle=\footnotesize\ttfamily,  % the size of the fonts that are used for the code
-  basicstyle=\ttfamily,               % the size of the fonts that are used for the code
-  captionpos=none,                    % no captions (and no empty space either)
-  commentstyle=\color{mygreen},       % comment style
-  frame=single,	                      % adds a frame around the code
-  keywordstyle=\color{blue},          % keyword style
-  language=Python,
-  stringstyle=\color{mymauve},        % string literal style
-  columns=flexible,                   %
-  keepspaces=true,                    % keeps spaces in text
-  tabsize=4,
-}
-
-
-\usepackage{tikz}
-%\usetikzlibrary{calc} % maybe later
-\usetikzlibrary{positioning}
-
-
-%\DeclareMathOperator{\d}{d}                  % exterior derivative
-\DeclareMathOperator{\grad}{\mathbf{grad}}
-\DeclareMathOperator{\curl}{\mathbf{curl}}
-\DeclareMathOperator{\dive}{div}
-\DeclareMathOperator{\atan2}{atan2}
-\DeclareMathOperator{\rank}{rank}
-\DeclareMathOperator{\im}{im}                 % image of a function/map
-\DeclareMathOperator{\vectorize}{vec}
-\DeclareMathOperator{\geo}{geo}               % geometric multiplicity
-\DeclareMathOperator{\alg}{alg}               % algebraic multiplicity 
-\DeclareMathOperator{\sign}{sign}    
-%\DeclareMathOperator{\Eig}{Eig} 
-
-\DeclareMathOperator{\e}{\mathrm{e}}          % for Euler's number - ToDo: use \e consistently!
-%\newcommand{\e}{\operatorname{e}}            % ...alternative definition (possibly)
-
-\usepackage{mathtools}                        % for "\DeclarePairedDelimiter" macro
-\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
-
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-
-%\let\cleardoublepage\clearpage
-
-% Maybe move the stuff up to here into a _Setup.tex file that can be included from
-% _FullBook.tex and _SingleChapter.tex
-
+\include{Setup}
 
 \begin{document}
 	
@@ -111,10 +36,6 @@
 \include{MulLinAlg_HyperNums}  % Quaternions, dual numbers, hyperbolic numbers, ...
 % or maybe PolyNumbers. it's about multidiemsnional numbers, hypercomplex numbers
 
-
-
-
-
 %\chapter{Calculus}
 \include{Calc} 
 \include{Calc_LimitsAndContinuity} 
@@ -133,13 +54,11 @@
 %\chapter{Geometry}
 % maybe this fits best directly after Linear Algebra as application thereof, so maybe place Calculus before Linear Algebra but maybe if we also compute areas of shapes via integrals, calculus needs to be introduced before geometry as well...maybe be a bit more general and include some (basic) calculusly stuff like areas and volumes, optimization of shapes (cylindrical can with smallest surface area kind of stuff)..no multivariable calculus, though - that's for later. but maybe introduce bivectors and trivectors already - they are simple and intuitive and will be needed for exterior algebra
 
-
 %\chapter{Multilinear Algebra}
 \include{MulLinAlg}
 \include{MulLinAlg_Exterior}
 \include{MulLinAlg_Geometric}
 \include{MulLinAlg_Tensor} 
-
 
 %\chapter{Multivariable Calculus}
 \include{MulCalc}
@@ -172,7 +91,6 @@
 \include{FuncAna_IntTrafos}      % Integral Transforms
 \include{FuncAna_DiffEqs}        % Differential Equations
 
-
 \part{Discrete Mathematics} 
 %\include{Comb}              % Combinatorics
 %\include{Comb_Elementary}   % Permutations, Variations, Bin. Coeffs, Partitions, etc.
@@ -188,7 +106,6 @@
 
 %\include{GraphTheo}         % graph theory
 %https://www.youtube.com/watch?v=uTUVhsxdGS8  Spectral Graph Theory For Dummies
-
 
 \part{Structural Mathematics}   % Maybe rename to Foundations and Struct...
 %\chapter{Logic}
@@ -209,13 +126,11 @@
 \include{Top_Deform}
 %\include{Top_Alg}   % algebraic topology
 
-
 %\chapter{Category Theory}
 %chapter{Theoretical Computer Science}
 
 % what about Type Theory  - maybe should go into theoreticalc computer Science?
 % theoretical CompSci should go here, too, also 
-
 
 \part{Applications of Mathematics}
 %\chapter{Approximation}
@@ -227,7 +142,6 @@
 \include{Phys_Relativity}
 \include{Phys_Everything}
 
-
 \include{Sci}        % Science
 %\include{Sci_Chem}   % Chemistry
 \include{Sci_Bio}    % Biology
@@ -238,8 +152,6 @@
 % Eng (ineerig): Mech(anical), Elec(trical), Sig(nal)Proc(esssing)
 
 % Art: Mus(ic), Gra(phics),
-
-% Maybe 
 
 
 \include{Apps_ScienceAndEng}

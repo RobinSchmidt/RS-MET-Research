@@ -1,0 +1,75 @@
+%\documentclass[12pt, twocolumn]{article}
+%\documentclass[12pt, openany]{book}
+\documentclass[12pt, oneside]{book}
+%\usepackage{fullpage}           % makes all margins 1 inch?
+\topmargin=-1.0cm
+\textheight=23cm
+\evensidemargin=-1.0cm
+\oddsidemargin=-1.0cm
+\textwidth=19cm
+\setcounter{secnumdepth}{-1}  % suppress numbering of sections
+\usepackage{amsmath}
+\usepackage{amssymb}          % for mathbb
+\usepackage{hyperref}
+\usepackage{array}            % For Cayley tables
+\usepackage{stmaryrd}         % for \llbracket, \rrbracket
+
+\usepackage{comment}          
+% to comment out larger sections via \begin{comment} ... \end{comment} 
+% see:
+% https://tex.stackexchange.com/questions/17816/commenting-out-large-sections
+% https://tex.stackexchange.com/questions/11177/how-to-write-hidden-notes-in-a-latex-file/73418
+
+
+\usepackage{color}               % colored text
+\usepackage{listings}            % source code formatting 
+%\lstset{language=python}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+\lstset{ %
+  backgroundcolor=\color{white},   
+  %basicstyle=\footnotesize\ttfamily,  % the size of the fonts that are used for the code
+  basicstyle=\ttfamily,               % the size of the fonts that are used for the code
+  captionpos=none,                    % no captions (and no empty space either)
+  commentstyle=\color{mygreen},       % comment style
+  frame=single,	                      % adds a frame around the code
+  keywordstyle=\color{blue},          % keyword style
+  language=Python,
+  stringstyle=\color{mymauve},        % string literal style
+  columns=flexible,                   %
+  keepspaces=true,                    % keeps spaces in text
+  tabsize=4,
+}
+
+
+\usepackage{tikz}
+%\usetikzlibrary{calc} % maybe later
+\usetikzlibrary{positioning}
+
+
+%\DeclareMathOperator{\d}{d}                  % exterior derivative
+\DeclareMathOperator{\grad}{\mathbf{grad}}
+\DeclareMathOperator{\curl}{\mathbf{curl}}
+\DeclareMathOperator{\dive}{div}
+\DeclareMathOperator{\atan2}{atan2}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\im}{im}                 % image of a function/map
+\DeclareMathOperator{\vectorize}{vec}
+\DeclareMathOperator{\geo}{geo}               % geometric multiplicity
+\DeclareMathOperator{\alg}{alg}               % algebraic multiplicity 
+\DeclareMathOperator{\sign}{sign}    
+%\DeclareMathOperator{\Eig}{Eig} 
+
+\DeclareMathOperator{\e}{\mathrm{e}}          % for Euler's number - ToDo: use \e consistently!
+%\newcommand{\e}{\operatorname{e}}            % ...alternative definition (possibly)
+
+\usepackage{mathtools}                        % for "\DeclarePairedDelimiter" macro
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+%\let\cleardoublepage\clearpage
+
+% Maybe move the stuff up to here into a _Setup.tex file that can be included from
+% _FullBook.tex and _SingleChapter.tex

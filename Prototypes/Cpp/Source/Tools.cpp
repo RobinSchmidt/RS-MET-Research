@@ -7420,6 +7420,86 @@ protected:
 // But maybe such a structure could still be useful enough, if the zero divisors are raer enough?
 
 
+
+//=================================================================================================
+
+/** Implements a set in the set theoretic sense. It's elements can only be other sets. 
+
+*/
+
+class rsSetNaive
+{
+
+public:
+
+
+  rsSetNaive* getCopy() const;
+
+
+  void addElement(const rsSetNaive& a);
+
+
+  bool hasElement(const rsSetNaive& a) const;
+
+  bool hasSubset(const rsSetNaive& A) const;
+
+  bool equals(const rsSetNaive& A) const;
+
+
+
+
+protected:
+
+  std::vector<rsSetNaive*> elements;
+  // We use a vector of pointers for purely technical reasons. That's the way, recursive data 
+  // structures are built in C++
+
+};
+
+rsSetNaive* rsSetNaive::getCopy() const
+{
+  rsSetNaive* c = new rsSetNaive;
+  for(size_t i = 0; i < elements.size(); i++)
+    c->elements.push_back(elements[i]->getCopy());
+  return c;
+}
+
+void rsSetNaive::addElement(const rsSetNaive& a)
+{
+  if(!hasElement(a))
+    elements.push_back(a.getCopy());
+}
+
+bool rsSetNaive::hasElement(const rsSetNaive& a) const
+{
+  for(size_t i = 0; i < elements.size(); i++)
+  {
+    if(elements[i]->equals(a))
+      return true;
+  }
+  return false;
+}
+
+bool rsSetNaive::hasSubset(const rsSetNaive& A) const
+{
+  for(size_t i = 0; i < A.elements.size(); i++)
+  {
+    if(!hasElement(*(A.elements[i])))
+      return false;
+  }
+  return true;
+}
+
+bool rsSetNaive::equals(const rsSetNaive& A) const
+{
+  return hasSubset(A) && A.hasSubset(*this);
+}
+
+
+
+
+
+
 //=================================================================================================
 
 template<class T> 

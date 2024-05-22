@@ -10513,6 +10513,13 @@ void testFiniteField()
   // are at it, we should also make it clenaly compile (without warnings) and work with rsFraction.
 }
 
+void testSet()
+{
+  rsSetNaive A;
+
+  int dummy = 0;
+}
+
 void testGeneralizedCollatz()
 {
   // The Collatz conjecture is a famous problem in math. It states: You will always end up in the 

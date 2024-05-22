@@ -65,7 +65,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // Math:
   //testEulerTransformation();
   //testCesaroSum();
-  testFejerSum();
+  //testFejerSum();
   //testGreensFunction();  // stub
   //testComplexPolar();    // stub
   //testRationalTrigonometry();
@@ -75,6 +75,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testFiniteField();     // stub
+  testSet();
   //testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();

@@ -7439,9 +7439,31 @@ public:
   /** Copy constructor.  */
   rsSetNaive(const rsSetNaive& A);
 
+  /** Move constructor.  */
+  rsSetNaive(rsSetNaive&& A) : elements(std::move(A.elements)) 
+  { 
+    A.elements.clear(); 
+  }
+  // Needs test
+
+  /** Copy assignment operator. */
+  rsSetNaive& operator=(const rsSetNaive& A);
+
+  /** Move assignment operator. */
+  rsSetNaive& operator=(rsSetNaive&& A) 
+  {
+    elements = std::move(A.elements);
+    A.elements.clear(); 
+    return *this;
+  }
 
 
   ~rsSetNaive();
+
+
+
+
+
 
   // ToDo: Copy/Move contructor/assignment
 
@@ -7504,6 +7526,19 @@ rsSetNaive::rsSetNaive(const rsSetNaive& A)
     elements[i] = A.elements[i]->getCopy();
 }
 
+rsSetNaive& rsSetNaive::operator=(const rsSetNaive& A)
+{
+  elements.resize(A.elements.size());
+  for(size_t i = 0; i < A.elements.size(); i++)
+    elements[i] = A.elements[i]->getCopy();
+  return *this;
+}
+
+// ToDo:
+// -Maybe factor out the deep copying code that is common to the copy constructor and copy 
+//  assignment operator
+
+
 rsSetNaive::~rsSetNaive()
 {
   for(size_t i = 0; i < elements.size(); i++)
@@ -7545,11 +7580,35 @@ rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
 {
   if(i == 0)
     return rsSetNaive();
+  else if(i == 1)
+  {
+    rsSetNaive A = makeNeumannNumber(0);
+    A.addElement(A);
+    return A;
+  }
   else
   {
     rsSetNaive A;
-    A.addElement(makeNeumannNumber(i-1));
+    A.elements.resize(i);
+    for(size_t j = 0; j < i; j++)               // maybe start at j = 1, maybe go backwards?
+    {
+      rsSetNaive tmp = makeNeumannNumber(i-1);  // i-j ?
+      A.elements[i-j] = tmp.getCopy();
+    }
     return A;
+
+
+
+    //A.addElement(makeNeumannNumber(i-1));
+
+
+
+    // Nope - this is wrong - but could that be one of the other constructions of the naturals? 
+    //...nah - I don't think so
+    //rsSetNaive A = makeNeumannNumber(i-1);
+    //size_t N = A.getCardinality();
+    //A.addElement(*(A.elements[N-1]));
+    //return A;
     // Verify this!
     // We get an access violation. I think, we need to implement copy-constructor, etc. in order to
     // create deep copies

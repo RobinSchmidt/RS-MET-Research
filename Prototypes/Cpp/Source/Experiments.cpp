@@ -10515,24 +10515,34 @@ void testFiniteField()
 
 void testSet()
 {
+  using Set = rsSetNaive;
+
+  bool ok = true;
+
   // Create the empty set. This set corresponds to the number 0 in the von Neumann construction of 
   // the natural numbers:
-  rsSetNaive s0;
+  Set s0;
+  ok &= s0.isEmpty();
+  ok &= s0.getCardinality() == 0;
 
   // Create the set that contains the empty se as element. This set corresponds to the number 1:
-  rsSetNaive s1;
+  Set s1;
   s1.addElement(s0);
+  ok &= !s1.isEmpty();
+  ok &=  s1.getCardinality() == 1;
 
   // Now the set representing the number 2:
-  rsSetNaive s2;
+  Set s2;
   s2.addElement(s0);
   s2.addElement(s1);
+  ok &= s2.getCardinality() == 2;
 
   // Now the set representing the number 3:
-  rsSetNaive s3;
+  Set s3;
   s3.addElement(s0);
   s3.addElement(s1);
   s3.addElement(s2);
+  ok &= s3.getCardinality() == 3;
 
 
 
@@ -10542,6 +10552,10 @@ void testSet()
   // -Include a memleak check. 
   // -Add free functions to create successor, sum and product according to the definitions
   // -Add a free function to create von Neumann numbers: createNeumannNumber(uint n)
+
+  // See:
+  // https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
+  // https://en.wikipedia.org/wiki/Von_Neumann_universe
 
   int dummy = 0;
 }

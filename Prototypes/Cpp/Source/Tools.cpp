@@ -7423,8 +7423,9 @@ protected:
 
 //=================================================================================================
 
-/** Implements a set in the set theoretic sense. It's elements can only be other sets. It's a 
-recursive data structure (similar to a tree) with sets all the way down. ...TBC... */
+/** Implements a set in the set theoretic sense. Its elements can only be other sets. It's a 
+recursive data structure (similar to a tree) with sets all the way down. The implementation is just 
+for proof/demonstration of set theoretical concepts and entirely unpractical ...TBC... */
 
 class rsSetNaive
 {
@@ -7437,6 +7438,12 @@ public:
   /** Adds the given set as element to this set. */
   void addElement(const rsSetNaive& a);
 
+
+  /** Returns the cardinality, i.e. the number of elements of this set. */
+  size_t getCardinality() const { return elements.size(); }
+
+  /** Returns true, iff this set is the empty set */
+  bool isEmpty() const { return elements.size() == 0; }
 
   /** Returns true iff this set has the given set A as element. */
   bool hasElement(const rsSetNaive& a) const;
@@ -7457,6 +7464,11 @@ protected:
   std::vector<rsSetNaive*> elements;
   // We use a vector of pointers for purely technical reasons. That's the way, recursive data 
   // structures are built in C++
+
+  // ToDo:
+  // -Implement union, intersection, etc.
+  // -Implement construction of ordered pairs
+  // -Implement construction of von Neumann numbers
 
 };
 
@@ -7505,7 +7517,6 @@ rsSetNaive* rsSetNaive::getCopy() const
     c->elements.push_back(elements[i]->getCopy());
   return c;
 }
-
 
 
 

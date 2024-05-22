@@ -307,7 +307,9 @@ $n=$ & $s(n-1)=$  & & & $\{ 0, 1, 2, \ldots, n-1 \} $
 \end{tabular}
 \medskip
 
-We define addition of two natural numbers $x,y$ recursively as follows:
+We define addition of two natural numbers $x,y$ recursively as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly.
+
+%In the recursive part of the definition, 
 
 
 

@@ -10764,6 +10764,18 @@ void printSet(const rsSetNaive& x)
   }
 }
 
+void printOrderedPair(const rsSetNaive& x)
+{
+  RAPT::rsAssert(x.isOrderedPair());
+  std::cout << '(';
+  printSet(x.orderedPairFirst());
+  std::cout << ',';
+  printSet(x.orderedPairSecond());
+  std::cout << ')';
+}
+
+
+
 void testNeumannNumbers()
 {
   using Set = rsSetNaive;
@@ -10813,13 +10825,11 @@ void testNeumannNumbers()
   Set n8 = NN::create(8);
   Set n9 = NN::create(9);
 
-  // Line feed helper function:
-  auto LF = []()
-  {
-    std::cout << '\n';
-  };
+
+
 
   // Print the first 5 Neumann numbers:
+  auto LF = []() { std::cout << '\n'; };  // Line feed helper function
   printSet(n0); LF();  // O
   printSet(n1); LF();  // {O}
   printSet(n2); LF();  // {O,{O}}
@@ -10910,11 +10920,14 @@ void testNeumannIntegers()
   using NI  = rsNeumannInteger;
   bool  ok  = true;
 
-
+  // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
+  Set m5 = NI::create(-5);
+  Set m4 = NI::create(-4);
+  Set m3 = NI::create(-3);
   Set m2 = NI::create(-2);
   Set m1 = NI::create(-1);
-  Set p0 = NI::zero();     
-  Set p1 = NI::one();      // maybe use p1 for "plus one" and use m1 for -1
+  Set p0 = NI::zero();
+  Set p1 = NI::one();
   Set p2 = NI::create(2);
   Set p3 = NI::create(3);
   Set p4 = NI::create(4);
@@ -10934,42 +10947,46 @@ void testNeumannIntegers()
   r = NI::sum(p2, p3); 
   ok &= r == p5;   // 2 +  3 = 5
 
-  //
-  r = NI::sum(p1, m1);
-  ok &= r == p0;
+  // Test addition with a negative 2nd argument:
+  r   = NI::sum(p2, m2);
+  v1  = NI::value(r);
+  v2  = NI::value(p0);
+  ok &= r != p0;             // r = (2,2), p0 = (0,0)
+  ok &= NI::equals(r, p0);   // r and p0 are different but equivalent
+  ok &= v1 == 0;
+  ok &= v2 == 0;
 
-  
+  // Print some output:
+  auto LF = []() { std::cout << '\n'; };  // Line feed helper function
+  //printSet(p0); LF();                     // {{O}}
+  //printSet(r);  LF();                     // {{{O,{O}}}}
+  //printOrderedPair(p0); LF();             // (O,O)             == (0, 0)
+  //printOrderedPair(r);  LF();             // ({O,{O}},{O,{O}}) == (2, 2)
 
-  r = NI::sum(p2, m2);
-  ok &= r == p0;
-  v1 = NI::value(r);
-  v2 = NI::value(p0);
-  // FAILS!
+  // 5 + -2 = 3:
+  r   = NI::sum(p5, m2);
+  v1  = NI::value(r);
+  v2  = NI::value(p3);
+  ok &= v1 == 3;
+  ok &= v2 == 3;
+  ok &= NI::equals(r, p3);  
 
-
-  /*
-  //r = NI::sum(p2, m2); ok &= r == p0;   // 2 + -2 = 0
-
-
-
-  r = NI::sum(p5, m2);
-
-  v1 = NI::value(r);
-  v2 = NI::value(p3);
-
-  
-  ok &= r == p3;   // 5 + -2 = 3   FAILS!!!
-  */
-
-  // v1 == v2  but  r != p3  - apparently the sets are different but represent the same number?
-  // But set comparison should be robust against differently structured sets/arrays that represent
-  // the same value
- 
-
-
+  // 3 + -5 = -2:
+  r   = NI::sum(p3, m5);
+  v1  = NI::value(r);
+  v2  = NI::value(m2);
+  ok &= v1 == -2;
+  ok &= v2 == -2;
+  ok &= NI::equals(r, m2);  
 
 
   rsAssert(ok);
+
+  // ToDo:
+  //
+  // -Implement a canonicalize() function that makes the 2nd component zero. Although, memory-wise, 
+  //  it would be more desirable to keep the sum as close to zero as possible. (6,0) will need more
+  //  memory than (3,3) because 2^6 + 2^0 > 2^3 + 2^3
 }
 
 

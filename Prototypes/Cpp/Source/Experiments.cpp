@@ -10634,6 +10634,12 @@ void testNeumannNumbers()
   r = NN::product(n2, n3); ok &= r == n6;   // 2 * 3 = 6
   r = NN::product(n3, n2); ok &= r == n6;   // 3 * 2 = 6
 
+  // Test exponentiation:
+  r = NN::power(n2, n0);   ok &= r == n1;   // 2 ^ 0 = 1
+  r = NN::power(n2, n1);   ok &= r == n2;   // 2 ^ 1 = 2
+  r = NN::power(n2, n2);   ok &= r == n4;   // 2 ^ 1 = 4
+
+
   rsAssert(ok);
 
   // ToDo:

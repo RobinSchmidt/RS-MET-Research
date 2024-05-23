@@ -7429,7 +7429,7 @@ held as pointers-to-elements which complicates the internal implementation but c
 really need to think about this. The implementation is similar to how would one implement a tree in
 C++ made up from nodes where each node has an array of pointers to child nodes. The implementation 
 is rather naive and just for proof/demonstration of set theoretical concepts and entirely 
-unpractical. */
+unpractical. It's a math excercise. */
 
 class rsSetNaive
 {
@@ -7681,7 +7681,9 @@ convenient. The first few numbers are:
   3 = { 0, 1, 2 } = { {}, {{}}, { {}, {{}} }  }  ...verify this!
 
 As can be seen, when expanding the sets fully, it gets messy rather quickly. I think, the size 
-grows exponentially (verify!).
+grows exponentially (verify!). This is completely useless for practical purposes. I just 
+implemented this for demostration purposes as a math excercise and to clarify the concepts to 
+myself.
 
 
 References:
@@ -7762,7 +7764,7 @@ public:
   static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
 
 
-  //static rsSetNaive power(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive power(const rsSetNaive& x, const rsSetNaive& y);
 
 
   // x ^ y    = 1          if y == 0
@@ -7833,21 +7835,31 @@ rsSetNaive rsNeumannNumber::predecessor(const rsSetNaive& A)
   //  and copy N-1 elements from A.
 }
 
-rsSetNaive rsNeumannNumber::sum(const rsSetNaive& A, const rsSetNaive& B)
+rsSetNaive rsNeumannNumber::sum(const rsSetNaive& x, const rsSetNaive& y)
 {
-  if(isZero(B))
-    return A;
+  if(isZero(y))
+    return x;
   else
-    return successor(sum(A, predecessor(B)));
+    return successor(sum(x, predecessor(y)));
 }
 
-rsSetNaive rsNeumannNumber::product(const rsSetNaive& A, const rsSetNaive& B)
+rsSetNaive rsNeumannNumber::product(const rsSetNaive& x, const rsSetNaive& y)
 {
-  if(isZero(B))
+  if(isZero(y))
     return zero();
   else
-    return sum(product(A, predecessor(B)), A);
+    return sum(product(x, predecessor(y)), x);
 }
+
+rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
+{
+  if(isZero(y))
+    return one();
+  else
+    return product(power(x, predecessor(y)), x);
+}
+// Needs test
+
 
 
 

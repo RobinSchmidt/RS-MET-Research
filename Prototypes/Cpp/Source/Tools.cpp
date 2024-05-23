@@ -7683,16 +7683,21 @@ public:
   // The test is rather expensive because it internally creates a reference/target set to compare
   // the input set to
 
+  /** Checks, if the given set represents zero. In the von Neumann construction, zero is 
+  represented by the empty set. */
+  static bool isZero(const rsSetNaive& A) { return A.isEmpty(); }
+
   /** Returns the value of a given von Neumann number represented by the set A. It is equal to the 
   cardinality of the set that represents it. */
   static size_t value(const rsSetNaive& A); 
-  // I may like to add an rsAssert(isWellFormed(A)) - but that would lead us into an infinite 
-  // recursion because isWellFormed calls value(). We could avoid that by calling getCardinality 
-  // directly - but that would uglify the code
+
 
 
   //-----------------------------------------------------------------------------------------------
   // \name Factory
+
+  /** Creates the set that represents the natural number i in the von Neumann construction. */
+  static rsSetNaive create(size_t i);
 
   /** Given a set A representing a natural number according to the von Neumann construction, this 
   function creates its successor. */
@@ -7703,20 +7708,21 @@ public:
   set. */
   static rsSetNaive predecessor(const rsSetNaive& A);
 
+  /** Computes the sum of A and B. */
+  static rsSetNaive sum(const rsSetNaive& A, const rsSetNaive& B);
 
 
-  /** Creates the set that represents the natural number i in the von Neumann construction. */
-  static rsSetNaive create(size_t i);
+
 
   // ToDo:
-  // -predecessor - just takes the set and removes the last element - or triggers an error 
-  //  when there are no elements
+  // -Maybe implement an explicit zero() function that creates the von neumann zero, i.e. the empty
+  //  set
   // -Implement add using the successor and predecessor function.
   // -implement a function isNeumannNumber or isWellFormed. It may look at the number of elements, 
   //  create the corresponding Neumann number and compare it to the input
   // -Explain why we operate on the baseclass objects - we do it to have access to the static 
   //  baseclass functions
-
+  // -Maybe implement a different construction of the naturals as well.
 };
 
 bool rsNeumannNumber::isWellFormed(const rsSetNaive& A)
@@ -7730,6 +7736,14 @@ size_t rsNeumannNumber::value(const rsSetNaive& A)
 { 
   rsAssert(isWellFormed(A));
   return A.getCardinality(); 
+}
+
+rsSetNaive rsNeumannNumber::create(size_t i)
+{
+  if(i == 0)
+    return rsSetNaive();
+  else
+    return successor(create(i-1));
 }
 
 rsSetNaive rsNeumannNumber::successor(const rsSetNaive& A)
@@ -7764,13 +7778,15 @@ rsSetNaive rsNeumannNumber::predecessor(const rsSetNaive& A)
   //  and copy N-1 elements from A.
 }
 
-rsSetNaive rsNeumannNumber::create(size_t i)
+rsSetNaive rsNeumannNumber::sum(const rsSetNaive& A, const rsSetNaive& B)
 {
-  if(i == 0)
-    return rsSetNaive();
+  if(isZero(B))
+    return A;
   else
-    return successor(create(i-1));
+    return successor(sum(A, predecessor(B)));
 }
+
+
 
 
 

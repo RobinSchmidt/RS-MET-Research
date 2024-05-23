@@ -10515,12 +10515,29 @@ void testFiniteField()
 
 void testSet()
 {
-  // We test the creation of von Neumann numbers, i.e. the set theoretical construction of the 
-  // natural numbers
+  // We test the class rsSetNaive which implements a set in the set-theoretical sense and provides
+  // functionality for common set-theoretic operations, the creation of von Neumann numbers (a set 
+  // theoretical construction of the natural numbers), etc.
 
   using Set = rsSetNaive;
 
   bool ok = true;
+
+  // Create the empty set:
+  Set empty;
+  ok &= empty.isEmpty();
+  ok &= empty.getCardinality() == 0;
+
+  // Create the singleton set that contains only the empty set:
+  Set singletonEmpty;
+  singletonEmpty.addElement(empty);
+  ok &= singletonEmpty.getCardinality() == 1;
+  Set tmp = singletonEmpty.getElement(0);
+  ok &= tmp.equals(empty);  // ToDo: implement and use == operator
+
+
+
+
 
   // Create the empty set. This set corresponds to the number 0 in the von Neumann construction of 
   // the natural numbers:
@@ -10563,6 +10580,7 @@ void testSet()
 
 
   // ToDo: 
+  // -Maybe rename the Neumann numbers from s0, s1, ... to nn0, nn1 (nn for Neumann number)
   // -Verify the constructions - add unit tests
   // -Include a memleak check. 
   // -Add free functions to create successor, sum and product according to the definitions

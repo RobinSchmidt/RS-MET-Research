@@ -7478,6 +7478,9 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
+  rsSetNaive getElement(size_t i) const;
+
+
   /** Returns the cardinality, i.e. the number of elements of this set. */
   size_t getCardinality() const { return elements.size(); }
 
@@ -7493,8 +7496,23 @@ public:
   /** Returns true iff this set is equal to the given set A. */
   bool equals(const rsSetNaive& A) const;
 
+
+
+
+
   //-----------------------------------------------------------------------------------------------
   // \name Factory
+
+  /** Given a set A, this function creates the set S = { A }, i.e. the singleton set that contains 
+  A as its only element. */
+  static rsSetNaive singleton(const rsSetNaive& A);
+
+  /** Given a set A representing a natural number according to the von Neumann construction, this 
+  function creates its successor. */
+  static rsSetNaive neumannSuccessor(const rsSetNaive& A);
+  // see:
+  // https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
+
 
   /** Creates the set that represents the natural number i in the von Neumann construction. */
   static rsSetNaive makeNeumannNumber(size_t i);
@@ -7551,6 +7569,14 @@ void rsSetNaive::addElement(const rsSetNaive& a)
     elements.push_back(a.getCopy());
 }
 
+rsSetNaive rsSetNaive::getElement(size_t i) const
+{
+  rsSetNaive e = *(elements[i]); // Calls copy contructor rsSetNaive(const rsSetNaive& A)
+  return e;
+  // Why does it not call the move-assignment operator? Or does it?
+}
+// needs test
+
 bool rsSetNaive::hasElement(const rsSetNaive& a) const
 {
   for(size_t i = 0; i < elements.size(); i++)
@@ -7574,6 +7600,20 @@ bool rsSetNaive::hasSubset(const rsSetNaive& A) const
 bool rsSetNaive::equals(const rsSetNaive& A) const
 {
   return hasSubset(A) && A.hasSubset(*this);
+}
+
+rsSetNaive rsSetNaive::singleton(const rsSetNaive& A)
+{
+  rsSetNaive S;
+  S.addElement(A);
+  return S;
+}
+
+rsSetNaive rsSetNaive::neumannSuccessor(const rsSetNaive& A)
+{
+  rsSetNaive S = A;
+  S.addElement(A);
+  return S;
 }
 
 rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)

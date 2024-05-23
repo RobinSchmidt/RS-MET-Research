@@ -10568,6 +10568,12 @@ void testSet()
   // assume that the outer and inner D are the same set after that operation. In that sense, D will
   // not include "itself" after the operation even though the code may (falsely) suggest that.
 
+  ok &= !A.isOrderedPair();
+  ok &= !B.isOrderedPair();
+  ok &=  C.isOrderedPair();  // C has the right structure even though not created as ordered pair
+  ok &= !D.isOrderedPair();
+
+
   // In this block, names like AB, ABC mean tuples:
   {
     // Now let's create a couple of ordered pairs and verify that they are all different:
@@ -10575,6 +10581,7 @@ void testSet()
     Set BA = Set::orderedPair(B, A);
     Set AC = Set::orderedPair(A, C);
     Set CA = Set::orderedPair(C, A);
+    ok &= AB.isOrderedPair();
     ok &= AB != BA;
     ok &= AB != AC;
     ok &= AB != CA;
@@ -10692,10 +10699,8 @@ void testSet()
     {
       return Set::orderedPair(A, B);
     };
-    T = Set({ p(n1,n3), p(n1,n4), p(n2,n3), p(n2,n4),  p(n3,n3), p(n3,n4)});
+    T = Set({ p(n1,n3), p(n1,n4),  p(n2,n3), p(n2,n4),  p(n3,n3), p(n3,n4)});
     ok &= AxB == T;
-
-
   }
 
   rsAssert(ok);
@@ -10707,6 +10712,10 @@ void testSet()
   // -Maybe implement a multiset is a similar way. In addElement, we should remove the check
   //  "if(hasElement(..))" and in equals, we should not just look if the other set hasElement but
   //  compare, how many instances of the given element both sets have.
+  // -Maybe implement a function isOrderedPair. It should check if it's either a singleton or a 
+  //  doubleton and in the latter case, if the singleton's element is also present in the doubleton
+  // -We need a function to retrieve the 2st and 2nd component of an orderPair. maybe call it 
+  //  getComponent()
   // -But maybe we could model multisets based on sets as well? But how?
   // 
   //
@@ -10804,7 +10813,7 @@ void testNeumannNumbers()
     Set s = NN::create(i);
     memUse[i] = s.getMemoryUsage();
   }
-  rsPlotVector(memUse);  // Looks exponential which is as expected
+  //rsPlotVector(memUse);  // Looks exponential which is as expected
 
 
   rsAssert(ok);
@@ -10827,10 +10836,26 @@ void testNeumannNumbers()
   //
   // Questions:
   //
-  // -How fast does the memory usage grow with n for the Nuemann numbers? I think, it might be 
+  // -How fast does the memory usage grow with n for the Neumann numbers? I think, it might be 
   //  exponentially? Document this. 
   // -What about the time complexity for the operations? Might this be even worse than the space
   //  complexity?
+}
+
+void testNeumannIntegers()
+{
+  using Set = rsSetNaive;
+  //using NN  = rsNeumannNumber;
+  using NI  = rsNeumannInteger;
+  bool  ok  = true;
+
+  Set i0 = NI::zero();
+  Set i1 = NI::one();
+  Set i2 = NI::create(2);
+  Set i3 = NI::create(3);
+
+
+  rsAssert(ok);
 }
 
 

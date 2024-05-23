@@ -7491,8 +7491,11 @@ public:
   size_t getCardinality() const { return elements.size(); }
   // maybe rename to size (or make an alias)
 
-  /** Returns true, iff this set is the empty set */
+  /** Returns true, iff this set is the empty set. */
   bool isEmpty() const { return elements.size() == 0; }
+
+  /** Returns true, iff this set is a singleton set, i.e. a set that has just one element. */
+  bool isSingleton() const { return elements.size() == 1; }
 
   /** Returns true iff this set has the given set A as element. */
   bool hasElement(const rsSetNaive& a) const;
@@ -7504,6 +7507,14 @@ public:
 
   /** Returns true iff this set is equal to the given set A. */
   bool equals(const rsSetNaive& A) const;
+
+
+  /** Returns true, iff this set is an ordered pair. This can be inferred from the structure of 
+  the set. */
+  bool isOrderedPair() const;
+
+
+  //rsSetNai
 
 
   size_t getMemoryUsage() const;
@@ -7555,19 +7566,19 @@ public:
   those elements from A which are not in B. */
   static rsSetNaive difference(const rsSetNaive& A, const rsSetNaive& B);
 
-
+  /** Creates the symmetric difference of A and B. This is the union minus the intersection. */
   static rsSetNaive symmetricDifference(const rsSetNaive& A, const rsSetNaive& B);
 
+  /** Creates the set product of A and B, i.e. the set of all ordered pairs of elements from A 
+  and B. */
   static rsSetNaive product(const rsSetNaive& A, const rsSetNaive& B);
 
-  // ToDo: differenceSet, symmetricDifferenceSet,
 
 
-
-
-
+  /** Compares this set with rhs for equality. */
   bool operator==(const rsSetNaive& rhs) const { return equals(rhs); }
 
+  /** Compares this set with rhs for inequality. */
   bool operator!=(const rsSetNaive& rhs) const { return !equals(rhs); }
 
 
@@ -7633,6 +7644,7 @@ void rsSetNaive::addElement(const rsSetNaive& a)
 
 rsSetNaive rsSetNaive::getElement(size_t i) const
 {
+  rsAssert(i < elements.size(), "Invalid element index");
   rsSetNaive e = *(elements[i]); // Calls copy contructor rsSetNaive(const rsSetNaive& A)
   return e;
   // Why does it not call the move-assignment operator? Or does it?
@@ -7656,6 +7668,29 @@ bool rsSetNaive::hasSubset(const rsSetNaive& A) const
       return false;
   }
   return true;
+}
+
+
+
+bool rsSetNaive::isOrderedPair() const
+{
+  // We use Kuratowski pairs which have the structure (x, y) = { { x }, { x, y } } which
+  // may collapse into (x, x) = { { x } } when both components are the same. 
+
+  if(getCardinality() == 1)                     // (x, x) = { { x } }
+    return isSingleton();                       
+  else if(getCardinality() == 2)                // (x, y) = { { x }, { x, y } }
+  {
+    // Investigate the structure:
+    if(!elements[0]->isSingleton())
+      return false;
+    if(!(elements[1]->getCardinality() == 2))
+      return false;
+    rsSetNaive x = elements[0]->getElement(0);
+    return elements[1]->hasElement(x);
+  }
+  else
+    return false;
 }
 
 bool rsSetNaive::equals(const rsSetNaive& A) const
@@ -7880,6 +7915,7 @@ public:
   // ToDo:
   // -Explain why we operate on the baseclass objects - we do it to have access to the static 
   //  baseclass functions
+  // -Maybe remove baseclass - actually, this class is just a collection of functions.
   // -Maybe implement a different construction of the naturals as well.
 };
 
@@ -7961,8 +7997,43 @@ rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
 }
 
 
+//=================================================================================================
+
+/** Implements integers based on equivalence classes of pairs of von Neumann numbers...TBC... */
+
+class rsNeumannInteger : public rsNeumannNumber
+{
+
+public:
+
+  using Base = rsNeumannNumber;
 
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  /** Implements the equivalence relation...TBC... */
+  //static bool equals(const rsSetNaive& x, const rsSetNaive& y);
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Factory
+
+  static rsSetNaive zero() { return orderedPair(Base::zero(), Base::zero()); }
+
+  static rsSetNaive one()  { return orderedPair(Base::one(), Base::zero()); }
+
+  static rsSetNaive create(size_t n) { return orderedPair(Base::create(n), Base::zero()); }
+
+};
+
+/*
+bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
+{
+  //rsNeumannNumber
+
+}
+*/
 
 
 

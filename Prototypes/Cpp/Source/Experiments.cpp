@@ -10579,13 +10579,21 @@ void testSet()
   ok &= BA != CA;
   ok &= AC != CA;
 
+  // Let's create some 3-tuples:
+  auto orderedTriple = [](const rsSetNaive& A, const rsSetNaive& B, const rsSetNaive& C)
+  {
+    return Set::orderedPair(Set::orderedPair(A, B), C);
+  };
+  Set ABC = orderedTriple(A, B, C);
+  Set ACB = orderedTriple(A, C, B);
+  Set BAC = orderedTriple(B, A, C);
+  Set BCA = orderedTriple(B, C, A);
+  Set CAB = orderedTriple(C, A, B);
+  Set CBA = orderedTriple(C, B, A);
+
+  // They should all be different from one another - we only veryfy this for some of them:
 
 
-  //Set D = 
-
-
-
-  //Set temp5 = Set::orderedPair(empty, empty);
 
 
 

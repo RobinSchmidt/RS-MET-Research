@@ -7526,9 +7526,34 @@ public:
 
   // ToDo: differenceSet, symmetricDifferenceSet, pair, orderedPair
 
+  /** Given two sets A,B, this function creates a set that may be used to represent the ordered 
+  pair (A, B). The normal pair() function could distinguish between { A, B } and { B, A } and a 
+  pair of equal values like { A, A } could not even be formed because it would just collapse to 
+  { A }. To model ordered pairs uisng only sets, we use Kuratowski's definition of ordered pairs
+  as (A, B) = { { A }, { A, B } }. With this definition (A, B) is distinguishable from (B, A).
+  We have
 
+    (A, B) = { { A }, { A, B } }
+    (B, A) = { { B }, { A, B } }
+    (A, A) = { { A } }
+
+  With this definition, we can define n-tuples recursively as 
+  
+    (A_1, A_2, ..., A_n) = ((A_1, A_2, ..., A_{n-1}), A_n)
+    
+  Other definitions of ordered pairs are also possible. ...TBC... */
   static rsSetNaive orderedPair(const rsSetNaive& A, const rsSetNaive& B);
-
+  // Maybe rename to kuratowskiPair
+  // With this definition, we can form n-tuples recursively. Hausdorff's definition:
+  // (A, B) = { {A, 1}, {B, 2} } might be more convenient for n-tuples because the "tags" can be
+  // generalized. But it has the potential problem that the tags should be distiguished from the 
+  // components. What if we want to use von neumann numbers for the tags as well as form the 
+  // components?
+ 
+  // See:
+  // https://en.wikipedia.org/wiki/Axiom_of_pairing
+  // https://en.wikipedia.org/wiki/Ordered_pair#Defining_the_ordered_pair_using_set_theory
+  // 
 
 
 
@@ -7668,7 +7693,17 @@ rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
 
 rsSetNaive rsSetNaive::orderedPair(const rsSetNaive& A, const rsSetNaive& B)
 {
-  return pair(singleton(A), pair(A, B));
+  return pair(singleton(A), pair(A, B));  // (A, B) = { { A }, { A, B } }
+
+  // Notes:
+  //
+  // -
+
+  // See:
+  //
+  // https://en.wikipedia.org/wiki/Ordered_pair#Kuratowski's_definition
+  // https://www.matej-zecevic.de/2022/022/kuratowski-definition-of-ordered-pairs/
+  // https://math.stackexchange.com/questions/1767604/please-explain-kuratowski-definition-of-ordered-pairs
 }
 
 

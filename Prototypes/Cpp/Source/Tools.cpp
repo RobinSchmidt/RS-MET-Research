@@ -7858,11 +7858,6 @@ rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
   else
     return product(power(x, predecessor(y)), x);
 }
-// Needs test
-
-
-
-
 
 //=================================================================================================
 

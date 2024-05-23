@@ -10603,7 +10603,7 @@ void testNeumannNumbers()
   ok &= s3.hasElement(t1);
   ok &= s3.hasElement(s2);
 
-  // Create the numbers 0..6, this time using the factory function:
+  // Create the numbers 0..9, this time using the factory function:
   Set n0 = NN::create(0);
   Set n1 = NN::create(1);
   Set n2 = NN::create(2);
@@ -10611,6 +10611,9 @@ void testNeumannNumbers()
   Set n4 = NN::create(4);
   Set n5 = NN::create(5);
   Set n6 = NN::create(6);
+  Set n7 = NN::create(7);
+  Set n8 = NN::create(8);
+  Set n9 = NN::create(9);
 
   // Check if the factory produced the same sets as we produced manually here:
   ok &= n0 == t0;
@@ -10637,7 +10640,9 @@ void testNeumannNumbers()
   // Test exponentiation:
   r = NN::power(n2, n0);   ok &= r == n1;   // 2 ^ 0 = 1
   r = NN::power(n2, n1);   ok &= r == n2;   // 2 ^ 1 = 2
-  r = NN::power(n2, n2);   ok &= r == n4;   // 2 ^ 1 = 4
+  r = NN::power(n2, n2);   ok &= r == n4;   // 2 ^ 2 = 4
+  r = NN::power(n2, n3);   ok &= r == n8;   // 2 ^ 3 = 8
+  r = NN::power(n3, n2);   ok &= r == n9;   // 3 ^ 2 = 9
 
 
   rsAssert(ok);

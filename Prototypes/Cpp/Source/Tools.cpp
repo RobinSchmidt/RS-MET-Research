@@ -7513,6 +7513,9 @@ public:
   /** Returns a string that represents this set. This is useful for debugging. */
   static std::string setToString(const rsSetNaive& A);
 
+  /** Assumes that the set A represents an ordered pair and turns it into a string. */
+  static std::string orderedPairToString(const rsSetNaive& A);
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Element Access
@@ -7720,6 +7723,17 @@ std::string rsSetNaive::setToString(const rsSetNaive& A)
   }
 }
 
+std::string rsSetNaive::orderedPairToString(const rsSetNaive& A)
+{
+  RAPT::rsAssert(A.isOrderedPair());
+  std::string str;
+  str += "(";
+  str += setToString(A.orderedPairFirst());
+  str += ",";
+  str += setToString(A.orderedPairSecond());
+  str += ")";
+  return str;
+}
 
 bool rsSetNaive::equals(const rsSetNaive& A) const
 {

@@ -10769,12 +10769,16 @@ void printSet(const rsSetNaive& x)
 
 void printOrderedPair(const rsSetNaive& x)
 {
+  std::cout << rsSetNaive::orderedPairToString(x);
+
+  /*
   RAPT::rsAssert(x.isOrderedPair());
   std::cout << '(';
   printSet(x.orderedPairFirst());
   std::cout << ',';
   printSet(x.orderedPairSecond());
   std::cout << ')';
+  */
 }
 
 

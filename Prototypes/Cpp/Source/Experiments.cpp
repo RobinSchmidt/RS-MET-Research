@@ -10652,6 +10652,7 @@ void testSet()
   n5 = NN::create(5);
   n6 = NN::create(6);
 
+  // Test some more set operations using sets of (Neumann) numbers:
   {
     Set A({ n0, n1, n2, n3     });  // A = { 0, 1, 2, 3          }
     Set B({ n2, n3, n4, n5, n6 });  // B = {       2, 3, 4, 5, 6 }
@@ -10672,16 +10673,30 @@ void testSet()
     T = Set( { n0, n1 } );
     ok &= S == T;
 
-    int dummy = 0;
+    // Test symmetric difference:
+    S = Set::symmetricDifference(A, B);
+    T = Set( { n0, n1, n4, n5, n6 } );
+    ok &= S == T;
+
+    // We can also create the symmetric difference in other ways:
+    S = Set::difference(Set::unionSet(A, B), Set::intersection(A,B));
+    ok &= S == T;
+    S = Set::unionSet(Set::difference(A, B), Set::difference(B, A));
+    ok &= S == T;
+
+    // Test the cartesian product:
+    A = Set({ n1, n2, n3 });  // A = { 1, 2, 3 }
+    B = Set({ n3, n4 });      // B = { 3, 4    }
+
+
+
   }
-
-
 
   rsAssert(ok);
 
   // ToDo:
   //
-  // -Implement and test union, intersection, pair, orderedPair, tuple, product, etc.
+  // -Implement and test tuple, product, etc.
   // -Include a memleak check. 
   // -Maybe implement a multiset is a similar way. In addElement, we should remove the check
   //  "if(hasElement(..))" and in equals, we should not just look if the other set hasElement but

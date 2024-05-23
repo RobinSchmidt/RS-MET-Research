@@ -7423,13 +7423,14 @@ protected:
 
 //=================================================================================================
 
-/** Implements a set in the set-theoretic sense. Its elements can only be other sets. It's a 
-recursive data structure with sets all the way down. For technical reasons, the elements must be 
-held as pointers-to-elements which complicates the internal implementation but client code does not
-really need to think about this. The implementation is similar to how would one implement a tree in
-C++ made up from nodes where each node has an array of pointers to child nodes. The implementation 
-is rather naive and just for proof/demonstration of set theoretical concepts and entirely 
-unpractical. It's a math excercise. */
+/** Implements a set in the set-theoretic sense. Its elements can only be other sets. It's not a 
+set of objects of some data type like you would expect from std::set. Instead, it's a recursive 
+data structure with sets all the way down. For technical reasons, the elements must be held as 
+pointers-to-elements which complicates the internal implementation but client code does not really 
+need to think about this. The implementation is similar to how would one implement a tree in C++ 
+with nodes where each node has an array of pointers to child nodes. The implementation is rather 
+naive and just for proof/demonstration of set theoretical concepts and entirely unpractical. It's a
+math excercise. */
 
 class rsSetNaive
 {
@@ -7553,6 +7554,9 @@ public:
   /** Given two sets A and B, this function produces the difference A minus B which contains only 
   those elements from A which are not in B. */
   static rsSetNaive difference(const rsSetNaive& A, const rsSetNaive& B);
+
+
+  static rsSetNaive symmetricDifference(const rsSetNaive& A, const rsSetNaive& B);
 
 
 
@@ -7735,6 +7739,15 @@ rsSetNaive rsSetNaive::difference(const rsSetNaive& A, const rsSetNaive& B)
 {
   rsSetNaive D;
   for(size_t i = 0; i < A.getCardinality(); i++)
+    if(!B.hasElement(A[i]))
+      D.addElement(A[i]);
+  return D;
+}
+
+rsSetNaive rsSetNaive::symmetricDifference(const rsSetNaive& A, const rsSetNaive& B)
+{
+  rsSetNaive D = difference(B, A);                 // D = B \ A
+  for(size_t i = 0; i < A.getCardinality(); i++)   // Add elements from A that are not in B
     if(!B.hasElement(A[i]))
       D.addElement(A[i]);
   return D;

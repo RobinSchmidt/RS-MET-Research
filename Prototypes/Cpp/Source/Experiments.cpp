@@ -10745,6 +10745,25 @@ void testSet()
 
 }
 
+void printSet(const rsSetNaive& x)
+{
+  if(x.isEmpty())
+    std::cout << "O";
+    //std::cout << "{}";
+  else
+  {
+    std::cout << '{';
+    size_t N = x.getCardinality();
+    for(size_t i = 0; i < N; i++)
+    {
+      printSet(x[i]);
+      if(i < N-1)
+        std::cout << ',';
+    }
+    std::cout << '}';
+  }
+}
+
 void testNeumannNumbers()
 {
   using Set = rsSetNaive;
@@ -10793,6 +10812,21 @@ void testNeumannNumbers()
   Set n7 = NN::create(7);
   Set n8 = NN::create(8);
   Set n9 = NN::create(9);
+
+  // Line feed helper function:
+  auto LF = []()
+  {
+    std::cout << '\n';
+  };
+
+  // Print the first 5 Neumann numbers:
+  printSet(n0); LF();  // O
+  printSet(n1); LF();  // {O}
+  printSet(n2); LF();  // {O,{O}}
+  printSet(n3); LF();  // {O,{O},{O,{O}}}
+  printSet(n4); LF();  // {O,{O},{O,{O}},{O,{O},{O,{O}}}}
+  printSet(n5); LF();  // {O,{O},{O,{O}},{O,{O},{O,{O}}},{O,{O},{O,{O}},{O,{O},{O,{O}}}}}
+
 
   // Check if the factory produced the same sets as we produced manually here:
   ok &= n0 == t0;
@@ -10886,30 +10920,51 @@ void testNeumannIntegers()
   Set p4 = NI::create(4);
   Set p5 = NI::create(5);
   Set r;
+  int v1, v2;
 
   // Test embedding of Neumann naturals:
   r = NI::embed(NN::create(3));
   ok &= r == p3;
 
+  // Test negation:
+  r = NI::negative(p2);
+  ok &= r == m2;
+
   // Test addition:
-  r = NI::sum(p2, p3); ok &= r == p5;   // 2 +  3 = 5
+  r = NI::sum(p2, p3); 
+  ok &= r == p5;   // 2 +  3 = 5
+
+  //
+  r = NI::sum(p1, m1);
+  ok &= r == p0;
+
+  
+
+  r = NI::sum(p2, m2);
+  ok &= r == p0;
+  v1 = NI::value(r);
+  v2 = NI::value(p0);
+  // FAILS!
 
 
+  /*
   //r = NI::sum(p2, m2); ok &= r == p0;   // 2 + -2 = 0
 
 
 
   r = NI::sum(p5, m2);
 
-  int v1 = NI::value(r);
-  int v2 = NI::value(p3);
+  v1 = NI::value(r);
+  v2 = NI::value(p3);
 
   
   ok &= r == p3;   // 5 + -2 = 3   FAILS!!!
+  */
 
   // v1 == v2  but  r != p3  - apparently the sets are different but represent the same number?
   // But set comparison should be robust against differently structured sets/arrays that represent
   // the same value
+ 
 
 
 

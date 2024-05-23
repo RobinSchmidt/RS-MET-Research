@@ -10823,6 +10823,13 @@ void testNeumannNumbers()
   r = NN::power(n2, n3);   ok &= r == n8;   // 2 ^ 3 = 8
   r = NN::power(n3, n2);   ok &= r == n9;   // 3 ^ 2 = 9
 
+  // Test less-than relation:
+  ok &= !NN::less(n1, n0);
+  ok &= !NN::less(n0, n0);
+  ok &=  NN::less(n0, n1);
+  ok &=  NN::less(n0, n2);
+  ok &=  NN::less(n1, n2);
+
 
   // Plot the growth of the memory usage:
   int max = 9;

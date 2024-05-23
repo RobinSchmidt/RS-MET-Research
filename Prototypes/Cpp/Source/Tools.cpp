@@ -7890,7 +7890,11 @@ public:
 
   /** Returns the value of a given von Neumann number represented by the set x. It is equal to the 
   cardinality of the set that represents it. */
-  static size_t value(const rsSetNaive& x); 
+  static size_t value(const rsSetNaive& x);
+
+  /** Implements the less-than relation on Nuemann numbers. */
+  static bool less(const rsSetNaive& x, const rsSetNaive& y);
+
 
 
   //-----------------------------------------------------------------------------------------------
@@ -7962,6 +7966,16 @@ size_t rsNeumannNumber::value(const rsSetNaive& A)
 { 
   rsAssert(isWellFormed(A));
   return A.getCardinality(); 
+}
+
+bool rsNeumannNumber::less(const rsSetNaive& x, const rsSetNaive& y)
+{ 
+  return x.getCardinality() < y.getCardinality(); 
+
+  // Notes:
+  //
+  // -We use the fact that for von Neumann numbers, the cardinality is equal to the represented
+  //  number such that we can make use of the < operator on size_t
 }
 
 rsSetNaive rsNeumannNumber::create(size_t i)

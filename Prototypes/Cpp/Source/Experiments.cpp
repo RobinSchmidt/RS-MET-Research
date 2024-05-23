@@ -10562,6 +10562,8 @@ void testSet()
 
   // Block to test operations with von Neumann numbers:
   {
+    using NN = rsNeumannNumber;
+
     // Create the natural numbers 0,1,2,3 via the von Neumann construction manually and do some 
     // checks with the produced sets::
     Set nn0t;                             // nn statnds for Neumann number, t for target
@@ -10596,10 +10598,10 @@ void testSet()
     // ToDo: rename s0 to nn0t (t for target)
 
     // Create the numbers 0..3 again, this time using the factory function:
-    Set nn0 = Set::neumannNumber(0);
-    Set nn1 = Set::neumannNumber(1);
-    Set nn2 = Set::neumannNumber(2);
-    Set nn3 = Set::neumannNumber(3);
+    Set nn0 = NN::neumannNumber(0);
+    Set nn1 = NN::neumannNumber(1);
+    Set nn2 = NN::neumannNumber(2);
+    Set nn3 = NN::neumannNumber(3);
 
     // Check if the factory produced the same sets as we produced manually here:
     ok &= nn0 == nn0t;

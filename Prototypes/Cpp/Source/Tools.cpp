@@ -7527,17 +7527,7 @@ public:
   // ToDo: differenceSet, symmetricDifferenceSet, pair, orderedPair
 
 
-  /** Given a set A representing a natural number according to the von Neumann construction, this 
-  function creates its successor. */
-  static rsSetNaive neumannSuccessor(const rsSetNaive& A);
 
-  /** Creates the set that represents the natural number i in the von Neumann construction. */
-  static rsSetNaive neumannNumber(size_t i);
-
-  // ToDo:
-  // -neumannPredecessor - just takes the set and removes the last element - or triggers an error 
-  //  when there are no elements
-  // -neumannAdd. Implement it using the neumannSuccessor and neumannPredecessor function.
 
 
   bool operator==(const rsSetNaive& rhs) const { return equals(rhs); }
@@ -7565,7 +7555,6 @@ protected:
   std::vector<rsSetNaive*> elements;
 
 };
-
 
 rsSetNaive::rsSetNaive(const rsSetNaive& A)
 {
@@ -7662,21 +7651,6 @@ rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
   return U;
 }
 
-rsSetNaive rsSetNaive::neumannSuccessor(const rsSetNaive& A)
-{
-  return unionSet(A, singleton(A));
-
-  // See: https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
-}
-
-rsSetNaive rsSetNaive::neumannNumber(size_t i)
-{
-  if(i == 0)
-    return rsSetNaive();
-  else
-    return neumannSuccessor(neumannNumber(i-1));
-}
-
 rsSetNaive* rsSetNaive::getCopy() const
 {
   rsSetNaive* c = new rsSetNaive;
@@ -7684,6 +7658,60 @@ rsSetNaive* rsSetNaive::getCopy() const
     c->elements.push_back(elements[i]->getCopy());
   return c;
 }
+
+//=================================================================================================
+
+/** Implements the von Neumann construction of the natural numbers based on sets. The sets are 
+represented using the class rsSetNaive.
+
+References:
+
+  (1) https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers  
+ 
+*/
+
+class rsNeumannNumber : public rsSetNaive
+{
+
+public:
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Factory
+
+
+  /** Given a set A representing a natural number according to the von Neumann construction, this 
+  function creates its successor. */
+  static rsSetNaive neumannSuccessor(const rsSetNaive& A);
+  // rename to successor
+
+  /** Creates the set that represents the natural number i in the von Neumann construction. */
+  static rsSetNaive neumannNumber(size_t i);
+  // rename to create
+
+  // ToDo:
+  // -predecessor - just takes the set and removes the last element - or triggers an error 
+  //  when there are no elements
+  // -Implement add using the successor and predecessor function.
+
+};
+
+
+rsSetNaive rsNeumannNumber::neumannSuccessor(const rsSetNaive& A)
+{
+  return unionSet(A, singleton(A));
+
+
+}
+
+rsSetNaive rsNeumannNumber::neumannNumber(size_t i)
+{
+  if(i == 0)
+    return rsSetNaive();
+  else
+    return neumannSuccessor(neumannNumber(i-1));
+}
+
+
 
 //=================================================================================================
 

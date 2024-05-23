@@ -10574,48 +10574,55 @@ void testNeumannNumbers()
 
   // Create the natural numbers 0,1,2,3 via the von Neumann construction manually and do some 
   // checks with the produced sets::
-  Set nn0t;                             // nn stands for Neumann number, t for target
-  ok &= nn0t.isEmpty();
-  ok &= nn0t.getCardinality() == 0;
+  Set t0;                             // nn stands for Neumann number, t for target
+  ok &= t0.isEmpty();
+  ok &= t0.getCardinality() == 0;
 
   // Create the set that contains the empty se as element. This set corresponds to the number 1:
-  Set nn1t;
-  nn1t.addElement(nn0t);
-  ok &= !nn1t.isEmpty();
-  ok &=  nn1t.getCardinality() == 1;
-  ok &=  nn1t.hasElement(nn0t);
+  Set t1;
+  t1.addElement(t0);
+  ok &= !t1.isEmpty();
+  ok &=  t1.getCardinality() == 1;
+  ok &=  t1.hasElement(t0);
 
   // Now the set representing the number 2:
   Set s2;
-  s2.addElement(nn0t);
-  s2.addElement(nn1t);
+  s2.addElement(t0);
+  s2.addElement(t1);
   ok &= s2.getCardinality() == 2;
-  ok &= s2.hasElement(nn0t);
-  ok &= s2.hasElement(nn1t);
+  ok &= s2.hasElement(t0);
+  ok &= s2.hasElement(t1);
 
   // Now the set representing the number 3:
   Set s3;
-  s3.addElement(nn0t);
-  s3.addElement(nn1t);
+  s3.addElement(t0);
+  s3.addElement(t1);
   s3.addElement(s2);
   ok &= s3.getCardinality() == 3;
-  ok &= s3.hasElement(nn0t);
-  ok &= s3.hasElement(nn1t);
+  ok &= s3.hasElement(t0);
+  ok &= s3.hasElement(t1);
   ok &= s3.hasElement(s2);
 
-  // ToDo: rename s0 to nn0t (t for target)
-
   // Create the numbers 0..3 again, this time using the factory function:
-  Set nn0 = NN::create(0);
-  Set nn1 = NN::create(1);
-  Set nn2 = NN::create(2);
-  Set nn3 = NN::create(3);
+  Set n0 = NN::create(0);
+  Set n1 = NN::create(1);
+  Set n2 = NN::create(2);
+  Set n3 = NN::create(3);
 
   // Check if the factory produced the same sets as we produced manually here:
-  ok &= nn0 == nn0t;
-  ok &= nn1 == nn1t;
-  ok &= nn2 == s2;
-  ok &= nn3 == s3;
+  ok &= n0 == t0;
+  ok &= n1 == t1;
+  ok &= n2 == s2;
+  ok &= n3 == s3;
+
+  // Test addition:
+  Set r;
+  r = NN::sum(n0, n0); ok &= r == n0;   // 0 + 0 = 0
+  r = NN::sum(n1, n0); ok &= r == n1;   // 1 + 0 = 1
+  r = NN::sum(n0, n1); ok &= r == n1;   // 0 + 1 = 1
+  r = NN::sum(n1, n1); ok &= r == n2;   // 1 + 1 = 2
+  r = NN::sum(n1, n2); ok &= r == n3;   // 1 + 2 = 3
+  r = NN::sum(n2, n1); ok &= r == n3;   // 2 + 1 = 3
 
 
   rsAssert(ok);

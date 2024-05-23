@@ -10926,19 +10926,51 @@ void testNeumannIntegers()
   bool  ok  = true;
 
   // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
+
+
+
   Set m5 = NI::create(-5);
   Set m4 = NI::create(-4);
   Set m3 = NI::create(-3);
   Set m2 = NI::create(-2);
   Set m1 = NI::create(-1);
-  Set p0 = NI::zero();
-  Set p1 = NI::one();
+
+  //Set p0 = NI::zero();
+  //Set p1 = NI::one();
+
+  Set p0 = NI::create(0);
+  Set p1 = NI::create(1);
+
   Set p2 = NI::create(2);
   Set p3 = NI::create(3);
   Set p4 = NI::create(4);
   Set p5 = NI::create(5);
   Set r;
   int v1, v2;
+
+  std::string str;
+  str = Set::orderedPairToString(p0);
+  ok &= str == "( {O} ; {O} )";
+
+  str = Set::orderedPairToString(p1);
+  //ok &= str == "( {{O}} ; {O,{{O}}} )";
+  ok &= str == "( {{O}} ; {{O},O} )";
+  // numerals:  ( { 1 } ; { 1, 0} )
+
+  str = Set::orderedPairToString(p2);
+  ok &= str == "( {{O,{O}}} ; {{O,{O}},O} )";
+  // numerals:  ( {   2   } ; {   2   ,O} )
+
+
+  str = Set::orderedPairToString(p1);
+  ok &= str == "( {{O}} ; {O} )";
+  // FAILS! Is  ( {{O}} ; {{O},O} )  i.e. (1,2)
+
+
+    
+  str = Set::orderedPairToString(p0);
+
+
 
   // Test embedding of Neumann naturals:
   r = NI::embed(NN::create(3));
@@ -10965,9 +10997,18 @@ void testNeumannIntegers()
   auto LF = []() { std::cout << '\n'; };  // Line feed helper function
   //printSet(p0); LF();                     // {{O}}
   //printSet(r);  LF();                     // {{{O,{O}}}}
-  printOrderedPair(p0); LF();             // (O,O)             == (0, 0)
-  printOrderedPair(r);  LF();             // ({O,{O}},{O,{O}}) == (2, 2)
+  //printOrderedPair(p0); LF();             // ({O})       == (0, 0)
+  //printOrderedPair(r);  LF();             // ({{O,{O}}}) == (2, 2)  ..this looks wrong!
+
+  // It should be ( , )
   // Shouldn't it be ({O},{O})  
+
+  //std::string str;
+
+
+
+
+
 
   // Test canonicalization:
   //r   = NI::canonical(r);    // Canonicalize - makes 2nd component zero

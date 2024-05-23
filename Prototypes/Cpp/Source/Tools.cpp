@@ -7725,13 +7725,33 @@ std::string rsSetNaive::setToString(const rsSetNaive& A)
 
 std::string rsSetNaive::orderedPairToString(const rsSetNaive& A)
 {
+  // The pair A is either of the form (x, x) or (x, y). In the former case, A has only 1 element.
+
   RAPT::rsAssert(A.isOrderedPair());
   std::string str;
-  str += "(";
-  str += setToString(A.orderedPairFirst());
-  str += ",";
-  str += setToString(A.orderedPairSecond());
-  str += ")";
+
+
+  str += "( ";
+
+  str += setToString(A[0]);
+
+
+  //str += " ; ";
+  //str += setToString(A[1]);
+
+
+  if(A.getCardinality() == 2)
+    str += " ; " + setToString(A[1]);   // A = (x, y)
+  else
+    str += " ; " + setToString(A[0]);   // A = (x, x)
+
+
+  //str += setToString(A.orderedPairFirst());
+  //str += ",";
+  //str += setToString(A.orderedPairSecond());
+
+
+  str += " )";
   return str;
 }
 

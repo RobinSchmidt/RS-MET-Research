@@ -10565,6 +10565,9 @@ void testSet()
 
   // Create the empty set. This set corresponds to the number 0 in the von Neumann construction of 
   // the natural numbers:
+
+  // Create the natural numbers 0,1,2,3 via the von Neumann construction manually and do some 
+  // checks with the produced sets::
   Set s0;
   ok &= s0.isEmpty();
   ok &= s0.getCardinality() == 0;
@@ -10594,11 +10597,21 @@ void testSet()
   ok &= s3.hasElement(s1);
   ok &= s3.hasElement(s2);
 
+  // ToDo: rename s0 to nn0t (t for target)
+
   // Create the numbers 0..3 again, this time using the factory function:
-  Set t0 = Set::makeNeumannNumber(0);
-  Set t1 = Set::makeNeumannNumber(1);
-  Set t2 = Set::makeNeumannNumber(2);
-  Set t3 = Set::makeNeumannNumber(3);
+  Set nn0 = Set::makeNeumannNumber(0);
+  Set nn1 = Set::makeNeumannNumber(1);
+  Set nn2 = Set::makeNeumannNumber(2);
+  Set nn3 = Set::makeNeumannNumber(3);
+
+  // Check if the factory produced the same sets as we produced manually here:
+  ok &= nn0 == s0;
+  ok &= nn1 == s1;
+  ok &= nn2 == s2;
+  ok &= nn3 == s3;
+
+
   // Still wrong - I think, it's because we don't have the = operator implemented yet
 
 

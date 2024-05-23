@@ -7509,6 +7509,8 @@ public:
   /** Given a set A, this function creates the set S = { A }, i.e. the singleton set that contains 
   A as its only element. */
   static rsSetNaive singleton(const rsSetNaive& A);
+  // One could also implement creation of singletons it via pair(A, A) but it's convenient to have
+  // a function to directly produce singletons.
 
   /** Given two sets A and B, this function produces the pair P = { A, B } of the two. */
   static rsSetNaive pair(const rsSetNaive& A, const rsSetNaive& B);
@@ -7595,12 +7597,11 @@ rsSetNaive& rsSetNaive::operator=(const rsSetNaive& A)
   for(size_t i = 0; i < A.elements.size(); i++)
     elements[i] = A.elements[i]->getCopy();
   return *this;
+
+  // ToDo:
+  // -Maybe factor out the deep copying code that is common to the copy constructor and copy 
+  //  assignment operator
 }
-
-// ToDo:
-// -Maybe factor out the deep copying code that is common to the copy constructor and copy 
-//  assignment operator
-
 
 rsSetNaive::~rsSetNaive()
 {
@@ -7645,6 +7646,11 @@ bool rsSetNaive::hasSubset(const rsSetNaive& A) const
 bool rsSetNaive::equals(const rsSetNaive& A) const
 {
   return hasSubset(A) && A.hasSubset(*this);
+
+  // Notes:
+  //
+  // -We cannot just iterate through the elements of *this and A and compare one by one because the
+  //  elements may be in a different order
 }
 
 rsSetNaive rsSetNaive::singleton(const rsSetNaive& A)
@@ -7652,31 +7658,14 @@ rsSetNaive rsSetNaive::singleton(const rsSetNaive& A)
   rsSetNaive S;
   S.addElement(A);
   return S;
-
-  // I think, one could also implement it via pair(A, A) - test this!
 }
 
 rsSetNaive rsSetNaive::pair(const rsSetNaive& A, const rsSetNaive& B)
 {
-  // Create a set P that contains A as element. Then check, if P contains B and if not, add B as 
-  // well. The reason for the check is that in the case A == B, we don't want to have a twice in P.
   rsSetNaive P;
   P.addElement(A);
   P.addElement(B);  // Will have no effect if B == A
-
-
-  //if(!P.hasElement(B))
-  //  P.addElement(B);
-
-
   return P;
-
-  // Notes:
-  //
-  // -I think having A twice in P when A == B should actually not affect the observable behavior of
-  //  the set. It would just be redundant. Test this by creating sets that contain some elements 
-  //  multiple times!
-  // -Oh - I think, the check is not needed because addElement itself does such a test
 }
 
 
@@ -7686,7 +7675,7 @@ rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
   // are not present in A:
   rsSetNaive U(A);
   for(size_t i = 0; i < B.getCardinality(); i++)
-    if(!A.hasElement(B[i]))
+    if(!A.hasElement(B[i]))  // The check is redundant! addElement itself has such a test!
       U.addElement(B[i]);
   return U;
 }
@@ -7749,8 +7738,6 @@ rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
 
 }
 
-
-
 rsSetNaive* rsSetNaive::getCopy() const
 {
   rsSetNaive* c = new rsSetNaive;
@@ -7758,11 +7745,6 @@ rsSetNaive* rsSetNaive::getCopy() const
     c->elements.push_back(elements[i]->getCopy());
   return c;
 }
-
-
-
-
-
 
 //=================================================================================================
 

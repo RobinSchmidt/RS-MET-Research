@@ -7502,7 +7502,7 @@ public:
   bool equals(const rsSetNaive& A) const;
 
 
-
+  size_t getMemoryUsage() const;
 
 
   //-----------------------------------------------------------------------------------------------
@@ -7526,6 +7526,8 @@ public:
 
   // ToDo: differenceSet, symmetricDifferenceSet, pair, orderedPair
 
+
+  static rsSetNaive orderedPair(const rsSetNaive& A, const rsSetNaive& B);
 
 
 
@@ -7625,6 +7627,19 @@ bool rsSetNaive::equals(const rsSetNaive& A) const
   //  elements may be in a different order
 }
 
+size_t rsSetNaive::getMemoryUsage() const
+{
+  size_t size = sizeof(rsSetNaive);
+  for(size_t i = 0; i < elements.size(); i++)
+    size += elements[i]->getMemoryUsage();
+  return size;
+
+  // Notes:
+  //
+  // -I'm not quite sure, if that algorithm computes the actual memory usage in bytes but it should 
+  //  have approximately the right scaling behavior.
+}
+
 rsSetNaive rsSetNaive::singleton(const rsSetNaive& A)
 {
   rsSetNaive S;
@@ -7650,6 +7665,12 @@ rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
       U.addElement(B[i]);
   return U;
 }
+
+rsSetNaive rsSetNaive::orderedPair(const rsSetNaive& A, const rsSetNaive& B)
+{
+  return pair(singleton(A), pair(A, B));
+}
+
 
 rsSetNaive* rsSetNaive::getCopy() const
 {
@@ -7698,8 +7719,6 @@ class rsNeumannNumber : public rsSetNaive
 
 public:
 
-  // maybe use x,y instead of A,B for the variables
-
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
@@ -7717,7 +7736,6 @@ public:
   static size_t value(const rsSetNaive& x); 
 
 
-
   //-----------------------------------------------------------------------------------------------
   // \name Factory
 
@@ -7729,12 +7747,7 @@ public:
   contains only 0. */
   static rsSetNaive one() { return singleton(zero()); }
 
-  // Maybe add a function to produce one - maybe as singleton(zero())
-
-  /** Creates the set that represents the natural number n in the von Neumann construction. The 
-  construction works out as n = { 0, 1, 2, 3, ..., n-1 }
-  
-  */
+  /** Creates the set that represents the natural number n in the von Neumann construction. */
   static rsSetNaive create(size_t n);
 
   /** Given a set x representing a natural number according to the von Neumann construction, this 
@@ -7763,20 +7776,18 @@ public:
   See (2). So, it is defined recursively using addition internally. */
   static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
 
+  /** Computes the power of x^y. It is defined as:
 
+  x ^ y    = 1           if y == 0
+  x ^ s(y) = x ^ y * x   if y != 0 
+
+  This definition in terms of multiplications is entirely analogous to the definition of 
+  multiplication in terms of addition. */
   static rsSetNaive power(const rsSetNaive& x, const rsSetNaive& y);
 
 
-  // x ^ y    = 1          if y == 0
-  // x ^ s(y) = x ^ y * x  if y != 0
-
 
   // ToDo:
-  // -Maybe implement an explicit zero() function that creates the von neumann zero, i.e. the empty
-  //  set
-  // -Implement add using the successor and predecessor function.
-  // -implement a function isNeumannNumber or isWellFormed. It may look at the number of elements, 
-  //  create the corresponding Neumann number and compare it to the input
   // -Explain why we operate on the baseclass objects - we do it to have access to the static 
   //  baseclass functions
   // -Maybe implement a different construction of the naturals as well.
@@ -7858,6 +7869,14 @@ rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
   else
     return product(power(x, predecessor(y)), x);
 }
+
+
+
+
+
+
+
+
 
 //=================================================================================================
 

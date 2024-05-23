@@ -1,6 +1,7 @@
 #include "Tools.cpp"         // this includes rapt and rosic
 #include "Attractors.cpp"
 #include <regex>
+//#include <numeric>           // iota
 
 //-------------------------------------------------------------------------------------------------
 // move some of this code to rapt:
@@ -10553,11 +10554,46 @@ void testSet()
   Set temp4 = Set::pair(empty, empty);
   ok &= temp4 == singletonEmpty;
 
+
+  // Create a couple of distinguishable sets to play with:
+  Set A = Set::pair(empty, singletonEmpty);  // A = { {}, {{}} }
+  Set B = Set::pair(empty, A);               // B = { {}, A }
+  Set C = Set::pair(singletonEmpty, A);      // C = { {{}}, A }
+  Set D;
+  D.addElement(A);
+  D.addElement(B);
+  D.addElement(C);
+  // What happens if we do D.addElement(D)? It should actually be unproblematic - but we should not
+  // assume that the outer and inner D are the same set after that operation. In that sense, D will
+  // not include "itself" after the operation even though the code may (falsely) suggest that.
+
+  // Now let's create a couple of ordered pairs and verify that they are all different:
+  Set AB = Set::orderedPair(A, B);
+  Set BA = Set::orderedPair(B, A);
+  Set AC = Set::orderedPair(A, C);
+  Set CA = Set::orderedPair(C, A);
+  ok &= AB != BA;
+  ok &= AB != AC;
+  ok &= AB != CA;
+  ok &= BA != AC;
+  ok &= BA != CA;
+  ok &= AC != CA;
+
+
+
+  //Set D = 
+
+
+
+  //Set temp5 = Set::orderedPair(empty, empty);
+
+
+
   rsAssert(ok);
 
   // ToDo:
   //
-  // - Implement and test union, intersection, pair, orderedPair, product, etc.
+  // - Implement and test union, intersection, pair, orderedPair, tuple, product, etc.
   // - Include a memleak check. 
   //
   // See:
@@ -10645,8 +10681,23 @@ void testNeumannNumbers()
   r = NN::power(n3, n2);   ok &= r == n9;   // 3 ^ 2 = 9
 
 
+  // Plot the growth of the memory usage:
+  int max = 9;
+  std::vector<float> memUse(max+1);
+  for(int i = 0; i <= max; i++)
+  {
+    Set s = NN::create(i);
+    memUse[i] = s.getMemoryUsage();
+  }
+  rsPlotVector(memUse);  // Looks exponential which is as expected
+
+
   rsAssert(ok);
 
+  // Notes:
+  //
+  // -The memory usage does indeed increase exponentially.
+  //
   // ToDo:
   //
   // -Maybe implement the Neumann numbers as class rsNeumannNumber : public rsSetNaive
@@ -10657,6 +10708,7 @@ void testNeumannNumbers()
   //  of equality)
   // -Maybe implement exponentiation - define it terms of multplication in a similar way as 
   //  multiplication is implemented via addition
+  // -Plot memory usage as function of number
   //
   // Questions:
   //

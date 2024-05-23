@@ -10601,6 +10601,10 @@ void testSet()
     Set CAB = orderedTriple(C, A, B);
     Set CBA = orderedTriple(C, B, A);
 
+    // Check if the outer and innder structure is correct:
+    ok &= ABC.isOrderedPair();
+    ok &= ABC[0].isOrderedPair();
+
     // They should all be different from one another - we only verify this for some of them:
     ok &= ABC != ACB;
     ok &= ABC != BAC;

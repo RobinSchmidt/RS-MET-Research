@@ -10560,6 +10560,7 @@ void testSet()
     // -Implement and test union, intersection, pair, orderPair, product, etc.
   }
 
+  /*
   // Block to test operations with von Neumann numbers:
   {
     using NN = rsNeumannNumber;
@@ -10611,6 +10612,7 @@ void testSet()
 
     // Maybe use t0,t1, ...for the targets and n0,n1,... for the numbers created by the factory
   }
+  */
 
   // ToDo: 
   //
@@ -10632,9 +10634,54 @@ void testSet()
 
 void testNeumannNumbers()
 {
-  using NN = rsNeumannNumber;
-  bool  ok = true;
+  using Set = rsSetNaive;
+  using NN  = rsNeumannNumber;
+  bool  ok  = true;
 
+  // Create the natural numbers 0,1,2,3 via the von Neumann construction manually and do some 
+  // checks with the produced sets::
+  Set nn0t;                             // nn stands for Neumann number, t for target
+  ok &= nn0t.isEmpty();
+  ok &= nn0t.getCardinality() == 0;
+
+  // Create the set that contains the empty se as element. This set corresponds to the number 1:
+  Set nn1t;
+  nn1t.addElement(nn0t);
+  ok &= !nn1t.isEmpty();
+  ok &=  nn1t.getCardinality() == 1;
+  ok &=  nn1t.hasElement(nn0t);
+
+  // Now the set representing the number 2:
+  Set s2;
+  s2.addElement(nn0t);
+  s2.addElement(nn1t);
+  ok &= s2.getCardinality() == 2;
+  ok &= s2.hasElement(nn0t);
+  ok &= s2.hasElement(nn1t);
+
+  // Now the set representing the number 3:
+  Set s3;
+  s3.addElement(nn0t);
+  s3.addElement(nn1t);
+  s3.addElement(s2);
+  ok &= s3.getCardinality() == 3;
+  ok &= s3.hasElement(nn0t);
+  ok &= s3.hasElement(nn1t);
+  ok &= s3.hasElement(s2);
+
+  // ToDo: rename s0 to nn0t (t for target)
+
+  // Create the numbers 0..3 again, this time using the factory function:
+  Set nn0 = NN::create(0);
+  Set nn1 = NN::create(1);
+  Set nn2 = NN::create(2);
+  Set nn3 = NN::create(3);
+
+  // Check if the factory produced the same sets as we produced manually here:
+  ok &= nn0 == nn0t;
+  ok &= nn1 == nn1t;
+  ok &= nn2 == s2;
+  ok &= nn3 == s3;
 
 
   rsAssert(ok);

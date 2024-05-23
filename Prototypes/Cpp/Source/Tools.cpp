@@ -7692,6 +7692,10 @@ public:
   // -predecessor - just takes the set and removes the last element - or triggers an error 
   //  when there are no elements
   // -Implement add using the successor and predecessor function.
+  // -implement a function isNeumannNumber or isWellFormed. It may look at the number of elements, 
+  //  create the corresponding Neumann number and compare it to the input
+  // -Explain why we operate on the baseclass objects - we do it to have access to the static 
+  //  baseclass functions
 
 };
 
@@ -7699,8 +7703,6 @@ public:
 rsSetNaive rsNeumannNumber::successor(const rsSetNaive& A)
 {
   return unionSet(A, singleton(A));
-
-
 }
 
 rsSetNaive rsNeumannNumber::create(size_t i)

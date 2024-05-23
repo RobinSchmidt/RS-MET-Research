@@ -7484,9 +7484,6 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-  /** Returns the i-th element of this set. */
-  rsSetNaive getElement(size_t i) const;
-
   /** Returns the cardinality, i.e. the number of elements of this set. */
   size_t getCardinality() const { return elements.size(); }
   // maybe rename to size (or make an alias)
@@ -7514,10 +7511,25 @@ public:
   bool isOrderedPair() const;
 
 
-  //rsSetNai
+  //-----------------------------------------------------------------------------------------------
+  // \name Element Access
 
+  /** Returns the i-th element of this set. */
+  rsSetNaive getElement(size_t i) const;
+
+  rsSetNaive orderedPairFirst() const;
+
+  rsSetNaive orderedPairSecond() const;
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Element Misc
 
   size_t getMemoryUsage() const;
+
+
+  //
+  // rsSetNaive
 
 
   //-----------------------------------------------------------------------------------------------
@@ -7642,13 +7654,6 @@ void rsSetNaive::addElement(const rsSetNaive& a)
     elements.push_back(a.getCopy());
 }
 
-rsSetNaive rsSetNaive::getElement(size_t i) const
-{
-  rsAssert(i < elements.size(), "Invalid element index");
-  rsSetNaive e = *(elements[i]); // Calls copy contructor rsSetNaive(const rsSetNaive& A)
-  return e;
-  // Why does it not call the move-assignment operator? Or does it?
-}
 
 bool rsSetNaive::hasElement(const rsSetNaive& a) const
 {
@@ -7702,6 +7707,33 @@ bool rsSetNaive::equals(const rsSetNaive& A) const
   // -We cannot just iterate through the elements of *this and A and compare one by one because the
   //  elements may be in a different order
 }
+
+
+rsSetNaive rsSetNaive::getElement(size_t i) const
+{
+  rsAssert(i < elements.size(), "Invalid element index");
+  rsSetNaive e = *(elements[i]); // Calls copy contructor rsSetNaive(const rsSetNaive& A)
+  return e;
+  // Why does it not call the move-assignment operator? Or does it?
+}
+
+
+
+rsSetNaive rsSetNaive::orderedPairFirst() const
+{
+  rsAssert(isOrderedPair());
+  return elements[0]->getElement(0);
+}
+
+rsSetNaive rsSetNaive::orderedPairSecond() const
+{
+  rsAssert(isOrderedPair());
+  if(getCardinality() == 2)
+    return elements[1]->getElement(1);
+  else
+    return elements[0]->getElement(0);
+}
+
 
 size_t rsSetNaive::getMemoryUsage() const
 {

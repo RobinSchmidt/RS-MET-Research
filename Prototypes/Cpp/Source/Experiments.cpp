@@ -10577,6 +10577,7 @@ void testSet()
   // In this block, names like AB, ABC mean tuples:
   {
     // Now let's create a couple of ordered pairs and verify that they are all different:
+    Set AA = Set::orderedPair(A, A);
     Set AB = Set::orderedPair(A, B);
     Set BA = Set::orderedPair(B, A);
     Set AC = Set::orderedPair(A, C);
@@ -10588,6 +10589,20 @@ void testSet()
     ok &= BA != AC;
     ok &= BA != CA;
     ok &= AC != CA;
+
+    // Retrieve 1st and 2nd components:
+    Set S;
+    S = AB.orderedPairFirst();
+    ok &= S == A;
+    S = AB.orderedPairSecond();
+    ok &= S == B;
+
+    S = AA.orderedPairFirst();
+    ok &= S == A;
+    S = AA.orderedPairSecond();
+    ok &= S == A;
+
+
 
     // Let's create some 3-tuples:
     auto orderedTriple = [](const rsSetNaive& A, const rsSetNaive& B, const rsSetNaive& C)

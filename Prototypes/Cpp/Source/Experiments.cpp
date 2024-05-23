@@ -10889,7 +10889,8 @@ void testNeumannNumbers()
     memUse[i] = s.getMemoryUsage();
   }
   //rsPlotVector(memUse);  // Looks exponential which is as expected
-  // I think, the growth function is f(n) = 32 * 2^n 
+  // I think, the growth function is f(n) = 32 * 2^n. For machine numbers, that would be a constant
+  // which makes it clear that this is totally impractical
 
 
   rsAssert(ok);
@@ -10926,23 +10927,15 @@ void testNeumannIntegers()
   bool  ok  = true;
 
   // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
-
-
-
-  Set m1 = NI::create(-1);
-
   Set m5 = NI::create(-5);
   Set m4 = NI::create(-4);
   Set m3 = NI::create(-3);
   Set m2 = NI::create(-2);
-
-
+  Set m1 = NI::create(-1);
   //Set p0 = NI::zero();
   //Set p1 = NI::one();
-
   Set p0 = NI::create(0);
   Set p1 = NI::create(1);
-
   Set p2 = NI::create(2);
   Set p3 = NI::create(3);
   Set p4 = NI::create(4);
@@ -10955,9 +10948,6 @@ void testNeumannIntegers()
   ok &= str == "( {O} ; {O,O} )";
   // numerals:  ( {0} ; {0,0} )
 
-  //ok &= str == "( {O} ; {O} )";
-  // numerals:  ( {0} ; {0} )
-
   str = Set::orderedPairToString(p1);
   ok &= str == "( {{O}} ; {{O},O} )";
   // numerals:  ( { 1 } ; { 1, 0} )
@@ -10966,21 +10956,13 @@ void testNeumannIntegers()
   ok &= str == "( {{O,{O}}} ; {{O,{O}},O} )";
   // numerals:  ( {   2   } ; {   2   ,O} )
 
-  //str = Set::setToString(m1);
-  // {{O},{O,{O}}}
-  //   0 ; 0  1
-
   str = Set::orderedPairToString(m1);
-  //ok &= str == "( {{O},O} ; {{O}} )";
   ok &= str == "( {O} ; {O,{O}} )";
   // numerals:  ( {0} ; {0, 1}  )
 
-  //            ( {O} ; {O,{O}} )
-  //            ( {O} ; {O,{O}} )
-
-    
-
-
+  str = Set::orderedPairToString(m2);
+  ok &= str == "( {O} ; {O,{O,{O}}} )";
+  // numerals:  ( {0} ; {0,   2   } )
 
   // Test embedding of Neumann naturals:
   r = NI::embed(NN::create(3));

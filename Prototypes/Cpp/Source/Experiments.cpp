@@ -10598,10 +10598,10 @@ void testSet()
     // ToDo: rename s0 to nn0t (t for target)
 
     // Create the numbers 0..3 again, this time using the factory function:
-    Set nn0 = NN::neumannNumber(0);
-    Set nn1 = NN::neumannNumber(1);
-    Set nn2 = NN::neumannNumber(2);
-    Set nn3 = NN::neumannNumber(3);
+    Set nn0 = NN::create(0);
+    Set nn1 = NN::create(1);
+    Set nn2 = NN::create(2);
+    Set nn3 = NN::create(3);
 
     // Check if the factory produced the same sets as we produced manually here:
     ok &= nn0 == nn0t;

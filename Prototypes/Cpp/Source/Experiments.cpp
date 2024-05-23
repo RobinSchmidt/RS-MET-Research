@@ -10929,11 +10929,13 @@ void testNeumannIntegers()
 
 
 
+  Set m1 = NI::create(-1);
+
   Set m5 = NI::create(-5);
   Set m4 = NI::create(-4);
   Set m3 = NI::create(-3);
   Set m2 = NI::create(-2);
-  Set m1 = NI::create(-1);
+
 
   //Set p0 = NI::zero();
   //Set p1 = NI::one();
@@ -10950,10 +10952,13 @@ void testNeumannIntegers()
 
   std::string str;
   str = Set::orderedPairToString(p0);
-  ok &= str == "( {O} ; {O} )";
+  ok &= str == "( {O} ; {O,O} )";
+  // numerals:  ( {0} ; {0,0} )
+
+  //ok &= str == "( {O} ; {O} )";
+  // numerals:  ( {0} ; {0} )
 
   str = Set::orderedPairToString(p1);
-  //ok &= str == "( {{O}} ; {O,{{O}}} )";
   ok &= str == "( {{O}} ; {{O},O} )";
   // numerals:  ( { 1 } ; { 1, 0} )
 
@@ -10961,14 +10966,19 @@ void testNeumannIntegers()
   ok &= str == "( {{O,{O}}} ; {{O,{O}},O} )";
   // numerals:  ( {   2   } ; {   2   ,O} )
 
+  //str = Set::setToString(m1);
+  // {{O},{O,{O}}}
+  //   0 ; 0  1
 
-  str = Set::orderedPairToString(p1);
-  ok &= str == "( {{O}} ; {O} )";
-  // FAILS! Is  ( {{O}} ; {{O},O} )  i.e. (1,2)
+  str = Set::orderedPairToString(m1);
+  //ok &= str == "( {{O},O} ; {{O}} )";
+  ok &= str == "( {O} ; {O,{O}} )";
+  // numerals:  ( {0} ; {0, 1}  )
 
+  //            ( {O} ; {O,{O}} )
+  //            ( {O} ; {O,{O}} )
 
     
-  str = Set::orderedPairToString(p0);
 
 
 

@@ -7733,23 +7733,26 @@ std::string rsSetNaive::orderedPairToString(const rsSetNaive& A)
 
   str += "( ";
 
-  str += setToString(A[0]);
-
+  //str += setToString(A[0]);
 
   //str += " ; ";
   //str += setToString(A[1]);
 
 
-  if(A.getCardinality() == 2)
-    str += " ; " + setToString(A[1]);   // A = (x, y)
-  else
-    str += " ; " + setToString(A[0]);   // A = (x, x)
-
+  //if(A.getCardinality() == 2)
+  //  str += " ; " + setToString(A[1]);   // A = (x, y)
+  //else
+  //  str += " ; " + setToString(A[0]);   // A = (x, x)
 
   //str += setToString(A.orderedPairFirst());
-  //str += ",";
+  //str += " ; ";
   //str += setToString(A.orderedPairSecond());
 
+  rsSetNaive x = A.orderedPairFirst();
+  rsSetNaive y = A.orderedPairSecond();
+
+  str += "{" + setToString(x) + "}" + " ; ";
+  str += "{" + setToString(x) + "," + setToString(y) + "}";
 
   str += " )";
   return str;

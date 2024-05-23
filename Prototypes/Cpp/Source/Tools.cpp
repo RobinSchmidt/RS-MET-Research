@@ -7676,17 +7676,37 @@ class rsNeumannNumber : public rsSetNaive
 public:
 
   //-----------------------------------------------------------------------------------------------
-  // \name Factory
+  // \name Inquiry
 
+  /** Checks whether or not the given set is a well formed von Neumann number. */
+  static bool isWellFormed(const rsSetNaive& A);
+  // The test is rather expensive because it internally creates a reference/target set to compare
+  // the input set to
+
+  /** Returns the value of a given von Neumann number represented by the set A. It is equal to the 
+  cardinality of the set that represents it. */
+  static size_t value(const rsSetNaive& A); 
+  // I may like to add an rsAssert(isWellFormed(A)) - but that would lead us into an infinite 
+  // recursion because isWellFormed calls value(). We could avoid that by calling getCardinality 
+  // directly - but that would uglify the code
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Factory
 
   /** Given a set A representing a natural number according to the von Neumann construction, this 
   function creates its successor. */
   static rsSetNaive successor(const rsSetNaive& A);
-  // rename to successor
+
+  /** Given a set A representing a natural number strictly greater than zero, this function creates 
+  its predecessor. If you feed in zero by mistake, it will trigger rsError and return the empty 
+  set. */
+  static rsSetNaive predecessor(const rsSetNaive& A);
+
+
 
   /** Creates the set that represents the natural number i in the von Neumann construction. */
   static rsSetNaive create(size_t i);
-  // rename to create
 
   // ToDo:
   // -predecessor - just takes the set and removes the last element - or triggers an error 
@@ -7699,10 +7719,49 @@ public:
 
 };
 
+bool rsNeumannNumber::isWellFormed(const rsSetNaive& A)
+{
+  //rsSetNaive target = create(value(A));  // Nope! Calling value() leads to infinite recursion!
+  rsSetNaive target = create(A.getCardinality());
+  return A.equals(target);
+}
+
+size_t rsNeumannNumber::value(const rsSetNaive& A) 
+{ 
+  rsAssert(isWellFormed(A));
+  return A.getCardinality(); 
+}
 
 rsSetNaive rsNeumannNumber::successor(const rsSetNaive& A)
 {
   return unionSet(A, singleton(A));
+
+  // Notes:
+  //
+  // -The operations to form a union and a singleton are allowed by the ZFC axioms. The formation of
+  //  the singleton { A } can be see a special case of a pair { A, A } although it's implemented
+  //  differently.
+}
+
+rsSetNaive rsNeumannNumber::predecessor(const rsSetNaive& A)
+{
+  //rsAssert(!A.isEmpty(), "Zero has no predecessor!");
+
+  if(A.isEmpty())
+  {
+    rsError("Zero has no predecessor!");
+    return A;                              // Return the empty set
+  }
+  return create(value(A) - 1);
+
+  // Notes:
+  //
+  // -I'm actually not sure, if/how the construction implemented here is allowed by the ZFC axioms.
+  //  We need this predecessor function to implement addition, though.
+  // -A more efficient way to construct the predecessor would be to create a copy of A and remove
+  //  the last element.
+  // -Even more efficient would be to start with an empty set, resize its elements vector to N-1 
+  //  and copy N-1 elements from A.
 }
 
 rsSetNaive rsNeumannNumber::create(size_t i)

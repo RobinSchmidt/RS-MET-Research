@@ -10557,7 +10557,7 @@ void testSet()
 
   // ToDo:
   //
-  // - Implement and test union, intersection, pair, orderPair, product, etc.
+  // - Implement and test union, intersection, pair, orderedPair, product, etc.
   // - Include a memleak check. 
   //
   // See:
@@ -10603,11 +10603,14 @@ void testNeumannNumbers()
   ok &= s3.hasElement(t1);
   ok &= s3.hasElement(s2);
 
-  // Create the numbers 0..3 again, this time using the factory function:
+  // Create the numbers 0..6, this time using the factory function:
   Set n0 = NN::create(0);
   Set n1 = NN::create(1);
   Set n2 = NN::create(2);
   Set n3 = NN::create(3);
+  Set n4 = NN::create(4);
+  Set n5 = NN::create(5);
+  Set n6 = NN::create(6);
 
   // Check if the factory produced the same sets as we produced manually here:
   ok &= n0 == t0;
@@ -10617,13 +10620,19 @@ void testNeumannNumbers()
 
   // Test addition:
   Set r;
-  r = NN::sum(n0, n0); ok &= r == n0;   // 0 + 0 = 0
-  r = NN::sum(n1, n0); ok &= r == n1;   // 1 + 0 = 1
-  r = NN::sum(n0, n1); ok &= r == n1;   // 0 + 1 = 1
-  r = NN::sum(n1, n1); ok &= r == n2;   // 1 + 1 = 2
-  r = NN::sum(n1, n2); ok &= r == n3;   // 1 + 2 = 3
-  r = NN::sum(n2, n1); ok &= r == n3;   // 2 + 1 = 3
+  r = NN::sum(n0, n0);     ok &= r == n0;   // 0 + 0 = 0
+  r = NN::sum(n1, n0);     ok &= r == n1;   // 1 + 0 = 1
+  r = NN::sum(n0, n1);     ok &= r == n1;   // 0 + 1 = 1
+  r = NN::sum(n1, n1);     ok &= r == n2;   // 1 + 1 = 2
+  r = NN::sum(n1, n2);     ok &= r == n3;   // 1 + 2 = 3
+  r = NN::sum(n2, n1);     ok &= r == n3;   // 2 + 1 = 3
 
+  // Test multiplication:
+  r = NN::product(n2, n0); ok &= r == n0;   // 2 * 0 = 0
+  r = NN::product(n2, n1); ok &= r == n2;   // 2 * 1 = 2
+  r = NN::product(n1, n2); ok &= r == n2;   // 1 * 2 = 2
+  r = NN::product(n2, n3); ok &= r == n6;   // 2 * 3 = 6
+  r = NN::product(n3, n2); ok &= r == n6;   // 3 * 2 = 6
 
   rsAssert(ok);
 
@@ -10635,6 +10644,15 @@ void testNeumannNumbers()
   // -These classes should have a == operator that uses an equivalence relation internally, i.e.
   //  does not compare the sets for equality but only for equivalence (which is a weaker form
   //  of equality)
+  // -Maybe implement exponentiation - define it terms of multplication in a similar way as 
+  //  multiplication is implemented via addition
+  //
+  // Questions:
+  //
+  // -How fast does the memory usage grow with n for the Nuemann numbers? I think, it might be 
+  //  exponentially? Document this. 
+  // -What about the time complexity for the operations? Might this be even worse than the space
+  //  complexity?
 }
 
 

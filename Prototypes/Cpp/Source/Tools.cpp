@@ -7662,12 +7662,33 @@ rsSetNaive* rsSetNaive::getCopy() const
 //=================================================================================================
 
 /** Implements the von Neumann construction of the natural numbers based on sets. The sets are 
-represented using the class rsSetNaive.
+represented using the class rsSetNaive. In the von Neuman construction, the number zero is 
+represented by the empty set and higher numbers are defined recursively via a successor function
+s(n) 
+
+  s(n) = unionSet(n, singleton(n))
+
+This construction leads to the following situation:
+
+  n = { 0, 1, 2, 3, ..., n-1 }
+
+such that the cardinality of the set that represents the number n is precisely n, which is 
+convenient. The first few numbers are:
+
+  0 = { }
+  1 = { 0 }       = { {} }
+  2 = { 0, 1 }    = { {}, {{}} }
+  3 = { 0, 1, 2 } = { {}, {{}}, { {}, {{}} }  }  ...verify this!
+
+As can be seen, when expanding the sets fully, it gets messy rather quickly. I think, the size 
+grows exponentially (verify!).
+
 
 References:
 
   (1) https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers  
- 
+  (2) https://cs.uwaterloo.ca/~alopez-o/math-faq/math-faq.pdf  pg 9 ff
+
 */
 
 class rsNeumannNumber : public rsSetNaive
@@ -7675,43 +7696,77 @@ class rsNeumannNumber : public rsSetNaive
 
 public:
 
+  // maybe use x,y instead of A,B for the variables
+
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-  /** Checks whether or not the given set is a well formed von Neumann number. */
-  static bool isWellFormed(const rsSetNaive& A);
+  /** Checks whether or not the given set x is a well formed von Neumann number. */
+  static bool isWellFormed(const rsSetNaive& x);
   // The test is rather expensive because it internally creates a reference/target set to compare
   // the input set to
 
-  /** Checks, if the given set represents zero. In the von Neumann construction, zero is 
+  /** Checks, if the given set x represents zero. In the von Neumann construction, zero is 
   represented by the empty set. */
-  static bool isZero(const rsSetNaive& A) { return A.isEmpty(); }
+  static bool isZero(const rsSetNaive& x) { return x.isEmpty(); }
 
-  /** Returns the value of a given von Neumann number represented by the set A. It is equal to the 
+  /** Returns the value of a given von Neumann number represented by the set x. It is equal to the 
   cardinality of the set that represents it. */
-  static size_t value(const rsSetNaive& A); 
+  static size_t value(const rsSetNaive& x); 
 
 
 
   //-----------------------------------------------------------------------------------------------
   // \name Factory
 
-  /** Creates the set that represents the natural number i in the von Neumann construction. */
-  static rsSetNaive create(size_t i);
+  /** Returns the set that represents zero in the von Neumann construction. This is the empty 
+  set. */
+  static rsSetNaive zero() { return rsSetNaive(); }
 
-  /** Given a set A representing a natural number according to the von Neumann construction, this 
+  /** Returns the set that represents zero in the von Neumann construction. This is the set that
+  contains only 0. */
+  static rsSetNaive one() { return singleton(zero()); }
+
+  // Maybe add a function to produce one - maybe as singleton(zero())
+
+  /** Creates the set that represents the natural number n in the von Neumann construction. The 
+  construction works out as n = { 0, 1, 2, 3, ..., n-1 }
+  
+  */
+  static rsSetNaive create(size_t n);
+
+  /** Given a set x representing a natural number according to the von Neumann construction, this 
   function creates its successor. */
-  static rsSetNaive successor(const rsSetNaive& A);
+  static rsSetNaive successor(const rsSetNaive& x);
 
-  /** Given a set A representing a natural number strictly greater than zero, this function creates 
+  /** Given a set x representing a natural number strictly greater than zero, this function creates 
   its predecessor. If you feed in zero by mistake, it will trigger rsError and return the empty 
   set. */
-  static rsSetNaive predecessor(const rsSetNaive& A);
+  static rsSetNaive predecessor(const rsSetNaive& x);
 
-  /** Computes the sum of A and B. */
-  static rsSetNaive sum(const rsSetNaive& A, const rsSetNaive& B);
+  /** Computes the sum of x and y. Using s() as the successor function, it is defined as:
+
+    x + y    = x           if y == 0
+    x + s(y) = s(x + y)    if y != 0
+
+  See (2). In order to actually implement it, we actually need a predecessor function rather than a
+  successor function. */
+  static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
+
+  /** Computes the product of x and y. It is defined as:
+
+    x * y    = 0           if y == 0
+    x * s(y) = x * y + x   if y != 0 
+
+  See (2). So, it is defined recursively using addition internally. */
+  static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
 
 
+  //static rsSetNaive power(const rsSetNaive& x, const rsSetNaive& y);
+
+
+  // x ^ y    = 1          if y == 0
+  // x ^ s(y) = x ^ y * x  if y != 0
 
 
   // ToDo:
@@ -7786,6 +7841,13 @@ rsSetNaive rsNeumannNumber::sum(const rsSetNaive& A, const rsSetNaive& B)
     return successor(sum(A, predecessor(B)));
 }
 
+rsSetNaive rsNeumannNumber::product(const rsSetNaive& A, const rsSetNaive& B)
+{
+  if(isZero(B))
+    return zero();
+  else
+    return sum(product(A, predecessor(B)), A);
+}
 
 
 

@@ -7510,6 +7510,9 @@ public:
   the set. */
   bool isOrderedPair() const;
 
+  /** Returns a string that represents this set. This is useful for debugging. */
+  static std::string setToString(const rsSetNaive& A);
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Element Access
@@ -7697,6 +7700,26 @@ bool rsSetNaive::isOrderedPair() const
   else
     return false;
 }
+
+std::string rsSetNaive::setToString(const rsSetNaive& A)
+{
+  if(A.isEmpty())
+    return "O";
+  else
+  {
+    std::string str = "{";
+    size_t N = A.getCardinality();
+    for(size_t i = 0; i < N; i++)
+    {
+      str += setToString(A[i]);
+      if(i < N-1)
+        str += ",";
+    }
+    str += "}";
+    return str;
+  }
+}
+
 
 bool rsSetNaive::equals(const rsSetNaive& A) const
 {
@@ -8091,9 +8114,15 @@ public:
 
   static rsSetNaive negative(const rsSetNaive& x);
 
+  static rsSetNaive canonical(const rsSetNaive& x);
+
 
 
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
+
+
+
+
 
 
   //static rsSetNaive diff(const rsSetNaive& x, const rsSetNaive& y);
@@ -8146,6 +8175,13 @@ rsSetNaive rsNeumannInteger::negative(const rsSetNaive& x)
   rsSetNaive a, b;
   split(x, a, b);
   return orderedPair(b, a);  // -(a, b) = (b, a)
+}
+
+rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
+{
+  rsSetNaive a, b;
+  split(x, a, b);
+  return orderedPair(sum(a, negative(b)), zero());
 }
 
 rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)

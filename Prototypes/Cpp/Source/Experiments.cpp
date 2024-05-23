@@ -10747,9 +10747,11 @@ void testSet()
 
 void printSet(const rsSetNaive& x)
 {
+  std::cout << rsSetNaive::setToString(x);
+
+  /*
   if(x.isEmpty())
     std::cout << "O";
-    //std::cout << "{}";
   else
   {
     std::cout << '{';
@@ -10762,6 +10764,7 @@ void printSet(const rsSetNaive& x)
     }
     std::cout << '}';
   }
+  */
 }
 
 void printOrderedPair(const rsSetNaive& x)
@@ -10824,8 +10827,6 @@ void testNeumannNumbers()
   Set n7 = NN::create(7);
   Set n8 = NN::create(8);
   Set n9 = NN::create(9);
-
-
 
 
   // Print the first 5 Neumann numbers:
@@ -10960,8 +10961,15 @@ void testNeumannIntegers()
   auto LF = []() { std::cout << '\n'; };  // Line feed helper function
   //printSet(p0); LF();                     // {{O}}
   //printSet(r);  LF();                     // {{{O,{O}}}}
-  //printOrderedPair(p0); LF();             // (O,O)             == (0, 0)
-  //printOrderedPair(r);  LF();             // ({O,{O}},{O,{O}}) == (2, 2)
+  printOrderedPair(p0); LF();             // (O,O)             == (0, 0)
+  printOrderedPair(r);  LF();             // ({O,{O}},{O,{O}}) == (2, 2)
+  // Shouldn't it be ({O},{O})  
+
+  // Test canonicalization:
+  //r   = NI::canonical(r);    // Canonicalize - makes 2nd component zero
+  //ok &= r == p0;             // Now r and p0 are not only equivalent but equal
+  // Access violation! I think, it is because I assume the ordered pair to be in the form
+  // (x, y) = { { x }, { x, y } } but maybe it can be also of the form { { x, y }, { x } }
 
   // 5 + -2 = 3:
   r   = NI::sum(p5, m2);
@@ -10969,7 +10977,9 @@ void testNeumannIntegers()
   v2  = NI::value(p3);
   ok &= v1 == 3;
   ok &= v2 == 3;
-  ok &= NI::equals(r, p3);  
+  ok &= NI::equals(r, p3);
+  //r   = NI::canonical(r);  // Access violation!
+  //ok &= r == p3;
 
   // 3 + -5 = -2:
   r   = NI::sum(p3, m5);
@@ -10977,13 +10987,15 @@ void testNeumannIntegers()
   v2  = NI::value(m2);
   ok &= v1 == -2;
   ok &= v2 == -2;
-  ok &= NI::equals(r, m2);  
+  ok &= NI::equals(r, m2);
 
 
   rsAssert(ok);
 
   // ToDo:
   //
+  // -Factor out a function that produces a std::string from the printing functions. Then use it in
+  //  unit tests. Maybe setToString, orderedPairToString
   // -Implement a canonicalize() function that makes the 2nd component zero. Although, memory-wise, 
   //  it would be more desirable to keep the sum as close to zero as possible. (6,0) will need more
   //  memory than (3,3) because 2^6 + 2^0 > 2^3 + 2^3

@@ -7423,9 +7423,15 @@ protected:
 
 //=================================================================================================
 
-/** Implements a set in the set theoretic sense. Its elements can only be other sets. It's a 
-recursive data structure (similar to a tree) with sets all the way down. The implementation is just 
-for proof/demonstration of set theoretical concepts and entirely unpractical ...TBC... */
+/** Implements a set in the set-theoretic sense. Its elements can only be other sets. It's a 
+recursive data structure with sets all the way down. For technical reasons, the elements must be 
+held as pointers-to-elements which complicates the internal implementation but client code does not
+really need to think about this. The implementation is similar to how would one implement a tree in
+C++ made up from nodes where each node has an array of pointers to child nodes. The implementation 
+is just for proof/demonstration of set theoretical concepts and entirely unpractical.
+
+
+...TBC... */
 
 class rsSetNaive
 {
@@ -7456,16 +7462,10 @@ public:
     A.elements.clear(); 
     return *this;
   }
+  // Move out of class
 
 
   ~rsSetNaive();
-
-
-
-
-
-
-  // ToDo: Copy/Move contructor/assignment
 
 
   //-----------------------------------------------------------------------------------------------
@@ -7483,12 +7483,15 @@ public:
 
   /** Returns the cardinality, i.e. the number of elements of this set. */
   size_t getCardinality() const { return elements.size(); }
+  // maybe rename to size (or make an alias)
 
   /** Returns true, iff this set is the empty set */
   bool isEmpty() const { return elements.size() == 0; }
 
   /** Returns true iff this set has the given set A as element. */
   bool hasElement(const rsSetNaive& a) const;
+  // Maybe rename to contains - but no - that's ambiguous - it could also refer to the subset 
+  // relation
 
   /** Returns true iff this set has the given set A as subset. */
   bool hasSubset(const rsSetNaive& A) const;
@@ -7507,6 +7510,19 @@ public:
   A as its only element. */
   static rsSetNaive singleton(const rsSetNaive& A);
 
+  /** Given two sets A and B, this function produces the union of the two. */
+  static rsSetNaive unionSet(const rsSetNaive& A, const rsSetNaive& B);
+  // Needs test
+  // Being able to create such a union set is one of the Zermelo-Fraenkel axioms (verify!)
+
+
+  /** Given two sets A and B, this function produces the intersection of the two. */
+  //static rsSetNaive intersectionSet(const rsSetNaive& A, const rsSetNaive& B);
+
+  // ToDo: differenceSet, symmetricDifferenceSet, pair, orderedPair
+
+
+
   /** Given a set A representing a natural number according to the von Neumann construction, this 
   function creates its successor. */
   static rsSetNaive neumannSuccessor(const rsSetNaive& A);
@@ -7516,12 +7532,30 @@ public:
 
   /** Creates the set that represents the natural number i in the von Neumann construction. */
   static rsSetNaive makeNeumannNumber(size_t i);
+  // rename to neumannNumber
 
 
 
 
   bool operator==(const rsSetNaive& rhs) const { return equals(rhs); }
 
+  bool operator!=(const rsSetNaive& rhs) const { return !equals(rhs); }
+
+
+  /** Returns a copy of the i-th element. */
+  //rsSetNaive operator[](size_t i) const { return getElement(i); }
+  // May not be needed?
+
+  /** Returns a reference to the i-th element. */
+  rsSetNaive& operator[](size_t i) 
+  { 
+    return *(elements[i]); 
+  }
+  // needs test
+
+
+  const rsSetNaive& operator[](size_t i) const { return *(elements[i]);  }
+  // Is this needed? ..yes - it's called from unionSet, for example
 
 
 protected:
@@ -7614,17 +7648,36 @@ rsSetNaive rsSetNaive::singleton(const rsSetNaive& A)
   return S;
 }
 
+rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
+{
+  // Use copy constructor to init U to be equal to A and then add those elements from B to U that 
+  // are not present in A:
+  rsSetNaive U(A);
+  for(size_t i = 0; i < B.getCardinality(); i++)
+    if(!A.hasElement(B[i]))
+      U.addElement(B[i]);
+  return U;
+}
+
 rsSetNaive rsSetNaive::neumannSuccessor(const rsSetNaive& A)
 {
-  rsSetNaive S = A;
-  S.addElement(A);
-  return S;
+  return unionSet(A, singleton(A));
+
+  // Alternative (not yet tested);
+  //rsSetNaive S = A;
+  //S.addElement(A);
+  //return S;
 }
 
 rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
 {
   if(i == 0)
     return rsSetNaive();
+  else
+    return neumannSuccessor(makeNeumannNumber(i-1));
+
+
+  /*
   else if(i == 1)  // verify if needed
   {
     rsSetNaive A = makeNeumannNumber(0);
@@ -7643,7 +7696,8 @@ rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
       A.elements[i-j] = tmp.getCopy();
     }
     return A;
-
+  }
+  */
 
 
     //A.addElement(makeNeumannNumber(i-1));
@@ -7659,7 +7713,8 @@ rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
     // Verify this!
     // We get an access violation. I think, we need to implement copy-constructor, etc. in order to
     // create deep copies
-  }
+
+
 }
 
 

@@ -10532,11 +10532,22 @@ void testSet()
   Set singletonEmpty;
   singletonEmpty.addElement(empty);
   ok &= singletonEmpty.getCardinality() == 1;
-  Set tmp = singletonEmpty.getElement(0);
-  ok &= tmp.equals(empty);
-  ok &= empty.equals(tmp);
-  ok &= tmp == empty;
-  ok &= empty ==  tmp;
+  ok &= singletonEmpty.hasElement(empty);
+
+  // Test retrieving the element via getElement and [] operator:
+  Set temp1 = singletonEmpty.getElement(0);
+  ok &= temp1.equals(empty);
+  ok &= empty.equals(temp1);
+  ok &= temp1 == empty;
+  ok &= empty == temp1;
+  Set temp2 = singletonEmpty[0];
+  ok &= temp2 == temp1;
+  // ToDo: test the version of the [] operator that returns a reference - oh it looks like this is 
+  // the one that gets called anyway
+
+  ok &= singletonEmpty != empty;
+
+
 
 
 

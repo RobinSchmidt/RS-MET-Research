@@ -10687,7 +10687,13 @@ void testSet()
     // Test the cartesian product:
     A = Set({ n1, n2, n3 });  // A = { 1, 2, 3 }
     B = Set({ n3, n4 });      // B = { 3, 4    }
-
+    Set AxB = Set::product(A, B);
+    auto p = [](const rsSetNaive& A, const rsSetNaive& B)
+    {
+      return Set::orderedPair(A, B);
+    };
+    T = Set({ p(n1,n3), p(n1,n4), p(n2,n3), p(n2,n4),  p(n3,n3), p(n3,n4)});
+    ok &= AxB == T;
 
 
   }

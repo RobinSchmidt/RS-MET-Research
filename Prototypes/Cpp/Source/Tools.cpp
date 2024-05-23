@@ -7558,7 +7558,7 @@ public:
 
   static rsSetNaive symmetricDifference(const rsSetNaive& A, const rsSetNaive& B);
 
-
+  static rsSetNaive product(const rsSetNaive& A, const rsSetNaive& B);
 
   // ToDo: differenceSet, symmetricDifferenceSet,
 
@@ -7751,6 +7751,15 @@ rsSetNaive rsSetNaive::symmetricDifference(const rsSetNaive& A, const rsSetNaive
     if(!B.hasElement(A[i]))
       D.addElement(A[i]);
   return D;
+}
+
+rsSetNaive rsSetNaive::product(const rsSetNaive& A, const rsSetNaive& B)
+{
+  rsSetNaive P;
+  for(int i = 0; i < A.getCardinality(); i++)
+    for(int j = 0; j < B.getCardinality(); j++)
+      P.addElement(orderedPair(A[i], B[j]));
+  return P;
 }
 
 rsSetNaive* rsSetNaive::getCopy() const

@@ -10626,8 +10626,20 @@ void testSet()
   // https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
   // https://en.wikipedia.org/wiki/Von_Neumann_universe
 
-  int dummy = 0;
+
+  rsAssert(ok);
 }
+
+void testNeumannNumbers()
+{
+  using NN = rsNeumannNumber;
+  bool  ok = true;
+
+
+
+  rsAssert(ok);
+}
+
 
 void testGeneralizedCollatz()
 {

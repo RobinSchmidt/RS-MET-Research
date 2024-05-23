@@ -7440,6 +7440,9 @@ public:
   /** Default constructor. Creates the empty set. */
   rsSetNaive() {}
 
+
+  rsSetNaive(const std::vector<rsSetNaive>& s);
+
   /** Copy constructor.  */
   rsSetNaive(const rsSetNaive& A);
 
@@ -7517,15 +7520,6 @@ public:
   to create such a pair is one of the Zermelo-Fraenkel axioms. */
   static rsSetNaive pair(const rsSetNaive& A, const rsSetNaive& B);
 
-  /** Given two sets A and B, this function produces the union of the two. Being able to create 
-  such a union set is one of the Zermelo-Fraenkel axioms. */
-  static rsSetNaive unionSet(const rsSetNaive& A, const rsSetNaive& B);
-
-  /** Given two sets A and B, this function produces the intersection of the two. */
-  //static rsSetNaive intersectionSet(const rsSetNaive& A, const rsSetNaive& B);
-
-  // ToDo: differenceSet, symmetricDifferenceSet, pair, orderedPair
-
   /** Given two sets A,B, this function creates a set that may be used to represent the ordered 
   pair (A, B). The normal pair() function could distinguish between { A, B } and { B, A } and a 
   pair of equal values like { A, A } could not even be formed because it would just collapse to 
@@ -7541,19 +7535,30 @@ public:
   
     (A_1, A_2, ..., A_n) = ((A_1, A_2, ..., A_{n-1}), A_n)
     
-  Other definitions of ordered pairs are also possible. ...TBC... */
+  Other definitions of ordered pairs are also possible but Kuratowski's seems to be the accepted 
+  standard. ...TBC... */
   static rsSetNaive orderedPair(const rsSetNaive& A, const rsSetNaive& B);
   // Maybe rename to kuratowskiPair
-  // With this definition, we can form n-tuples recursively. Hausdorff's definition:
-  // (A, B) = { {A, 1}, {B, 2} } might be more convenient for n-tuples because the "tags" can be
-  // generalized. But it has the potential problem that the tags should be distiguished from the 
-  // components. What if we want to use von neumann numbers for the tags as well as form the 
-  // components?
- 
-  // See:
-  // https://en.wikipedia.org/wiki/Axiom_of_pairing
-  // https://en.wikipedia.org/wiki/Ordered_pair#Defining_the_ordered_pair_using_set_theory
-  // 
+
+  /** Given two sets A and B, this function produces the union of the two. Being able to create 
+  such a union set is one of the Zermelo-Fraenkel axioms. */
+  static rsSetNaive unionSet(const rsSetNaive& A, const rsSetNaive& B);
+  // It would be nice for consistency to call the function just union, but that's not possible 
+  // because union is a C++ keyword
+
+  /** Given two sets A and B, this function produces the intersection of the two which contains 
+  only those elements that are present in both A and B. */
+  static rsSetNaive intersection(const rsSetNaive& A, const rsSetNaive& B);
+
+  /** Given two sets A and B, this function produces the difference A minus B which contains only 
+  those elements from A which are not in B. */
+  static rsSetNaive difference(const rsSetNaive& A, const rsSetNaive& B);
+
+
+
+  // ToDo: differenceSet, symmetricDifferenceSet,
+
+
 
 
 
@@ -7582,6 +7587,13 @@ protected:
   std::vector<rsSetNaive*> elements;
 
 };
+
+
+rsSetNaive::rsSetNaive(const std::vector<rsSetNaive>& s)
+{
+  for(size_t i = 0; i < s.size(); i++)
+    addElement(s[i]);
+}
 
 rsSetNaive::rsSetNaive(const rsSetNaive& A)
 {
@@ -7680,32 +7692,53 @@ rsSetNaive rsSetNaive::pair(const rsSetNaive& A, const rsSetNaive& B)
   return P;
 }
 
-rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
-{
-  // Use copy constructor to init U to be equal to A and then add those elements from B to U that 
-  // are not present in A:
-  rsSetNaive U(A);
-  for(size_t i = 0; i < B.getCardinality(); i++)
-    if(!A.hasElement(B[i]))  // The check is redundant! addElement itself has such a test!
-      U.addElement(B[i]);
-  return U;
-}
-
 rsSetNaive rsSetNaive::orderedPair(const rsSetNaive& A, const rsSetNaive& B)
 {
   return pair(singleton(A), pair(A, B));  // (A, B) = { { A }, { A, B } }
 
   // Notes:
   //
-  // -
-
+  // -Hausdorff's definition: (A, B) = { {A, 1}, {B, 2} } might be more conveniently generalize to 
+  //  n-tuples because the "tags" can be generalized. But it has the potential problem that the tags 
+  //  should be distiguished from the components, e.g. we can't have A == 1, for example. What if we 
+  //  want to use von Neumann numbers for the tags as well as form the components?
+  //
   // See:
   //
+  // https://en.wikipedia.org/wiki/Axiom_of_pairing
   // https://en.wikipedia.org/wiki/Ordered_pair#Kuratowski's_definition
   // https://www.matej-zecevic.de/2022/022/kuratowski-definition-of-ordered-pairs/
   // https://math.stackexchange.com/questions/1767604/please-explain-kuratowski-definition-of-ordered-pairs
 }
 
+
+rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
+{
+  // Use copy constructor to init U to be equal to A and then add those elements from B to U that 
+  // are not present in A:
+  rsSetNaive U(A);
+  for(size_t i = 0; i < B.getCardinality(); i++)
+    U.addElement(B[i]);  // Will add B[i] only if it's not already in U
+  return U;
+}
+
+rsSetNaive rsSetNaive::intersection(const rsSetNaive& A, const rsSetNaive& B)
+{
+  rsSetNaive I;
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    if(B.hasElement(A[i]))
+      I.addElement(A[i]);
+  return I;
+}
+
+rsSetNaive rsSetNaive::difference(const rsSetNaive& A, const rsSetNaive& B)
+{
+  rsSetNaive D;
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    if(!B.hasElement(A[i]))
+      D.addElement(A[i]);
+  return D;
+}
 
 rsSetNaive* rsSetNaive::getCopy() const
 {

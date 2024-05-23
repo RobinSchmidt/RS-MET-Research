@@ -10521,6 +10521,7 @@ void testSet()
   // theoretical construction of the natural numbers), etc.
 
   using Set = rsSetNaive;
+  using NN  = rsNeumannNumber;
   bool  ok  = true;
 
   // Create the empty set {}:
@@ -10567,33 +10568,112 @@ void testSet()
   // assume that the outer and inner D are the same set after that operation. In that sense, D will
   // not include "itself" after the operation even though the code may (falsely) suggest that.
 
-  // Now let's create a couple of ordered pairs and verify that they are all different:
-  Set AB = Set::orderedPair(A, B);
-  Set BA = Set::orderedPair(B, A);
-  Set AC = Set::orderedPair(A, C);
-  Set CA = Set::orderedPair(C, A);
-  ok &= AB != BA;
-  ok &= AB != AC;
-  ok &= AB != CA;
-  ok &= BA != AC;
-  ok &= BA != CA;
-  ok &= AC != CA;
-
-  // Let's create some 3-tuples:
-  auto orderedTriple = [](const rsSetNaive& A, const rsSetNaive& B, const rsSetNaive& C)
+  // In this block, names like AB, ABC mean tuples:
   {
-    return Set::orderedPair(Set::orderedPair(A, B), C);
-  };
-  Set ABC = orderedTriple(A, B, C);
-  Set ACB = orderedTriple(A, C, B);
-  Set BAC = orderedTriple(B, A, C);
-  Set BCA = orderedTriple(B, C, A);
-  Set CAB = orderedTriple(C, A, B);
-  Set CBA = orderedTriple(C, B, A);
+    // Now let's create a couple of ordered pairs and verify that they are all different:
+    Set AB = Set::orderedPair(A, B);
+    Set BA = Set::orderedPair(B, A);
+    Set AC = Set::orderedPair(A, C);
+    Set CA = Set::orderedPair(C, A);
+    ok &= AB != BA;
+    ok &= AB != AC;
+    ok &= AB != CA;
+    ok &= BA != AC;
+    ok &= BA != CA;
+    ok &= AC != CA;
 
-  // They should all be different from one another - we only veryfy this for some of them:
+    // Let's create some 3-tuples:
+    auto orderedTriple = [](const rsSetNaive& A, const rsSetNaive& B, const rsSetNaive& C)
+    {
+      return Set::orderedPair(Set::orderedPair(A, B), C);
+    };
+    Set ABC = orderedTriple(A, B, C);
+    Set ACB = orderedTriple(A, C, B);
+    Set BAC = orderedTriple(B, A, C);
+    Set BCA = orderedTriple(B, C, A);
+    Set CAB = orderedTriple(C, A, B);
+    Set CBA = orderedTriple(C, B, A);
+
+    // They should all be different from one another - we only verify this for some of them:
+    ok &= ABC != ACB;
+    ok &= ABC != BAC;
+    ok &= ABC != BCA;
+    // ...
+  }
+
+  // In this block, a names like AB means a set that contain A and B:
+  {
+    Set AB;
+    AB.addElement(A);
+    AB.addElement(B);
+
+    Set BC;
+    BC.addElement(B);
+    BC.addElement(C);
+
+    Set CB;
+    CB.addElement(C);
+    CB.addElement(B);
+
+    ok &= BC == CB;          // Element order should not matter
+
+    Set ABC;
+    ABC.addElement(A);
+    ABC.addElement(B);
+    ABC.addElement(C);
+
+    Set CBD;
+    CBD.addElement(C);
+    CBD.addElement(B);
+    CBD.addElement(D);
+
+    // Test intersection:
+    Set S;
+    S = Set::intersection(ABC, CBD);
+    ok &= S == BC;
+
+    // Test union:
+    S = Set::unionSet(AB, BC);
+    ok &= S == ABC;
+
+    // Test difference:
+    S = Set::difference(ABC, CBD);
+    ok &= S == Set::singleton(A);
+  }
 
 
+  // Create some von Neumann numbers:
+  Set n0, n1, n2, n3, n4, n5, n6;
+  n0 = NN::create(0);
+  n1 = NN::create(1);
+  n2 = NN::create(2);
+  n3 = NN::create(3);
+  n4 = NN::create(4);
+  n5 = NN::create(5);
+  n6 = NN::create(6);
+
+  {
+    Set A({ n0, n1, n2, n3     });  // A = { 0, 1, 2, 3          }
+    Set B({ n2, n3, n4, n5, n6 });  // B = {       2, 3, 4, 5, 6 }
+
+    // Test intersection:
+    Set S, T;
+    S = Set::intersection(A, B);
+    T = Set( { n2, n3 } );
+    ok &= S == T;
+
+    // Test union:
+    S = Set::unionSet(A, B);
+    T = Set( { n0, n1, n2, n3, n4, n5, n6 } );
+    ok &= S == T;
+
+    // Test difference:
+    S = Set::difference(A, B);
+    T = Set( { n0, n1 } );
+    ok &= S == T;
+
+    int dummy = 0;
+  }
 
 
 
@@ -10601,13 +10681,19 @@ void testSet()
 
   // ToDo:
   //
-  // - Implement and test union, intersection, pair, orderedPair, tuple, product, etc.
-  // - Include a memleak check. 
+  // -Implement and test union, intersection, pair, orderedPair, tuple, product, etc.
+  // -Include a memleak check. 
+  // -Maybe implement a multiset is a similar way. In addElement, we should remove the check
+  //  "if(hasElement(..))" and in equals, we should not just look if the other set hasElement but
+  //  compare, how many instances of the given element both sets have.
+  // -But maybe we could model multisets based on sets as well? But how?
+  // 
   //
   // See:
   //
   // - https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
   // - https://en.wikipedia.org/wiki/Von_Neumann_universe
+
 }
 
 void testNeumannNumbers()

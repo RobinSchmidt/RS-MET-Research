@@ -8045,7 +8045,13 @@ rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
 
 //=================================================================================================
 
-/** Implements integers based on equivalence classes of pairs of von Neumann numbers...TBC... */
+/** Implements integers based on equivalence classes of ordered pairs of von Neumann numbers. The
+pair (x, y) represents the number x - y. The Neumann naturals are embedded by letting y = 0. This
+is similar to how rational numbers are defined as equiavlence classes - there, a pair (x, y) would
+represent x/y and
+
+
+..TBC... */
 
 class rsNeumannInteger : public rsNeumannNumber
 {
@@ -8058,8 +8064,12 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
+
+  static void split(const rsSetNaive& x, rsSetNaive& a, rsSetNaive& b);
+
   /** Implements the equivalence relation...TBC... */
-  //static bool equals(const rsSetNaive& x, const rsSetNaive& y);
+  static bool equals(const rsSetNaive& x, const rsSetNaive& y);
+
 
 
   //-----------------------------------------------------------------------------------------------
@@ -8071,15 +8081,45 @@ public:
 
   static rsSetNaive create(size_t n) { return orderedPair(Base::create(n), Base::zero()); }
 
+  /** Embeds a Neumann natural number x into the Neumann integers by creating the pair (x, 0). */
+  static rsSetNaive embed(const rsSetNaive& x) { return orderedPair(x, Base::zero()); }
+
+  /*
+  static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y)
+  {
+    rsSetNaive p = 
+
+  }
+  */
+
+
 };
 
-/*
+void rsNeumannInteger::split(const rsSetNaive& x, rsSetNaive& a, rsSetNaive& b)
+{
+  a = x.orderedPairFirst();   // x = a-b
+  b = x.orderedPairSecond();
+}
+
 bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
 {
-  //rsNeumannNumber
+  rsSetNaive a, b, c, d, p, q;
+  split(x, a, b);                // decompose x = a - b into a, b
+  split(y, c, d);                // decompose y = c - d into c, d
+  p = Base::sum(a, d);           //   compose p = a + d
+  q = Base::sum(b, c);           //   compose q = b + c
+  return p.equals(q);
 
+  // Notes:
+  //
+  // -The idea is analoguous to how rational numbers p = a/b, q = c/d are equal iff a*d == b*c
+  //
+  // ToDo:
+  // 
+  // -Maybe factor out the computation of p,q. It will be used in the less relation as well
 }
-*/
+
+
 
 
 

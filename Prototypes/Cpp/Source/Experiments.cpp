@@ -10522,114 +10522,48 @@ void testSet()
   using Set = rsSetNaive;
   bool  ok  = true;
 
-  // Block for testing elementary set operations:
-  {
-    // Create the empty set {}:
-    Set empty;
-    ok &= empty.isEmpty();
-    ok &= empty.getCardinality() == 0;
+  // Create the empty set {}:
+  Set empty;
+  ok &= empty.isEmpty();
+  ok &= empty.getCardinality() == 0;
 
-    // Create the singleton set {{}} that contains only the empty set:
-    Set singletonEmpty;
-    singletonEmpty.addElement(empty);
-    ok &= singletonEmpty.getCardinality() == 1;
-    ok &= singletonEmpty.hasElement(empty);
-    ok &= singletonEmpty != empty;
+  // Create the singleton set {{}} that contains only the empty set:
+  Set singletonEmpty;
+  singletonEmpty.addElement(empty);
+  ok &= singletonEmpty.getCardinality() == 1;
+  ok &= singletonEmpty.hasElement(empty);
+  ok &= singletonEmpty != empty;
 
-    // Test retrieving the element via getElement and [] operator:
-    Set temp1 = singletonEmpty.getElement(0);
-    ok &= temp1.equals(empty);
-    ok &= empty.equals(temp1);
-    ok &= temp1 == empty;
-    ok &= empty == temp1;
-    Set temp2 = singletonEmpty[0];
-    ok &= temp2 == temp1;
-    // ToDo: test the version of the [] operator that returns a reference - oh it looks like this is 
-    // the one that gets called anyway
+  // Test retrieving the element via getElement and [] operator:
+  Set temp1 = singletonEmpty.getElement(0);
+  ok &= temp1.equals(empty);
+  ok &= empty.equals(temp1);
+  ok &= temp1 == empty;
+  ok &= empty == temp1;
+  Set temp2 = singletonEmpty[0];
+  ok &= temp2 == temp1;
+  // ToDo: test the version of the [] operator that returns a reference - oh it looks like this is 
+  // the one that gets called anyway
 
-    // Test the singleton factory function:
-    Set temp3 = Set::singleton(empty);
-    ok &= temp3 == singletonEmpty;
+  // Test the singleton factory function:
+  Set temp3 = Set::singleton(empty);
+  ok &= temp3 == singletonEmpty;
 
-    // Test creating the set {{}} as the pair {{},{}}. This should give the same result:
-    Set temp4 = Set::pair(empty, empty);
-    ok &= temp4 == singletonEmpty;
-
-    // ToDo:
-    //
-    // -Implement and test union, intersection, pair, orderPair, product, etc.
-  }
-
-  /*
-  // Block to test operations with von Neumann numbers:
-  {
-    using NN = rsNeumannNumber;
-
-    // Create the natural numbers 0,1,2,3 via the von Neumann construction manually and do some 
-    // checks with the produced sets::
-    Set nn0t;                             // nn statnds for Neumann number, t for target
-    ok &= nn0t.isEmpty();
-    ok &= nn0t.getCardinality() == 0;
-
-    // Create the set that contains the empty se as element. This set corresponds to the number 1:
-    Set nn1t;
-    nn1t.addElement(nn0t);
-    ok &= !nn1t.isEmpty();
-    ok &=  nn1t.getCardinality() == 1;
-    ok &=  nn1t.hasElement(nn0t);
-
-    // Now the set representing the number 2:
-    Set s2;
-    s2.addElement(nn0t);
-    s2.addElement(nn1t);
-    ok &= s2.getCardinality() == 2;
-    ok &= s2.hasElement(nn0t);
-    ok &= s2.hasElement(nn1t);
-
-    // Now the set representing the number 3:
-    Set s3;
-    s3.addElement(nn0t);
-    s3.addElement(nn1t);
-    s3.addElement(s2);
-    ok &= s3.getCardinality() == 3;
-    ok &= s3.hasElement(nn0t);
-    ok &= s3.hasElement(nn1t);
-    ok &= s3.hasElement(s2);
-
-    // ToDo: rename s0 to nn0t (t for target)
-
-    // Create the numbers 0..3 again, this time using the factory function:
-    Set nn0 = NN::create(0);
-    Set nn1 = NN::create(1);
-    Set nn2 = NN::create(2);
-    Set nn3 = NN::create(3);
-
-    // Check if the factory produced the same sets as we produced manually here:
-    ok &= nn0 == nn0t;
-    ok &= nn1 == nn1t;
-    ok &= nn2 == s2;
-    ok &= nn3 == s3;
-
-    // Maybe use t0,t1, ...for the targets and n0,n1,... for the numbers created by the factory
-  }
-  */
-
-  // ToDo: 
-  //
-  // -Include a memleak check. 
-  // -Maybe implement the Neumann numbers as class rsNeumannNumber : public rsSetNaive
-  // -Implement a class rsNeumannInteger that also has negative numbers
-  // -And/or implement rsNeumannPositiveRational
-  // -These classes should have a == operator that uses an equivalence relation internally, i.e.
-  //  does not compare the sets for equality but only for equivalence (which is a weaker form
-  //  of equality)
-
-  // See:
-  // https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
-  // https://en.wikipedia.org/wiki/Von_Neumann_universe
-
+  // Test creating the set {{}} as the pair {{},{}}. This should give the same result:
+  Set temp4 = Set::pair(empty, empty);
+  ok &= temp4 == singletonEmpty;
 
   rsAssert(ok);
+
+  // ToDo:
+  //
+  // - Implement and test union, intersection, pair, orderPair, product, etc.
+  // - Include a memleak check. 
+  //
+  // See:
+  //
+  // - https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
+  // - https://en.wikipedia.org/wiki/Von_Neumann_universe
 }
 
 void testNeumannNumbers()
@@ -10685,6 +10619,15 @@ void testNeumannNumbers()
 
 
   rsAssert(ok);
+
+  // ToDo:
+  //
+  // -Maybe implement the Neumann numbers as class rsNeumannNumber : public rsSetNaive
+  // -Implement a class rsNeumannInteger that also has negative numbers
+  // -And/or implement rsNeumannPositiveRational
+  // -These classes should have a == operator that uses an equivalence relation internally, i.e.
+  //  does not compare the sets for equality but only for equivalence (which is a weaker form
+  //  of equality)
 }
 
 

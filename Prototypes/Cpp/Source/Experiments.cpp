@@ -11015,6 +11015,7 @@ void testNeumannIntegers()
   ok &= v1 == 3;
   ok &= v2 == 3;
   ok &= NI::equals(r, p3);
+  ok &= r.isOrderedPair();
   //r   = NI::canonical(r);  // Access violation!
   //ok &= r == p3;
 

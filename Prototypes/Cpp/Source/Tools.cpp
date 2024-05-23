@@ -7692,16 +7692,53 @@ bool rsSetNaive::isOrderedPair() const
     return isSingleton();
   else if(getCardinality() == 2)                // (x, y) = { { x }, { x, y } }
   {
-    // Investigate the structure:
+    // Investigate the structure. The first element has to be a singleton and the second has to be
+    // a doubleton which contains the inner element of the first element as one of its members:
     if(!elements[0]->isSingleton())
       return false;
     if(!(elements[1]->getCardinality() == 2))
       return false;
     rsSetNaive x = elements[0]->getElement(0);
     return elements[1]->hasElement(x);
+
+
+
+   
+
+    //rsSetNaive x = orderedPairFirst();
+    //rsSetNaive y = orderedPairSecond();
+
+
+    /*
+    // NEW:
+    rsSetNaive x, y;
+    x = elements[0]->getElement(0);
+    if(getCardinality() == 2)
+      y = elements[1]->getElement(1);
+    else
+      y =x;
+    if(!elements[0]->hasElement(x))           return false;
+    if(!(elements[1]->getCardinality() == 2)) return false;  // use hasCardinality(2)
+    if(!elements[1]->hasElement(x))           return false;
+    if(!elements[1]->hasElement(y))           return false;
+    return true;
+    */
+
+
+
+
+    // I think, to destructure the pair, we need to use orderedPairFirst/Second. Nah! That leads
+    // to an infinite mutual recursion
   }
   else
     return false;
+
+  // Notes:
+  //
+  // -Set-theoretically, the order how the singleton and doubleton are stored doesn't matter. 
+  //  However, in the creation of ordered pairs, we adopt the convention to insert the singleton 
+  //  first. So, when ordered pairs are created via that function, we can assume that the 
+  //  singleton is stored first.
 }
 
 std::string rsSetNaive::setToString(const rsSetNaive& A)

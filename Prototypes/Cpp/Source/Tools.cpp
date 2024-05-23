@@ -8083,14 +8083,12 @@ public:
 
   /** Embeds a Neumann natural number x into the Neumann integers by creating the pair (x, 0). */
   static rsSetNaive embed(const rsSetNaive& x) { return orderedPair(x, Base::zero()); }
+  // Needs test
 
-  /*
-  static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y)
-  {
-    rsSetNaive p = 
 
-  }
-  */
+  static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
+
+
 
 
 };
@@ -8117,6 +8115,14 @@ bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
   // ToDo:
   // 
   // -Maybe factor out the computation of p,q. It will be used in the less relation as well
+}
+
+rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
+{
+  rsSetNaive a, b, c, d;
+  split(x, a, b);
+  split(y, c, d);
+  return orderedPair(Base::sum(a, c), Base::sum(b, d));
 }
 
 

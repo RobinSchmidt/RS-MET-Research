@@ -10879,6 +10879,11 @@ void testNeumannIntegers()
   Set i1 = NI::one();
   Set i2 = NI::create(2);
   Set i3 = NI::create(3);
+  Set i4 = NI::create(4);
+  Set i5 = NI::create(5);
+
+  Set r = NI::sum(i2, i3);
+  ok &= r == i5;
 
 
   rsAssert(ok);

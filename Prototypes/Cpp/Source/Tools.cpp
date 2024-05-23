@@ -7678,7 +7678,7 @@ bool rsSetNaive::isOrderedPair() const
   // may collapse into (x, x) = { { x } } when both components are the same. 
 
   if(getCardinality() == 1)                     // (x, x) = { { x } }
-    return isSingleton();                       
+    return isSingleton();
   else if(getCardinality() == 2)                // (x, y) = { { x }, { x, y } }
   {
     // Investigate the structure:

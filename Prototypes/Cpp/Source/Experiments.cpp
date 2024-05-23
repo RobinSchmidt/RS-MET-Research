@@ -10533,7 +10533,10 @@ void testSet()
   singletonEmpty.addElement(empty);
   ok &= singletonEmpty.getCardinality() == 1;
   Set tmp = singletonEmpty.getElement(0);
-  ok &= tmp.equals(empty);  // ToDo: implement and use == operator
+  ok &= tmp.equals(empty);
+  ok &= empty.equals(tmp);
+  ok &= tmp == empty;
+  ok &= empty ==  tmp;
 
 
 

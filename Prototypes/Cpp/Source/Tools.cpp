@@ -7519,6 +7519,11 @@ public:
 
 
 
+
+  bool operator==(const rsSetNaive& rhs) const { return equals(rhs); }
+
+
+
 protected:
 
   /** Creates a deep copy of this set via the "new" operator and returns it. The caller is 

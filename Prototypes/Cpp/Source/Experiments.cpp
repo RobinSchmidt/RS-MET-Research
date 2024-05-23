@@ -10523,16 +10523,17 @@ void testSet()
 
   bool ok = true;
 
-  // Create the empty set:
+  // Create the empty set {}:
   Set empty;
   ok &= empty.isEmpty();
   ok &= empty.getCardinality() == 0;
 
-  // Create the singleton set that contains only the empty set:
+  // Create the singleton set {{}} that contains only the empty set:
   Set singletonEmpty;
   singletonEmpty.addElement(empty);
   ok &= singletonEmpty.getCardinality() == 1;
   ok &= singletonEmpty.hasElement(empty);
+  ok &= singletonEmpty != empty;
 
   // Test retrieving the element via getElement and [] operator:
   Set temp1 = singletonEmpty.getElement(0);
@@ -10545,9 +10546,18 @@ void testSet()
   // ToDo: test the version of the [] operator that returns a reference - oh it looks like this is 
   // the one that gets called anyway
 
-  ok &= singletonEmpty != empty;
+  // Test the singleton factory function:
+  Set temp3 = Set::singleton(empty);
+  ok &= temp3 == singletonEmpty;
+
+  // Test creating the set {{}} as the pair {{},{}}. This should give the same result:
+  Set temp4 = Set::pair(empty, empty);
+  ok &= temp4 == singletonEmpty;
 
 
+
+  // ToDo:
+  // test union
 
 
 

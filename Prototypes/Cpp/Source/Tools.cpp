@@ -7510,6 +7510,12 @@ public:
   A as its only element. */
   static rsSetNaive singleton(const rsSetNaive& A);
 
+  /** Given two sets A and B, this function produces the pair P = { A, B } of the two. */
+  static rsSetNaive pair(const rsSetNaive& A, const rsSetNaive& B);
+  // Needs test
+  // Being able to create such a pair is one of the Zermelo-Fraenkel axioms (verify!)
+
+
   /** Given two sets A and B, this function produces the union of the two. */
   static rsSetNaive unionSet(const rsSetNaive& A, const rsSetNaive& B);
   // Needs test
@@ -7646,7 +7652,33 @@ rsSetNaive rsSetNaive::singleton(const rsSetNaive& A)
   rsSetNaive S;
   S.addElement(A);
   return S;
+
+  // I think, one could also implement it via pair(A, A) - test this!
 }
+
+rsSetNaive rsSetNaive::pair(const rsSetNaive& A, const rsSetNaive& B)
+{
+  // Create a set P that contains A as element. Then check, if P contains B and if not, add B as 
+  // well. The reason for the check is that in the case A == B, we don't want to have a twice in P.
+  rsSetNaive P;
+  P.addElement(A);
+  P.addElement(B);  // Will have no effect if B == A
+
+
+  //if(!P.hasElement(B))
+  //  P.addElement(B);
+
+
+  return P;
+
+  // Notes:
+  //
+  // -I think having A twice in P when A == B should actually not affect the observable behavior of
+  //  the set. It would just be redundant. Test this by creating sets that contain some elements 
+  //  multiple times!
+  // -Oh - I think, the check is not needed because addElement itself does such a test
+}
+
 
 rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
 {

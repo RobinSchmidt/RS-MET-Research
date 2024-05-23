@@ -10840,6 +10840,7 @@ void testNeumannNumbers()
     memUse[i] = s.getMemoryUsage();
   }
   //rsPlotVector(memUse);  // Looks exponential which is as expected
+  // I think, the growth function is f(n) = 32 * 2^n 
 
 
   rsAssert(ok);
@@ -10871,19 +10872,46 @@ void testNeumannNumbers()
 void testNeumannIntegers()
 {
   using Set = rsSetNaive;
-  //using NN  = rsNeumannNumber;
+  using NN  = rsNeumannNumber;
   using NI  = rsNeumannInteger;
   bool  ok  = true;
 
-  Set i0 = NI::zero();
-  Set i1 = NI::one();
-  Set i2 = NI::create(2);
-  Set i3 = NI::create(3);
-  Set i4 = NI::create(4);
-  Set i5 = NI::create(5);
 
-  Set r = NI::sum(i2, i3);
-  ok &= r == i5;
+  Set m2 = NI::create(-2);
+  Set m1 = NI::create(-1);
+  Set p0 = NI::zero();     
+  Set p1 = NI::one();      // maybe use p1 for "plus one" and use m1 for -1
+  Set p2 = NI::create(2);
+  Set p3 = NI::create(3);
+  Set p4 = NI::create(4);
+  Set p5 = NI::create(5);
+  Set r;
+
+  // Test embedding of Neumann naturals:
+  r = NI::embed(NN::create(3));
+  ok &= r == p3;
+
+  // Test addition:
+  r = NI::sum(p2, p3); ok &= r == p5;   // 2 +  3 = 5
+
+
+  //r = NI::sum(p2, m2); ok &= r == p0;   // 2 + -2 = 0
+
+
+
+  r = NI::sum(p5, m2);
+
+  int v1 = NI::value(r);
+  int v2 = NI::value(p3);
+
+  
+  ok &= r == p3;   // 5 + -2 = 3   FAILS!!!
+
+  // v1 == v2  but  r != p3  - apparently the sets are different but represent the same number?
+  // But set comparison should be robust against differently structured sets/arrays that represent
+  // the same value
+
+
 
 
   rsAssert(ok);

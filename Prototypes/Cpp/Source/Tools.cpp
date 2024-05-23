@@ -8047,11 +8047,10 @@ rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
 
 /** Implements integers based on equivalence classes of ordered pairs of von Neumann numbers. The
 pair (x, y) represents the number x - y. The Neumann naturals are embedded by letting y = 0. This
-is similar to how rational numbers are defined as equiavlence classes - there, a pair (x, y) would
-represent x/y and
-
-
-..TBC... */
+is similar to how rational numbers are defined as equivalence classes - there, a pair (x, y) would
+represent x/y where x,y are integers and the integers themselves are embedded by letting y = 1. 
+Inverse elements are represented by swapping the order of the components of the pair, i.e. the 
+inverse of (x, y) is (y, x). That works the samein both cases. ...TBC... */
 
 class rsNeumannInteger : public rsNeumannNumber
 {
@@ -8070,6 +8069,7 @@ public:
   /** Implements the equivalence relation...TBC... */
   static bool equals(const rsSetNaive& x, const rsSetNaive& y);
 
+  static int value(const rsSetNaive& x);
 
 
   //-----------------------------------------------------------------------------------------------
@@ -8079,16 +8079,24 @@ public:
 
   static rsSetNaive one()  { return orderedPair(Base::one(), Base::zero()); }
 
-  static rsSetNaive create(size_t n) { return orderedPair(Base::create(n), Base::zero()); }
+  static rsSetNaive create(int n);
+
+
 
   /** Embeds a Neumann natural number x into the Neumann integers by creating the pair (x, 0). */
   static rsSetNaive embed(const rsSetNaive& x) { return orderedPair(x, Base::zero()); }
   // Needs test
 
 
+
+  static rsSetNaive negative(const rsSetNaive& x);
+
+
+
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
 
 
+  //static rsSetNaive diff(const rsSetNaive& x, const rsSetNaive& y);
 
 
 };
@@ -8117,14 +8125,46 @@ bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
   // -Maybe factor out the computation of p,q. It will be used in the less relation as well
 }
 
+
+int rsNeumannInteger::value(const rsSetNaive& x)
+{
+  // x = (a, b) = a - b
+  return int(Base::value(x.orderedPairFirst())) - int(Base::value(x.orderedPairSecond()));
+}
+
+
+rsSetNaive rsNeumannInteger::create(int n) 
+{ 
+  if(n >= 0)
+    return orderedPair(Base::create( size_t(n) ), Base::zero());  // x = (n,  0 )
+  else
+    return orderedPair(Base::zero(), Base::create(size_t(-n)) );  // x = (0, |n|)
+}
+
+rsSetNaive rsNeumannInteger::negative(const rsSetNaive& x)
+{
+  rsSetNaive a, b;
+  split(x, a, b);
+  return orderedPair(b, a);  // -(a, b) = (b, a)
+}
+
 rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
 {
   rsSetNaive a, b, c, d;
   split(x, a, b);
   split(y, c, d);
-  return orderedPair(Base::sum(a, c), Base::sum(b, d));
+  return orderedPair(Base::sum(a, c), Base::sum(b, d)); // (a, b) + (c, d) = (a+c, b+d)
 }
 
+/*
+rsSetNaive rsNeumannInteger::diff(const rsSetNaive& x, const rsSetNaive& y)
+{
+  rsSetNaive a, b, c, d;
+  split(x, a, b);
+  split(y, c, d);
+  return orderedPair(Base::sum(a, d), Base::sum(b, c)); // (a, b) - (c, d) = (a+d, b+c)
+}
+*/
 
 
 

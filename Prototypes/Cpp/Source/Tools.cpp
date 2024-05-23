@@ -7428,10 +7428,8 @@ recursive data structure with sets all the way down. For technical reasons, the 
 held as pointers-to-elements which complicates the internal implementation but client code does not
 really need to think about this. The implementation is similar to how would one implement a tree in
 C++ made up from nodes where each node has an array of pointers to child nodes. The implementation 
-is just for proof/demonstration of set theoretical concepts and entirely unpractical.
-
-
-...TBC... */
+is rather naive and just for proof/demonstration of set theoretical concepts and entirely 
+unpractical. */
 
 class rsSetNaive
 {
@@ -7474,12 +7472,16 @@ public:
   /** Adds the given set as element to this set. */
   void addElement(const rsSetNaive& a);
 
+  // ToDo: 
+  // -removeElement(size_t i);
+  // -removeElement(const rsSetNaive& a);
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
+  /** Returns the i-th element of this set. */
   rsSetNaive getElement(size_t i) const;
-
 
   /** Returns the cardinality, i.e. the number of elements of this set. */
   size_t getCardinality() const { return elements.size(); }
@@ -7507,22 +7509,17 @@ public:
   // \name Factory
 
   /** Given a set A, this function creates the set S = { A }, i.e. the singleton set that contains 
-  A as its only element. */
+  A as its only element. One could also implement creation of singletons it via pair(A, A) but it's
+  convenient to have a function to directly produce singletons. */
   static rsSetNaive singleton(const rsSetNaive& A);
-  // One could also implement creation of singletons it via pair(A, A) but it's convenient to have
-  // a function to directly produce singletons.
 
-  /** Given two sets A and B, this function produces the pair P = { A, B } of the two. */
+  /** Given two sets A and B, this function produces the pair P = { A, B } of the two. Being able 
+  to create such a pair is one of the Zermelo-Fraenkel axioms. */
   static rsSetNaive pair(const rsSetNaive& A, const rsSetNaive& B);
-  // Needs test
-  // Being able to create such a pair is one of the Zermelo-Fraenkel axioms (verify!)
 
-
-  /** Given two sets A and B, this function produces the union of the two. */
+  /** Given two sets A and B, this function produces the union of the two. Being able to create 
+  such a union set is one of the Zermelo-Fraenkel axioms. */
   static rsSetNaive unionSet(const rsSetNaive& A, const rsSetNaive& B);
-  // Needs test
-  // Being able to create such a union set is one of the Zermelo-Fraenkel axioms (verify!)
-
 
   /** Given two sets A and B, this function produces the intersection of the two. */
   //static rsSetNaive intersectionSet(const rsSetNaive& A, const rsSetNaive& B);
@@ -7530,19 +7527,17 @@ public:
   // ToDo: differenceSet, symmetricDifferenceSet, pair, orderedPair
 
 
-
   /** Given a set A representing a natural number according to the von Neumann construction, this 
   function creates its successor. */
   static rsSetNaive neumannSuccessor(const rsSetNaive& A);
-  // see:
-  // https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
-
 
   /** Creates the set that represents the natural number i in the von Neumann construction. */
-  static rsSetNaive makeNeumannNumber(size_t i);
-  // rename to neumannNumber
+  static rsSetNaive neumannNumber(size_t i);
 
-
+  // ToDo:
+  // -neumannPredecessor - just takes the set and removes the last element - or triggers an error 
+  //  when there are no elements
+  // -neumannAdd. Implement it using the neumannSuccessor and neumannPredecessor function.
 
 
   bool operator==(const rsSetNaive& rhs) const { return equals(rhs); }
@@ -7550,20 +7545,15 @@ public:
   bool operator!=(const rsSetNaive& rhs) const { return !equals(rhs); }
 
 
-  /** Returns a copy of the i-th element. */
-  //rsSetNaive operator[](size_t i) const { return getElement(i); }
-  // May not be needed?
-
   /** Returns a reference to the i-th element. */
-  rsSetNaive& operator[](size_t i) 
-  { 
-    return *(elements[i]); 
-  }
-  // needs test
+  rsSetNaive& operator[](size_t i) { return *(elements[i]); }
+  // -Needs test
+  // -Figure out when this gets called
+  // -Try re-assigning elements using this operator
 
 
   const rsSetNaive& operator[](size_t i) const { return *(elements[i]);  }
-  // Is this needed? ..yes - it's called from unionSet, for example
+  // Is called from unionSet, for example.
 
 
 protected:
@@ -7573,13 +7563,6 @@ protected:
   rsSetNaive* getCopy() const;
 
   std::vector<rsSetNaive*> elements;
-  // We use a vector of pointers for purely technical reasons. That's the way, recursive data 
-  // structures are built in C++
-
-  // ToDo:
-  // -Implement union, intersection, etc.
-  // -Implement construction of ordered pairs
-  // -Implement construction of von Neumann numbers
 
 };
 
@@ -7599,6 +7582,7 @@ rsSetNaive& rsSetNaive::operator=(const rsSetNaive& A)
   return *this;
 
   // ToDo:
+  //
   // -Maybe factor out the deep copying code that is common to the copy constructor and copy 
   //  assignment operator
 }
@@ -7621,7 +7605,6 @@ rsSetNaive rsSetNaive::getElement(size_t i) const
   return e;
   // Why does it not call the move-assignment operator? Or does it?
 }
-// needs test
 
 bool rsSetNaive::hasElement(const rsSetNaive& a) const
 {
@@ -7668,7 +7651,6 @@ rsSetNaive rsSetNaive::pair(const rsSetNaive& A, const rsSetNaive& B)
   return P;
 }
 
-
 rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
 {
   // Use copy constructor to init U to be equal to A and then add those elements from B to U that 
@@ -7684,58 +7666,15 @@ rsSetNaive rsSetNaive::neumannSuccessor(const rsSetNaive& A)
 {
   return unionSet(A, singleton(A));
 
-  // Alternative (not yet tested);
-  //rsSetNaive S = A;
-  //S.addElement(A);
-  //return S;
+  // See: https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
 }
 
-rsSetNaive rsSetNaive::makeNeumannNumber(size_t i)
+rsSetNaive rsSetNaive::neumannNumber(size_t i)
 {
   if(i == 0)
     return rsSetNaive();
   else
-    return neumannSuccessor(makeNeumannNumber(i-1));
-
-
-  /*
-  else if(i == 1)  // verify if needed
-  {
-    rsSetNaive A = makeNeumannNumber(0);
-    A.addElement(A);
-    return A;
-  }
-  else
-  {
-    // still wrong:
-
-    rsSetNaive A;
-    A.elements.resize(i);
-    for(size_t j = 0; j < i; j++)               // maybe start at j = 1, maybe go backwards?
-    {
-      rsSetNaive tmp = makeNeumannNumber(i-1);  // i-j ?
-      A.elements[i-j] = tmp.getCopy();
-    }
-    return A;
-  }
-  */
-
-
-    //A.addElement(makeNeumannNumber(i-1));
-
-
-
-    // Nope - this is wrong - but could that be one of the other constructions of the naturals? 
-    //...nah - I don't think so
-    //rsSetNaive A = makeNeumannNumber(i-1);
-    //size_t N = A.getCardinality();
-    //A.addElement(*(A.elements[N-1]));
-    //return A;
-    // Verify this!
-    // We get an access violation. I think, we need to implement copy-constructor, etc. in order to
-    // create deep copies
-
-
+    return neumannSuccessor(neumannNumber(i-1));
 }
 
 rsSetNaive* rsSetNaive::getCopy() const

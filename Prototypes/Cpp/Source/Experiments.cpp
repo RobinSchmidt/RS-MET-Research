@@ -10600,20 +10600,16 @@ void testSet()
   // ToDo: rename s0 to nn0t (t for target)
 
   // Create the numbers 0..3 again, this time using the factory function:
-  Set nn0 = Set::makeNeumannNumber(0);
-  Set nn1 = Set::makeNeumannNumber(1);
-  Set nn2 = Set::makeNeumannNumber(2);
-  Set nn3 = Set::makeNeumannNumber(3);
+  Set nn0 = Set::neumannNumber(0);
+  Set nn1 = Set::neumannNumber(1);
+  Set nn2 = Set::neumannNumber(2);
+  Set nn3 = Set::neumannNumber(3);
 
   // Check if the factory produced the same sets as we produced manually here:
   ok &= nn0 == s0;
   ok &= nn1 == s1;
   ok &= nn2 == s2;
   ok &= nn3 == s3;
-
-
-  // Still wrong - I think, it's because we don't have the = operator implemented yet
-
 
 
   // ToDo: 

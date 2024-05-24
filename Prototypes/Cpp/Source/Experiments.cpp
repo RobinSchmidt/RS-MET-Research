@@ -11063,7 +11063,7 @@ void testNeumannIntegers()
   ok &= v2 == 0;
 
   // Print some output:
-  auto LF = []() { std::cout << '\n'; };  // Line feed helper function
+  //auto LF = []() { std::cout << '\n'; };  // Line feed helper function
   //printSet(p0); LF();                     // {{O}}
   //printSet(r);  LF();                     // {{{O,{O}}}}
   //printOrderedPair(p0); LF();             // ({O})       == (0, 0)

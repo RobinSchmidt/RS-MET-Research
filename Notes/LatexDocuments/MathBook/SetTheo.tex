@@ -19,8 +19,29 @@
 \section{Naive and Axiomatic Set Theory}
 
 % ToDo: 
-% -give Cantor'S original defition of a set
+% -give Cantor's original defition of a set
 
+\subsection{Cantor's Definition}
+In the introductory chapter of this book, we already encountered Georg Cantor's following definition of a set: "A set is a gathering together into a whole of definite, distinct objects of our perception or of our thought which are called elements of the set.". That means, a set is just a bunch of things. But what are these "things" then? In mathematics, these are typically mathematical objects like numbers or vectors or functions or operators etc.. But talking about those things requires that we already know what these things are. When we want to build math really from the ground up, we cannot assume the existence of such things. We have to think about what a number even is in the first place. ...TBC...
+
+% https://plato.stanford.edu/entries/set-theory/
+
+% https://de.wikipedia.org/wiki/Naive_Mengenlehre
+% Unter einer „Menge“ verstehen wir jede Zusammenfassung M von bestimmten wohlunterschiedenen Objekten m unserer Anschauung oder unseres Denkens (welche die „Elemente“ von M genannt werden) zu einem Ganzen.
+
+\subsection{Intuitions}
+So, let's take a step back and forget about the existence of numbers and ask ourselves, what kinds of objects a set could possibly contain. So far, we have only postulated the existence of objects that we want to call sets. So, how about letting sets to contain other sets? Maybe with that idea, we could build a sort of recursive data structure pretty much like a tree. A tree consists of nodes and each node can have child nodes. Let's apply the idea to sets: a set may consists of sets which we call elements. The elements play the role of the child nodes. Let's further postulate that there also exists a set that has no elements whatsoever and let's call that the empty set. Let's also assume that the identity of a set is determined by its content: if two sets have the same elements, they are the same set. There is no notion of order and it doesn't matter, if an element occurs more than once. So far, we have the following: (1) A set can contain sets as element. (2) There is a set without any elements. (3) The identity of a set is determined by its elements.
+
+%We have already postulated the notion of How about letting it contain other sets
+
+
+% Intuitions
+% -sets can have other sets as elements
+%  -that can be formalized by postulating an is-element-of relation between sets 
+%  -a "relation" itself (later) be modeled by sets - that seems cyclic and kinda is (I think)
+% -the empty set is a set
+% -the identity of a set is determined by what elements it has
+% -it's like a recursive data-structure (like a tree)
 
 % https://en.wikipedia.org/wiki/Universal_set
 

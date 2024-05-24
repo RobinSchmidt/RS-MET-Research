@@ -56,6 +56,12 @@
 # Misc:
 *.blg
 
+# Temporary 
+*.synctex(busy)
+# These files appear only during builds and are automatically deleted when the build is finished. 
+# When comitting during a build phase they might get accidently added which we want to avoid.
+
+
 #---------------------------------------------------------------------------------------------------
 # Ignored folders:
 

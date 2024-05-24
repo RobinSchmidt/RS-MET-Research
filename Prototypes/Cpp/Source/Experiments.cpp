@@ -10969,8 +10969,13 @@ void testNeumannIntegers()
   ok &= r == p3;
 
   // Test negation:
-  r = NI::negative(p2);
-  ok &= r == m2;
+  r = NI::negative(m1); ok &= r == p1;
+  r = NI::negative(m2); ok &= r == p2;
+  r = NI::negative(p0); ok &= r == p0;
+  r = NI::negative(p1); ok &= r == m1;
+  r = NI::negative(p2); ok &= r == m2;
+
+
 
   // Test addition:
   r = NI::sum(p2, p3); 
@@ -10997,13 +11002,18 @@ void testNeumannIntegers()
 
   //std::string str;
 
-
-
-
-
-
   // Test canonicalization:
-  //r   = NI::canonical(r);    // Canonicalize - makes 2nd component zero
+  r    = NI::sum(p1, m1);
+  ok  &= r.isOrderedPair();
+  str  = Set::orderedPairToString(r);
+  ok &= str == "( {{O}} ; {{O},{O}} )";
+  // numerals:  (   1   ; { 1,  1 } )    
+  str = Set::setToString(r);
+  ok &= str == "{{{O}}}"; // r = (1, 1) = { {1}, {1,1} } = { {1}, {1} } = { {1} } = {{{ 0 }}}
+
+  //r    = NI::canonical(r);    // Canonicalize - makes 2nd component zero
+  // access violation - in rsNeumannInteger::split, the set looks like {O}
+
   //ok &= r == p0;             // Now r and p0 are not only equivalent but equal
   // Access violation! I think, it is because I assume the ordered pair to be in the form
   // (x, y) = { { x }, { x, y } } but maybe it can be also of the form { { x, y }, { x } }
@@ -11016,6 +11026,8 @@ void testNeumannIntegers()
   ok &= v2 == 3;
   ok &= NI::equals(r, p3);
   ok &= r.isOrderedPair();
+  str = Set::orderedPairToString(r);
+
   //r   = NI::canonical(r);  // Access violation!
   //ok &= r == p3;
 

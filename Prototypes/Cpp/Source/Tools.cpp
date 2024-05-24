@@ -8154,14 +8154,10 @@ represent x/y where x,y are integers and the integers themselves are embedded by
 Inverse elements are represented by swapping the order of the components of the pair, i.e. the 
 inverse of (x, y) is (y, x). That works the samein both cases. ...TBC... */
 
-class rsNeumannInteger //: public rsNeumannNumber
+class rsNeumannInteger
 {
 
 public:
-
-  //using Base = rsNeumannNumber;
-  // We actually have the baseclass only to abbreviate calls to functions in it. Maybe get rid of 
-  // the baseclass and use a "using NN = rsNeumannNumber"
 
   using NN  = rsNeumannNumber;
   using Set = rsSetNaive;
@@ -8184,10 +8180,8 @@ public:
   // \name Factory
 
   static rsSetNaive zero() { return Set::orderedPair(NN::zero(), NN::zero()); }
-  // Needs test
 
   static rsSetNaive one()  { return Set::orderedPair(NN::one(), NN::zero()); }
-  // Needs test
 
   /** Creates a (potentially non-canonical) Neumann integer represented by the ordered pair (a, b) 
   which stands for the number x = a - b */
@@ -8328,16 +8322,35 @@ rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
 /** Implements rational numbers as equivalence classes of ordered pairs of Neumann integers.
 ...TBC... */
 
-/*
-class rsNeumannRational // : public rsNeumannInteger
+
+class rsNeumannRational
 {
 
 public:
 
+  //using NN  = rsNeumannNumber;
+  using NI  = rsNeumannInteger;
+  using Set = rsSetNaive;
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Factory
+
+  static rsSetNaive zero() { return Set::orderedPair(NI::zero(), NI::one()); }
+
+  static rsSetNaive one()  { return Set::orderedPair(NI::one(), NI::one()); }
+
+
+  static rsSetNaive create(int num, int den);
 
 
 };
-*/
+
+
+rsSetNaive rsNeumannRational::create(int num, int den)
+{
+  return Set::orderedPair(NI::create(num), NI::create(den));
+}
 
 
 

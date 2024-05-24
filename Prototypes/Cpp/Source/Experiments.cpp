@@ -11110,6 +11110,45 @@ void testNeumannIntegers()
   //  m6,..,p6 variables that we use in the tests are all canonical representations.
 }
 
+void testNeumannRationals()
+{
+  using Set = rsSetNaive;
+  //using NN  = rsNeumannNumber;
+  using NI  = rsNeumannInteger;
+  using NR  = rsNeumannRational;
+
+  // Some variables for repeated use:
+  bool ok  = true;
+  int  v;
+  Set  x, y, a, b, r;
+  std::string str;
+
+  Set p_0_1 = NR::create( 0, 1);  //  0/1 = 0
+  Set p_0_2 = NR::create( 0, 2);  //  0/2 = 0
+  Set p_1_1 = NR::create(+1, 1);  // +1/1 = 1
+  Set p_2_1 = NR::create(+2, 1);  // +2/1 = 2
+  Set p_1_2 = NR::create(+1, 2);  // +1/2
+  Set p_1_3 = NR::create(+1, 3);  // +1/3
+  Set p_2_3 = NR::create(+2, 3);  // +2/3
+  Set m_2_3 = NR::create(-2, 3);  // -2/3
+
+
+
+  str = Set::setToString(p_0_1);
+  str = Set::setToString(p_1_1);
+  str = Set::setToString(p_2_3);
+
+
+
+
+  // Maybe make a function nestedOrderedPairToSting
+
+
+
+
+
+  rsAssert(ok);
+}
 
 
 

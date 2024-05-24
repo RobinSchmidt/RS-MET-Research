@@ -77,7 +77,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testFiniteField();     // stub
   //testSet();
   //testNeumannNumbers();
-  testNeumannIntegers();
+  //testNeumannIntegers();
+  testNeumannRationals();
   //testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();

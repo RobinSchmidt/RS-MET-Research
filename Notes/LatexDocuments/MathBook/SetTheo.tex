@@ -46,6 +46,9 @@ By the way: We have informally stated that sets can have other sets as elements.
 
 % ToDo: Maybe talk a bit about the different possible textual representations of sets like { 1,2,3 }, { 2, 3, 1 }, { 1, 2, 3, 1 }, ... - this is important for an implementation - equlatiy comparisons should not depend on the representation. Maybe link my implementation. Maybe append an "Implementation" section at the end. Maybe do this also for other math topics - like the algorithms for polynomial multiplication (convolution), etc. - make some accompanying material - Code for C++, Python, Sage, etc.
 
+
+% https://www.youtube.com/watch?v=lNM6S2UUHcQ  at 25:22
+
 %---------------------------------------------------------------------------------------------------
 \subsection{Notational Conventions}  In the context of predicate logic, variables are typically denoted by lowercase letters from the end of the alphabet such as $x,y,z$. In general mathematics, sets are usually denoted by uppercase letters from the begin of the alphabet such as $A,B,C$ and set elements usually by lowercase $a,b,c$. In axiomatic set theory, sets are the only thing that exists - the elements of sets are also sets - and sets appear as variables in predicate logical formulas. So we have a conflict here - which of the notational conventions should we adopt? Here, I adopt the following convention: In contexts where a lot of predicate-logical formulas appear, I will use $x,y,z, \ldots$ because using the other convention tends to look ugly there. These contexts are typically the lower levels of the theory. In higher level contexts, where predicate logical formulas become less common, I'll prefer  $A,B,C, \ldots$ for sets. [TODO: introduce $\in$, $\notin$, $\ni$]
 
@@ -182,7 +185,7 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 
 % One important difference to unrestricted comprehension is that the predicate gets applied to objects that already are members of some set - the objects are not plucked out of thin air (i.e. a hypothesized universal set of all possible things) a
 
-% the predicate can only depend on the object itself, not on what other objects are present in the set. it's context independent. An example for a context dependent predicate for a set of numbers could be "larger than the average" - such things are not possible
+% the predicate can only depend on the object itself, not on what other objects are present in the set. it's context independent. An example for a context dependent predicate for a set of numbers could be "larger than the average" - such things are not possible. But it could perpahse depend on a fixed other set like: x from A belongs to B if its (not) in C - that would form the intersection of A and C
 
 \paragraph{Axiom Schema of Replacement}
 % https://en.wikipedia.org/wiki/Axiom_schema_of_replacement
@@ -589,5 +592,8 @@ https://en.wikipedia.org/wiki/Controversy_over_Cantor%27s_theory
 
 
 https://en.wikipedia.org/wiki/Type_theory
+
+https://www.youtube.com/watch?v=szfsGJ_PGQ0  The Axiom of Choice
+
 
 \end{comment}

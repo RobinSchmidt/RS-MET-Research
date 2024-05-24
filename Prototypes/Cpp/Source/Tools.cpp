@@ -7478,7 +7478,9 @@ public:
 
   // ToDo: 
   // -removeElement(size_t i);
-  // -removeElement(const rsSetNaive& a);
+  // -removeElement(const rsSetNaive& a); - this can actually be implemented as set-difference
+  //  with the singleton { a }. Not that this would be very practical - but from a theoretical
+  //  perspective, it might be an impoertant observation
 
 
   //-----------------------------------------------------------------------------------------------
@@ -7609,6 +7611,11 @@ public:
 
   const rsSetNaive& operator[](size_t i) const { return *(elements[i]);  }
   // Is called from unionSet, for example.
+
+  // ToDo:
+  // -Implement a leastElement and greatestElement function that takes a "lessThan" comparison
+  //  function as parameter. We just do a linear search through the elements with this function
+  //  to find the min or max. Maybe call the functions minimum/maximum
 
 
 protected:
@@ -7992,6 +7999,8 @@ public:
   /** Implements the less-than relation on Nuemann numbers. */
   static bool less(const rsSetNaive& x, const rsSetNaive& y);
 
+  // An equality comparison function is not needed because we can use the set-equality comparison 
+  // for that
 
 
   //-----------------------------------------------------------------------------------------------
@@ -8007,6 +8016,10 @@ public:
 
   /** Creates the set that represents the natural number n in the von Neumann construction. */
   static rsSetNaive create(size_t n);
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Operations
 
   /** Given a set x representing a natural number according to the von Neumann construction, this 
   function creates its successor. */
@@ -8108,7 +8121,7 @@ rsSetNaive rsNeumannNumber::predecessor(const rsSetNaive& A)
   if(A.isEmpty())
   {
     rsError("Zero has no predecessor!");
-    return A;                              // Return the empty set
+    return A;                              // Return the empty set - although, that's wrong
   }
   return create(value(A) - 1);
 
@@ -8117,9 +8130,15 @@ rsSetNaive rsNeumannNumber::predecessor(const rsSetNaive& A)
   // -I'm actually not sure, if/how the construction implemented here is allowed by the ZFC axioms.
   //  We need this predecessor function to implement addition, though.
   // -A more efficient way to construct the predecessor would be to create a copy of A and remove
-  //  the last element.
+  //  the last (or greatest) element.
   // -Even more efficient would be to start with an empty set, resize its elements vector to N-1 
   //  and copy N-1 elements from A.
+  // -Maybe to implement it purely in terms of set operations, we could extract the greatest 
+  //  element (finding it using the less-function), form a singleton set from it and then do a 
+  //  set-difference. This algorithm: "extract element, put into singleton, form set difference of
+  //  original with singleton" implements a "remove element" operation
+  // -Maybe in the case of A.empty, return a special set that does not represent a Neumann number.
+  //  For example, the set { 1 } =  { {0} } is not a valid Neumann number
 }
 
 rsSetNaive rsNeumannNumber::sum(const rsSetNaive& x, const rsSetNaive& y)
@@ -8174,6 +8193,9 @@ public:
 
   /** Implements the equivalence relation...TBC... */
   static bool equals(const rsSetNaive& x, const rsSetNaive& y);
+
+  /** Implements the less-than relation on Nuemann integers. */
+  //static bool less(const rsSetNaive& x, const rsSetNaive& y);
 
   /** Returns the value that is represented by the neumann integer x. */
   static int value(const rsSetNaive& x);

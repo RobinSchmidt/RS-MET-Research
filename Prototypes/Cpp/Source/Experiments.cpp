@@ -10981,8 +10981,23 @@ void testNeumannIntegers()
   str = Set::setToString(a); ok &= str == "{O,{O}}";  // 2
   str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
 
+  // Test negation:
+  r = NI::negative(x);
+  v1  = NI::value(r);
+  ok &= v1 == 0;
+  NI::split(r, a, b);
+  str = Set::setToString(a); ok &= str == "{O,{O}}";  // 2
+  str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
 
+  // Test canonicalization:
+  x = NI::canonical(x);
+  str = Set::orderedPairToString(x);
+  ok &= str == "( {O} ; {O,O} )"; 
+  // numerals:  ( {0} ; {0,0} )
+  str = Set::setToString(x);
+  ok &= str == "{{O}}";              // 0 = (0, 0) = { {0}, {0, 0} } = { {0}, {0} } = { {0} }
 
+ 
 
   // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
   Set m5 = NI::create(-5);

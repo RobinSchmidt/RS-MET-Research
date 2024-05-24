@@ -8067,7 +8067,8 @@ size_t rsNeumannNumber::value(const rsSetNaive& A)
 
 bool rsNeumannNumber::less(const rsSetNaive& x, const rsSetNaive& y)
 { 
-  return x.getCardinality() < y.getCardinality(); 
+  return y.hasElement(x);                            // Expensive. Uses only set operations.
+  //return x.getCardinality() < y.getCardinality();  // Efficient. Relies on semantics.
 
   // Notes:
   //
@@ -8079,6 +8080,7 @@ bool rsNeumannNumber::less(const rsSetNaive& x, const rsSetNaive& y)
   // -Maybe we could implement a max() function based on this less that returns a maximum of two
   //  sets or a set of sets.
 }
+// Needs tests and clean up of the comments
 
 rsSetNaive rsNeumannNumber::create(size_t i)
 {

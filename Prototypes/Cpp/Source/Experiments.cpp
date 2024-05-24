@@ -10931,27 +10931,14 @@ void testNeumannIntegers()
   Set  x, y, a, b, r;
   std::string str;
 
-  // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
-  Set m5 = NI::create(-5);
-  Set m4 = NI::create(-4);
-  Set m3 = NI::create(-3);
-  Set m2 = NI::create(-2);
-  Set m1 = NI::create(-1);
-  //Set p0 = NI::zero();
-  //Set p1 = NI::one();
-  Set p0 = NI::create(0);
-  Set p1 = NI::create(1);
-  Set p2 = NI::create(2);
-  Set p3 = NI::create(3);
-  Set p4 = NI::create(4);
-  Set p5 = NI::create(5);
 
-  // Try to trigger the access violation bug in the canonicalization:
+
+  // Test with a non-canonical representation of the number 1 as the ordered pair (2,1):
   x   = NI::create(2, 1);
   v1  = NI::value(x);
   ok &= v1 == 1;
   str = Set::orderedPairToString(x);
-  ok &= str == "( {{O,{O}}} ; {{O,{O}},{O}} )";   // 1 = (2, 1) = { {2}, {2,1} }
+  ok &= str == "( {{O,{O}}} ; {{O,{O}},{O}} )";       // 1 = (2, 1) = { {2}, {2,1} }
   // numerals:  ( {  2    } ; {  2    , 1 } )
 
   // Test splitting:
@@ -10968,12 +10955,49 @@ void testNeumannIntegers()
   str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
 
   // Test canonicalization:
-  r = NI::canonical(x);        // ACCESS VIOLATON!!
+  x = NI::canonical(x);
+  str = Set::orderedPairToString(x);
+  ok &= str == "( {{O}} ; {{O},O} )"; 
+  // numerals:  ( { 1 } ; { 1 ,0} )
 
-  // ToDo:
-  // -Use a helper function test(size_t a, size_t b, string sa, string sb, ..)
+
+  // Test with a non-canonical representation of the number 0 as the ordered pair (2,2):
+  x   = NI::create(2, 2);
+  v1  = NI::value(x);
+  ok &= v1 == 0;
+  str = Set::orderedPairToString(x);
+  ok &= str == "( {{O,{O}}} ; {{O,{O}},{O,{O}}} )";   // 0 = (2, 2) = { {2}, {2,2} }
+  // numerals:  ( { 2     } ; {   2   ,   2   } )
+
+  // This is a pretty interesting situation: according to the string, we have duplicates in the 
+  // set. The set { {2}, {2,2} } = { {2}, {2} } = { {2} }. But I think, that's normal and should be
+  // expected. But maybe we could introduce some function Set::removeDuplicates. On the other hand,
+  // the observable behavior of the set class should not depend on the presence or absence of 
+  // duplicates (in particular, the behavior of the == operator). We should have a test for this in
+  // the general testSet function. 
+
+  // Test splitting:
+  NI::split(x, a, b);
+  str = Set::setToString(a); ok &= str == "{O,{O}}";  // 2
+  str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
 
 
+
+
+  // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
+  Set m5 = NI::create(-5);
+  Set m4 = NI::create(-4);
+  Set m3 = NI::create(-3);
+  Set m2 = NI::create(-2);
+  Set m1 = NI::create(-1);
+  //Set p0 = NI::zero();
+  //Set p1 = NI::one();
+  Set p0 = NI::create(0);
+  Set p1 = NI::create(1);
+  Set p2 = NI::create(2);
+  Set p3 = NI::create(3);
+  Set p4 = NI::create(4);
+  Set p5 = NI::create(5);
 
 
   // Check a couple of string representations:

@@ -8260,7 +8260,10 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
 {
   rsSetNaive a, b;
   split(x, a, b);
-  return orderedPair(sum(a, negative(b)), zero());
+  size_t va = Base::value(a);
+  size_t vb = Base::value(b);
+  int    v  = int(va) - int(vb);
+  return create(v);
 }
 
 rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)

@@ -11005,8 +11005,6 @@ void testNeumannIntegers()
   Set m3 = NI::create(-3);
   Set m2 = NI::create(-2);
   Set m1 = NI::create(-1);
-  //Set p0 = NI::zero();
-  //Set p1 = NI::one();
   Set p0 = NI::create(0);
   Set p1 = NI::create(1);
   Set p2 = NI::create(2);
@@ -11014,6 +11012,9 @@ void testNeumannIntegers()
   Set p4 = NI::create(4);
   Set p5 = NI::create(5);
 
+  // Check the specific function to create 0 and 1:
+  ok &= p0 == NI::zero();
+  ok &= p1 == NI::one();
 
   // Check a couple of string representations:
   str = Set::orderedPairToString(p0);
@@ -11047,8 +11048,6 @@ void testNeumannIntegers()
   r = NI::negative(p1); ok &= r == m1;
   r = NI::negative(p2); ok &= r == m2;
 
-
-
   // Test addition:
   r = NI::sum(p2, p3); 
   ok &= r == p5;   // 2 +  3 = 5
@@ -11062,18 +11061,6 @@ void testNeumannIntegers()
   ok &= v1 == 0;
   ok &= v2 == 0;
 
-  // Print some output:
-  //auto LF = []() { std::cout << '\n'; };  // Line feed helper function
-  //printSet(p0); LF();                     // {{O}}
-  //printSet(r);  LF();                     // {{{O,{O}}}}
-  //printOrderedPair(p0); LF();             // ({O})       == (0, 0)
-  //printOrderedPair(r);  LF();             // ({{O,{O}}}) == (2, 2)  ..this looks wrong!
-
-  // It should be ( , )
-  // Shouldn't it be ({O},{O})  
-
-  //std::string str;
-
   // Test canonicalization:
   r    = NI::sum(p1, m1);
   ok  &= r.isOrderedPair();
@@ -11081,14 +11068,9 @@ void testNeumannIntegers()
   ok &= str == "( {{O}} ; {{O},{O}} )";
   // numerals:  (   1   ; { 1,  1 } )    
   str = Set::setToString(r);
-  ok &= str == "{{{O}}}"; // r = (1, 1) = { {1}, {1,1} } = { {1}, {1} } = { {1} } = {{{ 0 }}}
-
-  //r    = NI::canonical(r);    // Canonicalize - makes 2nd component zero
-  // access violation - in rsNeumannInteger::split, the set looks like {O}
-
-  //ok &= r == p0;             // Now r and p0 are not only equivalent but equal
-  // Access violation! I think, it is because I assume the ordered pair to be in the form
-  // (x, y) = { { x }, { x, y } } but maybe it can be also of the form { { x, y }, { x } }
+  ok &= str == "{{{O}}}";  // r = (1, 1) = { {1}, {1,1} } = { {1}, {1} } = { {1} } = {{{ 0 }}}
+  r   = NI::canonical(r);  // Canonicalize - makes 2nd component zero
+  ok &= r == p0;           // Now r and p0 are not only equivalent but equal
 
   // 5 + -2 = 3:
   r   = NI::sum(p5, m2);
@@ -11099,9 +11081,8 @@ void testNeumannIntegers()
   ok &= NI::equals(r, p3);
   ok &= r.isOrderedPair();
   str = Set::orderedPairToString(r);
-
-  //r   = NI::canonical(r);  // Access violation!
-  //ok &= r == p3;
+  r   = NI::canonical(r);
+  ok &= r == p3;
 
   // 3 + -5 = -2:
   r   = NI::sum(p3, m5);
@@ -11110,17 +11091,15 @@ void testNeumannIntegers()
   ok &= v1 == -2;
   ok &= v2 == -2;
   ok &= NI::equals(r, m2);
+  r   = NI::canonical(r);
+  ok &= r == m2;
 
 
   rsAssert(ok);
 
   // ToDo:
   //
-  // -Factor out a function that produces a std::string from the printing functions. Then use it in
-  //  unit tests. Maybe setToString, orderedPairToString
-  // -Implement a canonicalize() function that makes the 2nd component zero. Although, memory-wise, 
-  //  it would be more desirable to keep the sum as close to zero as possible. (6,0) will need more
-  //  memory than (3,3) because 2^6 + 2^0 > 2^3 + 2^3
+  // -Implement and test multiplication.
 }
 
 

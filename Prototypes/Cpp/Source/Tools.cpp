@@ -8191,12 +8191,16 @@ public:
   static rsSetNaive embed(const rsSetNaive& x) { return orderedPair(x, Base::zero()); }
   // Needs test
 
-
   /** Turns the given Neumann integer x into its negative -x. */
   static rsSetNaive negative(const rsSetNaive& x);
 
   /** Turns the given Neumann integer x into its canonical representation. */
   static rsSetNaive canonical(const rsSetNaive& x);
+  // Note that a canonical representation may be more expensive in terms of memory consumption and
+  // computation time. Memory-wise, it would be more desirable to keep the sum of the components of
+  // the pair (a, b) as close to zero as possible. (6,0) will need more memory than (3,3) because 
+  // 2^6 + 2^0 > 2^3 + 2^3 - one six is more expensive that two threes due to the exponential 
+  // scaling of memory use.
 
   /** Computes the sum of two Neumann integers. */
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
@@ -8221,12 +8225,7 @@ bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
   // Notes:
   //
   // -The idea is analoguous to how rational numbers p = a/b, q = c/d are equal iff a*d == b*c
-  //
-  // ToDo:
-  // 
-  // -Maybe factor out the computation of p,q. It will be used in the less relation as well
 }
-
 
 int rsNeumannInteger::value(const rsSetNaive& x)
 {
@@ -8245,14 +8244,6 @@ rsSetNaive rsNeumannInteger::create(int n)
     return create(size_t(n), size_t( 0));  // x = (n,  0 )
   else
     return create(size_t(0), size_t(-n));  // x = (0, |n|) = (0, -n)
-
-  // OLD:
-  //if(n >= 0)
-  //  return orderedPair(Base::create( size_t(n) ), Base::zero());  // x = (n,  0 )
-  //else
-  //  return orderedPair(Base::zero(), Base::create(size_t(-n)) );  // x = (0, |n|)
-
-  // ToDo: use create(a, b)
 }
 
 rsSetNaive rsNeumannInteger::negative(const rsSetNaive& x)

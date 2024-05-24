@@ -10927,7 +10927,7 @@ void testNeumannIntegers()
 
   // Some variables for repeated use:
   bool ok  = true;
-  int  v1, v2;           // ToDo: use only one v
+  int  v1; //, v2;           // ToDo: use only one v
   Set  x, y, a, b, r;
   std::string str;
 
@@ -11055,11 +11055,13 @@ void testNeumannIntegers()
   // Test addition with a negative 2nd argument:
   r   = NI::sum(p2, m2);
   v1  = NI::value(r);
-  v2  = NI::value(p0);
+  ok &= v1 == 0;
+  v1  = NI::value(p0);
+  ok &= v1 == 0;
   ok &= r != p0;             // r = (2,2), p0 = (0,0)
   ok &= NI::equals(r, p0);   // r and p0 are different but equivalent
-  ok &= v1 == 0;
-  ok &= v2 == 0;
+
+
 
   // Test canonicalization:
   r    = NI::sum(p1, m1);
@@ -11075,9 +11077,9 @@ void testNeumannIntegers()
   // 5 + -2 = 3:
   r   = NI::sum(p5, m2);
   v1  = NI::value(r);
-  v2  = NI::value(p3);
   ok &= v1 == 3;
-  ok &= v2 == 3;
+  v1  = NI::value(p3);
+  ok &= v1 == 3;
   ok &= NI::equals(r, p3);
   ok &= r.isOrderedPair();
   str = Set::orderedPairToString(r);
@@ -11087,12 +11089,16 @@ void testNeumannIntegers()
   // 3 + -5 = -2:
   r   = NI::sum(p3, m5);
   v1  = NI::value(r);
-  v2  = NI::value(m2);
   ok &= v1 == -2;
-  ok &= v2 == -2;
+  v1  = NI::value(m2);
+  ok &= v1 == -2;
   ok &= NI::equals(r, m2);
   r   = NI::canonical(r);
   ok &= r == m2;
+
+  // Test multiplication:
+  // 2 * 3 = 6:
+
 
 
   rsAssert(ok);

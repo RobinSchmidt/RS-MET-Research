@@ -10927,9 +10927,8 @@ void testNeumannIntegers()
 
   // Some variables for repeated use:
   bool ok  = true;
-  Set  r;       // get rid - use y
-  int  v1, v2;
-  Set  x, y, a, b;
+  int  v1, v2;           // ToDo: use only one v
+  Set  x, y, a, b, r;
   std::string str;
 
   // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
@@ -10959,6 +10958,16 @@ void testNeumannIntegers()
   NI::split(x, a, b);
   str = Set::setToString(a); ok &= str == "{O,{O}}";  // 2
   str = Set::setToString(b); ok &= str == "{O}";      // 1
+
+  // Test negation:
+  x = NI::negative(x);
+  NI::split(x, a, b);
+  str = Set::setToString(a); ok &= str == "{O}";      // 1
+  str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
+
+
+  // ToDo:
+  // -Use a helper function test(size_t a, size_t b, string sa, string sb, ..)
 
 
 

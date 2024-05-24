@@ -8168,6 +8168,7 @@ public:
 
   /** Splits the Neumann integer x = (a, b) into its two parts. */
   static void split(const rsSetNaive& x, rsSetNaive& a, rsSetNaive& b);
+  // Move into Set
 
   /** Implements the equivalence relation...TBC... */
   static bool equals(const rsSetNaive& x, const rsSetNaive& y);
@@ -8195,8 +8196,18 @@ public:
   static rsSetNaive embed(const rsSetNaive& x) { return Set::orderedPair(x, NN::zero()); }
   // Needs test
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Operations
+
   /** Turns the given Neumann integer x into its negative -x. */
   static rsSetNaive negative(const rsSetNaive& x);
+
+  /** Computes the sum of two Neumann integers. */
+  static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
+
+  /** Computes the product of two Neumann integers. */
+  static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
 
   /** Turns the given Neumann integer x into its canonical representation. A tuple (a,b) represents
   the integer a-b. For example, the canonical representation of the number two is 2 = (2,0). One
@@ -8209,12 +8220,6 @@ public:
   // I think, non canonical representation can occur in a subtraction, i.e. a negation followed
   // by addition. I think, the sum of a canonical positive and negative number will give rise to 
   // a non-canonical representation. ToDo: verify and document that
-
-  /** Computes the sum of two Neumann integers. */
-  static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
-
-  /** Computes the product of two Neumann integers. */
-  static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
 
 };
 
@@ -8264,6 +8269,31 @@ rsSetNaive rsNeumannInteger::negative(const rsSetNaive& x)
   return Set::orderedPair(b, a);  // -(a, b) = (b, a)
 }
 
+rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
+{
+  rsSetNaive a, b, c, d;
+  split(x, a, b);
+  split(y, c, d);
+  return Set::orderedPair(NN::sum(a, c), NN::sum(b, d)); // (a, b) + (c, d) = (a+c, b+d)
+}
+
+rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
+{
+  rsSetNaive a, b, c, d;
+  split(x, a, b);
+  split(y, c, d);
+  rsSetNaive p = NN::sum(NN::product(a, c), NN::product(b, d));  // p = a*c + b*d
+  rsSetNaive q = NN::sum(NN::product(a, d), NN::product(b, c));  // q = a*d + b*c
+  return Set::orderedPair(p, q);                                 // y = (p, q)
+
+  // Questions: 
+  //
+  // -Does it make a difference for the representation of the set (i.e. order, duplicates)
+  //  when we order the argumens for the sum and product differently? We are allowed to do this due
+  //  to commutativity. Maybe test that on a lower level. Look at the string representations of
+  //  2+3 and 3+2 and 2*3 and 3*2 for rsNeumannNumber
+}
+
 rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
 {
   rsSetNaive a, b;
@@ -8292,31 +8322,6 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
   //      return (max(b), 0);
 }
 
-rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
-{
-  rsSetNaive a, b, c, d;
-  split(x, a, b);
-  split(y, c, d);
-  return Set::orderedPair(NN::sum(a, c), NN::sum(b, d)); // (a, b) + (c, d) = (a+c, b+d)
-}
-
-rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
-{
-  rsSetNaive a, b, c, d;
-  split(x, a, b);
-  split(y, c, d);
-  rsSetNaive p = NN::sum(NN::product(a, c), NN::product(b, d));  // p = a*c + b*d
-  rsSetNaive q = NN::sum(NN::product(a, d), NN::product(b, c));  // q = a*d + b*c
-  return Set::orderedPair(p, q);                                 // y = (p, q)
-
-  // Questions: 
-  //
-  // -Does it make a difference for the representation of the set (i.e. order, duplicates)
-  //  when we order the argumens for the sum and product differently? We are allowed to do this due
-  //  to commutativity. Maybe test that on a lower level. Look at the string representations of
-  //  2+3 and 3+2 and 2*3 and 3*2 for rsNeumannNumber
-}
-
 //=================================================================================================
 
 /** Implements rational numbers as equivalence classes of ordered pairs of Neumann integers.
@@ -8332,6 +8337,21 @@ public:
   using NI  = rsNeumannInteger;
   using Set = rsSetNaive;
 
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+
+  /** Implements the equivalence relation...TBC... */
+  static bool equals(const rsSetNaive& x, const rsSetNaive& y);
+
+  /** Returns the value that is represented by the neumann integer x. */
+  static std::pair<int, int> value(const rsSetNaive& x);
+
+  static rsSetNaive numerator(const rsSetNaive& x);
+
+  static rsSetNaive denominator(const rsSetNaive& x);
+
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Factory
@@ -8345,6 +8365,44 @@ public:
 
 
 };
+
+bool rsNeumannRational::equals(const rsSetNaive& x, const rsSetNaive& y)
+{
+  rsSetNaive a, b, c, d, p, q;
+  NI::split(x, a, b);                // decompose x = a/b into a, b
+  NI::split(y, c, d);                // decompose y = c/d into c, d
+  p = NI::product(a, d);             //   compose p = a * d
+  q = NI::product(b, c);             //   compose q = b * c
+  return NI::equals(p, q);
+}
+// Needs test
+
+rsSetNaive rsNeumannRational::numerator(const rsSetNaive& x)
+{
+  rsSetNaive a, b;
+  NI::split(x, a, b); 
+  return a;
+}
+// Needs test
+
+rsSetNaive rsNeumannRational::denominator(const rsSetNaive& x)
+{
+  rsSetNaive a, b;
+  NI::split(x, a, b); 
+  return b;
+}
+// Needs test
+
+std::pair<int, int> rsNeumannRational::value(const rsSetNaive& x)
+{
+  rsSetNaive a, b;
+  NI::split(x, a, b);
+  int ai = NI::value(a);
+  int bi = NI::value(b);
+  return std::pair(ai, bi);
+}
+// Needs test
+
 
 
 rsSetNaive rsNeumannRational::create(int num, int den)

@@ -11131,12 +11131,13 @@ void testNeumannRationals()
   Set p_1_3 = NR::create(+1, 3);  // +1/3
   Set p_2_3 = NR::create(+2, 3);  // +2/3
   Set m_2_3 = NR::create(-2, 3);  // -2/3
-
-
+  Set p_3_4 = NR::create(+3, 4);  // +3/4
 
   str = Set::setToString(p_0_1);
   str = Set::setToString(p_1_1);
   str = Set::setToString(p_2_3);
+  str = Set::setToString(p_3_4);
+
 
 
 

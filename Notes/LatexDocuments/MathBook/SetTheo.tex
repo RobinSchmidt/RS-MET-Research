@@ -29,6 +29,8 @@ OK, so far, we know about one set: the empty set. It has no elements. It plays a
 \medskip
 By the way: We have informally stated that sets can have other sets as elements. As we will see later, that establishes a \emph{relation} between sets. The idea of a relation itself can be formalized in terms of sets. That seems cyclic and kinda is (I think), but for the time being, let's think about the is-element-of relation in informal terms. 
 
+% ToDo: Maybe talk a bit about the different possible textual representations of sets like { 1,2,3 }, { 2, 3, 1 }, { 1, 2, 3, 1 }, ... - this is important for an implementation - equlatiy comparisons should not depend on the representation. Maybe link my implementation. Maybe append an "Implementation" section at the end. Maybe do this also for other math topics - like the algorithms for polynomial multiplication (convolution), etc. - make some accompanying material - Code for C++, Python, Sage, etc.
+
 %---------------------------------------------------------------------------------------------------
 \subsection{Unrestricted Comprehension Principle}
 In naive set theory, there is one simple and very general principle that allows us to construct sets. Let $x$ be any kind of (mathematical) object and $\varphi(x)$ a predicate, i.e. a function into which we can plug in a variable $x$ and then $\varphi$ will return a boolean value that tells us whether or not $x$ has the property modeled by our predicate. With $\varphi$ in hand, we can build the set $S = \{x: \varphi(x)\}$ of all objects that satisfy our predicate. 

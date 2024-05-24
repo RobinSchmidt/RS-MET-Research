@@ -8205,6 +8205,11 @@ public:
   /** Computes the sum of two Neumann integers. */
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
 
+
+  static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
+
+
+
 };
 
 void rsNeumannInteger::split(const rsSetNaive& x, rsSetNaive& a, rsSetNaive& b)
@@ -8271,8 +8276,23 @@ rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
   return orderedPair(Base::sum(a, c), Base::sum(b, d)); // (a, b) + (c, d) = (a+c, b+d)
 }
 
+rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
+{
+  rsSetNaive a, b, c, d;
+  split(x, a, b);
+  split(y, c, d);
+  rsSetNaive p = Base::sum(Base::product(a, c), Base::product(b, d)); // p = a*c + b*d
+  rsSetNaive q = Base::sum(Base::product(a, d), Base::product(b, c)); // q = a*d + b*c
+  return orderedPair(p, q);                                           // y = (p, q)
 
-
+  // Questions: 
+  //
+  // -Does it make a difference for the representation of the set (i.e. order, duplicates)
+  //  when we order the argumens for the sum and product differently? We are allowed to do this due
+  //  to commutativity. Maybe test that on a lower level. Look at the string representations of
+  //  2+3 and 3+2 and 2*3 and 3*2 for rsNeumannNumber
+}
+// Needs test
 
 
 

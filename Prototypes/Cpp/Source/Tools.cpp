@@ -8242,9 +8242,15 @@ rsSetNaive rsNeumannInteger::create(size_t a, size_t b)
 rsSetNaive rsNeumannInteger::create(int n) 
 { 
   if(n >= 0)
-    return orderedPair(Base::create( size_t(n) ), Base::zero());  // x = (n,  0 )
+    return create(size_t(n), size_t( 0));  // x = (n,  0 )
   else
-    return orderedPair(Base::zero(), Base::create(size_t(-n)) );  // x = (0, |n|)
+    return create(size_t(0), size_t(-n));  // x = (0, |n|) = (0, -n)
+
+  // OLD:
+  //if(n >= 0)
+  //  return orderedPair(Base::create( size_t(n) ), Base::zero());  // x = (n,  0 )
+  //else
+  //  return orderedPair(Base::zero(), Base::create(size_t(-n)) );  // x = (0, |n|)
 
   // ToDo: use create(a, b)
 }
@@ -8274,15 +8280,9 @@ rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
   return orderedPair(Base::sum(a, c), Base::sum(b, d)); // (a, b) + (c, d) = (a+c, b+d)
 }
 
-/*
-rsSetNaive rsNeumannInteger::diff(const rsSetNaive& x, const rsSetNaive& y)
-{
-  rsSetNaive a, b, c, d;
-  split(x, a, b);
-  split(y, c, d);
-  return orderedPair(Base::sum(a, d), Base::sum(b, c)); // (a, b) - (c, d) = (a+d, b+c)
-}
-*/
+
+
+
 
 
 

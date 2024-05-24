@@ -10927,7 +10927,7 @@ void testNeumannIntegers()
 
   // Some variables for repeated use:
   bool ok  = true;
-  int  v1; //, v2;           // ToDo: use only one v
+  int  v;
   Set  x, y, a, b, r;
   std::string str;
 
@@ -10935,8 +10935,8 @@ void testNeumannIntegers()
 
   // Test with a non-canonical representation of the number 1 as the ordered pair (2,1):
   x   = NI::create(2, 1);
-  v1  = NI::value(x);
-  ok &= v1 == 1;
+  v   = NI::value(x);
+  ok &= v == 1;
   str = Set::orderedPairToString(x);
   ok &= str == "( {{O,{O}}} ; {{O,{O}},{O}} )";       // 1 = (2, 1) = { {2}, {2,1} }
   // numerals:  ( {  2    } ; {  2    , 1 } )
@@ -10947,9 +10947,9 @@ void testNeumannIntegers()
   str = Set::setToString(b); ok &= str == "{O}";      // 1
 
   // Test negation:
-  r = NI::negative(x);
-  v1  = NI::value(r);
-  ok &= v1 == -1;
+  r   = NI::negative(x);
+  v   = NI::value(r);
+  ok &= v == -1;
   NI::split(r, a, b);
   str = Set::setToString(a); ok &= str == "{O}";      // 1
   str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
@@ -10963,8 +10963,8 @@ void testNeumannIntegers()
 
   // Test with a non-canonical representation of the number 0 as the ordered pair (2,2):
   x   = NI::create(2, 2);
-  v1  = NI::value(x);
-  ok &= v1 == 0;
+  v   = NI::value(x);
+  ok &= v == 0;
   str = Set::orderedPairToString(x);
   ok &= str == "( {{O,{O}}} ; {{O,{O}},{O,{O}}} )";   // 0 = (2, 2) = { {2}, {2,2} }
   // numerals:  ( { 2     } ; {   2   ,   2   } )
@@ -10982,9 +10982,9 @@ void testNeumannIntegers()
   str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
 
   // Test negation:
-  r = NI::negative(x);
-  v1  = NI::value(r);
-  ok &= v1 == 0;
+  r   = NI::negative(x);
+  v   = NI::value(r);
+  ok &= v == 0;
   NI::split(r, a, b);
   str = Set::setToString(a); ok &= str == "{O,{O}}";  // 2
   str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
@@ -11054,10 +11054,10 @@ void testNeumannIntegers()
 
   // Test addition with a negative 2nd argument:
   r   = NI::sum(p2, m2);
-  v1  = NI::value(r);
-  ok &= v1 == 0;
-  v1  = NI::value(p0);
-  ok &= v1 == 0;
+  v   = NI::value(r);
+  ok &= v == 0;
+  v   = NI::value(p0);
+  ok &= v == 0;
   ok &= r != p0;             // r = (2,2), p0 = (0,0)
   ok &= NI::equals(r, p0);   // r and p0 are different but equivalent
 
@@ -11076,10 +11076,10 @@ void testNeumannIntegers()
 
   // 5 + -2 = 3:
   r   = NI::sum(p5, m2);
-  v1  = NI::value(r);
-  ok &= v1 == 3;
-  v1  = NI::value(p3);
-  ok &= v1 == 3;
+  v   = NI::value(r);
+  ok &= v == 3;
+  v   = NI::value(p3);
+  ok &= v == 3;
   ok &= NI::equals(r, p3);
   ok &= r.isOrderedPair();
   str = Set::orderedPairToString(r);
@@ -11088,10 +11088,10 @@ void testNeumannIntegers()
 
   // 3 + -5 = -2:
   r   = NI::sum(p3, m5);
-  v1  = NI::value(r);
-  ok &= v1 == -2;
-  v1  = NI::value(m2);
-  ok &= v1 == -2;
+  v   = NI::value(r);
+  ok &= v == -2;
+  v   = NI::value(m2);
+  ok &= v == -2;
   ok &= NI::equals(r, m2);
   r   = NI::canonical(r);
   ok &= r == m2;

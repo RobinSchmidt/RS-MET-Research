@@ -11063,8 +11063,6 @@ void testNeumannIntegers()
   ok &= r != p0;             // r = (2,2), p0 = (0,0)
   ok &= NI::equals(r, p0);   // r and p0 are different but equivalent
 
-
-
   // Test canonicalization:
   r    = NI::sum(p1, m1);
   ok  &= r.isOrderedPair();
@@ -11104,16 +11102,15 @@ void testNeumannIntegers()
   r = NI::product(m2, p3); ok &= NI::equals(r, m6);  // -2 * +3 = -6:
   r = NI::product(m2, m3); ok &= NI::equals(r, p6);  // -2 * -3 = +6
 
-
-
   rsAssert(ok);
 
   // ToDo:
   //
-  // -Implement and test multiplication.
   // -Test addition and multiplication with non-canonical representations of numbers. Our 
   //  m6,..,p6 variables that we use in the tests are all canonical representations.
 }
+
+
 
 
 void testGeneralizedCollatz()

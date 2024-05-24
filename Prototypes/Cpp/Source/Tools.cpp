@@ -8160,6 +8160,8 @@ class rsNeumannInteger : public rsNeumannNumber
 public:
 
   using Base = rsNeumannNumber;
+  // We actually have the baseclass only to abbreviate calls to functions in it. Maybe get rid of 
+  // the baseclass and use a "using NN = rsNeumannNumber"
 
 
   //-----------------------------------------------------------------------------------------------
@@ -8317,6 +8319,22 @@ rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
   //  to commutativity. Maybe test that on a lower level. Look at the string representations of
   //  2+3 and 3+2 and 2*3 and 3*2 for rsNeumannNumber
 }
+
+//=================================================================================================
+
+/** Implements rational numbers as equivalence classes of ordered pairs of Neumann integers.
+...TBC... */
+
+/*
+class rsNeumannRational // : public rsNeumannInteger
+{
+
+public:
+
+
+
+};
+*/
 
 
 

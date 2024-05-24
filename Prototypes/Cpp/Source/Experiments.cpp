@@ -10999,18 +10999,20 @@ void testNeumannIntegers()
 
  
 
-  // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
+  // Create numbers -6,..,+6. We use m5 for "minus five" and p2 for "plus two", etc.:
+  Set m6 = NI::create(-6);
   Set m5 = NI::create(-5);
   Set m4 = NI::create(-4);
   Set m3 = NI::create(-3);
   Set m2 = NI::create(-2);
   Set m1 = NI::create(-1);
-  Set p0 = NI::create(0);
-  Set p1 = NI::create(1);
-  Set p2 = NI::create(2);
-  Set p3 = NI::create(3);
-  Set p4 = NI::create(4);
-  Set p5 = NI::create(5);
+  Set p0 = NI::create( 0);
+  Set p1 = NI::create( 1);
+  Set p2 = NI::create( 2);
+  Set p3 = NI::create( 3);
+  Set p4 = NI::create( 4);
+  Set p5 = NI::create( 5);
+  Set p6 = NI::create( 6);
 
   // Check the specific function to create 0 and 1:
   ok &= p0 == NI::zero();
@@ -11098,6 +11100,10 @@ void testNeumannIntegers()
 
   // Test multiplication:
   // 2 * 3 = 6:
+  r   = NI::product(p2, p3);
+  v   = NI::value(r);
+  ok &= v == 6;
+  ok &= NI::equals(r, p6);
 
 
 

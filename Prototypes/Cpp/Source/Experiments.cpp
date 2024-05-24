@@ -10960,25 +10960,18 @@ void testNeumannIntegers()
   str = Set::setToString(b); ok &= str == "{O}";      // 1
 
   // Test negation:
-  x = NI::negative(x);
-  NI::split(x, a, b);
+  r = NI::negative(x);
+  v1  = NI::value(r);
+  ok &= v1 == -1;
+  NI::split(r, a, b);
   str = Set::setToString(a); ok &= str == "{O}";      // 1
   str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
 
+  // Test canonicalization:
+  r = NI::canonical(x);        // ACCESS VIOLATON!!
 
   // ToDo:
   // -Use a helper function test(size_t a, size_t b, string sa, string sb, ..)
-
-
-
-
-
-
-
-
-  //x   = NI::canonical(x);  // ACCESS VIOLATON!!
-  //v1  = NI::value(x);
-  //ok &= v1 == 1;
 
 
 

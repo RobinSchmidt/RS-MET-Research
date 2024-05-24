@@ -8154,14 +8154,17 @@ represent x/y where x,y are integers and the integers themselves are embedded by
 Inverse elements are represented by swapping the order of the components of the pair, i.e. the 
 inverse of (x, y) is (y, x). That works the samein both cases. ...TBC... */
 
-class rsNeumannInteger : public rsNeumannNumber
+class rsNeumannInteger //: public rsNeumannNumber
 {
 
 public:
 
-  using Base = rsNeumannNumber;
+  //using Base = rsNeumannNumber;
   // We actually have the baseclass only to abbreviate calls to functions in it. Maybe get rid of 
   // the baseclass and use a "using NN = rsNeumannNumber"
+
+  using NN  = rsNeumannNumber;
+  using Set = rsSetNaive;
 
 
   //-----------------------------------------------------------------------------------------------
@@ -8180,10 +8183,10 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Factory
 
-  static rsSetNaive zero() { return orderedPair(Base::zero(), Base::zero()); }
+  static rsSetNaive zero() { return Set::orderedPair(NN::zero(), NN::zero()); }
   // Needs test
 
-  static rsSetNaive one()  { return orderedPair(Base::one(), Base::zero()); }
+  static rsSetNaive one()  { return Set::orderedPair(NN::one(), NN::zero()); }
   // Needs test
 
   /** Creates a (potentially non-canonical) Neumann integer represented by the ordered pair (a, b) 
@@ -8195,7 +8198,7 @@ public:
   static rsSetNaive create(int n);
 
   /** Embeds a Neumann natural number x into the Neumann integers by creating the pair (x, 0). */
-  static rsSetNaive embed(const rsSetNaive& x) { return orderedPair(x, Base::zero()); }
+  static rsSetNaive embed(const rsSetNaive& x) { return Set::orderedPair(x, NN::zero()); }
   // Needs test
 
   /** Turns the given Neumann integer x into its negative -x. */
@@ -8232,8 +8235,8 @@ bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d, p, q;
   split(x, a, b);                // decompose x = a - b into a, b
   split(y, c, d);                // decompose y = c - d into c, d
-  p = Base::sum(a, d);           //   compose p = a + d
-  q = Base::sum(b, c);           //   compose q = b + c
+  p = NN::sum(a, d);             //   compose p = a + d
+  q = NN::sum(b, c);             //   compose q = b + c
   return p.equals(q);
 
   // Notes:
@@ -8244,12 +8247,12 @@ bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
 int rsNeumannInteger::value(const rsSetNaive& x)
 {
   // x = (a, b) = a - b
-  return int(Base::value(x.orderedPairFirst())) - int(Base::value(x.orderedPairSecond()));
+  return int(NN::value(x.orderedPairFirst())) - int(NN::value(x.orderedPairSecond()));
 }
 
 rsSetNaive rsNeumannInteger::create(size_t a, size_t b)
 {
-  return orderedPair(Base::create(a), Base::create(b));
+  return Set::orderedPair(NN::create(a), NN::create(b));
 }
 
 rsSetNaive rsNeumannInteger::create(int n) 
@@ -8264,15 +8267,15 @@ rsSetNaive rsNeumannInteger::negative(const rsSetNaive& x)
 {
   rsSetNaive a, b;
   split(x, a, b);
-  return orderedPair(b, a);  // -(a, b) = (b, a)
+  return Set::orderedPair(b, a);  // -(a, b) = (b, a)
 }
 
 rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
 {
   rsSetNaive a, b;
   split(x, a, b);
-  size_t va = Base::value(a);
-  size_t vb = Base::value(b);
+  size_t va = NN::value(a);
+  size_t vb = NN::value(b);
   int    v  = int(va) - int(vb);
   return create(v);
 
@@ -8300,7 +8303,7 @@ rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d;
   split(x, a, b);
   split(y, c, d);
-  return orderedPair(Base::sum(a, c), Base::sum(b, d)); // (a, b) + (c, d) = (a+c, b+d)
+  return Set::orderedPair(NN::sum(a, c), NN::sum(b, d)); // (a, b) + (c, d) = (a+c, b+d)
 }
 
 rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
@@ -8308,9 +8311,9 @@ rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d;
   split(x, a, b);
   split(y, c, d);
-  rsSetNaive p = Base::sum(Base::product(a, c), Base::product(b, d)); // p = a*c + b*d
-  rsSetNaive q = Base::sum(Base::product(a, d), Base::product(b, c)); // q = a*d + b*c
-  return orderedPair(p, q);                                           // y = (p, q)
+  rsSetNaive p = NN::sum(NN::product(a, c), NN::product(b, d));  // p = a*c + b*d
+  rsSetNaive q = NN::sum(NN::product(a, d), NN::product(b, c));  // q = a*d + b*c
+  return Set::orderedPair(p, q);                                 // y = (p, q)
 
   // Questions: 
   //

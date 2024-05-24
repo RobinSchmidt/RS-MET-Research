@@ -8072,7 +8072,12 @@ bool rsNeumannNumber::less(const rsSetNaive& x, const rsSetNaive& y)
   // Notes:
   //
   // -We use the fact that for von Neumann numbers, the cardinality is equal to the represented
-  //  number such that we can make use of the < operator on size_t
+  //  number such that we can make use of the < operator on size_t. 
+  // -Q: Can we get away without appealing to the cardinality? But maybe we don't have to. Maybe
+  //  in defining relations, it's OK to use the semantics of the sets? We do this in the definition
+  //  of the equivalence relation for a Neumann integer as well.
+  // -Maybe we could implement a max() function based on this less that returns a maximum of two
+  //  sets or a set of sets.
 }
 
 rsSetNaive rsNeumannNumber::create(size_t i)
@@ -8194,32 +8199,23 @@ public:
   /** Turns the given Neumann integer x into its negative -x. */
   static rsSetNaive negative(const rsSetNaive& x);
 
-  /** Turns the given Neumann integer x into its canonical representation. */
+  /** Turns the given Neumann integer x into its canonical representation. A tuple (a,b) represents
+  the integer a-b. For example, the canonical representation of the number two is 2 = (2,0). One
+  example for a non-canonical representation would be (5,3). Bringing a Neumann integer into its 
+  canonical from is analoguous to reducing a representation of a rational number to lowest terms.
+  The implementation of this function uses operations that use the intended semantics of the sets
+  on a higher level. It's not implemented purely in terms of set operations. So, if you want to 
+  simulate Peano artithmetic purely with set operations, this function cannot be used. */
   static rsSetNaive canonical(const rsSetNaive& x);
-  // Note that a canonical representation may be more expensive in terms of memory consumption and
-  // computation time. Memory-wise, it would be more desirable to keep the sum of the components of
-  // the pair (a, b) as close to zero as possible. (6,0) will need more memory than (3,3) because 
-  // 2^6 + 2^0 > 2^3 + 2^3 - one six is more expensive that two threes due to the exponential 
-  // scaling of memory use. ...Wait - no - that's nonsense. (3,3) is not a representation of 6. 
-  // It's a representation of 0! OK - so that means, the canonical representations are indeed the
-  // most efficient ones. Maybe we should ensure that the operations sum, product always produce
-  // canonical representations. At which point can we actually produce non-canonical 
-  // representations in our operations? BUT: The function to create the canonical representaions 
-  // actually uses an operations that is not "allowed" by set theory - we translate to values,
-  // subtract those values and then create a new object from scratch. Can we canonicalize purely
-  // via set-operations? Maybe if in x = (a, b) we have a > b then we could convert it to (c, 0) 
-  // where c is a-b using the set difference? Let x = +2 = (5,3) = (2,0) where
-  // 5 = { 0,1,2,3,4 } and 3 = { 0,1,2 }. We want to produce 2 = { 0,1 } only via set operations.
-  // Hmmm...that doesn't seem to be possible a-b = 5-3 would produce { 3,4 } which does not 
-  // represent 2. It's not even a valid Neumann number.
+  // I think, non canonical representation can occur in a subtraction, i.e. a negation followed
+  // by addition. I think, the sum of a canonical positive and negative number will give rise to 
+  // a non-canonical representation. ToDo: verify and document that
 
   /** Computes the sum of two Neumann integers. */
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
 
-
+  /** Computes the product of two Neumann integers. */
   static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
-
-
 
 };
 
@@ -8277,6 +8273,24 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
   size_t vb = Base::value(b);
   int    v  = int(va) - int(vb);
   return create(v);
+
+  // Questions:
+  //
+  // -Can we canonicalize a number purely via set-operations, i.e. without resorting to convert the
+  //  sets a,b to their intended values, doing a subtraction and the creating a canonical number 
+  //  from scratch? For example, let x = +2 = (5,3) = (2,0) where 5 = { 0,1,2,3,4 } and 
+  //  3 = { 0,1,2 }. We want to produce 2 = { 0,1 } only via set operations. The set difference 
+  //  a-b = 5-3 would produce { 3,4 } which does not represent 2. It's not even a valid Neumann 
+  //  number. Or maybe we could prove that the set { 0,1 } cannot be created from { 0,1,2,3,4 } and
+  //  { 0,1,2 } purely via set operations? Or maybe wo could extract the last element from 
+  //  { 0,1,2 }? Would that always work? But in sets, there is no notion of "last". But the 2 is 
+  //  the last overlapping element. But maybe we could use the "largest" using our defined "less" 
+  //  relation? Maybe we could implement "max"-function based on the "less" function and then do: 
+  //
+  //    if(b.isEmpty())
+  //      return (a, b);          // (a,b) is already canonical
+  //    else
+  //      return (max(b), 0);
 }
 
 rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)

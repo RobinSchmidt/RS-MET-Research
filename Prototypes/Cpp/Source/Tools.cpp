@@ -8200,7 +8200,18 @@ public:
   // computation time. Memory-wise, it would be more desirable to keep the sum of the components of
   // the pair (a, b) as close to zero as possible. (6,0) will need more memory than (3,3) because 
   // 2^6 + 2^0 > 2^3 + 2^3 - one six is more expensive that two threes due to the exponential 
-  // scaling of memory use.
+  // scaling of memory use. ...Wait - no - that's nonsense. (3,3) is not a representation of 6. 
+  // It's a representation of 0! OK - so that means, the canonical representations are indeed the
+  // most efficient ones. Maybe we should ensure that the operations sum, product always produce
+  // canonical representations. At which point can we actually produce non-canonical 
+  // representations in our operations? BUT: The function to create the canonical representaions 
+  // actually uses an operations that is not "allowed" by set theory - we translate to values,
+  // subtract those values and then create a new object from scratch. Can we canonicalize purely
+  // via set-operations? Maybe if in x = (a, b) we have a > b then we could convert it to (c, 0) 
+  // where c is a-b using the set difference? Let x = +2 = (5,3) = (2,0) where
+  // 5 = { 0,1,2,3,4 } and 3 = { 0,1,2 }. We want to produce 2 = { 0,1 } only via set operations.
+  // Hmmm...that doesn't seem to be possible a-b = 5-3 would produce { 3,4 } which does not 
+  // represent 2. It's not even a valid Neumann number.
 
   /** Computes the sum of two Neumann integers. */
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
@@ -8292,11 +8303,6 @@ rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
   //  to commutativity. Maybe test that on a lower level. Look at the string representations of
   //  2+3 and 3+2 and 2*3 and 3*2 for rsNeumannNumber
 }
-// Needs test
-
-
-
-
 
 
 

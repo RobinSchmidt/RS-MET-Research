@@ -11101,9 +11101,10 @@ void testNeumannIntegers()
   // Test multiplication:
   // 2 * 3 = 6:
   r   = NI::product(p2, p3);
-  v   = NI::value(r);
-  ok &= v == 6;
+  ok &= NI::value(r) == 6;
   ok &= NI::equals(r, p6);
+  str  = Set::orderedPairToString(r);
+
 
 
 
@@ -11112,6 +11113,8 @@ void testNeumannIntegers()
   // ToDo:
   //
   // -Implement and test multiplication.
+  // -Test addition and multiplication with non-canonical representations of numbers. Our 
+  //  m6,..,p6 variables that we use in the tests are all canonical representations.
 }
 
 

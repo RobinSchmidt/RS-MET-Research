@@ -10929,7 +10929,7 @@ void testNeumannIntegers()
   bool ok  = true;
   Set  r;       // get rid - use y
   int  v1, v2;
-  Set  x, y;
+  Set  x, y, a, b;
   std::string str;
 
   // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
@@ -10954,6 +10954,22 @@ void testNeumannIntegers()
   str = Set::orderedPairToString(x);
   ok &= str == "( {{O,{O}}} ; {{O,{O}},{O}} )";   // 1 = (2, 1) = { {2}, {2,1} }
   // numerals:  ( {  2    } ; {  2    , 1 } )
+
+  // Test splitting:
+  NI::split(x, a, b);
+  str = Set::setToString(a); ok &= str == "{O,{O}}";  // 2
+  str = Set::setToString(b); ok &= str == "{O}";      // 1
+
+
+
+
+
+
+
+
+  //x   = NI::canonical(x);  // ACCESS VIOLATON!!
+  //v1  = NI::value(x);
+  //ok &= v1 == 1;
 
 
 

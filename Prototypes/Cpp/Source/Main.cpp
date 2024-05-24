@@ -75,8 +75,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testFiniteField();     // stub
-  testSet();
-  testNeumannNumbers();
+  //testSet();
+  //testNeumannNumbers();
   testNeumannIntegers();
   //testGeneralizedCollatz();
   //testPowerCommutator();

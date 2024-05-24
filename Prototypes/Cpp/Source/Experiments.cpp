@@ -10924,7 +10924,13 @@ void testNeumannIntegers()
   using Set = rsSetNaive;
   using NN  = rsNeumannNumber;
   using NI  = rsNeumannInteger;
-  bool  ok  = true;
+
+  // Some variables for repeated use:
+  bool ok  = true;
+  Set  r;       // get rid - use y
+  int  v1, v2;
+  Set  x, y;
+  std::string str;
 
   // Create numbers -5,..,+5. We use m5 for "minus five" and p2 for "plus two", etc.:
   Set m5 = NI::create(-5);
@@ -10940,10 +10946,19 @@ void testNeumannIntegers()
   Set p3 = NI::create(3);
   Set p4 = NI::create(4);
   Set p5 = NI::create(5);
-  Set r;
-  int v1, v2;
 
-  std::string str;
+  // Try to trigger the access violation bug in the canonicalization:
+  x   = NI::create(2, 1);
+  v1  = NI::value(x);
+  ok &= v1 == 1;
+  str = Set::orderedPairToString(x);
+  ok &= str == "( {{O,{O}}} ; {{O,{O}},{O}} )";   // 1 = (2, 1) = { {2}, {2,1} }
+  // numerals:  ( {  2    } ; {  2    , 1 } )
+
+
+
+
+  // Check a couple of string representations:
   str = Set::orderedPairToString(p0);
   ok &= str == "( {O} ; {O,O} )";
   // numerals:  ( {0} ; {0,0} )

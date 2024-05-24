@@ -8160,12 +8160,13 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Inquiry
 
-
+  /** Splits the Neumann integer x = (a, b) into its two parts. */
   static void split(const rsSetNaive& x, rsSetNaive& a, rsSetNaive& b);
 
   /** Implements the equivalence relation...TBC... */
   static bool equals(const rsSetNaive& x, const rsSetNaive& y);
 
+  /** Returns the value that is represented by the neumann integer x. */
   static int value(const rsSetNaive& x);
 
 
@@ -8173,34 +8174,32 @@ public:
   // \name Factory
 
   static rsSetNaive zero() { return orderedPair(Base::zero(), Base::zero()); }
+  // Needs test
 
   static rsSetNaive one()  { return orderedPair(Base::one(), Base::zero()); }
+  // Needs test
 
+  /** Creates a (potentially non-canonical) Neumann integer represented by the ordered pair (a, b) 
+  which stands for the number x = a - b */
+  static rsSetNaive create(size_t a, size_t b);
+
+  /** Creates a canonical representation of the given integer as the ordered pair
+  (a, b) = (n, 0) for n >= 0  and  (a, b) = (0, -n) for n < 0. */
   static rsSetNaive create(int n);
-
-
 
   /** Embeds a Neumann natural number x into the Neumann integers by creating the pair (x, 0). */
   static rsSetNaive embed(const rsSetNaive& x) { return orderedPair(x, Base::zero()); }
   // Needs test
 
 
-
+  /** Turns the given Neumann integer x into its negative -x. */
   static rsSetNaive negative(const rsSetNaive& x);
 
+  /** Turns the given Neumann integer x into its canonical representation. */
   static rsSetNaive canonical(const rsSetNaive& x);
 
-
-
+  /** Computes the sum of two Neumann integers. */
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
-
-
-
-
-
-
-  //static rsSetNaive diff(const rsSetNaive& x, const rsSetNaive& y);
-
 
 };
 
@@ -8235,6 +8234,10 @@ int rsNeumannInteger::value(const rsSetNaive& x)
   return int(Base::value(x.orderedPairFirst())) - int(Base::value(x.orderedPairSecond()));
 }
 
+rsSetNaive rsNeumannInteger::create(size_t a, size_t b)
+{
+  return orderedPair(Base::create(a), Base::create(b));
+}
 
 rsSetNaive rsNeumannInteger::create(int n) 
 { 
@@ -8242,6 +8245,8 @@ rsSetNaive rsNeumannInteger::create(int n)
     return orderedPair(Base::create( size_t(n) ), Base::zero());  // x = (n,  0 )
   else
     return orderedPair(Base::zero(), Base::create(size_t(-n)) );  // x = (0, |n|)
+
+  // ToDo: use create(a, b)
 }
 
 rsSetNaive rsNeumannInteger::negative(const rsSetNaive& x)

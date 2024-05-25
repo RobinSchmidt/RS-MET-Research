@@ -10866,7 +10866,23 @@ void testNeumannNumbers()
   r = NN::product(n3, n2);  ok &= r == n6;   // 3 * 2 = 6
 
   // Test division:
+
+
   r = NN::quotient(n0, n1); ok &= r == n0;   // 0 / 1 = 0
+  r = NN::quotient(n0, n2); ok &= r == n0;   // 0 / 2 = 0
+  r = NN::quotient(n1, n1); ok &= r == n1;   // 1 / 1 = 1
+  r = NN::quotient(n1, n2); ok &= r == n0;   // 1 / 2 = 0
+  r = NN::quotient(n2, n1); ok &= r == n2;   // 2 / 1 = 2
+
+  r = NN::quotient(n2, n2); ok &= r == n1;   // 2 / 2 = 1 FAILS
+
+
+
+  //r = NN::quotient(n1, n1); ok &= r == n1;   // 1 / 1 = 1
+
+  // What about division by zero? I think, it will end up in an infinite loop
+
+
 
   // Test exponentiation:
   r = NN::power(n2, n0);    ok &= r == n1;   // 2 ^ 0 = 1

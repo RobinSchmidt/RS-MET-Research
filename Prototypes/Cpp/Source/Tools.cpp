@@ -8186,7 +8186,8 @@ rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
   // -Maybe implement the integer logarithm in a similar way. I think, we would just need to 
   //  accumulate multiplicatively (starting at 1)
   // -Can we also implement the modulo operation? Maybe we first need to think about implementing
-  //  the difference.
+  //  the difference. Maybe to compute difference, we need to use the class rsNeumannInteger? Can 
+  //  we do it without it?
   // -Handle division by zero somehow
 }
 
@@ -8376,6 +8377,9 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
   //      return (a, b);          // (a,b) is already canonical
   //    else
   //      return (max(b), 0);
+  // -Another idea: split (a,b) and form (a,0) and (0,b) and then form (a,0) + (0,b). I think, this
+  //  should produce a canonical form of (a,b). ...try it! Maybe implement a function 
+  //  isCanonical() that we can use in tests for that.
 }
 
 //=================================================================================================

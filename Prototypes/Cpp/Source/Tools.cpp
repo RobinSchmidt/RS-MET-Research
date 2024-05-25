@@ -8078,15 +8078,7 @@ public:
   multiplication in terms of addition. */
   static rsSetNaive power(const rsSetNaive& x, const rsSetNaive& y);
 
-
-
-
-
-
   // ToDo:
-  // -Explain why we operate on the baseclass objects - we do it to have access to the static 
-  //  baseclass functions
-  // -Maybe remove baseclass - actually, this class is just a collection of functions.
   // -Maybe implement a different construction of the naturals as well.
 };
 
@@ -8105,8 +8097,8 @@ size_t rsNeumannNumber::value(const rsSetNaive& A)
 
 bool rsNeumannNumber::less(const rsSetNaive& x, const rsSetNaive& y)
 { 
-  return y.hasElement(x);                            // Expensive. Uses only set operations.
-  //return x.getCardinality() < y.getCardinality();  // Efficient. Relies on semantics.
+  return y.hasElement(x);                           // Expensive. Uses only set operations.
+  //return x.getCardinality() < y.getCardinality(); // Efficient. Relies on implementation details.
 
   // Notes:
   //

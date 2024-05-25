@@ -7428,9 +7428,15 @@ set of objects of some data type like you would expect from std::set. Instead, i
 data structure with sets all the way down. For technical reasons, the elements must be held as 
 pointers-to-elements which complicates the internal implementation but client code does not really 
 need to think about this. The implementation is similar to how would one implement a tree in C++ 
-with nodes where each node has an array of pointers to child nodes. The implementation is rather 
-naive and just for proof/demonstration of set theoretical concepts and entirely unpractical. It's a
-math excercise. */
+with nodes where each node has an array of pointers to child nodes. 
+
+One may think about using std::set but what should the template parameter be? If you try to use 
+std::set<std::set>, it doesn't compile because now the inner set also needs a template parameter.
+If we don't have any primitive datatype at some level, we'll end up in an infinite regress. This
+implementation here does not have such problems. It really is a set of sets and there is no other
+datatype involved. The implementation is rather naive and just for proof/demonstration of set 
+theoretical concepts and entirely unpractical. It's purely educational code - basically a math 
+excercise. */
 
 class rsSetNaive
 {
@@ -7506,7 +7512,9 @@ public:
   /** Returns true iff this set has the given set A as subset. */
   bool hasSubset(const rsSetNaive& A) const;
 
-  //bool isSubsetOf()...
+  //bool isSubsetOf(const rsSetNaive& A) const { return A.hasSubset(*this); }
+  // Needs test
+  // inverse relation of hasSubset
 
   /** Returns true iff this set is equal to the given set A. */
   bool equals(const rsSetNaive& A) const;
@@ -7529,8 +7537,12 @@ public:
   /** Returns the i-th element of this set. */
   rsSetNaive getElement(size_t i) const;
 
+  /** Assuming that this set represents an ordered pair, i.e. was created by the orderedPair() 
+  function, this function extracts the first element of the ordered pair. */
   rsSetNaive orderedPairFirst() const;
 
+  /** Assuming that this set represents an ordered pair, i.e. was created by the orderedPair() 
+  function, this function extracts the second element of the ordered pair. */
   rsSetNaive orderedPairSecond() const;
 
 
@@ -7589,13 +7601,16 @@ public:
   /** Given two sets A and B, this function produces the difference A minus B which contains only 
   those elements from A which are not in B. */
   static rsSetNaive difference(const rsSetNaive& A, const rsSetNaive& B);
+  // Needs test
 
   /** Creates the symmetric difference of A and B. This is the union minus the intersection. */
   static rsSetNaive symmetricDifference(const rsSetNaive& A, const rsSetNaive& B);
+  // Needs test
 
   /** Creates the set product of A and B, i.e. the set of all ordered pairs of elements from A 
   and B. */
   static rsSetNaive product(const rsSetNaive& A, const rsSetNaive& B);
+  // Needs test
 
 
 

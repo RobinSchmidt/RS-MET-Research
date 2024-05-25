@@ -8169,28 +8169,17 @@ rsSetNaive rsNeumannNumber::product(const rsSetNaive& x, const rsSetNaive& y)
 
 rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
 {
-  rsSetNaive a = zero();       // Accumulator
-  rsSetNaive q = zero();       // Quotient
+  rsAssert(!isZero(y), "Division by zero error!");
+  rsSetNaive a = zero();  // Accumulator
+  rsSetNaive q = zero();  // Quotient
   while(true)
   {
-    a = sum(a, y);             // Acumulate another y into a
-    if(less(x, a))             // Stop accumulation when (a >= x) which means (x < a)
+    a = sum(a, y);        // Acumulate another y into a
+    if(less(x, a))        // Stop accumulation when (a >= x) which means (x < a)
       return q;
-    q = sum(q, one());
+    q = successor(q);     // Increment quotient by one
+    //q = sum(q, one());
   }
-
-
-  /*
-  rsSetNaive a = zero();       // Accumulator
-  while(true)
-  {
-    rsSetNaive t = sum(a, y);  // Temporary
-    if(less(x, t))             // Stop accumulation when (t >= x) which means (x < t)
-      return a;
-    a = t;
-  }
-  */
-
 
   // ToDo:
   //
@@ -8198,8 +8187,8 @@ rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
   //  accumulate multiplicatively (starting at 1)
   // -Can we also implement the modulo operation? Maybe we first need to think about implementing
   //  the difference.
+  // -Handle division by zero somehow
 }
-// Needs tests
 
 rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
 {

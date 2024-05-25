@@ -10886,8 +10886,6 @@ void testNeumannNumbers()
   r = NN::quotient(n4, n5); ok &= r == n0;   // 4 / 5 = 0
 
   // Maybe write and use a helper function testDiv(num, den, res)
-
-
   // What about division by zero? I think, it will end up in an infinite loop
 
 

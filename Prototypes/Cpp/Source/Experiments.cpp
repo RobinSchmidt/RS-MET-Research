@@ -10883,14 +10883,16 @@ void testNeumannNumbers()
   r = NN::quotient(n4, n4); ok &= r == n1;   // 4 / 4 = 1
   r = NN::quotient(n4, n5); ok &= r == n0;   // 4 / 5 = 0
 
-  // Hangs?:
-  for(int i = 0; i < 10; i++)
+  // Do the test for more numbers in a loop. We verify that the result of the quotient function
+  // matches the result of the integer division i/j. In the inner j-loop, at i = j+1 we'll get
+  // q = 0 for the first time. We'll go up one more up to j == i+2:
+  for(int i = 0; i < 8; i++)
   {
-    for(int j = 1; j < 10; j++)
+    for(int j = 1; j <= i+2; j++)
     {
       Set x = NN::create(i);
       Set y = NN::create(j);
-      Set q = NN::create(i/j);
+      Set q = NN::create(i/j);      // Target value
       Set r = NN::quotient(x, y);
       ok &= r == q;
     }
@@ -10957,6 +10959,7 @@ void testNeumannNumbers()
   // -Maybe implement exponentiation - define it terms of multplication in a similar way as 
   //  multiplication is implemented via addition
   // -Plot memory usage as function of number
+  // -Maybe write similar loops as in the quotient test also for sum, product, etc.
   //
   // Questions:
   //

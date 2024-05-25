@@ -7501,8 +7501,12 @@ public:
   // Maybe rename to contains - but no - that's ambiguous - it could also refer to the subset 
   // relation
 
+  //bool isElementOf const (const rsSetNaive& A) const { return A.hasElement(*this); }
+
   /** Returns true iff this set has the given set A as subset. */
   bool hasSubset(const rsSetNaive& A) const;
+
+  //bool isSubsetOf()...
 
   /** Returns true iff this set is equal to the given set A. */
   bool equals(const rsSetNaive& A) const;

@@ -8173,7 +8173,7 @@ rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive q = zero();       // Quotient
   while(true)
   {
-    a = sum(a, y);
+    a = sum(a, y);             // Acumulate another y into a
     if(less(x, a))             // Stop accumulation when (a >= x) which means (x < a)
       return q;
     q = sum(q, one());
@@ -8191,6 +8191,11 @@ rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
   }
   */
 
+
+  // ToDo:
+  //
+  // -Maybe implement the integer logarithm in a similar way. I think, we would just need to 
+  //  accumulate multiplicatively (starting at 1)
   // -Can we also implement the modulo operation? Maybe we first need to think about implementing
   //  the difference.
 }

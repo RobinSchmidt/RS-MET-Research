@@ -10873,20 +10873,42 @@ void testNeumannNumbers()
   r = NN::quotient(n2, n1); ok &= r == n2;   // 2 / 1 = 2
   r = NN::quotient(n2, n2); ok &= r == n1;   // 2 / 2 = 1
   r = NN::quotient(n2, n3); ok &= r == n0;   // 2 / 3 = 0
-
   r = NN::quotient(n3, n1); ok &= r == n3;   // 3 / 1 = 3
   r = NN::quotient(n3, n2); ok &= r == n1;   // 3 / 2 = 1
   r = NN::quotient(n3, n3); ok &= r == n1;   // 3 / 3 = 1
   r = NN::quotient(n3, n4); ok &= r == n0;   // 3 / 4 = 0
-
   r = NN::quotient(n4, n1); ok &= r == n4;   // 4 / 1 = 4
   r = NN::quotient(n4, n2); ok &= r == n2;   // 4 / 2 = 2
   r = NN::quotient(n4, n3); ok &= r == n1;   // 4 / 3 = 1
   r = NN::quotient(n4, n4); ok &= r == n1;   // 4 / 4 = 1
   r = NN::quotient(n4, n5); ok &= r == n0;   // 4 / 5 = 0
 
-  // Maybe write and use a helper function testDiv(num, den, res)
+  // Hangs?:
+  for(int i = 0; i < 10; i++)
+  {
+    for(int j = 1; j < 10; j++)
+    {
+      Set x = NN::create(i);
+      Set y = NN::create(j);
+      Set q = NN::create(i/j);
+      Set r = NN::quotient(x, y);
+      ok &= r == q;
+    }
+  }
+
+  // Maybe write and use a helper function testDiv(num, den, res). Or better: write loops
+  // that internally create numbers...
   // What about division by zero? I think, it will end up in an infinite loop
+
+  /*
+  auto testDiv = [](const Set& x, const Set& y, const Set& q)
+  {
+    Set r = NN::quotient(x, y);
+    return r == q;
+  };
+  ok &= testDiv(n0, n1, n0
+  */
+
 
 
 

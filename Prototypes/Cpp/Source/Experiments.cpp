@@ -10892,27 +10892,13 @@ void testNeumannNumbers()
     {
       Set x = NN::create(i);
       Set y = NN::create(j);
-      Set q = NN::create(i/j);      // Target value
-      Set r = NN::quotient(x, y);
-      ok &= r == q;
+      Set t = NN::create(i/j);               // Target value
+      Set r = NN::quotient(x, y);            // Result of computation
+      ok &= r == t;
     }
   }
-
-  // Maybe write and use a helper function testDiv(num, den, res). Or better: write loops
-  // that internally create numbers...
-  // What about division by zero? I think, it will end up in an infinite loop
-
-  /*
-  auto testDiv = [](const Set& x, const Set& y, const Set& q)
-  {
-    Set r = NN::quotient(x, y);
-    return r == q;
-  };
-  ok &= testDiv(n0, n1, n0
-  */
-
-
-
+  // This takes quite long. Maybe run it optionally with a flag "runExtensiveTests" that can be set
+  // at the top of the function
 
   // Test exponentiation:
   r = NN::power(n2, n0);    ok &= r == n1;   // 2 ^ 0 = 1

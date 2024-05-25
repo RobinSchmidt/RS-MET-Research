@@ -8170,6 +8170,18 @@ rsSetNaive rsNeumannNumber::product(const rsSetNaive& x, const rsSetNaive& y)
 rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
 {
   rsSetNaive a = zero();       // Accumulator
+  rsSetNaive q = zero();       // Quotient
+  while(true)
+  {
+    a = sum(a, y);
+    if(less(x, a))             // Stop accumulation when (a >= x) which means (x < a)
+      return q;
+    q = sum(q, one());
+  }
+
+
+  /*
+  rsSetNaive a = zero();       // Accumulator
   while(true)
   {
     rsSetNaive t = sum(a, y);  // Temporary
@@ -8177,6 +8189,7 @@ rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
       return a;
     a = t;
   }
+  */
 
   // -Can we also implement the modulo operation? Maybe we first need to think about implementing
   //  the difference.

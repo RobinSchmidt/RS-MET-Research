@@ -10866,7 +10866,7 @@ void testNeumannNumbers()
   r = NN::product(n3, n2);  ok &= r == n6;   // 3 * 2 = 6
 
   // Test division:
-
+  r = NN::quotient(n2, n2); ok &= r == n1;
 
   r = NN::quotient(n0, n1); ok &= r == n0;   // 0 / 1 = 0
   r = NN::quotient(n0, n2); ok &= r == n0;   // 0 / 2 = 0

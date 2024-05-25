@@ -10851,26 +10851,29 @@ void testNeumannNumbers()
 
   // Test addition:
   Set r;
-  r = NN::sum(n0, n0);     ok &= r == n0;   // 0 + 0 = 0
-  r = NN::sum(n1, n0);     ok &= r == n1;   // 1 + 0 = 1
-  r = NN::sum(n0, n1);     ok &= r == n1;   // 0 + 1 = 1
-  r = NN::sum(n1, n1);     ok &= r == n2;   // 1 + 1 = 2
-  r = NN::sum(n1, n2);     ok &= r == n3;   // 1 + 2 = 3
-  r = NN::sum(n2, n1);     ok &= r == n3;   // 2 + 1 = 3
+  r = NN::sum(n0, n0);      ok &= r == n0;   // 0 + 0 = 0
+  r = NN::sum(n1, n0);      ok &= r == n1;   // 1 + 0 = 1
+  r = NN::sum(n0, n1);      ok &= r == n1;   // 0 + 1 = 1
+  r = NN::sum(n1, n1);      ok &= r == n2;   // 1 + 1 = 2
+  r = NN::sum(n1, n2);      ok &= r == n3;   // 1 + 2 = 3
+  r = NN::sum(n2, n1);      ok &= r == n3;   // 2 + 1 = 3
 
   // Test multiplication:
-  r = NN::product(n2, n0); ok &= r == n0;   // 2 * 0 = 0
-  r = NN::product(n2, n1); ok &= r == n2;   // 2 * 1 = 2
-  r = NN::product(n1, n2); ok &= r == n2;   // 1 * 2 = 2
-  r = NN::product(n2, n3); ok &= r == n6;   // 2 * 3 = 6
-  r = NN::product(n3, n2); ok &= r == n6;   // 3 * 2 = 6
+  r = NN::product(n2, n0);  ok &= r == n0;   // 2 * 0 = 0
+  r = NN::product(n2, n1);  ok &= r == n2;   // 2 * 1 = 2
+  r = NN::product(n1, n2);  ok &= r == n2;   // 1 * 2 = 2
+  r = NN::product(n2, n3);  ok &= r == n6;   // 2 * 3 = 6
+  r = NN::product(n3, n2);  ok &= r == n6;   // 3 * 2 = 6
+
+  // Test division:
+  r = NN::quotient(n0, n1); ok &= r == n0;   // 0 / 1 = 0
 
   // Test exponentiation:
-  r = NN::power(n2, n0);   ok &= r == n1;   // 2 ^ 0 = 1
-  r = NN::power(n2, n1);   ok &= r == n2;   // 2 ^ 1 = 2
-  r = NN::power(n2, n2);   ok &= r == n4;   // 2 ^ 2 = 4
-  r = NN::power(n2, n3);   ok &= r == n8;   // 2 ^ 3 = 8
-  r = NN::power(n3, n2);   ok &= r == n9;   // 3 ^ 2 = 9
+  r = NN::power(n2, n0);    ok &= r == n1;   // 2 ^ 0 = 1
+  r = NN::power(n2, n1);    ok &= r == n2;   // 2 ^ 1 = 2
+  r = NN::power(n2, n2);    ok &= r == n4;   // 2 ^ 2 = 4
+  r = NN::power(n2, n3);    ok &= r == n8;   // 2 ^ 3 = 8
+  r = NN::power(n3, n2);    ok &= r == n9;   // 3 ^ 2 = 9
 
   // Test less-than relation:
   ok &= !NN::less(n1, n0);

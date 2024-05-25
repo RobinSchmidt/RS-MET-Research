@@ -8051,6 +8051,9 @@ public:
   See (2). So, it is defined recursively using addition internally. */
   static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
 
+  /** Computes the result of the integer division x/y, i.e. the integer part of the solution. */
+  static rsSetNaive quotient(const rsSetNaive& x, const rsSetNaive& y);
+
   /** Computes the power of x^y. It is defined as:
 
   x ^ y    = 1           if y == 0
@@ -8059,6 +8062,9 @@ public:
   This definition in terms of multiplications is entirely analogous to the definition of 
   multiplication in terms of addition. */
   static rsSetNaive power(const rsSetNaive& x, const rsSetNaive& y);
+
+
+
 
 
 
@@ -8161,6 +8167,22 @@ rsSetNaive rsNeumannNumber::product(const rsSetNaive& x, const rsSetNaive& y)
     return sum(product(x, predecessor(y)), x);
 }
 
+rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
+{
+  rsSetNaive a = zero();       // Accumulator
+  while(true)
+  {
+    rsSetNaive t = sum(a, y);  // Temporary
+    if(less(x, t))             // Stop accumulation when (t >= x) which means (x < t)
+      return a;
+    a = t;
+  }
+
+  // -Can we also implement the modulo operation? Maybe we first need to think about implementing
+  //  the difference.
+}
+// Needs tests
+
 rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
 {
   if(isZero(y))
@@ -8168,7 +8190,6 @@ rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
   else
     return product(power(x, predecessor(y)), x);
 }
-
 
 //=================================================================================================
 
@@ -8193,7 +8214,7 @@ public:
 
   /** Splits the Neumann integer x = (a, b) into its two parts. */
   static void split(const rsSetNaive& x, rsSetNaive& a, rsSetNaive& b);
-  // Move into Set
+  // Move into rsSetNaive - it's not specific to Neumann integers
 
   /** Implements the equivalence relation...TBC... */
   static bool equals(const rsSetNaive& x, const rsSetNaive& y);

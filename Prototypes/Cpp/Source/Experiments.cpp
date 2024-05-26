@@ -10905,8 +10905,8 @@ void testNeumannNumbers()
 
   // Test minimum and maximum:
   Set x = Set({ n2,n5,n0,n7,n6,n9,n4 });            // x = { 2,5,0,7,6,9,4 }
-  r = Set::minimum(x, NN::less); ok &= r == n0;
-  r = Set::maximum(x, NN::less); ok &= r == n9;
+  r = Set::min(x, NN::less); ok &= r == n0;
+  r = Set::max(x, NN::less); ok &= r == n9;
 
 
   // Plot the growth of the memory usage:

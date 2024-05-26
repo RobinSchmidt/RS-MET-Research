@@ -270,7 +270,7 @@ rsSetNaive rsSetNaive::product(const rsSetNaive& A, const rsSetNaive& B)
   return P;
 }
 
-rsSetNaive rsSetNaive::minimum(const rsSetNaive& A, 
+rsSetNaive rsSetNaive::min(const rsSetNaive& A, 
   bool (*less)(const rsSetNaive& left, const rsSetNaive& right))
 {
   if(A.isEmpty()) {
@@ -286,7 +286,7 @@ rsSetNaive rsSetNaive::minimum(const rsSetNaive& A,
   return m;
 }
 
-rsSetNaive rsSetNaive::maximum(const rsSetNaive& A, 
+rsSetNaive rsSetNaive::max(const rsSetNaive& A, 
   bool (*less)(const rsSetNaive& left, const rsSetNaive& right))
 {
   if(A.isEmpty()) {

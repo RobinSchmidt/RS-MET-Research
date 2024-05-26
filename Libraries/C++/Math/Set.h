@@ -1,5 +1,10 @@
 #pragma once
 
+// Some silly Microsoft header #defines min/max as macros but we want to use these names for some
+// functions, so we undefine these silly macros:
+#undef min
+#undef max
+
 // Maybe rename file to SetTheory.h
 
 
@@ -195,17 +200,22 @@ public:
   /** Creates the set product of A and B, i.e. the set of all ordered pairs of elements from A 
   and B. */
   static rsSetNaive product(const rsSetNaive& A, const rsSetNaive& B);
+  // Maybe rename to productSet or cartesianProduct to avoid ambiguity with functions that compute
+  // products of Neumann numbers
   // Needs test
 
   /** Given a nonempty set A = { a_1, a_2, a_3, ... }, this function returns the minimum of the 
   a_i elements according to the given less-than relation. */
-  static rsSetNaive minimum(const rsSetNaive& A, 
+  static rsSetNaive min(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
 
   /** Given a nonempty set A = { a_1, a_2, a_3, ... }, this function returns the maximum of the 
   a_i elements according to the given less-than relation. */
-  static rsSetNaive maximum(const rsSetNaive& A, 
+  static rsSetNaive max(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
+
+  // Note: I wantoed to call these functions min/max but some silly Microsoft header #defines
+  // min/max as macros which messes up the compilation. Maybe we should #undef them?
 
   // ToDo: Maybe implement functions for min and max that take 2 sets arguments and return the 
   // smaller or larger of the two. Then, implement the min/max that operate on the whole array of

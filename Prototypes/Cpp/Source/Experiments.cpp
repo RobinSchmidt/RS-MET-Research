@@ -10855,22 +10855,22 @@ void testNeumannNumbers()
   r = NN::mul(n3, n2); ok &= r == n6;   // 3 * 2 = 6
 
   // Test division:
-  r = NN::quotient(n0, n1); ok &= r == n0;   // 0 / 1 = 0
-  r = NN::quotient(n0, n2); ok &= r == n0;   // 0 / 2 = 0
-  r = NN::quotient(n1, n1); ok &= r == n1;   // 1 / 1 = 1
-  r = NN::quotient(n1, n2); ok &= r == n0;   // 1 / 2 = 0
-  r = NN::quotient(n2, n1); ok &= r == n2;   // 2 / 1 = 2
-  r = NN::quotient(n2, n2); ok &= r == n1;   // 2 / 2 = 1
-  r = NN::quotient(n2, n3); ok &= r == n0;   // 2 / 3 = 0
-  r = NN::quotient(n3, n1); ok &= r == n3;   // 3 / 1 = 3
-  r = NN::quotient(n3, n2); ok &= r == n1;   // 3 / 2 = 1
-  r = NN::quotient(n3, n3); ok &= r == n1;   // 3 / 3 = 1
-  r = NN::quotient(n3, n4); ok &= r == n0;   // 3 / 4 = 0
-  r = NN::quotient(n4, n1); ok &= r == n4;   // 4 / 1 = 4
-  r = NN::quotient(n4, n2); ok &= r == n2;   // 4 / 2 = 2
-  r = NN::quotient(n4, n3); ok &= r == n1;   // 4 / 3 = 1
-  r = NN::quotient(n4, n4); ok &= r == n1;   // 4 / 4 = 1
-  r = NN::quotient(n4, n5); ok &= r == n0;   // 4 / 5 = 0
+  r = NN::div(n0, n1); ok &= r == n0;   // 0 / 1 = 0
+  r = NN::div(n0, n2); ok &= r == n0;   // 0 / 2 = 0
+  r = NN::div(n1, n1); ok &= r == n1;   // 1 / 1 = 1
+  r = NN::div(n1, n2); ok &= r == n0;   // 1 / 2 = 0
+  r = NN::div(n2, n1); ok &= r == n2;   // 2 / 1 = 2
+  r = NN::div(n2, n2); ok &= r == n1;   // 2 / 2 = 1
+  r = NN::div(n2, n3); ok &= r == n0;   // 2 / 3 = 0
+  r = NN::div(n3, n1); ok &= r == n3;   // 3 / 1 = 3
+  r = NN::div(n3, n2); ok &= r == n1;   // 3 / 2 = 1
+  r = NN::div(n3, n3); ok &= r == n1;   // 3 / 3 = 1
+  r = NN::div(n3, n4); ok &= r == n0;   // 3 / 4 = 0
+  r = NN::div(n4, n1); ok &= r == n4;   // 4 / 1 = 4
+  r = NN::div(n4, n2); ok &= r == n2;   // 4 / 2 = 2
+  r = NN::div(n4, n3); ok &= r == n1;   // 4 / 3 = 1
+  r = NN::div(n4, n4); ok &= r == n1;   // 4 / 4 = 1
+  r = NN::div(n4, n5); ok &= r == n0;   // 4 / 5 = 0
 
   // Do the test for more numbers in a loop. We verify that the result of the quotient function
   // matches the result of the integer division i/j. In the inner j-loop, at i = j+1 we'll get
@@ -10882,7 +10882,7 @@ void testNeumannNumbers()
       Set x = NN::create(i);
       Set y = NN::create(j);
       Set t = NN::create(i/j);               // Target value
-      Set r = NN::quotient(x, y);            // Result of computation
+      Set r = NN::div(x, y);            // Result of computation
       ok &= r == t;
     }
   }

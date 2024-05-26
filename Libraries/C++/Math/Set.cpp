@@ -428,7 +428,7 @@ rsSetNaive rsNeumannNumber::mul(const rsSetNaive& x, const rsSetNaive& y)
     return add(mul(x, predecessor(y)), x);
 }
 
-rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
+rsSetNaive rsNeumannNumber::div(const rsSetNaive& x, const rsSetNaive& y)
 {
   rsAssert(!isZero(y), "Division by zero error!");
   rsSetNaive a = zero();  // Accumulator

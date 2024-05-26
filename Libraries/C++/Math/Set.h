@@ -359,7 +359,7 @@ public:
   static rsSetNaive mul(const rsSetNaive& x, const rsSetNaive& y);
 
   /** Computes the result of the integer division x/y, i.e. the integer part of the solution. */
-  static rsSetNaive quotient(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive div(const rsSetNaive& x, const rsSetNaive& y);
 
   /** Computes the power of x^y. It is defined as:
 

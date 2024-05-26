@@ -344,7 +344,7 @@ public:
   static rsSetNaive add(const rsSetNaive& x, const rsSetNaive& y);
 
   //static rsSetNaive difference(const rsSetNaive& x, const rsSetNaive& y);
-  static rsSetNaive subtract(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive sub(const rsSetNaive& x, const rsSetNaive& y);
   // difference is ambiguous because we already have a function with the same name in the baseclass
   // which computes the set difference. Maybe call it subtract. But this would be inconsisten with 
   // sum, product, etc. - these should them maybe renamed to add, multiply, etc - or maybe shorter

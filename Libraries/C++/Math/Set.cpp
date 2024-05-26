@@ -396,7 +396,7 @@ rsSetNaive rsNeumannNumber::add(const rsSetNaive& x, const rsSetNaive& y)
     return successor(add(x, predecessor(y)));
 }
 
-rsSetNaive rsNeumannNumber::subtract(const rsSetNaive& x, const rsSetNaive& y)
+rsSetNaive rsNeumannNumber::sub(const rsSetNaive& x, const rsSetNaive& y)
 {
   rsAssert(!less(x, y), "Trying to subtract larger from smaller natural number");
   rsSetNaive c = y;       // Counts up from y to x.
@@ -413,7 +413,7 @@ rsSetNaive rsNeumannNumber::subtract(const rsSetNaive& x, const rsSetNaive& y)
   //if(isZero(y))
   //  return x;
   //else
-  //  return subtract(predecessor(x), predecessor(y));
+  //  return sub(predecessor(x), predecessor(y));
 
   // -There are alternative implementations. We could count down from x to y, for example.
 }

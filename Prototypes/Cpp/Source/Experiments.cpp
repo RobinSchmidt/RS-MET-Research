@@ -10833,19 +10833,19 @@ void testNeumannNumbers()
 
   // Test addition:
   Set r;
-  r = NN::add(n0, n0);      ok &= r == n0;   // 0 + 0 = 0
-  r = NN::add(n1, n0);      ok &= r == n1;   // 1 + 0 = 1
-  r = NN::add(n0, n1);      ok &= r == n1;   // 0 + 1 = 1
-  r = NN::add(n1, n1);      ok &= r == n2;   // 1 + 1 = 2
-  r = NN::add(n1, n2);      ok &= r == n3;   // 1 + 2 = 3
-  r = NN::add(n2, n1);      ok &= r == n3;   // 2 + 1 = 3
+  r = NN::add(n0, n0); ok &= r == n0;   // 0 + 0 = 0
+  r = NN::add(n1, n0); ok &= r == n1;   // 1 + 0 = 1
+  r = NN::add(n0, n1); ok &= r == n1;   // 0 + 1 = 1
+  r = NN::add(n1, n1); ok &= r == n2;   // 1 + 1 = 2
+  r = NN::add(n1, n2); ok &= r == n3;   // 1 + 2 = 3
+  r = NN::add(n2, n1); ok &= r == n3;   // 2 + 1 = 3
 
   // Test subtraction:
-  r = NN::subtract(n0, n0); ok &= r == n0;   // 0 - 0 = 0
-  r = NN::subtract(n1, n0); ok &= r == n1;   // 1 - 0 = 1
-  r = NN::subtract(n2, n0); ok &= r == n2;   // 2 - 0 = 2
-  r = NN::subtract(n2, n1); ok &= r == n1;   // 2 - 1 = 2
-  r = NN::subtract(n8, n5); ok &= r == n3;   // 8 - 5 = 3
+  r = NN::sub(n0, n0); ok &= r == n0;   // 0 - 0 = 0
+  r = NN::sub(n1, n0); ok &= r == n1;   // 1 - 0 = 1
+  r = NN::sub(n2, n0); ok &= r == n2;   // 2 - 0 = 2
+  r = NN::sub(n2, n1); ok &= r == n1;   // 2 - 1 = 2
+  r = NN::sub(n8, n5); ok &= r == n3;   // 8 - 5 = 3
 
 
   // Test multiplication:

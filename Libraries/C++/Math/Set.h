@@ -442,7 +442,7 @@ public:
   static rsSetNaive add(const rsSetNaive& x, const rsSetNaive& y);
 
   /** Computes the product of two Neumann integers. */
-  static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive mul(const rsSetNaive& x, const rsSetNaive& y);
 
   /** Turns the given Neumann integer x into its canonical representation. A tuple (a,b) represents
   the integer a-b. For example, the canonical representation of the number two is 2 = (2,0). One
@@ -509,8 +509,8 @@ bool rsNeumannRational::equals(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d, p, q;
   NI::split(x, a, b);                // decompose x = a/b into a, b
   NI::split(y, c, d);                // decompose y = c/d into c, d
-  p = NI::product(a, d);             //   compose p = a * d
-  q = NI::product(b, c);             //   compose q = b * c
+  p = NI::mul(a, d);             //   compose p = a * d
+  q = NI::mul(b, c);             //   compose q = b * c
   return NI::equals(p, q);
 }
 // Needs test

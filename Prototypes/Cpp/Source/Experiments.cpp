@@ -11127,10 +11127,10 @@ void testNeumannIntegers()
   ok &= r == m2;
 
   // Test multiplication:
-  r = NI::product(p2, p3); ok &= NI::equals(r, p6);  // +2 * +3 = +6
-  r = NI::product(p2, m3); ok &= NI::equals(r, m6);  // +2 * -3 = -6
-  r = NI::product(m2, p3); ok &= NI::equals(r, m6);  // -2 * +3 = -6
-  r = NI::product(m2, m3); ok &= NI::equals(r, p6);  // -2 * -3 = +6
+  r = NI::mul(p2, p3); ok &= NI::equals(r, p6);  // +2 * +3 = +6
+  r = NI::mul(p2, m3); ok &= NI::equals(r, m6);  // +2 * -3 = -6
+  r = NI::mul(m2, p3); ok &= NI::equals(r, m6);  // -2 * +3 = -6
+  r = NI::mul(m2, m3); ok &= NI::equals(r, p6);  // -2 * -3 = +6
 
   
   // Test minimum and maximum:

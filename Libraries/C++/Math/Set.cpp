@@ -516,7 +516,7 @@ rsSetNaive rsNeumannInteger::add(const rsSetNaive& x, const rsSetNaive& y)
   return Set::orderedPair(NN::add(a, c), NN::add(b, d)); // (a, b) + (c, d) = (a+c, b+d)
 }
 
-rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
+rsSetNaive rsNeumannInteger::mul(const rsSetNaive& x, const rsSetNaive& y)
 {
   rsSetNaive a, b, c, d;
   split(x, a, b);

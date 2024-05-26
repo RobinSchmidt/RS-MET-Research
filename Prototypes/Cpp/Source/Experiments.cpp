@@ -10833,12 +10833,12 @@ void testNeumannNumbers()
 
   // Test addition:
   Set r;
-  r = NN::sum(n0, n0);      ok &= r == n0;   // 0 + 0 = 0
-  r = NN::sum(n1, n0);      ok &= r == n1;   // 1 + 0 = 1
-  r = NN::sum(n0, n1);      ok &= r == n1;   // 0 + 1 = 1
-  r = NN::sum(n1, n1);      ok &= r == n2;   // 1 + 1 = 2
-  r = NN::sum(n1, n2);      ok &= r == n3;   // 1 + 2 = 3
-  r = NN::sum(n2, n1);      ok &= r == n3;   // 2 + 1 = 3
+  r = NN::add(n0, n0);      ok &= r == n0;   // 0 + 0 = 0
+  r = NN::add(n1, n0);      ok &= r == n1;   // 1 + 0 = 1
+  r = NN::add(n0, n1);      ok &= r == n1;   // 0 + 1 = 1
+  r = NN::add(n1, n1);      ok &= r == n2;   // 1 + 1 = 2
+  r = NN::add(n1, n2);      ok &= r == n3;   // 1 + 2 = 3
+  r = NN::add(n2, n1);      ok &= r == n3;   // 2 + 1 = 3
 
   // Test subtraction:
   r = NN::subtract(n0, n0); ok &= r == n0;   // 0 - 0 = 0

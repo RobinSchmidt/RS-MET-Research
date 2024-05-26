@@ -341,7 +341,7 @@ public:
 
   See (2). In order to actually implement it, we actually need a predecessor function rather than a
   successor function. */
-  static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive add(const rsSetNaive& x, const rsSetNaive& y);
 
   //static rsSetNaive difference(const rsSetNaive& x, const rsSetNaive& y);
   static rsSetNaive subtract(const rsSetNaive& x, const rsSetNaive& y);

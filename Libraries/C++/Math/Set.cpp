@@ -388,12 +388,12 @@ rsSetNaive rsNeumannNumber::predecessor(const rsSetNaive& A)
   //  For example, the set { 1 } =  { {0} } is not a valid Neumann number
 }
 
-rsSetNaive rsNeumannNumber::sum(const rsSetNaive& x, const rsSetNaive& y)
+rsSetNaive rsNeumannNumber::add(const rsSetNaive& x, const rsSetNaive& y)
 {
   if(isZero(y))
     return x;
   else
-    return successor(sum(x, predecessor(y)));
+    return successor(add(x, predecessor(y)));
 }
 
 rsSetNaive rsNeumannNumber::subtract(const rsSetNaive& x, const rsSetNaive& y)
@@ -425,7 +425,7 @@ rsSetNaive rsNeumannNumber::product(const rsSetNaive& x, const rsSetNaive& y)
   if(isZero(y))
     return zero();
   else
-    return sum(product(x, predecessor(y)), x);
+    return add(product(x, predecessor(y)), x);
 }
 
 rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
@@ -435,7 +435,7 @@ rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive q = zero();  // Quotient
   while(true)
   {
-    a = sum(a, y);        // Acumulate another y into a
+    a = add(a, y);        // Acumulate another y into a
     if(less(x, a))        // Stop accumulation when (a >= x) which means (x < a)
       return q;
     q = successor(q);     // Increment quotient by one
@@ -473,8 +473,8 @@ bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d, p, q;
   split(x, a, b);                // decompose x = a - b into a, b
   split(y, c, d);                // decompose y = c - d into c, d
-  p = NN::sum(a, d);             //   compose p = a + d
-  q = NN::sum(b, c);             //   compose q = b + c
+  p = NN::add(a, d);             //   compose p = a + d
+  q = NN::add(b, c);             //   compose q = b + c
   return p.equals(q);
 
   // Notes:
@@ -513,7 +513,7 @@ rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d;
   split(x, a, b);
   split(y, c, d);
-  return Set::orderedPair(NN::sum(a, c), NN::sum(b, d)); // (a, b) + (c, d) = (a+c, b+d)
+  return Set::orderedPair(NN::add(a, c), NN::add(b, d)); // (a, b) + (c, d) = (a+c, b+d)
 }
 
 rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
@@ -521,8 +521,8 @@ rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d;
   split(x, a, b);
   split(y, c, d);
-  rsSetNaive p = NN::sum(NN::product(a, c), NN::product(b, d));  // p = a*c + b*d
-  rsSetNaive q = NN::sum(NN::product(a, d), NN::product(b, c));  // q = a*d + b*c
+  rsSetNaive p = NN::add(NN::product(a, c), NN::product(b, d));  // p = a*c + b*d
+  rsSetNaive q = NN::add(NN::product(a, d), NN::product(b, c));  // q = a*d + b*c
   return Set::orderedPair(p, q);                                 // y = (p, q)
 
   // Questions: 

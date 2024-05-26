@@ -436,7 +436,7 @@ public:
   // \name Operations
 
   /** Turns the given Neumann integer x into its negative -x. */
-  static rsSetNaive negative(const rsSetNaive& x);
+  static rsSetNaive neg(const rsSetNaive& x);
 
   /** Computes the sum of two Neumann integers. */
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);

@@ -501,7 +501,7 @@ rsSetNaive rsNeumannInteger::create(int n)
     return create(size_t(0), size_t(-n));  // x = (0, |n|) = (0, -n)
 }
 
-rsSetNaive rsNeumannInteger::negative(const rsSetNaive& x)
+rsSetNaive rsNeumannInteger::neg(const rsSetNaive& x)
 {
   rsSetNaive a, b;
   split(x, a, b);

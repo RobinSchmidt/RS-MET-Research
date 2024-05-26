@@ -10977,7 +10977,7 @@ void testNeumannIntegers()
   str = Set::setToString(b); ok &= str == "{O}";      // 1
 
   // Test negation:
-  r   = NI::negative(x);
+  r   = NI::neg(x);
   v   = NI::value(r);
   ok &= v == -1;
   NI::split(r, a, b);
@@ -11012,7 +11012,7 @@ void testNeumannIntegers()
   str = Set::setToString(b); ok &= str == "{O,{O}}";  // 2
 
   // Test negation:
-  r   = NI::negative(x);
+  r   = NI::neg(x);
   v   = NI::value(r);
   ok &= v == 0;
   NI::split(r, a, b);
@@ -11074,11 +11074,11 @@ void testNeumannIntegers()
   ok &= r == p3;
 
   // Test negation:
-  r = NI::negative(m1); ok &= r == p1;
-  r = NI::negative(m2); ok &= r == p2;
-  r = NI::negative(p0); ok &= r == p0;
-  r = NI::negative(p1); ok &= r == m1;
-  r = NI::negative(p2); ok &= r == m2;
+  r = NI::neg(m1); ok &= r == p1;
+  r = NI::neg(m2); ok &= r == p2;
+  r = NI::neg(p0); ok &= r == p0;
+  r = NI::neg(p1); ok &= r == m1;
+  r = NI::neg(p2); ok &= r == m2;
 
   // Test addition:
   r = NI::sum(p2, p3); 

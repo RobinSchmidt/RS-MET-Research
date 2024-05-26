@@ -8067,6 +8067,7 @@ public:
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
 
   //static rsSetNaive difference(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive subtract(const rsSetNaive& x, const rsSetNaive& y);
   // difference is ambiguous because we already have a function with the same name in the baseclass
   // which computes the set difference. Maybe call it subtract. But this would be inconsisten with 
   // sum, product, etc. - these should them maybe renamed to add, multiply, etc - or maybe shorter
@@ -8093,6 +8094,7 @@ public:
   static rsSetNaive power(const rsSetNaive& x, const rsSetNaive& y);
 
   // ToDo:
+  // -Implement logarithm and root functions
   // -Maybe implement a different construction of the naturals as well.
 };
 
@@ -8179,6 +8181,30 @@ rsSetNaive rsNeumannNumber::sum(const rsSetNaive& x, const rsSetNaive& y)
   else
     return successor(sum(x, predecessor(y)));
 }
+
+rsSetNaive rsNeumannNumber::subtract(const rsSetNaive& x, const rsSetNaive& y)
+{
+  rsAssert(!less(x, y), "Trying to subtract larger from smaller natural number");
+  rsSetNaive c = y;       // Counts up from y to x.
+  rsSetNaive d = zero();  // Counts up from 0 to x-y.
+  while(less(c, x))
+  {
+    c = successor(c);
+    d = successor(d);
+  }
+  return d;
+
+
+  //// Alternative implementation:
+  //if(isZero(y))
+  //  return x;
+  //else
+  //  return subtract(predecessor(x), predecessor(y));
+
+  // -There are alternative implementations. We could count down from x to y, for example.
+}
+// Needs test
+
 
 rsSetNaive rsNeumannNumber::product(const rsSetNaive& x, const rsSetNaive& y)
 {

@@ -139,7 +139,7 @@
     <Lib/>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Libraries\C++\Math\Set .cpp">
+    <ClCompile Include="..\..\..\..\Libraries\C++\Math\Set.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\Source\Attractors.cpp">

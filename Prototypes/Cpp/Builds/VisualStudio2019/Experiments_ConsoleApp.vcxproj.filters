@@ -289,7 +289,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Libraries\C++\Math\Set .cpp">
+    <ClCompile Include="..\..\..\..\Libraries\C++\Math\Set.cpp">
       <Filter>Experiments\Math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\Attractors.cpp">

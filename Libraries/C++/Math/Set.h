@@ -3,6 +3,10 @@
 namespace rema  // Rob's educational math algorithms
 {
 
+
+
+
+
 }
 
 // remo Rob's educational math objects

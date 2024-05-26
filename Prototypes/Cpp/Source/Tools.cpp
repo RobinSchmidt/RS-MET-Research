@@ -7612,10 +7612,13 @@ public:
   static rsSetNaive product(const rsSetNaive& A, const rsSetNaive& B);
   // Needs test
 
-
+  /** Given a nonempty set A = { a_1, a_2, a_3, ... }, this function returns the minimum of the 
+  a_i elements according to the given less-than relation. */
   static rsSetNaive minimum(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
 
+  /** Given a nonempty set A = { a_1, a_2, a_3, ... }, this function returns the maximum of the 
+  a_i elements according to the given less-than relation. */
   static rsSetNaive maximum(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
 
@@ -7730,18 +7733,10 @@ bool rsSetNaive::isOrderedPair() const
     // a doubleton which contains the inner element of the first element as one of its members:
     if(!elements[0]->isSingleton())
       return false;
-    if(!(elements[1]->getCardinality() == 2))
+    if(!(elements[1]->getCardinality() == 2))   // ToDo: use hasCardinality(2)
       return false;
     rsSetNaive x = elements[0]->getElement(0);
     return elements[1]->hasElement(x);
-
-
-
-   
-
-    //rsSetNaive x = orderedPairFirst();
-    //rsSetNaive y = orderedPairSecond();
-
 
     /*
     // NEW:
@@ -7757,9 +7752,6 @@ bool rsSetNaive::isOrderedPair() const
     if(!elements[1]->hasElement(y))           return false;
     return true;
     */
-
-
-
 
     // I think, to destructure the pair, we need to use orderedPairFirst/Second. Nah! That leads
     // to an infinite mutual recursion
@@ -7796,35 +7788,16 @@ std::string rsSetNaive::setToString(const rsSetNaive& A)
 
 std::string rsSetNaive::orderedPairToString(const rsSetNaive& A)
 {
-  // The pair A is either of the form (x, x) or (x, y). In the former case, A has only 1 element.
-
+  // The ordered pair A is either of the form (x, y) = { {x}, {x,y} } or of the form
+  // (x, x) = { {x}, {x,x} } = { {x}, {x} } = { {x} }.
+  
   RAPT::rsAssert(A.isOrderedPair());
-  std::string str;
-
-
-  str += "( ";
-
-  //str += setToString(A[0]);
-
-  //str += " ; ";
-  //str += setToString(A[1]);
-
-
-  //if(A.getCardinality() == 2)
-  //  str += " ; " + setToString(A[1]);   // A = (x, y)
-  //else
-  //  str += " ; " + setToString(A[0]);   // A = (x, x)
-
-  //str += setToString(A.orderedPairFirst());
-  //str += " ; ";
-  //str += setToString(A.orderedPairSecond());
-
   rsSetNaive x = A.orderedPairFirst();
   rsSetNaive y = A.orderedPairSecond();
-
+  std::string str;
+  str += "( ";
   str += "{" + setToString(x) + "}" + " ; ";
   str += "{" + setToString(x) + "," + setToString(y) + "}";
-
   str += " )";
   return str;
 }
@@ -7839,7 +7812,6 @@ bool rsSetNaive::equals(const rsSetNaive& A) const
   //  elements may be in a different order
 }
 
-
 rsSetNaive rsSetNaive::getElement(size_t i) const
 {
   rsAssert(i < elements.size(), "Invalid element index");
@@ -7847,8 +7819,6 @@ rsSetNaive rsSetNaive::getElement(size_t i) const
   return e;
   // Why does it not call the move-assignment operator? Or does it?
 }
-
-
 
 rsSetNaive rsSetNaive::orderedPairFirst() const
 {
@@ -7975,7 +7945,6 @@ rsSetNaive rsSetNaive::minimum(const rsSetNaive& A,
   }
   return m;
 }
-
 
 rsSetNaive rsSetNaive::maximum(const rsSetNaive& A, 
   bool (*less)(const rsSetNaive& left, const rsSetNaive& right))

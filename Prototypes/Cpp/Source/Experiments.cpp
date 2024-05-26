@@ -10847,13 +10847,12 @@ void testNeumannNumbers()
   r = NN::sub(n2, n1); ok &= r == n1;   // 2 - 1 = 2
   r = NN::sub(n8, n5); ok &= r == n3;   // 8 - 5 = 3
 
-
   // Test multiplication:
-  r = NN::product(n2, n0);  ok &= r == n0;   // 2 * 0 = 0
-  r = NN::product(n2, n1);  ok &= r == n2;   // 2 * 1 = 2
-  r = NN::product(n1, n2);  ok &= r == n2;   // 1 * 2 = 2
-  r = NN::product(n2, n3);  ok &= r == n6;   // 2 * 3 = 6
-  r = NN::product(n3, n2);  ok &= r == n6;   // 3 * 2 = 6
+  r = NN::mul(n2, n0); ok &= r == n0;   // 2 * 0 = 0
+  r = NN::mul(n2, n1); ok &= r == n2;   // 2 * 1 = 2
+  r = NN::mul(n1, n2); ok &= r == n2;   // 1 * 2 = 2
+  r = NN::mul(n2, n3); ok &= r == n6;   // 2 * 3 = 6
+  r = NN::mul(n3, n2); ok &= r == n6;   // 3 * 2 = 6
 
   // Test division:
   r = NN::quotient(n0, n1); ok &= r == n0;   // 0 / 1 = 0

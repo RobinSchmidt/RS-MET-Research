@@ -420,12 +420,12 @@ rsSetNaive rsNeumannNumber::sub(const rsSetNaive& x, const rsSetNaive& y)
 // Needs test
 
 
-rsSetNaive rsNeumannNumber::product(const rsSetNaive& x, const rsSetNaive& y)
+rsSetNaive rsNeumannNumber::mul(const rsSetNaive& x, const rsSetNaive& y)
 {
   if(isZero(y))
     return zero();
   else
-    return add(product(x, predecessor(y)), x);
+    return add(mul(x, predecessor(y)), x);
 }
 
 rsSetNaive rsNeumannNumber::quotient(const rsSetNaive& x, const rsSetNaive& y)
@@ -457,7 +457,7 @@ rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
   if(isZero(y))
     return one();
   else
-    return product(power(x, predecessor(y)), x);
+    return mul(power(x, predecessor(y)), x);
 }
 
 //=================================================================================================
@@ -521,9 +521,9 @@ rsSetNaive rsNeumannInteger::product(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d;
   split(x, a, b);
   split(y, c, d);
-  rsSetNaive p = NN::add(NN::product(a, c), NN::product(b, d));  // p = a*c + b*d
-  rsSetNaive q = NN::add(NN::product(a, d), NN::product(b, c));  // q = a*d + b*c
-  return Set::orderedPair(p, q);                                 // y = (p, q)
+  rsSetNaive p = NN::add(NN::mul(a, c), NN::mul(b, d));  // p = a*c + b*d
+  rsSetNaive q = NN::add(NN::mul(a, d), NN::mul(b, c));  // q = a*d + b*c
+  return Set::orderedPair(p, q);                         // y = (p, q)
 
   // Questions: 
   //

@@ -356,7 +356,7 @@ public:
   x * s(y) = x * y + x   if y != 0 
 
   See (2). So, it is defined recursively using addition internally. */
-  static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive mul(const rsSetNaive& x, const rsSetNaive& y);
 
   /** Computes the result of the integer division x/y, i.e. the integer part of the solution. */
   static rsSetNaive quotient(const rsSetNaive& x, const rsSetNaive& y);

@@ -11196,6 +11196,22 @@ void testNeumannRationals()
 
 
   rsAssert(ok);
+
+  // ToDo:
+  //
+  // -Maybe implement a class for sets with urelements. Maybe instead of the std::vector<Set*>, it
+  //  should have a std::vector<std::variant<Set*, T>> member for the elements where T is the type
+  //  of the urelements.
+  // -Maybe implement a class InfiniteSet. Maybe it should be a subclass of Set. I think, we should
+  //  represent infinite sets somehow via a virtual hasElement() function. Different sets could 
+  //  perhaps be subclasses that implement hasElement differently. 
+  // -To represent a real number via Dedekind cuts, we could use a subclass of InfiniteSet, let it
+  //  have a member that represents the real number (maybe as float or double or maybe as 
+  //  continued fraction). The hasElement(x) function should take a set that represents a Neumann
+  //  rational and be able to decide whether it belongs to the cut. ...But to use the class in 
+  //  practice, we actually need to represent rational numbers via machine integers - so maybe the
+  //  class should use a temaplet parameter for the rational number class. It could be 
+  //  rsNeumannRational or rsFraction<int>.
 }
 
 

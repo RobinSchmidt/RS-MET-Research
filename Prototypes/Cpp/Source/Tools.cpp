@@ -7622,7 +7622,9 @@ public:
   static rsSetNaive maximum(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
 
-
+  // ToDo: Maybe implement functions for min and max that take 2 sets arguments and return the 
+  // smaller or larger of the two. Then, implement the min/max that operate on the whole array of
+  // elements in terms of these...but maybe not.
 
 
   /** Compares this set with rhs for equality. */
@@ -7657,7 +7659,6 @@ protected:
   std::vector<rsSetNaive*> elements;
 
 };
-
 
 rsSetNaive::rsSetNaive(const std::vector<rsSetNaive>& s)
 {
@@ -7717,8 +7718,6 @@ bool rsSetNaive::hasSubset(const rsSetNaive& A) const
   }
   return true;
 }
-
-
 
 bool rsSetNaive::isOrderedPair() const
 {
@@ -7882,7 +7881,6 @@ rsSetNaive rsSetNaive::orderedPair(const rsSetNaive& A, const rsSetNaive& B)
   // https://www.matej-zecevic.de/2022/022/kuratowski-definition-of-ordered-pairs/
   // https://math.stackexchange.com/questions/1767604/please-explain-kuratowski-definition-of-ordered-pairs
 }
-
 
 rsSetNaive rsSetNaive::unionSet(const rsSetNaive& A, const rsSetNaive& B)
 {
@@ -8068,6 +8066,12 @@ public:
   successor function. */
   static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
 
+  //static rsSetNaive difference(const rsSetNaive& x, const rsSetNaive& y);
+  // difference is ambiguous because we already have a function with the same name in the baseclass
+  // which computes the set difference. Maybe call it subtract. But this would be inconsisten with 
+  // sum, product, etc. - these should them maybe renamed to add, multiply, etc - or maybe shorter
+  // add, mul, div, pow. Maybe successor and predecessor should then be called inc, dec
+
   /** Computes the product of x and y. It is defined as:
 
     x * y    = 0           if y == 0
@@ -8143,14 +8147,14 @@ rsSetNaive rsNeumannNumber::successor(const rsSetNaive& A)
 
 rsSetNaive rsNeumannNumber::predecessor(const rsSetNaive& A)
 {
-  //rsAssert(!A.isEmpty(), "Zero has no predecessor!");
-
   if(A.isEmpty())
   {
     rsError("Zero has no predecessor!");
     return A;                              // Return the empty set - although, that's wrong
   }
   return create(value(A) - 1);
+
+  //return maximum(A);  // This should also work - test it!
 
   // Notes:
   //

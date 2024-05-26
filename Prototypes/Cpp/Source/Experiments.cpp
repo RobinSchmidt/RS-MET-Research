@@ -11211,7 +11211,7 @@ void testNeumannRationals()
   //  rational and be able to decide whether it belongs to the cut. ...But to use the class in 
   //  practice, we actually need to represent rational numbers via machine integers - so maybe the
   //  class should use a temaplet parameter for the rational number class. It could be 
-  //  rsNeumannRational or rsFraction<int>.
+  //  rsNeumannRational or rsFraction<int>. Maybe call the class rsDedekindNumber
 }
 
 

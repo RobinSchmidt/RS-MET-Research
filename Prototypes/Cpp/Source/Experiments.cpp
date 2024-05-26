@@ -10890,11 +10890,11 @@ void testNeumannNumbers()
   // at the top of the function
 
   // Test exponentiation:
-  r = NN::power(n2, n0);    ok &= r == n1;   // 2 ^ 0 = 1
-  r = NN::power(n2, n1);    ok &= r == n2;   // 2 ^ 1 = 2
-  r = NN::power(n2, n2);    ok &= r == n4;   // 2 ^ 2 = 4
-  r = NN::power(n2, n3);    ok &= r == n8;   // 2 ^ 3 = 8
-  r = NN::power(n3, n2);    ok &= r == n9;   // 3 ^ 2 = 9
+  r = NN::pow(n2, n0);    ok &= r == n1;   // 2 ^ 0 = 1
+  r = NN::pow(n2, n1);    ok &= r == n2;   // 2 ^ 1 = 2
+  r = NN::pow(n2, n2);    ok &= r == n4;   // 2 ^ 2 = 4
+  r = NN::pow(n2, n3);    ok &= r == n8;   // 2 ^ 3 = 8
+  r = NN::pow(n3, n2);    ok &= r == n9;   // 3 ^ 2 = 9
 
   // Test less-than relation:
   ok &= !NN::less(n1, n0);

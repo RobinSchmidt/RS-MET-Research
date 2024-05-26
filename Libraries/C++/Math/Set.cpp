@@ -452,12 +452,12 @@ rsSetNaive rsNeumannNumber::div(const rsSetNaive& x, const rsSetNaive& y)
   // -Handle division by zero somehow
 }
 
-rsSetNaive rsNeumannNumber::power(const rsSetNaive& x, const rsSetNaive& y)
+rsSetNaive rsNeumannNumber::pow(const rsSetNaive& x, const rsSetNaive& y)
 {
   if(isZero(y))
     return one();
   else
-    return mul(power(x, predecessor(y)), x);
+    return mul(pow(x, predecessor(y)), x);
 }
 
 //=================================================================================================

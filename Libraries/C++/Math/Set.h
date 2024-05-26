@@ -368,7 +368,7 @@ public:
 
   This definition in terms of multiplications is entirely analogous to the definition of 
   multiplication in terms of addition. */
-  static rsSetNaive power(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive pow(const rsSetNaive& x, const rsSetNaive& y);
 
   // ToDo:
   // -Implement logarithm and root functions
@@ -553,9 +553,3 @@ rsSetNaive rsNeumannRational::create(int num, int den)
 
 
 }
-
-// remo Rob's educational math objects
-// remu                        utilities
-// remi                        implementations
-//    p                        prototypes
-//    a                        algorithms

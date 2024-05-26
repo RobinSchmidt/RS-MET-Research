@@ -10915,6 +10915,12 @@ void testNeumannNumbers()
   ok &=  NN::less(n1, n2);
 
 
+  // Test minimum and maximum:
+  Set x = Set({ n2,n5,n0,n7,n6,n9,n4 });            // x = { 2,5,0,7,6,9,4 }
+
+  r = Set::maximum(x, NN::less); ok &= r == n9;
+
+
   // Plot the growth of the memory usage:
   int max = 9;
   std::vector<float> memUse(max+1);
@@ -11133,10 +11139,16 @@ void testNeumannIntegers()
   ok &= r == m2;
 
   // Test multiplication:
-  r = NI::product(p2, p3); ok &= NI::equals(r, p6);  // +2 * +3 = +6:
-  r = NI::product(p2, m3); ok &= NI::equals(r, m6);  // +2 * -3 = -6:
-  r = NI::product(m2, p3); ok &= NI::equals(r, m6);  // -2 * +3 = -6:
+  r = NI::product(p2, p3); ok &= NI::equals(r, p6);  // +2 * +3 = +6
+  r = NI::product(p2, m3); ok &= NI::equals(r, m6);  // +2 * -3 = -6
+  r = NI::product(m2, p3); ok &= NI::equals(r, m6);  // -2 * +3 = -6
   r = NI::product(m2, m3); ok &= NI::equals(r, p6);  // -2 * -3 = +6
+
+  
+  // Test minimum and maximum:
+  //x = Set({ p1, m4, m2, p2, p6, m3, m1, m5, p5 }); // x = { 1,-4,-2,2,6,-3,-1,-5,5 }
+  // ...
+
 
   rsAssert(ok);
 

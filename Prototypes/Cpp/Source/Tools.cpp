@@ -7613,6 +7613,11 @@ public:
   // Needs test
 
 
+  static rsSetNaive maximum(const rsSetNaive& A, 
+    bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
+
+
+
 
   /** Compares this set with rhs for equality. */
   bool operator==(const rsSetNaive& rhs) const { return equals(rhs); }
@@ -7950,6 +7955,24 @@ rsSetNaive rsSetNaive::product(const rsSetNaive& A, const rsSetNaive& B)
     for(int j = 0; j < B.getCardinality(); j++)
       P.addElement(orderedPair(A[i], B[j]));
   return P;
+}
+
+rsSetNaive rsSetNaive::maximum(const rsSetNaive& A, 
+  bool (*less)(const rsSetNaive& left, const rsSetNaive& right))
+{
+  if(A.isEmpty())
+  {
+    rsError("Trying to find maximum of empty set - that's undefined");
+    return rsSetNaive();  // ...but we need to return someting anyway
+  }
+
+  rsSetNaive m = A[0];
+  for(size_t i = 1; i < A.getCardinality(); i++)
+  {
+    if(less(m, A[i]))
+      m = A[i];
+  }
+  return m;
 }
 
 rsSetNaive* rsSetNaive::getCopy() const

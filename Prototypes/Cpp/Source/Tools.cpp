@@ -7613,6 +7613,9 @@ public:
   // Needs test
 
 
+  static rsSetNaive minimum(const rsSetNaive& A, 
+    bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
+
   static rsSetNaive maximum(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
 
@@ -7957,14 +7960,29 @@ rsSetNaive rsSetNaive::product(const rsSetNaive& A, const rsSetNaive& B)
   return P;
 }
 
+rsSetNaive rsSetNaive::minimum(const rsSetNaive& A, 
+  bool (*less)(const rsSetNaive& left, const rsSetNaive& right))
+{
+  if(A.isEmpty()) {
+    rsError("Trying to find minimum of empty set - that's undefined");
+    return rsSetNaive(); }  // ...but we need to return someting anyway
+
+  rsSetNaive m = A[0];
+  for(size_t i = 1; i < A.getCardinality(); i++)
+  {
+    if(less(A[i], m))
+      m = A[i];
+  }
+  return m;
+}
+
+
 rsSetNaive rsSetNaive::maximum(const rsSetNaive& A, 
   bool (*less)(const rsSetNaive& left, const rsSetNaive& right))
 {
-  if(A.isEmpty())
-  {
+  if(A.isEmpty()) {
     rsError("Trying to find maximum of empty set - that's undefined");
-    return rsSetNaive();  // ...but we need to return someting anyway
-  }
+    return rsSetNaive(); }  // ...but we need to return someting anyway
 
   rsSetNaive m = A[0];
   for(size_t i = 1; i < A.getCardinality(); i++)

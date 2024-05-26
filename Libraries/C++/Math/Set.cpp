@@ -508,7 +508,7 @@ rsSetNaive rsNeumannInteger::neg(const rsSetNaive& x)
   return Set::orderedPair(b, a);  // -(a, b) = (b, a)
 }
 
-rsSetNaive rsNeumannInteger::sum(const rsSetNaive& x, const rsSetNaive& y)
+rsSetNaive rsNeumannInteger::add(const rsSetNaive& x, const rsSetNaive& y)
 {
   rsSetNaive a, b, c, d;
   split(x, a, b);

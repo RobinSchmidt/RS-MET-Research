@@ -439,7 +439,7 @@ public:
   static rsSetNaive neg(const rsSetNaive& x);
 
   /** Computes the sum of two Neumann integers. */
-  static rsSetNaive sum(const rsSetNaive& x, const rsSetNaive& y);
+  static rsSetNaive add(const rsSetNaive& x, const rsSetNaive& y);
 
   /** Computes the product of two Neumann integers. */
   static rsSetNaive product(const rsSetNaive& x, const rsSetNaive& y);

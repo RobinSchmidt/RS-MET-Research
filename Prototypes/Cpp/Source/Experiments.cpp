@@ -11081,11 +11081,11 @@ void testNeumannIntegers()
   r = NI::neg(p2); ok &= r == m2;
 
   // Test addition:
-  r = NI::sum(p2, p3); 
+  r = NI::add(p2, p3); 
   ok &= r == p5;   // 2 +  3 = 5
 
   // Test addition with a negative 2nd argument:
-  r   = NI::sum(p2, m2);
+  r   = NI::add(p2, m2);
   v   = NI::value(r);
   ok &= v == 0;
   v   = NI::value(p0);
@@ -11094,7 +11094,7 @@ void testNeumannIntegers()
   ok &= NI::equals(r, p0);   // r and p0 are different but equivalent
 
   // Test canonicalization:
-  r    = NI::sum(p1, m1);
+  r    = NI::add(p1, m1);
   ok  &= r.isOrderedPair();
   str  = Set::orderedPairToString(r);
   ok &= str == "( {{O}} ; {{O},{O}} )";
@@ -11105,7 +11105,7 @@ void testNeumannIntegers()
   ok &= r == p0;           // Now r and p0 are not only equivalent but equal
 
   // 5 + -2 = 3:
-  r   = NI::sum(p5, m2);
+  r   = NI::add(p5, m2);
   v   = NI::value(r);
   ok &= v == 3;
   v   = NI::value(p3);
@@ -11117,7 +11117,7 @@ void testNeumannIntegers()
   ok &= r == p3;
 
   // 3 + -5 = -2:
-  r   = NI::sum(p3, m5);
+  r   = NI::add(p3, m5);
   v   = NI::value(r);
   ok &= v == -2;
   v   = NI::value(m2);

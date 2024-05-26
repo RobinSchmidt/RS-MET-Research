@@ -10528,8 +10528,8 @@ void testSet()
   // functionality for common set-theoretic operations, the creation of von Neumann numbers (a set 
   // theoretical construction of the natural numbers), etc.
 
-  using Set = rsSetNaive;
-  using NN  = rsNeumannNumber;
+  using Set = rema::rsSetNaive;
+  using NN  = rema::rsNeumannNumber;
   bool  ok  = true;
 
   // Create the empty set {}:
@@ -10613,7 +10613,7 @@ void testSet()
 
 
     // Let's create some 3-tuples:
-    auto orderedTriple = [](const rsSetNaive& A, const rsSetNaive& B, const rsSetNaive& C)
+    auto orderedTriple = [](const Set& A, const Set& B, const Set& C)
     {
       return Set::orderedPair(Set::orderedPair(A, B), C);
     };
@@ -10722,7 +10722,7 @@ void testSet()
     A = Set({ n1, n2, n3 });  // A = { 1, 2, 3 }
     B = Set({ n3, n4 });      // B = { 3, 4    }
     Set AxB = Set::product(A, B);
-    auto p = [](const rsSetNaive& A, const rsSetNaive& B)
+    auto p = [](const Set& A, const Set& B)
     {
       return Set::orderedPair(A, B);
     };
@@ -10753,48 +10753,22 @@ void testSet()
 
 }
 
-void printSet(const rsSetNaive& x)
+void printSet(const rema::rsSetNaive& x)
 {
-  std::cout << rsSetNaive::setToString(x);
-
-  /*
-  if(x.isEmpty())
-    std::cout << "O";
-  else
-  {
-    std::cout << '{';
-    size_t N = x.getCardinality();
-    for(size_t i = 0; i < N; i++)
-    {
-      printSet(x[i]);
-      if(i < N-1)
-        std::cout << ',';
-    }
-    std::cout << '}';
-  }
-  */
+  std::cout << rema::rsSetNaive::setToString(x);
 }
 
-void printOrderedPair(const rsSetNaive& x)
+void printOrderedPair(const rema::rsSetNaive& x)
 {
-  std::cout << rsSetNaive::orderedPairToString(x);
-
-  /*
-  RAPT::rsAssert(x.isOrderedPair());
-  std::cout << '(';
-  printSet(x.orderedPairFirst());
-  std::cout << ',';
-  printSet(x.orderedPairSecond());
-  std::cout << ')';
-  */
+  std::cout << rema::rsSetNaive::orderedPairToString(x);
 }
 
 
 
 void testNeumannNumbers()
 {
-  using Set = rsSetNaive;
-  using NN  = rsNeumannNumber;
+  using Set = rema::rsSetNaive;
+  using NN  = rema::rsNeumannNumber;
   bool  ok  = true;
 
   // Create the natural numbers 0,1,2,3 via the von Neumann construction manually and do some 
@@ -10978,9 +10952,9 @@ void testNeumannNumbers()
 
 void testNeumannIntegers()
 {
-  using Set = rsSetNaive;
-  using NN  = rsNeumannNumber;
-  using NI  = rsNeumannInteger;
+  using Set = rema::rsSetNaive;
+  using NN  = rema::rsNeumannNumber;
+  using NI  = rema::rsNeumannInteger;
 
   // Some variables for repeated use:
   bool ok  = true;
@@ -11175,10 +11149,10 @@ void testNeumannIntegers()
 
 void testNeumannRationals()
 {
-  using Set = rsSetNaive;
-  //using NN  = rsNeumannNumber;
-  using NI  = rsNeumannInteger;
-  using NR  = rsNeumannRational;
+  using Set = rema::rsSetNaive;
+  //using NN  = rema::rsNeumannNumber;
+  using NI  = rema::rsNeumannInteger;
+  using NR  = rema::rsNeumannRational;
 
   // Some variables for repeated use:
   bool ok  = true;

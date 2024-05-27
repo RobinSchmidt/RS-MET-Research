@@ -10907,6 +10907,14 @@ void testNeumannNumbers()
   r = NN::log(n8, n2); ok &= r == n3;   // log2(8) = 3
   r = NN::log(n9, n2); ok &= r == n3;   // log2(9) = 3
 
+  r = NN::log(n1, n3); ok &= r == n0;   // log3(1) = 0
+  r = NN::log(n2, n3); ok &= r == n0;   // log3(2) = 0
+  r = NN::log(n3, n3); ok &= r == n1;   // log3(3) = 1
+  r = NN::log(n4, n3); ok &= r == n1;   // log3(4) = 1
+  r = NN::log(n8, n3); ok &= r == n1;   // log3(8) = 1
+  r = NN::log(n9, n3); ok &= r == n2;   // log3(9) = 2
+
+
 
   // Test less-than relation:
   ok &= !NN::less(n1, n0);

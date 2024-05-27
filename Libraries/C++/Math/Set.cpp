@@ -462,30 +462,20 @@ rsSetNaive rsNeumannNumber::pow(const rsSetNaive& x, const rsSetNaive& y)
 
 rsSetNaive rsNeumannNumber::log(const rsSetNaive& x, const rsSetNaive& b)
 {
-  if(isZero(x))
-  {
+  if(isZero(x)) {
     rsError("Log of zero error");
-    return zero();                  // Mathematically wrong, but wen must return something.
-  }
-  if(x == one())
-  {
-    return zero();                  // Log of 1 is 0.
-  }
+    return zero();   }              // Mathematically wrong, but we must return something.
 
-  rsSetNaive y = one();
-  rsSetNaive p = zero();            // Current trial exponent
-  while(less(y, x))
-  {
+  rsSetNaive y = one();             // Multiplicative accumulator for powers of the base b.
+  rsSetNaive p = zero();            // Additive accumulator of ones to represent current exponent.
+  while(less(y, x)) {
     y = mul(y, b);
-    p = successor(p);
-  }
+    p = successor(p); }
 
   if(y == x)
-    return p;
+    return p;                       // We hitted x exactly. Our p is now the exact log.
   else
-    return predecessor(p);
-
-  // Still wrong! computes ceil(log(...)) instead of floor(log(...))
+    return predecessor(p);          // We overshooted x. Subtract 1 to get floor of log.
 }
 
 //=================================================================================================

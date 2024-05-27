@@ -379,7 +379,14 @@ public:
   multiplication in terms of addition. */
   static rsSetNaive pow(const rsSetNaive& x, const rsSetNaive& y);
 
+  static rsSetNaive sqrt(const rsSetNaive& x);
+  
+  //static rsSetNaive root(const rsSetNaive& x, const rsSetNaive& n);
+
   static rsSetNaive log(const rsSetNaive& x, const rsSetNaive& base);
+
+
+
 
   // ToDo:
   // -Implement logarithm and root functions

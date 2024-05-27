@@ -460,6 +460,25 @@ rsSetNaive rsNeumannNumber::pow(const rsSetNaive& x, const rsSetNaive& y)
     return mul(pow(x, predecessor(y)), x);
 }
 
+rsSetNaive rsNeumannNumber::sqrt(const rsSetNaive& x)
+{
+  if(isZero(x) || x == one()) return x;   // sqrt(0) == 0, sqrt(1) == 1
+
+  rsSetNaive b = rsNeumannNumber::create(2);
+
+  while(true)
+  {
+    rsSetNaive b2 = mul(b, b);    // b^2
+    if( less(x, b2) )
+      break;
+    b = successor(b);
+  }
+
+
+  return b;
+}
+
+
 rsSetNaive rsNeumannNumber::log(const rsSetNaive& x, const rsSetNaive& b)
 {
   if(isZero(x)) {
@@ -477,6 +496,13 @@ rsSetNaive rsNeumannNumber::log(const rsSetNaive& x, const rsSetNaive& b)
   else
     return predecessor(p);          // We overshooted x. Subtract 1 to get floor of log.
 }
+
+// ToDo:
+//
+// -Implement function for n-th root. 
+//  -Maybe iterate through all possible bases b starting at 2 and compute b^n. When the result is
+//   greater or equal to the input x, return b. I think, we need a similar adjustment as in the log
+//   function to get the floor behavior.
 
 //=================================================================================================
 

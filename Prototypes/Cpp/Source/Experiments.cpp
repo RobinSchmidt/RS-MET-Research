@@ -10896,6 +10896,17 @@ void testNeumannNumbers()
   r = NN::pow(n2, n3); ok &= r == n8;   // 2 ^ 3 = 8
   r = NN::pow(n3, n2); ok &= r == n9;   // 3 ^ 2 = 9
 
+  // Test square root:
+  r = NN::sqrt(n0); ok &= r == n0;      // sqrt(0) = 0
+  r = NN::sqrt(n1); ok &= r == n1;      // sqrt(1) = 1
+  r = NN::sqrt(n2); ok &= r == n1;      // sqrt(2) = 1  FAILS!
+  r = NN::sqrt(n3); ok &= r == n1;      // sqrt(3) = 1
+  r = NN::sqrt(n4); ok &= r == n2;      // sqrt(4) = 2
+
+
+
+
+
   // Test logarithm:
   r = NN::log(n1, n2); ok &= r == n0;   // log2(1) = 0
   r = NN::log(n2, n2); ok &= r == n1;   // log2(2) = 1
@@ -10906,7 +10917,6 @@ void testNeumannNumbers()
   r = NN::log(n7, n2); ok &= r == n2;   // log2(7) = 2
   r = NN::log(n8, n2); ok &= r == n3;   // log2(8) = 3
   r = NN::log(n9, n2); ok &= r == n3;   // log2(9) = 3
-
   r = NN::log(n1, n3); ok &= r == n0;   // log3(1) = 0
   r = NN::log(n2, n3); ok &= r == n0;   // log3(2) = 0
   r = NN::log(n3, n3); ok &= r == n1;   // log3(3) = 1

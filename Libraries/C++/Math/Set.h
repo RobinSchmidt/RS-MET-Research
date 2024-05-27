@@ -28,7 +28,7 @@ datatype involved. The implementation is rather naive and just for proof/demonst
 theoretical concepts and entirely unpractical. It's purely educational code - basically a math 
 excercise. */
 
-class rsSetNaive
+class rsSetNaive  // rename to Set
 {
 
 public:
@@ -271,16 +271,15 @@ This construction leads to the following situation:
 such that the cardinality of the set that represents the number n is precisely n, which is 
 convenient. The first few numbers are:
 
-  0 = { }
-  1 = { 0 }       = { {} }
-  2 = { 0, 1 }    = { {}, {{}} }
-  3 = { 0, 1, 2 } = { {}, {{}}, { {}, {{}} }  }  ...verify this!
+  0 =   O
+  1 = { 0 }       = { O }
+  2 = { 0, 1 }    = { O, {O} }
+  3 = { 0, 1, 2 } = { O, {O}, { O, {O} }  }  ...verify this!
 
-As can be seen, when expanding the sets fully, it gets messy rather quickly. I think, the size 
-grows exponentially (verify!). This is completely useless for practical purposes. I just 
-implemented this for demostration purposes as a math excercise and to clarify the concepts to 
-myself.
-
+As can be seen, when expanding the sets fully, it gets messy rather quickly. The size grows 
+exponentially. We can really only use it for numbers up to 10 or so, before it gets too big to 
+handle with reasonable resources. The class is completely useless for practical purposes. I just
+implemented this for demostration purposes as a math excercise and to clarify the concepts.
 
 References:
 
@@ -379,6 +378,8 @@ public:
   This definition in terms of multiplications is entirely analogous to the definition of 
   multiplication in terms of addition. */
   static rsSetNaive pow(const rsSetNaive& x, const rsSetNaive& y);
+
+  static rsSetNaive log(const rsSetNaive& x, const rsSetNaive& base);
 
   // ToDo:
   // -Implement logarithm and root functions

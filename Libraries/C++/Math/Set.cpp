@@ -460,6 +460,30 @@ rsSetNaive rsNeumannNumber::pow(const rsSetNaive& x, const rsSetNaive& y)
     return mul(pow(x, predecessor(y)), x);
 }
 
+rsSetNaive rsNeumannNumber::log(const rsSetNaive& x, const rsSetNaive& b)
+{
+  if(isZero(x))
+  {
+    rsError("Log of zero error");
+    return zero();                  // Mathematically wrong, but wen must return something.
+  }
+  if(x == one())
+  {
+    return zero();                  // Log of 1 is 0.
+  }
+
+  rsSetNaive y = one();
+  rsSetNaive p = zero();            // Current trial exponent
+  while(less(y, x))
+  {
+    y = mul(y, b);
+    p = successor(p);
+  }
+  return p;
+
+  // Still wrong! computes ceil(log(...)) instead of floor(log(...))
+}
+
 //=================================================================================================
 
 void rsNeumannInteger::split(const rsSetNaive& x, rsSetNaive& a, rsSetNaive& b)

@@ -10890,11 +10890,22 @@ void testNeumannNumbers()
   // at the top of the function
 
   // Test exponentiation:
-  r = NN::pow(n2, n0);    ok &= r == n1;   // 2 ^ 0 = 1
-  r = NN::pow(n2, n1);    ok &= r == n2;   // 2 ^ 1 = 2
-  r = NN::pow(n2, n2);    ok &= r == n4;   // 2 ^ 2 = 4
-  r = NN::pow(n2, n3);    ok &= r == n8;   // 2 ^ 3 = 8
-  r = NN::pow(n3, n2);    ok &= r == n9;   // 3 ^ 2 = 9
+  r = NN::pow(n2, n0); ok &= r == n1;   // 2 ^ 0 = 1
+  r = NN::pow(n2, n1); ok &= r == n2;   // 2 ^ 1 = 2
+  r = NN::pow(n2, n2); ok &= r == n4;   // 2 ^ 2 = 4
+  r = NN::pow(n2, n3); ok &= r == n8;   // 2 ^ 3 = 8
+  r = NN::pow(n3, n2); ok &= r == n9;   // 3 ^ 2 = 9
+
+  // Test logarithm:
+  r = NN::log(n1, n2); ok &= r == n0;   // log2(1) = 0
+  r = NN::log(n2, n2); ok &= r == n1;   // log2(2) = 1
+
+  r = NN::log(n3, n2); ok &= r == n1;   // log2(3) = 1
+  // FAILS! Our function apparently computes ceil(log(x, b)) but we want floor(log(x, b))
+
+  //r = NN::log(n4, n2); ok &= r == n2;   // log2(4) = 2
+  //r = NN::log(n8, n2); ok &= r == n3;   // log2(8) = 3
+
 
   // Test less-than relation:
   ok &= !NN::less(n1, n0);
@@ -10910,16 +10921,18 @@ void testNeumannNumbers()
 
 
   // Plot the growth of the memory usage:
-  int max = 9;
+  int max = 10;                     // Above 10 or so, it really starts getting too big to handle
   std::vector<float> memUse(max+1);
   for(int i = 0; i <= max; i++)
   {
     Set s = NN::create(i);
     memUse[i] = s.getMemoryUsage();
+    //size_t pred = sizeof(Set) * pow(2, i);  // Predicted value - yep: matches memUse[i]
   }
-  //rsPlotVector(memUse);  // Looks exponential which is as expected
-  // I think, the growth function is f(n) = 32 * 2^n. For machine numbers, that would be a constant
-  // which makes it clear that this is totally impractical
+  // The growth function is f(n) = 32 * 2^n. For machine numbers, the function f(n) would be
+  // a constant. So - yeah - we have O(1) vs O(2^x). That's quite a difference! This class for 
+  // Neumann Numbers is totally impractical for anything but demonstration of the correctness of 
+  // the theory.  
 
 
   rsAssert(ok);

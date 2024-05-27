@@ -465,17 +465,24 @@ rsSetNaive rsNeumannNumber::sqrt(const rsSetNaive& x)
   if(isZero(x) || x == one()) return x;   // sqrt(0) == 0, sqrt(1) == 1
 
   rsSetNaive b = rsNeumannNumber::create(2);
-
+  rsSetNaive b2;
   while(true)
   {
-    rsSetNaive b2 = mul(b, b);    // b^2
+    b2 = mul(b, b);          // b^2
     if( less(x, b2) )
       break;
     b = successor(b);
   }
 
+  if(b2 == x)
+    return b;
+  else 
+    return predecessor(b);
 
-  return b;
+  // ToDo:
+  //
+  // -Implement a function that takes the n-th root. The code should look the same except for the
+  //  line b2 = mul(b, b) which should be replaced by bn = pow(b, n)
 }
 
 

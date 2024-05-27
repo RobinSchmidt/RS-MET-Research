@@ -10903,10 +10903,6 @@ void testNeumannNumbers()
   r = NN::sqrt(n3); ok &= r == n1;      // sqrt(3) = 1
   r = NN::sqrt(n4); ok &= r == n2;      // sqrt(4) = 2
 
-
-
-
-
   // Test logarithm:
   r = NN::log(n1, n2); ok &= r == n0;   // log2(1) = 0
   r = NN::log(n2, n2); ok &= r == n1;   // log2(2) = 1
@@ -10923,8 +10919,6 @@ void testNeumannNumbers()
   r = NN::log(n4, n3); ok &= r == n1;   // log3(4) = 1
   r = NN::log(n8, n3); ok &= r == n1;   // log3(8) = 1
   r = NN::log(n9, n3); ok &= r == n2;   // log3(9) = 2
-
-
 
   // Test less-than relation:
   ok &= !NN::less(n1, n0);

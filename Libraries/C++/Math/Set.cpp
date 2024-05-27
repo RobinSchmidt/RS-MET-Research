@@ -479,7 +479,11 @@ rsSetNaive rsNeumannNumber::log(const rsSetNaive& x, const rsSetNaive& b)
     y = mul(y, b);
     p = successor(p);
   }
-  return p;
+
+  if(y == x)
+    return p;
+  else
+    return predecessor(p);
 
   // Still wrong! computes ceil(log(...)) instead of floor(log(...))
 }

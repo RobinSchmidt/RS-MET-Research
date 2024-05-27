@@ -10899,12 +10899,13 @@ void testNeumannNumbers()
   // Test logarithm:
   r = NN::log(n1, n2); ok &= r == n0;   // log2(1) = 0
   r = NN::log(n2, n2); ok &= r == n1;   // log2(2) = 1
-
   r = NN::log(n3, n2); ok &= r == n1;   // log2(3) = 1
-  // FAILS! Our function apparently computes ceil(log(x, b)) but we want floor(log(x, b))
-
-  //r = NN::log(n4, n2); ok &= r == n2;   // log2(4) = 2
-  //r = NN::log(n8, n2); ok &= r == n3;   // log2(8) = 3
+  r = NN::log(n4, n2); ok &= r == n2;   // log2(4) = 2
+  r = NN::log(n5, n2); ok &= r == n2;   // log2(5) = 2
+  r = NN::log(n6, n2); ok &= r == n2;   // log2(6) = 2
+  r = NN::log(n7, n2); ok &= r == n2;   // log2(7) = 2
+  r = NN::log(n8, n2); ok &= r == n3;   // log2(8) = 3
+  r = NN::log(n9, n2); ok &= r == n3;   // log2(9) = 3
 
 
   // Test less-than relation:

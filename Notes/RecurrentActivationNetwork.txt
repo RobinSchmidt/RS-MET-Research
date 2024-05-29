@@ -34,4 +34,10 @@ Learning:
  based on the distance
  -maybe these neurons could move in order to modify the connection delays
 
+Notes:
+-It's actually a kind of nonlinear feedback-delay-network. The feedback matrix consists of 
+ point-to-point transfer functions of the type a_{ij} * z^{-d_{ij}} where a_{ij} is the weight
+ and d_{ij} the delay from neuron i to neuron j
+-
+
  maybe call it recurrent spike network

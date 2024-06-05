@@ -43,6 +43,7 @@
 *.opendb
 *.opensdf
 *.pdb
+*.pyc
 *.res
 *.sdf
 *.suo
@@ -69,6 +70,7 @@ Misc/UnusedCode/RSLibAndTests/RSLibTests/GeneratedFiles
 Products/AudioPlugins/ToolChain/Builds/VisualStudio2015/x64/Debug/
 Temp/
 Prototypes/Cpp/Builds/VisualStudio2019/enc_temp_folder/
+Notebooks/Python/.ipynb_checkpoints
 
 #---------------------------------------------------------------------------------------------------
 # Ignored files:

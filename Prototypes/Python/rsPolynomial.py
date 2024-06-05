@@ -141,7 +141,8 @@ def polyGcd(p, q, monic=True):
 	return a
 # maybe rename to polyGcd
 # https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor
-# ToDo: figure out the meaning of the leading coeff when it's not forced to 1
+# ToDo: figure out the meaning of the leading coeff when it's not forced to 1. 
+# I guess, it's the quotient of the leading coeffs of p and q?
 
 def polyNest(a, b):
 	"""Given the coefficient lists of two polynomials a(x) and b(x), this 

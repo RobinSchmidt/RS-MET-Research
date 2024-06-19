@@ -169,9 +169,11 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 % https://www.youtube.com/watch?v=QFHSHhpbo00
 % They Use ∂ Differently in Math and Physics. Which is Better?
 
-% Examples:
-% z = f(x,y) = sqrt(x^2 + y^2)
-% x = x(t)   = cos(2t)
+
+
+
+
+
 
 % ...convective derivative, material derivative, explicit vs complete partial derivative, ...
 % https://en.wikipedia.org/wiki/Material_derivative
@@ -222,5 +224,17 @@ For the "Composition" section:
   indeed only t appearing as independent variable.
   
 - Give some examples that are not too contrived, i.e. have some practical interpretation
+
+Example 1:
+z = z(x,y) = sqrt(x^2 + y^2)
+x = x(t)   = sin(2t)
+y = y(t)   = sin(3t)
+x,y is the parametric description of a Lissajous figure. z is the distance of the point from the
+origin. Maybe let t = f(s) where s is an arc-length parameter, i.e. a natural parametrization of the curve. That introduces another r level of nesting. Start with just z = f(x,y) and its partial derivatives. Then let x,y themselves be given by the parametric eqaution with parameter t. The let t be a function of s. 
+
+Example 2:
+Then introduce an explicit dependency of z on t. Maybe z = z(t,x,y) = sqrt(x^2 + y^2 - t^2). This
+example has some special relativity vibes. On that function, we can explain concepts like partial and total derivative of z with respect to t. The partial derivtaive would treat x and y as constants even though they are functions of t (I think)
+
 
 \end{comment} 

@@ -1,18 +1,20 @@
-\section{Derivatives}
+\section{Differentiation}
 
+%===================================================================================================
 \subsection{Partial Derivatives}
 Let's assume we have a bivariate function $f$, i.e. a function with two inputs $x,y$, that produces one output $z$: $z = f(x,y)$. We can visualize this as a landscape above an $(x,y)$-plane where the height is given by the function value. We can take derivatives of $f$ with respect to $x$ and with respect to $y$. In the former case, $y$ is just treated as a constant and in the latter case $x$ is treated as a constant. These two derivatives of $f$ are called \emph{partial derivatives} and we denote them as $\frac{\partial f}{\partial x}$ and $\frac{\partial f}{\partial y}$, where the curly d symbol $\partial$ is a special math symbol that we read as "partial" - it's not a greek delta. The formal definition is:
 \begin{equation}
  \frac{\partial f(x,y)}{\partial x} = \lim_{h \rightarrow 0} \frac{f(x+h,y) - f(x,y)}{h}, \qquad
  \frac{\partial f(x,y)}{\partial y} = \lim_{h \rightarrow 0} \frac{f(x,y+h) - f(x,y)}{h}
 \end{equation}
-In the text above, we wrote $\frac{\partial f}{\partial x}$ whereas in the definition, we wrote  $\frac{\partial f(x,y)}{\partial x}$. The former notation with suppressed input arguments $x,y$ is just an abbreviation of the more verbose latter notation. This abbreviation makes sense when it is understood from the context that $f$ is a function of $x,y$. Another, even shorter, notation for the partial derivatives is $f_x, f_y$. For a general multivariate function with scalar output $f(\mathbf{x})$ where $\mathbf{x} = (x_0,x_1,\ldots,x_n)^T$ where $n$ is the number of inputs, we can compute partial derivatives with respect to each input dimension. We denote these as $\frac{\partial f}{\partial x_i}$ where $i = 1,\ldots,n$. We could also write $f_{x_i}$ but we will rarely use this notation because an index with an index is typographically less than ideal. The formal definition of $\frac{\partial f}{\partial x_i}$ is given by:
+In the text above, we wrote $\frac{\partial f}{\partial x}$ whereas in the definition, we wrote  $\frac{\partial f(x,y)}{\partial x}$. The former notation with suppressed input arguments $x,y$ is just an abbreviation of the more verbose latter notation. This abbreviation makes sense when it is understood from the context that $f$ is a function of $x,y$. Another, even shorter, notation for the partial derivatives is $f_x, f_y$. For a general multivariate function with scalar output $f(\mathbf{x})$ where $\mathbf{x} = (x_1,x_2,\ldots,x_n)^T$ where $n$ is the number of inputs, we can compute partial derivatives with respect to each input dimension. We denote these as $\frac{\partial f}{\partial x_i}$ where $i = 1,\ldots,n$. We could also write $f_{x_i}$ but we will rarely use this notation because an index with an index is typographically less than ideal. The formal definition of $\frac{\partial f}{\partial x_i}$ is given by:
 \begin{equation}
  \frac{\partial f(\mathbf{x}) }{\partial x_i} 
  = \lim_{h \rightarrow 0} \frac{f(\mathbf{x} + h \mathbf{e}_i ) - f(\mathbf{x})}{h}
 \end{equation}
 where $\mathbf{e}_i$ is the unit vector in the $i$-th coordinate direction, i.e. it has a one at position $i$ and zeros everywhere else. As said: the computation of such partial derivatives is purely mechanic and we don't need to refer to our definitions for that. Instead, we just treat the function as if it would depend only on the variable with respect to which we differentiate and treat all other variables as constants.
 
+%===================================================================================================
 \subsection{Directional Derivatives}
 Now let's assume we are given an arbitrary vector $\mathbf{v}$ of unit length. We define the \emph{directional derivative} of $f$ into the direction of  $\mathbf{v}$ as:
 \begin{equation}
@@ -23,16 +25,20 @@ Now let's assume we are given an arbitrary vector $\mathbf{v}$ of unit length. W
 \end{equation}
 where the RHS is a generalization of \ref{Eq:DerivativeViaH} which tells us how we could evaluate the limit (but we'll soon learn a simpler way to evaluate it). Note that the directional derivative into any of the coordinate directions $\mathbf{e}_i$ just reduces to the partial derivative with respect to coordinate $i$, so partial derivatives can also be seen as directional derivatives into very specific directions: namely, into the directions of our coordinate axes. [TODO: verify that the RHS is actually correct - the formula is not from a book - i found it myself by analogy to the evaluation formula for the Gateaux derivative in Baerwolff, pg. 792]
 
+%===================================================================================================
 \subsection{Higher Order Partial Derivatives}
-Just like we could define the second derivative of a univariate function as the derivative of the derivative, we can define second order partial derivatives of a multivariate scalar function. Due to the fact that we now have $n$ input variables, we can form $n^2$ different second partial derivatives. If we first find the derivative of $f$ with respect to some $x_i$ and then take the result and find its derivative with respect to $x_j$, we obtain such a second order partial derivative. We write this as $ \frac{\partial f}{\partial x_i \partial x_j}$. If the function $f$ is twice continuously differentiable, then, according to \emph{Schwartz's theorem}, we will actually have the following symmetry:
+Just like we could define the second derivative of a univariate function as the derivative of the derivative, we can define second order partial derivatives of a multivariate scalar function. Due to the fact that we now have $n$ input variables, we can form $n^2$ different second partial derivatives. If we first find the derivative of $f$ with respect to some $x_i$ and then take the result and find its derivative with respect to $x_j$, we obtain such a second order partial derivative. We write this as $\frac{\partial^2 f}{\partial x_i \partial x_j}$. If the function $f$ is twice continuously differentiable, then, according to \emph{Schwartz's theorem}, we will actually have the following symmetry:
 \begin{equation}
-	\frac{\partial f}{\partial x_i \partial x_j} 
+	\frac{\partial^2 f}{\partial x_i \partial x_j} 
 	=
-	\frac{\partial f}{\partial x_j \partial x_i} 
+	\frac{\partial^2 f}{\partial x_j \partial x_i} 
 \end{equation}
-which means the order of the differentiations makes no difference. We can first take the derivative with respect to $x_i$ and then with respect to $x_j$ or the other way around. The end result will be the same. In the same way, we can find third order partial derivatives and there will be $n^3$ of them - but there will be symmetries, too: whatever order we choose for the 3 differentiations, the result will be the same if the function is 3 times continuously differentiable. And so on.
+which means the order of the differentiations makes no difference. We can first take the derivative with respect to $x_i$ and then with respect to $x_j$ or the other way around. The end result will be the same. We may also use the abbreviated notation $f_{xy}$ for $\frac{\partial^2 f}{\partial x \partial y}$ for a function that depends on $x$ and $y$, i.e. a low-dimensional function for which we assign different letters to the different input variables instead of using index notation. Note that the notation $f_{xy}$ does not imply that $f$ is a bivariate function that depends \emph{only} on the two input variables $x,y$. We could also find $f_{xy}$ of a trivariate function $f = f(x,y,z)$, for example.
 
+\medskip
+In the same way, we can find third order partial derivatives and there will be $n^3$ of them. For example  $f_{xyz} = \frac{\partial^3 f}{\partial x \partial y \partial z}$. There will be symmetries, too: whatever order we choose for the 3 differentiations, the result will be the same if the function is 3 times continuously differentiable. And so on.
 
+%===================================================================================================
 \subsection{The Gradient Vector}
 For a function $f$ with $n$ input variables (or one single $n$-dimensional input vector) and a single output, we can compute $n$ different partial derivatives. We can collect these partial derivatives into another $n$-dimensional vector. This vector is called the \emph{gradient} of the function. It is usually taken to be a column vector. The gradient always points into the direction in which the function increases most steeply and the length of this gradient vector tells us, how steep that steepest increase is. Note that this is a direction in the input space, not in the combined input/output space. So, if the input is 2D, such that $z = f(x,y)$ gives a height over an $(x,y)$-plane of input values, the gradient of $f$ at a particular input location $(x_0,y_0)$ in the plane gives the direction in the $(x,y)$-plane in which we need to move the input to get the steepest increase in the height value $z$. But it's \emph{not} a direction in the 3D space of $(x,y,z)$.
 %[Q: what is the direction in x,y,z space? is it just x,y taken from the gradient, augmented by a z-value for which we can take the length of the gradient? that seems plausible -> make some plots! the vector should be tangential to the surface, i think]
@@ -46,6 +52,7 @@ The gradient helps us to compute the directional derivative: It's just the scala
  \frac{\partial f}{\partial \mathbf{v}} = \mathbf{v} \cdot \grad f
 \end{equation}
 
+%===================================================================================================
 \subsection{The Jacobian Matrix}
 So far, we assumed that $f$ has only a single output, i.e. defines a scalar field. Now we will have a look at vector valued functions $\mathbf{f}: \mathbb{R}^n \rightarrow \mathbb{R}^m$ with $\mathbf{f(x)} = (f_1(\mathbf{x}), \ldots, f_m(\mathbf{x}))^T$ where $\mathbf{x} = (x_1,\ldots,x_n)^T$. So, our function has $n$ inputs and $m$ outputs. The $m \times n$ matrix
 \begin{equation}
@@ -79,6 +86,7 @@ when $\mathbf{J} = \mathbf{J_f}(\mathbf{x})$ is the Jacobian of  $\mathbf{f}$ at
 %If we multiply the matrix
 %also mention the importance of its determinant in case of equal input and output dimensionalities - it's a generalized area/volume/hypervolume scale factor
 
+%===================================================================================================
 \subsection{The Hessian Matrix}
 The gradient vector and the Jacobian matrix are collections of first partial derivatives of scalar- and vector valued functions respectively. The \emph{Hessian matrix} is a collection of second partial derivatives of a scalar valued function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ with $f = f(\mathbf{x})$ and $\mathbf{x} = (x_1, \ldots, x_n)$. It is defined as:
 \begin{equation}
@@ -102,9 +110,14 @@ Due to the symmetry of the partial derivatives when $f$ is twice continuously di
 for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then this quadratic approximation function will be the locally (at $\mathbf{x}$) best fitting paraboloid. Such second order approximations of a multivariate scalar function play an important role in numerical optimization algorithms, i.e. algorithms that try to try to locate minima or maxima of such functions. The simpler of such algorithms use only the gradient, the more advanced ones may also use (an approximation of) the Hessian.
 
 
-\subsection{Differentials} Imagine we have a function $f(x,y)$ in two variables, for example $f(x,y) = x^y$. We can compute the partial derivatives of $f$ with respect to $x$ and $y$ as $f_x = \partial f / \partial x = y x^{y-1}$ and $f_y = \partial f / \partial y = x^y \ln x$. Consider a particular point $(x_0, y_0) = (2,3)$. We can evaluate $f$ and its partial derivatives $f_x, f_y$ at that point to get $f = 2^3 = 8, f_x = 3 \cdot 2^2 = 12, f_y = 2^3 \cdot \ln 2 \approx 5.545178$. With these three values, we can approximate our function $f$ near the point $(3,2)$ linearly as $f \approx 8 + 12 dx + 5.545178 dy$. For example, at $(2.02,3.01)$, we get $f \approx 8 + 12 \cdot 0.02 + 5.545178 \cdot 0.01 \approx 8.2955$ which is an approximation to the true value of around $8.3006$. What we did here was to define a linear function in two variables $dx,dy$ which we envision as small offsets from our given point $(x_0,y_0) = (2,3)$. These were given as $(dx,dy) = (0.02,0.01)$ in our example. These two offsets in the input variables lead to a resulting offset $df$ in the output variable $df = 12 \cdot 0.02 + 5.545178 \cdot 0.01$. This linear function in the two offset variables $dx, dy$ is called the \emph{total differential} of the function $f$ at the point $(x_0, y_0)$
 
-...TBC...
+%===================================================================================================
+\subsection{More Terminology} 
+% Maybe move this section to somewhere else, i.e. below the "Composition" section
+
+\subsubsection{Differentials} Imagine we have a function $f(x,y)$ in two variables, for example $f(x,y) = x^y$. We can compute the partial derivatives of $f$ with respect to $x$ and $y$ as $f_x = \partial f / \partial x = y x^{y-1}$ and $f_y = \partial f / \partial y = x^y \ln x$. Consider a particular point $(x_0, y_0) = (2,3)$. We can evaluate $f$ and its partial derivatives $f_x, f_y$ at that point to get $f = 2^3 = 8, f_x = 3 \cdot 2^2 = 12, f_y = 2^3 \cdot \ln 2 \approx 5.545178$. With these three values, we can approximate our function $f$ near the point $(3,2)$ linearly as $f \approx 8 + 12 dx + 5.545178 dy$. For example, at $(2.02,3.01)$, we get $f \approx 8 + 12 \cdot 0.02 + 5.545178 \cdot 0.01 \approx 8.2955$ which is an approximation to the true value of around $8.3006$. What we did here was to define a linear function in two variables $dx,dy$ which we envision as small offsets from our given point $(x_0,y_0) = (2,3)$. These were given as $(dx,dy) = (0.02,0.01)$ in our example. These two offsets in the input variables lead to a resulting offset $df$ in the output variable $df = 12 \cdot 0.02 + 5.545178 \cdot 0.01$. This linear function in the two offset variables $dx, dy$ is called the \emph{total differential} of the function $f$ at the point $(x_0, y_0)$.
+
+...TBC...VERIFY, explain the terminology, explain how it is used, explain relation to total derivative, total differential
 
 % 0.69315 
 % 0.6931 4718  05599453094172321214581765680755001343602552541206800094...
@@ -122,6 +135,10 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 % https://en.wikipedia.org/wiki/Differential_of_a_function
 % https://de.wikipedia.org/wiki/Differential_(Mathematik)
 
+
+% https://en.wikipedia.org/wiki/Differential_(mathematics)
+
+
 % https://en.wikipedia.org/wiki/Total_derivative
 
 % This is also a useful view:
@@ -133,19 +150,28 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 %-https://en.wikipedia.org/wiki/Hessian_matrix#Vector-valued_functions
 
 
-
-\subsection{The Total Derivative}
+\subsubsection{The Total Derivative}
 
 % https://en.wikipedia.org/wiki/Total_derivative
 
 
-\subsection{Ambiguity of the Notation}
+
+%===================================================================================================
+\subsection{Composition of Multivariable Functions}
+
+\subsubsection{The Multivariable Chain Rule}
+
+\subsubsection{Ambiguity of the Notation}
 
 % https://www.youtube.com/watch?v=mICbKwwHziI
 % Ambiguity With Partial ∂ Notation, and How to Resolve It
 
 % https://www.youtube.com/watch?v=QFHSHhpbo00
 % They Use ∂ Differently in Math and Physics. Which is Better?
+
+% Examples:
+% z = f(x,y) = sqrt(x^2 + y^2)
+% x = x(t)   = cos(2t)
 
 % ...convective derivative, material derivative, explicit vs complete partial derivative, ...
 % https://en.wikipedia.org/wiki/Material_derivative
@@ -154,7 +180,6 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 
 
 %https://en.wikipedia.org/wiki/Generalizations_of_the_derivative
-
 
 \begin{comment}
 
@@ -175,5 +200,27 @@ which could be used to actually evaluate the directional derivative without usin
 
 -maybe divergence, but maybe defer that to vector calculus
 https://en.wikipedia.org/wiki/Del
+
+
+For the "Composition" section:
+
+- Explain compostion of multivariable functions in terms a "functional dependency graph" FDG. That's
+  a term that I made up myself. It means something like the directed graphs in this video:
+  https://www.youtube.com/watch?v=mICbKwwHziI
+
+- In case of univariate functions, this graph is trivial. It's juts a linear chain. For example
+  z -> y -> x means: z depends on y and y depends on x. In the multivariable setting, the graph 
+  can be arbitrarily complicated.
+  
+- Leaf nodes, i.e. nodes that have only incoming arrows, are called independent variables.
+  
+- For a function to be called explicit, the FDG must be acyclic (I guess). If it has at least one
+  cycle, we are deling with an implicitly defined function.
+
+- What about functions like f(x,x') where x = x(t) and x' = dx/dt? Does x' count as dependent on x
+  or only dependent on t? I guess, the latter - because if we really write down x'(t), then it has
+  indeed only t appearing as independent variable.
+  
+- Give some examples that are not too contrived, i.e. have some practical interpretation
 
 \end{comment} 

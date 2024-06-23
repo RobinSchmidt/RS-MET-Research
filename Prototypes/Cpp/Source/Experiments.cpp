@@ -13916,7 +13916,9 @@ void testSmoothCrossFade2()
   //   f(x) = exp(-1/x)  for x > 0, 0 otherwise
   //   g(x) = f(x) / (f(x) + f(1-x))
   //   h(x) = g(2+x) * g(2-x)
-
+  //
+  // Some notes: The n-th derivative of f is given by  p_n(x) * x^(-2*n) * f(x)  where p_n(x) is
+  // polynomial defined recursively as: p_0(x) = 1, p_{n+1}(x) = x^2 * p_n'(x) - (2*n*x-1)*p_n(x)
 
   using Real  = double;
   using Func  = std::function<Real(Real)>;        // Univariate function
@@ -13934,7 +13936,7 @@ void testSmoothCrossFade2()
       return 0.0;
     return exp(-1.0/x);
   };
-  rsPlotFunction(f, -1.0, +5.0, 601);
+  //rsPlotFunction(f, -1.0, +5.0, 601);
 
   //GNUPlotter::plotFunctions(201, -2.0, +2.0, &f);
 
@@ -13943,25 +13945,37 @@ void testSmoothCrossFade2()
   {
     return f(x) / (f(x) + f(1-x));
   };
-  rsPlotFunction(g, -0.1, +1.1, 121);
+  //rsPlotFunction(g, -0.1, +1.1, 121);
 
   // A bump between -2 and +2 that is indentically 1 in -1..+1:
   h = [&](Real x)
   {
     return g(2+x) * g(2-x);
   };
-  rsPlotFunction(h, -2.5, +2.5, 501);
+  //rsPlotFunction(h, -2.5, +2.5, 501);
 
   // A function that is given by an n-th power of x times our bump function:
   psi = [&](Real x, Real n)
   {
     return h(x) * pow(x, n);
   };
-  // This function appears at 6:43
+  // This function appears at 6:43 in the video
+
+  //Func psi3 = [&](Real x) { return psi(x, 3.0); };
+  //rsPlotFunction(psi3, -2.5, +2.5, 501);
+
+  // OK - so far, everything looks good like in the video. But from here, I don't know how to 
+  // continue because I don't know how to compue the lambda_n values. However - the functions 
+  // g and h that we have now at our disposal coud be useful in their own right....
 
 
-  Func psi3 = [&](Real x) { return psi(x, 3.0); };
-  rsPlotFunction(psi3, -2.5, +2.5, 501);
+
+  // This could be used as a smooth clipper and integrated intop the collection of sigmoids:
+  Func sigmoid = [&](Real x)
+  {
+    return (g( (x+2)*0.25 ) - 0.5) * 2;
+  };
+  rsPlotFunction(sigmoid, -2.5, +2.5, 501);
 
 
 
@@ -13971,7 +13985,9 @@ void testSmoothCrossFade2()
   // - The function g is interesting in its own right and should perhaps be integrated into the
   //   library collection of sigmoid functions. But for that, it needs to be scaled and shifted
   //   and then simplified/optimized.
-
+  //
+  // See also:
+  // https://math.stackexchange.com/questions/666936/prove-borels-lemma-pughs-book-35
 }
 
 

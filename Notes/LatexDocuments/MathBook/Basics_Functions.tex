@@ -309,6 +309,18 @@ where the weights $a_k$ in the sum form are called the \emph{coefficients} of th
 
 % quadratic approximations, biquads
 
+\paragraph{Powers and Monomials}
+The individual terms of the polynomial in its sum form, i.e. the $a_k x^k$ are called \emph{monomials}. If the coefficient $a_k$ is one, we are just dealing with a integer power of $x$ where the exponent is a natural number. There are some important rules for such natural powers of $x$:
+\begin{equation}
+\label{Eq:PowerRulesNatural}
+x^n x^m = x^{n+m}, \qquad
+\frac{x^n}{x^m} = x^{n-m}, \qquad
+(x^n)^m =  x^{n m} =  (x^m)^n
+\end{equation}
+where the second rule, for the time being, makes only sense when $n-m$ is natural, i.e. $n \geq m$. We will see later that this restriction can be dropped, though. But for that, we need to \emph{define} what $x^a$ is supposed to mean when $a$ is not necessarily natural.
+% ToDo: list power rules x^{n+m} = x^n x^m,  x^{n m} = (x^n)^m
+% exlpain the term "monic"
+
 \paragraph{Evaluation}
 The evaluation of a polynomial is best done in nested form. This is the computationally most efficient way and also one of the most stable ways numerically. We assume that a polynomial of degree $n$ is represented in the computer as a list or array of $n+1$ coefficients $a_0, \ldots, a_n$.
 \begin{lstlisting}
@@ -385,6 +397,8 @@ TODO: give algorithm for computing the coeffs of the nested polynomial in terms 
 % https://en.wikipedia.org/wiki/Companion_matrix
 % https://en.wikipedia.org/wiki/Minimal_polynomial_(linear_algebra)
 
+
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Rational Functions}
 A rational function is a ratio or quotient of two polynomials, i.e. function of the form:
 \begin{equation}
@@ -399,19 +413,41 @@ Functions of that form...TBC...
 % Maybe Polynomials and rational functions should get a section in their own right. Maybe after Linear Algebra...or maybe before it. Maybe is should be called "Polynomial Algebra" and be framed as another generalization of "Linear Algebra" where "Multilinear Algebra" is the other generalization. Polynomials do not necessarily need to be interpreted as functions - we can also interpret them as formal expressions. This interpretation can be generalized to non-convergent power series. The section should also consider multivariate polynomials. OK - it is now a section the Abstract Algebra chapter
 
 
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Arbitrary Powers of $x$}
+Polynomials are constructed as linear combinations (i.e. weighted sums) of nonnegative integer powers of the independent variable $x$. Surpassing the world of polynomials, we could also allow negative integer powers and identify the resulting functions as special cases of the rational functions. That is, it makes sense to define the function $f(x) = x^{-n}$ where $n > 0$ as the simple rational function $f(x) = \frac{1}{x^n}$. It can be verified that with such a definition, our rules given in (\ref{Eq:PowerRulesNatural}) continue to hold. This definition is an example of applying the \emph{principle of permanence} which says that, whenever we extend an existing definition to a larger domain, we should strive for doing it in such a way that our old rules continue to hold in this larger domain. Here, we extended the domain for allowed exponents from the natural to the integer numbers. Now we will generalize even more and look at what happens when we allow the exponent to be a rational, real or even complex number. That means, we are now interested in functions of the general form $f(x) = x^a$ where, $a$ is not restricted to a integer anymore. Let's start by investigating what $f(x) = x^{\frac{1}{n}}$ for positive natural $n$ could mean. The principle of permanence forces our hand to define this as $x^{\frac{1}{n}} = \sqrt[n]{x}$.
+
+...TBC...
+
+% https://en.wikipedia.org/wiki/Principle_of_permanence
+
+% Use a^x = e^{x \ln (a)}, x^a = e^{a \ln (x)}
+
+% Secret Kinks of Elementary Functions:
+% https://www.youtube.com/watch?v=92wXQYcYLMg  
+%
+% What is the graph of x^a when a is not an integer? An unusual look at familiar functions #some2
+% https://www.youtube.com/watch?v=_lb1AxwXLaM  
+
+
+
+
+
+
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Algebraic Functions}
 The set of algebraic functions contains all the functions that can be constructed from using the elementary operations and extracting roots....
 % partial fraction expansion
 
 
-\subsubsection{Trigonometric Functions}
-The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geometric considerations about triangles (more on that later in the geometry chapter) but can also be defined in terms of a power series:
 
 
 
 
 
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Exponential Functions}
 A general exponential function is a function of the form $y = f(x) = b^x$ for some constant $b$ which is called the basis (or base) in this context. Choosing Euler's number $\e = \lim_{n \rightarrow \infty} (1 + 1/n)^n = 2.71828\ldots$ as basis, we obtain \emph{the} exponential function $y = f(x) = \e^x = \exp(x)$. It can be defined via a power series, a limit or as inverse of a parameter integral [VERIFY the last]:
 \begin{equation}
@@ -448,8 +484,6 @@ In the complex domain, it also subsumes the - undeniably also very important - t
 % Verify:
 % In terms of group theory, the exponential function $\e^x$ an isomorphism between the groups $(\mathbb{R}^+, +)$ and $(\mathbb{R}^+, \cdot)$. ..I think, all epxonential functions are such an isomorphism but the basis e is the only one with the special property that...what? It is its own derivative (without a scale factor)
 
-
-
 % https://de.wikipedia.org/wiki/Exponentialfunktion
 % https://en.wikipedia.org/wiki/Exponential_function
 
@@ -467,6 +501,19 @@ In the complex domain, it also subsumes the - undeniably also very important - t
 % Permanenzprinzip:
 % Rechenregeln sollen weiterhin gelten bei asuweitung des Definitionsbereichs
 
+\paragraph{Logarithms}
+
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Trigonometric Functions}
+The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geometric considerations about triangles (more on that later in the geometry chapter) but can also be defined in terms of a power series:
+
+
+
+
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Hyperbolic Functions}
 When we decompose the exponential function into its odd and even parts, we obtain the so called hyperbolic sine and cosine functions $\sinh(x), \cosh(x)$ and when we form their quotient, we obtain the hyperbolic tangent $\tanh(x)$:
 \begin{equation}
@@ -477,16 +524,7 @@ When we decompose the exponential function into its odd and even parts, we obtai
 \end{equation}
 They can all also be directly be defined by a power series:
 
-\subsubsection{Arbitrary Powers of $x$}
-Polynomials are constructed as linear combinations (i.e. weighted sums) of nonnegative integer powers of the independent variable $x$. Surpassing the world of polynomials, we could also allow negative integer powers and identify the resulting functions as special cases of the rational functions. Now we will generalize even more and look at what happens when we allow the exponent to be a rational, real or even complex number. That means, we are now interested in functions of the general form $f(x) = x^a$ where, $a$ is not restricted to a (nonnegative) integer anymore. ...TBC...
 
-% Use a^x = e^{x \ln (a)}, x^a = e^{a \ln (x)}
-
-% Secret Kinks of Elementary Functions:
-% https://www.youtube.com/watch?v=92wXQYcYLMg  
-%
-% What is the graph of x^a when a is not an integer? An unusual look at familiar functions #some2
-% https://www.youtube.com/watch?v=_lb1AxwXLaM  
 
 
 %===================================================================================================

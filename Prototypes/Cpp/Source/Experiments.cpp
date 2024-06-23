@@ -13911,17 +13911,21 @@ void testSmoothCrossFade2()
   // Here, we implement a similar and related approach based on this video:
   // https://www.youtube.com/watch?v=Jz8VCv1MIYE  Ableitungen à la carte (Borels Lemma)
   //
+  // We define the follwoing functions:
+  //
   //   f(x) = exp(-1/x)  for x > 0, 0 otherwise
   //   g(x) = f(x) / (f(x) + f(1-x))
   //   h(x) = g(2+x) * g(2-x)
 
 
-  using Real = double;
-  using Func = std::function<Real(Real)>;
-  using Vec  = std::vector<Real>;
+  using Real  = double;
+  using Func  = std::function<Real(Real)>;        // Univariate function
+  using Func2 = std::function<Real(Real, Real)>;  // Bivariate function
+  using Vec   = std::vector<Real>;
 
 
-  Func f, g, h;
+  Func  f, g, h;
+  Func2 psi;
 
   // The function f on which everything is based:
   f = [](Real x)
@@ -13947,6 +13951,17 @@ void testSmoothCrossFade2()
     return g(2+x) * g(2-x);
   };
   rsPlotFunction(h, -2.5, +2.5, 501);
+
+  // A function that is given by an n-th power of x times our bump function:
+  psi = [&](Real x, Real n)
+  {
+    return h(x) * pow(x, n);
+  };
+  // This function appears at 6:43
+
+
+  Func psi3 = [&](Real x) { return psi(x, 3.0); };
+  rsPlotFunction(psi3, -2.5, +2.5, 501);
 
 
 

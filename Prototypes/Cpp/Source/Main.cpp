@@ -75,10 +75,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testFiniteField();     // stub
-  testSet();
-  testNeumannNumbers();
-  testNeumannIntegers();
-  testNeumannRationals();
+  //testSet();
+  //testNeumannNumbers();
+  //testNeumannIntegers();
+  //testNeumannRationals();
   //testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();
@@ -110,6 +110,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testGeneratingFunction();
   //testCatalanNumbers();
   //testSmoothCrossFade();
+  testSmoothCrossFade2();
 
 
   //testMerge();

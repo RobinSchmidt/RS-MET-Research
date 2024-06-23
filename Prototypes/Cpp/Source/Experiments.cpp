@@ -13906,6 +13906,47 @@ void testSmoothCrossFade()
   // From smoothMin and smoothMax we can perhaps also construct a smoothClip. 
 }
 
+void testSmoothCrossFade2()
+{
+  // Here, we implement a similar and related approach based on this video:
+  // https://www.youtube.com/watch?v=Jz8VCv1MIYE  Ableitungen à la carte (Borels Lemma)
+  //
+  //   f(x) = exp(-1/x)  for x > 0, 0 otherwise
+  //   g(x) = f(x) / (f(x) + f(1-x))
+  //   h(x) = g(2+x) * g(2-x)
+
+
+  using Real = double;
+  using Func = std::function<Real(Real)>;
+  using Vec  = std::vector<Real>;
+
+
+  Func f, g, h;
+
+  // The function f on which everything is based:
+  f = [](Real x)
+  {
+    if(x <= 0.0)
+      return 0.0;
+    return exp(-1.0/x);
+  };
+  rsPlotFunction(f, -1.0, +5.0, 601);
+
+  //GNUPlotter::plotFunctions(201, -2.0, +2.0, &f);
+
+  // A smooth fade-in between 0..1:
+  g = [&](Real x)
+  {
+    return f(x) / (f(x) + f(1-x));
+  };
+  rsPlotFunction(g, -0.1, +1.1, 121);
+
+
+
+}
+
+
+
 /** UNDER CONSTRUCTION */
 template<class T>
 void rsMergeInPlace(std::vector<T>& A, int s)

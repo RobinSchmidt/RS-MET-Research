@@ -26,10 +26,12 @@ Just like we can do with any functions $f: \mathbb{R} \rightarrow \mathbb{R}$, w
 Another binary operation that we can perform on two sequences $(a_n),(b_n)$ is \emph{convolution}, also known as the \emph{Cauchy product} between the sequences. We will denote the operation symbol for convolution by an asterisk $\ast$ and define the operation as:
 \begin{equation}
  (c_n) = (a_n) \ast (b_n) = (b_n) \ast (a_n) \quad \text{with} \quad
- c_n = \sum_{k=0}^n a_k b_{n-k} = \sum_{k=0}^n b_k a_{n-k}
+ c_n = \sum_{k=0}^n a_k b_{n-k} 
+     = \sum_{k=0}^n b_k a_{n-k}
+     = \sum_{i+j=n} b_i a_j
 \end{equation}
-where, from the given formula, you will already correctly infer that the operation is commutative.
-[VERIFY! What about complex sequences?]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity} [VERIFY! might be only sesquilinear in complex case?]. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response}.
+Each coefficient $c_n$ of the resulting sequence is given by a sum of products of coefficients from the original sequences and in each term of this sum, the indices of the two factors must sum up to $n$, the index in the $c_n$ sequence of the coefficient that is being computed. From this fact and the formula, you may already correctly infer that the operation is commutative.
+[VERIFY! What about complex sequences?]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity} [VERIFY! might be only sesquilinear in complex case?]. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response}. TODO: explain relation to multiplication of polynomials
 % https://mathworld.wolfram.com/CauchyProduct.html
 
 % https://en.wikipedia.org/wiki/Convolution#Discrete_convolution
@@ -58,8 +60,29 @@ As a side note, an analoguos operation of convolution can also be defined betwee
 \end{equation}
 This is not relevant in the context of series but it's sometimes good to point out the connections to other topics. I have used $t$ for the input and $\tau$ for the dummy integration variable here because this is the way, you often find it stated. This operation occurs a lot in (continuous time) signal processing where $t$ stands for time and $\tau$ for a time-lag or delay.
 
+\paragraph{Dirichlet Convolution}
+An operation that is of interest in the context of number theory and related to our regular old standard convolution is called Dirichlet convolution. It is defined as follows: 
+\begin{equation}
+ (c_n) = (a_n) \ast_D (b_n) 
+       = \sum_{k | n} a_k b_{n/k} 
+       = \sum_{ij = n} a_i b_j 
+\end{equation}
+The difference to regular convolution is that now the product of the indices $i$ and $j$ of the two factors must be equal to $n$. In regular convolution, it was the sum. The notation $\sum_{k | n}$ means that the index $k$ runs over all divisors of $n$ and $\sum_{ij = n}$ means that the sum runs of all pairs $i,j$ whose product $ij$ equals $n$. ...TBC...Is it also commutative? I think so. Explain how it arises from multiplying Dirichlet series in a similar way how normal convolution arises from multiplying polynomials. 
+
+% Instead of considering a function $\sum_n a_n x^n$, we consider $\sum_n a_n n^x$...or actually  $\sum_n a_n n^{-x}$ but the minus does not matter for what happens to the coeffs in a multiplication of two such functions. In both types of convolutions, we want to collect the coeffs that multiply the same term, i.e. x^n or n^x respectively.
 
 
+
+
+
+% https://en.wikipedia.org/wiki/Dirichlet_convolution
+
+% https://www.youtube.com/watch?v=fGbJrY75LU8
+% What is the Moebius function? #SoME4 #SomePi
+
+% https://en.wikipedia.org/wiki/Dirichlet_series
+
+% 
 
 \subsection{Convergence}
 When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster. If a sequence $(a_n)$ converges to some value $a$, we will denote this as $a_n \rightarrow a$.

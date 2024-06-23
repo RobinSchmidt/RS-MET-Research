@@ -475,7 +475,7 @@ In the complex domain, it also subsumes the - undeniably also very important - t
 % -for real x > 0, exp(x) > 1
 % -exp(x) is strictly monotonically increasing on the real number line
 
-[TODO: give formulas for change of basis, $(e^x)^y = e^{x y} = (e^y)^x$, iff $xy = yx$, i.e. multiplications is commutative - which is true for complex numbers but may not be true in other number systems, explain how the exponential function can be generalized to other number systems using the power series, But: $(a^b)^c \neq a^{(b^c)}$ - exponentiation is not associative]
+[TODO: give formulas for change of basis, $(\e^x)^y = \e^{x y} = (\e^y)^x$, iff $xy = yx$, i.e. multiplications is commutative - which is true for complex numbers but may not be true in other number systems, explain how the exponential function can be generalized to other number systems using the power series, But: $(a^b)^c \neq a^{(b^c)}$ - exponentiation is not associative]
 
 %As we will learn later, a   ...?...what did I want to write here?
 
@@ -502,9 +502,17 @@ In the complex domain, it also subsumes the - undeniably also very important - t
 % Rechenregeln sollen weiterhin gelten bei asuweitung des Definitionsbereichs
 
 \paragraph{Logarithms}
+We have seen that the exponential function $f(x) = \e^x$ is injective, i.e. maps different inputs to different outputs. It is not surjective on $\mathbb{R}$ though, because the negative values are never reached by $f$. However, if we restrict its codomain to $\mathbb{R}^+$, i.e. to only those values that are actually reached, then we can define an inverse function $g: \mathbb{R}^+ \rightarrow \mathbb{R}$ of the exponential function $f(x) = \e^x$. We call this function the \emph{natural logarithm} ...TBC...
 
+% See:
+% https://www.youtube.com/watch?v=Xv8jkBHknLM
+% at: 2:41, 4:52, 5:25, 7:30, 9:15, 15:40, 17:40, 20:55, 23:00
 
-
+%% ToDo:
+% -functional equation
+% -derivative (maybe - it's a preview to calc)
+% -rules (base-change, etc.)
+% -notational ambiguities (log vs ln, lg, ld, lb)
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Trigonometric Functions}

@@ -13942,6 +13942,11 @@ void testSmoothCrossFade2()
   rsPlotFunction(g, -0.1, +1.1, 121);
 
 
+  // ToDo:
+  //
+  // - The function g is interesting in its own right and should perhaps be integrated into the
+  //   library collection of sigmoid functions. But for that, it needs to be scaled and shifted
+  //   and then simplified/optimized.
 
 }
 

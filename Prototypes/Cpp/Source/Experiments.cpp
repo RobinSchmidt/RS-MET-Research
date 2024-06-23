@@ -13941,6 +13941,15 @@ void testSmoothCrossFade2()
   };
   rsPlotFunction(g, -0.1, +1.1, 121);
 
+  // A bump between -2 and +2 that is indentically 1 in -1..+1:
+  h = [&](Real x)
+  {
+    return g(2+x) * g(2-x);
+  };
+  rsPlotFunction(h, -2.5, +2.5, 501);
+
+
+
 
   // ToDo:
   //

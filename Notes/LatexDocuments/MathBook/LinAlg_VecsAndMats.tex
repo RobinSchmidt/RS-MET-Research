@@ -803,7 +803,7 @@ This product may also be called the \emph{naive matrix product}. Its application
 % https://en.wikipedia.org/wiki/Hilbert%E2%80%93Schmidt_operator
 
 % -mention approximation of matrix as weighted sum over Kronecker products of vectors
-% -maybe this is also knwon as tensor decomposition? figure out!
+% -maybe this is also known as tensor decomposition? figure out!
 %  https://en.wikipedia.org/wiki/Tensor_rank_decomposition
 % -Try to approximate mxn matrix A as a weighted sum over Kronecker products of vectors in a 
 %  least squares sense. ..has to do with separable filter kernels in image processing. Maybe make % %  the ansatz 
@@ -811,7 +811,21 @@ This product may also be called the \emph{naive matrix product}. Its application
 %    A ~ sum_{i=1}^m sum_{j=1}^n w_{ij} u_i \otimes v_j
 %  where u_i v_j are vectors and w_{ij} are scalar weights
 
-
+% Maybe try to approximate a 4x4 matrix C as Kronecker product of 2 2x2 matrices A,B
+%
+%      c11 c12 c13 c14
+% C =  c21 c22 c23 c24   A = a11 a12   B = b11 b12
+%      c31 c32 c33 c34       a21 a22       b21 b22
+%      c41 c42 c43 c44
+%
+% kr(A,B) = a11*b11 a11*b12  a12*b11 a12*b12
+%           a11*b21 a11*b22  a12*b21 a12*b22
+%
+%           a21*b11 a21*b12  a22*b11 a22*b12
+%           a21*b21 a21*b22  a22*b21 a22*b22
+%
+% We want (c11-a11*b11)^2 + (c12-a11*b12)^2 + ... = min. This can perhaps be done using gradient
+%% descent.
 
 % https://www.youtube.com/watch?v=i0cp3iQXSk8
 % defines a "tilt product" between two (unit) vectors: tilt(u, v) = v  u^T - u v^T. So it's
@@ -819,7 +833,7 @@ This product may also be called the \emph{naive matrix product}. Its application
 % be used to encode rotations via the matrix exponential. For orthogonal u,v, there's the
 % closed form formula for a rotation by an angle theta: 
 %   exp(tilt(u,v)) = I + sin(theta)*tilt(u,v) + (1-cos(theta))*(tilt(u,v))^2
-% The tilt product gives a matrix which projects vectors ont the uv-plane *and* rotates them
+% The tilt product gives a matrix which projects vectors onto the uv-plane *and* rotates them
 % in this plane by the angle between u and v. He calls the formula "Generalized Euler's"
 % formula. It's also similar to Rodrigues rotation formula
 % It has also some formulas for tze matrix epxonential

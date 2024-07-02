@@ -533,12 +533,12 @@ We have seen that the exponential function $f(x) = \e^x$ is injective, i.e. maps
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Trigonometric Functions}
-The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geometric considerations about triangles (more on that later in the geometry chapter) but can also be defined in terms of a power series:
+The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geometric considerations about triangles (more on that later in the geometry chapter) but can also be defined in terms of power series:
 \begin{equation}
 \sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!}, \qquad
 \cos(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}  }{(2n)!}
 \end{equation}
-These series expansions can actually be obtained from the series expansions of the exponential function by splitting it into the parts with even and odd exponents and introducing a sign alternation by the $(-1)^n$ factor. There are also differential and functional equations for sine and cosine that are reminiscent of the equations for the exponential function. Sine and cosine satisfy the following system of coupled differential equations:
+These series expansions can actually be obtained from the series expansion of the exponential function by splitting it into the parts with even and odd exponents and introducing a sign alternation by the $(-1)^n$ factor. There are also differential and functional equations for sine and cosine that are reminiscent of the equations for the exponential function. Sine and cosine satisfy the following system of coupled differential equations:
 \begin{equation}
 \frac{d}{dx} \sin(x) = \cos(x), \quad
 \frac{d}{dx} \cos(x) = -\sin(x)
@@ -548,6 +548,11 @@ and the following system of coupled functional equations which are also known un
 \sin(x+y) = \sin(x) \cos(y) + \cos(x) \sin(y), \qquad
 \cos(x+y) = \cos(x) \cos(y) - \sin(x) \sin(y)
 \end{equation}
+Although the relations are more complicated for sine and cosine than they are for the exponential function, we see that sine and cosine also somehow seem to translate between addition and multiplication and the derivatives are also repetitive. This is not a coincidence. In fact, the pair of sine and cosine are related to the exponential function in the complex domain via the formula:
+\begin{equation}
+\e^{\i z} = \cos(z) + \i \sin(z)
+\end{equation}
+for any complex number $z$. Yes - we can also plug complex numbers into $\sin, \cos$ and $\exp$. How to evaluate them for complex arguments is completely defined via the series expansions because all of these three series expansions do indeed converge in the entire complex plane.  ...TBC...
 
 
 
@@ -584,7 +589,16 @@ When we decompose the exponential function into its odd and even parts, we obtai
  \tanh(x) =	\frac{\sinh(x)}{\cosh(x)} 
           = \frac{\e^x - \e^{-x}}{\e^x + \e^{-x}}
 \end{equation}
-They can all also be directly be defined by a power series:
+They can all also be directly be defined by a power series: 
+\begin{equation}
+...
+\end{equation}
+Again, everything still makes sense when the argument is a complex number. ...TBC...
+
+
+
+% ToDo: maybe remove the tanh function from the eq above - introduce it later. maybe together with other functions like tan, sec, sech, cosec, etc..
+
 
 
 

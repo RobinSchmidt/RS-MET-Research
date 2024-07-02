@@ -470,9 +470,10 @@ It satisfies the following differential equation\footnote{Don't worry if you don
 \frac{d}{dx} \e^x = \e^x, \quad
 \e^{x+y} = \e^x \e^y
 \end{equation}
-This functional equation is pretty interesting indeed. It means that the exponential function translates between our two most important arithmetic operations addition and multiplication \footnote{subtraction and division are less important because they can be seen as mere inverses of the more fundamental operations of addition and multiplication}. The differential equation is quite noteworthy as well. It means that the exponential function is its own derivative. 
+This functional equation is pretty interesting indeed. It means that the exponential function translates between our two most important arithmetic operations addition and multiplication \footnote{subtraction and division are less important because they can be seen as mere inverses of the more fundamental operations of addition and multiplication}. The differential equation is quite noteworthy as well. It means that the exponential function is its own derivative. We can also insert complex arguments into the series definition. The resulting series will converge for any complex number $z$ whatsoever and the properties mentioned above continue to hold.
 
-In the complex domain, it also subsumes the - undeniably also very important - trigonometric functions sine and cosine that are so intimately related to the circle. All of these features are quite remarkable and secure the exponential function a top spot in the hall of fame of all functions in mathematics. It is even widely regarded as the most important function in all of mathematics and the chief reason for this is its functional equation, i.e. its ability to translate between addition and multiplication.
+\medskip
+In the complex domain, the exponential function also subsumes the - undeniably also very important - trigonometric functions sine and cosine that are so intimately related to the circle. All of these features are quite remarkable and secure the exponential function a top spot in the hall of fame of all functions in mathematics. It is even widely regarded as the most important function in all of mathematics and the chief reason for this is its functional equation, i.e. its ability to translate between addition and multiplication.
 
 % Other properties:
 % -it produces positive real output for real inputs
@@ -531,6 +532,36 @@ We have seen that the exponential function $f(x) = \e^x$ is injective, i.e. maps
 % -rules (base-change, etc.)
 % -notational ambiguities (log vs ln, lg, ld, lb)
 
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Hyperbolic Functions}
+When we decompose the exponential function into its odd and even parts, we obtain the so called \emph{hyperbolic sine} and \emph{hyperbolic cosine} functions $\sinh(x), \cosh(x)$:
+\begin{equation}
+\sinh(x) =	\frac{\e^x - \e^{-x}}{2}, \quad	
+\cosh(x) =	\frac{\e^x + \e^{-x}}{2}, \quad
+\end{equation}
+They can all also be directly be defined by a power series: 
+\begin{equation}
+\sinh(x) = \sum_{n=0}^{\infty} \frac{x^{2n+1}}{(2n+1)!}, \qquad
+\cosh(x) = \sum_{n=0}^{\infty} \frac{x^{2n}  }{(2n)!}
+\end{equation}
+These power series arise from the power series of the exponential function by just extracting the terms with odd exponents for $\sinh$ and the terms with even exponents for $\cosh$. ...TBC...
+
+% Everything still makes sense when the argument is a complex number. 
+
+%and when we form their quotient, we obtain the hyperbolic tangent $\tanh(x)$:
+%\begin{equation}
+%\tanh(x) =	\frac{\sinh(x)}{\cosh(x)} 
+%         = \frac{\e^x - \e^{-x}}{\e^x + \e^{-x}}
+%\end{equation}
+
+
+
+% https://en.wikipedia.org/wiki/Hyperbolic_functions
+
+% ToDo: maybe remove the tanh function from the eq above - introduce it later. maybe together with other functions like tan, sec, sech, cosec, etc..
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Trigonometric Functions}
 The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geometric considerations about triangles (more on that later in the geometry chapter) but can also be defined in terms of power series:
@@ -538,7 +569,7 @@ The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geo
 \sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!}, \qquad
 \cos(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}  }{(2n)!}
 \end{equation}
-These series expansions can actually be obtained from the series expansion of the exponential function by splitting it into the parts with even and odd exponents and introducing a sign alternation by the $(-1)^n$ factor. There are also differential and functional equations for sine and cosine that are reminiscent of the equations for the exponential function. Sine and cosine satisfy the following system of coupled differential equations:
+These series expansions look very similar to those of $\sinh$ and $\cosh$ but they have this additional sign alternation factor $(-1)^n$ going on. There are also differential and functional equations for sine and cosine that are reminiscent of the corresponding equations for the exponential function. Sine and cosine satisfy the following system of coupled differential equations:
 \begin{equation}
 \frac{d}{dx} \sin(x) = \cos(x), \quad
 \frac{d}{dx} \cos(x) = -\sin(x)
@@ -552,7 +583,9 @@ Although the relations are more complicated for sine and cosine than they are fo
 \begin{equation}
 \e^{\i z} = \cos(z) + \i \sin(z)
 \end{equation}
-for any complex number $z$. Yes - we can also plug complex numbers into $\sin, \cos$ and $\exp$. How to evaluate them for complex arguments is completely defined via the series expansions because all of these three series expansions do indeed converge in the entire complex plane.  ...TBC...
+for any complex number $z$. 
+
+%Yes - we can also plug complex numbers into $\sin, \cos$ and $\exp$. How to evaluate them for complex arguments is completely defined via the series expansions because all of these three series expansions do indeed converge in the entire complex plane.  ...TBC...
 
 
 
@@ -580,26 +613,7 @@ for any complex number $z$. Yes - we can also plug complex numbers into $\sin, \
 %  But it is more complicated - namely a system of two coupled functional equations.
 % -Give also the system of differential equations:  sin' = cos, cos' = -sin'
 
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Hyperbolic Functions}
-When we decompose the exponential function into its odd and even parts, we obtain the so called hyperbolic sine and cosine functions $\sinh(x), \cosh(x)$ and when we form their quotient, we obtain the hyperbolic tangent $\tanh(x)$:
-\begin{equation}
- \sinh(x) =	\frac{\e^x - \e^{-x}}{2}, \quad	
- \cosh(x) =	\frac{\e^x + \e^{-x}}{2}, \quad
- \tanh(x) =	\frac{\sinh(x)}{\cosh(x)} 
-          = \frac{\e^x - \e^{-x}}{\e^x + \e^{-x}}
-\end{equation}
-They can all also be directly be defined by a power series: 
-\begin{equation}
-\sinh(x) = \sum_{n=0}^{\infty} \frac{x^{2n+1}}{(2n+1)!}, \qquad
-\cosh(x) = \sum_{n=0}^{\infty} \frac{x^{2n}  }{(2n)!}
-\end{equation}
-Again, everything still makes sense when the argument is a complex number. ...TBC...
 
-
-% https://en.wikipedia.org/wiki/Hyperbolic_functions
-
-% ToDo: maybe remove the tanh function from the eq above - introduce it later. maybe together with other functions like tan, sec, sech, cosec, etc..
 
 
 % https://en.wikipedia.org/wiki/Gudermannian_function

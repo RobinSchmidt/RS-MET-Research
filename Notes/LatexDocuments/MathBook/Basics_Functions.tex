@@ -459,7 +459,7 @@ A general exponential function is a function of the form $y = f(x) = b^x$ for so
 \begin{equation}
 \e^x 
 = \exp(x)
-= \sum_{k=0}^{\infty} \frac{x^k}{k!}
+= \sum_{n=0}^{\infty} \frac{x^n}{n!}
 = \lim_{n \rightarrow \infty} \left( 1 + \frac{x}{n} \right)^n, \quad
 x = \int_1^y \frac{1}{t} \, dt
 \end{equation}
@@ -540,12 +540,27 @@ When we decompose the exponential function into its odd and even parts, we obtai
 \sinh(x) =	\frac{\e^x - \e^{-x}}{2}, \quad	
 \cosh(x) =	\frac{\e^x + \e^{-x}}{2}, \quad
 \end{equation}
-They can all also be directly be defined by a power series: 
+By applying these odd/even decomposition formulas to the power series of $\e^x$ and simplify using the symmetries of $x^n$, we obtain the power series of $\sinh$ and $\cosh$: 
 \begin{equation}
 \sinh(x) = \sum_{n=0}^{\infty} \frac{x^{2n+1}}{(2n+1)!}, \qquad
 \cosh(x) = \sum_{n=0}^{\infty} \frac{x^{2n}  }{(2n)!}
 \end{equation}
-These power series arise from the power series of the exponential function by just extracting the terms with odd exponents for $\sinh$ and the terms with even exponents for $\cosh$. ...TBC...
+These power series can also be constructed from the power series of the exponential function by just extracting the terms with odd exponents for $\sinh$ and the terms with even exponents for $\cosh$. This way of extracting the even and odd parts of a power series works for any function [VERIFY!]. The two functions satisfy the following system of coupled differential equations:
+\begin{equation}
+\frac{d}{dx} \sinh(x) = \cosh(x), \quad
+\frac{d}{dx} \cosh(x) = \sinh(x)
+\end{equation} 
+If you repeatedly differentiate, you'll always cycle through the same two functions. So we have a 2-cycle here. As an interesting parallel, recall that the exponential function is its own derivative which can be viewed as a 1-cycle. There is also a pair of formulas for hyperbolic functions that parallels the functional equation of the exponential function:
+\begin{equation}
+\sinh(x+y) = \sinh(x) \cosh(y) + \cosh(x) \sinh(y), \quad
+\cosh(x+y) = \cosh(x) \cosh(y) - \sinh(x) \sinh(y)
+\end{equation}
+
+
+%...TBC...give functional and differential equations
+
+
+
 
 % Everything still makes sense when the argument is a complex number. 
 
@@ -564,7 +579,12 @@ These power series arise from the power series of the exponential function by ju
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Trigonometric Functions}
-The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geometric considerations about triangles (more on that later in the geometry chapter) but can also be defined in terms of power series:
+The trigonometric functions $\sin(x), \cos(x)$ originally arise from certain geometric considerations about triangles (more on that later in the geometry chapter) but, surprisingly, they can also be introduced in an entirely different way. I mentioned that the exponential function can be evaluated in the whole complex plane via its power series definition. If we evaluate it along the real number line, we get strictly monotonically increasing real values as outputs. Let's now evaluate the same power series along the imaginary line. That means, we pick a real number $x$ and look at the function $\e^{\i x}$. When we do that and separate the real and imaginary parts, we will arrive at:
+\begin{equation}
+\e^{\i x} =      \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}  }{(2n)!} 
+            + \i \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!}
+\end{equation}
+It turns out that the real part of $\e^{\i x}$ is actually the cosine function and the imaginary part is sine function. That means, sine and cosine can also be defined in terms of power series:
 \begin{equation}
 \sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!}, \qquad
 \cos(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}  }{(2n)!}
@@ -587,6 +607,11 @@ for any complex number $z$.
 
 %Yes - we can also plug complex numbers into $\sin, \cos$ and $\exp$. How to evaluate them for complex arguments is completely defined via the series expansions because all of these three series expansions do indeed converge in the entire complex plane.  ...TBC...
 
+% Maybe introduce sin/cos similar to how sinh/cosh were introduced. But here, we have to do:
+% sin(z) = e^{i z} - e^{- i z} / (2i)  = Im e^z
+% cos(z) = e^{i z} + e^{- i z} / (2)   = Re e^z
+% i.e. instead of extracting even and odd part, we extract real and imaginary part
+% Oh - but we have to consider e^{i y} for real y, i.e. evaluate exp at the imaginary axis.
 
 
 
@@ -612,6 +637,10 @@ for any complex number $z$.
 %  can be thought of as being analoguous to the functional equation for the exponential function.
 %  But it is more complicated - namely a system of two coupled functional equations.
 % -Give also the system of differential equations:  sin' = cos, cos' = -sin'
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Relations between Exponential, Hyperbolic and Trigonometric Functions}
 
 
 

@@ -8979,19 +8979,38 @@ void testGeometricAlgebraNesting()
   // G^(1,0,0) with G^(0,1,0), i.e. the hyperbolic numbers with the complex numbers.
 
   using Real = double;
-  using GA0  = rsGeometricAlgebra<Real>;  // GA with zero nesting levels, i.e. flat GA
-  using GA1  = rsGeometricAlgebra<GA0>;   // GA with one nesting level
   using MV0  = rsMultiVector<Real>;       // Flat multivector
   using MV1  = rsMultiVector<MV0>;        // Nested multivector with 1 level of nesting
-  using Vec  = std::vector<Real>;         // For general arrays
+
+  using GA0  = rsGeometricAlgebra<Real>;  // GA with zero nesting levels, i.e. flat GA
+
+
+  // ToDo: figure out, which is right - I think, it should be rsGeometricAlgebra<MV0>
+  //using GA1  = rsGeometricAlgebra<GA0>;   // GA with one nesting level
+  using GA1  = rsGeometricAlgebra<MV0>;   // GA with one nesting level
+
+
+  //using Vec  = std::vector<Real>;         // For general arrays
 
   // Create the geometric algebra (GA) objects that we want to use:
   GA0 alg_1(1,0,0);    // 1D flat GA (isomorphic to hyperbolic numbers)
   GA0 alg_2(2,0,0);    // 2D flat GA algebra
   
+
   //GA1 alg_1_1(1,0,0);  // 1D GA with components from 1D GA
   // Doesn't compile. We may need to define implicit conversion operators from the component type
-  // to the multivector type.
+  // to the multivector type. See constructors of rsMultiVector for more comments about how we 
+  // could achieve this. I think, one way would be to switch the data type for the Cayley tables
+  // from T to int. We could even use int8_t to save space because the entries are always just the
+  // scalars -1,0,+1. ...Or are they? Wait! I think, the entries of the Cayley tables are zero or
+  // plus or minus the basis vectors. ...Hmm...implementing nesting of geometric algebras turns out
+  // to be more difficlut than I thought.
+  //
+  // As an intermediate step, we could try to create GAs from complex, hyperbolic and dual numbers.
+  // If that works and we can verify the desired isomorphies with these, we can think about how
+  // to represent these number types by geometric algebras as well. We'll kick the can a bit down
+  // the road such that we need a working implementation of GA-nesting later and first work with 
+  // GAs with different types for the components.
 
 
 

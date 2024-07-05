@@ -5365,6 +5365,17 @@ public:
   { setAlgebra(algebraToUse); set(coeffs); }
 
 
+  //rsMultiVector(const rsGeometricAlgebra<T>* algebraToUse, int scalarValue)
+  //{
+  //  setAlgebra(algebraToUse);
+  //  setToScalar(T(scalarValue));
+  //}
+  // Experimental. I think, we need this to implement nested geoemtric algebras. For this, we need
+  // a way to convert an integer into a multivector in such a way that the integer is taken as a
+  // scalar-valued multivector with the value given by the integer. ..Ah..wait..no. I think that 
+  // doesn't work. Our Cayley tables store values of type T. Maybe they should store integers and 
+  // do the conversion to type T during usage. That's less efficient, though. Or: Do indeed allow
+  // The Caley tables to store multivectors in case of nested algebras.
 
   //-----------------------------------------------------------------------------------------------
   /** \name Setup */
@@ -5666,11 +5677,13 @@ public:
     scalar,        // for blades, nonzero only when the two blades have same grade
     dot,
     fatDot,
-    commutator,    // is a "derivation", obeys product rule
+    commutator,    // obeys product rule for a derivation ...?
     regressive
   };
   // Maybe this should be defined in class rsGeometricAlgebra - then we could have a function
   // rsMatrix<T> getCalyeyTable(ProductType type) there. This could be interesting for client code
+  // What does it mean to say that the commutator obeys the product rule? With respect to which
+  // unary operation?
 
   /** Computes one of the several products that can be derived from the geometric product. Which 
   one it is is selected by the product type parameter. See:

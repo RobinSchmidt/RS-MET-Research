@@ -8975,7 +8975,27 @@ void testGeometricAlgebraNesting()
   // that turns out to be true, it could perhaps reduce the memory requirements for storing the
   // Cayley tables. The tables of the flattened algebra G^(i+l,j+m,k+n) would be larger than the 
   // sum of the tables for G^(i,j,k) and G(l,m,n). Maybe try first, if G^2 can be produced as 
-  // nesting of G^1 with itself.
+  // nesting of G^1 with itself. I use G^1 as shorthand for G^(1,0,0). Maybe try next nesting
+  // G^(1,0,0) with G^(0,1,0), i.e. the hyperbolic numbers with the complex numbers.
+
+  using Real = double;
+  using GA0  = rsGeometricAlgebra<Real>;  // GA with zero nesting levels, i.e. flat GA
+  using GA1  = rsGeometricAlgebra<GA0>;   // GA with one nesting level
+  using MV0  = rsMultiVector<Real>;       // Flat multivector
+  using MV1  = rsMultiVector<MV0>;        // Nested multivector with 1 level of nesting
+  using Vec  = std::vector<Real>;         // For general arrays
+
+  // Create the geometric algebra (GA) objects that we want to use:
+  GA0 alg_1(1,0,0);    // 1D flat GA (isomorphic to hyperbolic numbers)
+  GA0 alg_2(2,0,0);    // 2D flat GA algebra
+  
+  //GA1 alg_1_1(1,0,0);  // 1D GA with components from 1D GA
+  // Doesn't compile. We may need to define implicit conversion operators from the component type
+  // to the multivector type.
+
+
+
+  int dummy = 0;
 }
 
 

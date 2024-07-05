@@ -248,14 +248,14 @@ where $c$ is some fixed constant. It's often zero but for generality, I've alrea
 % https://en.wikipedia.org/wiki/Entire_function
 
 \paragraph{Convolution Revisited}
-When we defined the convolution operation between sequences, it may have seemed somewhat arbitrary and unmotivated. In light of power series, we may give it some interpretation that also justifies why it is also called the Cauchy "product". Recall that to mutliply two (finite) polynomials, we have to convolve their lists of coefficients. The Cauchy product is basically the infinite version of that. It's a generalization in the sense that it includes the finite case as special case when we assume that the sequences just become identically zero after some $n$. The product sequence is the sequence of coefficients of an infinite product polynomial, so to speak...TBC...that can perhaps be explained better
+When we defined the convolution operation between sequences, it may have seemed somewhat arbitrary and unmotivated. In light of power series, we may give it some interpretation that also justifies why it is also called the Cauchy "product". Recall that to multiply two (finite) polynomials, we have to convolve their lists of coefficients. The Cauchy product is basically the infinite version of that. It's a generalization in the sense that it includes the finite case as special case when we assume that the sequences just become identically zero after some $n$. The product sequence is the sequence of coefficients of an infinite product polynomial, so to speak...TBC...that can perhaps be explained better
 
 \medskip
 ...TBC..ToDo: explain how to compute radius of convergence - distance to nearest singularity
 
 %explain 
 
-\subsubsection{Taylor Expansion}
+\subsubsection{Taylor Series Expansion}
 One truly remarkable result of calculus is that a lot of functions can be expressed as such a power series. For many important functions (including our favorites $\exp, \sin, \cos$), we will even find an infinite radius of convergence. Taylor's theorem tells us how to find the coefficients and the formula is actually pretty simple. First, we pick an expansion point, i.e. the center of our expansion. That's the $c$ in the formula given above but here, we'll call it $x_0$. The $k$th coefficient is given the $k$th derivative of $f$ at our expansion point $x_0$ divided by $k!$. So the formula for the Taylor series is:
 \begin{equation}
 \label{Eq:TaylorSeries}
@@ -263,6 +263,8 @@ f(x) = \sum_{k=0}^\infty \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k
 %     = \sum_{k=0}^n \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k + \mathcal{O}(x-x_0)^n
 \end{equation}
 For this formula to work, we require a few things. First, $f$ must be smooth at $x_0$ such that we actually can take all the derivatives. Second, we require $x$ to be within the radius of convergence of the series, i.e. close enough to $x_0$. There are some rather special functions that are indeed smooth but have a radius of convergence of zero. But we'll forget about that complication right now. For most functions, it works just fine. By inspecting this formula, we can see the reason why (\ref{Eq:PowerSeries}) always converges for $x=c$ or $x=x_0$ in the new notation here: the factor $(x-x_0)^k$ will be zero for any $k > 0$. For $x = x_0$ and $k = 0$, the factor $(x-x_0)^k$ actually evaluates to $0^0$. For the formula to still work at $x=x_0$, we are forced to define $0^0 = 1$ which is a quite common definition in algebra, calculus and combinatorics.
+
+% toDo: explain how the formula arises from approximating a function with polynomials at a point by mathcing more and more derivatives. Explain hwo the power series for e^x arises from that 
 
 % which means that for $x=x_0$, 
 
@@ -274,9 +276,9 @@ For this formula to work, we require a few things. First, $f$ must be smooth at 
 % https://en.wikipedia.org/wiki/Zero_to_the_power_of_zero
 
 \medskip
-The practical usefulness of this Taylor expansion lies in the fact that when we just take a finite sum instead of an infinite one, we obtain an approximation to our function. The more terms we use, the better our approximation becomes (provided that the argument is within the radius of convergence - of course). Due to that feature, Taylor expansions are used a lot in numerical computations to approximate all kinds of functions. They are also used a lot in physics to simplify complicated problems by making approximations. There, often just first or second order approximations are used, i.e. approximations up to the linear or quadratic term. Let's see what happens, when we only use a single term, i.e. only the $k=0$ term. The formula tells us to evaluate the $0$th derivative of $f$, which is $f$ itself, at $x_0$, divide by $0!$, i.e. by one and multiply that by $(x-x_0)^0 = 1$. So what we get is just $f(x_0)$. The $0$th order Taylor polynomial around $x_0$ approximates $f$ as the constant function with value $f(x_0)$. Not a very impressive approximation but at least it has the correct function value at $x_0$ and that's the best we could possibly hope for, when we try to approximate a function $f$ by a constant function around some $x_0$. If we take one term more, we obtain a linear approximation of $f$ around $x_0$. It will have a matching function value and a matching first derivative. The approximant will be a tangent to our actual function at $(x_0, f(x_0))$. The next approximation will additionaly match the second derivative and create a paraboloic approximation. And so on.
+The practical usefulness of this Taylor expansion lies in the fact that when we just take a finite sum instead of an infinite one, we obtain an approximation to our function. The more terms we use, the better our approximation becomes (provided that the argument is within the radius of convergence - of course). Due to that feature, Taylor expansions are used a lot in numerical computations to approximate all kinds of functions. They are also used a lot in physics to simplify complicated problems by making approximations. There, often just first or second order approximations are used, i.e. approximations up to the linear or quadratic term. Let's see what happens, when we only use a single term, i.e. only the $k=0$ term. The formula tells us to evaluate the $0$th derivative of $f$, which is $f$ itself, at $x_0$, divide by $0!$, i.e. by one and multiply that by $(x-x_0)^0 = 1$. So what we get is just $f(x_0)$. The $0$th order Taylor polynomial around $x_0$ approximates $f$ as the constant function with value $f(x_0)$. Not a very impressive approximation but at least it has the correct function value at $x_0$ and that's the best we could possibly hope for, when we try to approximate a function $f$ by a constant function around some $x_0$. If we take one term more, we obtain a linear approximation of $f$ around $x_0$. It will have a matching function value and a matching first derivative. The approximant will be a tangent to our actual function at $(x_0, f(x_0))$. The next approximation will additionally match the second derivative and create a parabolic approximation. And so on.
 
-ToDo: maybe move that into an "Applications" section
+ToDo: maybe move that into an "Applications" section, explain how the factorial factors arise from matching the derivatives of a Taylor-polynomial
 
 \paragraph{Example} Let's consider the function $f(x) = 1 / (1 + x^2)$ and let's pick $x_0 = 0$ as expansion point. ToDo: draw plot of the function and a couple of approximants - show how convergence breaks down at +-1 because of the poles at +-i
 
@@ -292,6 +294,29 @@ ToDo: maybe move that into an "Applications" section
 % -explains hwo the remainder/error in Taylor's theorem determines the convergence of the series, 
 %  i.e. the circumstances under which the error goes to zero as the order of the series 
 %  approximation grows
+
+
+% This Function Breaks Taylor Series!
+% https://www.youtube.com/watch?v=01h743ZBcjo
+% Give examples of functions that have all derivatives defined but are not analytic
+% consider e^(-1/x) on the positive real number line
+
+\subsubsection{Laurent Series Expansion}
+The Taylor series is a power series expansion of a function $f(x)$ around a point $x_0$. The coefficients can be computed by the Taylor series formula. For this to work, a necessary (but not sufficient) condition is that the function must be smooth at the point. Otherwise, we wouldn't even be able to evaluate all the derivatives that occur in the formula for the coefficients. A Laurent expansion is a generalization that can sometimes be used to expand a function around a pole, i.e. around a point where not even the function value is well defined (let alone derivatives). The formula is [VERIFY!]:
+\begin{equation}
+\label{Eq:LaurentSeries}
+f(x) = \sum_{n=-\infty}^\infty a_n  (x-x_0)^n
+\end{equation}
+It looks similar to the power series expansion in (\ref{Eq:PowerSeries}) but it allows also for negative exponents - the index $n$ now starts at $-\infty$. That negative exponents are able to model the behavior of poles is apparent when we consider the function $(x-x_0)^{-1}$. ...TBC...ToDo: give formula for the coeffs $a_n$, Q: Does the expansion point have to be a pole or can it also be a jump or corner discontinuity? Explain convergence properties - converges in an annulus
+
+% Can we expand the abs or sign function into a Laurent series? ...I don't think so...hmm...if we differentiate abs, we get sign, if we diff again, we get a Dirac spike at zero...yeah...no..I don't think, we can model that with a Laurent series. If we can, we could integrate the result twice
+
+% Maybe explain difference between poles of even and odd order - odd order poles go to plus and minus inf at x_0 whereas even order poles go only to plus or to minsu inf. But that holds for the real number line - what about the complex plane?
+
+
+% https://en.wikipedia.org/wiki/Laurent_series
+% -"one often pieces together the Laurent series by combining known Taylor expansions." ...HOW?
+% https://mathworld.wolfram.com/LaurentSeries.html
 
 \subsection{Trigonometric Series}
 We now want to look at a completely different kind of series. It will again involve a variable $x$ but this time, we will not use powers of $x$ but instead trigonometric functions, specifically sines and cosines. We will look at series of the form:

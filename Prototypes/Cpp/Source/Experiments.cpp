@@ -9003,15 +9003,16 @@ void testGeometricAlgebraNesting()
   // could achieve this. I think, one way would be to switch the data type for the Cayley tables
   // from T to int. We could even use int8_t to save space because the entries are always just the
   // scalars -1,0,+1. ...Or are they? Wait! I think, the entries of the Cayley tables are zero or
-  // plus or minus the basis vectors. ...Hmm...implementing nesting of geometric algebras turns out
-  // to be more difficlut than I thought.
+  // plus or minus the basis vectors - but this might not be true anymore for more generalized
+  // algebras - in the documentation of buildCayleyTables and cayleyTableEntries, there is some 
+  // talk about non-diagonal metrics. ...Hmm...implementing nesting of geometric algebras turns out
+  // to be more difficlut than I thought. 
   //
   // As an intermediate step, we could try to create GAs from complex, hyperbolic and dual numbers.
   // If that works and we can verify the desired isomorphies with these, we can think about how
   // to represent these number types by geometric algebras as well. We'll kick the can a bit down
   // the road such that we need a working implementation of GA-nesting later and first work with 
   // GAs with different types for the components.
-
 
 
   int dummy = 0;

@@ -8965,13 +8965,17 @@ void testGeometricAlgebraNesting()
   // First, we use the geometric algebra of 2D Euclidean space G^(2,0,0) as outer algebra and 
   // the geometric algebra G(0,1,0) that represents the complex numbers as inner algebra. The 
   // questions that we wnat to answer experimentally are: Is the result isomorphic to doing the 
-  // composition the other way around? And maybe both nestings are isomorphic to G^(2,1,0)? Maybe 
-  // in general, nesting of G^(i,j,k) and G(l,m,n) is isomorphic to to G^(i+l,j+m,k+n)? To check 
-  // these proposed isomorphisms numerically, we should first define the mapping map(a) from one 
-  // representation to the other (e.g. from nested to flat), and then for all pairs of basis 
+  // composition the other way around? And maybe both nestings are isomorphic to G^(2,1,0)? To 
+  // check these proposed isomorphisms numerically, we should first define the mapping map(a) from
+  // one representation to the other (e.g. from nested to flat), and then for all pairs of basis 
   // vectors a,b check if map(a*b) = map(a) * map(b) where * is the geometric product. I guess, it
   // then follows from linearity that the map is indeed an isomorphism [VERIFY!].  ...TBC...
-
+  //
+  // Maybe in general, nesting of G^(i,j,k) and G(l,m,n) is isomorphic to to G^(i+l,j+m,k+n)? If 
+  // that turns out to be true, it could perhaps reduce the memory requirements for storing the
+  // Cayley tables. The tables of the flattened algebra G^(i+l,j+m,k+n) would be larger than the 
+  // sum of the tables for G^(i,j,k) and G(l,m,n). Maybe try first, if G^2 can be produced as 
+  // nesting of G^1 with itself.
 }
 
 

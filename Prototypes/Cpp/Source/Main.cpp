@@ -61,6 +61,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // Geometric algebra:
   //testExteriorAlgebra3D();
   //testGeometricAlgebra();
+  testGeometricAlgebraNesting();
 
   // Math:
   //testEulerTransformation();
@@ -110,7 +111,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testGeneratingFunction();
   //testCatalanNumbers();
   //testSmoothCrossFade();
-  testSmoothCrossFade2();
+  //testSmoothCrossFade2();
 
 
   //testMerge();

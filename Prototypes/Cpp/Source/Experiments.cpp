@@ -8947,6 +8947,34 @@ void testGeometricAlgebra()
 // case that the i-th row and column is all zeros in all basis matrices?
 
 
+void testGeometricAlgebraNesting()
+{
+  // UNDER CONSTRUCTION
+
+  // The idea for this came to me when seeing this video:
+  //
+  //   https://www.youtube.com/watch?v=m5aKoQ2FTeo
+  //
+  // I wrote a comment there. It seems like one can take the geometric algebra G^3 of 3D Euclidean 
+  // space R^3 and then replace the real numbers R by the complex numbers C. The complex numbers C 
+  // themselves are isomorphic to the geometric algebra G^(0,1,0), i.e. the algebra with one basis 
+  // vector that squares to -1. That made me think: How about letting the scalars and multivector 
+  // components of one geometric algebra be multivectors from another geometric algebra and thereby
+  // obtain a nested algebra? That's what we try out here. ...TBC...
+  //
+  // First, we use the geometric algebra of 2D Euclidean space G^(2,0,0) as outer algebra and 
+  // the geometric algebra G(0,1,0) that represents the complex numbers as inner algebra. The 
+  // questions that we wnat to answer experimentally are: Is the result isomorphic to doing the 
+  // composition the other way around? And maybe both nestings are isomorphic to G^(2,1,0)? Maybe 
+  // in general, nesting of G^(i,j,k) and G(l,m,n) is isomorphic to to G^(i+l,j+m,k+n)? To check 
+  // these proposed isomorphisms numerically, we should first define the mapping map(a) from one 
+  // representation to the other (e.g. from nested to flat), and then for all pairs of basis 
+  // vectors a,b check if map(a*b) = map(a) * map(b) where * is the geometric product. I guess, it
+  // then follows from linearity that the map is indeed an isomorphism [VERIFY!].  ...TBC...
+
+}
+
+
 void testEulerTransformation()
 {
   // Tests the Euler transformation used to speed up the convergence of a slowly converging 

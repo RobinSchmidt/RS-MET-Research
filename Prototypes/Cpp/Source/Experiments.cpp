@@ -8955,7 +8955,9 @@ void testGeometricAlgebraNesting()
   //
   //   https://www.youtube.com/watch?v=m5aKoQ2FTeo
   //
-  // I wrote a comment there. It seems like one can take the geometric algebra G^3 of 3D Euclidean 
+  // I wrote a comment there and there are some interesting replies
+  
+  // It seems like one can take the geometric algebra G^3 of 3D Euclidean 
   // space R^3 and then replace the real numbers R by the complex numbers C. The complex numbers C 
   // themselves are isomorphic to the geometric algebra G^(0,1,0), i.e. the algebra with one basis 
   // vector that squares to -1. That made me think: How about letting the scalars and multivector 
@@ -9006,16 +9008,56 @@ void testGeometricAlgebraNesting()
   // plus or minus the basis vectors - but this might not be true anymore for more generalized
   // algebras - in the documentation of buildCayleyTables and cayleyTableEntries, there is some 
   // talk about non-diagonal metrics. ...Hmm...implementing nesting of geometric algebras turns out
-  // to be more difficlut than I thought. 
+  // to be more difficlut than I thought. Maybe rsGeometricAlgebra needs a constructor that takes
+  // ber one of the template type as prototype. We can the first construct the mutivector that 
+  // represents the scalar number 1 of the inner algebra to the constructor of the outer algebra 
+  // such that the outer algebra can use that prototype to build its Cayley table. It needs the 
+  // prototype in order to know, which GA-object should be used by the inner components. It's a
+  // bit messy API-wise but it increases flexibility. I guess, we'll also need a similar mechanism
+  // when we wnat to build geometric algebras form modular integers. I don't know, if such a thing
+  // makes sense, though. So far, we didn't need prototype based construction of Cayley table 
+  // elements because so far, their elements were supposed to be a primitive data type such as 
+  // double. But when their datatype is itself more complicated - like a multivector type - then
+  // we may need it.
   //
   // As an intermediate step, we could try to create GAs from complex, hyperbolic and dual numbers.
   // If that works and we can verify the desired isomorphies with these, we can think about how
   // to represent these number types by geometric algebras as well. We'll kick the can a bit down
   // the road such that we need a working implementation of GA-nesting later and first work with 
-  // GAs with different types for the components.
-
+  // GAs with different types for the components. Maybe as very first step, try to find an 
+  // isomorphism between G(2,0,0) and nested hyperbolic numbers and one between G(0,2,0) and nested
+  // complex numbers - where the nesting is just one level deep. Next, try to find an isomorphism 
+  // between G(3,0,0) and doubly nested hyperbolic numbers. If that works out, there is hope to 
+  // believe that the general desired result my hold up. If that fails, we can quit and save the 
+  // trouble of doing the implementation of nested GAs - although maybe they could be useful even
+  // if no such isomorphism exists. In fact, that could make them even more useful because they 
+  // implement different structures than the flat GAs.
+  //
+  // Or, maybe start with finding an isomorphism between G(0,2,0) and nested complex numbers. If
+  // we represent the complex number a + i*b as vector (a,b), then the two basis vectors of the 
+  // complex numbers are given by (1,0), (0,1) and I think the basis vectors of the nested complex
+  // numbers can be seen as nested vectors of all possible combinations, i.e. 
+  // ((1,0),(1,0)), ((1,0),(0,1)), ((0,1),(1,0)), ((0,1),(0,1)) - verify that! I think, we want the
+  // following mapping between nested and flat basis vectors:
+  //   ((1,0),(1,0))  ->  (1,0,0,0)
+  //   ((1,0),(0,1))  ->  (0,1,0,0)
+  //   ((0,1),(1,0))  ->  (0,0,1,0)
+  //   ((0,1),(0,1))  ->  (0,0,0,1)
 
   int dummy = 0;
+
+
+  // ToDo:
+  //
+  // - Research if such a nesting of geometric algebras has already been explored. The video 
+  //   sparked the idea in my head - but maybe I'm just re-inventing the wheel yet again.
+  //
+  // See also:
+  //
+  // - Clifford algebra, geometric algebra, and applications
+  //   by Douglas Lundholm and Lars Svensson
+  //   https://www.mathematik.uni-muenchen.de/~lundholm/clifford.pdf
+  //   from page 54 onwards, it talks about isomorphisms between different algebras
 }
 
 

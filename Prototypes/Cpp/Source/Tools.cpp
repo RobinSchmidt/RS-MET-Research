@@ -4976,7 +4976,7 @@ class rsGeometricAlgebra
 
 public:
 
-  using Vec = std::vector<T>; // for conevenience
+  using Vec = std::vector<T>; // for convenience
 
   /** Creates an algebra object with given signature, i.e. given number of basis vectors that 
   square to +1, -1 and 0 respectively. Note that even though the zero-dimensions are specified 

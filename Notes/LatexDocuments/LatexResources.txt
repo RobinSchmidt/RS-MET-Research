@@ -1,0 +1,7 @@
+
+Nice big comprehensive list of math symbols:
+https://www.math.uci.edu/~xiangwen/pdf/LaTeX-Math-Symbols.pdf
+
+
+https://tex.stackexchange.com/questions/460408/how-to-add-a-cross-out-to-any-latex-symbol
+

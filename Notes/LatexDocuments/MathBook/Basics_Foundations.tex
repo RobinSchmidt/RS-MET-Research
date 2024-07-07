@@ -49,28 +49,12 @@ In a set, neither the order of the elements nor their multiplicity matters where
 % Applicaitons: Prime factorization, roots of polynomials, multiple traversals of a curve in algebraic geometry, e.g. the polynomial euqation  (x^2 + y^2 - 1)^n = 0  contains the unit circle n times (although there is no notion of "traversal" - I think, this idea comes in only when parameterizing the curve)
 
 
-
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Relations}
-A relation can formally be defined to be a set of tuples. Of particular importance are binary relations, i.e. sets of 2-tuples, aka pairs. As an example, consider the two sets $A = \{1,2,5\}, B = \{0,2,4\}$. We can define a relation $R$ between the sets $A$ and $B$ as a set of pairs where the first entry comes from $A$ and the second from $B$, for example: $R = \{(1,2),(1,4),(2,4)\}$. Such a relation can be visualized pictorially by drawing the two sets side by side and drawing an arrow between each pair of elements that is in the relation. This is shown for our relation $R$ in figure .... ...TBC...
-% explain left/right totality, left/right uniqueness - see Bill Shillito's course on youtube
-% use as example A = {1,2,3,4}, B = {0,2,4} and the < relation. R = {(1,2),(1,4),(2,4),(3,4)}
-% not left-total due to (4,X) missing
-% not right-total due to (X,0) missing
-% not left-unique due to (1,4),(2,4),(3,4)
-% not right-unique due to (1,2),(1,4)
-% explain inverse relations
-% reflexive/irreflexive, symmetric/asymmetric/antisymmetric
-%   https://www.youtube.com/watch?v=GvNGf9Gki7o 
-% transitive
-%   https://www.youtube.com/watch?v=O19RpfoxQpA
-%   make table like at the end of this video - but verify the definitions - the asymmetry definition
-%%  looks fishy. Maybe antimsymmtery is also "wrongly" defined there?
-% draw diagrams
-
-% https://byjus.com/maths/relations-and-its-types/
-% https://www.toppr.com/guides/maths/relations-and-functions/types-of-relations/
+A relation can formally be defined to be a set of tuples. Of particular importance are binary relations, i.e. sets of 2-tuples, aka pairs. As an example, consider the two sets $A = \{1,2,5\}, B = \{0,2,4\}$. We can define a relation $R$ between the sets $A$ and $B$ as a set of pairs where the first entry comes from $A$ and the second from $B$, for example: $R = \{(1,2),(1,4),(2,4)\}$. Such a relation can be visualized pictorially by drawing the two sets side by side and drawing an arrow between each pair of elements that is in the relation. This is shown for our relation $R$ in figure \ref{Fig:RelationLessThan_123_024}.
 
 \begin{figure}[h]
+\label{Fig:RelationLessThan_123_024}
 \centering
 	
 \begin{tikzpicture}
@@ -101,8 +85,52 @@ A relation can formally be defined to be a set of tuples. Of particular importan
 % see:
 % https://tex.stackexchange.com/questions/157450/producing-a-diagram-showing-relations-between-sets
 % https://latex.org/forum/viewtopic.php?t=21987
-There are a couple of important features that such a relation may or may not have. In a \emph{left-total} relation, every element in the left set has an outgoing arrow emanating from it. In a \emph{right-total} relation, every element in the right set has an incoming arrow. In a \emph{right-unique} relation, every element in the left set has at most one outgoing arrow. The naming convention reflects the idea that when you pick one element from the left set, the related  element of the right set, if any, is uniquely determined. We always know, where we have to go. Likewise, in a \emph{left-unique} relation, every element of the right set has at most one incoming arrow. For every element from the right set, the related element from the left set, if any, is uniquely determined. We always know, where we came from. As we can see, our example relation $R$ actually has none of these features.
 % It's actually the "<"  relation - maybe mention it in the section about orders...but that doesn't really fit well because in orders domain and codomain are the same
+There are a couple of important features that such a relation may or may not have. In a \emph{left-total} relation, every element in the left set has an outgoing arrow emanating from it. In a \emph{right-total} relation, every element in the right set has an incoming arrow. In a \emph{right-unique} relation, every element in the left set has at most one outgoing arrow. The naming convention reflects the idea that when you pick one element from the left set, the related  element of the right set, if any, is uniquely determined. We always know, where we have to go. Likewise, in a \emph{left-unique} relation, every element of the right set has at most one incoming arrow. For every element from the right set, the related element from the left set, if any, is uniquely determined. We always know, where we came from. As we can see, our example relation $R$ actually has none of these features.
+
+\medskip
+Notationally, we may write $(a,b) \in R$ when we want to express the fact that $a$ is related to $b$ by the relation $R$. But we may also write this in the shorthand infix notation $a R b$. For most relations, we'll use special symbols such as $<, \leq, =, \ldots$ such that the infix notation will look nice. 
+
+\medskip
+Our example relation above was an example for a general case where we have a relation between elements of a set $A$ and elements of a set $B$. We say that $R$ is a \emph{relation between} the sets $A$ and $B$. An important special case of that is when $B$ is actually the same set as $A$. We the say that we have a \emph{relation on} the set $A$. For a relation on a set $A$, there are a couple of more important named features that the relations may or may not have. In the following table, we use the generic infix symbol $\sim$ for our relation and $\nsim$ to indicate that the elements are not in the relation. 
+
+\medskip
+\begin{tabular}{c l}
+  $a \sim a$                                     & Reflexive  \\
+  $a \nsim a$                                    & Irreflexive \\
+  $a \sim b \Rightarrow b \sim a$                & Symmetric   \\
+  $a \sim b \Rightarrow b \nsim a$               & Asymmetric   \\
+  $a \sim b \wedge b \sim a \Rightarrow a = b $  & Antisymmetric    
+\end{tabular}
+\medskip
+
+...TBC...VERIFY
+% asymmetry implies irreflexivity
+
+% https://de.wikipedia.org/wiki/Asymmetrische_Relation
+% https://de.wikipedia.org/wiki/Antisymmetrische_Relation
+% https://de.wikipedia.org/wiki/Transitive_Relation
+% https://de.wikipedia.org/wiki/Reflexive_Relation
+
+
+% explain left/right totality, left/right uniqueness - see Bill Shillito's course on youtube
+% use as example A = {1,2,3,4}, B = {0,2,4} and the < relation. R = {(1,2),(1,4),(2,4),(3,4)}
+% not left-total due to (4,X) missing
+% not right-total due to (X,0) missing
+% not left-unique due to (1,4),(2,4),(3,4)
+% not right-unique due to (1,2),(1,4)
+% explain inverse relations
+% reflexive/irreflexive, symmetric/asymmetric/antisymmetric
+%   https://www.youtube.com/watch?v=GvNGf9Gki7o 
+% transitive
+%   https://www.youtube.com/watch?v=O19RpfoxQpA
+%   make table like at the end of this video - but verify the definitions - the asymmetry definition
+%%  looks fishy. Maybe antimsymmtery is also "wrongly" defined there?
+% draw diagrams
+
+% https://byjus.com/maths/relations-and-its-types/
+% https://www.toppr.com/guides/maths/relations-and-functions/types-of-relations/
+
 
 % https://www.youtube.com/watch?v=Tk5_B7w5fiY&list=PLZzHxk_TPOStgPtqRZ6KzmkUQBQ8TSWVX&index=9
 
@@ -111,12 +139,14 @@ There are a couple of important features that such a relation may or may not hav
 % https://www.youtube.com/watch?v=RyhUIoif_B8
 
 
+
+
 \paragraph{Functions} are a special kind of relations, namely those relations which are left-total and right-unique. You can think of functions as a definition of a map from a set $A$ to another set $B$. Each element of $A$ gets mapped to some unique element of $B$. You can throw any $a \in A$ at a function $f$ and it will unambiguously tell you, which $b \in B$ your given $a$ is mapped to. If a function is additionally left-unique, we can actually traverse the arrow back to figure out unambiguously, where we came from. We can undo the application of the functional mapping for those $b \in B$ which have an incoming arrow. Such left-unique functions are also called \emph{injective}. If, on the other hand, the function is right-total, i.e. every element of $B$ has an incoming arrow, we call the function \emph{surjective}. A function that is both injective and surjective is called \emph{bijective}. Such bijective functions can be inverted, i.e. undone, for any $b \in B$ and are therefore also called \emph{invertible}.
 
 % explain domain, range, image, pre-image (of elements and whole sets)
 % give the condctiosn for functions in math notation
 
-\paragraph{Equivalences} are another special kind of relations. In equivalence relations, the left and right set are actually the same set and a couple of additional properties must be satisfied. The relation must be \emph{reflexive} meaning that every element $a$ must be in relation with itself. They must also be \emph{symmetric} meaning that if the tuple $(a,b)$ is in the relation, then the tuple $(b,a)$ must also be in it. Finally, they must be \emph{transitive} meaning that if the tuples $(a,b)$ and $(b,c)$ are in the relation, then the tuple $(a,c)$ must also be in it. The prototype of an equivalence relation is the usual equality denoted by $=$ but the concept of an equivalence is more general. It is meant to capture the idea that two objects are interchangable within a given context. They do not necessarily have to be the exact same object but certainly can be - this is ensured by the reflexivity. For some equivalence relations, we may actually use the $=$ symbol even though another relation may be meant. Sometimes alternatives like $\sim, \equiv, \simeq, \cong,$ etc. are used. The notation for various equivalence relations may vary form field to field and from author to author. The symmetry condition captures the idea that if $a$ is equivalent to $b$ then $b$ is also equivalent to $a$. Transitivity captures the idea that if $a$ is equivalent to $b$ and $b$ is equivalent to $c$, then $a$ is also equivalent to $c$.
+\paragraph{Equivalences} are another special kind of relations. In equivalence relations, the left and right set are actually the same set and a couple of additional properties must be satisfied. The relation must be \emph{reflexive} meaning that every element $a$ must be in relation with itself. They must also be \emph{symmetric} meaning that if the tuple $(a,b)$ is in the relation, then the tuple $(b,a)$ must also be in it. Finally, they must be \emph{transitive} meaning that if the tuples $(a,b)$ and $(b,c)$ are in the relation, then the tuple $(a,c)$ must also be in it. Reflexivity just means that every object is equivalent to itself. The symmetry condition captures the idea that if $a$ is equivalent to $b$ then $b$ is also equivalent to $a$. Transitivity captures the idea that if $a$ is equivalent to $b$ and $b$ is equivalent to $c$, then $a$ is also equivalent to $c$. The prototype of an equivalence relation is the usual equality denoted by $=$ but the concept of an equivalence is more general. It is meant to capture the idea that two objects are interchangeable within a given context. They do not necessarily have to be the exact same object but certainly can be - this is ensured by the reflexivity. For some equivalence relations, we may actually use the $=$ symbol even though another relation may be meant. Sometimes alternatives like $\sim, \equiv, \simeq, \cong,$ etc. are used. The notation for various equivalence relations may vary form field to field and from author to author. 
 
 % ToDo: write down the conditions in math notation - maybe in a tabular
 
@@ -142,6 +172,7 @@ There are a couple of important features that such a relation may or may not hav
 % https://en.wikipedia.org/wiki/Total_order
 % https://en.wikipedia.org/wiki/Partially_ordered_set#Partial_order
 % https://en.wikipedia.org/wiki/Ordered_field
+% https://de.wikipedia.org/wiki/Ordnungsrelation
 
 % https://math.libretexts.org/Bookshelves/Applied_Mathematics/Seven_Sketches_in_Compositionality%3A_An_Invitation_to_Applied_Category_Theory_(Fong_and_Spivak)/01%3A_Generative_Effects_-_Orders_and_Adjunctions/1.01%3A_What_is_Order
 

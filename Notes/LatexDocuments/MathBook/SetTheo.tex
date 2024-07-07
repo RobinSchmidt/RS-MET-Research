@@ -191,6 +191,9 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 % https://en.wikipedia.org/wiki/Axiom_of_infinity
 
 
+% https://en.wikipedia.org/wiki/Finitism
+% -There's a school of thought in the philosophy of mathematics that rejects the axiom of infinity. It's aptly called finitism...
+
 \paragraph{Axiom Schema of Specification}
 % aka restricted comprehension
 
@@ -390,6 +393,17 @@ We constructed the integers, rationals, etc. by extending the set of natural num
 
 % https://www.youtube.com/watch?v=UxhFy4deLQA  Unendlich plus eins - Was sind Ordinalzahlen?
 
+% How To Count Past Infinity
+% https://www.youtube.com/watch?v=SrU9YDoXE88
+% -7:21: "The order type of a set is just the first ordinal number not needed to label 
+%  everything in the set in order" - what a beast of a sentence. The order type of the naturals
+%  is omega - the first ordinal that has not been used in labeling the naturals
+%  -for the naturals, cardinality and order type are the same
+
+
+% https://en.wikipedia.org/wiki/Burali-Forti_paradox
+% -constructing "the set of all ordinal numbers" leads to a contradiction
+
 \subsubsection{Cardinal Numbers}
 Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. ...TBC...
 
@@ -406,6 +420,7 @@ Cardinal numbers are special ordinal numbers. That means the set of cardinal num
 
 %\subsubsection{Cardinal Arithmetic}
 
+% $\aleph_0 + 1 = \aleph_0$ but $\omega + 1 \neq \omega$. I think $\aleph_0$ and $\omega$ are the same thing in a similar way as the natural number 0 and the real number 0 are the same. They represent the same idea but in a different data type - and the data types respond differently to certain arithmetic operations (for example, to division)
 
 
 The cardinal numbers are a superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
@@ -436,14 +451,20 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 
 \subsubsection{Transfinite Induction}
+In the chapter about logic, we have learned about the proof technique of induction. It is a technique to prove statements $\varphi(n)$ that should hold for any natural number $n$. This technique can be extended to prove statements that also hold for all ordinal or all cardinal numbers. The basic technique had to distinguish two cases: (1) the base case and (2) the successor case. In transfinite induction, we need to consider a third case: (3) the limit case. ...TBC...
 
 % https://en.wikipedia.org/wiki/Transfinite_induction
 % https://de.wikipedia.org/wiki/Transfinite_Induktion
 % https://mathworld.wolfram.com/TransfiniteInduction.html
+% https://en.wikipedia.org/wiki/Mathematical_induction
 
 
-%\subsubsection{Transfinite Recursion}
+\subsubsection{Transfinite Recursion}
+Transfinite recursion is a method of constructing a sequence of objects - one for each ordinal number.
 
+% Is it a way to construct more than countably many objects?
+
+% https://en.wikipedia.org/wiki/Transfinite_induction#Transfinite_recursion
 
 
 %===================================================================================================

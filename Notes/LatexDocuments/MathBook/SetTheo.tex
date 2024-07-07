@@ -382,14 +382,19 @@ Although the beth numbers are less commonly used in set theory than the cardinal
 Ordinal numbers are, as the name suggests, used to order things, i.e. to put them into an ascending sequence.
 % https://en.wikipedia.org/wiki/Ordinal_number
 
-\paragraph{Order Theory} Order theory is the part of set theory that is concerned with \emph{order relations}. Such order relations were already briefly introduced on page \pageref{Par:Orders}.
+\paragraph{Order Theory} Order theory is the part of set theory that is concerned with \emph{order relations}. Such order relations were already briefly introduced on page \pageref{Par:Orders}. Order relations formally model situations like "this is less than that" or "this comes before that". The order relations can be classified according various properties like being partial or total, strict or non-strict, etc. and the sets on which they operate can also be classified according to the existence of lower and upper bounds, existence of least and greatest elements, etc. All of that is the business of order theory an it also provides the foundation for the definition of the ordinal numbers.
 ...TBC...
+
+%and they can be classified according various properties like being a partial or total order, a strict or non-strict, etc. existence of lower and upper bounds, existence of least and greatest elements, etc.
+
 %https://en.wikipedia.org/wiki/Order_theory
 %https://en.wikipedia.org/wiki/Glossary_of_order_theory
 
-\paragraph{Well Ordered Sets} To understand ordinal numbers, we first need to understand the idea of a well ordered set. This is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers with our usual $\leq$ relation are such a well ordered set. The integers with the same usual $\leq$ relation are not well ordered because they don't have a least element. We can define a well ordering on the integers, though, by defining the following non-standard order: $0 < -1 < 1 < -2 < 2 < -3 < \ldots$.
+\paragraph{Well Ordered Sets} To understand ordinal numbers, we first need to understand the idea of a well ordered set. This is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers $\mathbb{N}$ with our usual $\leq$ relation are such a well ordered set. Recall that given a set and an order relation $\leq$ on it, we can always define the corresponding strict order relation $<$ via $a < b \Leftrightarrow (a \leq b) \wedge \neg (a = b)$ and we can also turn this around to get $\leq$ back via $a \leq b \Leftrightarrow (a < b) \vee (a = b)$.
 
-...TBC...explain that there may be multiple elements that don't have a direct predecessor.
+%The integers with the same usual $\leq$ relation are not well ordered because they don't have a least element. We can define a well ordering on the integers, though, by defining the following non-standard order: $0 < -1 < 1 < -2 < 2 < -3 < \ldots$.
+
+...TBC...explain that there may be multiple elements that don't have a direct predecessor. explain (again) how we go from an order to the corresponding strict order
 
 % More proerties of well ordred sets
 % -all proper initial segments have a successor

@@ -375,16 +375,33 @@ We constructed the integers, rationals, etc. by extending the set of natural num
 
 
 \subsubsection{Beth Numbers}
-Although the beth numbers are less commonly used in set theory than the cardinals and ordinals, I'll introduce them first because they correspond best to what we might expect intuitively from differently sized infinite sets. The are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$.
+Although the beth numbers are less commonly used in set theory than the cardinals and ordinals, I'll introduce them first because they correspond best to what we might expect intuitively from differently sized infinite sets. The are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. ...TBC...I think, this construction via power sets is not their fundamental definition, though - it just turns out to work out that way
 
 
 \subsubsection{Ordinal Numbers}
 Ordinal numbers are, as the name suggests, used to order things, i.e. to put them into an ascending sequence.
 % https://en.wikipedia.org/wiki/Ordinal_number
 
+\paragraph{Order Theory} Order theory is the part of set theory that is concerned with \emph{order relations}. Such order relations were already briefly introduced on page \pageref{Par:Orders}.
+...TBC...
+%https://en.wikipedia.org/wiki/Order_theory
+%https://en.wikipedia.org/wiki/Glossary_of_order_theory
+
 \paragraph{Well Ordered Sets} To understand ordinal numbers, we first need to understand the idea of a well ordered set. This is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers with our usual $\leq$ relation are such a well ordered set. The integers with the same usual $\leq$ relation are not well ordered because they don't have a least element. We can define a well ordering on the integers, though, by defining the following non-standard order: $0 < -1 < 1 < -2 < 2 < -3 < \ldots$.
 
 ...TBC...explain that there may be multiple elements that don't have a direct predecessor.
+
+% More proerties of well ordred sets
+% -all proper initial segments have a successor
+% -there are no infinite decreasing sequences - that also means, the set is founded (verify!)
+% -every element except maybe the last has a unique successor
+% -there is at most one element without successor - namely, the last element, if it exists
+% -there is at least one element without a predecessor, namely the smallest element
+%  -there can be arbitraily many more elements without predecessor, though
+% -the successor of an element a is always uniquel determined. It is the unique minimum of all
+%  elements that are greater than a
+% -every subset with an upper bound contains a least upper bound
+
 
 % example of a nonstandard well ordering of the naturals:
 % -even numbers are always greater than odd numbers
@@ -397,14 +414,15 @@ Ordinal numbers are, as the name suggests, used to order things, i.e. to put the
 
 %https://en.wikipedia.org/wiki/Well-order
 %https://de.wikipedia.org/wiki/Wohlordnung
+% https://de.wikipedia.org/wiki/Fundierte_Menge
 
-%https://en.wikipedia.org/wiki/Order_theory
-%https://en.wikipedia.org/wiki/Glossary_of_order_theory
 
 
 %https://en.wikipedia.org/wiki/Well-ordering_principle
 %https://en.wikipedia.org/wiki/Well-ordering_theorem
 
+\paragraph{Order Types} 
+% https://en.wikipedia.org/wiki/Order_type
 
 
 % https://www.youtube.com/watch?v=UxhFy4deLQA  Unendlich plus eins - Was sind Ordinalzahlen?
@@ -419,6 +437,9 @@ Ordinal numbers are, as the name suggests, used to order things, i.e. to put the
 
 % https://en.wikipedia.org/wiki/Burali-Forti_paradox
 % -constructing "the set of all ordinal numbers" leads to a contradiction
+
+
+
 
 \subsubsection{Cardinal Numbers}
 Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. ...TBC...

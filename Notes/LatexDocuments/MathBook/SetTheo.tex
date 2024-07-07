@@ -379,9 +379,33 @@ Although the beth numbers are less commonly used in set theory than the cardinal
 
 
 \subsubsection{Ordinal Numbers}
-
-
+Ordinal numbers are, as the name suggests, used to order things, i.e. to put them into an ascending sequence.
 % https://en.wikipedia.org/wiki/Ordinal_number
+
+\paragraph{Well Ordered Sets} To understand ordinal numbers, we first need to understand the idea of a well ordered set. This is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers with our usual $\leq$ relation are such a well ordered set. The integers with the same usual $\leq$ relation are not well ordered because they don't have a least element. We can define a well ordering on the integers, though, by defining the following non-standard order: $0 < -1 < 1 < -2 < 2 < -3 < \ldots$.
+
+...TBC...explain that there may be multiple elements that don't have a direct predecessor.
+
+% example of a nonstandard well ordering of the naturals:
+% -even numbers are always greater than odd numbers
+% -even and odd numbers are in their natural order
+% -it looks like: 1 < 3 < 5 < 7 < .....  < 0 < 2 < 4 < 6 < ...
+% -it has two elements without a direct predecessor: 1 and 0
+% -the ordinal number corresponding to that order is w + w = 2 * w
+
+% I think, the rationals can be well ordered by sorting by numerator and in case of equal numerator, look at the denominator. The reals may be well ordered  by ordering them by the decimal expansions lexicographically ...i guess.
+
+%https://en.wikipedia.org/wiki/Well-order
+%https://de.wikipedia.org/wiki/Wohlordnung
+
+%https://en.wikipedia.org/wiki/Order_theory
+%https://en.wikipedia.org/wiki/Glossary_of_order_theory
+
+
+%https://en.wikipedia.org/wiki/Well-ordering_principle
+%https://en.wikipedia.org/wiki/Well-ordering_theorem
+
+
 
 % https://www.youtube.com/watch?v=UxhFy4deLQA  Unendlich plus eins - Was sind Ordinalzahlen?
 

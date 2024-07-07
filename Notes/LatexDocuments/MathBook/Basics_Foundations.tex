@@ -161,9 +161,22 @@ When a relation is \emph{reflexive}, it means that every element $a$ must be in 
 % https://en.wikipedia.org/wiki/Equivalence_relation
 % https://mathworld.wolfram.com/EquivalenceRelation.html
 
-\paragraph{Orders} are yet another special kind of relation. They are also a type of relation defined on one set, i.e. the left and right sets are the same. If a set $A$ is equipped with such an \emph{order} relation, the set is said to be \emph{ordered}. An order relation is typically denoted by the symbol $<$ which we read as "less than", i.e. $a < b$ reads as: "$a$ is less than $b$".
+\paragraph{Orders} are yet another special kind of relation. They are also a type of relation defined on one set, i.e. the left and right sets are the same. If a set $A$ is equipped with such an \emph{order} relation, the set is said to be \emph{ordered}. An order relation is typically denoted by the symbol $\leq$ which we read as "less or equal" and $a \leq b$ reads as: "$a$ is less than or equal to $b$". An order relation must be reflexive, antisymmetric and transitive. Such an order can be \emph{partial} or \emph{total}, depending whether or not every pair $a,b$ can be compared via the order. In a total order, for every pair $a,b$, we always have $a \leq b$ or $b \leq a$. For a partial order, this is not necessarily the case - there may be pairs $a,b$ where neither $a \leq b$ nor $b \leq a$ is true. ...TBC...verify
 
-...TBC...
+% https://mathworld.wolfram.com/PartialOrder.html
+% https://mathworld.wolfram.com/TotalOrder.html
+
+\paragraph{Strict Orders} A related concept is a \emph{strict order} which we typically denote by the symbol $<$ which we read as "less" and $a < b$ reads as: "$a$ is less than $b$". Such a strict order is characterized by being irreflexive, asymmetric and transitive. Note that, counterintuitively, a strict order is \emph{not} a special kind of order in the sense defined above. We required an order to be reflexive and here we require irreflexivity. These are incompatible requirements. A strict order is a different concept. Strict orders can also be partial or total. Another way to characterize a strict total order is by requiring transitivity and \emph{trichotomy}. The latter means that for every pair $a,b$, exactly one of the three conditions must be true: (1) $a < b$, (2) $b < a$, (3) $a = b$. ...TBC...verify
+
+%https://mathworld.wolfram.com/StrictOrder.html
+
+
+% 
+
+% https://math.stackexchange.com/questions/2210560/orders-partial-orders-strict-partial-orders-total-orders-strict-total-orders
+
+% -Strict total order: has transitivity and trichotomy, is not a "total order" because it's not
+%  reflexive (this terminology is confusing!)
 % -trichotomy
 % -transitivity
 % -it can be inverted into >

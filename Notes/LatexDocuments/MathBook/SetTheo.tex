@@ -386,6 +386,10 @@ We constructed the integers, rationals, etc. by extending the set of natural num
 % https://en.wikipedia.org/wiki/Transfinite_number
 
 
+\subsubsection{Beth Numbers}
+Although the beth numbers are less commonly used in set theory than the cardinals and ordinals, I'll introduce them first because they correspond best to what we might expect intuitively from differently sized infinite sets. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$.
+
+
 \subsubsection{Ordinal Numbers}
 
 
@@ -465,6 +469,9 @@ Transfinite recursion is a method of constructing a sequence of objects - one fo
 % Is it a way to construct more than countably many objects?
 
 % https://en.wikipedia.org/wiki/Transfinite_induction#Transfinite_recursion
+
+% Example:
+% https://en.wikipedia.org/wiki/Beth_number
 
 
 %===================================================================================================

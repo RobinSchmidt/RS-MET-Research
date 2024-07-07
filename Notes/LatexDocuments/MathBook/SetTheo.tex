@@ -16,6 +16,10 @@
 % https://en.wikipedia.org/wiki/Second-order_logic
 % https://en.wikipedia.org/wiki/Higher-order_logic
 
+Set theory serves a couple of purposes in mathematics. It may serve as the foundational layer upon which all of other mathematics is built. In the course of providing the foundational layer, it also provides the basic language in which many of the higher level mathematical constructs are expressed. As a mathematical field all by itself, it is concerned mostly with the investigation of the idea of infinity. The so called \emph{transfinite numbers} are "numbers" that go beyond our usual finite numbers. They are numbers in the sense that you can do the usual arithmetic operations, (i.e. addition, multiplication and exponentiation\footnote{As we will learn in the section about abstract algebra, subtraction and division as well as roots and logarithms do not really count as operations in their own right - they will be defined in terms so called inverse elements.}) with them. The most important types of transfinite numbers are the \emph{ordinal numbers} and the \emph{cardinal numbers}. The ordinals are an extension of naturals and the cardinals are a certain subset of the ordinals. In this wider context, the natural numbers are ordinal as well as cardinal numbers. The ordinals are used to put things in order (as the name suggests). The cardinals are used to quantify, how big a set is, i.e. how many elements it has (as the name doesn't suggest - instead, it's a weirdo reference to a catholic cleric). In mathematics, we encounter infinite sets such as $\mathbb{N}, \mathbb{Z}, \mathbb{Q}, \mathbb{R}, \mathbb{C}$, i.e. sets with infinitely many elements. Upon closer investigation, it turns out that some infinite sets are bigger than others\footnote{Mind = Blown} and cardinal numbers make that idea precise. Spoiler: $\mathbb{N}, \mathbb{Z}$ and $\mathbb{Q}$ have all the same \emph{cardinality}, that is: the same size. We call that size $\aleph_0$. That's the Hebrew letter "aleph" with subscript zero. It stands for a \emph{countable infinity}. But $\mathbb{R}$ and $\mathbb{C}$ are bigger than $\aleph_0$ while also being of equal cardinality when compared to one another. They have an \emph{uncountably infinite} size. This size is called the size of the continuum and often written as $\mathfrak{c}$. It might be tempting to assume that this is the next bigger infinity and therefore think that it might be appropriate to call it $\aleph_1$, but as we will see, it's not that simple. Ordinal numbers, on the other hand, make precise the idea of: what comes next after all ordering positions with finite index are exhausted. Imagine the infinitely long list of natural numbers written down as an infinitely long row. We could write it as an infinite tuple like $(0,1,2,3,4,\ldots)$. What comes after this row is exhausted? Well, it never can be exhausted - but what would come next if it could be exhausted? The first element of the next row, of course! In the context of ordinals, we call that first element $\omega$ and the whole second row, written in infinite tuple notation would look like $(\omega, \omega+1, \omega+2, \ldots)$.
+
+% There are more types of transfinite numbers: Beth-numbers are those that arise form repeatedly taking power sets, starting with the set of naturals. The generalized continuum hypothesis states that the beth-numbers are equal to the aleph-numbers [VERIFY!]. 
+
 %===================================================================================================
 \section{Naive and Axiomatic Set Theory}
 
@@ -451,6 +455,21 @@ Cantor's theorem says that for any set $A$, the power set set $\mathcal{P}(A)$ h
 
 % https://en.wikipedia.org/wiki/Cantor%27s_theorem
 
+% Endless Sizes of Infinity, Explained in 5 Levels
+% https://www.youtube.com/watch?v=V0VVYsbP0WU&list=PLYteaSMVa_xbyUxGuq456V7wOjt4OFNav&index=1
+% -has an easy to follow proof of Cantor's theorem. It's basically a variation of a diagonal argument:
+%  -Take a set A (for example, the natural numbers)
+%  -Suppose that there exists a bijection f between A and its power set P(A): f: A -> P(A)
+%  -We construct another subset B of A that is guaranteed to be not reached by f as follows:
+%   -For every x in A, look at what x is mapped to by f, i.e. consider f(x) which is a subset of A
+%   -If x is not in f(x), include x in B. If x is in f(x), do not include x in B.
+%  -B is guaranteed to be different from any right hand side of f(x) because there is at least one
+%   element in f(x) that is not in B or vice versa. B and f(x) have at least one element not in 
+%   common - namely, the element x - it occurs only either in f(x) or in B but never in both.
+%  -So, B is different from f(x) - for any x in A whatsoever. We have constructed a subset B of A 
+%   which is never reached by f.
+%  -Therefore, f cannot be bijection. It fails to be surjective.
+
 % https://www.youtube.com/watch?v=iaUwNuaSLUk
 % proves the theorem at aroun 7:00. It's essentially the diagonal argument. But I think the explanantion is not quite right. I think, we must negate the (n,n)th entry - i.e. Y becomes N and N becomes Y. He seems to only to the N becomes Y thing but omits the Y becomes N thing. Ah - no - it's OK - n gets added to S iff n not in S_n - so yeah, it is indeed like negating all the Y/N entries. But the explanation would be more clear, if he had just said: negate the (n,n)th entry
 
@@ -548,6 +567,18 @@ By picking a particular set of axioms, one selects a particular mathematical uni
 % A theory that is consistent and expressive enough to talk about itself cannot be complete
 
 % https://www.youtube.com/watch?v=qSiLjXlFlYE
+
+
+%===================================================================================================
+\section{Applications}
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Proofs}
+Set theory is used extensively in formal proofs of mathematical theorems...TBC...
+
+\subsubsection{Goodstein's Theorem}
+Goodstein's theorem is a good example for a mathematical theorem that makes a statement about sequences of natural numbers but whose proof needs the machinery of ordinal numbers. ...TBC...
+
 
 \begin{comment}
 
@@ -650,6 +681,13 @@ https://www.youtube.com/watch?v=uxpowBoPieQ
  The modular integers mod 5: Z/5Z are in a sense defined by a division by zero because 5Z is the
  equivalence class of zero.
 
+Essence of Set Theory:
+https://www.youtube.com/playlist?list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb
+-Set theory is also the brnach of math that closer investigates the idea of infinity
 
+Ordinals vs Cardinals (and how many algebraic numbers are there?)
+https://www.youtube.com/watch?v=pSSsZLTMDq0
+-at 4:55 it seems to imply that a countable set is always orderable?
+-explains nicely why the algebraic numbers are countable
 
 \end{comment}

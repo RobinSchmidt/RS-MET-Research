@@ -216,12 +216,14 @@ A \supset   B \;\;  \Leftrightarrow \;\;   x \in B \Rightarrow x \in A,& A \neq 
 % Alignment is ugly! Maybe use a tabular environment
 The subset relation is a partial order, by the way [VERIFY].
 
-
 \paragraph{The Element Relation} 
 Take again two sets $A$ and $B$, not necessarily distinct and let $a \in A$ and $b \in B$. If the elements of $A$ and $B$ are themselves sets, and in modern set theory without atomic urelements, there's nothing else they could possibly be, then $a,A,b,B$ are all sets. That means we can ask questions like "is $A$ an element of $b$", that is $A \in b$. Or we could ask for whether or not $A \in B$ or $B \in A$ or $B \in a$, etc. We could even ask if $A \in A$ or $A \in a$ or $a \in a$. The answers to these latter questions will be "no", though because such recursive element inclusions are forbidden in axiomatic set theory - but it does make sense to ask the question. That is, our $\in$ symbol also defines a relation. The concepts in set theory begin to feel somewhat recursively self-referential by now and it is indeed the case that the whole imposing edifice of set theory somehow manages to bootstrap itself out of (almost) nothing.
 
+\paragraph{Relations vs Operations}
+We defined a function to be a special kind of relation (left-total, right-unique) and we also intuitively characterized a function as a sort of operation with an input and an output. The operational viewpoint is the way, we usually think of functions: we put some object in and get some object out. It is important to realize that such an "operational" point of view is not necessary. From a set-theoretic point of view, the "relational" point of view is all there is: a function is just a special kind of relation and a relation is just a special kind of set consisting of ordered pairs and ordered pairs can also be thought of a special kinds of sets. The definition really says nothing at all about a function being an input/output "operation". This is merely our interpretation. Or maybe it's more appropriate to say, that an input/output device is something that we want to \emph{model} with the concept of a function. At the core, it all just boils down to specific sorts of sets, because in set theory, sets are really the only thing that we have to work with anyway.
 
-
+\medskip
+A similar consideration can be applied to equivalences. By definition, they are also just a special kind of relation. When we use equivalences, for example to simplify equations, we sometimes interpret an equivalence as a possible replacement rule that can be applied to (parts of) a formula, i.e. a sort of operation. That's not what an equivalence is, at its core, though. It's a common misconception to think of the equals sign $=$ as a prescription to do something like an assignment or replacement when in reality, it just expresses the fact that two things are equal. An equation like $E = m c^2$ can indeed be used to compute $E$ when $m$ and $c$ are known but $E$ is yet unknown and that's indeed how we often use equations: to compute an unknown value from known ones. But the equation in and of itself, at its core and by its nature, is not an algorithmic prescription for a computation. It's just a relation.
 
 \medskip
 As we see, relations are quite flexible tools and can be used to model several important concepts in mathematics by imposing some additional requirements on the broad and general concept of a relation.
@@ -229,74 +231,6 @@ As we see, relations are quite flexible tools and can be used to model several i
 % -binary operations: (A x B) -> C: combine the ordered-pair/set-product mechanism do create
 %  the domain D = A x B, then use the function creation mechanism to create the desired subset
 %  of (D x C), the set-product between domain and codomain
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Set Operations and Relationships}
-
-\paragraph{Set Algebra} \label{Par:SetAlgebra} Just like we could combine logical propositions via the connectives $\wedge, \vee, \neg, \ldots$ to yield new propositions, there are operations that we can perform on sets to yield new sets. The \emph{intersection} of two sets $A, B$ is denoted as $A \cap B$ and defined to be the set with the elements that are present in $A$ and in $B$, i.e. the set of elements that $A$ and $B$ have in common. If the intersection between $A$ and $B$ is empty, i.e. the two sets have nothing in common, formally denoted as $A \cap B = \emptyset$, we say that $A$ and $B$ are \emph{disjoint}. The visual resemblence of $\cap$ and $\wedge$ is, of course, no coincidence. The \emph{union} of two sets $A,B$ is the set of all elements that are in $A$ or in $B$ where the "or" is again to be understood as an inclusive or. Imagine throwing all contents of sets $A$ and $B$ together into a bucket. You may get doublings for the common elements (i.e. the intersection) but that doesn't matter anyway because set membership does not care about potential multiplicities - but if you want, you can imagine to remove the doublings after throwing the sets together. The notation for the union of $A$ and $B$ is: $A \cup B$. The symbol looks a bit like a cup and resembles the "or" symbol $\vee$ from logic - again no coincidence. There is also a notion of a set \emph{difference} $A \setminus B$ which is the set $A$ minus those elements of $A$ which are also in $B$. You may read this as "$A$ take away $B$". It's also called the \emph{relative complement} of $B$ with respect to $A$. If we assume that we have some sort of universal set, i.e. the set of all things that we could possibly consider in the current context, we may also define the \emph{complement} of a set $A$, denoted as $\overline{A}$, which is the set of "everything" except the elements of $A$. Here, "everything" refers to our universal set which may depend on the context. If we call this universal set $U$, we could define $\overline{A} = U \setminus A$. The so called \emph{cartesian product} or \emph{set product} or \emph{cross product} or just \emph{product} of two sets $A$ and $B$, denoted as $A \times B$, is the set of all possible pairs $(a,b)$ where $a$ is an element of $A$ and $b$ is an element of $B$. Finally, the \emph{power set} operation $\mathcal{P}(A)$ takes the set of all subsets of a given set $A$. Here is a summary of these basic set operations:
-\begin{eqnarray}
- \overline{A}  =& \{x: \; x \notin A \}                    \qquad &\text{complement} \\	
- A \cap B      =& \{x: \; x \in A \wedge x \in    B \}     \qquad &\text{intersection} \\
- A \cup B      =& \{x: \; x \in A \vee   x \in    B \}     \qquad &\text{union} \\
- A \setminus B =& \{x: \; x \in A \wedge x \notin B \}     \qquad &\text{difference} \\
- A \times B    =& \{(x,y): \; x \in A \wedge y \in    B \} \qquad &\text{product} \\
- \mathcal{P}(A) 
-        = 2^A = &  \{x : \; x \subseteq A \}                \qquad &\text{power set}
-\end{eqnarray}
-The product may be iterated in the following way: Form the product $A \times B$ and then take the result of that and form the product with a third set $C$ to get: $(A \times B) \times C$. What we formally get would be a set of pairs where the first element is itself a pair of elements from $A$ and $B$ and the second element is an element from $C$. Elements of $(A \times B) \times C$ would look like $((a,b),c)$ where $a \in A, b \in B, c \in C$. On the other hand, elements of $A \times (B \times C)$ would be of the form $(a, (b,c))$. Formally, this is a different set, so our set product is formally not associative. However, the set $(A \times B) \times C$ is isomorphic (i.e. of the "same form") to $A \times (B \times C)$ and in many practical applications, what we actually want to form is not a set of nested pairs but rather a set of triples $(a,b,c)$ with no further inner structuring. We will adopt the convention that when we write a set product with multiple factors without any parentheses like: $A \times B \times C$, we mean the set of triples $(a,b,c)$ where $a \in A, b \in B, c \in C$. And this, of course, generalizes to quadruples, quintuples, etc. We will also use the notation $A^n$ to mean a set of $n$-tuples in which each element is from $A$.
-
-\medskip
-The power set $\mathcal{P}(A)$ may alternatively be denoted by $2^A$ where the latter notation is motivated by the observation that, if the set $A$ has $n$ elements, then the power set will have $2^n$ elements. This also explains the name "power set". The elements $x$ of the power set $2^A$ are themselves sets - namely, subsets of $A$. The empty set does also count as a subset of any nonempty set. If a set has $n$ elements, then the number of subsets with $k$ elements is given by the binomial coefficient "$n$-choose-$k$". [VERIFY, REF needed]. The fact that the power set of a finite set $A$ with $n$ elements has $2^n$ elements can also be understood as follows: For each subset, we may define a function $f$ from $A$ to the set $\{0,1\}$ which maps an element $a$ of $A$ to $1$, if the element $a$ is to be included into the subset and to $0$ if the element $a$ is not to be included. For such a function $f$, there are $2^n$ different possibilities because for each element $a \in A$ (of which there are $n$), we can choose either $0$ or $1$ as the mapped value. Including an element into a subset or not is a binary decision. We can establish a bijection between the subsets of $A$ and the set of possible functions $f: A \rightarrow \{0,1\}$, so these sets must have the same number of elements - namely, both have $2^n$ elements.
-
-\medskip
-In addition to these basic and most common set operations, there are a couple of more, less common ones. Some of them are:
-\begin{eqnarray}
- A \triangle B =& (A \setminus B) \cup (B \setminus A)      \qquad &\text{symmetric difference} \\
- A \sqcup B    =& A \times \{ 0 \}  \cup  A \times \{ 1 \}  \qquad &\text{disjoint union} \\
- A ^ B         =& \{ f: \; B \rightarrow A  \}              \qquad &\text{functions from $B$ to $A$} 
-\end{eqnarray}
-The symmetric difference is what remains, if we first form the union of $A$ and $B$ and then subtract the intersection of $A$ and $B$ from that. That is, we also have: $A \triangle B = (A \cup B) \setminus (A \cap B)$. Other possible notations for the symmetric difference are $A \ominus B$ and $A \oplus B$. The disjoint union is an operation in which we throw together the contents of two sets $A,B$ while keeping the elements that came from set $A$ distinguishable from those that came from $B$ by not using the elements of $A$ and $B$ as is but rather using tuples of the form $(a,0)$ and $(b,1)$ where $a \in A, b \in B$. The appended second components serve as tags to indicate from which set the element originally came. The purpose of the disjoint union is that many desirable set theoretic constructions involving a set union work out as desired only for disjoint sets. That's why we first make the sets $A,B$ artificially disjoint via this tuple formation and then take the union of the so created sets of tuples. The set of all possible functions from a set $B$ to a set $A$ is denoted by the exponential notation $A^B$. The notation $\{ f: \; B \rightarrow A \}$ is informal and intended to mean that $f$ is a function with domain $B$ and codomain $A$ [TODO: figure out, if there's a formal notation for this]. The exponential notation is used for a good reason: for finite sets $A$ and $B$, the number of possible different functions from $B$ to $A$ is indeed given by $|A|^{|B|}$.
-
-[TODO: $A^B$, $2^A = \{0,1\}^A = \mathcal{P}(A) $, quotient set i.e. set of equivalence classes]
-
-% Disjoint union is sometimes also denoted by a plus - which makes sense in the context of cardinal arithmetic
-
-
-
-\medskip
-There are a lot of algebraic equations involving these operators.... [TODO: give a rather comprehensive list of useful set-algebraic equations, define big intersection and union for sets of sets]
-
-
-
-
-
-% ToDo: mention that the complement is sometimes also written as A^C ...with some different font for the C, mention that the complement must always be taken with respect to some universal set which may depend on the context
-
-% The set difference is also called "relative complement"
-% https://en.wikipedia.org/wiki/Complement_(set_theory)#Relative_complement
-
-% https://en.wikipedia.org/wiki/Disjoint_union
-% https://en.wikipedia.org/wiki/Symmetric_difference
-
-% https://math.stackexchange.com/questions/1631396/what-is-the-difference-between-disjoint-union-and-union
-
-% Weitz uses a union symbol with a dot above to denote a union of disjoint sets. see:
-% https://www.youtube.com/watch?v=RcDjuXLK-Jg&list=PLb0zKSynM2PDUcEEkjv48Y_4N9CBFyzsz&index=7
-% at 9:00.  ...don't confuse this with the "disjoint union" operation which artificially makes sets disjoint before froming the union. Maybe explain both notations in the section of set theory 
-
-
-
-
-\paragraph{Cardinality} While we are speaking of the number of elements of a set, i.e. the "size" of a set, it should be noted that this size has been given a special name: \emph{cardinality}. We do not simply call it "size" because there are different notions of set size in mathematics and cardinality is just one of them (another one would be the so called \emph{measure}, for example). In the case of finite sets, the cardinality is just the number of elements, i.e. a natural number (to be defined in the next chapter). For infinite sets, however, set sizes are given by the so called \emph{cardinal numbers} the investigation of which is a whole branch of math on its own. The natural numbers are the finite cardinal numbers - but there are infinite cardinal numbers, too. And yes, that means there are different sizes of infinity in math. In a sense that can be made rigorous, there are more real numbers than natural numbers, for example. The cardinal number of the set of real numbers is bigger than that of the set of natural numbers. The notion of cardinality for infinite sets is defined in terms of existence of bijections: If for two infinite sets, you can find a bijective function between those sets, then these sets have, by definition, the same cardinality. This has a couple of counterintuitive consequences, one of which is that a strict subset of an infinite set can have the same cardinality as the whole set. The part is \emph{not} smaller than the whole. For example, the set of natural numbers and the set of even numbers have the same cardinality. The required bijection and its inverse are simply the functions $y = f(x) = 2 x$ and $x = f^{-1}(y) = y / 2$. We'll go deeper into this in a later chapter.
-
-%But this stuff is beyond the scope of this book. [TODO: give equations for cardinalities]
-
-\paragraph{Relations vs Operations}
-We defined a function to be a special kind of relation (left-total, right-unique) and we also intuitively characterized a function as a sort of operation with an input and an output. The operational viewpoint is the way, we usually think of functions: we put some object in and get some object out. It is important to realize that such an "operational" point of view is not necessary. From a set-theoretic point of view, the "relational" point of view is all there is: a function is just a special kind of relation and a relation is just a special kind of set consisting of ordered pairs and ordered pairs can also be thought of a special kinds of sets. The definition really says nothing at all about a function being an input/output "operation". This is merely our interpretation. Or maybe it's more appropriate to say, that an input/output device is something that we want to \emph{model} with the concept of a function. At the core, it all just boils down to specific sorts of sets, because in set theory, sets are really the only thing that we have to work with anyway.
-
-\medskip
-
-A similar consideration can be applied to equivalences. By definition, they are also just a special kind of relation. When we use equivalences, for example to simplify equations, we sometimes interpret an equivalence as a possible replacement rule that can be applied to (parts of) a formula, i.e. a sort of operation. That's not what an equivalence is, at its core, though. It's a common misconception to think of the equals sign $=$ as a prescription to do something like an assignment or replacement when in reality, it just expresses the fact that two things are equal. An equation like $E = m c^2$ can indeed be used to compute $E$ when $m$ and $c$ are known but $E$ is yet unknown and that's indeed how we often use equations: to compute an unknown value from known ones. But the equation in and of itself, at its core and by its nature, is not an algorithmic prescription for a computation. It's just a relation.
 
 %there's not really an intrinsic input/output interpretation
 %-explain the relational and operational aspects of 
@@ -308,8 +242,6 @@ A similar consideration can be applied to equivalences. By definition, they are 
 % -explain multifunctions such as the n-th root of a complex number
 % -explain the notation f: A -> B
 % -explain how the interpretations of two-input/one-output functions: A x B -> C and one-input/two-output function A -> B x C can be though of as ternary relations, i.e. subsets of A x B x C where formally A -> B x C is *interpreted* as A x (B x C) and A x B -> C as (A x B) x C but the interpretation can be "flattened out" and we can do partial application, currying, etc.
-
-
 
 % what about relational algebra? useful for databases, I think
 
@@ -323,6 +255,58 @@ A similar consideration can be applied to equivalences. By definition, they are 
 
 % https://www.youtube.com/watch?v=szfsGJ_PGQ0
 % 26:00 - well ordering theorem - explain connection to statement that complex numbers can't be ordered - this seems to be a contradiction - but "being ordered" for complex numbers requires more - the order must be compatible with the arithemtic operations - this is a difference of meaning which is confusing and should be pointed out.
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Set Operations}
+
+\paragraph{Set Algebra} \label{Par:SetAlgebra} Just like we could combine logical propositions via the connectives $\wedge, \vee, \neg, \ldots$ to yield new propositions, there are operations that we can perform on sets to yield new sets. The \emph{intersection} of two sets $A, B$ is denoted as $A \cap B$ and defined to be the set with the elements that are present in $A$ and in $B$, i.e. the set of elements that $A$ and $B$ have in common. If the intersection between $A$ and $B$ is empty, i.e. the two sets have nothing in common, formally denoted as $A \cap B = \emptyset$, we say that $A$ and $B$ are \emph{disjoint}. The visual resemblence of $\cap$ and $\wedge$ is, of course, no coincidence. The \emph{union} of two sets $A,B$ is the set of all elements that are in $A$ or in $B$ where the "or" is again to be understood as an inclusive or. Imagine throwing all contents of sets $A$ and $B$ together into a bucket. You may get doublings for the common elements (i.e. the intersection) but that doesn't matter anyway because set membership does not care about potential multiplicities - but if you want, you can imagine to remove the doublings after throwing the sets together. The notation for the union of $A$ and $B$ is: $A \cup B$. The symbol looks a bit like a cup and resembles the "or" symbol $\vee$ from logic - again no coincidence. There is also a notion of a set \emph{difference} $A \setminus B$ which is the set $A$ minus those elements of $A$ which are also in $B$. You may read this as "$A$ take away $B$". It's also called the \emph{relative complement} of $B$ with respect to $A$. If we assume that we have some sort of universal set, i.e. the set of all things that we could possibly consider in the current context, we may also define the \emph{complement} of a set $A$, denoted as $\overline{A}$, which is the set of "everything" except the elements of $A$. Here, "everything" refers to our universal set which may depend on the context. If we call this universal set $U$, we could define $\overline{A} = U \setminus A$. The so called \emph{cartesian product} or \emph{set product} or \emph{cross product} or just \emph{product} of two sets $A$ and $B$, denoted as $A \times B$, is the set of all possible pairs $(a,b)$ where $a$ is an element of $A$ and $b$ is an element of $B$. Finally, the \emph{power set} operation $\mathcal{P}(A)$ takes the set of all subsets of a given set $A$. Here is a summary of these basic set operations:
+\begin{eqnarray}
+ \overline{A}  =& \{x: \; x \notin A \}                    \qquad &\text{complement} \\	
+ A \cap B      =& \{x: \; x \in A \wedge x \in    B \}     \qquad &\text{intersection} \\
+ A \cup B      =& \{x: \; x \in A \vee   x \in    B \}     \qquad &\text{union} \\
+ A \setminus B =& \{x: \; x \in A \wedge x \notin B \}     \qquad &\text{difference} \\
+ A \times B    =& \{(x,y): \; x \in A \wedge y \in    B \} \qquad &\text{product} \\
+ \mathcal{P}(A) 
+        = 2^A = &  \{x : \; x \subseteq A \}               \qquad &\text{power set}
+\end{eqnarray}
+The product may be iterated in the following way: Form the product $A \times B$ and then take the result of that and form the product with a third set $C$ to get: $(A \times B) \times C$. What we formally get would be a set of pairs where the first element is itself a pair of elements from $A$ and $B$ and the second element is an element from $C$. Elements of $(A \times B) \times C$ would look like $((a,b),c)$ where $a \in A, b \in B, c \in C$. On the other hand, elements of $A \times (B \times C)$ would be of the form $(a, (b,c))$. Formally, this is a different set, so our set product is formally not associative. However, the set $(A \times B) \times C$ is isomorphic (i.e. of the "same form") to $A \times (B \times C)$ and in many practical applications, what we actually want to form is not a set of nested pairs but rather a set of triples $(a,b,c)$ with no further inner structuring. We will adopt the convention that when we write a set product with multiple factors without any parentheses like: $A \times B \times C$, we mean the set of triples $(a,b,c)$ where $a \in A, b \in B, c \in C$. And this, of course, generalizes to quadruples, quintuples, etc. We will also use the notation $A^n$ to mean a set of $n$-tuples in which each element is from $A$.
+
+\medskip
+The power set $\mathcal{P}(A)$ may alternatively be denoted by $2^A$ where the latter notation is motivated by the observation that, if the set $A$ has $n$ elements, then the power set will have $2^n$ elements. This also explains the name "power set". The elements $x$ of the power set $2^A$ are themselves sets - namely, subsets of $A$. The empty set does also count as a subset of any nonempty set. If a set has $n$ elements, then the number of subsets with $k$ elements is given by the binomial coefficient "$n$-choose-$k$". [VERIFY, REF needed]. The fact that the power set of a finite set $A$ with $n$ elements has $2^n$ elements can also be understood as follows: For each subset, we may define a function $f$ from $A$ to the set $\{0,1\}$ which maps an element $a$ of $A$ to $1$, if the element $a$ is to be included into the subset and to $0$ if the element $a$ is not to be included. For such a function $f$, there are $2^n$ different possibilities because for each element $a \in A$ (of which there are $n$), we can choose either $0$ or $1$ as the mapped value. Including an element into a subset or not is a binary decision. We can establish a bijection between the subsets of $A$ and the set of possible functions $f: A \rightarrow \{0,1\}$, so these sets must have the same number of elements - namely, both have $2^n$ elements.
+
+\medskip
+In addition to these basic and most common set operations, there are a couple of more, less common ones. Some of them are:
+\begin{eqnarray}
+ A \triangle B =& (A \setminus B) \cup (B \setminus A)      \qquad &\text{symmetric difference} \\
+ A \sqcup B    =& A \times \{ 0 \}  \cup  A \times \{ 1 \}  \qquad &\text{disjoint union} \\
+ A ^ B         =& \{ f: \; B \rightarrow A  \}              \qquad &\text{functions from $B$ to $A$} 
+\end{eqnarray}
+The symmetric difference is what remains, if we first form the union of $A$ and $B$ and then subtract the intersection of $A$ and $B$ from that. That is, we also have: $A \triangle B = (A \cup B) \setminus (A \cap B)$. Other possible notations for the symmetric difference are $A \ominus B$ and $A \oplus B$. The disjoint union is an operation in which we throw together the contents of two sets $A,B$ while keeping the elements that came from set $A$ distinguishable from those that came from $B$ by not using the elements of $A$ and $B$ as is but rather using tuples of the form $(a,0)$ and $(b,1)$ where $a \in A, b \in B$. The appended second components serve as tags to indicate from which set the element originally came. The purpose of the disjoint union is that many desirable set theoretic constructions involving a set union work out as desired only for disjoint sets. That's why we first make the sets $A,B$ artificially disjoint via this tuple formation and then take the union of the so created sets of tuples. The disjoint union is sometimes also denoted by a simple plus sign $+$ which makes sense in the context of cardinalities which are explained below. The set of all possible functions from a set $B$ to a set $A$ is denoted by the exponential notation $A^B$. The notation $\{ f: \; B \rightarrow A \}$ is informal and intended to mean that $f$ is a function with domain $B$ and codomain $A$ [TODO: figure out, if there's a formal notation for this]. The exponential notation is used for a good reason: for finite sets $A$ and $B$, the number of possible different functions from $B$ to $A$ is indeed given by $|A|^{|B|}$.
+
+[TODO: quotient set i.e. set of equivalence classes]
+
+
+\medskip
+There are a lot of algebraic equations involving these operators.... [TODO: give a rather comprehensive list of useful set-algebraic equations, define big intersection and union for sets of sets]
+
+% ToDo: mention that the complement is sometimes also written as A^C ...with some different font for the C, mention that the complement must always be taken with respect to some universal set which may depend on the context
+
+% https://en.wikipedia.org/wiki/Complement_(set_theory)#Relative_complement
+% https://en.wikipedia.org/wiki/Disjoint_union
+% https://en.wikipedia.org/wiki/Symmetric_difference
+
+% https://math.stackexchange.com/questions/1631396/what-is-the-difference-between-disjoint-union-and-union
+
+% Weitz uses a union symbol with a dot above to denote a union of disjoint sets. see:
+% https://www.youtube.com/watch?v=RcDjuXLK-Jg&list=PLb0zKSynM2PDUcEEkjv48Y_4N9CBFyzsz&index=7
+% at 9:00.  ...don't confuse this with the "disjoint union" operation which artificially makes sets disjoint before froming the union. Maybe explain both notations in the section of set theory 
+
+
+\paragraph{Cardinality} While we are speaking of the number of elements of a set, i.e. the "size" of a set, it should be noted that this size has been given a special name: \emph{cardinality}. The operation of taking the cardinality of a set $A$ is denoted like taking an absolute value: $|A|$ and the result of that operation is a so called cardinal number\footnote{Cardinal numbers are, of course (you know the drill), also special kinds of sets}. We do not simply call it "size" because there are different notions of set size in mathematics and cardinality is just one of them (another one would be the so called \emph{measure}, for example). In the case of finite sets, the cardinality is just the number of elements, i.e. a natural number. That means, the natural numbers are also cardinal numbers. They are the finite cardinal numbers - but there are infinite cardinal numbers, too. And yes, that means there are different sizes of infinity in math. In a sense that can be made rigorous, there are more real numbers than natural numbers, for example. The cardinal number of the set of real numbers is bigger than that of the set of natural numbers. The notion of cardinality for infinite sets is defined in terms of existence of bijections: If for two infinite sets, you can find a bijective function between those sets, then these sets have, by definition, the same cardinality. This has a couple of counterintuitive consequences, one of which is that a strict subset of an infinite set can have the same cardinality as the whole set. The part is \emph{not} smaller than the whole. For example, the set of natural numbers and the set of even numbers have the same cardinality. The required bijection and its inverse are simply the functions $y = f(x) = 2 x$ and $x = f^{-1}(y) = y / 2$. We'll go deeper into this in a later chapter.
+
+%But this stuff is beyond the scope of this book. [TODO: give equations for cardinalities]
+
+
 
 
 

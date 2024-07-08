@@ -668,14 +668,18 @@ In the set-theoretic framework, functions are required to be \emph{right-unique}
 % https://math.stackexchange.com/questions/3726882/square-root-as-a-multi-valued-function
 
 \paragraph{Complex Roots}
-In the real numbers $\mathbb{R}$, when taking the $n$-th root for a given real number $x$ and a given positive natural number $n$, we denote the result or root as $y = \sqrt[n]{x}$. It all works out fine when $n$ is odd. In this case, $y = \sqrt[n]{x}$, defines a bona-fide function because the equation $y^n = x$ will always have a unique real-valued solution. For even $n$, however, we run into two problems: for negative $x$, there is no real solution whatsoever and for positive $n$, there are two real solutions. We usually "solve" the problem by saying: OK, for even $n$, the function $\sqrt[n]{x}$ is undefined whenever $x < 0$ and for $x \geq 0$, we pick the nonnegative solution by definition. But this is an ugly hack. We may get kinda away with it on $\mathbb{R}$ but when we enter the complex plane $\mathbb{C}$, it is not good enough anymore. In $\mathbb{R}$, we would say that $\sqrt[4]{16} = 2$. In $\mathbb{C}$, we would say that $\sqrt[4]{16} = \{2,2\i,-2,-2\i\}$. In general, the $n$th root of any nonzero complex number $z$ will produce a set of $n$ solutions. To write down the set of solutions, i.e. the set of function values $w = \sqrt[n]{z}$, let's express our input number $z$ in polar form as $z = r \e^{i \varphi}$ where $r = |z|, \varphi = \arg(z) = \angle(z)$. Then we can define the $k$-th solution $w_k$ as:
+In the real numbers $\mathbb{R}$, when taking the $n$-th root for a given real number $x$ and a given positive natural number $n$, we denote the result or root as $y = \sqrt[n]{x}$. It all works out fine when $n$ is odd. In this case, $y = \sqrt[n]{x}$, defines a bona-fide function because the equation $y^n = x$ will always have a unique real-valued solution. For even $n$, however, we run into two problems: for negative $x$, there is no real solution whatsoever and for positive $n$, there are two real solutions. We usually "solve" the problem by saying: OK, for even $n$, the function $\sqrt[n]{x}$ is undefined whenever $x < 0$ and for $x \geq 0$, we pick the nonnegative solution by definition. But this is an ugly hack. We may get kinda away with it on $\mathbb{R}$ but when we enter the complex plane $\mathbb{C}$, it is not good enough anymore. In $\mathbb{R}$, we would say that $\sqrt[4]{16} = 2$. In $\mathbb{C}$, we would say that $\sqrt[4]{16} = \{2,2\i,-2,-2\i\}$. In general, the $n$th root of any nonzero complex number $z$ will produce a set of $n$ solutions. To write down the set of solutions, i.e. the set of function values $w = \sqrt[n]{z}$, let's express our input number $z$ in polar form as $z = r \e^{i \varphi}$ where $r = |z|, \varphi = \arg(z) = \angle(z)$. Then we can define the solution set $w$ as:
 \begin{equation}
+ \label{Eq:ComplexRoots}
  w = \{ w_k : k \in \{0,\ldots,n-1\} \}
  \qquad \text{where} \qquad
  w_k = \sqrt[n]{r} \, \exp \left( \frac{\i (\varphi + 2 \pi k) }{n} \right)
 \end{equation}
+Let's unpack this. The variable $w$ stands for a whole set of solutions, namely the set $\{w_0, w_1, \ldots, w_{n-1}\}$. Each of these $w_k$ is a uniquely defined complex number which can be computed by the formula to right of equation (\ref{Eq:ComplexRoots}).
+%In this $w_k$ 
 
-
+%is called the $k$-th \emph{branch} of 
+%Then we can define the $k$-th solution $w_k$ as:
 
 
 %\begin{equation}

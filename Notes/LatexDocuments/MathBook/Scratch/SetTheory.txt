@@ -41,3 +41,6 @@ Ordinal Numbers:
       identisch: a < b  gdw  a \in b  gdw  a \subset b
 290: -Def: Kardinalzahl: Sei a Ordinazahl. a heißt Kardinalzahl falls: für alle b < a: |b| < |a|
      -Def: Mächtigkeit: Sei M Menge. |M| = äääh? auf der rechten Seite kommt auch |M| vor..??
+291: - K + L = | K \sqcup L |
+       K * L = | K \times L | 
+       K ^ L = | K^L |

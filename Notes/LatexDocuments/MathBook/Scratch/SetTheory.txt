@@ -1,0 +1,19 @@
+====================================================================================================
+Ordinal Numbers:
+
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_2_1
+% https://aleph1.info/Resource?method=get&obj=Pdf&name=mengenlehre1.pdf
+
+223: -0,1,2,...,w,w+1,w+2,...,w+w,w+w+1,w+w+2,.....
+243: -Reihe hat erstes Element, alle Elemente vergleichbar, jedes Anfangsstück hat Nachfolger
+247: -Anfangselement, Nachfolgerelelemt, Limeselement
+249: -Kombination von Wohlordnungen duch aneinanderhängen
+251: -Ordnungismorphismus
+253: -Wohlordnung A ist "kürzer" als B, wenn a Anfangsstück von B ist
+261: -Satz: jede Menge läßt sich wohlordnen     
+267: -Teilmengenrelation ist partielle Ordnung
+282: -A heißt Ordinalzahl falls Wohlordnung < auf A existiert mit:
+      für alle B in A gilt: B = { C in A | C < B }
+     -Ordinalzahlen bestehen aus Ordinalzahlen
+284: -Sei A Menge. Dann: A ist ordinalzahl gdw A ist transitiv und durch Elementrelation 
+      wohlgeordnet

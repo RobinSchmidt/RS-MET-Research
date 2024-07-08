@@ -380,13 +380,30 @@ Although the beth numbers are less commonly used in set theory than the cardinal
 
 \subsubsection{Ordinal Numbers}
 Ordinal numbers are, as the name suggests, used to order things, i.e. to put them into an ascending sequence.
+
 % https://en.wikipedia.org/wiki/Ordinal_number
+
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_2_1
+% % https://aleph1.info/Resource?method=get&obj=Pdf&name=mengenlehre1.pdf
+% -We can imagine the ordinal numbers (or order numbers) as follows:
+%  0,1,2,...,w,w+1,w+2,...,w+w,w+w+1,w+w+2,...
+% -The idea is that we can pick any ordinal number and from there travel to the right by single
+%  steps (with a successor function) or in larger steps by adding another ordinal to our current
+%  position
+% -Each such journey has a uniquely determined destination - the limit or supremum of all such 
+%  steps
+% -pg 284 of pdf book: for ordinal numbers, the element-of relation serves as the order relation?
+%  It's also here:  https://aleph1.info/?call=Puc&permalink=mengenlehre1_2_6_Z4
 
 \paragraph{Order Theory} Order theory is the part of set theory that is concerned with \emph{order relations}. Such order relations were already briefly introduced on page \pageref{Par:Orders}. Order relations formally model situations like "this is less than that" or "this comes before that". The order relations can be classified according various properties like being partial or total, strict or non-strict, etc. and the sets on which they operate can also be classified according to the existence of lower and upper bounds, existence of least and greatest elements, etc. All of that is the business of order theory an it also provides the foundation for the definition of the ordinal numbers. The central structure in order theory is that of a \emph{partially ordered set} which is abbreviated as \emph{poset}. Formally, a poset $P = (A, \leq)$ is an ordered pair of a set $A$, called the ground set of $P$, and \emph{partial order} relation $\leq$ defined on $A$. A partial order on a set $A$ is a relation on $A$ that is reflexive, antisymmetric and transitive, see page \pageref{Tab:RelationFeatures}. Partial orders can also be total orders\footnote{This is typical math-speak where, for example, groups are special semigroups, the whole set is a special kind of subset, etc. The words "partial", "semi", "sub", etc. just take away certain stricter requirements from a thing but meeting those requirements anyway does not disqualify the thing.}. Total orders are just very special partial orders, namely those for which every pair $a,b$ of elements is comparable. In some contexts, it's more convenient to work with strict orders, denoted by $<$. On any given poset with order $\leq$, it's always possible to define a corresponding strict order $<$ via $a < b \Leftrightarrow (a \leq b) \wedge \neg (a = b)$ and we can also turn this around to get $\leq$ back via $a \leq b \Leftrightarrow (a < b) \vee (a = b)$. So, with this conversion prescription between strict and non-strict partial orders, we can equivalently define the poset as $P = (A, <)$. This is indeed more convenient for our purposes here, so we will do that. ...TBC...
 
 %https://en.wikipedia.org/wiki/Order_theory
 %https://en.wikipedia.org/wiki/Glossary_of_order_theory
 % https://en.wikipedia.org/wiki/Partially_ordered_set
+
+% I think, an example for partial order is the subset relation. We have {1,2} < {1,2,3}, 
+% {2,3} < {1,2,3} but neither {1,2} < {2,3} nor {2,3} < {1,2}. We say that {1,2} and {2,3} are 
+% incompatible
 
 \paragraph{Order Isomorphisms and Order Types}
 An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is a bijective function $f: A \rightarrow B$ that preserves the ordering of the elements. That means, the bijection $f$ must satisfy: $x <_A y \Leftrightarrow f(x) <_B f(y)$ for all $x,y \in A$. In words: $x$ is less then $y$ in $A$ if and only if $f(x)$ is less than $f(y)$ in $B$. 
@@ -699,8 +716,9 @@ Lebesgue-Measure:
 
 % See:
 % https://aleph1.info/?call=Puc&permalink=mengenlehre1
-
-
+% Full online book about set theory (in German)
+% pdf version:
+% https://aleph1.info/Resource?method=get&obj=Pdf&name=mengenlehre1.pdf
 
 Das Zermelo-Fraenkel-Axiomensystem der Mengenlehre (ZF)
 https://www.youtube.com/watch?v=U10UYyXv5gM&list=PLb0zKSynM2PAuxxtMK1bxYPV_bUoPtpTB&index=1&t=0s

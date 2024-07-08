@@ -692,9 +692,17 @@ In the real numbers $\mathbb{R}$, when taking the $n$th root for a given real nu
  \qquad \text{where} \qquad
  w_k = \sqrt[n]{r} \, \exp \left( \frac{\i (\varphi + 2 \pi k) }{n} \right)
 \end{equation}
-Let's unpack this. The variable $w$ stands for a whole set of solutions, namely the set $w = \{w_0, w_1, \ldots, w_{n-1}\}$. Each of these $w_k$ is a uniquely defined complex number which can be computed by the formula to right of equation (\ref{Eq:ComplexRoots}). The first factor in the formula $\sqrt[n]{r}$ is just an $n$th root of a nonnegative real number, so we have no problems computing it. The result will be again a nonnegative real number. The second factor $\exp \left( \frac{\i (\varphi + 2 \pi k) }{n} \right)$ is a complex exponential function of a purely imaginary argument. That will give us a complex number on the unit circle. Multiplying by such a number yields a pure rotation around the origin - so the second factor gives us a rotation factor. We can interpret the two factors geometrically as follows: The first factor gives us the radius of the $k$th solution. This radius does not depend on the index $k$, so it will be the same for all $k$. The second factor determines the angle of our $k$th solution. This angle does indeed depend on $k$. The solutions lie all on a circle of radius $\sqrt[n]{r}$ and they are evenly distributed around this circle. The angle of our first solution for $k=0$ is given by $\frac{\varphi}{n}$. The angle difference between two successive solutions is always the same and given by $\frac{2 \pi}{n}$. 
+Let's unpack this. The variable $w$ stands for a whole set of solutions, namely the set $w = \{w_0, w_1, \ldots, w_{n-1}\}$. Each of these $w_k$ is a uniquely defined complex number which can be computed by the formula to right of equation (\ref{Eq:ComplexRoots}). The first factor in the formula $\sqrt[n]{r}$ is just an $n$th root of a nonnegative real number, so we have no problems computing it. The result will be again a nonnegative real number. The second factor $\exp \left( \frac{\i (\varphi + 2 \pi k) }{n} \right)$ is a complex exponential function of a purely imaginary argument. That will give us a complex number on the unit circle. Multiplying by such a number yields a pure rotation around the origin - so the second factor gives us a rotation factor. 
 
- ...TBC...explain branches, main branch, branch cuts, roots of unity
+\medskip
+We can interpret the two factors geometrically as follows: The first factor gives us the radius of the $k$th solution. This radius does not depend on the index $k$, so it will be the same for all $k$. The second factor determines the angle of our $k$th solution. This angle does indeed depend on $k$. The solutions lie all on a circle of radius $\sqrt[n]{r}$ and they are evenly distributed around this circle. The angle of our first solution for $k=0$ is given by $\frac{\varphi}{n}$. The angle difference between two successive solutions is always the same and given by $\frac{2 \pi}{n}$. 
+
+\medskip
+I said earlier that we will get $n$ roots when the input $z$ is nonzero. So, what happens at zero? Well, the formulas pose no problems whatsoever but all the computed solutions will coincide because the first factor, the radius, will be zero. In terms of polynomial roots, we can interpret this as a single solution/root at zero with a multiplicity of $n$.
+
+%For $z=0$, we'll get only one solution, namely zero. 
+
+ ...TBC...explain branches, main branch, branch cuts, roots of unity, what happens at $z=0$
 
 % https://en.wikipedia.org/wiki/Nth_root#Complex_roots
 % https://de.wikipedia.org/wiki/Wurzel_(Mathematik)#Wurzeln_aus_komplexen_Zahlen
@@ -707,7 +715,15 @@ For logarithms on $\mathbb{C}$, things get even crazier. Due to the periodicity 
  \qquad \text{where} \qquad
  w_k = \log(r) + \i (\varphi + 2 \pi k)
 \end{equation}
-Let's again unpack what the formulas say. This time, the solution set $w$ has infinitely many elements. We get a solution of each $k \in \mathbb{Z}$. The solution with integer index $k$ can be computed via the formula to the right. The first term $\log(r)$ is just the natural logarithm of a positive real number, so no problems here. This will yield the real part of our $k$th solution and that real part actually doesn't even depend on the index $k$, so it will be the same for all $k$. The second term $\i (\varphi + 2 \pi k)$ gives us the imaginary part of our $k$th solution. This part does indeed depend on $k$ ...TBC...
+Let's again unpack what the formulas say. This time, the solution set $w$ has infinitely many elements. We get a solution of each $k \in \mathbb{Z}$. The solution with integer index $k$ can be computed via the formula to the right. The first term $\log(r)$ is just the natural logarithm of a positive real number, so no problems here. This will yield the real part of our $k$th solution and that real part actually doesn't even depend on the index $k$, so it will be the same for all $k$. The second term $\i (\varphi + 2 \pi k)$ gives us the imaginary part of our $k$th solution. This part does indeed depend on $k$. 
+
+\medskip
+Geometrically, the solutions all line up on a vertical line with real part, i.e. $x$-coordinate, given by $\log(r)$. The imaginary part, i.e. $y$-coordinate, of the solution for $k=0$ is at $\varphi$ and the solutions for all other values of $k$ are spaced apart by multiples of $2 \pi$ in the vertical direction.  
+
+\medskip
+Again, we need to pay attention to what happens at $z=0$. In this case, we would have $r = |z| = 0$, so we would need to compute $\log(0)$ for the first term. The logarithm of zero is undefined and that is indeed situation beyond repair\footnote{Maybe one could try something with $-\infty$ for $\Re(w_k)$ but I have no idea if that could work out in a meaningful way. Probably not. ToDo: figure out!}. There is no complex number $w$ that satisfies $\e^w = 0$ because the exponential function always produces nonzero values. So, in light of what we learned about partial functions, the complex logarithm could be defined as a partial multifunction or we just define it as a regular multifunction $f: \mathbb{C} \setminus \{ 0 \} \rightarrow \mathbb{C}$ which is the typical way to do it.
+
+...TBC...explain main branch, principal value
 
 % i.e. the fact that $e^z = e^{z + 2 \pi k \i}$ for any integer $k$, 
 % $\log(z)$
@@ -716,15 +732,19 @@ Let's again unpack what the formulas say. This time, the solution set $w$ has in
 
 
 % https://en.wikipedia.org/wiki/Complex_logarithm
+% https://en.wikipedia.org/wiki/Argument_(complex_analysis)#Principal_value
 
 %the square-root function on the real numbers. 
-% what about fractional roots like the (7/5)th root? ...or in general, how about z^w for any complex exponent w?
+% what about fractional roots like the (7/5)th root? ...or in general, how about z^w for any complex exponent w? how about irrational roots
 
 %If you go back to the diagram showing the rela  Fig. ..., 
 
 % -Maybe we can view multifunctions also simply as relations where we relax the condition of being
 %  right-unique
-\paragraph{Inverse Trigonometric Functions} ...TBC...
+
+\paragraph{Inverse Trigonometric Functions} 
+We do not really need to enter the complex plane to appreciate the usefulness of the idea of a multifunction. The concept makes sense already in a purely real context. ...TBC...
+
 % https://en.wikipedia.org/wiki/Inverse_trigonometric_functions
 
 

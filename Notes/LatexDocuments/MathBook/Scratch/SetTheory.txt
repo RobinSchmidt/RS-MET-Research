@@ -39,3 +39,5 @@ Ordinal Numbers:
 288: -Def: W(a) = { b : b < a }. D.h. W(a) ist die Menge der Elemente, die kleiner als a sind. 
      -Für Neumann-Ordinalzahlen ist W(a) = a. Damit kleiner-, Element- und Teilmengenrelation 
       identisch: a < b  gdw  a \in b  gdw  a \subset b
+290: -Def: Kardinalzahl: Sei a Ordinazahl. a heißt Kardinalzahl falls: für alle b < a: |b| < |a|
+     -Def: Mächtigkeit: Sei M Menge. |M| = äääh? auf der rechten Seite kommt auch |M| vor..??

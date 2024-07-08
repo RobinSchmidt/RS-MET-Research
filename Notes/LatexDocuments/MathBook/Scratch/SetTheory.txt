@@ -15,5 +15,27 @@ Ordinal Numbers:
 282: -A heißt Ordinalzahl falls Wohlordnung < auf A existiert mit:
       für alle B in A gilt: B = { C in A | C < B }
      -Ordinalzahlen bestehen aus Ordinalzahlen
-284: -Sei A Menge. Dann: A ist ordinalzahl gdw A ist transitiv und durch Elementrelation 
+284: -Sei A Menge. Dann: A ist Ordinalzahl gdw A ist transitiv und durch Elementrelation 
       wohlgeordnet
+285: -Sei A Ordinalzahl. Dann ist A + 1 = A \cup { A }. A heißt Nachfolgeordinalzahl falls es ein
+      ein B gibt so das A = B + 1. B heißt Vorgänger von A. A heißt Limesordinalzahl falls A != 0
+      und A keine Nachfolgeordinazahl ist, d.h. keinen Vorgänger hat. In einigen Texten wird auch 0
+      als Limesordinazahl definiert, so dass es nur zwei Sorten Ordinazahlen gibt.
+286: -Sei A eine Menge von Ordinalzahlen. Das Supremum von A ist: sup(A) = \bigcup A
+     -a ist Limesordinalzahl  gdw  \bigcup a = a  gdw  b+1 in a für alle b < a
+     -1   = 0 U {0} = {}
+      2   = 1 U {1} = {0}
+      3   = 2 U {2} = {0,1}
+      n+1 = n U {n} = {0,1,...,n}
+      ...
+      w   = N       = {0,1,2,3,...}
+      w+1 = w U {w} = {0,1,2,3,...,w}
+      ...
+      w+w =         = {0,1,2,3,...,w,w+1,w+2,...}
+     -Die natürlichen Zahlen sind diejenigen Ordinalzahlen die keliner als die erste Limesordinazahl 
+      sind
+287: -Repräsentationssatz: Zu jeder Wohlordnung (M,<) existiert eine Ordinalzahl a mit:  
+      (M,<) und (a,<) sind gleich lang
+288: -Def: W(a) = { b : b < a }. D.h. W(a) ist die Menge der Elemente, die kleiner als a sind. 
+     -Für Neumann-Ordinalzahlen ist W(a) = a. Damit kleiner-, Element- und Teilmengenrelation 
+      identisch: a < b  gdw  a \in b  gdw  a \subset b

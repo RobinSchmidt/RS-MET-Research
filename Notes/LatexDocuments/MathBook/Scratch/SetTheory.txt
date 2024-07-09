@@ -113,7 +113,7 @@ https://www.youtube.com/watch?v=qijXa3U4Nag
        weitesten links liegende) raus. Das ist w. Daher ist w eine Kardinalzahl.
 10:00: Aus a <= b folgt a <~= b. Wenn a weiter links liegt als b, hat es eine kleinere oder gleiche 
        Mächtigkeit als b.
-10:50: w ist Kardinalzahl
+10:50: w ist die kleinste unendliche Kardinalzahl
        Zu jeder Ordinalzahl a gibt es eine gleichmächtige Kardinalzahl - es ist einfach die die 
        nächste Kardinalzahl links von a in der Anordnung der Ordinalzahlen...glaube ich
        Satz von Hartogs: zu jeder Ordinalzahl gibt es eine größere Kardinalzahl
@@ -122,10 +122,10 @@ https://www.youtube.com/watch?v=qijXa3U4Nag
 11:40: Man kann jeder Menge A genau eine Kardinalzahl l zuordnen, so dass A und l gleichmächtig 
        sind. Man kann A wohlordnen und dann ist A isomorph zu einer Ordinalzahl a. Und zu a finden 
        wir eine gleichmächtige Kardinalzahl. Diese nennen wir l und schreiben l = |A|.
-14:12: Es wird in der kardinalzahlentheorie auch noch gimel und Dalet gebraucht:
+14:12: Es wird in der Kardinalzahlentheorie auch noch gimel und Dalet gebraucht:
        https://en.wikipedia.org/wiki/Gimel_function
        https://en.wikipedia.org/wiki/Dalet#Mathematics
-14:40: Die ordnungsstruktur der Kardinalzahlen CN sieht wie die der Ordinalzahlen ON aus. Das gilt
+14:40: Die Ordnungsstruktur der Kardinalzahlen CN sieht wie die der Ordinalzahlen ON aus. Das gilt
        auch für CN\w
        Die Vereinigung einer beliebigen Menge von Ordinalzahlen ist das ordinale Supremum der Menge
 15:13: CN = { a in ON : a = |a| }. CN: Klasse der Kardinalzahlen, ON: Klasser der Ordinalzahlen

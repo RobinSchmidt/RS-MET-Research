@@ -103,20 +103,26 @@ Ende:  Buchempfehlung: Everything and More von David Foster Wallace (Vorsicht: e
 Was sind Kardinalzahlen? Was besagt die Kontinuumshypothese?
 https://www.youtube.com/watch?v=qijXa3U4Nag
 
-9:01:  Eine Ordinalzahl a heißt kardinalzahl, wenn jede Ordinalzahl b < a eine kleinere Mächtigkeit 
-       als a hat.
+6:05:  Eine Menge A ist kleiner als eine Menge B wenn es eine Injektion von A nach B gibt, die 
+       keine Bijektion ist.
+9:01:  Eine Ordinalzahl a heißt Kardinalzahl, wenn jede Ordinalzahl b < a eine kleinere Mächtigkeit 
+       als a hat. 
 10:50: w ist Kardinalzahl
        Zu jeder Ordinalzahl a gibt es eine gleichmächtige Kardinalzahl - es ist einfach die die 
        nächste Kardinalzahl links von a in der Anordnung der Ordinalzahlen...glaube ich
        Satz von Hartogs: zu jeder Ordinalzahl gibt es eine größere Kardinalzahl
        -> kann ohne Auswahlaxiom bewiesen werden, für den rest der Theorie wird das Auswahlaxiom 
        aber gebraucht
-14:12  Es wird in der kardinalzahlentheorie auch noch gimel und Dalet gebraucht:
+11:40: Man kann jeder Menge A genau eine Kardinalzahl l zuordnen, so dass A und l gleichmächtig 
+       sind. Man kann A wohlordnen und dann ist A isomorph zu einer Ordinalzahl a. Und zu a finden 
+       wir eine gleichmächtige Kardinalzahl. Diese nennen wir l und schreiben l = |A|.
+14:12: Es wird in der kardinalzahlentheorie auch noch gimel und Dalet gebraucht:
        https://en.wikipedia.org/wiki/Gimel_function
        https://en.wikipedia.org/wiki/Dalet#Mathematics
 14:40: Die ordnungsstruktur der Kardinalzahlen CN sieht wie die der Ordinalzahlen ON aus. Das gilt
        auch für CN\w
        Die Vereinigung einer beliebigen Menge von Ordinalzahlen ist das ordinale Supremum der Menge
+15:13: CN = { a in ON : a = |a| }. CN: Klasse der Kardinalzahlen, ON: Klasser der Ordinalzahlen
 15:30: Aleph (ich nehme hier N - sieht ähnlich aus) ist der Ordnungsismorphismus von ON auf CN\w. 
        D.h. N_0 (Aleph_0) korrespondiert mit der Ordinalzahl 0, N_1 mit 1, N_w mit w, N_{w+1} mit 
        w+1 etc. Also Aleph bzw. N is eine Funktion auf ON
@@ -134,5 +140,7 @@ ToDo:
  ...I don't get it - it says "if X and Y are disjoint" - which is almost never the case with von 
  Neumann ordinals. And why would one apply cardinal addition to sets that aren't Neumann ordinals?
  ..Weitz says differently in his video at around 24:30
+  ...ahh - I see - I guess, it's because after the set operation, we apply the |...| operation. But 
+  how is *that* actually defined in terms of set operations?
 -The same is true for cardinal multiplications. It's defined in terms of set multiplication. Ordinal
  multiplication was defined via transfinite recursion.

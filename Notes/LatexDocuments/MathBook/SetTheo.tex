@@ -474,30 +474,6 @@ We constructed the integers, rationals, etc. by extending the set of natural num
 % https://en.wikipedia.org/wiki/Transfinite_number
 
 
-\subsubsection{Beth Numbers}
-% Maybe move under Ordinal Numbers
-Although the beth numbers are less commonly used in set theory than the cardinals and ordinals, I'll introduce them first because they correspond best to what we might expect intuitively from differently sized infinite sets. The are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. Here, for the time being, we may think of $n$ as a natural number. It can actually also be an ordinal number though. That's why the index is usually a greek letter in textbooks. The beth numbers are formally defined via transfinite recursion as:
-\begin{equation}
-\beth_0 = \aleph_0 
-        = \omega 
-        = |\mathbb{N}|, \quad
-\beth_{\alpha + 1} = \mathcal{P}(\beth_{\alpha}) 
-                   = 2^{\beth_{\alpha}}, \quad
-\beth_{\lambda} = \sup \{ \beth_{\alpha} : \alpha < \lambda \} 
-                = \bigcup_{\alpha \in \lambda} \beth_{\alpha} 
-\end{equation}
-but to understand this definition, we first need some more definitions an tools in place. ...TBC...VERIFY
-
-% https://en.wikipedia.org/wiki/Beth_number
-
-% https://neugierde.github.io/cantors-attic/Beth
-% -beth_omega has the property: whenever a set X has a cardinality less then beth_omega, then
-%  its power set will also have a cardinality less than beth_omega
-
-% https://planetmath.org/bethnumbers
-
-% Maybe introduce the beth numbers after ordinals and transfinite recursion
-
 
 
 \subsubsection{Ordinal Numbers}
@@ -626,6 +602,59 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 % -constructing "the set of all ordinal numbers" leads to a contradiction
 
 
+\subsubsection{Transfinite Processes}
+
+\paragraph{Transfinite Induction}
+In the chapter about logic, we have learned about the proof technique of induction. It is a technique to prove statements $\varphi(n)$ that should hold for any natural number $n$. This technique can be extended to prove statements that also hold for all ordinal or all cardinal numbers. The basic technique had to distinguish two cases: (1) the base case and (2) the successor case. In transfinite induction, we need to consider a third case: (3) the limit case. ...TBC...
+
+% https://en.wikipedia.org/wiki/Transfinite_induction
+% https://de.wikipedia.org/wiki/Transfinite_Induktion
+% https://mathworld.wolfram.com/TransfiniteInduction.html
+% https://en.wikipedia.org/wiki/Mathematical_induction
+
+% I think, transfinite induction can run over all well-ordered sets? ...verify!
+
+\paragraph{Transfinite Recursion}
+Transfinite recursion is a method of constructing a sequence of objects - one for each ordinal number.
+
+% Is it a way to construct more than countably many objects?
+
+% https://en.wikipedia.org/wiki/Transfinite_induction#Transfinite_recursion
+% https://math.stackexchange.com/questions/1934694/transfinite-recursion
+
+% Example:
+% https://en.wikipedia.org/wiki/Beth_number
+
+
+
+\paragraph{Beth Numbers}
+% Maybe move under Ordinal Numbers
+The beth numbers are another type of transfinite numbers in set theory. They correspond best to what we might expect intuitively from differently sized infinite sets and serve as a good example for constructing sets via transfinite recursion. They are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. Here, for the time being, we may think of $n$ as a natural number. It can actually also be an ordinal number though. That's why the index is usually a greek letter in textbooks. The beth numbers are formally defined via transfinite recursion as:
+\begin{equation}
+\beth_0 = \aleph_0 
+        = \omega 
+        = |\mathbb{N}|, \quad
+\beth_{\alpha + 1} = \mathcal{P}(\beth_{\alpha}) 
+                   = 2^{\beth_{\alpha}}, \quad
+\beth_{\lambda} = \sup \{ \beth_{\alpha} : \alpha < \lambda \} 
+                = \bigcup_{\alpha \in \lambda} \beth_{\alpha} 
+\end{equation}
+The leftmost definition is the base case in various notations
+...TBC...
+%but to understand this definition, we first need some more definitions an tools in place. ...TBC...VERIFY
+
+% https://en.wikipedia.org/wiki/Beth_number
+
+% https://neugierde.github.io/cantors-attic/Beth
+% -beth_omega has the property: whenever a set X has a cardinality less then beth_omega, then
+%  its power set will also have a cardinality less than beth_omega
+
+% https://planetmath.org/bethnumbers
+
+% Maybe introduce the beth numbers after ordinals and transfinite recursion
+
+
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Cardinal Numbers}
@@ -682,26 +711,7 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 %\subsection{title}
 
 
-\subsubsection{Transfinite Induction}
-In the chapter about logic, we have learned about the proof technique of induction. It is a technique to prove statements $\varphi(n)$ that should hold for any natural number $n$. This technique can be extended to prove statements that also hold for all ordinal or all cardinal numbers. The basic technique had to distinguish two cases: (1) the base case and (2) the successor case. In transfinite induction, we need to consider a third case: (3) the limit case. ...TBC...
 
-% https://en.wikipedia.org/wiki/Transfinite_induction
-% https://de.wikipedia.org/wiki/Transfinite_Induktion
-% https://mathworld.wolfram.com/TransfiniteInduction.html
-% https://en.wikipedia.org/wiki/Mathematical_induction
-
-% I think, transfinite induction can run over all well-ordered sets? ...verify!
-
-\subsubsection{Transfinite Recursion}
-Transfinite recursion is a method of constructing a sequence of objects - one for each ordinal number.
-
-% Is it a way to construct more than countably many objects?
-
-% https://en.wikipedia.org/wiki/Transfinite_induction#Transfinite_recursion
-% https://math.stackexchange.com/questions/1934694/transfinite-recursion
-
-% Example:
-% https://en.wikipedia.org/wiki/Beth_number
 
 
 %===================================================================================================

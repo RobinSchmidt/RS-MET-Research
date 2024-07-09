@@ -104,10 +104,15 @@ Was sind Kardinalzahlen? Was besagt die Kontinuumshypothese?
 https://www.youtube.com/watch?v=qijXa3U4Nag
 
 6:05:  Eine Menge A ist kleiner als eine Menge B wenn es eine Injektion von A nach B gibt, die 
-       keine Bijektion ist. Diese < Relation ist eine Halbordnung (Satz von Cantor-Bernstein). Die 
-       Annahme < wäre total/linear ist äquivalent zum Auswahlaxiom.
+       keine Bijektion ist. Diese <~ Relation ist eine Halbordnung (Satz von Cantor-Bernstein). Die 
+       Annahme < wäre total/linear ist äquivalent zum Auswahlaxiom. Wir nehmen hier <~, da < schon 
+       vergeben ist für die Ordnungsrelation.
 9:01:  Eine Ordinalzahl a heißt Kardinalzahl, wenn jede Ordinalzahl b < a eine kleinere Mächtigkeit 
-       als a hat. 
+       als a hat. Es gibt z.b. eine unendliche Anzahl von Ordinalzahlen, die dieselbe Mächtigkeit 
+       wie w haben (d.h. bijektiv auf w abbildbar sind). Von denen sucht man sich die kleinste (am
+       weitesten links liegende) raus. Das ist w. Daher ist w eine Kardinalzahl.
+10:00: Aus a <= b folgt a <~= b. Wenn a weiter links liegt als b, hat es eine kleinere oder gleiche 
+       Mächtigkeit als b.
 10:50: w ist Kardinalzahl
        Zu jeder Ordinalzahl a gibt es eine gleichmächtige Kardinalzahl - es ist einfach die die 
        nächste Kardinalzahl links von a in der Anordnung der Ordinalzahlen...glaube ich

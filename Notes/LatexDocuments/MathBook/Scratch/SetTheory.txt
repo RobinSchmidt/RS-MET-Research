@@ -21,13 +21,16 @@ Ordinal Numbers:
      -Ordinalzahlen bestehen aus Ordinalzahlen
      -Eine Menge M heißt transitiv wenn für alle x in M gilt: x \subseteq M. Also sind alle Elemente
       einer transitiven Menge gleichzeitig Teilmengen von ihr.
+     -Ordinalzahlen sind characterisiert durch: transitiv, durch \in wohlgeordnet.
+     -Dies wird manchmal als Definition(!) für Ordinalzahlen verwendet
 284: -Sei A Menge. Dann: A ist Ordinalzahl gdw A ist transitiv und durch Elementrelation 
       wohlgeordnet
 285: -Sei A Ordinalzahl. Dann ist A + 1 = A \cup { A }. A heißt Nachfolgeordinalzahl falls es ein
       ein B gibt so das A = B + 1. B heißt Vorgänger von A. A heißt Limesordinalzahl falls A != 0
       und A keine Nachfolgeordinazahl ist, d.h. keinen Vorgänger hat. In einigen Texten wird auch 0
       als Limesordinazahl definiert, so dass es nur zwei Sorten Ordinazahlen gibt.
-286: -Sei A eine Menge von Ordinalzahlen. Das Supremum von A ist: sup(A) = \bigcup A
+286: -Sei A eine Menge von Ordinalzahlen. 
+     -Das Supremum von A ist: sup(A) = \bigcup A
      -a ist Limesordinalzahl  gdw  \bigcup a = a  gdw  b+1 in a für alle b < a
      -1   = 0 U {0} = {}
       2   = 1 U {1} = {0}
@@ -38,15 +41,22 @@ Ordinal Numbers:
       w+1 = w U {w} = {0,1,2,3,...,w}
       ...
       w+w =         = {0,1,2,3,...,w,w+1,w+2,...}
-     -Die natürlichen Zahlen sind diejenigen Ordinalzahlen die keliner als die erste Limesordinazahl 
+     -Die natürlichen Zahlen sind diejenigen Ordinalzahlen die kleiner als die erste Limesordinazahl 
       sind
 287: -Repräsentationssatz: Zu jeder Wohlordnung (M,<) existiert eine Ordinalzahl a mit:  
       (M,<) und (a,<) sind gleich lang
 288: -Def: W(a) = { b : b < a }. D.h. W(a) ist die Menge der Elemente, die kleiner als a sind. 
      -Für Neumann-Ordinalzahlen ist W(a) = a. Damit kleiner-, Element- und Teilmengenrelation 
       identisch: a < b  gdw  a \in b  gdw  a \subset b
+     -Ich glaube, das W(a) soll heißen: Wohlordnung auf a?
 290: -Def: Kardinalzahl: Sei a Ordinazahl. a heißt Kardinalzahl falls: für alle b < a: |b| < |a|
      -Def: Mächtigkeit: Sei M Menge. |M| = äääh? auf der rechten Seite kommt auch |M| vor..??
 291: - K + L = | K \sqcup L |
        K * L = | K \times L | 
        K ^ L = | K^L |
+
+
+Unendlich plus eins - Was sind Ordinalzahlen?
+https://www.youtube.com/watch?v=UxhFy4deLQA
+21:00: Transitiv bedeutet auch dass:  z \in y \in x  ->  z \in x. d.h. die Element-Relation muss
+       transitiv sein

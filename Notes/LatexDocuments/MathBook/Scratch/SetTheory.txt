@@ -102,3 +102,15 @@ Ende:  Buchempfehlung: Everything and More von David Foster Wallace (Vorsicht: e
 
 Was sind Kardinalzahlen? Was besagt die Kontinuumshypothese?
 https://www.youtube.com/watch?v=qijXa3U4Nag
+
+9:01:  Eine Ordinalzahl a heißt kardinalzahl, wenn jede Ordinalzahl b < a eine kleinere Mächtigkeit 
+       als a hat.
+10:50: w ist Kardinalzahl
+       Zu jeder Ordinalzahl a gibt es eine gleichmächtige Kardinalzahl - es ist einfach die die 
+       nächste Kardinalzahl links von a in der Anordnung der Ordinalzahlen...glaube ich
+       Satz von Hartogs: zu jeder Ordinalzahl gibt es eine größere Kardinalzahl
+       -> kann ohne Auswahlaxiom bewiesen werden, für den rest der Theorie wird das Auswahlaxiom 
+       aber gebraucht
+14:12  Es wird in der kardinalzahlentheorie auch noch gimel und Dalet gebraucht:
+       https://en.wikipedia.org/wiki/Gimel_function
+       https://en.wikipedia.org/wiki/Dalet#Mathematics

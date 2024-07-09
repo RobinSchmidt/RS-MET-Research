@@ -317,7 +317,7 @@ In this section, we will mention a couple of other possible axioms that could be
 
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Definitions}
+\subsection{Terminology, Notation, Definitions}
 In the following we will define a couple of important set theoretical terms that we will need later.
 
 %\paragraph{Hereditary Property}
@@ -329,9 +329,19 @@ In the following we will define a couple of important set theoretical terms that
 
 % Ah - no - I misunderstood it - the concept seems to be concerned with inheriting properties in a bottom-up way when building sets using the transitive closure. I first thought that means a property that the set itself and all its elemnts have...and their elements...and so on
 
+%\paragraph{Relation Chains}
+% I don't know if there's a term for this - I want to define the idea of using something like 
+% 1 < 2 < 3 < 4  but with an arbitrary transitive relation - could be the subset relation, the element relation, etc.
+
+% https://proofwiki.org/wiki/Definition:Chain_(Order_Theory)
+% https://mathworld.wolfram.com/Chain.html
+% https://en.wikipedia.org/wiki/Total_order#Chains
+
+\paragraph{Big Unions}
+The union of two sets $A,B$ is written as $A \cup B$. If $A$ is a set of sets\footnote{Which it always is because modern set theory, all sets are sets of sets. I just wanted to emphasize it again.} such that $A = \{a_1, a_2, a_2, \ldots \}$, then we write the union $U = a_1 \cup a_2 \cup a_3 \cup \ldots$ over all the elements of A as $U = \bigcup_{a \in A} a$ or shorter as $U = \bigcup A$. Analog definitions exist for other associative binary set operations such as the intersection $I = \bigcap A$ or the disjoint union $D = \bigsqcup A$ or even the product $P = \bigtimes A$. However, it's the union that turns out to be important.
 
 \paragraph{Transitivity}
-A set $A$ is called transitive when its element relation is transitive, i.e. $b \in a \in A \Rightarrow b \in A$. This is equivalent to the requirement that each element must also occur as subset: $a \in A \Rightarrow a \subseteq A$. A set $A$ is transitive if and only if the union over all its elements gives a subset of the original set: $A \subseteq \bigcup_{a \in A} a$ or in more compact notation $A \subseteq \bigcup A$...TBC...
+A set $A$ is called transitive when its element relation is transitive, i.e. $b \in a \in A \Rightarrow b \in A$. This is equivalent to the requirement that each element must also occur as subset: $a \in A \Rightarrow a \subseteq A$. A set $A$ is transitive if and only if the union over all its elements gives a subset of the original set: $A \subseteq \bigcup A$...TBC...
 
 %TODO: explain why the requirements are equivalent - they look very different
 
@@ -339,10 +349,16 @@ A set $A$ is called transitive when its element relation is transitive, i.e. $b 
 
 % I think, if a set is transitive and this also holds for all of its elements, it automatically holds for their elements too - and recursively all the way down. See the defintion of ordinal numbers. I think, it becomes a hereditary property
 
-
-
 % $a \in A \wedge b \in a \Rightarrow b \in A$. 
+
 %https://en.wikipedia.org/wiki/Transitive_set
+
+
+%\paragraph{Transitive Closure}
+
+
+
+
 
 % https://en.wikipedia.org/wiki/Transitive_set#Transitive_closure
 % Is w the transitive closure of any finite natural number?
@@ -391,6 +407,9 @@ $3=$ & $s(2)=$ & $\{\emptyset,  \{ \emptyset \} \} \cup \{  \{\emptyset,  \{ \em
 $n=$ & $s(n-1)=$  & & & $\{ 0, 1, 2, \ldots, n-1 \} $       
 \end{tabular}
 \medskip
+
+% I think, the simples set that we can construct which is not a natural number is the set
+% {{0}}
 
 \paragraph{Addition}
 We define addition of two natural numbers $x,y$ recursively as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly.
@@ -935,5 +954,9 @@ https://www.youtube.com/watch?v=pSSsZLTMDq0
 Other potentially interesting stuff:
 https://en.wikipedia.org/wiki/Supertransitive_class
 https://en.wikipedia.org/wiki/Von_Neumann_universe
+
+https://en.wikipedia.org/wiki/Derived_set_(mathematics)
+-Deiser's book says, we obtain the derivative (on R) by first adding the boundary to the set and then
+ removing all isolated points - not sure, if that's the same notion.
 
 \end{comment}

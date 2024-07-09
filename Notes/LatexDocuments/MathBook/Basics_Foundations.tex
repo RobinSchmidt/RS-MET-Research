@@ -206,7 +206,10 @@ When a relation is \emph{reflexive}, it means that every element $a$ must be in 
 
 % https://math.libretexts.org/Bookshelves/Applied_Mathematics/Seven_Sketches_in_Compositionality%3A_An_Invitation_to_Applied_Category_Theory_(Fong_and_Spivak)/01%3A_Generative_Effects_-_Orders_and_Adjunctions/1.01%3A_What_is_Order
 
-\paragraph{The Subset Relation} We'll now shift our perspective a little bit. In the previous paragraphs, we defined certain \emph{types} of relations in terms of what properties they need to have to qualify for the given name. We have looked at the relations from the perspective of putting the pairs $(a,b)$ of \emph{elements} of two sets $A$ and $B$ into the relation or not. What we will do now is to consider the pair $(A,B)$ itself. Instead of defining properties of relations we will explicitly define some very specific relations in which any such pair of sets may or may not be. Of particular interest is, when one set $B$ contains all the elements that another set $A$ contains (and possibly more). In such a case, we call $A$ a \emph{subset} of $B$ and we call $B$ a \emph{superset} of $A$. The set $B$ may or may not contain other elements, i.e. elements that are not in $A$. If the superset $B$ does indeed contain additional elements, then we call $A$ a \emph{strict subset} of $B$ and we call $B$ a \emph{strict superset} of $A$. These relations are expressed with the notation $\subseteq, \subset, \supset, \supseteq$ as follows:
+\paragraph{The Subset Relation} We'll now shift our perspective a little bit. In the previous paragraphs, we defined certain \emph{types} of relations in terms of what properties they need to have to qualify for the given type name. The relations themselves were not specified. There may be many of them and their details may depend on the contexts. We have looked at the relations from the perspective of putting the pairs $(a,b)$ of \emph{elements} of two sets $A$ and $B$ into the relation or not. 
+
+\medskip
+What we will do now is to consider the pair $(A,B)$ itself and instead of defining properties of relations, we will explicitly define some very specific relations once and for all in which any such pair of sets may or may not be. We also do not really care where $A$ and $B$ came from - whether or not they are elements from some embedding sets is not of interest here. Instead, what we want to know is if the set $B$ contains all the elements that the other set $A$ contains. In such a case, we call $A$ a \emph{subset} of $B$ and we call $B$ a \emph{superset} of $A$. The set $B$ may or may not contain more elements, i.e. elements that are not in $A$. If the superset $B$ does indeed contain additional elements, then we call $A$ a \emph{strict subset} of $B$ and we call $B$ a \emph{strict superset} of $A$. These relations are expressed with the notation $\subseteq, \subset, \supset, \supseteq$ as follows:
 \begin{eqnarray}
 A \subseteq B \;\;  \Leftrightarrow \;\;   x \in A \Rightarrow x \in B&           \qquad & \text{$A$ is subset of $B$} \\
 A \supseteq B \;\;  \Leftrightarrow \;\;   x \in B \Rightarrow x \in A&           \qquad & \text{$A$ is superset of $B$} \\
@@ -214,12 +217,12 @@ A \subset   B \;\;  \Leftrightarrow \;\;   x \in A \Rightarrow x \in B,& A \neq 
 A \supset   B \;\;  \Leftrightarrow \;\;   x \in B \Rightarrow x \in A,& A \neq B \qquad & \text{$A$ is strict superset of $B$}
 \end{eqnarray}
 % Alignment is ugly! Maybe use a tabular environment
-The subset relation is a partial order, by the way [VERIFY].
+In contrast to orders, equivalences, functions and so on, the subset relation is an elementary set theoretical idea and not context dependent. If it is applied to a given set of sets, it is a partial order, by the way [VERIFY].
 
 \paragraph{The Element Relation} 
 Take again two sets $A$ and $B$, not necessarily distinct and let $a \in A$ and $b \in B$. If the elements of $A$ and $B$ are themselves sets, and in modern set theory without atomic urelements, there's nothing else they could possibly be, then $a,A,b,B$ are all sets. That means we can ask questions like "is $A$ an element of $b$", that is $A \in b$. Or we could ask for whether or not $A \in B$ or $B \in A$ or $B \in a$, etc. We could even ask if $A \in A$ or $A \in a$ or $a \in a$. The answers to these latter questions will be "no", though because such recursive element inclusions are forbidden in axiomatic set theory - but it does make sense to ask the question. That is, our $\in$ symbol also defines a relation. The concepts in set theory begin to feel somewhat recursively self-referential by now and it is indeed the case that the whole imposing edifice of set theory somehow manages to bootstrap itself out of (almost) nothing.
 
-\paragraph{Relations vs Operations}
+\paragraph{Relational vs Operational Interpretation}
 We defined a function to be a special kind of relation (left-total, right-unique) and we also intuitively characterized a function as a sort of operation with an input and an output. The operational viewpoint is the way, we usually think of functions: we put some object in and get some object out. It is important to realize that such an "operational" point of view is not necessary. From a set-theoretic point of view, the "relational" point of view is all there is: a function is just a special kind of relation and a relation is just a special kind of set consisting of ordered pairs and ordered pairs can also be thought of a special kinds of sets. The definition really says nothing at all about a function being an input/output "operation". This is merely our interpretation. Or maybe it's more appropriate to say, that an input/output device is something that we want to \emph{model} with the concept of a function. At the core, it all just boils down to specific sorts of sets, because in set theory, sets are really the only thing that we have to work with anyway.
 
 \medskip
@@ -281,19 +284,25 @@ In addition to these basic and most common set operations, there are a couple of
  A \sqcup B    =& A \times \{ 0 \}  \cup  A \times \{ 1 \}  \qquad &\text{disjoint union} \\
  A ^ B         =& \{ f: \; B \rightarrow A  \}              \qquad &\text{functions from $B$ to $A$} 
 \end{eqnarray}
-The symmetric difference is what remains, if we first form the union of $A$ and $B$ and then subtract the intersection of $A$ and $B$ from that. That is, we also have: $A \triangle B = (A \cup B) \setminus (A \cap B)$. Other possible notations for the symmetric difference are $A \ominus B$ and $A \oplus B$. The disjoint union is an operation in which we throw together the contents of two sets $A,B$ while keeping the elements that came from set $A$ distinguishable from those that came from $B$ by not using the elements of $A$ and $B$ as is but rather using tuples of the form $(a,0)$ and $(b,1)$ where $a \in A, b \in B$. The appended second components serve as tags to indicate from which set the element originally came. The purpose of the disjoint union is that many desirable set theoretic constructions involving a set union work out as desired only for disjoint sets. That's why we first make the sets $A,B$ artificially disjoint via this tuple formation and then take the union of the so created sets of tuples. The disjoint union is sometimes also denoted by a simple plus sign $+$ which makes sense in the context of cardinalities which are explained below. The set of all possible functions from a set $B$ to a set $A$ is denoted by the exponential notation $A^B$. The notation $\{ f: \; B \rightarrow A \}$ is informal and intended to mean that $f$ is a function with domain $B$ and codomain $A$ [TODO: figure out, if there's a formal notation for this]. The exponential notation is used for a good reason: for finite sets $A$ and $B$, the number of possible different functions from $B$ to $A$ is indeed given by $|A|^{|B|}$.
+The symmetric difference is what remains, if we first form the union of $A$ and $B$ and then subtract the intersection of $A$ and $B$ from that. That is, we also have: $A \triangle B = (A \cup B) \setminus (A \cap B)$. Other possible notations for the symmetric difference are $A \ominus B$ and $A \oplus B$. The disjoint union is an operation in which we throw together the contents of two sets $A,B$ while keeping the elements that came from set $A$ distinguishable from those that came from $B$ by not using the elements of $A$ and $B$ as is but rather using tuples of the form $(a,0)$ and $(b,1)$ where $a \in A, b \in B$. The appended second components serve as tags to indicate from which set the element originally came. The purpose of the disjoint union is that many desirable set theoretic constructions involving a set union work out as desired only for disjoint sets. That's why we first make the sets $A,B$ artificially disjoint via this tuple formation and then take the union of the so created sets of tuples. The disjoint union is sometimes also denoted by a simple plus sign $+$ which makes sense in the context of cardinalities which are explained below. The set of all possible functions from a set $B$ to a set $A$ is denoted by the exponential notation $A^B$. The notation $\{ f: \; B \rightarrow A \}$ is informal and intended to mean that $f$ is a function with domain $B$ and codomain $A$. The exponential notation is used for a good reason: for finite sets $A$ and $B$, the number of possible different functions from $B$ to $A$ is indeed given by $|A|^{|B|}$.
 
-[TODO: quotient set i.e. set of equivalence classes]
+[TODO: quotient set i.e. set of equivalence classes, give a rather comprehensive list of useful set-algebraic equations, define big intersection and union for sets of sets]
 
-
-\medskip
-There are a lot of algebraic equations involving these operators.... [TODO: give a rather comprehensive list of useful set-algebraic equations, define big intersection and union for sets of sets]
+% TODO: figure out, if there's a formal notation for the informal $A^B = \{ f: \; B \rightarrow A \}$
+% notation. Maybe $A^B = \{ f \in \mathcal{P}(B \times A) : f \text{is function} \}$ as 
+% semi-formal expression is ok? Here \mathcal{P}(B \times A) is the set of all possible relations
+% between B and A. We then pick only those which are functions.
 
 % ToDo: mention that the complement is sometimes also written as A^C ...with some different font for the C, mention that the complement must always be taken with respect to some universal set which may depend on the context
 
 % https://en.wikipedia.org/wiki/Complement_(set_theory)#Relative_complement
 % https://en.wikipedia.org/wiki/Disjoint_union
 % https://en.wikipedia.org/wiki/Symmetric_difference
+% https://math.stackexchange.com/questions/901735/meaning-of-a-set-in-the-exponent
+
+% https://en.wikipedia.org/wiki/Exponentiation#Sets_as_exponents
+% https://encyclopediaofmath.org/wiki/Exponential_law_for_sets
+% A^(B x C) = (A^B)^C. This law corresponds to "currying" in functional programming
 
 % https://math.stackexchange.com/questions/1631396/what-is-the-difference-between-disjoint-union-and-union
 

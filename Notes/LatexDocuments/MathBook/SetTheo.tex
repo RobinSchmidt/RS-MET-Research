@@ -7,6 +7,8 @@ Set theory serves a couple of purposes in mathematics. It may serve as the found
 
 % There are more types of transfinite numbers: Beth-numbers are those that arise form repeatedly taking power sets, starting with the set of naturals. The generalized continuum hypothesis states that the beth-numbers are equal to the aleph-numbers [VERIFY!]. 
 
+% The two most important concepts/definitions in set theory are: cardinality, well ordering
+
 %===================================================================================================
 \section{Naive and Axiomatic Set Theory}
 
@@ -375,8 +377,27 @@ We constructed the integers, rationals, etc. by extending the set of natural num
 
 
 \subsubsection{Beth Numbers}
-Although the beth numbers are less commonly used in set theory than the cardinals and ordinals, I'll introduce them first because they correspond best to what we might expect intuitively from differently sized infinite sets. The are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. ...TBC...I think, this construction via power sets is not their fundamental definition, though - it just turns out to work out that way
+Although the beth numbers are less commonly used in set theory than the cardinals and ordinals, I'll introduce them first because they correspond best to what we might expect intuitively from differently sized infinite sets. The are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. Here, for the time being, we may think of $n$ as a natural number. It can actually also be an ordinal number though. That's why the index is usually a greek letter in textbooks. The beth numbers are formally defined via transfinite recursion as:
+\begin{equation}
+\beth_0 = \aleph_0 
+        = \omega 
+        = |\mathbb{N}|, \quad
+\beth_{\alpha + 1} = \mathcal{P}(\beth_{\alpha}) 
+                   = 2^{\beth_{\alpha}}, \quad
+\beth_{\lambda} = \sup \{ \beth_{\alpha} : \alpha < \lambda \} 
+                = \bigcup_{\alpha \in \lambda} \beth_{\alpha} 
+\end{equation}
+but to understand this definition, we first need some more definitions an tools in place. ...TBC...VERIFY
 
+% https://en.wikipedia.org/wiki/Beth_number
+
+% https://neugierde.github.io/cantors-attic/Beth
+% -beth_omega has the property: whenever a set X has a cardinality less then beth_omega, then
+%  its power set will also have a cardinality less than beth_omega
+
+% https://planetmath.org/bethnumbers
+
+% Maybe introduce the beth numbers after ordinals and transfinite recursion
 
 \subsubsection{Ordinal Numbers}
 Ordinal numbers are, as the name suggests, used to order things, i.e. to put them into an ascending sequence.
@@ -394,6 +415,10 @@ Ordinal numbers are, as the name suggests, used to order things, i.e. to put the
 %  steps
 % -pg 284 of pdf book: for ordinal numbers, the element-of relation serves as the order relation?
 %  It's also here:  https://aleph1.info/?call=Puc&permalink=mengenlehre1_2_6_Z4
+
+% https://www.youtube.com/watch?v=5NSg_wJkEMc&list=PLHW2zF4VTA-dP091KTn3VbWcHKssMkSq4&index=5
+% -all the ordinals less than w_1 are countable
+% -the "order-type" is the index of thw w-number?
 
 \paragraph{Order Theory} Order theory is the part of set theory that is concerned with \emph{order relations}. Such order relations were already briefly introduced on page \pageref{Par:Orders}. Order relations formally model situations like "this is less than that" or "this comes before that". The order relations can be classified according various properties like being partial or total, strict or non-strict, etc. and the sets on which they operate can also be classified according to the existence of lower and upper bounds, existence of least and greatest elements, etc. All of that is the business of order theory an it also provides the foundation for the definition of the ordinal numbers. The central structure in order theory is that of a \emph{partially ordered set} which is abbreviated as \emph{poset}. Formally, a poset $P = (A, \leq)$ is an ordered pair of a set $A$, called the ground set of $P$, and \emph{partial order} relation $\leq$ defined on $A$. A partial order on a set $A$ is a relation on $A$ that is reflexive, antisymmetric and transitive, see page \pageref{Tab:RelationFeatures}. Partial orders can also be total orders\footnote{This is typical math-speak where, for example, groups are special semigroups, the whole set is a special kind of subset, etc. The words "partial", "semi", "sub", etc. just take away certain stricter requirements from a thing but meeting those requirements anyway does not disqualify the thing.}. Total orders are just very special partial orders, namely those for which every pair $a,b$ of elements is comparable. In some contexts, it's more convenient to work with strict orders, denoted by $<$. On any given poset with order $\leq$, it's always possible to define a corresponding strict order $<$ via $a < b \Leftrightarrow (a \leq b) \wedge \neg (a = b)$ and we can also turn this around to get $\leq$ back via $a \leq b \Leftrightarrow (a < b) \vee (a = b)$. So, with this conversion prescription between strict and non-strict partial orders, we can equivalently define the poset as $P = (A, <)$. This is indeed more convenient for our purposes here, so we will do that. ...TBC...
 
@@ -419,10 +444,14 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 %  -the order type of a well ordered set
 
 % Order-isomorphism
-% -bijection that preserves order relations?
-%  
+% -bijection that preserves order relations? yeah, i think so
+% -this is s strciter requirement than just requiring the existence of a bijection
+% -therefore, ordinals allow a finer differentiation of the inifniteness of a set than cardinals (?)
 
 % https://www.youtube.com/watch?v=As8rTENUOy0&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=6
+
+% https://risingentropy.com/the-order-type-of-the-rational-numbers/
+% https://math.stackexchange.com/questions/463024/the-order-type-of-the-rationals
 
 
 \paragraph{Well Ordered Sets} To understand ordinal numbers, we first need to understand the idea of a well ordered set. This is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers $\mathbb{N}$ with our usual $\leq$ relation are such a well ordered set. 
@@ -549,6 +578,7 @@ Transfinite recursion is a method of constructing a sequence of objects - one fo
 % Is it a way to construct more than countably many objects?
 
 % https://en.wikipedia.org/wiki/Transfinite_induction#Transfinite_recursion
+% https://math.stackexchange.com/questions/1934694/transfinite-recursion
 
 % Example:
 % https://en.wikipedia.org/wiki/Beth_number
@@ -620,10 +650,13 @@ Tarski proved 1924 that in ZF, the theorem "For every infinite set $A$, there ex
 
 %---------------------------------------------------------------------------------------------------
 \subsection{The Continuum Hypothesis}
-We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists (VERIFY!). This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH. We have already introduced the notation $\aleph_0 = |\mathbb{N}|$ for the cardinality of the natural numbers. The cardinality of the real numbers, i.e. the continuum, is denoted as $\mathfrak{c} = |\mathbb{R}|$ and we also already know that $|\mathbb{R}| = 2^{\aleph_0}$. With these notations, the continuum hypothesis can be written down as: $\aleph_1 = 2^{\aleph_0}$. The generalized CH, also called Cantor's aleph hypothesis, states: $\aleph_{\alpha+1} = 2^{\aleph_{\alpha}}$ for every ordinal number $\alpha$. ....TBC...
+We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists (VERIFY!). This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH. We have already introduced the notation $\aleph_0 = |\mathbb{N}|$ for the cardinality of the natural numbers. The cardinality of the real numbers, i.e. the continuum, is denoted as $\mathfrak{c} = |\mathbb{R}|$ and we also already know that $|\mathbb{R}| = 2^{\aleph_0}$. With these notations, the continuum hypothesis can be written down as: $\aleph_1 = 2^{\aleph_0}$. The generalized CH, also called Cantor's aleph hypothesis, states: $\aleph_{\alpha+1} = 2^{\aleph_{\alpha}}$ for every ordinal number $\alpha$. ....TBC...[todo: explain how GCH means that the aleph numbers equal the beth numbers]
 
 % Q: Does the index of a cardinal number have to be an ordinal number?
 % Q: How many cardinal numbers are there? Countably many or uncountably many? Is this question related to the CH?
+% -if GCH is false, the beth numbers are sparser than the aleph numbers, i.e. there are aleph 
+%  numbers tha don't have a beth partner (Q: why couldn't it be the other way around? or even both
+%  ways?)
 
 
 %or as $\mathfrak{c} = 2^{\aleph_0}$

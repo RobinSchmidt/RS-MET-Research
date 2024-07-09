@@ -82,6 +82,9 @@ For "axiomatic" set theory, it turns out that this unrestricted comprehension pr
 \subsubsection{Russel's Paradox}
 Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \emph{proper class}? Verify!} $R$ as the set of all sets that do not contain themselves as an element. That means $R = \{x: x \notin x\}$. That means $x \in R \Leftrightarrow x \notin x$, i.e. $x$ is an element of $R$ if and only if $x$ is not an element of $x$. Here, $x$ can be \emph{any} set - so for any set $x$ whatsoever, we can ask the question whether or not it is an element of $R$. Now ask what happens when we let $x = R$, i.e. we ask whether or not $R$ is an element of $R$. From $x \in R \Leftrightarrow x \notin x$ with $x = R$, we immediately get the contradiction $R \in R \Leftrightarrow R \notin R$. That is obviously nonsensical. So what went wrong?
 
+% -compare the Russel-set to the set B that is constructed in the proof of Cantors' theorem. It's
+%  the same construction
+
 \paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
 
 % https://de.wikipedia.org/wiki/Russellsche_Antinomie
@@ -176,7 +179,9 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory#2._Axiom_of_regularity_(also_called_the_axiom_of_foundation)
 
-\paragraph{Axiom of power set}
+% -a set is called founded, if
+
+\paragraph{Axiom of Power Set}
 % https://en.wikipedia.org/wiki/Axiom_of_power_set
 
 
@@ -541,6 +546,8 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 
 \subsubsection{Cardinal Numbers}
 Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. ...TBC...
+
+% -cardinal numbers can be view as establishing an equivalence relaation on sets...just like ordinal numbers, I think.
 
 % https://en.wikipedia.org/wiki/Cardinal_number
 % https://en.wikipedia.org/wiki/Successor_cardinal

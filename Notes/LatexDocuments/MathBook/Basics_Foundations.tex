@@ -347,9 +347,25 @@ Assume we have a set $A$ and an equivalence relation $\sim$ on $A$. That is, we 
 
 %But this stuff is beyond the scope of this book. [TODO: give equations for cardinalities]
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Operations on Relations}
+Now that we know what relations are and have familiarized ourselves with the common operations that we can perform on sets, we'll now have a look at some operations that we can perform on relations. In principle, since relations are just a specific kind of set, we have all the general set theoretic operations available. Of these, typically only the union, intersection and complement\footnote{If we have relation between two sets $A,B$, the complement is taken with respect to $A \times B$. [VERIFY]} are relevant in practice. There are also a couple of specific operations that are relevant only for relations and not for general sets.
+
+\paragraph{Composition}
+...TBC...
+
+\paragraph{Converse}
+...TBC...
+
+\paragraph{Restriction}
+...TBC...
+
+
+% https://en.wikipedia.org/wiki/Relation_(mathematics)#Operations_on_relations
 
 
 
+% Maybe make that a chapter in the structural math part
 
 \subsection{Category Theory}
 Category theory is an area of math that attempts to structure and organize mathematics itself. This section here is meant to only give a very superficial birds eye overview. Category theory has been called the "mathematics of mathematics" and - less charitably - as "abstract nonsense". Its relation to set theory has been compared to that of higher level programming languages to machine code. Category theory describes a given field of mathematics in terms of a so called \emph{category}. Such a category consists of a class of \emph{objects} and relationships between those objects, called \emph{morphisms}. You can picture the objects as nodes (as in a multigraph, see [REF needed to Graph Theory section]) and the morphisms as directed edges, depicted as arrows. Morphisms are also sometimes called arrows. The category must also have a notion of composing morphisms. When there's an arrow from node $A$ to node $B$ and another arrow from node $B$ to node $C$ then this induces an arrow from node $A$ to node $C$. This sort of \emph{composition} of morphisms into other morphisms can be pictured as traversing a path in the multigraph. The composition of morphisms must be associative. As final ingredient for a category, we need for each node a special kind of morphism, called an \emph{identity}. An identity is a morphism/arrow that goes from a node $A$ to itself and is meant to convey an abstraction of the idea of an identity function - a sort of neutral element in the realm of morphisms.

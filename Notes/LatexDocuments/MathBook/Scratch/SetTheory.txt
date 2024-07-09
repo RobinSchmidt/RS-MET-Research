@@ -135,6 +135,20 @@ https://www.youtube.com/watch?v=qijXa3U4Nag
 
 
 
+Ich glaube, es ist:
+
+  |w|   = N_0 = w
+  |w+n| = N_0 = w    für natürliches n 
+
+und der Grund, warum kardinale Addition und Multiplikations wieder Ordinalzahlen produziert, sind die
+"Betragsstriche" am Schluß:
+
+  k*l = |k x l|
+
+am Ende wird alles wieder zu einer Ordinalzahl gemacht. Die Struktur der Menge k x l geht dabei 
+verloren.
+
+ 
 
 ToDo:
 

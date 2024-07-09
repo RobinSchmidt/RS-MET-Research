@@ -60,3 +60,6 @@ Unendlich plus eins - Was sind Ordinalzahlen?
 https://www.youtube.com/watch?v=UxhFy4deLQA
 21:00: Transitiv bedeutet auch dass:  z \in y \in x  ->  z \in x. d.h. die Element-Relation muss
        transitiv sein
+21:35: Eine Menge heißt Ordinalzahl, wenn sie selbst und alle ihre Elemente transitiv sind. Man kann
+       beweisen: Die Elemente von Ordinalzahlen sind selbst Ordinalzahlen. (d.h. die Transitivität
+       der Element gilt rekursiv, glaube ich)

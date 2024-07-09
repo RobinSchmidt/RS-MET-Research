@@ -318,14 +318,35 @@ In this section, we will mention a couple of other possible axioms that could be
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Definitions}
+In the following we will define a couple of important set theoretical terms that we will need later.
+
+%\paragraph{Hereditary Property}
+%A set $A$ is said to have the hereditarily the property $\varphi(A)$, if
+
+% https://en.wikipedia.org/wiki/Hereditary_property
+% https://en.wikipedia.org/wiki/Hereditary_property#In_set_theory
+% https://en.wikipedia.org/wiki/Hereditary_set
+
+% Ah - no - I misunderstood it - the concept seems to be concerned with inheriting properties in a bottom-up way when building sets using the transitive closure. I first thought that means a property that the set itself and all its elemnts have...and their elements...and so on
+
 
 \paragraph{Transitivity}
 A set $A$ is called transitive when its element relation is transitive, i.e. $b \in a \in A \Rightarrow b \in A$. This is equivalent to the requirement that each element must also occur as subset: $a \in A \Rightarrow a \subseteq A$. A set $A$ is transitive if and only if the union over all its elements gives a subset of the original set: $A \subseteq \bigcup_{a \in A} a$ or in more compact notation $A \subseteq \bigcup A$...TBC...
 
 %TODO: explain why the requirements are equivalent - they look very different
 
+% I think, this makes the element relation qualify as strict order. For those, we require transitivity, irreflexivity and asymmetry. I think, the latter two do not need to be explictly required here because the element relation satisfies these anyway according to the axioms.
+
+% I think, if a set is transitive and this also holds for all of its elements, it automatically holds for their elements too - and recursively all the way down. See the defintion of ordinal numbers. I think, it becomes a hereditary property
+
+
+
 % $a \in A \wedge b \in a \Rightarrow b \in A$. 
 %https://en.wikipedia.org/wiki/Transitive_set
+
+% https://en.wikipedia.org/wiki/Transitive_set#Transitive_closure
+% Is w the transitive closure of any finite natural number?
+% https://en.wikipedia.org/wiki/Transitive_closure
 
 %===================================================================================================
 \section{Numbers as Sets}
@@ -462,6 +483,8 @@ Ordinal numbers are, as the name suggest, used to order things, i.e. to put them
 
 % https://en.wikipedia.org/wiki/Ordinal_number
 % https://de.wikipedia.org/wiki/Ordinalzahl#Limes-_und_Nachfolgerzahlen
+
+
 
 % https://aleph1.info/?call=Puc&permalink=mengenlehre1_2_1
 % % https://aleph1.info/Resource?method=get&obj=Pdf&name=mengenlehre1.pdf

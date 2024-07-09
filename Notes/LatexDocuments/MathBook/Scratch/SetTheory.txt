@@ -97,3 +97,8 @@ https://www.youtube.com/watch?v=UxhFy4deLQA
 32:30: Rechenregeln:  (a+b)+c = a+(b+c),  0*a = 0,  (a^b)^c = a^(b*c)
        1 + w = w != w + 1  ..bei w + 1 wird ein Punkt hinter w hinzugefügt. Dieser kann nicht durch
        einen Ordnungsismorphismus in w absorbiert werden. w+1 hat ein größtes Element, w aber nicht.
+Ende:  Buchempfehlung: Everything and More von David Foster Wallace (Vorsicht: enthält Fehler)
+
+
+Was sind Kardinalzahlen? Was besagt die Kontinuumshypothese?
+https://www.youtube.com/watch?v=qijXa3U4Nag

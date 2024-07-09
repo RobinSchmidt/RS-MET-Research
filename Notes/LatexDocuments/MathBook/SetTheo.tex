@@ -475,6 +475,7 @@ We constructed the integers, rationals, etc. by extending the set of natural num
 
 
 \subsubsection{Beth Numbers}
+% Maybe move under Ordinal Numbers
 Although the beth numbers are less commonly used in set theory than the cardinals and ordinals, I'll introduce them first because they correspond best to what we might expect intuitively from differently sized infinite sets. The are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. Here, for the time being, we may think of $n$ as a natural number. It can actually also be an ordinal number though. That's why the index is usually a greek letter in textbooks. The beth numbers are formally defined via transfinite recursion as:
 \begin{equation}
 \beth_0 = \aleph_0 
@@ -496,6 +497,8 @@ but to understand this definition, we first need some more definitions an tools 
 % https://planetmath.org/bethnumbers
 
 % Maybe introduce the beth numbers after ordinals and transfinite recursion
+
+
 
 \subsubsection{Ordinal Numbers}
 Ordinal numbers are, as the name suggest, used to order things, i.e. to put them into an ascending sequence. The formal set theoretical definition of an ordinal number is simple: A set $\alpha$ is called an \emph{ordinal number} if it is transitive. Using greek letters from the beginning of the alphabet is common practice in the theory of ordinal numbers, so we will adopt that practice here, too. We first observe that our natural numbers constructed above do indeed qualify as ordinal numbers according to this definition. We conclude that natural numbers are ordinal numbers. They are the finite ordinal numbers. There are more ordinal numbers, though ...TBC...
@@ -646,6 +649,9 @@ Cardinal numbers are special ordinal numbers. That means the set of cardinal num
 % $\aleph_0 + 1 = \aleph_0$ but $\omega + 1 \neq \omega$. I think $\aleph_0$ and $\omega$ are the same thing in a similar way as the natural number 0 and the real number 0 are the same. They represent the same idea but in a different data type - and the data types respond differently to certain arithmetic operations (for example, to division)
 
 % Alep_0 is the smallest infinite size because every infinite part of it is still of the same size
+
+% https://de.wikipedia.org/wiki/Aleph-Funktion
+
 
 The cardinal numbers are a superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
 

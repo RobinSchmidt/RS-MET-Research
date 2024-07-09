@@ -114,3 +114,25 @@ https://www.youtube.com/watch?v=qijXa3U4Nag
 14:12  Es wird in der kardinalzahlentheorie auch noch gimel und Dalet gebraucht:
        https://en.wikipedia.org/wiki/Gimel_function
        https://en.wikipedia.org/wiki/Dalet#Mathematics
+14:40: Die ordnungsstruktur der Kardinalzahlen CN sieht wie die der Ordinalzahlen ON aus. Das gilt
+       auch für CN\w
+       Die Vereinigung einer beliebigen Menge von Ordinalzahlen ist das ordinale Supremum der Menge
+15:30: Aleph (ich nehme hier N - sieht ähnlich aus) ist der Ordnungsismorphismus von ON auf CN\w. 
+       D.h. N_0 (Aleph_0) korrespondiert mit der Ordinalzahl 0, N_1 mit 1, N_w mit w, N_{w+1} mit 
+       w+1 etc. Also Aleph bzw. N is eine Funktion auf ON
+
+
+
+
+ToDo:
+
+-Try applying cardinal addition to natural numbers - I can't see how this should result in another 
+ natural number. The disjoint union operation seems to produce a set with completely wrong 
+ structure. Or does it? We seem to get a set of pairs. Or does the structure of the resulting set 
+ not matter and only its cardinality matters?
+ https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_addition
+ ...I don't get it - it says "if X and Y are disjoint" - which is almost never the case with von 
+ Neumann ordinals. And why would one apply cardinal addition to sets that aren't Neumann ordinals?
+ ..Weitz says differently in his video at around 24:30
+-The same is true for cardinal multiplications. It's defined in terms of set multiplication. Ordinal
+ multiplication was defined via transfinite recursion.

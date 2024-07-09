@@ -366,26 +366,23 @@ We define addition of two natural numbers $x,y$ recursively as follows: $x + 0 =
 \paragraph{Multiplication}
 To define multiplication, we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. ...TBC...(look it up in the implementation)
 
-\paragraph{Exponentiation}
+\paragraph{Exponentiation} ...TBC...
+
+\paragraph{Maximum}
+The maximum of two so constructed natural numbers $a,b$ can easily be found by a standard set theoretic operation: just take the union of the sets that represent $a$ and $b$. So we define $\max(a,b) = a \cup b$. To see why this works, observe that thanks to our construction of the naturals, the sets that will represent greater natural numbers will contain the sets that represent smaller numbers as subsets. In the union, the set representing the smaller number will behave neutrally. For example $2 \cup 5$ means $\{0,1\} \cup \{0,1,2,3,4\}$ when written out as sets. That union just produces $\{0,1,2,3,4\}$ which represents the number $5$ which is indeed the maximum of $2$ and $5$. This works also for unions of more than two sets. So, for a finite set $A$ of natural numbers, we define their maximum as:
+\begin{equation}
+\max(A) = \bigcup_{a_i \in A} a_i
+\end{equation}
+Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!].
 
 \paragraph{Order}
-On the so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. Thus, we don't even need to define anything new - our off the shelf standard set theoretic operations equip us with two ways to model our $<$ relation on the natural numbers. ...VERIFY......TBC
-% The stric subset relation coicides with our usual less-than relation. The element relation does as well.
+On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. Thus, we don't even need to define anything new - our off the shelf standard set theoretic operations equip us with two ways to model our $<$ relation on the natural numbers. ...VERIFY......TBC
 
 % N is a monoid (a semigroup is set with associative operation and if it also has an identity element, it's calle a monoid)
 % The so constructed natural numbers satisfy the Peano axioms (VERIFY)
 
 % https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
 % https://en.wikipedia.org/wiki/Peano_axioms
-
-\paragraph{Maximum}
-Let $A$ be a finite set of natural numbers each of which is itself a set built according to the prescription above. We define the maximum of $A$ as follows:
-\begin{equation}
-\max(A) = \bigcup_{a_i \in A} a_i
-\end{equation}
-This definition coincides with our usual notion of the maximum of a finite set of natural numbers. To see this, observe that thanks to our construction of the naturals, the sets that will represent greater natural numbers will contain the sets that represent smaller numbers as subsets. In the union, the set representing the smaller number will behave neutrally. For example $2 \cup 5$ means $\{0,1\} \cup \{0,1,2,3,4\}$ when written out as sets. That union just produces $\{0,1,2,3,4\}$ which represents the number $5$ which is indeed the maximum of $2$ and $5$. This works also for unions of more than two sets. VERIFY...TBC...explain supremum
-
-%...maybe we can just drop the restriction to *finite* sets and replace the maximum with supremum when A is infinite?
 
 \subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of pairs of naturals...TBC...
 % Z is an integral domain (commutative ring with no zero divisors - maybe we need to demand a multiplicative identity? ..see chapter about rings and be consistent with it - there are different convetions for this)

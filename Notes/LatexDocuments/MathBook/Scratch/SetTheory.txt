@@ -147,6 +147,13 @@ ToDo:
  Neumann ordinals. And why would one apply cardinal addition to sets that aren't Neumann ordinals?
  ..Weitz says differently in his video at around 24:30
   ...ahh - I see - I guess, it's because after the set operation, we apply the |...| operation. But 
-  how is *that* actually defined in terms of set operations?
+  how is *that* actually defined in terms of set operations? I think, |A| does the following: 
+  -well-order A, call that A' 
+  -map A' to its corresponding ordinal a'
+  -find the smallest (wrt order < on ordinals) ordinal a that has same cardinality as a', i.e. go 
+   left from a' as long as you can find a bijection between a' and the ordinal at the current 
+   position
+  -the so found ordinal a is the desired cardinal of A
+  
 -The same is true for cardinal multiplications. It's defined in terms of set multiplication. Ordinal
  multiplication was defined via transfinite recursion.

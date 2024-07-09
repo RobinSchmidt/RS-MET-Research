@@ -351,10 +351,11 @@ Assume we have a set $A$ and an equivalence relation $\sim$ on $A$. That is, we 
 \subsubsection{Operations on Relations}
 Now that we know what relations are and have familiarized ourselves with the common operations that we can perform on sets, we'll now have a look at some operations that we can perform on relations. In principle, since relations are just a specific kind of set, we have all the general set theoretic operations available. Of these, typically only the union, intersection and complement\footnote{If we have relation between two sets $A,B$, the complement is taken with respect to $A \times B$. [VERIFY]} are relevant in practice. There are also a couple of specific operations that are relevant only for relations and not for general sets.
 
-\paragraph{Composition}
-...TBC...
+% https://en.wikipedia.org/wiki/Relation_(mathematics)#Operations_on_relations
+% https://en.wikipedia.org/wiki/Algebraic_logic#Calculus_of_relations
 
-\paragraph{Converse} The converse relation of a given relation is obtained by just swapping $x$ and $y$ in the pairs $(x,y)$ that make up the relation. For example, if $<$ is the usual less-than relation, then the converse relation would be the greater-than relation $>$. The same is true for $\leq$ and $\geq$. The relations $=$ and $\neq$ are their own converses. ...TBC...
+\paragraph{Converse} The converse relation of a given relation is obtained by just swapping $x$ and $y$ in the pairs $(x,y)$ that make up the relation. For example, if $<$ is the usual less-than relation, then the converse relation would be the greater-than relation $>$. The same is true for $\leq$ and $\geq$. The relations $=$ and $\neq$ are their own converses. 
+...TBC...give notations
 
 \paragraph{Restriction}
 Given a set $A$ and a relation $\sim$ on $A$ and a strict\footnote{Technically, $B$ doesn't need to be a \emph{strict} subset of $A$ but in the case $B=A$, the restriction does nothing.} subset $B$ of $A$, i.e. $B \subset A$, then we can form the restriction of the relation $\sim$ to $B$. To do this, we take $\sim$, which is a set of pairs from $A \times A$, and just remove from it all those pairs $(x,y)$ for which $x \notin B \vee y \notin B$, i.e. at least one of the components of the pair $(x,y)$ is not an element of $B$. By doing so, we turn $\sim$ into a relation on $B$
@@ -362,11 +363,17 @@ Given a set $A$ and a relation $\sim$ on $A$ and a strict\footnote{Technically, 
 
 % Is there somethin similar for relations between two different sets, i.e. we have a relation between A and B and have subsets C,D of A,B respectively - could we do something like a "birestriction"?
 
-% https://en.wikipedia.org/wiki/Relation_(mathematics)#Operations_on_relations
+\paragraph{Composition}
+You may be familiar with the composition of functions. From the operational point of view, such a composition would just take an input, then apply the first function to obtain an intermediate result and then apply the second function to that to obtain the final result. Functions are specific relations and the notion of composing relations is a generalization of function composition to more general relations ...TBC...
+
+% https://en.wikipedia.org/wiki/Composition_of_relations
+% https://en.wikipedia.org/wiki/Function_composition
 
 % Containment:
 % -The subset relation, when applied to relations, is called containment. A relation can be 
 %  contained in another
+
+
 
 
 % Maybe make that a chapter in the structural math part

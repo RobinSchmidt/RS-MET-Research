@@ -7,7 +7,10 @@ Set theory serves a couple of purposes in mathematics. It may serve as the found
 
 % There are more types of transfinite numbers: Beth-numbers are those that arise form repeatedly taking power sets, starting with the set of naturals. The generalized continuum hypothesis states that the beth-numbers are equal to the aleph-numbers [VERIFY!]. 
 
-% The two most important concepts/definitions in set theory are: cardinality, well ordering
+% -The two most important concepts/definitions in set theory are: cardinality, well ordering
+% -From a set-theoretical point of view, the most important number systems in math are the naturals
+%  and the reals. The smallest uncountable ordinal omega_1 is also important
+% 
 
 %===================================================================================================
 \section{Naive and Axiomatic Set Theory}
@@ -262,8 +265,19 @@ In this section, we will mention a couple of other possible axioms that could be
 
 \paragraph{Axiom of Constructibility} ...TBC...
 
+% -Is a natural axiom but didn't make it into the standard canon
+% -Says that the ordinal numbers form the core of the set theoretic universe 
+% -it makes the continuum hypothesis provable
+% -It may be written a V = L
+% -It is incompatible with axioms of large cardinals
+
+
 % https://en.wikipedia.org/wiki/Axiom_of_constructibility
 % https://en.wikipedia.org/wiki/Constructible_universe
+
+%\paragraph{Axiom of Large Cardinals} 
+% https://en.wikipedia.org/wiki/Large_cardinal
+% -accepting the large cardinals axiom does not settle the continuum hypothesis (verify!)
 
 
 %\paragraph{Axiom Schema of Adjunction}
@@ -341,31 +355,32 @@ $n=$ & $s(n-1)=$  & & & $\{ 0, 1, 2, \ldots, n-1 \} $
 \end{tabular}
 \medskip
 
+\paragraph{Addition}
 We define addition of two natural numbers $x,y$ recursively as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly.
 
-\medskip
-To define multiplication, we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. ...TBC...
+\paragraph{Multiplication}
+To define multiplication, we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. ...TBC...(look it up in the implementation)
+
+\paragraph{Exponentiation}
+
+\paragraph{Order}
 
 % N is a monoid (a semigroup is set with associative operation and if it also has an identity element, it's calle a monoid)
-% The so cosntructed natural numbers satisfy the Peano axioms (VERIFY)
+% The so constructed natural numbers satisfy the Peano axioms (VERIFY)
 
 % https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
 % https://en.wikipedia.org/wiki/Peano_axioms
 
-\subsubsection{Integer Numbers}
-...TBC...
+\subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of pairs of naturals...TBC...
 % Z is an integral domain (commutative ring with no zero divisors - maybe we need to demand a multiplicative identity? ..see chapter about rings and be consistent with it - there are different convetions for this)
 
-\subsubsection{Rational Numbers}
-...TBC...
+\subsubsection{Rational Numbers} The rationals can be constructed from the integers as equivalence classes of pairs of integers...TBC...
 % Q is a field
 
-\subsubsection{Real Numbers}
-...TBC...
+\subsubsection{Real Numbers} The reals can be be constructed from the rationals by a technique called \emph{Dedekind cuts}. That's the most complicated step in the construction of the number system...TBC...
 % in R, the order is complete  ...what does that mean? It's from the math-faq.pdf above
 
-\subsubsection{Complex Numbers}
-...TBC...
+\subsubsection{Complex Numbers} The complex numbers can be constructed from the real numbers as pairs. This time, we don't even need equivalence classes, so this step is actually the simplest...TBC...
 % C is algebraically complete
 
 
@@ -436,6 +451,8 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 % https://en.wikipedia.org/wiki/Order_type
 % https://en.wikipedia.org/wiki/Order_isomorphism
 % https://en.wikipedia.org/wiki/Partially_ordered_set
+% https://mathworld.wolfram.com/OrderType.html
+% https://math.stackexchange.com/questions/49361/order-type-and-its-reverse
 
 % -the order type of a set is the ordinal number assigned to it
 % -so, it's analogous to the cardinality
@@ -475,11 +492,20 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 
 
 % example of a nonstandard well ordering of the naturals:
-% -even numbers are always greater than odd numbers
-% -even and odd numbers are in their natural order
-% -it looks like: 1 < 3 < 5 < 7 < .....  < 0 < 2 < 4 < 6 < ...
-% -it has two elements without a direct predecessor: 1 and 0
-% -the ordinal number corresponding to that order is w + w = 2 * w
+% (1) even numbers are always greater than odd numbers
+%  -even and odd numbers are in their natural order
+%  -it looks like: 1 < 3 < 5 < 7 < .....  < 0 < 2 < 4 < 6 < ...
+%  -it has two elements without a direct predecessor: 1 and 0
+%  -the ordinal number corresponding to that order is w + w = 2 * w
+% (2) order numbers according to their greatest prime divisor and for numbers with equal greatest 
+%     prime factors, use their natural order
+%  -it looks like: 0 | 1 | 2,4,8,16,32,.. | 3,6,9,12,18,.. | 5,10,15,20,.. | 7,14,21,.. | 11,22,.. 
+%  -I think, we get an order type of w*w
+% (3) order numbers according to greatest divisor (not necessarily prime) - if they are the same,
+%     use the second greatest divisor, etc.
+%  -I think, we obtain an order type w^w?
+% -I think, we can interpret "order types" as nested orderings? we order according ot one criterium,
+%% if it's the same for two elments, ordre them according to the next criterium, etc.
 
 % I think, the rationals can be well ordered by sorting by numerator and in case of equal numerator, look at the denominator. The reals may be well ordered  by ordering them by the decimal expansions lexicographically ...i guess.
 
@@ -657,6 +683,8 @@ We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. co
 % -if GCH is false, the beth numbers are sparser than the aleph numbers, i.e. there are aleph 
 %  numbers tha don't have a beth partner (Q: why couldn't it be the other way around? or even both
 %  ways?)
+% -Historically, the undecidability of CH is the first example a mathematically relevant undecidable
+%  questions (which were known to exist previously due to Gödel's incompleteness theorems)
 
 
 %or as $\mathfrak{c} = 2^{\aleph_0}$

@@ -14,7 +14,13 @@ Ordinal Numbers:
 267: -Teilmengenrelation ist partielle Ordnung
 282: -A heißt Ordinalzahl falls Wohlordnung < auf A existiert mit:
       für alle B in A gilt: B = { C in A | C < B }
+283: -Sei a Ordinalzahl und < eine Wohlordnung auf a. Für alle Ordinalzahlen b,c in a gilt: 
+      -c < b  gdw  c \in b  gdw  c \subset b
+      -b \in a  ->  b \subseteq a
+      -b \in a  ->  b is Ordinalzahl
      -Ordinalzahlen bestehen aus Ordinalzahlen
+     -Eine Menge M heißt transitiv wenn für alle x in M gilt: x \subseteq M. Also sind alle Elemente
+      einer transitiven Menge gleichzeitig Teilmengen von ihr.
 284: -Sei A Menge. Dann: A ist Ordinalzahl gdw A ist transitiv und durch Elementrelation 
       wohlgeordnet
 285: -Sei A Ordinalzahl. Dann ist A + 1 = A \cup { A }. A heißt Nachfolgeordinalzahl falls es ein

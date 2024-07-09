@@ -61,5 +61,39 @@ https://www.youtube.com/watch?v=UxhFy4deLQA
 21:00: Transitiv bedeutet auch dass:  z \in y \in x  ->  z \in x. d.h. die Element-Relation muss
        transitiv sein
 21:35: Eine Menge heißt Ordinalzahl, wenn sie selbst und alle ihre Elemente transitiv sind. Man kann
-       beweisen: Die Elemente von Ordinalzahlen sind selbst Ordinalzahlen. (d.h. die Transitivität
-       der Element gilt rekursiv, glaube ich)
+       beweisen: 
+       -Die Elemente von Ordinalzahlen sind selbst Ordinalzahlen. (d.h. die Transitivität der 
+        Elemente gilt rekursiv, glaube ich)
+       -Jede Menge von Ordinalzahlen wird durch die Elementrelation wohlgeordnet. Man schreibt daher
+        oft < statt \in
+       -Eine Ordinalzahl ist die Menge aller Ordinalzahlen, die kleiner als sie selbst sind
+24:35: Unendlichkeitsaxiom heute: Es gibt (mindestens) eine Menge, die 0 enthält und die mit jedem 
+       Element x auch x \cup { x } enthält. [Q: ist omega eine solche Menge?]
+24:45: Ist x eine Menge von Ordinalzahlen, so ist die Veriningung über x wieder eine Ordinalzahl, 
+       nämlich das supremum von x.
+25:35: Limeszahlen: sind das supremum ihrer Elemente. Die kleinste Limeszahl ist omega - die Menge
+       der natürlichen Zahlen.
+28:24: Das Auswahlaxiom wird für die Theorie der Ordinalzahlen nicht gebraucht.
+       Transfinite Induktion/Rekursion
+29:25: Addition: 
+       a + b = a,                   wenn b = 0
+       a + (b+1) = (a+b) + 1,       wenn b+1 Nachfolger von b ist 
+       a + b = sup(a + c : c < b)   wenn b Limeszahl
+       hierbei wird a als Konstante/Parameter für eine einstellige Funktion von b interpretiert
+30:35: zum Beispiel: ist 1 + w = sup(1 + n : n < w)   wobei n eine natürliche Zahl ist
+       ...und das Supremum aller Zahlen der Form 1+n ist natürlich w. Also ist 1+w = w.
+       -die Addition von Ordinalzahlen a + b entspricht dem Hintereinaderhängen der Wohlordnungen
+31:37: Multiplikation:
+       a * 0 = 0
+       a * (b+1) = (a*b) + a
+       a*b       = sup{a * c : c < b }
+       -die Multiplikation a*b entspricht dem Stapeln von b Wohlordnungen vom Typ a
+32:15: Potenz:
+       a^0 = 0
+       a^(b+1) = a^b * a
+       a^b = sup{ a^c : c < b }
+       -entspricht dem lexikographischen Sortieren (von rechts nach links) aller Funktionen von b 
+        nach a, die fast überall 0 sind ...?
+32:30: Rechenregeln:  (a+b)+c = a+(b+c),  0*a = 0,  (a^b)^c = a^(b*c)
+       1 + w = w != w + 1  ..bei w + 1 wird ein Punkt hinter w hinzugefügt. Dieser kann nicht durch
+       einen Ordnungsismorphismus in w absorbiert werden. w+1 hat ein größtes Element, w aber nicht.

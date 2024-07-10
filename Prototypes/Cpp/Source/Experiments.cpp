@@ -9050,7 +9050,16 @@ void testGeometricAlgebraNesting()
   // ToDo:
   //
   // - Research if such a nesting of geometric algebras has already been explored. The video 
-  //   sparked the idea in my head - but maybe I'm just re-inventing the wheel yet again.
+  //   sparked the idea in my head - but maybe I'm just re-inventing the wheel yet again. 
+  //   update...yes...see below under "See also"
+  //
+  // - Implement the constructor and Cayley table generation based on a prototype object for the
+  //   template parameter T in rsMultiVector/rsGeometricAlgebra objects. Then build geometric 
+  //   algebras for rsModularInteger and make that work. Take this as a preliminary step to 
+  //   building nested geometric algebras. The modular integer class has the modulus parameter 
+  //   which newly created objects inherit from the prototype in their creation. We need to do a 
+  //   similar thing with the pointer to the algebra object in the creation of new multivectors.
+  //
   //
   // See also:
   //

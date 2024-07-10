@@ -212,7 +212,10 @@ ToDo:
  
  https://www.generacodice.com/en/articolo/427621/LaTeX%3A-remove-blank-page-after-a-%5Cpart-or-%5Cchapter-%5Bclosed%5D
  
-  --------------------------------------------------------------------------------------------------
+
+ https://www.math.uci.edu/~xiangwen/pdf/LaTeX-Math-Symbols.pdf
+
+ ---------------------------------------------------------------------------------------------------
  
  resources:
  

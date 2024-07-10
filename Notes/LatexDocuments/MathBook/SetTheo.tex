@@ -311,10 +311,13 @@ In this section, we will mention a couple of other possible axioms that could be
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Classes}
+Some collections of mathematical objects that are of interest turn out to be not constructible via the construction steps that our respective axiom system provides (typically ZFC). We want some freedom back to describe certain collections of objects. Basically, for some collections of objects, we want to allow ourselves to use the unrestricted comprehension principle from naive set theory again. To define a \emph{class} $C$, we write $C = \{x: \varphi(x)\}$ where $\varphi(x)$ is a predicate in the sense of predicate logic. Sometimes it's even just a property that we informally express in natural language [VERIFY!]. So, classes are a broader concept and allow for more liberal constructions. That means, we should be careful when defining classes in order to not run into paradoxes. All sets are classes but not all classes are sets. A class that is not a set is called a \emph{proper class}. For example, the collection of ordinal numbers is a proper class. The same is true for the collection of cardinal numbers.
+
 % Or maybe call the subsection "Other Things in Set Theory" and also lits Types, Categories, Urelements, etc
 
 % https://en.wikipedia.org/wiki/Class_(set_theory)
-
+% https://de.wikipedia.org/wiki/Klasse_(Mengenlehre)
+% https://de.wikipedia.org/wiki/Klassenlogik
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Terminology, Notation, Definitions}
@@ -601,6 +604,8 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 % https://en.wikipedia.org/wiki/Burali-Forti_paradox
 % -constructing "the set of all ordinal numbers" leads to a contradiction
 
+\paragraph{The Well Ordering Theorem} 
+Any set $A$ can be well ordered. ...TBC...
 
 \subsubsection{Transfinite Processes}
 
@@ -653,21 +658,52 @@ The leftmost definition is the base case in various notations
 
 % Maybe introduce the beth numbers after ordinals and transfinite recursion
 
-
+% https://de.wikipedia.org/wiki/Beth-Funktion
+% -It talks about beth numbers as cardinal numbers - so is cardinal number an umbrella term for
+%  the aleph and beth numbers? figure out!
 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Cardinal Numbers}
-Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. Their purpose is to quantify the size of a set - finite or infinite.
+The purpose of cardinal numbers is to quantify the size of a set - finite or infinite. It will turn out that we can use special ordinal numbers for that purpose. Not all ordinal numbers are suitable for that, but some are. That means the set of cardinal numbers is a subset of the set of ordinal numbers. 
 ...TBC...
 
 \paragraph{Size Comparisons}
-For finite sets, size comparisons area easy: We just count the number of elements which results in a natural number and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
+For finite sets, size comparisons area easy: We just count the number of elements, which results in a natural number, and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
 
 \medskip
-We do not only want to answer the question whether or not two sets are of equal size. We also want to know, which of the two sets is bigger in the case of non equal sizes. To this end, we observe that for finite sets, whenever we can find an injective but not bijective function $f$ from one set $A$ to another set $B$, then the set $A$ is smaller. Injective means that every element from $A$ is mapped to a different element in $B$. If an injective map is not bijective, i.e. it fails to be surjective, then that means that there are leftover elements in $B$ which are not reached by $f$.
+We do not only want to answer the question whether or not two sets are of equal size. We also want to know, which of the two sets is bigger in the case of non equal sizes. To this end, we observe that for finite sets, whenever we can find an injective but not bijective function $f$ from one set $A$ to another set $B$, then the set $A$ is smaller. Injective means that every element from $A$ is mapped to a different element in $B$. If an injective map is not bijective, i.e. it fails to be surjective, then that means that there are leftover elements in $B$ which are not reached by $f$. We interpret that circumstance as $B$ having a greater size than $A$ such that we cannot establish a one-to-one correspondence. 
 
-% -cardinal numbers can be view as establishing an equivalence relaation on sets...just like ordinal numbers, I think.
+\medskip
+We now formalize these ideas as follows: We want to define a new kind of "number" that measures the size of sets. We want the class\footnote{It turns out that the cardinal numbers do not fit into a set. Just like the ordinals, they form a proper class. In a sense, there are "too many" of them. } of these new numbers to be comparable in the sense of a strict total order. That means, we want establish an equivalence relation and a strict total order relation on the class of these numbers.  ...TBC...
+
+\paragraph{The Aleph Function}
+[!!!VERIFY!!! I made some stuff up according to my own interpretation]
+What we eventually want is a function into which we can plug in an arbitrary set $A$. This function should produce as output an object that is size-comparable according to a suitable order relation. We will denote this function as $|A|$ like an absolute value. To construct the function, we first apply a suitable well-ordering function $W(A)$ to it to obtain an ordinal number $\alpha = W(A)$. According to the well ordering theorem, such a function exists for any set whatsoever. To this so found ordinal $\alpha$, we now apply a function that we denote by the Hebrew letter "aleph" to compute $\aleph_{\alpha}$. That aleph function produces another ordinal number. That is: aleph is a function from the ordinals to the ordinals. It's input can be any ordinal. Its output will be specific ordinals - namely, for any ordinal $\alpha$, our $\aleph$ function will spit out the next smaller limit ordinal....TBC...and VERIFY!!!
+
+
+
+% \alpha = W(A)  where W is the function that well-orders A
+% \aleph(\alpha) = |\alpha|
+
+
+% https://de.wikipedia.org/wiki/Aleph-Funktion
+% https://www.mathreference.com/set-card,aleph.html
+% https://en.wikipedia.org/wiki/Aleph_number
+
+
+% -cardinal numbers can be view as establishing an equivalence relation on sets...just 
+%  like ordinal numbers, I think.
+% - Maybe use latex smybols \simeq, \prec, and \preceq  for the cardinality comparison relation
+%   see: https://www.math.uci.edu/~xiangwen/pdf/LaTeX-Math-Symbols.pdf
+%   down below in the ams list, there are also negated variants of them. But maybe we should use
+%%  the regular less than < for size comparison and the prec, succ stuff for ordinal comparison
+%   ...the names suggest that this is the intended use. Or maybe use the same symbol, i.e.
+%   overload it, with the convention that when both numbers are cardinals, we mean the cardinal
+%   version. Whenever one of the numbers is an ordinal, we mean the ordinal version. I mean, we
+%   also overload the +, \cdot, etc that way so it seems consistent to also overload the <,=,...
+%   
+
 % -The equivalence is given by existence of a bijection
 % -we can also define an order based on existence of injections that are not bijections
 
@@ -684,17 +720,20 @@ We do not only want to answer the question whether or not two sets are of equal 
 
 %\subsubsection{Cardinal Arithmetic}
 
+% https://de.wikipedia.org/wiki/Kardinalzahlarithmetik#Kontinuumsfunktion
+
 % $\aleph_0 + 1 = \aleph_0$ but $\omega + 1 \neq \omega$. I think $\aleph_0$ and $\omega$ are the same thing in a similar way as the natural number 0 and the real number 0 are the same. They represent the same idea but in a different data type - and the data types respond differently to certain arithmetic operations (for example, to division)
 
 % Alep_0 is the smallest infinite size because every infinite part of it is still of the same size
 
-% https://de.wikipedia.org/wiki/Aleph-Funktion
 
 
+
+
+\paragraph{Cardinal Arithmetic}
 The cardinal numbers are a superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
 
 % https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_arithmetic
-
 % https://en.wikipedia.org/wiki/Inaccessible_cardinal
 
 \paragraph{Addition} For two sets $A,B$ with cardinalities $|A|,|B|$ repectively, we define the sum $|A| + |B|$ as the cardinality of the disjoint union of $A$ and $B$: $|A| + |B| = |A \sqcup B|$. If $A$ and $B$ are both finite, the cardinal addition just becomes the normal addition of natural numbers. If at least one of the sets $A, B$ is infinite, then the cardinal sum of the two is just the maximum: $|A| + |B| = \max(|A|, |B|)$ iff $|A| \geq \aleph_0 \vee |B| \geq \aleph_0$. 

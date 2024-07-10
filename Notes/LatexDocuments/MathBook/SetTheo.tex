@@ -658,9 +658,14 @@ The leftmost definition is the base case in various notations
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Cardinal Numbers}
-Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. ...TBC...
+Cardinal numbers are special ordinal numbers. That means the set of cardinal numbers is a subset of the set of ordinal numbers. Their purpose is to quantify the size of a set - finite or infinite.
+...TBC...
 
 \paragraph{Size Comparisons}
+For finite sets, size comparisons area easy: We just count the number of elements which results in a natural number and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
+
+\medskip
+We do not only want to answer the question whether or not two sets are of equal size. We also want to know, which of the two sets is bigger in the case of non equal sizes. To this end, we observe that for finite sets, whenever we can find an injective but not bijective function $f$ from one set $A$ to another set $B$, then the set $A$ is smaller. Injective means that every element from $A$ is mapped to a different element in $B$. If an injective map is not bijective, i.e. it fails to be surjective, then that means that there are leftover elements in $B$ which are not reached by $f$.
 
 % -cardinal numbers can be view as establishing an equivalence relaation on sets...just like ordinal numbers, I think.
 % -The equivalence is given by existence of a bijection

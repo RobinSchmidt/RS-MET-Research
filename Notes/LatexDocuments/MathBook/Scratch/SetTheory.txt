@@ -99,7 +99,7 @@ https://www.youtube.com/watch?v=UxhFy4deLQA
        einen Ordnungsismorphismus in w absorbiert werden. w+1 hat ein größtes Element, w aber nicht.
 Ende:  Buchempfehlung: Everything and More von David Foster Wallace (Vorsicht: enthält Fehler)
 
-
+====================================================================================================
 Was sind Kardinalzahlen? Was besagt die Kontinuumshypothese?
 https://www.youtube.com/watch?v=qijXa3U4Nag
 
@@ -134,6 +134,38 @@ https://www.youtube.com/watch?v=qijXa3U4Nag
 15:30: Aleph (ich nehme hier N - sieht ähnlich aus) ist der Ordnungsismorphismus von ON auf CN\w. 
        D.h. N_0 (Aleph_0) korrespondiert mit der Ordinalzahl 0, N_1 mit 1, N_w mit w, N_{w+1} mit 
        w+1 etc. Also Aleph bzw. N is eine Funktion auf ON
+
+
+====================================================================================================
+
+Omega One, 7 Essence of Set Theory
+https://www.youtube.com/watch?v=A9XtjC-xfA0&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=8
+
+...
+2:05: Counatble ordinals are proper initial segments of w1
+2:30: w1 is indexed by all the countable ordinals 
+      every ordinal splits w1 into a countable initial and uncountable terminal segment
+      analogy: every finite ordinal splits w into a finite initial and countbale terminal segment
+4:30: N_1 = |w_1|
+...
+8:30: Taking a left-closed, right-open interval and concatenating it countably often, the result is 
+      still such an interval. But concatenating it w1 times we get an object of a different kind. It
+      is called the "long line". Every proper initial segment of that still looks like an interval.
+      See: https://en.wikipedia.org/wiki/Long_line_(topology)
+
+https://www.youtube.com/watch?v=hj9hPx23vz0&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=9
+
+1:40: The union of *all* ordinal numbers cannot be taken. It leads to the Cesare Burali-Forti 
+      paradox.
+3:00: The union of all sets must be the largest set possible. However - what if we would take the 
+      power set of that? We would obtain an even larger set. A contradiction! We don't even have to 
+      take the union of all sets. We could just take the power set of the set of all sets itself. 
+      Either way, we have a way to produce a larger set. The argument seems similar to the argument 
+      for why there is no largest natural number - we could always add 1 to produce an even larger 
+      number. 
+
+
+
 
 
 

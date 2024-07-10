@@ -315,6 +315,8 @@ Some collections of mathematical objects that are of interest turn out to be not
 
 % Or maybe call the subsection "Other Things in Set Theory" and also lits Types, Categories, Urelements, etc
 
+% explain Cesare Burali-Forti paradox
+
 % https://en.wikipedia.org/wiki/Class_(set_theory)
 % https://de.wikipedia.org/wiki/Klasse_(Mengenlehre)
 % https://de.wikipedia.org/wiki/Klassenlogik
@@ -503,6 +505,14 @@ Ordinal numbers are, as the name suggest, used to order things, i.e. to put them
 % -all the ordinals less than w_1 are countable
 % -the "order-type" is the index of thw w-number?
 
+% https://www.youtube.com/watch?v=As8rTENUOy0&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=6
+% -Introduces the "ordinal union" at around 5:20. I'm not sure, if that is a special sort of
+%  operation or just the regular union applied to ordinals. He talks about first algining them
+%  before taking the union...but I guess, that alignment is just necessarry for the visualization?
+%  ...ahh...ok...yes - he says: "it simply returns the bigger ordinal". In chapter 7, he also says,
+%  it's the supremum
+% -so: w1 is the ordinal union (i.e. supremum) of all the countable ordinals
+
 \paragraph{Order Theory} Order theory is the part of set theory that is concerned with \emph{order relations}. Such order relations were already briefly introduced on page \pageref{Par:Orders}. Order relations formally model situations like "this is less than that" or "this comes before that". The order relations can be classified according various properties like being partial or total, strict or non-strict, etc. and the sets on which they operate can also be classified according to the existence of lower and upper bounds, existence of least and greatest elements, etc. All of that is the business of order theory an it also provides the foundation for the definition of the ordinal numbers. The central structure in order theory is that of a \emph{partially ordered set} which is abbreviated as \emph{poset}. Formally, a poset $P = (A, \leq)$ is an ordered pair of a set $A$, called the ground set of $P$, and \emph{partial order} relation $\leq$ defined on $A$. A partial order on a set $A$ is a relation on $A$ that is reflexive, antisymmetric and transitive, see page \pageref{Tab:RelationFeatures}. Partial orders can also be total orders\footnote{This is typical math-speak where, for example, groups are special semigroups, the whole set is a special kind of subset, etc. The words "partial", "semi", "sub", etc. just take away certain stricter requirements from a thing but meeting those requirements anyway does not disqualify the thing.}. Total orders are just very special partial orders, namely those for which every pair $a,b$ of elements is comparable. In some contexts, it's more convenient to work with strict orders, denoted by $<$. On any given poset with order $\leq$, it's always possible to define a corresponding strict order $<$ via $a < b \Leftrightarrow (a \leq b) \wedge \neg (a = b)$ and we can also turn this around to get $\leq$ back via $a \leq b \Leftrightarrow (a < b) \vee (a = b)$. So, with this conversion prescription between strict and non-strict partial orders, we can equivalently define the poset as $P = (A, <)$. This is indeed more convenient for our purposes here, so we will do that. ...TBC...
 
 %https://en.wikipedia.org/wiki/Order_theory
@@ -687,59 +697,49 @@ What we eventually want is a function into which we can plug in an arbitrary set
            f: A \rightarrow \alpha
 \end{cases}
 \end{equation}
-Such a definition allows us to plug any set into the function. If we specifically plug ordinal numbers into it, we could plot it as a function mapping ordinals to ordinals. For the finite ordinals, it would be the identity function. For the infinite ordinals, it would be piecewise constant and make an upward jump at every limit ordinal that represents a higher cardinality. For $\omega, \omega+1, \omega^2, \omega^\omega, \varepsilon_0, \ldots$ its would stay constant and just output $\omega$. The first jump would be at $\omega_1$ where it also jumps up to $\omega_1$, etc. The jumps are indeed rather coarsely spaced out. Not even every limit ordinal has a jump. [VERIFY! Much of it is my personal interpretation] ...TBC...
+It's a function from the class of all sets into the class of the ordinal numbers. Such a definition allows us to plug any set into the function. If we specifically plug ordinal numbers into it, we could plot it as a function mapping ordinals to ordinals. For the finite ordinals, it would be the identity function. For the infinite ordinals, it would be piecewise constant and make an upward jump at every limit ordinal that represents a higher cardinality. For $\omega, \omega+1, \omega^2, \omega^\omega, \varepsilon_0, \ldots$ it would stay constant and just output $\omega$. The first jump would be at $\omega_1$ where it also jumps up to $\omega_1$, etc. The jumps are indeed rather coarsely spaced out. Not even every limit ordinal has a jump. [VERIFY! Much of it is my personal interpretation] ...TBC...
 
 % A good resource is this:
 %https://www.youtube.com/watch?v=qijXa3U4Nag
 % in SetTheo.txt in the scratch folder, I have taken some notes from this
 
-\paragraph{The Aleph Function} 
-The outputs of the $\card$ function are specific ordinal numbers. We are now interested in its ascending sequence of outputs for infinite sets...TBC...
-
-% Don't confuse things like $\aleph_{\omega}$ and $\card(\omega)$. They are very different: $\card(\omega) = \aleph_0$ and $\alpeh_{\omega}$ is...I don't know...unfathomably big, I guess. It's a kind of "aleph-infinity"
-
-% card is used to meausre set sizes, aleph is used to order infinities
-
-% Much the stuff below is obsolete - clean up:
-
-% I think, this is where it gets wrong!
-%To this so found ordinal $\alpha$, we now apply a function that we denote by the Hebrew letter "aleph" to compute $\aleph(\alpha)$ which we more typically denote with index notation as $\aleph_{\alpha}$ rather than function application notation with parentheses [WHY?]. That aleph function produces another ordinal number. That is: aleph is a function from the ordinals to the ordinals. Its input can be any ordinal but its output can only be specific ordinals. On infinite ordinals, it behaves qualitatively a bit like a floor function - it steps up at certain ordinals and remains constant in between those. ....TBC...and VERIFY!!!! I made some stuff up according to my own interpretation and I'm totally not sure if it is correct]
-
-%\paragraph{The Aleph Function [VERIFY!]}
-
-% I think, what we explain here is the cardinality function, also denoted as card(A). We should not confuse the card-function with the aleph-function. I think, the purpose of the aleph function is to order infinities whereas the purpose of the card function is to measure the size of the set. these are different things
-
-% Wait - no  - the function-application interpretation is also wrong aleph_0 is NOT aleph(0)
-% in fact aleph_0 is aleph(omega). So, the notation alpeh_x is not the same as aleph(x). That may also explain why x <= aleph_x is plausible as said here:
-% https://de.wikipedia.org/wiki/Aleph-Funktion
+% https://en.wikipedia.org/wiki/Cardinal_number
+% https://en.wikipedia.org/wiki/Successor_cardinal
+% https://en.wikipedia.org/wiki/Limit_cardinal
+% https://en.wikipedia.org/wiki/Regular_cardinal
+% https://en.wikipedia.org/wiki/Cofinality
+% https://en.wikipedia.org/wiki/Cardinal_assignment
 % https://en.wikipedia.org/wiki/Cardinality
-
-% Namely, for any ordinal $\alpha$, our $\aleph$ function will spit out the next smaller limit ordinal ...Nope! w*w is a limit ordinal as well but for w*w, we still get alpeh_0. The steps are even corser than that. Aleph steps up from aleph_0 to aleph_1 at w_1 which is faaar above w*w, w^w, .. . epsilon_0, ...
-
-% Aleph is not surjective: many ordinals are not reached by it
-% Aleph is not injective:  many ordinals are mapped to the same ordinal
-% It behaves a bit like a floor function on the infinite ordinals, I think. On the finite ordinals,
-% it's the identity on the finite numbers
-
-% I think, that interpretation is wrong. The aleph function does not seem to take a set as input but an ordinal number....or well...that actually fits to the interpretation
-
 % https://en.wikipedia.org/wiki/Cardinality#Cardinal_numbers
 % "for each ordinal a, aleph_{a+1} is the least cardinal number greater than aleph_a"
 
-% Cantor's Theorem, the Aleph Function, and Beth Numbers
-% https://www.youtube.com/watch?v=ejcoVuPXihk
+\paragraph{The Aleph Function} 
+The outputs of the $\card$ function are specific ordinal numbers. We are now interested in its ascending sequence of outputs for infinite sets...TBC...is $aleph_{\alpha} = |\omega_{\alpha}|$? yeah - I think so.
 
-% \alpha = W(A)  where W is the function that well-orders A
-% \aleph(\alpha) = |\alpha|
+% see:
+% https://www.youtube.com/watch?v=hj9hPx23vz0&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=9
 
 
 % https://de.wikipedia.org/wiki/Aleph-Funktion
 % https://www.mathreference.com/set-card,aleph.html
 % https://en.wikipedia.org/wiki/Aleph_number
+% https://en.wikipedia.org/wiki/Aleph_number
+% https://en.wikipedia.org/wiki/Beth_number
+% Limeskardinalzahl?
 
+% Don't confuse things like $\aleph_{\omega}$ and $\card(\omega)$. They are very different: $\card(\omega) = \aleph_0$ and $\alpeh_{\omega}$ is...I don't know...unfathomably big, I guess. It's a kind of "aleph-infinity"
 
-% -cardinal numbers can be view as establishing an equivalence relation on sets...just 
-%  like ordinal numbers, I think.
+% aleph is a function from the ordinals to the ordinals
+% card is used to measure set sizes, aleph is used to order infinities
+% Aleph is not surjective: many ordinals are not reached by it
+% Aleph is not injective:  many ordinals are mapped to the same ordinal
+% It behaves a bit like a floor function on the infinite ordinals, I think. On the finite ordinals,
+% it's the identity on the finite numbers
+% Aleph_0 is the smallest infinite size because every infinite part of it is still of the same size
+
+% Cantor's Theorem, the Aleph Function, and Beth Numbers
+% https://www.youtube.com/watch?v=ejcoVuPXihk
+
 % - Maybe use latex smybols \simeq, \prec, and \preceq  for the cardinality comparison relation
 %   see: https://www.math.uci.edu/~xiangwen/pdf/LaTeX-Math-Symbols.pdf
 %   down below in the ams list, there are also negated variants of them. But maybe we should use
@@ -750,29 +750,18 @@ The outputs of the $\card$ function are specific ordinal numbers. We are now int
 %   also overload the +, \cdot, etc that way so it seems consistent to also overload the <,=,...
 %   
 
-% -The equivalence is given by existence of a bijection
-% -we can also define an order based on existence of injections that are not bijections
 
-% https://en.wikipedia.org/wiki/Cardinal_number
-% https://en.wikipedia.org/wiki/Successor_cardinal
-% https://en.wikipedia.org/wiki/Limit_cardinal
-% https://en.wikipedia.org/wiki/Regular_cardinal
-% https://en.wikipedia.org/wiki/Cofinality
-% https://en.wikipedia.org/wiki/Cardinal_assignment
-
-% https://en.wikipedia.org/wiki/Aleph_number
-% https://en.wikipedia.org/wiki/Beth_number
-% Limeskardinalzahl?
 
 %\subsubsection{Cardinal Arithmetic}
 
 % https://de.wikipedia.org/wiki/Kardinalzahlarithmetik#Kontinuumsfunktion
+% -> this page is the target of the Gimel-Funktion link here:
+% https://de.wikipedia.org/wiki/Aleph-Funktion
+% ...so Gimel-Funktion is a synonym for Kontinuumsfunktion?
+% ..its just the function k -> 2^k. I guess the name can be explained by observing that it gives
+% the size of the continuum when we plug in the first infinite cardinal
 
 % $\aleph_0 + 1 = \aleph_0$ but $\omega + 1 \neq \omega$. I think $\aleph_0$ and $\omega$ are the same thing in a similar way as the natural number 0 and the real number 0 are the same. They represent the same idea but in a different data type - and the data types respond differently to certain arithmetic operations (for example, to division)
-
-% Alep_0 is the smallest infinite size because every infinite part of it is still of the same size
-
-
 
 
 
@@ -1066,7 +1055,7 @@ https://en.wikipedia.org/wiki/Supertransitive_class
 https://en.wikipedia.org/wiki/Von_Neumann_universe
 
 https://en.wikipedia.org/wiki/Derived_set_(mathematics)
--Deiser's book says, we obtain the derivative (on R) by first adding the boundary to the set and then
- removing all isolated points - not sure, if that's the same notion.
+-Deiser's book says, we obtain the derivative (on R) by first adding the boundary to the set and
+ then removing all isolated points - not sure, if that's the same notion, though.
 
 \end{comment}

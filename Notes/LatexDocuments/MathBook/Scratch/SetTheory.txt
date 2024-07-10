@@ -107,12 +107,14 @@ https://www.youtube.com/watch?v=qijXa3U4Nag
        keine Bijektion ist. Diese <~ Relation ist eine Halbordnung (Satz von Cantor-Bernstein). Die 
        Annahme < wäre total/linear ist äquivalent zum Auswahlaxiom. Wir nehmen hier <~, da < schon 
        vergeben ist für die Ordnungsrelation.
+8:52:  Die kleinste Ordinalzahl, die die gleiche Mächtigkeit wie A hat ist die gesuchte Kardinalzahl
+       für A.
 9:01:  Eine Ordinalzahl a heißt Kardinalzahl, wenn jede Ordinalzahl b < a eine kleinere Mächtigkeit 
        als a hat. Es gibt z.b. eine unendliche Anzahl von Ordinalzahlen, die dieselbe Mächtigkeit 
        wie w haben (d.h. bijektiv auf w abbildbar sind). Von denen sucht man sich die kleinste (am
        weitesten links liegende) raus. Das ist w. Daher ist w eine Kardinalzahl.
 10:00: Aus a <= b folgt a <~= b. Wenn a weiter links liegt als b, hat es eine kleinere oder gleiche 
-       Mächtigkeit als b.
+       Mächtigkeit als b. Zu jeder Ordinalzahl gibt es eine gleichmächtige Kardinalzahl
 10:50: w ist die kleinste unendliche Kardinalzahl
        Zu jeder Ordinalzahl a gibt es eine gleichmächtige Kardinalzahl - es ist einfach die die 
        nächste Kardinalzahl links von a in der Anordnung der Ordinalzahlen...glaube ich

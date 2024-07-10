@@ -311,7 +311,7 @@ In this section, we will mention a couple of other possible axioms that could be
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Classes}
-Some collections of mathematical objects that are of interest turn out to be not constructible via the construction steps that our respective axiom system provides (typically ZFC). We want some freedom back to describe certain collections of objects. Basically, for some collections of objects, we want to allow ourselves to use the unrestricted comprehension principle from naive set theory again. To define a \emph{class} $C$, we write $C = \{x: \varphi(x)\}$ where $\varphi(x)$ is a predicate in the sense of predicate logic. Sometimes it's even just a property that we informally express in natural language [VERIFY!]. So, classes are a broader concept and allow for more liberal constructions. That means, we should be careful when defining classes in order to not run into paradoxes. All sets are classes but not all classes are sets. A class that is not a set is called a \emph{proper class}. For example, the collection of ordinal numbers is a proper class. The same is true for the collection of cardinal numbers.
+Some collections of mathematical objects that are of interest turn out to be not constructible via the construction steps that our respective axiom system provides (typically ZFC). We want some freedom back to describe certain collections of objects. Basically, for some collections of objects, we want to allow ourselves to use the unrestricted comprehension principle from naive set theory again. To define a \emph{class} $C$, we write $C = \{x: \varphi(x)\}$ where $\varphi(x)$ is a predicate in the sense of predicate logic. Sometimes it's even just a property that we informally express in natural language [VERIFY!]. So, classes are a broader concept and allow for more liberal constructions. That means, we should be careful when defining classes in order to not run into paradoxes. All sets are classes but not all classes are sets. A class that is not a set is called a \emph{proper class}. For example, the collection of ordinal numbers is a proper class. The same is true for the collection of cardinal numbers. We will denote these two classes by $\mathsf{ON}$ and $\mathsf{CN}$ respectively. The class of all sets is denoted by $\mathsf{SET}$.
 
 % Or maybe call the subsection "Other Things in Set Theory" and also lits Types, Categories, Urelements, etc
 
@@ -675,13 +675,48 @@ For finite sets, size comparisons area easy: We just count the number of element
 We do not only want to answer the question whether or not two sets are of equal size. We also want to know, which of the two sets is bigger in the case of non equal sizes. To this end, we observe that for finite sets, whenever we can find an injective but not bijective function $f$ from one set $A$ to another set $B$, then the set $A$ is smaller. Injective means that every element from $A$ is mapped to a different element in $B$. If an injective map is not bijective, i.e. it fails to be surjective, then that means that there are leftover elements in $B$ which are not reached by $f$. We interpret that circumstance as $B$ having a greater size than $A$ such that we cannot establish a one-to-one correspondence. 
 
 \medskip
-We now formalize these ideas as follows: We want to define a new kind of "number" that measures the size of sets. We want the class\footnote{It turns out that the cardinal numbers do not fit into a set. Just like the ordinals, they form a proper class. In a sense, there are "too many" of them. } of these new numbers to be comparable in the sense of a strict total order. That means, we want establish an equivalence relation and a strict total order relation on the class of these numbers.  ...TBC...
+We now formalize these ideas as follows: We want to define a new kind of "number" that measures the size of sets. We want the class\footnote{It turns out that the cardinal numbers do not fit into a set. Just like the ordinals, they form a proper class. In a sense, there are "too many" of them. } of these new numbers to be comparable in the sense of a greater or smaller "size". So, the task is now to define a new class of numbers and an equivalence relation and a strict total order relation on the class of these numbers. These relations should capture sizes of sets in terms of existence or non-existence of bijections and injections between the sets.
 
-\paragraph{The Aleph Function}
-[!!!VERIFY!!! I made some stuff up according to my own interpretation]
-What we eventually want is a function into which we can plug in an arbitrary set $A$. This function should produce as output an object that is size-comparable according to a suitable order relation. We will denote this function as $|A|$ like an absolute value. To construct the function, we first apply a suitable well-ordering function $W(A)$ to it to obtain an ordinal number $\alpha = W(A)$. According to the well ordering theorem, such a function exists for any set whatsoever. To this so found ordinal $\alpha$, we now apply a function that we denote by the Hebrew letter "aleph" to compute $\aleph_{\alpha}$. That aleph function produces another ordinal number. That is: aleph is a function from the ordinals to the ordinals. It's input can be any ordinal. Its output will be specific ordinals - namely, for any ordinal $\alpha$, our $\aleph$ function will spit out the next smaller limit ordinal....TBC...and VERIFY!!!
+\paragraph{The Cardinality Function [VERIFY!]}
+What we eventually want is a function into which we can plug in an arbitrary set $A$. This function should produce as output an object that is comparable according to a suitable order relation which should capture the "size" of the set. We will denote this function as $|A|$ like an absolute value. You will sometimes also find the notation $\card(A)$. Because we are are concerned with ordering the sets according to their sizes, it makes sense to investigate the ordinal numbers because ordering things is their job. To compute the output of the function for a given set $A$, we may first apply a suitable well-ordering function $w(A)$ to it to obtain an ordinal number $\gamma = w(A)$. According to the well ordering theorem, such a function $w$ exists for any set whatsoever. It's an order isomorphism and therefore in particular a bijection, so it doesn't change the property that we want to interpret as size. Starting from this so found ordinal $\gamma$, we now scan the ordinals leftward to find the leftmost\footnote{This leftward scanning process is guaranteed to terminate because the ordinals are well ordered [VERIFY]} ordinal $\alpha$ that allows a bijective map between $\gamma$ and $\alpha$. This ordinal number is the cardinal number that measures the size of $A$. With this definition, cardinal numbers are specific ordinal numbers. They are those ordinal numbers $\alpha$ that have the property that any ordinal number $\beta$ to their left, i.e. any ordinal $\beta < \alpha$ according to the order relation $<$ on the ordinals, allows an injective but not bijective map from $\beta$ to $\alpha$. We can actually also formulate the action of the $\card$ function without the intermediate step of applying the well-ordering function $w$ to $A$ first. In a semi-formal language, we could define the desired function as:
+\begin{equation}
+\card = 
+\begin{cases}
+\mathsf{SET} \rightarrow \mathsf{ON} \\
+\card(A) = \text{leftmost } \alpha \in \mathsf{ON} \text{ that allows bijection } 
+           f: A \rightarrow \alpha
+\end{cases}
+\end{equation}
+Such a definition allows us to plug any set into the function. If we specifically plug ordinal numbers into it, we could plot it as a function mapping ordinals to ordinals. For the finite ordinals, it would be the identity function. For the infinite ordinals, it would be piecewise constant and make an upward jump at every limit ordinal that represents a higher cardinality. For $\omega, \omega+1, \omega^2, \omega^\omega, \varepsilon_0, \ldots$ its would stay constant and just output $\omega$. The first jump would be at $\omega_1$ where it also jumps up to $\omega_1$, etc. The jumps are indeed rather coarsely spaced out. Not even every limit ordinal has a jump. [VERIFY! I made this up] ...TBC...
 
+% 
 
+% I think, this is where it gets wrong!
+%To this so found ordinal $\alpha$, we now apply a function that we denote by the Hebrew letter "aleph" to compute $\aleph(\alpha)$ which we more typically denote with index notation as $\aleph_{\alpha}$ rather than function application notation with parentheses [WHY?]. That aleph function produces another ordinal number. That is: aleph is a function from the ordinals to the ordinals. Its input can be any ordinal but its output can only be specific ordinals. On infinite ordinals, it behaves qualitatively a bit like a floor function - it steps up at certain ordinals and remains constant in between those. ....TBC...and VERIFY!!!! I made some stuff up according to my own interpretation and I'm totally not sure if it is correct]
+
+%\paragraph{The Aleph Function [VERIFY!]}
+
+% I think, what we explain here is the cardinality function, also denoted as card(A). We should not confuse the card-function with the aleph-function. I think, the purpose of the aleph function is to order infinities whereas the purpose of the card function is to measure the size of the set. these are different things
+
+% Wait - no  - the function-application interpretation is also wrong aleph_0 is NOT aleph(0)
+% in fact aleph_0 is aleph(omega). So, the notation alpeh_x is not the same as aleph(x). That may also explain why x <= aleph_x is plausible as said here:
+% https://de.wikipedia.org/wiki/Aleph-Funktion
+% https://en.wikipedia.org/wiki/Cardinality
+
+% Namely, for any ordinal $\alpha$, our $\aleph$ function will spit out the next smaller limit ordinal ...Nope! w*w is a limit ordinal as well but for w*w, we still get alpeh_0. The steps are even corser than that. Aleph steps up from aleph_0 to aleph_1 at w_1 which is faaar above w*w, w^w, .. . epsilon_0, ...
+
+% Aleph is not surjective: many ordinals are not reached by it
+% Aleph is not injective:  many ordinals are mapped to the same ordinal
+% It behaves a bit like a floor function on the infinite ordinals, I think. On the finite ordinals,
+% it's the identity on the finite numbers
+
+% I think, that interpretation is wrong. The aleph function does not seem to take a set as input but an ordinal number....or well...that actually fits to the interpretation
+
+% https://en.wikipedia.org/wiki/Cardinality#Cardinal_numbers
+% "for each ordinal a, aleph_{a+1} is the least cardinal number greater than aleph_a"
+
+% Cantor's Theorem, the Aleph Function, and Beth Numbers
+% https://www.youtube.com/watch?v=ejcoVuPXihk
 
 % \alpha = W(A)  where W is the function that well-orders A
 % \aleph(\alpha) = |\alpha|

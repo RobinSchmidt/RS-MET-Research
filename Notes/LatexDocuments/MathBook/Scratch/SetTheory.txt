@@ -171,13 +171,4 @@ ToDo:
   
 -The same is true for cardinal multiplications. It's defined in terms of set multiplication. Ordinal
  multiplication was defined via transfinite recursion.
-
--Maybe try to implement ordinals. Maybe we need an array of coeffs a0,a1,a2,a3,...,aN for 
- conceptually building the ordinal as:
-
-   a0 + a1*w + w^a2 + tetration(w, a3) + pentation(w, a4) + ... + hyperoperationN(w, aN)
-
- oh - but the coeffs themselves may have to be ordinals as well? ...not sure... and we may not need
- to actually *implement* all these hyperoperations - they just give the idea of what is supposed to 
- be going on.
   

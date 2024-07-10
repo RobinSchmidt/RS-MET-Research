@@ -322,7 +322,7 @@ bool rsNeumannNumber::isWellFormed(const rsSetNaive& A)
 size_t rsNeumannNumber::value(const rsSetNaive& A) 
 { 
   rsAssert(isWellFormed(A));
-  return A.getCardinality(); 
+  return A.getCardinality();
 }
 
 bool rsNeumannNumber::less(const rsSetNaive& x, const rsSetNaive& y)
@@ -616,16 +616,22 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
+//=================================================================================================
+/*
+
+Ideas:
+
+
+- Maybe try to implement Neumann ordinals. Maybe we need an array of coeffs a0,a1,a2,a3,...,aN for 
+  conceptually building the ordinal as:
+
+    a0 + a1*w + w^a2 + tetration(w, a3) + pentation(w, a4) + ... + hyperoperationN(w, aN)
+
+  oh - but the coeffs themselves may have to be ordinals as well? ...not sure... and we may not 
+  need to actually *implement* all these hyperoperations - they just give the idea of what is 
+  supposed to be going on.
+
+
+*/

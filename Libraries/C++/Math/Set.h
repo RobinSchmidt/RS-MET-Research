@@ -13,12 +13,15 @@ namespace rema  // Rob's educational math algorithms
 
 //=================================================================================================
 
-/** Implements a set in the set-theoretic sense. Its elements can only be other sets. It's not a 
-set of objects of some data type like you would expect from std::set. Instead, it's a recursive 
-data structure with sets all the way down. For technical reasons, the elements must be held as 
-pointers-to-elements which complicates the internal implementation but client code does not really 
-need to think about this. The implementation is similar to how would one implement a tree in C++ 
-with nodes where each node has an array of pointers to child nodes. 
+/** Implements a set in the modern set-theoretic sense. Its elements can only be other sets. It's 
+not a set of objects of some data type like you would expect from std::set, for example. I think, 
+in the terminology of set theory, std::set would be considered to be a set with "urelements" or 
+"atoms". But in modern set theory, there are no urelements. Instead, it's a recursive data 
+structure with sets all the way down. For technical reasons, the elements must be held as pointers
+to elements which complicates the internal implementation but client code does not really need to 
+think about this. The implementation is similar to how would one implement a tree in C++ with nodes 
+where each node has an array of pointers to child nodes. Here, each set A holds an array of pointers 
+to sets. These pointees a0,a1,a2,... are the elements of the set A = {a0,a1,a3,...}.
 
 One may think about using std::set but what should the template parameter be? If you try to use 
 std::set<std::set>, it doesn't compile because now the inner set also needs a template parameter.
@@ -109,15 +112,16 @@ public:
   /** Returns true iff this set is equal to the given set A. */
   bool equals(const rsSetNaive& A) const;
 
-
-  /** Returns true, iff this set is an ordered pair. This can be inferred from the structure of 
-  the set. */
+  /** Returns true, iff this set is an ordered pair as created by the orderedPair() function. This 
+  can be inferred from the structure of the set. */
   bool isOrderedPair() const;
 
   /** Returns a string that represents this set. This is useful for debugging. */
   static std::string setToString(const rsSetNaive& A);
 
-  /** Assumes that the set A represents an ordered pair and turns it into a string. */
+  /** Assumes that the set A represents an ordered pair and turns it into a string. Of course, you 
+  can also apply the general setToString function to ordered pairs - but them you will get a 
+  different formatting. */
   static std::string orderedPairToString(const rsSetNaive& A);
 
 
@@ -159,11 +163,11 @@ public:
   static rsSetNaive pair(const rsSetNaive& A, const rsSetNaive& B);
 
   /** Given two sets A,B, this function creates a set that may be used to represent the ordered 
-  pair (A, B). The normal pair() function could distinguish between { A, B } and { B, A } and a 
-  pair of equal values like { A, A } could not even be formed because it would just collapse to 
-  { A }. To model ordered pairs uisng only sets, we use Kuratowski's definition of ordered pairs
-  as (A, B) = { { A }, { A, B } }. With this definition (A, B) is distinguishable from (B, A).
-  We have
+  pair (A, B). The normal pair() function could not distinguish between { A, B } and { B, A } and a 
+  pair of equal values like { A, A } could not even be formed because it would just collapse into 
+  the singleton { A }. To model ordered pairs uisng only sets, we use Kuratowski's definition of 
+  ordered pairs as (A, B) = { { A }, { A, B } }. With this definition (A, B) is distinguishable 
+  from (B, A). We have:
 
     (A, B) = { { A }, { A, B } }
     (B, A) = { { B }, { A, B } }
@@ -176,7 +180,7 @@ public:
   Other definitions of ordered pairs are also possible but Kuratowski's seems to be the accepted 
   standard. ...TBC... */
   static rsSetNaive orderedPair(const rsSetNaive& A, const rsSetNaive& B);
-  // Maybe rename to kuratowskiPair
+  // Maybe rename to kuratowskiPair and maybe implement other ways of pair creation, too.
 
   /** Given two sets A and B, this function produces the union of the two. Being able to create 
   such a union set is one of the Zermelo-Fraenkel axioms. */
@@ -208,13 +212,14 @@ public:
   a_i elements according to the given less-than relation. */
   static rsSetNaive min(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
+  // Maybe use std::function for the less-relation
 
   /** Given a nonempty set A = { a_1, a_2, a_3, ... }, this function returns the maximum of the 
   a_i elements according to the given less-than relation. */
   static rsSetNaive max(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
 
-  // Note: I wantoed to call these functions min/max but some silly Microsoft header #defines
+  // Note: I wanted to call these functions min/max but some silly Microsoft header #defines
   // min/max as macros which messes up the compilation. Maybe we should #undef them?
 
   // ToDo: Maybe implement functions for min and max that take 2 sets arguments and return the 
@@ -281,6 +286,10 @@ exponentially. We can really only use it for numbers up to 10 or so, before it g
 handle with reasonable resources. The class is completely useless for practical purposes. I just
 implemented this for demostration purposes as a math excercise and to clarify the concepts.
 
+The class has no mmembers. It's just a collection of functions that operate on raw sets. You need
+to ensure yourself to feed in the right kinds of sets. You can use the isWellFormed() function to
+verify, if a given set is actually of the right structure to represent a Neumann number.
+
 References:
 
   (1) https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers  
@@ -306,14 +315,22 @@ public:
   static bool isZero(const rsSetNaive& x) { return x.isEmpty(); }
 
   /** Returns the value of a given von Neumann number represented by the set x. It is equal to the 
-  cardinality of the set that represents it. */
+  cardinality of the set that represents it. That's one of the conveniences of the von Neumann 
+  construction. */
   static size_t value(const rsSetNaive& x);
 
-  /** Implements the less-than relation on Nuemann numbers. */
+  /** Implements the less-than relation on Neumann numbers. */
   static bool less(const rsSetNaive& x, const rsSetNaive& y);
 
   // An equality comparison function is not needed because we can use the set-equality comparison 
-  // for that
+  // for that because Neumann numbers are unique representations of a given natural number. This
+  // is not true for integers and rationals anymore that are built from Neumann numbers. They are
+  // not unique because they are defined as equivalence classes. That's why there, we have specific
+  // implementations of the "equals" function.
+  //
+  // Verify! Maybe for consistency, implement an equals function anyway and let it just delegate 
+  // the call to Set::equals().
+
 
 
   //-----------------------------------------------------------------------------------------------
@@ -402,7 +419,7 @@ pair (x, y) represents the number x - y. The Neumann naturals are embedded by le
 is similar to how rational numbers are defined as equivalence classes - there, a pair (x, y) would
 represent x/y where x,y are integers and the integers themselves are embedded by letting y = 1. 
 Inverse elements are represented by swapping the order of the components of the pair, i.e. the 
-inverse of (x, y) is (y, x). That works the samein both cases. ...TBC... */
+inverse of (x, y) is (y, x). That works the same in both cases. ...TBC... */
 
 class rsNeumannInteger
 {

@@ -11176,8 +11176,6 @@ void testNeumannIntegers()
   str = Set::setToString(x);
   ok &= str == "{{O}}";              // 0 = (0, 0) = { {0}, {0, 0} } = { {0}, {0} } = { {0} }
 
- 
-
   // Create numbers -6,..,+6. We use m5 for "minus five" and p2 for "plus two", etc.:
   Set m6 = NI::create(-6);
   Set m5 = NI::create(-5);
@@ -11318,19 +11316,19 @@ void testNeumannRationals()
   Set m_2_3 = NR::create(-2, 3);  // -2/3
   Set p_3_4 = NR::create(+3, 4);  // +3/4
 
-  str = Set::setToString(p_0_1);
-  str = Set::setToString(p_1_1);
-  str = Set::setToString(p_2_3);
-  str = Set::setToString(p_3_4);
+  str = Set::setToString(p_0_1);  //  0
+  str = Set::setToString(p_1_1);  //  1
+  str = Set::setToString(p_2_3);  //  2/3
+  str = Set::setToString(m_2_3);  // -2/3
+  str = Set::setToString(p_3_4);  //  3/4
+  // WHAT? 0 looks more complex than 1. That doesn't seem right. Verify! Or maybe it is actually 
+  // right and is because of the Kuratowski pair building process that tends to simplify pairs 
+  // (turns them into singletons) when 1st and 2nd component are the same? Figure out and document!
 
-
-
-
-
-  // Maybe make a function nestedOrderedPairToSting
-
-
-
+  str = Set::orderedPairToString(p_0_1);
+  str = Set::orderedPairToString(p_1_1);
+  // Maybe make a function nestedOrderedPairToSting because this function here only resolves the
+  // outer pairing for the rational and not the inner pairing for the integer.
 
 
   rsAssert(ok);

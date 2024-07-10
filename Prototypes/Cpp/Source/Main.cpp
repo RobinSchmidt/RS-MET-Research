@@ -61,7 +61,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // Geometric algebra:
   //testExteriorAlgebra3D();
   //testGeometricAlgebra();
-  testGeometricAlgebraNesting();
+  //testGeometricAlgebraNesting();
 
   // Math:
   //testEulerTransformation();
@@ -79,7 +79,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSet();
   //testNeumannNumbers();
   //testNeumannIntegers();
-  //testNeumannRationals();
+  testNeumannRationals();
   //testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();

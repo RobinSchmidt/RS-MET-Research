@@ -624,14 +624,25 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
 Ideas:
 
 
-- Maybe try to implement Neumann ordinals. Maybe we need an array of coeffs a0,a1,a2,a3,...,aN for 
-  conceptually building the ordinal as:
+- Maybe try to implement von Neumann ordinals. Maybe we need an array of coeffs a0,a1,a2,a3,...,aN 
+  for conceptually building the ordinal as:
 
-    a0 + a1*w + w^a2 + tetration(w, a3) + pentation(w, a4) + ... + hyperoperationN(w, aN)
+    a0 + w*a1 + w^a2 + tetration(w, a3) + pentation(w, a4) + ... + hyperoperationN(w, aN)
 
-  oh - but the coeffs themselves may have to be ordinals as well? ...not sure... and we may not 
-  need to actually *implement* all these hyperoperations - they just give the idea of what is 
-  supposed to be going on.
+  Here, w is omega - the first infinite ordinal - aka aleph null aka cardinality of the naturals.
+  Oh - but the coeffs themselves may have to be ordinals as well? Not sure - maybe not. And we may
+  not need to actually *implement* all these hyperoperations - they just give the idea of what is 
+  supposed to be going on. Eventually, ordinals are supposed to order things, so the main operation
+  that we need to able to perform is a less-than comparison. And that comparison could, in this
+  representation, be just based on lexicographically comparing the coeffs from right to left. The 
+  bigger ordinal is the one that has a bigger coeff in a further right position. But I guess, that
+  representation may give us only the countable ordinals? What about w1,w2,...? Maybe we need
+  a 2D array of coeffs? Oh, and by the way, if the coeffs themselves are natural numbers, we 
+  shouldn't really use our Neumann naturals for this, although that would be conceptually purer.
+  But for practical reasons, we should probably just use int or uint or something and if they 
+  overflow, we just treat it as error. But in that representation, how would we perform arithmetic 
+  on such ordinals? Would it be similar to arithmetic on polynomial coeff arrays? I guess not.
+  ...figure out!
 
 
 */

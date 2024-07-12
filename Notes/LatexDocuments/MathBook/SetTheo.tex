@@ -348,6 +348,9 @@ In the following we will define a couple of important set theoretical terms that
 \paragraph{Chains of Inclusions}
 To convey the fact that a set $A$ is a subset of another set $B$ which is, in turn, a subset of a third set $C$, we could write $A \subseteq B \wedge B \subseteq C$. But that is tedious, so we will instead write this as $A \subseteq B \subseteq C$. We call such a statement a chain of subset inclusions\footnote{I don't know, if that's an official term, though.}. Likewise, for $A \in B \wedge B \in C$ we may write $A \in B \in C$ and call that a chain of element inclusions.
 
+% https://www.youtube.com/watch?v=szfsGJ_PGQ0
+% talks about chains at around 18:40
+
 \paragraph{Big Unions}
 The union of two sets $A,B$ is written as $A \cup B$. If $A$ is a set of sets\footnote{Which it always is because modern set theory, all sets are sets of sets. I just wanted to emphasize it again.} such that $A = \{a_1, a_2, a_2, \ldots \}$, then we write the union $U = a_1 \cup a_2 \cup a_3 \cup \ldots$ over all the elements of A as $U = \bigcup_{a_i \in A} a_i$ or shorter $U = \bigcup_{a \in A} a$ or even shorter as $U = \bigcup A$. Analog definitions exist for other associative binary set operations such as the intersection $I = \bigcap A$ or the disjoint union $D = \bigsqcup A$ or even the product $P = \bigtimes A$. However, it's the union that turns out to be important. 
 
@@ -400,6 +403,9 @@ The transitive closure of a set $A$, denoted as $\tc(A)$ is given by:
 % https://en.wikipedia.org/wiki/Transitive_set#Transitive_closure
 % Is w the transitive closure of any finite natural number?
 % https://en.wikipedia.org/wiki/Transitive_closure
+
+
+\paragraph{Upper Bound}
 
 %===================================================================================================
 \section{Numbers as Sets}
@@ -899,6 +905,19 @@ Tarski proved 1924 that in ZF, the theorem "For every infinite set $A$, there ex
 % ..it seems rather that the axiom of choice and the existence of the bijections are equivalent?
 
 % https://en.wikipedia.org/wiki/Tarski%27s_theorem_about_choice
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Well Ordering Theorem}
+
+% The Axiom of Choice
+% https://www.youtube.com/watch?v=szfsGJ_PGQ0
+% -has more equivalent statements around 28
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Zorn's Lemma}
+
 
 %---------------------------------------------------------------------------------------------------
 \subsection{The Continuum Hypothesis}

@@ -274,9 +274,40 @@ rsSetNaive rsSetNaive::pow(const rsSetNaive& A, const rsSetNaive& B)
 {
   rsSetNaive P;
 
+  rsError("This function is still wrong");
+
+
   int M = A.getCardinality();
   int N = B.getCardinality();
-  //int L = pow(M, N);
+  int L = std::pow(M, N);
+
+  for(int i = 0; i < L; i++)
+  {
+    rsSetNaive p;
+    for(int n = 0; n < N; n++)
+    {
+
+      //int m = (i+n) % M; 
+      //int m = (i*n+n) % M; 
+
+      int k = rsPow(M, n);
+
+      //int m = (i + n / k) % M;
+
+      int m = (n + i / k) % M;
+
+      //int m = (i*n) % M;  // This is WRONG!
+      // The index of the mapped index m must be some function of i and n. But what function is it?
+
+
+
+      rsSetNaive pnm = orderedPair(B[n], A[m]); // (B[n],A[m])
+      p.addElement(pnm);
+    }
+
+
+    P.addElement(p);
+  }
 
   return P;
 }

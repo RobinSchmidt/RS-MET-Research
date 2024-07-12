@@ -10646,6 +10646,10 @@ void testFiniteField()
 }
 
 
+
+// Some helper function to turn sets into strings and/or print them out
+// Maybe move some of them into the set class
+
 // This is meant to convert von Neumann numbers into strings that look more reasonable than the 
 // complex nested structure
 std::string cardinalitiesToString(const rema::rsSetNaive& A)
@@ -10661,8 +10665,16 @@ std::string cardinalitiesToString(const rema::rsSetNaive& A)
   str += "}";
   return str;
 }
-// Maybe move into the ste class
 
+void printSet(const rema::rsSetNaive& x)
+{
+  std::cout << rema::rsSetNaive::setToString(x);
+}
+
+void printOrderedPair(const rema::rsSetNaive& x)
+{
+  std::cout << rema::rsSetNaive::orderedPairToString(x);
+}
 
 void testSet()
 {
@@ -10947,15 +10959,6 @@ void testSet()
 
 }
 
-void printSet(const rema::rsSetNaive& x)
-{
-  std::cout << rema::rsSetNaive::setToString(x);
-}
-
-void printOrderedPair(const rema::rsSetNaive& x)
-{
-  std::cout << rema::rsSetNaive::orderedPairToString(x);
-}
 
 
 
@@ -11008,6 +11011,23 @@ void testNeumannNumbers()
   Set n8 = NN::create(8);
   Set n9 = NN::create(9);
 
+  // Test set exponentiation
+  Set A({n0,n1});      // A = {0,1}
+  Set B({n2,n3,n4});   // B = {2,3,4}
+  Set R;
+  R = Set::pow(A,B);   
+  // A^B = { {(2,0),(3,0),(4,0)},
+  //         {(2,0),(3,0),(4,1)},
+  //         {(2,0),(3,1),(4,0)},
+  //         {(2,0),(3,1),(4,1)},
+  //         {(2,1),(3,0),(4,0)},
+  //         {(2,1),(3,0),(4,1)},
+  //         {(2,1),(3,1),(4,0)},
+  //         {(2,1),(3,1),(4,1)}  }
+
+
+
+
 
   // Print the first 5 Neumann numbers:
   auto LF = []() { std::cout << '\n'; };  // Line feed helper function
@@ -11017,7 +11037,6 @@ void testNeumannNumbers()
   printSet(n3); LF();  // {O,{O},{O,{O}}}
   printSet(n4); LF();  // {O,{O},{O,{O}},{O,{O},{O,{O}}}}
   printSet(n5); LF();  // {O,{O},{O,{O}},{O,{O},{O,{O}}},{O,{O},{O,{O}},{O,{O},{O,{O}}}}}
-
 
   // Check if the factory produced the same sets as we produced manually here:
   ok &= n0 == t0;

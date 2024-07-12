@@ -219,11 +219,19 @@ public:
   // products of Neumann numbers
   // Needs test
 
+  /** UNDER CONSTRUCTION
+
+  Computes the set of all functions from B to A. This is the power function or set exponentiation 
+  denoted as A^B. The result will be a set of sets of ordered pairs of the form (b,a) ...TBC... */
+  static rsSetNaive pow(const rsSetNaive& A, const rsSetNaive& B);
+
+
   /** Given a nonempty set A = { a_1, a_2, a_3, ... }, this function returns the minimum of the 
   a_i elements according to the given less-than relation. */
   static rsSetNaive min(const rsSetNaive& A, 
     bool (*less)(const rsSetNaive& left, const rsSetNaive& right));
   // Maybe use std::function for the less-relation
+  // Maybe implement a binary function taking two sets as input
 
   /** Given a nonempty set A = { a_1, a_2, a_3, ... }, this function returns the maximum of the 
   a_i elements according to the given less-than relation. */
@@ -246,6 +254,10 @@ public:
   // to another set B. If A has M and B has N elements, the result will have N^M elements (or is it
   // M^N?). Maybe call it pow(Set A, Set B) and/or use the ^ operator
 
+
+  //static rsSetNaive powerSet(const rsSetNaive& A);
+
+
   /** UNDER CONSTRUCTION - VERIFY explanation and implementation!
   
   Produces the transitive closure of the given set A. The transitive closure of a set is defined as 
@@ -253,6 +265,7 @@ public:
   the way down until one eventually hits the empty sets on the lowest level. It can also be seen as
   the union of the set itself with the transitive closures of all of its elements...I think. */
   static rsSetNaive transitiveClosure(const rsSetNaive& A);
+  // maybe make non-static
 
   // https://en.wikipedia.org/wiki/Transitive_set#Transitive_closure
 

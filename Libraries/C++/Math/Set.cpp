@@ -270,6 +270,17 @@ rsSetNaive rsSetNaive::product(const rsSetNaive& A, const rsSetNaive& B)
   return P;
 }
 
+rsSetNaive rsSetNaive::pow(const rsSetNaive& A, const rsSetNaive& B)
+{
+  rsSetNaive P;
+
+  int M = A.getCardinality();
+  int N = B.getCardinality();
+  //int L = pow(M, N);
+
+  return P;
+}
+
 rsSetNaive rsSetNaive::min(const rsSetNaive& A, 
   bool (*less)(const rsSetNaive& left, const rsSetNaive& right))
 {

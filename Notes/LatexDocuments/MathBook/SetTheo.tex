@@ -322,8 +322,10 @@ Some collections of mathematical objects that are of interest turn out to be not
 % https://de.wikipedia.org/wiki/Klassenlogik
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Terminology, Notation, Definitions}
-In the following we will define a couple of important set theoretical terms that we will need later.
+\subsection{Terminology, Notation, Definitions, Conventions}
+In the following we will define a couple of important set theoretical terms that we will need later. In set theory, variable names stand for sets as such but they may also stand for elements of other sets because the elements of sets are, of course, yet again sets. We will tend to use capital letters like $A,B,C,\ldots$ if we want to emphasize the set nature of an object and lowercase letters like $a,b,c,\ldots$ when we want to emphasize the element nature of an object. We may also use greek letters from the beginning of the alphabet like $\alpha,\beta,\gamma, \ldots$ for sets that represent ordinal numbers and greek letters like $\kappa,\lambda,\mu,\ldots$ for cardinal numbers.
+
+% ToDo: eplxain usage of alpha, beta,...kappa,lambda for ordinal and cardinal numbers
 
 %\paragraph{Hereditary Property}
 %A set $A$ is said to have the hereditarily the property $\varphi(A)$, if
@@ -342,11 +344,29 @@ In the following we will define a couple of important set theoretical terms that
 % https://mathworld.wolfram.com/Chain.html
 % https://en.wikipedia.org/wiki/Total_order#Chains
 
+
+\paragraph{Chains of Inclusions}
+To convey the fact that a set $A$ is a subset of another set $B$ which is, in turn, a subset of a third set $C$, we could write $A \subseteq B \wedge B \subseteq C$. But that is tedious, so we will instead write this as $A \subseteq B \subseteq C$. We call such a statement a chain of subset inclusions\footnote{I don't know, if that's an official term, though.}. Likewise, for $A \in B \wedge B \in C$ we may write $A \in B \in C$ and call that a chain of element inclusions.
+
 \paragraph{Big Unions}
-The union of two sets $A,B$ is written as $A \cup B$. If $A$ is a set of sets\footnote{Which it always is because modern set theory, all sets are sets of sets. I just wanted to emphasize it again.} such that $A = \{a_1, a_2, a_2, \ldots \}$, then we write the union $U = a_1 \cup a_2 \cup a_3 \cup \ldots$ over all the elements of A as $U = \bigcup_{a \in A} a$ or shorter as $U = \bigcup A$. Analog definitions exist for other associative binary set operations such as the intersection $I = \bigcap A$ or the disjoint union $D = \bigsqcup A$ or even the product $P = \bigtimes A$. However, it's the union that turns out to be important.
+The union of two sets $A,B$ is written as $A \cup B$. If $A$ is a set of sets\footnote{Which it always is because modern set theory, all sets are sets of sets. I just wanted to emphasize it again.} such that $A = \{a_1, a_2, a_2, \ldots \}$, then we write the union $U = a_1 \cup a_2 \cup a_3 \cup \ldots$ over all the elements of A as $U = \bigcup_{a \in A} a$ or shorter as $U = \bigcup A$. Analog definitions exist for other associative binary set operations such as the intersection $I = \bigcap A$ or the disjoint union $D = \bigsqcup A$ or even the product $P = \bigtimes A$. However, it's the union that turns out to be important. 
+
+
+
 
 \paragraph{Transitivity}
-A set $A$ is called transitive when its element relation is transitive, i.e. $b \in a \in A \Rightarrow b \in A$. This is equivalent to the requirement that each element must also occur as subset: $a \in A \Rightarrow a \subseteq A$. A set $A$ is transitive if and only if the union over all its elements gives a subset of the original set: $A \subseteq \bigcup A$...TBC...
+A set $A$ is called \emph{transitive} when its element relation is transitive, i.e. $b \in a \in A \Rightarrow b \in A$. This is equivalent to the requirement that each element must also occur as subset: $a \in A \Rightarrow a \subseteq A$. Transitive sets have the following properties (1) A set $A$ is transitive if and only if the union over all its elements gives a subset of the original set: $A \subseteq \bigcup A$. (2) If $A$ is transitive, then $\bigcup A$ is transitive. ..TBC...
+
+\paragraph{Transitive Closure}
+The transitive closure of a set $A$, denoted as $\tc(A)$ is given by:
+\begin{equation}
+\label{Eq:TransitiveClosure}
+\tc(A) = \{A, \; 
+           \bigcup A, \; 
+           \bigcup \bigcup A, \;
+           \bigcup \bigcup \bigcup A, \;
+           \ldots  \}
+\end{equation}
 
 %TODO: explain why the requirements are equivalent - they look very different
 
@@ -361,6 +381,15 @@ A set $A$ is called transitive when its element relation is transitive, i.e. $b 
 
 %\paragraph{Transitive Closure}
 
+\paragraph{Hereditary Property}
+In general, a \emph{hereditary property} is a property of an object that is inherited by all of its subobjects. The meaning of the term subobject depends on the context. In set theory, the subobjects of a set are taken to be its elements.
+
+% Q: does it have to recursively hereditary?
+
+% https://en.wikipedia.org/wiki/Hereditary_property
+% https://mathworld.wolfram.com/HereditaryProperty.html
+
+% examples of set properties that can be hereditary: being finite, countable, transitive, well-ordered
 
 
 
@@ -386,7 +415,7 @@ In set theory, sets are the only thing that exists. Every mathematical object mu
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Construction of the Number System}
-In everyday math, we usually take numbers for granted and do not really think much about them. In set theory, all the number systems that we commonly use must first be \emph{constructed} using only sets. We'll show here, how this could be done. 
+In everyday math, we usually take numbers for granted and do not really think much about them. In set theory, all the number systems that we commonly use must first be \emph{constructed} using only sets. We'll show here briefly, how this could be done. For more details, see \cite{PDF_MathFAQ}.
 
 % https://cs.uwaterloo.ca/~alopez-o/math-faq/math-faq.pdf  pg 9 ff
 % https://cs.uwaterloo.ca/~alopez-o/math-faq/node11.html
@@ -417,7 +446,7 @@ $n=$ & $s(n-1)=$  & & & $\{ 0, 1, 2, \ldots, n-1 \} $
 % {{0}}
 
 \paragraph{Addition}
-We define addition of two natural numbers $x,y$ recursively as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly.
+We define addition of two natural numbers $x,y$ recursively as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly. 
 
 \paragraph{Multiplication}
 To define multiplication, we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. ...TBC...(look it up in the implementation)

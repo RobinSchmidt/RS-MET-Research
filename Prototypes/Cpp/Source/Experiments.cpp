@@ -10864,18 +10864,26 @@ void testSet()
 
     // 2 element sets:
     Set OS  = Set({O, S});            // The doubleton {O,S}
-    Set OSS = Set({O, SS});            // The doubleton {O,S}
+    Set OSS = Set({O, SS});            // The doubleton {O,SS}
 
     // 3 element sets:
     Set O_S_OS  = Set({O,  S, OS}); // The tripleton {O,S,OS}
     Set O_SS_OS = Set({O, SS, OS});  // The tripleton {O,SS,OS}
    
 
-    // Test formation of the transitive closure:
-    Set TC;
-    TC = Set::transitiveClosure(O);  ok &= TC == O;
+    // VERIFY THESE:
 
-    TC = Set::transitiveClosure(S);  ok &= TC == S; // Fails!
+    // Test formation of the transitive closure:
+    auto tc = [](const Set& A){ return Set::transitiveClosure(A); };
+
+    Set TC;
+    TC = tc(O);  ok &= TC == O;
+    TC = tc(S);  ok &= TC == S;
+    TC = tc(SS); ok &= TC == OS;
+    TC = tc(OS); ok &= TC == OS;
+
+
+
 
 
 

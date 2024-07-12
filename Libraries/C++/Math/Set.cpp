@@ -309,7 +309,7 @@ rsSetNaive rsSetNaive::transitiveClosure(const rsSetNaive& A)
     return A;
 
   // Recursive case:
-  rsSetNaive R;
+  rsSetNaive R = A;
   for(size_t i = 0; i < A.getCardinality(); i++)
     R = unionSet(R, transitiveClosure(A[i]));
   return R;

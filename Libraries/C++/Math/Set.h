@@ -226,6 +226,16 @@ public:
   // smaller or larger of the two. Then, implement the min/max that operate on the whole array of
   // elements in terms of these...but maybe not.
 
+  /** UNDER CONSTRUCTION - VERIFY explanation and implementation!
+  
+  Produces the transitive closure of the given set A. The transitive closure of a set is defined as 
+  the union of the set itself with all of its elements, with their elements, etc. - recursively all 
+  the way down until one eventually hits the empty sets on the lowest level. It can also be seen as
+  the union of the set itself with the transitive closures of all of its elements...I think. */
+  static rsSetNaive transitiveClosure(const rsSetNaive& A);
+
+  // https://en.wikipedia.org/wiki/Transitive_set#Transitive_closure
+
 
   /** Compares this set with rhs for equality. */
   bool operator==(const rsSetNaive& rhs) const { return equals(rhs); }

@@ -302,6 +302,20 @@ rsSetNaive rsSetNaive::max(const rsSetNaive& A,
   return m;
 }
 
+rsSetNaive rsSetNaive::transitiveClosure(const rsSetNaive& A)
+{
+  // Base case:
+  if(A.isEmpty())
+    return A;
+
+  // Recursive case:
+  rsSetNaive R;
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    R = unionSet(R, transitiveClosure(A[i]));
+  return R;
+}
+// Needs tests!
+
 rsSetNaive* rsSetNaive::getCopy() const
 {
   rsSetNaive* c = new rsSetNaive;

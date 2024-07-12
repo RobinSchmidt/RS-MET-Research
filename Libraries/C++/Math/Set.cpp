@@ -326,6 +326,32 @@ rsSetNaive rsSetNaive::max(const rsSetNaive& A,
   return m;
 }
 
+rsSetNaive rsSetNaive::powerSet(const rsSetNaive& A)
+{
+  rsWarning("Warning: function rsSetNaive::powerSet needs more tests."); 
+  // I'm not sure about the formula for the inclusion decision
+
+  int N = A.getCardinality();
+  int M = rsPow(2, N);
+  rsSetNaive P;
+  for(size_t m = 0; m < M; m++)
+  {
+    rsSetNaive S;                  // Current subset. Has index m
+    for(int n = 0; n < N; n++)
+    {
+      if((m >> n) & 1)             // VERIFY! Decides whether to include element n in subset m
+        S.addElement(A[n]);
+    }
+    P.addElement(S);
+  }
+  return P;
+
+  // The idea for the formula  (m >> n) & 1  is: m runs through all possible bit-patterns between 
+  // 0 and M-1. For every such bit pattern, we include the element with index n in the m-th subset 
+  // S when the bit pattern has a 1 at the n-th position. 
+}
+// Needs tests
+
 rsSetNaive rsSetNaive::transitiveClosure(const rsSetNaive& A)
 {
   // Base case:

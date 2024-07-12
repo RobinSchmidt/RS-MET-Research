@@ -10689,6 +10689,18 @@ void testSet()
   // Used for inspection in the debugger:
   std::string str;  
 
+  // Helper function to turn 2 sets (input and output of an operation) into a string:
+  auto str2 = [](const Set& A, const Set& B)
+  {
+    std::string str;
+    str += Set::setToString(A);
+    str += "\n\n  ->  \n\n";
+    str += Set::setToString(B);
+    return str;
+  };
+  // Maybe move out - rename to inOutSetsToString
+
+
   // Create the empty set {}:
   Set empty;
   ok &= empty.isEmpty();
@@ -10887,6 +10899,20 @@ void testSet()
     ok &= AxB == T;
   }
 
+
+  // Test power set:
+  {
+    Set P = Set::powerSet(D);         // |D| = 3
+    ok &= P.getCardinality() == 8;    // |P| = 8 = 2^3
+
+
+    //str = str2(D, P); // It's a mess!
+
+
+    int dummy = 0;
+  }
+
+
   // Test transitivity stuff:
   {
     // Some distinct elementary sets to form more complex sets:
@@ -10904,19 +10930,6 @@ void testSet()
     Set O_S_OS  = Set({O,  S, OS});  // The tripleton {O,S,OS} = {O,  {O},  {O,{O}}}
     Set O_SS_OS = Set({O, SS, OS});  // The tripleton {O,SS,OS}= {O, {{O}}, {O,{O}}}
    
-
-    // Helper function to turn 2 sets (input and output of an operation) into a string:
-    auto str2 = [](const Set& A, const Set& B)
-    {
-      std::string str;
-      str += Set::setToString(A);
-      str += "\n\n  ->  \n\n";
-      str += Set::setToString(B);
-      return str;
-    };
-    // Maybe move out of the block...or even further out - rename to inOutSetsToString
-
-
     // Test formation of the transitive closure:
     auto tc = [](const Set& A){ return Set::transitiveClosure(A); };
     Set TC;
@@ -10934,6 +10947,8 @@ void testSet()
 
     int dummy = 0;
   }
+
+
 
 
   rsAssert(ok);
@@ -11011,6 +11026,7 @@ void testNeumannNumbers()
   Set n8 = NN::create(8);
   Set n9 = NN::create(9);
 
+  // Maybe move this into testSet() - but then we need to use other sets as elements
   // Test set exponentiation:
   Set A({n0,n1});                      // A = {0,1}
   Set B({n2,n3,n4});                   // B = {2,3,4}

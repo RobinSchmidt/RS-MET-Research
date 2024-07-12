@@ -255,8 +255,8 @@ public:
   // to another set B. If A has M and B has N elements, the result will have N^M elements (or is it
   // M^N?). Maybe call it pow(Set A, Set B) and/or use the ^ operator
 
-
-  //static rsSetNaive powerSet(const rsSetNaive& A);
+  /** UNDER CONSTRUCTION - NEEDS TESTS */
+  static rsSetNaive powerSet(const rsSetNaive& A);
 
 
   /** UNDER CONSTRUCTION - VERIFY explanation and implementation!

@@ -10905,22 +10905,20 @@ void testSet()
     // Maybe move out of the block...or even further out - rename to inOutSetsToString
 
 
-    // VERIFY THESE:
-
     // Test formation of the transitive closure:
     auto tc = [](const Set& A){ return Set::transitiveClosure(A); };
-
     Set TC;
-    TC = tc(O);   ok &= TC == O;             //  O        ->  O
-    TC = tc(S);   ok &= TC == S;             // {O}       -> {O}
-    TC = tc(SS);  ok &= TC == OS;            // {{O}}     -> {O,{O}}
-    TC = tc(OS);  ok &= TC == OS;            // {O,{O}}   -> {O,{O}}
-    TC = tc(OSS); ok &= TC == Set({O,S,SS}); // {O,{{O}}} -> {O,{O},{{O}}}
+    TC = tc(O);       ok &= TC == O;                //  O                ->  O
+    TC = tc(S);       ok &= TC == S;                // {O}               -> {O}
+    TC = tc(SS);      ok &= TC == OS;               // {{O}}             -> {O,{O}}
+    TC = tc(OS);      ok &= TC == OS;               // {O,{O}}           -> {O,{O}}
+    TC = tc(OSS);     ok &= TC == Set({O,S,SS});    // {O,{{O}}}         -> {O,{O},{{O}}}
+    TC = tc(O_S_OS);  ok &= TC == O_S_OS;           // {O,{O},{O,{O}}}   -> {O,{O},{O,{O}}}
+    TC = tc(O_SS_OS); ok &= TC == Set({O,S,SS,OS}); // {O,{{O}},{O,{O}}} -> {O,{{O}},{O,{O}},{O}}
+    //str = str2(O_SS_OS, TC);
 
-
-
-    str = str2(OSS, TC);
-
+    // ToDo:
+    // -Test it on a set that has a non-transitive element
 
     int dummy = 0;
   }

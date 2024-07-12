@@ -118,6 +118,7 @@ public:
 
   /** Returns a string that represents this set. This is useful for debugging. */
   static std::string setToString(const rsSetNaive& A);
+  // maybe rename to toString. maybe make it non-static and without argument
 
   /** Assumes that the set A represents an ordered pair and turns it into a string. Of course, you 
   can also apply the general setToString function to ordered pairs - but them you will get a 
@@ -127,9 +128,12 @@ public:
 
   // ToDo:
   //bool isTransitive() const;
-  //bool isRecursivelyTransitive() const;
+  //bool isHereditarilyTransitive() const;   // or is the meaning of transitive already meant that way?
   //bool isRelationBetween(const rsSetNaive& A, const rsSetNaive& B) const;
   //bool isRelationOn(const rsSetNaive& A) const { return isRelationBetween(A, A); }
+
+  //bool hasProperty(bool (*predicate)(const rsSetNaive& A)) const;
+  //bool hasHereditaryProperty(bool (*predicate)(const rsSetNaive& A)) const;
 
 
   //-----------------------------------------------------------------------------------------------
@@ -232,6 +236,15 @@ public:
   // ToDo: Maybe implement functions for min and max that take 2 sets arguments and return the 
   // smaller or larger of the two. Then, implement the min/max that operate on the whole array of
   // elements in terms of these...but maybe not.
+
+  // ToDo: Implement the power set operation. We could implement it as follows: let N be the size
+  // of the set A. Produce the number P = 2^N. Iterate p = 0...P-1. For each p, iterate i = 0...p, 
+  // for each i, init a new subset. Iterpret the bit-pattern of p as follows 1: include subset at 
+  // digit position i into current subset.
+
+  // ToDo: Implement the set exponentiation function, i.e. the set of all functions from a set A
+  // to another set B. If A has M and B has N elements, the result will have N^M elements (or is it
+  // M^N?). Maybe call it pow(Set A, Set B) and/or use the ^ operator
 
   /** UNDER CONSTRUCTION - VERIFY explanation and implementation!
   

@@ -10645,6 +10645,25 @@ void testFiniteField()
   // are at it, we should also make it clenaly compile (without warnings) and work with rsFraction.
 }
 
+
+// This is meant to convert von Neumann numbers into strings that look more reasonable than the 
+// complex nested structure
+std::string cardinalitiesToString(const rema::rsSetNaive& A)
+{
+  std::string str = "{";
+  size_t N = A.getCardinality();
+  for(size_t i = 0; i < N; i++)
+  {
+    str += std::to_string(A[i].getCardinality());
+    if(i < N-1)
+      str += ",";
+  }
+  str += "}";
+  return str;
+}
+// Maybe move into the ste class
+
+
 void testSet()
 {
   // We test the class rsSetNaive which implements a set in the set-theoretical sense and provides
@@ -10654,6 +10673,9 @@ void testSet()
   using Set = rema::rsSetNaive;
   using NN  = rema::rsNeumannNumber;
   bool  ok  = true;
+
+  // Used for inspection in the debugger:
+  std::string str;  
 
   // Create the empty set {}:
   Set empty;
@@ -10856,20 +10878,32 @@ void testSet()
   // Test transitivity stuff:
   {
     // Some distinct elementary sets to form more complex sets:
-    Set O;                           // The empty set
+    Set O;                           // The empty set O
 
     // 1 element sets:
     Set S  = Set::singleton(O);      // The singleton {O}
     Set SS = Set::singleton(S);      // The singleton {{O}}
 
     // 2 element sets:
-    Set OS  = Set({O, S});            // The doubleton {O,S}
-    Set OSS = Set({O, SS});            // The doubleton {O,SS}
+    Set OS  = Set({O, S});           // The doubleton  {O,S}   = {O,{O}}
+    Set OSS = Set({O, SS});          // The doubleton {O,SS}  = {O,{{O}}}
 
     // 3 element sets:
-    Set O_S_OS  = Set({O,  S, OS}); // The tripleton {O,S,OS}
-    Set O_SS_OS = Set({O, SS, OS});  // The tripleton {O,SS,OS}
+    Set O_S_OS  = Set({O,  S, OS});  // The tripleton {O,S,OS} = {O,  {O},  {O,{O}}}
+    Set O_SS_OS = Set({O, SS, OS});  // The tripleton {O,SS,OS}= {O, {{O}}, {O,{O}}}
    
+
+    // Helper function to turn 2 sets (input and output of an operation) into a string:
+    auto str2 = [](const Set& A, const Set& B)
+    {
+      std::string str;
+      str += Set::setToString(A);
+      str += "\n\n  ->  \n\n";
+      str += Set::setToString(B);
+      return str;
+    };
+    // Maybe move out of the block...or even further out - rename to inOutSetsToString
+
 
     // VERIFY THESE:
 
@@ -10877,16 +10911,15 @@ void testSet()
     auto tc = [](const Set& A){ return Set::transitiveClosure(A); };
 
     Set TC;
-    TC = tc(O);  ok &= TC == O;
-    TC = tc(S);  ok &= TC == S;
-    TC = tc(SS); ok &= TC == OS;
-    TC = tc(OS); ok &= TC == OS;
+    TC = tc(O);   ok &= TC == O;             //  O        ->  O
+    TC = tc(S);   ok &= TC == S;             // {O}       -> {O}
+    TC = tc(SS);  ok &= TC == OS;            // {{O}}     -> {O,{O}}
+    TC = tc(OS);  ok &= TC == OS;            // {O,{O}}   -> {O,{O}}
+    TC = tc(OSS); ok &= TC == Set({O,S,SS}); // {O,{{O}}} -> {O,{O},{{O}}}
 
 
 
-
-
-
+    str = str2(OSS, TC);
 
 
     int dummy = 0;

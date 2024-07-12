@@ -227,6 +227,12 @@ public:
   static rsSetNaive pow(const rsSetNaive& A, const rsSetNaive& B);
 
 
+
+
+  static rsSetNaive bigUnion(const rsSetNaive& A);
+
+
+
   /** Given a nonempty set A = { a_1, a_2, a_3, ... }, this function returns the minimum of the 
   a_i elements according to the given less-than relation. */
   static rsSetNaive min(const rsSetNaive& A, 

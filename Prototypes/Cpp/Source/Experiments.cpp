@@ -10902,12 +10902,21 @@ void testSet()
 
   // Test power set:
   {
-    Set P = Set::powerSet(D);         // |D| = 3
-    ok &= P.getCardinality() == 8;    // |P| = 8 = 2^3
+    Set P;
 
+    P = Set::powerSet(empty);           // |O| = 0
+    ok &= P.getCardinality() == 1;      // 2^0 = 1 
+
+    P = Set::powerSet(singletonEmpty);  // | | = 1
+    ok &= P.getCardinality() == 2;      // 2^1 = 2
+
+    P = Set::powerSet(A);               // |A| = 2
+    ok &= P.getCardinality() == 4;      // 2^2 = 4
+
+    P = Set::powerSet(D);               // |D| = 3
+    ok &= P.getCardinality() == 8;      // 2^3 = 8
 
     //str = str2(D, P); // It's a mess!
-
 
     int dummy = 0;
   }
@@ -11060,7 +11069,10 @@ void testNeumannNumbers()
   R = Set::pow(B,A);
   ok &= R.getCardinality() == 81;      // = 3^4 = |B|^|A|
 
-
+  // Test big union:
+  Set n_0_5({n0,n1,n2,n3,n4,n5});      // {0,1,2,3,4,5}
+  Set U = Set::bigUnion(n_0_5);
+  ok &= U == n5;
 
   // Print the first 5 Neumann numbers:
   auto LF = []() { std::cout << '\n'; };  // Line feed helper function

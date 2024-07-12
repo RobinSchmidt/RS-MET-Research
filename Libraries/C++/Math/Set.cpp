@@ -294,6 +294,17 @@ rsSetNaive rsSetNaive::pow(const rsSetNaive& A, const rsSetNaive& B)
 }
 // Needs more tests!
 
+
+rsSetNaive rsSetNaive::bigUnion(const rsSetNaive& A)
+{
+  rsSetNaive U;
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    U = unionSet(U, A[i]);
+  return U;
+}
+// Needs test
+
+
 rsSetNaive rsSetNaive::min(const rsSetNaive& A, 
   bool (*less)(const rsSetNaive& left, const rsSetNaive& right))
 {
@@ -338,10 +349,8 @@ rsSetNaive rsSetNaive::powerSet(const rsSetNaive& A)
   {
     rsSetNaive S;                  // Current subset. Has index m
     for(int n = 0; n < N; n++)
-    {
       if((m >> n) & 1)             // VERIFY! Decides whether to include element n in subset m
         S.addElement(A[n]);
-    }
     P.addElement(S);
   }
   return P;

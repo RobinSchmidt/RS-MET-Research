@@ -135,6 +135,7 @@ public:
   //bool hasProperty(bool (*predicate)(const rsSetNaive& A)) const;
   //bool hasHereditaryProperty(bool (*predicate)(const rsSetNaive& A)) const;
 
+  // isFunctionBetween, isRelationBetween, isTransitiveRelation, ...
 
   //-----------------------------------------------------------------------------------------------
   // \name Element Access

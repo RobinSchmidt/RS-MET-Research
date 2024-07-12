@@ -272,45 +272,27 @@ rsSetNaive rsSetNaive::product(const rsSetNaive& A, const rsSetNaive& B)
 
 rsSetNaive rsSetNaive::pow(const rsSetNaive& A, const rsSetNaive& B)
 {
-  rsSetNaive P;
-
-  rsError("This function is still wrong");
-
+  rsWarning("Warning: function rsSetNaive::pow needs more tests."); 
+  // I'm not sure about the formula for the computation of m. The function needs more tests. There
+  // are some and these do pass - but we need more.
 
   int M = A.getCardinality();
   int N = B.getCardinality();
-  int L = std::pow(M, N);
-
+  int L = std::pow(M, N);                        // Number of possible functions from B to A
+  rsSetNaive P;                                  // Our result
   for(int i = 0; i < L; i++)
   {
-    rsSetNaive p;
+    rsSetNaive f;                                // Current function
     for(int n = 0; n < N; n++)
     {
-
-      //int m = (i+n) % M; 
-      //int m = (i*n+n) % M; 
-
-      int k = rsPow(M, n);
-
-      //int m = (i + n / k) % M;
-
-      int m = (n + i / k) % M;
-
-      //int m = (i*n) % M;  // This is WRONG!
-      // The index of the mapped index m must be some function of i and n. But what function is it?
-
-
-
-      rsSetNaive pnm = orderedPair(B[n], A[m]); // (B[n],A[m])
-      p.addElement(pnm);
+      int m = (n + i/rsPow(M, n)) % M;           // VERIFY! See Set.txt for motivation/derivation
+      f.addElement(orderedPair(B[n], A[m]));     // Add pair (B[n],A[m]) to current function
     }
-
-
-    P.addElement(p);
+    P.addElement(f);                             // Add current function to set of functions
   }
-
   return P;
 }
+// Needs more tests!
 
 rsSetNaive rsSetNaive::min(const rsSetNaive& A, 
   bool (*less)(const rsSetNaive& left, const rsSetNaive& right))

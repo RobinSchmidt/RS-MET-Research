@@ -1,0 +1,35 @@
+The set A^B of all functions from B={0,1,2} to A={0,1} has A^B 2^3 = 8 entries:
+
+    0  1  2
+
+0   0  0  0
+1   0  0  1
+2   0  1  0
+3   0  1  1 
+4   1  0  0 
+5   1  0  1 
+6   1  1  0 
+7   1  1  1 
+
+Each row represents one possible function. The column index is the index into the domain B. We want
+to compute the index into the codomain A, i.e. the matrix entry. Let k be the column index counted 
+from the right, i.e. 0 for the rightmost column. The rightmost column increments (mod 2) every row,
+the middle one every 2nd row and the leftmost one every 4th row. In general, it increments every 
+(2^k)th row
+
+
+The set A^B of all functions from B={0,1} to A={0,1,2} has A^B 3^2 = 9 entries:
+
+    0  1
+
+0   0  0
+1   0  1
+2   0  2
+3   1  0
+4   1  1
+5   1  2
+6   2  0
+7   2  1
+8   2  2
+
+I think, in general, the increment occurs every N^k rows

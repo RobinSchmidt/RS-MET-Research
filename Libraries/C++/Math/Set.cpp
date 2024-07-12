@@ -276,10 +276,10 @@ rsSetNaive rsSetNaive::pow(const rsSetNaive& A, const rsSetNaive& B)
   // I'm not sure about the formula for the computation of m. The function needs more tests. There
   // are some and these do pass - but we need more.
 
-  int M = A.getCardinality();
-  int N = B.getCardinality();
+  int M = A.getCardinality();                    // M = |A|
+  int N = B.getCardinality();                    // N = |B|
   int L = std::pow(M, N);                        // Number of possible functions from B to A
-  rsSetNaive P;                                  // Our result
+  rsSetNaive R;                                  // Our result. Set of functions f: B -> A
   for(int i = 0; i < L; i++)
   {
     rsSetNaive f;                                // Current function
@@ -288,9 +288,9 @@ rsSetNaive rsSetNaive::pow(const rsSetNaive& A, const rsSetNaive& B)
       int m = (n + i/rsPow(M, n)) % M;           // VERIFY! See Set.txt for motivation/derivation
       f.addElement(orderedPair(B[n], A[m]));     // Add pair (B[n],A[m]) to current function
     }
-    P.addElement(f);                             // Add current function to set of functions
+    R.addElement(f);                             // Add current function to set of functions
   }
-  return P;
+  return R;
 }
 // Needs more tests!
 

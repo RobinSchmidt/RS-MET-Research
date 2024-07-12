@@ -10853,6 +10853,33 @@ void testSet()
     ok &= AxB == T;
   }
 
+  // Test transitivity stuff:
+  {
+    // Some distinct elementary sets to form more complex sets:
+    Set O;                           // The empty set
+
+    // 1 element sets:
+    Set S  = Set::singleton(O);      // The singleton {O}
+    Set SS = Set::singleton(S);      // The singleton {{O}}
+
+    // 2 element sets:
+    Set OS  = Set({O, S});            // The doubleton {O,S}
+    Set OSS = Set({O, SS});            // The doubleton {O,S}
+
+    // 3 element sets:
+    Set O_S_OS  = Set({O,  S, OS}); // The tripleton {O,S,OS}
+    Set O_SS_OS = Set({O, SS, OS});  // The tripleton {O,SS,OS}
+   
+
+    Set TC = Set::transitiveClosure(O);
+    ok &= TC == O;
+
+
+
+    int dummy = 0;
+  }
+
+
   rsAssert(ok);
 
   // ToDo:

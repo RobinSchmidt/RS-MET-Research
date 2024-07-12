@@ -125,6 +125,13 @@ public:
   static std::string orderedPairToString(const rsSetNaive& A);
 
 
+  // ToDo:
+  //bool isTransitive() const;
+  //bool isRecursivelyTransitive() const;
+  //bool isRelationBetween(const rsSetNaive& A, const rsSetNaive& B) const;
+  //bool isRelationOn(const rsSetNaive& A) const { return isRelationBetween(A, A); }
+
+
   //-----------------------------------------------------------------------------------------------
   // \name Element Access
 
@@ -235,6 +242,7 @@ public:
   static rsSetNaive transitiveClosure(const rsSetNaive& A);
 
   // https://en.wikipedia.org/wiki/Transitive_set#Transitive_closure
+
 
 
   /** Compares this set with rhs for equality. */

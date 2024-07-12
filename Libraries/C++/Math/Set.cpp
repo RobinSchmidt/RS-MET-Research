@@ -109,6 +109,18 @@ bool rsSetNaive::isOrderedPair() const
   //  singleton is stored first.
 }
 
+bool rsSetNaive::isTransitive() const
+{
+  for(size_t i = 0; i < getCardinality(); i++)
+  {
+    rsSetNaive a = *elements[i];
+    for(size_t j = 0; j < a.getCardinality(); j++)
+      if(!hasElement(a[j]))
+        return false;
+  }
+  return true;
+}
+
 std::string rsSetNaive::setToString(const rsSetNaive& A)
 {
   if(A.isEmpty())
@@ -283,7 +295,7 @@ rsSetNaive rsSetNaive::pow(const rsSetNaive& A, const rsSetNaive& B)
   for(int i = 0; i < L; i++)
   {
     rsSetNaive f;                                // Current function
-    for(int n = 0; n < N; n++)
+    for(int n = 0; n < N; n++)                   // Index of function argument
     {
       int m = (n + i/rsPow(M, n)) % M;           // VERIFY! See Set.txt for motivation/derivation
       f.addElement(orderedPair(B[n], A[m]));     // Add pair (B[n],A[m]) to current function
@@ -355,9 +367,11 @@ rsSetNaive rsSetNaive::powerSet(const rsSetNaive& A)
   }
   return P;
 
-  // The idea for the formula  (m >> n) & 1  is: m runs through all possible bit-patterns between 
-  // 0 and M-1. For every such bit pattern, we include the element with index n in the m-th subset 
-  // S when the bit pattern has a 1 at the n-th position. 
+  // The idea for the formula  (m >> n) & 1  is: m runs through all possible bit-patterns of length 
+  // N which are all the numbers between 0 and M-1 in their binary expansion. For every such bit 
+  // pattern, we include the element with index n in the m-th subset S when the bit pattern has a 1 
+  // at the n-th position. The shift-and-mask operation extracts the bit at position n in the 
+  // current number m.
 }
 // Needs tests
 
@@ -674,7 +688,7 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
   //  3 = { 0,1,2 }. We want to produce 2 = { 0,1 } only via set operations. The set difference 
   //  a-b = 5-3 would produce { 3,4 } which does not represent 2. It's not even a valid Neumann 
   //  number. Or maybe we could prove that the set { 0,1 } cannot be created from { 0,1,2,3,4 } and
-  //  { 0,1,2 } purely via set operations? Or maybe wo could extract the last element from 
+  //  { 0,1,2 } purely via set operations? Or maybe we could extract the last element from 
   //  { 0,1,2 }? Would that always work? But in sets, there is no notion of "last". But the 2 is 
   //  the last overlapping element. But maybe we could use the "largest" using our defined "less" 
   //  relation? Maybe we could implement "max"-function based on the "less" function and then do: 
@@ -683,6 +697,7 @@ rsSetNaive rsNeumannInteger::canonical(const rsSetNaive& x)
   //      return (a, b);          // (a,b) is already canonical
   //    else
   //      return (max(b), 0);
+  //
   // -Another idea: split (a,b) and form (a,0) and (0,b) and then form (a,0) + (0,b). I think, this
   //  should produce a canonical form of (a,b). ...try it! Maybe implement a function 
   //  isCanonical() that we can use in tests for that.

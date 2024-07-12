@@ -116,6 +116,26 @@ public:
   can be inferred from the structure of the set. */
   bool isOrderedPair() const;
 
+
+  bool isTransitive() const;
+  // Needs test
+
+
+  // ToDo:
+  //
+  //bool isHereditarilyTransitive() const;   // or is the meaning of transitive already meant that way?
+  //bool isRelationBetween(const rsSetNaive& A, const rsSetNaive& B) const;
+  //bool isRelationOn(const rsSetNaive& A) const { return isRelationBetween(A, A); }
+
+  //bool hasProperty(bool (*predicate)(const rsSetNaive& A)) const;
+  //bool hasHereditaryProperty(bool (*predicate)(const rsSetNaive& A)) const;
+
+
+  // isFunctionBetween, isRelationBetween, isTransitiveRelationBetween, isOrderOn, isEquivalenceOn,
+  // isInjective, isSurjective
+
+
+
   /** Returns a string that represents this set. This is useful for debugging. */
   static std::string setToString(const rsSetNaive& A);
   // maybe rename to toString. maybe make it non-static and without argument
@@ -126,16 +146,9 @@ public:
   static std::string orderedPairToString(const rsSetNaive& A);
 
 
-  // ToDo:
-  //bool isTransitive() const;
-  //bool isHereditarilyTransitive() const;   // or is the meaning of transitive already meant that way?
-  //bool isRelationBetween(const rsSetNaive& A, const rsSetNaive& B) const;
-  //bool isRelationOn(const rsSetNaive& A) const { return isRelationBetween(A, A); }
 
-  //bool hasProperty(bool (*predicate)(const rsSetNaive& A)) const;
-  //bool hasHereditaryProperty(bool (*predicate)(const rsSetNaive& A)) const;
 
-  // isFunctionBetween, isRelationBetween, isTransitiveRelation, ...
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Element Access

@@ -349,10 +349,10 @@ In the following we will define a couple of important set theoretical terms that
 To convey the fact that a set $A$ is a subset of another set $B$ which is, in turn, a subset of a third set $C$, we could write $A \subseteq B \wedge B \subseteq C$. But that is tedious, so we will instead write this as $A \subseteq B \subseteq C$. We call such a statement a chain of subset inclusions\footnote{I don't know, if that's an official term, though.}. Likewise, for $A \in B \wedge B \in C$ we may write $A \in B \in C$ and call that a chain of element inclusions.
 
 \paragraph{Big Unions}
-The union of two sets $A,B$ is written as $A \cup B$. If $A$ is a set of sets\footnote{Which it always is because modern set theory, all sets are sets of sets. I just wanted to emphasize it again.} such that $A = \{a_1, a_2, a_2, \ldots \}$, then we write the union $U = a_1 \cup a_2 \cup a_3 \cup \ldots$ over all the elements of A as $U = \bigcup_{a \in A} a$ or shorter as $U = \bigcup A$. Analog definitions exist for other associative binary set operations such as the intersection $I = \bigcap A$ or the disjoint union $D = \bigsqcup A$ or even the product $P = \bigtimes A$. However, it's the union that turns out to be important. 
+The union of two sets $A,B$ is written as $A \cup B$. If $A$ is a set of sets\footnote{Which it always is because modern set theory, all sets are sets of sets. I just wanted to emphasize it again.} such that $A = \{a_1, a_2, a_2, \ldots \}$, then we write the union $U = a_1 \cup a_2 \cup a_3 \cup \ldots$ over all the elements of A as $U = \bigcup_{a_i \in A} a_i$ or shorter $U = \bigcup_{a \in A} a$ or even shorter as $U = \bigcup A$. Analog definitions exist for other associative binary set operations such as the intersection $I = \bigcap A$ or the disjoint union $D = \bigsqcup A$ or even the product $P = \bigtimes A$. However, it's the union that turns out to be important. 
 
 \paragraph{Hereditary Property}
-In set theory, a \emph{hereditary property} is a property of a set that is inherited by all of its elements, their elements and so on - recursively all the way down until we eventually hit the empty set.
+In set theory, a \emph{hereditary property} is a property of a set that is inherited by all of its elements, by their elements and so on - recursively all the way down until we eventually hit the empty set. [VERIFY]
 
 %n object that is inherited by all of its subobjects. The meaning of the term subobject depends on the context. In set theory, the subobjects of a set are taken to be its elements.
 
@@ -378,6 +378,7 @@ The transitive closure of a set $A$, denoted as $\tc(A)$ is given by:
            \bigcup \bigcup \bigcup A, \;
            \ldots  \}
 \end{equation}
+
 
 %TODO: explain why the requirements are equivalent - they look very different
 
@@ -458,7 +459,7 @@ To define multiplication, we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x 
 \paragraph{Maximum}
 The maximum of two so constructed natural numbers $a,b$ can easily be found by a standard set theoretic operation: just take the union of the sets that represent $a$ and $b$. So we define $\max(a,b) = a \cup b$. To see why this works, observe that thanks to our construction, the sets that will represent greater natural numbers will contain the sets that represent smaller numbers as subsets. In the union, the set representing the smaller number will behave neutrally. For example $2 \cup 5$ means $\{0,1\} \cup \{0,1,2,3,4\}$ when written out as sets. That union just produces $\{0,1,2,3,4\}$ which represents the number $5$ which is indeed the maximum of $2$ and $5$. This works also for unions of more than two sets. So, for a finite set $A$ of natural numbers, we define their maximum as:
 \begin{equation}
-\max(A) = \bigcup_{a_i \in A} a_i
+\max(A) = \bigcup_{a_i \in A} a_i = \bigcup A
 \end{equation}
 Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!].
 

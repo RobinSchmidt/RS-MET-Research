@@ -10871,8 +10871,13 @@ void testSet()
     Set O_SS_OS = Set({O, SS, OS});  // The tripleton {O,SS,OS}
    
 
-    Set TC = Set::transitiveClosure(O);
-    ok &= TC == O;
+    // Test formation of the transitive closure:
+    Set TC;
+    TC = Set::transitiveClosure(O);  ok &= TC == O;
+
+    TC = Set::transitiveClosure(S);  ok &= TC == S; // Fails!
+
+
 
 
 

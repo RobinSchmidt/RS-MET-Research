@@ -69,6 +69,9 @@ bool rsSetNaive::isOrderedPair() const
 
   if(getCardinality() == 1)                     // (x, x) = { { x } }
     return isSingleton();
+    // Huh? We could return true here immediately. isSingleton returns true, iff the cardinality 
+    // is 1
+
   else if(getCardinality() == 2)                // (x, y) = { { x }, { x, y } }
   {
     // Investigate the structure. The first element has to be a singleton and the second has to be
@@ -79,6 +82,9 @@ bool rsSetNaive::isOrderedPair() const
       return false;
     rsSetNaive x = elements[0]->getElement(0);
     return elements[1]->hasElement(x);
+    // Hmm - but maybe we should also allow for the case  (x, y) = {  { x, y }, { x } }. Although 
+    // the orderedPair function will not produce pairs of this form, sets of this form are 
+    // nevertheless valid ordered pairs
 
     /*
     // NEW:

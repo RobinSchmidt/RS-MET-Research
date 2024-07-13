@@ -235,9 +235,10 @@ rsSetNaive rsSetNaive::orderedPair(const rsSetNaive& A, const rsSetNaive& B)
   // Notes:
   //
   // -Hausdorff's definition: (A, B) = { {A, 1}, {B, 2} } might be more conveniently generalize to 
-  //  n-tuples because the "tags" can be generalized. But it has the potential problem that the tags 
-  //  should be distiguished from the components, e.g. we can't have A == 1, for example. What if we 
-  //  want to use von Neumann numbers for the tags as well as form the components?
+  //  n-tuples because the "tags" can be generalized. But it has the potential problem that the 
+  //  tags should be distinguished from the components, e.g. we can't have A == 1, for example. 
+  //  What if we want to use von Neumann numbers for the tags as well as for the components, for
+  //  example?
   //
   // See:
   //
@@ -539,6 +540,34 @@ bool rsRelation::isBijectiveFunction(const rsSetNaive& R, const rsSetNaive& A, c
   return isFunction(R, A, B) && isLeftUnique(R, A, B) && isRightTotal(R, A, B);
   // Left-unique == injective, right-total == surjective
 }
+
+
+bool rsRelation::isTrichotomic(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < A.getCardinality(); i++)
+  {
+    for(size_t j = 0; j < B.getCardinality(); j++)
+    {
+      // Create ordered pairs (a,b) and (b,a) where a = A[i], b = B[j]
+      rsSetNaive a  = A[i];
+      rsSetNaive b  = B[j];
+      rsSetNaive ab = rsSetNaive::orderedPair(a, b);
+      rsSetNaive ba = rsSetNaive::orderedPair(b, a);
+
+      // Check if trichotomy holds for the current pair a,b:
+      bool ls = R.hasElement(ab);   // a < b, "less"
+      bool eq = a == b;             // a = b, "equal"
+      bool gt = R.hasElement(ba);   // a > b, "greater"
+      bool ok = (ls && !eq && !gt) || (!ls && eq && !gt) || (!ls && !eq && gt);
+      if(!ok)
+        return false;
+    }
+  }
+  return true;
+}
+// Needs test
+
+
 
 
 rsSetNaive rsRelation::create(const rsSetNaive& A, const rsSetNaive& B,
@@ -901,12 +930,6 @@ Ideas:
 
 - Implement a collection of functions that deal specifically with relations. Implement
 
-  -isSurjective(R, C): checks for each c in C, if numOccurencesRight is >= 1
-  -isInjective(R, D): check for each d in D, if numOccurencesLeft is = 1...or maybe <=? Maybe we 
-   should allows also partial functions...or no: maybe that should be called isFunction
-  -isTransitive, isReflexive, isSymmetric, isAntiSymmetric, isAsymmetric
-  -isPartialOrder, isTotalOrder, isStrictPartialOrder, isStrictTotalOrder, isWellOrder, ...
-  -isEquivalence, isTrichotomic
   -Maybe implement a function that returns the set of all possible relations between A and B. 
    That's an even larger set than A^B or B^A, the sets of all functions from B to A or A to B. I 
    think, it's just the power set of the set product of A and B and therefore has size 2^(|A|*|B|).

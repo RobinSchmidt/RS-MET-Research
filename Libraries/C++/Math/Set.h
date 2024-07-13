@@ -428,7 +428,16 @@ public:
   // https://en.wikipedia.org/wiki/Binary_relation#Types_of_binary_relations
 
 
+  /** Checks, if the relation R is trichotomic on A,B. That means, for any pair a,b from A,B 
+  exactly one of the 3 conditions must me true: (a,b) in R, (b,a) in R, a == b. That models a 
+  strict total order relation in which for any a,b we have exactly one of 3 cases: 
+  a < b, a == b, a > b.  */
+  bool isTrichotomic(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
+
+  // ToDo:
+  // isTransitive, isReflexive, isSymmetric, isAntiSymmetric, isAsymmetric, isPartialOrder, 
+  // isTotalOrder, isStrictPartialOrder, isStrictTotalOrder, isWellOrder, isEquivalence, 
 
 
 

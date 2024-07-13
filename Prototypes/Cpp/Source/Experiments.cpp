@@ -10676,6 +10676,18 @@ void printOrderedPair(const rema::rsSetNaive& x)
   std::cout << rema::rsSetNaive::orderedPairToString(x);
 }
 
+/*
+// Quick factory function to create distiguishable sets:
+rema::rsSetNaive nestedSingleton(int level)
+{
+  rema::rsSetNaive A;
+  for(int i = 0; i < level; i++)
+    A = rema::rsSetNaive::singleton(A);
+  return A;
+}
+*/
+
+
 void testSet()
 {
   // We test the class rsSetNaive which implements a set in the set-theoretical sense and provides
@@ -10924,13 +10936,21 @@ void testSet()
 
     //str = str2(D, P); // It's a mess!
 
+    // Maybe do some more thorough tests - we currently only check, if the cardinalities are as 
+    // expected but don't look into the content of the sets
+
     int dummy = 0;
   }
 
+
   // Test special subsets of the power set:
   {
+    // Test check for a topology:
+    // ...
 
 
+    // Test check for a sigma algebra:
+    // ...
   }
 
 
@@ -10995,8 +11015,45 @@ void testSet()
 
 }
 
+void testRelation()
+{
+  using Set = rema::rsSetNaive;
+  using NN  = rema::rsNeumannNumber;
+  using Rel = rema::rsRelation;
+
+  using Mat = RAPT::rsMatrix<Set>;
+  using Vec = std::vector<Set>;
+
+  bool  ok  = true;
 
 
+
+  // Create the numbers 0..5:
+  Set n0 = NN::create(0);
+  Set n1 = NN::create(1);
+  Set n2 = NN::create(2);
+  Set n3 = NN::create(3);
+  Set n4 = NN::create(4);
+  Set n5 = NN::create(5);
+
+  Set A, B;
+
+  A = Set({n0,n1,n2,n3});  // A = { 0,1,2,3 }
+  B = Set({n2,n3,n4,n5});  // B = { 2,3,4,5 }
+
+
+  //Set p00 = Set::orderedPair(n0, n0);
+  //Set p01 = Set::orderedPair(n0, n1);
+  //Set p02 = Set::orderedPair(n0, n2);
+
+
+  Vec v({n0,n1,n2,n3,n4,n5});
+  Mat M;
+
+
+
+  rsAssert(ok);
+}
 
 void testNeumannNumbers()
 {
@@ -11046,6 +11103,13 @@ void testNeumannNumbers()
   Set n7 = NN::create(7);
   Set n8 = NN::create(8);
   Set n9 = NN::create(9);
+
+  // Check transitivity of some numbers:
+  ok &= n0.isTransitive();
+  ok &= n1.isTransitive();
+  ok &= n2.isTransitive();
+  ok &= n5.isTransitive();
+  ok &= n9.isTransitive();
 
   // Maybe move this into testSet() - but then we need to use other sets as elements
   // Test set exponentiation:

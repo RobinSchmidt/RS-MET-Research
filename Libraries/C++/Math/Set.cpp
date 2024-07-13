@@ -457,7 +457,45 @@ bool rsRelation::hasCodomain(const rsSetNaive& R, const rsSetNaive& B)
   return true;
 }
 
+int rsRelation::numOccurencesLeft(const rsSetNaive& R, const rsSetNaive& a)
+{
+  int count = 0;
+  for(size_t i = 0; i < R.getCardinality(); i++)
+  {
+    if(!R[i].isOrderedPair())                    // Skip over non-pairs
+      continue;  
+    if(a == R[i].orderedPairFirst())
+      count++;
+  }
+  return count;
+}
 
+int rsRelation::numOccurencesRight(const rsSetNaive& R, const rsSetNaive& b)
+{
+  int count = 0;
+  for(size_t i = 0; i < R.getCardinality(); i++)
+  {
+    if(!R[i].isOrderedPair())                    // Skip over non-pairs
+      continue;  
+    if(b == R[i].orderedPairSecond())
+      count++;
+  }
+  return count;
+}
+
+
+
+
+rsSetNaive rsRelation::create(const rsSetNaive& A, const rsSetNaive& B,
+  const std::function<bool(const rsSetNaive& a, const rsSetNaive& b)>& predicate)
+{
+  rsSetNaive R;
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    for(size_t j = 0; j < B.getCardinality(); j++)
+      if(predicate(A[i], B[j]))
+        R.addElement(rsSetNaive::orderedPair(A[i], B[j]));
+  return R;
+}
 
 
 
@@ -810,8 +848,12 @@ Ideas:
   -isRelation: checks, if the set is made from ordered pairs
   -hasDomain(R, D):  checks, if all left hand sides of R are in D
   -hasCodomain(R, C):    ...        right ...                   C
+  -makeRelation(A, B, predicate)
+
   -numOccurencesRight(R, C): counts the number, the element A occurs on the right hand side
   -numOccurencesLeft(R, D):
+  
+
   -isSurjective(R, C): checks for each c in C, if numOccurencesRight is >= 1
   -isInjective(R, D): check for each d in D, if numOccurencesLeft is = 1...or maybe <=? Maybe we 
    should allows also partial functions...or no: maybe that should be called isFunction
@@ -821,7 +863,6 @@ Ideas:
   -Maybe implement a function that returns the set of all possible relations between A and B. 
    That's an even larger set than A^B or B^A, the sets of all functions from B to A or A to B. I 
    think, it's just the power set of the set product of A and B and therefore has size 2^(|A|*|B|).
-  -makeRelation(A, B, predicate)
   -converse/inverse, composition, restriction
 
 - It seems natural to disallow cyclic element inclusion chains in sets - however, in a data 

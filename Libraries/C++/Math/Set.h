@@ -344,22 +344,24 @@ public:
   B. */
   bool isRelationBetween(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
+  /** Checks if the given set R is a relation on the set A, i.e. a relation between A and 
+  itself. */
   bool isRelationOn(const rsSetNaive& R, const rsSetNaive& A) { return isRelationBetween(R,A,A); }
 
-
+  /** Checks if the given set R is a relation with domain A. */
   bool hasDomain(const rsSetNaive& R, const rsSetNaive& A);
 
-
-
+  /** Checks if the given set R is a relation with codomain B. */
   bool hasCodomain(const rsSetNaive& R, const rsSetNaive& B);
 
 
+  /** Counts the number of times by which the given element a occurs on the left hand side of the 
+  relation R. */
   int numOccurencesLeft(const rsSetNaive& R, const rsSetNaive& a);
-  //counts the number, the element A occurs on the left hand side
 
+  /** Counts the number of times by which the given element b occurs on the right hand side of the 
+  relation R. */
   int numOccurencesRight(const rsSetNaive& R, const rsSetNaive& b);
-
-
 
 
 
@@ -368,6 +370,10 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Factory
 
+  /** Creates a relation R with domain A and codomain B based on the given predicate. The pair 
+  (a,b) with a in A, b in B will be included in R iff predicate(a,b) == true. */
+  static rsSetNaive create(const rsSetNaive& A, const rsSetNaive& B,
+    const std::function<bool(const rsSetNaive& a, const rsSetNaive& b)>& predicate);
 
 
 

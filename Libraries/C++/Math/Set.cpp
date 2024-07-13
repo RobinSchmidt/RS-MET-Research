@@ -202,6 +202,17 @@ size_t rsSetNaive::getMemoryUsage() const
   //  have approximately the right scaling behavior.
 }
 
+size_t rsSetNaive::getNestingDepth() const
+{
+  if(isEmpty())
+    return 0;
+  size_t maxElemDepth = 0;
+  for(size_t i = 0; i < getCardinality(); i++)
+    maxElemDepth = rsMax(maxElemDepth, elements[i]->getNestingDepth());
+  return 1 + maxElemDepth;
+}
+// Needs test
+
 rsSetNaive rsSetNaive::singleton(const rsSetNaive& A)
 {
   rsSetNaive S;
@@ -864,6 +875,9 @@ Ideas:
    That's an even larger set than A^B or B^A, the sets of all functions from B to A or A to B. I 
    think, it's just the power set of the set product of A and B and therefore has size 2^(|A|*|B|).
   -converse/inverse, composition, restriction
+  -what about Codd operations?
+   https://en.wikipedia.org/wiki/Relational_algebra
+   ..but nah - I think, that doesn't apply here
 
 - It seems natural to disallow cyclic element inclusion chains in sets - however, in a data 
   structure, we could actually implement this easily. Basically, a set can be viewed as a tree 

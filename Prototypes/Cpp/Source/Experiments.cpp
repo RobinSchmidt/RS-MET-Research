@@ -10750,6 +10750,12 @@ void testSet()
   ok &=  C.isOrderedPair();  // C has the right structure even though not created as ordered pair
   ok &= !D.isOrderedPair();
 
+  ok &= empty.getNestingDepth() == 0;
+  ok &= singletonEmpty.getNestingDepth() == 1;
+  ok &= A.getNestingDepth() == 2;
+  ok &= B.getNestingDepth() == 3;
+
+
 
   // In this block, names like AB, ABC mean tuples:
   {

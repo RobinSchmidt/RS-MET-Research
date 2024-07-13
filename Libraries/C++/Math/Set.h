@@ -121,6 +121,10 @@ public:
   // Needs test
 
 
+  bool isTopologyOn(const rsSetNaive& A);
+  bool isSigmaAlgebraOn(const rsSetNaive& A);
+
+
   // ToDo:
   //
   //bool isHereditarilyTransitive() const;   // or is the meaning of transitive already meant that way?
@@ -169,6 +173,9 @@ public:
   // \name Element Misc
 
   size_t getMemoryUsage() const;
+
+  /** Returns the depth of the tree-like data structure, i.e. the number of nesting levels. */
+  size_t getNestingDepth() const;
 
 
   //

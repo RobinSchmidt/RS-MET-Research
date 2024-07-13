@@ -11068,13 +11068,8 @@ void testRelation()
   ok &=  Rel::isFunction(         R, A, B);
   ok &=  Rel::isLeftTotal(        R, A, B);
   ok &=  Rel::isRightUnique(      R, A, B);
-
-
-  ok &=  Rel::isLeftUnique(       R, A, B);
-  // FAILS!
-
-
-  ok &= !Rel::isRightTotal(       R, A, B);
+  ok &= !Rel::isLeftUnique(       R, A, B);  // 5 in B could map to 2 or 3 in A
+  ok &= !Rel::isRightTotal(       R, A, B);  // 4 in B is not reached
   ok &=  Rel::isLeftTotal(        R, A, B);
   ok &= !Rel::isBijectiveFunction(R, A, B);
 

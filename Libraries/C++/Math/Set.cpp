@@ -211,7 +211,7 @@ size_t rsSetNaive::getNestingDepth() const
     maxElemDepth = rsMax(maxElemDepth, elements[i]->getNestingDepth());
   return 1 + maxElemDepth;
 }
-// Needs test
+// Needs more tests
 
 rsSetNaive rsSetNaive::singleton(const rsSetNaive& A)
 {
@@ -494,6 +494,63 @@ int rsRelation::numOccurencesRight(const rsSetNaive& R, const rsSetNaive& b)
   return count;
 }
 
+bool rsRelation::isLeftTotal(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    if(numOccurencesLeft(R, A[i]) < 1)
+      return false;
+  return true;
+}
+
+bool rsRelation::isRightUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    if(numOccurencesLeft(R, A[i]) > 1)
+      return false;
+  return true;
+}
+
+bool rsRelation::isFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    if(numOccurencesLeft(R, A[i]) != 1)
+      return false;
+  return true;
+}
+
+
+
+
+
+
+// I think these are wrong:
+/*
+bool rsRelation::isRightTotal(const rsSetNaive& R, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < B.getCardinality(); i++)
+    if(numOccurencesRight(R, B[i]) < 1)
+      return false;
+  return true;
+}
+// needs test
+
+
+bool rsRelation::isLeftUnique(const rsSetNaive& R, const rsSetNaive& A)
+{
+  for(size_t i = 0; i < A.getCardinality(); i++)
+    if(numOccurencesLeft(R, A[i]) > 1)
+      return false;
+  return true;
+}
+
+bool rsRelation::isRightUnique(const rsSetNaive& R, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < B.getCardinality(); i++)
+    if(numOccurencesRight(R, B[i]) > 1)
+      return false;
+  return true;
+}
+*/
 
 
 
@@ -856,14 +913,6 @@ Ideas:
   axiom of choice, i guess.
 
 - Implement a collection of functions that deal specifically with relations. Implement
-  -isRelation: checks, if the set is made from ordered pairs
-  -hasDomain(R, D):  checks, if all left hand sides of R are in D
-  -hasCodomain(R, C):    ...        right ...                   C
-  -makeRelation(A, B, predicate)
-
-  -numOccurencesRight(R, C): counts the number, the element A occurs on the right hand side
-  -numOccurencesLeft(R, D):
-  
 
   -isSurjective(R, C): checks for each c in C, if numOccurencesRight is >= 1
   -isInjective(R, D): check for each d in D, if numOccurencesLeft is = 1...or maybe <=? Maybe we 
@@ -874,7 +923,8 @@ Ideas:
   -Maybe implement a function that returns the set of all possible relations between A and B. 
    That's an even larger set than A^B or B^A, the sets of all functions from B to A or A to B. I 
    think, it's just the power set of the set product of A and B and therefore has size 2^(|A|*|B|).
-  -converse/inverse, composition, restriction
+  -converse/inverse, composition, restriction, complement
+   https://en.wikipedia.org/wiki/Complement_(set_theory)
   -what about Codd operations?
    https://en.wikipedia.org/wiki/Relational_algebra
    ..but nah - I think, that doesn't apply here

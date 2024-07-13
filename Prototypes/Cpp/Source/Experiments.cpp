@@ -10927,6 +10927,12 @@ void testSet()
     int dummy = 0;
   }
 
+  // Test special subsets of the power set:
+  {
+
+
+  }
+
 
   // Test transitivity stuff:
   {

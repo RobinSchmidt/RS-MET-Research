@@ -121,9 +121,24 @@ public:
   // Needs test
 
 
-  bool isTopologyOn(const rsSetNaive& A);
-  bool isSigmaAlgebraOn(const rsSetNaive& A);
 
+
+  //bool isClosedUnderComplement(const rsSetNaive& S, const rsSetNaive& A);
+  // Given S, assumed to be subset of the power set P of A, this function should check, if S
+  // is closed under the complement. That means: for each element s in S, check if P-s is also in S
+  // wher P-s is the set difference between P = P(A) and s
+
+  //bool isClosedUnderUnions(const rsSetNaive& S, const rsSetNaive& A);
+  // Given S, assumed to be subset of of the power set of A, this function should check, if S
+  // is closed under unions.
+
+  // isClosedUnderIntersections
+
+  //bool isTopologyOn(const rsSetNaive& A);
+  //bool isSigmaAlgebraOn(const rsSetNaive& A);
+
+  // See:
+  // https://en.wikipedia.org/wiki/Family_of_sets
 
   // ToDo:
   //
@@ -333,7 +348,9 @@ protected:
 
 //=================================================================================================
 
-/** Collection of functions that deal with special sets that represent relations */
+/** UNDER CONSTRUCTION. HAS NOT YET BEEN TESTED
+
+Collection of functions that deal with special sets that represent relations */
 
 class rsRelation : public rsSetNaive
 {
@@ -369,6 +386,56 @@ public:
   /** Counts the number of times by which the given element b occurs on the right hand side of the 
   relation R. */
   int numOccurencesRight(const rsSetNaive& R, const rsSetNaive& b);
+
+
+  // In some of these functions, we do not need to look at all function parameters - but we want a
+  // consistent API because otherwise, the caller must be careful to put the right set in (domain 
+  // or codomain). We define the API such that the caller must always pass relation, domain, 
+  // codomain in that order
+
+  // VERIFY the definitions of these:
+
+  /** Checks if every a in A occurs as left hand side in the relation R at least once. A is taken 
+  to be the domain of the relation R. */
+  bool isLeftTotal(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+
+  /** Checks if every a in A occurs as left hand side in the relation R at most once. A is taken 
+  to be the domain of the relation R. This is called right-unique because if we find a in A, it 
+  will have a unique partner in B. */
+  bool isRightUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+
+  /** Checks if every a in A occurs as left hand side in the relation R at exactly once. That is
+  euqivalent of being left-total and right-unique.  */
+  bool isFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+
+
+
+  // ToDo: left-unique aka  injective, right-total aka surjective,, bijective
+
+  // https://proofwiki.org/wiki/Definition:Right-Total_Relation
+  // https://knowledge.anyhowstep.com/nodes/183/title/Left-unique-Relation
+  // https://en.wikipedia.org/wiki/Binary_relation#Types_of_binary_relations
+
+
+  /** Checks if every b in B occurs as right hand side in the relation R at least once. B is taken 
+  to be the codomain of the relation R. */
+  //bool isRightTotal(const rsSetNaive& R, const rsSetNaive& B);
+  // I think, surjective is another word for right-total, I think - verify!
+
+  /** Checks if every a in A occurs as left hand side in the relation R at most once. A is taken 
+  to be the domain of the relation R. */
+  //bool isLeftUnique(const rsSetNaive& R, const rsSetNaive& A);
+
+  /** Checks if every b in B occurs as right hand side in the relation R at most once. B is taken 
+  to be the codomain of the relation R. */
+  //bool isRightUnique(const rsSetNaive& R, const rsSetNaive& B);
+  // I think, injective is another word for right-total, I think - verify!
+
+
+  // isLeftUnique, isRightUnique
+
+  // a function is left-total and right-unique
+
 
 
 

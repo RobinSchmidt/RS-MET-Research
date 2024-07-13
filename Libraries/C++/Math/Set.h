@@ -361,31 +361,32 @@ public:
   // \name Inquiry
 
   /** Checks if the given set R is a relation by verifying that each element is an ordered pair. */
-  bool isRelation(const rsSetNaive& R);
+  static bool isRelation(const rsSetNaive& R);
 
   /** Checks if the given set R is a relation between the domain A and the codomain B by verifying 
   that each element is an ordered pair with the first component from A and the second component from
   B. */
-  bool isRelationBetween(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+  static bool isRelationBetween(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   /** Checks if the given set R is a relation on the set A, i.e. a relation between A and 
   itself. */
-  bool isRelationOn(const rsSetNaive& R, const rsSetNaive& A) { return isRelationBetween(R,A,A); }
+  static bool isRelationOn(const rsSetNaive& R, const rsSetNaive& A) 
+  { return isRelationBetween(R, A, A); }
 
   /** Checks if the given set R is a relation with domain A. */
-  bool hasDomain(const rsSetNaive& R, const rsSetNaive& A);
+  static bool hasDomain(const rsSetNaive& R, const rsSetNaive& A);
 
   /** Checks if the given set R is a relation with codomain B. */
-  bool hasCodomain(const rsSetNaive& R, const rsSetNaive& B);
+  static bool hasCodomain(const rsSetNaive& R, const rsSetNaive& B);
 
 
   /** Counts the number of times by which the given element a occurs on the left hand side of the 
   relation R. */
-  int numOccurencesLeft(const rsSetNaive& R, const rsSetNaive& a);
+  static int numOccurencesLeft(const rsSetNaive& R, const rsSetNaive& a);
 
   /** Counts the number of times by which the given element b occurs on the right hand side of the 
   relation R. */
-  int numOccurencesRight(const rsSetNaive& R, const rsSetNaive& b);
+  static int numOccurencesRight(const rsSetNaive& R, const rsSetNaive& b);
 
 
   // In some of these functions, we do not need to look at all function parameters - but we want a
@@ -397,31 +398,31 @@ public:
 
   /** Checks if every a in A occurs as left hand side in the relation R at least once. A is taken 
   to be the domain of the relation R. */
-  bool isLeftTotal(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+  static bool isLeftTotal(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   /** Checks if every a in A occurs as left hand side in the relation R at most once. A is taken 
   to be the domain of the relation R. This is called right-unique because if we find a in A, it 
   will have a unique partner in B. */
-  bool isRightUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+  static bool isRightUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   /** Checks if every a in A occurs as left hand side in the relation R at exactly once. That is
   euqivalent of being left-total and right-unique. A function can be interpreted as a map that maps
   every element a of A to a uniquely determined element b of B. */
-  bool isFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+  static bool isFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   /** Checks if every b in B occurs as right hand side in the relation R at most once. B is taken 
   to be the codomain of the relation R. This is called left-unique because if we find b in B, it 
   will have a unique partner in A. A left-unique is also called injective. */
-  bool isLeftUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+  static bool isLeftUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   /** Checks if every b in B occurs as right hand side in the relation R at least once. B is taken 
   to be the codomain of the relation R. A right-total relation is also called surjective. */
-  bool isRightTotal(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+  static bool isRightTotal(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   /** Checks if relation R is a function from A to B and is additionally injective (i.e. 
   left-unique) and surjective (i.e. right-total). These two additional conditions are summarized
   under the term bijective. Bijective functions als also called invertible. */
-  bool isBijectiveFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+  static bool isBijectiveFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   // https://proofwiki.org/wiki/Definition:Right-Total_Relation
   // https://knowledge.anyhowstep.com/nodes/183/title/Left-unique-Relation
@@ -432,7 +433,7 @@ public:
   exactly one of the 3 conditions must me true: (a,b) in R, (b,a) in R, a == b. That models a 
   strict total order relation in which for any a,b we have exactly one of 3 cases: 
   a < b, a == b, a > b.  */
-  bool isTrichotomic(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+  static bool isTrichotomic(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
 
   // ToDo:

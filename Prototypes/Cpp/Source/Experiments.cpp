@@ -11027,8 +11027,7 @@ void testRelation()
   bool  ok  = true;
 
 
-
-  // Create the numbers 0..5:
+  // Create the Neumann numbers 0..5:
   Set n0 = NN::create(0);
   Set n1 = NN::create(1);
   Set n2 = NN::create(2);
@@ -11036,19 +11035,52 @@ void testRelation()
   Set n4 = NN::create(4);
   Set n5 = NN::create(5);
 
-  Set A, B;
+  // Create all possible pairs (a,b). This is the pool of objects from which we will build the 
+  // relations:
+  Vec v({n0,n1,n2,n3,n4,n5});
+  int iMax = 5;
+  Mat M(iMax+1, iMax+1);
+  for(int i = 0; i <= iMax; i++) {
+    for(int j = 0; j <= iMax; j++) {
+      Set ab = Set::orderedPair(v[i], v[j]);
+      M(i,j) = ab;  }}
 
+  // Create some sets between which we want to establish the relations
+  Set A, B;
   A = Set({n0,n1,n2,n3});  // A = { 0,1,2,3 }
   B = Set({n2,n3,n4,n5});  // B = { 2,3,4,5 }
 
 
-  //Set p00 = Set::orderedPair(n0, n0);
-  //Set p01 = Set::orderedPair(n0, n1);
-  //Set p02 = Set::orderedPair(n0, n2);
+  Set R;
+
+  // Create the bijective function f:  0->2, 1->3, 2->5, 3->4  from A to B.
+  R = Set({M(0,2), M(1,3), M(2,5), M(3,4)});
+  ok &= Rel::isFunction(         R, A, B);
+  ok &= Rel::isLeftTotal(        R, A, B);
+  ok &= Rel::isRightUnique(      R, A, B);
+  ok &= Rel::isLeftUnique(       R, A, B);
+  ok &= Rel::isRightTotal(       R, A, B);
+  ok &= Rel::isLeftTotal(        R, A, B);
+  ok &= Rel::isBijectiveFunction(R, A, B);
+
+  // Create the injective function f:  0->2, 1->3, 2->5, 3->5  from A to B.
+  R = Set({M(0,2), M(1,3), M(2,5), M(3,5)});
+  ok &=  Rel::isFunction(         R, A, B);
+  ok &=  Rel::isLeftTotal(        R, A, B);
+  ok &=  Rel::isRightUnique(      R, A, B);
 
 
-  Vec v({n0,n1,n2,n3,n4,n5});
-  Mat M;
+  ok &=  Rel::isLeftUnique(       R, A, B);
+  // FAILS!
+
+
+  ok &= !Rel::isRightTotal(       R, A, B);
+  ok &=  Rel::isLeftTotal(        R, A, B);
+  ok &= !Rel::isBijectiveFunction(R, A, B);
+
+
+  // ToDo: create more relations with various combinations of properties and check, if the is...
+  // functions return always the right result
 
 
 

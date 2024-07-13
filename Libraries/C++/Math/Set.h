@@ -405,36 +405,27 @@ public:
   bool isRightUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   /** Checks if every a in A occurs as left hand side in the relation R at exactly once. That is
-  euqivalent of being left-total and right-unique.  */
+  euqivalent of being left-total and right-unique. A function can be interpreted as a map that maps
+  every element a of A to a uniquely determined element b of B. */
   bool isFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
+  /** Checks if every b in B occurs as right hand side in the relation R at most once. B is taken 
+  to be the codomain of the relation R. This is called left-unique because if we find b in B, it 
+  will have a unique partner in A. A left-unique is also called injective. */
+  bool isLeftUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
+  /** Checks if every b in B occurs as right hand side in the relation R at least once. B is taken 
+  to be the codomain of the relation R. A right-total relation is also called surjective. */
+  bool isRightTotal(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
-  // ToDo: left-unique aka  injective, right-total aka surjective,, bijective
+  /** Checks if relation R is a function from A to B and is additionally injective (i.e. 
+  left-unique) and surjective (i.e. right-total). These two additional conditions are summarized
+  under the term bijective. Bijective functions als also called invertible. */
+  bool isBijectiveFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
 
   // https://proofwiki.org/wiki/Definition:Right-Total_Relation
   // https://knowledge.anyhowstep.com/nodes/183/title/Left-unique-Relation
   // https://en.wikipedia.org/wiki/Binary_relation#Types_of_binary_relations
-
-
-  /** Checks if every b in B occurs as right hand side in the relation R at least once. B is taken 
-  to be the codomain of the relation R. */
-  //bool isRightTotal(const rsSetNaive& R, const rsSetNaive& B);
-  // I think, surjective is another word for right-total, I think - verify!
-
-  /** Checks if every a in A occurs as left hand side in the relation R at most once. A is taken 
-  to be the domain of the relation R. */
-  //bool isLeftUnique(const rsSetNaive& R, const rsSetNaive& A);
-
-  /** Checks if every b in B occurs as right hand side in the relation R at most once. B is taken 
-  to be the codomain of the relation R. */
-  //bool isRightUnique(const rsSetNaive& R, const rsSetNaive& B);
-  // I think, injective is another word for right-total, I think - verify!
-
-
-  // isLeftUnique, isRightUnique
-
-  // a function is left-total and right-unique
 
 
 

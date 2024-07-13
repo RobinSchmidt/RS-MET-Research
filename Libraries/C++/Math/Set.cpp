@@ -518,40 +518,27 @@ bool rsRelation::isFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSe
   return true;
 }
 
-
-
-
-
-
-// I think these are wrong:
-/*
-bool rsRelation::isRightTotal(const rsSetNaive& R, const rsSetNaive& B)
-{
-  for(size_t i = 0; i < B.getCardinality(); i++)
-    if(numOccurencesRight(R, B[i]) < 1)
-      return false;
-  return true;
-}
-// needs test
-
-
-bool rsRelation::isLeftUnique(const rsSetNaive& R, const rsSetNaive& A)
-{
-  for(size_t i = 0; i < A.getCardinality(); i++)
-    if(numOccurencesLeft(R, A[i]) > 1)
-      return false;
-  return true;
-}
-
-bool rsRelation::isRightUnique(const rsSetNaive& R, const rsSetNaive& B)
+bool rsRelation::isLeftUnique(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B)
 {
   for(size_t i = 0; i < B.getCardinality(); i++)
     if(numOccurencesRight(R, B[i]) > 1)
       return false;
   return true;
 }
-*/
 
+bool rsRelation::isRightTotal(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < B.getCardinality(); i++)
+    if(numOccurencesRight(R, B[i]) < 1)
+      return false;
+  return true;
+}
+
+bool rsRelation::isBijectiveFunction(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B)
+{
+  return isFunction(R, A, B) && isLeftUnique(R, A, B) && isRightTotal(R, A, B);
+  // Left-unique == injective, right-total == surjective
+}
 
 
 rsSetNaive rsRelation::create(const rsSetNaive& A, const rsSetNaive& B,

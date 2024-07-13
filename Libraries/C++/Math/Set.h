@@ -326,6 +326,56 @@ protected:
 
 //=================================================================================================
 
+/** Collection of functions that deal with special sets that represent relations */
+
+class rsRelation : public rsSetNaive
+{
+
+public:
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+  /** Checks if the given set R is a relation by verifying that each element is an ordered pair. */
+  bool isRelation(const rsSetNaive& R);
+
+  /** Checks if the given set R is a relation between the domain A and the codomain B by verifying 
+  that each element is an ordered pair with the first component from A and the second component from
+  B. */
+  bool isRelationBetween(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B);
+
+  bool isRelationOn(const rsSetNaive& R, const rsSetNaive& A) { return isRelationBetween(R,A,A); }
+
+
+  bool hasDomain(const rsSetNaive& R, const rsSetNaive& A);
+
+
+
+  bool hasCodomain(const rsSetNaive& R, const rsSetNaive& B);
+
+
+  int numOccurencesLeft(const rsSetNaive& R, const rsSetNaive& a);
+  //counts the number, the element A occurs on the left hand side
+
+  int numOccurencesRight(const rsSetNaive& R, const rsSetNaive& b);
+
+
+
+
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Factory
+
+
+
+
+
+};
+
+//=================================================================================================
+
 /** Implements the von Neumann construction of the natural numbers based on sets. The sets are 
 represented using the class rsSetNaive. In the von Neuman construction, the number zero is 
 represented by the empty set and higher numbers are defined recursively via a successor function

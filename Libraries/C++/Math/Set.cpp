@@ -399,6 +399,75 @@ rsSetNaive* rsSetNaive::getCopy() const
 
 //=================================================================================================
 
+bool rsRelation::isRelation(const rsSetNaive& R)
+{
+  for(size_t i = 0; i < R.getCardinality(); i++)
+    if(!R[i].isOrderedPair())
+      return false;
+  return true;
+}
+
+bool rsRelation::isRelationBetween(const rsSetNaive& R, const rsSetNaive& A, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < R.getCardinality(); i++)
+  {
+    // Check that R[i] is an ordered pair:
+    if(!R[i].isOrderedPair())
+      return false;
+
+    // Destructure the pair R[i] into (a,b):
+    rsSetNaive a = R[i].orderedPairFirst();
+    rsSetNaive b = R[i].orderedPairSecond();
+
+    // Check, if the elements a,b are found in A,B respectively:
+    if(!A.hasElement(a))
+      return false;
+    if(!B.hasElement(b))
+      return false;
+  }
+  return true;
+
+  // We could implement this in terms of hasDomain/hasCodomain but I think, it's more efficient 
+  // this way because we do it all in one pass. 
+}
+
+bool rsRelation::hasDomain(const rsSetNaive& R, const rsSetNaive& A)
+{
+  for(size_t i = 0; i < R.getCardinality(); i++)
+  {
+    if(!R[i].isOrderedPair())                    // Check that R[i] is an ordered pair
+      return false;
+    rsSetNaive a = R[i].orderedPairFirst();      // Extract a from (a,b)
+    if(!A.hasElement(a))                         // Check that a is found in A
+      return false;
+  }
+  return true;
+}
+
+bool rsRelation::hasCodomain(const rsSetNaive& R, const rsSetNaive& B)
+{
+  for(size_t i = 0; i < R.getCardinality(); i++)
+  {
+    if(!R[i].isOrderedPair())                    // Check that R[i] is an ordered pair
+      return false;
+    rsSetNaive b = R[i].orderedPairSecond();     // Extract b from (a,b)
+    if(!B.hasElement(b))                         // Check that b is found in B
+      return false;
+  }
+  return true;
+}
+
+
+
+
+
+
+
+
+
+
+//=================================================================================================
+
 bool rsNeumannNumber::isWellFormed(const rsSetNaive& A)
 {
   //rsSetNaive target = create(value(A));  // Nope! Calling value() leads to infinite recursion!
@@ -731,6 +800,37 @@ Ideas:
   overflow, we just treat it as error. But in that representation, how would we perform arithmetic 
   on such ordinals? Would it be similar to arithmetic on polynomial coeff arrays? I guess not.
   ...figure out!
+
+- Maybe try to implement the natural numbers in a different way, namely as: 0 = {}, n+1 = {n}. That
+  means, the number n is just the n-th order nested singleton of the empty set. 1 = {0}, 2 = {{0}}, .
+  etc. The predecessor function would just be element extraction which could be justified by the 
+  axiom of choice, i guess.
+
+- Implement a collection of functions that deal specifically with relations. Implement
+  -isRelation: checks, if the set is made from ordered pairs
+  -hasDomain(R, D):  checks, if all left hand sides of R are in D
+  -hasCodomain(R, C):    ...        right ...                   C
+  -numOccurencesRight(R, C): counts the number, the element A occurs on the right hand side
+  -numOccurencesLeft(R, D):
+  -isSurjective(R, C): checks for each c in C, if numOccurencesRight is >= 1
+  -isInjective(R, D): check for each d in D, if numOccurencesLeft is = 1...or maybe <=? Maybe we 
+   should allows also partial functions...or no: maybe that should be called isFunction
+  -isTransitive, isReflexive, isSymmetric, isAntiSymmetric, isAsymmetric
+  -isPartialOrder, isTotalOrder, isStrictPartialOrder, isStrictTotalOrder, isWellOrder, ...
+  -isEquivalence, isTrichotomic
+  -Maybe implement a function that returns the set of all possible relations between A and B. 
+   That's an even larger set than A^B or B^A, the sets of all functions from B to A or A to B. I 
+   think, it's just the power set of the set product of A and B and therefore has size 2^(|A|*|B|).
+  -makeRelation(A, B, predicate)
+  -converse/inverse, composition, restriction
+
+- It seems natural to disallow cyclic element inclusion chains in sets - however, in a data 
+  structure, we could actually implement this easily. Basically, a set can be viewed as a tree 
+  whose leaf nodes are the empty set. If we would allow for more general graphs, we could have a 
+  set that contains itself as element. What does that mean? I don't know. ...Maybe it means that
+  the axiom of regularity is too restrictive? We could just define A = { A }, for example. The set
+  A would just be one node and its array of element-pointers would just point to itself. It's a 
+  graph with one node and one edge that loops from the node back to itself.
 
 
 */

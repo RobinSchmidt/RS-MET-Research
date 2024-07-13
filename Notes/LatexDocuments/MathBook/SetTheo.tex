@@ -164,7 +164,7 @@ The axiom states that for each set $x$ there is a set $y$ whose elements are pre
 
 
 \paragraph{Axiom of Regularity}
-This axiom states that every non-empty set $x$ contains an element that is disjoint from $x$. It is also known as the axiom of foundation. ...TBC...
+This axiom states that every non-empty set $x$ contains an element that is disjoint from $x$. It is also known as the \emph{axiom of foundation}. ...TBC...
 
 % The axiom of regularity together with the axiom of pairing implies that no set is an element of itself, and that there is no infinite sequence (an) such that ai+1 is an element of ai for all i. 
 
@@ -267,7 +267,6 @@ The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2,
 \subsubsection{Other Axioms and Systems}
 In this section, we will mention a couple of other possible axioms that could be added to an existing system of the axioms such as of ZF(C) or could be used to build new, alternative axiomatic systems. We'll also briefly look at some of these alternative systems.
 
-
 \paragraph{Axiom of Constructibility} ...TBC...
 
 % -Is a natural axiom but didn't make it into the standard canon
@@ -275,7 +274,6 @@ In this section, we will mention a couple of other possible axioms that could be
 % -it makes the continuum hypothesis provable
 % -It may be written a V = L
 % -It is incompatible with axioms of large cardinals
-
 
 % https://en.wikipedia.org/wiki/Axiom_of_constructibility
 % https://en.wikipedia.org/wiki/Constructible_universe
@@ -291,6 +289,9 @@ In this section, we will mention a couple of other possible axioms that could be
 
 %\paragraph{Axiom Schema of Induction}
 % https://en.wikipedia.org/wiki/Epsilon-induction
+
+% https://en.wikipedia.org/wiki/Axiom_of_determinacy
+% https://en.wikipedia.org/wiki/Axiom_of_countable_choice
 
 \paragraph{The NBG System by Neumann, Bernays, Gödel} ...TBC...
 
@@ -309,21 +310,16 @@ In this section, we will mention a couple of other possible axioms that could be
 % -How does the empty set arise from the axioms?
 % -How do we define intersection, complement and product of two sets?
 
-%---------------------------------------------------------------------------------------------------
-\subsection{Classes}
-Some collections of mathematical objects that are of interest turn out to be not constructible via the construction steps that our respective axiom system provides (typically ZFC). We want some freedom back to describe certain collections of objects. Basically, for some collections of objects, we want to allow ourselves to use the unrestricted comprehension principle from naive set theory again. To define a \emph{class} $C$, we write $C = \{x: \varphi(x)\}$ where $\varphi(x)$ is a predicate in the sense of predicate logic. Sometimes it's even just a property that we informally express in natural language [VERIFY!]. So, classes are a broader concept and allow for more liberal constructions. That means, we should be careful when defining classes in order to not run into paradoxes. All sets are classes but not all classes are sets. A class that is not a set is called a \emph{proper class}. For example, the collection of ordinal numbers is a proper class. The same is true for the collection of cardinal numbers. We will denote these two classes by $\mathsf{ON}$ and $\mathsf{CN}$ respectively. The class of all sets is denoted by $\mathsf{SET}$.
 
-% Or maybe call the subsection "Other Things in Set Theory" and also lits Types, Categories, Urelements, etc
 
-% explain Cesare Burali-Forti paradox
-
-% https://en.wikipedia.org/wiki/Class_(set_theory)
-% https://de.wikipedia.org/wiki/Klasse_(Mengenlehre)
-% https://de.wikipedia.org/wiki/Klassenlogik
-
+% https://en.wikipedia.org/wiki/New_Foundations
 %---------------------------------------------------------------------------------------------------
 \subsection{Terminology, Notation, Definitions, Conventions}
 In the following we will define a couple of important set theoretical terms that we will need later. In set theory, variable names stand for sets as such but they may also stand for elements of other sets because the elements of sets are, of course, yet again sets. We will tend to use capital letters like $A,B,C,\ldots$ if we want to emphasize the set nature of an object and lowercase letters like $a,b,c,\ldots$ when we want to emphasize the element nature of an object. We may also use greek letters from the beginning of the alphabet like $\alpha,\beta,\gamma, \ldots$ for sets that represent ordinal numbers and greek letters like $\kappa,\lambda,\mu,\ldots$ for cardinal numbers.
+
+
+% https://en.wikipedia.org/wiki/Urelement
+% -Urelements a dual to proper classes: proper classes cannot *be* elements whereas urelements cannot *have* elements. urelements are minimal objects while proper classes are maximal objects by the membership relation (which, of course, is not an order relation, so this analogy is not to be taken literally).
 
 % ToDo: eplxain usage of alpha, beta,...kappa,lambda for ordinal and cardinal numbers
 
@@ -345,8 +341,22 @@ In the following we will define a couple of important set theoretical terms that
 % https://en.wikipedia.org/wiki/Total_order#Chains
 
 
+
+\paragraph{Classes}
+Some collections of mathematical objects that are of interest turn out to be not constructible via the construction steps that our respective axiom system provides (typically ZFC). We want some freedom back to describe certain collections of objects. Basically, for some collections of objects, we want to allow ourselves to use the unrestricted comprehension principle from naive set theory again. To define a \emph{class} $C$, we write $C = \{x: \varphi(x)\}$ where $\varphi(x)$ is a predicate in the sense of predicate logic. Sometimes it's even just a property that we informally express in natural language [VERIFY!]. So, classes are a broader concept and allow for more liberal constructions. That means, we should be careful when defining classes in order to not run into paradoxes. All sets are classes but not all classes are sets. A class that is not a set is called a \emph{proper class}. For example, the collection of ordinal numbers is a proper class. The same is true for the collection of cardinal numbers. We will denote these two classes by $\mathsf{ON}$ and $\mathsf{CN}$ respectively. The class of all sets is denoted by $\mathsf{SET}$.
+
+% Or maybe call the subsection "Other Things in Set Theory" and also lits Types, Categories, Urelements, etc
+
+% explain Cesare Burali-Forti paradox
+
+% https://en.wikipedia.org/wiki/Class_(set_theory)
+% https://de.wikipedia.org/wiki/Klasse_(Mengenlehre)
+% https://de.wikipedia.org/wiki/Klassenlogik
+
+
+
 \paragraph{Chains of Inclusions}
-To convey the fact that a set $A$ is a subset of another set $B$ which is, in turn, a subset of a third set $C$, we could write $A \subseteq B \wedge B \subseteq C$. But that is tedious, so we will instead write this as $A \subseteq B \subseteq C$. We call such a statement a chain of subset inclusions\footnote{I don't know, if that's an official term, though.}. Likewise, for $A \in B \wedge B \in C$ we may write $A \in B \in C$ and call that a chain of element inclusions.
+To convey the fact that a set $A$ is a subset of another set $B$ which is, in turn, a subset of a third set $C$, we could write $A \subseteq B \wedge B \subseteq C$. But that is tedious, so we will instead write this as $A \subseteq B \subseteq C$. We call such a statement a chain of subset inclusions\footnote{I don't know, if that's an official term, though.}. Likewise, for $A \in B \wedge B \in C$ we may write $A \in B \in C$ and call that a chain of element inclusions. TODO: explain the term chain in the context of partial orders, Hasse diagrams, etc.
 
 % https://www.youtube.com/watch?v=szfsGJ_PGQ0
 % talks about chains at around 18:40
@@ -407,9 +417,14 @@ The transitive closure of a set $A$, denoted as $\tc(A)$ is given by:
 
 \paragraph{Upper Bound}
 
+% partial order, poset, maximal element
+
+% https://en.wikipedia.org/wiki/Baire_space_(set_theory)
+% Baire Space, Cantor Space
+
 %===================================================================================================
 \section{Numbers as Sets}
-In set theory, sets are the only thing that exists. Every mathematical object must somehow be viewed as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to build numbers from sets. Set theorists will talk about things like subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
+In set theory, sets are the only thing that exists. Every mathematical object must somehow be viewed as some sort of set. To do all the cool math things that we love (or hate) so much, we obviously need numbers. So, we somehow need to build numbers from sets. Set theorists will talk about things like subsets of a number. This will at first sound totally nonsensical - what the heck is a subset of $10$ or $3/7$ or $\pi$ supposed to mean? We are used to think of numbers as atomic entities. But in set theory, numbers indeed \emph{are} sets (and therefore can have subsets) and we need to get used to this point of view.
 
 % 
 
@@ -424,7 +439,14 @@ In set theory, sets are the only thing that exists. Every mathematical object mu
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Construction of the Number System}
-In everyday math, we usually take numbers for granted and do not really think much about them. In set theory, all the number systems that we commonly use must first be \emph{constructed} using only sets. We'll show here briefly, how this could be done. For more details, see \cite{PDF_MathFAQ}.
+In everyday math, we usually take numbers for granted and do not really think much about them. In set theory, all the number systems that we commonly use must first be \emph{constructed} using only sets. We'll show here briefly, how this could be done. For more details, see \cite{PDF_MathFAQ}. The construction of the natural numbers we will show here is due to John von Neumann. Therefore, these numbers are called \emph{von Neumann ordinals}. Actually, the von Neumann ordinals are a superset of the natural numbers that we construct here. This superset also includes "infinite" numbers - but for their construction, we'll need more tools. For the natural von Neumann numbers, I'll occasionally use the term \emph{Neumann natural}, although that is not an official term (I think.).
+
+% namely: transfinite recursion
+
+%number\footnote{This is not an official term, though. There is an official notion of the "von Neumann ordinals"}.
+
+% https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
+% https://en.wikipedia.org/wiki/Ordinal_number#Von_Neumann_definition_of_ordinals
 
 % https://cs.uwaterloo.ca/~alopez-o/math-faq/math-faq.pdf  pg 9 ff
 % https://cs.uwaterloo.ca/~alopez-o/math-faq/node11.html
@@ -897,30 +919,9 @@ To show that two sets $A$ and $B$ have the same cardinality, we must, by definit
 % An "obvious" theorem about infinite sets (The Cantor-Bernstein-Schröder Theorem)
 % https://www.youtube.com/watch?v=Nv90aDcwzv0
 
-%---------------------------------------------------------------------------------------------------
-\subsection{Tarski's Theorem}
-Tarski proved 1924 that in ZF, the theorem "For every infinite set $A$, there exists a bijection between $A$ and $A \times A$" implies the axiom of choice. The converse is also true and that was already known at that time. 
-
-%That means in ZF, the theorem and the axiom of choice are equivalent. ...? What did I mean by that?
-% ..it seems rather that the axiom of choice and the existence of the bijections are equivalent?
-
-% https://en.wikipedia.org/wiki/Tarski%27s_theorem_about_choice
 
 
 
-%---------------------------------------------------------------------------------------------------
-\subsection{Well Ordering Theorem}
-
-% The Axiom of Choice
-% https://www.youtube.com/watch?v=szfsGJ_PGQ0
-% -has more equivalent statements around 28
-
-% Das (berühmt-berüchtigte) Auswahlaxiom
-% https://www.youtube.com/watch?v=-qPpiHZ82rw
-% -Jede unendliche Menge A läßt sich ijektiv auf A x A abbilden
-
-%---------------------------------------------------------------------------------------------------
-\subsection{Zorn's Lemma}
 
 
 %---------------------------------------------------------------------------------------------------
@@ -974,6 +975,49 @@ The undecidability of the CH from ZFC means that, within the system of ZFC, we c
 %  Cantor's aleph hypothesis
 
 % https://en.wikipedia.org/wiki/Continuum_hypothesis#Generalized_continuum_hypothesis
+
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Consequences of the Axiom of Choice}
+The axiom of choice, abbreviated as AC, is the most controversial of all axioms in ZFC. It has a couple of very interesting and partially counterintuitive consequences. Its status in set theory is somewhat comparable to that of Euclid's parallel axiom in geometry. One often tries to avoid using the AC in proofs if possible because then the proofs will hold up in an even bigger mathematical universe, i.e. one in which the AC is not assumed. The AC has been proven to be independent of ZF. That means, it cannot be proven true or false from the ZF axioms. ...TBC...
+
+
+\paragraph{Well Ordering Theorem}
+
+% The Axiom of Choice
+% https://www.youtube.com/watch?v=szfsGJ_PGQ0
+% -has more equivalent statements around 28
+
+% Das (berühmt-berüchtigte) Auswahlaxiom
+% https://www.youtube.com/watch?v=-qPpiHZ82rw
+% -Jede unendliche Menge A läßt sich ijektiv auf A x A abbilden
+
+
+
+\paragraph{Zorn's Lemma}
+
+% "The axiom of choice is obviously true, the well ordering principle is obviously false and who can tell about Zorn's lemma?" ..famous quote...the thing is: all 3 statements are provably equivalent when ZF is assumed. The quote refers to what we intuitively tend to think.
+
+% Zorn's Lemma, The Well-Ordering Theorem, and Undefinability (Version 2.0)
+% https://www.youtube.com/watch?v=W8J4eEiAtIk
+% -A well-ordering on R is not definable (at around 14:00)
+
+
+\paragraph{Tarski's Theorem}
+Tarski proved 1924 that in ZF, the theorem "For every infinite set $A$, there exists a bijection between $A$ and $A \times A$" implies the axiom of choice. The converse is also true and that was already known at that time. 
+
+% Follows from the axiom of choice
+
+
+%That means in ZF, the theorem and the axiom of choice are equivalent. ...? What did I mean by that?
+% ..it seems rather that the axiom of choice and the existence of the bijections are equivalent?
+
+% https://en.wikipedia.org/wiki/Tarski%27s_theorem_about_choice
+
+
+\paragraph{Tarski's Paradox}
+
+
 
 
 %---------------------------------------------------------------------------------------------------

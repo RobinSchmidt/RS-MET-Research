@@ -11055,6 +11055,8 @@ void testRelation()
 
   // Create the bijective function f:  0->2, 1->3, 2->5, 3->4  from A to B.
   R = Set({M(0,2), M(1,3), M(2,5), M(3,4)});
+  ok &= Rel::hasDomain(          R, A   );
+  ok &= Rel::hasCodomain(        R,    B);
   ok &= Rel::isFunction(         R, A, B);
   ok &= Rel::isLeftTotal(        R, A, B);
   ok &= Rel::isRightUnique(      R, A, B);
@@ -11065,6 +11067,8 @@ void testRelation()
 
   // Create the injective function f:  0->2, 1->3, 2->5, 3->5  from A to B.
   R = Set({M(0,2), M(1,3), M(2,5), M(3,5)});
+  ok &=  Rel::hasDomain(          R, A   );
+  ok &=  Rel::hasCodomain(        R,    B);
   ok &=  Rel::isFunction(         R, A, B);
   ok &=  Rel::isLeftTotal(        R, A, B);
   ok &=  Rel::isRightUnique(      R, A, B);

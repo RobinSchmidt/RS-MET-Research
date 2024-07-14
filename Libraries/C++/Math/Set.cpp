@@ -806,10 +806,10 @@ void rsNeumannInteger::split(const rsSetNaive& x, rsSetNaive& a, rsSetNaive& b)
 bool rsNeumannInteger::equals(const rsSetNaive& x, const rsSetNaive& y)
 {
   rsSetNaive a, b, c, d, p, q;
-  split(x, a, b);                // decompose x = a - b into a, b
-  split(y, c, d);                // decompose y = c - d into c, d
-  p = NN::add(a, d);             //   compose p = a + d
-  q = NN::add(b, c);             //   compose q = b + c
+  split(x, a, b);                                          // decompose x = a - b into a, b
+  split(y, c, d);                                          // decompose y = c - d into c, d
+  p = NN::add(a, d);                                       //   compose p = a + d
+  q = NN::add(b, c);                                       //   compose q = b + c
   return p.equals(q);
 
   // Notes:
@@ -831,16 +831,16 @@ rsSetNaive rsNeumannInteger::create(size_t a, size_t b)
 rsSetNaive rsNeumannInteger::create(int n) 
 { 
   if(n >= 0)
-    return create(size_t(n), size_t( 0));  // x = (n,  0 )
+    return create(size_t(n), size_t( 0));                  // x = (n,  0 )
   else
-    return create(size_t(0), size_t(-n));  // x = (0, |n|) = (0, -n)
+    return create(size_t(0), size_t(-n));                  // x = (0, |n|) = (0, -n)
 }
 
 rsSetNaive rsNeumannInteger::neg(const rsSetNaive& x)
 {
   rsSetNaive a, b;
   split(x, a, b);
-  return Set::orderedPair(b, a);  // -(a, b) = (b, a)
+  return Set::orderedPair(b, a);                           // -(a, b) = (b, a)
 }
 
 rsSetNaive rsNeumannInteger::add(const rsSetNaive& x, const rsSetNaive& y)
@@ -848,7 +848,7 @@ rsSetNaive rsNeumannInteger::add(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d;
   split(x, a, b);
   split(y, c, d);
-  return Set::orderedPair(NN::add(a, c), NN::add(b, d)); // (a, b) + (c, d) = (a+c, b+d)
+  return Set::orderedPair(NN::add(a, c), NN::add(b, d));   // (a, b) + (c, d) = (a+c, b+d)
 }
 
 rsSetNaive rsNeumannInteger::mul(const rsSetNaive& x, const rsSetNaive& y)
@@ -856,9 +856,9 @@ rsSetNaive rsNeumannInteger::mul(const rsSetNaive& x, const rsSetNaive& y)
   rsSetNaive a, b, c, d;
   split(x, a, b);
   split(y, c, d);
-  rsSetNaive p = NN::add(NN::mul(a, c), NN::mul(b, d));  // p = a*c + b*d
-  rsSetNaive q = NN::add(NN::mul(a, d), NN::mul(b, c));  // q = a*d + b*c
-  return Set::orderedPair(p, q);                         // y = (p, q)
+  rsSetNaive p = NN::add(NN::mul(a, c), NN::mul(b, d));    // p = a*c + b*d
+  rsSetNaive q = NN::add(NN::mul(a, d), NN::mul(b, c));    // q = a*d + b*c
+  return Set::orderedPair(p, q);                           // y = (p, q)
 
   // Questions: 
   //

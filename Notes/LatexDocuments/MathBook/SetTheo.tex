@@ -523,7 +523,7 @@ With that construction, each natural number $x$ is just the set of all natural n
 \paragraph{Order}
 On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. We define the $<$ relation between two von Neumann numbers as:
 \begin{equation}
-x < y \Leftrightarrow x \in y \Leftrightarrow x \subset y
+x < y  \quad \Leftrightarrow \quad x \in y \Leftrightarrow x \subset y
 \end{equation}
 Thus, we don't need to invent anything new to model our $<$ relation on the natural numbers. Our off the shelf standard set theoretic operations equip us even with two ways to do it. ...VERIFY..
 
@@ -550,7 +550,7 @@ x+y =\begin{cases}
 \end{equation}
 
 \paragraph{Multiplication}
-To define multiplication, we observe that $x \cdot y$ can be seen as $y$ copies of $x$ added together which in turn can be seen as $y-1$ copies of $x$ added together plus another $x$. This works as long as $y-1$ is defined. For $y=0$, it isn't - but that is our base case in which $x \cdot y$ is just $x \cdot 0 = 0$. So, we can build the following recursively defined multiplication algorithm from what we already have:
+To define multiplication of natural numbers, we observe that $x \cdot y$ can be seen as $y$ copies of $x$ added together which in turn can be seen as $y-1$ copies of $x$ added together plus another $x$. This works as long as $y-1$ is defined. For $y=0$, it isn't - but that is our base case in which $x \cdot y$ is just $x \cdot 0 = 0$. So, we can build the following recursively defined multiplication algorithm from what we already have:
 \begin{equation}
 x \cdot y =\begin{cases}
  0                    & \qquad \text{if } y   =  0 \\
@@ -558,28 +558,44 @@ x \cdot y =\begin{cases}
 \end{cases}
 \end{equation}
 
+\paragraph{Exponentiation} Just like multiplication can be expressed in terms of repeated addition, exponentiation $x^y$ can be expressed as repeated multiplication with the base case $x^0 = 1$:
+\begin{equation}
+x^y =\begin{cases}
+ 1                  & \qquad \text{if } y   =  0 \\
+ x ^{y-1}  \cdot x  & \qquad \text{if } y \neq 0 
+\end{cases}
+\end{equation}
+
+\paragraph{Summary} We have constructed a representation or encoding the of natural numbers purely from sets and have expressed the basic arithmetic operations in terms of set theoretic operations. We started with the most basic operation of them all - the successor function - and then worked our way up all the way to exponentiation. TODO: define subtraction, (floor-)division, remainder, roots, logarithms
+
+
+%The structure we have created has a special name - it's called a \emph{monoid}
 
 
 
+% these have to be partial functions. for subtraction x-y, we need y < x, for division x/y we need y != 0,
+% for roots...well - we can perhaps use a floor-root definition just like with floor-division
 
-%we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. This is again a recursive definition that at some point will hit the base case. 
+% subtraction:    x-y = x when y=0, (x-(y-1))-1 when y != 0
+% floor-divsion:  x/y = 0 when y > x, (x-y) + 1 when y >= x
+% remainder:      x - (x/y)*x   ?
+% logarithm:
+% root:
+% Maybe for roots and logarithms, we could just use a brute force trial-and-error algorithm. For the
+% n-th root, try all possible bases, take them to the n-th power until the result is >= x
 
+% A semigroup is set with associative operation and if it also has an identity element, it's called a monoid. N is a monoid with respect to addition and multiplication (also exponentiation?)
 
-
-%...TBC...(look it up in the implementation)
-
-\paragraph{Exponentiation} ...TBC...
-
-
-
-
-% N is a monoid (a semigroup is set with associative operation and if it also has an identity element, it's calle a monoid)
 % The so constructed natural numbers satisfy the Peano axioms (VERIFY)
 
 % https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
 % https://en.wikipedia.org/wiki/Peano_axioms
 
-\subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of pairs of naturals...TBC...
+\subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of pairs of naturals. Let $x = (a,b)$, i.e. our set that represents the integer $x$ is a pair of two Neumann naturals $a,b$. I will call such numbers "Neumann integers". For two such Neumann integers $x = (a,b)$ and $y = (c,d)$, we define the equivalence relation $=$ as follows:
+\begin{equation}
+(a,b) = (c,d) \quad \Leftrightarrow  \quad a+d = c+b
+\end{equation}
+We add such Neumann integers via $(a,b)+(c,d) = (a+c,b+d)$. VERIFY....TBC...negation (swap),
 % Z is an integral domain (commutative ring with no zero divisors - maybe we need to demand a multiplicative identity? ..see chapter about rings and be consistent with it - there are different convetions for this)
 
 \subsubsection{Rational Numbers} The rationals can be constructed from the integers as equivalence classes of pairs of integers...TBC...

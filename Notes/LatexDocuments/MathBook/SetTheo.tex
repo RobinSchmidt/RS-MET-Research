@@ -514,11 +514,11 @@ Numbers would be boring if we couldn't do computations with them. So, the next s
 
 \paragraph{Successor}
 %The simplest operation that we want to define is the successor function $s(x)$. Here $s$ denotes a function or unary operation and $x$ denotes a set constructed like above. The table above has already shown by way of the first few examples, how we will define that function in general. 
-As we have already mentioned we define: $s(x) = x \cup \{x\}$. The successor of a set $x$ is just that same set $x$ with $x$ itself add to it s new element. For example, we have $3 = s(2) = s(\{0,1\}) = \{0,1\} \cup \{2\} = \{0,1,2\}$. Instead of $s(x)$, we may also write $x+1$ when this is more convenient. So, we define:
+As we have already mentioned we define: $s(x) = x \cup \{x\}$. The successor of a set $x$ is just that same set $x$ with $x$ itself add to it as new element. For example, we have $3 = s(2) = s(\{0,1\}) = \{0,1\} \cup \{2\} = \{0,1,2\}$. Instead of $s(x)$, we may also write $x+1$ when this is more convenient. So, we define:
 \begin{equation}
 x + 1 = x \cup \{x\}
 \end{equation}
-With that construction, each natural number $x$ is just the set of all natural numbers that are less than $x$. Note that universe of all possible sets that we can construct is much larger those which we can construct with our successor function when starting with the empty set. For example, the set $\{\{\emptyset\}\}$ is not among them.
+With that construction, each natural number $x$ is just the set of all natural numbers that are less than $x$. Note that the universe of all possible sets that we can construct is much larger those which we can construct with our successor function when starting with the empty set. For example, the set $\{\{\emptyset\}\}$ is not among them.
 
 \paragraph{Order}
 On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. We define the $<$ relation between two von Neumann numbers as:
@@ -532,13 +532,14 @@ The maximum of two so constructed natural numbers $a,b$ can easily be found by a
 \begin{equation}
 \max(A) = \bigcup_{a_i \in A} a_i = \bigcup A
 \end{equation}
-Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!]. 
+Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!]. TODO: minimum via intersection
 
 \paragraph{Predecessor}
 With the so defined maximum operation, we have a way to implement a predecessor function on our von Neumann numbers. To find the predecessor $p(x)$ of a number $x$, we can just use $p(x) = \max(x) = \bigcup x$. Instead of $p(x)$, we may also write $x-1$. We have:
 \begin{equation}
 x - 1 = \max(x) = \bigcup x
 \end{equation}
+This definition works only when $x > 0$ because $0$ itself has no predecessor. The formula would produce $0$ as the predecessor of $0$ - but that is wrong, so we need to make sure to use it only for $x > 0$.
 
 \paragraph{Addition}
 We define addition of two natural numbers $x,y$ recursively in terms of the successor function $s(x)$ as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly. For an actual implementation, we would have to explicitly operationalize the rather implicit "consider it as the successor of" idea somehow to figure out, what that $y$ is. Fortunately, that can be done in terms of the predecessor function we have just defined. So, in summary, we define the sum $x+y$ as:

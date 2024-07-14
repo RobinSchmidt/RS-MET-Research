@@ -160,25 +160,12 @@ The axiom states that for each set $x$ there is a set $y$ whose elements are pre
 \forall x \exists y \forall w:
 (w \in y \Leftrightarrow \exists u:(w \in u \wedge u \in x )  )
 \end{equation}
-Here, $x$ plays the role of the input set over whose elements we want to form the union, the union itself is $y$, $w$ is an element of this union and it is also an element of an element $u$ of $x$. This big union over all elements of a set $x$ is also denoted as $\bigcup x$.
-
-% x: the input set
-% y: the big union
-% w: an element - of the union y and also of an element u of x
-% u: an element of x
-
-% Can we write it like this?:
-%\begin{equation}
-%\forall x \forall y \exists z \forall w: w \in z \Leftrightarrow w \in x \vee w \in y
-%\end{equation}
-
-% Imagine a set $x = \{ x_1, x_2, x_3, \ldots \} $ of sets. From every set $x_i$, pour all elements into the set $y$. The set $y$ is the union of all the sets $x_i$.
-
+Here, $x$ plays the role of the input set over whose elements we want to form the union, the union itself is $y$, $w$ is an element of this union and it is also an element of an element $u$ of $x$. Imagine a set $x = \{ x_1, x_2, x_3, \ldots \} $ of sets. From every set $x_i$, pour all elements into the set $y$. The set $y$ is the union of all the sets $x_i$. This big union over all elements of a set $x$ is also denoted as $\bigcup x$.
 
 % https://en.wikipedia.org/wiki/Axiom_of_union
 % https://en.wikipedia.org/wiki/Axiom_of_union#Relation_to_Intersection
 % https://math-garden.com/unit/nst-unions/
-
+% https://en.wikipedia.org/wiki/Axiom_of_union#Relation_to_Intersection
 
 \paragraph{Axiom of Regularity}
 This axiom states that every non-empty set $x$ contains an element that is disjoint from $x$. It is also known as the \emph{axiom of foundation}. ...TBC...
@@ -214,6 +201,8 @@ The axiom of infinity asserts that there exists a set $I$ such that: (1) $I$ con
 \exists I: ( \emptyset\in I \wedge \forall x: (x \in I \Rightarrow (x \cup \{x\}) \in I ))
 \end{equation}
 This set must necessarily be infinite. To see this, start with the empty set and put it into $I$ to satisfy (1): $I = \{\emptyset\}$. But now our set $I$ violates (2). To satisfy it, we must also put $\{ \emptyset \} = \emptyset \cup \{ \emptyset \} $ into $I$, so now we have: $I = \{\emptyset, \{ \emptyset \} \}$. But now, it again violates (2) unless we also put $\{\emptyset,  \{ \emptyset \} \}$ into it, so: $I = \{\emptyset, \{ \emptyset \}, \{\emptyset,  \{ \emptyset \} \}  \}$ and so on. Every element we add to satisfy (2) once again for the previously added element will again break (2) for the newly added element. This will force us to add yet another element to satisfy (2) again and so on. For each element that we have added in construction step $n$, we will be forced to also add its successor in step $n+1$. Sets that are defined with such a rule are also called \emph{inductive sets}. The process of adding more and more elements never stops and thereby creates an infinite set. This infinite set gets the special symbol $\omega$ and plays an important role in the theory of ordinal numbers. 
+
+% Maybe use w instead of I. It looks like omega which is a good fit
 
 \medskip
 Now this axiom may appear a little strange. While for the others, most readers will probably just happily nod along and think things like "yea...sure...of course...duh...", this axiom might be more controversial. In fact, there is a school of thought in the philosophy of mathematics that rejects the axiom of infinity. This is aptly called \emph{finitism}. ...TBC...

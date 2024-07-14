@@ -160,7 +160,7 @@ The axiom states that for each set $x$ there is a set $y$ whose elements are pre
 \forall x \exists y \forall w:
 (w \in y \Leftrightarrow \exists u:(w \in u \wedge u \in x )  )
 \end{equation}
-Here, $x$ plays the role of the input set over whose elements we want to form the union, the union itself is $y$, $w$ is an element of this union and it is also an element of an element $u$ of $x$. Imagine a set $x = \{ x_1, x_2, x_3, \ldots \} $ of sets. From every set $x_i$, pour all elements into the set $y$. The set $y$ is the union of all the sets $x_i$. This big union over all elements of a set $x$ is also denoted as $\bigcup x$.
+Here, $x$ plays the role of the input set over whose elements we want to form the union, the union itself is $y$, $w$ is an element of this union and it is also an element of an element $u$ of $x$. Imagine a set $x = \{ x_1, x_2, x_3, \ldots \} $ of sets. From every set $x_i$, pour all elements into the set $y$. The set $y$ is the union of all the sets $x_i$. This big union over all elements of a set $x$ is also denoted as $\bigcup x$. TODO: explain how to construct a big intersection from union + specification
 
 % https://en.wikipedia.org/wiki/Axiom_of_union
 % https://en.wikipedia.org/wiki/Axiom_of_union#Relation_to_Intersection
@@ -184,6 +184,11 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 % https://en.wikipedia.org/wiki/Zermelo%E2%80%93Fraenkel_set_theory#2._Axiom_of_regularity_(also_called_the_axiom_of_foundation)
 
 % -a set is called founded, if
+
+% Das Zermelo-Fraenkel-Axiomensystem der Mengenlehre (ZF)
+% https://www.youtube.com/watch?v=U10UYyXv5gM
+% -it is not needed to avoid contradictions
+% 
 
 \paragraph{Axiom of Power Set}
 This axiom asserts that we can construct the set of all subsets of a given set $x$. If we denote this set of all subsets of $x$ as $y$, we can write the axiom as:
@@ -508,23 +513,33 @@ $n=$ & $s(n-1)=$  & & & $\{ 0, 1, 2, \ldots, n-1 \} $
 % I think, the simples set that we can construct which is not a natural number is the set
 % {{0}}
 
+% Maybe sort the paragraphs: succ, order, max, add, mul, exp
+
+\paragraph{Successor}
+The simplest operation that we want to define is the successor function $s(x)$. Here $s$ denotes a function or unary operation and $x$ denotes a set constructed like above. We then define: $s(x) = x \cup \{x\}$. The successor of a set $x$ is just that same set $x$ with $x$ itself add to it. For example, we have $3 = s(2) = s(\{0,1\}) = \{0,1\} \cup \{2\} = \{0,1,2\}$. With that construction, each natural number $x$ is just the set of all natural numbers that are less than $x$. [TODO: Explain how we could define a predecessor function - we could do it by extracting the maximum as explained below.]
+
 \paragraph{Addition}
-We define addition of two natural numbers $x,y$ recursively as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly. 
+We define addition of two natural numbers $x,y$ recursively in terms of the successor function $s(x)$ as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$\footnote{For an actual implementation, we would have to operationalize the "consider it as the successor of" somehow to figure out, what that $y$ is. This would have to be done in terms of a predecessor function.}. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly. 
 
 \paragraph{Multiplication}
-To define multiplication, we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. ...TBC...(look it up in the implementation)
+To define multiplication, we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. This is again a recursive definition that at some point will hit the base case. 
+
+...TBC...(look it up in the implementation)
 
 \paragraph{Exponentiation} ...TBC...
+
+
+\paragraph{Order}
+On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. Thus, we don't nee to invent anything new to model our $<$ relation on the natural numbers. Our off the shelf standard set theoretic operations equip us even with two ways to do it. ...VERIFY......TBC
 
 \paragraph{Maximum}
 The maximum of two so constructed natural numbers $a,b$ can easily be found by a standard set theoretic operation: just take the union of the sets that represent $a$ and $b$. So we define $\max(a,b) = a \cup b$. To see why this works, observe that thanks to our construction, the sets that will represent greater natural numbers will contain the sets that represent smaller numbers as subsets. In the union, the set representing the smaller number will behave neutrally. For example $2 \cup 5$ means $\{0,1\} \cup \{0,1,2,3,4\}$ when written out as sets. That union just produces $\{0,1,2,3,4\}$ which represents the number $5$ which is indeed the maximum of $2$ and $5$. This works also for unions of more than two sets. So, for a finite set $A$ of natural numbers, we define their maximum as:
 \begin{equation}
 \max(A) = \bigcup_{a_i \in A} a_i = \bigcup A
 \end{equation}
-Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!].
+Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!]. Note also that with the so defined maximum operation, we actually do have a way to implement the predecessor function on our Neumann numbers.
 
-\paragraph{Order}
-On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. Thus, we don't nee to invent anything new to model our $<$ relation on the natural numbers. Our off the shelf standard set theoretic operations equip us even with two ways to do it. ...VERIFY......TBC
+
 
 % N is a monoid (a semigroup is set with associative operation and if it also has an identity element, it's calle a monoid)
 % The so constructed natural numbers satisfy the Peano axioms (VERIFY)
@@ -696,6 +711,9 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 % -N x N, odered by 1st component first and by 2nd in case of equal 1st elements: w*w = w^2
 % -N U NxN U NxNxN U... with elems from N 1st, then elems from NxN, then elems from NxNxN, etc.
 %  I think, this would produce order type w^w...not sure, though. wite this set as \bigcup_{n \in N} N^n
+% -But: isn't w^w also the set of all function f: w -> w and therefore uncountable? Or does the notation
+%  w^w mean something different here? Like, maybe, ordinal exponentiation vs set exponentiation?
+
 
 %https://en.wikipedia.org/wiki/Well-order
 %https://de.wikipedia.org/wiki/Wohlordnung

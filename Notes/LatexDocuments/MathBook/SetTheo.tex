@@ -514,10 +514,18 @@ Numbers would be boring if we couldn't do computations with them. So, the next s
 
 \paragraph{Successor}
 %The simplest operation that we want to define is the successor function $s(x)$. Here $s$ denotes a function or unary operation and $x$ denotes a set constructed like above. The table above has already shown by way of the first few examples, how we will define that function in general. 
-As we have already mentioned we define: $s(x) = x \cup \{x\}$. The successor of a set $x$ is just that same set $x$ with $x$ itself add to it s new element. For example, we have $3 = s(2) = s(\{0,1\}) = \{0,1\} \cup \{2\} = \{0,1,2\}$. Instead of $s(x)$, we may also write $x+1$ when this is more convenient. With that construction, each natural number $x$ is just the set of all natural numbers that are less than $x$. Note that universe of all possible sets that we can construct is much larger those which we can construct with our successor function when starting with the empty set. For example, the set $\{\{\emptyset\}\}$ is not among them.
+As we have already mentioned we define: $s(x) = x \cup \{x\}$. The successor of a set $x$ is just that same set $x$ with $x$ itself add to it s new element. For example, we have $3 = s(2) = s(\{0,1\}) = \{0,1\} \cup \{2\} = \{0,1,2\}$. Instead of $s(x)$, we may also write $x+1$ when this is more convenient. So, we define:
+\begin{equation}
+x + 1 = x \cup \{x\}
+\end{equation}
+With that construction, each natural number $x$ is just the set of all natural numbers that are less than $x$. Note that universe of all possible sets that we can construct is much larger those which we can construct with our successor function when starting with the empty set. For example, the set $\{\{\emptyset\}\}$ is not among them.
 
 \paragraph{Order}
-On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. Thus, we don't need to invent anything new to model our $<$ relation on the natural numbers. Our off the shelf standard set theoretic operations equip us even with two ways to do it. ...VERIFY..
+On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. We define the $<$ relation between two von Neumann numbers as:
+\begin{equation}
+x < y \Leftrightarrow x \in y \Leftrightarrow x \subset y
+\end{equation}
+Thus, we don't need to invent anything new to model our $<$ relation on the natural numbers. Our off the shelf standard set theoretic operations equip us even with two ways to do it. ...VERIFY..
 
 \paragraph{Maximum}
 The maximum of two so constructed natural numbers $a,b$ can easily be found by a standard set theoretic operation: just take the union of the sets that represent $a$ and $b$. So we define $\max(a,b) = a \cup b$. To see why this works, observe that thanks to our construction, the sets that will represent greater natural numbers will contain the sets that represent smaller numbers as subsets. In the union, the set representing the smaller number will behave neutrally. For example $2 \cup 5$ means $\{0,1\} \cup \{0,1,2,3,4\}$ when written out as sets. That union just produces $\{0,1,2,3,4\}$ which represents the number $5$ which is indeed the maximum of $2$ and $5$. This works also for unions of more than two sets. So, for a finite set $A$ of natural numbers, we define their maximum as:
@@ -527,14 +535,17 @@ The maximum of two so constructed natural numbers $a,b$ can easily be found by a
 Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!]. 
 
 \paragraph{Predecessor}
-With the so defined maximum operation, we actually have a way to implement a predecessor function on our von Neumann numbers. To find the predecessor $p(x)$ of a number $x$, we can just use $p(x) = \max(x) = \bigcup x$. Instead of $p(x)$, we may also write $x-1$. VERIFY!
+With the so defined maximum operation, we have a way to implement a predecessor function on our von Neumann numbers. To find the predecessor $p(x)$ of a number $x$, we can just use $p(x) = \max(x) = \bigcup x$. Instead of $p(x)$, we may also write $x-1$. We have:
+\begin{equation}
+x - 1 = \max(x) = \bigcup x
+\end{equation}
 
 \paragraph{Addition}
 We define addition of two natural numbers $x,y$ recursively in terms of the successor function $s(x)$ as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly. For an actual implementation, we would have to explicitly operationalize the rather implicit "consider it as the successor of" idea somehow to figure out, what that $y$ is. Fortunately, that can be done in terms of the predecessor function we have just defined. So, in summary, we define the sum $x+y$ as:
 \begin{equation}
 x+y =\begin{cases}
- x                           & \qquad \text{if } y   =  0 \\
- s(x+p(y)) = (x+(y-1))+1     & \qquad \text{if } y \neq 0 
+ x            & \qquad \text{if } y   =  0 \\
+ (x+(y-1))+1  & \qquad \text{if } y \neq 0 
 \end{cases}
 \end{equation}
 

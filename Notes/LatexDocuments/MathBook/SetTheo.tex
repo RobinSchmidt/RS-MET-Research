@@ -124,7 +124,10 @@ This axiom states that there is an empty set. We can write it formally as:
 \end{equation}
 This is actually one of the redundant axioms and not explicitly listed in the English wikipedia article on ZFC but in the German article, it is. It is redundant because in any set theory which has the axiom schema of specification (which we do have in ZF) and axiomatically postulates existence of any set (as the axiom of infinity in ZF does), the existence of the empty set can be derived as a theorem and therefore doesn't need to be an axiom. The empty set is unique due to the axiom of extensionality. It is usually denoted by $\emptyset$ or, less often, by $\{ \}$.
 
+% Maybe use the \notin symbol
+
 % https://en.wikipedia.org/wiki/Axiom_of_empty_set
+% I think the way of deriving the axiom of the empty set from the axiom of specification is to just use an unsatisfiable formula or just use the formula that x is not in A - then we woul have the set of all things that are in A and are not in A which is, of course, the empty set
 
 \paragraph{Axiom of Extensionality}
 This axiom states that two sets are equal iff they contain the same elements. Formally, this means that
@@ -145,12 +148,24 @@ This axiom states that whenever we have two sets $x$ and $y$, then there is a se
 \end{equation}
 The pair is unique by virtue of the axiom of extensionality. The axiom of pairing also allows us to build \emph{singletons} by simply letting $x = y$ such that  $z = \{x, y\} = \{x, x\} = \{x\}$. It also lets us build the \emph{ordered pair} $(x,y) = \{ \{x\}, \{x, y\} \}$ and from ordered pairs we can recursively build ordered $n$-tuples as $(x_1, x_2, \ldots, x_n) = ((x_1, x_2, \ldots, x_{n-1}), x_n)$. 
 
-% in the standard formulation of the Zermelo–Fraenkel set theory, the axiom of pairing follows from the axiom schema of replacement applied to any given set with two or more elements, and thus it is sometimes omitted. 
+% In the standard formulation of the Zermelo–Fraenkel set theory, the axiom of pairing follows from the axiom schema of replacement applied to any given set with two or more elements, and thus it is sometimes omitted. 
+
+% Explain that we use the term pair in the following text to mean the ordered pair
 
 % https://en.wikipedia.org/wiki/Axiom_of_pairing
 
 \paragraph{Axiom of Union}
-The axiom states that for each set $x$ there is a set $y$ whose elements are precisely the elements of the elements of $x$.
+The axiom states that for each set $x$ there is a set $y$ whose elements are precisely the elements of the elements of $x$. Formally, it can be written down as:
+\begin{equation}
+\forall x \exists y \forall w:
+(w \in y \Leftrightarrow \exists u:(w \in u \wedge u \in x )  )
+\end{equation}
+Here, $x$ plays the role of the input set over whose elements we want to form the union, the union itself is $y$, $w$ is an element of this union and it is also an element of an element $u$ of $x$. This big union over all elements of a set $x$ is also denoted as $\bigcup x$.
+
+% x: the input set
+% y: the big union
+% w: an element - of the union y and also of an element u of x
+% u: an element of x
 
 % Can we write it like this?:
 %\begin{equation}
@@ -202,7 +217,12 @@ Now this axiom may appear a little strange. While for the others, most readers w
 
 
 \paragraph{Axiom Schema of Specification}
-This axiom says
+This axiom says that for any given predicate $\varphi(x)$ and any given set $A$, we can create the subset $S$ of $A$ that contains only those elements from $A$ which satisfy the predicate $\varphi$. This axiom lets us filter out elements from a given set $A$ by means of a formula of predicate logic. It's called an axiom schema because it formally represents an infinite number of axioms - one for each imaginable formula $\varphi$. It can be formally stated as:
+\begin{equation}
+\forall A \exists S \forall x: (x \in S \Leftrightarrow (x \in A \wedge \varphi(x)) )
+\end{equation}
+It is also known as axiom (schema) of separation of of axiom (schema) of restricted comprehension. If we compare it with the principle of unrestricted comprehension, we note that here, we can only select the objects from a given set $A$ whereas in unrestricted comprehension, there was some imagined underlying universe of "all things" to which the formula $\varphi$ could be applied. No we restrict ourselves to apply it only to the elements of some given set $A$. VERIFY!
+
 % aka restricted comprehension
 
 % https://en.wikipedia.org/wiki/Axiom_schema_of_specification

@@ -265,11 +265,13 @@ public:
   Computes the set of all functions from B to A. This is the power function or set exponentiation 
   denoted as A^B. The result will be a set of sets of ordered pairs of the form (b,a) ...TBC... */
   static rsSetNaive pow(const rsSetNaive& A, const rsSetNaive& B);
+  //
 
 
 
 
   static rsSetNaive bigUnion(const rsSetNaive& A);
+  // This implements the axiom of union, I think 
 
 
 

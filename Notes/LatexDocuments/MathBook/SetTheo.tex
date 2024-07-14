@@ -199,6 +199,12 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 % -a set is called founded, if
 
 \paragraph{Axiom of Power Set}
+This axiom asserts that we can construct the set of all subsets of a given set $x$. If we denote this set of all subsets of $x$ as $y$, we can write the axiom as:
+\begin{equation}
+\forall x \exists y \forall w: (w \in y \Leftrightarrow w \subseteq x)
+\end{equation}
+where we used the abbreviation $w \subseteq x$ for the formula $\forall u: (u \in w \Rightarrow u \in x)$. We interpret this as: For all sets $x$, there exists a set $y$ such that: when $w$ is an element of $y$ then $w$ is a subset of $x$. We denote the power set of a set $x$ as $\mathcal{P}(x)$ or as $2^x$. The reason for the latter notation is that for finite sets $x$, the number of elements of the power set is indeed given by $2$ to the power of the number of elements of $x$.
+
 % https://en.wikipedia.org/wiki/Axiom_of_power_set
 
 

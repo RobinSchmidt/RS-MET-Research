@@ -209,11 +209,11 @@ where we used the abbreviation $w \subseteq x$ for the formula $\forall u: (u \i
 
 
 \paragraph{Axiom of Infinity}
-The axiom of infinity asserts that there exists a set $I$ such that: (1) $I$ contains the empty set: $\emptyset \in I$ and (2) for every element $x \in I$, there exists another element $y \in I$ that is equal to $y = x \cup \{ x\}$. 
+The axiom of infinity asserts that there exists a set $I$ such that: (1) $I$ contains the empty set: $\emptyset \in I$ and (2) for every element $x \in I$, there exists another element $y \in I$ that is equal to $y = x \cup \{ x\}$. This so defined set $y$ is called the \emph{successor} of $x$.
 \begin{equation}
 \exists I: ( \emptyset\in I \wedge \forall x: (x \in I \Rightarrow (x \cup \{x\}) \in I ))
 \end{equation}
-This set must necessarily be infinite. To see this, start with the empty set and put it into $I$ to satisfy (1): $I = \{\emptyset\}$. But now our set $I$ violates (2). To satisfy it, we must also put $\{ \emptyset \} = \emptyset \cup \{ \emptyset \} $ into $I$, so now we have: $I = \{\emptyset, \{ \emptyset \} \}$. But now, it again violates (2) unless we also put $\{\emptyset,  \{ \emptyset \} \}$ into it, so: $I = \{\emptyset, \{ \emptyset \}, \{\emptyset,  \{ \emptyset \} \}  \}$ and so on. Every element we add to satisfy (2) once again for the previously added element will again break (2) for the newly added element. This will force us to add yet another element to satisfy (2) again and so on. That process never stops and thereby creates an infinite set. This infinite set gets the special symbol $\omega$ and plays an important role in the theory of ordinal numbers.
+This set must necessarily be infinite. To see this, start with the empty set and put it into $I$ to satisfy (1): $I = \{\emptyset\}$. But now our set $I$ violates (2). To satisfy it, we must also put $\{ \emptyset \} = \emptyset \cup \{ \emptyset \} $ into $I$, so now we have: $I = \{\emptyset, \{ \emptyset \} \}$. But now, it again violates (2) unless we also put $\{\emptyset,  \{ \emptyset \} \}$ into it, so: $I = \{\emptyset, \{ \emptyset \}, \{\emptyset,  \{ \emptyset \} \}  \}$ and so on. Every element we add to satisfy (2) once again for the previously added element will again break (2) for the newly added element. This will force us to add yet another element to satisfy (2) again and so on. For each element that we have added in construction step $n$, we will be forced to also add its successor in step $n+1$. Sets that are defined with such a rule are also called \emph{inductive sets}. The process of adding more and more elements never stops and thereby creates an infinite set. This infinite set gets the special symbol $\omega$ and plays an important role in the theory of ordinal numbers. 
 
 \medskip
 Now this axiom may appear a little strange. While for the others, most readers will probably just happily nod along and think things like "yea...sure...of course...duh...", this axiom might be more controversial. In fact, there is a school of thought in the philosophy of mathematics that rejects the axiom of infinity. This is aptly called \emph{finitism}. ...TBC...
@@ -227,7 +227,7 @@ This axiom says that for any given predicate $\varphi(x)$ and any given set $A$,
 \begin{equation}
 \forall A \exists S \forall x: (x \in S \Leftrightarrow (x \in A \wedge \varphi(x)) )
 \end{equation}
-It is also known as axiom (schema) of separation of of axiom (schema) of restricted comprehension. If we compare it with the principle of unrestricted comprehension, we note that here, we can only select the objects from a given set $A$ whereas in unrestricted comprehension, there was some imagined underlying universe of "all things" to which the formula $\varphi$ could be applied. No we restrict ourselves to apply it only to the elements of some given set $A$. VERIFY!
+It is also known as axiom (schema) of separation of of axiom (schema) of restricted comprehension. If we compare it with the principle of unrestricted comprehension, we note that here, we can only select the objects from a given set $A$ whereas in unrestricted comprehension, there was some imagined underlying universe of "all things" to which the formula $\varphi$ could be applied. No we restrict ourselves to apply it only to the elements of some given set $A$. Notation wise, we will abbreviate the set $S = \{ x : x \in A \wedge \varphi(x) \}$ as $S = \{ x \in A :  \varphi(x) \}$. ...TODO: use variable naming consistent with the axioms above
 
 % aka restricted comprehension
 

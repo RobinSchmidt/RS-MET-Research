@@ -134,8 +134,13 @@ public:
 
   // isClosedUnderIntersections
 
+  // Some classifications onsubsets of power-sets:
   //bool isTopologyOn(const rsSetNaive& A);
   //bool isSigmaAlgebraOn(const rsSetNaive& A);
+  //bool isChainOn(const rsSetNaive& A, const rsSetNaive& R);
+    // Given partial order R on P(A), a chain is a subset of P(A) for which every two elements of
+    // P(A) are comparable with respect to R. For example {},{2},{2,4},{1,2,4},{1,2,3,4} is a chain
+    // on P(A) when R is the subset relation and A = {1,2,3,4}
 
   // See:
   // https://en.wikipedia.org/wiki/Family_of_sets

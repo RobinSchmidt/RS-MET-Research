@@ -11072,7 +11072,7 @@ void testRelation()
   ok &=  Rel::isFunction(         R, A, B);
   ok &=  Rel::isLeftTotal(        R, A, B);
   ok &=  Rel::isRightUnique(      R, A, B);
-  ok &= !Rel::isLeftUnique(       R, A, B);  // 5 in B could map to 2 or 3 in A
+  ok &= !Rel::isLeftUnique(       R, A, B);  // 5 in B could unmap to 2 or 3 in A
   ok &= !Rel::isRightTotal(       R, A, B);  // 4 in B is not reached
   ok &=  Rel::isLeftTotal(        R, A, B);
   ok &= !Rel::isBijectiveFunction(R, A, B);
@@ -11525,6 +11525,18 @@ void testNeumannIntegers()
   // Test minimum and maximum:
   //x = Set({ p1, m4, m2, p2, p6, m3, m1, m5, p5 }); // x = { 1,-4,-2,2,6,-3,-1,-5,5 }
   // ...
+
+
+  // Check, how the naturals are embedded in the integers. Here, n3 = 3 as Neumann natural and
+  // p3 = 3 as Neumann integer in canonical form, etc.
+  bool eq;
+  Set n0 = NN::create(0);
+  Set n3 = NN::create(3);  // 
+  eq = n3 == p3;           // n3 = { 0,1,2 }  !=  { {0,1,2}, {} }   = p3
+  eq = n0 == p0;           // n0 = { }        !=  {{O},{O}} = {{O}} = p0
+  // Nope - they are not equal. The embedding of the Neumann naturals into the Neumann integers is
+  // not an identity operation. OK - that makes sense: n3 = { 0,1,2 }, p3 = { {0,1,2}, {} },
+  // I think.
 
 
   rsAssert(ok);

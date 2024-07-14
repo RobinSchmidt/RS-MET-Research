@@ -134,6 +134,8 @@ This axiom states that two sets are equal iff they contain the same elements. Fo
 \end{equation}
 From the axiom, it follows that the order of the elements in a set doesn't matter and element duplication also doesn't matter. [VERIFY! TODO: give the statement of the axiom without the equals sign, explain the fancy name - what does "extensionality" mean?]
 
+% I think, "extension" means something like "content" or "extent"
+
 % https://en.wikipedia.org/wiki/Axiom_of_extensionality
 
 \paragraph{Axiom of Pairing}
@@ -186,13 +188,21 @@ This axiom states that every non-empty set $x$ contains an element that is disjo
 
 
 \paragraph{Axiom of Infinity}
+The axiom of infinity asserts that there exists a set $I$ such that: (1) $I$ contains the empty set: $\emptyset \in I$ and (2) for every element $x \in I$, there exists another element $y \in I$ that is equal to $y = x \cup \{ x\}$. 
+\begin{equation}
+\exists I: ( \emptyset\in I \wedge \forall x: (x \in I \Rightarrow (x \cup \{x\}) \in I ))
+\end{equation}
+This set must necessarily be infinite. To see this, start with the empty set and put it into $I$ to satisfy (1): $I = \{\emptyset\}$. But now our set $I$ violates (2). To satisfy it, we must also put $\{ \emptyset \} = \emptyset \cup \{ \emptyset \} $ into $I$, so now we have: $I = \{\emptyset, \{ \emptyset \} \}$. But now, it again violates (2) unless we also put $\{\emptyset,  \{ \emptyset \} \}$ into it, so: $I = \{\emptyset, \{ \emptyset \}, \{\emptyset,  \{ \emptyset \} \}  \}$ and so on. Every element we add to satisfy (2) once again for the previously added element will again break (2) for the newly added element. This will force us to add yet another element to satisfy (2) again and so on. That process never stops and thereby creates an infinite set. This infinite set gets the special symbol $\omega$ and plays an important role in the theory of ordinal numbers.
+
+\medskip
+Now this axiom may appear a little strange. While for the others, most readers will probably just happily nod along and think things like "yea...sure...of course...duh...", this axiom might be more controversial. In fact, there is a school of thought in the philosophy of mathematics that rejects the axiom of infinity. This is aptly called \emph{finitism}. ...TBC...
+
 % https://en.wikipedia.org/wiki/Axiom_of_infinity
-
-
 % https://en.wikipedia.org/wiki/Finitism
-% -There's a school of thought in the philosophy of mathematics that rejects the axiom of infinity. It's aptly called finitism...
+
 
 \paragraph{Axiom Schema of Specification}
+This axiom says
 % aka restricted comprehension
 
 % https://en.wikipedia.org/wiki/Axiom_schema_of_specification
@@ -222,11 +232,8 @@ The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2,
 
 
 % https://en.wikipedia.org/wiki/Axiom_of_choice
-
 % https://de.wikipedia.org/wiki/Auswahlaxiom
-
 % https://www.spektrum.de/lexikon/mathematik/auswahlaxiom/390
-
 % https://aleph1.info/?call=Puc&permalink=mengenlehre1_3_1_Z13
 
 % Das (berühmt-berüchtigte) Auswahlaxiom
@@ -263,12 +270,9 @@ The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2,
 
 % https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Bernays%E2%80%93G%C3%B6del_set_theory
 % https://de.wikipedia.org/wiki/Neumann-Bernays-G%C3%B6del-Mengenlehre
-
-
 % https://en.wikipedia.org/wiki/Kripke%E2%80%93Platek_set_theory_with_urelements
 
-% https://de.wikipedia.org/wiki/Scottsches_Axiomensystem
-% https://de.wikipedia.org/wiki/New_Foundations
+
 
 \subsubsection{Other Axioms and Systems}
 In this section, we will mention a couple of other possible axioms that could be added to an existing system of the axioms such as of ZF(C) or could be used to build new, alternative axiomatic systems. We'll also briefly look at some of these alternative systems.
@@ -283,6 +287,9 @@ In this section, we will mention a couple of other possible axioms that could be
 
 % https://en.wikipedia.org/wiki/Axiom_of_constructibility
 % https://en.wikipedia.org/wiki/Constructible_universe
+
+% https://de.wikipedia.org/wiki/Scottsches_Axiomensystem
+% https://de.wikipedia.org/wiki/New_Foundations
 
 %\paragraph{Axiom of Large Cardinals} 
 % https://en.wikipedia.org/wiki/Large_cardinal
@@ -559,7 +566,7 @@ Ordinal numbers are, as the name suggest, used to order things, i.e. to put them
 
 
 % https://www.youtube.com/watch?v=Ay0151PkgMA&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=13
-% -ordinal numbres are transivtive sets that are well-orderd by the element relation
+% -ordinal numbres are transivtive sets that are well-ordered by the element relation
 
 
 % https://aleph1.info/?call=Puc&permalink=mengenlehre1_2_1
@@ -621,6 +628,11 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 % https://risingentropy.com/the-order-type-of-the-rational-numbers/
 % https://math.stackexchange.com/questions/463024/the-order-type-of-the-rationals
 
+% -the number of all possible functions from a set of size n to itself is n^n
+% -the number of bijective functions, i.e. the number of possible reorderings, is n!
+% -what about the number of reorderings of w? It should be somwhere below w^w but above
+%  w^n for any finite n? Or does this question make no sense because we need an aleph number for 
+%  this?
 
 \paragraph{Well Ordered Sets} To understand ordinal numbers, we first need to understand the idea of a well ordered set. This is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers $\mathbb{N}$ with our usual $\leq$ relation are such a well ordered set. 
 
@@ -660,11 +672,27 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 
 % I think, the rationals can be well ordered by sorting by numerator and in case of equal numerator, look at the denominator. The reals may be well ordered  by ordering them by the decimal expansions lexicographically ...i guess.
 
+% Other examples for well ordered sets:
+% -N U \cup {-1}. when putting the -1 before 0 or somewhere between two naturals, we just get w as
+%  order type. But if we put it after all positive numbers, we'll obtain w+1. That means 1+w = w but
+%  w+1 is something new. We could also use: N U w = {N,w}. It has also order type w+1
+% -N U {-1,-2,-3} with negatives after positives: w+3
+% -N with evens before odds: w*2
+% -N x N, odered by 1st component first and by 2nd in case of equal 1st elements: w*w = w^2
+% -N U NxN U NxNxN U... with elems from N 1st, then elems from NxN, then elems from NxNxN, etc.
+%  I think, this would produce order type w^w...not sure, though. wite this set as \bigcup_{n \in N} N^n
+
 %https://en.wikipedia.org/wiki/Well-order
 %https://de.wikipedia.org/wiki/Wohlordnung
 % https://de.wikipedia.org/wiki/Fundierte_Menge
 
-
+% About large countable ordinals:
+% https://en.wikipedia.org/wiki/Ordinal_number#Some_%22large%22_countable_ordinals
+% https://en.wikipedia.org/wiki/Large_countable_ordinal
+% https://en.wikipedia.org/wiki/Nonrecursive_ordinal#The_Church%E2%80%93Kleene_ordinal_and_variants
+% http://www.madore.org/~david/math/ordinal-zoo.pdf
+% https://johncarlosbaez.wordpress.com/2016/06/29/large-countable-ordinals-part-1/
+% https://johncarlosbaez.wordpress.com/2016/07/04/large-countable-ordinals-part-2/
 
 %https://en.wikipedia.org/wiki/Well-ordering_principle
 %https://en.wikipedia.org/wiki/Well-ordering_theorem
@@ -1175,6 +1203,12 @@ Other potentially interesting stuff:
 https://en.wikipedia.org/wiki/Supertransitive_class
 https://en.wikipedia.org/wiki/Von_Neumann_universe
 https://de.wikipedia.org/wiki/Von-Neumann-Hierarchie
+
+https://en.wikipedia.org/wiki/Veblen_function
+https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
+
+https://en.wikipedia.org/wiki/Primitive_recursive_set_function
+https://en.wikipedia.org/wiki/Constructible_universe
 
 
 https://en.wikipedia.org/wiki/Derived_set_(mathematics)

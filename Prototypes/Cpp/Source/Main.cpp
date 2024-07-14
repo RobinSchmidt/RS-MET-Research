@@ -79,7 +79,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSet();
   testRelation();
   testNeumannNumbers();
-  //testNeumannIntegers();
+  testNeumannIntegers();
   //testNeumannRationals();
   //testGeneralizedCollatz();
   //testPowerCommutator();

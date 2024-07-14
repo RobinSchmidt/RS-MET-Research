@@ -928,6 +928,7 @@ Ideas:
   overflow, we just treat it as error. But in that representation, how would we perform arithmetic 
   on such ordinals? Would it be similar to arithmetic on polynomial coeff arrays? I guess not.
   ...figure out!
+  Aha - see:  https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
 
 - Maybe try to implement the natural numbers in a different way, namely as: 0 = {}, n+1 = {n}. That
   means, the number n is just the n-th order nested singleton of the empty set. 1 = {0}, 2 = {{0}}, .
@@ -952,6 +953,17 @@ Ideas:
   the axiom of regularity is too restrictive? We could just define A = { A }, for example. The set
   A would just be one node and its array of element-pointers would just point to itself. It's a 
   graph with one node and one edge that loops from the node back to itself.
+
+- Implement a function that computes the cartesian product from the axioms. It's explained here:
+  https://www.youtube.com/watch?v=Okx7-Xai6SI&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=12
+  It's a very inefficient way of doing it - but the point is that it is possible in principle. The 
+  video has actually 2 ways of constructing A x B: 
+  (1) -form the pair:  P = {A,B}
+      -take union:     U = union(P)
+      -take power set: Q = powerSet(U)
+      -take power set: R = powerSet(Q)
+      -separation:     S = extract those elements from R that have the right structure
+  (2) replacement, union. ...hmm...I'm not sure, if I understand the constuction
 
 
 */

@@ -61,7 +61,7 @@ We have informally stated that sets can have other sets as elements. Elements ma
 % https://en.wikipedia.org/wiki/Converse_relation
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Notational Conventions}  In the context of predicate logic, variables are typically denoted by lowercase letters from the end of the alphabet such as $x,y,z$. In general mathematics, sets are usually denoted by uppercase letters from the begin of the alphabet such as $A,B,C$ and set elements usually by lowercase $a,b,c$. In axiomatic set theory, sets are the only thing that exists - the elements of sets are also sets - and sets appear as variables in predicate logical formulas. So we have a conflict here - which of the notational conventions should we adopt? Here, I adopt the following convention: In contexts where a lot of predicate-logical formulas appear, I will use $x,y,z, \ldots$ because using the other convention tends to look ugly there. These contexts are typically the lower levels of the theory. In higher level contexts, where predicate logical formulas become less common, I'll prefer  $A,B,C, \ldots$ for sets.
+\subsection{Notational Conventions}  In the context of predicate logic, variables are typically denoted by lowercase letters from the end of the alphabet such as $x,y,z$. In general mathematics, sets are usually denoted by uppercase letters from the beginning of the alphabet such as $A,B,C$ and set elements usually by lowercase $a,b,c$. In axiomatic set theory, sets are the only thing that exists - the elements of sets are also sets - and sets appear as variables in predicate logical formulas. So we have a conflict here - which of the notational conventions should we adopt? Here, I adopt the following convention: In contexts where a lot of predicate-logical formulas appear, I will use $x,y,z, \ldots$ because using the other convention tends to look ugly there. These contexts are typically the lower levels of the theory. In higher level contexts, where predicate logical formulas become less common, I'll prefer  $A,B,C, \ldots$ for sets when I want to emphasize their set nature and $a,b,c$ when I want to emphasize their element nature - so, the convention used depends on the role of the variable that I want to emphasize in a particular situation.
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Unrestricted Comprehension Principle}
@@ -85,7 +85,7 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 % -compare the Russel-set to the set B that is constructed in the proof of Cantors' theorem. It's
 %  the same construction
 
-\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
+\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? That clearly immediately triggers an infinite regress\footnote{In itself, infinite regress might not be an insurmountable problem, though. In an implementation, we may actually be able to do it in terms of graph where nodes represent sets and edges represent the is-element relation. It's no problem for a graph to have a node that has an edge to itself.}. Maybe we should disallow such situations. We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
 
 % https://de.wikipedia.org/wiki/Russellsche_Antinomie
 % https://en.wikipedia.org/wiki/Russell%27s_paradox
@@ -146,7 +146,7 @@ This axiom states that whenever we have two sets $x$ and $y$, then there is a se
 \begin{equation}
 \forall x \forall y \exists z \forall w: (w \in z) \Leftrightarrow (w = x \vee w = y)
 \end{equation}
-The pair is unique by virtue of the axiom of extensionality. The axiom of pairing also allows us to build \emph{singletons} by simply letting $x = y$ such that  $z = \{x, y\} = \{x, x\} = \{x\}$. It also lets us build the \emph{ordered pair} $(x,y) = \{ \{x\}, \{x, y\} \}$ and from ordered pairs we can recursively build ordered $n$-tuples as $(x_1, x_2, \ldots, x_n) = ((x_1, x_2, \ldots, x_{n-1}), x_n)$. 
+The pair is unique by virtue of the axiom of extensionality. The axiom of pairing also allows us to build \emph{singletons} by simply letting $x = y$ such that  $z = \{x, y\} = \{x, x\} = \{x\}$. It also lets us build the \emph{ordered pair} $(x,y) = \{ \{x\}, \{x, y\} \}$ and from ordered pairs we can recursively build ordered $n$-tuples as $(x_1, x_2, \ldots, x_n) = ((x_1, x_2, \ldots, x_{n-1}), x_n)$. TODO: warn about potential confusion between ordered and unordered pairs when "pair" appears unqualified.
 
 % In the standard formulation of the Zermelo–Fraenkel set theory, the axiom of pairing follows from the axiom schema of replacement applied to any given set with two or more elements, and thus it is sometimes omitted. 
 
@@ -217,11 +217,11 @@ Now this axiom may appear a little strange. While for the others, most readers w
 
 
 \paragraph{Axiom Schema of Specification}
-This axiom says that for any given predicate $\varphi(x)$ and any given set $A$, we can create the subset $S$ of $A$ that contains only those elements from $A$ which satisfy the predicate $\varphi$. This axiom lets us filter out elements from a given set $A$ by means of a formula of predicate logic. It's called an axiom schema because it formally represents an infinite number of axioms - one for each imaginable formula $\varphi$. It can be formally stated as:
+This axiom says that for any given predicate $\varphi(x)$ and any given set $A$, we can create the subset $S$ of $A$ that contains only those elements from $A$ which satisfy the predicate $\varphi$. This axiom lets us filter out elements from a given set $A$ by means of a formula of predicate logic. It's called an \emph{axiom schema} because it formally represents an infinite number of axioms - one for each imaginable formula $\varphi$. It can be formally stated as:
 \begin{equation}
 \forall A \exists S \forall x: (x \in S \Leftrightarrow (x \in A \wedge \varphi(x)) )
 \end{equation}
-It is also known as axiom (schema) of separation of of axiom (schema) of restricted comprehension. If we compare it with the principle of unrestricted comprehension, we note that here, we can only select the objects from a given set $A$ whereas in unrestricted comprehension, there was some imagined underlying universe of "all things" to which the formula $\varphi$ could be applied. No we restrict ourselves to apply it only to the elements of some given set $A$. Notation wise, we will abbreviate the set $S = \{ x : x \in A \wedge \varphi(x) \}$ as $S = \{ x \in A :  \varphi(x) \}$. ...TODO: use variable naming consistent with the axioms above
+The formula $\varphi$ specifies which elements we should pick from $A$. The axiom is also known as axiom (schema) of separation or axiom (schema) of restricted comprehension. If we compare it with the principle of unrestricted comprehension, we note that here, we can only select the objects from a given set $A$ whereas in unrestricted comprehension, there was some imagined underlying universe of "all things" to which the formula $\varphi$ could be applied. Now we restrict ourselves to apply it only to the elements of some given set $A$ that we already have in hand. Notation wise, we will abbreviate the set $S = \{ x : x \in A \wedge \varphi(x) \}$ as $S = \{ x \in A :  \varphi(x) \}$. ...TODO: use variable naming consistent with the axioms above
 
 % aka restricted comprehension
 
@@ -236,12 +236,13 @@ It is also known as axiom (schema) of separation of of axiom (schema) of restric
 
 % the predicate can only depend on the object itself, not on what other objects are present in the set. it's context independent. An example for a context dependent predicate for a set of numbers could be "larger than the average" - such things are not possible. But it could perpahse depend on a fixed other set like: x from A belongs to B if its (not) in C - that would form the intersection of A and C
 
-\paragraph{Axiom Schema of Replacement}
-% https://en.wikipedia.org/wiki/Axiom_schema_of_replacement
+\paragraph{Axiom Schema of Replacement} The axiom schema of replacement says that the image of a set under any definable mapping is again a set. [...TBC...explain what "mapping" means in this context. It's a formal term. The formal statement of this axiom is complicated]
 
+% https://en.wikipedia.org/wiki/Axiom_schema_of_replacement
+% https://en.wikipedia.org/wiki/Functional_predicate
 
 \subsubsection{The Axiom of Choice}
-The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2, x_3, \ldots \}$, we can define a family of choice functions $f_i$ such that each $f_i$ picks an element from each of the sets $x_i$ and we can pour all these chosen elements into a new set.
+The Zermelo-Fraenkel (ZF) axioms listed so far are the backbone of modern set theory. There is one axiom that is often used together with the ZF axioms - the axiom of choice. When we add it to the ZF axioms, we call the resulting axiom system ZFC. The axiom of choice states that for every set of nonempty sets $x = \{ x_1, x_2, x_3, \ldots \}$, we can define a family of choice functions $f_i$ such that each $f_i$ picks an element from each of the sets $x_i$ and we can pour all these chosen elements into a new set. This sounds like a quite unremarkable observation. Probably many more people will nod along with this than with the axiom of infinity. Nevertheless, it's the choice axiom that has a rather special status...TBC...
 
 % Has proven to be independent from the other ZF axioms.
 % Plays a role similar to Euclid's 5th postulate.
@@ -466,7 +467,6 @@ In set theory, sets are the only thing that exists. Every mathematical object mu
 % 
 
 %because we usually do not envision a number as a set. 
-...TBC... 
 
 % https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre#ZF_mit_Urelementen
 % https://de.wikipedia.org/wiki/Urelement
@@ -510,34 +510,55 @@ $n=$ & $s(n-1)=$  & & & $\{ 0, 1, 2, \ldots, n-1 \} $
 \end{tabular}
 \medskip
 
-% I think, the simples set that we can construct which is not a natural number is the set
-% {{0}}
-
-% Maybe sort the paragraphs: succ, order, max, add, mul, exp
+Numbers would be boring if we couldn't do computations with them. So, the next step is to construct our usual arithmetic operations from set theoretic operations.
 
 \paragraph{Successor}
-The simplest operation that we want to define is the successor function $s(x)$. Here $s$ denotes a function or unary operation and $x$ denotes a set constructed like above. We then define: $s(x) = x \cup \{x\}$. The successor of a set $x$ is just that same set $x$ with $x$ itself add to it. For example, we have $3 = s(2) = s(\{0,1\}) = \{0,1\} \cup \{2\} = \{0,1,2\}$. With that construction, each natural number $x$ is just the set of all natural numbers that are less than $x$. [TODO: Explain how we could define a predecessor function - we could do it by extracting the maximum as explained below.]
-
-\paragraph{Addition}
-We define addition of two natural numbers $x,y$ recursively in terms of the successor function $s(x)$ as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$\footnote{For an actual implementation, we would have to operationalize the "consider it as the successor of" somehow to figure out, what that $y$ is. This would have to be done in terms of a predecessor function.}. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly. 
-
-\paragraph{Multiplication}
-To define multiplication, we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. This is again a recursive definition that at some point will hit the base case. 
-
-...TBC...(look it up in the implementation)
-
-\paragraph{Exponentiation} ...TBC...
-
+%The simplest operation that we want to define is the successor function $s(x)$. Here $s$ denotes a function or unary operation and $x$ denotes a set constructed like above. The table above has already shown by way of the first few examples, how we will define that function in general. 
+As we have already mentioned we define: $s(x) = x \cup \{x\}$. The successor of a set $x$ is just that same set $x$ with $x$ itself add to it s new element. For example, we have $3 = s(2) = s(\{0,1\}) = \{0,1\} \cup \{2\} = \{0,1,2\}$. Instead of $s(x)$, we may also write $x+1$ when this is more convenient. With that construction, each natural number $x$ is just the set of all natural numbers that are less than $x$. Note that universe of all possible sets that we can construct is much larger those which we can construct with our successor function when starting with the empty set. For example, the set $\{\{\emptyset\}\}$ is not among them.
 
 \paragraph{Order}
-On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. Thus, we don't nee to invent anything new to model our $<$ relation on the natural numbers. Our off the shelf standard set theoretic operations equip us even with two ways to do it. ...VERIFY......TBC
+On our so constructed natural numbers, we can use the strict subset relation $\subset$ or the element relation $\in$ to model our usual less-than relation of the natural numbers. The subset relation works because a smaller number is indeed always represented by a strict subset of the set that represents the greater number. The element relation works because the set representing the greater number do indeed always have the set representing the smaller number as element but it's never the other way around. Thus, we don't need to invent anything new to model our $<$ relation on the natural numbers. Our off the shelf standard set theoretic operations equip us even with two ways to do it. ...VERIFY..
 
 \paragraph{Maximum}
 The maximum of two so constructed natural numbers $a,b$ can easily be found by a standard set theoretic operation: just take the union of the sets that represent $a$ and $b$. So we define $\max(a,b) = a \cup b$. To see why this works, observe that thanks to our construction, the sets that will represent greater natural numbers will contain the sets that represent smaller numbers as subsets. In the union, the set representing the smaller number will behave neutrally. For example $2 \cup 5$ means $\{0,1\} \cup \{0,1,2,3,4\}$ when written out as sets. That union just produces $\{0,1,2,3,4\}$ which represents the number $5$ which is indeed the maximum of $2$ and $5$. This works also for unions of more than two sets. So, for a finite set $A$ of natural numbers, we define their maximum as:
 \begin{equation}
 \max(A) = \bigcup_{a_i \in A} a_i = \bigcup A
 \end{equation}
-Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!]. Note also that with the so defined maximum operation, we actually do have a way to implement the predecessor function on our Neumann numbers.
+Later, we will generalize this to infinite sets of natural numbers. In the (possibly) infinite case, we'll have to replace the maximum with the supremum [VERIFY!]. 
+
+\paragraph{Predecessor}
+With the so defined maximum operation, we actually have a way to implement a predecessor function on our von Neumann numbers. To find the predecessor $p(x)$ of a number $x$, we can just use $p(x) = \max(x) = \bigcup x$. Instead of $p(x)$, we may also write $x-1$. VERIFY!
+
+\paragraph{Addition}
+We define addition of two natural numbers $x,y$ recursively in terms of the successor function $s(x)$ as follows: $x + 0 = x$, $x + s(y) = s(x + y)$. The first formula says that when the right operand is $0$, the result is just the left operand. The second formula says that when the right operand is not zero, we should consider it as the successor of some other number $y$. The right hand side of the formula then says, we should apply addition to $x$ and $y$ and then take the successor of that. If we apply this rule recursively, we will eventually end up in the base case $x + 0 = x$ which we can then use directly. For an actual implementation, we would have to explicitly operationalize the rather implicit "consider it as the successor of" idea somehow to figure out, what that $y$ is. Fortunately, that can be done in terms of the predecessor function we have just defined. So, in summary, we define the sum $x+y$ as:
+\begin{equation}
+x+y =\begin{cases}
+ x                           & \qquad \text{if } y   =  0 \\
+ s(x+p(y)) = (x+(y-1))+1     & \qquad \text{if } y \neq 0 
+\end{cases}
+\end{equation}
+
+\paragraph{Multiplication}
+To define multiplication, we observe that $x \cdot y$ can be seen as $y$ copies of $x$ added together which in turn can be seen as $y-1$ copies of $x$ added together plus another $x$. This works as long as $y-1$ is defined. For $y=0$, it isn't - but that is our base case in which $x \cdot y$ is just $x \cdot 0 = 0$. So, we can build the following recursively defined multiplication algorithm from what we already have:
+\begin{equation}
+x \cdot y =\begin{cases}
+ 0                    & \qquad \text{if } y   =  0 \\
+ (x \cdot (y-1)) + x  & \qquad \text{if } y \neq 0 
+\end{cases}
+\end{equation}
+
+
+
+
+
+%we use the rules: $x \cdot 0 = 0$, $x \cdot s(y) = (x \cdot y) + x$. This is again a recursive definition that at some point will hit the base case. 
+
+
+
+%...TBC...(look it up in the implementation)
+
+\paragraph{Exponentiation} ...TBC...
+
 
 
 
@@ -623,7 +644,7 @@ Ordinal numbers are, as the name suggest, used to order things, i.e. to put them
 %  it's the supremum
 % -so: w1 is the ordinal union (i.e. supremum) of all the countable ordinals
 
-\paragraph{Order Theory} Order theory is the part of set theory that is concerned with \emph{order relations}. Such order relations were already briefly introduced on page \pageref{Par:Orders}. Order relations formally model situations like "this is less than that" or "this comes before that". The order relations can be classified according various properties like being partial or total, strict or non-strict, etc. and the sets on which they operate can also be classified according to the existence of lower and upper bounds, existence of least and greatest elements, etc. All of that is the business of order theory an it also provides the foundation for the definition of the ordinal numbers. The central structure in order theory is that of a \emph{partially ordered set} which is abbreviated as \emph{poset}. Formally, a poset $P = (A, \leq)$ is an ordered pair of a set $A$, called the ground set of $P$, and \emph{partial order} relation $\leq$ defined on $A$. A partial order on a set $A$ is a relation on $A$ that is reflexive, antisymmetric and transitive, see page \pageref{Tab:RelationFeatures}. Partial orders can also be total orders\footnote{This is typical math-speak where, for example, groups are special semigroups, the whole set is a special kind of subset, etc. The words "partial", "semi", "sub", etc. just take away certain stricter requirements from a thing but meeting those requirements anyway does not disqualify the thing.}. Total orders are just very special partial orders, namely those for which every pair $a,b$ of elements is comparable. In some contexts, it's more convenient to work with strict orders, denoted by $<$. On any given poset with order $\leq$, it's always possible to define a corresponding strict order $<$ via $a < b \Leftrightarrow (a \leq b) \wedge \neg (a = b)$ and we can also turn this around to get $\leq$ back via $a \leq b \Leftrightarrow (a < b) \vee (a = b)$. So, with this conversion prescription between strict and non-strict partial orders, we can equivalently define the poset as $P = (A, <)$. This is indeed more convenient for our purposes here, so we will do that. ...TBC...
+\paragraph{Order Theory} Order theory is the part of set theory that is concerned with \emph{order relations}. Such order relations were already briefly introduced on page \pageref{Par:Orders}. Order relations formally model situations like "this is less than that" or "this comes before that". The order relations can be classified according various properties like being partial or total, strict or non-strict, etc. and the sets on which they operate can also be classified according to the existence of lower and upper bounds, existence of least and greatest elements, etc. All of that is the business of order theory an it also provides the foundation for the definition of the ordinal numbers. The central structure in order theory is that of a \emph{partially ordered set} which is abbreviated as \emph{poset}. Formally, a poset $P = (A, \leq)$ is an ordered pair of a set $A$, called the ground set of $P$, and \emph{partial order} relation $\leq$ defined on $A$. A partial order on a set $A$ is a relation on $A$ that is reflexive, antisymmetric and transitive, see page \pageref{Tab:RelationFeatures}. Partial orders can also be total orders\footnote{This is typical math-speak where, for example, groups are special semigroups, the whole set is a special kind of subset, etc. The words "partial", "semi", "sub", etc. just take away certain stricter requirements from a thing but meeting those requirements anyway does not disqualify the thing.}. Total orders are just very special partial orders, namely those for which every pair $a,b$ of elements is comparable. In some contexts, it's more convenient to work with strict orders, denoted by $<$. On any given poset with order $\leq$, it's always possible to define a corresponding strict order $<$ via $a < b \Leftrightarrow (a \leq b) \wedge (a \neq b)$ and we can also turn this around to get $\leq$ back via $a \leq b \Leftrightarrow (a < b) \vee (a = b)$. So, with this conversion prescription between strict and non-strict partial orders, we can equivalently define the poset in terms of a strict partial order as $P = (A, <)$. This is indeed more convenient for our purposes here, so we will do that. ...TBC...
 
 %https://en.wikipedia.org/wiki/Order_theory
 %https://en.wikipedia.org/wiki/Glossary_of_order_theory
@@ -813,7 +834,7 @@ The purpose of cardinal numbers is to quantify the size of a set - finite or inf
 ...TBC...
 
 \paragraph{Size Comparisons}
-For finite sets, size comparisons area easy: We just count the number of elements, which results in a natural number, and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
+For finite sets, size comparisons are easy: We just count the number of elements, which results in a natural number, and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
 
 \medskip
 We do not only want to answer the question whether or not two sets are of equal size. We also want to know, which of the two sets is bigger in the case of non equal sizes. To this end, we observe that for finite sets, whenever we can find an injective but not bijective function $f$ from one set $A$ to another set $B$, then the set $A$ is smaller. Injective means that every element from $A$ is mapped to a different element in $B$. If an injective map is not bijective, i.e. it fails to be surjective, then that means that there are leftover elements in $B$ which are not reached by $f$. We interpret that circumstance as $B$ having a greater size than $A$ such that we cannot establish a one-to-one correspondence. 
@@ -848,7 +869,7 @@ It's a function from the class of all sets into the class of the ordinal numbers
 % "for each ordinal a, aleph_{a+1} is the least cardinal number greater than aleph_a"
 
 \paragraph{The Aleph Function} 
-The outputs of the $\card$ function are specific ordinal numbers. We are now interested in its ascending sequence of outputs for infinite sets...TBC...is $aleph_{\alpha} = |\omega_{\alpha}|$? yeah - I think so.
+The outputs of the $\card$ function are specific ordinal numbers. We are now interested in its ascending sequence of outputs for infinite sets...TBC...is $\aleph_{\alpha} = |\omega_{\alpha}|$? yeah - I think so.
 
 % see:
 % https://www.youtube.com/watch?v=hj9hPx23vz0&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=9
@@ -936,7 +957,7 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Cantor's Theorem}
-Cantor's theorem says that for any set $A$, the power set set $\mathcal{P}(A)$ has a strictly greater cardinality than $A$ itself. That is: $|A| < |\mathcal{P}(A)|$. For finite sets, these two cardinalities are related by $|\mathcal{P}(A)| = 2^{|A|}$. [Q: what about infinite sets using cardinal exponentiation?]
+Cantor's theorem says that for any set $A$, the power set $\mathcal{P}(A)$ has a strictly greater cardinality than $A$ itself. That is: $|A| < |\mathcal{P}(A)|$. For finite sets, these two cardinalities are related by $|\mathcal{P}(A)| = 2^{|A|}$. [Q: what about infinite sets using cardinal exponentiation?]
 
 % https://en.wikipedia.org/wiki/Cantor%27s_theorem
 
@@ -983,7 +1004,7 @@ Cantor's theorem says that for any set $A$, the power set set $\mathcal{P}(A)$ h
 
 %---------------------------------------------------------------------------------------------------
 \subsection{The Cantor-Bernstein Theorem}
-To show that two sets $A$ and $B$ have the same cardinality, we must, by definition, show that a bijection between $A$ and $B$ exists. The Cantor-Bernstein theorem asserts that it suffices to show that and injection from $A$ to $B$ and an injection from $B$ to $A$ exists. If these two injections exist, then the theorem assures that also a bijection between $A$ and $B$ exists. (VERIFY) Constructing these two injections (or indirectly showing that they exist) can, in some situations, be easier than showing directly that a bijection exists, so the theorem may help us to show that two sets have the same cardinality. ...TBC...
+To show that two sets $A$ and $B$ have the same cardinality, we must, by definition, show that a bijection between $A$ and $B$ exists. The Cantor-Bernstein theorem asserts that it suffices to show that and injection from $A$ to $B$ and an injection from $B$ to $A$ exists. If these two injections exist, then the theorem assures that also a bijection between $A$ and $B$ exists. Constructing these two injections (or indirectly showing that they exist) can, in some situations, be easier than showing directly that a bijection exists, so the theorem may help us to show that two sets have the same cardinality. ...TBC...
 
 % I think, the theorem can be derived by (VERIFY!):
 % -If there exists an injective function f: A to B  then  |A| <= |B|
@@ -993,14 +1014,9 @@ To show that two sets $A$ and $B$ have the same cardinality, we must, by definit
 % An "obvious" theorem about infinite sets (The Cantor-Bernstein-Schröder Theorem)
 % https://www.youtube.com/watch?v=Nv90aDcwzv0
 
-
-
-
-
-
 %---------------------------------------------------------------------------------------------------
 \subsection{The Continuum Hypothesis}
-We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists (VERIFY!). This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH. We have already introduced the notation $\aleph_0 = |\mathbb{N}|$ for the cardinality of the natural numbers. The cardinality of the real numbers, i.e. the continuum, is denoted as $\mathfrak{c} = |\mathbb{R}|$ and we also already know that $|\mathbb{R}| = 2^{\aleph_0}$. With these notations, the continuum hypothesis can be written down as: $\aleph_1 = 2^{\aleph_0}$. The generalized CH, also called Cantor's aleph hypothesis, states: $\aleph_{\alpha+1} = 2^{\aleph_{\alpha}}$ for every ordinal number $\alpha$. ....TBC...[todo: explain how GCH means that the aleph numbers equal the beth numbers]
+We know that $|\mathbb{N}| < |\mathbb{R}|$. The cardinality of the real (i.e. continuous) numbers is strictly greater than the cardinality of the natural numbers. Cantor observed that any infinite subset of the real numbers that he could construct had either the same cardinality as $\mathbb{R}$ itself or the same cardinality as $\mathbb{N}$, so he hypothesized that no cardinality in between these two exists. This is called the \emph{continuum hypothesis} which is sometimes abbreviated as CH. We have already introduced the notation $\aleph_0 = |\mathbb{N}|$ for the cardinality of the natural numbers. The cardinality of the real numbers, i.e. the continuum, is denoted as $\mathfrak{c} = |\mathbb{R}|$ and we also already know that $|\mathbb{R}| = 2^{\aleph_0}$. With these notations, the continuum hypothesis can be written down as: $\aleph_1 = 2^{\aleph_0}$. The generalized CH, also called Cantor's aleph hypothesis, states: $\aleph_{\alpha+1} = 2^{\aleph_{\alpha}}$ for every ordinal number $\alpha$. ....TBC...[todo: explain how GCH means that the aleph numbers equal the beth numbers]
 
 % Q: Does the index of a cardinal number have to be an ordinal number?
 % Q: How many cardinal numbers are there? Countably many or uncountably many? Is this question related to the CH?

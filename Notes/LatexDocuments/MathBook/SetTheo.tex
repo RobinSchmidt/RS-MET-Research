@@ -217,7 +217,7 @@ Now this axiom may appear a little strange. While for the others, most readers w
 
 % https://en.wikipedia.org/wiki/Axiom_of_infinity
 % https://en.wikipedia.org/wiki/Finitism
-
+% https://en.wikipedia.org/wiki/Primitive_recursive_arithmetic
 
 \paragraph{Axiom Schema of Specification}
 This axiom says that for any given predicate $\varphi(x)$ and any given set $A$, we can create the subset $S$ of $A$ that contains only those elements from $A$ which satisfy the predicate $\varphi$. This axiom lets us filter out elements from a given set $A$ by means of a formula of predicate logic. It's called an \emph{axiom schema} because it formally represents an infinite number of axioms - one for each imaginable formula $\varphi$. It can be formally stated as:
@@ -390,6 +390,8 @@ Some collections of mathematical objects that are of interest turn out to be not
 % https://de.wikipedia.org/wiki/Klasse_(Mengenlehre)
 % https://de.wikipedia.org/wiki/Klassenlogik
 
+% https://en.wikipedia.org/wiki/Class_(set_theory)#Classes_in_formal_set_theories
+% Class-function?
 
 
 \paragraph{Chains of Inclusions}
@@ -646,6 +648,7 @@ Ordinal numbers are, as the name suggest, used to order things, i.e. to put them
 % https://en.wikipedia.org/wiki/Ordinal_number
 % https://de.wikipedia.org/wiki/Ordinalzahl#Limes-_und_Nachfolgerzahlen
 
+% https://de.wikipedia.org/wiki/Ordinalzahl
 
 % https://www.youtube.com/watch?v=Ay0151PkgMA&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=13
 % -ordinal numbres are transivtive sets that are well-ordered by the element relation
@@ -801,7 +804,19 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 % -constructing "the set of all ordinal numbers" leads to a contradiction
 
 \paragraph{The Well Ordering Theorem} 
-Any set $A$ can be well ordered. ...TBC...
+The well ordering theorem states that any set $A$ can be well ordered. Now that seems to be a bold statement! Why should this be true? The proof of the theorem is very indirect and not constructive, i.e. it doesn't show you \emph{how} to well-order any given set. It's not easy to construct a well ordering for the reals, for example. The standard ordering doesn't work because not every subset of the reals has a least element. Just take the interval $(0,1]$ for example - it has no least element according to the standard order. Also, didn't we say at some point, that the complex numbers cannot be ordered? But this apparent contradiction can be resolved: What that statement means is that the complex numbers cannot be ordered in such a way to get an \emph{ordered field}. An ordered field is a formal term that requires an order relation that interacts in a certain nice way with the arithmetic operations. Of course, you can invent an order for the complex numbers, for example: Order according to real part and in case of equality, order according to the imaginary part. But such an ordering will not respect some features that we expect from an order on an ordered field.
+
+\medskip
+OK - with that potential cause of confusion out of the way - what does the theorem actually say? It says that it is \emph{somehow} always be possible to find a well ordering on any given set whatsoever. That somehow follows from the ZFC axioms but for certain sets we may not have the slightest clue for how such a well ordering may look like. 
+
+% I'll leave it at that
+
+% such as $a < c, b < d \Rightarrow ab < cd$ and which are required for an ordered field.
+% ..oh - no - that formula is wrong - it doesn'T work for negatives
+
+% https://en.wikipedia.org/wiki/Ordered_field
+% https://en.wikipedia.org/wiki/Well-ordering_theorem
+% https://math.stackexchange.com/questions/6501/is-there-a-known-well-ordering-of-the-reals
 
 \subsubsection{Transfinite Processes}
 
@@ -827,8 +842,32 @@ Transfinite recursion is a method of constructing a sequence of objects - one fo
 % https://en.wikipedia.org/wiki/Beth_number
 
 
+% https://de.wikipedia.org/wiki/Transfinite_Induktion
+% hat unten definition für ordinale addition
 
-\paragraph{Beth Numbers}
+% Ordinal arithmetic
+% https://jjsch.github.io/output/oa.pdf
+
+% https://en.wikipedia.org/wiki/First_uncountable_ordinal
+
+
+% https://jdh.hamkins.org/transfinite-recursion-as-a-fundamental-principle-in-set-theory/
+
+% https://planetmath.org/transfiniterecursion
+
+\paragraph{Cantor Normal Form}
+Every ordinal number $\alpha$ can be written in the form:
+\begin{equation}
+\alpha = \omega^{\beta_1} c_1 + \omega^{\beta_2} c_2 + \ldots + \omega^{\beta_k} c_k
+\end{equation}
+where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta_i$ are ordinal numbers and are sorted from larges to smallest, i.e. $\beta_1 > \beta_2 > \ldots > \beta_k$. The greatest exponent $\beta_1$ is called the degree of $\alpha$. Compare that to the way in which usually interpret decimal numbers as a weighted sum of powers of $10$. It's very similar here - just that the basis is not $10$ but $\omega$ and the weights are multiplied with the powers from the right. This is really necessary because ordinal multiplication is not commutative and multiplying an infinite ordinal from the left by any natural number changes nothing. The $\beta_i$ can, in turn, also be expressed in Cantor normal form and so on until one eventually arrives at an expression that contains only natural numbers and $\omega$s. This is similar to the hereditary base-$n$ notation of natural numbers.
+
+% https://de.wikipedia.org/wiki/Cantorsche_Normalform
+% https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
+% https://en.wikipedia.org/wiki/Goodstein%27s_theorem#Hereditary_base-n_notation
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Beth Numbers}
 % Maybe move under Ordinal Numbers
 The beth numbers are another type of transfinite numbers in set theory. They correspond best to what we might expect intuitively from differently sized infinite sets and serve as a good example for constructing sets via transfinite recursion. They are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. Here, for the time being, we may think of $n$ as a natural number. It can actually also be an ordinal number though. That's why the index is usually a greek letter in textbooks. The beth numbers are formally defined via transfinite recursion as:
 \begin{equation}
@@ -982,11 +1021,21 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Surreal Numbers}
-So far, we have constructed the ordinal numbers from the natural numbers and, on a completely different route, we also have constructed the real numbers from the natural numbers. As it stands, these two number systems do not mix. It does not make sense to ask what $\omega \cdot \sqrt{2} + \pi$ is, for example. Real numbers and transfinite ordinal numbers are incompatible. But there is a number system is which such a thing actually does make sense. This system embeds both the ordinal and the real numbers - it even includes the hyperreal numbers from non-standard analysis. That system was discovered by John Conway and the name \emph{surreal numbers} is due to Donald Knuth. ....TBC...
+So far, we have constructed the ordinal numbers from the natural numbers and, on a completely different route, we also have constructed the real numbers from the natural numbers. As it stands, these two number systems do not mix. It does not make sense to ask what $\omega \cdot \sqrt{2} + \pi$ is, for example. Real numbers and transfinite ordinal numbers are incompatible. But there is a number system is which such a thing actually does make sense. This system embeds both the ordinal and the real numbers - it even includes the hyperreal numbers from non-standard analysis. That system was discovered by John Conway and the name \emph{surreal numbers} is due to Donald Knuth. Conway himself just called them "numbers" indicating that the set is an all encompassing set of numbers. Indeed, the surreal numbers from the largest possible set of numbers that is a totally ordered field and contain the reals [VERIFY]  ....TBC...
 
 % https://en.wikipedia.org/wiki/Surreal_number
 % https://en.wikipedia.org/wiki/Superreal_number
 % https://en.wikipedia.org/wiki/Hyperreal_number
+
+% explain also surcomplex numbers
+
+% https://www.ams.org/journals/tran/1985-287-01/S0002-9947-1985-0766225-7/S0002-9947-1985-0766225-7.pdf
+
+% On Numbers and Games
+% https://books.google.de/books?id=tXiVo8qA5PQC&redir_esc=y
+
+% THE ABSOLUTE ARITHMETIC CONTINUUM AND THE UNIFICATION OF ALL NUMBERS GREAT AND SMALL
+% https://web.archive.org/web/20170703064055/http://www.ohio.edu/people/ehrlich/Unification.pdf
 
 
 %===================================================================================================
@@ -1119,6 +1168,9 @@ The axiom of choice, abbreviated as AC, is the most controversial of all axioms 
 % https://www.youtube.com/watch?v=-qPpiHZ82rw
 % -Jede unendliche Menge A läßt sich ijektiv auf A x A abbilden
 
+% https://en.wikipedia.org/wiki/Well-ordering_theorem#History
+% "...in first-order logic the well-ordering theorem is equivalent to the axiom of choice...In second-order logic, however, the well-ordering theorem is strictly stronger than the axiom of choice..."
+% ...WTF?! How can 2nd order logic "undo" truths that have been proven by 1st order logic?
 
 
 \paragraph{Zorn's Lemma}

@@ -1,4 +1,4 @@
-\section{Fields}
+\section{Field Theory}
 In the realm of abstract algebra, a \emph{field} is a ring with some additional requirements. It must be a unital ring, which means that a multiplicative identity (i.e. neutral element) must exist. We will also require that all elements except the additive identity must have multiplicative inverses. The exception is motivated by the idea that division by zero is impossible. It turns out that this will case for any field if we want $a \cdot 0 = a \cdot (0 + 0) = a \cdot 0 + a \cdot 0$ to be true for any $a$ that is an element of our field. Furthermore, we require that the multiplication is also commutative. The prototypical examples of fields are the rational numbers $\mathbb{Q}$ and the real numbers $\mathbb{R}$. Whenever we have a field, we can do computations with the elements of the field in the same way that we are used to from elementary school. That means, we can add, subtract, multiply and divide to our hearts content with the sole exception of division by zero. As with rings, we denote a field as a triple $(\mathbb{F}, +, \cdot)$ made from an underlying set $\mathbb{F}$ and two operations which we call addition and multiplication. Formally, the requirements for a field are:
 \begin{itemize}
 \item $(\mathbb{F},+,\cdot)$ forms a unital ring, i.e. a ring with a multiplicative neutral element.
@@ -36,14 +36,21 @@ Multiplication distributes over addition:
 \medskip
 [...todo: verify that the list is complete]
 
-Any mathematical structure that satisfies these requirements is a structure in which can do calculations and solve equations in the same way as we are used to from the rational or real numbers. The rational numbers can be seen as the prototypical example of a field after which the abstraction was modeled. We don't need a right-distributive law because we have required a commutative multiplication. As usual, we will use $\mathbb{F}^*$ as a shorthand for $\mathbb{F} \setminus \{0\}$.
+Any mathematical structure that satisfies these requirements is a structure in which can do calculations and solve equations in the same way as we are used to from the rational or real numbers. The rational numbers can be seen as the prototypical example of a field after which the abstraction was modeled. We don't need a right-distributive law because we have required a commutative multiplication. As usual, we will use $\mathbb{F}^*$ as a shorthand for $\mathbb{F} \setminus \{0\}$. With this definition, we could also say that a field $\mathbb{F}$ is a set with two operations $+$ and $\cdot$ such that $(\mathbb{F},+,\cdot)$ forms a commutative unital ring and  $(\mathbb{F}^*,\cdot)$ forms a commutative group. [VERIFY!] 
+
+%So, a field is a ring in which we also have multiplicative inverses for all elements except for the additive neutral element.
+
+% If F has these porperties except commutativity for multiplication, then it's called a skew field (ex: Quaternions) ...does it need to be anticommutative? No - I don't think so - it's also called a division ring:
+% https://en.wikipedia.org/wiki/Division_ring
+% ...but "skew" seems to suggest anticommutativity
+
 
 %===================================================================================================
 \subsection{Construction of Fields}
 
 
 \subsubsection{Fields of Fractions}
-Given an integral domain $R$ (i.e. a commutative unital ring without zero divisors), we can construct a field from it in a way that generalizes the construction of the rational numbers from the ring of integers. It works as follows: Take all pairs $(a,b) \in R^2$ with $b \neq 0$ and identify two pairs $(a,b)$ and $(d,c)$ if they should represent the same fraction. That is, we say $(a,b) = (c,d)$ iff $a d = b c$. Let $F$ be the set of the resulting equivalence classes and let $[a,b]$ denote the equivalence class of $(a,b)$. On the set of these equivalence classes, we define addition as $[a,b] + [c,d] = [a d + bc, bd]$ and multiplication as  $[a,b] \cdot [c,d] = [ac, bd]$. As neutral elements, we use $0_F = [0_R, 1_R]$ and $1_F = [1_R, 1_R]$ where the subscript $F$ means that this is an element of our new, to be constructed field $F$ and the subscript $R$ means that it is an element from our original ring that we started with. The so constructed structure $F$ is indeed a field and it is called the \emph{field of fractions} aka the \emph{field of quotients} of $R$. If $R = \mathbb{Z}$, then we will arrive at the rational numbers $F = \mathbb{Q}$. This is the smallest field containing the integers and, in fact, even the smallest field containing the naturals. Of course, the construction is more general in that it can be applied to any integral domain $R$. I think, the so constructed field $F$ is the always smallest possible field containing the original ring $R$ in the sense that every other field containing $R$ is a strict superset of the field of fractions [VERIFY!]. 
+Given an integral domain $R$ (i.e. a commutative unital ring without zero divisors), we can construct a field from it in a way that generalizes the construction of the rational numbers from the ring of integers. It works as follows: Take all pairs $(a,b) \in R^2$ with $b \neq 0$ and identify two pairs $(a,b)$ and $(c,d)$ if they should represent the same fraction. That is, we say $(a,b) = (c,d)$ iff $a d = b c$. Let $F$ be the set of the resulting equivalence classes and let $[a,b]$ denote the equivalence class of $(a,b)$. On the set of these equivalence classes, we define addition as $[a,b] + [c,d] = [a d + bc, bd]$ and multiplication as  $[a,b] \cdot [c,d] = [ac, bd]$. As neutral elements, we use $0_F = [0_R, 1_R]$ and $1_F = [1_R, 1_R]$ where the subscript $F$ means that this is an element of our new, to be constructed field $F$ and the subscript $R$ means that it is an element from our original ring that we started with. The so constructed structure $F$ is indeed a field and it is called the \emph{field of fractions} aka the \emph{field of quotients} of $R$. If $R = \mathbb{Z}$, then we will arrive at the rational numbers $F = \mathbb{Q}$. This is the smallest field containing the integers and, in fact, even the smallest field containing the naturals. Of course, the construction is more general in that it can be applied to any integral domain $R$. I think, the so constructed field $F$ is the always smallest possible field containing the original ring $R$ in the sense that every other field containing $R$ is a strict superset of the field of fractions [VERIFY!]. 
 
 % see ACRS, pg 34
 % https://en.wikipedia.org/wiki/Field_of_fractions
@@ -55,13 +62,16 @@ Given an integral domain $R$ (i.e. a commutative unital ring without zero diviso
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Subfields and Extension Fields}
-By now, you know the drill already: if a subset of the underlying set of a given field forms itself a field (under the same operations), then we say that this subset forms a subfield of our given field (under these operations). We already know examples of such subfield relations. $\mathbb{R}$ is a subfield of $\mathbb{C}$ and $\mathbb{Q}$ is a subfield of $\mathbb{R}$ and therefore also of $\mathbb{C}$ (the relation is transitive). From the perspective of $\mathbb{Q}$, the bigger fields $\mathbb{R}$ and $\mathbb{C}$ are called extension fields [VERIFY]. 
+By now, you know the drill already: if a subset of the underlying set of a given field forms itself a field (under the same operations), then we say that this subset forms a \emph{subfield} of our given field (under these operations). We already know examples of such subfield relations. $\mathbb{R}$ is a subfield of $\mathbb{C}$ and $\mathbb{Q}$ is a subfield of $\mathbb{R}$ and therefore also of $\mathbb{C}$ (the relation is transitive). From the perspective of $\mathbb{Q}$, the bigger fields $\mathbb{R}$ and $\mathbb{C}$ are called \emph{extension fields} or \emph{field extensions}. 
 
 % R is transcendental extension of Q and C is algebraic extension of R?
 
 % R is subfield of C,  Q is subfield of R (and therefore also of C)
 
 % Notation is similar to adjoining elements to a ring - just using () instead of []
+
+% https://mathworld.wolfram.com/ExtensionField.html
+% https://en.wikipedia.org/wiki/Field_extension
 
 \paragraph{Algebraic Extensions of $\mathbb{Q}$}
 The field $\mathbb{Q}$ is something like the prototypical example of all fields. It is the smallest field containing the natural numbers [VERIFY!]. For some things, rational numbers are not enough. It is well known that the square root of two is not a rational number. If we just add $\sqrt{2}$ to the field of rational numbers and then make sure to also add everything else that is needed to continue to satisfy the field axioms, we obtain an extended field which we denote by $\mathbb{Q}(\sqrt{2})$ and call "Q adjoined square-root of two". This is totally analogous to what we did with rings when adjoining a new element, just that for fields we use parentheses like $(\ldots)$ instead of brackets like $[\ldots]$. It turns out that the elements of our extended field can always be written in the form $a + b \sqrt{2}$ where $a,b \in \mathbb{Q}$.
@@ -70,6 +80,8 @@ The field $\mathbb{Q}$ is something like the prototypical example of all fields.
 % Explain root field aka splitting field of a polynomial
 
 % https://math.libretexts.org/Bookshelves/Abstract_and_Geometric_Algebra/Abstract_Algebra%3A_Theory_and_Applications_(Judson)/18%3A_Integral_Domains/18.01%3A_Fields_of_Fractions
+
+% -ToDo: maybe show that sum, difference, product and quotient of (a + b*sqrt(n)) and (c + d*sqrt(n)) is again of the same form (for any integer n that is not a square number)
 
 \paragraph{Algebraic Closure of a Field}
 In an algebraically closed field, we can solve any polynomial equation. In fact, any polynomial of degree $n$ will always factor into precisely $n$ linear factors [VERIFY]. Algebraically closed fields are as nice as it gets when the goal is to solve algebraic equations. The field of complex numbers $\mathbb{C}$ is algebraically closed. When we start with any given field $\mathbb{F}$ and add to it precisely all the objects that are needed to turn it into algebraically closed field, then that so obtained new field is called the algebraic closure of $\mathbb{F}$. In this sense, $\mathbb{C}$ is the algebraic closure of $\mathbb{R}$. The algebraic closure of the field of rational numbers $\mathbb{Q}$ is the set of algebraic numbers $\mathbb{A}$. 
@@ -88,6 +100,12 @@ If we adjoin one or more transcendental numbers, i.e. numbers like the semicircl
 % https://en.wikipedia.org/wiki/Complete_metric_space#Completion
 
 
+%\paragraph{Extensions of $\mathbb{R}$}
+
+
+
+
+
 \paragraph{Algebraic Extensions of $\mathbb{F}_p$}
 
 % -explain algebraic closures of finite fields. These are complicated, I think. See elliptic tales.
@@ -96,11 +114,21 @@ If we adjoin one or more transcendental numbers, i.e. numbers like the semicircl
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Division by Zero}
-We learn already in elementary school that division by zero is "impossible". The history of mathematics is riddled with examples of things that were at one point deemed to be impossible which became possible later by extending the number system suitably. Subtracting 5 from 3 is impossible in the natural numbers but no problem in the integers. Dividing 3 by 5 is impossible in the integers but doable in the rationals. Taking the square root of 2 is impossible in the rationals but totally fine in the reals. Finally, taking the square root of a negative number is impossible in the reals but possible in the complex numbers. So, one might hope that with a suitable definition that extends our number system even further, also the problem of division by zero might be solved. Unfortunately, it turns out that doing so will necessarily invalidate one of our most basic calculation rules ...TBC...
+We learn already in elementary school that division by zero is "impossible". The history of mathematics is full of examples of things that were at one point deemed to be impossible which became possible later by extending the number system suitably. Subtracting 5 from 3 is impossible in the natural numbers but no problem in the integers. Dividing 3 by 5 is impossible in the integers but doable in the rationals. Taking the square root of 2 is impossible in the rationals but totally fine in the reals. Finally, taking the square root of a negative number is impossible in the reals but possible in the complex numbers. So, one might hope that with a suitable definition that extends our number system even further, also the problem of division by zero might be solved. Unfortunately, it turns out that doing so will necessarily invalidate one of our most basic calculation rules ...TBC...
 
-\paragraph{The Extended Real Line}...
+\paragraph{The Extended Real Line}...TBC..explain projective real line 
 
-\paragraph{Hyperreal Numbers}...
+% Field Extensions and the Hyperreals
+% https://www.youtube.com/watch?v=A7vRtMyR9gE&list=PLHW2zF4VTA-cidobAyHGzugw-XXh_H5tL&index=3
+% -R(i) is a *simple* extension of R with generator i. Q(sqrt(2)) is another example of a simple
+%  extension
+% -The hyperreals *R are the reals with w adjoined. w is a number that is greater than any real
+%  number....I think, it's the infinite ordinal omega? espilon = 1/w is an ininitesimal
+
+% https://en.wikipedia.org/wiki/Extended_real_number_line
+
+
+\paragraph{Hyperreal Numbers} Let's again start with the field of real numbers $\mathbb{R}$ and adjoin a special number $\omega$ with the property that $\omega > r$ for any real number $r$. For such a number to be larger than any real number, it must somehow be infinite. To make the set a field, we must also add $1/\omega$ which we will denote as $\epsilon$. That epsilon is called an infinitesimal and it has the property that it is greater than zero but less than any positive real number.  ...TBC...explain standard part, dual numbers
 
 \paragraph{Wheel Theory}...
 
@@ -201,6 +229,16 @@ definition is that g has a normal series in which all quotient groups are cyclic
 
 see ABoAA, pg 338, 342, 343
 
+Field Theory - an Introduction
+https://www.youtube.com/watch?v=BcF6APQYU1w&list=PLHW2zF4VTA-cidobAyHGzugw-XXh_H5tL&index=2
 
+
+https://en.wikipedia.org/wiki/Valuation_ring
+
+Surreal Numbers
+https://www.youtube.com/watch?v=QaK81xaIb-U
+
+
+https://en.wikipedia.org/wiki/Ordered_field#Definitions
 	
 \end{comment}

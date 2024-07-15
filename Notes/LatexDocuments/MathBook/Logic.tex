@@ -4,7 +4,11 @@
 %===================================================================================================
 \section{Propositional Logic}
 
+% -also known as zeroth order logic
 % -Connectives (and, or, not, nand, xor, ...)
+
+
+% https://en.wikipedia.org/wiki/Exclusive_or
 
 
 %===================================================================================================
@@ -31,6 +35,9 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 % https://home.uni-leipzig.de/methodenportal/deduktion_induktion/
 % -Deduktion schließt vom allgemeinen auf das spezielle
 % -Induktion schließt vom speziellen auf das allgemeine
+
+% https://en.wikipedia.org/wiki/Logical_consequence
+% https://en.wikipedia.org/wiki/Propositional_calculus
 
 \subsubsection{Rules of Inference}
 % https://en.wikipedia.org/wiki/Rule_of_inference
@@ -63,6 +70,45 @@ Proof by induction is a proof technique that can be used to prove a statement $\
 
 
 
+%===================================================================================================
+\section{Higher Order Logic}
+Propositional logic and predicate logic is also called zeroth and first order logic respectively indicating a hierarchy of logical systems. The position in this hierarchy determined by what the variables that appear in the formulas stand for. That is formalized in the idea of the \emph{domain of discourse} which is the universe of things that we can talk about.
+
+\medskip
+In 0th order logic, i.e. propositional logic, the variables just stand for truth values. That means, any variable $x$ that appears in a formula can be assigned either true or false and that's it. Variables have no inner structure. Our domain of discourse is just the relation between logical formulas themselves - like is one formula equivalent to another, does one imply the other, etc. We cannot yet talk about objects from the world, so to speak. ...TBC...
+
+%For example, the formula $(x \rightarrow y) \wedge x$ implies the much simpler formula $y$.
+
+\medskip
+In 1st order logic, the variables that were formerly just atomic truth values now become predicates over real world objects like numbers, sets, set elements, etc. We can now express things like "There exists a number such that...". We use quantifiers like $\exists$ and $\forall$ to introduce a variable. ...TBC...
+
+\medskip
+In 2nd order logic, we can additionally quantify over predicates. For example, we could write down the law of the excluded middle as: $\forall \varphi \forall x: (\varphi(x) \vee \neg \varphi(x))$. The formula says that for any predicate $\varphi$ and for any variable $x$, either $\varphi(x)$ or $\neg \varphi(x)$ is true\footnote{Shouldn't the law use an exclusive or, i.e. say $\varphi(x) \xor \neg \varphi(x)$? I mean, the use of inclusive or does not render the statement wrong - but it doesn't seem to express that $\varphi$ and $\neg \varphi$ are mutually exclusive. Figure out!}.
+
+% -bound variables
+
+%we get variables that stand for sets or set elements and we can quantify over such variables by means of quantifiers like $\exists$ and $\forall$.
+
+% Propositional logic deal with propositions and the relations between them. 
+
+
+
+
+% https://en.wikipedia.org/wiki/Atomic_formula
+% https://en.wikipedia.org/wiki/Propositional_variable
+
+% https://en.wikipedia.org/wiki/Domain_of_discourse
+
+% https://en.wikipedia.org/wiki/Propositional_calculus
+
+% https://en.wikipedia.org/wiki/First-order_logic
+%  In propositional logic, these sentences themselves are viewed as the individuals of study, and might be denoted, for example, by variables such as p and q. They are not viewed as an application of a predicate
+
+%https://en.wikipedia.org/wiki/Second-order_logic
+% First-order logic quantifies only variables that range over individuals (elements of the domain of discourse); second-order logic, in addition, quantifies over relations.
+
+%https://en.wikipedia.org/wiki/Higher-order_logic
+%https://en.wikipedia.org/wiki/Type_theory
 
 \begin{comment}
 
@@ -79,7 +125,6 @@ Proof by induction is a proof technique that can be used to prove a statement $\
 % https://en.wikipedia.org/wiki/G%C3%B6del%27s_completeness_theorem
 % https://en.wikipedia.org/wiki/List_of_first-order_theories
 
-% https://en.wikipedia.org/wiki/Second-order_logic
-% https://en.wikipedia.org/wiki/Higher-order_logic
+
 
 \end{comment}

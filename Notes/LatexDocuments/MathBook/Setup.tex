@@ -72,6 +72,15 @@
 
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
+% There are multiple conventions to express a logical exclusive or - we make the choice for the
+% whole text here:
+%\newcommand*\xor{\mathbin{\dot{\vee}}}        % exclusive or
+%\newcommand*\xor{\mathbin{\oplus}}           % exclusive or
+\newcommand*\xor{\mathbin{\veebar}}           % exclusive or
+% Maybe we should follow wolfram:
+% https://mathworld.wolfram.com/XOR.html
+%https://mathworld.wolfram.com/NAND.html
+
 %\let\cleardoublepage\clearpage
 
 % Maybe move the stuff up to here into a _Setup.tex file that can be included from

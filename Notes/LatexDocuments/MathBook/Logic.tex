@@ -3,17 +3,45 @@
 
 %===================================================================================================
 \section{Propositional Logic}
+Propositional logic deals with statements that can be either true or false. These statements are called propositions. The propositions are typically represented by variable symbols such as $p$ and $q$. For example, a proposition could be defined as $p = \text{"It is hot outside"}$ and another one could be $q = \text{"Chocolate melts in the heat"}$ and yet another one could be $r = \text{"The chocolate is outside"}$ and a last one could be $s = \text{"The chocolate is melting"}$. Propositional logic is concerned with formalizing processes like concluding $s$ from $p,q,r$. The machinery is the set of multivariate functions from the set $\{0,1\}$ to itself. So, $0$ and $1$ are the two possible values that our variables like $p,q,\ldots$ can take on and we interpret $1$ as "the proposition is true" and $0$ as "the proposition is false". We plug them in into a function and it spits out a value which is also either $0$ or $1$. We'll denote the set $\{0,1\}$ as $\mathbb{B}$ in honor to George Boole\footnote{George Boole: English mathematician, 1815-1864, Inventor of Boolean algebra}. We are concerned with functions $f$ of the type $f: \mathbb{B}^n \rightarrow \mathbb{B}$. We'll typically build such multivariate Boolean functions from a couple of basic bivariate Boolean functions of the type $f: \mathbb{B} \times \mathbb{B} \rightarrow \mathbb{B}$ and possibly the only nontrivial univariate Boolean function, namely the negation which maps $0$ to $1$ and $1$ to $0$. Propositional logic is also known as \emph{zeroth order logic} indicating that there is a hierarchy of logical systems with various levels. Indeed, one level up, we'll find predicate logic which is also known as first order logic. ...TBC...
 
-% -also known as zeroth order logic
-% -Connectives (and, or, not, nand, xor, ...)
+%  Propositional logic is the foundation of all higher order
+
+% https://en.wikipedia.org/wiki/Boolean_algebra
 
 \subsection{Connectives}
+Logical connectives are symbols that are used to create more complex logical expressions from simpler ones. They work with logical variables like the basic arithmetic operators do with numerical variables. They typically take two inputs and produce one output\footnote{The only exception is the negation which takes only a single input. It's somewhat analogous to the unary minus in arithmetic.}. Like arithmetic operators, we write them in infix notation between the variables. A non-exhaustive table of such connectives is given here:
 
-$\neg, \wedge, \vee, \xor, \nand, \then$
+\medskip
+\begin{tabular}{c l l}
+\label{Tab:LogicConnectives}
+  Symbol           & Name                  & Meaning      \\
+  $\neg p$         & Negation              & not $p$       \\
+  $p \wedge q$     & Conjunction           & $p$ and $q$    \\
+  $p \vee q$       & Disjunction           & $p$ or $q$ (maybe both)   \\
+  $p \then q$      & Material Implication  & $p$ implies $q$, if $p$ then $q$   \\  
+  $p \mequiv q$    & Material Equivalence  & $p$ if and only if $q$, $p$ iff $q$   \\    
+  $p \xor q$       & Exclusive or, Xor     & either $p$ or $q$, $p$ or $q$ but not both   \\ 
+  $p \nand q$      & Non-Conjunction, Nand & Not both, Not ($p$ and $q$)   \\   
+\end{tabular}
+\medskip
 
+As said, the list is not exhaustive. There are 16 possible different functions $f: \mathbb{B}^2 \rightarrow \mathbb{B}$ and we have listed only the $6$ most commonly used ones of them. We do not need a symbol for all of them because we can construct the missing ones from those in the table. In fact, we don't even need all of the connectives given in the table. A set of connectives from which all possible Boolean functions can be constructed by a suitable formula is called a \emph{functionally complete} set of connectives. For example, the set $\{\neg, \wedge, \vee\}$ is functionally complete. It is actually even overcomplete already and we could make do with  $\{\neg, \wedge\}$ but having the $\vee$ available as well makes it more convenient to write down and read(!) logical formulas. As an extreme example, the singleton set containing only the nand function $\nand$ is also functionally complete. It's not fun to read or write logical formulas when only the nand operator is permitted - but it is possible to express every possible logical formula solely in terms of nand. This fact has some technological relevance in the realm of chip design.
 
+...TBC..TODO: give truth tables for all of them, explain relation between $\then$ and $\Rightarrow$ and $\mequiv$ and $\Leftrightarrow$. The double-stroke arrow symbols are used on the meta level whereas the single-stroke arrows are used on the object level or formula level. Give other names for the connectives - there are a lot of akas
+
+% https://en.wikipedia.org/wiki/Functional_completeness
+% https://en.wikipedia.org/wiki/Sheffer_stroke  aka nand
 % https://en.wikipedia.org/wiki/Exclusive_or
 % https://en.wikipedia.org/wiki/Logical_connective
+% https://en.wikipedia.org/wiki/Logical_equivalence#Relation_to_material_equivalence
+% https://en.wikiversity.org/wiki/Logical_implication
+% https://en.wikipedia.org/wiki/Logical_biconditional
+% -explain difference between material conditional and logical implication
+% -explain difference between material equivalence and logical equivalence/biconditional
+%  material biconditional or equivalence or biimplication or bientailmen
+
+% What about constant functions that always output 0 or 1
 
 %===================================================================================================
 \section{Predicate Logic}
@@ -96,7 +124,7 @@ In 0th order logic, i.e. propositional logic, the variables just stand for truth
 In 1st order logic, the variables that were formerly just atomic truth values now become predicates over real world objects like numbers, sets, set elements, etc. We can now express things like "There exists a number such that...". We use quantifiers like $\exists$ and $\forall$ to introduce a variable. ...TBC...
 
 \medskip
-In 2nd order logic, we can additionally quantify over predicates. For example, we could write down the law of the excluded middle as: $\forall \varphi \forall x: (\varphi(x) \vee \neg \varphi(x))$. The formula says that for any predicate $\varphi$ and for any variable $x$, either $\varphi(x)$ or $\neg \varphi(x)$ is true\footnote{Shouldn't the law use an exclusive or, i.e. say $\varphi(x) \xor \neg \varphi(x)$? I mean, the use of inclusive or does not render the statement wrong - but it doesn't seem to express that $\varphi$ and $\neg \varphi$ are mutually exclusive. Figure out!}.
+In 2nd order logic, we can additionally quantify over predicates. For example, we could write down the law of the excluded middle as: $\forall \varphi \forall x: (\varphi(x) \vee \neg \varphi(x))$. The formula says that for any predicate $\varphi$ and for any variable $x$, either $\varphi(x)$ or $\neg \varphi(x)$ is true\footnote{Shouldn't the law use an exclusive or, i.e. say $\varphi(x) \xor \neg \varphi(x)$? I mean, the use of inclusive or does not render the statement wrong (in fact, it turns it into a tautology) - but it doesn't seem to express that $\varphi$ and $\neg \varphi$ are mutually exclusive which is clearly the intended meaning when calling it law of the \emph{excluded} middle. Figure out!}.
 
 % -bound variables
 
@@ -123,6 +151,22 @@ In 2nd order logic, we can additionally quantify over predicates. For example, w
 %https://en.wikipedia.org/wiki/Higher-order_logic
 %https://en.wikipedia.org/wiki/Type_theory
 
+%===================================================================================================
+\section{Other Logical Systems}
+
+\subsection{Modal Logic}
+% https://en.wikipedia.org/wiki/Modal_logic
+
+\subsection{Temporal Logic}
+% https://en.wikipedia.org/wiki/Temporal_logic
+
+\subsection{Three Valued Logic}
+% https://en.wikipedia.org/wiki/Many-valued_logic
+
+\subsection{Fuzzy Logic}
+% https://en.wikipedia.org/wiki/Fuzzy_logic
+
+
 \begin{comment}
 
 % For the logic chapter that should come before this chapter:
@@ -146,5 +190,7 @@ https://simple.wikipedia.org/wiki/Implication_(logic)
 https://en.wikipedia.org/wiki/Material_conditional
 
 https://en.wikipedia.org/wiki/Logical_consequence
+
+https://en.wikipedia.org/wiki/Modal_logic
 
 \end{comment}

@@ -74,12 +74,13 @@
 
 % There are multiple conventions to express a logical exclusive or - we make the choice for the
 % whole text here:
-%\newcommand*\xor{\mathbin{\dot{\vee}}}        % exclusive or
-%\newcommand*\xor{\mathbin{\oplus}}           % exclusive or
-\newcommand*\xor{\mathbin{\veebar}}           % exclusive or
-% Maybe we should follow wolfram:
+\newcommand*\xor{\mathbin{\veebar}}              % exclusive or - alternatives: \oplus, \dot{\vee}
+\newcommand*\nand{\mathbin{\barwedge}}
+\newcommand*\then{\mathbin{\rightarrow}}         % \implies is already defined
+\newcommand*\lequiv{\mathbin{\leftrightarrow}}   % logical equivalence
+% We follow wolfram:
 % https://mathworld.wolfram.com/XOR.html
-%https://mathworld.wolfram.com/NAND.html
+% https://mathworld.wolfram.com/NAND.html
 
 %\let\cleardoublepage\clearpage
 

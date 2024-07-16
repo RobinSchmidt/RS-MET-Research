@@ -397,6 +397,9 @@ Some collections of mathematical objects that are of interest turn out to be not
 \paragraph{Chains of Inclusions}
 To convey the fact that a set $A$ is a subset of another set $B$ which is, in turn, a subset of a third set $C$, we could write $A \subseteq B \wedge B \subseteq C$. But that is tedious, so we will instead write this as $A \subseteq B \subseteq C$. We call such a statement a chain of subset inclusions\footnote{I don't know, if that's an official term, though.}. Likewise, for $A \in B \wedge B \in C$ we may write $A \in B \in C$ and call that a chain of element inclusions. TODO: explain the term chain in the context of partial orders, Hasse diagrams, etc.
 
+% -A chain is a subset of a poset that is totally ordered (aka lineraly ordered), i.e. each pair of
+%  elements is comparable. That means, a chain is a linearly ordered set
+
 % https://www.youtube.com/watch?v=szfsGJ_PGQ0
 % talks about chains at around 18:40
 
@@ -459,7 +462,7 @@ The transitive closure of a set $A$, denoted as $\tc(A)$ is given by:
 % partial order, poset, maximal element
 
 % https://en.wikipedia.org/wiki/Baire_space_(set_theory)
-% Baire Space, Cantor Space
+% Baire Space w^w, Cantor Space 2^w
 
 % Special Subsets of the Power Set:
 % -Topology
@@ -689,10 +692,17 @@ Ordinal numbers are, as the name suggest, used to order things, i.e. to put them
 % incompatible
 
 \paragraph{Order Isomorphisms and Order Types}
-An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is a bijective function $f: A \rightarrow B$ that preserves the ordering of the elements. That means, the bijection $f$ must satisfy: $x <_A y \Leftrightarrow f(x) <_B f(y)$ for all $x,y \in A$. In words: $x$ is less then $y$ in $A$ if and only if $f(x)$ is less than $f(y)$ in $B$. 
+An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is a bijective function $f: A \rightarrow B$ that preserves the ordering of the elements. That means, the bijection $f$ must satisfy: $x <_A y \Leftrightarrow f(x) <_B f(y)$ for all $x,y \in A$. In words: $x$ is less then $y$ in $A$ if and only if $f(x)$ is less than $f(y)$ in $B$. As an example, take $A=\{1,2,3,4\}$ with the natural order $1 <_A 2 <_A 3 <_A 4$ and the set $B=\{one,two,three,four\}$ with the lexicographical order $four <_B one <_B three <_B two$. We can indeed find an order isomorphism $f$ between the two posets, namely the map: $f: 1-four, 2-one, 3-three, 4-two$.
+
+% Example: the set A={1,2,3,4} with the order 1<2<3<4  and the set B={one,two,three,four} with the order
+% four,one,three,two  with the bijection 1-four,2-one,3-three,2-four
 
 % https://en.wikipedia.org/wiki/Order_type
+% -the order type of the set of natural numbers is w
+
 % https://en.wikipedia.org/wiki/Order_isomorphism
+% -The class of partially ordered sets can be partitioned by it into equivalence classes, families of partially ordered sets that are all isomorphic to each other. These equivalence classes are called order types.
+
 % https://en.wikipedia.org/wiki/Partially_ordered_set
 % https://mathworld.wolfram.com/OrderType.html
 % https://math.stackexchange.com/questions/49361/order-type-and-its-reverse
@@ -718,6 +728,18 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 % -what about the number of reorderings of w? It should be somwhere below w^w but above
 %  w^n for any finite n? Or does this question make no sense because we need an aleph number for 
 %  this?
+
+% https://www.quora.com/Can-you-give-an-intuitive-explanation-of-what-an-order-type-is-in-set-theory-I-looked-at-the-Wikipedia-article-but-it-didnt-explain-very-well
+% "Two orderings have the same order type if there is a way to change the names of the elements, to turn one ordering into another."
+
+% Book Chapter - looks good - has examples:
+% https://www.math.wustl.edu/~freiwald/ch8.pdf
+%
+% Here is the full book:
+% https://www.math.wustl.edu/~freiwald/
+% https://openscholarship.wustl.edu/books/20/
+
+
 
 \paragraph{Well Ordered Sets} To understand ordinal numbers, we first need to understand the idea of a well ordered set. This is a set with a total order defined on it and the additional property that every non-empty subset has a least element with respect to the given order. The natural numbers $\mathbb{N}$ with our usual $\leq$ relation are such a well ordered set. 
 
@@ -762,12 +784,22 @@ An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is 
 %  order type. But if we put it after all positive numbers, we'll obtain w+1. That means 1+w = w but
 %  w+1 is something new. We could also use: N U w = {N,w}. It has also order type w+1
 % -N U {-1,-2,-3} with negatives after positives: w+3
+% -N U {-1,-2,-3} with negatives before positives: 3+w = w
 % -N with evens before odds: w*2
 % -N x N, odered by 1st component first and by 2nd in case of equal 1st elements: w*w = w^2
 % -N U NxN U NxNxN U... with elems from N 1st, then elems from NxN, then elems from NxNxN, etc.
 %  I think, this would produce order type w^w...not sure, though. wite this set as \bigcup_{n \in N} N^n
 % -But: isn't w^w also the set of all function f: w -> w and therefore uncountable? Or does the notation
 %  w^w mean something different here? Like, maybe, ordinal exponentiation vs set exponentiation?
+% -{...,-2,-1,0,+1,+2,...}  with 0 < 1< 2 < 3 <...< -1 < -2 < -3,...  ->   w*2
+% -{x in Q: x = n + sum_{k=0}^m 1/(2^k)   n,m in N } = {0,0.5,0.75,...1,1.5,1.75,...2,2.5,2.75,...} with
+%  nomral order on Q -> w^2
+% -set of all possible functions from w to w  ->   w^w
+
+% Some examples:
+% https://math24.net/well-orders-page-2.html
+% 
+
 
 
 %https://en.wikipedia.org/wiki/Well-order
@@ -824,7 +856,7 @@ Every ordinal number $\alpha$ can be written in the form:
 \begin{equation}
 \alpha = \omega^{\beta_1} c_1 + \omega^{\beta_2} c_2 + \ldots + \omega^{\beta_k} c_k
 \end{equation}
-where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta_i$ are ordinal numbers and are sorted from larges to smallest, i.e. $\beta_1 > \beta_2 > \ldots > \beta_k$. The greatest exponent $\beta_1$ is called the degree of $\alpha$. Compare that to the way in which usually interpret decimal numbers as a weighted sum of powers of $10$. It's very similar here - just that the basis is not $10$ but $\omega$ and the weights are multiplied with the powers from the right. This is really necessary because ordinal multiplication is not commutative and multiplying an infinite ordinal from the left by any natural number changes nothing. The $\beta_i$ can, in turn, also be expressed in Cantor normal form and so on until one eventually arrives at an expression that contains only natural numbers and $\omega$s. This is similar to the hereditary base-$n$ notation of natural numbers.
+where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta_i$ are ordinal numbers and are sorted from larges to smallest, i.e. $\beta_1 > \beta_2 > \ldots > \beta_k$. The greatest exponent $\beta_1$ is called the degree of $\alpha$. Compare that to the way in which usually interpret decimal numbers as a weighted sum of powers of $10$. It's very similar here - just that the basis is not $10$ but $\omega$ and the weights are multiplied with the powers from the right. This is really necessary because ordinal multiplication is not commutative and multiplying an infinite ordinal from the left by any natural number changes nothing. The $\beta_i$ can, in turn, also be expressed in Cantor normal form and so on until one eventually arrives at an expression that contains only natural numbers and $\omega$s. This is similar to the hereditary base-$n$ notation of natural numbers. ...TODO: give alternative form without the $c_i$ coeffs
 
 % https://de.wikipedia.org/wiki/Cantorsche_Normalform
 % https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
@@ -1028,12 +1060,14 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Surreal Numbers}
-So far, we have constructed the ordinal numbers from the natural numbers and, on a completely different route, we also have constructed the real numbers from the natural numbers. As it stands, these two number systems do not mix. It does not make sense to ask what $\omega \cdot \sqrt{2} + \pi$ is, for example. Real numbers and transfinite ordinal numbers are incompatible. But there is a number system is which such a thing actually does make sense. This system embeds both the ordinal and the real numbers - it even includes the hyperreal numbers from non-standard analysis. That system was discovered by John Conway and the name \emph{surreal numbers} is due to Donald Knuth. Conway himself just called them "numbers" indicating that the set is an all encompassing set of numbers. Indeed, the surreal numbers form the largest possible set of numbers that is a totally ordered field and contain the reals [VERIFY]. The construction of the surreal numbers using sets starts from scratch - it can be seen as an alternative to the von Neumann construction of the naturals (with subsequent construction of the integers, rationals and reals). The numbers are constructed recursively in terms of (ordered) pairs of previously constructed numbers. The construction starts with the number zero which defined as the pair $0 = (\emptyset, \emptyset)$. The positive integer $n$ is represented by $n = (n-1,\emptyset)$ and a negative integer $-n$ by $-n = (\emptyset, -(n-1))$. For example, $1=(0,\emptyset), 2=(1,\emptyset), 3=(2,\emptyset), \ldots$ and $-1=(\emptyset,0), -2=(\emptyset,-1), -3=(\emptyset,-2), \ldots$. Conway has introduced a special notation for this - he writes $\{L|R\}$ for the ordered pair $(L,R)$ where the $L,R$ variables are interpreted as "left" and "right" side of the number. When $L$ or $R$ or both are the empty set, the position can be left blank. So, for example, in the Conway notation, the numbers could be written as $3=\{2|\}$, $-3=\{|-2\}$,  $0=\{|\}$ etc.. So far, in our example, we have left one of the sides blank. The interesting thing happens when we do not leave anything blank. For example the pair $\{2|3\}$ represents the number $5/2$. The general rule is that the pair $\{L|R\}$ represents the number $(L+R)/2$, i.e. the average of $L$ and $R$. Geometrically speaking, it represents the midpoint between $L$ and $R$ on the real number line. The construction of the surreal numbers can be visualized as a process in which at each step, a bunch of new numbers are born. Each number has a birthday - that metaphorical terminology is indeed used in the theory of surreal numbers. At the $n$th stage of the construction, we produce the integers $n$ and $-n$ as well as all the midpoints between the numbers that we already had before (not all of them will be new though - but some will). Continuing this recursive construction indefinitely, we will eventually produce all the dyadic rationals, i.e. rational numbers whose denominator is a power of two. In the limit of reaching the $\omega$th construction step, we will have produced all the real numbers as well as $\omega$, $-\omega$, $1/\omega$, etc. ...VERIFY! ....TBC...explain surreal arithmetic
+So far, we have constructed the ordinal numbers from the natural numbers and, on a completely different route, we also have constructed the real numbers from the natural numbers. As it stands, these two number systems do not mix. It does not make sense to ask what $\omega \cdot \sqrt{2} + \pi$ is, for example. Real numbers and transfinite ordinal numbers are incompatible. But there is a number system is which such a thing actually does make sense. This system embeds both the ordinal and the real numbers - it even includes the hyperreal numbers from non-standard analysis. That system was discovered by John Conway and the name \emph{surreal numbers} is due to Donald Knuth. Conway himself just called them "numbers" indicating that the set is an all encompassing set of numbers. Indeed, the surreal numbers form the largest possible set of numbers that is a totally ordered field and contain the reals [VERIFY]. The construction of the surreal numbers using sets starts from scratch - it can be seen as an alternative to the von Neumann construction of the naturals (with subsequent construction of the integers, rationals and reals). The numbers are constructed recursively in terms of (ordered) pairs of previously constructed numbers. The construction starts with the number zero which defined as the pair $0 = (\emptyset, \emptyset)$. The positive integer $n$ is represented by $n = (n-1,\emptyset)$ and a negative integer $-n$ by $-n = (\emptyset, -(n-1))$. For example, $1=(0,\emptyset), 2=(1,\emptyset), 3=(2,\emptyset), \ldots$ and $-1=(\emptyset,0), -2=(\emptyset,-1), -3=(\emptyset,-2), \ldots$. Conway has introduced a special notation for this - he writes $\{L|R\}$ for the ordered pair $(L,R)$ where the $L,R$ variables are interpreted as "left" and "right" side of the number. When $L$ or $R$ or both are the empty set, the position can be left blank. So, for example, in the Conway notation, the numbers could be written as $3=\{2|\}$, $-3=\{|-2\}$,  $0=\{|\}$ etc.. So far, in our example, we have left one of the sides blank. The interesting thing happens when we do not leave anything blank. For example the pair $\{2|3\}$ represents the number $5/2$. The general rule is that the pair $\{L|R\}$ represents the number $(L+R)/2$, i.e. the average of $L$ and $R$. Geometrically speaking, it represents the midpoint between $L$ and $R$ on the real number line. The construction of the surreal numbers can be visualized as a process in which at each step, a bunch of new numbers are born. Each number has a birthday - that metaphorical terminology is indeed used in the theory of surreal numbers. At the $n$th stage of the construction, we produce the integers $n$ and $-n$ as well as all the midpoints between the numbers that we already had before (not all of them will be new though - but some will). Continuing this recursive construction indefinitely, we will eventually produce all the dyadic rationals, i.e. rational numbers whose denominator is a power of two. At each construction step $n$, the spacing between our existing inner numbers gets smaller and new numbers will be created at the outer frontiers left and right, i.e. at $\pm n$. In the limit of reaching the $\omega$th construction step, we will have produced all the real numbers because we'll have squeezed every possible number between two dyadic rationals with "infinite" denominators, so to speak. We will also have produced the infinite ordinals $\omega$, $-\omega$ and also their reciprocals\footnote{Technically, at the $\omega$th step, the denominators will be $2^\omega$ rather than just $\omega$ but that doesn't matter because $2^\omega = \omega$, I think...VERIFY} The number $1/\omega$ is the infinitesimally small number $\varepsilon$ from the hyperreal numbers ...VERIFY! ....TBC...explain surreal arithmetic
+
+
+
 
 % https://en.wikipedia.org/wiki/Surreal_number
 % -Each number is formed from an ordered pair of subsets of numbers already constructed
 % -given subsets L and R of numbers such that all the members of L are strictly less than all the members of R, then the pair { L | R } represents a number intermediate in value between all the members of L and all the members of R.
-
 
 % https://en.wikipedia.org/wiki/Superreal_number
 % https://en.wikipedia.org/wiki/Hyperreal_number
@@ -1055,6 +1089,8 @@ So far, we have constructed the ordinal numbers from the natural numbers and, on
 
 % https://www.cut-the-knot.org/WhatIs/Infinity/SurrealNumbers.shtml
 
+% https://en.wikipedia.org/wiki/Ordinal_arithmetic#Exponentiation
+% 2^w = w
 
 %===================================================================================================
 \section{Theorems and Hypotheses}
@@ -1365,6 +1401,9 @@ https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
 
 https://en.wikipedia.org/wiki/Primitive_recursive_set_function
 https://en.wikipedia.org/wiki/Constructible_universe
+
+https://en.wikipedia.org/wiki/Filter_(set_theory)
+https://en.wikipedia.org/wiki/Ultrafilter_on_a_set
 
 
 https://en.wikipedia.org/wiki/Derived_set_(mathematics)

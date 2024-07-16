@@ -142,6 +142,10 @@ public:
     // P(A) are comparable with respect to R. For example {},{2},{2,4},{1,2,4},{1,2,3,4} is a chain
     // on P(A) when R is the subset relation and A = {1,2,3,4}
 
+  // bool isFilterOn(const rsSetNaive& A);
+  // bool isUltrafilterOn(const rsSetNaive& A);
+
+
   // See:
   // https://en.wikipedia.org/wiki/Family_of_sets
 

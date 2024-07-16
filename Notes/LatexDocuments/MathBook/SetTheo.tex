@@ -818,6 +818,22 @@ OK - with that potential cause of confusion out of the way - what does the theor
 % https://en.wikipedia.org/wiki/Well-ordering_theorem
 % https://math.stackexchange.com/questions/6501/is-there-a-known-well-ordering-of-the-reals
 
+
+\paragraph{Cantor Normal Form}
+Every ordinal number $\alpha$ can be written in the form:
+\begin{equation}
+\alpha = \omega^{\beta_1} c_1 + \omega^{\beta_2} c_2 + \ldots + \omega^{\beta_k} c_k
+\end{equation}
+where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta_i$ are ordinal numbers and are sorted from larges to smallest, i.e. $\beta_1 > \beta_2 > \ldots > \beta_k$. The greatest exponent $\beta_1$ is called the degree of $\alpha$. Compare that to the way in which usually interpret decimal numbers as a weighted sum of powers of $10$. It's very similar here - just that the basis is not $10$ but $\omega$ and the weights are multiplied with the powers from the right. This is really necessary because ordinal multiplication is not commutative and multiplying an infinite ordinal from the left by any natural number changes nothing. The $\beta_i$ can, in turn, also be expressed in Cantor normal form and so on until one eventually arrives at an expression that contains only natural numbers and $\omega$s. This is similar to the hereditary base-$n$ notation of natural numbers.
+
+% https://de.wikipedia.org/wiki/Cantorsche_Normalform
+% https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
+% https://en.wikipedia.org/wiki/Goodstein%27s_theorem#Hereditary_base-n_notation
+
+% https://en.wikipedia.org/wiki/Ordinal_arithmetic#Natural_operations
+
+
+
 \subsubsection{Transfinite Processes}
 
 \paragraph{Transfinite Induction}
@@ -855,16 +871,7 @@ Transfinite recursion is a method of constructing a sequence of objects - one fo
 
 % https://planetmath.org/transfiniterecursion
 
-\paragraph{Cantor Normal Form}
-Every ordinal number $\alpha$ can be written in the form:
-\begin{equation}
-\alpha = \omega^{\beta_1} c_1 + \omega^{\beta_2} c_2 + \ldots + \omega^{\beta_k} c_k
-\end{equation}
-where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta_i$ are ordinal numbers and are sorted from larges to smallest, i.e. $\beta_1 > \beta_2 > \ldots > \beta_k$. The greatest exponent $\beta_1$ is called the degree of $\alpha$. Compare that to the way in which usually interpret decimal numbers as a weighted sum of powers of $10$. It's very similar here - just that the basis is not $10$ but $\omega$ and the weights are multiplied with the powers from the right. This is really necessary because ordinal multiplication is not commutative and multiplying an infinite ordinal from the left by any natural number changes nothing. The $\beta_i$ can, in turn, also be expressed in Cantor normal form and so on until one eventually arrives at an expression that contains only natural numbers and $\omega$s. This is similar to the hereditary base-$n$ notation of natural numbers.
 
-% https://de.wikipedia.org/wiki/Cantorsche_Normalform
-% https://en.wikipedia.org/wiki/Ordinal_arithmetic#Cantor_normal_form
-% https://en.wikipedia.org/wiki/Goodstein%27s_theorem#Hereditary_base-n_notation
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Beth Numbers}
@@ -1021,9 +1028,13 @@ The cardinal numbers are a superset of the natural numbers. With natural numbers
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Surreal Numbers}
-So far, we have constructed the ordinal numbers from the natural numbers and, on a completely different route, we also have constructed the real numbers from the natural numbers. As it stands, these two number systems do not mix. It does not make sense to ask what $\omega \cdot \sqrt{2} + \pi$ is, for example. Real numbers and transfinite ordinal numbers are incompatible. But there is a number system is which such a thing actually does make sense. This system embeds both the ordinal and the real numbers - it even includes the hyperreal numbers from non-standard analysis. That system was discovered by John Conway and the name \emph{surreal numbers} is due to Donald Knuth. Conway himself just called them "numbers" indicating that the set is an all encompassing set of numbers. Indeed, the surreal numbers from the largest possible set of numbers that is a totally ordered field and contain the reals [VERIFY]  ....TBC...
+So far, we have constructed the ordinal numbers from the natural numbers and, on a completely different route, we also have constructed the real numbers from the natural numbers. As it stands, these two number systems do not mix. It does not make sense to ask what $\omega \cdot \sqrt{2} + \pi$ is, for example. Real numbers and transfinite ordinal numbers are incompatible. But there is a number system is which such a thing actually does make sense. This system embeds both the ordinal and the real numbers - it even includes the hyperreal numbers from non-standard analysis. That system was discovered by John Conway and the name \emph{surreal numbers} is due to Donald Knuth. Conway himself just called them "numbers" indicating that the set is an all encompassing set of numbers. Indeed, the surreal numbers form the largest possible set of numbers that is a totally ordered field and contain the reals [VERIFY]. The construction of the surreal numbers using sets starts from scratch - it can be seen as an alternative to the von Neumann construction of the naturals (with subsequent construction of the integers, rationals and reals). The numbers are constructed recursively in terms of (ordered) pairs of previously constructed numbers. The construction starts with the number zero which defined as the pair $0 = (\emptyset, \emptyset)$. The positive integer $n$ is represented by $n = (n-1,\emptyset)$ and a negative integer $-n$ by $-n = (\emptyset, -(n-1))$. For example, $1=(0,\emptyset), 2=(1,\emptyset), 3=(2,\emptyset), \ldots$ and $-1=(\emptyset,0), -2=(\emptyset,-1), -3=(\emptyset,-2), \ldots$. Conway has introduced a special notation for this - he writes $\{L|R\}$ for the ordered pair $(L,R)$ where the $L,R$ variables are interpreted as "left" and "right" side of the number. When $L$ or $R$ or both are the empty set, the position can be left blank. So, for example, in the Conway notation, the numbers could be written as $3=\{2|\}$, $-3=\{|-2\}$,  $0=\{|\}$ etc.. So far, in our example, we have left one of the sides blank. The interesting thing happens when we do not leave anything blank. For example the number $\{2|3\}$ represents the number $5/2$. The general rule is that the pair $\{L|R\}$ represents the number $(L+R)/2$, i.e. the average of $L$ and $R$. Geometrically speaking, it represents the midpoint between $L$ and $R$ on the real number line. Continuing this recursively construction indefinitely, we will produce all the dyadic rationals, i.e. rational numbers whose denominator is a power of two. In the limit  ...VERIFY! ....TBC...
 
 % https://en.wikipedia.org/wiki/Surreal_number
+% -Each number is formed from an ordered pair of subsets of numbers already constructed
+% -given subsets L and R of numbers such that all the members of L are strictly less than all the members of R, then the pair { L | R } represents a number intermediate in value between all the members of L and all the members of R.
+
+
 % https://en.wikipedia.org/wiki/Superreal_number
 % https://en.wikipedia.org/wiki/Hyperreal_number
 
@@ -1036,6 +1047,13 @@ So far, we have constructed the ordinal numbers from the natural numbers and, on
 
 % THE ABSOLUTE ARITHMETIC CONTINUUM AND THE UNIFICATION OF ALL NUMBERS GREAT AND SMALL
 % https://web.archive.org/web/20170703064055/http://www.ohio.edu/people/ehrlich/Unification.pdf
+
+% https://www.scientificamerican.com/article/surreal-numbers-are-a-real-thing-heres-how-to-make-them/
+
+% Surreale Zahlen - reell, infinitesimal, transfinit und noch viel mehr
+% https://www.youtube.com/watch?v=Q9gGVUiMo04
+
+% https://www.cut-the-knot.org/WhatIs/Infinity/SurrealNumbers.shtml
 
 
 %===================================================================================================

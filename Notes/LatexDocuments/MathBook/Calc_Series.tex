@@ -182,13 +182,17 @@ If we have a nonnegative sequence $(a_n)$ and want to know whether it converges 
 
 
 \subsection{Infinite Sums aka Series}
-When we have a given sequence $(a_n)$, we can use it to define a new sequence, namely the sequence of its partial sums. Let's call that sequence $(s_n)$. Its $n$th element is given by the sum over all elements up to $n$ of our input sequence $(a_n)$:
+When we have a given sequence $(a_k)$, we can use it to define a new sequence, namely the sequence of its partial sums. Let's call that sequence $(s_n)$. Its $n$th element is given by the sum over all elements up to $n$ of our input sequence $(a_n)$:
 \begin{equation}
  s_n = \sum_{k=0}^n a_k
 \end{equation}
-Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}. A necessary condition for a series $(s_n)$ to converge is that the sequence $(a_n)$ of its terms converges to zero. But that is not a sufficient condition. The terms must also converge to zero "fast enough". For example, if the terms follow a power rule like $a_n = 1 / n^c$ for some constant $c > 0$, then the $a_n$ will converge to zero. But they will only converge to zero "fast enough" if $c > 1$.
-...TBC...
+Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}. A necessary condition for a series $(s_n)$ to converge is that the sequence $(a_n)$ of its terms converges to zero. But that is not a sufficient condition. The terms must also converge to zero "fast enough". For example, if the terms follow a power rule like $a_n = 1 / n^c$ for some constant $c > 0$, then the $a_n$ will converge to zero. But they will only converge to zero "fast enough" if $c > 1$. If the sequence of partial sums $s_n$ converges, then we can define its value as:
+\begin{equation}
+ S = \lim_{n \rightarrow \infty} s_n = \lim_{n \rightarrow \infty} \sum_{k=0}^n a_k
+\end{equation}
+This limit, if it exists and is finite, is called the \emph{sum} of the series.
 
+% https://en.wikipedia.org/wiki/Series_(mathematics)
 % For a_n = 1/n^c, it will be fast enough if |c| > 1.
 
 \subsubsection{Some Sums}
@@ -205,9 +209,12 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 
 
 
-\subsubsection{Riemann's Reordering Theorem} There is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that converge but do not converge absolutely. ...TBC...
+\subsubsection{Riemann's Reordering Theorem} There is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that converge but fail to converge absolutely. Such series can be made to converge to any value or even to diverge just by reordering the terms. This theorem is called \emph{Riemann reordering theorem}, \emph{Riemann rearrangement theorem} or \emph{Riemann series theorem}. That result is kinda weird because in finite sums, we can reorder the terms in any way we like without changing the final sum. That is a consequence of the associativity of addition. Infinite sums may break the associativity of addition in certain cases. [VERIFY!] ...TBC...
+
+% ...TBC...series that converge but fail to converge absolutely can be made to converge to any value just by reordering the terms
 
 % https://en.wikipedia.org/wiki/Riemann_series_theorem
+% Riemann rearrangement theorem, Riemann series theorem,
 
 \subsubsection{Summation Methods} Certain divergent series can be transformed into other series that are convergent. Of course, if we would allow any transformation, that would be trivially true and an uninteresting statement - we could just transform our divergent series into a series of all zeros, for example. We want to allow only those kinds of transformations that, when being applied to a convergent series, do not change their value. So, the name of the game is to transform the series in a certain way and then trying to figure out the value of the transformed series. This is what summation methods are about. A summation method that has our desired the property of not changing the value of any convergent series is called regular (VERIFY!)
 
@@ -287,8 +294,6 @@ ToDo: maybe move that into an "Applications" section, explain how the factorial 
 
 % https://en.wikipedia.org/wiki/Taylor%27s_theorem
 
-
-
 % https://www.youtube.com/watch?v=0HaBNdmUWXY
 % How We Compute sin, cos, and e^x Shouldn't Work At All | Smooth vs. Analytic Functions
 % -explains hwo the remainder/error in Taylor's theorem determines the convergence of the series, 
@@ -300,6 +305,12 @@ ToDo: maybe move that into an "Applications" section, explain how the factorial 
 % https://www.youtube.com/watch?v=01h743ZBcjo
 % Give examples of functions that have all derivatives defined but are not analytic
 % consider e^(-1/x) on the positive real number line
+
+\subsubsection{Formal Power Series}
+A formal power series is an expression of the form (\ref{Eq:PowerSeries}) without any considerations for the convergence of the sum. The series are just treated as formal expressions that can be formally manipulated using algebraic operations (like sum, product, etc.) without any intention to ever evaluate the expression. It's the (infinite) sequence of coefficients itself that is of interest, not the number that would result when evaluating the sum. ...TBC...explain use cases
+
+%https://en.wikipedia.org/wiki/Formal_power_series
+% "the method of generating functions uses formal power series to represent numerical sequences and multisets"
 
 \subsubsection{Laurent Series Expansion}
 The Taylor series is a power series expansion of a function $f(x)$ around a point $x_0$. The coefficients can be computed by the Taylor series formula. For this to work, a necessary (but not sufficient) condition is that the function must be smooth at the point. Otherwise, we wouldn't even be able to evaluate all the derivatives that occur in the formula for the coefficients. A Laurent expansion is a generalization that can sometimes be used to expand a function around a pole, i.e. around a point where not even the function value is well defined (let alone derivatives). The formula is [VERIFY!]:
@@ -317,6 +328,23 @@ It looks similar to the power series expansion in (\ref{Eq:PowerSeries}) but it 
 % https://en.wikipedia.org/wiki/Laurent_series
 % -"one often pieces together the Laurent series by combining known Taylor expansions." ...HOW?
 % https://mathworld.wolfram.com/LaurentSeries.html
+
+
+\subsubsection{Pusieux Series}
+A Pusieux series is another generalization of the idea of power series that allows for rational exponents. There are some restrictions, though: the denominators of the exponents must be bounded and the negative exponents cannot go all the way down to minus infinity - so it's not a proper generalization of the Laurent series. ...TBC...
+
+%https://en.wikipedia.org/wiki/Puiseux_series
+% it's not a proper generalization of a Laurent series because it introduces the restriction that the negative exponents cannot go down to minus infinity
+
+% by reducing exponents to a common denominator n, a Puiseux series becomes a Laurent series in an nth root of the indeterminate.
+
+\subsubsection{Hahn Series}
+A Hahn series generalizes the idea of power series even further by allowing the exponents to be arbitrary values from... ...TBC...
+
+% ...from an ordered subset of the value group ...but what does that mean?
+
+%https://en.wikipedia.org/wiki/Puiseux_series 
+%https://en.wikipedia.org/wiki/Hahn_series
 
 \subsection{Trigonometric Series}
 We now want to look at a completely different kind of series. It will again involve a variable $x$ but this time, we will not use powers of $x$ but instead trigonometric functions, specifically sines and cosines. We will look at series of the form:
@@ -490,5 +518,7 @@ https://en.wikipedia.org/wiki/Divergent_series
 
 Has also Cesaro summationa and Abel Summation
 https://www.youtube.com/watch?v=LDuD_ClkkG8
+ 
+
  
 \end{comment}

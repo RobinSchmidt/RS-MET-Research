@@ -935,6 +935,17 @@ Ideas:
   etc. The predecessor function would just be element extraction which could be justified by the 
   axiom of choice, i guess.
 
+- Implement the surreal numbers, see 
+  https://en.wikipedia.org/wiki/Surreal_number 
+  https://demonstrations.wolfram.com/GeneratingTheSurrealNumbers/
+  I think, it needs to use ordered pairs (i.e. Kuratowski pairs). Let E = {}. Then define:
+    n
+    0                                        0 = (E,E)
+    1                 -1 = (E,0)                                    +1 = (0,E)  
+    2    -2 = (E,-1)             -1/2 = (-1,0)        +1/2 = (0,1)              +2 = (1,E)
+  Compare the representations of certain numbers in the Neumann and Conway system
+
+
 - Implement a collection of functions that deal specifically with relations. Implement
 
   -Maybe implement a function that returns the set of all possible relations between A and B. 

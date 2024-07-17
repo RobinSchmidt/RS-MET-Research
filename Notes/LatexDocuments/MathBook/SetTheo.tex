@@ -863,9 +863,152 @@ We add such Neumann integers via $(a,b)+(c,d) = (a+c,b+d)$. VERIFY....TBC...nega
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Transfinite Numbers}
-We constructed the integers, rationals, etc. by extending the set of natural numbers $\mathbb{N}$. Here, we will consider a different extension of $\mathbb{N}$ that will also contain distinguishable infinite numbers which are called \emph{transfinite} in this context. The resulting set of numbers is called the \emph{ordinal numbers}. In practice, natural numbers can be used for different two things: (1) counting, how many elements there are in a set, (2) ordering, i.e. putting a bunch of things into a particular order such that we can say: this is the first, this the second, etc. The difference between these two aspects of natural numbers is rather subtle for finite numbers but will become important for infinite numbers. The ordering aspect is captured by the ordinal numbers and the counting aspect will be captured by the \emph{cardinal numbers}, which are, as we will see, actually a certain subset of the ordinal numbers. We will look at both kinds of transfinite numbers in turn.
+We constructed the integers, rationals, etc. by extending the set of natural numbers $\mathbb{N}$. Here, we will consider a different extension of $\mathbb{N}$ that will also contain distinguishable infinite numbers which are called \emph{transfinite} in this context. We'll arrive at a set called the \emph{ordinal numbers} a subset of which are the \emph{cardinal numbers}. In practice, natural numbers can be used for different two things: (1) counting, how many elements there are in a set, (2) ordering, i.e. putting a bunch of things into a particular order such that we can say: this is the first, this the second, etc. The difference between these two aspects of natural numbers is rather subtle for finite numbers but will become important for infinite numbers. The ordering aspect is captured by the ordinal numbers and the counting aspect will be captured by the cardinal numbers.
+
+%, which are, as we will see, actually a certain subset of the ordinal numbers. We will look at both kinds of transfinite numbers in turn.
 
 % https://en.wikipedia.org/wiki/Transfinite_number
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Beth Numbers}
+% Maybe move under Ordinal Numbers
+The beth numbers are another type of transfinite numbers that are not so commonly used. But they do correspond best to what we might expect intuitively from differently sized infinite sets and serve as a good example for constructing sets via transfinite recursion, so that's why we will introduce them first. They are a good warm-up for the progressively more complicated topics of cardinal and ordinal numbers. The beth numbers are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. Here, for the time being, we may think of $n$ as a natural number. It can actually also be an ordinal number though. That's why the index is usually a greek letter in textbooks. The beth numbers are formally defined via transfinite recursion as:
+\begin{equation}
+\beth_0 = \aleph_0 
+        = \omega 
+        = |\mathbb{N}|, \quad
+\beth_{\alpha + 1} = \mathcal{P}(\beth_{\alpha}) 
+                   = 2^{\beth_{\alpha}}, \quad
+\beth_{\lambda} = \sup \{ \beth_{\alpha} : \alpha < \lambda \} 
+                = \bigcup_{\alpha \in \lambda} \beth_{\alpha} 
+\end{equation}
+The leftmost definition is the base case in various notations
+...TBC...
+%but to understand this definition, we first need some more definitions an tools in place. ...TBC...VERIFY
+
+% https://en.wikipedia.org/wiki/Beth_number
+
+% https://neugierde.github.io/cantors-attic/Beth
+% -beth_omega has the property: whenever a set X has a cardinality less then beth_omega, then
+%  its power set will also have a cardinality less than beth_omega
+
+% https://planetmath.org/bethnumbers
+
+% Maybe introduce the beth numbers after ordinals and transfinite recursion
+
+% https://de.wikipedia.org/wiki/Beth-Funktion
+% -It talks about beth numbers as cardinal numbers - so is cardinal number an umbrella term for
+%  the aleph and beth numbers? figure out!
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Cardinal Numbers}
+The purpose of cardinal numbers is to quantify the size of a set - finite or infinite. 
+...TBC...
+
+\paragraph{Size Comparisons}
+For finite sets, size comparisons are easy: We just count the number of elements, which results in a natural number, and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
+
+\medskip
+We do not only want to answer the question whether or not two sets are of equal size. We also want to know, which of the two sets is bigger in the case of non equal sizes. To this end, we observe that for finite sets, whenever we can find an injective but not bijective function $f$ from one set $A$ to another set $B$, then the set $A$ is smaller. Injective means that every element from $A$ is mapped to a different element in $B$. If an injective map is not bijective, i.e. it fails to be surjective, then that means that there are leftover elements in $B$ which are not reached by $f$. We interpret that circumstance as $B$ having a greater size than $A$ such that we cannot establish a one-to-one correspondence. 
+
+\medskip
+We now formalize these ideas as follows: We want to define a new kind of "number" that measures the size of sets. We want the class\footnote{It turns out that the cardinal numbers do not fit into a set. Just like the ordinals, they form a proper class. In a sense, there are "too many" of them. } of these new numbers to be comparable in the sense of a greater or smaller "size". So, the task is now to define a new class of numbers and an equivalence relation and a strict total order relation on the class of these numbers. These relations should capture sizes of sets in terms of existence or non-existence of bijections and injections between the sets.
+
+\paragraph{Cantor's First Diagonal Argument} We will now show why $|\mathbb{Q}| = |\mathbb{N}|$ by a proof technique invented by Cantor by which one can demonstrate the possibility to create a bijection between a countably infinite set and its cartesian product with itself. We'll take the set $\mathbb{N}$ as the prototypical example of such a set, but the technique readily generalizes to any countably infinite set $A$ by just pointing out that, by definition of the term "countably infinite", the set $A$ can be put into a bijection with $\mathbb{N}$. To demonstrate the existence of a bijection between $\mathbb{N}$ and $\mathbb{N} \times \mathbb{N}$, one explicitly constructs one in the following way: One just creates a 2D table of the pairs $(n, m)$ where $n,m \in \mathbb{N}$ and then traverses the 2D table in diagonals. To figure out the number $k$ to which the pair $n,m$ gets mapped, one uses a so called \emph{pairing function}. Depending on the path taken through the 2D array, there may be different possible pairing functions. As said, Cantor's original one traverses the diagonals one by one and the single number index $k$ can be computed from 2D index $(m,n)$ by the formula:
+\begin{equation}
+k = f(m,n) = \frac{(m+n)(m+n+1)}{2} + n
+\end{equation}
+The formula can be uniquely inverted, i.e given a $k \in \mathbb{N}$ one can uniquely compute the pair $(m,n)$ that corresponds to it. For more details about that, see \cite{WK_PairingFunction} or search the internet for "pairing function". Pairing functions are also of practical interest in the realm of programming because they allow to uniquely map back and forth between two-dimensional and one-dimensional indices, i.e. the allow a unique and reversible encoding of a pair $(m,n)$ into a single number $k$. Extensions exist to map back and forth between 3D and 1D, 4D and 1D, etc. The takeaway is that we have explicitly constructed a bijection between $\mathbb{N}$ and $\mathbb{N}^2$. We could easily extend the idea to bijections between $\mathbb{Z}$ and $\mathbb{Z}^2$ and by noting that $\mathbb{Q}$ is just a subset of $\mathbb{Z}^2$, we can see that $|\mathbb{Q}| \leq |\mathbb{Z}^2| = |\mathbb{N}|$. I hope it's obvious that $|\mathbb{Q}|$ can't strictly less than $|\mathbb{N}|$, so we can conclude that $|\mathbb{Q}| = |\mathbb{N}|$.
+
+% https://en.wikipedia.org/wiki/Pairing_function
+% https://mathworld.wolfram.com/PairingFunction.html
+% https://www.cantorsparadise.com/cantor-pairing-function-e213a8a89c2b
+% https://www.cs.upc.edu/~alvarez/calculabilitat/enumerabilitat.pdf
+% https://de.wikipedia.org/wiki/Cantorsche_Paarungsfunktion
+% https://de.wikipedia.org/wiki/Dreieckszahl#Dreieckswurzel
+% https://en.wikipedia.org/wiki/Triangular_number#Triangular_roots_and_tests_for_triangular_numbers
+% http://www.szudzik.com/ElegantPairing.pdf
+% https://github.com/drhagen/pairing
+% https://drhagen.com/blog/superior-pairing-function/
+% https://drhagen.com/blog/multidimensional-pairing-functions/
+
+\paragraph{Cantor's Second Diagonal Argument} We will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct and element $b \in B$ which we can shown to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective has been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. OK - now from the abstract to the concrete. We will need 3 steps: (1) Show why a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (2) show how the unit interval $[0,1)$ of real numbers can be put into bijection with $2^{\mathbb{N}}$, (3) Show how  $[0,1)$ can be put into bijection with $\mathbb{R}$. .....TBC...TODO: show how with a minor tweak, the argument can be used to show that $|A| < |2^A|$ for any set $A$ - that's more useful in the following material
+
+%TODO: (1) show how the unit interval $[0,1)$ of real number can be put into bijection with $2^{\mathbb{N}}$, (2) show how a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (3) then show how  $[0,1)$ can be put into bijection with $\mathbb{R}$
+
+%  show that in general the power set of any given countably infinite set cannot be put into bijection with the original set, then 
+
+
+
+
+%\subsubsection{Cardinal Arithmetic}
+
+% https://de.wikipedia.org/wiki/Kardinalzahlarithmetik#Kontinuumsfunktion
+% -> this page is the target of the Gimel-Funktion link here:
+% https://de.wikipedia.org/wiki/Aleph-Funktion
+% ...so Gimel-Funktion is a synonym for Kontinuumsfunktion?
+% ..its just the function k -> 2^k. I guess the name can be explained by observing that it gives
+% the size of the continuum when we plug in the first infinite cardinal
+
+% $\aleph_0 + 1 = \aleph_0$ but $\omega + 1 \neq \omega$. I think $\aleph_0$ and $\omega$ are the same thing in a similar way as the natural number 0 and the real number 0 are the same. They represent the same idea but in a different data type - and the data types respond differently to certain arithmetic operations (for example, to division)
+
+\paragraph{Capturing Infinite Sizes in Numbers} So, we have seen that when we compare the sizes of infinite sets in terms of im/possibility of bijection between them, then at least two different sizes of infinity must exist, namely the size of $\mathbb{N}$ and the size of $\mathbb{R}$. In fact, there's an infinite hierarchy of sizes of infinity and $|\mathbb{N}|$ and $|\mathbb{R}|$ are just two very humble members of that hierarchy. This should be very plausible after having seen the beth numbers.
+
+...TBC...
+
+
+\paragraph{Cardinal Arithmetic}
+The cardinal numbers are a superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
+
+
+% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_arithmetic
+% https://en.wikipedia.org/wiki/Inaccessible_cardinal
+
+\paragraph{Addition} For two sets $A,B$ with cardinalities $|A|,|B|$ repectively, we define the sum $|A| + |B|$ as the cardinality of the disjoint union of $A$ and $B$: $|A| + |B| = |A \sqcup B|$. If $A$ and $B$ are already disjoint, one could also take the cardinality of the ordinary union $|A \cup B|$. The definition makes intuitive sense when one considers what happens to the total number of objects when we throw the content of to finite bags of real world objects (say, apples\footnote{Because, of course, it's always about apples in math.}) together. Sets/bags of real world objects are always disjoint by nature because no physical object can be in two places at the same time. In the world of math where two sets can in fact contain the same element (mathematical sets are not physical bags), we need this little complication of making them artificially distinguishable - that's why we need the disjoint union in general. If $A$ and $B$ are both finite, the cardinal addition just becomes the normal addition of natural numbers. If at least one of the sets $A, B$ is infinite, then the cardinal sum of the two is just the maximum: $|A| + |B| = \max(|A|, |B|)$ iff $|A| \geq \aleph_0 \vee |B| \geq \aleph_0$.
+\begin{equation}
+|A| + |B| = |A \sqcup B| =
+\begin{cases}
+|A| + |B|       \qquad &\text{if $A$ and $B$ are finite} \\
+\max(|A|,|B|)   \qquad &\text{if at least one of $A, B$ is infinite}
+\end{cases}
+\end{equation}
+We can interpret this maximum as: adding finite sets to infinite ones doesn't change their cardinality. The cardinality of the finite set gets just absorbed in the infinite one. A similar thing happens when sets with smaller sizes of infinity get absorbed into bigger infinities. A set of natural or even rational numbers is just a completely insignificant dust in the vastly bigger continuum of the real numbers, for example. Adding $\mathbb{Q}$ to $\mathbb{R} \setminus \mathbb{Q}$ doesn't really matter in terms of cardinality.
+
+%...TBC...this notation seem kinda atypical, I think - more typical is to use $\kappa, \lambda$ or something
+
+% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_12_Z2
+% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_addition
+
+\paragraph{Multiplication} The product of two cardinal numbers $|A|,|B|$ is defined as cardinality of the set product: $|A| \cdot |B| = |A \times B|$. The situation here is the same as for addition. For finite cardinals, the multiplication is the same as for natural numbers. If at least one of the sets is infinite, the product of their cardinalities is just the maximum.
+\begin{equation}
+|A| \cdot |B| = |A \times B| =
+\begin{cases}
+|A| cdot |B|    \qquad &\text{if $A$ and $B$ are finite} \\
+\max(|A|,|B|)   \qquad &\text{if at least one of $A, B$ is infinite}
+\end{cases}
+\end{equation}
+This may be a bit harder to swallow.
+
+
+% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_multiplication
+
+\paragraph{Exponentiation} The most interesting operation on cardinal numbers is the exponentiation. As usual, the definition of the operation is based on the corresponding set operation: $|A|^{|B|} = |A^B|$. The set $A^B$ is the set of all functions from $B$ to $A$. If $A$ and $B$ are finite, we observe, that the number of possible different functions from $B$ to $A$ is indeed given by $|A|^{|B|}$.
+
+
+
+
+...TBC...ToDo: subtraction, division, roots, logarithms - look at the code
+
+% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_exponentiation
+
+
+
+
+%\subsection{title}
+
+
+
 
 
 
@@ -924,79 +1067,10 @@ where $k$ is a natural number, the $c_i$ are also natural numbers and the $\beta
 
 
 
+\subsubsection{Cardinals as Special Ordinals}
+We have formerly introduced the cardinal numbers without reference to ordinal numbers. We explained their properties and what we can do with them but we actually didn't really define what they \emph{are}. It turns out that they can seen as a specific subset of the ordinal numbers.
 
-
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Beth Numbers}
-% Maybe move under Ordinal Numbers
-The beth numbers are another type of transfinite numbers in set theory. They correspond best to what we might expect intuitively from differently sized infinite sets and serve as a good example for constructing sets via transfinite recursion. They are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. Here, for the time being, we may think of $n$ as a natural number. It can actually also be an ordinal number though. That's why the index is usually a greek letter in textbooks. The beth numbers are formally defined via transfinite recursion as:
-\begin{equation}
-\beth_0 = \aleph_0 
-        = \omega 
-        = |\mathbb{N}|, \quad
-\beth_{\alpha + 1} = \mathcal{P}(\beth_{\alpha}) 
-                   = 2^{\beth_{\alpha}}, \quad
-\beth_{\lambda} = \sup \{ \beth_{\alpha} : \alpha < \lambda \} 
-                = \bigcup_{\alpha \in \lambda} \beth_{\alpha} 
-\end{equation}
-The leftmost definition is the base case in various notations
-...TBC...
-%but to understand this definition, we first need some more definitions an tools in place. ...TBC...VERIFY
-
-% https://en.wikipedia.org/wiki/Beth_number
-
-% https://neugierde.github.io/cantors-attic/Beth
-% -beth_omega has the property: whenever a set X has a cardinality less then beth_omega, then
-%  its power set will also have a cardinality less than beth_omega
-
-% https://planetmath.org/bethnumbers
-
-% Maybe introduce the beth numbers after ordinals and transfinite recursion
-
-% https://de.wikipedia.org/wiki/Beth-Funktion
-% -It talks about beth numbers as cardinal numbers - so is cardinal number an umbrella term for
-%  the aleph and beth numbers? figure out!
-
-
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Cardinal Numbers}
-The purpose of cardinal numbers is to quantify the size of a set - finite or infinite. It will turn out that we can use special ordinal numbers for that purpose. Not all ordinal numbers are suitable for that, but some are. That means the set of cardinal numbers is a subset of the set of ordinal numbers. 
-...TBC...
-
-\paragraph{Size Comparisons}
-For finite sets, size comparisons are easy: We just count the number of elements, which results in a natural number, and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
-
-\medskip
-We do not only want to answer the question whether or not two sets are of equal size. We also want to know, which of the two sets is bigger in the case of non equal sizes. To this end, we observe that for finite sets, whenever we can find an injective but not bijective function $f$ from one set $A$ to another set $B$, then the set $A$ is smaller. Injective means that every element from $A$ is mapped to a different element in $B$. If an injective map is not bijective, i.e. it fails to be surjective, then that means that there are leftover elements in $B$ which are not reached by $f$. We interpret that circumstance as $B$ having a greater size than $A$ such that we cannot establish a one-to-one correspondence. 
-
-\medskip
-We now formalize these ideas as follows: We want to define a new kind of "number" that measures the size of sets. We want the class\footnote{It turns out that the cardinal numbers do not fit into a set. Just like the ordinals, they form a proper class. In a sense, there are "too many" of them. } of these new numbers to be comparable in the sense of a greater or smaller "size". So, the task is now to define a new class of numbers and an equivalence relation and a strict total order relation on the class of these numbers. These relations should capture sizes of sets in terms of existence or non-existence of bijections and injections between the sets.
-
-\paragraph{Cantor's First Diagonal Argument} We will now show why $|\mathbb{Q}| = |\mathbb{N}|$ by a proof technique invented by Cantor by which one can demonstrate the possibility to create a bijection between a countably infinite set and its cartesian product with itself. We'll take the set $\mathbb{N}$ as the prototypical example of such a set, but the technique readily generalizes to any countably infinite set $A$ by just pointing out that, by definition of the term "countably infinite", the set $A$ can be put into a bijection with $\mathbb{N}$. To demonstrate the existence of a bijection between $\mathbb{N}$ and $\mathbb{N} \times \mathbb{N}$, one explicitly constructs one in the following way: One just creates a 2D table of the pairs $(n, m)$ where $n,m \in \mathbb{N}$ and then traverses the 2D table in diagonals. To figure out the number $k$ to which the pair $n,m$ gets mapped, one uses a so called \emph{pairing function}. Depending on the path taken through the 2D array, there may be different possible pairing functions. As said, Cantor's original one traverses the diagonals one by one and the single number index $k$ can be computed from 2D index $(m,n)$ by the formula:
-\begin{equation}
-k = f(m,n) = \frac{(m+n)(m+n+1)}{2} + n
-\end{equation}
-The formula can be uniquely inverted, i.e given a $k \in \mathbb{N}$ one can uniquely compute the pair $(m,n)$ that corresponds to it. For more details about that, see \cite{WK_PairingFunction} or search the internet for "pairing function". Pairing functions are also of practical interest in the realm of programming because they allow to uniquely map back and forth between two-dimensional and one-dimensional indices, i.e. the allow a unique and reversible encoding of a pair $(m,n)$ into a single number $k$. Extensions exist to map back and forth between 3D and 1D, 4D and 1D, etc. The takeaway is that we have explicitly constructed a bijection between $\mathbb{N}$ and $\mathbb{N}^2$. We could easily extend the idea to bijections between $\mathbb{Z}$ and $\mathbb{Z}^2$ and by noting that $\mathbb{Q}$ is just a subset of $\mathbb{Z}^2$, we can see that $|\mathbb{Q}| \leq |\mathbb{Z}^2| = |\mathbb{N}|$. I hope it's obvious that $|\mathbb{Q}|$ can't strictly less than $|\mathbb{N}|$, so we can conclude that $|\mathbb{Q}| = |\mathbb{N}|$.
-
-% https://en.wikipedia.org/wiki/Pairing_function
-% https://mathworld.wolfram.com/PairingFunction.html
-% https://www.cantorsparadise.com/cantor-pairing-function-e213a8a89c2b
-% https://www.cs.upc.edu/~alvarez/calculabilitat/enumerabilitat.pdf
-% https://de.wikipedia.org/wiki/Cantorsche_Paarungsfunktion
-% https://de.wikipedia.org/wiki/Dreieckszahl#Dreieckswurzel
-% https://en.wikipedia.org/wiki/Triangular_number#Triangular_roots_and_tests_for_triangular_numbers
-% http://www.szudzik.com/ElegantPairing.pdf
-% https://github.com/drhagen/pairing
-% https://drhagen.com/blog/superior-pairing-function/
-% https://drhagen.com/blog/multidimensional-pairing-functions/
-
-\paragraph{Cantor's Second Diagonal Argument} We will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct and element $b \in B$ which we can shown to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective has been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. OK - now from the abstract to the concrete. We will need 3 steps: (1) Show why a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (2) show how the unit interval $[0,1)$ of real numbers can be put into bijection with $2^{\mathbb{N}}$, (3) Show how  $[0,1)$ can be put into bijection with $\mathbb{R}$. .....TBC...
-
-%TODO: (1) show how the unit interval $[0,1)$ of real number can be put into bijection with $2^{\mathbb{N}}$, (2) show how a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (3) then show how  $[0,1)$ can be put into bijection with $\mathbb{R}$
-
-%  show that in general the power set of any given countably infinite set cannot be put into bijection with the original set, then 
-
+%It will turn out that we can use special ordinal numbers for that purpose. Not all ordinal numbers are suitable for that, but some are. That means the set of cardinal numbers is a subset of the set of ordinal numbers. 
 
 \paragraph{The Cardinality Function [VERIFY!]}
 What we eventually want is a function into which we can plug in an arbitrary set $A$. This function should produce as output an object that is comparable according to a suitable order relation which should capture the "size" of the set. We will denote this function as $|A|$ like an absolute value. We will sometimes also use the notation $\card(A)$ especially when we want to refer to the function $\card$ itself without giving it an argument. Because we are are concerned with ordering sets according to their sizes, it makes sense to investigate the ordinal numbers because ordering things is their job. To compute the output of $\card$ for a given set $A$, we may first apply a suitable well-ordering function $w(A)$ to it to obtain an ordinal number $\gamma = w(A)$. According to the well ordering theorem, such a function $w$ exists for any set whatsoever. It's an order isomorphism and therefore in particular a bijection, so it doesn't change the property that we want to interpret as size. Starting from this so found ordinal $\gamma$, we now scan the ordinals leftward to find the leftmost\footnote{This leftward scanning process is guaranteed to terminate because the ordinals are well ordered [VERIFY]} ordinal $\alpha$ that allows a bijective map between $\gamma$ and $\alpha$. This ordinal number is the cardinal number that measures the size of $A$. With this definition, cardinal numbers are specific ordinal numbers. They are those ordinal numbers $\alpha$ that have the property that any ordinal number $\beta$ to their left, i.e. any ordinal $\beta < \alpha$ according to the order relation $<$ on the ordinals, allows an injective but not bijective map from $\beta$ to $\alpha$. We can actually also formulate the action of the $\card$ function without the intermediate step of applying the well-ordering function $w$ to $A$ first. In a semi-formal language, we could define the desired function as:
@@ -1063,65 +1137,6 @@ The outputs of the $\card$ function are specific ordinal numbers. We are now int
 
 
 
-%\subsubsection{Cardinal Arithmetic}
-
-% https://de.wikipedia.org/wiki/Kardinalzahlarithmetik#Kontinuumsfunktion
-% -> this page is the target of the Gimel-Funktion link here:
-% https://de.wikipedia.org/wiki/Aleph-Funktion
-% ...so Gimel-Funktion is a synonym for Kontinuumsfunktion?
-% ..its just the function k -> 2^k. I guess the name can be explained by observing that it gives
-% the size of the continuum when we plug in the first infinite cardinal
-
-% $\aleph_0 + 1 = \aleph_0$ but $\omega + 1 \neq \omega$. I think $\aleph_0$ and $\omega$ are the same thing in a similar way as the natural number 0 and the real number 0 are the same. They represent the same idea but in a different data type - and the data types respond differently to certain arithmetic operations (for example, to division)
-
-\paragraph{Cardinal Arithmetic}
-The cardinal numbers are a superset of the natural numbers. With natural numbers, we can do certain arithmetic operations, namely addition, multiplication and exponentiation. It is possible to extend these operations to the infinite cardinals...TBC...
-
-
-% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_arithmetic
-% https://en.wikipedia.org/wiki/Inaccessible_cardinal
-
-\paragraph{Addition} For two sets $A,B$ with cardinalities $|A|,|B|$ repectively, we define the sum $|A| + |B|$ as the cardinality of the disjoint union of $A$ and $B$: $|A| + |B| = |A \sqcup B|$. If $A$ and $B$ are already disjoint, one could also take the cardinality of the ordinary union $|A \cup B|$. The definition makes intuitive sense when one considers what happens to the total number of objects when we throw the content of to finite bags of real world objects (say, apples\footnote{Because, of course, it's always about apples in math.}) together. Sets/bags of real world objects are always disjoint by nature because no physical object can be in two places at the same time. In the world of math where two sets can in fact contain the same element (mathematical sets are not physical bags), we need this little complication of making them artificially distinguishable - that's why we need the disjoint union in general. If $A$ and $B$ are both finite, the cardinal addition just becomes the normal addition of natural numbers. If at least one of the sets $A, B$ is infinite, then the cardinal sum of the two is just the maximum: $|A| + |B| = \max(|A|, |B|)$ iff $|A| \geq \aleph_0 \vee |B| \geq \aleph_0$.
-\begin{equation}
-|A| + |B| = |A \sqcup B| =
-\begin{cases}
-|A| + |B|       \qquad &\text{if $A$ and $B$ are finite} \\
-\max(|A|,|B|)   \qquad &\text{if at least one of $A, B$ is infinite}
-\end{cases}
-\end{equation}
-We can interpret this maximum as: adding finite sets to infinite ones doesn't change their cardinality. The cardinality of the finite set gets just absorbed in the infinite one. A similar thing happens when sets with smaller sizes of infinity get absorbed into bigger infinities. A set of natural or even rational numbers is just a completely insignificant dust in the vastly bigger continuum of the real numbers, for example. Adding $\mathbb{Q}$ to $\mathbb{R} \setminus \mathbb{Q}$ doesn't really matter in terms of cardinality.
-
-%...TBC...this notation seem kinda atypical, I think - more typical is to use $\kappa, \lambda$ or something
-
-% https://aleph1.info/?call=Puc&permalink=mengenlehre1_1_12_Z2
-% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_addition
-
-\paragraph{Multiplication} The product of two cardinal numbers $|A|,|B|$ is defined as cardinality of the set product: $|A| \cdot |B| = |A \times B|$. The situation here is the same as for addition. For finite cardinals, the multiplication is the same as for natural numbers. If at least one of the sets is infinite, the product of their cardinalities is just the maximum.
-\begin{equation}
-|A| \cdot |B| = |A \times B| =
-\begin{cases}
-|A| cdot |B|    \qquad &\text{if $A$ and $B$ are finite} \\
-\max(|A|,|B|)   \qquad &\text{if at least one of $A, B$ is infinite}
-\end{cases}
-\end{equation}
-This may be a bit harder to swallow.
-
-
-% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_multiplication
-
-\paragraph{Exponentiation} The most interesting operation on cardinal numbers is the exponentiation. As usual, the definition of the operation is based on the corresponding set operation: $|A|^{|B|} = |A^B|$. The set $A^B$ is the set of all functions from $B$ to $A$. If $A$ and $B$ are finite, we observe, that the number of possible different functions from $B$ to $A$ is indeed given by $|A|^{|B|}$.
-
-
-
-
-...TBC...ToDo: subtraction, division, roots, logarithms - look at the code
-
-% https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_exponentiation
-
-
-
-
-%\subsection{title}
 
 
 %---------------------------------------------------------------------------------------------------

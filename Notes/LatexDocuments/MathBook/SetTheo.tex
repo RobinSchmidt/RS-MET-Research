@@ -1289,20 +1289,36 @@ Goodstein's theorem is a good example for a mathematical theorem that makes a st
 \begin{comment}
 
 ToDo:
--Infinite Sets 
- -Construction of natural, integer, rational and real numbers
- -Cardinal Numbers
- -Ordinal Numbers (as generalization of cardinal numbers)
- -Surreal Numbers
- -Cantor-Bernstein Theorem
- -Continuum Hypothesis
- -Notation: looks like in axiomatic set theory, it's more common to use lowercase letters like x,y for sets (rather than A,B, ...). That looks better in predicate logic formulas
- -maybe use \varphi for predicates
+
+-Re-organize the matrial about transfinite numbers
+ -Pull the order theory and transfinite recursion stuff out of the ordinal numbers section
+  and put it before the "Numbers as Sets" section
+ -start with Beth numbers (they are the easiest to understand)
+ -then introduce cardinal numbers in a perliminary/informal way, i.e. without introducing 
+  them as special ordinal numbers
+ -then intrpduce ordinal numbers
+ -then revisit cardinal numbers and define them properly as special ordinal numbers
+ -the rationale in splitting the material about cardinals into two parts is that they are
+  easier to understand
+
+\section{Naive and Axiomatic Set Theory}
+
+\section{Order Theory}
+...
+\subsection{Transfinite Processes}
+
+\section{Numbers as Sets}
+...
+\subsection{Transfinite Numbers}
+
+\subsubsection{Beth Numbers}
+\subsubsection{Cardinal Numbers Informally}
+\subsubsection{Ordinal Numbers}
+\subsubsection{Cardinal Numbers Formally}
+
+\section{Theorems and Hypotheses}
 
 
-
-Set Containment:
--If for all x in A, x in B, then A \subseteq B
 
 Lebesgue-Measure:
  https://www.youtube.com/watch?v=0VD3BWDLmU0
@@ -1353,19 +1369,6 @@ https://de.wikipedia.org/wiki/Zermelo-Fraenkel-Mengenlehre#Die_Axiome_von_ZF_und
 
 
 
-
-How to implement the idea of sets in software:
--Make a (base?)class "Set" or maybe SetZFC
--It should have virtual functions like hasElement(const Set& elem), an equality comparison that takes two pointers to sets, etc.
--It should have an array of pointers (or maybe direct memebrs? but maybe that's not possible) for the elements - the elements of a set are also sets
--The empty set is the one where the elements array is empty
--There should be functions for union and intersection and factory functions for creating certain special sets like those representing numbers, ordered pairs, etc.
--Implement functions for addition and multiplication according to how these functions are defined set theoretically
--Generally, implement all functions to create sets that should exist accrding to the axioms
--Maybe have different sorts of Set like SetZFC, SetNBG, etc. - each implementing a different set of primitive axioms
--Maybe the axioms should be implemented as static member functions and all the higher level set building functions as free functions
-
-
 https://en.wikipedia.org/wiki/Foundations_of_mathematics
 https://en.wikipedia.org/wiki/Controversy_over_Cantor%27s_theory
 
@@ -1379,8 +1382,6 @@ https://www.youtube.com/watch?v=JUVYBBlxw7E
 Math PhD Student reacts to "Proof" of Continuum Hypothesis
 at 9:09, he explains Aleph 1
 -the explanation seems to imply that the aleph numbers themselves are countable - verify!
-
-
 
 How to Divide by "Zero" | Infinite Series
 https://www.youtube.com/watch?v=uxpowBoPieQ

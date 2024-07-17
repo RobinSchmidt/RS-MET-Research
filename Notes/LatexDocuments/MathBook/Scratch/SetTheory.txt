@@ -164,11 +164,13 @@ https://www.youtube.com/watch?v=hj9hPx23vz0&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9K
       for why there is no largest natural number - we could always add 1 to produce an even larger 
       number. 
 
+====================================================================================================
 
 
 
 
 
+====================================================================================================
 Ich glaube, es ist:
 
   |w|   = N_0 = w

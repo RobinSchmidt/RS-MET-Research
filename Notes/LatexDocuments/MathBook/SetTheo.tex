@@ -903,8 +903,10 @@ The leftmost definition is the base case in various notations
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Cardinal Numbers}
-The purpose of cardinal numbers is to quantify the size of a set - finite or infinite. 
-...TBC...
+The purpose of cardinal numbers is to quantify the size of a set - finite or infinite. I'll split the treatment of cardinal numbers into a "preliminary" part before the section about ordinals and a "proper" part after the section about ordinals. The proper part will then really define them in terms of ordinals. I opted to do it this way because I think that conceptually, the cardinals are easier to understand. They require only the notion of bijections whereas the ordinals require the more complicated notion of order isomorphism. 
+
+%So far for our preliminary treatment of cardinal numbers. We'll now look at ordinal numbers and when we have the ordinals in hand, we'll revisit the cardinals and define them properly. I opted to split the treatment of cardinals into a "preliminary" and "proper" section because conceptually, the cardinals are easier to understand
+%...TBC...
 
 \paragraph{Size Comparisons}
 For finite sets, size comparisons are easy: We just count the number of elements, which results in a natural number, and whichever set has the greater count, has the greater size. Simple enough. But what if we can't quantify the size of a set with a natural number? The idea is to observe that for finite sets, two sets of equal size can always be put into a bijection with one another. That means that for sets of equal size, we can find a function that maps one set to the other bijectively. Usually many such functions exist, but finding one is enough to demonstrate that the two sets have equal size. The idea is now to generalize this to infinite sets: Two sets are considered to be of equal size whenever we can find a bijective function between them.
@@ -933,7 +935,7 @@ The formula can be uniquely inverted, i.e given a $k \in \mathbb{N}$ one can uni
 % https://drhagen.com/blog/superior-pairing-function/
 % https://drhagen.com/blog/multidimensional-pairing-functions/
 
-\paragraph{Cantor's Second Diagonal Argument} We will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct and element $b \in B$ which we can shown to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective has been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. OK - now from the abstract to the concrete. We will need 3 steps: (1) Show why a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (2) show how the unit interval $[0,1)$ of real numbers can be put into bijection with $2^{\mathbb{N}}$, (3) Show how  $[0,1)$ can be put into bijection with $\mathbb{R}$. .....TBC...TODO: show how with a minor tweak, the argument can be used to show that $|A| < |2^A|$ for any set $A$ - that's more useful in the following material
+\paragraph{Cantor's Second Diagonal Argument} We will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct an element $b \in B$ which we can show to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective must have been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. OK - now from the abstract to the concrete. We will need 3 steps: (1) Show why a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (2) show how the unit interval $[0,1)$ of real numbers can be put into bijection with $2^{\mathbb{N}}$, (3) Show how  $[0,1)$ can be put into bijection with $\mathbb{R}$. .....TBC...TODO: show how with a minor tweak, the argument can be used to show that $|A| < |2^A|$ for any set $A$ - that's more useful in the following material
 
 %TODO: (1) show how the unit interval $[0,1)$ of real number can be put into bijection with $2^{\mathbb{N}}$, (2) show how a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (3) then show how  $[0,1)$ can be put into bijection with $\mathbb{R}$
 
@@ -953,9 +955,7 @@ The formula can be uniquely inverted, i.e given a $k \in \mathbb{N}$ one can uni
 
 % $\aleph_0 + 1 = \aleph_0$ but $\omega + 1 \neq \omega$. I think $\aleph_0$ and $\omega$ are the same thing in a similar way as the natural number 0 and the real number 0 are the same. They represent the same idea but in a different data type - and the data types respond differently to certain arithmetic operations (for example, to division)
 
-\paragraph{Capturing Infinite Sizes in Numbers} So, we have seen that when we compare the sizes of infinite sets in terms of im/possibility of bijection between them, then at least two different sizes of infinity must exist, namely the size of $\mathbb{N}$ and the size of $\mathbb{R}$. In fact, there's an infinite hierarchy of sizes of infinity and $|\mathbb{N}|$ and $|\mathbb{R}|$ are just two very humble members of that hierarchy. This should be very plausible after having seen the beth numbers.
-
-...TBC...
+\paragraph{Capturing Infinite Sizes in Numbers} So, we have seen that when we compare the sizes of infinite sets in terms of im/possibility of a bijection between them, then at least two different sizes of infinity must exist, namely the size of $\mathbb{N}$ and the size of $\mathbb{R}$. In fact, there's an infinite hierarchy of sizes of infinity and $|\mathbb{N}|$ and $|\mathbb{R}|$ are just two very humble members of that hierarchy. This should be very plausible after having seen the beth numbers. This, possibly infinite, size is captured in another kind of transfinite numbers - the so called \emph{cardinal numbers}. The finite cardinal numbers are just the natural numbers. The infinite ones are denoted by the Hebrew letter $\aleph$ with an index, such as $\aleph_0$, pronounced "aleph-zero" or "aleph-null" or "aleph-nought". This $0$th aleph number is, by definition, the cardinality of $\mathbb{N}$. So you might ask: what is then $\aleph_1$? Is it the cardinality of $\mathbb{R}$? The answer to that question is a bit more complicated - asserting that this is the case is the famous \emph{continuum hypothesis}. What we can say, however, is that the beth numbers constitute an indefinitely increasing sequence of infinite sizes. We can say this because we have seen by Cantor's 2nd diagonal argument that no bijection can exist between a set and its power set - and the beth numbers are defined by iterating the power set operation. There's actually a generalization of the continuum hypothesis that states that $\aleph_n = \beth_n$ for any $n$. For the time being, you can imagine $n$ as natural but the generalization goes even further and allows $n$ to be ordinal. But whatever the case may be, whether $|\mathbb{R}| = \aleph_0$ or not, we do have an increasing sequence of infinite set sizes. At this point, it is still conceivable that the aleph numbers (defined by existence of bijections) have a finer granularity that the beth numbers (defined by iterating the power set operation). VERIFY!.....TBC...
 
 
 \paragraph{Cardinal Arithmetic}
@@ -984,16 +984,16 @@ We can interpret this maximum as: adding finite sets to infinite ones doesn't ch
 \begin{equation}
 |A| \cdot |B| = |A \times B| =
 \begin{cases}
-|A| cdot |B|    \qquad &\text{if $A$ and $B$ are finite} \\
+|A| \cdot |B|    \qquad &\text{if $A$ and $B$ are finite} \\
 \max(|A|,|B|)   \qquad &\text{if at least one of $A, B$ is infinite}
 \end{cases}
 \end{equation}
-This may be a bit harder to swallow.
+This may be a bit harder to swallow. But we have already seen how $\mathbb{N}$ can be bijectively mapped to $\mathbb{N}^2$, so it might be somewhat plausible to believe that the set product of infinite sets does not yield larger sets in terms of cardinality. Although, in the case of mapping $\mathbb{R}$ bijectively to $\mathbb{R}^2$, Cantor himself couldn't believe it at first. But he found a bijection: To bijectively map a real number $z$ to a pair of real numbers $(x,y)$, just take the decimal expansion of $z$ and alternatingly put digits into $x$ and $y$, i.e. "unzip" the decimal expansion into two. The reverse mapping is just a "zip" operation. So - yeah - it works out to find bijections between $\mathbb{N}$ and $\mathbb{N}^2$ and it works also for  $\mathbb{R}$ and $\mathbb{R}^2$. And it works in general. Of course, these examples are no proof - but they are a plausibility check.
 
 
 % https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_multiplication
 
-\paragraph{Exponentiation} The most interesting operation on cardinal numbers is the exponentiation. As usual, the definition of the operation is based on the corresponding set operation: $|A|^{|B|} = |A^B|$. The set $A^B$ is the set of all functions from $B$ to $A$. If $A$ and $B$ are finite, we observe, that the number of possible different functions from $B$ to $A$ is indeed given by $|A|^{|B|}$.
+\paragraph{Exponentiation} OK - so addition and multiplication of infinite cardinal numbers is actually pretty boring. It's just a maximum operation. The most interesting operation on cardinal numbers is the exponentiation. As usual, the definition of the operation is based on the corresponding set operation: $|A|^{|B|} = |A^B|$. The set $A^B$ is the set of all functions from $B$ to $A$. If $A$ and $B$ are finite, we observe, that the number of possible different functions from $B$ to $A$ is indeed given by $|A|^{|B|}$.
 
 
 
@@ -1008,13 +1008,20 @@ This may be a bit harder to swallow.
 %\subsection{title}
 
 
-
-
+%\paragraph{Note}
+%
 
 
 
 \subsubsection{Ordinal Numbers}
-Ordinal numbers are, as the name suggest, used to order things, i.e. to put them into an ascending sequence. The formal set theoretical definition of an ordinal number is simple: A set $\alpha$ is called an \emph{ordinal number} if it is transitive. Using greek letters from the beginning of the alphabet is common practice in the theory of ordinal numbers, so we will adopt that practice here, too. We first observe that our natural numbers constructed above do indeed qualify as ordinal numbers according to this definition. We conclude that natural numbers are ordinal numbers. They are the finite ordinal numbers. There are more ordinal numbers, though ...TBC...
+Ordinal numbers are, as the name suggests, used to order things, i.e. to put them into an ascending sequence. The role that bijections play in the definition of cardinal numbers will now be played by order isomorphisms which are bijections with more specific properties. By using order isomorphisms rather than general bijections, one partitions the class of all sets into \emph{order types} rather than size types. This is a finer classification. Sets of the same size type, such as $\mathbb{N}, \mathbb{Z}, \mathbb{Q}$ which are indistiguishable by cardinality will become distiguishible because they belong to different order types. ...TBC...
+
+%It turns out that the tool need to distinguish between them is the notion of their respective order types. ...TBC...
+
+\paragraph{Intuition} ...TODO: explain how different order types can be visualized and how addition and multiplication work in terms of that visualization
+
+\paragraph{Definition of Ordinal Numbers}
+The formal set theoretical definition of an ordinal number is simple: A set $\alpha$ is called an \emph{ordinal number} if it is transitive. Using greek letters from the beginning of the alphabet is common practice in the theory of ordinal numbers, so we will adopt that practice here, too. We first observe that our natural numbers constructed above do indeed qualify as ordinal numbers according to this definition. We conclude that natural numbers are ordinal numbers. They are the finite ordinal numbers. There are more ordinal numbers, though ...TBC...
 
 % https://en.wikipedia.org/wiki/Ordinal_number
 % https://de.wikipedia.org/wiki/Ordinalzahl#Limes-_und_Nachfolgerzahlen

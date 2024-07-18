@@ -89,7 +89,7 @@ Define the Russel set\footnote{I think, it's actually not a \emph{set} but a \em
 % -compare the Russel-set to the set B that is constructed in the proof of Cantors' theorem. It's
 %  the same construction
 
-\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? That clearly immediately triggers an infinite regress\footnote{In itself, infinite regress might not be an insurmountable problem, though. In an implementation, we may actually be able to do it in terms of graph where nodes represent sets and edges represent the is-element relation. It's no problem for a graph to have a node that has an edge to itself.}. Maybe we should disallow such situations. We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
+\paragraph{Solution} Apparently, when allowing to construct sets in such a completely unrestricted way, we can create paradoxical situations. The culprit lies in the assumption that sets can contain themselves as elements in the first place. Maybe we should disallow situations where $x \in x$ altogether. That seems to be a weird and counterintuitive situation anyway - why would anyone assume that a set could contain itself? That clearly immediately triggers an infinite regress\footnote{In itself, infinite regress might not be an insurmountable problem, though. In an implementation, we may actually be able to do it in terms of a graph where nodes represent sets and edges represent the is-element relation. It's no problem for a graph to have a node that has an edge to itself.}. Maybe we should disallow such situations. We should perhaps even disallow a bit more - things like $x \in y \wedge y \in x$ or $x \in y \wedge y \in z \wedge z \in x$, etc. - i.e. disallow all recursive element relations that are cyclic, i.e. loop back on themselves. Of these, $x \in x$ is just the simplest one but the more complicated ones do also seem weird. Away with them!
 
 % https://de.wikipedia.org/wiki/Russellsche_Antinomie
 % https://en.wikipedia.org/wiki/Russell%27s_paradox
@@ -782,6 +782,7 @@ x+y =\begin{cases}
  (x+(y-1))+1  & \qquad \text{if } y \neq 0 
 \end{cases}
 \end{equation}
+We could also express the second line as $x + y = s(x + p(y))$ using our successor function $s(x)$ and predecssor function $p(x)$. The important observation is that in an recursive implementation\footnote{TODO: link to the C++ implementation}, the addition function will call itself recursively but with a smaller second argument such that the recursion will eventually hit the base case where the second argument is zero.
 
 \paragraph{Multiplication}
 To define multiplication of natural numbers, we observe that $x \cdot y$ can be seen as $y$ copies of $x$ added together which in turn can be seen as $y-1$ copies of $x$ added together plus another $x$. This works as long as $y-1$ is defined. For $y=0$, it isn't - but that is our base case in which $x \cdot y$ is just $x \cdot 0 = 0$. So, we can build the following recursively defined multiplication algorithm from what we already have:
@@ -825,18 +826,37 @@ x^y =\begin{cases}
 % https://en.wikipedia.org/wiki/Set-theoretic_definition_of_natural_numbers
 % https://en.wikipedia.org/wiki/Peano_axioms
 
-\subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of pairs of naturals. Let $x = (a,b)$, i.e. our set that represents the integer $x$ is a pair of two Neumann naturals $a,b$. I will call such numbers "Neumann integers". For two such Neumann integers $x = (a,b)$ and $y = (c,d)$, we define the equivalence relation $=$ as follows:
+\subsubsection{Integer Numbers} The integers can be constructed from the naturals as equivalence classes of pairs of naturals. Let $x = (a,b)$, i.e. our set that represents the integer $x$ is a pair of two Neumann naturals $a,b$. I will call such numbers "Neumann integers". For two such Neumann integers $x = (a,b)$ and $y = (c,d)$, we define the equivalence relation $\sim$ as follows:
 \begin{equation}
-(a,b) = (c,d) \quad \Leftrightarrow  \quad a+d = c+b
+(a,b) \sim (c,d) \quad \Leftrightarrow  \quad a+d = c+b
 \end{equation}
-We add such Neumann integers via $(a,b)+(c,d) = (a+c,b+d)$. VERIFY....TBC...negation (swap),
+Formally, we could define the set that we construct as $\mathbb{N}^2 / \sim$ which we may read as: "N-squared modulo equivalence" or "N-squared modulo tilde". The pair $(a,b)$ represents the integer $a-b$. The nonnegative integers are recovered by letting $b = 0$. For example, $3$ would be represented by $(3,0)$. However, it could also be represented by $(5,2)$ or any other pair of numbers $(a,b)$ which satisfy $a-b = 3$. A negative number like $-3$ would be represented by $(0,3)$ or by $(2,5)$ etc. So, the negative counterpart to any given number is obtained by swapping the components of the pair. We add such Neumann integers via $(a,b)+(c,d) = (a+c,b+d)$. VERIFY....TBC...explain multiplication, order, exponentiation, canonical representation (one of the components is zero - it's analoguous to represent a fraction in lowest terms)
 % Z is an integral domain (commutative ring with no zero divisors - maybe we need to demand a multiplicative identity? ..see chapter about rings and be consistent with it - there are different convetions for this)
 
-\subsubsection{Rational Numbers} The rationals can be constructed from the integers as equivalence classes of pairs of integers...TBC...
+% (a,b) represents the integer $a-b$
+
+% https://www.youtube.com/watch?v=HKbCtoSTalk&list=PLpzmRsG7u_gpZyi0w80IBk51k6ClSJRWK&index=23
+
+\subsubsection{Rational Numbers} The rationals can be constructed from the integers as equivalence classes of pairs of integers in a way that is analogous to how we defined the integers as equivalence classes of pairs of naturals. Again, we define an equivalence relation $\sim$. This time, it's defined as:
+\begin{equation}
+(a,b) \sim (c,d) \quad \Leftrightarrow  \quad a \cdot d = c \cdot b
+\end{equation}
+
+..TBC...
 % Q is a field
 
 \subsubsection{Real Numbers} The reals can be be constructed from the rationals by a technique called \emph{Dedekind cuts}. That's the most complicated step in the construction of the number system...TBC...
 % in R, the order is complete  ...what does that mean? It's from the math-faq.pdf above
+
+
+% https://www.youtube.com/watch?v=3FeIv08nrLk&list=PLlgGdNP9Tq4uzy2uu1D4zBg3W1pRuEUGK&index=7
+% -A real number x is defined by the (infinite) set of rational numbers that are less than x. 
+% -alternative construction: equivalence class of all Cauchy sequences that converge to x
+
+% https://en.wikipedia.org/wiki/Dedekind_cut
+% https://de.wikipedia.org/wiki/Dedekindscher_Schnitt
+
+
 
 \subsubsection{Complex Numbers} The complex numbers can be constructed from the real numbers as pairs. This time, we don't even need equivalence classes, so this step is actually the simplest...TBC...
 % C is algebraically complete
@@ -882,8 +902,7 @@ The beth numbers are another type of transfinite numbers that are not so commonl
 \beth_{\lambda} = \sup \{ \beth_{\alpha} : \alpha < \lambda \} 
                 = \bigcup_{\alpha \in \lambda} \beth_{\alpha} 
 \end{equation}
-The leftmost definition is the base case in various notations
-...TBC...
+The leftmost definition is the base case in various notations. The middle equation is the successor step. The $(\alpha+1)$th beth number is computed from the $\alpha$th beth number by taking its power set. Remember that numbers \emph{are} sets, so yes - we can indeed take the power set of a number, even if that feels strange. VERIFY!...TBC...Explain limit step
 %but to understand this definition, we first need some more definitions an tools in place. ...TBC...VERIFY
 
 % https://en.wikipedia.org/wiki/Beth_number
@@ -903,7 +922,7 @@ The leftmost definition is the base case in various notations
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Cardinal Numbers}
-The purpose of cardinal numbers is to quantify the size of a set - finite or infinite. I'll split the treatment of cardinal numbers into a "preliminary" part before the section about ordinals and a "proper" part after the section about ordinals. The proper part will then really define them in terms of ordinals. I opted to do it this way because I think that conceptually, the cardinals are easier to understand. They require only the notion of bijections whereas the ordinals require the more complicated notion of order isomorphism. 
+The purpose of cardinal numbers is to quantify the size of a set - finite or infinite. I'll split the treatment of cardinal numbers into a "preliminary" part before the section about ordinals and a "proper" part after the section about ordinals. The proper part will then really define them in terms of ordinals. I opted to do it this way because I think that conceptually, the cardinals are easier to understand. They require only the notion of bijections whereas the ordinals require the more complicated notion of order isomorphisms, so it's appropriate to treat the simpler sort of numbers first. 
 
 %So far for our preliminary treatment of cardinal numbers. We'll now look at ordinal numbers and when we have the ordinals in hand, we'll revisit the cardinals and define them properly. I opted to split the treatment of cardinals into a "preliminary" and "proper" section because conceptually, the cardinals are easier to understand
 %...TBC...
@@ -973,7 +992,7 @@ To convince ourselves that it actually makes sense to talk about different sizes
 %  show that in general the power set of any given countably infinite set cannot be put into bijection with the original set, then 
 
 
-
+%https://www.youtube.com/watch?v=iaUwNuaSLUk  7:18
 
 %\subsubsection{Cardinal Arithmetic}
 
@@ -1019,7 +1038,7 @@ We can interpret this maximum as: adding finite sets to infinite ones doesn't ch
 \max(|A|,|B|)   \qquad &\text{if at least one of $A, B$ is infinite}
 \end{cases}
 \end{equation}
-This may be a bit harder to swallow. But we have already seen how $\mathbb{N}$ can be bijectively mapped to $\mathbb{N}^2$, so it might be somewhat plausible to believe that the set product of infinite sets does not yield larger sets in terms of cardinality. Although, in the case of mapping $\mathbb{R}$ bijectively to $\mathbb{R}^2$, Cantor himself couldn't believe it at first. But he found a bijection: To bijectively map a real number $z$ to a pair of real numbers $(x,y)$, just take the decimal expansion of $z$ and alternatingly put digits into $x$ and $y$, i.e. "unzip" the decimal expansion into two. The reverse mapping is just a "zip" operation. So - yeah - it works out to find bijections between $\mathbb{N}$ and $\mathbb{N}^2$ and it works also for  $\mathbb{R}$ and $\mathbb{R}^2$. And it works in general. Of course, these examples are no proof - but they are a plausibility check.
+This may be a bit harder to swallow. But we have already seen how $\mathbb{N}$ can be bijectively mapped to $\mathbb{N}^2$, so it might be somewhat plausible to believe that the set product of infinite sets does not yield larger sets in terms of cardinality. Although, in the case of mapping $\mathbb{R}$ bijectively to $\mathbb{R}^2$, Cantor himself couldn't believe it at first. But he found a bijection: To bijectively map a real number $z$ to a pair of real numbers $(x,y)$, just take the decimal expansion\footnote{Actually, the decimal expansion of many numbers is not unique - consider $1 = 0.999\ldots$. And one perhaps also has to take some care about how to treat the position the decimal dot. But these are minor complications that can be solved.} of $z$ and alternatingly put digits into $x$ and $y$, i.e. "unzip" the decimal expansion into two. The reverse mapping is just a "zip" operation. So - yeah - it works out to find bijections between $\mathbb{N}$ and $\mathbb{N}^2$ and it works also for  $\mathbb{R}$ and $\mathbb{R}^2$. And it works in general. Of course, these examples are no proof - but they are a plausibility check.
 
 
 % https://en.wikipedia.org/wiki/Cardinal_number#Cardinal_multiplication
@@ -1062,6 +1081,8 @@ The formal set theoretical definition of an ordinal number is simple: A set $\al
 % https://www.youtube.com/watch?v=Ay0151PkgMA&list=PL2m0OzES6Uw9zK-F8BX8HuGq7HAx9KhQb&index=13
 % -ordinal numbres are transivtive sets that are well-ordered by the element relation
 
+% Set Theory | Lesson 11: Ordinals!!! [CC]
+% https://www.youtube.com/watch?v=efTeurdX__A&list=PLlgGdNP9Tq4uzy2uu1D4zBg3W1pRuEUGK&index=11
 
 % https://aleph1.info/?call=Puc&permalink=mengenlehre1_2_1
 % % https://aleph1.info/Resource?method=get&obj=Pdf&name=mengenlehre1.pdf

@@ -830,7 +830,7 @@ x^y =\begin{cases}
 \begin{equation}
 (a,b) \sim (c,d) \quad \Leftrightarrow  \quad a+d = c+b
 \end{equation}
-Formally, we could define the set that we construct as $\mathbb{N}^2 / \sim$ which we may read as: "N-squared modulo equivalence" or "N-squared modulo tilde". The pair $(a,b)$ represents the integer $a-b$. The nonnegative integers are recovered by letting $b = 0$. For example, $3$ would be represented by $(3,0)$. However, it could also be represented by $(5,2)$ or any other pair of numbers $(a,b)$ which satisfy $a-b = 3$. A negative number like $-3$ would be represented by $(0,3)$ or by $(2,5)$ etc. So, the negative counterpart to any given number is obtained by swapping the components of the pair. We add such Neumann integers via $(a,b)+(c,d) = (a+c,b+d)$. VERIFY....TBC...explain multiplication, order, exponentiation, canonical representation (one of the components is zero - it's analoguous to represent a fraction in lowest terms)
+Formally, we could define the set that we construct as $\mathbb{N}^2 / \sim$ which we may read as: "N-squared modulo equivalence" or "N-squared modulo tilde". The pair $(a,b)$ represents the integer $a-b$. The nonnegative integers are recovered by letting $b = 0$. For example, $3$ would be represented by $(3,0)$. However, it could also be represented by $(5,2)$ or any other pair of numbers $(a,b)$ which satisfy $a-b = 3$. A negative number like $-3$ would be represented by $(0,3)$ or by $(2,5)$ etc. So, the negative counterpart to any given number is obtained by swapping the components of the pair. We add such Neumann integers via $(a,b)+(c,d) = (a+c,b+d)$. VERIFY....TBC...explain multiplication, order, exponentiation, canonical representation (one of the components is zero - it's analoguous to represent a fraction in lowest terms)...TODO: explain embedding functions
 % Z is an integral domain (commutative ring with no zero divisors - maybe we need to demand a multiplicative identity? ..see chapter about rings and be consistent with it - there are different convetions for this)
 
 % (a,b) represents the integer $a-b$
@@ -891,7 +891,6 @@ We constructed the integers, rationals, etc. by extending the set of natural num
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Beth Numbers}
-% Maybe move under Ordinal Numbers
 The beth numbers are another type of transfinite numbers that are not so commonly used. But they do correspond best to what we might expect intuitively from differently sized infinite sets and serve as a good example for constructing sets via transfinite recursion, so that's why we will introduce them first. They are a good warm-up for the progressively more complicated topics of cardinal and ordinal numbers. The beth numbers are denoted by the Hebrew letter $\beth$ ("beth") with a subscript. We know that for any given finite set $A$, we can construct a bigger set by simply taking its power set $B = \mathcal{P}(A)$ where "bigger" is to be understood in the sense of "greater cardinality". To create an even bigger set, we can create the power set of that: $C = \mathcal{P}(B) = \mathcal{P}(\mathcal{P}(A))$. And we can continue applying the power set operation indefinitely to create ever bigger sets. As we will see later, Cantor's theorem shows that this construction of ever bigger sets using the iterated power set operation still works for infinite sets, so via the iterated power set operation, we have a way of producing a sequence of infinitely large sets with ever increasing size (cardinality). The beth numbers correspond to these sizes produced by the iterated power set operation: $\beth_n = |\mathcal{P}^n (\mathbb{N})|$, such that $\beth_0 = |\mathbb{N}|, \beth_1 = |\mathcal{P} (\mathbb{N})|, \beth_2 = |\mathcal{P}(\mathcal{P} (\mathbb{N}))|, \ldots$. Here, for the time being, we may think of $n$ as a natural number. It can actually also be an ordinal number though. That's why the index is usually a greek letter in textbooks. The beth numbers are formally defined via transfinite recursion as:
 \begin{equation}
 \beth_0 = \aleph_0 
@@ -981,9 +980,15 @@ To figure out the number $k$ to which the pair $n,m$ gets mapped, one uses a so 
 % https://drhagen.com/blog/multidimensional-pairing-functions/
 
 \paragraph{Cantor's Second Diagonal Argument} 
-To convince ourselves that it actually makes sense to talk about different sizes of infinity, we will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method and it is a method for showing the impossibility of the existence of a bijection between two sets. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct an element $b \in B$ which we can show to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective must have been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. OK - now from the abstract to the concrete. We will need 3 steps: (1) Show why a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (2) show how the unit interval $[0,1)$ of real numbers can be put into bijection with $2^{\mathbb{N}}$, (3) Show how  $[0,1)$ can be put into bijection with $\mathbb{R}$. .....TBC...TODO: show how with a minor tweak, the argument can be used to show that $|A| < |2^A|$ for any set $A$ - that's more useful in the following material
 
-% Idea: if we produce the $b \in B$ this way, couldn't we just add the line with the so produced b to the table? Maybe at the w-th position? It seems like postulating that we can always add such a line feels exactly like postulating the existence of an infinite set as in the axiom of infinity.
+
+
+% OLD:
+%To convince ourselves that it actually makes sense to talk about different sizes of infinity, we will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method and it is a method for showing the impossibility of the existence of a bijection between two sets. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct an element $b \in B$ which we can show to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective must have been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. OK - now from the abstract to the concrete. We will need 3 steps: (1) Show why a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (2) show how the unit interval $[0,1)$ of real numbers can be put into bijection with $2^{\mathbb{N}}$, (3) Show how  $[0,1)$ can be put into bijection with $\mathbb{R}$. .....TBC...TODO: show how with a minor tweak, the argument can be used to show that $|A| < |2^A|$ for any set $A$ - that's more useful in the following material
+
+
+
+% Idea: if we produce the $b \in B$ this way, couldn't we just add the line with the so produced b to the table? Maybe at the w-th position? It seems like postulating that we can always add such a line feels exactly like postulating the existence of an infinite set as in the axiom of infinity. Couldn't we put this new line of the table at the w-th position?
 
 % Use the multiplication tabel in the group theory chaote as template for the tabel to be sued here
 
@@ -1108,7 +1113,9 @@ The formal set theoretical definition of an ordinal number is simple: A set $\al
 %  it's the supremum
 % -so: w1 is the ordinal union (i.e. supremum) of all the countable ordinals
 
+% It's important to note that the order type of a poset is not an intrinsic feature of the underlying set. It really comes into existence only after an order relation is defined on the set. We can, for example, define various different order relations on the set of rationals (todo: mention calkin-wilf trees, order by denominator, then by numerator, using Cantor digonalization)
 
+% https://en.wikipedia.org/wiki/Calkin%E2%80%93Wilf_tree
 
 
 \paragraph{Cantor Normal Form}

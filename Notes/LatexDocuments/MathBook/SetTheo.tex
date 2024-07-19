@@ -980,11 +980,25 @@ To figure out the number $k$ to which the pair $n,m$ gets mapped, one uses a so 
 % https://drhagen.com/blog/multidimensional-pairing-functions/
 
 \paragraph{Cantor's Second Diagonal Argument} 
-
-
+To convince ourselves that it actually makes sense to talk about different sizes of infinity, we will now show why $|\mathcal{P}(\mathbb{N})| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method. Let's assume that we have list of subsets $S_n$ of the natural numbers. That means, each natural number $n \in \mathbb{N}$ is mapped to a subset $S_n \subseteq \mathbb{N}$ of the natural numbers. We could visualize such a list as an infinite table where the $(i,j)$th entry tells us whether or not the number $j$ is an element of the subset with index $i$. This is depicted below.
+\[
+\setlength{\extrarowheight}{5pt}% local setting
+\begin{array}{l|*{6}{c}}
+	       &  0     &  1     &  2     &  3      &  4     & \cdots \\
+	\hline
+	S_0    & \in    &  \in   & \notin & \in     & \notin & \cdots \\
+	S_1    & \notin &  \in   & \in    & \in     & \notin & \cdots \\
+	S_2    & \notin &  \in   & \notin & \in     & \notin & \cdots \\
+	S_3    & \in    & \in    & \notin & \notin  & \in    & \cdots \\
+	S_4    & \in    & \notin & \notin & \in     & \in    & \cdots \\
+	\vdots & \vdots & \vdots & \vdots & \vdots  & \vdots & \ddots \\
+\end{array} 
+\]
 
 % OLD:
-%To convince ourselves that it actually makes sense to talk about different sizes of infinity, we will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method and it is a method for showing the impossibility of the existence of a bijection between two sets. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct an element $b \in B$ which we can show to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective must have been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. OK - now from the abstract to the concrete. We will need 3 steps: (1) Show why a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (2) show how the unit interval $[0,1)$ of real numbers can be put into bijection with $2^{\mathbb{N}}$, (3) Show how  $[0,1)$ can be put into bijection with $\mathbb{R}$. .....TBC...TODO: show how with a minor tweak, the argument can be used to show that $|A| < |2^A|$ for any set $A$ - that's more useful in the following material
+%To convince ourselves that it actually makes sense to talk about different sizes of infinity, we will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method and it is a method for showing the impossibility of the existence of a bijection between two sets. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct an element $b \in B$ which we can show to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective must have been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. 
+
+%OK - now from the abstract to the concrete. We will need 3 steps: (1) Show why a bijection between $\mathbb{N}$ and $2^{\mathbb{N}}$ is impossible, (2) show how the unit interval $[0,1)$ of real numbers can be put into bijection with $2^{\mathbb{N}}$, (3) Show how  $[0,1)$ can be put into bijection with $\mathbb{R}$. .....TBC...TODO: show how with a minor tweak, the argument can be used to show that $|A| < |2^A|$ for any set $A$ - that's more useful in the following material
 
 
 

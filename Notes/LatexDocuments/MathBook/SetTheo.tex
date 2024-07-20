@@ -974,7 +974,7 @@ To figure out the number $k$ to which the pair $n,m$ gets mapped, one uses a so 
 % https://drhagen.com/blog/multidimensional-pairing-functions/
 
 \paragraph{Cantor's Second Diagonal Argument} 
-To convince ourselves that it actually makes sense to talk about different sizes of infinity, we will now show why $|\mathcal{P}(\mathbb{N})| > |\mathbb{N}|$ by a different kind of diagonal argument. This technique is an example of the proof by contradiction method. Let's assume that we have list of subsets $S_n$ of the natural numbers $\mathbb{N}$. That means, each natural number $n \in \mathbb{N}$ is mapped to a subset $S_n \subseteq \mathbb{N}$ of the natural numbers. We could visualize such a list as an infinite table where the $(i,j)$th entry tells us whether or not the number $j$ is an element of the subset with index $i$. An example for how this this could look like is depicted below.
+To convince ourselves that it actually makes sense to talk about different sizes of infinity, we will now show why $|\mathcal{P}(\mathbb{N})| > |\mathbb{N}|$ by a different kind of diagonal argument. This technique is an example of the proof by contradiction method. Let's assume that we have list of subsets $S_n$ of the natural numbers $\mathbb{N}$. That means, each natural number $n \in \mathbb{N}$ is mapped to a subset $S_n \subseteq \mathbb{N}$ of the natural numbers. We could visualize such a list as an infinite table where the $(i,j)$th entry tells us whether or not the number $j$ is an element of the subset with index $i$. An example for how this this could look like is depicted in the left side of the figure below (ignore the right side for the moment).
 \[
 \setlength{\extrarowheight}{5pt}% local setting
 \begin{array}{l|*{6}{c}}
@@ -986,12 +986,35 @@ To convince ourselves that it actually makes sense to talk about different sizes
 	S_3    & \in    & \in    & \notin & \notin  & \in    & \cdots \\
 	S_4    & \in    & \notin & \notin & \in     & \in    & \cdots \\
 	\vdots & \vdots & \vdots & \vdots & \vdots  & \vdots & \ddots \\
-\end{array} 
+\end{array}
+\qquad \qquad \qquad 
+\setlength{\extrarowheight}{5pt}% local setting
+\begin{array}{l|*{6}{c}}
+	       &  d_0   &  d_1   &  d_2   &  d_3    &  d_4   & \cdots \\
+	\hline
+	0      &  3     &  1     &  4     &  1      &  5     & \cdots \\
+	1      &  2     &  7     &  1     &  8      &  2     & \cdots \\
+	2      &  1     &  6     &  1     &  8      &  0     & \cdots \\
+	3      &  0     &  5     &  7     &  7      &  2     & \cdots \\
+	4      &  1     &  4     &  1     &  4      &  2     & \cdots \\
+	\vdots & \vdots & \vdots & \vdots & \vdots  & \vdots & \ddots \\
+\end{array}
 \]
 Let's now assume that the list of subsets is complete, i.e. every possible subset of $\mathbb{N}$ is represented by some row of our table. We will now show that this assumption must be false by explicitly constructing another subset $T$ of $\mathbb{N}$ that is guaranteed to be not in our table, i.e. is none of the $S_i$. We build $T$ as follows: We scan our existing table along its diagonal and whatever symbol we find there, we'll do the opposite: If we find an $\in$ at position $(i,i)$, then we will not include $i$ into our set $T$. If we find a $\notin$ at position $(i,i)$, then we will include $i$ into our set $T$. The so constructed set $T$ cannot be any of the $S_i$ because it will differ at at least one position from any of the $S_i$. Therefore, our table cannot possibly have been complete in the first place. At least one subset of $\mathbb{N}$, namely $T$, was not reached by our supposed bijection\footnote{Question: Couldn't we add our new subset $T$ at the $\omega$th row? And a list with $\omega + 1$ rows has still a countable number of rows? ...idk...}. So it isn't a bijection after all because it fails to be surjective. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. Therefore, we conclude that the cardinality of the power set of $\mathbb{N}$ must be strictly greater than the cardinality of $\mathbb{N}$ itself: $|\mathcal{P}(\mathbb{N})| > |\mathbb{N}|$.
 
+% https://en.wikipedia.org/wiki/List_of_mathematical_constants
+% pi      = 3.1415926535897932384626433832795028841971693993751058209749445923...
+% e       = 2.7182818284590452353602874713526624977572470936999595749669676277...
+% phi     = 1.6180339887498948482045868343656381177203091798057628621354486227...
+% gamma   = 0.5772156649015328606065120900824024310421593359399235988057672348...
+% sqrt(2) = 1.4142135623730950488016887242096980785696718753769480731766797379...
+
 \medskip
-We can use this result to show that the cardinality of the real numbers must also be greater than that of naturals. We do so be constructing a bijection between $\mathcal{P}(\mathbb{N})$ and $\mathbb{R}$. ...TBC... introduce the symbol $\mathfrak{c}$ for the size of the continuum, explain that the result holds for any set and its power set (Cantor's theorem)
+
+
+%We can use this result to show that the cardinality of the real numbers must also be greater than that of naturals. We do so be constructing a bijection between $\mathcal{P}(\mathbb{N})$ and $\mathbb{R}$. We'll actually first construct a bijection between 
+
+...TBC... introduce the symbol $\mathfrak{c}$ for the size of the continuum, explain that the result holds for any set and its power set (Cantor's theorem)
 
 % OLD:
 %To convince ourselves that it actually makes sense to talk about different sizes of infinity, we will now show why $|\mathbb{R}| > |\mathbb{N}|$ by a different flavor of Cantor's diagonalization technique. This technique is an example of the proof by contradiction method and it is a method for showing the impossibility of the existence of a bijection between two sets. The general mode of operation of the technique is: We start by assuming that we do have a bijection $f: A \rightarrow B$ from a set $A$ to set $B$. Then we will explicitly construct an element $b \in B$ which we can show to not be reached by our supposed bijection $f$. Therefore $f$ cannot be surjective and therefore not bijective. That proves that our initial assumption of $f$ being bijective must have been a false assumption. Because bijectivity was our only assumption about $f$, this shows that such a bijectivity assumption can never hold up [VERIFY]. 

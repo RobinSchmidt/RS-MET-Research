@@ -11622,14 +11622,14 @@ void cantorSingleToPair(int k, int* m, int* n)
 // Maybe use x,y instead of m,n
 
 
-int elegantPairToSingle(int x, int y)  // rename to szudzikPair...
+int szudzikPairToSingle(int x, int y)
 {
   if(x == rsMax(x, y))
     return x*x + x + y;
   else
     return y*y + x; 
 }
-void elegantSingleToPair(int z, int* x, int* y)
+void szudzikSingleToPair(int z, int* x, int* y)
 {
   int w = floor(sqrt(z));
   int t = z - w*w;
@@ -11683,23 +11683,23 @@ void testPairingFunctions()
   }
 
 
-  // Test single number to pair via the "elegant" function:
+  // Test single number to pair via Szudzik's function:
   for(int k = 0; k <= kMax; k++)
   {
     int m, n;
-    elegantSingleToPair(k, &m, &n);
-    int k2 = elegantPairToSingle(m, n);
+    szudzikSingleToPair(k, &m, &n);
+    int k2 = szudzikPairToSingle(m, n);
     ok &= k2 == k;
   }
 
-  // Test pair to single number via the "elegant" function:
+  // Test pair to single number via the Szudzik's function:
   for(int m = 0; m <= mMax; m++)
   {
     for(int n = 0; n <= nMax; n++)
     {
-      int k = elegantPairToSingle(m, n);
+      int k = szudzikPairToSingle(m, n);
       int m2, n2;
-      elegantSingleToPair(k, &m2, &n2);
+      szudzikSingleToPair(k, &m2, &n2);
       ok &= m2 == m;
       ok &= n2 == n;
     }
@@ -11710,18 +11710,24 @@ void testPairingFunctions()
   // ToDo: 
   //
   // - Implement other pairing functions. Cantor's function tends to produce bigger numbers than
-  //   necessary.
-  //
+  //   necessary. Or does it? Figure out the pros and cons of different pairing functions. Maybe 
+  //   move the into the RAPT library - maybe in a class rsPairingFunctions. This may also contain
+  //   functions for mapping between single indices to triples, quadruples, etc. To map to 
+  //   quadruples, we would apply pairing functions hierarchically: let the quadruple be (a,b,c,d):
+  //   do q = map(a,b), p = map(d,d), k = map(p,q). For triples (a,b,c), we coould do:
+  //   q = map(a,b), k = map(c,q)
+  // 
   // -Factor out the testing loops into a function:
   //   testPairingFunction(pairFunc, unPairFunc, xMax, yMax, zMax)
   //  taking function pointers to the un/pairing functions and max values for the loops. That 
   //  avoids the code duplication which will become more important when we implement even more 
   //  pairing functions
   //
+  //
   // See:
   //
-  // http://www.szudzik.com/ElegantPairing.pdf
-  // https://github.com/drhagen/pairing
+  // http://www.szudzik.com/ElegantPairing.pdf       explains Szudzik's function
+  // https://github.com/drhagen/pairing              explains some other pairing functions
   // https://drhagen.com/blog/superior-pairing-function/
   // https://drhagen.com/blog/multidimensional-pairing-functions/
 }

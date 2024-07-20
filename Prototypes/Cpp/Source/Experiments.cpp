@@ -11619,6 +11619,34 @@ void cantorSingleToPair(int k, int* m, int* n)
 
   // ToDo: Figure out if it can be done without resorting to floating point arithmetic
 }
+// Maybe use x,y instead of m,n
+
+
+int elegantPairToSingle(int x, int y)  // rename to szudzikPair...
+{
+  if(x == rsMax(x, y))
+    return x*x + x + y;
+  else
+    return y*y + x; 
+}
+void elegantSingleToPair(int z, int* x, int* y)
+{
+  int w = floor(sqrt(z));
+  int t = z - w*w;
+
+  if(t < w)
+  {
+    *x = t;
+    *y = w;
+  }
+  else
+  {
+    *x = w;
+    *y = t - w;
+  }
+}
+
+
 
 void testPairingFunctions()
 {
@@ -11632,7 +11660,7 @@ void testPairingFunctions()
   int nMax =  20;
 
 
-  // Test single number to pair:
+  // Test single number to pair via Cantor's function:
   for(int k = 0; k <= kMax; k++)
   {
     int m, n;
@@ -11641,7 +11669,7 @@ void testPairingFunctions()
     ok &= k2 == k;
   }
 
-  // Test pair to single number:
+  // Test pair to single number via Cantor's function:
   for(int m = 0; m <= mMax; m++)
   {
     for(int n = 0; n <= nMax; n++)
@@ -11655,12 +11683,47 @@ void testPairingFunctions()
   }
 
 
+  // Test single number to pair via the "elegant" function:
+  for(int k = 0; k <= kMax; k++)
+  {
+    int m, n;
+    elegantSingleToPair(k, &m, &n);
+    int k2 = elegantPairToSingle(m, n);
+    ok &= k2 == k;
+  }
+
+  // Test pair to single number via the "elegant" function:
+  for(int m = 0; m <= mMax; m++)
+  {
+    for(int n = 0; n <= nMax; n++)
+    {
+      int k = elegantPairToSingle(m, n);
+      int m2, n2;
+      elegantSingleToPair(k, &m2, &n2);
+      ok &= m2 == m;
+      ok &= n2 == n;
+    }
+  }
+
   rsAssert(ok);
 
   // ToDo: 
   //
   // - Implement other pairing functions. Cantor's function tends to produce bigger numbers than
   //   necessary.
+  //
+  // -Factor out the testing loops into a function:
+  //   testPairingFunction(pairFunc, unPairFunc, xMax, yMax, zMax)
+  //  taking function pointers to the un/pairing functions and max values for the loops. That 
+  //  avoids the code duplication which will become more important when we implement even more 
+  //  pairing functions
+  //
+  // See:
+  //
+  // http://www.szudzik.com/ElegantPairing.pdf
+  // https://github.com/drhagen/pairing
+  // https://drhagen.com/blog/superior-pairing-function/
+  // https://drhagen.com/blog/multidimensional-pairing-functions/
 }
 
 

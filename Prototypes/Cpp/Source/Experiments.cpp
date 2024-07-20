@@ -11605,6 +11605,62 @@ void testNeumannRationals()
 }
 
 
+// Cantor's original un/pairing functions:
+int cantorPairToSingle(int m, int n)
+{
+  return ((m+n)*(m+n+1))/2 + n;
+}
+void cantorSingleToPair(int k, int* m, int* n)
+{
+  int w = (int) floor(0.5 * (sqrt(8.0*k + 1.0) - 1.0));
+  int t = (w*w + w) / 2;
+  *n    = k - t;
+  *m    = w - *n;
+}
+
+void testPairingFunctions()
+{
+  // We test different pairing functions, i.e. functions that reversibly map a pair of indices to a 
+  // single index. ...TBC..
+
+  bool ok = true;
+
+  int kMax = 100;
+  int mMax =  10;
+  int nMax =  10;
+
+
+  // Test single number to pair:
+  for(int k = 0; k <= kMax; k++)
+  {
+    int m, n;
+    cantorSingleToPair(k, &m, &n);
+    int k2 = cantorPairToSingle(m, n);
+    ok &= k2 == k;
+  }
+
+  // Test pair to single number:
+  for(int m = 0; m <= mMax; m++)
+  {
+    for(int n = 0; n <= nMax; n++)
+    {
+      int k = cantorPairToSingle(m, n);
+      int m2, n2;
+      cantorSingleToPair(k, &m2, &n2);
+      ok &= m2 == m;
+      ok &= n2 == n;
+    }
+  }
+
+
+  rsAssert(ok);
+
+  // ToDo: 
+  //
+  // - Implement other pairing functions. Cantor's function tends to produce bigger numbers than
+  //   necessary.
+}
+
 
 void testGeneralizedCollatz()
 {

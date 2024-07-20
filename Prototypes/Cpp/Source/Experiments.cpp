@@ -11616,6 +11616,8 @@ void cantorSingleToPair(int k, int* m, int* n)
   int t = (w*w + w) / 2;
   *n    = k - t;
   *m    = w - *n;
+
+  // ToDo: Figure out if it can be done without resorting to floating point arithmetic
 }
 
 void testPairingFunctions()
@@ -11625,9 +11627,9 @@ void testPairingFunctions()
 
   bool ok = true;
 
-  int kMax = 100;
-  int mMax =  10;
-  int nMax =  10;
+  int kMax = 400;
+  int mMax =  20;
+  int nMax =  20;
 
 
   // Test single number to pair:

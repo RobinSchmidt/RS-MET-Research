@@ -803,6 +803,8 @@ x^y =\begin{cases}
 
 \paragraph{Summary} We have constructed a representation or encoding the of natural numbers purely from sets and have expressed the basic arithmetic operations in terms of set theoretic operations. We started with the most basic operation of them all - the successor function - and then worked our way up all the way to exponentiation. TODO: define subtraction, (floor-)division, remainder, roots, logarithms
 
+% ToDo: maybe show some properties of the operations like asscoicativity, distribuitivity, etc.
+% ..or at least meantion them
 
 %The structure we have created has a special name - it's called a \emph{monoid}
 
@@ -837,6 +839,11 @@ Formally, we could define the set that we construct as $\mathbb{N}^2 / \sim$ whi
 
 % https://www.youtube.com/watch?v=HKbCtoSTalk&list=PLpzmRsG7u_gpZyi0w80IBk51k6ClSJRWK&index=23
 
+
+% How to Construct Infinite Sets
+% https://www.youtube.com/watch?v=dz7j38sCUkI
+% -1 = {(0,1),(1,2),(2,3),(3,4),...} = {(a,b) \in N^2: (b-a) = 1 } = [(0,1)]_{\sim}
+
 \subsubsection{Rational Numbers} The rationals can be constructed from the integers as equivalence classes of pairs of integers in a way that is analogous to how we defined the integers as equivalence classes of pairs of naturals. Again, we define an equivalence relation $\sim$. This time, it's defined as:
 \begin{equation}
 (a,b) \sim (c,d) \quad \Leftrightarrow  \quad a \cdot d = c \cdot b
@@ -851,6 +858,10 @@ Formally, we could define the set that we construct as $\mathbb{N}^2 / \sim$ whi
 
 % https://www.youtube.com/watch?v=3FeIv08nrLk&list=PLlgGdNP9Tq4uzy2uu1D4zBg3W1pRuEUGK&index=7
 % -A real number x is defined by the (infinite) set of rational numbers that are less than x. 
+%  -the real number x = sqrt(2) is the least upper bound of a set of rationals:
+%    S = { x \in Q : x^2 < 2  }
+%   we use that set itself to represent sqrt(2)
+%  -the ordering is just a subset relation
 % -alternative construction: equivalence class of all Cauchy sequences that converge to x
 
 % https://en.wikipedia.org/wiki/Dedekind_cut
@@ -1609,5 +1620,10 @@ https://en.wikipedia.org/wiki/Ultrafilter_on_a_set
 https://en.wikipedia.org/wiki/Derived_set_(mathematics)
 -Deiser's book says, we obtain the derivative (on R) by first adding the boundary to the set and
  then removing all isolated points - not sure, if that's the same notion, though.
+
+
+How to Construct Infinite Sets
+https://www.youtube.com/watch?v=dz7j38sCUkI
+
 
 \end{comment}

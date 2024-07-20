@@ -11633,7 +11633,6 @@ void szudzikSingleToPair(int z, int* x, int* y)
 {
   int w = floor(sqrt(z));
   int t = z - w*w;
-
   if(t < w)
   {
     *x = t;

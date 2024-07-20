@@ -15,6 +15,9 @@ Category theory is an area of math that attempts to structure and organize mathe
 Abstracting the idea of bijective functions to a more general setting in which the objects are not necessarily sets and the morphisms are not necessarily functions leads to the categorical idea of an \emph{isomorphism} which is a particular kind of morphism with certain additional properties. The key here is that in the definition of what properties such an isomorphism must satisfy, we are not allowed to talk about "elements". The only things that we are allowed to talk about are categorical terms like objects, morphisms, compositions and identities. We must capture the idea of bijectivity in terms of these and only these ideas. It goes like this: A morphism $f: A \rightarrow B$ is an isomorphism, if there exists a morphism $g: B \rightarrow A$ such that $g \circ f = id_A$ and  $f \circ g = id_B$. In this context, $g$ is the inverse morphism of $f$ and itself an isomorphism as well. In terms of elements when we are in Set: we take an element $a \in A$, apply $f$ to map it to an element $b \in B$, then apply $g$ to map $b$ back to an element $a' \in A$, then $a' = a$, i.e. we're back to where we started so the whole roundtrip from set $A$ to set $B$ and back to $A$ reduces to an identity operation in $A$. Stated without mentioning elements and therefore generalizable: Applying $f$ first, then $g$ yields a composed morphism that equals the identity in $A$ and applying $g$ first, then $f$ yields the identity in $B$. Note how at no point are we talking about the internal structure of the objects like we did when referencing set elements in the definition of bijective functions. The categorical definition of an isomorphism is not even focusing on the objects at all but it's all about the morphisms. The objects are just the backdrop and our main attention goes to the morphisms. We are indeed looking at things from a higher level than in set theoretical descriptions where we looked \emph{inside} the details of the objects. This is typical of category theoretical definitions and theorems. Likewise, a monomorphism $f: A \rightarrow B$ is characterized by the property that for all morphisms $g,h: C \rightarrow A$, we have that $f \circ g = f \circ h$ implies $g = h$. Monomorphisms generalize the idea of an injective (i.e. left-unique) function. An epimorphism $f: A \rightarrow B$ is defined by the property that for all morphisms $g,h: B \rightarrow C$, we have that $g \circ f = h \circ f$ implies $g = h$. Epimorphisms generalize the idea of a surjective (i.e. right-total) function. [VERIFY] If you don't immediately see why these definitions indeed capture and generalize the ideas of injectivity and surjectivity (I certainly didn't), try reversing the implications. For injectivity/monomorphisms, rewrite $(f \circ g = f \circ h) \Rightarrow (g = h)$ as the equivalent statement $(g \neq h) \Rightarrow (f \circ g \neq f \circ h)$ and draw some picture where $g \neq h$. Then do something similar for surjectivity/epimorphisms. Then pat yourself on the back for having grasped a rather abstract and obscure categorical definition. [TODO: maybe add a figure that shows this].
 %pg 482 in Ehrig et al
 
+
+
+
 % https://www.youtube.com/watch?v=H0Ek86IH-3Y
 % Initial objects have arrow to all objects, terminal object arrows from all objects
 
@@ -54,3 +57,8 @@ Abstracting the idea of bijective functions to a more general setting in which t
 
 %\medskip 
 %Of course, there's much more to say about category theory but this very brief overview shall suffice for a book that attempts to focus on applied math.
+
+
+% The First Real Application of Category Theory #SoME3
+% https://www.youtube.com/watch?v=Njx2ed8RGis
+

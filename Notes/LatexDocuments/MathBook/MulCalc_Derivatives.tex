@@ -51,6 +51,8 @@ The gradient helps us to compute the directional derivative: It's just the scala
 \begin{equation}
  \frac{\partial f}{\partial \mathbf{v}} = \mathbf{v} \cdot \grad f
 \end{equation}
+TODO: Figure out, if it's better (i.e. more consistent wrt generalizations) to write it as $\grad f \cdot \mathbf{v}$.
+%i.e. with factors in reversed order? The order doesn't matter in the this case, but may for generalization to situations where the order matters, we should do it the other way around?
 
 %===================================================================================================
 \subsection{The Jacobian Matrix}
@@ -112,7 +114,7 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 
 
 %===================================================================================================
-\subsection{More Terminology} 
+\subsection{More Notation Terminology} 
 % Maybe move this section to somewhere else, i.e. below the "Composition" section
 
 \subsubsection{Differentials} Imagine we have a function $f(x,y)$ in two variables, for example $f(x,y) = x^y$. We can compute the partial derivatives of $f$ with respect to $x$ and $y$ as $f_x = \partial f / \partial x = y x^{y-1}$ and $f_y = \partial f / \partial y = x^y \ln x$. Consider a particular point $(x_0, y_0) = (2,3)$. We can evaluate $f$ and its partial derivatives $f_x, f_y$ at that point to get $f = 2^3 = 8, f_x = 3 \cdot 2^2 = 12, f_y = 2^3 \cdot \ln 2 \approx 5.545178$. With these three values, we can approximate our function $f$ near the point $(3,2)$ linearly as $f \approx 8 + 12 dx + 5.545178 dy$. For example, at $(2.02,3.01)$, we get $f \approx 8 + 12 \cdot 0.02 + 5.545178 \cdot 0.01 \approx 8.2955$ which is an approximation to the true value of around $8.3006$. What we did here was to define a linear function in two variables $dx,dy$ which we envision as small offsets from our given point $(x_0,y_0) = (2,3)$. These were given as $(dx,dy) = (0.02,0.01)$ in our example. These two offsets in the input variables lead to a resulting offset $df$ in the output variable $df = 12 \cdot 0.02 + 5.545178 \cdot 0.01$. This linear function in the two offset variables $dx, dy$ is called the \emph{total differential} of the function $f$ at the point $(x_0, y_0)$.
@@ -161,6 +163,38 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 
 % https://www.youtube.com/watch?v=QFHSHhpbo00
 % They Use ∂ Differently in Math and Physics. Which is Better?
+
+
+\subsubsection{The Total Derivative}
+
+\subsubsection{Derivatives With Respect to Vectors}
+Let $f = f(\mathbf{x})$ be a scalar valued function that has a vector $\mathbf{x}$ as its argument. We want to make sense of an expression like $\frac{d f}{d \mathbf{x}}$. Recall that:
+\begin{equation}
+f(\mathbf{x + h}) \approx 
+f(\mathbf{x}) + \sum_{i=1}^{n} \frac{\partial f}{\partial x_i} h_i =
+f(\mathbf{x}) + \mathbf{g}^T \mathbf{h}
+\end{equation}
+where $\mathbf{x} = (x_1,\ldots,x_n)$, $\mathbf{h} = (h_1,\ldots,h_n)$ and $\mathbf{g} = (\frac{\partial f}{\partial x_1},\ldots,\frac{\partial f}{\partial x_n})|_{\mathbf{x}}$, i.e. the gradient of $f$ evaluated at $\mathbf{x}$. ...TBC...
+
+
+% https://physics.stackexchange.com/questions/88935/derivative-with-respect-to-a-vector-is-a-gradient
+% https://onlinelibrary.wiley.com/doi/pdf/10.1002/0471705195.app3
+% https://en.wikipedia.org/wiki/Matrix_calculus#Derivatives_with_vectors
+
+\subsubsection{Derivatives With Respect to Matrices}
+Let $f = f(\mathbf{X})$ be a scalar valued function that has a matrix $\mathbf{X}$ as its argument. We want to make sense of an expression like $\frac{d f}{d \mathbf{X}}$. In analogy with the with the derivative with respect to a vector, we can write:
+\begin{equation}
+f(\mathbf{X + H}) \approx 
+f(\mathbf{X}) + \sum_{i=1}^{n} \sum_{j=1}^{n} \frac{\partial f}{\partial x_{ij}} h_{ij} =
+f(\mathbf{X}) + \vectorize(\mathbf{D})^T \vectorize(\mathbf{H}) =
+f(\mathbf{X}) + \tr(\mathbf{D}^T \mathbf{H})
+\end{equation}
+where $\mathbf{D}$ is the matrix with entries $d_{ij} = \frac{\partial f}{\partial x_{ij}}$. ...TBC...
+
+%Differentiating functions of vectors and matrices
+%https://www.youtube.com/watch?v=k5OFFevtGDg
+%-at 30:30:
+
 
 
 

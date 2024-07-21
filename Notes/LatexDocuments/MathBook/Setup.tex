@@ -49,29 +49,38 @@
 \usetikzlibrary{positioning}
 
 
+\usepackage{mathtools}                        % for "\DeclarePairedDelimiter" macro
+
+% Constants:
+\DeclareMathOperator{\e}{\mathrm{e}}          % for Euler's number - ToDo: use \e consistently!
+%\newcommand{\e}{\operatorname{e}}            % ...alternative definition (possibly)
+
+% Functions:
+\DeclareMathOperator{\sign}{sign}    
+\DeclareMathOperator{\atan2}{atan2}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}   % different norms?
+
+% Matrix stuff:
+\DeclareMathOperator{\rank}{rank}             % rank
+\DeclareMathOperator{\vectorize}{vec}         % matrix to vector (concat columns)
+\DeclareMathOperator{\tr}{tr}                 % trace
+\DeclareMathOperator{\geo}{geo}               % geometric multiplicity
+\DeclareMathOperator{\alg}{alg}               % algebraic multiplicity 
+
+% Multivariable calculus:
 %\DeclareMathOperator{\d}{d}                  % exterior derivative
 \DeclareMathOperator{\grad}{\mathbf{grad}}
 \DeclareMathOperator{\curl}{\mathbf{curl}}
 \DeclareMathOperator{\dive}{div}
-\DeclareMathOperator{\atan2}{atan2}
-\DeclareMathOperator{\rank}{rank}
+
+% Set theory:
 \DeclareMathOperator{\im}{im}                 % image of a function/map
-\DeclareMathOperator{\vectorize}{vec}
-\DeclareMathOperator{\geo}{geo}               % geometric multiplicity
-\DeclareMathOperator{\alg}{alg}               % algebraic multiplicity 
-\DeclareMathOperator{\sign}{sign}    
 \DeclareMathOperator{\card}{card}             % cardinality        
 \DeclareMathOperator{\tc}{tc}                 % transitive closure of a set
 %\DeclareMathOperator{\Eig}{Eig} 
 
-\DeclareMathOperator{\e}{\mathrm{e}}          % for Euler's number - ToDo: use \e consistently!
-%\newcommand{\e}{\operatorname{e}}            % ...alternative definition (possibly)
-
-\usepackage{mathtools}                        % for "\DeclarePairedDelimiter" macro
-\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
-
-\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
-
+% Logic:
 % There are multiple conventions to express a logical exclusive or - we make the choice for the
 % whole text here:
 \newcommand*\xor{\mathbin{\veebar}}              % exclusive or - alternatives: \oplus, \dot{\vee}

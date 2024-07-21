@@ -53,12 +53,16 @@ Given a vector space represented by its basis vectors stored in the rows of an $
 
 %===================================================================================================
 \subsection{Additional Structure from Products} 
-There are vector spaces that have additional operations defined on the vectors. These algebras are classified based on the properties of these additional operations. Typically, there is at least one additional binary operation between vectors, i.e. an operation that takes two vectors as input and produces another vector as output. This operation is often interpreted as "product" between the vectors although it may be any operation - remember that we are doing abstract algebra here. It could be a commutator between matrices (that happens in Lie algebras), a concatenation of loops (that happens in algebraic topology), etc.
+There are vector spaces that have additional operations defined on the vectors. These spaces are classified based on the properties of these additional operations. Typically, there is at least one additional binary operation between vectors, i.e. an operation that takes two vectors as input and produces another vector as output. This operation is often interpreted as "product" between the vectors although it may be any operation - remember that we are doing abstract algebra here. It could be a commutator between matrices (that happens in Lie algebras), a concatenation of loops (that happens in algebraic topology), etc. The product operation is typically bilinear. Vector spaces with such a bilinear product are called \emph{algebras over a field} or just \emph{algebras}\footnote{The term "algebra" is really overloaded a lot in mathematics. If you find that confusing then welcome to the club!}.
+
+% These vector spaces with additional structure are called \emph{algebras over a field} or just \emph{algebras}\footnote{The term "algebra" is really overloaded a lot in mathematics. If you find that confusing then welcome to the club!} when the additional structure arises from a bilinear product operation.
 
 % Maybe make the subsection "Extra Structure" with subsubs
 % Products, Gradation, Derivation
 
 %an additional operation defined that serves the purpose of a product between vectors that yields another vector. Depending on the properties of that product operation, they get different names.
+
+% https://en.wikipedia.org/wiki/Algebra_over_a_field
 
 \subsubsection{Associative Algebras} 
 
@@ -91,10 +95,23 @@ Compare this to the product rule that you know from calculus and you will notice
 % There is a univariate operation that satisfies the product rule
 % https://en.wikipedia.org/wiki/Derivation_(differential_algebra)
 
+% What about the arithmetic derivative?
+
 % I think  computer algebra systems rely on such an "algebraization" of calculus to do their computations
 
 % https://en.wikipedia.org/wiki/Gerstenhaber_algebra
 % https://en.wikipedia.org/wiki/Superalgebra
+
+
+\subsubsection{Graded Algebras} [VERIFY!]
+In a graded algebra, we are dealing with objects of different kinds that cannot be mixed up with one another in addition but can be in multiplication. As an example, consider the algebra of tensors over a vector space $V^n$. The product is, of course, the tensor product. We cannot add tensors of different ranks $m$ and $n$ but we can always multiply such tensors to get a new tensor of rank $m+n$. The rank of the tensor may also be called the \emph{grade}. Another example is the exterior algebra with the exterior product. We have scalars, vectors, bivectors, trivectors, etc. We cannot add a vector to the bivector - but we can multiply them to get a trivector ...TBC...
+
+
+%For example, it doesn't make sense to add a scalar to a vector but multiplication between a scalar and a vector does. 
+
+%In a graded algebr
+
+% Formally, the space we are dealignwith is expressed a a direct sum of the vector spaces for each grade
 
 % https://en.wikipedia.org/wiki/Graded_ring#Graded_algebra
 
@@ -156,6 +173,10 @@ https://www.youtube.com/watch?v=H4I2C3Ts7_w
 
 Associahedra: The Shapes of Multiplication | Infinite Series
 https://www.youtube.com/watch?v=N7wNWQ4aTLQ&list=PLa6IE8XPP_glwNKmFfl2tEL0b7E9D0WRr&index=19
+
+Was sind Vektorräume?
+https://www.youtube.com/watch?v=DhW-Qef7mhQ
+-at around 20:00 - some rules that follow from the axioms
 
 	
 \end{comment}

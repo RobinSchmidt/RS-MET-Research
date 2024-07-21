@@ -238,12 +238,33 @@ https://en.wikipedia.org/wiki/Valuation_ring
 Surreal Numbers
 https://www.youtube.com/watch?v=QaK81xaIb-U
 
-
 https://en.wikipedia.org/wiki/Ordered_field#Definitions
 	
 https://en.wikipedia.org/wiki/Levi-Civita_field
 https://en.wikipedia.org/wiki/Rational_function	
 
 https://en.wikipedia.org/wiki/Valuation_(algebra)
+	
+	
+Try to implement algebraic field extensions as follows:
+-Take an implementation of rational numbers like rsFraction
+-To adjoin r = sqrt(n) for someinteger (or rational) number n, define the the new field in terms
+ of pairs of fractions (a,b) which represent a + b*sqrt(n) = a + b*r
+-Addition and subtraction works elementwise, i.e. (a + b*r) + (c + d*r) = (a+c) + (b+d)*r
+-Multiplication works like:
+ (a + b*r) * (c + d*r) = a*c + a*d*r + b*c*r + b*d*r^2    use r^2 = n
+ = (a*c + n*b*d) + (a*d + b*c)*r
+-Division: ...
+-This can be used to adjoin the sqrt(5) and then use Binnet's formula to compute Fibonacci numbers
+ via efficient exponentiation in our new field. See:
+ https://www.youtube.com/watch?v=KzT9I1d-LlQ  One second to compute the largest Fibonacci number I can
+-Try if we can also use n = -1 and get the complex numbers
+-I think, to adjoin an m-th root of n, i.e. r = sqrt[m]{n}, we need to represent the number as
+ a0 + a1*r + a2*r^2 + a3*r^3 + ... + a_{m-1} r^{m-1}
+-Multiplication would have to be implemented via circular convolution of the coefficient arrays 
+ (I think) ...because r^m = n ...not sure -> figure out!
+
+ 
+	
 	
 \end{comment}

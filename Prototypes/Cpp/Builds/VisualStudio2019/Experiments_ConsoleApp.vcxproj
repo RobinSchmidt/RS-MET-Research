@@ -139,6 +139,9 @@
     <Lib/>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Libraries\C++\Math\FieldExtensions.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Libraries\C++\Math\Set.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -2063,6 +2066,7 @@
     <ClCompile Include="..\..\JuceLibraryCode\include_rs_testing.cpp"/>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Libraries\C++\Math\FieldExtensions.h"/>
     <ClInclude Include="..\..\..\..\Libraries\C++\Math\Set.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\_Deprecated\MultiArray.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\_Deprecated\RationalFunctionTools.h"/>

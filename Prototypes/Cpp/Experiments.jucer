@@ -6,6 +6,10 @@
               cppLanguageStandard="17" companyCopyright="" jucerFormatVersion="1">
   <MAINGROUP id="CUZTt8" name="Experiments">
     <GROUP id="{28A8A74B-E85B-6088-1DAE-FDA124A09C0B}" name="Math">
+      <FILE id="PA4tmL" name="FieldExtensions.cpp" compile="0" resource="0"
+            file="../../Libraries/C++/Math/FieldExtensions.cpp"/>
+      <FILE id="lMRCgo" name="FieldExtensions.h" compile="0" resource="0"
+            file="../../Libraries/C++/Math/FieldExtensions.h"/>
       <FILE id="Hkypgd" name="Set.cpp" compile="0" resource="0" file="../../Libraries/C++/Math/Set.cpp"/>
       <FILE id="OTzhGi" name="Set.h" compile="0" resource="0" file="../../Libraries/C++/Math/Set.h"/>
     </GROUP>

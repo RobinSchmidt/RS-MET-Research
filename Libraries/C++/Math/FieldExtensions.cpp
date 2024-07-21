@@ -29,7 +29,8 @@ Try to implement algebraic field extensions as follows:
   https://www.youtube.com/watch?v=KzT9I1d-LlQ  
   "One second to compute the largest Fibonacci number I can"
 
-- Try if we can also use n = -1 and get the complex numbers
+- Try if we can also use n = -1 and get the complex numbers. The reciprocation formula looks good.
+  It would evaluate to (a - b*i)/(a^2 + b^2)
 
 - I think, to adjoin an m-th root of n, i.e. r = sqrt[m]{n}, we need to represent the number as
   a0 + a1*r + a2*r^2 + a3*r^3 + ... + a_{m-1} r^{m-1}
@@ -37,7 +38,8 @@ Try to implement algebraic field extensions as follows:
 - Multiplication would have to be implemented via circular convolution of the coefficient arrays 
   (I think) ...because r^m = n ...not sure -> figure out!  ..ahh - not exactly. I think, we need
   to compute the result of linear convolution and then add the overhanging part wrapped around but
-  multiplied by n
+  multiplied by n. So, the wrapped around part does not *just* wrap around but is also weighted by 
+  n
 
 
 

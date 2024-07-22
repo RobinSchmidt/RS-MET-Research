@@ -10761,8 +10761,55 @@ void testRingExtensions()
 
   using Int = int;
   using QR  = rema::rsQuadraticField<Int>;
+  //using Mat = RAPT::rsMatrix<QR>;
 
   bool ok = true;
+
+
+
+  int n = -1;
+
+  int N = 10;
+
+  // Sieve out primes:
+
+  // Init:
+  RAPT::rsMatrix<float> isPrime(N, N);
+  isPrime.setAllValues(1.f);
+
+  // Helper function:
+  auto markMultiplesOf = [&](const QR& x)
+  {
+    for(int i = 0; i < N; i++)
+    {
+      for(int j = 0; j < N; j++)
+      {
+        QR y(i, j, n);               // 2nd factor
+        QR  z = x * y;               // Product
+        int a = z.getCoeffA();
+        int b = z.getCoeffB();
+
+        if(a >= 0 && b >= 0 && a < N && b < N)
+          isPrime(a, b) = 0.f;
+      }
+    }
+  };
+
+  // Mark all multiples as non-prime
+  for(int i = 0; i < N; i++)
+  {
+    for(int j = 0; j < N; j++)
+    {
+      QR x(i, j, n);
+      markMultiplesOf(x);
+    }
+  }
+
+
+  plotMatrix(isPrime);
+
+  //Mat p(N, N);        // Matrix of quadratic integers
+
   //QR x, y, z;
 
 

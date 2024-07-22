@@ -10659,6 +10659,9 @@ void testFiniteField()
 // how it should be.
 // ToDo: make it work, then maybe move the instantiation to somewhere else
 
+
+
+
 void testFieldExtensions()
 {
   // We test the implementation of rsQuadraticField by:

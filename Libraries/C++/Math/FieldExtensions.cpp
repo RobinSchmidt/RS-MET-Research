@@ -110,34 +110,7 @@ rsQuadraticField<T> rsQuadraticField<T>::getReciprocal() const
 /*=================================================================================================
 
 
-Try to implement algebraic field extensions as follows:
-
-- Take an implementation of rational numbers like rsFraction
-
-- To adjoin r = sqrt(n) for some integer (or rational) number n, define the the new field in terms
-  of pairs of fractions (a,b) which represent a + b*sqrt(n) = a + b*r
-
-- Addition and subtraction works elementwise, i.e. (a + b*r) + (c + d*r) = (a+c) + (b+d)*r
-
-- Multiplication works like:
-  (a + b*r) * (c + d*r) = a*c + a*d*r + b*c*r + b*d*r^2    use r^2 = n
-  = (a*c + n*b*d) + (a*d + b*c)*r
- 
-- Reciprocation:  1 / (a + b*r) = (a - b*r) / ((a+b*r)(a-b*r)) = (a - b*r) / (a^2 - n*b^2)
-  = a/d + (-b/d)*r  where  d = a^2 - n*b^2
-
-- Division: ...
-
-- The number n should be a member variable of the class pretty much like the modulus in the
-  implementation of modular integers.
-
-- This can be used to adjoin the sqrt(5) and then use Binnet's formula to compute Fibonacci numbers
-  via efficient exponentiation in our new field. See:
-  "One second to compute the largest Fibonacci number I can"
-  https://www.youtube.com/watch?v=KzT9I1d-LlQ  
-
-- Try if we can also use n = -1 and get the (rational) complex numbers. The reciprocation formula 
-  looks good. It would evaluate to (a - b*i)/(a^2 + b^2)
+Try to implement more algebraic field extensions as follows:
 
 - I think, to adjoin an m-th root of n, i.e. r = sqrt[m]{n}, we need to represent the number as
   a0 + a1*r + a2*r^2 + a3*r^3 + ... + a_{m-1} r^{m-1}
@@ -147,6 +120,16 @@ Try to implement algebraic field extensions as follows:
   to compute the result of linear convolution and then add the overhanging part wrapped around but
   multiplied by n. So, the wrapped around part does not *just* wrap around but is also weighted by 
   n
+
+
+- For an extension by a cube-root of some number n, we would have r = cbrt(n) and, I think, our 
+  numbers would have to be of the general form: a + b*r + c*r^2
+
+  - Multiplication would be (from now on, I suppress the * for multiplication):
+     (a + br + cr^2)(d + er + fr^2)
+   = ad + aer + afr^2 + brd + brer + brfr^2 + cr^2d + cr^2er + cr^2fr^2
+   = (ad)  +  (ae + bd)r  +  (af + be + cd)r^2  + (bf + ce)r^3 + (cf)r^4   use r^3 = n, r^4 = n*r
+   = (ad + (bf+ce)n)  +  (ae + bd + (cf)n)r  +  (af + be + cd)r^2
 
 
 
@@ -162,6 +145,10 @@ Can we also implement transcendental field extensions? How about Q-adjoin-pi?
 
 
 - See:
+
+  "One second to compute the largest Fibonacci number I can"
+  https://www.youtube.com/watch?v=KzT9I1d-LlQ  
+
   "Complex Quadratic Integers and Primes"
   https://www.youtube.com/watch?v=eYdKx1lLagA
 

@@ -6,11 +6,26 @@ namespace rema  // Rob's educational math algorithms
 {
 
 
-/**
+/** Implements the quadratic field Q(sqrt(n)) for a given integer or rational number n. The 
+implementation roughly follows RAPT::rsModularInteger where we had the modulus m as parameter. Here
+we have the number n as parameter. This is the square of the square-root that we want to adjoin to 
+the given base field. The base field is typically the field of rational numbers Q. That means, the 
+template parameter T should be some sort of rational number type such as RAPT::rsFraction. The 
+represented numbers are of the form:
 
-The implementation roughl follows rsModularInteger
+  x = a + b*r              where  r = sqrt(n)  and  a,b are rational
+  
+where r = sqrt(n) is the adjoined square-root. The resulting field is called a field extension of 
+the field rational numbers. We extend it by "adjoining" r. This process of adjoining some number to
+a field that previously was not present requires us to add a lot more numbers to keep the field 
+closed under the arithmetic operations. It turns out that when we adjoin the square-root r of some
+number n, we can express all members of the field as linear combinations of 1 and r with 
+coefficients for our base field.
 
-*/
+For n = -1, the complex (aka Gaussian) rationals result. For n = 5, we get a field that allows us to
+compute Fibonacci numbers via Binet's closed form formula without resorting to inexact floating 
+point arithmetic. For n = 2, we get a field that is often used in algebra textbooks as example for 
+field extensions. ...TBC...  */
 
 template<class T>
 class rsQuadraticField

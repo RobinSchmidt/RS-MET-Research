@@ -10659,6 +10659,10 @@ void testFiniteField()
 // how it should be.
 // ToDo: make it work, then maybe move the instantiation to somewhere else
 
+// For testing to instantiate the template with simpler data types:
+//template RAPT::rsFraction<int> RAPT::rsPow(const rsFraction<int>& base, int exponent);
+//template short RAPT::rsPow(const short& base, int exponent);
+
 void testFieldExtensions()
 {
   // We test the implementation of rsQuadraticField by:
@@ -10709,6 +10713,14 @@ void testFieldExtensions()
   x.set(Rat(1, 2), Rat(1, 2), 5);    // x = phi = 1/2 + (1/2)*sqrt(5)
   y = QF(1, 0, 5) - x;               // y = 1-phi = 1/phi
 
+
+  // TEST - to fgure out what goes wrong with the template instantiation:
+  //z          = RAPT::rsPow(x,         2);  // Nope! Doesn't work. Linker error.  
+  //Rat   test = RAPT::rsPow(Rat(1,2),  2);  // This also doesn't work. This is a simpler case.
+  //short test = RAPT::rsPow((short) 2, 3);  // Dito. Even simpler
+  // OK - 
+
+
   // Compute Fibonacci numbers uning the closed form formula in the quadratic field Q(sqrt(5)):
   for(int n = 0; n <= maxN; n++)
   {
@@ -10735,11 +10747,15 @@ void testFieldExtensions()
   //   get for the intermediate results.
   //
   // - Use rsPow - figure out why the explicit template instantiation doesn't work. Could it have 
-  //   to do with namespaces? Or constness? But all of that looks right. 
+  //   to do with namespaces? Or constness? But all of that looks right. I think, this file here 
+  //   may be too late to try to instantiate a RAPT template because the main .cpp file is not even
+  //   visible to the compiler here? But then - why doesn't the compiler give an error that 
+  //   indicates that it can't instantiate the template? Maybe we should turn rema into a proper 
+  //   juce module
+  //
+  // - Maybe implement a 2D version of the sieve of Erathostenes. But for that to make sense, I
+  //   think, we should adjoin sqrt(n) to the ring of integers rather than the field of rationals.
 }
-
-
-
 
 
 // Some helper function to turn sets into strings and/or print them out

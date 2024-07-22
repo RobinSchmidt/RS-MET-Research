@@ -19,7 +19,7 @@ void generateMatrixData(std::function<T(T x, T y)> f,
       z(i, j) = f(x[i], y[j]);
   // ToDo:
   // -Maybe use rsArrayTools::rangeLinear to make sure that no re-allocations take place in the
-  //  assignemnt of std::vector
+  //  assignment of std::vector
 }
 // Maybe pass output parameter by pointer
 

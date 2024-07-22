@@ -3,11 +3,14 @@
 #include <regex>
 //#include <numeric>           // iota
 
+
+// Preliminary:
 #include "../../../Libraries/C++/Math/Set.h"
+#include "../../../Libraries/C++/Math/FieldExtensions.h"
+
 #include "../../../Libraries/C++/Math/Set.cpp"
+#include "../../../Libraries/C++/Math/FieldExtensions.cpp"
 // ToDo: Organize the way, we include and compile this code more properly!
-
-
 
 
 
@@ -10644,6 +10647,17 @@ void testFiniteField()
   // for T = rsModularInteger. We should do that in the unit tests in the main repo and while we 
   // are at it, we should also make it clenaly compile (without warnings) and work with rsFraction.
 }
+
+
+void testFieldExtensions()
+{
+
+
+
+  int dummy = 0;
+}
+
+
 
 
 

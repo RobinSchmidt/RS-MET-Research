@@ -76,14 +76,14 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testFiniteField();     // stub
+  testFieldExtensions();
 
   //testSet();
   //testRelation();
   //testNeumannNumbers();
   //testNeumannIntegers();
   //testNeumannRationals();
-  testPairingFunctions();
-
+  //testPairingFunctions();
 
   //testGeneralizedCollatz();
   //testPowerCommutator();

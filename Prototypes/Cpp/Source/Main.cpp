@@ -77,7 +77,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimesAndMore();
   //testFiniteField();     // stub
   testFieldExtensions();
-  testRingExtensions();
+  //testRingExtensions();
 
   //testSet();
   //testRelation();

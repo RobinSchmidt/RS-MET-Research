@@ -10657,18 +10657,15 @@ void testFieldExtensions()
 
 
   bool ok = true;
-
-  //Rat n = -1;
-
   QF x, y, z;
 
   // Test with n = -1. We should get the complex rational numbers aka Gaussian rationals:
-  x.set(7, 2, -1);
-  y.set(5, 3, -1);
-  z = x + y; ok &= z.is(12,  5, -1);
-  z = x - y; ok &= z.is( 2, -1, -1);
-  z = x * y; ok &= z.is(29, 31, -1);
-
+  x.set(7, 2, -1);                                      // 7 + 2i
+  y.set(5, 3, -1);                                      // 5 + 3i
+  z = x + y; ok &= z.is(    12,           5,     -1);
+  z = x - y; ok &= z.is(     2,          -1,     -1);
+  z = x * y; ok &= z.is(    29,          31,     -1);   // 29    + 31i
+  z = x / y; ok &= z.is(Rat(41,34), Rat(-11,34), -1);   // 41/34 - 11/34 i
 
 
   int dummy = 0;

@@ -128,8 +128,8 @@ Try to implement more algebraic field extensions as follows:
     a + br + cr^2, we search for a number d + er + fr^2 such that the coeffs for r and r^2 in the
     product (a + br + cr^2)(d + er + fr^2) are both zero. So, we would require:
     (ae + bd + (cf)n) = 0  and  (af + be + cd) = 0. I have no idea, if that is possible, i.e. if 
-    such a number d + er + fr^2 exists. Seems like we would have to solve a nonlinear system of 
-    equations for d,e,f when we have a,b,c given. -> Figure this out!
+    such a number d + er + fr^2 exists. Seems like we would have to solve a system of equations for
+    d,e,f when we have a,b,c given. -> Figure this out!
 
 
 - I think, to adjoin an m-th root of n, i.e. r = sqrt[m]{n}, we need to represent the number as
@@ -154,7 +154,7 @@ Try to implement more algebraic field extensions as follows:
 - What about a less-than relation? Maybe we could say a + b*r < c + d*r  iff  
   (a + b*r) - (c + d*r) < 0. But does that help? I think, it may not make sense to try to define a
   general < relation. After all, for n = -1, we get the complex rationals and ordering complex 
-  numbers in a way that plays nicely with the arithemtic operations isn't possible anyway.
+  numbers in a way that plays nicely with the arithmetic operations isn't possible anyway.
 
 
 - See:

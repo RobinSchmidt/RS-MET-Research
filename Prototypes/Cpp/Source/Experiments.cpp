@@ -10654,7 +10654,7 @@ void testFiniteField()
 //template rema::rsQuadraticField<RAPT::rsFraction<int>> 
 //RAPT::rsPow(const rema::rsQuadraticField<RAPT::rsFraction<int>>& base, int exponent);
 // Hmm - this doesn't seem to work. When trying to use rsPow with the rsQuadraticField, we get an 
-// "unresolved external symbol" linker error anyway - with or without the explicit instatiation 
+// "unresolved external symbol" linker error anyway - with or without the explicit instantiation 
 // here. In the code below, we currently use a workaround to avoid calling rsPow. But that's not 
 // how it should be.
 // ToDo: make it work, then maybe move the instantiation to somewhere else
@@ -10690,7 +10690,7 @@ void testFieldExtensions()
   z = x / y; ok &= z.is(Rat(41,34), Rat(-11,34), -1);   // 41/34 - 11/34 i
 
 
-  // Compute Fibonacci numbers uisng the 3-term recursion relation:
+  // Compute Fibonacci numbers using the 3-term recursion relation:
   int maxN = 20;
   std::vector<int> fib(maxN+1);
   fib[0] = 0;
@@ -10734,6 +10734,22 @@ void testFieldExtensions()
     ok &= z.getSquare() == Rat(5,      1);
   }
 
+
+  // Test it using the square number 4. This should just give back the normal rationals:
+  x.set(7, 2,  4);
+  y.set(5, 3,  4);
+  z = x * y;        // z = (7 + 2*2)*(5 + 3*2) = 59 + 31*r = 59 + 31*2 = 59 + 62 = 121
+  z = x / y;        // z = -1 + 1*2 = 1 
+  // I tried it in Sage with: (7 + 2*2) * (5 + 3*2)   or   (7 + 2*2) / (5 + 3*2). Yes. The results
+  // here match the Sage output.
+  x.set(11, 2,  4);
+  y.set(5,  3,  4);
+  z = x / y; 
+  // (11 + 2*2) / (5 + 3*2) = 15/11. We get -31/11 + 2*23/11 = (-31+46)/11 = 15/11. OK. This also
+  // works. So, it looks like we get a redundant and non-unique representation of the rationals. 
+  // That seems to ba a reasonable behavior.
+
+
   rsAssert(ok);
 
 
@@ -10752,6 +10768,8 @@ void testFieldExtensions()
   //   visible to the compiler here? But then - why doesn't the compiler give an error that 
   //   indicates that it can't instantiate the template? Maybe we should turn rema into a proper 
   //   juce module
+  //
+  // - Check what happens for n = 0, 1, 4, 9 i.e. square numbers. What about e.g. -4?
 }
 
 void testRingExtensions()

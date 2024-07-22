@@ -20,7 +20,7 @@ the field rational numbers. We extend it by "adjoining" r. This process of adjoi
 a field that previously was not present requires us to add a lot more numbers to keep the field 
 closed under the arithmetic operations. It turns out that when we adjoin the square-root r of some
 number n, we can express all members of the field as linear combinations of 1 and r with 
-coefficients for our base field.
+coefficients from our base field.
 
 For n = -1, the complex (aka Gaussian) rationals result. For n = 5, we get a field that allows us to
 compute Fibonacci numbers via Binet's closed form formula without resorting to inexact floating 

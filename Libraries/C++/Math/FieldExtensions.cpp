@@ -29,8 +29,8 @@ Try to implement algebraic field extensions as follows:
   "One second to compute the largest Fibonacci number I can"
   https://www.youtube.com/watch?v=KzT9I1d-LlQ  
 
-- Try if we can also use n = -1 and get the complex numbers. The reciprocation formula looks good.
-  It would evaluate to (a - b*i)/(a^2 + b^2)
+- Try if we can also use n = -1 and get the (rational) complex numbers. The reciprocation formula 
+  looks good. It would evaluate to (a - b*i)/(a^2 + b^2)
 
 - I think, to adjoin an m-th root of n, i.e. r = sqrt[m]{n}, we need to represent the number as
   a0 + a1*r + a2*r^2 + a3*r^3 + ... + a_{m-1} r^{m-1}

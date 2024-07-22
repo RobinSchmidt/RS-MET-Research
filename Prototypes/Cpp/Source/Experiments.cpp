@@ -10649,6 +10649,17 @@ void testFiniteField()
 }
 
 
+// Template instantiation:
+//template rema::rsQuadraticField<RAPT::rsFraction<int>> 
+//RAPT::rsPow(const rema::rsQuadraticField<RAPT::rsFraction<int>>& base, int exponent);
+// Hmm - this doesn't seem to work - we get an "unresovled external symbol" linker error anyway
+// ToDo: move somewhere else
+
+// template bool RAPT::rsLess(const int& left, const int& right);
+//
+// template <class T>
+// T rsPow(const T& base, int exponent);
+
 void testFieldExtensions()
 {
   using Int = int;
@@ -10668,7 +10679,40 @@ void testFieldExtensions()
   z = x / y; ok &= z.is(Rat(41,34), Rat(-11,34), -1);   // 41/34 - 11/34 i
 
 
+  // Preliminary because using rsPow doesn't work:
+  auto power = [](const QF& base, int n)
+  {
+    QF res = rsUnityValue(base);
+    for(int i = 0; i < n; i++)
+      res *= base;
+    return res;
+  };
+
+
+  // The golden ratio  phi = (1 + sqrt(5)) / 2  expressed in Q(sqrt(5)):
+  x.set(Rat(1, 2), Rat(1, 2), 5);    // x = phi = 1/2 + (1/2)*sqrt(5)
+  y = QF(1, 0, 5) - x;               // y = 1-phi = 1/phi
+
+
+  for(int n = 0; n < 20; n++)
+  {
+    //z  = rsPow(x, n) - rsPow(y, n);          // Gives linker error
+    z  = power(x, n) - power(y, n);            // ...preliminary workaround
+    z /= QF(0, 1, 5);                          // Divide by sqrt(5)
+
+    int dummy = 0;
+  }
+
+  
+
+
   int dummy = 0;
+
+  // ToDo: 
+  //
+  // - Test computing Fibonacci numbers using Binet's formula in the field Q(sqrt(5)), see:
+  //   https://en.wikipedia.org/wiki/Fibonacci_sequence#Closed-form_expression
+  //   https://en.wikipedia.org/wiki/Golden_ratio#Relationship_to_Fibonacci_and_Lucas_numbers
 }
 
 

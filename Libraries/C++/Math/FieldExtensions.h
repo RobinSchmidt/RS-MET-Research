@@ -91,5 +91,27 @@ protected:
 };
 
 
+template<class T>
+rsQuadraticField<T> rsZeroValue(rsQuadraticField<T> value)
+{ 
+  return rsQuadraticField<T>(T(0), T(0), value.getSquare()); 
+}
+
+template<class T>
+rsQuadraticField<T> rsUnityValue(rsQuadraticField<T> value)
+{ 
+  return rsQuadraticField<T>(T(1), T(0), value.getSquare()); 
+}
+
+// Implement rsInv
+
+//template<class T> 
+//rsQuadraticField<T> rsConstantValue(T value, rsQuadraticField<T> targetTemplate) 
+//{ 
+//  return rsModularInteger<T>(value, T(0), targetTemplate.n);
+//}
+
+
+
 
 }

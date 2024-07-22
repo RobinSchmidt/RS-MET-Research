@@ -10662,13 +10662,21 @@ void testFiniteField()
 
 void testFieldExtensions()
 {
+  // We test the implementation of rsQuadraticField by:
+  //
+  //   (1) Constructing the field Q(sqrt(-1)) which represents the complex rationals and doing some
+  //       arithmetic in this field and checking the results.
+  //
+  //   (2) Constructing the field Q(sqrt(5)) within which we can use Binet's closed form formula 
+  //       for computing Fibonacci numbers without resorting to floating point arithmetic.
+
   using Int = int;
   using Rat = RAPT::rsFraction<Int>;
   using QF  = rema::rsQuadraticField<Rat>;
 
-
   bool ok = true;
   QF x, y, z;
+
 
   // Test with n = -1. We should get the complex rational numbers aka Gaussian rationals:
   x.set(7, 2, -1);                                      // 7 + 2i
@@ -10679,7 +10687,15 @@ void testFieldExtensions()
   z = x / y; ok &= z.is(Rat(41,34), Rat(-11,34), -1);   // 41/34 - 11/34 i
 
 
-  // Preliminary because using rsPow doesn't work:
+  // Compute Fibonacci numbers uisng the 3-term recursion relation:
+  int maxN = 20;
+  std::vector<int> fib(maxN+1);
+  fib[0] = 0;
+  fib[1] = 1;
+  for(int n = 2; n <= maxN; n++)
+    fib[n] = fib[n-2] + fib[n-1];
+
+  // Preliminary - to be used as workaround because using rsPow doesn't work:
   auto power = [](const QF& base, int n)
   {
     QF res = rsUnityValue(base);
@@ -10688,31 +10704,37 @@ void testFieldExtensions()
     return res;
   };
 
-
   // The golden ratio  phi = (1 + sqrt(5)) / 2  expressed in Q(sqrt(5)):
   x.set(Rat(1, 2), Rat(1, 2), 5);    // x = phi = 1/2 + (1/2)*sqrt(5)
   y = QF(1, 0, 5) - x;               // y = 1-phi = 1/phi
 
 
-  for(int n = 0; n < 20; n++)
+  // Compute Fibonacci numbers uning the closed form formula in the quadratic field Q(sqrt(5)):
+  for(int n = 0; n <= maxN; n++)
   {
     //z  = rsPow(x, n) - rsPow(y, n);          // Gives linker error
     z  = power(x, n) - power(y, n);            // ...preliminary workaround
-    z /= QF(0, 1, 5);                          // Divide by sqrt(5)
+    z /= QF(0, 1, 5);                          // Divide by sqrt(5) = 0 + 1*sqrt(5)
 
-    int dummy = 0;
+    // Compare closed formula result against recursively computed Fibonacci numbers:
+    ok &= z.getCoeffA() == Rat(fib[n], 1);
+    ok &= z.getCoeffB() == Rat(0,      1);
+    ok &= z.getSquare() == Rat(5,      1);
   }
 
-  
+  rsAssert(ok);
 
-
-  int dummy = 0;
 
   // ToDo: 
   //
   // - Test computing Fibonacci numbers using Binet's formula in the field Q(sqrt(5)), see:
   //   https://en.wikipedia.org/wiki/Fibonacci_sequence#Closed-form_expression
   //   https://en.wikipedia.org/wiki/Golden_ratio#Relationship_to_Fibonacci_and_Lucas_numbers
+  //
+  // - Use intermediate variables for x^n and y^n so we can inspect how big the numbers
+  //   get for the intermediate results.
+  //
+  // - Use rsPow - figure out why the explicit template instantiation doesn't work.
 }
 
 

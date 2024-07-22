@@ -10729,6 +10729,9 @@ void testFieldExtensions()
     //z  = RAPT::rsPow(x, n) - RAPT::rsPow(y, n);   // Gives linker error..
     z  = power(x, n) - power(y, n);                 // ..so we use the preliminary workaround
     z /= QF(0, 1, 5);                               // Divide by sqrt(5) = 0 + 1*sqrt(5)
+    // This division just copies the b-coeff into a and zeros b. Maybe dividing by the sqrt(n) is
+    // an operation worth to optimize? Maybe it occurs often in typical computations with quadratic
+    // fields? I don't know, though. I don't have much experience with these kinds of computations.
 
     // Compare closed formula result against recursively computed Fibonacci numbers:
     ok &= z.getCoeffA() == Rat(fib[n], 1);

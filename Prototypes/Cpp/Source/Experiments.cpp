@@ -10659,9 +10659,6 @@ void testFiniteField()
 // how it should be.
 // ToDo: make it work, then maybe move the instantiation to somewhere else
 
-
-
-
 void testFieldExtensions()
 {
   // We test the implementation of rsQuadraticField by:
@@ -10697,7 +10694,7 @@ void testFieldExtensions()
   for(int n = 2; n <= maxN; n++)
     fib[n] = fib[n-2] + fib[n-1];
 
-  // Preliminary - to be used as workaround because using rsPow doesn't work:
+  // Preliminary - computes base^n - to be used as workaround because using rsPow doesn't work:
   auto power = [](const QF& base, int n)
   {
     QF res = rsUnityValue(base);
@@ -10705,7 +10702,8 @@ void testFieldExtensions()
       res *= base;
     return res;
   };
-  // When the instantiation of rsPow works, this can be deleted.
+  // When the instantiation of rsPow works (see above this testFieldExtensions function), this can 
+  // be deleted.
 
   // The golden ratio  phi = (1 + sqrt(5)) / 2  expressed in Q(sqrt(5)):
   x.set(Rat(1, 2), Rat(1, 2), 5);    // x = phi = 1/2 + (1/2)*sqrt(5)
@@ -10737,7 +10735,7 @@ void testFieldExtensions()
   //   get for the intermediate results.
   //
   // - Use rsPow - figure out why the explicit template instantiation doesn't work. Could it have 
-  //   to do with namespaces?
+  //   to do with namespaces? Or constness? But all of that looks right. 
 }
 
 

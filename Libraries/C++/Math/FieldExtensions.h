@@ -22,9 +22,12 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Lifetime */
 
-  /** Default constructor. Leaves value and square uninitialized. */
+  /** Default constructor. Leaves coeffs and square uninitialized. */
   rsQuadraticField() {}
 
+
+  rsQuadraticField(const T& coeffA, const T& coeffB, const T& square)
+  { a = coeffA; b = coeffB; n = square; }
 
 
   //-----------------------------------------------------------------------------------------------
@@ -32,6 +35,32 @@ public:
 
 
   void set(T newCoeffA, T newCoeffB, T newSquare) { a = newCoeffA; b = newCoeffB; n = newSquare; }
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators */
+
+  rsQuadraticField& operator=(const rsQuadraticField& rhs)
+  { a = rhs.a; b = rhs.b; n = rhs.n; return *this; }
+
+
+  rsQuadraticField operator-() const;
+
+  bool operator==(const rsQuadraticField& other) const;
+  bool operator!=(const rsQuadraticField& other) const;
+
+
+  /*
+  rsQuadraticField operator+(const rsQuadraticField& other) const;
+  rsQuadraticField operator-(const rsQuadraticField& other) const;
+  rsQuadraticField operator*(const rsQuadraticField& other) const;
+  rsQuadraticField operator/(const rsQuadraticField& other) const;
+
+  rsQuadraticField& operator+=(const rsQuadraticField& other);
+  rsQuadraticField& operator-=(const rsQuadraticField& other);
+  rsQuadraticField& operator*=(const rsQuadraticField& other);
+  rsQuadraticField& operator/=(const rsQuadraticField& other);
+  */
 
 
 

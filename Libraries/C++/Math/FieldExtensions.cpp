@@ -1,4 +1,32 @@
 
+namespace rema
+{
+
+
+
+template<class T>
+rsQuadraticField<T> rsQuadraticField<T>::operator-() const
+{
+  return rsQuadraticField<T>(-a, -b, n);
+}
+
+template<class T>
+bool rsQuadraticField<T>::operator==(const rsQuadraticField<T>& y) const
+{
+  return a == y.a && b == y.b && n == y.n;
+}
+
+template<class T>
+bool rsQuadraticField<T>::operator!=(const rsQuadraticField<T>& other) const
+{
+  return !(*this == other);
+}
+
+
+
+
+}
+
 
 /*=================================================================================================
 

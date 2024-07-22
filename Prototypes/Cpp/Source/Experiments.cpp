@@ -10651,6 +10651,17 @@ void testFiniteField()
 
 void testFieldExtensions()
 {
+  using Int = int;
+  using Rat = RAPT::rsFraction<Int>;
+  using QF  = rema::rsQuadraticField<Rat>;
+
+
+  Rat n = 2;
+
+  QF x, y, z;
+
+  x.set(7, 2, n);
+  y.set(5, 3, n);
 
 
 

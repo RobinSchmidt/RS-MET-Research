@@ -64,5 +64,6 @@ Can we also implement transcendental field extensions? How about Q-adjoin-pi?
   https://en.wikipedia.org/wiki/Quadratic_integer
   https://en.wikipedia.org/wiki/Algebraic_number_field
   https://mathworld.wolfram.com/QuadraticSurd.html
+  https://en.wikipedia.org/wiki/Binary_quadratic_form
 
 */

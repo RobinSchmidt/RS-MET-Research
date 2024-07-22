@@ -10656,12 +10656,18 @@ void testFieldExtensions()
   using QF  = rema::rsQuadraticField<Rat>;
 
 
-  Rat n = 2;
+  bool ok = true;
+
+  //Rat n = -1;
 
   QF x, y, z;
 
-  x.set(7, 2, n);
-  y.set(5, 3, n);
+  // Test with n = -1. We should get the complex rational numbers aka Gaussian rationals:
+  x.set(7, 2, -1);
+  y.set(5, 3, -1);
+  z = x + y; ok &= z.is(12,  5, -1);
+  z = x - y; ok &= z.is( 2, -1, -1);
+  z = x * y; ok &= z.is(29, 31, -1);
 
 
 

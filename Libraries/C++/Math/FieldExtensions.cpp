@@ -1,7 +1,6 @@
 namespace rema
 {
 
-
 // Operators:
 
 template<class T>
@@ -36,7 +35,6 @@ rsQuadraticField<T> rsQuadraticField<T>::operator-(const rsQuadraticField<T>& y)
   return rsQuadraticField<T>(a - y.a, b - y.b, n);
 }
 
-
 template<class T>
 rsQuadraticField<T> rsQuadraticField<T>::operator*(const rsQuadraticField<T>& y) const
 {
@@ -48,9 +46,44 @@ rsQuadraticField<T> rsQuadraticField<T>::operator*(const rsQuadraticField<T>& y)
   //   (a + b*r) * (c + d*r)                               expand
   // = a*c + a*d*r + b*c*r + b*d*r^2                       use: r^2 = n
   // = (a*c + b*d*n) + (a*d + b*c)*r                       final form
+  //
+  // ToDo: Check order or operations such that it may potentially also work correctly with a type T
+  // whose multiplication is not commutative - maybe even with non-commutative addition
 }
-// ToDo: Check order or operations such that it may potentially also work correctly with a type T
-// whose multiplication is not commutative - maybe even with non-commutative addition
+
+template<class T>
+rsQuadraticField<T> rsQuadraticField<T>::operator/(const rsQuadraticField<T>& y) const
+{
+  return *this * y.getReciprocal();  // ToDo: Maybe implement division more directly
+}
+
+template<class T>
+rsQuadraticField<T>& rsQuadraticField<T>::operator+=(const rsQuadraticField<T>& y)
+{
+  *this = *this + y;
+  return *this;
+}
+
+template<class T>
+rsQuadraticField<T>& rsQuadraticField<T>::operator-=(const rsQuadraticField<T>& y)
+{
+  *this = *this - y;
+  return *this;
+}
+
+template<class T>
+rsQuadraticField<T>& rsQuadraticField<T>::operator*=(const rsQuadraticField<T>& y)
+{
+  *this = *this * y;
+  return *this;
+}
+
+template<class T>
+rsQuadraticField<T>& rsQuadraticField<T>::operator/=(const rsQuadraticField<T>& y)
+{
+  *this = *this / y;
+  return *this;
+}
 
 // Inquiry
 
@@ -135,8 +168,13 @@ Can we also implement transcendental field extensions? How about Q-adjoin-pi?
   https://en.wikipedia.org/wiki/Quadratic_field
   https://en.wikipedia.org/wiki/Quadratic_irrational_number
   https://en.wikipedia.org/wiki/Quadratic_integer
-  https://en.wikipedia.org/wiki/Algebraic_number_field
   https://mathworld.wolfram.com/QuadraticSurd.html
+
   https://en.wikipedia.org/wiki/Binary_quadratic_form
+  https://en.wikipedia.org/wiki/Discriminant#Fundamental_discriminants
+  https://en.wikipedia.org/wiki/Gaussian_rational
+
+
+  https://en.wikipedia.org/wiki/Algebraic_number_field
 
 */

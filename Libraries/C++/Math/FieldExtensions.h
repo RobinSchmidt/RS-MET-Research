@@ -48,11 +48,15 @@ public:
 
   T getSquare() const { return n; }
 
+  bool is(const T& coeffA, const T& coeffB, const T& square) const
+  { return a == coeffA && b == coeffB && n == square; }
+
   rsQuadraticField<T> getReciprocal() const;
 
 
-
-
+  // Maybe implement:
+  // T getDiscriminant() const;
+  // https://en.wikipedia.org/wiki/Quadratic_field#Discriminant
 
 
   //-----------------------------------------------------------------------------------------------
@@ -61,24 +65,21 @@ public:
   rsQuadraticField& operator=(const rsQuadraticField& rhs)
   { a = rhs.a; b = rhs.b; n = rhs.n; return *this; }
 
-
-  rsQuadraticField operator-() const;
-
   bool operator==(const rsQuadraticField& other) const;
   bool operator!=(const rsQuadraticField& other) const;
+
+  rsQuadraticField operator-() const;
 
   rsQuadraticField operator+(const rsQuadraticField& other) const;
   rsQuadraticField operator-(const rsQuadraticField& other) const;
   rsQuadraticField operator*(const rsQuadraticField& other) const;
-  //rsQuadraticField operator/(const rsQuadraticField& other) const;
+  rsQuadraticField operator/(const rsQuadraticField& other) const;
 
-
-  /*
   rsQuadraticField& operator+=(const rsQuadraticField& other);
   rsQuadraticField& operator-=(const rsQuadraticField& other);
   rsQuadraticField& operator*=(const rsQuadraticField& other);
   rsQuadraticField& operator/=(const rsQuadraticField& other);
-  */
+ 
 
 
 

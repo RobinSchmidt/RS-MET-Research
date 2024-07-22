@@ -26,8 +26,8 @@ Try to implement algebraic field extensions as follows:
 
 - This can be used to adjoin the sqrt(5) and then use Binnet's formula to compute Fibonacci numbers
   via efficient exponentiation in our new field. See:
-  https://www.youtube.com/watch?v=KzT9I1d-LlQ  
   "One second to compute the largest Fibonacci number I can"
+  https://www.youtube.com/watch?v=KzT9I1d-LlQ  
 
 - Try if we can also use n = -1 and get the complex numbers. The reciprocation formula looks good.
   It would evaluate to (a - b*i)/(a^2 + b^2)
@@ -54,5 +54,15 @@ Can we also implement transcendental field extensions? How about Q-adjoin-pi?
 
 
 
+- See:
+  "Complex Quadratic Integers and Primes"
+  https://www.youtube.com/watch?v=eYdKx1lLagA
+
+
+  https://en.wikipedia.org/wiki/Quadratic_field
+  https://en.wikipedia.org/wiki/Quadratic_irrational_number
+  https://en.wikipedia.org/wiki/Quadratic_integer
+  https://en.wikipedia.org/wiki/Algebraic_number_field
+  https://mathworld.wolfram.com/QuadraticSurd.html
 
 */

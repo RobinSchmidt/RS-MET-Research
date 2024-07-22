@@ -10667,8 +10667,8 @@ void testFieldExtensions()
 {
   // We test the implementation of rsQuadraticField by:
   //
-  //   (1) Constructing the field Q(sqrt(-1)) which represents the complex rationals and doing some
-  //       arithmetic in this field and checking the results.
+  //   (1) Constructing the field Q(sqrt(-1)), i.e. "Q-adjoin-sqrt(-1)", which represents the 
+  //       complex rationals. Then we do some arithmetic in this field and check the results.
   //
   //   (2) Constructing the field Q(sqrt(5)) within which we can use Binet's closed form formula 
   //       for computing Fibonacci numbers without resorting to floating point arithmetic.

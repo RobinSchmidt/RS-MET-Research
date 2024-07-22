@@ -112,6 +112,9 @@ rsQuadraticField<T> rsQuadraticField<T>::getReciprocal() const
 
 Try to implement more algebraic field extensions as follows:
 
+- Maybe generalize to quadratic fields that do not simply adjoin the square-root of some number but
+  the solution of a0 + a1*x + a2*x^2 = 0. But this (more complicated) implemtation should go into
+  its own class.
 
 - For an extension by a cube-root of some number n, we would have r = cbrt(n) and, I think, our 
   numbers would have to be of the general form: a + b*r + c*r^2

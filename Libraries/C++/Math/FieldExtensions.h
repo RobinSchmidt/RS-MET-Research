@@ -50,19 +50,6 @@ public:
 
   rsQuadraticField<T> getReciprocal() const;
 
-  /*
-  rsQuadraticField<T> getReciprocal()
-  {
-    T d = a*a - n*b*b;
-    return rsQuadraticField(a/d, -b/d, n);
-  }
-  */
-  //   1 / (a + b*r) 
-  // = (a - b*r) / ((a+b*r)(a-b*r)) 
-  // = (a - b*r) / (a^2 - n*b^2)
-  // = a/d + (-b/d)*r   where   d = a^2 - n*b^2
-
-
 
 
 
@@ -82,7 +69,7 @@ public:
 
   rsQuadraticField operator+(const rsQuadraticField& other) const;
   rsQuadraticField operator-(const rsQuadraticField& other) const;
-  //rsQuadraticField operator*(const rsQuadraticField& other) const;
+  rsQuadraticField operator*(const rsQuadraticField& other) const;
   //rsQuadraticField operator/(const rsQuadraticField& other) const;
 
 

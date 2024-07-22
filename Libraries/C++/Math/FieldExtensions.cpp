@@ -37,12 +37,27 @@ rsQuadraticField<T> rsQuadraticField<T>::operator-(const rsQuadraticField<T>& y)
 }
 
 
+template<class T>
+rsQuadraticField<T> rsQuadraticField<T>::operator*(const rsQuadraticField<T>& y) const
+{
+  rsAssert(n == y.n);
+  T c = y.a;
+  T d = y.b;
+  return rsQuadraticField<T>(a*c + b*d*n, a*d + b*c, n);
+
+  //   (a + b*r) * (c + d*r)                               expand
+  // = a*c + a*d*r + b*c*r + b*d*r^2                       use: r^2 = n
+  // = (a*c + b*d*n) + (a*d + b*c)*r                       final form
+}
+// ToDo: Check order or operations such that it may potentially also work correctly with a type T
+// whose multiplication is not commutative - maybe even with non-commutative addition
+
 // Inquiry
 
 template<class T>
 rsQuadraticField<T> rsQuadraticField<T>::getReciprocal() const
 {
-  T d = a*a - n*b*b;
+  T d = a*a - b*b*n;
   return rsQuadraticField(a/d, -b/d, n);
 
   //   1 / (a + b*r)                                       multiply through by conjugate

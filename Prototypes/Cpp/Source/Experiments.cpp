@@ -10756,65 +10756,49 @@ void testFieldExtensions()
 
 void testRingExtensions()
 {
+  // This is still very wrong. The goal is to reproduce something like this:
+  //   https://thegraycuber.github.io/quadratic.html
+  //   https://www.youtube.com/watch?v=eYdKx1lLagA
+  // But the sieve code is still just a stub. I didn't really try to get it right yet
+  //
   // Similar to testFieldExtensions but here, the base structure is just the ring of integers, not 
   // the field of fractions. ...TBC...
 
   using Int = int;
   using QR  = rema::rsQuadraticField<Int>;
-  //using Mat = RAPT::rsMatrix<QR>;
 
   bool ok = true;
 
+  int n =  3;           // The square of the number that we adjoin to Z
+  int N = 20;           // Maximum for the matrix entries
 
 
-  int n = -1;
 
-  int N = 10;
-
-  // Sieve out primes:
+  // Sieve out primes - this code is still nonsense:
 
   // Init:
   RAPT::rsMatrix<float> isPrime(N, N);
   isPrime.setAllValues(1.f);
 
   // Helper function:
-  auto markMultiplesOf = [&](const QR& x)
-  {
-    for(int i = 0; i < N; i++)
-    {
-      for(int j = 0; j < N; j++)
-      {
+  auto markMultiplesOf = [&](const QR& x) {
+    for(int i = 1; i < N; i++) {
+      for(int j = 1; j < N; j++) {
         QR y(i, j, n);               // 2nd factor
         QR  z = x * y;               // Product
         int a = z.getCoeffA();
         int b = z.getCoeffB();
-
         if(a >= 0 && b >= 0 && a < N && b < N)
-          isPrime(a, b) = 0.f;
-      }
-    }
-  };
+          isPrime(a, b) = 0.f;  }}};
 
-  // Mark all multiples as non-prime
-  for(int i = 0; i < N; i++)
-  {
-    for(int j = 0; j < N; j++)
-    {
+  // Mark all multiples of some other number as non-prime:
+  for(int i = 1; i < N; i++) {
+    for(int j = 1; j < N; j++) {
       QR x(i, j, n);
-      markMultiplesOf(x);
-    }
-  }
+      markMultiplesOf(x);   }}
 
-
-  plotMatrix(isPrime);
-
-  //Mat p(N, N);        // Matrix of quadratic integers
-
-  //QR x, y, z;
-
-
-
-  QR t(5,3, 2);
+  plotMatrix(isPrime); // Looks completely wrong. The sieve clearly doesn't work yet.
+  // Maybe it's because we do not yte take into account the associates?
 
   rsAssert(ok);
 

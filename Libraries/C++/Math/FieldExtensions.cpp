@@ -112,6 +112,26 @@ rsQuadraticField<T> rsQuadraticField<T>::getReciprocal() const
 
 Try to implement more algebraic field extensions as follows:
 
+
+- For an extension by a cube-root of some number n, we would have r = cbrt(n) and, I think, our 
+  numbers would have to be of the general form: a + b*r + c*r^2
+
+  - Multiplication would be (from now on, I suppress the * for multiplication):
+      (a + br + cr^2)(d + er + fr^2)
+    = ad + aer + afr^2 + brd + brer + brfr^2 + cr^2d + cr^2er + cr^2fr^2
+    = (ad)  +  (ae + bd)r  +  (af + be + cd)r^2  + (bf + ce)r^3 + (cf)r^4   use r^3 = n, r^4 = n*r
+    = (ad + (bf+ce)n)  +  (ae + bd + (cf)n)r  +  (af + be + cd)r^2
+    Verify these!
+
+  - For reciprocation and division, I think, we would have to search for some sort of "conjugate" 
+    by which we can multiply numerator and denominator. If our denominator is given by
+    a + br + cr^2, we search for a number d + er + fr^2 such that the coeffs for r and r^2 in the
+    product (a + br + cr^2)(d + er + fr^2) are both zero. So, we would require:
+    (ae + bd + (cf)n) = 0  and  (af + be + cd) = 0. I have no idea, if that is possible, i.e. if 
+    such a number d + er + fr^2 exists. Seems like we would have to solve a nonlinear system of 
+    equations for d,e,f when we have a,b,c given. -> Figure this out!
+
+
 - I think, to adjoin an m-th root of n, i.e. r = sqrt[m]{n}, we need to represent the number as
   a0 + a1*r + a2*r^2 + a3*r^3 + ... + a_{m-1} r^{m-1}
 
@@ -122,25 +142,13 @@ Try to implement more algebraic field extensions as follows:
   n
 
 
-- For an extension by a cube-root of some number n, we would have r = cbrt(n) and, I think, our 
-  numbers would have to be of the general form: a + b*r + c*r^2
-
-  - Multiplication would be (from now on, I suppress the * for multiplication):
-     (a + br + cr^2)(d + er + fr^2)
-   = ad + aer + afr^2 + brd + brer + brfr^2 + cr^2d + cr^2er + cr^2fr^2
-   = (ad)  +  (ae + bd)r  +  (af + be + cd)r^2  + (bf + ce)r^3 + (cf)r^4   use r^3 = n, r^4 = n*r
-   = (ad + (bf+ce)n)  +  (ae + bd + (cf)n)r  +  (af + be + cd)r^2
-
-
-
-Can we also implement transcendental field extensions? How about Q-adjoin-pi?
-
-- Maybe in a multiplication, we would not use circular convolution but regular convolution such 
-  that the polynomials would get longer in each multiplication or division. But no - I think, that 
-  doesn't work for division - multiplying by the conjugate would not lead to the nice cancellation 
-  that we get when r is the square root of something. That lack of cancellation may actually 
-  already pose a problem for division in the m-th root of n case. But maybe we can multiply through 
-  by a specifically defined conjugate 
+- Can we also implement transcendental field extensions? How about Q-adjoin-pi? Maybe in a 
+  multiplication, we would not use circular convolution but regular convolution such that the 
+  polynomials would get longer in each multiplication or division. But no - I think, that doesn't 
+  work for division - multiplying by the conjugate would not lead to the nice cancellation that we 
+  get when r is the square root of something. That lack of cancellation may actually already pose a 
+  problem for division in the m-th root of n case. But maybe we can multiply through by a 
+  specifically defined conjugate 
 
 
 

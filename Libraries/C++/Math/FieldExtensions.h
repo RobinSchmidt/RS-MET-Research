@@ -37,6 +37,37 @@ public:
   void set(T newCoeffA, T newCoeffB, T newSquare) { a = newCoeffA; b = newCoeffB; n = newSquare; }
 
 
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Inquiry
+
+
+  T getCoeffA() const { return a; }
+
+  T getCoeffB() const { return b; }
+
+  T getSquare() const { return n; }
+
+  rsQuadraticField<T> getReciprocal() const;
+
+  /*
+  rsQuadraticField<T> getReciprocal()
+  {
+    T d = a*a - n*b*b;
+    return rsQuadraticField(a/d, -b/d, n);
+  }
+  */
+  //   1 / (a + b*r) 
+  // = (a - b*r) / ((a+b*r)(a-b*r)) 
+  // = (a - b*r) / (a^2 - n*b^2)
+  // = a/d + (-b/d)*r   where   d = a^2 - n*b^2
+
+
+
+
+
+
+
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */
 
@@ -49,13 +80,13 @@ public:
   bool operator==(const rsQuadraticField& other) const;
   bool operator!=(const rsQuadraticField& other) const;
 
-
-  /*
   rsQuadraticField operator+(const rsQuadraticField& other) const;
   rsQuadraticField operator-(const rsQuadraticField& other) const;
-  rsQuadraticField operator*(const rsQuadraticField& other) const;
-  rsQuadraticField operator/(const rsQuadraticField& other) const;
+  //rsQuadraticField operator*(const rsQuadraticField& other) const;
+  //rsQuadraticField operator/(const rsQuadraticField& other) const;
 
+
+  /*
   rsQuadraticField& operator+=(const rsQuadraticField& other);
   rsQuadraticField& operator-=(const rsQuadraticField& other);
   rsQuadraticField& operator*=(const rsQuadraticField& other);

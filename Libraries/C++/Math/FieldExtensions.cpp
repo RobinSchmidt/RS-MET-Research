@@ -1,8 +1,8 @@
-
 namespace rema
 {
 
 
+// Operators:
 
 template<class T>
 rsQuadraticField<T> rsQuadraticField<T>::operator-() const
@@ -17,9 +17,39 @@ bool rsQuadraticField<T>::operator==(const rsQuadraticField<T>& y) const
 }
 
 template<class T>
-bool rsQuadraticField<T>::operator!=(const rsQuadraticField<T>& other) const
+bool rsQuadraticField<T>::operator!=(const rsQuadraticField<T>& y) const
 {
-  return !(*this == other);
+  return !(*this == y);
+}
+
+template<class T>
+rsQuadraticField<T> rsQuadraticField<T>::operator+(const rsQuadraticField<T>& y) const
+{
+  rsAssert(n == y.n);
+  return rsQuadraticField<T>(a + y.a, b + y.b, n);
+}
+
+template<class T>
+rsQuadraticField<T> rsQuadraticField<T>::operator-(const rsQuadraticField<T>& y) const
+{
+  rsAssert(n == y.n);
+  return rsQuadraticField<T>(a - y.a, b - y.b, n);
+}
+
+
+// Inquiry
+
+template<class T>
+rsQuadraticField<T> rsQuadraticField<T>::getReciprocal() const
+{
+  T d = a*a - n*b*b;
+  return rsQuadraticField(a/d, -b/d, n);
+
+  //   1 / (a + b*r)                                       multiply through by conjugate
+  // = (a - b*r) / ((a+b*r)*(a-b*r))                       expand denominator
+  // = (a - b*r) / ((a^2 - a*b*r + a*b*r - b^2*r^2)        use: r^2 = n, cancel +-
+  // = (a - b*r) / (a^2 - n*b^2)                           let: d = a^2 - n*b^2
+  // = a/d + (-b/d)*r                                      final form
 }
 
 

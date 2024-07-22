@@ -175,7 +175,7 @@ Try to implement more algebraic field extensions as follows:
   https://en.wikipedia.org/wiki/Discriminant#Fundamental_discriminants
   https://en.wikipedia.org/wiki/Gaussian_rational
 
-
   https://en.wikipedia.org/wiki/Algebraic_number_field
+  https://en.wikipedia.org/wiki/Cyclotomic_field
 
 */

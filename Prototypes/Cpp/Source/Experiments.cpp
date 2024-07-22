@@ -10752,9 +10752,33 @@ void testFieldExtensions()
   //   visible to the compiler here? But then - why doesn't the compiler give an error that 
   //   indicates that it can't instantiate the template? Maybe we should turn rema into a proper 
   //   juce module
+}
+
+void testRingExtensions()
+{
+  // Similar to testFieldExtensions but here, the base structure is just the ring of integers, not 
+  // the field of fractions. ...TBC...
+
+  using Int = int;
+  using QR  = rema::rsQuadraticField<Int>;
+
+  bool ok = true;
+  //QR x, y, z;
+
+
+
+  QR t(5,3, 2);
+
+  rsAssert(ok);
+
+
+  // ToDo: 
   //
   // - Maybe implement a 2D version of the sieve of Erathostenes. But for that to make sense, I
   //   think, we should adjoin sqrt(n) to the ring of integers rather than the field of rationals.
+  //
+  // - See: 
+  //   "Complex Quadratic Integers and Primes"  https://www.youtube.com/watch?v=eYdKx1lLagA
 }
 
 

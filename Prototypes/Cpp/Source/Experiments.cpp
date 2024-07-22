@@ -10649,16 +10649,15 @@ void testFiniteField()
 }
 
 
+
 // Template instantiation:
 //template rema::rsQuadraticField<RAPT::rsFraction<int>> 
 //RAPT::rsPow(const rema::rsQuadraticField<RAPT::rsFraction<int>>& base, int exponent);
-// Hmm - this doesn't seem to work - we get an "unresovled external symbol" linker error anyway
-// ToDo: move somewhere else
-
-// template bool RAPT::rsLess(const int& left, const int& right);
-//
-// template <class T>
-// T rsPow(const T& base, int exponent);
+// Hmm - this doesn't seem to work. When trying to use rsPow with the rsQuadraticField, we get an 
+// "unresolved external symbol" linker error anyway - with or without the explicit instatiation 
+// here. In the code below, we currently use a workaround to avoid calling rsPow. But that's not 
+// how it should be.
+// ToDo: make it work, then maybe move the instantiation to somewhere else
 
 void testFieldExtensions()
 {
@@ -10703,18 +10702,18 @@ void testFieldExtensions()
       res *= base;
     return res;
   };
+  // When the instantiation of rsPow works, this can be deleted.
 
   // The golden ratio  phi = (1 + sqrt(5)) / 2  expressed in Q(sqrt(5)):
   x.set(Rat(1, 2), Rat(1, 2), 5);    // x = phi = 1/2 + (1/2)*sqrt(5)
   y = QF(1, 0, 5) - x;               // y = 1-phi = 1/phi
 
-
   // Compute Fibonacci numbers uning the closed form formula in the quadratic field Q(sqrt(5)):
   for(int n = 0; n <= maxN; n++)
   {
-    //z  = rsPow(x, n) - rsPow(y, n);          // Gives linker error
-    z  = power(x, n) - power(y, n);            // ...preliminary workaround
-    z /= QF(0, 1, 5);                          // Divide by sqrt(5) = 0 + 1*sqrt(5)
+    //z  = RAPT::rsPow(x, n) - RAPT::rsPow(y, n);   // Gives linker error..
+    z  = power(x, n) - power(y, n);                 // ..so we use the preliminary workaround
+    z /= QF(0, 1, 5);                               // Divide by sqrt(5) = 0 + 1*sqrt(5)
 
     // Compare closed formula result against recursively computed Fibonacci numbers:
     ok &= z.getCoeffA() == Rat(fib[n], 1);
@@ -10734,7 +10733,8 @@ void testFieldExtensions()
   // - Use intermediate variables for x^n and y^n so we can inspect how big the numbers
   //   get for the intermediate results.
   //
-  // - Use rsPow - figure out why the explicit template instantiation doesn't work.
+  // - Use rsPow - figure out why the explicit template instantiation doesn't work. Could it have 
+  //   to do with namespaces?
 }
 
 

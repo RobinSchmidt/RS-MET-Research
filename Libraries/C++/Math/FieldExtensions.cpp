@@ -151,6 +151,11 @@ Try to implement more algebraic field extensions as follows:
   specifically defined conjugate 
 
 
+- What about a less-than relation? Maybe we could say a + b*r < c + d*r  iff  
+  (a + b*r) - (c + d*r) < 0. But does that help? I think, it may not make sense to try to define a
+  general < relation. After all, for n = -1, we get the complex rationals and ordering complex 
+  numbers in a way that plays nicely with the arithemtic operations isn't possible anyway.
+
 
 - See:
 

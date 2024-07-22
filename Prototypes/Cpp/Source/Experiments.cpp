@@ -10716,11 +10716,14 @@ void testFieldExtensions()
   double dx = x;
   double dy = y;
 
-  // TEST - to fgure out what goes wrong with the template instantiation:
-  //z          = RAPT::rsPow(x,         2);  // Nope! Doesn't work. Linker error.  
+
+  // TEST - to figure out what goes wrong with the template instantiations:
+  //z          = RAPT::rsPow(x,         2);  // Nope! Doesn't work. Linker error.
   //Rat   test = RAPT::rsPow(Rat(1,2),  2);  // This also doesn't work. This is a simpler case.
   //short test = RAPT::rsPow((short) 2, 3);  // Dito. Even simpler
-  // OK - 
+  // OK - none of these work - so it's not specifically related to rsQuadraticField. The explicit 
+  // instantiations are immediately above this function but they may be commented out. It doesn't 
+  // make a difference, though. It doesn't work either way.
 
 
   // Compute Fibonacci numbers uning the closed form formula in the quadratic field Q(sqrt(5)):
@@ -10729,9 +10732,10 @@ void testFieldExtensions()
     //z  = RAPT::rsPow(x, n) - RAPT::rsPow(y, n);   // Gives linker error..
     z  = power(x, n) - power(y, n);                 // ..so we use the preliminary workaround
     z /= QF(0, 1, 5);                               // Divide by sqrt(5) = 0 + 1*sqrt(5)
-    // This division just copies the b-coeff into a and zeros b. Maybe dividing by the sqrt(n) is
-    // an operation worth to optimize? Maybe it occurs often in typical computations with quadratic
-    // fields? I don't know, though. I don't have much experience with these kinds of computations.
+    // This division just copies the b-coeff into a and sets b to zero. Or maybe it's a swap in 
+    // general - a is zero. Maybe dividing by the sqrt(n) is an operation worth to optimize? Maybe
+    // it occurs often in typical computations with quadratic fields? I don't know, though. I 
+    // don't have much experience with these kinds of computations.
 
     // Compare closed formula result against recursively computed Fibonacci numbers:
     ok &= z.getCoeffA() == Rat(fib[n], 1);

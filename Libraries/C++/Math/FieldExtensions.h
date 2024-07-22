@@ -68,6 +68,10 @@ public:
 
   rsQuadraticField<T> getReciprocal() const;
 
+  double toDouble() const { return double(a) + double(b) * sqrt(double(n)); }
+
+  operator double() const { return toDouble(); }
+
 
   // Maybe implement:
   // T getDiscriminant() const;

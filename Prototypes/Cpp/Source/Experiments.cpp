@@ -10711,8 +10711,10 @@ void testFieldExtensions()
 
   // The golden ratio  phi = (1 + sqrt(5)) / 2  expressed in Q(sqrt(5)):
   x.set(Rat(1, 2), Rat(1, 2), 5);    // x = phi = 1/2 + (1/2)*sqrt(5)
-  y = QF(1, 0, 5) - x;               // y = 1-phi = 1/phi
+  y = QF(1, 0, 5) - x;               // y = 1-phi = -1/phi   ...verify!
 
+  double dx = x;
+  double dy = y;
 
   // TEST - to fgure out what goes wrong with the template instantiation:
   //z          = RAPT::rsPow(x,         2);  // Nope! Doesn't work. Linker error.  

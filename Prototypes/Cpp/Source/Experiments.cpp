@@ -10691,7 +10691,7 @@ void testFieldExtensions()
 
 
   // Compute Fibonacci numbers using the 3-term recursion relation:
-  int maxN = 40;
+  int maxN = 41;                     // Above 41, we get overflow errors
   std::vector<int> fib(maxN+1);
   fib[0] = 0;
   fib[1] = 1;

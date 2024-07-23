@@ -109,6 +109,8 @@ ACRS, pg 17 ff
   https://en.wikipedia.org/wiki/Resultant
 
 
+ABoAA
+-pg 261: if s/t is a root of a(x) in Z[x] the s|a_0 and t|a_n, i.e. a_0 divides s and a_n divides t
 
 https://en.wikipedia.org/wiki/Resultant
 https://en.wikipedia.org/wiki/Elimination_theory
@@ -163,6 +165,39 @@ https://en.wikipedia.org/wiki/Bring_radical
 How to Get to Galois Theory Naturally
 https://www.youtube.com/watch?v=lkvkUT3Qdw4 
 -Every polynomial has a symmetry group
--The structure of this group determines, if the polynomila is solvable by radicals
+-The structure of this group determines, if the polynomial is solvable by radicals
+
+For Galois theory we need groups, rings and fields 
+Notation:
+
+F              field of coefficients (ex: real numbers R)
+F[x]           ring of polynomials over F
+p(x)           element of F[x], polynomial in x with coeffs from F, ex: p(x) = x^2 + 1
+r1,r2,...      roots of a polynomial p
+F(c1,c2,..)    F with the roots of p adjoined: root-field/splitting field of p(x) over F
+               ex: complex numbers C. (ABoAA pg 313)
+F[x] / p(x)    Quotient ring of F[x] wrt p(x) ??? see below      
+Gal(K:F)       Galois group of K over F where: F: field of coeffs, K: root-field of p(x), p(x):
+               a given polynomial (suppressed in the notation - must be clear from context). It's 
+               the group of all automorphisms of K which fix F. (ABoAA pg 325)
+
+ex 1:
+F = Q, p(x) = x^2 - 2, r1 = sqrt(2), r2 = -sqrt(2), K = Q(sqrt(2))
+Gal(K:F) = ...
+
+ex 2:
+F = R, p(x) = x^2 + 1, r1 = i, r2 = -1, K = R(sqrt(-1)) = C
+Gal(K:F) = identity + complex cojugation? 
+
+
+Note to F[x] / p(x): Normally, we build quotient sets wrt to an equivalence relation - how is a
+polynomial an quivalence relation? Maybe it defines one by saying: all polynomials that have the 
+same roots as p are equivalent to p? Nah - that just filters out a subset of R[x]. I think, it's
+about the remainders from polynomail division: all polynomials if F[x] that have the same remainder
+after dividing out p(x) go into one equivalence class - or something
+
+
+https://math.stackexchange.com/questions/395028/how-to-deal-with-polynomial-quotient-rings
+https://sites.millersville.edu/bikenaga/abstract-algebra-1/quotient-rings-of-polynomial-rings/quotient-rings-of-polynomial-rings.html
 
 \end{comment}

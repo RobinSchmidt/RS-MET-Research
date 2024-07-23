@@ -92,6 +92,19 @@ In an algebraically closed field, we can solve any polynomial equation. In fact,
 
 % https://en.wikipedia.org/wiki/Algebraic_closure
 
+
+\paragraph{Basic theorem of Field Extensions}
+Let $\mathbb{F}$ be a field and $p = p(x)$ be a nonconstant polynomial in $\mathbb{F}[x]$. Then there exists an extension field $\mathbb{E} \supseteq \mathbb{F}$ and an element $r \in \mathbb{E}$ such that $r$ is a root of of $p$, i.e. $p(r) = 0$.
+% ABoAA pg 275
+
+\medskip
+As an immediate consequence, by recursively reducing $p(x)$ by dividing out the linear factors of the form $x-r$ from $p$, it follows that there exists a (possibly even larger) extension field that contains all the $n$ roots of $p$ where $n$ is the degree of $p$. [VERIFY!]
+% ABoAA pg 276
+
+\medskip
+This sounds a lot like the fundamental theorem of algebra which is, in fact, a special case where  $\mathbb{E} = \mathbb{F} = \mathbb{C}$. The complex numbers have the nice property of being algebraically closed such that we do not need to extend the field in order to find our roots. [VERIFY]
+
+
 \paragraph{Transcendental Extension of $\mathbb{Q}$}
 If we adjoin one or more transcendental numbers, i.e. numbers like the semicircle constant $\pi$ or Euler's number $\e$, to our base field $\mathbb{Q}$, we obtain what is called a transcendental extension. ...TBC...
 

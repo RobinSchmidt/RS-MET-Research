@@ -10786,7 +10786,7 @@ void testRingExtensions()
   // This is still very wrong. The goal is to reproduce something like this:
   //   https://thegraycuber.github.io/quadratic.html
   //   https://www.youtube.com/watch?v=eYdKx1lLagA
-  // But the sieve code is still just a stub. I didn't really try to get it right yet
+  // But the sieve code is still just a stub. I didn't really try to get it right yet.
   //
   // Similar to testFieldExtensions but here, the base structure is just the ring of integers, not 
   // the field of fractions. ...TBC...
@@ -10801,7 +10801,8 @@ void testRingExtensions()
 
 
 
-  // Sieve out primes - this code is still nonsense:
+  // Sieve out primes - this code is still nonsense - see ToDo-list for how to (maybe) do it 
+  // properly:
 
   // Init:
   RAPT::rsMatrix<float> isPrime(N, N);
@@ -10824,16 +10825,21 @@ void testRingExtensions()
       QR x(i, j, n);
       markMultiplesOf(x);   }}
 
-  plotMatrix(isPrime); // Looks completely wrong. The sieve clearly doesn't work yet.
-  // Maybe it's because we do not yte take into account the associates?
+  plotMatrix(isPrime); 
+  // This looks completely wrong. The sieve clearly doesn't work yet. But even if if the code would 
+  // work, it would be inefficient in the current form.
 
   rsAssert(ok);
 
 
   // ToDo: 
   //
-  // - Maybe implement a 2D version of the sieve of Erathostenes. But for that to make sense, I
-  //   think, we should adjoin sqrt(n) to the ring of integers rather than the field of rationals.
+  // - For implementing the sieve, maybe use a pairing function to map from a 1D array of indices 
+  //   to the 2D number. I think, the Szudzki function might be a good choice because it works its 
+  //   way nicely from the inside out. Then, the sieve algo could have more or less the same 
+  //   structure as the normal 1D version. But we need to take care of sieving out multiples of 
+  //   associates, too. For each 1D index n and each 1D index m, we get numbers (a,b) and (c,d) and
+  //   must mark all products of all associates of (a,b) and (c,d) as non-prime.
   //
   // - See: 
   //   "Complex Quadratic Integers and Primes"  https://www.youtube.com/watch?v=eYdKx1lLagA

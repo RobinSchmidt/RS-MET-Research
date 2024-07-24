@@ -73,6 +73,9 @@ A polynomial $a(x)$ is said to be reducible over a given field $\mathbb{F}$ if t
 
 % -Factorization
 
+\paragraph{Factorization Theorem}
+Every polynomial can be written as a constant times a product of monic irreducible polynomials. As formula: $P(x) = k p_1(x) p_2(x) \ldots p_3(x)$.  ...TBC...
+
 \paragraph{Euclid's Lemma for Polynomials}
 Let $p$ be irreducible. If $p|ab$ then $p|a$ or $p|b$. Here $p,a,b$ are all polynomials, i.e. $p = p(x), \ldots$.
 
@@ -90,6 +93,18 @@ Let $a(x) = a_0 + a_1 x + \ldots + a_n x^n$ be a polynomial with integer coeffic
 % a prime number $p$ which divides every coeff of a(x) exept the leading coeff a_n. Suppose p does 
 % not divide a_n and p^2 does not divide a_0. Then a(x) is irreducible over Q
 
+
+%===================================================================================================
+\subsection{Galois Theory}
+Galois theory is a sort of culmination point of abstract algebra where all the important algebraic structures that we have seen so far - groups, rings, fields, vector spaces - will be used. We will talk about \emph{rings} of polynomials whose coefficients come from a given \emph{field}. We will talk about field extensions and regard them as \emph{vector spaces} over their base field. We will talk about permutation \emph{groups} that operate on elements of these vector spaces by permuting the components of the vectors. ...TBC...VERIFY
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{The Abel-Ruffini Theorem} 
+
+% https://en.wikipedia.org/wiki/Abel%E2%80%93Ruffini_theorem
+% https://de.wikipedia.org/wiki/Satz_von_Abel-Ruffini
 
 %===================================================================================================
 \subsection{Multivariate Polynomials}
@@ -208,16 +223,18 @@ https://www.youtube.com/watch?v=lkvkUT3Qdw4
 For Galois theory we need groups, rings and fields 
 Notation:
 
-F              field of coefficients (ex: real numbers R)
-F[x]           ring of polynomials over F
+F              FIELD of coefficients (ex: real numbers R)
+F[x]           RING of polynomials over F
 p(x)           element of F[x], polynomial in x with coeffs from F, ex: p(x) = x^2 + 1
 r1,r2,...      roots of a polynomial p
 F(c1,c2,..)    F with the roots of p adjoined: root-field/splitting field of p(x) over F
-               ex: complex numbers C. (ABoAA pg 313)
+               ex: complex numbers C. (ABoAA pg 313). It is a VECTOR SPACE over F
 F[x] / p(x)    Quotient ring of F[x] wrt p(x) ??? see below      
-Gal(K:F)       Galois group of K over F where: F: field of coeffs, K: root-field of p(x), p(x):
+Gal(K:F)       Galois GROUP of K over F where: F: field of coeffs, K: root-field of p(x), p(x):
                a given polynomial (suppressed in the notation - must be clear from context). It's 
                the group of all automorphisms of K which fix F. (ABoAA pg 325)
+[K:F] = n      "the degree of the field extension K over F is n"
+
 
 ex 1:
 F = Q, p(x) = x^2 - 2, r1 = sqrt(2), r2 = -sqrt(2), K = Q(sqrt(2))
@@ -232,6 +249,8 @@ polynomial an quivalence relation? Maybe it defines one by saying: all polynomia
 same roots as p are equivalent to p? Nah - that just filters out a subset of R[x]. I think, it's
 about the remainders from polynomail division: all polynomials if F[x] that have the same remainder
 after dividing out p(x) go into one equivalence class - or something
+
+Note to Gal(K:F): I think the Galois group is a group of permutations of the root 
 
 ABoAA: the important stuff starts at pg 270
 274:  F(c) ~= F[x] / <p(x)>. F-adjoin-c is isomorphic to the quotient ring of polynomials over F

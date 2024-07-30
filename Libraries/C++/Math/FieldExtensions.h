@@ -25,7 +25,15 @@ coefficients from our base field.
 For n = -1, the complex (aka Gaussian) rationals result. For n = 5, we get a field that allows us to
 compute Fibonacci numbers via Binet's closed form formula without resorting to inexact floating 
 point arithmetic. For n = 2, we get a field that is often used in algebra textbooks as example for 
-field extensions. ...TBC...  */
+field extensions. 
+
+References:
+
+  (1)  A Book of Abstract Algebra  (Charles C. Pinter)
+
+
+
+...TBC...  */
 
 template<class T>
 class rsQuadraticField
@@ -77,6 +85,11 @@ public:
   // T getDiscriminant() const;
   // https://en.wikipedia.org/wiki/Quadratic_field#Discriminant
 
+
+
+  T getNorm() const { return a*a - b*b*D; }
+
+  // see https://www.youtube.com/watch?v=0AyqablLD-A  at 1:18
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */

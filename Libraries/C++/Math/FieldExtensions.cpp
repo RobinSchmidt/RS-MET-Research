@@ -116,6 +116,13 @@ Try to implement more algebraic field extensions as follows:
   the solution of a0 + a1*x + a2*x^2 = 0. But this (more complicated) implemtation should go into
   its own class.
 
+- Implement a class where we can adjoin more than one square-root. I think, if we add r = sqrt(n)
+  and s = sqrt(m), the numbers are represented as a + b*r + c*s + d*r*s. In general, to adjoin
+  multiple square roots, we need coeffs for all possible paiwise products. See (1), pg 297. Or 
+  wait - no - it's even worse - we need coeffs for all possible products, it seems. Figure out!
+  See also pg 325 - there's the case for adjoining sqrt(2) and sqrt(3) to Q. It has coeffs for
+  1, sqrt(2), sqrt(3) and sqrt(6)
+
 - For an extension by a cube-root of some number n, we would have r = cbrt(n) and, I think, our 
   numbers would have to be of the general form: a + b*r + c*r^2
 
@@ -144,6 +151,18 @@ Try to implement more algebraic field extensions as follows:
   multiplied by n. So, the wrapped around part does not *just* wrap around but is also weighted by 
   n
 
+- I think, in full generality, if have a polynomial p(x) of degreee n given with roots r1,r2,..,rn
+  then we must adjoin all the roots r1,.. to Q to get the splitting field. Sometimes, the roots are
+  associated with one another such that we may get away with adjoining less than n numbers. For 
+  example p(x) = x^2 - 2 has +-sqrt(2) as roots. We don't need to adjoin -sqrt(2) separately in 
+  this case, +sqrt(2) is enough.. Hmm...on page 312, (1) says that any finite extension 
+  F(r1,r2,...) to a field or characteristic 0 is equal to a simple extension F(r) of that field.
+  That seems unbelevievable! On pg 313, the book presents a proof for why F(a,b) is equal to F(c)
+  for some c. Adjoining two elements a and b can be replaced by adjoining just one element c and we
+  get the same field. For example, adjoining a = sqrt(2) and b = sqrt(3) can be replaced by 
+  adjoining c = a + b. In general, the number c to be adjoined is given by a + t*b for some t that 
+  must satisfy certain constraints. In this case, choosing t = 1 was good enough. See (1), pg 313.
+  I do not yet fully understand why that should work. Figure out!
 
 - Can we also implement transcendental field extensions? How about Q-adjoin-pi? Maybe in a 
   multiplication, we would not use circular convolution but regular convolution such that the 

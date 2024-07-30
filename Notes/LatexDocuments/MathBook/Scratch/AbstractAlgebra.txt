@@ -1,0 +1,52 @@
+https://www.youtube.com/watch?v=jtRsX-OTfrI
+
+Show that Q(sqrt(2) + sqrt(3)) = Q(sqrt(2), sqrt(3)). That means, adjoining the single element
+sqrt(2) + sqrt(3) to the rationals is the same as adjoining the two elements sqrt(2) and sqrt(3) to
+it. Let:
+
+  p = sqrt(2)
+  q = sqrt(3)
+  s = p + q    
+
+Consider:
+
+  r =  1 / s = 1 / (p+q) =  1 / (sqrt(2) + sqrt(3)) 
+    =  (sqrt(2) - sqrt(3)) / ( (sqrt(2) + sqrt(3) * (sqrt(2) - sqrt(3)) )
+    =  (sqrt(2) - sqrt(3)) / ( 2 - 3 )
+    =  sqrt(3) - sqrt(2)
+
+This number r is in Q(s) by closure of fields under reciprocation. Now consider
+
+  s + r = (sqrt(2) + sqrt(3))  +  (sqrt(3) - sqrt(2))  = 2 * sqrt(3)
+  s - r = (sqrt(2) + sqrt(3))  -  (sqrt(3) - sqrt(2))  = 2 * sqrt(2)
+
+These are also in Q(s) by closure of fields under addition and subtraction. By dividing them by 2, 
+we get sqrt(2) and sqrt(3) which must also be in Q(s) by closure under division. Thus, we have 
+produced both sqrt(2) and sqrt(3) by doing only closed field operations with memebrs of Q and our 
+new element s.
+
+Interpretation: By forming certain nonlinear(!) combinations of members from Q and the adjoined sum
+of irrational numbers s = sqrt(2) + sqrt(3), we can produce sqrt(2) and sqrt(3)
+
+Q: In the simplcifcation of the expression for r, we multiplied numerator and denominator by the
+   number (sqrt(2) - sqrt(3)) which is, a priori, not known to be member of Q(s). Whyy is Is this 
+   allowed? I mean, in effect, we have multiplied the whole expression by 1 - but still - can we 
+   just assume the existence of a fraction x/x where x is not neceassarily in our field?
+
+Q: What about general p = sqrt(m), q = sqrt(n)? Or just general p,q?
+
+
+Let's make it more general: show that  Q(sqrt(m) + sqrt(n)) = Q(sqrt(m), sqrt(n)). Define:
+
+  p = sqrt(m)
+  q = sqrt(n)
+  s = p + q  
+
+We need to show that we can produce the numbers p and q via (nonlinear) combinations of members from
+Q(s). Consider:
+
+  r = 1 / s = 1 / (p + q)
+
+It is, by closure of fields under reciprocation, a member of Q(s). 
+
+

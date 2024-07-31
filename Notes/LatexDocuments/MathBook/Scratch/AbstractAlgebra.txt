@@ -42,7 +42,30 @@ Q: How does a general element of Q(s) look like? Can it be expressed as a + b*s?
    to a ring to form, for example, Z[x], we do *not* only get elements of the form a + b*x. We 
    already get all polynomials in x with coeffs from Z. So, I guess, that's where my thinking goes 
    wrong. Maybe try forming a product (a + b*s) and (c + d*s) and see what comes out. It probably 
-   won't be of the same form.
+   won't be of the same form. Maybe also try a quotient.
+
+OK - let's try it:
+
+    (a + b*s) * (c + d*s)
+  = ac + ads + bsc + bdss = ac + (ad+bc)s + bdss
+
+OK - we get  ac + (ad+bc)s  terms which are of the same from as the inputs. But the s^2 is, in 
+general something else. s^2 = (p+q)^2 = p^2 + 2pq + q^2 = sqrt(2)^2 + 2*sqrt(2)*sqrt(3) + sqrt(3)^2
+= 2 + 2*sqrt(6) + 3.
+
+ToDo:
+
+- Show different bases for Q(p,q) and how the basis vectors of one can be expressed in terms of the 
+  others. One basis is (1,p,q,pq) = (1,sqrt(2),sqrt(3),sqrt(6)). Obtain one basis by first adjoining
+  sqrt(2) then sqrt(3). Obtain another by doing the adjoinments the other way around - maybe it will
+  be same? that is: Do Q(p)(q), then do Q(q)(p). Maybe the resulting will be 
+  (1,sqrt(2),sqrt(3),sqrt(6)) in both cases? Then create a basis for Q(s). To create a basis, 
+  consider the product of two elements of the form (a + bq). Maybe try it numerically with class
+  rsQuadraticField by nesting it.
+
+
+
+
 
 Q: What about general p = sqrt(m), q = sqrt(n)? Or just general p,q?
 

@@ -22,16 +22,27 @@ This number r is in Q(s) by closure of fields under reciprocation. Now consider
 
 These are also in Q(s) by closure of fields under addition and subtraction. By dividing them by 2, 
 we get sqrt(2) and sqrt(3) which must also be in Q(s) by closure under division. Thus, we have 
-produced both sqrt(2) and sqrt(3) by doing only closed field operations with memebrs of Q and our 
+produced both sqrt(2) and sqrt(3) by doing only closed field operations with members of Q and our 
 new element s.
 
 Interpretation: By forming certain nonlinear(!) combinations of members from Q and the adjoined sum
 of irrational numbers s = sqrt(2) + sqrt(3), we can produce sqrt(2) and sqrt(3)
 
 Q: In the simplcifcation of the expression for r, we multiplied numerator and denominator by the
-   number (sqrt(2) - sqrt(3)) which is, a priori, not known to be member of Q(s). Whyy is Is this 
-   allowed? I mean, in effect, we have multiplied the whole expression by 1 - but still - can we 
-   just assume the existence of a fraction x/x where x is not neceassarily in our field?
+   number (sqrt(2) - sqrt(3)) which is, a priori, not known to be member of Q(s). Why is Is this 
+   allowed? I mean, in effect, we have multiplied the whole expression by 1. But still - can we 
+   just assume the existence of a fraction x/x where x is not necessarily in our field?
+
+Q: How does a general element of Q(s) look like? Can it be expressed as a + b*s? Then it would be a
+   2D vector space over Q. But an element of Q(p,q) looks like a + b*p + c*q + d*p*q and is 
+   therefore a 4D vector space over Q. How can these two facts be reconciled? How can a 2D and 4D 
+   vector space be (represent?) the same field?
+   
+   But maybe a general element of Q(s) cannot be expressed as a + b*s. When we adjoin a new element
+   to a ring to form, for example, Z[x], we do *not* only get elements of the form a + b*x. We 
+   already get all polynomials in x with coeffs from Z. So, I guess, that's where my thinking goes 
+   wrong. Maybe try forming a product (a + b*s) and (c + d*s) and see what comes out. It probably 
+   won't be of the same form.
 
 Q: What about general p = sqrt(m), q = sqrt(n)? Or just general p,q?
 
@@ -46,6 +57,8 @@ We need to show that we can produce the numbers p and q via (nonlinear) combinat
 Q(s). Consider:
 
   r = 1 / s = 1 / (p + q)
+
+...tbc...
 
 It is, by closure of fields under reciprocation, a member of Q(s). 
 

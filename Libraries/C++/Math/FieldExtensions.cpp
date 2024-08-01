@@ -164,6 +164,10 @@ Try to implement more algebraic field extensions as follows:
   must satisfy certain constraints. In this case, choosing t = 1 was good enough. See (1), pg 313.
   I do not yet fully understand why that should work. Figure out!
 
+- Maybe we also need to allow for complex elements to be adjoined? Consider this example:
+  https://www.youtube.com/watch?v=QBX89S6FLMo  It adjoins a complex root w = cbrt(1). I think, it's
+  a principle root of 1
+
 - Can we also implement transcendental field extensions? How about Q-adjoin-pi? Maybe in a 
   multiplication, we would not use circular convolution but regular convolution such that the 
   polynomials would get longer in each multiplication or division. But no - I think, that doesn't 
@@ -186,6 +190,10 @@ Try to implement more algebraic field extensions as follows:
 
   "Complex Quadratic Integers and Primes"
   https://www.youtube.com/watch?v=eYdKx1lLagA
+
+  "Find a Splitting Field of x^3-1 over Q"
+  https://www.youtube.com/watch?v=QBX89S6FLMo
+
 
 
   https://en.wikipedia.org/wiki/Quadratic_field

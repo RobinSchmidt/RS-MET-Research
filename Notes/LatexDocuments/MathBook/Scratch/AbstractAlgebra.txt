@@ -38,6 +38,19 @@ Q: In the simplification of the expression for r, we multiplied numerator and de
    allowed? I mean, in effect, we have multiplied the whole expression by 1. But still - can we 
    just assume the existence of a fraction x/x where x is not necessarily in our field?
 
+Q: What does Q(x) look like for some symbolic variable x? When adjoining x to a ring, like in 
+   forming the polynomial ring Z[x], we get all polynomials in x with coeffs from Z. A basis for 
+   this ring would be x^n for n in N. I guess, Q(x) would be the field of all rational functions in 
+   x with a basis x^n with n in Z? Would that work out? Or maybe the basis would be more 
+   complicated? Does it even make sense to talk about a basis? Are we dealing with a vector space?
+   Q(sqrt(2)) is a 2D vector space over Q - but Q(x) for a symbolic variable x? Is it an infinite
+   dimensional vector space? But I think, some rational function like 1/p(x) with a polynomial p(x)
+   that is irreducible over Q cannot be expressed  sum_{n=-inf}^{inf} a_n x^n  with a_n in Q. Maybe
+   we need to invoke a partial fraction expansion of 1/p(x). Maybe we could use {1,x,x^2,x^2,...}
+   to get all the polynomials and then add the reciprocals of all irreducible polynomials and their
+   powers? ...seems complicated...figure out!
+
+
 Q: How does a general element of Q(s) look like? Can it be expressed as a + b*s? Then it would be a
    2D vector space over Q. But an element of Q(p,q) looks like a + b*p + c*q + d*p*q and is 
    therefore a 4D vector space over Q. How can these two facts be reconciled? How can a 2D and 4D 
@@ -90,4 +103,9 @@ Q(s). Consider:
 
 It is, by closure of fields under reciprocation, a member of Q(s). 
 
+====================================================================================================
+https://www.youtube.com/watch?v=QBX89S6FLMo
 
+-Splitting fields are not unique - but isomorphic...soo - unique up to isomorphism, I guess.
+-We can always factor a difference of two cubes as follows:
+ (a^3 - b^3) = (a-b) * (a^2 + a*b + b^2)

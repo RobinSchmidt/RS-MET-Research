@@ -51,9 +51,15 @@ Any mathematical structure that satisfies these requirements is a structure in w
 
 
 \subsubsection{Fields of Fractions}
-Given an integral domain $R$ (i.e. a commutative unital ring without zero divisors), we can construct a field from it in a way that generalizes the construction of the rational numbers from the ring of integers. It works as follows: Take all pairs $(a,b) \in R^2$ with $b \neq 0$ and identify two pairs $(a,b)$ and $(c,d)$ if they should represent the same fraction. That is, we say $(a,b) = (c,d)$ iff $a d = b c$. Let $F$ be the set of the resulting equivalence classes and let $[a,b]$ denote the equivalence class of $(a,b)$. On the set of these equivalence classes, we define addition as $[a,b] + [c,d] = [a d + bc, bd]$ and multiplication as  $[a,b] \cdot [c,d] = [ac, bd]$. As neutral elements, we use $0_F = [0_R, 1_R]$ and $1_F = [1_R, 1_R]$ where the subscript $F$ means that this is an element of our new, to be constructed field $F$ and the subscript $R$ means that it is an element from our original ring that we started with. The so constructed structure $F$ is indeed a field and it is called the \emph{field of fractions} aka the \emph{field of quotients} of $R$. If $R = \mathbb{Z}$, then we will arrive at the rational numbers $F = \mathbb{Q}$. This is the smallest field containing the integers and, in fact, even the smallest field containing the naturals. Of course, the construction is more general in that it can be applied to any integral domain $R$. I think, the so constructed field $F$ is the always smallest possible field containing the original ring $R$ in the sense that every other field containing $R$ is a strict superset of the field of fractions [VERIFY!]. 
+Given an integral domain $R$ (i.e. a commutative unital ring without zero divisors), we can construct a field from it in a way that generalizes the construction of the rational numbers from the ring of integers. It works as follows: Take all pairs $(a,b) \in R^2$ with $b \neq 0$ and identify two pairs $(a,b)$ and $(c,d)$ if they should represent the same fraction. That is, we say $(a,b) = (c,d)$ iff $a d = b c$. Let $F$ be the set of the resulting equivalence classes and let $[a,b]$ denote the equivalence class of $(a,b)$. On the set of these equivalence classes, we define addition as $[a,b] + [c,d] = [a d + bc, bd]$ and multiplication as  $[a,b] \cdot [c,d] = [ac, bd]$. As neutral elements, we use $0_F = [0_R, 1_R]$ and $1_F = [1_R, 1_R]$ where the subscript $F$ means that this is an element of our new, to be constructed field $F$ and the subscript $R$ means that it is an element from our original ring that we started with. The so constructed structure $F$ is indeed a field and it is called the \emph{field of fractions} aka the \emph{field of quotients} of $R$. If $R = \mathbb{Z}$, then we will arrive at the rational numbers $F = \mathbb{Q}$. This is the smallest field containing the integers and, in fact, even the smallest field containing the naturals. Of course, the construction is more general in that it can be applied to any integral domain $R$. I think, the so constructed field $F$ is the always smallest possible field containing the original ring $R$ in the sense that every other field containing $R$ is a strict superset of the field of fractions [VERIFY!].
 
-% see ACRS, pg 34
+TODO: explain how we find an isomorphic copy of our original ring $R$ in $F$ using as isomorphism the function $f: R \rightarrow F$ with $f(a) = [a,1_R]$. Explain how we produce additive and multiplicative inverses by using $-[a,b] = [-a, b]$ and $[a,b]^{-1} = [b,a]$ respectively.
+
+% Q: Can we use a similar construction to construct a ring from a monoid - like how the integers can
+% be constructed from the naturals? See the construction of Z in the section on aximoatic set theory
+% https://de.wikipedia.org/wiki/Monoid
+
+% see ACRS pg 34, ABoAA pg 203
 % https://en.wikipedia.org/wiki/Field_of_fractions
 
 % Q is the smallest field containing N
@@ -267,7 +273,10 @@ https://en.wikipedia.org/wiki/Rational_function
 
 https://en.wikipedia.org/wiki/Valuation_(algebra)
 	
-	
+ABoAA:
+pg 202: 
+-in any integral domain of characteristic p: (a+b)^p = a^p + b^p
+-every finite integral domain is a field.
 
 	
 	

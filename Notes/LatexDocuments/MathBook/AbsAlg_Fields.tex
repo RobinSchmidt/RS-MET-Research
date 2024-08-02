@@ -49,7 +49,7 @@ Any mathematical structure that satisfies these requirements is a structure in w
 %===================================================================================================
 \subsection{Construction of Fields}
 
-
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Fields of Fractions}
 Given an integral domain $R$ (i.e. a commutative unital ring without zero divisors), we can construct a field from it in a way that generalizes the construction of the rational numbers from the ring of integers. It works as follows: Take all pairs $(a,b) \in R^2$ with $b \neq 0$ and identify two pairs $(a,b)$ and $(c,d)$ if they should represent the same fraction. That is, we say $(a,b) = (c,d)$ iff $a d = b c$. Let $F$ be the set of the resulting equivalence classes and let $[a,b]$ denote the equivalence class of $(a,b)$. On the set of these equivalence classes, we define addition as $[a,b] + [c,d] = [a d + bc, bd]$ and multiplication as  $[a,b] \cdot [c,d] = [ac, bd]$. As neutral elements, we use $0_F = [0_R, 1_R]$ and $1_F = [1_R, 1_R]$ where the subscript $F$ means that this is an element of our new, to be constructed field $F$ and the subscript $R$ means that it is an element from our original ring that we started with. The additive and multiplicative inverses in $F$ are given by $-[a,b] = [-a, b]$ and $[a,b]^{-1} = [b,a]$ respectively. We find an isomorphic copy of our original ring $R$ within our newly constructed field $F$ by using the function $f: R \rightarrow F$ with $f(a) = [a,1_R]$ as isomorphism. The so constructed structure $F$ is indeed a field and it is called the \emph{field of fractions} aka the \emph{field of quotients} of $R$. If $R = \mathbb{Z}$, then we will arrive at the rational numbers $F = \mathbb{Q}$. This is the smallest field containing the integers and, in fact, even the smallest field containing the naturals. Of course, the construction is more general in that it can be applied to any integral domain $R$. I think, the so constructed field $F$ is the always smallest possible field containing the original ring $R$ in the sense that every other field containing $R$ is a strict superset of the field of fractions [VERIFY!]. Question: Can we use a similar construction to construct a ring from a monoid? Like how the integers were constructed from the naturals in the chapter on axiomatic set theory? Figure out! If yes, explain how in the ring theory section - if not, explain why not.
 
@@ -62,6 +62,27 @@ Given an integral domain $R$ (i.e. a commutative unital ring without zero diviso
 
 % how to make a field
 % https://www.youtube.com/watch?v=YSdidFMwn14
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Finite Fields}
+A \emph{finite field} is a field that has only finitely many elements. It turns out that the ring $\mathbb{Z}_m$ of integers modulo $m$ is, in fact, not just a ring but a field whenever the modulus $m$ is a prime number. That means that for any $a \in \mathbb{Z}_m$, we will find some number $b \in \mathbb{Z}_m$ such that $a b = 1$. When we consider $\mathbb{Z}_m$ with a composite number $m$, we will find that multiplicative inverses exist only for those elements of $\mathbb{Z}_m$ which are coprime with $m$ [VERIFY!]. When the number of elements $n$ of a finite set is not a prime but a power of some prime $p$ such that $n = p^k$ for some natural number $k > 1$, then modular arithmetic will not lead to a finite field either - but it is still possible to construct a finite field of size $n$. However, in this field, the operations of addition and multiplication are not just simply modular addition and multiplication. The implementation of these operations is more complicated in this cases [VERIFY it for addition - maybe only the multiplication differs?]. These two types finite fields are the only finite fields that exist and for each size $n$ the finite field of size $n$ is unique (up to isomorphism). These finite fields are also called \emph{Galois fields} and the Galois field of size $n$ is denoted as $GF(n)$. ...TBC...
+
+TODO: Give $GF(4)$ as example - with multiplication table. Maybe also $GF(8), GF(9)$. Explain construction of the multiplication operation or at least give a reference that shows how this can be done.
+
+
+
+% Two Simple Finite Field Examples: Z_2 and Galois Field GF(2^2) = GF(4)
+% https://www.youtube.com/watch?v=IBtghmj1yx8
+
+% https://en.wikipedia.org/wiki/Modular_arithmetic#Integers_modulo_m
+
+%modular integers 
+
+% For each prime 
+
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Subfields and Extension Fields}

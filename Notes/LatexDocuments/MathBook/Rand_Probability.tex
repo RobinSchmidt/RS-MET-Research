@@ -22,8 +22,21 @@ A  $P: \mathcal{F} \rightarrow [0,1]$, called the \emph{probability function}, t
 The intention of the definitions is best understood by an example. Consider the random experiment of rolling a die. The set of possible outcomes is $\Omega = \{1,2,3,4,5,6\}$. An event $A \in \mathcal{F}$ could be "the die lands on 3" represented by the singleton set $A = \{3\}$ which is a subset of $\Omega$. It could also be "the die lands on a number less than 5" represented by $B = \{1,2,3,4\}$ or "the die lands on an even number" represented by $C = \{2,4,6\}$. Assuming a fair die, the probability function $P$ would assign the following probabilities to $A,B,C$: $P(A) = \frac{1}{6}$, $P(B) = \frac{4}{6} = \frac{2}{3}$ and  $P(C) = \frac{3}{6} = \frac{1}{2}$.
 
 \medskip
-In general, ...TBC...
+In general, there are couple of conditions that $\Omega, \mathcal{F}, P$ need to satisfy. The sample space  $\Omega$ must partition the set outcomes of our experiment into mutually exclusive outcomes that, taken together, cover all possible outcomes. 
 
+%The event space $\mathcal{F}$ cannot just be any random collection of subsets of $\Omega$. Instead, it must be a $\sigma$-algebra. The probability function $P$ must be measure on \mathcal{F}. TBC...explain (again) what these terms mean. Maybe there are additional required properties such as $P(\Omega) = 1$, etc.
+%In general, the set of all possible outcomes
+
+
+% outcome = atomic event = elementary event
+
+% Give examples
+% (1) toss a coin: omega = {0,1}, P(0) = P(1) = 1/2
+% (2) roll a die: omega = {1,2,3,4,5,6}, P(n) = 1/6 for all n in 1,..,6
+% (3) toss a coin until heads appears: Omega = N+, P(n) = 1/2^n
+%     -> counatbly infinite sample space
+% (4) pick random number in [0,1], Omega = [0,1], P(A) = \mu(A) where A is a subset of Omega
+%     -> continuous sample space
 
 %(1)  The "random experiment" in this context could be, for example, something tossing a coin or rolling a die. In the former case, we would have $\Omega = \{heads, tails\}$ and in the latter case $\Omega = \{1,2,3,4,5,6\}$. 
 

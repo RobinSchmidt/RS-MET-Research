@@ -62,15 +62,51 @@ In general, ...TBC...
 % define the term "observation"
 
 
-
+% https://en.wikipedia.org/wiki/Event_(probability_theory)
+% https://en.wikipedia.org/wiki/Elementary_event
 
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Conditional Probabilities}
+%\subsubsection{Conditional Probabilities}
+\subsubsection{Computing with Probabilities}
+% find better name - maybe something about "complex probailities", combining propbabilites
 
-% Conditional probability, Bayes theorem
+
+\paragraph{Conditional Probability}
+A conditional probability is a probability of some event $A$ to occur when we already know that some other event $B$ definitely does occur. For example, if we already know that the die rolled an even number, the probability that it rolled the number $4$ is now $\frac{1}{3}$ and not $\frac{1}{6}$ anymore as it would be if we wouldn't have the information about the evenness. Conditional probabilities are denoted as $P(A|B)$ which we may read as "the probability of $A$ under the condition of $B$" or shorter "the probability of $A$ given $B$".
+
+...TBC...
+
+% P(A|B) = P(A \cap B) / P(B)
+
+% P(A) = 1/6, P(B) = 1/2, P(A|B) = 1/3
+
+% https://en.wikipedia.org/wiki/Conditional_probability
 
 
+% Conditional probability, joint probability, marginal probability,  Bayes theorem
 
+\paragraph{Joint Probability}
+
+% P(A \cap B) is also denoted as $P(A,B)$
+
+% https://en.wikipedia.org/wiki/Joint_probability_distribution
+% https://statisticsbyjim.com/probability/joint-probability/
+% https://byjus.com/maths/joint-probability/
+% https://www.sciencedirect.com/topics/engineering/joint-probability
+
+\paragraph{Bayes Theorem}
+%From $P(A \cap B) = P(A) P(B|A)$,  $P(B \cap A) = P(B) P(A|B)$ and $P(A \cap B) = P(B \cap A)$, it immediately follows that:
+From $P(A, B) = P(A) P(B|A)$,  $P(B, A) = P(B) P(A|B)$ and $P(A, B) = P(B, A)$, it immediately follows that:
+\begin{equation}
+\label{Eq:BayesTheorem}
+ P(A|B) = \frac{P(B|A) P(A)}{P(B)}
+\end{equation}
+You just need to plug in the right hand sides of equalities 1 and 2 into equality 3 and then solve for $ P(A|B)$. This result is known as Bayes theorem and is one of the important results in probability theory. In order to memorize it, I'd recommend to just memorize the 3 obvious equalities above from which it immediately follows. They are actually only two equalities - the second is exactly the same as first just with reversed roles of $A$ and $B$. Bayes theorem has a lot of uses....TBC...explain some use cases, give examples
+
+%https://en.wikipedia.org/wiki/Bayes%27_theorem
+
+
+% https://en.wikipedia.org/wiki/Law_of_total_probability
 
 %===================================================================================================
 \subsection{Probability Distributions}
@@ -79,9 +115,40 @@ In general, ...TBC...
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Discrete Distributions}
 
+\paragraph{Uniform Distribution}
+
+\paragraph{Triangular Distribution}
+
+\paragraph{Convolution} TODO: explain how adding two independent random variables corresponds to the convolution of their distributions, the triangular distribution arising from summing tow uniform distributions is an example, mention the Irwin-Hall distribution
+
+%\paragraph{Irwin-Hall Distribution}
+
+
+\paragraph{Binomial Distribution}
+
+\paragraph{Poisson Distribution}
+% https://en.wikipedia.org/wiki/Poisson_distribution
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Continuous Distributions}
+% akak provbaility density function pdf
+
+\paragraph{Irwin-Hall Distributions} TODO: uniform, triangular, piecewsie parabolic, etc., B-splines
+
+\paragraph{Gaussian Distribution}
+
+\paragraph{Exponential Distribution}
+
+\paragraph{Cauchy Distribution}
+
+\paragraph{Student t-Distribution}
+
+
+\paragraph{The Central Limit Theorem}
+One of the important theorems in probability theory is the \emph{central limit theorem}. It states that when we add more and more independent random variables, the distribution of the sum will, under mild conditions, always approach a Gaussian distribution. That's a justification for why in statistical models, the random variables that occur within it, are often assumed to follow a Gaussian distribution. Assuming a Gaussian distribution also happens to be convenient in curve fitting because it means that a maximum likelihood fit simplifies to a least-squares fit [VERIFY!] ...TBC...
+
+% it's also convenient because it implies that a least-squares fit to some data is a maximum likelihood fit
 
 
 

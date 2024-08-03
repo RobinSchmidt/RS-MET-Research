@@ -71,10 +71,24 @@ In general, ...TBC...
 % find better name - maybe something about "complex probailities", combining propbabilites
 
 
-\paragraph{Conditional Probability}
-A conditional probability is a probability of some event $A$ to occur when we already know that some other event $B$ definitely does occur. For example, if we already know that the die rolled an even number, the probability that it rolled the number $4$ is now $\frac{1}{3}$ and not $\frac{1}{6}$ anymore as it would be if we wouldn't have the information about the evenness. Conditional probabilities are denoted as $P(A|B)$ which we may read as "the probability of $A$ under the condition of $B$" or shorter "the probability of $A$ given $B$".
+\paragraph{Joint Probability}
+A \emph{joint probability} of two events $A$ and $B$ is the probability that both events occur. Occurrence of both events $A$ and $B$ means that the event defined by the \emph{intersection set} $A \cap B$ occurs. Think again of a die and take as event $A$ the event that an even number occurs, i.e. $A = \{2,4,6\}$ and as event $B$ that the number is less than $5$, i.e. $B = \{1,2,3,4\}$. The event $A \cap B$ means that the number is even \emph{and} is less then 5. That means we are asking for the probability of $A \cap B = \{2,4\}$. The joint probability of $A$ and $B$ can be written down as $P(A \cap B)$ or in the shorter notation $P(A,B)$. ...TBC...
 
-...TBC...
+% P(A \cap B) is also denoted as $P(A,B)$
+
+% https://en.wikipedia.org/wiki/Joint_probability_distribution
+% https://statisticsbyjim.com/probability/joint-probability/
+% https://byjus.com/maths/joint-probability/
+% https://www.sciencedirect.com/topics/engineering/joint-probability
+
+
+\paragraph{Conditional Probability}
+A conditional probability is a probability of some event $A$ to occur when we already know that some other event $B$ definitely does occur. For example, if we already know that the die rolled an even number, the probability that it rolled the number $4$ is now $\frac{1}{3}$ and not $\frac{1}{6}$ anymore as it would be if we wouldn't have the information about the evenness. Conditional probabilities are denoted as $P(A|B)$ which we may read as "the probability of $A$ under the condition of $B$" or shorter "the probability of $A$ given $B$". The formula to compute such a conditional probability is given by:
+\begin{equation}
+\label{Eq:ConditionalProbability}
+ P(A|B) = \frac{P(A \cap B)}{P(B)} = \frac{P(A, B)}{P(B)}
+\end{equation}
+...TBC...give intuition why that formula makes sense. Writing it as $P(A,B) = P(B) P(A|B)$ makes it clearer
 
 % P(A|B) = P(A \cap B) / P(B)
 
@@ -85,14 +99,7 @@ A conditional probability is a probability of some event $A$ to occur when we al
 
 % Conditional probability, joint probability, marginal probability,  Bayes theorem
 
-\paragraph{Joint Probability}
 
-% P(A \cap B) is also denoted as $P(A,B)$
-
-% https://en.wikipedia.org/wiki/Joint_probability_distribution
-% https://statisticsbyjim.com/probability/joint-probability/
-% https://byjus.com/maths/joint-probability/
-% https://www.sciencedirect.com/topics/engineering/joint-probability
 
 \paragraph{Bayes Theorem}
 %From $P(A \cap B) = P(A) P(B|A)$,  $P(B \cap A) = P(B) P(A|B)$ and $P(A \cap B) = P(B \cap A)$, it immediately follows that:

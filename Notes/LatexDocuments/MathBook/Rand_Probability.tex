@@ -1,8 +1,8 @@
 \section{Probability}
-
+Probability theory is the mathematical theory random events. It answers questions like "how likely is event $X$ to occur?". The answer is given in terms of a \emph{probability} which is a real number between zero and one. We can interpret this probability in the following way: We imagine an experimental situation with a random outcome such as the toss of a coin. Now we imagine to repeat the experiment $N$ times and ask about the number of times that we observed a particular outcome - say heads. Let's call that number $H$. We expect that when $N$ gets large, that the ratio $H/N$ will converge to the probability of seeing heads - in this case $\frac{1}{2}$. This interpretation of the idea of a probability is called the \emph{frequentist} interpretation. It bears this name because it interprets the idea of probability as a frequency of occurrence in the sense of how often a particular event occurs when we do a large number of experiments.  ...TBC...
 
 \subsection{Probability Spaces}
-A probability space consists of 3 ingredients: (1) A set $\Omega$, called the \emph{sample space}, that represents the set of all possible outcomes of some sort of random experiment. The "random experiment" in this context could be, for example, something tossing a coin or rolling a die. In the former case, we would have $\Omega = \{heads, tails\}$ and in the latter case $\Omega = \{1,2,3,4,5,6\}$. (2) A set $\mathcal{F}$ of events that could occur in such an experiment. For example: "the die lands on a 3" or "the die lands on an even number" or "the die lands on a number less than 5", etc. This so called \emph{event space} is a particular\footnote{To be precise, the set of subsets must be a $\sigma$-algebra (as defined in measure theory), but that's not particularly important here} set of subsets of $\Omega$. It's the set of all events that we want to assign a probability to. (3) A \emph{probability function} $P: \mathcal{F} \rightarrow [0,1]$ that assigns to each event $A \in \mathcal{F}$ a probability of occurrence. The function $P$ should satisfy the following conditions: An event that is certain should get a probability of one. Formally, that means $P(\Omega) = 1$. An event that is impossible should get a probability of zero. That translates to $P(\emptyset) = 0$.
+The setting in which probability theory takes place is formalized in terms of so called probability spaces. A \emph{probability space} consists of 3 ingredients: (1) A set $\Omega$, called the \emph{sample space}, that represents the set of all possible outcomes of some sort of random experiment. The "random experiment" in this context could be, for example, something tossing a coin or rolling a die. In the former case, we would have $\Omega = \{heads, tails\}$ and in the latter case $\Omega = \{1,2,3,4,5,6\}$. (2) A set $\mathcal{F}$ of events that could occur in such an experiment. For example: "the die lands on a 3" or "the die lands on an even number" or "the die lands on a number less than 5", etc. This so called \emph{event space} is a particular\footnote{To be precise, the set of subsets must be a $\sigma$-algebra (as defined in measure theory), but that's not particularly important here} set of subsets of $\Omega$. It's the set of all events that we want to assign a probability to. (3) A \emph{probability function} $P: \mathcal{F} \rightarrow [0,1]$ that assigns to each event $A \in \mathcal{F}$ a probability of occurrence. The function $P$ should satisfy the following conditions: An event that is certain should get a probability of one. Formally, that means $P(\Omega) = 1$. An event that is impossible should get a probability of zero. That translates to $P(\emptyset) = 0$.
 
 ...TBC...explain interpretation of the probability in the frequentist and Bayesian sense. Explain how probability zero means (almost) impossible and one means (almost) certain ...the "almost" part relevant only for infinite sample spaces, I think. I think $P$ should also satisfy additivity: for disjoint sets $A,B$, we should have $P(A \cup B) = P(A) + P(B)$. $P(\Omega) = 1$, $P(\emptyset) = 0$ ...verify!
 
@@ -15,10 +15,13 @@ A probability space consists of 3 ingredients: (1) A set $\Omega$, called the \e
 % https://en.wikipedia.org/wiki/Probability_space
 
 % https://www.its.caltech.edu/~mshum/stats/lect1.pdf
+% Good stuff in there!
 
 % https://ethz.ch/content/dam/ethz/special-interest/mavt/dynamic-systems-n-control/idsc-dam/Lectures/Stochastic-Systems/Probability.pdf
 
 % https://www.statlect.com/glossary/probability-space
+
+% define the term "observation"
 
 \begin{comment}
 

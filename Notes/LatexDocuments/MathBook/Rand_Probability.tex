@@ -1,6 +1,10 @@
 \section{Probability Theory}
-Probability theory is the mathematical theory random events. It answers questions like "how likely is event $X$ to occur?". The answer is given in terms of a \emph{probability} which is a real number between zero and one. We can interpret this probability in the following way: We imagine an experimental situation with a random outcome such as the toss of a coin. Now we imagine to repeat the experiment $N$ times and ask about the number of times that we observed a particular outcome - say heads. Let's call that number $H$. We expect that when $N$ gets large, that the ratio $H/N$ will converge to the probability of seeing heads - in this case $\frac{1}{2}$. This interpretation of the idea of a probability is called the \emph{frequentist} interpretation. It bears this name because it interprets the idea of probability as a frequency of occurrence in the sense of how often a particular event occurs when we do a large number of experiments.  ...TBC...
+Probability theory is the mathematical theory random events. It answers questions like "how likely is event $X$ to occur?". The answer is given in terms of a \emph{probability} which is a real number between zero and one. We can interpret this probability in the following way: We imagine an experimental situation with a random outcome such as the toss of a coin. Now we imagine to repeat the experiment $N$ times and ask about the number of times that we observed a particular outcome - say heads. Let's call that number $H$. We expect that when $N$ gets large, that the ratio $H/N$ will converge to the probability of seeing heads - in this case $\frac{1}{2}$. This interpretation of the idea of a probability is called the \emph{frequentist} interpretation. It bears this name because it interprets the idea of probability as a frequency of occurrence in the sense of how often a particular event occurs when we do a large number of experiments. There is also an alternative interpretation of the idea of a probability known as the Bayesian interpretation which interprets probability more as a subjective belief that may get updated when data is observed. The question of interpreting the meaning of the idea of a probability is a rather philosophical one and the mathematics of probability theory doesn't say anything about such an interpretation. It just gives the rules of computation.  
 
+%...TBC...go into more detail about frequentist vs Baysian
+
+% https://www.redjournal.org/article/S0360-3016(21)03256-9/fulltext
+% https://amplitude.com/blog/frequentist-vs-bayesian-statistics-methods
 
 %===================================================================================================
 \subsection{Probability Spaces}
@@ -22,13 +26,24 @@ A  $P: \mathcal{F} \rightarrow [0,1]$, called the \emph{probability function}, t
 The intention of the definitions is best understood by an example. Consider the random experiment of rolling a die. The set of possible outcomes is $\Omega = \{1,2,3,4,5,6\}$. An event $A \in \mathcal{F}$ could be "the die lands on 3" represented by the singleton set $A = \{3\}$ which is a subset of $\Omega$. It could also be "the die lands on a number less than 5" represented by $B = \{1,2,3,4\}$ or "the die lands on an even number" represented by $C = \{2,4,6\}$. Assuming a fair die, the probability function $P$ would assign the following probabilities to $A,B,C$: $P(A) = \frac{1}{6}$, $P(B) = \frac{4}{6} = \frac{2}{3}$ and  $P(C) = \frac{3}{6} = \frac{1}{2}$.
 
 \medskip
-In general, there are couple of conditions that $\Omega, \mathcal{F}, P$ need to satisfy. The sample space  $\Omega$ must partition the set outcomes of our experiment into mutually exclusive outcomes that, taken together, cover all possible outcomes. 
+In general, there are couple of conditions that $\Omega, \mathcal{F}, P$ need to satisfy. The sample space  $\Omega$ must partition the set outcomes of our experiment into mutually exclusive outcomes that, taken together, cover all possible outcomes. The term \emph{outcome} is a technical term in this context which shall not be confused with the idea of an \emph{event}. Outcomes are elements of $\Omega$. Events are subsets of $\Omega$. An event containing exactly one outcome, i.e. an event that is a singleton set, is called an \emph{elementary event} or \emph{atomic event}. The event space $\mathcal{F}$ cannot just be any random collection of subsets of $\Omega$. Instead, it must be a $\sigma$-algebra, see page \pageref{Def:SigmaAlgebra}. The probability function $P$ must be measure on $\Omega$ with the additional requirement that $P(\Omega) = 1$. 
 
-%The event space $\mathcal{F}$ cannot just be any random collection of subsets of $\Omega$. Instead, it must be a $\sigma$-algebra. The probability function $P$ must be measure on \mathcal{F}. TBC...explain (again) what these terms mean. Maybe there are additional required properties such as $P(\Omega) = 1$, etc.
-%In general, the set of all possible outcomes
+%These technical details are known as the Kolmogorov axioms. VERIFY ... TBC...
+
+% outcome = atomic event = elementary event ..or wel...no!
+%  is also sometimes called \emph{atomic event} or \emph{elementary event}.
+% An event containing exactly one outcome is called an elementary event.
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Examples}
+
+\paragraph{A Finite $\Omega$}
+
+\paragraph{A Countably Infinite $\Omega$}
+
+\paragraph{A Continuous $\Omega$}
 
 
-% outcome = atomic event = elementary event
 
 % Give examples
 % (1) toss a coin: omega = {0,1}, P(0) = P(1) = 1/2
@@ -40,9 +55,7 @@ In general, there are couple of conditions that $\Omega, \mathcal{F}, P$ need to
 
 %(1)  The "random experiment" in this context could be, for example, something tossing a coin or rolling a die. In the former case, we would have $\Omega = \{heads, tails\}$ and in the latter case $\Omega = \{1,2,3,4,5,6\}$. 
 
-
 %(2)  For example: "the die lands on a 3" or "the die lands on an even number" or "the die lands on a number less than 5", etc. This so called \emph{event space} is a particular\footnote{To be precise, the set of subsets must be a $\sigma$-algebra (as defined in measure theory), but that's not particularly important here} set of subsets of $\Omega$. It's the set of all events that we want to assign a probability to. 
-
 
 %(3) The function $P$ should satisfy the following conditions: An event that is certain should get a probability of one. Formally, that means $P(\Omega) = 1$. An event that is impossible should get a probability of zero. That translates to $P(\emptyset) = 0$.
 
@@ -53,10 +66,9 @@ In general, there are couple of conditions that $\Omega, \mathcal{F}, P$ need to
 % I think, the function $P$ must be a certain kind of measure
 % explain elementary events - maybe they make sense only in the context of finite Omega?
 
-% maybe use itemize or enumerate latex environment or somrthing
-% discuss frequenties vs Bayesian interpretation of probabilities
 
 
+% https://en.wikipedia.org/wiki/Probability_axioms
 
 % https://en.wikipedia.org/wiki/Probability_measure
 
@@ -182,6 +194,8 @@ https://www.youtube.com/watch?v=zczGnnM05TQ
 - Probability distiributions
   Discrete
   Continuous
+
+- explain some paradoxa - make the point that probability is often counterintuitive
 
 \end{comment}
 

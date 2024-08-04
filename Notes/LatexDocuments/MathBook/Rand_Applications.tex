@@ -39,6 +39,10 @@ The mathematics developed so far has a lot of practical use cases. We need it to
 % -explain in general how a larger probability space can be used to simulate a smaller one. Maybe
 %  such an "embedding" can be formalized as a sort of "probability homomorphism"? Is that already
 %  a thing? If not, maybe such a definition could make sense?
+% Consider two probability spaces (S1,E1,P1), (S2,E2,P2). We call a function f: E1 -> E2 a 
+% "probability homomorphism" from (S1,E1,P1) to (S2,E2,P2) if it satisfies P2(f(A)) = P1(A)
+% ...something along these lines. Here, A is a subset of S1 (i.e. element of E1) and f(A) a 
+% subset of S2 (i.e. element of E2)
 
 \paragraph{Arbitrary Distributions}
 % mention how to approximate the Gaussian distribution with piecewise polynomials (see codebase)

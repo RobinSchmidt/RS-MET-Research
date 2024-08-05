@@ -84,6 +84,7 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 % https://www.youtube.com/watch?v=3czgfHULZCs
 % 3:45 - kinds of statements we want to prove: equalities, (non) existence, uniqueness, 
 % (mutual) implications, properties (for a given object or for all objects of a given kind)
+% 11:15 - logical rules
 
 \subsubsection{Rules of Inference}
 % https://en.wikipedia.org/wiki/Rule_of_inference
@@ -98,9 +99,14 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 
 \paragraph{Disjunctive Syllogism} If $p$ is false and $p$ or $q$ is true then $q$ is true: $\neg p, p \vee q \Rightarrow q$
 
+\paragraph{Addition} If $p$ is true then $p$ or $q$ is true: $p \Rightarrow p \vee q$
 
+\paragraph{Simplification} If $p$ and $q$ are true then $p$ is true: $p \wedge q \Rightarrow p$
+
+\paragraph{Conjunction} If $p$ is true and $q$ is true then $p$ and $q$ is true: $p,q \Rightarrow p \wedge q$
 
 \paragraph{Contraposition}
+If $p$ implies $q$ then not $q$ implies not $p$: $p \then q \Rightarrow \neg q \then \neg p$
 % https://en.wikipedia.org/wiki/Contraposition
 
 \paragraph{Resolution}

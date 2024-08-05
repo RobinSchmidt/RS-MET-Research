@@ -88,6 +88,7 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 
 \subsubsection{Rules of Inference}
 % https://en.wikipedia.org/wiki/Rule_of_inference
+% https://en.wikipedia.org/wiki/List_of_rules_of_inference
 
 \paragraph{Modus Ponens} If $p$ is true and $p$ implies $q$, then $q$ is true: $p, p \then q \Rightarrow q$
 % https://en.wikipedia.org/wiki/Modus_ponens
@@ -108,6 +109,25 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 \paragraph{Contraposition}
 If $p$ implies $q$ then not $q$ implies not $p$: $p \then q \Rightarrow \neg q \then \neg p$
 % https://en.wikipedia.org/wiki/Contraposition
+
+\paragraph{Reductio ad Absurdum} If $p$ implies $q$ and $p$ implies not $q$ then $p$ is false: $p \then q, p \then \neg q \Rightarrow \neg p$
+
+
+\medskip
+\begin{tabular}{c l l}
+\label{Tab:RulesOfInference}
+  Formula          & Name                  & Meaning      \\
+  
+  $p, p \then q \Rightarrow q$                                  & 
+  Modus Ponens                                                  & 
+  If $p$ is true and $p$ implies $q$, then $q$ is true          \\   
+  
+  $p \then q, p \then \neg q \Rightarrow \neg p$                & 
+  Reductio ad Absurdum                                          & 
+  If $p$ implies $q$ and $p$ implies not $q$ then $p$ is false  \\ 
+  
+\end{tabular}
+\medskip
 
 \paragraph{Resolution}
 % -Resolution

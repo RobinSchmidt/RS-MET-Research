@@ -29,7 +29,7 @@ Logical connectives are symbols that are used to create more complex logical exp
 
 As said, the list is not exhaustive. There are 16 possible different functions $f: \mathbb{B}^2 \rightarrow \mathbb{B}$ and we have listed only the $6$ most commonly used ones of them. We do not need a symbol for all of them because we can construct the missing ones from those in the table. In fact, we don't even need all of the connectives given in the table. A set of connectives from which all possible Boolean functions can be constructed by a suitable formula is called a \emph{functionally complete} set of connectives. For example, the set $\{\neg, \wedge, \vee\}$ is functionally complete. It is actually even overcomplete already and we could make do with  $\{\neg, \wedge\}$ but having the $\vee$ available as well makes it more convenient to write down and read(!) logical formulas. As an extreme example, the singleton set containing only the nand function $\nand$ is also functionally complete. It's not fun to read or write logical formulas when only the nand operator is permitted - but it is possible to express every possible logical formula solely in terms of nand. This fact has some technological relevance in the realm of chip design.
 
-...TBC..TODO: give truth tables for all of them, explain relation between $\then$ and $\Rightarrow$ and $\mequiv$ and $\Leftrightarrow$. The double-stroke arrow symbols are used on the meta level whereas the single-stroke arrows are used on the object level or formula level. Give other names for the connectives - there are a lot of akas
+...TBC..TODO: give truth tables for all of them, explain relation between $\then$ and $\Rightarrow$ and $\mequiv$ and $\Leftrightarrow$. The double-stroke arrow symbols are used on the meta level whereas the single-stroke arrows are used on the object level or formula level. There are also $\vdash$ and $\vDash$ and also have meanings similar to $\then$ and $\Rightarrow$. Explain the subtle differences. Give other names for the connectives - there are a lot of akas
 
 % https://en.wikipedia.org/wiki/Functional_completeness
 % https://en.wikipedia.org/wiki/Sheffer_stroke  aka nand
@@ -48,7 +48,10 @@ As said, the list is not exhaustive. There are 16 possible different functions $
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Deduction}
-Logical \emph{deduction} is the process of deriving new true statements from given true statements. In this context, the given statements are called \emph{premises} and the derived statements are called \emph{conclusions}. The process of deriving new statements from known ones is called \emph{inference} and there are certain rules that we need to obey to draw valid conclusions from a given set of premises.
+Logical \emph{deduction} is the process of deriving new true statements from given true statements. In this context, the given statements are called \emph{premises} and the derived statements are called \emph{conclusions}. The process of deriving new statements from known ones is called \emph{inference} and there are certain rules that we need to obey to draw valid conclusions from a given set of premises. When we write a statement like $p,q \;\vdash\; r$ then this means that if $p$ and $q$ on the left hand side are both true propositions, then the proposition $r$ on the right hand side is also true. In this notation, $p,q$ are the premises and $r$ is the conclusions. The symbol $\vdash$ is called the "turnstile" or "tee" and means something like "proves", "entails", "yields"  ...tbc
+
+% https://en.wikipedia.org/wiki/Turnstile_(symbol)
+% or propositional logic, it may be shown that semantic consequence and derivability are equivalent
 
 % https://de.wikipedia.org/wiki/Deduktion
 
@@ -66,6 +69,7 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 % 11:15 - logical rules
 
 \subsubsection{Rules of Inference}
+
 % https://en.wikipedia.org/wiki/Rule_of_inference
 % https://en.wikipedia.org/wiki/List_of_rules_of_inference
 % https://en.wikipedia.org/wiki/Modus_ponens
@@ -77,59 +81,59 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 \label{Tab:RulesOfInference}
   Formula          & Name                  & Meaning      \\
   
-  $p, p \then q \Rightarrow q$                                  & 
+  $p, p \then q \;\vdash\; q$                                  & 
   Modus Ponens                                                  & 
   If $p$ is true and $p$ implies $q$, then $q$ is true          \\   
   
-  $\neg q, p \then q \Rightarrow \neg p$                        & 
+  $\neg q, p \then q \;\vdash\; \neg p$                        & 
   Modus Tollens                                                 & 
   If $q$ is false and $p$ implies $q$ then $p$ is false         \\     
   
-  $p \then q \Rightarrow \neg q \then \neg p$                   & 
+  $p \then q \;\vdash\; \neg q \then \neg p$                   & 
   Contraposition                                                & 
   If $p$ implies $q$ then not $q$ implies not $p$               \\   
   
-  $\neg p, p \vee q \Rightarrow q$                              & 
+  $\neg p, p \vee q \;\vdash\; q$                              & 
   Disjunctive Syllogism                                         & 
   If $p$ is false and $p$ or $q$ is true then $q$ is true       \\ 
   
-  $p \then q,  q \then r \Rightarrow p \then r$                 & 
+  $p \then q,  q \then r \;\vdash\; p \then r$                 & 
   Hypothetical Syllogism                                        & 
   If $p$ implies $q$ and $q$ implies $r$ then $p$ implies $r$   \\   
   
-  $p,q \Rightarrow p \wedge q$                                  & 
+  $p,q \;\vdash\; p \wedge q$                                  & 
   Conjunction Introduction                                      & 
   If $p$ is true and $q$ is true then $p$ and $q$ is true       \\ 
   
-  $p \Rightarrow p \vee q$                                      & 
+  $p \;\vdash\; p \vee q$                                      & 
   Disjunction Introduction                                      & 
   If $p$ is true then $p$ or $q$ is true                        \\    
   
-  $p \wedge q \Rightarrow p$                                    & 
+  $p \wedge q \;\vdash\; p$                                    & 
   Simplification                                                & 
   If $p$ and $q$ are true then $p$ is true                      \\    
   
-  $p \then q, p \then \neg q \Rightarrow \neg p$                & 
+  $p \then q, p \then \neg q \;\vdash\; \neg p$                & 
   Reductio ad Absurdum                                          & 
   If $p$ implies $q$ and its negation then $p$ is false         \\ 
   
-  $p, \neg p \Rightarrow q$                                     & 
+  $p, \neg p \;\vdash\; q$                                     & 
   Deductive Explosion                                           & 
   From a contradiction follows anything                         \\   
   
-  $p \then r, q \then r, p \vee q \Rightarrow r$                & 
+  $p \then r, q \then r, p \vee q \;\vdash\; r$                & 
   Case Analysis                                                 & 
   If $p$ and $q$ both imply $r$ and $p$ or $q$ then $r$         \\ 
   
-  $p \then r, q \then s, p \vee q \Rightarrow r \vee s$         & 
+  $p \then r, q \then s, p \vee q \;\vdash\; r \vee s$         & 
   Constructive Dilemma                                          & 
   If $p$ implies $r$, $q$ implies $s$ and $p$ or $q$ then $r$ or $s$         \\ 
   
-  $p \then q, q \then p \Rightarrow p \mequiv q$                & 
+  $p \then q, q \then p \;\vdash\; p \mequiv q$                & 
   Biconditional Introduction                                    & 
   From mutual implication follows equivalence                   \\   
   
-  $p \mequiv q, p \vee q \Rightarrow p \wedge q$                & 
+  $p \mequiv q, p \vee q \;\vdash\; p \wedge q$                & 
   Biconditional Elimination                                     & 
   If $p,q$ are equiv. and one is true then both are         \\     
   
@@ -140,7 +144,9 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 % https://en.wikipedia.org/wiki/List_of_rules_of_inference#Rules_for_propositional_calculus
 
 
-
+% https://en.wikipedia.org/wiki/Natural_deduction
+% https://en.wikipedia.org/wiki/List_of_logic_symbols
+% I think, we should use the \turnstile symbol instead of \Rightarrow
 
 
 
@@ -160,7 +166,8 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 
 \subsection{Quantifiers}
 
-$\exists, \nexists, \exists!, \exists_1, \forall$
+$\exists, \forall, \nexists, \exists!, \exists_1$
+% existential, universal
 
 % -also known as first order logic
 % -Variables, Formulas
@@ -168,6 +175,11 @@ $\exists, \nexists, \exists!, \exists_1, \forall$
 
 % https://en.wikipedia.org/wiki/Quantifier_(logic)
 % https://de.wikipedia.org/wiki/Quantor
+% $\neg (\forall x, p) = \exists x \neg p$
+
+% Intro To Math Proofs (Full Course)
+% https://www.youtube.com/watch?v=3czgfHULZCs
+% 34:10 - some quantifier formulas
 
 %===================================================================================================
 \section{Proof Techniques}

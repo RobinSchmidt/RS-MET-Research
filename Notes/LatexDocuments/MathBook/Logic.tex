@@ -90,15 +90,16 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 % https://en.wikipedia.org/wiki/Rule_of_inference
 % https://en.wikipedia.org/wiki/List_of_rules_of_inference
 
-\paragraph{Modus Ponens} If $p$ is true and $p$ implies $q$, then $q$ is true: $p, p \then q \Rightarrow q$
+
+%\paragraph{Modus Ponens} If $p$ is true and $p$ implies $q$, then $q$ is true: $p, p \then q \Rightarrow q$
 % https://en.wikipedia.org/wiki/Modus_ponens
 
-\paragraph{Modus Tollens} If $q$ is false and $p$ implies $q$ then $p$ is false: $\neg q, p \then q \Rightarrow \neg p$
+%\paragraph{Modus Tollens} If $q$ is false and $p$ implies $q$ then $p$ is false: $\neg q, p \then q \Rightarrow \neg p$
 % https://en.wikipedia.org/wiki/Modus_tollens
 
 \paragraph{Hypothetical Syllogism} If $p$ implies $q$ and $q$ implies $r$ then $p$ implies $r$: $p \then q,  q \then r \Rightarrow p \then r$
 
-\paragraph{Disjunctive Syllogism} If $p$ is false and $p$ or $q$ is true then $q$ is true: $\neg p, p \vee q \Rightarrow q$
+%\paragraph{Disjunctive Syllogism} If $p$ is false and $p$ or $q$ is true then $q$ is true: $\neg p, p \vee q \Rightarrow q$
 
 \paragraph{Addition} If $p$ is true then $p$ or $q$ is true: $p \Rightarrow p \vee q$
 
@@ -110,7 +111,7 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 If $p$ implies $q$ then not $q$ implies not $p$: $p \then q \Rightarrow \neg q \then \neg p$
 % https://en.wikipedia.org/wiki/Contraposition
 
-\paragraph{Reductio ad Absurdum} If $p$ implies $q$ and $p$ implies not $q$ then $p$ is false: $p \then q, p \then \neg q \Rightarrow \neg p$
+%\paragraph{Reductio ad Absurdum} If $p$ implies $q$ and $p$ implies not $q$ then $p$ is false: $p \then q, p \then \neg q \Rightarrow \neg p$
 
 
 \medskip
@@ -121,6 +122,20 @@ If $p$ implies $q$ then not $q$ implies not $p$: $p \then q \Rightarrow \neg q \
   $p, p \then q \Rightarrow q$                                  & 
   Modus Ponens                                                  & 
   If $p$ is true and $p$ implies $q$, then $q$ is true          \\   
+  
+  $\neg q, p \then q \Rightarrow \neg p$                        & 
+  Modus Tollens                                                 & 
+  If $q$ is false and $p$ implies $q$ then $p$ is false         \\     
+  
+  $\neg p, p \vee q \Rightarrow q$                              & 
+  Disjunctive Syllogism                                         & 
+  If $p$ is false and $p$ or $q$ is true then $q$ is true       \\ 
+  
+  
+  
+  
+  
+  
   
   $p \then q, p \then \neg q \Rightarrow \neg p$                & 
   Reductio ad Absurdum                                          & 

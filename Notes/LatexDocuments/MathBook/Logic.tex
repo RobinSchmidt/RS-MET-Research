@@ -9,6 +9,7 @@ Propositional logic deals with statements that can be either true or false. Thes
 
 % https://en.wikipedia.org/wiki/Boolean_algebra
 
+%---------------------------------------------------------------------------------------------------
 \subsection{Connectives}
 Logical connectives are symbols that are used to create more complex logical expressions from simpler ones. They work with logical variables like the basic arithmetic operators do with numerical variables. They typically take two inputs and produce one output\footnote{The only exception is the negation which takes only a single input. It's somewhat analogous to the unary minus in arithmetic.}. Like arithmetic operators, we write them in infix notation between the variables. A non-exhaustive table of such connectives is given here:
 
@@ -43,6 +44,105 @@ As said, the list is not exhaustive. There are 16 possible different functions $
 
 % What about constant functions that always output 0 or 1
 
+
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Deduction}
+Logical \emph{deduction} is the process of deriving new true statements from given true statements. In this context, the given statements are called \emph{premises} and the derived statements are called \emph{conclusions}. The process of deriving new statements from known ones is called \emph{inference} and there are certain rules that we need to obey to draw valid conclusions from a given set of premises.
+
+% https://de.wikipedia.org/wiki/Deduktion
+
+% https://home.uni-leipzig.de/methodenportal/deduktion_induktion/
+% -Deduktion schließt vom allgemeinen auf das spezielle
+% -Induktion schließt vom speziellen auf das allgemeine
+
+% https://en.wikipedia.org/wiki/Logical_consequence
+% https://en.wikipedia.org/wiki/Propositional_calculus
+
+% Intro To Math Proofs (Full Course)
+% https://www.youtube.com/watch?v=3czgfHULZCs
+% 3:45 - kinds of statements we want to prove: equalities, (non) existence, uniqueness, 
+% (mutual) implications, properties (for a given object or for all objects of a given kind)
+% 11:15 - logical rules
+
+\subsubsection{Rules of Inference}
+% https://en.wikipedia.org/wiki/Rule_of_inference
+% https://en.wikipedia.org/wiki/List_of_rules_of_inference
+% https://en.wikipedia.org/wiki/Modus_ponens
+% https://en.wikipedia.org/wiki/Modus_tollens
+% https://en.wikipedia.org/wiki/Contraposition
+
+\medskip
+\begin{tabular}{c l l}
+\label{Tab:RulesOfInference}
+  Formula          & Name                  & Meaning      \\
+  
+  $p, p \then q \Rightarrow q$                                  & 
+  Modus Ponens                                                  & 
+  If $p$ is true and $p$ implies $q$, then $q$ is true          \\   
+  
+  $\neg q, p \then q \Rightarrow \neg p$                        & 
+  Modus Tollens                                                 & 
+  If $q$ is false and $p$ implies $q$ then $p$ is false         \\     
+  
+  $p \then q \Rightarrow \neg q \then \neg p$                   & 
+  Contraposition                                                & 
+  If $p$ implies $q$ then not $q$ implies not $p$               \\   
+  
+  $\neg p, p \vee q \Rightarrow q$                              & 
+  Disjunctive Syllogism                                         & 
+  If $p$ is false and $p$ or $q$ is true then $q$ is true       \\ 
+  
+  $p \then q,  q \then r \Rightarrow p \then r$                 & 
+  Hypothetical Syllogism                                        & 
+  If $p$ implies $q$ and $q$ implies $r$ then $p$ implies $r$   \\   
+  
+  $p,q \Rightarrow p \wedge q$                                  & 
+  Conjunction Introduction                                      & 
+  If $p$ is true and $q$ is true then $p$ and $q$ is true       \\ 
+  
+  $p \Rightarrow p \vee q$                                      & 
+  Disjunction Introduction                                      & 
+  If $p$ is true then $p$ or $q$ is true                        \\    
+  
+  $p \wedge q \Rightarrow p$                                    & 
+  Simplification                                                & 
+  If $p$ and $q$ are true then $p$ is true                      \\    
+  
+  $p \then q, p \then \neg q \Rightarrow \neg p$                & 
+  Reductio ad Absurdum                                          & 
+  If $p$ implies $q$ and $p$ implies not $q$ then $p$ is false  \\ 
+  
+  $p, \neg p \Rightarrow q$                                     & 
+  Principle of Explosion                                        & 
+  From a contradiction follows anything                         \\   
+  
+  $p \then r, q \then r, p \vee q \Rightarrow r$                & 
+  Case Analysis                                                 & 
+  If $p$ and $q$ both imply $r$ and $p$ or $q$ then $r$         \\ 
+  
+  
+  
+  
+\end{tabular}
+\medskip
+
+Not yet complete!
+% https://en.wikipedia.org/wiki/List_of_rules_of_inference#Rules_for_propositional_calculus
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 %===================================================================================================
 \section{Predicate Logic}
 
@@ -67,96 +167,9 @@ $\exists, \nexists, \exists!, \exists_1, \forall$
 % https://jdhsmith.math.iastate.edu/class/BookOfProof.pdf
 % -Really good free ebook
 
-%---------------------------------------------------------------------------------------------------
-\subsection{Deduction}
-Logical \emph{deduction} is the process of deriving new true statements from given true statements. In this context, the given statements are called \emph{premises} and the derived statements are called \emph{conclusions}. The process of deriving new statements from known ones is called \emph{inference} and there are certain rules that we need to obey to draw valid conclusions from a given set of premises.
-
-% https://de.wikipedia.org/wiki/Deduktion
-
-% https://home.uni-leipzig.de/methodenportal/deduktion_induktion/
-% -Deduktion schließt vom allgemeinen auf das spezielle
-% -Induktion schließt vom speziellen auf das allgemeine
-
-% https://en.wikipedia.org/wiki/Logical_consequence
-% https://en.wikipedia.org/wiki/Propositional_calculus
-
-% Intro To Math Proofs (Full Course)
-% https://www.youtube.com/watch?v=3czgfHULZCs
-% 3:45 - kinds of statements we want to prove: equalities, (non) existence, uniqueness, 
-% (mutual) implications, properties (for a given object or for all objects of a given kind)
-% 11:15 - logical rules
-
-\subsubsection{Rules of Inference}
-% https://en.wikipedia.org/wiki/Rule_of_inference
-% https://en.wikipedia.org/wiki/List_of_rules_of_inference
 
 
-%\paragraph{Modus Ponens} If $p$ is true and $p$ implies $q$, then $q$ is true: $p, p \then q \Rightarrow q$
-% https://en.wikipedia.org/wiki/Modus_ponens
 
-%\paragraph{Modus Tollens} If $q$ is false and $p$ implies $q$ then $p$ is false: $\neg q, p \then q \Rightarrow \neg p$
-% https://en.wikipedia.org/wiki/Modus_tollens
-
-%\paragraph{Hypothetical Syllogism} If $p$ implies $q$ and $q$ implies $r$ then $p$ implies $r$: $p \then q,  q \then r \Rightarrow p \then r$
-
-%\paragraph{Disjunctive Syllogism} If $p$ is false and $p$ or $q$ is true then $q$ is true: $\neg p, p \vee q \Rightarrow q$
-
-%\paragraph{Addition} If $p$ is true then $p$ or $q$ is true: $p \Rightarrow p \vee q$
-
-%\paragraph{Simplification} If $p$ and $q$ are true then $p$ is true: $p \wedge q \Rightarrow p$
-
-%\paragraph{Conjunction} If $p$ is true and $q$ is true then $p$ and $q$ is true: $p,q \Rightarrow p \wedge q$
-
-%\paragraph{Contraposition}
-%If $p$ implies $q$ then not $q$ implies not $p$: $p \then q \Rightarrow \neg q \then \neg p$
-% https://en.wikipedia.org/wiki/Contraposition
-
-%\paragraph{Reductio ad Absurdum} If $p$ implies $q$ and $p$ implies not $q$ then $p$ is false: $p \then q, p \then \neg q \Rightarrow \neg p$
-
-\medskip
-\begin{tabular}{c l l}
-\label{Tab:RulesOfInference}
-  Formula          & Name                  & Meaning      \\
-  
-  $p, p \then q \Rightarrow q$                                  & 
-  Modus Ponens                                                  & 
-  If $p$ is true and $p$ implies $q$, then $q$ is true          \\   
-  
-  $\neg q, p \then q \Rightarrow \neg p$                        & 
-  Modus Tollens                                                 & 
-  If $q$ is false and $p$ implies $q$ then $p$ is false         \\     
-  
-  $p \then q \Rightarrow \neg q \then \neg p$                  & 
-  Contraposition                                               & 
-  If $p$ implies $q$ then not $q$ implies not $p$              \\   
-  
-  $\neg p, p \vee q \Rightarrow q$                              & 
-  Disjunctive Syllogism                                         & 
-  If $p$ is false and $p$ or $q$ is true then $q$ is true       \\ 
-  
-  $p \then q,  q \then r \Rightarrow p \then r$                 & 
-  Hypothetical Syllogism                                        & 
-  If $p$ implies $q$ and $q$ implies $r$ then $p$ implies $r$   \\   
-  
-  $p,q \Rightarrow p \wedge q$                 & 
-  Conjunction Introduction                                      & 
-  If $p$ is true and $q$ is true then $p$ and $q$ is true   \\ 
-  
-  $p \Rightarrow p \vee q$                 & 
-  Disjunction Introduction                                      & 
-  If $p$ is true then $p$ or $q$ is true   \\    
-  
-  $p \wedge q \Rightarrow p$                 & 
-  Simplification                                      & 
-  If $p$ and $q$ are true then $p$ is true   \\    
-  
-  
-  $p \then q, p \then \neg q \Rightarrow \neg p$                & 
-  Reductio ad Absurdum                                          & 
-  If $p$ implies $q$ and $p$ implies not $q$ then $p$ is false  \\ 
-  
-\end{tabular}
-\medskip
 
 \paragraph{Resolution}
 % -Resolution

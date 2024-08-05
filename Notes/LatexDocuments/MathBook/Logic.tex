@@ -111,10 +111,10 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
   
   $p \then q, p \then \neg q \Rightarrow \neg p$                & 
   Reductio ad Absurdum                                          & 
-  If $p$ implies $q$ and $p$ implies not $q$ then $p$ is false  \\ 
+  If $p$ implies $q$ and its negation then $p$ is false         \\ 
   
   $p, \neg p \Rightarrow q$                                     & 
-  Principle of Explosion                                        & 
+  Deductive Explosion                                           & 
   From a contradiction follows anything                         \\   
   
   $p \then r, q \then r, p \vee q \Rightarrow r$                & 
@@ -126,13 +126,17 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
   If $p$ implies $r$, $q$ implies $s$ and $p$ or $q$ then $r$ or $s$         \\ 
   
   $p \then q, q \then p \Rightarrow p \mequiv q$                & 
-  Biconditional introduction                                    & 
+  Biconditional Introduction                                    & 
   From mutual implication follows equivalence                   \\   
+  
+  $p \mequiv q, p \vee q \Rightarrow p \wedge q$                & 
+  Biconditional Elimination                                     & 
+  If $p,q$ are equiv. and one is true then both are         \\     
   
 \end{tabular}
 \medskip
 
-Not yet complete!
+%Not yet complete!
 % https://en.wikipedia.org/wiki/List_of_rules_of_inference#Rules_for_propositional_calculus
 
 

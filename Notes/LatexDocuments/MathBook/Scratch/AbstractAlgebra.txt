@@ -109,3 +109,51 @@ https://www.youtube.com/watch?v=QBX89S6FLMo
 -Splitting fields are not unique - but isomorphic...soo - unique up to isomorphism, I guess.
 -We can always factor a difference of two cubes as follows:
  (a^3 - b^3) = (a-b) * (a^2 + a*b + b^2)
+
+
+
+
+
+
+
+The Insolvability of the Quintic
+https://www.youtube.com/watch?v=9aUsTlBjspE  by Aleph 0
+
+What is the square root of two? | The Fundamental Theorem of Galois Theory
+https://www.youtube.com/watch?v=CwvuZ8aHyH4  by Aleph 0
+
+Algebraic number theory - an illustrated guide | Is 5 a prime number?
+https://www.youtube.com/watch?v=4m_EaWA08H0  by Aleph 0
+-Algebraic number theory is about how the rules of numbers change (what is prime, etc.) when we look
+ into number rings beyond the integers - it's important to look at rings and not at fields because
+ primes are not a thing in fields.
+-3:50: interpret 2*3 = 6 in a different way: all multiples of 2 times all multiples of 3 give all
+ multiples of 6. This is how factoring a number into prime numbers will generalize to factoring an 
+ ideal into prime ideals.
+
+
+Why There's 'No' Quintic Formula (proof without Galois theory)
+https://www.youtube.com/watch?v=BSHv9Elk1MU
+
+Why you can't solve quintic equations (Galois theory approach) #SoME2
+https://www.youtube.com/watch?v=zCU9tZ2VkWc
+-If an equation is solvable by radicals then there must exist a tower of radical extensions to Q
+ whose highest layer contains all the roots. We must be able to adjoin the roots one by one.
+
+Prelude to Galois Theory: Exploring Symmetric Polynomials
+https://www.youtube.com/watch?v=3imeTgGBaLc  by Martin Trifonov
+-Talks about multivariate polynomials. Specfically, the funcdamental theorem of symmetric 
+ polynomials. This is supposed to be some sort of prelimary to Galois theory.
+ I think, the idea is that when the different variables are
+ the roots of some polynomial, then we can permute them and the polynomial equation still holds 
+ true?
+ 9:28 elementary symmetric polynomials encode the pattern by which the roots of an arbitrary 
+      polynomial are related ot its coefficients
+11:20 Any power sum (e.g. x^k + y^k + z^k) can be expressed in terms of the elementary symmetric 
+      polynomials. (Newton's theorem) ...not a linear combination, though - it's a polynomial 
+      expression
+18:50 All symmetric polynomials can be expressed in terms of power sums - togethr with the former 
+      theorem, this means that all symmetric polanomials can be created using only polynomial  
+      expressions of the elementary symmetric polynomials
+29:17 The space of expressions in the roots is the arena in which Galois theory plays out. Galois 
+      theory considers the symmetry of expressions in the roots of polynomials

@@ -110,6 +110,34 @@ Galois theory is a sort of culmination point of abstract algebra where all the i
 \subsection{Multivariate Polynomials}
 
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Symmetric Polynomials}
+A symmetric polynomial is a multivariate polynomial whose value doesn't change when we permute the values of the input variables. For example $x^2 + y^2 - xy$ is symmetric\footnote{I assume that $xy = yx$, i.e. we deal with a commutative ring} but  $x^2 - y^2 + x^3 y$ is not. For the latter, you may find some special assignments for $x$ and $y$ which allows us to swap $x$ and $y$ without changing the value of the polynomial, but the non-change of value property will not hold in general for any assignment. In the former case, it doesn't matter at all what we assign to $x$ and $y$ - the output of the polynomial will always be insensitive to a swap. ...TBC...
+
+% I think to find such assignments, we would have to solve the nonlinear system of equations
+%  $x^2 - y^2 + x^3 y = c$,  $y^2 - x^2 + y^3 x = c$?
+
+\paragraph{Elementary Symmetric Polynomials}
+%When we have a polynomial given in product form $p(x) = (x-x_1)(x-x_2)(x-x_3)$ and expand this, we get $x^3 - (x_1 + x_2 + x_3) x^2 + (x_1 x_2 + x_1 x_3 + x_2 x_3) x^1 - x_1 x_2 x_3 x^0$. VERIFY
+
+% The coefficients of p, expressed in terms of its roots, are given by the elementary symmetric polynomials in the roots
+
+%Prelude to Galois Theory: Exploring Symmetric Polynomials
+%https://www.youtube.com/watch?v=3imeTgGBaLc  by Martin Trifonov
+
+%They arise
+
+% x_1 + x_2 + x_3 + x_4, x_1 x_2 + x_1 x_3 + x_1 x_4 + x_2 x_3 + x_2 x_4 + x_3 x_4,
+% x_1 x_2 x_3 + x_1 x_2 x_4 + x_1 x_3 x_4 + x_2 x_3 x_4, x_1 x_2 x_3 x_4
+
+%\begin{eqnarray}
+%e_1(x_1,x_2,\ldots,x_n) &=& \sum_{i=1}^n x_i \\
+%e_2(x_1,x_2,\ldots,x_n) &=& \sum_{i=1}^n \sum_{j=i}^n  x_i x_j \\
+%e_3(x_1,x_2,\ldots,x_n) &=& \sum_{i=1}^n \sum_{j=i}^n \sum_{k=j}^n  x_i x_j x_k
+%\end{eqnarray}
+% No - that's wrong!
+
+
 
 %===================================================================================================
 \subsection{Rational Functions}

@@ -115,6 +115,13 @@ The field $\mathbb{Q}$ is something like the prototypical example of all fields.
 
 % -ToDo: maybe show that sum, difference, product and quotient of (a + b*sqrt(n)) and (c + d*sqrt(n)) is again of the same form (for any integer n that is not a square number)
 
+% Galois extension: is obtained by adjoining all the roots of a polynomial
+% https://www.youtube.com/watch?v=zCU9tZ2VkWc at 9:47
+% https://en.wikipedia.org/wiki/Galois_extension
+% ..I think, it's just another name for splitting field / root field?
+
+
+
 \paragraph{Algebraic Closure of a Field}
 In an algebraically closed field, we can solve any polynomial equation. In fact, any polynomial of degree $n$ will always factor into precisely $n$ linear factors [VERIFY]. Algebraically closed fields are as nice as it gets when the goal is to solve algebraic equations. The field of complex numbers $\mathbb{C}$ is algebraically closed. When we start with any given field $\mathbb{F}$ and add to it precisely all the objects that are needed to turn it into algebraically closed field, then that so obtained new field is called the algebraic closure of $\mathbb{F}$. In this sense, $\mathbb{C}$ is the algebraic closure of $\mathbb{R}$. The algebraic closure of the field of rational numbers $\mathbb{Q}$ is the set of algebraic numbers $\mathbb{A}$. 
 
@@ -135,6 +142,15 @@ As an immediate consequence, by recursively reducing $p(x)$ by dividing out the 
 
 \medskip
 This sounds a lot like the fundamental theorem of algebra which is, in fact, a special case where  $\mathbb{E} = \mathbb{F} = \mathbb{C}$. The complex numbers have the nice property of being algebraically closed such that we do not need to extend the field any further in order to find the roots of any polynomial whatsoever with coefficients from $\mathbb{C}$. [VERIFY]
+
+\paragraph{Splitting Fields}
+Given a base field $\mathbb{F}$ and a polynomial with coefficients from $\mathbb{F}$, we can adjoin all the roots of this polynomial $p(x)$ to the field to obtain an extension field $\mathbb{E}$. In this extended field, we are able to split the polynomial into linear factors. That's why this field is also called the splitting field or root field of $p$. ...TBC.. 
+
+%I think it's also called Galois extension?
+% don't confuse it with Galois fields - these are finite fields
+
+% Cyclotomic extension: adjoin n-th root of unity
+% Kummer extension: andjoin n-th root of something while the n-nth root of unity are already there
 
 
 \paragraph{Transcendental Extension of $\mathbb{Q}$}

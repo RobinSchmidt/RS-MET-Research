@@ -10633,19 +10633,70 @@ void testPrimesAndMore()
 
 void testFiniteField()
 {
-  using Int = int;  // try also unsigned, 64 bit, etc.
+  // UNDER CONSTRUCTION
+  //
+  // We try to implement a finite field (aka Galois field) with p^k elements where p is a prime 
+  // number and k is an integer. To construct such a finite field, we start with the ring of 
+  // polynomials over Zp and then form the quotient ring of that with some fixed irreducible 
+  // polynomial of degree k from that ring. The result is a ring of polynomials over zp with degree
+  // of at most k-1. That means, we have k coeffcients from Zp - these length-k coefficient arrays
+  // form the elements of our field. ...TBC...
+  //
+  // In Z2[x], there's only one irrducible polynomial of degree 2: x^2 + x + 1 and there are
+  // two irreducible polynomials of degree 3: x^3 + x + 1, x^3 + x^2 + 1.
+
+  using Int    = int;                     // Try also unsigned, 64 bit, etc.
+  using ModInt = rsModularInteger<Int>;
+  using Poly   = rsPolynomial<ModInt>;
   
+  /*
   Int p = 3;
   Int k = 4;
   Int q = rsPow(p, k);  // q = p^k = 3^4 = 81, the number of field elements
+  */
+
+  // Create the Galois field  GF(8) ~ Z2[x] / (x^3 + x + 1)
+  Int p = 2;
+  Int k = 3;
+  Int q = rsPow(p, k);
+
+  ModInt zero(0, p); // Maybe use O (the letter Oh)
+  ModInt one (1, p); // Maybe use l (the letter ell)
+  Poly m({one, one, zero, one});  // Modulus polynomial 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3
+
+  // Create the 8 elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees
+  // less than 3. These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1
+  Poly g4_0({zero            });  // 0
+  Poly g4_1({one             });  // 1
+  Poly g4_2({zero, one       });  //     x
+  Poly g4_3({one,  one       });  // 1 + x
+  Poly g4_4({zero, zero, one });  //         x^2
+  Poly g4_5({one,  zero, one });  // 1     + x^2
+  Poly g4_6({zero, one,  one });  //     x + x^2
+  Poly g4_7({one,  one,  one });  // 1 + x + x^2
+  // We have the zero polynomial and
+  // 1 polynomial  of degree 0: g4_1  and
+  // 2 polynomials of degree 1: g4_2, g4_3  and 
+  // 4 polynomials of degree 2: g4_4, g4_5, g4_6, g4_7 
+
+  //std::vector<Poly> gf4(8);
+  // Doesn't compile - I think, it's because rsModularInteger has no default constructor
+
+
+
   
   rsFiniteFieldNaive<Int> field(p, k);
+
 
   int dummy = 0;
 
   // To actually do this, we first need to make sure that rsPolynomial compiles (and works) fine
   // for T = rsModularInteger. We should do that in the unit tests in the main repo and while we 
-  // are at it, we should also make it clenaly compile (without warnings) and work with rsFraction.
+  // are at it, we should also make it cleanly compile (without warnings) and work with rsFraction.
+
+  // https://www.youtube.com/watch?v=4BfCmZgOKP8  22:23
+  // https://math.stackexchange.com/questions/32197/find-all-irreducible-monic-polynomials-in-mathbbz-2x-with-degree-equal
+  // https://e.math.cornell.edu/people/belk/numbertheory/NumberTheoryPolynomials.pdf
 }
 
 

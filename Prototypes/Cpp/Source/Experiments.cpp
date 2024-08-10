@@ -10858,8 +10858,17 @@ void testPolynomialQuotientRing()
   using Rat  = rsFraction<Int>;
   using Poly = rsPolynomial<Rat>;
   using Comp = rsComplex<Rat>;
+  //using Hyp  = rsHyperbolicNumber<Rat>;  // That class does not yet exist
 
   bool ok = true;
+
+ 
+  auto equals = [](const Comp& c, const Poly& p)
+  {
+    Poly cp({c.re, c.im});
+    return p == cp;
+  };
+ 
 
   // Compute (7 + 2i) * (5 - 3i) in the complex numbers:
   Comp ca(7,  2);
@@ -10870,13 +10879,15 @@ void testPolynomialQuotientRing()
   Poly pm({1,0,1});           // m = 1 + x^2, our modulus polynomial
   Poly pa({7,  2});           // a = 7 + 2 x
   Poly pb({5, -3});           // b = 5 - 3 x
-  Poly pc = (pa * pb) % pm;   // 41 - 11 x + 0 x^2 - matches cc but has a 0 coeff for x^2, i.e. the 
+  Poly pc = (pa * pb) % pm;   // 41 - 11 x + 0 x^2 - matches cc but has a 0 coeff for x^2, i.e. the
                               // zero coeff is not automatically scrapped
   
   Poly test = pa * pb;        // 35 - 11 x - 6 x^2
 
   // ToDo:
-  // ok &= compare(cc, pc)
+  //ok &= equals(cc, pc);
+  // Fails because of the zero-coeff for x^2 which is not automatically scrapped in the modulo 
+  // operation such that pc is formally of degree 2.
  
 
 
@@ -10890,7 +10901,8 @@ void testPolynomialQuotientRing()
   // ToDo:
   //
   // - Try it with some more numbers - maybe let real and imaginary part loop through -10...+10
-  //   or something
+  //   or something. Try also addition. Try to do a couple of more multiplications without modulo 
+  //   and then do the modulo at the very end.
   //
   // - Demonstrate also isomorphy between Q[x] / (x^2 - 1) with the hyperbolic numbers and 
   //   Q[x] / (x^2) with the dual numbers.

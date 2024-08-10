@@ -10680,6 +10680,15 @@ void testFiniteField()
   // 2 polynomials of degree 1: g4_2, g4_3  and 
   // 4 polynomials of degree 2: g4_4, g4_5, g4_6, g4_7 
 
+  // But wait - in this so constructed field, we would have 1 + 1 = 0, not 1 + 1 = 2. That seems 
+  // wrong! But here, at 28:16: https://www.youtube.com/watch?v=4BfCmZgOKP8 this looks like this is
+  // indeed the way to do it. He computes 5 + 7 = 2 (I left out the g4_ prefix). Maybe we cannot 
+  // assume that the computations in Galois fields map meaningfully to the computations we are used
+  // to in (modular) integer numbers.
+
+  Poly r(O);
+  //r = g4_5 + g4_7; // Doesn't compile
+
   
   rsFiniteFieldNaive<Int> field(p, k);
 

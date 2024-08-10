@@ -10688,6 +10688,10 @@ void testFiniteField()
 
   Poly r(O);
   //r = g4_5 + g4_7; // Doesn't compile
+  // Maybe we need to give rsModularInteger a default constructor - oh - it actually has one! So 
+  // what's the problem then?
+  // Hmm - it seems, we don't have an explicit instatiation of rsPolynomial<rsModularInteger<int>>
+  // -> try to create one
 
   
   rsFiniteFieldNaive<Int> field(p, k);

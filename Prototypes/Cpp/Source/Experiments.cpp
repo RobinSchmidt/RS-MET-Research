@@ -3203,7 +3203,7 @@ class B: public A
     // j: derivative index
     // k: component index
     // i: summation index
-    D.setToZero();
+    D.setToZero(T(0));
     for(j = 0; j < N; j++) 
       for(k = 0; k < N; k++)
         for(i = 0; i < N; i++)
@@ -5828,7 +5828,7 @@ int hermiteInterpolant01(T* y0, int n0, T* y1, int n1, T* p, const rsMatrix<T>& 
   auto accumulate = [&](int i)->void 
   { 
     // Initializations:
-    L.setToZero();        // todo: rename to clear
+    L.setToZero(T(0));    // todo: rename to clear
     int ni, no;           // ni = n0 or n1, no is the respective other n
     T   xi;               // xi = 0  or 1
     T*  yi;               // yi = y0 or y1
@@ -10575,7 +10575,7 @@ void testPrimesAndMore()
   std::vector<std::vector<int>> numberClasses(M+1);
   Vec c(M+1);      // the current counts of all the sequences
   Mat C(M+1, N);
-  C.setToZero();
+  C.setToZero(0.0);
   for(int n = 2; n < N; n++)
   {
     int m = getSequenceIndex(n);

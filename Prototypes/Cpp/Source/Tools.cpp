@@ -2242,7 +2242,7 @@ public:
 
     // factor out into shiftFirstMatrixIndex:
     Mat B(N, N);
-    B.setToZero();
+    B.setToZero(T(0));
     for(int i = 0; i < N; i++)
       for(int j = 0; j < N; j++)
         for(int k = 0; k < N; k++)
@@ -2258,7 +2258,7 @@ public:
 
     // factor out into shiftFirstMatrixIndex:
     Mat B(N, N);
-    B.setToZero();
+    B.setToZero(T(0));
     for(int i = 0; i < N; i++)
       for(int j = 0; j < N; j++)
         for(int k = 0; k < N; k++)
@@ -2441,7 +2441,7 @@ public:
 
     // (4) - apply Ref.(1), Eq. 362:
     Mat D(N, N);
-    D.setToZero();
+    D.setToZero(T(0));
     int i, j, k;
     // i: index of covariant derivative (cov. der. with respect to i-th coordinate)
     // j: index of vector component (j-th component of cov. der.)
@@ -2606,7 +2606,7 @@ public:
   last index of the Riemann-Christoffel curvature tensor. */
   Mat getRicciTensor1stKind(const Vec& u) const
   {
-    Mat  r(N, N); r.setToZero();                     // Ricci tensor (rank 2)
+    Mat  r(N, N); r.setToZero(T(0));                     // Ricci tensor (rank 2)
     Tens R = getRiemannTensor2ndKind(u);  // has rank 4, type (1,3)
     for(int i = 0; i < N; i++)
       for(int j = 0; j < N; j++)
@@ -2815,7 +2815,7 @@ public:
       result &= errMax <= tol; }
 
     // product of numerically computed co- and contravariant bases:
-    Mat id = Mat::identity(N);
+    Mat id = Mat::identity(N, T(0));
     Mat M  = getNumericalBasisProduct(u);
     errMat = M - id;
     result &= errMat.getAbsoluteMaximum() <= tol;
@@ -7815,7 +7815,7 @@ public:
   //  ...but maybe...we'll see....
 
   /** Resets out internal state vector to all zeros. */
-  void reset() { x.setToZero(); }
+  void reset() { x.setToZero(T(0)); }
   // ToDo: 
   // -Maybe have a function setState(T* newState) that lets the client explicitly set up any 
   //  desired initial state/condition.

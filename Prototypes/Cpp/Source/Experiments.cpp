@@ -10660,29 +10660,25 @@ void testFiniteField()
   Int k = 3;
   Int q = rsPow(p, k);
 
-  ModInt zero(0, p); // Maybe use O (the letter Oh)
-  ModInt one (1, p); // Maybe use l (the letter ell)
-  Poly m({one, one, zero, one});  // Modulus polynomial 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3
+  ModInt O(0, p); // Maybe use O (the letter Oh)
+  ModInt l(1, p); // Maybe use l (the letter ell)
 
-  // Create the 8 elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees
-  // less than 3. These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1
-  Poly g4_0({zero            });  // 0
-  Poly g4_1({one             });  // 1
-  Poly g4_2({zero, one       });  //     x
-  Poly g4_3({one,  one       });  // 1 + x
-  Poly g4_4({zero, zero, one });  //         x^2
-  Poly g4_5({one,  zero, one });  // 1     + x^2
-  Poly g4_6({zero, one,  one });  //     x + x^2
-  Poly g4_7({one,  one,  one });  // 1 + x + x^2
+  // Create the Modulus polynomial m = 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3 and the 8 
+  // elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees less than 3.
+  // These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1
+  Poly m(   {l, l, O, l});  // 1 + x       + x^3
+  Poly g4_0({O         });  // 0
+  Poly g4_1({l         });  // 1
+  Poly g4_2({O, l      });  //     x
+  Poly g4_3({l, l      });  // 1 + x
+  Poly g4_4({O, O, l   });  //         x^2
+  Poly g4_5({l, O, l   });  // 1     + x^2
+  Poly g4_6({O, l, l   });  //     x + x^2
+  Poly g4_7({l, l, l   });  // 1 + x + x^2
   // We have the zero polynomial and
   // 1 polynomial  of degree 0: g4_1  and
   // 2 polynomials of degree 1: g4_2, g4_3  and 
   // 4 polynomials of degree 2: g4_4, g4_5, g4_6, g4_7 
-
-  //std::vector<Poly> gf4(8);
-  // Doesn't compile - I think, it's because rsModularInteger has no default constructor
-
-
 
   
   rsFiniteFieldNaive<Int> field(p, k);

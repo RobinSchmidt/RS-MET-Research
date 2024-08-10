@@ -10851,7 +10851,7 @@ void testPolynomialQuotientRing()
   // UNDER CONSTRUCTION
   //
   // We demonstrate the isomorphy between the complex rationals and the quotient ring of 
-  // polynomials with rational coeffs taken modulo the polynomial q(x) = 1 + x^2. ...TBC...
+  // polynomials with rational coeffs taken modulo the polynomial m = m(x) = 1 + x^2. ...TBC...
 
 
   using Int  = int;
@@ -10859,37 +10859,41 @@ void testPolynomialQuotientRing()
   using Poly = rsPolynomial<Rat>;
   using Comp = rsComplex<Rat>;
 
-  //using PQ   = rsModularInteger<Poly>;
-
-  Poly pm({1,0,1});  // q(x) = 1 + x^2, our modulus polynomial
-
-
-  //PQ a(Poly({2,3}), m);  // a = 2 + 3x
-  // Does not compile - we need to instantiate the template - see comment in RaptInstantiations, 
-  // line 384. Maybe do the computations on non-modular polynomials and do the mod operations 
-  // manually as last step. The point of using rsModularInteger is to automate the polynomial 
-  // modulo operation
-
-  // Compute ((7 + 2x) * (5 - 3x)) % (1 + x^2) in the polynomial quotient ring:
-  Poly pa({7,  2});  // a = 7 + 2x
-  Poly pb({5, -3});  // b = 5 - 3x
-  Poly pc; 
-  pc = pa * pb;
-  pc = pc % pm;
+  bool ok = true;
 
   // Compute (7 + 2i) * (5 - 3i) in the complex numbers:
   Comp ca(7,  2);
   Comp cb(5, -3);
-  Comp cc;
-  cc = ca * cb;
+  Comp cc = ca * cb;          // 41 - 11i
+
+  // Compute ((7 + 2x) * (5 - 3x)) % (1 + x^2) in the polynomial quotient ring:
+  Poly pm({1,0,1});           // m = 1 + x^2, our modulus polynomial
+  Poly pa({7,  2});           // a = 7 + 2 x
+  Poly pb({5, -3});           // b = 5 - 3 x
+  Poly pc = (pa * pb) % pm;   // 41 - 11 x + 0 x^2 - matches cc but has a 0 coeff for x^2, i.e. the 
+                              // zero coeff is not automatically scrapped
+  
+  Poly test = pa * pb;        // 35 - 11 x - 6 x^2
+
+  // ToDo:
+  // ok &= compare(cc, pc)
  
 
 
 
-  bool ok = true;
+
 
 
   rsAssert(ok);
+
+
+  // ToDo:
+  //
+  // - Try it with some more numbers - maybe let real and imaginary part loop through -10...+10
+  //   or something
+  //
+  // - Demonstrate also isomorphy between Q[x] / (x^2 - 1) with the hyperbolic numbers and 
+  //   Q[x] / (x^2) with the dual numbers.
 }
 
 

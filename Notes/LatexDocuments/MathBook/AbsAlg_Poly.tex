@@ -98,6 +98,9 @@ Let $a(x) = a_0 + a_1 x + \ldots + a_n x^n$ be a polynomial with integer coeffic
 \subsubsection{Quotient Rings}
 We will now consider rings of equivalence classes of polynomials where two polynomials are considered equivalent, when they produce the same remainder when we apply polynomial division to them with a given fixed polynomial $q(x)$. These rings are denoted in the form $\mathbb{F}[x] / q(x)$. For example, the notation $\mathbb{R}[x] / (x^2 + 1)$ means the following: We start with the ring of polynomial $\mathbb{R}[x]$ with real coefficients. We "mod" (apply a "modulo" operation) this ring by the fixed polynomial $q(x) = x^2 + 1$. This means we consider two elements of $\mathbb{R}[x]$ to be equivalent, we they produce the same polynomial $r(x)$ as remainder after a polynomial division by $q(x) = x^2 + 1$. The possible remainders are polynomials of degree at most $1$, that is, they can be written in the form $a_0 + a_1 x$. It will turn out that this specific example is actually isomorphic to the ring of complex numbers of the form $a + b \i$, which is indeed more than just a ring but even a field. If we would have taken $q(x) = x^2 - 1$ as modulus instead, we would get something isomorphic to the ring of hyperbolic (aka split-complex) numbers, which is not a field. If we would have taken $q(x) = x^2$, we would arrive at a ring that is isomorphic to the dual numbers which is not a field either.  VERIFY!...TBC...
 
+
+% Try to implement it using rsModularInteger<rsPolynomial<rsFraction<int>>>
+
 % hyperbolic numbers are not a field bcs (1+j) * (1-j) = 0
 % dual numbers are not a field because eps * eps = 0
 

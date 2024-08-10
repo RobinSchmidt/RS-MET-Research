@@ -10846,6 +10846,53 @@ void testRingExtensions()
 }
 
 
+void testPolynomialQuotientRing()
+{
+  // UNDER CONSTRUCTION
+  //
+  // We demonstrate the isomorphy between the complex rationals and the quotient ring of 
+  // polynomials with rational coeffs taken modulo the polynomial q(x) = 1 + x^2. ...TBC...
+
+
+  using Int  = int;
+  using Rat  = rsFraction<Int>;
+  using Poly = rsPolynomial<Rat>;
+  using Comp = rsComplex<Rat>;
+
+  //using PQ   = rsModularInteger<Poly>;
+
+  Poly pm({1,0,1});  // q(x) = 1 + x^2, our modulus polynomial
+
+
+  //PQ a(Poly({2,3}), m);  // a = 2 + 3x
+  // Does not compile - we need to instantiate the template - see comment in RaptInstantiations, 
+  // line 384. Maybe do the computations on non-modular polynomials and do the mod operations 
+  // manually as last step. The point of using rsModularInteger is to automate the polynomial 
+  // modulo operation
+
+  // Compute ((7 + 2x) * (5 - 3x)) % (1 + x^2) in the polynomial quotient ring:
+  Poly pa({7,  2});  // a = 7 + 2x
+  Poly pb({5, -3});  // b = 5 - 3x
+  Poly pc; 
+  pc = pa * pb;
+  pc = pc % pm;
+
+  // Compute (7 + 2i) * (5 - 3i) in the complex numbers:
+  Comp ca(7,  2);
+  Comp cb(5, -3);
+  Comp cc;
+  cc = ca * cb;
+ 
+
+
+
+  bool ok = true;
+
+
+  rsAssert(ok);
+}
+
+
 // Some helper function to turn sets into strings and/or print them out
 // Maybe move some of them into the set class
 

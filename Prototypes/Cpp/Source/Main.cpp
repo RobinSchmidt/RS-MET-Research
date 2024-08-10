@@ -76,8 +76,9 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   //testFiniteField();     // stub
-  testFieldExtensions();
+  //testFieldExtensions();
   //testRingExtensions();
+  testPolynomialQuotientRing();  // stub
 
   //testSet();
   //testRelation();

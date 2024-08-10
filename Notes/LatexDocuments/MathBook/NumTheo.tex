@@ -42,6 +42,33 @@ https://www.youtube.com/watch?v=DQdgls3f2OM
 if (a,b,c) is a Pythagorean triple then (a^m + b^m + c^m) / (a+b+c) is an integer for odd m
 
 
+
+https://www.youtube.com/watch?v=M-9_rZfVQVE
+ 2:20  Fermat's last theorem in different number systems
+ 5:35  In R, the equation a^n + b^n = c^n has infintely many solutions. Just treat a,b, as free
+       parameters and compute c as \sqrt[n]{a^2 + b^2}. But it's much more difficult to solve in Z
+ 6:20  Formula for primitive Pythagorean triples: take two integer parameters m,n with n > m >=1,
+       gcd(m,n) = 1, m + n = odd and take the triples (n^2 - m^2, 2 n m, n^2 + m^2).
+10:45: Over Z[i], 2 factors as (1+i)(1-i) and 5 = (1+2i)(1-2i), a^2+b^2 = (a+bi)(a-bi)
+11:20: Z[1/2] gives the dyadic rationals
+12:40: Z[sqrt(-3)] was used by Euler to solve a^3 + b^3 = c^3 (it has no solutions in Z+)
+13:20  This involved factoring an expresion like u^2 + 3 v^2. It canbe done as
+       u^2 + 3 v^2 = (u + r v)(u - r v)  with r = sqrt(-3). But his proof was wrong because for it
+       to work, the factorizationof number has to be unique. but it isn't. For example: 
+       4 = 2*2 = (1+r)*(1-r). The ring is not a unique factorization domain (UFD). 
+14:35  Z[w] with w = cbrt(1) creates the Eisenstein integers, has units +1,-1,w,w^2,-w,-w^2. This
+       ring contains sqrt(-3) as well and is a UFD. 4 still factors like in Z[sqrt(-3)] but the
+       different factorizations are now associated, so they don't count as different anymore. This
+       patches Euler's faulty proof
+16:20  In Z[w], we have  a^3 + b^3 = (a + b) (a^2 - a b + b^2) = (a + b)(a + bw)(a + bw^2)
+16:40  a^4 + b^4 = c^4 means (a^2)^2 + (b^2)^2 = (c^2)^2, so we can show that there exists no 
+       Pythagorean triple in which a,b,c are all squares.
+17:50  for a^5 + b^5 = c^5, we use Z[z5] where z5 = \sqrt[5]{1} - the cyclotomic integers of
+       order(?) 5
+18:20  Z[z23] is not a UFD
+...
+
+
 https://en.wikipedia.org/wiki/Lagrange%27s_four-square_theorem
 https://en.wikipedia.org/wiki/Fermat_polygonal_number_theorem
  
@@ -76,5 +103,7 @@ https://www.youtube.com/watch?v=i8bn0US_k84
  
 Algebraic number theory - an illustrated guide | Is 5 a prime number? 
 https://www.youtube.com/watch?v=4m_EaWA08H0
+	
+https://mathworld.wolfram.com/QuadraticReciprocityTheorem.html	
 	
 \end{comment}

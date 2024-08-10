@@ -217,14 +217,14 @@ It may happen that two ring elements $a,b$ have a common divisor $d$. That means
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Subrings}
-We have produced bigger rings from given ones by adjoining elements or forming products. We may also take a given ring $R$ and extract a smaller ring from it which we call a \emph{subring} $S$. A subring is defined analogously to a subgroup: we take a subset of the underlying set. If that subset together with the two operations forms itself a ring, then we have a subring. Multiplying any element $a \in S$ from the subring with any element $b \in S$ from the subring must yield again an element $c \in S$ from the subring. For example, the set of even integers $2 \mathbb{Z}$ forms a subring of $\mathbb{Z}$. Some authors include the existence of a multiplicative identity into the requirements for a ring. With such a definition, $2 \mathbb{Z}$ would not qualify as subring because it has no multiplicative identity. Then, one would have to resort to call it a subrng - a subring without the i [VERIFY!]. Fortunately, I have used a definition that lets us avoid that awkward language.
+We have produced bigger rings from given ones by adjoining elements or forming products. We may also take a given ring $R$ and extract a smaller ring from it which we call a \emph{subring} $S$. A subring is defined analogously to a subgroup: we take a subset of the underlying set. If that subset together with the two operations forms itself a ring, then we have a subring. Multiplying any element $a \in S$ from the subring with any element $b \in S$ from the subring must yield again an element $c \in S$ from the subring. For example, the set of even integers $2 \mathbb{Z}$ forms a subring of $\mathbb{Z}$. Some authors include the existence of a multiplicative identity into the requirements for a ring. With such a definition, $2 \mathbb{Z}$ would not qualify as subring because it has no multiplicative identity. Then, one would have to resort to call it a subrng - a subring without the i [VERIFY!]. Fortunately, I have used a definition that lets us avoid that awkward language. This is again a matter of convention and both conventions exist in the literature.
 
 % toDo: explain also "extension ring" or "ring extenstion"
 % https://en.wikipedia.org/wiki/Subring
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Ideals}
-The notion of an \emph{ideal} is more restrictive than that of a subring. Among other requirements, a subring $S$ must be closed under multiplication. For an ideal $I$ of $R$, the closure under multiplication requirement is tightened: It must be the case that the products of elements $i \in I$ from the ideal $I$ with elements $r \in R$ from the original ring $R$ must again produce elements inside the ideal. The subset is not only closed in the sense that you \emph{cannot leave it} but also acts as an "attractor" in the sense that you immediately \emph{get sucked into it} as soon as you multiply \emph{anything} by an element of it, so to speak. Another was to characterize an ideal is to say, that for every element that is inside the ideal, all of its multiples (as in: products with other ring elements) are also inside the ideal. When you hear "ideal" you may translate that in your head into "absorbing subring". If the ring is not commutative, we must distinguish between left, right and two-sided ideals. For these, we require:
+The notion of an \emph{ideal} is more restrictive than that of a subring. Among other requirements, a subring $S$ must be closed under multiplication. For an ideal $I$ of $R$, the closure under multiplication requirement is tightened: It must be the case that the products of elements $i \in I$ from the ideal $I$ with elements $r \in R$ from the original ring $R$ must again produce elements inside the ideal. The subset is not only closed in the sense that you \emph{cannot leave it} but also acts as an "attractor" in the sense that you immediately \emph{get sucked into it} as soon as you multiply \emph{anything} by an element of it, so to speak. Another way to characterize an ideal is to say, that for every element that is inside the ideal, all of its multiples (as in: products with other ring elements) are also inside the ideal. When you hear "ideal" you may translate that in your head into "absorbing subring". If the ring is not commutative, we must distinguish between left, right and two-sided ideals. For these, we require:
 
 \medskip
 \begin{tabular}{l l}
@@ -278,6 +278,8 @@ In words: The intersection of two ideals consists of all their common elements. 
 % https://math.stackexchange.com/questions/1737282/is-the-difference-of-ideals-an-ideal
 % https://math.stackexchange.com/questions/1524077/union-and-sum-of-ideals-is-not-ideal
 
+% I think, of all the operations, the product is the most important. And maybe also the quotient? Explain quotient ideal - has the definition anything to do with equivalence classes like it does with qutient rings?
+
 
 \medskip
 As example, take $I = \mathbb{Z}_6, J = \mathbb{Z}_8$ which are both ideals of $\mathbb{Z}$. Their intersection is given by $I \cap J = \mathbb{Z}_{24}$. That is because $24$ is the lowest common multiple of $6$ and $8$ [VERFIY claim]. ...TBC...
@@ -291,7 +293,7 @@ As example, take $I = \mathbb{Z}_6, J = \mathbb{Z}_8$ which are both ideals of $
 % In this view, the idea of a "prime ideal" makes sense, I think. These are then ideal that can
 % not be expressed as products of other ideals? I deliberately do not say "products of smaller
 % ideals" because, in a sense, these factor ideals have more elements when seen as sets (not more
-% in term of cardinality but in the sense of gaving some elements that the product doesn't have).
+% in term of cardinality but in the sense of having some elements that the product doesn't have).
 % The products contain less elements than the factors - not in the sense of cardinality but in the
 % sense of a subset relation. we have $I \cdot J \subseteq I$ and $I \cdot J \subseteq J$ [VERIFY]
 %

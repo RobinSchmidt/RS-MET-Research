@@ -44,11 +44,13 @@ As said, the list is not exhaustive. There are 16 possible different functions $
 
 % What about constant functions that always output 0 or 1
 
+% How to Read Logic
+% https://www.youtube.com/watch?v=JVjv0CCzHok
 
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Deduction}
-Logical \emph{deduction} is the process of deriving new true statements from given true statements. In this context, the given statements are called \emph{premises} and the derived statements are called \emph{conclusions}. The process of deriving new statements from known ones is called \emph{inference} and there are certain rules that we need to obey to draw valid conclusions from a given set of premises. When we write a statement like $p,q \;\vdash\; r$ then this means that if $p$ and $q$ on the left hand side are both true propositions, then the proposition $r$ on the right hand side is also true. In this notation, $p,q$ are the premises and $r$ is the conclusions. The symbol $\vdash$ is called the "turnstile" or "tee" and means something like "proves", "entails", "yields"  ...tbc
+Logical \emph{deduction} is the process of deriving new true statements from given true statements. In this context, the given statements are called \emph{premises} and the derived statements are called \emph{conclusions}. The process of deriving new statements from known ones is called \emph{inference} and there are certain rules that we need to obey to draw valid conclusions from a given set of premises. When we write a statement like $p,q \,\vdash\, r$ then this means that if $p$ and $q$ on the left hand side are both true propositions, then the proposition $r$ on the right hand side is also true. In this notation, $p,q$ are the premises and $r$ is the conclusion. The symbol $\vdash$ is called the "turnstile" or "tee" and means something like "proves", "entails", "yields"  ...tbc
 
 % https://en.wikipedia.org/wiki/Turnstile_(symbol)
 % or propositional logic, it may be shown that semantic consequence and derivability are equivalent
@@ -115,7 +117,7 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
   
   $p \then q, p \then \neg q \;\vdash\; \neg p$                & 
   Reductio ad Absurdum                                          & 
-  If $p$ implies $q$ and its negation then $p$ is false         \\ 
+  If $p$ implies $q$ and $q$s negation then $p$ is false         \\ 
   
   $p, \neg p \;\vdash\; q$                                     & 
   Deductive Explosion                                           & 
@@ -140,6 +142,8 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 \end{tabular}
 \medskip
 
+% Syllogism:
+
 %Not yet complete!
 % https://en.wikipedia.org/wiki/List_of_rules_of_inference#Rules_for_propositional_calculus
 
@@ -150,8 +154,18 @@ Logical \emph{deduction} is the process of deriving new true statements from giv
 
 
 
+%---------------------------------------------------------------------------------------------------
+%\subsection{Induction and Abduction}
 
 
+
+% Sherlock Holmes NEVER 'Deduced' Anything
+% https://www.youtube.com/watch?v=MJrYwh6WyF8  by Another Roof
+% -in an implication p -> q, q is called antecedent and p the consequence. We may also call it 
+%  premise and conclusion
+% -Induction is used in scientific reasoning - one speculates about general rules from specific
+%  observations. 
+% -Abduction tries to find the most plausible explanation for an observation
 
 
 
@@ -213,7 +227,7 @@ Proof by induction is a proof technique that can be used to prove a statement $\
 
 %===================================================================================================
 \section{Higher Order Logic}
-Propositional logic and predicate logic is also called zeroth and first order logic respectively indicating a hierarchy of logical systems. The position in this hierarchy determined by what the variables that appear in the formulas stand for. That is formalized in the idea of the \emph{domain of discourse} which is the universe of things that we can talk about.
+Propositional logic and predicate logic are also called zeroth and first order logic respectively indicating a hierarchy of logical systems. The position in this hierarchy determined by what the variables that appear in the formulas stand for. That is formalized in the idea of the \emph{domain of discourse} which is the universe of things that we can talk about.
 
 \medskip
 In 0th order logic, i.e. propositional logic, the variables just stand for truth values. That means, any variable $x$ that appears in a formula can be assigned either true or false and that's it. Variables have no inner structure. Our domain of discourse is just the relation between logical formulas themselves - like is one formula equivalent to another, does one imply the other, etc. We cannot yet talk about objects from the world, so to speak. ...TBC...
@@ -305,6 +319,8 @@ https://www.youtube.com/watch?v=niqqm1DRTkE
 
 Set Theory Part 1: Logic
 https://www.youtube.com/watch?v=kOm15NAOZIM
+
+
 
 
 \end{comment}

@@ -1641,6 +1641,10 @@ https://www.youtube.com/watch?v=sQ_znt_03Ws&list=PLTpJiP-hRaV2ZKBQipaeWp7Yxk_IK5
  2: {{E}}, {{E},E}
  3: {{{E}}}, ....
  The sets on each level may have incoming edges from all the sets in layers above. Maybe implement
- it.
+ it. i think, on each level, we just take all the sets of the previous level and add to them each
+ set of the previus level as element? Is that right? In order to get a new set in the level n that
+ has not been created before, we need to include at least one set from the level n-1. Ah - just
+ adding the sets from the previousl level as elements is not enough. We must add all non-empty
+ collections of sets from level n-1. 
 
 \end{comment}

@@ -1,0 +1,5 @@
+
+
+Has a list of lists:
+https://en.wikipedia.org/wiki/List_of_theorems
+List of algebras, algorithms, axioms, ...

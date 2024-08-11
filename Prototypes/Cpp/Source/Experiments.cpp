@@ -10630,40 +10630,37 @@ void testFiniteField()
 {
   // UNDER CONSTRUCTION
   //
-  // We try to implement a finite field (aka Galois field) with p^k elements where p is a prime 
+  // We try to implement a finite field (aka Galois field) with n = p^k elements where p is a prime 
   // number and k is an integer. To construct such a finite field, we start with the ring of 
   // polynomials over Zp and then form the quotient ring of that with some fixed irreducible 
-  // polynomial of degree k from that ring. The result is a ring of polynomials over zp with degree
+  // polynomial of degree k from that ring. The result is a ring of polynomials over Zp with degree
   // of at most k-1. That means, we have k coeffcients from Zp - these length-k coefficient arrays
   // form the elements of our field. ...TBC...
   //
-  // In Z2[x], there's only one irrducible polynomial of degree 2: x^2 + x + 1 and there are
-  // two irreducible polynomials of degree 3: x^3 + x + 1, x^3 + x^2 + 1.
+  // In Z2[x], there's only one irreducible polynomial of degree 2: x^2 + x + 1 and there are
+  // two irreducible polynomials of degree 3: x^3 + x + 1, x^3 + x^2 + 1. We pick the first one 
+  // from these two and create the Galois field  GF(8) ~ Z2[x] / (x^3 + x + 1). So, in this 
+  // experiment we implement the Galois field with: p = 2, k = 3, n = 2^3 = 8.
 
-  using Int    = int;                     // Try also unsigned, 64 bit, etc.
+  using Int    = int;
   using ModInt = rsModularInteger<Int>;
   using Poly   = rsPolynomial<ModInt>;
+  using Table  = rsMatrix<Poly>;         // For operation tables for +,-,*,/
   
-  /*
-  Int p = 3;
-  Int k = 4;
-  Int q = rsPow(p, k);  // q = p^k = 3^4 = 81, the number of field elements
-  */
-
-  // Create the Galois field  GF(8) ~ Z2[x] / (x^3 + x + 1)
+  // Parameters for our Galois field:
   Int p = 2;
   Int k = 3;
-  Int n = rsPow(p, k);
+  Int n = rsPow(p, k); // 8
 
-  ModInt _0(0, p); // Maybe use O (the letter Oh)
-  ModInt _1(1, p); // Maybe use l (the letter ell)
-  // Hmm...I'm not sure, if it's a good idea to abuse O,l as 0,1. Maybe use _0, _1 instead
+  // Zero and one as modular integers with modulus p:
+  ModInt _0(0, p);
+  ModInt _1(1, p);
 
   // Create the Modulus polynomial m = 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3 and the 8 
   // elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees less than 3.
-  // These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1
+  // These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1.
   std::vector<Poly> g(n);
-  Poly      m({_1, _1, _0, _1}); // 1 + x       + x^3
+  Poly      m({_1, _1, _0, _1});  // 1 + x       + x^3
   g[0] = Poly({_0            });  // 0
   g[1] = Poly({_1            });  // 1
   g[2] = Poly({_0, _1        });  //     x
@@ -10672,7 +10669,32 @@ void testFiniteField()
   g[5] = Poly({_1, _0, _1    });  // 1     + x^2
   g[6] = Poly({_0, _1, _1    });  //     x + x^2
   g[7] = Poly({_1, _1, _1    });  // 1 + x + x^2
-  // etc. - then we can loop over the elements of our field
+  // We may also write the modulus m in shorthand notation as 1011. In this notation, the leading 
+  // coeff for x^3 comes first and the last coeff is for the constant, i.e. this notation reverses 
+  // the polynomial coeff array. The remainder polynomials in this notation are given as g0 = 000, 
+  // g1 = 001, g2 = 010, ...TBC...
+
+  // Create addition and multiplication table:
+  Table add(n, n), mul(n, n);
+  for(int i = 0; i < n; i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      add(i, j) = (g[i] + g[j]) % m;  // I think, the % m does nothing here (verify!)
+      mul(i, j) = (g[i] * g[j]) % m;
+    }
+  }
+  // Some of the result have an allocated degree of up to 4 (i.e. coeff arrays of size 5) but the
+  // trailing coeffs are zero. This is because we do not yet automatically truncate the zeros.
+
+
+
+
+  // ToDo:
+  // -Truncate entries (trailing zeros) in addition and multiplication table
+  // -Create tables of additive and multiplicative inverses
+  // -Create subtraction and division table
+
 
   // But wait - in this so constructed field, we would have 1 + 1 = 0, not 1 + 1 = 2. That seems 
   // wrong! But here, at 28:16: https://www.youtube.com/watch?v=4BfCmZgOKP8 this looks like this is
@@ -10695,12 +10717,18 @@ void testFiniteField()
   d = c / a;           // Should be equal to b - but isn't
   // Yeah - maybe division isn't that simple in GF(8). Maybe we need to search for the 
   // multiplicative inverses
-
+  // Can we use an adapted version of rsModularInverse() that works on polynomials?
 
   
   //rsFiniteFieldNaive<Int> field(p, k);
 
   int dummy = 0;
+
+  // ToDo:
+  //
+  // - Try it also with the other possible choice for the modulus polynomial
+
+
 
   // To actually do this, we first need to make sure that rsPolynomial compiles (and works) fine
   // for T = rsModularInteger. We should do that in the unit tests in the main repo and while we 

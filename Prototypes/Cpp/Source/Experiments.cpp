@@ -10687,14 +10687,17 @@ void testFiniteField()
   // to in (modular) integer numbers.
 
   Poly r(O);
-  //r = g4_5 + g4_7; // Doesn't compile
-  // Maybe we need to give rsModularInteger a default constructor - oh - it actually has one! So 
-  // what's the problem then?
-  // Hmm - it seems, we don't have an explicit instatiation of rsPolynomial<rsModularInteger<int>>
-  // -> try to create one
+  r = g4_5 + g4_7; // Should be the polynomial p(x) = x ...looks good.
+  // I think, for addition, we don't need to do the mod-by-m operation because addition will never 
+  // change the degree of the polynomial
+
+  //r = (g4_5 * g4_7) % m;  // triggers assert
+
+
+
 
   
-  rsFiniteFieldNaive<Int> field(p, k);
+  //rsFiniteFieldNaive<Int> field(p, k);
 
 
   int dummy = 0;

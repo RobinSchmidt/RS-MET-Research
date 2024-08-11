@@ -10628,14 +10628,18 @@ void testPrimesAndMore()
 
 void testFiniteField()
 {
-  // UNDER CONSTRUCTION
-  //
-  // We try to implement a finite field (aka Galois field) with n = p^k elements where p is a prime 
-  // number and k is an integer. To construct such a finite field, we start with the ring of 
-  // polynomials over Zp and then form the quotient ring of that with some fixed irreducible 
-  // polynomial of degree k from that ring. The result is a ring of polynomials over Zp with degree
-  // of at most k-1. That means, we have k coeffcients from Zp - these length-k coefficient arrays
-  // form the elements of our field. ...TBC...
+  // We construct a finite field (aka Galois field) with n = p^k elements where p is a prime number
+  // and k is an integer for the case p = 2, k = 3 such that n = 2^3 = 8. That is, we construct the
+  // unique (up to isomorphism) field with 8 elements. We start with the ring of polynomials over 
+  // Zp and then form the quotient ring of that with some fixed irreducible polynomial of degree k 
+  // from that ring. The result is a ring of polynomials over Zp with degree of at most k-1. That 
+  // means, we have k coeffcients from Zp each of which can be any number in 0..p-1. That gives us
+  // n = p^k different possible coefficient arrays. These length-k coefficient arrays form the 
+  // elements of our field. Of course, the idea that these elements are polynomial coefficient 
+  // arrays can later be abstracted away, i.e. the n coeff arrays can be represented by simple
+  // indices 0..n-1. What counts is only the relationship the between the n elements as implemented
+  // in the operation tables for add/sub/mul/div. The concrete representation as polynomial 
+  // coefficient arrays is only needed in the construction of these tables. ...TBC...
   //
   // In Z2[x], there's only one irreducible polynomial of degree 2: x^2 + x + 1 and there are
   // two irreducible polynomials of degree 3: x^3 + x + 1, x^3 + x^2 + 1. We pick the first one 
@@ -10719,24 +10723,30 @@ void testFiniteField()
     }
   }
 
+  // Check the tables of additive and multiplicative inverses:
+  bool ok = true;
+  for(int i = 0; i < n; i++)
+  {
+    ok &= rsContainsOnce(neg, g[i]);
+    ok &= rsContainsOnce(rec, g[i]);
+
+    // Check that g[i] + (-g[i]) = 0:
+    Poly sum = (g[i] + neg[i]) % m; 
+    sum.truncateTrailingZeros(_0);
+    ok &= sum == g[0];
+
+    // Check that g[i] + (1/g[i]) = 1 except for i = 0:
+    if(i != 0)
+    { 
+      Poly prod = (g[i] * rec[i]) % m;
+      prod.truncateTrailingZeros(_0);
+      ok &= prod == g[1];
+    }
+  }
 
 
 
-
-  // ToDo:
-  // -Create tables of additive and multiplicative inverses
-  // -Check if neg, rec work as intended
-  // -Check, if neg/rec contain every entry of g exactly once...or maybe there should be an 
-  //  exception for g[0] in rec? ...but maybe not?
-  // -Create subtraction and division table
-
-
-  // But wait - in this so constructed field, we would have 1 + 1 = 0, not 1 + 1 = 2. That seems 
-  // wrong! But here, at 28:16: https://www.youtube.com/watch?v=4BfCmZgOKP8 this looks like this is
-  // indeed the way to do it. He computes 5 + 7 = 2 (I left out the g4_ prefix). Maybe we cannot 
-  // assume that the computations in Galois fields map meaningfully to the computations we are used
-  // to in (modular) integer numbers.
-
+  /*
   Poly a(_0), b(_0), c(_0), d(_0);
 
   a = g[5];
@@ -10753,6 +10763,7 @@ void testFiniteField()
   // Yeah - maybe division isn't that simple in GF(8). Maybe we need to search for the 
   // multiplicative inverses
   // Can we use an adapted version of rsModularInverse() that works on polynomials?
+  */
 
   
   //rsFiniteFieldNaive<Int> field(p, k);
@@ -10762,13 +10773,38 @@ void testFiniteField()
   // ToDo:
   //
   // - Try it also with the other possible choice for the modulus polynomial
-
-
-
-  // To actually do this, we first need to make sure that rsPolynomial compiles (and works) fine
-  // for T = rsModularInteger. We should do that in the unit tests in the main repo and while we 
-  // are at it, we should also make it cleanly compile (without warnings) and work with rsFraction.
-
+  //
+  // - It's really annoying that we have to explcitly call the truncateTrailingZeros function
+  //   after each operation. Maybe that should happen automatically. The problem is, for 
+  //   polynomials with floating point coeffs, the trunation should probably use a tolerance, so
+  //   it's difficult to do without either making the API totally inconvenient or hardcoding
+  //   such thresholds - neither of which seems desirable. Maybe we could hardcode a threshold of
+  //   zero with the understanding that in the case of floating point arithmetic, the 
+  //   auto-truncation may not work. ...not sure yet...
+  //
+  // - Create subtraction and division table
+  //
+  // - Create "abstract" tables for all operations which do not contain the actual polynomials but
+  //   just the numbers 0...n-1, i.e. 0..7. These tables can be used for a more efficient 
+  //   implementation.
+  //
+  // - Implement a function that does such an abstract table generation for general p,k. It may 
+  //   need to get the modulus polynomial passed, too. Or maybe write a function that automatically
+  //   finds a suitable modulus polynomial. Maybe for this, the class rsBigInteger can be helpful
+  //   to enumerate the different remainder polynomials. We would use an integer in the base p and
+  //   then use its digits for the polynomial coeffs.
+  //
+  //
+  // Notes:
+  //
+  // - In this so constructed field, we would have 1 + 1 = 0, not 1 + 1 = 2. That seems strange 
+  //   but here, at 28:16: https://www.youtube.com/watch?v=4BfCmZgOKP8 this looks like this is
+  //   indeed the way to do it. He computes 5 + 7 = 2 (I left out the g4_ prefix). Maybe we cannot 
+  //   assume that the computations in Galois fields map meaningfully to the computations we are 
+  //   used to in (modular) integer numbers.
+  //
+  //
+  // See also:
   // https://www.youtube.com/watch?v=4BfCmZgOKP8  22:23
   // https://math.stackexchange.com/questions/32197/find-all-irreducible-monic-polynomials-in-mathbbz-2x-with-degree-equal
   // https://e.math.cornell.edu/people/belk/numbertheory/NumberTheoryPolynomials.pdf

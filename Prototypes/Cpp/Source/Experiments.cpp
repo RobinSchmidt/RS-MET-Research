@@ -10759,32 +10759,44 @@ void testFiniteField()
 
 
 
-  // Now make the tables abstract:
-  std::vector<int> ig = rsRangeLinear(0, n-1, n);
+  // Now make the tables abstract. We don't want to think about the elements of our Galois field as
+  // being polynomials. Instead, we think of them as just 8 elements that have 2 binary operations 
+  // defined between them. We represent the 8 elements abstractly as the indices 0..7:
+
+  std::vector<int> GF_8 = rsRangeLinear(0, n-1, n);              // Field elements
+
+  std::vector<int>  neg_8(n), rec_8(n);                          // Negatives and reciprocals
+  for(int i = 0; i < n; i++)
+  {
+    neg_8(i) = rsFind(g, neg(i));
+    rec_8(i) = rsFind(g, rec(i));
+  }
+
+  rsMatrix<int> add_8(n,n), sub_8(n,n), mul_8(n,n), div_8(n,n);  // Operation tables
+  for(int i = 0; i < n; i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      add_8(i, j) = rsFind(g, add(i, j));
+      sub_8(i, j) = rsFind(g, sub(i, j));
+      mul_8(i, j) = rsFind(g, mul(i, j));
+      div_8(i, j) = rsFind(g, div(i, j));
+    }
+  }
+
+  // Let's visualize the operation tables:
+  //plotMatrix(add_8);  // Not so interesting
+  plotMatrix(mul_8);
+
+  // Test the abstract tables:
 
 
 
-
-
-
-  /*
-  Poly a(_0), b(_0), c(_0), d(_0);
-
+  // Some manual test:
+  Poly a(_0), b(_0), c(_0);
   a = g[5];
   b = g[7];
-
-
   c = a + b; // Should be the polynomial p(x) = x ...looks good.
-  // I think, for addition, we don't need to do the mod-by-m operation because addition will never 
-  // change the degree of the polynomial
-
-  c = (a * b) % m;  
-
-  d = c / a;           // Should be equal to b - but isn't
-  // Yeah - maybe division isn't that simple in GF(8). Maybe we need to search for the 
-  // multiplicative inverses
-  // Can we use an adapted version of rsModularInverse() that works on polynomials?
-  */
 
   
   //rsFiniteFieldNaive<Int> field(p, k);
@@ -10804,17 +10816,15 @@ void testFiniteField()
   //   zero with the understanding that in the case of floating point arithmetic, the 
   //   auto-truncation may not work. ...not sure yet...
   //
-  // - Create subtraction and division table
-  //
-  // - Create "abstract" tables for all operations which do not contain the actual polynomials but
-  //   just the numbers 0...n-1, i.e. 0..7. These tables can be used for a more efficient 
-  //   implementation.
-  //
   // - Implement a function that does such an abstract table generation for general p,k. It may 
   //   need to get the modulus polynomial passed, too. Or maybe write a function that automatically
   //   finds a suitable modulus polynomial. Maybe for this, the class rsBigInteger can be helpful
   //   to enumerate the different remainder polynomials. We would use an integer in the base p and
   //   then use its digits for the polynomial coeffs.
+  //
+  // - Find out if the table of reciprocals can be created via an adapted version of 
+  //   rsModularInverse() (that works on polynomials) rather than by naive exhaustive searching as
+  //   we do now. If so, implement it as alternative algorithm. If not, explain why not.
   //
   //
   // Notes:
@@ -10824,6 +10834,11 @@ void testFiniteField()
   //   indeed the way to do it. He computes 5 + 7 = 2 (I left out the g4_ prefix). Maybe we cannot 
   //   assume that the computations in Galois fields map meaningfully to the computations we are 
   //   used to in (modular) integer numbers.
+  //
+  // - I think, for addition and subtraction, we don't need to do the mod-by-m operation because 
+  //   addition will never change the degree of the polynomial. Likewise, for multiplication, I 
+  //   think we do not need the manula truncation of trailing zeros because polynomial 
+  //   multiplication only produces trailing zeros if one of the factors already has some.
   //
   //
   // See also:

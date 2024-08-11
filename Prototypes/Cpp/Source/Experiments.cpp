@@ -10768,8 +10768,8 @@ void testFiniteField()
   std::vector<int>  neg_8(n), rec_8(n);                          // Negatives and reciprocals
   for(int i = 0; i < n; i++)
   {
-    neg_8(i) = rsFind(g, neg(i));
-    rec_8(i) = rsFind(g, rec(i));
+    neg_8[i] = rsFind(g, neg[i]);
+    rec_8[i] = rsFind(g, rec[i]);
   }
 
   rsMatrix<int> add_8(n,n), sub_8(n,n), mul_8(n,n), div_8(n,n);  // Operation tables
@@ -10789,8 +10789,20 @@ void testFiniteField()
   plotMatrix(mul_8);
 
   // Test the abstract tables:
+  for(int i = 0; i < n; i++)
+  {
+    ok &= rsContainsOnce(neg_8, i);
+    ok &= rsContainsOnce(rec_8, i);
 
-
+    // Check sum and product of value with its respective inverse:
+    int sum  = add_8(GF_8[i], neg_8[i]);
+    int prod = mul_8(GF_8[i], rec_8[i]);
+    ok &= sum == 0;
+    if(i != 0)  
+      ok &= prod == 1;
+    else
+      ok &= prod == 0;
+  }
 
   // Some manual test:
   Poly a(_0), b(_0), c(_0);
@@ -10798,15 +10810,15 @@ void testFiniteField()
   b = g[7];
   c = a + b; // Should be the polynomial p(x) = x ...looks good.
 
-  
-  //rsFiniteFieldNaive<Int> field(p, k);
-
   rsAssert(ok);
 
 
   // ToDo:
   //
   // - Try it also with the other possible choice for the modulus polynomial
+  //
+  // - Check if the abstract operation tables are latin squares, i.e. each row and each column
+  //   must contain each element (i.e. each index in 0..7) exactly once.
   //
   // - It's really annoying that we have to explcitly call the truncateTrailingZeros function
   //   after each operation. Maybe that should happen automatically. The problem is, for 
@@ -10825,6 +10837,9 @@ void testFiniteField()
   // - Find out if the table of reciprocals can be created via an adapted version of 
   //   rsModularInverse() (that works on polynomials) rather than by naive exhaustive searching as
   //   we do now. If so, implement it as alternative algorithm. If not, explain why not.
+  //
+  // - Implement the generation of the abstract tables in a general way in class
+  //   rsFiniteFieldNaive<Int>.
   //
   //
   // Notes:

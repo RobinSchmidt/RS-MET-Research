@@ -10680,18 +10680,19 @@ void testFiniteField()
   {
     for(int j = 0; j < n; j++)
     {
-      add(i, j) = (g[i] + g[j]) % m;  // I think, the % m does nothing here (verify!)
+      add(i, j) = (g[i] + g[j]) % m;       // I think, the % m does nothing here (verify!)
       mul(i, j) = (g[i] * g[j]) % m;
+      add(i,j).truncateTrailingZeros(_0);  // If we don't pass the _0, we get a compilation error.
+      mul(i,j).truncateTrailingZeros(_0);  // ..figure out why defaulting to zero doesn't work
     }
   }
-  // Some of the result have an allocated degree of up to 4 (i.e. coeff arrays of size 5) but the
-  // trailing coeffs are zero. This is because we do not yet automatically truncate the zeros.
+  // If we don't call truncateTrailingZeros, some of the results will have an allocated degree of 
+  // up to 4 (i.e. coeff arrays of size 5) with the trailing coeffs all zero.
 
 
 
 
   // ToDo:
-  // -Truncate entries (trailing zeros) in addition and multiplication table
   // -Create tables of additive and multiplicative inverses
   // -Create subtraction and division table
 

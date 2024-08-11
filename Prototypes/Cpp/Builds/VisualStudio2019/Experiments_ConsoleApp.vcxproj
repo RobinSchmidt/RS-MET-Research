@@ -332,6 +332,9 @@
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\Mappers.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\MiscMathFunctions.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\NodeBasedFunction.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
@@ -417,6 +420,9 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\Matrix.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\ModularInteger.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\Polynomial.cpp">
@@ -519,9 +525,6 @@
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\Matrix.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\ModularInteger.cpp">
       <ExcludedFromBuild>true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\NumberTheory.cpp">
@@ -2135,6 +2138,7 @@
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\IntegerFunctions.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\InterpolatingFunction.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\Mappers.h"/>
+    <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\MiscMathFunctions.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\MoebiusTransform.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\NodeBasedFunction.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Functions\RealFunctions.h"/>
@@ -2164,6 +2168,7 @@
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\Complex.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\Fraction.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\Matrix.h"/>
+    <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\ModularInteger.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\Polynomial.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\RationalFunction.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\Types\Vector.h"/>
@@ -2200,7 +2205,6 @@
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\DifferentialEquationSystem.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\GeometricFunctions.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\Matrix.h"/>
-    <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\ModularInteger.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\NumberTheory.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\Point2D.h"/>
     <ClInclude Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Unfinished\Math\Polygon2D.h"/>
@@ -2759,6 +2763,7 @@
     <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\_Deprecated\ReadMe.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\LinearAlgebra\LaPackCPP\License.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Math\LinearAlgebra\LaPackCPP\ReadMe.txt"/>
     <None Include="..\..\..\..\..\RS-MET\Libraries\RobsJuceModules\rapt\Modulators\Ideas.txt"/>

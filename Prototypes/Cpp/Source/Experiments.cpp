@@ -10697,7 +10697,7 @@ void testFiniteField()
     // Find additive inverse of g[i] and put it into neg[i]:
     for(int j = 0; j < n; j++)
     {
-      Poly sum = g[i] + g[j];
+      Poly sum = (g[i] + g[j]) % m;     // modulo may be unnecessary
       sum.truncateTrailingZeros(_0);
       if(sum == g[0])
       {
@@ -10709,8 +10709,8 @@ void testFiniteField()
     // Find multiplicative inverse of g[i] and put it into rec[i]:
     for(int j = 0; j < n; j++)
     {
-      Poly prod = g[i] * g[j];
-      prod.truncateTrailingZeros(_0);  // May do nothing?
+      Poly prod = (g[i] * g[j]) % m;
+      prod.truncateTrailingZeros(_0);   // truncation may be unnecessary
       if(prod == g[1])
       {
         rec[i] = g[j];
@@ -10722,8 +10722,12 @@ void testFiniteField()
 
 
 
+
   // ToDo:
   // -Create tables of additive and multiplicative inverses
+  // -Check if neg, rec work as intended
+  // -Check, if neg/rec contain every entry of g exactly once...or maybe there should be an 
+  //  exception for g[0] in rec? ...but maybe not?
   // -Create subtraction and division table
 
 

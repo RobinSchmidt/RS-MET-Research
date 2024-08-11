@@ -10723,6 +10723,19 @@ void testFiniteField()
     }
   }
 
+  // Create subtraction and division table:
+  Table sub(n, n), div(n, n);
+  for(int i = 0; i < n; i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      sub(i, j) = (g[i] + neg[j]) % m;
+      div(i, j) = (g[i] * rec[j]) % m;
+      sub(i,j).truncateTrailingZeros(_0);
+      div(i,j).truncateTrailingZeros(_0); 
+    }
+  }
+
   // Check the tables of additive and multiplicative inverses:
   bool ok = true;
   for(int i = 0; i < n; i++)
@@ -10743,6 +10756,14 @@ void testFiniteField()
       ok &= prod == g[1];
     }
   }
+
+
+
+  // Now make the tables abstract:
+  std::vector<int> ig = rsRangeLinear(0, n-1, n);
+
+
+
 
 
 
@@ -10768,7 +10789,8 @@ void testFiniteField()
   
   //rsFiniteFieldNaive<Int> field(p, k);
 
-  int dummy = 0;
+  rsAssert(ok);
+
 
   // ToDo:
   //

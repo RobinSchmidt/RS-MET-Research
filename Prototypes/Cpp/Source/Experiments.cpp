@@ -10653,7 +10653,7 @@ void testFiniteField()
   // Create the Galois field  GF(8) ~ Z2[x] / (x^3 + x + 1)
   Int p = 2;
   Int k = 3;
-  Int q = rsPow(p, k);
+  Int n = rsPow(p, k);
 
   ModInt _0(0, p); // Maybe use O (the letter Oh)
   ModInt _1(1, p); // Maybe use l (the letter ell)
@@ -10675,6 +10675,11 @@ void testFiniteField()
   // 1 polynomial  of degree 0: g1  and
   // 2 polynomials of degree 1: g2, g3  and 
   // 4 polynomials of degree 2: g4, g5, g6, g7 
+
+  // ToDo - replace the above code by
+  //std::vector<Poly> g(n);  // triggers assert
+  // g[0] = ({_0            });  // 0
+  // etc. - then we can loop over the elements of our field
 
   // But wait - in this so constructed field, we would have 1 + 1 = 0, not 1 + 1 = 2. That seems 
   // wrong! But here, at 28:16: https://www.youtube.com/watch?v=4BfCmZgOKP8 this looks like this is

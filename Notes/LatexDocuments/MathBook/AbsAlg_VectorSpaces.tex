@@ -4,8 +4,11 @@ For a \emph{vector space}, we need two ingredients: \emph{scalars} and \emph{vec
 
 %===================================================================================================
 \subsection{Subspaces} 
-We have seen subgroups, subrings and subfields. It may not be surprising that we define a subspace of a given vector space in an entirely analoguous way. ...TBC...
+We have seen subgroups, subrings and subfields. It may not be surprising that we define a subspace of a given vector space in an entirely analogous way. A subset $U$ of a given vector space $V$ is called a \emph{subspace} of $V$ when it is itself a vector space. ...TBC...
 
+% https://en.wikipedia.org/wiki/Linear_subspace
+
+% https://math.stackexchange.com/questions/594887/notation-for-subspaces
 
 %===================================================================================================
 \subsection{Operations}
@@ -51,15 +54,28 @@ Given a vector space represented by its basis vectors stored in the rows of an $
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Homomorphisms}
-Just like groups and rings, vector spaces do also have a notion of homomorphisms. Such \emph{vector space homomorphisms} are also known as \emph{linear transformations}. If we view the transformation as a function $f: V \rightarrow W$ from some vector space $V$ so some (possibly) other vector space $W$, then the function $f$ must satisfy:
+Just like groups and rings, vector spaces do also have a notion of homomorphisms. Such \emph{vector space homomorphisms} are also known as \emph{linear transformations} or \emph{linear maps}. If we view the transformation as a function $f: V \rightarrow W$ from some vector space $V$ so some (possibly) other vector space $W$, then the function $f$ must satisfy:
 \begin{equation}
   f(\mathbf{v_1} + \mathbf{v_2}) = f(\mathbf{v_1}) + f(\mathbf{v_2}), \qquad
   f(\alpha \mathbf{v_1}) = \alpha f(\mathbf{v_1})
 \end{equation}
 for all $\mathbf{v_1, v_2} \in V$ and all $\alpha \in \mathbb{F}$, i.e. the $\mathbf{v_1, v_2}$ are vectors from $V$ and $\alpha$ is any scalar from our field of scalars. These two conditions are called \emph{additivity} and \emph{homogeneity} and taken together, they constitute the important notion of \emph{linearity}. Note again that on the left hand side, we are dealing with the addition and scalar multiplication of $V$ whereas on the right hand side, we are dealing with the operations of $W$. A simple example would be: $f: \mathbb{R}^2 \rightarrow \mathbb{R}^3$ with $f((x,y)) = (2 x + y, 3 x - 2 y, x - y)$. A slightly more advanced example dealing with infinite-dimensional vector spaces would be the derivative of a function. We could denote this as an operator $T: C^1(\mathbb{R}) \rightarrow C^0(\mathbb{R}) $ with $T[f] = f'$.
 
+\medskip
+Further important features of linear maps that follow from this definition are: (1) The zero vector of $V$ is mapped to the zero vector of $W$: $f(\mathbf{0}_V) = \mathbf{0}_W$. (2) The image of $V$ under $f$ is a subspace of $W$. (3) The kernel of $f$, i.e. the set of all vectors $\mathbf{v} \in V$ that get mapped to the zero vector, is a subspace of $V$. (4) When $f$ is injective such that we can invert it, then the inverse map is also linear.
+
+%Furthermore $f[V] \subseteq W$
+
 % Lineare Abbildungen und die Kern-Bild-Formel
 % https://www.youtube.com/watch?v=blroCEbv1X8  by Weitz
+
+% linear maps mus map the zero vector of V to the zero vector of W
+
+% Kern-Bild-Formel aka Rangsatz aka Dimensionssatz
+% dim V = dim ran(f) + dim ker (f)
+% https://en.wikipedia.org/wiki/Range_of_a_function
+% https://en.wikipedia.org/wiki/Kernel_(algebra)
+
 
 %===================================================================================================
 \subsection{Additional Structure from Products} 
@@ -96,7 +112,7 @@ Differential algebras have a product and an additional univariate operator that 
 \begin{equation}
  D(a \cdot b) = a \cdot D(b) + D(a) \cdot b
 \end{equation}
-Compare this to the product rule that you know from calculus and you will notice that it is indeed the same rule. The vector space of differentiable functions with the pointwise multiplication between the functions as product and the derivative as derivation does indeed form a differential algebra. ...TBC...what other interesting examples are there (subalgebras don't count)? TODO: use boldface for $a,b$
+Compare this to the product rule that you know from calculus and you will notice that it is indeed the same rule. The vector space of differentiable functions with the pointwise multiplication between the functions as product and the derivative as derivation does indeed form a differential algebra. A subspace of that is the space of all polynomials. If we represent the polynomials as sequences of coefficients, we could use convolution as our product operation. The derivation operation would be to apply the rule how to differentiate polynomials: left-shifting the sequence $a_n$ by one and multiplying by the old index, i.e. informally $D(a_n) = n a_{n+1}$. If we now forget that the sequences originally were meant to represent polynomial coefficients, we have now a differential algebra on (finite) sequences of numbers without necessarily having to think about functions. It would straightforwardly generalize to infinite sequences, too - even if they don't converge as a power series, i.e. don't define a function [VERIFY!]. ...TBC...what other interesting examples are there (subalgebras don't count)? TODO: use boldface for $a,b$
 
 % Sequences of numbers with convolution as multiplication. the derivation is: left-shifting by one and dividing by the old index, i.e. b_k = (a_{k+1})/(k+1). That's how polynomial multiplication and taking derivatives work. But we do not need to interpret the sequence as sequnece of polynomial coeffs
 

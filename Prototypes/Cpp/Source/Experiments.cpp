@@ -10662,23 +10662,16 @@ void testFiniteField()
   // Create the Modulus polynomial m = 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3 and the 8 
   // elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees less than 3.
   // These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1
-  Poly m( {_1, _1, _0, _1});  // 1 + x       + x^3
-  Poly g0({_0            });  // 0
-  Poly g1({_1            });  // 1
-  Poly g2({_0, _1        });  //     x
-  Poly g3({_1, _1        });  // 1 + x
-  Poly g4({_0, _0, _1    });  //         x^2
-  Poly g5({_1, _0, _1    });  // 1     + x^2
-  Poly g6({_0, _1, _1    });  //     x + x^2
-  Poly g7({_1, _1, _1    });  // 1 + x + x^2
-  // We have the zero polynomial and
-  // 1 polynomial  of degree 0: g1  and
-  // 2 polynomials of degree 1: g2, g3  and 
-  // 4 polynomials of degree 2: g4, g5, g6, g7 
-
-  // ToDo - replace the above code by
-  std::vector<Poly> g(n);  // triggers assert
-  // g[0] = ({_0            });  // 0
+  std::vector<Poly> g(n);
+  Poly      m({_1, _1, _0, _1}); // 1 + x       + x^3
+  g[0] = Poly({_0            });  // 0
+  g[1] = Poly({_1            });  // 1
+  g[2] = Poly({_0, _1        });  //     x
+  g[3] = Poly({_1, _1        });  // 1 + x
+  g[4] = Poly({_0, _0, _1    });  //         x^2
+  g[5] = Poly({_1, _0, _1    });  // 1     + x^2
+  g[6] = Poly({_0, _1, _1    });  //     x + x^2
+  g[7] = Poly({_1, _1, _1    });  // 1 + x + x^2
   // etc. - then we can loop over the elements of our field
 
   // But wait - in this so constructed field, we would have 1 + 1 = 0, not 1 + 1 = 2. That seems 
@@ -10689,8 +10682,8 @@ void testFiniteField()
 
   Poly a(_0), b(_0), c(_0), d(_0);
 
-  a = g5;
-  b = g7;
+  a = g[5];
+  b = g[7];
 
 
   c = a + b; // Should be the polynomial p(x) = x ...looks good.

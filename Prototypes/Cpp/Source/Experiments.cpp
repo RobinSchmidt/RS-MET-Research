@@ -10626,11 +10626,6 @@ void testPrimesAndMore()
   //  string with gnuplot options
 }
 
-
-
-// Template instantiation needed for the experiment:
-//template class RAPT::rsPolynomial<rsModularInteger<int>>;
-
 void testFiniteField()
 {
   // UNDER CONSTRUCTION
@@ -10660,22 +10655,22 @@ void testFiniteField()
   Int k = 3;
   Int q = rsPow(p, k);
 
-  ModInt O(0, p); // Maybe use O (the letter Oh)
-  ModInt l(1, p); // Maybe use l (the letter ell)
+  ModInt _0(0, p); // Maybe use O (the letter Oh)
+  ModInt _1(1, p); // Maybe use l (the letter ell)
   // Hmm...I'm not sure, if it's a good idea to abuse O,l as 0,1. Maybe use _0, _1 instead
 
   // Create the Modulus polynomial m = 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3 and the 8 
   // elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees less than 3.
   // These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1
-  Poly m(   {l, l, O, l});  // 1 + x       + x^3
-  Poly g4_0({O         });  // 0
-  Poly g4_1({l         });  // 1
-  Poly g4_2({O, l      });  //     x
-  Poly g4_3({l, l      });  // 1 + x
-  Poly g4_4({O, O, l   });  //         x^2
-  Poly g4_5({l, O, l   });  // 1     + x^2
-  Poly g4_6({O, l, l   });  //     x + x^2
-  Poly g4_7({l, l, l   });  // 1 + x + x^2
+  Poly m(   {_1, _1, _0, _1});  // 1 + x       + x^3
+  Poly g4_0({_0            });  // 0
+  Poly g4_1({_1            });  // 1
+  Poly g4_2({_0, _1        });  //     x
+  Poly g4_3({_1, _1        });  // 1 + x
+  Poly g4_4({_0, _0, _1    });  //         x^2
+  Poly g4_5({_1, _0, _1    });  // 1     + x^2
+  Poly g4_6({_0, _1, _1    });  //     x + x^2
+  Poly g4_7({_1, _1, _1    });  // 1 + x + x^2
   // We have the zero polynomial and
   // 1 polynomial  of degree 0: g4_1  and
   // 2 polynomials of degree 1: g4_2, g4_3  and 
@@ -10687,7 +10682,7 @@ void testFiniteField()
   // assume that the computations in Galois fields map meaningfully to the computations we are used
   // to in (modular) integer numbers.
 
-  Poly a(O), b(O), c(O), d(O);
+  Poly a(_0), b(_0), c(_0), d(_0);
 
   a = g4_5;
   b = g4_7;
@@ -10697,11 +10692,11 @@ void testFiniteField()
   // I think, for addition, we don't need to do the mod-by-m operation because addition will never 
   // change the degree of the polynomial
 
-  c = (a * b) % m;  // Triggers assert - but produces a result
-  // I think, in rsPolynomial<T>::divide, we need to use a AT::fillWithZeros function that takes
-  // a prototype for the zeros
+  c = (a * b) % m;  
 
-  d = c / a;      // Should be equal to b - but isn't
+  d = c / a;           // Should be equal to b - but isn't
+  // Yeah - maybe division isn't that simple in GF(8). Maybe we need to search for the 
+  // multiplicative inverses
 
 
   

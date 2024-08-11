@@ -10677,7 +10677,7 @@ void testFiniteField()
   // 4 polynomials of degree 2: g4, g5, g6, g7 
 
   // ToDo - replace the above code by
-  //std::vector<Poly> g(n);  // triggers assert
+  std::vector<Poly> g(n);  // triggers assert
   // g[0] = ({_0            });  // 0
   // etc. - then we can loop over the elements of our field
 

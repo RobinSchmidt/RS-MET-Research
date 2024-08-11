@@ -10661,19 +10661,22 @@ void testFiniteField()
   ModInt _0(0, p);
   ModInt _1(1, p);
 
-  // Create the Modulus polynomial m = 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3 and the 8 
-  // elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees less than 3.
-  // These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1.
+  // Create the Modulus polynomial m = 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3  or
+  // m = 1 + x^2 + x^3 = 1 + x + x^3 = 1*x^0 + 0*x^1 + 1*x^2 + 1*x^3:
+  Poly      m({_1, _1, _0, _1});    // 1 + x       + x^3     1st alternative
+  //Poly      m({_1, _0, _1, _1});  // 1     + x^2 + x^3     2nd alternative
+
+  // Create the 8 elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees
+  // less than 3. These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1:
   Array g(n);
-  Poly      m({_1, _1, _0, _1});  // 1 + x       + x^3
-  g[0] = Poly({_0            });  // 0
-  g[1] = Poly({_1            });  // 1
-  g[2] = Poly({_0, _1        });  //     x
-  g[3] = Poly({_1, _1        });  // 1 + x
-  g[4] = Poly({_0, _0, _1    });  //         x^2
-  g[5] = Poly({_1, _0, _1    });  // 1     + x^2
-  g[6] = Poly({_0, _1, _1    });  //     x + x^2
-  g[7] = Poly({_1, _1, _1    });  // 1 + x + x^2
+  g[0] = Poly({_0            });    // 0
+  g[1] = Poly({_1            });    // 1
+  g[2] = Poly({_0, _1        });    //     x
+  g[3] = Poly({_1, _1        });    // 1 + x
+  g[4] = Poly({_0, _0, _1    });    //         x^2
+  g[5] = Poly({_1, _0, _1    });    // 1     + x^2
+  g[6] = Poly({_0, _1, _1    });    //     x + x^2
+  g[7] = Poly({_1, _1, _1    });    // 1 + x + x^2
   // We may also write the modulus m in shorthand notation as 1011. In this notation, the leading 
   // coeff for x^3 comes first and the last coeff is for the constant, i.e. this notation reverses 
   // the polynomial coeff array. The remainder polynomials in this notation are given as g0 = 000, 
@@ -10748,7 +10751,7 @@ void testFiniteField()
     sum.truncateTrailingZeros(_0);
     ok &= sum == g[0];
 
-    // Check that g[i] + (1/g[i]) = 1 except for i = 0:
+    // Check that g[i] * (1/g[i]) = 1 except for i = 0:
     if(i != 0)
     { 
       Poly prod = (g[i] * rec[i]) % m;

@@ -10645,7 +10645,8 @@ void testFiniteField()
   using Int    = int;
   using ModInt = rsModularInteger<Int>;
   using Poly   = rsPolynomial<ModInt>;
-  using Table  = rsMatrix<Poly>;         // For operation tables for +,-,*,/
+  using Table  = rsMatrix<Poly>;           // For operation tables for +,-,*,/
+  using Array  = std::vector<Poly>;
   
   // Parameters for our Galois field:
   Int p = 2;
@@ -10659,7 +10660,7 @@ void testFiniteField()
   // Create the Modulus polynomial m = 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3 and the 8 
   // elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees less than 3.
   // These are the polynomials: 0, 1, x, x + 1, x^2, x^2 + 1, x^2 + x, x^2 + x + 1.
-  std::vector<Poly> g(n);
+  Array g(n);
   Poly      m({_1, _1, _0, _1});  // 1 + x       + x^3
   g[0] = Poly({_0            });  // 0
   g[1] = Poly({_1            });  // 1
@@ -10688,6 +10689,35 @@ void testFiniteField()
   }
   // If we don't call truncateTrailingZeros, some of the results will have an allocated degree of 
   // up to 4 (i.e. coeff arrays of size 5) with the trailing coeffs all zero.
+
+  // Create arrays of negatives and reciprocals, i.e. additive and multiplicative inverses:
+  Array neg(n), rec(n);
+  for(int i = 0; i < n; i++)
+  {
+    // Find additive inverse of g[i] and put it into neg[i]:
+    for(int j = 0; j < n; j++)
+    {
+      Poly sum = g[i] + g[j];
+      sum.truncateTrailingZeros(_0);
+      if(sum == g[0])
+      {
+        neg[i] = g[j];
+        break;
+      }
+    }
+
+    // Find multiplicative inverse of g[i] and put it into rec[i]:
+    for(int j = 0; j < n; j++)
+    {
+      Poly prod = g[i] * g[j];
+      prod.truncateTrailingZeros(_0);  // May do nothing?
+      if(prod == g[1])
+      {
+        rec[i] = g[j];
+        break;
+      }
+    }
+  }
 
 
 

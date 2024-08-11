@@ -10662,6 +10662,7 @@ void testFiniteField()
 
   ModInt O(0, p); // Maybe use O (the letter Oh)
   ModInt l(1, p); // Maybe use l (the letter ell)
+  // Hmm...I'm not sure, if it's a good idea to abuse O,l as 0,1. Maybe use _0, _1 instead
 
   // Create the Modulus polynomial m = 1 + x + x^3 = 1*x^0 + 1*x^1 + 0*x^2 + 1*x^3 and the 8 
   // elements of Z2[x] / (x^3 + x + 1). These are the polynomials over Z2 with degrees less than 3.
@@ -10686,19 +10687,23 @@ void testFiniteField()
   // assume that the computations in Galois fields map meaningfully to the computations we are used
   // to in (modular) integer numbers.
 
-  Poly r(O);
-  r = g4_5 + g4_7; // Should be the polynomial p(x) = x ...looks good.
+  Poly a(O), b(O), c(O), d(O);
+
+  a = g4_5;
+  b = g4_7;
+
+
+  c = a + b; // Should be the polynomial p(x) = x ...looks good.
   // I think, for addition, we don't need to do the mod-by-m operation because addition will never 
   // change the degree of the polynomial
 
-  //r = (g4_5 * g4_7) % m;  // triggers assert
+  c = (a * b) % m;  // Triggers assert - but produces a result
 
-
+  //d = c / a;      // Should be equal to b - but isn't
 
 
   
   //rsFiniteFieldNaive<Int> field(p, k);
-
 
   int dummy = 0;
 

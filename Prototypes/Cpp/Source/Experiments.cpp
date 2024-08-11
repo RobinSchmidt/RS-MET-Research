@@ -10672,9 +10672,9 @@ void testFiniteField()
   Poly g6({_0, _1, _1    });  //     x + x^2
   Poly g7({_1, _1, _1    });  // 1 + x + x^2
   // We have the zero polynomial and
-  // 1 polynomial  of degree 0: g4_1  and
-  // 2 polynomials of degree 1: g4_2, g4_3  and 
-  // 4 polynomials of degree 2: g4_4, g4_5, g4_6, g4_7 
+  // 1 polynomial  of degree 0: g1  and
+  // 2 polynomials of degree 1: g2, g3  and 
+  // 4 polynomials of degree 2: g4, g5, g6, g7 
 
   // But wait - in this so constructed field, we would have 1 + 1 = 0, not 1 + 1 = 2. That seems 
   // wrong! But here, at 28:16: https://www.youtube.com/watch?v=4BfCmZgOKP8 this looks like this is

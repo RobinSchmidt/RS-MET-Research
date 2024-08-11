@@ -10701,7 +10701,7 @@ void testFiniteField()
   // I think, in rsPolynomial<T>::divide, we need to use a AT::fillWithZeros function that takes
   // a prototype for the zeros
 
-  //d = c / a;      // Should be equal to b - but isn't
+  d = c / a;      // Should be equal to b - but isn't
 
 
   

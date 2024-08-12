@@ -11093,6 +11093,9 @@ void testFiniteField1()
   // abstractified tables, i.e. the VecI, MatI variables.
 
 
+  rsFiniteFieldTables opTables(p, k);
+
+
   // Some manual test:
   Poly a(_0), b(_0), c(_0);
   a = g[5];

@@ -10892,12 +10892,13 @@ void testFiniteField2()
       counter[i] = 0;
       i++;
     }
-
     if(i < (int) counter.size())
       counter[i] += 1;
-    
-    int dummy = 0;
   };
+  // Maybe make this a library function. The number m is the wrap-around value where the digit 
+  // wraps around to 0. In a decimal counter, this would be 10 and it would go up like:
+  //   000 001 002 ... 008 009 010 011 012 ... 018 019 020 021....900 901 902...999 000
+  // except that out counter has the digits reversed, i.e. the least important digit is leftmost
 
 
   auto makePoly = [](const std::vector<int>& coeffs, int m)
@@ -10906,41 +10907,30 @@ void testFiniteField2()
     Poly poly(k-1);
     for(int i = 0; i < k; i++)
       poly.setCoeff(i, ModInt(coeffs[i], m));
-
-
-
     //poly.truncateTrailingZeros(ModInt(0, m));
-
     return poly;
   };
 
 
-
-  std::vector<int> counter(k);
+  // Generate all the n = p^k possible polynomials of degree up to k-1 over Zp and store them in 
+  // the array g:
   Array g(n);
+  std::vector<int> counter(k);   // Content of counter is our polynomial coefficient array
   for(int i = 0; i < n; i++)
   {
-    // The content of the counter gives us our polynomial coefficient array
-    
-    Poly poly = makePoly(counter, p);
-
-
-    //g[n] = makePoly(counter, p);
-
-
+    g[i] = makePoly(counter, p);
     inc(counter, p);
-    int dummy = 0;
   }
 
 
 
-
-  // Zero and one as modular integers with modulus p:
-  //ModInt _0(0, p);
-  //ModInt _1(1, p);
-
-
   int dummy = 0;
+
+  // ToDo:
+  //
+  // - Automate finidng a suitable modulus polynomial. Try all polynomials of degree k and check if
+  //   they are irreducible. I think, we may test tha by checking if the polynomial has a root in
+  //   Zp - because if it has one, we can factor out a linear factor
 }
 
 void testFiniteField()

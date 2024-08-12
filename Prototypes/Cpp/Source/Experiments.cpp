@@ -10821,6 +10821,7 @@ bool testFiniteField1()
       ok &= prod == 0;
   }
 
+  /*
   // Some unit tests that test the factored out functions that do the same stuff that we do here
   // manually:
   Array g2      = makeAllPolynomials(p, k-1);      ok &= g2 == g;
@@ -10837,6 +10838,7 @@ bool testFiniteField1()
   MatI  sub_8_2 = abstractifyTable2D(g2, sub2);    ok &= sub_8_2 == sub_8;
   MatI  div_8_2 = abstractifyTable2D(g2, div2);    ok &= div_8_2 == div_8;
   rsAssert(ok);
+  */
   // This is how we would generally create all the 1D and 2D operation tables for a Galois field. 
   // We should consolidate that into a function that takes as input the numbers p and k and the 
   // modulus polynomial m and returns (or fills out) a class/structure that contains only the 

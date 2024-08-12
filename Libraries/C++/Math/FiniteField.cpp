@@ -62,6 +62,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeAllPolynomials(int modulus,
   return polys;
 }
 
+/*
 rsMatrix<rsPolynomial<rsModularInteger<int>>> makeAddTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
   const rsPolynomial<rsModularInteger<int>>& m)
@@ -84,7 +85,9 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeAddTable(
   }
   return add;
 }
+*/
 
+/*
 rsMatrix<rsPolynomial<rsModularInteger<int>>> makeMulTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
   const rsPolynomial<rsModularInteger<int>>& m)
@@ -107,6 +110,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeMulTable(
   }
   return mul;
 }
+*/
 
 std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
@@ -318,8 +322,8 @@ void rsFiniteFieldTables::createOperationTables()
   // addition, multiplication, subtraction and division:
   Array tmp1D;
   Table tmp2D;
-  tmp2D = makeAddTable(r,        m); add = abstractifyTable2D(r, tmp2D);
-  tmp2D = makeMulTable(r,        m); mul = abstractifyTable2D(r, tmp2D);
+  //tmp2D = makeAddTable(r,        m); add = abstractifyTable2D(r, tmp2D);
+  //tmp2D = makeMulTable(r,        m); mul = abstractifyTable2D(r, tmp2D);
   tmp1D = makeNegTable(r,        m); neg = abstractifyTable1D(r, tmp1D);
   tmp2D = makeSubTable(r, tmp1D, m); sub = abstractifyTable2D(r, tmp2D);
   tmp1D = makeRecTable(r,        m); rec = abstractifyTable1D(r, tmp1D);
@@ -331,6 +335,13 @@ void rsFiniteFieldTables::createOperationTables()
   // Under construction - we wnat to achieve the same with less code:
   ModInt _0(0, p);
 
+  auto opAdd = [&](const Poly& x, const Poly& y)
+  {
+    Poly r = (x + y) % m;         // Modulo m may be unnecessary
+    r.truncateTrailingZeros(_0);
+    return r;
+  };
+
   auto opMul = [&](const Poly& x, const Poly& y)
   {
     Poly r = (x * y) % m;
@@ -338,6 +349,8 @@ void rsFiniteFieldTables::createOperationTables()
     return r;
   };
 
+
+  tmp2D = makeBinaryOpTable(r, r, opAdd); add = abstractifyTable2D(r, tmp2D);
   tmp2D = makeBinaryOpTable(r, r, opMul); mul = abstractifyTable2D(r, tmp2D);
 
 

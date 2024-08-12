@@ -10989,56 +10989,37 @@ bool testFiniteField2()
   // We test the creation of various finite fields and doing computations in them. The possible 
   // sizes of finite fields are givne by prime powers, i.e. numbers n = p^k for some prime p and 
   // natural number k. For the k = 1 cases, i.e. n = p^1 = p, we test only the cases 
-  // p = 2,3,5,7,11. These special cases reduce to modular arithmetic.  ..TBC...
+  // p = 2,3,5,7,11,13,17. These special cases reduce to modular arithmetic because the poylnomials
+  // used in the construction are just the constant polynomials.
 
   bool ok = true;
 
   using Vec = std::vector<int>;
-
-  // When the exponent k is 1, i.e. n is a prime number, we can always use the polynomial p(x) = x.
-  // So, these cases are not listed completely
-
-  // n =  2 =  2^1:  x 
-  // n =  3 =  3^1:  x
-  // n =  4 =  2^2:  x^2 + x + 1
-  // n =  5 =  5^1:  x
-  // n =  7 =  7^1:  x
-  // n =  8 =  2^3:  x^3 + x + 1
-  // n =  9 =  3^2:  x^2 + 1
-  // n = 11 = 11^1:  x
-  // .................from here on, we don't list the boring x polynomials for n = prime anymore
-  // n = 16 =  2^4:  x^4 + x + 1
-  // n = 25 =  5^2:  x^2 + 2 
-  // n = 27 =  3^3:  x^3 + 2*x + 1
-  // ...more to come...
-  // n = 81 = 3^4: p(x) = x^4 + x + 2
-
-  // Test finite fields of sizes less than 100. For the k = 1 cases, i.e. n = p^1 = p, we test only
-  // the cases p = 2,3,5,7,11. These special cases reduce to modular arithmetic:
-  ok &=  testFiniteField( 2, 1, Vec({0,1          }));   //  2 =  2^1, x
-  ok &=  testFiniteField( 3, 1, Vec({0,1          }));   //  3 =  3^1, x
-  ok &=  testFiniteField( 2, 2, Vec({1,1,1        }));   //  4 =  2^2, 1 + x + x^2
-  ok &=  testFiniteField( 5, 1, Vec({0,1          }));   //  5 =  5^1, x
-  ok &=  testFiniteField( 7, 1, Vec({0,1          }));   //  7 =  7^1, x
-  ok &=  testFiniteField( 2, 3, Vec({1,1,0,1      }));   //  8 =  2^3, 1 + x + x^3
-  ok &=  testFiniteField( 3, 2, Vec({1,0,1        }));   //  9 =  3^2, 1 + x^2
-  ok &=  testFiniteField(11, 1, Vec({0,1          }));   // 11 = 11^1, x
-  ok &=  testFiniteField( 2, 4, Vec({1,1,0,0,1    }));   // 16 =  2^4, 1 + x + x^4
-  ok &=  testFiniteField( 5, 2, Vec({2,0,1        }));   // 25 =  5^2, 2 + x^2
-  ok &=  testFiniteField( 3, 3, Vec({1,2,0,1      }));   // 27 =  3^3, 1 + 2x + x^3
-  ok &=  testFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));   // 32 =  2^5, 1 + x^2 + x^5
-  ok &=  testFiniteField( 7, 2, Vec({1,0,1        }));   // 49 =  7^2, 1 + x^2
-  ok &=  testFiniteField( 2, 6, Vec({1,1,0,0,0,0,1}));   // 64 =  2^6, 1 + x + x^6
-  ok &=  testFiniteField( 3, 4, Vec({2,1,0,0,1    }));   // 81 =  3^4, 2 + x + x^4
+                                                       // Size         Modulus polynomial
+  ok &= testFiniteField( 2, 1, Vec({0,1          }));  //  2 =  2^1    x
+  ok &= testFiniteField( 3, 1, Vec({0,1          }));  //  3 =  3^1    x
+  ok &= testFiniteField( 2, 2, Vec({1,1,1        }));  //  4 =  2^2    1 + x + x^2
+  ok &= testFiniteField( 5, 1, Vec({0,1          }));  //  5 =  5^1    x
+  ok &= testFiniteField( 7, 1, Vec({0,1          }));  //  7 =  7^1    x
+  ok &= testFiniteField( 2, 3, Vec({1,1,0,1      }));  //  8 =  2^3    1 + x + x^3
+  ok &= testFiniteField( 3, 2, Vec({1,0,1        }));  //  9 =  3^2    1 + x^2
+  ok &= testFiniteField(11, 1, Vec({0,1          }));  // 11 = 11^1    x
+  ok &= testFiniteField(13, 1, Vec({0,1          }));  // 13 = 13^1    x
+  ok &= testFiniteField( 2, 4, Vec({1,1,0,0,1    }));  // 16 =  2^4    1 + x + x^4
+  ok &= testFiniteField(17, 1, Vec({0,1          }));  // 17 = 17^1    x
+  ok &= testFiniteField( 5, 2, Vec({2,0,1        }));  // 25 =  5^2    2 + x^2
+  ok &= testFiniteField( 3, 3, Vec({1,2,0,1      }));  // 27 =  3^3    1 + 2x + x^3
+  ok &= testFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));  // 32 =  2^5    1 + x^2 + x^5
+  ok &= testFiniteField( 7, 2, Vec({1,0,1        }));  // 49 =  7^2    1 + x^2
+  ok &= testFiniteField( 2, 6, Vec({1,1,0,0,0,0,1}));  // 64 =  2^6    1 + x + x^6
+  ok &= testFiniteField( 3, 4, Vec({2,1,0,0,1    }));  // 81 =  3^4    2 + x + x^4
 
   // Some variations for n = 8 = 2^3:
   ok &=  testFiniteField(2, 3, Vec({1,1,0,1})); // 1 + x + x^3
   ok &=  testFiniteField(2, 3, Vec({1,0,1,1})); // 1 + x^2 + x^3
   ok &= !testFiniteField(2, 3, Vec({1,0,0,1})); // 1 + x^3  is not irreducible  ->  not a field
 
-
   return ok;
-
 
   // Notes:
   //
@@ -11079,69 +11060,12 @@ bool testFiniteField2()
   // https://math.stackexchange.com/questions/998563/how-to-find-all-irreducible-polynomials-in-z2-with-degree-5
 }
 
-/*
-void testFiniteField3()
-{
-  // UNDER CONSTRUCTION...now obsolete...
-
-  // Generate all polynomials over Zp up to degree k-1...TBC...
-
-  using Int    = int;
-  using ModInt = rsModularInteger<Int>;
-  using Poly   = rsPolynomial<ModInt>;
-  using Table  = rsMatrix<Poly>;           // For operation tables for +,-,*,/
-  using Array  = std::vector<Poly>;
-
-  // Parameters for our Galois field:
-  Int p = 3;
-  Int k = 4;
-  Int n = rsPow(p, k);
-
-  // Create all possible polynomials over Zp up to degree k-1:
-  Array g = rema::makeAllPolynomials(p, k-1);
-
-
-  // Zero and one as modular integers with modulus p:
-  ModInt _0(0, p);
-  ModInt _1(1, p);
-  ModInt _2(2, p);
-
-  // Create the Modulus polynomial m = x^4 + x + 2:
-  Poly m({_1, _0, _0, _1, _2});
-
-
-  // Create addition and multiplication table:
-  Table add(n, n), mul(n, n);
-  for(int i = 0; i < n; i++)
-  {
-    for(int j = 0; j < n; j++)
-    {
-      add(i, j) = (g[i] + g[j]) % m;       // I think, the % m does nothing here (verify!)
-      mul(i, j) = (g[i] * g[j]) % m;
-      add(i,j).truncateTrailingZeros(_0);  // If we don't pass the _0, we get a compilation error.
-      mul(i,j).truncateTrailingZeros(_0);  // ..figure out why defaulting to zero doesn't work
-    }
-  }
-
-  // Create the 1D tables for additive and multiplicative inverses:
-  //
-  // ...hmm...we would have to copy a lot of code from testFiniteField1. The code should really be
-  // factored out - maybe make unftions to create mulTable, addTable, etc.
-
-   
-
-  int dummy = 0;
-}
-*/
-
 void testFiniteField()
 {
   bool ok = true;
   ok &= testFiniteField1();
   ok &= testFiniteField2();
   rsAssert(ok);
-
-  //testFiniteField3();
 }
 
 

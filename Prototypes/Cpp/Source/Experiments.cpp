@@ -11011,16 +11011,23 @@ bool testFiniteField2()
   // n = 81 = 3^4: p(x) = x^4 + x + 2
 
 
-  ok &=  testFiniteField( 2, 1, Vec({0,1      }));   //  2 =  2^1, x
-  ok &=  testFiniteField( 3, 1, Vec({0,1      }));   //  3 =  3^1, x
-  ok &=  testFiniteField( 2, 2, Vec({1,1,1    }));   //  4 =  2^2, 1 + x + x^2
-  ok &=  testFiniteField( 5, 1, Vec({0,1      }));   //  5 =  5^1, x
-  ok &=  testFiniteField( 7, 1, Vec({0,1      }));   //  7 =  7^1, x
-  ok &=  testFiniteField( 2, 3, Vec({1,1,0,1  }));   //  8 =  2^3, 1 + x + x^3
-  ok &=  testFiniteField( 3, 2, Vec({1,0,1    }));   //  9 =  3^2, 1 + x^2
-  ok &=  testFiniteField(11, 1, Vec({0,1      }));   // 11 = 11^1, x
-  ok &=  testFiniteField( 2, 4, Vec({1,1,0,0,1}));   // 16 =  2^4, 1 + x + x^4
-  ok &=  testFiniteField( 5, 2, Vec({2,0,1    }));   // 25 =  5^2, 2 + x^2
+  ok &=  testFiniteField( 2, 1, Vec({0,1          }));   //  2 =  2^1, x
+  ok &=  testFiniteField( 3, 1, Vec({0,1          }));   //  3 =  3^1, x
+  ok &=  testFiniteField( 2, 2, Vec({1,1,1        }));   //  4 =  2^2, 1 + x + x^2
+  ok &=  testFiniteField( 5, 1, Vec({0,1          }));   //  5 =  5^1, x
+  ok &=  testFiniteField( 7, 1, Vec({0,1          }));   //  7 =  7^1, x
+  ok &=  testFiniteField( 2, 3, Vec({1,1,0,1      }));   //  8 =  2^3, 1 + x + x^3
+  ok &=  testFiniteField( 3, 2, Vec({1,0,1        }));   //  9 =  3^2, 1 + x^2
+  ok &=  testFiniteField(11, 1, Vec({0,1          }));   // 11 = 11^1, x
+  ok &=  testFiniteField( 2, 4, Vec({1,1,0,0,1    }));   // 16 =  2^4, 1 + x + x^4
+  ok &=  testFiniteField( 5, 2, Vec({2,0,1        }));   // 25 =  5^2, 2 + x^2
+  ok &=  testFiniteField( 3, 3, Vec({1,2,0,1      }));   // 27 =  3^3, 1 + 2x + x^3
+  ok &=  testFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));   // 32 =  2^5, 1 + x^2 + x^5
+  ok &=  testFiniteField( 7, 2, Vec({1,0,1        }));   // 49 =  7^2, 1 + x^2
+  ok &=  testFiniteField( 2, 6, Vec({1,1,0,0,0,0,1}));   // 64 =  2^6, 1 + x + x^6
+
+
+  // x^6 + x + 1
 
 
   // Some variations for n = 8 = 2^3:

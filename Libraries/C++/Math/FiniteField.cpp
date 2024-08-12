@@ -216,7 +216,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeSubTable(
 // for that to work, we need implicit automatic trunction of polynomials. Or do we? Maybe that 
 // could be encapsulated in the op that we pass.
 
-
+/*
 rsMatrix<rsPolynomial<rsModularInteger<int>>> makeDivTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
   const std::vector<rsPolynomial<rsModularInteger<int>>>& rec,
@@ -241,6 +241,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeDivTable(
   }
   return div;
 }
+*/
 
 
 // Under construction:
@@ -364,12 +365,15 @@ void rsFiniteFieldTables::createOperationTables()
 
 
   tmp1D = makeNegTable(r,        m); neg = abstractifyTable1D(r, tmp1D);
-  //tmp2D = makeSubTable(r, tmp1D, m); sub = abstractifyTable2D(r, tmp2D);       // old
+  //tmp2D = makeSubTable(r, tmp1D, m); sub = abstractifyTable2D(r, tmp2D);        // old
   tmp2D = makeBinaryOpTable(r, tmp1D, opAdd); sub = abstractifyTable2D(r, tmp2D); // new
 
 
   tmp1D = makeRecTable(r,        m); rec = abstractifyTable1D(r, tmp1D);
-  tmp2D = makeDivTable(r, tmp1D, m); div = abstractifyTable2D(r, tmp2D);
+  //tmp2D = makeDivTable(r, tmp1D, m); div = abstractifyTable2D(r, tmp2D);        // old
+  tmp2D = makeBinaryOpTable(r, tmp1D, opMul); div = abstractifyTable2D(r, tmp2D); // new
+
+
 
 
 

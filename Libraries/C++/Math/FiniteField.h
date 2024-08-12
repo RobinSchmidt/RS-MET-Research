@@ -33,7 +33,7 @@ class rsFiniteFieldTables
 
 public:
 
-  rsFiniteFieldTables(int base, int exponent);
+  rsFiniteFieldTables(int base, int exponent, const std::vector<int>& modulusCoeffs);
     /*
     : p(base), k(exponent)
   {
@@ -50,8 +50,11 @@ protected:
   int k;  // Exponent in p^k, a positive integer
 
   // Operation tables:
+  std::vector<int>    mod;                // Coeffs of the modulus polynomial
   std::vector<int>    neg, rec;           // 1D tables negatives and reciprocals.
   RAPT::rsMatrix<int> add, mul, sub, div; // 2D tables for arithemetic operations.
+
+
 
 
   /*

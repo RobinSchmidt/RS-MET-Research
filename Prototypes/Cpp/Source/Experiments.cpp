@@ -10744,7 +10744,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
   std::vector<Poly> neg(n);
   for(int i = 0; i < n; i++)
   {
-    // Find additive inverse of g[i] and put it into neg[i]:
+    // Find additive inverse of r[i] and put it into neg[i]:
     for(int j = 0; j < n; j++)
     {
       Poly sum = (r[i] + r[j]) % m;        // Modulo m may be unnecessary
@@ -10757,6 +10757,36 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
     }
   }
   return neg;
+}
+
+std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
+  const rsPolynomial<rsModularInteger<int>>& m)
+{
+  // r: list of possible remainders
+  // m: modulus polynomial
+
+  using ModInt = rsModularInteger<int>;
+  using Poly   = rsPolynomial<ModInt>;
+  int p = m.getCoeff(0).getModulus();
+  int n = (int) r.size();
+  ModInt _0(0, p);
+  std::vector<Poly> rec(n);
+  for(int i = 0; i < n; i++)
+  {
+    // Find multiplicative inverse of r[i] and put it into rec[i]:
+    for(int j = 0; j < n; j++)
+    {
+      Poly prod = (r[i] * r[j]) % m;
+      prod.truncateTrailingZeros(_0);      // Truncation may be unnecessary
+      if(prod == r[1])
+      {
+        rec[i] = r[j];
+        break;
+      }
+    }
+  }
+  return rec;
 }
 
 
@@ -10875,6 +10905,8 @@ void testFiniteField1()
   }
 
   Array neg2 = makeNegTable(f, m); ok &= neg2 == neg;
+  Array rec2 = makeRecTable(f, m); ok &= rec2 == rec;
+
 
 
   // Create subtraction and division table:

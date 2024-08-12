@@ -10821,7 +10821,6 @@ bool testFiniteField1()
       ok &= prod == 0;
   }
 
-
   // Some unit tests that test the factored out functions that do the same stuff that we do here
   // manually:
   Array g2      = makeAllPolynomials(p, k-1);      ok &= g2 == g;
@@ -10843,8 +10842,7 @@ bool testFiniteField1()
   // modulus polynomial m and returns (or fills out) a class/structure that contains only the 
   // abstractified tables, i.e. the VecI, MatI variables.
 
-
-
+  /*
   // Some stuff for inspection in the debugger:
   VecI modI(k+1);
   for(int i = 0; i <= k; i++)
@@ -10855,7 +10853,7 @@ bool testFiniteField1()
   a = g[5];
   b = g[7];
   c = a + b; // Should be the polynomial p(x) = x ...looks good.
-
+  */
 
   rsAssert(ok);
   return ok;
@@ -10994,22 +10992,57 @@ bool testFiniteField2()
 
   using Vec = std::vector<int>;
 
-  ok &= testFiniteField(2, 3, Vec({1,1,0,1})); // 1 + x + x^3
-  ok &= testFiniteField(2, 3, Vec({1,0,1,1})); // 1 + x^2 + x^3
 
-
-
+  // n = 8 = 2^3:
+  ok &=  testFiniteField(2, 3, Vec({1,1,0,1})); // 1 + x + x^3
+  ok &=  testFiniteField(2, 3, Vec({1,0,1,1})); // 1 + x^2 + x^3
+  ok &= !testFiniteField(2, 3, Vec({1,0,0,1})); // 1 + x^3  is not irreducible  ->  not a field
 
 
   return ok;
 
+
+  // Notes:
+  //
+  // The following SageMath code can be used to produce a list of all irreducible polynomials of 
+  // degree k over a given field Zp:
+  //
+  // p = 3
+  // k = 4
+  // R = GF(p)['x']
+  // for p in R.polynomials(k):
+  //     if p.is_irreducible():
+  //         print(p)
+  //
+  // This code will be needed to produce suitable modulus polynomials, if we want to expand the 
+  // list of tests. In the example code, we have p = 3 and k = 4 such that we produce a finite 
+  // field of size 3^4 = 81. The first of the polynomials that we may use to construct this field 
+  // is p(x) = x^4 + x + 2. ...TBC...
+  //
+  //
   // ToDo:
-  // -Test distributive law, commutative, associative, etc.
+  //
+  // - Try automate finding a suitable modulus polynomial. I guess, this problem is algorithmically
+  //   difficult to to in an efficient way. Naively, one could produce all possible polynomials of 
+  //   the desired degree (of which there may be many) and then check for each, if it's irreducble.
+  //   This is itself would (navively) require to do trial division with all possible polynomials 
+  //   of lower degree. I don't know how to do the task efficiently - it's probably a problem that
+  //   is at least as hard as factoring prime numbers. So, for the time being, I produce the 
+  //   polynomials with SageMath.
+  //
+  // See also:
+  // https://ask.sagemath.org/question/41473/irreducible-polynomial-defining-the-finite-field/
+  // https://doc.sagemath.org/html/en/constructions/polynomials.html
+  //
+  // https://www.ams.org/journals/mcom/1990-54-189/S0025-5718-1990-0993933-0/S0025-5718-1990-0993933-0.pdf
+  // https://www.quora.com/Is-there-a-systematic-way-to-find-irreducible-polynomials
+  // https://math.stackexchange.com/questions/998563/how-to-find-all-irreducible-polynomials-in-z2-with-degree-5
 }
 
+/*
 void testFiniteField3()
 {
-  // UNDER CONSTRUCTION
+  // UNDER CONSTRUCTION...now obsolete...
 
   // Generate all polynomials over Zp up to degree k-1...TBC...
 
@@ -11058,42 +11091,8 @@ void testFiniteField3()
    
 
   int dummy = 0;
-
-  // ToDo:
-  //
-  // - Automate finding a suitable modulus polynomial. Try all polynomials of degree k and check if
-  //   they are irreducible. I think, we may test tha by checking if the polynomial has a root in
-  //   Zp - because if it has one, we can factor out a linear factor. In this function, we can also 
-  //   use the counter but initialized to 1000.. rather than 0000.. and it must be one digit longer
-  //   for that purpose. There are actually (p-1)*n different possible polynomials of degree k, I 
-  //   think. We could take all the n polynomials in g (they are all possible polynomial of degree
-  //   k-1) and prepend/add a term of the form a_k * x^k with a coeff a_k for which we have p-1 
-  //   options (not p because 0 is not an option). Wait no - that doesn't work. Not every reducible
-  //   polynomial needs to have a linear factor. It can also have higher degree factors.
-
-  // The following SageMath code can be used to produce a list of all irreducible polynomials of 
-  // degree k over a given field Zp:
-  //
-  // p = 3
-  // k = 4
-  // R = GF(p)['x']
-  // for p in R.polynomials(k):
-  //     if p.is_irreducible():
-  //         print(p)
-  //
-  // The first of them is  x^4 + x + 2
-  //
-  //
-  // See:
-  // https://ask.sagemath.org/question/41473/irreducible-polynomial-defining-the-finite-field/
-  // https://doc.sagemath.org/html/en/constructions/polynomials.html
-  //
-  // https://www.ams.org/journals/mcom/1990-54-189/S0025-5718-1990-0993933-0/S0025-5718-1990-0993933-0.pdf
-  // https://www.quora.com/Is-there-a-systematic-way-to-find-irreducible-polynomials
-  // https://math.stackexchange.com/questions/998563/how-to-find-all-irreducible-polynomials-in-z2-with-degree-5
-
-  //
 }
+*/
 
 void testFiniteField()
 {

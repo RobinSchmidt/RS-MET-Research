@@ -10626,6 +10626,62 @@ void testPrimesAndMore()
   //  string with gnuplot options
 }
 
+
+
+
+
+
+std::vector<rsPolynomial<rsModularInteger<int>>> allPolynomials(int modulus, int maxDegree)
+{
+  using ModInt = rsModularInteger<int>;
+  using Poly   = rsPolynomial<ModInt>;
+
+  int p = modulus;
+  int k = maxDegree+1;
+  int n = rsPow(p, k);
+
+  // Helper function to increment a counter:
+  auto inc = [](std::vector<int>& counter, int m)
+  {
+    int i = 0;
+    while(i < (int) counter.size() && counter[i] >= m-1)
+    {
+      counter[i] = 0;
+      i++;
+    }
+    if(i < (int) counter.size())
+      counter[i] += 1;
+  };
+  // Maybe make this a library function. The number m is the wrap-around value where the digit 
+  // wraps around to 0. In a decimal counter, this would be 10 and it would go up like:
+  //   000 001 002 ... 008 009 010 011 012 ... 018 019 020 021 ... 900 901 902 ... 999 000
+  // except that out counter has the digits reversed, i.e. the least important digit is leftmost
+
+  // Helper function to create a polynomial over the modular integers with modulus m and given 
+  // coefficients (as integers - they will be wrapped into the range 0..m-1 if they are beyond -
+  // which they actually are not in this case):
+  auto makePoly = [](const std::vector<int>& coeffs, int m)
+  {
+    int k = (int) coeffs.size();
+    Poly poly(k-1);
+    for(int i = 0; i < k; i++)
+      poly.setCoeff(i, ModInt(coeffs[i], m));
+    poly.truncateTrailingZeros(ModInt(0, m));
+    return poly;
+  };
+
+  // Generate all the n = p^k possible polynomials of degree up to k-1 over Zp:
+  std::vector<int>  counter(k);  // Content of counter is our polynomial coefficient array
+  std::vector<Poly> polys(n);    // vector of polynomials
+  for(int i = 0; i < n; i++)
+  {
+    polys[i] = makePoly(counter, p);
+    inc(counter, p);
+  }
+  return polys;
+}
+
+
 void testFiniteField1()
 {
   // We construct a finite field (aka Galois field) with n = p^k elements where p is a prime number
@@ -10645,6 +10701,8 @@ void testFiniteField1()
   // two irreducible polynomials of degree 3: x^3 + x + 1, x^3 + x^2 + 1. We pick the first one 
   // from these two and create the Galois field  GF(8) ~ Z2[x] / (x^3 + x + 1). So, in this 
   // experiment we implement the Galois field with: p = 2, k = 3, n = 2^3 = 8.
+
+  bool ok = true;
 
   using Int    = int;
   using ModInt = rsModularInteger<Int>;
@@ -10681,6 +10739,15 @@ void testFiniteField1()
   // coeff for x^3 comes first and the last coeff is for the constant, i.e. this notation reverses 
   // the polynomial coeff array. The remainder polynomials in this notation are given as g0 = 000, 
   // g1 = 001, g2 = 010, ...TBC...
+
+  // As a first check, compare our manually generated g with the automatically generated f. They 
+  // should be equal:
+  Array f = allPolynomials(p, k-1); // rename to makeAllPolynomials
+  ok &= f == g;
+
+
+
+  // Factor out into two functions makeAddTable, makeMulTable
 
   // Create addition and multiplication table:
   Table add(n, n), mul(n, n);
@@ -10740,7 +10807,6 @@ void testFiniteField1()
   }
 
   // Check the tables of additive and multiplicative inverses:
-  bool ok = true;
   for(int i = 0; i < n; i++)
   {
     ok &= rsContainsOnce(neg, g[i]);
@@ -10819,6 +10885,8 @@ void testFiniteField1()
 
   // ToDo:
   //
+  // - Figure out what happens if m is reducible. Try x^3 + 1.
+  //
   // - Create operation tables for powers, roots and logarithms.
   //
   // - Check if the abstract operation tables are latin squares, i.e. each row and each column
@@ -10868,56 +10936,6 @@ void testFiniteField1()
 
 
 
-std::vector<rsPolynomial<rsModularInteger<int>>> allPolynomials(int modulus, int maxDegree)
-{
-  using ModInt = rsModularInteger<int>;
-  using Poly   = rsPolynomial<ModInt>;
-
-  int p = modulus;
-  int k = maxDegree+1;
-  int n = rsPow(p, k);
-
-  // Helper function to increment a counter:
-  auto inc = [](std::vector<int>& counter, int m)
-  {
-    int i = 0;
-    while(i < (int) counter.size() && counter[i] >= m-1)
-    {
-      counter[i] = 0;
-      i++;
-    }
-    if(i < (int) counter.size())
-      counter[i] += 1;
-  };
-  // Maybe make this a library function. The number m is the wrap-around value where the digit 
-  // wraps around to 0. In a decimal counter, this would be 10 and it would go up like:
-  //   000 001 002 ... 008 009 010 011 012 ... 018 019 020 021 ... 900 901 902 ... 999 000
-  // except that out counter has the digits reversed, i.e. the least important digit is leftmost
-
-  // Helper function to create a polynomial over the modular integers with modulus m and given 
-  // coefficients (as integers - they will be wrapped into the range 0..m-1 if they are beyond -
-  // which they actually are not in this case):
-  auto makePoly = [](const std::vector<int>& coeffs, int m)
-  {
-    int k = (int) coeffs.size();
-    Poly poly(k-1);
-    for(int i = 0; i < k; i++)
-      poly.setCoeff(i, ModInt(coeffs[i], m));
-    poly.truncateTrailingZeros(ModInt(0, m));
-    return poly;
-  };
-
-  // Generate all the n = p^k possible polynomials of degree up to k-1 over Zp:
-  std::vector<int>  counter(k);  // Content of counter is our polynomial coefficient array
-  std::vector<Poly> polys(n);    // vector of polynomials
-  for(int i = 0; i < n; i++)
-  {
-    polys[i] = makePoly(counter, p);
-    inc(counter, p);
-  }
-  return polys;
-}
-
 
 void testFiniteField2()
 {
@@ -10965,7 +10983,7 @@ void testFiniteField2()
   // Create the 1D tables for additive and multiplicative inverses:
   //
   // ...hmm...we would have to copy a lot of code from testFiniteField1. The code should really be
-  // factored out - maybe make unftions to create mulTbale, addTable, etc.
+  // factored out - maybe make unftions to create mulTable, addTable, etc.
 
    
 
@@ -10973,7 +10991,7 @@ void testFiniteField2()
 
   // ToDo:
   //
-  // - Automate finidng a suitable modulus polynomial. Try all polynomials of degree k and check if
+  // - Automate finding a suitable modulus polynomial. Try all polynomials of degree k and check if
   //   they are irreducible. I think, we may test tha by checking if the polynomial has a root in
   //   Zp - because if it has one, we can factor out a linear factor. In this function, we can also 
   //   use the counter but initialized to 1000.. rather than 0000.. and it must be one digit longer
@@ -11009,7 +11027,7 @@ void testFiniteField2()
 
 void testFiniteField()
 {
-  //testFiniteField1();
+  testFiniteField1();
   testFiniteField2();
 }
 

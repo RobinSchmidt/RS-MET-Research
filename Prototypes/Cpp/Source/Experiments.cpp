@@ -10937,6 +10937,29 @@ void testFiniteField2()
   //   think. We could take all the n polynomials in g (they are all possible polynomial of degree
   //   k-1) and prepend/add a term of the form a_k * x^k with a coeff a_k for which we have p-1 
   //   options (not p because 0 is not an option)
+
+  // The following SageMath code can be used to produce a list of all irreducible polynomials of 
+  // degree k over a given field Zp:
+  //
+  // p = 3
+  // k = 4
+  // R = GF(p)['x']
+  // for p in R.polynomials(k):
+  //     if p.is_irreducible():
+  //         print(p)
+  //
+  // The first of them is  x^4 + x + 2
+  //
+  //
+  // See:
+  // https://ask.sagemath.org/question/41473/irreducible-polynomial-defining-the-finite-field/
+  // https://doc.sagemath.org/html/en/constructions/polynomials.html
+  //
+  // https://www.ams.org/journals/mcom/1990-54-189/S0025-5718-1990-0993933-0/S0025-5718-1990-0993933-0.pdf
+  // https://www.quora.com/Is-there-a-systematic-way-to-find-irreducible-polynomials
+  // https://math.stackexchange.com/questions/998563/how-to-find-all-irreducible-polynomials-in-z2-with-degree-5
+
+  //
 }
 
 void testFiniteField()

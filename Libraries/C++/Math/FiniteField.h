@@ -56,10 +56,7 @@ protected:
   // Operation tables:
   std::vector<int>    mod;                // Coeffs of the modulus polynomial
   std::vector<int>    neg, rec;           // 1D tables negatives and reciprocals.
-  RAPT::rsMatrix<int> add, mul, sub, div; // 2D tables for arithemetic operations.
-
-
-
+  RAPT::rsMatrix<int> add, mul, sub, div; // 2D tables for arithmetic operations.
 
   /*
   VecI  neg_8_2 = abstractifyTable1D(g2, neg2);    ok &= neg_8_2 == neg_8;
@@ -70,7 +67,6 @@ protected:
   MatI  div_8_2 = abstractifyTable2D(g2, div2);    ok &= div_8_2 == div_8;
   */
 
-
   // We need to form the field of polynomials of degree <= k over the modular integers with 
   // modulus p. Then we take that field modulo a specific polynomial M(x) that plays the role
   // of a modulus ...tbc...
@@ -80,7 +76,98 @@ protected:
   // of modular integers and the higher level being the use doing all polynomial operations modulo
   // the given M(x), requiring polynomial division with remainder?
 
+  friend class rsFiniteFieldElement;
+
 };
+
+//=================================================================================================
+
+/** Class for representing finite field elements. To construct such an element, you need to pass a
+pointer to a rsFiniteFieldTables object that will be consulted for doing the operations. That 
+pattern of implementation is similar to how rsMultiVector references a rsGeometricAlgebra object 
+for doing the actual computations. */
+
+class rsFiniteFieldElement
+{
+
+public:
+
+
+
+
+  rsFiniteFieldElement(const rsFiniteFieldTables* tablesToUse)
+  { 
+    setTables(tablesToUse); 
+  }
+
+  rsFiniteFieldElement(int newVal, const rsFiniteFieldTables* tablesToUse)
+  { 
+    val = newVal;
+    setTables(tablesToUse);
+    // todo: check if val is in aloowed range
+  }
+
+
+  rsFiniteFieldElement(const rsFiniteFieldElement& b) 
+  { 
+    set(b); 
+  }
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup */
+
+  void setTables(const rsFiniteFieldTables* tablesToUse)
+  {
+    tables = tablesToUse;
+  }
+
+  void set(const rsFiniteFieldElement& b)
+  {
+    val    = b.val;
+    tables = b.tables;
+  }
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators */
+
+  /** Adds two multivectors. */
+  rsFiniteFieldElement operator+(const rsFiniteFieldElement& b) const
+  {
+    //RAPT::rsAssert(isOperationOk(*this, b)); // compiler error
+
+    int rVal = tables->add(val, b.val);
+    return rsFiniteFieldElement(rVal, tables);
+  }
+
+
+
+protected:
+
+  bool isOperationOk(const rsFiniteFieldElement& a, const rsFiniteFieldElement& b)
+  {
+    bool ok = true;
+    ok &= a.tables != nullptr;
+    ok &= b.tables == a.tables;
+
+    // ToDo: check if values of a and b are in the allowed range of 0..p^k-1
+    // Would it actually make sense to interpret avlues outside this range as wrapped back via a
+    // modulo operation?
+
+    return ok;
+  }
+
+  int val = 0;
+
+  //const rsGeometricAlgebra<T>* alg = nullptr; 
+
+  const rsFiniteFieldTables* tables = nullptr;
+
+};
+
+
 
 
 // In a non-naive implementation, we should build tables for addition and multiplication in the 

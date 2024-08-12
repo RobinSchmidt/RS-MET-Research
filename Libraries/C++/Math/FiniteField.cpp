@@ -270,10 +270,8 @@ rsFiniteFieldTables::rsFiniteFieldTables(
   , k(exponent)
   , mod(modulusCoeffs)
 {
-
   createOperationTables();
 }
-
 
 void rsFiniteFieldTables::createOperationTables()
 {
@@ -307,5 +305,6 @@ void rsFiniteFieldTables::createOperationTables()
 
   int dummy = 0;
 }
+
 
 }

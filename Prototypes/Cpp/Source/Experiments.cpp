@@ -10912,9 +10912,6 @@ void testFiniteField1()
   // https://e.math.cornell.edu/people/belk/numbertheory/NumberTheoryPolynomials.pdf
 }
 
-
-
-
 void testFiniteField2()
 {
   // UNDER CONSTRUCTION

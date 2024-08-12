@@ -10952,7 +10952,11 @@ bool testFiniteField2()
     {
       b.set(j, &tbl);
 
-      // Test binary operations on a,b:
+      // Test commutative laws:
+      ok &= a + b == b + a;
+      ok &= a * b == b * a;
+
+      // Test some inversions of binary operations:
       Elem sum  = a + b;
       Elem prod = a * b;
       Elem diff = a - b;
@@ -10979,21 +10983,13 @@ bool testFiniteField2()
       {
         c.set(j, &tbl);
 
-        // Test distributive law:
-        Elem res1 = c * (a + b);
-        Elem res2 = c * a  + c * b;
-        ok &= res1 == res2;
-
+        // Test distributive and associative laws:
+        ok &= c * (a + b) == c * a  + c * b;
+        ok &= (a + b) + c == a + (b + c);
+        ok &= (a * b) * c == a * (b * c);
       }
-
-
-      int dummy = 0;
     }
   }
-
-
-
-
 
   return ok;
 

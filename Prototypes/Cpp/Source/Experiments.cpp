@@ -10852,8 +10852,20 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeDivTable(
   return div;
 }
 
+std::vector<int> abstractifyTable1D(
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& x,
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& y )
+{
+  // x: 
+  // y:
 
-
+  int n = (int) x.size();
+  rsAssert((int) y.size() == n);
+  std::vector<int> t(n);
+  for(int i = 0; i < n; i++)
+    t[i] = rsFind(x, y[i]);
+  return t;
+}
 
 
 
@@ -10885,6 +10897,7 @@ void testFiniteField1()
   using Poly   = rsPolynomial<ModInt>;
   using Table  = rsMatrix<Poly>;           // For operation tables for +,-,*,/
   using Array  = std::vector<Poly>;
+  using VecI   = std::vector<int>;
   
   // Parameters for our Galois field:
   Int p = 2;
@@ -11017,14 +11030,17 @@ void testFiniteField1()
   // being polynomials. Instead, we think of them as just 8 elements that have 2 binary operations 
   // defined between them. We represent the 8 elements abstractly as the indices 0..7:
 
-  std::vector<int> GF_8 = rsRangeLinear(0, n-1, n);              // Field elements
+  VecI GF_8 = rsRangeLinear(0, n-1, n);              // Field elements
 
-  std::vector<int>  neg_8(n), rec_8(n);                          // Negatives and reciprocals
+  VecI  neg_8(n), rec_8(n);                          // Negatives and reciprocals
   for(int i = 0; i < n; i++)
   {
     neg_8[i] = rsFind(g, neg[i]);
     rec_8[i] = rsFind(g, rec[i]);
   }
+
+  VecI neg_8_2 = abstractifyTable1D(g, neg); ok &= neg_8_2 == neg_8;
+  VecI rec_8_2 = abstractifyTable1D(g, rec); ok &= rec_8_2 == rec_8;
 
   rsMatrix<int> add_8(n,n), sub_8(n,n), mul_8(n,n), div_8(n,n);  // Operation tables
   for(int i = 0; i < n; i++)
@@ -11037,6 +11053,16 @@ void testFiniteField1()
       div_8(i, j) = rsFind(g, div(i, j));
     }
   }
+  // ToDo: factor these table abstractifactions out into 2 functions abstractifyTable1D, 
+  // abstractifyTable2D
+
+
+
+
+
+
+
+
 
   // Let's visualize the operation tables:
   //plotMatrix(add_8);  // Not so interesting

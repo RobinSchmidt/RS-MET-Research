@@ -10951,7 +10951,17 @@ bool testFiniteField2()
       ok &= b == sum - a;
 
       if(b != _0)
+      {
         ok &= a == prod / b;
+        ok &= a == quot * b;
+      }
+      if(a != _0)
+      {
+        ok &= b == prod / a;
+        //ok &= b == quot * a;  // Nope - wrong!
+      }
+
+
 
       int dummy = 0;
     }

@@ -156,13 +156,12 @@ void rsFiniteFieldTables::createOperationTables()
     m[i] = ModInt(mod[i], p);
 
   // Create the list of possible remainder polynomials:
-  Array r = makeAllPolynomials(p, k-1);  // rename to r - for reaminders
+  Array r = makeAllPolynomials(p, k-1);
 
 
-  // Under construction - we want to achieve the same with less code:
+  // Zero and one as modular integers with modulus p:
   ModInt _0(0, p);
   ModInt _1(1, p);
-
 
   // Predicate that returns true iff x and y are additive inverses, i.e. y is the negation of x:
   auto predNeg = [&](const Poly& x, const Poly& y)
@@ -170,6 +169,9 @@ void rsFiniteFieldTables::createOperationTables()
     Poly r = (x + y) % m;         // Modulo m may be unnecessary
     r.truncateTrailingZeros(_0);
     return r == _0;
+
+    // I think, the comparison of the Poly r to the ModInt _0 works because _0 can be implictly 
+    // converted to the constant polynomial with 0 as constant coeff. ...figure out!
   };
 
   // Predicate that returns true iff x and y are multiplicative inverses, i.e. y is the reciprocal of x:
@@ -182,8 +184,8 @@ void rsFiniteFieldTables::createOperationTables()
     else
       return r == _1;
 
-    // Note: If x == 0, there is no reciprocal but for technical reasons, it makes sense to take 0 
-    // as the reciprocal of itself in the table of reciprocals
+    // If x == 0, there is no reciprocal but for technical reasons, it makes sense to take 0 
+    // as the reciprocal of itself in the table of reciprocals.
   };
 
   // Operation that performs modular addition of two polynomials:
@@ -204,14 +206,14 @@ void rsFiniteFieldTables::createOperationTables()
 
   // Create the 1D operation tables for negation and reciprocation and the 2D operation tables for 
   // addition, multiplication, subtraction and division:
-  Array tmp1D;  // maybe rename to t1
-  Table tmp2D;  // maybe rename to t2
-  tmp2D = makeBinaryOpTable( r, r,     opAdd  ); add = abstractifyTable2D(r, tmp2D);
-  tmp2D = makeBinaryOpTable( r, r,     opMul  ); mul = abstractifyTable2D(r, tmp2D);
-  tmp1D = makeInversionTable(r,        predNeg); neg = abstractifyTable1D(r, tmp1D);
-  tmp2D = makeBinaryOpTable( r, tmp1D, opAdd  ); sub = abstractifyTable2D(r, tmp2D);
-  tmp1D = makeInversionTable(r,        predRec); rec = abstractifyTable1D(r, tmp1D);
-  tmp2D = makeBinaryOpTable( r, tmp1D, opMul  ); div = abstractifyTable2D(r, tmp2D);
+  Array t1;  // Temporary 1D table of polynomials
+  Table t2;  // Temporary 2D table of polynomials
+  t2 = makeBinaryOpTable( r, r,  opAdd  ); add = abstractifyTable2D(r, t2);
+  t2 = makeBinaryOpTable( r, r,  opMul  ); mul = abstractifyTable2D(r, t2);
+  t1 = makeInversionTable(r,     predNeg); neg = abstractifyTable1D(r, t1);
+  t2 = makeBinaryOpTable( r, t1, opAdd  ); sub = abstractifyTable2D(r, t2);
+  t1 = makeInversionTable(r,     predRec); rec = abstractifyTable1D(r, t1);
+  t2 = makeBinaryOpTable( r, t1, opMul  ); div = abstractifyTable2D(r, t2);
 
   int dummy = 0;
 }

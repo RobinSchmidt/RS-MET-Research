@@ -10986,7 +10986,10 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
 
 bool testFiniteField2()
 {
-  // We test the creation of various finite fields and doing computations in them...TBC...
+  // We test the creation of various finite fields and doing computations in them. The possible 
+  // sizes of finite fields are givne by prime powers, i.e. numbers n = p^k for some prime p and 
+  // natural number k. For the k = 1 cases, i.e. n = p^1 = p, we test only the cases 
+  // p = 2,3,5,7,11. These special cases reduce to modular arithmetic.  ..TBC...
 
   bool ok = true;
 
@@ -11010,7 +11013,8 @@ bool testFiniteField2()
   // ...more to come...
   // n = 81 = 3^4: p(x) = x^4 + x + 2
 
-
+  // Test finite fields of sizes less than 100. For the k = 1 cases, i.e. n = p^1 = p, we test only
+  // the cases p = 2,3,5,7,11. These special cases reduce to modular arithmetic:
   ok &=  testFiniteField( 2, 1, Vec({0,1          }));   //  2 =  2^1, x
   ok &=  testFiniteField( 3, 1, Vec({0,1          }));   //  3 =  3^1, x
   ok &=  testFiniteField( 2, 2, Vec({1,1,1        }));   //  4 =  2^2, 1 + x + x^2
@@ -11025,10 +11029,7 @@ bool testFiniteField2()
   ok &=  testFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));   // 32 =  2^5, 1 + x^2 + x^5
   ok &=  testFiniteField( 7, 2, Vec({1,0,1        }));   // 49 =  7^2, 1 + x^2
   ok &=  testFiniteField( 2, 6, Vec({1,1,0,0,0,0,1}));   // 64 =  2^6, 1 + x + x^6
-
-
-  // x^6 + x + 1
-
+  ok &=  testFiniteField( 3, 4, Vec({2,1,0,0,1    }));   // 81 =  3^4, 2 + x + x^4
 
   // Some variations for n = 8 = 2^3:
   ok &=  testFiniteField(2, 3, Vec({1,1,0,1})); // 1 + x + x^3

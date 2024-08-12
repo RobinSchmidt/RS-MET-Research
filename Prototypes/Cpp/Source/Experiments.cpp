@@ -10934,21 +10934,33 @@ bool testFiniteField2()
   Elem _1(1, &tbl);
 
 
-
+  // We loop over all elements and check some conditions that must hold in a field:
   for(int i = 0; i < n; i++)
   {
     a.set(i, &tbl);
+
+    // Test unary operations on a:
+    ok &= a - a    == _0;
+    ok &= a + (-a) == _0;                 // Additive inverse
+    if(a != _0)
+    {
+      ok &= a * a.getReciprocal() == _1;  // Multiplicative inverse
+      ok &= a / a                 == _1;  // Division by itself gives one
+    }
+
     for(int j = 0; j < n; j++)
     {
       b.set(j, &tbl);
 
+      // Test binary operations on a,b:
       Elem sum  = a + b;
       Elem prod = a * b;
       Elem diff = a - b;
       Elem quot = a / b;
 
-      ok &= a == sum - b;
-      ok &= b == sum - a;
+      ok &= a == sum  - b;
+      ok &= b == sum  - a;
+      ok &= a == diff + b;
 
       if(b != _0)
       {

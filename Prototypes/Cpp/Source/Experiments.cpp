@@ -10912,29 +10912,21 @@ bool testFiniteField1()
   // https://e.math.cornell.edu/people/belk/numbertheory/NumberTheoryPolynomials.pdf
 }
 
-bool testFiniteField2()
+bool testFiniteField(int p, int k, const std::vector<int>& m)
 {
   bool ok = true;
 
   using Tbl  = rema::rsFiniteFieldTables;
   using Elem = rema::rsFiniteFieldElement;
-  using VecI = std::vector<int>;
-
-  // ToDo: let user pass p, k, m and make various tests with variuos choices for p,k,m
-  int p = 2;
-  int k = 3;
-  int n = rsPow(p, k);
-  VecI m({1,1,0,1});
 
   Tbl tbl(p, k, m);
 
   Elem a(&tbl), b(&tbl), c(&tbl);
-
   Elem _0(0, &tbl);
   Elem _1(1, &tbl);
 
-
   // We loop over all elements and check some conditions that must hold in a field:
+  int n = rsPow(p, k);
   for(int i = 0; i < n; i++)
   {
     a.set(i, &tbl);
@@ -10990,6 +10982,30 @@ bool testFiniteField2()
       }
     }
   }
+
+  return ok;
+}
+
+bool testFiniteField2()
+{
+  bool ok = true;
+
+  using Tbl  = rema::rsFiniteFieldTables;
+  using Elem = rema::rsFiniteFieldElement;
+  using VecI = std::vector<int>;
+
+  // ToDo: let user pass p, k, m and make various tests with variuos choices for p,k,m
+  int p = 2;
+  int k = 3;
+  int n = rsPow(p, k);
+  VecI m({1,1,0,1});
+
+
+  ok &= testFiniteField(p, k, m);
+
+
+
+
 
   return ok;
 

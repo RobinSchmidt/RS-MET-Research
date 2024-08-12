@@ -179,6 +179,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
   return rec;
 }
 
+/*
 rsMatrix<rsPolynomial<rsModularInteger<int>>> makeSubTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
   const std::vector<rsPolynomial<rsModularInteger<int>>>& neg,
@@ -203,6 +204,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeSubTable(
   }
   return sub;
 }
+*/
 // makeAddTable could perhaps be expressed as makeSubTable(r, r, n) to get rid of some code 
 // duplication. But it should then be called makeAddTable but have two polynomial arrays as 
 // parameters - one for the 1st and one for the 2nd operand. In general, the arrays could be of
@@ -254,6 +256,16 @@ rsMatrix<TArg> makeBinaryOpTable(
       table(i, j) = op(x[i], y[j]);
   return table;
 }
+
+/*
+template<class TArg>
+std::vector makeInversionTable(const std::vector<TArg>& x, const TArg& neutralElem)
+{
+
+}
+*/
+
+
 
 std::vector<int> abstractifyTable1D(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& x,
@@ -318,20 +330,7 @@ void rsFiniteFieldTables::createOperationTables()
   // Create the list of possible remainder polynomials:
   Array r = makeAllPolynomials(p, k-1);  // rename to r - for reaminders
 
-  // Create the 1D operation tables for negation and reciprocation and the 2D operation tables for 
-  // addition, multiplication, subtraction and division:
-  Array tmp1D;
-  Table tmp2D;
-  //tmp2D = makeAddTable(r,        m); add = abstractifyTable2D(r, tmp2D);
-  //tmp2D = makeMulTable(r,        m); mul = abstractifyTable2D(r, tmp2D);
-  tmp1D = makeNegTable(r,        m); neg = abstractifyTable1D(r, tmp1D);
-  tmp2D = makeSubTable(r, tmp1D, m); sub = abstractifyTable2D(r, tmp2D);
-  tmp1D = makeRecTable(r,        m); rec = abstractifyTable1D(r, tmp1D);
-  tmp2D = makeDivTable(r, tmp1D, m); div = abstractifyTable2D(r, tmp2D);
 
-
-
-  
   // Under construction - we wnat to achieve the same with less code:
   ModInt _0(0, p);
 
@@ -350,8 +349,35 @@ void rsFiniteFieldTables::createOperationTables()
   };
 
 
-  tmp2D = makeBinaryOpTable(r, r, opAdd); add = abstractifyTable2D(r, tmp2D);
-  tmp2D = makeBinaryOpTable(r, r, opMul); mul = abstractifyTable2D(r, tmp2D);
+
+
+
+  // Create the 1D operation tables for negation and reciprocation and the 2D operation tables for 
+  // addition, multiplication, subtraction and division:
+  Array tmp1D;
+  Table tmp2D;
+
+  //tmp2D = makeAddTable(r,        m); add = abstractifyTable2D(r, tmp2D);    // old
+  //tmp2D = makeMulTable(r,        m); mul = abstractifyTable2D(r, tmp2D);    // old
+  tmp2D = makeBinaryOpTable(r, r, opAdd); add = abstractifyTable2D(r, tmp2D); // new
+  tmp2D = makeBinaryOpTable(r, r, opMul); mul = abstractifyTable2D(r, tmp2D); // new
+
+
+  tmp1D = makeNegTable(r,        m); neg = abstractifyTable1D(r, tmp1D);
+  //tmp2D = makeSubTable(r, tmp1D, m); sub = abstractifyTable2D(r, tmp2D);       // old
+  tmp2D = makeBinaryOpTable(r, tmp1D, opAdd); sub = abstractifyTable2D(r, tmp2D); // new
+
+
+  tmp1D = makeRecTable(r,        m); rec = abstractifyTable1D(r, tmp1D);
+  tmp2D = makeDivTable(r, tmp1D, m); div = abstractifyTable2D(r, tmp2D);
+
+
+
+  
+
+
+
+
 
 
 

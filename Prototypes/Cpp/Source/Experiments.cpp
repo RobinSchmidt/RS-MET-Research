@@ -7,11 +7,13 @@
 // Preliminary:
 #include "../../../Libraries/C++/Math/Set.h"
 #include "../../../Libraries/C++/Math/FieldExtensions.h"
+#include "../../../Libraries/C++/Math/FiniteField.h"
 
 #include "../../../Libraries/C++/Math/Set.cpp"
 #include "../../../Libraries/C++/Math/FieldExtensions.cpp"
-// ToDo: Organize the way, we include and compile this code more properly!
+#include "../../../Libraries/C++/Math/FiniteField.cpp"
 
+// ToDo: Organize the way, we include and compile this code more properly!
 
 
 //-------------------------------------------------------------------------------------------------

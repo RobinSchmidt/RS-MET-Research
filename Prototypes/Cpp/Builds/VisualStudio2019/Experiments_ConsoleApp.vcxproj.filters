@@ -292,6 +292,9 @@
     <ClCompile Include="..\..\..\..\Libraries\C++\Math\FieldExtensions.cpp">
       <Filter>Experiments\Math</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Libraries\C++\Math\FiniteField.cpp">
+      <Filter>Experiments\Math</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\Libraries\C++\Math\Set.cpp">
       <Filter>Experiments\Math</Filter>
     </ClCompile>
@@ -2233,6 +2236,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Libraries\C++\Math\FieldExtensions.h">
+      <Filter>Experiments\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Libraries\C++\Math\FiniteField.h">
       <Filter>Experiments\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\..\Libraries\C++\Math\Set.h">

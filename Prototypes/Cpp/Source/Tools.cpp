@@ -7432,6 +7432,9 @@ protected:
 // practically "disallow" thoses because they may result as output of some arithmetic operation.
 // But maybe such a structure could still be useful enough, if the zero divisors are raer enough?
 
+
+
+
 //=================================================================================================
 
 template<class T> 

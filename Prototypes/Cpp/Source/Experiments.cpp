@@ -10629,6 +10629,8 @@ void testPrimesAndMore()
 
 // Finite field stuff:
 
+// Maybe move these functions as static member functions into a class rsFiniteField:
+
 /** Creates a std::vector of all possible polynomials over Zp (== integers modulo p) up to the 
 given maximum degree. These are all the possible remainders that can occur when any polynomial over
 Zp is divided by a polynomial of degree k = maxDegree+1. These polynomials can be used to represent 
@@ -10789,6 +10791,38 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
   return rec;
 }
 
+rsMatrix<rsPolynomial<rsModularInteger<int>>> makeSubTable(
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& neg,
+  const rsPolynomial<rsModularInteger<int>>& m)
+{
+  // r:   list of possible remainders
+  // neg: list of additive inverese of r
+  // m:   modulus polynomial
+
+  using ModInt = rsModularInteger<int>;
+  int p = m.getCoeff(0).getModulus();
+  int n = (int) r.size();
+  ModInt _0(0, p);
+  rsMatrix<rsPolynomial<ModInt>> sub(n, n);
+  for(int i = 0; i < n; i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      sub(i, j) = (r[i] + neg[j]) % m;     // Truncation may be unnecessary
+      sub(i,j).truncateTrailingZeros(_0);
+    }
+  }
+  return sub;
+}
+// makeAddTable could perhaps be expressed as makeSubTable(r, r, n) to get rid of some code 
+// duplication. But it should the be called makeAddTable but have two polynomial arrays as 
+// parameters - one for the 1st and one for the 2nd operand. In general, the arrays could be of
+// different  size - although we do not need that here
+
+
+
+
 
 
 
@@ -10921,6 +10955,8 @@ void testFiniteField1()
       div(i,j).truncateTrailingZeros(_0); 
     }
   }
+
+  Table sub2 = makeSubTable(f, neg, m); ok &= sub2 == sub;
 
   // Check the tables of additive and multiplicative inverses:
   for(int i = 0; i < n; i++)

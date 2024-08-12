@@ -11070,26 +11070,25 @@ void testFiniteField1()
   }
 
 
-
-
-
-
   // Some unit tests that test the factored out functions that do the same stuff that we do here
   // manually:
-
-  Array f       = makeAllPolynomials(p, k-1); ok &= f == g;
-  Table mul2    = makeMulTable(f, m);         ok &= mul2 == mul;
-  Table add2    = makeAddTable(f, m);         ok &= add2 == add;
-  Array neg2    = makeNegTable(f, m);         ok &= neg2 == neg;
-  Array rec2    = makeRecTable(f, m);         ok &= rec2 == rec;
-  Table sub2    = makeSubTable(f, neg, m);    ok &= sub2 == sub;
-  Table div2    = makeDivTable(f, rec, m);    ok &= div2 == div;
-  VecI  neg_8_2 = abstractifyTable1D(g, neg); ok &= neg_8_2 == neg_8;
-  VecI  rec_8_2 = abstractifyTable1D(g, rec); ok &= rec_8_2 == rec_8;
-  MatI  add_8_2 = abstractifyTable2D(g, add); ok &= add_8_2 == add_8;
-  MatI  mul_8_2 = abstractifyTable2D(g, mul); ok &= mul_8_2 == mul_8;
-  MatI  sub_8_2 = abstractifyTable2D(g, sub); ok &= sub_8_2 == sub_8;
-  MatI  div_8_2 = abstractifyTable2D(g, div); ok &= div_8_2 == div_8;
+  Array g2      = makeAllPolynomials(p, k-1);      ok &= g2 == g;
+  Table mul2    = makeMulTable(      g2, m);       ok &= mul2 == mul;
+  Table add2    = makeAddTable(      g2, m);       ok &= add2 == add;
+  Array neg2    = makeNegTable(      g2, m);       ok &= neg2 == neg;
+  Array rec2    = makeRecTable(      g2, m);       ok &= rec2 == rec;
+  Table sub2    = makeSubTable(      g2, neg2, m); ok &= sub2 == sub;
+  Table div2    = makeDivTable(      g2, rec2, m); ok &= div2 == div;
+  VecI  neg_8_2 = abstractifyTable1D(g2, neg2);    ok &= neg_8_2 == neg_8;
+  VecI  rec_8_2 = abstractifyTable1D(g2, rec2);    ok &= rec_8_2 == rec_8;
+  MatI  add_8_2 = abstractifyTable2D(g2, add2);    ok &= add_8_2 == add_8;
+  MatI  mul_8_2 = abstractifyTable2D(g2, mul2);    ok &= mul_8_2 == mul_8;
+  MatI  sub_8_2 = abstractifyTable2D(g2, sub2);    ok &= sub_8_2 == sub_8;
+  MatI  div_8_2 = abstractifyTable2D(g2, div2);    ok &= div_8_2 == div_8;
+  // This is how we would generally create all the 1D and 2D operation tables for a Galois field. 
+  // We should consolidate that into a function that takes as input the numbers p and k and the 
+  // modulus polynomial m and returns (or fills out) a class/structure that contains only the 
+  // abstractified tables, i.e. the VecI, MatI variables.
 
 
   // Some manual test:

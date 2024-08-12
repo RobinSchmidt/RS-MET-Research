@@ -94,6 +94,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
 }
 */
 
+/*
 std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
   const rsPolynomial<rsModularInteger<int>>& m)
@@ -130,6 +131,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
   }
   return rec;
 }
+*/
 
 
 // Under construction:
@@ -288,7 +290,9 @@ void rsFiniteFieldTables::createOperationTables()
   tmp2D = makeBinaryOpTable(r, tmp1D, opAdd); sub = abstractifyTable2D(r, tmp2D); // new
 
 
-  tmp1D = makeRecTable(r,        m); rec = abstractifyTable1D(r, tmp1D);
+
+  tmp1D = makeInversionTable(r, predRec); rec = abstractifyTable1D(r, tmp1D);     // new
+  //tmp1D = makeRecTable(r,        m); rec = abstractifyTable1D(r, tmp1D);  // old
   //tmp2D = makeDivTable(r, tmp1D, m); div = abstractifyTable2D(r, tmp2D);        // old
   tmp2D = makeBinaryOpTable(r, tmp1D, opMul); div = abstractifyTable2D(r, tmp2D); // new
 

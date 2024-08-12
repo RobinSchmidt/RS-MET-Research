@@ -10633,7 +10633,7 @@ void testPrimesAndMore()
 given maximum degree. These are all the possible remainders that can occur when any polynomial over
 Zp is divided by a polynomial of degree k = maxDegree+1. These polynomials can be used to represent 
 elements of the finite field of size n = p^k where p is the (prime) modulus. */
-std::vector<rsPolynomial<rsModularInteger<int>>> allPolynomials(int modulus, int maxDegree)
+std::vector<rsPolynomial<rsModularInteger<int>>> makeAllPolynomials(int modulus, int maxDegree)
 {
   using ModInt = rsModularInteger<int>;
   using Poly   = rsPolynomial<ModInt>;
@@ -10699,7 +10699,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeAddTable(
   {
     for(int j = 0; j < n; j++)
     {
-      add(i, j) = (r[i] + r[j]) % m;       // % m may not be needed
+      add(i, j) = (r[i] + r[j]) % m;       // Modulo m may be unnecessary
       add(i,j).truncateTrailingZeros(_0);
     }
   }
@@ -10723,11 +10723,43 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeMulTable(
     for(int j = 0; j < n; j++)
     {
       mul(i, j) = (r[i] * r[j]) % m;
-      mul(i,j).truncateTrailingZeros(_0);  // Truncation may not be needed
+      mul(i,j).truncateTrailingZeros(_0);  // Truncation may be unnecessary
     }
   }
   return mul;
 }
+
+std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
+  const rsPolynomial<rsModularInteger<int>>& m)
+{
+  // r: list of possible remainders
+  // m: modulus polynomial
+
+  using ModInt = rsModularInteger<int>;
+  using Poly   = rsPolynomial<ModInt>;
+  int p = m.getCoeff(0).getModulus();
+  int n = (int) r.size();
+  ModInt _0(0, p);
+  std::vector<Poly> neg(n);
+  for(int i = 0; i < n; i++)
+  {
+    // Find additive inverse of g[i] and put it into neg[i]:
+    for(int j = 0; j < n; j++)
+    {
+      Poly sum = (r[i] + r[j]) % m;        // Modulo m may be unnecessary
+      sum.truncateTrailingZeros(_0);
+      if(sum == r[0])
+      {
+        neg[i] = r[j];
+        break;
+      }
+    }
+  }
+  return neg;
+}
+
+
 
 
 void testFiniteField1()
@@ -10790,12 +10822,7 @@ void testFiniteField1()
 
   // As a first check, compare our manually generated g with the automatically generated f. They 
   // should be equal:
-  Array f = allPolynomials(p, k-1); // rename to makeAllPolynomials
-  ok &= f == g;
-
-
-
-  // Factor out into two functions makeAddTable, makeMulTable
+  Array f = makeAllPolynomials(p, k-1); ok &= f == g;
 
   // Create addition and multiplication table:
   Table add(n, n), mul(n, n);
@@ -10812,12 +10839,11 @@ void testFiniteField1()
   // If we don't call truncateTrailingZeros, some of the results will have an allocated degree of 
   // up to 4 (i.e. coeff arrays of size 5) with the trailing coeffs all zero.
 
-  Table mul2 = makeMulTable(f, m);
-  ok &= mul2 == mul;
+  Table mul2 = makeMulTable(f, m); ok &= mul2 == mul;
+  Table add2 = makeAddTable(f, m); ok &= add2 == add;
 
-  Table add2 = makeAddTable(f, m);
-  ok &= add2 == add;
 
+  // Factor out into two functions makeNegTable, makeRecTable
 
   // Create arrays of negatives and reciprocals, i.e. additive and multiplicative inverses:
   Array neg(n), rec(n);
@@ -10847,6 +10873,9 @@ void testFiniteField1()
       }
     }
   }
+
+  Array neg2 = makeNegTable(f, m); ok &= neg2 == neg;
+
 
   // Create subtraction and division table:
   Table sub(n, n), div(n, n);
@@ -11010,7 +11039,7 @@ void testFiniteField2()
   Int n = rsPow(p, k);
 
   // Create all possible polynomials over Zp up to degree k-1:
-  Array g = allPolynomials(p, k-1);
+  Array g = makeAllPolynomials(p, k-1);
 
 
   // Zero and one as modular integers with modulus p:

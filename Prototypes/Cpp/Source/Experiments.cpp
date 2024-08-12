@@ -10887,13 +10887,14 @@ void testFiniteField2()
   auto inc = [](std::vector<int>& counter, int m)
   {
     int i = 0;
-    while(counter[i] >= m-1 && i < (int) counter.size())
+    while(i < (int) counter.size() && counter[i] >= m-1)
     {
       counter[i] = 0;
       i++;
     }
 
-    counter[i] += 1;
+    if(i < (int) counter.size())
+      counter[i] += 1;
     
     int dummy = 0;
   };

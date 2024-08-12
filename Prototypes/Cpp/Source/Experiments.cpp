@@ -10655,6 +10655,8 @@ void testFiniteField1()
 
   bool ok = true;
 
+  using namespace rema;
+
   using Int    = int;
   using ModInt = rsModularInteger<Int>;
   using Poly   = rsPolynomial<ModInt>;
@@ -10931,7 +10933,7 @@ void testFiniteField2()
   Int n = rsPow(p, k);
 
   // Create all possible polynomials over Zp up to degree k-1:
-  Array g = makeAllPolynomials(p, k-1);
+  Array g = rema::makeAllPolynomials(p, k-1);
 
 
   // Zero and one as modular integers with modulus p:

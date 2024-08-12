@@ -1,3 +1,5 @@
+namespace rema  // Rob's educational math algorithms
+{
 
 
 //-------------------------------------------------------------------------------------------------
@@ -7,9 +9,9 @@
 // to deal with arbitrary data types ...TBC...
 
 
-/** Creates a std::vector of all possible polynomials over Zp (== integers modulo p) up to the 
+/** Creates a std::vector of all possible polynomials over Zp (== integers modulo p) up to the
 given maximum degree. These are all the possible remainders that can occur when any polynomial over
-Zp is divided by a polynomial of degree k = maxDegree+1. These polynomials can be used to represent 
+Zp is divided by a polynomial of degree k = maxDegree+1. These polynomials can be used to represent
 elements of the finite field of size n = p^k where p is the (prime) modulus. */
 std::vector<rsPolynomial<rsModularInteger<int>>> makeAllPolynomials(int modulus, int maxDegree)
 {
@@ -24,12 +26,12 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeAllPolynomials(int modulus,
   auto inc = [](std::vector<int>& counter, int m)
   {
     int i = 0;
-    while(i < (int) counter.size() && counter[i] >= m-1)
+    while(i < (int)counter.size() && counter[i] >= m-1)
     {
       counter[i] = 0;
       i++;
     }
-    if(i < (int) counter.size())
+    if(i < (int)counter.size())
       counter[i] += 1;
   };
   // Maybe make this a library function. The number m is the wrap-around value where the digit 
@@ -42,7 +44,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeAllPolynomials(int modulus,
   // which they actually are not in this case):
   auto makePoly = [](const std::vector<int>& coeffs, int m)
   {
-    int k = (int) coeffs.size();
+    int k = (int)coeffs.size();
     Poly poly(k-1);
     for(int i = 0; i < k; i++)
       poly.setCoeff(i, ModInt(coeffs[i], m));
@@ -70,7 +72,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeAddTable(
 
   using ModInt = rsModularInteger<int>;
   int p = m.getCoeff(0).getModulus();
-  int n = (int) r.size();
+  int n = (int)r.size();
   ModInt _0(0, p);
   rsMatrix<rsPolynomial<ModInt>> add(n, n);
   for(int i = 0; i < n; i++)
@@ -78,7 +80,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeAddTable(
     for(int j = 0; j < n; j++)
     {
       add(i, j) = (r[i] + r[j]) % m;       // Modulo m may be unnecessary
-      add(i,j).truncateTrailingZeros(_0);
+      add(i, j).truncateTrailingZeros(_0);
     }
   }
   return add;
@@ -93,7 +95,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeMulTable(
 
   using ModInt = rsModularInteger<int>;
   int p = m.getCoeff(0).getModulus();
-  int n = (int) r.size();
+  int n = (int)r.size();
   ModInt _0(0, p);
   rsMatrix<rsPolynomial<ModInt>> mul(n, n);
   for(int i = 0; i < n; i++)
@@ -101,7 +103,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeMulTable(
     for(int j = 0; j < n; j++)
     {
       mul(i, j) = (r[i] * r[j]) % m;
-      mul(i,j).truncateTrailingZeros(_0);  // Truncation may be unnecessary
+      mul(i, j).truncateTrailingZeros(_0);  // Truncation may be unnecessary
     }
   }
   return mul;
@@ -117,7 +119,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
   using ModInt = rsModularInteger<int>;
   using Poly   = rsPolynomial<ModInt>;
   int p = m.getCoeff(0).getModulus();
-  int n = (int) r.size();
+  int n = (int)r.size();
   ModInt _0(0, p);
   std::vector<Poly> neg(n);
   for(int i = 0; i < n; i++)
@@ -147,7 +149,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
   using ModInt = rsModularInteger<int>;
   using Poly   = rsPolynomial<ModInt>;
   int p = m.getCoeff(0).getModulus();
-  int n = (int) r.size();
+  int n = (int)r.size();
   ModInt _0(0, p);
   std::vector<Poly> rec(n);
   for(int i = 0; i < n; i++)
@@ -178,7 +180,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeSubTable(
 
   using ModInt = rsModularInteger<int>;
   int p = m.getCoeff(0).getModulus();
-  int n = (int) r.size();
+  int n = (int)r.size();
   ModInt _0(0, p);
   rsMatrix<rsPolynomial<ModInt>> sub(n, n);
   for(int i = 0; i < n; i++)
@@ -186,7 +188,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeSubTable(
     for(int j = 0; j < n; j++)
     {
       sub(i, j) = (r[i] + neg[j]) % m;     // Modulo m may be unnecessary
-      sub(i,j).truncateTrailingZeros(_0);
+      sub(i, j).truncateTrailingZeros(_0);
     }
   }
   return sub;
@@ -214,7 +216,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeDivTable(
 
   using ModInt = rsModularInteger<int>;
   int p = m.getCoeff(0).getModulus();
-  int n = (int) r.size();
+  int n = (int)r.size();
   ModInt _0(0, p);
   rsMatrix<rsPolynomial<ModInt>> div(n, n);
   for(int i = 0; i < n; i++)
@@ -222,7 +224,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeDivTable(
     for(int j = 0; j < n; j++)
     {
       div(i, j) = (r[i] * rec[j]) % m;
-      div(i,j).truncateTrailingZeros(_0);  // Truncation may be unnecessary
+      div(i, j).truncateTrailingZeros(_0);  // Truncation may be unnecessary
     }
   }
   return div;
@@ -230,13 +232,13 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeDivTable(
 
 std::vector<int> abstractifyTable1D(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& x,
-  const std::vector<rsPolynomial<rsModularInteger<int>>>& y )
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& y)
 {
   // x: 
   // y:
 
-  int n = (int) x.size();
-  rsAssert((int) y.size() == n);
+  int n = (int)x.size();
+  rsAssert((int)y.size() == n);
   std::vector<int> t(n);
   for(int i = 0; i < n; i++)
     t[i] = rsFind(x, y[i]);
@@ -250,9 +252,9 @@ rsMatrix<int> abstractifyTable2D(
   // x: 
   // Y:
 
-  int n = (int) x.size();
-  rsAssert(Y.hasShape(n,n));
-  rsMatrix<int> T(n,n);
+  int n = (int)x.size();
+  rsAssert(Y.hasShape(n, n));
+  rsMatrix<int> T(n, n);
   for(int i = 0; i < n; i++)
     for(int j = 0; j < n; j++)
       T(i, j) = rsFind(x, Y(i, j));
@@ -282,23 +284,28 @@ void rsFiniteFieldTables::createOperationTables()
   using VecI   = std::vector<int>;
   using MatI   = rsMatrix<int>;
 
+  rsAssert((int) mod.size() == k+1);
 
-  /*
-  Array g2      = makeAllPolynomials(p, k-1);
-  Table mul2    = makeMulTable(      g2, m);
-  Table add2    = makeAddTable(      g2, m);
-  Array neg2    = makeNegTable(      g2, m);
-  Array rec2    = makeRecTable(      g2, m);
-  Table sub2    = makeSubTable(      g2, neg2, m);
-  Table div2    = makeDivTable(      g2, rec2, m);
-  VecI  neg_8_2 = abstractifyTable1D(g2, neg2);
-  VecI  rec_8_2 = abstractifyTable1D(g2, rec2);
-  MatI  add_8_2 = abstractifyTable2D(g2, add2);
-  MatI  mul_8_2 = abstractifyTable2D(g2, mul2);
-  MatI  sub_8_2 = abstractifyTable2D(g2, sub2);
-  MatI  div_8_2 = abstractifyTable2D(g2, div2);
-  */
+  // Create the modulus polynomial:
+  Poly m(k);
+  for(int i = 0; i <= k; i++)
+    m[i] = ModInt(mod[i], p);
 
+  // Create the list of possible remainder polynomials:
+  Array g2 = makeAllPolynomials(p, k-1);  // rename to r - for reaminders
+
+  // Create the 1D operation tables for negation and reciprocation and the 2D operation tables for 
+  // addition, multiplication, subtraction and division:
+  Array tmp1D;
+  Table tmp2D;
+  tmp2D = makeAddTable(g2,        m); add = abstractifyTable2D(g2, tmp2D);
+  tmp2D = makeMulTable(g2,        m); mul = abstractifyTable2D(g2, tmp2D);
+  tmp1D = makeNegTable(g2,        m); neg = abstractifyTable1D(g2, tmp1D);
+  tmp2D = makeSubTable(g2, tmp1D, m); sub = abstractifyTable2D(g2, tmp2D);
+  tmp1D = makeRecTable(g2,        m); rec = abstractifyTable1D(g2, tmp1D);
+  tmp2D = makeDivTable(g2, tmp1D, m); div = abstractifyTable2D(g2, tmp2D);
 
   int dummy = 0;
+}
+
 }

@@ -10939,6 +10939,36 @@ void testFiniteField2()
   // Create all possible polynomials over Zp up to degree k-1:
   Array g = allPolynomials(p, k-1);
 
+
+  // Zero and one as modular integers with modulus p:
+  ModInt _0(0, p);
+  ModInt _1(1, p);
+  ModInt _2(2, p);
+
+  // Create the Modulus polynomial m = x^4 + x + 2:
+  Poly m({_1, _0, _0, _1, _2});
+
+
+  // Create addition and multiplication table:
+  Table add(n, n), mul(n, n);
+  for(int i = 0; i < n; i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      add(i, j) = (g[i] + g[j]) % m;       // I think, the % m does nothing here (verify!)
+      mul(i, j) = (g[i] * g[j]) % m;
+      add(i,j).truncateTrailingZeros(_0);  // If we don't pass the _0, we get a compilation error.
+      mul(i,j).truncateTrailingZeros(_0);  // ..figure out why defaulting to zero doesn't work
+    }
+  }
+
+  // Create the 1D tables for additive and multiplicative inverses:
+  //
+  // ...hmm...we would have to copy a lot of code from testFiniteField1. The code should really be
+  // factored out - maybe make unftions to create mulTbale, addTable, etc.
+
+   
+
   int dummy = 0;
 
   // ToDo:

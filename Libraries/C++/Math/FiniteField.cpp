@@ -62,6 +62,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeAllPolynomials(int modulus,
   return polys;
 }
 
+/*
 std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
   const rsPolynomial<rsModularInteger<int>>& m)
@@ -91,6 +92,7 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
   }
   return neg;
 }
+*/
 
 std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
@@ -144,15 +146,20 @@ rsMatrix<TArg> makeBinaryOpTable(
   return table;
 }
 
-/*
-template<class TArg>
-std::vector makeInversionTable(const std::vector<TArg>& x, const TArg& neutralElem)
+template<class TArg, class TPred>
+std::vector<TArg> makeInversionTable(const std::vector<TArg>& x, const TPred& areInverses)
 {
-
+  int M = (int)x.size();
+  std::vector<TArg> inv(M);
+  for(int i = 0; i < M; i++)
+    for(int j = 0; j < M; j++)
+      if(areInverses(x[i], x[j]))
+        inv[i] = x[j];
+  return inv;
 }
-*/
 
 
+// ToDo: templatize on the vector element:
 std::vector<int> abstractifyTable1D(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& x,
   const std::vector<rsPolynomial<rsModularInteger<int>>>& y)
@@ -219,7 +226,32 @@ void rsFiniteFieldTables::createOperationTables()
 
   // Under construction - we wnat to achieve the same with less code:
   ModInt _0(0, p);
+  ModInt _1(1, p);
 
+
+  // Predicate that returns true iff x and y are additive inverses, i.e. y is the negation of x:
+  auto predNeg = [&](const Poly& x, const Poly& y)
+  {
+    Poly r = (x + y) % m;         // Modulo m may be unnecessary
+    r.truncateTrailingZeros(_0);
+    return r == _0;
+  };
+
+  // Predicate that returns true iff x and y are multiplicative inverses, i.e. y is the reciprocal of x:
+  auto predRec = [&](const Poly& x, const Poly& y)
+  {
+    Poly r = (x * y) % m;         // Modulo m may be unnecessary
+    r.truncateTrailingZeros(_0);
+    if(x == _0)
+      return y == _0;
+    else
+      return r == _1;
+
+    // Note: If x == 0, there is no reciprocal but for technical reasons, it makes sense to take 0 
+    // as the reciprocal of itself in the table of reciprocals
+  };
+
+  // Operation that performs modular addition of two polynomials:
   auto opAdd = [&](const Poly& x, const Poly& y)
   {
     Poly r = (x + y) % m;         // Modulo m may be unnecessary
@@ -227,6 +259,7 @@ void rsFiniteFieldTables::createOperationTables()
     return r;
   };
 
+  // Operation that performs modular multiplication of two polynomials:
   auto opMul = [&](const Poly& x, const Poly& y)
   {
     Poly r = (x * y) % m;
@@ -249,7 +282,8 @@ void rsFiniteFieldTables::createOperationTables()
   tmp2D = makeBinaryOpTable(r, r, opMul); mul = abstractifyTable2D(r, tmp2D); // new
 
 
-  tmp1D = makeNegTable(r,        m); neg = abstractifyTable1D(r, tmp1D);
+  tmp1D = makeInversionTable(r, predNeg); neg = abstractifyTable1D(r, tmp1D);     // new
+  //tmp1D = makeNegTable(r,        m); neg = abstractifyTable1D(r, tmp1D);        // old
   //tmp2D = makeSubTable(r, tmp1D, m); sub = abstractifyTable2D(r, tmp2D);        // old
   tmp2D = makeBinaryOpTable(r, tmp1D, opAdd); sub = abstractifyTable2D(r, tmp2D); // new
 

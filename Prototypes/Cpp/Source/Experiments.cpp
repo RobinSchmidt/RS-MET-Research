@@ -10681,6 +10681,29 @@ std::vector<rsPolynomial<rsModularInteger<int>>> allPolynomials(int modulus, int
   return polys;
 }
 
+rsMatrix<rsPolynomial<rsModularInteger<int>>> makeMulTable(
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
+  const rsPolynomial<rsModularInteger<int>>& m)
+{
+  // r: list of possible remainders
+  // m: modulus polynomial
+
+  using ModInt = rsModularInteger<int>;
+  int p = m.getCoeff(0).getModulus();
+  int n = (int) r.size();
+  ModInt _0(0, p);
+  rsMatrix<rsPolynomial<ModInt>> mul(n, n);
+  for(int i = 0; i < n; i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      mul(i, j) = (r[i] * r[j]) % m;
+      mul(i,j).truncateTrailingZeros(_0);  // May not be needed
+    }
+  }
+  return mul;
+}
+
 
 void testFiniteField1()
 {
@@ -10763,6 +10786,9 @@ void testFiniteField1()
   }
   // If we don't call truncateTrailingZeros, some of the results will have an allocated degree of 
   // up to 4 (i.e. coeff arrays of size 5) with the trailing coeffs all zero.
+
+  Table mul2 = makeMulTable(f, m);
+  ok &= mul2 == mul;
 
   // Create arrays of negatives and reciprocals, i.e. additive and multiplicative inverses:
   Array neg(n), rec(n);

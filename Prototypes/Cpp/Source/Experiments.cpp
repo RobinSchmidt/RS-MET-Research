@@ -10897,7 +10897,7 @@ void testFiniteField2()
   };
   // Maybe make this a library function. The number m is the wrap-around value where the digit 
   // wraps around to 0. In a decimal counter, this would be 10 and it would go up like:
-  //   000 001 002 ... 008 009 010 011 012 ... 018 019 020 021....900 901 902...999 000
+  //   000 001 002 ... 008 009 010 011 012 ... 018 019 020 021 ... 900 901 902 ... 999 000
   // except that out counter has the digits reversed, i.e. the least important digit is leftmost
 
   // Helper function to create a polynomial over the modular integers with modulus m and given 

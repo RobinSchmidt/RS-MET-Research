@@ -10627,10 +10627,12 @@ void testPrimesAndMore()
 }
 
 
+// Finite field stuff:
 
-
-
-
+/** Creates a std::vector of all possible polynomials over Zp (== integers modulo p) up to the 
+given maximum degree. These are all the possible remainders that can occur when any polynomial over
+Zp is divided by a polynomial of degree k = maxDegree+1. These polynomials can be used to represent 
+elements of the finite field of size n = p^k where p is the (prime) modulus. */
 std::vector<rsPolynomial<rsModularInteger<int>>> allPolynomials(int modulus, int maxDegree)
 {
   using ModInt = rsModularInteger<int>;
@@ -10681,6 +10683,29 @@ std::vector<rsPolynomial<rsModularInteger<int>>> allPolynomials(int modulus, int
   return polys;
 }
 
+rsMatrix<rsPolynomial<rsModularInteger<int>>> makeAddTable(
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
+  const rsPolynomial<rsModularInteger<int>>& m)
+{
+  // r: list of possible remainders
+  // m: modulus polynomial
+
+  using ModInt = rsModularInteger<int>;
+  int p = m.getCoeff(0).getModulus();
+  int n = (int) r.size();
+  ModInt _0(0, p);
+  rsMatrix<rsPolynomial<ModInt>> add(n, n);
+  for(int i = 0; i < n; i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      add(i, j) = (r[i] + r[j]) % m;       // % m may not be needed
+      add(i,j).truncateTrailingZeros(_0);
+    }
+  }
+  return add;
+}
+
 rsMatrix<rsPolynomial<rsModularInteger<int>>> makeMulTable(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
   const rsPolynomial<rsModularInteger<int>>& m)
@@ -10698,7 +10723,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeMulTable(
     for(int j = 0; j < n; j++)
     {
       mul(i, j) = (r[i] * r[j]) % m;
-      mul(i,j).truncateTrailingZeros(_0);  // May not be needed
+      mul(i,j).truncateTrailingZeros(_0);  // Truncation may not be needed
     }
   }
   return mul;
@@ -10789,6 +10814,10 @@ void testFiniteField1()
 
   Table mul2 = makeMulTable(f, m);
   ok &= mul2 == mul;
+
+  Table add2 = makeAddTable(f, m);
+  ok &= add2 == add;
+
 
   // Create arrays of negatives and reciprocals, i.e. additive and multiplicative inverses:
   Array neg(n), rec(n);

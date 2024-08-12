@@ -10944,9 +10944,7 @@ void testFiniteField1()
   // the polynomial coeff array. The remainder polynomials in this notation are given as g0 = 000, 
   // g1 = 001, g2 = 010, ...TBC...
 
-  // As a first check, compare our manually generated g with the automatically generated f. They 
-  // should be equal:
-  Array f = makeAllPolynomials(p, k-1); ok &= f == g;
+
 
   // Create addition and multiplication table:
   Table add(n, n), mul(n, n);
@@ -10962,12 +10960,6 @@ void testFiniteField1()
   }
   // If we don't call truncateTrailingZeros, some of the results will have an allocated degree of 
   // up to 4 (i.e. coeff arrays of size 5) with the trailing coeffs all zero.
-
-  Table mul2 = makeMulTable(f, m); ok &= mul2 == mul;
-  Table add2 = makeAddTable(f, m); ok &= add2 == add;
-
-
-  // Factor out into two functions makeNegTable, makeRecTable
 
   // Create arrays of negatives and reciprocals, i.e. additive and multiplicative inverses:
   Array neg(n), rec(n);
@@ -10998,11 +10990,6 @@ void testFiniteField1()
     }
   }
 
-  Array neg2 = makeNegTable(f, m); ok &= neg2 == neg;
-  Array rec2 = makeRecTable(f, m); ok &= rec2 == rec;
-
-
-
   // Create subtraction and division table:
   Table sub(n, n), div(n, n);
   for(int i = 0; i < n; i++)
@@ -11015,10 +11002,6 @@ void testFiniteField1()
       div(i,j).truncateTrailingZeros(_0); 
     }
   }
-
-  Table sub2 = makeSubTable(f, neg, m); ok &= sub2 == sub;
-  Table div2 = makeDivTable(f, rec, m); ok &= div2 == div;
-
 
   // Check the tables of additive and multiplicative inverses:
   for(int i = 0; i < n; i++)
@@ -11054,9 +11037,6 @@ void testFiniteField1()
     rec_8[i] = rsFind(g, rec[i]);
   }
 
-  VecI neg_8_2 = abstractifyTable1D(g, neg); ok &= neg_8_2 == neg_8;
-  VecI rec_8_2 = abstractifyTable1D(g, rec); ok &= rec_8_2 == rec_8;
-
   MatI add_8(n,n), sub_8(n,n), mul_8(n,n), div_8(n,n);  // Operation tables
   for(int i = 0; i < n; i++)
   {
@@ -11069,16 +11049,9 @@ void testFiniteField1()
     }
   }
 
-  MatI add_8_2 = abstractifyTable2D(g, add); ok &= add_8_2 == add_8;
-  MatI mul_8_2 = abstractifyTable2D(g, mul); ok &= mul_8_2 == mul_8;
-  MatI sub_8_2 = abstractifyTable2D(g, sub); ok &= sub_8_2 == sub_8;
-  MatI div_8_2 = abstractifyTable2D(g, div); ok &= div_8_2 == div_8;
-
-
-
   // Let's visualize the operation tables:
   //plotMatrix(add_8);  // Not so interesting
-  plotMatrix(mul_8);
+  //plotMatrix(mul_8);  // Different patterns for different choices of modulus polynomial m.
 
   // Test the abstract tables:
   for(int i = 0; i < n; i++)
@@ -11095,6 +11068,29 @@ void testFiniteField1()
     else
       ok &= prod == 0;
   }
+
+
+
+
+
+
+  // Some unit tests that test the factored out functions that do the same stuff that we do here
+  // manually:
+
+  Array f       = makeAllPolynomials(p, k-1); ok &= f == g;
+  Table mul2    = makeMulTable(f, m);         ok &= mul2 == mul;
+  Table add2    = makeAddTable(f, m);         ok &= add2 == add;
+  Array neg2    = makeNegTable(f, m);         ok &= neg2 == neg;
+  Array rec2    = makeRecTable(f, m);         ok &= rec2 == rec;
+  Table sub2    = makeSubTable(f, neg, m);    ok &= sub2 == sub;
+  Table div2    = makeDivTable(f, rec, m);    ok &= div2 == div;
+  VecI  neg_8_2 = abstractifyTable1D(g, neg); ok &= neg_8_2 == neg_8;
+  VecI  rec_8_2 = abstractifyTable1D(g, rec); ok &= rec_8_2 == rec_8;
+  MatI  add_8_2 = abstractifyTable2D(g, add); ok &= add_8_2 == add_8;
+  MatI  mul_8_2 = abstractifyTable2D(g, mul); ok &= mul_8_2 == mul_8;
+  MatI  sub_8_2 = abstractifyTable2D(g, sub); ok &= sub_8_2 == sub_8;
+  MatI  div_8_2 = abstractifyTable2D(g, div); ok &= div_8_2 == div_8;
+
 
   // Some manual test:
   Poly a(_0), b(_0), c(_0);

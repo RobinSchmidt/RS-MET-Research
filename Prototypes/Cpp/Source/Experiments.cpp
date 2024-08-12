@@ -10818,7 +10818,7 @@ void testFiniteField()
 
   // ToDo:
   //
-  // - Try it also with the other possible choice for the modulus polynomial
+  // - Create operation tables for powers, roots and logarithms.
   //
   // - Check if the abstract operation tables are latin squares, i.e. each row and each column
   //   must contain each element (i.e. each index in 0..7) exactly once.

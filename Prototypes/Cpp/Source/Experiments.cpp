@@ -10980,7 +10980,8 @@ void testFiniteField2()
   //   for that purpose. There are actually (p-1)*n different possible polynomials of degree k, I 
   //   think. We could take all the n polynomials in g (they are all possible polynomial of degree
   //   k-1) and prepend/add a term of the form a_k * x^k with a coeff a_k for which we have p-1 
-  //   options (not p because 0 is not an option)
+  //   options (not p because 0 is not an option). Wait no - that doesn't work. Not every reducible
+  //   polynomial needs to have a linear factor. It can also have higher degree factors.
 
   // The following SageMath code can be used to produce a list of all irreducible polynomials of 
   // degree k over a given field Zp:

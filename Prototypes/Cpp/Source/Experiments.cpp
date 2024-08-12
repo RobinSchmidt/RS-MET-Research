@@ -10928,7 +10928,7 @@ bool testFiniteField2()
 
   Tbl tbl(p, k, m);
 
-  Elem a(&tbl), b(&tbl); // c(&tbl);
+  Elem a(&tbl), b(&tbl), c(&tbl);
 
   Elem _0(0, &tbl);
   Elem _1(1, &tbl);
@@ -10958,9 +10958,10 @@ bool testFiniteField2()
       Elem diff = a - b;
       Elem quot = a / b;
 
-      ok &= a == sum  - b;
-      ok &= b == sum  - a;
-      ok &= a == diff + b;
+      ok &=  a == sum  - b;
+      ok &=  b == sum  - a;
+      ok &=  a == diff + b;
+      ok &= -b == diff - a;
 
       if(b != _0)
       {
@@ -10974,6 +10975,17 @@ bool testFiniteField2()
       }
 
 
+      for(int k = 0; k < n; k++)
+      {
+        c.set(j, &tbl);
+
+        // Test distributive law:
+        Elem res1 = c * (a + b);
+        Elem res2 = c * a  + c * b;
+        ok &= res1 == res2;
+
+      }
+
 
       int dummy = 0;
     }
@@ -10986,7 +10998,7 @@ bool testFiniteField2()
   return ok;
 
   // ToDo:
-  // -Test distributive law
+  // -Test distributive law, commutative, associative, etc.
 }
 
 void testFiniteField3()

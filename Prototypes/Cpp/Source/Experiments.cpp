@@ -10992,6 +10992,33 @@ bool testFiniteField2()
 
   using Vec = std::vector<int>;
 
+  // When the exponent k is 1, i.e. n is a prime number, we can always use the polynomial p(x) = x.
+  // So, these cases are not listed completely
+
+  // n =  2 =  2^1:  x 
+  // n =  3 =  3^1:  x
+  // n =  4 =  2^2:  x^2 + x + 1
+  // n =  5 =  5^1:  x
+  // n =  7 =  7^1:  x
+  // n =  8 =  2^3:  x^3 + x + 1
+  // n =  9 =  3^3:  x^3 + 2*x + 1
+  // n = 11 = 11^1:  x
+  // .................from here on, we don't list the boring x polynomials for n = prime anymore
+  // n = 16 =  2^4:  x^4 + x + 1
+  // n = 25 =  5^2:  x^2 + 2 
+  // n = 27 =  3^3:  x^3 + 2*x + 1
+  // ...more to come...
+  // n = 81 = 3^4: p(x) = x^4 + x + 2
+
+
+  ok &=  testFiniteField(2, 1, Vec({0,1}));     // 2 = 2^1, x
+
+  //ok &=  testFiniteField(3, 1, Vec({0,1}));     // 3 = 3^1, x
+  // triggers assert
+
+
+
+
 
   // n = 8 = 2^3:
   ok &=  testFiniteField(2, 3, Vec({1,1,0,1})); // 1 + x + x^3
@@ -11013,11 +11040,13 @@ bool testFiniteField2()
   // for p in R.polynomials(k):
   //     if p.is_irreducible():
   //         print(p)
+  //         break
   //
   // This code will be needed to produce suitable modulus polynomials, if we want to expand the 
   // list of tests. In the example code, we have p = 3 and k = 4 such that we produce a finite 
   // field of size 3^4 = 81. The first of the polynomials that we may use to construct this field 
-  // is p(x) = x^4 + x + 2. ...TBC...
+  // is p(x) = x^4 + x + 2. Putting a "break" after print p only prints the first usable one. 
+  // Removing it will print all - which may be a lot ...TBC...
   //
   //
   // ToDo:

@@ -164,8 +164,10 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
         rec[i] = r[j];
         break;
       }
-      else if(r[i] == _0)  // new
+      else if(r[i] == _0)
       {
+        // Mathematically, this makes no sense but we need to assign something well defined to the 
+        // reciprocal of zero anyway, so we choose zero:
         rec[i] = _0;
         break;
       }

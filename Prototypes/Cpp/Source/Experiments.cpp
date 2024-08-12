@@ -11022,6 +11022,7 @@ bool testFiniteField2()
   ok &=  testFiniteField(2, 3, Vec({1,0,1,1})); // 1 + x^2 + x^3
   ok &= !testFiniteField(2, 3, Vec({1,0,0,1})); // 1 + x^3  is not irreducible  ->  not a field
 
+  rsAssert(ok);
   return ok;
 
   // Notes:

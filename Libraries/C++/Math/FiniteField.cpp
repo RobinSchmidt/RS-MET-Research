@@ -236,6 +236,21 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeDivTable(
   return div;
 }
 
+
+// Under construction:
+template<class TArg, class TOp>
+rsMatrix<TArg> makeBinaryOpTable(
+  const std::vector<TArg>& x, const std::vector<TArg>& y, const TOp& op)
+{
+  int M = (int)x.size();
+  int N = (int)y.size();
+  rsMatrix<TArg> table(M, N);
+  for(int i = 0; i < M; i++)
+    for(int j = 0; j < N; j++)
+      table(i, j) = op(x[i], y[j]);
+  return table;
+}
+
 std::vector<int> abstractifyTable1D(
   const std::vector<rsPolynomial<rsModularInteger<int>>>& x,
   const std::vector<rsPolynomial<rsModularInteger<int>>>& y)
@@ -309,6 +324,23 @@ void rsFiniteFieldTables::createOperationTables()
   tmp2D = makeSubTable(r, tmp1D, m); sub = abstractifyTable2D(r, tmp2D);
   tmp1D = makeRecTable(r,        m); rec = abstractifyTable1D(r, tmp1D);
   tmp2D = makeDivTable(r, tmp1D, m); div = abstractifyTable2D(r, tmp2D);
+
+
+
+  
+  // Under construction - we wnat to achieve the same with less code:
+  ModInt _0(0, p);
+
+  auto opMul = [&](const Poly& x, const Poly& y)
+  {
+    Poly r = (x * y) % m;
+    r.truncateTrailingZeros(_0);  // Truncation may be unnecessary
+    return r;
+  };
+
+  tmp2D = makeBinaryOpTable(r, r, opMul); mul = abstractifyTable2D(r, tmp2D);
+
+
 
   int dummy = 0;
 }

@@ -11010,10 +11010,11 @@ bool testFiniteField2()
   // ...more to come...
   // n = 81 = 3^4: p(x) = x^4 + x + 2
 
+  ok &=  testFiniteField(3, 1, Vec({0,1}));     // 3 = 3^1, x
+
 
   ok &=  testFiniteField(2, 1, Vec({0,1}));     // 2 = 2^1, x
-
-  //ok &=  testFiniteField(3, 1, Vec({0,1}));     // 3 = 3^1, x
+  ok &=  testFiniteField(3, 1, Vec({0,1}));     // 3 = 3^1, x
   // triggers assert
 
 

@@ -164,6 +164,11 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
         rec[i] = r[j];
         break;
       }
+      else if(r[i] == _0)  // new
+      {
+        rec[i] = _0;
+        break;
+      }
     }
   }
   return rec;

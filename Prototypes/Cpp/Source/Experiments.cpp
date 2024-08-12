@@ -10626,7 +10626,7 @@ void testPrimesAndMore()
   //  string with gnuplot options
 }
 
-void testFiniteField()
+void testFiniteField1()
 {
   // We construct a finite field (aka Galois field) with n = p^k elements where p is a prime number
   // and k is an integer for the case p = 2, k = 3 such that n = 2^3 = 8. That is, we construct the
@@ -10813,6 +10813,7 @@ void testFiniteField()
   b = g[7];
   c = a + b; // Should be the polynomial p(x) = x ...looks good.
 
+
   rsAssert(ok);
 
 
@@ -10865,6 +10866,67 @@ void testFiniteField()
   // https://e.math.cornell.edu/people/belk/numbertheory/NumberTheoryPolynomials.pdf
 }
 
+void testFiniteField2()
+{
+  // UNDER CONSTRUCTION
+
+  // Generate all polynomials over Zp up to degree k-1...TBC...
+
+  using Int    = int;
+  using ModInt = rsModularInteger<Int>;
+  using Poly   = rsPolynomial<ModInt>;
+  using Table  = rsMatrix<Poly>;           // For operation tables for +,-,*,/
+  using Array  = std::vector<Poly>;
+
+  // Parameters for our Galois field:
+  Int p = 3;
+  Int k = 4;
+  Int n = rsPow(p, k);
+
+  // Helper function to increment a counter:
+  auto inc = [](std::vector<int>& counter, int m)
+  {
+    int i = 0;
+    while(counter[i] >= m-1 && i < (int) counter.size())
+    {
+      counter[i] = 0;
+      i++;
+    }
+
+    counter[i] += 1;
+    
+    int dummy = 0;
+  };
+
+
+  std::vector<int> counter(k);
+  Array g(n);
+  for(int i = 0; i < n; i++)
+  {
+    // The content of the counter gives us our polynomial coefficient array
+
+    //g[n] = makePoly(counter, m);
+
+    inc(counter, p);
+    int dummy = 0;
+  }
+
+
+
+
+  // Zero and one as modular integers with modulus p:
+  //ModInt _0(0, p);
+  //ModInt _1(1, p);
+
+
+  int dummy = 0;
+}
+
+void testFiniteField()
+{
+  //testFiniteField1();
+  testFiniteField2();
+}
 
 
 // Template instantiation:

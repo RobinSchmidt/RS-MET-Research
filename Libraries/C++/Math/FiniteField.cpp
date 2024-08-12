@@ -62,79 +62,10 @@ std::vector<rsPolynomial<rsModularInteger<int>>> makeAllPolynomials(int modulus,
   return polys;
 }
 
-/*
-std::vector<rsPolynomial<rsModularInteger<int>>> makeNegTable(
-  const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
-  const rsPolynomial<rsModularInteger<int>>& m)
-{
-  // r: list of possible remainders
-  // m: modulus polynomial
-
-  using ModInt = rsModularInteger<int>;
-  using Poly   = rsPolynomial<ModInt>;
-  int p = m.getCoeff(0).getModulus();
-  int n = (int)r.size();
-  ModInt _0(0, p);
-  std::vector<Poly> neg(n);
-  for(int i = 0; i < n; i++)
-  {
-    // Find additive inverse of r[i] and put it into neg[i]:
-    for(int j = 0; j < n; j++)
-    {
-      Poly sum = (r[i] + r[j]) % m;        // Modulo m may be unnecessary
-      sum.truncateTrailingZeros(_0);
-      if(sum == r[0])
-      {
-        neg[i] = r[j];
-        break;
-      }
-    }
-  }
-  return neg;
-}
-*/
-
-/*
-std::vector<rsPolynomial<rsModularInteger<int>>> makeRecTable(
-  const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
-  const rsPolynomial<rsModularInteger<int>>& m)
-{
-  // r: list of possible remainders
-  // m: modulus polynomial
-
-  using ModInt = rsModularInteger<int>;
-  using Poly   = rsPolynomial<ModInt>;
-  int p = m.getCoeff(0).getModulus();
-  int n = (int)r.size();
-  ModInt _0(0, p);
-  std::vector<Poly> rec(n);
-  for(int i = 0; i < n; i++)
-  {
-    // Find multiplicative inverse of r[i] and put it into rec[i]:
-    for(int j = 0; j < n; j++)
-    {
-      Poly prod = (r[i] * r[j]) % m;
-      prod.truncateTrailingZeros(_0);      // Truncation may be unnecessary
-      if(prod == r[1])
-      {
-        rec[i] = r[j];
-        break;
-      }
-      else if(r[i] == _0)
-      {
-        // Mathematically, this makes no sense but we need to assign something well defined to the 
-        // reciprocal of zero anyway, so we choose zero:
-        rec[i] = _0;
-        break;
-      }
-    }
-  }
-  return rec;
-}
-*/
-
-
-// Under construction:
+// Given two arrays x,y of some type TArg and a binray operation op that takes two arguments of 
+// type TArg and returns another TArg, this functions computes all the results of op(x[i], y[j])
+// where i,j range over the lengths of the x,y arrays respectively and stores them into a matrix
+// at position i,j.
 template<class TArg, class TOp>
 rsMatrix<TArg> makeBinaryOpTable(
   const std::vector<TArg>& x, const std::vector<TArg>& y, const TOp& op)
@@ -148,6 +79,9 @@ rsMatrix<TArg> makeBinaryOpTable(
   return table;
 }
 
+// Given an arry of values of some type TArg and a predicate that takes two TArgs and returns true
+// iff the second argument is the inverse of the first, this function produces the array of all the
+// so defined inverses of x.
 template<class TArg, class TPred>
 std::vector<TArg> makeInversionTable(const std::vector<TArg>& x, const TPred& areInverses)
 {
@@ -159,7 +93,6 @@ std::vector<TArg> makeInversionTable(const std::vector<TArg>& x, const TPred& ar
         inv[i] = x[j];
   return inv;
 }
-
 
 // ToDo: templatize on the vector element:
 std::vector<int> abstractifyTable1D(
@@ -226,7 +159,7 @@ void rsFiniteFieldTables::createOperationTables()
   Array r = makeAllPolynomials(p, k-1);  // rename to r - for reaminders
 
 
-  // Under construction - we wnat to achieve the same with less code:
+  // Under construction - we want to achieve the same with less code:
   ModInt _0(0, p);
   ModInt _1(1, p);
 
@@ -269,44 +202,16 @@ void rsFiniteFieldTables::createOperationTables()
     return r;
   };
 
-
-
-
-
   // Create the 1D operation tables for negation and reciprocation and the 2D operation tables for 
   // addition, multiplication, subtraction and division:
-  Array tmp1D;
-  Table tmp2D;
-
-  //tmp2D = makeAddTable(r,        m); add = abstractifyTable2D(r, tmp2D);    // old
-  //tmp2D = makeMulTable(r,        m); mul = abstractifyTable2D(r, tmp2D);    // old
-  tmp2D = makeBinaryOpTable(r, r, opAdd); add = abstractifyTable2D(r, tmp2D); // new
-  tmp2D = makeBinaryOpTable(r, r, opMul); mul = abstractifyTable2D(r, tmp2D); // new
-
-
-  tmp1D = makeInversionTable(r, predNeg); neg = abstractifyTable1D(r, tmp1D);     // new
-  //tmp1D = makeNegTable(r,        m); neg = abstractifyTable1D(r, tmp1D);        // old
-  //tmp2D = makeSubTable(r, tmp1D, m); sub = abstractifyTable2D(r, tmp2D);        // old
-  tmp2D = makeBinaryOpTable(r, tmp1D, opAdd); sub = abstractifyTable2D(r, tmp2D); // new
-
-
-
-  tmp1D = makeInversionTable(r, predRec); rec = abstractifyTable1D(r, tmp1D);     // new
-  //tmp1D = makeRecTable(r,        m); rec = abstractifyTable1D(r, tmp1D);  // old
-  //tmp2D = makeDivTable(r, tmp1D, m); div = abstractifyTable2D(r, tmp2D);        // old
-  tmp2D = makeBinaryOpTable(r, tmp1D, opMul); div = abstractifyTable2D(r, tmp2D); // new
-
-
-
-
-
-  
-
-
-
-
-
-
+  Array tmp1D;  // maybe rename to t1
+  Table tmp2D;  // maybe rename to t2
+  tmp2D = makeBinaryOpTable( r, r,     opAdd  ); add = abstractifyTable2D(r, tmp2D);
+  tmp2D = makeBinaryOpTable( r, r,     opMul  ); mul = abstractifyTable2D(r, tmp2D);
+  tmp1D = makeInversionTable(r,        predNeg); neg = abstractifyTable1D(r, tmp1D);
+  tmp2D = makeBinaryOpTable( r, tmp1D, opAdd  ); sub = abstractifyTable2D(r, tmp2D);
+  tmp1D = makeInversionTable(r,        predRec); rec = abstractifyTable1D(r, tmp1D);
+  tmp2D = makeBinaryOpTable( r, tmp1D, opMul  ); div = abstractifyTable2D(r, tmp2D);
 
   int dummy = 0;
 }

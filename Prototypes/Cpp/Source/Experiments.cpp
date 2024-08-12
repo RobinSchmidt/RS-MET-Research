@@ -10982,6 +10982,9 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
   }
 
   return ok;
+
+  // ToDo: Check if we really test all the important relations. I'm not sure, if the test is 
+  // complete.
 }
 
 bool testFiniteField2()
@@ -11050,6 +11053,8 @@ bool testFiniteField2()
   //   of lower degree. I don't know how to do the task efficiently - it's probably a problem that
   //   is at least as hard as factoring prime numbers. So, for the time being, I produce the 
   //   polynomials with SageMath.
+  //
+  // - Plot the operation tables. Maybe some interesting structure can be seen?
   //
   // See also:
   // https://ask.sagemath.org/question/41473/irreducible-polynomial-defining-the-finite-field/

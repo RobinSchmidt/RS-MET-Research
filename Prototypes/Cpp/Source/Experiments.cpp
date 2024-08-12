@@ -10867,8 +10867,21 @@ std::vector<int> abstractifyTable1D(
   return t;
 }
 
+rsMatrix<int> abstractifyTable2D(
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& x,
+  const rsMatrix<rsPolynomial<rsModularInteger<int>>>& Y)
+{
+  // x: 
+  // Y:
 
-
+  int n = (int) x.size();
+  rsAssert(Y.hasShape(n,n));
+  rsMatrix<int> T(n,n);
+  for(int i = 0; i < n; i++)
+    for(int j = 0; j < n; j++)
+      T(i, j) = rsFind(x, Y(i, j));
+  return T;
+}
 
 void testFiniteField1()
 {
@@ -10898,7 +10911,9 @@ void testFiniteField1()
   using Table  = rsMatrix<Poly>;           // For operation tables for +,-,*,/
   using Array  = std::vector<Poly>;
   using VecI   = std::vector<int>;
-  
+  using MatI   = rsMatrix<int>;
+
+
   // Parameters for our Galois field:
   Int p = 2;
   Int k = 3;
@@ -11042,7 +11057,7 @@ void testFiniteField1()
   VecI neg_8_2 = abstractifyTable1D(g, neg); ok &= neg_8_2 == neg_8;
   VecI rec_8_2 = abstractifyTable1D(g, rec); ok &= rec_8_2 == rec_8;
 
-  rsMatrix<int> add_8(n,n), sub_8(n,n), mul_8(n,n), div_8(n,n);  // Operation tables
+  MatI add_8(n,n), sub_8(n,n), mul_8(n,n), div_8(n,n);  // Operation tables
   for(int i = 0; i < n; i++)
   {
     for(int j = 0; j < n; j++)
@@ -11053,14 +11068,11 @@ void testFiniteField1()
       div_8(i, j) = rsFind(g, div(i, j));
     }
   }
-  // ToDo: factor these table abstractifactions out into 2 functions abstractifyTable1D, 
-  // abstractifyTable2D
 
-
-
-
-
-
+  MatI add_8_2 = abstractifyTable2D(g, add); ok &= add_8_2 == add_8;
+  MatI mul_8_2 = abstractifyTable2D(g, mul); ok &= mul_8_2 == mul_8;
+  MatI sub_8_2 = abstractifyTable2D(g, sub); ok &= sub_8_2 == sub_8;
+  MatI div_8_2 = abstractifyTable2D(g, div); ok &= div_8_2 == div_8;
 
 
 

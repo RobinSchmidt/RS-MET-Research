@@ -10797,7 +10797,7 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeSubTable(
   const rsPolynomial<rsModularInteger<int>>& m)
 {
   // r:   list of possible remainders
-  // neg: list of additive inverese of r
+  // neg: list of additive inverses (aka negatives) of r
   // m:   modulus polynomial
 
   using ModInt = rsModularInteger<int>;
@@ -10809,16 +10809,48 @@ rsMatrix<rsPolynomial<rsModularInteger<int>>> makeSubTable(
   {
     for(int j = 0; j < n; j++)
     {
-      sub(i, j) = (r[i] + neg[j]) % m;     // Truncation may be unnecessary
+      sub(i, j) = (r[i] + neg[j]) % m;     // Modulo m may be unnecessary
       sub(i,j).truncateTrailingZeros(_0);
     }
   }
   return sub;
 }
 // makeAddTable could perhaps be expressed as makeSubTable(r, r, n) to get rid of some code 
-// duplication. But it should the be called makeAddTable but have two polynomial arrays as 
+// duplication. But it should then be called makeAddTable but have two polynomial arrays as 
 // parameters - one for the 1st and one for the 2nd operand. In general, the arrays could be of
-// different  size - although we do not need that here
+// different size such that the table is not necessarily square - although we do not need that 
+// here. These table creation methods could even be generalized and factored out. The should then
+// get an operation passed as additional parameter - maybe as std::function op(p, q) where p,q
+// are polynomials - and return a matrix of polynomials. These op-table generation methods could
+// even be more general - the datatype does not need to be a polynomial but can be anything. But 
+// for that to work, we need implicit automatic trunction of polynomials. Or do we? Maybe that 
+// could be encapsulated in the op that we pass.
+
+
+rsMatrix<rsPolynomial<rsModularInteger<int>>> makeDivTable(
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& r,
+  const std::vector<rsPolynomial<rsModularInteger<int>>>& rec,
+  const rsPolynomial<rsModularInteger<int>>& m)
+{
+  // r:   list of possible remainders
+  // rec: list of multiplicative inverses (aka reciprocals) of r
+  // m:   modulus polynomial
+
+  using ModInt = rsModularInteger<int>;
+  int p = m.getCoeff(0).getModulus();
+  int n = (int) r.size();
+  ModInt _0(0, p);
+  rsMatrix<rsPolynomial<ModInt>> div(n, n);
+  for(int i = 0; i < n; i++)
+  {
+    for(int j = 0; j < n; j++)
+    {
+      div(i, j) = (r[i] * rec[j]) % m;
+      div(i,j).truncateTrailingZeros(_0);  // Truncation may be unnecessary
+    }
+  }
+  return div;
+}
 
 
 
@@ -10957,6 +10989,8 @@ void testFiniteField1()
   }
 
   Table sub2 = makeSubTable(f, neg, m); ok &= sub2 == sub;
+  Table div2 = makeDivTable(f, rec, m); ok &= div2 == div;
+
 
   // Check the tables of additive and multiplicative inverses:
   for(int i = 0; i < n; i++)
@@ -10977,7 +11011,6 @@ void testFiniteField1()
       ok &= prod == g[1];
     }
   }
-
 
 
   // Now make the tables abstract. We don't want to think about the elements of our Galois field as

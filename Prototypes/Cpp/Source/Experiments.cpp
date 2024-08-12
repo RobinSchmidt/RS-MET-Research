@@ -10866,22 +10866,16 @@ void testFiniteField1()
   // https://e.math.cornell.edu/people/belk/numbertheory/NumberTheoryPolynomials.pdf
 }
 
-void testFiniteField2()
+
+
+std::vector<rsPolynomial<rsModularInteger<int>>> allPolynomials(int modulus, int maxDegree)
 {
-  // UNDER CONSTRUCTION
-
-  // Generate all polynomials over Zp up to degree k-1...TBC...
-
-  using Int    = int;
-  using ModInt = rsModularInteger<Int>;
+  using ModInt = rsModularInteger<int>;
   using Poly   = rsPolynomial<ModInt>;
-  using Table  = rsMatrix<Poly>;           // For operation tables for +,-,*,/
-  using Array  = std::vector<Poly>;
 
-  // Parameters for our Galois field:
-  Int p = 3;
-  Int k = 4;
-  Int n = rsPow(p, k);
+  int p = modulus;
+  int k = maxDegree+1;
+  int n = rsPow(p, k);
 
   // Helper function to increment a counter:
   auto inc = [](std::vector<int>& counter, int m)
@@ -10913,17 +10907,37 @@ void testFiniteField2()
     return poly;
   };
 
-  // Generate all the n = p^k possible polynomials of degree up to k-1 over Zp and store them in 
-  // the array g:
-  Array g(n);
-  std::vector<int> counter(k);   // Content of counter is our polynomial coefficient array
+  // Generate all the n = p^k possible polynomials of degree up to k-1 over Zp:
+  std::vector<int>  counter(k);  // Content of counter is our polynomial coefficient array
+  std::vector<Poly> polys(n);    // vector of polynomials
   for(int i = 0; i < n; i++)
   {
-    g[i] = makePoly(counter, p);
+    polys[i] = makePoly(counter, p);
     inc(counter, p);
   }
+  return polys;
+}
 
 
+void testFiniteField2()
+{
+  // UNDER CONSTRUCTION
+
+  // Generate all polynomials over Zp up to degree k-1...TBC...
+
+  using Int    = int;
+  using ModInt = rsModularInteger<Int>;
+  using Poly   = rsPolynomial<ModInt>;
+  using Table  = rsMatrix<Poly>;           // For operation tables for +,-,*,/
+  using Array  = std::vector<Poly>;
+
+  // Parameters for our Galois field:
+  Int p = 3;
+  Int k = 4;
+  Int n = rsPow(p, k);
+
+  // Create all possible polynomials over Zp up to degree k-1:
+  Array g = allPolynomials(p, k-1);
 
   int dummy = 0;
 

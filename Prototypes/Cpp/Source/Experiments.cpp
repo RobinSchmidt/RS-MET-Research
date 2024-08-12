@@ -10899,13 +10899,33 @@ void testFiniteField2()
   };
 
 
+  auto makePoly = [](const std::vector<int>& coeffs, int m)
+  {
+    int k = (int) coeffs.size();
+    Poly poly(k-1);
+    for(int i = 0; i < k; i++)
+      poly.setCoeff(i, ModInt(coeffs[i], m));
+
+
+
+    //poly.truncateTrailingZeros(ModInt(0, m));
+
+    return poly;
+  };
+
+
+
   std::vector<int> counter(k);
   Array g(n);
   for(int i = 0; i < n; i++)
   {
     // The content of the counter gives us our polynomial coefficient array
+    
+    Poly poly = makePoly(counter, p);
 
-    //g[n] = makePoly(counter, m);
+
+    //g[n] = makePoly(counter, p);
+
 
     inc(counter, p);
     int dummy = 0;

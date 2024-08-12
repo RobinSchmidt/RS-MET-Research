@@ -10633,7 +10633,7 @@ void testPrimesAndMore()
 
 
 
-void testFiniteField1()
+bool testFiniteField1()
 {
   // We construct a finite field (aka Galois field) with n = p^k elements where p is a prime number
   // and k is an integer for the case p = 2, k = 3 such that n = 2^3 = 8. That is, we construct the
@@ -10843,15 +10843,14 @@ void testFiniteField1()
   // modulus polynomial m and returns (or fills out) a class/structure that contains only the 
   // abstractified tables, i.e. the VecI, MatI variables.
 
+
+
+  // Some stuff for inspection in the debugger:
   VecI modI(k+1);
   for(int i = 0; i <= k; i++)
     modI[i] = m.getCoeff(i).getValue();
-
-
   rsFiniteFieldTables opTables(p, k, modI);
 
-
-  // Some manual test:
   Poly a(_0), b(_0), c(_0);
   a = g[5];
   b = g[7];
@@ -10859,6 +10858,7 @@ void testFiniteField1()
 
 
   rsAssert(ok);
+  return ok;
 
 
   // ToDo:
@@ -10912,7 +10912,32 @@ void testFiniteField1()
   // https://e.math.cornell.edu/people/belk/numbertheory/NumberTheoryPolynomials.pdf
 }
 
-void testFiniteField2()
+bool testFiniteField2()
+{
+  bool ok = true;
+
+  using Tbl  = rema::rsFiniteFieldTables;
+  using Elem = rema::rsFiniteFieldElement;
+  using VecI = std::vector<int>;
+
+  // ToDo: let user pass p, k, m and make various tests with variuos choices for p,k,m
+  int p = 2;
+  int k = 3;
+  int n = rsPow(p, k);
+  VecI m({1,1,0,1});
+
+  Tbl tbl(p, k, m);
+
+  Elem a(&tbl), b(&tbl), c(&tbl);
+
+
+
+
+
+  return ok;
+}
+
+void testFiniteField3()
 {
   // UNDER CONSTRUCTION
 
@@ -11002,8 +11027,12 @@ void testFiniteField2()
 
 void testFiniteField()
 {
-  testFiniteField1();
-  testFiniteField2();
+  bool ok = true;
+  ok &= testFiniteField1();
+  ok &= testFiniteField2();
+  rsAssert(ok);
+
+  //testFiniteField3();
 }
 
 

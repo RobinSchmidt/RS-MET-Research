@@ -24,6 +24,13 @@ learning purposes by the classes rsFiniteFieldNaive and rsFiniteFieldElementNaiv
 together in tandem in the same way as rsGeometricAlgebra and rsMultiVector: every element holds a
 pointer to the algebra object which is consulted to perform the arithmetic operation.
 
+
+...so we have two levels of modular arithmetic at play here? The lower level being the usage 
+ of modular integers and the higher level being the use doing all polynomial operations modulo
+ the given M(x), requiring polynomial division with remainder? But only if we interpret the field 
+ members as polynomials - in reality, we just view then abstractly as indices to elements and work 
+ with operation tables
+
 ...tbc...
 
 See:
@@ -38,13 +45,7 @@ class rsFiniteFieldTables
 public:
 
   rsFiniteFieldTables(int base, int exponent, const std::vector<int>& modulusCoeffs);
-    /*
-    : p(base), k(exponent)
-  {
-    //RAPT::rsAssert(rsIsPrime(p));  // todo
-    //generateTables();
-  }
-  */
+
 
 protected:
 
@@ -58,23 +59,6 @@ protected:
   std::vector<int>    neg, rec;           // 1D tables negatives and reciprocals.
   RAPT::rsMatrix<int> add, mul, sub, div; // 2D tables for arithmetic operations.
 
-  /*
-  VecI  neg_8_2 = abstractifyTable1D(g2, neg2);    ok &= neg_8_2 == neg_8;
-  VecI  rec_8_2 = abstractifyTable1D(g2, rec2);    ok &= rec_8_2 == rec_8;
-  MatI  add_8_2 = abstractifyTable2D(g2, add2);    ok &= add_8_2 == add_8;
-  MatI  mul_8_2 = abstractifyTable2D(g2, mul2);    ok &= mul_8_2 == mul_8;
-  MatI  sub_8_2 = abstractifyTable2D(g2, sub2);    ok &= sub_8_2 == sub_8;
-  MatI  div_8_2 = abstractifyTable2D(g2, div2);    ok &= div_8_2 == div_8;
-  */
-
-  // We need to form the field of polynomials of degree <= k over the modular integers with 
-  // modulus p. Then we take that field modulo a specific polynomial M(x) that plays the role
-  // of a modulus ...tbc...
-  //using ModInt = RAPT::rsModularInteger<T>; // 
-  //rsPolynomial<ModInt> M;  // M(x) is an degree k polynomial that is irreducible in Z_p = Z/pZ
-  // ...so we have two levels of modular arithmetic at play here? The lower level being the usage 
-  // of modular integers and the higher level being the use doing all polynomial operations modulo
-  // the given M(x), requiring polynomial division with remainder?
 
   friend class rsFiniteFieldElement;
 
@@ -131,22 +115,10 @@ public:
 
 
   //-----------------------------------------------------------------------------------------------
-  /** \name Operators */
-
-  /** Adds two multivectors. */
-  rsFiniteFieldElement operator+(const rsFiniteFieldElement& b) const
-  {
-    //RAPT::rsAssert(isOperationOk(*this, b)); // compiler error
-
-    int rVal = tables->add(val, b.val);
-    return rsFiniteFieldElement(rVal, tables);
-  }
+  /** \name Inquiry */
 
 
-
-protected:
-
-  bool isOperationOk(const rsFiniteFieldElement& a, const rsFiniteFieldElement& b)
+  bool isOperationOk(const rsFiniteFieldElement& a, const rsFiniteFieldElement& b) const
   {
     bool ok = true;
     ok &= a.tables != nullptr;
@@ -159,10 +131,65 @@ protected:
     return ok;
   }
 
+
+  rsFiniteFieldElement zero(const rsFiniteFieldTables* tablesToUse) const
+  {
+    return rsFiniteFieldElement(0, tablesToUse);
+  }
+
+  rsFiniteFieldElement one(const rsFiniteFieldTables* tablesToUse) const
+  {
+    return rsFiniteFieldElement(1, tablesToUse);
+  }
+
+  rsFiniteFieldElement getNegative() const 
+  {
+    RAPT::rsAssert(tables != nullptr);
+    return rsFiniteFieldElement(tables->neg[val], tables);
+  }
+
+  rsFiniteFieldElement getReciprocal() const 
+  {
+    RAPT::rsAssert(tables != nullptr);
+    return rsFiniteFieldElement(tables->rec[val], tables);
+  }
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Operators */
+
+
+
+  rsFiniteFieldElement operator+(const rsFiniteFieldElement& b) const
+  {
+    RAPT::rsAssert(isOperationOk(*this, b));
+    return rsFiniteFieldElement(tables->add(val, b.val), tables);
+  }
+
+  rsFiniteFieldElement operator-(const rsFiniteFieldElement& b) const
+  {
+    RAPT::rsAssert(isOperationOk(*this, b));
+    return rsFiniteFieldElement(tables->sub(val, b.val), tables);
+  }
+
+  rsFiniteFieldElement operator*(const rsFiniteFieldElement& b) const
+  {
+    RAPT::rsAssert(isOperationOk(*this, b));
+    return rsFiniteFieldElement(tables->mul(val, b.val), tables);
+  }
+
+  rsFiniteFieldElement operator/(const rsFiniteFieldElement& b) const
+  {
+    RAPT::rsAssert(isOperationOk(*this, b));
+    return rsFiniteFieldElement(tables->div(val, b.val), tables);
+  }
+
+  // todo: unary minus, reciprocation (as function)
+
+
+
+protected:
+
   int val = 0;
-
-  //const rsGeometricAlgebra<T>* alg = nullptr; 
-
   const rsFiniteFieldTables* tables = nullptr;
 
 };

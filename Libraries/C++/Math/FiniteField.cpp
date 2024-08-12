@@ -8,10 +8,10 @@ namespace rema  // Rob's educational math algorithms
 // to deal with arbitrary data types ...TBC...
 
 
-/** Creates a std::vector of all possible polynomials over Zp (== integers modulo p) up to the
-given maximum degree. These are all the possible remainders that can occur when any polynomial over
-Zp is divided by a polynomial of degree k = maxDegree+1. These polynomials can be used to represent
-elements of the finite field of size n = p^k where p is the (prime) modulus. */
+// Creates a std::vector of all possible polynomials over Zp (== integers modulo p) up to the
+// given maximum degree. These are all the possible remainders that can occur when any polynomial 
+// over Zp is divided by a polynomial of degree k = maxDegree+1. These polynomials can be used to 
+// represent elements of the finite field of size n = p^k where p is the (prime) modulus. 
 std::vector<rsPolynomial<rsModularInteger<int>>> makeAllPolynomials(int modulus, int maxDegree)
 {
   using ModInt = rsModularInteger<int>;
@@ -94,14 +94,13 @@ std::vector<TArg> makeInversionTable(const std::vector<TArg>& x, const TPred& ar
   return inv;
 }
 
-// ToDo: templatize on the vector element:
-std::vector<int> abstractifyTable1D(
-  const std::vector<rsPolynomial<rsModularInteger<int>>>& x,
-  const std::vector<rsPolynomial<rsModularInteger<int>>>& y)
+// Given two vectors x,y of elements of some datatype and assuming that y contains some permutation
+// of the elements of x, this function produces the corresponding vector of permuted indices. The 
+// function can be used to convert a concrete permutation of some number of objects into an 
+// abstract permutaion in which each object is replaced by its index.
+template<class T>
+std::vector<int> abstractifyTable1D(const std::vector<T>& x, const std::vector<T>& y)
 {
-  // x: 
-  // y:
-
   int n = (int)x.size();
   rsAssert((int)y.size() == n);
   std::vector<int> t(n);
@@ -110,13 +109,14 @@ std::vector<int> abstractifyTable1D(
   return t;
 }
 
-rsMatrix<int> abstractifyTable2D(
-  const std::vector<rsPolynomial<rsModularInteger<int>>>& x,
-  const rsMatrix<rsPolynomial<rsModularInteger<int>>>& Y)
+// Given two vectors x and a matrix Y of elements of some datatype and assuming that the matrix 
+// describes abinary operation table between elements of x, this function produces the corresponding
+// abstract operation table where each element is replaced by it's corresponding index. This can be 
+// used to convert an operations table that works on concrete objects of some datatype into an 
+// abstract operation table that works on the indices.
+template<class T>
+rsMatrix<int> abstractifyTable2D(const std::vector<T>& x, const rsMatrix<T>& Y)
 {
-  // x: 
-  // Y:
-
   int n = (int)x.size();
   rsAssert(Y.hasShape(n, n));
   rsMatrix<int> T(n, n);
@@ -214,8 +214,6 @@ void rsFiniteFieldTables::createOperationTables()
   t2 = makeBinaryOpTable( r, t1, opAdd  ); sub = abstractifyTable2D(r, t2);
   t1 = makeInversionTable(r,     predRec); rec = abstractifyTable1D(r, t1);
   t2 = makeBinaryOpTable( r, t1, opMul  ); div = abstractifyTable2D(r, t2);
-
-  int dummy = 0;
 }
 
 

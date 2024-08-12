@@ -10988,20 +10988,14 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
 
 bool testFiniteField2()
 {
+  // We test the creation of various finite fields and doing computations in them...TBC...
+
   bool ok = true;
 
-  using Tbl  = rema::rsFiniteFieldTables;
-  using Elem = rema::rsFiniteFieldElement;
-  using VecI = std::vector<int>;
+  using Vec = std::vector<int>;
 
-  // ToDo: let user pass p, k, m and make various tests with variuos choices for p,k,m
-  int p = 2;
-  int k = 3;
-  int n = rsPow(p, k);
-  VecI m({1,1,0,1});
-
-
-  ok &= testFiniteField(p, k, m);
+  ok &= testFiniteField(2, 3, Vec({1,1,0,1})); // 1 + x + x^3
+  ok &= testFiniteField(2, 3, Vec({1,0,1,1})); // 1 + x^2 + x^3
 
 
 

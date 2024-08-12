@@ -53,6 +53,7 @@ protected:
 
   int p;  // Base in p^m, should be prime
   int k;  // Exponent in p^k, a positive integer
+  int n;  // n = p^k
 
   // Operation tables:
   std::vector<int>    mod;                // Coeffs of the modulus polynomial
@@ -113,9 +114,22 @@ public:
     tables = b.tables;
   }
 
+  void set(int newVal, const rsFiniteFieldTables* tablesToUse)
+  {
+    val    = newVal;
+    tables = tablesToUse;
+    rsAssert(isOk());
+  }
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
+
+  /** A sanity check function. */
+  bool isOk() const
+  {
+    return tables != nullptr && val >= 0 && val < tables->n;
+  }
 
 
   bool isOperationOk(const rsFiniteFieldElement& a, const rsFiniteFieldElement& b) const
@@ -157,7 +171,25 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */
 
+  bool operator==(const rsFiniteFieldElement& b) const 
+  { 
+    return val == b.val && tables == b.tables;
+  }
 
+  bool operator!=(const rsFiniteFieldElement& b) const 
+  { 
+    return !(*this == b);
+  }
+
+  rsFiniteFieldElement operator+() const
+  {
+    return rsFiniteFieldElement(*this);
+  }
+
+  rsFiniteFieldElement operator-() const
+  {
+    return getNegative();
+  }
 
   rsFiniteFieldElement operator+(const rsFiniteFieldElement& b) const
   {
@@ -182,9 +214,6 @@ public:
     RAPT::rsAssert(isOperationOk(*this, b));
     return rsFiniteFieldElement(tables->div(val, b.val), tables);
   }
-
-  // todo: unary minus, reciprocation (as function)
-
 
 
 protected:

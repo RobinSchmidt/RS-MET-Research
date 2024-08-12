@@ -10928,13 +10928,43 @@ bool testFiniteField2()
 
   Tbl tbl(p, k, m);
 
-  Elem a(&tbl), b(&tbl), c(&tbl);
+  Elem a(&tbl), b(&tbl); // c(&tbl);
+
+  Elem _0(0, &tbl);
+  Elem _1(1, &tbl);
+
+
+
+  for(int i = 0; i < n; i++)
+  {
+    a.set(i, &tbl);
+    for(int j = 0; j < n; j++)
+    {
+      b.set(j, &tbl);
+
+      Elem sum  = a + b;
+      Elem prod = a * b;
+      Elem diff = a - b;
+      Elem quot = a / b;
+
+      ok &= a == sum - b;
+      ok &= b == sum - a;
+
+      if(b != _0)
+        ok &= a == prod / b;
+
+      int dummy = 0;
+    }
+  }
 
 
 
 
 
   return ok;
+
+  // ToDo:
+  // -Test distributive law
 }
 
 void testFiniteField3()

@@ -270,6 +270,7 @@ rsFiniteFieldTables::rsFiniteFieldTables(
   , k(exponent)
   , mod(modulusCoeffs)
 {
+  n = rsPow(p, k);
   createOperationTables();
 }
 

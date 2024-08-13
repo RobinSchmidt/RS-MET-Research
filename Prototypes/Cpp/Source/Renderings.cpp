@@ -103,6 +103,17 @@ public:
   }
 
 
+  void setScale(int newScale) { scale = newScale; }
+
+  void setNumLevels(int newNumLevels) { numLevels = newNumLevels; }
+
+  void setAlgorithm(Algorithm newAlgo) { algo = newAlgo; }
+
+  void setWeights(TWgt newScaledWeight, TWgt newTiledWeight)
+  {
+    wScale = newScaledWeight;
+    wTile  = newTiledWeight;
+  }
 
   rsImage<TPix> apply(const rsImage<TPix>& seed);
 
@@ -414,10 +425,17 @@ void testImageFractalization()
   seed1(0,1) = 1.f;
 
 
-  rsImageFractalizer<float, float> fractalizer;
+  using Algo = rsImageFractalizer<float, float>::Algorithm;
 
-  rsImageF fractal = fractalizer.apply(seed1);
-  writeScaledImageToFilePPM(fractal, "Fractal.ppm", finalScale);
+  rsImageFractalizer<float, float> f;
+
+
+  f.resetParameters();
+  f.setAlgorithm(Algo::scaleOriginal);
+  f.setScale(2);
+  f.setNumLevels(8);
+  rsImageF fractal = f.apply(seed1);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag2x2_AlgOrg_Scl2_Lvl8.ppm", finalScale);
 
 
 

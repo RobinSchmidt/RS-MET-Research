@@ -65,6 +65,74 @@ T rsArtsyBivariateFunctions<T>::weirdTori(T x, T y, int variant)
 
 //-------------------------------------------------------------------------------------------------
 
+template<class TPix, class TWgt>
+class rsImageFractalizer
+{
+
+public:
+
+  enum class Algorithm
+  {
+    scaleOriginal = 0,
+    scaleCurrent,
+
+    numAlgorithms
+  };
+
+
+
+  rsImage<TPix> apply(const rsImage<TPix>& seed);
+
+protected:
+
+  int scale      = 2;   // Scale factor per iteration. ToDo: have separate factors for x and y
+  int numLevels  = 8;
+  Algorithm algo = Algorithm::scaleOriginal;
+
+  TWgt wTile  = TWgt(0.5);
+  TWgt wScale = TWgt(0.5);
+
+};
+
+template<class TPix, class TWgt>
+rsImage<TPix> rsImageFractalizer<TPix, TWgt>::apply(const rsImage<TPix>& seed)
+{
+  using IP = rsImageProcessor<TPix>;
+
+  rsImage<TPix> img    = seed;
+  rsImage<TPix> scaled = seed;
+  rsImage<TPix> tiled  = seed;
+
+  switch(algo)
+  {
+  case Algorithm::scaleOriginal:
+  {
+    for(int i = 0; i < numLevels; i++)
+    {
+      scaled = IP::scaleUp(scaled, scale);
+      tiled  = tile(       img,    scale, scale);
+      img    = blend(      scaled, 0.5f, tiled, 0.5f);
+    }
+  } break;
+  case Algorithm::scaleCurrent:
+  {
+    for(int i = 0; i < numLevels; i++)
+    {
+      scaled = IP::scaleUp(img, scale);
+      tiled  = tile(       img, scale, scale);
+      img    = blend(      scaled, 0.5f, tiled, 0.5f);
+    }
+  } break;
+  }
+
+  return img;
+}
+
+
+
+
+//-------------------------------------------------------------------------------------------------
+
 /** A class for creating contour plots from mathematical functions. The difference to
 rsImageContourPlotter is that that class is a pure image-processing facility where
 the input is also an image. Here, the input is a std::function. ...TBC... */
@@ -296,7 +364,7 @@ void imgRainbowRadiation()
 // ZelU28SUB_k  All RGB image generator (open source)
 
 //=================================================================================================
-// Algorithm Tests
+// Algorithm Tests and Denos
 
 void testImageFractalization()
 {
@@ -308,7 +376,7 @@ void testImageFractalization()
   // tables for certain Galois fields (for example for GF(64)) when the seed is 2x2 pattern with
   // black in (0,0),(1,1) and white in (0,1),(1,0). 
 
-  using IP   = rsImageProcessor<float>;
+  //using IP   = rsImageProcessor<float>;
 
   // Parameters:
   int algo       =  1;
@@ -323,6 +391,7 @@ void testImageFractalization()
   seed(1,0) = 1.f;
   seed(0,1) = 1.f;
 
+  /*
   // Fractalization algorithms:
   rsImageF img    = seed;
   rsImageF scaled = seed;
@@ -348,9 +417,18 @@ void testImageFractalization()
     }
   } break;
   }
+  */
 
-  writeScaledImageToFilePPM(seed, "Seed.ppm",        finalScale);
-  writeScaledImageToFilePPM(img,  "Fractalized.ppm", finalScale);
+
+  rsImageFractalizer<float, float> fractalizer;
+
+  rsImageF fractal = fractalizer.apply(seed);
+
+  writeScaledImageToFilePPM(fractal,  "Fractal.ppm", finalScale);
+
+
+  //writeScaledImageToFilePPM(seed, "Seed.ppm",        finalScale);
+  //writeScaledImageToFilePPM(img,  "Fractalized.ppm", finalScale);
 
 
   int dummy = 0;

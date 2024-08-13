@@ -409,60 +409,74 @@ void testImageFractalization()
   // tables for certain Galois fields (for example for GF(64)) when the seed is 2x2 pattern with
   // black in (0,0),(1,1) and white in (0,1),(1,0). 
 
-
-
-  // Parameters:
-  int algo       =  1;
-  int levelScale =  2;           // Upscaling parameter per level
-  int numLevels  =  8;
-  //int finalScale =  1;
-
-  // Reasonable settings for (levelScale,numLevels:) (2,8), (3,5)
-
-  // Create seed image:
-  rsImageF seed1(2,2);
-  seed1(1,0) = 1.f;
-  seed1(0,1) = 1.f;
-
-
   using Algo = rsImageFractalizer<float, float>::Algorithm;
-
   rsImageFractalizer<float, float> f;
   rsImageF fractal;
 
+
+  // Create seed image:
+  rsImageF seedDiag2x2(2,2);
+  seedDiag2x2(1,0) = 1.f;
+  seedDiag2x2(0,1) = 1.f;
+  writeScaledImageToFilePPM(seedDiag2x2, "SeedDiag2x2.ppm");
+
+  rsImageF seedDot3x3(3,3);
+  seedDot3x3(1,1) = 1.f;
+  writeScaledImageToFilePPM(seedDot3x3, "SeedDot3x3.ppm");
+
+  rsImageF seedCross3x3(3,3);
+  seedCross3x3(1,1) = 1.f;
+  seedCross3x3(1,0) = 1.f;
+  seedCross3x3(1,2) = 1.f;
+  seedCross3x3(0,1) = 1.f;
+  seedCross3x3(2,1) = 1.f;
+  writeScaledImageToFilePPM(seedCross3x3, "SeedCross3x3.ppm");
+
+
+  // Create different fractalizations:
   f.resetParameters();
   f.setAlgorithm(Algo::scaleOriginal);
   f.setScale(2);
   f.setNumLevels(8);
-  fractal = f.apply(seed1);
+  fractal = f.apply(seedDiag2x2);
   writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag2x2_AlgOrg_Scl2_Lvl8.ppm");
 
   f.resetParameters();
   f.setAlgorithm(Algo::scaleOriginal);
   f.setScale(3);
   f.setNumLevels(5);
-  fractal = f.apply(seed1);
+  fractal = f.apply(seedDiag2x2);
   writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag2x2_AlgOrg_Scl3_Lvl5.ppm");
+  // I think, when scale is 3, the seed should be 3x3, too - for best results. Try it!
 
+  f.resetParameters();
+  f.setAlgorithm(Algo::scaleCurrent);
+  f.setScale(2);
+  f.setNumLevels(8);
+  fractal = f.apply(seedDiag2x2);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag2x2_AlgCur_Scl2_Lvl8.ppm");
 
+  f.resetParameters();
+  f.setAlgorithm(Algo::scaleOriginal);
+  f.setScale(3);
+  f.setNumLevels(5);
+  fractal = f.apply(seedDot3x3);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedDot3x3_AlgOrg_Scl3_Lvl5.ppm");
+  // Looks like the Menger carpet
 
+  f.resetParameters();
+  f.setAlgorithm(Algo::scaleOriginal);
+  f.setScale(3);
+  f.setNumLevels(5);
+  fractal = f.apply(seedCross3x3);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedCross3x3_AlgOrg_Scl3_Lvl5.ppm");
 
-
-
-
-  //writeScaledImageToFilePPM(seed, "Seed.ppm",        finalScale);
-  //writeScaledImageToFilePPM(img,  "Fractalized.ppm", finalScale);
-
-
-  int dummy = 0;
 
   // Ideas for extension:
   // -Use different numbers for horizontal and vertical scaling and tiling in each stage. For 
   //  example im1 is obtained by scaling by (2,3) and tiling by (3,2) and im1 by scaling by (3,2)
   //  and tiling by (2,3). In each stage, the size increases by (6,6)
-  // -Maybe on each stage use for the scaled picture an appropriately upscaled version of the 
-  //  original instead od the result of the previous iteration. Yes - that produces results similar
-  //  to the Galois field addition table!
-  // -Try different (more interesting) seeds. Maybe a 3x3 seed with a cross.
+  // -Try different (more interesting) seeds. Maybe a 3x3 seed with a cross. Try also larger seeds
+  //  maybe with circular blobs.
 }
 

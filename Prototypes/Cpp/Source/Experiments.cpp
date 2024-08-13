@@ -2111,6 +2111,8 @@ bool testUpDownSample2D()
   //    [181  128  181]
 }
 
+
+// Move into rsImageProcessor
 template<class T>
 rsImage<T> blend(const rsImage<T>& im1, T w1, const rsImage<T>& im2, T w2)
 {
@@ -2152,28 +2154,43 @@ void testImageFractalization()
   using IP   = rsImageProcessor<float>;
 
   // Parameters:
+  int algo       =  0;
   int levelScale =  2;           // Upscaling parameter per level
-  int finalScale =  1;
   int numLevels  =  8;
+  int finalScale =  1;
 
+  // Reasonable settings for (levelScale,numLevels:) (2,8), (3,5)
+
+  // Create seed image:
   rsImageF seed(2,2);
   seed(1,0) = 1.f;
   seed(0,1) = 1.f;
 
-  rsImageF img = seed;
-  for(int i = 0; i < numLevels; i++)
+  // Fractalization algorithms:
+  rsImageF img    = seed;
+  rsImageF scaled = seed;
+  rsImageF tiled  = seed;
+  switch(algo)
   {
-    rsImageF scaled = IP::scaleUp(img, levelScale);
-    rsImageF tiled  = tile(img, levelScale, levelScale);
-    //rsImageF tiled = scaled;  // preliminary
-
-
-
-
-    img = blend(scaled, 0.5f, tiled, 0.5f);
+  case 0:
+  {
+    for(int i = 0; i < numLevels; i++)
+    {
+      scaled = IP::scaleUp(img, levelScale);
+      tiled  = tile(img, levelScale, levelScale);
+      img    = blend(scaled, 0.5f, tiled, 0.5f);
+    }
+  } break;
+  case 1:
+  {
+    for(int i = 0; i < numLevels; i++)
+    {
+      scaled = IP::scaleUp(scaled, levelScale);
+      tiled  = tile(img, levelScale, levelScale);
+      img    = blend(scaled, 0.5f, tiled, 0.5f);
+    }
+  } break;
   }
-
-
 
   writeScaledImageToFilePPM(seed, "Seed.ppm",        finalScale);
   writeScaledImageToFilePPM(img,  "Fractalized.ppm", finalScale);

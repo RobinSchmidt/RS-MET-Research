@@ -79,18 +79,40 @@ public:
     numAlgorithms
   };
 
+  rsImageFractalizer()
+  {
+    resetParameters();
+  }
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  //void setup(Algorithm newAlgo, int newNumLevels, int new
+
+  /** Resets all parameters to their default values */
+  void resetParameters()
+  {
+    scale      = 2;   // Scale factor per iteration. ToDo: have separate factors for x and y
+    numLevels  = 8;
+    algo       = Algorithm::scaleOriginal;
+
+    wTile      = TWgt(0.5);
+    wScale     = TWgt(0.5);
+  }
+
 
 
   rsImage<TPix> apply(const rsImage<TPix>& seed);
 
 protected:
 
-  int scale      = 2;   // Scale factor per iteration. ToDo: have separate factors for x and y
-  int numLevels  = 8;
-  Algorithm algo = Algorithm::scaleOriginal;
-
-  TWgt wTile  = TWgt(0.5);
-  TWgt wScale = TWgt(0.5);
+  int       scale;       // Scale factor per iteration. ToDo: have separate factors for x and y
+  int       numLevels;
+  Algorithm algo;
+  TWgt      wTile;       
+  TWgt      wScale;
 
 };
 
@@ -111,7 +133,7 @@ rsImage<TPix> rsImageFractalizer<TPix, TWgt>::apply(const rsImage<TPix>& seed)
     {
       scaled = IP::scaleUp(scaled, scale);
       tiled  = tile(       img,    scale, scale);
-      img    = blend(      scaled, 0.5f, tiled, 0.5f);
+      img    = blend(      scaled, wScale, tiled, wTile);
     }
   } break;
   case Algorithm::scaleCurrent:
@@ -120,7 +142,7 @@ rsImage<TPix> rsImageFractalizer<TPix, TWgt>::apply(const rsImage<TPix>& seed)
     {
       scaled = IP::scaleUp(img, scale);
       tiled  = tile(       img, scale, scale);
-      img    = blend(      scaled, 0.5f, tiled, 0.5f);
+      img    = blend(      scaled, wScale, tiled, wTile);
     }
   } break;
   }
@@ -376,7 +398,7 @@ void testImageFractalization()
   // tables for certain Galois fields (for example for GF(64)) when the seed is 2x2 pattern with
   // black in (0,0),(1,1) and white in (0,1),(1,0). 
 
-  //using IP   = rsImageProcessor<float>;
+
 
   // Parameters:
   int algo       =  1;
@@ -387,44 +409,17 @@ void testImageFractalization()
   // Reasonable settings for (levelScale,numLevels:) (2,8), (3,5)
 
   // Create seed image:
-  rsImageF seed(2,2);
-  seed(1,0) = 1.f;
-  seed(0,1) = 1.f;
-
-  /*
-  // Fractalization algorithms:
-  rsImageF img    = seed;
-  rsImageF scaled = seed;
-  rsImageF tiled  = seed;
-  switch(algo)
-  {
-  case 0:
-  {
-    for(int i = 0; i < numLevels; i++)
-    {
-      scaled = IP::scaleUp(img, levelScale);
-      tiled  = tile(img, levelScale, levelScale);
-      img    = blend(scaled, 0.5f, tiled, 0.5f);
-    }
-  } break;
-  case 1:
-  {
-    for(int i = 0; i < numLevels; i++)
-    {
-      scaled = IP::scaleUp(scaled, levelScale);
-      tiled  = tile(img, levelScale, levelScale);
-      img    = blend(scaled, 0.5f, tiled, 0.5f);
-    }
-  } break;
-  }
-  */
+  rsImageF seed1(2,2);
+  seed1(1,0) = 1.f;
+  seed1(0,1) = 1.f;
 
 
   rsImageFractalizer<float, float> fractalizer;
 
-  rsImageF fractal = fractalizer.apply(seed);
+  rsImageF fractal = fractalizer.apply(seed1);
+  writeScaledImageToFilePPM(fractal, "Fractal.ppm", finalScale);
 
-  writeScaledImageToFilePPM(fractal,  "Fractal.ppm", finalScale);
+
 
 
   //writeScaledImageToFilePPM(seed, "Seed.ppm",        finalScale);

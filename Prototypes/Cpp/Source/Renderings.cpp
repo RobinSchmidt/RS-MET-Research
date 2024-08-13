@@ -415,7 +415,7 @@ void testImageFractalization()
   int algo       =  1;
   int levelScale =  2;           // Upscaling parameter per level
   int numLevels  =  8;
-  int finalScale =  1;
+  //int finalScale =  1;
 
   // Reasonable settings for (levelScale,numLevels:) (2,8), (3,5)
 
@@ -428,14 +428,24 @@ void testImageFractalization()
   using Algo = rsImageFractalizer<float, float>::Algorithm;
 
   rsImageFractalizer<float, float> f;
-
+  rsImageF fractal;
 
   f.resetParameters();
   f.setAlgorithm(Algo::scaleOriginal);
   f.setScale(2);
   f.setNumLevels(8);
-  rsImageF fractal = f.apply(seed1);
-  writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag2x2_AlgOrg_Scl2_Lvl8.ppm", finalScale);
+  fractal = f.apply(seed1);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag2x2_AlgOrg_Scl2_Lvl8.ppm");
+
+  f.resetParameters();
+  f.setAlgorithm(Algo::scaleOriginal);
+  f.setScale(3);
+  f.setNumLevels(5);
+  fractal = f.apply(seed1);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag2x2_AlgOrg_Scl3_Lvl5.ppm");
+
+
+
 
 
 

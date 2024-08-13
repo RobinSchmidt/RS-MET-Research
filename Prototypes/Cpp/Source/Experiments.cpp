@@ -2127,6 +2127,18 @@ rsImage<T> blend(const rsImage<T>& im1, T w1, const rsImage<T>& im2, T w2)
   return result;
 }
 
+template<class T>
+rsImage<T> tile(const rsImage<T>& img, int nx, int ny)
+{
+  int w = img.getWidth();
+  int h = img.getHeight();
+  rsImage<T> result(nx*w, ny*h);
+  for(int y = 0; y < ny*h; y++)
+    for(int x = 0; x < nx*w; x++)
+      result(x, y) = img(x % w, y % h);
+  return result;
+}
+
 void testImageFractalization()
 {
   // Idea:
@@ -2141,8 +2153,8 @@ void testImageFractalization()
 
   // Parameters:
   int levelScale =  2;           // Upscaling parameter per level
-  int finalScale = 16;
-  int numLevels  =  1;
+  int finalScale =  1;
+  int numLevels  =  8;
 
   rsImageF seed(2,2);
   seed(1,0) = 1.f;
@@ -2152,9 +2164,8 @@ void testImageFractalization()
   for(int i = 0; i < numLevels; i++)
   {
     rsImageF scaled = IP::scaleUp(img, levelScale);
-
-    //rsImageF tiled  = IP::tile(   img, levelScale);  // To do
-    rsImageF tiled = scaled;  // preliminary
+    rsImageF tiled  = tile(img, levelScale, levelScale);
+    //rsImageF tiled = scaled;  // preliminary
 
 
 
@@ -2170,6 +2181,12 @@ void testImageFractalization()
 
   int dummy = 0;
 
+  // Ideas for extension:
+  // -Use different numbers for horizontal and vertical scaling and tiling in each stage. For 
+  //  example im1 is obtained by scaling by (2,3) and tiling by (3,2) and im1 by scaling by (3,2)
+  //  and tiling by (2,3). In each stage, the size increases by (6,6)
+  // -Maybe on each stage use for the scaled picture an appropriately upscaled version of the 
+  //  original instead od the result of the previous iteration
 }
 
 

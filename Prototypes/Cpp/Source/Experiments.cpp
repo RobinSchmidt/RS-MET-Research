@@ -10950,8 +10950,10 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
   }
 
   // Some interesting plots to look at:
-  plotMatrix(tbl.getAdditionTable());
-  plotMatrix(tbl.getMultiplicationTable());
+  //plotMatrix(tbl.getAdditionTable());
+  //plotMatrix(tbl.getSubtractionTable());
+  //plotMatrix(tbl.getMultiplicationTable());
+  //plotMatrix(tbl.getDivisionTable());
   // Maybe move this into another function
 
   return ok;

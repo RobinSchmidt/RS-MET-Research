@@ -414,7 +414,7 @@ void testImageFractalization()
   rsImageF fractal;
 
 
-  // Create seed image:
+  // Create seed images:
   rsImageF seedDiag2x2(2,2);
   seedDiag2x2(1,0) = 1.f;
   seedDiag2x2(0,1) = 1.f;

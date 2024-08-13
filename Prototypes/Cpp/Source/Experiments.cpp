@@ -10966,7 +10966,10 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
     plt.setOutputRange(0.f, max);
     plt.setInputRange(0.f, max, 0.f, max);
     plt.setSamplingResolution(n, n);
-    plt.setNumContours(n-1);                 // or maybe n+1 or n+1?
+    plt.setNumContours(0);  // test
+    plt.setToDarkMode();
+    plt.addCommand("set palette maxcolors " + std::to_string(n));
+
     plt.plot();
     //plt.addData
 

@@ -112,7 +112,7 @@ void prepareForContourPlot(GNUPlotter& plt,
   std::string cmd;
 
   // Add the contour lines:
-  if(drawContours)
+  if(drawContours && !levels.empty())
   {
     plt.addCommand("set contour");
     cmd = "set cntrparam levels discrete " + std::to_string(levels[0]);
@@ -129,7 +129,7 @@ void prepareForContourPlot(GNUPlotter& plt,
   }
 
   // Use constant color fills between the contour lines if desired:
-  if(useConstColors)
+  if(useConstColors && !levels.empty())
   {
     cmd = "set palette maxcolors " + std::to_string(levels.size() - 1);
     plt.addCommand(cmd);
@@ -233,7 +233,7 @@ public:
   void setColorPalette(GNUPlotter::ColorPalette newMap, bool reverse)
   { colorMap = newMap; reverseColors = reverse; }
 
-  void setToDarkMode(bool shouldBeDark) { dark = shouldBeDark; }
+  void setToDarkMode(bool shouldBeDark = true) { dark = shouldBeDark; }
 
   // Adds a custom command that will be passed to the plotter after the standard commands have been
   // passed. Can be used to set up special plotting options or to override the default behavior:
@@ -467,7 +467,12 @@ void rsContourMapPlotter<T>::plot()
   if(minZ >= maxZ) {
     minZ = z.getMinimum();
     maxZ = z.getMaximum(); }
-  std::vector<T> levels = RAPT::rsRangeLinear(minZ, maxZ, numContours);  // Array of contour levels
+
+  //std::vector<T> levels = RAPT::rsRangeLinear(minZ, maxZ, numContours);  // Array of contour levels
+
+  std::vector<T> levels;
+  if(numContours > 0)
+    levels = RAPT::rsRangeLinear(minZ, maxZ, numContours);  // Array of contour levels
 
   // Clip the matrix data, if desired:
   if(clipData == true) {

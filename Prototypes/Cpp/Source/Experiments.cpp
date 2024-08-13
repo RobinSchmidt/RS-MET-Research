@@ -10955,51 +10955,6 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
   // complete.
 }
 
-void plotFiniteField(int p, int k, const std::vector<int>& m)
-{
-  rema::rsFiniteFieldTables tbl(p, k, m);
-
-  int n = rsPow(p, k);
-
-  auto fAdd = [&](float i, float j)
-  {
-    if(i >= n || j >= n)
-      return 0.f;
-    return (float) tbl.getAdditionTable().at((int)i,(int)j);
-  };
-
-
-  float max = float(n-1);  // verify!
-  rsContourMapPlotter<float> plt;
-  plt.setFunction(fAdd);
-  plt.setOutputRange(0.f, max);
-  plt.setInputRange(0.f, max, 0.f, max);
-  //plt.setSamplingResolution(n+1, n+1);  // wrong!
-  plt.setSamplingResolution(n, n);        // wrong!
-  //plt.setSamplingResolution(n-1, n-1);  // wrong!
-  //plt.setSamplingResolution(8*n, 8*n);  // Oversampling looks ok - but it should work without!
-  plt.setNumContours(0);
-  plt.setToDarkMode();
-  plt.addCommand("set palette maxcolors " + std::to_string(n));
-  plt.setColorPalette(GNUPlotter::ColorPalette::SW_Inferno, false);
-  plt.plot();
-  // ToDo: get rid of the grid lines - they do not look good in this context
-
-
-  // The old way of plotting - crude:
-  plotMatrix(tbl.getAdditionTable());
-  plotMatrix(tbl.getSubtractionTable());
-  plotMatrix(tbl.getMultiplicationTable());
-  plotMatrix(tbl.getDivisionTable());
-
-  // But the new way of plotting looks different - and I mean not only style wise. Oversampling
-  // fixes it. I guess, there's and off-by-one error in the resolution setting. Maybe the contour
-  // plotter is not the right choice. Maybe we should use something like plotMatrix but with 
-  // tweaked color-scheme
-
-}
-
-
 bool testFiniteField2()
 {
   // We test the creation of various finite fields and doing computations in them. The possible 
@@ -11012,12 +10967,6 @@ bool testFiniteField2()
 
   using Vec = std::vector<int>;
 
-  // Throwaway code for adjusting the plots:
-  //plotFiniteField( 2, 3, Vec({1,1,0,1      })); 
-  //plotFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));
-  plotFiniteField( 3, 1, Vec({0,1          }));  //  3 =  3^1    x
-
-  
   // Size         Modulus polynomial
   ok &= testFiniteField( 2, 1, Vec({0,1          }));  //  2 =  2^1    x
   ok &= testFiniteField( 3, 1, Vec({0,1          }));  //  3 =  3^1    x
@@ -11094,8 +11043,74 @@ bool testFiniteField2()
   // https://math.stackexchange.com/questions/998563/how-to-find-all-irreducible-polynomials-in-z2-with-degree-5
 }
 
+void plotFiniteField(int p, int k, const std::vector<int>& m)
+{
+  rema::rsFiniteFieldTables tbl(p, k, m);
+
+  int n = rsPow(p, k);
+
+  auto fAdd = [&](float i, float j)
+  {
+    if(i >= n || j >= n)
+      return 0.f;
+    return (float) tbl.getAdditionTable().at((int)i,(int)j);
+  };
+
+  float max = float(n-1);  // verify!
+  rsContourMapPlotter<float> plt;
+  plt.setFunction(fAdd);
+  plt.setOutputRange(0.f, max);
+  plt.setInputRange(0.f, max, 0.f, max);
+  //plt.setSamplingResolution(n+1, n+1);  // wrong!
+  plt.setSamplingResolution(n, n);        // wrong!
+  //plt.setSamplingResolution(n-1, n-1);  // wrong!
+  //plt.setSamplingResolution(8*n, 8*n);  // Oversampling looks ok - but it should work without!
+  plt.setNumContours(0);
+  plt.setToDarkMode();
+  plt.addCommand("set palette maxcolors " + std::to_string(n));
+  plt.setColorPalette(GNUPlotter::ColorPalette::SW_Inferno, false);
+  plt.plot();
+  // ToDo: get rid of the grid lines - they do not look good in this context
+
+
+
+  // The old way of plotting - crude:
+  plotMatrix(tbl.getAdditionTable());
+  plotMatrix(tbl.getSubtractionTable());
+  plotMatrix(tbl.getMultiplicationTable());
+  plotMatrix(tbl.getDivisionTable());
+
+
+  // But the new way of plotting looks different - and I mean not only style wise. Oversampling
+  // fixes it. I guess, there's and off-by-one error in the resolution setting. Maybe the contour
+  // plotter is not the right choice. Maybe we should use something like plotMatrix but with 
+  // tweaked color-scheme
+
+}
+
+void plotFiniteFields()
+{
+  using Vec = std::vector<int>;
+
+  // Throwaway code for adjusting the plots:
+  //plotFiniteField( 2, 3, Vec({1,1,0,1      })); 
+  //plotFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));
+  //plotFiniteField( 2, 6, Vec({1,1,0,0,0,0,1})); 
+  plotFiniteField( 3, 4, Vec({2,1,0,0,1    }));
+  //plotFiniteField( 3, 1, Vec({0,1          }));  //  3 =  3^1    x
+
+
+
+  //plotFiniteField(2, 3, Vec({1,1,0,1})); // 1 + x + x^3
+  //plotFiniteField(2, 3, Vec({1,0,1,1})); // 1 + x^2 + x^3
+
+  // ToDo: try the same field sizes with different polynomials
+}
+
 void testFiniteField()
 {
+  plotFiniteFields();
+
   bool ok = true;
   ok &= testFiniteField1();
   ok &= testFiniteField2();

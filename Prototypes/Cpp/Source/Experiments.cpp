@@ -1622,7 +1622,7 @@ bool testUpDownSample1D()
   // Yes! It works! We now can tweak the kernel by tweaking a0. Setting a0 = 1 just takes the 
   // middle sample and does not do any filtering at all. Using a0 = 0.5 introduces a rather strong
   // filtering. Maybe we should impose the additional condition that a1 = a0/2. That leads to 
-  // a0 = 2/3. That's not a very nice number in base 2 though and leades to rounding errors. Using 
+  // a0 = 2/3. That's not a very nice number in base 2 though and leads to rounding errors. Using 
   // a0 = 0.75 may be a bit to little filtering. Maybe use 11/16 = 0.6875 or 10/16 = 0.625. Maybe
   // try to figure out the 2D version, then try a couple of values of a0 and select the best 
   // downsampling filter by eye.
@@ -1786,7 +1786,7 @@ bool testUpDownSample1D_2()
   //   b2 = -(b0*a2 + b1*a1) / a0      (= -(b0*0 + b1*0.25) / 0.5 = -b1/2 for our choice of a)
   // Substitute b2 into (2):
   //   2 = b0 + 2*(b1 - (b0*a2 + b1*a1) / a0)
-  // and solve for b1 using wolfram alpüha with "solve 2 = b0 + 2 (b1 - (b0 a2 + b1 a1)/a0) for b1"
+  // and solve for b1 using wolfram alpha with "solve 2 = b0 + 2 (b1 - (b0 a2 + b1 a1)/a0) for b1"
   // gives:
   //   b1 = (2*a0 - a0*b0 + 2*a2*b0) / (2*(a0-a1))
   // and the equation for b2 is already given above. Here it is again:
@@ -2109,6 +2109,67 @@ bool testUpDownSample2D()
   //    [181  128  181]
   //    [128  256  128]   /   256
   //    [181  128  181]
+}
+
+template<class T>
+rsImage<T> blend(const rsImage<T>& im1, T w1, const rsImage<T>& im2, T w2)
+{
+  rsAssert(im2.hasSameShapeAs(im1)); 
+  // ToDo: Maybe relax that condition by producing an image that has shape 
+  // (min(width1, width2), min(height1, height2))
+
+  int w = im1.getWidth();
+  int h = im1.getHeight();
+  rsImage<T> result(w, h);
+  for(int y = 0; y < h; y++)
+    for(int x = 0; x < w; x++)
+      result(x, y) = w1 * im1(x, y) + w2 * im2(x, y);
+  return result;
+}
+
+void testImageFractalization()
+{
+  // Idea:
+  // Start wih a small seed image. Then enter a loop and in each iteration, scale up the current 
+  // image in two ways: (1) Pixel duplication. (2) Tiling. The next image is obtained by taking an
+  // average (or more generally weighted sum with sum-of-weights = 1) of these two upscaled images.
+  // I hope that this will give a fractal pattern similar to those that we see in the addition 
+  // tables for certain Galois fields (for example for GF(64)) when the seed is 2x2 pattern with
+  // black in (0,0),(1,1) and white in (0,1),(1,0). 
+
+  using IP   = rsImageProcessor<float>;
+
+  // Parameters:
+  int levelScale =  2;           // Upscaling parameter per level
+  int finalScale = 16;
+  int numLevels  =  1;
+
+  rsImageF seed(2,2);
+  seed(1,0) = 1.f;
+  seed(0,1) = 1.f;
+
+  rsImageF img = seed;
+  for(int i = 0; i < numLevels; i++)
+  {
+    rsImageF scaled = IP::scaleUp(img, levelScale);
+
+    //rsImageF tiled  = IP::tile(   img, levelScale);  // To do
+    rsImageF tiled = scaled;  // preliminary
+
+
+
+
+    img = blend(scaled, 0.5f, tiled, 0.5f);
+  }
+
+
+
+  writeScaledImageToFilePPM(seed, "Seed.ppm",        finalScale);
+  writeScaledImageToFilePPM(img,  "Fractalized.ppm", finalScale);
+
+
+  int dummy = 0;
+
 }
 
 

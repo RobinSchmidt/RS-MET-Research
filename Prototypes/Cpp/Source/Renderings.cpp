@@ -148,7 +148,8 @@ rsImage<TPix> rsMathContourPlotter<TPix, TVal>::contourFills(
   //  getContourFills, let the user (optionally) pass in the array (of type TPix)
 }
 
-//-------------------------------------------------------------------------------------------------
+//=================================================================================================
+// Image Processing Algorithms (Maybe move some of them into RAPT::rsImageProcessor someday)
 
 /** Applies a 3x3 box filter to all inner pixels for which the given predicate/condition evaluates
 to true. The condition expects the pixel's value as input. */
@@ -165,6 +166,37 @@ rsImage<TPix> smoothCondionally(const rsImage<TPix>& in, TPred cond)
       else {
         out(x, y) = in(x, y); }}}
   return out;
+}
+
+/** Blends two images (i.e. creates a linear combination) with given weight factors. */
+template<class T>
+rsImage<T> blend(const rsImage<T>& im1, T w1, const rsImage<T>& im2, T w2)
+{
+  rsAssert(im2.hasSameShapeAs(im1)); 
+  // ToDo: Maybe relax that condition by producing an image that has shape 
+  // (min(width1, width2), min(height1, height2))
+
+  int w = im1.getWidth();
+  int h = im1.getHeight();
+  rsImage<T> result(w, h);
+  for(int y = 0; y < h; y++)
+    for(int x = 0; x < w; x++)
+      result(x, y) = w1 * im1(x, y) + w2 * im2(x, y);
+  return result;
+}
+
+/** Creates a bigger image by tiling a given image. Tiling means copying it nx times horizontally 
+and ny times vertically. */
+template<class T>
+rsImage<T> tile(const rsImage<T>& img, int nx, int ny)
+{
+  int w = img.getWidth();
+  int h = img.getHeight();
+  rsImage<T> result(nx*w, ny*h);
+  for(int y = 0; y < ny*h; y++)
+    for(int x = 0; x < nx*w; x++)
+      result(x, y) = img(x % w, y % h);
+  return result;
 }
 
 //=================================================================================================
@@ -235,8 +267,6 @@ void imgRainbowRadiation()
 
   writeImageToFilePPM(red, green, blue, "RainbowRadiation.ppm");
 
-
-
   // ToDo:
   // -Maybe darken the green channel a little bit. ..done via gamma
   // -Maybe blur the green channel (before gamma - or maybe after - try both)
@@ -262,6 +292,76 @@ void imgRainbowRadiation()
 // ToDo:
 // -Maybe prefix the function names with img for images, ani for animations and snd for sounds.
 
-
 // inspirational YouTube-Videos:
 // ZelU28SUB_k  All RGB image generator (open source)
+
+//=================================================================================================
+// Algorithm Tests
+
+void testImageFractalization()
+{
+  // Idea:
+  // Start wih a small seed image. Then enter a loop and in each iteration, scale up the current 
+  // image in two ways: (1) Pixel duplication. (2) Tiling. The next image is obtained by taking an
+  // average (or more generally weighted sum with sum-of-weights = 1) of these two upscaled images.
+  // I hope that this will give a fractal pattern similar to those that we see in the addition 
+  // tables for certain Galois fields (for example for GF(64)) when the seed is 2x2 pattern with
+  // black in (0,0),(1,1) and white in (0,1),(1,0). 
+
+  using IP   = rsImageProcessor<float>;
+
+  // Parameters:
+  int algo       =  1;
+  int levelScale =  2;           // Upscaling parameter per level
+  int numLevels  =  8;
+  int finalScale =  1;
+
+  // Reasonable settings for (levelScale,numLevels:) (2,8), (3,5)
+
+  // Create seed image:
+  rsImageF seed(2,2);
+  seed(1,0) = 1.f;
+  seed(0,1) = 1.f;
+
+  // Fractalization algorithms:
+  rsImageF img    = seed;
+  rsImageF scaled = seed;
+  rsImageF tiled  = seed;
+  switch(algo)
+  {
+  case 0:
+  {
+    for(int i = 0; i < numLevels; i++)
+    {
+      scaled = IP::scaleUp(img, levelScale);
+      tiled  = tile(img, levelScale, levelScale);
+      img    = blend(scaled, 0.5f, tiled, 0.5f);
+    }
+  } break;
+  case 1:
+  {
+    for(int i = 0; i < numLevels; i++)
+    {
+      scaled = IP::scaleUp(scaled, levelScale);
+      tiled  = tile(img, levelScale, levelScale);
+      img    = blend(scaled, 0.5f, tiled, 0.5f);
+    }
+  } break;
+  }
+
+  writeScaledImageToFilePPM(seed, "Seed.ppm",        finalScale);
+  writeScaledImageToFilePPM(img,  "Fractalized.ppm", finalScale);
+
+
+  int dummy = 0;
+
+  // Ideas for extension:
+  // -Use different numbers for horizontal and vertical scaling and tiling in each stage. For 
+  //  example im1 is obtained by scaling by (2,3) and tiling by (3,2) and im1 by scaling by (3,2)
+  //  and tiling by (2,3). In each stage, the size increases by (6,6)
+  // -Maybe on each stage use for the scaled picture an appropriately upscaled version of the 
+  //  original instead od the result of the previous iteration. Yes - that produces results similar
+  //  to the Galois field addition table!
+  // -Try different (more interesting) seeds. Maybe a 3x3 seed with a cross.
+}
+

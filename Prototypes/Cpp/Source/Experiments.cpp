@@ -1740,6 +1740,15 @@ bool testUpDownSample1D()
   //  pixel from the original positions [...] the “magic” kernel can be factorized into a 
   //  nearest-neighbor upsampling to the “doubled” (or “tiled”) grid, i.e. {1, 1}, followed by 
   //  convolution with a regular {1/4, 1/2, 1/4} kernel  "
+  //
+  // -Maybe try to express the  upsample -> downsample  roundtrip in terms of the upsampling and 
+  //  downsampling coeffs and from the roundtrip equations, derive condtions for the coeffs. Let
+  //  x = [x0,x1,x2,...,xm,..., x_{M-1}], y = [y0,y1,y2,...,yn,..., y_{N-1}] where x is the 
+  //  original and y the upsampled signal such that N=2*M, n=2*m. Assume to use 4 coeffs for 
+  //  upsampling and that they are symmetrical, so actually only need two, and call them a1,a2.
+  //  We have y[n] = a1*(x[...])...TBC...
+  //  Maybe also have the condition that the upsampled signal must interpolate the original such 
+  //  that y[2*m] = x[m]
 
   // -See also:
   //  https://en.wikipedia.org/wiki/Upsampling
@@ -2112,6 +2121,7 @@ bool testUpDownSample2D()
 }
 
 
+/*
 // Move into rsImageProcessor
 template<class T>
 rsImage<T> blend(const rsImage<T>& im1, T w1, const rsImage<T>& im2, T w2)
@@ -2140,7 +2150,9 @@ rsImage<T> tile(const rsImage<T>& img, int nx, int ny)
       result(x, y) = img(x % w, y % h);
   return result;
 }
+*/
 
+/*
 void testImageFractalization()
 {
   // Idea:
@@ -2154,7 +2166,7 @@ void testImageFractalization()
   using IP   = rsImageProcessor<float>;
 
   // Parameters:
-  int algo       =  0;
+  int algo       =  1;
   int levelScale =  2;           // Upscaling parameter per level
   int numLevels  =  8;
   int finalScale =  1;
@@ -2203,9 +2215,11 @@ void testImageFractalization()
   //  example im1 is obtained by scaling by (2,3) and tiling by (3,2) and im1 by scaling by (3,2)
   //  and tiling by (2,3). In each stage, the size increases by (6,6)
   // -Maybe on each stage use for the scaled picture an appropriately upscaled version of the 
-  //  original instead od the result of the previous iteration
+  //  original instead od the result of the previous iteration. Yes - that produces results similar
+  //  to the Galois field addition table!
+  // -Try different (more interesting) seeds. Maybe a 3x3 seed with a cross.
 }
-
+*/
 
 //-------------------------------------------------------------------------------------------------
 

@@ -22,7 +22,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testUpDownSample1D();              // up- and downsampling with lossless roundtrip
   //testUpDownSample1D_2();
   //testUpDownSample2D();              // stub, dito but for images
-  testImageFractalization();
+
 
   //epidemic();
 
@@ -76,10 +76,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();
-  testFiniteField();
+  //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();
-  testPolynomialQuotientRing();  // stub
+  //testPolynomialQuotientRing();  // stub
 
   //testSet();
   //testRelation();
@@ -142,10 +142,11 @@ int main (int /*argc*/, char* /*argv[]*/)
 
 
   // Batch creation of plots:
-  makePlotsForPolyaPotentialPaper();  // todo: move to Renderings.cpp
+  //makePlotsForPolyaPotentialPaper();  // todo: move to Renderings.cpp
 
   // Renderings of mathematical art:
   //imgRainbowRadiation();
+  testImageFractalization();
 
 
   // Throw away code:

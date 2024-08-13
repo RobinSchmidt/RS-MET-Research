@@ -10821,6 +10821,22 @@ bool testFiniteField1()
       ok &= prod == 0;
   }
 
+
+  // Check that rema::rsFiniteFieldTables produces the same tables as we did here:
+  using Tbl  = rema::rsFiniteFieldTables;
+  //using Elem = rema::rsFiniteFieldElement;
+  Tbl tbl(p, k, VecI({1,1,0,1}));
+  ok &= tbl.getNegationTable()       == neg_8;
+  ok &= tbl.getReciprocationTable()  == rec_8;
+  ok &= tbl.getAdditionTable()       == add_8;
+  ok &= tbl.getSubtractionTable()    == sub_8;
+  ok &= tbl.getMultiplicationTable() == mul_8;
+  ok &= tbl.getDivisionTable()       == div_8;
+
+  // Vec({1,1,0,1})
+
+
+
   /*
   // Some unit tests that test the factored out functions that do the same stuff that we do here
   // manually:
@@ -10863,8 +10879,6 @@ bool testFiniteField1()
 
   // ToDo:
   //
-  // - Figure out what happens if m is reducible. Try x^3 + 1.
-  //
   // - Create operation tables for powers, roots and logarithms.
   //
   // - Check if the abstract operation tables are latin squares, i.e. each row and each column
@@ -10887,9 +10901,6 @@ bool testFiniteField1()
   // - Find out if the table of reciprocals can be created via an adapted version of 
   //   rsModularInverse() (that works on polynomials) rather than by naive exhaustive searching as
   //   we do now. If so, implement it as alternative algorithm. If not, explain why not.
-  //
-  // - Implement the generation of the abstract tables in a general way in class
-  //   rsFiniteFieldNaive<Int>.
   //
   //
   // Notes:

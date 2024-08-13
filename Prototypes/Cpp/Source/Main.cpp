@@ -141,7 +141,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
 
   // Batch creation of plots:
-  //makePlotsForPolyaPotentialPaper();  // todo: move to Renderings.cpp
+  makePlotsForPolyaPotentialPaper();  // todo: move to Renderings.cpp
 
   // Renderings of mathematical art:
   //imgRainbowRadiation();

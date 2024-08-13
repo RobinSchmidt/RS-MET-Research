@@ -10949,12 +10949,41 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
     }
   }
 
+
+
+  // Maybe move this into another function:
+  bool showPlots = true;
+  if(showPlots)
+  {
+    auto fAdd = [&](float i, float j)
+    {
+      return (float) tbl.getAdditionTable().at((int)i,(int)j);
+    };
+
+    float max = float(n-1);  // verify!
+    rsContourMapPlotter<float> plt;
+    plt.setFunction(fAdd);
+    plt.setOutputRange(0.f, max);
+    plt.setInputRange(0.f, max, 0.f, max);
+    plt.setSamplingResolution(n, n);
+    plt.setNumContours(n-1);                 // or maybe n+1 or n+1?
+    plt.plot();
+    //plt.addData
+
+   
+    // The old way of plotting - crude:
+    plotMatrix(tbl.getAdditionTable());
+    plotMatrix(tbl.getSubtractionTable());
+    plotMatrix(tbl.getMultiplicationTable());
+    plotMatrix(tbl.getDivisionTable());
+
+
+  }
+
+  // rsContourMapPlotter
+
   // Some interesting plots to look at:
-  //plotMatrix(tbl.getAdditionTable());
-  //plotMatrix(tbl.getSubtractionTable());
-  //plotMatrix(tbl.getMultiplicationTable());
-  //plotMatrix(tbl.getDivisionTable());
-  // Maybe move this into another function
+
 
   return ok;
 
@@ -10973,7 +11002,13 @@ bool testFiniteField2()
   bool ok = true;
 
   using Vec = std::vector<int>;
-                                                       // Size         Modulus polynomial
+
+  // Throwaway code for adjusting the plots:
+  ok &= testFiniteField( 2, 3, Vec({1,1,0,1      })); 
+  //ok &= testFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));
+
+  
+  // Size         Modulus polynomial
   ok &= testFiniteField( 2, 1, Vec({0,1          }));  //  2 =  2^1    x
   ok &= testFiniteField( 3, 1, Vec({0,1          }));  //  3 =  3^1    x
   ok &= testFiniteField( 2, 2, Vec({1,1,1        }));  //  4 =  2^2    1 + x + x^2

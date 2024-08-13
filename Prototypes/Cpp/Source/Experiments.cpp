@@ -10821,10 +10821,8 @@ bool testFiniteField1()
       ok &= prod == 0;
   }
 
-
   // Check that rema::rsFiniteFieldTables produces the same tables as we did here:
   using Tbl  = rema::rsFiniteFieldTables;
-  //using Elem = rema::rsFiniteFieldElement;
   Tbl tbl(p, k, VecI({1,1,0,1}));
   ok &= tbl.getNegationTable()       == neg_8;
   ok &= tbl.getReciprocationTable()  == rec_8;
@@ -10833,45 +10831,8 @@ bool testFiniteField1()
   ok &= tbl.getMultiplicationTable() == mul_8;
   ok &= tbl.getDivisionTable()       == div_8;
 
-  // Vec({1,1,0,1})
-
-
-
-  /*
-  // Some unit tests that test the factored out functions that do the same stuff that we do here
-  // manually:
-  Array g2      = makeAllPolynomials(p, k-1);      ok &= g2 == g;
-  Table mul2    = makeMulTable(      g2, m);       ok &= mul2 == mul;
-  Table add2    = makeAddTable(      g2, m);       ok &= add2 == add;
-  Array neg2    = makeNegTable(      g2, m);       ok &= neg2 == neg;
-  Array rec2    = makeRecTable(      g2, m);       ok &= rec2 == rec;
-  Table sub2    = makeSubTable(      g2, neg2, m); ok &= sub2 == sub;
-  Table div2    = makeDivTable(      g2, rec2, m); ok &= div2 == div;
-  VecI  neg_8_2 = abstractifyTable1D(g2, neg2);    ok &= neg_8_2 == neg_8;
-  VecI  rec_8_2 = abstractifyTable1D(g2, rec2);    ok &= rec_8_2 == rec_8;
-  MatI  add_8_2 = abstractifyTable2D(g2, add2);    ok &= add_8_2 == add_8;
-  MatI  mul_8_2 = abstractifyTable2D(g2, mul2);    ok &= mul_8_2 == mul_8;
-  MatI  sub_8_2 = abstractifyTable2D(g2, sub2);    ok &= sub_8_2 == sub_8;
-  MatI  div_8_2 = abstractifyTable2D(g2, div2);    ok &= div_8_2 == div_8;
-  rsAssert(ok);
-  */
-  // This is how we would generally create all the 1D and 2D operation tables for a Galois field. 
-  // We should consolidate that into a function that takes as input the numbers p and k and the 
-  // modulus polynomial m and returns (or fills out) a class/structure that contains only the 
-  // abstractified tables, i.e. the VecI, MatI variables.
-
-  /*
-  // Some stuff for inspection in the debugger:
-  VecI modI(k+1);
-  for(int i = 0; i <= k; i++)
-    modI[i] = m.getCoeff(i).getValue();
-  rsFiniteFieldTables opTables(p, k, modI);
-
-  Poly a(_0), b(_0), c(_0);
-  a = g[5];
-  b = g[7];
-  c = a + b; // Should be the polynomial p(x) = x ...looks good.
-  */
+  //plotMatrix(mul_8);  //
+  //plotMatrix(tbl.getMultiplicationTable()); 
 
   rsAssert(ok);
   return ok;
@@ -10891,12 +10852,6 @@ bool testFiniteField1()
   //   such thresholds - neither of which seems desirable. Maybe we could hardcode a threshold of
   //   zero with the understanding that in the case of floating point arithmetic, the 
   //   auto-truncation may not work. ...not sure yet...
-  //
-  // - Implement a function that does such an abstract table generation for general p,k. It may 
-  //   need to get the modulus polynomial passed, too. Or maybe write a function that automatically
-  //   finds a suitable modulus polynomial. Maybe for this, the class rsBigInteger can be helpful
-  //   to enumerate the different remainder polynomials. We would use an integer in the base p and
-  //   then use its digits for the polynomial coeffs.
   //
   // - Find out if the table of reciprocals can be created via an adapted version of 
   //   rsModularInverse() (that works on polynomials) rather than by naive exhaustive searching as
@@ -10994,6 +10949,11 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
     }
   }
 
+  // Some interesting plots to look at:
+  plotMatrix(tbl.getAdditionTable());
+  plotMatrix(tbl.getMultiplicationTable());
+  // Maybe move this into another function
+
   return ok;
 
   // ToDo: Check if we really test all the important relations. I'm not sure, if the test is 
@@ -11038,6 +10998,14 @@ bool testFiniteField2()
   rsAssert(ok);
   return ok;
 
+  // Observations:
+  //
+  // - When plotting the multiplication tables, we note that when the polynomial is reducible, we 
+  //   get products of zero even when both factors are nonzero.
+  //
+  // - The addition tables with higher exponents have a nice fractal structure
+  //
+  //
   // Notes:
   //
   // The following SageMath code can be used to produce a list of all irreducible polynomials of 

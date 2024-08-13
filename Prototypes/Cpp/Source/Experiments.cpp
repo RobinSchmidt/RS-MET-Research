@@ -10951,12 +10951,15 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
 
 
 
-  // Maybe move this into another function:
+  // Some interesting plots to look at - maybe move this stuff into another function. Maybe 
+  // visualizeFiniteField
   bool showPlots = true;
   if(showPlots)
   {
     auto fAdd = [&](float i, float j)
     {
+      if(i >= n || j >= n)
+        return 0.f;
       return (float) tbl.getAdditionTable().at((int)i,(int)j);
     };
 
@@ -10965,13 +10968,16 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
     plt.setFunction(fAdd);
     plt.setOutputRange(0.f, max);
     plt.setInputRange(0.f, max, 0.f, max);
-    plt.setSamplingResolution(n, n);
-    plt.setNumContours(0);  // test
+    //plt.setSamplingResolution(n+1, n+1);  // wrong!
+    plt.setSamplingResolution(n, n);        // wrong!
+    //plt.setSamplingResolution(n-1, n-1);  // wrong!
+    //plt.setSamplingResolution(8*n, 8*n);  // Oversampling looks okis - but it should work without!
+    plt.setNumContours(0);
     plt.setToDarkMode();
     plt.addCommand("set palette maxcolors " + std::to_string(n));
-
+    plt.setColorPalette(GNUPlotter::ColorPalette::SW_Inferno, false);
     plt.plot();
-    //plt.addData
+    // ToDo: get rid of the grid lines - they do not look good in this context
 
    
     // The old way of plotting - crude:
@@ -10980,13 +10986,11 @@ bool testFiniteField(int p, int k, const std::vector<int>& m)
     plotMatrix(tbl.getMultiplicationTable());
     plotMatrix(tbl.getDivisionTable());
 
-
+    // But the new way of plotting looks different - and I mean not only style wise. Oversampling
+    // fixes it. I guess, there's and off-by-one error in the resolution setting. Maybe the contour
+    // plotter is not the right choice. Maybe we should use something like plotMatrix but with 
+    // tweaked color-scheme
   }
-
-  // rsContourMapPlotter
-
-  // Some interesting plots to look at:
-
 
   return ok;
 
@@ -11007,8 +11011,9 @@ bool testFiniteField2()
   using Vec = std::vector<int>;
 
   // Throwaway code for adjusting the plots:
-  ok &= testFiniteField( 2, 3, Vec({1,1,0,1      })); 
+  //ok &= testFiniteField( 2, 3, Vec({1,1,0,1      })); 
   //ok &= testFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));
+  ok &= testFiniteField( 3, 1, Vec({0,1          }));  //  3 =  3^1    x
 
   
   // Size         Modulus polynomial

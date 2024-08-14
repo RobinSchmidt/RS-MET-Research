@@ -268,5 +268,39 @@ The group elements could be represented by integers (maybe unsigned, 64 bit).
 
 
 
+Questions
+
+- Do we have a "successor" operation that enumerates all elements such as the "+1" operation
+  in the natural numbers or in the modular integers? I think taking literally "+1" will not work
+  here because it will only cycle between p rather than p^k elements (I think). Maybe the literal
+  +1 will partition the field into p^(k-1) equivalence classes. Or more generally, any element 
+  that arose from a polynomial that hass all coeffs 0 except one which is 1, will do? Maybe the 
+  coeff doesn't even need to be 1 but any nonzero coeff will work?
+
+- We know that the fields of size p^k resulting from different modulus polynomials are isomorphic.
+  How can we find an isomorphism? An isomorphism can be represent by a permutation of the numbers
+  0..n-1, i.e. a simple length-n array.
+
+- Can we always find a homomorphism from GF(p^k) to GF(p^(k-1)) and therefore, by induction, to
+  GF(p)? Try to write a function that produces such homomorphisms.
+
+- Maybe one way to approach this problem fo finding isomorphisms is to take some sort of 
+  "fingerprint" of each field element x and then find the element with the same fingerprint in the
+  other set. The fingerprint could consist of features like: additive order, multliplicative order,
+  mapped element in GF(p) in the homomorphism mentioned above (if that works out), orders of other 
+  operations like (a*a + a), (a^3 + a), (a^3 + a^2), etc. Additive and multiplciative order are 
+  just special cases where we use (a + a), (a * a). When the fingerprint is taken, look in the 
+  other isomorphic set for the element that has the same fingerprint. That's the function value 
+  f(x) of our isomorphism - or at least, it is a possible candidate for the function value.
+
+- What set of features will give us a fingerprint that lets us uniquely determine the desired 
+  function value f(x) for a given field element x? Or maybe unary features are not good enough and 
+  we need to look into binray features, i.e. features of all possible pairs of elements?
+
+- Can we find a formula for the additive order of an element in terms of its polynomial coeffs?
+  They give a pattern like  1 0 2 0 1 3 1. When we modularly add this pattern to itself - how long
+  will it take until we are back to the original pattern?
+
+
 
 */

@@ -169,6 +169,8 @@ public:
     return rsFiniteFieldElement(tables->rec[val], tables);
   }
 
+  const rsFiniteFieldTables* getTables() const { return tables; }
+
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */
 
@@ -225,6 +227,12 @@ protected:
   const rsFiniteFieldTables* tables = nullptr;
 
 };
+
+
+rsFiniteFieldElement rsUnityValue(rsFiniteFieldElement value)
+{ 
+  return rsFiniteFieldElement(1, value.getTables()); 
+}
 
 
 }

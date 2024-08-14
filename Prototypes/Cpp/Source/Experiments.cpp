@@ -11132,12 +11132,12 @@ void plotFiniteFields()
 // Structure to hold some important features of finite field elements:
 struct FiniteFieldFingerPrint
 {
-  //int additiveOrder;
-  //int multiplicativeOrder;
-
-  int addOrd;  // Additive order
+  int addOrd;  // Additive order   rename to ordAdd
   int mulOrd;  // Multiplicative order
+
+  //int ordMulAdd1;  // Order of y = y * x + 1
 };
+// repeated squaring/cubing/etc order.
 
 // ToDo: abstract this - pass an operation - avoid code duplication:
 template<class T>
@@ -11168,8 +11168,23 @@ int getMultiplicativeOrder(const T& x)
   }
   return order;
 }
-
-
+/*
+template<class T>
+int getOderMulPlus1(const T& x)
+{
+  int order = 0;
+  T y   = x;
+  T one = rsUnityValue(x);
+  while(true)
+  {
+    y = y * x + one;
+    order++;
+    if(y == x)
+      return order;
+  }
+  return order;
+}
+*/
 
 void testFiniteFieldFingerprints()
 {
@@ -11198,11 +11213,11 @@ void testFiniteFieldFingerprints()
 
   for(int i = 0; i < n; i++)
   {
-    //int addOrd = getAdditiveOrder(elems[i]);
-    //int mulOrd = getMultiplicativeOrder(elems[i]);
+    fingerPrints[i].addOrd     = getAdditiveOrder(elems[i]);
+    fingerPrints[i].mulOrd     = getMultiplicativeOrder(elems[i]);
 
-    fingerPrints[i].addOrd = getAdditiveOrder(elems[i]);
-    fingerPrints[i].mulOrd = getMultiplicativeOrder(elems[i]);
+    //fingerPrints[i].ordMulAdd1 = getOderMulPlus1(elems[i]);
+    // Nope! Goes into infinite loop!
   }
 
   int dummy = 0;

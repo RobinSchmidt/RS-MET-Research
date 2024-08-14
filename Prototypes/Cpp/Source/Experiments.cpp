@@ -11135,6 +11135,7 @@ struct FiniteFieldFingerPrint
   int multiplicativeOrder;
 };
 
+// ToDo: abstract this - pass an operation - avoid code duplication:
 template<class T>
 int getAdditiveOrder(const T& x)
 {
@@ -11149,6 +11150,22 @@ int getAdditiveOrder(const T& x)
   }
   return order;
 }
+template<class T>
+int getMultiplicativeOrder(const T& x)
+{
+  int order = 0;
+  T y = x;
+  while(true)
+  {
+    y = y * x;
+    order++;
+    if(y == x)
+      return order;
+  }
+  return order;
+}
+
+
 
 void testFiniteFieldFingerprints()
 {
@@ -11175,22 +11192,12 @@ void testFiniteFieldFingerprints()
   for(int i = 0; i < n; i++)
   {
     int addOrd = getAdditiveOrder(elems[i]);
-
-
+    int mulOrd = getMultiplicativeOrder(elems[i]);
     int dummy = 0;
-
   }
-
-
-
-  //Elem a(&tbl), b(&tbl), c(&tbl);
-  //Elem _0(0, &tbl);
-  //Elem _1(1, &tbl);
-
-  // We loop over all elements and check some conditions that must hold in a field:
-
-
-
+  // The additve order of 0 is 1, of all other elements 2
+  // The multiplciative order of 0 and 1 is 1, of all other elements 7
+  // These features do not make for a menaingful fingerprint! :-(
 }
 
 void testFiniteField()

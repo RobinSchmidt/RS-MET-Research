@@ -275,7 +275,8 @@ Questions
   here because it will only cycle between p rather than p^k elements (I think). Maybe the literal
   +1 will partition the field into p^(k-1) equivalence classes. Or more generally, any element 
   that arose from a polynomial that hass all coeffs 0 except one which is 1, will do? Maybe the 
-  coeff doesn't even need to be 1 but any nonzero coeff will work?
+  coeff doesn't even need to be 1 but any nonzero coeff will work? Of course, the operation should
+  be expressed in terms of field operations - incrementing the array index does not count!
 
 - We know that the fields of size p^k resulting from different modulus polynomials are isomorphic.
   How can we find an isomorphism? An isomorphism can be represent by a permutation of the numbers

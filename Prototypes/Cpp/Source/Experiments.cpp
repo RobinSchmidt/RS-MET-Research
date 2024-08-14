@@ -12569,14 +12569,14 @@ void testGeneralizedCollatz()
   // loop 4-2-1 when you start with an arbitrary seed number and apply the following rule 
   // iteratively: If x is even, apply x = x/2, else apply 3*x + 1. We look at a generalized 
   // form: we pick a fixed divisor k and a seed x and use the rule: If x is divisible by k, apply
-  // x = x/k, else apply x = (k+1)*x + 1. Using k=2 leads to the original Collatz rule.
+  // x = x/k, else apply x = (k+1)*x + 1. Using k=2 leads to the original Collatz rule. The idea is
+  // that when k beocmes large, it approaches multiplyign and dividing by k (the +1 does not make
+  // a big difference, relatively speaking)
 
-  using uint = uint32_t;
+  using uint = uint64_t;             // Maybe we need a bigger int type to avoid overflow?
   using AT   = RAPT::rsArrayTools;
-  uint k = 2;
-  uint x = 7;
-
-
+  uint k = 2;                        // Collatz: k = 2
+  uint x = 7;    
 
   std::vector<uint> v;
 
@@ -12588,6 +12588,12 @@ void testGeneralizedCollatz()
       x = (k+1)*x + 1;
     if(RAPT::rsContains(v, x))  {  // detect repetition - makes algo O(N^2)
       v.push_back(x); break; }}
+  // The repetition detection is used as loop exit criterion. Whenever we encounter a number that 
+  // we have already seen, we terminate the loop. ...we may potnetially end in an infinite loop if
+  // the (generalized) conjecture is false.
+
+  int cycleStart =  rsFind(v,x);
+  int cycleLength = (int)v.size() - cycleStart;
 
   // Simpler and more efficient: version - but can only detect the loop for the k=2 case (i think - verify:)
   //v.push_back(x);
@@ -12602,21 +12608,30 @@ void testGeneralizedCollatz()
 
 
   // Observations:
-  // For k = 3, we also end up in loops ending in 2784085845 like so:
-  //   x[0] =  1, x[2809] = 2784085845
-  //   x[0] =  2, x[2812] = 2784085845
-  //   x[0] =  3, x[2810] = 2784085845
-  //   x[0] =  4, x[2319] = 3499611477
-  //   x[0] =  5, x[2808] = 2784085845
-  //   x[0] =  6, x[2813] = 2784085845
-  //   x[0] =  7, x[2806] = 2784085845
-  //   x[0] =  8, x[2813] = 2784085845
-  //   x[0] =  9, x[2811] = 2784085845
-  //   x[0] = 10, x[2873] = 880104789
+  //
+  // - For k = 3, we also end up in loops ending in different numbers (but often in 2784085845) 
+  //   like so:
+  //
+  //     x[0] =  1, x[2809] = 2784085845
+  //     x[0] =  2, x[2812] = 2784085845
+  //     x[0] =  3, x[2810] = 2784085845
+  //     x[0] =  4, x[2319] = 3499611477
+  //     x[0] =  5, x[2808] = 2784085845
+  //     x[0] =  6, x[2813] = 2784085845
+  //     x[0] =  7, x[2806] = 2784085845, cycleStart = 572, cycleLength = 2235
+  //     x[0] =  8, x[2813] = 2784085845
+  //     x[0] =  9, x[2811] = 2784085845
+  //     x[0] = 10, x[2873] = 880104789
+  //
+  //   Oh! That was when we had "uint = uint32_t; ". Now that we have uint = uint64_t; we enter 
+  //   much longer (maybe infinite?) loop! I really think, we may need a big-integer class for 
+  //   this. I mean, with only finitely many representable integers, at some point, we will 
+  //   definitely see a value that we have seen before. I guess, with 32 bit integres, this happens
+  //   rather quickly but with 64 bit, it takes much longer (2^32 times as long)
 
 
 
-  // Try k = 2, x = 7 to reproduce sequence from the begiinig of this:
+  // Try k = 2, x = 7 to reproduce sequence from the beginnig of this:
   // https://www.youtube.com/watch?v=094y1Z2wpJg
 
 

@@ -143,6 +143,11 @@ rsImage<TPix> rsImageFractalizer<TPix, TWgt>::apply(const rsImage<TPix>& seed)
     for(int i = 0; i < numLevels; i++)
     {
       scaled = IP::scaleUp(scaled, scale);
+
+      //scaled = IP::interpolateBilinear(scaled, scale, scale);
+      // Test - doesn't have the right size
+      // ToDo: maybe smooth the scaled image
+
       tiled  = tile(       img,    scale, scale);
       img    = blend(      scaled, wScale, tiled, wTile);
     }
@@ -416,9 +421,15 @@ void testImageFractalization()
 
   // Create seed images:
   rsImageF seedDiag2x2(2,2);
-  seedDiag2x2(1,0) = 1.f;
-  seedDiag2x2(0,1) = 1.f;
+  seedDiag2x2(0,0) = 1.f;
+  seedDiag2x2(1,1) = 1.f;
   writeScaledImageToFilePPM(seedDiag2x2, "SeedDiag2x2.ppm");
+
+  rsImageF seedDiag3x3(3,3);
+  seedDiag3x3(0,0) = 1.f;
+  seedDiag3x3(1,1) = 1.f;
+  seedDiag3x3(2,2) = 1.f;
+  writeScaledImageToFilePPM(seedDiag3x3, "SeedDiag3x3.ppm");
 
   rsImageF seedDot3x3(3,3);
   seedDot3x3(1,1) = 1.f;
@@ -432,6 +443,14 @@ void testImageFractalization()
   seedCross3x3(2,1) = 1.f;
   writeScaledImageToFilePPM(seedCross3x3, "SeedCross3x3.ppm");
 
+  rsImageF seedX3x3(3,3);
+  seedX3x3(0,0) = 1.f;
+  seedX3x3(1,1) = 1.f;
+  seedX3x3(2,2) = 1.f;
+  seedX3x3(2,0) = 1.f;
+  seedX3x3(0,2) = 1.f;
+  writeScaledImageToFilePPM(seedDiag3x3, "SeedX3x3.ppm");
+
 
   // Create different fractalizations:
   f.resetParameters();
@@ -443,11 +462,25 @@ void testImageFractalization()
 
   f.resetParameters();
   f.setAlgorithm(Algo::scaleOriginal);
+  f.setScale(2);
+  f.setNumLevels(8);
+  fractal = f.apply(seedDiag3x3);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag3x3_AlgOrg_Scl2_Lvl8.ppm");
+
+  f.resetParameters();
+  f.setAlgorithm(Algo::scaleOriginal);
   f.setScale(3);
   f.setNumLevels(5);
   fractal = f.apply(seedDiag2x2);
   writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag2x2_AlgOrg_Scl3_Lvl5.ppm");
-  // I think, when scale is 3, the seed should be 3x3, too - for best results. Try it!
+  // I think, when scale is 3, the seed should be 3x3, too - for best results. 
+  // Let's try it:
+  fractal = f.apply(seedDiag3x3);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedDiag3x3_AlgOrg_Scl3_Lvl5.ppm");
+  fractal = f.apply(seedX3x3);
+  writeScaledImageToFilePPM(fractal, "Fractal_SeedX3x3_AlgOrg_Scl3_Lvl5.ppm");
+
+
 
   f.resetParameters();
   f.setAlgorithm(Algo::scaleCurrent);

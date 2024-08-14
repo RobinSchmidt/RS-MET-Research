@@ -54,12 +54,12 @@ protected:
   void createOperationTables();
 
   // Data:
-  int p;                                  // Base in p^m, should be prime
+  int p;                                  // Base in p^k, should be prime
   int k;                                  // Exponent in p^k, a positive integer
   int n;                                  // n = p^k
   std::vector<int> mod;                   // Coeffs of the modulus polynomial
-  std::vector<int> neg, rec;              // 1D tables negatives and reciprocals
-  RAPT::rsMatrix<int> add, mul, sub, div; // 2D tables for binary arithmetic operations
+  std::vector<int> neg, rec;              // 1D tables for unary operations (negate, reciprocate)
+  RAPT::rsMatrix<int> add, mul, sub, div; // 2D tables for binary operations (addition, ...)
 
 
   friend class rsFiniteFieldElement;
@@ -215,6 +215,8 @@ public:
     RAPT::rsAssert(isOperationOk(*this, b));
     return rsFiniteFieldElement(tables->div(val, b.val), tables);
   }
+
+  // ToDo: +=, -=, *=, /=
 
 
 protected:

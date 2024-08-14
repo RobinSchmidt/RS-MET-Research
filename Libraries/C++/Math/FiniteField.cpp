@@ -5,7 +5,8 @@ namespace rema  // Rob's educational math algorithms
 // Helper functions
 // ToDo: make them either static member functions of class rsFiniteFieldTables or generalize them
 // suitably and move them into the library for polynomials - or maybe make them even more general
-// to deal with arbitrary data types ...TBC...
+// to deal with arbitrary data types. Maybe makeAllPolynomials could take as first argument a 
+// std::vector<T> of all the possible values for the coefficients ...TBC...
 
 
 // Creates a std::vector of all possible polynomials over Zp (== integers modulo p) up to the

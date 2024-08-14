@@ -11135,6 +11135,21 @@ struct FiniteFieldFingerPrint
   int multiplicativeOrder;
 };
 
+template<class T>
+int getAdditiveOrder(const T& x)
+{
+  int order = 0;
+  T y = x;
+  while(true)
+  {
+    y = y + x;
+    order++;
+    if(y == x)
+      return order;
+  }
+  return order;
+}
+
 void testFiniteFieldFingerprints()
 {
   // Under construction.
@@ -11155,6 +11170,17 @@ void testFiniteFieldFingerprints()
   VecE elems(n);
   for(int i = 0; i < n; i++)
     elems[i] = Elem(i, &tbl);
+
+
+  for(int i = 0; i < n; i++)
+  {
+    int addOrd = getAdditiveOrder(elems[i]);
+
+
+    int dummy = 0;
+
+  }
+
 
 
   //Elem a(&tbl), b(&tbl), c(&tbl);

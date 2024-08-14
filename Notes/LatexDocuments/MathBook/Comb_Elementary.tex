@@ -12,6 +12,15 @@
 
 % Notation: the set has n elements and we choose k from it
 
+% https://de.wikipedia.org/wiki/Abz%C3%A4hlende_Kombinatorik
+
+% https://de.wikipedia.org/wiki/Abz%C3%A4hlende_Kombinatorik#Begriffsabgrenzungen
+% has a translation table between the German and English terms and also other nice tables
+
+% https://en.wikipedia.org/wiki/Permutation#Other_uses_of_the_term_permutation
+
+% The terminology seems a mess
+
 \paragraph{Permutations}
 Let's say that we have $n$ different (i.e. distinguishable) objects and we want to know, how many ways there are, to put these objects into a different order. For example, the possible orders for the $3$ objects $a,b,c$ are $abc$, $acb$, $bac$, $bca$, $cab$, $cba$. These are $6$ different orders. We call these different orderings of a number of $n$ different objects \emph{permutations}. The term "permute" means something like "reorder" where identity (i.e. do-nothing) reordering also counts as trivial edge case (as is typical in math). The number of \emph{permutations} of $n$ distinguishable objects is given by:
 \begin{equation}
@@ -23,23 +32,40 @@ P_n^{(m_1,m_2,\ldots,m_k)}
 = \frac{n!}{m_1! m_2! \ldots m_k!} 
 = \binom{n}{m_1,m_2,\ldots, m_k}
 \end{equation}
-distinguishable permutations. These ares sometimes called \emph{multiset permutations} or \emph{permutations with repetition} [VERIFY!]. The numbers $m_i$ are called the \emph{multiplicities}. The quantity is also called the multinomial coefficient and it is a generalization of the binomial coefficient "$n$-choose-$k$" and the notation on the right hand side is a corresponding generalization of the usual binomial coefficient notation $\binom{n}{k}$.
-...TBC..
+distinguishable permutations. These ares sometimes called \emph{multiset permutations} or \emph{permutations with repetition} [VERIFY!]. The numbers $m_i$ are called the \emph{multiplicities}. The quantity is also called the multinomial coefficient and it is a generalization of the binomial coefficient "$n$-choose-$k$" and the notation on the right hand side is a corresponding generalization of the usual binomial coefficient notation $\binom{n}{k}$. ...TBC..
 
-% I deliberately say "objects" rather than "elements" because set elements are, by definition, always distinguishable
-
-%...TBC...mention multiset permutations, multinomial coefficients
-
-
-% without repetition: P_n = n!
-% with repetition: P_m^{(m_1,m_2,\ldots,m_k)}
-
+% Leupold, pg 329
 % https://en.wikipedia.org/wiki/Permutation#Permutations_of_multisets
 % https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients
 
-\paragraph{Variations}
-
 \paragraph{Combinations}
+Imagine we have a set of size $n$ and we are asked how many different subsets of size $k$ we can form from this set. That is: how many different ways are there to choose $k$ elements from a set of $n$ elements. It doesn't matter in which order we chose the elements - as long as the total set of chosen elements is the same, our created subset is considered to be the same (remember that in sets, order doesn't matter - it isn't even a thing\footnote{Unless you \emph{define} one order \emph{on top} of the set - but a set all by itself does not have a notion of order built into it.}). We call these different subsets of size $k$ of a given set of size $n$ \emph{combinations} or, more specifically, $k$-combinations. The number of possible $k$-combinations from a set of size $n$ is given by the binomial coefficient:
+\begin{equation}
+C_n^k = \binom{n}{k} 
+      = \frac{n!}{k! (n-k)!} 
+      = \frac{n \cdot (n-1) \cdot (n-2) \cdot \ldots \cdot (n-k+1)}{k!}
+      = \frac{\prod_{m=n-k+1}^{n} m}{k!}
+\end{equation}
+which is, for this reason, typically pronounced as "$n$-choose-$k$". ...TBC...
+
+% https://en.wikipedia.org/wiki/Combination
+
+
+\paragraph{Variations}
+%The number of \emph{variations} of $n$ distinguishable objects is given by:
+\begin{equation}
+V_n^k = \frac{n!}{(n-k)!} 
+      = n \cdot (n-1) \cdot (n-2) \cdot \ldots \cdot (n-k+1) 
+      = \prod_{m=n-k+1}^{n} m
+\end{equation}
+
+% https://en.wikipedia.org/wiki/Permutation#Other_uses_of_the_term_permutation
+% k-permutation of n, partial permutation, sequence without repetition, variation, or arrangement
+
+% https://de.wikipedia.org/wiki/Variation_(Kombinatorik)
+
+% https://en.wikipedia.org/wiki/Partition_of_a_set
+
 
 
 \begin{comment}

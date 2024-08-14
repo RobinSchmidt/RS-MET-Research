@@ -303,6 +303,14 @@ Questions
   They give a pattern like  1 0 2 0 1 3 1. When we modularly add this pattern to itself - how long
   will it take until we are back to the original pattern?
 
+- A naive approach to fin an isomorphsim is to try all possible permutations and check, if they are
+  and isomorphism. But that's inefficient because the number of possible permutations is n!. This 
+  can be done practically only in very small cases, i.e. for very small n - maybe up to n = 9. We 
+  could get away with trying (n-2)! permutations because we already know that 0 and 1 must map to
+  0 and 1 - but that does not help much. 
+
+- Can it help to take the degree of the polynomial in the polynomial representation as feature?
+
 
 
 */

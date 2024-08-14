@@ -11197,7 +11197,14 @@ void testFiniteFieldFingerprints()
   }
   // The additve order of 0 is 1, of all other elements 2
   // The multiplciative order of 0 and 1 is 1, of all other elements 7
-  // These features do not make for a menaingful fingerprint! :-(
+  // These features do not make for a menaingful fingerprint! :-( ..but they can be used to 
+  // identify (i.e. find) additive and multiplicative identity, if we do not necessarily assume 
+  // that they are given by field elements with index 0 and 1. This will be the case, i.e. actually
+  // can be assumed, in the current implementation - but that's an implementation detail. What 
+  // about more complicated unary operations like a*a + a or maybe a*a + 1? Could their orders make 
+  // up for meaningful features? Although - maybe they don't even have an order in the sense that 
+  // we cycle back to the originla element. But they will certainly have to enter *some kind* of 
+  // repetitive cycle due to the finiteness of the set.
 }
 
 void testFiniteField()

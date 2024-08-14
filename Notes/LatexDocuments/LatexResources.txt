@@ -3,5 +3,10 @@ Nice big comprehensive list of math symbols:
 https://www.math.uci.edu/~xiangwen/pdf/LaTeX-Math-Symbols.pdf
 
 
+Tables:
+https://www.overleaf.com/learn/latex/Tables
+https://tex.stackexchange.com/questions/112343/beautiful-table-samples
+https://en.wikibooks.org/wiki/LaTeX/Tables
+
 https://tex.stackexchange.com/questions/460408/how-to-add-a-cross-out-to-any-latex-symbol
 

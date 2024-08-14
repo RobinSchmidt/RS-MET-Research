@@ -4,7 +4,42 @@
 %\subsection{Selecting Elements from a Set} 
 \subsection{Collections of Set Elements} 
 % Maybe rename to "Element Selections", "Choices", "Collections"
+
 % Leupold, Vol. 2 pg 238 has a nice overview
+% the table on pg 332 is also nice - reproduce it - but with formulas for the numbers
+
+% Weitz pg 177 has also a nice introdcution
+
+% Notation: the set has n elements and we choose k from it
+
+\paragraph{Permutations}
+Let's say that we have $n$ different (i.e. distinguishable) objects and we want to know, how many ways there are, to put these objects into a different order. For example, the possible orders for the $3$ objects $a,b,c$ are $abc$, $acb$, $bac$, $bca$, $cab$, $cba$. These are $6$ different orders. We call these different orderings of a number of $n$ different objects \emph{permutations}. The term "permute" means something like "reorder" where identity (i.e. do-nothing) reordering also counts as trivial edge case (as is typical in math). The number of \emph{permutations} of $n$ distinguishable objects is given by:
+\begin{equation}
+P_n = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n = n!
+\end{equation}
+This is easy to understand when we recognize that there are exactly $n$ different ways to put an element into the first position because we haven $n$ elements to choose from. Then, there remain $n-1$ different ways to put some other element into the second position and so on because after the first element has been chosen, we have $n-1$ elements left to choose from. And so on. We get $n\cdot(n-1)\cdot(n-2)\cdot\ldots\cdot1$ ways all in all. I stressed the point that the objects need to be distinguishable. This is the usual case when the objects are elements of a mathematical \emph{set} because set elements are by definition distinguishable. There is a more general notion of a \emph{multiset} in which there may be indistinguishable objects. If the $n$ objects are not all distinguishable such that they fall into $k$ equivalence classes of sizes $m_1, m_2, \ldots, m_k$ with $m_1 + m_2 + \ldots + m_k = n$, then there are:
+\begin{equation}
+P_n^{(m_1,m_2,\ldots,m_k)} 
+= \frac{n!}{m_1! m_2! \ldots m_k!} 
+= \binom{n}{m_1,m_2,\ldots, m_k}
+\end{equation}
+distinguishable permutations. These ares sometimes called \emph{multiset permutations} or \emph{permutations with repetition} [VERIFY!]. The numbers $m_i$ are called the \emph{multiplicities}. The quantity is also called the multinomial coefficient and it is a generalization of the binomial coefficient "$n$-choose-$k$" and the notation on the right hand side is a corresponding generalization of the usual binomial coefficient notation $\binom{n}{k}$.
+...TBC..
+
+% I deliberately say "objects" rather than "elements" because set elements are, by definition, always distinguishable
+
+%...TBC...mention multiset permutations, multinomial coefficients
+
+
+% without repetition: P_n = n!
+% with repetition: P_m^{(m_1,m_2,\ldots,m_k)}
+
+% https://en.wikipedia.org/wiki/Permutation#Permutations_of_multisets
+% https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients
+
+\paragraph{Variations}
+
+\paragraph{Combinations}
 
 
 \begin{comment}

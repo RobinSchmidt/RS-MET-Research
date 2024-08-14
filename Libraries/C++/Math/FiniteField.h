@@ -79,7 +79,7 @@ class rsFiniteFieldElement
 public:
 
 
-
+  rsFiniteFieldElement() {}
 
   rsFiniteFieldElement(const rsFiniteFieldTables* tablesToUse)
   { 

@@ -11051,6 +11051,7 @@ bool testFiniteField2()
   // https://math.stackexchange.com/questions/998563/how-to-find-all-irreducible-polynomials-in-z2-with-degree-5
 }
 
+
 void plotFiniteField(int p, int k, const std::vector<int>& m)
 {
   // Under construction
@@ -11110,20 +11111,65 @@ void plotFiniteFields()
   //plotFiniteField( 2, 2, Vec({1,1,1        }));
   //plotFiniteField( 2, 3, Vec({1,1,0,1      })); 
   //plotFiniteField( 2, 5, Vec({1,0,1,0,0,1  }));
-  plotFiniteField( 2, 6, Vec({1,1,0,0,0,0,1}));      // 64
+  //plotFiniteField( 2, 6, Vec({1,1,0,0,0,0,1}));      // 64
   //plotFiniteField( 3, 4, Vec({2,1,0,0,1    }));      // 81
   //plotFiniteField( 3, 1, Vec({0,1          }));  //  3 =  3^1    x
 
 
-
+  // The two different variations of GF(8):
   //plotFiniteField(2, 3, Vec({1,1,0,1})); // 1 + x + x^3
-  //plotFiniteField(2, 3, Vec({1,0,1,1})); // 1 + x^2 + x^3
+  plotFiniteField(2, 3, Vec({1,0,1,1})); // 1 + x^2 + x^3
+  // Seems like the addition/subtraction tables look the same but the multiplication/division 
+  // tables look different. The multliplication tables are only the same in the 0- and 1- row- 
+  // and -column. The div table may even differ in the 1-columns (i.e. the reciprocals)
 
-  // ToDo: try the same field sizes with different polynomials
+
+  // ToDo: Try the same field sizes with different polynomials - will they look different - or 
+  // similar in some ways? Try the two possible ways of createing GF(8)
+
+}
+
+struct FiniteFieldFingerPrint
+{
+  int additiveOrder;
+  int multiplicativeOrder;
+};
+
+void testFiniteFieldFingerprints()
+{
+  // Under construction.
+
+  using Tbl  = rema::rsFiniteFieldTables;
+  using Elem = rema::rsFiniteFieldElement;
+  using VecI = std::vector<int>;
+  using VecE = std::vector<Elem>;
+
+  int  p = 2;
+  int  k = 3;
+  VecI m({1,1,0,1});
+
+  Tbl tbl(p, k, m);
+
+  int n = rsPow(p, k);
+
+  VecE elems(n);
+  for(int i = 0; i < n; i++)
+    elems[i] = Elem(i, &tbl);
+
+
+  //Elem a(&tbl), b(&tbl), c(&tbl);
+  //Elem _0(0, &tbl);
+  //Elem _1(1, &tbl);
+
+  // We loop over all elements and check some conditions that must hold in a field:
+
+
+
 }
 
 void testFiniteField()
 {
+  testFiniteFieldFingerprints();
   plotFiniteFields();
 
   bool ok = true;

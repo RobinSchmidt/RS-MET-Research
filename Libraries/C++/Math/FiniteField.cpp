@@ -295,7 +295,9 @@ Questions
 
 - What set of features will give us a fingerprint that lets us uniquely determine the desired 
   function value f(x) for a given field element x? Or maybe unary features are not good enough and 
-  we need to look into binray features, i.e. features of all possible pairs of elements?
+  we need to look into binray features, i.e. features of all possible pairs of elements? Maybe we 
+  need to consider for each element its reciprocal and the structure by which elements are related
+  to their reciprocals gives use enough information to find the isomorphism?
 
 - Can we find a formula for the additive order of an element in terms of its polynomial coeffs?
   They give a pattern like  1 0 2 0 1 3 1. When we modularly add this pattern to itself - how long

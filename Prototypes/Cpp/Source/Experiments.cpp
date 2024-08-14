@@ -11129,10 +11129,14 @@ void plotFiniteFields()
 
 }
 
+// Structure to hold some important features of finite field elements:
 struct FiniteFieldFingerPrint
 {
-  int additiveOrder;
-  int multiplicativeOrder;
+  //int additiveOrder;
+  //int multiplicativeOrder;
+
+  int addOrd;  // Additive order
+  int mulOrd;  // Multiplicative order
 };
 
 // ToDo: abstract this - pass an operation - avoid code duplication:
@@ -11175,10 +11179,11 @@ void testFiniteFieldFingerprints()
   using Elem = rema::rsFiniteFieldElement;
   using VecI = std::vector<int>;
   using VecE = std::vector<Elem>;
+  using VecF = std::vector<FiniteFieldFingerPrint>;
 
-  int  p = 2;
-  int  k = 3;
-  VecI m({1,1,0,1});
+  //int p = 2, k = 3; VecI m({1,1,0,1}); // GF(8)
+  int p = 3, k = 4; VecI m({2,1,0,0,1}); // GF(81)
+  // plotFiniteField( 3, 4, Vec({2,1,0,0,1    }));      // 81
 
   Tbl tbl(p, k, m);
 
@@ -11188,23 +11193,33 @@ void testFiniteFieldFingerprints()
   for(int i = 0; i < n; i++)
     elems[i] = Elem(i, &tbl);
 
+  VecF fingerPrints(n);
+
 
   for(int i = 0; i < n; i++)
   {
-    int addOrd = getAdditiveOrder(elems[i]);
-    int mulOrd = getMultiplicativeOrder(elems[i]);
-    int dummy = 0;
+    //int addOrd = getAdditiveOrder(elems[i]);
+    //int mulOrd = getMultiplicativeOrder(elems[i]);
+
+    fingerPrints[i].addOrd = getAdditiveOrder(elems[i]);
+    fingerPrints[i].mulOrd = getMultiplicativeOrder(elems[i]);
   }
-  // The additve order of 0 is 1, of all other elements 2
-  // The multiplciative order of 0 and 1 is 1, of all other elements 7
-  // These features do not make for a menaingful fingerprint! :-( ..but they can be used to 
-  // identify (i.e. find) additive and multiplicative identity, if we do not necessarily assume 
-  // that they are given by field elements with index 0 and 1. This will be the case, i.e. actually
-  // can be assumed, in the current implementation - but that's an implementation detail. What 
-  // about more complicated unary operations like a*a + a or maybe a*a + 1? Could their orders make 
-  // up for meaningful features? Although - maybe they don't even have an order in the sense that 
-  // we cycle back to the originla element. But they will certainly have to enter *some kind* of 
-  // repetitive cycle due to the finiteness of the set.
+
+  int dummy = 0;
+
+  // Observations:
+  //
+  // - With p=2, k=3: 
+  //   - The additive order of 0 is 1, of all other elements 2
+  //   -The multiplciative order of 0 and 1 is 1, of all other elements 7
+  //   -These features do not make for a menaingful fingerprint! :-( ..but they can be used to 
+  //    identify (i.e. find) additive and multiplicative identity, if we do not necessarily assume 
+  //    that they are given by field elements with index 0 and 1. This will be the case, i.e. 
+  //    actually can be assumed, in the current implementation - but that's an implementation 
+  //    detail. What about more complicated unary operations like a*a + a or maybe a*a + 1? Could 
+  //    their orders make up for meaningful features? Although - maybe they don't even have an 
+  //    order in the sense that we cycle back to the originla element. But they will certainly have 
+  //    to enter *some kind* of repetitive cycle due to the finiteness of the set.
 }
 
 void testFiniteField()

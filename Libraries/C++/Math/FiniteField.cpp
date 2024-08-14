@@ -142,6 +142,10 @@ rsFiniteFieldTables::rsFiniteFieldTables(
 
 void rsFiniteFieldTables::createOperationTables()
 {
+  rsAssert((int) mod.size() == k+1, "Modulus polynomial has wrong degree!");
+  // The passed modulus polynomial does not fit together with the desired size of the field. For a
+  // field of size p^k, the modulus polynomial must have a degree of k, i.e. have k+1 coefficients.
+
   // Some shorthands for convenience:
   using ModInt = rsModularInteger<int>;
   using Poly   = rsPolynomial<ModInt>;
@@ -149,9 +153,6 @@ void rsFiniteFieldTables::createOperationTables()
   using Array  = std::vector<Poly>;         // Maybe use Table2D
   using VecI   = std::vector<int>;
   using MatI   = rsMatrix<int>;
-
-  rsAssert((int) mod.size() == k+1);
-  // The passed modulus polynomial does not fit together with the desired size of the field
 
   // Create the modulus polynomial:
   Poly m(k);
@@ -218,6 +219,20 @@ void rsFiniteFieldTables::createOperationTables()
   t2 = makeBinaryOpTable( r, t1, opAdd  ); sub = abstractifyTable2D(r, t2); // Subtraction
   t1 = makeInversionTable(r,     predRec); rec = abstractifyTable1D(r, t1); // Reciprocation
   t2 = makeBinaryOpTable( r, t1, opMul  ); div = abstractifyTable2D(r, t2); // Division
+
+
+  // ToDo: Maybe automatically make a self-test in debug builds like:
+  //
+  // rsAssert(isField()); 
+  //
+  // where isField() should check if all the field axioms are satiesfied with the given 
+  // operation tables. It may fail when the user passes a reducible polynomial to the constructor 
+  // by accident. We currently only check, if the polynomial has the right degree but not if its 
+  // actually irreducible. I guess, such a check would be rather complicated anyway (figure out!). 
+  // But what we can do with reasonable effort is checking if our resulting operation tables 
+  // satisfy the field axioms. See testFiniteField() in Experiments.cpp - there we do precisely 
+  // this. Well - it's O(n^3) because we need to iterate over all possible triples of elements for
+  // checking associativity and distributivity. So, it's not exactly cheap, though.
 }
 
 
@@ -311,6 +326,12 @@ Questions
   0 and 1 - but that does not help much. 
 
 - Can it help to take the degree of the polynomial in the polynomial representation as feature?
+
+- How about just picking one element x of the 1st representation (let's call it X) of our Galois 
+  field and map it to some element y of the 2nd representation Y. Then compute x^2 and y^2 and map
+  those to each other. Then compute x^3 and y^3 and map them to each other. Will that give use the
+  isomorphism? ...or at least bring us closer to it - and may we can adjust it bit more to get an 
+  actual isomorphism?
 
 
 

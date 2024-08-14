@@ -1,5 +1,5 @@
 \section{Elementary Combinatorics} 
-
+% Maybe call it "enumerative combinatorics"
 
 %\subsection{Selecting Elements from a Set} 
 \subsection{Collections of Set Elements} 
@@ -13,6 +13,9 @@
 % Notation: the set has n elements and we choose k from it
 
 % https://de.wikipedia.org/wiki/Abz%C3%A4hlende_Kombinatorik
+% https://en.wikipedia.org/wiki/Enumerative_combinatorics
+% "The problem of finding a closed formula is known as algebraic enumeration, and frequently involves deriving a recurrence relation or generating function and using this to arrive at the desired closed form"
+% "a simple asymptotic approximation may be preferable" ...Stirlings approximations
 
 % https://de.wikipedia.org/wiki/Abz%C3%A4hlende_Kombinatorik#Begriffsabgrenzungen
 % has a translation table between the German and English terms and also other nice tables
@@ -32,7 +35,7 @@ P_n^{(m_1,m_2,\ldots,m_k)}
 = \frac{n!}{m_1! m_2! \ldots m_k!} 
 = \binom{n}{m_1,m_2,\ldots, m_k}
 \end{equation}
-distinguishable permutations. These ares sometimes called \emph{multiset permutations} or \emph{permutations with repetition} [VERIFY!]. The numbers $m_i$ are called the \emph{multiplicities}. The quantity is also called the multinomial coefficient and it is a generalization of the binomial coefficient "$n$-choose-$k$" and the notation on the right hand side is a corresponding generalization of the usual binomial coefficient notation $\binom{n}{k}$. ...TBC..
+distinguishable permutations. These ares sometimes called \emph{multiset permutations} or \emph{permutations with repetition} [VERIFY!]. The numbers $m_i$ are called the \emph{multiplicities}. The quantity is also called the multinomial coefficient and it is a generalization of the binomial coefficient "$n$-choose-$k$" and the notation on the right hand side is a corresponding generalization of the usual binomial coefficient notation $\binom{n}{k}$. ...TBC... mention asymptotic approximations such as Stirling's formula and continuous variants as the product function(or its shifted version, the Gamma-function)
 
 % Leupold, pg 329
 % https://en.wikipedia.org/wiki/Permutation#Permutations_of_multisets
@@ -46,8 +49,19 @@ C_n^k = \binom{n}{k}
       = \frac{n \cdot (n-1) \cdot (n-2) \cdot \ldots \cdot (n-k+1)}{k!}
       = \frac{\prod_{m=n-k+1}^{n} m}{k!}
 \end{equation}
-which is, for this reason, typically pronounced as "$n$-choose-$k$". ...TBC...
+which is, for this reason, typically pronounced as "$n$-choose-$k$". In some situations, we may be allowed to choose an element more than once such that we do not form a (sub)set anymore but instead a multiset with elements picked from a given set. For the number different possible such combinations with repetition we get:
+\begin{equation}
+\prescript{r}{}{C}_n^k
+= \binom{n+k-1}{k}
+= \frac{n+k-1}{(n-1)! k!}
+= \left(\!\!{n\choose k}\!\!\right)
+\end{equation}
+where the top-left superscript $r$ stands for "with repetition"and the right notation that looks like binomial coefficient notation with double parentheses is sometimes used for this. This number is sometimes pronounced as "$n$-multichoose-$k$". VERIFY...TBC...
 
+% https://en.wikipedia.org/wiki/Combination#Number_of_combinations_with_repetition
+% notation with double parentheses, "n-multichoose-k"
+
+% https://tex.stackexchange.com/questions/5816/multiset-notation-in-latex
 % https://en.wikipedia.org/wiki/Combination
 
 
@@ -65,6 +79,10 @@ V_n^k = \frac{n!}{(n-k)!}
 % https://de.wikipedia.org/wiki/Variation_(Kombinatorik)
 
 % https://en.wikipedia.org/wiki/Partition_of_a_set
+
+
+
+\paragraph{Partitions}
 
 
 

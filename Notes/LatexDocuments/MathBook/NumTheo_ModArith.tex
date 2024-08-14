@@ -39,6 +39,20 @@ This conjecture states that every even natural number greater than $2$ can be wr
 % How about: Every natural number can be written as sum of 2 prime-powers? I have experimentally verified it in my head for numbers up to 20 (LOL!)...maybe write a little algorithm to test some more numbers.
 
 \paragraph{Collatz's Conjecture}
+Another unsolved number theoretic problem that is quite popular is the following: Consider the following simple algorithm: Start with any natural number $n > 1$. Now repeat: If the number is even, divide it by two, If the number is odd, triple it and add one. That means, in each iteration, you apply the simple function:
+\begin{equation}
+f(n) = \begin{cases}
+n/2    \qquad & \text{if $n$ is even}  \\
+3n + 1 \qquad & \text{if $n$ is odd}
+\end{cases}
+\end{equation}
+and take the result as input for the next iteration. The conjecture now says that for any starting value $n_0$, the iteration will eventually settle into the cycle $4-2-1-4-2-1-\ldots$. Experimentally, this was verified for numbers up to the order of $10^{20}$. The problem was brought up by Lothar Collatz in 1937 and his therefore named after him. Another name is the $3n + 1$ conjecture. There are generalizations......TBC...
+
+% https://en.wikipedia.org/wiki/Collatz_conjecture
+% https://de.wikipedia.org/wiki/Collatz-Problem
+% https://de.wikipedia.org/wiki/Collatz_Conjecture
+% https://www.spektrum.de/lexikon/mathematik/das-collatz-problem/1712
+% https://en.wikipedia.org/wiki/Collatz_conjecture#Experimental_evidence
 
 \begin{comment}
 -Modular addition and multiplication

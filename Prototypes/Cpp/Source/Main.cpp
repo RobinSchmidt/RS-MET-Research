@@ -88,7 +88,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNeumannRationals();
   //testPairingFunctions();
 
-  //testGeneralizedCollatz();
+  testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();

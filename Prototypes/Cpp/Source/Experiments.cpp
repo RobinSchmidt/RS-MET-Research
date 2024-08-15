@@ -9090,9 +9090,20 @@ void testBellTriangle()
   int maxN = 5;
   std::vector<int> B(maxN);
 
-  // Helper function:
+  // Helper function - needs tests:
   auto updateRow = [&](int i)
   {
+    //int a = B[i-1];
+    int b = B[0];
+    B[0]  = B[i-1];
+    for(int j = 1; j <= i; j++)
+    {
+      int c = B[j];
+      B[j] = b + B[j-1];
+      b = c;
+    }
+
+    /*
     int tmp1 = B[i-1];
 
     for(int j = 0; j <= i; j++)
@@ -9101,6 +9112,7 @@ void testBellTriangle()
       B[j] = B[j] + tmp1;
       tmp1 = tmp2;
     }
+    */
   
     return;
   };

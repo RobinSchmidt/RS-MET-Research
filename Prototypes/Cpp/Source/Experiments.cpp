@@ -9126,7 +9126,10 @@ void testBellTriangle()
   //    52  67  87 114 151 203
   //   203 255 322 409 523 674 877
   //
-  // The actual Bell numbers are always the last entries of each row.
+  // The actual Bell numbers are always the last entries of each row. So, the sequence of Bell 
+  // numbers is: 1,1,2,5,15,52,203,877,... The OEIS page is here: https://oeis.org/A000110. It 
+  // says that Bell numbers give "the number of equivalence relations that can be defined on a set
+  // of n elements"
   //
   // ToDo: factor out and turn into library function similar to the functions for Pascal's 
   // triangle.

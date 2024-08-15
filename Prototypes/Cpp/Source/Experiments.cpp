@@ -9082,6 +9082,22 @@ void testGeometricAlgebraNesting()
   //   from page 54 onwards, it talks about isomorphisms between different algebras
 }
 
+void testBellTriangle()
+{
+  // Under Construction. ToDo: implement this algorithm:
+  // https://en.wikipedia.org/wiki/Bell_number#Triangle_scheme_for_calculations
+
+  int maxN = 5;
+  std::vector<int> B(maxN);
+
+  B[0] = 1;
+  for(int n = 0; n < maxN; n++)
+  {
+    // ...something to do....
+  }
+
+  int dummy = 0;
+}
 
 void testEulerTransformation()
 {

@@ -11198,7 +11198,6 @@ void testFiniteFieldFingerprints()
 
   //int p = 2, k = 3; VecI m({1,1,0,1}); // GF(8)
   int p = 3, k = 4; VecI m({2,1,0,0,1}); // GF(81)
-  // plotFiniteField( 3, 4, Vec({2,1,0,0,1    }));      // 81
 
   Tbl tbl(p, k, m);
 
@@ -11225,9 +11224,9 @@ void testFiniteFieldFingerprints()
   // Observations:
   //
   // - With p=2, k=3: 
-  //   - The additive order of 0 is 1, of all other elements 2
+  //   -The additive order of 0 is 1, of all other elements 2
   //   -The multiplciative order of 0 and 1 is 1, of all other elements 7
-  //   -These features do not make for a menaingful fingerprint! :-( ..but they can be used to 
+  //   -These features do not make for a meaningful fingerprint! :-( ..but they can be used to 
   //    identify (i.e. find) additive and multiplicative identity, if we do not necessarily assume 
   //    that they are given by field elements with index 0 and 1. This will be the case, i.e. 
   //    actually can be assumed, in the current implementation - but that's an implementation 
@@ -11235,6 +11234,9 @@ void testFiniteFieldFingerprints()
   //    their orders make up for meaningful features? Although - maybe they don't even have an 
   //    order in the sense that we cycle back to the originla element. But they will certainly have 
   //    to enter *some kind* of repetitive cycle due to the finiteness of the set.
+  //
+  // - With p=3, k=4: 
+  //   -We get multiplicative orders of: 1,2,4,5,10,16,20,40,80
 }
 
 void testFiniteField()

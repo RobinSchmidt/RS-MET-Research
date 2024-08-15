@@ -9087,13 +9087,12 @@ void testBellTriangle()
   // Under Construction. ToDo: implement this algorithm:
   // https://en.wikipedia.org/wiki/Bell_number#Triangle_scheme_for_calculations
 
-  int maxN = 5;
+  int maxN = 7;
   std::vector<int> B(maxN);
 
   // Helper function - needs tests:
   auto updateRow = [&](int i)
   {
-    //int a = B[i-1];
     int b = B[0];
     B[0]  = B[i-1];
     for(int j = 1; j <= i; j++)
@@ -9102,18 +9101,6 @@ void testBellTriangle()
       B[j] = b + B[j-1];
       b = c;
     }
-
-    /*
-    int tmp1 = B[i-1];
-
-    for(int j = 0; j <= i; j++)
-    { 
-      int tmp2 = B[j];
-      B[j] = B[j] + tmp1;
-      tmp1 = tmp2;
-    }
-    */
-  
     return;
   };
 
@@ -9121,11 +9108,25 @@ void testBellTriangle()
   for(int i = 1; i < maxN; i++)
   {
     updateRow(i);
-
-    // ...something to do....
+    int dummy = 0;
   }
 
+  // The first few rows of the Bell triangle are:
+  //
+  //     1
+  //     1   2
+  //     2   3   5
+  //     5   7  10  15
+  //    15  20  27  37  52
+  //    52  67  87 114 151 203
+  //   203 255 322 409 523 674 877
+  //
+  // The Bell numbers are always the last entries of each row
+
   int dummy = 0;
+
+  // https://en.wikipedia.org/wiki/Bell_triangle
+  // https://mathworld.wolfram.com/BellTriangle.html
 }
 
 void testEulerTransformation()

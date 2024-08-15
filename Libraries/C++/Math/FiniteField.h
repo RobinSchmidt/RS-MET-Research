@@ -247,7 +247,4 @@ rsFiniteFieldElement rsIntValue(int value, rsFiniteFieldElement targetTemplate)
 // needs test
 
 
-// ToDo: add rsIntValue, rsZeroValue - see rsModularInteger
-
-
 }

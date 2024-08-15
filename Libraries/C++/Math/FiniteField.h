@@ -228,11 +228,26 @@ protected:
 
 };
 
+rsFiniteFieldElement rsZeroValue(rsFiniteFieldElement value)
+{ 
+  return rsFiniteFieldElement(0, value.getTables()); 
+}
+// needs test
 
 rsFiniteFieldElement rsUnityValue(rsFiniteFieldElement value)
 { 
   return rsFiniteFieldElement(1, value.getTables()); 
 }
+// needs test
+
+rsFiniteFieldElement rsIntValue(int value, rsFiniteFieldElement targetTemplate) 
+{ 
+  return rsFiniteFieldElement(value, targetTemplate.getTables()); 
+}
+// needs test
+
+
+// ToDo: add rsIntValue, rsZeroValue - see rsModularInteger
 
 
 }

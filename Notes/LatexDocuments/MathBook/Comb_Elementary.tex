@@ -41,6 +41,9 @@ distinguishable permutations. These ares sometimes called \emph{multiset permuta
 % https://en.wikipedia.org/wiki/Permutation#Permutations_of_multisets
 % https://en.wikipedia.org/wiki/Multinomial_theorem#Multinomial_coefficients
 
+% Nice example:
+% https://www.tutorchase.com/notes/cie-a-level/maths/4-2-2-arrangements-with-repetition
+
 \paragraph{Combinations}
 Imagine we have a set of size $n$ and we are asked how many different subsets of size $k$ we can form from this set. That is: how many different ways are there to choose $k$ elements from a set of $n$ elements. It doesn't matter in which order we chose the elements - as long as the total set of chosen elements is the same, our created subset is considered to be the same (remember that in sets, order doesn't matter - it isn't even a thing\footnote{Unless you \emph{define} an order \emph{on top} of the set - but a set all by itself does not have a notion of order built into it.}). We call these different subsets of size $k$ of a given set of size $n$ \emph{combinations} or, more specifically, $k$-combinations. The number of possible $k$-combinations from a set of size $n$ is given by the binomial coefficient:
 \begin{equation}
@@ -67,20 +70,30 @@ where the top-left superscript $r$ stands for "with repetition"and the right not
 
 \paragraph{Variations}
 %The number of \emph{variations} of $n$ distinguishable objects is given by:
+Now we have given a set of size $n$ and the task is to choose $k$ objects from it and put them into a given order. How many ways are there to do this? That is, how many different $k$-tuples can be formed from elements of a set of size $n$? If we allow an object to be chosen more than once, these tuples are is called \emph{variations with repetition} or \emph{arrangements with repetition} and there are:
+\begin{equation}
+\prescript{r}{}{V}_n^k = n^k
+\end{equation}
+of them. Again, the $r$ stands for "with repetition". In this setup, the number $k$ can even be greater than $n$. In such a case, obviously, there \emph{must} be repetitions. We could, for example, ask how many different strings of length $7$ could be formed from the $3$ letters $a,b,c$. The answer is $3^7 = 2187$. If repetitions are not allowed, we call it \emph{variations/arrangements with repetition} and there are:
 \begin{equation}
 V_n^k = \frac{n!}{(n-k)!} 
       = n \cdot (n-1) \cdot (n-2) \cdot \ldots \cdot (n-k+1) 
       = \prod_{m=n-k+1}^{n} m
 \end{equation}
+of them. ...VERIFY! ...TBC...
 
 % https://en.wikipedia.org/wiki/Permutation#Other_uses_of_the_term_permutation
 % k-permutation of n, partial permutation, sequence without repetition, variation, or arrangement
+
+% https://en.wikipedia.org/wiki/Falling_and_rising_factorials
 
 % https://de.wikipedia.org/wiki/Variation_(Kombinatorik)
 
 % https://en.wikipedia.org/wiki/Partition_of_a_set
 
-
+% https://www.tutorchase.com/notes/cie-a-level/maths/4-2-2-arrangements-with-repetition
+% 
+% https://stackoverflow.com/questions/2366074/code-for-variations-with-repetition-combinatorics
 
 \paragraph{Partitions}
 

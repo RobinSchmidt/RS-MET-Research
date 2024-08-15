@@ -9093,13 +9093,14 @@ void testBellTriangle()
   // Helper function - needs tests:
   auto updateRow = [&](int i)
   {
-    int b = B[0];
-    B[0]  = B[i-1];
+    int tmp1, tmp2;
+    tmp1 = B[0];
+    B[0] = B[i-1];
     for(int j = 1; j <= i; j++)
     {
-      int c = B[j];
-      B[j] = b + B[j-1];
-      b = c;
+      tmp2 = B[j];
+      B[j] = tmp1 + B[j-1];
+      tmp1 = tmp2;
     }
     return;
   };
@@ -9111,6 +9112,10 @@ void testBellTriangle()
     int dummy = 0;
   }
 
+  // OK - setting a debug breakpoint after updateRow() and inspecting the results, we see that we 
+  // indeed get the i-th row of the Bell triangle (in B) in the i-th iteration of the loop. So the
+  // algorithm works.
+  //
   // The first few rows of the Bell triangle are:
   //
   //     1
@@ -9121,7 +9126,10 @@ void testBellTriangle()
   //    52  67  87 114 151 203
   //   203 255 322 409 523 674 877
   //
-  // The Bell numbers are always the last entries of each row
+  // The actual Bell numbers are always the last entries of each row.
+  //
+  // ToDo: factor out and turn into library function similar to the functions for Pascal's 
+  // triangle.
 
   int dummy = 0;
 

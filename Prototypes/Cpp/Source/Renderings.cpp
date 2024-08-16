@@ -260,7 +260,7 @@ rsImage<TPix> rsMathContourPlotter<TPix, TVal>::contourFills(
 /** Applies a 3x3 box filter to all inner pixels for which the given predicate/condition evaluates
 to true. The condition expects the pixel's value as input. */
 template<class TPix, class TPred>
-rsImage<TPix> smoothCondionally(const rsImage<TPix>& in, TPred cond)
+rsImage<TPix> smoothConditionally(const rsImage<TPix>& in, TPred cond)
 {
   rsImage<TPix> out(in.getWidth(), in.getHeight());
   for(int y = 1; y < in.getHeight()-1; y++) {
@@ -357,15 +357,15 @@ void imgRainbowRadiation()
 
   // Conditional smoothing to get rid of the white line artifacts:
   Real thresh = 0.75;
-  red   = smoothCondionally(red,   [&](Real v){ return v >= thresh; });
-  green = smoothCondionally(green, [&](Real v){ return v >= thresh; });
-  blue  = smoothCondionally(blue,  [&](Real v){ return v >= thresh; });
+  red   = smoothConditionally(red,   [&](Real v){ return v >= thresh; });
+  green = smoothConditionally(green, [&](Real v){ return v >= thresh; });
+  blue  = smoothConditionally(blue,  [&](Real v){ return v >= thresh; });
 
 
 
   // Blur the bright green areas:
   for(int i = 1; i <= 2*scale; i++)
-    green = smoothCondionally(green, [&](Real v){ return v >= 0.3; });
+    green = smoothConditionally(green, [&](Real v){ return v >= 0.3; });
 
   // Darken green a bit via gamma;
   IP::gammaCorrection(green, 1.3);
@@ -415,9 +415,10 @@ void testImageFractalization()
   // black in (0,0),(1,1) and white in (0,1),(1,0). 
 
   using Algo = rsImageFractalizer<float, float>::Algorithm;
+  using IP   = rsImageProcessor<float>;
   rsImageFractalizer<float, float> f;
   rsImageF fractal;
-
+  rsImageF imgR, imgG, imgB;
 
   // Create seed images:
   rsImageF seedDiag2x2(2,2);
@@ -452,6 +453,7 @@ void testImageFractalization()
   writeScaledImageToFilePPM(seedDiag3x3, "SeedX3x3.ppm");
 
 
+  /*
   // Create different fractalizations:
   f.resetParameters();
   f.setAlgorithm(Algo::scaleOriginal);
@@ -480,8 +482,6 @@ void testImageFractalization()
   fractal = f.apply(seedX3x3);
   writeScaledImageToFilePPM(fractal, "Fractal_SeedX3x3_AlgOrg_Scl3_Lvl5.ppm");
 
-
-
   f.resetParameters();
   f.setAlgorithm(Algo::scaleCurrent);
   f.setScale(2);
@@ -503,6 +503,32 @@ void testImageFractalization()
   f.setNumLevels(5);
   fractal = f.apply(seedCross3x3);
   writeScaledImageToFilePPM(fractal, "Fractal_SeedCross3x3_AlgOrg_Scl3_Lvl5.ppm");
+  */
+
+  // RGB image - use different fractal patterns for different color channels:
+  f.resetParameters();
+  f.setAlgorithm(Algo::scaleOriginal);
+  f.setScale(3);
+  f.setNumLevels(5);
+  imgR = f.apply(seedCross3x3);  // R: Cross
+  imgB = f.apply(seedX3x3);      // B: X (diagonal cross)
+  imgG = f.apply(seedDot3x3);    // G: Menger carpet
+  writeImageToFilePPM(imgR, imgG, imgB, "Fractal_RedCross_BlueX_GreenMenger.ppm");
+  // Not very pretty but interesting. Benefits from gamma correction with values < 1 like 0.25
+  // (in Irfan view - not sure, if my gamma implementation responds the same way - might be 
+  // reversed, so maybe my gamma implementation needs to use 4 instead). ToDo: try different 
+  // gammas for the different channels. Irfan view can't do this.
+  // Negating the green channel is also nice
+
+  // Some post-processing:
+  IP::invert(imgG);
+  IP::gammaCorrection(imgG, 8.0f);
+  IP::scaleBrightness(imgG, 0.5f);
+  IP::gammaCorrection(imgR, 4.0f);
+  IP::gammaCorrection(imgB, 3.0f);
+  writeImageToFilePPM(imgR, imgG, imgB, "Fractal_RedCross_BlueX_GreenMenger_2.ppm");
+
+
 
 
   // Ideas for extension:

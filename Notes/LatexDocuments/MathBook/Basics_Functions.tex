@@ -271,6 +271,7 @@ The piecewise definition on the right hand side is how we usually think of $|x|$
 
 \medskip
 \begin{tabular}{l l}
+\label{Tab:Norm}
 Non-negative:         & $|x| \geq 0$  \\
 Positive definite:    & $|x| = 0 \Leftrightarrow x = 0$  \\
 Multiplicative:       & $|x \cdot y| = |x| \cdot |y| $  \\
@@ -280,6 +281,8 @@ Triangle inequality:  & $|x + y| \leq |x| + |y| $
 %https://en.wikipedia.org/wiki/Norm_(mathematics)
 % Die rationalen Zahlen liegen dicht (wie feiner Staub) in der Menge der reellen Zahlen
 % https://www.youtube.com/watch?v=lWTf_Isveso
+% I think, the non-negative property is already included in "positive definite". Maybe state it as:
+% Positive definite:    & $|x| \geq 0,  |x| = 0 \Leftrightarrow x = 0$  \\
 
 The idea of a norm function is that it should somehow measure the "size" of the object that it is being applied to. The first two conditions say that a norm can never be negative and it is zero if and only if the input is itself already zero. These conditions do indeed sound like some minimum requirements that we expect such a "norm" function to have if it should be interpretable as a size. Multiplicativity and triangle inequality are less obvious. The latter basically means that a direct path is always shorter than a roundabout path. We'll say more about this when we will meet vectors. These four are the properties that all functions shall have if they want to deserve to qualify for calling them a "norm" even when $x$ and $y$ can later be more complicated objects than real numbers. Some more properties immediately follow from these: $|x/y| = |x|/|y|$, $|x-y| = |x| + |y|$, $\bigl| (|x|-|y|) \bigr| \leq |x \pm y|$. In programming languages, the absolute value function is often called "abs". % and we may use that term as convenient abbreviation. 
 

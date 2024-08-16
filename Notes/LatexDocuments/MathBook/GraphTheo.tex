@@ -1,7 +1,63 @@
 \chapter{Graph Theory}
-Graph theory is the mathematical theory of, as you surely may have guessed from the name, networks. What? ...yeah - the name "graph theory" is yet another example of questionable naming in math. The name "graph" in mathematics was actually already taken by function graphs where it is more appropriate because such functions graphs are something we actually draw. In graph theory, the same name is used for an entirely different idea: a network of nodes that is connected by edges. That what graph theory is all about: how are a bunch of objects connected to each other. This can be used to mathematically model relationships between objects...TBC
+Graph theory is the mathematical theory of, as you surely may have guessed from the name, networks. What? ...yeah - the name "graph theory" is yet another example of questionable naming in math. The name "graph" in mathematics was actually already taken by function graphs where it is more appropriate because such functions graphs are something we actually draw. In graph theory, the same name is repurposed for an entirely different idea: a network of \emph{nodes} (or \emph{vertices}) that is connected by \emph{edges}. That what graph theory is all about: how are a bunch of objects connected to each other. This can be used to mathematically model relationships between objects such as friendships between people, neighborhood of countries, connections in transport systems, etc. In the first case, the nodes would be persons and the edges would be friendships. In the second case, the nodes would be countries and the edges would be borders. In the third case, the nodes would locations and the edges would be roads or railways. If you ask your navigation system to find the shortest (or fastest) route between your current location and some destination, then the algorithm that will figure it out is based on graph theory. ...TBC
+
+% connectedness - discrete topology - you can put a mesh on a geometric object and interpret it
+% as a graph and then run algorithms ion that mesh to figure out topological invariants (such as number of holes, connectedness, etc.)...i think.
+
+% Königsberger Brücken problem
+
+% friendships between people, connections in transport systems (roads, railway, airlines), neighborhood on geographical maps
 
 %However, a graph ...TBC...
+
+% Types of graphs: un/weighted, un/directed, multigraphs, graphs with additional data at the nodes and/or edges. 
+
+%\section{Representations of Graphs}
+% adjacency lists/matrices, edge set
+
+% Notation and terminology:
+% -Example: G = (V,E), V = {1,2,3,4}, E = {(1,3), (1,2), (2,3), (3,4)}
+% -two nodes are called "neighbours" when there is an edge between them
+% -"degree" of a node: number of neighbors
+% -A subgraph is a formed by a subset of the vertices and a subset of the edges with the
+%  constraint that all egde endpoints must be included in the vertex set (i.e. we do not 
+%  include dangling edges)
+% -a "path" is sequence of nodes with edges between successive nodes
+%  Ex: 1 -> 3 -> 4
+% -The "length" of a path is the number of edges it contains
+% -trail: path in which ...? or no - it says it's a "walk". What's the difference between path
+%  and walk?
+%  https://en.wikipedia.org/wiki/Path_(graph_theory)#Walk,_trail,_and_path
+% -A "cycle" is a path that ends at the same vertex where it started, i.e. it's a closed loop
+% -A grpah is called "cyclic" if it contains at least one cycle, otherwise "acyclic"
+% -Two vertices are "connected" if there exists a path between them
+% -A graph is connected when all vertices are pairwise connected
+% -A connected component of a graph is a subgraph that is connected
+%
+% Types:
+% -undirected: egdes are understood to connect both ways
+% -directed: egdes have only one direction
+% -weighted: each edge has  weight assoicated with it
+
+% Important special cases:
+% -Directed acyclic graph (DAG)
+% -Tree: connected, acyclic, removing an edge disconnects the graph (simply connected? nah!),
+%  adding an edge creates a cycle
+%  https://www.youtube.com/watch?v=LFKZLXVO-Dg  at 9:53
+
+% bipartite, tripartite, ..., planar, fully connected
+
+% https://en.wikipedia.org/wiki/Glossary_of_graph_theory
+
+% https://en.wikipedia.org/wiki/Hypergraph
+
+% Typical problems:
+% -existence of path between two nodes
+% -is a graph connected? cyclic?
+% -shortest path between two nodes
+% -path thas uses every vertex (or edge) exactly once (these are two different questions!)
+%  "Euler path" - no edge twice. "Hamilton path" - no vertex twice.
+% -coloring problems
 
 \begin{comment}
 
@@ -19,5 +75,8 @@ https://www.youtube.com/watch?v=DgXR2OWQnLc&list=PLDV1Zeh2NRsDGO4--qE8yH72HFL1Km
 
 Graph theory full course for Beginners
 https://www.youtube.com/watch?v=sWsXBY19o8I
+
+% Introduction to Graph Theory: A Computer Science Perspective
+% https://www.youtube.com/watch?v=LFKZLXVO-Dg
 
 \end{comment}

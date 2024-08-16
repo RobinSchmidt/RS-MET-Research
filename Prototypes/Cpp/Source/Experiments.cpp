@@ -9084,8 +9084,9 @@ void testGeometricAlgebraNesting()
 
 void testBellTriangle()
 {
-  // Under Construction. ToDo: implement this algorithm:
+  // Prototype implementation of this algorithm:
   // https://en.wikipedia.org/wiki/Bell_number#Triangle_scheme_for_calculations
+  // for producing rows of the Bell triangle (aka Aitken's array or Peirce triangle).
 
   int maxN = 7;
   std::vector<int> B(maxN);
@@ -9102,7 +9103,6 @@ void testBellTriangle()
       B[j] = tmp1 + B[j-1];
       tmp1 = tmp2;
     }
-    return;
   };
 
   B[0] = 1;
@@ -9127,12 +9127,18 @@ void testBellTriangle()
   //   203 255 322 409 523 674 877
   //
   // The actual Bell numbers are always the last entries of each row. So, the sequence of Bell 
-  // numbers is: 1,1,2,5,15,52,203,877,... The OEIS page is here: https://oeis.org/A000110. It 
-  // says that Bell numbers give "the number of equivalence relations that can be defined on a set
-  // of n elements"
+  // numbers is: 1,1,2,5,15,52,203,877,... The OEIS page is here: https://oeis.org/A000110. It has
+  // this other prepended 1 that we don't see here in this implementation. Must be some sort of 
+  // edge case that the code doesn't account for. OEIS says that Bell numbers give "the number of 
+  // equivalence relations that can be defined on a set of n elements". So, the Bell numbers give 
+  // the number of possible partitions of a set because an equivalence relation always defines a 
+  // partition and vice versa. So, to explain the leading 1, I guess, we have 1 partition of the 
+  // singleton set and by definition also 1 for the empty set? Oh - when we just read the first
+  // column downward instead of the diagonal, we also get the Bell numbers but this time *with* 
+  // the leading 1.
   //
   // ToDo: factor out and turn into library function similar to the functions for Pascal's 
-  // triangle.
+  // triangle. The helper function updateRow should take a pointer to int for B.
 
   int dummy = 0;
 

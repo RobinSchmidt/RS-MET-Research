@@ -65,7 +65,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testGeometricAlgebraNesting();
 
   // Math:
-  testBellTriangle();            // stub
+  //testBellTriangle();
   //testEulerTransformation();
   //testCesaroSum();
   //testFejerSum();
@@ -77,7 +77,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();
-  testFiniteField();
+  //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();
   //testPolynomialQuotientRing();  // stub

@@ -257,7 +257,14 @@ too. Weitz says nothing about that because he's only covering the case for p=2 i
 reduces to xor such that no table is needed. The method there uses a primitive k-th (?) root of 
 unity, i.e. a number that, when multiplied by itself k times gives one. Maybe an analog for
 addition could be a number that when added to itself k times gives zero? And that number would 
-be just the number 1, regardless of the modulus? ...  figure this out!
+be just the number 1, regardless of the modulus? ...  See here at 31:19
+https://www.youtube.com/watch?v=4BfCmZgOKP8
+I think, we can replace the 2D multiplication table lookup by two 1D table lookups, a modular 
+addition and another 1D table lookup. But what about addition? Subtraction and division can, of 
+course, be implemented in terms of addition and multiplication by consulting the negation and 
+reciprocal (i.e. inversion) tables. Maybe addition can be done by interpreting the indices of
+the operands in base p and adding their digits without carry?
+
 
 What happens if we use a cartesian product of modular integers, i.e. what if we take e.g.
 Z_7 x Z_7 x Z_7 with element-wise addition, multiplication and inversion? Will that produce
@@ -300,14 +307,31 @@ Questions
 - Can we always find a homomorphism from GF(p^k) to GF(p^(k-1)) and therefore, by induction, to
   GF(p)? Try to write a function that produces such homomorphisms.
 
-- Maybe one way to approach this problem fo finding isomorphisms is to take some sort of 
+- Maybe one heuristic way to approach this problem of finding isomorphisms is to take some sort of 
   "fingerprint" of each field element x and then find the element with the same fingerprint in the
   other set. The fingerprint could consist of features like: additive order, multliplicative order,
   mapped element in GF(p) in the homomorphism mentioned above (if that works out), orders of other 
   operations like (a*a + a), (a^3 + a), (a^3 + a^2), etc. Additive and multiplciative order are 
   just special cases where we use (a + a), (a * a). When the fingerprint is taken, look in the 
   other isomorphic set for the element that has the same fingerprint. That's the function value 
-  f(x) of our isomorphism - or at least, it is a possible candidate for the function value.
+  f(x) of our isomorphism - or at least, it is a possible candidate for the function value. But: 
+  not all operations cycle back to their original seed value. Instead, they may have a transient
+  phase and then enter a cycle. So we need to describe the "response" of an element to an iterative
+  rule by two integers: the length of the initial transient phase and the length of the cycle. We
+  could call this response the "operational fingerprint". The total fingerprint is then the set of
+  responses to all the different operations/algorithms that we use. An algorithm always has a seed
+  and a state, initializes the state with the seed and then iterates: op(seed, state). The see is 
+  our resepective element under investugation. For example,
+  multiplciative order is found by:  
+    init:    state = seed; 
+    iterate: state = op(seed, state) = state * seed;
+  We can do arbitrarily complicated things in "op". For example:
+    op(seed, state) = (state*state + seed + 1) / seed;
+  We can be creative here. The goal is to find operations to which many elements respond 
+  differently so we can distinguish them via their responses. the more operations we include in 
+  taking the fingerprint, the more likely we are to whittle down the list of candidates for the 
+  mapped value f(x). If the fingerprint does not yet uniquely pin down f(x), we may try all 
+  possible remaining candidate mappings, if that number is small enough.
 
 - What set of features will give us a fingerprint that lets us uniquely determine the desired 
   function value f(x) for a given field element x? Or maybe unary features are not good enough and 
@@ -332,6 +356,7 @@ Questions
   those to each other. Then compute x^3 and y^3 and map them to each other. Will that give use the
   isomorphism? ...or at least bring us closer to it - and may we can adjust it bit more to get an 
   actual isomorphism?
+
 
 
 

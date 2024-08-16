@@ -1,4 +1,4 @@
-\section{Modular Arithmetic}
+\section{Modular Integers}
 
 
 % Some authors use the abbreviation $\mathbb{Z}_p = \mathbb{Z} / p \mathbb{Z}$ exclusively in the case where $p$ is prime. I have never seen a convincing justification for such a restriction (actually, not ever any justification at all), so I will liberally use the notation $\mathbb{Z}_n = \mathbb{Z} / n \mathbb{Z}$ also for composite numbers $n$.
@@ -28,6 +28,59 @@
 
 %###################################################################################################
 % Maybe move into its own file
+\section{Other Number Systems}
+
+\subsection{Quadratic Integers}
+
+% Quadratic Integers and Primes
+% https://www.youtube.com/playlist?list=PLRcOL8MUr-pcIbez7ZRalqnSmYvLT00Fd
+
+\subsubsection{Gaussian Integers}
+
+\subsubsection{Eisenstein Integers}
+
+\subsection{Cyclotomic Integers}
+
+
+\subsection{$p$-adic Numbers}
+
+\subsubsection{Convergence on $\mathbb{Q}$}
+We know from calculus that a sequence of (rational) numbers is said to converge to a limit $L$ if the distance between $L$ and the sequence elements becomes arbitrarily small. By that, we implicitly assume that by "distance" we mean the absolute value of the difference. It turns out that by defining a different distance measure, we can re-purpose this definition of convergence to mean something different. ...TBC...
+
+\paragraph{Distance Metrics}
+As distance between two numbers, we usually take the norm of their difference where "norm", so far, was just a fancy word for "absolute value". We know from one of the very first chapters (page \ref{Tab:Norm}) that there are a couple of properties that we expect from a sensible norm: positive definiteness, multiplicativity and triangle inequality. The usual absolute value on the rational numbers satisfies these requirements. It turns out, though, that there is an alternative possibility that also satisfies them. ...TBC...
+
+% -define what properties a metric has to satisfy
+% -state Ostrowski's theorem: there are onyl two possible metrics on the rationals:
+%  -the normal absolute value of difference
+%  -the p-adic metric
+
+% Mathematicians Use Numbers Differently From The Rest of Us
+% https://www.youtube.com/watch?v=tRaq4aYPzCc  by Veritasium
+% -about p-adic numbers
+
+% https://www.youtube.com/watch?v=o02uipdcT7Y  How to Wrangle Infinity (an intro to p-adic numbers)
+% https://www.youtube.com/watch?v=v9QTK7zBAhw  Intuition for the p-adic metric
+% https://www.youtube.com/watch?v=aSxvz0NUXfc  Ostrowski's Theorem (p-adic metric continued)
+
+% 1 Billion is Tiny in an Alternate Universe: Introduction to p-adic Numbers
+% https://www.youtube.com/watch?v=3gyHKCDq1YA
+
+% [ANT15] p-adic integers: a primer, and an application (part 1)
+% https://www.youtube.com/watch?v=SwbJmKbFo7o
+
+% -The notion of convegergence of a sequence is formally the same: the distance between successive
+%  elements must get arbitraily small - but it means something very different because the distance
+%  is defined in a very different way.
+% -Numbers that extend have many digits may have very small absolute value
+% -The numbers exntend infinitely to the left
+% -the number of zeros on the right end tells us, how often the number is divisible by the base
+% -Ostrowski's theorem: there are only two notrivial metrics on the rationals: the usual abs-of-dif
+%  and the p-adic metric
+
+
+%###################################################################################################
+% Maybe move into its own file
 \section{Open Problems}
 The field of number theory is full of open problems that are well known in popular math. This is because the problems are often easy to state but have turned out to be really hard to solve. Some problems can be understood with just middle school or even elementary school math background but even the best mathematicians in the world were not yet able to solve them. That's what makes them so charming for exposition in pop-math.
 
@@ -53,6 +106,11 @@ and take the result as input for the next iteration. The conjecture now says tha
 % https://de.wikipedia.org/wiki/Collatz_Conjecture
 % https://www.spektrum.de/lexikon/mathematik/das-collatz-problem/1712
 % https://en.wikipedia.org/wiki/Collatz_conjecture#Experimental_evidence
+
+
+% The Oldest Unsolved Problem in Math
+% https://www.youtube.com/watch?v=Zrv1EDIqHkY
+% -Do odd perfect numbers exist?
 
 \begin{comment}
 -Modular addition and multiplication

@@ -11322,9 +11322,6 @@ bool isIsomorphism(const std::vector<int>& f,
 
   int n = (int) f.size();
 
-  //int p1 = tbl1.getBase();
-  //int k1 = tbl1.getExponent();
-
   bool ok = true;
 
   for(int i = 0; i < n; i++)
@@ -11337,66 +11334,70 @@ bool isIsomorphism(const std::vector<int>& f,
       Elem fb(f[j], &tbl2);
 
       // Check that f(a + b) = f(a) + f(b):
-
       Elem s1 = a  + b;          // Sum in 1st field
       Elem s2 = fa + fb;         // Sum in 2nd field
       int  k  = s1.getValue();
       Elem fs(f[k], &tbl2);      // Sum of 1st field mapped into 2nd field via f
       ok &= s2 == fs;
 
-      // ToDo:
-      // Do the same check for multiplication
-
-
-      int dummy = 0;
+      // Check that f(a * b) = f(a) * f(b):
+      Elem p1 = a  * b;          // Product in 1st field
+      Elem p2 = fa * fb;         // Product in 2nd field
+      k       = p1.getValue();
+      Elem fp(f[k], &tbl2);      // Product of 1st field mapped into 2nd field via f
+      ok &= p2 == fp;
     }
   }
 
-
-
   return ok;
-
 
   // Maybe implement it in terms of a function isHomomorphism
 }
 
 void testFiniteFieldIsomorphsim()
 {
-  // Under construction
+  // Under construction - not yet very promising
 
   // We create the two versions of GF(8) that result from using   1 + x + x^3  and  1 + x^2 + x^3
   // as modulus polynomial. They are isomorphic. We try to figure put the isomorphism explicitly.
   // ...TBC...
 
   using Tbl  = rema::rsFiniteFieldTables;
-  //using Elem = rema::rsFiniteFieldElement;
   using VecI = std::vector<int>;
-  //using VecE = std::vector<Elem>;
-
-
 
   Tbl tbl1(2, 3, VecI({1,1,0,1})); //  1 + x + x^3
   Tbl tbl2(2, 3, VecI({1,0,1,1})); //  1 + x^2 + x^3
 
   // The reciprocal tables are:
-  // G1:  0  1  2  3  4  5  6  7      1st Galois field, our input x
-  // R1:  0  1  5  6  7  2  3  4      ...and its reciprocals
-  // R2:  0  1  6  4  3  7  2  5
+  // G1:  0  1  2  3  4  5  6  7      Galois field member index, our input x
+  // R1:  0  1  5  6  7  2  3  4      reciprocals in 1st field ("rec" in tbl1)
+  // R2:  0  1  6  4  3  7  2  5      reciprocals in 2nd field ("rec" in tbl2)
   //
-  // G2   0  1  7  2  5  6  4  3      isomorphism f(x)
+  // G2   0  1  7  2  5  6  4  3      isomorphism f(x) ...nope doesn't seem to work
+  // G2   0  1  3  7  6  4  5  2      2nd try
   //
   //
   // algo: read index i in top row (e.g. 2), read off its reciprocal in 2nd row (e.g. 5), find that
   // number in the 3rd row (5 is in position 7 in 3rd row). That 7 is where 2 gets mapped to.
-  // ...I think - not sure...try it!
+  // ...I think - not sure...try it! the idea is to reciprocate in field 1 and then reciprocate 
+  // that again in field 2 - i.e. compose the two reciprocations of both fields to get the mapping:
+  // f(x) = r2(r1(x)) where r1 is reciprocation in field 1 and r2 reciprocation in field 2.
+  // Wait - no - that's not the idea. 
+  // But nope - it doesn't seem to work - maybe instead of mapping 2 to 7, we should map 7 to 2? 
+  // That's the 2nd try
+  // Yet another try: map the indices of 2nd and 3r row to each other. 2 has reciprocal 5 in GF1 
+  // and reciprocal 6 in GF2 - so we must map, 6 to 5, I think. Or 5 to 6?
 
   // This is our proposed isomorphism
-  VecI f = {0,1,7,2,5,6,4,3};
+  //VecI f = {0,1,7,2,5,6,4,3};    // 1st try - nope!
+  //VecI f = {0,1,3,7,6,4,5,2};    // 2nd try - nope!
+  //VecI f = {0,1,7,2,5,6,7,3};    // 3rd try - nope!
+  //VecI f = {0,1,3,7,6,4,5,2};    // 4th try - nope!
 
-  // ToDo:
-  bool ok = isIsomorphism(f, tbl1, tbl2);
-
-
+  //bool ok = isIsomorphism(f, tbl1, tbl2);
+  // Nope! That fails! None of the 4 mapping seem to work as isomorphism.
+  // The idea doesn't seem to work. -> Back to the drawing board!
+  // Verify the isIsomorphism also!
 
 
   int dummy = 0;

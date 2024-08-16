@@ -11300,12 +11300,40 @@ void testFiniteFieldFingerprints()
   //
   // - With p=3, k=4: 
   //   -We get multiplicative orders of: 1,2,4,5,10,16,20,40,80
+  //   -additive orders are 3 (except for 0 which has 1)
+  //   -I think, that means, the field decomposes into 27 subsets which are additively closed.
+  //    -> Verify! I think in general, we'll get p^(k-1) additively closed subsets. Can we leave
+  //    these subsets by multiplying their elements. ...Maybe not always - think about the subset
+  //    that arises from the constant polynomials. Multiplying their elements will still give 
+  //    results that are represented by constant polynomials.
+}
+
+void testFiniteFieldIsomorphsim()
+{
+  // We create the two versions of GF(8) that result from using   1 + x + x^3  and  1 + x^2 + x^3
+  // as modulus polynomial. They are isomorphic. We try to figure put the isomorphism explicitly.
+  // ...TBC...
+
+  using Tbl  = rema::rsFiniteFieldTables;
+  //using Elem = rema::rsFiniteFieldElement;
+  using VecI = std::vector<int>;
+  //using VecE = std::vector<Elem>;
+
+
+
+  Tbl tbl1(2, 3, VecI({1,1,0,1})); //  1 + x + x^3
+  Tbl tbl2(2, 3, VecI({1,0,1,1})); //  1 + x^2 + x^3
+
+
+
+  int dummy = 0;
 }
 
 void testFiniteField()
 {
-  testFiniteFieldFingerprints();
-  plotFiniteFields();
+  testFiniteFieldIsomorphsim();
+  //testFiniteFieldFingerprints();
+  //plotFiniteFields();
 
   bool ok = true;
   ok &= testFiniteField1();

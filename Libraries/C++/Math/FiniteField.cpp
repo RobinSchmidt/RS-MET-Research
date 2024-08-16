@@ -355,7 +355,21 @@ Questions
   field and map it to some element y of the 2nd representation Y. Then compute x^2 and y^2 and map
   those to each other. Then compute x^3 and y^3 and map them to each other. Will that give use the
   isomorphism? ...or at least bring us closer to it - and may we can adjust it bit more to get an 
-  actual isomorphism?
+  actual isomorphism? Or maybe compute x + 1 and y + 1 and map them to each other. then add to 
+  those 1 again and map them to each other. i think, we will eventuall come bck to x and y before 
+  we have exhausted the whole set. But then we already have a lot more mappings pinned down. Maybe
+  from that set, we can start forming products and map them to one another, etc.
+
+- Can we perhaps find one element that we can use as generator and then use that to generate all
+  elements x in X and their counterparts y in Y by using y as parallel generator? How about the 
+  element represented by the polynomial p(x) = x. It could generate all the powers of x. We can 
+  use p(x) = 1 to generate all the constants. With the constants 1,2,3,... and the monomials
+  x^1,x^2,x^3,... we could generate all elements.
+
+- Or: we actually know the polynomials that the indices represent - thes don not change from one
+  modulus polynomial to another - they are always the ame and have always the same order. Maybe it
+  therefore is sufficient to look at the reciprocal tables of two isomorphic GFs to figure out the
+  isomorphism
 
 
 

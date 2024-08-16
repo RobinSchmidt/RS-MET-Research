@@ -1434,6 +1434,8 @@ The undecidability of the CH from ZFC means that, within the system of ZFC, we c
 \subsection{Consequences of the Axiom of Choice}
 The axiom of choice, abbreviated as AC, is the most controversial of all axioms in ZFC. It has a couple of very interesting and partially counterintuitive consequences. Its status in set theory is somewhat comparable to that of Euclid's parallel axiom in geometry. One often tries to avoid using the AC in proofs if possible because then the proofs will hold up in an even bigger mathematical universe, i.e. one in which the AC is not assumed. The AC has been proven to be independent of ZF. That means, it cannot be proven true or false from the ZF axioms. What is most interesting about the AC is that there are a whole bunch of mathematical statements that turn out to be equivalent to the AC in ZF. That means, when we assume the rest of the ZF axioms to be true, then AC implies the given statement $\varphi$ and vice versa. Informally: $(ZF \wedge AC) \Rightarrow \varphi$ and: $(ZF \wedge \varphi) \Rightarrow AC$   ...TBC...
 
+
+
 \paragraph{Well Ordering Theorem} 
 From the AC, along with the other axioms of ZF, the well ordering theorem can be proven. That means: The AC implies the well ordering theorem. On the other hand, the well ordering theorem also implies the axiom of choice. Trivially, if we have a well ordering of a set in hand, we can utilize that to construct a choice function by saying: just always choose the minimum [VERIFY!]. So, this direction of the mutual implication is easy. The other way is less easy but it also works out. At the end, what that means is that the AC and the well ordering theorem are equivalent.
 
@@ -1450,7 +1452,13 @@ From the AC, along with the other axioms of ZF, the well ordering theorem can be
 % ...WTF?! How can 2nd order logic "undo" truths that have been proven by 1st order logic?
 
 \paragraph{Zorn's Lemma}
-Zorns lemman is another mathemetical statement that turns out to be equivalent to the continuum hypothesis. It states that\footnote{Taken from Wikipedia}: "Suppose a partially ordered set $P$ has the property that every chain in $P$ has an upper bound in $P$. Then the set $P$ contains at least one maximal element.". So - this statement is quite a bit more difficult to understand than the axiom of choice or the well ordering theorem. There is a famous quote of Jerry Bona who put it that way: "The axiom of choice is obviously true, the well ordering principle is obviously false and who can tell about Zorn's lemma?". The thing is: all 3 statements are provably equivalent when ZF is assumed. The quote refers to what we intuitively tend to think. %Set theory can sometimes lead to counterintuitive
+Zorns lemma is another mathemetical statement that turns out to be equivalent to the continuum hypothesis. It states that\footnote{Taken from Wikipedia}: "Suppose a partially ordered set $P$ has the property that every chain in $P$ has an upper bound in $P$. Then the set $P$ contains at least one maximal element.". So - this statement is quite a bit more difficult to understand than the axiom of choice or the well ordering theorem. There is a famous quote of Jerry Bona who put it that way: "The axiom of choice is obviously true, the well ordering principle is obviously false and who can tell about Zorn's lemma?". The thing is: all 3 statements are provably equivalent when ZF is assumed. The quote refers to what we intuitively tend to think. The joke nicely demonstrates an important aspect of the power of mathematical thinking: We can use it to start with things that we can easily nod along with intuitively. From there, we can prove true facts that are totally counterintuitive and we can also prove facts that are not so easily accessible to our intuition.
+
+% If we have a chain, i.e. a set of sets that has a total order, we can use its union as an upper bound
+
+%Set theory can sometimes lead to counterintuitive
+
+% "The axiom of choice is obviously true, the well ordering theorem is obviously false and who can tell about Zorn's lemma?" 
 
 % Zorn's Lemma, The Well-Ordering Theorem, and Undefinability (Version 2.0)
 % https://www.youtube.com/watch?v=W8J4eEiAtIk
@@ -1458,6 +1466,10 @@ Zorns lemman is another mathemetical statement that turns out to be equivalent t
 
 % https://en.wikipedia.org/wiki/Zorn%27s_lemma
 % https://de.wikipedia.org/wiki/Lemma_von_Zorn
+
+% Zorn's Lemma Demystified
+% https://www.youtube.com/watch?v=oRH-HTrAvxw  by sudgylacmoe
+% -has nice intro about order theory at the beginning
 
 \paragraph{Tarski's Theorem}
 Tarski proved 1924 that in ZF, the theorem "For every infinite set $A$, there exists a bijection between $A$ and $A \times A$" implies the axiom of choice. The converse is also true and that was already known at that time.  TBC

@@ -93,8 +93,6 @@ where on the right we have used two notations that we have yet to explain: By $|
 \end{equation}
 If this definition appears circular, remember that we can always use the purely algebraic definition to compute the dot product which does not yet reference the norm or angle. We see that geometrically, the dot product gives us two things: lengths and angles. Using a hat above a vector is a common notation for \emph{normalized} vectors, i.e. vectors with a norm of one. Dividing a vector by its own norm does indeed yield a vector with unit norm. It has the same direction as the original vector, of course - because scaling all components by the same amount doesn't change the direction of a vector.
 
-
-
  ...TBC...
 % explain geometric interpretations
 % -coefficient of projection
@@ -118,6 +116,8 @@ If this definition appears circular, remember that we can always use the purely 
 
 % Lengths, angles, projection, correlation | Linear algebra episode 2
 % https://www.youtube.com/watch?v=mCi_0ML0lG8
+
+%\paragraph{Distance}
 
 \paragraph{Orthogonal Projection}
 % -explain how the dot-product being zero means that the vectors are orthogonal and how we can
@@ -312,14 +312,23 @@ TODO: explain kernel an image of a matrix
 \subsection{Vector Features}
 
 \paragraph{Vector Norms}
-The norm of a vector captures its length. The most common norm is the Euclidean norm but there are others as well...TBC...
+The norm of a vector captures its length. The most common norm is the Euclidean norm but there are others as well. On page \pageref{Tab:Norm}, we already abstractly defined some properties that we require from a norm. ...TBC...
 % are a measure of length, $L_p$-norm, explain the general requirements to a norm
 % norm equivalence
+% refer back to norms of numbers defined in \ref{Tab:Norm}
 
 
 \paragraph{Orthogonality and Angles}
-% Angles between a are defined in terms of the cosine of the norm
+We define two vectors to be orthogonal, if their dot product is zero. ...TBC...
+
+%More generally, we define the angle between two vectors as the arc-cosine of their normalized dot product ...VERIFY!..TBC...
+% Angles between a are defined in terms of the cosine of the scalar product
 % 
+
+
+\paragraph{Distance}
+As distance between two vectors, we take the norm of their difference....TBC...
+% state abstarct requirements for a distance. ...see topology chapter
 
 
 \paragraph{Span of a Set of Vectors}

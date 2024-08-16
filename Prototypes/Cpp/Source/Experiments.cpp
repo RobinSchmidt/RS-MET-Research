@@ -11308,8 +11308,62 @@ void testFiniteFieldFingerprints()
   //    results that are represented by constant polynomials.
 }
 
+
+/** Under construction */
+bool isIsomorphism(const std::vector<int>& f,
+  const rema::rsFiniteFieldTables& tbl1, const rema::rsFiniteFieldTables& tbl2)
+{
+
+
+  using Elem = rema::rsFiniteFieldElement;
+
+  if(tbl1.getOrder() != tbl2.getOrder())
+    return false;
+
+  int n = (int) f.size();
+
+  //int p1 = tbl1.getBase();
+  //int k1 = tbl1.getExponent();
+
+  bool ok = true;
+
+  for(int i = 0; i < n; i++)
+  {
+    Elem a(   i,  &tbl1);        // maybe rename to a1
+    Elem fa(f[i], &tbl2);        // maybe rename to a2
+    for(int j = 0; j < n; j++)
+    {
+      Elem b(   j,  &tbl1);
+      Elem fb(f[j], &tbl2);
+
+      // Check that f(a + b) = f(a) + f(b):
+
+      Elem s1 = a  + b;          // Sum in 1st field
+      Elem s2 = fa + fb;         // Sum in 2nd field
+      int  k  = s1.getValue();
+      Elem fs(f[k], &tbl2);      // Sum of 1st field mapped into 2nd field via f
+      ok &= s2 == fs;
+
+      // ToDo:
+      // Do the same check for multiplication
+
+
+      int dummy = 0;
+    }
+  }
+
+
+
+  return ok;
+
+
+  // Maybe implement it in terms of a function isHomomorphism
+}
+
 void testFiniteFieldIsomorphsim()
 {
+  // Under construction
+
   // We create the two versions of GF(8) that result from using   1 + x + x^3  and  1 + x^2 + x^3
   // as modulus polynomial. They are isomorphic. We try to figure put the isomorphism explicitly.
   // ...TBC...
@@ -11323,6 +11377,25 @@ void testFiniteFieldIsomorphsim()
 
   Tbl tbl1(2, 3, VecI({1,1,0,1})); //  1 + x + x^3
   Tbl tbl2(2, 3, VecI({1,0,1,1})); //  1 + x^2 + x^3
+
+  // The reciprocal tables are:
+  // G1:  0  1  2  3  4  5  6  7      1st Galois field, our input x
+  // R1:  0  1  5  6  7  2  3  4      ...and its reciprocals
+  // R2:  0  1  6  4  3  7  2  5
+  //
+  // G2   0  1  7  2  5  6  4  3      isomorphism f(x)
+  //
+  //
+  // algo: read index i in top row (e.g. 2), read off its reciprocal in 2nd row (e.g. 5), find that
+  // number in the 3rd row (5 is in position 7 in 3rd row). That 7 is where 2 gets mapped to.
+  // ...I think - not sure...try it!
+
+  // This is our proposed isomorphism
+  VecI f = {0,1,7,2,5,6,4,3};
+
+  // ToDo:
+  bool ok = isIsomorphism(f, tbl1, tbl2);
+
 
 
 

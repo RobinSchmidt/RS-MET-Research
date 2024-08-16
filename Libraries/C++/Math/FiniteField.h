@@ -36,17 +36,29 @@ public:
   /** \name Inquiry */
 
 
-  const std::vector<int>& getNegationTable() const { return neg; }
+  int getBase()     const { return p; }
 
-  const std::vector<int>& getReciprocationTable() const { return rec; }
+  int getExponent() const { return k; }
 
-  const RAPT::rsMatrix<int>& getAdditionTable() const { return add; }
+  int getOrder()    const { return n; }
 
-  const RAPT::rsMatrix<int>& getSubtractionTable() const { return sub; }
+
+  const std::vector<int>&    getModulusPolynomial()   const { return mod; }
+
+
+  const std::vector<int>&    getNegationTable()       const { return neg; }
+
+  const std::vector<int>&    getReciprocationTable()  const { return rec; }
+
+  const RAPT::rsMatrix<int>& getAdditionTable()       const { return add; }
+
+  const RAPT::rsMatrix<int>& getSubtractionTable()    const { return sub; }
 
   const RAPT::rsMatrix<int>& getMultiplicationTable() const { return mul; }
 
-  const RAPT::rsMatrix<int>& getDivisionTable() const { return div; }
+  const RAPT::rsMatrix<int>& getDivisionTable()       const { return div; }
+
+
 
 
 protected:
@@ -56,7 +68,7 @@ protected:
   // Data:
   int p;                                  // Base in p^k, should be prime
   int k;                                  // Exponent in p^k, a positive integer
-  int n;                                  // n = p^k
+  int n;                                  // Number of elements. Order of the field. n = p^k
   std::vector<int> mod;                   // Coeffs of the modulus polynomial
   std::vector<int> neg, rec;              // 1D tables for unary operations (negate, reciprocate)
   RAPT::rsMatrix<int> add, mul, sub, div; // 2D tables for binary operations (addition, ...)
@@ -126,12 +138,29 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
 
+
+  int getValue() const { return val; }
+
+  const rsFiniteFieldTables* getTables() const { return tables; }
+
+  rsFiniteFieldElement getNegative() const 
+  {
+    RAPT::rsAssert(tables != nullptr);
+    return rsFiniteFieldElement(tables->neg[val], tables);
+  }
+
+  rsFiniteFieldElement getReciprocal() const 
+  {
+    RAPT::rsAssert(tables != nullptr);
+    return rsFiniteFieldElement(tables->rec[val], tables);
+  }
+
+
   /** A sanity check function. */
   bool isOk() const
   {
     return tables != nullptr && val >= 0 && val < tables->n;
   }
-
 
   bool isOperationOk(const rsFiniteFieldElement& a, const rsFiniteFieldElement& b) const
   {
@@ -157,19 +186,11 @@ public:
     return rsFiniteFieldElement(1, tablesToUse);
   }
 
-  rsFiniteFieldElement getNegative() const 
-  {
-    RAPT::rsAssert(tables != nullptr);
-    return rsFiniteFieldElement(tables->neg[val], tables);
-  }
 
-  rsFiniteFieldElement getReciprocal() const 
-  {
-    RAPT::rsAssert(tables != nullptr);
-    return rsFiniteFieldElement(tables->rec[val], tables);
-  }
 
-  const rsFiniteFieldTables* getTables() const { return tables; }
+
+
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Operators */

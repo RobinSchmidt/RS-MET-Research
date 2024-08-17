@@ -77,7 +77,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();
-  testFiniteField();
+  //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();
   //testPolynomialQuotientRing();  // stub
@@ -89,7 +89,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNeumannRationals();
   //testPairingFunctions();
 
-  //testGeneralizedCollatz();
+  testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();

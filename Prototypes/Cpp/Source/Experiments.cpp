@@ -11385,7 +11385,7 @@ void testFiniteFieldIsomorphsim()
   // Wait - no - that's not the idea. 
   // But nope - it doesn't seem to work - maybe instead of mapping 2 to 7, we should map 7 to 2? 
   // That's the 2nd try
-  // Yet another try: map the indices of 2nd and 3r row to each other. 2 has reciprocal 5 in GF1 
+  // Yet another try: map the indices of 2nd and 3rd row to each other. 2 has reciprocal 5 in GF1 
   // and reciprocal 6 in GF2 - so we must map, 6 to 5, I think. Or 5 to 6?
 
   // This is our proposed isomorphism
@@ -11397,7 +11397,8 @@ void testFiniteFieldIsomorphsim()
   //bool ok = isIsomorphism(f, tbl1, tbl2);
   // Nope! That fails! None of the 4 mapping seem to work as isomorphism.
   // The idea doesn't seem to work. -> Back to the drawing board!
-  // Verify the isIsomorphism also!
+  // Verify the isIsomorphism also! ..aaahh - I think the idea is flawed anyway. There is no reason
+  // to assume that element 2 in field 1 is related to element 2 in field 2 in this way
 
 
   int dummy = 0;
@@ -12773,7 +12774,7 @@ void testGeneralizedCollatz()
   using uint = uint64_t;             // Maybe we need a bigger int type to avoid overflow?
   using AT   = RAPT::rsArrayTools;
   uint k = 2;                        // Collatz: k = 2
-  uint x = 7;    
+  uint x = 27;                       // 7, 27
 
   std::vector<uint> v;
 
@@ -12830,7 +12831,9 @@ void testGeneralizedCollatz()
 
   // Try k = 2, x = 7 to reproduce sequence from the beginnig of this:
   // https://www.youtube.com/watch?v=094y1Z2wpJg
+  // x = 27 is nice
 
+ 
 
   int dummy = 0;
 }

@@ -183,7 +183,20 @@ Two numbers $n$ and $m$ are said to be \emph{coprime} or \emph{mututally prime} 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{The Prime Counting Function}
+The so called \emph{prime counting function} is an important function in number theory because it encapsulates all the information that there is to know about where the prime numbers are. It is denoted by the greek letter pi as $\pi(n)$. This is not to be confused with the semicircle constant $\pi$ from geometry. This $\pi$ here is a function that takes a natural number $n$ input and it spits out the number of prime numbers that are less than or equal to $n$. For example, $\pi(10) = 4$ because there are $4$ primes that are less than or equal to $10$, namely $2,3,5,7$. At $n = 11$, it jumps up from $4$ to $5$, because $11$ is a prime. It's a stairstep function that makes a step of height $1$ up at every prime number. ...TBC...Plot the function
 
+
+\paragraph{The Prime Number Theorem}
+The prime number theorem makes a statement about the asymptotic behavior of the prime counting function $\pi(n)$. It says that $\pi(n)$ is asymptotically equivalent to $n / \log(n)$. That means that when we use $n / \log(n)$ as approximation for $\pi(n)$, then the relative error, i.e. the error as percentage of the correct value, will approach zero as $n$ approaches infinity. Another way to state this is that the ratio between the actual function $\pi(n)$ and its approximant $n / \log(n)$ approaches one as $n$ approaches infinity. That's the way it's usually stated as a formula:
+\begin{equation}
+ \lim_{n \rightarrow \infty}  \frac{\pi(n)}{n / \log(n) }  = 1
+\end{equation}
+It's equivalent to saying that the $n$th prime number is approximately to be found at $n \log(n)$. As said, yet another way to state the theorem is that $n / \log(n)$ is a "good" approximation to $\pi(n)$, i.e. $\pi(n) \approx n / \log(n)$ in the sense that both functions are asymptotically equivalent. There are other asymptotically equivalent functions that are still better, though.
+...TBC...ToDo: Give better approximation in terms of $\Li(x)$ and as $x / (\log(x) - 1)$ where the $1$ was once suspected to be some other number and dubbed "Legendre's constant" - which later turned out to be exactly 1.
+
+% https://en.wikipedia.org/wiki/Prime_number_theorem
+% https://mathworld.wolfram.com/PrimeNumberTheorem.html
+% https://www.britannica.com/science/prime-number-theorem
 
 
 % number of (unique) prime factors https://en.wikipedia.org/wiki/Prime_omega_function
@@ -193,7 +206,7 @@ Two numbers $n$ and $m$ are said to be \emph{coprime} or \emph{mututally prime} 
 % https://www.youtube.com/watch?v=cQYGwiXSvi8
 % The part about "Legendre's Constant" is interesting. It turns out, that this constant is just
 % the number 1.
-% \pi(x) ~= x / (ln(x) - B)    B is Legnedre's constant - turns out, it's 1.
+% \pi(x) ~= x / (ln(x) - B)    B is Legendre's constant - turns out, it's 1.
 % https://en.wikipedia.org/wiki/Legendre%27s_constant
 
 % Factorials, prime numbers, and the Riemann Hypothesis

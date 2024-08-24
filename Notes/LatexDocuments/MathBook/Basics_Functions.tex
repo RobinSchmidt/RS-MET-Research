@@ -788,7 +788,20 @@ We do not really need to enter the complex plane to appreciate the usefulness of
 %===================================================================================================
 \subsection{Special Functions}
 
-\subsubsection{Gamma Function}
+\subsubsection{The Logarithmic Integrals $\li(x)$ and $\Li(x)$}
+The \emph{logarithmic integral} functions $\li(x)$ and $\Li(x)$ are defined via an integral as:
+\begin{equation}
+\label{Eq:LogarithmicIntegral}
+ \li(x) = \int_{0}^{x} \frac{1}{\log(t)} \; dt, \qquad
+ \Li(x) = \int_{2}^{x} \frac{1}{\log(t)} \; dt
+        = \li(x) - \li(2)
+\end{equation}
+The second variant is called the \emph{offset logarithmic integral} or the \emph{Eulerian logarithmic integral} and is more convenient in number theory, for example. ...TBC...
+
+% https://en.wikipedia.org/wiki/Logarithmic_integral_function
+% https://mathworld.wolfram.com/LogarithmicIntegral.html
+
+\subsubsection{The Gamma Function $\Gamma(x)$}
 The Gamma function, denoted as $\Gamma(z)$, can be seen as a generalization of the (shifted) factorial function $(n-1)!$ to the whole complex plane. For $\Re(z)>0$ it is usually defined via a parameter integral like so:
 \begin{equation}
 \Gamma(z) =	\int_{0}^{\infty} t^{z-1} \e^{-t} \, dt 

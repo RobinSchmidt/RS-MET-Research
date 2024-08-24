@@ -191,13 +191,21 @@ The prime number theorem makes a statement about the asymptotic behavior of the 
 \begin{equation}
  \lim_{n \rightarrow \infty}  \frac{\pi(n)}{n / \log(n) }  = 1
 \end{equation}
-It's equivalent to saying that the $n$th prime number is approximately to be found at $n \log(n)$. As said, yet another way to state the theorem is that $n / \log(n)$ is a "good" approximation to $\pi(n)$, i.e. $\pi(n) \approx n / \log(n)$ in the sense that both functions are asymptotically equivalent. There are other asymptotically equivalent functions that are still better, though.
-...TBC...ToDo: Give better approximation in terms of $\Li(x)$ and as $x / (\log(x) - 1)$ where the $1$ was once suspected to be some other number and dubbed "Legendre's constant" - which later turned out to be exactly 1.
+It's equivalent to saying that the $n$th prime number is approximately to be found at $n \log(n)$. As said, yet another way to state the theorem is that $n / \log(n)$ is a "good" approximation to $\pi(n)$, i.e. $\pi(n) \approx n / \log(n)$ in the sense that both functions are asymptotically equivalent. 
+
+\medskip
+There are other asymptotically equivalent functions that are still better, though. With the simple tweak to the function to use $n / (\log(n) - 1)$ instead, one can already improve the approximation quite a bit. One might also try to use $n / (\log(n) - B)$ for some constant $B$ that one should pick in an optimal way\footnote{ToDo: Explain the optimality criterion. Are we doing some sort of least squares fitting here?}. In his first experiments, Legendre determined an optimal value of $B = 1.08366$ which was dubbed Legendre's constant at the time. But it appeared only to be that value because Legendre looked at a small amount of data. It later turned out that the optimal value is indeed exactly $1$.
+
+\medskip
+There is a still better way to approximate $\pi(n)$. It is in terms of the so integral logarithm function $\Li(n)$ (see page \pageref{Eq:LogarithmicIntegral}). This approximation just uses $\pi(n) \approx \Li(n)$. This approximation is used in a stronger version of the prime number theorem that is still unproven - the famous Riemann hypothesis. If that hypothesis is true, then the approximation error between $\pi(n)$ and $\Li(n)$ will approach zero even faster ...TBC...
+
+%...TBC...ToDo: Give better approximation in terms of $\Li(x)$ 
 
 % https://en.wikipedia.org/wiki/Prime_number_theorem
 % https://mathworld.wolfram.com/PrimeNumberTheorem.html
 % https://www.britannica.com/science/prime-number-theorem
 
+% https://en.wikipedia.org/wiki/Legendre%27s_constant
 
 % number of (unique) prime factors https://en.wikipedia.org/wiki/Prime_omega_function
 % arithmetic derivative https://en.wikipedia.org/wiki/Arithmetic_derivative

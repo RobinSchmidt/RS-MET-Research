@@ -3,7 +3,9 @@
 
 %===================================================================================================
 \section{Propositional Logic}
-Propositional logic deals with statements that can be either true or false. These statements are called propositions. The propositions are typically represented by variable symbols such as $p$ and $q$. For example, a proposition could be defined as $p = \text{"It is hot outside"}$ and another one could be $q = \text{"Chocolate melts in the heat"}$ and yet another one could be $r = \text{"The chocolate is outside"}$ and a last one could be $s = \text{"The chocolate is melting"}$. Propositional logic is concerned with formalizing processes like concluding $s$ from $p,q,r$. The machinery is the set of multivariate functions from the set $\{0,1\}$ to itself. So, $0$ and $1$ are the two possible values that our variables like $p,q,\ldots$ can take on and we interpret $1$ as "the proposition is true" and $0$ as "the proposition is false". We plug them in into a function and it spits out a value which is also either $0$ or $1$. We'll denote the set $\{0,1\}$ as $\mathbb{B}$ in honor to George Boole\footnote{George Boole: English mathematician, 1815-1864, Inventor of Boolean algebra}. We are concerned with functions $f$ of the type $f: \mathbb{B}^n \rightarrow \mathbb{B}$. We'll typically build such multivariate Boolean functions from a couple of basic bivariate Boolean functions of the type $f: \mathbb{B} \times \mathbb{B} \rightarrow \mathbb{B}$ and possibly the only nontrivial univariate Boolean function, namely the negation which maps $0$ to $1$ and $1$ to $0$. Propositional logic is also known as \emph{zeroth order logic} indicating that there is a hierarchy of logical systems with various levels. Indeed, one level up, we'll find predicate logic which is also known as first order logic. ...TBC...
+Propositional logic deals with statements that can be either true or false. These statements are called propositions. The propositions are typically represented by variable symbols such as $p$ and $q$. For example, a proposition could be defined as $p = \text{"It is hot outside"}$ and another one could be $q = \text{"Chocolate melts in the heat"}$ and yet another one could be $r = \text{"The chocolate is outside"}$ and a last one could be $s = \text{"The chocolate is melting"}$. Propositional logic is concerned with formalizing processes like concluding $s$ from $p,q,r$. The machinery is the set of multivariate functions from the set $\{0,1\}$ to itself. So, $0$ and $1$ are the two possible values that our variables like $p,q,\ldots$ can take on and we interpret $1$ as "the proposition is true" and $0$ as "the proposition is false". In the context of logic, the constants $0$ and $1$ are also often denoted as $\bot$ and $\top$ respectively. In this case, they are sometimes read as "bottom" and "top" respectively - but you can also just read them as "false" and "true", if you prefer that (I do). The symbol $\top$ for "true" (or "top") even looks like the letter T, so it's easy to remember which is which. We want plug such logical values into logical functions which take one or more logical values as inputs and spit out another such logical value which is also either $0$ or $1$. We'll denote the set $\{0,1\}$ (or, alternatively $\{\bot, \top\}$) as $\mathbb{B}$ in honor to George Boole\footnote{George Boole: English mathematician, 1815-1864, Inventor of Boolean algebra}. We are concerned with functions $f$ of the type $f: \mathbb{B}^n \rightarrow \mathbb{B}$. We'll typically build such multivariate Boolean functions from a couple of basic bivariate Boolean functions of the type $f: \mathbb{B} \times \mathbb{B} \rightarrow \mathbb{B}$ and possibly the only interesting univariate Boolean function, namely the negation which maps $0$ to $1$ and $1$ to $0$.  Propositional logic is also known as \emph{zeroth order logic} indicating that there is a hierarchy of logical systems with various levels. Indeed, one level up, we'll find predicate logic which is also known as first order logic. 
+
+%%...TBC...introduce symbols for true and false $\top, \bot$ - "top" and "bottom"
 
 %  Propositional logic is the foundation of all higher order
 
@@ -27,7 +29,7 @@ Logical connectives are symbols that are used to create more complex logical exp
 \end{tabular}
 \medskip
 
-As said, the list is not exhaustive. There are 16 possible different functions $f: \mathbb{B}^2 \rightarrow \mathbb{B}$ and we have listed only the $6$ most commonly used ones of them. We do not need a symbol for all of them because we can construct the missing ones from those in the table. In fact, we don't even need all of the connectives given in the table. A set of connectives from which all possible Boolean functions can be constructed by a suitable formula is called a \emph{functionally complete} set of connectives. For example, the set $\{\neg, \wedge, \vee\}$ is functionally complete. It is actually even overcomplete already and we could make do with  $\{\neg, \wedge\}$ but having the $\vee$ available as well makes it more convenient to write down and read(!) logical formulas. As an extreme example, the singleton set containing only the nand function $\nand$ is also functionally complete. It's not fun to read or write logical formulas when only the nand operator is permitted - but it is possible to express every possible logical formula solely in terms of nand. This fact has some technological relevance in the realm of chip design.
+As said, the list is not exhaustive. There are 16 possible different functions $f: \mathbb{B}^2 \rightarrow \mathbb{B}$ and we have listed only the $6$ most commonly used ones of them. We do not need a symbol for all of them because we can construct the missing ones from those in the table. In fact, we don't even need all of the connectives given in the table. A set of connectives from which all possible Boolean functions can be constructed by a suitable formula is called a \emph{functionally complete} set of connectives. For example, the set $\{\neg, \wedge, \vee\}$ is functionally complete. It is actually even overcomplete already and we could make do with  $\{\neg, \wedge\}$ but having the $\vee$ available as well makes it more convenient to write down and read(!) logical formulas. As an extreme example, the singleton set $\{\nand\}$ containing only the nand function is also functionally complete. It's not fun to read or write logical formulas when only the nand operator is permitted - but it is possible to express every possible logical formula solely in terms of nand. This fact has some technological relevance in the realm of chip design.
 
 ...TBC..TODO: give truth tables for all of them, explain relation between $\then$ and $\Rightarrow$ and $\mequiv$ and $\Leftrightarrow$. The double-stroke arrow symbols are used on the meta level whereas the single-stroke arrows are used on the object level or formula level. There are also $\vdash$ and $\vDash$ and also have meanings similar to $\then$ and $\Rightarrow$. Explain the subtle differences. Give other names for the connectives - there are a lot of akas
 
@@ -46,6 +48,24 @@ As said, the list is not exhaustive. There are 16 possible different functions $
 
 % How to Read Logic
 % https://www.youtube.com/watch?v=JVjv0CCzHok
+
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Boolean Algebra}
+It turns out that some of the logical connectives obey certain rules of calculation that we are familiar with from the algebraic operations over numbers. Specifically, the "and" operation behaves similar to multiplication and the "or" operation behaves similar to addition. ...TBC... list rules: associativity, commutativity, distributivity (both operations distribute over the other - that's an important difference to "normal" algebra), de Morgan's laws, neutral and absorbing elements, etc.
+
+% p \vee q = q \vee q,  p \wedge q = q \wedge q
+% p \vee 0 = p   Neutral element of disjunction
+% p \vee 1 = 1   Absorbing element of disjunction
+%
+% p + (q * r) = (p + q) * (p + r)
+% p + p = p  Idempotence
+% p * p = p  Idempotence
+% (p + q) * p = p
+% (p * q) + p = p
+% ....see ABoAA pg 9-10
+
+
 
 
 %---------------------------------------------------------------------------------------------------

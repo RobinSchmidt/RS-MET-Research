@@ -2,9 +2,14 @@
 
 %###################################################################################################
 \section{Signals and Systems}
+A \emph{signal} is, in the most general sense of the term, actually just a function. We have some independent variable, often time $t$, and some quantity that varies over time - for example, a voltage. Mathematically, such a time-dependent voltage just means that the voltage is a function of time and we could write it symbolically as $v(t)$. The voltage could represent some other physical quantity - for example a sound pressure. In this case, we would convert the time-varying sound-pressure into a time-varying voltage (using a microphone and some electronic gear), then take the voltage as stand-in for the sound pressure and process it some way in order to achieve certain sonic effects - for example boosting the bass or applying distortion - and at the end convert the processed result back into sound pressure using a loudspeaker. In the processing stage, the voltage would be used as an analogon for the quantity that we actually "mean". That's where the term "analog" in the context of signal processing originally comes from - it conveys that we process a quantity that is technologically easy to handle (voltage) as analogon (or stand-in, representative) for some other quantity that would be much more cumbersome to handle directly (sound pressure). But nowadays, the term "analog" is also usually used in contrast to "digital". ...TBC...explain discrete vs continuous, analog vs digital, 2D vs 2-ch signals, notations $x(t), x[n], y(t), y[n]$
 
-% discrete vs continuous
 
+%In signal processing, a \emph{system} is just some device or algorithm that takes one ore more input signals and produces one ore more output signals. ...TBC...
+
+% 
+
+% Notation: x(t), x[n], y(t), y[n]
 
 %###################################################################################################
 \section{Linear Transforms}
@@ -15,15 +20,30 @@ In the context of signal processing, we will have to conceptually deal with 4 va
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Fourier Series}
-The Fourier series encapsulates Fourier's initial idea that any (square-integrable) periodic function $f(t)$ can be expressed as sum of sines and cosines. In this setting, the time axis $t$ is continuous, i.e. $t$ is a continuous input variable - that is: a real number. The output of the function is also a real number. The frequencies of the sines and cosines, however, are all integer multiples of some fundamental frequency. Being indexed by an integer makes them discrete quantities. So, in the Fourier series setting, the time axis is continuous and the frequency axis is discrete. ...TBC...
+The Fourier series encapsulates Fourier's initial idea that any (square-integrable) periodic function $x(t)$ can be expressed as sum of sines and cosines. In this setting, the time axis $t$ is continuous, i.e. $t$ is a continuous input variable - that is: a real number. The output of the function is also a real number. The frequencies of the sines and cosines, however, are all integer multiples of some fundamental frequency. The sinusoids at these frequencies are also known as \emph{harmonics} or \emph{overtones}. Being indexed by an integer makes them discrete quantities. So, in the Fourier series setting, the time axis is continuous and the frequency axis is discrete. The term "harmonics" is generally reserved for frequencies that are integer multiples of the fundamental. A more general "overtone" may or my not be at an integer multiple of a fundamental. If it isn't, the frequency ratio between it and fundamental would be called inharmonic - and it is questionable if the term "fundamental" should even be used in such a case. However, inharmonic overtones cannot be modeled by Fourier series anyway. They will have to wait for more general formalisms such as the continuous Fourier transform - which can handle this case as well and even much more, namely: non-sinusoidal components. ...TBC...
+
+%In most cases, the term "overtones" also refers to integer multiples. 
+
+%There is a more general notion of "partials" - these are also sinusoids at discrete frequencies but in this case, the frequencies may not be integer multiples of some fundamental. For example, if you have a mix of frequencies of $100, 141.421, 314.159$ $Hz$, they would never be called "harmonics", rarely "overtones"
+
+% I think partials may also be time-varying
+
+
+
+
+%explain that the terms "harmonic", and "overtones" imply the "integer multiple" - and that there can also be more general mixes, i.e. inharmonic, of frequencies
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Continuous Fourier Transform}
+The continuous Fourier transform (CFT) can be obtained from the Fourier series by considering it as a limiting case when we let the period of the signal go to infinity. What we will get is a generalized formalism that, when applied to periodic functions, will give the same results as the Fourier series did, but that can now be applied also to aperiodic functions. There are some technical details that are a bit daunting when we want to formalize them in a rigorous way - we'll have to deal with distributions as generalized functions, in particular, the Dirac delta distribution. Within the more general formalism of continuous Fourier transforms, we will find that the CFT of a periodic function will give us a weighted sum of such shifted Dirac deltas where the weights are precisely the coefficients of the Fourier series and the shifts will position these Dirac deltas at our harmonic frequencies. VERIFY...TBC...
+
 
 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Discrete Time Fourier Transform}
+The discrete time Fourier transform (DTFT) deals with (in general aperiodic) signals that are defined on a discrete time axis, i.e. signals of the form $x[n]$ rather than $x(t)$
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Discrete Fourier Transform}

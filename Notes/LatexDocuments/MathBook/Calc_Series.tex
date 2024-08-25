@@ -31,7 +31,7 @@ Another binary operation that we can perform on two sequences $(a_n),(b_n)$ is \
      = \sum_{i+j=n} b_i a_j
 \end{equation}
 Each coefficient $c_n$ of the resulting sequence is given by a sum of products of coefficients from the original sequences and in each term of this sum, the indices of the two factors must sum up to $n$, the index in the $c_n$ sequence of the coefficient that is being computed. From this fact and the formula, you may already correctly infer that the operation is commutative.
-[VERIFY! What about complex sequences?]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity} [VERIFY! might be only sesquilinear in complex case?]. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response}. TODO: explain relation to multiplication of polynomials
+[VERIFY! What about complex sequences?]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity} [VERIFY! might be only sesquilinear in complex case?]. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response} and sometimes also as \emph{kernel}. But be careful: the term kernel has another meaning in math, too - namely the set of inputs to a function that get mapped to zero - but that other meaning has nothing to do with the meaning here\footnote{Yeah - I know - it's a mess!}. TODO: explain relation to multiplication of polynomials
 % https://mathworld.wolfram.com/CauchyProduct.html
 
 % https://en.wikipedia.org/wiki/Convolution#Discrete_convolution
@@ -183,6 +183,23 @@ If we have a nonnegative sequence $(a_n)$ and want to know whether it converges 
 
 
 
+\subsection{Sequence Transformations}
+A transformation of a sequence is, very generally speaking, a process that we apply to it to obtain a new sequence. For such a transformation to be interesting, we usually want it to satisfy some additional constraints. Most notably among them is the desire to not change the limit of a sequence in the case that such a limit exists, i.e. when the sequence is convergent. If our transformation has this desirable property of not affecting limits of convergent sequences, then we call the transformation \emph{regular} (VERIFY). Such regular transformations can help to speed up the convergence of a sequence which can be very helpful in practice when our task is to (approximately) evaluate the limit of a given sequence. They can even help to turn divergent sequences into convergent ones and thereby give us a potential way to "evaluate" limits of divergent sequences - although we need to be very careful with that. We will have to ask ourselves questions like whether or not this new "limit" is well defined in the sense that all different possible regular transformations will produce the same value (VERIFY)...TBC...
+
+% https://en.wikipedia.org/wiki/Sequence_transformation
+% binomial transform, Möbius transform, Stirling transform 
+% https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
+% https://en.wikipedia.org/wiki/Series_acceleration
+
+\subsubsection{Convolution as Transformation}
+One way to transform a sequence into a new one is to convolve it with some fixed other sequence. For a simple example, let this other sequence be given by $(\frac{1}{2}, \frac{1}{2}, 0, 0, 0, \ldots)$. In effect, the convolution with the given kernel will just let our new transformed sequence consist of 2-point averages of the old sequence. This will clearly not change the limit of a given sequence if it exists - because if the limit exists, it means that the sequence converges to some fixed value which also implies that two neighboring points will tend to have the same value - and taking the average of two values that are actually one and the same value will not change anything. So, we have our first example of a regular transformation. It's very simple and not very powerful. It will not help much in accelerating convergence of sequences - let alone turning divergent into convergent ones. But at least, we get a sense of how such regular transformations may look like. ...TBC... explain the general condition for a convolution kernel to be "regular" in the sense of not affecting the limit. I guess it must go down to zero (fast enough?) and sum up to one? I think, these two conditions should be sufficient for regularity - but are they necessary? 
+
+\subsubsection{Transformation by Matrices}
+
+% Series to Series Transformations and Analytic Continuation by Matrix Methods
+% https://www.jstor.org/stable/2372347
+
+
 \subsection{Infinite Sums aka Series}
 When we have a given sequence $(a_k)$, we can use it to define a new sequence, namely the sequence of its partial sums. Let's call that sequence $(s_n)$. Its $n$th element is given by the sum over all elements up to $n$ of our input sequence $(a_n)$:
 \begin{equation}
@@ -196,6 +213,8 @@ This limit, if it exists and is finite, is called the \emph{sum} of the series.
 
 % https://en.wikipedia.org/wiki/Series_(mathematics)
 % For a_n = 1/n^c, it will be fast enough if |c| > 1.
+
+% ToDo: frame the production of a series from a sequence in terms of a transformation - it is one - albeit not a regular one, in general.
 
 \subsubsection{Some Sums}
 ToDo: give formulas for finite and infinite geometric series, infinite alternating harmonic series, inverse-squares ("Basel-problem"), explain divergence of harmonic series
@@ -218,7 +237,10 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 % https://en.wikipedia.org/wiki/Riemann_series_theorem
 % Riemann rearrangement theorem, Riemann series theorem,
 
-\subsubsection{Summation Methods} Certain divergent series can be transformed into other series that are convergent. Of course, if we would allow any transformation, that would be trivially true and an uninteresting statement - we could just transform our divergent series into a series of all zeros, for example. We want to allow only those kinds of transformations that, when being applied to a convergent series, do not change their value. So, the name of the game is to transform the series in a certain way and then trying to figure out the value of the transformed series. This is what summation methods are about. A summation method that has our desired the property of not changing the value of any convergent series is called regular (VERIFY!)
+\subsubsection{Summation Methods} Certain divergent series can be transformed into other series that are convergent. Of course, if we would allow any transformation, that would be trivially true and an uninteresting statement - we could just transform our divergent series into a series of all zeros, for example. We want to allow only those kinds of transformations that, when being applied to a convergent series, do not change their value. So, the name of the game is to transform the series in a certain way and then trying to figure out the value of the transformed series. This is what summation methods are about. A summation method that has our desired the property of not changing the value of any convergent series is called regular (VERIFY!). If we have found such a regular transformation and then apply it to a divergent series, it may happen that the transformed series becomes convergent. If that works out, we will have a way to assign numerical values to divergent series. If it furthermore turns out that different regular transformations will always lead to the same values, then we may be on to something - maybe some mathematically well defined way to actually evaluate divergent series ...TBC...
+
+% Series to Series Transformations and Analytic Continuation by Matrix Methods
+% https://www.jstor.org/stable/2372347
 
 %Of course, to make any sense, our transformation process
 
@@ -235,6 +257,9 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 %  of Gibbs ripple. Maybe it can also increase rate of convergence
 % https://www.youtube.com/watch?v=LDuD_ClkkG8
 
+
+% One minus one plus one minus one - Numberphile
+% https://www.youtube.com/watch?v=PCu_BNNI5x4
 
 \subsection{Power Series}
 A power series is a series that involves a variable $x$. We imagine that we have a given sequence $(a_n)$ and we will intepret this as a sequence of coefficients of a series of powers of $x$, i.e. a sort of infinite polynomial. We will consider the series:

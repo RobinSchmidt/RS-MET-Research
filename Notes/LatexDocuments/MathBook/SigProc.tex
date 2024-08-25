@@ -1,8 +1,11 @@
 \chapter{Signal Processing}
+Signal processing is a field of applied math that is hugely relevant in our everyday lives. It is the sort of math that is needed to understand the inner workings of our communication devices like telephones and the internet. It's also relevant for entertainment purposes such as recording and reproduction of music, photographs and videos. Last but not least, it's needed for processing all sorts of measurements coming from radars, sonars, seismographs, medical imaging devices etc. In AI algorithms and data analysis, some amount of signal processing often occurs as pre-processing step. So, signal processing really everywhere and the modern world wouldn't work without it. Reason enough to take a closer look at what this stuff is all about.
+
+% Relevance in communication (telephone, internet), entertainment (music, movies), observation/detection/measurement - radar, sonar, seismology, medical imaging
 
 %###################################################################################################
 \section{Signals and Systems}
-A \emph{signal} is, in the most general sense of the term, actually just a function. We have some independent variable, often time $t$, and some quantity that varies over time - for example, a voltage. Mathematically, such a time-dependent voltage just means that the voltage is a function of time and we could write it symbolically as $v(t)$. The voltage could represent some other physical quantity - for example a sound pressure. In this case, we would convert the time-varying sound-pressure into a time-varying voltage (using a microphone and some electronic gear), then take the voltage as stand-in for the sound pressure and process it some way in order to achieve certain sonic effects - for example boosting the bass or applying distortion - and at the end convert the processed result back into sound pressure using a loudspeaker. In the processing stage, the voltage would be used as an analogon for the quantity that we actually "mean". That's where the term "analog" in the context of signal processing originally comes from - it conveys that we process a quantity that is technologically easy to handle (voltage) as analogon (or stand-in, representative) for some other quantity that would be much more cumbersome to handle directly (sound pressure). But nowadays, the term "analog" is also usually used in contrast to "digital". ...TBC...explain discrete vs continuous, analog vs digital, 2D vs 2-ch signals, notations $x(t), x[n], y(t), y[n]$
+Mathematically speaking, a \emph{signal} is, in the most general sense of the term, actually just a function. So, it's really nothing new at all. We have some independent variable, often time $t$, and some quantity that varies over time - for example, a voltage. Mathematically, such a time-dependent voltage just means that the voltage is a function of time and we could write it symbolically as $v(t)$. The voltage could represent some other physical quantity - for example a sound pressure. In this case, we would convert the time-varying sound-pressure into a time-varying voltage (using a microphone and some electronic gear), then take the voltage as stand-in for the sound pressure and process it some way in order to achieve certain sonic effects (for example boosting the bass or applying distortion) and at the end convert the processed result back into sound pressure (using a loudspeaker). In the processing stage, the voltage would be used as an analogon for the quantity that we actually "mean". That's where the term "analog" in the context of signal processing originally comes from - it conveys that we process a quantity that is technologically easy to handle (like voltage) as analogon (or stand-in, representative) for some other quantity that would be much more cumbersome to handle directly (like sound pressure). But nowadays, the term "analog" is also usually used in contrast to "digital". ...TBC...explain discrete vs continuous, analog vs digital, 2D vs 2-ch signals, notations $x(t), x[n], y(t), y[n], n, N$, samples (both meanings)
 
 
 %In signal processing, a \emph{system} is just some device or algorithm that takes one ore more input signals and produces one ore more output signals. ...TBC...
@@ -16,11 +19,13 @@ A \emph{signal} is, in the most general sense of the term, actually just a funct
 
 %===================================================================================================
 \subsection{The Fourier Transform Family}
-In the context of signal processing, we will have to conceptually deal with 4 variants of the Fourier transform that are characterized by whether the time- and frequency axis will be discrete or continuous. If the time axis is continuous and the frequency axis is discrete, we are dealing with the \emph{Fourier series}. If both axes are continuous, we are dealing with the \emph{continuous Fourier transform}. If both axes are discrete, we are dealing with the \emph{discrete Fourier transform}. Finally, if only the time axis is discrete but the frequency axis is continuous, we are dealing with the \emph{discrete time Fourier transform}. I said, we have to deal with them "conceptually". I mean that in the sense that these 4 variants are relevant for understanding the theory. In practice, the only thing a computer can really deal with is the discrete Fourier transform which is so important that we will abbreviate it by DFT.
+In the context of signal processing, we will have to conceptually deal with 4 variants of the Fourier transform that are characterized by whether the time- and frequency axis will be discrete or continuous. If the time axis is continuous and the frequency axis is discrete, we are dealing with the \emph{Fourier series}. If both axes are continuous, we are dealing with the \emph{continuous Fourier transform}. If both axes are discrete, we are dealing with the \emph{discrete Fourier transform}. Finally, if only the time axis is discrete but the frequency axis is continuous, we are dealing with the \emph{discrete time Fourier transform}. I said, we have to deal with them "conceptually". I mean that in the sense that these 4 variants are relevant for understanding the theory. In practice, the only thing a computer can really ever deal with numerically is the discrete Fourier transform. The other variants may be representable symbolically in a CAS but symbolic representations are not what we usually deal with in signal processing applications. There, we'll do stuff numerically. We want actual concrete numbers, not lofty abstract formulas. The formulas may be useful in the design stage, though.
+
+% which is so important that we will abbreviate it by DFT.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Fourier Series}
-The Fourier series encapsulates Fourier's initial idea that any (square-integrable) periodic function $x(t)$ can be expressed as sum of sines and cosines. In this setting, the time axis $t$ is continuous, i.e. $t$ is a continuous input variable - that is: a real number. The output of the function is also a real number. The frequencies of the sines and cosines, however, are all integer multiples of some fundamental frequency. The sinusoids at these frequencies are also known as \emph{harmonics} or \emph{overtones}. Being indexed by an integer makes them discrete quantities. So, in the Fourier series setting, the time axis is continuous and the frequency axis is discrete. The term "harmonics" is generally reserved for frequencies that are integer multiples of the fundamental. A more general "overtone" may or my not be at an integer multiple of a fundamental. If it isn't, the frequency ratio between it and fundamental would be called inharmonic - and it is questionable if the term "fundamental" should even be used in such a case. However, inharmonic overtones cannot be modeled by Fourier series anyway. They will have to wait for more general formalisms such as the continuous Fourier transform - which can handle this case as well and even much more, namely: non-sinusoidal components. ...TBC...
+The Fourier series (FS) encapsulates Fourier's initial idea that any (square-integrable) periodic function $x(t)$ can be expressed as sum of sines and cosines. In this setting, the time axis $t$ is continuous, i.e. $t$ is a continuous input variable - that is: a real number. The output of the function is also a real number. The frequencies of the sines and cosines, however, are all integer multiples of some fundamental frequency. The sinusoids at these frequencies are also known as \emph{harmonics} or \emph{overtones}. Being indexed by an integer makes them discrete quantities. So, in the Fourier series setting, the time axis is continuous and the frequency axis is discrete. The term "harmonics" is generally reserved for frequencies that are integer multiples of the fundamental. A more general "overtone" may or may not be at an integer multiple of a fundamental. If it isn't, the frequency ratio between it and fundamental would be called \emph{inharmonic} - and it is questionable if the term "fundamental" should even be used in such a case. However, inharmonic overtones cannot be modeled by Fourier series anyway. They will have to wait for more general formalisms such as the continuous Fourier transform - which can handle this case as well and even much more, namely: non-sinusoidal components. ...TBC...
 
 %In most cases, the term "overtones" also refers to integer multiples. 
 
@@ -47,6 +52,36 @@ The discrete time Fourier transform (DTFT) deals with (in general aperiodic) sig
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Discrete Fourier Transform}
+The discrete time transform (DFT) is the thing that we usually compute numerically for a given (chunk of) and input signal. ...TBC...
+
+% it assumes a periodic signal. 
+
+\paragraph{Fast Fourier Transform}
+A naive implementation of the DFT formula would lead to a computational complexity of $\mathcal{O}(N^2)$ when the input is $N$ samples long. That is prohibitive for practically relevant sizes of $N$. Fortunately, there's a more efficient algorithm to compute the exact same result. That algorithm is called the \emph{fast Fourier transform}, abbreviated as FFT. It achieves a computational complexity of $\mathcal{O}(N \log(N))$ which is much more practical. It's actually a whole family of algorithms. ...TBC...explain DIF, DIT variants, Bluestein FFT, Winograd, etc.
+
+\paragraph{Zero Padding}
+% ...helps us using the DFT as approximation to the DTFT
+
+\paragraph{Windowing}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Short Time Fourier Transform and Spectrograms}
+The short time Fourier transform (STFT) is not really another type of Fourier transform like the ones we have seen before (FS, CFT, DTFT, DFT). Instead, it refers to an algorithm that we implement \emph{on top} of the windowed DFT. We use a given window function and slide it over our signal and for each windowed segment, we compute the DFT (using the FFT algorithm, of course). That gives us a sequence of spectral snapshots, ordered in time. If we plot the spectral magnitude as intensity (e.g. pixel darkness or brightness) with the time axis going to the right and the frequency axis going up, we get a view of the signal that is known as the \emph{spectrogram}. ...TBC...mention other time-frequency representations, explain how lossless resynthesis can be done
+
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{More Family Members}
+ToDo: explain DCT, DST, etc. - with applications
+
+% As we have seen, the family of Fourier transfroms is a rather big family
+
+%===================================================================================================
+\subsection{The Radon Transform}
+A transform that is very important in medical imaging is the Radon transform. ...TBC...
+
+
 
 
 %###################################################################################################

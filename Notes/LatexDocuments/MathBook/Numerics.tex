@@ -1,25 +1,45 @@
 \chapter{Numerics}
-Numerical mathematics, or numerics, for short, is the branch of math that deals with tasks like actually producing numbers, typically floating point numbers, on a computer. Tasks like evaluating the function $f(x) = \sin(x)$ at some given $x$ or finding a definite integral of a complicated function that has no elementary antiderivative or finding the solution of some complicated differential equation that has no elementary solution or finding all the complex roots of a polynomial high degree such that no elementary formula exists. 
+Numerical mathematics, or numerics, for short, is the branch of math that deals with tasks like actually producing numbers, typically floating point numbers, on a computer. Tasks like evaluating the function $f(x) = \sin(x)$ at some given $x$ or finding a definite integral of a complicated function that has no elementary antiderivative or finding the solution of some complicated differential equation that has no elementary solution or finding all the complex roots of a polynomial high degree such that no elementary formula exists. Or tasks like solving a linear system of equations or finding all eigenvalues and eigenvectors of a given matrix or finding the singular value decomposition of a matrix
 
 %evaluating
 
 % types of error: approximation error, rounding error
 
+%###################################################################################################
 \section{Numerical Linear Algebra}
 
+
+%===================================================================================================
 \subsection{Solving Linear Systems of Equations}
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Gaussian Elimination}
+
+\paragraph{Pivoting}
+
+\paragraph{Gauss-Jordan Method}
+
+
+%===================================================================================================
 \subsection{Finding Eigenvalues and Eigenvectors}
 
+
+%===================================================================================================
 \subsection{Matrix Decompositions}
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{$LU$-Decomposition}
+
+% QR, eigen, SVD
 
 
 
 
+%###################################################################################################
 \section{Numerical Analysis}
 
 
+%===================================================================================================
 \subsection{Interpolation}
 Interpolation is the business of reconstructing a continuous function from a bunch of data points. In the simplest case, we are dealing with an unknown $1D$ function of the of the form $y = f(x)$ and have pairs of data points $(x_i, y_i)$. Given only the data, we are only able to "evaluate" our mystery function exactly at the data points. That means, if someone gives us n $x$-value, we can immediately produce the corresponding $y$-value by just searching through our data until we find a point with $x_i = x$ and then just spit out the corresponding $y_i$. But what if one gives as an $x$ that isn't any of the recorded $x_i$? If we assume that the given $x$ falls somewhere in between some recorded $x_i$ and $x_{i+1}$, then we call the task \emph{interpolation}. It could also be the case that the given $x$ falls outside the range of observed data. In such a case, the task is called \emph{extrapolation}.
 
@@ -27,17 +47,39 @@ Interpolation is the business of reconstructing a continuous function from a bun
 
 % extrapolation
 
+%===================================================================================================
+\subsection{Function Evaluation and Approximation}
 
-\subsection{Function Approximation}
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Taylor Polynomials}
+We know from calculus (see page \pageref{Eq:TaylorSeries}) that a function $f(x)$ can be expanded around a point $x_0$ via a Taylor series as follows:
+\begin{equation}
+f(x) = \sum_{k=0}^\infty \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k
+\end{equation}
+If we do not take the sum up to infinity but only up to some finite value $n$, then we obtain an approximation to $f(x)$ which will tend to get better when we crank up $n$. This approximation is called the $n$th order Taylor polynomial of $f$ around $x_0$. 
 
-\subsection{Function Evaluation}
+% Taylor-series, Pade-Approximation, Lesat-Squares, Minimax, Chebychev-Approximation, Continued fractions, cordic
 
+%===================================================================================================
+%\subsection{Function Evaluation}
+
+%---------------------------------------------------------------------------------------------------
+%\subsubsection{Taylor Polynomials}
+
+
+%If we want to evaluate a function $f(x)$ and we happen  
+
+
+%===================================================================================================
 \subsection{Root Finding}
 
-
+%===================================================================================================
 \subsection{Optimization}
 
 % constrained and unconstrained
+
+
+
 
 
 

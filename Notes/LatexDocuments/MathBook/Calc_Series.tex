@@ -156,6 +156,10 @@ If a sequence really eventually blows up to either positive or negative infinity
 %ToDo: give some more examples of absolute convergent, conditionally convergent and different kinds of divergent series (alternating but finite, to plus infinity, to minus infinity, altenating with absolute value going to infinity) - maybe also give complex examples. Maybe take ((2/3)(1+i))^n and
 %((3/4)(1+i))^n. The former should converge, the latter diverge. Maybe argue via the geometric series and absolute value. Important in practice: a_n = n^k / b^n converges to zero for k in N, b > 1. Maybe |b| > 1 is enough? n-th root of a, a > 0 -> converges to 1.
 
+
+% https://en.wikipedia.org/wiki/Antilimit
+
+
 \subsubsection{Rules for Convergence and Divergence} 
 
 \paragraph{Sum Rule}
@@ -184,15 +188,17 @@ If we have a nonnegative sequence $(a_n)$ and want to know whether it converges 
 
 
 \subsection{Sequence Transformations}
-A transformation of a sequence is, very generally speaking, a process that we apply to it to obtain a new sequence. For such a transformation to be interesting, we usually want it to satisfy some additional constraints. Most notably among them is the desire to not change the limit of a sequence in the case that such a limit exists, i.e. when the sequence is convergent. If our transformation has this desirable property of not affecting limits of convergent sequences, then we call the transformation \emph{regular} (VERIFY). Such regular transformations can help to speed up the convergence of a sequence which can be very helpful in practice when our task is to (approximately) evaluate the limit of a given sequence. They can even help to turn divergent sequences into convergent ones and thereby give us a potential way to "evaluate" limits of divergent sequences - although we need to be very careful with that. We will have to ask ourselves questions like whether or not this new "limit" is well defined in the sense that all different possible regular transformations will produce the same value (VERIFY)...TBC...
+A transformation of a sequence is, very generally speaking, a process that we apply to it to obtain a new sequence. For such a transformation to be interesting, we usually want it to satisfy some additional constraints. Most notably among them is the desire to not change the limit of a sequence in the case that such a limit exists, i.e. when the sequence is convergent. If our transformation has this desirable property of not affecting limits of convergent sequences, then we call the transformation \emph{regular} (VERIFY). Such regular transformations can help to speed up the convergence of a sequence which can be very helpful in practice when our task is to (approximately) evaluate the limit of a given sequence. They can even help to turn divergent sequences into convergent ones and thereby give us a potential way to "evaluate" limits of divergent sequences - although we need to be very careful with that. We will have to ask ourselves questions like whether or not this new "limit" is well defined in the sense that all different possible regular transformations will produce the same value. This is a tall order if we don't even know (yet) how the set of all possible regular transformations looks like (VERIFY)...TBC...
 
 % https://en.wikipedia.org/wiki/Sequence_transformation
 % binomial transform, Möbius transform, Stirling transform 
 % https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
 % https://en.wikipedia.org/wiki/Series_acceleration
 
+% Give examples for irregular transformations - taking the absolute value of the terms could be seen as such an example
+
 \subsubsection{Convolution as Transformation}
-One way to transform a sequence into a new one is to convolve it with some fixed other sequence. For a simple example, let this other sequence be given by $(\frac{1}{2}, \frac{1}{2}, 0, 0, 0, \ldots)$. In effect, the convolution with the given kernel will just let our new transformed sequence consist of 2-point averages of the old sequence. This will clearly not change the limit of a given sequence if it exists - because if the limit exists, it means that the sequence converges to some fixed value which also implies that two neighboring points will tend to have the same value - and taking the average of two values that are actually one and the same value will not change anything. So, we have our first example of a regular transformation. It's very simple and not very powerful. It will not help much in accelerating convergence of sequences - let alone turning divergent into convergent ones. But at least, we get a sense of how such regular transformations may look like. ...TBC... explain the general condition for a convolution kernel to be "regular" in the sense of not affecting the limit. I guess it must go down to zero (fast enough?) and sum up to one? I think, these two conditions should be sufficient for regularity - but are they necessary? 
+One way to transform a sequence into a new one is to convolve it with some fixed other sequence. For a simple example, let this other sequence be given by $(\frac{1}{2}, \frac{1}{2}, 0, 0, 0, \ldots)$. In effect, the convolution with the given kernel will just let our new transformed sequence consist of 2-point averages of the old sequence. This will clearly not change the limit of a given sequence if it exists - because if the limit exists, it means that the sequence converges to some fixed value which also implies that two neighboring points will tend to have the same value - and taking the average of two values that are actually one and the same value will not change anything. So, we have our first example of a regular transformation. It's very simple and not very powerful. It will not help much in accelerating convergence of sequences - let alone turning divergent into convergent ones\footnote{Well - maybe it could actually do some good with alternating sequences. Figure out!}. But at least, we get a sense of how such regular transformations may look like. ...TBC... explain the general condition for a convolution kernel to be "regular" in the sense of not affecting the limit. I guess it must go down to zero (fast enough?) and sum up to one? I think, these two conditions should be sufficient for regularity - but are they necessary? 
 
 \subsubsection{Transformation by Matrices}
 
@@ -205,11 +211,11 @@ When we have a given sequence $(a_k)$, we can use it to define a new sequence, n
 \begin{equation}
  s_n = \sum_{k=0}^n a_k
 \end{equation}
-Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}. A necessary condition for a series $(s_n)$ to converge is that the sequence $(a_n)$ of its terms converges to zero. But that is not a sufficient condition. The terms must also converge to zero "fast enough". For example, if the terms follow a power rule like $a_n = 1 / n^c$ for some constant $c > 0$, then the $a_n$ will converge to zero. But they will only converge to zero "fast enough" if $c > 1$. If the sequence of partial sums $s_n$ converges, then we can define its value as:
+It's not often framed like this but if you want, you may see the production of the sequence of partial sums as a sequence transformation in the sense above - albeit not a regular one. Just like with any sequence, we can ask whether this sequence of partial sums converges or diverges when we let $n$ approach infinity. What we have then created is an \emph{infinite sum}. Such infinite sums have a special name: they are called \emph{series}. A necessary condition for a series $(s_n)$ to converge is that the sequence $(a_n)$ of its terms converges to zero. But that is not a sufficient condition. The terms must also converge to zero "fast enough". For example, if the terms follow a power rule like $a_n = 1 / n^c$ for some constant $c > 0$, then the $a_n$ will converge to zero. But they will only converge to zero "fast enough" if $c > 1$. If the sequence of partial sums $s_n$ converges, then we can define its value as:
 \begin{equation}
  S = \lim_{n \rightarrow \infty} s_n = \lim_{n \rightarrow \infty} \sum_{k=0}^n a_k
 \end{equation}
-This limit, if it exists and is finite, is called the \emph{sum} of the series.
+This limit, if it exists and is finite, is called the \emph{sum} of the series. 
 
 % https://en.wikipedia.org/wiki/Series_(mathematics)
 % For a_n = 1/n^c, it will be fast enough if |c| > 1.
@@ -230,17 +236,25 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 
 
 
-\subsubsection{Riemann's Reordering Theorem} There is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that converge but fail to converge absolutely. Such series can be made to converge to any value or even to diverge just by reordering the terms. This theorem is called \emph{Riemann reordering theorem}, \emph{Riemann rearrangement theorem} or \emph{Riemann series theorem}. That result is kinda weird because in finite sums, we can reorder the terms in any way we like without changing the final sum. That is a consequence of the associativity of addition. Infinite sums may break the associativity of addition in certain cases. [VERIFY!] ...TBC...
+\subsubsection{Riemann's Reordering Theorem} There is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that do converge but fail to converge absolutely. Such series can be made to converge to any value or even to diverge just by reordering the terms. This theorem is called \emph{Riemann reordering theorem}, \emph{Riemann rearrangement theorem} or \emph{Riemann series theorem}. That result is kinda weird because in finite sums, we can reorder the terms in any way we like without changing the final sum. That is a consequence of the associativity of addition. Infinite sums may break the associativity of addition in certain cases. [VERIFY!] ...TBC....Give example - maybe use the alternating harmonic series and show how to make it approach any value
+
+% Can you change a sum by rearranging its numbers? --- The Riemann Series Theorem
+% https://www.youtube.com/watch?v=U0w0f0PDdPA  by Morphocular
 
 % ...TBC...series that converge but fail to converge absolutely can be made to converge to any value just by reordering the terms
 
 % https://en.wikipedia.org/wiki/Riemann_series_theorem
 % Riemann rearrangement theorem, Riemann series theorem,
 
-\subsubsection{Summation Methods} Certain divergent series can be transformed into other series that are convergent. Of course, if we would allow any transformation, that would be trivially true and an uninteresting statement - we could just transform our divergent series into a series of all zeros, for example. We want to allow only those kinds of transformations that, when being applied to a convergent series, do not change their value. So, the name of the game is to transform the series in a certain way and then trying to figure out the value of the transformed series. This is what summation methods are about. A summation method that has our desired the property of not changing the value of any convergent series is called regular (VERIFY!). If we have found such a regular transformation and then apply it to a divergent series, it may happen that the transformed series becomes convergent. If that works out, we will have a way to assign numerical values to divergent series. If it furthermore turns out that different regular transformations will always lead to the same values, then we may be on to something - maybe some mathematically well defined way to actually evaluate divergent series ...TBC...
+\subsubsection{Summation Methods} Certain divergent series can be transformed into other series that are convergent. Of course, if we would allow any transformation, that would be trivially true and an uninteresting statement - we could just transform our divergent series into a series of all zeros, for example. We want to allow only those kinds of transformations that, when being applied to a convergent series, do not change their value. So, the name of the game is to transform the series in a certain way and then trying to figure out the value of the transformed series. This is what summation methods are about. A summation method that has our desired the property of not changing the value of any convergent series is called regular (VERIFY!). If we have found such a regular transformation and then apply it to a divergent series, it may happen that the transformed series becomes convergent. If that works out, we will have a way to assign numerical values to divergent series. If it furthermore turns out that different regular transformations will always lead to the same values, then we may be on to something - maybe some mathematically well defined way to actually evaluate divergent series ...TBC..
+
+% To be honest, I have seen the term "regular" only be used in the context of series but I boldly generalized its application to transformations of sequences, too
 
 % Series to Series Transformations and Analytic Continuation by Matrix Methods
 % https://www.jstor.org/stable/2372347
+% T-matrix:      sequence to sequence
+% gamma-matrix:  series to sequence
+% alpha-matrix:  series to series
 
 %Of course, to make any sense, our transformation process
 
@@ -257,6 +271,17 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 %  of Gibbs ripple. Maybe it can also increase rate of convergence
 % https://www.youtube.com/watch?v=LDuD_ClkkG8
 
+% https://en.wikipedia.org/wiki/Ces%C3%A0ro_summation
+% https://en.wikipedia.org/wiki/Divergent_series#Abel_summation
+% https://en.wikipedia.org/wiki/Divergent_series#Lindel%C3%B6f_summation
+% https://en.wikipedia.org/wiki/Euler_summation
+% https://en.wikipedia.org/wiki/Borel_summation
+% https://en.wikipedia.org/wiki/Mittag-Leffler_summation
+% https://en.wikipedia.org/wiki/Lambert_summation
+% https://en.wikipedia.org/wiki/Euler%E2%80%93Boole_summation
+% https://en.wikipedia.org/wiki/Van_Wijngaarden_transformation
+
+% https://en.wikipedia.org/wiki/Antilimit
 
 % One minus one plus one minus one - Numberphile
 % https://www.youtube.com/watch?v=PCu_BNNI5x4

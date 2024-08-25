@@ -1,7 +1,7 @@
 \section{Vectors and Matrices}
 
 \paragraph{Vectors}
-Consider a point in the 2D plane or in 3D space. To represent such a point mathematically, we would need a pair or a triple of numbers respectively. An $n$-dimensional vector can generally be thought of as an $n$-tuple of numbers. For intuition building, it's best to think of real numbers although in general, other kinds of numbers may also be allowed in the more general case. Such a vector can not only represent a position in space but also a translation. Imagine the $xy$-plane. The vector $(x,y) = (3,2)$ could encode the action of first going $3$ units into the $x$-direction (usually to the right) and then going $2$ units into the $y$-direction (usually upward). Of course, we could as well go first the $2$ units into the $y$-direction and the $3$ units into the $x$-direction - the location we would end up would be the same in both cases. Vectors are usually denoted as columns. For example, a vector $\mathbf{v}$ with given $x$ and $y$ values is written as:
+Consider a point in the 2D plane or in 3D space. To represent such a point mathematically, we would need a pair or a triple of numbers respectively. An $n$-dimensional vector can generally be thought of as an $n$-tuple of numbers. For intuition building, it's best to think of real numbers although in general, other kinds of numbers may also be allowed in the more general case. Such a vector can not only represent a position in space but also a translation. Imagine the $xy$-plane. The vector $(x,y) = (3,2)$ could encode the action of first going $3$ units into the $x$-direction (usually to the right) and then going $2$ units into the $y$-direction (usually upward). Of course, we could as well go first the $2$ units into the $y$-direction and the $3$ units into the $x$-direction. The location we would end up would be the same in both cases - namely the point with coordinates $(3,2)$. So, we have two interpretations of the tuple $(3,2)$: (1) The point with coordinates $(3,2)$. We could visualize this by drawing a fat dot at this position. (2) The action of displacing something by three units to the right and two units up. We could visualize this as an arrow pointing from the origin to $(3,2)$. If we apply the "action" interpretation to the origin $(0,0)$, we'll end up at $(3,2)$. That is, if we "apply" the arrow to the origin, we'll arrive at our fat dot. Some authors make a careful distinction between the first and second interpretation and use the term "point" or "position vector" for the first and the term "arrow" or "vector" or "displacement vector" for the second. We'll just use the term vector for everything because we don't care about the interpretation - this is math, after all. Vectors are usually denoted as columns. For example, a vector $\mathbf{v}$ with given $x$ and $y$ values is written as:
 \begin{equation}
 \mathbf{v} 
 = \begin{pmatrix} x \\ y \end{pmatrix} 
@@ -12,23 +12,29 @@ Consider a point in the 2D plane or in 3D space. To represent such a point mathe
 \end{equation}
 where the right hand sides can be seen as an interpretation of what the tuple $(x,y)$ actually encodes. We imagine $x$ to be a scaling factor (aka coefficient) of a unit vector $(1,0)$ into the $x$-direction and $y$ to be a coefficient for a unit vector $(0,1)$ into the $y$-direction. The left and right versions are just different notations. The right notation using tuples is more convenient when embedding an equation in a text or when vertical space shall be saved. In non-embedded equations, most books will usually use the left notation where vectors are written as columns with the components stacked vertically. 
 
+% Some authors distinguish carefully between points in the plane and the arrows that start at zero and have their tip at the respective point
+
 %You may also (rarely) see the notation $\mathbf{v} = (x \;\, y)^T$, i.e. like tuple notation but without the comma and a superscript $T$. This $T$ stands for \emph{transposition} which, in this case, means to turn the row into a column.
 
 % Explain notation: when the components are separated by a comma, we see the vectors as tuples. Without commas, we could write them as $(1 0)^T$ where the superscript $T$ in $(\ldots)^T$ stands for \emph{transposition} which, in this case, means to turn the row into a column.
 
 ...TBC...
 
-% Give the standard basis (1,0),(0,1) of R^2, explain how any vector can be expressed as a linear combination of them. done
-
-% Explain the uniot basis vectors and the zerop vector
+% Explain the unit basis vectors and the zero vector
 
 % Explain how the sum is "formal" in an algebraic sense but real in a geometric sense. Or ...well...it is actually also real in an algebraic sense - we can collapse it into a single vector, namely the vector (x,y). Writing it as such a sum can actually be interpreted as decomposition into a purely horizontal and a purely vertical component. These components, when added together in a sense that is soon to be defined, give back the original vector. 
 
 %A vector may not only represent a point itself, but also a translation ...tbc...
+% position vector vs translation/displacement vector
+% Ortsvektor vs Richtungsvektor
+% https://byjus.com/physics/position-and-displacement-vectors/
 
+
+% Geometrische Interpretation linearer Abbildungen
+% https://www.youtube.com/watch?v=EQ5Xct2YyLk
 
 \paragraph{Matrices}
-Vectors can be used to represent locations and translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are).
+Vectors can be used to represent locations and displacements aka translations. Translations are a specific kind of geometric transformation. A matrix represents a different kind of transformation, namely a \emph{linear transformation}, that we can apply to a vector. In geometric terms, linear transformations are scalings, rotations and shears. In this point of view, the columns of the matrices tell us, where the standard basis vectors will get mapped to (we'll see later what these are).
 
 ...TBC...
 
@@ -45,8 +51,9 @@ Vectors can be used to represent locations and translations. Translations are a 
 Strictly speaking, an $n$-tuple of numbers is not what a vector really \emph{is} by its nature. By its nature, a vector is a geometric entity such as a point in space or an arrow with a direction and length. The $n$-tuple of numbers is a specific \emph{representation} of that geometric entity that depends on the coordinate system that we have chosen. But you may take that statement as a foreshadowing to a more advanced viewpoint. For the purposes of this section, it's totally okay to picture a vector as a tuple of numbers. Likewise, matrices are also only a specific representation of a linear transformation. In a different coordinate system, the same transformation would be represented by a different 2D array of numbers. We will say more about this in the context of so called \emph{change of basis} transformations.
 
 \medskip
-Moreover, when we look at things more carefully, we need to distinguish between \emph{points} and \emph{vectors}. A point represents just a location and it does not really make any sense to add a location to another location. What is Berlin plus Paris supposed to mean? It makes no sense - even when expressed as geolocations! (By the way: I'm conveniently assuming a flat map here. Taking the spherical earth into account is a further complication which is of no relevance to my point). A vector, on the other hand, represents an arrow which we interpret as a translation. It does indeed make sense to add translations: we just perform one after the other. We may first go 30 km east and 20 km north and thereafter go 40 km east and 50 km north - that makes perfect sense. However - in practice (like in vector graphics APIs), points are usually identified with their \emph{position vectors} (aka location vector or radius vector), i.e. vectors that point from the origin to the given point. Represented as such, we actually can add points in our graphics code - we just should ask ourselves, if it makes any sense to do so in our particular case.
+Moreover, when we look at things more carefully, we may need to distinguish between \emph{points} and \emph{vectors}, after all - which I just said, we don't. A point represents just a location and it does not really make any sense to add a location to another location. What is Berlin plus Paris supposed to mean? It makes no sense - even when expressed as geolocations! (By the way: I'm conveniently assuming a flat map here. Taking the spherical earth into account is a further complication which is of no relevance to my point). A vector, on the other hand, represents an arrow which we interpret as a translation. It does indeed make sense to add translations: we just perform one after the other. We may first go 30 km east and 20 km north and thereafter go 40 km east and 50 km north - that makes perfect sense. So we can add translations to one another. We can actually even add translations to points - that makes sense as well. The result would be another point. What could also make sense is to take the difference of two points and interpret that as a displacement vector that tells us, how we would need to move to get from the first point to the other. However - in practice (like in vector graphics APIs), points are usually identified with their \emph{position vectors} (aka location vector or radius vector), i.e. vectors that point from the origin to the given point. Represented as such, we actually can add points in our graphics code - we just should ask ourselves, if it makes any sense to do so in our particular case and what the result represents. A graphics API could in principle provide different data types for points and vectors and allow only those operations that make sense - but they usually don't and express everything uniformly by vectors and expect the user to know, what they are doing. Don't let my ramblings distract you too much!
 % ...TBC...
+% the difference between two locations, on the other hand, does make sense. It would be a displacement vector
 
 % https://en.wikipedia.org/wiki/Position_(geometry)
 
@@ -54,10 +61,10 @@ Moreover, when we look at things more carefully, we need to distinguish between 
 \subsection{Vector Operations}
 
 \paragraph{Scalar Multiplication}
-Scalar multiplication refers to the act of multiplying a vector $\mathbf{v}$ by a scalar, i.e. a number, let's say $a$. This is just done by multiplying every component of the vector by that number. Geometrically, this scales the length of the vector by a factor of $a$. That's where the name "scalar" comes from. You may interpret it as "scaler". If $a > 1$, the vector just gets longer. If $a < 1$ but still $a > 0$, the vector gets shorter but retains its direction. If $a < 0$, the vector reverses direction in addition to being lengthened or shortened (in the special case of $a=-1$, it gets only reflected). If $a = 0$, the vector actually gets collapsed into the zero vector $\mathbf{0}$.
+Scalar multiplication refers to the act of multiplying a vector $\mathbf{v}$ by a scalar, i.e. a number, let's say $a$. This is just done by multiplying every component of the vector by that number. Geometrically, this scales the length of the vector by a factor of $a$. That's where the name "scalar" comes from. You may interpret it as "scaler". A thing that "scales". If $a > 1$, the vector just gets longer. If $a < 1$ but still $a > 0$, the vector gets shorter but retains its direction. If $a < 0$, the vector reverses direction in addition to being lengthened or shortened (in the special case of $a=-1$, it gets only reflected). If $a = 0$, the vector actually gets collapsed into the zero vector $\mathbf{0}$.
 
 \paragraph{Vector Addition}
-Algebraically, there is not much to say about vector addition - we just add the tuples component-wise and that's it. We can interpret such a vector addition geometrically at placing the vectors tip to tail. ...TBC... [ToDo: insert figure with the parallelogram picturing $\mathbf{a + b}$ and $\mathbf{b + a}$].
+Algebraically, there is not much to say about vector addition - we just add the tuples component-wise and that's it. We can interpret such a vector addition geometrically at placing the arrows that represent the vectors tip to tail. ...TBC... [ToDo: insert figure with the parallelogram picturing $\mathbf{a + b}$ and $\mathbf{b + a}$].
 
 % What about when dimensionalities don't match? Maybe we can zero-pad the shorter vector in certain
 % cases. Geometrically, this would mean to iamgine the low-dimensional vector spcae as being 
@@ -67,10 +74,13 @@ Algebraically, there is not much to say about vector addition - we just add the 
 % 
 
 \paragraph{Vector Subtraction}
+Algebraically, vector subtraction is also simple - just do it component-wise. Geometrically, when we subtract a vector $\mathbf{b}$ from another vector $\mathbf{a}$ such that $\mathbf{c = b-a}$, then the arrow that represents the difference vector $\mathbf{c}$ could be visualized as pointing from the tip of $\mathbf{b}$ to the tip of $\mathbf{a}$. But then it wouldn't have its tail at the origin anymore. But that's no problem - we can just imagine to slide it back such that its tail again coincides with the origin ...TBC...explain that better, draw a figure
 % What about subtraction? Algebraically, it's just addition of the negative but geometrically, it
 % has a meaningful interpretation, so maybe it should get is won section
 
 % maybe generalize to "Linear Combinations"
+
+% explain that vectors can be moved around freely in the plane
 
 \paragraph{Linear Combinations}
 A linear combination of a bunch of vectors is just a weighted sum of those vectors. That means each vector gets multiplied by a weight via our scalar multiplication and then these scaled vectors are added up via our vector addition. Vector subtraction is also just a special case of a linear combination of two vectors where one vector gets a weight of $+1$ and the other a weight of $-1$. 

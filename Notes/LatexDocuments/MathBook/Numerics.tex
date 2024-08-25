@@ -1,0 +1,46 @@
+\chapter{Numerics}
+Numerical mathematics, or numerics, for short, is the branch of math that deals with tasks like actually producing numbers, typically floating point numbers, on a computer. Tasks like evaluating the function $f(x) = \sin(x)$ at some given $x$ or finding a definite integral of a complicated function that has no elementary antiderivative or finding the solution of some complicated differential equation that has no elementary solution or finding all the complex roots of a polynomial high degree such that no elementary formula exists. 
+
+%evaluating
+
+% types of error: approximation error, rounding error
+
+\section{Numerical Linear Algebra}
+
+\subsection{Solving Linear Systems of Equations}
+
+\subsection{Finding Eigenvalues and Eigenvectors}
+
+\subsection{Matrix Decompositions}
+
+
+
+
+
+\section{Numerical Analysis}
+
+
+\subsection{Interpolation}
+Interpolation is the business of reconstructing a continuous function from a bunch of data points. In the simplest case, we are dealing with an unknown $1D$ function of the of the form $y = f(x)$ and have pairs of data points $(x_i, y_i)$. Given only the data, we are only able to "evaluate" our mystery function exactly at the data points. That means, if someone gives us n $x$-value, we can immediately produce the corresponding $y$-value by just searching through our data until we find a point with $x_i = x$ and then just spit out the corresponding $y_i$. But what if one gives as an $x$ that isn't any of the recorded $x_i$? If we assume that the given $x$ falls somewhere in between some recorded $x_i$ and $x_{i+1}$, then we call the task \emph{interpolation}. It could also be the case that the given $x$ falls outside the range of observed data. In such a case, the task is called \emph{extrapolation}.
+
+% Ex.: f(x) = x^2, data: (0,0), (1,1), (2,4), (3,9), (4,16), (5,25)
+
+% extrapolation
+
+
+\subsection{Function Approximation}
+
+\subsection{Function Evaluation}
+
+\subsection{Root Finding}
+
+
+\subsection{Optimization}
+
+% constrained and unconstrained
+
+
+
+\begin{comment}
+
+\end{comment}

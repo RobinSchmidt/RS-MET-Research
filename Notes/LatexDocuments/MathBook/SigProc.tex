@@ -11,14 +11,16 @@
 
 %===================================================================================================
 \subsection{The Fourier Transform Family}
-In the context of signal processing, we will cave to conceptually deal with 4 variants of the Fourier transform that are characterized by whether the time- and frequency axis will be discrete or continuous. If the time axis is continuous and the frequency axis is discrete, we are dealing with the \emph{Fourier series}. If both axes are continuous, we are dealing with the \emph{continuous Fourier transform}. If both axes are discrete, we are dealing with the \emph{discrete Fourier transform}. Finally, if only the time axis is discrete but the frequency axis is continuous, we are dealing with the \emph{discrete time Fourier transform}. 
-
+In the context of signal processing, we will have to conceptually deal with 4 variants of the Fourier transform that are characterized by whether the time- and frequency axis will be discrete or continuous. If the time axis is continuous and the frequency axis is discrete, we are dealing with the \emph{Fourier series}. If both axes are continuous, we are dealing with the \emph{continuous Fourier transform}. If both axes are discrete, we are dealing with the \emph{discrete Fourier transform}. Finally, if only the time axis is discrete but the frequency axis is continuous, we are dealing with the \emph{discrete time Fourier transform}. I said, we have to deal with them "conceptually". I mean that in the sense that these 4 variants are relevant for understanding the theory. In practice, the only thing a computer can really deal with is the discrete Fourier transform which is so important that we will abbreviate it by DFT.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Fourier Series}
+The Fourier series encapsulates Fourier's initial idea that any (square-integrable) periodic function $f(t)$ can be expressed as sum of sines and cosines. In this setting, the time axis $t$ is continuous, i.e. $t$ is a continuous input variable - that is: a real number. The output of the function is also a real number. The frequencies of the sines and cosines, however, are all integer multiples of some fundamental frequency. Being indexed by an integer makes them discrete quantities. So, in the Fourier series setting, the time axis is continuous and the frequency axis is discrete. ...TBC...
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Continuous Fourier Transform}
+
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Discrete Time Fourier Transform}

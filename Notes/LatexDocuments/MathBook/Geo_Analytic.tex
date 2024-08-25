@@ -1,7 +1,7 @@
 \section{Analytic Geometry}
 Analytic geometry is about representing the positions of points within space by numbers and doing calculations with these numbers. These numbers are called "coordinates" and are to be understood with respect to a given coordinate system which has to be chosen beforehand. From points, more complex objects like lines, planes, shapes, etc. can be made up and we are interested in computing things like the distance of a point from a line or plane etc.. The term "analytic" is, in my humble opinion, a bit misleading here because "analysis" is usually taken to be a more rigorous version of calculus but in analytic geometry, we typically do more basic vector- and matrix-algebra stuff and the more calculusy things are usually tackled later in "differential" geometry. However, "analytic" geometry, just like "elementary" geometry, is also mostly a bunch of formulas that are useful for creating more complex geometric algorithms. The main distinctive feature is that these formulas will typically involve representations of our shapes in terms of vectors of coordinates. This is actually the more typical representation we use in a computer, at least in the context of graphics but also for physical simulations. In this context, the points are also often called "vertices" and they can be represented by vectors. Conceptually, a point is actually not the same thing as a vector. A point is just a location in space and it doesn't seem to be a meaningful idea to add two locations in space together, for example. A vector, on the other hand, is meant to encode a length and direction (of movement) and it does indeed make geometric sense to add a vector to a point to get another point. In practice, however, this distinction is rarely made and points are just identified with their position vectors, i.e. vectors that go from the origin of the coordinate system to the point. Vectors are things that we can freely add together anyway and the result will always be another vector.
 
-
+%---------------------------------------------------------------------------------------------------
 \subsection{Lines}
 Given a point $\mathbf{p}$ and a nonzero vector $\mathbf{v}$, both elements of $\mathbb{R}^n$, we can consider the following set of points:
 \begin{equation}
@@ -11,19 +11,23 @@ Given a point $\mathbf{p}$ and a nonzero vector $\mathbf{v}$, both elements of $
 \end{equation}
 This set of points represents a line in $\mathbb{R}^n$. This line goes through the point $\mathbf{p}$ and has a direction of $\mathbf{v}$. The line is given in so called parametric form with the parameter $t$. We can imagine that, as $t$ sweeps through the real numbers, a point sweeps along the line. For each value of $t$, we obtain some point on the line by just plugging the value $t$ into the formula. With $t=0$, we are at $\mathbf{p}$. With $t=1$, we are at $\mathbf{p + v}$.  ...ToDo: give other forms of a line (implicit, etc.)
 
-
+%---------------------------------------------------------------------------------------------------
 \subsection{Planes}
-Given a point $\mathbf{p}$ and two nonzero, linearly independent vectors $\mathbf{v, w}$, consider the following set of points:
+Given a point $\mathbf{p}$ and two linearly independent\footnote{Linear independence implies that both must be nonzero.} vectors $\mathbf{v, w}$, consider the following set of points:
 \begin{equation}
  \mathbf{p} + \mathbb{R} \mathbf{v}  + \mathbb{R} \mathbf{w}
  \quad = \quad
  \mathbf{p} + s \mathbf{v} + t \mathbf{w}, \; s,t \in \mathbb{R}
 \end{equation}
+This set of points represents a plane in $\mathbb{R}^n$. 
 
-
-
+%---------------------------------------------------------------------------------------------------
 \subsection{Hyperplanes}
-
+After having seen lines and planes, the pattern continues. We can take some fixed point $\mathbf{p}$ together with a set of $k$ linearly independent vectors $\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_k$ and consider the set:
+\begin{equation}
+ \mathbf{p} + \sum_{i=0}^{k} t_i \mathbf{v}_i, \; t_i \in \mathbb{R}
+\end{equation}
+This set defines a $k$-dimensional hyperplane in $\mathbb{R}^n$ where $k < n$. Well, we could perhaps allow $k=n$ as edge case as well, but then we would just get the whole space $\mathbb{R}^n$ and that's not interesting. We are interested in substructures of $\mathbb{R}^n$. But $k > n$ does really not make any sense at all, not even as edge case, because then we can't even find a set of $k$ linearly independent vectors anymore.
 
 \subsection{The 2D Plane}
 

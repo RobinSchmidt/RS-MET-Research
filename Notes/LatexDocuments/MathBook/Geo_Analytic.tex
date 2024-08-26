@@ -30,7 +30,7 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 
 % Coordinate system:
 \draw[->] (-5,0)  -- (8,0) coordinate[label = {below:$x$}] (xmax);
-\draw[->] (0,-3)  -- (0,5)  coordinate[label = {left:$y$}] (ymax);
+\draw[->] (0,-1)  -- (0,5)  coordinate[label = {left:$y$}] (ymax);
 
 % Line:  
 \draw     (-4,-1) -- (6,4)  node[pos=0.95, below right] {Line};
@@ -47,9 +47,13 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 % ToDo: try to use tick-marks instead - or just drop horizontal and vertical lines
 % Maybe draw a grid, put centered (maybe wrap into a figure)
 
-% add x,y intercepts and angle alpha
+% x,y intercepts:
 \draw (-2,0) node[dot, label = {below:$a$}]{};  
 \draw (0,1) node[dot, label = {left:$b$}]{}; 
+
+% angle alpha:
+\draw (-1,0) arc (0:27.5:1);
+\draw (-1.2,0.2) node[label = {center:$\alpha$}]{};
 
 \end{tikzpicture}
 % adapted from:

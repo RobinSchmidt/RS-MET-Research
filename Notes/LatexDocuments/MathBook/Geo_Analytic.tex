@@ -23,38 +23,29 @@ After points (or vectors or vertices), the next object we need is the \emph{line
 \end{equation}
 In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of points in the sense that they encode locations whereas $\mathbf{v}$ is a proper vector in the narrower sense of encoding a displacement.
 
+\begin{tikzpicture}
+[thick, >=stealth', 
+  dot/.style = { draw, fill = black, circle, inner sep = 0pt, minimum size = 4pt }
+]
 
-\begin{tikzpicture}[
-    thick,
-    >=stealth',
-    dot/.style = {
-      draw,
-      fill = white,
-      circle,
-      inner sep = 0pt,
-      minimum size = 4pt
-    }
-  ]
-  \coordinate (O) at (0,0);
-  \draw[->] (-0.3,0) -- (8,0) coordinate[label = {below:$x$}] (xmax);
-  \draw[->] (0,-0.3) -- (0,5) coordinate[label = {left:$y$}] (ymax);
-  \path[name path=x] (0.3,0.5) -- (6.7,4.7);
-  \path[name path=y] plot[smooth] coordinates {(-0.3,2) (2,1.5) (4,2.8) (6,5)};
-  \scope[name intersections = {of = x and y, name = i}]
-    \draw      (0.3,0.5) -- (6.7,4.7) node[pos=0.8, below right] {Line};
-    \draw (i-1) node[dot, label = {above:$\mathbf{r}_1$}] (i-1) {} -- node[left]
-      {$f(x_0)$} (i-1 |- O) node[dot, label = {below:$x_1$}] {};
-    \path (i-2) node[dot, label = {above:$\mathbf{r}_2$}] (i-2) {} -- (i-2 |- i-1)
-      node[dot] (i-12) {};
-      
-    \draw(i-12) -- (i-12 |- O) node[dot, label = {below:$x_2$}] {};                     
-    \draw[blue, <->] (i-2) -- node[right] {$y_2 - y_1 $} (i-12);
-            
-    \draw[blue, <->] (i-1) -- node[below] {$x_2 - x_1$} (i-12);
-    
-    %\path       (i-1 |- O) -- node[below] {$\varepsilon$} (i-2 |- O);   
-%    \draw[gray]      (i-2) -- (i-2 -| xmax);
-  \endscope
+% Coordinate system:
+\draw[->] (-5,0)  -- (10,0) coordinate[label = {below:$x$}] (xmax);
+\draw[->] (0,-3)  -- (0,5)  coordinate[label = {left:$y$}] (ymax);
+
+% Line:  
+\draw     (-4,-1) -- (6,4)  node[pos=0.9, below right] {Line};
+
+% Points on the line:  
+\draw (2,2) node[dot, label = {above:$\mathbf{p}_1$}]{};
+\draw (4,3) node[dot, label = {above:$\mathbf{p}_2$}]{};
+
+% Marks on the x- and y-axes:
+\draw (2,0) node[dot, label = {below:$x_1$}]{};  
+\draw (4,0) node[dot, label = {below:$x_2$}]{};
+\draw (0,2) node[dot, label = {left:$y_1$}]{};
+\draw (0,3) node[dot, label = {left:$y_2$}]{};
+% ToDo: try to use tick-marks instead - or just drop horizontal and vertical lines
+
 \end{tikzpicture}
 % adapted from:
 % https://texample.net/tikz/examples/linear-regression/

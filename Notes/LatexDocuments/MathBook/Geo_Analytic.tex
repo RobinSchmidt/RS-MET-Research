@@ -1,8 +1,49 @@
 \section{Analytic Geometry}
-Analytic geometry is about representing the positions of points within space by numbers and doing calculations with these numbers. These numbers are called "coordinates" and are to be understood with respect to a given coordinate system which has to be chosen beforehand. From points, more complex objects like lines, planes, shapes, etc. can be made up and we are interested in computing things like the distance of a point from a line or plane etc.. The term "analytic" is, in my humble opinion, a bit misleading here because "analysis" is usually taken to be a more rigorous version of calculus but in analytic geometry, we typically do more basic vector- and matrix-algebra stuff and the more calculusy things are usually tackled later in "differential" geometry. However, "analytic" geometry, just like "elementary" geometry, is also mostly a bunch of formulas that are useful for creating more complex geometric algorithms. The main distinctive feature is that these formulas will typically involve representations of our shapes in terms of vectors of coordinates. This is actually the more typical representation we use in a computer, at least in the context of graphics but also for physical simulations. In this context, the points are also often called "vertices" and they can be represented by vectors. Conceptually, a point is actually not the same thing as a vector. A point is just a location in space and it doesn't seem to be a meaningful idea to add two locations in space together, for example. A vector, on the other hand, is meant to encode a length and direction (of movement) and it does indeed make geometric sense to add a vector to a point to get another point. In practice, however, this distinction is rarely made and points are just identified with their position vectors, i.e. vectors that go from the origin of the coordinate system to the point. Vectors are things that we can freely add together anyway and the result will always be another vector.
+Analytic geometry is about representing the positions of points within space by numbers and doing calculations with these numbers. These numbers are called "coordinates" and are to be understood with respect to a given coordinate system which has to be chosen beforehand. From points, more complex objects like lines, planes, shapes, etc. can be made up and we are interested in computing things like the distance of a point from a line or plane etc.. The term "analytic" is, in my humble opinion, a bit misleading here because "analysis" is usually taken to be a more rigorous version of calculus but in analytic geometry, we typically do more basic vector- and matrix-algebra stuff and the more calculusy things are usually tackled later in "differential" geometry. However, "analytic" geometry, just like "elementary" geometry, is also mostly a bunch of formulas that are useful for creating more complex geometric algorithms. The main distinctive feature is that these formulas will typically involve representations of our shapes in terms of vectors of coordinates. This is actually the more typical representation we use in a computer, at least in the context of graphics but also for physical simulations. 
+
+%===================================================================================================
+\subsection{The $2D$ Euclidean Plane $\mathbb{R}^2$}
+The simplest setting to do analytic geometry in is the $2$-dimensional plane also known as the Euclidean plane which we denote as $\mathbb{R}^2$ due to the fact that we use two real numbers to specify a location in this space. This is the place where Euclid himself developed all the geometric notions that we learn today in school. The objects we will deal with are points, lines, curves, triangles and polygons. The quantities we are interested in are distances, angles and areas. ...TBC...
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Lines}
+\subsubsection{Points, Vectors and Vertices}
+Our eventual goal is to describe geometric shapes and calculate certain features of them. The most primitive object that we need to build our representations of shapes from is a \emph{point}. A point is just a location in a space - in this case, a location in the $2D$ plane. When we build polygons from points, we will also call these points \emph{vertices} (singular: \emph{vertex}) and we may use \emph{vectors} to represent these points. So, in this setup, the terms point, vector and vertex kinda all mean the same basic mathematical object, namely a vector, but the usage of different terms can be viewed as a hint to what specific role a given vector currently plays. If we say vertex, the role is typically to be a corner of a polygon. If we say point, the role is typically a general location. If we say vector, the role may be a translation or displacement. But whatever the role is, the representation will always be a pair of real numbers, i.e. a $2D$ vector. ...TBC...TODO: introduce different notations for points and vectors.
+
+%In this context, the points are also often called "vertices" and they can be represented by vectors. Conceptually, a point is actually not the same thing as a vector. A point is just a location in space and it doesn't seem to be a meaningful idea to add two locations in space together, for example. A vector, on the other hand, is meant to encode a length and direction (of movement) and it does indeed make geometric sense to add a vector to a point to get another point. In practice, however, this distinction is rarely made and points are just identified with their position vectors, i.e. vectors that go from the origin of the coordinate system to the point. Vectors are things that we can freely add together anyway and the result will always be another vector.
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Lines}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Curves}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Triangles}
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Polygons}
+
+
+
+%ToDo: representation as 2D vectors, points, lines, formulas for: distance between points, between point and line, angle between lines, ...
+
+
+%===================================================================================================
+\subsection{The $3D$ Euclidean Space $\mathbb{R}^3$}
+When we up our game by one dimension from the Euclidean plane, we arrive at the $3$-dimensional Euclidean space. Points, lines, triangles and curves are still a thing - but they will now exist in $3$ rather than $2$ dimensions. But we also get a new type object to deal with: arbitrary planes. In the $2D$ case, there was \emph{the} plane which was the backdrop for all the objects. Now planes themselves are objects within the larger $3D$ space and they can have any orientation within that larger space. We even get curves surfaces which was also not a thing in $\mathbb{R}^2$. Polygons can still make sense in $\mathbb{R}^3$, but we need to be a bit more careful because it's not guaranteed anymore that all the vertices of a polygon lie in the same plane. This was not an issue in $2D$ space. ...TBC...
+
+%ToDo: representation as 3D vectors, points, lines, planes, formulas for: distance between point and line, point and plane, intersection point of line with plane, intersection line of 2 planes, intersection point of 3 planes, angle between plane and line, plane and plane, ...
+
+
+%===================================================================================================
+\subsection{The $nD$ Euclidean Space $\mathbb{R}^n$}
+Having seen the Euclidean spaces of dimension $2$ and $3$, it's now time to generalize to Euclidean spaces of arbitrary dimension. ...TBC...
+
+%\subsection{The Euclidean }
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Lines}
 Given a point $\mathbf{p}$ and a nonzero vector $\mathbf{v}$, both elements of $\mathbb{R}^n$, we can consider the following set of points:
 \begin{equation}
  L 
@@ -25,7 +66,7 @@ This is called a \emph{two point form}. It may also be called a representation i
 % https://math.stackexchange.com/questions/2931233/the-vector-form-and-parametric-forms-of-a-line-given-a-point-and-direction-or
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Planes}
+\subsubsection{Planes}
 Given a point $\mathbf{p}$ and two linearly independent\footnote{Linear independence implies that both must be nonzero.} vectors $\mathbf{v, w}$, consider the following set of points:
 \begin{equation}
  \mathbf{p} + \mathbb{R} \mathbf{v}  + \mathbb{R} \mathbf{w}
@@ -35,7 +76,7 @@ Given a point $\mathbf{p}$ and two linearly independent\footnote{Linear independ
 This set of points represents a plane in $\mathbb{R}^n$. 
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Hyperplanes}
+\subsubsection{Hyperplanes}
 After having seen lines and planes, the pattern continues. We can take some fixed point $\mathbf{p}$ together with a set of $k$ linearly independent vectors $\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_k$ and consider the set:
 \begin{equation}
  \mathbf{p} + \sum_{i=0}^{k} t_i \mathbf{v}_i, \; t_i \in \mathbb{R}
@@ -54,15 +95,7 @@ This set defines a $k$-dimensional hyperplane in $\mathbb{R}^n$ where $k < n$. W
 
 
 
-\subsection{The 2D Plane}
 
-ToDo: representation as 2D vectors, points, lines, formulas for: distance between points, between point and line, angle between lines, ...
-
-
-
-\subsection{The 3D Space}
-
-ToDo: representation as 3D vectors, points, lines, planes, formulas for: distance between point and line, point and plane, intersection point of line with plane, intersection line of 2 planes, intersection point of 3 planes, angle between plane and line, plane and plane, ...
 
 
 \begin{comment}

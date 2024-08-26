@@ -21,7 +21,7 @@ After points (or vectors or vertices), the next object we need is the \emph{line
 \mathbf{p}_2 = \begin{pmatrix} x_2 \\ y_2 \end{pmatrix}, \qquad
 \mathbf{v}   = \mathbf{p}_2 - \mathbf{p}_1 
 \end{equation}
-In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of points in the sense that they encode locations whereas $\mathbf{v}$ is a proper vector in the narrower sense of encoding a displacement.
+In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of points in the sense that they encode locations whereas $\mathbf{v}$ is a proper vector in the narrower sense of encoding a displacement. The situation is depicted below.
 
 \begin{tikzpicture}
 [thick, >=stealth', 
@@ -33,7 +33,7 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \draw[->] (0,-1)  -- (0,5)  coordinate[label = {left:$y$}] (ymax);
 
 % Line:  
-\draw     (-4,-1) -- (6,4)  node[pos=0.95, below right] {Line};
+\draw     (-4,-1) -- (6,4)  node[pos=0.85, below right] {};
 
 % Points on the line:  
 \draw (2,2) node[dot, label = {above:$\mathbf{p}_1$}]{};
@@ -55,6 +55,14 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \draw (-1,0) arc (0:27.5:1);
 \draw (-1.2,0.2) node[label = {center:$\alpha$}]{};
 
+\node[align=left] at (10,3.0) 
+{
+\begin{tabular}{l l}
+  $\tan(\alpha) = m = \frac{y_2-y_2}{x_2-x_1}$ & Slope $m$, Angle $\alpha$ \\
+  $\mathbf{p}(t) = \mathbf{p}_1 + t (\mathbf{p}_2 -\mathbf{p}_1)$ & Parametric form \\
+  $y = m x + b$ & Explicit form \\
+\end{tabular}
+};
 \end{tikzpicture}
 % adapted from:
 % https://texample.net/tikz/examples/linear-regression/

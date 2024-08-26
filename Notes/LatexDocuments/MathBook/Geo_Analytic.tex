@@ -46,17 +46,14 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
       {$f(x_0)$} (i-1 |- O) node[dot, label = {below:$x_1$}] {};
     \path (i-2) node[dot, label = {above:$\mathbf{r}_2$}] (i-2) {} -- (i-2 |- i-1)
       node[dot] (i-12) {};
-    \draw           (i-12) -- (i-12 |- O) node[dot,
-                              label = {below:$x_2$}] {};
-    \draw[blue, <->] (i-2) -- node[right] {$f(x_0 + \varepsilon) - f(x_0)$}
-                              (i-12);
-                              
+      
+    \draw(i-12) -- (i-12 |- O) node[dot, label = {below:$x_2$}] {};                     
+    \draw[blue, <->] (i-2) -- node[right] {$y_2 - y_1 $} (i-12);
+            
     \draw[blue, <->] (i-1) -- node[below] {$x_2 - x_1$} (i-12);
     
-    \path       (i-1 |- O) -- node[below] {$\varepsilon$} (i-2 |- O);
-    \draw[gray]      (i-2) -- (i-2 -| xmax);
-%    \draw[gray, <->] ([xshift = -0.5cm]i-2 -| xmax) -- node[fill = white]
-%      {$f(x_0 + \varepsilon)$}  ([xshift = -0.5cm]xmax);
+    %\path       (i-1 |- O) -- node[below] {$\varepsilon$} (i-2 |- O);   
+%    \draw[gray]      (i-2) -- (i-2 -| xmax);
   \endscope
 \end{tikzpicture}
 % adapted from:

@@ -113,7 +113,7 @@ Another derivation that I have seen in this book  (pages 8,9 - not available in 
   https://www.amazon.de/-/en/Avner-Ash/dp/0691163502/
 
 arrives at formulas compatible with those on wikipedia. They choose the fixed point P = (-1,0) and 
-let the variable point Q sweep out the y-axis. Their derivtaion is also a bit simpler than mine
+let the variable point Q sweep out the y-axis. Their derivation is also a bit simpler than mine
 because they do not use the parametric equation of the line but rather an explicit form y = f(x). I 
 have opted for the parametric line equation because I hope that this generalizes better to other
 varieties.
@@ -291,7 +291,7 @@ It produces the following output:
 (True, 1602216/1468129, 148104/112933, -5248195/1468129) 
   
 So it indeed worked all out. We have produced a rational coordinate triple (x,y,z) which defines a 
-point on the ellipsoid. Seraching on google for "ellipsoid rational parametrization" brings up this:
+point on the ellipsoid. Searching on google for "ellipsoid rational parametrization" brings up this:
 
 https://math.stackexchange.com/questions/4151942/parametric-equation-of-an-ellipsoid
   

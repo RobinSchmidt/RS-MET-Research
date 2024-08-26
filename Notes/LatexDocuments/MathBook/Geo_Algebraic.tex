@@ -34,7 +34,7 @@ An \emph{algebraic variety} is the set of solutions to a system of polynomial eq
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Parameterizations}
-Defining a shape as the solution set of a system of equations is also called an \emph{implicit definition}. Sometimes it is more convenient to have a more explicit representation of the set of points. A fully explicit representation would be, if we could isolate one variable and express it explicitly as function of all the others. But requiring such a functional representation is often too restrictive - there are some shapes that simply cannot represented that way. For example, we could try to represent the circle explicitly as $y = \sqrt{r^2 - x^2}$ but that would give us only the upper half the circle unless we interpret the square-root as multi-valued function, which is already inconvenient in this very simple toy example and in more complicated cases, things may get out of hand even more. If a fully explicit representation is not possible or practical, i.e. if we can't express one coordinate as function of the others, the second best thing is to let \emph{all} the coordinates be functions of a set of some \emph{auxiliary} variables which we call parameters. In the case of a circle, that could look like $x(t) = \cos(t), y(t) = \sin(t)$ for $t \in [0, 2 \pi]$. In such a representation we call $t$ the parameter. A surface, such as a sphere, would require two parameters which are often named $u$ and $v$. Such parametric representations are actually more common in differential geometry. Here, in algebraic geometry, we more often work with the implicit definitions and have some constraints for what kind of functions are allowed, namely polynomials. Sine and cosine, by virtue of being transcendental functions, do not really seem to belong in a field carrying the name "algebraic". Actually, the constraint to use only polynomials applies only to the implicit definitions and not necessarily to parameterizations, but still.
+Defining a shape as the solution set of a system of equations is also called an \emph{implicit definition}. Sometimes it is more convenient to have a more explicit representation of the set of points. A fully explicit representation would be, if we could isolate one variable and express it explicitly as function of all the others. But requiring such a functional representation is often too restrictive - there are some shapes that simply cannot be represented that way. For example, we could try to represent the circle explicitly as $y = \sqrt{r^2 - x^2}$ but that would give us only the upper half the circle unless we interpret the square-root as multi-valued function, which is already inconvenient in this very simple toy example and in more complicated cases, things may get out of hand even more. If a fully explicit representation is not possible or practical, i.e. if we can't express one coordinate as function of the others, the second best thing is to let \emph{all} the coordinates be functions of a set of some \emph{auxiliary} variables which we call parameters. In the case of a circle, that could look like $x(t) = \cos(t), y(t) = \sin(t)$ for $t \in [0, 2 \pi]$. In such a representation we call $t$ the parameter. A surface, such as a sphere, would require two parameters which are often named $u$ and $v$. Such parametric representations are actually more common in differential geometry. Here, in algebraic geometry, we more often work with the implicit definitions and have some constraints for what kind of functions are allowed, namely polynomials. Sine and cosine, by virtue of being transcendental functions, do not really seem to belong in a field carrying the name "algebraic". Actually, the constraint to use only polynomials applies only to the implicit definitions and not necessarily to parameterizations, but still.
 
 % - but it might be nicer and cleaner if we could at least restrict those parameterizations to algebraic functions as well.
 
@@ -43,9 +43,7 @@ The parameterization of the circle via the cosine and sine functions given above
 
 %To find a rational parameterization of an implicitly given curve, we sometimes can proceed as follows:
 
-...TBC...
-
-%drag in text from the file RataionalParametrization.txt
+...TBC...drag in text from the file RationalParametrization.txt
 
 % https://en.wikipedia.org/wiki/Circle#Parametric_form
 
@@ -55,7 +53,7 @@ The parameterization of the circle via the cosine and sine functions given above
 % this too:
 % https://en.wikipedia.org/wiki/Tangent_half-angle_substitution
 
-\paragraph{From Parameterization to Equation}
+\paragraph{From Parametrization to Equation}
 Now we look at the inverse problem: We assume that we have a rational parameterization given and we ask what the corresponding implicit equation is. ...TBC...
 
 % circle: ACRS, pg 2, general: 68 - has also algorithm for the inverse problem

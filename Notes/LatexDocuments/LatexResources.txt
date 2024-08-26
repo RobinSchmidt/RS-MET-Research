@@ -10,3 +10,11 @@ https://en.wikibooks.org/wiki/LaTeX/Tables
 
 https://tex.stackexchange.com/questions/460408/how-to-add-a-cross-out-to-any-latex-symbol
 
+
+
+Tikz:
+https://texample.net//tikz/examples/
+https://texample.net/tikz/examples/tag/plots/
+https://texample.net/tikz/examples/tag/graphs/
+https://texample.net/tikz/examples/tag/diagrams/
+https://texample.net/tikz/examples/tag/charts/

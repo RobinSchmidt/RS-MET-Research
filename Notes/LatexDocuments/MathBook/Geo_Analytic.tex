@@ -7,13 +7,77 @@ The simplest setting to do analytic geometry in is the $2$-dimensional plane als
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Points, Vectors and Vertices}
-Our eventual goal is to describe geometric shapes and calculate certain features of them. The most primitive object that we need to build our representations of shapes from is a \emph{point}. A point is just a location in a space - in this case, a location in the $2D$ plane. When we build polygons from points, we will also call these points \emph{vertices} (singular: \emph{vertex}) and we may use \emph{vectors} to represent these points. So, in this setup, the terms point, vector and vertex kinda all mean the same basic mathematical object, namely a vector, but the usage of different terms can be viewed as a hint to what specific role a given vector currently plays. If we say vertex, the role is typically to be a corner of a polygon. If we say point, the role is typically a general location. If we say vector, the role may be a translation or displacement. But whatever the role is, the representation will always be a pair of real numbers, i.e. a $2D$ vector. ...TBC...TODO: introduce different notations for points and vectors.
+Our eventual goal is to describe geometric shapes and calculate certain features of them. The most primitive object that we need to build our representations of shapes from is a \emph{point}. A point is just a location in a space - in this case, a location in the $2D$ plane. When we build polygons from points, we will also call these points \emph{vertices} (singular: \emph{vertex}) and we may use \emph{vectors} to represent these points. Conceptually, a point is actually not the same thing as a vector. A point is just a location in space and it doesn't seem to be a meaningful idea to add two locations in space together, for example. A vector, on the other hand, is meant to encode a length and direction (of movement, for example) and it does indeed make geometric sense to add a vector to a point to get another point. Vectors are things that we can freely add together anyway and the result will always be another vector. Such an addition does make geometric sense as well: we first do one translation, then the other - the sum of the two vectors encodes to total translation. Even though it doesn't make sense to \emph{add} two points, it does make sense to \emph{subtract} two points - and the result will be the vector that tells us, how to move from one point to the other. This seems all very messy. In practice, however, the distinction between points and vectors is rarely made and points are just identified with their position vectors, i.e. vectors that go from the origin of the coordinate system to the point. So, in this setup, the terms point, vector and vertex kinda all mean the same basic mathematical object, namely a vector, but the usage of different terms can be viewed as a hint to what specific role a given vector currently plays. If we say vertex, the role is typically to be a corner of a polygon. If we say point, the role is typically a general location. If we say vector, the role may be a translation or displacement. But whatever the role is, the representation will always be a pair of real numbers, i.e. a $2D$ vector.
 
-%In this context, the points are also often called "vertices" and they can be represented by vectors. Conceptually, a point is actually not the same thing as a vector. A point is just a location in space and it doesn't seem to be a meaningful idea to add two locations in space together, for example. A vector, on the other hand, is meant to encode a length and direction (of movement) and it does indeed make geometric sense to add a vector to a point to get another point. In practice, however, this distinction is rarely made and points are just identified with their position vectors, i.e. vectors that go from the origin of the coordinate system to the point. Vectors are things that we can freely add together anyway and the result will always be another vector.
+...TBC...TODO: introduce different notations for points and vectors.
 
+%In this context, the points are also often called "vertices" and they can be represented by vectors. 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Lines}
+After points (or vectors or vertices), the next object we need is the \emph{line}. A line can be defined in various ways. Perhaps the most obvious way is to use two points because given two distinct points, there is always exactly one line that passes through both of them. It is noteworthy that by line, we mean the infinitely extended line that goes through the two points. If we mean just the segment of the lines in between the two points, we call it a \emph{line segment}. In the great scheme of things, lines can be viewed as $1D$ spaces in their own right - and points would be the edge case of $0D$ spaces. Let's start with two points represented via their position vectors $\mathbf{p}_1, \mathbf{p}_2$ and their difference vector $\mathbf{v}$ which encodes how to move from $\mathbf{p}_1$ to $\mathbf{p}_2$:
+\begin{equation}
+\mathbf{p}_1 = \begin{pmatrix} x_1 \\ y_1 \end{pmatrix}, \quad
+\mathbf{p}_2 = \begin{pmatrix} x_2 \\ y_2 \end{pmatrix}, \qquad
+\mathbf{v}   = \mathbf{p}_2 - \mathbf{p}_1 
+\end{equation}
+In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of points in the sense that they encode locations whereas $\mathbf{v}$ is a proper vector in the narrower sense of encoding a displacement.
+
+
+\begin{tikzpicture}[
+    thick,
+    >=stealth',
+    dot/.style = {
+      draw,
+      fill = white,
+      circle,
+      inner sep = 0pt,
+      minimum size = 4pt
+    }
+  ]
+  \coordinate (O) at (0,0);
+  \draw[->] (-0.3,0) -- (8,0) coordinate[label = {below:$x$}] (xmax);
+  \draw[->] (0,-0.3) -- (0,5) coordinate[label = {left:$y$}] (ymax);
+  \path[name path=x] (0.3,0.5) -- (6.7,4.7);
+  \path[name path=y] plot[smooth] coordinates {(-0.3,2) (2,1.5) (4,2.8) (6,5)};
+  \scope[name intersections = {of = x and y, name = i}]
+    \fill[gray!20] (i-1) -- (i-2 |- i-1) -- (i-2) -- cycle;
+    \draw      (0.3,0.5) -- (6.7,4.7) node[pos=0.8, below right] {Line};
+    \draw (i-1) node[dot, label = {above:$P$}] (i-1) {} -- node[left]
+      {$f(x_0)$} (i-1 |- O) node[dot, label = {below:$x_0$}] {};
+    \path (i-2) node[dot, label = {above:$Q$}] (i-2) {} -- (i-2 |- i-1)
+      node[dot] (i-12) {};
+    \draw           (i-12) -- (i-12 |- O) node[dot,
+                              label = {below:$x_0 + \varepsilon$}] {};
+    \draw[blue, <->] (i-2) -- node[right] {$f(x_0 + \varepsilon) - f(x_0)$}
+                              (i-12);
+    \draw[blue, <->] (i-1) -- node[below] {$\varepsilon$} (i-12);
+    \path       (i-1 |- O) -- node[below] {$\varepsilon$} (i-2 |- O);
+    \draw[gray]      (i-2) -- (i-2 -| xmax);
+    \draw[gray, <->] ([xshift = -0.5cm]i-2 -| xmax) -- node[fill = white]
+      {$f(x_0 + \varepsilon)$}  ([xshift = -0.5cm]xmax);
+  \endscope
+\end{tikzpicture}
+% adapted from:
+% https://texample.net/tikz/examples/linear-regression/
+
+..TBC..give different forms of a line and formulas to convert between them, formulas for angles, distance point-line, projection of points onto lines, ...
+
+% points can be seen as 0D objects, lines as 1D
+
+% Leupold, pg 174-176:
+% 3.44:  m = tan(alpha) = (y2-y1)/(x2-x1)     Anstiegswinkel
+% 3.45:  r = r1 + t*(r2 - r1)                 Parameterdarstellung
+% 3.46:  r = r1 + t * u                       u = r2-r1
+% 3.47:  (y-y1)/(x-x1) = (y2-y1)/(x2-x1)      Zweipunkteform, (2-point form?)
+% 3.48:  y-y1 = m*(x-x1)                      Punktrichtungsform
+% 3.49:  y = m*x + b                          Normalform, (explicit?)
+% 3.50:  x/a + y/b = 1                        Abschnittsform
+% 3.51:  Ax + By + C = 0                      allgemeine Form
+%
+% m: slope, a: x-intercept, b: y-intercept, r1 = (x1,y1), r2 = (x2,y2)
+
+% Leupold
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Curves}
@@ -21,8 +85,20 @@ Our eventual goal is to describe geometric shapes and calculate certain features
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Triangles}
 
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Polygons}
+
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Conic Sections}
+
+\paragraph{Circles and Ellipses}
+
+\paragraph{Hyperbolas}
+
+\paragraph{Parabolas}
+
 
 
 

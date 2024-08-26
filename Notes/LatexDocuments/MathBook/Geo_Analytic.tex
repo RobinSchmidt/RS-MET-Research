@@ -29,11 +29,11 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 ]
 
 % Coordinate system:
-\draw[->] (-5,0)  -- (10,0) coordinate[label = {below:$x$}] (xmax);
+\draw[->] (-5,0)  -- (8,0) coordinate[label = {below:$x$}] (xmax);
 \draw[->] (0,-3)  -- (0,5)  coordinate[label = {left:$y$}] (ymax);
 
 % Line:  
-\draw     (-4,-1) -- (6,4)  node[pos=0.9, below right] {Line};
+\draw     (-4,-1) -- (6,4)  node[pos=0.95, below right] {Line};
 
 % Points on the line:  
 \draw (2,2) node[dot, label = {above:$\mathbf{p}_1$}]{};
@@ -45,6 +45,11 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \draw (0,2) node[dot, label = {left:$y_1$}]{};
 \draw (0,3) node[dot, label = {left:$y_2$}]{};
 % ToDo: try to use tick-marks instead - or just drop horizontal and vertical lines
+% Maybe draw a grid, put centered (maybe wrap into a figure)
+
+% add x,y intercepts and angle alpha
+\draw (-2,0) node[dot, label = {below:$a$}]{};  
+\draw (0,1) node[dot, label = {left:$b$}]{}; 
 
 \end{tikzpicture}
 % adapted from:

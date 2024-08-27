@@ -20,6 +20,8 @@ After points (or vectors or vertices), the next object we need is the \emph{line
 \mathbf{p}_1 = \begin{pmatrix} x_1 \\ y_1 \end{pmatrix}, \quad
 \mathbf{p}_2 = \begin{pmatrix} x_2 \\ y_2 \end{pmatrix}, \qquad
 \mathbf{v}   = \mathbf{p}_2 - \mathbf{p}_1 
+             = \begin{pmatrix} x_2 - x_1 \\ y_2 - y_1 \end{pmatrix}
+             = \begin{pmatrix} v_x \\ v_y \end{pmatrix}
 \end{equation}
 In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of points in the sense that they encode locations whereas $\mathbf{v}$ is a proper vector in the narrower sense of encoding a displacement. The situation is depicted below.
 
@@ -38,6 +40,10 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 % Points on the line:  
 \draw (2,2) node[dot, label = {above:$\mathbf{p}_1$}]{};
 \draw (4,3) node[dot, label = {above:$\mathbf{p}_2$}]{};
+
+% Vector v:
+\draw[blue, <->] (2,2) -- (4,2);
+\draw[blue] (3,2) node[below] {$v_x$};
 
 % Marks on the x- and y-axes:
 \draw (2,0) node[dot, label = {below:$x_1$}]{};  
@@ -58,7 +64,7 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \node[align=left] at (10,3.0) 
 {
 \begin{tabular}{l l}
-  $m = \frac{y_2-y_2}{x_2-x_1} = -\frac{b}{a}$ & Slope \\
+  $m = \frac{y_2-y_2}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}$ & Slope \\ 
   $\tan(\alpha) = m $                          & Angle\\  
   $\mathbf{p}(t) = \mathbf{p}_1 + t (\mathbf{p}_2 -\mathbf{p}_1)$ & Parametric form \\
   $y = m x + b$ & Explicit form \\
@@ -67,10 +73,19 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \end{tabular}
 };
 \end{tikzpicture}
+% draw in v (maybe in blue), maybe also its x- and y- components
+% maybe draw in the normal vector n
+
 % adapted from:
 % https://texample.net/tikz/examples/linear-regression/
 
 ..TBC..give different forms of a line and formulas to convert between them, formulas for angles, distance point-line, projection of points onto lines, ...
+
+% -explicit form: not applicable to vertical lines (m would have to be infinite)
+% -intercept form: not applicable to horizontal or vertical lines (because a or b would
+%  have to be infinite)
+% -talk about the degrees of freedom - there are 3. So, the 2-point form contains more 
+%  information than we need (which makes sense, because it actually encodes a line *segment*)
 
 % points can be seen as 0D objects, lines as 1D
 
@@ -82,9 +97,16 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 % 3.48:  y-y1 = m*(x-x1)                      Punktrichtungsform
 % 3.49:  y = m*x + b                          Normalform, (explicit?)
 % 3.50:  x/a + y/b = 1                        Abschnittsform
-% 3.51:  Ax + By + C = 0                      allgemeine Form
+% 3.51:  Ax + By + C = 0                      allgemeine Form, (implicit? kinda like Hesse
+%                                             normal form of planes?)
 %
 % m: slope, a: x-intercept, b: y-intercept, r1 = (x1,y1), r2 = (x2,y2)
+
+% To compute the intercepts a,b, use the parametric form in coordinate form:
+%   x(t) = x_1 + t (x_2 - x_1)
+%   y(t) = y_1 + t (y_2 - y_1)
+% To find b: find t such that x(t) = 0, plug it into y(t). That gives: b = y_1 - x_1 * m
+% To find a: find t such that y(t) = 0, plug it into x(t). That gives: a = x_1 - y_1 / m
 
 % Leupold
 
@@ -176,6 +198,10 @@ This set defines a $k$-dimensional hyperplane in $\mathbb{R}^n$ where $k < n$. W
 % https://en.wikipedia.org/wiki/Quadric_(algebraic_geometry)
 % Maybe do it in algebraic geometry
 
+
+% Give equation of a cone and explain why conic sections are called like that. It's because the
+% curves arise as intersection between a cone and a plane. I think, the equation is z^2 = x^2 + y^2
+% but I'm not sure about that.
 
 
 

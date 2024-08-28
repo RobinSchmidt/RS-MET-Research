@@ -50,20 +50,27 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \draw[red] (3,3) node[below] {$\mathbf{v}$};
 
 % Marks on the x- and y-axes:
-\draw (2,0) node[dot, label = {below:$x_1$}]{};  
-\draw (4,0) node[dot, label = {below:$x_2$}]{};
-\draw (0,2) node[dot, label = {left:$y_1$}]{};
-\draw (0,3) node[dot, label = {left:$y_2$}]{};
+%\draw (2,0) node[dot, label = {below:$x_1$}]{};  
+%\draw (4,0) node[dot, label = {below:$x_2$}]{};
+%\draw (0,2) node[dot, label = {left:$y_1$}]{};
+%\draw (0,3) node[dot, label = {left:$y_2$}]{};
 % ToDo: try to use tick-marks instead - or just drop horizontal and vertical lines
 % Maybe draw a grid, put centered (maybe wrap into a figure)
+\draw [shift={(2,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$x_1$};
+\draw [shift={(4,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$x_2$};
+\draw [shift={(0,2)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$y_1$};
+\draw [shift={(0,3)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$y_2$};
 
 % x,y intercepts:
-\draw (-2,0) node[dot, label = {below:$a$}]{};  
-\draw (0,1) node[dot, label = {left:$b$}]{}; 
+%\draw (-2,0) node[dot, label = {below:$a$}]{};  
+%\draw (0,1) node[dot, label = {left:$b$}]{}; 
+\draw [shift={(-2,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$a$};
+\draw [shift={( 0,1)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$b$};
+
 
 % angle alpha:
 \draw (-1,0) arc (0:27.5:1);
-\draw (-1.2,0.2) node[label = {center:$\alpha$}]{};
+\draw (-1.25,0.16) node[label = {center:$\alpha$}]{};
 
 % Can be used as example for drawing the tick marks on the axes:
 %\draw [shift={(1,0)}, color=black] (0pt,2pt) -- (0pt,-2pt) node [below] {$x_1$};

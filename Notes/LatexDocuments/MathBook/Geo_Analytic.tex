@@ -24,7 +24,6 @@ After points (or vectors or vertices), the next object we need is the \emph{line
              = \begin{pmatrix} v_x \\ v_y \end{pmatrix}
 \end{equation}
 In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of points in the sense that they encode locations whereas $\mathbf{v}$ is a proper vector in the narrower sense of encoding a displacement. The situation is depicted below.
-
 \begin{tikzpicture}
 [thick, >=stealth', 
   dot/.style = { draw, fill = black, circle, inner sep = 0pt, minimum size = 4pt }
@@ -69,19 +68,18 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \node[align=left] at (10,2.0) 
 {
 \begin{tabular}{l l}
-  %$m = \frac{y_2-y_2}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}$ & Slope \\ 
-  %$\tan(\alpha) = m $                          & Angle\\  
   $\mathbf{p}(t) = \mathbf{p}_1 + t (\mathbf{p}_2 -\mathbf{p}_1)$ & Parametric form \\
-  $y = m x + b$ & Explicit form \\
-  $Ax + By + C = 0$ & Implicit form \\  
-  $x/a + y/b = 1$ & Intercept form \\
+  $Ax + By + C = 0$                                               & Implicit form \\   
+  $y = m x + b$                                                   & Explicit form \\
+  %$x/a + y/b = 1$                                                 & Intercept form \\
+  $\frac{x}{a} + \frac{y}{b} = 1$                                 & Intercept form \\
 \end{tabular}
 };
 \end{tikzpicture}
 % https://en.wikipedia.org/wiki/Linear_equation
 % https://en.wikipedia.org/wiki/Linear_equation#Equation_of_a_line
 
-where also different forms of the line equation are given. The slope $m$, angle $\alpha$ and the $x,y$ intercepts can be computed as: 
+where also 4 different forms of the line equation are given. The slope $m$, angle $\alpha$ and the $x,y$ intercepts can be computed as: 
 \begin{equation}
  \tan(\alpha) = m = \frac{y_2-y_1}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}, \quad
  a = x_1 - \frac{y_1}{m}, \; b = y_1 - m x_1, \quad
@@ -91,12 +89,15 @@ The coefficients $A,B,C$ for the implicit form are given by:
  A = y_1 - y_2 = -v_y, \; B = x_2 - x_1 = v_x, \; C = x_1 y_2 - x_2 y_1
 \end{equation}
 
+VERIFY! 
 
-VERIFY!
-
-
-% Maybe drag the formulas for m and alpha aout of the figure. The coeffs in the implcit form
-% are: A = y_1 - y_2 = -v_y, B = x_2 - x_1 = v_x, C = x_1 y_2 - x_2 y_1
+% The coeffs for the implicit form can be multiplied through by any nonzero constant.
+% Give coordinate form of implcit equation: x(t) = x_1 + t (x_2 - x_1), ...
+% Explain that the vector (A,B) is a normal to the line. Maybe draw it in. Explain which forms are
+% convenient in which situations.
+% Give different forms of a line and formulas to convert between them, formulas for angles,
+% distance point-line, projection of points onto lines, ...
+% Explain that the set of lines forma a 2D vector space over R (I think)
 
 % Maybe use n_x, n_y, d inszead of A,B,C. (n_x, n_y) is a normal vector, d the distance to the 
 % origin
@@ -105,19 +106,15 @@ VERIFY!
 
 % adapted from:
 % https://texample.net/tikz/examples/linear-regression/
-
-% see also:
 % https://texample.net/tikz/examples/upper-riemann-sum/
 
-..TBC..give different forms of a line and formulas to convert between them, formulas for angles, distance point-line, projection of points onto lines, ...
+..TBC..
 
 % -explicit form: not applicable to vertical lines (m would have to be infinite)
 % -intercept form: not applicable to horizontal or vertical lines (because a or b would
 %  have to be infinite)
 % -talk about the degrees of freedom - there are 3. So, the 2-point form contains more 
 %  information than we need (which makes sense, because it actually encodes a line *segment*)
-
-% points can be seen as 0D objects, lines as 1D
 
 % Leupold, pg 174-176:
 % 3.44:  m = tan(alpha) = (y2-y1)/(x2-x1)     Anstiegswinkel
@@ -137,8 +134,6 @@ VERIFY!
 %   y(t) = y_1 + t (y_2 - y_1)
 % To find b: find t such that x(t) = 0, plug it into y(t). That gives: b = y_1 - x_1 * m
 % To find a: find t such that y(t) = 0, plug it into x(t). That gives: a = x_1 - y_1 / m
-
-% Leupold
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Curves}

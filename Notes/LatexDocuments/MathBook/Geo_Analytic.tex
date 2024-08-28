@@ -50,37 +50,27 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \draw[red] (3,3) node[below] {$\mathbf{v}$};
 
 % Marks on the x- and y-axes:
-%\draw (2,0) node[dot, label = {below:$x_1$}]{};  
-%\draw (4,0) node[dot, label = {below:$x_2$}]{};
-%\draw (0,2) node[dot, label = {left:$y_1$}]{};
-%\draw (0,3) node[dot, label = {left:$y_2$}]{};
 % ToDo: try to use tick-marks instead - or just drop horizontal and vertical lines
-% Maybe draw a grid, put centered (maybe wrap into a figure)
+% Maybe draw a grid
 \draw [shift={(2,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$x_1$};
 \draw [shift={(4,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$x_2$};
 \draw [shift={(0,2)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$y_1$};
 \draw [shift={(0,3)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$y_2$};
 
 % x,y intercepts:
-%\draw (-2,0) node[dot, label = {below:$a$}]{};  
-%\draw (0,1) node[dot, label = {left:$b$}]{}; 
 \draw [shift={(-2,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$a$};
 \draw [shift={( 0,1)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$b$};
-
 
 % angle alpha:
 \draw (-1,0) arc (0:27.5:1);
 \draw (-1.25,0.16) node[label = {center:$\alpha$}]{};
 
-% Can be used as example for drawing the tick marks on the axes:
-%\draw [shift={(1,0)}, color=black] (0pt,2pt) -- (0pt,-2pt) node [below] {$x_1$};
-% the shift determines the position
-
-\node[align=left] at (10,3.0) 
+% Equations:
+\node[align=left] at (10,2.0) 
 {
 \begin{tabular}{l l}
-  $m = \frac{y_2-y_2}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}$ & Slope \\ 
-  $\tan(\alpha) = m $                          & Angle\\  
+  %$m = \frac{y_2-y_2}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}$ & Slope \\ 
+  %$\tan(\alpha) = m $                          & Angle\\  
   $\mathbf{p}(t) = \mathbf{p}_1 + t (\mathbf{p}_2 -\mathbf{p}_1)$ & Parametric form \\
   $y = m x + b$ & Explicit form \\
   $Ax + By + C = 0$ & Implicit form \\  
@@ -88,6 +78,26 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \end{tabular}
 };
 \end{tikzpicture}
+% https://en.wikipedia.org/wiki/Linear_equation
+% https://en.wikipedia.org/wiki/Linear_equation#Equation_of_a_line
+
+where also different forms of the line equation are given. The slope $m$, angle $\alpha$ and the $x,y$ intercepts can be computed as: 
+\begin{equation}
+ \tan(\alpha) = m = \frac{y_2-y_1}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}, \quad
+ a = x_1 - \frac{y_1}{m}, \; b = y_1 - m x_1, \quad
+\end{equation}
+The coefficients $A,B,C$ for the implicit form are given by:
+\begin{equation}
+ A = y_1 - y_2 = -v_y, \; B = x_2 - x_1 = v_x, \; C = x_1 y_2 - x_2 y_1
+\end{equation}
+
+
+VERIFY!
+
+
+% Maybe drag the formulas for m and alpha aout of the figure. The coeffs in the implcit form
+% are: A = y_1 - y_2 = -v_y, B = x_2 - x_1 = v_x, C = x_1 y_2 - x_2 y_1
+
 % Maybe use n_x, n_y, d inszead of A,B,C. (n_x, n_y) is a normal vector, d the distance to the 
 % origin
 % draw in v (maybe in blue), maybe also its x- and y- components

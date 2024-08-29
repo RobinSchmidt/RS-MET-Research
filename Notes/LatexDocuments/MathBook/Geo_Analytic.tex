@@ -7,9 +7,11 @@ The simplest setting to do analytic geometry in is the $2$-dimensional plane als
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Points, Vectors and Vertices}
-Our eventual goal is to describe geometric shapes and calculate certain features of them. The most primitive object that we need to build our representations of shapes from is a \emph{point}. A point is just a location in a space - in this case, a location in the $2D$ plane. When we build polygons from points, we will also call these points \emph{vertices} (singular: \emph{vertex}) and we may use \emph{vectors} to represent these points. Conceptually, a point is actually not the same thing as a vector. A point is just a location in space and it doesn't seem to be a meaningful idea to add two locations in space together, for example. A vector, on the other hand, is meant to encode a length and direction (of movement, for example) and it does indeed make geometric sense to add a vector to a point to get another point. Vectors are things that we can freely add together anyway and the result will always be another vector. Such an addition does make geometric sense as well: we first do one translation, then the other - the sum of the two vectors encodes to total translation. Even though it doesn't make sense to \emph{add} two points, it does make sense to \emph{subtract} two points - and the result will be the vector that tells us, how to move from one point to the other. This seems all very messy. In practice, however, the distinction between points and vectors is rarely made and points are just identified with their position vectors, i.e. vectors that go from the origin of the coordinate system to the point. So, in this setup, the terms point, vector and vertex kinda all mean the same basic mathematical object, namely a vector, but the usage of different terms can be viewed as a hint to what specific role a given vector currently plays. If we say vertex, the role is typically to be a corner of a polygon. If we say point, the role is typically a general location. If we say vector, the role may be a translation or displacement. But whatever the role is, the representation will always be a pair of real numbers, i.e. a $2D$ vector.
+Our eventual goal is to describe geometric shapes and calculate certain features of them. The most primitive object that we need to build our representations of shapes from is a \emph{point}. A point is just a location in a space - in this case, a location in the $2D$ plane. When we build polygons from points, we will also call these points \emph{vertices} (singular: \emph{vertex}) and we may use \emph{vectors} to represent these points. Conceptually, a point is actually not the same thing as a vector. A point is just a location in space and it doesn't seem to be a meaningful idea to add two locations in space together, for example. A vector, on the other hand, is meant to encode a length and direction (of movement, for example) and it does indeed make geometric sense to add a vector to a point to get another point. Vectors are things that we can freely add together anyway and the result will always be another vector. Such an addition does make geometric sense as well: we first do one translation, then the other - the sum of the two vectors encodes the total translation. Even though it doesn't make sense to \emph{add} two points, it does make sense to \emph{subtract} two points - the result will be the vector that tells us, how to move from one point to the other. This seems all very messy. In practice, however, the distinction between points and vectors is rarely made and points are just identified with their position vectors, i.e. vectors that go from the origin of the coordinate system to the point. So, in this setup, the terms point, vector and vertex kinda all mean the same basic mathematical object, namely a vector, but the usage of different terms can be viewed as a hint to what specific role a given vector currently plays. If we say vertex, the role is typically to be a corner of a polygon. If we say point, the role is typically a general location. If we say vector, the role may be a translation or displacement. But whatever the role is, the representation will always be a pair of real numbers, i.e. a $2D$ vector.
 
 ...TBC...TODO: introduce different notations for points and vectors. Define distance between two points
+
+% What about the center of mass of a set of points. Barycenter
 
 %In this context, the points are also often called "vertices" and they can be represented by vectors. 
 
@@ -79,14 +81,19 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 % https://en.wikipedia.org/wiki/Linear_equation
 % https://en.wikipedia.org/wiki/Linear_equation#Equation_of_a_line
 
-where also 4 different forms of the line equation are given. There are yet more forms to write down a line equation but these are some of the more common ones. We'll see some others later. The given names of the forms are not all super official, though. The slope $m$, angle $\alpha$ and the $x$- and $y$-intercepts $a,b$ can be computed as: 
+where also 4 different forms of the line equation are given. There are yet more forms to write down a line equation but these are some of the more common ones. We'll see some others later. The given names of the forms are not all super official, though. I call a form "coordinate form" when we explicitly use the coordinates $x,y$ and I call it vector form, when vector notation such as $\mathbf{p}$ is used. The slope $m$, angle $\alpha$ and the $x$- and $y$-intercepts $a,b$ can be computed as: 
 \begin{equation}
  \tan(\alpha) = m = \frac{y_2-y_1}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}, \quad
  a = x_1 - \frac{y_1}{m}, \; b = y_1 - m x_1, \quad
 \end{equation}
-The denomination "$y$-intercept" can be understood as: "where the line intercepts the $y$-axis" - likewise for "$x$-intercept". The coefficients $A,B,C$ for the "implicit coordinate form" can be computed by:
+The denomination "$y$-intercept" can be understood as: "where the line intercepts the $y$-axis" - likewise for "$x$-intercept". The parametric form is also commonly seen in coordinate notation as:
 \begin{equation}
- A = y_1 - y_2 = -v_y, \; B = x_2 - x_1 = v_x, \; C = x_1 y_2 - x_2 y_1
+x(t) = x_1 + t (x_2 - x_1) = x_1 + t v_x, \quad
+y(t) = y_1 = t (y_2 - y_1) = y_1 + t v_y
+\end{equation}
+With my naming scheme, this form could then be called "parametric coordinate form" - again, this is not an official term. The coefficients $A,B,C$ for the "implicit coordinate form" can be computed by:
+\begin{equation}
+ A = y_1 - y_2 = -v_y, \quad B = x_2 - x_1 = v_x, \quad C = x_1 y_2 - x_2 y_1
 \end{equation}
 These coefficients are not uniquely determined, though. Because the right hand side of $Ax + By + C = 0$ is zero, we are free to multiply the $A,B,C$-coefficients all through by the same nonzero constant without changing the line that is encoded by this implicit line equation. 
 
@@ -112,17 +119,26 @@ when we take $\mathbf{p} = (p_x, p_y)$. The right variant is still an "implicit 
 I have given a lot of equations that \emph{define} a line in the sense that these formulas can be used to produce points on the line (in the case of the explicit and parametric forms) or can be used to check whether or not some given point is on the line (in the case of the implicit forms). I have not yet really said, what a line actually \emph{is} in a mathematical sense. So, I will now do just that: a line $L$ is a \emph{set of points}. We can write down this set using set builder notation as follows: 
 \begin{equation}
 L = \{ \mathbf{p} \in \mathbb{R}^2 : \mathbf{n} \cdot \mathbf{p} + d = 0 \}
-  = \{ \mathbf{p} + t \mathbf{v}, \;\; t \in \mathbb{R}, \; \mathbf{p,v} \in \mathbb{R}^2   \}
+  %= \{ \mathbf{p} + t \mathbf{v}, \;\; t \in \mathbb{R}, \; \mathbf{p,v} \in \mathbb{R}^2   \}
+  = \{ \mathbf{p} + t \mathbf{v}, \; t \in \mathbb{R}  \}
   = \{\mathbf{p} + \mathbb{R} \mathbf{v} \} 
 \end{equation}
 where $\mathbf{n}, \mathbf{v}, d$ are given constants, $t$ is a dummy variable for a parameter and the rightmost notation is an abbreviation for the parametric form in the middle. The left form is again the implicit form using the normal vector.
 ...TBC...
 
 \paragraph{Distance Between Point and Line}
-In geometry, we are interested in the geometric relationships between geometric objects. One such relationship is the distance between a point and a line. Observe that the Hesse normal form of the line is an equation that we can treat as a formula for a function into which we can plug in arbitrary points $\mathbf{p}$. If the function returns zero, it means our input point $\mathbf{p}$ was, in fact, on the line. If it returns some other value, this value can be interpreted as a signed distance of that point from the line. The distance is then just the absolute value of that. So, given a line $L$ in terms of $\mathbf{n}, d$ and a point $\mathbf{p}$, we can compute the distance between $L$ and $\mathbf{p}$ as
+In geometry, we are interested in the geometric relationships between geometric objects. One such relationship is the distance between a point and a line. Observe that the Hesse normal form of the line is an equation that we can treat as a formula for a function into which we can plug in arbitrary points $\mathbf{p}$. If the function returns zero, it means our input point $\mathbf{p}$ was, in fact, on the line. If it returns some other value, this value can be interpreted as a signed distance of that point from the line. The distance is then just the absolute value of that. So, given a point $\mathbf{p}$ and a line $L$ in terms of $\mathbf{n}, d$, i.e. in Hesse normal form, we can compute the distance between $\mathbf{p}$ and $L$ as:
 \begin{equation}
-\dist(L, \mathbf{p}) = | \mathbf{n} \cdot \mathbf{p} + d |
+\dist(\mathbf{p}, L) = | \mathbf{n} \cdot \mathbf{p} + d |
 \end{equation}
+
+\paragraph{Intersection of Two Lines}
+To compute an intersection between two lines $L_1, L_2$, let's assume the lines are given in parametric form like so:
+\begin{equation}
+L_1: \mathbf{p} + s \mathbf{u}, \quad
+L_2: \mathbf{q} + t \mathbf{v}
+\end{equation}
+To find a common point, we must require that $\mathbf{p} + s \mathbf{u} = \mathbf{q} + t \mathbf{v}$. This vector equation represents a system of two linear equations for $s$ and $t$ which we may readily solve. Remember that $\mathbf{p,u,q,v}$ are all just known vectors. To find the intersection point, we can then either plug $s$ into the equation for $L_1$ or $t$ into the equation for $L_2$. ...TBC...
 
 
 \paragraph{Angle Between Lines}

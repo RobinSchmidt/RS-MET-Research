@@ -348,19 +348,6 @@ where the second rule, for the time being, makes only sense when $n-m$ is natura
 % exlpain the term "monic"
 
 
-%\begin{tikzpicture}
-%[domain=-2:8.5,samples=50]
-%
-%  %\draw[very thin,color=lightgray] (-0.1,-1.1) grid (3.9,3.9);
-%  \draw[->] (-2.0,0) -- (10.0,0) node[below] {$x$};
-%  \draw[->] (0,-1.4) -- (0,1.4) node[left]  {$y$};
-%
-%  % \x r means to convert '\x' from degrees to _r_adians:
-%  \draw[color=blue] plot (\x,{sin(\x r)}) node[right] {$\sin x$};
-%  \draw[color=red]  plot (\x,{cos(\x r)}) node[right] {$\cos x$};
-%\end{tikzpicture}
-
-% https://tikz.dev/tikz-plots
 
 \paragraph{Evaluation}
 The evaluation of a polynomial is best done in nested form. This is the computationally most efficient way and also one of the most stable ways numerically\footnote{Numerical stability refers to the way in which small errors in the inputs affect the errors in the output - will errors tend to get amplified or not, etc.}. We assume that a polynomial of degree $n$ is represented in the computer as a list or array of $n+1$ coefficients $a_0, \ldots, a_n$.
@@ -627,7 +614,26 @@ It turns out that the real part of $\e^{\i x}$ is actually the cosine function a
 \sin(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n+1}}{(2n+1)!}, \qquad
 \cos(x) = \sum_{n=0}^{\infty} \frac{(-1)^n x^{2n}  }{(2n)!}
 \end{equation}
-These series expansions look very similar to those of $\sinh$ and $\cosh$ but they have this additional sign alternation factor $(-1)^n$ going on. There are also differential and functional equations for sine and cosine that are reminiscent of the corresponding equations for the exponential function. Sine and cosine satisfy the following system of coupled differential equations:
+These series expansions look very similar to those of $\sinh$ and $\cosh$ but they have this additional sign alternation factor $(-1)^n$ going on. The sine and cosine functions for real input arguments are depicted in figure \ref{Fig:SineAndCosine}.
+
+\begin{figure}[h]
+\centering
+\caption{Sine and cosine function}
+\label{Fig:SineAndCosine}
+\begin{tikzpicture}
+[domain=-2:8.5,samples=50]
+
+  %\draw[very thin,color=lightgray] (-0.1,-1.1) grid (3.9,3.9);
+  \draw[->] (-2.0,0) -- (10.0,0) node[below] {$x$};
+  \draw[->] (0,-1.4) -- (0,1.4) node[left]  {$y$};
+
+  % \x r means to convert '\x' from degrees to _r_adians:
+  \draw[color=blue] plot (\x,{sin(\x r)}) node[right] {$\sin x$};
+  \draw[color=red]  plot (\x,{cos(\x r)}) node[right] {$\cos x$};
+\end{tikzpicture}
+\end{figure}
+
+There are also differential and functional equations for sine and cosine that are reminiscent of the corresponding equations for the exponential function. Sine and cosine satisfy the following system of coupled differential equations:
 \begin{equation}
 \frac{d}{dx} \sin(x) = \cos(x), \quad
 \frac{d}{dx} \cos(x) = -\sin(x)
@@ -642,6 +648,13 @@ Although the relations are more complicated for sine and cosine than they are fo
 \e^{\i z} = \cos(z) + \i \sin(z)
 \end{equation}
 for any complex number $z$. 
+
+
+
+
+
+
+% https://tikz.dev/tikz-plots
 
 %Yes - we can also plug complex numbers into $\sin, \cos$ and $\exp$. How to evaluate them for complex arguments is completely defined via the series expansions because all of these three series expansions do indeed converge in the entire complex plane.  ...TBC...
 

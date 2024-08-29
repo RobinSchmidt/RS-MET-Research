@@ -42,7 +42,9 @@ After points (or vectors or vertices), the next object we need is the \emph{line
              = \begin{pmatrix} x_2 - x_1 \\ y_2 - y_1 \end{pmatrix}
              = \begin{pmatrix} v_x \\ v_y \end{pmatrix}
 \end{equation}
-In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of points in the sense that they encode locations whereas $\mathbf{v}$ is a proper vector in the narrower sense of encoding a displacement. The situation is depicted below.
+In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of points in the sense that they encode locations whereas $\mathbf{v}$ is a proper vector in the narrower sense of encoding a displacement. The situation is depicted below using as example $\mathbf{p}_1 = (2,2), \mathbf{p}_2 = (4,3)$.
+
+
 \begin{tikzpicture}
 [thick, >=stealth', 
   dot/.style = { draw, fill = black, circle, inner sep = 0pt, minimum size = 6pt }
@@ -100,6 +102,8 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \end{tikzpicture}
 % https://en.wikipedia.org/wiki/Linear_equation
 % https://en.wikipedia.org/wiki/Linear_equation#Equation_of_a_line
+% ToDo: maybe wrap into a figure, center it and move the formulas out.
+
 
 where also 4 different forms of the line equation are given. There are yet more forms to write down a line equation but these are some of the more common ones. We'll see some others later. The given names of the forms are not all super official, though. I call a form "coordinate form" when we explicitly use the coordinates $x,y$ and I call it vector form, when vector notation such as $\mathbf{p}$ is used. The slope $m$, angle $\alpha$ and the $x$- and $y$-intercepts $a,b$ can be computed as: 
 \begin{equation}

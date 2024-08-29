@@ -9,7 +9,24 @@ The simplest setting to do analytic geometry in is the $2$-dimensional plane als
 \subsubsection{Points, Vectors and Vertices}
 Our eventual goal is to describe geometric shapes and calculate certain features of them. The most primitive object that we need to build our representations of shapes from is a \emph{point}. A point is just a location in a space - in this case, a location in the $2D$ plane. When we build polygons from points, we will also call these points \emph{vertices} (singular: \emph{vertex}) and we may use \emph{vectors} to represent these points. Conceptually, a point is actually not the same thing as a vector. A point is just a location in space and it doesn't seem to be a meaningful idea to add two locations in space together, for example. A vector, on the other hand, is meant to encode a length and direction (of movement, for example) and it does indeed make geometric sense to add a vector to a point to get another point. Vectors are things that we can freely add together anyway and the result will always be another vector. Such an addition does make geometric sense as well: we first do one translation, then the other - the sum of the two vectors encodes the total translation. Even though it doesn't make sense to \emph{add} two points, it does make sense to \emph{subtract} two points - the result will be the vector that tells us, how to move from one point to the other. This seems all very messy. In practice, however, the distinction between points and vectors is rarely made and points are just identified with their position vectors, i.e. vectors that go from the origin of the coordinate system to the point. So, in this setup, the terms point, vector and vertex kinda all mean the same basic mathematical object, namely a vector, but the usage of different terms can be viewed as a hint to what specific role a given vector currently plays. If we say vertex, the role is typically to be a corner of a polygon. If we say point, the role is typically a general location. If we say vector, the role may be a translation or displacement. But whatever the role is, the representation will always be a pair of real numbers, i.e. a $2D$ vector.
 
-...TBC...TODO: introduce different notations for points and vectors. Define distance between two points
+\paragraph{Distance Between Points}
+In geometry, we are interested in the geometric relationships between geometric objects. perhaps the simplemost example of such a relationship is the distance between two points. as we are doing Euclidean geometry here, we will use the Euclidean distance. Given two points $\mathbf{p} = (p_x, p_y)$ and $\mathbf{q} = (q_x, q_y)$, the Euclidean distance between them is given by:
+\begin{equation}
+\dist(\mathbf{p,q}) = |\mathbf{p} - \mathbf{q}| = \sqrt{(p_x - q_x)^2 + (p_y - q_y)^2}
+\end{equation}
+Different distance measures are possible, but then we will leave the realm of Euclidean geometry. Non-Euclidean geometry is a topic for later.
+
+\paragraph{Center of Mass}
+If we have a collection of $N$ points $\mathbf{p}_1, \ldots, \mathbf{p}_N$, their \emph{center of mass}, also known as \emph{barycenter} or \emph{balance point}, is given by their arithmetic average. If we denote it by $\mathbf{P}$, we have:
+\begin{equation}
+\mathbf{P} = \frac{1}{N} \sum_{i = 1}^N \mathbf{p}_i
+\end{equation}
+This quantity is usually not so relevant in geometry, but for the sake of completeness.
+
+
+%https://en.wikipedia.org/wiki/Center_of_mass
+
+%...TBC...TODO: introduce different notations for points and vectors. Define distance between two points
 
 % What about the center of mass of a set of points. Barycenter
 
@@ -83,13 +100,13 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 
 where also 4 different forms of the line equation are given. There are yet more forms to write down a line equation but these are some of the more common ones. We'll see some others later. The given names of the forms are not all super official, though. I call a form "coordinate form" when we explicitly use the coordinates $x,y$ and I call it vector form, when vector notation such as $\mathbf{p}$ is used. The slope $m$, angle $\alpha$ and the $x$- and $y$-intercepts $a,b$ can be computed as: 
 \begin{equation}
- \tan(\alpha) = m = \frac{y_2-y_1}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}, \quad
- a = x_1 - \frac{y_1}{m}, \; b = y_1 - m x_1, \quad
+ \tan(\alpha) = m = \frac{y_2-y_1}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}, \qquad
+ a = x_1 - \frac{y_1}{m}, \; b = y_1 - m x_1
 \end{equation}
 The denomination "$y$-intercept" can be understood as: "where the line intercepts the $y$-axis" - likewise for "$x$-intercept". The parametric form is also commonly seen in coordinate notation as:
 \begin{equation}
-x(t) = x_1 + t (x_2 - x_1) = x_1 + t v_x, \quad
-y(t) = y_1 = t (y_2 - y_1) = y_1 + t v_y
+x(t) = x_1 + t (x_2 - x_1) = x_1 + t v_x, \qquad
+y(t) = y_1 + t (y_2 - y_1) = y_1 + t v_y
 \end{equation}
 With my naming scheme, this form could then be called "parametric coordinate form" - again, this is not an official term. The coefficients $A,B,C$ for the "implicit coordinate form" can be computed by:
 \begin{equation}
@@ -126,8 +143,11 @@ L = \{ \mathbf{p} \in \mathbb{R}^2 : \mathbf{n} \cdot \mathbf{p} + d = 0 \}
 where $\mathbf{n}, \mathbf{v}, d$ are given constants, $t$ is a dummy variable for a parameter and the rightmost notation is an abbreviation for the parametric form in the middle. The left form is again the implicit form using the normal vector.
 ...TBC...
 
+\paragraph{Lines as Data}
+We have seen various ways to define a line. As programmers, we may ask ourselves what data structure we should use to store a line in the computer. Some forms of the line equation were redundant in terms of data representation. The parametric forms use four real variables - either two points or a point and a vector. But these forms actually define not just a line itself but a line segment which includes already some more information than just the line itself. How many real (i.e. floating point) numbers do we actually \emph{need} to store the data of a line? The most parsimonious ways to define a line got away with just two real numbers - namely the explicit form $y = mx + b$ and the intercept form $x/a + y/b = 1$, so it surely appears that a line has two degrees of freedom. But these two forms are unfortunately not universally applicable. Maybe we could do some hacks with using the infinite values of IEEE floating point numbers for edge cases. Or we could look at the implicit forms. The Hesse normal form is generally applicable but needs one vector and one scalar to define a line. These are 3 real numbers all in all. But the vector is supposed to be normalized to unit length which takes away one degree of freedom. So - again - we can conclude that a general line has two degrees of freedom. Maybe to encode a line with the smallest amount of data, one could use the angle of the normal vector together with $d$ from the Hesse normal form. But that's a rather inconvenient encoding for most of our desired computations. But maybe for data storage purposes, that could be a useful way to do it. For practical geometric computations, one usually opts for the 2-point form. Mathematical lines do not have start- and endpoints but the lines that we want to draw on a screen usually do. So, the additional information stored in the 2-point form is usually quite useful in practice. So, although it's not the mathematically purest and not the most economical form to store a line, using two points is often a quite practical and convenient data structure for representing lines in geometric algorithms.
+
 \paragraph{Distance Between Point and Line}
-In geometry, we are interested in the geometric relationships between geometric objects. One such relationship is the distance between a point and a line. Observe that the Hesse normal form of the line is an equation that we can treat as a formula for a function into which we can plug in arbitrary points $\mathbf{p}$. If the function returns zero, it means our input point $\mathbf{p}$ was, in fact, on the line. If it returns some other value, this value can be interpreted as a signed distance of that point from the line. The distance is then just the absolute value of that. So, given a point $\mathbf{p}$ and a line $L$ in terms of $\mathbf{n}, d$, i.e. in Hesse normal form, we can compute the distance between $\mathbf{p}$ and $L$ as:
+Back to geometry. As said - we are interested in relationships between geometric objects. The next relationship of interest is the distance between a point and a line. What we mean by that is, of course, the shortest possible distance. That means that we want to figure out the length of a straight path from the point that hits the line from a perpendicular direction. We don't want to approach the line in a slanted way because such a path would clearly be longer. Observe that the Hesse normal form of the line is an equation that we can treat as a formula for a function into which we can plug in arbitrary points $\mathbf{p}$. If the function returns zero, it means our input point $\mathbf{p}$ was, in fact, on the line. It turns out that, in general, the returned value can be interpreted as a signed distance of that point from the line. The distance is then just the absolute value of that. So, given a point $\mathbf{p}$ and a line $L$ in terms of $\mathbf{n}, d$, i.e. in Hesse normal form, we can compute the distance between $\mathbf{p}$ and $L$ as:
 \begin{equation}
 \dist(\mathbf{p}, L) = | \mathbf{n} \cdot \mathbf{p} + d |
 \end{equation}
@@ -143,6 +163,8 @@ To find a common point, we must require that $\mathbf{p} + s \mathbf{u} = \mathb
 
 \paragraph{Angle Between Lines}
 Let's now assume that we have two lines $L_1, L_2$ given and we want to compute the angle between them. If both lines are given in the form ...TBC...
+
+
 
 
 
@@ -165,7 +187,6 @@ Let's now assume that we have two lines $L_1, L_2$ given and we want to compute 
 % https://texample.net/tikz/examples/linear-regression/
 % https://texample.net/tikz/examples/upper-riemann-sum/
 
-..TBC..
 
 % -explicit form: not applicable to vertical lines (m would have to be infinite)
 % -intercept form: not applicable to horizontal or vertical lines (because a or b would

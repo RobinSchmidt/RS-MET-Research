@@ -101,14 +101,28 @@ With these definitions in place, we can write down our implicit line equation al
  \mathbf{n} \cdot \mathbf{p} + d = 0 \quad \text{or} \quad
  n_x p_x + n_y p_y + d = 0
 \end{equation}
-when we take $\mathbf{p} = (p_x, p_y)$. The left of those might be called "implicit vector form". The right one is still an "implicit coordinate form" but now with normalized coefficients. The value $d$ has a geometric interpretation, too: It's a (signed) distance of the line from the origin - so using the letter $d$ actually makes sense. Observe that we now have an equation that we can treat as a formula for a function into which we can plug in arbitrary points $\mathbf{p}$. If the function returns zero, it means our input point  $\mathbf{p}$ was, in fact, on the line. If it returns some other value, this value can be interpreted as a signed distance of that point from the line [VERIFY all of this!].
+when we take $\mathbf{p} = (p_x, p_y)$. The right variant is still an "implicit coordinate form" but now with normalized coefficients. The left variant might be called "implicit vector form" but it's also known as the \emph{Hesse normal form}. The vector $\mathbf{n}$ is a vector of unit length that is perpendicular to our line and it's called a \emph{normal vector}. In this context, "normal" usually means "perpendicular". Normal vectors more commonly used for planes and more general surfaces - normal vectors to surfaces are very common in the context of 3D rendering engines - but the idea can be applied to a line, too. The value $d$ has a geometric interpretation, too: It's a (signed) \emph{distance} of the line from the origin - so using the letter $d$ actually makes sense. Observe that we now have an equation that we can treat as a formula for a function into which we can plug in arbitrary points $\mathbf{p}$. If the function returns zero, it means our input point  $\mathbf{p}$ was, in fact, on the line. If it returns some other value, this value can be interpreted as a signed distance of that point from the line [VERIFY all of this!].
+
+% https://en.wikipedia.org/wiki/Hesse_normal_form
 
 \paragraph{Lines as Sets}
-I have given a lot of equations that \emph{define} a line in the sense that these formulas can be used to produce points on the line (in the case of the explicit and parametric forms) or can be used to check whether or not some given point is on the line (in the case of the implicit forms). I have not yet really said, what a line actually \emph{is} in a mathematical sense. So, I will now do just that: a line is a \emph{set of points}. We can write down this set using set builder notation as follows: ...TBC...
+I have given a lot of equations that \emph{define} a line in the sense that these formulas can be used to produce points on the line (in the case of the explicit and parametric forms) or can be used to check whether or not some given point is on the line (in the case of the implicit forms). I have not yet really said, what a line actually \emph{is} in a mathematical sense. So, I will now do just that: a line $L$ is a \emph{set of points}. We can write down this set using set builder notation as follows: 
+\begin{equation}
+L = \{ \mathbf{p} \in \mathbb{R}^2 : \mathbf{n} \cdot \mathbf{p} + d = 0 \}
+  = \{ \mathbf{p} + t \mathbf{v}, \;\; t \in \mathbb{R}, \; \mathbf{p,v} \in \mathbb{R}^2   \}
+  = \{\mathbf{p} + \mathbb{R} \mathbf{v} \} 
+\end{equation}
+where $\mathbf{n}, \mathbf{v}, d$ are given constants, $t$ is a dummy variable for a parameter and the rightmost notation is an abbreviation for the parametric form in the middle. The left form is again the implicit form using the normal vector.
+...TBC...
+
+\paragraph{Distance Between Point and Line}
+
 
 
 \paragraph{Angle Between Lines}
 Let's now assume that we have two lines $L_1, L_2$ given and we want to compute the angle between them. If both lines are given in the form ...TBC...
+
+
 
 % Verify all formulas numerically
 

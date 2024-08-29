@@ -321,24 +321,14 @@ TODO: explain kernel an image of a matrix
 %===================================================================================================
 \subsection{Vector Features}
 
-\paragraph{Vector Norms}
-The norm of a vector captures its length. The most common norm is the Euclidean norm but there are others as well. On page \pageref{Tab:Norm}, we already abstractly defined some properties that we require from a norm. ...TBC...
+\paragraph{Norms}
+The \emph{norm} of a vector captures the idea of its length. We can abstractly view it as a function that takes a vector as input and returns a scalar. The most common norm is the Euclidean norm but there are others as well. On page \pageref{Tab:Norm}, we already abstractly defined some properties that we require from a norm. ...TBC...
 % are a measure of length, $L_p$-norm, explain the general requirements to a norm
 % norm equivalence
 % refer back to norms of numbers defined in \ref{Tab:Norm}
 
-
-\paragraph{Orthogonality and Angles}
-We define two vectors to be orthogonal, if their dot product is zero. ...TBC...
-
-%More generally, we define the angle between two vectors as the arc-cosine of their normalized dot product ...VERIFY!..TBC...
-% Angles between a are defined in terms of the cosine of the scalar product
-% 
-
-% parallel: if one is a scalar multiple of the other
-
 \paragraph{Distance}
-As distance between two vectors, we take the norm of their difference....TBC...
+A \emph{distance function} is a function into which we can plug in two vectors and it spits out a scalar. That scalar should indicate, how far apart the two vectors are. A distance is usually induced by a norm: As distance between two vectors, we take the norm of their difference. Different norms will lead to different notions of distance. ...TBC...
 % state abstarct requirements for a distance. ...see topology chapter
 
 % distances emphasize the interpretation of vectors as points/locations
@@ -346,12 +336,22 @@ As distance between two vectors, we take the norm of their difference....TBC...
 % the scalar product emphasizes the interpretation as arrows or directed lengths
 
 
+\paragraph{Orthogonality and Angles}
+We have observed in $\mathbb{R}^2$ and $\mathbb{R}^3$ that the dot product of two vectors is zero, iff these two vectors are perpendicular (aka orthogonal) to one another. In higher dimensional spaces, we \emph{define} two vectors to be \emph{orthogonal}, if their dot product is zero. ...TBC...
+
+%More generally, we define the angle between two vectors as the arc-cosine of their normalized dot product ...VERIFY!..TBC...
+% Angles between a are defined in terms of the cosine of the scalar product
+% 
+
+% parallel: if one is a scalar multiple of the other
+
+
 \paragraph{Span of a Set of Vectors}
 As the \emph{span} of a set of vectors $\{\mathbf{v}_1, \mathbf{v}_2 \ldots, \mathbf{v}_n \}$, we define the set of all vectors that can be formed by arbitrary linear combinations of those vectors, i.e. the set of all vectors that can be written as:
 \begin{equation}
  a_1 \mathbf{v}_1 + a_2 \mathbf{v}_1  + \ldots + a_n \mathbf{v}_n 
 \end{equation}
-for some set of scalar coefficients $a_1, \ldots, a_n$. The span of a set of vectors is itself a vector space: We can add two vectors from that space to get another vector which is again in the same space. And we can also scale the vectors from that space without leaving the space. We also say that our vectors span the space - where "span" is being used as a verb. The span (noun) of a set of vectors is the space that is spanned (verb) by these vectors. I know that this sounds silly and self referential. Often, the span of a set of vectors is a subspace of some larger embedding space. For example, in $3D$ space, a set of two vectors could span a $2D$ subspace, i.e. a $2D$ plane that is embedded in $3D$ space.
+for some set of scalar coefficients $a_1, \ldots, a_n$. The span of a set of vectors is itself a vector space: We can add two vectors from that space to get another vector which is again in the same space. And we can also scale the vectors from that space without leaving the space. We also say that our vectors span the space - where "span" is being used as a verb. The span (noun) of a set of vectors is the space that is spanned (verb) by these vectors. I know that this sounds silly and self referential. Often, the span of a set of vectors is a subspace of some larger embedding space. For example, in 3D space, a set of two vectors could span a 2D subspace, i.e. a 2D plane that is embedded in 3D space.
 
 
 \paragraph{Linear Independence}
@@ -371,7 +371,7 @@ A \emph{set} $\{\mathbf{b}_1, \ldots, \mathbf{b}_n \}$ of linearly independent v
 
 % https://en.wikipedia.org/wiki/Basis_(linear_algebra)
 
-\paragraph{Orthogonalization via Gram-Schmidt Algorithm}
+\paragraph{Gram-Schmidt Orthogonalization}
 When we have given an arbitrary ordered basis $B = (\mathbf{b}_1, \ldots, \mathbf{b}_n)$, the basis vectors $\mathbf{b}_i$ will be in general neither normalized to unit length nor orthogonal to one another. The process of \emph{Gram-Schmidt orthogonalization} may be used to derive another basis $C$ from $B$ that has these two (often desirable) features while spanning the same space as $B$. It's an algorithm that works as follows: ...TBC...
 
 % TODO: explain how we could order a given basis:
@@ -418,23 +418,30 @@ When we have given an arbitrary ordered basis $B = (\mathbf{b}_1, \ldots, \mathb
 \paragraph{Rank}
 The \emph{column rank} of a matrix $\mathbf{A}$ is the number of linearly independent columns. Sometimes, it is useful to view the columns $\mathbf{a}_1, \mathbf{a}_2, \ldots, \mathbf{a}_n$ of a matrix $\mathbf{A}$ as vectors. In this view, the rank of $\mathbf{A}$ is the dimension of the span of these column vectors. The \emph{row rank} is defined analogously as the number of linearly independent rows. A fundamental (and non obvious) result of linear algebra is that the column rank and the row rank are always equal. It is therefore justified to scrap the row/column qualifiers and just talk about the \emph{rank} of a matrix. We will denote the rank $r$ of a matrix $\mathbf{A}$ as $r = \rank(\mathbf{A})$. For an $(m \times n)$-matrix with rank $r$, the \emph{rank deficiency} is defined as $d = \min(m,n) - r$ [VERIFY!]. [TODO: explain row-space, column-space, nullity, rank of linear map, rank-nullity-theorem]
 
-% The rank of a linear map or operator  is defined as the dimension of its image
-
+% The rank of a linear map or operator is defined as the dimension of its image
 % https://en.wikipedia.org/wiki/Rank_(linear_algebra)
 
-% column-space, row-space
-
-% -rank-nullity theorem
-
-
 \paragraph{Trace}
-TODO: sum of diagonal elements, sum of eigenvalues
+The trace of a square matrix $\mathbf{A}$ is the sum of its diagonal elements and denoted by $\tr(\mathbf{A})$. 
+\begin{equation}
+ \tr(\mathbf{A}) = \sum_{i=1}^{n} a_{ii}
+\end{equation}
+For non-square matrices, the trace is not defined. The trace is also equal to the sum of the eigenvalues and it holds that $\tr(\mathbf{A B}) = \tr(\mathbf{B A})$. This implies that similar matrices have the same trace. The trace is linear such that: $\tr(\mathbf{A + B}) = \tr(\mathbf{A} + \tr(\mathbf{B})$ and $\tr(c \mathbf{A}) = c \tr(\mathbf{A})$. ...TBC...
 
+%https://en.wikipedia.org/wiki/Trace_(linear_algebra)
 
 \paragraph{Determinant}
-TODO: regular/singular, scaling factor for a hypervolume, product of eigenvalues
+Geometrically, the \emph{determinant} of a $(n \times n)$-matrix $\mathbf{A}$ is the amount by which the $n$D hypervolume of any chunk of the vector space $\mathbb{R}^n$ gets expanded or shrunken by multiplying by the matrix. You can imagine this as what happens to the (hyper)volume of the unit hypercube in $\mathbb{R}^n$ when applying the matrix to all of its vertices - but it applies to any other chunk of the space just the same. Note that the determinant also has a sign - so it's a kind of signed volume change factor. The determinant happens to be equal to the product of the eigenvalues. If we have a triangular matrix, then the determinant can be easily be computed as the product of the diagonal entries. If the determinant of a matrix is zero, it means geometrically that a hypervolume of $\mathbb{R}^n$ will be completely collapsed by the matrix into a lower dimensional object. For example, in $\mathbb{R}^3$, a 3D volume could be collapsed into some flat planar 2D object, or just into a 1D line or even into a 0D point. A matrix with a determinat of zero is called \emph{singular}, one with nonzero determinant is called \emph{regular}. Only regular matrices are invertible. This is geometrically plausible because you cannot undo the total collapse of a dimension - once a dimension has been squashed away, the information about that dimension is irrecoverably lost. 
+
+\medskip
+There are various ways to compute the determinant - the most practical perhaps being to transform the matrix into triangular form while keeping track of what the transformations do to the determinant (swapping rows changes the sign, multiplying a row by a factor changes the determinant by the same factor). At the end of that transformation process, we would compute the product of diagonal elements and take into account the modifications that accumulated during the transformation. ...VERIFY...TBC...
+
+% https://en.wikipedia.org/wiki/Determinant
+% https://en.wikipedia.org/wiki/Dieudonn%C3%A9_determinant  generalization
 
 \paragraph{Norms}
+Just like for vectors, there exist also various norms for matrices ...TBC...
+
 TODO: Frobenius norm, spectral norm, ..., norm compatibility (with vectors)
 % explain norm compatibility with vector norms
 
@@ -476,7 +483,7 @@ A square matrix is defined to be antisymmetric if $a_{ij} = -a_{ji}$ for all pai
 A square matrix is defined to be Hermitian if it is equal to its own Hermitian transpose: $\mathbf{A} = \mathbf{A}^H$ which is the transpose combined with complex conjugation of the elements. It is usually the right generalization of symmetric matrices when moving from the real to the complex case.
 
 % maybe put these "boolean" features into a subsection
-\paragraph{Orthogonal Matrices} A square matrix is called \emph{orthogonal} when its columns, seen as a set of vectors, form an \emph{orthonormal} set. That means, the scalar product of each column with itself must be one and the scalar product of any column with any other column must be zero. Non-obviously, this is equivalent to requiring that the rows must be orthonormal to one another. I have no idea where the inconsistency between usage of ortho\emph{gon}al and ortho\emph{norm}al between matrices and sets of vectors comes from but it seems like we are unfortunately stuck with it. Being orthogonal is equivalent to say that the inverse of the matrix is just the transpose: $\mathbf{A}^{-1} = \mathbf{A}^T$ iff $\mathbf{A}$ is orthogonal. That is a pretty convenient feature because transposing a matrix is very easy whereas inverting a matrix is quite hard (i.e. computationally expensive) in general.
+\paragraph{Orthogonal Matrices} A square matrix is called \emph{orthogonal} when its columns, seen as a set of vectors, form an \emph{orthonormal} set. That means, the scalar product of each column with itself must be one and the scalar product of any column with any other column must be zero. Non-obviously, this is equivalent to requiring that the rows must be orthonormal to one another. I have no idea where the inconsistency between usage of ortho\emph{gon}al and ortho\emph{norm}al between matrices and sets of vectors comes from but it seems like we are unfortunately stuck with it. Or maybe I'll be rebellious and call them orthonormal instead - at least, when there isn't any potential for confusion. Being orthonormal is equivalent to say that the inverse of the matrix is just the transpose: $\mathbf{A}^{-1} = \mathbf{A}^T$ iff $\mathbf{A}$ is orthonormal. That is a pretty convenient feature because transposing a matrix is very easy whereas inverting a matrix is quite hard (i.e. computationally expensive) in general.
 
 % https://math.stackexchange.com/questions/316208/difference-between-orthogonal-and-orthonormal-matrices
 
@@ -523,8 +530,10 @@ A matrix $\mathbf{A}$ is said to be \emph{positive definite} if for every nonzer
 
 % https://en.wikipedia.org/wiki/Frobenius_matrix
 % https://en.wikipedia.org/wiki/Normal_matrix
-% Toeplitz, Circulant, Unitary, Jordan
+% Toeplitz, Circulant, Jordan, Vandermonde
 
+% https://en.wikipedia.org/wiki/Cauchy_matrix
+% 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Eigenspaces}

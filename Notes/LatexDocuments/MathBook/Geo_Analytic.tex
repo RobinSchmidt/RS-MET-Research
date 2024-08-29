@@ -15,7 +15,7 @@ Our eventual goal is to describe geometric shapes and calculate certain features
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Lines}
-After points (or vectors or vertices), the next object we need is the \emph{line}. A line can be defined in various ways. Perhaps the most obvious way is to use two points because given two distinct points, there is always exactly one line that passes through both of them. It is noteworthy that by line, we mean the infinitely extended line that goes through the two points. If we mean just the segment of the lines in between the two points, we call it a \emph{line segment}. In the great scheme of things, lines can be viewed as $1D$ spaces in their own right - and points would be the edge case of $0D$ spaces. Let's start with two points represented via their position vectors $\mathbf{p}_1, \mathbf{p}_2$ and their difference vector $\mathbf{v}$ which encodes how to move from $\mathbf{p}_1$ to $\mathbf{p}_2$:
+After points (or vectors or vertices), the next object we need is the \emph{line}. A line can be defined in various ways. Perhaps the most obvious way is to use two points because given two distinct points, there is always exactly one line that passes through both of them. It is noteworthy that by line, we mean the infinitely extended line that goes through the two points. If we mean just the segment of the lines in between the two points, we call it a \emph{line segment}. In the great scheme of things, lines can be viewed as $1D$ spaces in their own right - and points would be the edge case of $0D$ spaces. Let's start with two distinct points represented via their position vectors $\mathbf{p}_1, \mathbf{p}_2$ and their difference vector $\mathbf{v}$ which encodes how to move from $\mathbf{p}_1$ to $\mathbf{p}_2$:
 \begin{equation}
 \mathbf{p}_1 = \begin{pmatrix} x_1 \\ y_1 \end{pmatrix}, \quad
 \mathbf{p}_2 = \begin{pmatrix} x_2 \\ y_2 \end{pmatrix}, \qquad
@@ -65,31 +65,52 @@ In this case, $\mathbf{p}_1$ and $\mathbf{p}_2$ are really playing the role of p
 \draw (-1.25,0.16) node[label = {center:$\alpha$}]{};
 
 % Equations:
-\node[align=left] at (10,2.0) 
+\node[align=left] at (9.5,2.0) 
 {
 \begin{tabular}{l l}
-  $\mathbf{p}(t) = \mathbf{p}_1 + t (\mathbf{p}_2 -\mathbf{p}_1)$ & Parametric form \\
-  $Ax + By + C = 0$                                               & Implicit form \\   
-  $y = m x + b$                                                   & Explicit form \\
-  %$x/a + y/b = 1$                                                 & Intercept form \\
-  $\frac{x}{a} + \frac{y}{b} = 1$                                 & Intercept form \\
+  $\mathbf{p}(t) = \mathbf{p}_1 + t (\mathbf{p}_2 -\mathbf{p}_1)$ & 2-point form \\
+  $\mathbf{p}(t) = \mathbf{p}_1 + t \mathbf{v}$ & Parametric vector form \\  
+  $Ax + By + C = 0$                             & Implicit coordinate form \\   
+  $y = m x + b$                                 & Explicit form \\
+  $\frac{x}{a} + \frac{y}{b} = 1$               & Intercept form \\
 \end{tabular}
 };
 \end{tikzpicture}
 % https://en.wikipedia.org/wiki/Linear_equation
 % https://en.wikipedia.org/wiki/Linear_equation#Equation_of_a_line
 
-where also 4 different forms of the line equation are given. The slope $m$, angle $\alpha$ and the $x,y$ intercepts can be computed as: 
+where also 4 different forms of the line equation are given. There are yet more forms to write down a line equation but these are some of the more common ones. We'll see some others later. The given names of the forms are not all super official, though. The slope $m$, angle $\alpha$ and the $x$- and $y$-intercepts $a,b$ can be computed as: 
 \begin{equation}
  \tan(\alpha) = m = \frac{y_2-y_1}{x_2-x_1} = \frac{v_y}{v_x} = -\frac{b}{a}, \quad
  a = x_1 - \frac{y_1}{m}, \; b = y_1 - m x_1, \quad
 \end{equation}
-The coefficients $A,B,C$ for the implicit form are given by:
+The denomination "$y$-intercept" can be understood as: "where the line intercepts the $y$-axis" - likewise for "$x$-intercept". The coefficients $A,B,C$ for the "implicit coordinate form" can be computed by:
 \begin{equation}
  A = y_1 - y_2 = -v_y, \; B = x_2 - x_1 = v_x, \; C = x_1 y_2 - x_2 y_1
 \end{equation}
+These coefficients are not uniquely determined, though. Because the right hand side of $Ax + By + C = 0$ is zero, we are free to multiply the $A,B,C$-coefficients all through by the same nonzero constant without changing the line that is encoded by this implicit line equation. It may makes sense to normalize the implicit line equation by requiring that $A^2 + B^2 = 1$. To achieve that, we need to scale all coefficients $A,B,C$ by $s = 1 / |\mathbf{v}| = 1 / \sqrt{A^2 + B^2}$. For that to work, we need to require that $A$ and $B$ are not simultaneously zero. That's usually a requirement for those coefficients anyway. From the formulas above, we see that they could only be simultaneously zero, if our two points $\mathbf{p}_1, \mathbf{p}_2$ would actually be one and the same point. That's of course not allowed. We said that the two points must be distinct. Let's define:
+\begin{equation}
+ s = \frac{1}{\sqrt{A^2 + B^2}}, \qquad
+ n_x = s A, \;
+ n_y = s B, \;
+ d   = s C, \qquad
+ \mathbf{n} = \begin{pmatrix} n_x \\ n_y \end{pmatrix}
+\end{equation}
+With these definitions in place, we can write down our implicit line equation also in the following form:
+\begin{equation}
+ \mathbf{n} \cdot \mathbf{p} + d = 0 \quad \text{or} \quad
+ n_x p_x + n_y p_y + d = 0
+\end{equation}
+when we take $\mathbf{p} = (p_x, p_y)$. The left of those might be called "implicit vector form". The right one is still an "implicit coordinate form" but now with normalized coefficients. The value $d$ has a geometric interpretation, too: It's a (signed) distance of the line from the origin - so using the letter $d$ actually makes sense. Observe that we now have an equation that we can treat as a formula for a function into which we can plug in arbitrary points $\mathbf{p}$. If the function returns zero, it means our input point  $\mathbf{p}$ was, in fact, on the line. If it returns some other value, this value can be interpreted as a signed distance of that point from the line [VERIFY all of this!].
 
-VERIFY! 
+\paragraph{Lines as Sets}
+I have given a lot of equations that \emph{define} a line in the sense that these formulas can be used to produce points on the line (in the case of the explicit and parametric forms) or can be used to check whether or not some given point is on the line (in the case of the implicit forms). I have not yet really said, what a line actually \emph{is} in a mathematical sense. So, I will now do just that: a line is a \emph{set of points}. We can write down this set using set builder notation as follows: ...TBC...
+
+
+\paragraph{Angle Between Lines}
+Let's now assume that we have two lines $L_1, L_2$ given and we want to compute the angle between them. If both lines are given in the form ...TBC...
+
+% Verify all formulas numerically
 
 % The coeffs for the implicit form can be multiplied through by any nonzero constant.
 % Give coordinate form of implcit equation: x(t) = x_1 + t (x_2 - x_1), ...
@@ -134,9 +155,15 @@ VERIFY!
 %   y(t) = y_1 + t (y_2 - y_1)
 % To find b: find t such that x(t) = 0, plug it into y(t). That gives: b = y_1 - x_1 * m
 % To find a: find t such that y(t) = 0, plug it into x(t). That gives: a = x_1 - y_1 / m
+%
+% Maybe given an implicit equation in vector form: \mathbf{n} \cdot \mathbf{p} + d = 0
+% where n is the unit normal vector n_x = A / |v|, n_y = B / |v|, d = C / |v|
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Curves}
+Curves are a generalization of lines. Equations of curves can also be given in various forms. The most common ones are again: parametric, implicit and explicit. All these 3 forms can be written down in a form using vector notation or by writing out one equation for each coordinate. For example, the unit circle can be written down in implicit form as $x^2 + y^2 = 1$, in explicit form as $y = \pm \sqrt{1 - x^2}$ and in parametric form as $(x,y) = (\cos t, \sin t), t \in [0, 2 \pi]$. For the purpose of drawing a curve on a screen using some vector graphics library, the parametric form is usually the most convenient. The explicit form is convenient when we are dealing with a curve that represents a function - but not all curves do represent functions so the applicability of that form is rather limited. The explicit form of the circle that I have written down above is somewhat of a hack using this $\pm$ sign to indicate that I want both values of the square root - but such a thing isn't really allowed for a proper function definition. You understand what I mean because you are a human (I guess), but a computer wouldn't accept that as an explicit definition - "explicit" is usually synonymous with "functional" as in "defines a function $y = f(x)$". We might get away with broadening our view to allowing multifunctions in explicit curve definitions - but I digress.
+
+...TBC...give some interesting examples - maybe the lemniscate, an elliptic curve, etc.
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Triangles}

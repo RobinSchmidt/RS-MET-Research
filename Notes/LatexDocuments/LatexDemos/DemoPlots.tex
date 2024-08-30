@@ -36,6 +36,7 @@
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Monomials}
+Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=6, yscale=3|.
 
 \begin{figure}[h]
 \centering
@@ -71,6 +72,7 @@
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Sine and Cosine}
+Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default size, i.e. without using \verb|scale|, \verb|xscale|, \verb|yscale|. 
 
 \begin{figure}[h]
 \centering
@@ -100,6 +102,70 @@
 \draw [shift={(0,1)}]  (+3pt, 0pt) -- (-3pt, 0pt) node [left] {$1$};
 \draw [shift={(0,-1)}] (+3pt, 0pt) -- (-3pt, 0pt) node [left] {$-1$};
     
+\end{tikzpicture}
+\end{figure}
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Line Equations}
+
+\begin{figure}[h]
+\centering
+\caption{Line Equations}
+\label{Fig:Line}
+\begin{tikzpicture}
+[thick, >=stealth', 
+  dot/.style = { draw, fill = black, circle, inner sep = 0pt, minimum size = 6pt }
+]
+
+% Grid:
+\draw[very thin,color=lightgray] (-3.2,0.0) grid (4.2,4.2);
+
+% Coordinate system:
+\draw[->] (-5, 0) -- (8,0) coordinate[label = {below:$x$}] (xmax);
+\draw[->] ( 0,-1) -- (0,5) coordinate[label = {left:$y$}]  (ymax);
+
+% Line:  
+\draw     (-4,-1) -- (6,4)  node[pos=0.85, below right] {};
+
+% Points 1p, p2 on the line:  
+\draw (2,2) node[dot, label = {above:$\mathbf{p}_1$}]{};
+\draw (4,3) node[dot, label = {above:$\mathbf{p}_2$}]{};
+
+% Vector v and its components:
+\draw[red, <->] (2,2) -- (4,2);
+\draw[red] (3,2) node[below] {$v_x$};
+\draw[red, <->] (4,2) -- (4,3);
+\draw[red] (4,2.5) node[right] {$v_y$};
+\draw[red, ->] (2,2) -- (4,3);
+\draw[red] (3,3) node[below] {$\mathbf{v}$};
+
+% Marks on the x- and y-axes:
+% ToDo: try to use tick-marks instead - or just drop horizontal and vertical lines
+% Maybe draw a grid
+\draw [shift={(2,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$x_1$};
+\draw [shift={(4,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$x_2$};
+\draw [shift={(0,2)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$y_1$};
+\draw [shift={(0,3)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$y_2$};
+
+% x,y intercepts:
+\draw [shift={(-2,0)}, color=black] ( 0pt,+3pt) -- ( 0pt,-3pt) node [below] {$a$};
+\draw [shift={( 0,1)}, color=black] (+3pt, 0pt) -- (-3pt, 0pt) node [left]  {$b$};
+
+% angle alpha:
+\draw (-1,0) arc (0:27.5:1);
+\draw (-1.25,0.16) node[label = {center:$\alpha$}]{};
+
+% Equations:
+\node[align=left] at (9.5,2.0) 
+{
+\begin{tabular}{l l}
+  $\mathbf{p}(t) = \mathbf{p}_1 + t (\mathbf{p}_2 -\mathbf{p}_1)$ & 2-point form \\
+  $\mathbf{p}(t) = \mathbf{p}_1 + t \mathbf{v}$ & Parametric vector form \\  
+  $Ax + By + C = 0$                             & Implicit coordinate form \\   
+  $y = m x + b$                                 & Explicit form \\
+  $\frac{x}{a} + \frac{y}{b} = 1$               & Intercept form \\
+\end{tabular}
+};
 \end{tikzpicture}
 \end{figure}
 

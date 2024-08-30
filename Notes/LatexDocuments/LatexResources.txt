@@ -15,9 +15,24 @@ Tikz-Manual:
 https://tikz.dev/tikz
 https://tikz.dev/tikz-plots
 
+https://www.bu.edu/math/files/2013/08/tikzpgfmanual.pdf
+
 Tikz-Examples:
 https://texample.net//tikz/examples/
 https://texample.net/tikz/examples/tag/plots/
 https://texample.net/tikz/examples/tag/graphs/
 https://texample.net/tikz/examples/tag/diagrams/
 https://texample.net/tikz/examples/tag/charts/
+
+PGF-Plots:
+https://tikz.dev/pgfplots/reference-specifyrange
+https://www.overleaf.com/learn/latex/Pgfplots_package
+
+
+
+https://texwelt.de/fragen/8703/wann-sollte-tikz-wann-pgfplots-verwendet-werden
+
+https://tex.stackexchange.com/questions/326592/how-can-i-define-the-range-x-y-axis-of-my-diagram
+
+https://en.wikipedia.org/wiki/PGF/TikZ
+-GeoGebra can produce pgf output!

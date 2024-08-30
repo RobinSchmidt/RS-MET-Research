@@ -347,24 +347,58 @@ where the second rule, for the time being, makes only sense when $n-m$ is natura
 % ToDo: list power rules x^{n+m} = x^n x^m,  x^{n m} = (x^n)^m
 % exlpain the term "monic"
 
+\begin{figure}[h]
+\centering
+\caption{Monomials of degrees $0$ to $5$}
+\label{Fig:Monomials}
+\begin{tikzpicture}
+[domain=-1.1:1.1, range=-1.2:1.2, xscale=6, yscale=3, samples=50, thick, >=stealth']
+
+% Coordinate axes:
+\draw[->] (-1.5,0) -- (1.5,0) node[below] {$x$};
+\draw[->] (0,-1.5) -- (0,1.5) node[left]  {$f(x)$};
+
+% Graphs:
+\draw[color=red]  plot (\x,{pow(\x,0)}) node[right] {$x^0$};
+\draw[color=blue] plot (\x,{pow(\x,1)}) node[right] {$x^1$};
+\draw[color=red]  plot (\x,{pow(\x,2)}) node[right] {$x^2$};
+\draw[color=blue] plot (\x,{pow(\x,3)}) node[right] {$x^3$};
+\draw[color=red]  plot (\x,{pow(\x,4)}) node[right] {$x^4$};
+\draw[color=blue] plot (\x,{pow(\x,5)}) node[right] {$x^5$};
+
+% Tick marks on x-axis:
+\draw [shift={(-1,0)}] (0pt,+1pt) -- (0pt,-1pt) node [below] {$-1$};  
+\draw [shift={( 1,0)}] (0pt,+1pt) -- (0pt,-1pt) node [below] {$1$};
+
+% Tick marks on y-axis:
+\draw [shift={(0,1)}]  (+.5pt, 0pt) -- (-.5pt, 0pt) node [left] {$1$};
+\draw [shift={(0,-1)}] (+.5pt, 0pt) -- (-.5pt, 0pt) node [left] {$-1$};
+    
+\end{tikzpicture}
+\end{figure}
+
+%https://tex.stackexchange.com/questions/326592/how-can-i-define-the-range-x-y-axis-of-my-diagram
+
 
 
 \paragraph{Evaluation}
-The evaluation of a polynomial is best done in nested form. This is the computationally most efficient way and also one of the most stable ways numerically\footnote{Numerical stability refers to the way in which small errors in the inputs affect the errors in the output - will errors tend to get amplified or not, etc.}. We assume that a polynomial of degree $n$ is represented in the computer as a list or array of $n+1$ coefficients $a_0, \ldots, a_n$.
-\begin{lstlisting}
-def polyEval(p, x):
-	"""Evaluates the polynomial p at the given x using Horner's algorithm"""
-	k = len(p)-1           # last valid index
-	if(k < 0):
-		return 0
-	y = p[k]
-	while(k > 0):
-		k -= 1
-		y = y*x + p[k]
-	return y
-\end{lstlisting}
-This way of evaluating a polynomial is also known as Horner's rule.
-...hmm...not sure, if code should appear in the normal text. maybe put it into an appendix? 
+The evaluation of a polynomial is best done in nested form. This is the computationally most efficient way and also one of the most stable ways numerically\footnote{Numerical stability refers to the way in which small errors in the inputs affect the errors in the output - will errors tend to get amplified or not, etc.}. 
+
+%We assume that a polynomial of degree $n$ is represented in the computer as a list or array of $n+1$ coefficients $a_0, \ldots, a_n$.
+%\begin{lstlisting}
+%def polyEval(p, x):
+%	"""Evaluates the polynomial p at the given x using Horner's algorithm"""
+%	k = len(p)-1           # last valid index
+%	if(k < 0):
+%		return 0
+%	y = p[k]
+%	while(k > 0):
+%		k -= 1
+%		y = y*x + p[k]
+%	return y
+%\end{lstlisting}
+%This way of evaluating a polynomial is also known as Horner's rule.
+%...hmm...not sure, if code should appear in the normal text. maybe put it into an appendix? 
 
 
 \paragraph{Addition and Subtraction}

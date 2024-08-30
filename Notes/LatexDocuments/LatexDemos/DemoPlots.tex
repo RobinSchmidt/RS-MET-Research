@@ -21,6 +21,7 @@
 \usepackage{color}
 \definecolor{rsGreen}{rgb}{0.0,0.4,0.0}
 \definecolor{rsRed}  {rgb}{0.7,0.0,0.0}
+\definecolor{rsBlue} {rgb}{0.0,0.0,1.0}
 
 %\definecolor{mygray}{rgb}{0.5,0.5,0.5}
 %\definecolor{mymauve}{rgb}{0.58,0,0.82}
@@ -53,11 +54,11 @@ Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=
 
 % Graphs:
 \draw[color=rsRed]  plot (\x,{pow(\x,0)}) node[right] {$x^0$};
-\draw[color=blue] plot (\x,{pow(\x,1)}) node[right] {$x^1$};
+\draw[color=rsBlue] plot (\x,{pow(\x,1)}) node[right] {$x^1$};
 \draw[color=rsRed]  plot (\x,{pow(\x,2)}) node[right] {$x^2$};
-\draw[color=blue] plot (\x,{pow(\x,3)}) node[right] {$x^3$};
+\draw[color=rsBlue] plot (\x,{pow(\x,3)}) node[right] {$x^3$};
 \draw[color=rsRed]  plot (\x,{pow(\x,4)}) node[right] {$x^4$};
-\draw[color=blue] plot (\x,{pow(\x,5)}) node[right] {$x^5$};
+\draw[color=rsBlue] plot (\x,{pow(\x,5)}) node[right] {$x^5$};
 
 % Tick marks on x-axis:
 \draw [shift={(-1,0)}] (0pt,+1pt) -- (0pt,-1pt) node [below] {$-1$};  
@@ -88,7 +89,7 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 \draw[->] (0,-1.4) -- (0,1.4) node[left]  {};
 
 % Graphs of sin(x) and cos(x):
-\draw[color=blue] plot (\x,{sin(\x r)}) node[right] {$\sin x$};
+\draw[color=rsBlue]   plot (\x,{sin(\x r)}) node[right] {$\sin x$};
 \draw[color=rsGreen]  plot (\x,{cos(\x r)}) node[right] {$\cos x$};
 % \x r means to convert '\x' from degrees to radians
   
@@ -130,8 +131,8 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 \draw     (-4,-1) -- (6,4)  node[pos=0.85, below right] {};
 
 % Points 1p, p2 on the line:  
-\draw (2,2) node[dot, label = {above:$\mathbf{p}_1$}]{};
-\draw (4,3) node[dot, label = {above:$\mathbf{p}_2$}]{};
+\draw (2,2) node[dot, rsBlue, label = {above:$\mathbf{p}_1$}]{};
+\draw (4,3) node[dot, rsBlue, label = {above:$\mathbf{p}_2$}]{};
 
 % Vector v and its components:
 \draw[rsRed, <->] (2,2) -- (4,2);

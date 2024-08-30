@@ -19,7 +19,9 @@
 
 % To define custom colors in plots - must appear after \usepackage{tikz}
 \usepackage{color}
-\definecolor{rsGreen}{rgb}{0,0.4,0}   % use rsGreen
+\definecolor{rsGreen}{rgb}{0.0,0.4,0.0}
+\definecolor{rsRed}  {rgb}{0.7,0.0,0.0}
+
 %\definecolor{mygray}{rgb}{0.5,0.5,0.5}
 %\definecolor{mymauve}{rgb}{0.58,0,0.82}
 
@@ -50,11 +52,11 @@ Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=
 \draw[->] (0,-1.7) -- (0,1.9) node[left]  {$f(x)$};
 
 % Graphs:
-\draw[color=red]  plot (\x,{pow(\x,0)}) node[right] {$x^0$};
+\draw[color=rsRed]  plot (\x,{pow(\x,0)}) node[right] {$x^0$};
 \draw[color=blue] plot (\x,{pow(\x,1)}) node[right] {$x^1$};
-\draw[color=red]  plot (\x,{pow(\x,2)}) node[right] {$x^2$};
+\draw[color=rsRed]  plot (\x,{pow(\x,2)}) node[right] {$x^2$};
 \draw[color=blue] plot (\x,{pow(\x,3)}) node[right] {$x^3$};
-\draw[color=red]  plot (\x,{pow(\x,4)}) node[right] {$x^4$};
+\draw[color=rsRed]  plot (\x,{pow(\x,4)}) node[right] {$x^4$};
 \draw[color=blue] plot (\x,{pow(\x,5)}) node[right] {$x^5$};
 
 % Tick marks on x-axis:
@@ -132,12 +134,12 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 \draw (4,3) node[dot, label = {above:$\mathbf{p}_2$}]{};
 
 % Vector v and its components:
-\draw[red, <->] (2,2) -- (4,2);
-\draw[red] (3,2) node[below] {$v_x$};
-\draw[red, <->] (4,2) -- (4,3);
-\draw[red] (4,2.5) node[right] {$v_y$};
-\draw[red, ->] (2,2) -- (4,3);
-\draw[red] (3,3) node[below] {$\mathbf{v}$};
+\draw[rsRed, <->] (2,2) -- (4,2);
+\draw[rsRed] (3,2) node[below] {$v_x$};
+\draw[rsRed, <->] (4,2) -- (4,3);
+\draw[rsRed] (4,2.5) node[right] {$v_y$};
+\draw[rsRed, ->] (2,2) -- (4,3);
+\draw[rsRed] (3,3) node[below] {$\mathbf{v}$};
 
 % Marks on the x- and y-axes:
 % ToDo: try to use tick-marks instead - or just drop horizontal and vertical lines

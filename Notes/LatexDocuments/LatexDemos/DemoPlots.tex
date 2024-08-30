@@ -130,11 +130,12 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 \draw[->] ( 0,-1) -- (0,5) coordinate[label = {left:$y$}]  (ymax);
 
 % Line:  
-\draw     (-4,-1) -- (6,4)  node[pos=0.85, below right] {};
+\draw[rsGreen]     (-4,-1) -- (6,4)  node[pos=0.85, below right] {};
 
 % Points 1p, p2 on the line:  
-\draw (2,2) node[dot, rsBlue, label = {above:$\mathbf{p}_1$}]{};
-\draw (4,3) node[dot, rsBlue, label = {above:$\mathbf{p}_2$}]{};
+\draw[rsBlue] (2,2) node[dot, rsBlue, label = {above:$\mathbf{p}_1$}]{};
+\draw[rsBlue] (4,3) node[dot, rsBlue, label = {above:$\mathbf{p}_2$}]{};
+% When using rsBlue only inside the node, only the dot becomes blue
 
 % Vector v and its components:
 \draw[rsRed, <->] (2,2) -- (4,2);

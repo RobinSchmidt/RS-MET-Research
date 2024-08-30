@@ -6,11 +6,7 @@
 \oddsidemargin=-1.0cm
 \textwidth=19cm
 
-% To define custom colors in plots:
-%\usepackage{color}
-%\definecolor{mygreen}{rgb}{0,0.6,0}
-%\definecolor{mygray}{rgb}{0.5,0.5,0.5}
-%\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
 
 % TikZ - TikZ ist kein Zeichenprogramm:
 \usepackage{tikz}
@@ -19,6 +15,13 @@
 \usetikzlibrary{arrows,intersections}
 
 % PGF - Portable Graphics File:
+
+
+% To define custom colors in plots - must appear after \usepackage{tikz}
+\usepackage{color}
+\definecolor{mygreen}{rgb}{0,0.6,0}
+%\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+%\definecolor{mymauve}{rgb}{0.58,0,0.82}
 
 
 \begin{document}
@@ -82,7 +85,7 @@
 
 % Graphs of sin(x) and cos(x):
 \draw[color=blue] plot (\x,{sin(\x r)}) node[right] {$\sin x$};
-\draw[color=red]  plot (\x,{cos(\x r)}) node[right] {$\cos x$};
+\draw[color=mygreen]  plot (\x,{cos(\x r)}) node[right] {$\cos x$};
 % \x r means to convert '\x' from degrees to radians
   
 % Tick marks on x-axis:

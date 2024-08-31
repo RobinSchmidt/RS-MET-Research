@@ -216,6 +216,9 @@ The operation of turning the rows of a matrix into the columns of a new matrix a
 
 % (AB)^T = B^T A^T
 
+% The Matrix Transpose: Visual Intuition
+% https://www.youtube.com/watch?v=wjYpzkQoyD8
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
 If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B}$ such that  $\mathbf{B} \mathbf{A} = \mathbf{I}$, then we call $\mathbf{B}$ a left inverse of $\mathbf{A}$. A matrix $\mathbf{C}$ with the property $\mathbf{A} \mathbf{C} = \mathbf{I}$ would be called a right inverse. It turns out that there is no difference between these two notions, i.e. left inverses are always also right inverses and vice versa so we call a matrix that has both of these properties just an inverse matrix of $\mathbf{A}$. It turns furthermore out that if such an inverse exists, then it is unique, so we call such a matrix \emph{the inverse} of $\mathbf{A}$ and denote it by $\mathbf{A}^{-1}$. Finding such an inverse for a given matrix $\mathbf{A}$ can be done by an algorithm called Gauss-Jordan elimination which we will be explained later. [VERIFY!] [TODO: explain pseudo-inverse]

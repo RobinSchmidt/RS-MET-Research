@@ -100,7 +100,10 @@ bool testKalmanFilter()
     pf[n] = xOut.x;
     vf[n] = xOut.y;
     // Is all zeros because the K matrix (Kalman gain) is zero in kf.getSample(). The P matrix is
-    // initialized with zero and therefore stays zero. ...something is wrong...
+    // initialized with zero and therefore stays zero. ...something is wrong... Maybe the Q matrix
+    // should not be all zeros? I think, when it's all zeros, it means that the prediction is 
+    // perfect. maybe we should assume that the velocity is misestimated? Maybe try using
+    // Q = [0,0; 0,1]
 
 
     int dummy = 0;

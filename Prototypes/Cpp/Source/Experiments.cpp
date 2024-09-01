@@ -106,7 +106,7 @@ bool testKalmanFilter()
     // initialized with zero and therefore stays zero. ...something is wrong... Maybe the Q matrix
     // should not be all zeros? I think, when it's all zeros, it means that the prediction is 
     // perfect. maybe we should assume that the velocity is misestimated? Maybe try using
-    // Q = [0,0; 0,1]
+    // Q = [0,0; 0,1] ...OK - done - the result seems to look more plausible now.
 
 
     int dummy = 0;
@@ -116,18 +116,26 @@ bool testKalmanFilter()
 
   //rsPlotVectors(v,  p);
   //rsPlotVectors(vm, pm);
-
-
   //rsPlotVectors(p, pm);
 
   //rsPlotVectors(p, pm, pf); // p: true, pm: measured / noisy, pf: filtered / less noisy
-
   rsPlotVectors(p-pm, p-pf);  // Estimation error before and after Kalman filter correction.
 
 
   return ok;
 
-
+  // Observations:
+  //
+  // - The K matrix (Kalman gain) and the P matrix (estimated covariance of state) in the filter 
+  //   seems to converge to constant/stationary matrices. Is this the expected behavior? Maybe the
+  //   filter needs soem time to settle and then is just constant?
+  // 
+  // - If we set the Q matrix to all zeros, the filter will just produce an all zeors output 
+  //   forever because the P and K matrices in the filter are always zero. I think, when it's all 
+  //   zeros, it means that the prediction is perfect. With  Q = (0,0, 0,1) we assume that the 
+  //   velocity is misestimated?
+  //
+  //
   // See:
   // https://en.wikipedia.org/wiki/Kalman_filter#Details
   //
@@ -144,6 +152,8 @@ bool testKalmanFilter()
   //   https://en.wikipedia.org/wiki/Kalman_filter#Example_application,_technical
   //
   // - Test this class with other matrix and vector types - especially rsMatrix and std::vector.
+  //
+  // - Figure out, if the convergence speed depends on Q
 }
 
 

@@ -9,6 +9,11 @@
 
 int main (int /*argc*/, char* /*argv[]*/)
 {
+
+  // Signal Processing:
+  testKalmanFilter();
+
+
   // Image processing:
   //testGaussBlurFIR();
   //testGaussBlurIIR();
@@ -21,7 +26,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testComplexGaussBlurIIR();
   //testUpDownSample1D();              // up- and downsampling with lossless roundtrip
   //testUpDownSample1D_2();
-  //testUpDownSample2D();              // stub, dito but for images
+  testUpDownSample2D();              // stub, dito but for images
 
 
   //epidemic();
@@ -89,7 +94,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNeumannRationals();
   //testPairingFunctions();
 
-  testGeneralizedCollatz();
+  //testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();
@@ -147,7 +152,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   // Renderings of mathematical art:
   //imgRainbowRadiation();
-  testImageFractalization();
+  //testImageFractalization();
 
 
   // Throw away code:

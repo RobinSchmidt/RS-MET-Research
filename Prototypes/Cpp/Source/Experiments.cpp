@@ -16,6 +16,21 @@
 // ToDo: Organize the way, we include and compile this code more properly!
 
 
+
+
+
+//-------------------------------------------------------------------------------------------------
+
+bool testKalmanFilter()
+{
+  bool ok = true;
+
+
+
+  return ok;
+}
+
+
 //-------------------------------------------------------------------------------------------------
 // move some of this code to rapt:
 

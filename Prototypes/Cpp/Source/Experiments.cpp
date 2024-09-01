@@ -58,6 +58,9 @@ bool testKalmanFilter()
 
   // ToDo:
   //
+  // - Implement the example from here: 
+  //   https://en.wikipedia.org/wiki/Kalman_filter#Example_application,_technical
+  //
   // - Test this class with other matrix and vector types - especially rsMatrix and std::vector.
 }
 

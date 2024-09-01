@@ -614,9 +614,12 @@ If you repeatedly differentiate, you'll always cycle through the same two functi
 \sinh(x+y) = \sinh(x) \cosh(y) + \cosh(x) \sinh(y), \quad
 \cosh(x+y) = \cosh(x) \cosh(y) - \sinh(x) \sinh(y)
 \end{equation}
+It also translates between addition and multiplication but it's more complicated than the exponential function because it's a system of 2 equations and each of them mixes both functions. When we form the quotient of $\sinh$ and $\cosh$, we obtain the hyperbolic tangent function, denoted by $f(x) = \tanh(x)$:
+\begin{equation}
+\tanh(x) =	\frac{\sinh(x)}{\cosh(x)} 
+         = \frac{\e^x - \e^{-x}}{\e^x + \e^{-x}}
+\end{equation}
 
-
-%...TBC...give functional and differential equations
 
 
 
@@ -624,10 +627,6 @@ If you repeatedly differentiate, you'll always cycle through the same two functi
 % Everything still makes sense when the argument is a complex number. 
 
 %and when we form their quotient, we obtain the hyperbolic tangent $\tanh(x)$:
-%\begin{equation}
-%\tanh(x) =	\frac{\sinh(x)}{\cosh(x)} 
-%         = \frac{\e^x - \e^{-x}}{\e^x + \e^{-x}}
-%\end{equation}
 
 
 
@@ -685,7 +684,7 @@ There are also differential and functional equations for sine and cosine that ar
 \frac{d}{dx} \sin(x) = \cos(x), \quad
 \frac{d}{dx} \cos(x) = -\sin(x)
 \end{equation}
-and the following system of coupled functional equations which are also known under the name of \emph{addition theorems}:
+That means, if you start with the sine function and repeatedly differentiate, you'll cycle through the 4 functions $\sin, \cos, -\sin, -\cos$. Sine and cosine also obey the following system of coupled functional equations which are also known under the name of \emph{addition theorems}:
 \begin{equation}
 \sin(x+y) = \sin(x) \cos(y) + \cos(x) \sin(y), \qquad
 \cos(x+y) = \cos(x) \cos(y) - \sin(x) \sin(y)
@@ -694,7 +693,7 @@ Although the relations are more complicated for sine and cosine than they are fo
 \begin{equation}
 \e^{\i z} = \cos(z) + \i \sin(z)
 \end{equation}
-for any complex number $z$. 
+for any complex number $z$. From this relation, we can derive a lot of formulas....TBC...
 
 
 

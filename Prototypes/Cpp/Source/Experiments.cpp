@@ -58,6 +58,7 @@ bool testKalmanFilter()
     nv[n] = 0.5 * prng.getSample();
   for(int n = 0; n < N; n++)
     np[n] = 0.3 * prng.getSample() - 0.7*nv[n];  // 2nd term should cause some cross-correlation
+  // I think, this is actually the *process* noise - not the *measurement* noise!
 
   // Estimate mean of the noises. They should be theoretically zero but practically, due to 
   // finite data, they are not - so we make them zero by subtracting them:
@@ -89,9 +90,16 @@ bool testKalmanFilter()
   // Create, set up and init the Kalman filter:
   KF kf;
   kf.setTransitionMatrix(F);
+  kf.initState(x0, P0);
+
+  // Old:
   kf.setMeasurementNoiseCovariance(R);
   kf.setTransitionNoiseCovariance(Q);
-  kf.initState(x0, P0);
+
+  // New:
+  //kf.setTransitionNoiseCovariance(R);
+  // Q is left as is, as the zero matrix
+
 
 
   // Try to clean up the measured position and velocity using the Kalman filter:
@@ -167,8 +175,18 @@ bool testKalmanFilter()
   //   Q = (0,0, 0,0.1), it takes longer (around 60 calls). ...does it converge to the same matrix?
   //   ...yes - that seems to be the case
   //
-  // - Find a proper way to etsimate the matrix Q. Predict outputs using F, compare to actual 
+  // - Find a proper way to estimate the matrix Q. Predict outputs using F, compare to actual 
   //   outputs. Or maybe we should actually use as Q what we currently use as R and set R to zero?
+  //   ...when doing that, the filter actually does nothing to the signal: output = input, up to
+  //   roundoff noise. 
+  //   I think, my estimation of the covariance matrix might be wrong. Or is it right? I'm not 
+  //   sure.
+  //
+  // - Implement that example
+  //   http://bilgin.esme.org/BitsAndBytes/KalmanFilterforDummies
+  //   ...it's just a scalar variant - use Real for TVec and TMat
+  //
+  // - https://www.kalmanfilter.net/default.aspx
 
 }
 

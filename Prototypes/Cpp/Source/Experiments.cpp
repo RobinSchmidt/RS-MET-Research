@@ -67,7 +67,6 @@ bool testKalmanFilter()
   AT::removeMean(&np[0], N);
 
 
-
   // Estimate covariance matrix of the noises:
   Real s_vv = AT::sumOfSquares( &nv[0], N) / N;
   Real s_pp = AT::sumOfSquares( &np[0], N) / N;
@@ -81,11 +80,15 @@ bool testKalmanFilter()
   Arr pm = p + np;   // pm: measured position, p: position, np: noise in position
   Arr vm = v + nv;
 
+  // Ad-Hoc estimate for the Q-matrix (prediction error / process error):
+  Mat Q(0,0, 0,1);
+
 
   // Create, set up and init the Kalman filter:
   KF kf;
   kf.setTransitionMatrix(F);
   kf.setMeasurementNoiseCovariance(R);
+  kf.setTransitionNoiseCovariance(Q);
   kf.initState(x0, P0);
 
 
@@ -117,7 +120,9 @@ bool testKalmanFilter()
 
   //rsPlotVectors(p, pm);
 
-  rsPlotVectors(p, pm, pf); // p: true, pm: measured / noisy, pf: filtered / less noisy
+  //rsPlotVectors(p, pm, pf); // p: true, pm: measured / noisy, pf: filtered / less noisy
+
+  rsPlotVectors(p-pm, p-pf);  // Estimation error before and after Kalman filter correction.
 
 
   return ok;

@@ -101,6 +101,8 @@ bool testKalmanFilter()
 
     pf[n] = xOut.x;
     vf[n] = xOut.y;
+    // Is all zeros because the K matrix (Kalman gain) is zero in kf.getSample(). The P matrix is
+    // initialized with zero and therefore stays zero. ...something is wrong...
 
 
     int dummy = 0;

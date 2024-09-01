@@ -31,16 +31,93 @@ bool testKalmanFilter()
   using Mat  = rsMatrix2x2<Real>;
   using Vec  = rsVector2D<Real>;
   using KF   = rsKalmanFilter<Mat, Vec>;
+  using Arr  = std::vector<Real>;           // Array
+  using AT   = rsArrayTools;
 
+  int N = 501;                              // Number of samples
+
+  Real dt = 1;
+  Vec x0(0, 0);
+  Mat P0(0, 0,  0, 0);
+  Mat F( 1, dt, 0, 1);
+
+
+
+  // Generate a random state trajectory:
+  rsNoiseGenerator2<Real> prng;
+  prng.setOrder(5);
+  Arr v(N), p(N);                           // Velocity and position
+  for(int n = 0; n < N; n++)
+    v[n] = prng.getSample();
+  p[0] = 0;
+  for(int n = 1; n < N; n++)
+    p[n] = p[n-1] + v[n];
+
+  // Generate the measurement noise (for v and p):
+  Arr nv(N), np(N);
+  for(int n = 0; n < N; n++)
+    nv[n] = 0.2 * prng.getSample();
+  for(int n = 0; n < N; n++)
+    np[n] = 0.3 * prng.getSample() - 0.7*nv[n];  // 2nd term should cause som cross-correlation
+
+  // Estimate mean of the noises. They should be theoretically zero but practically, due to 
+  // finite data, they are not - so we make them zero by subtracting them:
+  Real m_nv = AT::mean(&nv[0], N);
+  Real m_np = AT::mean(&np[0], N);
+  AT::removeMean(&nv[0], N);
+  AT::removeMean(&np[0], N);
+
+
+
+  // Estimate covariance matrix of the noises:
+  Real s_vv = AT::sumOfSquares( &nv[0], N) / N;
+  Real s_pp = AT::sumOfSquares( &np[0], N) / N;
+  Real s_pv = AT::sumOfProducts(&np[0], &nv[0], N) / N;
+  // Verify formulas! Should we take the square-roots? ...Nah - I don't think so!
+  // Should we divide by (N-1) or (N+1)?
+  Mat R(s_pp, s_pv, s_pv, s_vv);
+
+
+
+  // Create measured position and velocity by taking the true values and adding the noise:
+  Arr pm = p + np;   // pm: measured position, p: position, np: noise in position
+  Arr vm = v + nv;
+
+
+  // Create, set up and init the Kalman filter:
   KF kf;
-
-  Vec x0(0,0);
-  Mat P0(0,0,0,0);
-
-
-
+  kf.setTransitionMatrix(F);
+  kf.setMeasurementNoiseCovariance(R);
   kf.initState(x0, P0);
 
+
+  // Try to clean up the measured position and velocity using the Kalman filter:
+  Arr pf(N), vf(N);                // Filtered position and velocity
+  Vec u(0, 0);
+  for(int n = 0; n < N; n++)
+  {
+    Vec xIn(pm[n], vm[n]);            // This is the dirty, noisy measurement of the state
+    Vec xOut = kf.getSample(xIn, u);  // This is the cleaned up state estimate
+
+    pf[n] = xOut.x;
+    vf[n] = xOut.y;
+
+
+    int dummy = 0;
+  }
+
+
+
+
+
+
+  //rsPlotVectors(v,  p);
+  //rsPlotVectors(vm, pm);
+
+
+  //rsPlotVectors(p, pm);
+
+  rsPlotVectors(p, pm, pf); // p: true, pm: measured / noisy, pf: filtered / less noisy
 
 
   return ok;

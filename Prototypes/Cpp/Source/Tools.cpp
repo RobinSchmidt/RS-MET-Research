@@ -7887,10 +7887,11 @@ public:
   // xIn is the "unfiltered" new state - i.e. "what the caller thinks" the new state should be, 
   // regardless of the model, i.e. an observation/measurement of an actual state. u is an input 
   // control vector. The output will be our updated state estimate x, i.e. "what the filter 
-  // thinks" the new state should be. So, the mode of operation is: the caller observes some new 
+  // thinks" the new state should be. This estimate will be based on the old state and the new 
+  // information contained in xIn. So, the mode of operation is: the caller observes some new 
   // state estimate "xIn" and asks the filter for a cleaned up version "x" of the estimate.
   // I'm not really sure, if this is the right way to operate a Kalman filter. This is all very 
-  // experimental and immature.
+  // experimental and immature. I'm still figuring this stuff out
 
 protected:
 
@@ -7929,17 +7930,17 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& xIn, const TVec& u)
 
 
   // Prediction:
-  x = F*x + B*u;         // Predict new state from old, taking into account control vector
-  P = F*P*trans(F) + Q;  // Predict error covariance of x
+  x = F*x + B*u;           // Predict new state from old, taking into account control vector
+  P = F*P*rsTrans(F) + Q;  // Predict error covariance of x
 
   // Compute measurement z, innovation y and Kalman gain K:
-  TVec z = H*xIn;                               // Measurement
-  TVec y = z - H*x;                             // Innovation
-  TMat K = P*trans(H) * inv(H*P*trans(H) + R);  // Kalman gain
+  TVec z = H*xIn;                                     // Measurement
+  TVec y = z - H*x;                                   // Innovation
+  TMat K = P*rsTrans(H) * rsInv(H*P*rsTrans(H) + R);  // Kalman gain
 
   // Correction:
   x += K*y;
-  P -= K*H*P;
+  P = P - K*H*P;  // ToDo: use  P -= K*H*P;  ->  implement -= operator
 
   // Output is the cleaned up xIn which is equal to our current state estimate:
   return x;

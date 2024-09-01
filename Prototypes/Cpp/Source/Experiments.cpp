@@ -44,7 +44,7 @@ bool testKalmanFilter()
 
   // Generate a random state trajectory:
   rsNoiseGenerator2<Real> prng;
-  prng.setOrder(5);
+  prng.setOrder(7);
   Arr v(N), p(N);                           // Velocity and position
   for(int n = 0; n < N; n++)
     v[n] = prng.getSample();
@@ -68,8 +68,8 @@ bool testKalmanFilter()
 
 
   // Estimate covariance matrix of the noises:
-  Real s_vv = AT::sumOfSquares( &nv[0], N) / N;
-  Real s_pp = AT::sumOfSquares( &np[0], N) / N;
+  Real s_vv = AT::sumOfSquares( &nv[0],         N) / N;
+  Real s_pp = AT::sumOfSquares( &np[0],         N) / N;
   Real s_pv = AT::sumOfProducts(&np[0], &nv[0], N) / N;
   // Verify formulas! Should we take the square-roots? ...Nah - I don't think so!
   // Should we divide by (N-1) or (N+1)?
@@ -81,7 +81,9 @@ bool testKalmanFilter()
   Arr vm = v + nv;
 
   // Ad-Hoc estimate for the Q-matrix (prediction error / process error):
-  Mat Q(0,0, 0,1);
+  //Mat Q(0,0, 0,1);
+  //Mat Q(0,0, 0,0.1);
+  Mat Q(1,0, 0,1);
 
 
   // Create, set up and init the Kalman filter:
@@ -138,6 +140,8 @@ bool testKalmanFilter()
   //   zeros, it means that the prediction is perfect. With  Q = (0,0, 0,1) we assume that the 
   //   velocity is misestimated?
   //
+  // - When using  Q = (1,0, 0,1), the unfiltered and filtered estimates look almost the same.
+  //
   //
   // See:
   // https://en.wikipedia.org/wiki/Kalman_filter#Details
@@ -148,6 +152,8 @@ bool testKalmanFilter()
   // of the two Gaussians
   // 
   // https://github.com/yyccR/papers/blob/master/kalman%20filter/A%20New%20Approach%20to%20Linear%20Filtering%20and%20Prediction%20Problems.pdf
+  //
+  // Simon Haykin - Adaptive Filter Theory, 4th Ed. pg 484
 
   // ToDo:
   //
@@ -160,6 +166,10 @@ bool testKalmanFilter()
   //   calls to converge. Using  Q = (0,0, 0,0.1) also roughly takes the same time. With  
   //   Q = (0,0, 0,0.1), it takes longer (around 60 calls). ...does it converge to the same matrix?
   //   ...yes - that seems to be the case
+  //
+  // - Find a proper way to etsimate the matrix Q. Predict outputs using F, compare to actual 
+  //   outputs. Or maybe we should actually use as Q what we currently use as R and set R to zero?
+
 }
 
 

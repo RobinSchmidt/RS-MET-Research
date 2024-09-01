@@ -7828,6 +7828,96 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
 
 //=================================================================================================
 
+/** UNDER CONSTRUCTION
+
+*/
+
+template<class TMat, class TVec> 
+class rsKalmanFilter
+{
+
+public:
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Setup
+
+  void setTransitionMatrix(          const TMat& newMatrix) { F = newMatrix; }
+
+  void setMeasurementMatrix(         const TMat& newMatrix) { H = newMatrix; }
+
+  void setTransitionNoiseCovariance( const TMat& newMatrix) { Q = newMatrix; }
+
+  void setMeasurementNoiseCovariance(const TMat& newMatrix) { R = newMatrix; }
+
+  void setInputControlMatrix(        const TMat& newMatrix) { B = newMatrix; }
+
+
+  //-----------------------------------------------------------------------------------------------
+  // \name Processing
+
+  void init(const TVec& x0, const TMat& P0)
+  {
+    x = x0;
+    P = P0;
+  }
+
+  TVec getSample(const TVec& xIn, const TVec& u);
+  // xIn is the "unfiltered" new state - i.e. "what the caller thinks" the new state should be, 
+  // regardless of the model, i.e. an observation/measurement of an actual state. u is an input 
+  // control vector. The output will be our updated state estimate x, i.e. "what the filter 
+  // thinks" the new state should be. So, the mode of operation is: the caller observes some new 
+  // state estimate "xIn" and asks the filter for a cleaned up version "x" of the estimate.
+  // I'm not really sure, if this is the right way to operate a Kalman filter. This is all very 
+  // experimental and immature.
+
+protected:
+
+  // Estimates of dynamic system variables:
+  TVec x;   // Estimate of state vector 
+  TMat P;   // Estimate of covariance matrix of state vector
+
+  // Static system parameters:
+  TMat F;   // State transition matrix/model
+  TMat H;   // State measurement matrix/model
+  TMat Q;   // Covariance matrix of error/noise in state update
+  TMat R;   // Covariance matrix of error/noise in state measurement
+  TMat B;   // Input control matrix
+
+  // https://en.wikipedia.org/wiki/Kalman_filter#Underlying_dynamic_system_model
+
+
+};
+
+
+template<class TMat, class TVec>
+TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& xIn, const TVec& u)
+{
+  // This implementation is very preliminary and I have no idea if this is even remotely correct.
+
+
+  // Prediction:
+  x = F*x + B*u;         // Predict new state from old, taking into account control vector
+  P = F*P*trans(F) + Q;  // Predict error covariance of x
+
+  // Compute innovation and Kalman gain:
+  TVec z = H*xIn;                               // Measurement
+  TVec y = z - H*x;                             // Innovation
+  TMat K = P*trans(H) * inv(H*P*trans(H) + R);  // Kalman gain
+
+  // Correction:
+  x += K*y;
+  P -= K*H*P;
+
+  // Output is the cleaned up xIn which is equal to our current state estimate:
+  return x;
+}
+
+
+
+//=================================================================================================
+
 /** A class for representing Quaternions. Quaternions are a kind of 4-dimensional numbers similar 
 to how complex numbers are 2-dimensional numbers. In fact, the complex numbers are found as a 2D 
 subset within the quaternions. A quaternion q can be written as:

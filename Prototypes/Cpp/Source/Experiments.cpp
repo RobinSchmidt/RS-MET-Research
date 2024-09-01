@@ -23,11 +23,33 @@
 
 bool testKalmanFilter()
 {
+  // Under construction
+
   bool ok = true;
+
+  using Real = double;
+  using Mat  = rsMatrix2x2<Real>;
+  using Vec  = rsVector2D<Real>;
+  using KF   = rsKalmanFilter<Mat, Vec>;
 
 
 
   return ok;
+
+
+  // See:
+  // https://en.wikipedia.org/wiki/Kalman_filter#Details
+  //
+  // Wie ein bisschen Mathe bei der Mondlandung half (Das Kalman-Filter)
+  // https://www.youtube.com/watch?v=EBjca6tPuO0
+  // relevant part starts at 6:48, at 25:22 he shows the relation of the formulas to the parameters
+  // of the two Gaussians
+  // 
+  // https://github.com/yyccR/papers/blob/master/kalman%20filter/A%20New%20Approach%20to%20Linear%20Filtering%20and%20Prediction%20Problems.pdf
+
+  // ToDo:
+  //
+  // - Test this class with other matrix and vector types - especially rsMatrix and std::vector.
 }
 
 

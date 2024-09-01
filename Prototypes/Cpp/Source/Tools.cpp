@@ -7839,6 +7839,11 @@ class rsKalmanFilter
 public:
 
 
+  rsKalmanFilter()
+  {
+    resetParameters();
+  }
+
 
   //-----------------------------------------------------------------------------------------------
   // \name Setup
@@ -7852,6 +7857,9 @@ public:
   void setMeasurementNoiseCovariance(const TMat& newMatrix) { R = newMatrix; }
 
   void setInputControlMatrix(        const TMat& newMatrix) { B = newMatrix; }
+
+  /** Resets all system parameters (i.e. the model matrices) to their default values. */
+  void resetParameters();
 
 
   //-----------------------------------------------------------------------------------------------
@@ -7889,6 +7897,17 @@ protected:
 
 
 };
+
+
+template<class TMat, class TVec>
+void rsKalmanFilter<TMat, TVec>::resetParameters()
+{
+  //F = rsUnityValue(F);
+  //H = rsUnityValue(H);
+  //Q = rsZeroValue(Q);
+  //R = rsZeroValue(R);
+  //B = rsUnityValue(B);
+}
 
 
 template<class TMat, class TVec>

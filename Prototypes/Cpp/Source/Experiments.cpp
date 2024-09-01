@@ -32,6 +32,8 @@ bool testKalmanFilter()
   using Vec  = rsVector2D<Real>;
   using KF   = rsKalmanFilter<Mat, Vec>;
 
+  KF kf;
+
 
 
   return ok;

@@ -7842,6 +7842,7 @@ public:
   rsKalmanFilter()
   {
     resetParameters();
+    initState(rsZeroValue(x), rsZeroValue(P));
   }
 
 
@@ -7858,6 +7859,17 @@ public:
 
   void setInputControlMatrix(        const TMat& newMatrix) { B = newMatrix; }
 
+  // Maybe instead of using assigment operators, us a (free) function rsCopyData(newMatrix, F), 
+  // etc. and provide suitable explicit specializations of this function for all the relevant 
+  // matrix classes. The idea is tha we want to avoid memory re-allocations in these setters, if
+  // possible to make them potentially realtime safe. The idea is that for larger Kalman filters 
+  // (with big matrices), the memory allocation is done once. When setting the filter object up 
+  // under realtime conditions, no further (re)allocations happen because the matrxi-size doesn't
+  // change in calling the setters. ...although - such an optimization is irrelevant as long as
+  // the getSample function produces temporary matrices wthin its computations - which it does.
+  // Maybe a production implementation should avoid that
+
+
   /** Resets all system parameters (i.e. the model matrices) to their default values. */
   void resetParameters();
 
@@ -7865,7 +7877,7 @@ public:
   //-----------------------------------------------------------------------------------------------
   // \name Processing
 
-  void init(const TVec& x0, const TMat& P0)
+  void initState(const TVec& x0, const TMat& P0)
   {
     x = x0;
     P = P0;
@@ -7902,11 +7914,11 @@ protected:
 template<class TMat, class TVec>
 void rsKalmanFilter<TMat, TVec>::resetParameters()
 {
-  //F = rsUnityValue(F);
-  //H = rsUnityValue(H);
-  //Q = rsZeroValue(Q);
-  //R = rsZeroValue(R);
-  //B = rsUnityValue(B);
+  F = rsUnityValue(F);
+  H = rsUnityValue(H);
+  Q = rsZeroValue(Q);
+  R = rsZeroValue(R);
+  B = rsUnityValue(B);
 }
 
 
@@ -7920,7 +7932,7 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& xIn, const TVec& u)
   x = F*x + B*u;         // Predict new state from old, taking into account control vector
   P = F*P*trans(F) + Q;  // Predict error covariance of x
 
-  // Compute innovation and Kalman gain:
+  // Compute measurement z, innovation y and Kalman gain K:
   TVec z = H*xIn;                               // Measurement
   TVec y = z - H*x;                             // Innovation
   TMat K = P*trans(H) * inv(H*P*trans(H) + R);  // Kalman gain

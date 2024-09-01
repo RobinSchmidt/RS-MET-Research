@@ -34,6 +34,13 @@ bool testKalmanFilter()
 
   KF kf;
 
+  Vec x0(0,0);
+  Mat P0(0,0,0,0);
+
+
+
+  kf.initState(x0, P0);
+
 
 
   return ok;

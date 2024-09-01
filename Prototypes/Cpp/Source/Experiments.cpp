@@ -23,7 +23,7 @@
 
 bool testKalmanFilter()
 {
-  // Under construction
+  // Under construction - this doesn't work yet
 
   bool ok = true;
 
@@ -40,7 +40,6 @@ bool testKalmanFilter()
   Vec x0(0, 0);
   Mat P0(0, 0,  0, 0);
   Mat F( 1, dt, 0, 1);
-
 
 
   // Generate a random state trajectory:
@@ -78,7 +77,6 @@ bool testKalmanFilter()
   Mat R(s_pp, s_pv, s_pv, s_vv);
 
 
-
   // Create measured position and velocity by taking the true values and adding the noise:
   Arr pm = p + np;   // pm: measured position, p: position, np: noise in position
   Arr vm = v + nv;
@@ -107,9 +105,6 @@ bool testKalmanFilter()
 
     int dummy = 0;
   }
-
-
-
 
 
 

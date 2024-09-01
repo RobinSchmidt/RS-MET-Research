@@ -11,7 +11,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 {
 
   // Signal Processing:
-  testKalmanFilter();                // Stub
+  testKalmanFilter();                // Under construction - doesn't work yet
 
 
   // Image processing:

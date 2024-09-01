@@ -7908,7 +7908,7 @@ protected:
 
   // https://en.wikipedia.org/wiki/Kalman_filter#Underlying_dynamic_system_model
 
-
+  int numCalls = 0;  // for development
 };
 
 
@@ -7942,7 +7942,9 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& xIn, const TVec& u)
   x += K*y;
   P = P - K*H*P;  // ToDo: use  P -= K*H*P;  ->  implement -= operator
 
+
   // Output is the cleaned up xIn which is equal to our current state estimate:
+  numCalls++;
   return x;
 }
 

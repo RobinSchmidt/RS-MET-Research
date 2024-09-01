@@ -153,7 +153,10 @@ bool testKalmanFilter()
   //
   // - Test this class with other matrix and vector types - especially rsMatrix and std::vector.
   //
-  // - Figure out, if the convergence speed depends on Q
+  // - Figure out, if the convergence speed depends on Q. With  Q = (0,0, 0,1), it takes around 32
+  //   calls to converge. Using  Q = (0,0, 0,0.1) also roughly takes the same time. With  
+  //   Q = (0,0, 0,0.1), it takes longer (around 60 calls). ...does it converge to the same matrix?
+  //   ...yes - that seems to be the case
 }
 
 

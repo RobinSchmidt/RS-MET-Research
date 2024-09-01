@@ -55,9 +55,9 @@ bool testKalmanFilter()
   // Generate the measurement noise (for v and p):
   Arr nv(N), np(N);
   for(int n = 0; n < N; n++)
-    nv[n] = 0.2 * prng.getSample();
+    nv[n] = 0.5 * prng.getSample();
   for(int n = 0; n < N; n++)
-    np[n] = 0.3 * prng.getSample() - 0.7*nv[n];  // 2nd term should cause som cross-correlation
+    np[n] = 0.3 * prng.getSample() - 0.7*nv[n];  // 2nd term should cause some cross-correlation
 
   // Estimate mean of the noises. They should be theoretically zero but practically, due to 
   // finite data, they are not - so we make them zero by subtracting them:
@@ -125,6 +125,9 @@ bool testKalmanFilter()
   return ok;
 
   // Observations:
+  //
+  // - p-pf looks worse than p-pm - that means our supposedly "cleaned up" estimate is actually 
+  //   worse. The filter made it worse rather than better. Something is still wrong!
   //
   // - The K matrix (Kalman gain) and the P matrix (estimated covariance of state) in the filter 
   //   seems to converge to constant/stationary matrices. Is this the expected behavior? Maybe the

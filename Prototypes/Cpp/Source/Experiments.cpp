@@ -69,8 +69,8 @@ bool testKalmanFilter()
 
 
   // Estimate covariance matrix of the noises:
-  Real s_vv = AT::sumOfSquares( &nv[0],         N) / N;
   Real s_pp = AT::sumOfSquares( &np[0],         N) / N;
+  Real s_vv = AT::sumOfSquares( &nv[0],         N) / N;
   Real s_pv = AT::sumOfProducts(&np[0], &nv[0], N) / N;
   // Verify formulas! Should we take the square-roots? ...Nah - I don't think so!
   // Should we divide by (N-1) or (N+1)?
@@ -93,12 +93,18 @@ bool testKalmanFilter()
   kf.initState(x0, P0);
 
   // Old:
-  kf.setMeasurementNoiseCovariance(R);
-  kf.setTransitionNoiseCovariance(Q);
+  //kf.setMeasurementNoiseCovariance(R);
+  //kf.setTransitionNoiseCovariance(Q);
 
   // New:
-  //kf.setTransitionNoiseCovariance(R);
-  // Q is left as is, as the zero matrix
+  R = rsZeroValue(R);                     // Assume no measurement noise
+  Q = Mat(s_pp, s_pv, s_pv, s_vv);        // Process noise is covariance matrix of (np, nv)
+  //Q = Mat(2, 1, 1, 2);    // Test
+  //Q = Mat(0, 0, 0, 0);
+  kf.setTransitionNoiseCovariance(Q);
+  kf.setMeasurementNoiseCovariance(R);
+  kf.initState(x0, Q);                    // Test - doesn't seem to have any effect
+
 
 
 
@@ -112,23 +118,17 @@ bool testKalmanFilter()
 
     pf[n] = xOut.x;
     vf[n] = xOut.y;
-    // Is all zeros because the K matrix (Kalman gain) is zero in kf.getSample(). The P matrix is
-    // initialized with zero and therefore stays zero. ...something is wrong... Maybe the Q matrix
-    // should not be all zeros? I think, when it's all zeros, it means that the prediction is 
-    // perfect. maybe we should assume that the velocity is misestimated? Maybe try using
-    // Q = [0,0; 0,1] ...OK - done - the result seems to look more plausible now.
-
 
     int dummy = 0;
   }
 
 
 
-  //rsPlotVectors(v,  p);
-  //rsPlotVectors(vm, pm);
-  rsPlotVectors(p, pm, pf);
+  //rsPlotVectors(p,   v);   // True position and velocity
+  //rsPlotVectors(pm, vm);   // Measured position and velocity
+  //rsPlotVectors(pf, vf);     // Filtered position and and velocity
+  rsPlotVectors(p, pm, pf);  // p: true pos., pm: measured / noisy, pf: filtered / less noisy
 
-  //rsPlotVectors(p, pm, pf); // p: true, pm: measured / noisy, pf: filtered / less noisy
 
   rsPlotVectors(p-pm, p-pf, pm-pf);  
   // Estimation error before and after Kalman filter correction. pm-pf: Difference between "dirty"
@@ -152,6 +152,15 @@ bool testKalmanFilter()
   //   velocity is misestimated?
   //
   // - When using  Q = (1,0, 0,1), the unfiltered and filtered estimates look almost the same.
+  //
+  // - If Q and R are both zero, we get NaNs as output
+  //
+  // - Ah! I think, when we assume R = 0, then the filtered output actually should look like the 
+  //   unfiltered because, if we assume no measurement noise, then the measurement is supposed to 
+  //   be the exact state and the filter should just return it as is. That seems plausible!
+  //   ToDo: actually produce some measurement noise, too - and then add that during measurement.
+  //   Maybe call the noise signals q[n] and r[n] - with matrices Q, R respectively. Oh - but they
+  //   are two-dimensional signals, i.e. q[n], r[n] are 2D vectors
   //
   //
   // See:

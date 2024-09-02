@@ -1,3 +1,44 @@
+In this file, I try to bring together information about Kalman filters from various places in order
+to synthesize it into an implementation ready algorithm. 
+
+The purpose of a Kalman filter is to estimate the current state of some object based on two pieces
+of noisy information: (1) An estimated previous state, (2) An observation of current measurements.
+It is assumed that the system advances from one time step to the next according to some known 
+deterministic rule which is encapsulated in a state transition matrix F. The state itself is 
+represented as a state vector x. The observations are represented in an observation vector y. 
+
+...TBC...
+
+
+
+----------------------------------------------------------------------------------------------------
+Algorithm from this video:
+https://www.youtube.com/watch?v=EBjca6tPuO0
+
+The video represnets the state space model as follows: 
+
+x[k] = F x[k-1] + B u[k] + w[k]             where w[k] = N(0,Q)
+z[k] = H x[k] + v[k]                        where v[k] = N(0,R)
+
+I simplified the notation by assuming the matrices to be constant such that the time index [k] could
+be dropped from the matrices. I also use [k] to denote the time-step instead of subscripts because 
+they don't work well when the subscript is something like k-1. The notation w[k] = N(0,Q) means that
+the random vector w[k] is normally distributed with mean 0 and covariance matrix Q. The "+ B u[k]"
+represents a control input. If we just had  x[k] = F x[k-1], it would mean that the system advances
+according to the rule without external nudges and without noise.
+
+The estimation algorithm works like:
+
+Prediction:
+x[k] = F x[k-1] + B u[k]
+P[k] = F P[k-1] F^T + Q
+
+
+K[k] = P[k] H^T (H P[k] H^T + R)^(-1)        Kalman gain
+
+
+
+
 
 ----------------------------------------------------------------------------------------------------
 Algorithm in "Adaptive Filter Theory" (4th Ed.) by Simon Haykin, page 484
@@ -59,3 +100,9 @@ K(n+1,n)    = F(n+1,n) K(n) F^H(n+1,n) + Q1(n)
 
 
 ----------------------------------------------------------------------------------------------------
+
+More resources:
+
+
+https://en.wikipedia.org/wiki/Kalman_filter#Details
+https://en.wikipedia.org/wiki/Alpha_beta_filter

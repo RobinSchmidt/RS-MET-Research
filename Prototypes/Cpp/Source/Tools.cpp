@@ -7828,7 +7828,7 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
 
 //=================================================================================================
 
-/** UNDER CONSTRUCTION
+/** UNDER CONSTRUCTION...I'm still trying to figure it out - it doesn't work yet.
 
 */
 
@@ -7929,9 +7929,11 @@ void rsKalmanFilter<TMat, TVec>::resetParameters()
 
 
 template<class TMat, class TVec>
-TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& xIn, const TVec& u)
+TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& y, const TVec& u)
 {
   // This implementation is very preliminary and I have no idea if this is even remotely correct.
+  // I think, xIn should be renamed (maybe to y - that would be consistent with Haykin). It 
+  // represents the current observation vector. ...Done!
 
 
   // Prediction:
@@ -7939,12 +7941,17 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& xIn, const TVec& u)
   P = F*P*rsTrans(F) + Q;  // Predict error covariance of x
 
   // Compute measurement z, innovation y and Kalman gain K:
-  TVec z = H*xIn;                                     // Measurement
-  TVec y = z - H*x;                                   // Innovation
+  TVec z = H*y;                                       // Measurement of state from observations y
+  TVec a = z - H*x;                                   // Innovation 
   TMat K = P*rsTrans(H) * rsInv(H*P*rsTrans(H) + R);  // Kalman gain
+  // Wait no - that must be wrong! The vectors x and y do not in general have the same dimension,
+  // so computing H*x and H*y cannot both make sense. Maybe it should be just: a = z - x? That 
+  // would make sense: the "innovation" is the "element of surprise". If z = x, the innovation is 
+  // zero which means that measured state and predicted state are exactly equal such that there's
+  // no surprise at all.
 
   // Correction:
-  x += K*y;
+  x += K*a;
   P = P - K*H*P;  // ToDo: use  P -= K*H*P;  ->  implement -= operator
 
 

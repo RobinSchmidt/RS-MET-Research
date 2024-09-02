@@ -126,7 +126,7 @@ bool testKalmanFilter()
 
   //rsPlotVectors(v,  p);
   //rsPlotVectors(vm, pm);
-  //rsPlotVectors(p, pm);
+  rsPlotVectors(p, pm, pf);
 
   //rsPlotVectors(p, pm, pf); // p: true, pm: measured / noisy, pf: filtered / less noisy
 

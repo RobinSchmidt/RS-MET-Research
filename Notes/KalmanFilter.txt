@@ -1,7 +1,7 @@
 In this file, I try to bring together information about Kalman filters from various places in order
 to synthesize it into an implementation ready algorithm. 
 
-The purpose of a Kalman filter is to estimate the current state of some object based on two pieces
+The purpose of a Kalman filter is to estimate the current state of some system based on two pieces
 of noisy information: (1) An estimated previous state, (2) An observation of current measurements.
 It is assumed that the system advances from one time step to the next according to some known 
 deterministic rule which is encapsulated in a state transition matrix F. The state itself is 
@@ -9,13 +9,21 @@ represented as a state vector x. The observations are represented in an observat
 
 ...TBC...
 
-
+I think, the Kalman filter is basically a noise reduction filter based on the idea that if you have
+two estimates of a random variable, you can combine them into an estimate that is better than either
+one of the two - at least, if the estimates are both unbiased and independent (maybe uncorrelated is 
+good enough). Then, it can make sense to form a weighted average where you give higher weight to 
+less noisy estimate, i.e. the one with lower variance in the error. But the Kalman filter solves 
+this problem for the multidimensional case such that we not only have variances but covariance 
+matrices. And it applies the idea to the special case where one of the estimates is computed 
+recursively from a previous estimate via a known state transition matrix. ...that's my current 
+understanding, at least.
 
 ----------------------------------------------------------------------------------------------------
 Algorithm from this video:
 https://www.youtube.com/watch?v=EBjca6tPuO0
 
-The video represnets the state space model as follows (at 11:45): 
+The video represents the state space model as follows (at 11:45): 
 
 x[k] = F x[k-1] + B u[k] + w[k]             where w[k] = N(0,Q)
 z[k] = H x[k] + v[k]                        where v[k] = N(0,R)
@@ -25,7 +33,9 @@ be dropped from the matrices. I also use [k] to denote the time-step instead of 
 they don't work well when the subscript is something like k-1. The notation w[k] = N(0,Q) means that
 the random vector w[k] is normally distributed with mean 0 and covariance matrix Q. The "+ B u[k]"
 represents a control input. If we just had  x[k] = F x[k-1], it would mean that the system advances
-according to the rule without external nudges and without noise.
+according to the rule without external nudges and without noise. The first equation could be called
+state update equation and the second measurement equation (not sure if that terminology is common in
+the Kalman filter literature).
 
 The estimation algorithm works like (at 11:51):
 
@@ -92,10 +102,10 @@ Observations y(1),y(2), ... , y(n)
 Initial conditions:
 n = 1, n-1 = 0
 Expectation value of x(1): p(1|Y[0]) = E{x(1)} 
-Correlation matrix:        K(1,0)    = E{ (x(1)-E{x(1)}) (x(1)-E{x(1)})^H } = Pi_0, 
+Correlation matrix:        K(1,0)    = E{ (x(1)-E{x(1)}) (x(1)-E{x(1)})^H }, 
                                        with: ^H: Hermitian transpose
 
-Computation for n = 1,2,3:
+Computation for n = 1,2,3,...:
 
 G(n)        = F(n+1,n)  K(n,n-1)  C^H(n)  (C(n) K(n,n-1) C^H(n) + Q2)^(-1)
 a(n)        = y(n) - C(n) p(n|Y[n-1])

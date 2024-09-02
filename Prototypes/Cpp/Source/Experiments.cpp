@@ -129,7 +129,10 @@ bool testKalmanFilter()
   //rsPlotVectors(p, pm);
 
   //rsPlotVectors(p, pm, pf); // p: true, pm: measured / noisy, pf: filtered / less noisy
-  rsPlotVectors(p-pm, p-pf);  // Estimation error before and after Kalman filter correction.
+
+  rsPlotVectors(p-pm, p-pf, pm-pf);  
+  // Estimation error before and after Kalman filter correction. pm-pf: Difference between "dirty"
+  // and "clean" state estimate
 
 
   return ok;

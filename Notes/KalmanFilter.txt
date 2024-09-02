@@ -49,12 +49,13 @@ Correlation matrix:        K(1,0)    = E{ (x(1)-E{x(1)}) (x(1)-E{x(1)})^H } = Pi
 
 Computation for n = 1,2,3:
 
-G(n) = F(n+1,n)  K(n,n-1)  C^H(n)  (C(n) K(n,n-1) C^H(n) + Q2)^(-1)
-a(n) = y(n) - C(n) p(n|Y[n-1])
+G(n)        = F(n+1,n)  K(n,n-1)  C^H(n)  (C(n) K(n,n-1) C^H(n) + Q2)^(-1)
+a(n)        = y(n) - C(n) p(n|Y[n-1])
+p(n+1|Y[n]) = F(n+1,n) p(n|Y[n-1]) + G(n) a(n)
+K(n)        = K(n,n-1) - F(n,n+1) G(n) C(n) K(n,n-1)
+K(n+1,n)    = F(n+1,n) K(n) F^H(n+1,n) + Q1(n)
 
 
-
-...TBC...
 
 
 ----------------------------------------------------------------------------------------------------

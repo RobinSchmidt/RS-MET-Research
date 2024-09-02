@@ -1,17 +1,60 @@
 
-
-Algorithm in "Adaptive Filter Theory" (4th Ed) by Simon Haykin, page 484
+----------------------------------------------------------------------------------------------------
+Algorithm in "Adaptive Filter Theory" (4th Ed.) by Simon Haykin, page 484
 
 Variables:
 
-Name        Type       Meaning
-M           Integer    Dimension of state vector
-N           Integer    Dimension of observation vector
-x(n)        M x 1      State vector at time n
-y(n)        N x 1      Observation vector at time n
-F(n+1,n)    M x M      Transition matrix from time n to time n+1
-C(n)        N x M      Measurement matrix at time n
-Q1(n)       M x M      Correlation matrix of process noise v1(n)
-Q2(n)       N x N      Correlation matrix of measurement noise v2(n)
+Name          Type       Meaning
+M             Integer    Dimension of state vector
+N             Integer    Dimension of observation vector
+x(n)          M x 1      State vector at time n
+y(n)          N x 1      Observation vector at time n
+F(n+1,n)      M x M      Transition matrix from time n to time n+1
+C(n)          N x M      Measurement matrix at time n
+Q1(n)         M x M      Correlation matrix of process noise v1(n)
+Q2(n)         N x N      Correlation matrix of measurement noise v2(n)
+p(n|Y[n-1])   M x 1      Predicted estimate of state at time n given observations y(1),...,y(n-1)
+q(n|Y[n])     M x 1      Filtered estimate of state at time n given observations y(1),...,y(n)
+G(n)          M x N      Kalman gain at time n
+a(n)          N x 1      Innovations vector at time n
+R(n)          N x N      Correlation matrix of innovations vector a 
+K(n,n-1)      M x M      Correlation matrix of error p(n|Y[n-1]) 
+K(n)          M x M      Correlation matrix of error q(n|Y[n])
+
+The book uses x with a hat for both p and q and uses alpha for a. For ASCII reasons, I renamed these
+variables here. 
+
+
+Algorithm:
+
+
+Parameters:
+
+Transition matrix: F(n, n+1)
+Measurement matrix: C(n)
+Correlation matrix of process noise: Q1(n)
+Correlation matrix of measurement noise: Q2(n)
+
+
+Inputs:
+
+Observations y(1),y(2), ... , y(n)
+
+
+Initial conditions:
+n = 1, n-1 = 0
+Expectation value of x(1): p(1|Y[0]) = E{x(1)} 
+Correlation matrix:        K(1,0)    = E{ (x(1)-E{x(1)}) (x(1)-E{x(1)})^H } = Pi_0, 
+                                       with: ^H: Hermitian transpose
+
+Computation for n = 1,2,3:
+
+G(n) = F(n+1,n)  K(n,n-1)  C^H(n)  (C(n) K(n,n-1) C^H(n) + Q2)^(-1)
+a(n) = y(n) - C(n) p(n|Y[n-1])
+
+
 
 ...TBC...
+
+
+----------------------------------------------------------------------------------------------------

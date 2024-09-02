@@ -7948,7 +7948,9 @@ TVec rsKalmanFilter<TMat, TVec>::getSample(const TVec& y, const TVec& u)
   // so computing H*x and H*y cannot both make sense. Maybe it should be just: a = z - x? That 
   // would make sense: the "innovation" is the "element of surprise". If z = x, the innovation is 
   // zero which means that measured state and predicted state are exactly equal such that there's
-  // no surprise at all.
+  // no surprise at all. ....or maybe the z-vector should be our input? I think, the H matrix takes
+  // a state and produces a vector of observables - I assume it the other way around, which may be 
+  // wrong.
 
   // Correction:
   x += K*a;

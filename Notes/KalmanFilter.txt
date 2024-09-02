@@ -15,7 +15,7 @@ represented as a state vector x. The observations are represented in an observat
 Algorithm from this video:
 https://www.youtube.com/watch?v=EBjca6tPuO0
 
-The video represnets the state space model as follows: 
+The video represnets the state space model as follows (at 11:45): 
 
 x[k] = F x[k-1] + B u[k] + w[k]             where w[k] = N(0,Q)
 z[k] = H x[k] + v[k]                        where v[k] = N(0,R)
@@ -27,17 +27,24 @@ the random vector w[k] is normally distributed with mean 0 and covariance matrix
 represents a control input. If we just had  x[k] = F x[k-1], it would mean that the system advances
 according to the rule without external nudges and without noise.
 
-The estimation algorithm works like:
+The estimation algorithm works like (at 11:51):
 
 Prediction:
 x[k] = F x[k-1] + B u[k]
 P[k] = F P[k-1] F^T + Q
 
+Kalman gain computation:
+K[k] = P[k] H^T (H P[k] H^T + R)^(-1)
 
-K[k] = P[k] H^T (H P[k] H^T + R)^(-1)        Kalman gain
+Correction:
+x[k] = x[k] + K[k](z[k] - H x[k])        z[k] is measurement?
+P[k] = (I - K[k] H) P[k]
+     = P[k] - K[k] H P[k]
 
-
-
+So - it looks like the measurement matrix H takes a state vector as input and produces a vector of
+observables/measurements? And the Kalman gain matrix K does the opposite: take a vector of 
+innovations (which has the same dimension as measurements) and produces a vector of corrections for
+the state estimate?
 
 
 ----------------------------------------------------------------------------------------------------

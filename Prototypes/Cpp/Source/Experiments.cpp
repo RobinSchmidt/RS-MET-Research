@@ -162,6 +162,32 @@ bool testKalmanFilter()
   //   Maybe call the noise signals q[n] and r[n] - with matrices Q, R respectively. Oh - but they
   //   are two-dimensional signals, i.e. q[n], r[n] are 2D vectors
   //
+  // - I think, the way we try to simulate the noise processes is wrong. I think, we need to really
+  //   inject the noise at the appropriate places inside the Kalman filter. Namely at:
+  //    x = F*x + B*u + processNoise;  z = H*xIn + measurementNoise;
+  //
+  //
+  // Notes:
+  //
+  // - I think, the general underlying idea is that if you have two independent (uncorrelated may 
+  //   be enough) unbiased estimates of some random quantity, you can combine them into a better 
+  //   estimate (i.e. one with reduced variance) by taking a weighted average of them. The weights
+  //   should be inversely related to the variances of the error in both estimates. The idea can 
+  //   probably straightforwardly be generalized to more than 2 estimates - one would just form a 
+  //   weighted avarage of multiple variables. If the random quantity is vector valued, things get 
+  //   more complicated because one has not only variances but covariance matrices to deal with. I
+  //   think, that's what the Kalman filter does: form a weighted average of 2 vector valued 
+  //   estimates to get 1 better estimate. And this idea is applied to the specific case where one 
+  //   estimate is computed recursively from a previous estimate with known transition matrix.
+  //
+  // - I think, the expected outcome when we set one of the noise covariance matrices to zero, the
+  //   output of the filter will use zero weight for the other estimate, i.e. the output will be 
+  //   equal to the estimate with (assumed) zero error. It should then just disregard the other
+  //   estimate completely. If you want the optimal weights for one perfect and one erroneous
+  //   estimate, you would, of course, give the perfect estimate a weight of 1 and the erroneous a 
+  //   weight of 0. When we set both noise covariances to zero, we'll probably get some 0/0 error,
+  //   i.e. produce NaNs as outputs. I think, I have observed such behavior already.
+  //
   //
   // See:
   // https://en.wikipedia.org/wiki/Kalman_filter#Details

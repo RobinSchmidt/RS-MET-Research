@@ -1,0 +1,17 @@
+
+
+Algorithm in "Adaptive Filter Theory" (4th Ed) by Simon Haykin, page 484
+
+Variables:
+
+Name        Type       Meaning
+M           Integer    Dimension of state vector
+N           Integer    Dimension of observation vector
+x(n)        M x 1      State vector at time n
+y(n)        N x 1      Observation vector at time n
+F(n+1,n)    M x M      Transition matrix from time n to time n+1
+C(n)        N x M      Measurement matrix at time n
+Q1(n)       M x M      Correlation matrix of process noise v1(n)
+Q2(n)       N x N      Correlation matrix of measurement noise v2(n)
+
+...TBC...

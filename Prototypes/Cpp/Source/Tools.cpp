@@ -7892,6 +7892,11 @@ public:
   // state estimate "xIn" and asks the filter for a cleaned up version "x" of the estimate.
   // I'm not really sure, if this is the right way to operate a Kalman filter. This is all very 
   // experimental and immature. I'm still figuring this stuff out
+  //
+  // Nope! That is wrong! xIn is not, what the caller thinks, the state should be! It should be 
+  // called measurements or observations or something. It is the raw sensor data that is used to
+  // estimate the current state - the dimensionality of this vector may not even match the one of 
+  // the state vector!
 
 protected:
 

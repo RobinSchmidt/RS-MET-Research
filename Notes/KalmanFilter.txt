@@ -33,11 +33,11 @@ be dropped from the matrices. I also use [k] to denote the time-step instead of 
 they don't work well when the subscript is something like k-1. The notation w[k] = N(0,Q) means that
 the random vector w[k] is normally distributed with mean 0 and covariance matrix Q. The "+ B u[k]"
 represents a control input. If we just had  x[k] = F x[k-1], it would mean that the system advances
-according to the rule without external nudges and without noise. The first equation could be called
-state update equation and the second measurement equation (not sure if that terminology is common in
-the Kalman filter literature).
+according to the state update/transition rule without external nudges (coming in from u) and without 
+noise (coming from w). The first equation i be called process equation and the second is called 
+measurement equation.
 
-The estimation algorithm works like (at 11:51):
+The state estimation algorithm works like (at 11:51):
 
 Prediction:
 x[k] = F x[k-1] + B u[k]
@@ -47,14 +47,15 @@ Kalman gain computation:
 K[k] = P[k] H^T (H P[k] H^T + R)^(-1)
 
 Correction:
-x[k] = x[k] + K[k](z[k] - H x[k])        z[k] is measurement?
+x[k] = x[k] + K[k](z[k] - H x[k])        z[k] is incoming measurement signal?
 P[k] = (I - K[k] H) P[k]
      = P[k] - K[k] H P[k]
 
-So - it looks like the measurement matrix H takes a state vector as input and produces a vector of
-observables/measurements? And the Kalman gain matrix K does the opposite: take a vector of 
-innovations (which has the same dimension as measurements) and produces a vector of corrections for
-the state estimate?
+I think, the input to this filter is the current measurement vector z[k] and the control input u[k]. 
+The output is the current state estimate x[k]. So - it looks like the measurement matrix H takes a 
+state vector as input and produces a vector of observables/measurements? And the Kalman gain matrix 
+K does the opposite: take a vector of innovations (which has the same dimension as measurements) and 
+produces a vector of corrections for the state estimate?
 
 
 ----------------------------------------------------------------------------------------------------

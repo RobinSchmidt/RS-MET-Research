@@ -225,6 +225,21 @@ bool testKalmanFilter()
   //   ...it's just a scalar variant - use Real for TVec and TMat
   //
   // - https://www.kalmanfilter.net/default.aspx
+  //
+  // - Try to produce a vector valued noise generator that creates random vector with some 
+  //   user-specified covariance matrix. Maybe to create a noise vector with given covariance
+  //   matrix C, we can start with a vector x that is uncorrelated and obtain the correlated 
+  //   vector y as  y = A*x  for some matrix A that we have to compute for a given C. The 
+  //   covariance of y is:   C = E[y * y^T] = E[A*x * (A*x)^T] = E[A * x * x^T * A^T]
+  //   C = A * E[x * x^T] * A^T = A * I * A^T = A * A^T. So, yeah, the covariance matrix C is
+  //   just C = A * A^T. But how can we find such an A? Maybe look into:
+  //   https://en.wikipedia.org/wiki/Square_root_of_a_matrix
+  //   By the way: it is true that for any matrix A, we have that A * A^T and A^T * A are 
+  //   symmetric. Is the converse also true, i.e. does for any symmetric matrix B exist a matrix
+  //   such that B = A^T * A? Ah - yes - I think so, because symmetric matrices can always be
+  //   diagonalized: https://en.wikipedia.org/wiki/Square_root_of_a_matrix#By_diagonalization
+  //   and that can be used to find the square-root. Maybe we can use a matrix variant of Newton
+  //   iteration (i.e. the Babylonian root finding algorithm) to find the square-root?
 
 }
 

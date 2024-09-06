@@ -150,6 +150,9 @@ If this definition appears circular, remember that we can always use the purely 
 % -give algebraic and geometric definitions (geometric: sine of the angle, perpedicular to 
 %  the plane spanned etc.)
 
+% How do we generalize the cross product to other dimensions?
+% https://www.youtube.com/watch?v=MaWJsZEPg-c
+
 \paragraph{Wedge Product}
 % does not really belong here because it results in a bivector
 
@@ -227,10 +230,19 @@ If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B
 
 % Misc: transposition, hermitian tranpose, etc.
 
+% https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_pseudoinverse
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Commutator}
 Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$ in general. We also say, the matrices  $\mathbf{A}$ and $\mathbf{B}$ do not \emph{commute} in general. The difference of the two possible products $\mathbf{C} = \mathbf{A} \mathbf{B} - \mathbf{B} \mathbf{A}$ is called the commutator of $\mathbf{A}$ and $\mathbf{B}$. It can be thought of as measuring, how non-commutative the matrices are with respect to one another. If two matrices commute, their commutator is the zero matrix. [TODO: What about $\mathbf{A} \mathbf{B} \mathbf{A}^{-1} \mathbf{B}^{-1}$. That's how the commutator is defined in group theory. It's the identity matrix if  $\mathbf{A}$ and $\mathbf{B}$ commute, I think. Figure out and explain the relation between these two conflicting definitions!]
+
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Square Root}
+
+% https://en.wikipedia.org/wiki/Square_root_of_a_matrix
+% https://en.wikipedia.org/wiki/Cholesky_decomposition
+% https://en.wikipedia.org/wiki/Definite_matrix#Decomposition
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Sandwich Product, Change of Basis, Similarity Transformation}
@@ -537,6 +549,12 @@ A matrix $\mathbf{A}$ is said to be \emph{positive definite} if for every nonzer
 
 % https://en.wikipedia.org/wiki/Cauchy_matrix
 % 
+
+
+
+
+% https://en.wikipedia.org/wiki/Stochastic_matrix
+% https://en.wikipedia.org/wiki/Sinkhorn%27s_theorem
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Eigenspaces}

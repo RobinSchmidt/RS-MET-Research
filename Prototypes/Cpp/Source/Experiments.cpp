@@ -14903,13 +14903,26 @@ void test2x2Matrices1()
   rsAssert(ok);
 }
 
-/*
-template<class TMat>
-TMat rsSqrt(const TMat& A)
-{
 
+template<class T>
+rsMatrix<T> rsSqrtNewton(const rsMatrix<T>& A)
+{
+  rsAssert(A.isSquare());
+
+  using LA = rsLinearAlgebraNew;
+
+  int n = A.getNumRows();
+  rsMatrix X = rsMatrix<T>::identity(n, 0.0);
+  int maxIts = 100;
+  for(int i = 0; i < maxIts; i++)
+  {
+    X = T(0.5) * (X + A * LA::inverse(X));
+  }
+
+
+  return X;
 }
-*/
+
 
 void testMatrixSqrt()
 {
@@ -14924,6 +14937,11 @@ void testMatrixSqrt()
 
   Mat B(2, 2, {7,2, 3,5});
   Mat A = B*B;
+
+  Mat C = rsSqrtNewton(A);
+
+  Real tol = 1.e-13;
+  ok &= C.equals(B, tol);
 
 
 

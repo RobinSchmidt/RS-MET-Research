@@ -14903,6 +14903,34 @@ void test2x2Matrices1()
   rsAssert(ok);
 }
 
+/*
+template<class TMat>
+TMat rsSqrt(const TMat& A)
+{
+
+}
+*/
+
+void testMatrixSqrt()
+{
+  // We test algorithms to compute square-roots of matrices. Given a matrix A, a matrix B is called
+  // a square root of A if B*  B = A. In some contexts, one also uses the defition B^T * B = A. 
+  // ...TBC...
+
+  bool ok = true;
+
+  using Real = double;
+  using Mat  = rsMatrix<Real>;
+
+  Mat B(2, 2, {7,2, 3,5});
+  Mat A = B*B;
+
+
+
+  rsAssert(ok);
+
+  // https://en.wikipedia.org/wiki/Square_root_of_a_matrix#Solutions_in_closed_form
+}
 
 void test2x2Matrices()
 {

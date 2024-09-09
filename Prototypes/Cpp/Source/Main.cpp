@@ -11,7 +11,7 @@ int main (int /*argc*/, char* /*argv[]*/)
 {
 
   // Signal Processing:
-  testKalmanFilter();                // Under construction - doesn't work yet
+  //testKalmanFilter();                // Under construction - doesn't work yet
 
 
   // Image processing:
@@ -26,7 +26,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testComplexGaussBlurIIR();
   //testUpDownSample1D();              // up- and downsampling with lossless roundtrip
   //testUpDownSample1D_2();
-  testUpDownSample2D();              // stub, dito but for images
+  //testUpDownSample2D();              // stub, dito but for images
 
 
   //epidemic();
@@ -117,6 +117,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testStateSpaceFilters();
 
   // Math:
+  testMatrixSqrt();
   //test2x2Matrices();               // stub
   //test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub

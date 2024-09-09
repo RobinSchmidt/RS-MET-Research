@@ -1,5 +1,15 @@
 \section{Series}
 
+% Maybe Sequences should be a section rather than a subsection. Also talk about:
+
+% https://en.wikipedia.org/wiki/Pointwise_convergence
+% https://en.wikipedia.org/wiki/Uniform_convergence
+
+% covergence in the mean-square / energy sense - the error gets smaller in "energy" but
+% not necessarily in height - as in the Gibbs phenomenon
+
+% This should go into a "Sequences of Functions" subsection
+
 \subsection{Sequences}
 A \emph{sequence} can be defined as a function from the natural into the real numbers: $f: \mathbb{N} \rightarrow \mathbb{R}$. Sometimes the codomain can also be the complex numbers. The input can be seen as an index for an element of the sequence. Sometimes it is more convenient to restrict the domain to the positive natural numbers, i.e. consider functions $f: \mathbb{N}^+ \rightarrow \mathbb{R}$. You will find both definitions for sequences in the literature. Here, we will mostly use the former and I will give a special disclaimer when the latter is used. Some example sequences are:
 \begin{equation}
@@ -10,12 +20,16 @@ A \emph{sequence} can be defined as a function from the natural into the real nu
  a_n = \frac{1}{2^n},    \quad  
  a_n = \sqrt{n}
 \end{equation}
-The examples with an $n$ or $n^2$ in the denominator can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last two, plugging in $n=0$ poses no problem because $2^0=1$ and $\sqrt{0} = 0$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. We could also say that they are all defined on $\mathbb{N}$ and make a special case definition $a_0 = 0$ for the problematic ones. The function definition would then look a bit ugly but is entirely legitimate. When we deal with sequences, we will be mostly concerned with the question of \emph{convergence} for which it doesn't really matter, if finitely many elements in an initial section are ill defined, so we will mostly ignore this detail. Sequences themselves are a sort of preliminary to what we actually want to build up to: namely series. These are infinite sums of sequence elements.
+The examples with an $n$ or $n^2$ in the denominator can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last two, plugging in $n=0$ poses no problem because $2^0=1$ and $\sqrt{0} = 0$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. We could also say that they are all defined on $\mathbb{N}$ and make a special case definition $a_0 = 0$ for the problematic ones. The function definition would then look a bit ugly but is entirely legitimate. When we deal with sequences, we will be mostly concerned with the question of \emph{convergence} for which it doesn't really matter, if finitely many elements in an initial section are ill defined, so we will mostly ignore this detail. 
 
 \medskip
-The notation for the whole sequence is $(a_n)$. That is: By $a_n$ we mean a specific element whereas by $(a_n)$ we mean the whole sequence of elements. In a sense, a sequence can be seen as an infinite tuple so using the parentheses notation known from tuples seems like an appropriate reminder.
+The notation for the whole sequence is $(a_n)$. That is: By $a_n$ we mean a specific element whereas by $(a_n)$ we mean the whole sequence of elements at once, i.e. treat the sequence itself as an object. It's like the difference between writing $f(x)$ or just $f$. In a sense, a sequence can be seen as an infinite tuple so using the parentheses notation known from tuples seems like an appropriate reminder. In the context of a normal calculus course, sequences themselves are a sort of preliminary to what we actually want to build up to: namely \emph{series}. These are infinite sums of sequence elements. That is, we are given a sequence $(a_n)$ and consider infinite sums of the form $\sum_{n=0}^{\infty} a_n$. The lower summation index may also be $1$ rather than $0$ or some arbitrary other number $n_0$. When I say "normal calculus", I refer to the calculus of continuous functions that deals with functions $f: \mathbb{R} \rightarrow \mathbb{R}$. There is, however, a whole other type of calculus, called \emph{discrete calculus}, which deals with sequences, i.e. functions $f: \mathbb{N} \rightarrow \mathbb{R}$, in more depth. We'll look into this later in the discrete math part of the book.
+
 
 % https://en.wikipedia.org/wiki/Sequence
+
+
+
 
 \subsection{Operations}
 
@@ -108,9 +122,15 @@ When faced with a sequence of numbers, an important question is its behavior whe
 \paragraph{Convergence to Zero} The examples of convergent sequences that we have seen so far converge to zero. They are somewhat special in that regard because convergence to zero is a practically relevant special case of more general convergence. Consider $a_n = n/(n+1) = (0,1/2,2/3,3/4,4/5,\ldots)$. This sequence converges to $1$. The takeaway is that the sequences that converge to zero are an important subset of all the convergent sequences because convergence to zero of a sequence often appears as a necessary condition for certain other properties of interest to hold. We'll see this later in the context of series.
 
 
+
+
 \subsubsection{Absolute Convergence}
 An even stronger type of convergence is called \emph{absolute convergence}. If a sequence converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. ...TBC...
 [WAIT: this belongs into the series section - not into the sequences section! For sequences, absolute convergence is not a meaningful concept. Or is it?]
+
+
+
+
 
 \subsubsection{Rate of Convergence}
 We already informally used statements like "converges faster". Now we'll make more explicit what we mean by that...TBC...
@@ -315,6 +335,9 @@ where $c$ is some fixed constant. It's often zero but for generality, I've alrea
 % but it applies to sequences, so maybe include it here.
 
 % https://en.wikipedia.org/wiki/Entire_function
+
+
+
 
 \paragraph{Convolution Revisited}
 When we defined the convolution operation between sequences, it may have seemed somewhat arbitrary and unmotivated. In light of power series, we may give it some interpretation that also justifies why it is also called the Cauchy "product". Recall that to multiply two (finite) polynomials, we have to convolve their lists of coefficients. The Cauchy product is basically the infinite version of that. It's a generalization in the sense that it includes the finite case as special case when we assume that the sequences just become identically zero after some $n$. The product sequence is the sequence of coefficients of an infinite product polynomial, so to speak...TBC...that can perhaps be explained better

@@ -1,5 +1,8 @@
 \include{Setup}
 
+% This file is for quickly compiling small parts of the book during writing to accellerate the 
+%% edit-compile-verify cycle when working on a specific chapter.
+
 \begin{document}
 	
 % formatting:
@@ -17,13 +20,23 @@
 
 % Uncomment one chapter/section at a time to work on it:
 %\include{Basics_Foundations}
-\include{Basics_Functions}
+%\include{Basics_Functions}
+
+%\chapter{Linear Algebra}
+\include{LinAlg} 
+\include{LinAlg_VecsAndMats} 
+\include{LinAlg_SysOfEqs} 
+\include{LinAlg_MatrixDecomp}
+%\include{LinAlg_Trafos}   % matrices as lin. trafos -> kernel, nullspace, etc.
+%\include{MulLinAlg_HyperNums}  % Quaternions, dual numbers, hyperbolic numbers, ...
+% or maybe PolyNumbers. it's about multidiemsnional numbers, hypercomplex numbers
+
 
 %\include{MulCalc}
 %\include{MulCalc_Derivatives}
 
 %\include{Geo}
-%\include{Geo_Euclidean}
+\include{Geo_Euclidean}
 \include{Geo_Analytic}
 %\include{Geo_Algebraic}
 %\include{Geo_Differential}

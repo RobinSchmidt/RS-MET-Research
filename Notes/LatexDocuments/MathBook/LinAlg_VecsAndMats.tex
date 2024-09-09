@@ -224,13 +224,28 @@ The operation of turning the rows of a matrix into the columns of a new matrix a
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Inversion}
-If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B}$ such that  $\mathbf{B} \mathbf{A} = \mathbf{I}$, then we call $\mathbf{B}$ a left inverse of $\mathbf{A}$. A matrix $\mathbf{C}$ with the property $\mathbf{A} \mathbf{C} = \mathbf{I}$ would be called a right inverse. It turns out that there is no difference between these two notions, i.e. left inverses are always also right inverses and vice versa so we call a matrix that has both of these properties just an inverse matrix of $\mathbf{A}$. It turns furthermore out that if such an inverse exists, then it is unique, so we call such a matrix \emph{the inverse} of $\mathbf{A}$ and denote it by $\mathbf{A}^{-1}$. Finding such an inverse for a given matrix $\mathbf{A}$ can be done by an algorithm called Gauss-Jordan elimination which we will be explained later. [VERIFY!] [TODO: explain pseudo-inverse]
+If we have given a matrix $\mathbf{A}$ and we can find another matrix $\mathbf{B}$ such that  $\mathbf{B} \mathbf{A} = \mathbf{I}$, then we call $\mathbf{B}$ a left inverse of $\mathbf{A}$. A matrix $\mathbf{C}$ with the property $\mathbf{A} \mathbf{C} = \mathbf{I}$ would be called a right inverse. It turns out that if $\mathbf{A}$ is a square matrix, then there is no difference between these two notions, i.e. left inverses are always also right inverses and vice versa so we call a matrix that has both of these properties just an inverse matrix of $\mathbf{A}$. It turns furthermore out that if such an inverse exists, then it is unique, so we call such a matrix \emph{the inverse} of $\mathbf{A}$ and denote it by $\mathbf{A}^{-1}$. Finding such an inverse for a given matrix $\mathbf{A}$ can be done by an algorithm called Gauss-Jordan elimination which we will be explained later.
+
+\paragraph{Pseudo-Inverses}
+If the matrix $\mathbf{A}$ is not a square matrix and instead is an $m \times n$ matrix with $m \neq n$, then there is a generalized notion of of an inverse of $\mathbf{A}$, called the \emph{pseudo-inverse} or, more specifically, the \emph{Moore-Penrose pseudo-inverse}. ...TBC...
+
+%[TODO: explain pseudo-inverse]
 % Could be done via Gauss-Jordan Elimination Algorithm decribed in the section about solvin linear 
 % systems
 
-% Misc: transposition, hermitian tranpose, etc.
-
 % https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_pseudoinverse
+
+% https://people.csail.mit.edu/bkph/articles/Pseudo_Inverse.pdf
+% https://www.johndcook.com/blog/2018/05/06/least-squares/
+
+% https://en.wikipedia.org/wiki/Generalized_inverse
+% The property of the inverse that we want to retain in our generalization is: A A^G A = A where A^G
+% denotes the generalized inverse of A. I think, requiring A A^G = I is not good enough because I is
+% always square?
+
+% https://en.wikipedia.org/wiki/Constrained_generalized_inverse
+% https://en.wikipedia.org/wiki/Drazin_inverse
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Commutator}
@@ -278,7 +293,9 @@ Another important operation between two matrices $\mathbf{A}$ and $\mathbf{B}$ i
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Matrix-Vector Products}
-We have seen operations involving two vectors as well as operations involving two matrices. From a geometric perspective, linear algebra really comes to life when considering the interplay between vectors and matrices. Vectors encode positions and therefore also geometric shapes which are defined by the positions of their vertices. Matrices encode geometric transformations such as reflections, rotations, scalings, etc. We can interpret such a transformation as an \emph{action} that is applied to a shape, i.e. to a set of vectors. A matrix can \emph{act on} a vector or - in passive language - can \emph{be applied to} the vector. This action is effected by forming the \emph{matrix-vector product}. We actually already have everything we need. We do not need to define any brand new product for this. Instead, we observe that column vectors can be interpreted as special matrices - namely as matrices that just have a single column, i.e. as $n \times 1$ matrices where $n$ is the dimensionality of the vector. We can multiply such an $n$-vector $\mathbf{v}$, seen as $n \times 1$ matrix, from the left with an $n \times n$ matrix  $\mathbf{A}$ using the rules of matrix multiplication to get another $n \times 1$ matrix, i.e. another $n$-vector $\mathbf{w} = \mathbf{A v}$. Forming such a product between a matrix as left factor and a column vector as right factor will be our usual way of expressing geometric transformations. 
+We have seen operations involving two vectors as well as operations involving two matrices. From a geometric perspective, linear algebra really comes to life when considering the interplay between vectors and matrices. Vectors encode positions and therefore also geometric shapes which are defined by the positions of their vertices. Matrices encode geometric transformations such as reflections, rotations, scalings, etc. We can interpret such a transformation as an \emph{action} that is applied to a shape, i.e. to a set of vectors. A matrix can \emph{act on} a vector or - in passive language - can \emph{be applied to} the vector. This action is effected by forming the \emph{matrix-vector product}. We actually already have everything we need. We do not need to define any brand new product for this. Instead, we observe that column vectors can be interpreted as special matrices - namely as matrices that just have a single column, i.e. as $n \times 1$ matrices where $n$ is the dimensionality of the vector. We can multiply such an $n$-vector $\mathbf{v}$, seen as $n \times 1$ matrix, from the left with an $n \times n$ matrix  $\mathbf{A}$ using the rules of matrix multiplication to get another $n \times 1$ matrix, i.e. another $n$-vector $\mathbf{w} = \mathbf{A v}$. Forming such a product between a matrix as left factor and a column vector as right factor will be our canonical way of expressing geometric transformations. Some books may use right multiplication by a matrix to express such transformations.
+
+% In this case, the vectors must be row vectors. To go from one convention to the other, all the involved objects (i.e. all vectors and matrices) need to be transposed.
 
 %\medskip
 \paragraph{Left vs Right Multiplication}
@@ -453,6 +470,10 @@ There are various ways to compute the determinant - the most practical perhaps b
 
 % https://en.wikipedia.org/wiki/Determinant
 % https://en.wikipedia.org/wiki/Dieudonn%C3%A9_determinant  generalization
+
+% Why is the determinant like that?
+% https://www.youtube.com/watch?v=Sv7VseMsOQc
+
 
 \paragraph{Norms}
 Just like for vectors, there exist also various norms for matrices ...TBC...
@@ -661,7 +682,7 @@ We have seen "boolean properties" (programmer speak) of single matrices, i.e. fe
 % -what about asymmetric relations - maybe something like <, i.e. an order..maybe based on a norm?
 
 \paragraph{Similarity}
-A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have, among other things, a symmetry of the relation: $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{S}$ and post-multiplying both sides by $\mathbf{S}^{-1}$ to obtain $\mathbf{A} = \mathbf{S B S^{-1}}$. The transformation that maps $\mathbf{A}$ to $\mathbf{B}$ is called a \emph{similarity transformation} or a \emph{conjugation}. Conjugation is a term from group theory which we will encounter in a later chapter. The matrix $\mathbf{S}$ that achieves this transformation into the new basis is called \emph{change of basis matrix} or \emph{transition matrix}. 
+A matrix $\mathbf{A}$ is said to be \emph{similar} to another matrix $\mathbf{B}$, if there exists an invertible matrix $\mathbf{S}$ such that $\mathbf{B} = \mathbf{S^{-1} A S}$. We denote this by $\mathbf{A} \sim \mathbf{B}$ which we read as "A is similar to B" [VERIFY!]. Matrix similarity is an equivalence relation, so we have, among other things, a symmetry of the relation: $\mathbf{A} \sim \mathbf{B} \Leftrightarrow \mathbf{B} \sim \mathbf{A}$. We can actually solve for $\mathbf{A}$ by pre-multiplying both sides by $\mathbf{S}$ and post-multiplying both sides by $\mathbf{S}^{-1}$ to obtain $\mathbf{A} = \mathbf{S B S^{-1}}$. The transformation that maps $\mathbf{A}$ to $\mathbf{B}$ is called a \emph{similarity transformation} or a \emph{conjugation}. Conjugation is a term from group theory which we will encounter in a later chapter. The matrix $\mathbf{S}$ that achieves this transformation is called \emph{change of basis matrix} or \emph{transition matrix}. The designation as "change of basis" can be understood as follows: A matrix represents a linear transformation of vectors. Similar matrices encode the same transformation but expressed in different coordinate systems. [VERIFY]
 
 \medskip
 We can see how $\mathbf{A}$ and $\mathbf{B}$ encode the same transformation by considering, how the product: $\mathbf{A} = \mathbf{S B S^{-1}}$ acts on a vector $\mathbf{v}$. It computes $\mathbf{S B S^{-1} v}$ which we can understand as 3 successive transformations by reading the 3 matrices from right to left. As first step, we apply $\mathbf{S}^{-1}$ which transforms the vector $\mathbf{v}$ into the new coordinate system. Then we apply the matrix $\mathbf{B}$ which expresses our actual geometric transformation in this new coordinate system. Then we transform the result back into our old coordinate system by applying $\mathbf{S}$. The overall effect of these 3 transformations should be the same as applying $\mathbf{A}$ which represents our geometric transformation directly in the original coordinate system. So, the matrix $\mathbf{S}$ is actually the matrix that transforms from the coordinate system in which $\mathbf{B}$ represents our transformation into the coordinate system where $\mathbf{A}$ represents our transformation [VERIFY!].

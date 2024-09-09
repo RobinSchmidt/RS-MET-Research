@@ -2,6 +2,229 @@
 
 
 
+\subsection{Sequences}
+A \emph{sequence} can be defined as a function from the natural into the real numbers: $f: \mathbb{N} \rightarrow \mathbb{R}$. Sometimes the codomain can also be the complex numbers. The input can be seen as an index for an element of the sequence. Sometimes it is more convenient to restrict the domain to the positive natural numbers, i.e. consider functions $f: \mathbb{N}^+ \rightarrow \mathbb{R}$. You will find both definitions for sequences in the literature. Here, we will mostly use the former and I will give a special disclaimer when the latter is used. Some example sequences are:
+\begin{equation}
+ a_n = (-1)^n,           \quad 
+ a_n = \frac{1}{n},      \quad
+ a_n = \frac{(-1)^n}{n}, \quad 
+ a_n = \frac{1}{n^2},    \quad
+ a_n = \frac{1}{2^n},    \quad  
+ a_n = \sqrt{n}
+\end{equation}
+The examples with an $n$ or $n^2$ in the denominator can only be meaningfully defined as functions from the positive naturals into the reals because otherwise we would have a division by zero for the first (actually zero-th) element, i.e. when $n=0$. For the last two, plugging in $n=0$ poses no problem because $2^0=1$ and $\sqrt{0} = 0$. So, for those which would have a division by zero for $n=0$, we would chose a domain of $\mathbb{N}^+$ while for the others, we could choose $\mathbb{N}$. We could also say that they are all defined on $\mathbb{N}$ and make a special case definition $a_0 = 0$ for the problematic ones. The function definition would then look a bit ugly but is entirely legitimate. When we deal with sequences, we will be mostly concerned with the question of \emph{convergence} for which it doesn't really matter, if finitely many elements in an initial section are ill defined, so we will mostly ignore this detail. 
+
+\medskip
+The notation for the whole sequence is $(a_n)$. That is: By $a_n$ we mean a specific element whereas by $(a_n)$ we mean the whole sequence of elements at once, i.e. treat the sequence itself as an object. It's like the difference between writing $f(x)$ or just $f$. In a sense, a sequence can be seen as an infinite tuple so using the parentheses notation known from tuples seems like an appropriate reminder. In the context of a normal calculus course, sequences themselves are a sort of preliminary to what we actually want to build up to: namely \emph{series}. These are infinite sums of sequence elements. That is, we are given a sequence $(a_n)$ and consider infinite sums of the form $\sum_{n=0}^{\infty} a_n$. The lower summation index may also be $1$ rather than $0$ or some arbitrary other number $n_0$. When I say "normal calculus", I refer to the calculus of continuous functions that deals with functions $f: \mathbb{R} \rightarrow \mathbb{R}$. There is, however, a whole other type of calculus, called \emph{discrete calculus}, which deals with sequences, i.e. functions $f: \mathbb{N} \rightarrow \mathbb{R}$, in more depth. We'll look into this later in the discrete math part of the book.
+
+
+% https://en.wikipedia.org/wiki/Sequence
+
+
+
+
+\subsection{Operations}
+
+\subsubsection{Pointwise Operations}
+Just like we can do with any functions $f: \mathbb{R} \rightarrow \mathbb{R}$, we can of course also add, subtract, multiply and divide two functions $f: \mathbb{N} \rightarrow \mathbb{R}$ pointwise. The fact that the domain is restricted to the naturals does not change anything about that. That means: we can just perform our usual arithmetic operations on sequences element-wise.
+
+\subsubsection{Convolution aka Cauchy Product}
+Another binary operation that we can perform on two sequences $(a_n),(b_n)$ is \emph{convolution}, also known as the \emph{Cauchy product} between the sequences. We will denote the operation symbol for convolution by an asterisk $\ast$ and define the operation as:
+\begin{equation}
+ (c_n) = (a_n) \ast (b_n) = (b_n) \ast (a_n) \quad \text{with} \quad
+ c_n = \sum_{k=0}^n a_k b_{n-k} 
+     = \sum_{k=0}^n b_k a_{n-k}
+     = \sum_{i+j=n} b_i a_j
+\end{equation}
+Each coefficient $c_n$ of the resulting sequence is given by a sum of products of coefficients from the original sequences and in each term of this sum, the indices of the two factors must sum up to $n$, the index in the $c_n$ sequence of the coefficient that is being computed. From this fact and the formula, you may already correctly infer that the operation is commutative.
+[VERIFY! What about complex sequences?]. It is also associative and distributive over element-wise addition and subtraction (but not over element-wise multiplication and division - VERIFY). This distributivity, together with the fact that scaling one of the inputs by a factor yields an output scaled by the same factor constitutes the important property of \emph{bilinearity} [VERIFY! might be only sesquilinear in complex case?]. That means, the operation is linear in both of its input arguments. In the literature, especially the DSP literature, they will often say that convolution is \emph{linear} rather than \emph{bilinear}. I guess, this is because in this context, they view it as a single input operation because one of the two sequences is assumed to be fixed once and for all. In this context, the fixed sequence is often called the \emph{impulse response} and sometimes also as \emph{kernel}. But be careful: the term kernel has another meaning in math, too - namely the set of inputs to a function that get mapped to zero - but that other meaning has nothing to do with the meaning here\footnote{Yeah - I know - it's a mess!}. TODO: explain relation to multiplication of polynomials
+% https://mathworld.wolfram.com/CauchyProduct.html
+
+% https://en.wikipedia.org/wiki/Convolution#Discrete_convolution
+
+% generalization:
+% https://math.stackexchange.com/questions/4036715/definition-of-complex-convolution
+
+% What about complex sequences? Do we need a conjugation on one of the terms?  Maybe convolution is only sesquilinear in this case? In Simon Haykin's "Adaptive Filter Theory", page 7, the convolution action of a transversal FIR filter has complex conjugation on the filter coeffs (and the lags on the input samples), i.e. y[n] = sum_k conj(w_k) x[n-k]
+
+% In complex analysis, there doesn't seem to be a conjugation:
+% https://math.stackexchange.com/questions/4653227/laurent-series-cauchy-product
+
+% For infinite sequences, the Cauchy product converges if both factors converge absolutely (verify!). see Mertens theorem
+% https://www.youtube.com/watch?v=zWBQXzjj5fY
+% https://en.wikipedia.org/wiki/Cauchy_product#Convergence_and_Mertens'_theorem
+
+\paragraph{Deconvolution}
+With some caveats, it is actually possible to undo a convolution. We will call this operation \emph{deconvolution}. ...TBC...
+
+\paragraph{Continuous Convolution}
+As a side note, an analoguos operation of convolution can also be defined between two functions $f,g: \mathbb{R} \rightarrow \mathbb{R}$. In this case, the convolution is defined via an integral instead of a sum:
+\begin{equation}
+ h(t) = f(t) \ast g(t) = g(t) \ast f(t) \quad \text{with} \quad
+ h(t) = \int_{-\infty}^{\infty} f(\tau) g(t-\tau) \, d \tau 
+      = \int_{-\infty}^{\infty} g(\tau) f(t-\tau) \, d \tau
+\end{equation}
+This is not relevant in the context of series but it's sometimes good to point out the connections to other topics. I have used $t$ for the input and $\tau$ for the dummy integration variable here because this is the way, you often find it stated. This operation occurs a lot in (continuous time) signal processing where $t$ stands for time and $\tau$ for a time-lag or delay.
+
+\paragraph{Dirichlet Convolution}
+An operation that is of interest in the context of number theory and related to our regular old standard convolution is called Dirichlet convolution. It is defined as follows: 
+\begin{equation}
+ (c_n) = (a_n) \ast_D (b_n) 
+       = \sum_{k | n} a_k b_{n/k} 
+       = \sum_{ij = n} a_i b_j 
+\end{equation}
+The difference to regular convolution is that now the product of the indices $i$ and $j$ of the two factors must be equal to $n$. In regular convolution, it was the sum. The notation $\sum_{k | n}$ means that the index $k$ runs over all divisors of $n$ and $\sum_{ij = n}$ means that the sum runs of all pairs $i,j$ whose product $ij$ equals $n$. ...TBC...Is it also commutative? I think so. Explain how it arises from multiplying Dirichlet series in a similar way how normal convolution arises from multiplying polynomials. 
+
+% Instead of considering a function $\sum_n a_n x^n$, we consider $\sum_n a_n n^x$...or actually  $\sum_n a_n n^{-x}$ but the minus does not matter for what happens to the coeffs in a multiplication of two such functions. In both types of convolutions, we want to collect the coeffs that multiply the same term, i.e. x^n or n^x respectively.
+
+
+
+
+
+% https://en.wikipedia.org/wiki/Dirichlet_convolution
+
+% https://www.youtube.com/watch?v=fGbJrY75LU8
+% What is the Moebius function? #SoME4 #SomePi
+
+% https://en.wikipedia.org/wiki/Dirichlet_series
+
+% 
+
+\subsection{Convergence}
+When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster. If a sequence $(a_n)$ converges to some value $a$, we will denote this as $a_n \rightarrow a$.
+
+% ToDo: Bring the formal definition of convergence. Point out that the limit must be an 
+% element of the original set of numbers (that's the subtle difference between convergence 
+% and Cauchy sequences, I think)
+
+% See also the paragraph about padic numbers - use a definition here that is consistent with the one there
+
+%This sequence has a name: it's called the \emph{alternating harmonic series}.
+
+%Theorems: pointwise sum of sequences converges to sum of limits, etc.
+
+% https://www.youtube.com/watch?v=epejTvlWOXA
+% -8:33: Merkregel: Bei Grenzwertprozessen kann aus "kleiner" "kleiner-gleich" werden. Bsp: Nimm
+%  zwei relle konvergente Folgen a_n, b_n mit Grenzwerten a, b. Wenn a_n < b_n für fast alle n (also
+%  alle bis auf endlich viele) dann ist a <= b. Das (a <= b) gilt auch immer noch, wenn wir nur
+%  a_n <= b_n für fast alle n voraussetzen.
+
+% Notation: a_n converges to a: a_n \rightarrow a
+
+\paragraph{Convergence to Zero} The examples of convergent sequences that we have seen so far converge to zero. They are somewhat special in that regard because convergence to zero is a practically relevant special case of more general convergence. Consider $a_n = n/(n+1) = (0,1/2,2/3,3/4,4/5,\ldots)$. This sequence converges to $1$. The takeaway is that the sequences that converge to zero are an important subset of all the convergent sequences because convergence to zero of a sequence often appears as a necessary condition for certain other properties of interest to hold. We'll see this later in the context of series.
+
+
+
+
+\subsubsection{Absolute Convergence}
+An even stronger type of convergence is called \emph{absolute convergence}. If a sequence converges absolutely, it means that we can form a new series by taking the absolute values of terms of the original series and that new series still converges. We can intuitively see that this is a stronger requirement by noticing that when a series has positive and negative terms, they may partially cancel out thereby making the partial sums smaller compared to the case when all terms would have the same sign. ...TBC...
+[WAIT: this belongs into the series section - not into the sequences section! For sequences, absolute convergence is not a meaningful concept. Or is it?]
+
+
+
+
+
+\subsubsection{Rate of Convergence}
+We already informally used statements like "converges faster". Now we'll make more explicit what we mean by that...TBC...
+
+\subsubsection{Cauchy Sequences and Real Numbers}
+A concept related to convergence is that of Cauchy sequences. When saying that a sequence of numbers converges to some limit, there is usually an implicit assumption that the limit is also an element of the same set of numbers as the individual sequence elements. But that isn't always the case. Consider the following recursive definition of a sequence: $a_0 = 2, a_{n+1} = (a_n^2 + 2) / (2 a_n)$ for $n > 0$. It converges to the irrational number $\sqrt{2}$ but every element of the sequence is a rational number. We may therefore consider it as a sequence of rational numbers - but one that doesn't converge \emph{within} the rational numbers. To express the limit, we need to extend our number system to include $\sqrt{2}$. We could form the set $\mathbb{Q} \cup \sqrt{2}$ and say that our sequence converges within that set. However, we are of course interested in a more general extension - one that works for every imaginable sequence and not just that particular one. That's how we arrive at the set of real numbers $\mathbb{R}$. ...TBC...
+
+% No - that's not what "adjoin" means - adjoining sqrt froms the set a + b sqrt(2) for a,b, in Q
+
+%https://www.youtube.com/watch?v=E-Tquvais4w
+% Examples for non-convergent Cauchy sequences:
+% Babylonian algorithm for sqrt - limit is outside Q, therefore formally not convergent
+% in R and C, every Cauchy sequence is convergent (R and C are complete metric spaces)
+% ...
+% This may seem like nitpicking but it was important for the historical development. Imagine living in the 1800s - a time at which the real numbers were not yet defined satifactorily. It was known that irrational numbers exist - the irrationality of sqrt(2) was already known to the ancient greeks - but there wasn't yet an airtight definition for what the larger number space actually was. ...
+
+% Häufungspunkt (accumulation point?)
+% https://en.wikipedia.org/wiki/Accumulation_point
+
+\subsection{Divergence}
+By definition, any sequence that is not convergent is called \emph{divergent}. Perhaps counterintuitively, that includes bounded series that bounce around between two or more values but always stay within a finite interval. ...TBC...
+
+\subsubsection{Divergence to Infinity}
+If a sequence really eventually blows up to either positive or negative infinity, we say that this sequence \emph{diverges to infinity}. We may further specify the behavior by saying that it diverges to positive or negative infinity. Stated formally, convergence to positive infinity means that for any number $a$ that we may choose, no matter how large, we may find some index $N$ such that all $a_n > a$ for $n > N$ [VERIFY]. This means that the elements $a_n$ of the sequence become arbitrarily large as $n$ increases. Divergence to negative infinity is defined analogously: the elements become arbitrarily "small" - in the sense of arbitrarily negatively large. This notion "divergence to infinity" may be closer to our intuitive sense about what "divergence" should mean. But don't forget that the actual definition of divergence does not imply that kind of behavior. In a sense, this notion "divergence to infinity" might be seen as the counterpart to "convergence to zero": If $a_n$ diverges to (plus or minus) infinity, then $1/a_n$ converges to zero. For the converse, we must be a bit more careful - consider the alternating harmonic series as counterexample. ...TBC...
+
+% Can this be leaborated? Maybe iff a_n converges to zero then b_n = 1/a_n diverges to infinity?
+
+% "...ergibt nur Sinn für relle Folgen..." at 18:22:
+% https://www.youtube.com/watch?v=fKI_e7KMj5Q
+
+% What about "bestimmte Divergenz"
+% https://de.wikibooks.org/wiki/Mathe_f%C3%BCr_Nicht-Freaks:_Bestimmte_Divergenz,_uneigentliche_Konvergenz
+
+% https://math.libretexts.org/Bookshelves/Analysis/Real_Analysis_(Boman_and_Rogers)/04%3A_Convergence_of_Sequences_and_Series/4.03%3A_Divergence_of_a_Series
+
+% I think, it might be called "divergence to infinity" - see:
+% https://math.libretexts.org/Bookshelves/Analysis/Real_Analysis_(Boman_and_Rogers)/04%3A_Convergence_of_Sequences_and_Series/4.03%3A_Divergence_of_a_Series
+
+% https://math.stackexchange.com/questions/52077/types-of-divergence
+
+
+%\subsubsection{Examples}
+%ToDo: give some more examples of absolute convergent, conditionally convergent and different kinds of divergent series (alternating but finite, to plus infinity, to minus infinity, altenating with absolute value going to infinity) - maybe also give complex examples. Maybe take ((2/3)(1+i))^n and
+%((3/4)(1+i))^n. The former should converge, the latter diverge. Maybe argue via the geometric series and absolute value. Important in practice: a_n = n^k / b^n converges to zero for k in N, b > 1. Maybe |b| > 1 is enough? n-th root of a, a > 0 -> converges to 1.
+
+
+% https://en.wikipedia.org/wiki/Antilimit
+
+
+\subsubsection{Rules for Convergence and Divergence} 
+
+\paragraph{Sum Rule}
+Suppose we have two sequences $(a_n), (b_n)$ and form a third sequence by taking their pointwise sum: $c_n = a_n + b_n$. Then, if $(a_n)$ converges to $a$ and $(b_n)$ converges to $b$, then $(c_n)$ will converge to $a+b$. In math notation: $(a_n \rightarrow a, b_n \rightarrow b) \Rightarrow ((a_n + b_n) \rightarrow (a + b))$.
+
+\paragraph{Comparison Test}
+If we have a nonnegative sequence $(a_n)$ and want to know whether it converges or diverges, we can apply the following test: Suppose we have another nonnegative sequence $(b_n)$ which we already know to be convergent. Then, if we can find any index $N$ such that $a_n \leq b_n$ for all $n \geq N$, then $(a_n)$ is also convergent. Likewise, if we know that $(b_n)$ diverges to (positive) infinity and we can find an index $N$ such that $a_n \geq b_n$ for all $n \geq N$, then $(a_n)$ also diverges to (positive) infinity. You may sometimes find the latter statement stated like "if $(b_n)$ diverges, then $(a_n)$ also diverges" without the qualifier "to infinity". By our definition of divergence as mere absence of convergence without necessarily implying explosion to infinity, such a statement would be false: Consider as counterexample the divergent sequence $b_n = (-1)^n + 1$ that alternates between $0$ and $2$ and the sequence $a_n = 3n / (n+1)$ that converges to $3$. 
+
+% This:
+% https://www.sfu.ca/math-coursenotes/Math%20158%20Course%20Notes/sec_ComparisonTests.html
+% actually says nothing about diverging "to positive infinity" but speaks about divergence in general. But intuitively, it is not so clear to me why that more general statement should hold. ...verify! If it does indeed hold for the more general notion of convergence, explain why
+%
+% https://en.wikipedia.org/wiki/Direct_comparison_test
+%
+% Try constructing a counterexample: take a series b_n that diverges but is bounded:
+%   b_n = (-1)^n
+% Now take a series that converges to 2:
+%   a_n = (2 n) / (n+1)
+% We actually do have a_n >= b_n but a_n does *not* diverge
+% 
+
+
+% Majorante/Minorante
+% sum rule, product rule?
+
+
+
+\subsection{Sequence Transformations}
+A transformation of a sequence is, very generally speaking, a process that we apply to it to obtain a new sequence. For such a transformation to be interesting, we usually want it to satisfy some additional constraints. Most notably among them is the desire to not change the limit of a sequence in the case that such a limit exists, i.e. when the sequence is convergent. If our transformation has this desirable property of not affecting limits of convergent sequences, then we call the transformation \emph{regular} (VERIFY). Such regular transformations can help to speed up the convergence of a sequence which can be very helpful in practice when our task is to (approximately) evaluate the limit of a given sequence. They can even help to turn divergent sequences into convergent ones and thereby give us a potential way to "evaluate" limits of divergent sequences - although we need to be very careful with that. We will have to ask ourselves questions like whether or not this new "limit" is well defined in the sense that all different possible regular transformations will produce the same value. This is a tall order if we don't even know (yet) how the set of all possible regular transformations looks like (VERIFY)...TBC...
+
+% https://en.wikipedia.org/wiki/Sequence_transformation
+% binomial transform, Möbius transform, Stirling transform 
+% https://en.wikipedia.org/wiki/Aitken%27s_delta-squared_process
+% https://en.wikipedia.org/wiki/Series_acceleration
+
+% Give examples for irregular transformations - taking the absolute value of the terms could be seen as such an example
+
+% https://math.stackexchange.com/questions/1085570/when-do-regularization-methods-for-divergent-series-disagree
+
+% using such techniques is sometimes calle "regularization"
+
+% A Visual Attempt at 1 + 2 + 3 + 4 + 5 + ... = -1/12
+% https://www.youtube.com/watch?v=hB2F9lyr2_k
+
+\subsubsection{Convolution as Transformation}
+One way to transform a sequence into a new one is to convolve it with some fixed other sequence. For a simple example, let this other sequence be given by $(\frac{1}{2}, \frac{1}{2}, 0, 0, 0, \ldots)$. In effect, the convolution with the given kernel will just let our new transformed sequence consist of 2-point averages of the old sequence. This will clearly not change the limit of a given sequence if it exists - because if the limit exists, it means that the sequence converges to some fixed value which also implies that two neighboring points will tend to have the same value - and taking the average of two values that are actually one and the same value will not change anything. So, we have our first example of a regular transformation. It's very simple and not very powerful. It will not help much in accelerating convergence of sequences - let alone turning divergent into convergent ones\footnote{Well - maybe it could actually do some good with alternating sequences. Figure out!}. But at least, we get a sense of how such regular transformations may look like. ...TBC... explain the general condition for a convolution kernel to be "regular" in the sense of not affecting the limit. I guess it must go down to zero (fast enough?) and sum up to one? I think, these two conditions should be sufficient for regularity - but are they necessary? 
+
+\subsubsection{Transformation by Matrices} ...TBC...ToDo: explain general transformations in terms of (infinite?) matrices.
+
+% Series to Series Transformations and Analytic Continuation by Matrix Methods
+% https://www.jstor.org/stable/2372347
+% The paper considers sequence-to-sequence, series-to-sequence and series-to-series transformations
+
 
 
 

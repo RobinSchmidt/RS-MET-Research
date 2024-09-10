@@ -237,8 +237,8 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 
 \begin{figure}[h]
 \centering
-\caption{Bivariate Gaussian $f(x,y) = x e^{-(x^2+y^2)}$}
-\label{Fig:BivariateGaussian}
+\caption{$f(x,y) = x e^{-(x^2+y^2)}$}
+\label{Fig:BivariateGaussian3D}
 \begin{tikzpicture}
 \begin{axis}
    %[title=Bivariate Gaussian]
@@ -249,23 +249,22 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 
 
 \pgfplotsset{width=12cm,height=8cm,compat=1.9}
+
+\begin{figure}[h]
+\centering
+\caption{$f(x,y) = x e^{-(x^2+y^2)}$}
+\label{Fig:BivariateGaussianHeatMap}
 \begin{tikzpicture}
 \begin{axis}[
-    title={$x \exp(-x^2-y^2)$},
-    domain=-2:2,
-    view={0}{90},
-    colorbar right, colormap name = viridis ]
+%    title={$x \exp(-x^2-y^2)$},
+    domain=-2:2, view={0}{90}, colorbar right, colormap name = viridis ]
     
-    % \begin{axis}[colormap/RdYlGn
-    
-    \addplot3 [
-        contour filled={
-            number=14,
-        },
-    ] {exp(-x^2-y^2)*x};
+  \addplot3 [contour filled={number=15,},] 
+  {exp(-x^2-y^2)*x};
+  
 \end{axis}
 \end{tikzpicture}
-
+\end{figure}
 
 
 

@@ -23,9 +23,7 @@
 
 bool testRandomVectors()
 {
-  // Under construction
-
-  // We try to produce correlated random vectors with a given covariance matrix.
+  // We produce correlated random 2D vectors with a given covariance matrix.
 
   bool ok = true;
 
@@ -34,8 +32,8 @@ bool testRandomVectors()
   using Vec  = std::vector<Real>; 
   using AT   = rsArrayTools;
 
-
-  int N = 10000;               // Number of samples
+  int order = 4;               // Order of Irwin-Hall distribution. 1: uniform, 2: triangular, ...
+  int N     = 1000;            // Number of samples
   Mat C(2, 2, {7,3, 3,5});     // Desired covariance matrix
 
 
@@ -51,7 +49,7 @@ bool testRandomVectors()
 
   // Create the uncorrelated input noise:
   rsNoiseGenerator2<Real> prng;
-  prng.setOrder(1);  // Will it work independently from the order?
+  prng.setOrder(order);  // Will it work independently from the order?
   Vec x1(N), x2(N);  
   for(int n = 0; n < N; n++)
   {
@@ -70,13 +68,13 @@ bool testRandomVectors()
   Vec y1(N), y2(N);
   for(int n = 0; n < N; n++)
   {
-    // Fetch:
+    // Fetch and scale input vector x[n] from the 2 input signals x1,x2:
     Vec x({ s*x1[n], s*x2[n] });
 
-    // Compute:
+    // Compute output vector y[n]:
     Vec y = A * x;
 
-    // Store:
+    // Store components of y[n] in 2 signals y1,y2:
     y1[n] = y[0];
     y2[n] = y[1];
   }
@@ -84,19 +82,13 @@ bool testRandomVectors()
   // Compute variances and covariance of output y:
   Real d11 = AT::sumOfSquares( &y1[0],         N) / N;
   Real d22 = AT::sumOfSquares( &y2[0],         N) / N;
-  Real d12 = AT::sumOfProducts(&y1[0], &y2[0], N) / N;  // == c21
-
-  //Real s   = 3.0;      // Scaler - should be 1/c11, I think
-  //Real s11 = s*d11;
-  //Real s22 = s*d22;
-  //Real s12 = s*d12;
+  Real d12 = AT::sumOfProducts(&y1[0], &y2[0], N) / N;
+  // We want: d11 == C(0,0), d22 == C(1,1), d12 == C(0,1) == C(1,0). Only approximately, of course
+  // because it's all noisy. The values look good.
 
 
-
-
-  //rsPlotVectors(x1, x2);
-  //rsPlotVectors(y1, y2);
-
+  rsPlotVectors(x1, x2);
+  rsPlotVectors(y1, y2);
 
   return ok;
 
@@ -104,11 +96,12 @@ bool testRandomVectors()
   //
   // - For the Irwin-Hall noise of order 1, i.e. uniform noise, the variances of x1,x2 seem to be
   //   1/3. Is that the theoretically expected value? For the covariance, we expect a value of 0.
+  //   It seems like the general rule is: c11 = c22 = 1 / (3*order)
   //
-
+  //
   // ToDo:
   //
-  // - Try to produce a vector valued noise generator that creates random vector with some 
+  // - [DONE] Try to produce a vector valued noise generator that creates random vector with some 
   //   user-specified covariance matrix. Maybe to create a noise vector with given covariance
   //   matrix C, we can start with a vector x that is uncorrelated and obtain the correlated 
   //   vector y as  y = A*x  for some matrix A that we have to compute for a given C. The 
@@ -123,6 +116,10 @@ bool testRandomVectors()
   //   diagonalized: https://en.wikipedia.org/wiki/Square_root_of_a_matrix#By_diagonalization
   //   and that can be used to find the square-root. Maybe we can use a matrix variant of Newton
   //   iteration (i.e. the Babylonian root finding algorithm) to find the square-root?
+  // 
+  // - Create a stereo noise generator based on the code above. It can compute the matrix sqrt via
+  //   a closed form formula when we only need to deal with the 2x2 case. We can use the 
+  //   diagonalization algorithm. The user should be able to set up: order, variance, correlation.
 }
 
 bool testKalmanFilter()

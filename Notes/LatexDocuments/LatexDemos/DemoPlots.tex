@@ -120,13 +120,13 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 \subsection{Taylor Polynomials}
 
 
-\pgfplotsset{width=16cm,height=8cm,compat=1.9}
+\pgfplotsset{width=19cm,height=7cm,compat=1.9}
+
 \begin{figure}[h]
 \centering
-\caption{Sine and cosine function}
+\caption{Sine function and its Taylor polynomials}
 \label{Fig:TaylorExpansionSine}
 \begin{tikzpicture}
-
 \begin{axis}[xmin=-6,xmax=6,ymin=-1.2,ymax=1.2,samples=100,thick]
 
   \addplot[domain=-6:6, color=black] {sin( \x r )};
@@ -144,34 +144,43 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
  \addplot[domain=-5:5, color=rsCyan] {\x - \x^3/6 + \x^5/120 - \x^7/5040};
  \addlegendentry{$T_7(x)$}
   
-  % 362880
+ \addplot[domain=-6:6, color=rsBlue] {\x - \x^3/6 + \x^5/120 - \x^7/5040 + \x^9/362880};
+ \addlegendentry{$T_9(x)$}
+  
 \end{axis}
-
-%\begin{axis}[xmin=-7,xmax=7,ymin=-1,ymax=10]
-%    \addplot {sin( \x r )};
-%    \addplot[domain=-7:7, range=-2:20, samples=100, color=blue, thick]
-%        {x^2};
-%    \addlegendentry{\(x^2\)}
-%\end{axis}
+\end{tikzpicture}
+\end{figure}
 
 
+\begin{figure}[h]
+\centering
+\caption{Cosine function and its Taylor polynomials}
+\label{Fig:TaylorExpansionCosine}
+\begin{tikzpicture}
+\begin{axis}[xmin=-6,xmax=6,ymin=-1.2,ymax=1.2,samples=100,thick]
 
-% Coordinate axes:
-%\draw[->] (-9.0,0) -- (9.0,0) node[below] {$x$};
-%\draw[->] (0,-1.4) -- (0,1.4) node[left]  {};
-
-% Graphs of sin(x) and cos(x):
-%\draw[color=rsRed]   plot (\x,{sin(\x r)}) node[right] {$\sin x$};
-
-%\draw[color=rsBlue]  plot (\x,{\x}) node[right] {$x$};
-%\draw[color=rsBlue]  plot (\x,{\x - 0.03 * \x^3 }) node[right] {$x$};
-% \x r means to convert '\x' from degrees to radians
+  \addplot[domain=-6:6, color=black] {cos( \x r )};
+  \addlegendentry{\(\cos(x)\)}
   
-
-
+  \addplot[domain=-6:6, color=rsRed] {1};
+  \addlegendentry{$T_0(x)$}
   
-
-    
+  \addplot[domain=-3:3, color=rsYellow] {1 - \x^2/2};
+  \addlegendentry{$T_2(x)$}
+  
+  \addplot[domain=-4:4, color=rsGreen] {1 - \x^2/2 + \x^4/24};
+  \addlegendentry{$T_2(x)$}
+  
+% \addplot[domain=-5:5, color=rsGreen] {\x - \x^3/6 + \x^5/120};
+% \addlegendentry{$T_5(x)$}
+  
+% \addplot[domain=-5:5, color=rsCyan] {\x - \x^3/6 + \x^5/120 - \x^7/5040};
+% \addlegendentry{$T_7(x)$}
+  
+% \addplot[domain=-6:6, color=rsBlue] {\x - \x^3/6 + \x^5/120 - \x^7/5040 + \x^9/362880};
+% \addlegendentry{$T_9(x)$}
+  
+\end{axis}
 \end{tikzpicture}
 \end{figure}
 

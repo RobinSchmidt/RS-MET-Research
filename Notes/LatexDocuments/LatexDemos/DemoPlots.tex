@@ -127,7 +127,7 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 \caption{Sine function and its Taylor polynomials}
 \label{Fig:TaylorExpansionSine}
 \begin{tikzpicture}
-\begin{axis}[xmin=-6,xmax=6,ymin=-1.2,ymax=1.2,samples=100,thick]
+\begin{axis}[xmin=-6,xmax=6,ymin=-1.2,ymax=1.2,samples=100,thick, xmajorgrids=true, ymajorgrids=true]
 
   \addplot[domain=-6:6, color=black] {sin( \x r )};
   \addlegendentry{\(\sin(x)\)}
@@ -147,7 +147,7 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
  \addplot[domain=-6:6, color=rsBlue] {\x - \x^3/6 + \x^5/120 - \x^7/5040 + \x^9/362880};
  \addlegendentry{$T_9(x)$}
  
- \addplot[domain=-6:6, color=black] {sin( \x r )}; 
+ \addplot[domain=-6:6, color=black, very thick] {sin( \x r )}; 
  
 \end{axis}
 \end{tikzpicture}
@@ -159,7 +159,7 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 \caption{Cosine function and its Taylor polynomials}
 \label{Fig:TaylorExpansionCosine}
 \begin{tikzpicture}
-\begin{axis}[xmin=-6,xmax=6,ymin=-1.2,ymax=1.2,samples=100,thick]
+\begin{axis}[xmin=-6,xmax=6,ymin=-1.2,ymax=1.2,samples=100,thick, xmajorgrids=true, ymajorgrids=true]
 
   \addplot[domain=-6:6, color=black] {cos( \x r )};
   \addlegendentry{\(\cos(x)\)}
@@ -179,7 +179,7 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
   \addplot[domain=-5:5, color=rsBlue] {1 - \x^2/2 + \x^4/24 - \x^6/720 + \x^8/40320};
   \addlegendentry{$T_8(x)$} 
 
-  \addplot[domain=-6:6, color=black] {cos( \x r )};
+  \addplot[domain=-6:6, color=black, very thick] {cos( \x r )};
 
 \end{axis}
 \end{tikzpicture}
@@ -215,7 +215,7 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
   \addlegendentry{$T_4(x)$}  
   
   % draw the exp again so it is in the foreground:
-  \addplot[domain=-3:3, color=black] {exp(\x )};
+  \addplot[domain=-3:3, color=black, very thick] {exp(\x )};
   
 \end{axis}
 \end{tikzpicture}
@@ -295,6 +295,9 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 
 % https://stackoverflow.com/questions/70338079/get-east-position-of-tikz-legend
 % Has example for loading data from .csv file
+
+% Line thickness options: semithick, thick, very thick, ultra thick, line width=4pt
+
 
 
 \end{document}

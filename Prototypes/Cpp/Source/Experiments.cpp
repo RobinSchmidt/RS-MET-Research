@@ -63,13 +63,15 @@ bool testRandomVectors()
   Real c11 = AT::sumOfSquares( &x1[0],         N) / N;
   Real c22 = AT::sumOfSquares( &x2[0],         N) / N;
   Real c12 = AT::sumOfProducts(&x1[0], &x2[0], N) / N;  // == c21
+  Real s   = sqrt(2.0 / (c11 + c22)); 
+  // Scaler. Theoretically s = sqrt(1/c11) = sqrt(1/c22). Practically, we average.
 
   // Compute correlated noise:
   Vec y1(N), y2(N);
   for(int n = 0; n < N; n++)
   {
     // Fetch:
-    Vec x({ x1[n], x2[n] });
+    Vec x({ s*x1[n], s*x2[n] });
 
     // Compute:
     Vec y = A * x;
@@ -84,10 +86,10 @@ bool testRandomVectors()
   Real d22 = AT::sumOfSquares( &y2[0],         N) / N;
   Real d12 = AT::sumOfProducts(&y1[0], &y2[0], N) / N;  // == c21
 
-  Real s   = 3.0;      // Scaler - should be 1/c11, I think
-  Real s11 = s*d11;
-  Real s22 = s*d22;
-  Real s12 = s*d12;
+  //Real s   = 3.0;      // Scaler - should be 1/c11, I think
+  //Real s11 = s*d11;
+  //Real s22 = s*d22;
+  //Real s12 = s*d12;
 
 
 

@@ -193,18 +193,26 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 \textcolor{blue}{Left-hand Riemann Sum} and 
 \textcolor{red}{Right-hand Riemann Sum}
 
-\begin{tikzpicture}
+\begin{tikzpicture}[thick, >=stealth']
 
-  \draw[->] (-1-0.5,0) -- (4+0.5,0);
-  \draw[->] (0,-1-0.5) -- (0,4+0.5);
-  \draw[dashed] (-1,0) -- (-1,1) node[above] {$a$};
-  \draw[dashed] (4,0) -- (4,-1) node[below] {$b$};
+  % Coordinate axes:
+  \draw[->] (-1.5, 0  ) -- (4.5, 0  );
+  \draw[->] ( 0,  -1.5) -- (0,   1.5);
+  
+  % Markers for integration limits:
+%  \draw[dashed] (-1,0) -- (-1, 1) node[above] {$a$};
+%  \draw[dashed] ( 4,0) -- ( 4, 1) node[above] {$b$};
+  \draw[] (-1,-5pt) -- (-1, +5pt) node[above] {$a$};
+  \draw[] ( 4,-5pt) -- ( 4, +5pt) node[above] {$b$};  
+  
       
+  % The rectangles:
   \foreach \x in {-1,-0.5,...,3.5}
     \draw[thick, fill=blue!25] 
     (\x,0) -- (\x,{sin(deg(\x+0.25))}) -- (\x+.5,{sin(deg(\x+0.25))}) -- (\x+.5,0) -- cycle;
     
-  \draw[ultra thick, domain=-1:4, smooth, samples=100, variable=\x] plot ({\x},{sin(deg(\x))});
+  % The underlying function to be integrated:
+  \draw[ultra thick, domain=-1.5:4.5, smooth, samples=100, variable=\x] plot ({\x},{sin(deg(\x))});
     
 \end{tikzpicture}
 

@@ -146,7 +146,9 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
   
  \addplot[domain=-6:6, color=rsBlue] {\x - \x^3/6 + \x^5/120 - \x^7/5040 + \x^9/362880};
  \addlegendentry{$T_9(x)$}
-  
+ 
+ \addplot[domain=-6:6, color=black] {sin( \x r )}; 
+ 
 \end{axis}
 \end{tikzpicture}
 \end{figure}
@@ -177,6 +179,8 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
   \addplot[domain=-5:5, color=rsBlue] {1 - \x^2/2 + \x^4/24 - \x^6/720 + \x^8/40320};
   \addlegendentry{$T_8(x)$} 
 
+  \addplot[domain=-6:6, color=black] {cos( \x r )};
+
 \end{axis}
 \end{tikzpicture}
 \end{figure}
@@ -189,8 +193,8 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 \caption{Exponential function and its Taylor polynomials}
 \label{Fig:TaylorExpansionExp}
 \begin{tikzpicture}
-\begin{axis}[xmin=-3,xmax=3,ymin=-1.2,ymax=5.2,samples=100,thick,legend pos=north west]
-
+\begin{axis}[xmin=-3, xmax=3, ymin=-1.2, ymax=5.2, samples=100, thick, 
+             legend pos=north west, xmajorgrids=true, ymajorgrids=true]
 
   \addplot[domain=-3:3, color=black] {exp(\x )};
   \addlegendentry{$\exp(x)$}
@@ -209,6 +213,9 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
   
   \addplot[domain=-3:3, color=rsBlue] {1 + x + x^2/2 + x^3/6 + x^4/24};
   \addlegendentry{$T_4(x)$}  
+  
+  % draw the exp again so it is in the foreground:
+  \addplot[domain=-3:3, color=black] {exp(\x )};
   
 \end{axis}
 \end{tikzpicture}
@@ -286,7 +293,8 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 % ToDo: triangles, polygons, ...
 
 
-
+% https://stackoverflow.com/questions/70338079/get-east-position-of-tikz-legend
+% Has example for loading data from .csv file
 
 
 \end{document}

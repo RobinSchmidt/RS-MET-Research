@@ -2,6 +2,45 @@
 using namespace RAPT;   // maybe get rid
 using namespace rosic;  // dito
 
+
+// UNDER CONSTRUCTION - works but needs optimizations (some of which are very low hanging fruits)
+//
+// A square-root function for matrices based on Newtion iteration
+template<class T>
+rsMatrix<T> rsSqrtNewton(const rsMatrix<T>& A)
+{
+  rsAssert(A.isSquare());
+
+  using LA = rsLinearAlgebraNew;
+
+  int n = A.getNumRows();
+  rsMatrix X = rsMatrix<T>::identity(n, 0.0);
+  int maxIts = 100;
+  for(int i = 0; i < maxIts; i++)
+  {
+    X = T(0.5) * (X + A * LA::inverse(X));
+    // ToDo: check a convergence criterion - at the moment, we just do always 100 iterations, which
+    // is, of course, insane. Maybe compute D = A * LA::inverse(X), then compute its absolute 
+    // maximum maxD, then do X = 0.5 * (X + D) ...maybe in-place, and then break if 
+    // maxD <= threshold
+  }
+
+
+  return X;
+
+  // ToDo: 
+  // -Optimize to avoid creation of temporary matrix objects, i.e. try to do as much in-place
+  //  processing as possible
+  // -Implement a variant that computes X such that X^T * X = A. This function computes X such that
+  //  X * X = A. The wikipedia article:
+  //  https://en.wikipedia.org/wiki/Square_root_of_a_matrix#By_the_Babylonian_method
+  //  says that the algorithm follows from Newtons method using X^2 - A = 0 with A X_k = X_k A. We
+  //  may need to modify that into X^T * X - A = 0. See:
+  //  https://en.wikipedia.org/wiki/Newton%27s_method#Multidimensional_formulations
+}
+
+
+
 //=================================================================================================
 // Convenience functions for certain types of plots. Maybe move to library, maybe into rs_testing 
 // module into TestTools/Plotting.h. Maybe at some point even into GNUPlotCPP itself.

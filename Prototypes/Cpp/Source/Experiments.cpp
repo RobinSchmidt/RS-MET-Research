@@ -21,6 +21,108 @@
 
 //-------------------------------------------------------------------------------------------------
 
+bool testRandomVectors()
+{
+  // Under construction
+
+  // We try to produce correlated random vectors with a given covariance matrix.
+
+  bool ok = true;
+
+  using Real = double;
+  using Mat  = rsMatrix<Real>;
+  using Vec  = std::vector<Real>; 
+  using AT   = rsArrayTools;
+
+
+  int N = 10000;               // Number of samples
+  Mat C(2, 2, {7,3, 3,5});     // Desired covariance matrix
+
+
+  // We need a matrix A such that A^T * A = C:
+  Mat A = rsSqrtNewton(C);
+  // Ah - that is the wrong definition of the square root. We need the definition A^T * A = C 
+  // rather than A * A = C. But maybe it doesn't matter when the matrix C is symmetric? Let's try:
+
+  Mat T = A.getTranspose() * A;
+  // Yep: T == C. So we can use the sqrt implementation.
+
+
+
+  // Create the uncorrelated input noise:
+  rsNoiseGenerator2<Real> prng;
+  prng.setOrder(1);  // Will it work independently from the order?
+  Vec x1(N), x2(N);  
+  for(int n = 0; n < N; n++)
+  {
+    x1[n] = prng.getSample();
+    x2[n] = prng.getSample();
+  }
+
+  // Compute variances and covariance of input x:
+  Real c11 = AT::sumOfSquares( &x1[0],         N) / N;
+  Real c22 = AT::sumOfSquares( &x2[0],         N) / N;
+  Real c12 = AT::sumOfProducts(&x1[0], &x2[0], N) / N;  // == c21
+
+  // Compute correlated noise:
+  Vec y1(N), y2(N);
+  for(int n = 0; n < N; n++)
+  {
+    // Fetch:
+    Vec x({ x1[n], x2[n] });
+
+    // Compute:
+    Vec y = A * x;
+
+    // Store:
+    y1[n] = y[0];
+    y2[n] = y[1];
+  }
+
+  // Compute variances and covariance of output y:
+  Real d11 = AT::sumOfSquares( &y1[0],         N) / N;
+  Real d22 = AT::sumOfSquares( &y2[0],         N) / N;
+  Real d12 = AT::sumOfProducts(&y1[0], &y2[0], N) / N;  // == c21
+
+  Real s   = 3.0;      // Scaler - should be 1/c11, I think
+  Real s11 = s*d11;
+  Real s22 = s*d22;
+  Real s12 = s*d12;
+
+
+
+
+  //rsPlotVectors(x1, x2);
+  //rsPlotVectors(y1, y2);
+
+
+  return ok;
+
+  // Observations:
+  //
+  // - For the Irwin-Hall noise of order 1, i.e. uniform noise, the variances of x1,x2 seem to be
+  //   1/3. Is that the theoretically expected value? For the covariance, we expect a value of 0.
+  //
+
+  // ToDo:
+  //
+  // - Try to produce a vector valued noise generator that creates random vector with some 
+  //   user-specified covariance matrix. Maybe to create a noise vector with given covariance
+  //   matrix C, we can start with a vector x that is uncorrelated and obtain the correlated 
+  //   vector y as  y = A*x  for some matrix A that we have to compute for a given C. The 
+  //   covariance of y is:   C = E[y * y^T] = E[A*x * (A*x)^T] = E[A * x * x^T * A^T]
+  //   C = A * E[x * x^T] * A^T = A * I * A^T = A * A^T. So, yeah, the covariance matrix C is
+  //   just C = A * A^T. But how can we find such an A? Maybe look into:
+  //   https://en.wikipedia.org/wiki/Square_root_of_a_matrix
+  //   see also rsSqrtNewton() in Tools.cpp. There's a preliminary, prototype implementation
+  //   By the way: it is true that for any matrix A, we have that A * A^T and A^T * A are 
+  //   symmetric. Is the converse also true, i.e. does for any symmetric matrix B exist a matrix
+  //   such that B = A^T * A? Ah - yes - I think so, because symmetric matrices can always be
+  //   diagonalized: https://en.wikipedia.org/wiki/Square_root_of_a_matrix#By_diagonalization
+  //   and that can be used to find the square-root. Maybe we can use a matrix variant of Newton
+  //   iteration (i.e. the Babylonian root finding algorithm) to find the square-root?
+}
+
 bool testKalmanFilter()
 {
   // Under construction - this doesn't work yet
@@ -226,20 +328,7 @@ bool testKalmanFilter()
   //
   // - https://www.kalmanfilter.net/default.aspx
   //
-  // - Try to produce a vector valued noise generator that creates random vector with some 
-  //   user-specified covariance matrix. Maybe to create a noise vector with given covariance
-  //   matrix C, we can start with a vector x that is uncorrelated and obtain the correlated 
-  //   vector y as  y = A*x  for some matrix A that we have to compute for a given C. The 
-  //   covariance of y is:   C = E[y * y^T] = E[A*x * (A*x)^T] = E[A * x * x^T * A^T]
-  //   C = A * E[x * x^T] * A^T = A * I * A^T = A * A^T. So, yeah, the covariance matrix C is
-  //   just C = A * A^T. But how can we find such an A? Maybe look into:
-  //   https://en.wikipedia.org/wiki/Square_root_of_a_matrix
-  //   By the way: it is true that for any matrix A, we have that A * A^T and A^T * A are 
-  //   symmetric. Is the converse also true, i.e. does for any symmetric matrix B exist a matrix
-  //   such that B = A^T * A? Ah - yes - I think so, because symmetric matrices can always be
-  //   diagonalized: https://en.wikipedia.org/wiki/Square_root_of_a_matrix#By_diagonalization
-  //   and that can be used to find the square-root. Maybe we can use a matrix variant of Newton
-  //   iteration (i.e. the Babylonian root finding algorithm) to find the square-root?
+
 
 }
 
@@ -14903,27 +14992,6 @@ void test2x2Matrices1()
   rsAssert(ok);
 }
 
-
-template<class T>
-rsMatrix<T> rsSqrtNewton(const rsMatrix<T>& A)
-{
-  rsAssert(A.isSquare());
-
-  using LA = rsLinearAlgebraNew;
-
-  int n = A.getNumRows();
-  rsMatrix X = rsMatrix<T>::identity(n, 0.0);
-  int maxIts = 100;
-  for(int i = 0; i < maxIts; i++)
-  {
-    X = T(0.5) * (X + A * LA::inverse(X));
-  }
-
-
-  return X;
-}
-
-
 void testMatrixSqrt()
 {
   // We test algorithms to compute square-roots of matrices. Given a matrix A, a matrix B is called
@@ -14942,7 +15010,6 @@ void testMatrixSqrt()
 
   Real tol = 1.e-13;
   ok &= C.equals(B, tol);
-
 
 
   rsAssert(ok);

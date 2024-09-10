@@ -223,6 +223,32 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 
 
 
+% ToDo: 1 / (1 + x^2), 1 / (1 - x^2)
+
+% plots for:
+% -Fourier polynomials
+% -Derivative
+% -Riemann integral, Lebesgue integral
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Bivariate Gaussian}
+
+\pgfplotsset{width=12cm,height=8cm,compat=1.9}
+
+\begin{figure}[h]
+\centering
+\caption{Bivariate Gaussian $f(x,y) = e^{-(x^2+y^2)}$}
+\label{Fig:BivariateGaussian}
+\begin{tikzpicture}
+\begin{axis}
+   %[title=Bivariate Gaussian]
+   \addplot3 [surf,fill=white,domain=-2:2] {exp(-x^2-y^2)};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+% https://tikz.dev/pgfplots/reference-3dplots
+
 %---------------------------------------------------------------------------------------------------
 \subsection{Line Equations}
 Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{p}_2$ and various forms of the line equation embedded in the plot. It also shows how to draw dots and arrows and a coordinate grid. There's also an angle $\alpha$ drawn by a circular arc.
@@ -288,6 +314,10 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 };
 \end{tikzpicture}
 \end{figure}
+
+
+
+
 
 
 % ToDo: triangles, polygons, ...

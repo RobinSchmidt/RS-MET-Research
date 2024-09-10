@@ -6,6 +6,8 @@
 \oddsidemargin=-1.0cm
 \textwidth=19cm
 
+\usepackage{amsmath}
+%\usepackage{amssymb} 
 
 \usepackage{pgfplots}
 \pgfplotsset{width=10cm,compat=1.9}
@@ -190,29 +192,48 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 %\newcommand\rb{4} % rb = Riemann, b
 %\newcommand\rbtwo{3.5} % rb = Riemann, b
 
-\textcolor{blue}{Left-hand Riemann Sum} and 
-\textcolor{red}{Right-hand Riemann Sum}
+%\textcolor{blue}{Left-hand Riemann Sum} and 
+%\textcolor{red}{Right-hand Riemann Sum}
 
 \begin{tikzpicture}[thick, >=stealth']
 
-  % Coordinate axes:
-  \draw[->] (-1.5, 0  ) -- (4.5, 0  );
-  \draw[->] ( 0,  -1.5) -- (0,   1.5);
+% Coordinate axes:
+\draw[->] (-1.5, 0  ) -- (4.5, 0  );
+\draw[->] ( 0,  -1.5) -- (0,   1.5);
   
-  % Markers for integration limits:
-%  \draw[dashed] (-1,0) -- (-1, 1) node[above] {$a$};
-%  \draw[dashed] ( 4,0) -- ( 4, 1) node[above] {$b$};
-  \draw[] (-1,-5pt) -- (-1, +5pt) node[above] {$a$};
-  \draw[] ( 4,-5pt) -- ( 4, +5pt) node[above] {$b$};  
-  
-      
-  % The rectangles:
-  \foreach \x in {-1,-0.5,...,3.5}
-    \draw[thick, fill=blue!25] 
-    (\x,0) -- (\x,{sin(deg(\x+0.25))}) -- (\x+.5,{sin(deg(\x+0.25))}) -- (\x+.5,0) -- cycle;
+% Markers for integration limits:
+\draw[] (-1,-5pt) -- (-1, +5pt) node[above] {$a$};
+\draw[] ( 4,-5pt) -- ( 4, +5pt) node[above] {$b$};  
+        
+% The rectangles:
+\foreach \x in {-1,-0.5,...,3.5}
+  \draw[thick, fill=blue!25] 
+  (\x,0) -- (\x,{sin(deg(\x+0.25))}) -- (\x+.5,{sin(deg(\x+0.25))}) -- (\x+.5,0) -- cycle;
     
-  % The underlying function to be integrated:
-  \draw[ultra thick, domain=-1.5:4.5, smooth, samples=100, variable=\x] plot ({\x},{sin(deg(\x))});
+% The underlying function to be integrated:
+\draw[ultra thick, domain=-1.5:4.5, smooth, samples=100, variable=\x] plot ({\x},{sin(deg(\x))});
+    
+% Equations:
+\node[align=left, font=\normalsize] at (7.5,0.0) 
+{
+% Gives error:
+%\begin{equation*}
+%\int_{-1}^{4} \sin(x) \; dx \approx \sum_{n=1}^{10} f(x_n)
+%\nonumber 
+%\end{equation*}
+
+%\begin{equation*}
+%\int_{-1}^{4} \sin(x) \; dx \approx \sum_{n=1}^{10} f(x_n)
+%\end{equation*}
+
+$\begin{aligned}
+\int_{-1}^{4} \sin(x) \; dx \approx \sum_{n=1}^{10} f(x_n)
+\end{aligned}$
+
+% Uses small, inlined math symbols:
+%$\int_{-1}^{4} \sin(x) \; dx \approx \sum_{n=1}^{10} f(x_n) $   
+}; 
+% uses too small math font
     
 \end{tikzpicture}
 

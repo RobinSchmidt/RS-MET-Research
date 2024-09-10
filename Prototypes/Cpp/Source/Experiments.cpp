@@ -63,6 +63,7 @@ bool testRandomVectors()
   Real c12 = AT::sumOfProducts(&x1[0], &x2[0], N) / N;  // == c21
   Real s   = sqrt(2.0 / (c11 + c22)); 
   // Scaler. Theoretically s = sqrt(1/c11) = sqrt(1/c22). Practically, we average.
+  // Experimentally, it seems the correct value is sqrt(1 / (3*order)). ...Try it!
 
   // Compute correlated noise:
   Vec y1(N), y2(N);

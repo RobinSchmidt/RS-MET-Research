@@ -169,17 +169,14 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
   \addlegendentry{$T_2(x)$}
   
   \addplot[domain=-4:4, color=rsGreen] {1 - \x^2/2 + \x^4/24};
-  \addlegendentry{$T_2(x)$}
+  \addlegendentry{$T_4(x)$}
   
-% \addplot[domain=-5:5, color=rsGreen] {\x - \x^3/6 + \x^5/120};
-% \addlegendentry{$T_5(x)$}
+  \addplot[domain=-4:4, color=rsCyan] {1 - \x^2/2 + \x^4/24 - \x^6/720};
+  \addlegendentry{$T_6(x)$}  
   
-% \addplot[domain=-5:5, color=rsCyan] {\x - \x^3/6 + \x^5/120 - \x^7/5040};
-% \addlegendentry{$T_7(x)$}
-  
-% \addplot[domain=-6:6, color=rsBlue] {\x - \x^3/6 + \x^5/120 - \x^7/5040 + \x^9/362880};
-% \addlegendentry{$T_9(x)$}
-  
+  \addplot[domain=-5:5, color=rsBlue] {1 - \x^2/2 + \x^4/24 - \x^6/720 + \x^8/40320};
+  \addlegendentry{$T_8(x)$} 
+
 \end{axis}
 \end{tikzpicture}
 \end{figure}

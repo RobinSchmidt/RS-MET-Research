@@ -27,6 +27,8 @@
 \definecolor{rsGreen} {rgb}{0.0,0.5,0.0}
 \definecolor{rsCyan}  {rgb}{0.0,0.4,0.6}
 \definecolor{rsBlue}  {rgb}{0.0,0.0,1.0}
+\definecolor{rsPurple}{rgb}{0.5,0.0,0.8}
+
 % todo: rsMagenta or rsPurple
 
 %\definecolor{mygray}{rgb}{0.5,0.5,0.5}
@@ -53,19 +55,19 @@ Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=
 \caption{Monomials of degrees $0$ to $5$}
 \label{Fig:Monomials}
 \begin{tikzpicture}
-[domain=-1.1:1.1, range=-1.2:1.2, xscale=6, yscale=3, samples=50, thick, >=stealth']
+[domain=-1.1:1.1, range=-1.2:1.2, xscale=6, yscale=3, samples=50, very thick, >=stealth']
 
 % Coordinate axes:
 \draw[->] (-1.5,0) -- (1.5,0) node[below] {$x$};
 \draw[->] (0,-1.7) -- (0,1.9) node[left]  {$f(x)$};
 
 % Graphs:
-\draw[color=rsRed]  plot (\x,{pow(\x,0)}) node[right] {$x^0$};
-\draw[color=rsBlue] plot (\x,{pow(\x,1)}) node[right] {$x^1$};
-\draw[color=rsRed]  plot (\x,{pow(\x,2)}) node[right] {$x^2$};
-\draw[color=rsBlue] plot (\x,{pow(\x,3)}) node[right] {$x^3$};
-\draw[color=rsRed]  plot (\x,{pow(\x,4)}) node[right] {$x^4$};
-\draw[color=rsBlue] plot (\x,{pow(\x,5)}) node[right] {$x^5$};
+\draw[color=rsRed]    plot (\x,{pow(\x,0)}) node[right] {$x^0$};
+\draw[color=rsYellow] plot (\x,{pow(\x,1)}) node[right] {$x^1$};
+\draw[color=rsGreen]  plot (\x,{pow(\x,2)}) node[right] {$x^2$};
+\draw[color=rsCyan]   plot (\x,{pow(\x,3)}) node[right] {$x^3$};
+\draw[color=rsBlue]   plot (\x,{pow(\x,4)}) node[right] {$x^4$};
+\draw[color=rsPurple] plot (\x,{pow(\x,5)}) node[right] {$x^5$};
 
 % Tick marks on x-axis:
 \draw [shift={(-1,0)}] (0pt,+1pt) -- (0pt,-1pt) node [below] {$-1$};  

@@ -185,30 +185,26 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 %---------------------------------------------------------------------------------------------------
 \subsection{Riemann Integral}
 
-\newcommand\ra{-1} % ra = Riemann, a
-\newcommand\ratwo{-0.5} % ra = Riemann, a
+%\newcommand\ra{-1} % ra = Riemann, a
+%\newcommand\ratwo{-0.5} % ra = Riemann, a
 %\newcommand\rb{4} % rb = Riemann, b
-\newcommand\rbtwo{3.5} % rb = Riemann, b
+%\newcommand\rbtwo{3.5} % rb = Riemann, b
 
 \textcolor{blue}{Left-hand Riemann Sum} and 
 \textcolor{red}{Right-hand Riemann Sum}
 
 \begin{tikzpicture}
 
-    \draw[->] (\ra-0.5,0) -- (4+0.5,0);
-    \draw[->] (0,\ra-0.5) -- (0,4+0.5);
-    \draw[dashed] (\ra,0) -- (\ra,1) node[above] {$a$};
-    \draw[dashed] (4,0) -- (4,-1) node[below] {$b$};
+  \draw[->] (-1-0.5,0) -- (4+0.5,0);
+  \draw[->] (0,-1-0.5) -- (0,4+0.5);
+  \draw[dashed] (-1,0) -- (-1,1) node[above] {$a$};
+  \draw[dashed] (4,0) -- (4,-1) node[below] {$b$};
+      
+  \foreach \x in {-1,-0.5,...,3.5}
+    \draw[thick, fill=blue!25] 
+    (\x,0) -- (\x,{sin(deg(\x+0.25))}) -- (\x+.5,{sin(deg(\x+0.25))}) -- (\x+.5,0) -- cycle;
     
-    %Right-Hand
-%    \foreach \x in {\ratwo,0,...,4} % <--- my issues
-%    \draw[thick, fill=red!25] (\x-.5,0) -- (\x-.5,{sin(deg(\x))}) -- (\x,{sin(deg(\x))}) -- (\x,0) -- cycle;
-    
-    %Left-Hand
-    \foreach \x in {\ra,-0.5,...,\rbtwo} % <--- my issues
-    \draw[thick, fill=blue!25] (\x,0) -- (\x,{sin(deg(\x+0.25))}) -- (\x+.5,{sin(deg(\x+0.25))}) -- (\x+.5,0) -- cycle;
-    
-    \draw[ultra thick, domain=\ra:4, smooth, samples=100, variable=\x] plot ({\x},{sin(deg(\x))});
+  \draw[ultra thick, domain=-1:4, smooth, samples=100, variable=\x] plot ({\x},{sin(deg(\x))});
     
 \end{tikzpicture}
 

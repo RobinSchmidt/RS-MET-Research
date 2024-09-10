@@ -24,10 +24,10 @@
 \usepackage{color}
 \definecolor{rsRed}   {rgb}{0.7,0.0,0.0}
 \definecolor{rsYellow}{rgb}{0.5,0.4,0.0}
-\definecolor{rsGreen} {rgb}{0.0,0.4,0.0}
-\definecolor{rsCyan}  {rgb}{0.0,0.3,0.6}
-
-\definecolor{rsBlue} {rgb}{0.0,0.0,1.0}
+\definecolor{rsGreen} {rgb}{0.0,0.5,0.0}
+\definecolor{rsCyan}  {rgb}{0.0,0.4,0.6}
+\definecolor{rsBlue}  {rgb}{0.0,0.0,1.0}
+% todo: rsMagenta or rsPurple
 
 %\definecolor{mygray}{rgb}{0.5,0.5,0.5}
 %\definecolor{mymauve}{rgb}{0.58,0,0.82}
@@ -117,161 +117,6 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Taylor Polynomials}
-
-
-\pgfplotsset{width=19cm,height=6cm,compat=1.9}
-
-\begin{figure}[h]
-\centering
-\caption{Sine function and its Taylor polynomials}
-\label{Fig:TaylorExpansionSine}
-\begin{tikzpicture}
-\begin{axis}[xmin=-6,xmax=6,ymin=-1.2,ymax=1.2,samples=100,thick, xmajorgrids=true, ymajorgrids=true]
-
-  \addplot[domain=-6:6, color=black] {sin( \x r )};
-  \addlegendentry{\(\sin(x)\)}
-  
-  \addplot[domain=-6:6, color=rsRed] {x};
-  \addlegendentry{$T_1(x)$}
-  
- \addplot[domain=-3:3, color=rsYellow] {\x - \x^3/6};
-  \addlegendentry{$T_3(x)$}
-  
- \addplot[domain=-5:5, color=rsGreen] {\x - \x^3/6 + \x^5/120};
- \addlegendentry{$T_5(x)$}
-  
- \addplot[domain=-5:5, color=rsCyan] {\x - \x^3/6 + \x^5/120 - \x^7/5040};
- \addlegendentry{$T_7(x)$}
-  
- \addplot[domain=-6:6, color=rsBlue] {\x - \x^3/6 + \x^5/120 - \x^7/5040 + \x^9/362880};
- \addlegendentry{$T_9(x)$}
- 
- \addplot[domain=-6:6, color=black, very thick] {sin( \x r )}; 
- 
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-
-\begin{figure}[h]
-\centering
-\caption{Cosine function and its Taylor polynomials}
-\label{Fig:TaylorExpansionCosine}
-\begin{tikzpicture}
-\begin{axis}[xmin=-6,xmax=6,ymin=-1.2,ymax=1.2,samples=100,thick, xmajorgrids=true, ymajorgrids=true]
-
-  \addplot[domain=-6:6, color=black] {cos( \x r )};
-  \addlegendentry{\(\cos(x)\)}
-  
-  \addplot[domain=-6:6, color=rsRed] {1};
-  \addlegendentry{$T_0(x)$}
-  
-  \addplot[domain=-3:3, color=rsYellow] {1 - \x^2/2};
-  \addlegendentry{$T_2(x)$}
-  
-  \addplot[domain=-4:4, color=rsGreen] {1 - \x^2/2 + \x^4/24};
-  \addlegendentry{$T_4(x)$}
-  
-  \addplot[domain=-4:4, color=rsCyan] {1 - \x^2/2 + \x^4/24 - \x^6/720};
-  \addlegendentry{$T_6(x)$}  
-  
-  \addplot[domain=-5:5, color=rsBlue] {1 - \x^2/2 + \x^4/24 - \x^6/720 + \x^8/40320};
-  \addlegendentry{$T_8(x)$} 
-
-  \addplot[domain=-6:6, color=black, very thick] {cos( \x r )};
-
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-
-\pgfplotsset{width=15cm,height=10cm,compat=1.9}
-
-\begin{figure}[h]
-\centering
-\caption{Exponential function and its Taylor polynomials}
-\label{Fig:TaylorExpansionExp}
-\begin{tikzpicture}
-\begin{axis}[xmin=-3, xmax=3, ymin=-1.2, ymax=5.2, samples=100, thick, 
-             legend pos=north west, xmajorgrids=true, ymajorgrids=true]
-
-  \addplot[domain=-3:3, color=black] {exp(\x )};
-  \addlegendentry{$\exp(x)$}
-  
-  \addplot[domain=-3:3, color=rsRed] {1};
-  \addlegendentry{$T_0(x)$}
-  
-  \addplot[domain=-3:3, color=rsYellow] {1 + x};
-  \addlegendentry{$T_1(x)$}  
-  
-  \addplot[domain=-3:3, color=rsGreen] {1 + x + x^2/2};
-  \addlegendentry{$T_2(x)$}    
-  
-  \addplot[domain=-3:3, color=rsCyan] {1 + x + x^2/2 + x^3/6};
-  \addlegendentry{$T_3(x)$}
-  
-  \addplot[domain=-3:3, color=rsBlue] {1 + x + x^2/2 + x^3/6 + x^4/24};
-  \addlegendentry{$T_4(x)$}  
-  
-  % draw the exp again so it is in the foreground:
-  \addplot[domain=-3:3, color=black, very thick] {exp(\x )};
-  
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-
-
-% ToDo: 1 / (1 + x^2), 1 / (1 - x^2)
-
-% plots for:
-% -Fourier polynomials
-% -Derivative
-% -Riemann integral, Lebesgue integral
-
-%---------------------------------------------------------------------------------------------------
-\subsection{Bivariate Functions}
-
-\pgfplotsset{width=12cm,height=8cm,compat=1.9}
-
-\begin{figure}[h]
-\centering
-\caption{$f(x,y) = x e^{-(x^2+y^2)}$}
-\label{Fig:BivariateGaussian3D}
-\begin{tikzpicture}
-\begin{axis}
-   %[title=Bivariate Gaussian]
-   \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-
-\pgfplotsset{width=12cm,height=8cm,compat=1.9}
-
-\begin{figure}[h]
-\centering
-\caption{$f(x,y) = x e^{-(x^2+y^2)}$}
-\label{Fig:BivariateGaussianHeatMap}
-\begin{tikzpicture}
-\begin{axis}[
-%    title={$x \exp(-x^2-y^2)$},
-    domain=-2:2, view={0}{90}, colorbar right, colormap name = viridis ]
-    
-  \addplot3 [contour filled={number=15,},] 
-  {exp(-x^2-y^2)*x};
-  
-\end{axis}
-\end{tikzpicture}
-\end{figure}
-
-
-% colormaps: viridis
-
-% https://tikz.dev/pgfplots/reference-3dplots
-
-%---------------------------------------------------------------------------------------------------
 \subsection{Line Equations}
 Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{p}_2$ and various forms of the line equation embedded in the plot. It also shows how to draw dots and arrows and a coordinate grid. There's also an angle $\alpha$ drawn by a circular arc.
 
@@ -338,11 +183,171 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 \end{figure}
 
 
-
-
-
-
 % ToDo: triangles, polygons, ...
+
+%===================================================================================================
+\section{With PGFPlots}
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Taylor Polynomials}
+The figures (\ref{Fig:TaylorExpansionSine}), (\ref{Fig:TaylorExpansionCosine}), (\ref{Fig:TaylorExpansionExp}) show the first couple of Taylor polynomials for $\sin, \cos, \exp$ respectively.
+
+\pgfplotsset{width=19cm,height=6cm,compat=1.9}
+
+\begin{figure}[h]
+\centering
+\caption{Sine function and its Taylor polynomials}
+\label{Fig:TaylorExpansionSine}
+\begin{tikzpicture}
+\begin{axis}[xmin=-6, xmax=6, ymin=-1.2, ymax=1.2, samples=100, very thick, 
+             xmajorgrids=true, ymajorgrids=true]
+
+  \addplot[domain=-6:6, color=black, ultra thick] {sin( \x r )};
+  \addlegendentry{\(\sin(x)\)}
+  
+  \addplot[domain=-6:6, color=rsRed] {x};
+  \addlegendentry{$T_1(x)$}
+  
+ \addplot[domain=-3:3, color=rsYellow] {\x - \x^3/6};
+  \addlegendentry{$T_3(x)$}
+  
+ \addplot[domain=-5:5, color=rsGreen] {\x - \x^3/6 + \x^5/120};
+ \addlegendentry{$T_5(x)$}
+  
+ \addplot[domain=-5:5, color=rsCyan] {\x - \x^3/6 + \x^5/120 - \x^7/5040};
+ \addlegendentry{$T_7(x)$}
+  
+ \addplot[domain=-6:6, color=rsBlue] {\x - \x^3/6 + \x^5/120 - \x^7/5040 + \x^9/362880};
+ \addlegendentry{$T_9(x)$}
+ 
+ \addplot[domain=-6:6, color=black, ultra thick] {sin( \x r )}; 
+ 
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+\caption{Cosine function and its Taylor polynomials}
+\label{Fig:TaylorExpansionCosine}
+\begin{tikzpicture}
+\begin{axis}[xmin=-6, xmax=6, ymin=-1.2, ymax=1.2, samples=100, very thick, 
+             xmajorgrids=true, ymajorgrids=true]
+
+  \addplot[domain=-6:6, color=black, ultra thick] {cos( \x r )};
+  \addlegendentry{\(\cos(x)\)}
+  
+  \addplot[domain=-6:6, color=rsRed] {1};
+  \addlegendentry{$T_0(x)$}
+  
+  \addplot[domain=-3:3, color=rsYellow] {1 - \x^2/2};
+  \addlegendentry{$T_2(x)$}
+  
+  \addplot[domain=-4:4, color=rsGreen] {1 - \x^2/2 + \x^4/24};
+  \addlegendentry{$T_4(x)$}
+  
+  \addplot[domain=-4:4, color=rsCyan] {1 - \x^2/2 + \x^4/24 - \x^6/720};
+  \addlegendentry{$T_6(x)$}  
+  
+  \addplot[domain=-5:5, color=rsBlue] {1 - \x^2/2 + \x^4/24 - \x^6/720 + \x^8/40320};
+  \addlegendentry{$T_8(x)$} 
+
+  \addplot[domain=-6:6, color=black, ultra thick] {cos( \x r )};
+
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+
+\pgfplotsset{width=15cm,height=10cm,compat=1.9}
+
+\begin{figure}[h]
+\centering
+\caption{Exponential function and its Taylor polynomials}
+\label{Fig:TaylorExpansionExp}
+\begin{tikzpicture}
+\begin{axis}[xmin=-3, xmax=3, ymin=-1.2, ymax=5.2, samples=100, very thick, 
+             legend pos=north west, xmajorgrids=true, ymajorgrids=true]
+
+  \addplot[domain=-3:3, color=black, ultra thick] {exp(\x )};
+  \addlegendentry{$\exp(x)$}
+  
+  \addplot[domain=-3:3, color=rsRed] {1};
+  \addlegendentry{$T_0(x)$}
+  
+  \addplot[domain=-3:3, color=rsYellow] {1 + x};
+  \addlegendentry{$T_1(x)$}  
+  
+  \addplot[domain=-3:3, color=rsGreen] {1 + x + x^2/2};
+  \addlegendentry{$T_2(x)$}    
+  
+  \addplot[domain=-3:3, color=rsCyan] {1 + x + x^2/2 + x^3/6};
+  \addlegendentry{$T_3(x)$}
+  
+  \addplot[domain=-3:3, color=rsBlue] {1 + x + x^2/2 + x^3/6 + x^4/24};
+  \addlegendentry{$T_4(x)$}  
+  
+  % draw the exp again so it is in the foreground:
+  \addplot[domain=-3:3, color=black, ultra thick] {exp(\x )};
+  
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+
+
+% ToDo: 1 / (1 + x^2), 1 / (1 - x^2)
+
+% plots for:
+% -Fourier polynomials
+% -Derivative
+% -Riemann integral, Lebesgue integral
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Bivariate Functions}
+To plot bivariate functions, one can use the command \verb|\addplot3|. It can be configured to to do surface plots or heat maps. This is shown in figures (\ref{Fig:BivariateGaussian3D}) and (\ref{Fig:BivariateGaussianHeatMap}). 
+
+%\pgfplotsset{width=12cm,height=8cm,compat=1.9}
+\pgfplotsset{width=16cm,height=10cm,compat=1.9}
+
+\begin{figure}[h]
+\centering
+\caption{$f(x,y) = x e^{-(x^2+y^2)}$}
+\label{Fig:BivariateGaussian3D}
+\begin{tikzpicture}
+\begin{axis}
+   %[title=Bivariate Gaussian]
+   \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+
+%\pgfplotsset{width=12cm,height=8cm,compat=1.9}
+
+\begin{figure}[h]
+\centering
+\caption{$f(x,y) = x e^{-(x^2+y^2)}$}
+\label{Fig:BivariateGaussianHeatMap}
+\begin{tikzpicture}
+\begin{axis}[
+%    title={$x \exp(-x^2-y^2)$},
+    domain=-2:2, view={0}{90}, colorbar right, colormap name = viridis ]
+    
+  \addplot3 [contour filled={number=19,},] 
+  {exp(-x^2-y^2)*x};
+  
+\end{axis}
+\end{tikzpicture}
+\end{figure}
+
+
+% colormaps: viridis
+
+% https://tikz.dev/pgfplots/reference-3dplots
+
+
 
 
 % https://stackoverflow.com/questions/70338079/get-east-position-of-tikz-legend

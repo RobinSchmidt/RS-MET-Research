@@ -1,15 +1,27 @@
 
+----------------------------------------------------------------------------------------------------
+Math
+
 Nice big comprehensive list of math symbols:
 https://www.math.uci.edu/~xiangwen/pdf/LaTeX-Math-Symbols.pdf
 
 
-Tables:
+https://tex.stackexchange.com/questions/460408/how-to-add-a-cross-out-to-any-latex-symbol
+
+
+----------------------------------------------------------------------------------------------------
+Tables
+
 https://www.overleaf.com/learn/latex/Tables
 https://tex.stackexchange.com/questions/112343/beautiful-table-samples
 https://en.wikibooks.org/wiki/LaTeX/Tables
 
-https://tex.stackexchange.com/questions/460408/how-to-add-a-cross-out-to-any-latex-symbol
 
+
+
+
+----------------------------------------------------------------------------------------------------
+Graphics
 
 Tikz-Manual:
 https://tikz.dev/tikz
@@ -25,7 +37,27 @@ https://texample.net/tikz/examples/tag/diagrams/
 https://texample.net/tikz/examples/tag/charts/
 
 PGF-Plots:
+https://tikz.dev/pgfplots/reference-2dplots
+https://tikz.dev/pgfplots/reference-3dplots
+https://tikz.dev/pgfplots/reference-transformations    Polar plots
+https://tikz.dev/pgfplots/reference-annotations        Annotations
+
+https://tikz.dev/pgfplots/libs-colormaps    More colormaps
+https://tikz.dev/pgfplots/libs-colorbrewer  Create colormaps
+https://tikz.dev/pgfplots/libs-fillbetween  Fill areas between graphs
+https://tikz.dev/pgfplots/libs-groupplots   Multiplots
+https://tikz.dev/pgfplots/libs-statistics   Statistical plots
+https://tikz.dev/pgfplots/libs-ternary      Ternary diagrams (triangular, barycentric)
+
 https://tikz.dev/pgfplots/reference-specifyrange
+
+
+
+
+
+https://tikz.dev/pgfplots/reference-tikzinteroperability  For annotating a pgf plot with tikz
+
+
 https://www.overleaf.com/learn/latex/Pgfplots_package
 
 

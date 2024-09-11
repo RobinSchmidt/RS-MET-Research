@@ -1,0 +1,38 @@
+\include{Setup}
+
+\begin{document}
+
+\begin{figure}[h]
+\centering
+\caption{Sine and cosine function}
+\label{Fig:SineAndCosine}
+\begin{tikzpicture}
+[domain=-2:8.5, samples=50, thick, >=stealth']
+
+% Coordinate axes:
+\draw[->] (-2.0,0) -- (10.0,0) node[below] {$x$};
+\draw[->] (0,-1.4) -- (0,1.4) node[left]  {};
+
+% Graphs of sin(x) and cos(x):
+\draw[color=rsRed]   plot (\x,{sin(\x r)}) node[right] {$\sin x$};
+\draw[color=rsBlue]  plot (\x,{cos(\x r)}) node[right] {$\cos x$};
+% \x r means to convert '\x' from degrees to radians
+  
+% Tick marks on x-axis:
+\draw [shift={(-1.57,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$-\frac{\pi}{2}$};  
+\draw [shift={( 1.57,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$\frac{\pi}{2}$};
+\draw [shift={( 3.14,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$\pi$};
+\draw [shift={( 4.71,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$\frac{3\pi}{2}$};
+\draw [shift={( 6.28,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$2\pi$};
+\draw [shift={( 7.85,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$\frac{5\pi}{2}$};  
+  
+% Tick marks on y-axis:
+\draw [shift={(0,1)}]  (+3pt, 0pt) -- (-3pt, 0pt) node [left] {$1$};
+\draw [shift={(0,-1)}] (+3pt, 0pt) -- (-3pt, 0pt) node [left] {$-1$};
+    
+\end{tikzpicture}
+\end{figure}
+
+
+
+\end{document}

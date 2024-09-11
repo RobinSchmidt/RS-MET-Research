@@ -7,13 +7,31 @@
 
 \begin{document}
 
+
+
+
+
+% trying to draw in 3D arrows
+% https://tex.stackexchange.com/questions/267222/3d-arrows-with-tikz
+% shows also how to set local variables (using pgfsetmacro)
+
+% This looks relevant:
+% https://tex.stackexchange.com/questions/310478/pgfplot-3d-version-of-a-plane-and-its-the-gradient-vector
+
 \pgfplotsset{width=16cm,height=10cm,compat=1.9}
 \begin{tikzpicture}
-\begin{axis}
-   %[title=Bivariate Gaussian]
-   \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
+\begin{axis}[xlabel={$x$}, ylabel={$y$}]
+  \addplot3[surf, mesh] {x+y+1};
+  \draw[->, ultra thick] (0,0,0) -- (1,1,0);
+  \fill[red] (0,0,0) circle (2pt);
+  \draw[->] (1,1,0) -- (2,2,0);
 \end{axis}
 \end{tikzpicture}
+
+% It doesn't work - the arrow isn't there - maybe the poster has drawn it in by hand to show what
+% he wants to achieve?
+
+% https://tex.stackexchange.com/questions/518504/how-can-i-draw-gradient-arrows-on-iso-contour
 
 
 \end{document}

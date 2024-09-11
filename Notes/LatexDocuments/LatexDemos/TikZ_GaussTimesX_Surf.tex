@@ -3,7 +3,7 @@
 \begin{tikzpicture}
   \begin{axis}
     \addplot3
-      [surf, colormap/viridis, faceted color=rsGray20, 
+      [surf, colormap/viridis, faceted color=rsGray20, fill opacity = 1.0,
        domain=-2:2, samples=40] 
       { x * exp(-x^2-y^2) };
   \end{axis}
@@ -23,4 +23,5 @@
 % Maybe instead of specifying the color as rsGray20, use some name like meshGray. Rationale: We may
 % want to change the color for all plots at once. The Setup.tex file then acts like a style sheet. 
 % Maybe we can do something similar for the color-map, i.e, define a name like colorMapUnipolar, 
-% colorMapBipolar, etc.
+% colorMapBipolar, etc. One can also use fill opacity = 0.5 for making it sem-transparent - but for 
+% this plot, this doesn't look so good

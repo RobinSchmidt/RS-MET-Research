@@ -248,11 +248,7 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 \caption{$f(x,y) = x e^{-(x^2+y^2)}$}
 \label{Fig:BivariateGaussian3D}
 \pgfplotsset{width=16cm,height=10cm,compat=1.9}
-\begin{tikzpicture}
-\begin{axis}%[title=Bivariate Gaussian]
-   \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
-\end{axis}
-\end{tikzpicture}
+\include{TikZ_GaussTimesX_Surf}
 \end{figure}
 % ToDo: Try to draw in a gradient vector at (x,y) = (1,-1). It's a flat vector at the bottom, i.e.
 % the z-coordinate is zero. But maybe also draw a 3D "gradient" onto the landscape. It should start
@@ -260,8 +256,6 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 % gradient itself and the z-part by the length...maybe? Or no - the z-part should be determined as
 % follows: the overall direction should be tangential to the surface and the length should be given
 % by the length of the gradient
-
-
 
 
 
@@ -281,20 +275,6 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 \end{tikzpicture}
 \end{figure}
 
-
-% colormaps: viridis, cool
-
-% https://tikz.dev/pgfplots/reference-3dplots
-
-% https://stackoverflow.com/questions/70338079/get-east-position-of-tikz-legend
-% Has example for loading data from .csv file
-
-% Line thickness options: semithick, thick, very thick, ultra thick, line width=4pt
-
-% plotting data from files:
-% https://tikz.dev/pgfplots/reference-addplot#sec-4.3.4
-% \addplot table {filename.txt}
-
 %---------------------------------------------------------------------------------------------------
 \subsection{Parametric Surfaces}
 Figure \ref{Fig:Torus} shows how to plot parametric surfaces using a torus as example. This is the code to produce it:
@@ -306,18 +286,27 @@ Figure \ref{Fig:Torus} shows how to plot parametric surfaces using a torus as ex
 \pgfplotsset{width=16cm,height=10cm}
 \include{TikZ_Torus}
 \end{figure}
-% Taken from here:
-% https://tex.stackexchange.com/questions/348/how-to-draw-a-torus
-% ...and then modified. I use a different view angle and colormap. To render a partial torus, i.e.
-% one that is cut open and missing a piece, one need to restrict the "y domain", for example to
-% "y domain=0:2*3*pi/4". The torus takes quite long to compile. It's apparently quite complex.
-
-
-
 
 %===================================================================================================
 %\section{With Both}
 
-
-
 \end{document}
+
+
+%===================================================================================================
+
+\begin{comment}
+
+Line thickness options: semithick, thick, very thick, ultra thick, line width=4pt
+colormaps: viridis, cool
+
+https://tikz.dev/pgfplots/reference-3dplots
+
+
+Plotting data from files:
+https://stackoverflow.com/questions/70338079/get-east-position-of-tikz-legend
+https://tikz.dev/pgfplots/reference-addplot#sec-4.3.4
+\addplot table {filename.txt}
+
+\end{comment}
+

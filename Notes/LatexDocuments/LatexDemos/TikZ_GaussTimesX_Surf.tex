@@ -1,0 +1,9 @@
+\pgfplotsset{compat=1.9}
+
+\begin{tikzpicture}
+\begin{axis}%[title=Bivariate Gaussian]
+   \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
+\end{axis}
+\end{tikzpicture}
+
+

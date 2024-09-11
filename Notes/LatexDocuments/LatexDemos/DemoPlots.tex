@@ -1,3 +1,4 @@
+\include{Setup}
 
 \documentclass[12pt]{article}
 \topmargin=-1.0cm
@@ -224,6 +225,8 @@ N = 10, a = -1, b = 4
 
 \end{tikzpicture}
 
+% Maybe the rectangles below the x-axis should use another color like red
+
 %\begin{figure}[h]
 %\centering
 %\caption{Line Equations}
@@ -356,6 +359,11 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 %---------------------------------------------------------------------------------------------------
 \subsection{Multiplot of Monomials}
 
+\begin{figure}[h]
+\centering
+\caption{Monomials}
+\label{Fig:MultiplotMonomials}
+
 \pgfplotsset{width=7cm,compat=1.18}
 \begin{tikzpicture}
 \begin{groupplot}[group style={group size=4 by 2},height=5cm,width=5cm]
@@ -396,12 +404,60 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 
 \end{groupplot}
 \end{tikzpicture}
+\end{figure}
 
+%
+
+%---------------------------------------------------------------------------------------------------
+\subsection{Multiplot of Different of Poles}
+
+% Doesn't work yet:
+\begin{figure}[h]
+\centering
+\caption{Monomials}
+\label{Fig:MultiplotPoles}
+
+\pgfplotsset{width=7cm,compat=1.18}
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=4 by 1},height=5cm,width=5cm]
+
+\nextgroupplot
+\addplot[domain=-1:1, color=rsBlue, very thick] {1/x};
+
+% where do i put the ymin=-2, ymax=+2? 
+% into  \begin{groupplot}[ymin=-2,ymax=+2]  or into \nextgroupplot[ymin=-2,ymax=+2]
+
+% 1st row - even monomials
+%\nextgroupplot
+%\begin{axis}[ymin=-2,ymax=+2,enlargelimits=false]
+%\addplot[domain=-1:1, ymin=-2.2, ymax=2.2, color=rsBlue, very thick] {1/x};
+%\end{axis}
+
+%\draw (0.0,1.1) node[label = {center:$f(x)=x^0$}]{};
+
+%	\nextgroupplot 
+%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^2};
+%	\draw (0.0,0.8) node[label = {center:$f(x)=x^2$}]{};
+%	
+%	\nextgroupplot 
+%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^4};
+%	\draw (0.0,0.8) node[label = {center:$f(x)=x^4$}]{};
+%	
+%	\nextgroupplot 
+%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^6};
+%	\draw (0.0,0.8) node[label = {center:$f(x)=x^6$}]{};
+
+
+\end{groupplot}
+\end{tikzpicture}
+\end{figure}
 
 
 % ToDo: 1 / (1 + x^2), 1 / (1 - x^2)
 
 % plots for:
+% -multiplot for different kinds of poles: 1/x, -1/x, 1/x^2, -1/x^2. Maybe make also complex
+%  plots. I think, the feature of jumping from -inf to +inf rotates?
 % -Fourier polynomials
 % -Derivative
 % -Riemann integral, Lebesgue integral

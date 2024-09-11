@@ -56,7 +56,7 @@ https://tikz.dev/pgfplots/reference-specifyrange
 Examples:
 https://texample.net/tikz/examples/
 https://www.integral-domain.org/lwilliams/Resources/tikzsnippets.php
-
+https://github.com/janosh/tikz/
 
 
 https://tikz.dev/pgfplots/reference-tikzinteroperability  For annotating a pgf plot with tikz

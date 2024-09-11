@@ -14,10 +14,60 @@
 
 
 
+
 %---------------------------------------------------------------------------------------------------
 % 3D plots with arrows drawn in
 
-%    \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
+
+
+% Torus:
+\begin{tikzpicture}
+\begin{axis}
+  \addplot3[surf, colormap/cool, samples=20, domain=0:2*pi,y domain=0:2*pi, z buffer=sort]
+  ({(2+cos(deg(x)))*cos(deg(y+pi/2))}, 
+   {(2+cos(deg(x)))*sin(deg(y+pi/2))}, 
+   {sin(deg(x))});
+\end{axis}
+\end{tikzpicture}
+% From here:
+% https://tex.stackexchange.com/questions/348/how-to-draw-a-torus
+
+% Fancy Torus:
+
+%\begin{tikzpicture}
+%  \begin{axis}[
+%      axis equal image,
+%      axis lines=middle,
+%      xmax=18,zmax=5,
+%      ticks=none,
+%      clip bounding box=upper bound,
+%      colormap/blackwhite
+%    ]
+%
+%    \addplot3[domain=0:360,y domain=0:320, samples=50,surf,z buffer=sort]
+%    ({(12 + 3 * cos(x)) * cos(y)} ,
+%    {(12 + 3 * cos(x)) * sin(y)},
+%    {3 * sin(x)});
+%    % use axis coordinate system to draw the radii
+%    \draw [thick,blue] (axis cs: 0,0,0) -- (axis cs: 12,0,0) node [midway,above=-2] {$R$};
+%    \draw [thick,red] (axis cs: 12,-0.2,0) -- (axis cs: 12,3.7,0) node [midway,below right=-3] {$r$};
+%
+%    % use axis coordinate system to draw fake x, y and z axes
+%    \draw [-latex] (axis cs: 0,0,0) -- node [pos=0.9, xshift=0.5em]{$z$}(axis cs: 0,0,10);
+%    \draw [-latex] (axis cs: 0,-15,0) --
+%    node [pos=0.9, xshift=-1em, yshift=0.5em]{$y$}(axis cs: 0,-20,0);
+%    \draw (axis cs: 0,0,0) -- (axis cs: 0,9,0);
+%    \draw (axis cs: 0,0,0) -- (axis cs: -9,0,0);
+%  \end{axis}
+%\end{tikzpicture}
+
+% from here:
+% https://tikz.net/torus/
+% https://github.com/janosh/tikz/
+% Gives error "TeX capacity exceeded, sorry [main memory size=3000000]. \end{axis}"
+% See:
+% https://tex.stackexchange.com/questions/7953/how-to-expand-texs-main-memory-size-pgfplots-memory-overload
+% https://www.florian-rappl.de/Articles/Page/239/latex-memory
 
 
 \pgfplotsset{width=16cm,height=10cm,compat=1.12}
@@ -63,7 +113,7 @@
 \end{axis}
 \end{tikzpicture}
 % It's important to use compat=1.12 ...or maybe higher. With 1.9, it didn't work
-% ToDo: the arrow-head still looks kinda ugly - try to improve that
+% ToDo: the arrow-head still looks kinda ugly - try to improve that - ok - done
 
 
 % See also:
@@ -71,5 +121,12 @@
 
 
 % https://tex.stackexchange.com/questions/631435/tikz-3d-surface-plot
+
+% Try drawing a torus with tangential plane, unit normal vector
+% https://tex.stackexchange.com/questions/348/how-to-draw-a-torus
+
+% https://latexdraw.com/how-to-draw-a-torus-in-latex-using-tikz/?utm_content=cmp-true#t-1608582125077
+
+% https://tikz.net/torus/
 
 \end{document}

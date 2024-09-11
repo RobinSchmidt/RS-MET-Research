@@ -28,8 +28,10 @@
 
 # Build intermediates (LaTeX):
 *.aux
+*.auxlock
 *.bbl
 *.log
+*.md5
 *.out
 *.toc
 

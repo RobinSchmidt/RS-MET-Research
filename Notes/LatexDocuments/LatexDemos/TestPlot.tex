@@ -11,6 +11,38 @@
 
 
 
+
+
+
+%---------------------------------------------------------------------------------------------------
+% 3D plots with arrows drawn in
+
+%    \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
+
+
+\pgfplotsset{width=16cm,height=10cm,compat=1.12}
+\begin{tikzpicture}[thick, >=stealth']
+\begin{axis}[xlabel={$x$}, ylabel={$y$}, xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=+1.5, samples=15]
+  \addplot3[surf, faceted color=black, fill=white, domain=-1:1, y domain=-1:1] 
+  {1-x^2-y^2};
+%  \draw[->, ultra thick] (0,0,0) -- (1,1,0);
+%  \fill[black] (0,0,0) circle (3pt);
+\end{axis}
+\end{tikzpicture}
+% "domain" means "x domain", "y domain" means what it says
+% surf does not seem to accept the draw=black command - ah one needs to use "faceted color = black"
+
+
+\pgfplotsset{width=16cm,height=10cm,compat=1.12}
+\begin{tikzpicture}[thick, >=stealth']
+\begin{axis}[xlabel={$x$}, ylabel={$y$}, xmin=-6,xmax=6,ymin=-5,ymax=+5]
+  \addplot3[surf, mesh] {x+y+1};
+  \draw[->, ultra thick] (0,0,0) -- (1,1,0);
+  \fill[black] (0,0,0) circle (3pt);
+\end{axis}
+\end{tikzpicture}
+
+
 % trying to draw in 3D arrows
 % https://tex.stackexchange.com/questions/267222/3d-arrows-with-tikz
 % shows also how to set local variables (using pgfsetmacro)
@@ -19,15 +51,14 @@
 % https://tex.stackexchange.com/questions/310478/pgfplot-3d-version-of-a-plane-and-its-the-gradient-vector
 
 \pgfplotsset{width=16cm,height=10cm,compat=1.12}
-\begin{tikzpicture}
+\begin{tikzpicture}[thick, >=stealth']
 \begin{axis}[xlabel={$x$}, ylabel={$y$}]
   \addplot3[surf, mesh] {x+y+1};
   \draw[->, ultra thick] (0,0,0) -- (1,1,0);
-  \fill[red] (0,0,0) circle (2pt);
-%  \draw[->] (1,1,0) -- (2,2,0);
+  \fill[black] (0,0,0) circle (3pt);
 \end{axis}
 \end{tikzpicture}
-% It's important to use compat=1.12 ...ro maybe higher. With 1.9, it didn't work
+% It's important to use compat=1.12 ...or maybe higher. With 1.9, it didn't work
 % ToDo: the arrow-head still looks kinda ugly - try to improve that
 
 

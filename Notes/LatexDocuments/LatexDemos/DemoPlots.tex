@@ -371,8 +371,11 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 \nextgroupplot \addplot[domain=-1:1, color=rsBlue, very thick] {x^3};
 \nextgroupplot \addplot[domain=-1:1, color=rsBlue, very thick] {x^5};
 \nextgroupplot \addplot[domain=-1:1, color=rsBlue, very thick] {x^7};
+\draw (0.0,0.8) node[label = {center:$f(x)=x^7$}]{};
+%\node[align=left] at (0.5,0.5) {}
 
 % ToDo: write f(x) = x^2 etc into the plots
+% just adding  title=$x^1$ into the bracketed parameter list doesn't work
 \end{groupplot}
 \end{tikzpicture}
 

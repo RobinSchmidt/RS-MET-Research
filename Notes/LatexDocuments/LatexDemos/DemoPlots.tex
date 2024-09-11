@@ -427,16 +427,22 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 \subsection{Bivariate Functions}
 To plot bivariate functions, one can use the command \verb|\addplot3|. It can be configured to to do surface plots or heat maps. This is shown in figures \ref{Fig:BivariateGaussian3D} and \ref{Fig:BivariateGaussianHeatMap}. 
 
-%\pgfplotsset{width=12cm,height=8cm,compat=1.9}
+\begin{verbatim}
 \pgfplotsset{width=16cm,height=10cm,compat=1.9}
+\begin{tikzpicture}
+\begin{axis}
+  \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
+\end{axis}
+\end{tikzpicture}
+\end{verbatim}
 
 \begin{figure}[h]
 \centering
 \caption{$f(x,y) = x e^{-(x^2+y^2)}$}
 \label{Fig:BivariateGaussian3D}
+\pgfplotsset{width=16cm,height=10cm,compat=1.9}
 \begin{tikzpicture}
-\begin{axis}
-   %[title=Bivariate Gaussian]
+\begin{axis}%[title=Bivariate Gaussian]
    \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
 \end{axis}
 \end{tikzpicture}
@@ -449,7 +455,8 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 % by the length of the gradient
 
 
-%\pgfplotsset{width=12cm,height=8cm,compat=1.9}
+
+
 
 \begin{figure}[h]
 \centering

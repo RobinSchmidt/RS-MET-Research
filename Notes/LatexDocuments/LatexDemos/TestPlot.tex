@@ -7,34 +7,46 @@
 
 \begin{document}
 
+
+
+% Doesn't work yet:
 \begin{figure}[h]
 \centering
-\caption{Sine and cosine function}
-\label{Fig:SineAndCosine}
+\caption{Monomials}
+\label{Fig:MultiplotPoles}
+
+\pgfplotsset{width=7cm,compat=1.18}
 \begin{tikzpicture}
-[domain=-2:8.5, samples=50, thick, >=stealth']
+\begin{groupplot}[group style={group size=4 by 1},height=5cm,width=5cm]
 
-% Coordinate axes:
-\draw[->] (-2.0,0) -- (10.0,0) node[below] {$x$};
-\draw[->] (0,-1.4) -- (0,1.4) node[left]  {};
+\nextgroupplot
+\addplot[domain=-1:1, color=rsBlue, very thick] {1/x};
 
-% Graphs of sin(x) and cos(x):
-\draw[color=rsRed]   plot (\x,{sin(\x r)}) node[right] {$\sin x$};
-\draw[color=rsBlue]  plot (\x,{cos(\x r)}) node[right] {$\cos x$};
-% \x r means to convert '\x' from degrees to radians
-  
-% Tick marks on x-axis:
-\draw [shift={(-1.57,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$-\frac{\pi}{2}$};  
-\draw [shift={( 1.57,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$\frac{\pi}{2}$};
-\draw [shift={( 3.14,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$\pi$};
-\draw [shift={( 4.71,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$\frac{3\pi}{2}$};
-\draw [shift={( 6.28,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$2\pi$};
-\draw [shift={( 7.85,0)}] (0pt,+3pt) -- (0pt,-3pt) node [below] {$\frac{5\pi}{2}$};  
-  
-% Tick marks on y-axis:
-\draw [shift={(0,1)}]  (+3pt, 0pt) -- (-3pt, 0pt) node [left] {$1$};
-\draw [shift={(0,-1)}] (+3pt, 0pt) -- (-3pt, 0pt) node [left] {$-1$};
-    
+% where do i put the ymin=-2, ymax=+2? 
+% into  \begin{groupplot}[ymin=-2,ymax=+2]  or into \nextgroupplot[ymin=-2,ymax=+2]
+
+% 1st row - even monomials
+%\nextgroupplot
+%\begin{axis}[ymin=-2,ymax=+2,enlargelimits=false]
+%\addplot[domain=-1:1, ymin=-2.2, ymax=2.2, color=rsBlue, very thick] {1/x};
+%\end{axis}
+
+%\draw (0.0,1.1) node[label = {center:$f(x)=x^0$}]{};
+
+%	\nextgroupplot 
+%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^2};
+%	\draw (0.0,0.8) node[label = {center:$f(x)=x^2$}]{};
+%	
+%	\nextgroupplot 
+%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^4};
+%	\draw (0.0,0.8) node[label = {center:$f(x)=x^4$}]{};
+%	
+%	\nextgroupplot 
+%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^6};
+%	\draw (0.0,0.8) node[label = {center:$f(x)=x^6$}]{};
+
+
+\end{groupplot}
 \end{tikzpicture}
 \end{figure}
 

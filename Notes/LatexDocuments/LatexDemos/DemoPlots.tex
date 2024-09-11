@@ -56,19 +56,7 @@ Under construction....
 \include{TikZ_RiemannIntegral}
 \end{figure}
 
-
 % Maybe the rectangles below the x-axis should use another color like red
-
-%\begin{figure}[h]
-%\centering
-%\caption{Line Equations}
-%\label{Fig:RiemannIntegral}
-%\end{figure}
-
-% ToDo: triangles, polygons, ...
-
-% https://tex.stackexchange.com/questions/554044/riemann-integral-on-tikz-with-commands
-
 
 %---------------------------------------------------------------------------------------------------
 %\subsection{Lebesgue Integral}
@@ -257,22 +245,11 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 % follows: the overall direction should be tangential to the surface and the length should be given
 % by the length of the gradient
 
-
-
 \begin{figure}[h]
 \centering
 \caption{$f(x,y) = x e^{-(x^2+y^2)}$}
 \label{Fig:BivariateGaussianHeatMap}
-\begin{tikzpicture}
-\begin{axis}[
-%    title={$x \exp(-x^2-y^2)$},
-    domain=-2:2, view={0}{90}, colorbar right, colormap name = viridis ]
-    
-  \addplot3 [contour filled={number=19,},] 
-  {exp(-x^2-y^2)*x};
-  
-\end{axis}
-\end{tikzpicture}
+\include{TikZ_GaussTimesX_Heat}
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
@@ -307,6 +284,12 @@ Plotting data from files:
 https://stackoverflow.com/questions/70338079/get-east-position-of-tikz-legend
 https://tikz.dev/pgfplots/reference-addplot#sec-4.3.4
 \addplot table {filename.txt}
+
+
+ToDo: triangles, polygons, ...
+
+https://tex.stackexchange.com/questions/554044/riemann-integral-on-tikz-with-commands
+
 
 \end{comment}
 

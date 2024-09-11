@@ -2,10 +2,11 @@
 
 \begin{tikzpicture}
 \begin{axis}%[title=Bivariate Gaussian]
-   \addplot3 [surf,colormap/viridis,domain=-2:2] {x * exp(-x^2-y^2)};
+   \addplot3 [surf,colormap/viridis,domain=-2:2, samples=40] {x * exp(-x^2-y^2)};
 \end{axis}
 \end{tikzpicture}
 
 
 % Try using "colormap/viridis" instead of "fill=white"
 % ...done - yes - looks better - but maybe use more samples - it looks a bit rough
+% Using the smooth option works only for curves. ..ok - with 40 samples, it looks good

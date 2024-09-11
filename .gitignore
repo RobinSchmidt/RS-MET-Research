@@ -35,7 +35,7 @@
 *.out
 *.toc
 
-# IDE generated:
+# IDE generated (by Visual Studio):
 *.exp
 *.idb
 *.ilk
@@ -64,6 +64,8 @@
 # These files appear only during builds and are automatically deleted when the build is finished. 
 # When comitting during a build phase they might get accidently added which we want to avoid.
 
+# ToDo:
+# Document what the file formats mean.
 
 #---------------------------------------------------------------------------------------------------
 # Ignored folders:

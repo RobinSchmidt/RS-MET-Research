@@ -3,13 +3,13 @@
 \begin{document}
 
 \title{Demo Plots with TikZ and PGF}
-%\subtitle{(A Grab-Bag of Copy-And-Paste Recipes)}  % error!
 \author{Robin Schmidt}
 \maketitle
 
+%===================================================================================================
+
 %---------------------------------------------------------------------------------------------------
-%\subsection{Monomials}
-%Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=6, yscale=3|. The even ones are drawn in red, the odd ones in blue.
+% Monomials
 
 \begin{figure}[h]
 \centering
@@ -20,8 +20,7 @@
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
-%\subsection{Sine and Cosine}
-%Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default size, i.e. without using \verb|scale|, \verb|xscale|, \verb|yscale|. We draw the tick marks on the $x$-axis manually as short lines.
+% Sine and Cosine
 
 \begin{figure}[h]
 \centering
@@ -31,8 +30,7 @@
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
-%\subsection{Line Equations}
-%Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{p}_2$ and various forms of the line equation embedded in the plot. It also shows how to draw dots and arrows and a coordinate grid. There's also an angle $\alpha$ drawn by a circular arc.
+% Line Equations
 
 \begin{figure}[h]
 \centering
@@ -42,8 +40,7 @@
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
-%\subsection{Riemann Integral}
-%Under construction....
+% Riemann Integral
 
 \begin{figure}[h]
 \centering
@@ -55,13 +52,7 @@
 % Maybe the rectangles below the x-axis should use another color like red
 
 %---------------------------------------------------------------------------------------------------
-%\subsection{Lebesgue Integral}
-
-
-
-%---------------------------------------------------------------------------------------------------
-%\subsection{Taylor Polynomials}
-%The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref{Fig:TaylorExpansionExp} show the first couple of Taylor polynomials for $\sin, \cos, \exp$ respectively.
+% Taylor Polynomials
 
 \begin{figure}[h]
 \centering
@@ -87,9 +78,10 @@
 \include{TikZ_TaylorPolysExp}
 \end{figure}
 
+% ToDo: 1 / (1 + x^2), 1 / (1 - x^2)
 
 %---------------------------------------------------------------------------------------------------
-%\subsection{Multiplot of Monomials}
+% Multiplot of Monomials
 
 \begin{figure}[h]
 \centering
@@ -99,10 +91,8 @@
 \include{TikZ_Monomials_0-7_Group}
 \end{figure}
 
-%TikZ_Monomials_0-7_Group.tex
-
 %---------------------------------------------------------------------------------------------------
-%\subsection{Multiplot of Different of Poles}
+% Multiplot of Different of Poles
 
 \begin{figure}[h]
 \centering
@@ -115,17 +105,8 @@
 % With group plots, we cannot use "\begin{axis}[params] ... end{axis}". To use parameters in a
 % subplot of a group, we should pass the parameters to tzhe newgrouplot command instead
 
-% ToDo: 1 / (1 + x^2), 1 / (1 - x^2)
-
-% plots for:
-% -multiplot for different kinds of poles: 1/x, -1/x, 1/x^2, -1/x^2. Maybe make also complex
-%  plots. I think, the feature of jumping from -inf to +inf rotates?
-
-
-
 %---------------------------------------------------------------------------------------------------
-%\subsection{Bivariate Functions}
-%To plot bivariate functions, one can use the command \verb|\addplot3|. It can be configured to to do surface plots or heat maps. This is shown in figures \ref{Fig:BivariateGaussian3D} and \ref{Fig:BivariateGaussianHeatMap}. 
+% Bivariate Functions
 
 \begin{figure}[h]
 \centering
@@ -150,7 +131,7 @@
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
-%\subsection{Parametric Surfaces}
+% Parametric Surfaces
 
 \begin{figure}[h]
 \centering
@@ -160,14 +141,9 @@
 \include{TikZ_Torus}
 \end{figure}
 
-
-
-
+%===================================================================================================
 
 \end{document}
-
-
-%===================================================================================================
 
 \begin{comment}
 

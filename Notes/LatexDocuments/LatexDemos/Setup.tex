@@ -35,6 +35,36 @@
 \definecolor{rsCyan}  {rgb}{0.0,0.4,0.6}
 \definecolor{rsBlue}  {rgb}{0.0,0.0,1.0}
 \definecolor{rsPurple}{rgb}{0.5,0.0,0.8}
+% rename these colors to plotRed, plotYellow, etc. - maybe
 
 %\definecolor{mygray}{rgb}{0.5,0.5,0.5}
 %\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+
+
+% For formatted source code:
+
+%\usepackage{listings}            
+%\lstset{
+%  backgroundcolor=\color{white},   
+%  basicstyle=\footnotesize\ttfamily,  % the size of the fonts that are used for the code
+%  captionpos=none,                    % no captions (and no empty space either)
+%  commentstyle=\color{rsGreen},       % comment style
+%  frame=single,	                      % adds a frame around the code
+%  keywordstyle=\color{rsBlue},          % keyword style
+%  stringstyle=\color{rsPurple},       % string literal style
+%  columns=flexible,                   %
+%  keepspaces=true,                    % keeps spaces in text
+%  tabsize=2,
+%}
+
+% The idea is to give the latex code for the tikz pictures in the lstlisting environment like so:
+%
+%   \begin{lstlisting}[language=TeX]
+%    ...
+%   \end{lstlisting}
+%
+% But it doesn't really look good. The "begin" keyword seems to be not recognized. So, for now, I
+% just use the verbatim environment instead.
+
+

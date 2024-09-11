@@ -9,69 +9,8 @@
 
 
 
-
-
-
-
-
-
 %---------------------------------------------------------------------------------------------------
 % 3D plots with arrows drawn in
-
-
-\begin{figure}[h]
-\centering
-\caption{Complete and partial torus}
-\label{Fig:Tori}
-
-\pgfplotsset{width=8cm,compat=1.18}
-\begin{tikzpicture}
-\begin{groupplot}[group style={group size=2 by 1}, height=6cm, width=9cm]
-
-% Complete torus:
-\nextgroupplot[view={60}{60}]
-  \addplot3[surf, colormap/viridis, samples=30, domain=0:2*pi, y domain=0:2*pi, z buffer=sort]
-  ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
-   {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
-   {sin(deg(x))});
-
-% Partial torus:
-\nextgroupplot[view={60}{60}]
-  \addplot3[surf, colormap/viridis, samples=30, domain=0:2*pi, y domain=0:2*3*pi/4, z buffer=sort]
-  ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
-   {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
-   {sin(deg(x))});
-
-\end{groupplot}
-\end{tikzpicture}
-
-\end{figure}
-
-
-
-% Torus:
-\pgfplotsset{width=16cm,height=10cm,compat=1.12}
-\begin{tikzpicture}
-\begin{axis}[view={60}{60}]
-  \addplot3[surf, colormap/viridis, samples=30, domain=0:2*pi, y domain=0:2*pi, z buffer=sort]
-  ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
-   {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
-   {sin(deg(x))});
-\end{axis}
-\end{tikzpicture}
-% From here:
-% https://tex.stackexchange.com/questions/348/how-to-draw-a-torus
-% But modified - different view angle and colormap
-
-% Torues segment:
-\begin{tikzpicture}
-\begin{axis}[view={60}{60}]
-  \addplot3[surf, colormap/viridis, samples=30, domain=0:2*pi, y domain=0:2*3*pi/4, z buffer=sort]
-  ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
-   {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
-   {sin(deg(x))});
-\end{axis}
-\end{tikzpicture}
 
 
 
@@ -111,6 +50,9 @@
 % See:
 % https://tex.stackexchange.com/questions/7953/how-to-expand-texs-main-memory-size-pgfplots-memory-overload
 % https://www.florian-rappl.de/Articles/Page/239/latex-memory
+
+
+
 
 
 \pgfplotsset{width=16cm,height=10cm,compat=1.12}

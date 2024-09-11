@@ -379,42 +379,36 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 % Doesn't work yet:
 \begin{figure}[h]
 \centering
-\caption{Monomials}
+\caption{Poles}
 \label{Fig:MultiplotPoles}
 
 \pgfplotsset{width=7cm,compat=1.18}
 \begin{tikzpicture}
-\begin{groupplot}[group style={group size=4 by 1},height=5cm,width=5cm]
+\begin{groupplot}[group style={group size=2 by 2}, height=6cm, width=9cm]
 
-\nextgroupplot
-\addplot[domain=-1:1, color=rsBlue, very thick] {1/x};
+\nextgroupplot[xmin=-1,xmax=1,ymin=-20,ymax=+20, samples=101]
+\addplot[domain=-1:-0.01, color=rsBlue, very thick] { 1/x };
+\addplot[domain=+0.01:+1, color=rsBlue, very thick] { 1/x };
+\draw (-1.0,13) node[label = {right:$f(x)=1/x$}]{};
+% We split the domain into two parts to avoid the pole because having it in the domain would result
+% in a (almost) vertical line in the plot at x=0
 
-% where do i put the ymin=-2, ymax=+2? 
-% into  \begin{groupplot}[ymin=-2,ymax=+2]  or into \nextgroupplot[ymin=-2,ymax=+2]
+\nextgroupplot[xmin=-1,xmax=1,ymin=-20,ymax=+20, samples=101]
+\addplot[domain=-1:1, color=rsBlue, very thick] { 1/abs(x) };
+\draw (-1.0,13) node[label = {right:$f(x)=1/|x|$}]{};
 
-% 1st row - even monomials
-%\nextgroupplot
-%\begin{axis}[ymin=-2,ymax=+2,enlargelimits=false]
-%\addplot[domain=-1:1, ymin=-2.2, ymax=2.2, color=rsBlue, very thick] {1/x};
-%\end{axis}
+\nextgroupplot[xmin=-1,xmax=1,ymin=-20,ymax=+20, samples=101]
+\addplot[domain=-1:-0.01, color=rsBlue, very thick] { -1/x };
+\addplot[domain=+0.01:+1, color=rsBlue, very thick] { -1/x };
+\draw (-1.0,13) node[label = {right:$f(x)=-1/x$}]{};
 
-%\draw (0.0,1.1) node[label = {center:$f(x)=x^0$}]{};
-
-%	\nextgroupplot 
-%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^2};
-%	\draw (0.0,0.8) node[label = {center:$f(x)=x^2$}]{};
-%	
-%	\nextgroupplot 
-%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^4};
-%	\draw (0.0,0.8) node[label = {center:$f(x)=x^4$}]{};
-%	
-%	\nextgroupplot 
-%	\addplot[domain=-1:1, color=rsBlue, very thick] {x^6};
-%	\draw (0.0,0.8) node[label = {center:$f(x)=x^6$}]{};
-
+\nextgroupplot[xmin=-1,xmax=1,ymin=-20,ymax=+20, samples=101]
+\addplot[domain=-1:1, color=rsBlue, very thick] { -1/abs(x) };
+\draw (-1.0,13) node[label = {right:$f(x)=-1/|x|$}]{};
 
 \end{groupplot}
 \end{tikzpicture}
+
 \end{figure}
 
 
@@ -445,6 +439,12 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 \end{axis}
 \end{tikzpicture}
 \end{figure}
+% ToDo: Try to draw in a gradient vector at (x,y) = (1,-1). It's a flat vector at the bottom, i.e.
+% the z-coordinate is zero. But maybe also draw a 3D "gradient" onto the landscape. It should start
+% at (x,y,f(x,y)) and the (x,y) part of the direction should be given by the x,y coords of the
+% gradient itself and the z-part by the length...maybe? Or no - the z-part should be determined as
+% follows: the overall direction should be tangential to the surface and the length should be given
+% by the length of the gradient
 
 
 %\pgfplotsset{width=12cm,height=8cm,compat=1.9}

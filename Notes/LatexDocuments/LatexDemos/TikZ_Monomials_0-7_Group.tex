@@ -1,0 +1,42 @@
+\pgfplotsset{compat=1.18}
+
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=4 by 2},height=5cm,width=5cm]
+
+% 1st row - even monomials
+\nextgroupplot 
+\addplot[domain=-1:1, color=rsBlue, very thick] {x^0};
+\draw (0.0,1.1) node[label = {center:$f(x)=x^0$}]{};
+
+\nextgroupplot 
+\addplot[domain=-1:1, color=rsBlue, very thick] {x^2};
+\draw (0.0,0.8) node[label = {center:$f(x)=x^2$}]{};
+
+\nextgroupplot 
+\addplot[domain=-1:1, color=rsBlue, very thick] {x^4};
+\draw (0.0,0.8) node[label = {center:$f(x)=x^4$}]{};
+
+\nextgroupplot 
+\addplot[domain=-1:1, color=rsBlue, very thick] {x^6};
+\draw (0.0,0.8) node[label = {center:$f(x)=x^6$}]{};
+
+% 2nd row - odd monomials:
+\nextgroupplot 
+\addplot[domain=-1:1, color=rsBlue, very thick] {x^1};
+\draw (0.0,0.8) node[label = {center:$f(x)=x^1$}]{};
+
+\nextgroupplot 
+\addplot[domain=-1:1, color=rsBlue, very thick] {x^3};
+\draw (0.0,0.8) node[label = {center:$f(x)=x^3$}]{};
+
+\nextgroupplot 
+\addplot[domain=-1:1, color=rsBlue, very thick] {x^5};
+\draw (0.0,0.8) node[label = {center:$f(x)=x^5$}]{};
+
+\nextgroupplot 
+\addplot[domain=-1:1, color=rsBlue, very thick] {x^7};
+\draw (0.0,0.8) node[label = {center:$f(x)=x^7$}]{};
+
+\end{groupplot}
+\end{tikzpicture}
+

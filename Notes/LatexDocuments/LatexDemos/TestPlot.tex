@@ -18,6 +18,15 @@
 % This looks relevant:
 % https://tex.stackexchange.com/questions/310478/pgfplot-3d-version-of-a-plane-and-its-the-gradient-vector
 
+\pgfplotsset{width=16cm,height=10cm,compat=1.12}
+\begin{tikzpicture}
+\begin{axis}[xlabel={$x$}, ylabel={$y$}, zlabel={$z$}]
+  \addplot3[surf, mesh] {x+y+1};
+  \draw[red] (0,0,0) -- (1,1,1);
+  \fill[black] (0,0,0) circle (2pt);
+\end{axis}
+\end{tikzpicture}
+
 \pgfplotsset{width=16cm,height=10cm,compat=1.9}
 \begin{tikzpicture}
 \begin{axis}[xlabel={$x$}, ylabel={$y$}]

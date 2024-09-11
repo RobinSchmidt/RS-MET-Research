@@ -483,7 +483,20 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 
 %---------------------------------------------------------------------------------------------------
 \subsection{Parametric Surfaces}
-Figure \ref{Fig:Torus} shows how to plot parametric surfaces using a torus as example.
+Figure \ref{Fig:Torus} shows how to plot parametric surfaces using a torus as example. This is the code to produce it:
+
+\begin{verbatim}
+\pgfplotsset{width=16cm,height=10cm,compat=1.12}
+\begin{tikzpicture}
+  \begin{axis}[view={60}{60}]
+    \addplot3[surf, colormap/viridis, samples=30, 
+              domain=0:2*pi, y domain=0:2*pi, z buffer=sort]
+    ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
+     {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
+     {sin(deg(x))});
+  \end{axis}
+\end{tikzpicture}
+\end{verbatim}
 
 \begin{figure}[h]
 \centering
@@ -491,15 +504,13 @@ Figure \ref{Fig:Torus} shows how to plot parametric surfaces using a torus as ex
 \label{Fig:Torus}
 \pgfplotsset{width=16cm,height=10cm,compat=1.12}
 \begin{tikzpicture}
-\pgfplotsset{width=16cm,height=10cm,compat=1.12}
-\begin{tikzpicture}
-\begin{axis}[view={60}{60}]
-  \addplot3[surf, colormap/viridis, samples=30, domain=0:2*pi, y domain=0:2*pi, z buffer=sort]
-  ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
-   {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
-   {sin(deg(x))});
-\end{axis}
-\end{tikzpicture}
+  \begin{axis}[view={60}{60}]
+    \addplot3[surf, colormap/viridis, samples=30, 
+              domain=0:2*pi, y domain=0:2*pi, z buffer=sort]
+    ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
+     {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
+     {sin(deg(x))});
+  \end{axis}
 \end{tikzpicture}
 \end{figure}
 % Taken from here:

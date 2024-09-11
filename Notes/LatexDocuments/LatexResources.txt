@@ -1,4 +1,9 @@
 
+
+CTAN - Comprehensive TeX Archive Network
+https://ctan.org/pkg/pgfplots?lang=en
+
+
 ----------------------------------------------------------------------------------------------------
 Math
 
@@ -58,6 +63,8 @@ https://texample.net/tikz/examples/
 https://www.integral-domain.org/lwilliams/Resources/tikzsnippets.php
 https://github.com/janosh/tikz/
 
+
+https://ctan.org/topic/pgf-tikz
 
 https://tikz.dev/pgfplots/reference-tikzinteroperability  For annotating a pgf plot with tikz
 

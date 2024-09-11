@@ -20,26 +20,18 @@
 
 \pgfplotsset{width=16cm,height=10cm,compat=1.12}
 \begin{tikzpicture}
-\begin{axis}[xlabel={$x$}, ylabel={$y$}, zlabel={$z$}]
-  \addplot3[surf, mesh] {x+y+1};
-  \draw[red] (0,0,0) -- (1,1,1);
-  \fill[black] (0,0,0) circle (2pt);
-\end{axis}
-\end{tikzpicture}
-
-\pgfplotsset{width=16cm,height=10cm,compat=1.9}
-\begin{tikzpicture}
 \begin{axis}[xlabel={$x$}, ylabel={$y$}]
   \addplot3[surf, mesh] {x+y+1};
   \draw[->, ultra thick] (0,0,0) -- (1,1,0);
   \fill[red] (0,0,0) circle (2pt);
-  \draw[->] (1,1,0) -- (2,2,0);
+%  \draw[->] (1,1,0) -- (2,2,0);
 \end{axis}
 \end{tikzpicture}
+% It's important to use compat=1.12 ...ro maybe higher. With 1.9, it didn't work
+% ToDo: the arrow-head still looks kinda ugly - try to improve that
 
-% It doesn't work - the arrow isn't there - maybe the poster has drawn it in by hand to show what
-% he wants to achieve?
 
+% See also:
 % https://tex.stackexchange.com/questions/518504/how-can-i-draw-gradient-arrows-on-iso-contour
 
 

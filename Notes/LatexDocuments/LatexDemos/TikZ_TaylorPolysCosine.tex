@@ -1,0 +1,28 @@
+\pgfplotsset{compat=1.9}
+
+\begin{tikzpicture}
+\begin{axis}[xmin=-6, xmax=6, ymin=-1.2, ymax=1.2, samples=100, very thick, 
+             xmajorgrids=true, ymajorgrids=true]
+
+  \addplot[domain=-6:6, color=black, ultra thick] {cos( \x r )};
+  \addlegendentry{\(\cos(x)\)}
+  
+  \addplot[domain=-6:6, color=rsRed] {1};
+  \addlegendentry{$T_0(x)$}
+  
+  \addplot[domain=-3:3, color=rsYellow] {1 - \x^2/2};
+  \addlegendentry{$T_2(x)$}
+  
+  \addplot[domain=-4:4, color=rsGreen] {1 - \x^2/2 + \x^4/24};
+  \addlegendentry{$T_4(x)$}
+  
+  \addplot[domain=-4:4, color=rsCyan] {1 - \x^2/2 + \x^4/24 - \x^6/720};
+  \addlegendentry{$T_6(x)$}  
+  
+  \addplot[domain=-5:5, color=rsBlue] {1 - \x^2/2 + \x^4/24 - \x^6/720 + \x^8/40320};
+  \addlegendentry{$T_8(x)$} 
+
+  \addplot[domain=-6:6, color=black, ultra thick] {cos( \x r )};
+
+\end{axis}
+\end{tikzpicture}

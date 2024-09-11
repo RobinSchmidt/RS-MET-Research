@@ -71,11 +71,10 @@ https://tikz.dev/pgfplots/reference-tikzinteroperability  For annotating a pgf p
 
 https://www.overleaf.com/learn/latex/Pgfplots_package
 
-
-
 https://texwelt.de/fragen/8703/wann-sollte-tikz-wann-pgfplots-verwendet-werden
 
 https://tex.stackexchange.com/questions/326592/how-can-i-define-the-range-x-y-axis-of-my-diagram
 
 https://en.wikipedia.org/wiki/PGF/TikZ
 -GeoGebra can produce pgf output!
+

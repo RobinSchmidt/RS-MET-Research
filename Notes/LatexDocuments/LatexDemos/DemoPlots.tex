@@ -84,71 +84,20 @@ Under construction....
 \subsection{Taylor Polynomials}
 The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref{Fig:TaylorExpansionExp} show the first couple of Taylor polynomials for $\sin, \cos, \exp$ respectively.
 
-\pgfplotsset{width=19cm,height=6cm,compat=1.9}
-
 \begin{figure}[h]
 \centering
 \caption{Sine function and its Taylor polynomials}
 \label{Fig:TaylorExpansionSine}
-\begin{tikzpicture}
-\begin{axis}[xmin=-6, xmax=6, ymin=-1.2, ymax=1.2, samples=100, very thick, 
-             xmajorgrids=true, ymajorgrids=true]
-
-  \addplot[domain=-6:6, color=black, ultra thick] {sin( \x r )};
-  \addlegendentry{\(\sin(x)\)}
-  
-  \addplot[domain=-6:6, color=rsRed] {x};
-  \addlegendentry{$T_1(x)$}
-  
- \addplot[domain=-3:3, color=rsYellow] {\x - \x^3/6};
-  \addlegendentry{$T_3(x)$}
-  
- \addplot[domain=-5:5, color=rsGreen] {\x - \x^3/6 + \x^5/120};
- \addlegendentry{$T_5(x)$}
-  
- \addplot[domain=-5:5, color=rsCyan] {\x - \x^3/6 + \x^5/120 - \x^7/5040};
- \addlegendentry{$T_7(x)$}
-  
- \addplot[domain=-6:6, color=rsBlue] {\x - \x^3/6 + \x^5/120 - \x^7/5040 + \x^9/362880};
- \addlegendentry{$T_9(x)$}
- 
- \addplot[domain=-6:6, color=black, ultra thick] {sin( \x r )}; 
- 
-\end{axis}
-\end{tikzpicture}
+\pgfplotsset{width=19cm,height=6cm}
+\include{TikZ_TaylorPolysSine}
 \end{figure}
-
 
 \begin{figure}[h]
 \centering
 \caption{Cosine function and its Taylor polynomials}
 \label{Fig:TaylorExpansionCosine}
-\begin{tikzpicture}
-\begin{axis}[xmin=-6, xmax=6, ymin=-1.2, ymax=1.2, samples=100, very thick, 
-             xmajorgrids=true, ymajorgrids=true]
-
-  \addplot[domain=-6:6, color=black, ultra thick] {cos( \x r )};
-  \addlegendentry{\(\cos(x)\)}
-  
-  \addplot[domain=-6:6, color=rsRed] {1};
-  \addlegendentry{$T_0(x)$}
-  
-  \addplot[domain=-3:3, color=rsYellow] {1 - \x^2/2};
-  \addlegendentry{$T_2(x)$}
-  
-  \addplot[domain=-4:4, color=rsGreen] {1 - \x^2/2 + \x^4/24};
-  \addlegendentry{$T_4(x)$}
-  
-  \addplot[domain=-4:4, color=rsCyan] {1 - \x^2/2 + \x^4/24 - \x^6/720};
-  \addlegendentry{$T_6(x)$}  
-  
-  \addplot[domain=-5:5, color=rsBlue] {1 - \x^2/2 + \x^4/24 - \x^6/720 + \x^8/40320};
-  \addlegendentry{$T_8(x)$} 
-
-  \addplot[domain=-6:6, color=black, ultra thick] {cos( \x r )};
-
-\end{axis}
-\end{tikzpicture}
+\pgfplotsset{width=19cm,height=6cm}
+\include{TikZ_TaylorPolysCosine}
 \end{figure}
 
 
@@ -294,15 +243,6 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 \subsection{Bivariate Functions}
 To plot bivariate functions, one can use the command \verb|\addplot3|. It can be configured to to do surface plots or heat maps. This is shown in figures \ref{Fig:BivariateGaussian3D} and \ref{Fig:BivariateGaussianHeatMap}. 
 
-\begin{verbatim}
-\pgfplotsset{width=16cm,height=10cm,compat=1.9}
-\begin{tikzpicture}
-\begin{axis}
-  \addplot3 [surf,fill=white,domain=-2:2] {x * exp(-x^2-y^2)};
-\end{axis}
-\end{tikzpicture}
-\end{verbatim}
-
 \begin{figure}[h]
 \centering
 \caption{$f(x,y) = x e^{-(x^2+y^2)}$}
@@ -342,7 +282,7 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 \end{figure}
 
 
-% colormaps: viridis
+% colormaps: viridis, cool
 
 % https://tikz.dev/pgfplots/reference-3dplots
 
@@ -359,37 +299,12 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 \subsection{Parametric Surfaces}
 Figure \ref{Fig:Torus} shows how to plot parametric surfaces using a torus as example. This is the code to produce it:
 
-\begin{verbatim}
-\pgfplotsset{width=16cm,height=10cm,compat=1.12}
-\begin{tikzpicture}
-  \begin{axis}[view={60}{60}]
-    \addplot3[surf, colormap/viridis, samples=30, 
-              domain=0:2*pi, y domain=0:2*pi, z buffer=sort]
-    ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
-     {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
-     {sin(deg(x))});
-  \end{axis}
-\end{tikzpicture}
-\end{verbatim}
-
-% To make that look nicer, see:
-% https://www.overleaf.com/learn/latex/Code_listing
-% and see also the RAPT user manual in the main repo
-
 \begin{figure}[h]
 \centering
 \caption{Torus}
 \label{Fig:Torus}
-\pgfplotsset{width=16cm,height=10cm,compat=1.12}
-\begin{tikzpicture}
-  \begin{axis}[view={60}{60}]
-    \addplot3[surf, colormap/viridis, samples=30, 
-              domain=0:2*pi, y domain=0:2*pi, z buffer=sort]
-    ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
-     {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
-     {sin(deg(x))});
-  \end{axis}
-\end{tikzpicture}
+\pgfplotsset{width=16cm,height=10cm}
+\include{TikZ_Torus}
 \end{figure}
 % Taken from here:
 % https://tex.stackexchange.com/questions/348/how-to-draw-a-torus

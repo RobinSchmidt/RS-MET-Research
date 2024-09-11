@@ -1,0 +1,36 @@
+\pgfplotsset{compat=1.9}
+
+\begin{tikzpicture}[thick, >=stealth']
+
+% Coordinate axes:
+\draw[->] (-1.5, 0  ) -- (4.5, 0  );
+\draw[->] ( 0,  -1.5) -- (0,   1.5);
+  
+% Markers for integration limits:
+\draw[] (-1,-5pt) -- (-1, +5pt) node[above] {$a$};
+\draw[] ( 4,-5pt) -- ( 4, +5pt) node[above] {$b$};  
+        
+% The rectangles:
+\foreach \x in {-1,-0.5,...,3.5}
+  \draw[thick, fill=blue!25] 
+  (\x,0) -- (\x,{sin(deg(\x+0.25))}) -- (\x+.5,{sin(deg(\x+0.25))}) -- (\x+.5,0) -- cycle;
+    
+% The underlying function to be integrated:
+\draw[ultra thick, domain=-1.5:4.5, smooth, samples=100, variable=\x] plot ({\x},{sin(deg(\x))});
+    
+% Equations:
+\node[align=left, font=\normalsize] at (10.5,0.0) 
+{
+$\begin{aligned}
+&\int_{a}^{b} \sin(x) \; dx \approx \sum_{n=1}^{N} \Delta x \cdot \sin(x_n) \quad \text{where} \\
+&x_n = a + (n - \frac{1}{2}) \Delta x, \; 
+\Delta x = \frac{b-a}{N}, \; 
+N = 10, a = -1, b = 4
+\end{aligned}$
+% I don't know why the normal equation or equation* doesn't work. It's weird to use the $ with the
+% aligned environment. But this is the only way, I could make it work and compile without error.
+% Using just inline math via $...$ without aligned will give the small inlnie math font with tiny
+% integral and sum sign which looks ugly here. It took some trial and error to figure this out.
+}; 
+
+\end{tikzpicture}

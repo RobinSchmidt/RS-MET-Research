@@ -1,0 +1,27 @@
+\pgfplotsset{compat=1.18}
+
+\begin{tikzpicture}
+\begin{groupplot}[group style={group size=2 by 2}, height=6cm, width=9cm]
+
+\nextgroupplot[xmin=-1,xmax=1,ymin=-20,ymax=+20, samples=101]
+\addplot[domain=-1:-0.01, color=rsBlue, very thick] { 1/x };
+\addplot[domain=+0.01:+1, color=rsBlue, very thick] { 1/x };
+\draw (-1.0,13) node[label = {right:$f(x)=1/x$}]{};
+% We split the domain into two parts to avoid the pole because having it in the domain would result
+% in a (almost) vertical line in the plot at x=0
+
+\nextgroupplot[xmin=-1,xmax=1,ymin=-20,ymax=+20, samples=101]
+\addplot[domain=-1:1, color=rsBlue, very thick] { 1/abs(x) };
+\draw (-1.0,13) node[label = {right:$f(x)=1/|x|$}]{};
+
+\nextgroupplot[xmin=-1,xmax=1,ymin=-20,ymax=+20, samples=101]
+\addplot[domain=-1:-0.01, color=rsBlue, very thick] { -1/x };
+\addplot[domain=+0.01:+1, color=rsBlue, very thick] { -1/x };
+\draw (-1.0,13) node[label = {right:$f(x)=-1/x$}]{};
+
+\nextgroupplot[xmin=-1,xmax=1,ymin=-20,ymax=+20, samples=101]
+\addplot[domain=-1:1, color=rsBlue, very thick] { -1/abs(x) };
+\draw (-1.0,13) node[label = {right:$f(x)=-1/|x|$}]{};
+
+\end{groupplot}
+\end{tikzpicture}

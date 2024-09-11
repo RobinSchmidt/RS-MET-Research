@@ -7,13 +7,9 @@
 \author{Robin Schmidt}
 \maketitle
 
-%===================================================================================================
-\section{With TikZ}
-Here, we show plots and graphics created with the TikZ package. This is a high level interface to PGF.
-
 %---------------------------------------------------------------------------------------------------
-\subsection{Monomials}
-Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=6, yscale=3|. The even ones are drawn in red, the odd ones in blue.
+%\subsection{Monomials}
+%Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=6, yscale=3|. The even ones are drawn in red, the odd ones in blue.
 
 \begin{figure}[h]
 \centering
@@ -24,8 +20,8 @@ Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Sine and Cosine}
-Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default size, i.e. without using \verb|scale|, \verb|xscale|, \verb|yscale|. We draw the tick marks on the $x$-axis manually as short lines.
+%\subsection{Sine and Cosine}
+%Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default size, i.e. without using \verb|scale|, \verb|xscale|, \verb|yscale|. We draw the tick marks on the $x$-axis manually as short lines.
 
 \begin{figure}[h]
 \centering
@@ -35,8 +31,8 @@ Figure \ref{Fig:SineAndCosine} shows the sine and cosine function in default siz
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Line Equations}
-Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{p}_2$ and various forms of the line equation embedded in the plot. It also shows how to draw dots and arrows and a coordinate grid. There's also an angle $\alpha$ drawn by a circular arc.
+%\subsection{Line Equations}
+%Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{p}_2$ and various forms of the line equation embedded in the plot. It also shows how to draw dots and arrows and a coordinate grid. There's also an angle $\alpha$ drawn by a circular arc.
 
 \begin{figure}[h]
 \centering
@@ -46,8 +42,8 @@ Figure \ref{Fig:Line} shows a line defined by two points $\mathbf{p}_1, \mathbf{
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Riemann Integral}
-Under construction....
+%\subsection{Riemann Integral}
+%Under construction....
 
 \begin{figure}[h]
 \centering
@@ -65,12 +61,10 @@ Under construction....
 % https://tex.stackexchange.com/questions/667646/lebesgue-integral-on-tikz
 % 
 
-%===================================================================================================
-\section{With PGFPlots}
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Taylor Polynomials}
-The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref{Fig:TaylorExpansionExp} show the first couple of Taylor polynomials for $\sin, \cos, \exp$ respectively.
+%\subsection{Taylor Polynomials}
+%The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref{Fig:TaylorExpansionExp} show the first couple of Taylor polynomials for $\sin, \cos, \exp$ respectively.
 
 \begin{figure}[h]
 \centering
@@ -98,7 +92,7 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Multiplot of Monomials}
+%\subsection{Multiplot of Monomials}
 
 \begin{figure}[h]
 \centering
@@ -150,7 +144,7 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 %
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Multiplot of Different of Poles}
+%\subsection{Multiplot of Different of Poles}
 
 % Doesn't work yet:
 \begin{figure}[h]
@@ -200,14 +194,14 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 % -Riemann integral, Lebesgue integral
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Bivariate Functions}
-To plot bivariate functions, one can use the command \verb|\addplot3|. It can be configured to to do surface plots or heat maps. This is shown in figures \ref{Fig:BivariateGaussian3D} and \ref{Fig:BivariateGaussianHeatMap}. 
+%\subsection{Bivariate Functions}
+%To plot bivariate functions, one can use the command \verb|\addplot3|. It can be configured to to do surface plots or heat maps. This is shown in figures \ref{Fig:BivariateGaussian3D} and \ref{Fig:BivariateGaussianHeatMap}. 
 
 \begin{figure}[h]
 \centering
 \caption{$f(x,y) = x e^{-(x^2+y^2)}$}
 \label{Fig:BivariateGaussian3D}
-\pgfplotsset{width=16cm,height=10cm,compat=1.9}
+\pgfplotsset{width=16cm,height=10cm}
 \include{TikZ_GaussTimesX_Surf}
 \end{figure}
 % ToDo: Try to draw in a gradient vector at (x,y) = (1,-1). It's a flat vector at the bottom, i.e.
@@ -221,12 +215,12 @@ To plot bivariate functions, one can use the command \verb|\addplot3|. It can be
 \centering
 \caption{$f(x,y) = x e^{-(x^2+y^2)}$}
 \label{Fig:BivariateGaussianHeatMap}
+\pgfplotsset{width=16cm,height=10cm}
 \include{TikZ_GaussTimesX_Heat}
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
-\subsection{Parametric Surfaces}
-Figure \ref{Fig:Torus} shows how to plot parametric surfaces using a torus as example. This is the code to produce it:
+%\subsection{Parametric Surfaces}
 
 \begin{figure}[h]
 \centering
@@ -236,8 +230,9 @@ Figure \ref{Fig:Torus} shows how to plot parametric surfaces using a torus as ex
 \include{TikZ_Torus}
 \end{figure}
 
-%===================================================================================================
-%\section{With Both}
+
+
+
 
 \end{document}
 

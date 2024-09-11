@@ -88,40 +88,12 @@ The figures \ref{Fig:TaylorExpansionSine}, \ref{Fig:TaylorExpansionCosine}, \ref
 \include{TikZ_TaylorPolysCosine}
 \end{figure}
 
-
-\pgfplotsset{width=15cm,height=10cm,compat=1.9}
-
 \begin{figure}[h]
 \centering
 \caption{Exponential function and its Taylor polynomials}
 \label{Fig:TaylorExpansionExp}
-\begin{tikzpicture}
-\begin{axis}[xmin=-3, xmax=3, ymin=-1.2, ymax=5.2, samples=100, very thick, 
-             legend pos=north west, xmajorgrids=true, ymajorgrids=true]
-
-  \addplot[domain=-3:3, color=black, ultra thick] {exp(\x )};
-  \addlegendentry{$\exp(x)$}
-  
-  \addplot[domain=-3:3, color=rsRed] {1};
-  \addlegendentry{$T_0(x)$}
-  
-  \addplot[domain=-3:3, color=rsYellow] {1 + x};
-  \addlegendentry{$T_1(x)$}  
-  
-  \addplot[domain=-3:3, color=rsGreen] {1 + x + x^2/2};
-  \addlegendentry{$T_2(x)$}    
-  
-  \addplot[domain=-3:3, color=rsCyan] {1 + x + x^2/2 + x^3/6};
-  \addlegendentry{$T_3(x)$}
-  
-  \addplot[domain=-3:3, color=rsBlue] {1 + x + x^2/2 + x^3/6 + x^4/24};
-  \addlegendentry{$T_4(x)$}  
-  
-  % draw the exp again so it is in the foreground:
-  \addplot[domain=-3:3, color=black, ultra thick] {exp(\x )};
-  
-\end{axis}
-\end{tikzpicture}
+\pgfplotsset{width=15cm,height=10cm}
+\include{TikZ_TaylorPolysExp}
 \end{figure}
 
 

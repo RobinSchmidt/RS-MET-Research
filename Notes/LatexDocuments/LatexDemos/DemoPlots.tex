@@ -19,33 +19,8 @@ Figure \ref{Fig:Monomials} shows monomials of degrees up to 5 with \verb|xscale=
 \centering
 \caption{Monomials of degrees $0$ to $5$}
 \label{Fig:Monomials}
-%\pgfplotsset{width=10cm,compat=1.9} 
-\begin{tikzpicture}
-[domain=-1.1:1.1, range=-1.2:1.2, xscale=6, yscale=3, samples=50, very thick, >=stealth']
-
-% Coordinate axes:
-\draw[->] (-1.5,0) -- (1.5,0) node[below] {$x$};
-\draw[->] (0,-1.7) -- (0,1.9) node[left]  {$f(x)$};
-
-% Graphs:
-\draw[color=rsRed]    plot (\x,{pow(\x,0)}) node[right] {$x^0$};
-\draw[color=rsYellow] plot (\x,{pow(\x,1)}) node[right] {$x^1$};
-\draw[color=rsGreen]  plot (\x,{pow(\x,2)}) node[right] {$x^2$};
-\draw[color=rsCyan]   plot (\x,{pow(\x,3)}) node[right] {$x^3$};
-\draw[color=rsBlue]   plot (\x,{pow(\x,4)}) node[right] {$x^4$};
-\draw[color=rsPurple] plot (\x,{pow(\x,5)}) node[right] {$x^5$};
-
-% Tick marks on x-axis:
-\draw [shift={(-1,0)}] (0pt,+1pt) -- (0pt,-1pt) node [below] {$-1$};  
-\draw [shift={( 1,0)}] (0pt,+1pt) -- (0pt,-1pt) node [below] {$1$};
-% The point size 1pt results from 3 / yscale
-
-% Tick marks on y-axis:
-\draw [shift={(0,1)}]  (+.5pt, 0pt) -- (-.5pt, 0pt) node [left] {$1$};
-\draw [shift={(0,-1)}] (+.5pt, 0pt) -- (-.5pt, 0pt) node [left] {$-1$};
-% The point size .5pt results from 3 / xscale
-
-\end{tikzpicture}
+\pgfplotsset{width=8cm} 
+\include{TikZ_Monomials_0-5}
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------

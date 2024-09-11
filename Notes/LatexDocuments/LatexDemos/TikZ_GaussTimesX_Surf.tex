@@ -2,7 +2,10 @@
 
 \begin{tikzpicture}
   \begin{axis}
-    \addplot3[surf, colormap/viridis, domain=-2:2, samples=40] {x * exp(-x^2-y^2)};
+    \addplot3
+      [surf, colormap/viridis, faceted color=rsGray20, 
+       domain=-2:2, samples=40] 
+      { x * exp(-x^2-y^2) };
   \end{axis}
 \end{tikzpicture}
 
@@ -10,4 +13,6 @@
 % When using "fill=white" instead of "colormap/viridis", all the factes are painted white such that 
 % it looks like a cheaper variant of a surface plot. Using less than 40 samples makes it look rather
 % rough. Uisng the "smooth" option doesn't work for this - apparently, this is only for curves and 
-% not for surfaces.
+% not for surfaces. To control the colors of the lines, one has to use e.g. "faceted color=black". 
+% Without that option, it seems to use some light shade of gray and the lines look thinner - but that 
+% may be an optical illusion because of the lighter color.

@@ -45,8 +45,8 @@ https://texample.net/tikz/examples/tag/plots/
 https://texample.net/tikz/examples/tag/graphs/
 https://texample.net/tikz/examples/tag/diagrams/
 https://texample.net/tikz/examples/tag/charts/
-
 https://tikz.net/tag/surface-plot/
+https://tikz.net/category/mathematics/geometry/page/2/
 
 
 PGF-Plots:
@@ -89,4 +89,4 @@ https://en.wikipedia.org/wiki/PGF/TikZ
 
 Drawing knots:
 https://loopspace.mathforge.org/HowDidIDoThat/TeX/NewKnots/
-
+https://www.youtube.com/watch?v=n7w8hODwG1g  Explains hwo to make a trefoil knot in grasshopper

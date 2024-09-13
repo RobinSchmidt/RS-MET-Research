@@ -27,6 +27,8 @@
 % https://tex.stackexchange.com/questions/7953/how-to-expand-texs-main-memory-size-pgfplots-memory-overload
 % ...but this gives errors
 
+%---------------------------------------------------------------------------------------------------
+% Colors:
 
 % To define custom colors in plots - must appear after \usepackage{tikz}
 \usepackage{color}
@@ -48,7 +50,68 @@
 
 
 
-% For formatted source code:
+%---------------------------------------------------------------------------------------------------
+% Colormaps:
+
+% I try to define my own colormaps here. The idea is that the plots refer to the colormap by 
+% names that are descriptive for the prupose/type of the map like "sequential", "diverging" or
+% "qualitative". Then we can set up the colormap here in the setup file which serves then as
+% a sort of style-sheet for teh colormap which can be set up once and for all - i.e. for all 
+% plots in a document at once. It would be nice to be able to give alias names for predefined
+% colormaps, e.g. somethin tlike "sequential = viridis" but I have not yet figured out if that's
+% possible. Plots would then use "colormap name = rsSequential" insstead of 
+% "colormap name = viridis". See the plot in TikZ_GaussTimesX_Heat.tex
+
+%\pgfplotsset{/pgfplots/colormap={rsSequential}{rgb255=(255,255,255) rgb255=(0,0,0)}}
+%\pgfplotsset{/pgfplots/colormap={rsSequential}{rgb255=(255,0,255) rgb255(0,0,0) rgb255=(255,255,255)}}
+%\pgfplotsset
+%{
+%  /pgfplots/colormap={rsSequential}
+%  {
+%    color(0cm)=(blue); 
+%    color(1cm)=(yellow); 
+%    color(2cm)=(orange); 
+%    color(3cm)=(red)
+%  }
+%}
+%/pgfplots/colormap={hot}{color(0cm)=(blue); color(1cm)=(yellow); color(2cm)=(orange); color(3cm)=(red)}
+
+% I try to give alias names to existing color maps - but neither of these attempts work:
+%\pgfplotsset{/pgfplots/colormap={rsSequential}{colormap/viridis}}
+%\pgfplotsset{/pgfplots/colormap={rsSequential}{viridis}}
+% We get an "Illformed colormap specification" error.
+
+% Use rsSequential, rsDiverging, rsQualitative
+
+
+%\pgfplotsset{/pgfplots/colormap={rsBlackToWhite}{rgb255=(0,0,0) rgb255=(255,255,255)}}
+%\pgfplotsset{/pgfplots/colormap={rsWhiteToBlack}{rgb255=(255,255,255) rgb255=(0,0,0)}}
+%\pgfplotsset
+%{
+%  /pgfplots/colormap={rsEarth}
+%  {
+%    rgb255=(0,0,0) rgb255=(0,28,15) rgb255=(42,39,6) rgb255=(28,73,33) rgb255=(67,85,24) 
+%    rgb255=(68,112,46) rgb255=(81,129,83) rgb255=(124,137,87) rgb255=(153,147,122) 
+%    rgb255=(145,173,164) rgb255=(144,202,180) rgb255=(171,220,177) rgb255=(218,229,168) 
+%    rgb255=(255,235,199) rgb255=(255,255,255)
+%  }
+%}
+
+
+
+% See:
+% https://tikz.dev/pgfplots/libs-colormaps
+% https://tex.stackexchange.com/questions/359526/defining-custom-colormap
+% https://tikz.dev/pgfplots/libs-colorbrewer
+
+% https://tex.stackexchange.com/questions/359526/defining-custom-colormap
+% it says that the relevant files for the built-in colormaps are:
+% pgfplots.code.tex (line 36 ff) and pgfplotscolormap.code.tex (line 2372 ff)
+% ...it doesn't say where these files are located, though
+
+
+%---------------------------------------------------------------------------------------------------
+% Formatted source code:
 
 %\usepackage{listings}            
 %\lstset{

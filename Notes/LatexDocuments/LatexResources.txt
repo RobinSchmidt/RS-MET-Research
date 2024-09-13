@@ -34,12 +34,20 @@ https://tikz.dev/tikz-plots
 
 https://www.bu.edu/math/files/2013/08/tikzpgfmanual.pdf
 
+
+TikZ-Tutorials:
+https://www.overleaf.com/learn/latex/TikZ_package
+
+
 Tikz-Examples:
 https://texample.net//tikz/examples/
 https://texample.net/tikz/examples/tag/plots/
 https://texample.net/tikz/examples/tag/graphs/
 https://texample.net/tikz/examples/tag/diagrams/
 https://texample.net/tikz/examples/tag/charts/
+
+https://tikz.net/tag/surface-plot/
+
 
 PGF-Plots:
 https://tikz.dev/pgfplots/reference-2dplots

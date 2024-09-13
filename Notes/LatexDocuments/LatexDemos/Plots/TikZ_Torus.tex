@@ -2,7 +2,7 @@
 
 \begin{tikzpicture}
   \begin{axis}[view={60}{60}]
-    \addplot3[surf, colormap/viridis, samples=30,
+    \addplot3[surf, colormap/viridis, samples = 32, samples y = 64,
               domain=0:2*pi, y domain=0:2*pi, z buffer=sort]
     ({(3+cos(deg(x)))*cos(deg(y+pi/2))}, 
      {(3+cos(deg(x)))*sin(deg(y+pi/2))}, 
@@ -16,5 +16,8 @@
 % one that is cut open and missing a piece, one need to restrict the "y domain", for example to
 % "y domain=0:2*3*pi/4". The torus takes quite long to compile. It's apparently quite complex.
 
+% When using "samples = 40, samples y = 80", we get the error:
+% "TeX capacity exceeded, sorry [main memory size=3000000]."
+% 30/60 still works, 35/70 is also too much, 32/64 also works
 
 

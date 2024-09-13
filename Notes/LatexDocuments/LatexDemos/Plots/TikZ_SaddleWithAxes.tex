@@ -12,7 +12,8 @@
     \draw[->, ultra thick, rsBlue]  (0,0,0) -- (0,0,1);
     
     % The surface:
-    \addplot3[surf, mesh, thick, color = black, draw opacity = 0.25, 
+    \addplot3[surf, thick, draw opacity = 0.5, 
+              colormap/blackwhite, opacity=0.25,
               domain = -1.2:1.2, y domain = -1.2:1.2] 
     {x^2 - y^2};
     

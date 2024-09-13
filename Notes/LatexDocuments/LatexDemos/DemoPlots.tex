@@ -1,5 +1,8 @@
 \include{Setup}
 
+%\usepgfplotslibrary{external} 
+%\tikzexternalize
+
 \begin{document}
 
 \title{Demo Plots with TikZ and PGF}
@@ -148,6 +151,15 @@
 \pgfplotsset{width=16cm,height=10cm}
 \include{Plots/TikZ_Torus}
 \end{figure}
+
+\begin{figure}[h]
+\centering
+\caption{Moebius Strip}
+\label{Fig:MoebiusStrip}
+\pgfplotsset{width=16cm,height=10cm}
+\include{Plots/TikZ_MoebiusStrip}
+\end{figure}
+
 
 %===================================================================================================
 

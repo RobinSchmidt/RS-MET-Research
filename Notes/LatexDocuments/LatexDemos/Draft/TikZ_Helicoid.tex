@@ -1,0 +1,21 @@
+% Taken from:
+% https://tex.stackexchange.com/questions/538087/how-to-plot-a-parametric-surface-helicoid-with-latex
+
+
+\pgfplotsset{compat=1.16}
+
+\begin{tikzpicture}
+\begin{axis}
+    [
+    view={60}{30},
+    ]
+\addplot3[surf,
+    domain=0:5*pi,
+    samples=101,
+    samples y=11,z buffer=sort
+]
+({y*sin(deg(x))},
+{y*cos(deg(x))},
+{x});
+\end{axis}
+\end{tikzpicture}

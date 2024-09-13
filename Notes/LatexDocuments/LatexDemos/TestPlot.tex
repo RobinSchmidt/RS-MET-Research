@@ -16,15 +16,18 @@
 \begin{figure}[h]
 \centering
 
-\pgfplotsset{width=18cm,height=15cm} 
-%\include{TikZ_SaddleWithAxes}
-%\include{TikZ_GaussTimesX_Heat}
+% The numbers in the comment behind the plot give a good setting for width, height, i.e. 18,15 means
+% that the plot looks good when using "\pgfplotsset{width=18cm,height=15cm}", for example. 18,12..15
+% gives a range of 12 to 15 for the height
 
-%\pgfplotsset{width=18cm,height=12cm} 
-%\include{TikZ_Torus}
+\pgfplotsset{width=18cm,height=12cm}
+%\include{TikZ_SaddleWithAxes}                  % 18,12..15
+%\include{TikZ_GaussTimesX_Heat}                 % 18,12
+%\include{TikZ_Torus}                           % 18,12
 
-\include{Draft/TikZ_Helicoid}
-%\include{Draft/TikZ_ParabolicDome}
+%\pgfplotsset{width=18cm,height=15cm} 
+%\include{Draft/TikZ_Helicoid}                 % 18,15
+\include{Draft/TikZ_ParabolicDome}             % the width,height call seems to make no difference
 %\include{Draft/TikZ_ParabolicPavillon}
 %\include{Draft/TikZ_FancyTorus}
 

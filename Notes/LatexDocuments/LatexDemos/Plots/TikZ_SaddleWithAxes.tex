@@ -7,19 +7,27 @@
                
     % The borders:
     \addplot3 [domain=-1.2:1.2, samples=60, samples y=0, thick, black] 
-    ({x}, {1.2}, {x^2 - 1.2^2});               
-               
+    ({x}, {-1.2}, {x^2 - 1.2^2});    
+    \addplot3 [domain=-1.2:1.2, samples=60, samples y=0, thick, black] 
+    ({x}, {1.2}, {x^2 - 1.2^2}); 
+    \addplot3 [domain=-1.2:1.2, samples=60, samples y=0, thick, black] 
+    ({-1.2}, {x}, {1.2^2 - x^2});      
+
     % Origin and coordinate arrows: 
-    \fill[black] (0,0,0) circle (5pt);
-    \draw[->, ultra thick, rsRed]   (0,0,0) -- (1,0,0);
-    \draw[->, ultra thick, rsGreen] (0,0,0) -- (0,1,0);
-    \draw[->, ultra thick, rsBlue]  (0,0,0) -- (0,0,1);
+    \draw[->, line width = 3pt, rsRed]   (0,0,0) -- (1,0,0);
+    \draw[->, line width = 3pt, rsGreen] (0,0,0) -- (0,1,0);
+    \draw[->, line width = 3pt, rsBlue]  (0,0,0) -- (0,0,1);
+    \fill[black] (0,0,0) circle (5pt);    
     
     % The surface:
-    \addplot3[surf, thick, draw opacity = 0.5, 
-              colormap/blackwhite, opacity=0.25,
+    \addplot3[surf, thick, draw opacity = 0.8, 
+              colormap/blackwhite, opacity=0.4,
               domain = -1.2:1.2, y domain = -1.2:1.2] 
     {x^2 - y^2};
+    
+    % Right border:
+    \addplot3 [domain=-1.2:1.2, samples=60, samples y=0, thick, black] 
+    ({1.2}, {x}, {1.2^2 - x^2});    
     
   \end{axis}
 \end{tikzpicture}

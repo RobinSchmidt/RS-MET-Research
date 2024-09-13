@@ -86,3 +86,7 @@ https://tex.stackexchange.com/questions/326592/how-can-i-define-the-range-x-y-ax
 https://en.wikipedia.org/wiki/PGF/TikZ
 -GeoGebra can produce pgf output!
 
+
+Drawing knots:
+https://loopspace.mathforge.org/HowDidIDoThat/TeX/NewKnots/
+

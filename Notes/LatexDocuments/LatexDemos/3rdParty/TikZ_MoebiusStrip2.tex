@@ -23,8 +23,8 @@
 
 
     % surface
-    \addplot3 [surf, point meta=x, colormap/greenyellow, thin, line width=0.1mm, z buffer=sort, 
-               samples=60, samples y=3, domain=-180:180, y domain=-0.5:0.5, opacity=0.25] 
+    \addplot3 [surf, point meta=x, colormap/greenyellow, thin, line width=0.2mm, z buffer=sort, 
+               samples=50, samples y=7, domain=-180:180, y domain=-0.5:0.5, opacity=0.25] 
     ({(1+0.5*y*cos(x/2))*cos(x)},
      {(1+0.5*y*cos(x/2))*sin(x)},
      {0.5*y*sin(x/2)});

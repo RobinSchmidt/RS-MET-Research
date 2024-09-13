@@ -16,7 +16,7 @@
 \caption{Monomials of degrees $0$ to $5$}
 \label{Fig:Monomials}
 \pgfplotsset{width=8cm} 
-\include{TikZ_Monomials_0-5}
+\include{Plots/TikZ_Monomials_0-5}
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@
 \centering
 \caption{Sine and cosine function}
 \label{Fig:SineAndCosine}
-\include{TikZ_SineAndCosine}
+\include{Plots/TikZ_SineAndCosine}
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
@@ -36,7 +36,7 @@
 \centering
 \caption{Line Equations}
 \label{Fig:Line}
-\include{TikZ_LineEquations}
+\include{Plots/TikZ_LineEquations}
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@
 \centering
 \caption{Riemann Integral}
 \label{Fig:RiemannIntegral}
-\include{TikZ_RiemannIntegral}
+\include{Plots/TikZ_RiemannIntegral}
 \end{figure}
 
 % Maybe the rectangles below the x-axis should use another color like red
@@ -59,7 +59,7 @@
 \caption{Sine function and its Taylor polynomials}
 \label{Fig:TaylorExpansionSine}
 \pgfplotsset{width=19cm,height=6cm}
-\include{TikZ_TaylorPolysSine}
+\include{Plots/TikZ_TaylorPolysSine}
 \end{figure}
 
 \begin{figure}[h]
@@ -67,7 +67,7 @@
 \caption{Cosine function and its Taylor polynomials}
 \label{Fig:TaylorExpansionCosine}
 \pgfplotsset{width=19cm,height=6cm}
-\include{TikZ_TaylorPolysCosine}
+\include{Plots/TikZ_TaylorPolysCosine}
 \end{figure}
 
 \begin{figure}[h]
@@ -75,7 +75,7 @@
 \caption{Exponential function and its Taylor polynomials}
 \label{Fig:TaylorExpansionExp}
 \pgfplotsset{width=15cm,height=10cm}
-\include{TikZ_TaylorPolysExp}
+\include{Plots/TikZ_TaylorPolysExp}
 \end{figure}
 
 % ToDo: 1 / (1 + x^2), 1 / (1 - x^2)
@@ -88,7 +88,7 @@
 \caption{Monomials}
 \label{Fig:MultiplotMonomials}
 \pgfplotsset{width=7cm}
-\include{TikZ_Monomials_0-7_Group}
+\include{Plots/TikZ_Monomials_0-7_Group}
 \end{figure}
 
 %---------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@
 \caption{Poles}
 \label{Fig:MultiplotPoles}
 \pgfplotsset{width=7cm}
-\include{TikZ_PoleTypes}
+\include{Plots/TikZ_PoleTypes}
 \end{figure}
 
 % With group plots, we cannot use "\begin{axis}[params] ... end{axis}". To use parameters in a
@@ -113,7 +113,7 @@
 \caption{$f(x,y) = x e^{-(x^2+y^2)}$}
 \label{Fig:BivariateGaussian3D}
 \pgfplotsset{width=16cm,height=10cm}
-\include{TikZ_GaussTimesX_Surf}
+\include{Plots/TikZ_GaussTimesX_Surf}
 \end{figure}
 % ToDo: Try to draw in a gradient vector at (x,y) = (1,-1). It's a flat vector at the bottom, i.e.
 % the z-coordinate is zero. But maybe also draw a 3D "gradient" onto the landscape. It should start
@@ -127,14 +127,14 @@
 \caption{$f(x,y) = x e^{-(x^2+y^2)}$}
 \label{Fig:BivariateGaussianHeatMap}
 \pgfplotsset{width=16cm,height=10cm}
-\include{TikZ_GaussTimesX_Heat}
+\include{Plots/TikZ_GaussTimesX_Heat}
 \end{figure}
 
 \begin{figure}[h]
 \centering
 \caption{$f(x,y) = x^2 - y^2$}
 \pgfplotsset{width=18cm,height=15cm} 
-\include{TikZ_SaddleWithAxes}
+\include{Plots/TikZ_SaddleWithAxes}
 \end{figure}
 
 
@@ -146,7 +146,7 @@
 \caption{Torus}
 \label{Fig:Torus}
 \pgfplotsset{width=16cm,height=10cm}
-\include{TikZ_Torus}
+\include{Plots/TikZ_Torus}
 \end{figure}
 
 %===================================================================================================

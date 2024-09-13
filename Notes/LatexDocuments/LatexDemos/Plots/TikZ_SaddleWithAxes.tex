@@ -3,7 +3,8 @@
 \begin{tikzpicture}[thick, >=stealth']
   \begin{axis}[xlabel = {$x$}, ylabel = {$y$}, view = {25}{40},
                xmin = -1.5, xmax = 1.5, ymin = -1.5, ymax = +1.5, 
-               samples = 21, samples y = 21]
+               samples = 21, samples y = 21 %, z buffer=sort
+              ]
                
     % The borders:
     \addplot3 [domain=-1.2:1.2, samples=60, samples y=0, thick, black] 
@@ -13,17 +14,19 @@
     \addplot3 [domain=-1.2:1.2, samples=60, samples y=0, thick, black] 
     ({-1.2}, {x}, {1.2^2 - x^2});      
 
-    % Origin and coordinate arrows: 
+    % x-arrow: 
     \draw[->, line width = 3pt, rsRed]   (0,0,0) -- (1,0,0);
-    \draw[->, line width = 3pt, rsGreen] (0,0,0) -- (0,1,0);
-    \draw[->, line width = 3pt, rsBlue]  (0,0,0) -- (0,0,1);
-    \fill[black] (0,0,0) circle (5pt);    
-    
+
     % The surface:
     \addplot3[surf, thick, draw opacity = 0.8, 
               colormap/blackwhite, opacity=0.4,
               domain = -1.2:1.2, y domain = -1.2:1.2] 
     {x^2 - y^2};
+    
+    % y,z-arrows and origin: 
+    \draw[->, line width = 3pt, rsGreen] (0,0,0) -- (0,1,0);
+    \draw[->, line width = 3pt, rsBlue]  (0,0,0) -- (0,0,1);
+    \fill[black] (0,0,0) circle (5pt);        
     
     % Right border:
     \addplot3 [domain=-1.2:1.2, samples=60, samples y=0, thick, black] 
@@ -32,13 +35,23 @@
   \end{axis}
 \end{tikzpicture}
 
+% Notes:
+%
 % It's important to use compat=1.12 ...or maybe higher. With 1.9, it didn't work. I think, with 
 % compatibility to earlier versions, the coordinates are interpreted differently, i.e. as 
 % "screen-coodinates" rather than "world-coordinates" or something like that. I think, it can be 
 % fixed with older versions by using "(axis cs: 0,0,0)" instead of "(0,0,0)". The fancy torus 
 % example uses this method. But it's inconvenient.
+%
+% The red arrow is partially obscured by lines that are behind it. That's wrong. Apparently, TikZ
+% does not properly handle the depth info ("z-buffer"). The option "z buffer=sort" doesn't help 
+% either. The problem seems to be that the z-buffer sorting does not work across different calls
+% to addplot.
+%  See: https://tex.stackexchange.com/questions/227929/pgfplots-z-buffer-does-not-sort-the-plotted-objects-properly
 
 %
 % ToDo:
 % -Figure out how we can a different number of samples for the 2nd parameter. Using "y samples = 21" 
 %  didn't work. samples={11}{21} also didn't. Aha! It's "samples y = 21"
+
+

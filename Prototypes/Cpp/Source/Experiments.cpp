@@ -13153,6 +13153,10 @@ void testGeneralizedCollatz()
  
 
   int dummy = 0;
+
+
+  // See also:
+  // https://www.youtube.com/watch?v=pylw9t4j6bM
 }
 
 void testPowerCommutator()

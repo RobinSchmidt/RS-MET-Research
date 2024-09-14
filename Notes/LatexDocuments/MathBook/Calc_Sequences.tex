@@ -17,7 +17,7 @@ The notation for the whole sequence is $(a_n)$. That is: By $a_n$ we mean a spec
 
 % https://en.wikipedia.org/wiki/Sequence
 
-
+%===================================================================================================
 \subsection{Operations}
 % Maybe move below convergence and integrate with general transformations
 
@@ -86,6 +86,7 @@ The difference to regular convolution is that now the product of the indices $i$
 
 % 
 
+%===================================================================================================
 \subsection{Convergence}
 When faced with a sequence of numbers, an important question is its behavior when the index $n$ approaches infinity. Specifically, we are interested, if the output of the sequence approaches some finite number or not. There are a couple of things that could happen when $n$ approaches infinity: (1) the numbers converge to some finite number, (2) the numbers diverge to infinity, (3) the numbers stay finite but jump around and approach nothing. In the third case, we will mostly find situations where the sequence alternates between positive and negative values. The example sequence $(-1)^n$ is of that kind because $(-1)^n$ will be $+1$ for even $n$ and $-1$ for odd $n$ and thereby induce this alternating behavior. The sequence $1/n$ approaches zero, so that would count as convergent. The sequence $(-1)^n / n$ is an alternating version of the former. It alternates between positive and negative values but the absolute values become smaller and smaller. It also converges to zero but in an alternating way. The sequence $1/n^2$ also converges to zero and does so even faster than $1/n$ and $1/2^n$ converges to zero yet faster. If a sequence $(a_n)$ converges to some value $a$, we will denote this as $a_n \rightarrow a$.
 
@@ -138,6 +139,7 @@ A concept related to convergence is that of Cauchy sequences. When saying that a
 % Häufungspunkt (accumulation point?)
 % https://en.wikipedia.org/wiki/Accumulation_point
 
+%===================================================================================================
 \subsection{Divergence}
 By definition, any sequence that is not convergent is called \emph{divergent}. Perhaps counterintuitively, that includes bounded series that bounce around between two or more values but always stay within a finite interval. ...TBC...
 
@@ -194,7 +196,7 @@ If we have a nonnegative sequence $(a_n)$ and want to know whether it converges 
 % sum rule, product rule?
 
 
-
+%===================================================================================================
 \subsection{Sequence Transformations}
 A transformation of a sequence is, very generally speaking, a process that we apply to it to obtain a new sequence. For such a transformation to be interesting, we usually want it to satisfy some additional constraints. Most notably among them is the desire to not change the limit of a sequence in the case that such a limit exists, i.e. when the sequence is convergent. If our transformation has this desirable property of not affecting limits of convergent sequences, then we call the transformation \emph{regular} (VERIFY). Such regular transformations can help to speed up the convergence of a sequence which can be very helpful in practice when our task is to (approximately) evaluate the limit of a given sequence. They can even help to turn divergent sequences into convergent ones and thereby give us a potential way to "evaluate" limits of divergent sequences - although we need to be very careful with that. We will have to ask ourselves questions like whether or not this new "limit" is well defined in the sense that all different possible regular transformations will produce the same value. This is a tall order if we don't even know (yet) how the set of all possible regular transformations looks like (VERIFY)...TBC...
 
@@ -222,9 +224,18 @@ One way to transform a sequence into a new one is to convolve it with some fixed
 % The paper considers sequence-to-sequence, series-to-sequence and series-to-series transformations
 
 
+%===================================================================================================
+\subsection{Sequences of Functions} So far, the elements of our sequences were supposed to be numbers. In some contexts, it is useful to consider sequences whose elements are functions. Just like with sequences of numbers, we denote such a sequence of functions as $(f_n)$ and an individual element as $f_n$. It's only the letter $f$ that reminds us that we are now talking about functions - otherwise the notation is the same. Functions have an argument, so we may consider evaluating an element $f_n$ at some input $x$, i.e. consider $f_n(x)$. For each fixed value of $x$, $(f_n(x))$ will be a sequence of numbers. ...TBC... ToDo: explain uniform convergence (rate of convergence does not depend on $x$), Weierstrass approximation theorem, ...
+
+% https://en.wikipedia.org/wiki/Uniform_convergence
+
+% examples:
+% Taylor polynomials, Fourier polynomials, Bernstein polynomials
+% -repeated convolution of function with given kernel
 
 
-
+% Convolutions and Polynomial Approximation
+% https://www.youtube.com/watch?v=4P4Ufumu9ms
 
 
 \begin{comment}

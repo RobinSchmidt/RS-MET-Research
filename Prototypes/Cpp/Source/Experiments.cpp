@@ -13158,6 +13158,13 @@ void testGeneralizedCollatz()
   // See also:
   // https://www.youtube.com/watch?v=pylw9t4j6bM
   // The Mysterious Pattern I Found Within Prime Factorizations
+  //
+  // This maps numbers  n = prod_i p_i ^ k_i  to  m = prod_i (p_i + k_i)  and iterates the mapping.
+  // Maybe try other maps like  m = sum_i p_i k_i  or  m = prod_i k_i ^ p_i. In the latter case, it
+  // may be advantageous to do the mapping within the factorized representation to avoid having to
+  // deal with very large numbers - because taking a  p_i ^ k_i  factor to  k_i ^ p_i  can really 
+  // blow it up. For example, 29^3 is managable but 3^29 is huge. The algo would have to involve
+  // factoring the k_i.
 }
 
 void testPowerCommutator()

@@ -13164,7 +13164,7 @@ void testGeneralizedCollatz()
   // may be advantageous to do the mapping within the factorized representation to avoid having to
   // deal with very large numbers - because taking a  p_i ^ k_i  factor to  k_i ^ p_i  can really 
   // blow it up. For example, 29^3 is managable but 3^29 is huge. The algo would have to involve
-  // factoring the k_i.
+  // factoring the k_i. But maybe try this first in a math software like sage
 }
 
 void testPowerCommutator()

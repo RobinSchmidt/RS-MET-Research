@@ -27,7 +27,7 @@ where the RHS is a generalization of \ref{Eq:DerivativeViaH} which tells us how 
 
 %===================================================================================================
 \subsection{Higher Order Partial Derivatives}
-Just like we could define the second derivative of a univariate function as the derivative of the derivative, we can define second order partial derivatives of a multivariate scalar function. Due to the fact that we now have $n$ input variables, we can form $n^2$ different second partial derivatives. If we first find the derivative of $f$ with respect to some $x_i$ and then take the result and find its derivative with respect to $x_j$, we obtain such a second order partial derivative. We write this as $\frac{\partial^2 f}{\partial x_i \partial x_j}$. If the function $f$ is twice continuously differentiable, then, according to \emph{Schwartz's theorem}, we will actually have the following symmetry:
+Just like we could define the second derivative of a univariate function as the derivative of the derivative, we can define second order partial derivatives of a multivariate scalar function. Due to the fact that we now have $n$ input variables, we can form $n^2$ different second partial derivatives. If we first find the derivative of $f$ with respect to some $x_i$ and then take the result and find its derivative with respect to $x_j$, we obtain such a second order partial derivative. We write this as $\frac{\partial^2 f}{\partial x_i \partial x_j}$. If the function $f$ is twice continuously differentiable, then, according to \emph{Schwarz's theorem}\footnote{aka Clairaut's theorem or Young's theorem}, we will actually have the following symmetry:
 \begin{equation}
 	\frac{\partial^2 f}{\partial x_i \partial x_j} 
 	=
@@ -37,6 +37,9 @@ which means the order of the differentiations makes no difference. We can first 
 
 \medskip
 In the same way, we can find third order partial derivatives and there will be $n^3$ of them. For example  $f_{xyz} = \frac{\partial^3 f}{\partial x \partial y \partial z}$. There will be symmetries, too: whatever order we choose for the 3 differentiations, the result will be the same if the function is 3 times continuously differentiable. And so on.
+
+% % https://en.wikipedia.org/wiki/Symmetry_of_second_derivatives
+% https://de.wikipedia.org/wiki/Satz_von_Schwarz
 
 %===================================================================================================
 \subsection{The Gradient Vector}
@@ -105,17 +108,54 @@ The gradient vector and the Jacobian matrix are collections of first partial der
 		& \frac{\partial^2 f}{\partial x_n \partial x_n} (\mathbf{x})
 	\end{pmatrix}
 \end{equation}	
-Due to the symmetry of the partial derivatives when $f$ is twice continuously differentiable, the Hessian matrix is a symmetric matrix in this (typical) case. The Hessian of a function $f$ can also be formed as the Jacobian of its gradient. As usual, if things are clear from the context, we may suppress the index and argument and just write $\mathbf{H}$ for the Hessian. The Hessian can be used to formulate a quadratic (i.e. second order) approximation of a function $f$ as follows: Let $\mathbf{g}$ be the gradient and $\mathbf{H}$ be the Hessian of $f$ at $\mathbf{x}$. Then:
+Due to the symmetry of the partial derivatives when $f$ is twice continuously differentiable, the Hessian matrix is a symmetric matrix in this (typical) case. The Hessian of a function $f$ can also be formed as the Jacobian of its gradient. As usual, if things are clear from the context, we may suppress the index and argument and just write $\mathbf{H}$ for the Hessian. The Hessian can be used to formulate a quadratic (i.e. second order) approximation of a function $f$ as follows: Let $\mathbf{g}$ be the gradient and $\mathbf{H}$ be the Hessian of $f$ evaluated at $\mathbf{x}$. Then:
 \begin{equation}
- f(\mathbf{x + h}) \approx f(\mathbf{x}) + \mathbf{g^T h} + \mathbf{h^T H h}
+\label{Eq:TaylorMultivariate2ndOrder}
+ f(\mathbf{x + h}) \approx f(\mathbf{x}) + \mathbf{g^T h} + \frac{1}{2} \mathbf{h^T H h}
 \end{equation}	
-for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then this quadratic approximation function will be the locally (at $\mathbf{x}$) best fitting paraboloid. Such second order approximations of a multivariate scalar function play an important role in numerical optimization algorithms, i.e. algorithms that try to try to locate minima or maxima of such functions. The simpler of such algorithms use only the gradient, the more advanced ones may also use (an approximation of) the Hessian.
+for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then this quadratic approximation function will be the locally (at $\mathbf{x}$) best fitting paraboloid. Such second order approximations of a multivariate scalar function play an important role in numerical optimization algorithms, i.e. algorithms that try to locate minima or maxima of such functions. The simpler of such algorithms use only the gradient, the more advanced ones may also use (an approximation of) the Hessian.
 
+
+
+%===================================================================================================
+\subsection{Multivariable Taylor Series} 
+The approximation given in equation (\ref{Eq:TaylorMultivariate2ndOrder}) can be interpreted as a quadratic (i.e. 2nd order) approximation to our function $f$. To see where we are going, let's write it as:
+\begin{equation}
+ f(\mathbf{x + h}) \approx 
+   \frac{1}{0!} f(\mathbf{x}) 
+ + \frac{1}{1!} \mathbf{g^T h} 
+ + \frac{1}{2!} \mathbf{h^T H h}
+\end{equation}
+This doesn't change anything because $0! = 1, 1! = 1, 2! = 2$ but it may help us to recognize a pattern that we are familiar with from the one dimensional Taylor series formula. The second order Taylor polynomial in 1D was:
+%\begin{equation}
+% f(x + h) \approx \frac{1}{0!}  h^0 + \frac{1}{1!} 
+%\end{equation}
+
+
+
+%Consider a scalar valued function with vector valued inputs, i.e. a function $f: \mathbb{R}^n \rightarrow \mathbb{R}$. 
+
+...TBC...ToDo: give motivation and formula - maybe also in multi-index notation
+
+
+%Multivariable Taylor Series Derivation
+%https://www.youtube.com/watch?v=zxafRk45vtE
+
+% ToDo: multivariable Taylor Expansion
+
+% https://math.libretexts.org/Bookshelves/Calculus/Supplemental_Modules_(Calculus)/Multivariable_Calculus/3%3A_Topics_in_Partial_Derivatives/Taylor__Polynomials_of_Functions_of_Two_Variables
+
+% https://en.wikipedia.org/wiki/Taylor%27s_theorem#Taylor's_theorem_for_multivariate_functions
+
+% Karpfinger, pg 515
 
 
 %===================================================================================================
 \subsection{More Notation Terminology} 
 % Maybe move this section to somewhere else, i.e. below the "Composition" section
+
+\subsection{Multiindex Notation}
+ToDo: introduce multi-index notation and give Taylor formula in that notation
 
 \subsubsection{Differentials} Imagine we have a function $f(x,y)$ in two variables, for example $f(x,y) = x^y$. We can compute the partial derivatives of $f$ with respect to $x$ and $y$ as $f_x = \partial f / \partial x = y x^{y-1}$ and $f_y = \partial f / \partial y = x^y \ln x$. Consider a particular point $(x_0, y_0) = (2,3)$. We can evaluate $f$ and its partial derivatives $f_x, f_y$ at that point to get $f = 2^3 = 8, f_x = 3 \cdot 2^2 = 12, f_y = 2^3 \cdot \ln 2 \approx 5.545178$. With these three values, we can approximate our function $f$ near the point $(3,2)$ linearly as $f \approx 8 + 12 dx + 5.545178 dy$. For example, at $(2.02,3.01)$, we get $f \approx 8 + 12 \cdot 0.02 + 5.545178 \cdot 0.01 \approx 8.2955$ which is an approximation to the true value of around $8.3006$. What we did here was to define a linear function in two variables $dx,dy$ which we envision as small offsets from our given point $(x_0,y_0) = (2,3)$. These were given as $(dx,dy) = (0.02,0.01)$ in our example. These two offsets in the input variables lead to a resulting offset $df$ in the output variable $df = 12 \cdot 0.02 + 5.545178 \cdot 0.01$. This linear function in the two offset variables $dx, dy$ is called the \emph{total differential} of the function $f$ at the point $(x_0, y_0)$.
 
@@ -165,7 +205,7 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 % They Use ∂ Differently in Math and Physics. Which is Better?
 
 
-\subsubsection{The Total Derivative}
+%\subsubsection{The Total Derivative}
 
 \subsubsection{Derivatives With Respect to Vectors}  [very preliminary]
 Let $f = f(\mathbf{x})$ be a scalar valued function that has a vector $\mathbf{x}$ as its argument. We want to make sense of an expression like $\frac{d f}{d \mathbf{x}}$. Recall that:
@@ -224,6 +264,8 @@ where $\mathbf{D}$ is the matrix with entries $d_{ij} = \frac{\partial f}{\parti
 
 
 %https://en.wikipedia.org/wiki/Generalizations_of_the_derivative
+
+
 
 \begin{comment}
 

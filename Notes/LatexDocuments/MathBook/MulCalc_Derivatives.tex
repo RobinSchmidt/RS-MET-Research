@@ -119,7 +119,7 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 
 %===================================================================================================
 \subsection{Multivariable Taylor Series} 
-The approximation given in equation (\ref{Eq:TaylorMultivariate2ndOrder}) can be interpreted as a quadratic (i.e. 2nd order) approximation to our function $f$. To see where we are going, let's write it as:
+The approximation given in equation (\ref{Eq:TaylorMultivariate2ndOrder}) can be interpreted as a quadratic (i.e. 2nd order) approximation to our function $f$. To see where we are going, let's rewrite it in the following form:
 \begin{equation}
  f(\mathbf{x + h}) \approx
  f(\mathbf{x}) + 
@@ -136,7 +136,24 @@ Writing it like this may help us to recognize a pattern that we are familiar wit
               \frac{\partial f^3}{\partial x_i x_j x_k} h_i h_j h_k + 
  \frac{1}{4!}  \ldots              
 \end{equation}
-This notation becomes very verbose rather quickly which is why more compact notations have been invented for writing down formulas of that kind.
+This notation becomes very verbose rather quickly which is why more compact notations have been invented for writing down formulas of that kind. First of all, one can use the convention to use a single summation sign also for multiple sums:
+\begin{equation}
+ f(\mathbf{x + h}) \approx
+ f(\mathbf{x}) + 
+ \frac{1}{1!} \sum_{i=1}^{n}     \frac{\partial f}{\partial x_i} h_i + 
+ \frac{1}{2!} \sum_{i,j=1}^{n}   \frac{\partial f^2}{\partial x_i x_j} h_i h_j +
+ \frac{1}{3!} \sum_{i,j,k=1}^{n} \frac{\partial f^3}{\partial x_i x_j x_k} h_i h_j h_k + 
+ \frac{1}{4!}  \ldots              
+\end{equation}
+There are more fancy way of writing it down - some use tensor notation with Einstein summation convention, some use (powers of) the nabla operator, some use custom definitions of the multiple sums that occur above, some use multi-indices, etc. These ways of writing it down may appear daunting when one isn't familiar with the particular notation used. It's important to realize that they all just boil down to the formula above. TODO: give the formula in these other notations and explain how they translate back into the formula above.
+
+%ToDo: explain how to write it tensor notation with Einstein summation convention. There are various way to write it down - some of them quite fancy using powers of the nabla-operator, etc.
+
+% https://sites.millersville.edu/bikenaga/calculus3/taylor-series-several-variables/taylor-series-several-variables.pdf
+
+% https://math.stackexchange.com/questions/1586997/taylor-series-for-multivariable-functions
+
+% https://en.wikipedia.org/wiki/Fr%C3%A9chet_derivative#Higher_derivatives
 
 %Multivariable Taylor Series Derivation
 %https://www.youtube.com/watch?v=zxafRk45vtE
@@ -145,6 +162,8 @@ This notation becomes very verbose rather quickly which is why more compact nota
 
 % https://en.wikipedia.org/wiki/Taylor%27s_theorem#Taylor's_theorem_for_multivariate_functions
 
+% https://en.wikipedia.org/wiki/Taylor_series#Taylor_series_in_several_variables
+
 % Karpfinger, pg 515
 
 
@@ -152,8 +171,8 @@ This notation becomes very verbose rather quickly which is why more compact nota
 \subsection{More Notation Terminology} 
 % Maybe move this section to somewhere else, i.e. below the "Composition" section
 
-\subsection{Multiindex Notation}
-ToDo: introduce multi-index notation and give Taylor formula in that notation
+%\subsubsection{Multiindex Notation}
+%ToDo: introduce multi-index notation and give Taylor formula in that notation
 
 \subsubsection{Differentials} Imagine we have a function $f(x,y)$ in two variables, for example $f(x,y) = x^y$. We can compute the partial derivatives of $f$ with respect to $x$ and $y$ as $f_x = \partial f / \partial x = y x^{y-1}$ and $f_y = \partial f / \partial y = x^y \ln x$. Consider a particular point $(x_0, y_0) = (2,3)$. We can evaluate $f$ and its partial derivatives $f_x, f_y$ at that point to get $f = 2^3 = 8, f_x = 3 \cdot 2^2 = 12, f_y = 2^3 \cdot \ln 2 \approx 5.545178$. With these three values, we can approximate our function $f$ near the point $(3,2)$ linearly as $f \approx 8 + 12 dx + 5.545178 dy$. For example, at $(2.02,3.01)$, we get $f \approx 8 + 12 \cdot 0.02 + 5.545178 \cdot 0.01 \approx 8.2955$ which is an approximation to the true value of around $8.3006$. What we did here was to define a linear function in two variables $dx,dy$ which we envision as small offsets from our given point $(x_0,y_0) = (2,3)$. These were given as $(dx,dy) = (0.02,0.01)$ in our example. These two offsets in the input variables lead to a resulting offset $df$ in the output variable $df = 12 \cdot 0.02 + 5.545178 \cdot 0.01$. This linear function in the two offset variables $dx, dy$ is called the \emph{total differential} of the function $f$ at the point $(x_0, y_0)$.
 

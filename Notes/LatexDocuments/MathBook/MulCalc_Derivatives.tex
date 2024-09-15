@@ -75,8 +75,9 @@ is called the \emph{Jacobian matrix} of $\mathbf{f}$ at $\mathbf{x}$. It's a gen
  \mathbf{f}(\mathbf{x + h}) \approx 
  \mathbf{f}(\mathbf{x}) + \mathbf{J  h} \qquad \text{in the sense of:}  \qquad
  \lim_{\mathbf{h \rightarrow 0}} 
- \frac{\lVert \mathbf{f(x+h) - (f(x) + J h)} \rVert}
- {\lVert \mathbf{h} \rVert} = 0
+ \frac{ | \mathbf{f(x+h) - (f(x) + J h)}| }{ |\mathbf{h}| } = 0 
+% \frac{\lVert \mathbf{f(x+h) - (f(x) + J h)} \rVert}
+%       {\lVert \mathbf{h} \rVert} = 0
 \end{equation}	
 when $\mathbf{J} = \mathbf{J_f}(\mathbf{x})$ is the Jacobian of  $\mathbf{f}$ at $\mathbf{x}$. The limit can be understood in the following sense: the difference between $\mathbf{f(x+h)}$ and its approximation $\mathbf{f(x) + J h}$ approaches the zero vector faster than $\mathbf{h}$ itself when $\mathbf{h}$ approaches $\mathbf{0}$. Or stated in another way: when the denominator approaches zero linearly, the numerator will approach zero superlinearly, i.e. faster than linear (namely quadratically, I think. [VERIFY!]). Having the individual gradients of the component functions in the rows rather than in the columns ensures that we can formulate the linear approximation by left multiplication of the matrix with some small delta vector. The Jacobian matrix of a scalar valued function is actually the transpose of its gradient vector and I'm not sure, why the definition of the gradient has been chosen to be a column vector rather than a row vector. Maybe because in pure vector algebra (i.e. before matrices enter the stage), there's no notion of "row-" and "column" vectors. There are just vectors. We should perhaps more properly have said row- and column \emph{matrices} anyway. The determinant of the Jacobian matrix will play an important role in the change of variables formula for multiple integrals which we will see later. The approximation property of the Jacobian stated in \ref{Eq:JacobianApproximation} can also be seen as the definition of the derivative of $\mathbf{f}$ in the following way: we say that $\mathbf{f}$ is differentiable at $\mathbf{x}$, iff a matrix $\mathbf{J}$ exists, such that this equation holds true for any (small) direction vector $\mathbf{h}$. In this case, we call the matrix $\mathbf{J}$ the derivative of $\mathbf{f}$ at $\mathbf{x}$.
 
@@ -115,7 +116,7 @@ Due to the symmetry of the partial derivatives when $f$ is twice continuously di
 \end{equation}	
 for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then this quadratic approximation function will be the locally (at $\mathbf{x}$) best fitting paraboloid. Such second order approximations of a multivariate scalar function play an important role in numerical optimization algorithms, i.e. algorithms that try to locate minima or maxima of such functions. The simpler of such algorithms use only the gradient, the more advanced ones may also use (an approximation of) the Hessian.
 
-
+% https://en.wikipedia.org/wiki/Hessian_matrix#Generalization_to_the_complex_case
 
 %===================================================================================================
 \subsection{Multivariable Taylor Series} 
@@ -164,15 +165,28 @@ There are more fancy way of writing it down - some use tensor notation with Eins
 
 % https://en.wikipedia.org/wiki/Taylor_series#Taylor_series_in_several_variables
 
+% https://math.stackexchange.com/questions/4020865/how-to-expand-this-tensorial-taylor-expansion-to-the-nth-term
+
+% 
+
+
+
+%===================================================================================================
+%\subsection{Multiindex Notation}
+%ToDo: introduce multi-index notation and give Taylor formula in that notation
+
+% https://en.wikipedia.org/wiki/Multi-index_notation
+% https://de.wikipedia.org/wiki/Multiindex
+
 % Karpfinger, pg 515
+% Arens, pg 888
 
 
 %===================================================================================================
 \subsection{More Notation Terminology} 
 % Maybe move this section to somewhere else, i.e. below the "Composition" section
 
-%\subsubsection{Multiindex Notation}
-%ToDo: introduce multi-index notation and give Taylor formula in that notation
+
 
 \subsubsection{Differentials} Imagine we have a function $f(x,y)$ in two variables, for example $f(x,y) = x^y$. We can compute the partial derivatives of $f$ with respect to $x$ and $y$ as $f_x = \partial f / \partial x = y x^{y-1}$ and $f_y = \partial f / \partial y = x^y \ln x$. Consider a particular point $(x_0, y_0) = (2,3)$. We can evaluate $f$ and its partial derivatives $f_x, f_y$ at that point to get $f = 2^3 = 8, f_x = 3 \cdot 2^2 = 12, f_y = 2^3 \cdot \ln 2 \approx 5.545178$. With these three values, we can approximate our function $f$ near the point $(3,2)$ linearly as $f \approx 8 + 12 dx + 5.545178 dy$. For example, at $(2.02,3.01)$, we get $f \approx 8 + 12 \cdot 0.02 + 5.545178 \cdot 0.01 \approx 8.2955$ which is an approximation to the true value of around $8.3006$. What we did here was to define a linear function in two variables $dx,dy$ which we envision as small offsets from our given point $(x_0,y_0) = (2,3)$. These were given as $(dx,dy) = (0.02,0.01)$ in our example. These two offsets in the input variables lead to a resulting offset $df$ in the output variable $df = 12 \cdot 0.02 + 5.545178 \cdot 0.01$. This linear function in the two offset variables $dx, dy$ is called the \emph{total differential} of the function $f$ at the point $(x_0, y_0)$.
 

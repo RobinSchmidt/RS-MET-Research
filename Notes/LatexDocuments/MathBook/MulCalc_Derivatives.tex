@@ -121,27 +121,25 @@ for some small deviation vector $\mathbf{h}$. If the input to $f$ is 2D, then th
 \subsection{Multivariable Taylor Series} 
 The approximation given in equation (\ref{Eq:TaylorMultivariate2ndOrder}) can be interpreted as a quadratic (i.e. 2nd order) approximation to our function $f$. To see where we are going, let's write it as:
 \begin{equation}
- f(\mathbf{x + h}) \approx 
-   \frac{1}{0!} f(\mathbf{x}) 
- + \frac{1}{1!} \mathbf{g^T h} 
- + \frac{1}{2!} \mathbf{h^T H h}
+ f(\mathbf{x + h}) \approx
+ f(\mathbf{x}) + 
+ \frac{1}{1!} \sum_{i=1}^{n} \frac{\partial f}{\partial x_i} h_i + 
+ \frac{1}{2!} \sum_{i=1}^{n} \sum_{j=1}^{n}  \frac{\partial f^2}{\partial x_i x_j} h_i h_j
 \end{equation}
-This doesn't change anything because $0! = 1, 1! = 1, 2! = 2$ but it may help us to recognize a pattern that we are familiar with from the one dimensional Taylor series formula. The second order Taylor polynomial in 1D was:
-%\begin{equation}
-% f(x + h) \approx \frac{1}{0!}  h^0 + \frac{1}{1!} 
-%\end{equation}
-
-
-
-%Consider a scalar valued function with vector valued inputs, i.e. a function $f: \mathbb{R}^n \rightarrow \mathbb{R}$. 
-
-...TBC...ToDo: give motivation and formula - maybe also in multi-index notation
-
+Writing it like this may help us to recognize a pattern that we are familiar with from the one dimensional Taylor series formula. A general multivariate Taylor polynomial would look like this:
+\begin{equation}
+ f(\mathbf{x + h}) \approx
+ f(\mathbf{x}) + 
+ \frac{1}{1!} \sum_{i=1}^{n} \frac{\partial f}{\partial x_i} h_i + 
+ \frac{1}{2!} \sum_{i=1}^{n} \sum_{j=1}^{n}  \frac{\partial f^2}{\partial x_i x_j} h_i h_j +
+ \frac{1}{3!} \sum_{i=1}^{n} \sum_{j=1}^{n}  \sum_{k=1}^{n} 
+              \frac{\partial f^3}{\partial x_i x_j x_k} h_i h_j h_k + 
+ \frac{1}{4!}  \ldots              
+\end{equation}
+This notation becomes very verbose rather quickly which is why more compact notations have been invented for writing down formulas of that kind.
 
 %Multivariable Taylor Series Derivation
 %https://www.youtube.com/watch?v=zxafRk45vtE
-
-% ToDo: multivariable Taylor Expansion
 
 % https://math.libretexts.org/Bookshelves/Calculus/Supplemental_Modules_(Calculus)/Multivariable_Calculus/3%3A_Topics_in_Partial_Derivatives/Taylor__Polynomials_of_Functions_of_Two_Variables
 

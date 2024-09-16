@@ -24,7 +24,8 @@ Now that we have numbers, we want to do something with them. One thing we can do
 % shoved in in all the operation: conj(z * w) = conj(z) * conj(w), etc. - it works also for +,-,/
 
 %===================================================================================================
-\subsection{Equations}
+\subsection{Equations} 
+...TBC...
 
 %===================================================================================================
 \subsection{Arithmetic}
@@ -58,11 +59,25 @@ At the bottom, we introduce a dummy variable for the index (here $k$) and assign
  \sum_{0 \leq k \leq n} a_k, \qquad
  \sum_{k \neq 5} a_k
 \end{equation}
-and so on. In the first case, the range of the index $k$ must be inferred from the context. The second case writes the conditions for the index $k$ all at the bottom. It's uncommon to see this for conditions like $0 \leq k \leq n$ but this notation may be used for more general conditions that the index needs to satisfy. In the 3rd case, the index $k$ would run over all possible values of $k$ except $5$ - again, which values are possible or make sense must be inferred from the context. You can also have double sums like:
+and so on. In the first case, the range of the index $k$ must be inferred from the context. This may be used when specifying index range is too complicated to integrate into the summation sign notation. Then, the surrounding text may clarify what values the index $k$ will take on. The second sum writes the conditions for the index $k$ all at the bottom. It's  uncommon to see this for conditions like $0 \leq k \leq n$ but this notation may be used for more general conditions that the index needs to satisfy. In the 3rd case, the index $k$ would run over all possible values of $k$ except $5$ - again, which values are possible or make sense must be inferred from the context. You can also have double sums like:
 \begin{equation}
  \sum_{i=1}^{m} \sum_{j=i}^n  a_i b_j
 \end{equation}
-which would mean to sum over all products $a_i b_j$ of values from two given sequences of numbers $a_1,\ldots,a_m$ and $b_1,\ldots,b_n$. Note that the lower limit of inner summation index $j$ starts at $i$ in this example. This is something you can do: use the index of outer sum for computing limits of the index of the inner sum. One could also use a more general condition like $j \neq i$ - in this case, the sum would leave out the terms where $j$ would be equal to $i$. In cases where the upper summation index is less than the lower index, e.g. something like $\sum_{k=8}^{3}$, then there is nothing to sum over - the sum is considered to be an \emph{empty sum} and gets the value zero by definition. Likewise, an \emph{empty product} gets the value of one by definition. These definitions make sense because they assign the neutral elements of the respective operation to the empty case which tends to play nicely with edge cases. ...TBC...TODO: give formulas for sums (splitting, combining, index-shifting, ...), 
+which would mean to sum over all products $a_i b_j$ of values from two given sequences of numbers $a_1,\ldots,a_m$ and $b_1,\ldots,b_n$. Note that the lower limit of inner summation index $j$ starts at $i$ in this example. This is something you can do: use the current index of the outer sum for computing limits of the index of the inner sum. One could also use a more general condition like $j \neq i$ - in this case, the sum would leave out the terms where $j$ would be equal to $i$. In cases where the upper summation index is less than the lower index, e.g. something like $\sum_{k=8}^{3} a_k$, then there is nothing to sum over - the sum is considered to be an \emph{empty sum} and gets the value zero by definition. Likewise, an \emph{empty product} gets the value of one by definition. These definitions make sense because they assign the neutral elements of the respective operation to the empty case which tends to play nicely with edge cases. If, in a double sum (or general multiple sum), the different indices have the same range, then one can also use a single summation sign to save space. For example:
+\begin{equation}
+ \sum_{i=1}^{n} \sum_{j=1}^n  a_i b_j = \sum_{i,j=1}^{n} a_i b_j
+\end{equation}
+It is also possible to write something like:
+\begin{equation}
+ \sum_{i,j \geq 0, i+j \leq n} a_i b_j
+\end{equation}
+which means that we have a double sum (i.e. one with two indices $i,j$) and they both start at $0$ and their ranges are such that their sum is at most $n$. That means $i,j$ range over all combinations whose sum is less than or equal to $n$. You can also use set notation for the indices as in:
+\begin{equation}
+ \sum_{p \in \mathbb{P}, p \leq n} p
+\end{equation}
+That would mean to sum over all primes less than or equal to $n$.
+
+...TBC...TODO: give formulas for sums (splitting, combining, index-shifting, ...), 
 
 % Maybe include continued fractions, too
 

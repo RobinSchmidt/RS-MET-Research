@@ -107,7 +107,7 @@ This sum is to be interpreted as follows. The indices $k_i$ run over all possibl
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Some Important Formulas}
 
-\paragraph{Sums of Powers}
+\paragraph{Power Sums}
 Consider the task of summing powers of all natural numbers up to some given upper limit $n$. That means, we want to compute the sum $S = \sum_{k=1}^{n} k$. Doing it the naive way would require us to perform $n-1$ additions. That's a lot of work when $n$ is large. It turns out that there are formulas for that. For the first powers up to 3, they are:
 \begin{equation}
 \sum_{k=1}^{n} k^0 = n, \quad
@@ -142,7 +142,16 @@ The formula for $k^0 = 1$ is trivial but given for the sake of completeness. The
 % (x+y)(x-y) = x^2 - xy + yx - y^2 = x^2 - y^2 + [y,x] = x^2 - y^2 - [x,y] where [.,.] is
 % the commutator
 
+\paragraph{Geometric Progressions}
+A geometric progression is a finite sum of powers of a given number $r$, typically starting at $r^0 = 1$. There's a formula for that, too:
+\begin{equation}
+ r^0 + r^1 + r^2 + \ldots + r^n = \sum_{k=0}^{n} r^k = \frac{1-r^{n+1}}{1 - r}
+\end{equation}
+The number $r$ is the ratio of two successive terms in the sum. You may also find it as a sum of the form $a r^0 + a r^1 + a r^2 + \ldots + a r^n$ but the overall scaling factor $a$ can be factored out anyway, so we don't really need that kind of generality in our formula.
 
+% https://en.wikipedia.org/wiki/Arithmetic_progression
+% https://en.wikipedia.org/wiki/Geometric_progression
+% https://en.wikipedia.org/wiki/Geometric_series#Derivation_of_sum_formulas
 
 % https://mathworld.wolfram.com/HarmonicNumber.html
 

@@ -146,6 +146,16 @@ This notation becomes very verbose rather quickly which is why more compact nota
  \frac{1}{3!} \sum_{i,j,k=1}^{n} \frac{\partial f^3}{\partial x_i x_j x_k} h_i h_j h_k + 
  \frac{1}{4!}  \ldots              
 \end{equation}
+There are a couple of other ways of writing down the multivariate Taylor expansion. For example as:
+\begin{equation}
+ f(\mathbf{x}) \approx
+ \sum_{k_1+\ldots+k_n}^{m} c_{k_1 \ldots k_n} (x_1 - a_1)^k_1 \ldots (x_n - a_n)^k_n, 
+ \quad \text{where} \quad
+ c_{k_1 \ldots k_n} = \frac{1}{k_1 ! \ldots k_n!} 
+                      \frac{ \partial^{k_1+\ldots+k_n} }
+                           { \partial x_1 ^{k_1} \ldots \partial x_n ^ {k_n}} f(\mathbf{a})
+\end{equation}
+This notation needs a bit of dissection. 
 
 %There are more fancy way of writing it down - some use tensor notation with Einstein summation convention, some use (powers of) the nabla operator, some use custom definitions of the multiple sums that occur above, some use multi-indices, etc. These ways of writing it down may appear daunting when one isn't familiar with the particular notation used. It's important to realize that they all just boil down to the formula above. TODO: give the formula in these other notations and explain how they translate back into the formula above.
 
@@ -181,7 +191,7 @@ The notation is still quite verbose and the usage of "$\ldots$" requires the rea
 % https://de.wikipedia.org/wiki/Multiindex
 
 % Karpfinger, pg 515
-% Arens, pg 888
+% Arens, pg 888 - ..891: WTF! Raising a differential operator to the power of a multi-index! :-O
 
 
 % Tensor notation?

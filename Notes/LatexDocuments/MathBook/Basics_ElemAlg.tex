@@ -74,18 +74,38 @@ Another thing that is used often enough to deserve its own notation is the so ca
 \begin{equation}
  n! = 1 \cdot 2 \cdot 3 \cdot 4 \cdot \ldots \cdot n = \prod_{k=1}^{n} k
 \end{equation}
+The factorial of $0$ is defined to be $0$. With the factorial, we can define the so called \emph{binomial coefficients} as follows:
+\begin{equation}
+ \binom{n}{k} = \frac{n!}{k! (n-k)!}
+\end{equation}
+They get their name from the fact that they give the coefficients that arise from expanding a so called \emph{binomial} $(a+b)^n$. Expanding it yields:
+\begin{equation}
+(a+b)^n = \sum_{k=0}^{n} \binom{n}{k} a^k b^{n-k}
+\end{equation}
+They also arise in combinatorics. There, they give the number of different ways that one may pick $k$ objects form a set of $n$ objects. That's why they are pronounced as "n-choose-k". A generalization of the binomial coefficients are the \emph{multinomial coefficients} defined as:
+\begin{equation}
+ \binom{n}{k_1,k_2,\ldots,k_m} = \frac{n!}{k_1! k_2! \ldots k_m!}
+\end{equation}
+They arise from multiplying out a multinomial:
+\begin{equation}
+(a_1 + a_2 + \ldots + a_m)^n 
+= \sum_{k_1+\ldots+k_m = n} \binom{n}{k_1, \ldots, k_m} a_1^{k_1} a_2^{k_2} \ldots a_m^{k_m}
+\end{equation}
+This sum is to be interpreted as follows. The indices $k_i$ run over all possible combinations that give a total sum of $n$. ...TBC...VERIFY...TODO: explain Pascal's triangle, maybe give a preview to multi-indices
 
 
 % What Lies Above Pascal's Triangle?
 % https://www.youtube.com/watch?v=q2daqMR3l24
 
-
+% https://en.wikipedia.org/wiki/Multinomial_theorem
+% https://de.wikipedia.org/wiki/Multinomialtheorem
+% Arens, pg 891
 
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Some Important Formulas}
 
-\paragraph{The Binomial Theorem}
+%\paragraph{The Binomial Theorem}
 
 \paragraph{Sums of Powers}
 Consider the task of summing all natural numbers up to some given upper limit $m$. That means, we want to compute the sum $S = \sum_{n=1}^{m} n$. Doing it the naive way would require us to perform $n-1$ additions. That's a lot of work when $m$ is large. It turns out that there is a simple formula for that: $S = (m (m+1)) / 2$. [VERIFY]

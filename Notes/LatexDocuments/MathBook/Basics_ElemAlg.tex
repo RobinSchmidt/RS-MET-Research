@@ -107,32 +107,44 @@ This sum is to be interpreted as follows. The indices $k_i$ run over all possibl
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Some Important Formulas}
 
-%\paragraph{The Binomial Theorem}
-
 \paragraph{Sums of Powers}
-Consider the task of summing powers of all natural numbers up to some given upper limit $n$. That means, we want to compute the sum $S = \sum_{k=1}^{n} k$. Doing it the naive way would require us to perform $n-1$ additions. That's a lot of work when $n$ is large. It turns out that there are formulas for that:
+Consider the task of summing powers of all natural numbers up to some given upper limit $n$. That means, we want to compute the sum $S = \sum_{k=1}^{n} k$. Doing it the naive way would require us to perform $n-1$ additions. That's a lot of work when $n$ is large. It turns out that there are formulas for that. For the first powers up to 3, they are:
 \begin{equation}
-\sum_{k=1}^{n} k   = \frac{n (n+1)}{2}, \quad
-\sum_{k=1}^{n} k^2 = \ldots
+\sum_{k=1}^{n} k^0 = n, \quad
+\sum_{k=1}^{n} k^1 = \frac{n (n+1)}{2}, \quad
+\sum_{k=1}^{n} k^2 = \frac{n (n+1) (2 n  + 1) }{6}, \quad
+\sum_{k=1}^{n} k^3 = \frac{n^2 (n+1)^2}{4}
 \end{equation}
-...TBC...TODo: add more formulas, maybe give general formula (Faulhaber's Formula)
+The formula for $k^0 = 1$ is trivial but given for the sake of completeness. The formula for $k^1 = k$ of these formulas is also known as Gauss's summation formula\footnote{As the story goes, Gauss discovered the formula as a year old child in school when his math teacher wanted to keep the children busy by letting them add up all numbers from $0$ to $100$.}. The numbers resulting from the formula for $k^2$ are known as the square pyramidal numbers. They give the number of balls that make up a pyramid with a square base where the side length of the square is $n$. The tip of the pyramid is made from $1$ ball, the layer directly below is made from $2^2 = 4$ balls, etc. If you compare the formula for $k^1$ and $k^3$, you'll notice that you get the latter from the former by just squaring everything. That means that the sum over all the cubes up to $n$ equals the square of sum of all the numbers up to $n$.
 
-%Consider the task of summing all natural numbers up to some given upper limit $m$. That means, we want to compute the sum $S = \sum_{n=1}^{m} n$. Doing it the naive way would require us to perform $n-1$ additions. That's a lot of work when $m$ is large. It turns out that there is a simple formula for that: $S = (m (m+1)) / 2$. [VERIFY]
-%  Gauss's Sum and Faulhaber's Formula
+...TBC...TODO: Give general formula (Faulhaber's Formula), explain how these formulas can be used to compute sums that don't start at 1 and/or have an increment other than 1 (general arithmetic progressions), give other sum formulas - for a geometric progression
+
+% https://en.wikipedia.org/wiki/Faulhaber%27s_formula
+% https://de.wikipedia.org/wiki/Faulhabersche_Formel
+% https://mathworld.wolfram.com/FaulhabersFormula.html
+% https://mathworld.wolfram.com/PowerSum.html
+
+
 
 % https://de.wikipedia.org/wiki/Gau%C3%9Fsche_Summenformel
 % https://didaktik.mathematik.hu-berlin.de/user/Euler.pdf  
-
+% https://www.wolframalpha.com/input?i=sum+k%3D1+to+n+k%5E2
 
 % Binomial theorem, Faulhaber's formula (small special cases)
 % Multinomial coefficinet (see Arens, pg 891)
 
+% https://en.wikipedia.org/wiki/Square_pyramidal_number
+% https://de.wikipedia.org/wiki/Quadratische_Pyramidalzahl
 
 % (x+1)(x-1) = x^2 - 1
 % (x+y)(x-y) = x^2 - y^2
 % generally:
 % (x+y)(x-y) = x^2 - xy + yx - y^2 = x^2 - y^2 + [y,x] = x^2 - y^2 - [x,y] where [.,.] is
 % the commutator
+
+
+
+% https://mathworld.wolfram.com/HarmonicNumber.html
 
 %===================================================================================================
 \subsection{Linear Equations}

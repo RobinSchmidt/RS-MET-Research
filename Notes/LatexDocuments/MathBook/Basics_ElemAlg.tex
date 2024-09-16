@@ -43,20 +43,44 @@ Arithmetic is about performing the elementary operations of addition, subtractio
 % https://en.wikipedia.org/wiki/Arithmetic
 
 %---------------------------------------------------------------------------------------------------
+\subsubsection{Notation for Sums and Products}
+If we have $n$ numbers $a_1, a_2, \ldots, a_n$, there is a special notation to form their sum and their product. It uses the uppercase greek letters $\Sigma$ (sigma) and $\Pi$ (pi) which correspond to the latin letters S and P respectively which should remind us of taking \emph{s}ums and \emph{p}roducts. The notation looks like this:
+\begin{equation}
+ \sum_{k=1}^{n}  a_k = a_1   +   a_2   +   \ldots   +   a_n, \qquad
+ \prod_{k=1}^{n} a_k = a_1 \cdot a_2 \cdot \ldots \cdot a_n 
+\end{equation}
+At the bottom, we introduce a dummy variable for the index (here $k$) and assign the starting value for the index. At the top, we assign the final value for $k$ - which, in this case, is another variable, namely $n$ - the total number of values that we add (or multiply). You may also see things like:
+\begin{equation}
+ \qquad  \sum_{k} a_k,       \qquad
+ \sum_{0 \leq k \leq n} a_k, \qquad
+ \sum_{k \neq 5} a_k
+\end{equation}
+and so on. In the first case, the range of the index $k$ must be inferred from the context. The second case writes the conditions for the index $k$ all at the bottom. It's uncommon to see this for conditions like $0 \leq k \leq n$ but this notation may be used for more general conditions that the index needs to satisfy. In the 3rd case, the index $k$ would run over all possible values of $k$ except $5$ - again, which values are possible or make sense must be inferred from the context. You can also have double sums like:
+\begin{equation}
+ \sum_{i=1}^{m} \sum_{j=i}^n  a_i b_j
+\end{equation}
+which would mean to sum over all products $a_i b_j$ of values from two given sequences of numbers $a_1,\ldots,a_m$ and $b_1,\ldots,b_n$. Note that the lower limit of inner summation index $j$ starts at $i$ in this example. This is something you can do: use the index of outer sum for computing limits of the index of the inner sum. One could also use a more general condition like $j \neq i$ - in this case, the sum would leave out the terms where $j$ would be equal to $i$. In cases where the upper summation index is less than the lower index, e.g. something like $\sum_{k=8}^{3}$, then there is nothing to sum over - the sum is considered to be an \emph{empty sum} and gets the value zero by definition. Likewise, an \emph{empty product} gets the value of one by definition. These definitions make sense because they assign the neutral elements of the respective operation to the empty case which tends to play nicely with edge cases. ...TBC...TODO: give formulas for sums (splitting, combining, index-shifting, ...), 
+
+% Maybe include continued fractions, too
+
+% Endliche Summen und Produkte / gaußsche und geometrische Summenformel
+% https://www.youtube.com/watch?v=O_MI8V8MEkU
+% Ein paar einfache Regeln für Summen - Indexverschiebung, Aufsplitten, ...
+
+
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Factorials and Binomial Coefficients}
+Another thing that is used often enough to deserve its own notation is the so called \emph{factorial} of a natural number $n$. It's defined as the product of all positive natural numbers up to $n$ and denoted with an exclamation mark:
+\begin{equation}
+ n! = 1 \cdot 2 \cdot 3 \cdot 4 \cdot \ldots \cdot n = \prod_{k=1}^{n} k
+\end{equation}
 
 
 % What Lies Above Pascal's Triangle?
 % https://www.youtube.com/watch?v=q2daqMR3l24
 
 
-%---------------------------------------------------------------------------------------------------
-\subsubsection{Notation for Sums and Products}
-% Maybe include continued fractions, too
 
-% Endliche Summen und Produkte / gaußsche und geometrische Summenformel
-% https://www.youtube.com/watch?v=O_MI8V8MEkU
-% Ein paar einfache Regeln für Summen - Indexverschiebung, Aufsplitten, ...
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Some Important Formulas}
@@ -72,6 +96,7 @@ Consider the task of summing all natural numbers up to some given upper limit $m
 
 
 % Binomial theorem, Faulhaber's formula (small special cases)
+% Multinomial coefficinet (see Arens, pg 891)
 
 
 % (x+1)(x-1) = x^2 - 1

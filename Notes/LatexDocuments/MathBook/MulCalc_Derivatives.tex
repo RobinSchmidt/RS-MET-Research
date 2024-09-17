@@ -197,11 +197,14 @@ The meaning of $c_{\mathbf{k}}$ is that $c$ is a quantity that is indexed by an 
 Let's forget about multi indices for a moment and go back to equation (\ref*{Eq:TaylorSeriesMultiDim}) and let's now focus on things like $\frac{\partial f}{\partial x_i} h_i$, $\frac{\partial f^2}{\partial x_i x_j} h_i h_j$, etc. Let's define:
 \begin{equation}
  \mathbf{h} \cdot \nabla    = \sum_{i=1}^{n} h_i \frac{\partial}{\partial x_i}, \quad
-(\mathbf{h} \cdot \nabla)^2 = \sum_{i,j=1}^{n} h_i h_j \frac{\partial^2}{\partial x_i x_j}
+(\mathbf{h} \cdot \nabla)^2 = \sum_{i,j=1}^{n} h_i h_j \frac{\partial^2}{\partial x_i x_j}, \quad
+(\mathbf{h} \cdot \nabla)^k 
+= \sum_{i_1,\ldots,i_k=1}^{n} 
+  h_{i_1} \ldots h_{i_k} \frac{\partial^k}{\partial x_{i_1} \ldots \partial x_{i_k}}
 \end{equation}
+The object $\mathbf{h} \cdot \nabla$ is a differential operator...TBC...
 
-
-...TBC...
+% See Karpfinger, pg 517
 
 \paragraph{Operator Notation with Multi-indices}
 Of course, it's also possible to combine the ideas of operator- and multi-index notation. For this, we define:
@@ -213,19 +216,10 @@ Now we can write down the $m$-order Taylor approximation rather neatly as:
 f(\mathbf{x}) \approx \sum_{|\mathbf{k}| \leq m} \frac{1}{\mathbf{k}!} 
                       (\nabla ^ {\mathbf{k}} f)(\mathbf{a})  (\mathbf{x - a})^{\mathbf{k}}
 \end{equation}
-Whether such a condensed notation is really useful - I don't know. It requires us to be able to dissect it in our heads. I can't do that easily. I mean really - WTF! We are raising a differential operator to the power of a multi-index here! Knowing what that is even supposed to mean legitimately qualifies as rather advanced stuff - at least in my book. In practice, I really prefer equation (\ref{Eq:TaylorSeriesMultiDim}). It may be verbose but at least, it's a straightforward generalization of the 1D case. I have given the other notations here not to show off but in order to enable the reader to translate them into the more elementary notation when they come across the more advanced notation somewhere in the wild, i.e. when reading a math-heavy paper or something. TODO: figure out if there's a common way to write it in tensor notation - if so, give that too.
+Whether such a condensed notation is really useful - I don't know. It requires us to be able to dissect it in our heads. I can't do that easily. I mean really - WTF! We are raising a differential operator to the power of a multi-index here! Knowing what that is even supposed to mean legitimately qualifies as rather advanced stuff - at least in my book. In practice, I really prefer equation (\ref{Eq:TaylorSeriesMultiDim}). It may be verbose but at least, it's a straightforward generalization of the 1D case. I have given the other notations here not to show off but in order to enable the reader to translate them into the more elementary notation when they come across the more advanced notation somewhere in the wild, i.e. when reading a math-heavy paper or something. TODO: figure out if there's a common way to write it in tensor notation (maybe using Einstein summation convention) - if so, give that too. %Maybe express the coeffs also in terms of multinomial coefficients.
 
+% See Arens, pg 891
 
-%It is an $n$-fold sum, i.e. a sum that runs over $n$ different indices which we have dubbed $k_1,\ldots, k_n$ here. For each combination of these $k_i$ that satisfies $k_1+\ldots+k_n \leq m$, there will be one summand. This summand consists of a product of powers of $(x_i - a_i)^{k_i}$. Each of these products is weighted by a coefficient $c_{k_1 \ldots k_n}$. This coefficient has also $n$ indices. The computation formula for these coefficients is given on the right. It is a mixed partial 
-
-%...TBC...ToDo: explain the formula, give versions in operator notation, multi-index notation, notation using multinomial coefficients
-
-%but it's still quite verbose and needs a bit more explanation than the one we have seen before. 
-%maybe call this notation above "term-wise" notation. it considers each term separately. Maybe the notation with the single, double, triple, etc. sums could be called multi-sum notation because it uses multiple sum symbols
-
-
-
-%There are more fancy way of writing it down - some use tensor notation with Einstein summation convention, some use (powers of) the nabla operator, some use custom definitions of the multiple sums that occur above, some use multi-indices, etc. These ways of writing it down may appear daunting when one isn't familiar with the particular notation used. It's important to realize that they all just boil down to the formula above. TODO: give the formula in these other notations and explain how they translate back into the formula above.
 
 %ToDo: explain how to write it tensor notation with Einstein summation convention. There are various way to write it down - some of them quite fancy using powers of the nabla-operator, etc.
 
@@ -246,22 +240,10 @@ Whether such a condensed notation is really useful - I don't know. It requires u
 
 % https://math.stackexchange.com/questions/4020865/how-to-expand-this-tensorial-taylor-expansion-to-the-nth-term
 
-% 
-
-%===================================================================================================
-%\subsection{Multi-index Notation}
-%The notation is still quite verbose and the usage of "$\ldots$" requires the reader to recognize and extrapolate the pattern. There are more advanced ways of writing down the multivariable Taylor expansion but they require the introduction of a new concept: the \emph{multi-index}. A multi-index is, so to speak, a vector of indices. ...TBC... TODO: explain the concept, give some important formulas and definitions for multi-indices and then re-state the Taylor-expansion in multi-index notation.
-
-
-%ToDo: introduce multi-index notation and give Taylor formula in that notation
-% maybe use bolface k for the multi index here
-
 % https://en.wikipedia.org/wiki/Multi-index_notation
 % https://de.wikipedia.org/wiki/Multiindex
 
 % Karpfinger, pg 515
-% Arens, pg 888 - ..891: WTF! Raising a differential operator to the power of a multi-index! :-O
-
 
 % Tensor notation?
 % https://en.wikipedia.org/wiki/Four-gradient

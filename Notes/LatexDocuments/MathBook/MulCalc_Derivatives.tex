@@ -194,7 +194,14 @@ For that too make sense, we need to define the following operations for multi-in
 The meaning of $c_{\mathbf{k}}$ is that $c$ is a quantity that is indexed by an $n$-dimensional set of indices. For example, if $n=2$, each $c$ would be indexed by two indices - it would be a $c_{ij}$ like an element of an $n \times n$ matrix.
 
 \paragraph{Operator Notation}
-Let's forget about multi indices for a moment and go back to equation (\ref*{Eq:TaylorSeriesMultiDim}) and let's now focus on things like $\frac{\partial f}{\partial x_i} h_i$, $\frac{\partial f^2}{\partial x_i x_j} h_i h_j$, etc. ...TBC...
+Let's forget about multi indices for a moment and go back to equation (\ref*{Eq:TaylorSeriesMultiDim}) and let's now focus on things like $\frac{\partial f}{\partial x_i} h_i$, $\frac{\partial f^2}{\partial x_i x_j} h_i h_j$, etc. Let's define:
+\begin{equation}
+ \mathbf{h} \cdot \nabla    = \sum_{i=1}^{n} h_i \frac{\partial}{\partial x_i}, \quad
+(\mathbf{h} \cdot \nabla)^2 = \sum_{i,j=1}^{n} h_i h_j \frac{\partial^2}{\partial x_i x_j}
+\end{equation}
+
+
+...TBC...
 
 \paragraph{Operator Notation with Multi-indices}
 Of course, it's also possible to combine the ideas of operator- and multi-index notation. For this, we define:

@@ -197,11 +197,21 @@ The meaning of $c_{\mathbf{k}}$ is that $c$ is a quantity that is indexed by an 
 Let's forget about multi indices for a moment and go back to equation (\ref*{Eq:TaylorSeriesMultiDim}) and let's now focus on things like $\frac{\partial f}{\partial x_i} h_i$, $\frac{\partial f^2}{\partial x_i x_j} h_i h_j$, etc. ...TBC...
 
 \paragraph{Operator Notation with Multi-indices}
+Of course, it's also possible to combine the ideas of operator- and multi-index notation. For this, we define:
+\begin{equation}
+\nabla ^ {\mathbf{k}} = \frac{\partial^{|\mathbf{k}|}}{\partial x_1^{k_1} \ldots \partial x_n^{k_n}}
+\end{equation}
+Now we can write down the $m$-order Taylor approximation rather neatly as:
+\begin{equation}
+f(\mathbf{x}) \approx \sum_{|\mathbf{k}| \leq m} \frac{1}{\mathbf{k}!} 
+                      (\nabla ^ {\mathbf{k}} f)(\mathbf{a})  (\mathbf{x - a})^{\mathbf{k}}
+\end{equation}
+Whether such a condensed notation is really useful - I don't know. It requires us to be able to dissect it in our heads. I can't do that easily. I mean really - WTF! We are raising a differential operator to the power of a multi-index here! Knowing what that is even supposed to mean legitimately qualifies as rather advanced stuff - at least in my book.
 
 
 %It is an $n$-fold sum, i.e. a sum that runs over $n$ different indices which we have dubbed $k_1,\ldots, k_n$ here. For each combination of these $k_i$ that satisfies $k_1+\ldots+k_n \leq m$, there will be one summand. This summand consists of a product of powers of $(x_i - a_i)^{k_i}$. Each of these products is weighted by a coefficient $c_{k_1 \ldots k_n}$. This coefficient has also $n$ indices. The computation formula for these coefficients is given on the right. It is a mixed partial 
 
-...TBC...ToDo: explain the formula, give versions in operator notation, multi-index notation, notation using multinomial coefficients
+%...TBC...ToDo: explain the formula, give versions in operator notation, multi-index notation, notation using multinomial coefficients
 
 %but it's still quite verbose and needs a bit more explanation than the one we have seen before. 
 %maybe call this notation above "term-wise" notation. it considers each term separately. Maybe the notation with the single, double, triple, etc. sums could be called multi-sum notation because it uses multiple sum symbols

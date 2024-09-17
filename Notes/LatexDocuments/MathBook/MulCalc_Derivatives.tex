@@ -176,26 +176,9 @@ It involves only a single summation sign which is why I call it "flattened" (thi
 \end{equation}
 Now the inner sum requires the $k_i$ to add up to exactly $p$ and $p$ ranges from $0$ to $m$ in an outer sum. The "flattened" notation isn't really much better in terms of verbosity but at least, it doesn't require pattern extrapolation. It needs more explanation though. Things like $c_{k_1 \ldots k_n}$ or $\partial^{k_1+\ldots+k_n}$ may be less familiar notational concoctions. First of all, we note that this formula here gives us $f(\mathbf{x})$ directly in terms of the components of $\mathbf{x}$ rather than $f(\mathbf{x + h})$ in terms of the components $\mathbf{h}$. In this case here, our expansion center is given by another vector $\mathbf{a} = (a_1, \ldots, a_n)$, so the setting is a bit different. That's why we see things like $(x_i - a_i)$ appear instead of $h_i$. Second, we need to clarify the range of the sum. For each combination of these $k_i$ that satisfies $k_1+\ldots+k_n \leq m$, there will be one summand. This summand involves a product of powers of $(x_i - a_i)^{k_i}$. Each of these products is weighted by a coefficient $c_{k_1 \ldots k_n}$. This coefficient has also $n$ indices. The computation formula for these coefficients is given on the right. It is a (possibly mixed) partial derivative of $f$ evaluated at the expansion point $\mathbf{a}$ divided by the product of the factorials of the $k_i$. The order of the partial derivative is given by the sum over the $k_i$. 
 
-\paragraph{Multi-index Notation}
-The formula (\ref{Eq:TaylorSeriesMultiDimFlat}) can be condensed when we introduce the concept of a multi-index. A multi-index is, so to speak, a vector of indices. I have said that each of the $c$-coefficients has $n$ indices $k_i$ where $i = 1,\ldots,n$. We can collect these $n$ indices into a vector $\mathbf{k} = (k_1,\ldots,k_n)$. That vector $\mathbf{k}$ of indices is what we call a multi-index. With that definition in place, we can write:
-\begin{equation}
- f(\mathbf{x}) \approx
- \sum_{|\mathbf{k}| \leq m} c_{\mathbf{k}} (\mathbf{x-a})^{\mathbf{k}} 
- \quad \text{where} \quad
- c_{\mathbf{k}} = \frac{1}{\mathbf{k!} } 
-                      \frac{ \partial^{|\mathbf{k}|}}
-                           { \partial x_1 ^{k_1} \ldots \partial x_n ^ {k_n}} f(\mathbf{a})
-\end{equation}
-For that too make sense, we need to define the following operations for multi-indices $\mathbf{k}$ and between a multi-index $\mathbf{k}$ and a vector $\mathbf{v}$:
-\begin{equation}
-|\mathbf{k}| = k_1 + k_3 + \ldots + k_n, \quad
-\mathbf{v}^{\mathbf{k}} = v_1^{k_1} v_2^{k_2} \ldots v_n^{k_n}, \quad
-\mathbf{k}! = k_1! k_2! \ldots k_n!
-\end{equation}
-The meaning of $c_{\mathbf{k}}$ is that $c$ is a quantity that is indexed by an $n$-dimensional set of indices. For example, if $n=2$, each $c$ would be indexed by two indices - it would be a $c_{ij}$ like an element of an $n \times n$ matrix. TODO: maybe move general explanation of multi-indices into the chapter about multilinear algebra
 
 \paragraph{Operator Notation}
-Let's forget about multi indices for a moment and go back to equation (\ref*{Eq:TaylorSeriesMultiDim}) and let's now focus on things like $\frac{\partial f}{\partial x_i} h_i$, $\frac{\partial f^2}{\partial x_i x_j} h_i h_j$, etc. Let's define:
+Let's go back to equation (\ref{Eq:TaylorSeriesMultiDim}) and focus on the expressions $\frac{\partial f}{\partial x_i} h_i$, $\frac{\partial f^2}{\partial x_i x_j} h_i h_j$, etc. Let's define:
 \begin{equation}
  \mathbf{h} \cdot \nabla    = \sum_{i=1}^{n} h_i \frac{\partial}{\partial x_i}, \quad
 (\mathbf{h} \cdot \nabla)^2 = \sum_{i,j=1}^{n} h_i h_j \frac{\partial^2}{\partial x_i x_j}, \quad
@@ -226,6 +209,35 @@ With the definition of this operator in place, we can write the $m$th order Tayl
 ..TBC...
 
 % See Karpfinger, pg 517
+
+
+
+
+
+
+
+
+
+
+\paragraph{Multi-index Notation}
+The formula (\ref{Eq:TaylorSeriesMultiDimFlat}) can be condensed when we introduce the concept of a multi-index. A multi-index is, so to speak, a vector of indices. I have said that each of the $c$-coefficients has $n$ indices $k_i$ where $i = 1,\ldots,n$. We can collect these $n$ indices into a vector $\mathbf{k} = (k_1,\ldots,k_n)$. That vector $\mathbf{k}$ of indices is what we call a multi-index. With that definition in place, we can write:
+\begin{equation}
+ f(\mathbf{x}) \approx
+ \sum_{|\mathbf{k}| \leq m} c_{\mathbf{k}} (\mathbf{x-a})^{\mathbf{k}} 
+ \quad \text{where} \quad
+ c_{\mathbf{k}} = \frac{1}{\mathbf{k!} } 
+                      \frac{ \partial^{|\mathbf{k}|}}
+                           { \partial x_1 ^{k_1} \ldots \partial x_n ^ {k_n}} f(\mathbf{a})
+\end{equation}
+For that too make sense, we need to define the following operations for multi-indices $\mathbf{k}$ and between a multi-index $\mathbf{k}$ and a vector $\mathbf{v}$:
+\begin{equation}
+|\mathbf{k}| = k_1 + k_3 + \ldots + k_n, \quad
+\mathbf{v}^{\mathbf{k}} = v_1^{k_1} v_2^{k_2} \ldots v_n^{k_n}, \quad
+\mathbf{k}! = k_1! k_2! \ldots k_n!
+\end{equation}
+The meaning of $c_{\mathbf{k}}$ is that $c$ is a quantity that is indexed by an $n$-dimensional set of indices. For example, if $n=2$, each $c$ would be indexed by two indices - it would be a $c_{ij}$ like an element of an $n \times n$ matrix. TODO: maybe move general explanation of multi-indices into the chapter about multilinear algebra
+
+
 
 \paragraph{Operator Notation with Multi-indices}
 Of course, it's also possible to combine the ideas of operator- and multi-index notation. For this, we define:

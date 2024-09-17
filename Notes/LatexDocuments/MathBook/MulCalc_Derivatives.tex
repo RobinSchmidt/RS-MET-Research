@@ -129,10 +129,13 @@ The approximation given in equation (\ref{Eq:TaylorMultivariate2ndOrder}) can be
 \end{equation}
 Writing it like this may help us to recognize a pattern that we are familiar with from the one dimensional Taylor series formula. A general multivariate Taylor polynomial would look like this:
 \begin{equation}
+\label{Eq:TaylorSeriesMultiDim}
  f(\mathbf{x + h}) \approx
  f(\mathbf{x}) + 
- \frac{1}{1!} \sum_{i=1}^{n} \frac{\partial f}{\partial x_i} h_i + 
- \frac{1}{2!} \sum_{i=1}^{n} \sum_{j=1}^{n}  \frac{\partial f^2}{\partial x_i x_j} h_i h_j +
+ \frac{1}{1!} \sum_{i=1}^{n} 
+              \frac{\partial f} {\partial x_i} h_i + 
+ \frac{1}{2!} \sum_{i=1}^{n} \sum_{j=1}^{n}  
+              \frac{\partial f^2}{\partial x_i x_j} h_i h_j +
  \frac{1}{3!} \sum_{i=1}^{n} \sum_{j=1}^{n}  \sum_{k=1}^{n} 
               \frac{\partial f^3}{\partial x_i x_j x_k} h_i h_j h_k + 
  \frac{1}{4!}  \ldots              
@@ -164,9 +167,16 @@ For example, we could write the $m$-th order Taylor polynomial of some function 
                       \frac{ \partial^{k_1+\ldots+k_n} }
                            { \partial x_1 ^{k_1} \ldots \partial x_n ^ {k_n}} f(\mathbf{a})
 \end{equation}
-It involves only a single summation sign which is why I call it "flattened" (this is not an official term - I made that up). But don't be fooled: This "single sum" is actually a single-sum, double-sum, triple-sum, $\ldots$, $m$-fold sum in one go. This notation isn't really much better in terms of verbosity but at least, it doesn't require pattern extrapolation. It needs more explanation though. Things like $c_{k_1 \ldots k_n}$ or $\partial^{k_1+\ldots+k_n}$ may be less familiar notational concoctions. First of all, we note that this formula here gives us $f(\mathbf{x})$ directly in terms of the components of $\mathbf{x}$ rather than $f(\mathbf{x + h})$ in terms of the components $\mathbf{h}$. In this case here, our expansion center is given by another vector $\mathbf{a} = (a_1, \ldots, a_n)$, so the setting is a bit different. That's why we see things like $(x_i - a_i)$ appear instead of $h_i$. Second, we need to clarify the range of the sum. For each combination of these $k_i$ that satisfies $k_1+\ldots+k_n \leq m$, there will be one summand. This summand involves a product of powers of $(x_i - a_i)^{k_i}$. Each of these products is weighted by a coefficient $c_{k_1 \ldots k_n}$. This coefficient has also $n$ indices. The computation formula for these coefficients is given on the right. It is a (possibly mixed) partial derivative of $f$ evaluated at the expansion point $\mathbf{a}$ divided by the product of the factorials of the $k_i$. The order of the partial derivative is given by the sum over the $k_i$. 
+It involves only a single summation sign which is why I call it "flattened" (this is not an official term - I made that up). But don't be fooled: This "single sum" is actually a single-sum, double-sum, triple-sum, $\ldots$, $m$-fold sum in one go. One could de-structre the sum a bit like so:
+\begin{equation}
+ f(\mathbf{x}) \approx
+ \sum_{p=0}^{m}
+ \sum_{k_1+\ldots+k_n = p} c_{k_1 \ldots k_n} (x_1 - a_1)^{k_1} \ldots (x_n - a_n)^{k_n}, 
+\end{equation}
+Now the inner sum requires the $k_i$ to add up to exactly $p$ and $p$ ranges from $0$ to $m$ in an outer sum. The "flattened" notation isn't really much better in terms of verbosity but at least, it doesn't require pattern extrapolation. It needs more explanation though. Things like $c_{k_1 \ldots k_n}$ or $\partial^{k_1+\ldots+k_n}$ may be less familiar notational concoctions. First of all, we note that this formula here gives us $f(\mathbf{x})$ directly in terms of the components of $\mathbf{x}$ rather than $f(\mathbf{x + h})$ in terms of the components $\mathbf{h}$. In this case here, our expansion center is given by another vector $\mathbf{a} = (a_1, \ldots, a_n)$, so the setting is a bit different. That's why we see things like $(x_i - a_i)$ appear instead of $h_i$. Second, we need to clarify the range of the sum. For each combination of these $k_i$ that satisfies $k_1+\ldots+k_n \leq m$, there will be one summand. This summand involves a product of powers of $(x_i - a_i)^{k_i}$. Each of these products is weighted by a coefficient $c_{k_1 \ldots k_n}$. This coefficient has also $n$ indices. The computation formula for these coefficients is given on the right. It is a (possibly mixed) partial derivative of $f$ evaluated at the expansion point $\mathbf{a}$ divided by the product of the factorials of the $k_i$. The order of the partial derivative is given by the sum over the $k_i$. 
 
 \paragraph{Multi-index Notation}
+This formula can be condensed when we introduce the concept of a multi-index. A multi-index is, so to speak, a vector of indices. I have said that each of the $c$-coefficients has $n$ indices $k_i$ where $i = 1,\ldots,n$. We can collect these $n$ indices into a vector $\mathbf{k} = (k_1,\ldots,k_n)$. That vector $\mathbf{k}$ of indices is what we call a multi-index. With that definition in place, we can write:
 \begin{equation}
  f(\mathbf{x}) \approx
  \sum_{|\mathbf{k}| \leq m} c_{\mathbf{k}} (\mathbf{x-a})^{\mathbf{k}} 
@@ -175,9 +185,18 @@ It involves only a single summation sign which is why I call it "flattened" (thi
                       \frac{ \partial^{|\mathbf{k}|}}
                            { \partial x_1 ^{k_1} \ldots \partial x_n ^ {k_n}} f(\mathbf{a})
 \end{equation}
+For that too make sense, we need to define the following operations for multi-indices $\mathbf{k}$ and between a multi-index $\mathbf{k}$ and a vector $\mathbf{v}$:
+\begin{equation}
+|\mathbf{k}| = k_1 + k_3 + \ldots + k_n, \quad
+\mathbf{v}^{\mathbf{k}} = v_1^{k_1} v_2^{k_2} \ldots v_n^{k_n}, \quad
+\mathbf{k}! = k_1! k_2! \ldots k_n!
+\end{equation}
+The meaning of $c_{\mathbf{k}}$ is that $c$ is a quantity that is indexed by an $n$-dimensional set of indices. For example, if $n=2$, each $c$ would be indexed by two indices - it would be a $c_{ij}$ like an element of an $n \times n$ matrix.
 
+\paragraph{Operator Notation}
+Let's forget about multi indices for a moment and go back to equation (\ref*{Eq:TaylorSeriesMultiDim}) and let's now focus on things like $\frac{\partial f}{\partial x_i} h_i$, $\frac{\partial f^2}{\partial x_i x_j} h_i h_j$, etc. ...TBC...
 
-
+\paragraph{Operator Notation with Multi-indices}
 
 
 %It is an $n$-fold sum, i.e. a sum that runs over $n$ different indices which we have dubbed $k_1,\ldots, k_n$ here. For each combination of these $k_i$ that satisfies $k_1+\ldots+k_n \leq m$, there will be one summand. This summand consists of a product of powers of $(x_i - a_i)^{k_i}$. Each of these products is weighted by a coefficient $c_{k_1 \ldots k_n}$. This coefficient has also $n$ indices. The computation formula for these coefficients is given on the right. It is a mixed partial 

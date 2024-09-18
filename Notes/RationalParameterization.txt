@@ -176,7 +176,12 @@ ToDo, Questions:
   elliptic curve. This addition is also defined in terms of an intersection of a line (namely, the
   line that passes through the two summand points) with the curve. In this case, we look for the 
   third intersection point when two of them are given. But here, the goal is different: we want to 
-  "sweep out" all rational points on the curve with a (rational) parameter t.
+  "sweep out" all rational points on the curve with a (rational) parameter t. Oh - maybe that's not 
+  possible - see "Elliptic Tales", page 10: "Our secant method didn't work ... because we started 
+  with just a single rational point ...". But is seems to be possible to find a third rational point
+  on the curve when we have given *two* other rational points on the curve. The setting is 
+  different. Previously, we had one rational point on the curve and a line with rational slope 
+  through that point.
   
 - Give an inverse algorithm: Given a (rational?) parameterization, find the corresponding implicit 
   equation. Ideally, we want to able to convert back and forth between implicit and parametric 

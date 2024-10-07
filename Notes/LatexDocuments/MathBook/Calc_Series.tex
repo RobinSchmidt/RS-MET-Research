@@ -117,15 +117,20 @@ When we defined the convolution operation between sequences, it may have seemed 
 
 
 \subsubsection{Taylor Series Expansion}
-One truly remarkable result of calculus is that a lot of functions can be expressed as such a power series. For many important functions (including our favorites $\exp, \sin, \cos$), we will even find an infinite radius of convergence. Taylor's theorem tells us how to find the coefficients and the formula is actually pretty simple. First, we pick an expansion point, i.e. the center of our expansion. That's the $c$ in the formula given above but here, we'll call it $x_0$. The $k$th coefficient is given the $k$th derivative of $f$ at our expansion point $x_0$ divided by $k!$. So the formula for the Taylor series is:
+One truly remarkable result of calculus is that a lot of functions can be expressed as such a power series. For many important functions (including our favorites $\exp, \sin, \cos$), we will even find an infinite radius of convergence. Taylor's theorem tells us how to find the coefficients and the formula is actually pretty simple. First, we pick an expansion point, i.e. the center of our expansion. That's the $c$ in the formula given above but here, we'll call it $x_0$. The $k$th coefficient is given the $k$th derivative of $f$ evaluated at our expansion point $x_0$ divided by $k!$. So the formula for the \emph{Taylor series} is:
 \begin{equation}
 \label{Eq:TaylorSeries}
 f(x) = \sum_{k=0}^\infty \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k
 %     = \sum_{k=0}^n \frac{f^{(k)}(x_0)}{k!} (x-x_0)^k + \mathcal{O}(x-x_0)^n
 \end{equation}
-For this formula to work, we require a few things. First, $f$ must be smooth at $x_0$ such that we actually can take all the derivatives. Second, we require $x$ to be within the radius of convergence of the series, i.e. close enough to $x_0$. There are some rather special functions that are indeed smooth but have a radius of convergence of zero. But we'll forget about that complication right now. For most functions, it works just fine. By inspecting this formula, we can see the reason why (\ref{Eq:PowerSeries}) always converges for $x=c$ or $x=x_0$ in the new notation here: the factor $(x-x_0)^k$ will be zero for any $k > 0$. For $x = x_0$ and $k = 0$, the factor $(x-x_0)^k$ actually evaluates to $0^0$. For the formula to still work at $x=x_0$, we are forced to define $0^0 = 1$ which is a quite common definition in algebra, calculus and combinatorics.
+In the context of the more general power series formula given by (\ref{Eq:PowerSeries}), we recognize the Taylor series as the case where $c = x_0$ and $a_n =  \frac{f^{(k)}(x_0)}{k!}$ can be interpreted as a coefficient calculation formula for the $a_n$ of a general power series. For this formula to work, we require a few things. First, $f$ must be smooth at $x_0$ such that we actually can take all the derivatives. Second, we require $x$ to be within the radius of convergence of the series, i.e. close enough to $x_0$. There are some rather special functions that are indeed smooth but have a radius of convergence of zero. But we'll forget about that complication right now. For most functions, it works just fine. By inspecting this formula, we can see the reason why (\ref{Eq:PowerSeries}) always converges for $x=c$ or $x=x_0$ in the new notation here: the factor $(x-x_0)^k$ will be zero for any $k > 0$. For $x = x_0$ and $k = 0$, the factor $(x-x_0)^k$ actually evaluates to $0^0$. For the formula to still work at $x=x_0$, we are forced to define $0^0 = 1$ which is a quite common definition in algebra, calculus and combinatorics. If the expansion point $x_0$ is chosen to be $x_0 = 0$, the Taylor series is also called \emph{Maclaurin series}. That is: a Maclaurin series is a special case of a Taylor series with $x_0 = 0$. 
 
-% toDo: explain how the formula arises from approximating a function with polynomials at a point by mathcing more and more derivatives. Explain hwo the power series for e^x arises from that 
+%In the context of the more general power series formula given by (\ref{Eq:PowerSeries}), we recognize the Taylor series as the case where $c = x_0$ and $a_n =  \frac{f^{(k)}(x_0)}{k!}$ can be interpreted as a coefficient calculation formula for the $a_n$ of a general power series.
+
+% toDo: explain how the formula arises from approximating a function with polynomials at a point by matching more and more derivatives. Explain how the power series for e^x arises from that. We can 
+% intepret  \frac{f^{(k)}(x_0)}{k!}  as a computation formula for a coefficient a_k for a more general
+% power seris
+
 
 % which means that for $x=x_0$, 
 
@@ -137,7 +142,10 @@ For this formula to work, we require a few things. First, $f$ must be smooth at 
 % https://en.wikipedia.org/wiki/Zero_to_the_power_of_zero
 
 \medskip
-The practical usefulness of this Taylor expansion lies in the fact that when we just take a finite sum instead of an infinite one, we obtain an approximation to our function. The more terms we use, the better our approximation becomes (provided that the argument is within the radius of convergence - of course). Due to that feature, Taylor expansions are used a lot in numerical computations to approximate all kinds of functions. They are also used a lot in physics to simplify complicated problems by making approximations. There, often just first or second order approximations are used, i.e. approximations up to the linear or quadratic term. Let's see what happens, when we only use a single term, i.e. only the $k=0$ term. The formula tells us to evaluate the $0$th derivative of $f$, which is $f$ itself, at $x_0$, divide by $0!$, i.e. by one and multiply that by $(x-x_0)^0 = 1$. So what we get is just $f(x_0)$. The $0$th order Taylor polynomial around $x_0$ approximates $f$ as the constant function with value $f(x_0)$. Not a very impressive approximation but at least it has the correct function value at $x_0$ and that's the best we could possibly hope for, when we try to approximate a function $f$ by a constant function around some $x_0$. If we take one term more, we obtain a linear approximation of $f$ around $x_0$. It will have a matching function value and a matching first derivative. The approximant will be a tangent to our actual function at $(x_0, f(x_0))$. The next approximation will additionally match the second derivative and create a parabolic approximation. And so on.
+The practical usefulness of this Taylor expansion lies in the fact that when we just take a finite sum instead of an infinite one, we obtain an approximation to our function. The more terms we use, the better our approximation becomes (provided that the argument $x$ is within the radius of convergence - of course). The approximation also tends to be more accurate, the closer our input value $x$ is to the expansion center $x_0$. Due to the approximation feature, Taylor expansions are used a lot in numerical computations to approximate all kinds of functions. They are also used a lot in physics to simplify complicated problems by making approximations. There, often just first or second order approximations are used, i.e. approximations up to the linear or quadratic term. Let's see what happens, when we only use a single term, i.e. only the $k=0$ term. The formula tells us to evaluate the $0$th derivative of $f$, which is $f$ itself, at $x_0$, divide by $0!$, i.e. by one and multiply that by $(x-x_0)^0 = 1$. So what we get is just $f(x_0)$. The $0$th order Taylor polynomial around $x_0$ approximates $f$ as the constant function with value $f(x_0)$. Not a very impressive approximation but at least it has the correct function value at $x_0$ and that's the best we could possibly hope for, when we try to approximate a function $f$ by a constant function around some $x_0$. If we take one term more, we obtain a linear approximation of $f$ around $x_0$. It will have a matching function value and a matching first derivative. The approximant will be a tangent to our actual function at $(x_0, f(x_0))$. The next approximation will additionally match the second derivative and create a parabolic approximation. And so on. The more terms we use, the more derivatives our approximant will match to the target function. An $n$th order Taylor approximation matches our function $f$ at the point $x_0$ up to the $n$th derivative.
+
+% Taylor approximations are good to approximate functions around a point. They get increaingly bad, the further we move away from the point. In some situations, we may rather want to approximate the function withing an interval and perhaps minimize the maximum deviation of the approximant from the target function withing that interval. For that purpose, a Taylor expansion is not optimal. Instead, other polynomial approximations can be used (minimax, Chebychev, least-squares, Hermite etc.). They different in the way in which the polynomial coefficients are computed. ...maybe move this to Approximation Theory in the Applications part
+
 
 \paragraph{Example} Let's consider the function $f(x) = 1 / (1 + x^2)$ and let's pick $x_0 = 0$ as expansion point. ToDo: draw plot of the function and a couple of approximants - show how convergence breaks down at +-1 because of the poles at +-i
 
@@ -302,6 +310,10 @@ ToDo: bring stuff from Weitz video "Taylor trifft Fourier"
 
 % Another beautiful example for how math is full of unexpected connections. It's like a huge interconnected network of bits of knowledge that we can look at and stand in awe.
 
+
+%\subsection{Dirichlet Series}
+
+
 \begin{comment}
 ToDo:
 -Mention other types of series
@@ -332,6 +344,11 @@ ToDo:
   interesting: 1/log_2(x) https://www.desmos.com/calculator/1ceyqmelry
   goes through (-0.05,-1) - what's so special about 0.05? ...It's the base of the log divided by
   10...why 10? That seems arbitrary. I mean, it's the base of the number system but what has the number system to do with anything here?
+-General method to obtain a series from a sequence that leads to thinks like Taylor series:
+   a_n  ->  \sum_{n=0}^{\infty}  a_n  f(x, n)
+  The Taylor series of exp(x) arises from choosing f(x,n) = x^n / n! for example. What other 
+  interesting choices could ther be for f(x,n)? n^(-x) gives a Dirichlet series, I think
+  
 
 
 Maybe make a subsection about asymptotic series:
@@ -370,6 +387,8 @@ https://en.wikipedia.org/wiki/Divergent_series
 
 Has also Cesaro summationa and Abel Summation
 https://www.youtube.com/watch?v=LDuD_ClkkG8
+ 
+
  
 
  

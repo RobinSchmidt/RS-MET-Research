@@ -88,6 +88,9 @@ Motivated by the unsolvability of a particular equation within the realm of natu
 
 % rules for arithmetic, countability (Cantor's 1st diagonal argument), decimal expansion (fixed and floating point), explain the notion of a field - the rational numbers are the first example of a field
 
+% Simple fractions - those with numerator 1? ...look up!
+% How about defining a proper rational number as a number a/b where a,b are coprime and 
+% b !=1 (maybe that's superfluous because 1 is not considered a prime?)
 
 %\paragraph{Arithmetic Operations}
 %... In higher mathematics, specifically in abstract algebra, it turns out that a more convenient way to think about arithmetic operations is to only consider addition and multiplication as basic and cast subtraction and division in terms of these two basic operations and so called inverse elements. The inverse element of a rational number $q$ with respect to addition is just its negative version, i.e. $-q$. The inverse element of $q$ with respect to multiplication is the reciprocal of $q$, written as $1/q$ or $q^{-1}$. The set of rational numbers is the first set in which both of these inverses exist for any given $q$, except for $q=0$ which has no multiplicative inverse. 
@@ -116,6 +119,13 @@ Motivated by the unsolvability of a particular equation within the realm of natu
 OK, nice - so the set of rational numbers is a field. We can add, subtract, multiply and divide to our hearts content without ever encountering any object that does not belong to the set (with the sole exception of division by zero). Is that finally good enough or could we still want more? The pattern of coming up with unsolvable equations continues: Consider the equation $x^2 = 2$. We can take the square root of both sides to get the solution $x = \sqrt{2}$. If the square root of two is a rational number, then we can indeed solve that equation within the rational numbers - but is it? The answer turns out to be a resounding nope! I could now present a proof for this fact (and a mathematically minded reader would rightfully demand one) but I think that would distract too much from the main line, so I just ask you to take my word for it or look it up elsewhere - there are actually many very different proofs for that fact. Besides the square root of two, there are many more numbers that are still "missing". Our number line still has "gaps" and in a sense that can be made explicit, actually "most" numbers are still missing. If we "fill in" these missing numbers, we arrive at what we call the \emph{real numbers}. Defining the process of filling in the missing numbers is rather technical and can be skipped on a first reading.
 
 % https://en.wikipedia.org/wiki/Construction_of_the_real_numbers
+
+% It turns out that the n-th root of a natural number b is either itself natural or irrational. The 
+% case that a "proper rational", i.e. one with denominator != 1 occurs as n-th root cannot happen.
+% Proof: assume (a/b)^n = c = a^n / b^n with a,b,c,n natural and a/b is in reduced form, i.e. a,b 
+% have no common factor. Because a and b have no common factors,  a^n and b^n do also not have 
+% common factors, so a^n / b^n is not reducible. So in particular, it's not reducible to an integer. 
+% But c is an integer by assumption ...I guess...I made up that proof myself on the toilet
 
 
 \subsubsection{$\star$ Completeness}

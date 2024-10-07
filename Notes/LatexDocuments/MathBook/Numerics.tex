@@ -94,4 +94,15 @@ If we do not take the sum up to infinity but only up to some finite value $n$, t
 Numerische Methoden - Angewandte Mathematik für Ingenieure
 https://www.youtube.com/playlist?list=PLcQq8Z8G1veYx72P3svwG5K72WINt_tvZ
 
+
+Translating formulas to code:
+-A matrix equation like x = A^{-1} b means: solve A x = b. We don't want to actually compute the
+ inverse of A because that's much more expensive that solveing the linear system of equation by
+ e.g. Gaussian elimination.
+-An equation like p = atan(y/x) usually means p = atan2(y,x) ...at least in 99.9% of all cases. 
+ Beware of the argument order. atan2 usually takes the y coordinate first and the x coordinate 
+ second - but  there may be exceptions. atan2(y,x) computes the angle of the point (x,y) with the x-axis. This  angle is used in the polar coordinate representation (r,p) of the point where r is 
+ the radius and p the angle also known as "phase" or "argument".
+ 
+
 \end{comment}

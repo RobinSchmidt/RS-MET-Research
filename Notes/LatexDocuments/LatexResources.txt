@@ -90,3 +90,8 @@ https://en.wikipedia.org/wiki/PGF/TikZ
 Drawing knots:
 https://loopspace.mathforge.org/HowDidIDoThat/TeX/NewKnots/
 https://www.youtube.com/watch?v=n7w8hODwG1g  Explains hwo to make a trefoil knot in grasshopper
+
+
+
+
+https://www.youtube.com/watch?v=i-HAjex6VtM  Principles of Beautiful Figures for Research Papers

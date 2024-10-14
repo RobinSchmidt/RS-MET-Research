@@ -15890,6 +15890,17 @@ void testSmoothCrossFade2()
   // https://math.stackexchange.com/questions/666936/prove-borels-lemma-pughs-book-35
 }
 
+void testSmoothMax()
+{
+  // We want to define a smooth max(x,y) function for real numbers x,y. The idea is to use a smooth
+  // crossfade between x and y where the crossfade parameter c is a smooth 1D function of x-y of 
+  // sigmoid type that smoothly ramps up from 0 to 1.
+  // ...TBC...
+
+
+
+}
+
 
 
 /** UNDER CONSTRUCTION */

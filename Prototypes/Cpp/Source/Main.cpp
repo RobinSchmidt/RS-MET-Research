@@ -95,7 +95,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNeumannRationals();
   //testPairingFunctions();
 
-  testGeneralizedCollatz();
+  //testGeneralizedCollatz();
   //testPowerCommutator();
   //testParticleSystem();
   //testWeightedAverages();
@@ -123,11 +123,12 @@ int main (int /*argc*/, char* /*argv[]*/)
   //test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub
   //testQuaternion();
-  //testChebychevEconomization();  // stub
+  //testChebychevEconomization();    // stub
   //testGeneratingFunction();
   //testCatalanNumbers();
   //testSmoothCrossFade();
   //testSmoothCrossFade2();
+  testSmoothMax();                   // stub
 
 
   //testMerge();

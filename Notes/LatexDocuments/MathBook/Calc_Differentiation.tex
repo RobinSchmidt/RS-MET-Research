@@ -105,7 +105,18 @@ But that doesn't actually make any difference because we didn't say anything abo
 % -Explain cases where this is not the case and what the second best thing is ("continuously
 %  extendable" or something?).
 
-\paragraph{Central Difference} ...TBC...
+\paragraph{Central Difference} 
+We could also use a central difference definition:
+\begin{equation}
+ f'(x) = \lim_{h \rightarrow 0} \frac{f(x+h) - f(x-h)}{2 h}
+\end{equation}
+...TBC...
+% I think, a definition via a central difference could work also for corners. It would
+% naturally produce the average of forward and backward difference at a corner. This is nice
+% because this is indeed the most intuitive way to define a derivative at a corner. It would
+% satisfy the reflection law of optics and it is the value that the Fourier series converges
+% to at the step discontinuity of the derivative
+
 
 \paragraph{Quantum Derivatives}
 Common to the definitions of the derivative above is that they involved an initially finite, nonzero step size parameter $h$ and letting that step size $h$ approach zero. If one removes the limiting process, one arrives at the finite difference calculus which is also called $h$-calculus. An alternative definition that you won't usually find in general math textbooks is this:

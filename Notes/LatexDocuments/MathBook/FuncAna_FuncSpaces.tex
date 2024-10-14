@@ -24,6 +24,13 @@ Often we are not interested in the vast and unstructured set of all possible rea
 One way to categorize functions is by considering, how smooth they are. Does a function $f$ have spikes, jumps, corners, etc? That idea is captured by the number of continuous derivatives that a function has. If a function is $k$ times continuously differentiable, then it is said to be in the class $C^k$. If a function is just itself continuous but has a discontinuous first derivative, it is in the class $C^0$ but not in the class $C^1$. An example of such a $C^0$ but not $C^1$ function would be the absolute value $f(x) = |x|$. In general, the classes with lower $k$ are less restrictive, i.e. allow more functions. But the classification is meant in an inclusive sense, i.e. a function that is in $C^k$ is automatically also in $C^j$ if $j < k$. If a function can be differentiated $k+1$ times, it means that the $k$-th derivative is not only continuous but even differentiable which is a stronger requirement. That means, a function that can be differentiated $k+1$ times is automatically at least in $C^k$. If a function can be differentiated infinitely often, it is said to be in the class $C^\infty$. Such functions are also called \emph{smooth}. If, in addition to be infinitely differentiable, it also has a convergent Taylor series at every point of its domain, it said to be in $C^\omega$ and also called \emph{analytic}\footnote{The letter $\omega$ is also used in other areas of math (ordinal numbers, nonstandard analysis) to denote "infinity". I'm not sure, if that usage there is related but to be honest, I can't see how. It seems like the $\omega$ from ordinal numbers would mean exactly the same thing as the $\infty$ symbol as it is used here. So maybe drawing a connection would be a bit hasty.}. Analytic functions are in some sense even nicer than just smooth ones.
 ToDo: maybe use notation $C^k(\mathbb{R})$
 
+% Can we generalize this idea to negative k? C^{-1} could be the space of "functions" that
+% contain Dirac-spikes, C^{-2} could contain derivatives of Dirac spikes (i.e. bipolar
+% spikes), etc.
+
+% Integrating a function increases its k-value by 1, I think. Yeah - has to be because 
+% differentiation reduces k by 1 by definition.
+
 %...TODO: define $C^k$ spaces including $C^\infty$ and $C^\omega$
 
 % Bump functions are in  $C^\infty$ but not in $C^\omega$. Explain why!

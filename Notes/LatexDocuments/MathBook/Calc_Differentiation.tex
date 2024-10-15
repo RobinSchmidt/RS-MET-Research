@@ -38,9 +38,22 @@ This means: take the derivative of $f$ with respect to $x$, then evaluate the re
 % not differentiable at x = 0: 
 %  |x|   because of corner 
 %  cbrt(x)   (cube-root of x)  because of infinite slope - limit goes to infinity 
-% not continuous but nevertheless differntiable at x = 0
+%
+% [I think, that's wrong] An f(x) that is not continuous but nevertheless differntiable at x = 0:
 % f(x) = x-1 for x < 0, 0 for x = 0, x+1 for x > 0. It has a jump at x = 0 but the slopes match
-% the actual value at x = 0 doesn't matter for differentiability
+% the actual value at x = 0 doesn't matter for differentiability. Wait - no - that's wrong! The
+% limit of the difference quotient approaches +inf from both sides. Maybe we can make sense of
+% the derivative by looking at how fast it approaches inf when we come from left and right. I
+% think, the speed will be the same, if the value at the jump discontinuity is exactly in the
+% middle of the values immediately before and after the jump? But maybe we can make a definition 
+% that indeed assigns a slope of 1 to x=0? Maybe 
+% f'(x) = lim_{eps -> 0} lim_{h -> 0} (f(x+eps+h) - f(x+eps)) / h
+% the idea is that we do not take the derivative directly at x, but at x+eps for an infinitesimal 
+% eps, i.e. a small offset which then also approaches zero. Make an analoguous definition for the
+% backward derivative - if both match then the value is the derivative. If they don't match, maybe
+% take the average. The basic idea is to take the definition of the regular derivative but apply
+% it to a point right next to x (offset by eps) and then, in a second limiting process, let that
+% offset also go down to zero.
 %
 % In calculus, we are mostly insterested in functions that are continuous and differentiable.
 % That's why these two features are sometimes lumped into the concept of "continuously
@@ -81,6 +94,9 @@ whose usefulness lies mostly in its generalizations to the directional derivativ
 % This formula looks actually similar:
 % https://en.wikipedia.org/wiki/Differential_of_a_function#General_formulation
 
+
+% Generalization of chain rule to higher oder derivatives - Faa di Bruno's formula:
+% https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
 %todo: list derivatives of elementary functions
 

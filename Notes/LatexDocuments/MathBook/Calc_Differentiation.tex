@@ -24,7 +24,28 @@ so the derivative of $f(x) = x^2$ is $f'(x) = 2 x$.
 \end{equation}
 This means: take the derivative of $f$ with respect to $x$, then evaluate the resulting expression at $x = a$.
 
-%ToDo: Introduce the "evaluated at" notation with the vertical bar on the right.
+%ToDo: Introduce the "evaluated at" notation with the vertical bar on the right. [Done?]
+% also introduce the notation with the brackets
+
+\subsection{Differentiability}
+
+% Give examples of weird functions:
+% continuous everywhere, differentiable nowhere: Weierstrass function, Bolzano function
+% nowhere continuous: Dirichlet function D(x)
+% continuous only at x=0: x * D(x)
+% continuous only at r1,r2,..,rn: (x-r1)*(x-r2)* ... * (x-rn) * D(x)
+% continuous only at the integers: sin(2 \pi x) * D(x)
+% not differentiable at x = 0: 
+%  |x|   because of corner 
+%  cbrt(x)   (cube-root of x)  because of infinite slope - limit goes to infinity 
+% not continuous but nevertheless differntiable at x = 0
+% f(x) = x-1 for x < 0, 0 for x = 0, x+1 for x > 0. It has a jump at x = 0 but the slopes match
+% the actual value at x = 0 doesn't matter for differentiability
+%
+% In calculus, we are mostly insterested in functions that are continuous and differentiable.
+% That's why these two features are sometimes lumped into the concept of "continuously
+% differentiable". But these concepts are independent, as we have seen. There are functions that
+% are discontinuous but differentiable (verify!)
 
 
 \subsection{Differentiation Rules}

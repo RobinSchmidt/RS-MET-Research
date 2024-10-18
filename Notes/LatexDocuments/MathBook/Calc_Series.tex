@@ -31,6 +31,16 @@ Series that converge but do not converge absolutely, have a rather peculiar prop
 % Give rules for convergent series formed by our operations above - sum, product, Cauchy product. I think, in the case of the Cauchy product, we knoe that the it converges, if the two factors converge. But what else can be said? Porbably not much about the number it converges to. But maybe if we convolve two divergent series, we may end up with a convergent one? Maybe we can make them "interfere" destructively or something? What about the harmonic series 1/n and the alternating series (-1)^n. They are both individually divergent but their pointwise product is convergent, I think - it's the alternating harmonic series. What about the Cauchy product?
 
 
+% An Infinite Sum from the Berkeley Math Tournament
+% https://www.youtube.com/watch?v=fuUBMFYDZNg
+% -Derives sum_{n=0}^{\infty}  n^3 / n! = 5 e
+% -There's a comment (by @HL-iw1du) that says something like  
+%  sum_{n=0}^{\infty}  n^k / n! = B(k) e   where B(k) is the k-th Bell number, see
+%  https://oeis.org/A000110
+%  https://www.youtube.com/watch?v=fuUBMFYDZNg&lc=Ugz1gQWImgQnUtVJuV14AaABAg
+% -There's another comment (by @DanGRV) that explains how to further generalize the idea to
+%  sum_{n=0}^{\infty}  p(n) / n!  where p(n) is a polynomial
+%  https://www.youtube.com/watch?v=fuUBMFYDZNg&lc=UgyS38H5Wb2P1gJM6nF4AaABAg
 
 
 \subsubsection{Riemann's Reordering Theorem} There is a pretty interesting theorem that applies to conditionally convergent series, i.e. series that do converge but fail to converge absolutely. Such series can be made to converge to any value or even to diverge just by reordering the terms. This theorem is called \emph{Riemann reordering theorem}, \emph{Riemann rearrangement theorem} or \emph{Riemann series theorem}. That result is kinda weird because in finite sums, we can reorder the terms in any way we like without changing the final sum. That is a consequence of the associativity of addition. Infinite sums may break the associativity of addition in certain cases. [VERIFY!] ...TBC....Give example - maybe use the alternating harmonic series and show how to make it approach any value

@@ -647,6 +647,22 @@ ToDo:
  
 -I think, our Polya potential satisfies the Laplacian equation P_xx + P_yy = 0. That's an
  immediate consequence of the divergence free property of the vector field.
+ 
+-Investigate the impact of poles and zeros on geometric features such as the equipotential
+ curves and geodesics between interesting points (e.g. the saddles)
+
+-Derive some general features of the Hessian of Polya-potentials. A general 2x2 matrix looks 
+ like [a,b; c,d] so it has 4 degrees of freedom. But Hessians are symmetric, so c=b, so we have
+ only 3 degrees of freedom for general Hessians. But Polya potentials have more constraints. I think
+ the Laplacian equation becomes P_yy + P_xx = 0, so a = -d. I think, we also have that the 
+ determinant is zero such that a*d - b*c = 0. That's the observation that we always see saddles and
+ never minima or maxima. But I'm not sure, how to derive that constraint. It must have something to
+ do with the divergence-free property of the gradient of P, I think. Look at the Cauchy-Riemann
+ equations. One of them or maybe both can perhaps be used to derive the constraint. That would leave
+ The Hessian with only 1 degree of freedom. It would look like [a,b; b,-a] with the constraint
+ a * -a - b*b = 0 = -a^2 - b^2 -> a^2 + b^2 = 0. ...wait...that cannot be correct!
+ 
+-Try to make general statements about the eigenvalues and eigenvectors of the Hessian. 
 
 Resources:
 https://en.wikipedia.org/wiki/Scalar_potential	

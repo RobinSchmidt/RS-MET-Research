@@ -159,6 +159,55 @@ function are points of steepest slope. I think, we can also identify fixed point
 potential of f(z) - z instead of f(z) itself. The zeros of f(z) - z should be the fixed points of 
 f(z).
 
+----------------------------------------------------------------------------------------------------
+This snippet can be used to produce Polya vector fields u(x,y), v(x,y) and the potentials P(x,y) for
+complex functions w = f(z). The potential P can be read of from U,V. by using the common terms and 
+if there are left-over terms in either or both of the functions, they should be added, too.
+
+
+var("x y")
+assume(x, "real")
+assume(y, "real")
+z = x + I*y
+w = z^2                  # Define function w = f(z)
+u = w.real()
+v =-w.imag()
+U = integral(u, x)
+V = integral(v, y)
+u, v, U, V
+
+For example, for w = z^2, we get:
+
+(x^4 - 6*x^2*y^2 + y^4,  -4*x^3*y + 4*x*y^3,  1/5*x^5 - 2*x^3*y^2 + x*y^4,  -2*x^3*y^2 + x*y^4)
+
+The last two expressions are U,V. The terms that depend on x and y are the same in both expressions 
+but U has the additional term 1/5*x^5 that depends only on x. The full potential should include this 
+term too. It's the "integration constant" in V. If V had a term that depends only on y, we would 
+have to include it in P(x,y), too. It would be the integration constant in U. It turns out to be 
+zero in this case, though.
+
+z^n:
+
+n    P(x,y)
+0    x
+1    1/2*x^2 - 1/2*y^2
+2    1/3*x^3 - x*y^2
+3    1/4*x^4 - 3/2*x^2*y^2 + 1/4*y^4
+4    1/5*x^5 - 2*x^3*y^2 + x*y^4
+5    1/6*x^6 - 5/2*x^4*y^2 + 5/2*x^2*y^4 - 1/6*y^6
+6    1/7*x^7 - 3*x^5*y^2 + 5*x^3*y^4 - x*y^6
+7    1/8*x^8 - 7/2*x^6*y^2 + 35/4*x^4*y^4 - 7/2*x^2*y^6 + 1/8*y^8
+8    1/9*x^9 - 4*x^7*y^2 + 14*x^5*y^4 - 28/3*x^3*y^6 + x*y^8
+
+I think, we can always take V and add a term  x^(n+1) / (n+1)
+
+
+
+
+
+----------------------------------------------------------------------------------------------------
+
+
 ToDo:
 -work out the potential for some other important functions such as z^n, 1/z, exp(z),
  sin(z), cos(z), log(z), etc.

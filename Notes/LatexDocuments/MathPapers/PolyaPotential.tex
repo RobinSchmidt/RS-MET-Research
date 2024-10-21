@@ -487,6 +487,8 @@ Well - OK - they may not look like what we may have expected. Instead of a tripo
 \subsection{Plots for Exponential, Trigonometric and Hyperbolic Functions}
 A very important function in real analysis is the exponential function $f(x) = e^x$. It is the only function that is its own derivative. When splitting it into its symmetric and antisymmetric parts, one obtains the so called hyperbolic functions $\cosh(x), \sinh(x)$. If we take the exponential function as a function of a complex argument that produces a complex output, written as $f(z) = e^z$, we find interesting relationships between trigonometric and hyperbolic functions...TBC...
 
+% I think, sin and cos would just be like sinh and cosh but rotated by 90°
+
 
 
 % Ideas for including tall graphics:
@@ -671,7 +673,10 @@ ToDo:
  a * -a - b*b = 0 = -a^2 - b^2 -> a^2 + b^2 = 0. ...wait...that cannot be correct! It would mean
  that a=b=0 because a,b are both real. But maybe that's indeed the case. It doesn't have to be the 
  case everywhere - only at the stationary points. Maybe at these, the Hessian is indeed the zero 
- matrix? That would mean, the function is very flat there. Try it numerically with f(z) = z^5
+ matrix? That would mean, the function is very flat there. Try it numerically with f(z) = z^5.
+ Generate the Polya potential for it in the C++ code. Maybe we should really list the Polya 
+ potentials for z^n up to n=7 or so here. We have the general formulas already - but they are 
+ unwieldy to evaluate, so let's include some more evaluated ones.
  
 -Try to make general statements about the eigenvalues and eigenvectors of the Hessian. 
 

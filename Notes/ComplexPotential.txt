@@ -201,6 +201,26 @@ n    P(x,y)
 
 I think, we can always take V and add a term  x^(n+1) / (n+1)
 
+----------------------------------------------------------------------------------------------------
+Example: w = f(z) = z^5
+
+We get:
+P(x,y) = 1/6*x^6 - 5/2*x^4*y^2 + 5/2*x^2*y^4 - 1/6*y^6
+u(x,y) = x^5 - 10*x^3*y^2 + 5*x*y^4
+v(x,y) = -5*x^4*y + 10*x^2*y^3 - y^5
+
+Let's produce the Hessian:
+
+P_xx = 5*x^4 - 30*x^2*y^2 + 5*y^4   = u_x
+P_yy = -5*x^4*y + 10*x^2*y^3 - y^5  = v_y
+P_xy = -20*x^3*y + 20*x*y^3         = u_y = v_x = P_yx
+
+At the critical saddle point (x,y) = (0,0), the Hessian is indeed zero. That's the requirement for
+a saddle point. 
+
+Compute the determinant: ...
+
+
 
 
 
@@ -211,8 +231,11 @@ I think, we can always take V and add a term  x^(n+1) / (n+1)
 ToDo:
 -work out the potential for some other important functions such as z^n, 1/z, exp(z),
  sin(z), cos(z), log(z), etc.
- 
- 
+-Maybe try a function like f(z) = (z-1)*(z+1)*(z-i)*(z+i) 
+-Could we automate the step of combining both integrals U and V into P by doing something like:
+ P = V + U.free_of(y)  or something like that? Is there a function like "free_of" that extracts 
+ terms that are free of a given variable?
+-Maybe make a paper "An Inventory of Polya Potentials" that lists more Polya potebtials. 
 
 
 
@@ -226,12 +249,29 @@ Questions:
  https://math.okstate.edu/people/binegar/2233-S99/2233-l12.pdf
  ...hmm...noo...that seems to be something else and not really related.
 -Does the potential help to evaluate and/or make sense of complex path integrals?
--If we apply path integration to the Polya vector field, is there relationship of those path 
+-If we apply path integration to the Polya vector field, is there an relationship of those path 
  integrals with the complex path integral? Almost certainly - but what exactly is it? Maybe the 
  real part is equal to the circulation around the loop and the imaginary part is equal to the flux 
  through the loop (maybe with a minus sign)? Can this be interpreted in terms of curl and 
  divergence? The integrated curl around the loop ("circulation") is the real part (in the direction
  of the path) and the integrated divergence (flux) is the imaginary part (perpendicular to the 
  path, flows out of the region bounded by the loop)? That would seem plausible because 
- multiplication by i is rotation by 90°.
+ multiplication by i is rotation by 90°. ..yes - I think, "Visual Complex Analysis" discusses this 
+ stuff.
+-Has the potential difference between two points (i.e. the path integral between the two points 
+ which is independent from the path) a particular relation to the complex path integral between 
+ these points? We are looking for a relation between a scalar and a vectorial path integral. One 
+ integrates over P, the other over (u,v). Maybe this should be framed in terms of special features
+ path integrals in divergence-free vector fields. 
+-Could sqrt(z), cbrt(z), log(z), etc tackled by the "integral of inverse function" rule?
+-Maybe polar coordinates could be useful? For example: f(z) = z^2 in polar coordinates is
+ (r * e^(i*p))^2. We could extract two functiuons s(r,p) = r^2, q(r,p) = 2*p and therefore the 
+ potential in polar coordinates would be P(r,p) = r^3/3 + p^2. Here r,p are input radius and angle 
+ and s,q output radius and angle.. For z^(1/2), we'd get s(r,p) = r^(1/2), q(r,p) = p/2 and
+ P(r,p) = (2/3)*r^(3/2) + (1/4)*p^2
+-Maybe we could also used mixed coordinates: s(x,y), q(x,y)  or  u(r,p), v(r,p)
+-Maybe other coordinate systems could be useful as well?
+-What are the CR-equations in polar coordinates?
+-Maybe look at U+V and U-V. For many functions (exp, sin, cos, 1/z), the latter is zero. Does that
+ mean something? Yeah - it means that in both integrations, the integrations constants were zero.
  

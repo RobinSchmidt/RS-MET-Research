@@ -69,9 +69,18 @@ https://www.mathsisfun.com/geometry/alternate-exterior-angles.html
 
 
 \subsection{Triangles and Trigonometry}
-It's no coincidence that triangles featured prominently in the introduction above. They are the simplest and most basic shape of all shapes, made from 3 points and the 3 line segments connecting them, forming 3 angles at the 3 vertices. One point less and you don't get a shape anymore but just a line segment. More complicated shapes, like polygons, can be split into a bunch of triangles. In turn, smooth shapes, like circles or ellipses, can be approximated by polygons to arbitrary accuracy. That's why triangles are the basic geometric building blocks of most if not all 2D or 3D rendering engines. So, it makes a lot of sense to look at triangles first and "trigonometry" does exactly that: it is literally the science of measuring triangles in greek: "trigonom" means triangle and "metry" is the science of measuring something.
+It's no coincidence that triangles featured prominently in the introduction above. They are the simplest and most basic shape of all shapes, made from 3 points and the 3 line segments connecting them, forming 3 angles at the 3 vertices. One point less and you don't get a shape anymore but just a line segment. More complicated shapes, like polygons, can be split into a bunch of triangles. In turn, smooth shapes, like circles or ellipses, can be approximated by polygons to arbitrary accuracy. That's why triangles are the basic geometric building blocks of most if not all 2D or 3D rendering engines. So, it makes a lot of sense to look at triangles first and \emph{trigonometry} does exactly that: it is literally the science of measuring triangles in greek: "trigonon" means triangle and "metry" is the science of measuring something. So, trigonometry is about measuring certain quantities in triangles. These quantities are lengths and angles and to "measure" them is, in this context, to be understood as to "compute" them from other such quantities which are assumed to be known.
 
-\medskip
+% https://en.wikipedia.org/wiki/Trigonometry
+% https://de.wikipedia.org/wiki/Trigonometrie
+
+% Five or Ten New Proofs of the Pythagorean Theorem
+% https://www.tandfonline.com/doi/full/10.1080/00029890.2024.2370240
+
+
+\paragraph{Basic Formulas}
+
+%\medskip
 Let's consider a general triangle with side lengths $a,b,c$ where the angles opposite to these sides are called $\alpha, \beta, \gamma$. We then have the following 4 fundamental laws:
 
 \medskip
@@ -132,9 +141,12 @@ where the quantities $R, A$ appear. These and others can be computed via:
 \end{tabular}
 \medskip
 
-More formulas:
 
-\medskip
+\paragraph{More Formulas} $ $ \newline
+% For some reason, we need this "$ $ \newline" nonsense to convince LaTeX to put the tabular
+% on a new line
+
+%\medskip
 \begin{tabular}{l l}
  $\sin(\gamma / 2) = \sqrt{ (s-a)(s-b) / (a b)  }$      & Half-angle formula for sine \\
  $\cos(\gamma / 2) = \sqrt{ s(s-c) / (a b)  }$          & Half-angle formula for cosine \\
@@ -159,7 +171,12 @@ More formulas:
 \medskip
 
 
-These are quite a lot of moderately complicated formulas already (you perhaps see now why we really don't want to memorize them) and by symmetry, even more formulas can be obtained by doing the cyclic replacements: $a \rightarrow b \rightarrow c \rightarrow a$, $\alpha \rightarrow \beta \rightarrow \gamma \rightarrow \alpha$. The median of a side is the line segment that starts from the middle of that side and goes to the vertex that is opposed to that side. All 3 medians meet in a common point which is the center of gravity of the triangle. The angle bisector is a line segment resulting from drawing a line from a vertex using half of the angle there and extending it until it hits the opposing side. All 3 angle bisectors meet in a common point which is also the center of the inscribed circle of the triangle. The center of the circumscribed circle is given by the point where perpendicular line segment bisectors meet. These are lines starting at the centers of the sides in a direction perpendicular to the respective side (ToDo: is there a formula for their lengths, too? maybe draw triangle with medians, bisectors, inscribed circle, etc.).
+These are quite a lot of moderately complicated formulas already (you perhaps see now why we really don't want to memorize them) and by symmetry, even more formulas can be obtained by doing the cyclic replacements: $a \rightarrow b \rightarrow c \rightarrow a$, $\alpha \rightarrow \beta \rightarrow \gamma \rightarrow \alpha$. 
+
+
+\paragraph{More Definitions and Facts}
+
+The \emph{median} of a side is the line segment that starts from the middle of that side and goes to the vertex that is opposed to that side. All 3 medians meet in a common point which is the \emph{center of gravity} of the triangle. The \emph{angle bisector} is a line segment resulting from drawing a line from a vertex using half of the angle there and extending it until it hits the opposing side. All 3 angle bisectors meet in a common point which is also the \emph{center of the inscribed circle} of the triangle. The \emph{center of the circumscribed circle} is given by the point where perpendicular line segment bisectors meet. These are lines starting at the centers of the sides in a direction perpendicular to the respective side (ToDo: is there a formula for their lengths, too? maybe draw triangle with medians, bisectors, inscribed circle, etc.).
 
 % see Teubner tachenbuch, page 760,764
 % https://de.wikipedia.org/wiki/Projektionssatz_(Dreieck)
@@ -246,7 +263,7 @@ The $a^2 + b^2 = c^2$ relation is the famous theorem of Pythagoras which is a sp
 % https://en.wikipedia.org/wiki/N-sphere#Spherical_coordinates
 
 \subsection{Geometric Derivations}
-You may wonder, how all these formulas were derived geometrically or how one would go about deriving a formula geometrically at all. The process starts with a couple of points, lines or line segments and maybe circles and then makes use of the Euclidean axioms: we may pick any pair of points and draw a line between them, we may extend lines as we see fit, we may draw a circle centered at one of our points with a radius given by the distance between any pair of our points. In such a construction, we may then identify angles that must be equal to each other by the rules of corresponding, opposite, alternating or consecutive angles. We may identify sums of angles that must sum up to a right, straight or full angle. We may identify line segments or distance ratios that must be equal to each other. We may identify shapes that are congruent or similar to one another. All of that will give us equations. What exactly to do in a given situation to find such equations is a highly creative process. Look up "Dandelin Spheres" or watch 3blue1brown's "Why slicing a cone gives an ellipse" video for a nice example of such a geometric proof. A much simpler example is the proof that the sum of all angles in a triangle must be a straight angle...
+You may wonder, how all these formulas were derived geometrically or how one would go about deriving a formula geometrically at all. The process starts with a couple of points, lines or line segments and maybe circles and then makes use of the Euclidean axioms: we may pick any pair of points and draw a line between them, we may extend lines as we see fit, we may draw a circle centered at one of our points with a radius given by the distance between any pair of our points. In such a construction, we may then identify angles that must be equal to each other by the rules of corresponding, opposite, alternating or consecutive angles. We may identify sums of angles that must sum up to a right, straight or full angle. We may identify line segments or distance ratios that must be equal to each other. We may identify shapes that are congruent or similar to one another. All of that will give us equations. The "identification" of known geometric situations in itself requires two steps: recognition (usually by eye - like: "hey, these two triangles look similar!") and proof (usually by making geometric arguments based on known theorems - "like: they must indeed always be similar because of such and such theorem"). What exactly to do in a given situation to find such equations is a highly creative process. Look up "Dandelin Spheres" or watch 3blue1brown's "Why slicing a cone gives an ellipse" video for a nice example of such a geometric proof. [TODO: include a reference] A much simpler example is the proof that the sum of all angles in a triangle must be a straight angle...
 
 % https://www.youtube.com/watch?v=pQa_tWZmlGs
 % https://en.wikipedia.org/wiki/Dandelin_spheres

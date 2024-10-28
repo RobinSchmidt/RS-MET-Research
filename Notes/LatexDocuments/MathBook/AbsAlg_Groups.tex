@@ -979,6 +979,12 @@ Let's now generalize and formalize this sort of behavior. We need some way to de
 A group is abstractly defined as a set on which a binary operation is defined that satisfies certain properties. The elements of the set can be anything. Fortunately, there is a generic way for how we may concretely represent elements of a group and also a generic way to implement its group operation. Each group element is represented by an invertible matrix and the group operation is mapped to matrix multiplication. We have already mentioned that the set of symmetries of a regular polygon can be represented by a specific set of $2 \times 2$ matrices, see (\ref{Eq:PolygonSymmetries}). Such a representation of the group as a set of matrices is possible for any group whatsoever [VERIFY!]. ...TBC...
 
 
+% Regular representations use just permutation matrices. These matrices all have an eigenvector
+% of all ones - and the corresponding eigenvalue is also 1. It's easy to see: Multiplying an 
+% all-ones vector by a permutation matrix doesn't change it at all.
+
+% 
+
 % https://en.wikipedia.org/wiki/Representation_theory
 % https://en.wikipedia.org/wiki/Group_representation
 % https://en.wikipedia.org/wiki/Representation_theory_of_finite_groups
@@ -987,6 +993,10 @@ A group is abstractly defined as a set on which a binary operation is defined th
 
 % Is it possible to faithful represent any group via matrices?
 % https://en.wikipedia.org/wiki/Representation_theorem
+
+% Representation theory  [by All Angles]
+% https://www.youtube.com/playlist?list=PLffJUy1BnWj1nUztKIdlzIJLyMOAZVpKM
+
 
 %===================================================================================================
 \subsection{Taxonomy of Groups}

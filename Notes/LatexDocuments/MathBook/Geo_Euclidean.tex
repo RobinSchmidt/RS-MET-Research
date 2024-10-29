@@ -175,15 +175,20 @@ These are quite a lot of moderately complicated formulas already (you perhaps se
 
 
 \paragraph{More Definitions and Facts}
-
-The \emph{median} of a side is the line segment that starts from the middle of that side and goes to the vertex that is opposed to that side. All 3 medians meet in a common point which is the \emph{center of gravity} of the triangle. The \emph{angle bisector} is a line segment resulting from drawing a line from a vertex using half of the angle there and extending it until it hits the opposing side. All 3 angle bisectors meet in a common point which is also the \emph{center of the inscribed circle} of the triangle. The \emph{center of the circumscribed circle} is given by the point where perpendicular line segment bisectors meet. These are lines starting at the centers of the sides in a direction perpendicular to the respective side (ToDo: is there a formula for their lengths, too? maybe draw triangle with medians, bisectors, inscribed circle, etc.).
+A couple of terms appeared in the descriptions of the formulas above. They deserve some explanation. The \emph{perimeter} is the total length of all the sides, i.e. the length that you would have to walk if you walk around the triangle. The \emph{semiperimeter} is half of that. The \emph{median} of a side is the line segment that starts from the middle of that side and goes to the vertex that is opposed to that side. All 3 medians meet in a common point which is the \emph{center of gravity} of the triangle. The \emph{angle bisector} is a line segment resulting from drawing a line in between the two triangle sides from a vertex using half of the angle there and extending it until it hits the opposing side. All 3 angle bisectors meet in a common point which is also the \emph{center of the inscribed circle} of the triangle. The \emph{center of the circumscribed circle} is given by the point where \emph{perpendicular line segment bisectors} meet. These are lines starting at the centers of the sides in a direction perpendicular to the respective side (ToDo: is there a formula for their lengths, too? maybe draw triangle with medians, bisectors, inscribed circle, etc. Explain center of gravity as balancing point).
 
 % see Teubner tachenbuch, page 760,764
 % https://de.wikipedia.org/wiki/Projektionssatz_(Dreieck)
 % todo: law of cotangents, what about centers of the incircle and circumcircle? but maybe that's for analytic geometry because it involves coordinates
 
+% https://en.wikipedia.org/wiki/Semiperimeter
+%   "appears frequently enough in formulas for triangles and other figures that it is given a
+%   separate name" 
+% Is this one of the reasons why pi = tau/2 also appears quite often? pi is the length of
+% semiperimeter of a circle. It gives another reason to call pi the semicircle constant.
+
 \subsubsection{Congruence Theorems}
-In geometry, two shapes are said to be congruent if they can be brought into full agreement just by means of translations, rotations and reflections - fancy terms for moving, turning and mirroring. It captures the idea that the two shapes are the same, just possibly placed somwhere else in space with a possibly different orientation. There are 5 theorems that state sufficient conditions for two triangles to be congruent. Two triangles are congruent if at least one of the following statements holds true: (SSS) all three sides have matching lengths, (ASA) one side and the two adjacent angles match, (SAS) one angle and the two adjacent sides match, (AAS) two angles and one side match, (SsA) two sides and the angle adjacent to the smaller side match (the lowercase 2nd s is not a typo - it indicates the smaller side). ...ToDo: verify these, especially SsA and give the algorithms to compute the missing pieces. Explain also similarity (here, also scaling is allowed - its should preserve only distance ratios where congruence preserves distances themselves. I think it also preserves angles)
+In geometry, two shapes are said to be congruent if they can be brought into full agreement just by means of translations, rotations and reflections - fancy terms for moving, turning and mirroring. It captures the idea that the two shapes are the same, just possibly placed somwhere else in space with a possibly different orientation. There are 5 theorems that state sufficient conditions for two triangles to be congruent. Two triangles are congruent if at least one of the following statements holds true: (SSS) all three sides have matching lengths, (ASA) one side and the two adjacent angles match, (SAS) one angle and the two adjacent sides match, (AAS) two angles and one side match, (SsA) two sides and the angle adjacent to the smaller side match (the lowercase 2nd s is not a typo - it indicates the smaller side). ...ToDo: verify these, especially SsA and give the formulas/algorithms to compute the missing pieces. Explain also similarity (here, also scaling is allowed - its should preserve only distance ratios where congruence preserves distances themselves. I think it also preserves angles)
 
 % on (SsA): https://www.jstor.org/stable/27966706
 
@@ -192,7 +197,7 @@ In geometry, two shapes are said to be congruent if they can be brought into ful
 
 
 \subsubsection{Right Triangles}
-Of special importance are triangles in which one angle is a right angle. These are unsurprisingly and rightfully called right triangles. There can be only one right angle in a non-degenerate triangle because two right angles already sum up to a straight angle, which is also the sum of all 3 angles - so if you attempt to have two right angles, you'll get a degenerate triangle whose 3rd vertex is at infinity with an angle of zero. By the way, triangles in which two sides have the same length are called isosceles and those where all three sides are equal are called equilateral. But this is just more jargon and not super important. The right triangles are the mathematically important ones. Pictured below is a right triangle with sides $a,b,c$ that is split into two further right triangles by a drawing a perpendicular from the top vertex to the base side $c$. The height of the triangle is denoted by $h$. Next to it are some relevant formulas that hold in such a situation.
+Of special importance are triangles in which one angle is a right angle. These are unsurprisingly and rightfully called right triangles. There can be only one right angle in a non-degenerate triangle because two right angles already sum up to a straight angle, which is also the sum of all 3 angles - so if you attempt to have two right angles, you'll get (in the limit) a degenerate triangle whose 3rd vertex is at infinity with an angle of zero (because they are parallel). By the way, triangles in which two sides have the same length are called \emph{isosceles} and those where all three sides are equal are called \emph{equilateral}. But this is just more jargon and not super important. The right triangles are the mathematically important ones. Pictured below is a right triangle with sides $a,b,c$ that is split into two further right triangles by a drawing a perpendicular from the top vertex to the base side $c$. The height of the triangle is denoted by $h$. Next to it are some relevant formulas that hold in such a situation.
 
 \medskip
 \begin{tikzpicture}[thick, scale=0.4]
@@ -209,8 +214,8 @@ Of special importance are triangles in which one angle is a right angle. These a
 \node[align=left] at (17,3) {$c^2=a^2+b^2$\\ $b^2=p^2+h^2$ \\ $a^2=q^2+h^2$};
 \node[align=left] at (23,3) {$h^2 = p q$ \\ $b^2 = p c$ \\ $a^2 = q c$};
 \node[align=left] at (31,3) {$\sin \alpha = \cos \beta = a/c$ \\ 
-   $\sin \beta = \cos \alpha = b/c$ \\ 
-   $\tan \alpha = \cot \beta = a/b$ \\ 
+   $\sin \beta  = \cos \alpha = b/c$ \\ 
+   $\tan \alpha = \cot \beta  = a/b$ \\ 
    $\alpha + \beta = \pi/2$};
 \end{tikzpicture}
 \medskip
@@ -250,10 +255,16 @@ The $a^2 + b^2 = c^2$ relation is the famous theorem of Pythagoras which is a sp
 % https://www.youtube.com/watch?v=rr1fzjvqztY
 % In any cyclic quadrilateral (i.e. qudrilatral inscribed in a circle). Label 2 opposite sides A,a and the tow other opposite sides B,b and the two diagonals C,c. Then: A*a + B*b = C*c. If the quadrilateral is a rectangle, we recover Pythogoras's theorem a special case.
 
+% https://en.wikipedia.org/wiki/Semiperimeter#For_quadrilaterals
+
 \subsection{Polygons}
-% sums of interior and exterior angles
+% sums of interior and exterior angles, regular polygons, convexity, self-intersection
 
 \subsection{Circles}
+
+% introduce circle as 
+% (1) limiting case for a regular polygon as the number of sides grows.
+% (2) locus of all points at a fixed distance from some given center
 
 % https://www.youtube.com/watch?v=rr1fzjvqztY
 % 6:20: start with any chord of the circle. from the ends of the chord, draw lines that meet at the circle. all pairs of such lines will meet in the same angle at the circle
@@ -262,6 +273,18 @@ The $a^2 + b^2 = c^2$ relation is the famous theorem of Pythagoras which is a sp
 
 % https://en.wikipedia.org/wiki/N-sphere#Spherical_coordinates
 
+
+%\subsection{Conic Sections}
+
+%\subsection{General Shapes}
+% by 2D shape, we usually mean something deescribed by a closed, non self-intersecting curve
+% ..but we have already seen more general things: polygons that self-intesect, curves that 
+% aren't closed (hyperbolas). We usually think of a shape 2D as something that has an area.
+% That makes sense only for closed curves. When they self-intersect, we can still make sense 
+% of it but the notion of area becomes a bit ambiguous - should some parts of the figure 
+% count as negative area? Maybe based on the direction of winding of the edges around that
+% sub-area? Consider a figure 8
+
 \subsection{Geometric Derivations}
 You may wonder, how all these formulas were derived geometrically or how one would go about deriving a formula geometrically at all. The process starts with a couple of points, lines or line segments and maybe circles and then makes use of the Euclidean axioms: we may pick any pair of points and draw a line between them, we may extend lines as we see fit, we may draw a circle centered at one of our points with a radius given by the distance between any pair of our points. In such a construction, we may then identify angles that must be equal to each other by the rules of corresponding, opposite, alternating or consecutive angles. We may identify sums of angles that must sum up to a right, straight or full angle. We may identify line segments or distance ratios that must be equal to each other. We may identify shapes that are congruent or similar to one another. All of that will give us equations. The "identification" of known geometric situations in itself requires two steps: recognition (usually by eye - like: "hey, these two triangles look similar!") and proof (usually by making geometric arguments based on known theorems - "like: they must indeed always be similar because of such and such theorem"). What exactly to do in a given situation to find such equations is a highly creative process. Look up "Dandelin Spheres" or watch 3blue1brown's "Why slicing a cone gives an ellipse" video for a nice example of such a geometric proof. [TODO: include a reference] A much simpler example is the proof that the sum of all angles in a triangle must be a straight angle...
 
@@ -269,6 +292,23 @@ You may wonder, how all these formulas were derived geometrically or how one wou
 % https://en.wikipedia.org/wiki/Dandelin_spheres
 
 ToDo: draw the picture that shows that the angles in a triangle must sum to 180
+
+
+\subsection{3D Geometry}
+
+% angles in 3D, solid angles
+
+\subsubsection{Platonic Solids}
+% all faces, sides and angles are the same
+% tetrathedron, cube, ...
+
+\subsubsection{Polyhedra}
+% Euler's formula, generalization to nD: polytopes (I think)
+
+\subsubsection{Solids of Revolution}
+% sphere (revolve a half-circle), cylinder (revolve a rectangle), cone (revolve a 
+% right triangle)
+
 
 \begin{comment}
 	
@@ -346,5 +386,11 @@ Divine high PHI: The power of AB=A+B (Mathologer masterclass)
 https://www.youtube.com/watch?v=cCXRUHUgvLI
 at 6:40 - Ptolemys theorem - generalization of Pythagoras theorem
 
+-Hint at non-Eulcidean geometries: 
+ -straight lines don't exist anymore - we need to use geodesics instead
+ -spherical: angle sum in triangles is > pi, ratio of circumfence to radis in circle is
+  < pi, 
+ -hyperbolic:
+ -This will be picked up in more detail in the context of differential geometry
 
 \end{comment}

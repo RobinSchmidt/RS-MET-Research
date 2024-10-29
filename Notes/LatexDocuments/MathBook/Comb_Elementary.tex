@@ -25,7 +25,7 @@
 % The terminology seems a mess
 
 \paragraph{Permutations}
-Let's say that we have $n$ different (i.e. distinguishable) objects and we want to know, how many ways there are, to put these objects into a different order. For example, the possible orders for the $3$ objects $a,b,c$ are $abc$, $acb$, $bac$, $bca$, $cab$, $cba$. These are $6$ different orders. We call these different orderings of a number of $n$ different objects \emph{permutations}. The term "permute" means something like "reorder" where identity (i.e. do-nothing) reordering also counts as trivial edge case (as is typical in math). The number of \emph{permutations} of $n$ distinguishable objects is given by:
+Let's say that we have $n$ different (i.e. distinguishable) objects and we want to know, how many ways there are, to put these objects into a different order. For example, the possible orders for the $3$ objects $a,b,c$ are $abc$, $acb$, $bac$, $bca$, $cab$, $cba$. These are $6$ different orders. We call these different orderings of a number of $n$ different objects \emph{permutations}. The term "permute" means something like "reorder" where identity (i.e. do-nothing) reordering also counts as trivial edge case (as is typical in math). The number of \emph{permutations} of $n$ distinguishable objects is given by factorial of $n$:
 \begin{equation}
 P_n = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n = n!
 \end{equation}
@@ -35,7 +35,7 @@ P_n^{(m_1,m_2,\ldots,m_k)}
 = \frac{n!}{m_1! m_2! \ldots m_k!} 
 = \binom{n}{m_1,m_2,\ldots, m_k}
 \end{equation}
-distinguishable permutations. These ares sometimes called \emph{multiset permutations} or \emph{permutations with repetition} [VERIFY!]. The numbers $m_i$ are called the \emph{multiplicities}. The quantity is also called the multinomial coefficient and it is a generalization of the binomial coefficient "$n$-choose-$k$" and the notation on the right hand side is a corresponding generalization of the usual binomial coefficient notation $\binom{n}{k}$. ...TBC... mention asymptotic approximations such as Stirling's formula and continuous variants as the product function(or its shifted version, the Gamma-function)
+distinguishable permutations. These ares sometimes called \emph{multiset permutations} or \emph{permutations with repetition} [VERIFY!]. The numbers $m_i$ are called the \emph{multiplicities}. The quantity is also called the multinomial coefficient and it is a generalization of the binomial coefficient "$n$-choose-$k$" and the notation on the right hand side is a corresponding generalization of the usual binomial coefficient notation $\binom{n}{k}$. ...TBC... mention asymptotic approximations such as Stirling's formula and continuous variants as the product function(or its shifted version, the Gamma-function, point out relation to expanding an expression like $(\sum_{i=1}^{n} x_i)^p$ - here $n$ is the number of variables and $p$ is the power/exponent)
 
 % Leupold, pg 329
 % https://en.wikipedia.org/wiki/Permutation#Permutations_of_multisets
@@ -43,6 +43,8 @@ distinguishable permutations. These ares sometimes called \emph{multiset permuta
 
 % Nice example:
 % https://www.tutorchase.com/notes/cie-a-level/maths/4-2-2-arrangements-with-repetition
+
+% %\pageref{Sec:FactorialsAndBinomCoeffs}
 
 \paragraph{Combinations}
 Imagine we have a set of size $n$ and we are asked how many different subsets of size $k$ we can form from this set. That is: how many different ways are there to choose $k$ elements from a set of $n$ elements. It doesn't matter in which order we chose the elements - as long as the total set of chosen elements is the same, our created subset is considered to be the same (remember that in sets, order doesn't matter - it isn't even a thing\footnote{Unless you \emph{define} an order \emph{on top} of the set - but a set all by itself does not have a notion of order built into it.}). We call these different subsets of size $k$ of a given set of size $n$ \emph{combinations} or, more specifically, $k$-combinations. The number of possible $k$-combinations from a set of size $n$ is given by the binomial coefficient:
@@ -94,14 +96,34 @@ of them. ...VERIFY! ...TBC...
 % https://stackoverflow.com/questions/2366074/code-for-variations-with-repetition-combinatorics
 
 \paragraph{Partitions}
+A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as binomial coefficients. For those, we could use Pascal's triangle. For the Bell numbers, there's Bell's triangle. It looks as follows:
+\begin{center}  % doesn't work!
+\begin{verbatim}
+                    1
+                 1     2
+              2     3     5
+           5     7    10    15
+       15    20    27    37    52
+    52    67    87   114   151   203
+203   255   322   409   523   674   877
+\end{verbatim}
+\end{center}
+The rules to compute the numbers are as follows: Start with the single $1$ in the first line. To start the next line, copy the last number from the previous line into the first position of the next line. All other numbers in the line are computed by adding the left and top-left neighbors until the row is completely filled. Then copy the last number of the row into the first position of the next row again. And so on. The sequence of Bell numbers appears in the leftmost column, i.e. in the row start numbers. they also appear in th row end numbers but index-shifted by one. ...TBC... Q: Do the inner numbers of the Bell triangle have some meaning, too?
 
+
+% B0 = 1, B1 = 1, B2 = 2, B3 = 5, B4 = 15, B5 = 52, and B6 = 203
+
+% partitions of {a,b,c}: {{a},{b},{c}}, {{a},{b,c}}, {{a,b},{c}}, {{a,c},{b}}, {{a,b,c}}
 
 % https://en.wikipedia.org/wiki/Partition_of_a_set
 % https://en.wikipedia.org/wiki/Bell_number
-% Bell triangle - similar to Pascal's triangle
+% https://en.wikipedia.org/wiki/Bell_triangle  - similar to Pascal's triangle
 % https://en.wikipedia.org/wiki/Partition_of_a_set#Counting_partitions
 % ...non-crossing partitions / Catalan numbers
 
+% Not to be confused with:
+% https://en.wikipedia.org/wiki/Partition_problem
+% https://en.wikipedia.org/wiki/Integer_partition
 
 \begin{comment}
 

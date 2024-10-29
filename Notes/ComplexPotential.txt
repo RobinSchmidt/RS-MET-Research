@@ -269,7 +269,12 @@ Questions:
  potential in polar coordinates would be P(r,p) = r^3/3 + p^2. Here r,p are input radius and angle 
  and s,q output radius and angle.. For z^(1/2), we'd get s(r,p) = r^(1/2), q(r,p) = p/2 and
  P(r,p) = (2/3)*r^(3/2) + (1/4)*p^2
+-It is interesting to note that s(r,p) does in fact not depend on p and q(r,p) not on r. The 
+ functions decouple in polar coordinates.
 -Maybe we could also used mixed coordinates: s(x,y), q(x,y)  or  u(r,p), v(r,p)
+ Maybe for f(z) = ln(z), mixed coordinates are best? ln(r * e^(i*p)) = ln(r) + i*p. We can read off
+ u(r,p) = ln(r) and v(r,p) = p (or maybe -p, depending on whether or not we bake in a minus sign 
+ into v as we did for the purely cartesian v). 
 -Maybe other coordinate systems could be useful as well?
 -What are the CR-equations in polar coordinates?
 -Maybe look at U+V and U-V. For many functions (exp, sin, cos, 1/z), the latter is zero. Does that

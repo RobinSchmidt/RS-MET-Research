@@ -96,7 +96,7 @@ of them. ...VERIFY! ...TBC...
 % https://stackoverflow.com/questions/2366074/code-for-variations-with-repetition-combinatorics
 
 \paragraph{Partitions}
-A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as binomial coefficients. For those, we could use Pascal's triangle. For the Bell numbers, there's Bell's triangle. It looks as follows:
+A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empty subsets whose union gives back the original set. For example, take the set $\{a,b,c\}$. We can partition it in the following 5 ways: $\{\{a\},\{b\},\{c\}\}, \{\{a\},\{b,c\}\}, \{\{a,b\},\{c\}\}, \{\{a,c\},\{b\}\}, \{\{a,b,c\}\}$. For a set with $n$ elements, the number of possible partitions is given by the $n$th \emph{Bell number} $B_n$. Partitions of a set can also be interpreted in terms of equivalence classes. Therefore, the number $B_n$ gives the number of possible different equivalence relations on a set of size $n$. The first $7$ Bell numbers are: $B_0=1, B_1=1, B_2=2, B_3=5, B_4=15, B_5=52, B_6=203$. The Bell numbers can be computed algorithmically in a similar way as binomial coefficients. For those, we could use Pascal's triangle. For the Bell numbers, there's Bell's triangle. It looks as follows:
 \begin{center}  % doesn't work!
 \begin{verbatim}
                     1
@@ -108,25 +108,30 @@ A \emph{partition} of a set $S$ is a way of splitting it into disjoint, non-empt
 203   255   322   409   523   674   877
 \end{verbatim}
 \end{center}
-The rules to compute the numbers are as follows: Start with the single $1$ in the first line. To start the next line, copy the last number from the previous line into the first position of the next line. All other numbers in the line are computed by adding the left and top-left neighbors until the row is completely filled. Then copy the last number of the row into the first position of the next row again. And so on. The sequence of Bell numbers appears in the leftmost column, i.e. in the row start numbers. they also appear in th row end numbers but index-shifted by one. ...TBC... Q: Do the inner numbers of the Bell triangle have some meaning, too?
+The rules to compute the numbers are as follows: Start with the single $1$ in the first row. To start the next row, copy the last number from the previous row into the first position of the next row. All other numbers in the row are computed by adding the left and top-left neighbors until the row is completely filled. Then copy the last number of the row into the first position of the next row again. And so on. The sequence of Bell numbers appears in the leftmost column, i.e. in the row start numbers. They also appear in the row end numbers but index-shifted by one. 
 
-
-% B0 = 1, B1 = 1, B2 = 2, B3 = 5, B4 = 15, B5 = 52, and B6 = 203
-
-% partitions of {a,b,c}: {{a},{b},{c}}, {{a},{b,c}}, {{a,b},{c}}, {{a,c},{b}}, {{a,b,c}}
+...TBC... Q: Do the inner numbers of the Bell triangle have some meaning, too? ToDo: mention integer partitions (don't confuse these concepts).
 
 % https://en.wikipedia.org/wiki/Partition_of_a_set
 % https://en.wikipedia.org/wiki/Bell_number
 % https://en.wikipedia.org/wiki/Bell_triangle  - similar to Pascal's triangle
 % https://en.wikipedia.org/wiki/Partition_of_a_set#Counting_partitions
 % ...non-crossing partitions / Catalan numbers
+% Stirling numbers
 
 % Not to be confused with:
 % https://en.wikipedia.org/wiki/Partition_problem
 % https://en.wikipedia.org/wiki/Integer_partition
 
+
 \begin{comment}
 
+
+https://en.wikipedia.org/wiki/Central_binomial_coefficient
+https://en.wikipedia.org/wiki/Catalan_number#Applications_in_combinatorics
+https://en.wikipedia.org/wiki/Stirling_number
+https://en.wikipedia.org/wiki/Stirling_numbers_of_the_first_kind
+https://en.wikipedia.org/wiki/Gaussian_binomial_coefficient#Combinatorial_descriptions
 
 
 \end{comment}

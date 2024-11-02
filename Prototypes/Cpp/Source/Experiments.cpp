@@ -11047,20 +11047,26 @@ void testDivisors()
 
   bool ok = true;
   Vec d;
-  d = rsFindDivisors( 2); ok &= d == Vec({ 1, 2              });
-  d = rsFindDivisors( 3); ok &= d == Vec({ 1, 3              });
-  d = rsFindDivisors( 4); ok &= d == Vec({ 1, 2, 4           });
-  d = rsFindDivisors( 5); ok &= d == Vec({ 1, 5              });
-  d = rsFindDivisors( 6); ok &= d == Vec({ 1, 2, 3, 6        });
-  d = rsFindDivisors( 7); ok &= d == Vec({ 1, 7              });
-  d = rsFindDivisors( 8); ok &= d == Vec({ 1, 2, 4, 8        });
-  d = rsFindDivisors( 9); ok &= d == Vec({ 1, 3, 9           });
-  d = rsFindDivisors(10); ok &= d == Vec({ 1, 2, 5, 10       });
-  d = rsFindDivisors(11); ok &= d == Vec({ 1, 11             });
-  d = rsFindDivisors(12); ok &= d == Vec({ 1, 2, 3, 4, 6, 12 });
-  d = rsFindDivisors(13); ok &= d == Vec({ 1, 13             });
-  d = rsFindDivisors(14); ok &= d == Vec({ 1, 2, 7, 14       });
-  d = rsFindDivisors(15); ok &= d == Vec({ 1, 3, 5, 15       });
+  d = rsFindDivisors( 2); ok &= d == Vec({ 1, 2               });
+  d = rsFindDivisors( 3); ok &= d == Vec({ 1, 3               });
+  d = rsFindDivisors( 4); ok &= d == Vec({ 1, 2, 4            });
+  d = rsFindDivisors( 5); ok &= d == Vec({ 1, 5               });
+  d = rsFindDivisors( 6); ok &= d == Vec({ 1, 2, 3, 6         });
+  d = rsFindDivisors( 7); ok &= d == Vec({ 1, 7               });
+  d = rsFindDivisors( 8); ok &= d == Vec({ 1, 2, 4, 8         });
+  d = rsFindDivisors( 9); ok &= d == Vec({ 1, 3, 9            });
+  d = rsFindDivisors(10); ok &= d == Vec({ 1, 2, 5, 10        });
+  d = rsFindDivisors(11); ok &= d == Vec({ 1, 11              });
+  d = rsFindDivisors(12); ok &= d == Vec({ 1, 2, 3, 4, 6, 12  });
+  d = rsFindDivisors(13); ok &= d == Vec({ 1, 13              });
+  d = rsFindDivisors(14); ok &= d == Vec({ 1, 2, 7, 14        });
+  d = rsFindDivisors(15); ok &= d == Vec({ 1, 3, 5, 15        });
+  d = rsFindDivisors(16); ok &= d == Vec({ 1, 2, 4, 8, 16     });
+  d = rsFindDivisors(18); ok &= d == Vec({ 1, 2, 3, 6, 9, 18  });
+  d = rsFindDivisors(20); ok &= d == Vec({ 1, 2, 4, 5, 10, 20 });
+  d = rsFindDivisors(21); ok &= d == Vec({ 1, 3, 7, 21        });
+
+
 
   // ToDo: Test more numbers. Test edge cases (i.e. 0, 1, negative numbers)
   // Maybe implement a helper function that can be called like
@@ -11102,9 +11108,17 @@ void testSquarity()
   bool ok = true;
   Rat sq;
 
-  sq = squarity(12);
+  sq = squarity( 4); ok &= sq == Rat(1,1);
+  sq = squarity( 6); ok &= sq == Rat(2,3);
+  sq = squarity( 8); ok &= sq == Rat(2,4);
+  sq = squarity( 9); ok &= sq == Rat(1,1);
+  sq = squarity(10); ok &= sq == Rat(2,5);
+  sq = squarity(12); ok &= sq == Rat(3,4);
+  sq = squarity(14); ok &= sq == Rat(2,7);
+  sq = squarity(15); ok &= sq == Rat(3,5);
+  sq = squarity(16); ok &= sq == Rat(4,4);
+  sq = squarity(18); ok &= sq == Rat(3,6);
 
-  ok &= sq == Rat(3,4);
 
 
   RAPT::rsAssert(ok);

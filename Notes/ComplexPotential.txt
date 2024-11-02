@@ -277,6 +277,8 @@ Questions:
  into v as we did for the purely cartesian v). 
 -Maybe other coordinate systems could be useful as well?
 -What are the CR-equations in polar coordinates?
+ https://en.wikipedia.org/wiki/Cauchy%E2%80%93Riemann_equations#Other_representations
+ https://math.stackexchange.com/questions/1245754/cauchy-riemann-equations-in-polar-form
 -Maybe look at U+V and U-V. For many functions (exp, sin, cos, 1/z), the latter is zero. Does that
  mean something? Yeah - it means that in both integrations, the integrations constants were zero.
  

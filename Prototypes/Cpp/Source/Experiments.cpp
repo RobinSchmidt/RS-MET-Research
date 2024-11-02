@@ -11099,11 +11099,15 @@ void testSquarity()
   // Function to compute the "squarity" of a given number n:
   auto squarity = [](Int n)
   {
+    if(n < 2)
+      return Rat(1,1);                 // 0 and 1 have squarity 1 by definition
+
     VecI   d  = rsFindDivisors(n);
     size_t nd = d.size();              // Number of divisors
 
     if(nd == 2)
-      return Rat(0, 1);                // Primes have a squarity of 0 by definition
+      //return Rat(0, 1);                // Primes have a squarity of 0 by definition
+      return Rat(1, n);                // Alternative definition (may not even need a special case)
     else
     {
       size_t i_num = (nd-1)/2;
@@ -11130,13 +11134,35 @@ void testSquarity()
 
   RAPT::rsAssert(ok);
 
+  // Make a plot:
+  int N = 2000;
+  std::vector<float> x(N), y(N);
+  for(int n = 0; n < N; n++)
+  {
+    x[n] = (float)n;
+    y[n] = (float)squarity(n);
+  }
+  rsPlotVectorsXY(x, y);
 
+
+  // Observations:
+  //
+  // - Before hitting 1 for square numbers, the squarity function seems to increase. For numbers
+  //   that are one less than a square, the squarity is already quite high, i.e. close to 1.
+  //
+  // - There always seems to be some build-up of spikes before the maximum spikes of amplitude 1
+  //   are hit.
+  //
+  //
   // ToDo:
   //
-  // - Make a plot of the squarity function. Does it show some interesting structure?
+  // - Try to find mathematical statements about the structure of the function. Does it obey some
+  //   interesting functional equation? What about sq(a*b), sq(a/b), sq(a+b), where sq(..) denotes 
+  //   the squarity function?. 
   //
   // - Figure out what happens if do not take primes as special case. I think, the squarity will
-  //   then be 1/p for prime numbers p. Could such a definition make more sense?
+  //   then be 1/p for prime numbers p. Could such a definition make more sense? That may well be
+  //   the case. Maybe with that definition, we could have more structure.
   //
   // - I think, it may make sense to define the squarity of 0 and 1 to be 1, too. Both are indeed
   //   square numbers: 1 = 1^2, 0 = 0^2.

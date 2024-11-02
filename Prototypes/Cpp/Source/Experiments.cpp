@@ -11079,6 +11079,18 @@ void testDivisors()
 
 void testSquarity()
 {
+  // We define a function on the natural numbers that I call "squarity". It is defined to be 0 for
+  // prime numbers, 1 for square numbers and for composite numbers n that are not a square number, 
+  // it is defined as follows: split the number n into 2 factors in such a way that the two factors
+  // are as close as possible. For example, we could split 12 into two factors as 2*6 or as 3*4. 3 
+  // and 4 are closer together than 2 and 6, so we take the 3*4 split. The squarity is then defined 
+  // as the ratio of the smaller over the greater number, i.e. 3/4 in this case. The squarity is
+  // always a rational number in the range [0..1]. For square numbers n, the two factors that are 
+  // closest together are in fact the same factor, i.e. their distance is zero when n is a square.
+  // For other numbers, the two closest factors are not the same but we want to measure how close 
+  // they are together, so to speak.
+
+
   using Int  = int;                    // Integer number
   using Rat  = RAPT::rsFraction<Int>;  // Rational number
   using VecI = std::vector<Int>;       // Vector of integers
@@ -11088,19 +11100,16 @@ void testSquarity()
   auto squarity = [](Int n)
   {
     VecI   d  = rsFindDivisors(n);
-    size_t nd = d.size();             // Number of divisors
+    size_t nd = d.size();              // Number of divisors
 
     if(nd == 2)
-      return Rat(0, 1);               // Primes hae a squarity of 0 by definition
+      return Rat(0, 1);                // Primes have a squarity of 0 by definition
     else
     {
-      //size_t m = nd/2;                // Midpoint of d array
-      //return Rat(d[m], d[m-1]);       // VERIFY!!!
-
-      // VERIFY THIS:
       size_t i_num = (nd-1)/2;
       size_t i_den = nd / 2;
       return Rat(d[i_num], d[i_den]);
+      // Maybe verify the formula some more - and explain it!
     }
   };
 
@@ -11119,9 +11128,18 @@ void testSquarity()
   sq = squarity(16); ok &= sq == Rat(4,4);
   sq = squarity(18); ok &= sq == Rat(3,6);
 
-
-
   RAPT::rsAssert(ok);
+
+
+  // ToDo:
+  //
+  // - Make a plot of the squarity function. Does it show some interesting structure?
+  //
+  // - Figure out what happens if do not take primes as special case. I think, the squarity will
+  //   then be 1/p for prime numbers p. Could such a definition make more sense?
+  //
+  // - I think, it may make sense to define the squarity of 0 and 1 to be 1, too. Both are indeed
+  //   square numbers: 1 = 1^2, 0 = 0^2.
 }
 
 

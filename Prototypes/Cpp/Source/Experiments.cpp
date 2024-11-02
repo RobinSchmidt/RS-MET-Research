@@ -11017,6 +11017,38 @@ void testPrimesAndMore()
 }
 
 
+/** Finds all divisors of the given number n (which should be an integer type) including the 
+trivial ones, i.e. 1 and n. */
+template<class T>
+std::vector<T> rsFindDivisors(T n)
+{
+  RAPT::rsAssert(n > 1, "rsFindDivisors: Edge cases are not yet implemented.");
+
+  std::vector<T> d;
+  for(T i = 1; i <= n; i++)
+    if(n % i == 0)
+      d.push_back(i);
+  return d;
+}
+
+void testDivisors()
+{
+  using Int = int;
+  using Vec = std::vector<Int>;
+
+  bool ok = true;
+
+  Int n = 12;
+  Vec d = rsFindDivisors(n);
+ 
+  ok &= d == Vec({ 1, 2, 3, 4, 6, 12 });
+
+
+  RAPT::rsAssert(ok);
+}
+
+
+
 // Finite field stuff:
 
 

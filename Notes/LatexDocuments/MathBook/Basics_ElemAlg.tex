@@ -54,13 +54,13 @@ If we have $n$ numbers $a_1, a_2, \ldots, a_n$, there is a special notation to f
  \sum_{k=1}^{n}  a_k = a_1   +   a_2   +   \ldots   +   a_n, \qquad
  \prod_{k=1}^{n} a_k = a_1 \cdot a_2 \cdot \ldots \cdot a_n 
 \end{equation}
-At the bottom, we introduce a dummy variable for the index (here $k$) and assign the starting value for the index. At the top, we assign the final value for $k$ - which, in this case, is another variable, namely $n$ - the total number of values that we add (or multiply). You may also see things like:
+At the bottom, we introduce a dummy variable for the index (here $k$) and assign the starting value for the index. At the top, we assign the final value for $k$ - which, in this case, is another variable, namely $n$. If $k$ starts at $1$, $n$ is the total number of values that we add or multiply. You may also see things like:
 \begin{equation}
  \qquad  \sum_{k} a_k,       \qquad
  \sum_{0 \leq k \leq n} a_k, \qquad
  \sum_{k \neq 5} a_k
 \end{equation}
-and so on. In the first case, the range of the index $k$ must be inferred from the context. This may be used when specifying index range is too complicated to integrate into the summation sign notation. Then, the surrounding text may clarify what values the index $k$ will take on. The second sum writes the conditions for the index $k$ all at the bottom. It's  uncommon to see this for conditions like $0 \leq k \leq n$ but this notation may be used for more general conditions that the index needs to satisfy. In the 3rd case, the index $k$ would run over all possible values of $k$ except $5$ - again, which values are possible or make sense must be inferred from the context. You can also have double sums like:
+and so on. In the first case, the range of the index $k$ must be inferred from the context. This may be used when specifying index range is too complicated to integrate into the summation sign notation. Then, the surrounding text may clarify what values the index $k$ will take on. The second sum writes the conditions for the index $k$ all at the bottom. It's  uncommon to see this for simple and common conditions like $0 \leq k \leq n$ but this notation may be used for more general conditions that the index needs to satisfy. In the 3rd case, the index $k$ would run over all possible values of $k$ except $5$ - again, which values are possible or make sense must be inferred from the context. You can also have double sums like:
 \begin{equation}
  \sum_{i=1}^{m} \sum_{j=i}^n  a_i b_j
 \end{equation}
@@ -76,9 +76,9 @@ which means that we have a double sum (i.e. one with two indices $i,j$) and they
 \begin{equation}
  \sum_{p \in \mathbb{P}, p \leq n} p
 \end{equation}
-That would mean to sum over all primes less than or equal to $n$.
+That would mean to sum over all primes less than or equal to $n$. If the index range is too complicated to write down below (and possibly above) the summation sign, authors may just write the index variable $k$ under the sum and explain the range in the surrounding text or in separate formulas. You may also see things like $k \in S$ where $S$ is some set of integers that is further specified elsewhere in the text. But sometimes authors just don't care and write complicated expressions into the summation footer anyway. That tends to look ugly and scary. To see an example, look up the wikipedia page for the multinomial theorem. But don't let it scare you off. It's just a (multiple) sum, so you know, what you have to do in order to compute it. You just need to first decipher the algorithm for computing the ranges of the indices from the expression in the summation footer. 
 
-...TBC...TODO: give formulas for sums (splitting, combining, index-shifting, ...), 
+...TBC...TODO: give formulas for sums (splitting, combining, index-shifting, ...), give the scary multinomial coeffs formual from wikipedia here as example
 
 % Maybe include continued fractions, too
 

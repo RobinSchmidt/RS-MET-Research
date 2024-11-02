@@ -84,6 +84,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testPrimeFactorTable();
   //testPrimesAndMore();
   testDivisors();
+  testSquarity();
   //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();

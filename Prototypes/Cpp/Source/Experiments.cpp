@@ -11071,11 +11071,50 @@ void testDivisors()
   RAPT::rsAssert(ok);
 }
 
+void testSquarity()
+{
+  using Int  = int;                    // Integer number
+  using Rat  = RAPT::rsFraction<Int>;  // Rational number
+  using VecI = std::vector<Int>;       // Vector of integers
+  using VecR = std::vector<Rat>;       // Vector of rationals
+
+  // Function to compute the "squarity" of a given number n:
+  auto squarity = [](Int n)
+  {
+    VecI   d  = rsFindDivisors(n);
+    size_t nd = d.size();             // Number of divisors
+
+    if(nd == 2)
+      return Rat(0, 1);               // Primes hae a squarity of 0 by definition
+    else
+    {
+      //size_t m = nd/2;                // Midpoint of d array
+      //return Rat(d[m], d[m-1]);       // VERIFY!!!
+
+      // VERIFY THIS:
+      size_t i_num = (nd-1)/2;
+      size_t i_den = nd / 2;
+      return Rat(d[i_num], d[i_den]);
+    }
+  };
+
+
+  bool ok = true;
+  Rat sq;
+
+  sq = squarity(12);
+
+  ok &= sq == Rat(3,4);
+
+
+  RAPT::rsAssert(ok);
+}
+
+
+
 
 
 // Finite field stuff:
-
-
 
 bool testFiniteField1()
 {

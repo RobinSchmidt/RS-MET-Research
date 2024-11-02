@@ -11029,19 +11029,43 @@ std::vector<T> rsFindDivisors(T n)
     if(n % i == 0)
       d.push_back(i);
   return d;
+
+  // ToDo: 
+  //
+  // - The algorithm is rather naive. Figure out if there's a more efficient algorithm to find all
+  //   divisors of a number. If so, maybe implement it. Maybe something based on its prime 
+  //   factorization? That would involve creating a prime-table upfront, so it pay off only if we 
+  //   want to compute the divisors of many numbers in a loop.
 }
 
 void testDivisors()
 {
+  // We test the rsFindDivisors function here.
+
   using Int = int;
   using Vec = std::vector<Int>;
 
   bool ok = true;
+  Vec d;
+  d = rsFindDivisors( 2); ok &= d == Vec({ 1, 2              });
+  d = rsFindDivisors( 3); ok &= d == Vec({ 1, 3              });
+  d = rsFindDivisors( 4); ok &= d == Vec({ 1, 2, 4           });
+  d = rsFindDivisors( 5); ok &= d == Vec({ 1, 5              });
+  d = rsFindDivisors( 6); ok &= d == Vec({ 1, 2, 3, 6        });
+  d = rsFindDivisors( 7); ok &= d == Vec({ 1, 7              });
+  d = rsFindDivisors( 8); ok &= d == Vec({ 1, 2, 4, 8        });
+  d = rsFindDivisors( 9); ok &= d == Vec({ 1, 3, 9           });
+  d = rsFindDivisors(10); ok &= d == Vec({ 1, 2, 5, 10       });
+  d = rsFindDivisors(11); ok &= d == Vec({ 1, 11             });
+  d = rsFindDivisors(12); ok &= d == Vec({ 1, 2, 3, 4, 6, 12 });
+  d = rsFindDivisors(13); ok &= d == Vec({ 1, 13             });
+  d = rsFindDivisors(14); ok &= d == Vec({ 1, 2, 7, 14       });
+  d = rsFindDivisors(15); ok &= d == Vec({ 1, 3, 5, 15       });
 
-  Int n = 12;
-  Vec d = rsFindDivisors(n);
- 
-  ok &= d == Vec({ 1, 2, 3, 4, 6, 12 });
+  // ToDo: Test more numbers. Test edge cases (i.e. 0, 1, negative numbers)
+  // Maybe implement a helper function that can be called like
+  // ok &= test(12, { 1, 2, 3, 4, 6, 12 }); and use it to clean up the code -> shortens the 
+  // repetitive code.
 
 
   RAPT::rsAssert(ok);

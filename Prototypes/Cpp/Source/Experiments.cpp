@@ -11153,6 +11153,12 @@ void testSquarity()
   // - There always seems to be some build-up of spikes before the maximum spikes of amplitude 1
   //   are hit.
   //
+  // - Halfway between two actual square numbers, there's always a secondary spike that is also
+  //   quite high. Maybe, we could call these numbers half-squares? For example, between 81 and 100
+  //   there's 90 with a pretty high squarity of 0.9 = 9/10. Between 361 (= 19^2) and 400 (=20^2), 
+  //   there's 380 with sq(380) = 0.95 = 19/20. So, yeah - between (n-1)^2 and n^2, we find (n-1)*n
+  //   with rather high squarity which makes sense.
+  //
   //
   // ToDo:
   //

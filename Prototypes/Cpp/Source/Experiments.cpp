@@ -11110,8 +11110,8 @@ void testSquarity()
       return Rat(1, n);                // Alternative definition (may not even need a special case)
     else
     {
-      size_t i_num = (nd-1)/2;
-      size_t i_den = nd / 2;
+      size_t i_num = (nd-1) / 2;
+      size_t i_den =  nd    / 2;
       return Rat(d[i_num], d[i_den]);
       // Maybe verify the formula some more - and explain it!
     }

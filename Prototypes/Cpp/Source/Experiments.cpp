@@ -11172,8 +11172,8 @@ void testSquarity()
   // ToDo:
   //
   // - Try to find mathematical statements about the structure of the function. Does it obey some
-  //   interesting functional equation? What about sq(a*b), sq(a/b), sq(a+b), where sq(..) denotes 
-  //   the squarity function?. 
+  //   interesting functional equation? What about sq(a*b), sq(a/b), sq(a+b)? sq(..) denotes 
+  //   the squarity function. 
   //
   // - Figure out what happens if do not take primes as special case. I think, the squarity will
   //   then be 1/p for prime numbers p. Could such a definition make more sense? That may well be
@@ -11190,6 +11190,11 @@ void testSquarity()
   //   function can be used to stretch the x-axis. I think, we need to transform the argument 
   //   to x/(2x+1), i.e. evaluate sq(x/(2x+1)) ...not sure about that, though. To evaluate sq() at
   //   non-integers, we'll have to interpolate.
+  //
+  // - Maybe define a recursive squarity functions. Let x = a*b with a,b being the two factors into
+  //   which x is split, i.e. the two closest divisors of x. Then define 
+  //   rsq(x) = sq(x) * rsq(a) * rsq(b)  where rsq denotes the "recursive squarity function". Maybe
+  //   we need a base case rsq(x) = 1 if x has only the trivial divisors 1 and x.
   //
   //
   // Questions:

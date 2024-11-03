@@ -11118,9 +11118,9 @@ void testSquarity()
   };
 
 
+  // Some unit tests to verify the code for computing squarities:
   bool ok = true;
   Rat sq;
-
   sq = squarity( 4); ok &= sq == Rat(1,1);
   sq = squarity( 6); ok &= sq == Rat(2,3);
   sq = squarity( 8); ok &= sq == Rat(2,4);
@@ -11131,10 +11131,9 @@ void testSquarity()
   sq = squarity(15); ok &= sq == Rat(3,5);
   sq = squarity(16); ok &= sq == Rat(4,4);
   sq = squarity(18); ok &= sq == Rat(3,6);
-
   RAPT::rsAssert(ok);
 
-  // Make a plot:
+  // Compute squarities of numbers 0...N-1:
   int N = 2000;
   std::vector<float> x(N), y(N);
   for(int n = 0; n < N; n++)
@@ -11142,22 +11141,32 @@ void testSquarity()
     x[n] = (float)n;
     y[n] = (float)squarity(n);
   }
+
+  // Compute some statistical features:
+  float mean = RAPT::rsArrayTools::mean(&y[0], N);
+
+  // Make a plot:
   rsPlotVectorsXY(x, y);
+
+
 
 
   // Observations:
   //
   // - Before hitting 1 for square numbers, the squarity function seems to increase. For numbers
-  //   that are one less than a square, the squarity is already quite high, i.e. close to 1.
+  //   that are one less than a square, the squarity is already quite high, i.e. close to 1. I 
+  //   think, the explanation for this is that directly before n^2, there's always 
+  //   (n-1)*(n+1) = n^2 - 1 and (n-1) and (n+1) are quite close to each other.
   //
   // - There always seems to be some build-up of spikes before the maximum spikes of amplitude 1
-  //   are hit.
+  //   are hit. To figure out why, try to factor (n^2 - 2), (n^2 - 3), ...
   //
   // - Halfway between two actual square numbers, there's always a secondary spike that is also
   //   quite high. Maybe, we could call these numbers half-squares? For example, between 81 and 100
   //   there's 90 with a pretty high squarity of 0.9 = 9/10. Between 361 (= 19^2) and 400 (=20^2), 
   //   there's 380 with sq(380) = 0.95 = 19/20. So, yeah - between (n-1)^2 and n^2, we find (n-1)*n
   //   with rather high squarity which makes sense.
+  //
   //
   //
   // ToDo:
@@ -11172,6 +11181,21 @@ void testSquarity()
   //
   // - I think, it may make sense to define the squarity of 0 and 1 to be 1, too. Both are indeed
   //   square numbers: 1 = 1^2, 0 = 0^2.
+  //
+  // - Plot a histogram. What other statistical features aside from the mean features could be 
+  //   interesting? Higher order moments? Mode? Autocorrelation? Maybe a stretched autocorrelation
+  //   that forces the peaks (where sq(x) = 1) to be equidistant? It looks like with this 
+  //   stretching, the function could look close to periodic. The distance d between two peaks at 
+  //   n^2 and (n+1)^2 increases like: d = (n+1)^2 - n^2 = n^2 + 2n + 1 - n^2 = 2n + 1. This 
+  //   function can be used to stretch the x-axis. I think, we need to transform the argument 
+  //   to x/(2x+1), i.e. evaluate sq(x/(2x+1)) ...not sure about that, though. To evaluate sq() at
+  //   non-integers, we'll have to interpolate.
+  //
+  //
+  // Questions:
+  //
+  // - What is the expectation value? Maybe compute it numerically. OK, with N = 2000, it's
+  //   estimated at 0.308445662. Maybe try leaving out 0,1
 }
 
 

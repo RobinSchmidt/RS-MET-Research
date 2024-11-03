@@ -247,6 +247,21 @@ Proof by induction is a proof technique that can be used to prove a statement $\
 % https://www.youtube.com/watch?v=bXTbGJxW_fE
 % https://arxiv.org/pdf/1208.0973
 
+% The Magic of Induction - Numberphile
+% https://www.youtube.com/watch?v=DhZORrqL3xI
+% -Induction: hypothesis: assume that a statement holds for a given natural number 1. step:
+%  show that the statement being true for any n implies that it also holds for n+1. Example:
+%  sum_{k=1}^n k = (n^2 + n) / 2 (Gauss's summation formula)
+% -Strong (or complete) induction: in the iduction hypthesis, don't just assume the statement to 
+%  hold for a given n but for all k <= n. Example: proof that every natural number n >= 2 has a 
+%  prime divisor.
+% -Well foundedness: the n|m ("n divides m") relation is "well founded" on the natural numbers. The
+%  foundation are all the prime numbers in this case.
+% -Computing factorials: Python has a maximum stack depth limit of 1000, so computing 
+%  factorial(1000) will give a stack overflow for the standard recursive factorial implementaion.
+%  But using an implementation that splits the interval into two halves, computes the products
+%  of these two halves and then multiplies them, gives a tree-shaped recursive structure that is
+%  much less deep. Here, the foundation are th tree leaves.
 
 %===================================================================================================
 \section{Higher Order Logic}

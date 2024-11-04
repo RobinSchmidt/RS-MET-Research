@@ -41,6 +41,17 @@ Most of the numbers from $1$ to $n$ appear in the numerator and the denominator 
 %   = \lim_{n \rightarrow \infty} \prod_{k=2}^n  \left(1 - \frac{1}{k} \right)
 %\end{equation}
 
+% 08a - Infinite Products
+% https://www.youtube.com/watch?v=QPpjjyHDTMA
+% consider the product 
+%  p_n = \prod_{k=2}^n  \left(1 + \frac{1}{k} \right)
+% the factors are now (1 + 1/k) rather than a (1 - 1/k). It's also a telescopic product - but it
+% diverges to infinity
+
+% Is it true tha for convergent products with
+% prod_{k=1}^{\infty} a_k = P   we also have   prod_{k=1}^{\infty} \frac{1}{a_k} = \frac{1}{P}
+
+
 \paragraph{Convergence to Zero}
 Not all products that have zero as result diverge to zero, though. Some do also \emph{converge to zero}. To see what the difference between the two notions is, consider the finite product:
 \begin{equation}
@@ -48,7 +59,7 @@ Not all products that have zero as result diverge to zero, though. Some do also 
      = \prod_{k=2}^n  \left(\frac{k^2-1}{k^2} \right)
      = \frac{n+1}{2n}
 \end{equation}
-The last step is not supposed to be obvious but it can be shown by induction.  If we again let $n$ approach infinity to turn the finite into an infinite product, then this time $p_n$ approaches a nonzero value, namely $\frac{1}{2}$.
+The last step is not supposed to be obvious but it can be guessed by looking at the first couple of products and then be proved by induction.  If we again let $n$ approach infinity to turn the finite into an infinite product, then this time $p_n$ approaches a nonzero value, namely $\frac{1}{2}$.
 \begin{equation}
 P = \lim_{n \rightarrow \infty} \prod_{k=2}^{n} \left(1 - \frac{1}{k^2} \right)
   = \lim_{n \rightarrow \infty} p_n
@@ -59,7 +70,6 @@ So, we can say that the infinite product converges to $\frac{1}{2}$. If we now c
 
 \subsubsection{Definition of Convergence}
 Let's now cook that up into a general definition. We call an infinite product convergent, if ...TBC...
-
 
 % Some authors also just flatly disallow a convergent product to have a value of zero and call a product convergent if and only if the sequence of partial products converges to a nonzero value. With such a definition "convergence to zero" is not a thing. There's only divergence to zero, divergence to infinity and convergence to a finite nonzero value. But maybe we need to allow convergence to zero if we wnat to formulate certain theorems in a convenient way - those that say: the product converges if and only if the sum of ... converges
 
@@ -94,6 +104,8 @@ and solving that for $\pi$ gives:
 \end{equation}
 which is known as the \emph{Wallis product} representation of $\pi$. Due to its slow convergence, the formula useless for practical computation of $\pi$, though. But it's an interesting factoid nonetheless.
 
+% The Basel Problem Part 2: Euler's Proof and the Riemann Hypothesis
+% https://www.youtube.com/watch?v=FCpRl0NzVu4&list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY&index=3
 
 % https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Infinite_product_formulae
 
@@ -120,6 +132,22 @@ ToDo:
  about this
 -Explain my own approximation to sine/cosine somewhere in the codebase - dig it out
 
+Playlists:
+https://www.youtube.com/watch?v=1y_1P2zTInc&list=PLGqN-SK0TWHCVN66i8KVZxDjzIoq8IouB
+
+https://www.youtube.com/watch?v=awHcEvjMTSI&list=PLEhxwgh_ZIHjA-XDPbXkXysyf5jCAcerg
+
+https://www.youtube.com/watch?v=X_QCaoNNQko  Infinite Products: Example 1
+https://www.youtube.com/watch?v=gpnKVKPfPyQ  Infinite Products- Example 2
+
+
+https://www.youtube.com/watch?v=xMdfnPNGlWM  How to write 1/(1-x) as an infinite PRODUCT!
+
+
+https://www.youtube.com/watch?v=9cvmDT3_TKc  a great first infinite product!
+
+Relation Between Infinite Sums and Products: Convergence Conditions
+https://www.youtube.com/watch?v=F7jhQVsa_Go  
 
 
 \end{comment}

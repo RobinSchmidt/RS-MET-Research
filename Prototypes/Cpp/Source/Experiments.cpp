@@ -11201,6 +11201,18 @@ void testSquarity()
   //
   // - What is the expectation value? Maybe compute it numerically. OK, with N = 2000, it's
   //   estimated at 0.308445662. Maybe try leaving out 0,1
+  //
+  // - How many ways are there to make a number n from a binary tree of multiplications? Rules:
+  //   Order doesn't matter but parentheses do. i.e. (2*3)*5 is different from 2*(3*5) but not
+  //   from (3*2)*5 or 5*(2*3) or 5*(3*2) etc. I think we want to identify isomorphic trees with
+  //   one another. Call the function that returns this number nbt(x) for "num of binary trees"
+  //   or nmt (number of multiplicative trees). But maybe it's simpler to first let order matter.
+  //   That would give us a factor of n!. Another factor would come from the the number of possible
+  //   parenthisations of a product of n numbers. 
+  //   ...but what if a factor occurs multiple times? Surely we want 2*2 to be equal to 2*2 even
+  //   when the 1st and 2nd 2s are swapped?. Maybe instead of the factorial (i.e. number of 
+  //   permutations), we need the number of combinations or variations? The number of ways to
+  //   parenthesize an expression is given by the Catalan numbers.
 }
 
 

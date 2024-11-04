@@ -5,24 +5,80 @@ Recall the product sign from page \pageref{Sec:SumsAndProducts} and let's combin
 P = \lim_{n \rightarrow \infty} \prod_{k=0}^n a_k
   = \prod_{k=0}^{\infty} a_k
 \end{equation}
-where, again, $(a_k)$ is some given sequence. Here, "given" means that we'll typically have a formula to calculate $a_k$ for a given $k$, i.e. we a formula in which $k$ appears that computes $a_k$. ...TBC...
+where, again, $(a_k)$ is some given sequence. Here, "given" means that we'll typically have a formula to calculate $a_k$ for a given $k$, i.e. we have a formula in which $k$ appears that computes $a_k$. ...TBC...
 
 % https://en.wikipedia.org/wiki/Infinite_product
 
 
 \subsection{Convergence}
-Just as we did with infinite sums (aka series), we are interested in the question whether or not a given infinite product converges to a finite number. One could perhaps guess, that the definition of convergence for infinite products is entirely analogous to the definition of convergence for infinite sums, namely, that a product converges if and only if the sequence of partial products converges. However, the actual definition is a bit more subtle ...TBC...
+Just as we did with infinite sums (aka series), we are interested in the question whether or not a given infinite product converges to a finite number. One could perhaps guess, that the definition of convergence for infinite products is entirely analogous to the definition of convergence for infinite sums, namely, that a product converges if and only if the sequence of partial products converges. However, the actual definition is a bit more subtle and takes into account the special role of the number zero for multiplication. The actual definition of convergence ensures that a convergent product is zero if and only if at least one of its factors is zero. A necessary condition for an infinite product to converge is that the individual factors must approach one. That is analogous to the requirement that summands must approach zero in infinite sums.  ...TBC...
+
+% -The factors must approach 1 and do so fast enough - that's a necessary (but not sufficient)
+%  condition
 
 \paragraph{Divergence to Zero}
+Consider the finite product:
+\begin{equation}
+ p_n = \prod_{k=2}^n  \left(1 - \frac{1}{k} \right)
+     = \frac{1}{2} \cdot \frac{2}{3} \cdot \frac{3}{4} \cdot \frac{4}{5} 
+       \cdot \ldots \cdot \frac{n-2}{n-1} \cdot \frac{n-1}{n}
+     = \frac{1}{n}
+\end{equation}
+Most of the numbers from $1$ to $n$ appear in the numerator and the denominator and cancel each other out. The only ones that remain are $1$ in the numerator and $n$ in the denominator. We are dealing with a telescopic product here. If we now let $n$ approach infinity to turn the finite into an infinite product, $p_n = \frac{1}{n}$ clearly approaches zero. That is so even though none of the individual factors is zero - in fact, the smallest factor that occurs is $\frac{1}{2}$. Such a product is not considered to be convergent and instead is said to \emph{diverge to zero}.
+
+%\begin{equation}
+% P = \prod_{k=2}^{\infty} \left(1 - \frac{1}{k} \right)
+%   = \lim_{n \rightarrow \infty} \prod_{k=2}^n  \left(1 - \frac{1}{k} \right)
+%\end{equation}
 
 \paragraph{Convergence to Zero}
+Not all products that have zero as result diverge to zero, though. Some do also \emph{converge to zero}. To see what the difference between the two notions is, consider the finite product:
+\begin{equation}
+ p_n = \prod_{k=2}^n  \left(1 - \frac{1}{k^2} \right)
+     = \prod_{k=2}^n  \left(\frac{k^2-1}{k^2} \right)
+     = \frac{n+1}{2n}
+\end{equation}
+The last step is not supposed to be obvious but it can be shown by induction.  If we again let $n$ approach infinity to turn the finite into an infinite product, then this time $p_n$ approaches a nonzero value, namely $\frac{1}{2}$.
+\begin{equation}
+P = \lim_{n \rightarrow \infty} \prod_{k=0}^n a_k
+  = \prod_{k=0}^{\infty} \left(1 - \frac{1}{k^2} \right)
+  = \frac{1}{2}
+\end{equation}
+So, we can say that the infinite product converges to $\frac{1}{2}$. If we now consider the product in which the index does start at $1$ rather than at $2$, we get an initial first factor of zero which collapses the whole product to zero as well. This product has a value of zero because one of the factors happened to be zero - but its tail end converged to a nonzero finite number. In such a case, we say that the product \emph{converges to zero}. [VERIFY!]
+
+\paragraph{Definition of Convergence}
+In general, we call an infinite product convergent, if ...TBC...
+
+
+
 
 % -We want a definition that respects the property of finite products: a convergent product is 
 %  zero iff and only if one of its factors is zero. 
 % -Explain convergence to zero vs divergence to zero
 
+%===================================================================================================
+\subsection{Functions Expressed via Products}
+Some of our favorite functions have expressions based on infinite products. 
+
+\paragraph{Sine}
+A nice infinite product representation of the sine function was found be Euler and is given by:
+\begin{equation}
+ \sin(x) = x \cdot \prod_{k=1}^{\infty} \left( 1 - \frac{x^2}{k^2 \pi^2}  \right)
+\end{equation}
+By evaluating it at $x = \frac{\pi}{2}$, one obtains:
+\begin{equation}
+ 1 = \frac{\pi}{2} \cdot \prod_{k=1}^{\infty} \left( 1 - \frac{1}{4 k^2}  \right)
+   = \frac{\pi}{2} \cdot \prod_{k=1}^{\infty} \left( \frac{4 k^2 - 1}{4 k^2}  \right)
+   = \frac{\pi}{2} \cdot \prod_{k=1}^{\infty} \left( \frac{(2k-1)(2k+1)}{(2k)^2}  \right)   
+\end{equation}
+and solving that for $\pi$ gives:
+\begin{equation}
+\pi = 2 \cdot \prod_{k=1}^{\infty} \left( \frac{(2k)^2 }{(2k-1)(2k+1)} \right)   
+\end{equation}
+which is known as the \emph{Wallis product} representation of $\pi$. Due to its slow convergence, the formula useless for practical computation of $\pi$, though. But it's an interesting factoid nonetheless.
 
 
+%---------------------------------------------------------------------------------------------------
 
 \begin{comment}
 

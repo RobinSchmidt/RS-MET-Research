@@ -118,7 +118,7 @@
 % typically take natural arguments.
 % Examples of fats growing functions:
 % -Ackermann, Busy Beavers, Tree, Rayos number, tetration, pentation, hyperoperations, 
-% Graham's number, ...
+%  Graham's number, ...
 % https://en.wikipedia.org/wiki/Ackermann_function
 % https://en.wikipedia.org/wiki/Large_numbers
 % https://en.wikipedia.org/wiki/Fast-growing_hierarchy
@@ -131,6 +131,15 @@
 %
 % The Boundary of Computation
 % https://www.youtube.com/watch?v=kmAc1nDizu0
+% -But I think, the non-computability of BB(n) has not so much to do with it's size but with the
+%  halting problem. In priciple, it may be possible to come up with small non-computable
+%  numbers, I think. How about BB(n)/BB(n+1) - it should be close to zero even for moderately
+%  large n - but it's a rational number, so I'm not sure, if that counts. Maybe define a number
+%  BB*(n) as follows: Let a BB-machine print not only 0s and 1s on a tape but rather numbers
+%  from a given range - say 0..9 - acroding to some rule (like step-number mod 10). The output is
+%  not how many numbers it has printed but the last printed number. It's just as non-computable as
+%  the regular BB-number - but it's clearly in the range 0..9
+% 
 % 
 % Hexation and Graham's Number
 % https://www.youtube.com/watch?v=-zv454ePhsw
@@ -138,6 +147,10 @@
 % You CANNOT imagine this number! (Graham's Number)
 % https://www.youtube.com/watch?v=qjkhCO-1JMM
 % -It ends in 7. ...How do we know that?
+%
+% https://googology.fandom.com/wiki/Googology_Wiki
+% https://googology.fandom.com/wiki/Googology
+% https://en.wikipedia.org/wiki/Large_numbers
 
 \part{Structural Mathematics}   % Maybe rename to Foundations and Struct...
 \include{Logic} 

@@ -16,6 +16,8 @@ Just as we did with infinite sums (aka series), we are interested in the questio
 % -The factors must approach 1 and do so fast enough - that's a necessary (but not sufficient)
 %  condition
 
+\subsubsection{The Role of Zero}
+
 \paragraph{Divergence to Zero}
 Consider the finite product:
 \begin{equation}
@@ -40,15 +42,20 @@ Not all products that have zero as result diverge to zero, though. Some do also 
 \end{equation}
 The last step is not supposed to be obvious but it can be shown by induction.  If we again let $n$ approach infinity to turn the finite into an infinite product, then this time $p_n$ approaches a nonzero value, namely $\frac{1}{2}$.
 \begin{equation}
-P = \lim_{n \rightarrow \infty} \prod_{k=0}^n a_k
-  = \prod_{k=0}^{\infty} \left(1 - \frac{1}{k^2} \right)
+P = \lim_{n \rightarrow \infty} \prod_{k=2}^{n} \left(1 - \frac{1}{k^2} \right)
+  = \lim_{n \rightarrow \infty} p_n
+  = \lim_{n \rightarrow \infty} \frac{n+1}{2n}
   = \frac{1}{2}
 \end{equation}
-So, we can say that the infinite product converges to $\frac{1}{2}$. If we now consider the product in which the index does start at $1$ rather than at $2$, we get an initial first factor of zero which collapses the whole product to zero as well. This product has a value of zero because one of the factors happened to be zero - but its tail end converged to a nonzero finite number. In such a case, we say that the product \emph{converges to zero}. [VERIFY!]
+So, we can say that the infinite product converges to $\frac{1}{2}$. If we now consider the product in which the index does start at $1$ rather than at $2$, we get an initial first factor of zero which collapses the whole product to zero as well. This product has a value of zero because one of the factors happened to be zero - but its tail end converged to a nonzero finite number. Only in such a case, we want to say that the product \emph{converges to zero}. [VERIFY!]
 
-\paragraph{Definition of Convergence}
-In general, we call an infinite product convergent, if ...TBC...
+\subsubsection{Definition of Convergence}
+Let's now cook that up into a general definition. We call an infinite product convergent, if ...TBC...
 
+
+\paragraph{Consequences of our Definition}
+
+% Consequences of that defintion....
 
 
 

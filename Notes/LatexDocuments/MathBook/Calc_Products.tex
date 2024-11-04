@@ -8,7 +8,15 @@ P = \lim_{n \rightarrow \infty} \prod_{k=0}^n a_k
 where, again, $(a_k)$ is some given sequence. Here, "given" means that we'll typically have a formula to calculate $a_k$ for a given $k$, i.e. we have a formula in which $k$ appears that computes $a_k$. ...TBC...
 
 % https://en.wikipedia.org/wiki/Infinite_product
+% https://mathworld.wolfram.com/InfiniteProduct.html
 
+% https://www.math.ualberta.ca/~isaac/math324/s12/zeta.pdf
+% definition on page 2:
+% -divergence to zero: 
+%  -infinitely many factors are zero or
+%  -the factors converge to zero
+% -It doesn't define convergence to zero - it requires that the final result must be nonzero for
+%  a product to count as convergent
 
 \subsection{Convergence}
 Just as we did with infinite sums (aka series), we are interested in the question whether or not a given infinite product converges to a finite number. One could perhaps guess, that the definition of convergence for infinite products is entirely analogous to the definition of convergence for infinite sums, namely, that a product converges if and only if the sequence of partial products converges. However, the actual definition is a bit more subtle and takes into account the special role of the number zero for multiplication. The actual definition of convergence ensures that a convergent product is zero if and only if at least one of its factors is zero. A necessary condition for an infinite product to converge is that the individual factors must approach one. That is analogous to the requirement that summands must approach zero in infinite sums.  ...TBC...
@@ -85,6 +93,8 @@ and solving that for $\pi$ gives:
 which is known as the \emph{Wallis product} representation of $\pi$. Due to its slow convergence, the formula useless for practical computation of $\pi$, though. But it's an interesting factoid nonetheless.
 
 
+% https://en.wikipedia.org/wiki/List_of_trigonometric_identities#Infinite_product_formulae
+
 %---------------------------------------------------------------------------------------------------
 
 \begin{comment}
@@ -107,6 +117,7 @@ ToDo:
 -Give Euler's product form of cosine. Look up the zetamath channel. IIRC, it has a good video 
  about this
 -Explain my own approximation to sine/cosine somewhere in the codebase - dig it out
+
 
 
 \end{comment}

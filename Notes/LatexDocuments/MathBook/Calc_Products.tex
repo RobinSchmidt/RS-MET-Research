@@ -174,8 +174,17 @@ Like with series, there is also a notion of absolute convergence for products. U
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Convergence Criteria}
 
-
 %With this definition of the $h_k$, we can state the following:
+
+\paragraph{Cauchy Criterion} The infinite product $\prod_{k=k_0}^{\infty} a_k$ converges if and only if for every $\varepsilon > 0$ there exists an index $N_{\varepsilon}$ such that for all $n,m$ with $m > n \geq N_{\varepsilon}$ the inequality 
+\begin{equation}
+ \Bigg| 1 -\prod_{k=n+1}^{m} a_k \Bigg| < \varepsilon
+\end{equation}
+holds. That means that beyond some index $N_{\varepsilon}$ that depends on the chosen $\varepsilon$, we can take arbitrarily long partial products from the tail and they are all very close to 1, namely differ from 1 at most by $\varepsilon$.
+
+% https://www.sciencedirect.com/topics/mathematics/cauchy-criterion
+% https://proofwiki.org/wiki/Definition:Cauchy%27s_Criterion_for_Products#google_vignette
+% https://site.uvm.edu/jmwilson/files/2021/03/24221s_12.pdf
 
 \paragraph{Theorem} If there exists an index $m$ such that all $h_k$ for $k \geq m$ have the same sign, then the infinite product $\prod_{k=k_0}^{\infty} (1 + h_k)$ has the same convergence as the infinite sum $\sum_{k=k_0}^{\infty} h_k$. That means: either both converge or both diverge. Or stated yet another way: the product converges if and only if the sum converges. 
 
@@ -300,6 +309,6 @@ prod_{k=1}^{\infty} a_k = P   we also have   prod_{k=1}^{\infty} \frac{1}{a_k} =
 -I guess, that may be the case in case of convergence to a nonzero value. But if P converges
  (or diverges) to zero, then maybe 1/P diverges to infinity which would make sense.
 
-
+A typical trick to deal with products is to take the logarithm to turn it into a sum
 
 \end{comment}

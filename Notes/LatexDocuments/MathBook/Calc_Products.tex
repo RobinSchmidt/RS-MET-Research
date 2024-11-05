@@ -21,7 +21,12 @@ where, again, $(a_k)$ is some given sequence. Here, "given" means that we'll typ
 
 %===================================================================================================
 \subsection{Convergence}
-Just as we did with infinite sums (aka series), we are interested in the question whether or not a given infinite product converges to a finite number. One could perhaps guess, that the definition of convergence for infinite products is entirely analogous to the definition of convergence for infinite sums, namely, that a product converges if and only if the sequence of partial products converges. However, the actual definition is a bit more subtle and takes into account the special role of the number zero for multiplication. The actual definition of convergence ensures that a convergent product is zero if and only if at least one of its factors is zero. A necessary (but not sufficient) condition for an infinite product to converge is that the individual factors must approach one. That is analogous to the requirement that summands must approach zero in infinite sums.
+Just as we did with infinite sums (aka series), we are interested in the question whether or not a given infinite product converges to a finite number. One could perhaps guess, that the definition of convergence for infinite products is entirely analogous to the definition of convergence for infinite sums, namely, that a product converges if and only if the sequence of partial products converges. However, the actual definition is a bit more subtle and takes into account the special role of the number zero for multiplication. The actual definition of convergence ensures that a convergent product is zero if and only if at least one of its factors is zero. 
+%A necessary (but not sufficient) condition for an infinite product to converge is that the individual factors must approach one. That is analogous to the requirement that summands must approach zero in infinite sums.
+For infinite sums, a necessary (but not sufficient) condition for convergence was that the individual summands approach zero as $n \rightarrow \infty$. For infinite products, the analogous condition is that the individual factors must approach one. This is one reason why it is convenient to express the individual factors $a_k$ in the form $1 + h_k$ with $h_k = a_k - 1$. In products, it makes more sense to think about, how far the individual factors deviate from 1 rather than from 0 and the $h_k$ give us that information more directly than the $a_k$. They are the offset from $1$. In German, these $h_k$ values have a name: they are called "Kerne" (meaning "cores" or "kernels") but I have not yet found an English term for those (TODO: figure out if there is one!). So, we may write our products in either of the two forms:
+\begin{equation}
+ P = \prod_{k=k_0}^{\infty} a_k = \prod_{k=k_0}^{\infty} (1 + h_k) 
+\end{equation}
 
 % -The factors must approach 1 and do so fast enough - that's a necessary (but not sufficient)
 %  condition
@@ -29,6 +34,10 @@ Just as we did with infinite sums (aka series), we are interested in the questio
 % 08a - Infinite Products
 % https://www.youtube.com/watch?v=QPpjjyHDTMA
 % -at 12:33 - example p_n = \prod_{2}^{n} (1 + 1/k)
+
+
+
+
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Some Examples}
@@ -146,6 +155,10 @@ We now have all our desiderata in place and are now ready to craft the general d
 \paragraph{Consequences of our Definition}
 Let's now see what have we achieved with this somewhat subtle definition. Firstly, we note that a convergent product is zero if and only if one of its factors is zero. This is a behavior that we wanted to have. The definition of convergence only looks at the infinite tail of the product starting at some index $N$ after which no zeros for the factors $a_k$ are allowed to occur anymore. A finite initial section $\prod_{k=k_0}^{N-1} a_k$ that may contain zero values for the factors $a_k$ is ignored - it's not taken into account for the question whether or not we call the product convergent. If that finite initial section has at least one zero value but the infinite tail converges to a nonzero finite value, the product evaluates to zero and we say that it converges to zero. If the infinite tail approaches zero, then the product also evaluates to zero, but this time, we say that it diverges to zero - regardless of whether or not the finite initial section contains zero factors. ...VERIFY...TBC....
 
+\paragraph{Absolute Convergence}
+Like with series, there is also a notion of absolute convergence for products. Unlike with series, we do not just take the absolute values of the $a_k$. Instead, we take the absolute values of the $h_k$. So we define: An infinite product $\prod_{k=k_0}^{\infty} (1 + h_k)$ is said to be \emph{absolutely convergent} if the product $\prod_{k=k_0}^{\infty} (1 + |h_k|)$ is convergent. Every product that is absolutely convergent is also convergent but not vice versa. As with series, absolute convergence is a stronger requirement.
+
+
 % Would 
 
 % Consequences of that defintion....
@@ -154,13 +167,15 @@ Let's now see what have we achieved with this somewhat subtle definition. Firstl
 %  zero iff and only if one of its factors is zero. 
 % -Explain convergence to zero vs divergence to zero
 
+
+
+
+
 %---------------------------------------------------------------------------------------------------
-\subsubsection{Connections to Series}
-For infinite sums, a necessary (but not sufficient) condition for convergence was that the individual summands approach zero as $n \rightarrow \infty$. For infinite products, the analogous condition is that the individual factors must approach one. This is one reason why it is, it is convenient to express the individual factors $a_k$ in the form $1 + h_k$ with $h_k = a_k - 1$. In products, it makes more sense to think about, how far the individual factors are away from 1 rather than from 0 and the $h_k$ give us that information more directly than the $a_k$. They are the offset from $1$. In German, these $h_k$ values have a name: they are called "Kerne" (meaning "cores" or "kernels") but I have not yet found an English term for those (TODO: figure out if there is one!). So, we may write our products in either of the two forms:
-\begin{equation}
- P = \prod_{k=k_0}^{\infty} a_k = \prod_{k=k_0}^{\infty} (1 + h_k) 
-\end{equation}
-With this definition of the $h_k$, we can state the following:
+\subsubsection{Convergence Criteria}
+
+
+%With this definition of the $h_k$, we can state the following:
 
 \paragraph{Theorem} If there exists an index $m$ such that all $h_k$ for $k \geq m$ have the same sign, then the infinite product $\prod_{k=k_0}^{\infty} (1 + h_k)$ has the same convergence as the infinite sum $\sum_{k=k_0}^{\infty} h_k$. That means: either both converge or both diverge. Or stated yet another way: the product converges if and only if the sum converges. 
 

@@ -9,6 +9,7 @@ where, again, $(a_k)$ is some given sequence. Here, "given" means that we'll typ
 
 % https://en.wikipedia.org/wiki/Infinite_product
 % https://mathworld.wolfram.com/InfiniteProduct.html
+% https://de.wikipedia.org/wiki/Produkt_(Mathematik)#Unendliche_Produkte
 
 % https://www.math.ualberta.ca/~isaac/math324/s12/zeta.pdf
 % definition on page 2:
@@ -18,6 +19,7 @@ where, again, $(a_k)$ is some given sequence. Here, "given" means that we'll typ
 % -It doesn't define convergence to zero - it requires that the final result must be nonzero for
 %  a product to count as convergent
 
+%===================================================================================================
 \subsection{Convergence}
 Just as we did with infinite sums (aka series), we are interested in the question whether or not a given infinite product converges to a finite number. One could perhaps guess, that the definition of convergence for infinite products is entirely analogous to the definition of convergence for infinite sums, namely, that a product converges if and only if the sequence of partial products converges. However, the actual definition is a bit more subtle and takes into account the special role of the number zero for multiplication. The actual definition of convergence ensures that a convergent product is zero if and only if at least one of its factors is zero. A necessary condition for an infinite product to converge is that the individual factors must approach one. That is analogous to the requirement that summands must approach zero in infinite sums.  ...TBC...
 
@@ -28,6 +30,7 @@ Just as we did with infinite sums (aka series), we are interested in the questio
 % https://www.youtube.com/watch?v=QPpjjyHDTMA
 % -at 12:33 - example p_n = \prod_{2}^{n} (1 + 1/k)
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Some Examples}
 To get a feeling for how infinite products may converge or diverge, we'll now look at a couple of simple examples.
 
@@ -107,8 +110,9 @@ P = \prod_{k=2}^{\infty} \left(1 - \frac{1}{k^2} \right)
   = \lim_{n \rightarrow \infty} \frac{n+1}{2n}
   = \frac{1}{2}
 \end{equation}
-So, we can say that the infinite product converges to $\frac{1}{2}$. Now we are getting closer to the behavior that we want to eventually call convergent. If the limit of the sequence of partial products approaches some \emph{finite value} and that value is \emph{not zero}, then we are certainly justified to call the product convergent. In some sources, that is indeed the definition of a convergent product: the limit of of partial products must converge to a finite nonzero value. We are aiming for a somewhat more liberal definition here, though - one that allows us to also call a product convergent when the value is zero due to one ore more of the factors being zero.
+So, we can say that the infinite product converges to $\frac{1}{2}$. Now we are getting closer to the behavior that we want to eventually call convergent. If the limit of the sequence of partial products approaches some \emph{finite value} and that value is \emph{not zero}, then we are certainly justified to call the product convergent. In some sources, that is indeed the definition of a convergent product: the limit of partial products must converge to a finite nonzero value. We are aiming for a somewhat more liberal definition here, though - one that allows us to also call a product convergent when the value is zero due to one or more of the factors being zero.
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{The Special Role of Zero}
 In the context of multiplication and products, the number zero has a special role - it annihilates everything. If just a single factor in a (finite or infinite) product is zero, then the whole product is zero as well. It is also the only real (and complex) number that has no multiplicative inverse.
 
@@ -133,24 +137,41 @@ It looks almost like the one defined in (\ref{Eq:ProdOneMinusOneOverKSquared}) w
 %\end{equation}
 %So, we can say that the infinite product converges to $\frac{1}{2}$. If we now consider the product in which the index does start at $1$ rather than at $2$, we get an initial first factor of zero which collapses the whole product to zero as well. This product has a value of zero because one of the factors happened to be zero - but its tail end converged to a nonzero finite number. Only in such a case, we want to say that the product \emph{converges to zero}. [VERIFY!]
 
+%---------------------------------------------------------------------------------------------------
 \subsubsection{Definition of Convergence}
-OK - we now have all our desiderata in place and are now ready to craft the general definition of convergence for products. We call an infinite product convergent, if ...TBC...
+We now have all our desiderata in place and are now ready to craft the general definition of convergence for products. We call an infinite product $P = \prod_{k = k_0}^{\infty} a_k$ convergent, if: (1) there exists an $N$ such that all $a_k \neq 0$ for all $k \geq N$. (2) The sequence of partial products $p_n = \prod_{k = N}^{n} a_k$ approaches a nonzero value $P_N$ as $n \rightarrow \infty$. If $p_n \rightarrow 0$ as $n \rightarrow \infty$, we say that the product diverges to zero. %...TBC...
 
 % Some authors also just flatly disallow a convergent product to have a value of zero and call a product convergent if and only if the sequence of partial products converges to a nonzero value. With such a definition "convergence to zero" is not a thing. There's only divergence to zero, divergence to infinity and convergence to a finite nonzero value. But maybe we need to allow convergence to zero if we wnat to formulate certain theorems in a convenient way - those that say: the product converges if and only if the sum of ... converges
 
 \paragraph{Consequences of our Definition}
+Let's now see what have we achieved with this somewhat subtle definition. Firstly, we note that a convergent product is zero if and only if one of its factors is zero. This is a behavior that we wanted to have. The definition of convergence only looks at the infinite tail of the product starting at some index $N$ after which no zeros for the factors $a_k$ are allowed to occur anymore. A finite initial section $\prod_{k=k_0}^{N-1} a_k$ that may contain zero values for the factors $a_k$ is ignored - it's not taken into account for the question whether or not we call the product convergent. If that finite initial section has at least one zero value but the infinite tail converges to a nonzero finite value, the product evaluates to zero and we say that it converges to zero. If the infinite tail approaches zero, then the product also evaluates to zero, but this time, we say that it diverges to zero - regardless of whether or not the finite initial section contains zero factors. ...VERIFY...TBC....
+
+% Would 
 
 % Consequences of that defintion....
-
-
 
 % -We want a definition that respects the property of finite products: a convergent product is 
 %  zero iff and only if one of its factors is zero. 
 % -Explain convergence to zero vs divergence to zero
 
+%---------------------------------------------------------------------------------------------------
+\subsubsection{Connections to Series}
+
+
+
+
+
 %===================================================================================================
 \subsection{Functions Expressed via Products}
-Some of our favorite functions have expressions based on infinite products. 
+Some of our favorite functions have expressions based on infinite products. One way to find such an expression for a given function $f(x)$ is to consider the roots of the function, i.e. the values of $x$ where $f(x) = 0$. Let's call these roots $r_k$ where the index $k$ ranges over all the roots, however many there may be. If we know all the roots $r_k$ and construct a function in one of the two ways:
+\begin{equation}
+ p(x) = \prod_{k} (x - r_k)  \qquad \text{or} \qquad
+ q(x) = \prod_{k} (1 - \frac{1}{r_k})
+\end{equation}
+then $p(x)$ and $q(x)$ will have the same roots as $f(x)$. Of course, if the product is infinite, we may have to worry about convergence and even if it is finite, it is not clear whether or not the product will match the function anywhere else. If the function $f(x)$ happens to be a polynomial, though, we can actually confidently say that when we include all of the roots of $f(x)$ into our product function $p(x)$, then $p(x)$ must actually indeed be equal to $f(x)$ up to a constant scale factor. The same is true for $q(x)$ but with a different scale factor [VERIFY!]. If we now remember that a power series expansion of a function can be regarded as a sort of "infinite polynomial", we may plausibly hope that we can express our function $f(x)$ with an infinite product. In practice, the form of $q(x)$ tends to be easier to deal with. First, it has the desirable form of products where the factors are of the form $1 + \ldots$. I think, it also tends to be less prone to divergence away from the roots (VERIFY!). To turn one form into the other, one just needs to multiply a linear factor of the form $(x - r_k)$ with an appropriate constant, namely $-1 / r_k$. ...TBC...
+
+% To tame the polynomial, we may want to multiply each factor of the form (x - r_k) by some number c
+%  that turns the factor into the form (1 - x/r_k)
 
 % ToDo: 
 % -Explain how one can come up with a product representation of a given function. 
@@ -163,6 +184,10 @@ Some of our favorite functions have expressions based on infinite products.
 % -Maybe if we have a MacLaurin or Taylor series of the function given:
 %  f(x) = a_0 + a_1 x + a_2 x^2 + a_3 x^3 + ...
 %  we can factor out one linear factor (x - r_k) at a time?
+%
+% 05b - Euler's Solution of the Basel Problem
+% https://www.youtube.com/watch?v=wbirLVLNYNk
+
 
 \paragraph{Sine}
 A nice infinite product representation of the sine function was found be Euler and is given by:
@@ -179,7 +204,11 @@ and solving that for $\pi$ gives:
 \begin{equation}
 \pi = 2 \cdot \prod_{k=1}^{\infty} \left( \frac{(2k)^2 }{(2k-1)(2k+1)} \right)   
 \end{equation}
-which is known as the \emph{Wallis product} representation of $\pi$. Due to its slow convergence, the formula useless for practical computation of $\pi$, though. But it's an interesting factoid nonetheless.
+which is known as the \emph{Wallis product} representation of $\pi$. Due to its slow convergence, the formula useless for practical computation of $\pi$, though. But it's an interesting factoid nonetheless. 
+
+% ToDo: explain how the product form of the sine can be used to find formulas for infinite sums of
+% the form sum_k 1/k^2, sum_k 1/k^4, sum_k 1/k^6, ... It somehow works by comparing coefficients of
+% the Taylor expansion and the expanded product form...I think. zetamath has a video about that.
 
 % The Basel Problem Part 2: Euler's Proof and the Riemann Hypothesis
 % https://www.youtube.com/watch?v=FCpRl0NzVu4&list=PLbaA3qJlbE93DiTYMzl0XKnLn5df_QWqY&index=3
@@ -231,8 +260,6 @@ prod_{k=1}^{\infty} a_k = P   we also have   prod_{k=1}^{\infty} \frac{1}{a_k} =
 -I guess, that may be the case in case of convergence to a nonzero value. But if P converges
  (or diverges) to zero, then maybe 1/P diverges to infinity which would make sense.
 
--What about the product
- 
 
 
 \end{comment}

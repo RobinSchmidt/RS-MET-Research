@@ -84,20 +84,8 @@ That is so even though none of the individual factors is zero - in fact, the sma
 % the factors are now (1 + 1/k) rather than a (1 - 1/k). It's also a telescopic product - but it
 % diverges to infinity
 
-% Is it true that for convergent products with
-% prod_{k=1}^{\infty} a_k = P   we also have   prod_{k=1}^{\infty} \frac{1}{a_k} = \frac{1}{P}
-% -I guess, that may be the case in case of convergence to a nonzero value. But if P converges
-%  (or diverges) to zero, then maybe 1/P diverges to infinity which would make sense.
-
-
 \paragraph{Convergence to a Non-Zero Value}
-...tbc...
-
-%\subsubsection{The Role of Zero}
-
-
-\paragraph{Convergence to Zero}
-Not all products that have zero as result diverge to zero, though. Some do also \emph{converge to zero}. To see what the difference between the two notions is, consider the finite product:
+Recall that the harmonic series, i.e. the infinite sum over terms of the form $\frac{1}{k}$ was divergent but the sum of the reciprocals of the squares $\frac{1}{k^2}$ was convergent. This was so because the terms approached zero faster than in the $\frac{1}{k}$ case. Let's try to let the factors in our infinite product approach 1 faster by using factors of the form $1 - \frac{1}{k^2}$ rather than $1 - \frac{1}{k}$. So, we'll consider the product:
 \begin{equation}
  p_n = \prod_{k=2}^n  \left(1 - \frac{1}{k^2} \right)
      = \prod_{k=2}^n  \left(\frac{k^2-1}{k^2} \right)
@@ -110,7 +98,39 @@ P = \lim_{n \rightarrow \infty} \prod_{k=2}^{n} \left(1 - \frac{1}{k^2} \right)
   = \lim_{n \rightarrow \infty} \frac{n+1}{2n}
   = \frac{1}{2}
 \end{equation}
-So, we can say that the infinite product converges to $\frac{1}{2}$. If we now consider the product in which the index does start at $1$ rather than at $2$, we get an initial first factor of zero which collapses the whole product to zero as well. This product has a value of zero because one of the factors happened to be zero - but its tail end converged to a nonzero finite number. Only in such a case, we want to say that the product \emph{converges to zero}. [VERIFY!]
+
+
+...tbc...
+
+%\subsubsection{The Role of Zero}
+
+
+
+
+
+
+
+%\paragraph{Convergence to Zero}
+%Not all products that have zero as result "diverge" to zero, though. Some are also just zero because one or more of the factors is itself zero. o also \emph{converge to zero}. To see what the difference between the two notions is, consider the finite product:
+%\begin{equation}
+% p_n = \prod_{k=2}^n  \left(1 - \frac{1}{k^2} \right)
+%     = \prod_{k=2}^n  \left(\frac{k^2-1}{k^2} \right)
+%     = \frac{n+1}{2n}
+%\end{equation}
+%The last step is not supposed to be obvious but it can be guessed by looking at the first couple of products and then be proved by induction.  If we again let $n$ approach infinity to turn the finite into an infinite product, then this time $p_n$ approaches a nonzero value, namely $\frac{1}{2}$.
+%\begin{equation}
+%P = \lim_{n \rightarrow \infty} \prod_{k=2}^{n} \left(1 - \frac{1}{k^2} \right)
+%  = \lim_{n \rightarrow \infty} p_n
+%  = \lim_{n \rightarrow \infty} \frac{n+1}{2n}
+%  = \frac{1}{2}
+%\end{equation}
+%So, we can say that the infinite product converges to $\frac{1}{2}$. If we now consider the product in which the index does start at $1$ rather than at $2$, we get an initial first factor of zero which collapses the whole product to zero as well. This product has a value of zero because one of the factors happened to be zero - but its tail end converged to a nonzero finite number. Only in such a case, we want to say that the product \emph{converges to zero}. [VERIFY!]
+
+
+
+
+
+
 
 \subsubsection{Definition of Convergence}
 Let's now cook that up into a general definition. We call an infinite product convergent, if ...TBC...
@@ -204,6 +224,13 @@ https://www.youtube.com/watch?v=9cvmDT3_TKc  a great first infinite product!
 
 Relation Between Infinite Sums and Products: Convergence Conditions
 https://www.youtube.com/watch?v=F7jhQVsa_Go  
+
+Is it true that for convergent products with
+prod_{k=1}^{\infty} a_k = P   we also have   prod_{k=1}^{\infty} \frac{1}{a_k} = \frac{1}{P}
+-I guess, that may be the case in case of convergence to a nonzero value. But if P converges
+ (or diverges) to zero, then maybe 1/P diverges to infinity which would make sense.
+
+
 
 
 \end{comment}

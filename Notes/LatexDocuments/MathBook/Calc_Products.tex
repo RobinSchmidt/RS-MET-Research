@@ -36,8 +36,8 @@ Consider the following finite product:
 \begin{equation}
  p_n = \prod_{k=2}^n  \left(1 + \frac{1}{k} \right)
      = \prod_{k=2}^n  \left(\frac{k + 1}{k} \right)
-     = \frac{3}{2}   \cdot \frac{4}{3} \cdot \frac{5}{4} \cdot \ldots \cdot 
-       \frac{n}{n-1} \cdot \frac{n+1}{n}
+     = \frac{3}{2}   \cdot \frac{4}{3} \cdot \frac{5}{4} \cdot \frac{6}{5} 
+       \cdot \ldots \cdot \frac{n}{n-1} \cdot \frac{n+1}{n}
      = \frac{n+1}{2}
 \end{equation}
 It simplified so nicely because we could cancel the 3 in the numerator of the first factor with the denominator 3 in the 2nd factor and so on. We are dealing with a telescopic product and the only non-canceling numerator is the last one given by $n+1$ and the only non-canceling denominator is the first one given by $2$. So far, there is nothing infinite going on - it's all just a finite product. Now we look at what happens when we let $n$ approach infinity. Clearly, $p_n = \frac{n+1}{2}$ also diverges to infinity in this case. So we can say that:
@@ -55,11 +55,20 @@ The infinite variant of the product diverges to infinity. The individual factors
 Now let's consider the finite product:
 \begin{equation}
  p_n = \prod_{k=2}^n  \left(1 - \frac{1}{k} \right)
+     = \prod_{k=2}^n  \left(\frac{k - 1}{k} \right)
      = \frac{1}{2} \cdot \frac{2}{3} \cdot \frac{3}{4} \cdot \frac{4}{5} 
        \cdot \ldots \cdot \frac{n-2}{n-1} \cdot \frac{n-1}{n}
      = \frac{1}{n}
 \end{equation}
-The only difference is that now we subtract $\frac{1}{k}$ form $1$ instead of adding it like in the product before. The factors approach one from below. Again we are dealing with a telescopic product that simplifies nicely. In this case, it simplifies to $p_n = \frac{1}{n}$. Most of the numbers from $1$ to $n$ appear in the numerator and the denominator and cancel each other out. The only ones that remain are $1$ in the numerator and $n$ in the denominator. If we now again let $n$ approach infinity to turn the finite into an infinite product, $p_n = \frac{1}{n}$ clearly approaches zero. That is so even though none of the individual factors is zero - in fact, the smallest factor that occurs is $\frac{1}{2}$. If we would be dealing with an infinite sum rather than a product, we would consider such a sum convergent - namely, it would converge to zero. With infinite products, however, the terminology is a bit different. We say that the product \emph{diverges to zero}. 
+The only difference is that now we subtract $\frac{1}{k}$ from $1$ in the factors instead of adding it like in the product before. The factors now approach one from below rather than from above. Again we are dealing with a telescopic product that simplifies nicely. In this case, it simplifies to $p_n = \frac{1}{n}$. Most of the numbers from $1$ to $n$ appear in the numerator and the denominator and cancel each other out. The only ones that remain are $1$ in the numerator and $n$ in the denominator. If we now again let $n$ approach infinity to turn the finite into an infinite product, then $p_n = \frac{1}{n}$ clearly approaches zero:
+\begin{equation}
+ P = \prod_{k=2}^{\infty} \left(1 - \frac{1}{k} \right)
+   = \lim_{n \rightarrow \infty} p_n 
+   = \lim_{n \rightarrow \infty} \prod_{k=2}^n  \left(1 - \frac{1}{k} \right)
+   = \lim_{n \rightarrow \infty} \frac{1}{n} 
+   = 0
+\end{equation}
+That is so even though none of the individual factors is zero - in fact, the smallest factor that occurs is $\frac{1}{2}$. If we would be dealing with an infinite sum rather than a product, we would consider such a sum convergent - namely, it would converge to zero. With infinite products, however, the terminology is a bit different. We say that the product \emph{diverges to zero}. 
 
 %Such a product is not considered to be convergent and instead is said to \emph{diverge to zero}.
 

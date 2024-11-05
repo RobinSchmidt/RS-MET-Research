@@ -89,6 +89,18 @@ Let's now cook that up into a general definition. We call an infinite product co
 \subsection{Functions Expressed via Products}
 Some of our favorite functions have expressions based on infinite products. 
 
+% ToDo: 
+% -Explain how one can come up with a product representation of a given function. 
+% -If we know the zero-crossings/roos r_k  of the function, we may try to express f(x) as
+%    f(x) = c  \prod_{k=0}^{$\infty$} (x - r_k)
+%  where c is an overall scaling factor that somehow needs to figured out. Maybe it could make sense
+%  to give each linear factor (x - r_k) its own scaling factor and use factors of the form
+%  c_k (x - r_k)  and maybe try to express the factor in the form of (1 - x_k / r_k) because we 
+%  generally like factors of the form (1 + something).
+% -Maybe if we have a MacLaurin or Taylor series of the function given:
+%  f(x) = a_0 + a_1 x + a_2 x^2 + a_3 x^3 + ...
+%  we can factor out one linear factor (x - r_k) at a time?
+
 \paragraph{Sine}
 A nice infinite product representation of the sine function was found be Euler and is given by:
 \begin{equation}

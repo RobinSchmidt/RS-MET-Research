@@ -70,6 +70,13 @@ The only difference is that now we subtract $\frac{1}{k}$ from $1$ in the factor
 \end{equation}
 That is so even though none of the individual factors is zero - in fact, the smallest factor that occurs is $\frac{1}{2}$. If we would be dealing with an infinite sum rather than a product, we would consider such a sum convergent - namely, it would converge to zero. With infinite products, however, the terminology is a bit different. We say that the product \emph{diverges to zero}. 
 
+\medskip
+Q: What about a product of the form $P = \prod_{k=2}^{\infty} \left(1 + \frac{(-1)^k}{k} \right)$? We'll alternatingly get factors that are greater and less than 1. Will that converge like the alternating harmonic series does?
+
+% What about a product with alternating signs in the offset:
+%   P = \prod_{k=2}^{\infty} \left(1 + \frac{-1^k}{k} \right)
+% we'll alternatingly get factors that are greater and less than 1.
+
 %Such a product is not considered to be convergent and instead is said to \emph{diverge to zero}.
 
 %\begin{equation}
@@ -93,25 +100,25 @@ Recall that the harmonic series, i.e. the infinite sum over terms of the form $\
 \end{equation}
 The last step is not supposed to be obvious but it can be guessed by looking at the first couple of products and then be proved by induction.  If we again let $n$ approach infinity to turn the finite into an infinite product, then this time $p_n$ approaches a nonzero value, namely $\frac{1}{2}$.
 \begin{equation}
-P = \lim_{n \rightarrow \infty} \prod_{k=2}^{n} \left(1 - \frac{1}{k^2} \right)
+\label{Eq:ProdOneMinusOneOverKSquared}
+P = \prod_{k=2}^{\infty} \left(1 - \frac{1}{k^2} \right)
+  = \lim_{n \rightarrow \infty} \prod_{k=2}^{n} \left(1 - \frac{1}{k^2} \right)
   = \lim_{n \rightarrow \infty} p_n
   = \lim_{n \rightarrow \infty} \frac{n+1}{2n}
   = \frac{1}{2}
 \end{equation}
+So, we can say that the infinite product converges to $\frac{1}{2}$. Now we are getting closer to the behavior that we want to eventually call convergent. If the limit of the sequence of partial products approaches some \emph{finite value} and that value is \emph{not zero}, then we are certainly justified to call the product convergent. In some sources, that is indeed the definition of a convergent product: the limit of of partial products must converge to a finite nonzero value. We are aiming for a somewhat more liberal definition here, though - one that allows us to also call a product convergent when the value is zero due to one ore more of the factors being zero.
 
+\subsubsection{The Special Role of Zero}
+In the context of multiplication and products, the number zero has a special role - it annihilates everything. If just a single factor in a (finite or infinite) product is zero, then the whole product is zero as well. It is also the only real (and complex) number that has no multiplicative inverse.
 
-...tbc...
+\paragraph{Convergence to Zero}
+We have seen an example of an infinite product that had zero as a result even though none of its individual factors was zero. We called that product \emph{divergent to zero}. Not all products that have zero as result are said to "diverge" to zero, though. Some are also just zero because one or more of the factors is itself zero. Such products may also \emph{converge to zero}. To see what the difference between the two notions is, consider the infinite product:
+\begin{equation}
+P = \prod_{k=1}^{\infty} \left(1 - \frac{1}{k^2} \right)
+\end{equation}
+It looks almost like the one defined in (\ref{Eq:ProdOneMinusOneOverKSquared}) which was convergent to the number $\frac{1}{2}$. But our product here has a small but important difference. The index $k$ now starts at $1$ rather than $2$. That has the effect that the very first factor in the product evaluates to zero. This, of course, turns the value of the whole product to zero as well. We annihilated an otherwise convergent product by introducing a single factor of zero. In the definition of convergence that we are aiming for, we want to still call such a product convergent. We will say that it \emph{converges to zero}. In general, we want to call a product that evaluates to zero as convergent to zero, when its infinite tail converges to a nonzero number but in an initial section, there may be finitely many factors of zero.  ...TBC...
 
-%\subsubsection{The Role of Zero}
-
-
-
-
-
-
-
-%\paragraph{Convergence to Zero}
-%Not all products that have zero as result "diverge" to zero, though. Some are also just zero because one or more of the factors is itself zero. o also \emph{converge to zero}. To see what the difference between the two notions is, consider the finite product:
 %\begin{equation}
 % p_n = \prod_{k=2}^n  \left(1 - \frac{1}{k^2} \right)
 %     = \prod_{k=2}^n  \left(\frac{k^2-1}{k^2} \right)
@@ -126,14 +133,8 @@ P = \lim_{n \rightarrow \infty} \prod_{k=2}^{n} \left(1 - \frac{1}{k^2} \right)
 %\end{equation}
 %So, we can say that the infinite product converges to $\frac{1}{2}$. If we now consider the product in which the index does start at $1$ rather than at $2$, we get an initial first factor of zero which collapses the whole product to zero as well. This product has a value of zero because one of the factors happened to be zero - but its tail end converged to a nonzero finite number. Only in such a case, we want to say that the product \emph{converges to zero}. [VERIFY!]
 
-
-
-
-
-
-
 \subsubsection{Definition of Convergence}
-Let's now cook that up into a general definition. We call an infinite product convergent, if ...TBC...
+OK - we now have all our desiderata in place and are now ready to craft the general definition of convergence for products. We call an infinite product convergent, if ...TBC...
 
 % Some authors also just flatly disallow a convergent product to have a value of zero and call a product convergent if and only if the sequence of partial products converges to a nonzero value. With such a definition "convergence to zero" is not a thing. There's only divergence to zero, divergence to infinity and convergence to a finite nonzero value. But maybe we need to allow convergence to zero if we wnat to formulate certain theorems in a convenient way - those that say: the product converges if and only if the sum of ... converges
 
@@ -168,7 +169,7 @@ A nice infinite product representation of the sine function was found be Euler a
 \begin{equation}
  \sin(x) = x \cdot \prod_{k=1}^{\infty} \left( 1 - \frac{x^2}{k^2 \pi^2}  \right)
 \end{equation}
-By evaluating it at $x = \frac{\pi}{2}$, one obtains:
+He discovered this formula in the course of solving the so called Basel problem which is to find the value of the infinite sum $\sum_{k=1}^{\infty} \frac{1}{k^2}$. Euler found the value of this sum to be $\frac{\pi^2}{6}$ and his investigations led also to the definition of the famous Riemann zeta function (VERIFY!). By evaluating this formula at $x = \frac{\pi}{2}$, one obtains:
 \begin{equation}
  1 = \frac{\pi}{2} \cdot \prod_{k=1}^{\infty} \left( 1 - \frac{1}{4 k^2}  \right)
    = \frac{\pi}{2} \cdot \prod_{k=1}^{\infty} \left( \frac{4 k^2 - 1}{4 k^2}  \right)
@@ -230,7 +231,8 @@ prod_{k=1}^{\infty} a_k = P   we also have   prod_{k=1}^{\infty} \frac{1}{a_k} =
 -I guess, that may be the case in case of convergence to a nonzero value. But if P converges
  (or diverges) to zero, then maybe 1/P diverges to infinity which would make sense.
 
-
+-What about the product
+ 
 
 
 \end{comment}

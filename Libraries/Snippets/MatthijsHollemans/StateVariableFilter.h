@@ -1,3 +1,6 @@
+// Code is from here:
+// https://gist.github.com/hollance/2891d89c57adc71d9560bcf0e1e55c4b
+
 #pragma once
 
 #include <cmath>

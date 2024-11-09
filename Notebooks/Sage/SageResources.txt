@@ -1,0 +1,8 @@
+
+
+
+Forum threads:
+
+Substituting (sub)expressions inside expressions:
+https://ask.sagemath.org/question/25119/substitute-variable-in-expression/
+-could be useful to simplify expressions

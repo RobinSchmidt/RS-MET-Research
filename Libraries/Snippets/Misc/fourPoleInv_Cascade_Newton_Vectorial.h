@@ -1,5 +1,6 @@
 // Origin:
 // https://www.u-he.com/downloads/UrsBlog/fourPoleInv_Cascade_Newton_Vectorial.h
+// https://www.kvraudio.com/forum/viewtopic.php?t=459955
 
 /*
 	(c) 2016 by Urs Heckmann www.u-he.com

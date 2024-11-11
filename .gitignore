@@ -70,16 +70,22 @@
 #---------------------------------------------------------------------------------------------------
 # Ignored folders:
 
-Misc/UnusedCode/RSLibAndTests/RSLibTests/GeneratedFiles
-Products/AudioPlugins/ToolChain/Builds/VisualStudio2015/x64/Debug/
+# My own folder for placing local temporary files during development:
 Temp/
+
+# Build products and temp files from IDEs:
+Products/AudioPlugins/ToolChain/Builds/VisualStudio2015/x64/Debug/
 Prototypes/Cpp/Builds/VisualStudio2019/enc_temp_folder/
+Misc/UnusedCode/RSLibAndTests/RSLibTests/GeneratedFiles
+
+# Temp files from Jupyter Notebook and Jupyter Notebook Desktop:
 Notebooks/Python/.ipynb_checkpoints
+Notebooks/Python/.jupyter
+Notebooks/Python/.virtual_documents
 
 #---------------------------------------------------------------------------------------------------
 # Ignored files:
 
 Prototypes/Cpp/Builds/VisualStudio2019/x64/Debug/ConsoleApp/Experiments_ConsoleApp.vcxproj.FileListAbsolute.txt
 Projects/CppExperiments/Build/VisualStudio2019/x64/Debug/CppExperiments.vcxproj.FileListAbsolute.txt
-/Notebooks/Python/.jupyter
-/Notebooks/Python/.virtual_documents
+

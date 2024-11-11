@@ -1,8 +1,14 @@
 
 
+Substitution:
+
+https://doc.sagemath.org/html/en/reference/calculus/sage/symbolic/relation.html#substitution
+
 
 Forum threads:
 
 Substituting (sub)expressions inside expressions:
 https://ask.sagemath.org/question/25119/substitute-variable-in-expression/
 -could be useful to simplify expressions
+
+https://math.stackexchange.com/questions/2383818/sagemath-how-to-replace-an-expression-in-a-formula-by-a-function-defined-previ

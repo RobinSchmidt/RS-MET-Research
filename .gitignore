@@ -81,3 +81,5 @@ Notebooks/Python/.ipynb_checkpoints
 
 Prototypes/Cpp/Builds/VisualStudio2019/x64/Debug/ConsoleApp/Experiments_ConsoleApp.vcxproj.FileListAbsolute.txt
 Projects/CppExperiments/Build/VisualStudio2019/x64/Debug/CppExperiments.vcxproj.FileListAbsolute.txt
+/Notebooks/Python/.jupyter
+/Notebooks/Python/.virtual_documents

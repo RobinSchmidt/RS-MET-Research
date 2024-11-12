@@ -1,0 +1,77 @@
+Ableton Max4Live code for Jatin Chowdhury's tape emulation algorithm presented by Astrobear here: 
+https://www.youtube.com/watch?v=6zxUNiweIgU
+The code was embedded as a string in the "TapeSaturationPrototype.amxd" file that can be grabbed
+from the video description. I had to copy it and put it into a std::string in a Visual Studio 
+project and isnpect it in the debugger and then copy-and-paste it here.
+
+
+Derivative(T, x, x_n1, x_d_n1) {
+	return ((2 / T) * (x - x_n1)) - x_d_n1;
+}
+	
+
+Langevin(x) {
+	t1 = 1 / (tanh(x));
+	t2 = 1 / x;
+	y = t1 - t2;
+	stable = (abs(x)) > 0.0001;
+	return stable ? y : x / 3;
+}
+
+Langevin_Prime(x) {
+	stable = (abs(x)) > 0.0001;
+	t1 = 1 / (pow(x, 2));
+	t2 = 1 / (tanh(x));
+	t2_pow2 = pow(t2, 2);
+	y = (t1 - t2_pow2) + 1;
+	return stable ? y : 1 / 3;
+}
+
+JilesAtherton(M, H, H_d, alpha, a, M_s, k, c) {
+	x = ((H + (alpha * M))) / a;
+	L = Langevin(x);
+	L_prime = Langevin_Prime(x);
+	M_diff = (M_s * L) - M;
+	delta = H_d > 0 ? 1 : -1;
+	delta_M = (sign(delta)) == (sign(M_diff)) ? 1 : 0;
+	denominator = 1 - (((((c * alpha)) * (M_s / a))) * L_prime);
+	t1_num = ((((1 - c)) * delta_M)) * M_diff;
+	t1_den = (((((1 - c)) * delta)) * k) - (alpha * M_diff);
+	t1 = (t1_num / t1_den) * H_d;
+	t2 = ((((c * (M_s / a))) * H_d)) * L_prime;
+	return ((t1 + t2)) / denominator;
+}
+
+M_n(M_n1, k1, k2, k3, k4) {
+	return ((((((M_n1 + (k1 / 6))) + (k2 / 3))) + (k3 / 3))) + (k4 / 6);
+}
+
+Param alpha(0.0016);
+Param a(22000);
+Param M_s(350000);
+Param k(2700);
+Param c(0.17);
+
+History H_n1(0);
+History H_d_n1(0);
+History M_n1(0);
+
+H = in1; // Magnetic Field for current Sample
+
+
+
+T = 1 / samplerate;
+H_d = Derivative(T, H, H_n1, H_d_n1);
+k1 = T * JilesAtherton(M_n1, H_n1, H_d_n1, alpha, a, M_s, k, c);
+k2 = T * JilesAtherton(M_n1 + k1 / 2, (H + H_n1) / 2, (H_d + H_d_n1) / 2, alpha, a, M_s, k, c);
+k3 = T * JilesAtherton(M_n1 + k2 / 2, (H + H_n1) / 2, (H_d + H_d_n1) / 2, alpha, a, M_s, k, c);
+k4 = T * JilesAtherton(M_n1 + k3, H, H_d, alpha, a, M_s, k, c);
+
+M = M_n(M_n1, k1, k2, k3, k4);
+
+out1 = M;
+
+// Set up the state for the next sample
+H_n1 = H;
+H_d_n1 = H_d;
+M_n1 = M;

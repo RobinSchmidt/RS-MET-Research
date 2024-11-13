@@ -2,14 +2,14 @@ Ableton Max4Live code for Jatin Chowdhury's tape emulation algorithm presented b
 https://www.youtube.com/watch?v=6zxUNiweIgU
 The code was embedded as a string in the "TapeSaturationPrototype.amxd" file that can be grabbed
 from the video description. I had to copy it and put it into a std::string in a Visual Studio 
-project and isnpect it in the debugger and then copy-and-paste it here.
+project and isnpect it in the debugger and then copy-and-paste it here. I think, it needs a
+pre-gain of around 90000 and a post gain of 1/90000 to have noticable effect. 
 
 
 Derivative(T, x, x_n1, x_d_n1) {
 	return ((2 / T) * (x - x_n1)) - x_d_n1;
 }
 	
-
 Langevin(x) {
 	t1 = 1 / (tanh(x));
 	t2 = 1 / x;

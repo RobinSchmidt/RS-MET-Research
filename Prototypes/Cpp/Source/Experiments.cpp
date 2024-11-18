@@ -15009,65 +15009,75 @@ void testStateSpaceFilters()
   // yep - both outputs are also the same
 
   // ToDo:
-  // -Try a more complex example, with more inputs and outputs maybe (p,q,N) = (2,3,4) is not that
-  //  bad for an example system for tests. All 3 numbers should be different to expose all mistakes 
-  //  with respect to the shapes of the matrices. But they should also be small to make them easy 
-  //  to handle but > 1 to have at least some MIMO aspects - 2,3,4 seems the smallest example that 
-  //  ticks all these boxes.
-  // -Try to apply similarity transformations to diagonalize the state transition matrix A or at
-  //  least bring it into Jordan normal form (if it isn't diagonalizable). This will also involve
-  //  corresponding transformations of B,C,D (well, not sure about D - but probably B,C). This is
-  //  perhaps the best form to implement such a system in practice anyway because of the 
-  //  interpretability of the transition matrix in terms of poles and we also get a (band) 
-  //  diagonal matrix which makes it efficient to apply. See (1) pg 362 ff
-  // -Implement and test functions that convert between direct form and state space form like 
-  //  tf2ss, ss2tf in MatLab. Maybe implement also sos2ss, ss2sos, zp2ss, etc. see (1) pg 359
-  // -Is this state space realization here actually the generalized version of my 
-  //  rsStateVectorFilter? That seems plausible! Figure that out! Could the state-vector filter
-  //  benefit from having 2 ins and 2 outs? If so, we should not confuse that with a stereo 
-  //  version (which would be MIMO, specifically: 2-in/2-out). But that would be something 
-  //  different, I think because the internal states mix up the channels. But maybe it can be 
-  //  related to a complex valued SISO filter?
-
+  //
+  // - Try a more complex example, with more inputs and outputs maybe (p,q,N) = (2,3,4) is not that
+  //   bad for an example system for tests. All 3 numbers should be different to expose all 
+  //   mistakes with respect to the shapes of the matrices. But they should also be small to make 
+  //   them easy to handle but > 1 to have at least some MIMO aspects - 2,3,4 seems the smallest 
+  //   example that ticks all these boxes.
+  //
+  // - Try to apply similarity transformations to diagonalize the state transition matrix A or at
+  //   least bring it into Jordan normal form (if it isn't diagonalizable). This will also involve
+  //   corresponding transformations of B,C,D (well, not sure about D - but probably B,C). This is
+  //   perhaps the best form to implement such a system in practice anyway because of the 
+  //   interpretability of the transition matrix in terms of poles and we also get a (band) 
+  //   diagonal matrix which makes it efficient to apply. See (1) pg 362 ff
+  //
+  // - Implement and test functions that convert between direct form and state space form like 
+  //   tf2ss, ss2tf in MatLab. Maybe implement also sos2ss, ss2sos, zp2ss, etc. see (1) pg 359
+  //
+  // - Is this state space realization here actually the generalized version of my 
+  //   rsStateVectorFilter? That seems plausible! Figure that out! Could the state-vector filter
+  //   benefit from having 2 ins and 2 outs? If so, we should not confuse that with a stereo 
+  //   version (which would be MIMO, specifically: 2-in/2-out). But that would be something 
+  //   different, I think because the internal states mix up the channels. But maybe it can be 
+  //   related to a complex valued SISO filter?
+  //
+  //
   // Notes on diagonalization (see (1) pg 360 ff). I'm not totally sure, if I understand 
-//   everything correctly, so take it with a grain of salt:
-  // -Diagonalizing the state transition matrix A corresponds to a partial fraction expansion of
-  //  the corresponding transfer function H(z). Each diagonal matrix element is responsible for a 
-  //  single (complex) resonant mode, i.e. implements one complex resonator. That necessiates that 
-  //  those matrix elements have to be complex.
-  // -If the tranfer function is real, then the poles/eigenvalues will occur in complex conjugate 
-  //  pairs. If a real transition matrix is desired, complex conjugate poles/eigenvalues can be
-  //  combined into 2x2 blocks which correspond to real 2nd order sections. (ToDo: explain how!)
-  // -If the transfer function has a pole p with a multiplicity m > 1, then A will have a 
-  //  corresponding eigenvalue with algebraic multiplicity m (verify!). In such cases, A may or may
-  //  not be diagonalizable depending on the geometric multiplicity of the eigenvalue i.e. the 
-  //  dimensionality of the corresponding eigenspace (verify!). If the corresponding eigenvectors 
-  //  are linearly independent (i.e. the eigenspace has its maximum dimensionality), A can still be
-  //  diagonalized (verify!). If not, it means that the corresponding modes are coupled and A is 
-  //  not diagonalizable. In such a case, it can still be brought into a Jordan normal form, which
-  //  has only additional ones above the main diagonal. Each such 1 couples two modes with the same
-  //  resonant frequency (verify!). For example, for a pole p with multiplicity 3, we would get a 
-  //  3x3 Jordan block of the form:
-  //    [p 1 0]
-  //    [0 p 1]
-  //    [0 0 p]
-  //  I think, the ones above the diagonal couple the modes, i.e. feed the output of one resonator
-  //  into the input of the next (with gain 1 - that's what the 1 does, I think). In such a case, 
-  //  the eigenvectors need to be replaced by generalized eigenvectors in the similarity 
-  //  transformation. Generalized eigenvectors v to some eigenvalue s do not satisfy 
-  //  (A - s*I) * v = 0 as regular eigenvectors do but instead (A - s*I)^m * v = 0 for some m which 
-  //  is called the rank of the eigenvector. See:
-  //    https://en.wikipedia.org/wiki/Generalized_eigenvector
-  //  The number of Jordan blocks belonging to a pole p is equal to the number of linearly 
-  //  independent eigenvectors.
-  // -Q: What would it mean if we have 2 Jordan blocks of respective sizes 1 and 3 corresponding to
-  //  a pole p? We have 3 modes at p's frequency wich are coupled and another one at the same 
-  //  frequency that is decoupled? The algebraic multiplicity of the pole would be 1+3 = 4 and the 
-  //  geometric multiplicity 2? One of the poles would have its own 1D eigenspace and the remaining
-  //  3 would have to "share" the 2nd dimension...or something?....figure this out!
-
-
-
+  // everything correctly, so take it with a grain of salt:
+  //
+  // - Diagonalizing the state transition matrix A corresponds to a partial fraction expansion of
+  //   the corresponding transfer function H(z). Each diagonal matrix element is responsible for a 
+  //   single (complex) resonant mode, i.e. implements one complex resonator. That necessiates that
+  //   those matrix elements have to be complex.
+  //
+  // - If the tranfer function is real, then the poles/eigenvalues will occur in complex conjugate 
+  //   pairs. If a real transition matrix is desired, complex conjugate poles/eigenvalues can be
+  //   combined into 2x2 blocks which correspond to real 2nd order sections. (ToDo: explain how!)
+  //
+  // - If the transfer function has a pole p with a multiplicity m > 1, then A will have a 
+  //   corresponding eigenvalue with algebraic multiplicity m (verify!). In such cases, A may or 
+  //   may not be diagonalizable depending on the geometric multiplicity of the eigenvalue i.e. the 
+  //   dimensionality of the corresponding eigenspace (verify!). If the corresponding eigenvectors 
+  //   are linearly independent (i.e. the eigenspace has its maximum dimensionality), A can still 
+  //   be diagonalized (verify!). If not, it means that the corresponding modes are coupled and A 
+  //   is not diagonalizable. In such a case, it can still be brought into a Jordan normal form, 
+  //   which has only additional ones above the main diagonal. Each such 1 couples two modes with 
+  //   the same resonant frequency (verify!). For example, for a pole p with multiplicity 3, we 
+  //   would get a  3x3 Jordan block of the form:
+  //
+  //     [p 1 0]
+  //     [0 p 1]
+  //     [0 0 p]
+  //
+  //   I think, the ones above the diagonal couple the modes, i.e. feed the output of one resonator
+  //   into the input of the next (with gain 1 - that's what the 1 does, I think). In such a case, 
+  //   the eigenvectors need to be replaced by generalized eigenvectors in the similarity 
+  //   transformation. Generalized eigenvectors v to some eigenvalue s do not satisfy 
+  //   (A - s*I) * v = 0 as regular eigenvectors do but instead (A - s*I)^m * v = 0 for some m which 
+  //   is called the rank of the eigenvector. See:
+  //
+  //     https://en.wikipedia.org/wiki/Generalized_eigenvector
+  //
+  //   The number of Jordan blocks belonging to a pole p is equal to the number of linearly 
+  //   independent eigenvectors.
+  //
+  // - Q: What would it mean if we have 2 Jordan blocks of respective sizes 1 and 3 corresponding 
+  //   to a pole p? We have 3 modes at p's frequency wich are coupled and another one at the same 
+  //   frequency that is decoupled? The algebraic multiplicity of the pole would be 1+3 = 4 and the 
+  //   geometric multiplicity 2? One of the poles would have its own 1D eigenspace and the 
+  //   remaining 3 would have to "share" the 2nd dimension...or something?....figure this out!
 
   int dummy = 0;
 }

@@ -142,7 +142,11 @@ For example, if you roll two (distinguishable) dice, like a red  and a blue one,
 %https://en.wikipedia.org/wiki/Joint_probability_distribution#Marginal_probability_distribution
 
 \paragraph{Marginal Probability}
-A so called \emph{marginal probability} of an event $A$ can be computed from a given joint probability $P(A,B)$ by summing $P(A,B)$ over all possible outcomes of $B$ [VERIFY!] ...TBC...
+A so called \emph{marginal probability} of an event $A$ can be computed from a given joint probability $P(A,B)$ by summing $P(A,B)$ over all possible outcomes of $B$. Informally, we could write this as:
+\begin{equation}
+P(A) = \sum_B P(A,B)
+\end{equation}
+The computation of a marginal probability from a given joint probability kind of "integrates out" one of the variables. We look at all possible ways that the event $A$ could occur where by "possible ways", we mean "what the other variable does". [VERIFY!] ...TBC...
 
 
 \paragraph{Conditional Probability}

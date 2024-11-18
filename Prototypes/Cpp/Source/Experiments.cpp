@@ -14872,7 +14872,7 @@ void testMimoFilters() // rename to testMimoBassFilters
   //  it's a good idea to keep them both as pre-gain and post-gain?
 }
 
-void testStateSpaceFilters()
+void testStateSpaceFilterExamples()
 {
   // We test a state space implementation structure of a digital filter and compare its outputs to
   // a direct form implementation.
@@ -15081,6 +15081,24 @@ void testStateSpaceFilters()
 
   int dummy = 0;
 }
+
+void testStateSpaceSVF()
+{
+  // UNDER CONSTRUCTION
+  //
+  // I try to implement the state variable filter (SVF) in state space form and use this form to 
+  // find an expression for the transfer function.
+ 
+
+  int dummy = 0;
+}
+
+void testStateSpaceFilters()
+{
+  testStateSpaceFilterExamples();
+  testStateSpaceSVF();
+}
+
 
 
 void test2x2Matrices1()

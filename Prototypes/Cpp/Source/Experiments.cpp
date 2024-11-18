@@ -14878,6 +14878,7 @@ void testStateSpaceFilters()
   // a direct form implementation.
   // 
   //  References:
+  //
   //   (1) Introduction to Digital Filters with Audio Application (Julius O. Smith)
 
   using Real = double;
@@ -14911,7 +14912,7 @@ void testStateSpaceFilters()
   //
   //   y[n] = u[n-1] + u[n-2] + 0.5*y[n-1] - 0.1*y[n-2] + 0.01*y[n-3]
   //
-  // where we have use u[] for the input signal for cosistency with the book and to avoid confusion
+  // where we have use u[] for the input signal for consistency with the book and to avoid confusion
   // with the state vector inside our SSF. So, our filter's direct form feedforward coeffs are 
   // (0,1,1) and its feedback coeffs are (1,-0.5,+0.1,-0.01) using the usual negative sign 
   // convention for feedback coeffs and the unity dummy coeff for y[0] ...wait..shouldn't it get a 

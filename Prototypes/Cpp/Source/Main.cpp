@@ -83,8 +83,8 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testNewtonFractal();       // move up to image processing, compare to stuff in main repo - may be redundant
   //testPrimeFactorTable();
   //testPrimesAndMore();
-  testDivisors();
-  testSquarity();
+  //testDivisors();
+  //testSquarity();
   //testFiniteField();
   //testFieldExtensions();
   //testRingExtensions();
@@ -117,7 +117,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // MIMO Filters:
   //testMimoTransferMatrix();
   //testMimoFilters();        // just a stub - not much in there yet, mostly comments
-  //testStateSpaceFilters();
+  testStateSpaceFilters();
 
   // Math:
   //testMatrixSqrt();              // Tests functions to compute square root of a matrix
@@ -130,7 +130,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testCatalanNumbers();
   //testSmoothCrossFade();
   //testSmoothCrossFade2();
-  testSmoothMax();                   // stub
+  //testSmoothMax();                   // stub
 
 
   //testMerge();

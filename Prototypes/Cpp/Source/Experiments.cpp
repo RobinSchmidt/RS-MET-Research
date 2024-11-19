@@ -15130,10 +15130,14 @@ void testStateSpaceSVF()
   // - https://www.dsprelated.com/freebooks/filters/State_Space_Filters.html
 
 
+  int numSamples = 300;  // Number of samples to generate
+
   using Real = double;
+  using Vec  = std::vector<Real>;
   using Mat  = rsMatrix<Real>;
   using SVF  = rsStateVariableFilterMystran2<Real, Real>;
   using SSF  = rsStateSpaceFilter<Real>;
+  //using AT   = RAPT::rsArrayTools;
 
 
   // Create and set up an SVF and retrieve its g,s,c coefficients:
@@ -15151,6 +15155,27 @@ void testStateSpaceSVF()
   // Create and set up state space filter:
   SSF ssf;
   ssf.setup(A, B, C, D);
+
+
+
+  // Create input and output sample arrays and filter object:
+  int N = numSamples;                      // We need it often, so a shorthand is good
+  Vec x = createNoise(N, -1.0, +1.0, 0);   // Input
+
+  // Compute outputs of the SVF:
+  Vec yH(N), yB(N), yL(N);
+  for(int n = 0; n < N; n++)
+  {
+    svf.getPartialOutputs(x[n], &yL[n], &yB[n], &yH[n]);
+  }
+  rsPlotVectors(x, yL, yB, yH);
+
+
+  // Compute Outputs of the SSF:
+  Vec  zH(N), zB(N), zL(N);
+  Real tmp[3];
+    // ...
+
 
 
 

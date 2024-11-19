@@ -15148,6 +15148,9 @@ void testStateSpaceSVF()
   Mat C(3,2, {-s*c, -s,  1-g*s*c, -g*s,  g-g*g*s*c, 1-g*g*s});  // 3x2 output matrix 
   Mat D(3,1, {s, g*s, g*g*s});                                  // 3x1 feedaround matrix
 
+  // Create and set up state space filter:
+  SSF ssf;
+  ssf.setup(A, B, C, D);
 
 
 

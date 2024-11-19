@@ -7745,7 +7745,10 @@ public:
   //  ...hmmm...
 
 
-  rsMatrix<T> getTransferFunctionAt(rsComplex<T> z);
+  rsMatrix<rsComplex<T>> getTransferFunctionAt(rsComplex<T> z);
+
+
+  //rsComplex<T> getTransferFunctionAt(rsComplex<T> z);
 
 
 
@@ -7872,18 +7875,41 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
 
 
 template<class T> 
-rsMatrix<T> rsStateSpaceFilter<T>::getTransferFunctionAt(rsComplex<T> z)
+rsMatrix<rsComplex<T>> rsStateSpaceFilter<T>::getTransferFunctionAt(rsComplex<T> z)
 {
-  // Create matrix M = (z*I - A)^(-1)
-  rsMatrix<T> M = A;
-  for(int i = 0; i < M.getNumRows(); i++)
-    M(i, i) += z;
-  M = rsLinearAlgebraNew::inverse(M);
-  rsMatrix<T> H = D + C*M*B;
-  return H;
+  // We need to complexify our matrices...
 
-  // H(z) = D + C*(z*I - A)^(-1) * B 
+
+  rsMatrix<rsComplex<T>> Ac;
+
+
+  return Ac;  // Wrong! Just to satisfy the compiler
+
+
+  //rsMatrix<rsComplex<T>> M = A;
+  //for(int i = 0; i < M.getNumRows(); i++)
+  //  M(i, i) += z;
+  //M = rsLinearAlgebraNew::inverse(M);        // M    = (z*I - A)^(-1)
+  //rsMatrix<rsComplex<T>> H = D + C*M*B;      // H(z) = D + C*(z*I - A)^(-1) * B 
+  //return H;
+
+  // This can be optimized!
 }
+
+/*
+template<class T> 
+rsComplex<T> rsStateSpaceFilter<T>::getTransferFunctionAt(rsComplex<T> z)
+{
+  rsMatrix<rsComplex<T>> H = getPartialTransferFunctionsAt(z);
+  return aH*H(0,0) + aB*H(1,0) + aL*H(2,0);
+}
+*/
+
+
+//template class RAPT::rsLadderFilter<double, double>;
+
+
+
 // Needs tests
 
 

@@ -15087,36 +15087,35 @@ template<class T>
 void stateVariableToStateSpace(T g, T c, T s, 
   rsMatrixView<T>* A, rsMatrixView<T>* B, rsMatrixView<T>* C, rsMatrixView<T>* D)
 {
-  // 2x2 transition matrix:
-  //A->setShape(2,2);
+  T gs  = g*s;
+  T ggs = g*gs;
+
+  // 2x2 state transition matrix:
   rsAssert(A->hasShape(2,2));
-  (*A)(0,0) =  1  -2*g*s*c;
-  (*A)(0,1) =     -2*g*s;
-  (*A)(1,0) =  2*g-2*g*s*g*c;
-  (*A)(1,1) =  1  -2*g*s*g;
+  (*A)(0,0) =  1  -2*gs*c;
+  (*A)(0,1) =     -2*gs;
+  (*A)(1,0) =  2*g-2*ggs*c;
+  (*A)(1,1) =  1  -2*ggs;
 
   // 2x1 input matrix:
-  //B->setShape(2,1);
   rsAssert(B->hasShape(2,1));
-  (*B)(0,0) =  2*g*s;
-  (*B)(1,0) =  2*g*s*g;
+  (*B)(0,0) =  2*gs;
+  (*B)(1,0) =  2*ggs;
 
   // 3x2 output matrix:
-  //C->setShape(3,2);
   rsAssert(C->hasShape(3,2));
   (*C)(0,0) = -s*c;
   (*C)(0,1) = -s;
-  (*C)(1,0) = 1-g*s*c;
-  (*C)(1,1) =  -g*s;
-  (*C)(2,0) = g-g*g*s*c;
-  (*C)(2,1) = 1-g*g*s;
+  (*C)(1,0) = 1-gs*c;
+  (*C)(1,1) =  -gs;
+  (*C)(2,0) = g-ggs*c;
+  (*C)(2,1) = 1-ggs;
 
   // 3x1 feedaround matrix:
-  //D->setShape(3,1);
   rsAssert(D->hasShape(3,1));
-  (*D)(0,0) =     s;
-  (*D)(1,0) =   g*s;
-  (*D)(2,0) = g*g*s;
+  (*D)(0,0) =   s;
+  (*D)(1,0) =  gs;
+  (*D)(2,0) = ggs;
 
   // The state space formulation matrices are given by:
   //
@@ -15174,12 +15173,12 @@ void testStateSpaceSVF()
 
   int numSamples = 300;  // Number of samples to generate
 
-  using Real = double;
-  using Vec  = std::vector<Real>;
-  using Mat  = rsMatrix<Real>;
-  using SVF  = rsStateVariableFilterMystran2<Real, Real>;
-  using SSF  = rsStateSpaceFilter<Real>;
-  //using AT   = RAPT::rsArrayTools;
+  using Real    = double;
+  using Complex = rsComplex<Real>;
+  using Vec     = std::vector<Real>;
+  using Mat     = rsMatrix<Real>;
+  using SVF     = rsStateVariableFilterMystran2<Real, Real>;
+  using SSF     = rsStateSpaceFilter<Real>;
 
 
   // Create and set up an SVF and retrieve its g,s,c coefficients:
@@ -15238,6 +15237,16 @@ void testStateSpaceSVF()
   ok &= rsIsCloseTo(zL, yL, tol);
   ok &= rsIsCloseTo(zB, yB, tol);
   ok &= rsIsCloseTo(zH, yH, tol);
+
+
+  // Test evaluation of transfer function:
+  Complex z(0.3, 0.2);
+  Complex H1 = svf.getTransferFunctionAt(z);
+
+
+  rsMatrix<Complex> vecH = ssf.getTransferFunctionAt(z); // H(z) is vector valued
+
+
   rsAssert(ok);
 
   // ToDo:

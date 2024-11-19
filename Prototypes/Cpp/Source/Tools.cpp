@@ -7744,6 +7744,11 @@ public:
   //  vector x and its temporary storage t should nevertheless stay non-reference members?
   //  ...hmmm...
 
+
+  rsMatrix<T> getTransferFunctionAt(rsComplex<T> z);
+
+
+
   /** Processes a single MIMO output frame at a time. */
   void processFrame(T* ins, T* outs)
   {
@@ -7864,6 +7869,23 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
 
   //rsError("Not yet implemented");
 }
+
+
+template<class T> 
+rsMatrix<T> rsStateSpaceFilter<T>::getTransferFunctionAt(rsComplex<T> z)
+{
+  // Create matrix M = (z*I - A)^(-1)
+  rsMatrix<T> M = A;
+  for(int i = 0; i < M.getNumRows(); i++)
+    M(i, i) += z;
+  M = rsLinearAlgebraNew::inverse(M);
+  rsMatrix<T> H = D + C*M*B;
+  return H;
+
+  // H(z) = D + C*(z*I - A)^(-1) * B 
+}
+// Needs tests
+
 
 //=================================================================================================
 

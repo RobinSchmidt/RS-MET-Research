@@ -15082,6 +15082,50 @@ void testStateSpaceFilterExamples()
   int dummy = 0;
 }
 
+
+template<class T>
+void stateVariableToStateSpace(T g, T c, T s, 
+  rsMatrixView<T>* A, rsMatrixView<T>* B, rsMatrixView<T>* C, rsMatrixView<T>* D)
+{
+  // 2x2 transition matrix:
+  //A->setShape(2,2);
+  rsAssert(A->hasShape(2,2));
+  (*A)(0,0) =  1  -2*g*s*c;
+  (*A)(0,1) =     -2*g*s;
+  (*A)(1,0) =  2*g-2*g*s*g*c;
+  (*A)(1,1) =  1  -2*g*s*g;
+
+  // 2x1 input matrix:
+  //B->setShape(2,1);
+  rsAssert(B->hasShape(2,1));
+  (*B)(0,0) =  2*g*s;
+  (*B)(1,0) =  2*g*s*g;
+
+  // 3x2 output matrix:
+  //C->setShape(3,2);
+  rsAssert(C->hasShape(3,2));
+  (*C)(0,0) = -s*c;
+  (*C)(0,1) = -s;
+  (*C)(1,0) = 1-g*s*c;
+  (*C)(1,1) =  -g*s;
+  (*C)(2,0) = g-g*g*s*c;
+  (*C)(2,1) = 1-g*g*s;
+
+  // 3x1 feedaround matrix:
+  //D->setShape(3,1);
+  rsAssert(D->hasShape(3,1));
+  (*D)(0,0) =     s;
+  (*D)(1,0) =   g*s;
+  (*D)(2,0) = g*g*s;
+
+  // The state space formulation matrices are given by:
+  //
+  //                                             [-sc      -s  ]      [s  ]
+  //    A =  [1-2gsc     -2gs ], B = [2gs ], C = [1-gsc    -gs ], D = [gs ]
+  //         [2g-2ggsc  1-2ggs]      [2ggs]      [g-ggsc  1-ggs]      [ggs]
+}
+
+
 void testStateSpaceSVF()
 {
   // We convert the state variable filter (SVF) in state space form. In general, the difference 
@@ -15145,10 +15189,15 @@ void testStateSpaceSVF()
   svf.getCoeffs_g_c_s(&g, &c, &s);
 
   // Set up matrices for SSF:
-  Mat A(2,2, {1-2*g*s*c, -2*g*s,  2*g-2*g*g*s*c, 1-2*g*g*s });  // 2x2 transition matrix
-  Mat B(2,1, {2*g*s, 2*g*g*s});                                 // 2x1 input matrix
-  Mat C(3,2, {-s*c, -s,  1-g*s*c, -g*s,  g-g*g*s*c, 1-g*g*s});  // 3x2 output matrix 
-  Mat D(3,1, {s, g*s, g*g*s});                                  // 3x1 feedaround matrix
+  //Mat A(2,2, {1-2*g*s*c, -2*g*s,  2*g-2*g*g*s*c, 1-2*g*g*s });  // 2x2 transition matrix
+  //Mat B(2,1, {2*g*s, 2*g*g*s});                                 // 2x1 input matrix
+  //Mat C(3,2, {-s*c, -s,  1-g*s*c, -g*s,  g-g*g*s*c, 1-g*g*s});  // 3x2 output matrix 
+  //Mat D(3,1, {s, g*s, g*g*s});                                  // 3x1 feedaround matrix
+
+
+  Mat A(2,2), B(2,1), C(3,2), D(3,1);
+  stateVariableToStateSpace(g,c,s, &A, &B, &C, &D);
+
 
   // Create and set up state space filter:
   SSF ssf;
@@ -15193,7 +15242,11 @@ void testStateSpaceSVF()
 
   // ToDo:
   //
-  // - Try to find and expression for the transfer function from the state space form.
+  // - Try to find and expression for the transfer function from the state space form. It is given 
+  //   by H(z) = D + C*(z*I - A)^(-1) * B 
+  //
+  // - Maybe move the SVF-to-SSF conversion into the library. Maybe into class 
+  //   rsFilterCoefficientConverter
 }
 
 void testStateSpaceFilters()

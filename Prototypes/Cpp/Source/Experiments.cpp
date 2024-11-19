@@ -15084,20 +15084,15 @@ void testStateSpaceFilterExamples()
 
 void testStateSpaceSVF()
 {
-  // UNDER CONSTRUCTION
-  //
-  // I try to implement the state variable filter (SVF) in state space form and use this form to 
-  // find an expression for the transfer function.
-  //
-  // In general, the difference equation of a digital filter in state space form is given by:
+  // We convert the state variable filter (SVF) in state space form. In general, the difference 
+  // equation of a digital filter in state space form is given by:
   //
   //   y[n]   = C * x[n] + D * u[n]           // Compute output
   //   x[n+1] = A * x[n] + B * u[n]           // Update state
   //
   // where x[n] is the state vector, u[n] is the input signal and y[n] is the output signal. All of 
-  // these are vectors.The matrices A,B,C,D are called: A: state transition matrix, B: ...
-  //
-  // For the SVF, we have the time domain equations:
+  // these are vectors.The matrices A,B,C,D are called: A: state transition matrix, B: input matrix, 
+  // C: output matrix, D: feedaround matrix. For the SVF, we have the time domain equations:
   //
   //   h[n] = s*x[n] - s*c*u[n-1] - s*v[n-1]
   //   b[n] = g*h[n] + u[n-1]
@@ -15105,11 +15100,8 @@ void testStateSpaceSVF()
   //   u[n] = 2*b[n] - u[n-1]
   //   v[n] = 2*l[n] - v[n-1]
   //
+  //
   // This translates to the following state space form:
-  //
-  //   [u[n+1]] = [-1   0] * [u[n]]  +  [2  0] * [b[n]]
-  //   [v[n+1]]   [ 0  -1]   [v[n]]     [0  2]   [l[n]]
-  //
   //
   // Output computation:
   //
@@ -15121,6 +15113,12 @@ void testStateSpaceSVF()
   //
   //   [u[n+1]] = [1-2gsc      -2gs] * [u[n]]  +  [2gs ] * [x[n]]
   //   [v[n+1]]   [2g-2ggsc  1-2ggs]   [v[n]]     [2ggs]  
+  //
+  // So we see that our 4 matrices are given by:
+  //
+  //                                             [-sc      -s  ]      [s  ]
+  //    A =  [1-2gsc     -2gs ], B = [2gs ], C = [1-gsc    -gs ], D = [gs ]
+  //         [2g-2ggsc  1-2ggs]      [2ggs]      [g-ggsc  1-ggs]      [ggs]
   //
   //
   // See:
@@ -15185,21 +15183,17 @@ void testStateSpaceSVF()
   }
   //rsPlotVectors(x, zL, zB, zH);
 
-  Real tol = 1.e-13;
+  // Check that the SVF and SSF have produced the same outputs:
+  Real tol = 1.e-15;
   bool ok  = true;
   ok &= rsIsCloseTo(zL, yL, tol);
   ok &= rsIsCloseTo(zB, yB, tol);
   ok &= rsIsCloseTo(zH, yH, tol);
+  rsAssert(ok);
 
-
-
-
-    // ...
-
-
-
-
-  int dummy = 0;
+  // ToDo:
+  //
+  // - Try to find and expression for the transfer function from the state space form.
 }
 
 void testStateSpaceFilters()

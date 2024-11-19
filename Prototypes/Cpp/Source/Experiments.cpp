@@ -15183,25 +15183,17 @@ void testStateSpaceSVF()
 
   // Create and set up an SVF and retrieve its g,s,c coefficients:
   Real g, c, s;
+  Real mL, mB, mH;
   SVF svf;
   svf.setupLowpass(0.1, 3.0);
   svf.getCoeffs_g_c_s(&g, &c, &s);
-
-  // Set up matrices for SSF:
-  //Mat A(2,2, {1-2*g*s*c, -2*g*s,  2*g-2*g*g*s*c, 1-2*g*g*s });  // 2x2 transition matrix
-  //Mat B(2,1, {2*g*s, 2*g*g*s});                                 // 2x1 input matrix
-  //Mat C(3,2, {-s*c, -s,  1-g*s*c, -g*s,  g-g*g*s*c, 1-g*g*s});  // 3x2 output matrix 
-  //Mat D(3,1, {s, g*s, g*g*s});                                  // 3x1 feedaround matrix
-
-
-  Mat A(2,2), B(2,1), C(3,2), D(3,1);
-  stateVariableToStateSpace(g,c,s, &A, &B, &C, &D);
-
+  svf.getMixCoeffs_l_b_h(&mL, &mB, &mH);
 
   // Create and set up state space filter:
   SSF ssf;
+  Mat A(2,2), B(2,1), C(3,2), D(3,1);
+  stateVariableToStateSpace(g,c,s, &A, &B, &C, &D);
   ssf.setup(A, B, C, D);
-
 
 
   // Create input and output sample arrays and filter object:
@@ -15238,24 +15230,25 @@ void testStateSpaceSVF()
   ok &= rsIsCloseTo(zB, yB, tol);
   ok &= rsIsCloseTo(zH, yH, tol);
 
-
-  // Under contruction:
-  // Test evaluation of transfer function:
+  // Test evaluation of transfer function of SVF and SSF:
   Complex z(0.3, 0.2);
   Complex H1 = svf.getTransferFunctionAt(z);
-  rsMatrix<Complex> vecH = ssf.getTransferFunctionAt(z); // H(z) is vector valued
-  // I doesn't work yet because the line rsLinearAlgebraNew::inverse(M); doesn't compile
+  rsMatrix<Complex> vecH = ssf.getTransferFunctionAt(z);      // H(z) is vector valued
+  Complex H2 = mH*vecH(0,0) + mB*vecH(1,0) + mL*vecH(2,0);    // ...this is how we get the scalar
+  ok &= rsIsCloseTo(H1, H2, Complex(tol));
+  // vecH is vector-valued because it returns the 3 transfer functions of the highpass, bandpass 
+  // and lowpass part. We need to manually compute the overall transfer function by combining the 3
+  // transfer functions via the mixing coefficients.
 
 
   rsAssert(ok);
 
   // ToDo:
   //
-  // - Try to find and expression for the transfer function from the state space form. It is given 
-  //   by H(z) = D + C*(z*I - A)^(-1) * B 
-  //
   // - Maybe move the SVF-to-SSF conversion into the library. Maybe into class 
   //   rsFilterCoefficientConverter
+  //
+  // - Add modulation tests for SVF, SSF, DF1, DF2, TDF1, TDF2
 }
 
 void testStateSpaceFilters()

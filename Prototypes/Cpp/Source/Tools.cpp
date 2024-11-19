@@ -7710,11 +7710,14 @@ respectively)
 
 The system has the q-by-p MIMO transfer function matrix:
 
-  H(z) = D + C*(z*I - A)^(-1) * B     (1) Eq G.5
+  H(z) = D + C * (z*I - A)^(-1) * B     (1) Eq G.5
 
- ...tbc...
+The H(i,j) element of this matrix gives the transfer function from the j-th input to the i-th 
+output [VERIFY!].
+
 
 References:
+
   (1) Introduction to Digital Filters with Audio Application (Julius O. Smith)
 
 */
@@ -7744,31 +7747,32 @@ public:
   //  vector x and its temporary storage t should nevertheless stay non-reference members?
   //  ...hmmm...
 
-
+  /** Computes the transfer function matrix at the given complex number z. The (i,j)-th element
+  of this matrix is the point-to-point transfer function from input j to output i. ...I think...
+  or maybe it's the other way around? ...Figure out!  */
   rsMatrix<rsComplex<T>> getTransferFunctionAt(rsComplex<T> z);
-
-
-  //rsComplex<T> getTransferFunctionAt(rsComplex<T> z);
 
 
 
   /** Processes a single MIMO output frame at a time. */
   void processFrame(T* ins, T* outs)
   {
+    using AT = rsArrayTools;
+    using MV = rsMatrixView<T>;
+
     // Wrap some matrix-view objects around inputs and output to view them as p-by-1 and q-by-1 
     // column-vectors:
-    using MV = rsMatrixView<T>;
-    MV u(p, 1, ins);                                               // u = input vector
-    MV y(q, 1, outs);                                              // y = output vector
+    MV u(p, 1, ins);                             // u = input vector
+    MV y(q, 1, outs);                            // y = output vector
 
     // Compute output y = C*x + D*u:
-    MV::matrixMultiply(          C, x, &y);                        // y = C*x
-    MV::matrixMultiplyAccumulate(D, u, &y);                        // y = C*x + D*u
+    MV::matrixMultiply(          C, x, &y);      // y = C*x
+    MV::matrixMultiplyAccumulate(D, u, &y);      // y = C*x + D*u
 
     // Update the state x = A*x + B*u:
-    MV::matrixMultiply(          A, x, &t);                        // t = A*x
-    MV::matrixMultiplyAccumulate(B, u, &t);                        // t = A*x + B*u
-    rsArrayTools::copy(t.getDataPointer(), x.getDataPointer(), N); // x = t
+    MV::matrixMultiply(          A, x, &t);      // t = A*x
+    MV::matrixMultiplyAccumulate(B, u, &t);      // t = A*x + B*u
+    AT::copy(&t(0,0), &x(0,0), N);               // x = t
   }
   // Notes:
   // -Needs more tests, if it does the right thing.
@@ -7778,6 +7782,12 @@ public:
   //  previous point via calling e.g. setup(). Safeguarding here would require otherwise useless 
   //  and redundant function parameters like numIns, numOuts. Not sure, if that's a good idea.
   //  ...but maybe...we'll see....
+  // -Maybe try to shorten the code. instead of AT::copy(...) we could use something like
+  //  x.copyDataFrom(t). But calling AT::copy may be more efficient because it bypasses the
+  //  setShape() call in copyDataFrom(). The function names matrixMultiply/Accumulate could be 
+  //  shortened to something like mul/Accum ...the matrix prefix is redundant because we already 
+  //  are in class rsMatrixView
+
 
   /** Resets out internal state vector to all zeros. */
   void reset() { x.setToZero(T(0)); }
@@ -7817,11 +7827,7 @@ protected:
   //  typically sparse, right? But what about the other matrices? Are they also typically sparse?
   //  Maybe only A should be sparse but B,C,D dense? ...figure out!
   // -Implement a getTransferFunction() function that returns an rsMatrix of type
-  //  rsRationalFunction and a getTransferFunctionAt(Complex z, int i, int j) that evaluates
-  //  the (i,j)th point-to-point transfer function from input j to output i at the given z. Can we
-  //  do this without memory allocations? I mean conveniently, without introducing new members or
-  //  a workspace? I think, we nee to implement: H(z) = D + C*(z*I - A)^(-1) * B. There appears an
-  //  inverse matrix
+  //  rsRationalFunction
 
 };
 
@@ -7850,7 +7856,7 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
   p = newB.getNumColumns();  // number of inputs
   q = newC.getNumRows();     // number of outputs
   setDimensions(p, q, N);
-  // ToDo: Verify and document that no allocations take place here, when alreade enough memory was
+  // ToDo: Verify and document that no allocations take place here, when already enough memory was
   // allcoated previously. See rsMatrix::setShape - it calls resize on a std::vector which should
   // reallocate only in case of growth.
 
@@ -7873,43 +7879,35 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
   //rsError("Not yet implemented");
 }
 
-
-// Move into library - or maybe there is already something like that? Figure out!
-template<class TIn, class TOut>
-rsMatrix<TOut> rsConvert(const rsMatrix<TIn>& A)
-{
-  rsMatrix<TOut> B(A.getNumRows(), A.getNumColumns());
-  for(int i = 0; i < B.getNumRows(); i++)
-    for(int j = 00; j < B.getNumColumns(); j++)
-      B(i,j) = (TOut) A(i,j);
-  return B;
-}
-
 template<class T> 
 rsMatrix<rsComplex<T>> rsStateSpaceFilter<T>::getTransferFunctionAt(rsComplex<T> z)
 {
-  // This is still wrong! We need to invert M but the code for that doesn't compile yet.
+  using Comp = rsComplex<T>;
+  using Mat  = rsMatrix<Comp>;
 
   // Complexify our matrices:
-  rsMatrix<rsComplex<T>> Ac = rsConvert<T, rsComplex<T>>(A);
-  rsMatrix<rsComplex<T>> Bc = rsConvert<T, rsComplex<T>>(B);
-  rsMatrix<rsComplex<T>> Cc = rsConvert<T, rsComplex<T>>(C);
-  rsMatrix<rsComplex<T>> Dc = rsConvert<T, rsComplex<T>>(D);
+  Mat Ac = rsConvert<T, Comp>(A);
+  Mat Bc = rsConvert<T, Comp>(B);
+  Mat Cc = rsConvert<T, Comp>(C);
+  Mat Dc = rsConvert<T, Comp>(D);
 
-  // Form the matrix M = (z*I - A)^(-1)
-  rsMatrix<rsComplex<T>> M  = Ac;
-  for(int i = 0; i < M.getNumRows(); i++)
-    M(i, i) += z;
-  M = rsLinearAlgebraNew::inverse(M);        // M    = (z*I - A)^(-1)
+  // Form the matrix M = (z*I - A)^(-1):
+  Mat M = -Ac;                                           // M =      - A
+  for(int i = 0; i < M.getNumRows(); i++) M(i,i) += z;   // M = (z*I - A)
+  M = rsLinearAlgebraNew::inverse(M);                    // M = (z*I - A)^(-1)
 
   // Evaluate the transfer function:
-  rsMatrix<rsComplex<T>> H = Dc + Cc*M*Bc;   // H(z) = D + C*(z*I - A)^(-1) * B 
+  Mat H = Dc + Cc*M*Bc;                                  // H(z) = D + C * (z*I - A)^(-1) * B 
   return H;
 
-
-  // This can be optimized!
+  // This can probably be optimized a lot. Firstly, we may want to have a lower level API that lets
+  // the caller pass pre-allocated pointers to rsMatrixView to get around the internal memory 
+  // allocations. Secondly, maybe we can get away without the inversion and formulate it as a 
+  // solution to a linear system? Thirdly, not all matrices need to be complex. We just do it that
+  // way because the operators +,* need matrices of the same element type so we just complexify all
+  // our matrices.
 }
-// Needs tests
+
 
 
 //=================================================================================================

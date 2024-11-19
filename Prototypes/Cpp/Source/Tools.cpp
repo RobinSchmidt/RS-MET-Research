@@ -7900,10 +7900,7 @@ rsMatrix<rsComplex<T>> rsStateSpaceFilter<T>::getTransferFunctionAt(rsComplex<T>
   rsMatrix<rsComplex<T>> M  = Ac;
   for(int i = 0; i < M.getNumRows(); i++)
     M(i, i) += z;
-
-  //M = rsLinearAlgebraNew::inverse(M);        // M    = (z*I - A)^(-1)
-  // Doesn't compile!
-
+  M = rsLinearAlgebraNew::inverse(M);        // M    = (z*I - A)^(-1)
 
   // Evaluate the transfer function:
   rsMatrix<rsComplex<T>> H = Dc + Cc*M*Bc;   // H(z) = D + C*(z*I - A)^(-1) * B 

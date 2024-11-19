@@ -15143,7 +15143,12 @@ void testStateSpaceSVF()
   svf.getCoeffs_g_c_s(&g, &c, &s);
 
   // Set up matrices for SSF:
-  Mat C(3, 2, {-s*c,-s,  1-g*s*c,-g*s,  g-g*g*s*c,1-g*g*s}); 
+  Mat A(2,2, {1-2*g*s*c, -2*g*s,  2*g-2*g*g*s*c, 1-2*g*g*s });  // 2x2 transition matrix
+  Mat B(2,1, {2*g*s, 2*g*g*s});                                 // 2x1 input matrix
+  Mat C(3,2, {-s*c, -s,  1-g*s*c, -g*s,  g-g*g*s*c, 1-g*g*s});  // 3x2 output matrix 
+  Mat D(3,1, {s, g*s, g*g*s});                                  // 3x1 feedaround matrix
+
+
 
 
   int dummy = 0;

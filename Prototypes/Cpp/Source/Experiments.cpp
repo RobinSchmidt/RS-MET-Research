@@ -15239,12 +15239,12 @@ void testStateSpaceSVF()
   ok &= rsIsCloseTo(zH, yH, tol);
 
 
+  // Under contruction:
   // Test evaluation of transfer function:
   Complex z(0.3, 0.2);
   Complex H1 = svf.getTransferFunctionAt(z);
-
-
   rsMatrix<Complex> vecH = ssf.getTransferFunctionAt(z); // H(z) is vector valued
+  // I doesn't work yet because the line rsLinearAlgebraNew::inverse(M); doesn't compile
 
 
   rsAssert(ok);

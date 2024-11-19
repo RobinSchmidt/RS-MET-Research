@@ -7720,7 +7720,7 @@ References:
 */
 
 
-template<class T> 
+template<class T>     // ToDo: have TSig and TPar
 class rsStateSpaceFilter
 {
 

@@ -15088,14 +15088,70 @@ void testStateSpaceSVF()
   //
   // I try to implement the state variable filter (SVF) in state space form and use this form to 
   // find an expression for the transfer function.
- 
+  //
+  // In general, the difference equation of a digital filter in state space form is given by:
+  //
+  //   y[n]   = C * x[n] + D * u[n]           // Compute output
+  //   x[n+1] = A * x[n] + B * u[n]           // Update state
+  //
+  // where x[n] is the state vector, u[n] is the input signal and y[n] is the output signal. All of 
+  // these are vectors.The matrices A,B,C,D are called: A: state transition matrix, B: ...
+  //
+  // For the SVF, we have the time domain equations:
+  //
+  //   h[n] = s*x[n] - s*c*u[n-1] - s*v[n-1]
+  //   b[n] = g*h[n] + u[n-1]
+  //   l[n] = g*b[n] + v[n-1]
+  //   u[n] = 2*b[n] - u[n-1]
+  //   v[n] = 2*l[n] - v[n-1]
+  //
+  // This translates to the following state space form:
+  //
+  //   [u[n+1]] = [-1   0] * [u[n]]  +  [2  0] * [b[n]]
+  //   [v[n+1]]   [ 0  -1]   [v[n]]     [0  2]   [l[n]]
+  //
+  //
+  // Output computation:
+  //
+  //   [h[n]]   [-sc         -s] * [u[n]]  +  [  s] * [x[n]]
+  //   [b[n]] = [1-gsc      -gs]   [v[n]]     [ gs]
+  //   [l[n]]   [g-ggsc   1-ggs]              [ggs]
+  //
+  // State update:
+  //
+  //   [u[n+1]] = [1-2gsc      -2gs] * [u[n]]  +  [2gs ] * [x[n]]
+  //   [v[n+1]]   [2g-2ggsc  1-2ggs]   [v[n]]     [2ggs]  
+  //
+  //
+  // See:
+  //
+  // - Documentation of rsStateSpaceFilter
+  //
+  // - https://www.dsprelated.com/freebooks/filters/State_Space_Filters.html
+
+
+  using Real = double;
+  using Mat  = rsMatrix<Real>;
+  using SVF  = rsStateVariableFilterMystran2<Real, Real>;
+  using SSF  = rsStateSpaceFilter<Real>;
+
+
+  // Create and set up an SVF and retrieve its g,s,c coefficients:
+  Real g, c, s;
+  SVF svf;
+  svf.setupLowpass(0.1, 3.0);
+  svf.getCoeffs_g_c_s(&g, &c, &s);
+
+  // Set up matrices for SSF:
+  Mat C(3, 2, {-s*c,-s,  1-g*s*c,-g*s,  g-g*g*s*c,1-g*g*s}); 
+
 
   int dummy = 0;
 }
 
 void testStateSpaceFilters()
 {
-  testStateSpaceFilterExamples();
+  //testStateSpaceFilterExamples();
   testStateSpaceSVF();
 }
 

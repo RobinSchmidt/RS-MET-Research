@@ -15173,7 +15173,20 @@ void testStateSpaceSVF()
 
   // Compute Outputs of the SSF:
   Vec  zH(N), zB(N), zL(N);
-  Real tmp[3];
+  Real ins[1];
+  Real outs[3];
+  for(int n = 0; n < N; n++)
+  {
+    ins[0] = x[n];
+    ssf.processFrame(ins, outs);
+    zH[n] = outs[0];
+    zB[n] = outs[1];
+    zL[n] = outs[2];
+  }
+  rsPlotVectors(x, zL, zB, zH);
+
+
+
     // ...
 
 

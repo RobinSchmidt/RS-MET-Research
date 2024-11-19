@@ -7874,42 +7874,44 @@ void rsStateSpaceFilter<T>::setup(const rsMatrixView<T>& newA, const rsMatrixVie
 }
 
 
+// Move into library - or maybe there is already something like that? Figure out!
+template<class TIn, class TOut>
+rsMatrix<TOut> rsConvert(const rsMatrix<TIn>& A)
+{
+  rsMatrix<TOut> B(A.getNumRows(), A.getNumColumns());
+  for(int i = 0; i < B.getNumRows(); i++)
+    for(int j = 00; j < B.getNumColumns(); j++)
+      B(i,j) = (TOut) A(i,j);
+  return B;
+}
+
 template<class T> 
 rsMatrix<rsComplex<T>> rsStateSpaceFilter<T>::getTransferFunctionAt(rsComplex<T> z)
 {
-  // We need to complexify our matrices...
+  // This is still wrong! We need to invert M but the code for that doesn't compile yet.
 
+  // Complexify our matrices:
+  rsMatrix<rsComplex<T>> Ac = rsConvert<T, rsComplex<T>>(A);
+  rsMatrix<rsComplex<T>> Bc = rsConvert<T, rsComplex<T>>(B);
+  rsMatrix<rsComplex<T>> Cc = rsConvert<T, rsComplex<T>>(C);
+  rsMatrix<rsComplex<T>> Dc = rsConvert<T, rsComplex<T>>(D);
 
-  rsMatrix<rsComplex<T>> Ac;
+  // Form the matrix M = (z*I - A)^(-1)
+  rsMatrix<rsComplex<T>> M  = Ac;
+  for(int i = 0; i < M.getNumRows(); i++)
+    M(i, i) += z;
 
-
-  return Ac;  // Wrong! Just to satisfy the compiler
-
-
-  //rsMatrix<rsComplex<T>> M = A;
-  //for(int i = 0; i < M.getNumRows(); i++)
-  //  M(i, i) += z;
   //M = rsLinearAlgebraNew::inverse(M);        // M    = (z*I - A)^(-1)
-  //rsMatrix<rsComplex<T>> H = D + C*M*B;      // H(z) = D + C*(z*I - A)^(-1) * B 
-  //return H;
+  // Doesn't compile!
+
+
+  // Evaluate the transfer function:
+  rsMatrix<rsComplex<T>> H = Dc + Cc*M*Bc;   // H(z) = D + C*(z*I - A)^(-1) * B 
+  return H;
+
 
   // This can be optimized!
 }
-
-/*
-template<class T> 
-rsComplex<T> rsStateSpaceFilter<T>::getTransferFunctionAt(rsComplex<T> z)
-{
-  rsMatrix<rsComplex<T>> H = getPartialTransferFunctionsAt(z);
-  return aH*H(0,0) + aB*H(1,0) + aL*H(2,0);
-}
-*/
-
-
-//template class RAPT::rsLadderFilter<double, double>;
-
-
-
 // Needs tests
 
 

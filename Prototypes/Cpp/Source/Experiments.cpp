@@ -15168,7 +15168,7 @@ void testStateSpaceSVF()
   {
     svf.getPartialOutputs(x[n], &yL[n], &yB[n], &yH[n]);
   }
-  rsPlotVectors(x, yL, yB, yH);
+  //rsPlotVectors(x, yL, yB, yH);
 
 
   // Compute Outputs of the SSF:
@@ -15183,7 +15183,14 @@ void testStateSpaceSVF()
     zB[n] = outs[1];
     zL[n] = outs[2];
   }
-  rsPlotVectors(x, zL, zB, zH);
+  //rsPlotVectors(x, zL, zB, zH);
+
+  Real tol = 1.e-13;
+  bool ok  = true;
+  ok &= rsIsCloseTo(zL, yL, tol);
+  ok &= rsIsCloseTo(zB, yB, tol);
+  ok &= rsIsCloseTo(zH, yH, tol);
+
 
 
 

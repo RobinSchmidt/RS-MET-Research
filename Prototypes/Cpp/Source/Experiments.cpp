@@ -15277,22 +15277,21 @@ void testDirectFormToStateSpace()
     z[n]  = outs[0];
   }
 
-
-
   // Plot outputs of DF and SSF filters:
-  rsPlotVectors(y, z);  // Yep - the match!
+  rsPlotVectors(y, z);  // Yep - they match!
 
-
-  int dummy = 0;
+  // Check the match programmatically:
+  bool ok = true;
+  ok &= rsIsCloseTo(z, y, 1.e-14);
+  rsAssert(ok);
 
 
   // ToDo:
   //
-  // - If a,b are of different length, the shorter of the two needs to be zero padded.
-  //
   // - If a[0] != 1, we first need to normalize the coeffs by dividing them all by a[0]
   //
-  // - Add a unit-test ok variable and use it to check if y and z match
+  // - If a,b are of different length, the shorter of the two needs to be zero padded. Maybe
+  //   introduce a convenience function for that: rsZeroPadToSameLength(a, b)
 }
 
 void testStateSpaceFilters()

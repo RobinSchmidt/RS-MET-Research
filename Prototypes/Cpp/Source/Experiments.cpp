@@ -15134,7 +15134,7 @@ void testStateSpaceSVF()
   using Complex = rsComplex<Real>;
   using Vec     = std::vector<Real>;
   using Mat     = rsMatrix<Real>;
-  using SVF     = rsStateVariableFilterMystran2<Real, Real>;
+  using SVF     = rsStateVariableFilter2<Real, Real>;
   using SSF     = rsStateSpaceFilter<Real>;
 
 

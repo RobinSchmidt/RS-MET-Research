@@ -15255,6 +15255,8 @@ template<class T>
 void directFormToStateSpace(std::vector<T> b, std::vector<T> a,
   rsMatrix<T>* A, rsMatrix<T>* B, rsMatrix<T>* C, rsMatrix<T>* D)
 {
+  using Vec = std::vector<T>;
+
   // Normalize to a[0] = 1:
   if(a[0] != T(1))
   {
@@ -15268,8 +15270,8 @@ void directFormToStateSpace(std::vector<T> b, std::vector<T> a,
 
   // Compute some intermediate variables:
   int N = b.size() - 1;     // Filter order
-  Real b0 = b[0];
-  Vec  beta(b.size());
+  T   b0 = b[0];
+  Vec beta(b.size());
   beta[0] = 0;              // Not used
   for(int k = 1; k < beta.size(); k++)
     beta[k] = b[k] - b0*a[k];
@@ -15316,6 +15318,7 @@ void testDirectFormToStateSpace()
   Vec y = rsFilter(b, a, x);
 
   // Compute SSF matrices:
+  /*
   int N = b.size() - 1;     // Filter order - rename to order
   Real b0 = b[0];
   Vec  beta(b.size());
@@ -15331,6 +15334,12 @@ void testDirectFormToStateSpace()
   for(int i = 1; i <= N; i++)
     C(0,i-1) = beta[i];
   D(0,0) = b0;
+  */
+
+
+  Mat A, B, C, D;
+  directFormToStateSpace(b, a, &A, &B, &C, &D);
+
 
   // Create, set up and apply an SSF:
   SSF ssf;

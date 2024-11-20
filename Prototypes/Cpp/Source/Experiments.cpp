@@ -15208,6 +15208,23 @@ void testStateSpaceSVF()
   // - Add modulation tests for SVF, SSF, DF1, DF2, TDF1, TDF2
 }
 
+template<class T>
+std::vector<T> rsFilter(const std::vector<T>& b, const std::vector<T>& a, const std::vector<T>& x)
+{
+  int numSamples = (int) x.size();
+  std::vector<T> y(numSamples);
+  RAPT::rsArrayTools::filter(&x[0], numSamples, &y[0], numSamples, 
+                             &b[0], b.size()-1, &a[0], a.size()-1);
+  return y;
+
+  // ToDo:
+  //
+  // - Have an optional parameter outputLength taht allows the use to specify hwo long the output
+  //   signal should be to allow for ring out.
+  //
+  // - Catch edge cases like empty b and/or a
+}
+
 void testDirectFormToStateSpace()
 {
   // See JOS - Filters, page 351.
@@ -15244,8 +15261,9 @@ void testDirectFormToStateSpace()
 
   int numSamples = 100;
   Vec x = createNoise(numSamples, -1.0, +1.0, 0);
-  Vec y(numSamples);
-  RAPT::rsArrayTools::filter(&x[0], numSamples, &y[0], numSamples, &b[0], N, &a[0], N);
+  Vec y = rsFilter(b, a, x);
+  //Vec y(numSamples);
+  //RAPT::rsArrayTools::filter(&x[0], numSamples, &y[0], numSamples, &b[0], N, &a[0], N);
   // ToDo: factor out a convenience function that we can call like in MatLab:
   // Vec y = rsFilter(x, b, a);
 

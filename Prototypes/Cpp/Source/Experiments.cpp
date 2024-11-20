@@ -15219,7 +15219,7 @@ std::vector<T> rsFilter(const std::vector<T>& b, const std::vector<T>& a, const 
 
   // ToDo:
   //
-  // - Have an optional parameter outputLength taht allows the use to specify hwo long the output
+  // - Have an optional parameter outputLength taht allows the use to specify how long the output
   //   signal should be to allow for ring out.
   //
   // - Catch edge cases like empty b and/or a.
@@ -15229,79 +15229,6 @@ std::vector<T> rsFilter(const std::vector<T>& b, const std::vector<T>& a, const 
   // - When all is nice, move to library.
   //
   // - Add documentation. It works like filter() in MatLab or SciPy.
-}
-
-
-template<class T>
-void rsZeroPadToSameSize(std::vector<T>& b, std::vector<T>& a)
-{
-  size_t Na = a.size();
-  size_t Nb = b.size();
-  if(Na > Nb)
-    b.resize(Na, T(0));
-  else if(Nb > Na)
-    a.resize(Nb, T(0));
-
-  // ToDo:
-  //
-  // - [Done] Make sure that resize() really initializes the tail with all zeros. Can we really 
-  //   rely on that? Maybe it's implementation dependent? The spec says that additional elements
-  //   are "default inserted":
-  //   https://en.cppreference.com/w/cpp/container/vector/resize
-  //   Maybe we should just pass T(0) as second parameter to be sure. ...Done!
-}
-
-template<class T>
-void directFormToStateSpace(std::vector<T> b, std::vector<T> a,
-  rsMatrix<T>* A, rsMatrix<T>* B, rsMatrix<T>* C, rsMatrix<T>* D)
-{
-  using Vec = std::vector<T>;
-
-  // Normalize to a[0] = 1:
-  if(a[0] != T(1))
-  {
-    T s = T(1) / a[0];
-    rsScale(b, s);
-    rsScale(a, s);
-  }
-
-  // Zero-pad the shorter array, if needed:
-  rsZeroPadToSameSize(b, a);
-
-  // Compute some intermediate variables:
-  int N = b.size() - 1;     // Filter order
-  T   b0 = b[0];
-  Vec beta(b.size());
-  beta[0] = 0;              // Not used
-  for(int k = 1; k < beta.size(); k++)
-    beta[k] = b[k] - b0*a[k];
-
-  // Compute SSF matrices:
-  A->setShape(N,N); A->setToZero(b0);
-  B->setShape(N,1); B->setToZero(b0);
-  C->setShape(1,N); C->setToZero(b0);
-  D->setShape(1,1); D->setToZero(b0);
-  for(int i = 1; i <= N; i++)
-    (*A)(0,i-1) = -a[i];
-  for(int i = 1; i < N; i++)
-    (*A)(i,i-1) = 1;
-  (*B)(0,0) = 1;
-  for(int i = 1; i <= N; i++)
-    (*C)(0,i-1) = beta[i];
-  (*D)(0,0) = b0;
-
-
-  // Notes and ToDo:
-  //
-  // - The formulas are taken from Julius Smith's book about filters, page 351.
-  //
-  // - We deliberately pass b,a by value rather than by const reference because we may modify 
-  //   them here.
-  //
-  // - Maybe try to avoid creation of the beta array. We can use the formula directly in the
-  //   loop that assigns the C-matrix.
-  //
-  // - Move function to main repo near stateVariableToStateSpace
 }
 
 void testDirectFormToStateSpace()
@@ -15346,16 +15273,12 @@ void testDirectFormToStateSpace()
 
 void testStateSpaceFilters()
 {
-  testDirectFormToStateSpace();   // Only for development
-
-
+  testDirectFormToStateSpace();     // Only for development
 
   testStateSpaceFilterExamples();
   testStateSpaceSVF();
   testDirectFormToStateSpace();
 }
-
-
 
 void test2x2Matrices1()
 {

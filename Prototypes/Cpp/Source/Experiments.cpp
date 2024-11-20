@@ -15253,7 +15253,7 @@ void testStateSpaceSVF()
 
 void testStateSpaceFilters()
 {
-  //testStateSpaceFilterExamples();
+  testStateSpaceFilterExamples();
   testStateSpaceSVF();
 }
 

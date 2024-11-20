@@ -15082,49 +15082,6 @@ void testStateSpaceFilterExamples()
   int dummy = 0;
 }
 
-
-template<class T>
-void stateVariableToStateSpace(T g, T c, T s, 
-  rsMatrixView<T>* A, rsMatrixView<T>* B, rsMatrixView<T>* C, rsMatrixView<T>* D)
-{
-  T gs  = g*s;
-  T ggs = g*gs;
-
-  // 2x2 state transition matrix:
-  rsAssert(A->hasShape(2,2));
-  (*A)(0,0) =  1  -2*gs*c;
-  (*A)(0,1) =     -2*gs;
-  (*A)(1,0) =  2*g-2*ggs*c;
-  (*A)(1,1) =  1  -2*ggs;
-
-  // 2x1 input matrix:
-  rsAssert(B->hasShape(2,1));
-  (*B)(0,0) =  2*gs;
-  (*B)(1,0) =  2*ggs;
-
-  // 3x2 output matrix:
-  rsAssert(C->hasShape(3,2));
-  (*C)(0,0) = -s*c;
-  (*C)(0,1) = -s;
-  (*C)(1,0) = 1-gs*c;
-  (*C)(1,1) =  -gs;
-  (*C)(2,0) = g-ggs*c;
-  (*C)(2,1) = 1-ggs;
-
-  // 3x1 feedaround matrix:
-  rsAssert(D->hasShape(3,1));
-  (*D)(0,0) =   s;
-  (*D)(1,0) =  gs;
-  (*D)(2,0) = ggs;
-
-  // The state space formulation matrices are given by:
-  //
-  //                                             [-sc      -s  ]      [s  ]
-  //    A =  [1-2gsc     -2gs ], B = [2gs ], C = [1-gsc    -gs ], D = [gs ]
-  //         [2g-2ggsc  1-2ggs]      [2ggs]      [g-ggsc  1-ggs]      [ggs]
-}
-
-
 void testStateSpaceSVF()
 {
   // We convert the state variable filter (SVF) in state space form. In general, the difference 

@@ -15291,19 +15291,21 @@ void directFormToStateSpace(std::vector<T> b, std::vector<T> a,
   (*D)(0,0) = b0;
 
 
-  // Notes and ToDo: 
+  // Notes and ToDo:
+  //
+  // - The formulas are taken from Julius Smith's book about filters, page 351.
   //
   // - We deliberately pass b,a by value rather than by const reference because we may modify 
   //   them here.
   //
   // - Maybe try to avoid creation of the beta array. We can use the formula directly in the
-  //   loop that assigns the C-matrix
+  //   loop that assigns the C-matrix.
+  //
+  // - Move function to main repo near stateVariableToStateSpace
 }
 
 void testDirectFormToStateSpace()
 {
-  // See JOS - Filters, page 351.
-
   int numSamples = 300;
 
   using Real    = double;
@@ -15318,28 +15320,8 @@ void testDirectFormToStateSpace()
   Vec y = rsFilter(b, a, x);
 
   // Compute SSF matrices:
-  /*
-  int N = b.size() - 1;     // Filter order - rename to order
-  Real b0 = b[0];
-  Vec  beta(b.size());
-  beta[0] = 0;              // Not used
-  for(int k = 1; k < beta.size(); k++)
-    beta[k] = b[k] - b0*a[k];
-  Mat A(N,N), B(N,1), C(1,N), D(1,1);
-  for(int i = 1; i <= N; i++)
-    A(0,i-1) = -a[i];
-  for(int i = 1; i < N; i++)
-    A(i,i-1) = 1;
-  B(0,0) = 1;
-  for(int i = 1; i <= N; i++)
-    C(0,i-1) = beta[i];
-  D(0,0) = b0;
-  */
-
-
   Mat A, B, C, D;
   directFormToStateSpace(b, a, &A, &B, &C, &D);
-
 
   // Create, set up and apply an SSF:
   SSF ssf;
@@ -15360,16 +15342,6 @@ void testDirectFormToStateSpace()
   bool ok = true;
   ok &= rsIsCloseTo(z, y, 1.e-14);
   rsAssert(ok);
-
-
-  // ToDo:
-  //
-  // - If a[0] != 1, we first need to normalize the coeffs by dividing them all by a[0]
-  //
-  // - If a,b are of different length, the shorter of the two needs to be zero padded. Maybe
-  //   introduce a convenience function for that: rsZeroPadToSameLength(a, b)
-  //
-  // - Factor out a function directFormToStateSpace similar to stateVariableToStateSpace
 }
 
 void testStateSpaceFilters()

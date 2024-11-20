@@ -15222,31 +15222,39 @@ std::vector<T> rsFilter(const std::vector<T>& b, const std::vector<T>& a, const 
   // - Have an optional parameter outputLength taht allows the use to specify hwo long the output
   //   signal should be to allow for ring out.
   //
-  // - Catch edge cases like empty b and/or a
+  // - Catch edge cases like empty b and/or a.
+  //
+  // - Implement unit tests that test various edge cases.
+  //
+  // - When all is nice, move to library.
+  //
+  // - Add documentation. It works like filter() in MatLab or SciPy.
 }
 
 void testDirectFormToStateSpace()
 {
   // See JOS - Filters, page 351.
 
+  int numSamples = 300;
+
   using Real    = double;
   using Vec     = std::vector<Real>;
   using Mat     = rsMatrix<Real>;
   using SSF     = rsStateSpaceFilter<Real>;
 
-
+  // Define direct form filter coeff arrays and apply the filter to a noise test signal:
   Vec b({2, 5,   1,  -3,   -2  });
   Vec a({1,-0.3,-0.2, 0.4, -0.1});
+  Vec x = createNoise(numSamples, -1.0, +1.0, 0);
+  Vec y = rsFilter(b, a, x);
 
-  //int N = b.size() + 1;
-  int N = b.size() - 1;     // Filter order
-
+  // Compute SSF matrices:
+  int N = b.size() - 1;     // Filter order - rename to order
   Real b0 = b[0];
   Vec  beta(b.size());
   beta[0] = 0;              // Not used
   for(int k = 1; k < beta.size(); k++)
     beta[k] = b[k] - b0*a[k];
-
   Mat A(N,N), B(N,1), C(1,N), D(1,1);
   for(int i = 1; i <= N; i++)
     A(0,i-1) = -a[i];
@@ -15257,16 +15265,7 @@ void testDirectFormToStateSpace()
     C(0,i-1) = beta[i];
   D(0,0) = b0;
 
-
-
-  int numSamples = 100;
-  Vec x = createNoise(numSamples, -1.0, +1.0, 0);
-  Vec y = rsFilter(b, a, x);
-  //Vec y(numSamples);
-  //RAPT::rsArrayTools::filter(&x[0], numSamples, &y[0], numSamples, &b[0], N, &a[0], N);
-  // ToDo: factor out a convenience function that we can call like in MatLab:
-  // Vec y = rsFilter(x, b, a);
-
+  // Create, set up and apply an SSF:
   SSF ssf;
   ssf.setup(A,B,C,D);
   Vec z(numSamples);
@@ -15278,9 +15277,10 @@ void testDirectFormToStateSpace()
     z[n]  = outs[0];
   }
 
-  rsPlotVectors(y, z);
 
 
+  // Plot outputs of DF and SSF filters:
+  rsPlotVectors(y, z);  // Yep - the match!
 
 
   int dummy = 0;
@@ -15291,6 +15291,8 @@ void testDirectFormToStateSpace()
   // - If a,b are of different length, the shorter of the two needs to be zero padded.
   //
   // - If a[0] != 1, we first need to normalize the coeffs by dividing them all by a[0]
+  //
+  // - Add a unit-test ok variable and use it to check if y and z match
 }
 
 void testStateSpaceFilters()

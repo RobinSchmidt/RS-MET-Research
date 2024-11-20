@@ -15249,7 +15249,18 @@ void testDirectFormToStateSpace()
   // ToDo: factor out a convenience function that we can call like in MatLab:
   // Vec y = rsFilter(x, b, a);
 
-  rsPlotVectors(y);
+  SSF ssf;
+  ssf.setup(A,B,C,D);
+  Vec z(numSamples);
+  Real ins[1], outs[1];
+  for(int n = 0; n < numSamples; n++)
+  {
+    ins[0] = x[n];
+    ssf.processFrame(ins, outs);
+    z[n]  = outs[0];
+  }
+
+  rsPlotVectors(y, z);
 
 
 

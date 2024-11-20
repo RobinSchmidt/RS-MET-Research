@@ -15233,9 +15233,24 @@ void testDirectFormToStateSpace()
   Mat A(N,N), B(N,1), C(1,N), D(1,1);
   for(int i = 1; i <= N; i++)
     A(0,i-1) = -a[i];
-
-  for(int i = 1; i <= N; i++)
+  for(int i = 1; i < N; i++)
     A(i,i-1) = 1;
+  B(0,0) = 1;
+  for(int i = 1; i <= N; i++)
+    C(0,i-1) = beta[i];
+  D(0,0) = b0;
+
+
+
+  int numSamples = 100;
+  Vec x = createNoise(numSamples, -1.0, +1.0, 0);
+  Vec y(numSamples);
+  RAPT::rsArrayTools::filter(&x[0], numSamples, &y[0], numSamples, &b[0], N, &a[0], N);
+  // ToDo: factor out a convenience function that we can call like in MatLab:
+  // Vec y = rsFilter(x, b, a);
+
+  rsPlotVectors(y);
+
 
 
 

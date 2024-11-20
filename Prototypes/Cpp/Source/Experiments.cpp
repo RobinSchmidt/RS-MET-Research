@@ -15208,10 +15208,56 @@ void testStateSpaceSVF()
   // - Add modulation tests for SVF, SSF, DF1, DF2, TDF1, TDF2
 }
 
+void testDirectFormToStateSpace()
+{
+  // See JOS - Filters, page 351.
+
+  using Real    = double;
+  using Vec     = std::vector<Real>;
+  using Mat     = rsMatrix<Real>;
+  using SSF     = rsStateSpaceFilter<Real>;
+
+
+  Vec b({2, 5,   1,  -3,   -2  });
+  Vec a({1,-0.3,-0.2, 0.4, -0.1});
+
+  //int N = b.size() + 1;
+  int N = b.size() - 1;     // Filter order
+
+  Real b0 = b[0];
+  Vec  beta(b.size());
+  beta[0] = 0;              // Not used
+  for(int k = 1; k < beta.size(); k++)
+    beta[k] = b[k] - b0*a[k];
+
+  Mat A(N,N), B(N,1), C(1,N), D(1,1);
+  for(int i = 1; i <= N; i++)
+    A(0,i-1) = -a[i];
+
+  for(int i = 1; i <= N; i++)
+    A(i,i-1) = 1;
+
+
+
+  int dummy = 0;
+
+
+  // ToDo:
+  //
+  // - If a,b are of different length, the shorter of the two needs to be zero padded.
+  //
+  // - If a[0] != 1, we first need to normalize the coeffs by dividing them all by a[0]
+}
+
 void testStateSpaceFilters()
 {
+  testDirectFormToStateSpace();   // Only for development
+
+
+
   testStateSpaceFilterExamples();
   testStateSpaceSVF();
+  testDirectFormToStateSpace();
 }
 
 

@@ -15082,7 +15082,7 @@ void testStateSpaceFilterExamples()
   int dummy = 0;
 }
 
-void testStateSpaceSVF()
+void testStateSpaceFromSVF()
 {
   // We convert the state variable filter (SVF) in state space form. In general, the difference 
   // equation of a digital filter in state space form is given by:
@@ -15231,8 +15231,10 @@ std::vector<T> rsFilter(const std::vector<T>& b, const std::vector<T>& a, const 
   // - Add documentation. It works like filter() in MatLab or SciPy.
 }
 
-void testDirectFormToStateSpace()
+void testStateSpaceFromDF()
 {
+  // We test the conversion between a direct form filter and a state space formulation.
+
   int numSamples = 300;
 
   using Real    = double;
@@ -15273,11 +15275,9 @@ void testDirectFormToStateSpace()
 
 void testStateSpaceFilters()
 {
-  testDirectFormToStateSpace();     // Only for development
-
   testStateSpaceFilterExamples();
-  testStateSpaceSVF();
-  testDirectFormToStateSpace();
+  testStateSpaceFromSVF();
+  testStateSpaceFromDF();
 }
 
 void test2x2Matrices1()

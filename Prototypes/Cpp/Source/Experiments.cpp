@@ -15211,15 +15211,14 @@ void testStateSpaceFromSVF()
 template<class T>
 std::vector<T> rsFilter(const std::vector<T>& b, const std::vector<T>& a, const std::vector<T>& x)
 {
-  int numSamples = (int) x.size();
-  std::vector<T> y(numSamples);
-  RAPT::rsArrayTools::filter(&x[0], numSamples, &y[0], numSamples, 
-                             &b[0], b.size()-1, &a[0], a.size()-1);
+  int N = (int) x.size();
+  std::vector<T> y(N);
+  RAPT::rsArrayTools::filter(&x[0], N, &y[0], N, &b[0], b.size()-1, &a[0], a.size()-1);
   return y;
 
   // ToDo:
   //
-  // - Have an optional parameter outputLength taht allows the use to specify how long the output
+  // - Have an optional parameter outputLength that allows the use to specify how long the output
   //   signal should be to allow for ring out.
   //
   // - Catch edge cases like empty b and/or a.
@@ -15237,14 +15236,14 @@ void testStateSpaceFromDF()
 
   int numSamples = 300;
 
-  using Real    = double;
-  using Vec     = std::vector<Real>;
-  using Mat     = rsMatrix<Real>;
-  using SSF     = rsStateSpaceFilter<Real>;
+  using Real = double;
+  using Vec  = std::vector<Real>;
+  using Mat  = rsMatrix<Real>;
+  using SSF  = rsStateSpaceFilter<Real>;
 
   // Define direct form filter coeff arrays and apply the filter to a noise test signal:
-  Vec b({2, 5,   1,  -3,   -2  });
-  Vec a({1,-0.3,-0.2, 0.4, -0.1});
+  Vec b({ 2,  5,    1,  -3,   -2   });
+  Vec a({ 1, -0.3, -0.2, 0.4, -0.1 });
   Vec x = createNoise(numSamples, -1.0, +1.0, 0);
   Vec y = rsFilter(b, a, x);
 
@@ -15265,16 +15264,21 @@ void testStateSpaceFromDF()
   }
 
   // Plot outputs of DF and SSF filters:
-  rsPlotVectors(y, z);  // Yep - they match!
+  //rsPlotVectors(y, z);  // Yep - they match!
 
   // Check the match programmatically:
   bool ok = true;
   ok &= rsIsCloseTo(z, y, 1.e-14);
   rsAssert(ok);
+
+  // ToDo:
+  //
+  // - Make unit tests. Cover edge cases like empty a- and/or b-array etc.
 }
 
 void testStateSpaceFilters()
 {
+  //testStateSpaceFromDF();
   testStateSpaceFilterExamples();
   testStateSpaceFromSVF();
   testStateSpaceFromDF();

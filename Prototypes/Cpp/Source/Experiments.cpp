@@ -15213,7 +15213,18 @@ std::vector<T> rsFilter(const std::vector<T>& b, const std::vector<T>& a, const 
 {
   int N = (int) x.size();
   std::vector<T> y(N);
-  RAPT::rsArrayTools::filter(&x[0], N, &y[0], N, &b[0], b.size()-1, &a[0], a.size()-1);
+  if(a[0] == T(1))
+  {
+    // Filter coeffs are correctly normalized. We may use them as is:
+    RAPT::rsArrayTools::filter(&x[0], N, &y[0], N, &b[0], b.size()-1, &a[0], a.size()-1);
+  }
+  else
+  {
+    // We need to scale all the filter coeffs by 1/a[0]:
+    std::vector<T> A = a; rsScale(A, T(1)/a[0]);
+    std::vector<T> B = b; rsScale(B, T(1)/a[0]);
+    RAPT::rsArrayTools::filter(&x[0], N, &y[0], N, &B[0], B.size()-1, &A[0], A.size()-1);
+  }
   return y;
 
   // ToDo:
@@ -15243,7 +15254,7 @@ void testStateSpaceFromDF()
 
   // Define direct form filter coeff arrays and apply the filter to a noise test signal:
   Vec b({ 2,  5,    1,  -3,   -2   });
-  Vec a({ 1, -0.3, -0.2, 0.4, -0.1 });
+  Vec a({ 2, -0.3, -0.2, 0.4, -0.1 });
   Vec x = createNoise(numSamples, -1.0, +1.0, 0);
   Vec y = rsFilter(b, a, x);
 

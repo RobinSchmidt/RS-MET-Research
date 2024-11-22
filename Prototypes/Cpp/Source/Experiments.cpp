@@ -15253,8 +15253,8 @@ void testStateSpaceFromDF()
   using SSF  = rsStateSpaceFilter<Real>;
 
   // Define direct form filter coeff arrays and apply the filter to a noise test signal:
-  Vec b({ 2,  5,    1,  -3,   -2   });
-  Vec a({ 2, -0.3, -0.2, 0.4, -0.1 });
+  Vec b({ 2,  5  ,  1,   -3,   -2   });
+  Vec a({ 2, -0.3, -0.2,  0.4, -0.1 });
   Vec x = createNoise(numSamples, -1.0, +1.0, 0);
   Vec y = rsFilter(b, a, x);
 

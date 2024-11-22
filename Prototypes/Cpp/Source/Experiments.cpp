@@ -15264,21 +15264,26 @@ void testStateSpaceFromDF()
   }
 
   // Plot outputs of DF and SSF filters:
-  //rsPlotVectors(y, z);  // Yep - they match!
+  rsPlotVectors(y, z);  // Yep - they match!
 
   // Check the match programmatically:
   bool ok = true;
   ok &= rsIsCloseTo(z, y, 1.e-14);
   rsAssert(ok);
 
+
   // ToDo:
   //
-  // - Make unit tests. Cover edge cases like empty a- and/or b-array etc.
+  // - Make unit tests. Cover edge cases like empty a- and/or b-array etc. Also include tests with
+  //   a[0] != 1. At the moment, this test cas would fail but i think it is because our driect form
+  //   filter implementation can't handle that case correctly - so I don't think that the DF -> SSF
+  //   conversion is at fault.
 }
 
 void testStateSpaceFilters()
 {
-  //testStateSpaceFromDF();
+  testStateSpaceFromDF();
+
   testStateSpaceFilterExamples();
   testStateSpaceFromSVF();
   testStateSpaceFromDF();

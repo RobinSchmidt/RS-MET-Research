@@ -9399,6 +9399,47 @@ void testGeometricAlgebraNesting()
   //   from page 54 onwards, it talks about isomorphisms between different algebras
 }
 
+void eulersNumberViaPascalsTriangle()
+{
+  // If we define P(n) to be the product of the entries of the n-th row of Pascal's triangle and 
+  // consider the quantity  (P(n-1)*P(n+1)) / (P(n))^2  then this quantity converges to Euler's 
+  // number as n goes to infinity. See:  https://www.youtube.com/watch?v=6tuzas0GTQ0
+  // We check this here numerically.
+
+
+  // Create Pascal's triangle as rsMatrix (Maybe factor out into a library function):
+  int maxN = 15;
+  rsMatrix<rsUint64> T(maxN, maxN);
+  T(0,0) = 1;
+  for(int i = 1; i < maxN; i++)
+    rsNextPascalTriangleLine(T.getRowPointer(i-1), T.getRowPointer(i), i);
+
+
+  // Compute the products P(n) for each row:
+  std::vector<double> P(maxN);
+  for(int i = 0; i < maxN; i++)
+  {
+    P[i] = 1.0;
+    for(int j = 0; j <= i; j++)
+      P[i] *= (double) T(i, j);
+  }
+
+  // Compute  E[n] = (P(n-1)*P(n+1)) / (P(n))^2  as the n-th approximation of Euler's number e:
+  std::vector<double> E(maxN);
+  for(int i = 1; i < maxN-1; i++)
+  {
+    E[i] = (P[i-1]*P[i+1]) / (P[i]*P[i]);
+  }
+
+
+
+  // Notes:
+  //
+  // - The numbers get big really quickly, so we reach integer overflow conditions already for 
+  //   moderate numbers n.
+
+}
+
 void testBellTriangle()
 {
   // Prototype implementation of this algorithm:

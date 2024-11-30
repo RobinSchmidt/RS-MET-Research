@@ -66,6 +66,15 @@
 
 % Bias/variance, maximum likelihood
 
+% Explain why estimating the variance uses a division by N-1 rather than N when using an estimated 
+% mean. Maybe use an example with just two data points x1 = 2, x2 = 6. The estimated mean is 
+% (2+6)/2 = 4 and the estimated variance is ((2-4)^2 + (6-4)^2) / (2-1) = (2^2 + 2^2) / 1 = 8 with
+% the formula using N-1 and it's 4 with the formula using N.
+
+% https://en.wikipedia.org/wiki/Variance#Unbiased_sample_variance
+% https://en.wikipedia.org/wiki/Bessel%27s_correction
+% https://en.wikipedia.org/wiki/Bessel%27s_correction#Source_of_bias
+
 
 %===================================================================================================
 \subsection{Hypothesis Testing}

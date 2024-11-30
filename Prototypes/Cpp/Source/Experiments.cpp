@@ -9407,13 +9407,14 @@ void eulersNumberViaPascalsTriangle()
   // We check this here numerically.
 
 
+  // Setup:
+  int maxN = 15;  // Number of rows to generate in Pascal's triangle
+
   // Create Pascal's triangle as rsMatrix (Maybe factor out into a library function):
-  int maxN = 15;
   rsMatrix<rsUint64> T(maxN, maxN);
   T(0,0) = 1;
   for(int i = 1; i < maxN; i++)
     rsNextPascalTriangleLine(T.getRowPointer(i-1), T.getRowPointer(i), i);
-
 
   // Compute the products P(n) for each row:
   std::vector<double> P(maxN);
@@ -9432,12 +9433,15 @@ void eulersNumberViaPascalsTriangle()
   }
 
 
-
   // Notes:
   //
-  // - The numbers get big really quickly, so we reach integer overflow conditions already for 
-  //   moderate numbers n.
-
+  // - The numbers in P get big really quickly, so we reach integer overflow conditions already for
+  //   moderate numbers n. That's why we use double rather than rsInt64 for the P array. E needs to
+  //   be real valued anyway - or at least rational. We are getting rational approximations.
+  //
+  // - It looks plausible that E[n] could converge to e as n -> inf. But the convergence seems to 
+  //   be rather slow. We may have erroneous values due to floating point roundoff errors as well. 
+  //   To do it properly, we should use rational numbers with big integers. 
 }
 
 void testBellTriangle()

@@ -1,7 +1,7 @@
 \chapter{Category Theory}
 % Maybe make that a chapter in the structural math part
 
-Category theory is an area of math that attempts to structure and organize mathematics itself. This section here is meant to only give a very superficial birds eye overview. Category theory has been called the "mathematics of mathematics" and - less charitably - as "abstract nonsense". Its relation to set theory has been compared to that of higher level programming languages to machine code. Category theory describes a given field of mathematics in terms of a so called \emph{category}. Such a category consists of a class of \emph{objects} and relationships between those objects, called \emph{morphisms}. You can picture the objects as nodes (as in a multigraph, see [REF needed to Graph Theory section]) and the morphisms as directed edges, depicted as arrows. Morphisms are also sometimes called arrows. The category must also have a notion of composing morphisms. When there's an arrow from node $A$ to node $B$ and another arrow from node $B$ to node $C$ then this induces an arrow from node $A$ to node $C$. This sort of \emph{composition} of morphisms into other morphisms can be pictured as traversing a path in the multigraph. The composition of morphisms must be associative. As final ingredient for a category, we need for each node a special kind of morphism, called an \emph{identity}. An identity is a morphism/arrow that goes from a node $A$ to itself and is meant to convey an abstraction of the idea of an identity function - a sort of neutral element in the realm of morphisms.
+Category theory is an area of math that attempts to structure and organize mathematics itself. This section here is meant to only give a very superficial birds eye overview. Category theory has been called the "mathematics of mathematics" and - less charitably - as "abstract nonsense". Its relation to set theory has been compared to that of higher level programming languages to machine code. Category theory describes a given field of mathematics in terms of a so called \emph{category}. Such a category consists of a class of \emph{objects} and relationships between those objects, called \emph{morphisms}. You can picture the objects as nodes (as in a multigraph, see [REF needed to Graph Theory section]) and the morphisms as directed edges, depicted as arrows. Morphisms are also sometimes called \emph{arrows}. The category must also have a notion of composing morphisms. When there's an arrow from node $A$ to node $B$ and another arrow from node $B$ to node $C$ then this induces an arrow from node $A$ to node $C$. This sort of \emph{composition} of morphisms into other morphisms can be pictured as traversing a path in the multigraph. The composition of morphisms must be associative. As final ingredient for a category, we need for each node a special kind of morphism, called an \emph{identity}. An identity is a morphism/arrow that goes from a node $A$ to itself and is meant to convey an abstraction of the idea of an identity function - a sort of neutral element in the realm of morphisms.
 %ToDo: composition (-> paths), identites (-> loopy edges)
 
 % https://en.wikipedia.org/wiki/Multigraph
@@ -17,48 +17,58 @@ Abstracting the idea of bijective functions to a more general setting in which t
 
 
 
+\begin{comment}
 
-% https://www.youtube.com/watch?v=H0Ek86IH-3Y
-% Initial objects have arrow to all objects, terminal object arrows from all objects
+https://www.youtube.com/watch?v=H0Ek86IH-3Y
+Initial objects have arrow to all objects, terminal object arrows from all objects
 
-% endomorphism, automorphism, homomorphism - the set of morphisms is also sometimes called "Hom" - why?
+endomorphism, automorphism, homomorphism - the set of morphisms is also sometimes called "Hom" - why?
 
-%ToDo: 
-%-explain the categorical analogs of injective and surjective functions (mono- and epimorphisms)
-% -explain why the definitions of mono- and epimorphisms work, i.e. capture the desired idea
-% -reverse the implications: g != h  ->  g°f != h°f etc. and draw pictures where g != h and show how that implies the RHS
-%-give other examples of categories: FinSet, Grp, Vect, deductive systems, Graph
-%-explain subcategories in this context - many other examples actually are subcategories of Set
-%-examplin categorical products and coproducts
-%-explain functors, natural transformations
+ToDo: 
+-explain the categorical analogs of injective and surjective functions (mono- and epimorphisms)
+ -explain why the definitions of mono- and epimorphisms work, i.e. capture the desired idea
+ -reverse the implications: g != h  ->  g°f != h°f etc. and draw pictures where g != h and show how that implies the RHS
+-give other examples of categories: FinSet, Grp, Vect, deductive systems, Graph
+-explain subcategories in this context - many other examples actually are subcategories of Set
+-examplin categorical products and coproducts
+-explain functors, natural transformations
 
-% https://en.wikipedia.org/wiki/Category_theory
-% https://plato.stanford.edu/entries/category-theory/#Exam
+https://en.wikipedia.org/wiki/Category_theory
+https://plato.stanford.edu/entries/category-theory/#Exam
 
-% https://www.youtube.com/watch?v=SmXB2K_5lcA  Category Theory for Programmers: Chapter 1 - Category
+https://www.youtube.com/watch?v=SmXB2K_5lcA  Category Theory for Programmers: Chapter 1 - Category
 
-% https://www.youtube.com/watch?v=1TvNeFLGMrE  Abstrakter Unsinn? Was ist Kategorientheorie?
+https://www.youtube.com/watch?v=1TvNeFLGMrE  Abstrakter Unsinn? Was ist Kategorientheorie?
 
-% https://math.jhu.edu/~eriehl/context.pdf
+https://math.jhu.edu/~eriehl/context.pdf
 
-% https://texample.net/tikz/examples/tag/diagrams/
-% https://texample.net/tikz/examples/labeled-chain/
+https://texample.net/tikz/examples/tag/diagrams/
+https://texample.net/tikz/examples/labeled-chain/
 
-% The Mathematician's Weapon | An Introduction to Category Theory, Abstraction and Algebra
-%https://www.youtube.com/watch?v=FQYOpD7tv30
-% "Category theory is the abstraction of composition"
-% has some nice examples of categories
-% https://www.youtube.com/watch?v=5Ykrfqrxc8o&list=PLoCKNPo3VR0I2wqT2wemCNIlpjdy_Ry_q&index=2
-% https://www.youtube.com/watch?v=DrldYpmwN5s
+The Mathematician's Weapon | An Introduction to Category Theory, Abstraction and Algebra
+https://www.youtube.com/watch?v=FQYOpD7tv30
+ "Category theory is the abstraction of composition"
+ has some nice examples of categories
+ https://www.youtube.com/watch?v=5Ykrfqrxc8o&list=PLoCKNPo3VR0I2wqT2wemCNIlpjdy_Ry_q&index=2
+ https://www.youtube.com/watch?v=DrldYpmwN5s
 
-% Maybe draw a diagram for Set with some example objects (sets) and arrows (functions)
-% Q\{0} x Q  ->  Q:  (a,b) -> a/b
-% R  ->  {0,1}:  a -> 1, if a rational, 0 otherwise 
+Maybe draw a diagram for Set with some example objects (sets) and arrows (functions)
+Q\{0} x Q  ->  Q:  (a,b) -> a/b
+R  ->  {0,1}:  a -> 1, if a rational, 0 otherwise 
 
-%\medskip 
-%Of course, there's much more to say about category theory but this very brief overview shall suffice for a book that attempts to focus on applied math.
+\medskip 
+Of course, there's much more to say about category theory but this very brief overview shall suffice for a book that attempts to focus on applied math.
 
 
-% The First Real Application of Category Theory #SoME3
-% https://www.youtube.com/watch?v=Njx2ed8RGis
+The First Real Application of Category Theory #SoME3
+https://www.youtube.com/watch?v=Njx2ed8RGis
+
+Universal Construction | Category Theory and Why We Care
+https://www.youtube.com/watch?v=HJ9-yvZ-Toc
+-Terminal objects correspond to singleton sets. There's exactly one possible arrow from
+ any object in the category to the terminal object.
+
+
+\end{comment}
+
 

@@ -14432,6 +14432,13 @@ void testAttractorChaoticRotor()
   // need at least 3 dimensions, so we start with 3D rotations. in 3D, we have 3 possible rotation
   // axes, so we can define 3 independent rotation frequencies. ...TBC...
 
+  // I think, to get the rotations, we need to look into how infinitesimal rotations work. Assume
+  // that we have a position vector r = (x,y,z) and w vector of angular velocities w = (wx,wx,wz).
+  // I think, we then have r' = cross(r,w), i.e. the time derivative of the vector r is given by
+  // the cross product of r with the angular velocity vector. Yes - see 
+  // "Thomsen - Ein Jahr für die Physik", page 8. But it says: v = cross(w, r)
+  // 
+
 
   int dummy = 0;
 
@@ -14439,8 +14446,11 @@ void testAttractorChaoticRotor()
   //
   // https://en.wikipedia.org/wiki/Rotation_matrix
   // https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions
+  // https://en.wikipedia.org/wiki/Infinitesimal_rotation_matrix
   // https://rotations.berkeley.edu/infinitesimal-rotations/
   // https://mathworld.wolfram.com/InfinitesimalRotation.html
+  // https://sites.astro.caltech.edu/~golwala/ph125ab/ph106ab_notes_sec5.1.pdf
+  // https://www.feynmanlectures.caltech.edu/I_20.html
 }
 
 void testAttractors()

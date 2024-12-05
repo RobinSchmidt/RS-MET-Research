@@ -891,6 +891,9 @@ protected:
 class ChaoticRotor : public Rotor
 {
 
+  // Hmm - so far, I've not yet found any parameter setup that leads to chaotic behavior. It always
+  // seems to be either quasi-periodic or run into a fixed point.
+
 public:
 
 
@@ -899,16 +902,23 @@ public:
     calcRotationTerms();
 
     // Chaos parameters:
-    double a = -12.5;
-    double b =   0.0;
+    double a =  -14.0;
+    double b =   -5.0;
+    double c = -200.0;
+    double d =   20.0;
+
+    // Interesting settings:
+    // (-12.5,0,0,0),(-14,2,-100,0),(-14,2,-200,20)
 
     // Apply nonlinear terms:
-    dx += a*y*z + b*x*x;
-    dy += a*x*z + b*y*y;
-    dz += a*x*y + b*z*z;
+    dx += a*y*z + b*x*x + c*x*y*z + d*x*x*x;
+    dy += a*x*z + b*y*y + c*x*y*z + d*y*y*y;
+    dz += a*x*y + b*z*z + c*x*y*z + d*z*z*z;
 
     updatePosition();
     renormalize();
+
+    // Without renormalization, it explodes
   }
 
 

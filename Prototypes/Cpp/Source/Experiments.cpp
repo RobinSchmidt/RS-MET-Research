@@ -14447,7 +14447,8 @@ void testAttractorChaoticRotor()
   double frequency  = 100;    // Sort of a pseudo-frequency of the generator
 
   // Set up the object:
-  Rotor att;
+  //Rotor att;
+  ChaoticRotor att;
   att.reset();
   att.setSampleRate(oversample * sampleRate);
   att.setFrequency(frequency);

@@ -834,15 +834,15 @@ public:
     calcRotationTerms();
 
     // Check that v = (dx,dy,dz) is orthogonal to r = (x,y,z):
-    double c = x*dx + y*dy + z*dz;  
+    double c = x*dx + y*dy + z*dz;
     // This should be (close to) zero. If it turns out that this doesn't work well due to numerical
     // errors, one trick could be to orthogonalize it. I think, this can be done by computing the 
     // projection of v onto r and subtract that from v - or something. Like in Gram-Schmidt 
     // orthogonalization - but just for one vector.
 
-    x += h * dx;
-    y += h * dy;
-    z += h * dz;
+
+    updatePosition();
+
 
     // As a cheap trick, we renormalize r to ensure that we really did a pure rotation:
     renormalize();
@@ -858,6 +858,13 @@ public:
 
 protected:
 
+
+  void updatePosition()
+  {
+    x += h * dx;
+    y += h * dy;
+    z += h * dz;
+  }
 
   void calcRotationTerms()
   {
@@ -885,6 +892,25 @@ class ChaoticRotor : public Rotor
 {
 
 public:
+
+
+  void inc()
+  {
+    calcRotationTerms();
+
+    // Chaos parameters:
+    double a = -12.5;
+    double b =   0.0;
+
+    // Apply nonlinear terms:
+    dx += a*y*z + b*x*x;
+    dy += a*x*z + b*y*y;
+    dz += a*x*y + b*z*z;
+
+    updatePosition();
+    renormalize();
+  }
+
 
 
 

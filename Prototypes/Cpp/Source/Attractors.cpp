@@ -830,13 +830,15 @@ public:
 
   void inc()
   {
+
+    // Maybe factor out into calcRotationTerms:
     double wx = C[0];
     double wy = C[1];
     double wz = C[2];
-
     dx = wy*z - wz*y;
     dy = wz*x - wx*z;
     dz = wx*y - wy*x;
+
 
     // Chack that v = (dx,dy,dz) is orthogonal to r = (x,y,z):
     double c = x*dx + y*dy + z*dz;  
@@ -851,13 +853,6 @@ public:
 
     // As a cheap trick, we renormalize r to ensure that we really did a pure rotation:
     renormalize();
-
-
-
-    //double L = sqrt(x*x + y*y + z*z);
-    //x /= L;
-    //y /= L;
-    //z /= L;
   }
 
   void reset()
@@ -872,12 +867,11 @@ protected:
 
   void renormalize()
   {
-    double L = sqrt(x*x + y*y + z*z);
-    x /= L;
-    y /= L;
-    z /= L;
+    double s = 1 / sqrt(x*x + y*y + z*z);
+    x *= s;
+    y *= s;
+    z *= s;
   }
-
 
 };
 

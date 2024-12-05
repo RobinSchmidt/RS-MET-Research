@@ -14439,6 +14439,19 @@ void testAttractorChaoticRotor()
   // "Thomsen - Ein Jahr für die Physik", page 8. But it says: v = cross(w, r)
   // 
 
+  int N = 200;   // Number of samples to produce
+
+  double wx = 0.2;
+  double wy = 0.3;
+  double wz = 0.5;
+
+
+  Rotor rotor;
+  rotor.setAngularVelocities(wx, wy, wz);
+
+
+
+
 
   int dummy = 0;
 

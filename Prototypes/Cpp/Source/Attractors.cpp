@@ -807,6 +807,58 @@ class HindenmarshRose : public Attractor // https://en.wikipedia.org/wiki/Hindma
 };
 
 
+//-------------------------------------------------------------------------------------------------
+// Here are my own ideas:
+
+class Rotor : public Attractor
+{
+
+public:
+
+  Rotor()
+  {
+    reset();
+  }
+
+  void setAngularVelocities(double wx, double wy, double wz)
+  {
+    this->wx = wx;
+    this->wy = wy;
+    this->wz = wz;
+  }
+
+  void inc()
+  {
+    dx = wy*z - wz*y;
+    dy = wz*x - wx*z;
+    dz = wx*y - wy*z;
+
+    x += h * dx;
+    y += h * dy;
+    z += h * dz;
+  }
+
+  void reset()
+  {
+    x = 1.0;
+    y = 0.0;
+    z = 0.0;
+  }
+
+protected:
+
+  //double  x,  y,  z;  // Coordinates
+
+  double wx, wy, wz;  // Angular velocities - maybe use inherited C-array to store these
+
+  //double h = 0.01;    // Step size
+
+};
+
+
+
+
+
 /*
 
 this video has a few more at 1:57

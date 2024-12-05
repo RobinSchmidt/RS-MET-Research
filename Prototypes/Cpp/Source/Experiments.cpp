@@ -14439,6 +14439,48 @@ void testAttractorChaoticRotor()
   // "Thomsen - Ein Jahr für die Physik", page 8. But it says: v = cross(w, r)
   // 
 
+
+  // Setup:
+  int    numSamples = 3000;   // Number of datapoints to generate
+  int    oversample = 10;     // Amount of oversampling for the ODE solver
+  double sampleRate = 44100;  // Output sample rate
+  double frequency  = 100;    // Sort of a pseudo-frequency of the generator
+
+  // Set up the object:
+  Rotor att;
+  att.reset();
+  att.setSampleRate(oversample * sampleRate);
+  att.setFrequency(frequency);
+  double h = att.getStepSize();
+  double H = h*oversample;
+
+  // Generate output:
+  using Vec = std::vector<double>;
+  int N = numSamples;
+  Vec t(N), x(N), y(N), z(N);
+  t[0] = 0;
+  x[0] = att.getX();
+  y[0] = att.getY();
+  z[0] = att.getZ();
+  for(int i = 1; i < N; i++)
+  {
+    for(int j = 1; j <= oversample; j++)
+    {
+      att.inc();
+    }
+    t[i] = t[i-1] + H;
+    x[i] = att.getX();
+    y[i] = att.getY();
+    z[i] = att.getZ();
+  }
+
+  // Plot results:
+  rsPlotVectorsXY(t, x, y, z);
+  rsPlotVectors3D(   x, y, z);
+
+
+
+  /*
   int N = 200;   // Number of samples to produce
 
   double wx = 0.2;
@@ -14448,12 +14490,20 @@ void testAttractorChaoticRotor()
 
   Rotor rotor;
   rotor.setAngularVelocities(wx, wy, wz);
+  */
 
 
 
 
 
   int dummy = 0;
+
+  // Observations:
+  //
+  // - The Euler method introduces a lot of numerical damping. We see spirals. Oversampling doesn't
+  //   seem to help. Why not? Or are the formulas still wrong? Wait! Maybe the w-vector needs to be 
+  //   normalized? If nothing helps, we may renormalize the x,y,z vector after each update step. But 
+  //   that is cheating.
 
   // See:
   //

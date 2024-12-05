@@ -836,21 +836,21 @@ public:
 
     // Chack that v = (dx,dy,dz) is orthogonal to r = (x,y,z):
     double c = x*dx + y*dy + z*dz;  
-    // This should be (close to) zero. It kinda is - but the deviation from zero grows over time. 
-    // Maybe we should orthogonalize it. I think, this can be done by computing the projection of v
-    // onto r and subtract that from v - or something. Like in Gram-Schmidt orthogonalization - but 
-    // just for one vector.
+    // This should be (close to) zero. If it turns out that this doesn't work well due to nuemrical
+    // errors, one trick could be to orthogonalize it. I think, this can be done by computing the 
+    // projection of v onto r and subtract that from v - or something. Like in Gram-Schmidt 
+    // orthogonalization - but just for one vector.
 
     x += h * dx;
     y += h * dy;
     z += h * dz;
 
-    // As a cheap trick, we renormalize r:
+
+    // As a cheap trick, we renormalize r to ensure that we really did a pure rotation:
     double L = sqrt(x*x + y*y + z*z);
-    //x /= L;
-    //y /= L;
-    //z /= L;
-    
+    x /= L;
+    y /= L;
+    z /= L;
   }
 
   void reset()
@@ -862,11 +862,7 @@ public:
 
 protected:
 
-  //double  x,  y,  z;  // Coordinates
-
   double wx, wy, wz;  // Angular velocities - maybe use inherited C-array to store these
-
-  //double h = 0.01;    // Step size
 
 };
 

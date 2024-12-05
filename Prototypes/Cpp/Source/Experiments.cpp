@@ -14442,7 +14442,7 @@ void testAttractorChaoticRotor()
 
   // Setup:
   int    numSamples = 3000;   // Number of datapoints to generate
-  int    oversample = 10;     // Amount of oversampling for the ODE solver
+  int    oversample = 1;      // Amount of oversampling for the ODE solver
   double sampleRate = 44100;  // Output sample rate
   double frequency  = 100;    // Sort of a pseudo-frequency of the generator
 
@@ -14480,14 +14480,14 @@ void testAttractorChaoticRotor()
 
   int dummy = 0;
 
+
   // Observations:
   //
-  // - The Euler method introduces a lot of numerical damping. We see spirals. Oversampling doesn't
-  //   seem to help. Why not? Or are the formulas still wrong? Wait! Maybe the w-vector needs to be 
-  //   normalized? If nothing helps, we may renormalize the x,y,z vector after each update step. But 
-  //   that is cheating.
+  // - Without oversampling, we see an outward spiral, i.e. numerical instability. It gets worse 
+  //   with higher frequencies.
   //
-  // - Maybe check, if the v-vector is orthogonal to r
+  // - Even with renormalization to unit length after each update step, we see some sort of drift.
+  //   
 
   // See:
   //

@@ -832,7 +832,7 @@ public:
   {
     dx = wy*z - wz*y;
     dy = wz*x - wx*z;
-    dz = wx*y - wy*z;
+    dz = wx*y - wy*x;
 
     // Chack that v = (dx,dy,dz) is orthogonal to r = (x,y,z):
     double c = x*dx + y*dy + z*dz;  
@@ -847,9 +847,9 @@ public:
 
     // As a cheap trick, we renormalize r:
     double L = sqrt(x*x + y*y + z*z);
-    x /= L;
-    y /= L;
-    z /= L;
+    //x /= L;
+    //y /= L;
+    //z /= L;
     
   }
 

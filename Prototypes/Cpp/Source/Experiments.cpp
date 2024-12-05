@@ -14478,24 +14478,6 @@ void testAttractorChaoticRotor()
   rsPlotVectorsXY(t, x, y, z);
   rsPlotVectors3D(   x, y, z);
 
-
-
-  /*
-  int N = 200;   // Number of samples to produce
-
-  double wx = 0.2;
-  double wy = 0.3;
-  double wz = 0.5;
-
-
-  Rotor rotor;
-  rotor.setAngularVelocities(wx, wy, wz);
-  */
-
-
-
-
-
   int dummy = 0;
 
   // Observations:

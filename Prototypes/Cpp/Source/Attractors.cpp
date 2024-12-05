@@ -830,19 +830,12 @@ public:
 
   void inc()
   {
+    // Assign dx,dy,dz with the contributions from the rotation:
+    calcRotationTerms();
 
-    // Maybe factor out into calcRotationTerms:
-    double wx = C[0];
-    double wy = C[1];
-    double wz = C[2];
-    dx = wy*z - wz*y;
-    dy = wz*x - wx*z;
-    dz = wx*y - wy*x;
-
-
-    // Chack that v = (dx,dy,dz) is orthogonal to r = (x,y,z):
+    // Check that v = (dx,dy,dz) is orthogonal to r = (x,y,z):
     double c = x*dx + y*dy + z*dz;  
-    // This should be (close to) zero. If it turns out that this doesn't work well due to nuemrical
+    // This should be (close to) zero. If it turns out that this doesn't work well due to numerical
     // errors, one trick could be to orthogonalize it. I think, this can be done by computing the 
     // projection of v onto r and subtract that from v - or something. Like in Gram-Schmidt 
     // orthogonalization - but just for one vector.
@@ -864,6 +857,17 @@ public:
 
 
 protected:
+
+
+  void calcRotationTerms()
+  {
+    double wx = C[0];
+    double wy = C[1];
+    double wz = C[2];
+    dx = wy*z - wz*y;
+    dy = wz*x - wx*z;
+    dz = wx*y - wy*x;
+  }
 
   void renormalize()
   {

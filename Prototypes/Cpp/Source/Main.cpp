@@ -71,7 +71,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testGeometricAlgebraNesting();
 
   // Math:
-  eulersNumberViaPascalsTriangle();
+  //eulersNumberViaPascalsTriangle();
   //testBellTriangle();
   //testEulerTransformation();
   //testCesaroSum();
@@ -113,7 +113,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   // ToDo: 
   // -Maybe move the string-group code over here from the main repo, and write testStringGroup()
 
-  //testAttractors();  // move into a section for physics/models
+  testAttractors();  // move into a section for physics/models
 
   // MIMO Filters:
   //testMimoTransferMatrix();

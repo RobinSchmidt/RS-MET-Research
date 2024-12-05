@@ -14325,10 +14325,12 @@ void rsPlotVectors3D(const std::vector<T>& x, const std::vector<T>& y, const std
 }
 // maybe move to RAPT where all the other plotting convenience functions are
 
-void testAttractors()
+void testAttractorDenTSUCS2()
 {
   // We tests some ODE systems posted by Elan here:
+  //
   //   https://github.com/RobinSchmidt/RS-MET/discussions/324
+  //
   // We want to try a couple of solver methods to compare their stability range, accuracy, etc.
 
   // Setup:
@@ -14400,6 +14402,7 @@ void testAttractors()
   //  control.
   // -Compare the accuracy of the various methods. Maybe creating the reference output ("ground 
   //  truth") by a method that is known to be very accurate and using a very small stepsize.
+  // -Figure out what the name DenTSUCS2 means, maybe change it to something better
 
   // Ideas:
   // -Invent some new systems by starting from a linear system that produces a decaying sinusoid 
@@ -14421,6 +14424,30 @@ void testAttractors()
   // polynomial P(x) = x^2 should lead to sinusoidal behavior.
 }
 
+void testAttractorChaoticRotor()
+{
+  // This is one of my own ideas. We start with a linear ODE that leads to a 3D rotation and then 
+  // add nonlinear terms to it to add in some chaotic behavior. The hope is that we can smoothly 
+  // ramp up the amount of chaos in an oscillator. It is well known that for a chaotic system, we
+  // need at least 3 dimensions, so we start with 3D rotations. in 3D, we have 3 possible rotation
+  // axes, so we can define 3 independent rotation frequencies. ...TBC...
+
+
+  int dummy = 0;
+
+  // See:
+  //
+  // https://en.wikipedia.org/wiki/Rotation_matrix
+  // https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions
+  // https://rotations.berkeley.edu/infinitesimal-rotations/
+  // https://mathworld.wolfram.com/InfinitesimalRotation.html
+}
+
+void testAttractors()
+{
+  //testAttractorDenTSUCS2();
+  testAttractorChaoticRotor();
+}
 
 
 bool testLiftedPolynomial()

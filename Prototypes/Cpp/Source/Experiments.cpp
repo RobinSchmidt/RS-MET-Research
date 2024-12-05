@@ -14441,14 +14441,19 @@ void testAttractorChaoticRotor()
 
 
   // Setup:
-  int    numSamples = 3000;   // Number of datapoints to generate
+  int    numSamples = 5000;   // Number of datapoints to generate
   int    oversample = 1;      // Amount of oversampling for the ODE solver
   double sampleRate = 44100;  // Output sample rate
-  double frequency  = 100;    // Sort of a pseudo-frequency of the generator
+  double frequency  = 150;    // Sort of a pseudo-frequency of the generator
 
   // Set up the object:
   //Rotor att;
-  ChaoticRotor att;
+  ChaoticRotor att;    // Is not really chaotic yet. But it's nonlinear
+  //att.setAngularVelocities(1.0, 1.6324, 2.78456792);
+
+  //Lorentz att;
+  //Aizawa att;        // Features sinusoidal bursts - much like gaboret-wavelets
+
   att.reset();
   att.setSampleRate(oversample * sampleRate);
   att.setFrequency(frequency);
@@ -14489,6 +14494,18 @@ void testAttractorChaoticRotor()
   //
   // - Even with renormalization to unit length after each update step, we see some sort of drift.
   //   
+  //
+  // Other ideas:
+  //
+  // - Try a 3-body system or a double pendulum with two unequal masses. When one mass is zero, 
+  //   there is no chaos - we just have a pendulum. When ramping up the 2nd mass, we may be able to
+  //   introduce chaos gradually. That's the overall goal - start with a periodic system and drive 
+  //   it into chaos gradually.
+  //
+  // - Try different frequency ratios. Maybe the ratios are too simple. ...Hmmm...dunno..
+  //
+  // - Maybe "mix" the equations of different attractors with desirable properties. Like, maybe mix 
+  //   in a little bit of the Lorenz rules. Maybe have a slider tha morphs between Rotor and Lorenz.
 
   // See:
   //

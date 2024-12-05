@@ -75,6 +75,8 @@ class Lorentz : public Attractor
   uint rho   = 1;
   uint beta  = 2;
 
+public:
+
   Lorentz()
   {
     C[sigma] = 10.0;
@@ -111,6 +113,8 @@ class Aizawa : public Attractor // http://www.3d-meier.de/tut19/Seite3.html
   uint d = 3;
   uint e = 4;
   uint f = 5;
+
+public:
 
   Aizawa()
   {
@@ -922,10 +926,15 @@ public:
     //dz /= (1 + e*z*z*x*y);
 
 
+    double f = 0.0;
+
+
     // Apply nonlinear terms:
-    dx += a*y*z + b*x*x + c*x*y*z + d*x*x*x;
-    dy += a*x*z + b*y*y + c*x*y*z + d*y*y*y;
-    dz += a*x*y + b*z*z + c*x*y*z + d*z*z*z;
+    dx += a*y*z + b*x*x + c*x*y*z + d*x*x*x + f;
+    dy += a*x*z + b*y*y + c*x*y*z + d*y*y*y + f;
+    dz += a*x*y + b*z*z + c*x*y*z + d*z*z*z + f;
+    // Maybe the terms are too much symmetrically placed for chaos to ensue? Deleting the + c... 
+    // stuff in dz += doesn't seem to help.
 
     updatePosition();
     renormalize();

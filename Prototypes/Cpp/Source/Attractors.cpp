@@ -912,17 +912,15 @@ public:
     double b =   -5.0;
     double c = -200.0;
     double d =  +20.0;
-
-    double e =   10.0;
-
-    dx /= (1 + e*x*x*y*z);
-    dy /= (1 + e*y*y*x*z);
-    dz /= (1 + e*z*z*x*y);
-
-
-
     // Interesting settings:
     // (-12.5,0,0,0),(-14,2,-100,0),(-14,2,-200,20)
+
+
+    //double e =   10.0;
+    //dx /= (1 + e*x*x*y*z);
+    //dy /= (1 + e*y*y*x*z);
+    //dz /= (1 + e*z*z*x*y);
+
 
     // Apply nonlinear terms:
     dx += a*y*z + b*x*x + c*x*y*z + d*x*x*x;

@@ -826,10 +826,6 @@ public:
     C[0] = wx;
     C[1] = wy;
     C[2] = wz;
-
-    //this->wx = wx;
-    //this->wy = wy;
-    //this->wz = wz;
   }
 
   void inc()
@@ -853,12 +849,15 @@ public:
     y += h * dy;
     z += h * dz;
 
-
     // As a cheap trick, we renormalize r to ensure that we really did a pure rotation:
-    double L = sqrt(x*x + y*y + z*z);
-    x /= L;
-    y /= L;
-    z /= L;
+    renormalize();
+
+
+
+    //double L = sqrt(x*x + y*y + z*z);
+    //x /= L;
+    //y /= L;
+    //z /= L;
   }
 
   void reset()
@@ -868,13 +867,30 @@ public:
     z = 0.0;
   }
 
+
 protected:
 
-  //double wx, wy, wz;  // Angular velocities - maybe use inherited C-array to store these
+  void renormalize()
+  {
+    double L = sqrt(x*x + y*y + z*z);
+    x /= L;
+    y /= L;
+    z /= L;
+  }
+
 
 };
 
 
+
+class ChaoticRotor : public Rotor
+{
+
+public:
+
+
+
+};
 
 
 

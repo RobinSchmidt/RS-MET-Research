@@ -14504,6 +14504,8 @@ void testAttractorChaoticRotor()
   //   seem to help. Why not? Or are the formulas still wrong? Wait! Maybe the w-vector needs to be 
   //   normalized? If nothing helps, we may renormalize the x,y,z vector after each update step. But 
   //   that is cheating.
+  //
+  // - Maybe check, if the v-vector is orthogonal to r
 
   // See:
   //

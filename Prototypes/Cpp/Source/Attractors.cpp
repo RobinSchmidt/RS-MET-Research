@@ -834,9 +834,23 @@ public:
     dy = wz*x - wx*z;
     dz = wx*y - wy*z;
 
+    // Chack that v = (dx,dy,dz) is orthogonal to r = (x,y,z):
+    double c = x*dx + y*dy + z*dz;  
+    // This should be (close to) zero. It kinda is - but the deviation from zero grows over time. 
+    // Maybe we should orthogonalize it. I think, this can be done by computing the projection of v
+    // onto r and subtract that from v - or something. Like in Gram-Schmidt orthogonalization - but 
+    // just for one vector.
+
     x += h * dx;
     y += h * dy;
     z += h * dz;
+
+    // As a cheap trick, we renormalize r:
+    double L = sqrt(x*x + y*y + z*z);
+    x /= L;
+    y /= L;
+    z /= L;
+    
   }
 
   void reset()

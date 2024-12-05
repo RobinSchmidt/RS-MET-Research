@@ -879,6 +879,12 @@ protected:
   void renormalize()
   {
     double s = 1 / sqrt(x*x + y*y + z*z);
+    //double s = 2.0 / (1 + x*x + y*y + z*z);  // Test
+
+    // Test - normalize only when the vector is too big:
+    s = RAPT::rsMin(s, 1.0);
+    //if(s > 1) s = 1;
+
     x *= s;
     y *= s;
     z *= s;
@@ -905,7 +911,7 @@ public:
     double a =  -14.0;
     double b =   -5.0;
     double c = -200.0;
-    double d =   20.0;
+    double d =  +20.0;
 
     // Interesting settings:
     // (-12.5,0,0,0),(-14,2,-100,0),(-14,2,-200,20)
@@ -918,7 +924,8 @@ public:
     updatePosition();
     renormalize();
 
-    // Without renormalization, it explodes
+    // Without renormalization, it explodes. Maybe try saturation instead of renormalization. Or 
+    // renomralize conditionally - like only the the point goes out of the sphere
   }
 
 

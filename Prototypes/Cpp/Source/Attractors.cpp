@@ -823,13 +823,21 @@ public:
 
   void setAngularVelocities(double wx, double wy, double wz)
   {
-    this->wx = wx;
-    this->wy = wy;
-    this->wz = wz;
+    C[0] = wx;
+    C[1] = wy;
+    C[2] = wz;
+
+    //this->wx = wx;
+    //this->wy = wy;
+    //this->wz = wz;
   }
 
   void inc()
   {
+    double wx = C[0];
+    double wy = C[1];
+    double wz = C[2];
+
     dx = wy*z - wz*y;
     dy = wz*x - wx*z;
     dz = wx*y - wy*x;
@@ -862,7 +870,7 @@ public:
 
 protected:
 
-  double wx, wy, wz;  // Angular velocities - maybe use inherited C-array to store these
+  //double wx, wy, wz;  // Angular velocities - maybe use inherited C-array to store these
 
 };
 

@@ -3799,8 +3799,8 @@ RS_PFX rsSqrt(RS_DN x) { return RS_DN(rsSqrt(x.v), x.d*TVal(0.5)/sqrt(x.v)); }
 // by using a limit
 
 
-RS_PFX rsPow(RS_DN x, int  n) { return RS_DN(rsPow(x.v, n),  x.d*n*rsPow(x.v, n-1)); }
-RS_PFX rsPow(RS_DN x, TVal n) { return RS_DN(rsPow(x.v, n),  x.d*n*rsPow(x.v, n-1)); }
+RS_PFX rsPow(RS_DN x, int  n) { return RS_DN(rsPowI(x.v, n),  x.d*n*rsPowI(x.v, n-1)); }
+RS_PFX rsPow(RS_DN x, TVal n) { return RS_DN(rsPow( x.v, n),  x.d*n*rsPow( x.v, n-1)); }
 // Not sure, if we should have these two of just always use the more general implementation below
 // which takes two dual numbers as inputs.
 
@@ -7644,7 +7644,7 @@ void rsLiftedPolynomial<T>::invert()
 template <class T>
 T rsLiftedPolynomial<T>::evaluate(const T& x, const T *a, int N, int m)
 {
-  return rsPow(x, m) * Base::evaluate(x, a, N);
+  return rsPowI(x, m) * Base::evaluate(x, a, N);
 }
 
 template <class T>

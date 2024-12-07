@@ -46,13 +46,13 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSortedSet();
 
   // Autodiff:
-  //testAutoDiff();
-  //testAutoDiff2();
-  //testAutoDiff3();
-  //testAutoDiff4();
-  //testAutoDiff5();     // stub
-  //testAutoDiffReverse1();
-  //testDualComplex();
+  testAutoDiff();
+  testAutoDiff2();
+  testAutoDiff3();
+  testAutoDiff4();
+  testAutoDiff5();     // stub
+  testAutoDiffReverse1();
+  testDualComplex();
 
   //testVectorMultiplication3D();
   //testHermiteInterpolation();

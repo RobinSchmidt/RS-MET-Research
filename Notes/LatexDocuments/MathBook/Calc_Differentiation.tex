@@ -91,7 +91,22 @@ The two first properties, homogeneity and additivity, taken together constitute 
  = \lim_{h \rightarrow 0} \frac{f(x + h) - f(x)}{h}
  = \frac{d}{d h} f(x + h) \bigg\rvert_{h=0}
 \end{equation}
-whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later. There, we will see a similar definition via a limit and the RHS will tell us, how to actually evaluate the limit....but that's for later... 
+whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later. There, we will see a similar definition via a limit and the RHS will tell us, how to actually evaluate the limit - but that's a topic for later. There is a generalization for the product rule for products with more than two factors. The rule says to 
+take the derivative of one function at a time and leave the others as is and add the results. For example, for a product of 3 functions, it says that $(fgh)' =  f' g h + f g' h + f g h'$.  In general:
+\begin{equation}
+\frac{d}{dx} \prod_k f_k(x)  
+= \Bigl(  \prod_k f_k(x)   \Bigr) '
+= \sum_k \Bigl( f_k'(x) \prod_{i \neq k} f_i(x)  \Bigr) 
+\end{equation}
+
+% Do You ACTUALLY Know The Product Rule?
+% https://www.youtube.com/watch?v=0dz5HTHWneo
+% -Nice generalization of the product rule for a product of multiple functions. The rule says to 
+%  take the derivative of one function at a time and leave the others as is and add the results.
+%  For 3 functions (f g h)' = f' g h + f g' h + f g h'. In general:
+
+% Is there a similar generalization for the chain rule?
+
 % Where did I get this formula from? I think, I derived it myself? Maybe via a Taylor expansion of f? Or via specializing to 1D the directional derivative which itself is more easily to "see" intuitively? Or maybe we can define a bivariate function f(x,h) = f(x+h) and derive it from there using partial derivatives? Or maybe evaluate the limit directly from the bivariate function?
 
 % This formula looks actually similar:
@@ -100,6 +115,10 @@ whose usefulness lies mostly in its generalizations to the directional derivativ
 
 % Generalization of chain rule to higher oder derivatives - Faa di Bruno's formula:
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
+
+
+
+
 
 %todo: list derivatives of elementary functions
 

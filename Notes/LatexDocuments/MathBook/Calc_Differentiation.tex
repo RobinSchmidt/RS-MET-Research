@@ -98,6 +98,7 @@ take the derivative of one function at a time and leave the others as is and add
 = \Bigl(  \prod_k f_k(x)   \Bigr) '
 = \sum_k \Bigl( f_k'(x) \prod_{i \neq k} f_i(x)  \Bigr) 
 \end{equation}
+There is also a similar generalization of the chain rule for compositions of more than two functions. ...TBC... TODO: state the rule - it can be found on wikipedia %https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
 
 % Do You ACTUALLY Know The Product Rule?
 % https://www.youtube.com/watch?v=0dz5HTHWneo
@@ -106,6 +107,7 @@ take the derivative of one function at a time and leave the others as is and add
 %  For 3 functions (f g h)' = f' g h + f g' h + f g h'. In general:
 
 % Is there a similar generalization for the chain rule?
+% Yes: https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
 
 % Where did I get this formula from? I think, I derived it myself? Maybe via a Taylor expansion of f? Or via specializing to 1D the directional derivative which itself is more easily to "see" intuitively? Or maybe we can define a bivariate function f(x,h) = f(x+h) and derive it from there using partial derivatives? Or maybe evaluate the limit directly from the bivariate function?
 
@@ -125,6 +127,9 @@ take the derivative of one function at a time and leave the others as is and add
 \subsection{Elementary Derivatives}
 We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting).
 ...
+
+% State also some tricks to evaluate cretain functions togther with their derivatives without much 
+% extra cost
 
 \subsection{Higher Order Derivatives}
 With the derivative, we have an operation to produce a new "derived" function from a given function. There's nothing that stops us to apply the same operation to the derived function as well. And then iterate that process as often as we like. That's the way, higher order derivatives are created.

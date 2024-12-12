@@ -491,6 +491,9 @@ Order theory is the part of set theory that is concerned with \emph{order relati
 % {2,3} < {1,2,3} but neither {1,2} < {2,3} nor {2,3} < {1,2}. We say that {1,2} and {2,3} are 
 % incompatible
 
+% In a poset, we can have "chains". These are subsets inside which every pair of elements is
+% comparable. There are also antichains which are subsets where no pair of elements is comparable.
+
 \subsection{Order Isomorphisms and Order Types}
 An \emph{order isomorphism} between the two posets $(A, <_A)$ and $(B, <_B)$ is a bijective function $f: A \rightarrow B$ that preserves the ordering of the elements. That means, the bijection $f$ must satisfy: $x <_A y \Leftrightarrow f(x) <_B f(y)$ for all $x,y \in A$. In words: $x$ is less then $y$ in $A$ if and only if $f(x)$ is less than $f(y)$ in $B$. As an example, take $A=\{1,2,3,4\}$ with the natural order $1 <_A 2 <_A 3 <_A 4$ and the set $B=\{one,two,three,four\}$ with the lexicographical order $four <_B one <_B three <_B two$. We can indeed find an order isomorphism $f$ between the two posets, namely the map: $f: 1-four, 2-one, 3-three, 4-two$. It's worth to point out that finding an order isomorphism between two posets is "more difficult" than just finding any old bijection between the underlying sets. An order isomorphism has stricter requirements to qualify as such. Order isomorphisms have to respect the additional poset structures of their domain and codomain. If such an order isomorphism can be found between two posets, then these two posets are said to be \emph{order isomorphic} and they belong to the same \emph{order type}.
 

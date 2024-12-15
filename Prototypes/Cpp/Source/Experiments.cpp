@@ -19261,4 +19261,12 @@ todo:
  //  https://www.youtube.com/watch?v=O3aJCGbyfR8&list=PL9tHLTl03LqEM2q6xZTcOAVFNTj4TqtL6&index=4
  //  maybe also implement animations
 
+
+Maybe try implementing the Ackermann function non-recursively. See:
+https://stackoverflow.com/questions/10742322/how-to-rewrite-ackermann-function-in-non-recursive-style
+The implementations are based on manually nadling a stack. Maybe use  rsDoubleEndedQueue  
+for the stack (I think, it should support queues and stacks, too - maybe make subclasses that 
+provide a more stack- and queue appropriate API - or maybe better use compisition and delegation)
+
+
 */

@@ -241,3 +241,12 @@ ToDo:
  
  https://mathworld.wolfram.com/HypergeometricSeries.html
  Introduce it as generalization of geometric series in the series section of calculus chapter
+
+
+
+Jokes:
+
+"The natural question that arises is blablabla\footnote{Or maybe it's "where am I ever going to use 
+this in real life"}"
+
+Proof techniques: contradiction, induction, excercise for the reader

@@ -78,3 +78,10 @@ compile-time, I guess? Who needs that? Normally, one wants to branch at runtime.
 
 
 
+https://github.com/AnthonyCalandra/modern-cpp-features
+Overview over the new features of each C++ version (but incomplete, I think - the C++11 list misses
+std::function, for example)
+
+
+
+https://fasterthanli.me/articles/a-half-hour-to-learn-rust

@@ -315,6 +315,8 @@ As we see, relations are quite flexible tools and can be used to model several i
 \end{eqnarray}
 The product may be iterated in the following way: Form the product $A \times B$ and then take the result of that and form the product with a third set $C$ to get: $(A \times B) \times C$. What we formally get would be a set of pairs where the first element is itself a pair of elements from $A$ and $B$ and the second element is an element from $C$. Elements of $(A \times B) \times C$ would look like $((a,b),c)$ where $a \in A, b \in B, c \in C$. On the other hand, elements of $A \times (B \times C)$ would be of the form $(a, (b,c))$. Formally, this is a different set, so our set product is formally not associative. However, the set $(A \times B) \times C$ is isomorphic (i.e. of the "same form") to $A \times (B \times C)$ and in many practical applications, what we actually want to form is not a set of nested pairs but rather a set of triples $(a,b,c)$ with no further inner structuring. We will adopt the convention that when we write a set product with multiple factors without any parentheses like: $A \times B \times C$, we mean the set of triples $(a,b,c)$ where $a \in A, b \in B, c \in C$. And this, of course, generalizes to quadruples, quintuples, etc. We will also use the notation $A^n$ to mean a set of $n$-tuples in which each element is from $A$. 
 
+% A \setminus B = A \cap \overline{A}, see https://www.youtube.com/watch?v=gHUZFXvy4yE at 4:45
+% A \cap B = \overline{ \overline{A} \cup \overline{B}  }
 
 \paragraph{Alternative Notations}
 
@@ -338,7 +340,8 @@ The symmetric difference is what remains, if we first form the union of $A$ and 
 
 [TODO: give a rather comprehensive list of useful set-algebraic equations, define big intersection and big union for sets of sets]
 
-
+% A \setminus B = A \cap \overline{A}, see https://www.youtube.com/watch?v=gHUZFXvy4yE at 4:45
+% A \cap B = \overline{ \overline{A} \cup \overline{B}  }
 
 % TODO: figure out, if there's a formal notation for the informal $A^B = \{ f: \; B \rightarrow A \}$
 % notation. Maybe $A^B = \{ f \in \mathcal{P}(B \times A) : f \text{is function} \}$ as 

@@ -1,5 +1,5 @@
 \section{Elementary Algebra}
-Now that we have numbers, we want to do something with them. One thing we can do is to perform elementary operations such as addition and multiplication on given numbers to generate new numbers. For example $3 \cdot 5 + 7 = 22$. Hey - cool - we have produced a $22$ from $3,5$ and $7$! Not yet impressed? Then consider this: assume that the number $5$ is unknown and we only know the relation $3 \cdot x + 7 = 22$. Can we recover the unknown $x$ from that equation? It turns out that the answer is yes, we can: by subtracting $7$ from both sides of the equation and then dividing both sides by $3$, we recover $x = 5$. Elementary algebra is the science of solving such equations for unknown variables where it is understood that the unknowns are supposed to be numbers. The setting is usually as follows: we have given one or more equations that contain one or more unknown variables, typically denoted by letters from the end of the alphabet such as $x,y,z$. The question is if there are any solutions of the given equations, i.e. any assignments for the variables that make the equations hold true - simultaneously, if there's more than one equation. If there are solutions, we may ask how many there are. Just one solution, i.e. a unique solution? Or some other number of solutions? Or maybe even infinitely many? And, of course, we may also want to know, what the solution is or what they are. How can we produce them in a systematic way? Elementary algebra is about answering questions like these. Surpassing the "elementary" qualifier, the higher levels of algebra investigate mathematical systems which are then called algebraic structures and it turns out that our familiar natural, integer, rational, real and complex numbers are just specific examples of such systems which are studied there in an abstract way. In this realm of \emph{abstract algebra}, our familiar number systems serve as prototypes which are subsequently generalized. But this stuff is for later chapters. 
+Now that we have numbers, we want to do something with them. One thing we can do is to perform elementary operations such as addition and multiplication on given numbers to generate new numbers. For example $3 \cdot 5 + 7 = 22$. Hey - cool - we have produced a $22$ from $3,5$ and $7$! Not yet impressed? Then consider this: assume that the number $5$ is unknown and we only know the relation $3 \cdot x + 7 = 22$. Can we recover the unknown $x$ from that equation? It turns out that the answer is yes, we can: by subtracting $7$ from both sides of the equation and then dividing both sides by $3$, we recover $x = 5$. Elementary algebra is the science of solving such equations for unknown variables where it is understood that the unknowns are supposed to be numbers. The setting is usually as follows: we have given one or more equations that contain one or more unknown variables, typically denoted by letters from the end of the alphabet such as $x,y,z$. The question is if there are any solutions to the given equations, i.e. any assignments for the variables that make the equations hold true - simultaneously, if there's more than one equation. If there are solutions, we may ask how many there are. Just one solution, i.e. a unique solution? Or some other number of solutions? Or maybe even infinitely many? And, of course, we may also want to know, what the solution is or what they are. How can we produce them in a systematic way? Elementary algebra is about answering questions like these. Surpassing the "elementary" qualifier, the higher levels of algebra investigate mathematical systems which are then called algebraic structures and it turns out that our familiar natural, integer, rational, real and complex numbers are just specific examples of such systems which are studied there in an abstract way. In this realm of \emph{abstract algebra}, our familiar number systems serve as prototypes which are subsequently generalized. But this stuff is for later chapters. 
 
 % Field theory gives a systematic answer to the question of solving polynomial equations
 
@@ -94,7 +94,7 @@ Another thing that is used often enough to deserve its own notation is the so ca
 \begin{equation}
  n! = 1 \cdot 2 \cdot 3 \cdot 4 \cdot \ldots \cdot n = \prod_{k=1}^{n} k
 \end{equation}
-The factorial of $0$ is defined to be $0$. With the factorial, we can define the so called \emph{binomial coefficients} as follows:
+The factorial of $0$ is defined to be $1$. This is in line with the definition of the empty product: $\prod_{k=1}^{0} k = 1$. With the factorial, we can define the so called \emph{binomial coefficients} as follows:
 \begin{equation}
 \label{Eq:BinomialCoeffs}
  \binom{n}{k} = \frac{n!}{k! (n-k)!}
@@ -103,7 +103,7 @@ They get their name from the fact that they give the coefficients that arise fro
 \begin{equation}
 (a+b)^n = \sum_{k=0}^{n} \binom{n}{k} a^k b^{n-k}
 \end{equation}
-They also arise in combinatorics. There, they give the number of different ways that one may pick $k$ objects form a set of $n$ objects. That's why they are pronounced as "n-choose-k". A generalization of the binomial coefficients are the \emph{multinomial coefficients} defined as:
+They also arise in combinatorics. There, they give the number of different ways that one may pick $k$ objects from a set of $n$ objects. That's why they are pronounced as "n-choose-k". A generalization of the binomial coefficients are the \emph{multinomial coefficients} defined as:
 \begin{equation}
 \label{Eq:MultinomialCoeffs}
  \binom{n}{k_1,k_2,\ldots,k_m} = \frac{n!}{k_1! k_2! \ldots k_m!}
@@ -140,7 +140,7 @@ Consider the task of summing powers of all natural numbers up to some given uppe
 \sum_{k=1}^{n} k^2 = \frac{n (n+1) (2 n  + 1) }{6}, \quad
 \sum_{k=1}^{n} k^3 = \frac{n^2 (n+1)^2}{4}
 \end{equation}
-The formula for $k^0 = 1$ is trivial but given for the sake of completeness. The formula for $k^1 = k$ of these formulas is also known as Gauss's summation formula\footnote{As the story goes, Gauss discovered the formula as a year old child in school when his math teacher wanted to keep the children busy by letting them add up all numbers from $0$ to $100$.}. The numbers resulting from the formula for $k^2$ are known as the square pyramidal numbers. They give the number of balls that make up a pyramid with a square base where the side length of the square is $n$. The tip of the pyramid is made from $1$ ball, the layer directly below is made from $2^2 = 4$ balls, etc. If you compare the formula for $k^1$ and $k^3$, you'll notice that you get the latter from the former by just squaring everything. That means that the sum over all the cubes up to $n$ equals the square of sum of all the numbers up to $n$.
+The formula for $k^0 = 1$ is trivial but given for the sake of completeness. The formula for $k^1 = k$ of these formulas is also known as Gauss's summation formula\footnote{As the story goes, Gauss discovered the formula as child in school when his math teacher wanted to keep the children busy by letting them add up all numbers from $0$ to $100$. To his teachers surprise, Gauss gave the correct answer of 5050 very quickly because he discovered the formula during this task.}. The numbers resulting from the formula for $k^2$ are known as the square pyramidal numbers. They give the number of balls that make up a pyramid with a square base where the side length of the square is $n$. The tip of the pyramid is made from $1$ ball, the layer directly below is made from $2^2 = 4$ balls, etc. If you compare the formula for $k^1$ and $k^3$, you'll notice that you get the latter from the former by just squaring everything. That means that the sum over all the cubes up to $n$ equals the square of sum of all the numbers up to $n$.
 
 ...TBC...TODO: Give general formula (Faulhaber's Formula), explain how these formulas can be used to compute sums that don't start at 1 and/or have an increment other than 1 (general arithmetic progressions), give other sum formulas - for a geometric progression
 
@@ -169,6 +169,10 @@ The formula for $k^0 = 1$ is trivial but given for the sake of completeness. The
 
 %\paragraph{Arithmetic Progressions}
 %An arithmetic progression is a finite sum that starts at some given value $m$
+
+% A New Year 2025 Math Fact
+% https://www.youtube.com/watch?v=ZWLkIW4NsQ0
+% \sum_{i=1}^n i^3 = (\sum_{i=1}^n i)^2
 
 \paragraph{Geometric Progressions}
 A geometric progression is a finite sum of powers of a given number $r$, typically starting at $r^0 = 1$. There's a formula for that, too:
@@ -297,8 +301,16 @@ a^3 + b^3 = (a+b)^3 - 3ab(a+b)
 a^3 - b^3 = (a-b)^3 + 3ab(a-b) 
           = (a-b)(a^2 + ab + b^2)
 
+https://www.youtube.com/watch?v=k2RRQtkjtCY  at 36:08:
+(a+b)^2 + (a-b)^2 = 2(a^2+b^2)
 
 
+https://www.youtube.com/watch?v=XfWgfZ5V2qI  A New Definition of the Derivative? #SoME3
+t^2 - 1 = (t - 1) * (1 + t)
+t^3 - 1 = (t - 1) * (1 + t + t^2)
+t^4 - 1 = (t - 1) * (1 + t + t^2 + t^3)
+       ...
+t^n - 1 = (t - 1) * (1 + t + t^2 + t^3 + ... + t^(n-1))
 
 
 Maybe this whole section should be called Elementary Algebra.

@@ -15596,7 +15596,7 @@ void testMatrixSqrt()
   Mat C = rsSqrtNewton(A);
 
   Real tol = 1.e-13;
-  ok &= C.equals(B, tol);
+  ok &= C.isCloseTo(B, tol);
 
 
   rsAssert(ok);

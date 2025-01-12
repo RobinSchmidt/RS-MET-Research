@@ -274,11 +274,18 @@ Let's assume, we have a given set $A$ such as $\mathbb{R}^n$ for some positive n
 \medskip
 From this definition, it follows that the empty set $\emptyset$ is also in $\Sigma$ and that $\Sigma$ is closed under taking countable intersections, too. The extreme examples of such $\sigma$-algebras on a set $A$ are $\{\emptyset, A\}$ and $\mathcal{P}(A)$. The former is the smallest possible and the latter is the largest possible $\sigma$-algebra on $A$. Now, if $\mathcal{P}(A)$ qualifies as a $\sigma$-algebra, you might wonder why we go through the hassle of making such a definition instead of just always using $\mathcal{P}(A)$ as the domain of our measure function $\mu$. Why not just always take the largest possible domain? Why throw in such a complication just to restrict $\mu$ to possibly smaller domains? The answer is that for some choices of the set $A$, $\mathbb{R}$ being among these choices, it is impossible to construct a measure function $\mu$ on $\mathcal{P}(A)$ with certain desired properties. More on that later.
 
+\medskip
+By the way, there is also a notion of a so called $\Sigma$-algebra in computer science which is an entirely different concept that has nothing to do with the $\sigma$-algebras of this section, so don't get confused. I also have no idea why it's called an "algebra" anyway. In abstract algebra, an algebra is typically a vector space with some product defined on it - but I don't see the connection to this concept of $\sigma$-algebra here. [ToDo: Figure out if there is one! If not, rant about bad naming.]
 
 % TODO: explain how the values of f on sets of measure zero do not affect the value of a (definite)
 % integral. That implies that it makes no difference if we integrate over open, half-open or closed
 % intervals
 
+
+% https://www.youtube.com/watch?v=1BhSQiHTNbg  The Mathematician's Measure
+
+% Contrast it to:
+% https://encyclopediaofmath.org/wiki/Sigma-algebra_(Computer_Science)
 
 
 %...TBC...[I don't really know why this is - maybe some weird sets $A$ have subsets that are not measurable and therefore need to be excluded from the domain or something? Figure out!]

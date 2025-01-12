@@ -130,7 +130,7 @@ def polyGcd(p, q, monic=True):
 	defined as the polynomial of highest degree that divides both p and q. Such
 	a polynomial is unique only up to multiplication by a constant, so it is 
 	often additionally required to be a monic polynomial to make it unique. 
-	This normalization can be controlled by by the monic parameter."""
+	This normalization can be controlled by the monic parameter."""
 	a, b = p[:], q[:]
 	while not isZeroPoly(b):
 		t = b 
@@ -139,7 +139,6 @@ def polyGcd(p, q, monic=True):
 	if(monic):
 		makeMonic(a)
 	return a
-# maybe rename to polyGcd
 # https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor
 # ToDo: figure out the meaning of the leading coeff when it's not forced to 1. 
 # I guess, it's the quotient of the leading coeffs of p and q?

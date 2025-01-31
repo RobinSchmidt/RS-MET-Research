@@ -4,8 +4,8 @@ Let's assume we have a degree N polynomial p(x) given in terms of its roots as:
 
 and we want to evaluate it together with its derivative at some given number x. The idea is to 
 recursively split it into two polynomials of half the degree, evaluate their values and derivatives
-and combine them using the product rule. Let's take a degree 8 polynomial as example and assume 
-k = 1, so we have:
+and combine them using the product rule (which requires 2 muls and 1 add). Let's take a degree 8 
+polynomial as example and assume k = 1, so we have:
 
   p(x) = (x-r1)*(x-r2) * (x-r3)*(x-r4)  *  (x-r5)*(x-r6*) * (x-r7)*(x-r8)
 
@@ -50,7 +50,95 @@ Questions:
  the next power of two? Maybe the values should be padded by 1 and the derivatives by 0?
 -Can it be generalized to higher derivatives?
 
+----------------------------------------------------------------------------------------------------
 
+Multiplying two polynomials p(x) = A * (x-r1) * (x-r2) * ... and q(x) = B * (x-s1) * (x-s2) * ...
+in their product form is easy: the overall scale factor C is just the product of the two scale 
+factors C = A*B and the arrays of roots r1,r1,... and s1,s2,... are just concatenated. But 
+what about the sum p(x) + q(x)? Can we compute the scale factor and its roots t1,t2,... from the 
+given data without converting to sum form first? The expression p(x) + q(x) is zero iff 
+p(x) = -q(x). Let's try it for the example:
 
+  p(x) = 1*(x+2)(x-1) = x^2 +   x - 2
+  q(x) = 2*(x-1/2)    =       2*x - 1
 
+  See: https://www.desmos.com/calculator/vyyvwxlddq
 
+We need to find all solutions of:
+
+  1*(x+2)(x-1) = -2*(x-1/2)    or    1*(x+2)(x-1) - 2*(x-1/2) = 0
+
+Maybe it could help to apply the exp or log function to both sides? Let's try log (aka ln):
+
+  ln(1) + ln(x+2) + ln(x-1) = ln(-2) + ln(x-1/2)
+  ln(1) + ln(x+2) + ln(x-1) - ln(-2) - ln(x-1/2) = 0  ...eww! ln(-2) is complex!
+
+Other idea: for an example, let's assume, p(x) and q(x) are both of degree 2. Their sum 
+r(x) = p(x) + q(x) will also be of (at most) degree 2. Let's denote the roots of p by p1,p2, those 
+of q by q1,q2 and those of r by r1,r2 and the scale factors P,Q,R. So, we have:
+
+  p(x) = P * (x-p1) * (x-p2)
+  q(x) = Q * (x-q1) * (x-q2)
+  r(x) = R * (x-r1) * (x-r2)
+
+We make the ansatz: r(x) = p(x) + q(x) which gives:
+
+  R * (x-r1) * (x-r2) = P * (x-p1) * (x-p2)  +  Q * (x-q1) * (x-q2)
+
+We may directly compute R as:
+
+  R = P + Q
+
+Because that's how leading coefficients behave (like all other coeffs as well). So that unknown is 
+already out of the way. Let's now plug in the known values p1,p2,q1,q2 for x. We obtain the system 
+of 4 equations:
+
+  R * (p1-r1) * (p1-r2)  =  Q * (p1-q1) * (p1-q2)  =  Q(p1)
+  R * (p2-r1) * (p2-r2)  =  Q * (p2-q1) * (p2-q2)  =  Q(p2)
+  R * (q1-r1) * (q1-r2)  =  P * (q1-p1) * (q1-p2)  =  P(q1)
+  R * (q2-r1) * (q2-r2)  =  P * (q2-p1) * (q2-p2)  =  P(q2)
+
+The right hand sides are numbers which we can directly compute. They are knowns. On the left, we 
+have a product of factors involving our unknowns r1,r2. Let's now take the logarithm of both sides.
+That transforms the products into sums:
+
+  ln(R) + ln(p1-r1) + ln(p1-r2)  =  ln(Q(p1))
+  ln(R) + ln(p2-r1) + ln(p2-r2)  =  ln(Q(p2))
+  ln(R) + ln(q1-r1) + ln(q1-r2)  =  ln(P(q1))
+  ln(R) + ln(q2-r1) + ln(q2-r2)  =  ln(P(q2))
+
+This is now a linear(!) system of 4 equations in the 8 unknowns ln(p1-r1), ln(p1-r2), ...hmm...4 
+equations are not enough for 8 unknowns. Let's try
+ 
+  ln(p1-r1) + ln(p1-r2)  =  ln(Q(p1)) - ln(R)
+  ln(p2-r1) + ln(p2-r2)  =  ln(Q(p2)) - ln(R)
+  ln(q1-r1) + ln(q1-r2)  =  ln(P(q1)) - ln(R)
+  ln(q2-r1) + ln(q2-r2)  =  ln(P(q2)) - ln(R)
+
+Exponentiate the 1st equation:
+
+    exp(ln(p1-r1) + ln(p1-r2))  =  exp(ln(Q(p1))-ln(R))  
+    exp(ln(p1-r1)) * exp(ln(p1-r2)) =  exp(ln(Q(p1))-ln(R))  
+    (p1-r1) * (p1-r2) =  exp(ln(Q(p1))-ln(R)) 
+
+...hmm...not sure, if that leads anywhere...
+
+Maybe we can obtain more equations by plugging in r1,r2. These are unknowns, but maybe it 
+nevertheless makes sense to do it? Let's try it:
+
+  R * (r1-r1) * (r1-r2)  =  Q * (r1-q1) * (r1-q2)  +  P * (r1-p1) * (r1-p2)
+  R * (r2-r1) * (r2-r2)  =  Q * (r2-q1) * (r2-q2)  +  P * (r2-p1) * (r2-p2)
+
+The left hand sides vanish:
+
+  0  =  Q * (r1-q1) * (r1-q2)  +  P * (r1-p1) * (r1-p2)
+  0  =  Q * (r2-q1) * (r2-q2)  +  P * (r2-p1) * (r2-p2)
+
+Let's bring the Q-terms to the left:
+
+  -Q * (r1-q1) * (r1-q2)  =  P * (r1-p1) * (r1-p2)
+  -Q * (r2-q1) * (r2-q2)  =  P * (r2-p1) * (r2-p2)
+
+Take the logarithm:
+
+ ...

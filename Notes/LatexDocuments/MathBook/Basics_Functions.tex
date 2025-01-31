@@ -318,6 +318,9 @@ I said formerly that an "elementary" function can only use the arithmetic operat
 % -sqrt(z * conj(z)) = |z|
 % -can it also be re-expressed to qualify as elementary?
 
+
+
+
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Polynomials}
 A \emph{polynomial} can be written in various forms. Some important canonical forms are: (1) a weighted sum of integer powers of $x$, (2) a (scaled) product of so called linear factors, (3) a nested expression. So, a polynomial is a function that can be written in one of these forms\footnote{With some caveat: The given product form is guaranteed to exist only if we are assuming to work over the complex numbers (or some other algebraically closed field), which, for the time being, we indeed will assume. If we have only real numbers, there may be quadratic factors as well - and if we have only rational numbers or work over finite fields, we may have to include even higher degree factors.}:
@@ -330,8 +333,19 @@ where the weights $a_k$ in the sum form are called the \emph{coefficients} of th
 
 % ToDo: explain that when the coeffs are real, then complex roots come in conjugate pairs and can be combined into quadratic factors with real coeffs
 
+% ToDo: mention other represenations - for example in terms of other basis polynomials such as
+% Chebychev polynomials. But explaining that properly requires a bit of linear algebra, so it should
+% be a starred section. Polynomials can be represented linear combinations of basis functions. These
+% basis functions can be the monomials (with coeff 1) but they can also be any other set of linearly
+% independent polynomials. One usually uses a set of polynomials that are orthogonal with respect
+% to a suitably defined scalar product. This scalar product is usually a definite integral of the
+% product of the polynomials, possibly weighted by some weighting function. The explanation of that 
+% it needs some calculus as well.
+
 \paragraph{$\star$ Some Applications - Preview}
-The practical importance of such affine functions is that we will often use them to approximate more complicated functions - a process known as \emph{linearization}\footnote{But shouldn't it then be called "affinization"? Math terminology is unfortunately not always totally consistent. I digress...}. This linearized function will have the same function value as the original function at some point of interest and will, moreover, also have the same slope (i.e. the same first derivative). A polynomial of degree 2, i.e. a function of the form $f(x) = a_0 + a_1 x + a_2 x^2$, is also called a quadratic polynomial. Such polynomials are often used to approximate an arbitrary function around a minimum or maximum in the context of \emph{optimization} problems. A linear approximation is not suitable in this case because the $a_1$ coefficient will be zero anyway so we need to go one degree higher if we don't just want a constant "approximation" (which doesn't really deserve this name - therefore the quotes). A quadratic approximation can also be used as a more accurate approximation than a linear one around arbitrary points and sometimes this is useful, too. And, of course, one can also use higher order polynomial approximations, as well. For some functions, when we approximate them with polynomials and crank up the degree, the approximations will actually converge to the original function. This happens, for example, in a \emph{Taylor expansion} or in \emph{Lagrange interpolation}. We'll look into the details of these applications later. Polynomials are generally used to do all sorts of approximations because polynomials are often much easier to deal with than other types of functions - especially when it comes to problems involving some calculus because polynomials are easy to integrate and differentiate in closed form. For example, if all you want is a numerical value for some definite integral over a function that is hard (or impossible) to integrate in closed form, you can take a (piecewise) polynomial approximation and integrate that instead and thereby obtain an approximation of your desired integral. This is done in \emph{numerical integration}. Generally, polynomials are used extensively in \emph{numerical analysis} which includes, besides numerical integration also \emph{numerical differentiation} and the numerical solution of (ordinary and partial) \emph{differential equations}. These things are all super important for applications in the natural sciences and in engineering. In data analysis and visualization, polynomials are also important for tasks like \emph{interpolation}, \emph{curve fitting}, etc.
+The practical importance of such affine functions is that we will often use them to approximate more complicated functions - a process known as \emph{linearization}\footnote{But shouldn't it then be called "affinization"? Math terminology is unfortunately not always totally consistent. I digress...}. This linearized function will have the same function value as the original function at some point of interest and will, moreover, also have the same slope (i.e. the same first derivative). A polynomial of degree 2, i.e. a function of the form $f(x) = a_0 + a_1 x + a_2 x^2$, is also called a quadratic polynomial. Such polynomials are often used to approximate an arbitrary function around a minimum or maximum in the context of \emph{optimization} problems. A linear approximation is not suitable in this case because the $a_1$ coefficient will be zero anyway so we need to go one degree higher if we don't just want a constant "approximation" (which doesn't really deserve this name - therefore the quotes). A quadratic approximation can also be used as a more accurate approximation than a linear one around arbitrary points and sometimes this is useful, too. And, of course, one can also use higher order polynomial approximations, as well. For some functions, when we approximate them with polynomials and crank up the degree, the approximations will actually converge to the original function. This happens, for example, in a \emph{Taylor expansion} or in \emph{Lagrange interpolation} (VERIFY!). We'll look into the details of these applications later. Polynomials are generally used to do all sorts of approximations because polynomials are often much easier to deal with than other types of functions - especially when it comes to problems involving some calculus because polynomials are easy to integrate and differentiate in closed form. For example, if all you want is a numerical value for some definite integral over a function that is hard (or impossible) to integrate in closed form, you can take a (piecewise) polynomial approximation and integrate that instead and thereby obtain an approximation of your desired integral. This is done in \emph{numerical integration}. Generally, polynomials are used extensively in \emph{numerical analysis} which includes, besides numerical integration also \emph{numerical differentiation} and the numerical solution of (ordinary and partial) \emph{differential equations}. These things are all super important for applications in the natural sciences and in engineering. In data analysis and visualization, polynomials are also important for tasks like \emph{interpolation}, \emph{curve fitting}, etc.
+
+% I formerly said that the convergence may happen "in a \emph{Taylor expansion} or in \emph{Lagrange interpolation}" ...but does it really happen in Lagrange interpolation? I don't actually think so. Figure out what happens in practice when we take a section of exp(x) in some intervale (say 0..1) and sample the function ever more densely and then find the Lagrange interpolant of the sampled values. Will it wiggle between the sample values or will it converge
 
 %if your original function is hard to integrate in closed form, 
 
@@ -386,7 +400,7 @@ where the second rule, for the time being, makes only sense when $n-m$ is natura
 
 
 \paragraph{Evaluation}
-The evaluation of a polynomial is best done in nested form. This is the computationally most efficient way and also one of the most stable ways numerically\footnote{Numerical stability refers to the way in which small errors in the inputs affect the errors in the output - will errors tend to get amplified or not, etc.}. 
+The evaluation of a polynomial is best done in nested form. Evaluating polynomials this way is known as \emph{Horner's method} or Horner's scheme. This is the computationally most efficient way and also one of the most stable ways numerically\footnote{Numerical stability refers to the way in which small errors in the inputs affect the errors in the output - will errors tend to get amplified or not, etc.}, so it's usually the preferred way of evaluating polynomials in practice.
 
 %We assume that a polynomial of degree $n$ is represented in the computer as a list or array of $n+1$ coefficients $a_0, \ldots, a_n$.
 %\begin{lstlisting}
@@ -403,6 +417,11 @@ The evaluation of a polynomial is best done in nested form. This is the computat
 %\end{lstlisting}
 %This way of evaluating a polynomial is also known as Horner's rule.
 %...hmm...not sure, if code should appear in the normal text. maybe put it into an appendix? 
+
+
+% -what happens if we conjugate the argument? Can we re-express this as conjugation of the coeffs?
+% -Maybe also consider negating the argument as preliminary step. That amounts to negating the
+%  coeffs of the doo powers.
 
 
 \paragraph{Addition and Subtraction}

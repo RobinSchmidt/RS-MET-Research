@@ -202,8 +202,10 @@ i.e. try initially applying Newton iteration to:
 and when this is (roughly) converged, scrap the 1/r1 term and converge to the actual solution? For 
 a 3rd root, we would initially add 1/r1 + 1/r2, etc. Or maybe ther could be some more clever way to
 "remove" the root at r1 from the left hand side without affecting the locations of the other roots?
+Maybe we could cancel it by dividing the whole expression by (x-r1)?
+
 Another problem might be to evaluate the derivative of the polynomial in prodcut form. Maybe we need
-to appyl a generalized product rule? See .tex files for the math book - there I have some notes 
+to apply a generalized product rule? See .tex files for the math book - there I have some notes 
 about that rule. Maybe we should have a class rsFactoredPolynomial for implementing such operations 
 on factored polynomials (i.e. polynomials in product form)
 

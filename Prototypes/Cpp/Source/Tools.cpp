@@ -7710,9 +7710,9 @@ and overall scaling factor. That is:
 
   p(x) = k * (x-r1) * (x-r2) * (x-r3) * ... * (x-rN)
 
-where r1,r2,...,rN are the N roots of the polynomial and k is the overall scaling factor. ...TBC...
-
-*/
+where r1,r2,...,rN are the N roots of the polynomial and k is the overall scaling factor. The 
+number N of roots is also the degree of the polynomial and the scaling factor k is the leading
+coefficient of the sum form.  ...TBC...  */
 
 template<class T> 
 class rsFactoredPolynomial

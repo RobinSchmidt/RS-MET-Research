@@ -7560,7 +7560,11 @@ a situation occurs in the definition of paraunitary filters.
 See here, section 1.3.3:
 https://www.snnu.uni-saarland.de/wp-content/uploads/2015/05/BMT1822-Introduction-to-Paraunitary-Filter-Banks-and-Orthogonal-Expansions-in-l2.pdf
 
-...tbc...  */
+...tbc...explain the term "lifted" - I made that up myself to describe the operation of multiplying
+a polynomial by a monomial. This "lifts up" all the epxonents/powers of the original polynomial. 
+Maybe a better term can be found for that. 
+
+*/
 
 template<class T> 
 class rsLiftedPolynomial : private RAPT::rsPolynomial<T> 
@@ -7619,7 +7623,7 @@ public:
   static int multiply(const T *a, int aDegree, int aOffset,
                       const T *b, int bDegree, int bOffset, T *result);
   // todo: 
-  // -document, how long the result array needs to be...actually, in this respec, nothing really
+  // -document, how long the result array needs to be...actually, in this respect, nothing really
   //  changes - the same rules as for normal polynomials apply
 
   // todo:
@@ -7630,6 +7634,7 @@ public:
 protected:
 
   int m = 0;  // The offset, i.e. the power of x by which the whole thing is multiplied
+  // ToDo: give it a descriptive name..like powerOffset
 
 };
 
@@ -7692,6 +7697,87 @@ int rsLiftedPolynomial<T>::multiply(const T *a, int aDegree, int aOffset, const 
 //  Figure this out and document it.
 // -Make also a class LiftedRationalFunction because eventually, we want to apply it also to IIR
 //  transfer functions
+
+
+
+
+
+
+//=================================================================================================
+
+/**  A class for representing polynomials in factored form, i.e. as a product of linear factors and
+and overall scaling factor. That is:
+
+  p(x) = k * (x-r1) * (x-r2) * (x-r3) * ... * (x-rN)
+
+where r1,r2,...,rN are the N roots of the polynomial and k is the overall scaling factor. ...TBC...
+
+*/
+
+template<class T> 
+class rsFactoredPolynomial
+{
+
+public:
+
+
+
+
+  void setup(const T& scaler, const T *roots, int degree);
+
+
+  /** Evaluates the polynomial at the given input x. */
+  //T evaluate(T x) const { return evaluate(x, &coeffs[0], getDegree(), m); }
+
+
+
+
+  static T evaluate(const T& x, const T& k, const T *r, int degree);
+
+
+protected:
+
+  std::vector<T> r;  // Roots
+  T k = T(0);        // Scaler
+
+};
+
+
+template <class T>
+void rsFactoredPolynomial<T>::setup(const T& scaler, const T* roots, int degree)
+{
+  rsCopyToVector(roots, degree, r);
+  k = scaler;
+}
+
+
+template <class T>
+T rsFactoredPolynomial<T>::evaluate(const T& x, const T& k, const T *r, int degree)
+{
+  T p(T(1));
+  for(auto& ri : r)
+    p *= (x - ri);
+  return k * p;
+}
+
+
+
+// ToDo:
+//
+// - Conversion from/to rsPolynomial. I think, the functions to do that should be free functions in
+//   or to keep the two classes independent of each other. Or maybe functions to do conversions 
+//   between various different representations of polynomials could be collected into a class
+//   rsPolynomialConverter as static functions.
+
+
+
+
+
+
+
+
+
+
 
 //=================================================================================================
 

@@ -14580,6 +14580,30 @@ bool testLiftedPolynomial()
   return ok;
 }
 
+bool testFactoredPolynomial()
+{
+  bool ok = true;
+
+  using Num   = float;
+  using PolyF = rsFactoredPolynomial<Num>;
+  using Vec   = std::vector<Num>;
+
+
+  Vec roots({ -3, -1, 2 });
+  Num k = 5;
+
+  PolyF p1;
+  p1.setup(k, &roots[0], (int) roots.size());
+
+  Num x = 0;
+
+  //Num y = p.evaluate(x);
+
+
+
+  return ok;
+}
+
 
 void testMimoTransferMatrix()
 {

@@ -46,13 +46,13 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSortedSet();
 
   // Autodiff:
-  testAutoDiff();
-  testAutoDiff2();
-  testAutoDiff3();
-  testAutoDiff4();
-  testAutoDiff5();     // stub
-  testAutoDiffReverse1();
-  testDualComplex();
+  //testAutoDiff();
+  //testAutoDiff2();
+  //testAutoDiff3();
+  //testAutoDiff4();
+  //testAutoDiff5();     // stub
+  //testAutoDiffReverse1();
+  //testDualComplex();
 
   //testVectorMultiplication3D();
   //testHermiteInterpolation();
@@ -113,7 +113,11 @@ int main (int /*argc*/, char* /*argv[]*/)
   // ToDo: 
   // -Maybe move the string-group code over here from the main repo, and write testStringGroup()
 
-  testAttractors();  // move into a section for physics/models
+  //testAttractors();  // move into a section for physics/models
+
+  testLiftedPolynomial();
+  testFactoredPolynomial();          // stub
+
 
   // MIMO Filters:
   //testMimoTransferMatrix();
@@ -134,7 +138,10 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSmoothMax();                   // stub
 
 
-  //testMerge();
+
+
+
+  //testMerge();  // Trying to find an in-place merge algorithm - not sure, if that's possible, though
 
 
   // Riemann zeta function:

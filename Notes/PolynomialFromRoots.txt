@@ -136,9 +136,86 @@ The left hand sides vanish:
 
 Let's bring the Q-terms to the left:
 
-  -Q * (r1-q1) * (r1-q2)  =  P * (r1-p1) * (r1-p2)
+  -Q * (r1-q1) * (r1-q2)  =  P * (r1-p1) * (r1-p2)                                               (1)
   -Q * (r2-q1) * (r2-q2)  =  P * (r2-p1) * (r2-p2)
 
 Take the logarithm:
 
- ...
+ ...TBC...
+
+
+Another idea: Take the ansatz:
+
+  r(x) = p(x) + q(x) = 0    iff    p(x) = -q(x)
+
+So, we require for our example:
+
+  P * (x-p1) * (x-p2) = -Q * (x-q1) * (x-q2)
+
+Now into this equation, we plug in the unknonw(1) roots r1,r2 of r(x) to obtain two equations:
+
+  P * (r1-p1) * (r1-p2) = -Q * (r1-q1) * (r1-q2)
+  P * (r2-p1) * (r2-p2) = -Q * (r2-q1) * (r2-q2)
+
+Ah! That the same equation that we obtained above as (1)! OK - now take the natural logarithm of 
+both sides to transform the products into sums:
+
+  ln(P) + ln(r1-p1) + ln(r1-p2) = ln(-Q) + ln(r1-q1) + ln(r1-q2)
+  ln(P) + ln(r2-p1) + ln(r2-p2) = ln(-Q) + ln(r2-q1) + ln(r2-q2)
+
+Bring all terms to the left:
+
+  ln(P) + ln(r1-p1) + ln(r1-p2) - ln(-Q) - ln(r1-q1) - ln(r1-q2) = 0
+  ln(P) + ln(r2-p1) + ln(r2-p2) - ln(-Q) - ln(r2-q1) - ln(r2-q2) = 0
+
+Re-arrange:
+
+  ln(P) - ln(-Q)  +  ln(r1-p1) - ln(r1-q1)  +  ln(r1-p2) - ln(r1-q2) = 0
+  ln(P) - ln(-Q)  +  ln(r2-p1) - ln(r2-q1)  +  ln(r2-p2) - ln(r2-q2) = 0
+
+Hmm - we actually again have 8 unknowns: ln(r1-p1), ln(r1-q1), ... and only two equations. But we 
+already obtained 4 equations above by pluggin in p1,p2,q1,q2 into our first ansatz. So, that is 6 in 
+total. Can we somehow obtain 2 more? What about plugging r1,r2 into the 1st ansatz?
+
+  R * (x-r1) * (x-r2) = P * (x-p1) * (x-p2)  +  Q * (x-q1) * (x-q2)
+  0 = P * (r1-p1) * (r1-p2)  +  Q * (r1-q1) * (r1-q2) = Q(r1) + P(r1)
+  0 = P * (r2-p2) * (r2-p2)  +  Q * (r2-q1) * (r2-q2) = Q(r2) + P(r2)
+
+...hmm...no - that seems to give the same equations, we already have. Maybe we can reduce the number 
+of unknowns by combining the terms that involve the same unknown root. Then we shift the burden to 
+solve a nonlinear equation involving sums of logarithms of the type ln(r1-p1) + ln(r1-p2) + ...
+
+Other idea: Maybe just take the ansatz:
+
+  P * (r1-p1) * (r1-p2)  -  Q * (r1-q1) * (r1-q2) = 0
+  P * (r2-p1) * (r2-p2)  -  Q * (r2-q1) * (r2-q2) = 0
+
+This is a decoupled(!) nonlinear system of 2 equations in the two unknowns r1,r2. We may go ahead 
+and just try to solve the 1st equation via (complex valued) Newton iteration to find the 1st root 
+r1. But what then? Just applying Newton iteration two the 2nd equation will just converge to the 
+same root if we take the same initial value. But maybe we can tweak the function in the initial 
+phase to drive the solution away from r1 - for example by introduing a pole at r1 by adding 1/r1, 
+i.e. try initially applying Newton iteration to:
+
+    P * (r2-p1) * (r2-p2)  -  Q * (r2-q1) * (r2-q2)  + 1/r1 = 0
+
+and when this is (roughly) converged, scrap the 1/r1 term and converge to the actual solution? For 
+a 3rd root, we would initially add 1/r1 + 1/r2, etc. Or maybe ther could be some more clever way to
+"remove" the root at r1 from the left hand side without affecting the locations of the other roots?
+Another problem might be to evaluate the derivative of the polynomial in prodcut form. Maybe we need
+to appyl a generalized product rule? See .tex files for the math book - there I have some notes 
+about that rule. Maybe we should have a class rsFactoredPolynomial for implementing such operations 
+on factored polynomials (i.e. polynomials in product form)
+
+
+
+
+
+
+
+
+
+
+
+
+

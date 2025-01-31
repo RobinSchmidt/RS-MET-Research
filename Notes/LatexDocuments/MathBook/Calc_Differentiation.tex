@@ -104,7 +104,14 @@ There is also a similar generalization of the chain rule for compositions of mor
 % https://www.youtube.com/watch?v=0dz5HTHWneo
 % -Nice generalization of the product rule for a product of multiple functions. The rule says to 
 %  take the derivative of one function at a time and leave the others as is and add the results.
-%  For 3 functions (f g h)' = f' g h + f g' h + f g h'. In general:
+%  For 3 functions (f g h)' = f' g h + f g' h + f g h'. In general for n functions, we have a sum of
+%  n terms where each term is a product of (n-1) function values and one derivative value. In 
+%  practice, we could evaluate it via first forming a product P of all n terms and then form a sum 
+%  of terms of the form P * f_i' / f_i where i is the index of the function. This should be more
+%  efficient than evaluating the n-1 different products from scratch. We need to take care of
+%  possible division by zero, though. In the context evaluating the derivative for Newton iteration,
+%  this may not be a problem because when one of f_i is zero, then so is the product which means 
+%  that we have already found the root - the problematic case occurs only at the root itself.
 
 % Is there a similar generalization for the chain rule?
 % Yes: https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions

@@ -7726,6 +7726,35 @@ public:
 
   void setup(const T& scaler, const T *roots, int numRoots);
 
+  // ToDo: setScaler, setCoeff
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry */
+
+
+  int getNumRoots() const { return (int) r.size(); }
+
+  T getScaler() const { return k; }
+
+  T getRoot(int i) const
+  {
+    rsAssert(i >= 0 && i < getNumRoots()); // Maybe make a function isValidRootIndex
+    return r[i];
+  }
+
+
+
+  int getDegree() const { return getNumRoots(); }
+
+  T getLeadingCoeff() const { return getScaler(); }
+
+
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Evaluation and Calculus (High Level) */
 
   /** Evaluates the polynomial at the given input x. */
   T evaluate(T x) const { return evaluate(x, k, &r[0], getNumRoots()); }
@@ -7740,33 +7769,12 @@ public:
   //T evaluateUnscaled(T x) const { return evaluate(x, k, &r[0], getNumRoots()); }
 
 
-
-  //-----------------------------------------------------------------------------------------------
-  /** \name Inquiry */
-
-
-  int getNumRoots() const { return (int) r.size(); }
-
-  T getScaler() const { return k; }
+  //void valueAndSlopeAt(const T& x, T* y, T* yp) const
+  //{
+  //  evaluateWithDerivative(x, &coeffs[0], getDegree(), y, yp);
+  //}
 
 
-  int getDegree() const { return getNumRoots(); }
-
-  T getLeadingCoefficient() const { return getScaler(); }
-  // Maybe rename to getLeadingCoeff - but make sure to do it consistently in all polynomial
-  // classes
-
-  T getRoot(int i) const
-  {
-    rsAssert(i >= 0 && i < getNumRoots()); // Maybe make a function isValidRootIndex
-    return r[i];
-  }
-  
-
-
-  // Maybe have also a getNumRoots function
-
-  // getScaler getLeadingCoeff
 
 
   //-----------------------------------------------------------------------------------------------

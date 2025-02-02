@@ -14600,9 +14600,29 @@ T derivative(const rsFactoredPolynomial<T>& p, T x)
   // The algo may be numerically unstable near stationary points. Exactly at the stationary point, 
   // we'd formally have a 0/0 expression. Wait - no - we will get this problem at the roots...so we
   // will have problems evalauting the derivative at zero crossings via such an algo. In the 
-  // context of Newtion ietration that may not be a problem because the iteration terminates at a 
+  // context of Newtion iteration that may not be a problem because the iteration terminates at a 
   // root. We'll see....
+  //
+  // I think, one possible solution could be to evaluate p, check if the result is clsoe to zero
+  // and if it is, figure out which one of the roots is responsible and then create an algorithm
+  // that treats the offending root specially. But: it could be that the offending root is a 
+  // multiple root - we cannot safely assume that only one root is problematic. Maybe we could keep
+  // the roots sorted - then a multiple root would occupy a contiguous section of the array and 
+  // could be skipped over. But the complication of keeping the roots sorted is significant so I
+  // don't really like the idea. Also, for complex roots, we would have to define a suitable 
+  // sorting criterion - of course, we could sort be real part and in case fo equal real parts sort
+  // by imaginray part - but that's arbitrary from a mathematical point of view.
 }
+
+template<class T>
+void valueAndSlopeAt(const rsFactoredPolynomial<T>& p, T x, T* y, T* yp)
+{
+  *y  = p.evaluate(x);
+  *yp = 0;
+  for(int i = 0; i < p.getNumRoots(); i++)
+    *yp += *y / (x - p.getRoot(i));
+}
+
 
 bool testFactoredPolynomial()
 {
@@ -14614,27 +14634,33 @@ bool testFactoredPolynomial()
   using Vec   = std::vector<Num>;
 
 
+  // Create example polynomial in product (i.e. factored) form and in sum (i.e. coefficient) form:
   Vec roots({ -3, -1, 2 });
   Num k = 5;
-
-  PolyF f1;
-  f1.setup(k, &roots[0], (int) roots.size());
-
-  Poly p1;
-  p1.setRoots(roots, k);
+  PolyF f1; f1.setup(k, &roots[0], (int) roots.size());  // Maybe make a convenience function that takes a std::vector
+  Poly  p1; p1.setRoots(roots, k);
 
 
+  // Variables for evaluation tests:
+  Num x = 1.25;                       // x-value where we evaluate stuff
+  Num y1, y2, s1, s2;                 // Values and slopes of normal and factored polynomial
 
-  Num x = 1.25;
-  Num y1, y2;
-
+  // Evaluate polynomial p(x):
   y1 = p1.evaluate(x);
   y2 = f1.evaluate(x);
   ok &= y2 == y1;
 
-  y1 = p1.derivativeAt(x);
-  y2 = derivative(f1, x);
+  // Evaluate derivative p'(x):
+  s1 = p1.derivativeAt(x);
+  s2 = derivative(f1, x);
+  ok &= s2 == s1;
+
+  // Evaluate polynomial and derivative:
+  y2 = s2 = 0;
+  valueAndSlopeAt(f1, x, &y2, &s2);
   ok &= y2 == y1;
+  ok &= s2 == s1;
+
 
   return ok;
 }

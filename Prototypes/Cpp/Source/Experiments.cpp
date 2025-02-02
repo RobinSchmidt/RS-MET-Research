@@ -14580,6 +14580,15 @@ bool testLiftedPolynomial()
   return ok;
 }
 
+
+// Under construction - should evaluate the derivative of p at the given x, i.e. p'(x)
+template<class T>
+T derivative(const rsFactoredPolynomial<T>& p, T x)
+{
+  return T(0);  // Preliminary
+
+}
+
 bool testFactoredPolynomial()
 {
   bool ok = true;
@@ -14601,10 +14610,14 @@ bool testFactoredPolynomial()
 
 
 
-  Num x = 0;
+  Num x = 1;
 
-  Num y1 = f1.evaluate(x);
-  Num y2 = p1.evaluate(x);
+  Num y1 = p1.evaluate(x);
+  Num y2 = f1.evaluate(x);
+
+  y1 = p1.derivativeAt(x);
+  y2 = derivative(f1, x);
+
 
 
 

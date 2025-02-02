@@ -91,14 +91,26 @@ The two first properties, homogeneity and additivity, taken together constitute 
  = \lim_{h \rightarrow 0} \frac{f(x + h) - f(x)}{h}
  = \frac{d}{d h} f(x + h) \bigg\rvert_{h=0}
 \end{equation}
-whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later. There, we will see a similar definition via a limit and the RHS will tell us, how to actually evaluate the limit - but that's a topic for later. There is a generalization for the product rule for products with more than two factors. The rule says to 
-take the derivative of one function at a time and leave the other factors as is and then add up the results. For example, for a product of 3 functions, it says that $(fgh)' =  f' g h + f g' h + f g h'$.  In general:
+whose usefulness lies mostly in its generalizations to the directional derivative and Gateaux derivative which we will encounter later. There, we will see a similar definition via a limit and the RHS will tell us, how to actually evaluate the limit - but that's a topic for later. There is a generalization for the product rule for products with more than two factors. The rule says to take the derivative of one function at a time and leave the other factors as is and then add up the results. For example, for a product of 3 functions, it says that $(fgh)' =  f' g h + f g' h + f g h'$.  In general:
 \begin{equation}
 \frac{d}{dx} \prod_k f_k(x)  
 = \Bigl(  \prod_k f_k(x)   \Bigr) '
 = \sum_k \Bigl( f_k'(x) \prod_{i \neq k} f_i(x)  \Bigr) 
 \end{equation}
-There is also a similar generalization of the chain rule for compositions of more than two functions. ...TBC... TODO: state the rule - it can be found on wikipedia %https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
+There is also a similar generalization of the chain rule for compositions of more than two functions. For a composition of 3 functions, it states that $f(g(h(x)))' =  f'(g(h(x))) \cdot g'(h(x)) \cdot h'(x)$. I'll refrain from giving a general formula because I would have to introduce an uncommon notation for it. Instead, I'll appeal to your ability to see the pattern. It's basically just a product of all the derivatives and each derivative is taken at the appropriate argument of the respective function. For example, the derivative of $g$ is taken at $h(x)$ because $h(x)$ is the argument of $g$ etc. ...TBC... ToDo: inverse function rule, logarithmic differentiation
+
+%TODO: maybe instead of writing (f(g))' = g' f'(g) write  (f(g(x)))' = g'(x) f'(g(x)) because it's ambiguous otherwise
+
+%TODO: maybe mention backpropagation: to evaluate a derivative of an expression that is a compositions of 3 functions, we first make a forward propagation (inside-out) pass: 
+% h(x) -> g(h) -> f(g)
+% and then a backward propagation pass to evaluate the derivatives:
+% f'(g) -> g'(h) -> h'(x)
+% and the multiply them all together to obtain f'(x)
+% I think, it doesn't really matter in which direction we evaluate the derivatives - we could also do that in a forward pass - but maybe in the multivariate case, we really need to do it backwards? Try it in the bivariate case
+
+%https://en.wikipedia.org/wiki/Chain_rule#Composites_of_more_than_two_functions
+
+% f(g(h(x))) = f'(g(h(x))) * g'(h(x)) * h'(x)
 
 % Where did I get this formula from? I think, I derived it myself? Maybe via a Taylor expansion of f? Or via specializing to 1D the directional derivative which itself is more easily to "see" intuitively? Or maybe we can define a bivariate function f(x,h) = f(x+h) and derive it from there using partial derivatives? Or maybe evaluate the limit directly from the bivariate function?
 
@@ -109,7 +121,7 @@ There is also a similar generalization of the chain rule for compositions of mor
 % Generalization of chain rule to higher oder derivatives - Faa di Bruno's formula:
 % https://en.wikipedia.org/wiki/Fa%C3%A0_di_Bruno%27s_formula
 
-
+% Give example to differentiate f(x) = x^x
 
 
 % Do You ACTUALLY Know The Product Rule?
@@ -137,8 +149,7 @@ There is also a similar generalization of the chain rule for compositions of mor
 %todo: list derivatives of elementary functions
 
 \subsection{Elementary Derivatives}
-We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting).
-...
+We'll now give a list of some of the most important derivatives of elementary functions. This list (or a more comprehensive version of it that can be found elsewhere), together with the differentiation rules above, will allow us to mechanically evaluate derivatives of all functions that can be constructed from these elementary functions by algebraic operations or composition (i.e. nesting). ...TBC...
 
 % State also some tricks to evaluate cretain functions togther with their derivatives without much 
 % extra cost

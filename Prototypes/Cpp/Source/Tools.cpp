@@ -7721,16 +7721,47 @@ class rsFactoredPolynomial
 public:
 
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Setup */
 
-
-  void setup(const T& scaler, const T *roots, int degree);
+  void setup(const T& scaler, const T *roots, int numRoots);
 
 
   /** Evaluates the polynomial at the given input x. */
-  //T evaluate(T x) const { return evaluate(x, &coeffs[0], getDegree(), m); }
+  T evaluate(T x) const { return evaluate(x, k, &r[0], getNumRoots()); }
 
 
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Inquiry */
+
+
+  int getNumRoots() const { return (int) r.size(); }
+
+  T getScaler() const { return k; }
+
+
+  int getDegree() const { return getNumRoots(); }
+
+  T getLeadingCoefficient() const { return getScaler(); }
+  // Maybe rename to getLeadingCoeff - but make sure to do it consistently in all polynomial
+  // classes
+
+  T getRoot(int i) const
+  {
+    rsAssert(i >= 0 && i < getNumRoots()); // Maybe make a function isValidRootIndex
+    return r[i];
+  }
+  
+
+
+  // Maybe have also a getNumRoots function
+
+  // getScaler getLeadingCoeff
+
+
+  //-----------------------------------------------------------------------------------------------
+  /** \name Static member functions */
 
   static T evaluate(const T& x, const T& k, const T *r, int degree);
 
@@ -7739,24 +7770,25 @@ protected:
 
   std::vector<T> r;  // Roots
   T k = T(0);        // Scaler
+  // Maybe rename to roots, scaler
 
 };
 
 
 template <class T>
-void rsFactoredPolynomial<T>::setup(const T& scaler, const T* roots, int degree)
+void rsFactoredPolynomial<T>::setup(const T& newScaler, const T* newRoots, int degree)
 {
-  rsCopyToVector(roots, degree, r);
-  k = scaler;
+  rsCopyToVector(newRoots, degree, r);
+  k = newScaler;
 }
 
 
 template <class T>
-T rsFactoredPolynomial<T>::evaluate(const T& x, const T& k, const T *r, int degree)
+T rsFactoredPolynomial<T>::evaluate(const T& x, const T& k, const T *r, int numRoots)
 {
   T p(T(1));
-  for(auto& ri : r)
-    p *= (x - ri);
+  for(int i = 0; i < numRoots; i++)
+    p *= (x - r[i]);
   return k * p;
 }
 

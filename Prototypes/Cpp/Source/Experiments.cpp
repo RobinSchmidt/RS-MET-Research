@@ -14585,6 +14585,7 @@ bool testFactoredPolynomial()
   bool ok = true;
 
   using Num   = float;
+  using Poly  = rsPolynomial<Num>;
   using PolyF = rsFactoredPolynomial<Num>;
   using Vec   = std::vector<Num>;
 
@@ -14592,12 +14593,18 @@ bool testFactoredPolynomial()
   Vec roots({ -3, -1, 2 });
   Num k = 5;
 
-  PolyF p1;
-  p1.setup(k, &roots[0], (int) roots.size());
+  PolyF f1;
+  f1.setup(k, &roots[0], (int) roots.size());
+
+  Poly p1;
+  p1.setRoots(roots, k);
+
+
 
   Num x = 0;
 
-  //Num y = p.evaluate(x);
+  Num y1 = f1.evaluate(x);
+  Num y2 = p1.evaluate(x);
 
 
 

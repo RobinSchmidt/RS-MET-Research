@@ -14581,12 +14581,27 @@ bool testLiftedPolynomial()
 }
 
 
-// Under construction - should evaluate the derivative of p at the given x, i.e. p'(x)
+// Evaluates the derivative of p at the given x, i.e. p'(x)
 template<class T>
 T derivative(const rsFactoredPolynomial<T>& p, T x)
 {
-  return T(0);  // Preliminary
+  T d(T(0));
+  for(int i = 0; i < p.getNumRoots(); i++)
+    d += p.evalUnscaledOneRootLess(x, i);
+  return d * p.getScaler();
 
+  // This is an O(n^2) algorithm where n is the number of roots. It should probably not be used in
+  // production. It has its place in unit testing, though. It's O(n^2) because the call to
+  // p.evalUnscaledOneRootLess() is itself O(n). It's possible to write a derivative algorithm that
+  // runs in O(n), though - we need to evaluate the polynomial y = p(x) itself and then form a sum
+  // of terms of the form y / (x-r[i]). Instead of evalauting the polynomial from the roots while
+  // leaving out one root at a time, we evaluate it once fully and the divide out the extra root 
+  // per term. The problem might be that we may have to take care of possible divisions by zero. 
+  // The algo may be numerically unstable near stationary points. Exactly at the stationary point, 
+  // we'd formally have a 0/0 expression. Wait - no - we will get this problem at the roots...so we
+  // will have problems evalauting the derivative at zero crossings via such an algo. In the 
+  // context of Newtion ietration that may not be a problem because the iteration terminates at a 
+  // root. We'll see....
 }
 
 bool testFactoredPolynomial()
@@ -14610,16 +14625,16 @@ bool testFactoredPolynomial()
 
 
 
-  Num x = 1;
+  Num x = 1.25;
+  Num y1, y2;
 
-  Num y1 = p1.evaluate(x);
-  Num y2 = f1.evaluate(x);
+  y1 = p1.evaluate(x);
+  y2 = f1.evaluate(x);
+  ok &= y2 == y1;
 
   y1 = p1.derivativeAt(x);
   y2 = derivative(f1, x);
-
-
-
+  ok &= y2 == y1;
 
   return ok;
 }

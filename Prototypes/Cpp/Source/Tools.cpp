@@ -7731,6 +7731,15 @@ public:
   T evaluate(T x) const { return evaluate(x, k, &r[0], getNumRoots()); }
 
 
+  T evalUnscaledOneRootLess(T x, int leftOutRootIndex) const 
+  { 
+    return evalUnscaledOneRootLess(x, &r[0], getNumRoots(), leftOutRootIndex);
+  }
+
+
+  //T evaluateUnscaled(T x) const { return evaluate(x, k, &r[0], getNumRoots()); }
+
+
 
   //-----------------------------------------------------------------------------------------------
   /** \name Inquiry */
@@ -7763,7 +7772,18 @@ public:
   //-----------------------------------------------------------------------------------------------
   /** \name Static member functions */
 
-  static T evaluate(const T& x, const T& k, const T *r, int degree);
+
+
+  static T evaluate(const T& x, const T& scaler, const T *roots, int numRoots);
+
+  static T evaluateUnscaled(const T& x, const T *roots, int numRoots);
+  // Maybe rename to evaluate - the fact that it's unscaled can be inferred from the fact that no
+  // scale factor is passed...but that may be ahrd to see at the call site - so maybe it's better
+  // to be explicit - so maybe don't rename
+
+
+  static T evalUnscaledOneRootLess(const T& x, const T *roots, int numRoots, int leftOutRootIndex);
+
 
 
 protected:
@@ -7783,13 +7803,33 @@ void rsFactoredPolynomial<T>::setup(const T& newScaler, const T* newRoots, int d
 }
 
 
+
+
+
 template <class T>
 T rsFactoredPolynomial<T>::evaluate(const T& x, const T& k, const T *r, int numRoots)
+{
+  return k * evaluateUnscaled(x, r, numRoots);
+}
+
+template <class T>
+T rsFactoredPolynomial<T>::evaluateUnscaled(const T& x, const T *r, int numRoots)
 {
   T p(T(1));
   for(int i = 0; i < numRoots; i++)
     p *= (x - r[i]);
-  return k * p;
+  return p;
+}
+
+template <class T>
+T rsFactoredPolynomial<T>::evalUnscaledOneRootLess(
+  const T& x, const T *r, int numRoots, int leftOut)
+{
+  T p(T(1));
+  for(int i = 0; i < numRoots; i++)
+    if(i != leftOut)
+      p *= (x - r[i]);
+  return p;
 }
 
 

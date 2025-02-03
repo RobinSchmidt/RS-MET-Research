@@ -14685,6 +14685,12 @@ bool testFactoredPolynomial()
 
 
   return ok;
+
+  // ToDo:
+  //
+  // - Write a function that computes the partial derivative of p with respect to a root r[i] at a
+  //   given location x. That is: we now treat x as a fixed parameter and view p as a multivariate 
+  //   function of the roots. I think, it's just given by -p.evalUnscaledOneRootLess(x, i)
 }
 
 

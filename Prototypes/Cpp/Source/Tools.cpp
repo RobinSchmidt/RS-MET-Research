@@ -7726,7 +7726,7 @@ public:
 
   void setup(const T& scaler, const T *roots, int numRoots);
 
-  // ToDo: setScaler, setCoeff
+  // ToDo: setScaler(T newScaler), setRoot(int i, T newRoot)
 
 
 
@@ -7738,12 +7738,8 @@ public:
 
   T getScaler() const { return k; }
 
-  T getRoot(int i) const
-  {
-    rsAssert(i >= 0 && i < getNumRoots()); // Maybe make a function isValidRootIndex
-    return r[i];
-  }
-
+  T getRoot(int i) const { rsAssert(i >= 0 && i < getNumRoots()); return r[i]; }
+  // Maybe make a function isValidRootIndex
 
 
   int getDegree() const { return getNumRoots(); }
@@ -7761,9 +7757,7 @@ public:
 
 
   T evalUnscaledOneRootLess(T x, int leftOutRootIndex) const 
-  { 
-    return evalUnscaledOneRootLess(x, &r[0], getNumRoots(), leftOutRootIndex);
-  }
+  { return evalUnscaledOneRootLess(x, &r[0], getNumRoots(), leftOutRootIndex); }
 
 
   //T evaluateUnscaled(T x) const { return evaluate(x, k, &r[0], getNumRoots()); }
@@ -7809,10 +7803,6 @@ void rsFactoredPolynomial<T>::setup(const T& newScaler, const T* newRoots, int d
   rsCopyToVector(newRoots, degree, r);
   k = newScaler;
 }
-
-
-
-
 
 template <class T>
 T rsFactoredPolynomial<T>::evaluate(const T& x, const T& k, const T *r, int numRoots)

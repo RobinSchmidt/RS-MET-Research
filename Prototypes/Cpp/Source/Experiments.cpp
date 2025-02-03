@@ -14611,16 +14611,39 @@ T derivative(const rsFactoredPolynomial<T>& p, T x)
   // could be skipped over. But the complication of keeping the roots sorted is significant so I
   // don't really like the idea. Also, for complex roots, we would have to define a suitable 
   // sorting criterion - of course, we could sort be real part and in case fo equal real parts sort
-  // by imaginray part - but that's arbitrary from a mathematical point of view.
+  // by imaginray part - but that's arbitrary from a mathematical point of view. Maybe it would be 
+  // acceptable to pass in the polynomial as non-const and sort the roots internally as first step.
+  // That would lead to an O(n*log(n)) algorithm - not quite as good as O(n) but much better than 
+  // O(n^2). We could also create a temporary polynomial internally - but then we would have a heap
+  // allocation. Or we could let the caller pass in a workspace.
 }
 
 template<class T>
 void valueAndSlopeAt(const rsFactoredPolynomial<T>& p, T x, T* y, T* yp)
 {
   *y  = p.evaluate(x);
-  *yp = 0;
+  *yp = T(0);
   for(int i = 0; i < p.getNumRoots(); i++)
     *yp += *y / (x - p.getRoot(i));
+
+
+  // Notes:
+  //
+  // - The derivative is a sum of terms where each term is the polynomial evaluated with one root 
+  //   left out. Implementing that literally would lead to an O(n^2) algorithm. We simulate the 
+  //   "leave-one-root-out" strategy by evaluating it with all roots and then dividing out one root
+  //   at a time to obtain the term that we would have gotten, if we had left out the root. This 
+  //   gives an O(n) algorithm. ...but:
+  //
+  // - This algorithm will be problematic when x is at or near a root of p. We will have a division 
+  //   by zero exactly at the root and precision loss near the root (subtracting two numbers that 
+  //   are close will give rise to precision loss). So, the algorithm should be used only when x is
+  //   sufficiently far away from all the roots.
+  //
+  //
+  // ToDo:
+  //
+  // - Try to come up with an O(n) algorithm that works also at or near the roots. 
 }
 
 
@@ -14629,9 +14652,9 @@ bool testFactoredPolynomial()
   bool ok = true;
 
   using Num   = float;
+  using Vec   = std::vector<Num>;
   using Poly  = rsPolynomial<Num>;
   using PolyF = rsFactoredPolynomial<Num>;
-  using Vec   = std::vector<Num>;
 
 
   // Create example polynomial in product (i.e. factored) form and in sum (i.e. coefficient) form:
@@ -14639,7 +14662,6 @@ bool testFactoredPolynomial()
   Num k = 5;
   PolyF f1; f1.setup(k, &roots[0], (int) roots.size());  // Maybe make a convenience function that takes a std::vector
   Poly  p1; p1.setRoots(roots, k);
-
 
   // Variables for evaluation tests:
   Num x = 1.25;                       // x-value where we evaluate stuff

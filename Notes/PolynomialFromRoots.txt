@@ -204,7 +204,21 @@ a 3rd root, we would initially add 1/r1 + 1/r2, etc. Or maybe ther could be some
 "remove" the root at r1 from the left hand side without affecting the locations of the other roots?
 Maybe we could cancel it by dividing the whole expression by (x-r1)?
 
-Another problem might be to evaluate the derivative of the polynomial in prodcut form. Maybe we need
+Maybe we could try to obtain a set of strategically placed points of the polynomial 
+r(x) = p(x) + q(x) and then find an interpolant via Newtons interpolation formula? We could choose
+the roots of p, i.e. p1, p2, ... as x-values. The y values would be q(p1), q(p2), ... This is 
+because p(x) vanishes at x = p1, x = p2, ... so p(x) + q(x) would be just q(x). Or we could choose 
+the roots of q as x values and the corresponding y-values would p(q1), p(q2), ...
+
+Maybe we could consider a family of polynomials r_t(x) = p(x) + t * q(x) where t is a parameter in 
+[0,1]. We could start at t = 0 where the roots of r_t(x) would be the same as the roots of p(x). 
+Then we could slowly ramp up t and (somehow) let and algorithm follow the trajectories of the roots.
+At t = 1, they would be our desired roots of r(x) = p(x) + q(x). It would require that for each t,
+we would have to compute the roots of r_t - but maybe that could be done fast - maybe with one nD 
+Newton step?
+
+
+Another problem might be to evaluate the derivative of the polynomial in product form. Maybe we need
 to apply a generalized product rule? See .tex files for the math book - there I have some notes 
 about that rule. Maybe we should have a class rsFactoredPolynomial for implementing such operations 
 on factored polynomials (i.e. polynomials in product form)

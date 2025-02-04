@@ -14694,6 +14694,86 @@ bool testFactoredPolynomial()
 }
 
 
+
+// Move to StandardContainerTools.h:
+
+template<class T>
+inline std::complex<T> operator+(int x, const std::complex<T>& y)
+{
+  return T(x) + y;
+}
+
+template<class T>
+inline std::complex<T> operator-(int x, const std::complex<T>& y)
+{
+  return T(x) - y;
+}
+
+template<class T>
+inline std::complex<T> operator*(int x, const std::complex<T>& y)
+{
+  return T(x) * y;
+}
+
+
+void testPolynomialRootCorrespondence()
+{
+  // Under construction
+
+  // Define two polynomial p(x) and q(x) of same degree and then consider the parametrized 
+  // polynomial r_t(x) = (1-t)*p(x) + t*q(x) for t in 0..1. We are interested in the trajectories
+  // of the roots and in the question which root of p(x) gets corresponds to which root in q(x) in
+  // the sense that the root of p is the start and the root of q is the end fo such a trajectory.
+  // For this, we create some example polynomials and plot the roots for 
+  // t = 0.0, 0.1, 0.2, ..., 0.8, 0.9, 1.0
+
+
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using VecC    = std::vector<Complex>;
+  using PolyC   = rsPolynomial<Complex>;
+
+  Complex i(0, 1);
+  VecC rp({-3, 5 + 2*i, 5 - 2*i});
+  VecC rq({-4, 6 + 3*i, 6 - 3*i});
+
+  PolyC p, q;
+  p.setRoots(rp);
+  q.setRoots(rq);
+
+  int deg = p.getDegree();
+
+
+  int N = 11;
+  for(int n = 0; n < N; n++)
+  {
+    double t = double(n) / double(N-1);
+
+    PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+
+    // Find the roots of r = r_t(x):
+    VecC roots;
+    roots.resize(deg);
+    PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
+
+
+    //roots(const std::complex<R>* a, int degree, std::complex<R>* roots);
+
+
+
+
+    int dummy = 0;
+  }
+
+
+
+
+
+
+  int dummy = 0;
+}
+
+
 void testMimoTransferMatrix()
 {
   // Experiments with MIMO (multi-input/multi-output) transfer function matrices. A p-by-q (p rows,

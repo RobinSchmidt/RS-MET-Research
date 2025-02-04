@@ -101,6 +101,10 @@ There is also a similar generalization of the chain rule for compositions of mor
 
 %TODO: maybe instead of writing (f(g))' = g' f'(g) write  (f(g(x)))' = g'(x) f'(g(x)) because it's ambiguous otherwise
 
+% https://www.youtube.com/watch?v=-cedS03L17I
+% -Logarithmic differentiation: if f > 0, then (log(f(x)))' = f'(x)/f(x)
+% -Defining L[f] = f'/f, we get L[f g] = (f'g + g'f) / (fg) = L[f] + L[g]
+
 %TODO: maybe mention backpropagation: to evaluate a derivative of an expression that is a compositions of 3 functions, we first make a forward propagation (inside-out) pass: 
 % h(x) -> g(h) -> f(g)
 % and then a backward propagation pass to evaluate the derivatives:

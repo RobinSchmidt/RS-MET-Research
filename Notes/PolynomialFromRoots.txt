@@ -217,6 +217,30 @@ At t = 1, they would be our desired roots of r(x) = p(x) + q(x). It would requir
 we would have to compute the roots of r_t - but maybe that could be done fast - maybe with one nD 
 Newton step?
 
+Or maybe use the ansatz r_t(x) = (1-t)p(x) + t*q(x). We would do a crossfade between p and q via the
+parameter t. At t = 1/2, we would find a polynomial with our desired roots of r(x) = p(x) + q(x), 
+although r_t at t = 1/2 would be scaled by the factor 1/2 with respect to our desired r(x). But that 
+scaling doesn't affect the locations of the roots, so that's ok. Maybe we could develop a theory of
+root correspondence or root association between pairs of polynomials based on which root of p moves 
+to its associate root in q when we let t go from 0 to 1. From the outset, it's not clear that a 
+meaningful one-to-one association between roots of p and roots of q even exists. Maybe we can figure 
+out, how this asscociation via the morph relates to the distance between the pairs of roots. It 
+would seem plausible that in general, roots should be (more likely to be) associated if they are 
+closer together in the complex plane. But there may be complications - maybe a unique association 
+cannot be established when during the morph some of the roots meet and merge into a double root for 
+some t. Then we can't just follow the trajectory but must make a decision at the meeting point about
+which root goes where. Take as example p(z) = (z+1)*(z-1) = z^2 - 1, q(z) = (z+i)*(z-i) = z^2 + 1.
+At t = 1/2, we would have a double root at z = 0. But I think that such situations of having non 
+uniquely associable roots in p and q should be rare in the sense that when generating a polynomial 
+with random roots, the probability of running into such a case is zero. For that to happen, the 
+roots must "conspire" in a particular way (this is speculation from my gut feeling). Maybe to 
+resolve the ambiguity of "which goes where", we could establish a rule that says that at such corner
+points, the turning angle should be positive. That would make the root at +1 go to +i and the one 
+at -1 go to -i. I think, they will be corner points...not sure though - maybe in case of 3 roots 
+meeting to a triple root, there won't be a corner, but possibly a discontinuity in the 2nd 
+derivative (of the 2D curve traced out by the roots - not necessarily the components of their 
+parametric descriptions, i.e. the functions that map t to a point in a complex plane). Figure out!
+
 
 Another problem might be to evaluate the derivative of the polynomial in product form. Maybe we need
 to apply a generalized product rule? See .tex files for the math book - there I have some notes 

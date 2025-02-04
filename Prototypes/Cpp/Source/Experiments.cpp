@@ -14754,10 +14754,44 @@ void rsFlatten(const std::vector<std::vector<T>>& v, std::vector<T>& f)
     for(size_t j = 0; j < v[i].size(); j++)
       f.push_back(v[i][j]);
 
-
-
   // ToDo: pass f by pointer, maybe optionally swap inner and outer loop such that interleaving in
   // the result is the other way around
+}
+
+
+template<class T>
+void rsPlotPolyRootTrajectory(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  int N)
+{
+  rsAssert(rp.size() == rq.size());
+
+  using Complex = std::complex<T>;
+  using VecC    = std::vector<Complex>;
+  using PolyC   = rsPolynomial<Complex>;
+
+  // Create polynomials p,q:
+  PolyC p; p.setRoots(rp); p.scale(wp);
+  PolyC q; q.setRoots(rq); q.scale(wq);
+
+  // Vector for the roots of r_t(x). First index is for the different values of t, second index is
+  // index of the root:
+  std::vector<std::vector<Complex>> roots;
+  rsComputeRootTrajectory(p, q, N, roots);
+
+  // Flatten the roots vector:
+  std::vector<Complex> rootsFlat;
+  rsFlatten(roots, rootsFlat);
+
+  // Plot the roots:
+  GNUPlotter plt;
+  plt.addDataComplex(rootsFlat);
+  plt.setToDarkMode();
+  plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
+  plt.plot();
+  // It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
+ 
 }
 
 
@@ -14787,6 +14821,11 @@ void testPolynomialRootCorrespondence()
   VecC rp({-3, 5 + 2*i, 5 - 2*i});
   VecC rq({-4, 6 + 3*i, 6 - 3*i});
 
+
+  rsPlotPolyRootTrajectory(rp, Complex(1.0), rq, Complex(1.0), N);
+
+
+
   // Create polynomials p,q:
   PolyC p, q;
   p.setRoots(rp);
@@ -14804,11 +14843,10 @@ void testPolynomialRootCorrespondence()
   // Plot the roots:
   GNUPlotter plt;
   plt.addDataComplex(rootsFlat);
-  //plt.setGraphColors("000000");
-
   plt.setToDarkMode();
   plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
   plt.plot();
+  // It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
 
 
   // ToDo:

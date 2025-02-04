@@ -14804,7 +14804,9 @@ void testPolynomialRootCorrespondence()
   // Plot the roots:
   GNUPlotter plt;
   plt.addDataComplex(rootsFlat);
-  plt.setGraphColors("000000");
+  //plt.setGraphColors("000000");
+
+  plt.setToDarkMode();
   plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
   plt.plot();
 

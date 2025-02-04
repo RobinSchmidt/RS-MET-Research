@@ -14835,13 +14835,13 @@ void testPolynomialRootCorrespondence()
     {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 2
 
 
-  //// Try wq = -1:
-  //rsPlotPolyRootTrajectory(
-  //  {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = +1
-  //  {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = -1
-  //// Triggers a degenerate case where the leading coeff is zero - when N = 17, this occurs at at
-  //// n = 8, i.e. right in the middle of the trajectory. This trips up the Laguerre root finding 
-  //// algorithm. 
+  // Try wq = -1:
+  rsPlotPolyRootTrajectory(
+    {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = +1
+    {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = -1
+  // Triggers a degenerate case where the leading coeff is zero - when N = 17, this occurs at at
+  // n = 8, i.e. right in the middle of the trajectory. This trips up the Laguerre root finding 
+  // algorithm. 
 
 
   // A situation where in the middle of the trajectories, two roots merge into a double root:
@@ -14856,16 +14856,21 @@ void testPolynomialRootCorrespondence()
   //   samples along the trajectory near the roots of the respective polynomial. This is 
   //   intuitively plausible.
   //
+  // - When a polynomial for some value of t happens to be of lower degree than p and q because of
+  //   some cancellation effect, the root finding algo triggers an assertion. It can be triggered 
+  //   with: rp = {-3, 5+2i, 5-2i}, wp = +1, rq = {-4, 6+3i, 6-3i}, wq = -1, N = 17. The 
+  //   problematic case occurs at n = 8. That is, right in the middle (for t = 0.5);
+  //
   //
   // ToDo:
-  //
-  // - Test it with 
   //
   // - Figure out what happens when the degrees of p and q are different. Maybe some roots will go 
   //   off to infinity? We can't test this with the current code, though. Maybe we should just look
   //   at what happens to the roots when we scale the leading coeff of a single polynomial with 
   //   factors from 1 down to 0. Consider p(x) = a0 + a1*x + a2*x^2 + a3*x^3 and then let a3 go to 
   //   zero.
+  //
+  // - Write results down in a paper like "Root Trajectories of Polynomial Mixtures"
 }
 
 

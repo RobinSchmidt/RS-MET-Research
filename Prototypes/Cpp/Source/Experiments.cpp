@@ -14818,36 +14818,39 @@ void testPolynomialRootCorrespondence()
   Complex i(0, 1);      // Imaginary unit
 
 
-
   // Create some example root trajectories:
 
   // This is a rather nice situation. There is a clear correspondence between roots of p and q. We 
   // observe that the sampling of the trajectories is not equidistant. It's denser near the roots 
-  // of p even though both weights are equal (both are 1):
+  // of q even though both weights are equal (both are 1):
   rsPlotPolyRootTrajectory(
     {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = 1
     {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 1
 
-  // Now we increase the weighting coefficient of q from 1 to 2. This has the effect of a denser 
+  // Now we increase the weighting coefficient of q from 1 to 5. This has the effect of an even denser 
   // sampling of the trajectories near the roots of q:
   rsPlotPolyRootTrajectory(
     {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = 1
-    {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 2
+    {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 5
 
+  // Now let's reduce wq back to 1 again and instead increase wp to 5. In this case, the sampling is 
+  // denser near roots of p:
+  rsPlotPolyRootTrajectory(
+    {-3, 5 + 2*i, 5 - 2*i}, 5 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = 5
+    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 1
 
   // Try wq = -1:
-  rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = +1
-    {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = -1
-  // Triggers a degenerate case where the leading coeff is zero - when N = 17, this occurs at at
+  //rsPlotPolyRootTrajectory(
+  //  {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = +1
+  //  {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = -1
+  // Triggers a degenerate case where the leading coeff is zero. When N = 17, this occurs at at
   // n = 8, i.e. right in the middle of the trajectory. This trips up the Laguerre root finding 
   // algorithm. 
-
 
   // A situation where in the middle of the trajectories, two roots merge into a double root:
   rsPlotPolyRootTrajectory(
     {-1, +1}, 1 + 0*i,      // rp = -1, +1,  wp = 1
-    {-i, +i}, 1 + 0*i, N);  // rq = -i, +i,, wq = 1
+    {-i, +i}, 1 + 0*i, N);  // rq = -i, +i,  wq = 1
 
 
   // Observations:
@@ -14859,7 +14862,15 @@ void testPolynomialRootCorrespondence()
   // - When a polynomial for some value of t happens to be of lower degree than p and q because of
   //   some cancellation effect, the root finding algo triggers an assertion. It can be triggered 
   //   with: rp = {-3, 5+2i, 5-2i}, wp = +1, rq = {-4, 6+3i, 6-3i}, wq = -1, N = 17. The 
-  //   problematic case occurs at n = 8. That is, right in the middle (for t = 0.5);
+  //   problematic case occurs at n = 8. That is, right in the middle (for t = 0.5); I think, this 
+  //   cancellation of the leading coeff will always happen at some value of t, if the leading 
+  //   coeffs of p and q have different signs. So: that's may be precondition that needs to be met
+  //   if we want to be able to uniquely associate roots of p and q. But maybe we can relax the 
+  //   precondition associating a vanishing root with one that (re)appears. Vanishing roots seem
+  //   to shoot of to infinity when the leading coeff goes to zero. Maybe if several roots vanish
+  //   (and re-appear) simultaneously, we can associate them by looking at the directions in which
+  //   they shoot off and come back. Maybe they should be the same (or maybe exactly opposite) 
+  //   directions for associated roots.
   //
   //
   // ToDo:
@@ -14868,7 +14879,14 @@ void testPolynomialRootCorrespondence()
   //   off to infinity? We can't test this with the current code, though. Maybe we should just look
   //   at what happens to the roots when we scale the leading coeff of a single polynomial with 
   //   factors from 1 down to 0. Consider p(x) = a0 + a1*x + a2*x^2 + a3*x^3 and then let a3 go to 
-  //   zero.
+  //   zero. Ah - let's try it with a quadratic polynomial a*x^2 + b*x + c. It's roots are given
+  //   by r1,r2 = (-b +- sqrt(b^2 - 4*a*c)) / (2*a). So, yes, when a approaches zero, the 
+  //   denominator approaches zero, so the whole expression goes to infinity - unless the numerator
+  //   is also zero, which indeed does happen for the "+" case. Then the numerator is 
+  //   -b + sqrt(b^2) = -b + b = 0. This "+" case should probably converge to a finite number which
+  //   is the root of b*x + c, i.e. -c/b. Verify this by taking the appropriate limits. The "-"
+  //   case should be a limit of the form -2*b/0 (which is infinity) and the "+" case is a limit
+  //   of the form 0/0 for which we need l'Hospital's rule.
   //
   // - Write results down in a paper like "Root Trajectories of Polynomial Mixtures"
 }

@@ -14813,62 +14813,33 @@ void testPolynomialRootCorrespondence()
   using VecC    = std::vector<Complex>;
   using PolyC   = rsPolynomial<Complex>;
 
-  // Number of sample points along the trajectories:
-  int N = 21;
 
-  // Define the vectors of roots of p and q:
-  Complex i(  0, 1);
-  Complex one(1, 0);
+  int N = 17;           // Number of sample points along the trajectories
+  Complex i(0, 1);      // Imaginary unit
 
 
-  VecC rp({-3, 5 + 2*i, 5 - 2*i});
-  VecC rq({-4, 6 + 3*i, 6 - 3*i});
 
+  // Create some example root trajectories:
 
   rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i}, one, 
-    {-4, 6 + 3*i, 6 - 3*i}, one, N);
+    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = 1
+    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 1
+  // Dots are denser near the roots of p
 
-  //rsPlotPolyRootTrajectory(rp, one, rq, one, N);
-
-
-
-  //// Create polynomials p,q:
-  //PolyC p, q;
-  //p.setRoots(rp);
-  //q.setRoots(rq);
-
-  //// Vector for the roots of r_t(x). First index is for the different values of t, second index is
-  //// index of the root:
-  //std::vector<std::vector<Complex>> roots;
-  //rsComputeRootTrajectory(p, q, N, roots);
-
-  //// Flatten the roots vector:
-  //std::vector<Complex> rootsFlat;
-  //rsFlatten(roots, rootsFlat);
-
-  //// Plot the roots:
-  //GNUPlotter plt;
-  //plt.addDataComplex(rootsFlat);
-  //plt.setToDarkMode();
-  //plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
-  //plt.plot();
-  //// It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
+  rsPlotPolyRootTrajectory(
+    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = 1
+    {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 2
+  // Dots are denser near the roots of q. That's the effect of giving q a higher weight wq
 
 
-  // ToDo:
+  // Observations:
   //
-  // - Maybe make a convenience function that takes two complex vectors of roots and encapsulates
-  //   all the computations and creation of the plots. We want to call it like:
-  //   plotPolyRootTrajectory(VecC({-3, 5 + 2*i, 5 - 2*i}), VecC({-4, 6 + 3*i, 6 - 3*i}), N);
-  //   Maybe it could take the two scale factors for the polynomials as optional arguments 
-  //   (defaulting to 1). See poleZeroPlot() in Demos.cpp in the GNUPlotCPP repo fro making the 
-  //   plot nice. Maybe let the colors of the dots go from red to green or blue. Red indicates 
-  //   start, blue end.
-  // 
-  // - Figure out the effect of having different scale factors in front of p and q. I guess, it 
-  //   changes the (time variant) speed along the trajectory in some way? A higher coeff in front 
-  //   of p will make the roots of r_t stayy longer near the roots of p?
+  // - Increasing the scale factor of one of the polynomials p or q increases the density of the 
+  //   samples along the trajectory near the roots of the respective polynomial. This is 
+  //   intuitively plausible.
+  //
+  //
+  // ToDo:
   //
   // - 
 }

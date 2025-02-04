@@ -14716,7 +14716,7 @@ inline std::complex<T> operator*(int x, const std::complex<T>& y)
 }
 
 template<class T>
-void computeRootTrajectory(
+void rsComputeRootTrajectory(
   const rsPolynomial<std::complex<T>>& p, const rsPolynomial<std::complex<T>>& q,
   int N, std::vector<std::vector<std::complex<T>>>& roots)
 {
@@ -14741,6 +14741,25 @@ void computeRootTrajectory(
   // ToDo: pass roots array by pointer
 }
 
+template<class T>
+void rsFlatten(const std::vector<std::vector<T>>& v, std::vector<T>& f)
+{
+  size_t totalSize = 0;
+  for(size_t i = 0; i < v.size(); i++)
+    totalSize += v[i].size();
+
+  f.clear();
+  f.reserve(totalSize);
+  for(size_t i = 0; i < v.size(); i++)
+    for(size_t j = 0; j < v[i].size(); j++)
+      f.push_back(v[i][j]);
+
+
+
+  // ToDo: pass f by pointer, maybe optionally swap inner and outer loop such that interleaving in
+  // the result is the other way around
+}
+
 
 
 void testPolynomialRootCorrespondence()
@@ -14761,7 +14780,7 @@ void testPolynomialRootCorrespondence()
   using PolyC   = rsPolynomial<Complex>;
 
   // Number of sample points along the trajectories:
-  int N = 11;
+  int N = 21;
 
   // Define the vectors of roots of p and q:
   Complex i(0, 1);
@@ -14776,39 +14795,18 @@ void testPolynomialRootCorrespondence()
   // Vector for the roots of r_t(x). First index is for the different values of t, second index is
   // index of the root:
   std::vector<std::vector<Complex>> roots;
-  computeRootTrajectory(p, q, N, roots);
+  rsComputeRootTrajectory(p, q, N, roots);
 
-
-
-
-  /*
-  // Maybe factor out into computeRootTrajectory(p, q, N, :
-  // Compute the roots:
-  int deg = p.getDegree();
-  int N   = 11;
-  roots.resize(N);
-  for(int n = 0; n < N; n++)
-  {
-    // Compute parameter t and create polynomial r_t(x):
-    double t = double(n) / double(N-1);
-    PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
-
-    // Find the roots of r = r_t(x):
-    roots[n].resize(deg);
-    PolyC::roots(r.getCoeffPointer(), deg, &roots[n][0]);
-  }
-  */
-
+  // Flatten the roots vector:
+  std::vector<Complex> rootsFlat;
+  rsFlatten(roots, rootsFlat);
 
   // Plot the roots:
-  // ...
-
-
-
-
-
-  int dummy = 0;
-
+  GNUPlotter plt;
+  plt.addDataComplex(rootsFlat);
+  plt.setGraphColors("000000");
+  plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
+  plt.plot();
 
 
   // ToDo:
@@ -14817,11 +14815,15 @@ void testPolynomialRootCorrespondence()
   //   all the computations and creation of the plots. We want to call it like:
   //   plotPolyRootTrajectory(VecC({-3, 5 + 2*i, 5 - 2*i}), VecC({-4, 6 + 3*i, 6 - 3*i}), N);
   //   Maybe it could take the two scale factors for the polynomials as optional arguments 
-  //   (defaulting to 1).
-  //
+  //   (defaulting to 1). See poleZeroPlot() in Demos.cpp in the GNUPlotCPP repo fro making the 
+  //   plot nice. Maybe let the colors of the dots go from red to green or blue. Red indicates 
+  //   start, blue end.
+  // 
   // - Figure out the effect of having different scale factors in front of p and q. I guess, it 
   //   changes the (time variant) speed along the trajectory in some way? A higher coeff in front 
   //   of p will make the roots of r_t stayy longer near the roots of p?
+  //
+  // - 
 }
 
 

@@ -14792,6 +14792,12 @@ void rsPlotPolyRootTrajectory(
   plt.plot();
   // It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
  
+
+  // ToDo:
+  //
+  // - Maybe limit/clip the radius of the complex numbers such that when roots try to escape off to
+  //   infinity, we limit them but in a way that preserves their direction. Maybe use a 
+  //   soft-clipper for this...or maybe hard-clipping is better? We'll see.
 }
 
 
@@ -14814,7 +14820,7 @@ void testPolynomialRootCorrespondence()
   using PolyC   = rsPolynomial<Complex>;
 
 
-  int N = 17;           // Number of sample points along the trajectories
+  //int N = 17;           // Number of sample points along the trajectories
   Complex i(0, 1);      // Imaginary unit
 
 
@@ -14824,33 +14830,34 @@ void testPolynomialRootCorrespondence()
   // observe that the sampling of the trajectories is not equidistant. It's denser near the roots 
   // of q even though both weights are equal (both are 1):
   rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = 1
-    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 1
+    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 1
+    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 1
 
   // Now we increase the weighting coefficient of q from 1 to 5. This has the effect of an even denser 
   // sampling of the trajectories near the roots of q:
   rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = 1
-    {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 5
+    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 1
+    {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 5
 
   // Now let's reduce wq back to 1 again and instead increase wp to 5. In this case, the sampling is 
   // denser near roots of p:
   rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i}, 5 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = 5
-    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = 1
+    {-3, 5 + 2*i, 5 - 2*i}, 5 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 5
+    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 1
 
-  // Try wq = -1:
-  //rsPlotPolyRootTrajectory(
-  //  {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,      // rp = -3, 5+2i, 5-2i,  wp = +1
-  //  {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, N);  // rq = -4, 6+3i, 6-3i,  wq = -1
-  // Triggers a degenerate case where the leading coeff is zero. When N = 17, this occurs at at
-  // n = 8, i.e. right in the middle of the trajectory. This trips up the Laguerre root finding 
-  // algorithm. 
-
-  // A situation where in the middle of the trajectories, two roots merge into a double root:
+  // Now let's try wq = -1. We can't use N = 17 in this case because this case would make our
+  // middle value of t exactly equal to 0.5 which will cause the leading coeff to cancel, effecticely 
+  // leading to a lower degree polynomial which would trip up the Laguerre root finder. N = 16 works 
+  // though, because we avoid the problematic case of exact cancellation:
   rsPlotPolyRootTrajectory(
-    {-1, +1}, 1 + 0*i,      // rp = -1, +1,  wp = 1
-    {-i, +i}, 1 + 0*i, N);  // rq = -i, +i,  wq = 1
+    {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,       // rp = -3, 5+2i, 5-2i,  wp = +1
+    {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, 16);  // rq = -4, 6+3i, 6-3i,  wq = -1
+
+  // A situation with tow quadratic polynomials where in the middle of the trajectories, two roots
+  // merge into a double root:
+  rsPlotPolyRootTrajectory(
+    {-1, +1}, 1 + 0*i,                      // rp = -1, +1,  wp = 1
+    {-i, +i}, 1 + 0*i, 17);                 // rq = -i, +i,  wq = 1
 
 
   // Observations:

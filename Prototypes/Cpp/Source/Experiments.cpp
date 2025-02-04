@@ -14733,44 +14733,54 @@ void testPolynomialRootCorrespondence()
   using VecC    = std::vector<Complex>;
   using PolyC   = rsPolynomial<Complex>;
 
+  // Define the vectors of roots of p and q:
   Complex i(0, 1);
   VecC rp({-3, 5 + 2*i, 5 - 2*i});
   VecC rq({-4, 6 + 3*i, 6 - 3*i});
 
+  // Create polynomials p,q:
   PolyC p, q;
   p.setRoots(rp);
   q.setRoots(rq);
 
+  // Vector for the roots of r_t(x). First index is for the different values of t, second index is
+  // index of the root:
+  std::vector<std::vector<Complex>> roots;
+
+
+  // Maybe factor out into computeRootTrajectory(p, q, N, :
+  // Compute the roots:
   int deg = p.getDegree();
-
-
-  int N = 11;
+  int N   = 11;
+  roots.resize(N);
   for(int n = 0; n < N; n++)
   {
+    // Compute parameter t and create polynomial r_t(x):
     double t = double(n) / double(N-1);
-
     PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
 
     // Find the roots of r = r_t(x):
-    VecC roots;
-    roots.resize(deg);
-    PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
-
-
-    //roots(const std::complex<R>* a, int degree, std::complex<R>* roots);
-
-
-
-
-    int dummy = 0;
+    roots[n].resize(deg);
+    PolyC::roots(r.getCoeffPointer(), deg, &roots[n][0]);
   }
 
+
+  // Plot the roots:
+  // ...
 
 
 
 
 
   int dummy = 0;
+
+
+
+  // ToDo:
+  //
+  // - Figure out the effect of having different scale factors in front of p and q. I guess, it 
+  //   changes the (time variant) speed along the trajectory in some way? A higher coeff in front 
+  //   of p will make the roots of r_t stayy longer near the roots of p?
 }
 
 

@@ -14715,6 +14715,33 @@ inline std::complex<T> operator*(int x, const std::complex<T>& y)
   return T(x) * y;
 }
 
+template<class T>
+void computeRootTrajectory(
+  const rsPolynomial<std::complex<T>>& p, const rsPolynomial<std::complex<T>>& q,
+  int N, std::vector<std::vector<std::complex<T>>>& roots)
+{
+  rsAssert(p.getDegree() == q.getDegree());
+
+  using Complex = std::complex<T>;
+  using PolyC   = rsPolynomial<Complex>;
+
+  int deg = p.getDegree();
+  roots.resize(N);
+  for(int n = 0; n < N; n++)
+  {
+    // Compute parameter t and create polynomial r_t(x):
+    T t = T(n) / T(N-1);
+    PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+
+    // Find the roots of r = r_t(x):
+    roots[n].resize(deg);
+    PolyC::roots(r.getCoeffPointer(), deg, &roots[n][0]);
+  }
+
+  // ToDo: pass roots array by pointer
+}
+
+
 
 void testPolynomialRootCorrespondence()
 {
@@ -14733,6 +14760,9 @@ void testPolynomialRootCorrespondence()
   using VecC    = std::vector<Complex>;
   using PolyC   = rsPolynomial<Complex>;
 
+  // Number of sample points along the trajectories:
+  int N = 11;
+
   // Define the vectors of roots of p and q:
   Complex i(0, 1);
   VecC rp({-3, 5 + 2*i, 5 - 2*i});
@@ -14746,8 +14776,12 @@ void testPolynomialRootCorrespondence()
   // Vector for the roots of r_t(x). First index is for the different values of t, second index is
   // index of the root:
   std::vector<std::vector<Complex>> roots;
+  computeRootTrajectory(p, q, N, roots);
 
 
+
+
+  /*
   // Maybe factor out into computeRootTrajectory(p, q, N, :
   // Compute the roots:
   int deg = p.getDegree();
@@ -14763,6 +14797,7 @@ void testPolynomialRootCorrespondence()
     roots[n].resize(deg);
     PolyC::roots(r.getCoeffPointer(), deg, &roots[n][0]);
   }
+  */
 
 
   // Plot the roots:
@@ -14777,6 +14812,12 @@ void testPolynomialRootCorrespondence()
 
 
   // ToDo:
+  //
+  // - Maybe make a convenience function that takes two complex vectors of roots and encapsulates
+  //   all the computations and creation of the plots. We want to call it like:
+  //   plotPolyRootTrajectory(VecC({-3, 5 + 2*i, 5 - 2*i}), VecC({-4, 6 + 3*i, 6 - 3*i}), N);
+  //   Maybe it could take the two scale factors for the polynomials as optional arguments 
+  //   (defaulting to 1).
   //
   // - Figure out the effect of having different scale factors in front of p and q. I guess, it 
   //   changes the (time variant) speed along the trajectory in some way? A higher coeff in front 

@@ -14755,7 +14755,9 @@ void rsFlatten(const std::vector<std::vector<T>>& v, std::vector<T>& f)
       f.push_back(v[i][j]);
 
   // ToDo: pass f by pointer, maybe optionally swap inner and outer loop such that interleaving in
-  // the result is the other way around
+  // the result is the other way around. But wait: that assumes that all the sizes of the v[i] are 
+  // equal. In our case here, this is the case but we want the function to be applicable to more 
+  // general situations where this is not the case. 
 }
 
 
@@ -14824,7 +14826,29 @@ void testPolynomialRootCorrespondence()
   Complex i(0, 1);      // Imaginary unit
 
 
+  // Helper function to produce roots arranged around an ellipse:
+  auto ellipRoots = [](int numRoots, Real xRadius, Real yRadius, Real initialAngle)
+  {
+    VecC roots(numRoots);
+    for(int n = 0; n < numRoots; n++)
+    {
+      Real phi = (2*PI*n) / numRoots;
+      Real x = xRadius * cos(phi + initialAngle);
+      Real y = yRadius * sin(phi + initialAngle);
+      roots[n] = Complex(x, y);
+    }
+    return roots;
+  };
+
+
   // Create some example root trajectories:
+
+  VecC rp, rq;
+  rp = ellipRoots(7, 1.0, 1.0, 0.0);
+  rq = ellipRoots(7, 1.5, 1.2, 0.0);
+  rsPlotPolyRootTrajectory(rp, 1 + 0*i, rq, 1 + 0*i, 17);
+
+
 
   // This is a rather nice situation. There is a clear correspondence between roots of p and q. We 
   // observe that the sampling of the trajectories is not equidistant. It's denser near the roots 
@@ -14860,6 +14884,8 @@ void testPolynomialRootCorrespondence()
     {-i, +i}, 1 + 0*i, 17);                 // rq = -i, +i,  wq = 1
 
 
+
+
   // Observations:
   //
   // - Increasing the scale factor of one of the polynomials p or q increases the density of the 
@@ -14874,7 +14900,7 @@ void testPolynomialRootCorrespondence()
   //   coeffs of p and q have different signs. So: that's may be precondition that needs to be met
   //   if we want to be able to uniquely associate roots of p and q. But maybe we can relax the 
   //   precondition associating a vanishing root with one that (re)appears. Vanishing roots seem
-  //   to shoot of to infinity when the leading coeff goes to zero. Maybe if several roots vanish
+  //   to shoot off to infinity when the leading coeff goes to zero. Maybe if several roots vanish
   //   (and re-appear) simultaneously, we can associate them by looking at the directions in which
   //   they shoot off and come back. Maybe they should be the same (or maybe exactly opposite) 
   //   directions for associated roots.
@@ -14896,6 +14922,31 @@ void testPolynomialRootCorrespondence()
   //   of the form 0/0 for which we need l'Hospital's rule.
   //
   // - Write results down in a paper like "Root Trajectories of Polynomial Mixtures"
+  //
+  // - The goal of this is to find an algorithm to compute the sum of two polynomials in product 
+  //   form that is more efficient than converting to coefficient from, adding and then using a 
+  //   root findetr to go back to product form. 
+  //
+  // - Another application of the root-correspondence may be to define intermediate polynomials in
+  //   terms of intrepolating the roots in some way. That could be useful to create filters that 
+  //   are in between e.g. Butterworth and Bessel. Well - in this special case, we can probably 
+  //   figure out the correspondence "manually" - but it would be nice to have a general framework
+  //   for doing this kind of thing. In the Paarmann book about analog filters, they do an 
+  //   interpolation based on a weighted geoemtric mean, i.e.:  x^(1-t) * y^t  where x,y are the 
+  //   two inputs and t is the interpolation parameter in 0..1. In the case of polynomials, these
+  //   inputs are the roots. Apparently, in order to do this, we first need to kwow which root y
+  //   corresponds to which root x.
+  //
+  // - Maybe try this with certain geometric patterns of roots - like regular polygons. Maybe 
+  //   rotate one of them and/or scale it. maybe use roots distributed on ellipses with different
+  //   eccentricities and different orientations. Maybe try also shearing the configurations. What
+  //   about reflections and translations?
+  //
+  // - Maybe define the center of gravity of a polygon as the mean of the locations of the roots.
+  //   Maybe define a centering operation that shifts that mean to zero (by subtracting the 
+  //   computed mean from all roots).
+  //
+
 }
 
 

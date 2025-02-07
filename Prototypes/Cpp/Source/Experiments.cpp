@@ -14790,6 +14790,8 @@ void rsPlotPolyRootTrajectory(
   GNUPlotter plt;
   plt.addDataComplex(rootsFlat);
   plt.setToDarkMode();
+  plt.setPixelSize(600, 600);
+  plt.addCommand("set size square");
   plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
   plt.plot();
   // It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
@@ -14838,17 +14840,43 @@ void testPolynomialRootCorrespondence()
       roots[n] = Complex(x, y);
     }
     return roots;
+
+    // ToDo: Maybe give it an optional parameter for a rotation that is applied to (x,y). This has a
+    // different effect than the initial angle. It rotates the whole underlying ellipse.
   };
 
 
   // Create some example root trajectories:
 
-  //VecC rp, rq;
-  //rp = ellipRoots(7, 1.0, 1.0, 0.0);
-  //rq = ellipRoots(7, 1.5, 1.2, 0.0);
+  // 7 roots arranged in an elliptic pattern. We can clearly see, that the trajectories are not 
+  // straightforward at all. They first go inwards, then outwards again:
   rsPlotPolyRootTrajectory(
     ellipRoots(7, 1.0, 1.0, 0.0), 1 + 0*i, 
-    ellipRoots(7, 1.5, 1.2, 0.3), 1 + 0*i, 17);
+    ellipRoots(7, 1.5, 1.2, 0.4), 1 + 0*i, 21);
+
+
+  // 8 roots arranged in an elliptic pattern:
+  rsPlotPolyRootTrajectory(
+    ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
+    ellipRoots(8, 1.5, 1.2, 0.3), 1 + 0*i, 21);
+
+  // 8 roots arranged in an elliptic pattern:
+  rsPlotPolyRootTrajectory(
+    ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
+    ellipRoots(8, 1.5, 1.2, 0.4), 1 + 0*i, 21);
+  // This looks weird! It has "outliers". Investigate further!
+
+  // 8 roots arranged in an elliptic pattern:
+  rsPlotPolyRootTrajectory(
+    ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
+    ellipRoots(8, 1.5, 1.2, 0.0), 1 + 0*i, 17);
+
+  // 8 roots arranged in a circular pattern. This fails with N=17:
+  rsPlotPolyRootTrajectory(
+    ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
+    ellipRoots(8, 1.5, 1.5, 0.0), 1 + 0*i, 16);
+  // ToDo: Figure out what happens with N=17. Probably a cancellation of leading coeff problem at
+  // t=0.5 once again? But nah, the leading coeffs of p and q should have the same sign.
 
 
 
@@ -14950,6 +14978,9 @@ void testPolynomialRootCorrespondence()
   //   Maybe define a centering operation that shifts that mean to zero (by subtracting the 
   //   computed mean from all roots).
   //
+  // - Try to figure out a function that describes the spacing of samples along the trajectory as
+  //   function of the spacing of t values. Maybe work this out explicitly for the simple case
+  //   p = (x-1)*(x+1), q = (x-2)*(x+2). Then maybe for p = (x-1)(x-i)(x+i), q = (x-2)(x-2i)(x+2i).
 
 }
 

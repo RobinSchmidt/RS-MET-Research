@@ -14832,9 +14832,9 @@ void testPolynomialRootCorrespondence()
     VecC roots(numRoots);
     for(int n = 0; n < numRoots; n++)
     {
-      Real phi = (2*PI*n) / numRoots;
-      Real x = xRadius * cos(phi + initialAngle);
-      Real y = yRadius * sin(phi + initialAngle);
+      Real phi = initialAngle + (2*PI*n) / numRoots;
+      Real x = xRadius * cos(phi);
+      Real y = yRadius * sin(phi);
       roots[n] = Complex(x, y);
     }
     return roots;
@@ -14843,10 +14843,14 @@ void testPolynomialRootCorrespondence()
 
   // Create some example root trajectories:
 
-  VecC rp, rq;
-  rp = ellipRoots(7, 1.0, 1.0, 0.0);
-  rq = ellipRoots(7, 1.5, 1.2, 0.0);
-  rsPlotPolyRootTrajectory(rp, 1 + 0*i, rq, 1 + 0*i, 17);
+  //VecC rp, rq;
+  //rp = ellipRoots(7, 1.0, 1.0, 0.0);
+  //rq = ellipRoots(7, 1.5, 1.2, 0.0);
+  rsPlotPolyRootTrajectory(
+    ellipRoots(7, 1.0, 1.0, 0.0), 1 + 0*i, 
+    ellipRoots(7, 1.5, 1.2, 0.3), 1 + 0*i, 17);
+
+
 
 
 

@@ -14716,6 +14716,27 @@ inline std::complex<T> operator*(int x, const std::complex<T>& y)
 }
 
 template<class T>
+void rsFlushToZeroReIm(std::complex<T>& z, T tol)
+{
+  if(abs(real(z)) <= tol) 
+    z.real(0);
+
+  if(abs(imag(z)) <= tol) 
+    z.imag(0);
+}
+
+template<class T>
+void rsFlushToZeroReIm(std::complex<T>* z, int N, T tol)
+{
+  for(int n = 0; n < N; n++)
+    rsFlushToZeroReIm(z[n], tol);
+}
+
+
+
+
+
+template<class T>
 void rsComputeRootTrajectory(
   const rsPolynomial<std::complex<T>>& p, const rsPolynomial<std::complex<T>>& q,
   int N, std::vector<std::vector<std::complex<T>>>& roots)
@@ -14732,6 +14753,14 @@ void rsComputeRootTrajectory(
     // Compute parameter t and create polynomial r_t(x):
     T t = T(n) / T(N-1);
     PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+
+
+    // For a debug test:
+    //rsFlushToZeroReIm<T>(r.getCoeffPointer(), deg+1, 1.e-13);
+    // Aha! Without flushing tiny real and imaginary parts to zero, the root finder runs into a 
+    // problem! The flushing to zero fixes it! Or rather works around it! It should not happen in
+    // the first place. This seems to be a real bug in the root finder!
+
 
     // Find the roots of r = r_t(x):
     roots[n].resize(deg);
@@ -14824,9 +14853,7 @@ void testPolynomialRootCorrespondence()
   using PolyC   = rsPolynomial<Complex>;
 
 
-  //int N = 17;           // Number of sample points along the trajectories
   Complex i(0, 1);      // Imaginary unit
-
 
   // Helper function to produce roots arranged around an ellipse:
   auto ellipRoots = [](int numRoots, Real xRadius, Real yRadius, Real initialAngle)
@@ -14854,6 +14881,7 @@ void testPolynomialRootCorrespondence()
 
   // Create some example root trajectories:
 
+  /*
 
   // 7 roots arranged in an elliptic pattern. We can clearly see, that the trajectories are not 
   // straightforward at all. They first go inwards, then outwards again:
@@ -14878,9 +14906,6 @@ void testPolynomialRootCorrespondence()
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.0), 1 + 0*i, 17);
 
-
-
-
   // 8 roots arranged in a circular pattern. This fails with N=17:
   rsPlotPolyRootTrajectory(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
@@ -14888,19 +14913,23 @@ void testPolynomialRootCorrespondence()
   // ToDo: Figure out what happens with N=17. Probably a cancellation of leading coeff problem at
   // t=0.5 once again? But nah, the leading coeffs of p and q should have the same sign.
 
-  /*
+  */
+
+
   // Temp - to figure out the cause of the error mentioned above:
   rsPlotPolyRootTrajectory(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.5, 0.0), 1 + 0*i, 17);
   // The error happens at n=1. It's not a cancellation of the leading coeff though. It lookks like
   // we have a polynomial with leading coeff 1 and constant term of -2.5393... The other coeffs are
-  // numerically close to zero. Maybe make a unit test with polynomials of the form  x^8 + +0  with
+  // numerically close to zero. Maybe make a unit test with polynomials of the form  x^8 + a0  with
   // a0 = 2.54 or something - try to expose the error in a simpler setting. Maybe we should 
   // consider it as bug in the Laguerre root finder? So far, it never failed me - but maybe that is
   // the first time?
-  */
-
+  //
+  // Flushing real and imaginray parts that are close to zero to exactly zero fixes the problem!
+  // This seems to be a real issue with the root finder!!! We really need a unit test that exposes 
+  // this!
 
 
 
@@ -14958,6 +14987,16 @@ void testPolynomialRootCorrespondence()
   //   (and re-appear) simultaneously, we can associate them by looking at the directions in which
   //   they shoot off and come back. Maybe they should be the same (or maybe exactly opposite) 
   //   directions for associated roots.
+  //
+  //
+  // Notes:
+  //
+  // - I think, interpolating the coeffs in another polynomial basis (say, Chebychev rather than 
+  //   monomial) will make no difference. Or maybe it will? Try it! Express the polynomial in the 
+  //   Chebychev basis, i.e. as b0*T0(x) + b1*T1(x) + b2*T2(x) + ... rather than 
+  //   a0*x^0 + a1*^x^1 + a2*x^2 + ... and interpolate the coeffs in this basis and then convert 
+  //   back. Maybe this works best when we also pre/post scale the polynomials? If this leads to
+  //   good results, try other polynomials bases like Bernstein, Legendre, Hermite, etc.
   //
   //
   // ToDo:

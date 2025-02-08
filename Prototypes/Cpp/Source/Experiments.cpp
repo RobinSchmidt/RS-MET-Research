@@ -14907,6 +14907,7 @@ void testPolynomialRootCorrespondence()
   // the number of samples significantly. But this code again runs into the problems in the root
   // finder
   */
+ 
 
   // 8 roots arranged in an elliptic pattern:
   rsPlotPolyRootTrajectory(

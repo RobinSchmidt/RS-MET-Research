@@ -14881,14 +14881,11 @@ void testPolynomialRootCorrespondence()
 
   // Create some example root trajectories:
 
-  /*
-
   // 7 roots arranged in an elliptic pattern. We can clearly see, that the trajectories are not 
   // straightforward at all. They first go inwards, then outwards again:
   rsPlotPolyRootTrajectory(
     ellipRoots(7, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(7, 1.5, 1.2, 0.4), 1 + 0*i, 21);
-
 
   // 8 roots arranged in an elliptic pattern:
   rsPlotPolyRootTrajectory(
@@ -14900,6 +14897,16 @@ void testPolynomialRootCorrespondence()
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.4), 1 + 0*i, 21);
   // This looks weird! It has "outliers". Investigate further!
+  /*
+  // Temp - to investigate the "outliers" further:
+  rsPlotPolyRootTrajectory(
+    ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
+    ellipRoots(8, 1.5, 1.2, 0.4), 1 + 0*i, 101);
+  // Aha! with a lot more samples along the trajectory, we can see what is going on. The "outliers"
+  // are the "tails" of the trajectory. The samples are just very sparse there unless we ramp up 
+  // the number of samples significantly. But this code again runs into the problems in the root
+  // finder
+  */
 
   // 8 roots arranged in an elliptic pattern:
   rsPlotPolyRootTrajectory(
@@ -14912,10 +14919,7 @@ void testPolynomialRootCorrespondence()
     ellipRoots(8, 1.5, 1.5, 0.0), 1 + 0*i, 16);
   // ToDo: Figure out what happens with N=17. Probably a cancellation of leading coeff problem at
   // t=0.5 once again? But nah, the leading coeffs of p and q should have the same sign.
-
-  */
-
-
+  /*
   // Temp - to figure out the cause of the error mentioned above:
   rsPlotPolyRootTrajectory(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
@@ -14927,11 +14931,10 @@ void testPolynomialRootCorrespondence()
   // consider it as bug in the Laguerre root finder? So far, it never failed me - but maybe that is
   // the first time?
   //
-  // Flushing real and imaginray parts that are close to zero to exactly zero fixes the problem!
+  // Flushing real and imaginary parts that are close to zero to exactly zero fixes the problem!
   // This seems to be a real issue with the root finder!!! We really need a unit test that exposes 
-  // this!
-
-
+  // this! See comments in rsComputeRootTrajectory().
+  */
 
   // This is a rather nice situation. There is a clear correspondence between roots of p and q. We 
   // observe that the sampling of the trajectories is not equidistant. It's denser near the roots 

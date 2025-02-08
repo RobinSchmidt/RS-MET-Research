@@ -14846,7 +14846,14 @@ void testPolynomialRootCorrespondence()
   };
 
 
+
+
+
+
+
+
   // Create some example root trajectories:
+
 
   // 7 roots arranged in an elliptic pattern. We can clearly see, that the trajectories are not 
   // straightforward at all. They first go inwards, then outwards again:
@@ -14871,6 +14878,9 @@ void testPolynomialRootCorrespondence()
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.0), 1 + 0*i, 17);
 
+
+
+
   // 8 roots arranged in a circular pattern. This fails with N=17:
   rsPlotPolyRootTrajectory(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
@@ -14878,6 +14888,18 @@ void testPolynomialRootCorrespondence()
   // ToDo: Figure out what happens with N=17. Probably a cancellation of leading coeff problem at
   // t=0.5 once again? But nah, the leading coeffs of p and q should have the same sign.
 
+  /*
+  // Temp - to figure out the cause of the error mentioned above:
+  rsPlotPolyRootTrajectory(
+    ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
+    ellipRoots(8, 1.5, 1.5, 0.0), 1 + 0*i, 17);
+  // The error happens at n=1. It's not a cancellation of the leading coeff though. It lookks like
+  // we have a polynomial with leading coeff 1 and constant term of -2.5393... The other coeffs are
+  // numerically close to zero. Maybe make a unit test with polynomials of the form  x^8 + +0  with
+  // a0 = 2.54 or something - try to expose the error in a simpler setting. Maybe we should 
+  // consider it as bug in the Laguerre root finder? So far, it never failed me - but maybe that is
+  // the first time?
+  */
 
 
 

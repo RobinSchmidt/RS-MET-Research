@@ -8,7 +8,9 @@ Idea:
  it fires a spike and enters "recovering" mode in which it stays for a given time (global 
  parameter)
 -the weights and delays are features of each connection
--some neurons receive external inputs
+-some neurons receive external inputs, these are input neurons - we may apply an input (a number in 
+ 0..1) and the input lets it produce periodic spikes whose rate depends on the strength of the 
+ input. The maximum rate is 1 / recovery-time.
 
 Implementation:
 -each neuron has a delayline at its input into which at each time-step the input is gathered from

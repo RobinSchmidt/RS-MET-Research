@@ -14881,18 +14881,93 @@ void testPolynomialRootCorrespondence()
 
   // Create some example root trajectories:
 
+
+  // If we assume that a root of p wants to map to the nearest root of q and vice versa then in 
+  // this example, -1 of p wants to map to +3 of q but +3 of q wants to map to +5 of p but +5 of p
+  // wants to map to +6 of q, if we would go by distance. So, assuming a prefecrence by distance 
+  // rule, roots of p and q may disaggree about which root should map to which. In reality, -1 maps
+  // to +3 and +5 to +6.
+  rsPlotPolyRootTrajectory(
+    { -1, +5 }, 1 + 0*i,              // rp = -1, +5, wp = 1
+    { +3, +6 }, 1 + 0*i, 51);         // rq = +3, +6, wq = 1
+
+  // Now the +5 of p is indifferent whether it wants to map to +3 or +7 because the distances are 
+  // the same.
+  rsPlotPolyRootTrajectory(
+    { -1, +5 }, 1 + 0*i,              // rp = -1, +5, wp = 1
+    { +3, +7 }, 1 + 0*i, 51);        // rq = +3, +7, wq = 1
+
+
+
+
+
+
+  // These trajectories look like parts of ellipses - maybe they indeed are? Figure that out! Maybe 
+  // try drawing some actual ellipses on top.
+  rsPlotPolyRootTrajectory(
+    { 2 + i,  2 - i}, 1 + 0*i,              // rp =  2+i,  2-i, wp = 1
+    {-2 + i, -2 - i}, 1 + 0*i, 51);         // rq = -2+i, -2-i, wq = 1
+
+  rsPlotPolyRootTrajectory(
+    { 1 + i,  1 - i}, 1 + 0*i,              // rp =  1+i,  1-i, wp = 1
+    {-1 + i, -1 - i}, 1 + 0*i, 51);         // rq = -1+i, -1-i, wq = 1
+
+  rsPlotPolyRootTrajectory(
+    { 1 + 2*i,  1 - 2*i}, 1 + 0*i,          // rp =  1+2i,  1-2i, wp = 1
+    {-1 + 2*i, -1 - 2*i}, 1 + 0*i, 51);     // rq = -1+2i, -1-2i, wq = 1
+
+  rsPlotPolyRootTrajectory(
+    {-1,  1 + i,  1 - i}, 1 + 0*i,          // rp = -1,  1+i,  1-i, wp = 1
+    {+1, -1 + i, -1 - i}, 1 + 0*i, 51);     // rq = +1, -1+i, -1-i, wq = 1
+
+
+  // This is a rather nice situation. There is a clear correspondence between roots of p and q. We 
+  // observe that the sampling of the trajectories is not equidistant. It's denser near the roots 
+  // of q even though both weights are equal (both are 1).
+  rsPlotPolyRootTrajectory(
+    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 1
+    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 1
+
+  // Now we increase the weighting coefficient of q from 1 to 5. This has the effect of an even denser 
+  // sampling of the trajectories near the roots of q.
+  rsPlotPolyRootTrajectory(
+    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 1
+    {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 5
+
+  // Now let's reduce wq back to 1 again and instead increase wp to 5. In this case, the sampling is 
+  // denser near roots of p.
+  rsPlotPolyRootTrajectory(
+    {-3, 5 + 2*i, 5 - 2*i}, 5 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 5
+    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 1
+
+  // Now let's try wq = -1. We can't use N = 17 in this case because this case would make our
+  // middle value of t exactly equal to 0.5 which will cause the leading coeff to cancel, effecticely 
+  // leading to a lower degree polynomial which would trip up the Laguerre root finder. N = 16 works 
+  // though, because we avoid the problematic case of exact cancellation.
+  rsPlotPolyRootTrajectory(
+    {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,       // rp = -3, 5+2i, 5-2i,  wp = +1
+    {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, 16);  // rq = -4, 6+3i, 6-3i,  wq = -1
+
+  // A situation with tow quadratic polynomials where in the middle of the trajectories, two roots
+  // merge into a double root.
+  rsPlotPolyRootTrajectory(
+    {-1, +1}, 1 + 0*i,                      // rp = -1, +1,  wp = 1
+    {-i, +i}, 1 + 0*i, 17);                 // rq = -i, +i,  wq = 1
+
+
+
   // 7 roots arranged in an elliptic pattern. We can clearly see, that the trajectories are not 
-  // straightforward at all. They first go inwards, then outwards again:
+  // straightforward at all. They first go inwards, then outwards again.
   rsPlotPolyRootTrajectory(
     ellipRoots(7, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(7, 1.5, 1.2, 0.4), 1 + 0*i, 21);
 
-  // 8 roots arranged in an elliptic pattern:
+  // 8 roots arranged in an elliptic pattern.
   rsPlotPolyRootTrajectory(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.3), 1 + 0*i, 21);
 
-  // 8 roots arranged in an elliptic pattern:
+  // 8 roots arranged in an elliptic pattern.
   rsPlotPolyRootTrajectory(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.4), 1 + 0*i, 21);
@@ -14937,38 +15012,19 @@ void testPolynomialRootCorrespondence()
   // this! See comments in rsComputeRootTrajectory().
   */
 
-  // This is a rather nice situation. There is a clear correspondence between roots of p and q. We 
-  // observe that the sampling of the trajectories is not equidistant. It's denser near the roots 
-  // of q even though both weights are equal (both are 1):
-  rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 1
-    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 1
 
-  // Now we increase the weighting coefficient of q from 1 to 5. This has the effect of an even denser 
-  // sampling of the trajectories near the roots of q:
-  rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 1
-    {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 5
 
-  // Now let's reduce wq back to 1 again and instead increase wp to 5. In this case, the sampling is 
-  // denser near roots of p:
+  // Circular patterns with rotations between p and q:
   rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i}, 5 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 5
-    {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 1
+    ellipRoots(8, 1.0, 1.0, 0.0 ), 1 + 0*i, 
+    ellipRoots(8, 1.0, 1.0, PI/8), 1 + 0*i, 51);
 
-  // Now let's try wq = -1. We can't use N = 17 in this case because this case would make our
-  // middle value of t exactly equal to 0.5 which will cause the leading coeff to cancel, effecticely 
-  // leading to a lower degree polynomial which would trip up the Laguerre root finder. N = 16 works 
-  // though, because we avoid the problematic case of exact cancellation:
   rsPlotPolyRootTrajectory(
-    {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,       // rp = -3, 5+2i, 5-2i,  wp = +1
-    {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, 16);  // rq = -4, 6+3i, 6-3i,  wq = -1
+    ellipRoots(8, 1.0, 1.0, 0.0  ), 1 + 0*i, 
+    ellipRoots(8, 1.0, 1.0, PI/16), 1 + 0*i, 16);
 
-  // A situation with tow quadratic polynomials where in the middle of the trajectories, two roots
-  // merge into a double root:
-  rsPlotPolyRootTrajectory(
-    {-1, +1}, 1 + 0*i,                      // rp = -1, +1,  wp = 1
-    {-i, +i}, 1 + 0*i, 17);                 // rq = -i, +i,  wq = 1
+
+
 
 
 
@@ -14992,6 +15048,10 @@ void testPolynomialRootCorrespondence()
   //   they shoot off and come back. Maybe they should be the same (or maybe exactly opposite) 
   //   directions for associated roots.
   //
+  // - I think, that wehn we consider a p with M roots arranged in a circle and a q with those 
+  //   roots rotated by an angle, the trajectories approach straight inward-outward shapes for
+  //   the angle approaching pi/M ...verify!
+  //
   //
   // Notes:
   //
@@ -15001,6 +15061,26 @@ void testPolynomialRootCorrespondence()
   //   a0*x^0 + a1*^x^1 + a2*x^2 + ... and interpolate the coeffs in this basis and then convert 
   //   back. Maybe this works best when we also pre/post scale the polynomials? If this leads to
   //   good results, try other polynomials bases like Bernstein, Legendre, Hermite, etc.
+  //
+  // - When we consider the poles of  (1-t) * 1/p(z)  +  t * 1/q(q),  I think, the poles will not 
+  //   move when we sweep t. Instead, the sum has poles at the roots of p and q but at t=0, the 
+  //   poles of q are cancelled by the zeros of the denominator and at t=1, the poles of p are 
+  //   cancelled.
+  //
+  //
+  // Questions:
+  //
+  // - How do root associations change when we apply a bilinear transformation such as the s-to-z
+  //   or z-to-s transform?
+  //
+  // - Can we predict the root correspondeces by looking at the distances between the roots of
+  //   p and q? We could create a distance matrix to investigate this. Let d(i,j) = |p_i - q_j|.
+  //   Maybe a sufficient condtion for the roots p_i of p and q_i of q to be associated is
+  //   d(i,j) < d(i,k) for all k != j  and  d(i,j) < d(k,j) for all k != i? The idea is that when
+  //   the 1st condition is met, root j of q wants to be associated with root i of p. When the 2nd
+  //   condition is met, root i of p also wants to be associated with root j of q. If they both 
+  //   aggree on that, the association happens. ...that's the intuition - I have no idea, if that's
+  //   really how any of this works.
   //
   //
   // ToDo:

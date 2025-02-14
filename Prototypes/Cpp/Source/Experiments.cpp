@@ -14737,7 +14737,7 @@ void rsFlushToZeroReIm(std::complex<T>* z, int N, T tol)
 
 
 template<class T>
-void rsComputeRootTrajectory(
+void rsComputeRootTrajectories(
   const rsPolynomial<std::complex<T>>& p, const rsPolynomial<std::complex<T>>& q,
   int N, std::vector<std::vector<std::complex<T>>>& roots)
 {
@@ -14804,7 +14804,7 @@ void rsFlattenTransposed(const std::vector<std::vector<T>>& v, std::vector<T>& f
 
 
 template<class T>
-void rsPlotPolyRootTrajectory(
+void rsPlotPolyRootTrajectories(
   const std::vector<std::complex<T>>& rp, std::complex<T> wp,
   const std::vector<std::complex<T>>& rq, std::complex<T> wq,
   int N)
@@ -14822,7 +14822,7 @@ void rsPlotPolyRootTrajectory(
   // Vector for the roots of r_t(x). First index is for the different values of t, second index is
   // index of the root:
   std::vector<std::vector<Complex>> roots;
-  rsComputeRootTrajectory(p, q, N, roots);
+  rsComputeRootTrajectories(p, q, N, roots);
 
   // Flatten the roots vector:
   std::vector<Complex> rootsFlat;
@@ -14907,13 +14907,13 @@ void testPolynomialRootCorrespondence1()
   // wants to map to +6 of q, if we would go by distance. So, assuming a prefecrence by distance 
   // rule, roots of p and q may disaggree about which root should map to which. In reality, -1 maps
   // to +3 and +5 to +6.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     { -1, +5 }, 1 + 0*i,              // rp = -1, +5, wp = 1
     { +3, +6 }, 1 + 0*i, 51);         // rq = +3, +6, wq = 1
 
   // Now the +5 of p is indifferent whether it wants to map to +3 or +7 because the distances are 
   // the same.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     { -1, +5 }, 1 + 0*i,              // rp = -1, +5, wp = 1
     { +3, +7 }, 1 + 0*i, 51);        // rq = +3, +7, wq = 1
 
@@ -14921,19 +14921,19 @@ void testPolynomialRootCorrespondence1()
 
   // These trajectories look like parts of ellipses - maybe they indeed are? Figure that out! Maybe 
   // try drawing some actual ellipses on top.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     { 2 + i,  2 - i}, 1 + 0*i,              // rp =  2+i,  2-i, wp = 1
     {-2 + i, -2 - i}, 1 + 0*i, 51);         // rq = -2+i, -2-i, wq = 1
 
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     { 1 + i,  1 - i}, 1 + 0*i,              // rp =  1+i,  1-i, wp = 1
     {-1 + i, -1 - i}, 1 + 0*i, 51);         // rq = -1+i, -1-i, wq = 1
 
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     { 1 + 2*i,  1 - 2*i}, 1 + 0*i,          // rp =  1+2i,  1-2i, wp = 1
     {-1 + 2*i, -1 - 2*i}, 1 + 0*i, 51);     // rq = -1+2i, -1-2i, wq = 1
 
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     {-1,  1 + i,  1 - i}, 1 + 0*i,          // rp = -1,  1+i,  1-i, wp = 1
     {+1, -1 + i, -1 - i}, 1 + 0*i, 51);     // rq = +1, -1+i, -1-i, wq = 1
 
@@ -14941,19 +14941,19 @@ void testPolynomialRootCorrespondence1()
   // This is a rather nice situation. There is a clear correspondence between roots of p and q. We 
   // observe that the sampling of the trajectories is not equidistant. It's denser near the roots 
   // of q even though both weights are equal (both are 1).
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 1
     {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 1
 
   // Now we increase the weighting coefficient of q from 1 to 5. This has the effect of an even denser 
   // sampling of the trajectories near the roots of q.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     {-3, 5 + 2*i, 5 - 2*i}, 1 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 1
     {-4, 6 + 3*i, 6 - 3*i}, 2 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 5
 
   // Now let's reduce wq back to 1 again and instead increase wp to 5. In this case, the sampling is 
   // denser near roots of p.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     {-3, 5 + 2*i, 5 - 2*i}, 5 + 0*i,        // rp = -3, 5+2i, 5-2i,  wp = 5
     {-4, 6 + 3*i, 6 - 3*i}, 1 + 0*i, 17);   // rq = -4, 6+3i, 6-3i,  wq = 1
 
@@ -14961,13 +14961,13 @@ void testPolynomialRootCorrespondence1()
   // middle value of t exactly equal to 0.5 which will cause the leading coeff to cancel, effecticely 
   // leading to a lower degree polynomial which would trip up the Laguerre root finder. N = 16 works 
   // though, because we avoid the problematic case of exact cancellation.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     {-3, 5 + 2*i, 5 - 2*i},  1 + 0*i,       // rp = -3, 5+2i, 5-2i,  wp = +1
     {-4, 6 + 3*i, 6 - 3*i}, -1 + 0*i, 16);  // rq = -4, 6+3i, 6-3i,  wq = -1
 
   // A situation with tow quadratic polynomials where in the middle of the trajectories, two roots
   // merge into a double root.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     {-1, +1}, 1 + 0*i,                      // rp = -1, +1,  wp = 1
     {-i, +i}, 1 + 0*i, 17);                 // rq = -i, +i,  wq = 1
 
@@ -14975,23 +14975,23 @@ void testPolynomialRootCorrespondence1()
 
   // 7 roots arranged in an elliptic pattern. We can clearly see, that the trajectories are not 
   // straightforward at all. They first go inwards, then outwards again.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(7, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(7, 1.5, 1.2, 0.4), 1 + 0*i, 21);
 
   // 8 roots arranged in an elliptic pattern.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.3), 1 + 0*i, 21);
 
   // 8 roots arranged in an elliptic pattern.
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.4), 1 + 0*i, 21);
   // This looks weird! It has "outliers". Investigate further!
   /*
   // Temp - to investigate the "outliers" further:
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.4), 1 + 0*i, 101);
   // Aha! with a lot more samples along the trajectory, we can see what is going on. The "outliers"
@@ -15002,19 +15002,19 @@ void testPolynomialRootCorrespondence1()
  
 
   // 8 roots arranged in an elliptic pattern:
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.2, 0.0), 1 + 0*i, 17);
 
   // 8 roots arranged in a circular pattern. This fails with N=17:
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.5, 0.0), 1 + 0*i, 16);
   // ToDo: Figure out what happens with N=17. Probably a cancellation of leading coeff problem at
   // t=0.5 once again? But nah, the leading coeffs of p and q should have the same sign.
   /*
   // Temp - to figure out the cause of the error mentioned above:
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(8, 1.0, 1.0, 0.0), 1 + 0*i, 
     ellipRoots(8, 1.5, 1.5, 0.0), 1 + 0*i, 17);
   // The error happens at n=1. It's not a cancellation of the leading coeff though. It lookks like
@@ -15032,11 +15032,11 @@ void testPolynomialRootCorrespondence1()
 
 
   // Circular patterns with rotations between p and q:
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(8, 1.0, 1.0, 0.0 ), 1 + 0*i, 
     ellipRoots(8, 1.0, 1.0, PI/8), 1 + 0*i, 51);
 
-  rsPlotPolyRootTrajectory(
+  rsPlotPolyRootTrajectories(
     ellipRoots(8, 1.0, 1.0, 0.0  ), 1 + 0*i, 
     ellipRoots(8, 1.0, 1.0, PI/16), 1 + 0*i, 16);
 
@@ -15184,7 +15184,7 @@ void testPolynomialRootCorrespondence2()
   wq = 1;
   D = rsDistanceMatrix(rp, rq);
   plotMatrix(D);
-  rsPlotPolyRootTrajectory(rp, wp, rq, wq, 101);
+  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
 
 
   //// Example 2:
@@ -15194,7 +15194,7 @@ void testPolynomialRootCorrespondence2()
   //wq = 1;
   //D = rsDistanceMatrix(rp, rq);
   //plotMatrix(D);
-  //rsPlotPolyRootTrajectory(rp, wp, rq, wq, 101);
+  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
   //// Has a dot at (0,0) - that's interesting!
 
 

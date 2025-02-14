@@ -14872,12 +14872,22 @@ void testPolynomialRootCorrespondence1()
 {
   // Under construction
 
-  // Define two polynomial p(x) and q(x) of same degree and then consider the parametrized 
+  // We define two polynomial p(x) and q(x) of same degree and then consider the parametric mixed
   // polynomial r_t(x) = (1-t)*p(x) + t*q(x) for t in 0..1. We are interested in the trajectories
-  // of the roots and in the question which root of p(x) gets corresponds to which root in q(x) in
-  // the sense that the root of p is the start and the root of q is the end fo such a trajectory.
-  // For this, we create some example polynomials and plot the roots for 
-  // t = 0.0, 0.1, 0.2, ..., 0.8, 0.9, 1.0
+  // of the roots as t goes from 0 to 1 and in the question which root of p(x) corresponds to 
+  // which root in q(x) in the sense that the root of p is the start and the root of q is the end 
+  // of such a trajectory. For this, we create some example polynomials and plot the roots for
+  // t = 0/N = 0, 1/N, 2/N, 3/N, ..., (N-2)/N, (N-1)/N, N/N = 1 for some given N which is the 
+  // number of samples along the trajectory minus 1. For example, for N = 10, we get 11 samples
+  // at t = 0.0, 0.1, 0.2, ..., 0.9, 0.9, 1.0.
+  //
+  // The goal is to finding rules that lets us predict for arbitrary polynomials p,q, which roots 
+  // of p correspond to which roots of q. We may need such a prediction when we want to create
+  // filters that are intermediate between e.g. Butterworth and Bessel. To create such an 
+  // intermediate filter, we will have to interpolate between the roots - but first we need to 
+  // identify the corresponding roots. For such a special case like Butterworth and Bessel 
+  // polynomials, we may establish some special rules by inspection - but here we are interested in
+  // developing a more general theory of polynomial root correspondence.
 
 
   using Real    = double;

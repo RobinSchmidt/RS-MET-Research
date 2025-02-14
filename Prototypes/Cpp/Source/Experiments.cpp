@@ -15146,6 +15146,20 @@ void testPolynomialRootCorrespondence1()
 
 }
 
+template<class T>
+rsMatrix<T> rsDistanceMatrix(
+  const std::vector<std::complex<T>>& p,
+  const std::vector<std::complex<T>>& q)
+{
+  int M = (int) p.size();
+  int N = (int) q.size();
+  rsMatrix<T> D(M, N);
+  for(int i = 0; i < M; i++)
+    for(int j = 0; j < N; j++)
+      D(i, j) = rsAbs(p[i] - q[j]);
+  return D;
+}
+
 
 void testPolynomialRootCorrespondence2()
 {
@@ -15154,19 +15168,34 @@ void testPolynomialRootCorrespondence2()
   using Real    = double;
   using Complex = std::complex<Real>;
   using VecC    = std::vector<Complex>;
+  using MatR    = rsMatrix<Real>;
   using PolyC   = rsPolynomial<Complex>;
 
 
   Complex i(0, 1);      // Imaginary unit
   Complex wp, wq;       // Weights for p and q
-  VecC    rp, rq;       // Roots of p and q;
+  VecC    rp, rq;       // Roots of p and q
+  MatR    D;            // Distance matrix
 
   // Example 1:
   rp = ellipRoots(8, 1.0, 0.7, 0.0  );
   rq = ellipRoots(8, 1.5, 2.0, PI/16);
   wp = 8;
   wq = 1;
+  D = rsDistanceMatrix(rp, rq);
+  plotMatrix(D);
   rsPlotPolyRootTrajectory(rp, wp, rq, wq, 101);
+
+
+  //// Example 2:
+  //rp = ellipRoots(16, 1.0, 0.7, 0.0  );
+  //rq = ellipRoots(16, 1.5, 2.0, PI/32);
+  //wp = 16;
+  //wq = 1;
+  //D = rsDistanceMatrix(rp, rq);
+  //plotMatrix(D);
+  //rsPlotPolyRootTrajectory(rp, wp, rq, wq, 101);
+  //// Has a dot at (0,0) - that's interesting!
 
 
 
@@ -15186,6 +15215,11 @@ void testPolynomialRootCorrespondence2()
   //
   // - Maybe roots association strength can also be inferred by some sort of normalized root 
   //   distance where the normalization may be in terms of the maximum root distance?
+  //
+  // - Refactor the function rsPlotPolyRootTrajectory into a fucntion that extracts the 
+  //   trajectories and one that does the actual plotting. Then write a function that takes in the
+  //   trajectories and returns a matrix that has a 1 on cell i,j  if the i-th root of p is 
+  //   associated with the j-th root of q.
 }
 
 

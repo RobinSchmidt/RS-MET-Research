@@ -14850,14 +14850,16 @@ void rsPlotPolyRootTrajectories(
 // Helper function to produce roots arranged around an ellipse:
 template<class T>
 std::vector<std::complex<T>> ellipRoots(
-  int numRoots, T xRadius, T yRadius, T initialAngle)
+  int numRoots, T xRadius, T yRadius, T initialAngle, T rotationAngle = T(0))
 {
   std::vector<std::complex<T>> roots(numRoots);
+  rsRotationXY<T> rot(rotationAngle);
   for(int n = 0; n < numRoots; n++)
   {
     T phi = initialAngle + (2*PI*n) / numRoots;
     T x = xRadius * cos(phi);
     T y = yRadius * sin(phi);
+    rot.apply(&x, &y);
     roots[n] = std::complex<T>(x, y);
   }
   return roots;
@@ -15178,8 +15180,8 @@ void testPolynomialRootCorrespondence2()
   MatR    D;            // Distance matrix
 
   // Example 1:
-  rp = ellipRoots(8, 1.0, 0.7, 0.0  );
-  rq = ellipRoots(8, 1.5, 2.0, PI/16);
+  rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
+  rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
   wp = 8;
   wq = 1;
   D = rsDistanceMatrix(rp, rq);

@@ -14804,6 +14804,22 @@ void rsFlattenTransposed(const std::vector<std::vector<T>>& v, std::vector<T>& f
 
 
 template<class T>
+void rsPlotComplexPoints(const std::vector<std::complex<T>>& points)
+{
+  GNUPlotter plt;
+  plt.addDataComplex(points);
+  plt.setToDarkMode();
+  plt.setPixelSize(600, 600);
+  plt.addCommand("set size square");
+  //plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
+  plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.4 notitle");
+  plt.plot();
+  // It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
+  // Factor out into a rsPlotComplexPoints function
+}
+
+
+template<class T>
 void rsPlotPolyRootTrajectories(
   const std::vector<std::complex<T>>& rp, std::complex<T> wp,
   const std::vector<std::complex<T>>& rq, std::complex<T> wq,
@@ -14824,22 +14840,11 @@ void rsPlotPolyRootTrajectories(
   std::vector<std::vector<Complex>> roots;
   rsComputeRootTrajectories(p, q, N, roots);
 
-  // Flatten the roots vector:
+  // Flatten the roots vector and plot it:
   std::vector<Complex> rootsFlat;
   rsFlatten(roots, rootsFlat);
+  rsPlotComplexPoints(rootsFlat);
 
-  // Plot the roots:
-  GNUPlotter plt;
-  plt.addDataComplex(rootsFlat);
-  plt.setToDarkMode();
-  plt.setPixelSize(600, 600);
-  plt.addCommand("set size square");
-  //plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
-  plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.4 notitle");
-  plt.plot();
-  // It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
-  // Factor out into a rsPlotComplexPoints function
- 
 
   // ToDo:
   //
@@ -15198,24 +15203,50 @@ std::vector<std::complex<T>> rsRootTrajectory(
   T dt = T(1)/T(64);
   while(t < T(1))
   {
+    // Extract the last point from the curve produced so far:
+    Complex prev = rsLast(curve);
+
+    // Compute the new roots for the new value of the parameter t:
+
     t += dt;
     PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
     PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
 
+    // New:
+    // Sort the current roots by their distance to the previous root:
+    std::sort(roots.begin(), roots.end(), 
+      [&](const Complex& lhs, const Complex& rhs)
+      { return abs(prev - lhs) < abs(prev - rhs); }
+    );
+    // ToDo: maybe use a partial sort. It's enough if the 1st element is the one closest to prev 
+    // and the 2nd element is the second closest
+
+    curve.push_back(roots[0]);
 
 
-    int j = index; 
-    // Preliminary. ToDo: find the root in roots that is closest to the last element of "curve".
-    // j should be the index of *that* root
 
 
 
-    curve.push_back(roots[j]);
+    // Old:
+    //int j = index; 
+    //// Preliminary. ToDo: find the root in roots that is closest to the last element of "curve".
+    //// j should be the index of *that* root
+    //curve.push_back(roots[j]);
   }
 
 
 
   return curve;
+
+  // ToDo:
+  //
+  // - Include a mechanism to grow or shrink dt such that the distance between succesive points on
+  //   the trajectory is always reasonable, i.e. not too large and not too small.
+  //
+  // - Maybe make sure that the ratio between the distance to the closest root and the second 
+  //   closest is above some threshold. That means we need not make sure that we can reliably 
+  //   distinguish between closest and second closest. If that isn't the case, we may need a 
+  //   smaller stepsize dt.
 }
 
 /*
@@ -15256,13 +15287,16 @@ void testPolynomialRootCorrespondence2()
   wp = 8;
   wq = 1;
 
-
   VecC curve = rsRootTrajectory(rp, wp, rq, wq, 0);
+  rsPlotComplexPoints(curve);
+
+
+  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
 
 
   D = rsDistanceMatrix(rp, rq);
   plotMatrix(D);
-  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+
 
 
   //// Example 2:

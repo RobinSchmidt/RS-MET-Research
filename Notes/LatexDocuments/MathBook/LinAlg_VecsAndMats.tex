@@ -1,7 +1,7 @@
 \section{Vectors and Matrices}
 
 \paragraph{Vectors}
-Consider a point in the 2D plane or in 3D space. To represent such a point mathematically, we would need a pair or a triple of numbers respectively. An $n$-dimensional vector can generally be thought of as an $n$-tuple of numbers. For intuition building, it's best to think of real numbers although in general, other kinds of numbers may also be allowed in the more general case. Such a vector can not only represent a position in space but also a translation. Imagine the $xy$-plane. The vector $(x,y) = (3,2)$ could encode the action of first going $3$ units into the $x$-direction (usually to the right) and then going $2$ units into the $y$-direction (usually upward). Of course, we could as well go first the $2$ units into the $y$-direction and the $3$ units into the $x$-direction. The location we would end up would be the same in both cases - namely the point with coordinates $(3,2)$. So, we have two interpretations of the tuple $(3,2)$: (1) The point with coordinates $(3,2)$. We could visualize this by drawing a fat dot at this position. (2) The action of displacing something by three units to the right and two units up. We could visualize this as an arrow pointing from the origin to $(3,2)$. If we apply the "action" interpretation to the origin $(0,0)$, we'll end up at $(3,2)$. That is, if we "apply" the arrow to the origin, we'll arrive at our fat dot. Some authors make a careful distinction between the first and second interpretation and use the term "point" or "position vector" for the first and the term "arrow" or "vector" or "displacement vector" for the second. We'll just use the term vector for everything because we don't care about the interpretation - this is math, after all. Vectors are usually denoted as columns. For example, a vector $\mathbf{v}$ with given $x$ and $y$ values is written as:
+Consider a point in the 2D plane or in 3D space. To represent such a point mathematically, we would need a pair or a triple of numbers respectively. An $n$-dimensional vector can generally be thought of as an $n$-tuple of numbers. For intuition building, it's best to think of real numbers although in general, other kinds of numbers may also be allowed in the more general case. Such a vector can not only represent a position in space but also a translation. Imagine the $xy$-plane. The vector $(x,y) = (3,2)$ could encode the action of first going $3$ units into the $x$-direction (usually to the right) and then going $2$ units into the $y$-direction (usually upward). Of course, we could as well go first the $2$ units into the $y$-direction and then $3$ units into the $x$-direction. The location we would end up would be the same in both cases - namely the point with coordinates $(3,2)$ if we assume that we started at the origin $(0,0)$. So, we have two interpretations of the tuple $(3,2)$: (1) The point with coordinates $(3,2)$. We could visualize this by drawing a fat dot at this position. (2) The action of displacing something by three units to the right and two units up. We could visualize this as an arrow pointing from the origin to $(3,2)$. If we apply the "action" interpretation to the origin $(0,0)$, we'll end up at $(3,2)$. That is, if we "apply" the arrow to the origin, we'll arrive at our fat dot. Some authors make a careful distinction between the first and second interpretation and use the term "point" or "position vector" for the first and the term "arrow" or "vector" or "displacement vector" for the second. We'll just use the term vector for everything because we don't care about the interpretation - this is math, after all. Vectors are usually denoted as columns. For example, a vector $\mathbf{v}$ with given $x$ and $y$ values is written as:
 \begin{equation}
 \mathbf{v} 
 = \begin{pmatrix} x \\ y \end{pmatrix} 
@@ -74,7 +74,7 @@ Algebraically, there is not much to say about vector addition - we just add the 
 % 
 
 \paragraph{Vector Subtraction}
-Algebraically, vector subtraction is also simple - just do it component-wise. Geometrically, when we subtract a vector $\mathbf{b}$ from another vector $\mathbf{a}$ such that $\mathbf{c = b-a}$, then the arrow that represents the difference vector $\mathbf{c}$ could be visualized as pointing from the tip of $\mathbf{b}$ to the tip of $\mathbf{a}$. But then it wouldn't have its tail at the origin anymore. But that's no problem - we can just imagine to slide it back such that its tail again coincides with the origin ...TBC...explain that better, draw a figure
+Algebraically, vector subtraction is also simple - just do it component-wise. Geometrically, when we subtract a vector $\mathbf{b}$ from another vector $\mathbf{a}$ such that $\mathbf{c = b-a}$, then the arrow that represents the difference vector $\mathbf{c}$ could be visualized as pointing from the tip of $\mathbf{b}$ to the tip of $\mathbf{a}$. But then it wouldn't have its tail at the origin anymore. But that's no problem - we can just imagine to slide it back such that its tail again coincides with the origin. Displacement vectors don't really have a location. They only have a length and direction. We can place them whereever we want in the $xy$-plane. That is: we can freely slide them around at will without changing the translation that they represent. ...TBC...explain that better, draw a figure
 % What about subtraction? Algebraically, it's just addition of the negative but geometrically, it
 % has a meaningful interpretation, so maybe it should get is won section
 
@@ -88,7 +88,7 @@ A linear combination of a bunch of vectors is just a weighted sum of those vecto
 
 
 \paragraph{Inner Product}
-The \emph{inner product}, also known as the \emph{scalar product} or \emph{dot product} between two vectors $\mathbf{v}$ and $\mathbf{w}$ does not give another vector. Instead, the result is just a number, i.e.a scalar. It is computed by taking all the component-wise products and summing them all up. That is the algebraic definition and the calculation recipe. The inner product can also be defined geometrically as follows: it is the product of the lengths of the two vectors times the cosine of the angle between them. In 3D with $\mathbf{v} = (v_x, v_y, v_z)$ and $\mathbf{w} = (w_x, w_y, w_z)$ we have:
+The \emph{inner product}, also known as the \emph{scalar product} or \emph{dot product} between two vectors $\mathbf{v}$ and $\mathbf{w}$ does not give another vector. Instead, the result is just a number, i.e. a scalar. It is computed by taking all the component-wise products and summing them all up. That is the algebraic definition and the calculation recipe. The inner product can also be defined geometrically as follows: it is the product of the lengths of the two vectors times the cosine of the angle between them. In 3D with $\mathbf{v} = (v_x, v_y, v_z)$ and $\mathbf{w} = (w_x, w_y, w_z)$ we have:
 \begin{equation}
  \mathbf{v} \cdot \mathbf{w} 
  = v_x w_x + v_y w_y + v_z w_z 
@@ -188,7 +188,7 @@ Matrices are added and subtracted element-wise. For that to work, the two matric
  \quad \text{where} \quad
  c_{ij} = \sum_{k=1}^p a_{ik} b_{kj}
 \end{equation}
-The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$ [VERIFY!]. The matrix that has zeros everywhere except on the main diagonal is called the identity matrix and denoted as usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway. This matrix is the neutral element of matrix multiplication. That means that  $\mathbf{I} \mathbf{A} = \mathbf{A} = \mathbf{A} \mathbf{I}$ for any (square) matrix $\mathbf{A}$ whatsoever. In this notation, it is usually understood that the size of $\mathbf{I}$ is matched to the size of $\mathbf{A}$. Matrix multiplication is associative: $(\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{A} (\mathbf{B} \mathbf{C})$ and distributive over matrix addition and subtraction: $\mathbf{A} (\mathbf{B} \pm \mathbf{C}) = \mathbf{A} \mathbf{B} \pm \mathbf{A} \mathbf{C}$ but it is not generally commutative: $\mathbf{AB} \neq \mathbf{BA}$. 
+The matrix $\mathbf{C}$ will have a shape of $m \times n$. Note that the element $c_{ij}$ can be interpreted as a scalar product of the $i$-th row of $\mathbf{A}$ with the $j$-th column of  $\mathbf{B}$. The matrix that has zeros everywhere except on the main diagonal where it has all ones is called the identity matrix and is usually denoted as $\mathbf{I}$. One could perhaps argue that $\mathbf{1}$ could also be a good notation, but I have never seen that - on the other hand, the difference is subtle anyway. This matrix is the neutral element of matrix multiplication. That means that  $\mathbf{I} \mathbf{A} = \mathbf{A} = \mathbf{A} \mathbf{I}$ for any (square) matrix $\mathbf{A}$ whatsoever. In this notation, it is usually understood that the size of $\mathbf{I}$ is matched to the size of $\mathbf{A}$. Matrix multiplication is associative: $(\mathbf{A} \mathbf{B}) \mathbf{C} = \mathbf{A} (\mathbf{B} \mathbf{C})$ and distributive over matrix addition and subtraction: $\mathbf{A} (\mathbf{B} \pm \mathbf{C}) = \mathbf{A} \mathbf{B} \pm \mathbf{A} \mathbf{C}$ but it is not generally commutative: $\mathbf{AB} \neq \mathbf{BA}$. 
 
 % -maybe add also the Kronecker product and list formulas for its connection with the regular
 %  product
@@ -250,6 +250,9 @@ If the matrix $\mathbf{A}$ is not a square matrix and instead is an $m \times n$
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Commutator}
 Matrix multiplication is, in general, not commutative, i.e. $\mathbf{A} \mathbf{B} \neq \mathbf{B} \mathbf{A}$ in general. We also say, the matrices  $\mathbf{A}$ and $\mathbf{B}$ do not \emph{commute} in general. The difference of the two possible products $\mathbf{C} = \mathbf{A} \mathbf{B} - \mathbf{B} \mathbf{A}$ is called the commutator of $\mathbf{A}$ and $\mathbf{B}$. It can be thought of as measuring, how non-commutative the matrices are with respect to one another. If two matrices commute, their commutator is the zero matrix. [TODO: What about $\mathbf{A} \mathbf{B} \mathbf{A}^{-1} \mathbf{B}^{-1}$. That's how the commutator is defined in group theory. It's the identity matrix if  $\mathbf{A}$ and $\mathbf{B}$ commute, I think. Figure out and explain the relation between these two conflicting definitions!]
+
+% https://en.wikipedia.org/wiki/Commutator
+% https://gqcg-res.github.io/knowdes/formulas-for-commutators-and-anticommutators.html
 
 %---------------------------------------------------------------------------------------------------
 \subsubsection{Square Root}
@@ -334,6 +337,15 @@ Now we want to define what is means to apply a function such as the exponential 
 
 % How can the sqrt be computed? Will Newton iteration work
 
+% Matrix exponential:
+% -det(e^A) = e^(Tr(A))
+% -if A,B commute then e^(A+B) = e^A e^B. If they don't commute, then use Baker-Campbell-Hausdorff
+%  formula https://en.wikipedia.org/wiki/Baker%E2%80%93Campbell%E2%80%93Hausdorff_formula
+% -if A ist Hermitian then e^(iA) is unitary 
+% https://www.youtube.com/watch?v=sFC5jMUzKnA
+% ...maybe that stuff should go into a "Matrix Calculus" chapter. Calculus is about continuous 
+% functions. in matrix calculus, these functions have matrices as inputs and outputs, I guess.
+
 % sqrt
 
 \paragraph{$\star$ Functions of a Vector}
@@ -362,7 +374,7 @@ The \emph{norm} of a vector captures the idea of its length. We can abstractly v
 % refer back to norms of numbers defined in \ref{Tab:Norm}
 
 \paragraph{Distance}
-A \emph{distance function} is a function into which we can plug in two vectors and it spits out a scalar. That scalar should indicate, how far apart the two vectors are. A distance is usually induced by a norm: As distance between two vectors, we take the norm of their difference. Different norms will lead to different notions of distance. ...TBC...
+A \emph{distance function} is a function into which we can plug in two vectors and it spits out a scalar. That scalar should indicate, how far apart the two vectors are. A distance can be \emph{induced} by a norm: As distance between two vectors, we may take the norm of their difference. Different norms will lead to different notions of distance. ...TBC...
 % state abstarct requirements for a distance. ...see topology chapter
 
 % distances emphasize the interpretation of vectors as points/locations
@@ -460,12 +472,12 @@ The trace of a square matrix $\mathbf{A}$ is the sum of its diagonal elements an
 \begin{equation}
  \tr(\mathbf{A}) = \sum_{i=1}^{n} a_{ii}
 \end{equation}
-For non-square matrices, the trace is not defined. The trace is also equal to the sum of the eigenvalues and it holds that $\tr(\mathbf{A B}) = \tr(\mathbf{B A})$. This implies that similar matrices have the same trace. The trace is linear such that: $\tr(\mathbf{A + B}) = \tr(\mathbf{A} + \tr(\mathbf{B})$ and $\tr(c \mathbf{A}) = c \tr(\mathbf{A})$. ...TBC...
+For non-square matrices, the trace is not defined. The trace is also equal to the sum of the eigenvalues and it holds that $\tr(\mathbf{A B}) = \tr(\mathbf{B A})$. This implies that similar matrices have the same trace. The trace is linear such that: $\tr(\mathbf{A + B}) = \tr(\mathbf{A}) + \tr(\mathbf{B})$ and $\tr(c \mathbf{A}) = c \tr(\mathbf{A})$. ...TBC...
 
 %https://en.wikipedia.org/wiki/Trace_(linear_algebra)
 
 \paragraph{Determinant}
-Geometrically, the \emph{determinant} of a $(n \times n)$-matrix $\mathbf{A}$ is the amount by which the $n$D hypervolume of any chunk of the vector space $\mathbb{R}^n$ gets expanded or shrunken by multiplying by the matrix. You can imagine this as what happens to the (hyper)volume of the unit hypercube in $\mathbb{R}^n$ when applying the matrix to all of its vertices - but it applies to any other chunk of the space just the same. Note that the determinant also has a sign - so it's a kind of signed volume change factor. The determinant happens to be equal to the product of the eigenvalues. If we have a triangular matrix, then the determinant can be easily be computed as the product of the diagonal entries. If the determinant of a matrix is zero, it means geometrically that a hypervolume of $\mathbb{R}^n$ will be completely collapsed by the matrix into a lower dimensional object. For example, in $\mathbb{R}^3$, a 3D volume could be collapsed into some flat planar 2D object, or just into a 1D line or even into a 0D point. A matrix with a determinat of zero is called \emph{singular}, one with nonzero determinant is called \emph{regular}. Only regular matrices are invertible. This is geometrically plausible because you cannot undo the total collapse of a dimension - once a dimension has been squashed away, the information about that dimension is irrecoverably lost. 
+Geometrically, the \emph{determinant} of a $(n \times n)$-matrix $\mathbf{A}$ is the amount by which the $n$D hypervolume of any chunk of the vector space $\mathbb{R}^n$ gets expanded or shrunken by multiplying by the matrix. You can imagine this as what happens to the (hyper)volume of the unit hypercube in $\mathbb{R}^n$ when applying the matrix to all of its vertices - but it applies to any other chunk of the space just the same. Note that the determinant also has a sign - so it's a kind of signed volume change factor. The determinant happens to be equal to the product of the eigenvalues. If we have a triangular matrix, then the determinant can be easily be computed as the product of the diagonal entries. If the determinant of a matrix is zero, it means geometrically that a hypervolume of $\mathbb{R}^n$ will be completely collapsed by the matrix into a lower dimensional object. For example, in $\mathbb{R}^3$, a 3D volume could be collapsed into some flat planar 2D object, or just into a 1D line or even into a 0D point. The common feature of all of these 3 cases is that the result has a volume of zero. A matrix with a determinant of zero is called \emph{singular}, one with nonzero determinant is called \emph{regular}. Only regular matrices are invertible. This is geometrically plausible because you cannot undo the total collapse of a dimension - once a dimension has been squashed away, the information about that dimension is irrecoverably lost. 
 
 \medskip
 There are various ways to compute the determinant - the most practical perhaps being to transform the matrix into triangular form while keeping track of what the transformations do to the determinant (swapping rows changes the sign, multiplying a row by a factor changes the determinant by the same factor). At the end of that transformation process, we would compute the product of diagonal elements and take into account the modifications that accumulated during the transformation. ...VERIFY...TBC...
@@ -541,7 +553,7 @@ A unitary matrix is one whose Hermitian transpose is equal to its inverse: $\mat
 %https://mathworld.wolfram.com/HermitianMatrix.html
 
 \paragraph{Definite Matrices}
-A matrix $\mathbf{A}$ is said to be \emph{positive definite} if for every nonzero vector $\mathbf{x}$, the sandwich product of the vector with that matrix is positive: $\forall \mathbf{x \neq 0}: \; \mathbf{x}^T \mathbf{A x} > 0$. It's called \emph{positive semidefinite} if $\mathbf{x}^T \mathbf{A x} \geq 0$, \emph{negative definite} if $\mathbf{x}^T \mathbf{A x} < 0$ and \emph{negative semidefinite} if $\mathbf{x}^T \mathbf{A x} \leq 0$. I believe that have heard the "definite" without any qualifiers being used for matrices that satisfy $\mathbf{x}^T \mathbf{A x} \neq 0$ for all nonzero vectors $\mathbf{x}$ [VERIFY!]. TODO: explain indefinite and what definiteness implies for the eigenvalues
+A matrix $\mathbf{A}$ is said to be \emph{positive definite} if for every nonzero vector $\mathbf{x}$, the sandwich product of the vector with that matrix is positive: $\forall \mathbf{x \neq 0}: \; \mathbf{x}^T \mathbf{A x} > 0$. It's called \emph{positive semidefinite} if $\mathbf{x}^T \mathbf{A x} \geq 0$, \emph{negative definite} if $\mathbf{x}^T \mathbf{A x} < 0$ and \emph{negative semidefinite} if $\mathbf{x}^T \mathbf{A x} \leq 0$. I believe that I have heard the term "definite" without any qualifiers being used for matrices that satisfy $\mathbf{x}^T \mathbf{A x} \neq 0$ for all nonzero vectors $\mathbf{x}$ [VERIFY!]. TODO: explain indefinite and what definiteness implies for the eigenvalues
 
 % It was here - at 15:35:
 % https://www.youtube.com/watch?v=qwsvXa7nIGg

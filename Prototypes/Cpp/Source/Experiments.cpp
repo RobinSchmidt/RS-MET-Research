@@ -14838,6 +14838,7 @@ void rsPlotPolyRootTrajectories(
   plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.4 notitle");
   plt.plot();
   // It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
+  // Factor out into a rsPlotComplexPoints function
  
 
   // ToDo:
@@ -15148,6 +15149,7 @@ void testPolynomialRootCorrespondence1()
 
 }
 
+// Computes the distance matrix D(i,j) = abs(p[i] - q[j]) for the points given in p and q:
 template<class T>
 rsMatrix<T> rsDistanceMatrix(
   const std::vector<std::complex<T>>& p,
@@ -15161,6 +15163,75 @@ rsMatrix<T> rsDistanceMatrix(
       D(i, j) = rsAbs(p[i] - q[j]);
   return D;
 }
+
+
+template<class T>
+std::vector<std::complex<T>> rsRootTrajectory(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  int index)
+{
+  // Under construction
+
+
+  rsAssert(rp.size() == rq.size());
+
+  using Complex = std::complex<T>;
+  using PolyC   = rsPolynomial<Complex>;
+
+  // Create polynomials p,q:
+  PolyC p; p.setRoots(rp); p.scale(wp);
+  PolyC q; q.setRoots(rq); q.scale(wq);
+
+  // Allocate vector for the roots:
+  int deg = p.getDegree();
+  std::vector<Complex> roots;
+  roots.resize(deg);
+
+  // Compute initial point of the trajectory:
+  PolyC::roots(p.getCoeffPointer(), deg, &roots[0]);
+  std::vector<Complex> curve;
+  curve.push_back(roots[index]);
+
+  // Compute the trajectory:
+  T t  = T(0);
+  T dt = T(1)/T(64);
+  while(t < T(1))
+  {
+    t += dt;
+    PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+    PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
+
+
+
+    int j = index; 
+    // Preliminary. ToDo: find the root in roots that is closest to the last element of "curve".
+    // j should be the index of *that* root
+
+
+
+    curve.push_back(roots[j]);
+  }
+
+
+
+  return curve;
+}
+
+/*
+template<class T>
+rsMatrix<T> rsCorrespondenceMatrix(
+  const std::vector<std::complex<T>>& p,
+  const std::vector<std::complex<T>>& q)
+{
+  int M = (int) p.size();
+  int N = (int) q.size();
+  rsMatrix<T> C(M, N);
+
+
+  return C;
+}
+*/
 
 
 void testPolynomialRootCorrespondence2()
@@ -15184,6 +15255,11 @@ void testPolynomialRootCorrespondence2()
   rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
   wp = 8;
   wq = 1;
+
+
+  VecC curve = rsRootTrajectory(rp, wp, rq, wq, 0);
+
+
   D = rsDistanceMatrix(rp, rq);
   plotMatrix(D);
   rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);

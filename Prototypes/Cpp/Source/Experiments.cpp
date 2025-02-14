@@ -14834,7 +14834,8 @@ void rsPlotPolyRootTrajectory(
   plt.setToDarkMode();
   plt.setPixelSize(600, 600);
   plt.addCommand("set size square");
-  plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
+  //plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.6 notitle");
+  plt.addGraph("i 0 u 1:2 w points pt 7 ps 0.4 notitle");
   plt.plot();
   // It looks a bit ugly - as if the point locations are rounded to the nearest pixel or something.
  
@@ -15150,6 +15151,27 @@ void testPolynomialRootCorrespondence2()
 {
   // Under construction
 
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using VecC    = std::vector<Complex>;
+  using PolyC   = rsPolynomial<Complex>;
+
+
+  Complex i(0, 1);      // Imaginary unit
+  Complex wp, wq;       // Weights for p and q
+  VecC    rp, rq;       // Roots of p and q;
+
+  // Example 1:
+  rp = ellipRoots(8, 1.0, 0.7, 0.0  );
+  rq = ellipRoots(8, 1.5, 2.0, PI/16);
+  wp = 8;
+  wq = 1;
+  rsPlotPolyRootTrajectory(rp, wp, rq, wq, 101);
+
+
+
+
+
 
   int dummy = 0;
 
@@ -15161,6 +15183,9 @@ void testPolynomialRootCorrespondence2()
   //   distance. Maybe this length ratio can be related to some sort of association strength?
   //
   // - Maybe compute the line integrals along the trajectories. Maybe this has some significance?
+  //
+  // - Maybe roots association strength can also be inferred by some sort of normalized root 
+  //   distance where the normalization may be in terms of the maximum root distance?
 }
 
 

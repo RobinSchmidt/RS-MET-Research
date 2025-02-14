@@ -15216,7 +15216,9 @@ std::vector<std::complex<T>> rsRootTrajectory(
     // Sort the current roots by their distance to the previous root:
     std::sort(roots.begin(), roots.end(), 
       [&](const Complex& lhs, const Complex& rhs)
-      { return abs(prev - lhs) < abs(prev - rhs); }
+      { 
+        return abs(prev - lhs) < abs(prev - rhs); 
+      }
     );
     // ToDo: maybe use a partial sort. It's enough if the 1st element is the one closest to prev 
     // and the 2nd element is the second closest

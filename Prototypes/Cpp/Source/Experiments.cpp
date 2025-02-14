@@ -14846,6 +14846,26 @@ void rsPlotPolyRootTrajectory(
   //   soft-clipper for this...or maybe hard-clipping is better? We'll see.
 }
 
+// Helper function to produce roots arranged around an ellipse:
+template<class T>
+std::vector<std::complex<T>> ellipRoots(
+  int numRoots, T xRadius, T yRadius, T initialAngle)
+{
+  std::vector<std::complex<T>> roots(numRoots);
+  for(int n = 0; n < numRoots; n++)
+  {
+    T phi = initialAngle + (2*PI*n) / numRoots;
+    T x = xRadius * cos(phi);
+    T y = yRadius * sin(phi);
+    roots[n] = std::complex<T>(x, y);
+  }
+  return roots;
+
+  // ToDo: Maybe give it an optional parameter for a rotation that is applied to (x,y). This has a
+  // different effect than the initial angle. It rotates the whole underlying ellipse.
+}
+
+
 
 
 void testPolynomialRootCorrespondence1()
@@ -14868,24 +14888,6 @@ void testPolynomialRootCorrespondence1()
 
   Complex i(0, 1);      // Imaginary unit
 
-  // Helper function to produce roots arranged around an ellipse:
-  auto ellipRoots = [](int numRoots, Real xRadius, Real yRadius, Real initialAngle)
-  {
-    VecC roots(numRoots);
-    for(int n = 0; n < numRoots; n++)
-    {
-      Real phi = initialAngle + (2*PI*n) / numRoots;
-      Real x = xRadius * cos(phi);
-      Real y = yRadius * sin(phi);
-      roots[n] = Complex(x, y);
-    }
-    return roots;
-
-    // ToDo: Maybe give it an optional parameter for a rotation that is applied to (x,y). This has a
-    // different effect than the initial angle. It rotates the whole underlying ellipse.
-  };
-
-
 
   // Create some example root trajectories:
 
@@ -14903,9 +14905,6 @@ void testPolynomialRootCorrespondence1()
   rsPlotPolyRootTrajectory(
     { -1, +5 }, 1 + 0*i,              // rp = -1, +5, wp = 1
     { +3, +7 }, 1 + 0*i, 51);        // rq = +3, +7, wq = 1
-
-
-
 
 
 

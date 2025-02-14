@@ -14753,6 +14753,10 @@ void rsComputeRootTrajectory(
     // Compute parameter t and create polynomial r_t(x):
     T t = T(n) / T(N-1);
     PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+    // Maybe use a function r = rsLerp(p, q, t). This can later be replaced by another function
+    // that interpolates in a different way. Then we can try to use one that does the interpolation
+    // in the Chebychev basis. I think, the result should theoretically be exactly the same as in 
+    // the monomial basis due to linearity but it would be reassuring to verify it numerically.
 
 
     // For a debug test:
@@ -14787,6 +14791,15 @@ void rsFlatten(const std::vector<std::vector<T>>& v, std::vector<T>& f)
   // the result is the other way around. But wait: that assumes that all the sizes of the v[i] are 
   // equal. In our case here, this is the case but we want the function to be applicable to more 
   // general situations where this is not the case. 
+}
+
+template<class T>
+void rsFlattenTransposed(const std::vector<std::vector<T>>& v, std::vector<T>& f)
+{
+  // Under construction
+
+
+  int dummy = 0;
 }
 
 
@@ -14835,7 +14848,7 @@ void rsPlotPolyRootTrajectory(
 
 
 
-void testPolynomialRootCorrespondence()
+void testPolynomialRootCorrespondence1()
 {
   // Under construction
 
@@ -14874,13 +14887,7 @@ void testPolynomialRootCorrespondence()
 
 
 
-
-
-
-
-
   // Create some example root trajectories:
-
 
   // If we assume that a root of p wants to map to the nearest root of q and vice versa then in 
   // this example, -1 of p wants to map to +3 of q but +3 of q wants to map to +5 of p but +5 of p
@@ -15128,6 +15135,25 @@ void testPolynomialRootCorrespondence()
   //   p = (x-1)*(x+1), q = (x-2)*(x+2). Then maybe for p = (x-1)(x-i)(x+i), q = (x-2)(x-2i)(x+2i).
 
 }
+
+
+void testPolynomialRootCorrespondence2()
+{
+  // Under construction
+
+
+  int dummy = 0;
+
+  // ToDo:
+  //
+  // - Plot the distance matrices of the roots of p and q.
+  //
+  // - Compute the lengths of the trajectories, normalize these lengths by dividing by the 
+  //   distance. Maybe this length ratio can be related to some sort of association strength?
+  //
+  // - Maybe compute the line integrals along the trajectories. Maybe this has some significance?
+}
+
 
 
 void testMimoTransferMatrix()

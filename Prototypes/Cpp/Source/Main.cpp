@@ -115,9 +115,10 @@ int main (int /*argc*/, char* /*argv[]*/)
 
   //testAttractors();  // move into a section for physics/models
 
-  testLiftedPolynomial();
-  testFactoredPolynomial();
-  testPolynomialRootCorrespondence();  // stub
+  //testLiftedPolynomial();
+  //testFactoredPolynomial();
+  //testPolynomialRootCorrespondence1();
+  testPolynomialRootCorrespondence2();
 
 
   // MIMO Filters:

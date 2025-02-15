@@ -15189,7 +15189,7 @@ template<class T>
 std::vector<std::complex<T>> rsRootTrajectory(
   const std::vector<std::complex<T>>& rp, std::complex<T> wp,
   const std::vector<std::complex<T>>& rq, std::complex<T> wq,
-  int index)
+  int index, T resolution = T(1)/T(128) )
 {
   // Under construction
 
@@ -15215,19 +15215,12 @@ std::vector<std::complex<T>> rsRootTrajectory(
 
   // Set up some algorithm parameters:
   T maxRootDist = rsMaxDistance(rp, rq);
-  //T maxDist = T(1) / T(32);   // Maximum allowed distance between trajectory points
-  T maxDist = maxRootDist / T(128);  // Maximum allowed distance between trajectory points
-
-  //T minDist = maxDist / 4;          // Distance at which we may increase the stepsize dt
-  T minDist = maxDist / 2;          // Distance at which we may increase the stepsize dt
-
-  // ToDo: I think, maxDist should depend on the two polynomials. Maybe use a fraction of the 
-  // maximum distance between the roots of p and q. Using minDist = maxDist/4 is ad hoc. The 
-  // rationale is that we do not want the stepsize to go up and down too erratically so the ratio
-  // of maxDist to minDist should be large enough. But it shouldn't be too large either because 
-  // then we may see trajectory samplings with wildly differently sized steps.
-
-  // Make the factor 1/128 an optional parameter
+  T maxDist = resolution * maxRootDist;  // Maximum allowed distance between trajectory points
+  T minDist = T(0.5) * maxDist;          // Distance at which we may increase the stepsize dt
+  // Using minDist = 0.5 * maxDist is ad hoc. We do not want the stepsize to go up and down too 
+  // erratically so the ratio of maxDist to minDist should be large enough. But it shouldn't be 
+  // too large either because then we may see trajectory samplings with wildly differently sized 
+  // steps.
 
 
 
@@ -15352,6 +15345,8 @@ void testPolynomialRootCorrespondence2()
   wq = 1;
 
   VecC curve = rsRootTrajectory(rp, wp, rq, wq, 0);
+  rsPlotComplexPoints(curve);
+  curve = rsRootTrajectory(rp, wp, rq, wq, 1);
   rsPlotComplexPoints(curve);
 
 

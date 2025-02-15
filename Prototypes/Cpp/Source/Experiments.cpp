@@ -15241,7 +15241,8 @@ std::vector<std::complex<T>> rsRootTrajectory(
       // Find its roots:
       PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
 
-      // Sort the current roots by their distance to the previous root:
+      // Sort the current roots by their distance to the previous root and extract the one that is 
+      // closest:
       std::sort(roots.begin(), roots.end(), 
         [&](const Complex& lhs, const Complex& rhs)
         { 
@@ -15257,7 +15258,8 @@ std::vector<std::complex<T>> rsRootTrajectory(
       // be sufficient.
 
       // Check, if we can accept the step. If not, decrease dt and try again:
-      if(abs(prevRoot - newRoot) <= maxDist)
+      T dist = abs(prevRoot - newRoot);
+      if(dist <= maxDist)
       {
         // ToDo: Maybe include an additional criterion that looks at the ratio:
         // abs(prevRoot - newRoot) / abs(prevRoot - roots[1]). The rationale is that we don't want
@@ -15272,7 +15274,7 @@ std::vector<std::complex<T>> rsRootTrajectory(
         t += dt;
 
         // Increase the stepsize for the next iteration if we can afford it:
-        if(abs(prevRoot - newRoot) <= minDist)
+        if(dist <= minDist)
           dt *= T(2);
       }
       else

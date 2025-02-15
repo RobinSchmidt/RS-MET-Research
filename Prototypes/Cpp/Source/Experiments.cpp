@@ -15198,32 +15198,100 @@ std::vector<std::complex<T>> rsRootTrajectory(
   std::vector<Complex> curve;
   curve.push_back(roots[index]);
 
+  // Set up some algorithm parameters:
+  T maxDist = T(1) / T(32);   // Maximum allowed distance between trajectory points
+  T minDist = maxDist / 4;    // Distance at which we may increase the stepsize dt
+  // ToDo: I think, maxDist should depend on the two polynomials. Maybe use a fraction of the 
+  // maximum distance between the roots of p and q. Using minDist = maxDist/4 is ad hoc. The 
+  // rationale is that we do not want the stepsize to go up and down too erratically so the ratio
+  // of maxDist to minDist should be large enough. But it shouldn't be too large either because 
+  // then we may see trajectory samplings with wildly differently sized steps.
+
+
   // Compute the trajectory:
   T t  = T(0);
-  T dt = T(1)/T(64);
+  T dt = T(1) / T(64);
   while(t < T(1))
   {
     // Extract the last point from the curve produced so far:
-    Complex prev = rsLast(curve);
+    Complex prevRoot = rsLast(curve);
 
-    // Compute the new roots for the new value of the parameter t:
 
-    t += dt;
-    PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
-    PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
 
     // New:
-    // Sort the current roots by their distance to the previous root:
-    std::sort(roots.begin(), roots.end(), 
-      [&](const Complex& lhs, const Complex& rhs)
-      { 
-        return abs(prev - lhs) < abs(prev - rhs); 
-      }
-    );
-    // ToDo: maybe use a partial sort. It's enough if the 1st element is the one closest to prev 
-    // and the 2nd element is the second closest
+    bool stepAccepted = false;
+    while(stepAccepted == false)
+    {
+      // Create the polynomial r at t+dt:
+      PolyC r = Complex(1-(t+dt))*p + Complex(t+dt)*q;
 
-    curve.push_back(roots[0]);
+      // Find its roots:
+      PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
+
+      // Sort the current roots by their distance to the previous root:
+      std::sort(roots.begin(), roots.end(), 
+        [&](const Complex& lhs, const Complex& rhs)
+        { 
+          return abs(prevRoot - lhs) < abs(prevRoot - rhs); 
+        }
+      );
+      Complex newRoot = roots[0];
+      // ToDo: maybe use a partial sort. It's enough if the 1st element is the one closest to prev 
+      // and the 2nd element is the second closest. See: 
+      // https://en.cppreference.com/w/cpp/algorithm/partial_sort
+      // Well - actually we need the second closest root only if we below implement the additional
+      // acceptance criterion (see comment there). Otherwise, a simple search for the minimum may 
+      // be sufficient.
+
+      // Check, if we can accept the step. If not, decrease dt and try again:
+      if(abs(prevRoot - newRoot) <= maxDist)
+      {
+        // ToDo: Maybe include an additional criterion that looks at the ratio:
+        // abs(prevRoot - newRoot) / abs(prevRoot - roots[1]). The rationale is that we don't want
+        // to accept the setp when we cant distinguish well enough between the closest and second 
+        // closest new root. We should enter this "accept" branch only when both conditions are 
+        // met, i.e. combine both condition with a logical "and" in the "if" statement. But: it 
+        // will create problems for polynomials with roots that have a mutliplicity greater than 1.
+
+        // Accept the step:
+        curve.push_back(newRoot);
+        stepAccepted = true;
+        t += dt;
+
+        // Increase the stepsize for the next iteration if we can afford it:
+        if(abs(prevRoot - newRoot) <= minDist)
+          dt *= T(2);
+      }
+      else
+      {
+        // Step was not accepted. We decrease the stepsize and try again:
+        dt *= T(0.5);
+      }
+
+    }
+
+
+
+    //// Old:
+    //// Compute the new roots for the new value of the parameter t:
+
+    //t += dt;
+    //PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+    //PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
+
+    //// New:
+    //// Sort the current roots by their distance to the previous root:
+    //std::sort(roots.begin(), roots.end(), 
+    //  [&](const Complex& lhs, const Complex& rhs)
+    //  { 
+    //    return abs(prev - lhs) < abs(prev - rhs); 
+    //  }
+    //);
+    //// ToDo: maybe use a partial sort. It's enough if the 1st element is the one closest to prev 
+    //// and the 2nd element is the second closest. See: 
+    //// https://en.cppreference.com/w/cpp/algorithm/partial_sort
+
+    //curve.push_back(roots[0]);
 
 
 
@@ -15249,6 +15317,9 @@ std::vector<std::complex<T>> rsRootTrajectory(
   //   closest is above some threshold. That means we need not make sure that we can reliably 
   //   distinguish between closest and second closest. If that isn't the case, we may need a 
   //   smaller stepsize dt.
+  //
+  // - To refine the sampling algorithm, maybe try to take (estimated) curvature into account. When
+  //   the curvature is large, we may want to use a denser sampling.
 }
 
 /*

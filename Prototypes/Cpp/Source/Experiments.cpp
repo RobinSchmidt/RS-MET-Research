@@ -15169,6 +15169,21 @@ rsMatrix<T> rsDistanceMatrix(
   return D;
 }
 
+// Computes the maximum of abs(p[i] - q[j]) for the points given in p and q:
+template<class T>
+T rsMaxDistance(
+  const std::vector<std::complex<T>>& p,
+  const std::vector<std::complex<T>>& q)
+{
+  int M = (int) p.size();
+  int N = (int) q.size();
+  T maxDist = T(0);
+  for(int i = 0; i < M; i++)
+    for(int j = 0; j < N; j++)
+      maxDist = rsMax(maxDist, rsAbs(p[i] - q[j]));
+  return maxDist;
+}
+
 
 template<class T>
 std::vector<std::complex<T>> rsRootTrajectory(
@@ -15199,34 +15214,31 @@ std::vector<std::complex<T>> rsRootTrajectory(
   curve.push_back(roots[index]);
 
   // Set up some algorithm parameters:
-  T maxDist = T(1) / T(32);   // Maximum allowed distance between trajectory points
-  T minDist = maxDist / 4;    // Distance at which we may increase the stepsize dt
+  T maxRootDist = rsMaxDistance(rp, rq);
+  //T maxDist = T(1) / T(32);   // Maximum allowed distance between trajectory points
+  T maxDist = maxRootDist / T(128);  // Maximum allowed distance between trajectory points
+
+  //T minDist = maxDist / 4;          // Distance at which we may increase the stepsize dt
+  T minDist = maxDist / 2;          // Distance at which we may increase the stepsize dt
+
   // ToDo: I think, maxDist should depend on the two polynomials. Maybe use a fraction of the 
   // maximum distance between the roots of p and q. Using minDist = maxDist/4 is ad hoc. The 
   // rationale is that we do not want the stepsize to go up and down too erratically so the ratio
   // of maxDist to minDist should be large enough. But it shouldn't be too large either because 
   // then we may see trajectory samplings with wildly differently sized steps.
 
+  // Make the factor 1/128 an optional parameter
+
+
 
   // Compute the trajectory:
   T t  = T(0);
-  //T dt = T(1) / T(64);
   T dt = T(1);            // This will shrink to its desired value via the stepsize adaption.
-  //T dt = T(1) / T(8192);
-  // Maybe init with a too large value such that the very first step uses a stepsize that lets
-  // us land within our range of desired root distances between the steps. If we init with a too
-  // small value, the first few steps may be too small. ...done...using 1 is the maximum that makes
-  // sense
-
-
   while(t < T(1))
   {
     // Extract the last point from the curve produced so far:
     Complex prevRoot = rsLast(curve);
 
-
-
-    // New:
     bool stepAccepted = false;
     while(stepAccepted == false)
     {
@@ -15277,42 +15289,7 @@ std::vector<std::complex<T>> rsRootTrajectory(
       }
 
     }
-
-
-
-    //// Old:
-    //// Compute the new roots for the new value of the parameter t:
-
-    //t += dt;
-    //PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
-    //PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
-
-    //// New:
-    //// Sort the current roots by their distance to the previous root:
-    //std::sort(roots.begin(), roots.end(), 
-    //  [&](const Complex& lhs, const Complex& rhs)
-    //  { 
-    //    return abs(prev - lhs) < abs(prev - rhs); 
-    //  }
-    //);
-    //// ToDo: maybe use a partial sort. It's enough if the 1st element is the one closest to prev 
-    //// and the 2nd element is the second closest. See: 
-    //// https://en.cppreference.com/w/cpp/algorithm/partial_sort
-
-    //curve.push_back(roots[0]);
-
-
-
-
-
-    // Old:
-    //int j = index; 
-    //// Preliminary. ToDo: find the root in roots that is closest to the last element of "curve".
-    //// j should be the index of *that* root
-    //curve.push_back(roots[j]);
   }
-
-
 
   return curve;
 
@@ -15331,6 +15308,9 @@ std::vector<std::complex<T>> rsRootTrajectory(
   //
   // - To refine the sampling algorithm, maybe try to take (estimated) curvature into account. When
   //   the curvature is large, we may want to use a denser sampling.
+  //
+  // - What if dt falls below eps. Then we get a hang in an inifnite loop because t += dt will not
+  //   change t anymore. Maybe we need to ensure that dt is at least eps.
 }
 
 /*

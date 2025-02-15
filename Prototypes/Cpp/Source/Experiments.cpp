@@ -15210,7 +15210,15 @@ std::vector<std::complex<T>> rsRootTrajectory(
 
   // Compute the trajectory:
   T t  = T(0);
-  T dt = T(1) / T(64);
+  //T dt = T(1) / T(64);
+  T dt = T(1);            // This will shrink to its desired value via the stepsize adaption.
+  //T dt = T(1) / T(8192);
+  // Maybe init with a too large value such that the very first step uses a stepsize that lets
+  // us land within our range of desired root distances between the steps. If we init with a too
+  // small value, the first few steps may be too small. ...done...using 1 is the maximum that makes
+  // sense
+
+
   while(t < T(1))
   {
     // Extract the last point from the curve produced so far:
@@ -15248,7 +15256,7 @@ std::vector<std::complex<T>> rsRootTrajectory(
       {
         // ToDo: Maybe include an additional criterion that looks at the ratio:
         // abs(prevRoot - newRoot) / abs(prevRoot - roots[1]). The rationale is that we don't want
-        // to accept the setp when we cant distinguish well enough between the closest and second 
+        // to accept the step when we cant distinguish well enough between the closest and second 
         // closest new root. We should enter this "accept" branch only when both conditions are 
         // met, i.e. combine both condition with a logical "and" in the "if" statement. But: it 
         // will create problems for polynomials with roots that have a mutliplicity greater than 1.
@@ -15309,6 +15317,9 @@ std::vector<std::complex<T>> rsRootTrajectory(
   return curve;
 
   // ToDo:
+  //
+  // - Check if the last sampled point on the trajectory actually corresponds to a root of q, i.e.
+  //   if we produce r(x) = q(x) in the very last step - or if we miss one step or overshoot.
   //
   // - Include a mechanism to grow or shrink dt such that the distance between succesive points on
   //   the trajectory is always reasonable, i.e. not too large and not too small.

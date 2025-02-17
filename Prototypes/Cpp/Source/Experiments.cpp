@@ -15332,6 +15332,8 @@ std::vector<int> rsGetRootCorrespondence(
     std::vector<std::complex<T>> t;
     t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
 
+    rsPlotComplexPoints(t);   // For debug
+
     std::complex<T> endPoint = rsLast(t);
 
     //int j = rsFind(rq, endPoint);
@@ -15432,7 +15434,7 @@ void testPolynomialRootCorrespondence2()
   rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
   wp = 8;
   wq = 1;
-  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
   D = rsDistanceMatrix(rp, rq);
   //plotMatrix(D);
 
@@ -15442,8 +15444,8 @@ void testPolynomialRootCorrespondence2()
   //rsPlotComplexPoints(curve);
 
   std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, 1./128);
-
-  plotMatrixWithMarkers(D, rootsMap);
+  plotMatrixWithMarkers(D, rootsMap); // This looks wrong!
+  // ToDo: make a simpler example to figure out what is going on
 
 
 

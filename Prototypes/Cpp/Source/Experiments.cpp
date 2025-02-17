@@ -15392,6 +15392,12 @@ void plotMatrixWithMarkers(const rsMatrix<T>& A, const std::vector<int>& markers
   if(A.isSquare())
     plt.addCommand("set size square");
 
+  // Preliminary, for test:
+  plt.addCommand("set object 1 circle front at 0.0,0.0 size 0.2 fillcolor rgb \"black\" fs solid");
+ 
+
+
+
   plt.plot();
 }
 
@@ -15418,7 +15424,7 @@ void testPolynomialRootCorrespondence2()
   rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
   wp = 8;
   wq = 1;
-  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
   D = rsDistanceMatrix(rp, rq);
   //plotMatrix(D);
 

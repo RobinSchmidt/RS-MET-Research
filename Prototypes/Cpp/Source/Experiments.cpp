@@ -15331,6 +15331,7 @@ std::vector<int> rsGetRootCorrespondence(
     std::vector<std::complex<T>> t;
     t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
     std::complex<T> endPoint = rsLast(t);
+    //rsPlotComplexPoints(t);                     // For debuging and experimentation
 
     // Find root in q that matches the end point:
     int j = -1;
@@ -15414,17 +15415,17 @@ void testPolynomialRootCorrespondence2()
   VecC    rp, rq;       // Roots of p and q
   MatR    D;            // Distance matrix
 
-  //// Example 1:
-  //rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
-  //rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
-  //wp = 8;
-  //wq = 1;
-  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
-  //rsPlotRootDistancesAndMap( rp, wp, rq, wq);
-  //// root index in p(x):   0  1  2  3  4  5  6  7
-  //// root index in q(x):   0  1  2  3  4  5  6  7
-  //// is row minimum:       Y  N  Y  Y  Y  N  Y  Y
-  //// is column minimum:    Y  N  N  Y  Y  N  N  Y
+  // Example 1:
+  rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
+  rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
+  wp = 8;
+  wq = 1;
+  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+  rsPlotRootDistancesAndMap( rp, wp, rq, wq);
+  // root index in p(x):   0  1  2  3  4  5  6  7
+  // root index in q(x):   0  1  2  3  4  5  6  7
+  // is row minimum:       Y  N  Y  Y  Y  N  Y  Y
+  // is column minimum:    Y  N  N  Y  Y  N  N  Y
 
 
   // Example 2:

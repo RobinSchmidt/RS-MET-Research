@@ -15393,8 +15393,16 @@ void plotMatrixWithMarkers(const rsMatrix<T>& A, const std::vector<int>& markers
     plt.addCommand("set size square");
 
   // Preliminary, for test:
-  plt.addCommand("set object 1 circle front at 0.0,0.0 size 0.2 fillcolor rgb \"black\" fs solid");
+  //plt.addCommand("set object 1 circle front at 0.0,0.0 size 0.2 fillcolor rgb \"black\" fs solid");
  
+  std::string str;
+  for(size_t i = 0; i < markers.size(); i++)
+  {
+    str  = "set object " + std::to_string(i+1) + " circle front at ";
+    str += std::to_string(i) + "," + std::to_string(markers[i]);
+    str += " size 0.2 fillcolor rgb \"black\" fs solid";
+    plt.addCommand(str);
+  }
 
 
 

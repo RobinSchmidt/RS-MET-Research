@@ -15315,66 +15315,34 @@ std::vector<std::complex<T>> rsRootTrajectory(
   //   change t anymore. Maybe we need to ensure that dt is at least eps.
 }
 
-
-
-
 template<class T>
 std::vector<int> rsGetRootCorrespondence(
   const std::vector<std::complex<T>>& rp, std::complex<T> wp,
   const std::vector<std::complex<T>>& rq, std::complex<T> wq,
-  T resolution = T(1)/T(128))
+  T resolution = T(1) / T(128))
 {
   std::vector<int> rootsMap(rp.size());
 
-  T tol = 1.e-13;   // Make this a parameter
+  T tol = 1.e-13;   // ToDo: Make this a parameter
 
   for(int i = 0; i < (int) rp.size(); i++)
   {
+    // Compute the trajectory and extrcat its end point:
     std::vector<std::complex<T>> t;
     t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
-
-    //rsPlotComplexPoints(t);   // For debug
-
     std::complex<T> endPoint = rsLast(t);
 
-    //int j = rsFind(rq, endPoint);
-    // We seem to need a tolerance for the comparisons...but why?
-
+    // Find root in q that matches the end point:
     int j = -1;
-    for(int k = 0; k < (int)rq.size(); k++)
-    {
-      if(rsIsCloseTo(endPoint, rq[k], tol))
-      {
+    for(int k = 0; k < (int)rq.size(); k++) {
+      if(rsIsCloseTo(endPoint, rq[k], tol)) {
         j = k;
-        break;
-      }
-    }
-
-
-
+        break; }}
     rootsMap[i] = j;
   }
 
   return rootsMap;
 }
-
-
-/*
-template<class T>
-rsMatrix<T> rsCorrespondenceMatrix(
-  const std::vector<std::complex<T>>& p,
-  const std::vector<std::complex<T>>& q)
-{
-  int M = (int) p.size();
-  int N = (int) q.size();
-  rsMatrix<T> C(M, N);
-
-
-  return C;
-}
-*/
-
-
 
 template<class T>
 void plotMatrixWithMarkers(const rsMatrix<T>& A, const std::vector<int>& markers)
@@ -15407,9 +15375,8 @@ void plotMatrixWithMarkers(const rsMatrix<T>& A, const std::vector<int>& markers
   plt.plot();
 }
 
-
 template<class T>
-void rsPlotRootMap(
+void rsPlotRootDistancesAndMap(
   const std::vector<std::complex<T>>& rp, std::complex<T> wp,
   const std::vector<std::complex<T>>& rq, std::complex<T> wq,
   T resolution = T(1) / T(128)) 
@@ -15417,8 +15384,10 @@ void rsPlotRootMap(
 {
   rsMatrix<T> D = rsDistanceMatrix(rp, rq);
 
+
   std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, resolution); 
-  // should take tolerance parameter
+  // ToDo: The function should take tolerance parameter. Then we should pass on the tolerance that
+  // we are given from the caller
 
 
   plotMatrixWithMarkers(D, rootsMap); 
@@ -15445,30 +15414,39 @@ void testPolynomialRootCorrespondence2()
   VecC    rp, rq;       // Roots of p and q
   MatR    D;            // Distance matrix
 
-  // Example 1:
-  rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
-  rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
+  //// Example 1:
+  //rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
+  //rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
+  //wp = 8;
+  //wq = 1;
+  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+  //rsPlotRootDistancesAndMap( rp, wp, rq, wq);
+  //// root index in p(x):   0  1  2  3  4  5  6  7
+  //// root index in q(x):   0  1  2  3  4  5  6  7
+  //// is row minimum:       Y  N  Y  Y  Y  N  Y  Y
+  //// is column minimum:    Y  N  N  Y  Y  N  N  Y
+
+
+  // Example 2:
+  rp = ellipRoots(11, 1.0, 0.7,  0.3, -0.4);
+  rq = ellipRoots(11, 1.5, 3.0, -0.2,  0.5);
   wp = 8;
   wq = 1;
-  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);  // Rename to rsPlotRootCurves
-  rsPlotRootMap(             rp, wp, rq, wq);
-  // root index in p(x):   0  1  2  3  4  5  6  7
-  // root index in q(x):   0  1  2  3  4  5  6  7
-  // is row minimum:       Y  N  Y  Y  Y  N  Y  Y
-  // is column minimum:    Y  N  N  Y  Y  N  N  Y
+  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+  rsPlotRootDistancesAndMap( rp, wp, rq, wq);
+  // The sampling of the trajectories looks wrong. The distances are too uneven.
 
 
-
-
-  //// Example 2:
+  //// Example 3:
   //rp = ellipRoots(16, 1.0, 0.7, 0.0  );
   //rq = ellipRoots(16, 1.5, 2.0, PI/32);
   //wp = 16;
   //wq = 1;
-  //D = rsDistanceMatrix(rp, rq);
-  //plotMatrix(D);
-  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
-  //// Has a dot at (0,0) - that's interesting!
+  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);  // Has a dot at (0,0) - that's interesting!
+  //rsPlotRootDistancesAndMap( rp, wp, rq, wq);
+  //// Triggers assertions
+
+
 
 
 
@@ -15477,6 +15455,18 @@ void testPolynomialRootCorrespondence2()
 
   int dummy = 0;
 
+  // Observations:
+  //
+  // - The 1st example shows that root correspondence is not necessarily linked to root distance.
+  //   The roots with index 1 and 5 (in p and q) are neither a row minimum nor a column minimum in 
+  //   the distance matrix.
+  // 
+  //
+  // Questions:
+  //
+  // - Could root correspondece have something to do with the root angles?
+  //
+  //
   // ToDo:
   //
   // - Plot the distance matrices of the roots of p and q.

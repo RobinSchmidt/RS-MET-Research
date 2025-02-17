@@ -15212,6 +15212,8 @@ std::vector<std::complex<T>> rsRootTrajectory(
   PolyC::roots(p.getCoeffPointer(), deg, &roots[0]);
   std::vector<Complex> curve;
   curve.push_back(roots[index]);
+  std::vector<T> time;
+  time.push_back(T(0));
 
   // Set up some algorithm parameters:
   T maxRootDist = rsMaxDistance(rp, rq);
@@ -15236,7 +15238,8 @@ std::vector<std::complex<T>> rsRootTrajectory(
     while(stepAccepted == false)
     {
       // Create the polynomial r at t+dt:
-      PolyC r = Complex(1-(t+dt))*p + Complex(t+dt)*q;
+      T tt = rsMin(t+dt, T(1));
+      PolyC r = Complex(1-tt)*p + Complex(tt)*q;
 
       // Find its roots:
       PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
@@ -15270,7 +15273,9 @@ std::vector<std::complex<T>> rsRootTrajectory(
 
         // Accept the step:
         curve.push_back(newRoot);
+        time.push_back(tt);
         stepAccepted = true;
+        //t = rsMin(t+dt, T(1))
         t += dt;
 
         // Increase the stepsize for the next iteration if we can afford it:
@@ -15291,7 +15296,8 @@ std::vector<std::complex<T>> rsRootTrajectory(
   // ToDo:
   //
   // - Check if the last sampled point on the trajectory actually corresponds to a root of q, i.e.
-  //   if we produce r(x) = q(x) in the very last step - or if we miss one step or overshoot.
+  //   if we produce r(x) = q(x) in the very last step - or if we miss one step or overshoot. OK.
+  //   The last element of the "time" array is 1.0, so it should be fine.
   //
   // - Include a mechanism to grow or shrink dt such that the distance between succesive points on
   //   the trajectory is always reasonable, i.e. not too large and not too small.
@@ -15307,6 +15313,30 @@ std::vector<std::complex<T>> rsRootTrajectory(
   // - What if dt falls below eps. Then we get a hang in an inifnite loop because t += dt will not
   //   change t anymore. Maybe we need to ensure that dt is at least eps.
 }
+
+template<class T>
+std::vector<int> rsGetRootCorrespondence(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  T resolution = T(1)/T(128))
+{
+  std::vector<int> rootsMap(rp.size());
+
+  for(int i = 0; i < (int) rp.size(); i++)
+  {
+    std::vector<std::complex<T>> t;
+    t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
+
+    std::complex<T> endPoint = rsLast(t);
+
+    int j = rsFind(rq, endPoint);
+
+    rootsMap[i] = j;
+  }
+
+  return rootsMap;
+}
+
 
 /*
 template<class T>
@@ -15350,6 +15380,9 @@ void testPolynomialRootCorrespondence2()
   rsPlotComplexPoints(curve);
   curve = rsRootTrajectory(rp, wp, rq, wq, 1);
   rsPlotComplexPoints(curve);
+
+  std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, 1./128);
+
 
 
   rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);

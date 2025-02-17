@@ -15209,10 +15209,11 @@ std::vector<std::complex<T>> rsRootTrajectory(
   roots.resize(deg);
 
   // Compute initial point of the trajectory:
-  PolyC::roots(p.getCoeffPointer(), deg, &roots[0]);
+  PolyC::roots(p.getCoeffPointer(), deg, &roots[0]);  // Obsolete, I think
   std::vector<Complex> curve;
-  curve.push_back(roots[index]);
-  std::vector<T> time;
+  //curve.push_back(roots[index]);  // Nah! We should just push rp[index]
+  curve.push_back(rp[index]);       // New.
+  std::vector<T> time;              // Maybe get rid. We needed it only for inspection for debugging
   time.push_back(T(0));
 
   // Set up some algorithm parameters:
@@ -15332,7 +15333,7 @@ std::vector<int> rsGetRootCorrespondence(
     std::vector<std::complex<T>> t;
     t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
 
-    rsPlotComplexPoints(t);   // For debug
+    //rsPlotComplexPoints(t);   // For debug
 
     std::complex<T> endPoint = rsLast(t);
 
@@ -15385,7 +15386,7 @@ void plotMatrixWithMarkers(const rsMatrix<T>& A, const std::vector<int>& markers
   plt.addDataMatrixFlat(B.getNumRows(), B.getNumColumns(), B.getRowPointer(0));
 
   plt.setToDarkMode();
-  plt.setPixelSize(800, 800);
+  plt.setPixelSize(600, 600);
 
   plt.addGraph("i 0 nonuniform matrix w image notitle");
 
@@ -15402,7 +15403,8 @@ void plotMatrixWithMarkers(const rsMatrix<T>& A, const std::vector<int>& markers
   {
     str  = "set object " + std::to_string(i+1) + " circle front at ";
     str += std::to_string(i) + "," + std::to_string(markers[i]);
-    str += " size 0.2 fillcolor rgb \"black\" fs solid";
+    //str += " size 0.2 fillcolor rgb \"black\" fs solid";
+    str += " size 0.15 fillcolor rgb \"black\" fs solid";
     plt.addCommand(str);
   }
 
@@ -15434,7 +15436,11 @@ void testPolynomialRootCorrespondence2()
   rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
   wp = 8;
   wq = 1;
-  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+
+  //rp.resize(2); rq.resize(2);  // Test
+
+  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+
   D = rsDistanceMatrix(rp, rq);
   //plotMatrix(D);
 
@@ -15445,6 +15451,12 @@ void testPolynomialRootCorrespondence2()
 
   std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, 1./128);
   plotMatrixWithMarkers(D, rootsMap); // This looks wrong!
+  // Figure out why the root rp[0] maps to rq[4]. This seems to be very wrong! The trajectory 
+  // starting at rp[0] ends at rq[0], I think.
+  // OK - this seems to be fixed!
+  // Maybe plot also markers into the row- and column minima to see if they always match. It'S not 
+  // so easy to see just by the colors
+
   // ToDo: make a simpler example to figure out what is going on
 
 

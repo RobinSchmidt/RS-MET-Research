@@ -15326,7 +15326,7 @@ std::vector<int> rsGetRootCorrespondence(
 {
   std::vector<int> rootsMap(rp.size());
 
-  T tol = 1.e-13;
+  T tol = 1.e-13;   // Make this a parameter
 
   for(int i = 0; i < (int) rp.size(); i++)
   {
@@ -15381,37 +15381,51 @@ void plotMatrixWithMarkers(const rsMatrix<T>& A, const std::vector<int>& markers
 {
   GNUPlotter plt;
 
-
-  rsMatrix<T> B = A;  // Try to get rid. See comment in plotMatrix() for how to
-  plt.addDataMatrixFlat(B.getNumRows(), B.getNumColumns(), B.getRowPointer(0));
-
-  plt.setToDarkMode();
-  plt.setPixelSize(600, 600);
-
+  //rsMatrix<T> B = A;  // Try to get rid. See comment in plotMatrix() for how to
+  //plt.addDataMatrixFlat(B.getNumRows(), B.getNumColumns(), B.getRowPointer(0));
+  plt.addDataMatrixFlat(A.getNumRows(), A.getNumColumns(), A.getRowPointerConst(0));
   plt.addGraph("i 0 nonuniform matrix w image notitle");
 
-  plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
-
+  // Set style options:
+  plt.setToDarkMode();
+  plt.setPixelSize(600, 600);
+  //plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
+  plt.setColorPalette(GNUPlotter::ColorPalette::ML_Parula, false);
   if(A.isSquare())
     plt.addCommand("set size square");
 
-  // Preliminary, for test:
-  //plt.addCommand("set object 1 circle front at 0.0,0.0 size 0.2 fillcolor rgb \"black\" fs solid");
- 
+  // Draw the markers:
   std::string str;
   for(size_t i = 0; i < markers.size(); i++)
   {
     str  = "set object " + std::to_string(i+1) + " circle front at ";
     str += std::to_string(i) + "," + std::to_string(markers[i]);
-    //str += " size 0.2 fillcolor rgb \"black\" fs solid";
     str += " size 0.15 fillcolor rgb \"black\" fs solid";
     plt.addCommand(str);
   }
 
-
-
   plt.plot();
 }
+
+
+template<class T>
+void rsPlotRootMap(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  T resolution = T(1) / T(128)) 
+  //T tolerance = 1024 * std::numeric_limits<T>::epsilon)
+{
+  rsMatrix<T> D = rsDistanceMatrix(rp, rq);
+
+  std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, resolution); 
+  // should take tolerance parameter
+
+
+  plotMatrixWithMarkers(D, rootsMap); 
+}
+
+
+
 
 
 
@@ -15436,31 +15450,12 @@ void testPolynomialRootCorrespondence2()
   rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
   wp = 8;
   wq = 1;
-
-  //rp.resize(2); rq.resize(2);  // Test
-
-  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
-
-  D = rsDistanceMatrix(rp, rq);
-  //plotMatrix(D);
-
-  //VecC curve = rsRootTrajectory(rp, wp, rq, wq, 0);
-  //rsPlotComplexPoints(curve);
-  //curve = rsRootTrajectory(rp, wp, rq, wq, 1);
-  //rsPlotComplexPoints(curve);
-
-  std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, 1./128);
-  plotMatrixWithMarkers(D, rootsMap); // This looks wrong!
-  // Figure out why the root rp[0] maps to rq[4]. This seems to be very wrong! The trajectory 
-  // starting at rp[0] ends at rq[0], I think.
-  // OK - this seems to be fixed!
-  // Maybe plot also markers into the row- and column minima to see if they always match. It'S not 
-  // so easy to see just by the colors
-
-  // ToDo: make a simpler example to figure out what is going on
-
-
-
+  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);  // Rename to rsPlotRootCurves
+  rsPlotRootMap(             rp, wp, rq, wq);
+  // root index in p(x):   0  1  2  3  4  5  6  7
+  // root index in q(x):   0  1  2  3  4  5  6  7
+  // is row minimum:       Y  N  Y  Y  Y  N  Y  Y
+  // is column minimum:    Y  N  N  Y  Y  N  N  Y
 
 
 

@@ -15327,7 +15327,7 @@ std::vector<int> rsGetRootCorrespondence(
 
   for(int i = 0; i < (int) rp.size(); i++)
   {
-    // Compute the trajectory and extrcat its end point:
+    // Compute the trajectory and extract its end point:
     std::vector<std::complex<T>> t;
     t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
     std::complex<T> endPoint = rsLast(t);
@@ -15434,7 +15434,9 @@ void testPolynomialRootCorrespondence2()
   wq = 1;
   rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
   rsPlotRootDistancesAndMap( rp, wp, rq, wq);
-  // The sampling of the trajectories looks wrong. The distances are too uneven.
+  // The sampling of the trajectories looks wrong. The distances are too uneven. Ah - I think, it's
+  // because rsPlotPolyRootTrajectories has not stepsize adaption - it uses equally spaced values 
+  // of t.
 
 
   //// Example 3:

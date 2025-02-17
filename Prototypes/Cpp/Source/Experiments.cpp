@@ -15314,6 +15314,9 @@ std::vector<std::complex<T>> rsRootTrajectory(
   //   change t anymore. Maybe we need to ensure that dt is at least eps.
 }
 
+
+
+
 template<class T>
 std::vector<int> rsGetRootCorrespondence(
   const std::vector<std::complex<T>>& rp, std::complex<T> wp,
@@ -15322,6 +15325,8 @@ std::vector<int> rsGetRootCorrespondence(
 {
   std::vector<int> rootsMap(rp.size());
 
+  T tol = 1.e-13;
+
   for(int i = 0; i < (int) rp.size(); i++)
   {
     std::vector<std::complex<T>> t;
@@ -15329,7 +15334,20 @@ std::vector<int> rsGetRootCorrespondence(
 
     std::complex<T> endPoint = rsLast(t);
 
-    int j = rsFind(rq, endPoint);
+    //int j = rsFind(rq, endPoint);
+    // We seem to need a tolerance for the comparisons...but why?
+
+    int j = -1;
+    for(int k = 0; k < (int)rq.size(); k++)
+    {
+      if(rsIsCloseTo(endPoint, rq[k], tol))
+      {
+        j = k;
+        break;
+      }
+    }
+
+
 
     rootsMap[i] = j;
   }
@@ -15354,6 +15372,31 @@ rsMatrix<T> rsCorrespondenceMatrix(
 */
 
 
+
+template<class T>
+void plotMatrixWithMarkers(const rsMatrix<T>& A, const std::vector<int>& markers)
+{
+  GNUPlotter plt;
+
+
+  rsMatrix<T> B = A;  // Try to get rid. See comment in plotMatrix() for how to
+  plt.addDataMatrixFlat(B.getNumRows(), B.getNumColumns(), B.getRowPointer(0));
+
+  plt.setToDarkMode();
+  plt.setPixelSize(800, 800);
+
+  plt.addGraph("i 0 nonuniform matrix w image notitle");
+
+  plt.setColorPalette(GNUPlotter::ColorPalette::CJ_BuYlRd11, false);
+
+  if(A.isSquare())
+    plt.addCommand("set size square");
+
+  plt.plot();
+}
+
+
+
 void testPolynomialRootCorrespondence2()
 {
   // Under construction
@@ -15375,21 +15418,22 @@ void testPolynomialRootCorrespondence2()
   rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
   wp = 8;
   wq = 1;
+  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+  D = rsDistanceMatrix(rp, rq);
+  //plotMatrix(D);
 
-  VecC curve = rsRootTrajectory(rp, wp, rq, wq, 0);
-  rsPlotComplexPoints(curve);
-  curve = rsRootTrajectory(rp, wp, rq, wq, 1);
-  rsPlotComplexPoints(curve);
+  //VecC curve = rsRootTrajectory(rp, wp, rq, wq, 0);
+  //rsPlotComplexPoints(curve);
+  //curve = rsRootTrajectory(rp, wp, rq, wq, 1);
+  //rsPlotComplexPoints(curve);
 
   std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, 1./128);
 
+  plotMatrixWithMarkers(D, rootsMap);
 
 
-  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
 
 
-  D = rsDistanceMatrix(rp, rq);
-  plotMatrix(D);
 
 
 

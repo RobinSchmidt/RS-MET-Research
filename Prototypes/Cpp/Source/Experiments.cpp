@@ -14733,12 +14733,20 @@ void rsFlushToZeroReIm(std::complex<T>* z, int N, T tol)
 }
 
 
+template<class T>
+rsPolynomial<T> rsLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
+{
+  return (T(1)-t)*p + t*q;
+}
+
+
 
 
 
 template<class T>
 void rsComputeRootTrajectories(
-  const rsPolynomial<std::complex<T>>& p, const rsPolynomial<std::complex<T>>& q,
+  const rsPolynomial<std::complex<T>>& p, 
+  const rsPolynomial<std::complex<T>>& q,
   int N, std::vector<std::vector<std::complex<T>>>& roots)
 {
   rsAssert(p.getDegree() == q.getDegree());
@@ -14752,11 +14760,13 @@ void rsComputeRootTrajectories(
   {
     // Compute parameter t and create polynomial r_t(x):
     T t = T(n) / T(N-1);
-    PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+    //PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+    PolyC r = rsLerp(p, q, Complex(t));         // r_t(x) = (1-t)*p(x) + t*q(x)
     // Maybe use a function r = rsLerp(p, q, t). This can later be replaced by another function
     // that interpolates in a different way. Then we can try to use one that does the interpolation
     // in the Chebychev basis. I think, the result should theoretically be exactly the same as in 
-    // the monomial basis due to linearity but it would be reassuring to verify it numerically.
+    // the monomial basis due to linearity but it would be reassuring to verify it numerically. Or 
+    // maybe only the trajectories are the same but the spacing along them isn't?
 
 
     // For a debug test:
@@ -15486,6 +15496,12 @@ void testPolynomialRootCorrespondence2()
   //   trajectories and one that does the actual plotting. Then write a function that takes in the
   //   trajectories and returns a matrix that has a 1 on cell i,j  if the i-th root of p is 
   //   associated with the j-th root of q.
+  //
+  // - Try to do the interpolation in rsPlotPolyRootTrajectories in the domain of Chebychev 
+  //   expansion coeffs. This should result in the same trajectories, but the sampling along them
+  //   may be different. Maybe it could be more evenly spaced? But maybe that depends on how far
+  //   the roots are spread out compared to the natural domain of [-1,+1] of Chebychev polynomials.
+  //   Maybe the roots should be roughly arranged around the unit circle?
 }
 
 

@@ -14742,23 +14742,17 @@ rsPolynomial<T> rsLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
 template<class T>
 rsPolynomial<T> rsChebyLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
 {
-  //return (T(1)-t)*p + t*q;  // Preliminary
+  using Vec = std::vector<T>;
 
-  std::vector<T> vp = p.getCoeffs();
-  std::vector<T> vq = q.getCoeffs();
-
+  Vec vp = p.getCoeffs();
+  Vec vq = q.getCoeffs();
   vp = rsPolyToCheby(vp);
   vq = rsPolyToCheby(vq);
 
-  std::vector<T> r = (T(1)-t)*vp + t*vq;
-
+  Vec r = (T(1)-t)*vp + t*vq;
   r = rsChebyToPoly(r);
 
   return rsPolynomial<T>(r);
-
-
-  // ToDo: Convert p,q from monomial to Chebychev basis, lerp in Chebychev basis, convert result
-  // bakc to monomial basis
 }
 
 

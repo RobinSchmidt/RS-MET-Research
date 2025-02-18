@@ -14739,7 +14739,27 @@ rsPolynomial<T> rsLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
   return (T(1)-t)*p + t*q;
 }
 
+template<class T>
+rsPolynomial<T> rsChebyLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
+{
+  //return (T(1)-t)*p + t*q;  // Preliminary
 
+  std::vector<T> vp = p.getCoeffs();
+  std::vector<T> vq = q.getCoeffs();
+
+  vp = rsPolyToCheby(vp);
+  vq = rsPolyToCheby(vq);
+
+  std::vector<T> r = (T(1)-t)*vp + t*vq;
+
+  r = rsChebyToPoly(r);
+
+  return rsPolynomial<T>(r);
+
+
+  // ToDo: Convert p,q from monomial to Chebychev basis, lerp in Chebychev basis, convert result
+  // bakc to monomial basis
+}
 
 
 
@@ -14760,13 +14780,18 @@ void rsComputeRootTrajectories(
   {
     // Compute parameter t and create polynomial r_t(x):
     T t = T(n) / T(N-1);
+
     //PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
     PolyC r = rsLerp(p, q, Complex(t));         // r_t(x) = (1-t)*p(x) + t*q(x)
-    // Maybe use a function r = rsLerp(p, q, t). This can later be replaced by another function
-    // that interpolates in a different way. Then we can try to use one that does the interpolation
-    // in the Chebychev basis. I think, the result should theoretically be exactly the same as in 
-    // the monomial basis due to linearity but it would be reassuring to verify it numerically. Or 
-    // maybe only the trajectories are the same but the spacing along them isn't?
+
+    //PolyC r = rsChebyLerp(p, q, Complex(t));
+    // Try to do the interpolation in the Chebychev basis. I think, the result should theoretically
+    // be exactly the same as in the monomial basis due to linearity but it would be reassuring to 
+    // verify it numerically. Or maybe only the trajectories are the same but the spacing along 
+    // them isn't? ...hmmm...it doesn't look like it makes any difference. Thinking about it, I 
+    // think it shouldn't. Linearity means that for a linear transformation L, we have:
+    // L^-1 * (a*L*x + b*L*y) = L^-1*a*L*x + L^-1*b*L*y = a*L^-1*L*x + b*L^-1*L*y = a*x + b*y
+    // Where L would be the transformation from the monomial into the Chebychev basis in this case.
 
 
     // For a debug test:

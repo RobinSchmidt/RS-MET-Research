@@ -15017,9 +15017,12 @@ void testPolynomialRootCorrespondence2()
     Complex wp = 1;
     Complex wq = 1;
     rsPlotPolyRootTrajectories2(rp, wp, rq, wq, resolution);
-    rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
+    rsPlotRootDistancesAndMap(  rp, wp, rq, wq);  // needs to take resolution parameter!
   };
   
+
+
+  annular(5,  0.5, 1.0, 2,  1.5, 2.0, 3,  1./64);
 
   annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./64);
   // It looks like curves are crossing - but zooming in, the crossing actually looks like a point
@@ -15030,6 +15033,9 @@ void testPolynomialRootCorrespondence2()
   annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./32);
   // With this low resolution (1./32), two roots of p run into the same root of q. But the matrix 
   // view doesn't confirm this! I think, it uses its own value for the reslution. Fix this!
+
+
+
 
  
   /*

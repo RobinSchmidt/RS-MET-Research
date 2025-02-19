@@ -9954,8 +9954,8 @@ void rsPlotPolyRootTrajectories2(
 
     // Draw markers for start and end of trajectory:
     int L = t.size()-1;  // Last index
-    rsAddCircle(plt, real(t[0]), imag(t[0]), "size 0.02 fc rgb \"green\" fs solid");
-    rsAddCircle(plt, real(t[L]), imag(t[L]), "size 0.02 fc rgb \"red\" fs solid");
+    rsAddCircle(plt, real(t[0]), imag(t[0]), "size 0.02 fc rgb \"dark-pink\" fs solid");
+    rsAddCircle(plt, real(t[L]), imag(t[L]), "size 0.02 fc rgb \"dark-turquoise\" fs solid");
     // fc: fillcolor, fs: fillstyle
 
   }

@@ -9670,6 +9670,33 @@ std::vector<std::complex<T>> ellipRoots(
   // ToDo: Maybe give it an optional parameter for a rotation that is applied to (x,y). This has a
   // different effect than the initial angle. It rotates the whole underlying ellipse.
 }
+// Maybe rename to rootsAroundEllipse
+
+
+
+// randomRootsInAnnulus(5, 1.5, 2.0, 0);
+template<class T>
+std::vector<std::complex<T>> rootsRandomInAnnulus(
+  int numRoots, T innerRadius, T outerRadius, unsigned long seed)
+{
+  std::vector<std::complex<T>> roots(numRoots);
+
+  rsNoiseGenerator<T> ng;
+  ng.setSeed(seed);
+  ng.setRange(T(0), T(1));
+
+  for(int n = 0; n < numRoots; n++)
+  {
+    T p = 2*PI * ng.getSample();
+    T r = innerRadius + (outerRadius - innerRadius) * ng.getSample();
+    T x = r * cos(p);
+    T y = r * sin(p);
+    roots[n] = std::complex<T>(x, y);
+  }
+
+  return roots;
+}
+
 
 // Computes the distance matrix D(i,j) = abs(p[i] - q[j]) for the points given in p and q:
 template<class T>
@@ -9922,7 +9949,9 @@ void rsPlotPolyRootTrajectories2(
 
   // ToDo:
   //
-  // - Maybe emphasize the start and end points by drawing dots/circles there
+  // - Maybe emphasize the start and end points by drawing dots/circles there. Maybe use different
+  //   symbols (and/or different colors) for start and end points. Maybe a cross and a plus or 
+  //   triangles with different orientations
 }
 
 template<class T>

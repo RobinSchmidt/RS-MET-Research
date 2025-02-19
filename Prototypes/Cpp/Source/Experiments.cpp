@@ -14975,12 +14975,13 @@ void testPolynomialRootCorrespondence2()
   using PolyC   = rsPolynomial<Complex>;
 
 
-  Complex i(0, 1);      // Imaginary unit
+  //Complex i(0, 1);      // Imaginary unit
   Complex wp, wq;       // Weights for p and q
   VecC    rp, rq;       // Roots of p and q
-  MatR    D;            // Distance matrix
+  //MatR    D;            // Distance matrix
 
-  // Example 1:
+  /*
+  // 8 roots arranged on ellipses:
   rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
   rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
   wp = 8;
@@ -14993,7 +14994,7 @@ void testPolynomialRootCorrespondence2()
   // is row minimum:       Y  N  Y  Y  Y  N  Y  Y
   // is column minimum:    Y  N  N  Y  Y  N  N  Y
 
-  // Example 2:
+  // 11 roots arranged on ellpises:
   rp = ellipRoots(11, 1.0, 0.7,  0.3, -0.4);
   rq = ellipRoots(11, 1.5, 3.0, -0.2,  0.5);
   wp = 8;
@@ -15001,9 +15002,22 @@ void testPolynomialRootCorrespondence2()
   rsPlotPolyRootTrajectories( rp, wp, rq, wq, 101);
   rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
   rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
+  */
+ 
 
+  // 5 roots randomly placed in an annulus
+  rp = rootsRandomInAnnulus(5, 0.5, 1.0, 0);
+  rq = rootsRandomInAnnulus(5, 1.5, 2.0, 1);
+  wp = 1;
+  wq = 1;
+  rsPlotPolyRootTrajectories( rp, wp, rq, wq, 101);
+  //rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
+  rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./512);
+  rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
+  // It looks like curves are crossing - but zooming in, the crossing actually looks like a point
+  // of meeting and diverging again. ToDo: Mark start and endpoints of trajectories. maybe that can
+  // help to rule out a crossing, depending on the distributions of start- and end points
 
-  //rp = randomRootsInAnnulus(5, 1.5, 2.0, 0); // params: numRoots, minRadius, maxRadius, seed
 
 
 
@@ -15034,6 +15048,9 @@ void testPolynomialRootCorrespondence2()
   //
   //
   // ToDo:
+  //
+  // - Make a helper function that can be called like annulusTest(5,  0.5, 1.0, 0,  1.5, 2.0, 1) 
+  //   and use that with various seeds etc.
   //
   // - Figure out if a simple translation of all points may affect the root correspondence. I think
   //   that it should not - but maybe it does?

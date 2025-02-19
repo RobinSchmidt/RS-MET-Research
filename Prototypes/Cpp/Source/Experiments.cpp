@@ -14739,6 +14739,9 @@ rsPolynomial<T> rsLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
   return (T(1)-t)*p + t*q;
 }
 
+/** Linearly interpolates between polynomials p and q in the Chebychev basis, i.e. first converts 
+p,q into Chebychev basis, than does linear intrepolation there, than converts back into the 
+monomial basis. */
 template<class T>
 rsPolynomial<T> rsChebyLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
 {
@@ -14753,6 +14756,14 @@ rsPolynomial<T> rsChebyLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, 
   r = rsChebyToPoly(r);
 
   return rsPolynomial<T>(r);
+
+  // I think, it doesn't make any difference if we interpolate polynomial coeffs in the monomial or
+  // in the Chebychev basis. Linearity means that for a linear transformation L, we have:
+  // L^-1 * (a*L*x + b*L*y) = L^-1*a*L*x + L^-1*b*L*y = a*L^-1*L*x + b*L^-1*L*y = a*x + b*y
+  // where L would be the transformation from the monomial into the Chebychev basis in this case
+  // and a would be 1-t, b would be t and x,y would be the polynomial coefficient vectors of p,q.
+  // Experiments seem to confirm this - so this function is actually not useful for anything other
+  // than demonstrating this fact numerically.
 }
 
 
@@ -14774,18 +14785,10 @@ void rsComputeRootTrajectories(
   {
     // Compute parameter t and create polynomial r_t(x):
     T t = T(n) / T(N-1);
-
     //PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
     PolyC r = rsLerp(p, q, Complex(t));         // r_t(x) = (1-t)*p(x) + t*q(x)
+    //PolyC r = rsChebyLerp(p, q, Complex(t));  // ...makes no difference
 
-    //PolyC r = rsChebyLerp(p, q, Complex(t));
-    // Try to do the interpolation in the Chebychev basis. I think, the result should theoretically
-    // be exactly the same as in the monomial basis due to linearity but it would be reassuring to 
-    // verify it numerically. Or maybe only the trajectories are the same but the spacing along 
-    // them isn't? ...hmmm...it doesn't look like it makes any difference. Thinking about it, I 
-    // think it shouldn't. Linearity means that for a linear transformation L, we have:
-    // L^-1 * (a*L*x + b*L*y) = L^-1*a*L*x + L^-1*b*L*y = a*L^-1*L*x + b*L^-1*L*y = a*x + b*y
-    // Where L would be the transformation from the monomial into the Chebychev basis in this case.
 
 
     // For a debug test:
@@ -14822,6 +14825,7 @@ void rsFlatten(const std::vector<std::vector<T>>& v, std::vector<T>& f)
   // general situations where this is not the case. 
 }
 
+/*
 template<class T>
 void rsFlattenTransposed(const std::vector<std::vector<T>>& v, std::vector<T>& f)
 {
@@ -14830,6 +14834,7 @@ void rsFlattenTransposed(const std::vector<std::vector<T>>& v, std::vector<T>& f
 
   int dummy = 0;
 }
+*/
 
 
 template<class T>
@@ -15444,17 +15449,17 @@ void testPolynomialRootCorrespondence2()
   VecC    rp, rq;       // Roots of p and q
   MatR    D;            // Distance matrix
 
-  // Example 1:
-  rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
-  rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
-  wp = 8;
-  wq = 1;
-  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
-  rsPlotRootDistancesAndMap( rp, wp, rq, wq);
-  // root index in p(x):   0  1  2  3  4  5  6  7
-  // root index in q(x):   0  1  2  3  4  5  6  7
-  // is row minimum:       Y  N  Y  Y  Y  N  Y  Y
-  // is column minimum:    Y  N  N  Y  Y  N  N  Y
+  //// Example 1:
+  //rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
+  //rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
+  //wp = 8;
+  //wq = 1;
+  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+  //rsPlotRootDistancesAndMap( rp, wp, rq, wq);
+  //// root index in p(x):   0  1  2  3  4  5  6  7
+  //// root index in q(x):   0  1  2  3  4  5  6  7
+  //// is row minimum:       Y  N  Y  Y  Y  N  Y  Y
+  //// is column minimum:    Y  N  N  Y  Y  N  N  Y
 
 
   // Example 2:
@@ -15463,10 +15468,13 @@ void testPolynomialRootCorrespondence2()
   wp = 8;
   wq = 1;
   rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
+  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 1001);
   rsPlotRootDistancesAndMap( rp, wp, rq, wq);
   // The sampling of the trajectories looks wrong. The distances are too uneven. Ah - I think, it's
-  // because rsPlotPolyRootTrajectories has not stepsize adaption - it uses equally spaced values 
-  // of t.
+  // because rsPlotPolyRootTrajectories has no stepsize adaption - it uses equally spaced values 
+  // of t. ToDo: Make a similar funtion that uses stepsize adaption, i.e. calls rsRootTrajectory()
+  // internally. Maybe the old function should be rename into rsPlotRootTrajectoriesSimple or
+  // rsPlotSampledRoots, rsPlotSampledRootCurves
 
 
   //// Example 3:
@@ -15501,7 +15509,14 @@ void testPolynomialRootCorrespondence2()
   //
   // ToDo:
   //
-  // - Plot the distance matrices of the roots of p and q.
+  // - Make better trajectory plots - using stepsize adaption and connecting the trajectory samples
+  //   with lines - or maybe splines, if GNUPlot offers this option
+  //
+  // - Make plots with random roots and try to spot patterns, i.e. predictors for association. 
+  //   Maybe invetsigate other pairwise properties such as the angle of the difference, the 
+  //   quotient, deviations from different kinds of means, etc. Maybe the computation of the 
+  //   distance matrix should take a std::function that takes to complex numbers and spits out a 
+  //   real number that we take as "distance" - although it may be somethign else.
   //
   // - Compute the lengths of the trajectories, normalize these lengths by dividing by the 
   //   distance. Maybe this length ratio can be related to some sort of association strength?

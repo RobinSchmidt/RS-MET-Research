@@ -217,7 +217,7 @@ The operation of turning the rows of a matrix into the columns of a new matrix a
 % https://www.youtube.com/watch?v=hsJ1-6ybvGM
 % at around 25 min
 
-% (AB)^T = B^T A^T
+% (AB)^T = B^T A^T, (ABC)^T = C^T B^T A^T, etc. This holds also formatrices that are not square.
 
 % The Matrix Transpose: Visual Intuition
 % https://www.youtube.com/watch?v=wjYpzkQoyD8
@@ -946,15 +946,20 @@ This product may also be called the \emph{naive matrix product}. Its application
 %  https://en.wikipedia.org/wiki/Spectral_theorem
 
 \paragraph{Transposition Formulas}
+Transposing a product of matrices is equal to the product in reverse order of the transposed individual matrices:
 \begin{equation}
 (\mathbf{A_1 A_2 \ldots  A_n})^T = \mathbf{A_n}^T \ldots \mathbf{A_2}^T \mathbf{A_1}^T
 \end{equation}
+So, for example, $(\mathbf{A} \mathbf{B})^T =  \mathbf{B}^T \mathbf{A}^T$ and  $(\mathbf{A} \mathbf{B} \mathbf{C})^T = \mathbf{C}^T \mathbf{B}^T  \mathbf{A}^T$. This holds for any matrices, square or not. This rule works also for the Hermitian transpose.
 
+% ToDo: make the indices non-bold. Unfortunately, this requires a lot of of ugly LaTeX boilerplate
 
 \paragraph{Inversion Formulas}
 \begin{equation}
 (\mathbf{A_1 A_2 \ldots  A_n})^{-1} = \mathbf{A_n}^{-1} \ldots \mathbf{A_2}^{-1} \mathbf{A_1}^{-1}
 \end{equation}
+
+% A, B need to be square and invertible
 
 % https://en.wikipedia.org/wiki/Woodbury_matrix_identity
 % https://tlienart.github.io/posts/2018/12/13-matrix-inversion-lemmas/index.html
@@ -962,6 +967,8 @@ This product may also be called the \emph{naive matrix product}. Its application
 % http://www0.cs.ucl.ac.uk/staff/g.ridgway/mil/mil.pdf
 
 % https://stattrek.com/matrix-algebra/matrix-theorems
+
+% (A^T)^-1  = (A^-1)^T so we may write it as A^-T
 
 \paragraph{Rank Nullity Theorem}
 

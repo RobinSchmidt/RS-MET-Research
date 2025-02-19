@@ -15017,12 +15017,20 @@ void testPolynomialRootCorrespondence2()
     Complex wp = 1;
     Complex wq = 1;
     rsPlotPolyRootTrajectories2(rp, wp, rq, wq, resolution);
-    rsPlotRootDistancesAndMap(  rp, wp, rq, wq);  // needs to take resolution parameter!
+    rsPlotRootDistancesAndMap(  rp, wp, rq, wq, resolution);
   };
   
 
 
+  annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./64);
+  annular(5,  0.5, 1.0, 1,  1.5, 2.0, 2,  1./64);
   annular(5,  0.5, 1.0, 2,  1.5, 2.0, 3,  1./64);
+  annular(5,  0.5, 1.0, 3,  1.5, 2.0, 4,  1./64);
+  annular(5,  0.5, 1.0, 4,  1.5, 2.0, 5,  1./64);
+  annular(5,  0.5, 1.0, 5,  1.5, 2.0, 6,  1./64);
+  annular(5,  0.5, 1.0, 6,  1.5, 2.0, 7,  1./64);
+
+
 
   annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./64);
   // It looks like curves are crossing - but zooming in, the crossing actually looks like a point
@@ -15033,27 +15041,6 @@ void testPolynomialRootCorrespondence2()
   annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./32);
   // With this low resolution (1./32), two roots of p run into the same root of q. But the matrix 
   // view doesn't confirm this! I think, it uses its own value for the reslution. Fix this!
-
-
-
-
- 
-  /*
-  // 5 roots randomly placed in an annulus
-  rp = rootsRandomInAnnulus(5, 0.5, 1.0, 0);
-  rq = rootsRandomInAnnulus(5, 1.5, 2.0, 1);
-  wp = 1;
-  wq = 1;
-  rsPlotPolyRootTrajectories( rp, wp, rq, wq, 101);
-  //rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
-  rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./512);
-  rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
-  // It looks like curves are crossing - but zooming in, the crossing actually looks like a point
-  // of meeting and diverging again. ToDo: Mark start and endpoints of trajectories. maybe that can
-  // help to rule out a crossing, depending on the distributions of start- and end points. OK. 
-  // Done. Indeed: it's not a crossing but an approach-diverge point.
-  */
-
 
 
 

@@ -9650,6 +9650,185 @@ rsPolynomial<T> rsChebyLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, 
   // than demonstrating this fact numerically.
 }
 
+// Helper function to produce roots arranged around an ellipse:
+template<class T>
+std::vector<std::complex<T>> ellipRoots(
+  int numRoots, T xRadius, T yRadius, T initialAngle, T rotationAngle = T(0))
+{
+  std::vector<std::complex<T>> roots(numRoots);
+  rsRotationXY<T> rot(rotationAngle);
+  for(int n = 0; n < numRoots; n++)
+  {
+    T phi = initialAngle + (2*PI*n) / numRoots;
+    T x = xRadius * cos(phi);
+    T y = yRadius * sin(phi);
+    rot.apply(&x, &y);
+    roots[n] = std::complex<T>(x, y);
+  }
+  return roots;
+
+  // ToDo: Maybe give it an optional parameter for a rotation that is applied to (x,y). This has a
+  // different effect than the initial angle. It rotates the whole underlying ellipse.
+}
+
+// Computes the distance matrix D(i,j) = abs(p[i] - q[j]) for the points given in p and q:
+template<class T>
+rsMatrix<T> rsDistanceMatrix(
+  const std::vector<std::complex<T>>& p,
+  const std::vector<std::complex<T>>& q)
+{
+  int M = (int) p.size();
+  int N = (int) q.size();
+  rsMatrix<T> D(M, N);
+  for(int i = 0; i < M; i++)
+    for(int j = 0; j < N; j++)
+      D(i, j) = rsAbs(p[i] - q[j]);
+  return D;
+}
+
+// Computes the maximum of abs(p[i] - q[j]) for the points given in p and q:
+template<class T>
+T rsMaxDistance(
+  const std::vector<std::complex<T>>& p,
+  const std::vector<std::complex<T>>& q)
+{
+  int M = (int) p.size();
+  int N = (int) q.size();
+  T maxDist = T(0);
+  for(int i = 0; i < M; i++)
+    for(int j = 0; j < N; j++)
+      maxDist = rsMax(maxDist, rsAbs(p[i] - q[j]));
+  return maxDist;
+}
+
+template<class T>
+std::vector<std::complex<T>> rsRootTrajectory(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  int index, T resolution = T(1)/T(128) )
+{
+  rsAssert(rp.size() == rq.size());
+
+  using Complex = std::complex<T>;
+  using PolyC   = rsPolynomial<Complex>;
+
+  // Create polynomials p,q:
+  PolyC p; p.setRoots(rp); p.scale(wp);
+  PolyC q; q.setRoots(rq); q.scale(wq);
+
+  // Allocate vector for the roots:
+  int deg = p.getDegree();
+  std::vector<Complex> roots;
+  roots.resize(deg);
+
+  // Compute initial point of the trajectory:
+  PolyC::roots(p.getCoeffPointer(), deg, &roots[0]);  // Obsolete, I think
+  std::vector<Complex> curve;
+  //curve.push_back(roots[index]);  // Nah! We should just push rp[index]
+  curve.push_back(rp[index]);       // New.
+  std::vector<T> time;              // Maybe get rid. We needed it only for inspection for debugging
+  time.push_back(T(0));
+
+  // Set up some algorithm parameters:
+  T maxRootDist = rsMaxDistance(rp, rq);
+  T maxDist = resolution * maxRootDist;  // Maximum allowed distance between trajectory points
+  T minDist = T(0.5) * maxDist;          // Distance at which we may increase the stepsize dt
+  // Using minDist = 0.5 * maxDist is ad hoc. We do not want the stepsize to go up and down too 
+  // erratically so the ratio of maxDist to minDist should be large enough. But it shouldn't be 
+  // too large either because then we may see trajectory samplings with wildly differently sized 
+  // steps.
+
+
+
+  // Compute the trajectory:
+  T t  = T(0);
+  T dt = T(1);            // This will shrink to its desired value via the stepsize adaption.
+  while(t < T(1))
+  {
+    // Extract the last point from the curve produced so far:
+    Complex prevRoot = rsLast(curve);
+
+    bool stepAccepted = false;
+    while(stepAccepted == false)
+    {
+      // Create the polynomial r at t+dt:
+      T tt = rsMin(t+dt, T(1));
+      PolyC r = Complex(1-tt)*p + Complex(tt)*q;
+
+      // Find its roots:
+      PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
+
+      // Sort the current roots by their distance to the previous root and extract the one that is 
+      // closest:
+      std::sort(roots.begin(), roots.end(), 
+        [&](const Complex& lhs, const Complex& rhs)
+        { 
+          return abs(prevRoot - lhs) < abs(prevRoot - rhs); 
+        }
+      );
+      Complex newRoot = roots[0];
+      // ToDo: maybe use a partial sort. It's enough if the 1st element is the one closest to prev 
+      // and the 2nd element is the second closest. See: 
+      // https://en.cppreference.com/w/cpp/algorithm/partial_sort
+      // Well - actually we need the second closest root only if we below implement the additional
+      // acceptance criterion (see comment there). Otherwise, a simple search for the minimum may 
+      // be sufficient.
+
+      // Check, if we can accept the step. If not, decrease dt and try again:
+      T dist = abs(prevRoot - newRoot);
+      if(dist <= maxDist)
+      {
+        // ToDo: Maybe include an additional criterion that looks at the ratio:
+        // abs(prevRoot - newRoot) / abs(prevRoot - roots[1]). The rationale is that we don't want
+        // to accept the step when we cant distinguish well enough between the closest and second 
+        // closest new root. We should enter this "accept" branch only when both conditions are 
+        // met, i.e. combine both condition with a logical "and" in the "if" statement. But: it 
+        // will create problems for polynomials with roots that have a mutliplicity greater than 1.
+
+        // Accept the step:
+        curve.push_back(newRoot);
+        time.push_back(tt);
+        stepAccepted = true;
+        //t = rsMin(t+dt, T(1))
+        t += dt;
+
+        // Increase the stepsize for the next iteration if we can afford it:
+        if(dist <= minDist)
+          dt *= T(2);
+      }
+      else
+      {
+        // Step was not accepted. We decrease the stepsize and try again:
+        dt *= T(0.5);
+      }
+
+    }
+  }
+
+  return curve;
+
+  // ToDo:
+  //
+  // - Check if the last sampled point on the trajectory actually corresponds to a root of q, i.e.
+  //   if we produce r(x) = q(x) in the very last step - or if we miss one step or overshoot. OK.
+  //   The last element of the "time" array is 1.0, so it should be fine.
+  //
+  // - Include a mechanism to grow or shrink dt such that the distance between succesive points on
+  //   the trajectory is always reasonable, i.e. not too large and not too small.
+  //
+  // - Maybe make sure that the ratio between the distance to the closest root and the second 
+  //   closest is above some threshold. That means we need not make sure that we can reliably 
+  //   distinguish between closest and second closest. If that isn't the case, we may need a 
+  //   smaller stepsize dt.
+  //
+  // - To refine the sampling algorithm, maybe try to take (estimated) curvature into account. When
+  //   the curvature is large, we may want to use a denser sampling.
+  //
+  // - What if dt falls below eps. Then we get a hang in an inifnite loop because t += dt will not
+  //   change t anymore. Maybe we need to ensure that dt is at least eps.
+}
+
+
 template<class T>
 void rsComputeRootTrajectories(
   const rsPolynomial<std::complex<T>>& p, 
@@ -9688,14 +9867,90 @@ void rsComputeRootTrajectories(
   // ToDo: pass roots array by pointer
 }
 
+// rename to rsPlotSampledRootSets
+template<class T>
+void rsPlotPolyRootTrajectories(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  int N)
+{
+  rsAssert(rp.size() == rq.size());
+
+  using Complex = std::complex<T>;
+  using VecC    = std::vector<Complex>;
+  using PolyC   = rsPolynomial<Complex>;
+
+  // Create polynomials p,q:
+  PolyC p; p.setRoots(rp); p.scale(wp);
+  PolyC q; q.setRoots(rq); q.scale(wq);
+
+  // Vector for the roots of r_t(x). First index is for the different values of t, second index is
+  // index of the root:
+  std::vector<std::vector<Complex>> roots;
+  rsComputeRootTrajectories(p, q, N, roots);
+
+  // Flatten the roots vector and plot it:
+  std::vector<Complex> rootsFlat;
+  rsFlatten(roots, rootsFlat);
+  rsPlotComplexPoints(rootsFlat);
+
+
+  // ToDo:
+  //
+  // - Maybe limit/clip the radius of the complex numbers such that when roots try to escape off to
+  //   infinity, we limit them but in a way that preserves their direction. Maybe use a 
+  //   soft-clipper for this...or maybe hard-clipping is better? We'll see.
+}
 
 
 
+template<class T>
+std::vector<int> rsGetRootCorrespondence(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  T resolution = T(1) / T(128))
+{
+  std::vector<int> rootsMap(rp.size());
+
+  T tol = 1.e-13;   // ToDo: Make this a parameter
+
+  for(int i = 0; i < (int) rp.size(); i++)
+  {
+    // Compute the trajectory and extract its end point:
+    std::vector<std::complex<T>> t;
+    t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
+    std::complex<T> endPoint = rsLast(t);
+    //rsPlotComplexPoints(t);                     // For debuging and experimentation
+
+    // Find root in q that matches the end point:
+    int j = -1;
+    for(int k = 0; k < (int)rq.size(); k++) {
+      if(rsIsCloseTo(endPoint, rq[k], tol)) {
+        j = k;
+        break; }}
+    rootsMap[i] = j;
+  }
+
+  return rootsMap;
+}
+
+template<class T>
+void rsPlotRootDistancesAndMap(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  T resolution = T(1) / T(128)) 
+  //T tolerance = 1024 * std::numeric_limits<T>::epsilon)
+{
+  rsMatrix<T> D = rsDistanceMatrix(rp, rq);
 
 
+  std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, resolution); 
+  // ToDo: The function should take tolerance parameter. Then we should pass on the tolerance that
+  // we are given from the caller
 
 
-
+  plotMatrixWithMarkers(D, rootsMap); 
+}
 
 //=================================================================================================
 /*

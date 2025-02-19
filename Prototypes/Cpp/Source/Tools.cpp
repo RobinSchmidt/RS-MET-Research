@@ -9614,6 +9614,88 @@ rsImage<T> rsPolyaPotentialPlotter<T>::getPolyaPotentialImage(
 }
 
 
+//=================================================================================================
+// Helper functions for investigating polynomial root trajectories
+
+template<class T>
+rsPolynomial<T> rsLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
+{
+  return (T(1)-t)*p + t*q;
+}
+
+/** Linearly interpolates between polynomials p and q in the Chebychev basis, i.e. first converts 
+p,q into Chebychev basis, than does linear intrepolation there, than converts back into the 
+monomial basis. */
+template<class T>
+rsPolynomial<T> rsChebyLerp(const rsPolynomial<T>& p, const rsPolynomial<T>& q, T t)
+{
+  using Vec = std::vector<T>;
+
+  Vec vp = p.getCoeffs();
+  Vec vq = q.getCoeffs();
+  vp = rsPolyToCheby(vp);
+  vq = rsPolyToCheby(vq);
+
+  Vec r = (T(1)-t)*vp + t*vq;
+  r = rsChebyToPoly(r);
+
+  return rsPolynomial<T>(r);
+
+  // I think, it doesn't make any difference if we interpolate polynomial coeffs in the monomial or
+  // in the Chebychev basis. Linearity means that for a linear transformation L, we have:
+  // L^-1 * (a*L*x + b*L*y) = L^-1*a*L*x + L^-1*b*L*y = a*L^-1*L*x + b*L^-1*L*y = a*x + b*y
+  // where L would be the transformation from the monomial into the Chebychev basis in this case
+  // and a would be 1-t, b would be t and x,y would be the polynomial coefficient vectors of p,q.
+  // Experiments seem to confirm this - so this function is actually not useful for anything other
+  // than demonstrating this fact numerically.
+}
+
+template<class T>
+void rsComputeRootTrajectories(
+  const rsPolynomial<std::complex<T>>& p, 
+  const rsPolynomial<std::complex<T>>& q,
+  int N, std::vector<std::vector<std::complex<T>>>& roots)
+{
+  rsAssert(p.getDegree() == q.getDegree());
+
+  using Complex = std::complex<T>;
+  using PolyC   = rsPolynomial<Complex>;
+
+  int deg = p.getDegree();
+  roots.resize(N);
+  for(int n = 0; n < N; n++)
+  {
+    // Compute parameter t and create polynomial r_t(x):
+    T t = T(n) / T(N-1);
+    //PolyC r = Complex(1-t)*p + Complex(t)*q;  // r_t(x) = (1-t)*p(x) + t*q(x)
+    PolyC r = rsLerp(p, q, Complex(t));         // r_t(x) = (1-t)*p(x) + t*q(x)
+    //PolyC r = rsChebyLerp(p, q, Complex(t));  // ...makes no difference
+
+
+
+    // For a debug test:
+    //rsFlushToZeroReIm<T>(r.getCoeffPointer(), deg+1, 1.e-13);
+    // Aha! Without flushing tiny real and imaginary parts to zero, the root finder runs into a 
+    // problem! The flushing to zero fixes it! Or rather works around it! It should not happen in
+    // the first place. This seems to be a real bug in the root finder!
+
+
+    // Find the roots of r = r_t(x):
+    roots[n].resize(deg);
+    PolyC::roots(r.getCoeffPointer(), deg, &roots[n][0]);
+  }
+
+  // ToDo: pass roots array by pointer
+}
+
+
+
+
+
+
+
+
+
 
 //=================================================================================================
 /*

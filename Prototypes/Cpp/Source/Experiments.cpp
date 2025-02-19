@@ -15004,9 +15004,28 @@ void testPolynomialRootCorrespondence2()
   rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
   rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
   */
-  
- 
 
+
+  // Helper function
+  auto annular = [](int numRoots, 
+                    Real innerRadius1, Real outerRadius1, unsigned long seed1,
+                    Real innerRadius2, Real outerRadius2, unsigned long seed2)
+  {
+    VecC rp = rootsRandomInAnnulus(numRoots, innerRadius1, outerRadius1, seed1);
+    VecC rq = rootsRandomInAnnulus(numRoots, innerRadius2, outerRadius2, seed2);
+    Complex wp = 1;
+    Complex wq = 1;
+    rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
+    rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
+
+    // Maybe make the resolution a parameter.
+  };
+  
+
+  annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1);
+
+ 
+  /*
   // 5 roots randomly placed in an annulus
   rp = rootsRandomInAnnulus(5, 0.5, 1.0, 0);
   rq = rootsRandomInAnnulus(5, 1.5, 2.0, 1);
@@ -15020,6 +15039,7 @@ void testPolynomialRootCorrespondence2()
   // of meeting and diverging again. ToDo: Mark start and endpoints of trajectories. maybe that can
   // help to rule out a crossing, depending on the distributions of start- and end points. OK. 
   // Done. Indeed: it's not a crossing but an approach-diverge point.
+  */
 
 
 
@@ -15053,10 +15073,12 @@ void testPolynomialRootCorrespondence2()
   // ToDo:
   //
   // - Make a helper function that can be called like annulusTest(5,  0.5, 1.0, 0,  1.5, 2.0, 1) 
-  //   and use that with various seeds etc.
+  //   and use that with various seeds etc. make something similar for the ellipse roots
   //
   // - Figure out if a simple translation of all points may affect the root correspondence. I think
-  //   that it should not - but maybe it does?
+  //   that it should not - but maybe it does? 
+  //
+  // - Maybe try using complex weights - does that change anything?
   //
   // - Make plots with random roots and try to spot patterns, i.e. predictors for association. 
   //   Maybe invetsigate other pairwise properties such as the angle of the difference, the 

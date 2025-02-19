@@ -15009,20 +15009,27 @@ void testPolynomialRootCorrespondence2()
   // Helper function
   auto annular = [](int numRoots, 
                     Real innerRadius1, Real outerRadius1, unsigned long seed1,
-                    Real innerRadius2, Real outerRadius2, unsigned long seed2)
+                    Real innerRadius2, Real outerRadius2, unsigned long seed2,
+                    Real resolution)
   {
     VecC rp = rootsRandomInAnnulus(numRoots, innerRadius1, outerRadius1, seed1);
     VecC rq = rootsRandomInAnnulus(numRoots, innerRadius2, outerRadius2, seed2);
     Complex wp = 1;
     Complex wq = 1;
-    rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
+    rsPlotPolyRootTrajectories2(rp, wp, rq, wq, resolution);
     rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
-
-    // Maybe make the resolution a parameter.
   };
   
 
-  annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1);
+  annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./64);
+  // It looks like curves are crossing - but zooming in, the crossing actually looks like a point
+  // of meeting and diverging again. This is also confirmed by the fact that if it would be a 
+  // crossing, the each of the two curves that cross could not have the same color for start and
+  // endpoint - but they do. So, it's not a crossing but indeed an approach-then-diverge point.
+
+  annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./32);
+  // With this low resolution (1./32), two roots of p run into the same root of q. But the matrix 
+  // view doesn't confirm this! I think, it uses its own value for the reslution. Fix this!
 
  
   /*

@@ -14980,6 +14980,7 @@ void testPolynomialRootCorrespondence2()
   VecC    rp, rq;       // Roots of p and q
   //MatR    D;            // Distance matrix
 
+  
   /*
   // 8 roots arranged on ellipses:
   rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
@@ -15003,6 +15004,7 @@ void testPolynomialRootCorrespondence2()
   rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
   rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
   */
+  
  
 
   // 5 roots randomly placed in an annulus
@@ -15016,7 +15018,8 @@ void testPolynomialRootCorrespondence2()
   rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
   // It looks like curves are crossing - but zooming in, the crossing actually looks like a point
   // of meeting and diverging again. ToDo: Mark start and endpoints of trajectories. maybe that can
-  // help to rule out a crossing, depending on the distributions of start- and end points
+  // help to rule out a crossing, depending on the distributions of start- and end points. OK. 
+  // Done. Indeed: it's not a crossing but an approach-diverge point.
 
 
 

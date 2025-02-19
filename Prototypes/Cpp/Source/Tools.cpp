@@ -9749,11 +9749,9 @@ std::vector<std::complex<T>> rsRootTrajectory(
   roots.resize(deg);
 
   // Compute initial point of the trajectory:
-  PolyC::roots(p.getCoeffPointer(), deg, &roots[0]);  // Obsolete, I think
   std::vector<Complex> curve;
-  //curve.push_back(roots[index]);  // Nah! We should just push rp[index]
-  curve.push_back(rp[index]);       // New.
-  std::vector<T> time;              // Maybe get rid. We needed it only for inspection for debugging
+  curve.push_back(rp[index]);  
+  std::vector<T> time;       // Maybe get rid. We needed it only for inspection for debugging
   time.push_back(T(0));
 
   // Set up some algorithm parameters:
@@ -9927,6 +9925,16 @@ void rsPlotPolyRootTrajectories(
   //   soft-clipper for this...or maybe hard-clipping is better? We'll see.
 }
 
+
+void rsAddCircle(GNUPlotter& plt, double x, double y, const std::string& style)
+{
+  std::string str;
+  str  = "set object circle front at ";
+  str += std::to_string(x) + "," + std::to_string(y);
+  str += " " + style;
+  plt.addCommand(str);
+}
+
 template<class T>
 void rsPlotPolyRootTrajectories2(
   const std::vector<std::complex<T>>& rp, std::complex<T> wp,
@@ -9938,20 +9946,28 @@ void rsPlotPolyRootTrajectories2(
   GNUPlotter plt;
   for(int i = 0; i < (int) rp.size(); i++)
   {
+    // Compute trajectory and add its data to the plot:
     std::vector<std::complex<T>> t;
     t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
     plt.addDataComplex(t);
+
+    // Draw markers for start and end of trajectory:
+    int L = t.size()-1;  // Last index
+    rsAddCircle(plt, real(t[0]), imag(t[0]), "size 0.02 fc rgb \"green\" fs solid");
+    rsAddCircle(plt, real(t[L]), imag(t[L]), "size 0.02 fc rgb \"red\" fs solid");
+    // fc: fillcolor, fs: fillstyle
+
   }
   plt.setToDarkMode();
   plt.setPixelSize(600, 600);
   plt.addCommand("set size square");
   plt.plot();
 
+
   // ToDo:
   //
-  // - Maybe emphasize the start and end points by drawing dots/circles there. Maybe use different
-  //   symbols (and/or different colors) for start and end points. Maybe a cross and a plus or 
-  //   triangles with different orientations
+  // - Maybe try to use different symbols (and/or different colors) for start and end points. Maybe
+  //   a cross and a plus or triangles with different orientations. Use better colors for markers.
 }
 
 template<class T>

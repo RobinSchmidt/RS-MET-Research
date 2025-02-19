@@ -9934,6 +9934,7 @@ void rsAddCircle(GNUPlotter& plt, double x, double y, const std::string& style)
   str += " " + style;
   plt.addCommand(str);
 }
+// ToDo: pass the size as double
 
 template<class T>
 void rsPlotPolyRootTrajectories2(

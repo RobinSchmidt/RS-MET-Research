@@ -14980,32 +14980,32 @@ void testPolynomialRootCorrespondence2()
   VecC    rp, rq;       // Roots of p and q
   MatR    D;            // Distance matrix
 
-  //// Example 1:
-  //rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
-  //rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
-  //wp = 8;
-  //wq = 1;
-  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
-  //rsPlotRootDistancesAndMap( rp, wp, rq, wq);
-  //// root index in p(x):   0  1  2  3  4  5  6  7
-  //// root index in q(x):   0  1  2  3  4  5  6  7
-  //// is row minimum:       Y  N  Y  Y  Y  N  Y  Y
-  //// is column minimum:    Y  N  N  Y  Y  N  N  Y
-
+  // Example 1:
+  rp = ellipRoots(8, 1.0, 0.7, 0.0,   -0.1);
+  rq = ellipRoots(8, 1.5, 2.0, PI/16,  0.0);
+  wp = 8;
+  wq = 1;
+  rsPlotPolyRootTrajectories( rp, wp, rq, wq, 101);
+  rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
+  rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
+  // root index in p(x):   0  1  2  3  4  5  6  7
+  // root index in q(x):   0  1  2  3  4  5  6  7
+  // is row minimum:       Y  N  Y  Y  Y  N  Y  Y
+  // is column minimum:    Y  N  N  Y  Y  N  N  Y
 
   // Example 2:
   rp = ellipRoots(11, 1.0, 0.7,  0.3, -0.4);
   rq = ellipRoots(11, 1.5, 3.0, -0.2,  0.5);
   wp = 8;
   wq = 1;
-  rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);
-  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 1001);
-  rsPlotRootDistancesAndMap( rp, wp, rq, wq);
-  // The sampling of the trajectories looks wrong. The distances are too uneven. Ah - I think, it's
-  // because rsPlotPolyRootTrajectories has no stepsize adaption - it uses equally spaced values 
-  // of t. ToDo: Make a similar funtion that uses stepsize adaption, i.e. calls rsRootTrajectory()
-  // internally. Maybe the old function should be rename into rsPlotRootTrajectoriesSimple or
-  // rsPlotSampledRoots, rsPlotSampledRootCurves
+  rsPlotPolyRootTrajectories( rp, wp, rq, wq, 101);
+  rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
+  rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
+
+
+  //rp = randomRootsInAnnulus(5, 1.5, 2.0, 0); // params: numRoots, minRadius, maxRadius, seed
+
+
 
 
   //// Example 3:
@@ -15013,8 +15013,9 @@ void testPolynomialRootCorrespondence2()
   //rq = ellipRoots(16, 1.5, 2.0, PI/32);
   //wp = 16;
   //wq = 1;
-  //rsPlotPolyRootTrajectories(rp, wp, rq, wq, 101);  // Has a dot at (0,0) - that's interesting!
-  //rsPlotRootDistancesAndMap( rp, wp, rq, wq);
+  //rsPlotPolyRootTrajectories( rp, wp, rq, wq, 101);    // Has a dot at (0,0) - that's interesting!
+  //rsPlotPolyRootTrajectories2(rp, wp, rq, wq, 1./128);
+  //rsPlotRootDistancesAndMap(  rp, wp, rq, wq);
   //// Triggers assertions
 
 
@@ -15034,14 +15035,17 @@ void testPolynomialRootCorrespondence2()
   //
   // ToDo:
   //
-  // - Make better trajectory plots - using stepsize adaption and connecting the trajectory samples
-  //   with lines - or maybe splines, if GNUPlot offers this option
+  // - Figure out if a simple translation of all points may affect the root correspondence. I think
+  //   that it should not - but maybe it does?
   //
   // - Make plots with random roots and try to spot patterns, i.e. predictors for association. 
   //   Maybe invetsigate other pairwise properties such as the angle of the difference, the 
   //   quotient, deviations from different kinds of means, etc. Maybe the computation of the 
   //   distance matrix should take a std::function that takes to complex numbers and spits out a 
-  //   real number that we take as "distance" - although it may be somethign else.
+  //   real number that we take as "distance" - although it may be something else. I think, the 
+  //   function should treat p and q symmetrically, i.e. the matrix must be symmetric..or wait
+  //   ...does it? Maybe we should look at abs(p[i] - q[j]) + abs(p[j] - q[i])? But no - that 
+  //   doesn't seem to make any sense
   //
   // - Compute the lengths of the trajectories, normalize these lengths by dividing by the 
   //   distance. Maybe this length ratio can be related to some sort of association strength?

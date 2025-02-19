@@ -9829,6 +9829,7 @@ std::vector<std::complex<T>> rsRootTrajectory(
 }
 
 
+// reanme to rsComputeSampledRootSets
 template<class T>
 void rsComputeRootTrajectories(
   const rsPolynomial<std::complex<T>>& p, 
@@ -9850,14 +9851,11 @@ void rsComputeRootTrajectories(
     PolyC r = rsLerp(p, q, Complex(t));         // r_t(x) = (1-t)*p(x) + t*q(x)
     //PolyC r = rsChebyLerp(p, q, Complex(t));  // ...makes no difference
 
-
-
     // For a debug test:
     //rsFlushToZeroReIm<T>(r.getCoeffPointer(), deg+1, 1.e-13);
     // Aha! Without flushing tiny real and imaginary parts to zero, the root finder runs into a 
     // problem! The flushing to zero fixes it! Or rather works around it! It should not happen in
     // the first place. This seems to be a real bug in the root finder!
-
 
     // Find the roots of r = r_t(x):
     roots[n].resize(deg);
@@ -9902,7 +9900,30 @@ void rsPlotPolyRootTrajectories(
   //   soft-clipper for this...or maybe hard-clipping is better? We'll see.
 }
 
+template<class T>
+void rsPlotPolyRootTrajectories2(
+  const std::vector<std::complex<T>>& rp, std::complex<T> wp,
+  const std::vector<std::complex<T>>& rq, std::complex<T> wq,
+  T resolution = T(1) / T(128))
+{
+  rsAssert(rp.size() == rq.size());
 
+  GNUPlotter plt;
+  for(int i = 0; i < (int) rp.size(); i++)
+  {
+    std::vector<std::complex<T>> t;
+    t = rsRootTrajectory(rp, wp, rq, wq, i, resolution);
+    plt.addDataComplex(t);
+  }
+  plt.setToDarkMode();
+  plt.setPixelSize(600, 600);
+  plt.addCommand("set size square");
+  plt.plot();
+
+  // ToDo:
+  //
+  // - Maybe emphasize the start and end points by drawing dots/circles there
+}
 
 template<class T>
 std::vector<int> rsGetRootCorrespondence(
@@ -9942,6 +9963,8 @@ void rsPlotRootDistancesAndMap(
   //T tolerance = 1024 * std::numeric_limits<T>::epsilon)
 {
   rsMatrix<T> D = rsDistanceMatrix(rp, rq);
+  // This should take a distance function as std::function as parameter. For example, we can use
+  // abs(p[i] - q[j]) which is what we currently use. But I want to try other functions
 
 
   std::vector<int> rootsMap = rsGetRootCorrespondence(rp, wp, rq, wq, resolution); 

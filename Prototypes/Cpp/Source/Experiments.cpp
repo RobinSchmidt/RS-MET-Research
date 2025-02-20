@@ -15008,31 +15008,38 @@ void testPolynomialRootCorrespondence2()
   */
 
 
-  // Helper function
-  auto annular = [](int numRoots, 
-                    Real innerRadius1, Real outerRadius1, unsigned long seed1,
-                    Real innerRadius2, Real outerRadius2, unsigned long seed2,
-                    Real resolution)
+  // Helper functions:
+
+  auto showPlots = [](const VecC& rp, Complex wp,
+                      const VecC& rq, Complex wq, 
+                      Real resolution)
+  {
+    rsPlotPolyRootTrajectories2(rp, wp, rq, wq, resolution);
+    rsPlotRootDistancesAndMap(  rp, wp, rq, wq, resolution);
+  };
+
+
+  auto annular = [&](int numRoots, 
+                     Real innerRadius1, Real outerRadius1, unsigned long seed1,
+                     Real innerRadius2, Real outerRadius2, unsigned long seed2,
+                     Real resolution)
   {
     VecC rp = rootsRandomInAnnulus(numRoots, innerRadius1, outerRadius1, seed1);
     VecC rq = rootsRandomInAnnulus(numRoots, innerRadius2, outerRadius2, seed2);
     Complex wp = 1;
     Complex wq = 1;
-    rsPlotPolyRootTrajectories2(rp, wp, rq, wq, resolution);
-    rsPlotRootDistancesAndMap(  rp, wp, rq, wq, resolution);
+    showPlots(rp, wp, rq, wq, resolution);
+    //rsPlotPolyRootTrajectories2(rp, wp, rq, wq, resolution);
+    //rsPlotRootDistancesAndMap(  rp, wp, rq, wq, resolution);
   };
+  // Maybe give the annuli parameters for the center - and maybe give the roots patterns 
+  // parameters for rotation
   
+  // Make a function for rectangular roots. parameters: center, width, height
 
 
-  annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./64);
-  annular(5,  0.5, 1.0, 1,  1.5, 2.0, 2,  1./64);
-  annular(5,  0.5, 1.0, 2,  1.5, 2.0, 3,  1./64);
-  annular(5,  0.5, 1.0, 3,  1.5, 2.0, 4,  1./64);
-  annular(5,  0.5, 1.0, 4,  1.5, 2.0, 5,  1./64);
-  annular(5,  0.5, 1.0, 5,  1.5, 2.0, 6,  1./64);
-  annular(5,  0.5, 1.0, 6,  1.5, 2.0, 7,  1./64);
-
-
+  for(int i = 0; i <= 6; i++)
+    annular(5,  0.5, 1.0, i,  1.5, 2.0, i+1,  1./64);
 
   annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./64);
   // It looks like curves are crossing - but zooming in, the crossing actually looks like a point
@@ -15042,7 +15049,10 @@ void testPolynomialRootCorrespondence2()
 
   annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./32);
   // With this low resolution (1./32), two roots of p run into the same root of q. But the matrix 
-  // view doesn't confirm this! I think, it uses its own value for the reslution. Fix this!
+  // view doesn't confirm this! I think, it uses its own value for the reslution. Fix this! Done!
+  // Now the matrix has not dot in the row with index 3
+
+
 
 
 
@@ -15097,7 +15107,9 @@ void testPolynomialRootCorrespondence2()
   // - Maybe compute the line integrals along the trajectories. Maybe this has some significance?
   //
   // - Maybe roots association strength can also be inferred by some sort of normalized root 
-  //   distance where the normalization may be in terms of the maximum root distance?
+  //   distance where the normalization may be in terms of the maximum root distance? Or maybe some
+  //   sort of row- and/or column average. Try diving all distances by average of row- and column-
+  //   average...or maximum...or minimum
   //
   // - Refactor the function rsPlotPolyRootTrajectory into a fucntion that extracts the 
   //   trajectories and one that does the actual plotting. Then write a function that takes in the

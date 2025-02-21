@@ -9613,6 +9613,94 @@ rsImage<T> rsPolyaPotentialPlotter<T>::getPolyaPotentialImage(
     P, xMin, xMax, yMin, yMax);                      // Convert data to image and post-process
 }
 
+//=================================================================================================
+// Stuff for Chebychev expansions
+
+/** Class to represent an expansion of a function in terms of Chebychev polynomials. That means, 
+the function f(x) is represented as:
+
+  f(x) = b0*T0(x) + b1*T1(x) + b2*T2(x) + ... + bN*TN(x)
+
+where N is the degree of the expansion. The basis functions T0,T1,T2,...,TN are the Chebychev 
+polynomials. You may want to compare this expression to a normal polynomial of degree N which can 
+be written as:
+
+  f(x) = a0*x^0 + a1*x^1 + a2*x^2 + ... + aN*x^N
+
+Any polynomial of degree N can be expressed either via the b-coefficients or via the 
+a-coefficients. It's the same function expressed via different basis functions. In the latter case,
+we say that the polynomial is expressed in the monomial basis, i.e. in terms of the basis functions
+1, x, x^2, x^3, x^4, etc. These basis functions are called monomials. In the former case, we 
+express the same polynomial in the basis of the Chebychev polynomials T0(x), T1(x), T2(x), etc. The 
+first few of them are:
+
+  T0(x) = 1,  T1(x) = x,  T2(x) = 2*x^2 - 1,  T3(x) = 4*x^3 - 3*x,  T4(x) = 8*x^4 - 8*x^2 + 1
+
+and in general, they satisfy the 3-term recurrence relation:
+
+  T[n+1](x) - 2*x*T[n](x) + T[n-1](x) = 0  ->  T[n+1](x) = 2*x*T[n](x) - T[n-1](x)
+
+where we may use the bracket notation [] to indicate the index of the polynomial but we may also 
+just write e.g. T3(x) to abbreviate T[3](x). We may also drop the argument (x) sometimes. Chebychev
+polynomials satisfy a whole lot of other interesting identities that make them useful in numerical 
+computations. 
+
+For example, it is well known that doing a polynomial regression to approximate given data leads to
+a linear system of equations that tends to have numerically undesirable properties. The so called 
+Vandermonde matrix that occurs in this computation tends to be ill conditioned. Doing the 
+regression in terms of the Chebychev polynomials as basis functions rather than using the monomials
+is numerically much more well behaved. The Vandermonde matrix will get replaced by a different 
+matrix that is well conditioned. The result are then the coefficients of the Chebychev expansion 
+rather than normal polynonials. 
+
+Approximations of functions in terms of a Chebychev series tends to converge more rapidly that a
+normal power series. ...TBC...
+
+
+References:
+
+  (1) https://en.wikipedia.org/wiki/Chebyshev_polynomials
+
+  (2) https://mathworld.wolfram.com/ChebyshevPolynomialoftheFirstKind.html
+
+  (3) Numerical Methods for Scientists an Engineers, 2nd Ed.  (R.W. Hamming)
+
+*/
+
+template<class T>
+class rsChebychevExpansion
+{
+
+public:
+
+
+
+
+protected:
+
+  std::vector<T> coeffs;   // Array of coefficients. Index n correpsonds to Tn(x)
+
+};
+
+/*
+
+ToDo:
+
+- Some more stuff is in Prototypes.h in the rs_testing module
+
+
+See also:
+
+- https://de.wikipedia.org/wiki/Tschebyschow-Polynom
+- https://www.geeksforgeeks.org/chebyshev-polynomials/
+- https://www.mathematik.uni-kassel.de/~koepf/Publikationen/cheby.pdf
+
+Properties:
+
+- For all n: Tn(1) = 1,  Tn(-1) = (-1)^n 
+
+*/
+
 
 //=================================================================================================
 // Helper functions for investigating polynomial root trajectories

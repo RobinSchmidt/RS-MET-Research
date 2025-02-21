@@ -9935,6 +9935,20 @@ T rsMaxDistance(
 }
 
 
+template<class T, class Comparator>
+T rsMin(const std::vector<T>& v, Comparator less)
+{
+  T min = v[0];
+  for(size_t i = 1; i < v.size(); i++)
+  {
+    if(less(v[i], min))
+      min = v[i];
+    //min = std::min(min, v[i], less);
+  }
+  return min;
+}
+
+
 
 // Under construction:
 template<class T>
@@ -9948,18 +9962,30 @@ std::complex<T> rsFindRootNear(const rsPolynomial<std::complex<T>>& p, std::comp
   PolyC::roots(p.getCoeffPointerConst(), p.getDegree(), &roots[0]);
 
 
+  /*
   std::sort(roots.begin(), roots.end(), 
     [&](const Complex& lhs, const Complex& rhs)
     { 
       return abs(z - lhs) < abs(z - rhs); 
     }
   );
-  // Use std::min instead!
+  // Use std::min instead! Oh - it seems like std::min doesn't take a comparator function 
+  // parameter. Then we need to implement such a min function ourselves - maybe in rsArrayTools.
+  // Or mayb it does? Ah - yes - but it doesn't take a container!
 
 
   Complex newRoot = roots[0];
+  */
 
-  return newRoot;
+
+
+  Complex closestRoot = rsMin(roots, 
+    [&](const Complex& lhs, const Complex& rhs)
+    { 
+      return abs(z - lhs) < abs(z - rhs); 
+    });
+
+  return closestRoot;
 }
 // Rename to findRootClosestTo
 

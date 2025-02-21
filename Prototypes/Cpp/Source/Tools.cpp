@@ -9934,6 +9934,36 @@ T rsMaxDistance(
   return maxDist;
 }
 
+
+
+// Under construction:
+template<class T>
+std::complex<T> rsFindRootNear(const rsPolynomial<std::complex<T>>& p, std::complex<T> z)
+{
+  using Complex = std::complex<T>;
+  using PolyC   = rsPolynomial<Complex>;
+
+  std::vector<Complex> roots(p.getDegree());
+
+  PolyC::roots(p.getCoeffPointerConst(), p.getDegree(), &roots[0]);
+
+
+  std::sort(roots.begin(), roots.end(), 
+    [&](const Complex& lhs, const Complex& rhs)
+    { 
+      return abs(z - lhs) < abs(z - rhs); 
+    }
+  );
+  // Use std::min instead!
+
+
+  Complex newRoot = roots[0];
+
+  return newRoot;
+}
+// Rename to findRootClosestTo
+
+
 template<class T>
 std::vector<std::complex<T>> rsRootTrajectory(
   const std::vector<std::complex<T>>& rp, std::complex<T> wp,
@@ -9986,6 +10016,8 @@ std::vector<std::complex<T>> rsRootTrajectory(
       T tt = rsMin(t+dt, T(1));
       PolyC r = Complex(1-tt)*p + Complex(tt)*q;
 
+      // Old:
+      /*
       // Find its roots:
       PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
 
@@ -10006,6 +10038,12 @@ std::vector<std::complex<T>> rsRootTrajectory(
       // be sufficient. We don't really need to sort the whole array at all - we just need the 
       // minimum and possibly the second smallest element - and the latter only if we want to 
       // implement the additional criterion
+      */
+      
+
+      // New:
+      Complex newRoot = rsFindRootNear(r, prevRoot);
+
 
       // Check, if we can accept the step. If not, decrease dt and try again:
       T dist = abs(prevRoot - newRoot);

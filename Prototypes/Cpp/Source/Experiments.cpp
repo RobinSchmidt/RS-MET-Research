@@ -15059,8 +15059,7 @@ void testPolynomialRootCorrespondence2()
   // Now the matrix has not dot in the row with index 3
 
 
-  for(int i = 0; i <= 9; i++) rectangular(15,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
-
+  //for(int i = 0; i <= 9; i++) rectangular(15,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
   for(int i = 0; i <= 9; i++) rectangular(20,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
 
   for(int i = 0; i <= 9; i++) rectangular( 9,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);

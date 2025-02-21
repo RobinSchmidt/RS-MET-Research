@@ -15059,16 +15059,19 @@ void testPolynomialRootCorrespondence2()
   // Now the matrix has not dot in the row with index 3
 
 
+  for(int i = 0; i <= 9; i++) rectangular(15,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
 
-  for(int i = 0; i <= 9; i++) rectangular(9,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
+  for(int i = 0; i <= 9; i++) rectangular(20,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
+
+  for(int i = 0; i <= 9; i++) rectangular( 9,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
   // i = 5,7,8 are most interesting. They show most clearly that distance is not a good predictor
   // for association.
 
-  for(int i = 0; i <= 9; i++) rectangular(9,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
-  for(int i = 0; i <= 9; i++) rectangular(3,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
-  for(int i = 0; i <= 9; i++) rectangular(2,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
-  for(int i = 0; i <= 9; i++) rectangular(5,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64); // Runs into assertion for i = 6
-  for(int i = 0; i <= 9; i++) annular(    5,  i, 0.5, 1.0,  i+1, 1.5, 2.0,  1./64);
+  for(int i = 0; i <= 9; i++) rectangular( 9,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
+  for(int i = 0; i <= 9; i++) rectangular( 3,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
+  for(int i = 0; i <= 9; i++) rectangular( 2,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
+  for(int i = 0; i <= 9; i++) rectangular( 5,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64); // Runs into assertion for i = 6
+  for(int i = 0; i <= 9; i++) annular(     5,  i, 0.5, 1.0,  i+1, 1.5, 2.0,  1./64);
 
 
 
@@ -15100,8 +15103,8 @@ void testPolynomialRootCorrespondence2()
   // - With degree 3 we see some more: short trajectories seem to be more straight, i.e. less 
   //   affected by the pushing and pulling "forces"
   //
-  // -Generally, we see that the trajectories never cross, i.e. never intersect one another. When 
-  //  they goe near each other, they eventually repel.
+  // - Generally, we see that the trajectories never cross, i.e. never intersect one another. When 
+  //   they goe near each other, they eventually repel.
   //
   //
   // Questions:
@@ -15110,6 +15113,10 @@ void testPolynomialRootCorrespondence2()
   //
   //
   // ToDo:
+  //
+  // - Check what happens to the root trajectories of two degree N polynmialy p,q when we add 
+  //   another root to each. Will the existing trajectories remain and a new one will appear or the
+  //   trajectories be completely redistributed? I guess the latter.
   //
   // - Make a helper function that can be called like annulusTest(5,  0.5, 1.0, 0,  1.5, 2.0, 1) 
   //   and use that with various seeds etc. make something similar for the ellipse roots
@@ -16561,7 +16568,18 @@ void testQuaternion()
 
 void testChebychevExpansion()
 {
-  // Under construction 
+  // Under construction
+
+  using Real    = double;
+  using Vec     = std::vector<Real>;
+  using ChebExp = rsChebychevExpansion<Real>;
+
+
+  Real x = 0.7345645981;
+  
+  
+  //ChebExp ce1;
+
 
   int dummy = 0;
 }

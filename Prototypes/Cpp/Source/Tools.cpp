@@ -9638,7 +9638,7 @@ first few of them are:
 
 and in general, they satisfy the 3-term recurrence relation:
 
-  T[n+1](x) - 2*x*T[n](x) + T[n-1](x) = 0  ->  T[n+1](x) = 2*x*T[n](x) - T[n-1](x)
+  T[n+1](x) - 2*x*T[n](x) + T[n-1](x) = 0   <->   T[n+1](x) = 2*x*T[n](x) - T[n-1](x)
 
 where we may use the bracket notation [] to indicate the index of the polynomial but we may also 
 just write e.g. T3(x) to abbreviate T[3](x). We may also drop the argument (x) sometimes. Chebychev
@@ -9675,12 +9675,56 @@ public:
 
 
 
+  //-----------------------------------------------------------------------------------------------
+  /** \name Evaluation (Low Level) */
+
+  /** Evaluates the Chebychev expansion defined by the array of expansion coefficients "b" at 
+  argument "x".  The array of coefficients must be of length degree+1 and is interpreted as 
+  follows: b[n] is taken to be the the multiplier for T[n](x). */
+  template<class TArg>
+  static TArg evaluate(const TArg& x, const T *b, int degree);
+  // Needs tests
+
+
 
 protected:
 
   std::vector<T> coeffs;   // Array of coefficients. Index n correpsonds to Tn(x)
 
 };
+
+
+template <class T>
+template <class TArg>
+TArg rsChebychevExpansion<T>::evaluate(const TArg& x, const T *b, int N)
+{
+  rsAssert(N >= 0, "Invalid degree in rsChebychevExpansion::evaluate");
+
+  if(N == 0)
+    return TArg(b[0]);
+
+  TArg c0 = TArg(b[N-1]);
+  TArg c1 = TArg(b[N]);
+  for(int i = 2; i <= N; i++)
+  {
+    TArg tmp = c0;
+    c0 = b[N-i] - c1;
+    c1 = tmp + T(2)*c1*x;
+  }
+  return c0 + c1 * x;
+
+  // Adapted from:
+  // https://insertinterestingnamehere.github.io/posts/basic-examples/
+  //
+  // See also:
+  // https://en.wikipedia.org/wiki/Clenshaw_algorithm#Special_case_for_Chebyshev_series
+  // https://de.wikipedia.org/wiki/Clenshaw-Algorithmus
+  // https://math.stackexchange.com/questions/784093/numerical-evaluation-of-polynomials-in-chebyshev-basis
+  // https://www.sciencedirect.com/science/article/abs/pii/S0096300311006242
+}
+
+
+
 
 /*
 
@@ -9959,7 +10003,9 @@ std::vector<std::complex<T>> rsRootTrajectory(
       // https://en.cppreference.com/w/cpp/algorithm/partial_sort
       // Well - actually we need the second closest root only if we below implement the additional
       // acceptance criterion (see comment there). Otherwise, a simple search for the minimum may 
-      // be sufficient.
+      // be sufficient. We don't really need to sort the whole array at all - we just need the 
+      // minimum and possibly the second smallest element - and the latter only if we want to 
+      // implement the additional criterion
 
       // Check, if we can accept the step. If not, decrease dt and try again:
       T dist = abs(prevRoot - newRoot);
@@ -10013,6 +10059,16 @@ std::vector<std::complex<T>> rsRootTrajectory(
   //
   // - What if dt falls below eps. Then we get a hang in an inifnite loop because t += dt will not
   //   change t anymore. Maybe we need to ensure that dt is at least eps.
+  //
+  // - Instead of finding all roots in each step and then picking the one that is closest to the 
+  //   one in the previous step (i.e. calling PolyC::roots(..), then sort(..), then pick the 
+  //   first), we could also just take the found root from the previous iteration and "update" it
+  //   by calling something like findRootNear(..) that uses Newton iteration or the 
+  //   convergeToRootViaLaguerre() function. That would make the algorithm much more efficient. But
+  //   maybe it also makes it less robust, so maybe we should keep both variants. Maybe factor out
+  //   a function findRootNear(..) that takes a const reference to a polynomial and a root guess. 
+  //   Then make different version of that function and let the algorithm here switch between 
+  //   calling them.
 }
 
 

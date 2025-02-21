@@ -9935,31 +9935,33 @@ T rsMaxDistance(
 }
 
 
-
-
-// Under construction:
 template<class T>
 std::complex<T> rsFindRootClosestTo(const rsPolynomial<std::complex<T>>& p, std::complex<T> z)
 {
+  // Find all roots of polynomial p:
   using Complex = std::complex<T>;
-  using PolyC   = rsPolynomial<Complex>;
-
   std::vector<Complex> roots(p.getDegree());
+  rsPolynomial<Complex>::roots(p.getCoeffPointerConst(), p.getDegree(), &roots[0]);
 
-  PolyC::roots(p.getCoeffPointerConst(), p.getDegree(), &roots[0]);
-
-
+  // Extract and return the root that is closest to z:
   Complex closestRoot = rsMin(roots, 
     [&](const Complex& lhs, const Complex& rhs)
     { 
       return abs(z - lhs) < abs(z - rhs); 
     });
-
   return closestRoot;
 }
-// Rename to findRootClosestTo
 
-// Implement rsFindNearbyRootViaLaguerre
+/*
+// Implement rsFindNearbyRootViaLaguerre:
+template<class T>
+std::complex<T> rsFindNearbyRootViaLaguerre(
+  const rsPolynomial<std::complex<T>>& p, std::complex<T> z)
+{
+ 
+
+}
+*/
 
 
 template<class T>
@@ -10041,6 +10043,7 @@ std::vector<std::complex<T>> rsRootTrajectory(
 
       // New:
       Complex newRoot = rsFindRootClosestTo(r, prevRoot);
+      // ToDo: try replacing rsFindRootClosestTo by rsFindNearbyRootViaLaguerre (to be written)
 
 
       // Check, if we can accept the step. If not, decrease dt and try again:

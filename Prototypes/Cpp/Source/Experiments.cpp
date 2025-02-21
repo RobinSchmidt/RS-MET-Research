@@ -15015,45 +15015,60 @@ void testPolynomialRootCorrespondence2()
                       Real resolution)
   {
     rsPlotPolyRootTrajectories2(rp, wp, rq, wq, resolution);
-    rsPlotRootDistancesAndMap(  rp, wp, rq, wq, resolution);
+    //rsPlotRootDistancesAndMap(  rp, wp, rq, wq, resolution);
   };
 
-
   auto annular = [&](int numRoots, 
-                     Real innerRadius1, Real outerRadius1, unsigned long seed1,
-                     Real innerRadius2, Real outerRadius2, unsigned long seed2,
-                     Real resolution)
+    unsigned long seed1, Real innerRadius1, Real outerRadius1, 
+    unsigned long seed2, Real innerRadius2, Real outerRadius2, 
+    Real resolution)
   {
-    VecC rp = rootsRandomInAnnulus(numRoots, innerRadius1, outerRadius1, seed1);
-    VecC rq = rootsRandomInAnnulus(numRoots, innerRadius2, outerRadius2, seed2);
+    VecC rp = rootsRandomInAnnulus(numRoots, seed1, innerRadius1, outerRadius1);
+    VecC rq = rootsRandomInAnnulus(numRoots, seed2, innerRadius2, outerRadius2);
     Complex wp = 1;
     Complex wq = 1;
     showPlots(rp, wp, rq, wq, resolution);
-    //rsPlotPolyRootTrajectories2(rp, wp, rq, wq, resolution);
-    //rsPlotRootDistancesAndMap(  rp, wp, rq, wq, resolution);
+
+    // Maybe give the annuli parameters for the center - and maybe give the roots patterns 
+    // parameters for rotation
   };
-  // Maybe give the annuli parameters for the center - and maybe give the roots patterns 
-  // parameters for rotation
-  
-  // Make a function for rectangular roots. parameters: center, width, height
+
+  auto rectangular = [&](int numRoots, 
+    unsigned long seed1, Real width1, Real height1, 
+    unsigned long seed2, Real width2, Real height2, 
+    Real resolution)
+  {
+    VecC rp = rootsRandomInRectangle(numRoots, seed1, width1, height1);
+    VecC rq = rootsRandomInRectangle(numRoots, seed2, width2, height2);
+    Complex wp = 1;
+    Complex wq = 1;
+    showPlots(rp, wp, rq, wq, resolution);
+  };
 
 
-  for(int i = 0; i <= 6; i++)
-    annular(5,  0.5, 1.0, i,  1.5, 2.0, i+1,  1./64);
 
-  annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./64);
+  //annular(5,  0, 0.5, 1.0,  1, 1.5, 2.0,  1./64);
   // It looks like curves are crossing - but zooming in, the crossing actually looks like a point
   // of meeting and diverging again. This is also confirmed by the fact that if it would be a 
   // crossing, the each of the two curves that cross could not have the same color for start and
   // endpoint - but they do. So, it's not a crossing but indeed an approach-then-diverge point.
 
-  annular(5,  0.5, 1.0, 0,  1.5, 2.0, 1,  1./32);
+  //annular(5,  0, 0.5, 1.0,  1, 1.5, 2.0,  1./32);
   // With this low resolution (1./32), two roots of p run into the same root of q. But the matrix 
   // view doesn't confirm this! I think, it uses its own value for the reslution. Fix this! Done!
   // Now the matrix has not dot in the row with index 3
 
 
 
+  for(int i = 0; i <= 9; i++) rectangular(9,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
+  // i = 5,7,8 are most interesting. They show most clearly that distance is not a good predictor
+  // for association.
+
+  for(int i = 0; i <= 9; i++) rectangular(9,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
+  for(int i = 0; i <= 9; i++) rectangular(3,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
+  for(int i = 0; i <= 9; i++) rectangular(2,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64);
+  for(int i = 0; i <= 9; i++) rectangular(5,  i, 2.0, 0.5,  i+1, 0.5, 2.0,  1./64); // Runs into assertion for i = 6
+  for(int i = 0; i <= 9; i++) annular(    5,  i, 0.5, 1.0,  i+1, 1.5, 2.0,  1./64);
 
 
 
@@ -15075,7 +15090,19 @@ void testPolynomialRootCorrespondence2()
   // - The 1st example shows that root correspondence is not necessarily linked to root distance.
   //   The roots with index 1 and 5 (in p and q) are neither a row minimum nor a column minimum in 
   //   the distance matrix.
+  //
+  // - With degree 2 polynomials, we can see the folloing tendencies: trajectories that are roughly
+  //   parallel seem to push each other away and trajectories that are parallel but in opposite 
+  //   directions seem to attract each other.
+  //   Try: p: (0,0),(0,1), q: (1,0),(-1,-1) - these are perpendicular - maybe we get straight 
+  //   lines?
   // 
+  // - With degree 3 we see some more: short trajectories seem to be more straight, i.e. less 
+  //   affected by the pushing and pulling "forces"
+  //
+  // -Generally, we see that the trajectories never cross, i.e. never intersect one another. When 
+  //  they goe near each other, they eventually repel.
+  //
   //
   // Questions:
   //
@@ -15121,6 +15148,11 @@ void testPolynomialRootCorrespondence2()
   //   may be different. Maybe it could be more evenly spaced? But maybe that depends on how far
   //   the roots are spread out compared to the natural domain of [-1,+1] of Chebychev polynomials.
   //   Maybe the roots should be roughly arranged around the unit circle?
+  //
+  // - Maybe compute for all possible pairings of roots (there should be n! of them if n is the 
+  //   degree of p and q) a sort of overall energy function (maybe sum of the (squared) 
+  //   distances?). Maybe the actual pairing minimizes such an energy function? This is wild 
+  //   speculation, though.
 }
 
 
@@ -16523,6 +16555,13 @@ void testQuaternion()
   // -Compare the performances of the different implementations (I guess, raw will be most 
   //  performant?)
 
+
+  int dummy = 0;
+}
+
+void testChebychevExpansion()
+{
+  // Under construction 
 
   int dummy = 0;
 }

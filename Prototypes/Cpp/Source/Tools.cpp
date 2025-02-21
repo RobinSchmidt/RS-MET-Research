@@ -9677,10 +9677,9 @@ std::vector<std::complex<T>> ellipRoots(
 // randomRootsInAnnulus(5, 1.5, 2.0, 0);
 template<class T>
 std::vector<std::complex<T>> rootsRandomInAnnulus(
-  int numRoots, T innerRadius, T outerRadius, unsigned long seed)
+  int numRoots, unsigned long seed, T innerRadius, T outerRadius)
 {
   std::vector<std::complex<T>> roots(numRoots);
-
   rsNoiseGenerator<T> ng;
   ng.setSeed(seed);
   ng.setRange(T(0), T(1));
@@ -9697,6 +9696,66 @@ std::vector<std::complex<T>> rootsRandomInAnnulus(
   return roots;
 }
 
+template<class T>
+std::vector<std::complex<T>> rootsRandomInRectangle(
+  int numRoots, unsigned long seed, T width, T height)
+{
+  std::vector<std::complex<T>> roots(numRoots);
+  rsNoiseGenerator<T> ng;
+  ng.setSeed(seed);
+  ng.setRange(T(0), T(1));
+
+  T xMin = T(-0.5) * width;
+  T yMin = T(-0.5) * height;
+
+  for(int n = 0; n < numRoots; n++)
+  {
+    T x = xMin + width  * ng.getSample();
+    T y = yMin + height * ng.getSample();
+    roots[n] = std::complex<T>(x, y);
+  }
+
+  return roots;
+}
+
+
+template<class T>
+T rsRowSum(const rsMatrix<T>& A, int rowIndex)
+{
+  T sum(0);
+  for(int j = 0; j < A.getNumColumns(); j++)
+    sum += A(rowIndex, j);
+  return sum;
+}
+
+template<class T>
+T rsColumnSum(const rsMatrix<T>& A, int columnIndex)
+{
+  T sum(0);
+  for(int i = 0; i < A.getNumRows(); i++)
+    sum += A(i, columnIndex);
+  return sum;
+}
+
+template<class T>
+rsMatrix<T> rsNormalizeByRowAndColumnSum(const rsMatrix<T>& A)
+{
+  int M = A.getNumRows();
+  int N = A.getNumColumns();
+  rsMatrix<T> B(M, N);
+  for(int i = 0; i < M; i++)
+  {
+    for(int j = 0; j < N; j++)
+    {
+      T rs  = rsRowSum(   A, i);
+      T cs  = rsColumnSum(A, j);
+      B(i, j) = A(i, j) / (rs + cs);
+    }
+  }
+  return B;
+}
+
+
 
 // Computes the distance matrix D(i,j) = abs(p[i] - q[j]) for the points given in p and q:
 template<class T>
@@ -9708,8 +9767,23 @@ rsMatrix<T> rsDistanceMatrix(
   int N = (int) q.size();
   rsMatrix<T> D(M, N);
   for(int i = 0; i < M; i++)
+  {
     for(int j = 0; j < N; j++)
+    {
+      // We try different "distance" functions:
+
       D(i, j) = rsAbs(p[i] - q[j]);
+      //D(i, j) = rsWrapToInterval(std::arg(p[i] - q[j]), 0, 2*PI);
+      //D(i, j) = rsWrapToInterval(std::arg(p[i] / q[j]), 0, 2*PI);
+
+      // The goal is to find one, whose minima or maxima allow us to predict the roots association.
+      // I'm not sure, if such a function exists, though. Maybe the search is futile. But maybe not.
+    }
+  }
+
+  //D = rsNormalizeByRowAndColumnSum(D);  // Test
+  // Maybe try normalize by row- and column maximum instead of the sum
+
   return D;
 }
 
@@ -9934,7 +10008,7 @@ void rsAddCircle(GNUPlotter& plt, double x, double y, const std::string& style)
   str += " " + style;
   plt.addCommand(str);
 }
-// ToDo: pass the size as double
+// ToDo: maybe pass the size as double
 
 template<class T>
 void rsPlotPolyRootTrajectories2(
@@ -9954,10 +10028,9 @@ void rsPlotPolyRootTrajectories2(
 
     // Draw markers for start and end of trajectory:
     int L = t.size()-1;  // Last index
-    rsAddCircle(plt, real(t[0]), imag(t[0]), "size 0.02 fc rgb \"dark-pink\" fs solid");
-    rsAddCircle(plt, real(t[L]), imag(t[L]), "size 0.02 fc rgb \"dark-turquoise\" fs solid");
-    // fc: fillcolor, fs: fillstyle
-
+    rsAddCircle(plt, real(t[0]), imag(t[0]), "size screen 0.008 fc rgb \"dark-turquoise\" fs solid");
+    rsAddCircle(plt, real(t[L]), imag(t[L]), "size screen 0.008 fc rgb \"dark-pink\" fs solid");
+    // "fc": fillcolor, "fs": fillstyle, "size screen": sets absolute size
   }
   plt.setToDarkMode();
   plt.setPixelSize(600, 600);
@@ -9969,6 +10042,10 @@ void rsPlotPolyRootTrajectories2(
   //
   // - Maybe try to use different symbols (and/or different colors) for start and end points. Maybe
   //   a cross and a plus or triangles with different orientations. Use better colors for markers.
+  //
+  // - Try to make the size of the circles independent of the zoom and scaling of coordinate 
+  //   system. Maybe we can give the size a unit like 0.02pt or something to achieve this effect?
+  //   https://groups.google.com/g/comp.graphics.apps.gnuplot/c/qHK6Gsk8CxQ?pli=1
 }
 
 template<class T>

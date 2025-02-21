@@ -9935,24 +9935,11 @@ T rsMaxDistance(
 }
 
 
-template<class T, class Comparator>
-T rsMin(const std::vector<T>& v, Comparator less)
-{
-  T min = v[0];
-  for(size_t i = 1; i < v.size(); i++)
-  {
-    if(less(v[i], min))
-      min = v[i];
-    //min = std::min(min, v[i], less);
-  }
-  return min;
-}
-
 
 
 // Under construction:
 template<class T>
-std::complex<T> rsFindRootNear(const rsPolynomial<std::complex<T>>& p, std::complex<T> z)
+std::complex<T> rsFindRootClosestTo(const rsPolynomial<std::complex<T>>& p, std::complex<T> z)
 {
   using Complex = std::complex<T>;
   using PolyC   = rsPolynomial<Complex>;
@@ -9971,6 +9958,8 @@ std::complex<T> rsFindRootNear(const rsPolynomial<std::complex<T>>& p, std::comp
   return closestRoot;
 }
 // Rename to findRootClosestTo
+
+// Implement rsFindNearbyRootViaLaguerre
 
 
 template<class T>
@@ -10051,7 +10040,7 @@ std::vector<std::complex<T>> rsRootTrajectory(
       
 
       // New:
-      Complex newRoot = rsFindRootNear(r, prevRoot);
+      Complex newRoot = rsFindRootClosestTo(r, prevRoot);
 
 
       // Check, if we can accept the step. If not, decrease dt and try again:

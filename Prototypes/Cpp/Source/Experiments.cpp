@@ -17078,13 +17078,42 @@ void testSmoothMax()
 
 
 template<class T>
-T rsFindSaddle1D(const std::function<T(T)>& f, T x0)
+T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
 {
-  return x0;  // Preliminary
+  // Under construction. Does not yet work!
 
+  T s = 1.0;  // stepsize
+  T x = x0;  
+  T f0, f1, f2;
+  bool converged = false;
+  int numIts = 0;
+
+  while(!converged)
+  {
+    // Compute f(x), f'(x), f''(x):
+    f(x, &f0, &f1, &f2);
+
+    // Compute update step:
+    //T dx = -s * f1 * f2;
+    T dx = -s * f1 / f2;
+    //T dx = -s * f1 * rsSign(f2);
+    //T dx = -s * rsSign(f1) * rsSign(f2);
+
+    // Do step:
+    x += dx;
+
+    // Check convergence criterion:
+    // ...
+
+
+    numIts++;
+  }
+
+
+  return x;
 }
-// Oh! No! We need an API that allows the function f to compute f(x), f'(x), f''(x). So maybe it
-// should be const std::function<void(T, T*,T*,T*)> like in rsRootFinder::halley
+// API is like in rsRootFinder::halley
+
 
 void testSaddleFinder1D()
 {
@@ -17103,14 +17132,39 @@ void testSaddleFinder1D()
 
 
   using Real = double;
+  using Func = std::function<void(Real, Real*, Real*, Real*)>;
+
+
+  Func xCubed = [](Real x, Real* f0, Real* f1, Real* f2)
+  { 
+    *f0 = x*x*x;  // f(x)   = x^3
+    *f1 = 3*x*x;  // f'(x)  = 3*x^2
+    *f2 = 6*x;    // f''(x) = 6*x
+  };
+
+
+  //Real x0 = 2;
+
+  Real ys;
+
+
+  ys = rsFindSaddle1D(xCubed, -3.0);
+
+  ys = rsFindSaddle1D(xCubed, -2.0);
+  ys = rsFindSaddle1D(xCubed,  2.0);
+
+
+
+  /*
   using Func = std::function<Real(Real)>;  // Function f: R -> R
 
 
   Func xCubed = [](Real x){ return x*x*x; };
 
-  Real x0 = 2;
+
 
   Real y  = xCubed(x0);
+  */
 
 
   int dummy = 0;

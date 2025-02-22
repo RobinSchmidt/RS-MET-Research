@@ -17080,21 +17080,35 @@ void testSmoothMax()
 template<class T>
 T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
 {
-  // Under construction. Does not yet work!
+  // Under construction. 
+
 
   T s = 1.0;  // stepsize
+
+  //T s = 2.0;  // stepsize - 2 seems ideal for 1st order saddle
+
+
   T x = x0;  
   T f0, f1, f2;
-  bool converged = false;
+  //bool converged = false;
   int numIts = 0;
+  int maxIts = 1000;
 
   T tol = std::numeric_limits<T>::epsilon();
 
-
-  while(!converged)
+  while(true)
   {
     // Compute f(x), f'(x), f''(x):
     f(x, &f0, &f1, &f2);
+
+    //if(rsAbs(f2) <= tol)
+    //  break;
+    // Nah! We cannot just break when f'' is zero. We might be on a straight slope. We can break
+    // only if f' is also zero. We want to avoid a division by zero in the computation below 
+    // though. Maybe we should divide by f'' only if it's large enough? Or maybe it should depend
+    // on the ratio f' / f''. Maybe the dx value should be clipped to the range -x..+x? A lot of
+    // heuristic ideas that one may try.
+
 
     // Compute update step:
     //T dx = -s * f1 * f2;
@@ -17103,23 +17117,25 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
     //T dx = -s * rsSign(f1) * rsSign(f2);
 
 
+    // Do the update step:
+    x += dx;
+    numIts++;
+
+
     // Check convergence criterion:
     //converged = rsAbs(dx) <= tol * rsAbs(x); 
     // Maybe we should do this check before or after doing the step?
     // ...but this check is not good if the saddle is exactly at zero
 
-
-    converged = rsAbs(dx) <= rsMax(tol * rsAbs(x), tol); 
+    //converged = rsAbs(dx) <= rsMax(tol * rsAbs(x), tol); 
     // This variant should also work when the saddle is at zero
 
-
-    // Do the update step:
-    x += dx;
-
+    if( rsAbs(dx) <= rsMax(tol * rsAbs(x), tol) )
+      break;
 
 
-
-    numIts++;
+    if(numIts >= maxIts)
+      break;
   }
 
 
@@ -17134,12 +17150,43 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
   //
   // - Other possible rules to try: dx = -s * f1 * sign(f2), dx = -s * sing(f1) * sign(f2), 
   //   dx = -s * f1 * f2 (diverges), dx = -s * f2 / f1 
+  //
+  // - The convergence check  "rsAbs(dx) <= rsMax(tol * rsAbs(x), tol)"  includes this max 
+  //   operation to make it work also in the case where the saddle is exactly at x = 0. In this 
+  //   case, x itself decays without lower bound and therefore, the dx would always be smaller than
+  //   x until we really reach absolute zero.
+  //
+  //
+  // ToDo:
+  //
+  // - Try f(x) = x^5, x^7, etc. - how does the algorithm behvae for higher order saddles? Will it
+  //   slow down? Will it diverge? Will it work just fine?
+  //
+  // - Document why we do the convergence check for abs(dx) after the update. I'm not sure, if I 
+  //   have a valid reason for that. The idea is that an additional step can't hurt because we 
+  //   expect steps to improve opur solution. But when the dx is below the relative epsilon, then
+  //   this step should be inconsequential. ...but we assume here that tol == eps. this is the case
+  //   but maybe we someday want to use a higher tolerance.
+  //
+  //
+  // Questions:
+  //
+  // - Maybe the update rule  dx = -2 * f'(x) / f''(x)  that immediately jumps to the saddle is
+  //   analoguous to the Newton step that immediately jumps into a minimum. See:
+  //   https://en.wikipedia.org/wiki/Newton%27s_method_in_optimization
+  //   See also: 
+  //   https://en.wikipedia.org/wiki/Newton%27s_method#Slow_convergence_for_roots_of_multiplicity_greater_than_1
+  //   Maybe such a factor m should also be used in the algorithm for finding stationary points 
+  //   where m should be chosen according to how many derivatives are zero at the sought stationary
+  //   point? Figure out the optimal factor for f(x) = x^5
 }
 // API is like in rsRootFinder::halley
 
 
 void testSaddleFinder1D()
 {
+  // Under construction.
+
   // We experiment with algorithms to find a saddle point of a 1D function such as f(x) = x^3. The
   // idea is to modify gradient ascent/descent (which find maxima or minima respectively) in a way 
   // that is suitable for saddle points. The general idea in 1D is to do a descent step whenever 
@@ -17166,29 +17213,17 @@ void testSaddleFinder1D()
   };
 
 
-  //Real x0 = 2;
 
   Real ys;
-
-
   ys = rsFindSaddle1D(xCubed, -10.0);
   ys = rsFindSaddle1D(xCubed,  -4.0);
   ys = rsFindSaddle1D(xCubed,  -3.0);
   ys = rsFindSaddle1D(xCubed,  -2.0);
   ys = rsFindSaddle1D(xCubed,   2.0);
-
-
-
-  /*
-  using Func = std::function<Real(Real)>;  // Function f: R -> R
-
-
-  Func xCubed = [](Real x){ return x*x*x; };
-
-
-
-  Real y  = xCubed(x0);
-  */
+  ys = rsFindSaddle1D(xCubed,   2.0);
+  ys = rsFindSaddle1D(xCubed,   3.0);
+  ys = rsFindSaddle1D(xCubed,   4.0);
+  ys = rsFindSaddle1D(xCubed,  10.0);
 
 
   int dummy = 0;

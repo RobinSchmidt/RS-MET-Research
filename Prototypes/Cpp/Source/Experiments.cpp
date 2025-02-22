@@ -17088,6 +17088,9 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
   bool converged = false;
   int numIts = 0;
 
+  T tol = std::numeric_limits<T>::epsilon();
+
+
   while(!converged)
   {
     // Compute f(x), f'(x), f''(x):
@@ -17099,11 +17102,21 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
     //T dx = -s * f1 * rsSign(f2);
     //T dx = -s * rsSign(f1) * rsSign(f2);
 
-    // Do step:
-    x += dx;
 
     // Check convergence criterion:
-    // ...
+    //converged = rsAbs(dx) <= tol * rsAbs(x); 
+    // Maybe we should do this check before or after doing the step?
+    // ...but this check is not good if the saddle is exactly at zero
+
+
+    converged = rsAbs(dx) <= rsMax(tol * rsAbs(x), tol); 
+    // This variant should also work when the saddle is at zero
+
+
+    // Do the update step:
+    x += dx;
+
+
 
 
     numIts++;
@@ -17111,6 +17124,16 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
 
 
   return x;
+
+  // Notes:
+  //
+  // - For f(x) = x^3, a stepsize of s = 1 halves the distance to the saddle in each iteration.
+  //   With s = 2, we would jump immediately into the saddle but we would get a division by zero in
+  //   the 2nd iteration. I guess, we should do another test that checks, if f1 and f2 are both
+  //   close to zero. If they are, break. Maybe we should generally leave the loop via breaks.
+  //
+  // - Other possible rules to try: dx = -s * f1 * sign(f2), dx = -s * sing(f1) * sign(f2), 
+  //   dx = -s * f1 * f2 (diverges), dx = -s * f2 / f1 
 }
 // API is like in rsRootFinder::halley
 
@@ -17148,10 +17171,11 @@ void testSaddleFinder1D()
   Real ys;
 
 
-  ys = rsFindSaddle1D(xCubed, -3.0);
-
-  ys = rsFindSaddle1D(xCubed, -2.0);
-  ys = rsFindSaddle1D(xCubed,  2.0);
+  ys = rsFindSaddle1D(xCubed, -10.0);
+  ys = rsFindSaddle1D(xCubed,  -4.0);
+  ys = rsFindSaddle1D(xCubed,  -3.0);
+  ys = rsFindSaddle1D(xCubed,  -2.0);
+  ys = rsFindSaddle1D(xCubed,   2.0);
 
 
 

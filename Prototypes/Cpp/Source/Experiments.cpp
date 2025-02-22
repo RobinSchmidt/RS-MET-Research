@@ -17078,66 +17078,55 @@ void testSmoothMax()
 
 
 template<class T>
-T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
+T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0, 
+  T tol = std::numeric_limits<T>::epsilon(), int maxIts = 1000, T stepSize = T(1))
 {
   // Under construction. 
 
-
-  T s = 1.0;  // stepsize
-
-  //T s = 2.0;  // stepsize - 2 seems ideal for 1st order saddle
-
-
-  T x = x0;  
+  T x = x0;
   T f0, f1, f2;
-  //bool converged = false;
   int numIts = 0;
-  int maxIts = 1000;
-
-  T tol = std::numeric_limits<T>::epsilon();
 
   while(true)
   {
     // Compute f(x), f'(x), f''(x):
     f(x, &f0, &f1, &f2);
 
-    //if(rsAbs(f2) <= tol)
+    // Safeguard against NaN:
+    //if(rsAbs(f1) <= tol && rsAbs(f2) <= tol)
     //  break;
     // Nah! We cannot just break when f'' is zero. We might be on a straight slope. We can break
     // only if f' is also zero. We want to avoid a division by zero in the computation below 
     // though. Maybe we should divide by f'' only if it's large enough? Or maybe it should depend
     // on the ratio f' / f''. Maybe the dx value should be clipped to the range -x..+x? A lot of
     // heuristic ideas that one may try.
+    // Maybe make a nested if: the outer checks f2 against zero and the inner f1. If f1 is zero, 
+    // break, if not, set f2 to 1. A nonzero f1 together with a zero f2 means that the function is
+    // locally a slanted straight line. If it is really straight, the stationary point would be 
+    // infinitely far away. ...or maybe it's better to set it to abs(x) rather than 1?
+    // But: for higher order monomials, f1 and f2 do really seem to legitmately get extreemely 
+    // small - way below epsilon. Apparently, their quotient still makes sense in these cases. So
+    // maybe we should really use an exact check against zero for f2? That will protect us from 
+    // NaN. The quotient f1/f2 may still overflow to infinity. We could counteract that by 
+    // clipping it to the range (-x,+x). Or maybe to the range -|dx|..+|dx| using the old dx. We 
+    // expect the steps to get smaller over time. Maybe we should init it x0..but no! What if 
+    // x0 = 0? Then we don't so any steps at all. Maybe use dx = inf as initialization
 
 
     // Compute update step:
-    //T dx = -s * f1 * f2;
-    T dx = -s * f1 / f2;
-    //T dx = -s * f1 * rsSign(f2);
-    //T dx = -s * rsSign(f1) * rsSign(f2);
-
+    T dx = -stepSize * f1 / f2;
 
     // Do the update step:
     x += dx;
     numIts++;
 
-
     // Check convergence criterion:
-    //converged = rsAbs(dx) <= tol * rsAbs(x); 
-    // Maybe we should do this check before or after doing the step?
-    // ...but this check is not good if the saddle is exactly at zero
-
-    //converged = rsAbs(dx) <= rsMax(tol * rsAbs(x), tol); 
-    // This variant should also work when the saddle is at zero
-
     if( rsAbs(dx) <= rsMax(tol * rsAbs(x), tol) )
       break;
-
 
     if(numIts >= maxIts)
       break;
   }
-
 
   return x;
 
@@ -17231,11 +17220,20 @@ void testSaddleFinder1D()
   };
 
 
+  Real tol = std::numeric_limits<Real>::epsilon(); 
+  int maxIts = 1000;
+
+
 
   Real ys;
 
-  ys = rsFindSaddle1D(xTo7,  10.0);
-  ys = rsFindSaddle1D(xTo5,  10.0);
+
+
+  ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts);
+  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts);
+  ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts);
+
+
   ys = rsFindSaddle1D(xTo3, -10.0);
   ys = rsFindSaddle1D(xTo3,  -4.0);
   ys = rsFindSaddle1D(xTo3,  -3.0);

@@ -15060,7 +15060,7 @@ void testPolynomialRootCorrespondence2()
 
 
   //for(int i = 0; i <= 9; i++) rectangular(15,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
-  for(int i = 0; i <= 9; i++) rectangular(20,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
+  //for(int i = 0; i <= 9; i++) rectangular(20,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
 
   for(int i = 0; i <= 9; i++) rectangular( 9,  i, 1.0, 1.0,  i+1, 1.0, 1.0,  1./64);
   // i = 5,7,8 are most interesting. They show most clearly that distance is not a good predictor
@@ -17075,6 +17075,46 @@ void testSmoothMax()
 
 }
 
+
+
+template<class T>
+T rsFindSaddle1D(const std::function<T(T)>& f, T x0)
+{
+  return x0;  // Preliminary
+
+}
+// Oh! No! We need an API that allows the function f to compute f(x), f'(x), f''(x). So maybe it
+// should be const std::function<void(T, T*,T*,T*)> like in rsRootFinder::halley
+
+void testSaddleFinder1D()
+{
+  // We experiment with algorithms to find a saddle point of a 1D function such as f(x) = x^3. The
+  // idea is to modify gradient ascent/descent (which find maxima or minima respectively) in a way 
+  // that is suitable for saddle points. The general idea in 1D is to do a descent step whenever 
+  // the function is convex and an ascent step whenever the function is concave. Convexity is 
+  // indicated by a positive 2nd derivative and concavity by a negative 2nd derivative.
+  //
+  // We may actually scale the gradient step by the value of the 2nd derivative instead of just 
+  // using its sign. To generalize to nD, maybe we should scale the gradient by the Hessian? These
+  // are the sorts of things we want to figure out in these experiments....TBC...
+  //
+  // As an application, we could use such saddle finder algorithms in 2D to find the saddle points
+  // of Polya potentials of complex functions.
+
+
+  using Real = double;
+  using Func = std::function<Real(Real)>;  // Function f: R -> R
+
+
+  Func xCubed = [](Real x){ return x*x*x; };
+
+  Real x0 = 2;
+
+  Real y  = xCubed(x0);
+
+
+  int dummy = 0;
+}
 
 
 /** UNDER CONSTRUCTION */

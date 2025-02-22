@@ -9952,17 +9952,13 @@ std::complex<T> rsFindRootClosestTo(const rsPolynomial<std::complex<T>>& p, std:
   return closestRoot;
 }
 
-/*
-// Implement rsFindNearbyRootViaLaguerre:
 template<class T>
 std::complex<T> rsFindNearbyRootViaLaguerre(
   const rsPolynomial<std::complex<T>>& p, std::complex<T> z)
 {
- 
-
+  return rsPolynomial<std::complex<T>>::convergeToRootViaLaguerre(
+    p.getCoeffPointerConst(), p.getDegree(), z);
 }
-*/
-
 
 template<class T>
 std::vector<std::complex<T>> rsRootTrajectory(
@@ -10042,8 +10038,8 @@ std::vector<std::complex<T>> rsRootTrajectory(
       
 
       // New:
-      Complex newRoot = rsFindRootClosestTo(r, prevRoot);
-      // ToDo: try replacing rsFindRootClosestTo by rsFindNearbyRootViaLaguerre (to be written)
+      //Complex newRoot = rsFindRootClosestTo(r, prevRoot);   // May be more robust?
+      Complex newRoot = rsFindNearbyRootViaLaguerre(r, prevRoot); // Is more efficient
 
 
       // Check, if we can accept the step. If not, decrease dt and try again:

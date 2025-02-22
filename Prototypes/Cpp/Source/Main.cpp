@@ -118,7 +118,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testLiftedPolynomial();
   //testFactoredPolynomial();
   //testPolynomialRootCorrespondence1();
-  testPolynomialRootCorrespondence2();
+  //testPolynomialRootCorrespondence2();
 
 
   // MIMO Filters:
@@ -132,13 +132,14 @@ int main (int /*argc*/, char* /*argv[]*/)
   //test2x2MatrixCommutation();
   //test2x2MatrixInterpolation();    // stub
   //testQuaternion();
-  testChebychevExpansion();        // stub
+  //testChebychevExpansion();        // stub
   //testChebychevEconomization();    // stub
   //testGeneratingFunction();
   //testCatalanNumbers();
   //testSmoothCrossFade();
   //testSmoothCrossFade2();
   //testSmoothMax();                   // stub
+  testSaddleFinder1D();              // stub
 
 
 

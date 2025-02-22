@@ -17178,7 +17178,11 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0)
   //   https://en.wikipedia.org/wiki/Newton%27s_method#Slow_convergence_for_roots_of_multiplicity_greater_than_1
   //   Maybe such a factor m should also be used in the algorithm for finding stationary points 
   //   where m should be chosen according to how many derivatives are zero at the sought stationary
-  //   point? Figure out the optimal factor for f(x) = x^5
+  //   point? Figure out the optimal factor for f(x) = x^5 ...I think, it's 4. Maybe the general 
+  //   rule is n-1 where n is the exponent? Try x^7 ...yes! The optimal factor is s = 6 in this 
+  //   case. So, maybe give the function an additional parameter for the "order" or "degree" or
+  //   "multiplicity" of the stationary point. Maybe move this function into rsMinimizer1D as
+  //   newton - similar to the Newton method in rsRootFinder. Maybe rename it to rsOptimizer1D
 }
 // API is like in rsRootFinder::halley
 
@@ -17205,26 +17209,42 @@ void testSaddleFinder1D()
   using Func = std::function<void(Real, Real*, Real*, Real*)>;
 
 
-  Func xCubed = [](Real x, Real* f0, Real* f1, Real* f2)
+  Func xTo3 = [](Real x, Real* f0, Real* f1, Real* f2)
   { 
     *f0 = x*x*x;  // f(x)   = x^3
     *f1 = 3*x*x;  // f'(x)  = 3*x^2
     *f2 = 6*x;    // f''(x) = 6*x
   };
 
+  Func xTo5 = [](Real x, Real* f0, Real* f1, Real* f2)
+  { 
+    *f0 = x*x*x*x*x;  // f(x)   = x^5
+    *f1 = 5*x*x*x*x;  // f'(x)  = 5*x^4
+    *f2 = 20*x*x*x;   // f''(x) = 20*x^3
+  };
+
+  Func xTo7 = [](Real x, Real* f0, Real* f1, Real* f2)
+  { 
+    *f0 = x*x*x*x*x*x*x;  // f(x)   = x^7
+    *f1 = 7*x*x*x*x*x*x;  // f'(x)  = 7*x^6
+    *f2 = 42*x*x*x*x*x;   // f''(x) = 42*x^5
+  };
+
 
 
   Real ys;
-  ys = rsFindSaddle1D(xCubed, -10.0);
-  ys = rsFindSaddle1D(xCubed,  -4.0);
-  ys = rsFindSaddle1D(xCubed,  -3.0);
-  ys = rsFindSaddle1D(xCubed,  -2.0);
-  ys = rsFindSaddle1D(xCubed,   2.0);
-  ys = rsFindSaddle1D(xCubed,   2.0);
-  ys = rsFindSaddle1D(xCubed,   3.0);
-  ys = rsFindSaddle1D(xCubed,   4.0);
-  ys = rsFindSaddle1D(xCubed,  10.0);
 
+  ys = rsFindSaddle1D(xTo7,  10.0);
+  ys = rsFindSaddle1D(xTo5,  10.0);
+  ys = rsFindSaddle1D(xTo3, -10.0);
+  ys = rsFindSaddle1D(xTo3,  -4.0);
+  ys = rsFindSaddle1D(xTo3,  -3.0);
+  ys = rsFindSaddle1D(xTo3,  -2.0);
+  ys = rsFindSaddle1D(xTo3,   2.0);
+  ys = rsFindSaddle1D(xTo3,   2.0);
+  ys = rsFindSaddle1D(xTo3,   3.0);
+  ys = rsFindSaddle1D(xTo3,   4.0);
+  ys = rsFindSaddle1D(xTo3,  10.0);
 
   int dummy = 0;
 }

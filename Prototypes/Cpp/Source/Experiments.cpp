@@ -17268,37 +17268,13 @@ void testSaddleFinder1D()
   // Maybe wap order of n and x
 
 
-  Func xTo3 = [&](Real x, Real* f0, Real* f1, Real* f2)
-  { 
-    //// Old:
-    //*f0 = x*x*x;  // f(x)   = x^3
-    //*f1 = 3*x*x;  // f'(x)  = 3*x^2
-    //*f2 = 6*x;    // f''(x) = 6*x
 
-    // New:
-    powN(3, x, f0, f1, f2);
-    int dummy = 0;
-  };
-
-  Func xTo5 = [&](Real x, Real* f0, Real* f1, Real* f2)
-  { 
-    //*f0 = x*x*x*x*x;  // f(x)   = x^5
-    //*f1 = 5*x*x*x*x;  // f'(x)  = 5*x^4
-    //*f2 = 20*x*x*x;   // f''(x) = 20*x^3
-
-    powN(5, x, f0, f1, f2);
-    int dummy = 0;
-  };
-
-  Func xTo7 = [&](Real x, Real* f0, Real* f1, Real* f2)
-  { 
-    //*f0 = x*x*x*x*x*x*x;  // f(x)   = x^7
-    //*f1 = 7*x*x*x*x*x*x;  // f'(x)  = 7*x^6
-    //*f2 = 42*x*x*x*x*x;   // f''(x) = 42*x^5
-
-    powN(7, x, f0, f1, f2);
-    int dummy = 0;
-  };
+  Func xTo2 = [&](Real x, Real* f0, Real* f1, Real* f2) { powN(2, x, f0, f1, f2); };
+  Func xTo3 = [&](Real x, Real* f0, Real* f1, Real* f2) { powN(3, x, f0, f1, f2); };
+  Func xTo4 = [&](Real x, Real* f0, Real* f1, Real* f2) { powN(4, x, f0, f1, f2); };
+  Func xTo5 = [&](Real x, Real* f0, Real* f1, Real* f2) { powN(5, x, f0, f1, f2); };
+  Func xTo6 = [&](Real x, Real* f0, Real* f1, Real* f2) { powN(6, x, f0, f1, f2); };
+  Func xTo7 = [&](Real x, Real* f0, Real* f1, Real* f2) { powN(7, x, f0, f1, f2); };
 
 
   Real tol = std::numeric_limits<Real>::epsilon(); 
@@ -17308,19 +17284,41 @@ void testSaddleFinder1D()
 
   Real ys;
 
+  // Test the Newton method for finding stationary points for functions f(x) = x^n for various 
+  // values for the exponent n, namely n = 1,2,3,4,5,6,7. We use the default stepsize of 1 in all
+  // cases:
+  ys = rsFindSaddle1D(xTo2,  10.0, tol, maxIts); //   2 iterations, 2nd with dx = 0
+  ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts); //  56 iterations
+  ys = rsFindSaddle1D(xTo4,  10.0, tol, maxIts); //  93
+  ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts); // 130
+  ys = rsFindSaddle1D(xTo6,  10.0, tol, maxIts); // 166
+  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts); // 202
+  // The number of iterations taken increases linearly with the exponent n. The difference
+  // between successive values is always 37 or 36 (except the 1st where it's 54). So it seems that
+  // when using the fixed default stepsize, the computational cost is proportional to the order of
+  // stationary point (i.e. number of vanishing derivatives). If we know the order beforehand, we
+  // can use that to choose a better stepsize that will converge in a single iteration. This 
+  // optimal stepsize is given by n-1. This is shown below.
 
 
-  ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts);
-  ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts);
-  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts);
-
-  // These all converge in one iteration as theoretically predicted. The stepsize should be the
-  // n-1 where n is the exponent:
-  ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts, 2.0);
-  ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts, 4.0);
-  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts, 6.0);
-
-
+  // These all converge in one iteration as theoretically predicted (except for f(x) = x^2, see 
+  // comment below why that is). The stepsize should be the n-1 where n is the exponent:
+                                                      // iterations
+  ys = rsFindSaddle1D(xTo2,  10.0, tol, maxIts, 1.0); // 2
+  ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts, 2.0); // 1
+  ys = rsFindSaddle1D(xTo4,  10.0, tol, maxIts, 3.0); // 1
+  ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts, 4.0); // 1
+  ys = rsFindSaddle1D(xTo6,  10.0, tol, maxIts, 5.0); // 1
+  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts, 6.0); // 1
+  // The n = 2 case counts two iterations instead of 1 but in the 2nd iteration the update step
+  // dx is zero. This is because in the n = 2 case, we do not satisfy the convergence criterion
+  // at tbe top of the loop that checks for f2 == f1 == 0. The n = 2 case exits the loop via the
+  // criterion at the bottom of the loop (after the increment of the iteration counter). All the 
+  // other cases exit the loop by the top criterion. Maybe we should increment the iteration 
+  // counter immediately after evaluating the function turning it into an evaluation counter. That
+  // means, we would count function evaluations rather than update steps. If we assume that it is 
+  // the function evaluations itself that dominates the computational cost (and not the actual 
+  // update step), then that reflects the cost of the algorithm more accurately.
 
 
 
@@ -17340,7 +17338,11 @@ void testSaddleFinder1D()
 }
 
 
-/** UNDER CONSTRUCTION */
+/** UNDER CONSTRUCTION. Does not work yet. I try to come up with an in-place merge algorithm that 
+can be used in merge sort. All the implementations of merge sort I have seen so far, use an 
+additional buffer, making its space complexity O(n). I'd like to do merge sort with space 
+complexity of O(1). I'm not sure, if that's possible, though. I guess, if it would be possible,
+implementations would be already available...but mayby I didn't serach hard enough. */
 template<class T>
 void rsMergeInPlace(std::vector<T>& A, int s)
 {

@@ -17184,6 +17184,13 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   //   difference in the exponent between f0 and f1 and f1 and f2 is always around 15 or 16, i.e.
   //   of the order of the epsilon. This is true for f(x) = x^3, x^5, x^7. Does that mean anything?
   //
+  // - The algorithm actually doesn't use f(x) in the formula, so we may consider changing the API
+  //   to take a function that produces ony two values: 1st and 2nd derivative. But then it would 
+  //   be the same API as in rsRootFinder::newton and in fact, it is the same algorithm, just 
+  //   applied to the derivative rather than the function itself (except for our additional 
+  //   treatment of division-by-zero here). So we may as well use the Newton root finder method 
+  //   directly.
+  //
   //
   // ToDo:
   //

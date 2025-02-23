@@ -17086,6 +17086,7 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   T x = x0;
   T f0, f1, f2;
   int numIts = 0;
+  T maxStep = std::numeric_limits<T>::infinity();
 
   while(true)
   {
@@ -17093,6 +17094,26 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
     f(x, &f0, &f1, &f2);
 
     // Safeguard against NaN:
+    if(f2 == T(0))
+    {
+      if(f1 == T(0))
+      {
+        // If 1st and 2nd derivative are both zero, we are arrived at a stationary point so we are
+        // done:
+        break;
+      }
+      else
+      {
+        // If the 2nd derivative is zero but the 1st is nonzero, we are on a flat slope. In this 
+        // case, the normal formula doesn't work. It would compute an infinite step dx which makes
+        // sense because zero curvature makes the algorithm assume that the slope continues 
+        // indefinitely. In such a case, we set f2 to 1 which will let us take a gradient step:
+        f2 = T(1);
+        // This needs tests! Maybe test it with a piecewise function that has a linear segment.
+        // Maybe use a cubic spline.
+      }
+
+    }
     //if(rsAbs(f1) <= tol && rsAbs(f2) <= tol)
     //  break;
     // Nah! We cannot just break when f'' is zero. We might be on a straight slope. We can break
@@ -17116,9 +17137,23 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
     // Compute update step:
     T dx = -stepSize * f1 / f2;
 
+    // Limit the upate step:
+    dx = rsClip(dx, -maxStep, +maxStep);
+    maxStep = rsAbs(dx);
+    // The rationale behind limiting dx is that we may encounter a situation where f2 is so close 
+    // to zero that dx may overflow to infinity. So we want to limit it to some finite value. In 
+    // each iteration, we limit the stepsize to the size of the step taken in the previous 
+    // iteration. 
+    // finite value "maxStep" that we choose here
+
+
+
     // Do the update step:
     x += dx;
+
+    // Count iteration:
     numIts++;
+
 
     // Check convergence criterion:
     if( rsAbs(dx) <= rsMax(tol * rsAbs(x), tol) )
@@ -17145,6 +17180,10 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   //   case, x itself decays without lower bound and therefore, the dx would always be smaller than
   //   x until we really reach absolute zero.
   //
+  // - It looks like at the end, when the algorithm has converged (with stepSize == 1), the 
+  //   difference in the exponent between f0 and f1 and f1 and f2 is always around 15 or 16, i.e.
+  //   of the order of the epsilon. This is true for f(x) = x^3, x^5, x^7. Does that mean anything?
+  //
   //
   // ToDo:
   //
@@ -17156,6 +17195,11 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   //   expect steps to improve opur solution. But when the dx is below the relative epsilon, then
   //   this step should be inconsequential. ...but we assume here that tol == eps. this is the case
   //   but maybe we someday want to use a higher tolerance.
+  //
+  // - Check if algorithm is invariant with respect to scaling of the input x and output y, i.e.
+  //   replace f(x) by f(a*x) and a*f(x) and check, if it produces the same results in terms of 
+  //   accuracy and takes the same number of iterations for any choice of a. Pay special attention
+  //   to cases where the stepsize limitation and or the setting of f2 = 1 actually kicks in.
   //
   //
   // Questions:
@@ -17172,6 +17216,10 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   //   case. So, maybe give the function an additional parameter for the "order" or "degree" or
   //   "multiplicity" of the stationary point. Maybe move this function into rsMinimizer1D as
   //   newton - similar to the Newton method in rsRootFinder. Maybe rename it to rsOptimizer1D
+  //
+  // - Newton's method for optimization results from applying Newton's method for root finding to
+  //   the derivative of a function. Can we find inflection points by applying it to the 2nd
+  //   derivative? Maybe it would have to be: dx = -f''(x)/f'''(x). Try it!
 }
 // API is like in rsRootFinder::halley
 
@@ -17230,8 +17278,19 @@ void testSaddleFinder1D()
 
 
   ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts);
-  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts);
   ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts);
+  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts);
+
+  // These all converge in one iteration as theoretically predicted. The stepsize should be the
+  // n-1 where n is the exponent:
+  ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts, 2.0);
+  ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts, 4.0);
+  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts, 6.0);
+
+
+
+
+
 
 
   ys = rsFindSaddle1D(xTo3, -10.0);

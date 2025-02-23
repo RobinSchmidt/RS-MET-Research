@@ -10012,7 +10012,8 @@ std::vector<std::complex<T>> rsRootTrajectory(
       T tt = rsMin(t+dt, T(1));
       PolyC r = Complex(1-tt)*p + Complex(tt)*q;
 
-      // Old:
+
+      // Old - obsolete - may be deleted:
       /*
       // Find its roots:
       PolyC::roots(r.getCoeffPointer(), deg, &roots[0]);
@@ -10040,6 +10041,10 @@ std::vector<std::complex<T>> rsRootTrajectory(
       // New:
       //Complex newRoot = rsFindRootClosestTo(r, prevRoot);   // May be more robust?
       Complex newRoot = rsFindNearbyRootViaLaguerre(r, prevRoot); // Is more efficient
+      // Maybe try to converge to the root via Newton's method rather than Laguerre's. Or maybe
+      // Halley's or higher order Householder methods. Maybe let the user select between various
+      // algorithms and maybe provide an API to report the number of iterations taken to the 
+      // caller.
 
 
       // Check, if we can accept the step. If not, decrease dt and try again:

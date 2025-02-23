@@ -17249,15 +17249,35 @@ void testSaddleFinder1D()
   // of Polya potentials of complex functions.
 
 
-  using Real = double;
-  using Func = std::function<void(Real, Real*, Real*, Real*)>;
+  using Real  = double;
+  using Func  = std::function<void(Real, Real*, Real*, Real*)>;
+  using FuncN = std::function<void(int, Real, Real*, Real*, Real*)>;
 
 
-  Func xTo3 = [](Real x, Real* f0, Real* f1, Real* f2)
+
+  FuncN powN = [](int n, Real x, Real* f0, Real* f1, Real* f2)
+  {
+    *f0 = pow(x, n);
+    *f1 = n * pow(x, n-1);
+    *f2 = (n-1)*n * pow(x, n-2);
+
+    // Can be optimized: call pow only once as pow(x, n-2) and compute x^(n-1) by multiplying by x 
+    // and x^n by multiplying by x again. Only relevant if we need this in performance critical 
+    // code.
+  };
+  // Maybe wap order of n and x
+
+
+  Func xTo3 = [&](Real x, Real* f0, Real* f1, Real* f2)
   { 
-    *f0 = x*x*x;  // f(x)   = x^3
-    *f1 = 3*x*x;  // f'(x)  = 3*x^2
-    *f2 = 6*x;    // f''(x) = 6*x
+    //// Old:
+    //*f0 = x*x*x;  // f(x)   = x^3
+    //*f1 = 3*x*x;  // f'(x)  = 3*x^2
+    //*f2 = 6*x;    // f''(x) = 6*x
+
+    // New:
+    powN(3, x, f0, f1, f2);
+    int dummy = 0;
   };
 
   Func xTo5 = [](Real x, Real* f0, Real* f1, Real* f2)

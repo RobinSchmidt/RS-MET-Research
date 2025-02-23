@@ -17280,18 +17280,24 @@ void testSaddleFinder1D()
     int dummy = 0;
   };
 
-  Func xTo5 = [](Real x, Real* f0, Real* f1, Real* f2)
+  Func xTo5 = [&](Real x, Real* f0, Real* f1, Real* f2)
   { 
-    *f0 = x*x*x*x*x;  // f(x)   = x^5
-    *f1 = 5*x*x*x*x;  // f'(x)  = 5*x^4
-    *f2 = 20*x*x*x;   // f''(x) = 20*x^3
+    //*f0 = x*x*x*x*x;  // f(x)   = x^5
+    //*f1 = 5*x*x*x*x;  // f'(x)  = 5*x^4
+    //*f2 = 20*x*x*x;   // f''(x) = 20*x^3
+
+    powN(5, x, f0, f1, f2);
+    int dummy = 0;
   };
 
-  Func xTo7 = [](Real x, Real* f0, Real* f1, Real* f2)
+  Func xTo7 = [&](Real x, Real* f0, Real* f1, Real* f2)
   { 
-    *f0 = x*x*x*x*x*x*x;  // f(x)   = x^7
-    *f1 = 7*x*x*x*x*x*x;  // f'(x)  = 7*x^6
-    *f2 = 42*x*x*x*x*x;   // f''(x) = 42*x^5
+    //*f0 = x*x*x*x*x*x*x;  // f(x)   = x^7
+    //*f1 = 7*x*x*x*x*x*x;  // f'(x)  = 7*x^6
+    //*f2 = 42*x*x*x*x*x;   // f''(x) = 42*x^5
+
+    powN(7, x, f0, f1, f2);
+    int dummy = 0;
   };
 
 

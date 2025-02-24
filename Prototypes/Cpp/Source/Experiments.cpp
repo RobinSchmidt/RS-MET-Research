@@ -17081,7 +17081,12 @@ template<class T>
 T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0, 
   T tol = std::numeric_limits<T>::epsilon(), int maxIts = 1000, T stepSize = T(1))
 {
-  // Under construction. 
+  // Rename to rsFindStationaryPoint1D, rsFindFlatPoint1D, rsFindExtremum1D. Eventually, it may go
+  // into class rsMinimizer1D as static member function newton(...). But actually we could also 
+  // just use rsRootFinder::newton. The algorithm is the same, just applied to f'(x) rather than
+  // f(x)
+
+  // Under construction. ...kinda works already but needs more tests and possibly tweaking.
 
   T x = x0;
   T f0, f1, f2;
@@ -17092,6 +17097,7 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   {
     // Compute f(x), f'(x), f''(x):
     f(x, &f0, &f1, &f2);
+    // f0 is not actually used. Maybe change API
 
     // Safeguard against NaN:
     if(f2 == T(0))
@@ -17139,12 +17145,15 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
 
     // Limit the upate step:
     dx = rsClip(dx, -maxStep, +maxStep);
-    maxStep = rsAbs(dx);
+    maxStep = rsAbs(dx);  // Maybe use maxStep = k*rsAbs(dx) with a factor k >= 1
     // The rationale behind limiting dx is that we may encounter a situation where f2 is so close 
-    // to zero that dx may overflow to infinity. So we want to limit it to some finite value. In 
-    // each iteration, we limit the stepsize to the size of the step taken in the previous 
-    // iteration. 
-    // finite value "maxStep" that we choose here
+    // to zero that dx may overflow to infinity. So we want to limit it to some finite value. That 
+    // value should somehow be derived from the numbers that occur in the algorithm anyway in order
+    // to be not totally arbitrary. Here, in each iteration, we limit the stepsize to the size of 
+    // the step taken in the previous iteration. The idea is that the steps are supposed to get 
+    // smaller anyway when we are converging. Maybe we should allow the range to be larger by a 
+    // constant factor, e.g. use maxStep = 2*rsAbs(dx) to give the algorithm a bit more freedom.
+    // More experiments are needed.
 
 
 
@@ -17153,6 +17162,8 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
 
     // Count iteration:
     numIts++;
+    // It actually counts the steps when we do it here. To really count loop iterations, we should
+    // do it at the top.
 
 
     // Check convergence criterion:
@@ -17189,7 +17200,11 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   //   be the same API as in rsRootFinder::newton and in fact, it is the same algorithm, just 
   //   applied to the derivative rather than the function itself (except for our additional 
   //   treatment of division-by-zero here). So we may as well use the Newton root finder method 
-  //   directly.
+  //   directly. But there, we also have the y-parameter, i.e. the function doesn't necessarily 
+  //   find a zero but rather an x-value that has a different y-value. Translating that to the case
+  //   here, that amounts to finding a point x where the function has a particular desired slope.
+  //   Maybe that could be useful in certain settings - maybe we may want to find a point where the
+  //   function f has a slope of unity or something like that.
   //
   //
   // ToDo:
@@ -17334,6 +17349,25 @@ void testSaddleFinder1D()
   ys = rsFindSaddle1D(xTo3,   4.0);
   ys = rsFindSaddle1D(xTo3,  10.0);
 
+
+  // Observations:
+  //
+  // - For functions f(x) = x^n, the number of iterations taken grows linearly with n if we use the
+  //   fixed default step size of 1. If we use a step size of n-1, the algorithm converges in a 
+  //   single iteration as is predicted by theory.
+  //
+  //
+  // ToDo:
+  //
+  // - Change the API such that the caller can be informed about the number of iterations taken. 
+  //   Maybe provide an optional parameter int* numIts that defaults to a nullptr. If it isn't
+  //   null, the function will assign numIts to it.
+  //
+  // - Check, if the algorithm is invariant under scaling input and output, i.e. if it provides
+  //   the same performance for a*f(x) and f(a*x) as it does for f(x) for any constant a.
+  //
+  // - Try it with other functions: higher order monomials and polynomials, sin, exp(-x^2), ...
+
   int dummy = 0;
 }
 
@@ -17342,7 +17376,7 @@ void testSaddleFinder1D()
 can be used in merge sort. All the implementations of merge sort I have seen so far, use an 
 additional buffer, making its space complexity O(n). I'd like to do merge sort with space 
 complexity of O(1). I'm not sure, if that's possible, though. I guess, if it would be possible,
-implementations would be already available...but mayby I didn't serach hard enough. */
+implementations would be already available...but maybe I didn't serach hard enough. */
 template<class T>
 void rsMergeInPlace(std::vector<T>& A, int s)
 {

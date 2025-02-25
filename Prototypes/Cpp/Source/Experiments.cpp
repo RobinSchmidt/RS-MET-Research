@@ -17081,10 +17081,10 @@ template<class T>
 T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0, 
   T tol = std::numeric_limits<T>::epsilon(), int maxIts = 1000, T stepSize = T(1))
 {
-  // Rename to rsFindStationaryPoint1D, rsFindFlatPoint1D, rsFindExtremum1D. Eventually, it may go
-  // into class rsMinimizer1D as static member function newton(...). But actually we could also 
-  // just use rsRootFinder::newton. The algorithm is the same, just applied to f'(x) rather than
-  // f(x)
+  // Rename to rsFindStationaryPoint1D, rsFindFlatPoint1D, rsFindExtremum1D, rsOptimizeNewton1D. 
+  // Eventually, it may go into class rsMinimizer1D as static member function newton(...). But 
+  // actually we could also just use rsRootFinder::newton. The algorithm is the same, just 
+  // applied to f'(x) rather than f(x)
 
   // Under construction. ...kinda works already but needs more tests and possibly tweaking.
 
@@ -17204,7 +17204,13 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   //   find a zero but rather an x-value that has a different y-value. Translating that to the case
   //   here, that amounts to finding a point x where the function has a particular desired slope.
   //   Maybe that could be useful in certain settings - maybe we may want to find a point where the
-  //   function f has a slope of unity or something like that.
+  //   function f has a slope of unity or something like that. Furthermore, in geenral, to write a
+  //   robust optimization algo, we actually want to evaluate the function itself in order to check
+  //   if the step actually led to an improvement and if it didn't, undo the step and try some 
+  //   other step (possibly in the same direction but with reduced step size). So, it seems, for 
+  //   robust optimizers, we want an API, that lets the algo evaluate the objectice function 
+  //   itself. And perhaps all optimizers should have the same API...or well...I'm not so sure 
+  //   about that. We'll see.
   //
   //
   // ToDo:

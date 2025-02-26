@@ -17370,6 +17370,30 @@ void testNewtonOptimizer1D()
 }
 
 
+void testFourierTrafo2D()
+{
+  // Under construction. Just a stub at the moment.
+
+  // ToDo:
+  //
+  // - Take the implmentation of the 1D FFT from rsLinearTransforms::fourierRadix2DIF and give it
+  //   an additional integer "stride" parameter (defaulting to 1). 
+  //
+  // - Replace the indices of all array reads and writes like a[i] with a[stride*i]
+  //
+  // - For a 2D FFT on an M-by-N matrix, call the strided FFT for each row with a stride of 1 and
+  //   then call it for each column with a stride of N. That should compute the 2D FFT, if I'm not
+  //   mistaken. We would have to compute M 1D FFTs of size N for the rows and then N 1D FFTs of 
+  //   size M for the columns. The total cost of the algorithm should therefore be of the order
+  //   M * (N*log2(N)) + N * (M*log2(M)) = M*N * (log2(N) + log2(M)) = M*N * log2(M*N).
+  //
+  // - This can be generalized to an nD FFT. We would jsut run the strided FFT along all dimensions
+  //   one dimension at a time. Try that with a 3D FFT as well. Compare results against naive 
+  //   computation of the nD DFT in unit tests.
+}
+
+
+
 /** UNDER CONSTRUCTION. Does not work yet. I try to come up with an in-place merge algorithm that 
 can be used in merge sort. All the implementations of merge sort I have seen so far, use an 
 additional buffer, making its space complexity O(n). I'd like to do merge sort with space 

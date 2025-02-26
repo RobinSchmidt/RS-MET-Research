@@ -140,7 +140,7 @@ int main (int /*argc*/, char* /*argv[]*/)
   //testSmoothCrossFade2();
   //testSmoothMax();                   // stub
   //testNewtonOptimizer1D();
-  testFourierTrafo2D();                // stub
+  testFourierTrafo2D();                // Under construction. Does not yet work.
 
 
 

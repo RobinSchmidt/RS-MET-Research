@@ -17401,8 +17401,8 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
 
   rsArrayTools::orderBitReversed(a, N, (int)(rsLog2(N)+0.5)); // descramble outputs
 
-
   // Code was adpated from rsLinearTransforms::fourierRadix2DIF()
+  // Needs tests!
 }
 
 template<class T>
@@ -17461,13 +17461,18 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
     rsStridedFFT(B.getDataPointer(0, j), M, Wy, N);
 
   return B;
+
+  // May still be wrong. Maybe swap Wx, Wy? ..nah - that doesn't seem to help
 }
-
-
 
 void testFourierTrafo2D()
 {
-  // Under construction. Just a stub at the moment.
+  // Under construction. Does not work yet. Maybe there's still an error in the naive DFT 
+  // implementation and/or in the formulas for Wx,Wy (maybe we should swap the divisors M,N)?
+  // But with M = N = 8 we still get different results from the DFT and FFT. Maybe compare against
+  // this: https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py  and/or maybe look into
+  // scipy for a 2D FFT. If it has none, look into some image processing libraries for a reference
+  // 2D FFT implementation.
 
   // We want to implement a 2D FFT based on a strided 1D FFT. Later we want to generalize the
   // implementation to nD.
@@ -17477,8 +17482,8 @@ void testFourierTrafo2D()
   using Mat     = rsMatrix<Complex>;
 
   int M = 8;        // Number of rows
-  int N = 16;       // Number of columns
-
+  //int N = 16;       // Number of columns
+  int N = 8;        // Number of columns - test to see if this fixes problems -> nope
 
   Complex i(0, 1);  // Imaginary unit
   bool ok = true;
@@ -17490,6 +17495,8 @@ void testFourierTrafo2D()
   // Compute basic twiddle factors:
   Complex Wx = rsExp(-2*PI*i / Real(M));
   Complex Wy = rsExp(-2*PI*i / Real(N));
+  // Wait! Shouldn't Wx be e^(-2*pi*i/N) and wy be e^(-2*pi*i/M)? But the FDT-IDFT roundtrip 
+  // actually works - which would be unlikely if teh formulas were wrong
 
   // Compute the DFT naively:
   Mat B = rsDFT2D(A, Wx, Wy);
@@ -17497,7 +17504,10 @@ void testFourierTrafo2D()
   // Compute the DFT via the FFT algorithm:
   Mat B2 = rsFFT2D(A, Wx, Wy);
   // This should be equal to B - but isn't! There is still something wrong in either the naive DFT
-  // or the FFT or both.
+  // or the FFT or both. Or maybe even in rsMatrix.getDataPointer(i,j)
+
+  Mat err = B - B2;
+  // Hmm - *some* values actually do match. But most are totally different with M=N=8. Weird!
 
 
   // Compute the IDFT of the naive DFT:
@@ -17507,7 +17517,7 @@ void testFourierTrafo2D()
   C *= (Real(1)/Complex(M*N));   // We need to scale by 1/(M*N)
 
   // Compute DFT-IDFT roundtrip error:
-  Mat err = A-C;
+  err = A - C;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-13;
     // We need to take the rsAbs again because the return value of getAbsoluteMaximum() is of type
     // Complex

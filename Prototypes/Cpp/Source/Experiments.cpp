@@ -17408,14 +17408,11 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
 template<class T>
 rsMatrix<T> rsDFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 {
-  // Under construction
+  // Needs tests!
 
   int M = A.getNumRows();
   int N = A.getNumColumns();
   rsMatrix<T> B(M, N);
-
-  // Something to do...
-
   for(int u = 0; u < M; u++)
   {
     for(int v = 0; v < N; v++)
@@ -17430,13 +17427,10 @@ rsMatrix<T> rsDFT2D(const rsMatrix<T>& A, T Wx, T Wy)
       }
     }
   }
-
+  return B;
 
 
   // F(u,v) = sum_{x=0}^{M-1} sum_{y=0}^{N-1} f(x,y) e^(-2*pi*i* (u*x/M + v*y/N) )
-
-
-  return B;
 
   // Math:
   //
@@ -17449,6 +17443,27 @@ rsMatrix<T> rsDFT2D(const rsMatrix<T>& A, T Wx, T Wy)
   //
   // https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py
 }
+
+template<class T>
+rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
+{
+  int M = A.getNumRows();
+  int N = A.getNumColumns();
+
+  rsMatrix<T> B(A);
+
+  // Do M row-wise FFTs of length N with stride 1 and twiddle base Wx:
+  for(int i = 0; i < M; i++)
+    rsStridedFFT(B.getDataPointer(i, 0), N, Wx, 1);
+
+  // Do N column-wise FFTs of length M with stride N and twiddle base Wy:
+  for(int j = 0; j < N; j++)
+    rsStridedFFT(B.getDataPointer(0, j), M, Wy, N);
+
+  return B;
+}
+
+
 
 void testFourierTrafo2D()
 {
@@ -17466,7 +17481,7 @@ void testFourierTrafo2D()
 
 
   Complex i(0, 1);  // Imaginary unit
-
+  bool ok = true;
 
   // Create a matrix of random values:
   Mat A(M, N);
@@ -17478,6 +17493,35 @@ void testFourierTrafo2D()
 
   // Compute the DFT naively:
   Mat B = rsDFT2D(A, Wx, Wy);
+
+  // Compute the DFT via the FFT algorithm:
+  Mat B2 = rsFFT2D(A, Wx, Wy);
+  // This should be equal to B - but isn't! There is still something wrong in either the naive DFT
+  // or the FFT or both.
+
+
+  // Compute the IDFT of the naive DFT:
+  Wx = rsExp(+2*PI*i / Real(M));
+  Wy = rsExp(+2*PI*i / Real(N));
+  Mat C = rsDFT2D(B, Wx, Wy);
+  C *= (Real(1)/Complex(M*N));   // We need to scale by 1/(M*N)
+
+  // Compute DFT-IDFT roundtrip error:
+  Mat err = A-C;
+  ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-13;
+    // We need to take the rsAbs again because the return value of getAbsoluteMaximum() is of type
+    // Complex
+
+  // OK - we have computed the DFT naively and it works to do a DFT -> IDFT roundtrip. I have not
+  // yet checked the 2D DFT result against a reference implementation, though.
+
+
+  // ToDo: implement and test a 2D FFT:
+
+
+
+  // ...
+
 
 
   int dummy = 0;

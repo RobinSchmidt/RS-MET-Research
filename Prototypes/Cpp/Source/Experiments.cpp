@@ -17078,7 +17078,7 @@ void testSmoothMax()
 
 
 template<class T>
-T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0, 
+T rsOptimizeNewton1D(const std::function<void(T, T*, T*, T*)>& f, T x0, 
   T tol = std::numeric_limits<T>::epsilon(), int maxIts = 1000, T stepSize = T(1))
 {
   // Rename to rsFindStationaryPoint1D, rsFindFlatPoint1D, rsFindExtremum1D, rsOptimizeNewton1D. 
@@ -17229,6 +17229,13 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
   //   accuracy and takes the same number of iterations for any choice of a. Pay special attention
   //   to cases where the stepsize limitation and or the setting of f2 = 1 actually kicks in.
   //
+  // - Implement versions for 2D and nD. They should have the same API, just that the f0, f1, f2 
+  //   output parameters are now interpreted as pointers to a scalar, a vector and a matrix 
+  //   respectively (rather than all being scalars as in the 1D case). The matrix should be 
+  //   compatible with being wrapped into rsMatrixView. It actually doesn't matter if the Hessian
+  //   is interpreted as a matrix in row major or column major storage because it is symmetric 
+  //   anyway.
+  //
   //
   // Questions:
   //
@@ -17252,28 +17259,16 @@ T rsFindSaddle1D(const std::function<void(T, T*, T*, T*)>& f, T x0,
 // API is like in rsRootFinder::halley
 
 
-void testSaddleFinder1D()
+void testNewtonOptimizer1D()
 {
   // Under construction.
 
-  // We experiment with algorithms to find a saddle point of a 1D function such as f(x) = x^3. The
-  // idea is to modify gradient ascent/descent (which find maxima or minima respectively) in a way 
-  // that is suitable for saddle points. The general idea in 1D is to do a descent step whenever 
-  // the function is convex and an ascent step whenever the function is concave. Convexity is 
-  // indicated by a positive 2nd derivative and concavity by a negative 2nd derivative.
-  //
-  // We may actually scale the gradient step by the value of the 2nd derivative instead of just 
-  // using its sign. To generalize to nD, maybe we should scale the gradient by the Hessian? These
-  // are the sorts of things we want to figure out in these experiments....TBC...
-  //
-  // As an application, we could use such saddle finder algorithms in 2D to find the saddle points
-  // of Polya potentials of complex functions.
-
+  // We test rsOptimizeNewton1D with some example functions. This optimizer will find minima, 
+  // maxima or saddle points ...TBC...
 
   using Real  = double;
   using Func  = std::function<void(Real, Real*, Real*, Real*)>;
   using FuncN = std::function<void(int, Real, Real*, Real*, Real*)>;
-
 
 
   FuncN powN = [](int n, Real x, Real* f0, Real* f1, Real* f2)
@@ -17284,11 +17279,9 @@ void testSaddleFinder1D()
 
     // Can be optimized: call pow only once as pow(x, n-2) and compute x^(n-1) by multiplying by x 
     // and x^n by multiplying by x again. Only relevant if we need this in performance critical 
-    // code.
+    // code. 
   };
-  // Maybe wap order of n and x
-
-
+  // Maybe swap order of n and x
 
   Func xTo2 = [&](Real x, Real* f0, Real* f1, Real* f2) { powN(2, x, f0, f1, f2); };
   Func xTo3 = [&](Real x, Real* f0, Real* f1, Real* f2) { powN(3, x, f0, f1, f2); };
@@ -17308,12 +17301,12 @@ void testSaddleFinder1D()
   // Test the Newton method for finding stationary points for functions f(x) = x^n for various 
   // values for the exponent n, namely n = 1,2,3,4,5,6,7. We use the default stepsize of 1 in all
   // cases:
-  ys = rsFindSaddle1D(xTo2,  10.0, tol, maxIts); //   2 iterations, 2nd with dx = 0
-  ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts); //  56 iterations
-  ys = rsFindSaddle1D(xTo4,  10.0, tol, maxIts); //  93
-  ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts); // 130
-  ys = rsFindSaddle1D(xTo6,  10.0, tol, maxIts); // 166
-  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts); // 202
+  ys = rsOptimizeNewton1D(xTo2,  10.0, tol, maxIts); //   2 iterations, 2nd with dx = 0
+  ys = rsOptimizeNewton1D(xTo3,  10.0, tol, maxIts); //  56 iterations
+  ys = rsOptimizeNewton1D(xTo4,  10.0, tol, maxIts); //  93
+  ys = rsOptimizeNewton1D(xTo5,  10.0, tol, maxIts); // 130
+  ys = rsOptimizeNewton1D(xTo6,  10.0, tol, maxIts); // 166
+  ys = rsOptimizeNewton1D(xTo7,  10.0, tol, maxIts); // 202
   // The number of iterations taken increases linearly with the exponent n. The difference
   // between successive values is always 37 or 36 (except the 1st where it's 54). So it seems that
   // when using the fixed default stepsize, the computational cost is proportional to the order of
@@ -17325,12 +17318,12 @@ void testSaddleFinder1D()
   // These all converge in one iteration as theoretically predicted (except for f(x) = x^2, see 
   // comment below why that is). The stepsize should be the n-1 where n is the exponent:
                                                       // iterations
-  ys = rsFindSaddle1D(xTo2,  10.0, tol, maxIts, 1.0); // 2
-  ys = rsFindSaddle1D(xTo3,  10.0, tol, maxIts, 2.0); // 1
-  ys = rsFindSaddle1D(xTo4,  10.0, tol, maxIts, 3.0); // 1
-  ys = rsFindSaddle1D(xTo5,  10.0, tol, maxIts, 4.0); // 1
-  ys = rsFindSaddle1D(xTo6,  10.0, tol, maxIts, 5.0); // 1
-  ys = rsFindSaddle1D(xTo7,  10.0, tol, maxIts, 6.0); // 1
+  ys = rsOptimizeNewton1D(xTo2,  10.0, tol, maxIts, 1.0); // 2
+  ys = rsOptimizeNewton1D(xTo3,  10.0, tol, maxIts, 2.0); // 1
+  ys = rsOptimizeNewton1D(xTo4,  10.0, tol, maxIts, 3.0); // 1
+  ys = rsOptimizeNewton1D(xTo5,  10.0, tol, maxIts, 4.0); // 1
+  ys = rsOptimizeNewton1D(xTo6,  10.0, tol, maxIts, 5.0); // 1
+  ys = rsOptimizeNewton1D(xTo7,  10.0, tol, maxIts, 6.0); // 1
   // The n = 2 case counts two iterations instead of 1 but in the 2nd iteration the update step
   // dx is zero. This is because in the n = 2 case, we do not satisfy the convergence criterion
   // at tbe top of the loop that checks for f2 == f1 == 0. The n = 2 case exits the loop via the
@@ -17342,18 +17335,17 @@ void testSaddleFinder1D()
   // update step), then that reflects the cost of the algorithm more accurately.
 
 
-
-
-
-  ys = rsFindSaddle1D(xTo3, -10.0);
-  ys = rsFindSaddle1D(xTo3,  -4.0);
-  ys = rsFindSaddle1D(xTo3,  -3.0);
-  ys = rsFindSaddle1D(xTo3,  -2.0);
-  ys = rsFindSaddle1D(xTo3,   2.0);
-  ys = rsFindSaddle1D(xTo3,   2.0);
-  ys = rsFindSaddle1D(xTo3,   3.0);
-  ys = rsFindSaddle1D(xTo3,   4.0);
-  ys = rsFindSaddle1D(xTo3,  10.0);
+  // Test it with different starting values:
+  ys = rsOptimizeNewton1D(xTo3, -10.0);
+  ys = rsOptimizeNewton1D(xTo3,  -4.0);
+  ys = rsOptimizeNewton1D(xTo3,  -3.0);
+  ys = rsOptimizeNewton1D(xTo3,  -2.0);
+  ys = rsOptimizeNewton1D(xTo3,   2.0);
+  ys = rsOptimizeNewton1D(xTo3,   2.0);
+  ys = rsOptimizeNewton1D(xTo3,   3.0);
+  ys = rsOptimizeNewton1D(xTo3,   4.0);
+  ys = rsOptimizeNewton1D(xTo3,  10.0);
+  // ToDo: include a check that ys == 0 after each call
 
 
   // Observations:

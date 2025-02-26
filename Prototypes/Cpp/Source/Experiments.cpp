@@ -17370,6 +17370,39 @@ void testNewtonOptimizer1D()
 }
 
 
+template<class T>
+void rsStridedFFT(T* a, int N, T W, int stride = 1)
+{
+  rsAssert(rsIsPowerOfTwo(N), "N must be a power of 2");
+
+  int n = 1;
+  int h = N/2;
+  while(h > 0) {  
+    for(int k = 0; k < n; k++) 
+    {
+      T Wjk  = rsUnityValue(W);
+      int jf = 2*k*h;
+      int jl = jf+h-1;
+      for(int j = jf; j <= jl; j++) 
+      {
+        T aj   = a[j];
+        a[j]   =  aj + a[j+h];
+        a[j+h] = (aj - a[j+h])*Wjk;
+        Wjk *= W; 
+      }
+    }
+    n *= 2;
+    h /= 2;
+    W *= W; 
+  }
+
+  rsArrayTools::orderBitReversed(a, N, (int)(rsLog2(N)+0.5)); // descramble outputs
+
+
+  // Code was adpated from rsLinearTransforms::fourierRadix2DIF()
+}
+
+
 void testFourierTrafo2D()
 {
   // Under construction. Just a stub at the moment.
@@ -17378,16 +17411,17 @@ void testFourierTrafo2D()
   //
   // - Take the implmentation of the 1D FFT from rsLinearTransforms::fourierRadix2DIF and give it
   //   an additional integer "stride" parameter (defaulting to 1). 
+//     DONE: It's in the function rsStridedFFT() above.
   //
   // - Replace the indices of all array reads and writes like a[i] with a[stride*i]
   //
-  // - For a 2D FFT on an M-by-N matrix, call the strided FFT for each row with a stride of 1 and
+  // - For a 2D FFT of an M-by-N matrix, call the strided FFT for each row with a stride of 1 and
   //   then call it for each column with a stride of N. That should compute the 2D FFT, if I'm not
   //   mistaken. We would have to compute M 1D FFTs of size N for the rows and then N 1D FFTs of 
   //   size M for the columns. The total cost of the algorithm should therefore be of the order
   //   M * (N*log2(N)) + N * (M*log2(M)) = M*N * (log2(N) + log2(M)) = M*N * log2(M*N).
   //
-  // - This can be generalized to an nD FFT. We would jsut run the strided FFT along all dimensions
+  // - This can be generalized to an nD FFT. We would just run the strided FFT along all dimensions
   //   one dimension at a time. Try that with a 3D FFT as well. Compare results against naive 
   //   computation of the nD DFT in unit tests.
 }

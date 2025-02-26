@@ -17377,7 +17377,8 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
 
   int n = 1;
   int h = N/2;
-  while(h > 0) {  
+  while(h > 0) 
+  {
     for(int k = 0; k < n; k++) 
     {
       T Wjk  = rsUnityValue(W);
@@ -17385,15 +17386,17 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
       int jl = jf+h-1;
       for(int j = jf; j <= jl; j++) 
       {
-        T aj   = a[j];
-        a[j]   =  aj + a[j+h];
-        a[j+h] = (aj - a[j+h])*Wjk;
+        int i1 = stride *  j;
+        int i2 = stride * (j+h);
+        T aj   = a[i1];                // Maybe rename aj to ai1
+        a[i1]  =  aj + a[i2];
+        a[i2]  = (aj - a[i2]) * Wjk;
         Wjk *= W; 
       }
     }
     n *= 2;
     h /= 2;
-    W *= W; 
+    W *= W;
   }
 
   rsArrayTools::orderBitReversed(a, N, (int)(rsLog2(N)+0.5)); // descramble outputs
@@ -17402,18 +17405,92 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
   // Code was adpated from rsLinearTransforms::fourierRadix2DIF()
 }
 
+template<class T>
+rsMatrix<T> rsDFT2D(const rsMatrix<T>& A, T Wx, T Wy)
+{
+  // Under construction
+
+  int M = A.getNumRows();
+  int N = A.getNumColumns();
+  rsMatrix<T> B(M, N);
+
+  // Something to do...
+
+  for(int u = 0; u < M; u++)
+  {
+    for(int v = 0; v < N; v++)
+    {
+      B(u, v) = T(0);
+      for(int x = 0; x < M; x++)
+      {
+        for(int y = 0; y < N; y++)
+        {
+          B(u, v) += A(x,y) * rsPow(Wx, T(u*x)) * rsPow(Wy, T(v*y)); // Verify!
+        }
+      }
+    }
+  }
+
+
+
+  // F(u,v) = sum_{x=0}^{M-1} sum_{y=0}^{N-1} f(x,y) e^(-2*pi*i* (u*x/M + v*y/N) )
+
+
+  return B;
+
+  // Math:
+  //
+  // https://stackoverflow.com/questions/4361372/complexity-of-a-2d-discrete-fourier-transform
+  // https://www.quora.com/What-is-a-2D-DFT
+  // https://www.uomustansiriyah.edu.iq/media/lectures/5/5_2017_03_26!05_31_37_PM.pdf
+  // 
+  //
+  // Code:
+  //
+  // https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py
+}
 
 void testFourierTrafo2D()
 {
   // Under construction. Just a stub at the moment.
 
+  // We want to implement a 2D FFT based on a strided 1D FFT. Later we want to generalize the
+  // implementation to nD.
+
+  using Real    = double;
+  using Complex = std::complex<Real>;
+  using Mat     = rsMatrix<Complex>;
+
+  int M = 8;        // Number of rows
+  int N = 16;       // Number of columns
+
+
+  Complex i(0, 1);  // Imaginary unit
+
+
+  // Create a matrix of random values:
+  Mat A(M, N);
+  rsFillWithComplexRandomValues(A.getDataPointer(), M*N, -5.0, +5.0, 0);
+
+  // Compute basic twiddle factors:
+  Complex Wx = rsExp(-2*PI*i / Real(M));
+  Complex Wy = rsExp(-2*PI*i / Real(N));
+
+  // Compute the DFT naively:
+  Mat B = rsDFT2D(A, Wx, Wy);
+
+
+  int dummy = 0;
+
+
   // ToDo:
   //
-  // - Take the implmentation of the 1D FFT from rsLinearTransforms::fourierRadix2DIF and give it
+  // - Take the implementation of the 1D FFT from rsLinearTransforms::fourierRadix2DIF and give it
   //   an additional integer "stride" parameter (defaulting to 1). 
-//     DONE: It's in the function rsStridedFFT() above.
+  //   DONE: It's in the function rsStridedFFT() above.
   //
-  // - Replace the indices of all array reads and writes like a[i] with a[stride*i]
+  // - Replace the indices of all array reads and writes like a[i] with a[stride*i].
+  //   DONE.
   //
   // - For a 2D FFT of an M-by-N matrix, call the strided FFT for each row with a stride of 1 and
   //   then call it for each column with a stride of N. That should compute the 2D FFT, if I'm not

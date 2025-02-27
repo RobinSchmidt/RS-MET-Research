@@ -17498,6 +17498,8 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
   //   stride = 1.
 }
 
+
+//template<class TReal, class TComplex>
 bool testFourierTrafo2D(int M, int N, int seed)
 {
   // Tests our 2D FFT routine rsFFT2D against a naive implementation of the 2D DFT. We test also
@@ -17510,6 +17512,12 @@ bool testFourierTrafo2D(int M, int N, int seed)
 
   Complex i(0, 1);  // Imaginary unit
   bool ok = true;
+
+  // Try to retrieve the real type:
+  //auto dummy = rsAbs(i);
+  //using TReal = decltype dummy;
+  // Nope - that doesn't work
+
 
   // Create a MxN matrix of random complex values:
   Mat A(M, N);

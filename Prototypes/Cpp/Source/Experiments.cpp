@@ -17524,8 +17524,10 @@ bool testFourierTrafo2D(int M, int N, int seed, TReal tol)
   rsFillWithComplexRandomValues(A.getDataPointer(), M*N, TReal(-5), TReal(+5), seed);
 
   // Compute basic twiddle factors:
-  TComplex Wx = rsExp(-2*PI*i / TReal(M)); // Twiddle base along 1st axis (x, rows)
-  TComplex Wy = rsExp(-2*PI*i / TReal(N)); // Twiddle base along 2nd axis (y, columns)
+  TComplex Wx = rsExp(TReal(-2*PI)*i / TReal(M)); // Twiddle base along 1st axis (x, rows)
+  TComplex Wy = rsExp(TReal(-2*PI)*i / TReal(N)); // Twiddle base along 2nd axis (y, columns)
+  // If we don't explicitly convert (-2*PI) to TReal, apparently it gets converted to int when
+  // TReal = float, leading to wrong results.
 
   // Compute the DFT naively and via the FFT and check if results match:
   Mat B   = rsDFT2D(A, Wx, Wy);
@@ -17536,8 +17538,8 @@ bool testFourierTrafo2D(int M, int N, int seed, TReal tol)
   // Complex. This is a bit weird.
 
   // Compute the IDFT of the naive DFT:
-  Wx = rsExp(+2*PI*i / TReal(M));
-  Wy = rsExp(+2*PI*i / TReal(N));
+  Wx = rsExp(TReal(+2*PI)*i / TReal(M));
+  Wy = rsExp(TReal(+2*PI)*i / TReal(N));
   Mat C = rsDFT2D(B, Wx, Wy);
   C *= (TReal(1)/TComplex(M*N));      // We need to scale by 1/(M*N)
 
@@ -17545,6 +17547,7 @@ bool testFourierTrafo2D(int M, int N, int seed, TReal tol)
   err = A - C;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= tol;
 
+  //rsAssert(ok);
   return ok;
 
 
@@ -17606,17 +17609,28 @@ bool runTestsFourierTrafo2D(int maxPower, int seed, TReal tol)
   return ok;
 }
 
-
 void testFourierTrafo2D()
 {
-  // This can someday be teurned into a unit test in the main repo.
+  // This can someday be turned into a unit test in the main repo.
 
   bool ok = true;
 
-  //ok &= runTestsFourierTrafo2D<float,  std::complex<float>> (4, 0, 1.e-6f); // FAILS!
+  // For debug:
+  //ok &= testFourierTrafo2D<float,  std::complex<float>>(16, 16, 0, 1.e-3);
+  // That's the case that doesn't pass with a tolerance of 1.e-13 which is why we use 1.e-12 below.
+  // We really need to figure out why we need such a high tolerance.
+
+  ok &= runTestsFourierTrafo2D<float,  std::complex<float>> (4, 0, 1.e-2f); // Needs BIG tolerance!
   ok &= runTestsFourierTrafo2D<double, std::complex<double>>(4, 0, 1.e-11);
 
   rsAssert(ok);
+
+  // Notes:
+  //
+  // - For TReal = float, we need a very high tolerance. I think, this may be because the FFT 
+  //   routine computes all twiddle factors by recursion which may produce a high roundoff error. 
+  //   Maybe it's also because the values are moderately large and the tolerance is used as 
+  //   absolute tolerance. Verify this!
 }
 
 

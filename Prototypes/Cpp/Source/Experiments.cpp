@@ -17371,6 +17371,7 @@ void testNewtonOptimizer1D()
 
 
 
+
 template <class T>
 void rsOrderBitReversedStrided(T *buffer, int N, int log2N, int stride = 1)
 {
@@ -17385,8 +17386,6 @@ void rsOrderBitReversedStrided(T *buffer, int N, int log2N, int stride = 1)
   // rsBitReverse() works with unsigned long, so maybe we should declare n,nr as unsigned long, too
   // to avoid conversions inside the loop.
 }
-// Needs tests!
-
 
 template<class T>
 void rsStridedFFT(T* a, int N, T W, int stride = 1)
@@ -17418,11 +17417,8 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
   }
 
   rsOrderBitReversedStrided(a, N, (int)(rsLog2(N)+0.5), stride); // descramble outputs
-  //rsArrayTools::orderBitReversed(a, N, (int)(rsLog2(N)+0.5)); // descramble outputs
-  // We need a strided variant of that, too!
 
   // Code was adpated from rsLinearTransforms::fourierRadix2DIF()
-  // Needs tests!
 }
 
 template<class T>
@@ -17472,18 +17468,6 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 
   rsMatrix<T> B(A);
 
-  // Old - buggy - uses wrong (swapped) twiddle bases:
-  //// Do M row-wise FFTs of length N with stride 1 and twiddle base Wx:
-  //for(int i = 0; i < M; i++)
-  //  rsStridedFFT(B.getDataPointer(i, 0), N, Wx, 1);
-
-  //// Do N column-wise FFTs of length M with stride N and twiddle base Wy:
-  //for(int j = 0; j < N; j++)
-  //  rsStridedFFT(B.getDataPointer(0, j), M, Wy, N);
-
-
-  // New - seems to work correctly:
-
   // Do M row-wise FFTs of length N with stride 1 and twiddle base Wy:
   for(int i = 0; i < M; i++)
     rsStridedFFT(B.getDataPointer(i, 0), N, Wy, 1);
@@ -17497,18 +17481,8 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 
 void testFourierTrafo2D()
 {
-  // Under construction. Does not work yet. Maybe there's still an error in the naive DFT 
-  // implementation and/or in the formulas for Wx,Wy (maybe we should swap the divisors M,N)?
-  // But with M = N = 8 we still get different results from the DFT and FFT. Maybe compare against
-  // this: https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py  and/or maybe look into
-  // scipy for a 2D FFT. If it has none, look into some image processing libraries for a reference
-  // 2D FFT implementation.
-
-  // Ah - I think, the orderBitReversed is not applicable as is. We need to make a strided version 
-  // of that, too! Yes! that fixes it! ..at least for M=N=8, it works now. Try next M != N.
-
-  // We want to implement a 2D FFT based on a strided 1D FFT. Later we want to generalize the
-  // implementation to nD.
+  // Tests our 2D FFT routine rsFFT2D against a naive implementation of the 2D DFT. We test also
+  // if a DFT -> IDFT roundtrip of the naive immplementaion reconstructs the original 2D signal.
 
   using Real    = double;
   using Complex = std::complex<Real>;
@@ -17516,13 +17490,6 @@ void testFourierTrafo2D()
 
   int M = 8;        // Number of rows
   int N = 16;       // Number of columns
-
-  //int N = 8;        // Number of columns - test to see if this fixes problems -> Yes!
-  // So, it currently works when N = M but not when N != M, I think.
-
-  //M = 2;
-  //N = 4;
-
 
   Complex i(0, 1);  // Imaginary unit
   bool ok = true;
@@ -17532,25 +17499,14 @@ void testFourierTrafo2D()
   rsFillWithComplexRandomValues(A.getDataPointer(), M*N, -5.0, +5.0, 0);
 
   // Compute basic twiddle factors:
-  Complex Wx = rsExp(-2*PI*i / Real(M));
-  Complex Wy = rsExp(-2*PI*i / Real(N));
-  //Complex Wx = rsExp(-2*PI*i / Real(N));
-  //Complex Wy = rsExp(-2*PI*i / Real(M));
-  // Wait! Shouldn't Wx be e^(-2*pi*i/N) and wy be e^(-2*pi*i/M)? But the FDT-IDFT roundtrip 
-  // actually works - which would be unlikely if teh formulas were wrong
+  Complex Wx = rsExp(-2*PI*i / Real(M)); // Twiddle base along 1st axis (x, rows)
+  Complex Wy = rsExp(-2*PI*i / Real(N)); // Twiddle base along 2nd axis (y, columns)
 
-  // Compute the DFT naively:
-  Mat B = rsDFT2D(A, Wx, Wy);
-
-  // Compute the DFT via the FFT algorithm:
-  Mat B2 = rsFFT2D(A, Wx, Wy);
-  // This should be equal to B - but isn't! There is still something wrong in either the naive DFT
-  // or the FFT or both. Or maybe even in rsMatrix.getDataPointer(i,j)
-
+  // Compute the DFT naively and via the FFT and check if results match:
+  Mat B   = rsDFT2D(A, Wx, Wy);
+  Mat B2  = rsFFT2D(A, Wx, Wy);
   Mat err = B - B2;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-12;
-  // Hmm - *some* values actually do match with M=N=8. But most are totally different. Weird!
-
 
   // Compute the IDFT of the naive DFT:
   Wx = rsExp(+2*PI*i / Real(M));
@@ -17564,49 +17520,32 @@ void testFourierTrafo2D()
     // We need to take the rsAbs again because the return value of getAbsoluteMaximum() is of type
     // Complex
 
-  // OK - we have computed the DFT naively and it works to do a DFT -> IDFT roundtrip. I have not
-  // yet checked the 2D DFT result against a reference implementation, though.
+  rsAssert(ok);
 
 
-
-
-
-
-  // ToDo: implement and test a 2D FFT:
-
-
-
-  // ...
-
-
-
-  int dummy = 0;
-
-
-  // ToDo:
+  // Notes:
   //
-  // - Take the implementation of the 1D FFT from rsLinearTransforms::fourierRadix2DIF and give it
-  //   an additional integer "stride" parameter (defaulting to 1). 
-  //   DONE: It's in the function rsStridedFFT() above.
-  //
-  // - Replace the indices of all array reads and writes like a[i] with a[stride*i].
-  //   DONE.
-  //
-  // - For a 2D FFT of an M-by-N matrix, call the strided FFT for each row with a stride of 1 and
-  //   then call it for each column with a stride of N. That should compute the 2D FFT, if I'm not
-  //   mistaken. We would have to compute M 1D FFTs of size N for the rows and then N 1D FFTs of 
-  //   size M for the columns. The total cost of the algorithm should therefore be of the order
+  // - The computational cost of a 2D FFT of an MxN matrix is M*N * log2(M*N). We compute M 1D FFTs
+  //   of size N for the rows and then N 1D FFTs of size M for the columns. The total cost of the 
+  //   algorithm is therefore of the order:
   //   M * (N*log2(N)) + N * (M*log2(M)) = M*N * (log2(N) + log2(M)) = M*N * log2(M*N).
   //
-  // - This can be generalized to an nD FFT. We would just run the strided FFT along all dimensions
-  //   one dimension at a time. Try that with a 3D FFT as well. Compare results against naive 
+  //
+  // ToDo:
+  //
+  // - Verify results against a trustworthy reference implementation. For example:
+  //   https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.fft2.html
+  //   https://numpy.org/doc/stable/reference/generated/numpy.fft.fft2.html  
+  //
+  // - Generalize to an nD FFT. We would just run the strided FFT along all dimensions one 
+  //   dimension at a time. Try that with a 3D FFT as well. Compare results against naive 
   //   computation of the nD DFT in unit tests.
-
-  // See:
+  //
+  //
+  // See also:
   //
   // https://thepythoncodingbook.com/2021/08/30/2d-fourier-transform-in-python-and-fourier-synthesis-of-images/
-  // https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.fft2.html
-  // https://numpy.org/doc/stable/reference/generated/numpy.fft.fft2.html
+  // https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py  
 }
 
 

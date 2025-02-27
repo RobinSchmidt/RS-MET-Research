@@ -17375,7 +17375,7 @@ void testNewtonOptimizer1D()
 template <class T>
 void rsOrderBitReversedStrided(T *buffer, int N, int log2N, int stride = 1)
 {
-  int n, nr; // index and bit-reversed index
+  int n, nr; // Index and bit-reversed index
   for(n = 0; n < N; n++)
   {
     nr = (int) RAPT::rsBitReverse(n, log2N);
@@ -17390,6 +17390,7 @@ void rsOrderBitReversedStrided(T *buffer, int N, int log2N, int stride = 1)
 template<class T>
 void rsStridedFFT(T* a, int N, T W, int stride = 1)
 {
+  rsAssert(N >= 1);  // Could we admit N == 0, too?
   rsAssert(rsIsPowerOfTwo(N), "N must be a power of 2");
 
   int n = 1;
@@ -17405,9 +17406,9 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
       {
         int i1 = stride *  j;
         int i2 = stride * (j+h);
-        T aj   = a[i1];                // Maybe rename aj to ai1
-        a[i1]  =  aj + a[i2];
-        a[i2]  = (aj - a[i2]) * Wjk;
+        T ai1  = a[i1];
+        a[i1]  =  ai1 + a[i2];
+        a[i2]  = (ai1 - a[i2]) * Wjk;
         Wjk *= W; 
       }
     }
@@ -17416,67 +17417,70 @@ void rsStridedFFT(T* a, int N, T W, int stride = 1)
     W *= W;
   }
 
-  rsOrderBitReversedStrided(a, N, (int)(rsLog2(N)+0.5), stride); // descramble outputs
+  rsOrderBitReversedStrided(a, N, (int)(rsLog2(N)+0.5), stride); // Descramble outputs
 
-  // Code was adpated from rsLinearTransforms::fourierRadix2DIF()
+  // Code was adpated from rsLinearTransforms::fourierRadix2DIF(). Maybe this strided version 
+  // should go there, too. Maybe the value log2N should be a function parameter. It's wasteful to
+  // compute it here, especially when the function is called in a loop which is typical for using
+  // it to compute a multidimensional FFT. Also, even if we compute it here, it may be a bad idea 
+  // to convert to double and then back to int. We should perhaps use a log2 function that directly
+  // works on integers. Maybe we could admit N == 0, too? Then the function should just do nothing
+  // at all. I think it should work. It wouldn't be useful but we could still handle it.
 }
 
+/** A naive implementation of a 2D DFT. The algorithm uses 4 nested loops and the computational 
+cost for transforming an MxN matrix is of order (M*N)^2. */
 template<class T>
 rsMatrix<T> rsDFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 {
-  // Needs tests!
-
   int M = A.getNumRows();
   int N = A.getNumColumns();
+  rsAssert(M >= 1 && N >= 1);  // Needed because we access A(0,0) even if we don't enter the loop.
   rsMatrix<T> B(M, N);
+  B.setToZero(A(0,0));
   for(int u = 0; u < M; u++)
-  {
     for(int v = 0; v < N; v++)
-    {
-      B(u, v) = T(0);
       for(int x = 0; x < M; x++)
-      {
         for(int y = 0; y < N; y++)
-        {
-          B(u, v) += A(x,y) * rsPow(Wx, T(u*x)) * rsPow(Wy, T(v*y)); // Verify!
-        }
-      }
-    }
-  }
+          B(u, v) += A(x,y) * rsPow(Wx, T(u*x)) * rsPow(Wy, T(v*y));
   return B;
 
-
-  // F(u,v) = sum_{x=0}^{M-1} sum_{y=0}^{N-1} f(x,y) e^(-2*pi*i* (u*x/M + v*y/N) )
-
-  // Math:
+  // See:
   //
+  // F(u,v) = sum_{x=0}^{M-1} sum_{y=0}^{N-1} f(x,y) e^(-2*pi*i* (u*x/M + v*y/N) )
   // https://stackoverflow.com/questions/4361372/complexity-of-a-2d-discrete-fourier-transform
   // https://www.quora.com/What-is-a-2D-DFT
   // https://www.uomustansiriyah.edu.iq/media/lectures/5/5_2017_03_26!05_31_37_PM.pdf
-  // 
-  //
-  // Code:
-  //
   // https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py
 }
 
+/** Computes the 2D DFT (discrete Fourier transform) of the given matrix A by means of a 2D version
+of the FFT algorithm. For an MxN matrix, the algorithm first computes M row-wise FFTs of length N 
+with stride 1 and twiddle base Wy and then computes N column-wise FFTs of length M with stride N 
+and twiddle base Wy. The total computational cost is of order M*N * log2(M*N). */
 template<class T>
 rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 {
   int M = A.getNumRows();
   int N = A.getNumColumns();
+  rsAssert(M >= 1 && N >= 1); // Maybe we don't need this?
+  rsAssert(rsIsPowerOfTwo(M), "Number of rows must be a power of two.");
+  rsAssert(rsIsPowerOfTwo(N), "Number of columns must be a power of two.");
 
   rsMatrix<T> B(A);
 
-  // Do M row-wise FFTs of length N with stride 1 and twiddle base Wy:
+  // Do M row-wise FFTs of length N with stride 1 and twiddle base Wy. Cost is M * (N*log2(N)).
   for(int i = 0; i < M; i++)
     rsStridedFFT(B.getDataPointer(i, 0), N, Wy, 1);
 
-  // Do N column-wise FFTs of length M with stride N and twiddle base Wy:
+  // Do N column-wise FFTs of length M with stride N and twiddle base Wy. Cost is N * (M*log2(M)).
   for(int j = 0; j < N; j++)
     rsStridedFFT(B.getDataPointer(0, j), M, Wx, N);
 
   return B;
+
+  // The total cost is:
+  // M * (N*log2(N)) + N * (M*log2(M)) = M*N * (log2(N) + log2(M)) = M*N * log2(M*N).
 }
 
 void testFourierTrafo2D()
@@ -17486,15 +17490,16 @@ void testFourierTrafo2D()
 
   using Real    = double;
   using Complex = std::complex<Real>;
+  //using Complex = rsComplex<Real>;  // Doesn't compile because of rsFillWithComplexRandomValues
   using Mat     = rsMatrix<Complex>;
 
-  int M = 8;        // Number of rows
+  int M =  8;       // Number of rows
   int N = 16;       // Number of columns
 
   Complex i(0, 1);  // Imaginary unit
   bool ok = true;
 
-  // Create a matrix of random values:
+  // Create a MxN matrix of random complex values:
   Mat A(M, N);
   rsFillWithComplexRandomValues(A.getDataPointer(), M*N, -5.0, +5.0, 0);
 
@@ -17507,6 +17512,8 @@ void testFourierTrafo2D()
   Mat B2  = rsFFT2D(A, Wx, Wy);
   Mat err = B - B2;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-12;
+  // We need to take the rsAbs again because the return value of getAbsoluteMaximum() is of type
+  // Complex
 
   // Compute the IDFT of the naive DFT:
   Wx = rsExp(+2*PI*i / Real(M));
@@ -17517,8 +17524,6 @@ void testFourierTrafo2D()
   // Compute DFT-IDFT roundtrip error:
   err = A - C;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-13;
-    // We need to take the rsAbs again because the return value of getAbsoluteMaximum() is of type
-    // Complex
 
   rsAssert(ok);
 
@@ -17535,11 +17540,22 @@ void testFourierTrafo2D()
   //
   // - Verify results against a trustworthy reference implementation. For example:
   //   https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.fft2.html
-  //   https://numpy.org/doc/stable/reference/generated/numpy.fft.fft2.html  
+  //   https://numpy.org/doc/stable/reference/generated/numpy.fft.fft2.html
+  //
+  // - Maybe implement a unit test function that we can call like:
+  //   testFFT2D(int M, int N, T tol). Maybe it could also take a seed parameter for the PRNG.
+  //
+  // - Test it also with rsComplex instead of std::complex
   //
   // - Generalize to an nD FFT. We would just run the strided FFT along all dimensions one 
   //   dimension at a time. Try that with a 3D FFT as well. Compare results against naive 
   //   computation of the nD DFT in unit tests.
+  //
+  // - Verify that it also works when we do the column-wise FFTs first and then the row-wise ones.
+  //   Could there be a numerical advantage of doing it one way or the other? Maybe we should do
+  //   the FFT along the shorter dimension first. Or maybe along the longer? Maybe try to estimate
+  //   the different numerical errors by computing with float and then compare against a reference
+  //   computed with double.
   //
   //
   // See also:

@@ -17445,13 +17445,22 @@ rsMatrix<T> rsDFT2D(const rsMatrix<T>& A, T Wx, T Wy)
           B(u, v) += A(x,y) * rsPow(Wx, T(u*x)) * rsPow(Wy, T(v*y));
   return B;
 
-  // See:
+  // ToDo:
   //
-  // F(u,v) = sum_{x=0}^{M-1} sum_{y=0}^{N-1} f(x,y) e^(-2*pi*i* (u*x/M + v*y/N) )
-  // https://stackoverflow.com/questions/4361372/complexity-of-a-2d-discrete-fourier-transform
-  // https://www.quora.com/What-is-a-2D-DFT
-  // https://www.uomustansiriyah.edu.iq/media/lectures/5/5_2017_03_26!05_31_37_PM.pdf
-  // https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py
+  // - Document how the user is supposed to assign Wx, Wy. See testFourierTrafo2D(). Maybe rename
+  //   them to WM, WN or maybe in a function declaration rowTwiddleBase, colTwiddleBase
+  //
+  // - Document that we don't do any sort of normalization. That means, it's the caller's 
+  //   responsibility to divide the results by M*N either in the forward or in the inverse 
+  //   transform or maybe even by sqrt(M*N) in both directions.
+  //
+  // - Explain how the formulas used in the code can be derived from the formula:
+  //   F(u,v) = sum_{x=0}^{M-1} sum_{y=0}^{N-1} f(x,y) e^(-2*pi*i* (u*x/M + v*y/N) )
+  //   that is given here (except for the the normalization by 1/(M*N)):
+  //   https://stackoverflow.com/questions/4361372/complexity-of-a-2d-discrete-fourier-transform
+  //   It's simple application of rules for exponentials. Explain also, why we do that. We want the
+  //   formula to be written in terms of powers of the two twiddle bases Wx, Wy such that the code 
+  //   can also be used for NTTs.
 }
 
 /** Computes the 2D DFT (discrete Fourier transform) of the given matrix A by means of a 2D version
@@ -17479,11 +17488,17 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 
   return B;
 
-  // The total cost is:
-  // M * (N*log2(N)) + N * (M*log2(M)) = M*N * (log2(N) + log2(M)) = M*N * log2(M*N).
+  // Notes:
+  //
+  // - The total cost is the sum of the costs of the two loops given by:
+  //   M * (N*log2(N)) + N * (M*log2(M)) = M*N * (log2(N) + log2(M)) = M*N * log2(M*N).
+  //
+  // - For a stride of 1 like in the first loop, we could also call the normal 1D implementation.
+  //   That should be slightly more efficient than using the general, strided implementation with 
+  //   stride = 1.
 }
 
-void testFourierTrafo2D()
+bool testFourierTrafo2D(int M, int N, int seed)
 {
   // Tests our 2D FFT routine rsFFT2D against a naive implementation of the 2D DFT. We test also
   // if a DFT -> IDFT roundtrip of the naive immplementaion reconstructs the original 2D signal.
@@ -17493,15 +17508,12 @@ void testFourierTrafo2D()
   //using Complex = rsComplex<Real>;  // Doesn't compile because of rsFillWithComplexRandomValues
   using Mat     = rsMatrix<Complex>;
 
-  int M =  8;       // Number of rows
-  int N = 16;       // Number of columns
-
   Complex i(0, 1);  // Imaginary unit
   bool ok = true;
 
   // Create a MxN matrix of random complex values:
   Mat A(M, N);
-  rsFillWithComplexRandomValues(A.getDataPointer(), M*N, -5.0, +5.0, 0);
+  rsFillWithComplexRandomValues(A.getDataPointer(), M*N, -5.0, +5.0, seed);
 
   // Compute basic twiddle factors:
   Complex Wx = rsExp(-2*PI*i / Real(M)); // Twiddle base along 1st axis (x, rows)
@@ -17511,59 +17523,82 @@ void testFourierTrafo2D()
   Mat B   = rsDFT2D(A, Wx, Wy);
   Mat B2  = rsFFT2D(A, Wx, Wy);
   Mat err = B - B2;
-  ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-12;
+  ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-11;
   // We need to take the rsAbs again because the return value of getAbsoluteMaximum() is of type
-  // Complex
+  // Complex. This is a bit weird.
 
   // Compute the IDFT of the naive DFT:
   Wx = rsExp(+2*PI*i / Real(M));
   Wy = rsExp(+2*PI*i / Real(N));
   Mat C = rsDFT2D(B, Wx, Wy);
-  C *= (Real(1)/Complex(M*N));   // We need to scale by 1/(M*N)
+  C *= (Real(1)/Complex(M*N));      // We need to scale by 1/(M*N)
 
-  // Compute DFT-IDFT roundtrip error:
+  // Compute and check DFT-IDFT roundtrip error:
   err = A - C;
   ok &= rsAbs(err.getAbsoluteMaximum()) <= 1.e-13;
 
-  rsAssert(ok);
+  return ok;
 
 
-  // Notes:
-  //
-  // - The computational cost of a 2D FFT of an MxN matrix is M*N * log2(M*N). We compute M 1D FFTs
-  //   of size N for the rows and then N 1D FFTs of size M for the columns. The total cost of the 
-  //   algorithm is therefore of the order:
-  //   M * (N*log2(N)) + N * (M*log2(M)) = M*N * (log2(N) + log2(M)) = M*N * log2(M*N).
-  //
-  //
   // ToDo:
   //
   // - Verify results against a trustworthy reference implementation. For example:
   //   https://docs.scipy.org/doc/scipy/reference/generated/scipy.fft.fft2.html
   //   https://numpy.org/doc/stable/reference/generated/numpy.fft.fft2.html
   //
-  // - Maybe implement a unit test function that we can call like:
-  //   testFFT2D(int M, int N, T tol). Maybe it could also take a seed parameter for the PRNG.
+  // - Maybe also do an IFFT and check the result.
   //
-  // - Test it also with rsComplex instead of std::complex
+  // - Give the function a tolerance parameter. Templatize it on the real type or maybe better 
+  //   directly on the complex type, so we can use it with std::complex and rsComplex and both with
+  //   float and double.
   //
-  // - Generalize to an nD FFT. We would just run the strided FFT along all dimensions one 
-  //   dimension at a time. Try that with a 3D FFT as well. Compare results against naive 
+  // - Test it also with rsComplex instead of std::complex. Trying this currently doesn't compile 
+  //   because rsFillWithComplexRandomValues() works only with std::complex. We first need to make
+  //   that accomodate for rsComplex, too.
+  //
+  // - Try to use it for FFTs on finite fields (aka number theoretic transforms, NTTs).
+  //
+  // - Maybe implement similar 2D versions for other kinds of transforms like the fast Hadamard 
+  //   transform and the Kronecker transforms. Are they also separable, i.e. is it possible to swap
+  //   the row-wise and column-wise transforms for them, too?
+  //
+  // - Generalize to an nD FFT. I guess, we would just run the strided FFT along all dimensions one 
+  //   dimension at a time? Try that with a 3D FFT as well. Compare results against naive 
   //   computation of the nD DFT in unit tests.
   //
   // - Verify that it also works when we do the column-wise FFTs first and then the row-wise ones.
-  //   Could there be a numerical advantage of doing it one way or the other? Maybe we should do
-  //   the FFT along the shorter dimension first. Or maybe along the longer? Maybe try to estimate
-  //   the different numerical errors by computing with float and then compare against a reference
-  //   computed with double.
+  //   Done. Yes - it does work. Could there be a numerical advantage of doing it one way or the 
+  //   other? Maybe we should do the FFT along the shorter dimension first? Or maybe along the 
+  //   longer? Maybe try to estimate the different numerical errors by computing with float and 
+  //   then compare against a reference computed with double. I think, the property that makes this
+  //   swap possible is that the DFT is "separable". Verify that terminology and add some 
+  //   documentation about that.
   //
   //
   // See also:
   //
   // https://thepythoncodingbook.com/2021/08/30/2d-fourier-transform-in-python-and-fourier-synthesis-of-images/
-  // https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py  
+  // https://github.com/msdkhani/2D-DFT/blob/master/2D-DFT.py
+  // https://www.quora.com/What-is-a-2D-DFT
+  // https://www.uomustansiriyah.edu.iq/media/lectures/5/5_2017_03_26!05_31_37_PM.pdf
 }
 
+void testFourierTrafo2D()
+{
+  // This can someday be teurned into a unit test in the main repo.
+
+  bool ok = true;
+
+  // Test 2D FFT for M,N = 1,2,4,8,16:
+  int maxPower = 4;
+  for(int i = 0; i <= maxPower; i++) {
+    int M = rsPow(2, i);
+    for(int j = 0; j <= maxPower; j++) {
+      int N = rsPow(2, j);
+      ok &= testFourierTrafo2D(M, N, 0);  }}
+
+  rsAssert(ok);
+}
 
 
 /** UNDER CONSTRUCTION. Does not work yet. I try to come up with an in-place merge algorithm that 

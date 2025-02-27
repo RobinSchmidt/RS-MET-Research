@@ -17499,18 +17499,18 @@ rsMatrix<T> rsFFT2D(const rsMatrix<T>& A, T Wx, T Wy)
 }
 
 
-//template<class TReal, class TComplex>
+template<class TReal, class TComplex>
 bool testFourierTrafo2D(int M, int N, int seed)
 {
   // Tests our 2D FFT routine rsFFT2D against a naive implementation of the 2D DFT. We test also
   // if a DFT -> IDFT roundtrip of the naive immplementaion reconstructs the original 2D signal.
 
-  using Real    = double;
-  using Complex = std::complex<Real>;
+  //using Real    = double;
+  //using Complex = std::complex<Real>;
   //using Complex = rsComplex<Real>;  // Doesn't compile because of rsFillWithComplexRandomValues
-  using Mat     = rsMatrix<Complex>;
+  using Mat     = rsMatrix<TComplex>;
 
-  Complex i(0, 1);  // Imaginary unit
+  TComplex i(0, 1);  // Imaginary unit
   bool ok = true;
 
   // Try to retrieve the real type:
@@ -17524,8 +17524,8 @@ bool testFourierTrafo2D(int M, int N, int seed)
   rsFillWithComplexRandomValues(A.getDataPointer(), M*N, -5.0, +5.0, seed);
 
   // Compute basic twiddle factors:
-  Complex Wx = rsExp(-2*PI*i / Real(M)); // Twiddle base along 1st axis (x, rows)
-  Complex Wy = rsExp(-2*PI*i / Real(N)); // Twiddle base along 2nd axis (y, columns)
+  TComplex Wx = rsExp(-2*PI*i / TReal(M)); // Twiddle base along 1st axis (x, rows)
+  TComplex Wy = rsExp(-2*PI*i / TReal(N)); // Twiddle base along 2nd axis (y, columns)
 
   // Compute the DFT naively and via the FFT and check if results match:
   Mat B   = rsDFT2D(A, Wx, Wy);
@@ -17536,10 +17536,10 @@ bool testFourierTrafo2D(int M, int N, int seed)
   // Complex. This is a bit weird.
 
   // Compute the IDFT of the naive DFT:
-  Wx = rsExp(+2*PI*i / Real(M));
-  Wy = rsExp(+2*PI*i / Real(N));
+  Wx = rsExp(+2*PI*i / TReal(M));
+  Wy = rsExp(+2*PI*i / TReal(N));
   Mat C = rsDFT2D(B, Wx, Wy);
-  C *= (Real(1)/Complex(M*N));      // We need to scale by 1/(M*N)
+  C *= (TReal(1)/TComplex(M*N));      // We need to scale by 1/(M*N)
 
   // Compute and check DFT-IDFT roundtrip error:
   err = A - C;
@@ -17603,7 +17603,7 @@ void testFourierTrafo2D()
     int M = rsPow(2, i);
     for(int j = 0; j <= maxPower; j++) {
       int N = rsPow(2, j);
-      ok &= testFourierTrafo2D(M, N, 0);  }}
+      ok &= testFourierTrafo2D<double, std::complex<double>>(M, N, 0);  }}
 
   rsAssert(ok);
 }

@@ -17505,25 +17505,15 @@ bool testFourierTrafo2D(int M, int N, int seed, TReal tol)
   // Tests our 2D FFT routine rsFFT2D against a naive implementation of the 2D DFT. We test also
   // if a DFT -> IDFT roundtrip of the naive immplementaion reconstructs the original 2D signal.
 
-  //using Real    = double;
-  //using Complex = std::complex<Real>;
-  //using Complex = rsComplex<Real>;  // Doesn't compile because of rsFillWithComplexRandomValues
-  using Mat     = rsMatrix<TComplex>;
-
-  TComplex i(0, 1);  // Imaginary unit
   bool ok = true;
 
-  // Try to retrieve the real type:
-  //auto dummy = rsAbs(i);
-  //using TReal = decltype dummy;
-  // Nope - that doesn't work
-
-
   // Create a MxN matrix of random complex values:
+  using Mat = rsMatrix<TComplex>;
   Mat A(M, N);
   rsFillWithComplexRandomValues(A.getDataPointer(), M*N, TReal(-5), TReal(+5), seed);
 
   // Compute basic twiddle factors:
+  TComplex i(0, 1);                               // Imaginary unit
   TComplex Wx = rsExp(TReal(-2*PI)*i / TReal(M)); // Twiddle base along 1st axis (x, rows)
   TComplex Wy = rsExp(TReal(-2*PI)*i / TReal(N)); // Twiddle base along 2nd axis (y, columns)
   // If we don't explicitly convert (-2*PI) to TReal, apparently it gets converted to int when
@@ -17622,15 +17612,23 @@ void testFourierTrafo2D()
 
   ok &= runTestsFourierTrafo2D<float,  std::complex<float>> (4, 0, 1.e-2f); // Needs BIG tolerance!
   ok &= runTestsFourierTrafo2D<double, std::complex<double>>(4, 0, 1.e-11);
+  //ok &= runTestsFourierTrafo2D<float,  rsComplex<float>>    (4, 0, 1.e-2f); // Linker error!
+  ok &= runTestsFourierTrafo2D<double, rsComplex<double>>   (4, 0, 1.e-11);
 
   rsAssert(ok);
 
   // Notes:
   //
-  // - For TReal = float, we need a very high tolerance. I think, this may be because the FFT 
+  // - For TReal = float, we need a *very* high tolerance. I think, this may be because the FFT 
   //   routine computes all twiddle factors by recursion which may produce a high roundoff error. 
   //   Maybe it's also because the values are moderately large and the tolerance is used as 
   //   absolute tolerance. Verify this!
+  //
+  //
+  // ToDo:
+  //
+  // - Fix linker error for rsComplex<float>. It's about some functions in rsArrayTools for which
+  //   apparently no instantioations exist for rsComplex<float>.
 }
 
 
